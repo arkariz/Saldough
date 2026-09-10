@@ -7,15 +7,21 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
-  flutter:
-    sdk: flutter
-
-  # Paket internal
+  # Paket internal — dipin ke commit SHA pada branch kompatibilitas
+  # `claude/saldough-flutter-finance-app-06ufsv` di advance-mobile-platform
+  # untuk api_storage/models/state_management/hive_storage, karena tag
+  # aslinya menunjuk commit lama yang isinya masih mereferensikan paket
+  # sibling lewat URL GitLab privat. Paket lain (dependencies/di/failures/
+  # navigation) tidak pernah rusak (tidak punya dependensi internal di blok
+  # `dependencies:` regulernya) sehingga tetap dipin ke tag asli.
+  # `resolution: workspace` pada paket-paket ini TIDAK dihapus — tetap
+  # dipakai melos untuk pengembangan internal. Lihat ADR-0001 dan
+  # TASK_LIST.md Fase 0 untuk detail diagnosisnya.
   api_storage:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: infrastructure/storage/api_storage
-      ref: api_storage-v1.1.0
+      ref: 275181ec7d43d423d5293ab676445a4e43a736ee  # api_storage-v1.1.0 + fix URL
   dependencies:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
@@ -31,43 +37,41 @@ dependencies:
       url: https://github.com/arkariz/advance-mobile-platform
       path: core/failures
       ref: failures-v2.0.2
+  flutter:
+    sdk: flutter
+  go_router: ^17.3.0
+  google_fonts: ^8.1.0
   hive_storage:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: infrastructure/storage/hive_storage
-      ref: hive_storage-v1.1.1
+      ref: 9b96fb4353f913270f72518198e598e900d6646c  # hive_storage-v1.1.1 + fix URL + fix ref api_storage
+  intl: ^0.20.2
   models:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: core/models
-      ref: models-v1.1.3
+      ref: 275181ec7d43d423d5293ab676445a4e43a736ee  # models-v1.1.3 + fix URL
   navigation:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: fondation/navigation
       ref: navigation-v1.1.1
+  slang: ^4.7.0
+  slang_flutter: ^4.7.0
   state_management:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: fondation/state_management
-      ref: state_management-v2.2.0
-
-  # Pihak ketiga
-  go_router: ^17.3.0
-  google_fonts: ^8.1.0
-  intl: ^0.20.2
-  slang: ^4.7.0
-  slang_flutter: ^4.7.0
+      ref: 275181ec7d43d423d5293ab676445a4e43a736ee  # state_management-v2.2.0 + fix URL
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   bloc_test: ^10.0.0
   build_runner: any
+  flutter_test:
+    sdk: flutter
   injectable_generator: any
   json_serializable: any
-  mocktail: ^1.0.4
-  slang_build_runner: ^4.7.0
   linter:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
@@ -77,7 +81,9 @@ dev_dependencies:
     git:
       url: https://github.com/arkariz/advance-mobile-platform
       path: infrastructure/storage/memory_storage
-      ref: memory_storage-v1.1.1
+      ref: 9b96fb4353f913270f72518198e598e900d6646c  # memory_storage-v1.1.1 + fix URL + fix ref api_storage
+  mocktail: ^1.0.4
+  slang_build_runner: ^4.7.0
 
 flutter:
   uses-material-design: true

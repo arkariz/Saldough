@@ -44,27 +44,76 @@ Karena risiko `resolution: workspace` belum terbukti aman, resolusi dependensi
 dijadikan **gerbang Fase 0**. Tidak ada pekerjaan fase berikutnya yang dimulai
 sebelum `flutter pub get` berhasil.
 
-Kalau resolusi gagal, jalur pemulihan yang disetujui pemilik adalah mendorong
-branch kompatibilitas di `advance-mobile-platform` pada branch
-`claude/saldough-flutter-finance-app-06ufsv`, yang melepas baris
-`resolution: workspace` pada paket yang dipakai. Saldough lalu dipin ke commit
-SHA branch itu. Branch `main` monorepo tidak disentuh.
+Resolusi memang gagal — lihat "Hasil sebenarnya" di bawah. Jalur pemulihan
+yang dijalankan **bukan** melepas `resolution: workspace` seperti diduga di
+bagian ini saat ADR ditulis, melainkan mendorong branch kompatibilitas di
+`advance-mobile-platform` pada branch
+`claude/saldough-flutter-finance-app-06ufsv` yang menyamakan URL paket
+internal (GitLab privat → GitHub publik) di blok `dependencies:` setiap
+paket, sambil **membiarkan `resolution: workspace` apa adanya** — baris itu
+tetap diperlukan untuk pengelolaan monorepo lewat melos, bukan sumber
+kegagalan yang sebenarnya. Branch `main` monorepo tidak disentuh.
 
-Versi yang dipakai, terverifikasi lewat `git ls-remote --tags` pada
-9 September 2026:
+### Hasil sebenarnya (10 September 2026)
 
-| Paket | Tag | Dipakai untuk |
+`flutter pub get` gagal pada percobaan pertama, bukan karena
+`resolution: workspace`, melainkan karena **setiap paket internal
+mereferensikan paket sibling-nya lewat URL SSH GitLab privat di blok
+`dependencies:`-nya sendiri** — bukan cuma di level Saldough. Pesan galat
+asli:
+
+```
+Because every version of memory_storage from git depends on api_storage from git git@gitlab.bankcapital.co.id:mobile-services/mobile-platform.git at api_storage-v1.1.0 in infrastructure/storage/api_storage and saldough depends on api_storage from git https://github.com/arkariz/advance-mobile-platform at api_storage-v1.1.0 in infrastructure/storage/api_storage, memory_storage from git is forbidden.
+```
+
+Perbaikan dilakukan dalam dua commit di branch kompatibilitas:
+
+1. **`275181ec7d43d423d5293ab676445a4e43a736ee`** — ganti URL
+   `git@gitlab.bankcapital.co.id:mobile-services/mobile-platform.git` jadi
+   `https://github.com/arkariz/advance-mobile-platform` di blok
+   `dependencies:` setiap paket yang terkena (`api_storage`, `hive_storage`,
+   `memory_storage`, `models`, `state_management`, plus beberapa
+   `dev_dependencies:` yang tidak relevan untuk resolusi tapi diseragamkan
+   juga). `resolution: workspace` tidak disentuh.
+2. **`9b96fb4353f913270f72518198e598e900d6646c`** — commit pertama belum
+   cukup: tag `api_storage-v1.1.0` yang dipakai `hive_storage` dan
+   `memory_storage` untuk merujuk `api_storage` masih menunjuk commit LAMA
+   (sebelum commit 1), yang isinya masih mereferensikan `failures` lewat
+   GitLab. Jadi `hive_storage`/`memory_storage` dipin ulang ke commit 1
+   (`275181e...`) lewat `ref:` SHA, bukan tag, khusus untuk rujukan
+   `api_storage`-nya.
+
+`failures` dan `dependencies` (sebagai paket) **tidak pernah rusak**: kedua
+paket itu tidak punya dependensi internal apa pun di blok `dependencies:`
+regulernya (cuma dependensi pihak ketiga atau tidak ada sama sekali), jadi
+tag aslinya tetap valid dan tidak perlu dipindah. Begitu juga `di`,
+`navigation`, dan `linter` — GitLab di paket-paket itu hanya muncul di
+`dev_dependencies:` (tidak ditarik pub untuk dependensi transitif), jadi
+tidak pernah memengaruhi resolusi Saldough sama sekali.
+
+Dengan perbaikan ini, `flutter pub get` **berhasil** sungguhan lewat jaringan
+nyata ke GitHub (bukan simulasi lokal): "Got dependencies!" tanpa galat, dan
+`flutter analyze` (dengan `include: package:linter/analysis_options.yaml`)
+melaporkan "No issues found!".
+
+Tabel tag diganti tabel pin aktual di bawah, per paket.
+
+| Paket | Pin yang dipakai Saldough | Kenapa |
 |---|---|---|
-| `state_management` | `state_management-v2.2.0` | Bloc, state, dan efek |
-| `navigation` | `navigation-v1.1.1` | Registri rute bertipe |
-| `failures` | `failures-v2.0.2` | Hierarki kesalahan |
-| `models` | `models-v1.1.3` | Struktur data bersama |
-| `api_storage` | `api_storage-v1.1.0` | Kontrak penyimpanan |
-| `hive_storage` | `hive_storage-v1.1.1` | Implementasi Hive |
-| `di` | `di-v1.1.2` | Injeksi dependensi |
-| `dependencies` | `dependencies-v1.4.0` | Penguncian versi pihak ketiga |
-| `linter` | `linter-v1.0.2` | Aturan lint bersama |
-| `memory_storage` | `memory_storage-v1.1.1` | Test double, dev dependency |
+| `state_management` | SHA `275181e` | Rujukan internalnya ke `dependencies` butuh URL terbaru |
+| `navigation` | Tag `navigation-v1.1.1` | Tidak punya dependensi internal, tag asli valid |
+| `failures` | Tag `failures-v2.0.2` | Tidak punya dependensi internal, tag asli valid |
+| `models` | SHA `275181e` | Rujukan internalnya ke `dependencies` butuh URL terbaru |
+| `api_storage` | SHA `275181e` | Rujukan internalnya ke `failures` butuh URL terbaru |
+| `hive_storage` | SHA `9b96fb4` | Butuh commit 1 (URL) **dan** commit 2 (ref `api_storage` ke SHA, bukan tag lama) |
+| `di` | Tag `di-v1.1.2` | Tidak punya dependensi internal, tag asli valid |
+| `dependencies` | Tag `dependencies-v1.4.0` | Tidak punya dependensi internal sama sekali |
+| `linter` | Tag `linter-v1.0.2` | Tidak punya dependensi internal, tag asli valid |
+| `memory_storage` | SHA `9b96fb4` | Sama seperti `hive_storage` — rujukan ke `api_storage` |
+
+SHA lengkap: `275181ec7d43d423d5293ab676445a4e43a736ee` (commit 1, perbaikan
+URL) dan `9b96fb4353f913270f72518198e598e900d6646c` (commit 2, perbaikan
+ref `api_storage` di `hive_storage`/`memory_storage`).
 
 Paket `api_network` dan `dio_network` **tidak dipakai** pada MVP, karena tidak
 ada backend. Keduanya baru masuk pada tahap sinkronisasi.
@@ -153,10 +202,17 @@ kedua repositori dimiliki orang yang sama.
 
 ### Kalau jalur pemulihan dipakai
 
+**Catatan 10 September 2026:** langkah 2 di bawah ini SALAH DIDUGA saat ADR
+ditulis — lihat "Hasil sebenarnya" di bagian 3 untuk apa yang benar-benar
+dikerjakan (ganti URL GitLab→GitHub per paket, **bukan** hapus
+`resolution: workspace`). Daftar ini dibiarkan apa adanya sebagai jejak,
+tidak diedit diam-diam.
+
 1. Catat pesan galat `flutter pub get` apa adanya di `TASK_LIST.md`.
-2. Di `advance-mobile-platform`, pada branch
+2. ~~Di `advance-mobile-platform`, pada branch
    `claude/saldough-flutter-finance-app-06ufsv`, hapus baris
-   `resolution: workspace` hanya pada paket yang dikonsumsi Saldough.
+   `resolution: workspace` hanya pada paket yang dikonsumsi Saldough.~~
+   Ternyata tidak perlu — akar masalahnya bukan baris itu.
 3. Dorong branch itu, lalu pin dependensi Saldough ke commit SHA-nya.
 4. Perbarui ADR ini dengan hasil sebenarnya, dan ganti tabel tag di atas menjadi
    tabel SHA.
@@ -190,4 +246,6 @@ kedua repositori dimiliki orang yang sama.
 **Penulis keputusan:** Tim Saldough
 **Ditinjau oleh:** Pemilik proyek
 **Tanggal disetujui:** 2026-09-09
-**Status implementasi:** Disetujui, verifikasi menunggu Fase 0
+**Status implementasi:** Diverifikasi 10 September 2026 — `flutter pub get`
+dan `flutter analyze` berhasil bersih setelah jalur pemulihan dijalankan
+(lihat "Hasil sebenarnya" di bagian 3).

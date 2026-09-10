@@ -13,11 +13,22 @@ di MVP.
 
 ## Tautan Design Canvas
 
-**Inti Siklus Bulanan** (D-1.1, D-2.1, D-2.2, D-2.3):
+**Gaya komik/meme — seluruh layar MVP** (D-2.1–2.4, D-3.1–3.3, D-4.1–4.3,
+D-5.1–5.2, D-6.1):
+[Saldough — Dashboard Gaya Komik](https://claude.ai/code/artifact/acace93a-af43-462b-a752-3dc5d8e758e3) —
+26 artboard (13 layar × gelap+terang). Ini adalah bahasa visual yang
+**aktif dipakai sekarang**, dipilih langsung oleh pemilik (lihat "Catatan
+pengerjaan" di bawah untuk alasan pivotnya). Seluruh cakupan desain MVP
+sudah ada di canvas ini.
+
+**Lembar token/komponen (D-1.1) dan Inti Siklus Bulanan, versi lama**
+(gaya lama, **digantikan**):
 [Saldough — Siklus Bulanan](https://claude.ai/code/artifact/0c0d80a5-90a5-4f02-b5e6-bf8fa76d07d6) —
-7 artboard: lembar token & komponen, dashboard (gelap+terang), tambah/sunting
-baris (gelap+terang), alur rollover (gelap+terang). Bisa diklik-edit
-langsung di canvas.
+7 artboard dengan palet "sports-tech" dari `new-health-duel` (termasuk
+lembar token ADR-0006 versi lama). Disimpan sebagai arsip — **bukan acuan
+visual** lagi. D-1.1 (lembar token) belum punya pengganti gaya komik;
+ADR-0006 juga belum ditulis ulang untuk palet komik — lihat catatan di
+bawah.
 
 ## Cara memakai dokumen ini
 
@@ -42,90 +53,105 @@ Terakhir diperbarui: 10 September 2026.
 
 | Fase | Tugas desain | Selesai | Status |
 |---|---|---|---|
-| 1 — Sistem desain | 1 | 1 | Selesai |
-| 2 — Siklus bulanan | 4 | 3 | 3 dari 4 selesai |
-| 3 — Pemasukan dan timesheet | 3 | 0 | Belum dimulai |
-| 4 — Roll-up | 3 | 0 | Belum dimulai |
-| 5 — Investasi | 2 | 0 | Belum dimulai |
-| 6 — Seed | 1 | 0 | Belum dimulai |
-| **Total** | **14** | **4** | |
+| 1 — Sistem desain | 1 | 0 | Versi lama digantikan, belum ada pengganti gaya komik |
+| 2 — Siklus bulanan | 4 | 4 | Selesai, gaya komik |
+| 3 — Pemasukan dan timesheet | 3 | 3 | Selesai, gaya komik |
+| 4 — Roll-up | 3 | 3 | Selesai, gaya komik |
+| 5 — Investasi | 2 | 2 | Selesai, gaya komik |
+| 6 — Seed | 1 | 1 | Selesai, gaya komik |
+| **Total** | **14** | **13** | |
 
 ## Fase 1: Sistem desain
 
-- [x] **D-1.1** Lembar token dan komponen: palet warna semantik
-      (`income`, `expense`, `overBudget`, `investment`, `rollUp`,
-      `needsReview`, plus slot netral dan `muted`), skala tipografi Syne/DM
-      Sans, skala jarak dan sudut, contoh `AppCard`, `AppButton`, `AppChip`,
-      dan `AppMoneyText`. Gelap dan terang berdampingan.
-      Memenuhi [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md).
-      ⚠ Satu nilai diturunkan, bukan dikutip langsung dari ADR: `muted`
-      terang (`#94A3B8`) tidak disebutkan eksplisit di ADR-0006 (yang
-      eksplisit hanya `muted` gelap `#4A6070`). Dipilih konsisten dengan
-      keluarga warna `sub` terang, bukan angka sembarang — tinjau saat
-      implementasi.
+- [ ] **D-1.1** Lembar token dan komponen gaya komik: palet pop-art
+      (latar kertas koran/panel hitam, garis tepi tebal, bayangan keras
+      offset), pasangan huruf Archivo Black (angka)/Space Grotesk
+      (body)/Bangers (label-label pendek), skala jarak dan sudut, contoh
+      komponen kartu/tombol/badge. Belum digambar sebagai artboard
+      tersendiri — palet dan tipografinya sudah terpakai konsisten di
+      seluruh 13 layar Fase 2–6, tapi belum diringkas jadi satu lembar
+      rujukan, dan belum dituliskan formal di ADR-0006 (masih berisi
+      palet lama). Lihat "Catatan pengerjaan".
+      Target: [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md)
+      (perlu ditulis ulang).
 
 ## Fase 2: Siklus bulanan
 
-- [x] **D-2.1** Dashboard siklus bulanan: daftar baris pemasukan dengan
-      total, daftar baris anggaran dengan total, sisa (varian positif
-      ditunjukkan dengan data nyata September 2026; varian `overBudget`
-      negatif belum digambar terpisah — lihat catatan di bawah), badge
-      tetap/insidental, badge `rollUp` dengan asal angkanya, badge
-      `needsReview`, plus banner ringkasan "N baris perlu ditinjau"
+- [x] **D-2.1** Dashboard siklus bulanan, gaya komik: daftar baris
+      pemasukan dengan total, daftar baris anggaran dengan total, sisa
+      (varian positif ditunjukkan dengan data nyata September 2026; varian
+      `overBudget` negatif belum digambar terpisah — lihat catatan di
+      bawah), badge tetap/insidental, badge `rollUp` dengan asal angkanya,
+      badge `needsReview`, plus banner ringkasan "N baris perlu ditinjau"
       (FR-TPL-002).
       Memenuhi FR-CYCLE-001.
-      ⚠ Varian sisa negatif (`overBudget`) tidak digambar sebagai artboard
-      terpisah ronde ini — token warnanya sudah ada di Artboard 0 (lembar
-      token), tapi belum diterapkan ke hero dashboard dalam konteks negatif.
-      Susulkan di ronde berikutnya kalau diperlukan sebelum implementasi.
-- [x] **D-2.2** Tambah/sunting baris pemasukan dan baris anggaran manual,
-      toggle tetap/insidental, tampilan baris roll-up yang tidak bisa
-      disunting langsung beserta penjelasannya.
+      ⚠ Varian sisa negatif (`overBudget`) masih belum digambar sebagai
+      artboard terpisah. Susulkan di ronde berikutnya kalau diperlukan
+      sebelum implementasi.
+- [x] **D-2.2** Tambah/sunting baris, gaya komik: bottom sheet dengan
+      balon-kata komik untuk baris roll-up yang tidak bisa disunting
+      langsung, toggle tetap/insidental.
       Memenuhi FR-CYCLE-002.
-- [x] **D-2.3** Alur rollover: konfirmasi membuat bulan baru dari template,
-      ringkasan "N baris perlu ditinjau", cara menandai satu baris selesai
-      ditinjau.
+- [x] **D-2.3** Alur rollover, gaya komik: konfirmasi membuat bulan baru
+      dari template, ringkasan "N baris perlu ditinjau", checklist
+      menandai baris selesai ditinjau.
       Memenuhi FR-TPL-001, FR-TPL-002, FR-TPL-003.
-- [ ] **D-2.4** Kelola template: daftar baris tetap yang dipakai rollover,
-      persentase alokasi investasi bawaan.
+- [x] **D-2.4** Kelola template, gaya komik: daftar 12 baris tetap yang
+      dipakai rollover (toggle aktif/nonaktif per baris), alokasi
+      investasi bawaan dengan validator total persentase.
       Memenuhi FR-TPL-004.
+      ⚠ Nama dan persentase pos investasi ("Pos Darurat" dll.) bersifat
+      **contoh ilustrasi** — belum dikonfirmasi sebagai nama pos asli
+      pemilik.
 
 ## Fase 3: Pemasukan dan timesheet
 
-- [ ] **D-3.1** Kelola sumber pemasukan (gaji tetap, freelance per jam,
-      sekali jalan) dan aturan potongan (persentase atau nominal tetap).
+- [x] **D-3.1** Kelola sumber pemasukan, gaya komik: Gaji Menul
+      (freelance per jam, tarif Rp72.500/jam bisa diubah, potongan pajak
+      2,5%) dan Gaji Koko (gaji tetap) sebagai data nyata.
       Memenuhi FR-INC-001, FR-INC-002, FR-INC-003.
-- [ ] **D-3.2** Catat jam kerja dalam satu langkah, dengan penanda hari buku
-      baru.
+- [x] **D-3.2** Catat jam kerja, gaya komik: satu langkah (sumber,
+      tanggal, jam), toggle "mulai buku baru", pratinjau kotor langsung.
       Memenuhi FR-TIME-001, FR-TIME-002.
-- [ ] **D-3.3** Tutup buku jam: rincian gaji kotor → potongan → gaji bersih,
-      dan riwayat buku jam terdahulu.
+- [x] **D-3.3** Tutup buku jam, gaya komik: rincian kotor→potongan→bersih
+      (Rp3.117.500 → −Rp77.937 → Rp3.039.563, konsisten dengan Gaji Menul
+      di dashboard), riwayat buku terdahulu.
       Memenuhi FR-TIME-003, FR-TIME-004.
 
 ## Fase 4: Roll-up
 
-- [ ] **D-4.1** Daftar belanja mingguan dan bulanan, harga timpaan, ringkasan
-      roll-up (total sebulan dan pengali minggu).
+- [x] **D-4.1** Rencana Belanja, gaya komik: formula roll-up
+      576.600×4 minggu+762.100=Rp3.068.500 (sama dengan baris "Bulanan" di
+      dashboard), dipecah jadi 4 minggu + 1 belanja bulanan dengan tanda
+      "harga ditimpa".
       Memenuhi FR-GROC-001, FR-GROC-002, FR-GROC-003.
-- [ ] **D-4.2** Kelola kartu kredit dan catat transaksi dalam satu langkah.
+- [x] **D-4.2** Kartu Kredit, gaya komik: CC TOKPED (Rp1.386.516, sama
+      dengan dashboard) dan CC BRI TOUCH, form catat transaksi satu
+      langkah.
       Memenuhi FR-CARD-001, FR-CARD-002.
-- [ ] **D-4.3** Siklus tagihan kartu (daftar transaksi dan total) dan alur
+- [x] **D-4.3** Siklus Tagihan Kartu, gaya komik: total tagihan, catatan
+      tanggal cetak 15 (nilai seed terkonfirmasi, bisa diubah), alur
       konfirmasi langganan berulang.
       Memenuhi FR-CARD-003, FR-CARD-004, FR-CARD-005.
+      ⚠ Baris "Langganan Streaming Rp54.000" bersifat **contoh
+      ilustrasi**, bukan data asli dari spreadsheet pemilik.
 
 ## Fase 5: Investasi
 
-- [ ] **D-5.1** Kelola pos tujuan, alokasi persentase per pos, dan validator
-      total persentase.
+- [x] **D-5.1** Pos Tujuan, gaya komik: 3 pos dengan alokasi persentase
+      dan validator total 100%, saldo awal Rp0 (nilai seed terkonfirmasi).
       Memenuhi FR-INV-001, FR-INV-002, FR-INV-003.
-- [ ] **D-5.2** Pencatatan pinjaman antar pos dan riwayat pergerakan saldo
-      tiap pos.
+      ⚠ Nama dan persentase pos ("Pos Darurat" dll.) bersifat **contoh
+      ilustrasi** — sama seperti catatan di D-2.4, belum dikonfirmasi
+      sebagai nama pos asli.
+- [x] **D-5.2** Pinjaman Antar Pos, gaya komik: form pinjaman dari→ke pos,
+      riwayat pergerakan saldo (naik/turun berpasangan).
       Memenuhi FR-INV-004, FR-INV-005.
 
 ## Fase 6: Seed
 
-- [ ] **D-6.1** Layar impor data seed: progres pemuatan dan konfirmasi saat
-      aplikasi pertama dibuka.
+- [x] **D-6.1** Impor Seed, gaya komik: progres pemuatan dengan checklist
+      (2 sumber pemasukan, 12 baris template, pos tujuan).
       Memenuhi FR-SEED-001.
 
 ## Catatan pengerjaan
@@ -169,3 +195,41 @@ sementara — itu dibalik ke hex asli supaya token tetap sama persis
 dengan ADR-0006, tapi keputusan akhir (tambah varian teks khusus di
 ADR-0006, atau terima kontrasnya) perlu keputusan pemilik saat
 implementasi.
+
+**10 September 2026 (pivot gaya visual)** — Pemilik menilai hasil gaya
+"sports-tech" (ADR-0006 lama) jelek untuk aplikasi keuangan, dan secara
+eksplisit meminta: (1) hanya pola teknis Flutter theming dari
+`new-health-duel` yang dipakai (struktur `ThemeExtension`/`AppTheme`,
+bukan warnanya), (2) riset ulang desain aplikasi keuangan dari nol. Riset
+awal (tren fintech 2026: satu warna aksen kuat, nada tenang-dipercaya)
+disampaikan ke pemilik, tapi pemilik memilih arah sendiri yang berbeda
+dari rekomendasi riset itu: **gaya komik/meme** — garis tepi tebal, bayangan
+keras offset, tipografi Archivo Black (angka)/Space Grotesk (body)/Bangers
+(label pendek), warna pop-art datar. Ini dihormati sebagai keputusan rasa
+pemilik untuk aplikasi pribadinya, bukan diperdebatkan lebih lanjut.
+
+Dikerjakan bertahap sesuai permintaan pemilik sendiri: (1) satu canvas
+percobaan (dashboard saja) untuk konfirmasi gaya, (2) setelah dikonfirmasi
+cocok, Fase 4 langsung di gaya komik, (3) permintaan "buat semua desain
+yang tersisa" memicu penyelesaian seluruh sisa cakupan MVP gaya komik
+sekaligus — termasuk D-2.2 dan D-2.3 yang sebelumnya sempat terlewat dari
+cakupan "tersisa" karena sudah "selesai" di gaya lama, lalu disusulkan
+begitu disadari. Hasil akhir: 13 dari 14 tugas desain selesai gaya komik,
+satu canvas tunggal. Satu-satunya yang belum: **D-1.1** (lembar token
+formal) dan **ADR-0006** (masih berisi palet "sports-tech" lama) — palet
+dan tipografi komik sudah konsisten dipakai di 13 layar, tapi belum
+diringkas jadi satu lembar rujukan atau dituliskan resmi di ADR. Begitu
+juga dokumen lain yang masih merujuk palet/tipografi lama
+(`ARCHITECTURE_OVERVIEW.md` §10, `prd-saldough-1.0.md` §10, `TASK_LIST.md`
+T-1.3, peran `new-health-duel` di `CLAUDE.md`/`AGENT_CONTEXT.md`) — belum
+disentuh ronde ini karena permintaan pemilik secara spesifik soal "desain",
+bukan dokumen arsitektur; ditunda sampai diminta terpisah.
+
+Nama pos investasi ("Pos Darurat", "Pos Liburan", "Pos Belajar") dan satu
+baris langganan berulang ("Langganan Streaming") di D-2.4/D-5.1/D-4.3
+bersifat **contoh ilustrasi** buatan sendiri untuk menunjukkan mekanisme
+UI — bukan dikutip dari spreadsheet asli pemilik, karena nama pos/pos
+pinjaman yang sesungguhnya tidak tercantum di dokumen yang sudah ada.
+Semua nominal lain (Rp15.839.563, Rp13.382.490, Rp3.068.500, Rp1.386.516,
+Rp3.039.563/Rp3.117.500/Rp77.937, tanggal cetak 15, tarif Rp72.500/jam)
+tetap data/nilai seed nyata yang sudah terkonfirmasi sebelumnya.

@@ -13,13 +13,23 @@ di MVP.
 
 ## Tautan Design Canvas
 
-**Gaya komik/meme — seluruh layar MVP** (D-2.1–2.4, D-3.1–3.3, D-4.1–4.3,
-D-5.1–5.2, D-6.1):
-[Saldough — Dashboard Gaya Komik](https://claude.ai/code/artifact/acace93a-af43-462b-a752-3dc5d8e758e3) —
-26 artboard (13 layar × gelap+terang). Ini adalah bahasa visual yang
-**aktif dipakai sekarang**, dipilih langsung oleh pemilik (lihat "Catatan
-pengerjaan" di bawah untuk alasan pivotnya). Seluruh cakupan desain MVP
-sudah ada di canvas ini.
+**Prototipe komik/meme terhubung — seluruh layar MVP** (D-2.1–2.4,
+D-3.1–3.3, D-4.1–4.3, D-5.1–5.2, D-6.1):
+[Saldough — Prototipe Komik](https://claude.ai/code/artifact/acace93a-af43-462b-a752-3dc5d8e758e3) —
+2 artboard **interaktif** (gelap+terang), bukan lagi 26 layar statis
+berdampingan. Satu artboard = satu aplikasi utuh: layar "Menyiapkan
+Saldough!" di awal → tekan tombolnya → masuk ke shell aplikasi dengan
+**bottom navigation bar nyata** (4 tab: Siklus/Pemasukan/Belanja/Investasi,
+ikon+label, tab aktif disorot — meniru pola aplikasi sungguhan). Baris,
+tombol, dan ikon di tiap layar bisa benar-benar ditekan dan berpindah ke
+layar lain (dashboard → tap baris → sunting baris; tap ikon siklus baru →
+rollover → "Kelola Template"; Pemasukan → tombol jam → Catat Jam Kerja;
+Belanja → ikon kartu → Kartu Kredit → tap kartu → rincian tagihan;
+Investasi → "Catat Pinjaman" → Pinjaman Antar Pos). Rencana Belanja kini
+punya **tabel detail item** (kolom Item/Jumlah/Harga/Subtotal) untuk
+Minggu 1 dan untuk belanja bulanan sekali, bukan cuma total agregat.
+Ini adalah bahasa visual yang **aktif dipakai sekarang**, dipilih langsung
+oleh pemilik (lihat "Catatan pengerjaan" untuk alasan pivotnya).
 
 **Lembar token/komponen (D-1.1) dan Inti Siklus Bulanan, versi lama**
 (gaya lama, **digantikan**):
@@ -122,9 +132,15 @@ Terakhir diperbarui: 10 September 2026.
 
 - [x] **D-4.1** Rencana Belanja, gaya komik: formula roll-up
       576.600×4 minggu+762.100=Rp3.068.500 (sama dengan baris "Bulanan" di
-      dashboard), dipecah jadi 4 minggu + 1 belanja bulanan dengan tanda
-      "harga ditimpa".
+      dashboard), **tabel detail item** (Item/Jumlah/Harga/Subtotal) untuk
+      Minggu 1 (13 item) dan belanja bulanan sekali (8 item, 2 ditandai
+      "harga ditimpa"), Minggu 2–4 memakai daftar template yang sama.
       Memenuhi FR-GROC-001, FR-GROC-002, FR-GROC-003.
+      ⚠ Rincian per-item (nama, harga satuan) bersifat **contoh
+      ilustrasi** yang disusun supaya totalnya pas dengan angka roll-up
+      nyata (Rp576.600/minggu, Rp762.100 bulanan) — bukan daftar belanja
+      asli dari spreadsheet pemilik, karena data per-item tidak tercatat
+      di dokumen yang ada.
 - [x] **D-4.2** Kartu Kredit, gaya komik: CC TOKPED (Rp1.386.516, sama
       dengan dashboard) dan CC BRI TOUCH, form catat transaksi satu
       langkah.
@@ -233,3 +249,26 @@ pinjaman yang sesungguhnya tidak tercantum di dokumen yang sudah ada.
 Semua nominal lain (Rp15.839.563, Rp13.382.490, Rp3.068.500, Rp1.386.516,
 Rp3.039.563/Rp3.117.500/Rp77.937, tanggal cetak 15, tarif Rp72.500/jam)
 tetap data/nilai seed nyata yang sudah terkonfirmasi sebelumnya.
+
+**10 September 2026 (prototipe terhubung)** — Pemilik meminta tiga hal:
+(1) dashboard memakai bottom navigation bar nyata seperti aplikasi
+sungguhan, (2) desain punya flow yang benar-benar terhubung antar layar,
+(3) Rencana Belanja belum punya tabel detail item. Ketiganya ditangani
+sekaligus dengan mengganti 26 artboard statis (13 layar × gelap+terang)
+menjadi **2 artboard interaktif** (gelap+terang) — satu file per tema,
+berisi seluruh 13 layar sebagai "view" yang disembunyikan/ditampilkan
+lewat JavaScript, plus bottom nav bar 4 tab (Siklus/Pemasukan/Belanja/
+Investasi) yang sebelumnya hanya pernah dijelaskan di wireframe terpisah,
+sekarang benar-benar ada dan berfungsi di desainnya sendiri. Alur yang
+bisa dicoba: Impor Seed → Dashboard, tap baris → Sunting Baris, ikon
+siklus baru → Rollover → Kelola Template, tab Pemasukan → Catat Jam
+Kerja/Tutup Buku, tab Belanja → Kartu Kredit → rincian Tagihan, tab
+Investasi → Pinjaman Antar Pos.
+
+Navigasi diverifikasi otomatis (skrip Playwright menekan tiap tombol dan
+mengecek layar tujuan muncul) sebelum diterbitkan — bukan hanya dicek
+visual. Tabel item Rencana Belanja: lihat catatan ⚠ di D-4.1 di atas
+soal rincian per-item yang ilustratif.
+
+Yang belum: D-1.1 dan ADR-0006 (lihat catatan pivot gaya visual di atas)
+masih tertunda dengan alasan yang sama.

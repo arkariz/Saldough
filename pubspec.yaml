@@ -1,0 +1,83 @@
+name: saldough
+description: Pencatatan keuangan pribadi, pengganti sistem spreadsheet manual.
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Paket internal
+  api_storage:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: infrastructure/storage/api_storage
+      ref: api_storage-v1.1.0
+  dependencies:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: shared/dependencies
+      ref: dependencies-v1.4.0
+  di:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: shared/di
+      ref: di-v1.1.2
+  failures:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: core/failures
+      ref: failures-v2.0.2
+  hive_storage:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: infrastructure/storage/hive_storage
+      ref: hive_storage-v1.1.1
+  models:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: core/models
+      ref: models-v1.1.3
+  navigation:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: fondation/navigation
+      ref: navigation-v1.1.1
+  state_management:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: fondation/state_management
+      ref: state_management-v2.2.0
+
+  # Pihak ketiga
+  go_router: ^17.3.0
+  google_fonts: ^8.1.0
+  intl: ^0.20.2
+  slang: ^4.7.0
+  slang_flutter: ^4.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  bloc_test: ^10.0.0
+  build_runner: any
+  injectable_generator: any
+  json_serializable: any
+  mocktail: ^1.0.4
+  slang_build_runner: ^4.7.0
+  linter:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: shared/linter
+      ref: linter-v1.0.2
+  memory_storage:
+    git:
+      url: https://github.com/arkariz/advance-mobile-platform
+      path: infrastructure/storage/memory_storage
+      ref: memory_storage-v1.1.1
+
+flutter:
+  uses-material-design: true

@@ -8,8 +8,8 @@ Halaman ini adalah titik masuk. Ikuti jalur baca yang sesuai peran Anda di
 bawah.
 
 **Status proyek:** dokumentasi selesai, implementasi belum dimulai.
-**Versi dokumentasi:** 1.0
-**Terakhir diperbarui:** 9 September 2026
+**Versi dokumentasi:** 1.1
+**Terakhir diperbarui:** 10 September 2026
 
 ## Jalur baca
 
@@ -29,16 +29,19 @@ memahami produknya.
 
 ### Akan menulis kode
 
-Mulai dari arsitektur, lalu langsung ke tugas. Tiga ADR yang disebut di bawah
-menjelaskan perbedaan sadar dari repositori acuan, dan menyalin pola acuan tanpa
-membacanya akan salah.
+Mulai dari arsitektur, lalu langsung ke tugas. ADR yang disebut di bawah
+menjelaskan konvensi yang divalidasi dari repositori acuan, dan menyalin pola
+acuan tanpa membacanya akan salah — terutama karena sebagian konvensi baru
+dikonfirmasi lewat eksplorasi kedua (10 September 2026) dan membalik keputusan
+pertama.
 
 1. [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md)
 2. [Model domain](02-architecture/DOMAIN_MODEL.md) — terutama aturan
    representasi uang.
 3. [ADR-0003](02-architecture/adr/0003-effect-bloc-state-management.md),
-   [ADR-0004](02-architecture/adr/0004-typed-route-registry-navigation.md), dan
-   [ADR-0005](02-architecture/adr/0005-throw-catch-failure-convention.md)
+   [ADR-0004](02-architecture/adr/0004-typed-route-registry-navigation.md),
+   [ADR-0005](02-architecture/adr/0005-either-failure-convention.md), dan
+   [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md)
 4. [Daftar tugas](04-planning/TASK_LIST.md)
 
 ### Meninjau keputusan arsitektur
@@ -79,10 +82,12 @@ docs/
 | [0002](02-architecture/adr/0002-local-first-hive-document-storage.md) | Penyimpanan lokal berbasis dokumen dengan Hive | Accepted |
 | [0003](02-architecture/adr/0003-effect-bloc-state-management.md) | State management berbasis bloc dengan efek terdaftar | Accepted |
 | [0004](02-architecture/adr/0004-typed-route-registry-navigation.md) | Navigasi lewat registri rute bertipe | Accepted |
-| [0005](02-architecture/adr/0005-throw-catch-failure-convention.md) | Konvensi kesalahan: lempar dan tangkap | Accepted |
+| [0005](02-architecture/adr/0005-either-failure-convention.md) | Konvensi kesalahan: `Either<Failure, T>` via fpdart | Accepted (revisi) |
 | [0006](02-architecture/adr/0006-design-token-semantic-color-mapping.md) | Token desain dan pemetaan warna semantik | Accepted |
 | [0007](02-architecture/adr/0007-slang-localization.md) | Terjemahan antarmuka dengan slang | Accepted |
 | [0008](02-architecture/adr/0008-monthly-cycle-template-and-rollup.md) | Siklus bulanan: template, rollover, dan roll-up | Accepted |
+| [0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) | Struktur folder: zona core / shared / features | Accepted |
+| [0010](02-architecture/adr/0010-hand-rolled-test-fakes.md) | Konvensi pengujian: fake tulis tangan | Accepted |
 
 ## Pertanyaan yang sering muncul
 
@@ -91,9 +96,12 @@ docs/
 | Mengapa aplikasi ini dibuat? | [Analisis proses manual](00-foundation/MANUAL_PROCESS_ANALYSIS.md) |
 | Apa arti istilah "buku jam" atau "roll-up"? | [Glosarium](00-foundation/PROJECT_GLOSSARY.md) |
 | Mengapa nominal disimpan dalam satuan sen? | [Model domain](02-architecture/DOMAIN_MODEL.md), bagian aturan representasi uang |
-| Mengapa tidak memakai `Either` seperti health_duel? | [ADR-0005](02-architecture/adr/0005-throw-catch-failure-convention.md) |
-| Mengapa `flutter-architecture-studi` tidak dipakai? | [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md), bagian dasar keputusan |
+| Mengapa kesalahan dikembalikan sebagai `Either<Failure, T>`? | [ADR-0005](02-architecture/adr/0005-either-failure-convention.md) |
+| Mengapa struktur foldernya tiga zona, bukan feature-first sederhana? | [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) |
+| Mengapa `flutter-architecture-studi` (tanpa `-bank`) tidak dipakai? | [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md), bagian dasar keputusan |
+| Mengapa tidak memakai `mocktail`/`bloc_test`? | [ADR-0010](02-architecture/adr/0010-hand-rolled-test-fakes.md) |
 | Apa risiko terbesar proyek ini? | [ADR-0001](02-architecture/adr/0001-internal-package-dependency-strategy.md) |
+| Berapa nilai seed yang sudah dikonfirmasi pemilik? | [Model domain](02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |
 
 ## Konvensi penulisan

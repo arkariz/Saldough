@@ -34,6 +34,14 @@ antarmuka harus berpindah halaman dan menampilkan pesan; setelah menyimpan
 alokasi yang tidak genap 100 persen, antarmuka harus memperingatkan tanpa
 menghalangi penyimpanan.
 
+> **Catatan validasi (2026-09-10):** Referensi arsitektur Saldough kemudian
+> berganti lagi, dari `new-health-duel` ke `flutter-architecture-studi-bank`
+> (`lib/v2`) — lihat [ADR-0009](0009-core-shared-features-zone-layout.md).
+> Repo itu memakai `package:state_management` yang identik (versi tag sama)
+> secara produksi, lengkap dengan pola `BlocContext<T>` untuk state internal
+> bloc yang tidak dirender (terpisah dari `UiState` yang dirender) — keputusan
+> di bawah ini tidak berubah, hanya makin terbukti benar.
+
 ## 3. Keputusan
 
 Saldough memakai `package:state_management` versi 2.2.0 sebagai satu-satunya
@@ -167,11 +175,16 @@ Implementasi harus mengikuti kode.
 
 - [ARCHITECTURE_OVERVIEW.md](../ARCHITECTURE_OVERVIEW.md) bagian struktur fitur.
 - [ADR-0004](0004-typed-route-registry-navigation.md) untuk efek navigasi.
-- [ADR-0005](0005-throw-catch-failure-convention.md) untuk penanganan kesalahan
+- [ADR-0005](0005-either-failure-convention.md) untuk penanganan kesalahan
   di dalam bloc.
+- [ADR-0009](0009-core-shared-features-zone-layout.md) untuk struktur folder
+  yang divalidasi bersamaan dengan temuan ini.
 
 ### Rujukan kode
 
+- `flutter-architecture-studi-bank`, `lib/v2/features/auth/landing/presentation/bloc/`
+  — `UiState`/`UiEffect`/`BlocContext` dipakai persis sama di produksi,
+  termasuk pola `emit(state.withEffect(...))`.
 - `advance-mobile-platform/fondation/state_management/lib/src/base/state/ui_state.dart`
 - `advance-mobile-platform/fondation/state_management/lib/src/effect/`
 - `advance-mobile-platform/app_example/lib/features/auth/presentation/bloc/`

@@ -347,19 +347,27 @@ requirement di [PRD](../01-product/prd-saldough-1.0.md).
 | Mencatat pinjaman antar pos secara lepas, tanpa saldo pos yang terjaga. | Menyimpan pos tujuan bersaldo, dengan transaksi pinjam dan kembalikan yang memperbarui saldo. |
 | Daftar pos di bagian pinjaman tidak sinkron dengan daftar pos di bagian alokasi. | Menggunakan satu daftar pos tujuan yang dipakai bersama oleh alokasi maupun pinjaman. |
 
-## Hal yang masih perlu dikonfirmasi
+## Hal yang sudah dikonfirmasi pemilik
 
-Tiga hal tidak bisa disimpulkan dari spreadsheet dan perlu jawaban pemilik
-sebelum atau saat implementasi.
+Tiga hal yang tidak bisa disimpulkan dari spreadsheet sudah dijawab pemilik
+pada 10 September 2026. Nilai-nilai ini dipakai sebagai seed data (lihat
+[DOMAIN_MODEL.md](../02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi)),
+bukan konstanta kode — tetap bisa disunting pemilik kapan saja.
 
-- **Tarif per jam freelance.** Tidak tercatat di spreadsheet mana pun. Gaji
-  kotor tidak habis dibagi total jam dengan angka bulat, jadi tarif tidak bisa
-  disimpulkan balik dari data yang ada.
-- **Tanggal cetak tagihan tiap kartu.** Batas siklus terlihat sekitar tanggal
-  16, tetapi tidak konsisten.
-- **Daftar pos tujuan yang berlaku.** Bagian alokasi memakai enam nama tetap,
-  sedangkan bagian pinjaman memakai nama lain. Perlu dipastikan apakah keduanya
-  daftar yang sama atau memang terpisah.
+- **Tarif per jam freelance: Rp72.500.** Tidak tercatat di spreadsheet mana
+  pun, tidak bisa disimpulkan balik dari data yang ada, jadi dikonfirmasi
+  langsung.
+- **Tanggal cetak tagihan tiap kartu: tanggal 15.** Batas siklus terlihat
+  sekitar tanggal 16 di data historis, tetapi pemilik mengonfirmasi tanggal
+  resminya 15.
+- **Daftar pos tujuan: satu daftar yang sama, terbuka.** Bagian alokasi dan
+  bagian pinjaman memakai satu daftar `Goal` yang sama. Nama yang muncul di
+  bagian pinjaman pada data historis (`Travel To Japan`, `Kuliah tata`) tidak
+  ada di pos manapun saat itu — pemilik mengonfirmasi itu bukan pos resmi.
+  Kalau pinjaman semacam itu ingin dilacak formal di aplikasi, pos itu harus
+  didaftarkan dulu sebagai `Goal` baru, bukan ditulis sebagai label bebas.
+- **Saldo awal pos tujuan: 0 untuk semua pos.** Pemilik memilih tidak
+  merekonstruksi saldo historis saat data diimpor.
 
 ## Langkah berikutnya
 

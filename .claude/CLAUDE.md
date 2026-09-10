@@ -1,6 +1,6 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 9 September 2026
+**Terakhir diperbarui:** 10 September 2026
 **Fase saat ini:** Dokumentasi selesai, menunggu Fase 0 (gerbang dependensi)
 
 ## Apa ini
@@ -48,12 +48,14 @@ di-resolve. Ini gerbang: jangan memulai fase berikutnya sebelum
 | Repositori | Peran | Catatan |
 |---|---|---|
 | `arkariz/advance-mobile-platform` | Paket internal: state, navigasi, failure, storage, DI | Dipakai sebagai git dependency, dipin per tag |
-| `arkariz/new-health-duel` | Acuan struktur dan tema | Hanya dibaca, jangan diubah |
-| `arkariz/flutter-architecture-studi` | **Tidak dipakai** | `lib/v2` tidak ada; `lib/app` memakai Riverpod yang bertentangan |
+| `arkariz/flutter-architecture-studi-bank` | **Acuan struktur arsitektur** | Branch `refactor/platform-migration`, folder `lib/v2`. Hanya dibaca, jangan diubah. Jangan salin bagian legacy GetX/`mobile_dsl`-nya |
+| `arkariz/new-health-duel` | **Acuan tema saja** (bukan lagi struktur) | Hanya dibaca, jangan diubah |
+| `arkariz/flutter-architecture-studi` (tanpa `-bank`) | **Tidak dipakai** | `lib/v2` tidak ada di repo ini; `lib/app` memakai Riverpod yang bertentangan |
 
 Paket internal diambil dari `https://github.com/arkariz/advance-mobile-platform`,
 bukan dari URL SSH GitLab yang tertulis di pubspec monorepo. URL itu tidak bisa
-diakses.
+diakses. `flutter-architecture-studi-bank` memakai paket identik (nama dan versi
+tag sama) dari counterpart privatnya — ini memvalidasi pilihan paket tersebut.
 
 ## Preferensi pemilik
 
@@ -66,14 +68,22 @@ diakses.
 
 ## Aturan paling penting
 
-Tiga hal ini paling sering salah kalau pola repositori acuan disalin mentah:
+Empat hal ini paling sering salah kalau pola repositori acuan disalin mentah:
 
 1. **Uang bertipe `int` satuan sen.** Bukan `double`, dan pembulatan hanya saat
    menampilkan.
-2. **Kesalahan dilempar, bukan dibungkus `Either`.** Tangkap dengan
-   `on Failure catch`, bukan `on Exception catch`.
-3. **Mesin state dari `package:state_management`.** Jangan menyalin EffectBloc
-   lokal `new-health-duel`, jangan memakai Riverpod.
+2. **Kesalahan dikembalikan sebagai `Either<Failure, T>`** lewat
+   `RepositoryGuard`, bukan dilempar. Bloc membongkarnya dengan `switch` pada
+   `Left`/`Right`.
+3. **Mesin state dari `package:state_management`.** Jangan pakai Riverpod
+   atau GetX, dan jangan salin jembatan legacy GetX dari repo acuan
+   arsitektur — itu khusus migrasi mereka.
+4. **Struktur folder 3 zona** `core`/`shared`/`features`, bukan feature-first
+   murni.
+
+Empat nilai seed (tarif per jam, tanggal cetak kartu, saldo awal pos, dan
+desain `GoalLoan`) sudah dikonfirmasi pemilik — lihat
+`.claude/AGENT_CONTEXT.md` bagian "Nilai seed yang sudah terkonfirmasi".
 
 Aturan selengkapnya ada di `.claude/AGENT_CONTEXT.md`.
 

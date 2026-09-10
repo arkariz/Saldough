@@ -15,9 +15,18 @@ bulanan membuka rincian baris, rincian buku jam, rincian siklus tagihan kartu,
 dan rincian pos tujuan. Sebagian besar perpindahan itu membawa argumen, misalnya
 identitas siklus atau identitas kartu.
 
-Repositori referensi arsitektur, `new-health-duel`, memakai `go_router` langsung
-dengan konstanta string di kelas `AppRoutes`, ditambah fungsi pembentuk jalur
-seperti `duelPath(String id)`. Argumen dikirim sebagai bagian jalur.
+Repositori yang menjadi referensi arsitektur saat keputusan ini pertama dibuat,
+`new-health-duel`, memakai `go_router` langsung dengan konstanta string di
+kelas `AppRoutes`, ditambah fungsi pembentuk jalur seperti
+`duelPath(String id)`. Argumen dikirim sebagai bagian jalur.
+
+> **Catatan validasi (2026-09-10):** Referensi arsitektur Saldough kemudian
+> berganti ke `flutter-architecture-studi-bank` (`lib/v2`). Pola yang dipilih
+> di bawah — `FeatureRouteModule`, `RouteNode.typed<Input>`, `DevEntry` untuk
+> menu pengembang — ternyata persis yang dipakai repo itu di produksi,
+> termasuk konvensi mengambil `ScopeProvider.of(context)` sebelum
+> `ScopeWidget` disisipkan. Keputusan ini tidak berubah, hanya makin
+> terbukti benar.
 
 Pemilik meminta paket internal `navigation` dipakai. Paket itu menyediakan
 lapisan yang tidak bergantung pada vendor router: `RouteKey<TInput>`,

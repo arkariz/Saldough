@@ -303,9 +303,12 @@ tertinggal.
 
 **FR-INV-001 — Mengelola pos tujuan**
 
-- [ ] Membuat, menyunting, dan menonaktifkan pos tujuan.
+- [ ] Membuat, menyunting, dan menonaktifkan pos tujuan. Daftar pos terbuka —
+      tidak dibatasi enam nama bawaan (ANAK, RUMAH, PENSIUN, SEKOLAH, KYOTO,
+      SAHAM), pemilik bisa menambah pos baru kapan saja.
 - [ ] Menyimpan saldo awal tiap pos.
-- [ ] Memakai satu daftar pos yang sama untuk alokasi maupun pinjaman.
+- [ ] Memakai satu daftar pos yang sama untuk alokasi maupun pinjaman — tidak
+      ada daftar pos kedua yang terpisah untuk pinjaman.
 
 **FR-INV-002 — Alokasi persentase**
 
@@ -402,14 +405,16 @@ dikirim ke mana pun pada MVP.
 Rincian lengkapnya ada di
 [ARCHITECTURE_OVERVIEW.md](../02-architecture/ARCHITECTURE_OVERVIEW.md).
 
-- **Aplikasi:** Flutter, Clean Architecture berbasis fitur, mengikuti struktur
-  proyek `new-health-duel`.
+- **Aplikasi:** Flutter, Clean Architecture tiga zona (`core`/`shared`/`features`),
+  mengikuti struktur `flutter-architecture-studi-bank` (`lib/v2`).
 - **State:** pola bloc dengan efek sekali jalan dari `package:state_management`.
 - **Penyimpanan:** Hive lewat `package:api_storage` dan `package:hive_storage`.
 - **Navigasi:** registri rute bertipe dari `package:navigation` di atas
   `go_router`.
-- **Kesalahan:** `package:failures` dengan konvensi lempar dan tangkap.
+- **Kesalahan:** `Either<Failure, T>` dari fpdart (`package:dependencies`),
+  dengan mixin `RepositoryGuard`.
 - **Terjemahan:** slang dengan bahasa dasar Indonesia dan tambahan Inggris.
+- **Tema:** tetap dari `new-health-duel`, dipetakan ulang ke konteks keuangan.
 - **Backend:** tidak ada pada MVP.
 
 ## 10. Prinsip antarmuka
@@ -435,7 +440,6 @@ warnanya tanpa perlu membuka detail.
 | Risiko | Dampak | Kemungkinan | Mitigasi |
 |---|---|---|---|
 | Paket internal gagal di-resolve karena menyatakan `resolution: workspace` | Tinggi | Sedang | Diuji lebih dulu sebagai gerbang di Fase 0. Kalau gagal, dorong branch kompatibilitas di `advance-mobile-platform`. Lihat [ADR-0001](../02-architecture/adr/0001-internal-package-dependency-strategy.md). |
-| Tarif per jam freelance tidak diketahui | Sedang | Pasti | Dikonfirmasi ke pemilik sebelum Fase 3. Sementara diperlakukan sebagai nilai yang dikonfigurasi. |
 | Hasil hitung meleset dari spreadsheet | Tinggi | Rendah | Aritmatika integer sen, ditambah uji unit memakai angka nyata. |
 | Batas siklus tagihan kartu tidak konsisten | Rendah | Sedang | Siklus bisa disunting manual, tidak semata mengikuti tanggal cetak. |
 | Hive kurang memadai saat data tumbuh | Sedang | Rendah | Akses data lewat antarmuka repository sehingga mesin penyimpanan bisa diganti tanpa menyentuh domain. Lihat [ADR-0002](../02-architecture/adr/0002-local-first-hive-document-storage.md). |
@@ -454,11 +458,12 @@ warnanya tanpa perlu membuka detail.
 
 ## 13. Pertanyaan terbuka
 
-- Berapa tarif per jam yang berlaku pada sumber `Gaji Menul`?
-- Tanggal berapa tagihan tiap kartu dicetak?
-- Apakah pos di bagian pinjaman, seperti `Travel To Japan` dan `Kuliah tata`,
-  adalah pos yang sama dengan enam pos di bagian alokasi, atau daftar terpisah?
-- Berapa saldo awal tiap pos tujuan saat data historis diimpor?
+Seluruh pertanyaan dari versi dokumen sebelumnya sudah terjawab pemilik pada
+10 September 2026 — lihat [DOMAIN_MODEL.md bagian "Nilai seed
+terkonfirmasi"](../02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi)
+untuk nilainya (tarif per jam Rp72.500, tanggal cetak tagihan kartu 15, saldo
+awal pos 0, dan keputusan bahwa `GoalLoan` hanya merujuk `Goal` terdaftar
+dengan daftar yang terbuka). Tidak ada pertanyaan terbuka lagi pada MVP.
 
 ## 14. Lampiran
 

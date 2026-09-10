@@ -13,29 +13,39 @@ Dokumen ini memuat aturan arsitektur yang mengikat. Alasannya ada di
 | 2 | [DOMAIN_MODEL.md](../docs/02-architecture/DOMAIN_MODEL.md) | Entitas, rumus, dan aturan representasi uang |
 | 3 | [TASK_LIST.md](../docs/04-planning/TASK_LIST.md) | Tugas yang sedang dikerjakan |
 
-## Tiga jebakan terbesar
+## Empat jebakan terbesar
 
-Repositori acuan arsitektur, `new-health-duel`, berbeda dari Saldough di tiga
-titik. Menyalin polanya tanpa menyadari ini akan salah.
+Referensi arsitektur Saldough adalah `arkariz/flutter-architecture-studi-bank`
+(branch `refactor/platform-migration`, folder `lib/v2`) — bukan
+`new-health-duel` (yang kini hanya acuan tema) dan bukan
+`flutter-architecture-studi` tanpa `-bank` (tidak dipakai sama sekali, `lib/v2`
+di situ tidak ada, `lib/app` yang ada memakai Riverpod).
 
-| Hal | `new-health-duel` | **Saldough** |
+| Jebakan | Kesalahan yang mudah terjadi | Yang benar untuk Saldough |
 |---|---|---|
-| Kesalahan | `Either<Failure, T>` dengan `dartz` | `throw Failure`, tangkap dengan `on Failure catch` |
-| Efek bloc | Kelas EffectBloc lokal | `package:state_management` |
-| Navigasi | Konstanta string `AppRoutes` | `RouteKey` bertipe dari `package:navigation` |
+| Kesalahan | Menyalin asumsi versi dokumen lama: `throw Failure` + `on Failure catch` | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard`. Lihat [ADR-0005](../docs/02-architecture/adr/0005-either-failure-convention.md) |
+| Bagian legacy repo acuan | Menyalin `ArchitectureBride*`, seam `Get.find()`/`Get.put()`, `getx_nav_effect_handler` | Saldough greenfield: `main()` → `runApp()` langsung, tanpa jembatan apa pun. Itu khusus migrasi GetX mereka |
+| Design system repo acuan | Menyalin atau mencoba mengakses `mobile_dsl` (privat, tak bisa diakses) | Tema tetap dari `new-health-duel` ([ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md)) |
+| Ejaan | Meniru typo `fondation`, `architecture_bride` dari repo acuan | Saldough pakai ejaan baku: `foundation/` |
 
-Repositori `flutter-architecture-studi` **tidak dipakai sama sekali**. Folder
-`lib/v2` yang pernah disebut tidak ada, dan `lib/app` memakai Riverpod yang
-bertentangan dengan paket state internal.
+Struktur folder memakai tiga zona `core/`/`shared/<module>/`/`features/<feature>/`,
+bukan feature-first murni — lihat
+[ADR-0009](../docs/02-architecture/adr/0009-core-shared-features-zone-layout.md).
 
 ## Aturan yang mengikat
 
-### Lapisan
+### Lapisan dan zona
 
 - Lapisan `domain` **tidak boleh** mengimpor Flutter, Hive, atau
   `api_storage`. Dart murni saja.
 - Lapisan `presentation` **tidak boleh** mengimpor lapisan `data`. Keduanya
   bertemu di `domain` lewat antarmuka repository.
+- `core/` **tidak pernah** berisi entitas bisnis — hanya infra tanpa makna
+  domain (DI, navigasi, effect handler, tema, pemformat, `RepositoryGuard`).
+- `shared/<module>/` diimpor hanya lewat barrel-nya (`<module>.dart`), tidak
+  pernah lewat jalur berkas di dalamnya. Disusun module-first
+  (`domain/`+`data/`), **tanpa `presentation/`** kecuali dicatat eksplisit
+  sebagai pengecualian di ADR.
 - Impor antar fitur hanya lewat `<fitur>_route_keys.dart`. Jangan pernah
   mengimpor berkas halaman fitur lain.
 - Seluruh impor memakai `package:saldough/...`. Impor relatif hanya boleh di
@@ -55,15 +65,18 @@ terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
 
 ### Kesalahan
 
-- Repository dan use case mengembalikan `Future<T>`, bukan
-  `Future<Either<Failure, T>>`.
-- Kegagalan dilempar sebagai turunan `Failure`.
-- Penangkapan memakai `on Failure catch`. **`on Exception catch` tidak akan
-  menangkapnya**, karena `Failure` bukan turunan `Exception`.
-- Setiap penangan event bloc yang menyentuh repository wajib punya
+- Repository dan use case mengembalikan `Future<Either<Failure, T>>`, **bukan**
+  `Future<T>` polos dan **bukan** melempar `Failure`.
+- Implementasi repository memakai `with RepositoryGuard` dan memanggil
+  `guard()`/`guardVoid()` — jangan menulis `try`/`catch` manual.
+- Bloc membongkar hasilnya dengan `switch` pada `Left`/`Right`, bukan
   `on Failure catch`.
+- Impor `Either`/`left`/`right`/`unit` dari `package:dependencies`, bukan
+  langsung dari `package:fpdart`.
 - Pesan untuk pengguna diambil dari `failure.userMessage`, tidak pernah dari
   `failure.message`.
+- Lihat [ADR-0005](../docs/02-architecture/adr/0005-either-failure-convention.md)
+  untuk contoh lengkap `RepositoryGuard` dan alasan kebalikan keputusan ini.
 
 ### State
 
@@ -94,13 +107,18 @@ terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
 ## Yang TIDAK boleh dilakukan
 
 - Memakai Riverpod, Provider, atau GetX.
-- Memakai `Either`, `dartz`, atau `fpdart`.
 - Memakai `freezed`. Monorepo internal tidak memakainya di mana pun.
-- Menyalin kelas dasar EffectBloc dari `new-health-duel`.
+- Memakai `mocktail` atau `bloc_test`. Pakai fake tulis tangan — lihat
+  [ADR-0010](../docs/02-architecture/adr/0010-hand-rolled-test-fakes.md).
+- Menyalin `ArchitectureBride*`, seam `Get.find()`, atau `mobile_dsl` dari
+  repo acuan arsitektur — itu spesifik migrasi legacy mereka.
 - Mengimpor Flutter di lapisan domain.
+- Meletakkan entitas bisnis di `core/`.
 - Memakai `double` untuk nominal uang.
 - Menyunting nominal baris roll-up secara langsung.
 - Menyalin nominal baris roll-up saat rollover.
+- Menulis `GoalLoan` dengan label bebas — `fromGoalId`/`toGoalId` harus
+  merujuk `Goal` yang sudah terdaftar.
 - Mengubah branch `main` di repositori manapun.
 - Melanjutkan pekerjaan saat terhambat. Berhenti dan laporkan.
 
@@ -117,6 +135,18 @@ terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
 - Centang hanya kalau benar-benar selesai dan terverifikasi. Pekerjaan sebagian
   tetap kosong disertai catatan.
 
+## Nilai seed yang sudah terkonfirmasi (jangan tanya ulang)
+
+Empat hal ini sudah dijawab pemilik pada 10 September 2026 — jangan tanya
+ulang, langsung pakai nilainya sebagai data seed (bukan konstanta kode):
+
+| Nilai | Field | Seed |
+|---|---|---|
+| Tarif per jam `Gaji Menul` | `IncomeSource.hourlyRate` | Rp72.500 |
+| Tanggal cetak tagihan kartu | `CreditCard.statementDayOfMonth` | 15 |
+| Saldo awal tiap pos tujuan | `Goal.openingBalance` | 0 |
+| Daftar pos untuk `GoalLoan` | `fromGoalId`/`toGoalId` | Pos resmi terdaftar saja, daftar terbuka (bukan label bebas) |
+
 ## Kapan harus berhenti dan bertanya
 
 Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
@@ -124,13 +154,10 @@ Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
 - `flutter pub get` gagal karena `resolution: workspace` pada paket internal.
   Ini gerbang Fase 0 dan sudah punya jalur pemulihan tertulis di
   [ADR-0001](../docs/02-architecture/adr/0001-internal-package-dependency-strategy.md).
-- Butuh tarif per jam `Gaji Menul`. Tidak tercatat di spreadsheet mana pun.
-- Butuh tanggal cetak tagihan tiap kartu.
-- Butuh saldo awal pos tujuan.
-- Perlu memastikan apakah pos di bagian pinjaman sama dengan pos di bagian
-  alokasi.
 - Hasil hitung berbeda dari spreadsheet. Cari akarnya di aturan pembulatan lebih
   dulu, dan jangan mengubah rumusnya sampai penyebabnya jelas.
+- Menemukan konvensi di repo acuan yang belum terdokumentasi di ADR manapun
+  dan berdampak signifikan pada kode yang sedang ditulis.
 
 ## Kasus uji wajib
 

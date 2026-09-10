@@ -70,7 +70,8 @@ docs/
 │   └── adr/
 └── 04-planning/               # urutan dan progres
     ├── ROADMAP.md
-    └── TASK_LIST.md
+    ├── TASK_LIST.md
+    └── UI_UX_DESIGN_TASKS.md
 ```
 
 ## Daftar ADR
@@ -102,6 +103,7 @@ docs/
 | Mengapa pengujian memakai `mocktail`/`bloc_test` padahal repo acuan tidak? | [ADR-0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) |
 | Apa risiko terbesar proyek ini? | [ADR-0001](02-architecture/adr/0001-internal-package-dependency-strategy.md) |
 | Berapa nilai seed yang sudah dikonfirmasi pemilik? | [Model domain](02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi) |
+| Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |
 
 ## Konvensi penulisan

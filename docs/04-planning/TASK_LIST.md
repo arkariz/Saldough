@@ -3,7 +3,9 @@
 Dokumen ini adalah daftar kerja Saldough beserta status penyelesaiannya.
 Perbarui kotak centang di sini setiap kali sebuah tugas selesai.
 
-Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md).
+Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md). Untuk
+pekerjaan desain visual per fase — yang selesai lebih dulu daripada kode —
+lihat [UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
 
 ## Cara memakai dokumen ini
 
@@ -66,6 +68,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 **Hasil galat T-0.3:** belum dijalankan.
 
 ## Fase 1: Fondasi
+
+*Desain: [D-1.1](UI_UX_DESIGN_TASKS.md#fase-1-sistem-desain).*
 
 ### Tema dan token
 
@@ -134,6 +138,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
 ## Fase 2: Siklus bulanan
 
+*Desain: [D-2.1 sampai D-2.4](UI_UX_DESIGN_TASKS.md#fase-2-siklus-bulanan).*
+
 ### Domain
 
 - [ ] **T-2.1** Buat entitas `MonthlyCycle`, `IncomeLine`, dan `BudgetLine`
@@ -193,6 +199,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
 ## Fase 3: Pemasukan dan timesheet
 
+*Desain: [D-3.1 sampai D-3.3](UI_UX_DESIGN_TASKS.md#fase-3-pemasukan-dan-timesheet).*
+
 - [ ] **T-3.1** Buat entitas `IncomeSource` dengan tiga tipe dan
       `DeductionRule` dengan dua tipe.
       ⚠ Tarif per jam `Gaji Menul` adalah data (`hourlyRate`), bukan konstanta
@@ -227,6 +235,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
       Memenuhi FR-TIME-004.
 
 ## Fase 4: Roll-up
+
+*Desain: [D-4.1 sampai D-4.3](UI_UX_DESIGN_TASKS.md#fase-4-roll-up).*
 
 ### Belanja
 
@@ -275,6 +285,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
 ## Fase 5: Investasi
 
+*Desain: [D-5.1 sampai D-5.2](UI_UX_DESIGN_TASKS.md#fase-5-investasi).*
+
 - [ ] **T-5.1** Buat entitas `Goal` dengan saldo awal (seed: 0 untuk semua
       pos), dipakai bersama oleh alokasi maupun pinjaman lewat `shared/goal/`
       (T-1.13). Daftar pos terbuka — tidak dibatasi enam nama bawaan.
@@ -302,6 +314,8 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
       Memenuhi FR-INV-005.
 
 ## Fase 6: Seed
+
+*Desain: [D-6.1](UI_UX_DESIGN_TASKS.md#fase-6-seed).*
 
 - [ ] **T-6.1** Susun berkas seed dari data spreadsheet November 2025 sampai
       September 2026.

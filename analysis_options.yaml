@@ -5,9 +5,9 @@
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
+# Aturan lint baku repo, dari package:linter (monorepo advance-mobile-platform),
+# yang sendirinya memakai very_good_analysis. Lihat TASK_LIST.md T-0.5.
+include: package:linter/analysis_options.yaml
 
 analyzer:
   exclude:

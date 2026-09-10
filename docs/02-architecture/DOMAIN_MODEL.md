@@ -164,6 +164,11 @@ Aturan yang berlaku hari ini pada `Gaji Menul`: pajak sebesar 2,5% sebagai
 potongan persentase, ditambah potongan bernominal tetap yang muncul sesekali
 seperti `jajan` dan `webinar` senilai Rp150.000.
 
+**Nilai `hourlyRate` terkonfirmasi pemilik: Rp72.500.** Ini adalah data yang
+tersimpan di `IncomeSource`, bukan konstanta kode — pemilik bisa mengubahnya
+kapan saja lewat antarmuka. Nilai ini dipakai sebagai seed Fase 6, bukan nilai
+bawaan terprogram.
+
 ### Catatan jam dan buku jam
 
 `WorkLogEntry` merekam satu hari kerja.
@@ -260,6 +265,11 @@ menolak data nyata pemilik.
 cardRollUp = Σ statement.transactions.amount
 ```
 
+**Nilai `statementDayOfMonth` terkonfirmasi pemilik: tanggal 15**, berlaku
+sebagai nilai seed untuk kartu yang diimpor di Fase 6. Sama seperti
+`hourlyRate`, ini data pada `CreditCard`, bukan konstanta kode — tiap kartu
+boleh punya tanggal cetak berbeda dan pemilik bisa mengubahnya.
+
 `CardTransaction` punya field `note` terpisah dari `merchant`. Di spreadsheet,
 kolom merchant dipakai menampung catatan seperti `PT Tokopedia cicilan 1` dan
 `ulanzi tripod canceled?`. Memisahkan keduanya menjaga nama merchant tetap
@@ -314,10 +324,20 @@ Contoh nyata: pinjaman pokok Rp9.300.000 dikembalikan Rp9.331.000, selisih
 Rp31.000.
 
 Enam pos yang berlaku hari ini adalah `ANAK`, `RUMAH`, `PENSIUN`, `SEKOLAH`,
-`KYOTO`, dan `SAHAM`. Nama pos disimpan sebagai data, bukan enum, supaya pemilik
-bisa menambah pos tanpa mengubah kode. Ini juga menutup ketidaksinkronan di
-spreadsheet, di mana bagian pinjaman memakai nama pos berbeda seperti
-`Travel To Japan` dan `Kuliah tata`.
+`KYOTO`, dan `SAHAM` — **ini bukan daftar tertutup.** Nama pos disimpan sebagai
+data, bukan enum, dan FR-INV-001 sudah mengizinkan pemilik menambah pos baru
+kapan saja. `GoalLoan` hanya boleh merujuk `Goal` yang benar-benar terdaftar
+(lihat invarian di bawah) — ini keputusan sadar, bukan kelonggaran: kalau
+pemilik ingin melacak formal pinjaman semacam contoh lama di spreadsheet
+(`Travel To Japan`, `Kuliah tata`, yang saat itu tidak ada di pos manapun),
+langkahnya adalah mendaftarkan keduanya sebagai `Goal` baru lebih dulu
+(dengan `openingBalance` default 0), bukan menulis label bebas di `GoalLoan`.
+Ini menutup ketidaksinkronan yang ada di spreadsheet, di mana bagian pinjaman
+dan bagian alokasi memakai dua daftar nama yang berbeda.
+
+**Nilai `openingBalance` terkonfirmasi pemilik: 0 untuk seluruh pos**, berlaku
+sebagai nilai seed Fase 6. Pemilik memilih tidak merekonstruksi saldo historis
+pos tujuan saat ini.
 
 ## Template dan rollover
 
@@ -358,17 +378,23 @@ Aturan berikut harus dijaga model dan diuji.
 | Seluruh nominal bertipe `int` dalam sen. | Menjaga hasil hitung sama persis dengan spreadsheet. |
 | `goalId` pada alokasi dan pinjaman harus menunjuk `Goal` yang ada. | Mencegah ketidaksinkronan daftar pos seperti di spreadsheet. |
 
-## Nilai yang belum dipastikan
+## Nilai seed terkonfirmasi
 
-Tiga nilai tidak bisa disimpulkan dari spreadsheet dan harus dikonfirmasi
-pemilik saat implementasi:
+Tiga nilai yang semula tidak bisa disimpulkan dari spreadsheet sudah
+dikonfirmasi pemilik pada 10 September 2026. Ketiganya adalah **data seed**,
+bukan konstanta kode — field yang menampungnya (`hourlyRate`,
+`statementDayOfMonth`, `openingBalance`) tetap bisa disunting pemilik kapan
+saja lewat antarmuka.
 
-- **`hourlyRate` pada `Gaji Menul`.** Tidak tercatat, dan tidak bisa disimpulkan
-  balik karena gaji kotor tidak habis dibagi total jam dengan angka bulat.
-- **`statementDayOfMonth` tiap kartu.** Batas siklus terlihat sekitar tanggal 16
-  tetapi tidak konsisten.
-- **`openingBalance` tiap pos tujuan.** Diperlukan supaya saldo pos benar sejak
-  data historis diimpor.
+| Nilai | Field | Seed |
+|---|---|---|
+| Tarif per jam `Gaji Menul` | `IncomeSource.hourlyRate` | Rp72.500 |
+| Tanggal cetak tagihan kartu | `CreditCard.statementDayOfMonth` | 15 |
+| Saldo awal tiap pos tujuan | `Goal.openingBalance` | 0 |
+
+Satu hal terkait lain yang juga sudah diputuskan: `GoalLoan` hanya merujuk
+`Goal` yang terdaftar, dengan daftar `Goal` yang terbuka — lihat bagian
+"Pos tujuan dan pinjaman" di atas.
 
 ## Langkah berikutnya
 

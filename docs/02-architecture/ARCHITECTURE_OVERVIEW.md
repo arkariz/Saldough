@@ -10,28 +10,48 @@ menjelaskan alasannya; tautannya disebutkan di tempatnya masing-masing.
 
 ## Dasar keputusan
 
-Saldough menggabungkan dua sumber acuan yang berbeda perannya.
+Saldough menggabungkan tiga sumber acuan dengan peran berbeda.
 
-**Struktur** diambil dari `new-health-duel`: Clean Architecture berbasis fitur,
-tiga lapisan, modul dependensi per fitur, dan susunan lapisan tema.
+**Struktur dan mesin runtime** diambil dari
+`arkariz/flutter-architecture-studi-bank` (branch `refactor/platform-migration`,
+folder `lib/v2`) — aplikasi mobile banking produksi yang memakai paket
+**mobile-platform** dari GitLab privat, counterpart persis dari
+`arkariz/advance-mobile-platform` (GitHub publik) yang dikonsumsi Saldough.
+Nama paket dan versi tag-nya identik (`failures-v2.0.2`,
+`state_management-v2.2.0`, `navigation-v1.1.1`, `di-v1.1.2`, dst.), sehingga
+konvensi yang divalidasi di sana berlaku langsung untuk Saldough: tiga zona
+folder `core`/`shared`/`features` ([ADR-0009](adr/0009-core-shared-features-zone-layout.md)),
+`Either<Failure, T>` untuk kesalahan ([ADR-0005](adr/0005-either-failure-convention.md)),
+efek bloc lewat `package:state_management` ([ADR-0003](adr/0003-effect-bloc-state-management.md)),
+dan navigasi lewat `package:navigation` ([ADR-0004](adr/0004-typed-route-registry-navigation.md)).
 
-**Mesin runtime** diambil dari paket internal `arkariz/advance-mobile-platform`
-sesuai permintaan pemilik: state, navigasi, kesalahan, penyimpanan, dan injeksi
-dependensi.
+**Tema** tetap diambil dari `arkariz/new-health-duel`
+([ADR-0006](adr/0006-design-token-semantic-color-mapping.md)) — repo
+acuan arsitektur memakai `mobile_dsl`, design system privat yang tidak bisa
+diakses, sehingga perannya di Saldough terbatas pada struktur kode, bukan
+tampilan.
 
-Penggabungan ini menimbulkan tiga perbedaan sadar dari `new-health-duel`.
-Ketiganya wajib diketahui sebelum menulis kode, karena menyalin pola
-`new-health-duel` mentah-mentah akan salah di tiga titik ini.
+Repositori `flutter-architecture-studi` (tanpa `-bank`) **tidak** dipakai.
+Folder `lib/v2` yang semula disebut tidak ada di repositori itu — yang ada
+`lib/app`, memakai Riverpod, bertentangan dengan `package:state_management`.
 
-| Hal | `new-health-duel` | **Saldough** | Alasan |
-|---|---|---|---|
-| Kesalahan | `Either<Failure, T>` dengan `dartz` | `throw Failure` dan `on Failure catch` | [ADR-0005](adr/0005-throw-catch-failure-convention.md) |
-| Efek bloc | Kelas EffectBloc lokal | `package:state_management` | [ADR-0003](adr/0003-effect-bloc-state-management.md) |
-| Navigasi | Konstanta string di atas `go_router` | Registri rute bertipe `package:navigation` | [ADR-0004](adr/0004-typed-route-registry-navigation.md) |
+### Bagian repo acuan yang sengaja TIDAK disalin
 
-Repositori `flutter-architecture-studi` **tidak** dipakai sebagai acuan. Folder
-`lib/v2` yang semula disebut tidak ada di repositori itu, dan `lib/app` yang ada
-memakai Riverpod sehingga bertentangan dengan `package:state_management`.
+`flutter-architecture-studi-bank` sedang migrasi dari GetX legacy ke stack ini
+(pola *Strangler Fig*). Saldough greenfield tidak punya legacy, sehingga
+bagian berikut tidak relevan dan tidak disalin dalam bentuk apa pun:
+
+| Bagian repo acuan | Kenapa tidak disalin |
+|---|---|
+| `ArchitectureBride*`, seam `Get.find()`/`Get.put()` | Jembatan boot dari GetX legacy ke shell v2 — Saldough tidak punya legacy untuk dijembatani |
+| `getx_nav_effect_handler`, `StartupDestination` legacy | Spesifik migrasi, tidak ada "legacy" di Saldough |
+| `mobile_dsl` | Design system privat mereka — tema Saldough dari `new-health-duel` |
+| Ejaan `fondation`, `architecture_bride` | Typo konsisten di repo mereka — Saldough pakai ejaan baku `foundation/` |
+
+Yang dipertahankan dari urutan boot mereka hanyalah **urutannya**: pasang
+`Bloc.observer` → jalankan `di.run()` → daftarkan effect handler → render
+router → jalankan `di.warmUp()` setelah frame pertama. Saldough tetap
+`main()` → `runApp()` langsung, tanpa jembatan apa pun.
 
 ## Lapisan
 
@@ -61,6 +81,12 @@ Lapisan `presentation` tidak pernah mengimpor `data`. Keduanya bertemu di
 
 ## Struktur folder
 
+Saldough memakai tiga zona tidak tumpang tindih — `core/`, `shared/<module>/`,
+`features/<feature>/` — sesuai [ADR-0009](adr/0009-core-shared-features-zone-layout.md).
+Ini mengganti asumsi feature-first sederhana dari rencana awal, yang tidak
+punya jawaban untuk di mana entitas lintas fitur (seperti `Goal`) seharusnya
+tinggal.
+
 ```
 saldough/
 ├── assets/
@@ -70,16 +96,18 @@ saldough/
 ├── lib/
 │   ├── main.dart                         # bootstrap dua fase
 │   ├── app.dart                          # MaterialApp.router
-│   ├── core/
+│   ├── core/                             # infra lintas fitur, TANPA makna bisnis
 │   │   ├── di/
 │   │   │   ├── di.dart                   # DiBoot
 │   │   │   └── src/{app_injectable.dart, root_module.dart}
-│   │   ├── effect_handler/
-│   │   │   ├── app_effect_registry.dart
-│   │   │   └── src/{nav_effect_handler.dart, feedback_effect_handler.dart}
-│   │   ├── navigation/
-│   │   │   ├── app_route_registry.dart
-│   │   │   └── route_node_go_router_ext.dart
+│   │   ├── foundation/
+│   │   │   ├── effect_handler/
+│   │   │   │   ├── app_effect_registry.dart
+│   │   │   │   └── src/{nav_effect_handler.dart, snackbar_effect_handler.dart, dialog_effect_handler.dart}
+│   │   │   ├── navigation/
+│   │   │   │   ├── app_route_registry.dart
+│   │   │   │   └── route_node_go_router_ext.dart
+│   │   │   └── repository_guard.dart     # mixin RepositoryGuard — lihat ADR-0005
 │   │   ├── storage/
 │   │   │   ├── app_storage.dart
 │   │   │   └── app_storage_keys.dart
@@ -91,26 +119,33 @@ saldough/
 │   │   ├── presentation/widgets/         # AppCard, AppButton, AppChip, AppMoneyText
 │   │   ├── utils/formatters/             # pemformat uang dan tanggal
 │   │   └── i18n/                         # keluaran slang
-│   └── features/
+│   ├── shared/                           # kapabilitas dipakai ≥2 fitur, module-first
+│   │   └── goal/
+│   │       ├── goal.dart                 # barrel — satu-satunya jalur impor ke modul ini
+│   │       ├── domain/{goal.dart, goal_repository.dart}
+│   │       └── data/{goal_model.dart, goal_repository_impl.dart}
+│   └── features/                         # graf milik satu fitur
 │       ├── cycle/                        # siklus bulanan
 │       ├── income/                       # sumber pemasukan
 │       ├── worklog/                      # timesheet dan buku jam
 │       ├── grocery/                      # rencana belanja
 │       ├── card/                         # kartu kredit
-│       ├── investment/                   # pos tujuan dan alokasi
+│       ├── investment/                   # alokasi & pinjaman antar pos (konsumen shared/goal)
 │       └── seed/                         # impor data historis
 └── test/
+    ├── shared/                           # cermin struktur lib/shared
     └── features/                         # cermin struktur lib/features
 ```
 
-Setiap fitur punya susunan yang sama:
+Setiap `features/<feature>/` punya susunan internal yang sama — `domain/`
+dan `data/` privat (tidak diimpor fitur lain), `presentation/`, dan `di/`:
 
 ```
 features/cycle/
 ├── data/
 │   ├── models/           # model serialisasi dengan fromJson dan toJson
 │   ├── datasources/      # akses Hive
-│   └── repositories/     # implementasi antarmuka domain
+│   └── repositories/     # implementasi antarmuka domain, with RepositoryGuard
 ├── di/
 │   └── cycle_scope.dart  # IsolatedScope
 ├── domain/
@@ -129,6 +164,31 @@ features/cycle/
     ├── pages/
     └── widgets/
 ```
+
+`shared/<module>/` (lihat `shared/goal/` di atas) disusun module-first —
+`domain/` + `data/` di balik satu barrel, **tanpa `presentation/`** — dan
+diimpor fitur lain hanya lewat barrel itu, tidak pernah lewat jalur berkas di
+dalamnya.
+
+## Cara memilih pola DI
+
+Repo acuan punya *decision tree* eksplisit untuk empat situasi yang berbeda.
+Saldough memakainya langsung:
+
+| Yang didaftarkan | Pola | Contoh Saldough |
+|---|---|---|
+| Bloc screen-local, tanpa dependensi repository | `BlocProvider.create()` di level rute | Bloc formulir sederhana yang tidak menyentuh penyimpanan |
+| Singleton app-wide, kelas sendiri, ctor sinkron | `@LazySingleton(as: Interface)` langsung — **default** | `AppMoneyFormatter`, layanan lokal tanpa dependensi async |
+| Tipe pihak ketiga / async / `@Named` | Factory method di kelas `@module` | `HiveKeyValueStorage.initialize(...)` di `RootModule` |
+| Graf milik satu fitur, dependensi induk perlu dibatasi, atau ada urutan async | `IsolatedScope` di `features/<fitur>/di/<fitur>_scope.dart` | `CycleScope`, `InvestmentScope` |
+
+Heuristik satu baris: **`shared/` → root injectable · `features/` → scope ·
+bloc screen-local → route provider.**
+
+`IsolatedScope` punya tiga hook berurutan dan mengikat — lihat contoh lengkap
+di bagian "Injeksi dependensi" di bawah: `bridge()` (whitelist dependensi
+induk satu per satu) → `register()` (wiring lokal) → `afterInit()` (urutan
+async, tidak pernah mendaftar dependensi baru).
 
 ## Pemetaan paket
 
@@ -157,6 +217,12 @@ tetapi jangan memaksakan pemakaiannya.
 
 `api_network` dan `dio_network` **tidak** dipakai pada MVP karena tidak ada
 backend. Keduanya masuk pada tahap sinkronisasi.
+
+`dependencies` kini benar-benar dipakai, bukan cuma terpasang: paket ini
+mengekspor ulang `fpdart`, sumber `Either`/`left`/`right`/`unit` yang dipakai
+di seluruh repository dan bloc sejak [ADR-0005](adr/0005-either-failure-convention.md).
+Impor selalu lewat `package:dependencies/dependencies.dart`, tidak langsung
+dari `package:fpdart`.
 
 ## Rantai alat
 
@@ -242,11 +308,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  bloc_test: ^10.0.0
   build_runner: any
   injectable_generator: any
   json_serializable: any
-  mocktail: ^1.0.4
   slang_build_runner: ^4.7.0
   linter:
     git:
@@ -271,7 +335,8 @@ karena resolusi bisa menuntut penyesuaian.
 ## Bootstrap
 
 Aplikasi dimulai dalam dua fase, mengikuti pola `DiBoot` dari `package:di` dan
-pola dua tahap `new-health-duel`.
+urutan boot yang divalidasi di `flutter-architecture-studi-bank` (minus
+jembatan legacy GetX mereka — lihat bagian "Dasar keputusan").
 
 Fase pertama ditunggu sebelum `runApp`, berisi hal yang dibutuhkan bingkai
 pertama: penyimpanan, tema, terjemahan, dan router. Fase kedua berjalan setelah
@@ -319,13 +384,13 @@ Entitas adalah Dart murni dengan `Equatable`, tanpa `freezed`. Monorepo internal
 tidak memakai `freezed` di mana pun, jadi Saldough mengikutinya.
 
 Antarmuka repository memakai `abstract interface class` dan mengembalikan
-tipe hasilnya langsung, bukan `Either`.
+`Future<Either<Failure, T>>` — lihat [ADR-0005](adr/0005-either-failure-convention.md).
 
 ```dart
 abstract interface class CycleRepository {
-  Future<MonthlyCycle> getCycle(String id);
-  Future<List<String>> listCycleIds();
-  Future<void> saveCycle(MonthlyCycle cycle);
+  Future<Either<Failure, MonthlyCycle>> getCycle(String id);
+  Future<Either<Failure, List<String>>> listCycleIds();
+  Future<Either<Failure, Unit>> saveCycle(MonthlyCycle cycle);
 }
 ```
 
@@ -339,36 +404,38 @@ Model serialisasi terpisah dari entitas domain, dengan `fromJson` dan `toJson`
 tulis tangan mengikuti pola `User` di `app_example`. Setiap dokumen menyertakan
 `schemaVersion`.
 
-Implementasi repository menerjemahkan kesalahan mentah menjadi `Failure`:
+Implementasi repository memakai `with RepositoryGuard` dari
+`core/foundation/repository_guard.dart` untuk memusatkan pemetaan exception
+mentah menjadi `Failure`:
 
 ```dart
-final class CycleRepositoryImpl implements CycleRepository {
+final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository {
+  const CycleRepositoryImpl({required this._storage});
+  final KeyValueStorage _storage;
+
   @override
-  Future<MonthlyCycle> getCycle(String id) async {
-    try {
-      final stored = await _storage.read(CycleStorageKeys.cycle(id).value);
-      if (stored == null) {
-        throw PersistenceFailure(
-          code: StorageFailureCode.keyNotFound,
-          message: 'Cycle $id not found in local storage',
-          userMessage: null,
-        );
-      }
-      return CycleModel.fromJson(jsonDecode(stored)).toEntity();
-    } on FormatException catch (error, stackTrace) {
-      throw SystemFailure(
-        code: const FailureCode('PERSISTENCE_PARSE_ERROR'),
-        message: 'Failed to parse cycle $id',
-        details: FailureDetails(cause: error, stackTrace: stackTrace),
-      );
+  Future<Either<Failure, MonthlyCycle>> getCycle(String id) => guard(() async {
+    final stored = await _storage.read(CycleStorageKeys.cycle(id).value);
+    if (stored == null) {
+      throw StateError('Cycle $id not found in local storage');
     }
-  }
+    return CycleModel.fromJson(jsonDecode(stored)).toEntity();
+  });
+
+  @override
+  Failure? mapCustomError(Object error) => error is StateError
+      ? PersistenceFailure(code: StorageFailureCode.keyNotFound, message: error.message)
+      : null;
 }
 ```
 
-Perhatikan bahwa `Failure` dilempar, bukan dikembalikan. `Failure` bukan turunan
-`Exception`, sehingga penangkapannya harus memakai `on Failure catch`, bukan
-`on Exception catch`.
+`guard()` menangkap `FormatException` (kegagalan penguraian) secara otomatis;
+exception lain (seperti `StateError` di atas) ditangkap oleh cabang generik
+`guard()` dan diteruskan ke hook `mapCustomError`, yang setiap implementasi
+repository boleh override untuk memetakan exception spesifik fiturnya sendiri
+— persis pola `AuthRepositoryImpl.mapCustomError` di
+[ADR-0005](adr/0005-either-failure-convention.md). Kode pemanggil (bloc) tidak
+pernah menangkap exception — ia hanya membongkar `Either` yang dikembalikan.
 
 ### Presentation
 
@@ -402,8 +469,9 @@ final class CycleState extends UiState<CycleState> {
 }
 ```
 
-Bloc menangkap `Failure` dan memancarkan efek. Efek ditulis sebagai `extension`
-di berkas `part`, supaya berkas bloc tetap ringkas.
+Bloc membongkar `Either` dengan `switch` dan memancarkan efek sesuai cabangnya.
+Efek ditulis sebagai `extension` di berkas `part`, supaya berkas bloc tetap
+ringkas.
 
 ```dart
 Future<void> _onRollOverRequested(
@@ -411,15 +479,16 @@ Future<void> _onRollOverRequested(
   Emitter<CycleState> emit,
 ) async {
   emit(state.copyWith(isLoading: true));
-  try {
-    final next = await _rollOverCycle(event.fromCycleId);
-    emit(state.copyWith(
-      cycle: next,
-      isLoading: false,
-      effect: _effectCycleCreated(next.id),
-    ));
-  } on Failure catch (failure) {
-    emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
+  final result = await _rollOverCycle(event.fromCycleId);
+  switch (result) {
+    case Left(value: final failure):
+      emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
+    case Right(value: final next):
+      emit(state.copyWith(
+        cycle: next,
+        isLoading: false,
+        effect: _effectCycleCreated(next.id),
+      ));
   }
 }
 ```
@@ -509,8 +578,14 @@ use case domain paling utama, karena di situlah rumus keuangan berada.
 |---|---|
 | Use case domain | Uji unit Dart murni, memakai angka nyata dari spreadsheet |
 | Repository | `InMemoryKeyValueStorage` dari `memory_storage` |
-| Bloc | `bloc_test`, dengan repository dipalsukan memakai `mocktail` |
+| Bloc | Fake tulis tangan (`_FakeXyz implements Interface`), `bloc.add()` + `await bloc.stream.firstWhere(...)` — lihat [ADR-0010](adr/0010-hand-rolled-test-fakes.md) |
 | Widget | Uji widget untuk komponen bersama |
+
+Saldough **tidak** memakai `mocktail` atau `bloc_test`. Repo acuan arsitektur
+tidak memakai keduanya — seluruh pengujian memakai fake tulis tangan, cocok
+untuk interface Saldough yang sempit (2-4 metode). Lihat
+[ADR-0010](adr/0010-hand-rolled-test-fakes.md) untuk contoh lengkap dan
+alasannya.
 
 Aturan yang mengikat: **setiap rumus di
 [DOMAIN_MODEL.md](DOMAIN_MODEL.md) punya uji unit dengan angka nyata dari
@@ -553,14 +628,20 @@ menyimpang dari arsitektur.
 
 - Lapisan domain tidak mengimpor Flutter, Hive, atau paket infrastruktur.
 - Lapisan presentation tidak mengimpor lapisan data.
+- `core/` tidak pernah berisi entitas bisnis — hanya infra tanpa makna
+  domain.
+- `shared/<module>/` diimpor hanya lewat barrel-nya (`<module>.dart`), tidak
+  pernah lewat jalur berkas di dalamnya.
 - Impor antar fitur hanya lewat `<fitur>_route_keys.dart`.
 - Seluruh impor memakai `package:saldough/...`, bukan impor relatif, kecuali di
   dalam berkas barrel dan direktif `part`.
 - Nominal bertipe `int` dalam satuan sen. Tidak pernah `double`.
-- Kegagalan dilempar sebagai `Failure` dan ditangkap dengan `on Failure catch`.
+- Kegagalan dikembalikan sebagai `Either<Failure, T>` lewat `RepositoryGuard`,
+  tidak pernah dilempar dengan `throw Failure`.
 - `effect` tidak pernah masuk `props`.
 - Warna, jarak, sudut, dan durasi selalu lewat token, tidak pernah harfiah.
 - Teks antarmuka selalu lewat slang, tidak pernah harfiah.
+- Pengujian memakai fake tulis tangan, tidak `mocktail`/`bloc_test`.
 - Ikuti kode paket internal, bukan README-nya. Beberapa README diketahui tidak
   sinkron dengan kodenya.
 

@@ -23,19 +23,19 @@ menjelaskan apa yang kurang.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 9 September 2026.
+Terakhir diperbarui: 10 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Gerbang dependensi | 5 | 0 | Belum dimulai |
-| 1 — Fondasi | 12 | 0 | Terkunci oleh Fase 0 |
+| 1 — Fondasi | 13 | 0 | Terkunci oleh Fase 0 |
 | 2 — Siklus bulanan | 12 | 0 | Terkunci oleh Fase 1 |
 | 3 — Pemasukan dan timesheet | 10 | 0 | Terkunci oleh Fase 2 |
 | 4 — Roll-up | 12 | 0 | Terkunci oleh Fase 2 |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 |
-| 6 — Seed | 6 | 0 | Terkunci oleh Fase 5 |
+| 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **65** | **0** | |
+| **Total MVP** | **67** | **0** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -102,8 +102,11 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 ### Kerangka aplikasi
 
 - [ ] **T-1.8** Siapkan `DiBoot` dengan bootstrap dua fase dan urutan
-      pendaftaran penyimpanan, repository lintas fitur, modul fitur, lalu
-      router.
+      pendaftaran penyimpanan, repository lintas fitur (`shared/`), modul
+      fitur, lalu router. Susun folder memakai tiga zona `core/`/`shared/`/
+      `features/` dan ikuti *decision tree* DI (route provider / root
+      injectable / `@module` / `IsolatedScope`).
+      Memenuhi [ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md).
 - [ ] **T-1.9** Siapkan penyimpanan Hive lewat
       `HiveKeyValueStorage.initialize(boxName:)`, lalu buktikan aplikasi
       berfungsi penuh dalam mode pesawat dan data bertahan setelah aplikasi
@@ -114,6 +117,9 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
       [ADR-0002](../02-architecture/adr/0002-local-first-hive-document-storage.md).
 - [ ] **T-1.10** Siapkan `RouteRegistry`, adapter `toGoRoute()`, dan menu
       pengembang mode debug.
+      ⚠ Di dalam pembangun rute yang memakai `ScopeWidget`, ambil
+      `ScopeProvider.of(context)` SEBELUM `ScopeWidget` disisipkan —
+      `ScopeProvider` belum ada di pohon saat `create` dijalankan.
       Memenuhi [ADR-0004](../02-architecture/adr/0004-typed-route-registry-navigation.md).
 - [ ] **T-1.11** Daftarkan penangan efek navigasi dan umpan balik sebelum
       `runApp`, dan pasang `Bloc.observer = AppBlocObserver()`.
@@ -121,6 +127,10 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
       Memenuhi [ADR-0003](../02-architecture/adr/0003-effect-bloc-state-management.md).
 - [ ] **T-1.12** Buat satu fitur contoh menyeluruh untuk membuktikan pola:
       entitas, repository, bloc dengan efek, rute, dan lingkup dependensi.
+- [ ] **T-1.13** Buat `shared/goal/` sebagai modul `shared/` pertama:
+      `domain/{goal.dart, goal_repository.dart}` + `data/` di balik satu
+      barrel `goal.dart`. Tanpa `presentation/`.
+      Memenuhi [ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md).
 
 ## Fase 2: Siklus bulanan
 
@@ -141,11 +151,14 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 - [ ] **T-2.4** Buat model serialisasi siklus dengan `schemaVersion`, lalu
       implementasi `CycleRepository` di atas Hive.
       Memenuhi NFR-REL-003.
-- [ ] **T-2.5** Terjemahkan kesalahan penyimpanan menjadi `PersistenceFailure`
-      dan kesalahan penguraian menjadi `SystemFailure`.
-      ⚠ Lempar dengan `throw`, bukan kembalikan `Either`. `Failure` bukan
-      turunan `Exception`, jadi tangkap dengan `on Failure catch`.
-      Memenuhi [ADR-0005](../02-architecture/adr/0005-throw-catch-failure-convention.md).
+- [ ] **T-2.5** Buat `RepositoryGuard` di `core/foundation/repository_guard.dart`,
+      lalu pakai `with RepositoryGuard` di `CycleRepositoryImpl` agar
+      mengembalikan `Either<Failure, T>` lewat `guard()`/`guardVoid()` —
+      kesalahan penyimpanan jadi `PersistenceFailure`, kesalahan penguraian
+      jadi `SystemFailure`.
+      ⚠ Kembalikan `Either`, jangan melempar `Failure`. Bloc membongkarnya
+      dengan `switch` pada `Left`/`Right`, bukan `on Failure catch`.
+      Memenuhi [ADR-0005](../02-architecture/adr/0005-either-failure-convention.md).
 
 ### Presentation
 
@@ -180,11 +193,10 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
 ## Fase 3: Pemasukan dan timesheet
 
-⚠ **Butuh jawaban pemilik sebelum selesai:** berapa tarif per jam pada sumber
-`Gaji Menul`? Nilai ini tidak tercatat di spreadsheet mana pun.
-
 - [ ] **T-3.1** Buat entitas `IncomeSource` dengan tiga tipe dan
       `DeductionRule` dengan dua tipe.
+      ⚠ Tarif per jam `Gaji Menul` adalah data (`hourlyRate`), bukan konstanta
+      kode. Nilai seed terkonfirmasi: Rp72.500.
       Memenuhi FR-INC-001.
 - [ ] **T-3.2** Buat use case `CalculateNetPay`.
       ⚠ Potongan persentase dihitung dari gaji kotor, bukan dari nilai berjalan
@@ -216,9 +228,6 @@ Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
 ## Fase 4: Roll-up
 
-⚠ **Butuh jawaban pemilik sebelum selesai:** tanggal berapa tagihan tiap kartu
-dicetak?
-
 ### Belanja
 
 - [ ] **T-4.1** Buat entitas `GroceryPlan` dan `GroceryItem` dengan
@@ -242,6 +251,8 @@ dicetak?
       `CardTransaction`.
       ⚠ `note` adalah field terpisah dari `merchant`. Di spreadsheet keduanya
       tercampur, sehingga nama merchant tidak bisa dicocokkan dengan langganan.
+      Tanggal cetak (`statementDayOfMonth`) adalah data, bukan konstanta
+      kode. Nilai seed terkonfirmasi: tanggal 15.
       Memenuhi FR-CARD-001 dan FR-CARD-002.
 - [ ] **T-4.7** Buat pengelompokan transaksi ke siklus tagihan dan
       penutupan siklus.
@@ -264,12 +275,9 @@ dicetak?
 
 ## Fase 5: Investasi
 
-⚠ **Butuh jawaban pemilik sebelum selesai:** apakah pos di bagian pinjaman,
-seperti `Travel To Japan` dan `Kuliah tata`, sama dengan enam pos di bagian
-alokasi?
-
-- [ ] **T-5.1** Buat entitas `Goal` dengan saldo awal, dipakai bersama oleh
-      alokasi maupun pinjaman.
+- [ ] **T-5.1** Buat entitas `Goal` dengan saldo awal (seed: 0 untuk semua
+      pos), dipakai bersama oleh alokasi maupun pinjaman lewat `shared/goal/`
+      (T-1.13). Daftar pos terbuka — tidak dibatasi enam nama bawaan.
       Memenuhi FR-INV-001.
 - [ ] **T-5.2** Buat entitas `InvestmentPlan` dan `Allocation`.
 - [ ] **T-5.3** Buat use case `CalculateAllocations`.
@@ -283,7 +291,9 @@ alokasi?
       Memenuhi FR-INV-003.
 - [ ] **T-5.6** Buat entitas `GoalLoan` dengan pokok dan pengembalian terpisah.
       ⚠ Nilainya bisa berbeda. Data nyata: pokok Rp9.300.000 dikembalikan
-      Rp9.331.000.
+      Rp9.331.000. `fromGoalId`/`toGoalId` HARUS merujuk `Goal` yang sudah
+      terdaftar — tidak ada label bebas. Kalau pos pinjamannya belum ada di
+      daftar `Goal`, daftarkan dulu (lihat T-6.x untuk kasus data historis).
       Memenuhi FR-INV-004.
 - [ ] **T-5.7** Buat perhitungan saldo pos dari saldo awal, alokasi, dan
       pinjaman.
@@ -293,8 +303,6 @@ alokasi?
 
 ## Fase 6: Seed
 
-⚠ **Butuh jawaban pemilik sebelum selesai:** berapa saldo awal tiap pos tujuan?
-
 - [ ] **T-6.1** Susun berkas seed dari data spreadsheet November 2025 sampai
       September 2026.
 - [ ] **T-6.2** Muat siklus bulanan beserta baris pemasukan dan anggarannya.
@@ -303,9 +311,17 @@ alokasi?
       Memenuhi FR-SEED-001.
 - [ ] **T-6.4** Muat riwayat transaksi kartu kredit per siklus.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.5** Muat pos tujuan beserta saldo awalnya.
+- [ ] **T-6.5** Muat pos tujuan beserta saldo awalnya (seed: 0 untuk semua
+      pos, sesuai jawaban pemilik).
       Memenuhi FR-SEED-001.
-- [ ] **T-6.6** Bandingkan seluruh hasil hitung terhadap spreadsheet asli dan
+- [ ] **T-6.6** Untuk pinjaman historis yang pos-nya belum terdaftar sebagai
+      `Goal` (contoh nyata: "Travel To Japan", "Kuliah tata") — daftarkan
+      keduanya sebagai `Goal` baru (`openingBalance` 0) sebelum mengimpor
+      transaksi `GoalLoan`-nya. Kalau pemilik tidak mau melacaknya formal,
+      lewati baris pinjaman itu dan catat di bagian "Catatan pengerjaan" di
+      bawah.
+      Memenuhi FR-SEED-001.
+- [ ] **T-6.7** Bandingkan seluruh hasil hitung terhadap spreadsheet asli dan
       pastikan tidak ada selisih rupiah.
       ⚠ Ini pembuktian menyeluruh produk. Kalau ada selisih, cari akarnya di
       aturan pembulatan sebelum mengubah apa pun yang lain.
@@ -346,4 +362,19 @@ Bagian ini diisi selama implementasi berjalan. Catat keputusan yang menyimpang
 dari rencana, kejutan yang ditemukan, dan hal yang perlu diingat sesi
 berikutnya.
 
-Belum ada catatan.
+**10 September 2026** — Revisi besar sebelum implementasi dimulai (belum ada
+kode yang ditulis, jadi tidak ada dampak terhadap kode):
+
+- Referensi arsitektur diganti dari `new-health-duel` ke
+  `flutter-architecture-studi-bank` (`lib/v2`, branch
+  `refactor/platform-migration`) — memenuhi permintaan asli yang sebelumnya
+  gagal karena repo yang disebut (`flutter-architecture-studi`, tanpa
+  `-bank`) tidak punya folder itu. `new-health-duel` tetap jadi acuan tema.
+- **ADR-0005 dibalik**: dari throw/catch menjadi `Either<Failure, T>` via
+  fpdart, karena bukti produksi nyata (104 vs 0 kecocokan) membalikkan
+  keputusan yang sebelumnya hanya berdasarkan `app_example` kecil.
+- ADR-0009 (zona core/shared/features) dan ADR-0010 (fake tulis tangan,
+  tanpa mocktail/bloc_test) ditambahkan.
+- Empat pertanyaan terbuka terjawab: tarif per jam Rp72.500, tanggal cetak
+  tagihan kartu 15, saldo awal pos 0, dan `GoalLoan` hanya merujuk `Goal`
+  terdaftar dengan daftar yang terbuka (bukan label bebas).

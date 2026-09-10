@@ -38,13 +38,14 @@ Kalau akan langsung menulis kode, mulai dari
 | Bagian | Pilihan |
 |---|---|
 | Kerangka | Flutter 3.47.2, Dart 3.13.2 |
-| Arsitektur | Clean Architecture berbasis fitur, tiga lapisan |
+| Arsitektur | Tiga zona `core`/`shared`/`features`, mengikuti `flutter-architecture-studi-bank` |
 | State | Bloc dengan efek terdaftar, dari `package:state_management` |
 | Navigasi | Registri rute bertipe dari `package:navigation`, di atas `go_router` |
 | Penyimpanan | Hive lewat `package:api_storage` dan `package:hive_storage` |
-| Kesalahan | `package:failures`, konvensi lempar dan tangkap |
+| Kesalahan | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard` |
 | Injeksi dependensi | `package:di`, GetIt dengan lingkup per fitur |
 | Terjemahan | slang, bahasa dasar Indonesia dan tambahan Inggris |
+| Tema | `new-health-duel`, dipetakan ulang ke konteks keuangan |
 
 Paket internal berasal dari
 [`arkariz/advance-mobile-platform`](https://github.com/arkariz/advance-mobile-platform),

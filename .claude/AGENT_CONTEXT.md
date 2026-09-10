@@ -108,8 +108,12 @@ terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
 
 - Memakai Riverpod, Provider, atau GetX.
 - Memakai `freezed`. Monorepo internal tidak memakainya di mana pun.
-- Memakai `mocktail` atau `bloc_test`. Pakai fake tulis tangan — lihat
-  [ADR-0010](../docs/02-architecture/adr/0010-hand-rolled-test-fakes.md).
+- Membuat fake tulis tangan (`_FakeXyz implements Interface`) untuk mock
+  repository/use case — pakai `mocktail` (`MockXyz extends Mock implements
+  Interface`) dan `bloc_test` untuk bloc. Lihat
+  [ADR-0010](../docs/02-architecture/adr/0010-mocktail-bloc-test-convention.md).
+  Ini keputusan yang menyimpang dari repo acuan arsitektur, atas permintaan
+  eksplisit pemilik.
 - Menyalin `ArchitectureBride*`, seam `Get.find()`, atau `mobile_dsl` dari
   repo acuan arsitektur — itu spesifik migrasi legacy mereka.
 - Mengimpor Flutter di lapisan domain.

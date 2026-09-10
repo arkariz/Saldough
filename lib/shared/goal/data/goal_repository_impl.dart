@@ -14,8 +14,8 @@ const _goalsKey = StorageKey(namespace: 'goal', name: 'all');
 /// Seluruh pos disimpan sebagai satu dokumen JSON (daftar kecil, lihat
 /// `models` package note di ARCHITECTURE_OVERVIEW.md soal volume data MVP).
 final class GoalRepositoryImpl with RepositoryGuard implements GoalRepository {
-  /// Membuat [GoalRepositoryImpl] di atas [storage].
-  const GoalRepositoryImpl({required KeyValueStorage storage}) : _storage = storage;
+  /// Membuat [GoalRepositoryImpl] di atas [_storage].
+  const GoalRepositoryImpl({required this._storage});
 
   final KeyValueStorage _storage;
 

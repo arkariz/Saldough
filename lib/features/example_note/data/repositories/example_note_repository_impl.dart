@@ -10,8 +10,8 @@ const _notesKey = StorageKey(namespace: 'example_note', name: 'all');
 
 /// Implementasi [ExampleNoteRepository] di atas [KeyValueStorage].
 final class ExampleNoteRepositoryImpl with RepositoryGuard implements ExampleNoteRepository {
-  /// Membuat [ExampleNoteRepositoryImpl] di atas [storage].
-  const ExampleNoteRepositoryImpl({required KeyValueStorage storage}) : _storage = storage;
+  /// Membuat [ExampleNoteRepositoryImpl] di atas [_storage].
+  const ExampleNoteRepositoryImpl({required this._storage});
 
   final KeyValueStorage _storage;
 

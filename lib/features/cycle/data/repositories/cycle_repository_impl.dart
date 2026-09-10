@@ -3,7 +3,6 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
 import 'package:saldough/features/cycle/data/models/cycle_model.dart';
-import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
@@ -18,10 +17,8 @@ StorageKey _cycleKey(String id) => StorageKey(namespace: 'cycle', name: id);
 /// Setiap [getCycle] menghitung ulang baris `rollUp` lewat [_resolver] —
 /// nilai di dokumen tersimpan tidak pernah dipercaya (ADR-0008).
 final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository {
-  /// Membuat [CycleRepositoryImpl] di atas [storage] dan [resolver].
-  const CycleRepositoryImpl({required KeyValueStorage storage, required RollUpResolver resolver})
-      : _storage = storage,
-        _resolver = resolver;
+  /// Membuat [CycleRepositoryImpl] di atas [_storage] dan [_resolver].
+  const CycleRepositoryImpl({required this._storage, required this._resolver});
 
   final KeyValueStorage _storage;
   final RollUpResolver _resolver;
@@ -49,7 +46,7 @@ final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository 
 
   Future<MonthlyCycle> _resolveRollUps(MonthlyCycle cycle) async {
     final resolvedLines = await Future.wait(cycle.budgetLines.map((line) async {
-      if (line.kind != BudgetLineKind.rollUp) return line;
+      if (line.kind != .rollUp) return line;
       final resolution = await _resolver.resolve(line.rollUpSource!);
       return line.copyWith(
         amount: resolution.amount,

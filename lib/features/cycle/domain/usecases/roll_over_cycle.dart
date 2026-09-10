@@ -1,7 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
-import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
 import 'package:saldough/features/cycle/domain/entities/cycle_template.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/investment_plan.dart';
@@ -21,11 +20,7 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_template_repos
 /// 4. Salin `defaultAllocations` apa adanya ke `investmentPlan.allocations`.
 final class RollOverCycle {
   /// Membuat [RollOverCycle] dengan kedua repository yang dibutuhkan.
-  RollOverCycle({
-    required CycleRepository cycleRepository,
-    required CycleTemplateRepository templateRepository,
-  })  : _cycleRepository = cycleRepository,
-        _templateRepository = templateRepository;
+  RollOverCycle({required this._cycleRepository, required this._templateRepository});
 
   final CycleRepository _cycleRepository;
   final CycleTemplateRepository _templateRepository;
@@ -82,7 +77,7 @@ final class RollOverCycle {
           label: line.label,
           // Aturan 2: baris rollUp tidak membawa nominal lama. Diisi 0,
           // dihitung ulang saat siklus baru dibaca (lihat RollUpResolver).
-          amount: line.kind == BudgetLineKind.rollUp ? 0 : line.amount,
+          amount: line.kind == .rollUp ? 0 : line.amount,
           kind: line.kind,
           rollUpSource: line.rollUpSource,
           isTemplate: true,

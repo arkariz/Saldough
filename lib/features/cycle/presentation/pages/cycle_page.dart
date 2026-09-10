@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
 import 'package:saldough/features/cycle/presentation/widgets/cycle_line_tile.dart';
@@ -64,7 +63,7 @@ class _AppBarSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: .center,
         children: [
           IconButton(
             icon: const Icon(Icons.chevron_left),
@@ -151,17 +150,17 @@ class _TotalsCard extends StatelessWidget {
     return AppCard(
       borderRadius: AppRadius.comicCut,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(t.cycle.incomeSectionTitle, style: textTheme.bodyMedium),
               AppMoneyText(sen: state.totals.totalIncome, style: textTheme.titleMedium),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(t.cycle.budgetSectionTitle, style: textTheme.bodyMedium),
               AppMoneyText(sen: state.totals.totalBudget, style: textTheme.titleMedium),
@@ -169,7 +168,7 @@ class _TotalsCard extends StatelessWidget {
           ),
           const Divider(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(t.cycle.remainderLabel, style: textTheme.titleMedium),
               AppMoneyText(sen: state.totals.remainder, style: textTheme.headlineSmall),
@@ -190,7 +189,7 @@ class _IncomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<CycleBloc>();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         Text(t.cycle.incomeSectionTitle, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: AppSpacing.sm),
@@ -244,7 +243,7 @@ class _BudgetSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<CycleBloc>();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         Text(t.cycle.budgetSectionTitle, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: AppSpacing.sm),
@@ -257,7 +256,7 @@ class _BudgetSection extends StatelessWidget {
               amount: line.amount,
               isTemplate: line.isTemplate,
               needsReview: line.needsReview,
-              isEditable: line.kind == BudgetLineKind.manual,
+              isEditable: line.kind == .manual,
               rollUpSourceUnavailable: line.rollUpSourceUnavailable,
               onTap: () async {
                 final result = await LineEditSheet.show(
@@ -270,7 +269,7 @@ class _BudgetSection extends StatelessWidget {
                   bloc.add(BudgetLineSaved(id: line.id, label: result.label, amount: result.amount));
                 }
               },
-              onDelete: line.kind == BudgetLineKind.manual
+              onDelete: line.kind == .manual
                   ? () => bloc.add(BudgetLineRemoved(line.id))
                   : null,
               onToggleTemplate: () => bloc.add(BudgetLineTemplateToggled(line.id)),

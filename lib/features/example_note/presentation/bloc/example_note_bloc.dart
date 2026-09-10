@@ -12,9 +12,7 @@ part 'example_note_effect.dart';
 /// domain→data→presentation dari ujung ke ujung untuk T-1.12.
 final class ExampleNoteBloc extends Bloc<ExampleNoteEvent, ExampleNoteState> {
   /// Membuat [ExampleNoteBloc] dengan [_repository].
-  ExampleNoteBloc({required ExampleNoteRepository repository})
-      : _repository = repository,
-        super(ExampleNoteState.initial()) {
+  ExampleNoteBloc({required this._repository}) : super(ExampleNoteState.initial()) {
     on<ExampleNoteStarted>(_onStarted);
     on<ExampleNoteAdded>(_onAdded);
   }

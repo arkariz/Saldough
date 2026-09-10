@@ -85,6 +85,6 @@ final class BudgetLineModel {
         rollUpSource: RollUpSourceModel.fromJson(rollUpSourceJson),
         isTemplate: isTemplate,
         needsReview: needsReview,
-        rollUpSourceUnavailable: kind == BudgetLineKind.rollUp && rollUpSourceUnavailable,
+        rollUpSourceUnavailable: kind == .rollUp && rollUpSourceUnavailable,
       );
 }

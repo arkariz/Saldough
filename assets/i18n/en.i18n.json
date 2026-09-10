@@ -39,5 +39,42 @@
     "needsReviewBadge": "Needs review",
     "confirmReviewed": "Looks right",
     "unreviewedBanner": "$count line(s) need review."
+  },
+  "income": {
+    "pageTitle": "Income sources",
+    "emptySources": "No income sources yet.",
+    "addSourceTitle": "Add income source",
+    "editSourceTitle": "Edit income source",
+    "nameFieldHint": "Name",
+    "fixedAmountFieldHint": "Fixed amount (Rp)",
+    "hourlyRateFieldHint": "Hourly rate (Rp)",
+    "hourlyRateSubtitle": "$rate / hour",
+    "kindFixedSalary": "Fixed salary",
+    "kindHourlyFreelance": "Hourly freelance",
+    "kindAdHoc": "One-off",
+    "deductionRulesTitle": "Deduction rules",
+    "addDeductionRuleButton": "Add deduction",
+    "deductionLabelHint": "Deduction name",
+    "deductionValueHint": "Value",
+    "deductionKindPermille": "Per mille",
+    "deductionKindFixed": "Fixed (Rp)"
+  },
+  "worklog": {
+    "pageTitle": "Work log",
+    "noFreelanceSource": "No freelance income source yet. Add one on the Income Sources screen first.",
+    "addEntryTitle": "Log hours",
+    "hoursFieldHint": "Number of hours",
+    "startsNewBookLabel": "Start new book",
+    "addEntryButton": "Log",
+    "openBookTitle": "Open book",
+    "totalHours": "$hours hour(s)",
+    "closeBookButton": "Close book",
+    "bookClosedMessage": "Book closed. Net pay $netPay.",
+    "historyTitle": "Book history",
+    "emptyHistory": "No closed books yet.",
+    "targetCycleHint": "Target cycle (YYYY-MM)",
+    "injectButton": "Inject into cycle",
+    "injectedMessage": "Injected into cycle $cycleId.",
+    "injectedInto": "Injected into cycle $cycleId."
   }
 }

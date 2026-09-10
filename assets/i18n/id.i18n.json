@@ -39,5 +39,42 @@
     "needsReviewBadge": "Perlu ditinjau",
     "confirmReviewed": "Sudah benar",
     "unreviewedBanner": "Ada $count baris perlu ditinjau."
+  },
+  "income": {
+    "pageTitle": "Sumber pemasukan",
+    "emptySources": "Belum ada sumber pemasukan.",
+    "addSourceTitle": "Tambah sumber pemasukan",
+    "editSourceTitle": "Sunting sumber pemasukan",
+    "nameFieldHint": "Nama",
+    "fixedAmountFieldHint": "Nominal tetap (Rp)",
+    "hourlyRateFieldHint": "Tarif per jam (Rp)",
+    "hourlyRateSubtitle": "$rate / jam",
+    "kindFixedSalary": "Gaji tetap",
+    "kindHourlyFreelance": "Freelance per jam",
+    "kindAdHoc": "Sekali jalan",
+    "deductionRulesTitle": "Aturan potongan",
+    "addDeductionRuleButton": "Tambah potongan",
+    "deductionLabelHint": "Nama potongan",
+    "deductionValueHint": "Nilai",
+    "deductionKindPermille": "Per mil",
+    "deductionKindFixed": "Tetap (Rp)"
+  },
+  "worklog": {
+    "pageTitle": "Catatan jam kerja",
+    "noFreelanceSource": "Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.",
+    "addEntryTitle": "Catat jam kerja",
+    "hoursFieldHint": "Jumlah jam",
+    "startsNewBookLabel": "Mulai buku baru",
+    "addEntryButton": "Catat",
+    "openBookTitle": "Buku berjalan",
+    "totalHours": "$hours jam",
+    "closeBookButton": "Tutup buku",
+    "bookClosedMessage": "Buku ditutup. Gaji bersih $netPay.",
+    "historyTitle": "Riwayat buku",
+    "emptyHistory": "Belum ada buku yang ditutup.",
+    "targetCycleHint": "Siklus tujuan (YYYY-MM)",
+    "injectButton": "Suntik ke siklus",
+    "injectedMessage": "Disuntikkan ke siklus $cycleId.",
+    "injectedInto": "Disuntikkan ke siklus $cycleId."
   }
 }

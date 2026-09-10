@@ -32,12 +32,12 @@ Terakhir diperbarui: 10 September 2026.
 | 0 — Gerbang dependensi | 5 | 3 | Gerbang (T-0.3) lolos — T-0.2 menunggu verifikasi di mesin pemilik |
 | 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
 | 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
-| 3 — Pemasukan dan timesheet | 10 | 0 | Gerbang Fase 2 lolos, siap dimulai |
+| 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
 | 4 — Roll-up | 12 | 0 | Gerbang Fase 2 lolos, siap dimulai (tidak bergantung Fase 3) |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **26** | |
+| **Total MVP** | **67** | **36** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -395,38 +395,92 @@ galat. Folder `linux/`/`build/` dihapus lagi setelahnya, tidak masuk repo.
 
 *Desain: [D-3.1 sampai D-3.3](UI_UX_DESIGN_TASKS.md#fase-3-pemasukan-dan-timesheet).*
 
-- [ ] **T-3.1** Buat entitas `IncomeSource` dengan tiga tipe dan
+- [x] **T-3.1** Buat entitas `IncomeSource` dengan tiga tipe dan
       `DeductionRule` dengan dua tipe.
       ⚠ Tarif per jam `Gaji Menul` adalah data (`hourlyRate`), bukan konstanta
       kode. Nilai seed terkonfirmasi: Rp72.500.
+      Keduanya naik ke `shared/income/` (bukan `features/income/`) — dipakai
+      juga oleh `cycle` (T-3.4) dan `worklog` (T-3.8), ambang "2+ konsumen"
+      ADR-0009 terpenuhi sejak awal, bukan promosi spekulatif. Lihat catatan
+      revisi ADR-0009.
       Memenuhi FR-INC-001.
-- [ ] **T-3.2** Buat use case `CalculateNetPay`.
+- [x] **T-3.2** Buat use case `CalculateNetPay` (ikut naik ke `shared/income/`
+      — fungsi murni atas entitasnya, dipakai `income` dan `worklog`).
       ⚠ Potongan persentase dihitung dari gaji kotor, bukan dari nilai berjalan
       setelah potongan sebelumnya.
+      ⚠ Celah dokumentasi ditemukan dan ditutup: `DeductionRule.value` untuk
+      `percentage` semula ditulis "nilai per seratus" — tidak bisa
+      merepresentasikan tarif pajak nyata 2,5% sebagai `int`. Diperbaiki ke
+      per mil (`~/ 1000`, 2,5% = `25`). Lihat catatan di DOMAIN_MODEL.md.
       Memenuhi FR-INC-003.
-- [ ] **T-3.3** Tulis uji unit `CalculateNetPay` memakai lima kasus nyata,
-      termasuk `3.117.500` dengan pajak 2,5% menghasilkan `3.039.563`.
+- [x] **T-3.3** Tulis uji unit `CalculateNetPay` memakai lima kasus nyata,
+      termasuk `3.117.500` dengan pajak 2,5% menghasilkan `3.039.563`
+      (`test/shared/income/domain/calculate_net_pay_test.dart`, 8 kasus —
+      lima dari tabel pajak MANUAL_PROCESS_ANALYSIS.md plus tiga kasus rumus
+      tambahan: gaji kotor, potongan tetap, dan potongan ganda dari gaji
+      kotor yang sama).
       ⚠ Uji ini yang membuktikan aritmatika integer sen tidak dilanggar.
       Membulatkan pajak lebih dulu menghasilkan `3.039.562`, meleset satu rupiah.
+      Terverifikasi: menghitung di satuan sen (bukan rupiah) dengan rumus per
+      mil menghapus kebutuhan pembulatan perantara sama sekali — potongan
+      selalu pas tanpa sisa untuk kombinasi gaji kotor rupiah bulat dan tarif
+      satu desimal persen, jadi tidak ada celah pembulatan yang tersisa untuk
+      dihindari secara manual.
       Memenuhi NFR-ACC-002.
-- [ ] **T-3.4** Buat pengelolaan sumber pemasukan dan penautannya ke baris
-      pemasukan.
+- [x] **T-3.4** Buat pengelolaan sumber pemasukan dan penautannya ke baris
+      pemasukan. `IncomeSourceListPage` (CRUD penuh termasuk aturan potongan)
+      di fitur `income`; `LineEditSheet` milik `cycle` mendapat pemilih
+      sumber yang otomatis mengisi nominal untuk `fixedSalary` (`CycleBloc`
+      memuat `IncomeSourceRepository` dari `shared/income/` saat siklus
+      dibuka).
       Memenuhi FR-INC-002.
-- [ ] **T-3.5** Buat entitas `WorkLogEntry` dan `BillingBook`.
-- [ ] **T-3.6** Buat layar pencatatan jam kerja satu langkah.
+- [x] **T-3.5** Buat entitas `WorkLogEntry` dan `BillingBook`.
+      ⚠ Tiga field ditambah di luar draf awal DOMAIN_MODEL.md:
+      `netPayAmount`/`injectedCycleId`/`injectedIncomeLineId` — supaya gaji
+      bersih buku yang sudah ditutup tidak dihitung ulang diam-diam dan
+      status "sudah disuntik ke mana" bisa ditampilkan di riwayat tanpa
+      menyuntik dua kali. Lihat catatan di DOMAIN_MODEL.md.
+- [x] **T-3.6** Buat layar pencatatan jam kerja satu langkah (`WorklogPage`,
+      `_EntryForm`: tanggal, jam, toggle "mulai buku baru", kirim langsung).
       Memenuhi FR-TIME-001 dan NFR-UX-001.
-- [ ] **T-3.7** Buat pengelompokan entri ke buku jam berdasarkan penanda
-      `startsNewBook`.
+- [x] **T-3.7** Buat pengelompokan entri ke buku jam berdasarkan penanda
+      `startsNewBook` (`WorklogRepositoryImpl.addEntry` — entri tanpa
+      penanda menyambung ke buku terbuka, entri ber-penanda atau tanpa buku
+      terbuka memulai buku baru; diuji `worklog_repository_impl_test.dart`).
       ⚠ Jangan memotong periode berdasarkan bulan kalender. Data nyata
       menunjukkan periode membentang dari delapan hari sampai hampir sebulan.
+      Terverifikasi: pengelompokan murni berdasar penanda, tidak pernah
+      melihat tanggal/bulan kalender sama sekali.
       Memenuhi FR-TIME-002.
-- [ ] **T-3.8** Buat penutupan buku jam yang menghasilkan gaji bersih.
+- [x] **T-3.8** Buat penutupan buku jam yang menghasilkan gaji bersih
+      (use case `CloseBillingBook`, menolak menutup buku yang sudah tertutup
+      atau tanpa entri).
       Memenuhi FR-TIME-003.
-- [ ] **T-3.9** Buat penyuntikan gaji bersih ke baris pemasukan pada siklus yang
-      dipilih.
+- [x] **T-3.9** Buat penyuntikan gaji bersih ke baris pemasukan pada siklus
+      yang dipilih (use case `InjectNetPay` + `WorklogPage._InjectForm`,
+      pemilik mengetik id siklus tujuan, bawaan bulan berjalan).
+      ⚠ **Keputusan arsitektur**: `worklog` butuh menulis ke `MonthlyCycle`
+      milik fitur `cycle` — agregat kompleks, beda dari `IncomeSource` yang
+      tinggal dipromosikan ke `shared/`. Diselesaikan dengan port kecil milik
+      `worklog` sendiri (`CycleIncomeWriter`, domain `worklog`), yang
+      diimplementasikan `features/cycle/data/adapters/` dan dikawat di
+      `RootModule` — meniru arah `RollUpResolver` (Fase 2) tapi terbalik.
+      Kedua fitur tetap tidak saling mengimpor domain/data satu sama lain.
+      Dicatat lengkap di catatan revisi ADR-0009.
       Memenuhi FR-TIME-003.
-- [ ] **T-3.10** Buat layar riwayat buku jam.
+- [x] **T-3.10** Buat layar riwayat buku jam (`WorklogPage` bagian
+      "Riwayat buku": total jam, gaji bersih, status sudah/belum disuntik
+      per buku tertutup).
       Memenuhi FR-TIME-004.
+
+**Verifikasi Fase 3:** `flutter analyze` bersih, `flutter test` lolos (54
+tes total, 28 baru — domain `CalculateNetPay`/`CloseBillingBook`/
+`InjectNetPay`, data `WorklogRepositoryImpl`/`CycleIncomeWriterImpl`,
+presentation `IncomeSourceBloc`/`WorklogBloc`, plus `CycleBloc` yang
+diperbarui untuk dependensi barunya). Diuji juga secara runtime (build Linux
+sandbox + xvfb, dibuang setelah verifikasi) — `RootModule.registerAll`
+(termasuk adapter lintas fitur baru dan kedua modul rute baru) berjalan
+tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
 
 ## Fase 4: Roll-up
 

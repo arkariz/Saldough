@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -78,6 +79,18 @@ class _AppBarSliver extends StatelessWidget {
         ],
       ),
       centerTitle: true,
+      actions: [
+        IconButton(
+          tooltip: t.income.pageTitle,
+          icon: const Icon(Icons.account_balance_wallet_outlined),
+          onPressed: () => context.push('/income/list'),
+        ),
+        IconButton(
+          tooltip: t.worklog.pageTitle,
+          icon: const Icon(Icons.schedule_outlined),
+          onPressed: () => context.push('/worklog/page'),
+        ),
+      ],
     );
   }
 
@@ -208,9 +221,16 @@ class _IncomeSection extends StatelessWidget {
                   title: t.cycle.editIncomeLine,
                   initialLabel: line.label,
                   initialAmount: line.amount,
+                  sources: state.incomeSources,
+                  initialSourceId: line.sourceId,
                 );
                 if (result != null) {
-                  bloc.add(IncomeLineSaved(id: line.id, label: result.label, amount: result.amount));
+                  bloc.add(IncomeLineSaved(
+                    id: line.id,
+                    label: result.label,
+                    amount: result.amount,
+                    sourceId: result.sourceId,
+                  ));
                 }
               },
               onDelete: () => bloc.add(IncomeLineRemoved(line.id)),
@@ -223,9 +243,13 @@ class _IncomeSection extends StatelessWidget {
           label: t.cycle.addIncomeLine,
           icon: Icons.add,
           onPressed: () async {
-            final result = await LineEditSheet.show(context, title: t.cycle.addIncomeLine);
+            final result = await LineEditSheet.show(
+              context,
+              title: t.cycle.addIncomeLine,
+              sources: state.incomeSources,
+            );
             if (result != null) {
-              bloc.add(IncomeLineSaved(label: result.label, amount: result.amount));
+              bloc.add(IncomeLineSaved(label: result.label, amount: result.amount, sourceId: result.sourceId));
             }
           },
         ),

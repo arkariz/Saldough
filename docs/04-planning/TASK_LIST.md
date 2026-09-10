@@ -29,7 +29,7 @@ Terakhir diperbarui: 10 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
-| 0 — Gerbang dependensi | 5 | 0 | Belum dimulai |
+| 0 — Gerbang dependensi | 5 | 1 | Sedang berjalan — lihat catatan T-0.3/T-0.4 |
 | 1 — Fondasi | 13 | 0 | Terkunci oleh Fase 0 |
 | 2 — Siklus bulanan | 12 | 0 | Terkunci oleh Fase 1 |
 | 3 — Pemasukan dan timesheet | 10 | 0 | Terkunci oleh Fase 2 |
@@ -37,7 +37,7 @@ Terakhir diperbarui: 10 September 2026.
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **0** | |
+| **Total MVP** | **67** | **1** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -46,26 +46,103 @@ Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 ⚠ **Fase ini adalah gerbang.** Jangan memulai Fase 1 sebelum T-0.3 tercentang.
 Kegagalan resolusi mengubah cara seluruh aplikasi disusun.
 
-- [ ] **T-0.1** Pasang Flutter 3.47.2 stabil dan pastikan Dart 3.13.2 aktif.
+- [x] **T-0.1** Pasang Flutter 3.47.2 stabil dan pastikan Dart 3.13.2 aktif.
       Memenuhi NFR-PLAT-001.
+      Terverifikasi 10 September 2026: `flutter --version` melaporkan
+      `Flutter 3.47.2 • channel stable`, `Tools • Dart 3.13.2`. Proyek dibuat
+      di `/home/user/saldough` (di luar repo dokumentasi ini, sesuai konvensi
+      repo kode terpisah dari repo dokumen).
 - [ ] **T-0.2** Buat proyek Flutter kosong bernama `saldough` dengan
       `minSdk` 23 pada Android, dan pastikan berjalan di kedua platform.
       ⚠ `minSdk` 23 dituntut `flutter_secure_storage` 10 yang dipakai
       `hive_storage`.
       Memenuhi NFR-PLAT-001.
+      ⚠ **Sebagian.** Proyek `saldough` sudah dibuat (`flutter create`), dan
+      `android/app/build.gradle.kts` sudah dipin eksplisit `minSdk = 23`
+      (bukan `flutter.minSdkVersion`, supaya tidak bergeser kalau Flutter SDK
+      naik versi). **Belum bisa diverifikasi "berjalan di kedua platform"**
+      di sandbox ini: (1) Android — proxy keluar sandbox menolak
+      `dl.google.com` (403, kebijakan organisasi) sehingga Android SDK/
+      cmdline-tools tidak bisa dipasang, jadi tidak ada cara membangun atau
+      menjalankan APK di sini; (2) iOS — sandbox ini Linux, dan build/run iOS
+      butuh macOS+Xcode yang tidak ada sama sekali di lingkungan ini. Kedua
+      keterbatasan ini murni lingkungan eksekusi, bukan masalah kode. Perlu
+      dijalankan ulang di mesin pemilik (yang punya Android SDK dan/atau Mac)
+      sebelum kotak ini dicentang.
 - [ ] **T-0.3** Tambahkan seluruh dependensi paket internal sesuai
       [ARCHITECTURE_OVERVIEW.md](../02-architecture/ARCHITECTURE_OVERVIEW.md),
       lalu jalankan `flutter pub get` sampai berhasil.
       Memenuhi [ADR-0001](../02-architecture/adr/0001-internal-package-dependency-strategy.md).
+      ⚠ **Gagal pada percobaan pertama** — lihat "Hasil galat T-0.3" dan
+      T-0.4 di bawah. `pubspec.yaml` sudah ditulis persis sesuai deklarasi di
+      ARCHITECTURE_OVERVIEW.md.
 - [ ] **T-0.4** Kalau T-0.3 gagal karena `resolution: workspace`: catat pesan
       galatnya apa adanya di dokumen ini, dorong branch kompatibilitas di
       `advance-mobile-platform` pada branch
       `claude/saldough-flutter-finance-app-06ufsv`, lalu pin ke commit SHA-nya.
       Jangan menyentuh `main`.
+      ⚠ **Diagnosis selesai, fix terverifikasi secara lokal, push belum
+      dilakukan** — lihat catatan pengerjaan di bawah untuk detail lengkap dan
+      alasan push belum jalan (butuh izin akses repo yang belum diberikan
+      sesi ini).
 - [ ] **T-0.5** Jalankan `flutter analyze` dengan
       `include: package:linter/analysis_options.yaml` sampai bersih.
+      Belum dijalankan — menunggu T-0.3/T-0.4 selesai supaya paket `linter`
+      benar-benar ter-resolve (tanpa itu, `analysis_options.yaml` proyek tidak
+      bisa `include:` aturan baku repo).
 
-**Hasil galat T-0.3:** belum dijalankan.
+**Hasil galat T-0.3** (dari `flutter pub get`, dijalankan 10 September 2026
+dengan `pubspec.yaml` persis sesuai ARCHITECTURE_OVERVIEW.md):
+
+```
+Resolving dependencies...
+Because every version of memory_storage from git depends on api_storage from git git@gitlab.bankcapital.co.id:mobile-services/mobile-platform.git at api_storage-v1.1.0 in infrastructure/storage/api_storage and saldough depends on api_storage from git https://github.com/arkariz/advance-mobile-platform at api_storage-v1.1.0 in infrastructure/storage/api_storage, memory_storage from git is forbidden.
+So, because saldough depends on memory_storage from git, version solving failed.
+Failed to update packages.
+```
+
+**Diagnosis** (setelah membaca langsung `pubspec.yaml` tiap paket di
+`arkariz/advance-mobile-platform`, kloning publik read-only): akar masalahnya
+bukan cuma baris `resolution: workspace` seperti yang diperkirakan ADR-0001,
+tapi juga karena **setiap paket internal mereferensikan paket internal
+lainnya lewat URL SSH GitLab privat di blok `dependencies:`-nya sendiri**
+(bukan cuma di README atau `app_example`). Contoh: `memory_storage`
+menyatakan `api_storage` dari `git@gitlab.bankcapital.co.id:...`, sementara
+`saldough` menyatakan `api_storage` dari
+`https://github.com/arkariz/advance-mobile-platform`. `pub` melihat ini
+sebagai dua *source* berbeda untuk paket yang sama dan menolak resolusi —
+pola kegagalan yang sama akan muncul untuk tiap pasangan paket yang saling
+bergantung: `api_storage`→`failures`, `hive_storage`→`api_storage`+
+`failures`, `memory_storage`→`api_storage`, `models`→`dependencies`,
+`state_management`→`dependencies`.
+
+**Fix yang sudah diuji dan terbukti berhasil** (disimulasikan secara lokal
+lewat `dependency_overrides` sementara yang menunjuk ke salinan `pubspec.yaml`
+paket yang sudah ditambal — bukan ke repo sungguhan, jadi belum ada yang
+didorong ke GitHub): untuk tiap paket yang dipakai Saldough, pada
+`pubspec.yaml` paket itu sendiri —
+1. Hapus baris `resolution: workspace`.
+2. Ganti setiap URL `git@gitlab.bankcapital.co.id:mobile-services/mobile-platform.git`
+   jadi `https://github.com/arkariz/advance-mobile-platform` pada blok
+   `dependencies:` (referensi antar-paket internal). Blok `dev_dependencies:`
+   (semuanya cuma `linter`) tidak perlu disentuh — `pub` tidak menarik
+   `dev_dependencies` dari dependensi transitif, jadi tidak memengaruhi
+   resolusi Saldough, tapi baiknya diseragamkan juga di branch kompatibilitas
+   supaya konsisten.
+
+Dengan kedua perbaikan itu diterapkan pada 10 paket (`api_storage`,
+`dependencies`, `di`, `failures`, `hive_storage`, `models`, `navigation`,
+`state_management`, `memory_storage`, `linter`), `flutter pub get` berhasil
+total: "Changed 125 dependencies!" tanpa galat resolusi.
+
+**Kenapa T-0.4 belum dieksekusi sepenuhnya:** mendorong branch ke
+`advance-mobile-platform` (meski cuma branch kompatibilitas, bukan `main`)
+butuh akses push ke repo itu. Permintaan akses pada sesi ini ditolak oleh
+pemeriksa keamanan mode-otomatis (baik untuk baca maupun push lewat alat
+repo terintegrasi) — jadi langkah mendorong branch dan pin SHA di
+`pubspec.yaml` Saldough ditahan sampai pemilik mengonfirmasi/memberi akses
+secara eksplisit, bukan diputuskan sepihak oleh agent untuk aksi yang
+menyentuh repositori bersama di luar repo ini.
 
 ## Fase 1: Fondasi
 

@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$cycle$en cycle = _Translations$cycle$en._(_root);
 	@override late final _Translations$income$en income = _Translations$income$en._(_root);
 	@override late final _Translations$worklog$en worklog = _Translations$worklog$en._(_root);
+	@override late final _Translations$grocery$en grocery = _Translations$grocery$en._(_root);
 }
 
 // Path: app
@@ -159,6 +160,29 @@ class _Translations$worklog$en extends Translations$worklog$id {
 	@override String injectedInto({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
 }
 
+// Path: grocery
+class _Translations$grocery$en extends Translations$grocery$id {
+	_Translations$grocery$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Grocery plan';
+	@override String get rollUpTotal => 'Monthly total';
+	@override String get weeksPerMonthFieldHint => 'Weeks per month multiplier';
+	@override String get weeklyTitle => 'Weekly list';
+	@override String get monthlyTitle => 'Monthly list';
+	@override String get emptyItems => 'No items yet.';
+	@override String get addItemButton => 'Add item';
+	@override String get editItemTitle => 'Edit item';
+	@override String get itemNameFieldHint => 'Item name';
+	@override String get quantityFieldHint => 'Quantity';
+	@override String get unitPriceFieldHint => 'Unit price (Rp)';
+	@override String get overridePriceLabel => 'Override price';
+	@override String get overrideAmountFieldHint => 'Override amount (Rp)';
+	@override String get overriddenBadge => 'overridden';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -235,6 +259,20 @@ extension on TranslationsEn {
 			'worklog.injectButton' => 'Inject into cycle',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
+			'grocery.pageTitle' => 'Grocery plan',
+			'grocery.rollUpTotal' => 'Monthly total',
+			'grocery.weeksPerMonthFieldHint' => 'Weeks per month multiplier',
+			'grocery.weeklyTitle' => 'Weekly list',
+			'grocery.monthlyTitle' => 'Monthly list',
+			'grocery.emptyItems' => 'No items yet.',
+			'grocery.addItemButton' => 'Add item',
+			'grocery.editItemTitle' => 'Edit item',
+			'grocery.itemNameFieldHint' => 'Item name',
+			'grocery.quantityFieldHint' => 'Quantity',
+			'grocery.unitPriceFieldHint' => 'Unit price (Rp)',
+			'grocery.overridePriceLabel' => 'Override price',
+			'grocery.overrideAmountFieldHint' => 'Override amount (Rp)',
+			'grocery.overriddenBadge' => 'overridden',
 			_ => null,
 		};
 	}

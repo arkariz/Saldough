@@ -2,7 +2,6 @@ import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_template_repository_impl.dart';
-import 'package:saldough/features/cycle/data/roll_up/unavailable_roll_up_resolver.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
@@ -19,14 +18,14 @@ final class CycleScope extends IsolatedScope {
   void bridge(GetIt c) {
     c
       ..registerSingleton<KeyValueStorage>(parent<KeyValueStorage>())
-      ..registerSingleton<IncomeSourceRepository>(parent<IncomeSourceRepository>());
+      ..registerSingleton<IncomeSourceRepository>(parent<IncomeSourceRepository>())
+      // Implementasi sungguhan (grocery) dikawat di RootModule sejak
+      // Fase 4 — lihat catatan di root_module.dart.
+      ..registerSingleton<RollUpResolver>(parent<RollUpResolver>());
   }
 
   @override
   void register(GetIt c) {
-    // Placeholder sampai Fase 4 — lihat ROADMAP.md Fase 2 dan
-    // UnavailableRollUpResolver.
-    c.registerLazySingleton<RollUpResolver>(UnavailableRollUpResolver.new);
     c.registerLazySingleton<CycleRepository>(
       () => CycleRepositoryImpl(storage: c<KeyValueStorage>(), resolver: c<RollUpResolver>()),
     );

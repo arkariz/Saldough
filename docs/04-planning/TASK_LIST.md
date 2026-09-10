@@ -33,11 +33,11 @@ Terakhir diperbarui: 10 September 2026.
 | 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
 | 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
-| 4 — Roll-up | 12 | 0 | Gerbang Fase 2 lolos, siap dimulai (tidak bergantung Fase 3) |
+| 4 — Roll-up | 12 | 5 | Belanja selesai (T-4.1–T-4.5) — Kartu kredit (T-4.6–T-4.12) belum dikerjakan |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **36** | |
+| **Total MVP** | **67** | **41** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -488,20 +488,46 @@ tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
 
 ### Belanja
 
-- [ ] **T-4.1** Buat entitas `GroceryPlan` dan `GroceryItem` dengan
+- [x] **T-4.1** Buat entitas `GroceryPlan` dan `GroceryItem` dengan
       `amountOverride`.
       ⚠ Jangan memaksa harga sama dengan jumlah dikali harga satuan. Data nyata
-      memuat koreksi manual: sampo `1 × Rp41.300` berharga Rp24.000.
+      memuat koreksi manual: sampo `1 × Rp41.300` berharga Rp24.000. `isOverridden`
+      (penanda item yang ditimpa) ditambah sebagai getter turunan, bukan field —
+      pola sama seperti `CycleState.totals`.
       Memenuhi FR-GROC-002.
-- [ ] **T-4.2** Buat use case `CalculateGroceryRollUp`.
-- [ ] **T-4.3** Tulis uji unit roll-up belanja memakai kasus nyata
-      `576.600 × 4 + 762.100 = 3.068.500`.
+- [x] **T-4.2** Buat use case `CalculateGroceryRollUp`.
+- [x] **T-4.3** Tulis uji unit roll-up belanja memakai kasus nyata
+      `576.600 × 4 + 762.100 = 3.068.500`
+      (`test/features/grocery/domain/usecases/calculate_grocery_roll_up_test.dart`,
+      4 kasus: rumus nyata, `amountOverride`, pengali minggu, rencana kosong).
       Memenuhi NFR-ACC-002.
-- [ ] **T-4.4** Buat layar pengelolaan daftar mingguan dan bulanan.
+- [x] **T-4.4** Buat layar pengelolaan daftar mingguan dan bulanan
+      (`GroceryPage`: dua bagian terpisah, tambah/sunting/hapus item, toggle
+      timpa harga, ubah pengali minggu).
       Memenuhi FR-GROC-001.
-- [ ] **T-4.5** Sambungkan roll-up belanja ke baris anggaran, dan pastikan
-      perubahan daftar langsung terlihat.
+- [x] **T-4.5** Sambungkan roll-up belanja ke baris anggaran, dan pastikan
+      perubahan daftar langsung terlihat. `GroceryRollUpResolver`
+      (`features/grocery/data/`) menggantikan `UnavailableRollUpResolver`
+      sebagai implementasi `RollUpResolver` sungguhan di `RootModule` — baris
+      `rollUp` tetap dihitung ulang tiap siklus dibaca (ADR-0008), tidak ada
+      langkah "sinkronisasi" tambahan, sesuai rencana ROADMAP.md Fase 2.
+      `CycleScope` kini membawa `RollUpResolver` dari `RootModule` lewat
+      `bridge()` (bukan mendaftar placeholder lokal).
+      ⚠ Baris `card` masih `unavailable()` — bagian kartu kredit (T-4.6–T-4.12)
+      belum dikerjakan ronde ini, lihat catatan di bawah.
       Memenuhi FR-GROC-003 dan NFR-PERF-002.
+
+**Catatan cakupan:** Ronde ini hanya mengerjakan bagian Belanja (T-4.1–T-4.5).
+Bagian Kartu kredit (T-4.6–T-4.12) tidak bergantung pada bagian ini (lihat
+ROADMAP.md: keduanya independen di bawah Fase 4) dan sengaja ditunda ke ronde
+berikutnya untuk menjaga ukuran perubahan tetap kecil.
+
+**Verifikasi bagian Belanja:** `flutter analyze` bersih, `flutter test` lolos
+(61 tes total, 7 baru — `CalculateGroceryRollUp` dan `GroceryRollUpResolver`,
+termasuk kasus `CardRollUpSource` yang tetap `unavailable()`). Diuji juga
+secara runtime (build Linux sandbox + xvfb, dibuang setelah verifikasi) —
+pendaftaran ulang `RollUpResolver` di `RootModule`/`CycleScope` berjalan
+tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
 
 ### Kartu kredit
 

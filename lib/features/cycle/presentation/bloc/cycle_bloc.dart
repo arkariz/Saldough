@@ -8,6 +8,7 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dar
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
 import 'package:saldough/features/cycle/domain/usecases/roll_over_cycle.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
+import 'package:saldough/shared/income/income.dart';
 import 'package:state_management/state_management.dart';
 
 part 'cycle_effect.dart';
@@ -25,6 +26,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     required this._cycleRepository,
     required this._templateRepository,
     required this._rollOverCycle,
+    required this._sourceRepository,
   }) : super(CycleState.initial()) {
     on<CycleOpened>(_onOpened);
     on<IncomeLineSaved>(_onIncomeLineSaved);
@@ -51,15 +53,19 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
   final CycleRepository _cycleRepository;
   final CycleTemplateRepository _templateRepository;
   final RollOverCycle _rollOverCycle;
+  final IncomeSourceRepository _sourceRepository;
 
   Future<void> _onOpened(CycleOpened event, Emitter<CycleState> emit) async {
     emit(state.copyWith(isLoading: true));
+    final sourcesResult = await _sourceRepository.listSources();
+    final sources = sourcesResult.getOrElse((_) => const []);
+
     final result = await _cycleRepository.getCycle(event.cycleId);
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final cycle):
-        emit(state.withCycle(cycle ?? .empty(event.cycleId)));
+        emit(state.withCycle(cycle ?? .empty(event.cycleId)).copyWith(incomeSources: sources));
     }
   }
 

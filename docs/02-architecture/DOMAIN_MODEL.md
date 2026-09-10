@@ -169,11 +169,18 @@ bulan.
 | `id` | `String` | Identitas aturan. |
 | `label` | `String` | Nama, misalnya `Pajak`. |
 | `kind` | `DeductionKind` | `percentage` atau `fixedAmount`. |
-| `value` | `int` | Untuk `percentage`, nilai per seratus. Untuk `fixedAmount`, nominal dalam sen. |
+| `value` | `int` | Untuk `percentage`, nilai per mil (perseribu). Untuk `fixedAmount`, nominal dalam sen. |
 
-Aturan yang berlaku hari ini pada `Gaji Menul`: pajak sebesar 2,5% sebagai
-potongan persentase, ditambah potongan bernominal tetap yang muncul sesekali
-seperti `jajan` dan `webinar` senilai Rp150.000.
+> **Catatan 10 September 2026:** draf awal menulis `value` sebagai "nilai per
+> seratus" (persentase bulat). Itu tidak bisa merepresentasikan tarif pajak
+> nyata 2,5% sebagai `int`. Diperbaiki ke per mil (2,5% tersimpan sebagai
+> `25`) saat implementasi Fase 3 — menutup celah dokumentasi, bukan keputusan
+> produk baru. Rumus di bawah diperbarui mengikuti (`~/ 1000`, bukan
+> `~/ 100`).
+
+Aturan yang berlaku hari ini pada `Gaji Menul`: pajak sebesar 2,5% (`value:
+25`) sebagai potongan persentase, ditambah potongan bernominal tetap yang
+muncul sesekali seperti `jajan` dan `webinar` senilai Rp150.000.
 
 **Nilai `hourlyRate` terkonfirmasi pemilik: Rp72.500.** Ini adalah data yang
 tersimpan di `IncomeSource`, bukan konstanta kode — pemilik bisa mengubahnya
@@ -201,6 +208,16 @@ buku baru sampai penanda berikutnya.
 | `startDate` | `DateTime` | Tanggal entri pertama. |
 | `endDate` | `DateTime?` | Tanggal entri terakhir. Null selama buku masih terbuka. |
 | `entries` | `List<WorkLogEntry>` | Entri dalam periode ini. |
+| `netPayAmount` | `int?` | Gaji bersih hasil `CalculateNetPay` saat buku ditutup, dalam sen. Null selama buku masih terbuka — lihat catatan di bawah. |
+| `injectedCycleId` | `String?` | Siklus tujuan penyuntikan (T-3.9). Null kalau belum disuntikkan. |
+| `injectedIncomeLineId` | `String?` | Baris pemasukan tujuan di siklus itu. Null kalau belum disuntikkan. |
+
+> **Catatan 10 September 2026:** tiga field terakhir tidak ada di draf tabel
+> ini semula. Ditambahkan saat implementasi Fase 3 supaya nilai gaji bersih
+> sebuah buku yang sudah ditutup tetap tetap (tidak dihitung ulang diam-diam
+> kalau `IncomeSource`-nya kelak berubah tarif) dan supaya "sudah disuntikkan
+> ke siklus mana" bisa ditampilkan di riwayat (FR-TIME-004) tanpa menyuntik
+> dua kali. Menutup celah dokumentasi, bukan keputusan produk baru.
 
 Buku jam **tidak** dipotong per bulan kalender. Periode ditentukan semata oleh
 penanda `startsNewBook`. Data nyata menunjukkan panjang periode bervariasi dari
@@ -214,7 +231,7 @@ Rumus dari buku jam menjadi baris pemasukan:
 totalHours = Σ entries.hours
 grossPay   = totalHours × source.hourlyRate
 deduction(rule) = rule.kind == percentage
-                    ? grossPay × rule.value ~/ 100
+                    ? grossPay × rule.value ~/ 1000
                     : rule.value
 netPay     = grossPay − Σ deduction(rule)
 ```
@@ -222,6 +239,17 @@ netPay     = grossPay − Σ deduction(rule)
 Potongan persentase selalu dihitung dari gaji kotor, bukan dari nilai berjalan
 setelah potongan sebelumnya. Ini sesuai spreadsheet, di mana kolom gaji kotor
 berulang di setiap baris potongan.
+
+Rumus di atas dihitung murni dalam sen — `~/` di sini tidak pernah kehilangan
+presisi untuk kombinasi gaji kotor rupiah bulat dan tarif satu desimal persen
+(sen memberi dua digit presisi ekstra di atas rupiah, mil memberi satu digit
+ekstra di atas persen). Spreadsheet aslinya membulatkan potongan ke rupiah
+**sebelum** mengurangi dari gaji kotor — itu sumber selisih satu rupiah yang
+pernah ditemukan (lihat `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md`,
+kasus Rp3.117.500: membulatkan potongan lebih dulu menghasilkan Rp3.039.562,
+padahal jawaban benar Rp3.039.563). `netPay` di sini selalu dihitung dari
+`deduction(rule)` yang belum dibulatkan — pembulatan ke rupiah hanya terjadi
+saat `AppMoneyFormatter` menampilkannya.
 
 ## Belanja
 

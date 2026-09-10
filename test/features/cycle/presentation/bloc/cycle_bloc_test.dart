@@ -14,15 +14,19 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_template_repos
 import 'package:saldough/features/cycle/domain/usecases/roll_over_cycle.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
+import 'package:saldough/shared/income/income.dart';
 import 'package:state_management/state_management.dart';
 
 class MockCycleRepository extends Mock implements CycleRepository {}
 
 class MockCycleTemplateRepository extends Mock implements CycleTemplateRepository {}
 
+class MockIncomeSourceRepository extends Mock implements IncomeSourceRepository {}
+
 void main() {
   late MockCycleRepository cycleRepository;
   late MockCycleTemplateRepository templateRepository;
+  late MockIncomeSourceRepository sourceRepository;
 
   setUpAll(() {
     registerFallbackValue(MonthlyCycle.empty('2026-09'));
@@ -31,6 +35,8 @@ void main() {
   setUp(() {
     cycleRepository = MockCycleRepository();
     templateRepository = MockCycleTemplateRepository();
+    sourceRepository = MockIncomeSourceRepository();
+    when(() => sourceRepository.listSources()).thenAnswer((_) async => right(const []));
   });
 
   // RollOverCycle sendiri final class (tidak bisa di-mock mocktail) dan
@@ -43,6 +49,7 @@ void main() {
           cycleRepository: cycleRepository,
           templateRepository: templateRepository,
         ),
+        sourceRepository: sourceRepository,
       );
 
   final cycleWithLines = MonthlyCycle(

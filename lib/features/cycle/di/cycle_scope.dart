@@ -8,6 +8,7 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_template_repos
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
 import 'package:saldough/features/cycle/domain/usecases/roll_over_cycle.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
+import 'package:saldough/shared/income/income.dart';
 
 /// Lingkup dependensi fitur `cycle`.
 final class CycleScope extends IsolatedScope {
@@ -16,7 +17,9 @@ final class CycleScope extends IsolatedScope {
 
   @override
   void bridge(GetIt c) {
-    c.registerSingleton<KeyValueStorage>(parent<KeyValueStorage>());
+    c
+      ..registerSingleton<KeyValueStorage>(parent<KeyValueStorage>())
+      ..registerSingleton<IncomeSourceRepository>(parent<IncomeSourceRepository>());
   }
 
   @override
@@ -41,6 +44,7 @@ final class CycleScope extends IsolatedScope {
         cycleRepository: c<CycleRepository>(),
         templateRepository: c<CycleTemplateRepository>(),
         rollOverCycle: c<RollOverCycle>(),
+        sourceRepository: c<IncomeSourceRepository>(),
       ),
       dispose: (bloc) => bloc.close(),
     );

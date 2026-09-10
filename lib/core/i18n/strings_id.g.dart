@@ -44,6 +44,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$app$id app = Translations$app$id.internal(_root);
 	late final Translations$common$id common = Translations$common$id.internal(_root);
 	late final Translations$cycle$id cycle = Translations$cycle$id.internal(_root);
+	late final Translations$income$id income = Translations$income$id.internal(_root);
+	late final Translations$worklog$id worklog = Translations$worklog$id.internal(_root);
 }
 
 // Path: app
@@ -178,6 +180,123 @@ class Translations$cycle$id {
 	String unreviewedBanner({required Object count}) => 'Ada ${count} baris perlu ditinjau.';
 }
 
+// Path: income
+class Translations$income$id {
+	Translations$income$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Sumber pemasukan'
+	String get pageTitle => 'Sumber pemasukan';
+
+	/// id: 'Belum ada sumber pemasukan.'
+	String get emptySources => 'Belum ada sumber pemasukan.';
+
+	/// id: 'Tambah sumber pemasukan'
+	String get addSourceTitle => 'Tambah sumber pemasukan';
+
+	/// id: 'Sunting sumber pemasukan'
+	String get editSourceTitle => 'Sunting sumber pemasukan';
+
+	/// id: 'Nama'
+	String get nameFieldHint => 'Nama';
+
+	/// id: 'Nominal tetap (Rp)'
+	String get fixedAmountFieldHint => 'Nominal tetap (Rp)';
+
+	/// id: 'Tarif per jam (Rp)'
+	String get hourlyRateFieldHint => 'Tarif per jam (Rp)';
+
+	/// id: '$rate / jam'
+	String hourlyRateSubtitle({required Object rate}) => '${rate} / jam';
+
+	/// id: 'Gaji tetap'
+	String get kindFixedSalary => 'Gaji tetap';
+
+	/// id: 'Freelance per jam'
+	String get kindHourlyFreelance => 'Freelance per jam';
+
+	/// id: 'Sekali jalan'
+	String get kindAdHoc => 'Sekali jalan';
+
+	/// id: 'Aturan potongan'
+	String get deductionRulesTitle => 'Aturan potongan';
+
+	/// id: 'Tambah potongan'
+	String get addDeductionRuleButton => 'Tambah potongan';
+
+	/// id: 'Nama potongan'
+	String get deductionLabelHint => 'Nama potongan';
+
+	/// id: 'Nilai'
+	String get deductionValueHint => 'Nilai';
+
+	/// id: 'Per mil'
+	String get deductionKindPermille => 'Per mil';
+
+	/// id: 'Tetap (Rp)'
+	String get deductionKindFixed => 'Tetap (Rp)';
+}
+
+// Path: worklog
+class Translations$worklog$id {
+	Translations$worklog$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catatan jam kerja'
+	String get pageTitle => 'Catatan jam kerja';
+
+	/// id: 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.'
+	String get noFreelanceSource => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.';
+
+	/// id: 'Catat jam kerja'
+	String get addEntryTitle => 'Catat jam kerja';
+
+	/// id: 'Jumlah jam'
+	String get hoursFieldHint => 'Jumlah jam';
+
+	/// id: 'Mulai buku baru'
+	String get startsNewBookLabel => 'Mulai buku baru';
+
+	/// id: 'Catat'
+	String get addEntryButton => 'Catat';
+
+	/// id: 'Buku berjalan'
+	String get openBookTitle => 'Buku berjalan';
+
+	/// id: '$hours jam'
+	String totalHours({required Object hours}) => '${hours} jam';
+
+	/// id: 'Tutup buku'
+	String get closeBookButton => 'Tutup buku';
+
+	/// id: 'Buku ditutup. Gaji bersih $netPay.'
+	String bookClosedMessage({required Object netPay}) => 'Buku ditutup. Gaji bersih ${netPay}.';
+
+	/// id: 'Riwayat buku'
+	String get historyTitle => 'Riwayat buku';
+
+	/// id: 'Belum ada buku yang ditutup.'
+	String get emptyHistory => 'Belum ada buku yang ditutup.';
+
+	/// id: 'Siklus tujuan (YYYY-MM)'
+	String get targetCycleHint => 'Siklus tujuan (YYYY-MM)';
+
+	/// id: 'Suntik ke siklus'
+	String get injectButton => 'Suntik ke siklus';
+
+	/// id: 'Disuntikkan ke siklus $cycleId.'
+	String injectedMessage({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.';
+
+	/// id: 'Disuntikkan ke siklus $cycleId.'
+	String injectedInto({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -221,6 +340,39 @@ extension on Translations {
 			'cycle.needsReviewBadge' => 'Perlu ditinjau',
 			'cycle.confirmReviewed' => 'Sudah benar',
 			'cycle.unreviewedBanner' => ({required Object count}) => 'Ada ${count} baris perlu ditinjau.',
+			'income.pageTitle' => 'Sumber pemasukan',
+			'income.emptySources' => 'Belum ada sumber pemasukan.',
+			'income.addSourceTitle' => 'Tambah sumber pemasukan',
+			'income.editSourceTitle' => 'Sunting sumber pemasukan',
+			'income.nameFieldHint' => 'Nama',
+			'income.fixedAmountFieldHint' => 'Nominal tetap (Rp)',
+			'income.hourlyRateFieldHint' => 'Tarif per jam (Rp)',
+			'income.hourlyRateSubtitle' => ({required Object rate}) => '${rate} / jam',
+			'income.kindFixedSalary' => 'Gaji tetap',
+			'income.kindHourlyFreelance' => 'Freelance per jam',
+			'income.kindAdHoc' => 'Sekali jalan',
+			'income.deductionRulesTitle' => 'Aturan potongan',
+			'income.addDeductionRuleButton' => 'Tambah potongan',
+			'income.deductionLabelHint' => 'Nama potongan',
+			'income.deductionValueHint' => 'Nilai',
+			'income.deductionKindPermille' => 'Per mil',
+			'income.deductionKindFixed' => 'Tetap (Rp)',
+			'worklog.pageTitle' => 'Catatan jam kerja',
+			'worklog.noFreelanceSource' => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.',
+			'worklog.addEntryTitle' => 'Catat jam kerja',
+			'worklog.hoursFieldHint' => 'Jumlah jam',
+			'worklog.startsNewBookLabel' => 'Mulai buku baru',
+			'worklog.addEntryButton' => 'Catat',
+			'worklog.openBookTitle' => 'Buku berjalan',
+			'worklog.totalHours' => ({required Object hours}) => '${hours} jam',
+			'worklog.closeBookButton' => 'Tutup buku',
+			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Buku ditutup. Gaji bersih ${netPay}.',
+			'worklog.historyTitle' => 'Riwayat buku',
+			'worklog.emptyHistory' => 'Belum ada buku yang ditutup.',
+			'worklog.targetCycleHint' => 'Siklus tujuan (YYYY-MM)',
+			'worklog.injectButton' => 'Suntik ke siklus',
+			'worklog.injectedMessage' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
+			'worklog.injectedInto' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
 			_ => null,
 		};
 	}

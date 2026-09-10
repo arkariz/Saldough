@@ -70,7 +70,7 @@ perlu UI dipakai ulang lintas fitur — dan kalaupun itu terjadi, harus dicatat
 eksplisit sebagai pengecualian terdokumentasi, bukan dianggap pola kedua yang
 setara.
 
-Satu-satunya `shared/<module>/` yang sudah teridentifikasi untuk MVP Saldough:
+`shared/<module>/` untuk MVP Saldough:
 
 ```
 lib/shared/goal/
@@ -81,6 +81,17 @@ lib/shared/goal/
 └── data/
     ├── goal_model.dart            # serialisasi
     └── goal_repository_impl.dart
+
+lib/shared/income/
+├── income.dart                    # barrel
+├── domain/
+│   ├── income_source.dart / income_source_kind.dart
+│   ├── deduction_rule.dart / deduction_kind.dart
+│   ├── income_source_repository.dart  # abstract interface class
+│   └── usecases/calculate_net_pay.dart
+└── data/
+    ├── income_source_model.dart / deduction_rule_model.dart
+    └── income_source_repository_impl.dart
 ```
 
 `Goal` dipakai oleh fitur `investment` (alokasi persentase) dan oleh
@@ -93,10 +104,40 @@ dipikirkan sebagai registry terbuka yang wajar dipakai fitur lain nanti
 satu-satunya pengecualian yang disengaja terhadap aturan "jangan promosikan
 spekulatif" — dicatat di sini supaya tidak jadi kebiasaan.
 
+> **Catatan revisi (Fase 3, 10 September 2026):** `income` naik ke
+> `shared/income/` — bukan pengecualian seperti `Goal`, melainkan kasus
+> normal ambang "2+ konsumen": fitur `cycle` perlu membaca daftar
+> `IncomeSource` untuk menautkan baris pemasukan dan mengisi nominal otomatis
+> (T-3.4/FR-INC-002), dan fitur `worklog` perlu membaca `hourlyRate` serta
+> `deductionRules`-nya untuk menghitung gaji bersih (T-3.8) — dua konsumen
+> nyata sejak awal, bukan spekulasi. `CalculateNetPay` ikut naik karena murni
+> fungsi atas entitas `shared/income/` tanpa bergantung pada repository
+> fitur mana pun.
+>
+> Satu kebutuhan lain di Fase 3 **tidak** diselesaikan lewat promosi:
+> `worklog` perlu menulis gaji bersih ke `IncomeLine` milik `MonthlyCycle`
+> (T-3.9/FR-TIME-003) — sebuah AGREGAT milik `cycle`, bukan entitas mandiri
+> seperti `Goal`/`IncomeSource`. Mempromosikan `MonthlyCycle` beserta seluruh
+> `CycleRepository` (yang sudah berisi logika resolusi roll-up Fase 2) ke
+> `shared/` terlalu besar untuk satu kebutuhan tulis. Sebagai gantinya
+> dipakai pola port kecil yang sudah ada preseden dari `RollUpResolver`
+> (Fase 2, arah sebaliknya — `cycle` mendefinisikan, fitur lain
+> mengimplementasikan): `worklog` mendefinisikan
+> `abstract interface class CycleIncomeWriter` di domainnya sendiri, dan
+> `features/cycle/data/` mengimplementasikannya (`CycleIncomeWriterImpl`,
+> membungkus `CycleRepository` yang sudah ada, tidak mengubah kodenya).
+> Kedua fitur tetap tidak saling mengimpor domain satu sama lain — masing-
+> masing hanya bergantung pada satu antarmuka kecil miliknya sendiri, dikawat
+> di `RootModule` yang memang melihat kedua fitur. Ini pola resmi untuk
+> "fitur A perlu menulis ke agregat fitur B" ke depannya — beda dari promosi
+> `shared/`, yang dipakai untuk "entitas mandiri dipakai banyak fitur."
+
 **`features/<feature>/`** — graf milik satu fitur: `domain/` dan `data/`
 privat (tidak diimpor fitur lain), `presentation/{bloc,navigation,pages,widgets}`,
 dan `di/<feature>_scope.dart` sendiri. Tujuh fitur MVP:
-`cycle`, `income`, `worklog`, `grocery`, `card`, `investment`, `seed`.
+`cycle`, `income`, `worklog`, `grocery`, `card`, `investment`, `seed`. Fitur
+`income` sejak Fase 3 hanya berisi `presentation/` + `di/` — domain dan
+data-nya ada di `shared/income/` (lihat catatan revisi di bawah).
 
 ### Aturan penempatan domain
 

@@ -42,6 +42,8 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$app$en app = _Translations$app$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$cycle$en cycle = _Translations$cycle$en._(_root);
+	@override late final _Translations$income$en income = _Translations$income$en._(_root);
+	@override late final _Translations$worklog$en worklog = _Translations$worklog$en._(_root);
 }
 
 // Path: app
@@ -106,6 +108,57 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String unreviewedBanner({required Object count}) => '${count} line(s) need review.';
 }
 
+// Path: income
+class _Translations$income$en extends Translations$income$id {
+	_Translations$income$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Income sources';
+	@override String get emptySources => 'No income sources yet.';
+	@override String get addSourceTitle => 'Add income source';
+	@override String get editSourceTitle => 'Edit income source';
+	@override String get nameFieldHint => 'Name';
+	@override String get fixedAmountFieldHint => 'Fixed amount (Rp)';
+	@override String get hourlyRateFieldHint => 'Hourly rate (Rp)';
+	@override String hourlyRateSubtitle({required Object rate}) => '${rate} / hour';
+	@override String get kindFixedSalary => 'Fixed salary';
+	@override String get kindHourlyFreelance => 'Hourly freelance';
+	@override String get kindAdHoc => 'One-off';
+	@override String get deductionRulesTitle => 'Deduction rules';
+	@override String get addDeductionRuleButton => 'Add deduction';
+	@override String get deductionLabelHint => 'Deduction name';
+	@override String get deductionValueHint => 'Value';
+	@override String get deductionKindPermille => 'Per mille';
+	@override String get deductionKindFixed => 'Fixed (Rp)';
+}
+
+// Path: worklog
+class _Translations$worklog$en extends Translations$worklog$id {
+	_Translations$worklog$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Work log';
+	@override String get noFreelanceSource => 'No freelance income source yet. Add one on the Income Sources screen first.';
+	@override String get addEntryTitle => 'Log hours';
+	@override String get hoursFieldHint => 'Number of hours';
+	@override String get startsNewBookLabel => 'Start new book';
+	@override String get addEntryButton => 'Log';
+	@override String get openBookTitle => 'Open book';
+	@override String totalHours({required Object hours}) => '${hours} hour(s)';
+	@override String get closeBookButton => 'Close book';
+	@override String bookClosedMessage({required Object netPay}) => 'Book closed. Net pay ${netPay}.';
+	@override String get historyTitle => 'Book history';
+	@override String get emptyHistory => 'No closed books yet.';
+	@override String get targetCycleHint => 'Target cycle (YYYY-MM)';
+	@override String get injectButton => 'Inject into cycle';
+	@override String injectedMessage({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
+	@override String injectedInto({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -149,6 +202,39 @@ extension on TranslationsEn {
 			'cycle.needsReviewBadge' => 'Needs review',
 			'cycle.confirmReviewed' => 'Looks right',
 			'cycle.unreviewedBanner' => ({required Object count}) => '${count} line(s) need review.',
+			'income.pageTitle' => 'Income sources',
+			'income.emptySources' => 'No income sources yet.',
+			'income.addSourceTitle' => 'Add income source',
+			'income.editSourceTitle' => 'Edit income source',
+			'income.nameFieldHint' => 'Name',
+			'income.fixedAmountFieldHint' => 'Fixed amount (Rp)',
+			'income.hourlyRateFieldHint' => 'Hourly rate (Rp)',
+			'income.hourlyRateSubtitle' => ({required Object rate}) => '${rate} / hour',
+			'income.kindFixedSalary' => 'Fixed salary',
+			'income.kindHourlyFreelance' => 'Hourly freelance',
+			'income.kindAdHoc' => 'One-off',
+			'income.deductionRulesTitle' => 'Deduction rules',
+			'income.addDeductionRuleButton' => 'Add deduction',
+			'income.deductionLabelHint' => 'Deduction name',
+			'income.deductionValueHint' => 'Value',
+			'income.deductionKindPermille' => 'Per mille',
+			'income.deductionKindFixed' => 'Fixed (Rp)',
+			'worklog.pageTitle' => 'Work log',
+			'worklog.noFreelanceSource' => 'No freelance income source yet. Add one on the Income Sources screen first.',
+			'worklog.addEntryTitle' => 'Log hours',
+			'worklog.hoursFieldHint' => 'Number of hours',
+			'worklog.startsNewBookLabel' => 'Start new book',
+			'worklog.addEntryButton' => 'Log',
+			'worklog.openBookTitle' => 'Open book',
+			'worklog.totalHours' => ({required Object hours}) => '${hours} hour(s)',
+			'worklog.closeBookButton' => 'Close book',
+			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Book closed. Net pay ${netPay}.',
+			'worklog.historyTitle' => 'Book history',
+			'worklog.emptyHistory' => 'No closed books yet.',
+			'worklog.targetCycleHint' => 'Target cycle (YYYY-MM)',
+			'worklog.injectButton' => 'Inject into cycle',
+			'worklog.injectedMessage' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
+			'worklog.injectedInto' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
 			_ => null,
 		};
 	}

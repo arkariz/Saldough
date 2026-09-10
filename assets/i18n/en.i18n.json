@@ -1,0 +1,17 @@
+{
+  "app": {
+    "title": "Saldough"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "retry": "Retry",
+    "loading": "Loading...",
+    "genericErrorMessage": "Something went wrong. Please try again.",
+    "confirmDeleteTitle": "Delete?",
+    "confirmDeleteMessage": "This action cannot be undone."
+  }
+}

@@ -30,14 +30,14 @@ Terakhir diperbarui: 10 September 2026.
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Gerbang dependensi | 5 | 3 | Gerbang (T-0.3) lolos — T-0.2 menunggu verifikasi di mesin pemilik |
-| 1 — Fondasi | 13 | 0 | Gerbang Fase 0 lolos, siap dimulai |
-| 2 — Siklus bulanan | 12 | 0 | Terkunci oleh Fase 1 |
+| 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
+| 2 — Siklus bulanan | 12 | 0 | Gerbang Fase 1 lolos, siap dimulai |
 | 3 — Pemasukan dan timesheet | 10 | 0 | Terkunci oleh Fase 2 |
 | 4 — Roll-up | 12 | 0 | Terkunci oleh Fase 2 |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **3** | |
+| **Total MVP** | **67** | **16** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -156,45 +156,76 @@ found!".
 
 ### Tema dan token
 
-- [ ] **T-1.1** Buat token `AppSpacing`, `AppRadius`, `AppDurations`, dan
+- [x] **T-1.1** Buat token `AppSpacing`, `AppRadius`, `AppDurations`, dan
       `AppElevation` sebagai `abstract final class` berkonstruktor privat.
       Memenuhi [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md).
-- [ ] **T-1.2** Buat `AppColorsExtension` dengan enam slot semantik keuangan
+- [x] **T-1.2** Buat `AppColorsExtension` dengan enam slot semantik keuangan
       (`income`, `expense`, `overBudget`, `investment`, `rollUp`,
       `needsReview`) ditambah slot netral, lengkap dengan `copyWith`, `lerp`,
       dan ekstensi `BuildContext` bernilai cadangan.
       ⚠ Jangan mempertahankan nama slot `opponent` atau `gold`.
-- [ ] **T-1.3** Buat `AppTheme` dengan `ThemeData` terang dan gelap, pasangan
-      huruf Syne dan DM Sans, serta aturan batas rambut menggantikan bayangan di
-      mode gelap. Memenuhi NFR-UX-003.
-- [ ] **T-1.4** Buat widget bersama `AppCard`, `AppButton`, `AppChip`, dan
+      Terverifikasi: tidak ada slot itu di kode.
+- [x] **T-1.3** Buat `AppTheme` dengan `ThemeData` terang dan gelap, tiga
+      peran huruf (Archivo Black angka, Space Grotesk teks, Bangers label),
+      serta garis tepi tebal dan bayangan keras offset menggantikan bayangan
+      `Material` standar di kedua mode. Memenuhi NFR-UX-003.
+      ⚠ Gaya komik, bukan Syne/DM Sans — lihat ADR-0006 (direvisi 10
+      September 2026).
+- [x] **T-1.4** Buat widget bersama `AppCard`, `AppButton`, `AppChip`, dan
       `AppMoneyText`.
       ⚠ Dibuat sekarang, bukan nanti. Di `new-health-duel` dekorasi kartu yang
       sama terulang di sekitar delapan berkas karena ini tidak pernah dibuat.
 
 ### Uang dan terjemahan
 
-- [ ] **T-1.5** Buat pemformat uang di `core/utils/formatters/` yang mengubah
+- [x] **T-1.5** Buat pemformat uang di `core/utils/formatters/` yang mengubah
       satuan sen menjadi rupiah dengan pembulatan setengah ke atas.
       Memenuhi NFR-ACC-001.
-- [ ] **T-1.6** Tulis uji unit pemformat uang memakai kasus `3.039.562,50`
+      ⚠ `~/` bawaan Dart memotong ke nol (truncating), bukan pembagian
+      lantai — dibuktikan lewat `dart run` sebelum kode ditulis. Memakainya
+      langsung untuk "setengah ke atas" salah untuk nilai negatif;
+      `_floorDiv` mengoreksinya. Lihat kasus uji regresi di T-1.6.
+- [x] **T-1.6** Tulis uji unit pemformat uang memakai kasus `3.039.562,50`
       menjadi `Rp3.039.563`.
-- [ ] **T-1.7** Pasang slang dengan bahasa dasar `id` dan tambahan `en`,
+      6 kasus: kasus wajib di atas, kasus regresi pembulatan negatif (rumus
+      `remainder` -1.337.042 — tanpa `_floorDiv` hasilnya -1.337.041, meleset
+      satu rupiah), nol, dan nominal besar. `flutter test`: semua lolos.
+- [x] **T-1.7** Pasang slang dengan bahasa dasar `id` dan tambahan `en`,
       berkas di `assets/i18n/`, namespace per fitur.
       ⚠ Istilah antarmuka mengikuti
       [glosarium](../00-foundation/PROJECT_GLOSSARY.md), bukan istilah baru.
       Memenuhi NFR-UX-004, NFR-UX-002, dan
       [ADR-0007](../02-architecture/adr/0007-slang-localization.md).
+      ⚠ Nama berkas ternyata `id.i18n.json`/`en.i18n.json`, bukan
+      `strings_id.i18n.json` seperti di ARCHITECTURE_OVERVIEW.md semula —
+      slang versi terpasang (4.19) mendeprekasi prefiks `strings_` saat
+      namespace (per-fitur) tidak dipakai. Namespace `app`/`common` diisi
+      sebagai nested object dalam satu berkas per bahasa (bukan berkas
+      terpisah per namespace), sesuai bentuk yang didokumentasikan. Dokumen
+      sudah diperbarui. `dart run build_runner build` berhasil, 22 string
+      (11/bahasa).
 
 ### Kerangka aplikasi
 
-- [ ] **T-1.8** Siapkan `DiBoot` dengan bootstrap dua fase dan urutan
+- [x] **T-1.8** Siapkan `DiBoot` dengan bootstrap dua fase dan urutan
       pendaftaran penyimpanan, repository lintas fitur (`shared/`), modul
       fitur, lalu router. Susun folder memakai tiga zona `core/`/`shared/`/
       `features/` dan ikuti *decision tree* DI (route provider / root
       injectable / `@module` / `IsolatedScope`).
       Memenuhi [ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md).
-- [ ] **T-1.9** Siapkan penyimpanan Hive lewat
+      ⚠ `RootModule` (akar) dan `ExampleNoteScope`/`CycleScope`-gaya (fitur)
+      memakai panggilan `GetIt` manual (`registerLazySingleton` dkk), bukan
+      anotasi `@module`/`@LazySingleton` dari `injectable` — paket itu
+      tersedia transitif lewat `package:di` (yang re-export
+      `package:injectable`), tapi tidak didaftarkan sebagai dependensi
+      langsung Saldough di ARCHITECTURE_OVERVIEW.md, dan menyalakan codegen
+      `injectable` sekarang berarti menambah dependensi yang belum
+      didokumentasikan. Panggilan manual mencapai hasil yang sama (`GetIt`
+      tidak peduli bagaimana `register*` dipanggil) dan konsisten dengan
+      contoh `CycleScope` di ARCHITECTURE_OVERVIEW.md sendiri, yang juga
+      manual. Putuskan dulu soal `injectable` langsung kalau suatu saat
+      butuh fitur codegen-nya (`@Named`, `@module` async kompleks).
+- [x] **T-1.9** Siapkan penyimpanan Hive lewat
       `HiveKeyValueStorage.initialize(boxName:)`, lalu buktikan aplikasi
       berfungsi penuh dalam mode pesawat dan data bertahan setelah aplikasi
       ditutup dan perangkat dimulai ulang.
@@ -202,22 +233,51 @@ found!".
       paket sudah tidak ada di versi 1.1.1. Ikuti kode, bukan README.
       Memenuhi NFR-REL-001, NFR-REL-002, NFR-SEC-001, dan
       [ADR-0002](../02-architecture/adr/0002-local-first-hive-document-storage.md).
-- [ ] **T-1.10** Siapkan `RouteRegistry`, adapter `toGoRoute()`, dan menu
+      ⚠ **Sebagian.** Kode sudah benar dan **terverifikasi jalan nyata**:
+      sandbox ini tidak punya Android/iOS, tapi punya toolchain Linux
+      desktop (dipasang manual: `libgtk-3-dev`, `libsecret-1-dev`,
+      `xdg-user-dirs`) — `flutter build linux` + jalan di bawah `xvfb-run`
+      sungguhan melewati seluruh rantai `main()` → `di.run()` →
+      `HiveKeyValueStorage.initialize()` → kotak Hive terbuka → `GoalRepository`
+      terdaftar → router terbangun → `ExampleNoteScope` terpasang →
+      `ExampleNoteBloc` baca Hive kosong → emit `isLoading: true` lalu
+      `false` — semuanya di log `AppBlocObserver` sungguhan, bukan simulasi.
+      **Belum diverifikasi**: literal "mode pesawat" dan "data bertahan
+      setelah perangkat dimulai ulang" butuh perangkat Android/iOS asli —
+      sandbox ini tidak punya keduanya (lihat T-0.2). Folder `linux/` dan
+      `build/` dihapus lagi setelah uji coba supaya tidak ikut ke repo (di
+      luar platform target proyek: Android dan iOS saja).
+- [x] **T-1.10** Siapkan `RouteRegistry`, adapter `toGoRoute()`, dan menu
       pengembang mode debug.
       ⚠ Di dalam pembangun rute yang memakai `ScopeWidget`, ambil
       `ScopeProvider.of(context)` SEBELUM `ScopeWidget` disisipkan —
       `ScopeProvider` belum ada di pohon saat `create` dijalankan.
       Memenuhi [ADR-0004](../02-architecture/adr/0004-typed-route-registry-navigation.md).
-- [ ] **T-1.11** Daftarkan penangan efek navigasi dan umpan balik sebelum
+      Path URL diturunkan dari `RouteKey.id` (`'example_note.list'` →
+      `/example_note/list`). Menu pengembang dipasang sebagai tombol kecil
+      mengambang, hanya tampil di `kDebugMode`, lewat `builder:`
+      `MaterialApp.router` supaya muncul di atas layar apa pun.
+- [x] **T-1.11** Daftarkan penangan efek navigasi dan umpan balik sebelum
       `runApp`, dan pasang `Bloc.observer = AppBlocObserver()`.
       ⚠ `AppBlocObserver` bukan `const`, berbeda dari contoh di README paket.
       Memenuhi [ADR-0003](../02-architecture/adr/0003-effect-bloc-state-management.md).
-- [ ] **T-1.12** Buat satu fitur contoh menyeluruh untuk membuktikan pola:
+      ⚠ `ShowSnackBarEffect.actionLabel`/`actionIntentId` belum disambungkan
+      ke bloc — belum ada fitur yang butuh aksi pada snackbar, dan paket
+      `state_management` tidak menentukan mekanisme bakunya. Diputuskan
+      nanti kalau kebutuhannya muncul, dicatat sebagai komentar di
+      `snackbar_effect_handler.dart`.
+- [x] **T-1.12** Buat satu fitur contoh menyeluruh untuk membuktikan pola:
       entitas, repository, bloc dengan efek, rute, dan lingkup dependensi.
-- [ ] **T-1.13** Buat `shared/goal/` sebagai modul `shared/` pertama:
+      Fitur `features/example_note/` — secara eksplisit bukti pola, bukan
+      fitur produk (lihat komentar di `ExampleNote`). Diuji lewat
+      `bloc_test`+`mocktail` (3 skenario: muat sukses, muat gagal,
+      tambah sukses) **dan** jalan nyata di Linux desktop (lihat T-1.9).
+- [x] **T-1.13** Buat `shared/goal/` sebagai modul `shared/` pertama:
       `domain/{goal.dart, goal_repository.dart}` + `data/` di balik satu
       barrel `goal.dart`. Tanpa `presentation/`.
       Memenuhi [ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md).
+      `Goal` cuma `id`/`name`/`openingBalance` — `balance` (saldo berjalan)
+      sengaja tidak jadi field, itu nilai turunan untuk use case Fase 5.
 
 ## Fase 2: Siklus bulanan
 

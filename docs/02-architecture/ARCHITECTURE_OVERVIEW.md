@@ -91,8 +91,8 @@ tinggal.
 saldough/
 ├── assets/
 │   └── i18n/
-│       ├── strings_id.i18n.json          # bahasa dasar
-│       └── strings_en.i18n.json
+│       ├── id.i18n.json                  # bahasa dasar
+│       └── en.i18n.json
 ├── lib/
 │   ├── main.dart                         # bootstrap dua fase
 │   ├── app.dart                          # MaterialApp.router

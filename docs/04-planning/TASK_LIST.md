@@ -31,13 +31,13 @@ Terakhir diperbarui: 10 September 2026.
 |---|---|---|---|
 | 0 — Gerbang dependensi | 5 | 3 | Gerbang (T-0.3) lolos — T-0.2 menunggu verifikasi di mesin pemilik |
 | 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
-| 2 — Siklus bulanan | 12 | 0 | Gerbang Fase 1 lolos, siap dimulai |
-| 3 — Pemasukan dan timesheet | 10 | 0 | Terkunci oleh Fase 2 |
-| 4 — Roll-up | 12 | 0 | Terkunci oleh Fase 2 |
-| 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 |
+| 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
+| 3 — Pemasukan dan timesheet | 10 | 0 | Gerbang Fase 2 lolos, siap dimulai |
+| 4 — Roll-up | 12 | 0 | Gerbang Fase 2 lolos, siap dimulai (tidak bergantung Fase 3) |
+| 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **16** | |
+| **Total MVP** | **67** | **26** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -285,22 +285,34 @@ found!".
 
 ### Domain
 
-- [ ] **T-2.1** Buat entitas `MonthlyCycle`, `IncomeLine`, dan `BudgetLine`
+- [x] **T-2.1** Buat entitas `MonthlyCycle`, `IncomeLine`, dan `BudgetLine`
       dengan seluruh nominal bertipe `int` satuan sen.
       Memenuhi FR-CYCLE-004.
-- [ ] **T-2.2** Buat use case `CalculateCycleTotals` yang menghitung
+      ⚠ `needsReview: bool` ditambahkan ke `IncomeLine`/`BudgetLine` — celah
+      dokumentasi di DOMAIN_MODEL.md, bukan keputusan baru (ADR-0008 aturan
+      3 dan FR-TPL-002 sudah mengikat field ini ada). Dokumen sudah
+      diperbaiki dengan catatan revisi.
+- [x] **T-2.2** Buat use case `CalculateCycleTotals` yang menghitung
       `totalIncome`, `totalBudget`, dan `remainder`.
-- [ ] **T-2.3** Tulis uji unit rumus sisa memakai dua kasus nyata:
+- [x] **T-2.3** Tulis uji unit rumus sisa memakai dua kasus nyata:
       `15.839.563 − 13.382.490 = 2.457.073`, dan kasus negatif
       `8.900.000 − 10.237.042 = −1.337.042`.
       Memenuhi NFR-ACC-002.
+      Keduanya lolos, plus satu kasus tambahan (jumlah beberapa baris).
 
 ### Data
 
-- [ ] **T-2.4** Buat model serialisasi siklus dengan `schemaVersion`, lalu
+- [x] **T-2.4** Buat model serialisasi siklus dengan `schemaVersion`, lalu
       implementasi `CycleRepository` di atas Hive.
       Memenuhi NFR-REL-003.
-- [ ] **T-2.5** Buat `RepositoryGuard` di `core/foundation/repository_guard.dart`,
+      ⚠ Baris `rollUp` memakai `RollUpResolver` (antarmuka baru di
+      `features/cycle/domain/repositories/`) untuk menghitung ulang nominal
+      saat dibaca — belum ada implementasi nyata sampai Fase 4, sementara
+      dipasang `UnavailableRollUpResolver` yang selalu mengembalikan 0 +
+      penanda tidak tersedia, sesuai ROADMAP.md Fase 2. Diuji dengan
+      `InMemoryKeyValueStorage` dari `memory_storage` (4 kasus, termasuk
+      simpan-baca bolak-balik dan indeks `listCycleIds`).
+- [x] **T-2.5** Buat `RepositoryGuard` di `core/foundation/repository_guard.dart`,
       lalu pakai `with RepositoryGuard` di `CycleRepositoryImpl` agar
       mengembalikan `Either<Failure, T>` lewat `guard()`/`guardVoid()` —
       kesalahan penyimpanan jadi `PersistenceFailure`, kesalahan penguraian
@@ -308,37 +320,76 @@ found!".
       ⚠ Kembalikan `Either`, jangan melempar `Failure`. Bloc membongkarnya
       dengan `switch` pada `Left`/`Right`, bukan `on Failure catch`.
       Memenuhi [ADR-0005](../02-architecture/adr/0005-either-failure-convention.md).
+      `RepositoryGuard` sudah dibuat di Fase 1 (dipakai `GoalRepositoryImpl`
+      dan `ExampleNoteRepositoryImpl`) — di sini dipakai ulang, bukan
+      ditulis ulang.
 
 ### Presentation
 
-- [ ] **T-2.6** Buat layar siklus yang menampilkan baris pemasukan, baris
+- [x] **T-2.6** Buat layar siklus yang menampilkan baris pemasukan, baris
       anggaran, total, dan sisa.
       Memenuhi FR-CYCLE-001.
-- [ ] **T-2.7** Tampilkan sisa negatif dengan warna `overBudget` dan label lewat
+- [x] **T-2.7** Tampilkan sisa negatif dengan warna `overBudget` dan label lewat
       anggaran, bukan sebagai kesalahan.
       Memenuhi FR-CYCLE-001.
-- [ ] **T-2.8** Buat penyuntingan baris: tambah, ubah, hapus, dan penandaan
+      `AppMoneyText` otomatis memilih `overBudget` untuk nilai negatif
+      (bukan `expense`, sesuai antipola ADR-0006).
+- [x] **T-2.8** Buat penyuntingan baris: tambah, ubah, hapus, dan penandaan
       tetap atau insidental.
       ⚠ Baris baru bawaannya insidental.
       Memenuhi FR-CYCLE-002.
-- [ ] **T-2.9** Buat perpindahan antar bulan dan penguncian siklus yang sudah
+      Menandai baris "tetap" mendaftarkannya ke `CycleTemplate` (dan
+      melepasnya saat ditandai kembali insidental) — keputusan desain
+      karena DOMAIN_MODEL.md/FR-TPL-004 tidak merinci mekanisme sinkronnya;
+      lihat komentar di `CycleTemplate` dan `CycleBloc._syncIncomeTemplate`.
+- [x] **T-2.9** Buat perpindahan antar bulan dan penguncian siklus yang sudah
       ditutup.
       Memenuhi FR-CYCLE-003.
+      Perpindahan bulan memakai ulang `CycleBloc` yang sama (`CycleOpened`
+      ke id baru), bukan navigasi rute baru. Siklus terkunci menolak semua
+      event penyuntingan lewat `_saveAndEmit`, kecuali `CycleReopened`
+      sendiri (diuji — jebakan `copyWith(closedAt: null)` klasik ditemukan
+      dan diperbaiki dengan method `close()`/`reopen()` eksplisit alih-alih
+      `copyWith` untuk field nullable ini).
 
 ### Template dan rollover
 
 - [ ] **T-2.10** Buat `CycleTemplate` beserta pengelolaannya.
       Memenuhi FR-TPL-004.
-- [ ] **T-2.11** Buat use case `RollOverCycle` dengan empat aturannya, termasuk
+      ⚠ **Sebagian.** Entitas, repository, dan pengelolaan daftar baris
+      tetap (lewat penandaan di layar siklus, lihat T-2.8) sudah ada dan
+      teruji. **Belum ada** antarmuka untuk menyunting
+      `defaultAllocations` (persentase alokasi investasi bawaan) — FR-TPL-004
+      butir kedua. Sengaja ditunda ke Fase 5 (Investasi), karena fase itu
+      toh butuh antarmuka pengaturan persentase alokasi yang sama untuk
+      siklus berjalan — dibangun sekali, dipakai untuk keduanya, bukan dua
+      layar terpisah yang tumpang tindih.
+- [x] **T-2.11** Buat use case `RollOverCycle` dengan empat aturannya, termasuk
       penandaan perlu ditinjau dan penghitungan ulang baris roll-up.
       Memenuhi FR-TPL-001, FR-TPL-002, FR-TPL-003, dan
       [ADR-0008](../02-architecture/adr/0008-monthly-cycle-template-and-rollup.md).
+      Menolak menimpa siklus yang sudah ada (keputusan tambahan, tidak
+      diminta literal oleh ADR tapi konsisten dengan nilai "ketepatan lebih
+      penting daripada kecepatan"). 3 uji use case + diuji ulang lewat
+      `CycleBloc` sungguhan (bukan di-mock — `RollOverCycle` adalah
+      `final class`, tidak bisa di-mock `mocktail`; diuji di atas
+      repository yang dipalsukan).
 - [ ] **T-2.12** Ukur waktu tampil layar siklus pada perangkat kelas menengah
       dan pastikan di bawah satu detik.
       ⚠ Ukur setelah data seed tersedia di Fase 6, lalu ulangi. Layar siklus
       memuat rencana belanja dan siklus kartu karena roll-up dihitung saat
       dibaca.
       Memenuhi NFR-PERF-001.
+      Belum diukur — menunggu Fase 6 sesuai catatan di tugas ini sendiri.
+
+**Verifikasi Fase 2**: `flutter analyze` bersih, `flutter test` 26 kasus
+lolos (18 baru di fase ini: 3 `CalculateCycleTotals`, 3 `RollOverCycle`,
+4 `CycleRepositoryImpl` di atas `InMemoryKeyValueStorage`, 7 `CycleBloc`,
+ditambah kasus dari Fase 0/1). Dibuktikan jalan nyata lagi lewat build
+Linux desktop + `xvfb-run` (sama seperti Fase 1) — log `AppBlocObserver`
+menunjukkan `CycleBloc` terbentuk, `CycleOpened` diproses, dan siklus bulan
+berjalan (`2026-09`, dihitung otomatis dari tanggal sistem) termuat tanpa
+galat. Folder `linux/`/`build/` dihapus lagi setelahnya, tidak masuk repo.
 
 ## Fase 3: Pemasukan dan timesheet
 

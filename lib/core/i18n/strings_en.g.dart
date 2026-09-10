@@ -41,6 +41,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	// Translations
 	@override late final _Translations$app$en app = _Translations$app$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
+	@override late final _Translations$cycle$en cycle = _Translations$cycle$en._(_root);
 }
 
 // Path: app
@@ -72,6 +73,39 @@ class _Translations$common$en extends Translations$common$id {
 	@override String get confirmDeleteMessage => 'This action cannot be undone.';
 }
 
+// Path: cycle
+class _Translations$cycle$en extends Translations$cycle$id {
+	_Translations$cycle$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get incomeSectionTitle => 'Income';
+	@override String get budgetSectionTitle => 'Budget';
+	@override String get totalLabel => 'Total';
+	@override String get remainderLabel => 'Remainder';
+	@override String get addIncomeLine => 'Add income line';
+	@override String get addBudgetLine => 'Add budget line';
+	@override String get editIncomeLine => 'Edit income line';
+	@override String get editBudgetLine => 'Edit budget line';
+	@override String get labelFieldHint => 'Name';
+	@override String get amountFieldHint => 'Amount (Rp)';
+	@override String get emptyIncome => 'No income lines yet.';
+	@override String get emptyBudget => 'No budget lines yet.';
+	@override String get rollOverButton => 'Create next month';
+	@override String get closeCycle => 'Close cycle';
+	@override String get reopenCycle => 'Reopen';
+	@override String get closedBanner => 'This cycle is closed.';
+	@override String get closedCannotEdit => 'This cycle is closed. Reopen it to make changes.';
+	@override String get rollUpNotEditable => 'This line is calculated automatically and can\'t be edited directly.';
+	@override String get rollUpSourceUnavailable => 'Source not available yet';
+	@override String get markFixed => 'Mark as fixed';
+	@override String get markIncidental => 'Mark as one-off';
+	@override String get needsReviewBadge => 'Needs review';
+	@override String get confirmReviewed => 'Looks right';
+	@override String unreviewedBanner({required Object count}) => '${count} line(s) need review.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -91,6 +125,30 @@ extension on TranslationsEn {
 			'common.genericErrorMessage' => 'Something went wrong. Please try again.',
 			'common.confirmDeleteTitle' => 'Delete?',
 			'common.confirmDeleteMessage' => 'This action cannot be undone.',
+			'cycle.incomeSectionTitle' => 'Income',
+			'cycle.budgetSectionTitle' => 'Budget',
+			'cycle.totalLabel' => 'Total',
+			'cycle.remainderLabel' => 'Remainder',
+			'cycle.addIncomeLine' => 'Add income line',
+			'cycle.addBudgetLine' => 'Add budget line',
+			'cycle.editIncomeLine' => 'Edit income line',
+			'cycle.editBudgetLine' => 'Edit budget line',
+			'cycle.labelFieldHint' => 'Name',
+			'cycle.amountFieldHint' => 'Amount (Rp)',
+			'cycle.emptyIncome' => 'No income lines yet.',
+			'cycle.emptyBudget' => 'No budget lines yet.',
+			'cycle.rollOverButton' => 'Create next month',
+			'cycle.closeCycle' => 'Close cycle',
+			'cycle.reopenCycle' => 'Reopen',
+			'cycle.closedBanner' => 'This cycle is closed.',
+			'cycle.closedCannotEdit' => 'This cycle is closed. Reopen it to make changes.',
+			'cycle.rollUpNotEditable' => 'This line is calculated automatically and can\'t be edited directly.',
+			'cycle.rollUpSourceUnavailable' => 'Source not available yet',
+			'cycle.markFixed' => 'Mark as fixed',
+			'cycle.markIncidental' => 'Mark as one-off',
+			'cycle.needsReviewBadge' => 'Needs review',
+			'cycle.confirmReviewed' => 'Looks right',
+			'cycle.unreviewedBanner' => ({required Object count}) => '${count} line(s) need review.',
 			_ => null,
 		};
 	}

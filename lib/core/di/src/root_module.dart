@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/features/cycle/presentation/navigation/cycle_route_module.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
 import 'package:saldough/shared/goal/goal.dart';
 
@@ -16,8 +17,13 @@ abstract final class RootModule {
   /// Seluruh modul rute fitur yang terdaftar di aplikasi.
   ///
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
-  /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
-  static const _featureModules = [ExampleNoteRouteModule()];
+  /// penemuan otomatis, sesuai desain `FeatureRouteModule`. `example_note`
+  /// tetap terdaftar sebagai fitur bukti pola (lihat T-1.12), dapat dicapai
+  /// lewat menu pengembang mode debug, bukan lagi lokasi awal.
+  static const List<FeatureRouteModule> _featureModules = [
+    CycleRouteModule(),
+    ExampleNoteRouteModule(),
+  ];
 
   /// Menjalankan seluruh pendaftaran akar ke [container].
   static Future<void> registerAll(GetIt container) async {
@@ -53,7 +59,9 @@ abstract final class RootModule {
     );
   }
 
-  // Lihat T-1.12 — example_note adalah fitur bukti pola, belum ada layar
-  // home sungguhan sampai Fase 2. Lokasi awal diarahkan ke sana sementara.
-  static String get _initialLocation => '/example_note/list';
+  // Siklus bulan berjalan sebagai layar awal (Fase 2). Path GoRoute tidak
+  // membawa parameter — id bulan berjalan dipasok lewat
+  // CycleRouteModule.defaultInput, bukan lewat URL, karena initialLocation
+  // dibuka tanpa `extra` (lihat RouteNodeGoRouterExt.toGoRoute).
+  static const _initialLocation = '/cycle/detail';
 }

@@ -1,0 +1,326 @@
+import 'package:flutter/material.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
+import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
+import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
+import 'package:saldough/features/cycle/presentation/widgets/cycle_line_tile.dart';
+import 'package:saldough/features/cycle/presentation/widgets/line_edit_sheet.dart';
+import 'package:state_management/state_management.dart';
+
+/// Layar siklus bulanan — menampilkan baris pemasukan, baris anggaran,
+/// total, dan sisa (FR-CYCLE-001).
+class CyclePage extends StatelessWidget {
+  /// Membuat [CyclePage]. [cycleId] hanya dipakai untuk judul awal sebelum
+  /// state bloc termuat — navigasi antar bulan selanjutnya membaca
+  /// `state.cycle.id`.
+  const CyclePage({required this.cycleId, super.key});
+
+  /// Identitas siklus awal.
+  final String cycleId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: EffectListener<CycleBloc, CycleState>(
+        child: BlocBuilder<CycleBloc, CycleState>(
+          builder: (context, state) {
+            if (state.isLoading && state.cycle.id.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return CustomScrollView(
+              slivers: [
+                _AppBarSliver(state: state),
+                SliverPadding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  sliver: SliverList.list(children: [
+                    if (state.cycle.isClosed) _ClosedBanner(),
+                    if (state.unreviewedCount > 0) _UnreviewedBanner(count: state.unreviewedCount),
+                    _TotalsCard(state: state),
+                    const SizedBox(height: AppSpacing.lg),
+                    _IncomeSection(state: state),
+                    const SizedBox(height: AppSpacing.lg),
+                    _BudgetSection(state: state),
+                    const SizedBox(height: AppSpacing.lg),
+                    _ActionsRow(state: state),
+                  ]),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _AppBarSliver extends StatelessWidget {
+  const _AppBarSliver({required this.state});
+
+  final CycleState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: () => context.read<CycleBloc>().add(CycleOpened(_shiftMonth(state.cycle.id, -1))),
+          ),
+          Text(state.cycle.id),
+          IconButton(
+            icon: const Icon(Icons.chevron_right),
+            onPressed: () => context.read<CycleBloc>().add(CycleOpened(_shiftMonth(state.cycle.id, 1))),
+          ),
+          if (state.cycle.isClosed) Icon(Icons.lock, size: 16, color: context.appColors.textMuted),
+        ],
+      ),
+      centerTitle: true,
+    );
+  }
+
+  static String _shiftMonth(String id, int delta) {
+    final parts = id.split('-');
+    final year = int.parse(parts[0]);
+    final month = int.parse(parts[1]) + delta;
+    final normalizedMonth = ((month - 1) % 12 + 12) % 12 + 1;
+    final normalizedYear = year + ((month - 1) ~/ 12 - (month <= 0 ? 1 : 0));
+    return '$normalizedYear-${normalizedMonth.toString().padLeft(2, '0')}';
+  }
+}
+
+class _ClosedBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppCard(
+        elevation: AppElevation.none,
+        child: Row(
+          children: [
+            Icon(Icons.lock, color: colors.overBudget),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(child: Text(t.cycle.closedBanner)),
+            TextButton(
+              onPressed: () => context.read<CycleBloc>().add(const CycleReopened()),
+              child: Text(t.cycle.reopenCycle),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UnreviewedBanner extends StatelessWidget {
+  const _UnreviewedBanner({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppCard(
+        elevation: AppElevation.none,
+        child: Row(
+          children: [
+            Icon(Icons.flag, color: colors.needsReview),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(child: Text(t.cycle.unreviewedBanner(count: count))),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TotalsCard extends StatelessWidget {
+  const _TotalsCard({required this.state});
+
+  final CycleState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return AppCard(
+      borderRadius: AppRadius.comicCut,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(t.cycle.incomeSectionTitle, style: textTheme.bodyMedium),
+              AppMoneyText(sen: state.totals.totalIncome, style: textTheme.titleMedium),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(t.cycle.budgetSectionTitle, style: textTheme.bodyMedium),
+              AppMoneyText(sen: state.totals.totalBudget, style: textTheme.titleMedium),
+            ],
+          ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(t.cycle.remainderLabel, style: textTheme.titleMedium),
+              AppMoneyText(sen: state.totals.remainder, style: textTheme.headlineSmall),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IncomeSection extends StatelessWidget {
+  const _IncomeSection({required this.state});
+
+  final CycleState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<CycleBloc>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(t.cycle.incomeSectionTitle, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.sm),
+        if (state.cycle.incomeLines.isEmpty) Text(t.cycle.emptyIncome),
+        for (final line in state.cycle.incomeLines)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: CycleLineTile(
+              label: line.label,
+              amount: line.amount,
+              isTemplate: line.isTemplate,
+              needsReview: line.needsReview,
+              onTap: () async {
+                final result = await LineEditSheet.show(
+                  context,
+                  title: t.cycle.editIncomeLine,
+                  initialLabel: line.label,
+                  initialAmount: line.amount,
+                );
+                if (result != null) {
+                  bloc.add(IncomeLineSaved(id: line.id, label: result.label, amount: result.amount));
+                }
+              },
+              onDelete: () => bloc.add(IncomeLineRemoved(line.id)),
+              onToggleTemplate: () => bloc.add(IncomeLineTemplateToggled(line.id)),
+              onConfirmReview: line.needsReview ? () => bloc.add(IncomeLineReviewed(line.id)) : null,
+            ),
+          ),
+        const SizedBox(height: AppSpacing.sm),
+        AppButton(
+          label: t.cycle.addIncomeLine,
+          icon: Icons.add,
+          onPressed: () async {
+            final result = await LineEditSheet.show(context, title: t.cycle.addIncomeLine);
+            if (result != null) {
+              bloc.add(IncomeLineSaved(label: result.label, amount: result.amount));
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _BudgetSection extends StatelessWidget {
+  const _BudgetSection({required this.state});
+
+  final CycleState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<CycleBloc>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(t.cycle.budgetSectionTitle, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.sm),
+        if (state.cycle.budgetLines.isEmpty) Text(t.cycle.emptyBudget),
+        for (final line in state.cycle.budgetLines)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: CycleLineTile(
+              label: line.label,
+              amount: line.amount,
+              isTemplate: line.isTemplate,
+              needsReview: line.needsReview,
+              isEditable: line.kind == BudgetLineKind.manual,
+              rollUpSourceUnavailable: line.rollUpSourceUnavailable,
+              onTap: () async {
+                final result = await LineEditSheet.show(
+                  context,
+                  title: t.cycle.editBudgetLine,
+                  initialLabel: line.label,
+                  initialAmount: line.amount,
+                );
+                if (result != null) {
+                  bloc.add(BudgetLineSaved(id: line.id, label: result.label, amount: result.amount));
+                }
+              },
+              onDelete: line.kind == BudgetLineKind.manual
+                  ? () => bloc.add(BudgetLineRemoved(line.id))
+                  : null,
+              onToggleTemplate: () => bloc.add(BudgetLineTemplateToggled(line.id)),
+              onConfirmReview: line.needsReview ? () => bloc.add(BudgetLineReviewed(line.id)) : null,
+            ),
+          ),
+        const SizedBox(height: AppSpacing.sm),
+        AppButton(
+          label: t.cycle.addBudgetLine,
+          icon: Icons.add,
+          onPressed: () async {
+            final result = await LineEditSheet.show(context, title: t.cycle.addBudgetLine);
+            if (result != null) {
+              bloc.add(BudgetLineSaved(label: result.label, amount: result.amount));
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionsRow extends StatelessWidget {
+  const _ActionsRow({required this.state});
+
+  final CycleState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<CycleBloc>();
+    return Row(
+      children: [
+        Expanded(
+          child: AppButton(
+            label: t.cycle.rollOverButton,
+            icon: Icons.fast_forward,
+            onPressed: () => bloc.add(const CycleRollOverRequested()),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        if (!state.cycle.isClosed)
+          Expanded(
+            child: AppButton(
+              label: t.cycle.closeCycle,
+              icon: Icons.lock_outline,
+              color: context.appColors.textMuted,
+              onPressed: () => bloc.add(const CycleClosed()),
+            ),
+          ),
+      ],
+    );
+  }
+}

@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	// Translations
 	late final Translations$app$id app = Translations$app$id.internal(_root);
 	late final Translations$common$id common = Translations$common$id.internal(_root);
+	late final Translations$cycle$id cycle = Translations$cycle$id.internal(_root);
 }
 
 // Path: app
@@ -96,6 +97,87 @@ class Translations$common$id {
 	String get confirmDeleteMessage => 'Tindakan ini tidak bisa dibatalkan.';
 }
 
+// Path: cycle
+class Translations$cycle$id {
+	Translations$cycle$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pemasukan'
+	String get incomeSectionTitle => 'Pemasukan';
+
+	/// id: 'Anggaran'
+	String get budgetSectionTitle => 'Anggaran';
+
+	/// id: 'Total'
+	String get totalLabel => 'Total';
+
+	/// id: 'Sisa'
+	String get remainderLabel => 'Sisa';
+
+	/// id: 'Tambah baris pemasukan'
+	String get addIncomeLine => 'Tambah baris pemasukan';
+
+	/// id: 'Tambah baris anggaran'
+	String get addBudgetLine => 'Tambah baris anggaran';
+
+	/// id: 'Sunting baris pemasukan'
+	String get editIncomeLine => 'Sunting baris pemasukan';
+
+	/// id: 'Sunting baris anggaran'
+	String get editBudgetLine => 'Sunting baris anggaran';
+
+	/// id: 'Nama'
+	String get labelFieldHint => 'Nama';
+
+	/// id: 'Nominal (Rp)'
+	String get amountFieldHint => 'Nominal (Rp)';
+
+	/// id: 'Belum ada baris pemasukan.'
+	String get emptyIncome => 'Belum ada baris pemasukan.';
+
+	/// id: 'Belum ada baris anggaran.'
+	String get emptyBudget => 'Belum ada baris anggaran.';
+
+	/// id: 'Buat bulan berikutnya'
+	String get rollOverButton => 'Buat bulan berikutnya';
+
+	/// id: 'Tutup siklus'
+	String get closeCycle => 'Tutup siklus';
+
+	/// id: 'Buka kembali'
+	String get reopenCycle => 'Buka kembali';
+
+	/// id: 'Siklus ini sudah ditutup.'
+	String get closedBanner => 'Siklus ini sudah ditutup.';
+
+	/// id: 'Siklus sudah ditutup. Buka kembali untuk menyunting.'
+	String get closedCannotEdit => 'Siklus sudah ditutup. Buka kembali untuk menyunting.';
+
+	/// id: 'Baris ini dihitung otomatis, tidak bisa disunting langsung.'
+	String get rollUpNotEditable => 'Baris ini dihitung otomatis, tidak bisa disunting langsung.';
+
+	/// id: 'Sumber belum tersedia'
+	String get rollUpSourceUnavailable => 'Sumber belum tersedia';
+
+	/// id: 'Tandai tetap'
+	String get markFixed => 'Tandai tetap';
+
+	/// id: 'Tandai insidental'
+	String get markIncidental => 'Tandai insidental';
+
+	/// id: 'Perlu ditinjau'
+	String get needsReviewBadge => 'Perlu ditinjau';
+
+	/// id: 'Sudah benar'
+	String get confirmReviewed => 'Sudah benar';
+
+	/// id: 'Ada $count baris perlu ditinjau.'
+	String unreviewedBanner({required Object count}) => 'Ada ${count} baris perlu ditinjau.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -115,6 +197,30 @@ extension on Translations {
 			'common.genericErrorMessage' => 'Ada yang salah. Coba lagi.',
 			'common.confirmDeleteTitle' => 'Hapus?',
 			'common.confirmDeleteMessage' => 'Tindakan ini tidak bisa dibatalkan.',
+			'cycle.incomeSectionTitle' => 'Pemasukan',
+			'cycle.budgetSectionTitle' => 'Anggaran',
+			'cycle.totalLabel' => 'Total',
+			'cycle.remainderLabel' => 'Sisa',
+			'cycle.addIncomeLine' => 'Tambah baris pemasukan',
+			'cycle.addBudgetLine' => 'Tambah baris anggaran',
+			'cycle.editIncomeLine' => 'Sunting baris pemasukan',
+			'cycle.editBudgetLine' => 'Sunting baris anggaran',
+			'cycle.labelFieldHint' => 'Nama',
+			'cycle.amountFieldHint' => 'Nominal (Rp)',
+			'cycle.emptyIncome' => 'Belum ada baris pemasukan.',
+			'cycle.emptyBudget' => 'Belum ada baris anggaran.',
+			'cycle.rollOverButton' => 'Buat bulan berikutnya',
+			'cycle.closeCycle' => 'Tutup siklus',
+			'cycle.reopenCycle' => 'Buka kembali',
+			'cycle.closedBanner' => 'Siklus ini sudah ditutup.',
+			'cycle.closedCannotEdit' => 'Siklus sudah ditutup. Buka kembali untuk menyunting.',
+			'cycle.rollUpNotEditable' => 'Baris ini dihitung otomatis, tidak bisa disunting langsung.',
+			'cycle.rollUpSourceUnavailable' => 'Sumber belum tersedia',
+			'cycle.markFixed' => 'Tandai tetap',
+			'cycle.markIncidental' => 'Tandai insidental',
+			'cycle.needsReviewBadge' => 'Perlu ditinjau',
+			'cycle.confirmReviewed' => 'Sudah benar',
+			'cycle.unreviewedBanner' => ({required Object count}) => 'Ada ${count} baris perlu ditinjau.',
 			_ => null,
 		};
 	}

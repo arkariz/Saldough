@@ -87,7 +87,7 @@ docs/
 | [0007](02-architecture/adr/0007-slang-localization.md) | Terjemahan antarmuka dengan slang | Accepted |
 | [0008](02-architecture/adr/0008-monthly-cycle-template-and-rollup.md) | Siklus bulanan: template, rollover, dan roll-up | Accepted |
 | [0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) | Struktur folder: zona core / shared / features | Accepted |
-| [0010](02-architecture/adr/0010-hand-rolled-test-fakes.md) | Konvensi pengujian: fake tulis tangan | Accepted |
+| [0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) | Konvensi pengujian: `mocktail` dan `bloc_test` | Accepted (revisi) |
 
 ## Pertanyaan yang sering muncul
 
@@ -99,7 +99,7 @@ docs/
 | Mengapa kesalahan dikembalikan sebagai `Either<Failure, T>`? | [ADR-0005](02-architecture/adr/0005-either-failure-convention.md) |
 | Mengapa struktur foldernya tiga zona, bukan feature-first sederhana? | [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) |
 | Mengapa `flutter-architecture-studi` (tanpa `-bank`) tidak dipakai? | [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md), bagian dasar keputusan |
-| Mengapa tidak memakai `mocktail`/`bloc_test`? | [ADR-0010](02-architecture/adr/0010-hand-rolled-test-fakes.md) |
+| Mengapa pengujian memakai `mocktail`/`bloc_test` padahal repo acuan tidak? | [ADR-0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) |
 | Apa risiko terbesar proyek ini? | [ADR-0001](02-architecture/adr/0001-internal-package-dependency-strategy.md) |
 | Berapa nilai seed yang sudah dikonfirmasi pemilik? | [Model domain](02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |

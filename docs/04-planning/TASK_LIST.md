@@ -373,8 +373,16 @@ kode yang ditulis, jadi tidak ada dampak terhadap kode):
 - **ADR-0005 dibalik**: dari throw/catch menjadi `Either<Failure, T>` via
   fpdart, karena bukti produksi nyata (104 vs 0 kecocokan) membalikkan
   keputusan yang sebelumnya hanya berdasarkan `app_example` kecil.
-- ADR-0009 (zona core/shared/features) dan ADR-0010 (fake tulis tangan,
-  tanpa mocktail/bloc_test) ditambahkan.
+- ADR-0009 (zona core/shared/features) dan ADR-0010 (saat itu: fake tulis
+  tangan, tanpa mocktail/bloc_test) ditambahkan.
 - Empat pertanyaan terbuka terjawab: tarif per jam Rp72.500, tanggal cetak
   tagihan kartu 15, saldo awal pos 0, dan `GoalLoan` hanya merujuk `Goal`
   terdaftar dengan daftar yang terbuka (bukan label bebas).
+
+**10 September 2026 (lanjutan)** — Pemilik meminta ADR-0010 dibalik kembali:
+`mocktail` dan `bloc_test` dipakai, bukan fake tulis tangan. Ini penyimpangan
+sadar dari repo acuan arsitektur (`flutter-architecture-studi-bank` tidak
+memakai pustaka mocking), dilakukan atas permintaan eksplisit, bukan temuan
+teknis baru. Berkas ADR diganti nama jadi
+`0010-mocktail-bloc-test-convention.md`. `ARCHITECTURE_OVERVIEW.md` (bagian
+pengujian dan `pubspec.yaml`) dan `.claude/AGENT_CONTEXT.md` disesuaikan.

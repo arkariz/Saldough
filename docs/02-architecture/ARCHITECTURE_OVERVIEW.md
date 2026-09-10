@@ -308,9 +308,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  bloc_test: ^10.0.0
   build_runner: any
   injectable_generator: any
   json_serializable: any
+  mocktail: ^1.0.4
   slang_build_runner: ^4.7.0
   linter:
     git:
@@ -578,14 +580,15 @@ use case domain paling utama, karena di situlah rumus keuangan berada.
 |---|---|
 | Use case domain | Uji unit Dart murni, memakai angka nyata dari spreadsheet |
 | Repository | `InMemoryKeyValueStorage` dari `memory_storage` |
-| Bloc | Fake tulis tangan (`_FakeXyz implements Interface`), `bloc.add()` + `await bloc.stream.firstWhere(...)` — lihat [ADR-0010](adr/0010-hand-rolled-test-fakes.md) |
+| Bloc | `bloc_test`, dengan repository dipalsukan memakai `mocktail` — lihat [ADR-0010](adr/0010-mocktail-bloc-test-convention.md) |
 | Widget | Uji widget untuk komponen bersama |
 
-Saldough **tidak** memakai `mocktail` atau `bloc_test`. Repo acuan arsitektur
-tidak memakai keduanya — seluruh pengujian memakai fake tulis tangan, cocok
-untuk interface Saldough yang sempit (2-4 metode). Lihat
-[ADR-0010](adr/0010-hand-rolled-test-fakes.md) untuk contoh lengkap dan
-alasannya.
+Saldough memakai `mocktail` untuk mock/stub dan `bloc_test` untuk menguji
+bloc. Ini **menyimpang** dari repo acuan arsitektur (`flutter-architecture-studi-bank`
+memakai fake tulis tangan tanpa pustaka mocking) — penyimpangan ini atas
+permintaan eksplisit pemilik, bukan temuan teknis. Lihat
+[ADR-0010](adr/0010-mocktail-bloc-test-convention.md) untuk contoh lengkap
+dan alasannya.
 
 Aturan yang mengikat: **setiap rumus di
 [DOMAIN_MODEL.md](DOMAIN_MODEL.md) punya uji unit dengan angka nyata dari
@@ -641,7 +644,7 @@ menyimpang dari arsitektur.
 - `effect` tidak pernah masuk `props`.
 - Warna, jarak, sudut, dan durasi selalu lewat token, tidak pernah harfiah.
 - Teks antarmuka selalu lewat slang, tidak pernah harfiah.
-- Pengujian memakai fake tulis tangan, tidak `mocktail`/`bloc_test`.
+- Pengujian memakai `mocktail`/`bloc_test`, bukan fake tulis tangan.
 - Ikuti kode paket internal, bukan README-nya. Beberapa README diketahui tidak
   sinkron dengan kodenya.
 

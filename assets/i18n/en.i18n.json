@@ -76,5 +76,21 @@
     "injectButton": "Inject into cycle",
     "injectedMessage": "Injected into cycle $cycleId.",
     "injectedInto": "Injected into cycle $cycleId."
+  },
+  "grocery": {
+    "pageTitle": "Grocery plan",
+    "rollUpTotal": "Monthly total",
+    "weeksPerMonthFieldHint": "Weeks per month multiplier",
+    "weeklyTitle": "Weekly list",
+    "monthlyTitle": "Monthly list",
+    "emptyItems": "No items yet.",
+    "addItemButton": "Add item",
+    "editItemTitle": "Edit item",
+    "itemNameFieldHint": "Item name",
+    "quantityFieldHint": "Quantity",
+    "unitPriceFieldHint": "Unit price (Rp)",
+    "overridePriceLabel": "Override price",
+    "overrideAmountFieldHint": "Override amount (Rp)",
+    "overriddenBadge": "overridden"
   }
 }

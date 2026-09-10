@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$cycle$id cycle = Translations$cycle$id.internal(_root);
 	late final Translations$income$id income = Translations$income$id.internal(_root);
 	late final Translations$worklog$id worklog = Translations$worklog$id.internal(_root);
+	late final Translations$grocery$id grocery = Translations$grocery$id.internal(_root);
 }
 
 // Path: app
@@ -297,6 +298,57 @@ class Translations$worklog$id {
 	String injectedInto({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.';
 }
 
+// Path: grocery
+class Translations$grocery$id {
+	Translations$grocery$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Rencana belanja'
+	String get pageTitle => 'Rencana belanja';
+
+	/// id: 'Total bulanan'
+	String get rollUpTotal => 'Total bulanan';
+
+	/// id: 'Pengali minggu per bulan'
+	String get weeksPerMonthFieldHint => 'Pengali minggu per bulan';
+
+	/// id: 'Daftar mingguan'
+	String get weeklyTitle => 'Daftar mingguan';
+
+	/// id: 'Daftar bulanan'
+	String get monthlyTitle => 'Daftar bulanan';
+
+	/// id: 'Belum ada bahan.'
+	String get emptyItems => 'Belum ada bahan.';
+
+	/// id: 'Tambah bahan'
+	String get addItemButton => 'Tambah bahan';
+
+	/// id: 'Sunting bahan'
+	String get editItemTitle => 'Sunting bahan';
+
+	/// id: 'Nama bahan'
+	String get itemNameFieldHint => 'Nama bahan';
+
+	/// id: 'Jumlah'
+	String get quantityFieldHint => 'Jumlah';
+
+	/// id: 'Harga satuan (Rp)'
+	String get unitPriceFieldHint => 'Harga satuan (Rp)';
+
+	/// id: 'Timpa harga'
+	String get overridePriceLabel => 'Timpa harga';
+
+	/// id: 'Harga timpaan (Rp)'
+	String get overrideAmountFieldHint => 'Harga timpaan (Rp)';
+
+	/// id: 'ditimpa'
+	String get overriddenBadge => 'ditimpa';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -373,6 +425,20 @@ extension on Translations {
 			'worklog.injectButton' => 'Suntik ke siklus',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
+			'grocery.pageTitle' => 'Rencana belanja',
+			'grocery.rollUpTotal' => 'Total bulanan',
+			'grocery.weeksPerMonthFieldHint' => 'Pengali minggu per bulan',
+			'grocery.weeklyTitle' => 'Daftar mingguan',
+			'grocery.monthlyTitle' => 'Daftar bulanan',
+			'grocery.emptyItems' => 'Belum ada bahan.',
+			'grocery.addItemButton' => 'Tambah bahan',
+			'grocery.editItemTitle' => 'Sunting bahan',
+			'grocery.itemNameFieldHint' => 'Nama bahan',
+			'grocery.quantityFieldHint' => 'Jumlah',
+			'grocery.unitPriceFieldHint' => 'Harga satuan (Rp)',
+			'grocery.overridePriceLabel' => 'Timpa harga',
+			'grocery.overrideAmountFieldHint' => 'Harga timpaan (Rp)',
+			'grocery.overriddenBadge' => 'ditimpa',
 			_ => null,
 		};
 	}

@@ -76,5 +76,21 @@
     "injectButton": "Suntik ke siklus",
     "injectedMessage": "Disuntikkan ke siklus $cycleId.",
     "injectedInto": "Disuntikkan ke siklus $cycleId."
+  },
+  "grocery": {
+    "pageTitle": "Rencana belanja",
+    "rollUpTotal": "Total bulanan",
+    "weeksPerMonthFieldHint": "Pengali minggu per bulan",
+    "weeklyTitle": "Daftar mingguan",
+    "monthlyTitle": "Daftar bulanan",
+    "emptyItems": "Belum ada bahan.",
+    "addItemButton": "Tambah bahan",
+    "editItemTitle": "Sunting bahan",
+    "itemNameFieldHint": "Nama bahan",
+    "quantityFieldHint": "Jumlah",
+    "unitPriceFieldHint": "Harga satuan (Rp)",
+    "overridePriceLabel": "Timpa harga",
+    "overrideAmountFieldHint": "Harga timpaan (Rp)",
+    "overriddenBadge": "ditimpa"
   }
 }

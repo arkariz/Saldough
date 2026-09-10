@@ -6,9 +6,12 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
-import 'package:saldough/features/cycle/data/roll_up/unavailable_roll_up_resolver.dart';
+import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
 import 'package:saldough/features/cycle/presentation/navigation/cycle_route_module.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
+import 'package:saldough/features/grocery/data/grocery_roll_up_resolver.dart';
+import 'package:saldough/features/grocery/data/repositories/grocery_plan_repository_impl.dart';
+import 'package:saldough/features/grocery/presentation/navigation/grocery_route_module.dart';
 import 'package:saldough/features/income/presentation/navigation/income_route_module.dart';
 import 'package:saldough/features/worklog/domain/repositories/cycle_income_writer.dart';
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_module.dart';
@@ -31,6 +34,7 @@ abstract final class RootModule {
     CycleRouteModule(),
     IncomeRouteModule(),
     WorklogRouteModule(),
+    GroceryRouteModule(),
     ExampleNoteRouteModule(),
   ];
 
@@ -57,19 +61,31 @@ abstract final class RootModule {
     );
   }
 
+  // `RollUpResolver` adalah antarmuka milik `cycle` (Fase 2), diimplementasi
+  // fitur sumber datanya sendiri — sekarang `grocery` sungguhan
+  // (`GroceryRollUpResolver`, menggantikan `UnavailableRollUpResolver`
+  // sesuai rencana ROADMAP.md Fase 2). Baris `card` masih `unavailable()`
+  // sampai bagian kartu kredit Fase 4 selesai (di luar cakupan ronde ini).
+  //
   // `CycleIncomeWriter` adalah port milik fitur `worklog` (T-3.9), bukan
   // milik `cycle` — diimplementasikan di sini karena RootModule, bukan
-  // fitur mana pun, yang boleh melihat data/domain kedua fitur untuk
-  // mengawatnya (lihat catatan revisi ADR-0009). `CycleRepositoryImpl` di
-  // sini adalah instance TERPISAH dari yang dipakai `CycleScope` — keduanya
-  // menunjuk dokumen `KeyValueStorage` yang sama (satu-satunya sumber
-  // kebenaran), jadi aman dipakai bersamaan tanpa cache yang bisa basi.
+  // fitur mana pun, yang boleh melihat data/domain lebih dari satu fitur
+  // untuk mengawatnya (lihat catatan revisi ADR-0009). `CycleRepositoryImpl`
+  // di sini adalah instance TERPISAH dari yang dipakai `CycleScope` — sama
+  // seperti `GroceryPlanRepositoryImpl` di bawah, keduanya menunjuk dokumen
+  // `KeyValueStorage` yang sama (satu-satunya sumber kebenaran), jadi aman
+  // dipakai bersamaan tanpa cache yang bisa basi.
   static void _registerCrossFeatureAdapters(GetIt container) {
+    container.registerLazySingleton<RollUpResolver>(
+      () => GroceryRollUpResolver(
+        repository: GroceryPlanRepositoryImpl(storage: container<KeyValueStorage>()),
+      ),
+    );
     container.registerLazySingleton<CycleIncomeWriter>(
       () => CycleIncomeWriterImpl(
         cycleRepository: CycleRepositoryImpl(
           storage: container<KeyValueStorage>(),
-          resolver: const UnavailableRollUpResolver(),
+          resolver: container<RollUpResolver>(),
         ),
       ),
     );

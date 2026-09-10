@@ -10,8 +10,8 @@ const _templateKey = StorageKey(namespace: 'cycle', name: 'template');
 
 /// Implementasi [CycleTemplateRepository] di atas [KeyValueStorage].
 final class CycleTemplateRepositoryImpl with RepositoryGuard implements CycleTemplateRepository {
-  /// Membuat [CycleTemplateRepositoryImpl] di atas [storage].
-  const CycleTemplateRepositoryImpl({required KeyValueStorage storage}) : _storage = storage;
+  /// Membuat [CycleTemplateRepositoryImpl] di atas [_storage].
+  const CycleTemplateRepositoryImpl({required this._storage});
 
   final KeyValueStorage _storage;
 
@@ -25,7 +25,7 @@ final class CycleTemplateRepositoryImpl with RepositoryGuard implements CycleTem
   @override
   Future<Either<Failure, CycleTemplate>> getTemplate() => guard(() async {
         final model = await _store.read();
-        return model?.toEntity() ?? CycleTemplate.empty();
+        return model?.toEntity() ?? .empty();
       });
 
   @override

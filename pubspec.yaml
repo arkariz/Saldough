@@ -4,7 +4,10 @@ publish_to: none
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.11.4
+  # ^3.12.0 (bukan ^3.11.4 seperti bawaan `flutter create`): constructor
+  # `required this._field` (parameter bernama publik ke field privat)
+  # butuh fitur bahasa `private-named-parameters`, baru ada dari 3.12.0.
+  sdk: ^3.12.0
 
 dependencies:
   # Paket internal — dipin ke commit SHA pada branch kompatibilitas

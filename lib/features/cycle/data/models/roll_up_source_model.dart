@@ -8,8 +8,8 @@ abstract final class RollUpSourceModel {
   static RollUpSource? fromJson(Map<String, dynamic>? json) {
     if (json == null) return null;
     return switch (json['type'] as String) {
-      'grocery' => RollUpSource.grocery,
-      'card' => RollUpSource.card(json['cardId'] as String),
+      'grocery' => .grocery,
+      'card' => .card(json['cardId'] as String),
       final type => throw FormatException('RollUpSource.type tidak dikenal: $type'),
     };
   }

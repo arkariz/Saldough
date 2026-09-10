@@ -89,8 +89,8 @@ class _LineEditSheetState extends State<LineEditSheet> {
         bottom: AppSpacing.md + MediaQuery.viewInsetsOf(context).bottom,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: AppSpacing.md),
@@ -102,7 +102,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
           const SizedBox(height: AppSpacing.sm),
           TextField(
             controller: _amountController,
-            keyboardType: TextInputType.number,
+            keyboardType: .number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(labelText: t.cycle.amountFieldHint),
             onSubmitted: (_) => _submit(),

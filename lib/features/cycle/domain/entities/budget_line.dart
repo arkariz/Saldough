@@ -25,7 +25,7 @@ final class BudgetLine extends Equatable {
     this.needsReview = false,
     this.rollUpSourceUnavailable = false,
   }) {
-    if (kind == BudgetLineKind.rollUp && rollUpSource == null) {
+    if (kind == .rollUp && rollUpSource == null) {
       throw ArgumentError.value(
         rollUpSource,
         'rollUpSource',

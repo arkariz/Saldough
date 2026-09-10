@@ -64,11 +64,11 @@ class CycleLineTile extends StatelessWidget {
           children: [
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Row(
                     children: [
-                      Expanded(child: Text(label, overflow: TextOverflow.ellipsis)),
+                      Expanded(child: Text(label, overflow: .ellipsis)),
                       if (isTemplate)
                         Padding(
                           padding: const EdgeInsets.only(left: AppSpacing.xs),
@@ -85,7 +85,7 @@ class CycleLineTile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpacing.xs),
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisSize: .min,
                         children: [
                           AppChip(
                             label: t.cycle.needsReviewBadge,

@@ -2,13 +2,10 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
-import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
-import 'package:saldough/features/cycle/domain/entities/cycle_template.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
-import 'package:saldough/features/cycle/domain/usecases/calculate_cycle_totals.dart';
 import 'package:saldough/features/cycle/domain/usecases/roll_over_cycle.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
 import 'package:state_management/state_management.dart';
@@ -18,17 +15,17 @@ part 'cycle_event.dart';
 
 /// Bloc layar siklus bulanan. Lihat ARCHITECTURE_OVERVIEW.md bagian
 /// "Menulis satu fitur" — pola ini diikuti persis.
+///
+/// Helper transisi state dan getter turunan ([totals]/[unreviewedCount])
+/// hidup di [CycleState] ([CycleState.withCycle]), bukan di sini — bloc ini
+/// murni mengorkestrasi use case dan repository.
 final class CycleBloc extends Bloc<CycleEvent, CycleState> {
   /// Membuat [CycleBloc].
   CycleBloc({
-    required CycleRepository cycleRepository,
-    required CycleTemplateRepository templateRepository,
-    required RollOverCycle rollOverCycle,
-  })  : _cycleRepository = cycleRepository,
-        _templateRepository = templateRepository,
-        _rollOverCycle = rollOverCycle,
-        _calculateTotals = CalculateCycleTotals(),
-        super(CycleState.initial()) {
+    required this._cycleRepository,
+    required this._templateRepository,
+    required this._rollOverCycle,
+  }) : super(CycleState.initial()) {
     on<CycleOpened>(_onOpened);
     on<IncomeLineSaved>(_onIncomeLineSaved);
     on<IncomeLineRemoved>(_onIncomeLineRemoved);
@@ -54,7 +51,6 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
   final CycleRepository _cycleRepository;
   final CycleTemplateRepository _templateRepository;
   final RollOverCycle _rollOverCycle;
-  final CalculateCycleTotals _calculateTotals;
 
   Future<void> _onOpened(CycleOpened event, Emitter<CycleState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -63,12 +59,12 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final cycle):
-        _emitCycle(emit, cycle ?? MonthlyCycle.empty(event.cycleId), isLoading: false);
+        emit(state.withCycle(cycle ?? .empty(event.cycleId)));
     }
   }
 
   Future<void> _onIncomeLineSaved(IncomeLineSaved event, Emitter<CycleState> emit) async {
-    final existing = event.id == null ? null : _findIncomeLine(event.id!);
+    final existing = event.id == null ? null : state.findIncomeLine(event.id!);
     final line = IncomeLine(
       id: event.id ?? _freshId(),
       label: event.label,
@@ -91,8 +87,8 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
 
   Future<void> _onBudgetLineSaved(BudgetLineSaved event, Emitter<CycleState> emit) async {
     final isNew = event.id == null;
-    final existing = isNew ? null : _findBudgetLine(event.id!);
-    if (existing != null && existing.kind == BudgetLineKind.rollUp) {
+    final existing = isNew ? null : state.findBudgetLine(event.id!);
+    if (existing != null && existing.kind == .rollUp) {
       emit(state.copyWith(effect: _effectRollUpNotEditable()));
       return;
     }
@@ -100,7 +96,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       id: event.id ?? _freshId(),
       label: event.label,
       amount: event.amount,
-      kind: BudgetLineKind.manual,
+      kind: .manual,
       isTemplate: existing?.isTemplate ?? false,
       needsReview: existing?.needsReview ?? false,
     );
@@ -120,7 +116,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     IncomeLineTemplateToggled event,
     Emitter<CycleState> emit,
   ) async {
-    final line = _findIncomeLine(event.lineId);
+    final line = state.findIncomeLine(event.lineId);
     if (line == null) return;
     final toggled = line.copyWith(isTemplate: !line.isTemplate);
     await _syncIncomeTemplate(toggled);
@@ -131,7 +127,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     BudgetLineTemplateToggled event,
     Emitter<CycleState> emit,
   ) async {
-    final line = _findBudgetLine(event.lineId);
+    final line = state.findBudgetLine(event.lineId);
     if (line == null) return;
     final toggled = line.copyWith(isTemplate: !line.isTemplate);
     await _syncBudgetTemplate(toggled);
@@ -143,7 +139,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
   /// untuk rollover berikutnya (ADR-0008), bukan cuma penanda lokal.
   Future<void> _syncIncomeTemplate(IncomeLine line) async {
     final result = await _templateRepository.getTemplate();
-    final template = result.getOrElse((_) => CycleTemplate.empty());
+    final template = result.getOrElse((_) => .empty());
     final lines = [
       ...template.incomeLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
@@ -153,7 +149,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
 
   Future<void> _syncBudgetTemplate(BudgetLine line) async {
     final result = await _templateRepository.getTemplate();
-    final template = result.getOrElse((_) => CycleTemplate.empty());
+    final template = result.getOrElse((_) => .empty());
     final lines = [
       ...template.budgetLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
@@ -171,7 +167,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final next):
-        _emitCycle(emit, next, isLoading: false, effect: _effectCycleCreated(next.id));
+        emit(state.withCycle(next, effect: _effectCycleCreated(next.id)));
     }
   }
 
@@ -189,7 +185,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
-        _emitCycle(emit, reopened, isLoading: false);
+        emit(state.withCycle(reopened));
     }
   }
 
@@ -225,32 +221,9 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
-        _emitCycle(emit, cycle, isLoading: false);
+        emit(state.withCycle(cycle));
     }
   }
-
-  void _emitCycle(
-    Emitter<CycleState> emit,
-    MonthlyCycle cycle, {
-    required bool isLoading,
-    UiEffect? effect,
-  }) {
-    final unreviewed = cycle.incomeLines.where((l) => l.needsReview).length +
-        cycle.budgetLines.where((l) => l.needsReview).length;
-    emit(state.copyWith(
-      cycle: cycle,
-      totals: _calculateTotals(cycle),
-      isLoading: isLoading,
-      unreviewedCount: unreviewed,
-      effect: effect,
-    ));
-  }
-
-  IncomeLine? _findIncomeLine(String id) =>
-      state.cycle.incomeLines.where((l) => l.id == id).firstOrNull;
-
-  BudgetLine? _findBudgetLine(String id) =>
-      state.cycle.budgetLines.where((l) => l.id == id).firstOrNull;
 
   String _freshId() => DateTime.now().microsecondsSinceEpoch.toString();
 }

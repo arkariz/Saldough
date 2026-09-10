@@ -118,7 +118,10 @@ Terakhir diperbarui: 10 September 2026.
 
 - [x] **D-3.1** Kelola sumber pemasukan, gaya komik: Gaji Menul
       (freelance per jam, tarif Rp72.500/jam bisa diubah, potongan pajak
-      2,5%) dan Gaji Koko (gaji tetap) sebagai data nyata.
+      2,5%) dan Gaji Koko (gaji tetap) sebagai data nyata. **Sumber
+      freelance punya layar detail/flow sendiri** (buku berjalan, riwayat
+      catatan jam) karena butuh pencatatan harian — beda dari sumber gaji
+      tetap yang cuma perlu layar detail sederhana dengan opsi hapus.
       Memenuhi FR-INC-001, FR-INC-002, FR-INC-003.
 - [x] **D-3.2** Catat jam kerja, gaya komik: satu langkah (sumber,
       tanggal, jam), toggle "mulai buku baru", pratinjau kotor langsung.
@@ -154,14 +157,22 @@ Terakhir diperbarui: 10 September 2026.
 
 ## Fase 5: Investasi
 
-- [x] **D-5.1** Pos Tujuan, gaya komik: 3 pos dengan alokasi persentase
-      dan validator total 100%, saldo awal Rp0 (nilai seed terkonfirmasi).
+- [x] **D-5.1** Pos Tujuan, gaya komik: **CRUD penuh** (tambah/sunting/
+      hapus pos lewat pilihan chip nama+persentase), kartu **Total
+      Portofolio** yang ikut berubah, validator total 100%, saldo awal
+      Rp0 (nilai seed terkonfirmasi), plus layar **Alokasi Bulan Ini**
+      (FR-INV baru yang tersirat dari "alokasi dana investasi tiap
+      bulan") — pilih jumlah, pecahan per pos dihitung otomatis dari
+      persentase, menambah saldo sungguhan saat dikonfirmasi.
       Memenuhi FR-INV-001, FR-INV-002, FR-INV-003.
       ⚠ Nama dan persentase pos ("Pos Darurat" dll.) bersifat **contoh
-      ilustrasi** — sama seperti catatan di D-2.4, belum dikonfirmasi
-      sebagai nama pos asli.
-- [x] **D-5.2** Pinjaman Antar Pos, gaya komik: form pinjaman dari→ke pos,
-      riwayat pergerakan saldo (naik/turun berpasangan).
+      ilustrasi**, belum dikonfirmasi sebagai nama pos asli. Form
+      tambah/sunting memakai chip pilihan cepat, bukan ketik bebas —
+      lihat catatan fidelitas di "Catatan pengerjaan".
+- [x] **D-5.2** Pinjaman Antar Pos, gaya komik: form pinjaman dari→ke pos
+      yang **benar-benar memindahkan saldo** (pos asal berkurang, pos
+      tujuan bertambah, total portofolio tetap), saldo negatif tampil
+      merah kalau pos asal kekurangan dana, riwayat pergerakan saldo.
       Memenuhi FR-INV-004, FR-INV-005.
 
 ## Fase 6: Seed
@@ -272,3 +283,41 @@ soal rincian per-item yang ilustratif.
 
 Yang belum: D-1.1 dan ADR-0006 (lihat catatan pivot gaya visual di atas)
 masih tertunda dengan alasan yang sama.
+
+**10 September 2026 (lanjutan — pemisahan flow & CRUD investasi)** —
+Setelah dicoba, pemilik minta tiga penyesuaian lagi:
+
+1. **Sumber pemasukan freelance dipisah jadi flow sendiri.** Sebelumnya
+   "Catat Jam Kerja" cuma tombol FAB lepas di layar Sumber Pemasukan,
+   tidak terkait sumber mana. Sekarang tap baris "Gaji Menul" (freelance)
+   masuk ke layar detail sendiri (buku berjalan, riwayat catatan jam,
+   tombol catat jam hari ini, tombol tutup buku) — baru dari sana link ke
+   Catat Jam Kerja/Tutup Buku. Tap "Gaji Koko" (gaji tetap, tidak perlu
+   pencatatan harian) masuk ke layar detail sederhana dengan opsi hapus.
+2. **CRUD pos investasi.** Kartu pos di Pos Tujuan sekarang bisa ditekan
+   untuk sunting (ganti persentase lewat pilihan chip) atau hapus; ada
+   tombol tambah pos baru (pilih nama & persentase contoh, bukan ketik
+   bebas — lihat catatan fidelitas di bawah). Kartu portofolio total di
+   atas ikut berubah otomatis.
+3. **Flow investasi/nabung masuk**, sekaligus menutupi dua permintaan
+   "detail fitur" terakhir (menampilkan portofolio, alokasi dana tiap
+   bulan): layar "Alokasi Bulan Ini" — pilih jumlah (chip Rp200rb/500rb/1jt/
+   semua sisa), pecahannya ke tiap pos dihitung otomatis dari persentase
+   masing-masing pos saat itu (bukan angka tetap), tombol "Catat Alokasi"
+   benar-benar menambah saldo tiap pos dan memperbarui Total Portofolio.
+   Pinjaman Antar Pos juga diperbarui jadi sungguhan: saldo pos asal
+   berkurang, pos tujuan bertambah, total portofolio tidak berubah (uang
+   cuma pindah, bukan bertambah) — termasuk saldo negatif ditampilkan
+   merah kalau pos asal kekurangan dana.
+
+Semua perhitungan (pecahan alokasi, update saldo, update total) diuji
+otomatis dengan skrip Playwright yang menekan tombol-tombol sungguhan dan
+mengecek angka hasilnya cocok secara matematis (bukan cuma dicek visual)
+di kedua tema, sebelum diterbitkan.
+
+⚠ Catatan fidelitas: form "Tambah Pos" dan "Sunting Pos" memakai pilihan
+cepat (chip nama/persentase contoh), bukan ketik teks bebas — konsisten
+dengan seluruh field lain di prototipe ini yang memang bergaya tampilan,
+bukan form HTML sungguhan. Ini cukup untuk menunjukkan alur CRUD-nya,
+tapi implementasi Flutter nanti tetap perlu form input teks/angka yang
+sesungguhnya.

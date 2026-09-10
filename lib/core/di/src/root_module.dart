@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/features/card/data/card_roll_up_resolver.dart';
+import 'package:saldough/features/card/data/repositories/card_statement_repository_impl.dart';
+import 'package:saldough/features/card/presentation/navigation/card_route_module.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
-import 'package:saldough/features/cycle/data/roll_up/unavailable_roll_up_resolver.dart';
+import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
 import 'package:saldough/features/cycle/presentation/navigation/cycle_route_module.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
 import 'package:saldough/features/income/presentation/navigation/income_route_module.dart';
@@ -31,6 +34,7 @@ abstract final class RootModule {
     CycleRouteModule(),
     IncomeRouteModule(),
     WorklogRouteModule(),
+    CardRouteModule(),
     ExampleNoteRouteModule(),
   ];
 
@@ -64,12 +68,23 @@ abstract final class RootModule {
   // sini adalah instance TERPISAH dari yang dipakai `CycleScope` — keduanya
   // menunjuk dokumen `KeyValueStorage` yang sama (satu-satunya sumber
   // kebenaran), jadi aman dipakai bersamaan tanpa cache yang bisa basi.
+  //
+  // `RollUpResolver` adalah port milik fitur `cycle` (Fase 2), diimplementasi
+  // `CardRollUpResolver` milik `card` (T-4.6-T-4.12) — pola PULL/read yang
+  // sama seperti rencana belanja. Baris `grocery` di luar cakupan resolver
+  // ini sampai fitur itu digabung (dibangun di cabang terpisah); falls back
+  // ke `RollUpResolution.unavailable()`.
   static void _registerCrossFeatureAdapters(GetIt container) {
+    container.registerLazySingleton<RollUpResolver>(
+      () => CardRollUpResolver(
+        repository: CardStatementRepositoryImpl(storage: container<KeyValueStorage>()),
+      ),
+    );
     container.registerLazySingleton<CycleIncomeWriter>(
       () => CycleIncomeWriterImpl(
         cycleRepository: CycleRepositoryImpl(
           storage: container<KeyValueStorage>(),
-          resolver: const UnavailableRollUpResolver(),
+          resolver: container<RollUpResolver>(),
         ),
       ),
     );

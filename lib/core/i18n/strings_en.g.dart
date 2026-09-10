@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$cycle$en cycle = _Translations$cycle$en._(_root);
 	@override late final _Translations$income$en income = _Translations$income$en._(_root);
 	@override late final _Translations$worklog$en worklog = _Translations$worklog$en._(_root);
+	@override late final _Translations$card$en card = _Translations$card$en._(_root);
 }
 
 // Path: app
@@ -159,6 +160,43 @@ class _Translations$worklog$en extends Translations$worklog$id {
 	@override String injectedInto({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
 }
 
+// Path: card
+class _Translations$card$en extends Translations$card$id {
+	_Translations$card$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Credit cards';
+	@override String get cardsTitle => 'Cards';
+	@override String get emptyCards => 'No cards yet.';
+	@override String get addCardTitle => 'Add card';
+	@override String get editCardTitle => 'Edit card';
+	@override String get cardNameFieldHint => 'Card name';
+	@override String get statementDayFieldHint => 'Statement day';
+	@override String statementDaySubtitle({required Object day}) => 'Statement day ${day}';
+	@override String get openStatementTitle => 'Open statement';
+	@override String get pendingConfirmationTitle => 'Needs confirmation';
+	@override String get closeStatementButton => 'Close statement';
+	@override String get statementClosedMessage => 'Statement closed. Next statement opened.';
+	@override String get addTransactionTitle => 'Log transaction';
+	@override String get merchantFieldHint => 'Merchant';
+	@override String get amountFieldHint => 'Amount (Rp)';
+	@override String get noteFieldHint => 'Note (optional)';
+	@override String get addTransactionButton => 'Log';
+	@override String get subscriptionsTitle => 'Recurring subscriptions';
+	@override String get emptySubscriptions => 'No subscriptions yet.';
+	@override String get addSubscriptionTitle => 'Add subscription';
+	@override String get editSubscriptionTitle => 'Edit subscription';
+	@override String get subscriptionDayFieldHint => 'Day prepared each month';
+	@override String get subscriptionActiveLabel => 'Active';
+	@override String subscriptionSubtitle({required Object amount, required Object day}) => '${amount} / month, day ${day}';
+	@override String get subscriptionInactiveBadge => 'Inactive';
+	@override String get historyTitle => 'Statement history';
+	@override String get emptyHistory => 'No closed statements yet.';
+	@override String statementPeriodLabel({required Object start, required Object end}) => '${start} – ${end}';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -235,6 +273,34 @@ extension on TranslationsEn {
 			'worklog.injectButton' => 'Inject into cycle',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
+			'card.pageTitle' => 'Credit cards',
+			'card.cardsTitle' => 'Cards',
+			'card.emptyCards' => 'No cards yet.',
+			'card.addCardTitle' => 'Add card',
+			'card.editCardTitle' => 'Edit card',
+			'card.cardNameFieldHint' => 'Card name',
+			'card.statementDayFieldHint' => 'Statement day',
+			'card.statementDaySubtitle' => ({required Object day}) => 'Statement day ${day}',
+			'card.openStatementTitle' => 'Open statement',
+			'card.pendingConfirmationTitle' => 'Needs confirmation',
+			'card.closeStatementButton' => 'Close statement',
+			'card.statementClosedMessage' => 'Statement closed. Next statement opened.',
+			'card.addTransactionTitle' => 'Log transaction',
+			'card.merchantFieldHint' => 'Merchant',
+			'card.amountFieldHint' => 'Amount (Rp)',
+			'card.noteFieldHint' => 'Note (optional)',
+			'card.addTransactionButton' => 'Log',
+			'card.subscriptionsTitle' => 'Recurring subscriptions',
+			'card.emptySubscriptions' => 'No subscriptions yet.',
+			'card.addSubscriptionTitle' => 'Add subscription',
+			'card.editSubscriptionTitle' => 'Edit subscription',
+			'card.subscriptionDayFieldHint' => 'Day prepared each month',
+			'card.subscriptionActiveLabel' => 'Active',
+			'card.subscriptionSubtitle' => ({required Object amount, required Object day}) => '${amount} / month, day ${day}',
+			'card.subscriptionInactiveBadge' => 'Inactive',
+			'card.historyTitle' => 'Statement history',
+			'card.emptyHistory' => 'No closed statements yet.',
+			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
 			_ => null,
 		};
 	}

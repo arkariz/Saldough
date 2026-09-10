@@ -297,12 +297,22 @@ menolak data nyata pemilik.
 |---|---|
 | `CreditCard` | `id`, `name`, `statementDayOfMonth` |
 | `CardStatement` | `id`, `cardId`, `periodStart`, `periodEnd`, `transactions`, `closedAt` |
-| `CardTransaction` | `id`, `date`, `merchant`, `amount`, `note` |
+| `CardTransaction` | `id`, `date`, `merchant`, `amount`, `note`, `isConfirmed` |
 | `RecurringSubscription` | `id`, `cardId`, `merchant`, `amount`, `dayOfMonth`, `isActive` |
 
 ```
-cardRollUp = Σ statement.transactions.amount
+cardRollUp = Σ statement.transactions.where(isConfirmed).amount
 ```
+
+> **Catatan revisi (T-4.6/T-4.10, 10 September 2026):** `isConfirmed`
+> ditambahkan ke `CardTransaction` — tidak ada di tabel semula dokumen ini.
+> Bawaan `true` untuk transaksi yang diketik manual; `false` untuk hasil
+> penyiapan otomatis dari `RecurringSubscription` yang belum dikonfirmasi
+> pemilik (lihat paragraf di bawah). Formula `cardRollUp` di atas juga
+> dikoreksi untuk menyaring `isConfirmed` — versi awal menjumlahkan seluruh
+> transaksi tanpa penyaring ini, yang berarti nominal langganan yang belum
+> dikonfirmasi (dan bisa berubah) akan ikut terhitung ke anggaran sebelum
+> pemilik sempat memeriksanya.
 
 **Nilai `statementDayOfMonth` terkonfirmasi pemilik: tanggal 15**, berlaku
 sebagai nilai seed untuk kartu yang diimpor di Fase 6. Sama seperti

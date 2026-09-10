@@ -15,7 +15,11 @@ StorageKey _cycleKey(String id) => StorageKey(namespace: 'cycle', name: id);
 /// `CycleRepositoryImpl` di ARCHITECTURE_OVERVIEW.md.
 ///
 /// Setiap [getCycle] menghitung ulang baris `rollUp` lewat [_resolver] —
-/// nilai di dokumen tersimpan tidak pernah dipercaya (ADR-0008).
+/// nilai di dokumen tersimpan tidak pernah dipercaya (ADR-0008) — KECUALI
+/// siklus sudah `isClosed` (T-4.12): begitu dikunci, nilai roll-up yang
+/// tersimpan dibekukan apa adanya. Tanpa ini, siklus tertutup akan terus
+/// bergerak setiap kali dibaca ulang kalau sumbernya (kartu/belanja) berubah
+/// setelah bulan itu ditutup — bertentangan dengan makna "ditutup".
 final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository {
   /// Membuat [CycleRepositoryImpl] di atas [_storage] dan [_resolver].
   const CycleRepositoryImpl({required this._storage, required this._resolver});
@@ -45,6 +49,7 @@ final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository 
       });
 
   Future<MonthlyCycle> _resolveRollUps(MonthlyCycle cycle) async {
+    if (cycle.isClosed) return cycle;
     final resolvedLines = await Future.wait(cycle.budgetLines.map((line) async {
       if (line.kind != .rollUp) return line;
       final resolution = await _resolver.resolve(line.rollUpSource!);

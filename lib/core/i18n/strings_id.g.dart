@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$cycle$id cycle = Translations$cycle$id.internal(_root);
 	late final Translations$income$id income = Translations$income$id.internal(_root);
 	late final Translations$worklog$id worklog = Translations$worklog$id.internal(_root);
+	late final Translations$card$id card = Translations$card$id.internal(_root);
 }
 
 // Path: app
@@ -297,6 +298,99 @@ class Translations$worklog$id {
 	String injectedInto({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.';
 }
 
+// Path: card
+class Translations$card$id {
+	Translations$card$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Kartu kredit'
+	String get pageTitle => 'Kartu kredit';
+
+	/// id: 'Kartu'
+	String get cardsTitle => 'Kartu';
+
+	/// id: 'Belum ada kartu terdaftar.'
+	String get emptyCards => 'Belum ada kartu terdaftar.';
+
+	/// id: 'Tambah kartu'
+	String get addCardTitle => 'Tambah kartu';
+
+	/// id: 'Sunting kartu'
+	String get editCardTitle => 'Sunting kartu';
+
+	/// id: 'Nama kartu'
+	String get cardNameFieldHint => 'Nama kartu';
+
+	/// id: 'Tanggal cetak tagihan'
+	String get statementDayFieldHint => 'Tanggal cetak tagihan';
+
+	/// id: 'Cetak tanggal $day'
+	String statementDaySubtitle({required Object day}) => 'Cetak tanggal ${day}';
+
+	/// id: 'Siklus tagihan berjalan'
+	String get openStatementTitle => 'Siklus tagihan berjalan';
+
+	/// id: 'Perlu dikonfirmasi'
+	String get pendingConfirmationTitle => 'Perlu dikonfirmasi';
+
+	/// id: 'Tutup siklus tagihan'
+	String get closeStatementButton => 'Tutup siklus tagihan';
+
+	/// id: 'Siklus tagihan ditutup. Siklus berikutnya dibuka.'
+	String get statementClosedMessage => 'Siklus tagihan ditutup. Siklus berikutnya dibuka.';
+
+	/// id: 'Catat transaksi'
+	String get addTransactionTitle => 'Catat transaksi';
+
+	/// id: 'Merchant'
+	String get merchantFieldHint => 'Merchant';
+
+	/// id: 'Nominal (Rp)'
+	String get amountFieldHint => 'Nominal (Rp)';
+
+	/// id: 'Catatan (opsional)'
+	String get noteFieldHint => 'Catatan (opsional)';
+
+	/// id: 'Catat'
+	String get addTransactionButton => 'Catat';
+
+	/// id: 'Langganan berulang'
+	String get subscriptionsTitle => 'Langganan berulang';
+
+	/// id: 'Belum ada langganan terdaftar.'
+	String get emptySubscriptions => 'Belum ada langganan terdaftar.';
+
+	/// id: 'Tambah langganan'
+	String get addSubscriptionTitle => 'Tambah langganan';
+
+	/// id: 'Sunting langganan'
+	String get editSubscriptionTitle => 'Sunting langganan';
+
+	/// id: 'Tanggal disiapkan tiap bulan'
+	String get subscriptionDayFieldHint => 'Tanggal disiapkan tiap bulan';
+
+	/// id: 'Aktif'
+	String get subscriptionActiveLabel => 'Aktif';
+
+	/// id: '$amount / bulan, tanggal $day'
+	String subscriptionSubtitle({required Object amount, required Object day}) => '${amount} / bulan, tanggal ${day}';
+
+	/// id: 'Nonaktif'
+	String get subscriptionInactiveBadge => 'Nonaktif';
+
+	/// id: 'Riwayat siklus tagihan'
+	String get historyTitle => 'Riwayat siklus tagihan';
+
+	/// id: 'Belum ada siklus tagihan yang ditutup.'
+	String get emptyHistory => 'Belum ada siklus tagihan yang ditutup.';
+
+	/// id: '$start – $end'
+	String statementPeriodLabel({required Object start, required Object end}) => '${start} – ${end}';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -373,6 +467,34 @@ extension on Translations {
 			'worklog.injectButton' => 'Suntik ke siklus',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
+			'card.pageTitle' => 'Kartu kredit',
+			'card.cardsTitle' => 'Kartu',
+			'card.emptyCards' => 'Belum ada kartu terdaftar.',
+			'card.addCardTitle' => 'Tambah kartu',
+			'card.editCardTitle' => 'Sunting kartu',
+			'card.cardNameFieldHint' => 'Nama kartu',
+			'card.statementDayFieldHint' => 'Tanggal cetak tagihan',
+			'card.statementDaySubtitle' => ({required Object day}) => 'Cetak tanggal ${day}',
+			'card.openStatementTitle' => 'Siklus tagihan berjalan',
+			'card.pendingConfirmationTitle' => 'Perlu dikonfirmasi',
+			'card.closeStatementButton' => 'Tutup siklus tagihan',
+			'card.statementClosedMessage' => 'Siklus tagihan ditutup. Siklus berikutnya dibuka.',
+			'card.addTransactionTitle' => 'Catat transaksi',
+			'card.merchantFieldHint' => 'Merchant',
+			'card.amountFieldHint' => 'Nominal (Rp)',
+			'card.noteFieldHint' => 'Catatan (opsional)',
+			'card.addTransactionButton' => 'Catat',
+			'card.subscriptionsTitle' => 'Langganan berulang',
+			'card.emptySubscriptions' => 'Belum ada langganan terdaftar.',
+			'card.addSubscriptionTitle' => 'Tambah langganan',
+			'card.editSubscriptionTitle' => 'Sunting langganan',
+			'card.subscriptionDayFieldHint' => 'Tanggal disiapkan tiap bulan',
+			'card.subscriptionActiveLabel' => 'Aktif',
+			'card.subscriptionSubtitle' => ({required Object amount, required Object day}) => '${amount} / bulan, tanggal ${day}',
+			'card.subscriptionInactiveBadge' => 'Nonaktif',
+			'card.historyTitle' => 'Riwayat siklus tagihan',
+			'card.emptyHistory' => 'Belum ada siklus tagihan yang ditutup.',
+			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
 			_ => null,
 		};
 	}

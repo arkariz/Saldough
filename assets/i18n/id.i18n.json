@@ -1,0 +1,17 @@
+{
+  "app": {
+    "title": "Saldough"
+  },
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Sunting",
+    "add": "Tambah",
+    "retry": "Coba lagi",
+    "loading": "Memuat...",
+    "genericErrorMessage": "Ada yang salah. Coba lagi.",
+    "confirmDeleteTitle": "Hapus?",
+    "confirmDeleteMessage": "Tindakan ini tidak bisa dibatalkan."
+  }
+}

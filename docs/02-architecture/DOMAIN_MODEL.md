@@ -112,6 +112,7 @@ dengan warna `overBudget`, bukan menolak menyimpannya.
 | `amount` | `int` | Nominal dalam sen. |
 | `sourceId` | `String?` | Rujukan ke `IncomeSource`. Null untuk baris yang diketik lepas. |
 | `isTemplate` | `bool` | True kalau baris ikut terbawa saat rollover. |
+| `needsReview` | `bool` | True kalau baris ini hasil rollover yang belum dikonfirmasi pemilik. |
 
 ### Baris anggaran
 
@@ -123,6 +124,16 @@ dengan warna `overBudget`, bukan menolak menyimpannya.
 | `kind` | `BudgetLineKind` | `manual` atau `rollUp`. |
 | `rollUpSource` | `RollUpSource?` | Wajib terisi kalau `kind` bernilai `rollUp`. |
 | `isTemplate` | `bool` | True kalau baris ikut terbawa saat rollover. |
+| `needsReview` | `bool` | True kalau baris ini hasil rollover yang belum dikonfirmasi pemilik. |
+
+> **Catatan 10 September 2026:** field `needsReview` tidak ada di draf tabel
+> ini semula, padahal ADR-0008 aturan 3 dan FR-TPL-002 sudah mengikat bahwa
+> setiap baris hasil rollover wajib bisa ditandai "perlu ditinjau" dan
+> penandanya wajib bisa dihapus pemilik satu per satu. Ditambahkan saat
+> implementasi Fase 2, bukan keputusan produk baru — cuma menutup celah
+> dokumentasi. Nilai bawaan `false`; rollover mengisi `true` pada baris hasil
+> salinan, dan penyuntingan manual oleh pemilik mengembalikannya ke `false`
+> (lihat `RollOverCycle` dan `CycleBloc` di ARCHITECTURE_OVERVIEW.md).
 
 `RollUpSource` menunjuk asal angka untuk baris yang tidak diketik manual:
 

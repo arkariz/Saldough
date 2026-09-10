@@ -13,5 +13,31 @@
     "genericErrorMessage": "Something went wrong. Please try again.",
     "confirmDeleteTitle": "Delete?",
     "confirmDeleteMessage": "This action cannot be undone."
+  },
+  "cycle": {
+    "incomeSectionTitle": "Income",
+    "budgetSectionTitle": "Budget",
+    "totalLabel": "Total",
+    "remainderLabel": "Remainder",
+    "addIncomeLine": "Add income line",
+    "addBudgetLine": "Add budget line",
+    "editIncomeLine": "Edit income line",
+    "editBudgetLine": "Edit budget line",
+    "labelFieldHint": "Name",
+    "amountFieldHint": "Amount (Rp)",
+    "emptyIncome": "No income lines yet.",
+    "emptyBudget": "No budget lines yet.",
+    "rollOverButton": "Create next month",
+    "closeCycle": "Close cycle",
+    "reopenCycle": "Reopen",
+    "closedBanner": "This cycle is closed.",
+    "closedCannotEdit": "This cycle is closed. Reopen it to make changes.",
+    "rollUpNotEditable": "This line is calculated automatically and can't be edited directly.",
+    "rollUpSourceUnavailable": "Source not available yet",
+    "markFixed": "Mark as fixed",
+    "markIncidental": "Mark as one-off",
+    "needsReviewBadge": "Needs review",
+    "confirmReviewed": "Looks right",
+    "unreviewedBanner": "$count line(s) need review."
   }
 }

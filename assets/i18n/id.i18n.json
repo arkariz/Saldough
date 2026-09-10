@@ -13,5 +13,31 @@
     "genericErrorMessage": "Ada yang salah. Coba lagi.",
     "confirmDeleteTitle": "Hapus?",
     "confirmDeleteMessage": "Tindakan ini tidak bisa dibatalkan."
+  },
+  "cycle": {
+    "incomeSectionTitle": "Pemasukan",
+    "budgetSectionTitle": "Anggaran",
+    "totalLabel": "Total",
+    "remainderLabel": "Sisa",
+    "addIncomeLine": "Tambah baris pemasukan",
+    "addBudgetLine": "Tambah baris anggaran",
+    "editIncomeLine": "Sunting baris pemasukan",
+    "editBudgetLine": "Sunting baris anggaran",
+    "labelFieldHint": "Nama",
+    "amountFieldHint": "Nominal (Rp)",
+    "emptyIncome": "Belum ada baris pemasukan.",
+    "emptyBudget": "Belum ada baris anggaran.",
+    "rollOverButton": "Buat bulan berikutnya",
+    "closeCycle": "Tutup siklus",
+    "reopenCycle": "Buka kembali",
+    "closedBanner": "Siklus ini sudah ditutup.",
+    "closedCannotEdit": "Siklus sudah ditutup. Buka kembali untuk menyunting.",
+    "rollUpNotEditable": "Baris ini dihitung otomatis, tidak bisa disunting langsung.",
+    "rollUpSourceUnavailable": "Sumber belum tersedia",
+    "markFixed": "Tandai tetap",
+    "markIncidental": "Tandai insidental",
+    "needsReviewBadge": "Perlu ditinjau",
+    "confirmReviewed": "Sudah benar",
+    "unreviewedBanner": "Ada $count baris perlu ditinjau."
   }
 }

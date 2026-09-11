@@ -95,7 +95,18 @@ class _TotalPortfolioCard extends StatelessWidget {
         children: [
           Text(t.investment.totalPortfolioTitle, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppSpacing.xs),
-          AppMoneyText(sen: state.totalPortfolio, style: Theme.of(context).textTheme.headlineMedium),
+          AppMoneyText(
+            sen: state.totalPortfolio,
+            // investmentOnLight, bukan pewarnaan otomatis income/overBudget
+            // -- portofolio investasi bukan pemasukan (UX-26). Sisi negatif
+            // tetap overBudgetOnLight: saldo pos yang minus (lebih banyak
+            // dipinjamkan daripada yang dimiliki) tetap perlu terlihat beda,
+            // sama seperti sisa siklus negatif.
+            color: state.totalPortfolio < 0
+                ? context.appColors.overBudgetOnLight
+                : context.appColors.investmentOnLight,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
         ],
       ),
     );
@@ -132,7 +143,13 @@ class _GoalTile extends StatelessWidget {
                     crossAxisAlignment: .start,
                     children: [
                       Text(goal.name, style: Theme.of(context).textTheme.titleMedium),
-                      AppMoneyText(sen: state.balanceOf(goal.id), style: Theme.of(context).textTheme.titleMedium),
+                      AppMoneyText(
+                        sen: state.balanceOf(goal.id),
+                        color: state.balanceOf(goal.id) < 0
+                            ? context.appColors.overBudgetOnLight
+                            : context.appColors.investmentOnLight,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                     ],
                   ),
                 ),

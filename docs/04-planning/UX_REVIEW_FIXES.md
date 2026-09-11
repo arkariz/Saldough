@@ -76,10 +76,10 @@ menyusul di branch `claude/ux-review-fixes`.
 | 2 | Jalan buntu dan validasi form | 5 | 0 | Prioritas #3 |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
-| 5 | Token dan warna semantik | 9 | 2 | UX-30, UX-22 selesai — UX-22 punya catatan cakupan (chip/tombol tidak disentuh, lihat item) |
+| 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **3** | |
+| **Total** | | **37** | **4** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -1250,12 +1250,13 @@ Perbaikan satu kata, tidak ada risiko.
 
 **Verifikasi.** Kedua ikon kunci (banner dan app bar) berwarna sama.
 
-## - [ ] UX-26 🟡 Dua slot semantik praktis mati
+## - [x] UX-26 🟡 Dua slot semantik praktis mati
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Butuh keputusan pemilik** | Tidak lagi — tapi **bergantung teknis pada UX-22**: butuh varian `…OnLight` sudah ada di kode |
+| **Status** | **Sebagian selesai 11 September 2026** — `investment` dikerjakan; `rollUp` tetap ditunda ke UX-36 seperti direncanakan. |
 
 **Masalah.**
 
@@ -1275,8 +1276,14 @@ gejalanya.
 
 **Langkah perbaikan.**
 
-1. `investment`: beri `color` eksplisit pada `AppMoneyText` di
-   `_TotalPortfolioCard` dan `_GoalTile` — lihat pola yang sama di **UX-23**.
+1. **SELESAI.** `investment`: `color` eksplisit dipasang di `AppMoneyText`
+   pada `_TotalPortfolioCard` dan `_GoalTile` — `investmentOnLight` untuk
+   saldo positif/nol, `overBudgetOnLight` untuk saldo negatif. Sengaja
+   TIDAK dibuat flat ke satu warna: saldo pos yang minus (lebih banyak
+   dipinjamkan daripada yang dimiliki lewat `GoalLoan`) secara matematis
+   mungkin terjadi (lihat `calculate_goal_balances.dart`), dan tanda itu
+   tetap perlu terlihat beda — pola yang sama dengan sisa siklus negatif
+   (`overBudget`, bukan `expense`).
 2. `rollUp`: dipakai sebagai penanda baris roll-up; dikerjakan sebagai bagian
    dari **UX-36**, bukan di sini. Item ini hanya mencatat bahwa slotnya ada dan
    menganggur.
@@ -1793,3 +1800,24 @@ terselesaikan diam-diam; perlu keputusan terpisah kalau ingin ditutup.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` **141 lulus** (124
 baseline + 17 tes baru).
+
+**11 September 2026 (UX-26 dikerjakan sebagian)** — Bagian `investment` dari
+UX-26 dikerjakan bersamaan dengan UX-22 karena berbagi token yang sama:
+`_TotalPortfolioCard` dan `_GoalTile` (`investment_page.dart`) sekarang
+memberi `color` eksplisit pada `AppMoneyText`, bukan mengandalkan pewarnaan
+otomatis (yang sebelumnya membuat seluruh angka investasi tampil hijau
+"pemasukan"). Dibuat sadar-tanda (bukan flat satu warna): positif/nol →
+`investmentOnLight`, negatif → `overBudgetOnLight` — karena saldo pos secara
+matematis bisa negatif lewat `GoalLoan` (dipinjamkan lebih banyak daripada
+yang dimiliki), dan tanda itu tetap perlu tersinyal beda, sama seperti sisa
+siklus negatif.
+
+Bagian `rollUp` **tetap ditunda**, persis seperti rencana semula di item ini
+— pemasangannya menunggu penanda visual baris roll-up di UX-36, supaya tidak
+dikerjakan dua kali (sekali di sini sebagai warna terpisah, sekali lagi di
+UX-36 sebagai bagian dari penanda baris). Checkbox UX-26 dicentang karena
+bagian yang direncanakan selesai di sini (investment) sudah tuntas, dengan
+catatan eksplisit bahwa rollUp menyusul di item lain.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 141 lulus (tidak
+berubah dari UX-22 — ini murni perubahan widget, tidak menyentuh bloc).

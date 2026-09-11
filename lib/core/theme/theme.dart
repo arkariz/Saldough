@@ -3,6 +3,7 @@ library;
 
 export 'app_theme.dart';
 export 'extensions/app_colors_extension.dart';
+export 'tokens/app_border.dart';
 export 'tokens/app_durations.dart';
 export 'tokens/app_elevation.dart';
 export 'tokens/app_radius.dart';

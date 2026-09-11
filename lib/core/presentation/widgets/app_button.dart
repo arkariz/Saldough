@@ -38,7 +38,7 @@ class AppButton extends StatelessWidget {
       backgroundColor: isDisabled ? colors.textMuted.withValues(alpha: 0.3) : fill,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.smAll,
-        side: BorderSide(color: colors.edge, width: 2.5),
+        side: BorderSide(color: colors.edge, width: AppBorder.thick),
       ),
     );
 

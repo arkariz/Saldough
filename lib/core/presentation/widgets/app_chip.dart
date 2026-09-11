@@ -13,6 +13,7 @@ class AppChip extends StatelessWidget {
     this.selected = false,
     this.color,
     this.onTap,
+    this.shout = false,
     super.key,
   });
 
@@ -28,10 +29,19 @@ class AppChip extends StatelessWidget {
   /// Dipanggil saat chip diketuk. `null` membuat chip non-interaktif.
   final VoidCallback? onTap;
 
+  /// True untuk badge status pendek bergaya stiker komik (`AppTheme.shout`,
+  /// Bangers) — mis. "Perlu ditinjau", "Nonaktif". Bawaan `false` (Space
+  /// Grotesk): Bangers tidak cocok untuk label yang bisa panjang/berulang
+  /// seperti pilihan sumber atau nama kartu (ADR-0006 — angka/label
+  /// panjang tetap grotesk, hanya badge stiker pendek yang boleh Bangers).
+  /// Lihat `docs/04-planning/UX_REVIEW_FIXES.md` item UX-27.
+  final bool shout;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final fill = color ?? Theme.of(context).colorScheme.primary;
+    final textColor = selected ? _onFill(fill, colors) : colors.textPrimary;
 
     return GestureDetector(
       onTap: onTap,
@@ -40,14 +50,16 @@ class AppChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? fill : Colors.transparent,
           borderRadius: AppRadius.fullAll,
-          border: Border.all(color: colors.edge, width: 2),
+          border: Border.all(color: colors.edge, width: AppBorder.thick),
         ),
         child: Text(
           label,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: selected ? _onFill(fill, colors) : colors.textPrimary,
-                fontWeight: FontWeight.w700,
-              ),
+          style: shout
+              ? AppTheme.shout(color: textColor)
+              : Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w700,
+                  ),
         ),
       ),
     );

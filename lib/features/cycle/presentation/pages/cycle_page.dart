@@ -117,7 +117,10 @@ class _ClosedBanner extends StatelessWidget {
         elevation: AppElevation.none,
         child: Row(
           children: [
-            Icon(Icons.lock, color: colors.overBudget),
+            // textMuted, bukan overBudget -- siklus tertutup bukan kondisi
+            // lewat anggaran, dan ikon kunci yang sama di app bar (:93) sudah
+            // memakai textMuted (UX-25).
+            Icon(Icons.lock, color: colors.textMuted),
             const SizedBox(width: AppSpacing.sm),
             Expanded(child: Text(t.cycle.closedBanner)),
             TextButton(
@@ -423,7 +426,11 @@ class _ActionsRow extends StatelessWidget {
         if (state.canDeleteCycle)
           IconButton(
             tooltip: t.cycle.deleteCycle,
-            icon: Icon(Icons.delete_outline, color: context.appColors.expense),
+            // textMuted, bukan expense -- hapus adalah aksi netral sampai
+            // dikonfirmasi (dialognya sendiri yang memikul warna destruktif
+            // lewat showConfirmDelete). expense sebelumnya dipakai untuk
+            // pengeluaran, aksi destruktif, DAN galat sekaligus (UX-24).
+            icon: Icon(Icons.delete_outline, color: context.appColors.textMuted),
             onPressed: () async {
               final confirmed = await showConfirmDelete(
                 context,

@@ -46,6 +46,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$worklog$en worklog = _Translations$worklog$en._(_root);
 	@override late final _Translations$card$en card = _Translations$card$en._(_root);
 	@override late final _Translations$grocery$en grocery = _Translations$grocery$en._(_root);
+	@override late final _Translations$investment$en investment = _Translations$investment$en._(_root);
 }
 
 // Path: app
@@ -221,6 +222,49 @@ class _Translations$grocery$en extends Translations$grocery$id {
 	@override String get overriddenBadge => 'overridden';
 }
 
+// Path: investment
+class _Translations$investment$en extends Translations$investment$id {
+	_Translations$investment$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Investment';
+	@override String get totalPortfolioTitle => 'Total portfolio';
+	@override String get goalsTitle => 'Goals';
+	@override String get emptyGoals => 'No goals yet.';
+	@override String get addGoalTitle => 'Add goal';
+	@override String get editGoalTitle => 'Edit goal';
+	@override String get goalNameFieldHint => 'Goal name';
+	@override String get openingBalanceFieldHint => 'Opening balance (Rp)';
+	@override String get allocationPlanTitle => 'This month\'s allocation';
+	@override String get cycleIdFieldHint => 'Cycle (YYYY-MM)';
+	@override String get cycleNotFound => 'This cycle doesn\'t exist yet.';
+	@override String get cycleClosedMessage => 'This cycle is closed. Reopen it to edit the allocation.';
+	@override String get remainderLabel => 'Cycle remainder';
+	@override String get returnDepositFieldHint => 'Extra funds (Rp)';
+	@override String get percentageFieldHint => '%';
+	@override String totalPercentageLabel({required Object total}) => 'Total percentage: ${total}%';
+	@override String get loansTitle => 'Loans between goals';
+	@override String get emptyLoans => 'No loans yet.';
+	@override String get addLoanTitle => 'Add loan';
+	@override String get editLoanTitle => 'Edit loan';
+	@override String get fromGoalFieldHint => 'From goal';
+	@override String get toGoalFieldHint => 'To goal';
+	@override String get principalFieldHint => 'Principal (Rp)';
+	@override String get repaidFieldHint => 'Repaid (Rp)';
+	@override String get noteFieldHint => 'Note (optional)';
+	@override String get historyTitle => 'History';
+	@override String allocationHistoryLabel({required Object cycleId}) => 'Allocation for cycle ${cycleId}';
+	@override String loanInLabel({required Object fromName}) => 'Loan from ${fromName}';
+	@override String loanOutLabel({required Object toName}) => 'Loan to ${toName}';
+	@override String loanRouteLabel({required Object fromName, required Object toName}) => '${fromName} → ${toName}';
+	@override String loanAmountsLabel({required Object principal, required Object repaid}) => 'Principal ${principal}, repaid ${repaid}';
+	@override String get invalidTotalMessage => 'Total percentage must be 0 or 100.';
+	@override String get allocationSavedMessage => 'Allocation plan saved.';
+	@override String get loanSavedMessage => 'Loan saved.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -339,6 +383,40 @@ extension on TranslationsEn {
 			'grocery.overridePriceLabel' => 'Override price',
 			'grocery.overrideAmountFieldHint' => 'Override amount (Rp)',
 			'grocery.overriddenBadge' => 'overridden',
+			'investment.pageTitle' => 'Investment',
+			'investment.totalPortfolioTitle' => 'Total portfolio',
+			'investment.goalsTitle' => 'Goals',
+			'investment.emptyGoals' => 'No goals yet.',
+			'investment.addGoalTitle' => 'Add goal',
+			'investment.editGoalTitle' => 'Edit goal',
+			'investment.goalNameFieldHint' => 'Goal name',
+			'investment.openingBalanceFieldHint' => 'Opening balance (Rp)',
+			'investment.allocationPlanTitle' => 'This month\'s allocation',
+			'investment.cycleIdFieldHint' => 'Cycle (YYYY-MM)',
+			'investment.cycleNotFound' => 'This cycle doesn\'t exist yet.',
+			'investment.cycleClosedMessage' => 'This cycle is closed. Reopen it to edit the allocation.',
+			'investment.remainderLabel' => 'Cycle remainder',
+			'investment.returnDepositFieldHint' => 'Extra funds (Rp)',
+			'investment.percentageFieldHint' => '%',
+			'investment.totalPercentageLabel' => ({required Object total}) => 'Total percentage: ${total}%',
+			'investment.loansTitle' => 'Loans between goals',
+			'investment.emptyLoans' => 'No loans yet.',
+			'investment.addLoanTitle' => 'Add loan',
+			'investment.editLoanTitle' => 'Edit loan',
+			'investment.fromGoalFieldHint' => 'From goal',
+			'investment.toGoalFieldHint' => 'To goal',
+			'investment.principalFieldHint' => 'Principal (Rp)',
+			'investment.repaidFieldHint' => 'Repaid (Rp)',
+			'investment.noteFieldHint' => 'Note (optional)',
+			'investment.historyTitle' => 'History',
+			'investment.allocationHistoryLabel' => ({required Object cycleId}) => 'Allocation for cycle ${cycleId}',
+			'investment.loanInLabel' => ({required Object fromName}) => 'Loan from ${fromName}',
+			'investment.loanOutLabel' => ({required Object toName}) => 'Loan to ${toName}',
+			'investment.loanRouteLabel' => ({required Object fromName, required Object toName}) => '${fromName} → ${toName}',
+			'investment.loanAmountsLabel' => ({required Object principal, required Object repaid}) => 'Principal ${principal}, repaid ${repaid}',
+			'investment.invalidTotalMessage' => 'Total percentage must be 0 or 100.',
+			'investment.allocationSavedMessage' => 'Allocation plan saved.',
+			'investment.loanSavedMessage' => 'Loan saved.',
 			_ => null,
 		};
 	}

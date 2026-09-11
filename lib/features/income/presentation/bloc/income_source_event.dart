@@ -29,3 +29,11 @@ final class IncomeSourceDeleted extends IncomeSourceEvent {
   /// Identitas sumber.
   final String id;
 }
+
+/// Tombol "Catat Jam Kerja" ditekan — pindah ke layar `worklog`
+/// (pencatatan freelance per jam, T-3.x, dipisah dari layar ini sejak
+/// desain D-3.x).
+final class WorklogEntryPointTapped extends IncomeSourceEvent {
+  /// Membuat [WorklogEntryPointTapped].
+  const WorklogEntryPointTapped();
+}

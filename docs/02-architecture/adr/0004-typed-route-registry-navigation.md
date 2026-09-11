@@ -157,6 +157,39 @@ dengan sebanyak ini layar.
   memakai `StatefulShellRoute` di mana pun.
 - Paket `navigation` tidak lagi dipelihara.
 
+> **Catatan revisi (11 September 2026):** kriteria peninjauan pertama di atas
+> terpenuhi — bilah navigasi bawah dibutuhkan begitu Fase 2-5 selesai dan tiap
+> fitur hanya bisa dicapai lewat menu pengembang (debug-only), bukan navigasi
+> pengguna sungguhan. **Keputusan ini TIDAK ditinjau ulang/dibatalkan** —
+> diselesaikan tanpa mengubah `package:navigation` maupun memakai
+> `StatefulShellRoute`-nya `go_router`:
+>
+> - `MainShellPage` (`lib/core/presentation/shell/`) adalah satu `GoRoute`
+>   MENTAH (bukan `RouteNode`, tidak lewat `RouteRegistry`) yang didaftarkan
+>   langsung di `AppRouteRegistry.build` sebagai `homeBuilder`, jadi layar
+>   awal aplikasi (`_initialLocation`). Ini pengecualian sadar terhadap
+>   "seluruh rute didaftarkan lewat `FeatureRouteModule`" — shell ini bukan
+>   milik satu fitur, jadi tidak bisa diletakkan di `FeatureRouteModule`
+>   mana pun tanpa memaksa fitur itu mengimpor tiga fitur lain.
+> - Bilah bawahnya 4 tab (Siklus/Pemasukan/Belanja/Investasi), isinya
+>   `IndexedStack` yang memasang `ScopeWidget` tiap fitur langsung (pola sama
+>   seperti di `XRouteModule` masing-masing) — bukan `StatefulShellRoute`,
+>   jadi tidak perlu Navigator bercabang. `IndexedStack` cukup untuk
+>   kebutuhan Saldough (state tiap tab tetap hidup saat pindah tab) tanpa
+>   kerumitan tumpukan navigasi per-cabang.
+> - Worklog (dari tab Pemasukan) dan Card (dari tab Belanja) BUKAN tab
+>   tersendiri — pola "antipola yang harus dihindari" di atas (§7) tetap
+>   dipegang lurus: `IncomeSourceBloc`/`GroceryBloc` mendorong
+>   `NavigatePushEffect` (bukan `context.push` langsung dari widget) yang
+>   `keyId`-nya `WorklogRouteKeys.page.id`/`CardRouteKeys.page.id` — RouteKeys
+>   fitur lain, bukan string harfiah. Ini konsumen NYATA pertama efek
+>   navigasi sejak T-1.11 mendaftarkan penanganannya; sebelum ronde ini
+>   penanganannya terpasang tapi tidak ada bloc yang memakainya.
+> - Kalau kelak kebutuhan navigasi jadi lebih dalam dari ini (tab dengan
+>   tumpukan historinya sendiri, deep link ke layar di dalam satu tab),
+>   `StatefulShellRoute` sungguhan baru perlu dipertimbangkan — dicatat di
+>   sini sebagai kemungkinan langkah berikutnya, bukan kebutuhan sekarang.
+
 ## 9. Artefak terkait
 
 ### Dokumentasi
@@ -175,4 +208,7 @@ dengan sebanyak ini layar.
 **Penulis keputusan:** Tim Saldough
 **Ditinjau oleh:** Pemilik proyek
 **Tanggal disetujui:** 2026-09-09
-**Status implementasi:** Disetujui, belum diimplementasikan
+**Status implementasi:** Diimplementasikan — `RouteRegistry`/`RouteNode`/
+`RouteKey` dipakai tiap fitur sejak Fase 1, efek navigasi punya konsumen
+nyata pertama dan `MainShellPage` (bilah bawah) sejak 11 September 2026
+(lihat catatan revisi di §8)

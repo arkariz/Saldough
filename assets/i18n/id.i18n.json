@@ -57,7 +57,8 @@
     "deductionLabelHint": "Nama potongan",
     "deductionValueHint": "Nilai",
     "deductionKindPermille": "Per mil",
-    "deductionKindFixed": "Tetap (Rp)"
+    "deductionKindFixed": "Tetap (Rp)",
+    "worklogEntryPointLabel": "Catat Jam Kerja"
   },
   "worklog": {
     "pageTitle": "Catatan jam kerja",
@@ -121,7 +122,8 @@
     "unitPriceFieldHint": "Harga satuan (Rp)",
     "overridePriceLabel": "Timpa harga",
     "overrideAmountFieldHint": "Harga timpaan (Rp)",
-    "overriddenBadge": "ditimpa"
+    "overriddenBadge": "ditimpa",
+    "cardEntryPointLabel": "Kartu Kredit"
   },
   "investment": {
     "pageTitle": "Investasi",
@@ -158,5 +160,11 @@
     "invalidTotalMessage": "Total persentase harus 0 atau 100.",
     "allocationSavedMessage": "Rencana alokasi disimpan.",
     "loanSavedMessage": "Pinjaman disimpan."
+  },
+  "shell": {
+    "cycleTabLabel": "Siklus",
+    "incomeTabLabel": "Pemasukan",
+    "groceryTabLabel": "Belanja",
+    "investmentTabLabel": "Investasi"
   }
 }

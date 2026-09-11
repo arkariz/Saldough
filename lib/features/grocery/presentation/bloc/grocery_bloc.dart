@@ -1,6 +1,8 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/card/presentation/navigation/card_route_keys.dart';
 import 'package:saldough/features/grocery/domain/entities/grocery_item.dart';
 import 'package:saldough/features/grocery/domain/entities/grocery_plan.dart';
 import 'package:saldough/features/grocery/domain/repositories/grocery_plan_repository.dart';
@@ -19,6 +21,7 @@ final class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
     on<GroceryItemSaved>(_onItemSaved);
     on<GroceryItemRemoved>(_onItemRemoved);
     on<WeeksPerMonthChanged>(_onWeeksPerMonthChanged);
+    on<CardEntryPointTapped>(_onCardEntryPointTapped);
   }
 
   final GroceryPlanRepository _repository;
@@ -71,5 +74,9 @@ final class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
       case Right():
         emit(state.copyWith(plan: plan));
     }
+  }
+
+  void _onCardEntryPointTapped(CardEntryPointTapped event, Emitter<GroceryState> emit) {
+    emit(state.copyWith(effect: _effectOpenCard()));
   }
 }

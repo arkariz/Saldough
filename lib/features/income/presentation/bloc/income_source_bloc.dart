@@ -1,7 +1,9 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_state.dart';
+import 'package:saldough/features/worklog/presentation/navigation/worklog_route_keys.dart';
 import 'package:saldough/shared/income/income.dart';
 import 'package:state_management/state_management.dart';
 
@@ -15,6 +17,7 @@ final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> 
     on<IncomeSourcesLoaded>(_onLoaded);
     on<IncomeSourceSaved>(_onSaved);
     on<IncomeSourceDeleted>(_onDeleted);
+    on<WorklogEntryPointTapped>(_onWorklogEntryPointTapped);
   }
 
   final IncomeSourceRepository _repository;
@@ -48,5 +51,9 @@ final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> 
       case Right():
         add(const IncomeSourcesLoaded());
     }
+  }
+
+  void _onWorklogEntryPointTapped(WorklogEntryPointTapped event, Emitter<IncomeSourceState> emit) {
+    emit(state.copyWith(effect: _effectOpenWorklog()));
   }
 }

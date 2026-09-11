@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/presentation/shell/main_shell_page.dart';
 import 'package:saldough/features/card/data/card_roll_up_resolver.dart';
 import 'package:saldough/features/card/data/repositories/card_statement_repository_impl.dart';
 import 'package:saldough/features/card/presentation/navigation/card_route_module.dart';
@@ -131,15 +132,15 @@ abstract final class RootModule {
       AppRouteRegistry.build(
         registry: registry,
         initialLocation: _initialLocation,
+        homeBuilder: (context) => const MainShellPage(),
       ),
     );
   }
 
-  // Siklus bulan berjalan sebagai layar awal (Fase 2). Path GoRoute tidak
-  // membawa parameter — id bulan berjalan dipasok lewat
-  // CycleRouteModule.defaultInput, bukan lewat URL, karena initialLocation
-  // dibuka tanpa `extra` (lihat RouteNodeGoRouterExt.toGoRoute).
-  static const _initialLocation = '/cycle/detail';
+  // Shell navigasi utama (`MainShellPage`, bottom nav 4 tab) sebagai layar
+  // awal sejak wiring navigasi lintas fitur — sebelumnya layar siklus
+  // bulanan langsung (Fase 2), kini salah satu tab di dalam shell.
+  static const String _initialLocation = AppRouteRegistry.homePath;
 }
 
 /// Menggabungkan resolver roll-up tiap fitur sumber (`grocery`, `card`) jadi

@@ -5,7 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_bloc.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_state.dart';
+import 'package:saldough/features/worklog/presentation/navigation/worklog_route_keys.dart';
 import 'package:saldough/shared/income/income.dart';
+import 'package:state_management/state_management.dart';
 
 class MockIncomeSourceRepository extends Mock implements IncomeSourceRepository {}
 
@@ -69,6 +71,19 @@ void main() {
       act: (bloc) => bloc.add(const IncomeSourceDeleted('s1')),
       expect: () => [
         isA<IncomeSourceState>().having((s) => s.effect, 'effect', isNotNull),
+      ],
+    );
+
+    blocTest<IncomeSourceBloc, IncomeSourceState>(
+      'WorklogEntryPointTapped mendorong efek navigasi ke layar worklog',
+      build: () => IncomeSourceBloc(repository: repository),
+      act: (bloc) => bloc.add(const WorklogEntryPointTapped()),
+      expect: () => [
+        isA<IncomeSourceState>().having(
+          (s) => s.effect,
+          'effect',
+          isA<NavigatePushEffect>().having((e) => e.keyId, 'keyId', WorklogRouteKeys.page.id),
+        ),
       ],
     );
   });

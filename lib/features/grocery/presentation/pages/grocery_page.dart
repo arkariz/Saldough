@@ -20,7 +20,16 @@ class GroceryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.grocery.pageTitle)),
+      appBar: AppBar(
+        title: Text(t.grocery.pageTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.credit_card),
+            tooltip: t.grocery.cardEntryPointLabel,
+            onPressed: () => context.read<GroceryBloc>().add(const CardEntryPointTapped()),
+          ),
+        ],
+      ),
       body: EffectListener<GroceryBloc, GroceryState>(
         child: BlocBuilder<GroceryBloc, GroceryState>(
           builder: (context, state) {

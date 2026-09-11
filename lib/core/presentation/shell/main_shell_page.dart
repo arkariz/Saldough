@@ -89,13 +89,19 @@ class _CycleTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cycleId = _currentCycleId();
     return ScopeWidget<CycleScope>(
       create: () => CycleScope(parentContainer: parentContainer),
-      builder: (context, scope) => BlocProvider.value(
-        value: scope.container<CycleBloc>()..add(CycleOpened(cycleId)),
-        child: CyclePage(cycleId: cycleId),
-      ),
+      builder: (context, scope) {
+        final bloc = scope.container<CycleBloc>();
+        // UX-07: `builder` jalan lagi setiap kali tab ini pindah (rebuild
+        // `IndexedStack` induk), bukan hanya sekali. Pancarkan `CycleOpened`
+        // hanya saat bloc benar-benar belum memuat siklus mana pun --
+        // supaya posisi navigasi bulan yang dipilih pemilik (chevron) tidak
+        // ditimpa balik ke bulan berjalan tiap kali balik ke tab ini.
+        final cycleId = bloc.state.cycle.id.isEmpty ? _currentCycleId() : bloc.state.cycle.id;
+        if (bloc.state.cycle.id.isEmpty) bloc.add(CycleOpened(cycleId));
+        return BlocProvider.value(value: bloc, child: CyclePage(cycleId: cycleId));
+      },
     );
   }
 }

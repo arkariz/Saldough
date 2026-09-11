@@ -22,5 +22,19 @@ void main() {
       expect(CycleMonthFormatter.format('2026-13'), '2026-13');
       expect(CycleMonthFormatter.format('2026'), '2026');
     });
+
+    // UX-21: dasar Text catat jam kerja -- sebelumnya disusun tangan jadi
+    // "2026-09-11", melanggar aturan slang.
+    test('formatDate memformat tanggal lengkap dalam bahasa Indonesia (bawaan)', () {
+      expect(CycleMonthFormatter.formatDate(DateTime(2026, 9, 11)), '11 September 2026');
+      expect(CycleMonthFormatter.formatDate(DateTime(2026, 1, 5)), '5 Januari 2026');
+    });
+
+    test('formatDate memformat dalam bahasa Inggris kalau locale aktif en', () async {
+      await LocaleSettings.setLocale(AppLocale.en);
+      addTearDown(() => LocaleSettings.setLocale(AppLocale.id));
+
+      expect(CycleMonthFormatter.formatDate(DateTime(2026, 1, 5)), '5 January 2026');
+    });
   });
 }

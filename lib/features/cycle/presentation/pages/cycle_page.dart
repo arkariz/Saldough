@@ -493,6 +493,9 @@ class _ActionsRow extends StatelessWidget {
             onPressed: () async {
               final confirmed = await showConfirmDelete(
                 context,
+                title: t.cycle.confirmDeleteCycleTitle(
+                  month: CycleMonthFormatter.format(state.cycle.id),
+                ),
                 message: t.cycle.deleteCycleConfirmMessage,
                 confirmLabel: t.cycle.deleteCycle,
               );

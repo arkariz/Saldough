@@ -95,8 +95,8 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get editBudgetLine => 'Edit budget line';
 	@override String get labelFieldHint => 'Name';
 	@override String get amountFieldHint => 'Amount (Rp)';
-	@override String get emptyIncome => 'No income lines yet.';
-	@override String get emptyBudget => 'No budget lines yet.';
+	@override String get emptyIncome => 'No income lines yet. Add the first one below.';
+	@override String get emptyBudget => 'No budget lines yet. Add the first one below.';
 	@override String get rollOverButton => 'Create next month';
 	@override String cycleCreatedMessage({required Object month}) => '${month} cycle created.';
 	@override String get closeCycle => 'Close cycle';
@@ -113,6 +113,7 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String unreviewedBanner({required Object count}) => '${count} line(s) need review.';
 	@override String get unreviewedBannerHint => 'The amount still carries over from last month — check it before marking it right.';
 	@override String get deleteCycle => 'Delete this cycle';
+	@override String confirmDeleteCycleTitle({required Object month}) => 'Delete the ${month} cycle?';
 	@override String get deleteCycleConfirmMessage => 'All income and budget lines for this month will be deleted. This action cannot be undone.';
 	@override String get noIncomeSourcesHint => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.';
 	@override String get addIncomeSourceButton => 'Add income source';
@@ -167,6 +168,7 @@ class _Translations$worklog$en extends Translations$worklog$id {
 	// Translations
 	@override String get pageTitle => 'Work log';
 	@override String get noFreelanceSource => 'No freelance income source yet. Add one on the Income Sources screen first.';
+	@override String get goToIncomeSourcesButton => 'Open Income Sources';
 	@override String get addEntryTitle => 'Log hours';
 	@override String get hoursFieldHint => 'Number of hours';
 	@override String get startsNewBookLabel => 'Start new book';
@@ -340,8 +342,8 @@ extension on TranslationsEn {
 			'cycle.editBudgetLine' => 'Edit budget line',
 			'cycle.labelFieldHint' => 'Name',
 			'cycle.amountFieldHint' => 'Amount (Rp)',
-			'cycle.emptyIncome' => 'No income lines yet.',
-			'cycle.emptyBudget' => 'No budget lines yet.',
+			'cycle.emptyIncome' => 'No income lines yet. Add the first one below.',
+			'cycle.emptyBudget' => 'No budget lines yet. Add the first one below.',
 			'cycle.rollOverButton' => 'Create next month',
 			'cycle.cycleCreatedMessage' => ({required Object month}) => '${month} cycle created.',
 			'cycle.closeCycle' => 'Close cycle',
@@ -358,6 +360,7 @@ extension on TranslationsEn {
 			'cycle.unreviewedBanner' => ({required Object count}) => '${count} line(s) need review.',
 			'cycle.unreviewedBannerHint' => 'The amount still carries over from last month — check it before marking it right.',
 			'cycle.deleteCycle' => 'Delete this cycle',
+			'cycle.confirmDeleteCycleTitle' => ({required Object month}) => 'Delete the ${month} cycle?',
 			'cycle.deleteCycleConfirmMessage' => 'All income and budget lines for this month will be deleted. This action cannot be undone.',
 			'cycle.noIncomeSourcesHint' => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.',
 			'cycle.addIncomeSourceButton' => 'Add income source',
@@ -394,6 +397,7 @@ extension on TranslationsEn {
 			'income.confirmDeleteSourceMessage' => 'Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone.',
 			'worklog.pageTitle' => 'Work log',
 			'worklog.noFreelanceSource' => 'No freelance income source yet. Add one on the Income Sources screen first.',
+			'worklog.goToIncomeSourcesButton' => 'Open Income Sources',
 			'worklog.addEntryTitle' => 'Log hours',
 			'worklog.hoursFieldHint' => 'Number of hours',
 			'worklog.startsNewBookLabel' => 'Start new book',

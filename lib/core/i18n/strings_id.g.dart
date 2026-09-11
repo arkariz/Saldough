@@ -138,11 +138,11 @@ class Translations$cycle$id {
 	/// id: 'Nominal (Rp)'
 	String get amountFieldHint => 'Nominal (Rp)';
 
-	/// id: 'Belum ada baris pemasukan.'
-	String get emptyIncome => 'Belum ada baris pemasukan.';
+	/// id: 'Belum ada baris pemasukan. Tambahkan yang pertama di bawah.'
+	String get emptyIncome => 'Belum ada baris pemasukan. Tambahkan yang pertama di bawah.';
 
-	/// id: 'Belum ada baris anggaran.'
-	String get emptyBudget => 'Belum ada baris anggaran.';
+	/// id: 'Belum ada baris anggaran. Tambahkan yang pertama di bawah.'
+	String get emptyBudget => 'Belum ada baris anggaran. Tambahkan yang pertama di bawah.';
 
 	/// id: 'Buat bulan berikutnya'
 	String get rollOverButton => 'Buat bulan berikutnya';
@@ -192,6 +192,9 @@ class Translations$cycle$id {
 	/// id: 'Hapus siklus ini'
 	String get deleteCycle => 'Hapus siklus ini';
 
+	/// id: 'Hapus siklus $month?'
+	String confirmDeleteCycleTitle({required Object month}) => 'Hapus siklus ${month}?';
+
 	/// id: 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.'
 	String get deleteCycleConfirmMessage => 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.';
 
@@ -207,11 +210,11 @@ class Translations$cycle$id {
 	/// id: 'Manual'
 	String get budgetSourceManual => 'Manual';
 
-	/// id: 'Rencana Belanja'
-	String get budgetSourceGrocery => 'Rencana Belanja';
+	/// id: 'Rencana belanja'
+	String get budgetSourceGrocery => 'Rencana belanja';
 
-	/// id: 'Kartu Kredit'
-	String get budgetSourceCard => 'Kartu Kredit';
+	/// id: 'Kartu kredit'
+	String get budgetSourceCard => 'Kartu kredit';
 
 	/// id: 'Pilih kartu'
 	String get selectCardHint => 'Pilih kartu';
@@ -317,6 +320,9 @@ class Translations$worklog$id {
 
 	/// id: 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.'
 	String get noFreelanceSource => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.';
+
+	/// id: 'Buka Sumber Pemasukan'
+	String get goToIncomeSourcesButton => 'Buka Sumber Pemasukan';
 
 	/// id: 'Catat jam kerja'
 	String get addEntryTitle => 'Catat jam kerja';
@@ -704,8 +710,8 @@ extension on Translations {
 			'cycle.editBudgetLine' => 'Sunting baris anggaran',
 			'cycle.labelFieldHint' => 'Nama',
 			'cycle.amountFieldHint' => 'Nominal (Rp)',
-			'cycle.emptyIncome' => 'Belum ada baris pemasukan.',
-			'cycle.emptyBudget' => 'Belum ada baris anggaran.',
+			'cycle.emptyIncome' => 'Belum ada baris pemasukan. Tambahkan yang pertama di bawah.',
+			'cycle.emptyBudget' => 'Belum ada baris anggaran. Tambahkan yang pertama di bawah.',
 			'cycle.rollOverButton' => 'Buat bulan berikutnya',
 			'cycle.cycleCreatedMessage' => ({required Object month}) => 'Siklus ${month} sudah dibuat.',
 			'cycle.closeCycle' => 'Tutup siklus',
@@ -722,13 +728,14 @@ extension on Translations {
 			'cycle.unreviewedBanner' => ({required Object count}) => 'Ada ${count} baris perlu ditinjau.',
 			'cycle.unreviewedBannerHint' => 'Nominalnya masih ikut bulan lalu — periksa sebelum ditandai benar.',
 			'cycle.deleteCycle' => 'Hapus siklus ini',
+			'cycle.confirmDeleteCycleTitle' => ({required Object month}) => 'Hapus siklus ${month}?',
 			'cycle.deleteCycleConfirmMessage' => 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.',
 			'cycle.noIncomeSourcesHint' => 'Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.',
 			'cycle.addIncomeSourceButton' => 'Tambah sumber pemasukan',
 			'cycle.budgetSourceFieldLabel' => 'Sumber nominal',
 			'cycle.budgetSourceManual' => 'Manual',
-			'cycle.budgetSourceGrocery' => 'Rencana Belanja',
-			'cycle.budgetSourceCard' => 'Kartu Kredit',
+			'cycle.budgetSourceGrocery' => 'Rencana belanja',
+			'cycle.budgetSourceCard' => 'Kartu kredit',
 			'cycle.selectCardHint' => 'Pilih kartu',
 			'cycle.rollUpSourceAlreadyUsed' => 'Sumber ini sudah ditautkan ke baris anggaran lain.',
 			'cycle.confirmDeleteIncomeLineTitle' => ({required Object name}) => 'Hapus baris ${name}?',
@@ -758,6 +765,7 @@ extension on Translations {
 			'income.confirmDeleteSourceMessage' => 'Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan.',
 			'worklog.pageTitle' => 'Catatan jam kerja',
 			'worklog.noFreelanceSource' => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.',
+			'worklog.goToIncomeSourcesButton' => 'Buka Sumber Pemasukan',
 			'worklog.addEntryTitle' => 'Catat jam kerja',
 			'worklog.hoursFieldHint' => 'Jumlah jam',
 			'worklog.startsNewBookLabel' => 'Mulai buku baru',

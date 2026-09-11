@@ -66,20 +66,20 @@ otomatis, tapi sebutkan di catatan pengerjaan bahwa verifikasinya manual.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 11 September 2026 — pemilik menjawab kedua keputusan;
-UX-30 dan UX-01 selesai; langkah dokumentasi UX-22 selesai, kodenya
-menyusul di branch `claude/ux-review-fixes`.
+Terakhir diperbarui: 11 September 2026 — Batch 3 (navigasi/IA) selesai
+semua, plus UX-35 dari Batch 6 dikerjakan lebih awal karena jadi dependensi
+UX-11.
 
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
 | 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
-| 3 | Navigasi dan IA | 5 | 0 | |
+| 3 | Navigasi dan IA | 5 | 5 | **Semua selesai** |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 9 | **Semua selesai** — UX-26 sebagian (rollUp sengaja ditunda ke UX-36), UX-24 langkah 2 masih menunggu keputusan pemilik (dicatat sebagai follow-up), keduanya tetap dicentang karena bagian yang direncanakan di sini sudah tuntas |
-| 6 | Sentuh dan aksesibilitas | 5 | 0 | |
+| 6 | Sentuh dan aksesibilitas | 5 | 1 | UX-35 selesai (dikerjakan lebih awal, dependensi UX-11) |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **15** | |
+| **Total** | | **37** | **21** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -584,13 +584,14 @@ menegaskan siklus tidak ikut tertulis sama sekali.
 
 # Batch 3 — Navigasi dan information architecture
 
-## - [ ] UX-07 🟠 Balik ke tab Siklus selalu melompat ke bulan berjalan
+## - [x] UX-07 🟠 Balik ke tab Siklus selalu melompat ke bulan berjalan
 
 | | |
 |---|---|
 | **Kat.** | A |
 | **Berkas** | `lib/core/presentation/shell/main_shell_page.dart:92-96` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** `_CycleTab.build()` memanggil `_currentCycleId()` lalu
 `..add(CycleOpened(cycleId))`. `IndexedStack` memang mempertahankan state
@@ -627,13 +628,14 @@ Belanja → balik ke Siklus: harus **tetap** di bulan sebelumnya. Lalu ulangi
 skenario Fix #8: tambah sumber pemasukan dari sheet baris pemasukan, balik,
 sumber baru harus langsung muncul.
 
-## - [ ] UX-08 🟠 Satu-satunya jalan ke layar Kartu Kredit terkubur di dasar tab Belanja
+## - [x] UX-08 🟠 Satu-satunya jalan ke layar Kartu Kredit terkubur di dasar tab Belanja
 
 | | |
 |---|---|
 | **Kat.** | A |
 | **Berkas** | `lib/features/grocery/presentation/pages/grocery_page.dart:45-49` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** Tombol berlabel Kartu Kredit di body dipertahankan sebagai jalur kedua; tombol Catat Jam Kerja di body layar Pemasukan dihapus (itu yang mendorong konten). |
 
 **Masalah.** Tombol "Kartu Kredit" adalah item **terakhir** `ListView` — di
 bawah daftar mingguan DAN daftar bulanan. Dengan daftar belanja sungguhan
@@ -672,13 +674,14 @@ menguji event entry point-nya; tidak ada logika baru. Verifikasi manual.
 **Verifikasi.** Dengan daftar belanja panjang, pintu ke Kartu Kredit harus
 terjangkau tanpa scroll.
 
-## - [ ] UX-09 🟠 Pemilik harus mengetik `YYYY-MM` dengan tangan di dua tempat
+## - [x] UX-09 🟠 Pemilik harus mengetik `YYYY-MM` dengan tangan di dua tempat
 
 | | |
 |---|---|
 | **Kat.** | B |
 | **Berkas** | `lib/features/worklog/presentation/pages/worklog_page.dart:241-244`, `lib/features/investment/presentation/pages/investment_page.dart:266-270` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** `listCycleIds()` ditambah ke `CycleIncomeWriter`/`CycleInvestmentGateway`, `TextField` diganti `DropdownButtonFormField`. Investasi: siklus bawaan sekarang siklus terbuka terbaru yang sungguh ada, bukan selalu bulan berjalan. |
 
 **Masalah.** Dua layar meminta pemilik mengetik kode bulan sebagai teks bebas:
 "Siklus tujuan (YYYY-MM)" untuk menyuntikkan gaji bersih, dan "Siklus
@@ -727,13 +730,14 @@ jangan bikin port baru:
 **Verifikasi.** `flutter test` lulus; di kedua layar, siklus dipilih dari daftar
 dan labelnya berupa nama bulan ("Agustus 2026"), bukan `2026-08`.
 
-## - [ ] UX-10 🟡 Bagian di bawah daftar kartu tidak menyebut kartu mana
+## - [x] UX-10 🟡 Bagian di bawah daftar kartu tidak menyebut kartu mana
 
 | | |
 |---|---|
 | **Kat.** | A |
 | **Berkas** | `lib/features/card/presentation/pages/card_page.dart:52-84` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** Varian berparameter selalu dipakai (bukan kondisional); kunci lama dihapus. |
 
 **Masalah.** "Siklus tagihan berjalan", form transaksi, langganan, dan riwayat
 semuanya milik `state.selectedCard`, tapi tidak ada satu pun judul yang
@@ -760,13 +764,14 @@ selalu memakai varian bernama. Jangan tinggalkan kunci menggantung.
 **Verifikasi.** Dengan dua kartu, setiap judul bagian menyebut kartu yang aktif,
 dan ikut berubah saat kartu lain dipilih.
 
-## - [ ] UX-11 🟡 `LineEditSheet` tidak punya tombol Batal
+## - [x] UX-11 🟡 `LineEditSheet` tidak punya tombol Batal
 
 | | |
 |---|---|
 | **Kat.** | A |
 | **Berkas** | `lib/features/cycle/presentation/widgets/line_edit_sheet.dart:373`, `:360` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026**, dikerjakan bersama UX-35 (dependensinya). Diterapkan konsisten di ketujuh sheet penyunting yang ada di proyek, bukan hanya `LineEditSheet`. |
 
 **Masalah.** Sheet hanya menampilkan Simpan, padahal `t.common.cancel` sudah ada
 dan dipakai di dialog. Dengan `autofocus: true` (`:360`) keyboard langsung
@@ -1654,13 +1659,14 @@ Periksa di lebar 390px.
 **Verifikasi.** Jenis potongan terlihat sebagai pilihan, bukan badge, dan kedua
 pilihannya terlihat sekaligus.
 
-## - [ ] UX-35 🟡 `LineEditSheet` tidak punya `SingleChildScrollView`
+## - [x] UX-35 🟡 `LineEditSheet` tidak punya `SingleChildScrollView`
 
 | | |
 |---|---|
 | **Kat.** | F |
 | **Berkas** | `lib/features/cycle/presentation/widgets/line_edit_sheet.dart:265` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026**, dikerjakan lebih awal (di luar urutan Batch 6) karena UX-11 bergantung padanya. |
 
 **Masalah.** `Column(mainAxisSize: .min)` langsung, tanpa pembungkus scroll.
 `isScrollControlled: true` (`:128`) hanya mengizinkan sheet lebih tinggi dari

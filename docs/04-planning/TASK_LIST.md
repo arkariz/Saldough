@@ -5,7 +5,9 @@ Perbarui kotak centang di sini setiap kali sebuah tugas selesai.
 
 Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md). Untuk
 pekerjaan desain visual per fase — yang selesai lebih dulu daripada kode —
-lihat [UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
+lihat [UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md). Untuk perbaikan yang
+lahir dari review UX terhadap kode yang sudah jalan — bukan tugas fase baru —
+lihat [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md).
 
 ## Cara memakai dokumen ini
 

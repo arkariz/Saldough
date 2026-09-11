@@ -6,7 +6,14 @@ import 'package:saldough/core/theme/theme.dart';
 ///
 /// [selected] menukar isian jadi [color] penuh (bawaan
 /// `colorScheme.primary`); tidak terpilih menampilkan garis tepi saja.
-class AppChip extends StatelessWidget {
+///
+/// Area sentuhnya minimum 44px (UX-31) walau tampilan visualnya tetap
+/// sekecil semula — chip bukan elemen dekoratif, ia satu-satunya kontrol
+/// untuk memilih sumber pemasukan/anggaran/kartu di beberapa layar. Saat
+/// ditekan, chip menyusut sedikit (bukan splash Material yang sengaja
+/// dimatikan secara global, ADR-0006) — umpan balik tekan tanpa mengubah
+/// tampilan diamnya (UX-32).
+class AppChip extends StatefulWidget {
   /// Membuat [AppChip] dengan [label].
   const AppChip({
     required this.label,
@@ -38,33 +45,58 @@ class AppChip extends StatelessWidget {
   final bool shout;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final fill = color ?? Theme.of(context).colorScheme.primary;
-    final textColor = selected ? _onFill(fill, colors) : colors.textPrimary;
+  State<AppChip> createState() => _AppChipState();
+}
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-        decoration: BoxDecoration(
-          color: selected ? fill : Colors.transparent,
-          borderRadius: AppRadius.fullAll,
-          border: Border.all(color: colors.edge, width: AppBorder.thick),
-        ),
-        child: Text(
-          label,
-          style: shout
-              ? AppTheme.shout(color: textColor)
-              : Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: textColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-        ),
-      ),
-    );
+class _AppChipState extends State<AppChip> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (widget.onTap == null) return;
+    setState(() => _pressed = value);
   }
 
   Color _onFill(Color fill, AppColorsExtension colors) =>
       fill == colors.needsReview ? colors.onNeedsReview : colors.background;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final fill = widget.color ?? Theme.of(context).colorScheme.primary;
+    final textColor = widget.selected ? _onFill(fill, colors) : colors.textPrimary;
+    final pressed = _pressed && widget.onTap != null;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      onTapDown: (_) => _setPressed(true),
+      onTapUp: (_) => _setPressed(false),
+      onTapCancel: () => _setPressed(false),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+        child: Center(
+          child: AnimatedScale(
+            duration: AppDurations.fast,
+            scale: pressed ? 0.94 : 1,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+              decoration: BoxDecoration(
+                color: widget.selected ? fill : Colors.transparent,
+                borderRadius: AppRadius.fullAll,
+                border: Border.all(color: colors.edge, width: AppBorder.thick),
+              ),
+              child: Text(
+                widget.label,
+                style: widget.shout
+                    ? AppTheme.shout(color: textColor)
+                    : Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: textColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

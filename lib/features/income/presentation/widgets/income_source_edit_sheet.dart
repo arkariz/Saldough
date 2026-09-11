@@ -206,36 +206,49 @@ class _DeductionRuleRowState extends State<_DeductionRuleRow> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-      child: Row(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Column(
+        crossAxisAlignment: .stretch,
         children: [
-          Expanded(
-            child: TextField(
-              controller: _labelController,
-              decoration: InputDecoration(labelText: t.income.deductionLabelHint),
-              onChanged: (value) => widget.onChanged(widget.rule.copyWith(label: value)),
-            ),
+          TextField(
+            controller: _labelController,
+            decoration: InputDecoration(labelText: t.income.deductionLabelHint),
+            onChanged: (value) => widget.onChanged(widget.rule.copyWith(label: value)),
           ),
-          const SizedBox(width: AppSpacing.xs),
-          AppChip(
-            label: widget.rule.kind == .percentage ? t.income.deductionKindPermille : t.income.deductionKindFixed,
-            selected: true,
-            onTap: () => widget.onChanged(
-              widget.rule.copyWith(kind: widget.rule.kind == .percentage ? .fixedAmount : .percentage),
-            ),
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            children: [
+              // UX-34: dua chip terpisah, satu terpilih -- pola yang sama
+              // seperti pemilih jenis sumber pemasukan di sheet ini
+              // (lihat di atas), bukan satu chip yang menukar labelnya
+              // sendiri (tampak seperti badge statis, pilihan lain tak
+              // pernah terlihat). Dipindah ke baris sendiri karena baris
+              // ini sempit (label + nilai + hapus berbagi lebar 390px).
+              AppChip(
+                label: t.income.deductionKindPermille,
+                selected: widget.rule.kind == .percentage,
+                onTap: () => widget.onChanged(widget.rule.copyWith(kind: .percentage)),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              AppChip(
+                label: t.income.deductionKindFixed,
+                selected: widget.rule.kind == .fixedAmount,
+                onTap: () => widget.onChanged(widget.rule.copyWith(kind: .fixedAmount)),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              SizedBox(
+                width: 72,
+                child: TextField(
+                  controller: _valueController,
+                  keyboardType: .number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(labelText: t.income.deductionValueHint),
+                  onChanged: (value) => widget.onChanged(widget.rule.copyWith(value: int.tryParse(value) ?? 0)),
+                ),
+              ),
+              IconButton(icon: const Icon(Icons.delete_outline), onPressed: widget.onRemoved),
+            ],
           ),
-          const SizedBox(width: AppSpacing.xs),
-          SizedBox(
-            width: 72,
-            child: TextField(
-              controller: _valueController,
-              keyboardType: .number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: t.income.deductionValueHint),
-              onChanged: (value) => widget.onChanged(widget.rule.copyWith(value: int.tryParse(value) ?? 0)),
-            ),
-          ),
-          IconButton(icon: const Icon(Icons.delete_outline), onPressed: widget.onRemoved),
         ],
       ),
     );

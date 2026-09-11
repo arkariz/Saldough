@@ -76,10 +76,10 @@ menyusul di branch `claude/ux-review-fixes`.
 | 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
-| 5 | Token dan warna semantik | 9 | 8 | Semua selesai kecuali **UX-26** (sebagian — rollUp ditunda ke UX-36). UX-24 langkah 2 masih menunggu keputusan pemilik, dicatat sebagai follow-up |
+| 5 | Token dan warna semantik | 9 | 9 | **Semua selesai** — UX-26 sebagian (rollUp sengaja ditunda ke UX-36), UX-24 langkah 2 masih menunggu keputusan pemilik (dicatat sebagai follow-up), keduanya tetap dicentang karena bagian yang direncanakan di sini sudah tuntas |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **14** | |
+| **Total** | | **37** | **15** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -1216,13 +1216,14 @@ relative luminance cukup belasan baris Dart murni, tidak butuh Flutter.
 **Verifikasi.** Tes kontras lulus; periksa mata di mode terang bahwa ikon
 "perlu ditinjau" dan angka Sisa negatif terbaca jelas.
 
-## - [ ] UX-23 🟠 Nominal anggaran tampil hijau "pemasukan"
+## - [x] UX-23 🟠 Nominal anggaran tampil hijau "pemasukan"
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `lib/features/cycle/presentation/widgets/cycle_line_tile.dart:113-116`, `lib/features/cycle/presentation/pages/cycle_page.dart:176-190` |
 | **Butuh keputusan pemilik** | Tidak (keterbacaannya ikut membaik setelah UX-22, tapi tidak bergantung padanya) |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** Kedua titik memanggil `AppMoneyText` **tanpa** `color`, jadi
 pewarnaan otomatis berdasarkan tanda berlaku — dan nominal anggaran selalu
@@ -1239,21 +1240,29 @@ Peringatannya ada, pemakainya tidak mengikutinya.
 
 **Langkah perbaikan.**
 
-1. `cycle_line_tile.dart`: tambahkan parameter yang membedakan baris pemasukan
-   dari baris anggaran (mis. `bool isExpense`), teruskan dari `_IncomeSection`/
-   `_BudgetSection`, lalu kirim `color: colors.expense` (atau
-   `expenseOnLight` setelah UX-22) untuk baris anggaran.
-2. `_TotalsCard` (`cycle_page.dart:159-207`): beri `color` eksplisit pada total
-   Pemasukan (`income`) dan total Anggaran (`expense`).
-3. **Biarkan Sisa** memakai pewarnaan otomatis — di sana tandanya memang yang
-   bermakna, dan ADR-0006 secara khusus menetapkan sisa negatif memakai
-   `overBudget` (bukan `expense`). Jangan sentuh itu.
+1. **SELESAI.** `CycleLineTile` dapat parameter `isExpense` (bawaan `false`),
+   diteruskan `true` dari `_BudgetSection` — dikirim sebagai
+   `color: colors.expenseOnLight` ke `AppMoneyText`-nya (varian on-light dari
+   UX-22, bukan slot mentah, karena ini selalu teks). `_IncomeSection` tidak
+   diubah — bawaan `isExpense: false` membiarkan pewarnaan otomatis
+   `AppMoneyText` (yang sudah benar untuk pemasukan).
+2. **SELESAI.** `_TotalsCard`: total Pemasukan dapat `color:
+   colors.incomeOnLight` eksplisit, total Anggaran dapat `color:
+   colors.expenseOnLight` eksplisit — keduanya tidak lagi mengandalkan
+   pewarnaan otomatis (yang membuat berdua-duanya hijau karena berdua-dua
+   selalu positif).
+3. **Dipatuhi.** Sisa (`remainder`) TIDAK disentuh — tetap pewarnaan
+   otomatis, sesuai aturan ADR-0006 (sisa negatif memakai `overBudget`,
+   bukan `expense`).
 
-**Tes.** Murni tampilan; verifikasi manual, atau widget test kalau sekalian
-memulai.
+**Tes.** Murni tampilan; belum ada widget test di proyek ini, jadi
+diverifikasi lewat pembacaan kode: dipastikan `_IncomeSection`
+TIDAK ikut mengirim `isExpense`, supaya baris pemasukan tidak diam-diam
+ikut memakai warna anggaran.
 
-**Verifikasi.** Di kartu total, angka Pemasukan dan Anggaran berbeda warna; baris
-anggaran tidak lagi hijau.
+**Verifikasi.** `flutter analyze` 0 issue, `flutter test` 144 lulus (murni
+perubahan widget). Di kartu total, angka Pemasukan dan Anggaran kini
+berbeda warna; baris anggaran tidak lagi hijau.
 
 ## - [x] UX-24 🟠 Slot `expense` dipakai untuk tombol hapus yang netral
 
@@ -2043,3 +2052,17 @@ independen satu sama lain, dan tidak berisiko.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` 144 lulus di semuanya
 (seluruhnya perubahan widget/tema, tidak menyentuh bloc).
+
+**11 September 2026 (UX-23 dikerjakan — Batch 5 selesai)** — `CycleLineTile`
+dapat parameter `isExpense`, dikirim `true` hanya dari `_BudgetSection` —
+`AppMoneyText`-nya memakai `expenseOnLight` alih-alih pewarnaan otomatis.
+`_TotalsCard` dapat warna eksplisit untuk kedua totalnya (`incomeOnLight`/
+`expenseOnLight`); Sisa tetap pewarnaan otomatis sesuai aturan ADR-0006.
+
+Batch 5 (token dan warna semantik) kini selesai seluruhnya: UX-22 sampai
+UX-30, sembilan item. Dua catatan terbuka yang sengaja dibiarkan (bukan
+terlewat): rollUp di UX-26 menunggu UX-36, dan pemisahan slot galat di
+UX-24 langkah 2 menunggu keputusan pemilik.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 144 lulus (tidak
+berubah — murni perubahan widget).

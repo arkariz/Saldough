@@ -181,6 +181,7 @@ class _TotalsCard extends StatelessWidget {
               Text(t.cycle.incomeSectionTitle, style: textTheme.bodyMedium),
               AppMoneyText(
                 sen: state.totals.totalIncome,
+                color: context.appColors.incomeOnLight,
                 style: textTheme.titleMedium,
               ),
             ],
@@ -191,6 +192,10 @@ class _TotalsCard extends StatelessWidget {
               Text(t.cycle.budgetSectionTitle, style: textTheme.bodyMedium),
               AppMoneyText(
                 sen: state.totals.totalBudget,
+                // expenseOnLight, bukan pewarnaan otomatis -- total anggaran
+                // dan total pemasukan sebelumnya tampil warna sama (hijau
+                // income) karena keduanya selalu positif (UX-23).
+                color: context.appColors.expenseOnLight,
                 style: textTheme.titleMedium,
               ),
             ],
@@ -330,6 +335,7 @@ class _BudgetSection extends StatelessWidget {
               isTemplate: line.isTemplate,
               needsReview: line.needsReview,
               isEditable: line.kind == .manual,
+              isExpense: true,
               rollUpSourceUnavailable: line.rollUpSourceUnavailable,
               onTap: () async {
                 final result = await LineEditSheet.show(

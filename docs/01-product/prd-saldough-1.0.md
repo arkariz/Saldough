@@ -437,13 +437,18 @@ Rincian lengkapnya ada di
 - **Kesalahan:** `Either<Failure, T>` dari fpdart (`package:dependencies`),
   dengan mixin `RepositoryGuard`.
 - **Terjemahan:** slang dengan bahasa dasar Indonesia dan tambahan Inggris.
-- **Tema:** tetap dari `new-health-duel`, dipetakan ulang ke konteks keuangan.
+- **Tema:** pola teknis `ThemeExtension` dari `new-health-duel`, bahasa visual
+  (gaya komik/meme) orisinal Saldough.
 - **Backend:** tidak ada pada MVP.
 
 ## 10. Prinsip antarmuka
 
-Sistem token desain diambil dari `new-health-duel`, dengan slot warna semantik
-dipetakan ulang ke konteks keuangan. Rinciannya ada di
+Pola teknis sistem token (struktur `core/theme/`, mekanisme `ThemeExtension`)
+diambil dari `new-health-duel`. Bahasa visualnya sendiri — palet, tipografi,
+motif — bukan dari `new-health-duel` dan bukan dari riset fintech generik:
+pemilik menolak kandidat "Ledger Tenang" hasil riset dan memilih sendiri gaya
+komik/meme (garis tepi tebal, bayangan keras offset, tekstur halftone, badge
+ala stiker). Rinciannya, termasuk nilai hex dan alasan pivotnya, ada di
 [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md).
 
 | Peran | Slot | Dipakai untuk |
@@ -455,8 +460,10 @@ dipetakan ulang ke konteks keuangan. Rinciannya ada di
 | Roll-up | `rollUp` | Baris yang nominalnya dihitung dari sumber lain |
 | Perlu ditinjau | `needsReview` | Baris hasil rollover yang belum dikonfirmasi |
 
-Prinsipnya: angka adalah elemen utama tiap layar, dan status baris terbaca dari
-warnanya tanpa perlu membuka detail.
+Prinsipnya: angka adalah elemen utama tiap layar (huruf Archivo Black tebal,
+tabular), dan status baris terbaca dari warnanya tanpa perlu membuka detail.
+"Chaos" gaya komik dibatasi ke elemen dekoratif (stiker, rotasi, tekstur) —
+baris data dan angka tetap rapi dalam grid.
 
 ## 11. Risiko dan mitigasi
 

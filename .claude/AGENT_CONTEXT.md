@@ -17,7 +17,8 @@ Dokumen ini memuat aturan arsitektur yang mengikat. Alasannya ada di
 
 Referensi arsitektur Saldough adalah `arkariz/flutter-architecture-studi-bank`
 (branch `refactor/platform-migration`, folder `lib/v2`) — bukan
-`new-health-duel` (yang kini hanya acuan tema) dan bukan
+`new-health-duel` (yang kini hanya acuan pola teknis theming Flutter, bukan
+acuan visual — lihat ADR-0006) dan bukan
 `flutter-architecture-studi` tanpa `-bank` (tidak dipakai sama sekali, `lib/v2`
 di situ tidak ada, `lib/app` yang ada memakai Riverpod).
 
@@ -25,7 +26,7 @@ di situ tidak ada, `lib/app` yang ada memakai Riverpod).
 |---|---|---|
 | Kesalahan | Menyalin asumsi versi dokumen lama: `throw Failure` + `on Failure catch` | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard`. Lihat [ADR-0005](../docs/02-architecture/adr/0005-either-failure-convention.md) |
 | Bagian legacy repo acuan | Menyalin `ArchitectureBride*`, seam `Get.find()`/`Get.put()`, `getx_nav_effect_handler` | Saldough greenfield: `main()` → `runApp()` langsung, tanpa jembatan apa pun. Itu khusus migrasi GetX mereka |
-| Design system repo acuan | Menyalin atau mencoba mengakses `mobile_dsl` (privat, tak bisa diakses) | Tema tetap dari `new-health-duel` ([ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md)) |
+| Design system repo acuan | Menyalin atau mencoba mengakses `mobile_dsl` (privat, tak bisa diakses) | Pola teknis theming dari `new-health-duel`, palet/tipografi (gaya komik/meme) orisinal Saldough ([ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md)) |
 | Ejaan | Meniru typo `fondation`, `architecture_bride` dari repo acuan | Saldough pakai ejaan baku: `foundation/` |
 
 Struktur folder memakai tiga zona `core/`/`shared/<module>/`/`features/<feature>/`,

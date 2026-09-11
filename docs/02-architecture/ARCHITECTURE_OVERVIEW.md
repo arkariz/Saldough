@@ -25,11 +25,14 @@ folder `core`/`shared`/`features` ([ADR-0009](adr/0009-core-shared-features-zone
 efek bloc lewat `package:state_management` ([ADR-0003](adr/0003-effect-bloc-state-management.md)),
 dan navigasi lewat `package:navigation` ([ADR-0004](adr/0004-typed-route-registry-navigation.md)).
 
-**Tema** tetap diambil dari `arkariz/new-health-duel`
-([ADR-0006](adr/0006-design-token-semantic-color-mapping.md)) — repo
-acuan arsitektur memakai `mobile_dsl`, design system privat yang tidak bisa
-diakses, sehingga perannya di Saldough terbatas pada struktur kode, bukan
-tampilan.
+**Pola teknis tema** diambil dari `arkariz/new-health-duel` (struktur
+`core/theme/`, mekanisme `ThemeExtension`) — repo acuan arsitektur memakai
+`mobile_dsl`, design system privat yang tidak bisa diakses, sehingga perannya
+di Saldough terbatas pada struktur kode. **Bahasa visualnya** (palet gaya
+komik/meme, pasangan huruf Archivo Black/Space Grotesk/Bangers) bukan dari
+`new-health-duel` maupun repo acuan lain — itu keputusan gaya pemilik
+langsung, diverifikasi lewat Design Canvas sebelum diterapkan.
+Lihat [ADR-0006](adr/0006-design-token-semantic-color-mapping.md).
 
 Repositori `flutter-architecture-studi` (tanpa `-bank`) **tidak** dipakai.
 Folder `lib/v2` yang semula disebut tidak ada di repositori itu — yang ada
@@ -45,7 +48,7 @@ bagian berikut tidak relevan dan tidak disalin dalam bentuk apa pun:
 |---|---|
 | `ArchitectureBride*`, seam `Get.find()`/`Get.put()` | Jembatan boot dari GetX legacy ke shell v2 — Saldough tidak punya legacy untuk dijembatani |
 | `getx_nav_effect_handler`, `StartupDestination` legacy | Spesifik migrasi, tidak ada "legacy" di Saldough |
-| `mobile_dsl` | Design system privat mereka — tema Saldough dari `new-health-duel` |
+| `mobile_dsl` | Design system privat mereka — Saldough pakai pola teknis `ThemeExtension` dari `new-health-duel`, palet/tipografi (gaya komik/meme) orisinal |
 | Ejaan `fondation`, `architecture_bride` | Typo konsisten di repo mereka — Saldough pakai ejaan baku `foundation/` |
 
 Yang dipertahankan dari urutan boot mereka hanyalah **urutannya**: pasang

@@ -36,9 +36,9 @@ oleh pemilik (lihat "Catatan pengerjaan" untuk alasan pivotnya).
 [Saldough — Siklus Bulanan](https://claude.ai/code/artifact/0c0d80a5-90a5-4f02-b5e6-bf8fa76d07d6) —
 7 artboard dengan palet "sports-tech" dari `new-health-duel` (termasuk
 lembar token ADR-0006 versi lama). Disimpan sebagai arsip — **bukan acuan
-visual** lagi. D-1.1 (lembar token) belum punya pengganti gaya komik;
-ADR-0006 juga belum ditulis ulang untuk palet komik — lihat catatan di
-bawah.
+visual** lagi. ADR-0006 sudah ditulis ulang untuk palet komik (11 September
+2026); D-1.1 (lembar token sebagai artboard tersendiri) belum punya
+pengganti gaya komik — lihat catatan di bawah.
 
 ## Cara memakai dokumen ini
 
@@ -59,11 +59,11 @@ dokumen ini.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 September 2026.
+Terakhir diperbarui: 11 September 2026.
 
 | Fase | Tugas desain | Selesai | Status |
 |---|---|---|---|
-| 1 — Sistem desain | 1 | 0 | Versi lama digantikan, belum ada pengganti gaya komik |
+| 1 — Sistem desain | 1 | 0 | ADR-0006 sudah ditulis ulang gaya komik; artboard lembar token tersendiri belum ada |
 | 2 — Siklus bulanan | 4 | 4 | Selesai, gaya komik |
 | 3 — Pemasukan dan timesheet | 3 | 3 | Selesai, gaya komik |
 | 4 — Roll-up | 3 | 3 | Selesai, gaya komik |
@@ -77,13 +77,14 @@ Terakhir diperbarui: 10 September 2026.
       (latar kertas koran/panel hitam, garis tepi tebal, bayangan keras
       offset), pasangan huruf Archivo Black (angka)/Space Grotesk
       (body)/Bangers (label-label pendek), skala jarak dan sudut, contoh
-      komponen kartu/tombol/badge. Belum digambar sebagai artboard
-      tersendiri — palet dan tipografinya sudah terpakai konsisten di
-      seluruh 13 layar Fase 2–6, tapi belum diringkas jadi satu lembar
-      rujukan, dan belum dituliskan formal di ADR-0006 (masih berisi
-      palet lama). Lihat "Catatan pengerjaan".
-      Target: [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md)
-      (perlu ditulis ulang).
+      komponen kartu/tombol/badge. Palet dan tipografinya sudah terpakai
+      konsisten di seluruh 13 layar Fase 2–6 dan sudah dituliskan formal di
+      [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md)
+      (ditulis ulang 11 September 2026) — yang masih belum ada hanyalah
+      artboard lembar-rujukan visual tersendiri (ringkasan satu halaman
+      untuk dilihat, bukan dibaca sebagai tabel Markdown). Opsional, tidak
+      memblokir implementasi karena nilainya sudah definitif di ADR-0006.
+      Lihat "Catatan pengerjaan".
 
 ## Fase 2: Siklus bulanan
 
@@ -291,8 +292,10 @@ mengecek layar tujuan muncul) sebelum diterbitkan — bukan hanya dicek
 visual. Tabel item Rencana Belanja: lihat catatan ⚠ di D-4.1 di atas
 soal rincian per-item yang ilustratif.
 
-Yang belum: D-1.1 dan ADR-0006 (lihat catatan pivot gaya visual di atas)
-masih tertunda dengan alasan yang sama.
+Yang belum saat itu: D-1.1 dan ADR-0006 (lihat catatan pivot gaya visual di
+atas) masih tertunda dengan alasan yang sama — ADR-0006 kemudian ditulis
+ulang 11 September 2026 (lihat catatan di bawah); D-1.1 (artboard lembar
+token tersendiri) masih belum.
 
 **10 September 2026 (lanjutan — pemisahan flow & CRUD investasi)** —
 Setelah dicoba, pemilik minta tiga penyesuaian lagi:
@@ -331,3 +334,28 @@ dengan seluruh field lain di prototipe ini yang memang bergaya tampilan,
 bukan form HTML sungguhan. Ini cukup untuk menunjukkan alur CRUD-nya,
 tapi implementasi Flutter nanti tetap perlu form input teks/angka yang
 sesungguhnya.
+
+**11 September 2026 (penyelarasan dokumen)** — Bagian yang sengaja ditunda di
+ronde pivot gaya visual ("belum disentuh ronde ini ... ditunda sampai
+diminta terpisah") sekarang diselesaikan:
+
+- **ADR-0006** ditulis ulang total: memisahkan pola teknis theming (tetap
+  dari `new-health-duel`) dari bahasa visual (gaya komik/meme, orisinal
+  milik pemilik), dengan tabel hex final yang diambil langsung dari
+  `Main.dc.html`/`AppLight.dc.html` yang sudah diterbitkan — bukan ditebak
+  ulang. Nilai `needsReview` final: `#FFE14D` (gelap) / `#FFD400` (terang),
+  dengan `onNeedsReview` `#14120F`/`#161310` supaya teks di atas kuning
+  tetap terbaca di kedua mode — closing catatan kontras lama di atas.
+- **`.claude/CLAUDE.md` dan `AGENT_CONTEXT.md`**: baris `new-health-duel`
+  diperbarui dari "acuan tema" menjadi "acuan pola teknis theming Flutter
+  saja", konsisten dengan ADR-0006.
+- **`ARCHITECTURE_OVERVIEW.md`** (bagian "Dasar keputusan") dan
+  **`prd-saldough-1.0.md`** (bagian 9 dan 10 "Prinsip antarmuka"): narasi
+  "tema dari `new-health-duel`" diganti jadi "pola teknis dari
+  `new-health-duel`, bahasa visual orisinal gaya komik/meme".
+- **`TASK_LIST.md` T-1.3**: sudah menyebut gaya komik dan ADR-0006 sejak
+  task itu diimplementasikan di Fase 1 — tidak perlu perubahan lagi.
+
+D-1.1 (artboard lembar token tersendiri) tetap `[ ]` — ADR-0006 sudah jadi
+rujukan tertulis definitif, tapi belum ada artboard visual ringkasan
+satu-halaman. Ini opsional dan tidak memblokir implementasi Flutter.

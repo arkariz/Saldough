@@ -50,7 +50,7 @@ di-resolve. Ini gerbang: jangan memulai fase berikutnya sebelum
 |---|---|---|
 | `arkariz/advance-mobile-platform` | Paket internal: state, navigasi, failure, storage, DI | Dipakai sebagai git dependency, dipin per tag |
 | `arkariz/flutter-architecture-studi-bank` | **Acuan struktur arsitektur** | Branch `refactor/platform-migration`, folder `lib/v2`. Hanya dibaca, jangan diubah. Jangan salin bagian legacy GetX/`mobile_dsl`-nya |
-| `arkariz/new-health-duel` | **Acuan tema saja** (bukan lagi struktur) | Hanya dibaca, jangan diubah |
+| `arkariz/new-health-duel` | **Acuan pola teknis theming Flutter saja** (struktur `ThemeExtension`) — bukan lagi acuan visual | Hanya dibaca, jangan diubah. Warna/tipografi (gaya komik/meme) orisinal milik Saldough, lihat [ADR-0006](docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md) |
 | `arkariz/flutter-architecture-studi` (tanpa `-bank`) | **Tidak dipakai** | `lib/v2` tidak ada di repo ini; `lib/app` memakai Riverpod yang bertentangan |
 
 Paket internal diambil dari `https://github.com/arkariz/advance-mobile-platform`,

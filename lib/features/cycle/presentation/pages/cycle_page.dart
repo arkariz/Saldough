@@ -146,7 +146,10 @@ class _UnreviewedBanner extends StatelessWidget {
         elevation: AppElevation.none,
         child: Row(
           children: [
-            Icon(Icons.flag, color: colors.needsReview),
+            // needsReviewOnLight, bukan needsReview: ikon ini digambar di
+            // atas kartu terang, bukan sebagai isian — slot mentahnya cuma
+            // 1.43:1 di sana (ADR-0006 bagian "Varian on-light").
+            Icon(Icons.flag, color: colors.needsReviewOnLight),
             const SizedBox(width: AppSpacing.sm),
             Expanded(child: Text(t.cycle.unreviewedBanner(count: count))),
           ],

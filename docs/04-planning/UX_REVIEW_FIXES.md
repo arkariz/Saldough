@@ -76,10 +76,10 @@ menyusul di branch `claude/ux-review-fixes`.
 | 2 | Jalan buntu dan validasi form | 5 | 0 | Prioritas #3 |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
-| 5 | Token dan warna semantik | 9 | 1 | UX-30 selesai; UX-22 (prioritas #2) sudah dibuka — ADR-nya sudah ditulis, sisanya kode |
+| 5 | Token dan warna semantik | 9 | 2 | UX-30, UX-22 selesai — UX-22 punya catatan cakupan (chip/tombol tidak disentuh, lihat item) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **2** | |
+| **Total** | | **37** | **3** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -1072,13 +1072,14 @@ dipakai (`PROJECT_GLOSSARY.md:5`).
 
 # Batch 5 — Token dan warna semantik
 
-## - [ ] UX-22 🔴 Mode terang gagal ambang kontras di hampir seluruh palet semantik
+## - [x] UX-22 🔴 Mode terang gagal ambang kontras di hampir seluruh palet semantik
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Prioritas** | #2 |
-| **Butuh keputusan pemilik** | Tidak lagi — **opsi A sudah dipilih**, dan langkah 1 (ADR-0006) sudah dikerjakan. Sisanya kode. |
+| **Butuh keputusan pemilik** | Tidak lagi — **opsi A sudah dipilih**. |
+| **Status** | **Selesai 11 September 2026** di branch `claude/ux-review-fixes`, dengan satu catatan cakupan — lihat di bawah. |
 
 **Masalah.** Rasio kontras WCAG dihitung dari tabel hex ADR-0006 (ambang 4.5:1
 teks normal, 3:1 teks besar ≥18.66px bold):
@@ -1114,22 +1115,38 @@ aman tanpa membaca pelan-pelan.
    catatan revisi.~~ **SELESAI 11 September 2026** — lihat ADR-0006 bagian
    "Varian `…OnLight`" untuk nilai hex final dan bagian 8b untuk catatan
    revisinya. Ambil hex dari ADR, jangan dari dokumen ini.
-2. Tambahkan enam field ke `AppColorsExtension`
-   (`lib/core/theme/extensions/app_colors_extension.dart`): `incomeOnLight`,
-   `expenseOnLight`, `overBudgetOnLight`, `investmentOnLight`, `rollUpOnLight`,
-   `needsReviewOnLight`. **Wajib** diisi di `light` **dan** `dark` (di `dark`,
-   isi dengan nilai slot aslinya — mode gelap tidak butuh varian), lalu
-   ditambahkan ke `copyWith` dan `lerp`. Melewatkan salah satu dari dua method
-   itu akan lolos `analyze` tapi merusak transisi tema — tiap field harus
-   muncul 7 kali di berkas itu (parameter konstruktor, deklarasi field, `light`,
-   `dark`, parameter `copyWith`, penugasan `copyWith`, `lerp`); hitung dengan
-   `grep -c` sebagai pemeriksaan cepat.
-3. Ganti pemakaian di titik-titik pada tabel di atas supaya memakai varian
-   `…OnLight` saat warna dipakai sebagai **teks/ikon**, dan tetap memakai slot
-   asli saat dipakai sebagai **isian** (chip terpilih, latar snackbar, tombol).
-   `AppMoneyText` (`app_money_text.dart:36-40`) dan `AppChip._onFill`
-   (`app_chip.dart:56-57`) adalah dua titik pusatnya — memperbaiki keduanya
-   menutup sebagian besar kasus sekaligus.
+2. ~~Tambahkan enam field ke `AppColorsExtension`~~ **SELESAI** — keenam
+   field ada di `light`, `dark`, `copyWith`, dan `lerp` (7 kemunculan tiap
+   field, diverifikasi lewat `grep -c`). Diuji lewat
+   `test/core/theme/app_colors_extension_test.dart` (baru) — menghitung rasio
+   kontras WCAG langsung, bukan menebak dari mata: seluruh varian terang
+   lolos ≥4.5:1 terhadap `cardBackground` **dan** `background`, varian gelap
+   dites sama dengan slot aslinya, dan slot asli (isian) dites TIDAK ikut
+   berubah.
+3. **SELESAI, dengan cakupan yang perlu dibaca teliti.** Dua titik diubah:
+   - `AppMoneyText` (`app_money_text.dart`): pewarnaan otomatis kini memakai
+     `incomeOnLight`/`overBudgetOnLight`, bukan `income`/`overBudget`. Karena
+     nominal SELALU teks (tidak pernah isian), ini aman diterapkan tanpa
+     syarat — dan otomatis menutup DUA baris tabel sekaligus: "Nominal income
+     (`cycle_line_tile.dart:113`)" dan "Sisa negatif
+     (`cycle_page.dart:197`)" — keduanya memakai `AppMoneyText`, tidak perlu
+     disentuh terpisah.
+   - `cycle_page.dart:149` (ikon `needsReview` di banner): diganti ke
+     `needsReviewOnLight`.
+
+   ⚠ **Dua baris tabel TIDAK disentuh, dengan sengaja**: "AppChip terpilih:
+   teks krem di atas hijau" (`app_chip.dart:48, 57`) dan "AppButton: putih
+   di atas hijau" (`app_theme.dart:74-75`). Kedua kasus itu BUKAN "warna
+   semantik dipakai sebagai teks di atas kartu terang" — melainkan "warna
+   netral (`background`/putih) dipakai sebagai teks DI ATAS ISIAN semantik".
+   Instruksi langkah ini eksplisit: isian tetap memakai slot asli. Mengubah
+   `_onFill`/foreground tombol berarti mengubah ISIAN-nya (mengganti warna
+   fill atau menambah token `onXxx` baru per slot), yang di luar keputusan
+   pemilik ("opsi A": hanya tambah varian `…OnLight` untuk teks/ikon). Angka
+   kontras kedua kasus itu (2.89 dan 3.48) **masih berdiri apa adanya** —
+   dicatat di sini supaya tidak dibaca sebagai terselesaikan diam-diam. Kalau
+   pemilik ingin ini ditutup juga, perlu keputusan baru (token `onXxx`
+   tambahan per slot, di luar cakupan UX-22).
 4. Jangan membuat varian `…OnDark`. Tidak ada yang membutuhkannya, dan itu
    menggandakan permukaan token tanpa alasan.
 
@@ -1748,3 +1765,31 @@ baseline — wajar, tidak ada logika bloc yang diubah). Kesembilan titik
 Verifikasi visual di perangkat/emulator belum dilakukan (widget test pertama
 proyek ini belum ditulis — item ini dianggap cukup dengan pola yang sudah
 terbukti di dialog hapus siklus yang sudah ada sebelumnya).
+
+**11 September 2026 (UX-22 dikerjakan)** — Enam field `…OnLight` ditambahkan
+ke `AppColorsExtension` (`light`, `dark`, `copyWith`, `lerp` — 7 kemunculan
+tiap field, hex persis sama dengan tabel ADR-0006). Dipakai di dua titik:
+pewarnaan otomatis `AppMoneyText` (income→incomeOnLight,
+overBudget→overBudgetOnLight — ini otomatis menutup baris "nominal income" DAN
+"sisa negatif" di tabel kontras sekaligus, karena keduanya lewat widget yang
+sama) dan ikon `needsReview` di banner `_UnreviewedBanner` cycle_page.dart.
+
+Test baru `test/core/theme/app_colors_extension_test.dart` (17 kasus) *menghitung*
+rasio kontras WCAG langsung dari kode — bukan menegaskan angka yang sudah
+dihitung manual — supaya regresi ketangkap otomatis kalau ada yang mengubah
+hex nanti. Meliputi: keenam varian terang lolos ≥4.5:1 terhadap
+`cardBackground` maupun `background`, varian gelap sama dengan slot asli,
+slot asli (isian) tidak ikut berubah, dan `copyWith`/`lerp` meneruskan field
+baru dengan benar.
+
+**Catatan cakupan yang disengaja**: dua baris di tabel kontras UX-22 —
+kontras teks pada `AppChip` terpilih (2.89:1) dan `AppButton` (3.48:1) —
+TIDAK diubah. Keduanya secara teknis bukan "warna semantik sebagai teks di
+atas kartu", melainkan "warna netral (`background`/putih) sebagai teks di
+atas ISIAN semantik" — memperbaikinya berarti mengubah isian atau menambah
+token `onXxx` baru, di luar batas opsi A yang pemilik pilih ("isian tetap
+slot asli"). Dicatat eksplisit di item UX-22 supaya tidak dibaca sebagai
+terselesaikan diam-diam; perlu keputusan terpisah kalau ingin ditutup.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` **141 lulus** (124
+baseline + 17 tes baru).

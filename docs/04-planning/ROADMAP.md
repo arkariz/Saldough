@@ -134,18 +134,30 @@ spreadsheet, dan saldo pos memperhitungkan alokasi maupun pinjaman.
 
 ## Fase 6: Seed
 
-Memuat riwayat November 2025 sampai September 2026.
+Menulis data historis yang pemilik punya langsung ke penyimpanan lokal,
+sekali jalan, lewat skrip pengembang — BUKAN fitur di dalam aplikasi.
 
-Fase ini membuat aplikasi langsung berguna sejak pertama dibuka, dan sekaligus
-menjadi pembuktian menyeluruh: kalau seluruh data historis dimuat dan angkanya
-cocok dengan spreadsheet, aplikasi terbukti bisa dipercaya.
+> **Catatan revisi (11 September 2026):** fase ini semula dibayangkan
+> sebagai layar impor di dalam aplikasi ("Impor Seed") yang memuat rentang
+> tetap November 2025–September 2026. Pemilik memutuskan sebaliknya:
+> operasi sekali pakai tanpa UI dan tanpa versi produksi (tidak ikut
+> ter-*build* ke rilis), cakupan data mengikuti apa yang pemilik benar-
+> benar punya saat skrip dijalankan — bisa sebagian, bisa tidak mencakup
+> semua jenis data sama sekali. Lihat ADR-0009 untuk pola implementasinya
+> (`tool/`, bukan `features/seed/`).
 
-Fase ini butuh tiga jawaban dari pemilik: saldo awal tiap pos tujuan, tanggal
-cetak tagihan tiap kartu, dan kepastian apakah pos di bagian pinjaman sama
-dengan pos di bagian alokasi.
+Fase ini tetap jadi pembuktian menyeluruh untuk data yang diimpor: kalau
+angkanya cocok persis dengan spreadsheet asli, aplikasi terbukti bisa
+dipercaya untuk bagian itu.
 
-**Selesai kalau:** seluruh siklus historis termuat dan tidak ada satu pun
-selisih rupiah terhadap spreadsheet.
+Fase ini butuh data historis sungguhan dari pemilik sebelum bisa dikerjakan
+— tiga jawaban terkonfirmasi sebelumnya (saldo awal tiap pos tujuan,
+tanggal cetak tagihan tiap kartu, kepastian pos pinjaman sama dengan pos
+alokasi) sudah terjawab, tapi datanya sendiri (isi keempat spreadsheet)
+belum tersedia di repositori ini.
+
+**Selesai kalau:** seluruh data yang pemilik sediakan termuat dan tidak ada
+satu pun selisih rupiah terhadap spreadsheet, untuk bagian yang diimpor.
 
 ## Fase 7: Sinkronisasi
 

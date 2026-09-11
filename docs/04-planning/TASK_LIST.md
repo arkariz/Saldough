@@ -35,9 +35,9 @@ Terakhir diperbarui: 11 September 2026.
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
 | 4 — Roll-up | 12 | 12 | Selesai — Belanja (T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah, sudah digabung; `RootModule` kini memakai `_CompositeRollUpResolver` yang mendelegasikan ke resolver grocery/card sesuai tipe `RollUpSource` |
 | 5 — Investasi | 8 | 8 | Selesai — saldo pos hanya menghitung alokasi siklus tertutup (lihat catatan T-5.7) |
-| 6 — Seed | 7 | 0 | Siap dimulai — Fase 5 selesai |
+| 6 — Seed | 8 | 0 | Menunggu data historis sungguhan dari pemilik — cakupan dan cara kerja direvisi 11 September 2026 (bukan fitur aplikasi, lihat catatan di atas bagian Fase 6) |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **56** | |
+| **Total MVP** | **68** | **56** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -682,30 +682,62 @@ Investasi lewat menu pengembang (tidak ada alat otomasi GUI di sandbox ini).
 
 ## Fase 6: Seed
 
-*Desain: [D-6.1](UI_UX_DESIGN_TASKS.md#fase-6-seed).*
+*Desain: [D-6.1](UI_UX_DESIGN_TASKS.md#fase-6-seed) — lihat catatan revisi di
+berkas itu; desainnya TIDAK akan diimplementasikan sebagai layar aplikasi.*
 
-- [ ] **T-6.1** Susun berkas seed dari data spreadsheet November 2025 sampai
-      September 2026.
-- [ ] **T-6.2** Muat siklus bulanan beserta baris pemasukan dan anggarannya.
+⚠ **Catatan revisi (11 September 2026):** fase ini semula dibayangkan sebagai
+fitur impor di dalam aplikasi untuk rentang tetap November 2025–September
+2026. Pemilik memutuskan sebaliknya, secara eksplisit: operasi SEKALI PAKAI
+lewat skrip pengembang (`tool/seed_import.dart`, lihat catatan revisi
+[ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md)),
+tanpa UI, tanpa versi produksi — tidak ikut ter-*build* ke rilis yang dipakai
+pemilik sehari-hari. Cakupan datanya juga mengikuti apa yang pemilik
+BENAR-BENAR punya saat skrip ditulis, bukan rentang tanggal yang diasumsikan
+penuh — tiap tugas di bawah boleh mencakup sebagian data saja kalau itu yang
+tersedia.
+
+⚠ **Gerbang data:** seluruh tugas di bawah butuh data historis sungguhan
+dari pemilik (isi keempat spreadsheet) sebelum bisa dikerjakan. Belum ada
+satu pun data itu di repositori ini — hanya contoh ilustrasi tersebar di
+`MANUAL_PROCESS_ANALYSIS.md`/`AGENT_CONTEXT.md` (dipakai sebagai kasus uji
+rumus, bukan dataset historis lengkap). Jangan mengarang angka di sini —
+langsung bertentangan dengan prinsip inti proyek (lihat `.claude/CLAUDE.md`
+bagian "Kalau terhambat").
+
+- [ ] **T-6.1** Susun berkas seed dari data spreadsheet yang pemilik
+      sediakan. Format berkas (JSON/lainnya) ditentukan saat data diterima,
+      mengikuti bentuk entitas yang sudah ada (`MonthlyCycle`, `WorkLogEntry`,
+      `CardStatement`, `Goal`, `GoalLoan`) — bukan format baru.
+- [ ] **T-6.2** Tulis `tool/seed_import.dart`: skrip Dart berdiri sendiri
+      (`dart run tool/seed_import.dart`) yang membaca berkas seed (T-6.1) dan
+      menulis langsung lewat repository tiap fitur ke `KeyValueStorage` yang
+      sama yang dibaca aplikasi sungguhan — bukan lewat UI, bukan bagian
+      `lib/`. Boleh memanggil beberapa fitur sekaligus (lihat catatan revisi
+      ADR-0009 soal pengecualian isolasi fitur untuk skrip ini).
+- [ ] **T-6.3** Muat siklus bulanan beserta baris pemasukan dan anggarannya,
+      untuk bagian yang datanya disediakan.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.3** Muat riwayat jam kerja dan buku jamnya.
+- [ ] **T-6.4** Muat riwayat jam kerja dan buku jamnya, untuk bagian yang
+      datanya disediakan.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.4** Muat riwayat transaksi kartu kredit per siklus.
+- [ ] **T-6.5** Muat riwayat transaksi kartu kredit per siklus, untuk bagian
+      yang datanya disediakan.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.5** Muat pos tujuan beserta saldo awalnya (seed: 0 untuk semua
-      pos, sesuai jawaban pemilik).
+- [ ] **T-6.6** Muat pos tujuan beserta saldo awalnya (seed: 0 untuk semua
+      pos, sesuai jawaban pemilik), untuk bagian yang datanya disediakan.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.6** Untuk pinjaman historis yang pos-nya belum terdaftar sebagai
+- [ ] **T-6.7** Untuk pinjaman historis yang pos-nya belum terdaftar sebagai
       `Goal` (contoh nyata: "Travel To Japan", "Kuliah tata") — daftarkan
       keduanya sebagai `Goal` baru (`openingBalance` 0) sebelum mengimpor
       transaksi `GoalLoan`-nya. Kalau pemilik tidak mau melacaknya formal,
       lewati baris pinjaman itu dan catat di bagian "Catatan pengerjaan" di
       bawah.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.7** Bandingkan seluruh hasil hitung terhadap spreadsheet asli dan
-      pastikan tidak ada selisih rupiah.
-      ⚠ Ini pembuktian menyeluruh produk. Kalau ada selisih, cari akarnya di
-      aturan pembulatan sebelum mengubah apa pun yang lain.
+- [ ] **T-6.8** Bandingkan hasil hitung terhadap spreadsheet asli untuk
+      seluruh bagian yang diimpor, dan pastikan tidak ada selisih rupiah.
+      ⚠ Ini pembuktian menyeluruh untuk data yang diimpor. Kalau ada
+      selisih, cari akarnya di aturan pembulatan sebelum mengubah apa pun
+      yang lain.
       Memenuhi FR-SEED-001 dan NFR-ACC-002.
 
 ## Fase 7: Sinkronisasi

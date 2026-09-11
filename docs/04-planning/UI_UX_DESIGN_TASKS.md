@@ -180,6 +180,16 @@ Terakhir diperbarui: 10 September 2026.
 - [x] **D-6.1** Impor Seed, gaya komik: progres pemuatan dengan checklist
       (2 sumber pemasukan, 12 baris template, pos tujuan).
       Memenuhi FR-SEED-001.
+      ⚠ **Catatan revisi (11 September 2026): TIDAK akan diimplementasikan
+      sebagai layar aplikasi.** Kotak di atas dibiarkan `[x]` karena
+      artboard-nya memang sudah ada di Design Canvas (sesuai aturan
+      pencentangan dokumen ini — soal APAKAH desainnya dibuat, bukan
+      soal apakah akan dikodekan), tapi pemilik memutuskan impor data
+      historis bukan fitur aplikasi: operasi sekali pakai lewat skrip
+      pengembang (`tool/seed_import.dart`), tanpa UI, tanpa versi
+      produksi. Lihat catatan revisi di `docs/04-planning/TASK_LIST.md`
+      bagian Fase 6 dan ADR-0009. Desain ini jadi arsip referensi visual
+      saja, tidak ada kode yang akan dibangun darinya.
 
 ## Catatan pengerjaan
 

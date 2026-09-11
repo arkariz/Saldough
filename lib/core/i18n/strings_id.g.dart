@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$worklog$id worklog = Translations$worklog$id.internal(_root);
 	late final Translations$card$id card = Translations$card$id.internal(_root);
 	late final Translations$grocery$id grocery = Translations$grocery$id.internal(_root);
+	late final Translations$investment$id investment = Translations$investment$id.internal(_root);
 }
 
 // Path: app
@@ -443,6 +444,117 @@ class Translations$grocery$id {
 	String get overriddenBadge => 'ditimpa';
 }
 
+// Path: investment
+class Translations$investment$id {
+	Translations$investment$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Investasi'
+	String get pageTitle => 'Investasi';
+
+	/// id: 'Total portofolio'
+	String get totalPortfolioTitle => 'Total portofolio';
+
+	/// id: 'Pos tujuan'
+	String get goalsTitle => 'Pos tujuan';
+
+	/// id: 'Belum ada pos tujuan.'
+	String get emptyGoals => 'Belum ada pos tujuan.';
+
+	/// id: 'Tambah pos'
+	String get addGoalTitle => 'Tambah pos';
+
+	/// id: 'Sunting pos'
+	String get editGoalTitle => 'Sunting pos';
+
+	/// id: 'Nama pos'
+	String get goalNameFieldHint => 'Nama pos';
+
+	/// id: 'Saldo awal (Rp)'
+	String get openingBalanceFieldHint => 'Saldo awal (Rp)';
+
+	/// id: 'Alokasi bulan ini'
+	String get allocationPlanTitle => 'Alokasi bulan ini';
+
+	/// id: 'Siklus (YYYY-MM)'
+	String get cycleIdFieldHint => 'Siklus (YYYY-MM)';
+
+	/// id: 'Siklus ini belum ada.'
+	String get cycleNotFound => 'Siklus ini belum ada.';
+
+	/// id: 'Siklus ini sudah ditutup. Buka kembali untuk menyunting alokasi.'
+	String get cycleClosedMessage => 'Siklus ini sudah ditutup. Buka kembali untuk menyunting alokasi.';
+
+	/// id: 'Sisa siklus'
+	String get remainderLabel => 'Sisa siklus';
+
+	/// id: 'Tambahan dana (Rp)'
+	String get returnDepositFieldHint => 'Tambahan dana (Rp)';
+
+	/// id: '%'
+	String get percentageFieldHint => '%';
+
+	/// id: 'Total persentase: $total%'
+	String totalPercentageLabel({required Object total}) => 'Total persentase: ${total}%';
+
+	/// id: 'Pinjaman antar pos'
+	String get loansTitle => 'Pinjaman antar pos';
+
+	/// id: 'Belum ada pinjaman.'
+	String get emptyLoans => 'Belum ada pinjaman.';
+
+	/// id: 'Tambah pinjaman'
+	String get addLoanTitle => 'Tambah pinjaman';
+
+	/// id: 'Sunting pinjaman'
+	String get editLoanTitle => 'Sunting pinjaman';
+
+	/// id: 'Dari pos'
+	String get fromGoalFieldHint => 'Dari pos';
+
+	/// id: 'Ke pos'
+	String get toGoalFieldHint => 'Ke pos';
+
+	/// id: 'Pokok (Rp)'
+	String get principalFieldHint => 'Pokok (Rp)';
+
+	/// id: 'Dikembalikan (Rp)'
+	String get repaidFieldHint => 'Dikembalikan (Rp)';
+
+	/// id: 'Catatan (opsional)'
+	String get noteFieldHint => 'Catatan (opsional)';
+
+	/// id: 'Riwayat'
+	String get historyTitle => 'Riwayat';
+
+	/// id: 'Alokasi siklus $cycleId'
+	String allocationHistoryLabel({required Object cycleId}) => 'Alokasi siklus ${cycleId}';
+
+	/// id: 'Pinjaman dari $fromName'
+	String loanInLabel({required Object fromName}) => 'Pinjaman dari ${fromName}';
+
+	/// id: 'Pinjaman ke $toName'
+	String loanOutLabel({required Object toName}) => 'Pinjaman ke ${toName}';
+
+	/// id: '$fromName → $toName'
+	String loanRouteLabel({required Object fromName, required Object toName}) => '${fromName} → ${toName}';
+
+	/// id: 'Pokok $principal, dikembalikan $repaid'
+	String loanAmountsLabel({required Object principal, required Object repaid}) => 'Pokok ${principal}, dikembalikan ${repaid}';
+
+	/// id: 'Total persentase harus 0 atau 100.'
+	String get invalidTotalMessage => 'Total persentase harus 0 atau 100.';
+
+	/// id: 'Rencana alokasi disimpan.'
+	String get allocationSavedMessage => 'Rencana alokasi disimpan.';
+
+	/// id: 'Pinjaman disimpan.'
+	String get loanSavedMessage => 'Pinjaman disimpan.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -561,6 +673,40 @@ extension on Translations {
 			'grocery.overridePriceLabel' => 'Timpa harga',
 			'grocery.overrideAmountFieldHint' => 'Harga timpaan (Rp)',
 			'grocery.overriddenBadge' => 'ditimpa',
+			'investment.pageTitle' => 'Investasi',
+			'investment.totalPortfolioTitle' => 'Total portofolio',
+			'investment.goalsTitle' => 'Pos tujuan',
+			'investment.emptyGoals' => 'Belum ada pos tujuan.',
+			'investment.addGoalTitle' => 'Tambah pos',
+			'investment.editGoalTitle' => 'Sunting pos',
+			'investment.goalNameFieldHint' => 'Nama pos',
+			'investment.openingBalanceFieldHint' => 'Saldo awal (Rp)',
+			'investment.allocationPlanTitle' => 'Alokasi bulan ini',
+			'investment.cycleIdFieldHint' => 'Siklus (YYYY-MM)',
+			'investment.cycleNotFound' => 'Siklus ini belum ada.',
+			'investment.cycleClosedMessage' => 'Siklus ini sudah ditutup. Buka kembali untuk menyunting alokasi.',
+			'investment.remainderLabel' => 'Sisa siklus',
+			'investment.returnDepositFieldHint' => 'Tambahan dana (Rp)',
+			'investment.percentageFieldHint' => '%',
+			'investment.totalPercentageLabel' => ({required Object total}) => 'Total persentase: ${total}%',
+			'investment.loansTitle' => 'Pinjaman antar pos',
+			'investment.emptyLoans' => 'Belum ada pinjaman.',
+			'investment.addLoanTitle' => 'Tambah pinjaman',
+			'investment.editLoanTitle' => 'Sunting pinjaman',
+			'investment.fromGoalFieldHint' => 'Dari pos',
+			'investment.toGoalFieldHint' => 'Ke pos',
+			'investment.principalFieldHint' => 'Pokok (Rp)',
+			'investment.repaidFieldHint' => 'Dikembalikan (Rp)',
+			'investment.noteFieldHint' => 'Catatan (opsional)',
+			'investment.historyTitle' => 'Riwayat',
+			'investment.allocationHistoryLabel' => ({required Object cycleId}) => 'Alokasi siklus ${cycleId}',
+			'investment.loanInLabel' => ({required Object fromName}) => 'Pinjaman dari ${fromName}',
+			'investment.loanOutLabel' => ({required Object toName}) => 'Pinjaman ke ${toName}',
+			'investment.loanRouteLabel' => ({required Object fromName, required Object toName}) => '${fromName} → ${toName}',
+			'investment.loanAmountsLabel' => ({required Object principal, required Object repaid}) => 'Pokok ${principal}, dikembalikan ${repaid}',
+			'investment.invalidTotalMessage' => 'Total persentase harus 0 atau 100.',
+			'investment.allocationSavedMessage' => 'Rencana alokasi disimpan.',
+			'investment.loanSavedMessage' => 'Pinjaman disimpan.',
 			_ => null,
 		};
 	}

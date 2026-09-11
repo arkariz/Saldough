@@ -132,6 +132,31 @@ spekulatif" — dicatat di sini supaya tidak jadi kebiasaan.
 > "fitur A perlu menulis ke agregat fitur B" ke depannya — beda dari promosi
 > `shared/`, yang dipakai untuk "entitas mandiri dipakai banyak fitur."
 
+> **Catatan revisi (Fase 5, 11 September 2026):** pola port kecil di atas
+> dipakai lagi untuk `investment` ↔ `cycle`, kali ini dua arah sekaligus:
+> `investment` mendefinisikan `abstract interface class
+> CycleInvestmentGateway` (baca *dan* tulis potret rencana investasi sebuah
+> siklus — `CycleInvestmentSnapshot`, bentuk transport miliknya sendiri,
+> bukan `InvestmentPlan`/`Allocation` milik `cycle`), diimplementasikan
+> `CycleInvestmentGatewayImpl` di `features/cycle/data/adapters/`. Alasannya
+> sama seperti `CycleIncomeWriter`: `InvestmentPlan` adalah field
+> `MonthlyCycle` (agregat `cycle`), terlalu menyatu untuk dipromosikan ke
+> `shared/` hanya demi satu port. `RollUpResolver` juga kena perluasan serupa
+> di Fase 4 — lihat `_CompositeRollUpResolver` privat di `root_module.dart`,
+> yang menggabungkan resolver `grocery` dan `card` di belakang satu
+> antarmuka lewat `switch` atas tipe `RollUpSource`; pola ini relevan kalau
+> kelak ada konsumen `RollUpResolver`/`CycleInvestmentGateway` ketiga.
+
+> **Catatan revisi (Fase 5, 11 September 2026):** `T-5.7` (saldo pos)
+> sengaja HANYA menjumlahkan alokasi dari siklus yang sudah **tertutup**
+> (`CycleInvestmentGateway.listClosedCycleSnapshots`), konsisten dengan
+> formula DOMAIN_MODEL.md bagian "Pos tujuan dan pinjaman". Menyimpan
+> persentase alokasi pada siklus yang masih terbuka (lewat layar "Alokasi
+> Bulan Ini") TIDAK langsung mengubah saldo pos — baru berefek begitu
+> siklus itu ditutup (aksi terpisah di layar Siklus Bulanan, Fase 2). Ini
+> konsisten dengan ADR-0008 (siklus tertutup dibekukan): anggaran bulan
+> lalu tidak boleh berubah kalau persentase alokasi disunting belakangan.
+
 **`features/<feature>/`** — graf milik satu fitur: `domain/` dan `data/`
 privat (tidak diimpor fitur lain), `presentation/{bloc,navigation,pages,widgets}`,
 dan `di/<feature>_scope.dart` sendiri. Tujuh fitur MVP:

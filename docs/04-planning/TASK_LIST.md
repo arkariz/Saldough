@@ -34,10 +34,10 @@ Terakhir diperbarui: 11 September 2026.
 | 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
 | 4 — Roll-up | 12 | 12 | Selesai — Belanja (T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah, sudah digabung; `RootModule` kini memakai `_CompositeRollUpResolver` yang mendelegasikan ke resolver grocery/card sesuai tipe `RollUpSource` |
-| 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
-| 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
+| 5 — Investasi | 8 | 8 | Selesai — saldo pos hanya menghitung alokasi siklus tertutup (lihat catatan T-5.7) |
+| 6 — Seed | 7 | 0 | Siap dimulai — Fase 5 selesai |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **48** | |
+| **Total MVP** | **67** | **56** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -597,31 +597,79 @@ siklus berjalan dengan normal.
 
 *Desain: [D-5.1 sampai D-5.2](UI_UX_DESIGN_TASKS.md#fase-5-investasi).*
 
-- [ ] **T-5.1** Buat entitas `Goal` dengan saldo awal (seed: 0 untuk semua
+- [x] **T-5.1** Buat entitas `Goal` dengan saldo awal (seed: 0 untuk semua
       pos), dipakai bersama oleh alokasi maupun pinjaman lewat `shared/goal/`
       (T-1.13). Daftar pos terbuka — tidak dibatasi enam nama bawaan.
+      Sudah dibangun sejak Fase 1 (T-1.13); ronde ini hanya memverifikasi dan
+      memakainya — tidak ada perubahan di `shared/goal/`.
       Memenuhi FR-INV-001.
-- [ ] **T-5.2** Buat entitas `InvestmentPlan` dan `Allocation`.
-- [ ] **T-5.3** Buat use case `CalculateAllocations`.
+- [x] **T-5.2** Buat entitas `InvestmentPlan` dan `Allocation`.
+      Sudah dibangun sejak Fase 2 sebagai field `MonthlyCycle.investmentPlan`
+      (`features/cycle/domain/entities/`) — tidak ada perubahan di sini.
+      Fitur `investment` (T-5.3 dst.) tidak mengimpornya langsung (ADR-0009:
+      fitur privat); lihat `CycleInvestmentGateway` di bawah.
+- [x] **T-5.3** Buat use case `CalculateAllocations`.
+      Ditaruh di `features/investment/domain/usecases/` (bukan `cycle`) —
+      fitur `investment` memang pemilik logika "alokasi" menurut
+      ARCHITECTURE_OVERVIEW.md. Beroperasi atas `AllocationPercentage` milik
+      `investment` sendiri, bukan `Allocation` milik `cycle` (ADR-0009).
+      Dipakai ulang oleh `CalculateGoalBalances` (T-5.7) dan riwayat alokasi
+      per pos (T-5.8) — satu tempat untuk seluruh hitungan nominal alokasi.
       Memenuhi FR-INV-002.
-- [ ] **T-5.4** Tulis uji unit alokasi memakai kasus nyata `3.086.960 × 15%
-      = 463.044` dan `× 55% = 1.697.828`.
+- [x] **T-5.4** Tulis uji unit alokasi memakai kasus nyata `3.086.960 × 15%
+      = 463.044` dan `× 55% = 1.697.828`
+      (`test/features/investment/domain/usecases/calculate_allocations_test.dart`,
+      4 kasus: kedua rumus nyata dari DOMAIN_MODEL.md, persentase 0, daftar
+      kosong).
       Memenuhi NFR-ACC-002.
-- [ ] **T-5.5** Buat validasi total persentase.
+- [x] **T-5.5** Buat validasi total persentase.
+      `isValidAllocationTotal` (`features/investment/domain/usecases/`).
       ⚠ Nilai 0 sah dan berarti bulan itu belum dialokasikan. Yang ditolak hanya
-      nilai selain 0 dan 100.
+      nilai selain 0 dan 100. `InvestmentBloc` menolak `AllocationPlanSaved`
+      yang gagal validasi ini TANPA memanggil `CycleInvestmentGateway` sama
+      sekali (diuji di `investment_bloc_test.dart`).
       Memenuhi FR-INV-003.
-- [ ] **T-5.6** Buat entitas `GoalLoan` dengan pokok dan pengembalian terpisah.
+- [x] **T-5.6** Buat entitas `GoalLoan` dengan pokok dan pengembalian terpisah.
       ⚠ Nilainya bisa berbeda. Data nyata: pokok Rp9.300.000 dikembalikan
       Rp9.331.000. `fromGoalId`/`toGoalId` HARUS merujuk `Goal` yang sudah
-      terdaftar — tidak ada label bebas. Kalau pos pinjamannya belum ada di
-      daftar `Goal`, daftarkan dulu (lihat T-6.x untuk kasus data historis).
+      terdaftar — tidak ada label bebas; `GoalLoanEditSheet` memakai chip
+      pilihan dari daftar `Goal` yang sudah ada, bukan ketik bebas (kalau pos
+      pinjamannya belum ada di daftar `Goal`, daftarkan dulu — lihat T-6.x
+      untuk kasus data historis).
       Memenuhi FR-INV-004.
-- [ ] **T-5.7** Buat perhitungan saldo pos dari saldo awal, alokasi, dan
+- [x] **T-5.7** Buat perhitungan saldo pos dari saldo awal, alokasi, dan
       pinjaman.
+      `CalculateGoalBalances` (`features/investment/domain/usecases/`).
+      ⚠ Sesuai DOMAIN_MODEL.md, HANYA alokasi dari siklus yang sudah
+      **tertutup** yang ikut terhitung
+      (`CycleInvestmentGateway.listClosedCycleSnapshots`) — menyimpan
+      persentase di layar "Alokasi Bulan Ini" pada siklus yang masih
+      terbuka belum mengubah saldo, baru berefek begitu siklus itu ditutup
+      (lihat catatan revisi ADR-0009 Fase 5). Ini sengaja dipilih karena
+      DOMAIN_MODEL.md eksplisit soal ini, sekalipun draf desain D-5.1 lama
+      menyiratkan efek langsung — lihat catatan cakupan di bawah.
       Memenuhi FR-INV-005.
-- [ ] **T-5.8** Buat layar riwayat pergerakan tiap pos.
+- [x] **T-5.8** Buat layar riwayat pergerakan tiap pos.
+      `InvestmentPage._GoalTile` menampilkan, per pos: alokasi per siklus
+      tertutup (`InvestmentState.allocationHistoryFor`) dan pinjaman
+      masuk/keluar — dua daftar terpisah, bukan linimasa tergabung (lebih
+      sederhana, tetap memenuhi "riwayat pergerakan").
       Memenuhi FR-INV-005.
+
+**Catatan cakupan:** `features/investment/` dibangun penuh ronde ini:
+`GoalLoan` + repository (`GoalLoanRepositoryImpl`, pola satu-dokumen seperti
+`GoalRepositoryImpl`), `CycleInvestmentGateway` (port baca+tulis milik
+`investment`, diimplementasikan `CycleInvestmentGatewayImpl` di
+`features/cycle/data/adapters/` — lihat catatan revisi ADR-0009), `InvestmentBloc`
+dengan layar CRUD pos tujuan, form "Alokasi Bulan Ini" (pilih siklus,
+sunting persentase per pos dan tambahan dana, validasi total, pratinjau
+sisa siklus), dan CRUD pinjaman antar pos. Diverifikasi: `flutter analyze`
+bersih, `flutter test` 103 tes lolos (18 baru untuk `investment` + adapter
+`CycleInvestmentGatewayImpl`), serta build+jalan Linux sandbox (xvfb,
+dibuang setelah verifikasi) — `RootModule` mendaftarkan `CycleInvestmentGateway`
+dan `InvestmentRouteModule` tanpa galat, `CycleBloc` tetap memuat siklus
+berjalan dengan normal. Belum diverifikasi: navigasi manual ke layar
+Investasi lewat menu pengembang (tidak ada alat otomasi GUI di sandbox ini).
 
 ## Fase 6: Seed
 

@@ -240,6 +240,8 @@ class _IncomeSection extends StatelessWidget {
                   sources: state.incomeSources,
                   initialSourceId: line.sourceId,
                   isIncomeLine: true,
+                  onIncomeSourceAdded: () =>
+                      bloc.add(const CycleIncomeSourcesRefreshRequested()),
                 );
                 if (result != null) {
                   bloc.add(
@@ -270,6 +272,8 @@ class _IncomeSection extends StatelessWidget {
               title: t.cycle.addIncomeLine,
               sources: state.incomeSources,
               isIncomeLine: true,
+              onIncomeSourceAdded: () =>
+                  bloc.add(const CycleIncomeSourcesRefreshRequested()),
             );
             if (result != null) {
               bloc.add(
@@ -351,6 +355,10 @@ class _BudgetSection extends StatelessWidget {
               title: t.cycle.addBudgetLine,
               isBudgetLine: true,
               cards: state.cards,
+              usedRollUpSources: [
+                for (final line in state.cycle.budgetLines)
+                  if (line.kind == .rollUp) line.rollUpSource!,
+              ],
             );
             if (result != null) {
               bloc.add(

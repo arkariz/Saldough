@@ -857,6 +857,32 @@ lulus; `tool/seed_import.dart --dry-run` dijalankan ulang setelah perubahan
 repository/bloc — kesembilan siklus tertutup masih cocok persis dengan
 spreadsheet, siklus terbuka tetap terhitung live sesuai desain.
 
+**11 September 2026 (lanjutan)** — Dua laporan lagi setelah perbaikan di atas
+dicoba langsung:
+
+8. **Sumber pemasukan baru tidak terdeteksi balik ke tab Siklus** — akar
+   masalahnya: layar "Tambah sumber pemasukan" dicapai lewat `context.push`
+   yang menumpuk DI ATAS shell (bukan tab), jadi `_CycleTab` tidak dibangun
+   ulang saat kembali, beda dari berpindah tab bottom nav yang memang
+   mengirim ulang `CycleOpened` tiap `_CycleTab.build()` jalan lagi (sudah
+   "benar secara tidak sengaja" sebelumnya, hanya lewat tab switch). Event
+   baru `CycleIncomeSourcesRefreshRequested` menyegarkan `incomeSources`
+   saja (tanpa memuat ulang siklus/cards/existingCycleIds, supaya tidak ada
+   kedipan loading) — dipicu lewat callback `onIncomeSourceAdded` yang
+   dioper `LineEditSheet` (bukan `LineEditSheet` mengimpor `CycleBloc`
+   langsung — tetap generik, pola yang sama dengan `LineEditResult`).
+9. **Bisa menambah lebih dari satu baris anggaran ke Rencana Belanja/kartu
+   yang SAMA** — seharusnya satu sumber roll-up hanya boleh ditautkan ke
+   satu baris (kartu yang berbeda tetap boleh masing-masing punya baris
+   sendiri). Diperbaiki dua lapis: `LineEditSheet` menerima
+   `usedRollUpSources` dan menonaktifkan (tetap tampil, diredupkan — bukan
+   disembunyikan, supaya pemilik tahu kenapa) chip Rencana Belanja/kartu
+   yang sudah terpakai; `CycleBloc._onBudgetLineSaved` menolak juga di sisi
+   bloc (jaring pengaman kalau UI ke-bypass) dengan efek peringatan baru.
+
+Diverifikasi lagi: `flutter analyze` (0 isu) dan `flutter test` (124
+pengujian) lulus; `tool/seed_import.dart --dry-run` masih cocok persis.
+
 ## Fase 7: Sinkronisasi
 
 Di luar MVP. Dikerjakan setelah Fase 6 selesai dan dipakai beberapa waktu.

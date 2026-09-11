@@ -47,7 +47,8 @@
     "budgetSourceManual": "Manual",
     "budgetSourceGrocery": "Grocery plan",
     "budgetSourceCard": "Credit card",
-    "selectCardHint": "Select a card"
+    "selectCardHint": "Select a card",
+    "rollUpSourceAlreadyUsed": "This source is already linked to another budget line."
   },
   "income": {
     "pageTitle": "Income sources",

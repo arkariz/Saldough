@@ -20,4 +20,9 @@ extension on CycleBloc {
     message: t.cycle.rollUpNotEditable,
     severity: .warning,
   );
+
+  UiEffect _effectRollUpSourceAlreadyUsed() => ShowSnackBarEffect(
+    message: t.cycle.rollUpSourceAlreadyUsed,
+    severity: .warning,
+  );
 }

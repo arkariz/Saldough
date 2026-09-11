@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -54,6 +52,8 @@ class LineEditSheet extends StatefulWidget {
     this.isIncomeLine = false,
     this.isBudgetLine = false,
     this.cards = const [],
+    this.usedRollUpSources = const [],
+    this.onIncomeSourceAdded,
     super.key,
   });
 
@@ -91,6 +91,23 @@ class LineEditSheet extends StatefulWidget {
   /// [_BudgetSourceChoice.card] dipilih. Kosong untuk baris pemasukan.
   final List<CardSummary> cards;
 
+  /// Sumber roll-up yang SUDAH ditautkan ke baris anggaran lain di siklus
+  /// ini — dipakai menonaktifkan (bukan menyembunyikan) pilihan Rencana
+  /// Belanja/kartu yang sudah terpakai, supaya tidak bisa menautkan dua
+  /// baris anggaran ke sumber yang sama (laporan pemilik: sebelumnya bisa
+  /// berkali-kali). Kartu yang berbeda tetap boleh masing-masing punya
+  /// baris sendiri — hanya sumber yang SAMA yang dibatasi.
+  final List<RollUpSource> usedRollUpSources;
+
+  /// Dipanggil setelah pemilik balik dari layar "Tambah sumber pemasukan"
+  /// (lewat tombol `addIncomeSourceButton` di bawah) — widget pemanggil
+  /// memakainya
+  /// untuk menyegarkan daftar sumber pemasukan tanpa pemilik harus
+  /// berpindah tab dulu (laporan pemilik: sumber baru sebelumnya tidak
+  /// terdeteksi sampai pindah-balik tab). `null` kalau tidak relevan
+  /// (misalnya untuk baris anggaran).
+  final VoidCallback? onIncomeSourceAdded;
+
   /// Menampilkan [LineEditSheet] sebagai modal bottom sheet, mengembalikan
   /// [LineEditResult] atau `null` kalau dibatalkan.
   static Future<LineEditResult?> show(
@@ -103,6 +120,8 @@ class LineEditSheet extends StatefulWidget {
     bool isIncomeLine = false,
     bool isBudgetLine = false,
     List<CardSummary> cards = const [],
+    List<RollUpSource> usedRollUpSources = const [],
+    VoidCallback? onIncomeSourceAdded,
   }) {
     return showModalBottomSheet<LineEditResult>(
       context: context,
@@ -116,6 +135,8 @@ class LineEditSheet extends StatefulWidget {
         isIncomeLine: isIncomeLine,
         isBudgetLine: isBudgetLine,
         cards: cards,
+        usedRollUpSources: usedRollUpSources,
+        onIncomeSourceAdded: onIncomeSourceAdded,
       ),
     );
   }
@@ -143,6 +164,12 @@ class _LineEditSheetState extends State<LineEditSheet> {
 
   bool get _isNewBudgetLine =>
       widget.isBudgetLine && widget.initialLabel == null;
+
+  bool get _isGroceryUsed =>
+      widget.usedRollUpSources.contains(RollUpSource.grocery);
+
+  bool _isCardUsed(String cardId) =>
+      widget.usedRollUpSources.contains(RollUpSource.card(cardId));
 
   @override
   void dispose() {
@@ -178,6 +205,27 @@ class _LineEditSheetState extends State<LineEditSheet> {
       _selectedCardId = card.id;
       _labelController.text = card.name;
     });
+  }
+
+  /// Chip pilihan sumber anggaran yang bisa dinonaktifkan — dipakai untuk
+  /// Rencana Belanja/kartu yang sudah ditautkan ke baris lain (lihat
+  /// [LineEditSheet.usedRollUpSources]): tetap TAMPIL (bukan disembunyikan,
+  /// supaya pemilik tahu kenapa tidak bisa dipilih lagi) tapi diredupkan dan
+  /// tidak merespons ketukan.
+  Widget _budgetSourceChip({
+    required String label,
+    required bool selected,
+    required bool disabled,
+    required VoidCallback onTap,
+  }) {
+    return Opacity(
+      opacity: disabled ? 0.4 : 1,
+      child: AppChip(
+        label: label,
+        selected: selected && !disabled,
+        onTap: disabled ? null : onTap,
+      ),
+    );
   }
 
   void _submit() {
@@ -242,9 +290,11 @@ class _LineEditSheetState extends State<LineEditSheet> {
             AppButton(
               label: t.cycle.addIncomeSourceButton,
               icon: Icons.arrow_forward,
-              onPressed: () {
+              onPressed: () async {
+                final onIncomeSourceAdded = widget.onIncomeSourceAdded;
                 Navigator.of(context).pop();
-                unawaited(context.push('/income/list'));
+                await context.push('/income/list');
+                onIncomeSourceAdded?.call();
               },
             ),
             const SizedBox(height: AppSpacing.md),
@@ -263,9 +313,10 @@ class _LineEditSheetState extends State<LineEditSheet> {
                   selected: _budgetSource == .manual,
                   onTap: () => _selectBudgetSource(.manual),
                 ),
-                AppChip(
+                _budgetSourceChip(
                   label: t.cycle.budgetSourceGrocery,
                   selected: _budgetSource == .grocery,
+                  disabled: _isGroceryUsed,
                   onTap: () => _selectBudgetSource(.grocery),
                 ),
                 AppChip(
@@ -277,7 +328,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
             ),
             const SizedBox(height: AppSpacing.sm),
             if (_budgetSource == .card) ...[
-              if (widget.cards.isEmpty)
+              if (widget.cards.every((card) => _isCardUsed(card.id)))
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: Text(
@@ -292,9 +343,10 @@ class _LineEditSheetState extends State<LineEditSheet> {
                     spacing: AppSpacing.sm,
                     children: [
                       for (final card in widget.cards)
-                        AppChip(
+                        _budgetSourceChip(
                           label: card.name,
                           selected: card.id == _selectedCardId,
+                          disabled: _isCardUsed(card.id),
                           onTap: () => _selectCard(card),
                         ),
                     ],

@@ -157,3 +157,16 @@ final class CycleDeleteRequested extends CycleEvent {
   /// Membuat [CycleDeleteRequested].
   const CycleDeleteRequested();
 }
+
+/// Menyegarkan [CycleState.incomeSources] saja, tanpa memuat ulang siklus.
+///
+/// Dipicu widget pemanggil setelah pemilik balik dari layar "Tambah sumber
+/// pemasukan" (`LineEditSheet`) — layar itu dicapai lewat `context.push`
+/// yang menumpuk di atas shell, jadi `_CycleTab` TIDAK dibangun ulang saat
+/// kembali (beda dari berpindah tab bottom nav, yang mengirim ulang
+/// `CycleOpened`) dan sumber baru tidak pernah terdeteksi tanpa event ini
+/// (laporan pemilik).
+final class CycleIncomeSourcesRefreshRequested extends CycleEvent {
+  /// Membuat [CycleIncomeSourcesRefreshRequested].
+  const CycleIncomeSourcesRefreshRequested();
+}

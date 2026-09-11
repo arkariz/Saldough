@@ -56,6 +56,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     on<CycleClosed>(_onClosed);
     on<CycleReopened>(_onReopened);
     on<CycleDeleteRequested>(_onDeleteRequested);
+    on<CycleIncomeSourcesRefreshRequested>(_onIncomeSourcesRefreshRequested);
   }
 
   final CycleRepository _cycleRepository;
@@ -89,6 +90,14 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
               .copyWith(incomeSources: sources),
         );
     }
+  }
+
+  Future<void> _onIncomeSourcesRefreshRequested(
+    CycleIncomeSourcesRefreshRequested event,
+    Emitter<CycleState> emit,
+  ) async {
+    final result = await _sourceRepository.listSources();
+    emit(state.copyWith(incomeSources: result.getOrElse((_) => const [])));
   }
 
   Future<List<CardSummary>> _listCards() async {
@@ -166,6 +175,19 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     // sudah ditolak di atas), jadi diamkan kalau UI keliru mengirimkannya
     // bersama `id` baris lama.
     final rollUpSource = isNew ? event.rollUpSource : null;
+    // Satu sumber roll-up (Rencana Belanja, atau satu kartu tertentu) hanya
+    // boleh ditautkan ke SATU baris anggaran — kalau tidak, baris anggaran
+    // jadi duplikat hitungan yang sama (laporan pemilik). Kartu yang
+    // berbeda tetap boleh masing-masing punya baris sendiri. Ini jaring
+    // pengaman lapis kedua — `LineEditSheet` sudah menonaktifkan pilihan
+    // yang terpakai di UI, tapi bloc tidak boleh ikut percaya begitu saja.
+    if (rollUpSource != null &&
+        state.cycle.budgetLines.any(
+          (l) => l.kind == .rollUp && l.rollUpSource == rollUpSource,
+        )) {
+      emit(state.copyWith(effect: _effectRollUpSourceAlreadyUsed()));
+      return;
+    }
     final line = BudgetLine(
       id: event.id ?? _freshId(),
       label: event.label,

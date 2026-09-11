@@ -123,19 +123,34 @@ class _IncomeTab extends StatelessWidget {
   }
 }
 
-class _GroceryTab extends StatelessWidget {
+class _GroceryTab extends StatefulWidget {
   const _GroceryTab({required this.parentContainer});
 
   final GetIt parentContainer;
 
   @override
+  State<_GroceryTab> createState() => _GroceryTabState();
+}
+
+class _GroceryTabState extends State<_GroceryTab> {
+  // UX-17: builder ScopeWidget jalan lagi setiap pindah tab (sama seperti
+  // UX-07 di _CycleTab) -- tanpa penjaga ini, GroceryPlanLoaded terpancar
+  // ulang tiap kali, dan grocery_page.dart mengganti SELURUH body dengan
+  // spinner (membuang posisi scroll) padahal datanya sudah ada.
+  bool _dispatchedInitialLoad = false;
+
+  @override
   Widget build(BuildContext context) {
     return ScopeWidget<GroceryScope>(
-      create: () => GroceryScope(parentContainer: parentContainer),
-      builder: (context, scope) => BlocProvider.value(
-        value: scope.container<GroceryBloc>()..add(const GroceryPlanLoaded()),
-        child: const GroceryPage(),
-      ),
+      create: () => GroceryScope(parentContainer: widget.parentContainer),
+      builder: (context, scope) {
+        final bloc = scope.container<GroceryBloc>();
+        if (!_dispatchedInitialLoad) {
+          _dispatchedInitialLoad = true;
+          bloc.add(const GroceryPlanLoaded());
+        }
+        return BlocProvider.value(value: bloc, child: const GroceryPage());
+      },
     );
   }
 }

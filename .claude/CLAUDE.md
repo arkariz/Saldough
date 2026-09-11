@@ -25,6 +25,7 @@ spreadsheet pemilik. Yang dihapus hanya pekerjaan tangannya.
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-1.0.md` |
 | **Tugas dan progres (kode)** | `docs/04-planning/TASK_LIST.md` |
 | **Tugas dan progres (desain UI/UX)** | `docs/04-planning/UI_UX_DESIGN_TASKS.md` |
+| **Perbaikan dari review UX** | `docs/04-planning/UX_REVIEW_FIXES.md` |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 
 ## Status

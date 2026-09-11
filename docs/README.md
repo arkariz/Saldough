@@ -71,7 +71,8 @@ docs/
 └── 04-planning/               # urutan dan progres
     ├── ROADMAP.md
     ├── TASK_LIST.md
-    └── UI_UX_DESIGN_TASKS.md
+    ├── UI_UX_DESIGN_TASKS.md
+    └── UX_REVIEW_FIXES.md
 ```
 
 ## Daftar ADR

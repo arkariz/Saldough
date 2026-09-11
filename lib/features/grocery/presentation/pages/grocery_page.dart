@@ -33,8 +33,16 @@ class GroceryPage extends StatelessWidget {
       body: EffectListener<GroceryBloc, GroceryState>(
         child: BlocBuilder<GroceryBloc, GroceryState>(
           builder: (context, state) {
-            if (state.isLoading) return const Center(child: CircularProgressIndicator());
-            return ListView(
+            // UX-17: pemuatan PERTAMA (belum ada data sama sekali) tampil
+            // skeleton penuh; pemuatan ULANG (data sudah ada) tidak
+            // mengganti body -- lihat indikator halus di Stack di bawah.
+            final hasData = state.plan.weeklyItems.isNotEmpty || state.plan.monthlyItems.isNotEmpty;
+            if (state.isLoading && !hasData) {
+              return const AppSkeletonPage();
+            }
+            return Stack(
+              children: [
+                ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
                 AppCard(
@@ -58,6 +66,15 @@ class GroceryPage extends StatelessWidget {
                   icon: Icons.credit_card,
                   onPressed: () => context.read<GroceryBloc>().add(const CardEntryPointTapped()),
                 ),
+              ],
+                ),
+                if (state.isLoading)
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: LinearProgressIndicator(minHeight: 2),
+                  ),
               ],
             );
           },

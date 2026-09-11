@@ -27,8 +27,12 @@ class CyclePage extends StatelessWidget {
       body: EffectListener<CycleBloc, CycleState>(
         child: BlocBuilder<CycleBloc, CycleState>(
           builder: (context, state) {
+            // UX-17: pemuatan PERTAMA (belum ada siklus sama sekali) tampil
+            // skeleton penuh; pemuatan ULANG (pindah bulan lewat chevron,
+            // data lama masih ada) tidak mengganti body -- lihat indikator
+            // halus di PreferredSize app bar bawaan Scaffold di bawah.
             if (state.isLoading && state.cycle.id.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
+              return const AppSkeletonPage();
             }
             // UX-16: kegagalan baca TIDAK dirender sebagai siklus kosong --
             // pemilik butuh tahu ini kegagalan (bisa dicoba lagi), bukan
@@ -52,26 +56,40 @@ class CyclePage extends StatelessWidget {
                 ),
               );
             }
-            return CustomScrollView(
-              slivers: [
-                _AppBarSliver(state: state),
-                SliverPadding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  sliver: SliverList.list(
-                    children: [
-                      if (state.cycle.isClosed) _ClosedBanner(),
-                      if (state.unreviewedCount > 0)
-                        _UnreviewedBanner(count: state.unreviewedCount),
-                      _TotalsCard(state: state),
-                      const SizedBox(height: AppSpacing.lg),
-                      _IncomeSection(state: state),
-                      const SizedBox(height: AppSpacing.lg),
-                      _BudgetSection(state: state),
-                      const SizedBox(height: AppSpacing.lg),
-                      _ActionsRow(state: state),
-                    ],
-                  ),
+            return Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    _AppBarSliver(state: state),
+                    SliverPadding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      sliver: SliverList.list(
+                        children: [
+                          if (state.cycle.isClosed) _ClosedBanner(),
+                          if (state.unreviewedCount > 0)
+                            _UnreviewedBanner(count: state.unreviewedCount),
+                          _TotalsCard(state: state),
+                          const SizedBox(height: AppSpacing.lg),
+                          _IncomeSection(state: state),
+                          const SizedBox(height: AppSpacing.lg),
+                          _BudgetSection(state: state),
+                          const SizedBox(height: AppSpacing.lg),
+                          _ActionsRow(state: state),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
+                // UX-17: pemuatan ULANG (mis. pindah bulan lewat chevron) --
+                // data lama tetap tampil, hanya indikator halus di puncak
+                // layar, bukan mengganti seluruh body dengan spinner.
+                if (state.isLoading)
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: LinearProgressIndicator(minHeight: 2),
+                  ),
               ],
             );
           },

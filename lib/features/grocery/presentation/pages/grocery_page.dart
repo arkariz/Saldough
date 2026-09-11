@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -67,11 +69,25 @@ class _WeeksPerMonthField extends StatefulWidget {
 
 class _WeeksPerMonthFieldState extends State<_WeeksPerMonthField> {
   late final _controller = TextEditingController(text: widget.weeksPerMonth.toString());
+  Timer? _debounce;
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Menulis [value] ke bloc kalau valid. Dipanggil baik lewat debounce
+  /// (mengetik lalu berhenti) maupun `onSubmitted` (menekan enter) — dua
+  /// jalur komit yang sama, supaya pengali tersimpan walau pemilik cuma
+  /// scroll menjauh tanpa menekan enter (laporan pemilik, UX-04: sebelumnya
+  /// field menampilkan nilai baru tapi yang tersimpan masih nilai lama).
+  void _commit(String value) {
+    final weeks = int.tryParse(value);
+    if (weeks != null && weeks > 0) {
+      context.read<GroceryBloc>().add(WeeksPerMonthChanged(weeks));
+    }
   }
 
   @override
@@ -81,11 +97,13 @@ class _WeeksPerMonthFieldState extends State<_WeeksPerMonthField> {
       keyboardType: .number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(labelText: t.grocery.weeksPerMonthFieldHint),
+      onChanged: (value) {
+        _debounce?.cancel();
+        _debounce = Timer(AppDurations.debounce, () => _commit(value));
+      },
       onSubmitted: (value) {
-        final weeks = int.tryParse(value);
-        if (weeks != null && weeks > 0) {
-          context.read<GroceryBloc>().add(WeeksPerMonthChanged(weeks));
-        }
+        _debounce?.cancel();
+        _commit(value);
       },
     );
   }

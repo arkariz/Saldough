@@ -25,7 +25,7 @@ menjelaskan apa yang kurang.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 September 2026.
+Terakhir diperbarui: 11 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -33,11 +33,11 @@ Terakhir diperbarui: 10 September 2026.
 | 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
 | 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
-| 4 — Roll-up | 12 | 5 | Belanja selesai (T-4.1–T-4.5) — Kartu kredit (T-4.6–T-4.12) belum dikerjakan |
+| 4 — Roll-up | 12 | 12 | Selesai — Belanja (T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah, sudah digabung; `RootModule` kini memakai `_CompositeRollUpResolver` yang mendelegasikan ke resolver grocery/card sesuai tipe `RollUpSource` |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **41** | |
+| **Total MVP** | **67** | **48** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -513,48 +513,84 @@ tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
       langkah "sinkronisasi" tambahan, sesuai rencana ROADMAP.md Fase 2.
       `CycleScope` kini membawa `RollUpResolver` dari `RootModule` lewat
       `bridge()` (bukan mendaftar placeholder lokal).
-      ⚠ Baris `card` masih `unavailable()` — bagian kartu kredit (T-4.6–T-4.12)
-      belum dikerjakan ronde ini, lihat catatan di bawah.
+      ⚠ Saat ronde ini dikerjakan, baris `card` masih `unavailable()` — bagian
+      kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah dan digabung
+      belakangan, lihat catatan revisi di bawah.
       Memenuhi FR-GROC-003 dan NFR-PERF-002.
 
-**Catatan cakupan:** Ronde ini hanya mengerjakan bagian Belanja (T-4.1–T-4.5).
-Bagian Kartu kredit (T-4.6–T-4.12) tidak bergantung pada bagian ini (lihat
-ROADMAP.md: keduanya independen di bawah Fase 4) dan sengaja ditunda ke ronde
-berikutnya untuk menjaga ukuran perubahan tetap kecil.
+**Catatan revisi (penggabungan Fase 4, 11 September 2026):** Belanja
+(T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) masing-masing dikerjakan di
+cabang terpisah dari `main` (`claude/saldough-flutter-finance-app-06ufsv` dan
+`claude/saldough-fase4-kartu-kredit`) agar ukuran tiap ronde tetap kecil
+(lihat ROADMAP.md: keduanya independen di bawah Fase 4). Belanja digabung ke
+`main` lebih dulu; menggabungkan Kartu kredit setelahnya menimbulkan konflik
+merge di `RootModule`/`CycleScope` karena kedua cabang sama-sama menambah
+pendaftaran `RollUpResolver`-nya sendiri. Diselesaikan dengan menambah
+`_CompositeRollUpResolver` (privat, di `root_module.dart`) yang membungkus
+`GroceryRollUpResolver` dan `CardRollUpResolver`, mendelegasikan berdasar
+tipe `RollUpSource` ke salah satunya — keduanya tetap hanya tahu sumbernya
+sendiri, tidak ada yang diubah di fitur `grocery`/`card` sendiri.
 
-**Verifikasi bagian Belanja:** `flutter analyze` bersih, `flutter test` lolos
-(61 tes total, 7 baru — `CalculateGroceryRollUp` dan `GroceryRollUpResolver`,
-termasuk kasus `CardRollUpSource` yang tetap `unavailable()`). Diuji juga
-secara runtime (build Linux sandbox + xvfb, dibuang setelah verifikasi) —
-pendaftaran ulang `RollUpResolver` di `RootModule`/`CycleScope` berjalan
-tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
+**Verifikasi bagian Belanja (saat dikerjakan):** `flutter analyze` bersih,
+`flutter test` lolos (61 tes total, 7 baru — `CalculateGroceryRollUp` dan
+`GroceryRollUpResolver`, termasuk kasus `CardRollUpSource` yang tetap
+`unavailable()`). Diuji juga secara runtime (build Linux sandbox + xvfb,
+dibuang setelah verifikasi) — pendaftaran ulang `RollUpResolver` di
+`RootModule`/`CycleScope` berjalan tanpa galat dan `CycleBloc` tetap memuat
+siklus berjalan dengan normal.
 
 ### Kartu kredit
 
-- [ ] **T-4.6** Buat entitas `CreditCard`, `CardStatement`, dan
+- [x] **T-4.6** Buat entitas `CreditCard`, `CardStatement`, dan
       `CardTransaction`.
       ⚠ `note` adalah field terpisah dari `merchant`. Di spreadsheet keduanya
       tercampur, sehingga nama merchant tidak bisa dicocokkan dengan langganan.
       Tanggal cetak (`statementDayOfMonth`) adalah data, bukan konstanta
-      kode. Nilai seed terkonfirmasi: tanggal 15.
+      kode. Nilai seed terkonfirmasi: tanggal 15. `isConfirmed` pada
+      `CardTransaction` adalah tambahan di luar tabel DOMAIN_MODEL.md semula
+      (default `true`, `false` untuk hasil penyiapan langganan) — dibutuhkan
+      T-4.10, dicatat di DOMAIN_MODEL.md.
       Memenuhi FR-CARD-001 dan FR-CARD-002.
-- [ ] **T-4.7** Buat pengelompokan transaksi ke siklus tagihan dan
+- [x] **T-4.7** Buat pengelompokan transaksi ke siklus tagihan dan
       penutupan siklus.
+      `CardStatementPeriod.forDate` menghitung periode murni dari
+      `statementDayOfMonth` (bukan bulan kalender); `CardStatementRepositoryImpl`
+      mencari-atau-membuat siklus yang mencakup tanggal transaksi.
+      `CloseCardStatement` menutup siklus terbuka dan langsung membuka siklus
+      berikutnya. Diuji lewat kasus batas tanggal cetak (`card_statement_period_test.dart`)
+      dan use case (`close_card_statement_test.dart`).
       Memenuhi FR-CARD-003.
-- [ ] **T-4.8** Buat layar pencatatan transaksi satu langkah.
+- [x] **T-4.8** Buat layar pencatatan transaksi satu langkah.
+      `CardPage._AddTransactionForm` — merchant, nominal, tanggal, catatan
+      opsional, satu tombol catat.
       Memenuhi FR-CARD-002 dan NFR-UX-001.
-- [ ] **T-4.9** Buat entitas `RecurringSubscription` dan penyiapan otomatisnya
+- [x] **T-4.9** Buat entitas `RecurringSubscription` dan penyiapan otomatisnya
       saat siklus baru dibuka.
+      `CloseCardStatement` menyiapkan satu `CardTransaction` belum terkonfirmasi
+      per langganan aktif kartu ini saat membuka siklus berikutnya.
       Memenuhi FR-CARD-004.
-- [ ] **T-4.10** Buat alur konfirmasi transaksi langganan sebelum dihitung.
+- [x] **T-4.10** Buat alur konfirmasi transaksi langganan sebelum dihitung.
       ⚠ Nominal langganan berubah. Claude AI tercatat Rp337.760 di satu siklus
-      dan Rp358.600 di siklus lain.
+      dan Rp358.600 di siklus lain — itu sebabnya `CardPage._PendingTransactionRow`
+      punya field nominal yang bisa disunting sebelum dikonfirmasi, bukan
+      langsung memakai nilai `RecurringSubscription.amount` mentah.
+      `CardStatement.confirmedTotal` hanya menghitung transaksi ber-`isConfirmed`.
       Memenuhi FR-CARD-004.
-- [ ] **T-4.11** Sambungkan roll-up kartu ke baris anggaran.
+- [x] **T-4.11** Sambungkan roll-up kartu ke baris anggaran.
+      `CardRollUpResolver` (implementasi `RollUpResolver` milik `cycle`, pola
+      sama seperti rencana belanja — lihat ADR-0009) dikawat di
+      `RootModule._registerCrossFeatureAdapters` lewat `_CompositeRollUpResolver`
+      (lihat catatan revisi penggabungan Fase 4 di bagian "Belanja" di atas),
+      dibagikan ke `CycleScope` lewat `bridge()`.
       Memenuhi FR-CARD-005.
-- [ ] **T-4.12** Bekukan nilai roll-up saat siklus ditutup.
-      ⚠ Tanpa ini, menyunting daftar belanja hari ini akan mengubah anggaran
-      bulan-bulan sebelumnya dan merusak riwayat.
+- [x] **T-4.12** Bekukan nilai roll-up saat siklus ditutup.
+      ⚠ Tanpa ini, menyunting daftar belanja atau tagihan kartu hari ini akan
+      mengubah anggaran bulan-bulan sebelumnya dan merusak riwayat.
+      `CycleRepositoryImpl._resolveRollUps` sekarang mengembalikan siklus
+      apa adanya kalau `cycle.isClosed`, tidak memanggil `RollUpResolver` sama
+      sekali — diuji di `cycle_repository_impl_test.dart` lewat resolver palsu
+      yang menghitung jumlah pemanggilan. Perbaikan ini berlaku umum untuk
+      seluruh sumber roll-up (belanja maupun kartu), bukan khusus kartu.
       Memenuhi [ADR-0008](../02-architecture/adr/0008-monthly-cycle-template-and-rollup.md).
 
 ## Fase 5: Investasi

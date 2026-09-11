@@ -7,7 +7,21 @@ import 'package:saldough/features/cycle/domain/entities/budget_line_kind.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/investment_plan.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_resolution.dart';
 import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
+import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
+
+/// Resolver palsu yang menghitung berapa kali [resolve] dipanggil — dipakai
+/// membuktikan T-4.12: siklus tertutup tidak pernah memanggil resolver lagi.
+class _CountingResolver implements RollUpResolver {
+  int calls = 0;
+
+  @override
+  Future<RollUpResolution> resolve(RollUpSource source) async {
+    calls++;
+    return const RollUpResolution(amount: 999999, isAvailable: true);
+  }
+}
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -63,6 +77,58 @@ void main() {
 
       expect(read!.budgetLines.single.amount, 0);
       expect(read.budgetLines.single.rollUpSourceUnavailable, isTrue);
+    });
+
+    test('rollUp dibekukan (tidak dihitung ulang) begitu siklus ditutup (T-4.12)', () async {
+      final resolver = _CountingResolver();
+      final closedRepository = CycleRepositoryImpl(storage: storage, resolver: resolver);
+      final closedCycle = MonthlyCycle(
+        id: '2026-08',
+        incomeLines: const [],
+        budgetLines: [
+          BudgetLine(
+            id: 'b1',
+            label: 'CC TOKPED',
+            amount: 123456,
+            kind: BudgetLineKind.rollUp,
+            rollUpSource: RollUpSource.card('cc1'),
+          ),
+        ],
+        investmentPlan: InvestmentPlan.empty(),
+      ).close(at: DateTime(2026, 9, 2));
+      await closedRepository.saveCycle(closedCycle);
+
+      final readResult = await closedRepository.getCycle('2026-08');
+      final read = readResult.getOrElse((_) => throw StateError('expected Right'));
+
+      expect(read!.budgetLines.single.amount, 123456);
+      expect(resolver.calls, 0);
+    });
+
+    test('siklus terbuka tetap menghitung ulang rollUp seperti biasa (bukan dibekukan)', () async {
+      final resolver = _CountingResolver();
+      final openRepository = CycleRepositoryImpl(storage: storage, resolver: resolver);
+      final openCycle = MonthlyCycle(
+        id: '2026-09',
+        incomeLines: const [],
+        budgetLines: [
+          BudgetLine(
+            id: 'b1',
+            label: 'CC TOKPED',
+            amount: 1,
+            kind: BudgetLineKind.rollUp,
+            rollUpSource: RollUpSource.card('cc1'),
+          ),
+        ],
+        investmentPlan: InvestmentPlan.empty(),
+      );
+      await openRepository.saveCycle(openCycle);
+
+      final readResult = await openRepository.getCycle('2026-09');
+      final read = readResult.getOrElse((_) => throw StateError('expected Right'));
+
+      expect(read!.budgetLines.single.amount, 999999);
+      expect(resolver.calls, 1);
     });
 
     test('getCycle mengembalikan Right(null) untuk siklus yang belum ada', () async {

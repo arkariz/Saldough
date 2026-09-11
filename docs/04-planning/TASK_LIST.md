@@ -35,9 +35,9 @@ Terakhir diperbarui: 11 September 2026.
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
 | 4 — Roll-up | 12 | 12 | Selesai — Belanja (T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah, sudah digabung; `RootModule` kini memakai `_CompositeRollUpResolver` yang mendelegasikan ke resolver grocery/card sesuai tipe `RollUpSource` |
 | 5 — Investasi | 8 | 8 | Selesai — saldo pos hanya menghitung alokasi siklus tertutup (lihat catatan T-5.7) |
-| 6 — Seed | 8 | 0 | Menunggu data historis sungguhan dari pemilik — cakupan dan cara kerja direvisi 11 September 2026 (bukan fitur aplikasi, lihat catatan di atas bagian Fase 6) |
+| 6 — Seed | 8 | 8 | Selesai — 10 siklus nyata (Jan–Okt 2026) diimpor & direkonsiliasi, nol selisih rupiah di seluruh siklus tertutup (lihat "Catatan pengerjaan") |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **68** | **56** | |
+| **Total MVP** | **68** | **64** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -696,49 +696,124 @@ BENAR-BENAR punya saat skrip ditulis, bukan rentang tanggal yang diasumsikan
 penuh — tiap tugas di bawah boleh mencakup sebagian data saja kalau itu yang
 tersedia.
 
-⚠ **Gerbang data:** seluruh tugas di bawah butuh data historis sungguhan
-dari pemilik (isi keempat spreadsheet) sebelum bisa dikerjakan. Belum ada
-satu pun data itu di repositori ini — hanya contoh ilustrasi tersebar di
-`MANUAL_PROCESS_ANALYSIS.md`/`AGENT_CONTEXT.md` (dipakai sebagai kasus uji
-rumus, bukan dataset historis lengkap). Jangan mengarang angka di sini —
-langsung bertentangan dengan prinsip inti proyek (lihat `.claude/CLAUDE.md`
-bagian "Kalau terhambat").
+✅ **Gerbang data terpenuhi (11 September 2026):** pemilik mengonfirmasi
+kelima spreadsheet bisa diakses langsung lewat konektor Google Drive.
+Seluruh data nyata (Anggaran 2026, `bulanan`, `Pencatatan jam kerja
+(Responses)`, `Tokopedia Card Transaction`, `BRI Touch Transaction`) dibaca
+dan diimpor — lihat "Catatan pengerjaan" di bawah untuk keputusan cakupan
+dan hasil rekonsiliasinya.
 
-- [ ] **T-6.1** Susun berkas seed dari data spreadsheet yang pemilik
-      sediakan. Format berkas (JSON/lainnya) ditentukan saat data diterima,
-      mengikuti bentuk entitas yang sudah ada (`MonthlyCycle`, `WorkLogEntry`,
-      `CardStatement`, `Goal`, `GoalLoan`) — bukan format baru.
-- [ ] **T-6.2** Tulis `tool/seed_import.dart`: skrip Dart berdiri sendiri
-      (`dart run tool/seed_import.dart`) yang membaca berkas seed (T-6.1) dan
-      menulis langsung lewat repository tiap fitur ke `KeyValueStorage` yang
-      sama yang dibaca aplikasi sungguhan — bukan lewat UI, bukan bagian
-      `lib/`. Boleh memanggil beberapa fitur sekaligus (lihat catatan revisi
-      ADR-0009 soal pengecualian isolasi fitur untuk skrip ini).
-- [ ] **T-6.3** Muat siklus bulanan beserta baris pemasukan dan anggarannya,
-      untuk bagian yang datanya disediakan.
+- [x] **T-6.1** Susun berkas seed dari data spreadsheet yang pemilik
+      sediakan. Format: `tool/seed_data.json`, nominal dalam Rupiah penuh
+      (bukan sen — dikonversi oleh skrip), mengikuti bentuk entitas yang
+      sudah ada (`MonthlyCycle`, `WorkLogEntry`, `CardStatement`, `Goal`) —
+      bukan format baru.
+- [x] **T-6.2** Tulis `tool/seed_import.dart`: skrip Dart berdiri sendiri
+      (`dart run tool/seed_import.dart --db-path <folder>`) yang membaca
+      `tool/seed_data.json` dan menulis langsung lewat repository tiap fitur
+      ke `KeyValueStorage` yang sama yang dibaca aplikasi sungguhan — bukan
+      lewat UI, bukan bagian `lib/`. Memanggil beberapa fitur sekaligus
+      (lihat catatan revisi ADR-0009 soal pengecualian isolasi fitur untuk
+      skrip ini).
+      ⚠ **Kendala teknis yang ditemukan saat menulis skrip ini**:
+      `HiveKeyValueStorage.initialize()` (package `hive_storage`) memanggil
+      `Hive.initFlutter()`, yang butuh `WidgetsFlutterBinding` dan
+      `path_provider` — tidak tersedia di proses `dart run` murni. Diatasi
+      dengan menambah `hive_ce` (varian murni-Dart dari Hive, sudah jadi
+      dependensi transitif lewat `hive_storage`) sebagai `dev_dependency`
+      eksplisit, dan skrip membuka `Box<String>` bernama sama (`saldough_kv`)
+      lewat `Hive.init()` biasa — BUKAN `initFlutter()` — pada path yang
+      diberikan lewat `--db-path`. Untuk data sungguhan, `--db-path` harus
+      menunjuk folder dokumen aplikasi nyata di perangkat pemilik.
+- [x] **T-6.3** Muat siklus bulanan beserta baris pemasukan dan anggarannya.
+      **10 siklus lengkap, Januari–Oktober 2026** (bukan rentang yang
+      diasumsikan semula).
       Memenuhi FR-SEED-001.
-- [ ] **T-6.4** Muat riwayat jam kerja dan buku jamnya, untuk bagian yang
-      datanya disediakan.
+- [x] **T-6.4** Muat riwayat jam kerja dan buku jamnya. **14 buku jam nyata**,
+      Mei 2025–September 2026.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.5** Muat riwayat transaksi kartu kredit per siklus, untuk bagian
-      yang datanya disediakan.
+- [x] **T-6.5** Muat riwayat transaksi kartu kredit per siklus. **15 statement
+      Tokopedia nyata** (Juni 2025–September 2026, termasuk satu yang masih
+      terbuka). Kartu BRI Touch **sengaja dilewati** — lihat "Catatan
+      pengerjaan".
       Memenuhi FR-SEED-001.
-- [ ] **T-6.6** Muat pos tujuan beserta saldo awalnya (seed: 0 untuk semua
-      pos, sesuai jawaban pemilik), untuk bagian yang datanya disediakan.
+- [x] **T-6.6** Muat pos tujuan beserta saldo awalnya (seed: 0 untuk semua
+      pos, sesuai jawaban pemilik). **6 pos**: ANAK, RUMAH, PENSIUN, SEKOLAH,
+      KYOTO, SAHAM.
       Memenuhi FR-SEED-001.
-- [ ] **T-6.7** Untuk pinjaman historis yang pos-nya belum terdaftar sebagai
-      `Goal` (contoh nyata: "Travel To Japan", "Kuliah tata") — daftarkan
-      keduanya sebagai `Goal` baru (`openingBalance` 0) sebelum mengimpor
-      transaksi `GoalLoan`-nya. Kalau pemilik tidak mau melacaknya formal,
-      lewati baris pinjaman itu dan catat di bagian "Catatan pengerjaan" di
-      bawah.
+- [x] **T-6.7** Untuk pinjaman historis yang pos-nya belum terdaftar sebagai
+      `Goal` (pokok Rp9.300.000 dari "Travel To Japan" ke "Kuliah tata",
+      dikembalikan Rp9.331.000) — **pemilik memilih tidak melacaknya secara
+      formal, baris ini dilewati sepenuhnya** (tidak didaftarkan sebagai
+      `Goal`, tidak diimpor sebagai `GoalLoan`).
       Memenuhi FR-SEED-001.
-- [ ] **T-6.8** Bandingkan hasil hitung terhadap spreadsheet asli untuk
+- [x] **T-6.8** Bandingkan hasil hitung terhadap spreadsheet asli untuk
       seluruh bagian yang diimpor, dan pastikan tidak ada selisih rupiah.
-      ⚠ Ini pembuktian menyeluruh untuk data yang diimpor. Kalau ada
-      selisih, cari akarnya di aturan pembulatan sebelum mengubah apa pun
-      yang lain.
+      **Seluruh 9 siklus tertutup (2026-01 s/d 2026-09) cocok persis, nol
+      selisih rupiah** (diverifikasi otomatis lewat `--dry-run`, lihat
+      "Catatan pengerjaan" untuk penjelasan siklus terbuka 2026-10).
       Memenuhi FR-SEED-001 dan NFR-ACC-002.
+
+## Catatan pengerjaan (Fase 6)
+
+**11 September 2026** — Pemilik mengonfirmasi akses Google Drive langsung
+ke kelima spreadsheet, menggantikan asumsi sebelumnya ("belum ada data sama
+sekali"). Keputusan cakupan (lewat `AskUserQuestion`, dijawab pemilik):
+
+- **Semua siklus yang ada diimpor** — ternyata 10 blok berurutan di
+  `Anggaran 2026` (Januari–Oktober 2026), bukan 9 seperti hitungan awal
+  (tersalah hitung karena blok "Kos juli - agustus" dan blok "Kos agustus -
+  september" pertama sempat dikira satu blok yang sama). Blok terakhir
+  (sisa Rp6.689.763, belum ada alokasi investasi) dikonfirmasi pemilik =
+  **Oktober 2026**, cycle yang sedang terbuka saat ini.
+- **Kartu BRI Touch dilewati sepenuhnya** — nilainya `Rp0` di semua 10
+  siklus dan transaksi nyata terakhirnya Mei 2025 (kartu sudah tidak
+  aktif). Tidak ada `CreditCard`/`CardStatement` untuk kartu ini.
+- **Pinjaman "Travel To Japan" → "Kuliah tata" dilewati** sesuai jawaban
+  pemilik di T-6.7 — tidak didaftarkan sebagai `Goal`, tidak diimpor.
+
+**Penemuan penting — label `Kos agustus - september` terbawa TIGA siklus
+berturut-turut** (2026-08, 2026-09, 2026-10), bukan dua seperti disangka
+saat pertama membaca data — persis cerita asal US-02 ("terbawa tiga bulan
+berturut-turut tanpa terdeteksi"). Siklus 2026-09 dan 2026-10 diimpor
+dengan `needsReview: true` pada baris Kos-nya; siklus 2026-08 tidak (label
+itu masih benar untuk bulan itu).
+
+**Siklus 2026-10 (terbuka) sengaja TIDAK cocok dengan angka stale di
+Anggaran** — ini bukan selisih yang perlu diperbaiki, tapi bukti fitur
+roll-up bekerja: baris "bulanan" dan "CC TOKPED" di siklus terbuka dihitung
+ULANG live dari `GroceryPlan`/`CardStatement` yang sebenarnya (ADR-0008),
+bukan dari angka yang pemilik ketik manual di Anggaran kapan pun terakhir
+kali dia buka sheet itu. Diverifikasi lewat `--dry-run`:
+CC TOKPED live = Rp382.000 (cocok dengan Anggaran, tidak ada selisih).
+Bulanan live = **Rp3.219.700** (Anggaran bilang Rp3.150.000) — bukan cuma
+beda karena sheet tidak live-link, tapi karena subtotal **mingguan** di
+spreadsheet `bulanan` itu SENDIRI sudah basi (Rp576.600) terhadap daftar
+item yang sekarang (Rp614.400 — dua item, "alpukat" dan "bawang mix",
+ditambahkan setelah totalnya terakhir dihitung manual). Pola yang sama
+persis dengan bug label Kos, ditemukan di spreadsheet yang berbeda — bukti
+tambahan kenapa roll-up otomatis (bukan ketik ulang manual) adalah inti
+produk ini.
+
+Seluruh 9 siklus TERTUTUP (2026-01–2026-09) cocok **persis, nol selisih
+rupiah**, termasuk kasus pembulatan pajak 2,5% (contoh: Rp3.117.500 × 2,5%
+= Rp77.937,50 → dibulatkan setengah ke atas → Rp77.938, sama dengan
+Anggaran). Dengan data seed sekarang tersedia, `T-2.12` (pengukuran
+performa di perangkat kelas menengah) bisa mulai dikerjakan pemilik —
+masih menunggu pengukuran nyata di perangkatnya, tidak dikerjakan di sini.
+
+Buku jam: 5 dari 14 buku bisa dipastikan menyuntik ke siklus tertentu lewat
+kecocokan persis `jam × Rp72.500` dengan Gaji Kotor di Anggaran (2026-05,
+2026-07, 2026-08, 2026-09, 2026-10). Sisanya diimpor apa adanya (entri
+harian nyata) tapi tanpa `injectedCycleId` karena tarif historisnya tidak
+cocok persis Rp72.500 (kemungkinan tarif berbeda di masa itu) — lihat
+catatan per-buku di `tool/seed_data.json`.
+
+`tool/seed_data.json` dan `tool/seed_import.dart` TIDAK dijalankan terhadap
+data aplikasi sungguhan pemilik dari sesi ini (tidak ada akses ke perangkat
+pemilik) — hanya diverifikasi lewat `--dry-run` ke folder sementara.
+Pemilik perlu menjalankan `dart run tool/seed_import.dart --db-path
+<folder_data_app_sungguhan>` sendiri sebelum memakai aplikasi sehari-hari.
 
 ## Fase 7: Sinkronisasi
 

@@ -1,0 +1,693 @@
+{
+  "_comment": "Data historis nyata pemilik, diimpor 11 September 2026 dari Google Sheets (Anggaran 2026, bulanan, Pencatatan jam kerja (Responses), Tokopedia Card Transaction). Seluruh nominal di sini dalam RUPIAH PENUH (bukan sen) - seed_import.dart mengonversi ke sen (x100) saat menulis entity. Kartu BRI Touch dan pinjaman 'Travel To Japan'->'Kuliah tata' SENGAJA dilewati atas keputusan pemilik (lihat docs/04-planning/TASK_LIST.md Fase 6).",
+
+  "incomeSources": [
+    {
+      "id": "gaji-menul",
+      "name": "Gaji Menul",
+      "kind": "hourlyFreelance",
+      "hourlyRateRupiah": 72500,
+      "deductionRules": [
+        {"id": "pajak", "label": "Pajak", "kind": "percentage", "value": 25}
+      ]
+    },
+    {
+      "id": "gaji-koko",
+      "name": "Gaji Koko",
+      "kind": "fixedSalary",
+      "fixedAmountRupiah": 12800000
+    }
+  ],
+
+  "goals": [
+    {"id": "anak", "name": "ANAK", "openingBalanceRupiah": 0},
+    {"id": "rumah", "name": "RUMAH", "openingBalanceRupiah": 0},
+    {"id": "pensiun", "name": "PENSIUN", "openingBalanceRupiah": 0},
+    {"id": "sekolah", "name": "SEKOLAH", "openingBalanceRupiah": 0},
+    {"id": "kyoto", "name": "KYOTO", "openingBalanceRupiah": 0},
+    {"id": "saham", "name": "SAHAM", "openingBalanceRupiah": 0}
+  ],
+
+  "cards": [
+    {"id": "tokped", "name": "Tokopedia", "statementDayOfMonth": 15}
+  ],
+
+  "_cardStatementsComment": "16 periode nyata kartu Tokopedia, Juni 2025-September 2026 (ongoing). periodStart/periodEnd mengikuti aturan statementDayOfMonth=15 (16 bulan lalu s/d 15 bulan ini); yang terakhir (open) belum punya periodEnd pasti karena belum ditutup. Transaksi apa adanya dari spreadsheet.",
+  "cardStatements": {
+    "tokped": [
+      {
+        "periodStart": "2025-06-16", "periodEnd": "2025-06-15",
+        "_note": "partial tertua di spreadsheet, sebelum 16 Juni - dibiarkan apa adanya",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-06-11T10:15:00", "merchant": "PT Tokopedia Jakarta - Botol & Sambal", "amountRupiah": 183914},
+          {"date": "2025-06-12T10:18:00", "merchant": "PT Tokopedia Jakarta - Kirim paspor", "amountRupiah": 92100}
+        ]
+      },
+      {
+        "periodStart": "2025-05-16", "periodEnd": "2025-06-15",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-06-15T10:20:00", "merchant": "PT Tokopedia Jakarta - Blackmore", "amountRupiah": 295920},
+          {"date": "2025-06-21T20:33:00", "merchant": "ALFAMIDI JAKARTA SELATID", "amountRupiah": 143600},
+          {"date": "2025-06-22T10:33:00", "merchant": "SHELL KEMANG RAYA-1 HO JAKARTA SLT ID", "amountRupiah": 39213},
+          {"date": "2025-06-22T18:15:00", "merchant": "PT Tokopedia ***09 ID - Pakaian dalam", "amountRupiah": 52949},
+          {"date": "2025-06-28T08:53:00", "merchant": "PT Tokopedia ***09 ID - listrik (sudah ada di jago tagihan CC)", "amountRupiah": 203100},
+          {"date": "2025-07-03T15:51:00", "merchant": "PT Tokopedia ***09 ID - selimut", "amountRupiah": 54500},
+          {"date": "2025-07-06T20:07:00", "merchant": "ALFAMIDI JAKARTA SELATID (sudah ada di jago tagihan CC)", "amountRupiah": 192600},
+          {"date": "2025-07-08T19:44:00", "merchant": "10454 GRAMEDIA PEJATEN JAKARTA ID", "amountRupiah": 160000},
+          {"date": "2025-07-08T20:13:00", "merchant": "CHATIME JAKARTA SELATID", "amountRupiah": 62000}
+        ]
+      },
+      {
+        "periodStart": "2025-06-16", "periodEnd": "2025-07-15",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-07-25T10:47:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 255845},
+          {"date": "2025-07-26T21:39:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 141350},
+          {"date": "2025-08-02T17:28:00", "merchant": "Netflix", "amountRupiah": 65000},
+          {"date": "2025-08-02T17:28:00", "merchant": "Tokopedia Kacamata", "amountRupiah": 71300}
+        ]
+      },
+      {
+        "periodStart": "2025-07-16", "periodEnd": "2025-08-15",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-08-23T16:40:00", "merchant": "TOKO MARIO JAKARTA SLT ID", "amountRupiah": 360000},
+          {"date": "2025-08-27T16:40:00", "merchant": "Listrik", "amountRupiah": 102000},
+          {"date": "2025-08-28T21:29:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 263126},
+          {"date": "2025-09-02T08:00:00", "merchant": "Netflix", "amountRupiah": 65000}
+        ]
+      },
+      {
+        "periodStart": "2025-08-16", "periodEnd": "2025-09-15",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-09-22T20:12:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 63558},
+          {"date": "2025-09-26T19:08:00", "merchant": "KLINIK KF. 0581 BANGKA Jakarta SelatID", "amountRupiah": 220000},
+          {"date": "2025-09-27T09:17:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 203100},
+          {"date": "2025-10-02T07:41:00", "merchant": "Netflix.com Los Gatos SG", "amountRupiah": 65000},
+          {"date": "2025-10-10T20:33:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 332520}
+        ]
+      },
+      {
+        "periodStart": "2025-09-16", "periodEnd": "2025-10-15",
+        "closed": true,
+        "transactions": [
+          {"date": "2025-10-16T19:20:00", "merchant": "PT Tokopedia ***09 ID", "amountRupiah": 120700},
+          {"date": "2025-10-25T00:00:00", "merchant": "Tokoped nescafe", "amountRupiah": 96797},
+          {"date": "2025-11-02T00:00:00", "merchant": "Netflix", "amountRupiah": 65000},
+          {"date": "2025-11-02T00:00:00", "merchant": "Udon", "amountRupiah": 276000},
+          {"date": "2025-11-08T00:00:00", "merchant": "Tokped vitamin & kripik", "amountRupiah": 350000}
+        ]
+      },
+      {
+        "periodStart": "2025-10-16", "periodEnd": "2025-11-15",
+        "closed": true,
+        "_feedsCycle": "2026-01",
+        "transactions": [
+          {"date": "2025-11-21T18:22:00", "merchant": "PT Tokopedia", "amountRupiah": 382750},
+          {"date": "2025-12-02T20:19:00", "merchant": "OH MY GRILL KEMANG-HO", "amountRupiah": 238000},
+          {"date": "2025-12-02T07:19:00", "merchant": "Netflix.com Los Gatos SG", "amountRupiah": 65000},
+          {"date": "2025-12-09T07:19:00", "merchant": "Bayi", "amountRupiah": 1506000}
+        ]
+      },
+      {
+        "periodStart": "2025-11-16", "periodEnd": "2025-12-15",
+        "closed": true,
+        "_feedsCycle": "2026-02",
+        "transactions": [
+          {"date": "2025-12-20T16:00:00", "merchant": "PT Tokopedia", "amountRupiah": 417066},
+          {"date": "2025-12-24T12:45:00", "merchant": "SHOPEE", "amountRupiah": 210000},
+          {"date": "2025-12-24T20:12:00", "merchant": "JIROKU RAMEN MELAWAI", "amountRupiah": 429000},
+          {"date": "2025-12-24T21:13:00", "merchant": "FARMERS FAMILY 2144 BLOK", "amountRupiah": 112400},
+          {"date": "2025-12-25T19:58:00", "merchant": "PT Tokopedia", "amountRupiah": 79830},
+          {"date": "2026-01-02T07:13:00", "merchant": "NETFLIX.COM", "amountRupiah": 65000},
+          {"date": "2026-01-03T14:08:00", "merchant": "PT Tokopedia", "amountRupiah": 237200}
+        ]
+      },
+      {
+        "periodStart": "2026-01-16", "periodEnd": "2026-02-15",
+        "closed": true,
+        "_feedsCycle": "2026-03",
+        "transactions": [
+          {"date": "2026-02-02T11:27:00", "merchant": "Netflix", "amountRupiah": 65000},
+          {"date": "2026-02-08T11:27:00", "merchant": "Claude AI", "amountRupiah": 337760},
+          {"date": "2026-02-13T11:27:00", "merchant": "PT Tokopedia", "amountRupiah": 112200},
+          {"date": "2026-02-13T19:36:00", "merchant": "PT Tokopedia", "amountRupiah": 84750},
+          {"date": "2026-02-14T20:30:00", "merchant": "PT Tokopedia", "amountRupiah": 85000}
+        ]
+      },
+      {
+        "periodStart": "2026-02-16", "periodEnd": "2026-03-15",
+        "_note": "Tidak ada data detail di spreadsheet untuk periode ini ('invalid'). Total historisnya tetap dicatat di BudgetLine siklus 2026-05 (Rp486.700) meski statement-nya tidak diimpor di sini.",
+        "closed": false,
+        "skip": true,
+        "transactions": []
+      },
+      {
+        "periodStart": "2026-02-15", "periodEnd": "2026-03-14",
+        "_note": "tanggal di spreadsheet mulai 4 Maret, sedikit di luar pola 16-15 biasa - dicatat apa adanya",
+        "closed": true,
+        "_feedsCycle": "2026-04",
+        "transactions": [
+          {"date": "2026-03-04T20:09:00", "merchant": "PT Tokopedia", "amountRupiah": 646542},
+          {"date": "2026-03-06T20:38:00", "merchant": "PT Tokopedia", "amountRupiah": 398900},
+          {"date": "2026-03-14T13:28:00", "merchant": "MTI MDS MU KU BLOK M", "amountRupiah": 552800},
+          {"date": "2026-03-14T14:24:00", "merchant": "MTI MDS MU KU BLOK M", "amountRupiah": 199000},
+          {"date": "2026-03-14T15:21:00", "merchant": "FLADEOSHOES BLKM3", "amountRupiah": 230800},
+          {"date": "2026-03-14T15:31:00", "merchant": "WIN WIN FASHION", "amountRupiah": 134000}
+        ]
+      },
+      {
+        "periodStart": "2026-04-16", "periodEnd": "2026-05-15",
+        "closed": true,
+        "_feedsCycle": "2026-06",
+        "transactions": [
+          {"date": "2026-04-20T20:09:00", "merchant": "Github copilot", "amountRupiah": 171930},
+          {"date": "2026-04-28T17:43:00", "merchant": "PT Tokopedia", "amountRupiah": 269400},
+          {"date": "2026-05-01T23:51:00", "merchant": "NETFLIX.COM", "amountRupiah": 65000}
+        ]
+      },
+      {
+        "periodStart": "2026-05-16", "periodEnd": "2026-06-15",
+        "_note": "tanggal transaksi sedikit melebar ke 19 Mei, dicatat apa adanya dari spreadsheet",
+        "closed": true,
+        "_feedsCycle": "2026-07",
+        "transactions": [
+          {"date": "2026-05-19T20:09:00", "merchant": "Github copilot", "amountRupiah": 176690},
+          {"date": "2026-05-27T22:01:00", "merchant": "PT Tokopedia", "amountRupiah": 437700},
+          {"date": "2026-06-01T11:11:00", "merchant": "PT Tokopedia", "amountRupiah": 1043882},
+          {"date": "2026-06-01T22:57:00", "merchant": "Netflix.com", "amountRupiah": 65000}
+        ]
+      },
+      {
+        "periodStart": "2026-06-16", "periodEnd": "2026-07-15",
+        "closed": true,
+        "_feedsCycle": "2026-08",
+        "transactions": [
+          {"date": "2026-06-24T15:00:00", "merchant": "Claude code", "amountRupiah": 357440},
+          {"date": "2026-06-27T12:17:00", "merchant": "STEAMGAMES.COM ***1234", "amountRupiah": 202484},
+          {"date": "2026-07-01T22:36:00", "merchant": "Netflix.com", "amountRupiah": 65000},
+          {"date": "2026-07-12T18:20:00", "merchant": "GOJEK", "amountRupiah": 1000},
+          {"date": "2026-07-13T09:28:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 8895},
+          {"date": "2026-07-13T13:11:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 9000},
+          {"date": "2026-07-13T19:48:00", "merchant": "PT Tokopedia cicilan 1", "amountRupiah": 343279},
+          {"date": "2026-07-13T19:48:00", "merchant": "ulanzi tripod canceled?", "amountRupiah": 273090}
+        ]
+      },
+      {
+        "periodStart": "2026-07-16", "periodEnd": "2026-08-15",
+        "closed": true,
+        "_feedsCycle": "2026-09",
+        "transactions": [
+          {"date": "2026-07-16T17:30:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 9000},
+          {"date": "2026-07-16T20:46:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 23000},
+          {"date": "2026-07-16T20:46:00", "merchant": "TOKOPEDIA ULANZI MT-44B", "amountRupiah": 272845},
+          {"date": "2026-07-22T10:00:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 500},
+          {"date": "2026-07-22T10:13:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 9000},
+          {"date": "2026-07-22T10:13:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 9000},
+          {"date": "2026-07-24T08:00:00", "merchant": "Claude ai", "amountRupiah": 358600},
+          {"date": "2026-07-26T08:14:00", "merchant": "PT Tokopedia", "amountRupiah": 65436},
+          {"date": "2026-08-01T22:35:00", "merchant": "Netflix.com", "amountRupiah": 65000},
+          {"date": "2026-08-02T22:35:00", "merchant": "baju kodok", "amountRupiah": 108156},
+          {"date": "2026-08-08T17:58:00", "merchant": "WL *STEAM PURCHASE", "amountRupiah": 61700},
+          {"date": "2026-08-08T17:58:00", "merchant": "Tokopedia", "amountRupiah": 343279},
+          {"date": "2026-08-08T17:58:00", "merchant": "e statement", "amountRupiah": 5000},
+          {"date": "2026-08-08T17:58:00", "merchant": "chatime", "amountRupiah": 56000}
+        ]
+      },
+      {
+        "periodStart": "2026-08-16", "periodEnd": "2026-09-15",
+        "_note": "periode masih berjalan (open) per 11 September 2026 - BELUM ditutup",
+        "closed": false,
+        "_feedsCycle": "2026-10",
+        "transactions": [
+          {"date": "2026-08-21T15:04:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 9000},
+          {"date": "2026-08-25T13:45:00", "merchant": "SHOPEE", "amountRupiah": 210000},
+          {"date": "2026-09-01T23:38:00", "merchant": "Netflix.com", "amountRupiah": 65000},
+          {"date": "2026-09-05T15:07:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 31500},
+          {"date": "2026-09-06T07:14:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 35000},
+          {"date": "2026-09-06T10:33:00", "merchant": "GOJEK RECURRING NON3DS", "amountRupiah": 31500}
+        ]
+      }
+    ]
+  },
+
+  "_groceryPlanComment": "Rencana belanja LIVE saat ini (spreadsheet 'bulanan', per 11 September 2026). Ini bukan snapshot historis per-siklus - hanya ada SATU GroceryPlan tersimpan, dibaca live oleh siklus yang masih terbuka (2026-10). Nilai 'harga ditimpa' (amountOverride) dipakai utk 2 item yang harga jadi-nya beda dari jumlah x harga satuan (sampo, Popok).",
+  "groceryPlan": {
+    "weeksPerMonth": 4,
+    "weeklyItems": [
+      {"id": "w-ikan-kembung", "name": "Ikan kembung (astro)", "quantity": 2, "unitPriceRupiah": 31700},
+      {"id": "w-dada-ayam", "name": "Dada ayam (astro)", "quantity": 2, "unitPriceRupiah": 32500},
+      {"id": "w-udang", "name": "udang", "quantity": 2, "unitPriceRupiah": 35200},
+      {"id": "w-tempe", "name": "Tempe", "quantity": 2, "unitPriceRupiah": 8600},
+      {"id": "w-buncis", "name": "Buncis", "quantity": 1, "unitPriceRupiah": 9000},
+      {"id": "w-egg-tofu", "name": "egg tofu", "quantity": 3, "unitPriceRupiah": 9700},
+      {"id": "w-brokoli", "name": "Brokoli", "quantity": 2, "unitPriceRupiah": 25100},
+      {"id": "w-wortel", "name": "Wortel", "quantity": 2, "unitPriceRupiah": 17600},
+      {"id": "w-telur-30", "name": "telur 30 butir", "quantity": 1, "unitPriceRupiah": 58800},
+      {"id": "w-pepaya", "name": "pepaya", "quantity": 1, "unitPriceRupiah": 21700},
+      {"id": "w-edamame", "name": "EDAMAME", "quantity": 1, "unitPriceRupiah": 22500},
+      {"id": "w-skm", "name": "SKM", "quantity": 1, "unitPriceRupiah": 24900},
+      {"id": "w-kopi", "name": "Kopi", "quantity": 1, "unitPriceRupiah": 56400},
+      {"id": "w-air-mineral", "name": "air mineral", "quantity": 1, "unitPriceRupiah": 21000},
+      {"id": "w-santan", "name": "santan", "quantity": 2, "unitPriceRupiah": 15900},
+      {"id": "w-alpukat", "name": "alpukat", "quantity": 1, "unitPriceRupiah": 21100},
+      {"id": "w-bawang-mix", "name": "bawang mix", "quantity": 1, "unitPriceRupiah": 16700}
+    ],
+    "monthlyItems": [
+      {"id": "m-jeruk", "name": "Jeruk", "quantity": 1, "unitPriceRupiah": 35100},
+      {"id": "m-beras", "name": "beras", "quantity": 2, "unitPriceRupiah": 80800},
+      {"id": "m-saos-sambal", "name": "saos sambal", "quantity": 1, "unitPriceRupiah": 15200},
+      {"id": "m-susu-uht", "name": "susu uht", "quantity": 2, "unitPriceRupiah": 24000},
+      {"id": "m-sampo", "name": "sampo", "quantity": 1, "unitPriceRupiah": 41300, "amountOverrideRupiah": 24000},
+      {"id": "m-minyak-goreng", "name": "minyak goreng", "quantity": 1, "unitPriceRupiah": 24400},
+      {"id": "m-puff-pastry", "name": "puff pastry", "quantity": 1, "unitPriceRupiah": 50800},
+      {"id": "m-mixed-berry", "name": "Mixed Berry", "quantity": 1, "unitPriceRupiah": 40500},
+      {"id": "m-golden-field", "name": "golden field choco Crunchy", "quantity": 1, "unitPriceRupiah": 63200},
+      {"id": "m-sabun", "name": "sabun", "quantity": 1, "unitPriceRupiah": 45100},
+      {"id": "m-tisu-basah", "name": "tisu basah", "quantity": 3, "unitPriceRupiah": 8100},
+      {"id": "m-oat", "name": "oat", "quantity": 1, "unitPriceRupiah": 38400},
+      {"id": "m-telur-asin", "name": "telur asin matang", "quantity": 1, "unitPriceRupiah": 22200},
+      {"id": "m-nutrijell", "name": "nutrijell cincau", "quantity": 2, "unitPriceRupiah": 6400},
+      {"id": "m-nata-decoco", "name": "nata the coco", "quantity": 1, "unitPriceRupiah": 22500},
+      {"id": "m-popok", "name": "Popok", "quantity": 1, "unitPriceRupiah": 180000, "amountOverrideRupiah": 22500},
+      {"id": "m-bensin", "name": "Bensin", "quantity": 1, "unitPriceRupiah": 100000},
+      {"id": "m-masako", "name": "Masako", "quantity": 1, "unitPriceRupiah": 11500}
+    ]
+  },
+
+  "_worklogComment": "14 buku jam (BillingBook) nyata dari rekap spreadsheet 'Pencatatan jam kerja (Responses)'. Hanya 5 yang bisa dipastikan menyuntik ke siklus tertentu (cocok persis lewat Gaji Kotor = jam x Rp72.500): lihat injectedCycleId. Sisanya TETAP diimpor apa adanya (entri harian nyata) tapi TIDAK diberi injectedCycleId karena tarif historisnya tidak cocok persis dengan Rp72.500 (kemungkinan tarif berbeda di masa itu) - netPayAmountRupiah untuk buku-buku ini dihitung otomatis oleh seed_import.dart lewat CalculateNetPay (rumus nyata, bukan tebakan), bukan diketik manual.",
+  "worklog": {
+    "gaji-menul": [
+      {
+        "id": "book-2025-06a",
+        "startDate": "2025-05-30", "endDate": "2025-06-25",
+        "entries": [
+          {"date": "2025-05-30", "hours": 5}, {"date": "2025-05-31", "hours": 6}, {"date": "2025-06-01", "hours": 7},
+          {"date": "2025-06-02", "hours": 8}, {"date": "2025-06-03", "hours": 5}, {"date": "2025-06-04", "hours": 4},
+          {"date": "2025-06-08", "hours": 4}, {"date": "2025-06-09", "hours": 6}, {"date": "2025-06-10", "hours": 3},
+          {"date": "2025-06-11", "hours": 5}, {"date": "2025-06-13", "hours": 4}, {"date": "2025-06-14", "hours": 5},
+          {"date": "2025-06-15", "hours": 5}, {"date": "2025-06-16", "hours": 9}, {"date": "2025-06-17", "hours": 8},
+          {"date": "2025-06-18", "hours": 5}, {"date": "2025-06-20", "hours": 2}, {"date": "2025-06-21", "hours": 6},
+          {"date": "2025-06-22", "hours": 6}, {"date": "2025-06-23", "hours": 9}, {"date": "2025-06-24", "hours": 8},
+          {"date": "2025-06-25", "hours": 5}
+        ]
+      },
+      {
+        "id": "book-2025-06b",
+        "startDate": "2025-06-28", "endDate": "2025-07-28",
+        "entries": [
+          {"date": "2025-06-28", "hours": 5, "startsNewBook": true}, {"date": "2025-06-29", "hours": 6}, {"date": "2025-06-30", "hours": 6},
+          {"date": "2025-07-01", "hours": 5}, {"date": "2025-07-02", "hours": 4}, {"date": "2025-07-04", "hours": 3},
+          {"date": "2025-07-05", "hours": 6}, {"date": "2025-07-06", "hours": 7}, {"date": "2025-07-07", "hours": 7},
+          {"date": "2025-07-08", "hours": 3}, {"date": "2025-07-09", "hours": 5}, {"date": "2025-07-11", "hours": 3},
+          {"date": "2025-07-12", "hours": 4}, {"date": "2025-07-13", "hours": 5}, {"date": "2025-07-14", "hours": 6},
+          {"date": "2025-07-15", "hours": 6}, {"date": "2025-07-16", "hours": 5}, {"date": "2025-07-18", "hours": 2},
+          {"date": "2025-07-19", "hours": 5}, {"date": "2025-07-20", "hours": 3}, {"date": "2025-07-21", "hours": 5},
+          {"date": "2025-07-22", "hours": 3}, {"date": "2025-07-23", "hours": 6}, {"date": "2025-07-25", "hours": 2},
+          {"date": "2025-07-26", "hours": 4}, {"date": "2025-07-27", "hours": 6}, {"date": "2025-07-28", "hours": 6}
+        ]
+      },
+      {
+        "id": "book-2025-08a",
+        "startDate": "2025-08-01", "endDate": "2025-08-27",
+        "entries": [
+          {"date": "2025-08-01", "hours": 5, "startsNewBook": true}, {"date": "2025-08-02", "hours": 5}, {"date": "2025-08-03", "hours": 7},
+          {"date": "2025-08-04", "hours": 7}, {"date": "2025-08-06", "hours": 6}, {"date": "2025-08-08", "hours": 4},
+          {"date": "2025-08-09", "hours": 6}, {"date": "2025-08-10", "hours": 6}, {"date": "2025-08-11", "hours": 3},
+          {"date": "2025-08-12", "hours": 5}, {"date": "2025-08-13", "hours": 7}, {"date": "2025-08-15", "hours": 1},
+          {"date": "2025-08-16", "hours": 4}, {"date": "2025-08-18", "hours": 3}, {"date": "2025-08-19", "hours": 5},
+          {"date": "2025-08-20", "hours": 4}, {"date": "2025-08-22", "hours": 0}, {"date": "2025-08-23", "hours": 6},
+          {"date": "2025-08-24", "hours": 8}, {"date": "2025-08-25", "hours": 5}, {"date": "2025-08-26", "hours": 6},
+          {"date": "2025-08-27", "hours": 5}
+        ]
+      },
+      {
+        "id": "book-2025-08b",
+        "startDate": "2025-08-29", "endDate": "2025-09-27",
+        "entries": [
+          {"date": "2025-08-29", "hours": 4, "startsNewBook": true}, {"date": "2025-08-31", "hours": 6},
+          {"date": "2025-09-01", "hours": 6}, {"date": "2025-09-02", "hours": 4}, {"date": "2025-09-03", "hours": 1},
+          {"date": "2025-09-08", "hours": 8}, {"date": "2025-09-09", "hours": 7}, {"date": "2025-09-10", "hours": 4},
+          {"date": "2025-09-12", "hours": 5}, {"date": "2025-09-13", "hours": 6}, {"date": "2025-09-14", "hours": 6},
+          {"date": "2025-09-15", "hours": 5}, {"date": "2025-09-16", "hours": 4}, {"date": "2025-09-17", "hours": 6},
+          {"date": "2025-09-19", "hours": 4}, {"date": "2025-09-20", "hours": 6}, {"date": "2025-09-21", "hours": 7},
+          {"date": "2025-09-22", "hours": 5}, {"date": "2025-09-23", "hours": 2}, {"date": "2025-09-27", "hours": 4}
+        ]
+      },
+      {
+        "id": "book-2025-10a",
+        "startDate": "2025-10-01", "endDate": "2025-10-28",
+        "entries": [
+          {"date": "2025-10-01", "hours": 5, "startsNewBook": true}, {"date": "2025-10-03", "hours": 2}, {"date": "2025-10-04", "hours": 3},
+          {"date": "2025-10-05", "hours": 5}, {"date": "2025-10-06", "hours": 3}, {"date": "2025-10-07", "hours": 5},
+          {"date": "2025-10-08", "hours": 4}, {"date": "2025-10-10", "hours": 2}, {"date": "2025-10-11", "hours": 4},
+          {"date": "2025-10-12", "hours": 7}, {"date": "2025-10-13", "hours": 3}, {"date": "2025-10-14", "hours": 5},
+          {"date": "2025-10-15", "hours": 4}, {"date": "2025-10-17", "hours": 3}, {"date": "2025-10-18", "hours": 2},
+          {"date": "2025-10-19", "hours": 7}, {"date": "2025-10-20", "hours": 5}, {"date": "2025-10-21", "hours": 4},
+          {"date": "2025-10-22", "hours": 2}, {"date": "2025-10-24", "hours": 4}, {"date": "2025-10-25", "hours": 6},
+          {"date": "2025-10-26", "hours": 6}, {"date": "2025-10-27", "hours": 5}, {"date": "2025-10-28", "hours": 5}
+        ]
+      },
+      {
+        "id": "book-2025-11",
+        "startDate": "2025-11-01", "endDate": "2025-11-26",
+        "entries": [
+          {"date": "2025-11-01", "hours": 3, "startsNewBook": true}, {"date": "2025-11-01", "hours": 6}, {"date": "2025-11-02", "hours": 6},
+          {"date": "2025-11-03", "hours": 7}, {"date": "2025-11-04", "hours": 6}, {"date": "2025-11-05", "hours": 6},
+          {"date": "2025-11-07", "hours": 5}, {"date": "2025-11-08", "hours": 5}, {"date": "2025-11-09", "hours": 6},
+          {"date": "2025-11-10", "hours": 5}, {"date": "2025-11-11", "hours": 6}, {"date": "2025-11-12", "hours": 4},
+          {"date": "2025-11-14", "hours": 4}, {"date": "2025-11-15", "hours": 6}, {"date": "2025-11-16", "hours": 2},
+          {"date": "2025-11-17", "hours": 3}, {"date": "2025-11-18", "hours": 5}, {"date": "2025-11-19", "hours": 6},
+          {"date": "2025-11-21", "hours": 5}, {"date": "2025-11-22", "hours": 5}, {"date": "2025-11-23", "hours": 5},
+          {"date": "2025-11-24", "hours": 4}, {"date": "2025-11-25", "hours": 4}, {"date": "2025-11-26", "hours": 7}
+        ]
+      },
+      {
+        "id": "book-2025-12",
+        "startDate": "2025-12-01", "endDate": "2025-12-28",
+        "entries": [
+          {"date": "2025-12-01", "hours": 3, "startsNewBook": true}, {"date": "2025-12-02", "hours": 4}, {"date": "2025-12-03", "hours": 6},
+          {"date": "2025-12-05", "hours": 5}, {"date": "2025-12-06", "hours": 6}, {"date": "2025-12-07", "hours": 5},
+          {"date": "2025-12-08", "hours": 3}, {"date": "2025-12-09", "hours": 7}, {"date": "2025-12-10", "hours": 6},
+          {"date": "2025-12-12", "hours": 3}, {"date": "2025-12-13", "hours": 4}, {"date": "2025-12-14", "hours": 3},
+          {"date": "2025-12-15", "hours": 4}, {"date": "2025-12-16", "hours": 4}, {"date": "2025-12-17", "hours": 5},
+          {"date": "2025-12-19", "hours": 4}, {"date": "2025-12-20", "hours": 4}, {"date": "2025-12-21", "hours": 7},
+          {"date": "2025-12-22", "hours": 3}, {"date": "2025-12-23", "hours": 6}, {"date": "2025-12-24", "hours": 2},
+          {"date": "2025-12-27", "hours": 5}, {"date": "2025-12-28", "hours": 6}
+        ]
+      },
+      {
+        "id": "book-2025-12-31",
+        "startDate": "2025-12-29", "endDate": "2025-12-31",
+        "entries": [
+          {"date": "2025-12-29", "hours": 7, "startsNewBook": true}, {"date": "2025-12-30", "hours": 5}, {"date": "2025-12-31", "hours": 3}
+        ]
+      },
+      {
+        "id": "book-2026-04",
+        "startDate": "2026-04-11", "endDate": "2026-04-26",
+        "entries": [
+          {"date": "2026-04-11", "hours": 3, "startsNewBook": true}, {"date": "2026-04-25", "hours": 17}, {"date": "2026-04-26", "hours": 4}
+        ],
+        "injectedCycleId": "2026-05",
+        "netPayAmountRupiah": 1396500,
+        "_note": "Kotor 24h x 72.500 = 1.740.000, cocok persis dgn cycle 2026-05. Bersih final di cycle 2026-05 (1.396.500) sudah termasuk potongan webinar+jajan ad-hoc di luar rumus baku - dipakai apa adanya, bukan hasil CalculateNetPay murni."
+      },
+      {
+        "id": "book-2026-05",
+        "startDate": "2026-05-02", "endDate": "2026-05-24",
+        "entries": [
+          {"date": "2026-05-02", "hours": 3, "startsNewBook": true}, {"date": "2026-05-03", "hours": 3}, {"date": "2026-05-10", "hours": 5},
+          {"date": "2026-05-16", "hours": 4}, {"date": "2026-05-17", "hours": 5}, {"date": "2026-05-23", "hours": 3},
+          {"date": "2026-05-24", "hours": 5}
+        ]
+      },
+      {
+        "id": "book-2026-05-06",
+        "startDate": "2026-05-30", "endDate": "2026-06-27",
+        "entries": [
+          {"date": "2026-05-30", "hours": 1, "startsNewBook": true}, {"date": "2026-06-06", "hours": 9}, {"date": "2026-06-07", "hours": 5},
+          {"date": "2026-06-13", "hours": 5}, {"date": "2026-06-14", "hours": 4}, {"date": "2026-06-20", "hours": 3},
+          {"date": "2026-06-21", "hours": 5}, {"date": "2026-06-27", "hours": 5}
+        ],
+        "injectedCycleId": "2026-07",
+        "netPayAmountRupiah": 1911000,
+        "_note": "Kotor 37h x 72.500 = 2.682.500 - cocok Kotor cycle 2026-07, TAPI Bersih resmi cycle 2026-07 (1.911.000) berasal dari Kotor 1.960.000 (27h), bukan 2.682.500. Ada 2 buku 37 jam (ini dan book-2026-07) - disimpan injectedCycleId 2026-07 sbg estimasi terbaik urutan kronologis; figur Bersih di cycle tetap diambil dari Anggaran, bukan dihitung ulang dari buku ini."
+      },
+      {
+        "id": "book-2026-07",
+        "startDate": "2026-07-04", "endDate": "2026-07-26",
+        "entries": [
+          {"date": "2026-07-04", "hours": 5, "startsNewBook": true}, {"date": "2026-07-05", "hours": 1}, {"date": "2026-07-11", "hours": 6},
+          {"date": "2026-07-12", "hours": 2}, {"date": "2026-07-18", "hours": 6}, {"date": "2026-07-19", "hours": 6},
+          {"date": "2026-07-25", "hours": 4}, {"date": "2026-07-26", "hours": 7}
+        ],
+        "injectedCycleId": "2026-08",
+        "netPayAmountRupiah": 2615438,
+        "_note": "Kotor 37h x 72.500 = 2.682.500, cocok persis dgn cycle 2026-08 (Bersih 2.615.438 = 2.682.500 - 67.063 pajak 2,5%)."
+      },
+      {
+        "id": "book-2026-08",
+        "startDate": "2026-08-01", "endDate": "2026-08-23",
+        "entries": [
+          {"date": "2026-08-01", "hours": 7, "startsNewBook": true}, {"date": "2026-08-02", "hours": 6}, {"date": "2026-08-08", "hours": 5},
+          {"date": "2026-08-09", "hours": 8}, {"date": "2026-08-15", "hours": 6}, {"date": "2026-08-16", "hours": 5},
+          {"date": "2026-08-22", "hours": 4}, {"date": "2026-08-23", "hours": 2}
+        ],
+        "injectedCycleId": "2026-09",
+        "netPayAmountRupiah": 3039563,
+        "_note": "Kotor 43h x 72.500 = 3.117.500, cocok persis dgn cycle 2026-09 (Bersih 3.039.563 = 3.117.500 - 77.938 pajak 2,5%, round-half-up)."
+      },
+      {
+        "id": "book-2026-09",
+        "startDate": "2026-08-29", "endDate": "2026-09-05",
+        "entries": [
+          {"date": "2026-08-29", "hours": 6, "startsNewBook": true}, {"date": "2026-08-30", "hours": 4}, {"date": "2026-09-05", "hours": 5}
+        ],
+        "injectedCycleId": "2026-10",
+        "netPayAmountRupiah": 1060313,
+        "_note": "Kotor 15h x 72.500 = 1.087.500, cocok persis dgn cycle 2026-10 (Bersih 1.060.313 = 1.087.500 - 27.188 pajak 2,5%, round-half-up)."
+      }
+    ]
+  },
+
+  "_cyclesComment": "10 MonthlyCycle nyata, Januari-Oktober 2026, label Kos apa adanya dari spreadsheet (termasuk label stale 'Kos agustus - september' yang terbawa 3 kali berturut - TIDAK dikoreksi, itu bug nyata yang akan ditandai needsReview saat rollover berikutnya). Baris 'tabung' (selalu kosong di semua blok) diabaikan - tidak pernah diisi pemilik. Baris CC BRI TOUCH selalu manual/0 (BRI Touch tidak diimpor sebagai kartu terpisah, sesuai keputusan pemilik).",
+  "cycles": [
+    {
+      "id": "2026-01", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 7166250},
+        {"id": "inc-belum-teralokasi", "label": "Ambil 'belum teralokasi'", "amountRupiah": 7045000},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 8900000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos Januari - Februari", "kind": "manual", "amountRupiah": 4675000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 102000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-dani", "label": "Dani", "kind": "manual", "amountRupiah": 150000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-vga", "label": "VGA RX 9060XT", "kind": "manual", "amountRupiah": 7045000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 2191750},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    },
+    {
+      "id": "2026-02", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 1023750},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 8900000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos Februari - Maret", "kind": "manual", "amountRupiah": 4675000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 1550496},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    },
+    {
+      "id": "2026-03", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 0},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 8900000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos Maret - April", "kind": "manual", "amountRupiah": 4675000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 684710},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    },
+    {
+      "id": "2026-04", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 0},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 8900000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos April - Mei", "kind": "manual", "amountRupiah": 4675000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 2162042},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    },
+    {
+      "id": "2026-05", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 1396500},
+        {"id": "inc-thr-laufey", "label": "THR Laufey", "amountRupiah": 800000},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 19048000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos Mei - Juni", "kind": "manual", "amountRupiah": 1900000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-kulkas", "label": "Kulkas", "kind": "manual", "amountRupiah": 2199000},
+        {"id": "b-kasur", "label": "kasur", "kind": "manual", "amountRupiah": 2731714},
+        {"id": "b-bengkel", "label": "bengkel", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-temper-glass", "label": "Temper glass & jemuran", "kind": "manual", "amountRupiah": 286000},
+        {"id": "b-case-hp", "label": "Case hp", "kind": "manual", "amountRupiah": 43000},
+        {"id": "b-jacket", "label": "Jacket, kompor, alat dapur", "kind": "manual", "amountRupiah": 2264000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 486700},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 255000}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    },
+    {
+      "id": "2026-06", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 1911000},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 12880000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos Juni - juli", "kind": "manual", "amountRupiah": 1900000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-beras", "label": "Beras", "kind": "manual", "amountRupiah": 80000},
+        {"id": "b-laundry", "label": "Laundry", "kind": "manual", "amountRupiah": 50000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cicilan-iphone", "label": "Cicilan iphone", "kind": "manual", "amountRupiah": 2914000},
+        {"id": "b-kembalikan-pinjaman", "label": "Kembalikan pinjaman jalan2", "kind": "manual", "amountRupiah": 4000000},
+        {"id": "b-wifi", "label": "Wifi", "kind": "manual", "amountRupiah": 338550},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 506330},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": [{"goalId": "kyoto", "percentage": 100}]}
+    },
+    {
+      "id": "2026-07", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 2615438},
+        {"id": "inc-anggaran-pindah", "label": "Anggaran Pindah", "amountRupiah": 1043000},
+        {"id": "inc-sisa-pindah-kos", "label": "Sisa pindah kos", "amountRupiah": 2064000},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 12800000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos juli - agustus", "kind": "manual", "amountRupiah": 1900000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-makan", "label": "makan", "kind": "manual", "amountRupiah": 2200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cicilan-iphone", "label": "Cicilan iphone", "kind": "manual", "amountRupiah": 2914000},
+        {"id": "b-wifi", "label": "Wifi", "kind": "manual", "amountRupiah": 338550},
+        {"id": "b-laundry", "label": "Laundry", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-beras", "label": "Beras", "kind": "manual", "amountRupiah": 80000},
+        {"id": "b-mamypoko", "label": "MamyPoko", "kind": "manual", "amountRupiah": 180000},
+        {"id": "b-bengkel", "label": "Bengkel", "kind": "manual", "amountRupiah": 416000},
+        {"id": "b-donasi", "label": "Donasi", "kind": "manual", "amountRupiah": 2000000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 1723272},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {
+        "returnDepositRupiah": 0,
+        "allocations": [
+          {"goalId": "anak", "percentage": 20}, {"goalId": "rumah", "percentage": 20},
+          {"goalId": "pensiun", "percentage": 20}, {"goalId": "kyoto", "percentage": 40}
+        ]
+      }
+    },
+    {
+      "id": "2026-08", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 2615438},
+        {"id": "inc-course-bci", "label": "Course bci", "amountRupiah": 400000},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 12800000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos agustus - september", "kind": "manual", "amountRupiah": 1900000},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-bulanan", "label": "bulanan", "kind": "rollUp", "rollUpSource": "grocery", "amountRupiah": 2237000},
+        {"id": "b-jajan1", "label": "jajan", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cicilan-iphone", "label": "Cicilan iphone", "kind": "manual", "amountRupiah": 2914000},
+        {"id": "b-wifi", "label": "Wifi", "kind": "manual", "amountRupiah": 338550},
+        {"id": "b-laundry", "label": "Laundry", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-sufor", "label": "Sufor", "kind": "manual", "amountRupiah": 78300},
+        {"id": "b-gas", "label": "Gas", "kind": "manual", "amountRupiah": 20000},
+        {"id": "b-gopay-astro", "label": "Gopay later astro", "kind": "manual", "amountRupiah": 208000},
+        {"id": "b-donasi1", "label": "Donasi", "kind": "manual", "amountRupiah": 500000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 1260188},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0},
+        {"id": "b-donasi2", "label": "Donasi", "kind": "manual", "amountRupiah": 500000},
+        {"id": "b-kebutuhan-laufey", "label": "kebutuhan laufey", "kind": "manual", "amountRupiah": 147000},
+        {"id": "b-jajan-dimsum", "label": "jajan dimsum+es+eskrim", "kind": "manual", "amountRupiah": 56000},
+        {"id": "b-baiza-sushi", "label": "baiza sushi", "kind": "manual", "amountRupiah": 503440},
+        {"id": "b-jajan2", "label": "Jajan", "kind": "manual", "amountRupiah": 466000}
+      ],
+      "investmentPlan": {
+        "returnDepositRupiah": 0,
+        "allocations": [
+          {"goalId": "anak", "percentage": 15}, {"goalId": "rumah", "percentage": 15},
+          {"goalId": "pensiun", "percentage": 15}, {"goalId": "kyoto", "percentage": 55}
+        ]
+      }
+    },
+    {
+      "id": "2026-09", "closed": true,
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 3039563},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 12800000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos agustus - september", "kind": "manual", "amountRupiah": 1900000, "needsReview": true},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-bulanan", "label": "Bulanan", "kind": "rollUp", "rollUpSource": "grocery", "amountRupiah": 3068500},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-cicilan-iphone", "label": "Cicilan iphone", "kind": "manual", "amountRupiah": 2914000},
+        {"id": "b-wifi", "label": "Wifi", "kind": "manual", "amountRupiah": 338550},
+        {"id": "b-laundry", "label": "Laundry", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 1386516},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0},
+        {"id": "b-pelunasan-aba", "label": "Pelunasan pelatian ABA", "kind": "manual", "amountRupiah": 1200000},
+        {"id": "b-gopay-astro", "label": "Gopay later astro", "kind": "manual", "amountRupiah": 155803},
+        {"id": "b-bengkel", "label": "Bengkel", "kind": "manual", "amountRupiah": 258000},
+        {"id": "b-barber", "label": "Barber", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-jajan", "label": "Jajan", "kind": "manual", "amountRupiah": 46000},
+        {"id": "b-kipas-baju", "label": "Kipas + baju", "kind": "manual", "amountRupiah": 330380},
+        {"id": "b-kipas-portable", "label": "kipas portable", "kind": "manual", "amountRupiah": 284741}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": [{"goalId": "saham", "percentage": 100}]}
+    },
+    {
+      "id": "2026-10", "closed": false,
+      "_note": "CYCLE TERBUKA - ini siklus 'saat ini' begitu app dipakai nyata. Baris rollUp (Bulanan, CC TOKPED) SENGAJA diisi amountRupiah placeholder - nilai sebenarnya akan dihitung ULANG live dari GroceryPlan/CardStatement terbuka saat cycle dibaca. Diverifikasi lewat --dry-run: live Bulanan = Rp3.219.700 (BUKAN Rp3.150.000 di Anggaran, dan BUKAN Rp3.068.500 yang tadinya disangka pas dicek manual) - subtotal MINGGUAN di spreadsheet `bulanan` sendiri sudah basi (576.600) terhadap daftar item yang sekarang (614.400, sudah ditambah 'alpukat' dan 'bawang mix' tanpa total-nya diperbarui) - pola yang sama persis dengan bug label Kos, cuma di spreadsheet yang lain. CC TOKPED live = Rp382.000, cocok dengan Anggaran (tidak ada selisih di situ).",
+      "incomeLines": [
+        {"id": "inc-gaji-menul", "label": "Gaji Menul", "sourceId": "gaji-menul", "amountRupiah": 1060313},
+        {"id": "inc-gaji-koko", "label": "Gaji Koko", "sourceId": "gaji-koko", "amountRupiah": 12800000}
+      ],
+      "budgetLines": [
+        {"id": "b-kos", "label": "Kos agustus - september", "kind": "manual", "amountRupiah": 1900000, "needsReview": true},
+        {"id": "b-listrik", "label": "listrik", "kind": "manual", "amountRupiah": 200000},
+        {"id": "b-bulanan", "label": "bulanan", "kind": "rollUp", "rollUpSource": "grocery", "amountRupiah": 0},
+        {"id": "b-sabil", "label": "Sabil", "kind": "manual", "amountRupiah": 800000},
+        {"id": "b-sisihkan-rumah", "label": "Sisihkan rumah", "kind": "manual", "amountRupiah": 300000},
+        {"id": "b-wifi", "label": "Wifi", "kind": "manual", "amountRupiah": 338550},
+        {"id": "b-laundry", "label": "Laundry", "kind": "manual", "amountRupiah": 100000},
+        {"id": "b-cc-tokped", "label": "CC TOKPED", "kind": "rollUp", "rollUpSource": "card:tokped", "amountRupiah": 0},
+        {"id": "b-cc-bri", "label": "CC BRI TOUCH", "kind": "manual", "amountRupiah": 0}
+      ],
+      "investmentPlan": {"returnDepositRupiah": 0, "allocations": []}
+    }
+  ]
+}

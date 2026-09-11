@@ -73,6 +73,13 @@ dev_dependencies:
   build_runner: any
   flutter_test:
     sdk: flutter
+  # Khusus tool/seed_import.dart (Fase 6) - hive_ce murni Dart (tanpa
+  # dependensi Flutter), supaya skrip bisa dijalankan lewat `dart run` biasa.
+  # `hive_storage` (dependencies: di atas) memakai `hive_ce_flutter`, yang
+  # Hive.initFlutter()-nya butuh WidgetsFlutterBinding - tidak bisa jalan di
+  # proses `dart run` murni. Skrip ini membuka Box yang SAMA lewat Hive.init()
+  # biasa (bukan initFlutter) pada path yang sama dengan aplikasi nyata.
+  hive_ce: ^2.19.3
   injectable_generator: any
   json_serializable: any
   linter:

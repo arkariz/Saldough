@@ -135,7 +135,8 @@ saldough/
 │       ├── card/                         # kartu kredit
 │       └── investment/                   # alokasi & pinjaman antar pos (konsumen shared/goal)
 ├── tool/                                 # skrip pengembang sekali pakai, TIDAK ikut di-build ke rilis
-│   └── seed_import.dart                  # Fase 6 — lihat catatan revisi ADR-0009
+│   ├── seed_import.dart                  # Fase 6 — lihat catatan revisi ADR-0009
+│   └── seed_data.json                    # data historis nyata, lihat TASK_LIST.md Fase 6
 └── test/
     ├── shared/                           # cermin struktur lib/shared
     └── features/                         # cermin struktur lib/features

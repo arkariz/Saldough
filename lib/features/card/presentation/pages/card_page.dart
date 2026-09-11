@@ -388,7 +388,7 @@ class _SubscriptionTile extends StatelessWidget {
             if (!subscription.isActive)
               Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.xs),
-                child: AppChip(label: t.card.subscriptionInactiveBadge),
+                child: AppChip(label: t.card.subscriptionInactiveBadge, shout: true),
               ),
             IconButton(
               icon: const Icon(Icons.delete_outline),

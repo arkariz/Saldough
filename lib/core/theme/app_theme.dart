@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saldough/core/theme/extensions/app_colors_extension.dart';
+import 'package:saldough/core/theme/tokens/app_border.dart';
 import 'package:saldough/core/theme/tokens/app_radius.dart';
 
 /// Menyusun [ThemeData] terang dan gelap untuk Saldough.
@@ -9,13 +10,43 @@ import 'package:saldough/core/theme/tokens/app_radius.dart';
 /// Space Grotesk untuk teks dan komponen Material standar, Bangers untuk
 /// label/badge pendek lewat [shout] — bukan bagian dari [TextTheme] baku
 /// karena tidak ada slot Material yang cocok untuknya.
+///
+/// Setiap gaya di bawah mendeklarasikan tumpukan huruf cadangan nyata lewat
+/// [_withFallback] (ADR-0006 §Risiko: "setiap gaya teks wajib mendeklarasikan
+/// tumpukan huruf cadangan yang nyata") — kalau `google_fonts` gagal
+/// mengunduh saat peluncuran pertama tanpa koneksi, tampilan jatuh ke huruf
+/// sistem yang MASIH sepadan perannya, bukan diam-diam ke huruf acak
+/// (UX-28). Paket `GoogleFonts.*` sendiri tidak punya parameter
+/// `fontFamilyFallback` passthrough — makanya ditambahkan lewat
+/// `TextStyle.copyWith` setelah gaya dibuat, bukan sebagai argumen.
 abstract final class AppTheme {
   AppTheme._();
 
+  /// Tumpukan cadangan untuk peran Archivo Black (judul/angka besar) — huruf
+  /// grotesk sangat tebal yang tersedia luas di Windows/Android.
+  static const _displayFallback = ['Arial Black', 'Roboto', 'sans-serif'];
+
+  /// Tumpukan cadangan untuk peran Space Grotesk (teks dan komponen
+  /// Material standar) — grotesk netral yang tersedia di semua platform
+  /// target (Android/iOS).
+  static const _bodyFallback = ['Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'];
+
+  /// Tumpukan cadangan untuk peran Bangers (label/badge stiker komik) —
+  /// huruf informal/tulisan tangan yang paling dekat perannya di tiap
+  /// platform, bukan sekadar grotesk netral (yang akan kehilangan
+  /// karakter "komik"-nya sama sekali).
+  static const _shoutFallback = ['Comic Sans MS', 'Chalkboard SE', 'cursive'];
+
+  /// Menambahkan tumpukan cadangan [fallback] ke [style] tanpa mengubah
+  /// huruf utamanya.
+  static TextStyle? _withFallback(TextStyle? style, List<String> fallback) =>
+      style?.copyWith(fontFamilyFallback: fallback);
+
   /// Gaya huruf "shout" (Bangers) untuk label/badge bergaya stiker komik.
-  /// Selalu sertakan tumpukan cadangan nyata kalau font belum termuat.
-  static TextStyle shout({double fontSize = 14, Color? color}) =>
-      GoogleFonts.bangers(fontSize: fontSize, color: color, letterSpacing: 0.4);
+  static TextStyle shout({double fontSize = 14, Color? color}) => _withFallback(
+        GoogleFonts.bangers(fontSize: fontSize, color: color, letterSpacing: 0.4),
+        _shoutFallback,
+      )!;
 
   /// Tema mode terang.
   static ThemeData get lightTheme => _build(AppColorsExtension.light, Brightness.light);
@@ -55,7 +86,7 @@ abstract final class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.mdAll,
-          side: BorderSide(color: colors.edge, width: 2.5),
+          side: BorderSide(color: colors.edge, width: AppBorder.thick),
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -63,9 +94,9 @@ abstract final class AppTheme {
         foregroundColor: colors.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: GoogleFonts.archivoBlack(
-          fontSize: 18,
-          color: colors.textPrimary,
+        titleTextStyle: _withFallback(
+          GoogleFonts.archivoBlack(fontSize: 18, color: colors.textPrimary),
+          _displayFallback,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -75,7 +106,7 @@ abstract final class AppTheme {
           foregroundColor: brightness == Brightness.light ? Colors.white : colors.onNeedsReview,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.smAll,
-            side: BorderSide(color: colors.edge, width: 2.5),
+            side: BorderSide(color: colors.edge, width: AppBorder.thick),
           ),
         ),
       ),
@@ -90,22 +121,27 @@ abstract final class AppTheme {
   // ADR-0006: Archivo Black untuk display/headline, Space Grotesk untuk
   // sisanya.
   static TextTheme _buildTextTheme(TextTheme base, AppColorsExtension colors) {
+    TextStyle? display(TextStyle? base, Color color) =>
+        _withFallback(GoogleFonts.archivoBlack(textStyle: base, color: color), _displayFallback);
+    TextStyle? body(TextStyle? base, Color color) =>
+        _withFallback(GoogleFonts.spaceGrotesk(textStyle: base, color: color), _bodyFallback);
+
     return base.copyWith(
-      displayLarge: GoogleFonts.archivoBlack(textStyle: base.displayLarge, color: colors.textPrimary),
-      displayMedium: GoogleFonts.archivoBlack(textStyle: base.displayMedium, color: colors.textPrimary),
-      displaySmall: GoogleFonts.archivoBlack(textStyle: base.displaySmall, color: colors.textPrimary),
-      headlineLarge: GoogleFonts.archivoBlack(textStyle: base.headlineLarge, color: colors.textPrimary),
-      headlineMedium: GoogleFonts.archivoBlack(textStyle: base.headlineMedium, color: colors.textPrimary),
-      headlineSmall: GoogleFonts.archivoBlack(textStyle: base.headlineSmall, color: colors.textPrimary),
-      titleLarge: GoogleFonts.spaceGrotesk(textStyle: base.titleLarge, color: colors.textPrimary),
-      titleMedium: GoogleFonts.spaceGrotesk(textStyle: base.titleMedium, color: colors.textPrimary),
-      titleSmall: GoogleFonts.spaceGrotesk(textStyle: base.titleSmall, color: colors.textPrimary),
-      bodyLarge: GoogleFonts.spaceGrotesk(textStyle: base.bodyLarge, color: colors.textPrimary),
-      bodyMedium: GoogleFonts.spaceGrotesk(textStyle: base.bodyMedium, color: colors.textPrimary),
-      bodySmall: GoogleFonts.spaceGrotesk(textStyle: base.bodySmall, color: colors.textMuted),
-      labelLarge: GoogleFonts.spaceGrotesk(textStyle: base.labelLarge, color: colors.textPrimary),
-      labelMedium: GoogleFonts.spaceGrotesk(textStyle: base.labelMedium, color: colors.textMuted),
-      labelSmall: GoogleFonts.spaceGrotesk(textStyle: base.labelSmall, color: colors.textMuted),
+      displayLarge: display(base.displayLarge, colors.textPrimary),
+      displayMedium: display(base.displayMedium, colors.textPrimary),
+      displaySmall: display(base.displaySmall, colors.textPrimary),
+      headlineLarge: display(base.headlineLarge, colors.textPrimary),
+      headlineMedium: display(base.headlineMedium, colors.textPrimary),
+      headlineSmall: display(base.headlineSmall, colors.textPrimary),
+      titleLarge: body(base.titleLarge, colors.textPrimary),
+      titleMedium: body(base.titleMedium, colors.textPrimary),
+      titleSmall: body(base.titleSmall, colors.textPrimary),
+      bodyLarge: body(base.bodyLarge, colors.textPrimary),
+      bodyMedium: body(base.bodyMedium, colors.textPrimary),
+      bodySmall: body(base.bodySmall, colors.textMuted),
+      labelLarge: body(base.labelLarge, colors.textPrimary),
+      labelMedium: body(base.labelMedium, colors.textMuted),
+      labelSmall: body(base.labelSmall, colors.textMuted),
     );
   }
 }

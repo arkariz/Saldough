@@ -40,7 +40,7 @@ class AppCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: radius,
-        border: Border.all(color: colors.edge, width: 2.5),
+        border: Border.all(color: colors.edge, width: AppBorder.thick),
         boxShadow: elevation > 0 ? AppElevation.hardShadow(colors.edge, offset: elevation) : null,
       ),
       child: child,

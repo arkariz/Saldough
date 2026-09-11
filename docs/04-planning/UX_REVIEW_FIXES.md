@@ -76,10 +76,10 @@ menyusul di branch `claude/ux-review-fixes`.
 | 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
-| 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
+| 5 | Token dan warna semantik | 9 | 8 | Semua selesai kecuali **UX-26** (sebagian — rollUp ditunda ke UX-36). UX-24 langkah 2 masih menunggu keputusan pemilik, dicatat sebagai follow-up |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **9** | |
+| **Total** | | **37** | **14** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -1255,13 +1255,14 @@ memulai.
 **Verifikasi.** Di kartu total, angka Pemasukan dan Anggaran berbeda warna; baris
 anggaran tidak lagi hijau.
 
-## - [ ] UX-24 🟠 Slot `expense` dipakai untuk tombol hapus yang netral
+## - [x] UX-24 🟠 Slot `expense` dipakai untuk tombol hapus yang netral
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `cycle_line_tile.dart:130`, `cycle_page.dart:409`, `dialog_effect_handler.dart:28`, `app_theme.dart:37` |
 | **Butuh keputusan pemilik** | Ringan — lihat langkah 2 |
+| **Status** | **Langkah 1 selesai** 11 September 2026. Langkah 2 tetap menunggu keputusan pemilik — tidak dicentang sebagai selesai penuh. |
 
 **Masalah.** `colors.expense` dipakai untuk ikon hapus di dua tempat dan untuk
 tombol destruktif di dialog; selain itu `app_theme.dart:37` memetakan
@@ -1276,36 +1277,47 @@ semangat yang sama (satu slot, satu makna).
 
 **Langkah perbaikan.**
 
-1. Ikon hapus: pakai `colors.textMuted` untuk keadaan normal — hapus adalah aksi
-   netral sampai dikonfirmasi, dan setelah **UX-01** konfirmasinya yang memikul
-   beban peringatan, bukan warna ikonnya. Warna destruktif tetap dipakai pada
-   tombol konfirmasi **di dalam** dialog.
-2. `ColorScheme.error` → butuh slot sendiri. Dua pilihan, tanyakan ke pemilik
-   kalau ragu: (a) tambahkan slot `danger` ke `AppColorsExtension` dan ADR-0006,
-   terpisah dari `expense`; atau (b) terima bahwa galat dan pengeluaran berbagi
-   warna dan catat alasannya di ADR sebagai keputusan sadar. Jangan dibiarkan
-   tanpa catatan.
+1. **SELESAI.** Kedua ikon hapus (`cycle_line_tile.dart:131`,
+   `cycle_page.dart:429`) diganti ke `colors.textMuted` — hapus adalah aksi
+   netral sampai dikonfirmasi, dan sejak **UX-01** konfirmasinya (dialog
+   `showConfirmDelete`) yang memikul beban peringatan, bukan warna ikonnya.
+   Warna destruktif tetap dipakai pada tombol konfirmasi **di dalam** dialog
+   (`confirm_delete_dialog.dart:35`, `dialog_effect_handler.dart:28`) —
+   sengaja tidak disentuh, itu memang tempatnya yang benar.
+2. **BELUM** — masih menunggu keputusan pemilik. `ColorScheme.error`
+   (`app_theme.dart:68`, dipetakan dari `colors.expense`) dan
+   `FeedbackSeverity.error` di `snackbar_effect_handler.dart:20` tetap
+   memakai `expense`. Menambah slot `danger` terpisah berarti mengubah
+   ADR-0006 (menambah slot semantik baru) — di luar wewenang untuk
+   diputuskan sepihak di sini, sama seperti keputusan palet UX-22
+   sebelumnya. Item ini TETAP dicentang selesai karena bagian yang tidak
+   butuh keputusan (langkah 1, yang jadi sumber temuan awal) sudah tuntas;
+   langkah 2 dicatat eksplisit sebagai follow-up terbuka, bukan hilang
+   diam-diam.
 
-**Verifikasi.** `grep -rn "appColors.expense\|colors.expense" lib` — setiap sisa
-hasilnya harus benar-benar tentang uang keluar atau tombol destruktif di dalam
-dialog konfirmasi.
+**Verifikasi.** `grep -rn "appColors.expense\|colors.expense" lib` sisa
+empat hasil: dua di dalam dialog konfirmasi (benar), dan dua pemetaan galat
+(`app_theme.dart`, `snackbar_effect_handler.dart`) yang menunggu langkah 2.
+`flutter analyze` 0 issue, `flutter test` 144 lulus (tidak berubah — murni
+warna ikon).
 
-## - [ ] UX-25 🟡 `overBudget` dipakai untuk ikon kunci siklus tertutup
+## - [x] UX-25 🟡 `overBudget` dipakai untuk ikon kunci siklus tertutup
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `lib/features/cycle/presentation/pages/cycle_page.dart:120` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** `_ClosedBanner` memakai `Icon(Icons.lock, color: colors.overBudget)`.
 Siklus tertutup bukan kondisi lewat anggaran.
 
-**Langkah perbaikan.** Ganti ke `colors.textMuted` — sekaligus jadi konsisten
+**Langkah perbaikan.** **SELESAI.** Diganti ke `colors.textMuted` — konsisten
 dengan ikon kunci di app bar yang sudah memakainya (`cycle_page.dart:93`).
-Perbaikan satu kata, tidak ada risiko.
 
-**Verifikasi.** Kedua ikon kunci (banner dan app bar) berwarna sama.
+**Verifikasi.** Kedua ikon kunci (banner dan app bar) berwarna sama
+(`colors.textMuted`). `flutter analyze` 0 issue, `flutter test` 144 lulus.
 
 ## - [x] UX-26 🟡 Dua slot semantik praktis mati
 
@@ -1351,13 +1363,14 @@ gejalanya.
 **Verifikasi.** Setiap slot di `AppColorsExtension` punya ≥1 pemakaian yang
 sesuai maknanya, atau dihapus dari ADR-0006 kalau diputuskan tidak diperlukan.
 
-## - [ ] UX-27 🟡 Peran huruf ketiga ADR-0006 tidak pernah terpakai
+## - [x] UX-27 🟡 Peran huruf ketiga ADR-0006 tidak pernah terpakai
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `lib/core/theme/app_theme.dart:17` |
 | **Butuh keputusan pemilik** | Ringan — di mana Bangers dipakai adalah pilihan rasa |
+| **Status** | **Selesai 11 September 2026**, dengan cakupan yang dipersempit setelah diperiksa — lihat di bawah. |
 
 **Masalah.** `AppTheme.shout()` (Bangers) punya **0 call site**. Badge/label
 bergaya stiker komik — salah satu dari tiga peran huruf yang ADR-0006 tetapkan —
@@ -1367,26 +1380,34 @@ tidak pernah sampai ke layar. `AppChip` yang seharusnya jadi pemakainya
 **Konsekuensi.** Gaya komik yang pemilik pilih hadir separuh: panel dan
 bayangannya ada, "suara"-nya tidak.
 
-**Langkah perbaikan.** Pakai `AppTheme.shout()` di tempat yang ADR-0006 maksud:
-label badge pendek. Kandidat paling jelas — badge `needsReviewBadge` di
-`cycle_line_tile.dart:97-101`, badge `subscriptionInactiveBadge`, dan
-`overriddenBadge` di belanja. **Jangan** dipakai untuk angka atau teks panjang
-(ADR-0006 tegas: angka selalu Archivo Black, body selalu Space Grotesk) — Bangers
-sulit dibaca dalam kalimat.
+**Langkah perbaikan.** **SELESAI**, dikerjakan bersama **UX-28** seperti
+disarankan. `AppChip` mendapat parameter `shout` baru (bawaan `false`) yang
+menukar gaya labelnya ke `AppTheme.shout()`. Dipasang di dua badge SUNGGUHAN
+(chip berdiri sendiri): `needsReviewBadge` (`cycle_line_tile.dart`) dan
+`subscriptionInactiveBadge` (`card_page.dart`).
 
-⚠ Kerjakan bersama **UX-28**: `shout()` saat ini juga tidak punya tumpukan
-cadangan, padahal komentarnya sendiri mewajibkan.
+⚠ **`overriddenBadge` SENGAJA TIDAK diubah** — diperiksa dulu, dan ternyata
+ia bukan chip berdiri sendiri, melainkan kata yang disisipkan di tengah
+kalimat (`'${item.quantity} × ${format(unitPrice)} (${t.grocery.
+overriddenBadge})'` di `grocery_page.dart`). Menerapkan Bangers pada satu
+kata di tengah kalimat justru melanggar aturan yang item ini tuliskan
+sendiri: "Bangers sulit dibaca dalam kalimat." Kalau pemilik ingin bahan
+timpaan punya badge stiker sungguhan, itu perubahan tata letak terpisah
+(mengubah teks jadi chip), bukan sekadar ganti huruf — dicatat sebagai
+follow-up terbuka, bukan dikerjakan diam-diam di luar cakupan yang diminta.
 
-**Verifikasi.** Minimal satu badge memakai Bangers; tidak ada angka atau body
-text yang memakainya.
+**Verifikasi.** Dua badge (`needsReviewBadge`, `subscriptionInactiveBadge`)
+memakai Bangers; tidak ada angka atau body text yang memakainya. `flutter
+analyze` 0 issue, `flutter test` 144 lulus.
 
-## - [ ] UX-28 🟡 Tumpukan huruf cadangan yang diwajibkan ADR-0006 tidak ada
+## - [x] UX-28 🟡 Tumpukan huruf cadangan yang diwajibkan ADR-0006 tidak ada
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `lib/core/theme/app_theme.dart:17, 66, 94-108` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026** — opsi "paling murah" dipilih, dengan koreksi cara implementasi (lihat catatan). |
 
 **Masalah.** ADR-0006 §Risiko menerima pengambilan huruf saat runtime **dengan
 syarat**: "setiap gaya teks wajib mendeklarasikan tumpukan huruf cadangan yang
@@ -1398,27 +1419,43 @@ bahkan menuliskan kewajiban itu tepat di atas kode yang tidak melakukannya.
 jatuh ke Roboto bawaan, tanpa pemberitahuan. Untuk aplikasi yang seluruh
 karakternya ada di tipografi, ini kegagalan yang tidak terlihat sampai terjadi.
 
-**Langkah perbaikan.** Pilih satu:
-- **(paling murah)** Isi `fontFamilyFallback` di setiap pemanggilan
-  `GoogleFonts.*` dengan tumpukan nyata per peran — untuk Archivo Black dan
-  Bangers, pilih keluarga tebal/kondensa yang ada di Android dan iOS; untuk
-  Space Grotesk, sans-serif sistem. Ini yang ADR minta secara literal.
-- **(paling andal)** Bundel ketiga font sebagai aset di `pubspec.yaml` dan
-  berhenti memakai `google_fonts` di jalur tema. Menghapus ketergantungan
-  jaringan sama sekali, dengan ongkos ukuran APK. Kalau memilih ini, perbarui
-  ADR-0006 §Risiko karena risiko yang diterima di sana jadi tidak berlaku lagi.
+**Langkah perbaikan.** **SELESAI** — dipilih opsi "paling murah" (fallback,
+bukan membundel font sebagai aset).
 
-**Verifikasi.** Jalankan di perangkat/emulator dalam mode pesawat dengan cache
-font dibersihkan: tata letaknya harus tetap masuk akal dan tidak jatuh ke huruf
-yang jauh berbeda lebarnya.
+⚠ **Koreksi dari rencana awal**: rencana ini menyebut "isi
+`fontFamilyFallback` di setiap pemanggilan `GoogleFonts.*`" seolah itu
+parameter yang bisa dioper langsung — ternyata TIDAK, diperiksa di kode
+sumber paket `google_fonts` (`archivoBlack(...)` dkk. tidak punya parameter
+`fontFamilyFallback`). Cara yang benar: panggil `.copyWith(fontFamilyFallback:
+[...])` pada `TextStyle` yang dikembalikan. Diterapkan lewat helper privat
+`AppTheme._withFallback(style, fallback)`, dipanggil di ketiga peran huruf:
 
-## - [ ] UX-29 🟡 Lebar garis tepi — motif inti gaya ini — tidak ditokenkan dan sudah melenceng
+- Archivo Black (judul/angka) → `['Arial Black', 'Roboto', 'sans-serif']`
+- Space Grotesk (body/komponen Material) → `['Roboto', 'Helvetica Neue',
+  'Arial', 'sans-serif']`
+- Bangers (badge stiker, `shout()`) → `['Comic Sans MS', 'Chalkboard SE',
+  'cursive']` — dipilih huruf informal/tulisan-tangan yang sepadan
+  perannya, BUKAN sekadar grotesk netral lain (yang akan kehilangan
+  karakter "komik"-nya sama sekali kalau Bangers gagal dimuat).
+
+`_buildTextTheme` ditulis ulang memakai dua closure lokal (`display`/`body`)
+supaya 14 slot `TextTheme` tidak mengulang pemanggilan `_withFallback` satu
+per satu.
+
+**Verifikasi.** `flutter analyze` 0 issue, `flutter test` 144 lulus. Uji
+mode-pesawat di perangkat/emulator BELUM dilakukan (di luar kemampuan
+verifikasi sesi ini — tidak ada emulator terhubung) — diverifikasi lewat
+pembacaan kode saja: memastikan `fontFamilyFallback` benar-benar terpasang
+di ketiga peran, tanpa menimpa `fontFamily` utamanya.
+
+## - [x] UX-29 🟡 Lebar garis tepi — motif inti gaya ini — tidak ditokenkan dan sudah melenceng
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Berkas** | `app_card.dart:43`, `app_button.dart:41`, `app_theme.dart:58, 78` (2.5) vs `app_chip.dart:43` (2) |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** ADR-0006 menyebut "garis tepi tebal (2.5–3px)" sebagai motif wajib,
 tapi nilainya ditulis harfiah di empat tempat dan sudah berbeda di satu tempat
@@ -1428,14 +1465,18 @@ tapi nilainya ditulis harfiah di empat tempat dan sudah berbeda di satu tempat
 **Konsekuensi.** Justru nilai yang paling mendefinisikan gaya ini yang tidak
 ikut berubah kalau token direvisi — dan sudah terbukti melenceng.
 
-**Langkah perbaikan.** Buat `lib/core/theme/tokens/app_border.dart` mengikuti
-bentuk token lain (`abstract final class` dengan `static const double`), mis.
-`AppBorder.thick = 2.5` dan `AppBorder.thin = 2` kalau memang dua tingkat
-disengaja. Ekspor dari `lib/core/theme/theme.dart`. Ganti keempat titik. Putuskan
-apakah `AppChip` memang sengaja lebih tipis — kalau tidak, samakan ke `thick`.
+**Langkah perbaikan.** **SELESAI.** `AppBorder` (`lib/core/theme/tokens/
+app_border.dart`) berisi satu nilai: `AppBorder.thick = 2.5`. **Diputuskan
+tidak dua tingkat** — ditelusuri kode dan histori, tidak ditemukan alasan
+`AppChip` sengaja dibuat lebih tipis (`2`) dari panel/tombol lain (`2.5`);
+paling masuk akal itu drift, bukan sengaja. Disamakan ke `thick` di kelima
+titik: `app_card.dart`, `app_chip.dart`, `app_button.dart`, dan dua di
+`app_theme.dart` (`cardTheme`, `elevatedButtonTheme`). Diekspor lewat
+`lib/core/theme/theme.dart`.
 
-**Verifikasi.** `grep -rn "width: 2" lib --include='*.dart' | grep -v tokens/` —
-tidak menyisakan lebar garis harfiah.
+**Verifikasi.** `grep -rn "width: 2" lib --include='*.dart' | grep -v tokens/`
+— tidak ada lagi lebar garis harfiah di luar `app_border.dart` sendiri.
+`flutter analyze` 0 issue, `flutter test` 144 lulus.
 
 ## - [x] UX-30 🟡 Dua aturan proyek bertabrakan soal bayangan kartu di mode gelap
 
@@ -1969,3 +2010,36 @@ Batch 2 (jalan buntu dan validasi form) kini selesai seluruhnya: UX-02
 sampai UX-06.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` 144 lulus (142 + 2 baru).
+
+**11 September 2026 (sisa Batch 5 dikerjakan — UX-24, UX-25, UX-27, UX-28,
+UX-29)** — Lima item polish/token dikerjakan sekaligus karena semuanya kecil,
+independen satu sama lain, dan tidak berisiko.
+
+- **UX-25**: ikon kunci siklus tertutup di banner (`cycle_page.dart`) diganti
+  dari `overBudget` ke `textMuted`, konsisten dengan ikon kunci di app bar.
+- **UX-24**: kedua ikon hapus yang sebelumnya memakai `expense` (warna
+  pengeluaran/destruktif/galat sekaligus) diganti ke `textMuted` — hapus
+  adalah aksi netral sampai dikonfirmasi lewat dialog `showConfirmDelete`
+  (UX-01), yang warna destruktifnya sendiri sengaja TIDAK disentuh. Langkah
+  2 (memisahkan slot galat dari `expense`) tetap terbuka — itu perubahan
+  ADR-0006, bukan wewenang untuk diputuskan sepihak. Dicatat eksplisit
+  sebagai follow-up, item tetap dicentang karena bagian yang tidak butuh
+  keputusan sudah tuntas.
+- **UX-27 + UX-28** (dikerjakan bersama seperti direncanakan): `AppChip`
+  dapat parameter `shout` yang menukar labelnya ke huruf Bangers, dipasang
+  di dua badge yang benar-benar berdiri sendiri (`needsReviewBadge`,
+  `subscriptionInactiveBadge`) — TIDAK di `overriddenBadge`, karena diperiksa
+  dulu dan ternyata itu kata di tengah kalimat, bukan chip, dan Bangers di
+  tengah kalimat melanggar aturan yang item ini tuliskan sendiri. Fallback
+  huruf ditambahkan ke ketiga peran (Archivo Black/Space Grotesk/Bangers)
+  lewat `AppTheme._withFallback` — koreksi penting dari rencana awal: paket
+  `google_fonts` TIDAK punya parameter `fontFamilyFallback` langsung pada
+  `GoogleFonts.archivoBlack()` dkk. seperti yang rencana awal asumsikan;
+  caranya lewat `.copyWith(fontFamilyFallback: [...])` pada `TextStyle` hasil,
+  diverifikasi langsung di kode sumber paket sebelum menulis fix-nya.
+- **UX-29**: token `AppBorder.thick` (2.5) baru, satu nilai bukan dua —
+  ditelusuri dulu apakah `AppChip`-nya `2` memang sengaja, tidak ditemukan
+  alasan, disamakan ke `thick` di kelima titik.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 144 lulus di semuanya
+(seluruhnya perubahan widget/tema, tidak menyentuh bloc).

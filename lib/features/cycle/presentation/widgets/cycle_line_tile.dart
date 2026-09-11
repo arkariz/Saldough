@@ -98,6 +98,7 @@ class CycleLineTile extends StatelessWidget {
                             label: t.cycle.needsReviewBadge,
                             selected: true,
                             color: colors.needsReview,
+                            shout: true,
                           ),
                           if (onConfirmReview != null)
                             TextButton(
@@ -127,7 +128,7 @@ class CycleLineTile extends StatelessWidget {
             if (isEditable && onDelete != null)
               IconButton(
                 tooltip: t.common.delete,
-                icon: Icon(Icons.delete_outline, color: colors.expense),
+                icon: Icon(Icons.delete_outline, color: colors.textMuted),
                 onPressed: onDelete,
               ),
           ],

@@ -24,7 +24,7 @@ setengah jalan dibiarkan kosong dengan catatan satu baris apa yang kurang.
 | 🔴 | Blocker — menghalangi pemilik menyelesaikan tugas intinya |
 | 🟠 | Friksi — bisa diselesaikan tapi berputar-putar atau butuh tebakan |
 | 🟡 | Polish — kosmetik/konsistensi, tidak menghalangi siapa pun |
-| ⛔ | Terkunci — butuh keputusan pemilik dulu, jangan dikerjakan sebelum itu |
+| ⛔ | Terkunci — butuh keputusan pemilik dulu. **Saat ini tidak ada item terkunci**: kedua keputusan sudah dijawab (lihat bagian di bawah) |
 
 Identitas item: `UX-<nomor>`. Kolom "Kat." merujuk kategori checklist
 `ux-review` (`references/checklist.md`), supaya temuan bisa dilacak balik ke
@@ -66,7 +66,8 @@ otomatis, tapi sebutkan di catatan pengerjaan bahwa verifikasinya manual.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 11 September 2026 (baru dibuat, belum ada yang dikerjakan).
+Terakhir diperbarui: 11 September 2026 — pemilik menjawab kedua keputusan;
+UX-30 selesai dan langkah dokumentasi UX-22 selesai.
 
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
@@ -74,10 +75,10 @@ Terakhir diperbarui: 11 September 2026 (baru dibuat, belum ada yang dikerjakan).
 | 2 | Jalan buntu dan validasi form | 5 | 0 | Prioritas #3 |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
-| 5 | Token dan warna semantik | 9 | 0 | UX-22 terkunci (prioritas #2) |
+| 5 | Token dan warna semantik | 9 | 1 | UX-30 selesai; UX-22 (prioritas #2) sudah dibuka — ADR-nya sudah ditulis, sisanya kode |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **0** | |
+| **Total** | | **37** | **1** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -85,12 +86,13 @@ diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
 ## Urutan kerja yang disarankan
 
 Bukan urutan nomor. Alasannya: yang pertama paling murah dan paling besar
-akibatnya, dan dua item terkunci perlu diangkat ke pemilik lebih awal supaya
-tidak jadi penghalang nanti.
+akibatnya. Kedua keputusan pemilik sudah dijawab, jadi tidak ada lagi yang
+menunggu.
 
 1. **UX-01** (konfirmasi hapus) — berdiri sendiri, infrastrukturnya sudah ada.
-2. **Angkat UX-22 dan UX-30 ke pemilik sekarang**, walau dikerjakan nanti —
-   keduanya butuh keputusan rasa/ADR, dan UX-22 memblokir item lain.
+2. **UX-22** (varian `…OnLight` di kode) — ADR-nya sudah ditulis, jadi ini
+   tinggal menuangkan tabel ADR ke `AppColorsExtension` dan memakainya di titik
+   pemakaian. Mengerjakannya juga membuka UX-26.
 3. **UX-02 … UX-06** (jalan buntu + validasi) — satu pola dipakai ulang, jadi
    lebih murah dikerjakan sekaligus daripada terpisah.
 4. **UX-25, UX-27, UX-28, UX-29** (ikon kunci, peran huruf, tumpukan cadangan,
@@ -98,30 +100,38 @@ tidak jadi penghalang nanti.
    menunggu keputusan UX-22.
 5. Sisanya bebas, mengikuti prioritas pemilik.
 
-## Keputusan pemilik yang ditunggu
+## Keputusan pemilik — SUDAH DIJAWAB (11 September 2026)
 
-Dua item tidak boleh dikerjakan sebelum pemilik menjawab. Keduanya menyentuh
+Dua item semula terkunci karena menyentuh
 [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md),
-yang statusnya sudah disetujui pemilik — mengubahnya sendiri berarti menimpa
-keputusan rasa pemilik, dan itu dilarang.
+yang statusnya sudah disetujui pemilik. **Keduanya sudah dijawab**, dan
+jawabannya sudah dituliskan ke ADR-0006 bagian "8b. Catatan revisi" — jadi
+ADR-nya kini yang jadi acuan, bukan dokumen ini. Tidak ada lagi item yang
+terkunci.
 
-### ⛔ Keputusan 1 — palet mode terang (memblokir UX-22 dan UX-26)
+| Keputusan | Jawaban pemilik | Dituliskan di | Sisa pekerjaan |
+|---|---|---|---|
+| 1 — palet mode terang | **Opsi A**: tambah varian `…OnLight`, hex isian tetap | ADR-0006 §8b + tabel varian | Kode: UX-22, lalu UX-26 |
+| 2 — bayangan mode gelap | **ADR-0006 yang berlaku** | ADR-0006 §8b, `AGENT_CONTEXT.md` diselaraskan | Tidak ada — UX-30 selesai |
+
+### ✅ Keputusan 1 — palet mode terang (jawaban: opsi A)
 
 Pengukuran kontras WCAG di UX-22 menunjukkan enam slot semantik gagal ambang
 keterbacaan **khusus di mode terang** (mode gelap sehat seluruhnya). Ini
 memicu kriteria peninjauan ulang yang ADR-0006 §8 tuliskan sendiri.
 
-Tiga pilihan, dengan konsekuensinya:
+Pemilik memilih **opsi A**. Tiga pilihan yang diajukan, untuk rekaman:
 
 | Pilihan | Yang dilakukan | Akibat |
 |---|---|---|
-| **A (disarankan)** | Tambah varian `…OnLight` untuk dipakai saat warna jadi teks/ikon di atas kartu terang; hex isian tetap apa adanya | Karakter pop-art utuh (isian tetap cerah), keterbacaan beres. Tabel ADR-0006 bertambah 6 baris |
+| **A ← DIPILIH** | Tambah varian `…OnLight` untuk dipakai saat warna jadi teks/ikon di atas kartu terang; hex isian tetap apa adanya | Karakter pop-art utuh (isian tetap cerah), keterbacaan beres. Tabel ADR-0006 bertambah 6 baris |
 | **B** | Ganti hex terang yang ada jadi versi lebih gelap | Lebih sederhana, tapi isian chip/badge jadi lebih kalem — mengubah rasa yang pemilik pilih |
 | **C** | Terima apa adanya | Ikon "perlu ditinjau" praktis tak terlihat dan angka Sisa negatif sulit dibaca di mode terang, permanen |
 
-Kalau pemilik memilih **A**, hex kandidat berikut sudah dihitung dan
-semuanya lolos ≥4.5:1 terhadap kartu putih **dan** dasar krem `#F2E9D8`, dengan
-hue yang sama seperti slot aslinya (jadi masih terbaca sebagai warna yang sama):
+Hex final berikut sudah dihitung, diverifikasi lolos ≥4.5:1 terhadap kartu
+putih **dan** dasar krem `#F2E9D8` dengan hue yang sama seperti slot aslinya,
+dan **sudah resmi tercatat di tabel ADR-0006** — ambil dari sana saat
+mengerjakan UX-22, bukan dari dokumen ini:
 
 | Slot | Hex terang sekarang | Rasio (kartu/dasar) | Kandidat `…OnLight` | Rasio (kartu/dasar) |
 |---|---|---:|---|---:|
@@ -134,7 +144,7 @@ hue yang sama seperti slot aslinya (jadi masih terbaca sebagai warna yang sama):
 
 Mode gelap **tidak perlu varian apa pun** — rasio terendahnya 5.39.
 
-### ⛔ Keputusan 2 — bayangan kartu di mode gelap (UX-30)
+### ✅ Keputusan 2 — bayangan kartu di mode gelap (jawaban: ADR-0006 berlaku)
 
 Dua aturan proyek saling bertabrakan:
 
@@ -147,10 +157,11 @@ Dua aturan proyek saling bertabrakan:
 Kode mengikuti ADR (`app_card.dart:44`), jadi di mode gelap setiap kartu punya
 bayangan keras 4px berwarna `edge` — yang di mode gelap bernilai krem
 `#F2E9D8`. Hasilnya halo krem tegas di sekeliling setiap panel di atas dasar
-hitam. Itu mungkin memang yang diinginkan (ini gaya komik), tapi salah satu
-dari dua dokumen itu harus diperbaiki. Pemilik memutuskan mana yang berlaku;
-pekerjaannya cuma menyelaraskan dokumen (dan kode, kalau AGENT_CONTEXT yang
-menang).
+hitam, dan itu memang yang diinginkan.
+
+**Pemilik menetapkan ADR-0006 yang berlaku.** `AGENT_CONTEXT.md` sudah
+diselaraskan, ADR-0006 §8b mencatat keputusannya, dan tidak ada perubahan kode
+maupun nilai token. Lihat UX-30 — selesai.
 
 ---
 
@@ -1058,13 +1069,13 @@ dipakai (`PROJECT_GLOSSARY.md:5`).
 
 # Batch 5 — Token dan warna semantik
 
-## - [ ] UX-22 ⛔ 🔴 Mode terang gagal ambang kontras di hampir seluruh palet semantik
+## - [ ] UX-22 🔴 Mode terang gagal ambang kontras di hampir seluruh palet semantik
 
 | | |
 |---|---|
 | **Kat.** | E |
 | **Prioritas** | #2 |
-| **Butuh keputusan pemilik** | **YA — Keputusan 1 di bagian atas dokumen. Jangan kerjakan sebelum dijawab.** |
+| **Butuh keputusan pemilik** | Tidak lagi — **opsi A sudah dipilih**, dan langkah 1 (ADR-0006) sudah dikerjakan. Sisanya kode. |
 
 **Masalah.** Rasio kontras WCAG dihitung dari tabel hex ADR-0006 (ambang 4.5:1
 teks normal, 3:1 teks besar ≥18.66px bold):
@@ -1094,22 +1105,22 @@ dan cakupannya lebih luas dari perkiraan semula: bukan cuma `needsReview` dan
 bahkan untuk ambang teks besar. Pemilik tidak bisa memindai apakah bulan ini
 aman tanpa membaca pelan-pelan.
 
-**Langkah perbaikan** (asumsi pemilik memilih opsi **A**; kalau memilih B atau C,
-ubah langkahnya sesuai jawaban):
+**Langkah perbaikan** (opsi A — pemilik sudah memilih).
 
-1. Tulis ulang tabel hex di
-   `docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md` dengan
-   enam baris `…OnLight` tambahan, memakai nilai dari tabel kandidat di bagian
-   "Keputusan pemilik" dokumen ini. Tambahkan bagian "Catatan revisi" yang jujur:
-   ini koreksi keterbacaan, bukan perubahan arah rasa, dan dipicu oleh kriteria
-   peninjauan ulang yang ADR ini tuliskan sendiri di §8.
+1. ~~Tulis ulang tabel hex di ADR-0006 dengan enam baris `…OnLight`, plus
+   catatan revisi.~~ **SELESAI 11 September 2026** — lihat ADR-0006 bagian
+   "Varian `…OnLight`" untuk nilai hex final dan bagian 8b untuk catatan
+   revisinya. Ambil hex dari ADR, jangan dari dokumen ini.
 2. Tambahkan enam field ke `AppColorsExtension`
    (`lib/core/theme/extensions/app_colors_extension.dart`): `incomeOnLight`,
    `expenseOnLight`, `overBudgetOnLight`, `investmentOnLight`, `rollUpOnLight`,
    `needsReviewOnLight`. **Wajib** diisi di `light` **dan** `dark` (di `dark`,
    isi dengan nilai slot aslinya — mode gelap tidak butuh varian), lalu
    ditambahkan ke `copyWith` dan `lerp`. Melewatkan salah satu dari dua method
-   itu akan lolos `analyze` tapi merusak transisi tema.
+   itu akan lolos `analyze` tapi merusak transisi tema — tiap field harus
+   muncul 7 kali di berkas itu (parameter konstruktor, deklarasi field, `light`,
+   `dark`, parameter `copyWith`, penugasan `copyWith`, `lerp`); hitung dengan
+   `grep -c` sebagai pemeriksaan cepat.
 3. Ganti pemakaian di titik-titik pada tabel di atas supaya memakai varian
    `…OnLight` saat warna dipakai sebagai **teks/ikon**, dan tetap memakai slot
    asli saat dipakai sebagai **isian** (chip terpilih, latar snackbar, tombol).
@@ -1219,12 +1230,12 @@ Perbaikan satu kata, tidak ada risiko.
 
 **Verifikasi.** Kedua ikon kunci (banner dan app bar) berwarna sama.
 
-## - [ ] UX-26 ⛔ 🟡 Dua slot semantik praktis mati
+## - [ ] UX-26 🟡 Dua slot semantik praktis mati
 
 | | |
 |---|---|
 | **Kat.** | E |
-| **Butuh keputusan pemilik** | **YA** — menghidupkan keduanya sebagai warna teks di mode terang butuh hasil Keputusan 1 (UX-22) |
+| **Butuh keputusan pemilik** | Tidak lagi — tapi **bergantung teknis pada UX-22**: butuh varian `…OnLight` sudah ada di kode |
 
 **Masalah.**
 
@@ -1249,9 +1260,9 @@ gejalanya.
 2. `rollUp`: dipakai sebagai penanda baris roll-up; dikerjakan sebagai bagian
    dari **UX-36**, bukan di sini. Item ini hanya mencatat bahwa slotnya ada dan
    menganggur.
-3. Keduanya jadi teks di atas kartu terang, jadi tunggu varian `…OnLight` dari
-   UX-22 (`investment` hanya 2.43:1 apa adanya — jelas tidak boleh dipakai
-   sebagai teks tanpa varian).
+3. Keduanya jadi teks di atas kartu terang, jadi pakai `investmentOnLight` dan
+   `rollUpOnLight` — bukan slot aslinya (`investment` hanya 2.43:1 apa adanya).
+   Karena itu UX-22 harus selesai lebih dulu.
 
 **Verifikasi.** Setiap slot di `AppColorsExtension` punya ≥1 pemakaian yang
 sesuai maknanya, atau dihapus dari ADR-0006 kalau diputuskan tidak diperlukan.
@@ -1342,12 +1353,13 @@ apakah `AppChip` memang sengaja lebih tipis — kalau tidak, samakan ke `thick`.
 **Verifikasi.** `grep -rn "width: 2" lib --include='*.dart' | grep -v tokens/` —
 tidak menyisakan lebar garis harfiah.
 
-## - [ ] UX-30 ⛔ 🟡 Dua aturan proyek bertabrakan soal bayangan kartu di mode gelap
+## - [x] UX-30 🟡 Dua aturan proyek bertabrakan soal bayangan kartu di mode gelap
 
 | | |
 |---|---|
 | **Kat.** | E |
-| **Butuh keputusan pemilik** | **YA — Keputusan 2 di bagian atas dokumen.** |
+| **Butuh keputusan pemilik** | Sudah dijawab — ADR-0006 yang berlaku |
+| **Status** | **Selesai 11 September 2026.** Dokumen saja, tanpa perubahan kode. |
 
 **Masalah.** `.claude/AGENT_CONTEXT.md:98` mewajibkan kartu mode gelap memakai
 batas rambut, bukan bayangan; ADR-0006 §Batasan mewajibkan bayangan keras di
@@ -1359,16 +1371,16 @@ tegas 4px di atas dasar hitam. Itu mungkin memang yang diinginkan — tapi satu
 dari dua dokumen mengikat sedang salah, dan agent berikutnya yang membaca
 AGENT_CONTEXT akan "memperbaiki" sesuatu yang sengaja.
 
-**Langkah perbaikan.** Setelah pemilik menjawab:
-- Kalau **ADR menang** (kemungkinan besar, karena itu yang pemilik setujui
-  terakhir dan yang dipakai di Design Canvas): perbaiki
-  `.claude/AGENT_CONTEXT.md:98` supaya menyebut bayangan keras berlaku di kedua
-  mode. Tidak ada perubahan kode.
-- Kalau **AGENT_CONTEXT menang**: `app_card.dart` memakai `elevation: none` di
-  mode gelap dan mengandalkan `border` yang sudah ada, lalu ADR-0006 direvisi
-  dengan catatan revisi yang jujur.
+**Yang dikerjakan.** Pemilik menetapkan ADR-0006 yang berlaku, jadi
+`.claude/AGENT_CONTEXT.md` yang diperbaiki: butir "Di mode gelap, kartu memakai
+batas rambut, bukan bayangan" diganti menjadi pernyataan bahwa garis tepi tebal
+dan bayangan keras offset berlaku di **kedua** mode, dengan tautan ke ADR-0006.
+ADR-0006 §8b mencatat keputusannya. `app_card.dart` tidak disentuh — ia sudah
+benar sejak awal.
 
-**Verifikasi.** Kedua dokumen menyebut hal yang sama, dan kode mengikutinya.
+**Verifikasi.** Kedua dokumen kini menyebut hal yang sama, dan kode
+(`app_card.dart:44`) mengikutinya tanpa perubahan. `flutter analyze` 0 issue,
+`flutter test` 124 lulus — tidak terpengaruh karena tidak ada kode yang diubah.
 
 ---
 
@@ -1677,5 +1689,34 @@ diputuskan pemilik, apa yang sengaja ditunda, dan hasil verifikasinya
 commit `8891451`. 37 temuan dicatat jadi item UX-01…UX-37, plus 3 dugaan bug.
 Belum ada yang dikerjakan. Cek regresi Fix #1–#9 dilakukan sebagai bagian review:
 kesembilan masih utuh, tidak ada regresi. Dua item menunggu keputusan pemilik
-(palet mode terang, dan konflik aturan bayangan mode gelap) — keduanya dirangkum
-di bagian "Keputusan pemilik yang ditunggu" di atas.
+(palet mode terang, dan konflik aturan bayangan mode gelap).
+
+**11 September 2026 (kedua keputusan pemilik dijawab — dokumentasi saja)** —
+Pemilik memilih **opsi A** untuk palet mode terang, dan menetapkan **ADR-0006
+yang berlaku** untuk aturan bayangan mode gelap. Ronde ini sengaja dibatasi ke
+dokumen; tidak ada satu baris kode yang diubah.
+
+- **ADR-0006** ditambahi bagian "Varian `…OnLight`" berisi tabel hex final
+  keenam varian beserta rasio kontras terukurnya, aturan pemakaian satu kalimat
+  (isian memakai slot asli, teks/ikon memakai varian), dan alasan kenapa tidak
+  ada varian `…OnDark`. Bagian "8b. Catatan revisi" baru mencatat kedua
+  keputusan, menegaskan bahwa ini koreksi keterbacaan dan bukan perubahan arah
+  rasa, serta menandai bahwa tabelnya mendahului kode (preferensi pemilik
+  "dokumentasi lebih dulu, kode menyusul"). Kriteria peninjauan ulang di bagian
+  8 yang menyebut kegagalan kontras ditandai sudah terpicu dan ditindak,
+  supaya tidak dibaca sebagai kriteria yang masih menganggur.
+- **`.claude/AGENT_CONTEXT.md`** butir "Di mode gelap, kartu memakai batas
+  rambut, bukan bayangan" diganti menjadi pernyataan bahwa garis tepi tebal dan
+  bayangan keras offset berlaku di kedua mode, dengan tautan ke ADR-0006. Ini
+  menutup **UX-30**, satu-satunya item yang pekerjaannya murni dokumen.
+- **UX_REVIEW_FIXES.md** (dokumen ini): kunci ⛔ pada UX-22 dan UX-26 dilepas,
+  langkah 1 UX-22 ditandai selesai, UX-30 dicentang, dan bagian keputusan
+  ditulis ulang dari "ditunggu" menjadi "sudah dijawab" lengkap dengan tabel
+  sisa pekerjaan.
+- **UI_UX_DESIGN_TASKS.md** diberi catatan bahwa klaim "catatan kontras sudah
+  closed" di entri 11 September sebelumnya hanya benar separuh.
+
+Verifikasi: `flutter analyze` 0 issue dan `flutter test` 124 lulus (sama dengan
+baseline — wajar, tidak ada kode yang disentuh). Seluruh tautan relatif di
+dokumen yang disunting dicek resolve. **Sisa UX-22 adalah pekerjaan kode** dan
+belum dikerjakan, jadi kotaknya tetap kosong.

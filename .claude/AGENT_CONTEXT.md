@@ -95,7 +95,9 @@ terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
 - Jarak, sudut, durasi, dan elevasi selalu lewat token. Tidak pernah harfiah.
 - Teks antarmuka selalu lewat slang. Tidak pernah harfiah.
 - Nominal ditampilkan lewat `AppMoneyText`.
-- Di mode gelap, kartu memakai batas rambut, bukan bayangan.
+- Kartu memakai garis tepi tebal dan bayangan keras offset di KEDUA mode,
+  bukan bayangan lembut Material dan bukan batas rambut di mode gelap. Ini
+  motif yang disengaja, lihat [ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md).
 
 ### Penamaan
 

@@ -95,6 +95,38 @@ nilainya baru sepenuhnya):
 | `rollUp` | `#5B9CFF` | `#2D6FE0` | Baris yang nominalnya dihitung dari sumber lain |
 | `needsReview` | `#FFE14D` | `#FFD400` | Baris rollover yang belum dikonfirmasi |
 
+#### Varian `…OnLight` — dipakai saat warna semantik menjadi teks atau ikon
+
+Keenam slot di atas dirancang sebagai **isian** (chip terpilih, badge, latar
+snackbar, tombol), dengan teks gelap di atasnya. Dipakai sebagai isian, nilainya
+aman di kedua mode.
+
+Dipakai sebagai **teks atau ikon di atas dasar terang**, enam-enamnya gagal
+ambang keterbacaan. Pengukuran terhadap `cardBackground` terang (`#FFFFFF`):
+`needsReview` 1.43:1, `investment` 2.43:1, `overBudget` 2.78:1, `income` 3.48:1,
+`expense` 4.34:1, `rollUp` 4.71:1 — sementara ambangnya 4.5:1 untuk teks normal
+dan 3:1 untuk teks besar. Mode gelap tidak punya masalah ini: rasio
+terendahnya 5.39:1.
+
+Karena itu setiap slot semantik punya pasangan `…OnLight` yang **hanya**
+dipakai saat warnanya menjadi teks atau ikon. Hue-nya sama supaya tetap terbaca
+sebagai warna yang sama; yang berubah hanya kegelapannya. Di mode gelap varian
+ini bernilai sama dengan slot aslinya, sehingga pemakai token tidak perlu
+bercabang per tema.
+
+| Varian | Gelap | Terang | Rasio terang (kartu putih / dasar krem) |
+|---|---|---|---|
+| `incomeOnLight` | `#3DDC68` | `#15702F` | 6.19 / 5.14 |
+| `expenseOnLight` | `#FF4D6A` | `#B01C3A` | 6.83 / 5.67 |
+| `overBudgetOnLight` | `#FF8C3D` | `#A84F05` | 5.55 / 4.60 |
+| `investmentOnLight` | `#FFD23F` | `#7A5400` | 6.78 / 5.63 |
+| `rollUpOnLight` | `#5B9CFF` | `#2159BE` | 6.49 / 5.38 |
+| `needsReviewOnLight` | `#FFE14D` | `#756000` | 6.12 / 5.08 |
+
+Aturannya satu kalimat: **isian memakai slot aslinya, teks dan ikon memakai
+varian `…OnLight`.** Tidak ada varian `…OnDark` — tidak ada yang
+membutuhkannya, dan menambahkannya menggandakan permukaan token tanpa alasan.
+
 `needsReview` dipakai sebagai warna isian badge (bukan hanya teks), sehingga
 butuh warna teks-di-atasnya tersendiri: `onNeedsReview` = `#14120F` (gelap)
 dan `#161310` (terang) — teks gelap di atas kuning tetap terbaca di kedua
@@ -235,10 +267,52 @@ kepercayaan massal — dipakai satu orang yang memang menyukainya.
 
 - Aplikasi dipakai lebih dari satu orang, sehingga preferensi visual perlu
   dinegosiasikan ulang.
-- Pemeriksaan kontras menunjukkan slot tertentu (terutama kuning di atas
-  terang) gagal memenuhi ambang keterbacaan.
+- ~~Pemeriksaan kontras menunjukkan slot tertentu (terutama kuning di atas
+  terang) gagal memenuhi ambang keterbacaan.~~ **Terpicu dan ditindak pada
+  11 September 2026** — lihat "Catatan revisi" di bawah. Kriteria ini tetap
+  berlaku untuk slot yang ditambahkan nanti.
 - Laporan dan grafik masuk cakupan, sehingga dibutuhkan palet kategorikal
   untuk visualisasi data.
+
+## 8b. Catatan revisi
+
+**11 September 2026 — varian `…OnLight` ditambahkan.** Review UX (skill
+`ux-review`, lihat [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)
+item UX-22) mengukur kontras WCAG seluruh slot semantik terhadap nilai hex di
+ADR ini, dan menemukan enam slot gagal ambang keterbacaan di mode terang saat
+dipakai sebagai teks atau ikon. Yang paling parah dua elemen terpenting di
+layar utama: ikon penanda "perlu ditinjau" (1.43:1, praktis tak terlihat) dan
+angka sisa siklus yang negatif (2.78:1, gagal bahkan untuk ambang teks besar).
+
+Ini memicu kriteria peninjauan ulang yang ADR ini tuliskan sendiri di bagian 8.
+
+Pemilik memilih menambah varian, bukan menggelapkan hex yang sudah ada —
+sehingga karakter pop-art datar yang dipilih pemilik tetap utuh pada isian,
+dan yang berubah hanya warna teks/ikon. **Arah rasa tidak berubah; ini koreksi
+keterbacaan.** Dua opsi lain yang ditolak: menggelapkan hex terang yang ada
+(membuat isian chip/badge lebih kalem), dan menerima kontrasnya apa adanya.
+
+Catatan kontras lama di
+[UI_UX_DESIGN_TASKS.md](../../04-planning/UI_UX_DESIGN_TASKS.md) (11 September
+2026) menyatakan masalah kuning sudah "closed" lewat penambahan
+`onNeedsReview`. Penutupan itu benar, tapi hanya untuk kasus **teks di atas
+isian kuning** (12.93:1, aman). Kasus kuning sebagai **ikon atau teks di atas
+kartu terang** tidak pernah diperiksa — dan justru itulah yang dipakai banner
+"perlu ditinjau". Catatan itu dengan demikian tertutup hanya separuh, dan
+sekarang ditutup penuh di sini.
+
+⚠ Dokumen ini mendahului kodenya, mengikuti preferensi pemilik "dokumentasi
+lebih dulu, kode menyusul" (`.claude/CLAUDE.md`). Saat catatan ini ditulis,
+`AppColorsExtension` **belum** memuat keenam varian tersebut — pengerjaannya
+ada di UX-22. Sampai itu selesai, tabel di atas adalah spesifikasi, bukan
+cermin kode.
+
+**11 September 2026 — aturan bayangan mode gelap ditegaskan.** Review yang sama
+(item UX-30) menemukan `.claude/AGENT_CONTEXT.md` mewajibkan kartu mode gelap
+memakai batas rambut alih-alih bayangan, bertentangan dengan bagian 7 ADR ini
+yang mewajibkan bayangan keras offset di kedua mode. Kode mengikuti ADR.
+Pemilik menetapkan **ADR ini yang berlaku**, dan `AGENT_CONTEXT.md` sudah
+diselaraskan. Tidak ada perubahan kode maupun nilai token.
 
 ## 9. Artefak terkait
 

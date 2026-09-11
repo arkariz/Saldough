@@ -346,6 +346,19 @@ diminta terpisah") sekarang diselesaikan:
   ulang. Nilai `needsReview` final: `#FFE14D` (gelap) / `#FFD400` (terang),
   dengan `onNeedsReview` `#14120F`/`#161310` supaya teks di atas kuning
   tetap terbaca di kedua mode — closing catatan kontras lama di atas.
+
+  ⚠ **Koreksi 11 September 2026 (sore):** penutupan ini ternyata hanya benar
+  separuh. `onNeedsReview` memang menyelesaikan kasus **teks di atas isian
+  kuning** (12.93:1, aman), tapi kasus warna semantik dipakai sebagai **teks
+  atau ikon di atas kartu terang** tidak pernah diperiksa — dan justru itulah
+  yang dipakai banner "perlu ditinjau" di `cycle_page.dart` (1.43:1, praktis
+  tak terlihat). Review UX menemukan enam slot gagal ambang di mode terang,
+  bukan hanya `needsReview` dan `investment`. Pemilik memilih menambah varian
+  `…OnLight`; nilainya kini resmi di
+  [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md)
+  bagian "Varian `…OnLight`", dan pengerjaan kodenya dilacak sebagai UX-22 di
+  [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md). Catatan kontras lama dengan
+  demikian baru tertutup penuh sekarang.
 - **`.claude/CLAUDE.md` dan `AGENT_CONTEXT.md`**: baris `new-health-duel`
   diperbarui dari "acuan tema" menjadi "acuan pola teknis theming Flutter
   saja", konsisten dengan ADR-0006.

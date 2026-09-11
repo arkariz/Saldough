@@ -17,11 +17,11 @@ final class MonthlyCycle extends Equatable {
 
   /// Siklus kosong untuk bulan ber-[id] (format `YYYY-MM`).
   factory MonthlyCycle.empty(String id) => MonthlyCycle(
-        id: id,
-        incomeLines: const [],
-        budgetLines: const [],
-        investmentPlan: InvestmentPlan.empty(),
-      );
+    id: id,
+    incomeLines: const [],
+    budgetLines: const [],
+    investmentPlan: InvestmentPlan.empty(),
+  );
 
   /// Identitas siklus, format `YYYY-MM`, misalnya `"2026-09"`.
   final String id;
@@ -63,22 +63,28 @@ final class MonthlyCycle extends Equatable {
 
   /// Salinan [MonthlyCycle] yang dikunci pada [at] (bawaan waktu sekarang).
   MonthlyCycle close({DateTime? at}) => MonthlyCycle(
-        id: id,
-        incomeLines: incomeLines,
-        budgetLines: budgetLines,
-        investmentPlan: investmentPlan,
-        closedAt: at ?? DateTime.now(),
-      );
+    id: id,
+    incomeLines: incomeLines,
+    budgetLines: budgetLines,
+    investmentPlan: investmentPlan,
+    closedAt: at ?? DateTime.now(),
+  );
 
   /// Salinan [MonthlyCycle] yang kuncinya dibuka kembali, secara sadar
   /// (ADR-0008).
   MonthlyCycle reopen() => MonthlyCycle(
-        id: id,
-        incomeLines: incomeLines,
-        budgetLines: budgetLines,
-        investmentPlan: investmentPlan,
-      );
+    id: id,
+    incomeLines: incomeLines,
+    budgetLines: budgetLines,
+    investmentPlan: investmentPlan,
+  );
 
   @override
-  List<Object?> get props => [id, incomeLines, budgetLines, investmentPlan, closedAt];
+  List<Object?> get props => [
+    id,
+    incomeLines,
+    budgetLines,
+    investmentPlan,
+    closedAt,
+  ];
 }

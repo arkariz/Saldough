@@ -2,6 +2,7 @@ import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
 import 'package:saldough/features/cycle/domain/entities/cycle_totals.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
+import 'package:saldough/features/cycle/domain/repositories/card_catalog.dart';
 import 'package:saldough/features/cycle/domain/usecases/calculate_cycle_totals.dart';
 import 'package:saldough/shared/income/income.dart';
 import 'package:state_management/state_management.dart';
@@ -18,11 +19,14 @@ final class CycleState extends UiState<CycleState> {
     required this.cycle,
     required this.isLoading,
     this.incomeSources = const [],
+    this.existingCycleIds = const [],
+    this.cards = const [],
     super.effect,
   });
 
   /// State awal sebelum siklus mana pun dimuat.
-  factory CycleState.initial() => CycleState(cycle: .empty(''), isLoading: true);
+  factory CycleState.initial() =>
+      CycleState(cycle: .empty(''), isLoading: true);
 
   /// Siklus yang sedang ditampilkan.
   final MonthlyCycle cycle;
@@ -35,6 +39,34 @@ final class CycleState extends UiState<CycleState> {
   /// (T-3.4/FR-INC-002). Dimuat sekali saat siklus dibuka.
   final List<IncomeSource> incomeSources;
 
+  /// Seluruh `id` siklus yang benar-benar sudah dibuat (`CycleRepository`),
+  /// terurut menaik. Dipakai app bar untuk membatasi navigasi bulan —
+  /// siklus baru hanya boleh muncul lewat [CycleBloc.add] dengan
+  /// `CycleRollOverRequested`, bukan dengan sekadar menggeser bulan
+  /// (sebelumnya bisa, ini perbaikan atas laporan pemilik).
+  final List<String> existingCycleIds;
+
+  /// Seluruh kartu kredit terdaftar (ringkasan id+nama) — dipakai layar
+  /// penyuntingan baris anggaran untuk menautkan baris baru ke tagihan
+  /// kartu tertentu sebagai sumber roll-up (laporan pemilik: sebelumnya
+  /// hanya bisa lewat seed, tidak ada cara dari UI). Dimuat sekali saat
+  /// siklus dibuka, lewat `CardCatalog` (port milik fitur ini, ADR-0009).
+  final List<CardSummary> cards;
+
+  /// True kalau siklus ber-`id` [id] sudah benar-benar ada.
+  bool hasCycle(String id) => existingCycleIds.contains(id);
+
+  /// True kalau siklus yang sedang ditampilkan boleh dihapus: harus siklus
+  /// TERAKHIR (paling baru, [existingCycleIds] terurut menaik — lihat
+  /// `CycleRepository.listCycleIds`) dan belum ditutup. Dibatasi ke siklus
+  /// terakhir saja supaya urutan rollover tidak berlubang di tengah (siklus
+  /// Maret terhapus tapi April masih ada, misalnya) — kalau mau menghapus
+  /// siklus yang lebih lama, hapus dulu semua yang lebih baru satu per satu.
+  bool get canDeleteCycle =>
+      !cycle.isClosed &&
+      existingCycleIds.isNotEmpty &&
+      existingCycleIds.last == cycle.id;
+
   /// Total dan sisa, dihitung dari [cycle] lewat `CalculateCycleTotals`.
   CycleTotals get totals => CalculateCycleTotals()(cycle);
 
@@ -45,22 +77,28 @@ final class CycleState extends UiState<CycleState> {
       cycle.budgetLines.where((l) => l.needsReview).length;
 
   /// Baris pemasukan ber-`id` [id] di [cycle], atau `null` kalau tidak ada.
-  IncomeLine? findIncomeLine(String id) => cycle.incomeLines.where((l) => l.id == id).firstOrNull;
+  IncomeLine? findIncomeLine(String id) =>
+      cycle.incomeLines.where((l) => l.id == id).firstOrNull;
 
   /// Baris anggaran ber-`id` [id] di [cycle], atau `null` kalau tidak ada.
-  BudgetLine? findBudgetLine(String id) => cycle.budgetLines.where((l) => l.id == id).firstOrNull;
+  BudgetLine? findBudgetLine(String id) =>
+      cycle.budgetLines.where((l) => l.id == id).firstOrNull;
 
   @override
   CycleState copyWith({
     MonthlyCycle? cycle,
     bool? isLoading,
     List<IncomeSource>? incomeSources,
+    List<String>? existingCycleIds,
+    List<CardSummary>? cards,
     UiEffect? effect,
   }) {
     return CycleState(
       cycle: cycle ?? this.cycle,
       isLoading: isLoading ?? this.isLoading,
       incomeSources: incomeSources ?? this.incomeSources,
+      existingCycleIds: existingCycleIds ?? this.existingCycleIds,
+      cards: cards ?? this.cards,
       effect: effect,
     );
   }
@@ -69,9 +107,26 @@ final class CycleState extends UiState<CycleState> {
   /// tiap kali berhasil memuat, menyimpan, rollover, atau membuka kembali
   /// siklus; `isLoading` bawaan `false` karena selalu dipanggil setelah
   /// operasi selesai.
-  CycleState withCycle(MonthlyCycle cycle, {bool isLoading = false, UiEffect? effect}) =>
-      copyWith(cycle: cycle, isLoading: isLoading, effect: effect);
+  CycleState withCycle(
+    MonthlyCycle cycle, {
+    bool isLoading = false,
+    List<String>? existingCycleIds,
+    List<CardSummary>? cards,
+    UiEffect? effect,
+  }) => copyWith(
+    cycle: cycle,
+    isLoading: isLoading,
+    existingCycleIds: existingCycleIds,
+    cards: cards,
+    effect: effect,
+  );
 
   @override
-  List<Object?> get props => [cycle, isLoading, incomeSources];
+  List<Object?> get props => [
+    cycle,
+    isLoading,
+    incomeSources,
+    existingCycleIds,
+    cards,
+  ];
 }

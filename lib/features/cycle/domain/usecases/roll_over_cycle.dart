@@ -20,7 +20,10 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_template_repos
 /// 4. Salin `defaultAllocations` apa adanya ke `investmentPlan.allocations`.
 final class RollOverCycle {
   /// Membuat [RollOverCycle] dengan kedua repository yang dibutuhkan.
-  RollOverCycle({required this._cycleRepository, required this._templateRepository});
+  RollOverCycle({
+    required this._cycleRepository,
+    required this._templateRepository,
+  });
 
   final CycleRepository _cycleRepository;
   final CycleTemplateRepository _templateRepository;
@@ -38,11 +41,13 @@ final class RollOverCycle {
       case Left(value: final failure):
         return left(failure);
       case Right(value: final cycle) when cycle != null:
-        return left(BusinessRuleFailure(
-          code: const FailureCode('CYCLE_ALREADY_EXISTS'),
-          message: 'Siklus $nextId sudah ada, rollover tidak menimpanya.',
-          userMessage: 'Siklus bulan $nextId sudah ada.',
-        ));
+        return left(
+          BusinessRuleFailure(
+            code: const FailureCode('CYCLE_ALREADY_EXISTS'),
+            message: 'Siklus $nextId sudah ada, rollover tidak menimpanya.',
+            userMessage: 'Siklus bulan $nextId sudah ada.',
+          ),
+        );
       case Right():
         break;
     }
@@ -54,7 +59,10 @@ final class RollOverCycle {
     };
   }
 
-  Future<Either<Failure, MonthlyCycle>> _createFrom(String nextId, CycleTemplate template) async {
+  Future<Either<Failure, MonthlyCycle>> _createFrom(
+    String nextId,
+    CycleTemplate template,
+  ) async {
     var counter = 0;
     String freshId(String prefix) => '$nextId-$prefix-${counter++}';
 
@@ -89,7 +97,10 @@ final class RollOverCycle {
       id: nextId,
       incomeLines: incomeLines,
       budgetLines: budgetLines,
-      investmentPlan: InvestmentPlan(returnDeposit: 0, allocations: template.defaultAllocations),
+      investmentPlan: InvestmentPlan(
+        returnDeposit: 0,
+        allocations: template.defaultAllocations,
+      ),
     );
 
     final saveResult = await _cycleRepository.saveCycle(newCycle);

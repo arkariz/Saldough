@@ -50,5 +50,12 @@ final class IncomeLine extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, label, amount, sourceId, isTemplate, needsReview];
+  List<Object?> get props => [
+    id,
+    label,
+    amount,
+    sourceId,
+    isTemplate,
+    needsReview,
+  ];
 }

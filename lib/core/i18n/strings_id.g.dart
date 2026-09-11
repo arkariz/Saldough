@@ -182,6 +182,33 @@ class Translations$cycle$id {
 
 	/// id: 'Ada $count baris perlu ditinjau.'
 	String unreviewedBanner({required Object count}) => 'Ada ${count} baris perlu ditinjau.';
+
+	/// id: 'Hapus siklus ini'
+	String get deleteCycle => 'Hapus siklus ini';
+
+	/// id: 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.'
+	String get deleteCycleConfirmMessage => 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.';
+
+	/// id: 'Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.'
+	String get noIncomeSourcesHint => 'Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.';
+
+	/// id: 'Tambah sumber pemasukan'
+	String get addIncomeSourceButton => 'Tambah sumber pemasukan';
+
+	/// id: 'Sumber nominal'
+	String get budgetSourceFieldLabel => 'Sumber nominal';
+
+	/// id: 'Manual'
+	String get budgetSourceManual => 'Manual';
+
+	/// id: 'Rencana Belanja'
+	String get budgetSourceGrocery => 'Rencana Belanja';
+
+	/// id: 'Kartu Kredit'
+	String get budgetSourceCard => 'Kartu Kredit';
+
+	/// id: 'Pilih kartu'
+	String get selectCardHint => 'Pilih kartu';
 }
 
 // Path: income
@@ -626,6 +653,15 @@ extension on Translations {
 			'cycle.needsReviewBadge' => 'Perlu ditinjau',
 			'cycle.confirmReviewed' => 'Sudah benar',
 			'cycle.unreviewedBanner' => ({required Object count}) => 'Ada ${count} baris perlu ditinjau.',
+			'cycle.deleteCycle' => 'Hapus siklus ini',
+			'cycle.deleteCycleConfirmMessage' => 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.',
+			'cycle.noIncomeSourcesHint' => 'Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.',
+			'cycle.addIncomeSourceButton' => 'Tambah sumber pemasukan',
+			'cycle.budgetSourceFieldLabel' => 'Sumber nominal',
+			'cycle.budgetSourceManual' => 'Manual',
+			'cycle.budgetSourceGrocery' => 'Rencana Belanja',
+			'cycle.budgetSourceCard' => 'Kartu Kredit',
+			'cycle.selectCardHint' => 'Pilih kartu',
 			'income.pageTitle' => 'Sumber pemasukan',
 			'income.emptySources' => 'Belum ada sumber pemasukan.',
 			'income.addSourceTitle' => 'Tambah sumber pemasukan',

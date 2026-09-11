@@ -38,7 +38,16 @@
     "markIncidental": "Mark as one-off",
     "needsReviewBadge": "Needs review",
     "confirmReviewed": "Looks right",
-    "unreviewedBanner": "$count line(s) need review."
+    "unreviewedBanner": "$count line(s) need review.",
+    "deleteCycle": "Delete this cycle",
+    "deleteCycleConfirmMessage": "All income and budget lines for this month will be deleted. This action cannot be undone.",
+    "noIncomeSourcesHint": "No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.",
+    "addIncomeSourceButton": "Add income source",
+    "budgetSourceFieldLabel": "Amount source",
+    "budgetSourceManual": "Manual",
+    "budgetSourceGrocery": "Grocery plan",
+    "budgetSourceCard": "Credit card",
+    "selectCardHint": "Select a card"
   },
   "income": {
     "pageTitle": "Income sources",

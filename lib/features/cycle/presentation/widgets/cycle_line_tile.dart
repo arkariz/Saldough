@@ -56,7 +56,10 @@ class CycleLineTile extends StatelessWidget {
     final colors = context.appColors;
 
     return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       elevation: AppElevation.sm,
       child: InkWell(
         onTap: isEditable ? onTap : null,
@@ -72,7 +75,11 @@ class CycleLineTile extends StatelessWidget {
                       if (isTemplate)
                         Padding(
                           padding: const EdgeInsets.only(left: AppSpacing.xs),
-                          child: Icon(Icons.repeat, size: 14, color: colors.textMuted),
+                          child: Icon(
+                            Icons.repeat,
+                            size: 14,
+                            color: colors.textMuted,
+                          ),
                         ),
                     ],
                   ),
@@ -103,11 +110,18 @@ class CycleLineTile extends StatelessWidget {
                 ],
               ),
             ),
-            AppMoneyText(sen: amount, style: Theme.of(context).textTheme.titleMedium),
+            AppMoneyText(
+              sen: amount,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             if (onToggleTemplate != null)
               IconButton(
-                tooltip: isTemplate ? t.cycle.markIncidental : t.cycle.markFixed,
-                icon: Icon(isTemplate ? Icons.push_pin : Icons.push_pin_outlined),
+                tooltip: isTemplate
+                    ? t.cycle.markIncidental
+                    : t.cycle.markFixed,
+                icon: Icon(
+                  isTemplate ? Icons.push_pin : Icons.push_pin_outlined,
+                ),
                 onPressed: onToggleTemplate,
               ),
             if (isEditable && onDelete != null)

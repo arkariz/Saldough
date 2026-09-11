@@ -14,7 +14,12 @@ void main() {
       id: '2026-09',
       incomeLines: [IncomeLine(id: 'i1', label: 'Pemasukan', amount: income)],
       budgetLines: [
-        BudgetLine(id: 'b1', label: 'Anggaran', amount: budget, kind: BudgetLineKind.manual),
+        BudgetLine(
+          id: 'b1',
+          label: 'Anggaran',
+          amount: budget,
+          kind: BudgetLineKind.manual,
+        ),
       ],
       investmentPlan: InvestmentPlan.empty(),
     );
@@ -22,7 +27,9 @@ void main() {
 
   group('CalculateCycleTotals', () {
     test('sisa positif: 15.839.563 - 13.382.490 = 2.457.073', () {
-      final totals = calculate(cycleWith(income: 1583956300, budget: 1338249000));
+      final totals = calculate(
+        cycleWith(income: 1583956300, budget: 1338249000),
+      );
 
       expect(totals.totalIncome, 1583956300);
       expect(totals.totalBudget, 1338249000);
@@ -31,7 +38,9 @@ void main() {
     });
 
     test('sisa negatif: 8.900.000 - 10.237.042 = -1.337.042', () {
-      final totals = calculate(cycleWith(income: 890000000, budget: 1023704200));
+      final totals = calculate(
+        cycleWith(income: 890000000, budget: 1023704200),
+      );
 
       expect(totals.remainder, -133704200);
       expect(totals.isOverBudget, isTrue);
@@ -45,8 +54,18 @@ void main() {
           IncomeLine(id: 'i2', label: 'Freelance', amount: 50000000),
         ],
         budgetLines: [
-          BudgetLine(id: 'b1', label: 'Kos', amount: 150000000, kind: BudgetLineKind.manual),
-          BudgetLine(id: 'b2', label: 'Listrik', amount: 20000000, kind: BudgetLineKind.manual),
+          BudgetLine(
+            id: 'b1',
+            label: 'Kos',
+            amount: 150000000,
+            kind: BudgetLineKind.manual,
+          ),
+          BudgetLine(
+            id: 'b2',
+            label: 'Listrik',
+            amount: 20000000,
+            kind: BudgetLineKind.manual,
+          ),
         ],
         investmentPlan: InvestmentPlan.empty(),
       );

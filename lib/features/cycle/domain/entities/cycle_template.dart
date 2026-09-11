@@ -21,10 +21,10 @@ final class CycleTemplate extends Equatable {
 
   /// Template kosong.
   factory CycleTemplate.empty() => const CycleTemplate(
-        incomeLines: [],
-        budgetLines: [],
-        defaultAllocations: [],
-      );
+    incomeLines: [],
+    budgetLines: [],
+    defaultAllocations: [],
+  );
 
   /// Baris pemasukan tetap.
   final List<IncomeLine> incomeLines;

@@ -7,8 +7,14 @@ import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
 final class CalculateCycleTotals {
   /// Menghitung total untuk [cycle].
   CycleTotals call(MonthlyCycle cycle) {
-    final totalIncome = cycle.incomeLines.fold(0, (sum, line) => sum + line.amount);
-    final totalBudget = cycle.budgetLines.fold(0, (sum, line) => sum + line.amount);
+    final totalIncome = cycle.incomeLines.fold(
+      0,
+      (sum, line) => sum + line.amount,
+    );
+    final totalBudget = cycle.budgetLines.fold(
+      0,
+      (sum, line) => sum + line.amount,
+    );
     return CycleTotals(
       totalIncome: totalIncome,
       totalBudget: totalBudget,

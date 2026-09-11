@@ -10,7 +10,9 @@ abstract final class RollUpSourceModel {
     return switch (json['type'] as String) {
       'grocery' => .grocery,
       'card' => .card(json['cardId'] as String),
-      final type => throw FormatException('RollUpSource.type tidak dikenal: $type'),
+      final type => throw FormatException(
+        'RollUpSource.type tidak dikenal: $type',
+      ),
     };
   }
 

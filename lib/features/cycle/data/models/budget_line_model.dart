@@ -21,7 +21,8 @@ final class BudgetLineModel {
   });
 
   /// Membaca [BudgetLineModel] dari JSON.
-  factory BudgetLineModel.fromJson(Map<String, dynamic> json) => BudgetLineModel(
+  factory BudgetLineModel.fromJson(Map<String, dynamic> json) =>
+      BudgetLineModel(
         id: json['id'] as String,
         label: json['label'] as String,
         amount: json['amount'] as int,
@@ -33,14 +34,14 @@ final class BudgetLineModel {
 
   /// Membuat model dari entitas domain.
   factory BudgetLineModel.fromEntity(BudgetLine line) => BudgetLineModel(
-        id: line.id,
-        label: line.label,
-        amount: line.amount,
-        kind: line.kind,
-        rollUpSourceJson: RollUpSourceModel.toJson(line.rollUpSource),
-        isTemplate: line.isTemplate,
-        needsReview: line.needsReview,
-      );
+    id: line.id,
+    label: line.label,
+    amount: line.amount,
+    kind: line.kind,
+    rollUpSourceJson: RollUpSourceModel.toJson(line.rollUpSource),
+    isTemplate: line.isTemplate,
+    needsReview: line.needsReview,
+  );
 
   /// Identitas baris.
   final String id;
@@ -65,26 +66,29 @@ final class BudgetLineModel {
 
   /// Menulis [BudgetLineModel] ke JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'amount': amount,
-        'kind': kind.name,
-        'rollUpSource': rollUpSourceJson,
-        'isTemplate': isTemplate,
-        'needsReview': needsReview,
-      };
+    'id': id,
+    'label': label,
+    'amount': amount,
+    'kind': kind.name,
+    'rollUpSource': rollUpSourceJson,
+    'isTemplate': isTemplate,
+    'needsReview': needsReview,
+  };
 
   /// Mengubah model jadi entitas domain, dengan [amount] opsional menimpa
   /// nilai tersimpan — dipakai `CycleRepositoryImpl` untuk menyisipkan hasil
   /// [RollUpResolver] pada baris `rollUp`.
-  BudgetLine toEntity({int? resolvedAmount, bool rollUpSourceUnavailable = false}) => BudgetLine(
-        id: id,
-        label: label,
-        amount: resolvedAmount ?? amount,
-        kind: kind,
-        rollUpSource: RollUpSourceModel.fromJson(rollUpSourceJson),
-        isTemplate: isTemplate,
-        needsReview: needsReview,
-        rollUpSourceUnavailable: kind == .rollUp && rollUpSourceUnavailable,
-      );
+  BudgetLine toEntity({
+    int? resolvedAmount,
+    bool rollUpSourceUnavailable = false,
+  }) => BudgetLine(
+    id: id,
+    label: label,
+    amount: resolvedAmount ?? amount,
+    kind: kind,
+    rollUpSource: RollUpSourceModel.fromJson(rollUpSourceJson),
+    isTemplate: isTemplate,
+    needsReview: needsReview,
+    rollUpSourceUnavailable: kind == .rollUp && rollUpSourceUnavailable,
+  );
 }

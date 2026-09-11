@@ -38,7 +38,16 @@
     "markIncidental": "Tandai insidental",
     "needsReviewBadge": "Perlu ditinjau",
     "confirmReviewed": "Sudah benar",
-    "unreviewedBanner": "Ada $count baris perlu ditinjau."
+    "unreviewedBanner": "Ada $count baris perlu ditinjau.",
+    "deleteCycle": "Hapus siklus ini",
+    "deleteCycleConfirmMessage": "Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.",
+    "noIncomeSourcesHint": "Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.",
+    "addIncomeSourceButton": "Tambah sumber pemasukan",
+    "budgetSourceFieldLabel": "Sumber nominal",
+    "budgetSourceManual": "Manual",
+    "budgetSourceGrocery": "Rencana Belanja",
+    "budgetSourceCard": "Kartu Kredit",
+    "selectCardHint": "Pilih kartu"
   },
   "income": {
     "pageTitle": "Sumber pemasukan",

@@ -16,4 +16,9 @@ abstract interface class CycleRepository {
 
   /// Menyimpan [cycle] — menambah kalau `id` baru, menimpa kalau sudah ada.
   Future<Either<Failure, Unit>> saveCycle(MonthlyCycle cycle);
+
+  /// Menghapus siklus ber-`id` [id]. Tidak ada penjagaan di sini soal siklus
+  /// mana yang boleh dihapus (terakhir/belum ditutup) — itu keputusan
+  /// presentasi (lihat `CycleBloc`), bukan aturan penyimpanan.
+  Future<Either<Failure, Unit>> deleteCycle(String id);
 }

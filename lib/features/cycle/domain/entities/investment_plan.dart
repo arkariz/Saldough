@@ -10,7 +10,8 @@ final class InvestmentPlan extends Equatable {
   });
 
   /// Rencana kosong — tanpa tambahan dana dan tanpa alokasi.
-  factory InvestmentPlan.empty() => const InvestmentPlan(returnDeposit: 0, allocations: []);
+  factory InvestmentPlan.empty() =>
+      const InvestmentPlan(returnDeposit: 0, allocations: []);
 
   /// Tambahan dana dalam sen. Nol kalau tidak ada.
   final int returnDeposit;

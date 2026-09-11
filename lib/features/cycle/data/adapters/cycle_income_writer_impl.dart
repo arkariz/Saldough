@@ -27,20 +27,27 @@ final class CycleIncomeWriterImpl implements CycleIncomeWriter {
       case Left(value: final failure):
         return left(failure);
       case Right(value: null):
-        return left(BusinessRuleFailure(
-          code: const FailureCode('CYCLE_NOT_FOUND'),
-          message: 'Siklus $cycleId belum ada, tidak bisa disuntik.',
-          userMessage: 'Siklus $cycleId belum ada.',
-        ));
+        return left(
+          BusinessRuleFailure(
+            code: const FailureCode('CYCLE_NOT_FOUND'),
+            message: 'Siklus $cycleId belum ada, tidak bisa disuntik.',
+            userMessage: 'Siklus $cycleId belum ada.',
+          ),
+        );
       case Right(value: final cycle?) when cycle.isClosed:
-        return left(BusinessRuleFailure(
-          code: const FailureCode('CYCLE_CLOSED'),
-          message: 'Siklus $cycleId sudah ditutup, tidak bisa disuntik.',
-          userMessage: 'Siklus $cycleId sudah ditutup. Buka kembali dulu.',
-        ));
+        return left(
+          BusinessRuleFailure(
+            code: const FailureCode('CYCLE_CLOSED'),
+            message: 'Siklus $cycleId sudah ditutup, tidak bisa disuntik.',
+            userMessage: 'Siklus $cycleId sudah ditutup. Buka kembali dulu.',
+          ),
+        );
       case Right(value: final cycle?):
-        final existing = cycle.incomeLines.where((l) => l.sourceId == sourceId).firstOrNull;
-        final line = existing?.copyWith(amount: amount) ??
+        final existing = cycle.incomeLines
+            .where((l) => l.sourceId == sourceId)
+            .firstOrNull;
+        final line =
+            existing?.copyWith(amount: amount) ??
             IncomeLine(
               id: DateTime.now().microsecondsSinceEpoch.toString(),
               label: sourceLabel,
@@ -52,7 +59,9 @@ final class CycleIncomeWriterImpl implements CycleIncomeWriter {
           line,
         ];
 
-        final saveResult = await _cycleRepository.saveCycle(cycle.copyWith(incomeLines: lines));
+        final saveResult = await _cycleRepository.saveCycle(
+          cycle.copyWith(incomeLines: lines),
+        );
         return switch (saveResult) {
           Left(value: final failure) => left(failure),
           Right() => right(line.id),

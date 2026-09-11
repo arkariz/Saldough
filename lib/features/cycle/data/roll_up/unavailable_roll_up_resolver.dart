@@ -16,5 +16,6 @@ final class UnavailableRollUpResolver implements RollUpResolver {
   const UnavailableRollUpResolver();
 
   @override
-  Future<RollUpResolution> resolve(RollUpSource source) async => const .unavailable();
+  Future<RollUpResolution> resolve(RollUpSource source) async =>
+      const .unavailable();
 }

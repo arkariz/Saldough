@@ -147,6 +147,9 @@ class Translations$cycle$id {
 	/// id: 'Buat bulan berikutnya'
 	String get rollOverButton => 'Buat bulan berikutnya';
 
+	/// id: 'Siklus $month sudah dibuat.'
+	String cycleCreatedMessage({required Object month}) => 'Siklus ${month} sudah dibuat.';
+
 	/// id: 'Tutup siklus'
 	String get closeCycle => 'Tutup siklus';
 
@@ -162,8 +165,11 @@ class Translations$cycle$id {
 	/// id: 'Baris ini dihitung otomatis, tidak bisa disunting langsung.'
 	String get rollUpNotEditable => 'Baris ini dihitung otomatis, tidak bisa disunting langsung.';
 
-	/// id: 'Sumber belum tersedia'
-	String get rollUpSourceUnavailable => 'Sumber belum tersedia';
+	/// id: 'Kartu sumbernya belum terdaftar. Tambah dulu di Belanja › Kartu Kredit.'
+	String get rollUpSourceUnavailableCard => 'Kartu sumbernya belum terdaftar. Tambah dulu di Belanja › Kartu Kredit.';
+
+	/// id: 'Rencana belanja masih kosong. Isi dulu di tab Belanja.'
+	String get rollUpSourceUnavailableGrocery => 'Rencana belanja masih kosong. Isi dulu di tab Belanja.';
 
 	/// id: 'Tandai tetap'
 	String get markFixed => 'Tandai tetap';
@@ -179,6 +185,9 @@ class Translations$cycle$id {
 
 	/// id: 'Ada $count baris perlu ditinjau.'
 	String unreviewedBanner({required Object count}) => 'Ada ${count} baris perlu ditinjau.';
+
+	/// id: 'Nominalnya masih ikut bulan lalu — periksa sebelum ditandai benar.'
+	String get unreviewedBannerHint => 'Nominalnya masih ikut bulan lalu — periksa sebelum ditandai benar.';
 
 	/// id: 'Hapus siklus ini'
 	String get deleteCycle => 'Hapus siklus ini';
@@ -698,17 +707,20 @@ extension on Translations {
 			'cycle.emptyIncome' => 'Belum ada baris pemasukan.',
 			'cycle.emptyBudget' => 'Belum ada baris anggaran.',
 			'cycle.rollOverButton' => 'Buat bulan berikutnya',
+			'cycle.cycleCreatedMessage' => ({required Object month}) => 'Siklus ${month} sudah dibuat.',
 			'cycle.closeCycle' => 'Tutup siklus',
 			'cycle.reopenCycle' => 'Buka kembali',
 			'cycle.closedBanner' => 'Siklus ini sudah ditutup.',
 			'cycle.closedCannotEdit' => 'Siklus sudah ditutup. Buka kembali untuk menyunting.',
 			'cycle.rollUpNotEditable' => 'Baris ini dihitung otomatis, tidak bisa disunting langsung.',
-			'cycle.rollUpSourceUnavailable' => 'Sumber belum tersedia',
+			'cycle.rollUpSourceUnavailableCard' => 'Kartu sumbernya belum terdaftar. Tambah dulu di Belanja › Kartu Kredit.',
+			'cycle.rollUpSourceUnavailableGrocery' => 'Rencana belanja masih kosong. Isi dulu di tab Belanja.',
 			'cycle.markFixed' => 'Tandai tetap',
 			'cycle.markIncidental' => 'Tandai insidental',
 			'cycle.needsReviewBadge' => 'Perlu ditinjau',
 			'cycle.confirmReviewed' => 'Sudah benar',
 			'cycle.unreviewedBanner' => ({required Object count}) => 'Ada ${count} baris perlu ditinjau.',
+			'cycle.unreviewedBannerHint' => 'Nominalnya masih ikut bulan lalu — periksa sebelum ditandai benar.',
 			'cycle.deleteCycle' => 'Hapus siklus ini',
 			'cycle.deleteCycleConfirmMessage' => 'Seluruh baris pemasukan dan anggaran bulan ini akan terhapus. Tindakan ini tidak bisa dibatalkan.',
 			'cycle.noIncomeSourcesHint' => 'Belum ada sumber pemasukan. Nominal bisa diisi manual, atau tambah sumber dulu supaya nominalnya ikut otomatis dari jam kerja atau gaji tetap.',

@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
 import 'package:saldough/features/cycle/presentation/widgets/cycle_line_tile.dart';
@@ -28,6 +29,28 @@ class CyclePage extends StatelessWidget {
           builder: (context, state) {
             if (state.isLoading && state.cycle.id.isEmpty) {
               return const Center(child: CircularProgressIndicator());
+            }
+            // UX-16: kegagalan baca TIDAK dirender sebagai siklus kosong --
+            // pemilik butuh tahu ini kegagalan (bisa dicoba lagi), bukan
+            // "belum ada baris".
+            if (state.hasLoadError) {
+              final retryId = state.cycle.id.isNotEmpty ? state.cycle.id : cycleId;
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    mainAxisSize: .min,
+                    children: [
+                      Text(t.common.genericErrorMessage, textAlign: .center),
+                      const SizedBox(height: AppSpacing.md),
+                      AppButton(
+                        label: t.common.retry,
+                        onPressed: () => context.read<CycleBloc>().add(CycleOpened(retryId)),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
             return CustomScrollView(
               slivers: [
@@ -154,7 +177,18 @@ class _UnreviewedBanner extends StatelessWidget {
             // 1.43:1 di sana (ADR-0006 bagian "Varian on-light").
             Icon(Icons.flag, color: colors.needsReviewOnLight),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: Text(t.cycle.unreviewedBanner(count: count))),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(t.cycle.unreviewedBanner(count: count)),
+                  Text(
+                    t.cycle.unreviewedBannerHint,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -337,6 +371,7 @@ class _BudgetSection extends StatelessWidget {
               isEditable: line.kind == .manual,
               isExpense: true,
               rollUpSourceUnavailable: line.rollUpSourceUnavailable,
+              rollUpSourceIsCard: line.rollUpSource is CardRollUpSource,
               onTap: () async {
                 final result = await LineEditSheet.show(
                   context,

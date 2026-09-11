@@ -144,6 +144,33 @@ void main() {
     );
 
     blocTest<CycleBloc, CycleState>(
+      'CycleOpened yang gagal menghasilkan state bertanda galat, bukan state siklus kosong',
+      build: () {
+        when(() => cycleRepository.getCycle('2026-09')).thenAnswer(
+          (_) async => left(
+            const BusinessRuleFailure(
+              code: FailureCode('STORAGE_ERROR'),
+              message: 'gagal baca',
+              userMessage: 'Gagal memuat siklus.',
+            ),
+          ),
+        );
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const CycleOpened('2026-09')),
+      expect: () => [
+        isA<CycleState>().having((s) => s.isLoading, 'isLoading', true),
+        isA<CycleState>()
+            .having((s) => s.isLoading, 'isLoading', false)
+            .having((s) => s.hasLoadError, 'hasLoadError', isTrue)
+            // UX-16: berbeda dari siklus kosong -- ini kegagalan, bukan
+            // "belum ada baris". cycle.id TIDAK ikut jadi '2026-09' karena
+            // Left tidak pernah menyentuh cycle di state (lihat juga BUG-1).
+            .having((s) => s.cycle.incomeLines, 'incomeLines', isEmpty),
+      ],
+    );
+
+    blocTest<CycleBloc, CycleState>(
       'IncomeLineSaved menambah baris baru lalu menyimpan',
       build: () {
         when(
@@ -544,7 +571,13 @@ void main() {
         isA<CycleState>()
             .having((s) => s.cycle.id, 'cycle.id', '2026-10')
             .having((s) => s.hasCycle('2026-10'), 'hasCycle(2026-10)', isTrue)
-            .having((s) => s.effect, 'effect', isA<ShowSnackBarEffect>()),
+            .having(
+              (s) => (s.effect! as ShowSnackBarEffect).message,
+              'effect.message',
+              // UX-14: bukan lagi id siklus mentah ("2026-10") -- kalimat
+              // lewat slang dengan nama bulan yang diformat.
+              'Siklus Oktober 2026 sudah dibuat.',
+            ),
       ],
     );
 

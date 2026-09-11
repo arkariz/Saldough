@@ -98,17 +98,20 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get emptyIncome => 'No income lines yet.';
 	@override String get emptyBudget => 'No budget lines yet.';
 	@override String get rollOverButton => 'Create next month';
+	@override String cycleCreatedMessage({required Object month}) => '${month} cycle created.';
 	@override String get closeCycle => 'Close cycle';
 	@override String get reopenCycle => 'Reopen';
 	@override String get closedBanner => 'This cycle is closed.';
 	@override String get closedCannotEdit => 'This cycle is closed. Reopen it to make changes.';
 	@override String get rollUpNotEditable => 'This line is calculated automatically and can\'t be edited directly.';
-	@override String get rollUpSourceUnavailable => 'Source not available yet';
+	@override String get rollUpSourceUnavailableCard => 'The source card isn\'t registered yet. Add it under Shopping › Credit Cards first.';
+	@override String get rollUpSourceUnavailableGrocery => 'The shopping plan is still empty. Fill it in on the Shopping tab first.';
 	@override String get markFixed => 'Mark as fixed';
 	@override String get markIncidental => 'Mark as one-off';
 	@override String get needsReviewBadge => 'Needs review';
 	@override String get confirmReviewed => 'Looks right';
 	@override String unreviewedBanner({required Object count}) => '${count} line(s) need review.';
+	@override String get unreviewedBannerHint => 'The amount still carries over from last month — check it before marking it right.';
 	@override String get deleteCycle => 'Delete this cycle';
 	@override String get deleteCycleConfirmMessage => 'All income and budget lines for this month will be deleted. This action cannot be undone.';
 	@override String get noIncomeSourcesHint => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.';
@@ -340,17 +343,20 @@ extension on TranslationsEn {
 			'cycle.emptyIncome' => 'No income lines yet.',
 			'cycle.emptyBudget' => 'No budget lines yet.',
 			'cycle.rollOverButton' => 'Create next month',
+			'cycle.cycleCreatedMessage' => ({required Object month}) => '${month} cycle created.',
 			'cycle.closeCycle' => 'Close cycle',
 			'cycle.reopenCycle' => 'Reopen',
 			'cycle.closedBanner' => 'This cycle is closed.',
 			'cycle.closedCannotEdit' => 'This cycle is closed. Reopen it to make changes.',
 			'cycle.rollUpNotEditable' => 'This line is calculated automatically and can\'t be edited directly.',
-			'cycle.rollUpSourceUnavailable' => 'Source not available yet',
+			'cycle.rollUpSourceUnavailableCard' => 'The source card isn\'t registered yet. Add it under Shopping › Credit Cards first.',
+			'cycle.rollUpSourceUnavailableGrocery' => 'The shopping plan is still empty. Fill it in on the Shopping tab first.',
 			'cycle.markFixed' => 'Mark as fixed',
 			'cycle.markIncidental' => 'Mark as one-off',
 			'cycle.needsReviewBadge' => 'Needs review',
 			'cycle.confirmReviewed' => 'Looks right',
 			'cycle.unreviewedBanner' => ({required Object count}) => '${count} line(s) need review.',
+			'cycle.unreviewedBannerHint' => 'The amount still carries over from last month — check it before marking it right.',
 			'cycle.deleteCycle' => 'Delete this cycle',
 			'cycle.deleteCycleConfirmMessage' => 'All income and budget lines for this month will be deleted. This action cannot be undone.',
 			'cycle.noIncomeSourcesHint' => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.',

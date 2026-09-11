@@ -246,15 +246,38 @@ class _LineEditSheetState extends State<LineEditSheet> {
     required bool selected,
     required bool disabled,
     required VoidCallback onTap,
+    String? disabledMessage,
   }) {
     return Opacity(
-      opacity: disabled ? 0.4 : 1,
-      child: AppChip(
-        label: label,
-        selected: selected && !disabled,
-        onTap: disabled ? null : onTap,
+      opacity: disabled ? 0.5 : 1,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          AppChip(
+            label: label,
+            selected: selected && !disabled,
+            // UX-33: chip nonaktif TETAP bisa diketuk -- ketukannya
+            // menjelaskan alasannya (disabledMessage), bukan diam saja.
+            // Sebelumnya onTap dinolkan total, jadi copy penjelas yang
+            // sudah ditulis (mis. rollUpSourceAlreadyUsed) tidak pernah
+            // terbaca pemilik.
+            onTap: disabled
+                ? (disabledMessage == null ? null : () => _showDisabledExplanation(disabledMessage))
+                : onTap,
+          ),
+          if (disabled)
+            Positioned(
+              right: -3,
+              top: -3,
+              child: Icon(Icons.lock, size: 13, color: context.appColors.textMuted),
+            ),
+        ],
       ),
     );
+  }
+
+  void _showDisabledExplanation(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _submit() {
@@ -346,12 +369,18 @@ class _LineEditSheetState extends State<LineEditSheet> {
                   label: t.cycle.budgetSourceGrocery,
                   selected: _budgetSource == .grocery,
                   disabled: _isGroceryUsed,
+                  disabledMessage: _isGroceryUsed ? t.cycle.rollUpSourceAlreadyUsed : null,
                   onTap: () => _selectBudgetSource(.grocery),
                 ),
                 _budgetSourceChip(
                   label: t.cycle.budgetSourceCard,
                   selected: _budgetSource == .card,
                   disabled: _hasNoCards || _allCardsUsed,
+                  disabledMessage: _hasNoCards
+                      ? t.cycle.noCardsHint
+                      : _allCardsUsed
+                      ? t.cycle.allCardsUsedHint
+                      : null,
                   onTap: () => _selectBudgetSource(.card),
                 ),
               ],
@@ -395,6 +424,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
                         label: card.name,
                         selected: card.id == _selectedCardId,
                         disabled: _isCardUsed(card.id),
+                        disabledMessage: _isCardUsed(card.id) ? t.cycle.rollUpSourceAlreadyUsed : null,
                         onTap: () => _selectCard(card),
                       ),
                   ],

@@ -22,6 +22,7 @@
     "addBudgetLine": "Tambah baris anggaran",
     "editIncomeLine": "Sunting baris pemasukan",
     "editBudgetLine": "Sunting baris anggaran",
+    "renameRollUpLineTitle": "Ganti nama baris",
     "labelFieldHint": "Nama",
     "amountFieldHint": "Nominal (Rp)",
     "emptyIncome": "Belum ada baris pemasukan. Tambahkan yang pertama di bawah.",

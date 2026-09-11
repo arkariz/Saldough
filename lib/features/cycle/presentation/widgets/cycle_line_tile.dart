@@ -12,6 +12,7 @@ class CycleLineTile extends StatelessWidget {
     required this.isTemplate,
     required this.needsReview,
     this.isEditable = true,
+    this.isRollUp = false,
     this.isExpense = false,
     this.rollUpSourceUnavailable = false,
     this.rollUpSourceIsCard = false,
@@ -34,9 +35,18 @@ class CycleLineTile extends StatelessWidget {
   /// True kalau baris ini hasil rollover yang belum dikonfirmasi.
   final bool needsReview;
 
-  /// False untuk baris `rollUp` — tidak bisa disunting/dihapus langsung
-  /// (ADR-0008).
+  /// False untuk baris `rollUp` — nominalnya tidak bisa disunting/dihapus
+  /// langsung (ADR-0008). Hanya mengontrol ikon hapus di sini; [onTap]
+  /// tetap dipanggil apa adanya untuk kedua nilai (UX-36/UX-37: baris
+  /// `rollUp` tetap bisa diketuk, hanya membuka sheet yang berbeda —
+  /// ganti nama, bukan sunting nominal).
   final bool isEditable;
+
+  /// True untuk baris `rollUp` — menampilkan penanda visual (ikon
+  /// terhubung berwarna `colors.rollUp`) supaya baris ini terlihat beda
+  /// dari baris manual SEBELUM diketuk, bukan baru terasa beda setelah
+  /// ketukannya tidak berbuat apa-apa (UX-36).
+  final bool isRollUp;
 
   /// True untuk baris anggaran — nominalnya SELALU disimpan positif, tapi
   /// semantiknya pengeluaran, jadi warnanya dipaksa `expenseOnLight` alih-
@@ -76,7 +86,7 @@ class CycleLineTile extends StatelessWidget {
       ),
       elevation: AppElevation.sm,
       child: InkWell(
-        onTap: isEditable ? onTap : null,
+        onTap: onTap,
         child: Row(
           children: [
             Expanded(
@@ -86,6 +96,15 @@ class CycleLineTile extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: Text(label, overflow: .ellipsis)),
+                      if (isRollUp)
+                        Padding(
+                          padding: const EdgeInsets.only(left: AppSpacing.xs),
+                          child: Icon(
+                            Icons.link,
+                            size: 14,
+                            color: colors.rollUp,
+                          ),
+                        ),
                       if (isTemplate)
                         Padding(
                           padding: const EdgeInsets.only(left: AppSpacing.xs),

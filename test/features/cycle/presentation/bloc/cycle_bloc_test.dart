@@ -330,6 +330,53 @@ void main() {
       verify: (_) => verifyNever(() => cycleRepository.saveCycle(any())),
     );
 
+    // UX-37: pemilik bisa mengganti nama baris rollUp sendiri -- ADR-0008
+    // hanya mengunci nominal, tidak pernah mengunci label.
+    blocTest<CycleBloc, CycleState>(
+      'BudgetLineRenamed mengganti nama baris rollUp tanpa menyentuh nominal/sumbernya',
+      build: () {
+        final cycleWithGroceryRollUp = MonthlyCycle(
+          id: '2026-09',
+          incomeLines: const [],
+          budgetLines: [
+            BudgetLine(
+              id: 'g1',
+              label: 'Rencana Belanja',
+              amount: 500000,
+              kind: BudgetLineKind.rollUp,
+              rollUpSource: RollUpSource.grocery,
+            ),
+          ],
+          investmentPlan: InvestmentPlan.empty(),
+        );
+        when(
+          () => cycleRepository.getCycle('2026-09'),
+        ).thenAnswer((_) async => right(cycleWithGroceryRollUp));
+        when(
+          () => cycleRepository.saveCycle(any()),
+        ).thenAnswer((_) async => right(unit));
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const BudgetLineRenamed(lineId: 'g1', label: 'Belanja bulanan'));
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having((s) => s.cycle.budgetLines.single.label, 'label', 'Belanja bulanan')
+            .having((s) => s.cycle.budgetLines.single.amount, 'amount', 500000)
+            .having((s) => s.cycle.budgetLines.single.kind, 'kind', BudgetLineKind.rollUp)
+            .having(
+              (s) => s.cycle.budgetLines.single.rollUpSource,
+              'rollUpSource',
+              RollUpSource.grocery,
+            ),
+      ],
+      verify: (_) => verify(() => cycleRepository.saveCycle(any())).called(1),
+    );
+
     blocTest<CycleBloc, CycleState>(
       'BudgetLineSaved tetap bisa menautkan kartu berbeda meski kartu lain '
       'sudah dipakai baris rollUp lain',

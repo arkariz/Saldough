@@ -93,6 +93,7 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get addBudgetLine => 'Add budget line';
 	@override String get editIncomeLine => 'Edit income line';
 	@override String get editBudgetLine => 'Edit budget line';
+	@override String get renameRollUpLineTitle => 'Rename line';
 	@override String get labelFieldHint => 'Name';
 	@override String get amountFieldHint => 'Amount (Rp)';
 	@override String get emptyIncome => 'No income lines yet. Add the first one below.';
@@ -340,6 +341,7 @@ extension on TranslationsEn {
 			'cycle.addBudgetLine' => 'Add budget line',
 			'cycle.editIncomeLine' => 'Edit income line',
 			'cycle.editBudgetLine' => 'Edit budget line',
+			'cycle.renameRollUpLineTitle' => 'Rename line',
 			'cycle.labelFieldHint' => 'Name',
 			'cycle.amountFieldHint' => 'Amount (Rp)',
 			'cycle.emptyIncome' => 'No income lines yet. Add the first one below.',

@@ -130,8 +130,9 @@ saldough/
 │       ├── worklog/                      # timesheet dan buku jam
 │       ├── grocery/                      # rencana belanja
 │       ├── card/                         # kartu kredit
-│       ├── investment/                   # alokasi & pinjaman antar pos (konsumen shared/goal)
-│       └── seed/                         # impor data historis
+│       └── investment/                   # alokasi & pinjaman antar pos (konsumen shared/goal)
+├── tool/                                 # skrip pengembang sekali pakai, TIDAK ikut di-build ke rilis
+│   └── seed_import.dart                  # Fase 6 — lihat catatan revisi ADR-0009
 └── test/
     ├── shared/                           # cermin struktur lib/shared
     └── features/                         # cermin struktur lib/features

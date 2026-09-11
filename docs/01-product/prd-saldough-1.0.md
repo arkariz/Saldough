@@ -337,13 +337,36 @@ tertinggal.
 
 **FR-SEED-001 — Seed awal**
 
-- [ ] Memuat data historis November 2025 sampai September 2026 saat aplikasi
-      pertama dibuka.
-- [ ] Memuat siklus bulanan beserta baris pemasukan dan anggarannya.
-- [ ] Memuat riwayat jam kerja dan buku jamnya.
-- [ ] Memuat riwayat transaksi kartu kredit per siklus.
-- [ ] Memuat pos tujuan beserta saldo awalnya.
-- [ ] Menghasilkan angka yang sama persis dengan spreadsheet asli.
+⚠ **Bukan fitur aplikasi.** Ini operasi SEKALI PAKAI yang dijalankan
+pengembang di luar jalur produksi — tanpa layar, tanpa tombol, tidak ikut
+ter-*build* ke rilis yang dipakai pemilik sehari-hari (lihat catatan revisi
+9 September 2026 di bawah). Cakupannya juga hanya data yang BENAR-BENAR
+dimiliki pemilik saat operasi ini dijalankan, bukan rentang tanggal yang
+diasumsikan tetap (Nov 2025–Sep 2026 di versi PRD sebelumnya adalah
+perkiraan awal, bukan jaminan; tiap jenis data di bawah boleh tercakup
+sebagian atau tidak sama sekali kalau pemilik tidak punya datanya).
+
+- [ ] Menulis langsung ke penyimpanan lokal dari data yang disediakan
+      pemilik, sekali jalan, sebelum aplikasi dipakai sehari-hari.
+- [ ] Memuat siklus bulanan beserta baris pemasukan dan anggarannya, untuk
+      bagian yang datanya disediakan.
+- [ ] Memuat riwayat jam kerja dan buku jamnya, untuk bagian yang datanya
+      disediakan.
+- [ ] Memuat riwayat transaksi kartu kredit per siklus, untuk bagian yang
+      datanya disediakan.
+- [ ] Memuat pos tujuan beserta saldo awalnya, untuk bagian yang datanya
+      disediakan.
+- [ ] Menghasilkan angka yang sama persis dengan spreadsheet asli untuk
+      seluruh bagian yang diimpor.
+
+> **Catatan revisi (11 September 2026):** requirement ini semula
+> menyiratkan proses impor di dalam aplikasi (lihat D-6.1 lama, layar
+> "Impor Seed" dengan checklist progres) untuk rentang tanggal tetap
+> November 2025–September 2026. Pemilik secara eksplisit meminta
+> sebaliknya: operasi sekali pakai tanpa UI dan tanpa versi produksi,
+> cakupan data mengikuti apa yang benar-benar pemilik punya — bukan
+> diasumsikan penuh. Lihat ADR-0009 (catatan revisi Fase 6) untuk detail
+> implementasi.
 
 ## 8. Kebutuhan non-fungsional
 

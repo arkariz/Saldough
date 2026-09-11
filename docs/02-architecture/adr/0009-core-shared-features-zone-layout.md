@@ -159,10 +159,30 @@ spekulatif" — dicatat di sini supaya tidak jadi kebiasaan.
 
 **`features/<feature>/`** — graf milik satu fitur: `domain/` dan `data/`
 privat (tidak diimpor fitur lain), `presentation/{bloc,navigation,pages,widgets}`,
-dan `di/<feature>_scope.dart` sendiri. Tujuh fitur MVP:
-`cycle`, `income`, `worklog`, `grocery`, `card`, `investment`, `seed`. Fitur
+dan `di/<feature>_scope.dart` sendiri. Enam fitur MVP:
+`cycle`, `income`, `worklog`, `grocery`, `card`, `investment`. Fitur
 `income` sejak Fase 3 hanya berisi `presentation/` + `di/` — domain dan
 data-nya ada di `shared/income/` (lihat catatan revisi di bawah).
+
+> **Catatan revisi (Fase 6, 11 September 2026):** `seed` semula didaftar
+> sebagai fitur ketujuh di sini (lihat draf awal dokumen ini). Pemilik
+> meminta sebaliknya secara eksplisit: impor data historis BUKAN fitur
+> aplikasi — operasi sekali pakai, tanpa UI, tidak ikut ter-*build* ke
+> rilis produksi. Ini bukan kasus "fitur kecil jadi `shared/`"
+> (promosi ke atas); ini kasus "bukan fitur sama sekali" (keluar dari
+> `features/` seluruhnya). Tempatnya sekarang `tool/seed_import.dart` —
+> skrip Dart berdiri sendiri (`dart run tool/seed_import.dart`), BUKAN
+> bagian dari `lib/`, jadi tidak pernah ikut ter-*build* ke APK/IPA. Skrip
+> ini boleh memanggil langsung repository milik tiap fitur (`CycleRepository`,
+> `WorklogRepository`, `CardStatementRepository`, `GoalRepository`,
+> `GoalLoanRepository` lewat implementasinya masing-masing) karena ia
+> BUKAN fitur yang harus menjaga isolasi ADR-0009 ini — ia justru alat
+> yang sengaja melihat semua fitur sekaligus untuk mengisi penyimpanan
+> yang sama yang nanti dibaca `RootModule` saat aplikasi sungguhan
+> dijalankan. Cakupan datanya mengikuti apa yang pemilik sediakan saat
+> skrip ditulis — lihat TASK_LIST.md Fase 6 untuk rincian tugas dan
+> D-6.1 di UI_UX_DESIGN_TASKS.md untuk status desain lama yang kini
+> tidak akan diimplementasikan sebagai layar.
 
 ### Aturan penempatan domain
 

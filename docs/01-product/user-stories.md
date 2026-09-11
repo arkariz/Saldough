@@ -217,14 +217,24 @@ tempat lain.
 
 **US-20 — Membuka aplikasi dengan riwayat yang sudah ada**
 
-Sebagai pemilik, saya ingin data November 2025 sampai September 2026 sudah ada
-saat pertama membuka aplikasi, supaya saldo pos saya benar dan saya bisa
-langsung melanjutkan, bukan memulai dari nol.
+Sebagai pemilik, saya ingin riwayat yang saya punya sudah ada begitu saya
+mulai memakai aplikasi, supaya saldo pos saya benar dan saya bisa langsung
+melanjutkan, bukan memulai dari nol.
 
 - Siklus bulanan, riwayat jam kerja, transaksi kartu, dan pos tujuan ikut
-  termuat.
+  termuat — untuk bagian yang datanya saya sediakan.
 - Angkanya sama persis dengan spreadsheet asli.
+- Proses ini sekali jalan di belakang layar sebelum saya mulai memakai
+  aplikasi sehari-hari — bukan langkah yang saya lakukan sendiri lewat
+  aplikasi.
 - Memenuhi FR-SEED-001.
+
+> **Catatan revisi (11 September 2026):** versi sebelumnya menyebut rentang
+> tetap "November 2025 sampai September 2026" dan menyiratkan proses ini
+> terjadi "saat pertama membuka aplikasi" (kesan ada langkah di dalam
+> aplikasi). Keduanya diralat: cakupan data mengikuti apa yang pemilik
+> benar-benar sediakan, dan prosesnya adalah operasi sekali pakai di luar
+> aplikasi (skrip pengembang), bukan alur yang pemilik jalankan sendiri.
 
 **US-21 — Percaya bahwa hitungannya benar**
 

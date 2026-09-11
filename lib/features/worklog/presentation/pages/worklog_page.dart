@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -142,6 +143,7 @@ class _EntryFormState extends State<_EntryForm> {
                 child: TextField(
                   controller: _hoursController,
                   keyboardType: .number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(labelText: t.worklog.hoursFieldHint),
                   onChanged: (_) => setState(() {}),
                 ),

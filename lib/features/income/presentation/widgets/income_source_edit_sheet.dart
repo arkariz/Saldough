@@ -66,10 +66,19 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
   }
 
   /// Gerbang tombol Simpan -- dinonaktifkan (bukan diam-diam menolak submit)
-  /// saat nama belum diisi (UX-03). Nominal tetap/tarif per jam yang kosong
-  /// TIDAK digerbang di sini -- itu perilaku lain (default ke Rp 0, dicatat
-  /// terpisah sebagai UX-05).
-  bool get _canSubmit => _nameController.text.trim().isNotEmpty;
+  /// saat nama belum diisi (UX-03), atau saat nominal yang relevan dengan
+  /// [_kind] belum valid (UX-05: sebelumnya field ini boleh kosong dan
+  /// tersimpan diam-diam sebagai Rp 0 -- untuk sumber baru field ini memang
+  /// mulai KOSONG, bukan "0", jadi risikonya nyata: tarif per jam Rp 0
+  /// berarti seluruh gaji bersih freelance jadi Rp 0 tanpa pemberitahuan).
+  bool get _canSubmit {
+    if (_nameController.text.trim().isEmpty) return false;
+    return switch (_kind) {
+      .fixedSalary => int.tryParse(_fixedAmountController.text.trim()) != null,
+      .hourlyFreelance => int.tryParse(_hourlyRateController.text.trim()) != null,
+      .adHoc => true,
+    };
+  }
 
   void _submit() {
     final name = _nameController.text.trim();
@@ -133,6 +142,7 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
                 keyboardType: .number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(labelText: t.income.fixedAmountFieldHint),
+                onChanged: (_) => setState(() {}),
               ),
             if (_kind == .hourlyFreelance) ...[
               TextField(
@@ -140,6 +150,7 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
                 keyboardType: .number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(labelText: t.income.hourlyRateFieldHint),
+                onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: AppSpacing.md),
               Text(t.income.deductionRulesTitle, style: Theme.of(context).textTheme.titleMedium),
@@ -206,6 +217,7 @@ class _DeductionRuleRowState extends State<_DeductionRuleRow> {
             child: TextField(
               controller: _valueController,
               keyboardType: .number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(labelText: t.income.deductionValueHint),
               onChanged: (value) => widget.onChanged(widget.rule.copyWith(value: int.tryParse(value) ?? 0)),
             ),

@@ -1,7 +1,8 @@
-// Satu method disengaja — ini port Strategy yang akan punya lebih dari satu
-// implementasi bertukar di DI (UnavailableRollUpResolver sekarang, resolver
-// belanja/kartu sungguhan di Fase 4), bukan kelas yang sebaiknya jadi fungsi
-// top-level.
+// Satu method disengaja — ini port Strategy dengan lebih dari satu
+// implementasi bertukar di DI (GroceryRollUpResolver untuk baris grocery,
+// CardRollUpResolver untuk baris card, keduanya sejak Fase 4, digabung jadi
+// satu lewat CompositeRollUpResolver di RootModule), bukan kelas yang
+// sebaiknya jadi fungsi top-level.
 // ignore_for_file: one_member_abstracts
 
 import 'package:saldough/features/cycle/domain/entities/roll_up_resolution.dart';
@@ -12,11 +13,13 @@ import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
 /// (ADR-0008) — tidak pernah ada nilai roll-up yang dipercaya dari dokumen
 /// tersimpan.
 ///
-/// Baris `card` sudah punya implementasi nyata (`CardRollUpResolver`,
-/// T-4.6-T-4.12) yang dikawat `RootModule` — lihat catatan di
-/// `_registerCrossFeatureAdapters`. Baris `grocery` dibangun di cabang
-/// terpisah dan belum tergabung di sini; sampai itu `CardRollUpResolver`
-/// mengembalikan `RollUpResolution.unavailable()` untuk sumber non-kartu.
+/// Baris `grocery` (`GroceryRollUpResolver`, Fase 4 bagian belanja) dan
+/// `card` (`CardRollUpResolver`, T-4.6-T-4.12) sudah punya implementasi
+/// nyata, masing-masing hanya menangani satu jenis sumbernya sendiri dan
+/// mengembalikan `RollUpResolution.unavailable()` untuk sumber lain.
+/// `RootModule` mengawat keduanya di belakang satu `CompositeRollUpResolver`
+/// yang mendelegasikan ke resolver yang cocok berdasar tipe `RollUpSource`
+/// — lihat catatan di `_registerCrossFeatureAdapters`.
 /// `UnavailableRollUpResolver` di `features/cycle/data/roll_up/` tetap ada
 /// sebagai fallback test/placeholder. Penempatan antarmuka ini di
 /// `features/cycle/` adalah keputusan sementara; pindahkan kalau nanti

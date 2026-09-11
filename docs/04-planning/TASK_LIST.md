@@ -25,7 +25,7 @@ menjelaskan apa yang kurang.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 September 2026.
+Terakhir diperbarui: 11 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -33,11 +33,11 @@ Terakhir diperbarui: 10 September 2026.
 | 1 — Fondasi | 13 | 13 | Selesai — T-1.9 sebagian (lihat catatan, sama seperti T-0.2) |
 | 2 — Siklus bulanan | 12 | 10 | "Selesai kalau" ROADMAP.md terpenuhi — T-2.10 sebagian, T-2.12 menunggu Fase 6 |
 | 3 — Pemasukan dan timesheet | 10 | 10 | Selesai — "Selesai kalau" ROADMAP.md terpenuhi (lihat T-3.3) |
-| 4 — Roll-up | 12 | 7 | Kartu kredit (T-4.6–T-4.12) selesai di cabang ini. Belanja (T-4.1–T-4.5) selesai di cabang terpisah `claude/saldough-flutter-finance-app-06ufsv`, kotaknya di bagian "Belanja" di bawah masih `[ ]` di SALINAN dokumen ini (belum digabung) — lihat catatan cakupan sebelum bagian "Kartu kredit" |
+| 4 — Roll-up | 12 | 12 | Selesai — Belanja (T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah, sudah digabung; `RootModule` kini memakai `_CompositeRollUpResolver` yang mendelegasikan ke resolver grocery/card sesuai tipe `RollUpSource` |
 | 5 — Investasi | 8 | 0 | Terkunci oleh Fase 2 — lihat juga catatan T-2.10 |
 | 6 — Seed | 7 | 0 | Terkunci oleh Fase 5 |
 | 7 — Sinkronisasi | 5 | 0 | Di luar MVP |
-| **Total MVP** | **67** | **43** | Hanya menghitung tugas yang kotaknya `[x]` di salinan dokumen ini (36 sebelumnya + 7 kartu kredit); T-4.1–T-4.5 akan menambah 5 lagi begitu kedua cabang Fase 4 digabung |
+| **Total MVP** | **67** | **48** | |
 
 Dokumentasi sudah selesai dan tidak dihitung dalam tabel di atas.
 
@@ -488,32 +488,58 @@ tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
 
 ### Belanja
 
-- [ ] **T-4.1** Buat entitas `GroceryPlan` dan `GroceryItem` dengan
+- [x] **T-4.1** Buat entitas `GroceryPlan` dan `GroceryItem` dengan
       `amountOverride`.
       ⚠ Jangan memaksa harga sama dengan jumlah dikali harga satuan. Data nyata
-      memuat koreksi manual: sampo `1 × Rp41.300` berharga Rp24.000.
+      memuat koreksi manual: sampo `1 × Rp41.300` berharga Rp24.000. `isOverridden`
+      (penanda item yang ditimpa) ditambah sebagai getter turunan, bukan field —
+      pola sama seperti `CycleState.totals`.
       Memenuhi FR-GROC-002.
-- [ ] **T-4.2** Buat use case `CalculateGroceryRollUp`.
-- [ ] **T-4.3** Tulis uji unit roll-up belanja memakai kasus nyata
-      `576.600 × 4 + 762.100 = 3.068.500`.
+- [x] **T-4.2** Buat use case `CalculateGroceryRollUp`.
+- [x] **T-4.3** Tulis uji unit roll-up belanja memakai kasus nyata
+      `576.600 × 4 + 762.100 = 3.068.500`
+      (`test/features/grocery/domain/usecases/calculate_grocery_roll_up_test.dart`,
+      4 kasus: rumus nyata, `amountOverride`, pengali minggu, rencana kosong).
       Memenuhi NFR-ACC-002.
-- [ ] **T-4.4** Buat layar pengelolaan daftar mingguan dan bulanan.
+- [x] **T-4.4** Buat layar pengelolaan daftar mingguan dan bulanan
+      (`GroceryPage`: dua bagian terpisah, tambah/sunting/hapus item, toggle
+      timpa harga, ubah pengali minggu).
       Memenuhi FR-GROC-001.
-- [ ] **T-4.5** Sambungkan roll-up belanja ke baris anggaran, dan pastikan
-      perubahan daftar langsung terlihat.
+- [x] **T-4.5** Sambungkan roll-up belanja ke baris anggaran, dan pastikan
+      perubahan daftar langsung terlihat. `GroceryRollUpResolver`
+      (`features/grocery/data/`) menggantikan `UnavailableRollUpResolver`
+      sebagai implementasi `RollUpResolver` sungguhan di `RootModule` — baris
+      `rollUp` tetap dihitung ulang tiap siklus dibaca (ADR-0008), tidak ada
+      langkah "sinkronisasi" tambahan, sesuai rencana ROADMAP.md Fase 2.
+      `CycleScope` kini membawa `RollUpResolver` dari `RootModule` lewat
+      `bridge()` (bukan mendaftar placeholder lokal).
+      ⚠ Saat ronde ini dikerjakan, baris `card` masih `unavailable()` — bagian
+      kartu kredit (T-4.6–T-4.12) dikerjakan di cabang terpisah dan digabung
+      belakangan, lihat catatan revisi di bawah.
       Memenuhi FR-GROC-003 dan NFR-PERF-002.
 
-### Kartu kredit
+**Catatan revisi (penggabungan Fase 4, 11 September 2026):** Belanja
+(T-4.1–T-4.5) dan Kartu kredit (T-4.6–T-4.12) masing-masing dikerjakan di
+cabang terpisah dari `main` (`claude/saldough-flutter-finance-app-06ufsv` dan
+`claude/saldough-fase4-kartu-kredit`) agar ukuran tiap ronde tetap kecil
+(lihat ROADMAP.md: keduanya independen di bawah Fase 4). Belanja digabung ke
+`main` lebih dulu; menggabungkan Kartu kredit setelahnya menimbulkan konflik
+merge di `RootModule`/`CycleScope` karena kedua cabang sama-sama menambah
+pendaftaran `RollUpResolver`-nya sendiri. Diselesaikan dengan menambah
+`_CompositeRollUpResolver` (privat, di `root_module.dart`) yang membungkus
+`GroceryRollUpResolver` dan `CardRollUpResolver`, mendelegasikan berdasar
+tipe `RollUpSource` ke salah satunya — keduanya tetap hanya tahu sumbernya
+sendiri, tidak ada yang diubah di fitur `grocery`/`card` sendiri.
 
-⚠ **Catatan cakupan (10 September 2026):** dikerjakan di cabang terpisah
-(`claude/saldough-fase4-kartu-kredit`, dari `main` setelah Fase 3 digabung),
-bukan di cabang tempat `Belanja` di atas dikerjakan
-(`claude/saldough-flutter-finance-app-06ufsv`). Cabang ini TIDAK memuat kode
-`grocery` — `RollUpResolver` di sini (`CardRollUpResolver`) hanya menangani
-`CardRollUpSource`, jatuh ke `unavailable()` untuk `GroceryRollUpSource`.
-Begitu kedua cabang digabung, `RootModule` perlu satu resolver gabungan yang
-menangani keduanya — dicatat di sini sebagai langkah integrasi yang masih
-tertunda, belum jadi pertanyaan ke pemilik.
+**Verifikasi bagian Belanja (saat dikerjakan):** `flutter analyze` bersih,
+`flutter test` lolos (61 tes total, 7 baru — `CalculateGroceryRollUp` dan
+`GroceryRollUpResolver`, termasuk kasus `CardRollUpSource` yang tetap
+`unavailable()`). Diuji juga secara runtime (build Linux sandbox + xvfb,
+dibuang setelah verifikasi) — pendaftaran ulang `RollUpResolver` di
+`RootModule`/`CycleScope` berjalan tanpa galat dan `CycleBloc` tetap memuat
+siklus berjalan dengan normal.
+
+### Kartu kredit
 
 - [x] **T-4.6** Buat entitas `CreditCard`, `CardStatement`, dan
       `CardTransaction`.
@@ -553,8 +579,9 @@ tertunda, belum jadi pertanyaan ke pemilik.
 - [x] **T-4.11** Sambungkan roll-up kartu ke baris anggaran.
       `CardRollUpResolver` (implementasi `RollUpResolver` milik `cycle`, pola
       sama seperti rencana belanja — lihat ADR-0009) dikawat di
-      `RootModule._registerCrossFeatureAdapters`, dibagikan ke `CycleScope`
-      lewat `bridge()`.
+      `RootModule._registerCrossFeatureAdapters` lewat `_CompositeRollUpResolver`
+      (lihat catatan revisi penggabungan Fase 4 di bagian "Belanja" di atas),
+      dibagikan ke `CycleScope` lewat `bridge()`.
       Memenuhi FR-CARD-005.
 - [x] **T-4.12** Bekukan nilai roll-up saat siklus ditutup.
       ⚠ Tanpa ini, menyunting daftar belanja atau tagihan kartu hari ini akan
@@ -562,8 +589,8 @@ tertunda, belum jadi pertanyaan ke pemilik.
       `CycleRepositoryImpl._resolveRollUps` sekarang mengembalikan siklus
       apa adanya kalau `cycle.isClosed`, tidak memanggil `RollUpResolver` sama
       sekali — diuji di `cycle_repository_impl_test.dart` lewat resolver palsu
-      yang menghitung jumlah pemanggilan. Perbaikan ini berlaku umum (juga
-      akan berlaku untuk cabang Belanja begitu digabung), bukan khusus kartu.
+      yang menghitung jumlah pemanggilan. Perbaikan ini berlaku umum untuk
+      seluruh sumber roll-up (belanja maupun kartu), bukan khusus kartu.
       Memenuhi [ADR-0008](../02-architecture/adr/0008-monthly-cycle-template-and-rollup.md).
 
 ## Fase 5: Investasi

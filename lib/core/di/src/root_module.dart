@@ -9,9 +9,14 @@ import 'package:saldough/features/card/data/repositories/card_statement_reposito
 import 'package:saldough/features/card/presentation/navigation/card_route_module.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_resolution.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
 import 'package:saldough/features/cycle/presentation/navigation/cycle_route_module.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
+import 'package:saldough/features/grocery/data/grocery_roll_up_resolver.dart';
+import 'package:saldough/features/grocery/data/repositories/grocery_plan_repository_impl.dart';
+import 'package:saldough/features/grocery/presentation/navigation/grocery_route_module.dart';
 import 'package:saldough/features/income/presentation/navigation/income_route_module.dart';
 import 'package:saldough/features/worklog/domain/repositories/cycle_income_writer.dart';
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_module.dart';
@@ -34,6 +39,7 @@ abstract final class RootModule {
     CycleRouteModule(),
     IncomeRouteModule(),
     WorklogRouteModule(),
+    GroceryRouteModule(),
     CardRouteModule(),
     ExampleNoteRouteModule(),
   ];
@@ -61,23 +67,32 @@ abstract final class RootModule {
     );
   }
 
+  // `RollUpResolver` adalah antarmuka milik `cycle` (Fase 2), diimplementasi
+  // fitur sumber datanya sendiri — `grocery` (`GroceryRollUpResolver`) dan
+  // `card` (`CardRollUpResolver`, T-4.6-T-4.12), masing-masing hanya
+  // menangani sumbernya sendiri dan jatuh ke `unavailable()` untuk sumber
+  // lain. `_CompositeRollUpResolver` di bawah menggabungkan keduanya di
+  // belakang satu `RollUpResolver`, mendelegasikan berdasar tipe
+  // `RollUpSource` — lihat catatan revisi di roll_up_resolver.dart.
+  //
   // `CycleIncomeWriter` adalah port milik fitur `worklog` (T-3.9), bukan
   // milik `cycle` — diimplementasikan di sini karena RootModule, bukan
-  // fitur mana pun, yang boleh melihat data/domain kedua fitur untuk
-  // mengawatnya (lihat catatan revisi ADR-0009). `CycleRepositoryImpl` di
-  // sini adalah instance TERPISAH dari yang dipakai `CycleScope` — keduanya
-  // menunjuk dokumen `KeyValueStorage` yang sama (satu-satunya sumber
-  // kebenaran), jadi aman dipakai bersamaan tanpa cache yang bisa basi.
-  //
-  // `RollUpResolver` adalah port milik fitur `cycle` (Fase 2), diimplementasi
-  // `CardRollUpResolver` milik `card` (T-4.6-T-4.12) — pola PULL/read yang
-  // sama seperti rencana belanja. Baris `grocery` di luar cakupan resolver
-  // ini sampai fitur itu digabung (dibangun di cabang terpisah); falls back
-  // ke `RollUpResolution.unavailable()`.
+  // fitur mana pun, yang boleh melihat data/domain lebih dari satu fitur
+  // untuk mengawatnya (lihat catatan revisi ADR-0009). `CycleRepositoryImpl`
+  // di sini adalah instance TERPISAH dari yang dipakai `CycleScope` — sama
+  // seperti `GroceryPlanRepositoryImpl`/`CardStatementRepositoryImpl` di
+  // bawah, semuanya menunjuk dokumen `KeyValueStorage` yang sama
+  // (satu-satunya sumber kebenaran), jadi aman dipakai bersamaan tanpa
+  // cache yang bisa basi.
   static void _registerCrossFeatureAdapters(GetIt container) {
     container.registerLazySingleton<RollUpResolver>(
-      () => CardRollUpResolver(
-        repository: CardStatementRepositoryImpl(storage: container<KeyValueStorage>()),
+      () => _CompositeRollUpResolver(
+        grocery: GroceryRollUpResolver(
+          repository: GroceryPlanRepositoryImpl(storage: container<KeyValueStorage>()),
+        ),
+        card: CardRollUpResolver(
+          repository: CardStatementRepositoryImpl(storage: container<KeyValueStorage>()),
+        ),
       ),
     );
     container.registerLazySingleton<CycleIncomeWriter>(
@@ -110,4 +125,25 @@ abstract final class RootModule {
   // CycleRouteModule.defaultInput, bukan lewat URL, karena initialLocation
   // dibuka tanpa `extra` (lihat RouteNodeGoRouterExt.toGoRoute).
   static const _initialLocation = '/cycle/detail';
+}
+
+/// Menggabungkan resolver roll-up tiap fitur sumber (`grocery`, `card`) jadi
+/// satu [RollUpResolver], mendelegasikan berdasar tipe [RollUpSource] —
+/// lihat catatan di [RootModule._registerCrossFeatureAdapters]. Tinggal di
+/// sini (bukan di `features/cycle/`) karena menggabungkan tipe dari dua
+/// fitur sekaligus, sama seperti alasan port lintas-fitur lain dikawat di
+/// `RootModule` (ADR-0009).
+final class _CompositeRollUpResolver implements RollUpResolver {
+  const _CompositeRollUpResolver({required this._grocery, required this._card});
+
+  final RollUpResolver _grocery;
+  final RollUpResolver _card;
+
+  @override
+  Future<RollUpResolution> resolve(RollUpSource source) {
+    return switch (source) {
+      GroceryRollUpSource() => _grocery.resolve(source),
+      CardRollUpSource() => _card.resolve(source),
+    };
+  }
 }

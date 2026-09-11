@@ -19,6 +19,8 @@ final class CycleScope extends IsolatedScope {
     c
       ..registerSingleton<KeyValueStorage>(parent<KeyValueStorage>())
       ..registerSingleton<IncomeSourceRepository>(parent<IncomeSourceRepository>())
+      // Implementasi sungguhan (grocery dan card) dikawat di RootModule
+      // sejak Fase 4 — lihat catatan di root_module.dart.
       ..registerSingleton<RollUpResolver>(parent<RollUpResolver>());
   }
 

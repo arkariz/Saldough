@@ -50,27 +50,36 @@ class _WithDebugMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!kDebugMode) return child ?? const SizedBox.shrink();
 
-    return Stack(
-      children: [
-        ?child,
-        Positioned(
-          right: 12,
-          bottom: 12,
-          child: FloatingActionButton.small(
-            heroTag: 'debug-menu',
-            tooltip: 'Menu pengembang',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => DevMenuScreen(
-                  registry: registry,
-                  onEntryTap: (entry) {
-                    Navigator.of(context).pop();
-                    router.goNamed(entry.keyId, extra: entry.createInput());
-                  },
+    // Dibungkus `Overlay` sendiri: FAB ini sibling dari `child` (bukan
+    // descendant-nya), jadi tidak bisa memakai `Overlay` milik `Navigator`
+    // di dalam `child` untuk tooltip-nya.
+    return Overlay(
+      initialEntries: [
+        OverlayEntry(
+          builder: (context) => Stack(
+            children: [
+              ?child,
+              Positioned(
+                right: 12,
+                bottom: 12,
+                child: FloatingActionButton.small(
+                  heroTag: 'debug-menu',
+                  tooltip: 'Menu pengembang',
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => DevMenuScreen(
+                        registry: registry,
+                        onEntryTap: (entry) {
+                          Navigator.of(context).pop();
+                          router.goNamed(entry.keyId, extra: entry.createInput());
+                        },
+                      ),
+                    ),
+                  ),
+                  child: const Icon(Icons.bug_report),
                 ),
               ),
-            ),
-            child: const Icon(Icons.bug_report),
+            ],
           ),
         ),
       ],

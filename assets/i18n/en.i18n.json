@@ -11,8 +11,7 @@
     "retry": "Retry",
     "loading": "Loading...",
     "genericErrorMessage": "Something went wrong. Please try again.",
-    "confirmDeleteTitle": "Delete?",
-    "confirmDeleteMessage": "This action cannot be undone."
+    "confirmDeleteTitle": "Delete?"
   },
   "cycle": {
     "incomeSectionTitle": "Income",
@@ -48,7 +47,10 @@
     "budgetSourceGrocery": "Grocery plan",
     "budgetSourceCard": "Credit card",
     "selectCardHint": "Select a card",
-    "rollUpSourceAlreadyUsed": "This source is already linked to another budget line."
+    "rollUpSourceAlreadyUsed": "This source is already linked to another budget line.",
+    "confirmDeleteIncomeLineTitle": "Delete the $name line?",
+    "confirmDeleteBudgetLineTitle": "Delete the $name line?",
+    "confirmDeleteLineMessage": "This line will be removed from this cycle. This cannot be undone."
   },
   "income": {
     "pageTitle": "Income sources",
@@ -68,7 +70,9 @@
     "deductionValueHint": "Value",
     "deductionKindPermille": "Per mille",
     "deductionKindFixed": "Fixed (Rp)",
-    "worklogEntryPointLabel": "Log Work Hours"
+    "worklogEntryPointLabel": "Log Work Hours",
+    "confirmDeleteSourceTitle": "Delete source $name?",
+    "confirmDeleteSourceMessage": "Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone."
   },
   "worklog": {
     "pageTitle": "Work log",
@@ -116,7 +120,11 @@
     "subscriptionInactiveBadge": "Inactive",
     "historyTitle": "Statement history",
     "emptyHistory": "No closed statements yet.",
-    "statementPeriodLabel": "$start – $end"
+    "statementPeriodLabel": "$start – $end",
+    "confirmDeleteCardTitle": "Delete card $name?",
+    "confirmDeleteCardMessage": "All statements and transactions on this card will be deleted. Budget lines linked to this card will lose their source. This cannot be undone.",
+    "confirmDeleteSubscriptionTitle": "Delete the $name subscription?",
+    "confirmDeleteSubscriptionMessage": "This subscription will no longer be added automatically each statement. Transactions already recorded are unaffected. This cannot be undone."
   },
   "grocery": {
     "pageTitle": "Grocery plan",
@@ -133,7 +141,9 @@
     "overridePriceLabel": "Override price",
     "overrideAmountFieldHint": "Override amount (Rp)",
     "overriddenBadge": "overridden",
-    "cardEntryPointLabel": "Credit Card"
+    "cardEntryPointLabel": "Credit Card",
+    "confirmDeleteItemTitle": "Delete $name?",
+    "confirmDeleteItemMessage": "The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone."
   },
   "investment": {
     "pageTitle": "Investment",
@@ -169,7 +179,11 @@
     "loanAmountsLabel": "Principal $principal, repaid $repaid",
     "invalidTotalMessage": "Total percentage must be 0 or 100.",
     "allocationSavedMessage": "Allocation plan saved.",
-    "loanSavedMessage": "Loan saved."
+    "loanSavedMessage": "Loan saved.",
+    "confirmDeleteGoalTitle": "Delete the $name goal?",
+    "confirmDeleteGoalMessage": "The goal's balance and its entire allocation history will be deleted. This cannot be undone.",
+    "confirmDeleteLoanTitle": "Delete this loan?",
+    "confirmDeleteLoanMessage": "The principal and repayment records will be deleted, and both goals' balances will change. This cannot be undone."
   },
   "shell": {
     "cycleTabLabel": "Cycle",

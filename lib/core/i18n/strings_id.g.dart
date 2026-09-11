@@ -98,9 +98,6 @@ class Translations$common$id {
 
 	/// id: 'Hapus?'
 	String get confirmDeleteTitle => 'Hapus?';
-
-	/// id: 'Tindakan ini tidak bisa dibatalkan.'
-	String get confirmDeleteMessage => 'Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: cycle
@@ -212,6 +209,15 @@ class Translations$cycle$id {
 
 	/// id: 'Sumber ini sudah ditautkan ke baris anggaran lain.'
 	String get rollUpSourceAlreadyUsed => 'Sumber ini sudah ditautkan ke baris anggaran lain.';
+
+	/// id: 'Hapus baris $name?'
+	String confirmDeleteIncomeLineTitle({required Object name}) => 'Hapus baris ${name}?';
+
+	/// id: 'Hapus baris $name?'
+	String confirmDeleteBudgetLineTitle({required Object name}) => 'Hapus baris ${name}?';
+
+	/// id: 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteLineMessage => 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: income
@@ -275,6 +281,12 @@ class Translations$income$id {
 
 	/// id: 'Catat Jam Kerja'
 	String get worklogEntryPointLabel => 'Catat Jam Kerja';
+
+	/// id: 'Hapus sumber $name?'
+	String confirmDeleteSourceTitle({required Object name}) => 'Hapus sumber ${name}?';
+
+	/// id: 'Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteSourceMessage => 'Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: worklog
@@ -425,6 +437,18 @@ class Translations$card$id {
 
 	/// id: '$start – $end'
 	String statementPeriodLabel({required Object start, required Object end}) => '${start} – ${end}';
+
+	/// id: 'Hapus kartu $name?'
+	String confirmDeleteCardTitle({required Object name}) => 'Hapus kartu ${name}?';
+
+	/// id: 'Seluruh siklus tagihan dan transaksi kartu ini akan terhapus. Baris anggaran yang menaut kartu ini akan kehilangan sumbernya. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteCardMessage => 'Seluruh siklus tagihan dan transaksi kartu ini akan terhapus. Baris anggaran yang menaut kartu ini akan kehilangan sumbernya. Tindakan ini tidak bisa dibatalkan.';
+
+	/// id: 'Hapus langganan $name?'
+	String confirmDeleteSubscriptionTitle({required Object name}) => 'Hapus langganan ${name}?';
+
+	/// id: 'Langganan ini tidak lagi disiapkan otomatis tiap siklus tagihan. Transaksi yang sudah tercatat tidak terpengaruh. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteSubscriptionMessage => 'Langganan ini tidak lagi disiapkan otomatis tiap siklus tagihan. Transaksi yang sudah tercatat tidak terpengaruh. Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: grocery
@@ -479,6 +503,12 @@ class Translations$grocery$id {
 
 	/// id: 'Kartu Kredit'
 	String get cardEntryPointLabel => 'Kartu Kredit';
+
+	/// id: 'Hapus $name?'
+	String confirmDeleteItemTitle({required Object name}) => 'Hapus ${name}?';
+
+	/// id: 'Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteItemMessage => 'Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: investment
@@ -590,6 +620,18 @@ class Translations$investment$id {
 
 	/// id: 'Pinjaman disimpan.'
 	String get loanSavedMessage => 'Pinjaman disimpan.';
+
+	/// id: 'Hapus pos $name?'
+	String confirmDeleteGoalTitle({required Object name}) => 'Hapus pos ${name}?';
+
+	/// id: 'Saldo pos dan seluruh riwayat alokasinya akan terhapus. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteGoalMessage => 'Saldo pos dan seluruh riwayat alokasinya akan terhapus. Tindakan ini tidak bisa dibatalkan.';
+
+	/// id: 'Hapus pinjaman ini?'
+	String get confirmDeleteLoanTitle => 'Hapus pinjaman ini?';
+
+	/// id: 'Catatan pokok dan pengembaliannya akan terhapus, dan saldo kedua pos ikut berubah. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteLoanMessage => 'Catatan pokok dan pengembaliannya akan terhapus, dan saldo kedua pos ikut berubah. Tindakan ini tidak bisa dibatalkan.';
 }
 
 // Path: shell
@@ -631,7 +673,6 @@ extension on Translations {
 			'common.loading' => 'Memuat...',
 			'common.genericErrorMessage' => 'Ada yang salah. Coba lagi.',
 			'common.confirmDeleteTitle' => 'Hapus?',
-			'common.confirmDeleteMessage' => 'Tindakan ini tidak bisa dibatalkan.',
 			'cycle.incomeSectionTitle' => 'Pemasukan',
 			'cycle.budgetSectionTitle' => 'Anggaran',
 			'cycle.totalLabel' => 'Total',
@@ -666,6 +707,9 @@ extension on Translations {
 			'cycle.budgetSourceCard' => 'Kartu Kredit',
 			'cycle.selectCardHint' => 'Pilih kartu',
 			'cycle.rollUpSourceAlreadyUsed' => 'Sumber ini sudah ditautkan ke baris anggaran lain.',
+			'cycle.confirmDeleteIncomeLineTitle' => ({required Object name}) => 'Hapus baris ${name}?',
+			'cycle.confirmDeleteBudgetLineTitle' => ({required Object name}) => 'Hapus baris ${name}?',
+			'cycle.confirmDeleteLineMessage' => 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.',
 			'income.pageTitle' => 'Sumber pemasukan',
 			'income.emptySources' => 'Belum ada sumber pemasukan.',
 			'income.addSourceTitle' => 'Tambah sumber pemasukan',
@@ -684,6 +728,8 @@ extension on Translations {
 			'income.deductionKindPermille' => 'Per mil',
 			'income.deductionKindFixed' => 'Tetap (Rp)',
 			'income.worklogEntryPointLabel' => 'Catat Jam Kerja',
+			'income.confirmDeleteSourceTitle' => ({required Object name}) => 'Hapus sumber ${name}?',
+			'income.confirmDeleteSourceMessage' => 'Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan.',
 			'worklog.pageTitle' => 'Catatan jam kerja',
 			'worklog.noFreelanceSource' => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.',
 			'worklog.addEntryTitle' => 'Catat jam kerja',
@@ -728,6 +774,10 @@ extension on Translations {
 			'card.historyTitle' => 'Riwayat siklus tagihan',
 			'card.emptyHistory' => 'Belum ada siklus tagihan yang ditutup.',
 			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'card.confirmDeleteCardTitle' => ({required Object name}) => 'Hapus kartu ${name}?',
+			'card.confirmDeleteCardMessage' => 'Seluruh siklus tagihan dan transaksi kartu ini akan terhapus. Baris anggaran yang menaut kartu ini akan kehilangan sumbernya. Tindakan ini tidak bisa dibatalkan.',
+			'card.confirmDeleteSubscriptionTitle' => ({required Object name}) => 'Hapus langganan ${name}?',
+			'card.confirmDeleteSubscriptionMessage' => 'Langganan ini tidak lagi disiapkan otomatis tiap siklus tagihan. Transaksi yang sudah tercatat tidak terpengaruh. Tindakan ini tidak bisa dibatalkan.',
 			'grocery.pageTitle' => 'Rencana belanja',
 			'grocery.rollUpTotal' => 'Total bulanan',
 			'grocery.weeksPerMonthFieldHint' => 'Pengali minggu per bulan',
@@ -743,6 +793,8 @@ extension on Translations {
 			'grocery.overrideAmountFieldHint' => 'Harga timpaan (Rp)',
 			'grocery.overriddenBadge' => 'ditimpa',
 			'grocery.cardEntryPointLabel' => 'Kartu Kredit',
+			'grocery.confirmDeleteItemTitle' => ({required Object name}) => 'Hapus ${name}?',
+			'grocery.confirmDeleteItemMessage' => 'Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan.',
 			'investment.pageTitle' => 'Investasi',
 			'investment.totalPortfolioTitle' => 'Total portofolio',
 			'investment.goalsTitle' => 'Pos tujuan',
@@ -777,6 +829,10 @@ extension on Translations {
 			'investment.invalidTotalMessage' => 'Total persentase harus 0 atau 100.',
 			'investment.allocationSavedMessage' => 'Rencana alokasi disimpan.',
 			'investment.loanSavedMessage' => 'Pinjaman disimpan.',
+			'investment.confirmDeleteGoalTitle' => ({required Object name}) => 'Hapus pos ${name}?',
+			'investment.confirmDeleteGoalMessage' => 'Saldo pos dan seluruh riwayat alokasinya akan terhapus. Tindakan ini tidak bisa dibatalkan.',
+			'investment.confirmDeleteLoanTitle' => 'Hapus pinjaman ini?',
+			'investment.confirmDeleteLoanMessage' => 'Catatan pokok dan pengembaliannya akan terhapus, dan saldo kedua pos ikut berubah. Tindakan ini tidak bisa dibatalkan.',
 			'shell.cycleTabLabel' => 'Siklus',
 			'shell.incomeTabLabel' => 'Pemasukan',
 			'shell.groceryTabLabel' => 'Belanja',

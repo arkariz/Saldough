@@ -138,7 +138,14 @@ class _GoalTile extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
-                  onPressed: () => bloc.add(GoalDeleted(goal.id)),
+                  onPressed: () async {
+                    final confirmed = await showConfirmDelete(
+                      context,
+                      title: t.investment.confirmDeleteGoalTitle(name: goal.name),
+                      message: t.investment.confirmDeleteGoalMessage,
+                    );
+                    if (confirmed) bloc.add(GoalDeleted(goal.id));
+                  },
                 ),
               ],
             ),
@@ -362,7 +369,14 @@ class _LoanTile extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => bloc.add(GoalLoanDeleted(loan.id)),
+              onPressed: () async {
+                final confirmed = await showConfirmDelete(
+                  context,
+                  title: t.investment.confirmDeleteLoanTitle,
+                  message: t.investment.confirmDeleteLoanMessage,
+                );
+                if (confirmed) bloc.add(GoalLoanDeleted(loan.id));
+              },
             ),
           ],
         ),

@@ -143,7 +143,16 @@ class _ItemSection extends StatelessWidget {
                     AppMoneyText(sen: item.amount, style: Theme.of(context).textTheme.titleMedium),
                     IconButton(
                       icon: const Icon(Icons.delete_outline),
-                      onPressed: () => bloc.add(GroceryItemRemoved(isWeekly: isWeekly, id: item.id)),
+                      onPressed: () async {
+                        final confirmed = await showConfirmDelete(
+                          context,
+                          title: t.grocery.confirmDeleteItemTitle(name: item.name),
+                          message: t.grocery.confirmDeleteItemMessage,
+                        );
+                        if (confirmed) {
+                          bloc.add(GroceryItemRemoved(isWeekly: isWeekly, id: item.id));
+                        }
+                      },
                     ),
                   ],
                 ),

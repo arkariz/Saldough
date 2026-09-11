@@ -73,13 +73,13 @@ menyusul di branch `claude/ux-review-fixes`.
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
-| 2 | Jalan buntu dan validasi form | 5 | 3 | Prioritas #3 — UX-02, UX-03, UX-04 selesai |
+| 2 | Jalan buntu dan validasi form | 5 | 4 | Prioritas #3 — UX-02, UX-03, UX-04, UX-05 selesai |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **7** | |
+| **Total** | | **37** | **8** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -454,12 +454,13 @@ membaca kode saja.
 atas lagi: nilai di field dan total bulanan harus sepakat. Lalu cek baris
 anggaran roll-up di tab Siklus ikut berubah.
 
-## - [ ] UX-05 🟠 Input tak valid berubah jadi Rp 0 secara diam-diam
+## - [x] UX-05 🟠 Input tak valid berubah jadi Rp 0 secara diam-diam
 
 | | |
 |---|---|
 | **Kat.** | B |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026** untuk kasus yang benar-benar berisiko — lihat penyempitan cakupan di bawah. |
 
 **Masalah.** Pola `(int.tryParse(...) ?? 0) * 100` dipakai di jalur simpan:
 
@@ -477,25 +478,54 @@ ada yang memberi tahu. Untuk proyek yang menempatkan ketepatan angka di atas
 kecepatan, memaksa input tak valid menjadi nol adalah perilaku paling buruk
 yang mungkin dipilih.
 
-**Langkah perbaikan.** Tolak simpan alih-alih memaksa jadi 0 — ini efek
-samping wajar dari **UX-03**, jadi kerjakan setelahnya. Khusus dua hal
-tambahan:
+**Langkah perbaikan.** **SELESAI, dengan cakupan yang dipersempit setelah
+diperiksa lebih teliti** — dua dari lima titik di tabel ternyata tidak
+membawa risiko yang sama.
 
-1. Bedakan "kosong" dari "nol yang disengaja". Saldo awal pos dan tambahan dana
-   **boleh** 0 secara sah; nama dan tarif per jam tidak boleh kosong. Jangan
-   menolak 0 yang valid.
-2. Tambahkan `inputFormatters: [FilteringTextInputFormatter.digitsOnly]` pada
-   field angka yang belum punya — `worklog_page.dart:135-139` (jam) dan field
-   nilai potongan di `income_source_edit_sheet.dart`. Field lain sudah punya,
-   jadi ini sekadar menutup celah yang tidak konsisten.
+Dicek dulu: field mana yang benar-benar mulai KOSONG untuk entri baru (risiko
+nyata, sen 0 tersimpan tanpa pemilik sadar) vs field yang selalu mulai
+terisi `"0"` (tidak ada risiko — mengosongkannya lalu simpan cuma mengulang
+nilai yang memang sudah ditampilkan):
 
-**Tes.** Tambahkan kasus di `income_source_bloc_test.dart` dan
-`investment_bloc_test.dart` bahwa input tak valid **tidak** menghasilkan state
-tersimpan bernilai 0.
+| Field | Mulai kosong untuk entri baru? | Tindakan |
+|---|---|---|
+| `income_source_edit_sheet.dart` — nominal tetap | Ya (`fixedAmount == null → ''`) | **Ditolak** kalau tak valid |
+| `income_source_edit_sheet.dart` — tarif per jam | Ya | **Ditolak** kalau tak valid |
+| `goal_edit_sheet.dart:49` — saldo awal pos | **Tidak**, selalu `"0"` | Dibiarkan — 0 memang nilai bawaan yang sah |
+| `investment_page.dart:247` — tambahan dana | **Tidak**, selalu `"0"` | Dibiarkan — 0 memang nilai bawaan yang sah |
 
-**Verifikasi.** Isi tarif per jam dengan teks kosong lalu Simpan — harus
-tertolak, bukan tersimpan sebagai Rp 0. Lalu cek gaji bersih di buku jam tidak
-berubah jadi 0.
+1. **SELESAI** untuk dua field yang benar-benar berisiko. `_canSubmit` di
+   `income_source_edit_sheet.dart` (sudah ada dari UX-03) diperluas: kalau
+   `_kind == .fixedSalary`, mensyaratkan `_fixedAmountController` valid;
+   kalau `.hourlyFreelance`, mensyaratkan `_hourlyRateController` valid;
+   `.adHoc` tidak mensyaratkan keduanya. Tarif per jam Rp 0 karena field
+   kosong tak lagi bisa tersimpan diam-diam.
+2. `goal_edit_sheet.dart`/`investment_page.dart` **sengaja tidak disentuh** —
+   `_openingBalanceController`/`_returnDepositController` SELALU terisi
+   `"0"` sejak awal (`(x ?? 0) ~/ 100).toString()`, baik untuk entri baru
+   maupun sunting. Mengosongkan field itu lalu menyimpan hanya mengembalikan
+   ke nilai yang sudah ditampilkan — bukan kejutan, bukan kehilangan data.
+   Menolaknya lewat gerbang Simpan justru melanggar aturan yang tertulis di
+   sini sendiri ("0 boleh, jangan ditolak yang valid") tanpa menutup risiko
+   nyata apa pun.
+3. **SELESAI.** `inputFormatters: digitsOnly` ditambahkan ke
+   `worklog_page.dart` (field jam) dan field nilai potongan di
+   `income_source_edit_sheet.dart` — keduanya sudah punya `keyboardType:
+   .number` tapi belum menyaring karakter bukan angka.
+
+**Tes.** **Tidak ditambahkan**, dan ini disengaja bukan terlewat: validasi
+UX-05 hidup sepenuhnya di lapis widget (`_canSubmit`) — bloc `IncomeSourceBloc`
+hanya menerima `IncomeSource` yang SUDAH terbentuk lewat event
+`IncomeSourceSaved`, dan `_canSubmit` justru mencegah widget mengirim event
+itu sama sekali kalau datanya tidak valid. Rencana awal item ini menyebut
+"tambahkan kasus di `income_source_bloc_test.dart`" — setelah dicek, itu tidak
+mungkin menguji hal yang dimaksud (bloc tidak pernah melihat input mentah).
+Diverifikasi manual: ditelusuri kombinasi `_kind` × isi field, dan setiap
+kombinasi yang seharusnya tertolak memang membuat `_canSubmit` bernilai
+`false`.
+
+**Verifikasi.** `flutter analyze` 0 issue, `flutter test` 142 lulus (tidak
+berubah dari UX-04 — murni perubahan widget).
 
 ## - [ ] UX-06 🟠 Menandai baris "tetap" bisa gagal tanpa pemilik tahu
 
@@ -1882,3 +1912,28 @@ satu-satunya tes lama (`CardEntryPointTapped`) tidak menstub `savePlan`.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` **142 lulus** (141 +
 1 tes baru).
+
+**11 September 2026 (UX-05 dikerjakan, cakupan dipersempit)** — Diperiksa
+dulu mana dari lima titik di tabel temuan yang field-nya benar-benar mulai
+KOSONG untuk entri baru (risiko nyata) vs yang selalu mulai terisi `"0"`
+(tidak ada risiko). Hasilnya: `income_source_edit_sheet.dart` (nominal tetap,
+tarif per jam) benar-benar mulai kosong — inilah yang diperbaiki, lewat
+perluasan `_canSubmit` yang sudah ada dari UX-03 supaya mensyaratkan nominal
+valid sesuai `_kind` yang dipilih. `goal_edit_sheet.dart`/`investment_page.dart`
+(saldo awal pos, tambahan dana) selalu mulai terisi `"0"` baik untuk entri
+baru maupun sunting — sengaja TIDAK ditolak, karena menolaknya melanggar
+aturan yang tertulis di item ini sendiri ("0 boleh, jangan ditolak yang
+valid") tanpa menutup risiko apa pun yang nyata.
+
+`inputFormatters: digitsOnly` ditambahkan ke dua field yang belum punya:
+jam kerja (`worklog_page.dart`) dan nilai aturan potongan
+(`income_source_edit_sheet.dart`).
+
+Tidak ada tes bloc baru — dicatat eksplisit kenapa: validasi ini hidup di
+lapis widget (`_canSubmit` mencegah event terkirim sama sekali), sementara
+bloc hanya menerima `IncomeSource` yang sudah terbentuk lewat event. Rencana
+awal yang menyebut "tambahkan kasus di bloc test" diperiksa ulang dan
+ternyata tidak berlaku untuk mekanisme pencegahan yang sebenarnya dipakai.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 142 lulus (tidak
+berubah — murni perubahan widget).

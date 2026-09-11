@@ -218,6 +218,12 @@ class Translations$cycle$id {
 
 	/// id: 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.'
 	String get confirmDeleteLineMessage => 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.';
+
+	/// id: 'Belum ada kartu terdaftar. Tambah dulu di Belanja › Kartu Kredit.'
+	String get noCardsHint => 'Belum ada kartu terdaftar. Tambah dulu di Belanja › Kartu Kredit.';
+
+	/// id: 'Semua kartu sudah ditautkan ke baris anggaran lain.'
+	String get allCardsUsedHint => 'Semua kartu sudah ditautkan ke baris anggaran lain.';
 }
 
 // Path: income
@@ -710,6 +716,8 @@ extension on Translations {
 			'cycle.confirmDeleteIncomeLineTitle' => ({required Object name}) => 'Hapus baris ${name}?',
 			'cycle.confirmDeleteBudgetLineTitle' => ({required Object name}) => 'Hapus baris ${name}?',
 			'cycle.confirmDeleteLineMessage' => 'Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.',
+			'cycle.noCardsHint' => 'Belum ada kartu terdaftar. Tambah dulu di Belanja › Kartu Kredit.',
+			'cycle.allCardsUsedHint' => 'Semua kartu sudah ditautkan ke baris anggaran lain.',
 			'income.pageTitle' => 'Sumber pemasukan',
 			'income.emptySources' => 'Belum ada sumber pemasukan.',
 			'income.addSourceTitle' => 'Tambah sumber pemasukan',

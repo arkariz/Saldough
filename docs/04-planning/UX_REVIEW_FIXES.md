@@ -73,13 +73,13 @@ menyusul di branch `claude/ux-review-fixes`.
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
-| 2 | Jalan buntu dan validasi form | 5 | 0 | Prioritas #3 |
+| 2 | Jalan buntu dan validasi form | 5 | 2 | Prioritas #3 — UX-02, UX-03 selesai |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **4** | |
+| **Total** | | **37** | **6** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -290,13 +290,14 @@ hapus". Tempatkan di `test/features/<fitur>/presentation/pages/`.
 
 # Batch 2 — Jalan buntu dan validasi form
 
-## - [ ] UX-02 🔴 Pilihan "Kartu Kredit" jadi jalan buntu kalau belum ada kartu
+## - [x] UX-02 🔴 Pilihan "Kartu Kredit" jadi jalan buntu kalau belum ada kartu
 
 | | |
 |---|---|
 | **Kat.** | B (alur & penyelesaian tugas) |
 | **Berkas** | `lib/features/cycle/presentation/widgets/line_edit_sheet.dart:322-338`, `:240` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** Dikerjakan bersama UX-03 (menyentuh fungsi yang sama), lihat catatan cakupan di UX-03. |
 
 **Masalah.** Dua cacat bertumpuk di sheet tambah baris anggaran:
 
@@ -348,12 +349,13 @@ pesannya mengarahkan.
 kartu terpakai, ada kartu bebas) dan pastikan ketiganya memberi pesan berbeda
 yang benar.
 
-## - [ ] UX-03 🔴 Simpan gagal tanpa satu pun pesan
+## - [x] UX-03 🔴 Simpan gagal tanpa satu pun pesan
 
 | | |
 |---|---|
 | **Kat.** | B, C, D |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026**, dengan satu penyempitan cakupan sengaja — lihat catatan di bawah. |
 
 **Masalah.** Setiap form melakukan `return` diam-diam saat input tidak valid:
 
@@ -378,18 +380,28 @@ dibedakan dari aplikasi yang menggantung.
 **Langkah perbaikan.** Pola acuannya sudah ada di repo ini dan sudah benar —
 `investment_page.dart:262, 317, 321`: Simpan dinonaktifkan
 (`onPressed: isValidTotal ? _submit : null`) dan angka yang salah berubah warna.
-Salin pola itu, jangan bikin pola baru.
+Disalin persis ke ketujuh jalur:
 
-1. Di setiap `State` form, tambahkan getter `bool get _canSubmit` yang
-   mengevaluasi syaratnya, dan panggil `setState` dari `onChanged` setiap field
-   yang ikut menentukannya.
-2. `AppButton(label: t.common.save, onPressed: _canSubmit ? _submit : null)` —
-   `AppButton` sudah punya tampilan nonaktif (`app_button.dart:38`), jadi tidak
-   perlu widget baru.
-3. Tambahkan `errorText` pada `InputDecoration` field yang salah, supaya
-   alasannya terlihat di tempat masalahnya, bukan cuma tombol yang mati.
-4. Setelah semua jalur dijaga, `_submit()` tidak perlu lagi `return` bisu —
-   tapi biarkan penjaganya sebagai pertahanan lapis kedua (jangan dihapus).
+1. **SELESAI.** Setiap `State` form kini punya getter `bool get _canSubmit`
+   yang mengevaluasi syaratnya, dan tiap field yang menentukannya memanggil
+   `setState` lewat `onChanged: (_) => setState(() {})`.
+2. **SELESAI.** `AppButton(..., onPressed: _canSubmit ? _submit : null)` di
+   `line_edit_sheet.dart` (dikerjakan bersama UX-02 — dua dari empat jalur di
+   berkas itu adalah kasus roll-up UX-02, dua lainnya label/nominal biasa),
+   `worklog_page.dart` (`_EntryFormState`), `grocery_page.dart`
+   (`_GroceryItemEditSheetState`), `income_source_edit_sheet.dart`.
+3. ⚠ **TIDAK dikerjakan, sengaja.** `errorText` pada `InputDecoration` tidak
+   ditambahkan di jalur mana pun. Alasan: satu-satunya pola acuan yang sudah
+   ada di repo (`_AllocationPlanForm`, dikutip di atas) SENDIRI tidak memakai
+   `errorText` — ia hanya menonaktifkan tombol dan mengubah warna teks total.
+   Menambah `errorText` di sini berarti memperkenalkan pola baru yang tidak
+   konsisten dengan satu-satunya acuan yang ada, jadi disamakan ke pola yang
+   sudah terbukti (tombol nonaktif saja) alih-alih membuat separuh form
+   punya `errorText` dan separuh tidak. Kalau pemilik menilai tombol nonaktif
+   saja kurang jelas, ini follow-up terpisah — bukan pekerjaan yang
+   terlewat diam-diam.
+4. **SELESAI.** `_submit()` di keempat berkas tetap menyimpan penjaga
+   awalnya sebagai pertahanan lapis kedua — tidak dihapus.
 
 **Kunci i18n baru** (`common`):
 ```jsonc
@@ -1821,3 +1833,31 @@ catatan eksplisit bahwa rollUp menyusul di item lain.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` 141 lulus (tidak
 berubah dari UX-22 — ini murni perubahan widget, tidak menyentuh bloc).
+
+**11 September 2026 (UX-02 dan UX-03 dikerjakan bersama)** — Dikerjakan dalam
+satu perubahan karena keduanya menyentuh fungsi Simpan yang sama di
+`line_edit_sheet.dart`, persis seperti dependensi yang sudah dicatat di kedua
+item.
+
+UX-02: `_hasNoCards`/`_allCardsUsed` memisahkan dua keadaan yang sebelumnya
+tercampur lewat `[].every(...)`. Chip "Kartu Kredit" sekarang ikut bisa
+dinonaktifkan (dipindah dari `AppChip` polos ke `_budgetSourceChip`), dengan
+hint text (`noCardsHint`/`allCardsUsedHint`, kunci i18n baru) yang berbeda
+untuk "belum ada kartu" vs "semua kartu terpakai" — bukan satu `selectCardHint`
+untuk ketiganya. Karena chip induk sekarang menggerbang masuknya, sub-bagian
+pemilihan kartu di bawahnya HANYA bisa tercapai saat memang ada kartu bebas,
+jadi cabang `if (semua terpakai) teks else chip` yang jadi biang UX-02
+disederhanakan jadi satu jalur saja (`selectCardHint` + chip, tanpa
+percabangan lagi).
+
+UX-03: `_canSubmit` dipasang di keempat berkas (line_edit_sheet, worklog,
+grocery, income_source_edit_sheet), Simpan/Catat/Tambah dinonaktifkan alih-alih
+diam-diam menolak. `errorText` (langkah 3 di rencana awal) SENGAJA tidak
+ditambahkan — dijelaskan di item UX-03 kenapa: satu-satunya pola acuan yang
+ada di repo tidak memakainya, jadi disamakan ke situ.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 141 lulus (tidak
+berubah — murni perubahan widget, tidak menyentuh bloc). Diperiksa manual
+alur logikanya (bukan widget test — proyek ini belum punya widget test):
+setiap kombinasi budgetSource/kind ditelusuri baris demi baris memastikan
+`_canSubmit` konsisten dengan apa yang `_submit()` sebenarnya terima.

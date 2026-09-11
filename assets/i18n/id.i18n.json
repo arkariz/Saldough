@@ -50,7 +50,9 @@
     "rollUpSourceAlreadyUsed": "Sumber ini sudah ditautkan ke baris anggaran lain.",
     "confirmDeleteIncomeLineTitle": "Hapus baris $name?",
     "confirmDeleteBudgetLineTitle": "Hapus baris $name?",
-    "confirmDeleteLineMessage": "Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan."
+    "confirmDeleteLineMessage": "Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan.",
+    "noCardsHint": "Belum ada kartu terdaftar. Tambah dulu di Belanja › Kartu Kredit.",
+    "allCardsUsedHint": "Semua kartu sudah ditautkan ke baris anggaran lain."
   },
   "income": {
     "pageTitle": "Sumber pemasukan",

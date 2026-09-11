@@ -88,6 +88,13 @@ class _EntryFormState extends State<_EntryForm> {
   final _hoursController = TextEditingController();
   bool _startsNewBook = false;
 
+  /// Gerbang tombol Catat — dinonaktifkan (bukan diam-diam menolak submit)
+  /// saat jam belum diisi atau bukan angka positif (UX-03).
+  bool get _canSubmit {
+    final hours = int.tryParse(_hoursController.text.trim());
+    return hours != null && hours > 0;
+  }
+
   @override
   void dispose() {
     _hoursController.dispose();
@@ -136,6 +143,7 @@ class _EntryFormState extends State<_EntryForm> {
                   controller: _hoursController,
                   keyboardType: .number,
                   decoration: InputDecoration(labelText: t.worklog.hoursFieldHint),
+                  onChanged: (_) => setState(() {}),
                 ),
               ),
             ],
@@ -146,7 +154,11 @@ class _EntryFormState extends State<_EntryForm> {
             value: _startsNewBook,
             onChanged: (value) => setState(() => _startsNewBook = value),
           ),
-          AppButton(label: t.worklog.addEntryButton, icon: Icons.add, onPressed: _submit),
+          AppButton(
+            label: t.worklog.addEntryButton,
+            icon: Icons.add,
+            onPressed: _canSubmit ? _submit : null,
+          ),
         ],
       ),
     );

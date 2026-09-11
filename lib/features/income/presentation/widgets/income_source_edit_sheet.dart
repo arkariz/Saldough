@@ -65,6 +65,12 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
     setState(() => _rules = _rules.map((r) => r.id == updated.id ? updated : r).toList());
   }
 
+  /// Gerbang tombol Simpan -- dinonaktifkan (bukan diam-diam menolak submit)
+  /// saat nama belum diisi (UX-03). Nominal tetap/tarif per jam yang kosong
+  /// TIDAK digerbang di sini -- itu perilaku lain (default ke Rp 0, dicatat
+  /// terpisah sebagai UX-05).
+  bool get _canSubmit => _nameController.text.trim().isNotEmpty;
+
   void _submit() {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
@@ -102,6 +108,7 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
               controller: _nameController,
               autofocus: true,
               decoration: InputDecoration(labelText: t.income.nameFieldHint),
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
@@ -142,7 +149,7 @@ class _IncomeSourceEditSheetState extends State<IncomeSourceEditSheet> {
               AppButton(label: t.income.addDeductionRuleButton, icon: Icons.add, onPressed: _addRule),
             ],
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: t.common.save, onPressed: _submit),
+            AppButton(label: t.common.save, onPressed: _canSubmit ? _submit : null),
           ],
         ),
       ),

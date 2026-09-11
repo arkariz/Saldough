@@ -387,8 +387,8 @@ class Translations$card$id {
 	/// id: 'Cetak tanggal $day'
 	String statementDaySubtitle({required Object day}) => 'Cetak tanggal ${day}';
 
-	/// id: 'Siklus tagihan berjalan'
-	String get openStatementTitle => 'Siklus tagihan berjalan';
+	/// id: 'Siklus tagihan berjalan — $cardName'
+	String openStatementTitleFor({required Object cardName}) => 'Siklus tagihan berjalan — ${cardName}';
 
 	/// id: 'Perlu dikonfirmasi'
 	String get pendingConfirmationTitle => 'Perlu dikonfirmasi';
@@ -414,8 +414,8 @@ class Translations$card$id {
 	/// id: 'Catat'
 	String get addTransactionButton => 'Catat';
 
-	/// id: 'Langganan berulang'
-	String get subscriptionsTitle => 'Langganan berulang';
+	/// id: 'Langganan berulang — $cardName'
+	String subscriptionsTitleFor({required Object cardName}) => 'Langganan berulang — ${cardName}';
 
 	/// id: 'Belum ada langganan terdaftar.'
 	String get emptySubscriptions => 'Belum ada langganan terdaftar.';
@@ -438,8 +438,8 @@ class Translations$card$id {
 	/// id: 'Nonaktif'
 	String get subscriptionInactiveBadge => 'Nonaktif';
 
-	/// id: 'Riwayat siklus tagihan'
-	String get historyTitle => 'Riwayat siklus tagihan';
+	/// id: 'Riwayat siklus tagihan — $cardName'
+	String historyTitleFor({required Object cardName}) => 'Riwayat siklus tagihan — ${cardName}';
 
 	/// id: 'Belum ada siklus tagihan yang ditutup.'
 	String get emptyHistory => 'Belum ada siklus tagihan yang ditutup.';
@@ -769,7 +769,7 @@ extension on Translations {
 			'card.cardNameFieldHint' => 'Nama kartu',
 			'card.statementDayFieldHint' => 'Tanggal cetak tagihan',
 			'card.statementDaySubtitle' => ({required Object day}) => 'Cetak tanggal ${day}',
-			'card.openStatementTitle' => 'Siklus tagihan berjalan',
+			'card.openStatementTitleFor' => ({required Object cardName}) => 'Siklus tagihan berjalan — ${cardName}',
 			'card.pendingConfirmationTitle' => 'Perlu dikonfirmasi',
 			'card.closeStatementButton' => 'Tutup siklus tagihan',
 			'card.statementClosedMessage' => 'Siklus tagihan ditutup. Siklus berikutnya dibuka.',
@@ -778,7 +778,7 @@ extension on Translations {
 			'card.amountFieldHint' => 'Nominal (Rp)',
 			'card.noteFieldHint' => 'Catatan (opsional)',
 			'card.addTransactionButton' => 'Catat',
-			'card.subscriptionsTitle' => 'Langganan berulang',
+			'card.subscriptionsTitleFor' => ({required Object cardName}) => 'Langganan berulang — ${cardName}',
 			'card.emptySubscriptions' => 'Belum ada langganan terdaftar.',
 			'card.addSubscriptionTitle' => 'Tambah langganan',
 			'card.editSubscriptionTitle' => 'Sunting langganan',
@@ -786,7 +786,7 @@ extension on Translations {
 			'card.subscriptionActiveLabel' => 'Aktif',
 			'card.subscriptionSubtitle' => ({required Object amount, required Object day}) => '${amount} / bulan, tanggal ${day}',
 			'card.subscriptionInactiveBadge' => 'Nonaktif',
-			'card.historyTitle' => 'Riwayat siklus tagihan',
+			'card.historyTitleFor' => ({required Object cardName}) => 'Riwayat siklus tagihan — ${cardName}',
 			'card.emptyHistory' => 'Belum ada siklus tagihan yang ditutup.',
 			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
 			'card.confirmDeleteCardTitle' => ({required Object name}) => 'Hapus kartu ${name}?',

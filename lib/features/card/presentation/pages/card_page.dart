@@ -55,7 +55,10 @@ class CardPage extends StatelessWidget {
                   const SizedBox(height: AppSpacing.lg),
                   _AddTransactionForm(state: state),
                   const SizedBox(height: AppSpacing.lg),
-                  Text(t.card.subscriptionsTitle, style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    t.card.subscriptionsTitleFor(cardName: state.selectedCard!.name),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   if (state.cardSubscriptions.isEmpty) Text(t.card.emptySubscriptions),
                   for (final subscription in state.cardSubscriptions)
@@ -73,7 +76,10 @@ class CardPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text(t.card.historyTitle, style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    t.card.historyTitleFor(cardName: state.selectedCard!.name),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   if (state.closedStatements.isEmpty) Text(t.card.emptyHistory),
                   for (final statement in state.closedStatements)
@@ -166,7 +172,10 @@ class _OpenStatementSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text(t.card.openStatementTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            t.card.openStatementTitleFor(cardName: state.selectedCard!.name),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: AppSpacing.xs),
           AppMoneyText(sen: statement.confirmedTotal, style: Theme.of(context).textTheme.headlineSmall),
           if (pending.isNotEmpty) ...[

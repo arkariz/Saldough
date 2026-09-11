@@ -17,7 +17,16 @@ class IncomeSourceListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.income.pageTitle)),
+      appBar: AppBar(
+        title: Text(t.income.pageTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.access_time),
+            tooltip: t.income.worklogEntryPointLabel,
+            onPressed: () => context.read<IncomeSourceBloc>().add(const WorklogEntryPointTapped()),
+          ),
+        ],
+      ),
       body: EffectListener<IncomeSourceBloc, IncomeSourceState>(
         child: BlocBuilder<IncomeSourceBloc, IncomeSourceState>(
           builder: (context, state) {
@@ -28,12 +37,6 @@ class IncomeSourceListPage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
-                AppButton(
-                  label: t.income.worklogEntryPointLabel,
-                  icon: Icons.access_time,
-                  onPressed: () => bloc.add(const WorklogEntryPointTapped()),
-                ),
-                const SizedBox(height: AppSpacing.md),
                 if (state.sources.isEmpty) Text(t.income.emptySources),
                 for (final source in state.sources)
                   Padding(

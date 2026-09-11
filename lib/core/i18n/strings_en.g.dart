@@ -174,7 +174,8 @@ class _Translations$worklog$en extends Translations$worklog$id {
 	@override String bookClosedMessage({required Object netPay}) => 'Book closed. Net pay ${netPay}.';
 	@override String get historyTitle => 'Book history';
 	@override String get emptyHistory => 'No closed books yet.';
-	@override String get targetCycleHint => 'Target cycle (YYYY-MM)';
+	@override String get targetCycleHint => 'Target cycle';
+	@override String get noCyclesForInject => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.';
 	@override String get injectButton => 'Inject into cycle';
 	@override String injectedMessage({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
 	@override String injectedInto({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
@@ -263,7 +264,8 @@ class _Translations$investment$en extends Translations$investment$id {
 	@override String get goalNameFieldHint => 'Goal name';
 	@override String get openingBalanceFieldHint => 'Opening balance (Rp)';
 	@override String get allocationPlanTitle => 'This month\'s allocation';
-	@override String get cycleIdFieldHint => 'Cycle (YYYY-MM)';
+	@override String get cycleIdFieldHint => 'Cycle';
+	@override String get noCyclesAvailable => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.';
 	@override String get cycleNotFound => 'This cycle doesn\'t exist yet.';
 	@override String get cycleClosedMessage => 'This cycle is closed. Reopen it to edit the allocation.';
 	@override String get remainderLabel => 'Cycle remainder';
@@ -396,7 +398,8 @@ extension on TranslationsEn {
 			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Book closed. Net pay ${netPay}.',
 			'worklog.historyTitle' => 'Book history',
 			'worklog.emptyHistory' => 'No closed books yet.',
-			'worklog.targetCycleHint' => 'Target cycle (YYYY-MM)',
+			'worklog.targetCycleHint' => 'Target cycle',
+			'worklog.noCyclesForInject' => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.',
 			'worklog.injectButton' => 'Inject into cycle',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
@@ -458,7 +461,8 @@ extension on TranslationsEn {
 			'investment.goalNameFieldHint' => 'Goal name',
 			'investment.openingBalanceFieldHint' => 'Opening balance (Rp)',
 			'investment.allocationPlanTitle' => 'This month\'s allocation',
-			'investment.cycleIdFieldHint' => 'Cycle (YYYY-MM)',
+			'investment.cycleIdFieldHint' => 'Cycle',
+			'investment.noCyclesAvailable' => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.',
 			'investment.cycleNotFound' => 'This cycle doesn\'t exist yet.',
 			'investment.cycleClosedMessage' => 'This cycle is closed. Reopen it to edit the allocation.',
 			'investment.remainderLabel' => 'Cycle remainder',

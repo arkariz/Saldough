@@ -339,8 +339,11 @@ class Translations$worklog$id {
 	/// id: 'Belum ada buku yang ditutup.'
 	String get emptyHistory => 'Belum ada buku yang ditutup.';
 
-	/// id: 'Siklus tujuan (YYYY-MM)'
-	String get targetCycleHint => 'Siklus tujuan (YYYY-MM)';
+	/// id: 'Siklus tujuan'
+	String get targetCycleHint => 'Siklus tujuan';
+
+	/// id: 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.'
+	String get noCyclesForInject => 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.';
 
 	/// id: 'Suntik ke siklus'
 	String get injectButton => 'Suntik ke siklus';
@@ -552,8 +555,11 @@ class Translations$investment$id {
 	/// id: 'Alokasi bulan ini'
 	String get allocationPlanTitle => 'Alokasi bulan ini';
 
-	/// id: 'Siklus (YYYY-MM)'
-	String get cycleIdFieldHint => 'Siklus (YYYY-MM)';
+	/// id: 'Siklus'
+	String get cycleIdFieldHint => 'Siklus';
+
+	/// id: 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.'
+	String get noCyclesAvailable => 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.';
 
 	/// id: 'Siklus ini belum ada.'
 	String get cycleNotFound => 'Siklus ini belum ada.';
@@ -750,7 +756,8 @@ extension on Translations {
 			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Buku ditutup. Gaji bersih ${netPay}.',
 			'worklog.historyTitle' => 'Riwayat buku',
 			'worklog.emptyHistory' => 'Belum ada buku yang ditutup.',
-			'worklog.targetCycleHint' => 'Siklus tujuan (YYYY-MM)',
+			'worklog.targetCycleHint' => 'Siklus tujuan',
+			'worklog.noCyclesForInject' => 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.',
 			'worklog.injectButton' => 'Suntik ke siklus',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
@@ -812,7 +819,8 @@ extension on Translations {
 			'investment.goalNameFieldHint' => 'Nama pos',
 			'investment.openingBalanceFieldHint' => 'Saldo awal (Rp)',
 			'investment.allocationPlanTitle' => 'Alokasi bulan ini',
-			'investment.cycleIdFieldHint' => 'Siklus (YYYY-MM)',
+			'investment.cycleIdFieldHint' => 'Siklus',
+			'investment.noCyclesAvailable' => 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.',
 			'investment.cycleNotFound' => 'Siklus ini belum ada.',
 			'investment.cycleClosedMessage' => 'Siklus ini sudah ditutup. Buka kembali untuk menyunting alokasi.',
 			'investment.remainderLabel' => 'Sisa siklus',

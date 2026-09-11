@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/investment/domain/entities/allocation_percentage.dart';
 import 'package:saldough/features/investment/domain/entities/goal_loan.dart';
@@ -176,7 +177,7 @@ class _GoalTile extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: .spaceBetween,
                   children: [
-                    Text(t.investment.allocationHistoryLabel(cycleId: entry.$1)),
+                    Text(t.investment.allocationHistoryLabel(cycleId: CycleMonthFormatter.format(entry.$1))),
                     AppMoneyText(sen: entry.$2, style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
@@ -223,7 +224,6 @@ class _AllocationPlanForm extends StatefulWidget {
 }
 
 class _AllocationPlanFormState extends State<_AllocationPlanForm> {
-  late final _cycleIdController = TextEditingController(text: widget.state.cycleId);
   late final _returnDepositController = TextEditingController(
     text: ((widget.state.cycleSnapshot?.returnDeposit ?? 0) ~/ 100).toString(),
   );
@@ -253,7 +253,6 @@ class _AllocationPlanFormState extends State<_AllocationPlanForm> {
 
   @override
   void dispose() {
-    _cycleIdController.dispose();
     _returnDepositController.dispose();
     for (final controller in _percentageControllers.values) {
       controller.dispose();
@@ -289,11 +288,20 @@ class _AllocationPlanFormState extends State<_AllocationPlanForm> {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          TextField(
-            controller: _cycleIdController,
-            decoration: InputDecoration(labelText: t.investment.cycleIdFieldHint),
-            onSubmitted: (value) => bloc.add(InvestmentCycleSelected(value.trim())),
-          ),
+          if (widget.state.cycleIds.isEmpty)
+            Text(t.investment.noCyclesAvailable)
+          else
+            DropdownButtonFormField<String>(
+              initialValue: widget.state.cycleIds.contains(widget.state.cycleId) ? widget.state.cycleId : null,
+              decoration: InputDecoration(labelText: t.investment.cycleIdFieldHint),
+              items: [
+                for (final id in widget.state.cycleIds)
+                  DropdownMenuItem(value: id, child: Text(CycleMonthFormatter.format(id))),
+              ],
+              onChanged: (value) {
+                if (value != null) bloc.add(InvestmentCycleSelected(value));
+              },
+            ),
           const SizedBox(height: AppSpacing.sm),
           if (snapshot == null)
             Text(t.investment.cycleNotFound)

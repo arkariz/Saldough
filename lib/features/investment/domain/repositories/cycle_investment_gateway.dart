@@ -32,4 +32,8 @@ abstract interface class CycleInvestmentGateway {
   /// (T-5.7): hanya alokasi dari siklus tertutup yang ikut terhitung (lihat
   /// DOMAIN_MODEL.md bagian "Pos tujuan dan pinjaman").
   Future<Either<Failure, List<CycleInvestmentSnapshot>>> listClosedCycleSnapshots();
+
+  /// Seluruh `id` siklus yang sudah dibuat, terurut menaik (UX-09: dipakai
+  /// untuk pemilih siklus tujuan, bukan mengetik `YYYY-MM` dengan tangan).
+  Future<Either<Failure, List<String>>> listCycleIds();
 }

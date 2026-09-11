@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/worklog/domain/entities/billing_book.dart';
 import 'package:saldough/features/worklog/presentation/bloc/worklog_bloc.dart';
 import 'package:saldough/features/worklog/presentation/bloc/worklog_state.dart';
@@ -41,7 +42,7 @@ class WorklogPage extends StatelessWidget {
                 for (final book in state.closedBooks)
                   Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: _ClosedBookTile(book: book),
+                    child: _ClosedBookTile(book: book, cycleIds: state.cycleIds),
                   ),
               ],
             );
@@ -194,9 +195,10 @@ class _OpenBookCard extends StatelessWidget {
 }
 
 class _ClosedBookTile extends StatelessWidget {
-  const _ClosedBookTile({required this.book});
+  const _ClosedBookTile({required this.book, required this.cycleIds});
 
   final BillingBook book;
+  final List<String> cycleIds;
 
   @override
   Widget build(BuildContext context) {
@@ -214,12 +216,12 @@ class _ClosedBookTile extends StatelessWidget {
           if (book.isInjected)
             Padding(
               padding: const EdgeInsets.only(top: AppSpacing.xs),
-              child: Text(t.worklog.injectedInto(cycleId: book.injectedCycleId!)),
+              child: Text(t.worklog.injectedInto(cycleId: CycleMonthFormatter.format(book.injectedCycleId!))),
             )
           else
             Padding(
               padding: const EdgeInsets.only(top: AppSpacing.sm),
-              child: _InjectForm(book: book),
+              child: _InjectForm(book: book, cycleIds: cycleIds),
             ),
         ],
       ),
@@ -228,41 +230,45 @@ class _ClosedBookTile extends StatelessWidget {
 }
 
 class _InjectForm extends StatefulWidget {
-  const _InjectForm({required this.book});
+  const _InjectForm({required this.book, required this.cycleIds});
 
   final BillingBook book;
+  final List<String> cycleIds;
 
   @override
   State<_InjectForm> createState() => _InjectFormState();
 }
 
 class _InjectFormState extends State<_InjectForm> {
-  late final _cycleIdController = TextEditingController(
-    text: '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}',
-  );
-
-  @override
-  void dispose() {
-    _cycleIdController.dispose();
-    super.dispose();
-  }
+  // UX-09: pemilik memilih dari siklus yang benar-benar ada, bukan mengetik
+  // `YYYY-MM` dengan tangan. Bawaan siklus TERBARU dalam daftar (`cycleIds`
+  // terurut menaik dari `CycleRepository.listCycleIds`).
+  late String? _selectedCycleId = widget.cycleIds.isEmpty ? null : widget.cycleIds.last;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.cycleIds.isEmpty) return Text(t.worklog.noCyclesForInject);
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: _cycleIdController,
+          child: DropdownButtonFormField<String>(
+            initialValue: _selectedCycleId,
             decoration: InputDecoration(labelText: t.worklog.targetCycleHint),
+            items: [
+              for (final id in widget.cycleIds)
+                DropdownMenuItem(value: id, child: Text(CycleMonthFormatter.format(id))),
+            ],
+            onChanged: (value) => setState(() => _selectedCycleId = value),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
         AppButton(
           label: t.worklog.injectButton,
-          onPressed: () => context.read<WorklogBloc>().add(
-                NetPayInjected(bookId: widget.book.id, cycleId: _cycleIdController.text.trim()),
-              ),
+          onPressed: _selectedCycleId == null
+              ? null
+              : () => context.read<WorklogBloc>().add(
+                    NetPayInjected(bookId: widget.book.id, cycleId: _selectedCycleId!),
+                  ),
         ),
       ],
     );

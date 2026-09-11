@@ -44,6 +44,11 @@ void main() {
     goalRepository = MockGoalRepository();
     loanRepository = MockGoalLoanRepository();
     gateway = MockCycleInvestmentGateway();
+    // UX-09: `_onOpened` sekarang juga memuat daftar siklus untuk memilih
+    // siklus bawaan yang masih terbuka — bawaan kosong (tetap memakai
+    // `cycleId` awal `InvestmentState.initial()`), tes yang butuh daftar
+    // sungguhan menimpa stub ini sendiri.
+    when(() => gateway.listCycleIds()).thenAnswer((_) async => right(const []));
   });
 
   // CalculateGoalBalances sendiri final class (tidak bisa di-mock mocktail)
@@ -79,6 +84,46 @@ void main() {
             .having((s) => s.goals, 'goals', [goal])
             .having((s) => s.cycleSnapshot, 'cycleSnapshot', openSnapshot),
       ],
+    );
+
+    // UX-09: siklus bawaan bukan lagi selalu bulan berjalan -- kalau ada
+    // siklus yang sudah dibuat dan masih terbuka, pilih itu (yang terbaru),
+    // bukan siklus yang sudah ditutup.
+    blocTest<InvestmentBloc, InvestmentState>(
+      'InvestmentOpened memilih siklus TERBUKA terbaru sebagai bawaan, bukan bulan berjalan',
+      build: () {
+        when(() => goalRepository.listGoals()).thenAnswer((_) async => right([goal]));
+        when(() => loanRepository.listLoans()).thenAnswer((_) async => right(const []));
+        when(() => gateway.listCycleIds()).thenAnswer(
+          (_) async => right(const ['2026-08', '2026-09', '2026-10']),
+        );
+        when(() => gateway.listClosedCycleSnapshots()).thenAnswer(
+          (_) async => right(const [
+            CycleInvestmentSnapshot(
+              cycleId: '2026-08',
+              remainder: 0,
+              returnDeposit: 0,
+              allocations: [],
+              isClosed: true,
+            ),
+            CycleInvestmentSnapshot(
+              cycleId: '2026-09',
+              remainder: 0,
+              returnDeposit: 0,
+              allocations: [],
+              isClosed: true,
+            ),
+          ]),
+        );
+        when(() => gateway.getSnapshot(any())).thenAnswer((_) async => right(openSnapshot));
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const InvestmentOpened()),
+      expect: () => [
+        isA<InvestmentState>().having((s) => s.cycleId, 'cycleId', '2026-10'),
+        isA<InvestmentState>().having((s) => s.isLoading, 'isLoading', false),
+      ],
+      verify: (_) => verify(() => gateway.getSnapshot('2026-10')).called(1),
     );
 
     blocTest<InvestmentBloc, InvestmentState>(

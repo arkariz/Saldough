@@ -40,7 +40,22 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
   final CalculateGoalBalances _calculateGoalBalances;
 
   Future<void> _onOpened(InvestmentOpened event, Emitter<InvestmentState> emit) async {
-    emit(state.copyWith(isLoading: true));
+    // UX-09: siklus bawaan bukan lagi selalu bulan berjalan (yang bisa saja
+    // belum dibuat) -- kalau ada siklus yang benar-benar sudah dibuat dan
+    // masih terbuka, pilih itu (yang terbaru). `cycleNotFound` jadi nyaris
+    // tak terjangkau setelah ini, tapi tetap jadi pertahanan lapis kedua.
+    // Dihitung SEBELUM `emit` pertama supaya urutan state yang dipancarkan
+    // tidak berubah (tetap dua: loading, lalu hasil `_reloadAll`).
+    final idsResult = await _gateway.listCycleIds();
+    final cycleIds = idsResult.getOrElse((_) => const []);
+    var cycleId = state.cycleId;
+    if (cycleIds.isNotEmpty) {
+      final closedResult = await _gateway.listClosedCycleSnapshots();
+      final closedIds = closedResult.getOrElse((_) => const []).map((s) => s.cycleId).toSet();
+      final openIds = cycleIds.where((id) => !closedIds.contains(id));
+      cycleId = openIds.isNotEmpty ? openIds.last : cycleIds.last;
+    }
+    emit(state.copyWith(isLoading: true, cycleId: cycleId, cycleIds: cycleIds));
     await _reloadAll(emit);
   }
 
@@ -146,6 +161,7 @@ final class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       cycleSnapshot: snapshot,
       closedSnapshots: closedSnapshots,
       isLoading: false,
+      cycleIds: state.cycleIds,
       effect: effect,
     ));
   }

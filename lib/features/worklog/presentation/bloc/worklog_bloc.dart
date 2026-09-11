@@ -1,8 +1,10 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/worklog/domain/entities/work_log_entry.dart';
+import 'package:saldough/features/worklog/domain/repositories/cycle_income_writer.dart';
 import 'package:saldough/features/worklog/domain/repositories/worklog_repository.dart';
 import 'package:saldough/features/worklog/domain/usecases/close_billing_book.dart';
 import 'package:saldough/features/worklog/domain/usecases/inject_net_pay.dart';
@@ -22,6 +24,7 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
     required this._worklogRepository,
     required this._closeBillingBook,
     required this._injectNetPay,
+    required this._cycleIncomeWriter,
   }) : super(WorklogState.initial()) {
     on<WorklogOpened>(_onOpened);
     on<WorklogSourceSelected>(_onSourceSelected);
@@ -34,17 +37,31 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
   final WorklogRepository _worklogRepository;
   final CloseBillingBook _closeBillingBook;
   final InjectNetPay _injectNetPay;
+  final CycleIncomeWriter _cycleIncomeWriter;
 
   Future<void> _onOpened(WorklogOpened event, Emitter<WorklogState> emit) async {
     emit(state.copyWith(isLoading: true));
     final result = await _sourceRepository.listSources();
+    // UX-09: daftar siklus untuk pemilih siklus tujuan penyuntikan --
+    // kegagalannya tidak menghalangi layar tampil (sama seperti
+    // `CycleBloc._listCycleIds`), field jadi kosong dan pemilih tidak
+    // menawarkan opsi.
+    final cycleIdsResult = await _cycleIncomeWriter.listCycleIds();
+    final cycleIds = cycleIdsResult.getOrElse((_) => const []);
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final sources):
         final freelance = sources.where((s) => s.kind == .hourlyFreelance).toList();
         final firstId = freelance.firstOrNull?.id ?? '';
-        emit(state.copyWith(sources: freelance, sourceId: firstId, isLoading: firstId.isEmpty));
+        emit(
+          state.copyWith(
+            sources: freelance,
+            sourceId: firstId,
+            cycleIds: cycleIds,
+            isLoading: firstId.isEmpty,
+          ),
+        );
         if (firstId.isNotEmpty) add(WorklogSourceSelected(firstId));
     }
   }

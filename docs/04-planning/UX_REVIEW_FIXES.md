@@ -66,20 +66,20 @@ otomatis, tapi sebutkan di catatan pengerjaan bahwa verifikasinya manual.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 11 September 2026 — Batch 3 (navigasi/IA) selesai
-semua, plus UX-35 dari Batch 6 dikerjakan lebih awal karena jadi dependensi
-UX-11.
+Terakhir diperbarui: 11 September 2026 — Batch 4 (cakupan state dan copy)
+selesai semua, termasuk UX-15 (langkah 1 saja, langkah 2 sengaja tidak
+dikerjakan setelah diperiksa risiko migrasi data).
 
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
 | 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
 | 3 | Navigasi dan IA | 5 | 5 | **Semua selesai** |
-| 4 | Cakupan state dan copy | 10 | 0 | |
+| 4 | Cakupan state dan copy | 10 | 10 | **Semua selesai** — UX-15 langkah 2 (ganti nama enum) sengaja tidak dikerjakan, lihat catatan di item |
 | 5 | Token dan warna semantik | 9 | 9 | **Semua selesai** — UX-26 sebagian (rollUp sengaja ditunda ke UX-36), UX-24 langkah 2 masih menunggu keputusan pemilik (dicatat sebagai follow-up), keduanya tetap dicentang karena bagian yang direncanakan di sini sudah tuntas |
 | 6 | Sentuh dan aksesibilitas | 5 | 1 | UX-35 selesai (dikerjakan lebih awal, dependensi UX-11) |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **21** | |
+| **Total** | | **37** | **31** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -794,13 +794,14 @@ Keputusannya harus sama di semuanya — pilih satu dan terapkan menyeluruh.
 
 # Batch 4 — Cakupan state dan copy
 
-## - [ ] UX-12 🟠 `rollUpSourceUnavailable` tidak memberi tahu apa yang harus dilakukan
+## - [x] UX-12 🟠 `rollUpSourceUnavailable` tidak memberi tahu apa yang harus dilakukan
 
 | | |
 |---|---|
 | **Kat.** | C |
 | **Berkas** | `lib/features/cycle/presentation/widgets/cycle_line_tile.dart:86-90` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** Menampilkan `t.cycle.rollUpSourceUnavailable` ("Sumber belum
 tersedia") sebagai `bodySmall` polos — warna `textMuted`, tanpa ikon. Pemilik
@@ -832,13 +833,14 @@ kalau kedua cabang sudah tertutup.
 (sekarang lewat konfirmasi UX-01): barisnya harus menjelaskan apa yang hilang
 dan ke mana harus pergi.
 
-## - [ ] UX-13 🟠 Badge "Perlu ditinjau" tidak pernah menjelaskan maknanya
+## - [x] UX-13 🟠 Badge "Perlu ditinjau" tidak pernah menjelaskan maknanya
 
 | | |
 |---|---|
 | **Kat.** | C |
 | **Berkas** | `lib/features/cycle/presentation/widgets/cycle_line_tile.dart:98`, `lib/features/cycle/presentation/pages/cycle_page.dart:151` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** Badge hanya berbunyi "Perlu ditinjau" dan banner "Ada $count baris
 perlu ditinjau." Makna sebenarnya menurut ADR-0008 — baris ini hasil salinan
@@ -862,13 +864,14 @@ di tiap baris).
 **Verifikasi.** Jalankan rollover, lihat banner di siklus baru: harus
 menjelaskan apa yang diminta, bukan cuma jumlahnya.
 
-## - [ ] UX-14 🟠 Snackbar sukses rollover isinya `id` siklus mentah
+## - [x] UX-14 🟠 Snackbar sukses rollover isinya `id` siklus mentah
 
 | | |
 |---|---|
 | **Kat.** | D |
 | **Berkas** | `lib/features/cycle/presentation/bloc/cycle_effect.dart:9-12` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** `_effectCycleCreated(cycleId)` mengembalikan
 `ShowSnackBarEffect(message: cycleId)`. Setelah menekan "Buat bulan berikutnya",
@@ -901,12 +904,13 @@ penegasan bahwa pesan efeknya bukan id mentah.
 
 **Verifikasi.** Rollover memunculkan "Siklus Oktober 2026 sudah dibuat."
 
-## - [ ] UX-15 🟠 "Per mil" vs glosarium "persentase" vs enum `.percentage`
+## - [x] UX-15 🟠 "Per mil" vs glosarium "persentase" vs enum `.percentage`
 
 | | |
 |---|---|
 | **Kat.** | D, G |
 | **Butuh keputusan pemilik** | Sebagian — penggantian nama enum |
+| **Status** | **Selesai 11 September 2026 untuk langkah 1** (PROJECT_GLOSSARY.md diselaraskan ke "per mil"; DOMAIN_MODEL.md sudah benar, tidak disentuh). **Langkah 2 (ganti nama enum) SENGAJA TIDAK dikerjakan** — diperiksa dulu `deduction_rule_model.dart`: `kind.name` memang ikut tersimpan ke JSON (`DeductionRuleModel.toJson`/`fromJson` lewat `DeductionKind.values.byName`), persis risiko yang diperingatkan item ini. Mengganti nama enum tanpa migrasi akan merusak data seed Fase 6 yang sudah diimpor. Sesuai instruksi item ini sendiri ("kalau begitu, cukup kerjakan langkah 1 dan catat alasan enum dibiarkan"), item dicentang selesai untuk cakupan yang aman dikerjakan tanpa keputusan pemilik. |
 
 **Masalah.** Tiga sumber tidak sejalan di jalur hitung gaji bersih:
 
@@ -945,13 +949,14 @@ sudah menguji per mil — pastikan tetap lulus. Kalau enum diganti nama, tes
 **Verifikasi.** Jalankan ulang rekonsiliasi seed Fase 6 (lihat catatan T-6.8 di
 TASK_LIST.md) — nol selisih rupiah harus tetap nol.
 
-## - [ ] UX-16 🟡 Gagal memuat terlihat seperti siklus kosong
+## - [x] UX-16 🟡 Gagal memuat terlihat seperti siklus kosong
 
 | | |
 |---|---|
 | **Kat.** | B, C |
 | **Berkas** | `lib/features/cycle/presentation/pages/cycle_page.dart:29`, `lib/features/cycle/presentation/bloc/cycle_bloc.dart` cabang `Left` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** `CycleState.hasLoadError` baru; BUG-1 tetap perlu diverifikasi terpisah lewat `code-review`. |
 
 **Masalah.** `t.common.retry` ("Coba lagi") ada di i18n tapi **tidak dipakai di
 mana pun**. Saat `getCycle` gagal, bloc hanya memunculkan snackbar lalu
@@ -984,12 +989,13 @@ bertanda galat, bukan state siklus kosong".
 **Verifikasi.** Paksa kegagalan baca (mis. lewat mock di tes, atau sementara di
 repository) dan pastikan layar menampilkan galat + tombol, bukan daftar kosong.
 
-## - [ ] UX-17 🟡 Penanganan state memuat tidak konsisten, dan token shimmer mati
+## - [x] UX-17 🟡 Penanganan state memuat tidak konsisten, dan token shimmer mati
 
 | | |
 |---|---|
 | **Kat.** | C, E |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** AppSkeleton/AppSkeletonPage baru (`lib/core/presentation/widgets/app_skeleton.dart`) mengisi slot shimmerBase/shimmerHighlight; _GroceryTab dapat penjaga yang sama seperti UX-07 supaya isLoading tidak lagi terpicu berulang tiap pindah tab. |
 
 **Masalah.** Tiga hal terkait:
 
@@ -1021,12 +1027,13 @@ dan dua slot token yang dijanjikan ADR-0006 tidak pernah sampai ke layar.
 **Verifikasi.** Pindah bulan memberi umpan balik; muat ulang Belanja tidak
 membuang posisi scroll.
 
-## - [ ] UX-18 🟡 State kosong menyebut tujuan tanpa menyediakan jalannya
+## - [x] UX-18 🟡 State kosong menyebut tujuan tanpa menyediakan jalannya
 
 | | |
 |---|---|
 | **Kat.** | C |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** `worklog.noFreelanceSource` menyebut "Tambah dulu di layar Sumber
 Pemasukan" tanpa tombol ke sana (`worklog_page.dart:25-27`);
@@ -1050,12 +1057,13 @@ Untuk worklog, tambahkan tombol yang memancarkan navigasi ke Sumber Pemasukan.
 
 **Verifikasi.** Di setiap state kosong ada satu aksi jelas yang bisa diketuk.
 
-## - [ ] UX-19 🟡 Satu konsep, dua ejaan
+## - [x] UX-19 🟡 Satu konsep, dua ejaan
 
 | | |
 |---|---|
 | **Kat.** | D |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.**
 
@@ -1080,13 +1088,14 @@ menulis migrasi untuk ini; cukup catat bahwa baris lama mempertahankan namanya.
 **Verifikasi.** `grep -n "Rencana Belanja\|Kartu Kredit" assets/i18n/*.json`
 tidak menyisakan bentuk title-case.
 
-## - [ ] UX-20 🟡 `kindAdHoc` tidak memakai istilah glosarium
+## - [x] UX-20 🟡 `kindAdHoc` tidak memakai istilah glosarium
 
 | | |
 |---|---|
 | **Kat.** | D |
 | **Berkas** | `assets/i18n/id.i18n.json:64`, `docs/00-foundation/PROJECT_GLOSSARY.md:40` |
 | **Butuh keputusan pemilik** | Ringan — pilih mana yang menang |
+| **Status** | **Selesai 11 September 2026.** Dipilih "Sekali jalan" (sesuai rekomendasi item ini sendiri) — glosarium diselaraskan, UI tidak disentuh. |
 
 **Masalah.** UI menulis "Sekali jalan"; glosarium menetapkan "Pemasukan lain"
 untuk `IncomeSourceKind.adHoc`.
@@ -1099,12 +1108,13 @@ dipakai (`PROJECT_GLOSSARY.md:5`).
 
 **Verifikasi.** Hanya satu istilah muncul di kode dan dokumen.
 
-## - [ ] UX-21 🟡 Tanggal mentah dan judul konfirmasi generik
+## - [x] UX-21 🟡 Tanggal mentah dan judul konfirmasi generik
 
 | | |
 |---|---|
 | **Kat.** | D |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** `CycleMonthFormatter.formatDate` baru. |
 
 **Masalah.**
 - `worklog_page.dart:130` menyusun tanggal dengan tangan →

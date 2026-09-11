@@ -83,7 +83,18 @@ class _CreditCardEditSheetState extends State<CreditCardEditSheet> {
               decoration: InputDecoration(labelText: t.card.statementDayFieldHint),
             ),
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: t.common.save, onPressed: _submit),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(t.common.cancel),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(child: AppButton(label: t.common.save, onPressed: _submit)),
+              ],
+            ),
           ],
         ),
       ),

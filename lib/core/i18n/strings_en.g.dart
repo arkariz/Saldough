@@ -119,6 +119,7 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get budgetSourceGrocery => 'Grocery plan';
 	@override String get budgetSourceCard => 'Credit card';
 	@override String get selectCardHint => 'Select a card';
+	@override String get rollUpSourceAlreadyUsed => 'This source is already linked to another budget line.';
 }
 
 // Path: income
@@ -342,6 +343,7 @@ extension on TranslationsEn {
 			'cycle.budgetSourceGrocery' => 'Grocery plan',
 			'cycle.budgetSourceCard' => 'Credit card',
 			'cycle.selectCardHint' => 'Select a card',
+			'cycle.rollUpSourceAlreadyUsed' => 'This source is already linked to another budget line.',
 			'income.pageTitle' => 'Income sources',
 			'income.emptySources' => 'No income sources yet.',
 			'income.addSourceTitle' => 'Add income source',

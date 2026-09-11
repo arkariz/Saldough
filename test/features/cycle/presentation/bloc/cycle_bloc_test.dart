@@ -251,6 +251,172 @@ void main() {
     );
 
     blocTest<CycleBloc, CycleState>(
+      'BudgetLineSaved dengan rollUpSource yang sudah dipakai baris lain '
+      'ditolak dengan efek peringatan, tanpa menyimpan',
+      build: () {
+        final cycleWithGroceryRollUp = MonthlyCycle(
+          id: '2026-09',
+          incomeLines: const [],
+          budgetLines: [
+            BudgetLine(
+              id: 'g1',
+              label: 'Rencana Belanja',
+              amount: 500000,
+              kind: BudgetLineKind.rollUp,
+              rollUpSource: RollUpSource.grocery,
+            ),
+          ],
+          investmentPlan: InvestmentPlan.empty(),
+        );
+        when(
+          () => cycleRepository.getCycle('2026-09'),
+        ).thenAnswer((_) async => right(cycleWithGroceryRollUp));
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(
+          const BudgetLineSaved(
+            label: 'Rencana Belanja (dobel)',
+            amount: 0,
+            rollUpSource: RollUpSource.grocery,
+          ),
+        );
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having(
+              (s) => s.effect,
+              'effect',
+              isA<ShowSnackBarEffect>(),
+            )
+            .having(
+              (s) => s.cycle.budgetLines,
+              'budgetLines tidak bertambah',
+              hasLength(1),
+            ),
+      ],
+      verify: (_) => verifyNever(() => cycleRepository.saveCycle(any())),
+    );
+
+    blocTest<CycleBloc, CycleState>(
+      'BudgetLineSaved tetap bisa menautkan kartu berbeda meski kartu lain '
+      'sudah dipakai baris rollUp lain',
+      build: () {
+        final cycleWithCardRollUp = MonthlyCycle(
+          id: '2026-09',
+          incomeLines: const [],
+          budgetLines: [
+            BudgetLine(
+              id: 'c1',
+              label: 'CC TOKPED',
+              amount: 300000,
+              kind: BudgetLineKind.rollUp,
+              rollUpSource: RollUpSource.card('cardA'),
+            ),
+          ],
+          investmentPlan: InvestmentPlan.empty(),
+        );
+        final resolvedCycle = MonthlyCycle(
+          id: '2026-09',
+          incomeLines: const [],
+          budgetLines: [
+            ...cycleWithCardRollUp.budgetLines,
+            BudgetLine(
+              id: 'c2',
+              label: 'CC BRI',
+              amount: 654321,
+              kind: BudgetLineKind.rollUp,
+              rollUpSource: RollUpSource.card('cardB'),
+            ),
+          ],
+          investmentPlan: InvestmentPlan.empty(),
+        );
+        var callCount = 0;
+        when(() => cycleRepository.getCycle('2026-09')).thenAnswer((_) async {
+          callCount++;
+          return right(callCount == 1 ? cycleWithCardRollUp : resolvedCycle);
+        });
+        when(
+          () => cycleRepository.saveCycle(any()),
+        ).thenAnswer((_) async => right(unit));
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(
+          BudgetLineSaved(
+            label: 'CC BRI',
+            amount: 0,
+            rollUpSource: RollUpSource.card('cardB'),
+          ),
+        );
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>().having(
+          (s) => s.cycle.budgetLines,
+          'budgetLines sebelum disegarkan',
+          hasLength(2),
+        ),
+        isA<CycleState>().having(
+          (s) => s.cycle.budgetLines.last.amount,
+          'amount setelah disegarkan',
+          654321,
+        ),
+      ],
+      verify: (_) => verify(() => cycleRepository.saveCycle(any())).called(1),
+    );
+
+    blocTest<CycleBloc, CycleState>(
+      'CycleIncomeSourcesRefreshRequested menyegarkan incomeSources saja, '
+      'tanpa memuat ulang siklus (laporan pemilik: sumber baru dari layar '
+      'tambah sumber tidak terdeteksi tanpa pindah tab)',
+      build: () {
+        when(
+          () => cycleRepository.getCycle('2026-09'),
+        ).thenAnswer((_) async => right(cycleWithLines));
+        var callCount = 0;
+        when(() => sourceRepository.listSources()).thenAnswer((_) async {
+          callCount++;
+          return right(
+            callCount == 1
+                ? const []
+                : [
+                    IncomeSource(
+                      id: 's1',
+                      name: 'Gaji Tetap',
+                      kind: IncomeSourceKind.fixedSalary,
+                      fixedAmount: 1000000,
+                    ),
+                  ],
+          );
+        });
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const CycleIncomeSourcesRefreshRequested());
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having(
+              (s) => s.incomeSources,
+              'incomeSources',
+              hasLength(1),
+            )
+            .having((s) => s.cycle.id, 'cycle.id tidak berubah', '2026-09'),
+      ],
+      verify: (_) =>
+          verify(() => cycleRepository.getCycle('2026-09')).called(1),
+    );
+
+    blocTest<CycleBloc, CycleState>(
       'BudgetLineSaved pada baris rollUp ditolak dengan efek peringatan',
       build: () {
         final cycleWithRollUp = MonthlyCycle(

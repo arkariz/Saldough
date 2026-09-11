@@ -47,7 +47,8 @@
     "budgetSourceManual": "Manual",
     "budgetSourceGrocery": "Rencana Belanja",
     "budgetSourceCard": "Kartu Kredit",
-    "selectCardHint": "Pilih kartu"
+    "selectCardHint": "Pilih kartu",
+    "rollUpSourceAlreadyUsed": "Sumber ini sudah ditautkan ke baris anggaran lain."
   },
   "income": {
     "pageTitle": "Sumber pemasukan",

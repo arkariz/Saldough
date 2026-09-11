@@ -209,6 +209,9 @@ class Translations$cycle$id {
 
 	/// id: 'Pilih kartu'
 	String get selectCardHint => 'Pilih kartu';
+
+	/// id: 'Sumber ini sudah ditautkan ke baris anggaran lain.'
+	String get rollUpSourceAlreadyUsed => 'Sumber ini sudah ditautkan ke baris anggaran lain.';
 }
 
 // Path: income
@@ -662,6 +665,7 @@ extension on Translations {
 			'cycle.budgetSourceGrocery' => 'Rencana Belanja',
 			'cycle.budgetSourceCard' => 'Kartu Kredit',
 			'cycle.selectCardHint' => 'Pilih kartu',
+			'cycle.rollUpSourceAlreadyUsed' => 'Sumber ini sudah ditautkan ke baris anggaran lain.',
 			'income.pageTitle' => 'Sumber pemasukan',
 			'income.emptySources' => 'Belum ada sumber pemasukan.',
 			'income.addSourceTitle' => 'Tambah sumber pemasukan',

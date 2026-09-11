@@ -4,6 +4,8 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
+import 'package:saldough/features/cycle/domain/repositories/card_catalog.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
 import 'package:saldough/features/cycle/domain/usecases/roll_over_cycle.dart';
@@ -27,6 +29,7 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     required this._templateRepository,
     required this._rollOverCycle,
     required this._sourceRepository,
+    required this._cardCatalog,
   }) : super(CycleState.initial()) {
     on<CycleOpened>(_onOpened);
     on<IncomeLineSaved>(_onIncomeLineSaved);
@@ -35,41 +38,93 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     on<BudgetLineRemoved>(_onBudgetLineRemoved);
     on<IncomeLineTemplateToggled>(_onIncomeLineTemplateToggled);
     on<BudgetLineTemplateToggled>(_onBudgetLineTemplateToggled);
-    on<IncomeLineReviewed>((event, emit) => _updateIncomeLine(
-          emit,
-          event.lineId,
-          (line) => line.copyWith(needsReview: false),
-        ));
-    on<BudgetLineReviewed>((event, emit) => _updateBudgetLine(
-          emit,
-          event.lineId,
-          (line) => line.copyWith(needsReview: false),
-        ));
+    on<IncomeLineReviewed>(
+      (event, emit) => _updateIncomeLine(
+        emit,
+        event.lineId,
+        (line) => line.copyWith(needsReview: false),
+      ),
+    );
+    on<BudgetLineReviewed>(
+      (event, emit) => _updateBudgetLine(
+        emit,
+        event.lineId,
+        (line) => line.copyWith(needsReview: false),
+      ),
+    );
     on<CycleRollOverRequested>(_onRollOverRequested);
     on<CycleClosed>(_onClosed);
     on<CycleReopened>(_onReopened);
+    on<CycleDeleteRequested>(_onDeleteRequested);
   }
 
   final CycleRepository _cycleRepository;
   final CycleTemplateRepository _templateRepository;
   final RollOverCycle _rollOverCycle;
   final IncomeSourceRepository _sourceRepository;
+  final CardCatalog _cardCatalog;
 
-  Future<void> _onOpened(CycleOpened event, Emitter<CycleState> emit) async {
+  Future<void> _onOpened(CycleOpened event, Emitter<CycleState> emit) =>
+      _loadCycle(event.cycleId, emit);
+
+  Future<void> _loadCycle(String cycleId, Emitter<CycleState> emit) async {
     emit(state.copyWith(isLoading: true));
     final sourcesResult = await _sourceRepository.listSources();
     final sources = sourcesResult.getOrElse((_) => const []);
+    final existingIds = await _listCycleIds();
+    final cards = await _listCards();
 
-    final result = await _cycleRepository.getCycle(event.cycleId);
+    final result = await _cycleRepository.getCycle(cycleId);
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final cycle):
-        emit(state.withCycle(cycle ?? .empty(event.cycleId)).copyWith(incomeSources: sources));
+        emit(
+          state
+              .withCycle(
+                cycle ?? .empty(cycleId),
+                existingCycleIds: existingIds,
+                cards: cards,
+              )
+              .copyWith(incomeSources: sources),
+        );
     }
   }
 
-  Future<void> _onIncomeLineSaved(IncomeLineSaved event, Emitter<CycleState> emit) async {
+  Future<List<CardSummary>> _listCards() async {
+    final result = await _cardCatalog.listCards();
+    return result.getOrElse((_) => const []);
+  }
+
+  Future<List<String>> _listCycleIds() async {
+    final result = await _cycleRepository.listCycleIds();
+    return result.getOrElse((_) => const []);
+  }
+
+  Future<void> _onDeleteRequested(
+    CycleDeleteRequested event,
+    Emitter<CycleState> emit,
+  ) async {
+    if (!state.canDeleteCycle) return;
+    final deletedId = state.cycle.id;
+    emit(state.copyWith(isLoading: true));
+    final result = await _cycleRepository.deleteCycle(deletedId);
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
+      case Right():
+        final remainingIds = await _listCycleIds();
+        await _loadCycle(
+          remainingIds.isEmpty ? deletedId : remainingIds.last,
+          emit,
+        );
+    }
+  }
+
+  Future<void> _onIncomeLineSaved(
+    IncomeLineSaved event,
+    Emitter<CycleState> emit,
+  ) async {
     final existing = event.id == null ? null : state.findIncomeLine(event.id!);
     final line = IncomeLine(
       id: event.id ?? _freshId(),
@@ -86,23 +141,40 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     await _saveAndEmit(emit, state.cycle.copyWith(incomeLines: lines));
   }
 
-  Future<void> _onIncomeLineRemoved(IncomeLineRemoved event, Emitter<CycleState> emit) async {
-    final lines = state.cycle.incomeLines.where((l) => l.id != event.id).toList();
+  Future<void> _onIncomeLineRemoved(
+    IncomeLineRemoved event,
+    Emitter<CycleState> emit,
+  ) async {
+    final lines = state.cycle.incomeLines
+        .where((l) => l.id != event.id)
+        .toList();
     await _saveAndEmit(emit, state.cycle.copyWith(incomeLines: lines));
   }
 
-  Future<void> _onBudgetLineSaved(BudgetLineSaved event, Emitter<CycleState> emit) async {
+  Future<void> _onBudgetLineSaved(
+    BudgetLineSaved event,
+    Emitter<CycleState> emit,
+  ) async {
     final isNew = event.id == null;
     final existing = isNew ? null : state.findBudgetLine(event.id!);
     if (existing != null && existing.kind == .rollUp) {
       emit(state.copyWith(effect: _effectRollUpNotEditable()));
       return;
     }
+    // `rollUpSource` hanya berlaku untuk baris BARU — menautkan baris yang
+    // sudah ada ke sumber roll-up tidak didukung (penyuntingan baris rollUp
+    // sudah ditolak di atas), jadi diamkan kalau UI keliru mengirimkannya
+    // bersama `id` baris lama.
+    final rollUpSource = isNew ? event.rollUpSource : null;
     final line = BudgetLine(
       id: event.id ?? _freshId(),
       label: event.label,
-      amount: event.amount,
-      kind: .manual,
+      // Sama seperti `RollOverCycle` mengisi baris rollUp baru: nominal
+      // sungguhan dihitung ulang dari sumbernya, bukan dari input pemilik —
+      // lihat penyegaran lewat `_cycleRepository.getCycle` di bawah.
+      amount: rollUpSource == null ? event.amount : 0,
+      kind: rollUpSource == null ? .manual : .rollUp,
+      rollUpSource: rollUpSource,
       isTemplate: existing?.isTemplate ?? false,
       needsReview: existing?.needsReview ?? false,
     );
@@ -111,10 +183,29 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       line,
     ];
     await _saveAndEmit(emit, state.cycle.copyWith(budgetLines: lines));
+    if (rollUpSource != null) {
+      await _refreshRollUpAmounts(emit);
+    }
   }
 
-  Future<void> _onBudgetLineRemoved(BudgetLineRemoved event, Emitter<CycleState> emit) async {
-    final lines = state.cycle.budgetLines.where((l) => l.id != event.id).toList();
+  /// Membaca ulang siklus lewat [_cycleRepository] supaya nominal baris
+  /// rollUp yang baru ditautkan langsung menyegarkan angkanya (bukan `Rp 0`
+  /// sampai pemilik pindah dan kembali) — lihat catatan [_onBudgetLineSaved].
+  Future<void> _refreshRollUpAmounts(Emitter<CycleState> emit) async {
+    final result = await _cycleRepository.getCycle(state.cycle.id);
+    final resolved = result.getOrElse((_) => null);
+    if (resolved != null) {
+      emit(state.withCycle(resolved, existingCycleIds: state.existingCycleIds));
+    }
+  }
+
+  Future<void> _onBudgetLineRemoved(
+    BudgetLineRemoved event,
+    Emitter<CycleState> emit,
+  ) async {
+    final lines = state.cycle.budgetLines
+        .where((l) => l.id != event.id)
+        .toList();
     await _saveAndEmit(emit, state.cycle.copyWith(budgetLines: lines));
   }
 
@@ -150,7 +241,9 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       ...template.incomeLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
     ];
-    await _templateRepository.saveTemplate(template.copyWith(incomeLines: lines));
+    await _templateRepository.saveTemplate(
+      template.copyWith(incomeLines: lines),
+    );
   }
 
   Future<void> _syncBudgetTemplate(BudgetLine line) async {
@@ -160,7 +253,9 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       ...template.budgetLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
     ];
-    await _templateRepository.saveTemplate(template.copyWith(budgetLines: lines));
+    await _templateRepository.saveTemplate(
+      template.copyWith(budgetLines: lines),
+    );
   }
 
   Future<void> _onRollOverRequested(
@@ -173,7 +268,14 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final next):
-        emit(state.withCycle(next, effect: _effectCycleCreated(next.id)));
+        final existingIds = await _listCycleIds();
+        emit(
+          state.withCycle(
+            next,
+            existingCycleIds: existingIds,
+            effect: _effectCycleCreated(next.id),
+          ),
+        );
     }
   }
 
@@ -181,7 +283,10 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     await _saveAndEmit(emit, state.cycle.close());
   }
 
-  Future<void> _onReopened(CycleReopened event, Emitter<CycleState> emit) async {
+  Future<void> _onReopened(
+    CycleReopened event,
+    Emitter<CycleState> emit,
+  ) async {
     // Tidak lewat _saveAndEmit: itu justru MENOLAK penyuntingan saat siklus
     // masih terkunci — dan membuka kembali kuncinya, secara sadar, adalah
     // tepat apa yang dilakukan aksi ini (ADR-0008).
@@ -217,7 +322,10 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     await _saveAndEmit(emit, state.cycle.copyWith(budgetLines: lines));
   }
 
-  Future<void> _saveAndEmit(Emitter<CycleState> emit, MonthlyCycle cycle) async {
+  Future<void> _saveAndEmit(
+    Emitter<CycleState> emit,
+    MonthlyCycle cycle,
+  ) async {
     if (state.cycle.isClosed) {
       emit(state.copyWith(effect: _effectCycleClosed()));
       return;
@@ -227,7 +335,14 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
-        emit(state.withCycle(cycle));
+        // Baris pertama yang ditambah ke siklus yang sebelumnya belum ada
+        // (lihat `CycleOpened`) adalah yang benar-benar membuatnya — daftar
+        // `existingCycleIds` perlu ikut diperbarui supaya chevron navigasi
+        // langsung membuka untuk siklus ini juga.
+        final ids = state.existingCycleIds.contains(cycle.id)
+            ? state.existingCycleIds
+            : await _listCycleIds();
+        emit(state.withCycle(cycle, existingCycleIds: ids));
     }
   }
 

@@ -1,25 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
+import 'package:saldough/features/cycle/domain/repositories/card_catalog.dart';
 import 'package:saldough/shared/income/income.dart';
 
 /// Hasil [LineEditSheet].
 class LineEditResult {
   /// Membuat [LineEditResult].
-  const LineEditResult({required this.label, required this.amount, this.sourceId});
+  const LineEditResult({
+    required this.label,
+    required this.amount,
+    this.sourceId,
+    this.rollUpSource,
+  });
 
   /// Nama baris.
   final String label;
 
-  /// Nominal dalam sen.
+  /// Nominal dalam sen. Diabaikan kalau [rollUpSource] diisi.
   final int amount;
 
   /// Rujukan ke `IncomeSource` yang dipilih, atau `null` kalau tidak ditaut
   /// (T-3.4/FR-INC-002). Selalu `null` untuk baris anggaran.
   final String? sourceId;
+
+  /// Sumber roll-up yang dipilih (Rencana Belanja/kartu kredit), atau `null`
+  /// untuk baris manual biasa. Selalu `null` untuk baris pemasukan.
+  final RollUpSource? rollUpSource;
 }
+
+/// Pilihan sumber nominal baris anggaran — lihat [LineEditSheet.isBudgetLine].
+enum _BudgetSourceChoice { manual, grocery, card }
 
 /// Bottom sheet tambah/sunting satu baris pemasukan atau anggaran.
 ///
@@ -34,6 +51,9 @@ class LineEditSheet extends StatefulWidget {
     this.initialAmount,
     this.sources = const [],
     this.initialSourceId,
+    this.isIncomeLine = false,
+    this.isBudgetLine = false,
+    this.cards = const [],
     super.key,
   });
 
@@ -53,6 +73,24 @@ class LineEditSheet extends StatefulWidget {
   /// Sumber yang sudah ditaut, kalau menyunting baris yang sudah ada.
   final String? initialSourceId;
 
+  /// True untuk baris pemasukan, false untuk baris anggaran. Menentukan
+  /// apakah hint+tombol "tambah sumber pemasukan" ditampilkan saat
+  /// [sources] kosong (T-3.4 — sebelumnya kosong tanpa penjelasan kalau
+  /// belum ada `IncomeSource` terdaftar, laporan pemilik).
+  final bool isIncomeLine;
+
+  /// True untuk baris anggaran BARU — menentukan apakah pemilihan sumber
+  /// nominal (Manual/Rencana Belanja/Kartu Kredit) ditampilkan (laporan
+  /// pemilik: sebelumnya tidak ada cara menautkan baris anggaran ke Rencana
+  /// Belanja/kartu dari UI, hanya lewat seed). Baris anggaran yang sudah
+  /// ada (sunting) selalu baris `manual` — baris `rollUp` tidak bisa dibuka
+  /// lewat sheet ini sama sekali (ADR-0008, digerbang di `cycle_page.dart`).
+  final bool isBudgetLine;
+
+  /// Seluruh kartu kredit terdaftar, dipakai pemilihan kartu saat
+  /// [_BudgetSourceChoice.card] dipilih. Kosong untuk baris pemasukan.
+  final List<CardSummary> cards;
+
   /// Menampilkan [LineEditSheet] sebagai modal bottom sheet, mengembalikan
   /// [LineEditResult] atau `null` kalau dibatalkan.
   static Future<LineEditResult?> show(
@@ -62,6 +100,9 @@ class LineEditSheet extends StatefulWidget {
     int? initialAmount,
     List<IncomeSource> sources = const [],
     String? initialSourceId,
+    bool isIncomeLine = false,
+    bool isBudgetLine = false,
+    List<CardSummary> cards = const [],
   }) {
     return showModalBottomSheet<LineEditResult>(
       context: context,
@@ -72,6 +113,9 @@ class LineEditSheet extends StatefulWidget {
         initialAmount: initialAmount,
         sources: sources,
         initialSourceId: initialSourceId,
+        isIncomeLine: isIncomeLine,
+        isBudgetLine: isBudgetLine,
+        cards: cards,
       ),
     );
   }
@@ -81,11 +125,24 @@ class LineEditSheet extends StatefulWidget {
 }
 
 class _LineEditSheetState extends State<LineEditSheet> {
-  late final _labelController = TextEditingController(text: widget.initialLabel ?? '');
+  late final _labelController = TextEditingController(
+    text: widget.initialLabel ?? '',
+  );
   late final _amountController = TextEditingController(
-    text: widget.initialAmount == null ? '' : (widget.initialAmount! ~/ 100).toString(),
+    text: widget.initialAmount == null
+        ? ''
+        : (widget.initialAmount! ~/ 100).toString(),
   );
   late String? _sourceId = widget.initialSourceId;
+
+  /// Sumber nominal baris anggaran — hanya relevan saat [LineEditSheet.
+  /// isBudgetLine] true. Baris anggaran yang sudah ada selalu `manual`
+  /// (lihat catatan di [LineEditSheet.isBudgetLine]).
+  _BudgetSourceChoice _budgetSource = .manual;
+  String? _selectedCardId;
+
+  bool get _isNewBudgetLine =>
+      widget.isBudgetLine && widget.initialLabel == null;
 
   @override
   void dispose() {
@@ -104,13 +161,48 @@ class _LineEditSheetState extends State<LineEditSheet> {
     });
   }
 
+  void _selectBudgetSource(_BudgetSourceChoice choice) {
+    setState(() {
+      _budgetSource = choice;
+      if (choice == .grocery) {
+        _labelController.text = t.cycle.budgetSourceGrocery;
+      } else if (choice == .manual) {
+        _labelController.clear();
+        _selectedCardId = null;
+      }
+    });
+  }
+
+  void _selectCard(CardSummary card) {
+    setState(() {
+      _selectedCardId = card.id;
+      _labelController.text = card.name;
+    });
+  }
+
   void _submit() {
+    if (_isNewBudgetLine && _budgetSource != .manual) {
+      final label = _labelController.text.trim();
+      if (label.isEmpty) return;
+      final rollUpSource = _budgetSource == .grocery
+          ? RollUpSource.grocery
+          : _selectedCardId == null
+          ? null
+          : RollUpSource.card(_selectedCardId!);
+      if (rollUpSource == null) return;
+      Navigator.of(context).pop(
+        LineEditResult(label: label, amount: 0, rollUpSource: rollUpSource),
+      );
+      return;
+    }
     final label = _labelController.text.trim();
     final amountText = _amountController.text.trim();
     if (label.isEmpty || amountText.isEmpty) return;
     final rupiah = int.tryParse(amountText);
     if (rupiah == null) return;
-    Navigator.of(context).pop(LineEditResult(label: label, amount: rupiah * 100, sourceId: _sourceId));
+    Navigator.of(context).pop(
+      LineEditResult(label: label, amount: rupiah * 100, sourceId: _sourceId),
+    );
   }
 
   @override
@@ -141,20 +233,90 @@ class _LineEditSheetState extends State<LineEditSheet> {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
+          ] else if (widget.isIncomeLine) ...[
+            Text(
+              t.cycle.noIncomeSourcesHint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppButton(
+              label: t.cycle.addIncomeSourceButton,
+              icon: Icons.arrow_forward,
+              onPressed: () {
+                Navigator.of(context).pop();
+                unawaited(context.push('/income/list'));
+              },
+            ),
+            const SizedBox(height: AppSpacing.md),
           ],
-          TextField(
-            controller: _labelController,
-            autofocus: true,
-            decoration: InputDecoration(labelText: t.cycle.labelFieldHint),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          TextField(
-            controller: _amountController,
-            keyboardType: .number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: InputDecoration(labelText: t.cycle.amountFieldHint),
-            onSubmitted: (_) => _submit(),
-          ),
+          if (_isNewBudgetLine) ...[
+            Text(
+              t.cycle.budgetSourceFieldLabel,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Wrap(
+              spacing: AppSpacing.sm,
+              children: [
+                AppChip(
+                  label: t.cycle.budgetSourceManual,
+                  selected: _budgetSource == .manual,
+                  onTap: () => _selectBudgetSource(.manual),
+                ),
+                AppChip(
+                  label: t.cycle.budgetSourceGrocery,
+                  selected: _budgetSource == .grocery,
+                  onTap: () => _selectBudgetSource(.grocery),
+                ),
+                AppChip(
+                  label: t.cycle.budgetSourceCard,
+                  selected: _budgetSource == .card,
+                  onTap: () => _selectBudgetSource(.card),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            if (_budgetSource == .card) ...[
+              if (widget.cards.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Text(
+                    t.cycle.selectCardHint,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Wrap(
+                    spacing: AppSpacing.sm,
+                    children: [
+                      for (final card in widget.cards)
+                        AppChip(
+                          label: card.name,
+                          selected: card.id == _selectedCardId,
+                          onTap: () => _selectCard(card),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ],
+          if (!_isNewBudgetLine || _budgetSource == .manual) ...[
+            TextField(
+              controller: _labelController,
+              autofocus: true,
+              decoration: InputDecoration(labelText: t.cycle.labelFieldHint),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: _amountController,
+              keyboardType: .number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: InputDecoration(labelText: t.cycle.amountFieldHint),
+              onSubmitted: (_) => _submit(),
+            ),
+          ],
           const SizedBox(height: AppSpacing.md),
           AppButton(label: t.common.save, onPressed: _submit),
         ],

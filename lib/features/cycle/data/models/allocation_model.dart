@@ -6,16 +6,17 @@ final class AllocationModel {
   const AllocationModel({required this.goalId, required this.percentage});
 
   /// Membaca [AllocationModel] dari JSON.
-  factory AllocationModel.fromJson(Map<String, dynamic> json) => AllocationModel(
+  factory AllocationModel.fromJson(Map<String, dynamic> json) =>
+      AllocationModel(
         goalId: json['goalId'] as String,
         percentage: json['percentage'] as int,
       );
 
   /// Membuat model dari entitas domain.
   factory AllocationModel.fromEntity(Allocation allocation) => AllocationModel(
-        goalId: allocation.goalId,
-        percentage: allocation.percentage,
-      );
+    goalId: allocation.goalId,
+    percentage: allocation.percentage,
+  );
 
   /// Rujukan ke `Goal`.
   final String goalId;

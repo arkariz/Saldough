@@ -22,7 +22,9 @@ final class CycleInvestmentGatewayImpl implements CycleInvestmentGateway {
   final CycleRepository _cycleRepository;
 
   @override
-  Future<Either<Failure, CycleInvestmentSnapshot?>> getSnapshot(String cycleId) async {
+  Future<Either<Failure, CycleInvestmentSnapshot?>> getSnapshot(
+    String cycleId,
+  ) async {
     final result = await _cycleRepository.getCycle(cycleId);
     return switch (result) {
       Left(value: final failure) => left(failure),
@@ -40,36 +42,50 @@ final class CycleInvestmentGatewayImpl implements CycleInvestmentGateway {
     final cycleResult = await _cycleRepository.getCycle(cycleId);
     if (cycleResult case Left(value: final failure)) return left(failure);
     if (cycleResult case Right(value: null)) {
-      return left(BusinessRuleFailure(
-        code: const FailureCode('CYCLE_NOT_FOUND'),
-        message: 'Siklus $cycleId belum ada, tidak bisa disunting.',
-        userMessage: 'Siklus $cycleId belum ada.',
-      ));
+      return left(
+        BusinessRuleFailure(
+          code: const FailureCode('CYCLE_NOT_FOUND'),
+          message: 'Siklus $cycleId belum ada, tidak bisa disunting.',
+          userMessage: 'Siklus $cycleId belum ada.',
+        ),
+      );
     }
-    final cycle = switch (cycleResult) { Right(value: final c?) => c, _ => throw StateError('unreachable') };
+    final cycle = switch (cycleResult) {
+      Right(value: final c?) => c,
+      _ => throw StateError('unreachable'),
+    };
     if (cycle.isClosed) {
-      return left(BusinessRuleFailure(
-        code: const FailureCode('CYCLE_CLOSED'),
-        message: 'Siklus $cycleId sudah ditutup, tidak bisa disunting.',
-        userMessage: 'Siklus $cycleId sudah ditutup. Buka kembali dulu.',
-      ));
+      return left(
+        BusinessRuleFailure(
+          code: const FailureCode('CYCLE_CLOSED'),
+          message: 'Siklus $cycleId sudah ditutup, tidak bisa disunting.',
+          userMessage: 'Siklus $cycleId sudah ditutup. Buka kembali dulu.',
+        ),
+      );
     }
 
     final plan = InvestmentPlan(
       returnDeposit: returnDeposit,
       allocations: [
         for (final allocation in allocations)
-          Allocation(goalId: allocation.goalId, percentage: allocation.percentage),
+          Allocation(
+            goalId: allocation.goalId,
+            percentage: allocation.percentage,
+          ),
       ],
     );
     return _cycleRepository.saveCycle(cycle.copyWith(investmentPlan: plan));
   }
 
   @override
-  Future<Either<Failure, List<CycleInvestmentSnapshot>>> listClosedCycleSnapshots() async {
+  Future<Either<Failure, List<CycleInvestmentSnapshot>>>
+  listClosedCycleSnapshots() async {
     final idsResult = await _cycleRepository.listCycleIds();
     if (idsResult case Left(value: final failure)) return left(failure);
-    final ids = switch (idsResult) { Right(value: final i) => i, _ => throw StateError('unreachable') };
+    final ids = switch (idsResult) {
+      Right(value: final i) => i,
+      _ => throw StateError('unreachable'),
+    };
 
     final snapshots = <CycleInvestmentSnapshot>[];
     for (final id in ids) {
@@ -90,7 +106,10 @@ final class CycleInvestmentGatewayImpl implements CycleInvestmentGateway {
       returnDeposit: cycle.investmentPlan.returnDeposit,
       allocations: [
         for (final allocation in cycle.investmentPlan.allocations)
-          AllocationPercentage(goalId: allocation.goalId, percentage: allocation.percentage),
+          AllocationPercentage(
+            goalId: allocation.goalId,
+            percentage: allocation.percentage,
+          ),
       ],
       isClosed: cycle.isClosed,
     );

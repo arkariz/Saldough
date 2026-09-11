@@ -2,6 +2,7 @@ import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_template_repository_impl.dart';
+import 'package:saldough/features/cycle/domain/repositories/card_catalog.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
@@ -18,16 +19,23 @@ final class CycleScope extends IsolatedScope {
   void bridge(GetIt c) {
     c
       ..registerSingleton<KeyValueStorage>(parent<KeyValueStorage>())
-      ..registerSingleton<IncomeSourceRepository>(parent<IncomeSourceRepository>())
+      ..registerSingleton<IncomeSourceRepository>(
+        parent<IncomeSourceRepository>(),
+      )
       // Implementasi sungguhan (grocery dan card) dikawat di RootModule
       // sejak Fase 4 — lihat catatan di root_module.dart.
-      ..registerSingleton<RollUpResolver>(parent<RollUpResolver>());
+      ..registerSingleton<RollUpResolver>(parent<RollUpResolver>())
+      ..registerSingleton<CardCatalog>(parent<CardCatalog>());
   }
 
   @override
   void register(GetIt c) {
     c.registerLazySingleton<CycleRepository>(
-      () => CycleRepositoryImpl(storage: c<KeyValueStorage>(), resolver: c<RollUpResolver>()),
+      () => CycleRepositoryImpl(
+        storage: c<KeyValueStorage>(),
+        resolver: c<RollUpResolver>(),
+        incomeSourceRepository: c<IncomeSourceRepository>(),
+      ),
     );
     c.registerLazySingleton<CycleTemplateRepository>(
       () => CycleTemplateRepositoryImpl(storage: c<KeyValueStorage>()),
@@ -44,6 +52,7 @@ final class CycleScope extends IsolatedScope {
         templateRepository: c<CycleTemplateRepository>(),
         rollOverCycle: c<RollOverCycle>(),
         sourceRepository: c<IncomeSourceRepository>(),
+        cardCatalog: c<CardCatalog>(),
       ),
       dispose: (bloc) => bloc.close(),
     );

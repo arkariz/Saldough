@@ -110,6 +110,15 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get needsReviewBadge => 'Needs review';
 	@override String get confirmReviewed => 'Looks right';
 	@override String unreviewedBanner({required Object count}) => '${count} line(s) need review.';
+	@override String get deleteCycle => 'Delete this cycle';
+	@override String get deleteCycleConfirmMessage => 'All income and budget lines for this month will be deleted. This action cannot be undone.';
+	@override String get noIncomeSourcesHint => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.';
+	@override String get addIncomeSourceButton => 'Add income source';
+	@override String get budgetSourceFieldLabel => 'Amount source';
+	@override String get budgetSourceManual => 'Manual';
+	@override String get budgetSourceGrocery => 'Grocery plan';
+	@override String get budgetSourceCard => 'Credit card';
+	@override String get selectCardHint => 'Select a card';
 }
 
 // Path: income
@@ -324,6 +333,15 @@ extension on TranslationsEn {
 			'cycle.needsReviewBadge' => 'Needs review',
 			'cycle.confirmReviewed' => 'Looks right',
 			'cycle.unreviewedBanner' => ({required Object count}) => '${count} line(s) need review.',
+			'cycle.deleteCycle' => 'Delete this cycle',
+			'cycle.deleteCycleConfirmMessage' => 'All income and budget lines for this month will be deleted. This action cannot be undone.',
+			'cycle.noIncomeSourcesHint' => 'No income sources yet. You can type an amount manually, or add a source first so the amount follows your hours or fixed salary automatically.',
+			'cycle.addIncomeSourceButton' => 'Add income source',
+			'cycle.budgetSourceFieldLabel' => 'Amount source',
+			'cycle.budgetSourceManual' => 'Manual',
+			'cycle.budgetSourceGrocery' => 'Grocery plan',
+			'cycle.budgetSourceCard' => 'Credit card',
+			'cycle.selectCardHint' => 'Select a card',
 			'income.pageTitle' => 'Income sources',
 			'income.emptySources' => 'No income sources yet.',
 			'income.addSourceTitle' => 'Add income source',

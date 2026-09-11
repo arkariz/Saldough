@@ -160,7 +160,11 @@ Hive `saldough_kv` di folder itu, box YANG SAMA yang dibaca aplikasi.
     grocery: GroceryRollUpResolver(repository: groceryPlanRepo),
     card: CardRollUpResolver(repository: cardStatementRepo),
   );
-  final cycleRepo = CycleRepositoryImpl(storage: storage, resolver: resolver);
+  final cycleRepo = CycleRepositoryImpl(
+    storage: storage,
+    resolver: resolver,
+    incomeSourceRepository: incomeSourceRepo,
+  );
 
   print('== T-6.3/6.4/6.5/6.6: menulis data seed ke $dbPath ==');
 

@@ -9,13 +9,16 @@ import 'package:saldough/features/cycle/domain/repositories/cycle_template_repos
 const _templateKey = StorageKey(namespace: 'cycle', name: 'template');
 
 /// Implementasi [CycleTemplateRepository] di atas [KeyValueStorage].
-final class CycleTemplateRepositoryImpl with RepositoryGuard implements CycleTemplateRepository {
+final class CycleTemplateRepositoryImpl
+    with RepositoryGuard
+    implements CycleTemplateRepository {
   /// Membuat [CycleTemplateRepositoryImpl] di atas [_storage].
   const CycleTemplateRepositoryImpl({required this._storage});
 
   final KeyValueStorage _storage;
 
-  StoredValue<CycleTemplateModel> get _store => StoredValue<CycleTemplateModel>.json(
+  StoredValue<CycleTemplateModel> get _store =>
+      StoredValue<CycleTemplateModel>.json(
         key: _templateKey,
         fromJson: CycleTemplateModel.fromJson,
         toJson: (m) => m.toJson(),
@@ -24,12 +27,13 @@ final class CycleTemplateRepositoryImpl with RepositoryGuard implements CycleTem
 
   @override
   Future<Either<Failure, CycleTemplate>> getTemplate() => guard(() async {
-        final model = await _store.read();
-        return model?.toEntity() ?? .empty();
-      });
+    final model = await _store.read();
+    return model?.toEntity() ?? .empty();
+  });
 
   @override
-  Future<Either<Failure, Unit>> saveTemplate(CycleTemplate template) => guardVoid(() async {
+  Future<Either<Failure, Unit>> saveTemplate(CycleTemplate template) =>
+      guardVoid(() async {
         await _store.write(CycleTemplateModel.fromEntity(template));
       });
 }

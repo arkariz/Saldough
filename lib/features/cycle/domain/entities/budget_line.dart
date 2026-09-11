@@ -79,19 +79,20 @@ final class BudgetLine extends Equatable {
       rollUpSource: rollUpSource,
       isTemplate: isTemplate ?? this.isTemplate,
       needsReview: needsReview ?? this.needsReview,
-      rollUpSourceUnavailable: rollUpSourceUnavailable ?? this.rollUpSourceUnavailable,
+      rollUpSourceUnavailable:
+          rollUpSourceUnavailable ?? this.rollUpSourceUnavailable,
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        label,
-        amount,
-        kind,
-        rollUpSource,
-        isTemplate,
-        needsReview,
-        rollUpSourceUnavailable,
-      ];
+    id,
+    label,
+    amount,
+    kind,
+    rollUpSource,
+    isTemplate,
+    needsReview,
+    rollUpSourceUnavailable,
+  ];
 }

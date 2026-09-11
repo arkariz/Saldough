@@ -19,7 +19,12 @@ final class CycleOpened extends CycleEvent {
 /// Menambah (kalau [id] `null`) atau menyunting baris pemasukan.
 final class IncomeLineSaved extends CycleEvent {
   /// Membuat [IncomeLineSaved].
-  const IncomeLineSaved({required this.label, required this.amount, this.id, this.sourceId});
+  const IncomeLineSaved({
+    required this.label,
+    required this.amount,
+    this.id,
+    this.sourceId,
+  });
 
   /// `null` berarti baris baru.
   final String? id;
@@ -46,10 +51,18 @@ final class IncomeLineRemoved extends CycleEvent {
 /// Menambah (kalau [id] `null`) atau menyunting baris anggaran manual.
 ///
 /// ⚠ Hanya untuk baris [BudgetLineKind.manual] — baris `rollUp` tidak bisa
-/// disunting lewat event ini (ADR-0008).
+/// disunting lewat event ini (ADR-0008). [rollUpSource] hanya berlaku saat
+/// [id] `null` (baris baru) — menautkan baris anggaran baru langsung ke
+/// Rencana Belanja atau kartu kredit tertentu (laporan pemilik: sebelumnya
+/// hanya bisa lewat seed, tidak ada cara dari UI).
 final class BudgetLineSaved extends CycleEvent {
   /// Membuat [BudgetLineSaved].
-  const BudgetLineSaved({required this.label, required this.amount, this.id});
+  const BudgetLineSaved({
+    required this.label,
+    required this.amount,
+    this.id,
+    this.rollUpSource,
+  });
 
   /// `null` berarti baris baru.
   final String? id;
@@ -57,8 +70,14 @@ final class BudgetLineSaved extends CycleEvent {
   /// Nama yang tampil.
   final String label;
 
-  /// Nominal dalam sen.
+  /// Nominal dalam sen. Diabaikan kalau [rollUpSource] diisi — nominal baris
+  /// rollUp selalu dihitung ulang dari sumbernya (ADR-0008), tidak pernah
+  /// dari input pemilik.
   final int amount;
+
+  /// Sumber roll-up untuk baris baru, kalau pemilik menautkannya ke Rencana
+  /// Belanja atau kartu kredit tertentu. `null` berarti baris manual biasa.
+  final RollUpSource? rollUpSource;
 }
 
 /// Menghapus baris anggaran ber-`id` [id].
@@ -126,4 +145,15 @@ final class CycleClosed extends CycleEvent {
 final class CycleReopened extends CycleEvent {
   /// Membuat [CycleReopened].
   const CycleReopened();
+}
+
+/// Menghapus siklus yang sedang dibuka. Hanya berlaku kalau
+/// [CycleState.canDeleteCycle] — lihat catatan di sana soal alasan
+/// pembatasannya. Widget pemanggil bertanggung jawab menampilkan dialog
+/// konfirmasi sebelum mengirim event ini (bukan `CycleBloc`, supaya bloc
+/// tidak perlu tahu soal dialog — hanya efek navigasi/snackbar yang lewat
+/// bloc, lihat ARCHITECTURE_OVERVIEW.md bagian navigasi).
+final class CycleDeleteRequested extends CycleEvent {
+  /// Membuat [CycleDeleteRequested].
+  const CycleDeleteRequested();
 }

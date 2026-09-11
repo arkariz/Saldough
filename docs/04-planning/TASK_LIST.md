@@ -815,6 +815,48 @@ pemilik) — hanya diverifikasi lewat `--dry-run` ke folder sementara.
 Pemilik perlu menjalankan `dart run tool/seed_import.dart --db-path
 <folder_data_app_sungguhan>` sendiri sebelum memakai aplikasi sehari-hari.
 
+## Catatan pengerjaan (perbaikan pasca-Fase 6)
+
+**11 September 2026** — Setelah seed diimpor dan aplikasi dicoba langsung di
+perangkat nyata (debug build), pemilik melaporkan 7 masalah UI/UX. Seluruhnya
+diperbaiki di branch yang sama, tanpa menunggu Fase 7:
+
+1. **Format bulan app bar** — `2026-08` diganti jadi `Agustus 2026`/`August
+   2026` mengikuti locale aktif (`CycleMonthFormatter`, baru, karena aplikasi
+   belum memuat data locale `intl`/`flutter_localizations`).
+2. **Icon button Income & Worklog dihapus dari app bar cycle** — redundan,
+   kedua layar sudah bisa dicapai lewat bottom nav.
+3. **Hint + tombol "tambah sumber pemasukan"** muncul di `LineEditSheet`
+   kalau belum ada `IncomeSource` terdaftar — sebelumnya kosong tanpa
+   penjelasan.
+4. **Baris pemasukan bertaut `IncomeSource` kini ikut berubah** kalau
+   sumbernya disunting — diperbaiki dengan memperluas pola freeze-on-close
+   ADR-0008 (yang sebelumnya hanya untuk baris `rollUp`) ke baris pemasukan
+   bertaut sumber: `fixedSalary` menyegarkan label+nominal, `hourlyFreelance`
+   hanya label (nominalnya snapshot historis hasil suntik worklog, sengaja
+   tidak ikut tarif baru).
+5. **Navigasi app bar dibatasi ke siklus yang benar-benar ada** — `CycleState`
+   kini membawa `existingCycleIds` (dari `CycleRepository.listCycleIds`),
+   kedua chevron dinonaktifkan kalau target belum dibuka lewat rollover.
+6. **Aksi hapus siklus ditambah** — hanya untuk siklus TERAKHIR dan belum
+   ditutup (`CycleState.canDeleteCycle`), supaya urutan rollover tidak
+   berlubang di tengah.
+7. **Baris anggaran baru bisa ditautkan ke Rencana Belanja/kartu kredit
+   langsung dari UI** — sebelumnya hanya bisa lewat seed. Port baru
+   `CardCatalog` (domain milik `cycle`, diimplementasikan `card`, dikawat di
+   `RootModule` — pola ADR-0009 yang sama dengan `CycleIncomeWriter`/
+   `CycleInvestmentGateway`, arahnya saja yang baca-saja). `LineEditSheet`
+   menambah pemilihan sumber (Manual/Rencana Belanja/Kartu Kredit) untuk
+   baris anggaran BARU; `CycleBloc` menulis baris `rollUp` ber-`amount: 0`
+   (sama seperti `RollOverCycle` mengisi baris rollUp hasil salinan), lalu
+   langsung membaca ulang siklus lewat `CycleRepository.getCycle` supaya
+   nominal sungguhan tersegarkan tanpa menunggu pemilik pindah-kembali layar.
+
+Diverifikasi: `flutter analyze` (0 isu) dan `flutter test` (121 pengujian)
+lulus; `tool/seed_import.dart --dry-run` dijalankan ulang setelah perubahan
+repository/bloc — kesembilan siklus tertutup masih cocok persis dengan
+spreadsheet, siklus terbuka tetap terhitung live sesuai desain.
+
 ## Fase 7: Sinkronisasi
 
 Di luar MVP. Dikerjakan setelah Fase 6 selesai dan dipakai beberapa waktu.

@@ -13,21 +13,22 @@ final class CycleRouteModule extends FeatureRouteModule {
 
   @override
   List<RouteNode> get routes => [
-        RouteNode.typed<CycleDetailInput>(
-          key: CycleRouteKeys.detail,
-          defaultInput: () => CycleDetailInput(cycleId: _currentCycleId()),
-          builder: (context, input) {
-            final parentContainer = ScopeProvider.of(context);
-            return ScopeWidget<CycleScope>(
-              create: () => CycleScope(parentContainer: parentContainer),
-              builder: (context, scope) => BlocProvider.value(
-                value: scope.container<CycleBloc>()..add(CycleOpened(input.cycleId)),
-                child: CyclePage(cycleId: input.cycleId),
-              ),
-            );
-          },
-        ),
-      ];
+    RouteNode.typed<CycleDetailInput>(
+      key: CycleRouteKeys.detail,
+      defaultInput: () => CycleDetailInput(cycleId: _currentCycleId()),
+      builder: (context, input) {
+        final parentContainer = ScopeProvider.of(context);
+        return ScopeWidget<CycleScope>(
+          create: () => CycleScope(parentContainer: parentContainer),
+          builder: (context, scope) => BlocProvider.value(
+            value: scope.container<CycleBloc>()
+              ..add(CycleOpened(input.cycleId)),
+            child: CyclePage(cycleId: input.cycleId),
+          ),
+        );
+      },
+    ),
+  ];
 
   static String _currentCycleId() {
     final now = DateTime.now();

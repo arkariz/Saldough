@@ -5,14 +5,17 @@ import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/main_shell_page.dart';
+import 'package:saldough/features/card/data/adapters/card_catalog_impl.dart';
 import 'package:saldough/features/card/data/card_roll_up_resolver.dart';
 import 'package:saldough/features/card/data/repositories/card_statement_repository_impl.dart';
+import 'package:saldough/features/card/data/repositories/credit_card_repository_impl.dart';
 import 'package:saldough/features/card/presentation/navigation/card_route_module.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_investment_gateway_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
 import 'package:saldough/features/cycle/domain/entities/roll_up_resolution.dart';
 import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
+import 'package:saldough/features/cycle/domain/repositories/card_catalog.dart';
 import 'package:saldough/features/cycle/domain/repositories/roll_up_resolver.dart';
 import 'package:saldough/features/cycle/presentation/navigation/cycle_route_module.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
@@ -59,7 +62,9 @@ abstract final class RootModule {
   }
 
   static Future<void> _registerStorage(GetIt container) async {
-    final storage = await HiveKeyValueStorage.initialize(boxName: 'saldough_kv');
+    final storage = await HiveKeyValueStorage.initialize(
+      boxName: 'saldough_kv',
+    );
     container.registerSingleton<KeyValueStorage>(storage);
   }
 
@@ -93,10 +98,14 @@ abstract final class RootModule {
     container.registerLazySingleton<RollUpResolver>(
       () => _CompositeRollUpResolver(
         grocery: GroceryRollUpResolver(
-          repository: GroceryPlanRepositoryImpl(storage: container<KeyValueStorage>()),
+          repository: GroceryPlanRepositoryImpl(
+            storage: container<KeyValueStorage>(),
+          ),
         ),
         card: CardRollUpResolver(
-          repository: CardStatementRepositoryImpl(storage: container<KeyValueStorage>()),
+          repository: CardStatementRepositoryImpl(
+            storage: container<KeyValueStorage>(),
+          ),
         ),
       ),
     );
@@ -105,6 +114,7 @@ abstract final class RootModule {
         cycleRepository: CycleRepositoryImpl(
           storage: container<KeyValueStorage>(),
           resolver: container<RollUpResolver>(),
+          incomeSourceRepository: container<IncomeSourceRepository>(),
         ),
       ),
     );
@@ -116,7 +126,18 @@ abstract final class RootModule {
         cycleRepository: CycleRepositoryImpl(
           storage: container<KeyValueStorage>(),
           resolver: container<RollUpResolver>(),
+          incomeSourceRepository: container<IncomeSourceRepository>(),
         ),
+      ),
+    );
+    // `CardCatalog` adalah port milik fitur `cycle` — layar siklus perlu
+    // daftar kartu (hanya id+nama) untuk menautkan baris anggaran baru ke
+    // tagihan kartu tertentu (laporan pemilik: sebelumnya tidak ada cara
+    // melakukan ini dari UI). Arahnya baca-saja, beda dari
+    // `CycleIncomeWriter`/`CycleInvestmentGateway` di atas yang juga menulis.
+    container.registerLazySingleton<CardCatalog>(
+      () => CardCatalogImpl(
+        repository: CreditCardRepositoryImpl(storage: container<KeyValueStorage>()),
       ),
     );
   }

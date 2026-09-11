@@ -13,7 +13,8 @@ final class IncomeLineModel {
   });
 
   /// Membaca [IncomeLineModel] dari JSON.
-  factory IncomeLineModel.fromJson(Map<String, dynamic> json) => IncomeLineModel(
+  factory IncomeLineModel.fromJson(Map<String, dynamic> json) =>
+      IncomeLineModel(
         id: json['id'] as String,
         label: json['label'] as String,
         amount: json['amount'] as int,
@@ -24,13 +25,13 @@ final class IncomeLineModel {
 
   /// Membuat model dari entitas domain.
   factory IncomeLineModel.fromEntity(IncomeLine line) => IncomeLineModel(
-        id: line.id,
-        label: line.label,
-        amount: line.amount,
-        sourceId: line.sourceId,
-        isTemplate: line.isTemplate,
-        needsReview: line.needsReview,
-      );
+    id: line.id,
+    label: line.label,
+    amount: line.amount,
+    sourceId: line.sourceId,
+    isTemplate: line.isTemplate,
+    needsReview: line.needsReview,
+  );
 
   /// Identitas baris.
   final String id;
@@ -52,21 +53,21 @@ final class IncomeLineModel {
 
   /// Menulis [IncomeLineModel] ke JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'amount': amount,
-        'sourceId': sourceId,
-        'isTemplate': isTemplate,
-        'needsReview': needsReview,
-      };
+    'id': id,
+    'label': label,
+    'amount': amount,
+    'sourceId': sourceId,
+    'isTemplate': isTemplate,
+    'needsReview': needsReview,
+  };
 
   /// Mengubah model jadi entitas domain.
   IncomeLine toEntity() => IncomeLine(
-        id: id,
-        label: label,
-        amount: amount,
-        sourceId: sourceId,
-        isTemplate: isTemplate,
-        needsReview: needsReview,
-      );
+    id: id,
+    label: label,
+    amount: amount,
+    sourceId: sourceId,
+    isTemplate: isTemplate,
+    needsReview: needsReview,
+  );
 }

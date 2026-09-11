@@ -18,29 +18,32 @@ final class CycleModel {
 
   /// Membaca [CycleModel] dari JSON.
   factory CycleModel.fromJson(Map<String, dynamic> json) => CycleModel(
-        schemaVersion: json['schemaVersion'] as int,
-        id: json['id'] as String,
-        incomeLines: (json['incomeLines'] as List<dynamic>)
-            .map((e) => IncomeLineModel.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        budgetLines: (json['budgetLines'] as List<dynamic>)
-            .map((e) => BudgetLineModel.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        investmentPlan:
-            InvestmentPlanModel.fromJson(json['investmentPlan'] as Map<String, dynamic>),
-        closedAt: json['closedAt'] == null ? null : DateTime.parse(json['closedAt'] as String),
-      );
+    schemaVersion: json['schemaVersion'] as int,
+    id: json['id'] as String,
+    incomeLines: (json['incomeLines'] as List<dynamic>)
+        .map((e) => IncomeLineModel.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    budgetLines: (json['budgetLines'] as List<dynamic>)
+        .map((e) => BudgetLineModel.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    investmentPlan: InvestmentPlanModel.fromJson(
+      json['investmentPlan'] as Map<String, dynamic>,
+    ),
+    closedAt: json['closedAt'] == null
+        ? null
+        : DateTime.parse(json['closedAt'] as String),
+  );
 
   /// Membuat model dari entitas domain, siap disimpan dengan
   /// [currentSchemaVersion].
   factory CycleModel.fromEntity(MonthlyCycle cycle) => CycleModel(
-        schemaVersion: currentSchemaVersion,
-        id: cycle.id,
-        incomeLines: cycle.incomeLines.map(IncomeLineModel.fromEntity).toList(),
-        budgetLines: cycle.budgetLines.map(BudgetLineModel.fromEntity).toList(),
-        investmentPlan: InvestmentPlanModel.fromEntity(cycle.investmentPlan),
-        closedAt: cycle.closedAt,
-      );
+    schemaVersion: currentSchemaVersion,
+    id: cycle.id,
+    incomeLines: cycle.incomeLines.map(IncomeLineModel.fromEntity).toList(),
+    budgetLines: cycle.budgetLines.map(BudgetLineModel.fromEntity).toList(),
+    investmentPlan: InvestmentPlanModel.fromEntity(cycle.investmentPlan),
+    closedAt: cycle.closedAt,
+  );
 
   /// Versi skema saat ini.
   static const currentSchemaVersion = 1;
@@ -65,22 +68,22 @@ final class CycleModel {
 
   /// Menulis [CycleModel] ke JSON.
   Map<String, dynamic> toJson() => {
-        'schemaVersion': schemaVersion,
-        'id': id,
-        'incomeLines': incomeLines.map((l) => l.toJson()).toList(),
-        'budgetLines': budgetLines.map((l) => l.toJson()).toList(),
-        'investmentPlan': investmentPlan.toJson(),
-        'closedAt': closedAt?.toIso8601String(),
-      };
+    'schemaVersion': schemaVersion,
+    'id': id,
+    'incomeLines': incomeLines.map((l) => l.toJson()).toList(),
+    'budgetLines': budgetLines.map((l) => l.toJson()).toList(),
+    'investmentPlan': investmentPlan.toJson(),
+    'closedAt': closedAt?.toIso8601String(),
+  };
 
   /// Mengubah model jadi entitas domain. Baris `rollUp` memakai nominal
   /// tersimpan apa adanya — `CycleRepositoryImpl` yang menimpanya dengan
   /// hasil `RollUpResolver` setelah ini dipanggil.
   MonthlyCycle toEntity() => MonthlyCycle(
-        id: id,
-        incomeLines: incomeLines.map((l) => l.toEntity()).toList(),
-        budgetLines: budgetLines.map((l) => l.toEntity()).toList(),
-        investmentPlan: investmentPlan.toEntity(),
-        closedAt: closedAt,
-      );
+    id: id,
+    incomeLines: incomeLines.map((l) => l.toEntity()).toList(),
+    budgetLines: budgetLines.map((l) => l.toEntity()).toList(),
+    investmentPlan: investmentPlan.toEntity(),
+    closedAt: closedAt,
+  );
 }

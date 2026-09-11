@@ -34,4 +34,12 @@ abstract final class CycleMonthFormatter {
     final months = LocaleSettings.currentLocale == AppLocale.en ? _enMonths : _idMonths;
     return '${months[month - 1]} $year';
   }
+
+  /// Memformat [date] lengkap dengan tanggal (UX-21) — mis. `11 September
+  /// 2026`, bukan `2026-09-11` yang disusun tangan. Memakai daftar bulan
+  /// yang sama seperti [format], tidak menduplikasinya.
+  static String formatDate(DateTime date) {
+    final months = LocaleSettings.currentLocale == AppLocale.en ? _enMonths : _idMonths;
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
 }

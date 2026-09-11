@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -25,7 +26,23 @@ class WorklogPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.sources.isEmpty) {
-              return Center(child: Padding(padding: const EdgeInsets.all(AppSpacing.lg), child: Text(t.worklog.noFreelanceSource)));
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    mainAxisSize: .min,
+                    children: [
+                      Text(t.worklog.noFreelanceSource, textAlign: .center),
+                      const SizedBox(height: AppSpacing.md),
+                      AppButton(
+                        label: t.worklog.goToIncomeSourcesButton,
+                        icon: Icons.arrow_forward,
+                        onPressed: () => context.push('/income/list'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -136,7 +153,7 @@ class _EntryFormState extends State<_EntryForm> {
                     );
                     if (picked != null) setState(() => _date = picked);
                   },
-                  child: Text('${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}'),
+                  child: Text(CycleMonthFormatter.formatDate(_date)),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),

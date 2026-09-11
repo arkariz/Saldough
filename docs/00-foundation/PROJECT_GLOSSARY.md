@@ -37,7 +37,7 @@ berubah menjadi satu baris pemasukan.
 | Sumber pemasukan | `IncomeSource` | Definisi sumber penghasilan yang berlaku lintas bulan, bukan nominal per bulan. |
 | Gaji tetap | `IncomeSourceKind.fixedSalary` | Sumber pemasukan bernominal sama tiap bulan. Contoh: `Gaji Koko`. |
 | Freelance per jam | `IncomeSourceKind.hourlyFreelance` | Sumber pemasukan yang nominalnya dihitung dari jam kerja dikali tarif. Contoh: `Gaji Menul`. |
-| Pemasukan lain | `IncomeSourceKind.adHoc` | Pemasukan sekali jalan tanpa aturan hitung. Contoh: `THR Laufey`. |
+| Sekali jalan | `IncomeSourceKind.adHoc` | Pemasukan sekali jalan tanpa aturan hitung. Contoh: `THR Laufey`. |
 | Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja freelance. |
 | Catatan jam | `WorkLogEntry` | Satu entri jam kerja harian: tanggal, jumlah jam, dan penanda buku baru. |
 | Hari buku baru | `startsNewBook` | Penanda pada catatan jam yang menandakan awal periode tagihan baru. |

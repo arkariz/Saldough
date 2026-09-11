@@ -73,13 +73,13 @@ menyusul di branch `claude/ux-review-fixes`.
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
-| 2 | Jalan buntu dan validasi form | 5 | 4 | Prioritas #3 — UX-02, UX-03, UX-04, UX-05 selesai |
+| 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **8** | |
+| **Total** | | **37** | **9** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -527,13 +527,14 @@ kombinasi yang seharusnya tertolak memang membuat `_canSubmit` bernilai
 **Verifikasi.** `flutter analyze` 0 issue, `flutter test` 142 lulus (tidak
 berubah dari UX-04 — murni perubahan widget).
 
-## - [ ] UX-06 🟠 Menandai baris "tetap" bisa gagal tanpa pemilik tahu
+## - [x] UX-06 🟠 Menandai baris "tetap" bisa gagal tanpa pemilik tahu
 
 | | |
 |---|---|
 | **Kat.** | B |
 | **Berkas** | `lib/features/cycle/presentation/bloc/cycle_bloc.dart:259-281` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** Menutup Batch 2 sepenuhnya. |
 
 **Masalah.** `_syncIncomeTemplate` dan `_syncBudgetTemplate` memakai
 `getOrElse((_) => .empty())` untuk membaca template (`:261`, `:273`), lalu
@@ -553,20 +554,31 @@ lihat **BUG-3** di bagian terakhir dokumen ini.
 
 **Langkah perbaikan.**
 
-1. Bongkar hasil `saveTemplate()` dengan `switch` dan pancarkan
-   `_effectError(failure)` di cabang `Left` — pola `_effectError` sudah ada di
-   `cycle_effect.dart:4-7`.
-2. Batalkan perubahan pin di state kalau penulisannya gagal, supaya UI tidak
-   menunjukkan keadaan yang tidak tersimpan. Kalau itu terlalu berbelit,
-   minimal pesannya harus jelas bahwa penandaan gagal.
-3. Jangan sentuh `getOrElse` di `:261`/`:273` di item ini — itu BUG-3.
+1. **SELESAI.** `_syncIncomeTemplate`/`_syncBudgetTemplate` sekarang
+   mengembalikan `Future<Failure?>` (bukan `Future<void>`) — hasil
+   `saveTemplate()` dibongkar dengan `switch`, mengembalikan `Failure`-nya
+   kalau `Left`, `null` kalau `Right`.
+2. **SELESAI, dengan pilihan "batalkan" (bukan cuma pesan jelas).**
+   `_onIncomeLineTemplateToggled`/`_onBudgetLineTemplateToggled` memeriksa
+   hasil itu SEBELUM memanggil `_updateIncomeLine`/`_updateBudgetLine` — kalau
+   gagal, memancarkan `_effectError(failure)` dan `return` tanpa menyentuh
+   baris di siklus sama sekali. Jadi pin di layar dan isi template
+   benar-benar tidak pernah berbeda; pemilik tidak perlu menebak dari pesan
+   galat saja apakah pin-nya "kena" atau tidak.
+3. **Dipatuhi.** `getOrElse` di pembacaan (`getTemplate()`) TIDAK disentuh —
+   itu BUG-3, di luar cakupan item ini.
 
-**Tes.** `cycle_bloc_test.dart` sudah memakai `mocktail` + `bloc_test` dan
-sudah punya `MockCycleTemplateRepository`. Tambahkan: "IncomeLineTemplateToggled
-memancarkan efek galat saat saveTemplate gagal". Ingat aturan `Either` di
-bagian atas dokumen — bongkar dengan `switch`, jangan `expect(result, left(...))`.
+**Tes.** **SELESAI** — dua kasus baru di `cycle_bloc_test.dart`:
+"IncomeLineTemplateToggled" dan "BudgetLineTemplateToggled memancarkan efek
+galat dan TIDAK menandai baris kalau penulisan template gagal". Keduanya
+menegaskan DUA hal sekaligus dalam satu `having`: `effect` adalah
+`ShowSnackBarEffect`, DAN baris di `state.cycle` tetap `isTemplate: false`
+(bukan cuma memeriksa efeknya saja, yang tidak akan menangkap kalau langkah
+2 ternyata tidak benar-benar membatalkan). `verifyNever(saveCycle(any()))`
+menegaskan siklus tidak ikut tertulis sama sekali.
 
-**Verifikasi.** `flutter test` dengan tes baru lulus; `flutter analyze` bersih.
+**Verifikasi.** `flutter analyze` 0 issue, `flutter test` **144 lulus**
+(142 + 2 tes baru).
 
 ---
 
@@ -1937,3 +1949,23 @@ ternyata tidak berlaku untuk mekanisme pencegahan yang sebenarnya dipakai.
 
 Verifikasi: `flutter analyze` 0 issue, `flutter test` 142 lulus (tidak
 berubah — murni perubahan widget).
+
+**11 September 2026 (UX-06 dikerjakan — Batch 2 selesai)** —
+`_syncIncomeTemplate`/`_syncBudgetTemplate` kini mengembalikan
+`Future<Failure?>` alih-alih membuang hasil `saveTemplate()`. Pemanggilnya
+(`_onIncomeLineTemplateToggled`/`_onBudgetLineTemplateToggled`) memeriksa
+hasil itu SEBELUM menyunting baris di siklus — kalau template gagal ditulis,
+baris di siklus juga TIDAK disentuh (bukan cuma menampilkan pesan galat di
+atas perubahan yang sudah "kena" secara visual). Ini menghindari keadaan di
+mana pin terlihat berhasil di layar sementara diam-diam tidak ikut terbawa
+saat rollover bulan depan.
+
+Dua tes bloc baru menegaskan baris tetap `isTemplate: false` DAN efek galat
+muncul DAN `saveCycle` tidak pernah dipanggil — tiga sinyal sekaligus,
+supaya regresi di salah satu bagian (misalnya efeknya muncul tapi barisnya
+diam-diam tetap berubah) ketangkap.
+
+Batch 2 (jalan buntu dan validasi form) kini selesai seluruhnya: UX-02
+sampai UX-06.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 144 lulus (142 + 2 baru).

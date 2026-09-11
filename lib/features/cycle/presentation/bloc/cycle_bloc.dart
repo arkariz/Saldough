@@ -238,7 +238,15 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     final line = state.findIncomeLine(event.lineId);
     if (line == null) return;
     final toggled = line.copyWith(isTemplate: !line.isTemplate);
-    await _syncIncomeTemplate(toggled);
+    final syncFailure = await _syncIncomeTemplate(toggled);
+    // Kalau template gagal ditulis, JANGAN lanjut menyunting baris siklus --
+    // itu akan membuat pin di layar terlihat berhasil padahal baris tidak
+    // ikut terbawa saat rollover bulan depan, tanpa pemilik pernah tahu
+    // (UX-06). Batalkan keduanya sekaligus dan tunjukkan galatnya.
+    if (syncFailure != null) {
+      emit(state.copyWith(effect: _effectError(syncFailure)));
+      return;
+    }
     await _updateIncomeLine(emit, event.lineId, (_) => toggled);
   }
 
@@ -249,35 +257,52 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     final line = state.findBudgetLine(event.lineId);
     if (line == null) return;
     final toggled = line.copyWith(isTemplate: !line.isTemplate);
-    await _syncBudgetTemplate(toggled);
+    final syncFailure = await _syncBudgetTemplate(toggled);
+    if (syncFailure != null) {
+      emit(state.copyWith(effect: _effectError(syncFailure)));
+      return;
+    }
     await _updateBudgetLine(emit, event.lineId, (_) => toggled);
   }
 
   /// Mendaftarkan/melepas [line] dari `CycleTemplate` — menandai baris
   /// sebagai tetap adalah tindakan sadar yang mendaftarkannya ke template
   /// untuk rollover berikutnya (ADR-0008), bukan cuma penanda lokal.
-  Future<void> _syncIncomeTemplate(IncomeLine line) async {
+  ///
+  /// Mengembalikan `null` kalau penulisan template berhasil, atau
+  /// [Failure]-nya kalau gagal — pembacaan template (`getTemplate`) TETAP
+  /// memakai `getOrElse` di sini (bukan bagian UX-06; lihat BUG-3 di
+  /// `UX_REVIEW_FIXES.md` untuk masalah terpisah pada pembacaannya).
+  Future<Failure?> _syncIncomeTemplate(IncomeLine line) async {
     final result = await _templateRepository.getTemplate();
     final template = result.getOrElse((_) => .empty());
     final lines = [
       ...template.incomeLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
     ];
-    await _templateRepository.saveTemplate(
+    final saveResult = await _templateRepository.saveTemplate(
       template.copyWith(incomeLines: lines),
     );
+    return switch (saveResult) {
+      Left(value: final failure) => failure,
+      Right() => null,
+    };
   }
 
-  Future<void> _syncBudgetTemplate(BudgetLine line) async {
+  Future<Failure?> _syncBudgetTemplate(BudgetLine line) async {
     final result = await _templateRepository.getTemplate();
     final template = result.getOrElse((_) => .empty());
     final lines = [
       ...template.budgetLines.where((l) => l.id != line.id),
       if (line.isTemplate) line.copyWith(needsReview: false),
     ];
-    await _templateRepository.saveTemplate(
+    final saveResult = await _templateRepository.saveTemplate(
       template.copyWith(budgetLines: lines),
     );
+    return switch (saveResult) {
+      Left(value: final failure) => failure,
+      Right() => null,
+    };
   }
 
   Future<void> _onRollOverRequested(

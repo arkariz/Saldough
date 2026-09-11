@@ -11,8 +11,7 @@
     "retry": "Coba lagi",
     "loading": "Memuat...",
     "genericErrorMessage": "Ada yang salah. Coba lagi.",
-    "confirmDeleteTitle": "Hapus?",
-    "confirmDeleteMessage": "Tindakan ini tidak bisa dibatalkan."
+    "confirmDeleteTitle": "Hapus?"
   },
   "cycle": {
     "incomeSectionTitle": "Pemasukan",
@@ -48,7 +47,10 @@
     "budgetSourceGrocery": "Rencana Belanja",
     "budgetSourceCard": "Kartu Kredit",
     "selectCardHint": "Pilih kartu",
-    "rollUpSourceAlreadyUsed": "Sumber ini sudah ditautkan ke baris anggaran lain."
+    "rollUpSourceAlreadyUsed": "Sumber ini sudah ditautkan ke baris anggaran lain.",
+    "confirmDeleteIncomeLineTitle": "Hapus baris $name?",
+    "confirmDeleteBudgetLineTitle": "Hapus baris $name?",
+    "confirmDeleteLineMessage": "Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan."
   },
   "income": {
     "pageTitle": "Sumber pemasukan",
@@ -68,7 +70,9 @@
     "deductionValueHint": "Nilai",
     "deductionKindPermille": "Per mil",
     "deductionKindFixed": "Tetap (Rp)",
-    "worklogEntryPointLabel": "Catat Jam Kerja"
+    "worklogEntryPointLabel": "Catat Jam Kerja",
+    "confirmDeleteSourceTitle": "Hapus sumber $name?",
+    "confirmDeleteSourceMessage": "Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan."
   },
   "worklog": {
     "pageTitle": "Catatan jam kerja",
@@ -116,7 +120,11 @@
     "subscriptionInactiveBadge": "Nonaktif",
     "historyTitle": "Riwayat siklus tagihan",
     "emptyHistory": "Belum ada siklus tagihan yang ditutup.",
-    "statementPeriodLabel": "$start – $end"
+    "statementPeriodLabel": "$start – $end",
+    "confirmDeleteCardTitle": "Hapus kartu $name?",
+    "confirmDeleteCardMessage": "Seluruh siklus tagihan dan transaksi kartu ini akan terhapus. Baris anggaran yang menaut kartu ini akan kehilangan sumbernya. Tindakan ini tidak bisa dibatalkan.",
+    "confirmDeleteSubscriptionTitle": "Hapus langganan $name?",
+    "confirmDeleteSubscriptionMessage": "Langganan ini tidak lagi disiapkan otomatis tiap siklus tagihan. Transaksi yang sudah tercatat tidak terpengaruh. Tindakan ini tidak bisa dibatalkan."
   },
   "grocery": {
     "pageTitle": "Rencana belanja",
@@ -133,7 +141,9 @@
     "overridePriceLabel": "Timpa harga",
     "overrideAmountFieldHint": "Harga timpaan (Rp)",
     "overriddenBadge": "ditimpa",
-    "cardEntryPointLabel": "Kartu Kredit"
+    "cardEntryPointLabel": "Kartu Kredit",
+    "confirmDeleteItemTitle": "Hapus $name?",
+    "confirmDeleteItemMessage": "Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan."
   },
   "investment": {
     "pageTitle": "Investasi",
@@ -169,7 +179,11 @@
     "loanAmountsLabel": "Pokok $principal, dikembalikan $repaid",
     "invalidTotalMessage": "Total persentase harus 0 atau 100.",
     "allocationSavedMessage": "Rencana alokasi disimpan.",
-    "loanSavedMessage": "Pinjaman disimpan."
+    "loanSavedMessage": "Pinjaman disimpan.",
+    "confirmDeleteGoalTitle": "Hapus pos $name?",
+    "confirmDeleteGoalMessage": "Saldo pos dan seluruh riwayat alokasinya akan terhapus. Tindakan ini tidak bisa dibatalkan.",
+    "confirmDeleteLoanTitle": "Hapus pinjaman ini?",
+    "confirmDeleteLoanMessage": "Catatan pokok dan pengembaliannya akan terhapus, dan saldo kedua pos ikut berubah. Tindakan ini tidak bisa dibatalkan."
   },
   "shell": {
     "cycleTabLabel": "Siklus",

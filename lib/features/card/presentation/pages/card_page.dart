@@ -135,7 +135,14 @@ class _CardTile extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => bloc.add(CreditCardDeleted(card.id)),
+              onPressed: () async {
+                final confirmed = await showConfirmDelete(
+                  context,
+                  title: t.card.confirmDeleteCardTitle(name: card.name),
+                  message: t.card.confirmDeleteCardMessage,
+                );
+                if (confirmed) bloc.add(CreditCardDeleted(card.id));
+              },
             ),
           ],
         ),
@@ -385,7 +392,14 @@ class _SubscriptionTile extends StatelessWidget {
               ),
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => bloc.add(RecurringSubscriptionDeleted(subscription.id)),
+              onPressed: () async {
+                final confirmed = await showConfirmDelete(
+                  context,
+                  title: t.card.confirmDeleteSubscriptionTitle(name: subscription.merchant),
+                  message: t.card.confirmDeleteSubscriptionMessage,
+                );
+                if (confirmed) bloc.add(RecurringSubscriptionDeleted(subscription.id));
+              },
             ),
           ],
         ),

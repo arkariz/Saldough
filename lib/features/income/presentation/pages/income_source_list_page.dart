@@ -90,7 +90,14 @@ class _IncomeSourceTile extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => bloc.add(IncomeSourceDeleted(source.id)),
+              onPressed: () async {
+                final confirmed = await showConfirmDelete(
+                  context,
+                  title: t.income.confirmDeleteSourceTitle(name: source.name),
+                  message: t.income.confirmDeleteSourceMessage,
+                );
+                if (confirmed) bloc.add(IncomeSourceDeleted(source.id));
+              },
             ),
           ],
         ),

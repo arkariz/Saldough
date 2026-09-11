@@ -67,18 +67,19 @@ otomatis, tapi sebutkan di catatan pengerjaan bahwa verifikasinya manual.
 ## Ringkasan progres
 
 Terakhir diperbarui: 11 September 2026 — pemilik menjawab kedua keputusan;
-UX-30 selesai dan langkah dokumentasi UX-22 selesai.
+UX-30 dan UX-01 selesai; langkah dokumentasi UX-22 selesai, kodenya
+menyusul di branch `claude/ux-review-fixes`.
 
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
-| 1 | Keamanan aksi destruktif | 1 | 0 | Prioritas #1 — tidak butuh keputusan pemilik |
+| 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
 | 2 | Jalan buntu dan validasi form | 5 | 0 | Prioritas #3 |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 1 | UX-30 selesai; UX-22 (prioritas #2) sudah dibuka — ADR-nya sudah ditulis, sisanya kode |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **1** | |
+| **Total** | | **37** | **2** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -167,13 +168,14 @@ maupun nilai token. Lihat UX-30 — selesai.
 
 # Batch 1 — Keamanan aksi destruktif
 
-## - [ ] UX-01 🔴 Konfirmasi untuk setiap aksi hapus
+## - [x] UX-01 🔴 Konfirmasi untuk setiap aksi hapus
 
 | | |
 |---|---|
 | **Kat.** | A (IA & navigasi) |
 | **Prioritas** | #1 — kerjakan pertama |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026** di branch `claude/ux-review-fixes`. |
 
 **Masalah.** Delapan titik panggilan hapus (tujuh jenis objek) menjalankan
 penghapusan langsung saat ikon ditekan. Hanya hapus siklus yang punya dialog
@@ -266,10 +268,11 @@ membuat baris anggaran roll-up yang menautnya jadi kehilangan sumber.
 "confirmDeleteLineMessage": "Baris ini akan terhapus dari siklus bulan ini. Tindakan ini tidak bisa dibatalkan."
 ```
 
-Catatan: `common.confirmDeleteMessage` ("Tindakan ini tidak bisa dibatalkan.")
-saat ini **ada tapi tidak terpakai sama sekali** — boleh dipakai sebagai
-sufiks bersama, atau dihapus kalau setiap pesan sudah menuliskannya sendiri.
-Jangan ditinggalkan menggantung.
+~~Catatan: `common.confirmDeleteMessage` ada tapi tidak terpakai.~~ **Selesai**
+— setiap pesan konfirmasi di atas kini menuliskan sendiri klausa "Tindakan ini
+tidak bisa dibatalkan." (atau padanannya), sehingga `common.confirmDeleteMessage`
+dihapus dari `id.i18n.json` dan `en.i18n.json` (paritas 174/174) — tidak ada
+lagi yang menggantung.
 
 **Tes.** Tidak ada logika bloc yang berubah, jadi tes bloc yang ada harus tetap
 lulus tanpa disentuh. Kalau memilih menulis widget test pertama proyek ini,
@@ -1720,3 +1723,28 @@ Verifikasi: `flutter analyze` 0 issue dan `flutter test` 124 lulus (sama dengan
 baseline — wajar, tidak ada kode yang disentuh). Seluruh tautan relatif di
 dokumen yang disunting dicek resolve. **Sisa UX-22 adalah pekerjaan kode** dan
 belum dikerjakan, jadi kotaknya tetap kosong.
+
+**11 September 2026 (UX-01 dikerjakan)** — Branch baru `claude/ux-review-fixes`
+dibuat dari `main` (setelah PR #13 merge). Konfirmasi hapus dipasang di
+seluruh delapan titik: pos tujuan, pinjaman antar pos, kartu, langganan
+berulang, sumber pemasukan, bahan belanja, baris pemasukan, baris anggaran —
+lewat helper bersama baru `showConfirmDelete`
+(`lib/core/presentation/widgets/confirm_delete_dialog.dart`), diekspor dari
+`widgets.dart`. Dialog hapus siklus yang sudah ada sebelumnya (satu-satunya
+yang sudah dikonfirmasi) ikut disatukan memakai helper yang sama, alih-alih
+membiarkan dua implementasi berbeda.
+
+Sembilan kunci i18n baru ditambahkan ke `id.i18n.json` **dan** `en.i18n.json`
+(paritas tetap terjaga — 174/174 setelah perubahan). Setiap pesan menyebut
+konsekuensi konkret, bukan "Yakin?", dan diakhiri klausa irreversibilitas
+sendiri-sendiri — karena itu `common.confirmDeleteMessage` yang sebelumnya
+menganggur tanpa pemakai dihapus dari kedua berkas i18n, bukan dibiarkan
+menggantung.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` 124 lulus (sama dengan
+baseline — wajar, tidak ada logika bloc yang diubah). Kesembilan titik
+`showConfirmDelete` diperiksa satu per satu memakai grep: setiap pemanggilan
+`*Deleted(`/`*Removed(` sekarang berada di dalam cabang `if (confirmed)`.
+Verifikasi visual di perangkat/emulator belum dilakukan (widget test pertama
+proyek ini belum ditulis — item ini dianggap cukup dengan pola yang sudah
+terbukti di dialog hapus siklus yang sudah ada sebelumnya).

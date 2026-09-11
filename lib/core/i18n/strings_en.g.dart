@@ -76,7 +76,6 @@ class _Translations$common$en extends Translations$common$id {
 	@override String get loading => 'Loading...';
 	@override String get genericErrorMessage => 'Something went wrong. Please try again.';
 	@override String get confirmDeleteTitle => 'Delete?';
-	@override String get confirmDeleteMessage => 'This action cannot be undone.';
 }
 
 // Path: cycle
@@ -120,6 +119,9 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String get budgetSourceCard => 'Credit card';
 	@override String get selectCardHint => 'Select a card';
 	@override String get rollUpSourceAlreadyUsed => 'This source is already linked to another budget line.';
+	@override String confirmDeleteIncomeLineTitle({required Object name}) => 'Delete the ${name} line?';
+	@override String confirmDeleteBudgetLineTitle({required Object name}) => 'Delete the ${name} line?';
+	@override String get confirmDeleteLineMessage => 'This line will be removed from this cycle. This cannot be undone.';
 }
 
 // Path: income
@@ -147,6 +149,8 @@ class _Translations$income$en extends Translations$income$id {
 	@override String get deductionKindPermille => 'Per mille';
 	@override String get deductionKindFixed => 'Fixed (Rp)';
 	@override String get worklogEntryPointLabel => 'Log Work Hours';
+	@override String confirmDeleteSourceTitle({required Object name}) => 'Delete source ${name}?';
+	@override String get confirmDeleteSourceMessage => 'Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone.';
 }
 
 // Path: worklog
@@ -209,6 +213,10 @@ class _Translations$card$en extends Translations$card$id {
 	@override String get historyTitle => 'Statement history';
 	@override String get emptyHistory => 'No closed statements yet.';
 	@override String statementPeriodLabel({required Object start, required Object end}) => '${start} – ${end}';
+	@override String confirmDeleteCardTitle({required Object name}) => 'Delete card ${name}?';
+	@override String get confirmDeleteCardMessage => 'All statements and transactions on this card will be deleted. Budget lines linked to this card will lose their source. This cannot be undone.';
+	@override String confirmDeleteSubscriptionTitle({required Object name}) => 'Delete the ${name} subscription?';
+	@override String get confirmDeleteSubscriptionMessage => 'This subscription will no longer be added automatically each statement. Transactions already recorded are unaffected. This cannot be undone.';
 }
 
 // Path: grocery
@@ -233,6 +241,8 @@ class _Translations$grocery$en extends Translations$grocery$id {
 	@override String get overrideAmountFieldHint => 'Override amount (Rp)';
 	@override String get overriddenBadge => 'overridden';
 	@override String get cardEntryPointLabel => 'Credit Card';
+	@override String confirmDeleteItemTitle({required Object name}) => 'Delete ${name}?';
+	@override String get confirmDeleteItemMessage => 'The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone.';
 }
 
 // Path: investment
@@ -276,6 +286,10 @@ class _Translations$investment$en extends Translations$investment$id {
 	@override String get invalidTotalMessage => 'Total percentage must be 0 or 100.';
 	@override String get allocationSavedMessage => 'Allocation plan saved.';
 	@override String get loanSavedMessage => 'Loan saved.';
+	@override String confirmDeleteGoalTitle({required Object name}) => 'Delete the ${name} goal?';
+	@override String get confirmDeleteGoalMessage => 'The goal\'s balance and its entire allocation history will be deleted. This cannot be undone.';
+	@override String get confirmDeleteLoanTitle => 'Delete this loan?';
+	@override String get confirmDeleteLoanMessage => 'The principal and repayment records will be deleted, and both goals\' balances will change. This cannot be undone.';
 }
 
 // Path: shell
@@ -309,7 +323,6 @@ extension on TranslationsEn {
 			'common.loading' => 'Loading...',
 			'common.genericErrorMessage' => 'Something went wrong. Please try again.',
 			'common.confirmDeleteTitle' => 'Delete?',
-			'common.confirmDeleteMessage' => 'This action cannot be undone.',
 			'cycle.incomeSectionTitle' => 'Income',
 			'cycle.budgetSectionTitle' => 'Budget',
 			'cycle.totalLabel' => 'Total',
@@ -344,6 +357,9 @@ extension on TranslationsEn {
 			'cycle.budgetSourceCard' => 'Credit card',
 			'cycle.selectCardHint' => 'Select a card',
 			'cycle.rollUpSourceAlreadyUsed' => 'This source is already linked to another budget line.',
+			'cycle.confirmDeleteIncomeLineTitle' => ({required Object name}) => 'Delete the ${name} line?',
+			'cycle.confirmDeleteBudgetLineTitle' => ({required Object name}) => 'Delete the ${name} line?',
+			'cycle.confirmDeleteLineMessage' => 'This line will be removed from this cycle. This cannot be undone.',
 			'income.pageTitle' => 'Income sources',
 			'income.emptySources' => 'No income sources yet.',
 			'income.addSourceTitle' => 'Add income source',
@@ -362,6 +378,8 @@ extension on TranslationsEn {
 			'income.deductionKindPermille' => 'Per mille',
 			'income.deductionKindFixed' => 'Fixed (Rp)',
 			'income.worklogEntryPointLabel' => 'Log Work Hours',
+			'income.confirmDeleteSourceTitle' => ({required Object name}) => 'Delete source ${name}?',
+			'income.confirmDeleteSourceMessage' => 'Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone.',
 			'worklog.pageTitle' => 'Work log',
 			'worklog.noFreelanceSource' => 'No freelance income source yet. Add one on the Income Sources screen first.',
 			'worklog.addEntryTitle' => 'Log hours',
@@ -406,6 +424,10 @@ extension on TranslationsEn {
 			'card.historyTitle' => 'Statement history',
 			'card.emptyHistory' => 'No closed statements yet.',
 			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'card.confirmDeleteCardTitle' => ({required Object name}) => 'Delete card ${name}?',
+			'card.confirmDeleteCardMessage' => 'All statements and transactions on this card will be deleted. Budget lines linked to this card will lose their source. This cannot be undone.',
+			'card.confirmDeleteSubscriptionTitle' => ({required Object name}) => 'Delete the ${name} subscription?',
+			'card.confirmDeleteSubscriptionMessage' => 'This subscription will no longer be added automatically each statement. Transactions already recorded are unaffected. This cannot be undone.',
 			'grocery.pageTitle' => 'Grocery plan',
 			'grocery.rollUpTotal' => 'Monthly total',
 			'grocery.weeksPerMonthFieldHint' => 'Weeks per month multiplier',
@@ -421,6 +443,8 @@ extension on TranslationsEn {
 			'grocery.overrideAmountFieldHint' => 'Override amount (Rp)',
 			'grocery.overriddenBadge' => 'overridden',
 			'grocery.cardEntryPointLabel' => 'Credit Card',
+			'grocery.confirmDeleteItemTitle' => ({required Object name}) => 'Delete ${name}?',
+			'grocery.confirmDeleteItemMessage' => 'The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone.',
 			'investment.pageTitle' => 'Investment',
 			'investment.totalPortfolioTitle' => 'Total portfolio',
 			'investment.goalsTitle' => 'Goals',
@@ -455,6 +479,10 @@ extension on TranslationsEn {
 			'investment.invalidTotalMessage' => 'Total percentage must be 0 or 100.',
 			'investment.allocationSavedMessage' => 'Allocation plan saved.',
 			'investment.loanSavedMessage' => 'Loan saved.',
+			'investment.confirmDeleteGoalTitle' => ({required Object name}) => 'Delete the ${name} goal?',
+			'investment.confirmDeleteGoalMessage' => 'The goal\'s balance and its entire allocation history will be deleted. This cannot be undone.',
+			'investment.confirmDeleteLoanTitle' => 'Delete this loan?',
+			'investment.confirmDeleteLoanMessage' => 'The principal and repayment records will be deleted, and both goals\' balances will change. This cannot be undone.',
 			'shell.cycleTabLabel' => 'Cycle',
 			'shell.incomeTabLabel' => 'Income',
 			'shell.groceryTabLabel' => 'Grocery',

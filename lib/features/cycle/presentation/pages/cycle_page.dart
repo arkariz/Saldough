@@ -254,7 +254,14 @@ class _IncomeSection extends StatelessWidget {
                   );
                 }
               },
-              onDelete: () => bloc.add(IncomeLineRemoved(line.id)),
+              onDelete: () async {
+                final confirmed = await showConfirmDelete(
+                  context,
+                  title: t.cycle.confirmDeleteIncomeLineTitle(name: line.label),
+                  message: t.cycle.confirmDeleteLineMessage,
+                );
+                if (confirmed) bloc.add(IncomeLineRemoved(line.id));
+              },
               onToggleTemplate: () =>
                   bloc.add(IncomeLineTemplateToggled(line.id)),
               onConfirmReview: line.needsReview
@@ -336,7 +343,14 @@ class _BudgetSection extends StatelessWidget {
                 }
               },
               onDelete: line.kind == .manual
-                  ? () => bloc.add(BudgetLineRemoved(line.id))
+                  ? () async {
+                      final confirmed = await showConfirmDelete(
+                        context,
+                        title: t.cycle.confirmDeleteBudgetLineTitle(name: line.label),
+                        message: t.cycle.confirmDeleteLineMessage,
+                      );
+                      if (confirmed) bloc.add(BudgetLineRemoved(line.id));
+                    }
                   : null,
               onToggleTemplate: () =>
                   bloc.add(BudgetLineTemplateToggled(line.id)),
@@ -408,24 +422,12 @@ class _ActionsRow extends StatelessWidget {
             tooltip: t.cycle.deleteCycle,
             icon: Icon(Icons.delete_outline, color: context.appColors.expense),
             onPressed: () async {
-              final confirmed = await showDialog<bool>(
-                context: context,
-                builder: (dialogContext) => AlertDialog(
-                  title: Text(t.common.confirmDeleteTitle),
-                  content: Text(t.cycle.deleteCycleConfirmMessage),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(dialogContext).pop(false),
-                      child: Text(t.common.cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(dialogContext).pop(true),
-                      child: Text(t.cycle.deleteCycle),
-                    ),
-                  ],
-                ),
+              final confirmed = await showConfirmDelete(
+                context,
+                message: t.cycle.deleteCycleConfirmMessage,
+                confirmLabel: t.cycle.deleteCycle,
               );
-              if (confirmed ?? false) bloc.add(const CycleDeleteRequested());
+              if (confirmed) bloc.add(const CycleDeleteRequested());
             },
           ),
       ],

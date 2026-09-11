@@ -73,13 +73,13 @@ menyusul di branch `claude/ux-review-fixes`.
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
 | 1 | Keamanan aksi destruktif | 1 | 1 | Prioritas #1 — selesai |
-| 2 | Jalan buntu dan validasi form | 5 | 2 | Prioritas #3 — UX-02, UX-03 selesai |
+| 2 | Jalan buntu dan validasi form | 5 | 3 | Prioritas #3 — UX-02, UX-03, UX-04 selesai |
 | 3 | Navigasi dan IA | 5 | 0 | |
 | 4 | Cakupan state dan copy | 10 | 0 | |
 | 5 | Token dan warna semantik | 9 | 3 | UX-30, UX-22, UX-26 selesai (UX-26 sebagian: rollUp ditunda ke UX-36) |
 | 6 | Sentuh dan aksesibilitas | 5 | 0 | |
 | 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **6** | |
+| **Total** | | **37** | **7** | |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -417,13 +417,14 @@ diuji), tulis tes bloc seperti biasa. Untuk validasi di widget, widget test.
 pastikan Simpan **terlihat nonaktif** (bukan aktif tapi bisu), lalu isi dan
 pastikan jadi aktif.
 
-## - [ ] UX-04 🟠 Pengali minggu hanya tersimpan kalau pemilik menekan "enter"
+## - [x] UX-04 🟠 Pengali minggu hanya tersimpan kalau pemilik menekan "enter"
 
 | | |
 |---|---|
 | **Kat.** | B |
 | **Berkas** | `lib/features/grocery/presentation/pages/grocery_page.dart:79-90` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** |
 
 **Masalah.** `_WeeksPerMonthField` hanya punya `onSubmitted`. Tidak ada tombol
 simpan dan tidak ada `onChanged`. Mengetik "5" lalu menutup keyboard atau
@@ -434,18 +435,20 @@ yang menautnya di siklus — tetap memakai pengali lama, sementara layar
 menunjukkan angka berbeda. Layar berbohong tentang isi penyimpanan, dan itu
 menabrak nilai utama proyek: angka harus sama persis dengan spreadsheet.
 
-**Langkah perbaikan.** Pilih salah satu, jangan dua-duanya:
-- **(disarankan)** Commit lewat `onChanged` dengan debounce (`AppDurations`
-  sudah ada sebagai sumber nilai durasi — jangan tulis angka harfiah), sambil
-  tetap mempertahankan `onSubmitted`.
-- Atau tambahkan tombol simpan eksplisit di sebelah field.
+**Langkah perbaikan.** **SELESAI** — dipilih opsi debounce (bukan tombol
+simpan terpisah, supaya tampilannya tidak berubah). `onChanged` men-debounce
+lewat `Timer` baru dengan durasi `AppDurations.debounce` (500ms, token baru
+di `app_durations.dart` — kelas ini sebelumnya hanya berisi durasi animasi,
+diperluas dengan catatan eksplisit kenapa). `onSubmitted` tetap dipertahankan
+dan langsung membatalkan timer yang sedang berjalan sebelum komit, supaya
+menekan enter tidak menghasilkan dua kali commit.
 
-Jangan memakai `onEditingComplete` saja — ia tidak terpanggil saat pemilik
-scroll menjauh, yang justru kasus gagalnya.
-
-**Tes.** `grocery_bloc_test.dart` sudah ada; tambahkan kasus bahwa
-`WeeksPerMonthChanged` menghasilkan `rollUpAmount` baru. Perilaku pengikatan
-field-nya sendiri perlu widget test atau verifikasi manual.
+**Tes.** **SELESAI** — `grocery_bloc_test.dart` (kasus baru): `WeeksPerMonthChanged`
+menghasilkan state dengan `plan.weeksPerMonth` DAN `rollUpAmount` yang baru,
+angka pembandingnya dihitung dari rumus `CalculateGroceryRollUp`, bukan
+disalin dari ekspektasi lama. Perilaku pengikatan field/debounce itu sendiri
+tidak diuji otomatis (belum ada widget test di proyek ini) — diverifikasi
+membaca kode saja.
 
 **Verifikasi.** Ubah pengali, **jangan** tekan enter, scroll ke bawah lalu ke
 atas lagi: nilai di field dan total bulanan harus sepakat. Lalu cek baris
@@ -1861,3 +1864,21 @@ berubah — murni perubahan widget, tidak menyentuh bloc). Diperiksa manual
 alur logikanya (bukan widget test — proyek ini belum punya widget test):
 setiap kombinasi budgetSource/kind ditelusuri baris demi baris memastikan
 `_canSubmit` konsisten dengan apa yang `_submit()` sebenarnya terima.
+
+**11 September 2026 (UX-04 dikerjakan)** — `_WeeksPerMonthFieldState` kini
+men-debounce lewat `Timer` (`AppDurations.debounce`, token baru — 500ms,
+diperluas dari kelas yang sebelumnya khusus durasi animasi) alih-alih hanya
+mengandalkan `onSubmitted`. `onSubmitted` tetap ada dan membatalkan timer yang
+berjalan lebih dulu supaya tidak dobel commit saat menekan enter.
+
+Tes bloc baru: `WeeksPerMonthChanged menyimpan pengali baru dan rollUpAmount
+ikut berubah` — menegaskan `plan.weeksPerMonth` DAN `rollUpAmount` sekaligus,
+dengan angka pembanding dihitung dari rumus `CalculateGroceryRollUp`
+(`weeklySubtotal × weeksPerMonth + monthlySubtotal`), bukan angka yang
+ditebak. Perlu `registerFallbackValue(GroceryPlan.empty())` baru di
+`setUpAll` — `any()` untuk tipe non-primitif (`GroceryPlan`) butuh fallback
+di mocktail, belum pernah dibutuhkan di berkas tes ini sebelumnya karena
+satu-satunya tes lama (`CardEntryPointTapped`) tidak menstub `savePlan`.
+
+Verifikasi: `flutter analyze` 0 issue, `flutter test` **142 lulus** (141 +
+1 tes baru).

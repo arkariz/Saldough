@@ -12,6 +12,7 @@ class CycleLineTile extends StatelessWidget {
     required this.isTemplate,
     required this.needsReview,
     this.isEditable = true,
+    this.isExpense = false,
     this.rollUpSourceUnavailable = false,
     this.onTap,
     this.onDelete,
@@ -35,6 +36,13 @@ class CycleLineTile extends StatelessWidget {
   /// False untuk baris `rollUp` — tidak bisa disunting/dihapus langsung
   /// (ADR-0008).
   final bool isEditable;
+
+  /// True untuk baris anggaran — nominalnya SELALU disimpan positif, tapi
+  /// semantiknya pengeluaran, jadi warnanya dipaksa `expenseOnLight` alih-
+  /// alih ikut pewarnaan otomatis `AppMoneyText` (yang akan salah menyangka
+  /// nominal positif = pemasukan). Bawaan `false` (baris pemasukan, biarkan
+  /// pewarnaan otomatis). Lihat UX-23.
+  final bool isExpense;
 
   /// True kalau baris `rollUp` ini sumbernya belum tersedia.
   final bool rollUpSourceUnavailable;
@@ -113,6 +121,7 @@ class CycleLineTile extends StatelessWidget {
             ),
             AppMoneyText(
               sen: amount,
+              color: isExpense ? colors.expenseOnLight : null,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             if (onToggleTemplate != null)

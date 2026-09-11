@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
@@ -36,6 +37,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(MonthlyCycle.empty('2026-09'));
+    registerFallbackValue(CycleTemplate.empty());
   });
 
   setUp(() {
@@ -625,6 +627,91 @@ void main() {
       skip: 2,
       expect: () => <CycleState>[],
       verify: (_) => verifyNever(() => cycleRepository.deleteCycle(any())),
+    );
+
+    // UX-06: sebelumnya hasil saveTemplate() dibuang begitu saja -- pin
+    // "tetap" tampak berhasil di layar padahal tidak ikut terbawa saat
+    // rollover, tanpa pemilik pernah tahu.
+    blocTest<CycleBloc, CycleState>(
+      'IncomeLineTemplateToggled memancarkan efek galat dan TIDAK menandai '
+      'baris kalau penulisan template gagal',
+      build: () {
+        when(
+          () => cycleRepository.getCycle('2026-09'),
+        ).thenAnswer((_) async => right(cycleWithLines));
+        when(
+          () => templateRepository.getTemplate(),
+        ).thenAnswer((_) async => right(CycleTemplate.empty()));
+        when(
+          () => templateRepository.saveTemplate(any()),
+        ).thenAnswer(
+          (_) async => left(
+            const PersistenceFailure(
+              code: FailureCode('STORAGE_ERROR'),
+              message: 'disk penuh',
+              userMessage: 'Gagal menyimpan.',
+            ),
+          ),
+        );
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const IncomeLineTemplateToggled('i1'));
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having((s) => s.effect, 'effect', isA<ShowSnackBarEffect>())
+            .having(
+              (s) => s.findIncomeLine('i1')?.isTemplate,
+              'baris i1 tetap tidak ditandai',
+              false,
+            ),
+      ],
+      verify: (_) => verifyNever(() => cycleRepository.saveCycle(any())),
+    );
+
+    blocTest<CycleBloc, CycleState>(
+      'BudgetLineTemplateToggled memancarkan efek galat dan TIDAK menandai '
+      'baris kalau penulisan template gagal',
+      build: () {
+        when(
+          () => cycleRepository.getCycle('2026-09'),
+        ).thenAnswer((_) async => right(cycleWithLines));
+        when(
+          () => templateRepository.getTemplate(),
+        ).thenAnswer((_) async => right(CycleTemplate.empty()));
+        when(
+          () => templateRepository.saveTemplate(any()),
+        ).thenAnswer(
+          (_) async => left(
+            const PersistenceFailure(
+              code: FailureCode('STORAGE_ERROR'),
+              message: 'disk penuh',
+              userMessage: 'Gagal menyimpan.',
+            ),
+          ),
+        );
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const BudgetLineTemplateToggled('b1'));
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having((s) => s.effect, 'effect', isA<ShowSnackBarEffect>())
+            .having(
+              (s) => s.findBudgetLine('b1')?.isTemplate,
+              'baris b1 tetap tidak ditandai',
+              false,
+            ),
+      ],
+      verify: (_) => verifyNever(() => cycleRepository.saveCycle(any())),
     );
   });
 }

@@ -42,6 +42,7 @@ final class WorklogScope extends IsolatedScope {
         worklogRepository: c<WorklogRepository>(),
         closeBillingBook: c<CloseBillingBook>(),
         injectNetPay: c<InjectNetPay>(),
+        cycleIncomeWriter: c<CycleIncomeWriter>(),
       ),
       dispose: (bloc) => bloc.close(),
     );

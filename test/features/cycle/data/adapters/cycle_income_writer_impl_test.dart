@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
@@ -119,6 +120,43 @@ void main() {
 
       expect(result.isLeft(), isTrue);
       verifyNever(() => repository.saveCycle(any()));
+    });
+
+    // UX-09: dasar pemilih siklus tujuan penyuntikan, bukan input `YYYY-MM`
+    // bebas -- port ini murni meneruskan `CycleRepository.listCycleIds()`.
+    test('listCycleIds meneruskan hasil dari CycleRepository', () async {
+      when(
+        () => repository.listCycleIds(),
+      ).thenAnswer((_) async => right(const ['2026-08', '2026-09']));
+      final writer = CycleIncomeWriterImpl(cycleRepository: repository);
+
+      final result = await writer.listCycleIds();
+
+      switch (result) {
+        case Left():
+          fail('seharusnya Right, dapat Left');
+        case Right(value: final ids):
+          expect(ids, ['2026-08', '2026-09']);
+      }
+    });
+
+    test('listCycleIds meneruskan Failure dari CycleRepository', () async {
+      const failure = BusinessRuleFailure(
+        code: FailureCode('STORAGE_ERROR'),
+        message: 'gagal baca index',
+        userMessage: 'Gagal memuat daftar siklus.',
+      );
+      when(() => repository.listCycleIds()).thenAnswer((_) async => left(failure));
+      final writer = CycleIncomeWriterImpl(cycleRepository: repository);
+
+      final result = await writer.listCycleIds();
+
+      switch (result) {
+        case Left(value: final f):
+          expect(f, failure);
+        case Right():
+          fail('seharusnya Left, dapat Right');
+      }
     });
   });
 }

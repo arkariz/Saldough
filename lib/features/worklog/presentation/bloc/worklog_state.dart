@@ -10,6 +10,7 @@ final class WorklogState extends UiState<WorklogState> {
     required this.sourceId,
     required this.books,
     required this.isLoading,
+    this.cycleIds = const [],
     super.effect,
   });
 
@@ -29,6 +30,10 @@ final class WorklogState extends UiState<WorklogState> {
   /// Sedang memuat/menyimpan.
   final bool isLoading;
 
+  /// Seluruh `id` siklus yang sudah dibuat, terurut menaik (UX-09: dasar
+  /// pemilih siklus tujuan penyuntikan, bukan input `YYYY-MM` bebas).
+  final List<String> cycleIds;
+
   /// Sumber yang sedang dipilih, atau `null` kalau [sourceId] kosong.
   IncomeSource? get selectedSource => sources.where((s) => s.id == sourceId).firstOrNull;
 
@@ -45,6 +50,7 @@ final class WorklogState extends UiState<WorklogState> {
     String? sourceId,
     List<BillingBook>? books,
     bool? isLoading,
+    List<String>? cycleIds,
     UiEffect? effect,
   }) {
     return WorklogState(
@@ -52,6 +58,7 @@ final class WorklogState extends UiState<WorklogState> {
       sourceId: sourceId ?? this.sourceId,
       books: books ?? this.books,
       isLoading: isLoading ?? this.isLoading,
+      cycleIds: cycleIds ?? this.cycleIds,
       effect: effect,
     );
   }
@@ -61,5 +68,5 @@ final class WorklogState extends UiState<WorklogState> {
       copyWith(books: books, isLoading: false, effect: effect);
 
   @override
-  List<Object?> get props => [sources, sourceId, books, isLoading];
+  List<Object?> get props => [sources, sourceId, books, isLoading, cycleIds];
 }

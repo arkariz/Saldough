@@ -12,7 +12,7 @@ extension on WorklogBloc {
       );
 
   UiEffect _effectInjected(String cycleId) => ShowSnackBarEffect(
-        message: t.worklog.injectedMessage(cycleId: cycleId),
+        message: t.worklog.injectedMessage(cycleId: CycleMonthFormatter.format(cycleId)),
         severity: .success,
       );
 }

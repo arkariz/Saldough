@@ -68,4 +68,7 @@ final class CycleIncomeWriterImpl implements CycleIncomeWriter {
         };
     }
   }
+
+  @override
+  Future<Either<Failure, List<String>>> listCycleIds() => _cycleRepository.listCycleIds();
 }

@@ -1,8 +1,3 @@
-// Satu method disengaja — ini port kecil untuk satu kebutuhan tulis lintas
-// fitur (lihat catatan revisi ADR-0009), bukan kelas yang sebaiknya jadi
-// fungsi top-level.
-// ignore_for_file: one_member_abstracts
-
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 
@@ -29,4 +24,8 @@ abstract interface class CycleIncomeWriter {
     required String sourceLabel,
     required int amount,
   });
+
+  /// Seluruh `id` siklus yang sudah dibuat, terurut menaik (UX-09: dipakai
+  /// untuk pemilih siklus tujuan, bukan mengetik `YYYY-MM` dengan tangan).
+  Future<Either<Failure, List<String>>> listCycleIds();
 }

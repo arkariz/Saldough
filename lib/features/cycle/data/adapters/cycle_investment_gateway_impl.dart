@@ -98,6 +98,9 @@ final class CycleInvestmentGatewayImpl implements CycleInvestmentGateway {
     return right(snapshots);
   }
 
+  @override
+  Future<Either<Failure, List<String>>> listCycleIds() => _cycleRepository.listCycleIds();
+
   CycleInvestmentSnapshot _toSnapshot(MonthlyCycle cycle) {
     final totals = CalculateCycleTotals().call(cycle);
     return CycleInvestmentSnapshot(

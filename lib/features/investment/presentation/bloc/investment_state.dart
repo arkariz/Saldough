@@ -23,6 +23,7 @@ final class InvestmentState extends UiState<InvestmentState> {
     required this.cycleSnapshot,
     required this.closedSnapshots,
     required this.isLoading,
+    this.cycleIds = const [],
     super.effect,
   });
 
@@ -59,6 +60,10 @@ final class InvestmentState extends UiState<InvestmentState> {
   /// Sedang memuat/menyimpan.
   final bool isLoading;
 
+  /// Seluruh `id` siklus yang sudah dibuat, terurut menaik (UX-09: dasar
+  /// pemilih siklus yang dilihat/disunting, bukan input `YYYY-MM` bebas).
+  final List<String> cycleIds;
+
   /// Saldo pos ber-`id` [goalId], nol kalau belum terhitung.
   int balanceOf(String goalId) => balances[goalId] ?? 0;
 
@@ -86,6 +91,7 @@ final class InvestmentState extends UiState<InvestmentState> {
     String? cycleId,
     List<CycleInvestmentSnapshot>? closedSnapshots,
     bool? isLoading,
+    List<String>? cycleIds,
     UiEffect? effect,
   }) {
     return InvestmentState(
@@ -96,6 +102,7 @@ final class InvestmentState extends UiState<InvestmentState> {
       cycleSnapshot: cycleSnapshot,
       closedSnapshots: closedSnapshots ?? this.closedSnapshots,
       isLoading: isLoading ?? this.isLoading,
+      cycleIds: cycleIds ?? this.cycleIds,
       effect: effect,
     );
   }
@@ -113,10 +120,12 @@ final class InvestmentState extends UiState<InvestmentState> {
       cycleSnapshot: snapshot,
       closedSnapshots: closedSnapshots,
       isLoading: false,
+      cycleIds: cycleIds,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [goals, balances, loans, cycleId, cycleSnapshot, closedSnapshots, isLoading];
+  List<Object?> get props =>
+      [goals, balances, loans, cycleId, cycleSnapshot, closedSnapshots, isLoading, cycleIds];
 }

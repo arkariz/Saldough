@@ -142,5 +142,19 @@ void main() {
         expect(snapshots.single.isClosed, isTrue);
       },
     );
+
+    // UX-09: dasar pemilih siklus (bukan lagi input `YYYY-MM` bebas) --
+    // port ini murni meneruskan `CycleRepository.listCycleIds()`, terurut
+    // dan mencakup siklus terbuka maupun tertutup.
+    test('listCycleIds mengembalikan seluruh id siklus yang sudah dibuat', () async {
+      final repository = _buildRepository(storage);
+      await repository.saveCycle(MonthlyCycle.empty('2026-09'));
+      await repository.saveCycle(MonthlyCycle.empty('2026-08').close());
+
+      final result = await gateway.listCycleIds();
+
+      final ids = result.getOrElse((_) => throw StateError('expected Right'));
+      expect(ids, ['2026-08', '2026-09']);
+    });
   });
 }

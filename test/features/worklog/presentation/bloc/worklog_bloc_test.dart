@@ -44,6 +44,10 @@ void main() {
     sourceRepository = MockIncomeSourceRepository();
     worklogRepository = MockWorklogRepository();
     writer = MockCycleIncomeWriter();
+    // UX-09: `_onOpened` sekarang juga memuat daftar siklus untuk pemilih
+    // siklus tujuan penyuntikan — bawaan kosong, tes yang butuh daftar
+    // sungguhan menimpa stub ini sendiri.
+    when(() => writer.listCycleIds()).thenAnswer((_) async => right(const []));
   });
 
   // CloseBillingBook dan InjectNetPay sendiri final class (tidak bisa
@@ -55,6 +59,7 @@ void main() {
         worklogRepository: worklogRepository,
         closeBillingBook: CloseBillingBook(repository: worklogRepository),
         injectNetPay: InjectNetPay(writer: writer, repository: worklogRepository),
+        cycleIncomeWriter: writer,
       );
 
   // WorklogOpened dengan satu sumber freelance selalu menghasilkan 4 state
@@ -77,6 +82,23 @@ void main() {
         isA<WorklogState>()
             .having((s) => s.isLoading, 'isLoading', false)
             .having((s) => s.books, 'books', isEmpty),
+      ],
+    );
+
+    // UX-09: dasar pemilih siklus tujuan penyuntikan -- bukan lagi input
+    // `YYYY-MM` bebas.
+    blocTest<WorklogBloc, WorklogState>(
+      'WorklogOpened memuat daftar siklus yang bisa dipilih untuk penyuntikan',
+      build: () {
+        when(() => sourceRepository.listSources()).thenAnswer((_) async => right([source]));
+        when(() => worklogRepository.listBooks('gaji-menul')).thenAnswer((_) async => right(const []));
+        when(() => writer.listCycleIds()).thenAnswer((_) async => right(const ['2026-08', '2026-09']));
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const WorklogOpened()),
+      skip: 3,
+      expect: () => [
+        isA<WorklogState>().having((s) => s.cycleIds, 'cycleIds', ['2026-08', '2026-09']),
       ],
     );
 

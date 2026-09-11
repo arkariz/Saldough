@@ -41,6 +41,12 @@ class GroceryPage extends StatelessWidget {
                 _ItemSection(title: t.grocery.weeklyTitle, items: state.plan.weeklyItems, isWeekly: true),
                 const SizedBox(height: AppSpacing.lg),
                 _ItemSection(title: t.grocery.monthlyTitle, items: state.plan.monthlyItems, isWeekly: false),
+                const SizedBox(height: AppSpacing.lg),
+                AppButton(
+                  label: t.grocery.cardEntryPointLabel,
+                  icon: Icons.credit_card,
+                  onPressed: () => context.read<GroceryBloc>().add(const CardEntryPointTapped()),
+                ),
               ],
             );
           },

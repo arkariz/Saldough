@@ -47,6 +47,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$card$en card = _Translations$card$en._(_root);
 	@override late final _Translations$grocery$en grocery = _Translations$grocery$en._(_root);
 	@override late final _Translations$investment$en investment = _Translations$investment$en._(_root);
+	@override late final _Translations$shell$en shell = _Translations$shell$en._(_root);
 }
 
 // Path: app
@@ -135,6 +136,7 @@ class _Translations$income$en extends Translations$income$id {
 	@override String get deductionValueHint => 'Value';
 	@override String get deductionKindPermille => 'Per mille';
 	@override String get deductionKindFixed => 'Fixed (Rp)';
+	@override String get worklogEntryPointLabel => 'Log Work Hours';
 }
 
 // Path: worklog
@@ -220,6 +222,7 @@ class _Translations$grocery$en extends Translations$grocery$id {
 	@override String get overridePriceLabel => 'Override price';
 	@override String get overrideAmountFieldHint => 'Override amount (Rp)';
 	@override String get overriddenBadge => 'overridden';
+	@override String get cardEntryPointLabel => 'Credit Card';
 }
 
 // Path: investment
@@ -263,6 +266,19 @@ class _Translations$investment$en extends Translations$investment$id {
 	@override String get invalidTotalMessage => 'Total percentage must be 0 or 100.';
 	@override String get allocationSavedMessage => 'Allocation plan saved.';
 	@override String get loanSavedMessage => 'Loan saved.';
+}
+
+// Path: shell
+class _Translations$shell$en extends Translations$shell$id {
+	_Translations$shell$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get cycleTabLabel => 'Cycle';
+	@override String get incomeTabLabel => 'Income';
+	@override String get groceryTabLabel => 'Grocery';
+	@override String get investmentTabLabel => 'Investment';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -325,6 +341,7 @@ extension on TranslationsEn {
 			'income.deductionValueHint' => 'Value',
 			'income.deductionKindPermille' => 'Per mille',
 			'income.deductionKindFixed' => 'Fixed (Rp)',
+			'income.worklogEntryPointLabel' => 'Log Work Hours',
 			'worklog.pageTitle' => 'Work log',
 			'worklog.noFreelanceSource' => 'No freelance income source yet. Add one on the Income Sources screen first.',
 			'worklog.addEntryTitle' => 'Log hours',
@@ -383,6 +400,7 @@ extension on TranslationsEn {
 			'grocery.overridePriceLabel' => 'Override price',
 			'grocery.overrideAmountFieldHint' => 'Override amount (Rp)',
 			'grocery.overriddenBadge' => 'overridden',
+			'grocery.cardEntryPointLabel' => 'Credit Card',
 			'investment.pageTitle' => 'Investment',
 			'investment.totalPortfolioTitle' => 'Total portfolio',
 			'investment.goalsTitle' => 'Goals',
@@ -417,6 +435,10 @@ extension on TranslationsEn {
 			'investment.invalidTotalMessage' => 'Total percentage must be 0 or 100.',
 			'investment.allocationSavedMessage' => 'Allocation plan saved.',
 			'investment.loanSavedMessage' => 'Loan saved.',
+			'shell.cycleTabLabel' => 'Cycle',
+			'shell.incomeTabLabel' => 'Income',
+			'shell.groceryTabLabel' => 'Grocery',
+			'shell.investmentTabLabel' => 'Investment',
 			_ => null,
 		};
 	}

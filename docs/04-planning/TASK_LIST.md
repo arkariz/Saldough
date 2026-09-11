@@ -266,6 +266,15 @@ found!".
       `state_management` tidak menentukan mekanisme bakunya. Diputuskan
       nanti kalau kebutuhannya muncul, dicatat sebagai komentar di
       `snackbar_effect_handler.dart`.
+      ⚠ **Catatan revisi (11 September 2026):** penanganan efek navigasi
+      terpasang sejak fase ini tapi TANPA konsumen nyata sampai Fase 2-5
+      selesai — setiap fitur hanya bisa dicapai lewat menu pengembang
+      (debug-only), tidak ada navigasi pengguna sungguhan. Diselesaikan
+      lewat `MainShellPage` (bilah navigasi bawah) dan dua konsumen nyata
+      pertama `NavigatePushEffect` (`IncomeSourceBloc`→`worklog`,
+      `GroceryBloc`→`card`) — lihat catatan revisi
+      [ADR-0004](../02-architecture/adr/0004-typed-route-registry-navigation.md)
+      §8 untuk detail lengkap.
 - [x] **T-1.12** Buat satu fitur contoh menyeluruh untuk membuktikan pola:
       entitas, repository, bloc dengan efek, rute, dan lingkup dependensi.
       Fitur `features/example_note/` — secara eksplisit bukti pola, bukan

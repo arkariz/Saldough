@@ -57,7 +57,8 @@
     "deductionLabelHint": "Deduction name",
     "deductionValueHint": "Value",
     "deductionKindPermille": "Per mille",
-    "deductionKindFixed": "Fixed (Rp)"
+    "deductionKindFixed": "Fixed (Rp)",
+    "worklogEntryPointLabel": "Log Work Hours"
   },
   "worklog": {
     "pageTitle": "Work log",
@@ -121,7 +122,8 @@
     "unitPriceFieldHint": "Unit price (Rp)",
     "overridePriceLabel": "Override price",
     "overrideAmountFieldHint": "Override amount (Rp)",
-    "overriddenBadge": "overridden"
+    "overriddenBadge": "overridden",
+    "cardEntryPointLabel": "Credit Card"
   },
   "investment": {
     "pageTitle": "Investment",
@@ -158,5 +160,11 @@
     "invalidTotalMessage": "Total percentage must be 0 or 100.",
     "allocationSavedMessage": "Allocation plan saved.",
     "loanSavedMessage": "Loan saved."
+  },
+  "shell": {
+    "cycleTabLabel": "Cycle",
+    "incomeTabLabel": "Income",
+    "groceryTabLabel": "Grocery",
+    "investmentTabLabel": "Investment"
   }
 }

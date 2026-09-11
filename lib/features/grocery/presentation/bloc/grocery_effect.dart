@@ -5,4 +5,6 @@ extension on GroceryBloc {
         message: failure.userMessage ?? t.common.genericErrorMessage,
         severity: .error,
       );
+
+  UiEffect _effectOpenCard() => NavigatePushEffect(keyId: CardRouteKeys.page.id, input: const EmptyInput());
 }

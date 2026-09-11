@@ -64,3 +64,9 @@ final class WeeksPerMonthChanged extends GroceryEvent {
   /// Pengali baru.
   final int weeksPerMonth;
 }
+
+/// Tombol "Kartu Kredit" ditekan — pindah ke layar `card`.
+final class CardEntryPointTapped extends GroceryEvent {
+  /// Membuat [CardEntryPointTapped].
+  const CardEntryPointTapped();
+}

@@ -5,4 +5,7 @@ extension on IncomeSourceBloc {
         message: failure.userMessage ?? t.common.genericErrorMessage,
         severity: .error,
       );
+
+  UiEffect _effectOpenWorklog() =>
+      NavigatePushEffect(keyId: WorklogRouteKeys.page.id, input: const EmptyInput());
 }

@@ -546,6 +546,16 @@ RouteNode.typed<CycleDetailInput>(
 ),
 ```
 
+**Shell navigasi utama** (`MainShellPage`, `lib/core/presentation/shell/`) —
+bilah navigasi bawah 4 tab (Siklus/Pemasukan/Belanja/Investasi), layar awal
+aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan langsung di
+`AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab tetap
+dipasang lewat `ScopeWidget` fiturnya sendiri di dalam `IndexedStack` (bukan
+`StatefulShellRoute` — lihat catatan revisi ADR-0004 §8). Worklog (dari tab
+Pemasukan) dan Card (dari tab Belanja) dicapai lewat `NavigatePushEffect`
+yang didorong bloc (`IncomeSourceBloc`/`GroceryBloc`), bukan tab tersendiri —
+pola resmi untuk "layar sekunder dari fitur lain", lihat ADR-0004.
+
 ### Injeksi dependensi
 
 Setiap fitur punya `IsolatedScope`. Lingkup mendapat kontainer `GetIt` baru yang

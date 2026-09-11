@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$card$id card = Translations$card$id.internal(_root);
 	late final Translations$grocery$id grocery = Translations$grocery$id.internal(_root);
 	late final Translations$investment$id investment = Translations$investment$id.internal(_root);
+	late final Translations$shell$id shell = Translations$shell$id.internal(_root);
 }
 
 // Path: app
@@ -241,6 +242,9 @@ class Translations$income$id {
 
 	/// id: 'Tetap (Rp)'
 	String get deductionKindFixed => 'Tetap (Rp)';
+
+	/// id: 'Catat Jam Kerja'
+	String get worklogEntryPointLabel => 'Catat Jam Kerja';
 }
 
 // Path: worklog
@@ -442,6 +446,9 @@ class Translations$grocery$id {
 
 	/// id: 'ditimpa'
 	String get overriddenBadge => 'ditimpa';
+
+	/// id: 'Kartu Kredit'
+	String get cardEntryPointLabel => 'Kartu Kredit';
 }
 
 // Path: investment
@@ -555,6 +562,27 @@ class Translations$investment$id {
 	String get loanSavedMessage => 'Pinjaman disimpan.';
 }
 
+// Path: shell
+class Translations$shell$id {
+	Translations$shell$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Siklus'
+	String get cycleTabLabel => 'Siklus';
+
+	/// id: 'Pemasukan'
+	String get incomeTabLabel => 'Pemasukan';
+
+	/// id: 'Belanja'
+	String get groceryTabLabel => 'Belanja';
+
+	/// id: 'Investasi'
+	String get investmentTabLabel => 'Investasi';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -615,6 +643,7 @@ extension on Translations {
 			'income.deductionValueHint' => 'Nilai',
 			'income.deductionKindPermille' => 'Per mil',
 			'income.deductionKindFixed' => 'Tetap (Rp)',
+			'income.worklogEntryPointLabel' => 'Catat Jam Kerja',
 			'worklog.pageTitle' => 'Catatan jam kerja',
 			'worklog.noFreelanceSource' => 'Belum ada sumber pemasukan freelance. Tambah dulu di layar Sumber Pemasukan.',
 			'worklog.addEntryTitle' => 'Catat jam kerja',
@@ -673,6 +702,7 @@ extension on Translations {
 			'grocery.overridePriceLabel' => 'Timpa harga',
 			'grocery.overrideAmountFieldHint' => 'Harga timpaan (Rp)',
 			'grocery.overriddenBadge' => 'ditimpa',
+			'grocery.cardEntryPointLabel' => 'Kartu Kredit',
 			'investment.pageTitle' => 'Investasi',
 			'investment.totalPortfolioTitle' => 'Total portofolio',
 			'investment.goalsTitle' => 'Pos tujuan',
@@ -707,6 +737,10 @@ extension on Translations {
 			'investment.invalidTotalMessage' => 'Total persentase harus 0 atau 100.',
 			'investment.allocationSavedMessage' => 'Rencana alokasi disimpan.',
 			'investment.loanSavedMessage' => 'Pinjaman disimpan.',
+			'shell.cycleTabLabel' => 'Siklus',
+			'shell.incomeTabLabel' => 'Pemasukan',
+			'shell.groceryTabLabel' => 'Belanja',
+			'shell.investmentTabLabel' => 'Investasi',
 			_ => null,
 		};
 	}

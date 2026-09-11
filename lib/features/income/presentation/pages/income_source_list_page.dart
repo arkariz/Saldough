@@ -28,6 +28,12 @@ class IncomeSourceListPage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
+                AppButton(
+                  label: t.income.worklogEntryPointLabel,
+                  icon: Icons.access_time,
+                  onPressed: () => bloc.add(const WorklogEntryPointTapped()),
+                ),
+                const SizedBox(height: AppSpacing.md),
                 if (state.sources.isEmpty) Text(t.income.emptySources),
                 for (final source in state.sources)
                   Padding(

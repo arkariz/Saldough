@@ -171,6 +171,35 @@ class _LineEditSheetState extends State<LineEditSheet> {
   bool _isCardUsed(String cardId) =>
       widget.usedRollUpSources.contains(RollUpSource.card(cardId));
 
+  /// True kalau belum ada kartu terdaftar sama sekali — beda dari
+  /// [_allCardsUsed] (ada kartu, tapi semuanya sudah ditautkan). Dipisah
+  /// karena `[].every(...)` bernilai `true` untuk daftar kosong: sebelum
+  /// perbaikan ini, kedua keadaan tercampur jadi satu gerbang yang sama dan
+  /// pemilik yang belum punya kartu melihat "Pilih kartu" tanpa satu pun
+  /// chip untuk dipilih (laporan pemilik, UX-02).
+  bool get _hasNoCards => widget.cards.isEmpty;
+
+  /// True kalau ada kartu terdaftar tapi semuanya sudah dipakai baris
+  /// anggaran roll-up lain.
+  bool get _allCardsUsed =>
+      widget.cards.isNotEmpty && widget.cards.every((c) => _isCardUsed(c.id));
+
+  /// Gerbang tombol Simpan — dinonaktifkan (bukan diam-diam menolak submit)
+  /// saat input belum lengkap, mengikuti pola `_AllocationPlanForm` di
+  /// `investment_page.dart` (UX-03).
+  bool get _canSubmit {
+    if (_isNewBudgetLine && _budgetSource != .manual) {
+      if (_labelController.text.trim().isEmpty) return false;
+      return _budgetSource == .grocery
+          ? !_isGroceryUsed
+          : _selectedCardId != null && !_isCardUsed(_selectedCardId!);
+    }
+    final label = _labelController.text.trim();
+    final amountText = _amountController.text.trim();
+    if (label.isEmpty || amountText.isEmpty) return false;
+    return int.tryParse(amountText) != null;
+  }
+
   @override
   void dispose() {
     _labelController.dispose();
@@ -319,39 +348,58 @@ class _LineEditSheetState extends State<LineEditSheet> {
                   disabled: _isGroceryUsed,
                   onTap: () => _selectBudgetSource(.grocery),
                 ),
-                AppChip(
+                _budgetSourceChip(
                   label: t.cycle.budgetSourceCard,
                   selected: _budgetSource == .card,
+                  disabled: _hasNoCards || _allCardsUsed,
                   onTap: () => _selectBudgetSource(.card),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
-            if (_budgetSource == .card) ...[
-              if (widget.cards.every((card) => _isCardUsed(card.id)))
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Text(
-                    t.cycle.selectCardHint,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Wrap(
-                    spacing: AppSpacing.sm,
-                    children: [
-                      for (final card in widget.cards)
-                        _budgetSourceChip(
-                          label: card.name,
-                          selected: card.id == _selectedCardId,
-                          disabled: _isCardUsed(card.id),
-                          onTap: () => _selectCard(card),
-                        ),
-                    ],
-                  ),
+            if (_hasNoCards)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Text(
+                  t.cycle.noCardsHint,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
+              )
+            else if (_allCardsUsed)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Text(
+                  t.cycle.allCardsUsedHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            const SizedBox(height: AppSpacing.sm),
+            // Chip "Kartu Kredit" dinonaktifkan lewat _hasNoCards/
+            // _allCardsUsed di atas, jadi baris ini hanya bisa tercapai saat
+            // memang ada kartu yang masih bisa dipilih -- selectCardHint
+            // ("Pilih kartu") berlaku tanpa syarat di sini.
+            if (_budgetSource == .card) ...[
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Text(
+                  t.cycle.selectCardHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Wrap(
+                  spacing: AppSpacing.sm,
+                  children: [
+                    for (final card in widget.cards)
+                      _budgetSourceChip(
+                        label: card.name,
+                        selected: card.id == _selectedCardId,
+                        disabled: _isCardUsed(card.id),
+                        onTap: () => _selectCard(card),
+                      ),
+                  ],
+                ),
+              ),
             ],
           ],
           if (!_isNewBudgetLine || _budgetSource == .manual) ...[
@@ -359,6 +407,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
               controller: _labelController,
               autofocus: true,
               decoration: InputDecoration(labelText: t.cycle.labelFieldHint),
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
             TextField(
@@ -366,11 +415,12 @@ class _LineEditSheetState extends State<LineEditSheet> {
               keyboardType: .number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(labelText: t.cycle.amountFieldHint),
+              onChanged: (_) => setState(() {}),
               onSubmitted: (_) => _submit(),
             ),
           ],
           const SizedBox(height: AppSpacing.md),
-          AppButton(label: t.common.save, onPressed: _submit),
+          AppButton(label: t.common.save, onPressed: _canSubmit ? _submit : null),
         ],
       ),
     );

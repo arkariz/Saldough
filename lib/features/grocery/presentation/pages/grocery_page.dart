@@ -209,6 +209,19 @@ class _GroceryItemEditSheetState extends State<_GroceryItemEditSheet> {
   );
   late bool _isOverridden = widget.initial?.isOverridden ?? false;
 
+  /// Gerbang tombol Simpan -- dinonaktifkan (bukan diam-diam menolak submit)
+  /// saat nama/jumlah/harga satuan belum valid (UX-03). Sengaja tidak ikut
+  /// mensyaratkan `_overrideController` terisi saat [_isOverridden] aktif --
+  /// `_submit()` sendiri sudah memperlakukan override kosong sebagai "tidak
+  /// ditimpa", bukan gagal simpan, jadi gerbang ini tidak mengubah perilaku
+  /// itu.
+  bool get _canSubmit {
+    final name = _nameController.text.trim();
+    final quantity = int.tryParse(_quantityController.text.trim());
+    final unitPrice = int.tryParse(_unitPriceController.text.trim());
+    return name.isNotEmpty && quantity != null && unitPrice != null;
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -256,6 +269,7 @@ class _GroceryItemEditSheetState extends State<_GroceryItemEditSheet> {
               controller: _nameController,
               autofocus: true,
               decoration: InputDecoration(labelText: t.grocery.itemNameFieldHint),
+              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
             Row(
@@ -266,6 +280,7 @@ class _GroceryItemEditSheetState extends State<_GroceryItemEditSheet> {
                     keyboardType: .number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(labelText: t.grocery.quantityFieldHint),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -275,6 +290,7 @@ class _GroceryItemEditSheetState extends State<_GroceryItemEditSheet> {
                     keyboardType: .number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(labelText: t.grocery.unitPriceFieldHint),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
               ],
@@ -293,7 +309,7 @@ class _GroceryItemEditSheetState extends State<_GroceryItemEditSheet> {
                 decoration: InputDecoration(labelText: t.grocery.overrideAmountFieldHint),
               ),
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: t.common.save, onPressed: _submit),
+            AppButton(label: t.common.save, onPressed: _canSubmit ? _submit : null),
           ],
         ),
       ),

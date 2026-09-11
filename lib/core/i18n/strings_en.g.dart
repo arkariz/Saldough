@@ -122,6 +122,8 @@ class _Translations$cycle$en extends Translations$cycle$id {
 	@override String confirmDeleteIncomeLineTitle({required Object name}) => 'Delete the ${name} line?';
 	@override String confirmDeleteBudgetLineTitle({required Object name}) => 'Delete the ${name} line?';
 	@override String get confirmDeleteLineMessage => 'This line will be removed from this cycle. This cannot be undone.';
+	@override String get noCardsHint => 'No cards yet. Add one first under Groceries › Credit Card.';
+	@override String get allCardsUsedHint => 'Every card is already linked to another budget line.';
 }
 
 // Path: income
@@ -360,6 +362,8 @@ extension on TranslationsEn {
 			'cycle.confirmDeleteIncomeLineTitle' => ({required Object name}) => 'Delete the ${name} line?',
 			'cycle.confirmDeleteBudgetLineTitle' => ({required Object name}) => 'Delete the ${name} line?',
 			'cycle.confirmDeleteLineMessage' => 'This line will be removed from this cycle. This cannot be undone.',
+			'cycle.noCardsHint' => 'No cards yet. Add one first under Groceries › Credit Card.',
+			'cycle.allCardsUsedHint' => 'Every card is already linked to another budget line.',
 			'income.pageTitle' => 'Income sources',
 			'income.emptySources' => 'No income sources yet.',
 			'income.addSourceTitle' => 'Add income source',

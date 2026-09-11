@@ -196,7 +196,7 @@ class _Translations$card$en extends Translations$card$id {
 	@override String get cardNameFieldHint => 'Card name';
 	@override String get statementDayFieldHint => 'Statement day';
 	@override String statementDaySubtitle({required Object day}) => 'Statement day ${day}';
-	@override String get openStatementTitle => 'Open statement';
+	@override String openStatementTitleFor({required Object cardName}) => 'Open statement — ${cardName}';
 	@override String get pendingConfirmationTitle => 'Needs confirmation';
 	@override String get closeStatementButton => 'Close statement';
 	@override String get statementClosedMessage => 'Statement closed. Next statement opened.';
@@ -205,7 +205,7 @@ class _Translations$card$en extends Translations$card$id {
 	@override String get amountFieldHint => 'Amount (Rp)';
 	@override String get noteFieldHint => 'Note (optional)';
 	@override String get addTransactionButton => 'Log';
-	@override String get subscriptionsTitle => 'Recurring subscriptions';
+	@override String subscriptionsTitleFor({required Object cardName}) => 'Recurring subscriptions — ${cardName}';
 	@override String get emptySubscriptions => 'No subscriptions yet.';
 	@override String get addSubscriptionTitle => 'Add subscription';
 	@override String get editSubscriptionTitle => 'Edit subscription';
@@ -213,7 +213,7 @@ class _Translations$card$en extends Translations$card$id {
 	@override String get subscriptionActiveLabel => 'Active';
 	@override String subscriptionSubtitle({required Object amount, required Object day}) => '${amount} / month, day ${day}';
 	@override String get subscriptionInactiveBadge => 'Inactive';
-	@override String get historyTitle => 'Statement history';
+	@override String historyTitleFor({required Object cardName}) => 'Statement history — ${cardName}';
 	@override String get emptyHistory => 'No closed statements yet.';
 	@override String statementPeriodLabel({required Object start, required Object end}) => '${start} – ${end}';
 	@override String confirmDeleteCardTitle({required Object name}) => 'Delete card ${name}?';
@@ -411,7 +411,7 @@ extension on TranslationsEn {
 			'card.cardNameFieldHint' => 'Card name',
 			'card.statementDayFieldHint' => 'Statement day',
 			'card.statementDaySubtitle' => ({required Object day}) => 'Statement day ${day}',
-			'card.openStatementTitle' => 'Open statement',
+			'card.openStatementTitleFor' => ({required Object cardName}) => 'Open statement — ${cardName}',
 			'card.pendingConfirmationTitle' => 'Needs confirmation',
 			'card.closeStatementButton' => 'Close statement',
 			'card.statementClosedMessage' => 'Statement closed. Next statement opened.',
@@ -420,7 +420,7 @@ extension on TranslationsEn {
 			'card.amountFieldHint' => 'Amount (Rp)',
 			'card.noteFieldHint' => 'Note (optional)',
 			'card.addTransactionButton' => 'Log',
-			'card.subscriptionsTitle' => 'Recurring subscriptions',
+			'card.subscriptionsTitleFor' => ({required Object cardName}) => 'Recurring subscriptions — ${cardName}',
 			'card.emptySubscriptions' => 'No subscriptions yet.',
 			'card.addSubscriptionTitle' => 'Add subscription',
 			'card.editSubscriptionTitle' => 'Edit subscription',
@@ -428,7 +428,7 @@ extension on TranslationsEn {
 			'card.subscriptionActiveLabel' => 'Active',
 			'card.subscriptionSubtitle' => ({required Object amount, required Object day}) => '${amount} / month, day ${day}',
 			'card.subscriptionInactiveBadge' => 'Inactive',
-			'card.historyTitle' => 'Statement history',
+			'card.historyTitleFor' => ({required Object cardName}) => 'Statement history — ${cardName}',
 			'card.emptyHistory' => 'No closed statements yet.',
 			'card.statementPeriodLabel' => ({required Object start, required Object end}) => '${start} – ${end}',
 			'card.confirmDeleteCardTitle' => ({required Object name}) => 'Delete card ${name}?',

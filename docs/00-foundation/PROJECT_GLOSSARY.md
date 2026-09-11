@@ -44,7 +44,7 @@ berubah menjadi satu baris pemasukan.
 | Buku jam | `BillingBook` | Satu periode tagihan freelance, yaitu kumpulan catatan jam dari satu penanda buku baru sampai penanda berikutnya. |
 | Total jam | `totalHours` | Jumlah seluruh jam dalam satu buku jam. |
 | Gaji kotor | `grossPay` | Total jam dikali tarif per jam. |
-| Potongan | `DeductionRule` | Pengurang gaji kotor, berupa persentase atau nominal tetap. |
+| Potongan | `DeductionRule` | Pengurang gaji kotor, berupa per mil atau nominal tetap. |
 | Gaji bersih | `netPay` | Gaji kotor dikurangi seluruh potongan. Angka ini yang masuk ke baris pemasukan. |
 
 Perhatikan bahwa **buku jam tidak sama dengan bulan kalender**. Satu buku jam

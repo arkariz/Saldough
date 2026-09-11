@@ -8,6 +8,7 @@ import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_state.dart';
 import 'package:saldough/features/cycle/presentation/widgets/cycle_line_tile.dart';
 import 'package:saldough/features/cycle/presentation/widgets/line_edit_sheet.dart';
+import 'package:saldough/features/cycle/presentation/widgets/roll_up_line_rename_sheet.dart';
 import 'package:state_management/state_management.dart';
 
 /// Layar siklus bulanan — menampilkan baris pemasukan, baris anggaran,
@@ -387,26 +388,42 @@ class _BudgetSection extends StatelessWidget {
               isTemplate: line.isTemplate,
               needsReview: line.needsReview,
               isEditable: line.kind == .manual,
+              isRollUp: line.kind == .rollUp,
               isExpense: true,
               rollUpSourceUnavailable: line.rollUpSourceUnavailable,
               rollUpSourceIsCard: line.rollUpSource is CardRollUpSource,
-              onTap: () async {
-                final result = await LineEditSheet.show(
-                  context,
-                  title: t.cycle.editBudgetLine,
-                  initialLabel: line.label,
-                  initialAmount: line.amount,
-                );
-                if (result != null) {
-                  bloc.add(
-                    BudgetLineSaved(
-                      id: line.id,
-                      label: result.label,
-                      amount: result.amount,
-                    ),
-                  );
-                }
-              },
+              onTap: line.kind == .manual
+                  ? () async {
+                      final result = await LineEditSheet.show(
+                        context,
+                        title: t.cycle.editBudgetLine,
+                        initialLabel: line.label,
+                        initialAmount: line.amount,
+                      );
+                      if (result != null) {
+                        bloc.add(
+                          BudgetLineSaved(
+                            id: line.id,
+                            label: result.label,
+                            amount: result.amount,
+                          ),
+                        );
+                      }
+                    }
+                  // UX-36 + UX-37: baris rollUp TETAP bisa diketuk -- bukan
+                  // membuka sheet nominal (ADR-0008 melarangnya), tapi
+                  // sheet ganti nama saja. Ini sekaligus jadi penjelasan
+                  // "kenapa tidak bisa disunting" yang UX-36 minta (banner
+                  // rollUpNotEditable ada di dalam sheet itu).
+                  : () async {
+                      final newLabel = await RollUpLineRenameSheet.show(
+                        context,
+                        initialLabel: line.label,
+                      );
+                      if (newLabel != null && newLabel != line.label) {
+                        bloc.add(BudgetLineRenamed(lineId: line.id, label: newLabel));
+                      }
+                    },
               onDelete: line.kind == .manual
                   ? () async {
                       final confirmed = await showConfirmDelete(

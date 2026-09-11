@@ -53,6 +53,13 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
         (line) => line.copyWith(needsReview: false),
       ),
     );
+    on<BudgetLineRenamed>(
+      (event, emit) => _updateBudgetLine(
+        emit,
+        event.lineId,
+        (line) => line.copyWith(label: event.label),
+      ),
+    );
     on<CycleRollOverRequested>(_onRollOverRequested);
     on<CycleClosed>(_onClosed);
     on<CycleReopened>(_onReopened);

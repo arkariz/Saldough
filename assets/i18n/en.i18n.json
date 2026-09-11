@@ -22,6 +22,7 @@
     "addBudgetLine": "Add budget line",
     "editIncomeLine": "Edit income line",
     "editBudgetLine": "Edit budget line",
+    "renameRollUpLineTitle": "Rename line",
     "labelFieldHint": "Name",
     "amountFieldHint": "Amount (Rp)",
     "emptyIncome": "No income lines yet. Add the first one below.",

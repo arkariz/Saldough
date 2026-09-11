@@ -132,6 +132,9 @@ class Translations$cycle$id {
 	/// id: 'Sunting baris anggaran'
 	String get editBudgetLine => 'Sunting baris anggaran';
 
+	/// id: 'Ganti nama baris'
+	String get renameRollUpLineTitle => 'Ganti nama baris';
+
 	/// id: 'Nama'
 	String get labelFieldHint => 'Nama';
 
@@ -708,6 +711,7 @@ extension on Translations {
 			'cycle.addBudgetLine' => 'Tambah baris anggaran',
 			'cycle.editIncomeLine' => 'Sunting baris pemasukan',
 			'cycle.editBudgetLine' => 'Sunting baris anggaran',
+			'cycle.renameRollUpLineTitle' => 'Ganti nama baris',
 			'cycle.labelFieldHint' => 'Nama',
 			'cycle.amountFieldHint' => 'Nominal (Rp)',
 			'cycle.emptyIncome' => 'Belum ada baris pemasukan. Tambahkan yang pertama di bawah.',

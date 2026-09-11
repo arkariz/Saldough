@@ -156,6 +156,21 @@ class _LineEditSheetState extends State<LineEditSheet> {
   );
   late String? _sourceId = widget.initialSourceId;
 
+  /// Nilai terakhir yang DIISI OTOMATIS ke [_labelController] (bukan yang
+  /// diketik pemilik sendiri) -- dipakai [_fillLabel] untuk memutuskan
+  /// apakah aman menimpa isi field saat pemilik pindah pilihan sumber
+  /// (UX-37): field hanya diisi ulang kalau masih kosong atau masih persis
+  /// berisi isian otomatis SEBELUMNYA, tidak pernah menimpa nama yang
+  /// sudah diketik tangan.
+  String? _autoFilledLabel;
+
+  void _fillLabel(String value) {
+    if (_labelController.text.isEmpty || _labelController.text == _autoFilledLabel) {
+      _labelController.text = value;
+    }
+    _autoFilledLabel = value;
+  }
+
   /// Sumber nominal baris anggaran — hanya relevan saat [LineEditSheet.
   /// isBudgetLine] true. Baris anggaran yang sudah ada selalu `manual`
   /// (lihat catatan di [LineEditSheet.isBudgetLine]).
@@ -210,7 +225,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
   void _selectSource(IncomeSource source) {
     setState(() {
       _sourceId = source.id;
-      _labelController.text = source.name;
+      _fillLabel(source.name);
       if (source.kind == .fixedSalary && source.fixedAmount != null) {
         _amountController.text = (source.fixedAmount! ~/ 100).toString();
       }
@@ -221,9 +236,8 @@ class _LineEditSheetState extends State<LineEditSheet> {
     setState(() {
       _budgetSource = choice;
       if (choice == .grocery) {
-        _labelController.text = t.cycle.budgetSourceGrocery;
+        _fillLabel(t.cycle.budgetSourceGrocery);
       } else if (choice == .manual) {
-        _labelController.clear();
         _selectedCardId = null;
       }
     });
@@ -232,7 +246,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
   void _selectCard(CardSummary card) {
     setState(() {
       _selectedCardId = card.id;
-      _labelController.text = card.name;
+      _fillLabel(card.name);
     });
   }
 

@@ -110,6 +110,21 @@ final class BudgetLineTemplateToggled extends CycleEvent {
   final String lineId;
 }
 
+/// Mengganti nama baris anggaran ber-`id` [lineId] jadi [label] -- SATU-
+/// SATUNYA jalur penyuntingan yang berlaku untuk baris `rollUp` (UX-37).
+/// Nominal, sumber, dan jenis baris tidak ikut berubah; ADR-0008 hanya
+/// mengunci nominal, tidak pernah mengunci label.
+final class BudgetLineRenamed extends CycleEvent {
+  /// Membuat [BudgetLineRenamed].
+  const BudgetLineRenamed({required this.lineId, required this.label});
+
+  /// Identitas baris.
+  final String lineId;
+
+  /// Nama baru.
+  final String label;
+}
+
 /// Mengonfirmasi baris pemasukan ber-`id` [lineId] — menghapus penanda
 /// perlu ditinjau (FR-TPL-002).
 final class IncomeLineReviewed extends CycleEvent {

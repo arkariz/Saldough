@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/cycle/domain/entities/budget_line.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
@@ -78,7 +79,13 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
     final result = await _cycleRepository.getCycle(cycleId);
     switch (result) {
       case Left(value: final failure):
-        emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            hasLoadError: true,
+            effect: _effectError(failure),
+          ),
+        );
       case Right(value: final cycle):
         emit(
           state

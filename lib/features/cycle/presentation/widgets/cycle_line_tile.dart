@@ -14,6 +14,7 @@ class CycleLineTile extends StatelessWidget {
     this.isEditable = true,
     this.isExpense = false,
     this.rollUpSourceUnavailable = false,
+    this.rollUpSourceIsCard = false,
     this.onTap,
     this.onDelete,
     this.onToggleTemplate,
@@ -46,6 +47,11 @@ class CycleLineTile extends StatelessWidget {
 
   /// True kalau baris `rollUp` ini sumbernya belum tersedia.
   final bool rollUpSourceUnavailable;
+
+  /// True kalau sumber roll-up baris ini kartu kredit, false kalau rencana
+  /// belanja -- menentukan pesan [rollUpSourceUnavailable] mana yang
+  /// tampil (UX-12). Diabaikan kalau [rollUpSourceUnavailable] false.
+  final bool rollUpSourceIsCard;
 
   /// Dipanggil saat baris diketuk untuk disunting. `null` kalau tidak bisa.
   final VoidCallback? onTap;
@@ -93,7 +99,9 @@ class CycleLineTile extends StatelessWidget {
                   ),
                   if (rollUpSourceUnavailable)
                     Text(
-                      t.cycle.rollUpSourceUnavailable,
+                      rollUpSourceIsCard
+                          ? t.cycle.rollUpSourceUnavailableCard
+                          : t.cycle.rollUpSourceUnavailableGrocery,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   if (needsReview)

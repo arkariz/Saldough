@@ -21,6 +21,7 @@ final class CycleState extends UiState<CycleState> {
     this.incomeSources = const [],
     this.existingCycleIds = const [],
     this.cards = const [],
+    this.hasLoadError = false,
     super.effect,
   });
 
@@ -52,6 +53,12 @@ final class CycleState extends UiState<CycleState> {
   /// hanya bisa lewat seed, tidak ada cara dari UI). Dimuat sekali saat
   /// siklus dibuka, lewat `CardCatalog` (port milik fitur ini, ADR-0009).
   final List<CardSummary> cards;
+
+  /// True kalau pemuatan siklus terakhir gagal (UX-16) -- berbeda dari
+  /// "siklus kosong": pemilik tidak boleh salah menyimpulkan kegagalan baca
+  /// sebagai belum ada data. Dibersihkan otomatis begitu [withCycle]
+  /// dipanggil lagi (pemuatan berikutnya berhasil).
+  final bool hasLoadError;
 
   /// True kalau siklus ber-`id` [id] sudah benar-benar ada.
   bool hasCycle(String id) => existingCycleIds.contains(id);
@@ -91,6 +98,7 @@ final class CycleState extends UiState<CycleState> {
     List<IncomeSource>? incomeSources,
     List<String>? existingCycleIds,
     List<CardSummary>? cards,
+    bool? hasLoadError,
     UiEffect? effect,
   }) {
     return CycleState(
@@ -99,6 +107,7 @@ final class CycleState extends UiState<CycleState> {
       incomeSources: incomeSources ?? this.incomeSources,
       existingCycleIds: existingCycleIds ?? this.existingCycleIds,
       cards: cards ?? this.cards,
+      hasLoadError: hasLoadError ?? this.hasLoadError,
       effect: effect,
     );
   }
@@ -106,18 +115,20 @@ final class CycleState extends UiState<CycleState> {
   /// Helper transisi state — berpindah ke [cycle] baru. Dipakai [CycleBloc]
   /// tiap kali berhasil memuat, menyimpan, rollover, atau membuka kembali
   /// siklus; `isLoading` bawaan `false` karena selalu dipanggil setelah
-  /// operasi selesai.
+  /// operasi selesai. Selalu membersihkan [hasLoadError] — dipanggil hanya
+  /// setelah pemuatan/penyimpanan BERHASIL.
   CycleState withCycle(
     MonthlyCycle cycle, {
     bool isLoading = false,
     List<String>? existingCycleIds,
     List<CardSummary>? cards,
     UiEffect? effect,
-  }) => copyWith(
+  }) => CycleState(
     cycle: cycle,
     isLoading: isLoading,
-    existingCycleIds: existingCycleIds,
-    cards: cards,
+    incomeSources: incomeSources,
+    existingCycleIds: existingCycleIds ?? this.existingCycleIds,
+    cards: cards ?? this.cards,
     effect: effect,
   );
 
@@ -128,5 +139,6 @@ final class CycleState extends UiState<CycleState> {
     incomeSources,
     existingCycleIds,
     cards,
+    hasLoadError,
   ];
 }

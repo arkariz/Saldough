@@ -7,7 +7,7 @@ extension on CycleBloc {
   );
 
   UiEffect _effectCycleCreated(String cycleId) => ShowSnackBarEffect(
-    message: cycleId,
+    message: t.cycle.cycleCreatedMessage(month: CycleMonthFormatter.format(cycleId)),
     severity: .success,
   );
 

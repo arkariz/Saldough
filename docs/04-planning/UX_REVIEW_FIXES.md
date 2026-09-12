@@ -66,9 +66,11 @@ otomatis, tapi sebutkan di catatan pengerjaan bahwa verifikasinya manual.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 11 September 2026 — Batch 4 (cakupan state dan copy)
-selesai semua, termasuk UX-15 (langkah 1 saja, langkah 2 sengaja tidak
-dikerjakan setelah diperiksa risiko migrasi data).
+Terakhir diperbarui: 12 September 2026 — **seluruh 37 item selesai.**
+Beberapa item punya cakupan yang sengaja dipersempit (bukan dikerjakan
+setengah jalan) — lihat catatan per item: UX-15 (langkah 2, risiko migrasi
+data), UX-24 (langkah 2, menunggu keputusan pemilik), UX-32 ("AppCard yang
+bisa diketuk" belum di-retrofit).
 
 | Batch | Isi | Item | Selesai | Catatan |
 |---|---|---:|---:|---|
@@ -76,10 +78,10 @@ dikerjakan setelah diperiksa risiko migrasi data).
 | 2 | Jalan buntu dan validasi form | 5 | 5 | Prioritas #3 — **selesai semua** |
 | 3 | Navigasi dan IA | 5 | 5 | **Semua selesai** |
 | 4 | Cakupan state dan copy | 10 | 10 | **Semua selesai** — UX-15 langkah 2 (ganti nama enum) sengaja tidak dikerjakan, lihat catatan di item |
-| 5 | Token dan warna semantik | 9 | 9 | **Semua selesai** — UX-26 sebagian (rollUp sengaja ditunda ke UX-36), UX-24 langkah 2 masih menunggu keputusan pemilik (dicatat sebagai follow-up), keduanya tetap dicentang karena bagian yang direncanakan di sini sudah tuntas |
-| 6 | Sentuh dan aksesibilitas | 5 | 1 | UX-35 selesai (dikerjakan lebih awal, dependensi UX-11) |
-| 7 | Aturan domain (baris roll-up) | 2 | 0 | |
-| **Total** | | **37** | **31** | |
+| 5 | Token dan warna semantik | 9 | 9 | **Semua selesai** — UX-26 sebagian (rollUp sengaja ditunda ke UX-36, sekarang juga selesai), UX-24 langkah 2 masih menunggu keputusan pemilik (dicatat sebagai follow-up), keduanya tetap dicentang karena bagian yang direncanakan di sini sudah tuntas |
+| 6 | Sentuh dan aksesibilitas | 5 | 5 | **Semua selesai** — UX-32 sebagian ("AppCard yang bisa diketuk" belum di-retrofit, lihat catatan di item) |
+| 7 | Aturan domain (baris roll-up) | 2 | 2 | **Semua selesai** |
+| **Total** | | **37** | **37** | **Selesai semua** |
 
 Di luar daftar ini ada **3 dugaan bug** (bukan temuan UX) di bagian terakhir —
 diverifikasi dan ditindak lewat skill `code-review`, bukan di sini.
@@ -1535,13 +1537,14 @@ benar sejak awal.
 
 # Batch 6 — Sentuh dan aksesibilitas
 
-## - [ ] UX-31 🟠 `AppChip` jadi kontrol utama tapi area sentuhnya ±28px
+## - [x] UX-31 🟠 `AppChip` jadi kontrol utama tapi area sentuhnya ±28px
 
 | | |
 |---|---|
 | **Kat.** | F |
 | **Berkas** | `lib/core/presentation/widgets/app_chip.dart:38-44` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 11 September 2026.** `ConstrainedBox(minWidth/minHeight: 44)` + `Center`, tampilan visual tidak berubah. |
 
 **Masalah.** Tinggi efektifnya ≈28px: `labelMedium` (12px) + padding vertikal
 `AppSpacing.xs` (4px × 2) + garis tepi (2px × 2). Di bawah ambang ±44px yang
@@ -1569,13 +1572,14 @@ bisa ikut menerima umpan balik tekan dari **UX-32**.
 **Verifikasi.** Ukur area ketuk (mis. lewat `debugPaintPointersEnabled` atau
 Flutter DevTools) ≥44px tinggi, sementara chip tetap terlihat sama.
 
-## - [ ] UX-32 🟠 Tidak ada umpan balik ketukan di seluruh aplikasi
+## - [x] UX-32 🟠 Tidak ada umpan balik ketukan di seluruh aplikasi
 
 | | |
 |---|---|
 | **Kat.** | F |
 | **Berkas** | `lib/core/theme/app_theme.dart:48-49` |
 | **Butuh keputusan pemilik** | Ringan — bentuk efek tekannya pilihan rasa |
+| **Status** | **Selesai 11 September 2026 untuk AppButton dan AppChip** (dipilih efek bayangan-ditarik untuk AppButton yang sudah punya bayangan, dan menyusut halus untuk AppChip yang sebelumnya tidak punya bayangan sama sekali — supaya tampilan diamnya tidak berubah). **"AppCard yang bisa diketuk" sengaja belum disentuh** — dipakai lewat `InkWell` eksternal di banyak file berbeda, retrofit-nya di luar cakupan yang aman dikerjakan sekaligus di sini. |
 
 **Masalah.** `splashFactory: NoSplash.splashFactory` dan
 `highlightColor: Colors.transparent` mematikan umpan balik Material secara
@@ -1603,13 +1607,14 @@ Terapkan di `AppButton`, `AppCard` yang bisa diketuk, dan `AppChip`. Pakai
 **Verifikasi.** Setiap elemen yang bisa diketuk memberi tanda saat ditekan, dan
 tampilannya masih terbaca sebagai gaya komik, bukan Material.
 
-## - [ ] UX-33 🟠 Chip nonaktif hanya diredupkan, dan penjelasannya sudah ditulis tapi tak pernah muncul
+## - [x] UX-33 🟠 Chip nonaktif hanya diredupkan, dan penjelasannya sudah ditulis tapi tak pernah muncul
 
 | | |
 |---|---|
 | **Kat.** | F, G |
 | **Berkas** | `lib/features/cycle/presentation/widgets/line_edit_sheet.dart:221-228` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 12 September 2026.** Chip tetap bisa diketuk saat nonaktif, menampilkan snackbar penjelasan; ikon gembok kecil jadi sinyal kedua. Penjaga bloc Fix #9 tidak disentuh. |
 
 **Masalah.** `_budgetSourceChip` memakai `Opacity(0.4)` + `onTap: null`. Satu
 sinyal saja (opasitas), tanpa ikon dan tanpa keterangan. Checklist kategori G
@@ -1644,13 +1649,14 @@ tesnya ada di `cycle_bloc_test.dart`.
 lalu buka sheet lagi: chip Rencana Belanja redup, dan mengetuknya menjelaskan
 alasannya.
 
-## - [ ] UX-34 🟡 Toggle jenis potongan tampil sebagai badge terisi permanen
+## - [x] UX-34 🟡 Toggle jenis potongan tampil sebagai badge terisi permanen
 
 | | |
 |---|---|
 | **Kat.** | F |
 | **Berkas** | `lib/features/income/presentation/widgets/income_source_edit_sheet.dart:189-195` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 12 September 2026.** Dua chip terpisah (Per mil/Tetap), dipindah ke baris sendiri di bawah label karena baris aslinya sempit di lebar 390px. |
 
 **Masalah.** `AppChip` dengan `selected: true` **selalu**, yang saat diketuk
 menukar labelnya sendiri antara "Per mil" dan "Tetap (Rp)". Tampilannya identik
@@ -1703,13 +1709,14 @@ perangkat pendek, Simpan tetap terjangkau (boleh dengan scroll).
 
 # Batch 7 — Aturan domain (baris roll-up)
 
-## - [ ] UX-36 🟠 Baris roll-up tidak bisa dibedakan sebelum diketuk, dan ketukannya diam saja
+## - [x] UX-36 🟠 Baris roll-up tidak bisa dibedakan sebelum diketuk, dan ketukannya diam saja
 
 | | |
 |---|---|
 | **Kat.** | G |
 | **Berkas** | `lib/features/cycle/presentation/widgets/cycle_line_tile.dart:65`, `:127` |
 | **Butuh keputusan pemilik** | Tidak |
+| **Status** | **Selesai 12 September 2026.** Ikon `Icons.link` warna `colors.rollUp` (menghidupkan slot UX-26); `onTap` sekarang selalu terpanggil, membuka `RollUpLineRenameSheet` (lihat UX-37) yang juga menampilkan `rollUpNotEditable`. |
 
 **Masalah.** `onTap: isEditable ? onTap : null`. Gerbangnya **benar** secara
 teknis — ADR-0008 dipatuhi, sheet tidak terbuka — tapi secara pengalaman ini
@@ -1755,13 +1762,14 @@ penolakan — hanya kebisuan.
 **Verifikasi.** Baris roll-up terlihat berbeda dari baris manual tanpa perlu
 diketuk, dan mengetuknya menjelaskan kenapa tidak bisa disunting.
 
-## - [ ] UX-37 🟡 Baris roll-up tidak bisa diberi nama sendiri oleh pemilik
+## - [x] UX-37 🟡 Baris roll-up tidak bisa diberi nama sendiri oleh pemilik
 
 | | |
 |---|---|
 | **Kat.** | G |
 | **Berkas** | `lib/features/cycle/presentation/widgets/line_edit_sheet.dart:357`, `:195`, `:206` |
 | **Butuh keputusan pemilik** | Ringan — apakah nama memang sengaja dikunci |
+| **Status** | **Selesai 12 September 2026.** Diputuskan TIDAK sengaja dikunci (ADR-0008 memang hanya mengunci nominal). `RollUpLineRenameSheet` baru + event bloc `BudgetLineRenamed`; `_fillLabel` baru mencegah isian otomatis menimpa nama yang sudah diketik tangan. |
 
 **Masalah.** Field nama disembunyikan saat sumbernya bukan manual (`:357`), dan
 `_selectBudgetSource`/`_selectCard` memaksa labelnya jadi "Rencana Belanja" atau

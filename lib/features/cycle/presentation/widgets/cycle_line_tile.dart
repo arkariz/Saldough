@@ -134,12 +134,8 @@ class CycleLineTile extends StatelessWidget {
                             selected: true,
                             color: colors.needsReview,
                             shout: true,
+                            onTap: onConfirmReview
                           ),
-                          if (onConfirmReview != null)
-                            TextButton(
-                              onPressed: onConfirmReview,
-                              child: Text(t.cycle.confirmReviewed),
-                            ),
                         ],
                       ),
                     ),

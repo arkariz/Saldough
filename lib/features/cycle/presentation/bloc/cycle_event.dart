@@ -177,10 +177,12 @@ final class CycleDeleteRequested extends CycleEvent {
 ///
 /// Dipicu widget pemanggil setelah pemilik balik dari layar "Tambah sumber
 /// pemasukan" (`LineEditSheet`) — layar itu dicapai lewat `context.push`
-/// yang menumpuk di atas shell, jadi `_CycleTab` TIDAK dibangun ulang saat
-/// kembali (beda dari berpindah tab bottom nav, yang mengirim ulang
-/// `CycleOpened`) dan sumber baru tidak pernah terdeteksi tanpa event ini
-/// (laporan pemilik).
+/// yang menumpuk di atas shell, jadi `MainShellPage`/`_CycleTab` TIDAK
+/// dibangun ulang sampai rute itu ditutup. Berpindah tab bottom nav memang
+/// sekarang ikut mengirim ulang `CycleOpened` saat tab ini diaktifkan lagi
+/// (lihat `_CycleTabState.didUpdateWidget` di `main_shell_page.dart`), tapi
+/// itu tidak menjangkau jalur push di atas — event ini tetap perlu untuk
+/// jalur itu secara khusus (laporan pemilik).
 final class CycleIncomeSourcesRefreshRequested extends CycleEvent {
   /// Membuat [CycleIncomeSourcesRefreshRequested].
   const CycleIncomeSourcesRefreshRequested();

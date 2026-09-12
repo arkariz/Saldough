@@ -341,7 +341,21 @@ final class CycleBloc extends Bloc<CycleEvent, CycleState> {
   }
 
   Future<void> _onClosed(CycleClosed event, Emitter<CycleState> emit) async {
-    await _saveAndEmit(emit, state.cycle.close());
+    // `state.cycle` bisa saja memuat nilai baris rollUp/baris pemasukan
+    // tertaut-sumber yang sudah basi (laporan pemilik: pemilik menyunting
+    // Rencana Belanja/sumber pemasukan di tab lain, balik ke tab Siklus yang
+    // belum sempat memuat ulang, lalu menutup siklus). `close()` membekukan
+    // apa adanya (`cycle_repository_impl.dart` berhenti meresolusi ulang
+    // setelah `isClosed`), jadi baca ulang dari repository DULU supaya yang
+    // dibekukan adalah nilai terkini, bukan nilai basi yang kebetulan masih
+    // nyantol di state.
+    final result = await _cycleRepository.getCycle(state.cycle.id);
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
+      case Right(value: final fresh):
+        await _saveAndEmit(emit, (fresh ?? state.cycle).close());
+    }
   }
 
   Future<void> _onReopened(

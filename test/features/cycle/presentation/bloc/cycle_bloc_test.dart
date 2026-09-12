@@ -581,6 +581,77 @@ void main() {
     );
 
     blocTest<CycleBloc, CycleState>(
+      'CycleClosed membaca ulang siklus dari repository sebelum membekukannya, '
+      'bukan nilai di state yang mungkin sudah basi (laporan pemilik: baris rollUp/ '
+      'pemasukan tertaut-sumber berubah di tab lain lalu dibekukan dengan nilai lama)',
+      build: () {
+        var callCount = 0;
+        final fresh = cycleWithLines.copyWith(
+          budgetLines: [
+            cycleWithLines.budgetLines.first.copyWith(amount: 999900000),
+          ],
+        );
+        when(() => cycleRepository.getCycle('2026-09')).thenAnswer((_) async {
+          callCount++;
+          return right(callCount == 1 ? cycleWithLines : fresh);
+        });
+        when(
+          () => cycleRepository.saveCycle(any()),
+        ).thenAnswer((_) async => right(unit));
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const CycleClosed());
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having((s) => s.cycle.isClosed, 'isClosed', isTrue)
+            .having(
+              (s) => s.cycle.budgetLines.first.amount,
+              'nominal yang dibekukan',
+              999900000,
+            ),
+      ],
+      verify: (_) =>
+          verify(() => cycleRepository.getCycle('2026-09')).called(2),
+    );
+
+    blocTest<CycleBloc, CycleState>(
+      'CycleClosed memancarkan efek galat dan TIDAK menutup siklus kalau '
+      'pembacaan ulang sebelum membekukan gagal',
+      build: () {
+        var callCount = 0;
+        when(() => cycleRepository.getCycle('2026-09')).thenAnswer((_) async {
+          callCount++;
+          if (callCount == 1) return right(cycleWithLines);
+          return left(
+            const PersistenceFailure(
+              code: FailureCode('STORAGE_ERROR'),
+              message: 'disk penuh',
+              userMessage: 'Gagal menyimpan.',
+            ),
+          );
+        });
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const CycleOpened('2026-09'));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const CycleClosed());
+      },
+      skip: 2,
+      expect: () => [
+        isA<CycleState>()
+            .having((s) => s.cycle.isClosed, 'isClosed', isFalse)
+            .having((s) => s.effect, 'effect', isA<ShowSnackBarEffect>()),
+      ],
+      verify: (_) => verifyNever(() => cycleRepository.saveCycle(any())),
+    );
+
+    blocTest<CycleBloc, CycleState>(
       'CycleRollOverRequested berpindah ke siklus baru hasil rollover, dan mendaftarkannya '
       'ke existingCycleIds supaya bisa dinavigasi',
       build: () {

@@ -24,9 +24,12 @@ import 'package:saldough/features/grocery/data/grocery_roll_up_resolver.dart';
 import 'package:saldough/features/grocery/data/repositories/grocery_plan_repository_impl.dart';
 import 'package:saldough/features/grocery/domain/repositories/grocery_cycle_gateway.dart';
 import 'package:saldough/features/grocery/presentation/navigation/grocery_route_module.dart';
+import 'package:saldough/features/income/domain/repositories/income_worklog_gateway.dart';
 import 'package:saldough/features/income/presentation/navigation/income_route_module.dart';
 import 'package:saldough/features/investment/domain/repositories/cycle_investment_gateway.dart';
 import 'package:saldough/features/investment/presentation/navigation/investment_route_module.dart';
+import 'package:saldough/features/worklog/data/adapters/income_worklog_gateway_impl.dart';
+import 'package:saldough/features/worklog/data/repositories/worklog_repository_impl.dart';
 import 'package:saldough/features/worklog/domain/repositories/cycle_income_writer.dart';
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_module.dart';
 import 'package:saldough/shared/goal/goal.dart';
@@ -153,6 +156,17 @@ abstract final class RootModule {
           resolver: container<RollUpResolver>(),
           incomeSourceRepository: container<IncomeSourceRepository>(),
         ),
+      ),
+    );
+    // `IncomeWorklogGateway` adalah port milik fitur `income` — layar
+    // Sumber Pemasukan perlu ringkasan buku jam TERBUKA tiap sumber
+    // freelance, supaya tiap tile menampilkannya sendiri beserta tombol
+    // langsung ke layar catatan jam kerja (laporan pemilik: alur sumber
+    // freelance → catat jam → suntik ke siklus terasa membingungkan).
+    // Pola baca-saja yang sama seperti `CardCatalog`/`GroceryCycleGateway`.
+    container.registerLazySingleton<IncomeWorklogGateway>(
+      () => IncomeWorklogGatewayImpl(
+        repository: WorklogRepositoryImpl(storage: container<KeyValueStorage>()),
       ),
     );
   }

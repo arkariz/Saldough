@@ -3,6 +3,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/features/income/domain/repositories/income_worklog_gateway.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_bloc.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_state.dart';
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_keys.dart';
@@ -11,8 +12,11 @@ import 'package:state_management/state_management.dart';
 
 class MockIncomeSourceRepository extends Mock implements IncomeSourceRepository {}
 
+class MockIncomeWorklogGateway extends Mock implements IncomeWorklogGateway {}
+
 void main() {
   late MockIncomeSourceRepository repository;
+  late MockIncomeWorklogGateway worklogGateway;
 
   setUpAll(() {
     registerFallbackValue(
@@ -22,16 +26,27 @@ void main() {
 
   setUp(() {
     repository = MockIncomeSourceRepository();
+    worklogGateway = MockIncomeWorklogGateway();
+    when(() => worklogGateway.openBookHoursBySourceId(any())).thenAnswer((_) async => right(const {}));
   });
 
+  IncomeSourceBloc buildBloc() =>
+      IncomeSourceBloc(repository: repository, worklogGateway: worklogGateway);
+
   final source = IncomeSource(id: 's1', name: 'Gaji Koko', kind: IncomeSourceKind.fixedSalary, fixedAmount: 1280000000);
+  final freelance = IncomeSource(
+    id: 's2',
+    name: 'Gaji Menul',
+    kind: IncomeSourceKind.hourlyFreelance,
+    hourlyRate: 7250000,
+  );
 
   group('IncomeSourceBloc', () {
     blocTest<IncomeSourceBloc, IncomeSourceState>(
       'IncomeSourcesLoaded memuat daftar sumber',
       build: () {
         when(() => repository.listSources()).thenAnswer((_) async => right([source]));
-        return IncomeSourceBloc(repository: repository);
+        return buildBloc();
       },
       act: (bloc) => bloc.add(const IncomeSourcesLoaded()),
       expect: () => [
@@ -43,11 +58,26 @@ void main() {
     );
 
     blocTest<IncomeSourceBloc, IncomeSourceState>(
+      'IncomeSourcesLoaded mengisi openBookHours dari IncomeWorklogGateway untuk sumber freelance',
+      build: () {
+        when(() => repository.listSources()).thenAnswer((_) async => right([source, freelance]));
+        when(() => worklogGateway.openBookHoursBySourceId(['s2']))
+            .thenAnswer((_) async => right({'s2': 12}));
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const IncomeSourcesLoaded()),
+      skip: 1,
+      expect: () => [
+        isA<IncomeSourceState>().having((s) => s.openBookHours, 'openBookHours', {'s2': 12}),
+      ],
+    );
+
+    blocTest<IncomeSourceBloc, IncomeSourceState>(
       'IncomeSourceSaved menyimpan lalu memuat ulang daftar',
       build: () {
         when(() => repository.saveSource(any())).thenAnswer((_) async => right(unit));
         when(() => repository.listSources()).thenAnswer((_) async => right([source]));
-        return IncomeSourceBloc(repository: repository);
+        return buildBloc();
       },
       act: (bloc) => bloc.add(IncomeSourceSaved(source)),
       expect: () => [
@@ -66,7 +96,7 @@ void main() {
             message: 'gagal',
           )),
         );
-        return IncomeSourceBloc(repository: repository);
+        return buildBloc();
       },
       act: (bloc) => bloc.add(const IncomeSourceDeleted('s1')),
       expect: () => [
@@ -75,14 +105,34 @@ void main() {
     );
 
     blocTest<IncomeSourceBloc, IncomeSourceState>(
-      'WorklogEntryPointTapped mendorong efek navigasi ke layar worklog',
-      build: () => IncomeSourceBloc(repository: repository),
+      'WorklogEntryPointTapped tanpa sourceId mendorong efek navigasi generik ke layar worklog',
+      build: buildBloc,
       act: (bloc) => bloc.add(const WorklogEntryPointTapped()),
       expect: () => [
         isA<IncomeSourceState>().having(
           (s) => s.effect,
           'effect',
-          isA<NavigatePushEffect>().having((e) => e.keyId, 'keyId', WorklogRouteKeys.page.id),
+          isA<NavigatePushEffect>()
+              .having((e) => e.keyId, 'keyId', WorklogRouteKeys.page.id)
+              .having((e) => e.input, 'input', isA<WorklogSourceInput>().having((i) => i.sourceId, 'sourceId', isNull)),
+        ),
+      ],
+    );
+
+    blocTest<IncomeSourceBloc, IncomeSourceState>(
+      'WorklogEntryPointTapped dengan sourceId membawanya ke layar worklog (laporan pemilik: '
+      'tombol milik satu sumber sebelumnya selalu lompat ke sumber freelance pertama)',
+      build: buildBloc,
+      act: (bloc) => bloc.add(const WorklogEntryPointTapped(sourceId: 's2')),
+      expect: () => [
+        isA<IncomeSourceState>().having(
+          (s) => s.effect,
+          'effect',
+          isA<NavigatePushEffect>().having(
+            (e) => e.input,
+            'input',
+            isA<WorklogSourceInput>().having((i) => i.sourceId, 'sourceId', 's2'),
+          ),
         ),
       ],
     );

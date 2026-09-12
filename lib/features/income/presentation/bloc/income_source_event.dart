@@ -35,5 +35,10 @@ final class IncomeSourceDeleted extends IncomeSourceEvent {
 /// desain D-3.x).
 final class WorklogEntryPointTapped extends IncomeSourceEvent {
   /// Membuat [WorklogEntryPointTapped].
-  const WorklogEntryPointTapped();
+  const WorklogEntryPointTapped({this.sourceId});
+
+  /// Sumber freelance yang langsung dipilih di layar `worklog`, kalau
+  /// ditekan dari tombol milik satu sumber tertentu (bukan ikon generik di
+  /// app bar, yang selalu mengirim `null`).
+  final String? sourceId;
 }

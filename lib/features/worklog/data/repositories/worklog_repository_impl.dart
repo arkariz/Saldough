@@ -46,8 +46,16 @@ final class WorklogRepositoryImpl with RepositoryGuard implements WorklogReposit
         final books = (await store.read() ?? const []).map((m) => m.toEntity()).toList();
         final open = books.where((b) => !b.isClosed).firstOrNull;
 
+        // Laporan pemilik: sebelumnya `entry.startsNewBook` bisa memulai
+        // buku KEDUA yang terbuka diam-diam sementara satu masih terbuka --
+        // `WorklogState.openBook` hanya mengambil yang PERTAMA ditemukan,
+        // jadi buku kedua itu tersembunyi dari layar. `WorklogBloc` (lewat
+        // `WorkLogEntryAdded`) tidak pernah lagi mengirim `startsNewBook`
+        // true selagi ada buku terbuka -- satu-satunya jalan memulai buku
+        // baru sekarang adalah menutup yang lama dulu (cabang `else` di
+        // bawah otomatis memulai yang baru begitu tidak ada yang terbuka).
         final BillingBook target;
-        if (open != null && !entry.startsNewBook) {
+        if (open != null) {
           target = open.withEntry(entry);
         } else {
           target = BillingBook.startWith(id: _freshId(), sourceId: sourceId, entry: entry);

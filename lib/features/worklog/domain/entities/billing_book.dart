@@ -89,12 +89,23 @@ final class BillingBook extends Equatable {
   }
 
   /// Salinan [BillingBook] dengan field yang disebutkan diganti.
+  ///
+  /// [startDate] dihitung ulang secara otomatis sebagai tanggal PALING AWAL
+  /// di [entries] kalau [entries] diisi dan tidak kosong — dipakai
+  /// menyunting/menghapus entri pada buku terbuka (laporan pemilik), supaya
+  /// menghapus entri pertama tidak meninggalkan `startDate` yang basi.
+  /// Dibiarkan apa adanya kalau [entries] tidak diisi, atau diisi kosong
+  /// (seharusnya tidak terjadi untuk buku terbuka — lihat `WorklogBloc`).
   BillingBook copyWith({List<WorkLogEntry>? entries}) {
+    final nextEntries = entries ?? this.entries;
+    final nextStartDate = entries != null && entries.isNotEmpty
+        ? entries.map((e) => e.date).reduce((a, b) => a.isBefore(b) ? a : b)
+        : startDate;
     return BillingBook(
       id: id,
       sourceId: sourceId,
-      startDate: startDate,
-      entries: entries ?? this.entries,
+      startDate: nextStartDate,
+      entries: nextEntries,
       endDate: endDate,
       netPayAmount: netPayAmount,
       injectedCycleId: injectedCycleId,

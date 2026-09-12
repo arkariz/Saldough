@@ -6,11 +6,6 @@ extension on WorklogBloc {
         severity: .error,
       );
 
-  UiEffect _effectBookClosed(NetPayBreakdown breakdown) => ShowSnackBarEffect(
-        message: t.worklog.bookClosedMessage(netPay: AppMoneyFormatter.format(breakdown.netPay)),
-        severity: .success,
-      );
-
   UiEffect _effectInjected(String cycleId) => ShowSnackBarEffect(
         message: t.worklog.injectedMessage(cycleId: CycleMonthFormatter.format(cycleId)),
         severity: .success,

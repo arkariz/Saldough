@@ -13,15 +13,15 @@ final class WorklogRouteModule extends FeatureRouteModule {
 
   @override
   List<RouteNode> get routes => [
-        RouteNode.typed<EmptyInput>(
+        RouteNode.typed<WorklogSourceInput>(
           key: WorklogRouteKeys.page,
-          defaultInput: EmptyInput.new,
+          defaultInput: WorklogSourceInput.new,
           builder: (context, input) {
             final parentContainer = ScopeProvider.of(context);
             return ScopeWidget<WorklogScope>(
               create: () => WorklogScope(parentContainer: parentContainer),
               builder: (context, scope) => BlocProvider.value(
-                value: scope.container<WorklogBloc>()..add(const WorklogOpened()),
+                value: scope.container<WorklogBloc>()..add(WorklogOpened(initialSourceId: input.sourceId)),
                 child: const WorklogPage(),
               ),
             );

@@ -44,6 +44,27 @@ final class WorklogState extends UiState<WorklogState> {
   /// Buku yang sudah ditutup, terurut dari yang terbaru (FR-TIME-004).
   List<BillingBook> get closedBooks => books.where((b) => b.isClosed).toList().reversed.toList();
 
+  /// Rincian gaji kotor/potongan/bersih untuk [book], atau `null` kalau
+  /// sumbernya tidak diketahui atau [book] tidak punya entri. Dihitung ulang
+  /// dari [selectedSource] dan `book.totalHours` tiap diakses (pola sama
+  /// seperti `GroceryState.rollUpAmount`), bukan field tersimpan -- aman
+  /// dipanggil untuk buku TERBUKA sekalipun (perkiraan sebelum ditutup,
+  /// laporan pemilik: sebelumnya tidak ada cara melihat gaji sebelum
+  /// menutup buku) maupun buku yang SUDAH tertutup (rinciannya selalu sama
+  /// dengan saat ditutup, karena entri buku tertutup tidak pernah berubah).
+  NetPayBreakdown? breakdownFor(BillingBook book) {
+    final source = selectedSource;
+    if (source == null || book.entries.isEmpty) return null;
+    return CalculateNetPay()(totalHours: book.totalHours, source: source);
+  }
+
+  /// Perkiraan gaji untuk [openBook], atau `null` kalau belum ada buku
+  /// terbuka.
+  NetPayBreakdown? get openBookPreview {
+    final book = openBook;
+    return book == null ? null : breakdownFor(book);
+  }
+
   @override
   WorklogState copyWith({
     List<IncomeSource>? sources,

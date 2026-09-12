@@ -6,6 +6,6 @@ extension on IncomeSourceBloc {
         severity: .error,
       );
 
-  UiEffect _effectOpenWorklog() =>
-      NavigatePushEffect(keyId: WorklogRouteKeys.page.id, input: const EmptyInput());
+  UiEffect _effectOpenWorklog(String? sourceId) =>
+      NavigatePushEffect(keyId: WorklogRouteKeys.page.id, input: WorklogSourceInput(sourceId: sourceId));
 }

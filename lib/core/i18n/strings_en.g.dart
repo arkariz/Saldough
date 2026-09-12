@@ -156,6 +156,9 @@ class _Translations$income$en extends Translations$income$id {
 	@override String get deductionKindPermille => 'Per mille';
 	@override String get deductionKindFixed => 'Fixed (Rp)';
 	@override String get worklogEntryPointLabel => 'Log Work Hours';
+	@override String get noOpenBook => 'No open book yet.';
+	@override String openBookSummary({required Object hours}) => 'Open book: ${hours} hour(s).';
+	@override String get logHoursButton => 'Log hours';
 	@override String confirmDeleteSourceTitle({required Object name}) => 'Delete source ${name}?';
 	@override String get confirmDeleteSourceMessage => 'Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone.';
 }
@@ -172,19 +175,32 @@ class _Translations$worklog$en extends Translations$worklog$id {
 	@override String get goToIncomeSourcesButton => 'Open Income Sources';
 	@override String get addEntryTitle => 'Log hours';
 	@override String get hoursFieldHint => 'Number of hours';
-	@override String get startsNewBookLabel => 'Start new book';
 	@override String get addEntryButton => 'Log';
 	@override String get openBookTitle => 'Open book';
+	@override String openSince({required Object date}) => 'Since ${date}';
+	@override String get editEntryTitle => 'Edit hours';
+	@override String get confirmDeleteEntryTitle => 'Delete this entry?';
+	@override String get confirmDeleteEntryMessage => 'This entry will be removed from the book currently open. Total hours and the estimated pay will change. This cannot be undone.';
 	@override String totalHours({required Object hours}) => '${hours} hour(s)';
 	@override String get closeBookButton => 'Close book';
-	@override String bookClosedMessage({required Object netPay}) => 'Book closed. Net pay ${netPay}.';
+	@override String get bookClosedTitle => 'Book closed';
+	@override String get estimateLabel => 'Estimated pay (may still change before the book is closed)';
+	@override String get breakdownTitle => 'Pay breakdown';
+	@override String get grossPayLabel => 'Gross pay';
+	@override String get netPayLabel => 'Net pay';
 	@override String get historyTitle => 'Book history';
 	@override String get emptyHistory => 'No closed books yet.';
+	@override String get injectedBadge => 'Injected';
+	@override String get notInjectedBadge => 'Not injected';
+	@override String get injectLaterButton => 'Later';
 	@override String get targetCycleHint => 'Target cycle';
 	@override String get noCyclesForInject => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.';
 	@override String get injectButton => 'Inject into cycle';
 	@override String injectedMessage({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
 	@override String injectedInto({required Object cycleId}) => 'Injected into cycle ${cycleId}.';
+	@override String get overwriteWarningTitle => 'Overwrite the already-injected amount?';
+	@override String overwriteWarningMessage({required Object cycleId, required Object amount}) => 'Cycle ${cycleId} already received ${amount} from another book for this source. Injecting this book will OVERWRITE that amount, not add to it.';
+	@override String get overwriteConfirmButton => 'Overwrite';
 }
 
 // Path: card
@@ -395,6 +411,9 @@ extension on TranslationsEn {
 			'income.deductionKindPermille' => 'Per mille',
 			'income.deductionKindFixed' => 'Fixed (Rp)',
 			'income.worklogEntryPointLabel' => 'Log Work Hours',
+			'income.noOpenBook' => 'No open book yet.',
+			'income.openBookSummary' => ({required Object hours}) => 'Open book: ${hours} hour(s).',
+			'income.logHoursButton' => 'Log hours',
 			'income.confirmDeleteSourceTitle' => ({required Object name}) => 'Delete source ${name}?',
 			'income.confirmDeleteSourceMessage' => 'Income lines in any cycle that link to this source will no longer update when the source is edited. Amounts already recorded are not deleted. This cannot be undone.',
 			'worklog.pageTitle' => 'Work log',
@@ -402,19 +421,32 @@ extension on TranslationsEn {
 			'worklog.goToIncomeSourcesButton' => 'Open Income Sources',
 			'worklog.addEntryTitle' => 'Log hours',
 			'worklog.hoursFieldHint' => 'Number of hours',
-			'worklog.startsNewBookLabel' => 'Start new book',
 			'worklog.addEntryButton' => 'Log',
 			'worklog.openBookTitle' => 'Open book',
+			'worklog.openSince' => ({required Object date}) => 'Since ${date}',
+			'worklog.editEntryTitle' => 'Edit hours',
+			'worklog.confirmDeleteEntryTitle' => 'Delete this entry?',
+			'worklog.confirmDeleteEntryMessage' => 'This entry will be removed from the book currently open. Total hours and the estimated pay will change. This cannot be undone.',
 			'worklog.totalHours' => ({required Object hours}) => '${hours} hour(s)',
 			'worklog.closeBookButton' => 'Close book',
-			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Book closed. Net pay ${netPay}.',
+			'worklog.bookClosedTitle' => 'Book closed',
+			'worklog.estimateLabel' => 'Estimated pay (may still change before the book is closed)',
+			'worklog.breakdownTitle' => 'Pay breakdown',
+			'worklog.grossPayLabel' => 'Gross pay',
+			'worklog.netPayLabel' => 'Net pay',
 			'worklog.historyTitle' => 'Book history',
 			'worklog.emptyHistory' => 'No closed books yet.',
+			'worklog.injectedBadge' => 'Injected',
+			'worklog.notInjectedBadge' => 'Not injected',
+			'worklog.injectLaterButton' => 'Later',
 			'worklog.targetCycleHint' => 'Target cycle',
 			'worklog.noCyclesForInject' => 'No cycles available to pick from yet. Create a cycle in the Cycle tab first.',
 			'worklog.injectButton' => 'Inject into cycle',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Injected into cycle ${cycleId}.',
+			'worklog.overwriteWarningTitle' => 'Overwrite the already-injected amount?',
+			'worklog.overwriteWarningMessage' => ({required Object cycleId, required Object amount}) => 'Cycle ${cycleId} already received ${amount} from another book for this source. Injecting this book will OVERWRITE that amount, not add to it.',
+			'worklog.overwriteConfirmButton' => 'Overwrite',
 			'card.pageTitle' => 'Credit cards',
 			'card.cardsTitle' => 'Cards',
 			'card.emptyCards' => 'No cards yet.',

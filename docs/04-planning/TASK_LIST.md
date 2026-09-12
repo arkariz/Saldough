@@ -462,6 +462,15 @@ galat. Folder `linux/`/`build/` dihapus lagi setelahnya, tidak masuk repo.
       menunjukkan periode membentang dari delapan hari sampai hampir sebulan.
       Terverifikasi: pengelompokan murni berdasar penanda, tidak pernah
       melihat tanggal/bulan kalender sama sekali.
+      **Amandemen (12 September 2026, lihat "Catatan pengerjaan (redesign
+      UX alur freelance...)" di bawah):** "entri ber-penanda memulai buku
+      baru" kini HANYA berlaku kalau belum ada buku terbuka. Selagi ada
+      buku terbuka, penanda diabaikan dan entri tetap menyambung ke situ —
+      dua buku terbuka sekaligus tidak lagi mungkin terjadi lewat
+      `addEntry` sama sekali. `startsNewBook` tetap dipertahankan di entitas
+      untuk fidelitas impor data historis (`tool/seed_import.dart` menulis
+      lewat `saveBook` langsung, tidak lewat `addEntry`, jadi tidak
+      terdampak).
       Memenuhi FR-TIME-002.
 - [x] **T-3.8** Buat penutupan buku jam yang menghasilkan gaji bersih
       (use case `CloseBillingBook`, menolak menutup buku yang sudah tertutup
@@ -1031,6 +1040,68 @@ Diverifikasi: `flutter analyze` 0 isu, `flutter test` 165 lulus (tidak
 berubah — kedua perbaikan murni widget shell/string i18n, tidak ada logika
 bloc baru yang butuh tes; batasan yang sama dengan verifikasi Fix #10/#13:
 tidak ada widget test yang menjangkau `MainShellPage`).
+
+## Catatan pengerjaan (redesign UX alur freelance: sumber, worklog, suntik)
+
+**12 September 2026** — Laporan pemilik: flow sumber pemasukan freelance,
+penambahan worklog, dan sinkronisasi gaji freelance ke siklus terlalu
+membingungkan. Tiga keputusan disepakati lewat `AskUserQuestion` sebelum
+mengetik kode:
+
+1. **Dua buku terbuka sekaligus tidak boleh terjadi** — buku lama wajib
+   ditutup dulu lewat `BillingBookClosed` sebelum yang baru bisa dimulai.
+   Diselesaikan SECARA STRUKTURAL, bukan penjagaan baru di repository:
+   toggle "mulai buku baru" dihapus total dari `WorklogPage`/
+   `WorkLogEntryAdded` (pemilik tidak lagi punya cara mengirim
+   `startsNewBook: true` selagi ada buku terbuka), dan
+   `WorklogRepositoryImpl.addEntry` disederhanakan — `entry.startsNewBook`
+   sekarang hanya relevan kalau belum ada buku terbuka; kalau masih ada,
+   entri SELALU menyambung ke situ, apa pun nilai penandanya. Field
+   `startsNewBook` sendiri dipertahankan di `WorkLogEntry` karena masih
+   dipakai `tool/seed_import.dart` untuk menandai batas buku pada data
+   historis (lewat `saveBook` langsung, bukan `addEntry`, sehingga tidak
+   terdampak penyederhanaan ini).
+2. **Tutup buku langsung menawarkan suntik** — `WorklogBloc` tidak lagi
+   memancarkan efek snackbar saat buku ditutup; `WorklogPage` mendeteksi
+   transisi `openBook` jadi `null` lewat `BlocListener` dan langsung
+   menampilkan dialog rincian gaji bersih + tawaran pilih siklus tujuan,
+   supaya pemilik tidak perlu mencari sendiri buku itu di riwayat.
+3. **Titik masuk worklog per sumber** — tiap tile sumber freelance di
+   `IncomeSourceListPage` menampilkan ringkasan buku berjalan (jam
+   terkumpul) dan tombol "Catat jam" yang membawa ke `WorklogPage` dengan
+   sumber itu sudah terpilih (`WorklogSourceInput`, bukan selalu lompat ke
+   sumber freelance pertama seperti sebelumnya). Ringkasan jam ini
+   diperoleh `IncomeSourceBloc` lewat port baru `IncomeWorklogGateway`
+   (dimiliki `income`, diimplementasikan `worklog`, dikawat di
+   `RootModule._registerCrossFeatureAdapters` — pola yang sama dengan
+   `GroceryCycleGateway`/`CycleIncomeWriter`, bukan impor langsung antar
+   fitur).
+
+Perubahan pendukung lain: entri pada buku terbuka sekarang bisa
+disunting/dihapus (`WorkLogEntryUpdated`/`WorkLogEntryRemoved`,
+`BillingBook.copyWith` menghitung ulang `startDate` otomatis supaya tidak
+basi kalau entri pertama dihapus); rincian gaji kotor/potongan/bersih
+tersedia sebagai getter turunan di `WorklogState`
+(`breakdownFor`/`openBookPreview`, pola sama seperti
+`GroceryState.rollUpAmount` — tidak disimpan sebagai field) sehingga bisa
+ditampilkan untuk buku yang masih terbuka (perkiraan) maupun yang sudah
+tertutup; riwayat buku mendapat badge "Sudah disuntik"/"Belum disuntik";
+dan menyuntik buku ke siklus yang sudah menerima suntikan dari buku lain
+sekarang memperingatkan dulu (akan MENIMPA, bukan menambah) sebelum
+dikonfirmasi.
+
+Diverifikasi: `flutter analyze` 0 isu, `flutter test` **169 lulus**.
+Pengerjaan tes ini sempat menemukan 4 tes gagal: 1 tes lama
+`worklog_repository_impl_test.dart` yang menguji perilaku "2 buku terbuka"
+LAMA (diperbarui supaya menguji penyambungan struktural di atas, bukan
+dihapus — skenarionya masih valid, cuma hasil yang diharapkan berubah), dan
+3 tes bloc baru yang keliru mengandalkan stub `listBooks` yang statis
+(tidak mencerminkan `saveBook` yang baru terjadi) — `Bloc`/`Cubit` memang
+tidak memancarkan state yang SAMA dengan state sebelumnya (deduplikasi
+`Equatable` bawaan paket), jadi reload yang membaca data basi dari stub
+tampak seperti tidak memancarkan apa-apa sama sekali. Diperbaiki dengan
+membuat stub `listBooks` mencerminkan hasil `saveBook` terakhir (variabel
+buku yang diperbarui dalam `thenAnswer`), bukan mengubah bloc.
 
 ## Fase 7: Sinkronisasi
 

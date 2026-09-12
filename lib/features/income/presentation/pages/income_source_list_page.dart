@@ -41,7 +41,10 @@ class IncomeSourceListPage extends StatelessWidget {
                 for (final source in state.sources)
                   Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: _IncomeSourceTile(source: source),
+                    child: _IncomeSourceTile(
+                      source: source,
+                      openBookHours: state.openBookHours[source.id],
+                    ),
                   ),
                 const SizedBox(height: AppSpacing.sm),
                 AppButton(
@@ -62,9 +65,13 @@ class IncomeSourceListPage extends StatelessWidget {
 }
 
 class _IncomeSourceTile extends StatelessWidget {
-  const _IncomeSourceTile({required this.source});
+  const _IncomeSourceTile({required this.source, this.openBookHours});
 
   final IncomeSource source;
+
+  /// Jumlah jam buku TERBUKA sumber ini, atau `null` kalau belum ada buku
+  /// terbuka. Selalu `null` untuk sumber bukan freelance.
+  final int? openBookHours;
 
   @override
   Widget build(BuildContext context) {
@@ -80,28 +87,59 @@ class _IncomeSourceTile extends StatelessWidget {
           final result = await IncomeSourceEditSheet.show(context, initial: source);
           if (result != null) bloc.add(IncomeSourceSaved(result));
         },
-        child: Row(
+        child: Column(
+          crossAxisAlignment: .stretch,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: .start,
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      Text(source.name, style: Theme.of(context).textTheme.titleMedium),
+                      Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () async {
+                    final confirmed = await showConfirmDelete(
+                      context,
+                      title: t.income.confirmDeleteSourceTitle(name: source.name),
+                      message: t.income.confirmDeleteSourceMessage,
+                    );
+                    if (confirmed) bloc.add(IncomeSourceDeleted(source.id));
+                  },
+                ),
+              ],
+            ),
+            // Laporan pemilik: sebelumnya satu-satunya jalan ke Catatan Jam
+            // Kerja adalah ikon tanpa label di app bar, terlepas dari
+            // daftar sumber -- tiap sumber freelance sekarang menampilkan
+            // ringkasan buku berjalannya sendiri di sini, dengan tombol
+            // yang langsung memilihnya di layar itu (bukan selalu lompat
+            // ke sumber freelance pertama).
+            if (source.kind == .hourlyFreelance) ...[
+              const Divider(height: AppSpacing.md),
+              Row(
                 children: [
-                  Text(source.name, style: Theme.of(context).textTheme.titleMedium),
-                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+                  Expanded(
+                    child: Text(
+                      openBookHours == null
+                          ? t.income.noOpenBook
+                          : t.income.openBookSummary(hours: openBookHours!),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () => bloc.add(WorklogEntryPointTapped(sourceId: source.id)),
+                    icon: const Icon(Icons.access_time, size: 18),
+                    label: Text(t.income.logHoursButton),
+                  ),
                 ],
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () async {
-                final confirmed = await showConfirmDelete(
-                  context,
-                  title: t.income.confirmDeleteSourceTitle(name: source.name),
-                  message: t.income.confirmDeleteSourceMessage,
-                );
-                if (confirmed) bloc.add(IncomeSourceDeleted(source.id));
-              },
-            ),
+            ],
           ],
         ),
       ),

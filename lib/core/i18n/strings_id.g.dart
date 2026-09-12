@@ -303,6 +303,15 @@ class Translations$income$id {
 	/// id: 'Catat Jam Kerja'
 	String get worklogEntryPointLabel => 'Catat Jam Kerja';
 
+	/// id: 'Belum ada buku berjalan.'
+	String get noOpenBook => 'Belum ada buku berjalan.';
+
+	/// id: 'Buku berjalan: $hours jam.'
+	String openBookSummary({required Object hours}) => 'Buku berjalan: ${hours} jam.';
+
+	/// id: 'Catat jam'
+	String get logHoursButton => 'Catat jam';
+
 	/// id: 'Hapus sumber $name?'
 	String confirmDeleteSourceTitle({required Object name}) => 'Hapus sumber ${name}?';
 
@@ -333,14 +342,23 @@ class Translations$worklog$id {
 	/// id: 'Jumlah jam'
 	String get hoursFieldHint => 'Jumlah jam';
 
-	/// id: 'Mulai buku baru'
-	String get startsNewBookLabel => 'Mulai buku baru';
-
 	/// id: 'Catat'
 	String get addEntryButton => 'Catat';
 
 	/// id: 'Buku berjalan'
 	String get openBookTitle => 'Buku berjalan';
+
+	/// id: 'Sejak $date'
+	String openSince({required Object date}) => 'Sejak ${date}';
+
+	/// id: 'Ubah jumlah jam'
+	String get editEntryTitle => 'Ubah jumlah jam';
+
+	/// id: 'Hapus entri ini?'
+	String get confirmDeleteEntryTitle => 'Hapus entri ini?';
+
+	/// id: 'Entri jam kerja ini akan dihapus dari buku yang sedang berjalan. Total jam dan perkiraan gaji ikut berubah. Tindakan ini tidak bisa dibatalkan.'
+	String get confirmDeleteEntryMessage => 'Entri jam kerja ini akan dihapus dari buku yang sedang berjalan. Total jam dan perkiraan gaji ikut berubah. Tindakan ini tidak bisa dibatalkan.';
 
 	/// id: '$hours jam'
 	String totalHours({required Object hours}) => '${hours} jam';
@@ -348,14 +366,35 @@ class Translations$worklog$id {
 	/// id: 'Tutup buku'
 	String get closeBookButton => 'Tutup buku';
 
-	/// id: 'Buku ditutup. Gaji bersih $netPay.'
-	String bookClosedMessage({required Object netPay}) => 'Buku ditutup. Gaji bersih ${netPay}.';
+	/// id: 'Buku ditutup'
+	String get bookClosedTitle => 'Buku ditutup';
+
+	/// id: 'Perkiraan gaji (bisa berubah sebelum buku ditutup)'
+	String get estimateLabel => 'Perkiraan gaji (bisa berubah sebelum buku ditutup)';
+
+	/// id: 'Rincian gaji'
+	String get breakdownTitle => 'Rincian gaji';
+
+	/// id: 'Gaji kotor'
+	String get grossPayLabel => 'Gaji kotor';
+
+	/// id: 'Gaji bersih'
+	String get netPayLabel => 'Gaji bersih';
 
 	/// id: 'Riwayat buku'
 	String get historyTitle => 'Riwayat buku';
 
 	/// id: 'Belum ada buku yang ditutup.'
 	String get emptyHistory => 'Belum ada buku yang ditutup.';
+
+	/// id: 'Sudah disuntik'
+	String get injectedBadge => 'Sudah disuntik';
+
+	/// id: 'Belum disuntik'
+	String get notInjectedBadge => 'Belum disuntik';
+
+	/// id: 'Nanti saja'
+	String get injectLaterButton => 'Nanti saja';
 
 	/// id: 'Siklus tujuan'
 	String get targetCycleHint => 'Siklus tujuan';
@@ -371,6 +410,15 @@ class Translations$worklog$id {
 
 	/// id: 'Disuntikkan ke siklus $cycleId.'
 	String injectedInto({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.';
+
+	/// id: 'Timpa nominal yang sudah disuntik?'
+	String get overwriteWarningTitle => 'Timpa nominal yang sudah disuntik?';
+
+	/// id: 'Siklus $cycleId sudah menerima suntikan sebesar $amount dari buku lain milik sumber ini. Menyuntik buku ini akan MENIMPA nominal itu, bukan menjumlahkannya.'
+	String overwriteWarningMessage({required Object cycleId, required Object amount}) => 'Siklus ${cycleId} sudah menerima suntikan sebesar ${amount} dari buku lain milik sumber ini. Menyuntik buku ini akan MENIMPA nominal itu, bukan menjumlahkannya.';
+
+	/// id: 'Timpa'
+	String get overwriteConfirmButton => 'Timpa';
 }
 
 // Path: card
@@ -765,6 +813,9 @@ extension on Translations {
 			'income.deductionKindPermille' => 'Per mil',
 			'income.deductionKindFixed' => 'Tetap (Rp)',
 			'income.worklogEntryPointLabel' => 'Catat Jam Kerja',
+			'income.noOpenBook' => 'Belum ada buku berjalan.',
+			'income.openBookSummary' => ({required Object hours}) => 'Buku berjalan: ${hours} jam.',
+			'income.logHoursButton' => 'Catat jam',
 			'income.confirmDeleteSourceTitle' => ({required Object name}) => 'Hapus sumber ${name}?',
 			'income.confirmDeleteSourceMessage' => 'Baris pemasukan di siklus mana pun yang menaut sumber ini tidak lagi ikut berubah saat sumbernya disunting. Nominal yang sudah tercatat tidak terhapus. Tindakan ini tidak bisa dibatalkan.',
 			'worklog.pageTitle' => 'Catatan jam kerja',
@@ -772,19 +823,32 @@ extension on Translations {
 			'worklog.goToIncomeSourcesButton' => 'Buka Sumber Pemasukan',
 			'worklog.addEntryTitle' => 'Catat jam kerja',
 			'worklog.hoursFieldHint' => 'Jumlah jam',
-			'worklog.startsNewBookLabel' => 'Mulai buku baru',
 			'worklog.addEntryButton' => 'Catat',
 			'worklog.openBookTitle' => 'Buku berjalan',
+			'worklog.openSince' => ({required Object date}) => 'Sejak ${date}',
+			'worklog.editEntryTitle' => 'Ubah jumlah jam',
+			'worklog.confirmDeleteEntryTitle' => 'Hapus entri ini?',
+			'worklog.confirmDeleteEntryMessage' => 'Entri jam kerja ini akan dihapus dari buku yang sedang berjalan. Total jam dan perkiraan gaji ikut berubah. Tindakan ini tidak bisa dibatalkan.',
 			'worklog.totalHours' => ({required Object hours}) => '${hours} jam',
 			'worklog.closeBookButton' => 'Tutup buku',
-			'worklog.bookClosedMessage' => ({required Object netPay}) => 'Buku ditutup. Gaji bersih ${netPay}.',
+			'worklog.bookClosedTitle' => 'Buku ditutup',
+			'worklog.estimateLabel' => 'Perkiraan gaji (bisa berubah sebelum buku ditutup)',
+			'worklog.breakdownTitle' => 'Rincian gaji',
+			'worklog.grossPayLabel' => 'Gaji kotor',
+			'worklog.netPayLabel' => 'Gaji bersih',
 			'worklog.historyTitle' => 'Riwayat buku',
 			'worklog.emptyHistory' => 'Belum ada buku yang ditutup.',
+			'worklog.injectedBadge' => 'Sudah disuntik',
+			'worklog.notInjectedBadge' => 'Belum disuntik',
+			'worklog.injectLaterButton' => 'Nanti saja',
 			'worklog.targetCycleHint' => 'Siklus tujuan',
 			'worklog.noCyclesForInject' => 'Belum ada siklus yang bisa dipilih. Buat siklus dulu di tab Siklus.',
 			'worklog.injectButton' => 'Suntik ke siklus',
 			'worklog.injectedMessage' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
 			'worklog.injectedInto' => ({required Object cycleId}) => 'Disuntikkan ke siklus ${cycleId}.',
+			'worklog.overwriteWarningTitle' => 'Timpa nominal yang sudah disuntik?',
+			'worklog.overwriteWarningMessage' => ({required Object cycleId, required Object amount}) => 'Siklus ${cycleId} sudah menerima suntikan sebesar ${amount} dari buku lain milik sumber ini. Menyuntik buku ini akan MENIMPA nominal itu, bukan menjumlahkannya.',
+			'worklog.overwriteConfirmButton' => 'Timpa',
 			'card.pageTitle' => 'Kartu kredit',
 			'card.cardsTitle' => 'Kartu',
 			'card.emptyCards' => 'Belum ada kartu terdaftar.',

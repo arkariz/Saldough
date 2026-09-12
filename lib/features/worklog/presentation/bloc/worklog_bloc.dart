@@ -2,7 +2,6 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/worklog/domain/entities/work_log_entry.dart';
 import 'package:saldough/features/worklog/domain/repositories/cycle_income_writer.dart';
 import 'package:saldough/features/worklog/domain/repositories/worklog_repository.dart';
@@ -29,6 +28,8 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
     on<WorklogOpened>(_onOpened);
     on<WorklogSourceSelected>(_onSourceSelected);
     on<WorkLogEntryAdded>(_onEntryAdded);
+    on<WorkLogEntryUpdated>(_onEntryUpdated);
+    on<WorkLogEntryRemoved>(_onEntryRemoved);
     on<BillingBookClosed>(_onBookClosed);
     on<NetPayInjected>(_onInjected);
   }
@@ -53,7 +54,15 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final sources):
         final freelance = sources.where((s) => s.kind == .hourlyFreelance).toList();
-        final firstId = freelance.firstOrNull?.id ?? '';
+        // Laporan pemilik: layar ini sebelumnya selalu lompat ke sumber
+        // freelance PERTAMA, walau dicapai dari tombol milik sumber
+        // tertentu di layar Sumber Pemasukan -- pakai `initialSourceId`
+        // kalau ada dan benar-benar salah satu sumber freelance, jatuh
+        // balik ke yang pertama kalau tidak.
+        final requestedId = event.initialSourceId;
+        final firstId = requestedId != null && freelance.any((s) => s.id == requestedId)
+            ? requestedId
+            : freelance.firstOrNull?.id ?? '';
         emit(
           state.copyWith(
             sources: freelance,
@@ -78,13 +87,45 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
   }
 
   Future<void> _onEntryAdded(WorkLogEntryAdded event, Emitter<WorklogState> emit) async {
+    // `startsNewBook` tidak lagi ditentukan pemilik lewat layar ini (lihat
+    // catatan di `WorkLogEntryAdded`) -- selalu `false`, yang tetap memulai
+    // buku baru kalau memang belum ada buku terbuka (`WorklogRepositoryImpl`
+    // bagian `else`), dan menyambung ke yang terbuka kalau ada.
     final entry = WorkLogEntry(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       date: event.date,
       hours: event.hours,
-      startsNewBook: event.startsNewBook,
     );
     final result = await _worklogRepository.addEntry(sourceId: state.sourceId, entry: entry);
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
+      case Right():
+        add(WorklogSourceSelected(state.sourceId));
+    }
+  }
+
+  Future<void> _onEntryUpdated(WorkLogEntryUpdated event, Emitter<WorklogState> emit) async {
+    final book = state.openBook;
+    if (book == null || book.id != event.bookId) return;
+    final entries = [
+      for (final entry in book.entries)
+        if (entry.id == event.entryId) entry.copyWith(hours: event.hours) else entry,
+    ];
+    final result = await _worklogRepository.saveBook(book.copyWith(entries: entries));
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
+      case Right():
+        add(WorklogSourceSelected(state.sourceId));
+    }
+  }
+
+  Future<void> _onEntryRemoved(WorkLogEntryRemoved event, Emitter<WorklogState> emit) async {
+    final book = state.openBook;
+    if (book == null || book.id != event.bookId) return;
+    final entries = book.entries.where((entry) => entry.id != event.entryId).toList();
+    final result = await _worklogRepository.saveBook(book.copyWith(entries: entries));
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
@@ -102,8 +143,13 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
-      case Right(value: final breakdown):
-        await _reloadBooks(emit, effect: _effectBookClosed(breakdown));
+      case Right():
+        // Tidak ada efek snackbar di sini -- `WorklogPage` mendeteksi buku
+        // yang baru tertutup lewat `BlocListener` (openBook berubah jadi
+        // null) dan langsung menampilkan dialog rincian gaji + tawaran
+        // suntik (laporan pemilik: sebelumnya cuma snackbar sekilas lalu
+        // pemilik harus mencari sendiri buku itu di riwayat).
+        await _reloadBooks(emit);
     }
   }
 
@@ -121,7 +167,7 @@ final class WorklogBloc extends Bloc<WorklogEvent, WorklogState> {
     }
   }
 
-  Future<void> _reloadBooks(Emitter<WorklogState> emit, {required UiEffect effect}) async {
+  Future<void> _reloadBooks(Emitter<WorklogState> emit, {UiEffect? effect}) async {
     final result = await _worklogRepository.listBooks(state.sourceId);
     switch (result) {
       case Left(value: final failure):

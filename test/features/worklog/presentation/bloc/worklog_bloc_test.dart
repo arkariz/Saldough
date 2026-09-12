@@ -131,7 +131,7 @@ void main() {
             ]),
           ]),
         );
-        bloc.add(WorkLogEntryAdded(date: DateTime(2026, 9), hours: 8, startsNewBook: true));
+        bloc.add(WorkLogEntryAdded(date: DateTime(2026, 9), hours: 8));
       },
       skip: 4,
       expect: () => [
@@ -141,17 +141,30 @@ void main() {
     );
 
     blocTest<WorklogBloc, WorklogState>(
-      'BillingBookClosed menghitung gaji bersih dan menampilkan efek',
+      // Tidak ada lagi efek snackbar di sini (laporan pemilik: buku ditutup
+      // lalu suntik ke siklus terasa dua langkah terputus) -- `WorklogPage`
+      // mendeteksi transisi openBook jadi null lewat `BlocListener` sendiri
+      // dan menampilkan dialog, bukan bloc yang memancarkan efek.
+      'BillingBookClosed menghitung gaji bersih, menutup buku, TANPA efek snackbar',
       build: () {
         when(() => sourceRepository.listSources()).thenAnswer((_) async => right([source]));
-        final openBook = BillingBook(
-          id: 'b1',
-          sourceId: 'gaji-menul',
-          startDate: DateTime(2026, 8, 29),
-          entries: [WorkLogEntry(id: 'e1', date: DateTime(2026, 8, 29), hours: 15, startsNewBook: true)],
-        );
-        when(() => worklogRepository.listBooks('gaji-menul')).thenAnswer((_) async => right([openBook]));
-        when(() => worklogRepository.saveBook(any())).thenAnswer((_) async => right(unit));
+        var books = [
+          BillingBook(
+            id: 'b1',
+            sourceId: 'gaji-menul',
+            startDate: DateTime(2026, 8, 29),
+            entries: [WorkLogEntry(id: 'e1', date: DateTime(2026, 8, 29), hours: 15, startsNewBook: true)],
+          ),
+        ];
+        // `listBooks` mencerminkan hasil `saveBook` terakhir -- buku tertutup
+        // yang ditulis `CloseBillingBook` harus kelihatan lagi saat dimuat
+        // ulang, bukan salinan lama yang masih terbuka.
+        when(() => worklogRepository.listBooks('gaji-menul')).thenAnswer((_) async => right(books));
+        when(() => worklogRepository.saveBook(any())).thenAnswer((invocation) async {
+          final saved = invocation.positionalArguments.single as BillingBook;
+          books = [saved];
+          return right(unit);
+        });
         return buildBloc();
       },
       act: (bloc) async {
@@ -161,9 +174,93 @@ void main() {
       },
       skip: 4,
       expect: () => [
-        isA<WorklogState>().having((s) => s.effect, 'effect', isNotNull),
+        isA<WorklogState>()
+            .having((s) => s.effect, 'effect', isNull)
+            .having((s) => s.openBook, 'openBook', isNull)
+            .having((s) => s.closedBooks, 'closedBooks', hasLength(1)),
       ],
       verify: (_) => verify(() => worklogRepository.saveBook(any())).called(1),
+    );
+
+    blocTest<WorklogBloc, WorklogState>(
+      'WorkLogEntryUpdated mengubah jam satu entri pada buku terbuka',
+      build: () {
+        when(() => sourceRepository.listSources()).thenAnswer((_) async => right([source]));
+        var books = [
+          BillingBook(
+            id: 'b1',
+            sourceId: 'gaji-menul',
+            startDate: DateTime(2026, 9),
+            entries: [WorkLogEntry(id: 'e1', date: DateTime(2026, 9), hours: 5)],
+          ),
+        ];
+        // `listBooks` mencerminkan hasil `saveBook` terakhir, sama seperti
+        // tes `BillingBookClosed` -- tanpa ini, buku yang dimuat ulang lewat
+        // `WorklogSourceSelected` tetap menunjukkan jam yang lama.
+        when(() => worklogRepository.listBooks('gaji-menul')).thenAnswer((_) async => right(books));
+        when(() => worklogRepository.saveBook(any())).thenAnswer((invocation) async {
+          final saved = invocation.positionalArguments.single as BillingBook;
+          books = [saved];
+          return right(unit);
+        });
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const WorklogOpened());
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const WorkLogEntryUpdated(bookId: 'b1', entryId: 'e1', hours: 9));
+      },
+      skip: 4,
+      // `_onEntryUpdated` sendiri tidak memancarkan state -- ia menyimpan
+      // lalu memicu ulang `WorklogSourceSelected`, yang memancarkan 2 state
+      // berurutan (isLoading, lalu buku termuat ulang), sama seperti
+      // `WorkLogEntryAdded` di atas.
+      expect: () => [
+        isA<WorklogState>().having((s) => s.isLoading, 'isLoading', true),
+        isA<WorklogState>().having((s) => s.openBook?.totalHours, 'openBook.totalHours', 9),
+      ],
+      verify: (_) => verify(
+        () => worklogRepository.saveBook(
+          any(that: isA<BillingBook>().having((b) => b.entries.single.hours, 'entries.single.hours', 9)),
+        ),
+      ).called(1),
+    );
+
+    blocTest<WorklogBloc, WorklogState>(
+      'WorkLogEntryRemoved menghapus satu entri dan menyegarkan startDate',
+      build: () {
+        when(() => sourceRepository.listSources()).thenAnswer((_) async => right([source]));
+        var books = [
+          BillingBook(
+            id: 'b1',
+            sourceId: 'gaji-menul',
+            startDate: DateTime(2026, 8, 29),
+            entries: [
+              WorkLogEntry(id: 'e1', date: DateTime(2026, 8, 29), hours: 5),
+              WorkLogEntry(id: 'e2', date: DateTime(2026, 9, 2), hours: 3),
+            ],
+          ),
+        ];
+        when(() => worklogRepository.listBooks('gaji-menul')).thenAnswer((_) async => right(books));
+        when(() => worklogRepository.saveBook(any())).thenAnswer((invocation) async {
+          final saved = invocation.positionalArguments.single as BillingBook;
+          books = [saved];
+          return right(unit);
+        });
+        return buildBloc();
+      },
+      act: (bloc) async {
+        bloc.add(const WorklogOpened());
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const WorkLogEntryRemoved(bookId: 'b1', entryId: 'e1'));
+      },
+      skip: 4,
+      expect: () => [
+        isA<WorklogState>().having((s) => s.isLoading, 'isLoading', true),
+        isA<WorklogState>()
+            .having((s) => s.openBook?.totalHours, 'openBook.totalHours', 3)
+            .having((s) => s.openBook?.startDate, 'openBook.startDate', DateTime(2026, 9, 2)),
+      ],
     );
   });
 }

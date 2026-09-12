@@ -5,6 +5,7 @@ import 'package:saldough/features/cycle/domain/entities/cycle_template.dart';
 import 'package:saldough/features/cycle/domain/entities/income_line.dart';
 import 'package:saldough/features/cycle/domain/entities/investment_plan.dart';
 import 'package:saldough/features/cycle/domain/entities/monthly_cycle.dart';
+import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_repository.dart';
 import 'package:saldough/features/cycle/domain/repositories/cycle_template_repository.dart';
 
@@ -87,7 +88,14 @@ final class RollOverCycle {
           // dihitung ulang saat siklus baru dibaca (lihat RollUpResolver).
           amount: line.kind == .rollUp ? 0 : line.amount,
           kind: line.kind,
-          rollUpSource: line.rollUpSource,
+          // `GroceryRollUpSource.planId` dari template masih menunjuk siklus
+          // ASAL (siklus tempat baris itu ditandai tetap) -- tautan 1:1
+          // `GroceryPlan`↔`MonthlyCycle` berarti siklus BARU ini harus
+          // menunjuk rencana belanja bulan INI, bukan warisan planId lama.
+          // `CardRollUpSource` tidak berubah -- kartu bukan per-bulan.
+          rollUpSource: line.rollUpSource is GroceryRollUpSource
+              ? RollUpSource.grocery(nextId)
+              : line.rollUpSource,
           isTemplate: true,
           needsReview: true,
         ),

@@ -1,10 +1,9 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:navigation/navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/features/card/presentation/navigation/card_route_keys.dart';
 import 'package:saldough/features/grocery/domain/entities/grocery_item.dart';
 import 'package:saldough/features/grocery/domain/entities/grocery_plan.dart';
+import 'package:saldough/features/grocery/domain/repositories/grocery_cycle_gateway.dart';
 import 'package:saldough/features/grocery/domain/repositories/grocery_plan_repository.dart';
 import 'package:saldough/features/grocery/presentation/bloc/grocery_state.dart';
 import 'package:state_management/state_management.dart';
@@ -16,19 +15,32 @@ part 'grocery_event.dart';
 /// "Menulis satu fitur".
 final class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
   /// Membuat [GroceryBloc].
-  GroceryBloc({required this._repository}) : super(GroceryState.initial()) {
+  GroceryBloc({required this._repository, required this._cycleGateway})
+      : super(GroceryState.initial()) {
     on<GroceryPlanLoaded>(_onLoaded);
+    on<GroceryCycleSelected>(_onCycleSelected);
     on<GroceryItemSaved>(_onItemSaved);
     on<GroceryItemRemoved>(_onItemRemoved);
     on<WeeksPerMonthChanged>(_onWeeksPerMonthChanged);
-    on<CardEntryPointTapped>(_onCardEntryPointTapped);
   }
 
   final GroceryPlanRepository _repository;
+  final GroceryCycleGateway _cycleGateway;
 
   Future<void> _onLoaded(GroceryPlanLoaded event, Emitter<GroceryState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    final result = await _repository.getPlan();
+    final idsResult = await _cycleGateway.listCycleIds();
+    final cycleIds = idsResult.getOrElse((_) => const []);
+    emit(state.copyWith(isLoading: true, cycleIds: cycleIds));
+    await _loadPlan(emit, state.cycleId);
+  }
+
+  Future<void> _onCycleSelected(GroceryCycleSelected event, Emitter<GroceryState> emit) async {
+    emit(state.copyWith(cycleId: event.cycleId, isLoading: true));
+    await _loadPlan(emit, event.cycleId);
+  }
+
+  Future<void> _loadPlan(Emitter<GroceryState> emit, String cycleId) async {
+    final result = await _repository.getPlan(cycleId);
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
@@ -74,9 +86,5 @@ final class GroceryBloc extends Bloc<GroceryEvent, GroceryState> {
       case Right():
         emit(state.copyWith(plan: plan));
     }
-  }
-
-  void _onCardEntryPointTapped(CardEntryPointTapped event, Emitter<GroceryState> emit) {
-    emit(state.copyWith(effect: _effectOpenCard()));
   }
 }

@@ -12,6 +12,7 @@ import 'package:saldough/features/card/data/repositories/credit_card_repository_
 import 'package:saldough/features/card/presentation/navigation/card_route_module.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_income_writer_impl.dart';
 import 'package:saldough/features/cycle/data/adapters/cycle_investment_gateway_impl.dart';
+import 'package:saldough/features/cycle/data/adapters/grocery_cycle_gateway_impl.dart';
 import 'package:saldough/features/cycle/data/repositories/cycle_repository_impl.dart';
 import 'package:saldough/features/cycle/domain/entities/roll_up_resolution.dart';
 import 'package:saldough/features/cycle/domain/entities/roll_up_source.dart';
@@ -21,6 +22,7 @@ import 'package:saldough/features/cycle/presentation/navigation/cycle_route_modu
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
 import 'package:saldough/features/grocery/data/grocery_roll_up_resolver.dart';
 import 'package:saldough/features/grocery/data/repositories/grocery_plan_repository_impl.dart';
+import 'package:saldough/features/grocery/domain/repositories/grocery_cycle_gateway.dart';
 import 'package:saldough/features/grocery/presentation/navigation/grocery_route_module.dart';
 import 'package:saldough/features/income/presentation/navigation/income_route_module.dart';
 import 'package:saldough/features/investment/domain/repositories/cycle_investment_gateway.dart';
@@ -138,6 +140,19 @@ abstract final class RootModule {
     container.registerLazySingleton<CardCatalog>(
       () => CardCatalogImpl(
         repository: CreditCardRepositoryImpl(storage: container<KeyValueStorage>()),
+      ),
+    );
+    // `GroceryCycleGateway` adalah port milik fitur `grocery` — layar
+    // Rencana Belanja perlu daftar `id` siklus untuk memilih bulan mana yang
+    // sedang dilihat/disunting (tautan 1:1 `GroceryPlan`↔`MonthlyCycle`,
+    // laporan pemilik), pola baca-saja yang sama seperti `CardCatalog`.
+    container.registerLazySingleton<GroceryCycleGateway>(
+      () => GroceryCycleGatewayImpl(
+        cycleRepository: CycleRepositoryImpl(
+          storage: container<KeyValueStorage>(),
+          resolver: container<RollUpResolver>(),
+          incomeSourceRepository: container<IncomeSourceRepository>(),
+        ),
       ),
     );
   }

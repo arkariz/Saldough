@@ -249,7 +249,7 @@ class _Translations$grocery$en extends Translations$grocery$id {
 	@override String get overridePriceLabel => 'Override price';
 	@override String get overrideAmountFieldHint => 'Override amount (Rp)';
 	@override String get overriddenBadge => 'overridden';
-	@override String get cardEntryPointLabel => 'Credit Card';
+	@override String get cycleIdFieldHint => 'Month';
 	@override String confirmDeleteItemTitle({required Object name}) => 'Delete ${name}?';
 	@override String get confirmDeleteItemMessage => 'The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone.';
 }
@@ -461,7 +461,7 @@ extension on TranslationsEn {
 			'grocery.overridePriceLabel' => 'Override price',
 			'grocery.overrideAmountFieldHint' => 'Override amount (Rp)',
 			'grocery.overriddenBadge' => 'overridden',
-			'grocery.cardEntryPointLabel' => 'Credit Card',
+			'grocery.cycleIdFieldHint' => 'Month',
 			'grocery.confirmDeleteItemTitle' => ({required Object name}) => 'Delete ${name}?',
 			'grocery.confirmDeleteItemMessage' => 'The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone.',
 			'investment.pageTitle' => 'Investment',

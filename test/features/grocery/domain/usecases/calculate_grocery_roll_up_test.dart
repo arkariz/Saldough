@@ -9,6 +9,7 @@ void main() {
   group('CalculateGroceryRollUp', () {
     test('576.600 x 4 + 762.100 = 3.068.500 (kasus nyata, sama dengan baris Bulanan)', () {
       const plan = GroceryPlan(
+        id: '2026-09',
         weeklyItems: [GroceryItem(id: 'w1', name: 'Belanja mingguan', quantity: 1, unitPrice: 57660000)],
         monthlyItems: [GroceryItem(id: 'm1', name: 'Belanja bulanan', quantity: 1, unitPrice: 76210000)],
       );
@@ -19,6 +20,7 @@ void main() {
     test('amountOverride mengabaikan quantity x unitPrice', () {
       // Kasus nyata: sampo 1 x Rp41.300 tapi berharga Rp24.000 (FR-GROC-002).
       const plan = GroceryPlan(
+        id: '2026-09',
         weeklyItems: [
           GroceryItem(id: 'w1', name: 'Sampo', quantity: 1, unitPrice: 4130000, amountOverride: 2400000),
         ],
@@ -31,6 +33,7 @@ void main() {
 
     test('weeksPerMonth mengalikan hanya subtotal mingguan, bukan bulanan', () {
       const plan = GroceryPlan(
+        id: '2026-09',
         weeklyItems: [GroceryItem(id: 'w1', name: 'A', quantity: 1, unitPrice: 10000)],
         monthlyItems: [GroceryItem(id: 'm1', name: 'B', quantity: 1, unitPrice: 5000)],
         weeksPerMonth: 3,
@@ -40,7 +43,7 @@ void main() {
     });
 
     test('rencana kosong menghasilkan roll-up nol', () {
-      expect(calculate(GroceryPlan.empty()), 0);
+      expect(calculate(GroceryPlan.empty('2026-09')), 0);
     });
   });
 }

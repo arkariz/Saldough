@@ -150,7 +150,7 @@
     "overridePriceLabel": "Override price",
     "overrideAmountFieldHint": "Override amount (Rp)",
     "overriddenBadge": "overridden",
-    "cardEntryPointLabel": "Credit Card",
+    "cycleIdFieldHint": "Month",
     "confirmDeleteItemTitle": "Delete $name?",
     "confirmDeleteItemMessage": "The monthly grocery total will change, and any budget line linked to it will adjust accordingly. This cannot be undone."
   },

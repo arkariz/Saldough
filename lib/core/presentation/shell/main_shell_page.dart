@@ -1,6 +1,9 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/card/di/card_scope.dart';
+import 'package:saldough/features/card/presentation/bloc/card_bloc.dart';
+import 'package:saldough/features/card/presentation/pages/card_page.dart';
 import 'package:saldough/features/cycle/di/cycle_scope.dart';
 import 'package:saldough/features/cycle/presentation/bloc/cycle_bloc.dart';
 import 'package:saldough/features/cycle/presentation/pages/cycle_page.dart';
@@ -19,7 +22,7 @@ import 'package:state_management/state_management.dart';
 /// Belanja/Investasi), meniru struktur Design Canvas prototipe komik.
 ///
 /// Satu-satunya tempat di `core/` yang boleh mengimpor presentation+DI
-/// keempat fitur ini langsung — `RootModule` sudah melakukan hal serupa
+/// kelima fitur ini langsung — `RootModule` sudah melakukan hal serupa
 /// untuk modul rute masing-masing, jadi ini bukan pelanggaran baru terhadap
 /// "fitur privat, tidak diimpor fitur lain" (ADR-0009): shell ini, seperti
 /// `RootModule`, memang dirancang untuk melihat banyak fitur sekaligus.
@@ -30,11 +33,13 @@ import 'package:state_management/state_management.dart';
 /// `IndexedStack` menjaga tiap tab (termasuk scroll position dan bloc)
 /// tetap hidup saat berpindah tab, bukan dibangun ulang dari nol.
 ///
-/// Worklog (dari tab Pemasukan) dan Card (dari tab Belanja) BUKAN tab
-/// tersendiri — keduanya dicapai lewat `NavigatePushEffect` yang didorong
-/// tombol di layar masing-masing (lihat `IncomeSourceBloc`/`GroceryBloc`),
-/// tampil sebagai layar yang menutupi bottom nav, sesuai alur di Design
-/// Canvas.
+/// Worklog (dari tab Pemasukan) BUKAN tab tersendiri — dicapai lewat
+/// `NavigatePushEffect` yang didorong tombol di layar Pemasukan (lihat
+/// `IncomeSourceBloc`), tampil sebagai layar yang menutupi bottom nav.
+/// Kartu Kredit SEBALIKNYA sekarang SUB-TAB di dalam tab Belanja (lewat
+/// `TabBar`, bukan `NavigatePushEffect` lagi) — permintaan pemilik supaya
+/// Belanja dan Kartu Kredit masing-masing punya bagian sendiri tanpa
+/// menambah ikon baru di bottom nav. Lihat `_GroceryCardTab`.
 class MainShellPage extends StatefulWidget {
   /// Membuat [MainShellPage].
   const MainShellPage({super.key});
@@ -55,7 +60,7 @@ class _MainShellPageState extends State<MainShellPage> {
         children: [
           _CycleTab(parentContainer: parentContainer, isActive: _index == 0),
           _IncomeTab(parentContainer: parentContainer),
-          _GroceryTab(parentContainer: parentContainer),
+          _GroceryCardTab(parentContainer: parentContainer),
           _InvestmentTab(parentContainer: parentContainer),
         ],
       ),
@@ -156,34 +161,86 @@ class _IncomeTab extends StatelessWidget {
   }
 }
 
-class _GroceryTab extends StatefulWidget {
-  const _GroceryTab({required this.parentContainer});
+/// Tab "Belanja" — Rencana Belanja dan Kartu Kredit sebagai DUA sub-tab
+/// (`TabBar`) di bawah satu `AppBar`, bukan lagi satu layar dengan tombol
+/// yang men-`push` layar kartu (laporan pemilik: masing-masing ingin jadi
+/// bagiannya sendiri). Kedua fitur tetap punya `ScopeWidget`/bloc masing-
+/// masing (ADR-0009) — yang baru hanya TATA LETAKnya, disusun bersarang di
+/// sini karena shell memang satu-satunya tempat yang boleh melihat lebih
+/// dari satu fitur sekaligus (lihat catatan kelas `MainShellPage`).
+class _GroceryCardTab extends StatefulWidget {
+  const _GroceryCardTab({required this.parentContainer});
 
   final GetIt parentContainer;
 
   @override
-  State<_GroceryTab> createState() => _GroceryTabState();
+  State<_GroceryCardTab> createState() => _GroceryCardTabState();
 }
 
-class _GroceryTabState extends State<_GroceryTab> {
-  // UX-17: builder ScopeWidget jalan lagi setiap pindah tab (sama seperti
-  // UX-07 di _CycleTab) -- tanpa penjaga ini, GroceryPlanLoaded terpancar
-  // ulang tiap kali, dan grocery_page.dart mengganti SELURUH body dengan
-  // spinner (membuang posisi scroll) padahal datanya sudah ada.
-  bool _dispatchedInitialLoad = false;
+class _GroceryCardTabState extends State<_GroceryCardTab> {
+  // UX-17: builder tiap ScopeWidget jalan lagi setiap pindah tab (sama
+  // seperti UX-07 di _CycleTab) -- tanpa penjaga ini, GroceryPlanLoaded/
+  // CardOpened terpancar ulang tiap kali tab Belanja ini pindah (bukan
+  // hanya saat sub-tab Belanja/Kartu sendiri yang berpindah).
+  bool _dispatchedGroceryLoad = false;
+  bool _dispatchedCardLoad = false;
 
   @override
   Widget build(BuildContext context) {
     return ScopeWidget<GroceryScope>(
       create: () => GroceryScope(parentContainer: widget.parentContainer),
-      builder: (context, scope) {
-        final bloc = scope.container<GroceryBloc>();
-        if (!_dispatchedInitialLoad) {
-          _dispatchedInitialLoad = true;
-          bloc.add(const GroceryPlanLoaded());
+      builder: (context, groceryScope) {
+        final groceryBloc = groceryScope.container<GroceryBloc>();
+        if (!_dispatchedGroceryLoad) {
+          _dispatchedGroceryLoad = true;
+          groceryBloc.add(const GroceryPlanLoaded());
         }
-        return BlocProvider.value(value: bloc, child: const GroceryPage());
+        return ScopeWidget<CardScope>(
+          create: () => CardScope(parentContainer: widget.parentContainer),
+          builder: (context, cardScope) {
+            final cardBloc = cardScope.container<CardBloc>();
+            if (!_dispatchedCardLoad) {
+              _dispatchedCardLoad = true;
+              cardBloc.add(const CardOpened());
+            }
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: groceryBloc),
+                BlocProvider.value(value: cardBloc),
+              ],
+              child: const _GroceryCardTabView(),
+            );
+          },
+        );
       },
+    );
+  }
+}
+
+class _GroceryCardTabView extends StatelessWidget {
+  const _GroceryCardTabView();
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(t.shell.groceryTabLabel),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: t.grocery.pageTitle),
+              Tab(text: t.card.pageTitle),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            GroceryPage(embedded: true),
+            CardPage(embedded: true),
+          ],
+        ),
+      ),
     );
   }
 }

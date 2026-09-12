@@ -299,6 +299,7 @@ class _IncomeSection extends StatelessWidget {
                 final result = await LineEditSheet.show(
                   context,
                   title: t.cycle.editIncomeLine,
+                  cycleId: state.cycle.id,
                   initialLabel: line.label,
                   initialAmount: line.amount,
                   sources: state.incomeSources,
@@ -341,6 +342,7 @@ class _IncomeSection extends StatelessWidget {
             final result = await LineEditSheet.show(
               context,
               title: t.cycle.addIncomeLine,
+              cycleId: state.cycle.id,
               sources: state.incomeSources,
               isIncomeLine: true,
               onIncomeSourceAdded: () =>
@@ -397,6 +399,7 @@ class _BudgetSection extends StatelessWidget {
                       final result = await LineEditSheet.show(
                         context,
                         title: t.cycle.editBudgetLine,
+                        cycleId: state.cycle.id,
                         initialLabel: line.label,
                         initialAmount: line.amount,
                       );
@@ -449,6 +452,7 @@ class _BudgetSection extends StatelessWidget {
             final result = await LineEditSheet.show(
               context,
               title: t.cycle.addBudgetLine,
+              cycleId: state.cycle.id,
               isBudgetLine: true,
               cards: state.cards,
               usedRollUpSources: [

@@ -45,6 +45,7 @@ class LineEditSheet extends StatefulWidget {
   /// Membuat [LineEditSheet].
   const LineEditSheet({
     required this.title,
+    required this.cycleId,
     this.initialLabel,
     this.initialAmount,
     this.sources = const [],
@@ -59,6 +60,13 @@ class LineEditSheet extends StatefulWidget {
 
   /// Judul sheet, misalnya "Tambah baris pemasukan".
   final String title;
+
+  /// Siklus yang sedang disunting — jadi `planId` kalau baris anggaran baru
+  /// ditautkan ke Rencana Belanja (tautan 1:1 `GroceryPlan`↔`MonthlyCycle`,
+  /// laporan pemilik). Tidak relevan untuk baris pemasukan, tapi tetap wajib
+  /// diisi supaya pemanggil tidak lupa -- `cycle_page.dart` selalu punya
+  /// `state.cycle.id` di tangan untuk kedua jenis baris.
+  final String cycleId;
 
   /// Nama awal, kalau menyunting baris yang sudah ada.
   final String? initialLabel;
@@ -113,6 +121,7 @@ class LineEditSheet extends StatefulWidget {
   static Future<LineEditResult?> show(
     BuildContext context, {
     required String title,
+    required String cycleId,
     String? initialLabel,
     int? initialAmount,
     List<IncomeSource> sources = const [],
@@ -128,6 +137,7 @@ class LineEditSheet extends StatefulWidget {
       isScrollControlled: true,
       builder: (_) => LineEditSheet(
         title: title,
+        cycleId: cycleId,
         initialLabel: initialLabel,
         initialAmount: initialAmount,
         sources: sources,
@@ -181,7 +191,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
       widget.isBudgetLine && widget.initialLabel == null;
 
   bool get _isGroceryUsed =>
-      widget.usedRollUpSources.contains(RollUpSource.grocery);
+      widget.usedRollUpSources.contains(RollUpSource.grocery(widget.cycleId));
 
   bool _isCardUsed(String cardId) =>
       widget.usedRollUpSources.contains(RollUpSource.card(cardId));
@@ -299,7 +309,7 @@ class _LineEditSheetState extends State<LineEditSheet> {
       final label = _labelController.text.trim();
       if (label.isEmpty) return;
       final rollUpSource = _budgetSource == .grocery
-          ? RollUpSource.grocery
+          ? RollUpSource.grocery(widget.cycleId)
           : _selectedCardId == null
           ? null
           : RollUpSource.card(_selectedCardId!);

@@ -255,8 +255,15 @@ Hive `saldough_kv` di folder itu, box YANG SAMA yang dibaca aplikasi.
   }
   print('  card statements: $statementCount');
 
-  // --- Grocery plan (satu-satunya, live) --------------------------------
+  // --- Grocery plan ------------------------------------------------------
+  // Sejak GroceryPlan jadi satu dokumen per bulan (tautan 1:1 ke
+  // MonthlyCycle, laporan pemilik), plan "live" di seed_data.json ditautkan
+  // ke id siklus yang MASIH TERBUKA -- diturunkan dari data `cycles`
+  // (bukan ditulis tangan) supaya tidak basi kalau seed_data.json berubah.
   final groceryJson = data['groceryPlan'] as Map<String, dynamic>;
+  final openCycleId = (data['cycles'] as List<dynamic>)
+      .cast<Map<String, dynamic>>()
+      .firstWhere((c) => c['closed'] == false)['id'] as String;
   GroceryItem parseItem(Map<String, dynamic> j) => GroceryItem(
         id: j['id'] as String,
         name: j['name'] as String,
@@ -265,13 +272,14 @@ Hive `saldough_kv` di folder itu, box YANG SAMA yang dibaca aplikasi.
         amountOverride: j['amountOverrideRupiah'] == null ? null : sen(j['amountOverrideRupiah'] as int),
       );
   final plan = GroceryPlan(
+    id: openCycleId,
     weeksPerMonth: groceryJson['weeksPerMonth'] as int,
     weeklyItems: [for (final i in groceryJson['weeklyItems'] as List<dynamic>) parseItem(i as Map<String, dynamic>)],
     monthlyItems: [for (final i in groceryJson['monthlyItems'] as List<dynamic>) parseItem(i as Map<String, dynamic>)],
   );
   final groceryResult = await groceryPlanRepo.savePlan(plan);
   _assertRight(groceryResult, 'savePlan');
-  print('  grocery plan: ${plan.weeklyItems.length} item mingguan, ${plan.monthlyItems.length} item bulanan');
+  print('  grocery plan ($openCycleId): ${plan.weeklyItems.length} item mingguan, ${plan.monthlyItems.length} item bulanan');
 
   // --- Worklog (BillingBook) -------------------------------------------
   final worklogJson = data['worklog'] as Map<String, dynamic>;
@@ -329,7 +337,7 @@ Hive `saldough_kv` di folder itu, box YANG SAMA yang dibaca aplikasi.
     ];
     final budgetLines = [
       for (final b in (j['budgetLines'] as List<dynamic>))
-        _budgetLineFromJson(b as Map<String, dynamic>),
+        _budgetLineFromJson(b as Map<String, dynamic>, j['id'] as String),
     ];
     final allocJson = j['investmentPlan'] as Map<String, dynamic>;
     final cycle = MonthlyCycle(
@@ -393,13 +401,17 @@ Hive `saldough_kv` di folder itu, box YANG SAMA yang dibaca aplikasi.
   }
 }
 
-BudgetLine _budgetLineFromJson(Map<String, dynamic> j) {
+// `cycleId` jadi `planId` rencana belanja kalau sumbernya `grocery` --
+// tautan 1:1 `GroceryPlan`↔`MonthlyCycle` berarti baris roll-up grocery
+// siklus X menunjuk plan ber-id X juga (lihat catatan di blok "Grocery
+// plan" di atas, dan `RollUpSource.grocery`/`GroceryRollUpSource`).
+BudgetLine _budgetLineFromJson(Map<String, dynamic> j, String cycleId) {
   final kindStr = j['kind'] as String;
   final kind = kindStr == 'rollUp' ? BudgetLineKind.rollUp : BudgetLineKind.manual;
   RollUpSource? source;
   if (kind == BudgetLineKind.rollUp) {
     final raw = j['rollUpSource'] as String;
-    source = raw == 'grocery' ? RollUpSource.grocery : RollUpSource.card(raw.split(':')[1]);
+    source = raw == 'grocery' ? RollUpSource.grocery(cycleId) : RollUpSource.card(raw.split(':')[1]);
   }
   return BudgetLine(
     id: j['id'] as String,

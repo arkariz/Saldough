@@ -18,20 +18,28 @@ void main() {
   group('GroceryRollUpResolver', () {
     test('menghitung roll-up sungguhan untuk GroceryRollUpSource dari plan tersimpan', () async {
       await repository.savePlan(const GroceryPlan(
+        id: '2026-09',
         weeklyItems: [GroceryItem(id: 'w1', name: 'A', quantity: 1, unitPrice: 57660000)],
         monthlyItems: [GroceryItem(id: 'm1', name: 'B', quantity: 1, unitPrice: 76210000)],
       ));
 
-      final resolution = await resolver.resolve(RollUpSource.grocery);
+      final resolution = await resolver.resolve(RollUpSource.grocery('2026-09'));
 
       expect(resolution.isAvailable, isTrue);
       expect(resolution.amount, 306850000);
     });
 
     test('rencana belum tersimpan menghasilkan roll-up nol tapi tetap tersedia', () async {
-      final resolution = await resolver.resolve(RollUpSource.grocery);
+      final resolution = await resolver.resolve(RollUpSource.grocery('2026-09'));
 
       expect(resolution.isAvailable, isTrue);
+      expect(resolution.amount, 0);
+    });
+
+    test('planId kosong (dokumen lama sebelum plan per bulan) tidak tersedia', () async {
+      final resolution = await resolver.resolve(const GroceryRollUpSource(''));
+
+      expect(resolution.isAvailable, isFalse);
       expect(resolution.amount, 0);
     });
 

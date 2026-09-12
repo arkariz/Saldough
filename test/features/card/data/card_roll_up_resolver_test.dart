@@ -21,7 +21,7 @@ void main() {
 
   group('CardRollUpResolver', () {
     test('mengembalikan unavailable untuk sumber selain kartu (mis. grocery)', () async {
-      final result = await resolver.resolve(RollUpSource.grocery);
+      final result = await resolver.resolve(RollUpSource.grocery('2026-09'));
 
       expect(result.isAvailable, isFalse);
       expect(result.amount, 0);

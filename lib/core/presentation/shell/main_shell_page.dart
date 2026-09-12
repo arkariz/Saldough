@@ -53,7 +53,7 @@ class _MainShellPageState extends State<MainShellPage> {
       body: IndexedStack(
         index: _index,
         children: [
-          _CycleTab(parentContainer: parentContainer),
+          _CycleTab(parentContainer: parentContainer, isActive: _index == 0),
           _IncomeTab(parentContainer: parentContainer),
           _GroceryTab(parentContainer: parentContainer),
           _InvestmentTab(parentContainer: parentContainer),
@@ -82,22 +82,55 @@ String _currentCycleId() {
   return '${now.year}-${now.month.toString().padLeft(2, '0')}';
 }
 
-class _CycleTab extends StatelessWidget {
-  const _CycleTab({required this.parentContainer});
+class _CycleTab extends StatefulWidget {
+  const _CycleTab({required this.parentContainer, required this.isActive});
 
   final GetIt parentContainer;
+
+  /// True kalau tab ini yang sedang tampil di bottom nav.
+  final bool isActive;
+
+  @override
+  State<_CycleTab> createState() => _CycleTabState();
+}
+
+class _CycleTabState extends State<_CycleTab> {
+  CycleBloc? _bloc;
+
+  @override
+  void didUpdateWidget(_CycleTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Tab ini baru saja diaktifkan kembali lewat bottom nav (balik dari
+    // Pemasukan/Belanja). Sumber pemasukan, rencana belanja, atau kartu bisa
+    // saja baru disunting di tab lain itu sejak siklus ini terakhir dimuat --
+    // tanpa muat ulang di sini, baris pemasukan/anggaran yang tertaut tidak
+    // pernah menyegarkan label/nominalnya di layar, dan sumber pemasukan baru
+    // tidak terdeteksi saat menambah baris (laporan pemilik). Muat ulang
+    // SIKLUS YANG SAMA (bukan reset ke bulan berjalan) supaya pilihan
+    // navigasi chevron pemilik tidak ditimpa balik -- kebalikan dari
+    // penjaga UX-07 di `build`, yang justru mencegah muat ulang berulang
+    // saat tab TIDAK benar-benar berpindah.
+    if (!oldWidget.isActive && widget.isActive) {
+      final bloc = _bloc;
+      if (bloc != null && bloc.state.cycle.id.isNotEmpty) {
+        bloc.add(CycleOpened(bloc.state.cycle.id));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScopeWidget<CycleScope>(
-      create: () => CycleScope(parentContainer: parentContainer),
+      create: () => CycleScope(parentContainer: widget.parentContainer),
       builder: (context, scope) {
         final bloc = scope.container<CycleBloc>();
+        _bloc = bloc;
         // UX-07: `builder` jalan lagi setiap kali tab ini pindah (rebuild
         // `IndexedStack` induk), bukan hanya sekali. Pancarkan `CycleOpened`
         // hanya saat bloc benar-benar belum memuat siklus mana pun --
         // supaya posisi navigasi bulan yang dipilih pemilik (chevron) tidak
-        // ditimpa balik ke bulan berjalan tiap kali balik ke tab ini.
+        // ditimpa balik ke bulan berjalan tiap kali balik ke tab ini. Muat
+        // ulang saat tab DIAKTIFKAN lagi ditangani `didUpdateWidget` di atas.
         final cycleId = bloc.state.cycle.id.isEmpty ? _currentCycleId() : bloc.state.cycle.id;
         if (bloc.state.cycle.id.isEmpty) bloc.add(CycleOpened(cycleId));
         return BlocProvider.value(value: bloc, child: CyclePage(cycleId: cycleId));

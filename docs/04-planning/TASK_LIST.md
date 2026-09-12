@@ -885,6 +885,58 @@ dicoba langsung:
 Diverifikasi lagi: `flutter analyze` (0 isu) dan `flutter test` (124
 pengujian) lulus; `tool/seed_import.dart --dry-run` masih cocok persis.
 
+**12 September 2026 (3 laporan lanjutan)** — Pemilik melaporkan tiga gejala
+lagi, semuanya berakar pada pola yang sama: tab Siklus tidak pernah memuat
+ulang dirinya kalau pemilik berpindah ke tab lain (lewat bottom nav) lalu
+kembali — bukan hanya saat menambah sumber pemasukan (itu sudah digerbang
+Fix #8, tapi hanya untuk jalur `context.push` dari `LineEditSheet`, bukan
+jalur bottom nav biasa):
+
+10. **Sumber pemasukan baru tidak terdeteksi saat menambah baris pemasukan**
+    — laporan ulang dari sudut yang berbeda dari Fix #8: kali ini lewat tab
+    Pemasukan di bottom nav (bukan tombol di `LineEditSheet`), yang tidak
+    memicu `CycleIncomeSourcesRefreshRequested` sama sekali. **Baris
+    pemasukan/anggaran tertaut-sumber juga tidak tersinkron** dengan
+    perubahan di tab lain (sumber pemasukan disunting, Rencana Belanja
+    disunting) dengan gejala sama — kedua laporan itu ternyata bukan dua bug
+    terpisah, melainkan satu akar yang sama. `_CycleTab`
+    (`main_shell_page.dart`) diubah dari `StatelessWidget` jadi
+    `StatefulWidget` yang menerima `isActive` dari `_MainShellPageState`
+    (`_index == 0`); `didUpdateWidget` memancarkan ulang `CycleOpened` untuk
+    siklus yang SAMA (bukan reset ke bulan berjalan) begitu `isActive`
+    berubah dari `false` ke `true` — yaitu begitu pemilik kembali ke tab ini.
+    `_loadCycle` yang sudah ada menyegarkan sumber pemasukan, kartu, DAN
+    siklus (termasuk label/nominal baris tertaut-sumber serta baris rollUp)
+    sekaligus, jadi satu perbaikan ini menutup gejala tampilan dari ketiga
+    laporan. Komentar di `CycleIncomeSourcesRefreshRequested`
+    (`cycle_event.dart`) yang mengklaim "berpindah tab mengirim ulang
+    `CycleOpened`" diperbarui — klaim itu benar sekarang (sebelumnya hanya
+    kebetulan terpicu tiap `build`, bukan by design), tapi event itu masih
+    perlu untuk jalur `context.push` yang tidak lewat bottom nav sama sekali.
+11. **Menutup siklus bisa membekukan nilai yang sudah basi** — akibat
+    langsung dari akar yang sama: kalau pemilik menyunting sumber
+    pemasukan/Rencana Belanja di tab lain, balik ke tab Siklus SEBELUM
+    Fix #10 ada (atau kalaupun sudah ada, state bloc pada prinsipnya masih
+    bisa basi di antara dua muat ulang), lalu menutup siklus, `CycleClosed`
+    sebelumnya langsung membekukan `state.cycle` apa adanya —
+    `CycleRepositoryImpl` berhenti meresolusi ulang baris rollUp/tertaut-
+    sumber begitu `isClosed`, jadi nilai basi itu membeku permanen.
+    `CycleBloc._onClosed` sekarang membaca ulang siklus dari
+    `_cycleRepository.getCycle` LEBIH DULU, baru memanggil `.close()` pada
+    hasil baca terkini itu — kalau pembacaan gagal, efek galat dipancarkan
+    dan siklus TIDAK ditutup (lebih baik gagal daripada membekukan angka
+    yang salah, selaras NFR-ACC-001 "sampai rupiah terakhir").
+
+Dua tes baru di `cycle_bloc_test.dart` untuk Fix #11 (nilai yang dibekukan
+berasal dari pembacaan ulang, bukan state basi; galat pembacaan ulang
+membatalkan penutupan). Fix #10 murni perubahan widget shell (tidak ada
+widget test proyek ini yang menjangkau `MainShellPage` — diverifikasi lewat
+pembacaan kode dan `flutter analyze`, sama seperti batasan yang sudah dicatat
+di verifikasi UX-01).
+
+Diverifikasi: `flutter analyze` (0 isu) dan `flutter test` (155 pengujian,
+153 + 2 tes baru) lulus.
+
 ## Fase 7: Sinkronisasi
 
 Di luar MVP. Dikerjakan setelah Fase 6 selesai dan dipakai beberapa waktu.

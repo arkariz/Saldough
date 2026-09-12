@@ -60,7 +60,7 @@ class _MainShellPageState extends State<MainShellPage> {
         children: [
           _CycleTab(parentContainer: parentContainer, isActive: _index == 0),
           _IncomeTab(parentContainer: parentContainer),
-          _GroceryCardTab(parentContainer: parentContainer),
+          _GroceryCardTab(parentContainer: parentContainer, isActive: _index == 2),
           _InvestmentTab(parentContainer: parentContainer),
         ],
       ),
@@ -169,9 +169,12 @@ class _IncomeTab extends StatelessWidget {
 /// sini karena shell memang satu-satunya tempat yang boleh melihat lebih
 /// dari satu fitur sekaligus (lihat catatan kelas `MainShellPage`).
 class _GroceryCardTab extends StatefulWidget {
-  const _GroceryCardTab({required this.parentContainer});
+  const _GroceryCardTab({required this.parentContainer, required this.isActive});
 
   final GetIt parentContainer;
+
+  /// True kalau tab ini yang sedang tampil di bottom nav.
+  final bool isActive;
 
   @override
   State<_GroceryCardTab> createState() => _GroceryCardTabState();
@@ -184,6 +187,21 @@ class _GroceryCardTabState extends State<_GroceryCardTab> {
   // hanya saat sub-tab Belanja/Kartu sendiri yang berpindah).
   bool _dispatchedGroceryLoad = false;
   bool _dispatchedCardLoad = false;
+  GroceryBloc? _groceryBloc;
+
+  @override
+  void didUpdateWidget(_GroceryCardTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Tab ini baru saja diaktifkan kembali lewat bottom nav (balik dari
+    // Siklus). Siklus baru bisa saja dibuat di sana (rollover, atau baris
+    // pertama disimpan di bulan yang belum ada) sejak pemilih bulan di
+    // Rencana Belanja terakhir dimuat -- tanpa muat ulang di sini,
+    // `cycleIds` tetap yang lama sampai aplikasi ditutup-buka ulang
+    // (laporan pemilik). Pola yang sama seperti `_CycleTabState` di atas.
+    if (!oldWidget.isActive && widget.isActive) {
+      _groceryBloc?.add(const GroceryPlanLoaded());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +209,7 @@ class _GroceryCardTabState extends State<_GroceryCardTab> {
       create: () => GroceryScope(parentContainer: widget.parentContainer),
       builder: (context, groceryScope) {
         final groceryBloc = groceryScope.container<GroceryBloc>();
+        _groceryBloc = groceryBloc;
         if (!_dispatchedGroceryLoad) {
           _dispatchedGroceryLoad = true;
           groceryBloc.add(const GroceryPlanLoaded());

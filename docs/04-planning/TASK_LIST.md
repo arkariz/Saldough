@@ -1002,6 +1002,36 @@ masih cocok persis dengan spreadsheet, siklus terbuka (2026-10) tetap
 terhitung live dari `GroceryPlan` ber-`id` `2026-10` yang diturunkan dari
 data `cycles` (bukan ditulis tangan di skrip).
 
+**12 September 2026 (2 laporan lanjutan atas Fix #12/#13)** — Dicoba
+langsung di branch yang sama, belum di-merge:
+
+14. **Pemilih bulan di Rencana Belanja tidak memuat siklus baru tanpa
+    tutup-buka aplikasi** — `_GroceryCardTab` (pola sama seperti
+    `_GroceryTabState` UX-17 lama) hanya memancarkan `GroceryPlanLoaded`
+    SEKALI lewat penjaga `_dispatchedGroceryLoad`, jadi `cycleIds` yang
+    mengisi dropdown tidak pernah tersegarkan setelah siklus baru dibuat
+    (rollover, atau baris pertama disimpan di bulan yang belum ada) — mirip
+    akar masalah Fix #10, hanya di tab Belanja. Diperbaiki dengan pola yang
+    sama persis: `_GroceryCardTab` menerima `isActive` dari shell,
+    `didUpdateWidget` memancarkan ulang `GroceryPlanLoaded` (bukan reset
+    bulan terpilih — `_onLoaded` memuat ulang `state.cycleId` yang sedang
+    dipilih, hanya `cycleIds`-nya yang disegarkan) begitu tab ini diaktifkan
+    kembali.
+15. **Judul tab gabungan masih menyebut "Grocery" walau sudah berisi Kartu
+    Kredit juga** — `shell.groceryTabLabel` versi Inggris sebelumnya
+    `"Grocery"`, padahal versi Indonesia sudah generik (`"Belanja"`, cocok
+    untuk kedua sub-tab) dan ikon bottom nav-nya sendiri sudah
+    `Icons.shopping_cart` (bukan ikon belanjaan). Diperbaiki dengan
+    menyamakan makna: versi Inggris diganti `"Shopping"` supaya konsisten
+    dengan ikon dan makna generik versi Indonesia — bukan menulis ulang
+    struktur judul (AppBar tetap satu judul generik di atas, `TabBar` yang
+    menyebut dua sub-screennya secara spesifik).
+
+Diverifikasi: `flutter analyze` 0 isu, `flutter test` 165 lulus (tidak
+berubah — kedua perbaikan murni widget shell/string i18n, tidak ada logika
+bloc baru yang butuh tes; batasan yang sama dengan verifikasi Fix #10/#13:
+tidak ada widget test yang menjangkau `MainShellPage`).
+
 ## Fase 7: Sinkronisasi
 
 Di luar MVP. Dikerjakan setelah Fase 6 selesai dan dipakai beberapa waktu.

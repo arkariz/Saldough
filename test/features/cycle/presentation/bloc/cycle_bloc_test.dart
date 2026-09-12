@@ -231,7 +231,7 @@ void main() {
               label: 'Rencana Belanja',
               amount: 123456,
               kind: BudgetLineKind.rollUp,
-              rollUpSource: RollUpSource.grocery,
+              rollUpSource: RollUpSource.grocery('2026-09'),
             ),
           ],
           investmentPlan: InvestmentPlan.empty(),
@@ -250,10 +250,10 @@ void main() {
         bloc.add(const CycleOpened('2026-09'));
         await Future<void>.delayed(Duration.zero);
         bloc.add(
-          const BudgetLineSaved(
+          BudgetLineSaved(
             label: 'Rencana Belanja',
             amount: 0,
-            rollUpSource: RollUpSource.grocery,
+            rollUpSource: RollUpSource.grocery('2026-09'),
           ),
         );
       },
@@ -292,7 +292,7 @@ void main() {
               label: 'Rencana Belanja',
               amount: 500000,
               kind: BudgetLineKind.rollUp,
-              rollUpSource: RollUpSource.grocery,
+              rollUpSource: RollUpSource.grocery('2026-09'),
             ),
           ],
           investmentPlan: InvestmentPlan.empty(),
@@ -306,10 +306,10 @@ void main() {
         bloc.add(const CycleOpened('2026-09'));
         await Future<void>.delayed(Duration.zero);
         bloc.add(
-          const BudgetLineSaved(
+          BudgetLineSaved(
             label: 'Rencana Belanja (dobel)',
             amount: 0,
-            rollUpSource: RollUpSource.grocery,
+            rollUpSource: RollUpSource.grocery('2026-09'),
           ),
         );
       },
@@ -344,7 +344,7 @@ void main() {
               label: 'Rencana Belanja',
               amount: 500000,
               kind: BudgetLineKind.rollUp,
-              rollUpSource: RollUpSource.grocery,
+              rollUpSource: RollUpSource.grocery('2026-09'),
             ),
           ],
           investmentPlan: InvestmentPlan.empty(),
@@ -371,7 +371,7 @@ void main() {
             .having(
               (s) => s.cycle.budgetLines.single.rollUpSource,
               'rollUpSource',
-              RollUpSource.grocery,
+              RollUpSource.grocery('2026-09'),
             ),
       ],
       verify: (_) => verify(() => cycleRepository.saveCycle(any())).called(1),
@@ -504,7 +504,7 @@ void main() {
               label: 'Bulanan',
               amount: 0,
               kind: BudgetLineKind.rollUp,
-              rollUpSource: RollUpSource.grocery,
+              rollUpSource: RollUpSource.grocery('2026-09'),
             ),
           ],
           investmentPlan: InvestmentPlan.empty(),

@@ -144,8 +144,10 @@ lama akan diterima diam-diam. Kecepatan di sini menghasilkan angka yang salah.
 
 ### Perilaku yang diharapkan
 
-- Menyunting rencana belanja langsung mengubah baris `Bulanan` di seluruh siklus
-  yang belum ditutup.
+- Menyunting rencana belanja langsung mengubah baris `Bulanan` di SATU siklus
+  yang ditautkan ke rencana itu (`GroceryPlan.id` == `MonthlyCycle.id`, satu
+  dokumen per bulan — lihat "Catatan revisi" di bagian 8b), bukan lagi seluruh
+  siklus terbuka.
 - Menambah transaksi kartu langsung mengubah baris kartu di siklus yang
   bersangkutan.
 - Menutup siklus membekukan nilai roll-up, sehingga riwayat tidak berubah kalau
@@ -168,6 +170,59 @@ sebelumnya, dan riwayat pemilik menjadi tidak dapat dipercaya.
 - Muncul sumber roll-up keempat, sehingga `RollUpSource` perlu dibuat lebih
   umum.
 - Membuka satu bulan mulai terasa lambat karena dokumen yang dimuat bertambah.
+
+## 8b. Catatan revisi
+
+**12 September 2026 — `GroceryPlan` jadi satu dokumen per bulan, bukan lagi
+dokumen tunggal dibaca bersama.** Sejak Fase 4, `GroceryPlan` adalah satu
+dokumen singleton (`grocery:plan`) dibaca LIVE oleh setiap `BudgetLine`
+ber-`rollUpSource` `grocery` di SELURUH siklus yang masih terbuka —
+`GroceryRollUpSource` tidak membawa identitas apa pun, jadi tidak ada cara
+membedakan "rencana belanja bulan ini" dari "rencana belanja bulan lalu".
+Pemilik melaporkan ini sebagai keterbatasan: daftar belanja memang berubah
+tiap bulan (harga naik, item baru), dan satu dokumen bersama berarti
+menyunting bulan ini ikut menggeser angka bulan lain yang masih terbuka,
+padahal belum tentu keduanya dimaksudkan sama.
+
+Keputusan: `GroceryPlan` diberi `id` (format `YYYY-MM`, sama seperti
+`MonthlyCycle.id`), dan `GroceryRollUpSource` diberi field `planId` — satu
+baris anggaran roll-up `grocery` sekarang menunjuk SATU rencana belanja
+tertentu, dengan konvensi **1:1**: baris yang dibuat dari siklus `2026-08`
+menunjuk `GroceryPlan` ber-`id` `2026-08`. Ini pola yang sama seperti
+`CardRollUpSource.cardId` sejak awal (kartu selalu punya identitas) — bukan
+konsep baru, hanya menyamakan `grocery` dengan `card`.
+
+**Bulan baru tidak mulai kosong.** `GroceryPlanRepositoryImpl.getPlan`
+menyalin daftar item dari bulan SEBELUMNYA kalau bulan yang diminta belum
+pernah disunting (permintaan eksplisit pemilik — lihat `AskUserQuestion`:
+opsi "disalin dari bulan sebelumnya" dipilih atas "kosong, diisi manual tiap
+bulan"). Salinan ini tidak otomatis tertulis ke penyimpanan — sama seperti
+`MonthlyCycle` yang "ada" secara malas sampai baris pertamanya disimpan
+(`CycleBloc._loadCycle`), rencana belanja bulan baru hanya benar-benar
+tersimpan sendiri saat pemilik pertama kali menyimpan perubahan padanya.
+
+Konsekuensi pada rollover (`RollOverCycle`): kalau baris template punya
+`GroceryRollUpSource`, `planId`-nya BUKAN disalin apa adanya (itu akan
+mewariskan `planId` siklus asal, bukan siklus baru) — ditaut ulang ke `id`
+siklus baru. Ini satu-satunya pengecualian pada aturan 2 di bagian 3
+("salin strukturnya, bukan nominalnya") yang perlu field tambahan selain
+nominal untuk tetap benar; `CardRollUpSource.cardId` tidak terpengaruh
+karena kartu bukan entitas per-bulan.
+
+**Dampak pada kalimat "Perilaku yang diharapkan" di bagian 7**: baris
+"menyunting rencana belanja langsung mengubah baris `Bulanan` di seluruh
+siklus yang belum ditutup" sudah TIDAK BENAR lagi sejak revisi ini — sekarang
+hanya mengubah SATU siklus yang `id`-nya sama dengan rencana yang disunting.
+Kalimat itu sudah diperbarui langsung di bagian 7, bukan hanya dicatat di
+sini — beda dari revisi UX-22 ADR-0006 (koreksi keterbacaan tanpa mengubah
+isi keputusan), ini mengubah perilaku yang didokumentasikan, jadi bagian
+utamanya yang harus benar, catatan ini menjelaskan alasannya.
+
+Penanda "kunci" (closed) siklus TETAP berfungsi seperti sebelumnya
+(`CycleRepositoryImpl._resolveRollUps` berhenti menghitung ulang begitu
+`isClosed`) — tautan 1:1 tidak mengubah aturan pembekuan saat penutupan,
+hanya mengubah SIAPA yang dihitung ulang saat siklus masih terbuka (satu
+bulan, bukan semua).
 
 ## 9. Artefak terkait
 

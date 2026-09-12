@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/grocery/domain/entities/grocery_item.dart';
 import 'package:saldough/features/grocery/presentation/bloc/grocery_bloc.dart';
@@ -13,74 +14,95 @@ import 'package:state_management/state_management.dart';
 
 /// Layar rencana belanja mingguan dan bulanan — FR-GROC-001 sampai
 /// FR-GROC-003.
+///
+/// Sejak rencana belanja jadi satu dokumen per bulan (tautan 1:1 ke
+/// `MonthlyCycle`, laporan pemilik), layar ini punya pemilih bulan di atas
+/// daftar — pola sama seperti pemilih siklus di `InvestmentPage` (UX-09),
+/// bukan navigasi chevron seperti `CyclePage` (tidak ada padanan kode siap
+/// pakai untuk itu di luar `CyclePage` sendiri, dan dropdown sudah cukup
+/// untuk kebutuhan "pilih bulan mana yang disunting").
 class GroceryPage extends StatelessWidget {
   /// Membuat [GroceryPage].
-  const GroceryPage({super.key});
+  ///
+  /// [embedded] true saat dipasang sebagai salah satu sub-tab "Belanja"
+  /// (lihat `MainShellPage`) — menghilangkan `Scaffold`/`AppBar` sendiri
+  /// supaya tidak bertumpuk dengan `AppBar`+`TabBar` induknya.
+  const GroceryPage({this.embedded = false, super.key});
+
+  /// Lihat catatan di atas.
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(t.grocery.pageTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.credit_card),
-            tooltip: t.grocery.cardEntryPointLabel,
-            onPressed: () => context.read<GroceryBloc>().add(const CardEntryPointTapped()),
-          ),
-        ],
-      ),
-      body: EffectListener<GroceryBloc, GroceryState>(
-        child: BlocBuilder<GroceryBloc, GroceryState>(
-          builder: (context, state) {
-            // UX-17: pemuatan PERTAMA (belum ada data sama sekali) tampil
-            // skeleton penuh; pemuatan ULANG (data sudah ada) tidak
-            // mengganti body -- lihat indikator halus di Stack di bawah.
-            final hasData = state.plan.weeklyItems.isNotEmpty || state.plan.monthlyItems.isNotEmpty;
-            if (state.isLoading && !hasData) {
-              return const AppSkeletonPage();
-            }
-            return Stack(
-              children: [
-                ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              children: [
-                AppCard(
-                  child: Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Text(t.grocery.rollUpTotal, style: Theme.of(context).textTheme.titleMedium),
-                      AppMoneyText(sen: state.rollUpAmount, style: Theme.of(context).textTheme.headlineSmall),
+    final body = EffectListener<GroceryBloc, GroceryState>(
+      child: BlocBuilder<GroceryBloc, GroceryState>(
+        builder: (context, state) {
+          final bloc = context.read<GroceryBloc>();
+          // UX-17: pemuatan PERTAMA (belum ada data sama sekali) tampil
+          // skeleton penuh; pemuatan ULANG (data sudah ada, mis. pindah
+          // bulan) tidak mengganti body -- lihat indikator halus di Stack
+          // di bawah.
+          final hasData = state.plan.weeklyItems.isNotEmpty || state.plan.monthlyItems.isNotEmpty;
+          if (state.isLoading && !hasData) {
+            return const AppSkeletonPage();
+          }
+          return Stack(
+            children: [
+              ListView(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                children: [
+                  DropdownButtonFormField<String>(
+                    // `state.cycleId` selalu disertakan di [items] (lewat
+                    // `Set`) walau belum ada di [cycleIds] -- bulan berjalan
+                    // bawaan belum tentu punya `MonthlyCycle` yang sudah
+                    // dibuat (keduanya sama-sama dibuat baru secara malas,
+                    // lihat `GroceryPlanRepositoryImpl.getPlan`) -- jadi
+                    // `initialValue` selalu cocok dengan salah satu item,
+                    // tidak perlu gerbang `contains` seperti di
+                    // `InvestmentPage` (yang selalu punya `cycleIds` terisi
+                    // begitu ada siklus pertama).
+                    initialValue: state.cycleId,
+                    decoration: InputDecoration(labelText: t.grocery.cycleIdFieldHint),
+                    items: [
+                      for (final id in {...state.cycleIds, state.cycleId})
+                        DropdownMenuItem(value: id, child: Text(CycleMonthFormatter.format(id))),
                     ],
+                    onChanged: (value) {
+                      if (value != null) bloc.add(GroceryCycleSelected(value));
+                    },
                   ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                _WeeksPerMonthField(weeksPerMonth: state.plan.weeksPerMonth),
-                const SizedBox(height: AppSpacing.lg),
-                _ItemSection(title: t.grocery.weeklyTitle, items: state.plan.weeklyItems, isWeekly: true),
-                const SizedBox(height: AppSpacing.lg),
-                _ItemSection(title: t.grocery.monthlyTitle, items: state.plan.monthlyItems, isWeekly: false),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: t.grocery.cardEntryPointLabel,
-                  icon: Icons.credit_card,
-                  onPressed: () => context.read<GroceryBloc>().add(const CardEntryPointTapped()),
-                ),
-              ],
-                ),
-                if (state.isLoading)
-                  const Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: LinearProgressIndicator(minHeight: 2),
+                  const SizedBox(height: AppSpacing.md),
+                  AppCard(
+                    child: Row(
+                      mainAxisAlignment: .spaceBetween,
+                      children: [
+                        Text(t.grocery.rollUpTotal, style: Theme.of(context).textTheme.titleMedium),
+                        AppMoneyText(sen: state.rollUpAmount, style: Theme.of(context).textTheme.headlineSmall),
+                      ],
+                    ),
                   ),
-              ],
-            );
-          },
-        ),
+                  const SizedBox(height: AppSpacing.md),
+                  _WeeksPerMonthField(weeksPerMonth: state.plan.weeksPerMonth),
+                  const SizedBox(height: AppSpacing.lg),
+                  _ItemSection(title: t.grocery.weeklyTitle, items: state.plan.weeklyItems, isWeekly: true),
+                  const SizedBox(height: AppSpacing.lg),
+                  _ItemSection(title: t.grocery.monthlyTitle, items: state.plan.monthlyItems, isWeekly: false),
+                ],
+              ),
+              if (state.isLoading)
+                const Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: LinearProgressIndicator(minHeight: 2),
+                ),
+            ],
+          );
+        },
       ),
     );
+    if (embedded) return body;
+    return Scaffold(appBar: AppBar(title: Text(t.grocery.pageTitle)), body: body);
   }
 }
 

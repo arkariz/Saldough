@@ -65,7 +65,10 @@ void main() {
                 label: 'Bulanan',
                 amount: 99999999, // nilai lama — harus TIDAK disalin
                 kind: BudgetLineKind.rollUp,
-                rollUpSource: RollUpSource.grocery,
+                // `planId` siklus ASAL (2026-09) -- harus ditaut ulang ke
+                // siklus BARU (2026-10) saat rollover, lihat expect() di
+                // bawah.
+                rollUpSource: RollUpSource.grocery('2026-09'),
                 isTemplate: true,
               ),
             ],
@@ -105,7 +108,11 @@ void main() {
         reason: 'nominal roll-up lama tidak boleh ikut disalin (ADR-0008)',
       );
       expect(rollUp.needsReview, isTrue);
-      expect(rollUp.rollUpSource, RollUpSource.grocery);
+      expect(
+        rollUp.rollUpSource,
+        RollUpSource.grocery('2026-10'),
+        reason: 'planId harus ditaut ulang ke siklus baru, bukan warisan dari template (tautan 1:1)',
+      );
 
       expect(cycle.investmentPlan.allocations, [
         const Allocation(goalId: 'kyoto', percentage: 20),

@@ -17,15 +17,23 @@ import 'package:state_management/state_management.dart';
 /// Layar kartu kredit — FR-CARD-001 sampai FR-CARD-005.
 class CardPage extends StatelessWidget {
   /// Membuat [CardPage].
-  const CardPage({super.key});
+  ///
+  /// [embedded] true saat dipasang sebagai salah satu sub-tab "Belanja"
+  /// (lihat `MainShellPage`) — menghilangkan `Scaffold`/`AppBar` sendiri
+  /// supaya tidak bertumpuk dengan `AppBar`+`TabBar` induknya. Rute
+  /// `CardRouteKeys.page` (berdiri sendiri, `embedded: false`) tetap ada
+  /// untuk kemungkinan navigasi langsung/pengujian, tapi tidak lagi dicapai
+  /// dari alur normal sejak kartu jadi sub-tab, bukan layar yang di-`push`.
+  const CardPage({this.embedded = false, super.key});
+
+  /// Lihat catatan di atas.
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(t.card.pageTitle)),
-      body: EffectListener<CardBloc, CardState>(
-        child: BlocBuilder<CardBloc, CardState>(
-          builder: (context, state) {
+    final body = EffectListener<CardBloc, CardState>(
+      child: BlocBuilder<CardBloc, CardState>(
+        builder: (context, state) {
             if (state.isLoading && state.cards.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -92,8 +100,9 @@ class CardPage extends StatelessWidget {
             );
           },
         ),
-      ),
     );
+    if (embedded) return body;
+    return Scaffold(appBar: AppBar(title: Text(t.card.pageTitle)), body: body);
   }
 }
 

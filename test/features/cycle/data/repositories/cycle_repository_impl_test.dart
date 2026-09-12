@@ -83,7 +83,7 @@ void main() {
               label: 'Bulanan',
               amount: 99999999, // nilai lama, harus diabaikan saat dibaca
               kind: BudgetLineKind.rollUp,
-              rollUpSource: RollUpSource.grocery,
+              rollUpSource: RollUpSource.grocery('2026-09'),
             ),
           ],
           investmentPlan: InvestmentPlan.empty(),

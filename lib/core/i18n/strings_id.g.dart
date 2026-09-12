@@ -528,8 +528,8 @@ class Translations$grocery$id {
 	/// id: 'ditimpa'
 	String get overriddenBadge => 'ditimpa';
 
-	/// id: 'Kartu Kredit'
-	String get cardEntryPointLabel => 'Kartu Kredit';
+	/// id: 'Bulan'
+	String get cycleIdFieldHint => 'Bulan';
 
 	/// id: 'Hapus $name?'
 	String confirmDeleteItemTitle({required Object name}) => 'Hapus ${name}?';
@@ -831,7 +831,7 @@ extension on Translations {
 			'grocery.overridePriceLabel' => 'Timpa harga',
 			'grocery.overrideAmountFieldHint' => 'Harga timpaan (Rp)',
 			'grocery.overriddenBadge' => 'ditimpa',
-			'grocery.cardEntryPointLabel' => 'Kartu Kredit',
+			'grocery.cycleIdFieldHint' => 'Bulan',
 			'grocery.confirmDeleteItemTitle' => ({required Object name}) => 'Hapus ${name}?',
 			'grocery.confirmDeleteItemMessage' => 'Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan.',
 			'investment.pageTitle' => 'Investasi',

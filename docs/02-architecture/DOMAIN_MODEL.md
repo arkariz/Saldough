@@ -254,14 +254,21 @@ saat `AppMoneyFormatter` menampilkannya.
 ## Belanja
 
 `GroceryPlan` menghasilkan nominal untuk baris anggaran ber-`rollUpSource`
-`grocery`.
+`grocery`. Satu dokumen PER BULAN (ADR-0008, bagian 8b) — `id`-nya sama
+persis dengan `id` `MonthlyCycle` yang ditautkan (tautan 1:1, bukan satu
+dokumen dibaca bersama seluruh siklus terbuka seperti sebelum revisi ini).
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Identitas rencana. |
+| `id` | `String` | Format `YYYY-MM`, sama dengan `id` `MonthlyCycle` yang ditautkan. |
 | `weeklyItems` | `List<GroceryItem>` | Daftar mingguan. |
 | `monthlyItems` | `List<GroceryItem>` | Daftar bulanan. |
 | `weeksPerMonth` | `int` | Pengali daftar mingguan. Default 4. |
+
+Bulan yang belum pernah disunting TIDAK kosong — `GroceryPlanRepositoryImpl`
+menyalin `weeklyItems`/`monthlyItems`/`weeksPerMonth` dari bulan sebelumnya
+(kalau ada), baru benar-benar tersimpan sendiri saat pemilik pertama kali
+menyimpan perubahan pada bulan itu.
 
 `GroceryItem` merekam satu bahan.
 

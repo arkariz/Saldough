@@ -937,6 +937,71 @@ di verifikasi UX-01).
 Diverifikasi: `flutter analyze` (0 isu) dan `flutter test` (155 pengujian,
 153 + 2 tes baru) lulus.
 
+**12 September 2026 (2 permintaan pemilik, bukan laporan bug)** — Branch
+baru `claude/grocery-per-cycle-and-card-tab` dibuat dari `main` (setelah
+PR #17 merge). Dua permintaan pemilik, bukan perbaikan atas laporan bug:
+
+12. **`GroceryPlan` jadi satu dokumen per bulan, ditautkan 1:1 ke
+    `MonthlyCycle`** (sebelumnya satu dokumen tunggal dibaca bersama SELURUH
+    siklus terbuka — lihat amandemen ADR-0008 bagian 8b untuk analisis
+    lengkap). `GroceryPlan`/`GroceryPlanModel` diberi `id` (format `YYYY-MM`);
+    `GroceryPlanRepositoryImpl` pindah dari key storage tetap (`grocery:plan`)
+    ke key per-id (pola sama seperti `CycleRepositoryImpl`). Bulan yang belum
+    pernah disunting TIDAK kosong -- disalin dari bulan sebelumnya (keputusan
+    pemilik lewat `AskUserQuestion`, memilih opsi ini atas "kosong manual"),
+    tapi salinan itu tidak otomatis tersimpan sampai pemilik benar-benar
+    menyimpan perubahan pertamanya (sama seperti siklus baru yang "ada"
+    secara malas sampai baris pertamanya disimpan).
+
+    Tautan 1:1 diwujudkan lewat `GroceryRollUpSource` yang sekarang membawa
+    `planId` (dulu singleton `const GroceryRollUpSource()` tanpa identitas
+    apa pun -- pola yang sama seperti `CardRollUpSource.cardId` sejak awal).
+    `LineEditSheet` menerima `cycleId` baru (selalu diisi pemanggil,
+    `cycle_page.dart`) dan menautkan baris rollUp grocery BARU ke `planId`
+    = siklus yang sedang dibuka. `RollOverCycle` diperbaiki supaya
+    `planId` warisan template ditaut ULANG ke siklus baru, bukan ikut
+    disalin apa adanya (satu-satunya pengecualian pada aturan "salin
+    struktur, bukan nominal" yang butuh field tambahan, bukan cuma nominal,
+    untuk tetap benar).
+
+    `GroceryPage` mendapat pemilih bulan (`DropdownButtonFormField`, pola
+    identik `InvestmentPage`/UX-09) lewat port baru `GroceryCycleGateway`
+    (fitur `grocery`, diimplementasikan `cycle`, dikawat `RootModule` --
+    pola yang sama seperti `CycleInvestmentGateway`/`CycleIncomeWriter`,
+    ADR-0009). Dokumen lama tanpa `planId` (`{"type": "grocery"}` saja)
+    dibaca sebagai `planId` kosong, diperlakukan `GroceryRollUpResolver`
+    sebagai "sumber tidak tersedia" (bukan dilempar) -- sama seperti kartu
+    yang belum terdaftar.
+13. **Rencana Belanja dan Kartu Kredit masing-masing section sendiri** --
+    sebelumnya Kartu Kredit hanya dicapai lewat tombol `context.push` di
+    `GroceryPage` (UX-08 sempat memindahkannya ke `AppBar.actions`, tapi
+    tetap satu langkah tersembunyi). Pemilik diberi 3 opsi lewat
+    `AskUserQuestion` (tab bottom nav terpisah / 1 tab dengan sub-tab /
+    biarkan) -- memilih **1 tab "Belanja" dengan sub-tab (`TabBar`)
+    Rencana Belanja/Kartu Kredit**, supaya bottom nav tidak bertambah padat.
+
+    `_GroceryTab` (`main_shell_page.dart`) diganti `_GroceryCardTab`:
+    memasang `ScopeWidget<GroceryScope>` DAN `ScopeWidget<CardScope>`
+    bersarang (dua fitur, dua scope DI terpisah, ADR-0009 tidak dilanggar --
+    cuma tata letaknya yang disatukan, sama seperti alasan shell sudah boleh
+    melihat banyak fitur sekaligus), menggabungkan kedua bloc lewat
+    `MultiBlocProvider`, lalu `DefaultTabController`+`Scaffold`+`TabBar`+
+    `TabBarView` di atasnya. `GroceryPage`/`CardPage` diberi parameter
+    `embedded` (default `false`) -- `true` melepas `Scaffold`/`AppBar`
+    sendiri supaya tidak bertumpuk dengan `AppBar`+`TabBar` induk; rute
+    berdiri sendiri (`GroceryRouteKeys.page`/`CardRouteKeys.page`) tetap ada
+    tapi tidak lagi dicapai dari alur normal. `CardEntryPointTapped`/
+    `_effectOpenCard`/tombol "Kartu Kredit" di `GroceryPage` dihapus
+    (bukan cuma diabaikan) karena jalurnya sudah digantikan sub-tab.
+
+Diverifikasi: `flutter analyze` 0 isu, `flutter test` **165 lulus** (155 +
+6 tes repository/rollover baru + 2 tes gateway baru + 2 tes bloc baru - 1
+tes navigasi lama yang dihapus bersama `CardEntryPointTapped`). Dijalankan
+ulang juga `tool/seed_import.dart --dry-run`: seluruh 9 siklus tertutup
+masih cocok persis dengan spreadsheet, siklus terbuka (2026-10) tetap
+terhitung live dari `GroceryPlan` ber-`id` `2026-10` yang diturunkan dari
+data `cycles` (bukan ditulis tangan di skrip).
+
 ## Fase 7: Sinkronisasi
 
 Di luar MVP. Dikerjakan setelah Fase 6 selesai dan dipakai beberapa waktu.

@@ -9,20 +9,26 @@ import 'package:dependencies/dependencies.dart';
 sealed class RollUpSource extends Equatable {
   const RollUpSource();
 
-  /// Baris `Bulanan`, dihitung dari rencana belanja bulanan.
-  static const grocery = GroceryRollUpSource();
+  /// Baris `Bulanan`, dihitung dari rencana belanja ber-`id` [planId] — SAMA
+  /// dengan id siklus yang ditautkan (tautan 1:1, laporan pemilik: rencana
+  /// belanja sekarang satu dokumen per bulan, bukan lagi satu dokumen
+  /// dibaca bersama oleh semua siklus terbuka).
+  static RollUpSource grocery(String planId) => GroceryRollUpSource(planId);
 
   /// Baris tagihan kartu kredit, dihitung dari siklus tagihan [cardId].
   static RollUpSource card(String cardId) => CardRollUpSource(cardId);
 }
 
-/// Rencana belanja bulanan sebagai sumber roll-up.
+/// Satu rencana belanja bulanan tertentu sebagai sumber roll-up.
 final class GroceryRollUpSource extends RollUpSource {
-  /// Membuat [GroceryRollUpSource].
-  const GroceryRollUpSource();
+  /// Membuat [GroceryRollUpSource] untuk rencana ber-`id` [planId].
+  const GroceryRollUpSource(this.planId);
+
+  /// Identitas rencana belanja (`GroceryPlan.id`, format `YYYY-MM`).
+  final String planId;
 
   @override
-  List<Object?> get props => const ['grocery'];
+  List<Object?> get props => ['grocery', planId];
 }
 
 /// Satu kartu kredit sebagai sumber roll-up.

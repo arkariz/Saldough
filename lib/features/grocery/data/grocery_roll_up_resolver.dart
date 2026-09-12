@@ -20,8 +20,13 @@ final class GroceryRollUpResolver implements RollUpResolver {
   @override
   Future<RollUpResolution> resolve(RollUpSource source) async {
     if (source is! GroceryRollUpSource) return const RollUpResolution.unavailable();
+    // `planId` kosong berarti dokumen lama (sebelum GroceryPlan per bulan)
+    // atau baris yang belum pernah ditaut ulang -- lihat catatan di
+    // RollUpSourceModel.fromJson. Tidak ada rencana belanja yang bisa dibaca
+    // untuk id kosong, jadi sama dengan "sumber tidak tersedia".
+    if (source.planId.isEmpty) return const RollUpResolution.unavailable();
 
-    final result = await _repository.getPlan();
+    final result = await _repository.getPlan(source.planId);
     return switch (result) {
       Left() => const RollUpResolution.unavailable(),
       Right(value: final plan) => RollUpResolution(amount: _calculate(plan), isAvailable: true),

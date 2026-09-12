@@ -150,7 +150,7 @@
     "overridePriceLabel": "Timpa harga",
     "overrideAmountFieldHint": "Harga timpaan (Rp)",
     "overriddenBadge": "ditimpa",
-    "cardEntryPointLabel": "Kartu Kredit",
+    "cycleIdFieldHint": "Bulan",
     "confirmDeleteItemTitle": "Hapus $name?",
     "confirmDeleteItemMessage": "Total bulanan rencana belanja akan berubah, dan baris anggaran yang menautnya ikut menyesuaikan. Tindakan ini tidak bisa dibatalkan."
   },

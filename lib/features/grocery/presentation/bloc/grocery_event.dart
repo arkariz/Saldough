@@ -6,10 +6,22 @@ sealed class GroceryEvent {
   const GroceryEvent();
 }
 
-/// Memuat rencana belanja.
+/// Memuat rencana belanja bulan bawaan ([GroceryState.cycleId]) beserta
+/// daftar `id` siklus yang sudah dibuat (dasar pemilih bulan).
 final class GroceryPlanLoaded extends GroceryEvent {
   /// Membuat [GroceryPlanLoaded].
   const GroceryPlanLoaded();
+}
+
+/// Berpindah melihat/menyunting rencana belanja bulan [cycleId] —
+/// dipancarkan pemilih bulan di `GroceryPage` (pola sama seperti
+/// `InvestmentCycleSelected`).
+final class GroceryCycleSelected extends GroceryEvent {
+  /// Membuat [GroceryCycleSelected].
+  const GroceryCycleSelected(this.cycleId);
+
+  /// Identitas siklus (bulan) yang dipilih.
+  final String cycleId;
 }
 
 /// Menambah (kalau [id] `null`) atau menyunting satu item.
@@ -63,10 +75,4 @@ final class WeeksPerMonthChanged extends GroceryEvent {
 
   /// Pengali baru.
   final int weeksPerMonth;
-}
-
-/// Tombol "Kartu Kredit" ditekan — pindah ke layar `card`.
-final class CardEntryPointTapped extends GroceryEvent {
-  /// Membuat [CardEntryPointTapped].
-  const CardEntryPointTapped();
 }

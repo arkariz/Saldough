@@ -311,7 +311,7 @@ class _Translations$shell$en extends Translations$shell$id {
 	// Translations
 	@override String get cycleTabLabel => 'Cycle';
 	@override String get incomeTabLabel => 'Income';
-	@override String get groceryTabLabel => 'Grocery';
+	@override String get groceryTabLabel => 'Shopping';
 	@override String get investmentTabLabel => 'Investment';
 }
 
@@ -505,7 +505,7 @@ extension on TranslationsEn {
 			'investment.confirmDeleteLoanMessage' => 'The principal and repayment records will be deleted, and both goals\' balances will change. This cannot be undone.',
 			'shell.cycleTabLabel' => 'Cycle',
 			'shell.incomeTabLabel' => 'Income',
-			'shell.groceryTabLabel' => 'Grocery',
+			'shell.groceryTabLabel' => 'Shopping',
 			'shell.investmentTabLabel' => 'Investment',
 			_ => null,
 		};

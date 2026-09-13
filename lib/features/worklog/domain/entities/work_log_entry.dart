@@ -23,6 +23,13 @@ final class WorkLogEntry extends Equatable {
   /// DOMAIN_MODEL.md bagian "Catatan jam dan buku jam").
   final bool startsNewBook;
 
+  /// Salinan [WorkLogEntry] dengan [hours] diganti — dipakai menyunting
+  /// entri pada buku yang masih terbuka (laporan pemilik: sebelumnya tidak
+  /// ada cara memperbaiki jam yang salah ketik selain membiarkannya).
+  WorkLogEntry copyWith({int? hours}) {
+    return WorkLogEntry(id: id, date: date, hours: hours ?? this.hours, startsNewBook: startsNewBook);
+  }
+
   @override
   List<Object?> get props => [id, date, hours, startsNewBook];
 }

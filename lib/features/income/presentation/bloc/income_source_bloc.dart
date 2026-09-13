@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:navigation/navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/income/domain/repositories/income_worklog_gateway.dart';
 import 'package:saldough/features/income/presentation/bloc/income_source_state.dart';
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_keys.dart';
 import 'package:saldough/shared/income/income.dart';
@@ -13,7 +13,8 @@ part 'income_source_event.dart';
 /// Bloc layar pengelolaan sumber pemasukan (FR-INC-001 sampai FR-INC-003).
 final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> {
   /// Membuat [IncomeSourceBloc].
-  IncomeSourceBloc({required this._repository}) : super(IncomeSourceState.initial()) {
+  IncomeSourceBloc({required this._repository, required this._worklogGateway})
+      : super(IncomeSourceState.initial()) {
     on<IncomeSourcesLoaded>(_onLoaded);
     on<IncomeSourceSaved>(_onSaved);
     on<IncomeSourceDeleted>(_onDeleted);
@@ -21,6 +22,7 @@ final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> 
   }
 
   final IncomeSourceRepository _repository;
+  final IncomeWorklogGateway _worklogGateway;
 
   Future<void> _onLoaded(IncomeSourcesLoaded event, Emitter<IncomeSourceState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -29,7 +31,10 @@ final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> 
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
       case Right(value: final sources):
-        emit(state.copyWith(sources: sources, isLoading: false));
+        final freelanceIds = sources.where((s) => s.kind == .hourlyFreelance).map((s) => s.id).toList();
+        final hoursResult = await _worklogGateway.openBookHoursBySourceId(freelanceIds);
+        final openBookHours = hoursResult.getOrElse((_) => const {});
+        emit(state.copyWith(sources: sources, openBookHours: openBookHours, isLoading: false));
     }
   }
 
@@ -54,6 +59,6 @@ final class IncomeSourceBloc extends Bloc<IncomeSourceEvent, IncomeSourceState> 
   }
 
   void _onWorklogEntryPointTapped(WorklogEntryPointTapped event, Emitter<IncomeSourceState> emit) {
-    emit(state.copyWith(effect: _effectOpenWorklog()));
+    emit(state.copyWith(effect: _effectOpenWorklog(event.sourceId)));
   }
 }

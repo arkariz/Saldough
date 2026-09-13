@@ -26,7 +26,8 @@ void main() {
       expect(book.isClosed, isFalse);
     });
 
-    test('entri ber-startsNewBook memulai buku baru, tidak menyambung ke yang lama', () async {
+    test('entri ber-startsNewBook tetap menyambung ke buku yang masih terbuka, tidak memulai buku '
+        'kedua (UX-07: mulai buku baru wajib tutup dulu lewat BillingBookClosed)', () async {
       final first = WorkLogEntry(id: 'e1', date: DateTime(2026, 8, 29), hours: 8, startsNewBook: true);
       final second = WorkLogEntry(id: 'e2', date: DateTime(2026, 10, 3), hours: 12, startsNewBook: true);
 
@@ -35,9 +36,9 @@ void main() {
 
       final booksResult = await repository.listBooks('gaji-menul');
       final books = booksResult.getOrElse((_) => throw StateError('expected Right'));
-      expect(books, hasLength(2));
-      expect(books[0].totalHours, 8);
-      expect(books[1].totalHours, 12);
+      expect(books, hasLength(1));
+      expect(books.single.totalHours, 20);
+      expect(books.single.isClosed, isFalse);
     });
 
     test('entri baru setelah buku ditutup memulai buku baru walau startsNewBook false', () async {

@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-fixed": "#2f1500", "on-surface-variant": "#3d4a42", "background": "#fff8f5", "surface-container": "#f4ece8", "error": "#ba1a1a", "surface-container-high": "#eee7e3", "inverse-surface": "#33302d", "tertiary": "#8d4b00", "on-secondary-fixed": "#370e00", "surface-bright": "#fff8f5", "on-tertiary-fixed-variant": "#6e3900", "surface-dim": "#e0d8d5", "on-error": "#ffffff", "error-container": "#ffdad6", "inverse-on-surface": "#f7efeb", "on-tertiary": "#ffffff", "primary": "#006948", "on-secondary": "#ffffff", "primary-fixed-dim": "#68dba9", "on-primary-fixed": "#002114", "surface-tint": "#006c4a", "tertiary-container": "#b15f00", "tertiary-fixed-dim": "#ffb77d", "inverse-primary": "#68dba9", "surface-variant": "#e9e1dd", "on-primary": "#ffffff", "on-primary-container": "#f5fff7", "surface": "#fff8f5", "tertiary-fixed": "#ffdcc3", "secondary-fixed-dim": "#ffb599", "surface-container-low": "#faf2ee", "on-secondary-fixed-variant": "#7f2b00", "on-background": "#1e1b19", "on-tertiary-container": "#fffbff", "on-surface": "#1e1b19", "primary-fixed": "#85f8c4", "primary-container": "#00855d", "secondary": "#a73a00", "surface-container-highest": "#e9e1dd", "surface-container-lowest": "#ffffff", "on-error-container": "#93000a", "secondary-container": "#fd651e", "on-primary-fixed-variant": "#005137", "outline": "#6d7a72", "outline-variant": "#bccac0", "secondary-fixed": "#ffdbce", "on-secondary-container": "#571a00" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-xl": "2rem", "space-lg": "1.5rem", "margin": "1rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem" }, fontFamily: { "headline-xl-mobile": ["Space Grotesk"], "label-lg": ["Space Mono"], "body-md": ["Plus Jakarta Sans"], "label-sm": ["Space Mono"], "body-lg": ["Plus Jakarta Sans"], "headline-md": ["Space Grotesk"], "headline-xl": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "label-md": ["Space Mono"], "body-sm": ["Plus Jakarta Sans"] }, fontSize: { "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "700" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Pixel Kas Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XYSRapcLvuKIH-ip1dF-f3Wkkc2cG4DB4VQijYvMvb09AG4d9KkDB1ep7rC1qLHe76I9HtfhwFLLhLjT2FqfmyOhjsShRP3ClEuf_O71VqhQmZB3_vr6WIj2Rv9li3DQvPWCb_UiFf6pBcKxNg169IP_0DhUQfii-eHkE6KW7UJBQiTAfV5gbah56TgpN7Aa11xdIeafi45a4h9KduWrs43nQUWCj7OMDT2ngUg-gnwGE08XdR0qz_LMEM"><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">Pixel Kas</span><span class="font-label-sm text-label-sm bg-primary-fixed text-on-primary-fixed px-space-xs py-0.5 rounded">LVL 01</span></div><span class="font-label-sm text-label-sm text-on-surface-variant font-bold">Beranda</span></div></div><div class="flex items-center gap-space-sm"><button aria-label="Notifikasi" class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 min-h-screen bg-surface px-margin max-w-md mx-auto"><div class="flex flex-col w-full gap-y-space-md">
+<!-- Top Navigation & Action Banner -->
+<div class="flex items-center justify-between">
+<button aria-label="Kembali ke halaman sebelumnya" class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="flex flex-col items-center text-center">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">Langkah 02 // Transaksi</span>
+<h1 class="font-headline-md text-headline-md text-on-surface leading-tight">Catat Pengeluaran</h1>
+</div>
+<div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+</div>
+</div>
+<!-- Micro Guide Banner / Mental Model Hint -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-highest shadow-sm">
+<div class="w-7 h-7 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WcWCQGaFTVGFJqbeNGIqcn-5dTAGuf4yND7L9QCg6ExfLtB7lvJ7bsoARpIeDotgmk3mxzIDilin-rxGXEz_L8_MSjRNyUhAQX7dMJvwqlaxlJllj34M_bwgxG9Cj5RCxgVhUSUOhX2wx_BIKG5rCFLEB-2hxTzvgvMamGNvge9KoBAa2qXtPfDTRFxFic7IbODvIvC_X9cwf1yfEID5kdWCNaH6QWtIdOJV6hfbyi9UDZiCqehILczbDQ" alt="Peringatan" class="w-5 h-5 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-bold text-on-surface">Aturan Kas: Saldo Riil Terpotong</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+        Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini secara otomatis.
+      </p>
+</div>
+</div>
+<!-- 1. Hero Nominal Display & Quick Modifiers -->
+<section class="flex flex-col p-space-md rounded-xl bg-surface-container-lowest shadow-[0_4px_16px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between mb-space-xs">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant" for="nominal-input">Nominal Pengeluaran</label>
+<span class="font-label-sm text-label-sm text-error font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> KAS KELUAR
+      </span>
+</div>
+<!-- Main Amount Box -->
+<div class="flex items-baseline gap-space-xs my-space-xs py-space-xs bg-surface-container-low rounded-lg px-space-sm">
+<span class="font-label-lg text-label-lg font-bold text-secondary">Rp</span>
+<input class="w-full bg-transparent font-headline-xl-mobile text-headline-xl-mobile font-bold text-on-surface tracking-tight outline-none focus:text-error transition-colors" id="nominal-input" inputmode="numeric" placeholder="0" type="text" value="75.000">
+<button aria-label="Bersihkan nominal" class="text-on-surface-variant hover:text-on-surface p-1 rounded active:scale-90 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px]">backspace</span>
+</button>
+</div>
+<!-- Quick Pill Modifiers -->
+<div class="grid grid-cols-4 gap-space-xs mt-space-sm">
+<button class="py-1.5 px-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm text-center active:scale-95 transition-all" type="button">
+        +10rb
+      </button>
+<button class="py-1.5 px-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm text-center active:scale-95 transition-all" type="button">
+        +50rb
+      </button>
+<button class="py-1.5 px-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm text-center active:scale-95 transition-all" type="button">
+        +100rb
+      </button>
+<button class="py-1.5 px-2 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm text-center font-bold active:scale-95 transition-all" type="button">
+        Bulatkan
+      </button>
+</div>
+</section>
+<!-- 2. Kategori Pengeluaran (Category Grid) -->
+<section class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-md text-label-md text-on-surface uppercase">Kategori Transaksi</span>
+<span class="font-label-sm text-label-sm text-primary font-bold cursor-pointer hover:underline">+ Kustom</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs">
+<!-- Item: Makanan & Minuman (Selected) -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-primary text-on-primary shadow-sm active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-on-primary/15 flex items-center justify-center mb-1"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XaoP7UJPPkOBgo89Oc5sqa7_hiPsRndPDJbQWUHElnqqOi4tZ6vCTJ5Ikr7dyeAiKe79ZsiAmgFYDoOpNbipz42j3RIVWPUfZeUcWjvxrI0XKolD_xTzlnWVrMinTXvswBIKNQDtmOsOUIYn4UTyVH-HynNwy9MVFgMtxw4fKYyHHBezSm5StCaliCFxAzK0MLtkFr4QyuvXgxJBWvWxpWufV0VeqKaghUY-loz-1s0nX8JM0dDKjRk46_" alt="Makanan" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Makanan</span>
+</button>
+<!-- Item: Belanja -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center mb-1 text-on-surface-variant"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UpDJ4R8a2Jc7VoZinKe9f6FqZKpyi7gq0i2H6X3WnfuqY1SOA3XEQLtEP3wHA6mNEbAfRs60AwAQnAU5XCaX5kVg-_e1Vo58NfPRva5k9o6ms6CvCbz26L7rQkvoW6QSi2QNlxAzozxCbz9kCBkbUTtCh2qM9TENBxB8948Ou5BILFDB7NcQB7OV3Un9v-BFcK8ZVGbNohyoUekFNPttQqmJTGDM5qr8TNMpWEsM4u2-8rK0AdIfDxz8dA" alt="Belanja" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Belanja</span>
+</button>
+<!-- Item: Transport -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center mb-1 text-on-surface-variant"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UCxzJ5RpXI5yjSvUcnvefJezSVNomUjTsGpwINGY_4Yxa-S1lyEbMCoXh-IszIQ3u2curHNIAY6XZZSmANAVDmzp4rdwjcNuSb5jD2IRiHoFAcsAUo0B8nQPZLi1qqsqXiriIiWZS1wZjToY90tgLwyrmsjthgvd7U05bozgZNCeaS_nZEhHOuxS_w-ppSBa17JLekGUPXjByW5SkU1zQvSMrQINCKy_KA87ehjAN2dGrmDyAsxgwnjAk" alt="Transport" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Transport</span>
+</button>
+<!-- Item: Tagihan -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center mb-1 text-on-surface-variant"><img src="https://lh3.googleusercontent.com/aida/AEtjO1VcQ3EsJ8IwexbeMiO7JL0vDHXl6_MLk6zv4rkhM26yjmz64rCuCBKLWAoApFlVP7nar-yxz2CrUcT_WmIl81KcDpv1g6H8qEK4B8QlCLOXrHCA3bSzbHmlVgSr98Z4CUttJU0rVmI2fuuyef3RNt0G1uSw7cl_zVB8iyFoXcjgNByjSX47rqNKbIgD5faGcKyC9Y7LIXXIWBlBX8_pbjB-acw-rDpipSsoCasOEpTkejKi8dgPpdWLaho" alt="Tagihan" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Tagihan</span>
+</button>
+<!-- Item: Hiburan -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center mb-1 text-on-surface-variant"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XnLmEqn7rqxSNIqwkTq5BvZevaFQthfa0lEqLSAqG2EARSX3A25Vqrnoz2SeYLasAZEk-SaZY2TB341CBvVRevYga7GP5Sfo5ARppCpmKRVLP7vBMpGarjUWTRUMyLnvPiNTvQtlK4EOp2Ec4aOaMMtUBJ1Mchhli6CwrOyDxjEumRLp1A8fJ18HkWnqg2L0jDmk-ZEiHI3IjWcaryHwf-a5vLzqjxlfe1we_flHiug-kms6DaMTRkTIna" alt="Hiburan" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;"></div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Hiburan</span>
+</button>
+<!-- Item: Lainnya -->
+<button class="flex flex-col items-center justify-center p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center mb-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-center leading-tight truncate w-full">Lainnya</span>
+</button>
+</div>
+</section>
+<!-- 3. Dompet Sumber & Live Balance Impact -->
+<section class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-md text-label-md text-on-surface uppercase">Dompet Sumber Dana</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pilih Asal Uang</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Wallet Option: BCA (Selected) -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XT8JVtDA6Ua3Dw_5KQIcW2gKrI9lufBJPi2zTDEKBVH3xsyEHhun2jr1OZNJ8YETNC4G3oRM50YOhIfxc8r9Thv7KbvTvpv17VtHG_pklxjp9S4lxLY_le-PrFXwdM-rRu2Nue4z07my6jsAvPvx2hQ6l_de5zGPRS5k9TS0Tivd7Y3VBGHss7MDChQzmLm8dqYfNPB1G389bx4caae_VAbC-kGxufXoxTiF1X93N_hvV0XMWUMM5j-U0" alt="BCA" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispEdges;"></div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface leading-tight">Bank BCA Utama</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Saldo: Rp8.500.000</span>
+</div>
+</div>
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1XOZjwXYElBLkgG4KiPOyocfudlOo-KoAdWboB58wOlshX78eXJkDSIwWqN9FKFiPn6TCNRnrS-Z3A44ltS3Su63UCBS61-ZmGzOnK2E6fLMGU0uSfYfNNzMHqtsdFtsXtI224YmZN8a2gZnEQtId3LXCuz7Xt9lz_iyRyjam-g7l5M0emSUMpL_8Fzc6kQwnbwngs_RWvz-MaGo38ezra4kv5W8BBVRkmdPDz2Xn-izkvbhyxD7tImVuw" alt="Terpilih" class="w-5 h-5 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;">
+</div>
+<!-- Wallet Option: GoPay -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UYcTWZWQxYnVnS-0DCA6oDHv_2Rq7zDYLgKCzxl2QOJ839x08nH0vwVROdUxZZta5hBzExNrWUZFwT5LwTFbFE6H8isiZfLD_6ItAnMcErFwPCjkKV7cp7_kdVD2LeWcRr4cyyAZr0OSAnpROwbC2z_lbJjE8TR9u8ZAVUnD4gJ4yoB9XV0Hyzi_0PZ7i5EGix-mxuLVnfc-ed2P2JGwF7h1PK9IatOZF7iuWKACBTg71r469JJ_ZVYMLl" alt="GoPay" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispEdges;"></div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface leading-tight">GoPay Pay</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Saldo: Rp2.450.000</span>
+</div>
+</div>
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1WhvpchE-T1MgmxtCHwbb-7SgDGsYWP4gMIZetuqYbrlBPOnpEPkO-ou3cP0J83FPpn6vHJnkXT0_RyJrCEOvRP1ynoPrSw4iD85x3pGgIMQA7L0FAbFuHNIswOhZvXOhpzPpCzfQZ-AygzgiM54-ubEXsA2mQeJ4z_NL4ZyzuLzrrrB0IiiQebcloZPf0tuERk-7NP-_QpV7THNYxvzjuBuJ1k_6SL-Th6OpU4euTDbESSRG6eEsU90IKT" alt="Belum Terpilih" class="w-5 h-5 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;">
+</div>
+<!-- Wallet Option: Tunai -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida/AEtjO1VWas8CkeyuuL5gt2iHa1mqDcF1LVhWojP8MbyusGgeRiATGAnFkgcUzZXKjBz6zh9l56pkrStGrnbykSFGiMoCieS0A_AHSR5lR1sZfBtAkdJ_uyDsJHH-y1jZrkEgzZ_BOatmjlPHmunxd7ninwX6mGBzPQl5NfLB-uJkYgOz_Y9uKGzF-oiGL2PSgaJ8GYJRTmT4lz6DbwiO3vaucWmbMFFmJ99T1yWEGxW1k4dB__DpQy7hNGlVR_o" alt="Tunai" class="w-7 h-7 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispEdges;"></div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface leading-tight">Uang Tunai Saku</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Saldo: Rp1.500.000</span>
+</div>
+</div>
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1WhvpchE-T1MgmxtCHwbb-7SgDGsYWP4gMIZetuqYbrlBPOnpEPkO-ou3cP0J83FPpn6vHJnkXT0_RyJrCEOvRP1ynoPrSw4iD85x3pGgIMQA7L0FAbFuHNIswOhZvXOhpzPpCzfQZ-AygzgiM54-ubEXsA2mQeJ4z_NL4ZyzuLzrrrB0IiiQebcloZPf0tuERk-7NP-_QpV7THNYxvzjuBuJ1k_6SL-Th6OpU4euTDbESSRG6eEsU90IKT" alt="Belum Terpilih" class="w-5 h-5 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;">
+</div>
+</div>
+<!-- Feedback Impact Card -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-high text-on-surface-variant mt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">arrow_forward</span>
+<span class="font-label-sm text-label-sm">Estimasi Saldo BCA:</span>
+</div>
+<span class="font-label-md text-label-md font-bold text-primary">Rp8.425.000</span>
+</div>
+</section>
+<!-- 4. Tanggal & Waktu Transaksi -->
+<section class="flex flex-col gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface uppercase px-space-xs">Waktu Transaksi</span>
+<div class="flex items-center gap-space-xs">
+<button class="py-1 px-3 rounded-lg bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold" type="button">
+        Hari Ini
+      </button>
+<button class="py-1 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm" type="button">
+        Kemarin
+      </button>
+<div class="flex-1 flex items-center justify-end gap-1 px-space-sm py-1.5 rounded-lg bg-surface-container-low text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">schedule</span>
+<span class="font-label-sm text-label-sm">26 Okt 2024, 14:20</span>
+</div>
+</div>
+</section>
+<!-- 5. Catatan / Keterangan -->
+<section class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface uppercase px-space-xs" for="catatan-field">Keterangan / Catatan</label>
+<div class="flex items-center p-space-sm rounded-xl bg-surface-container-lowest shadow-sm focus-within:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant mr-space-xs">edit_note</span>
+<input class="w-full bg-transparent font-body-md text-body-md text-on-surface placeholder:text-outline-variant outline-none" id="catatan-field" placeholder="Contoh: Nasi padang &amp; es teh kantor" type="text" value="Nasi padang &amp; es teh kantor">
+</div>
+</section>
+<!-- 6. Hubungkan ke Anggaran / Budget Item Impact -->
+<section class="flex flex-col p-space-md rounded-xl bg-surface-container-low shadow-sm gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1XfXQ_nzTXWeQ65NrNGj0x11TwvcCegqNZG8u-oO3rjLOmKNx0UYA-9TqhWwzUN4YibX39PvHISZcNjgM9KmHcYpJD9gb8QRNUiU1hvC7lwnkftdu464l11W_6rJ6pmJgBYYkzTKltvliRETSxwVUsPfsEU6PHpju2ihxbpw4w932sxSa2aRKj3OYqaG_yt7TD4cDA4CnyziZv-wkaje_ajCFHyV5H72Ih4hXes66Ue9q2E1TYCCsn9QU4" alt="Anggaran" class="w-5 h-5 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;">
+<span class="font-label-md text-label-md font-bold text-on-surface">Alokasikan ke Anggaran Bulanan?</span>
+</div>
+<!-- Retro-styled Toggle Switch -->
+<div class="w-11 h-6 rounded-full bg-primary p-0.5 flex items-center justify-end cursor-pointer">
+<div class="w-5 h-5 rounded-full bg-on-primary shadow-sm"></div>
+</div>
+</div>
+<!-- Active Connected Budget Card -->
+<div class="flex flex-col gap-1.5 p-space-sm rounded-lg bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm font-bold text-on-surface">Makan Siang &amp; Kopi Harian</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">-Rp75.000</span>
+</div>
+<!-- Chunky Progress Indicator Simulation -->
+<div class="w-full bg-surface-container-high h-3 rounded overflow-hidden flex p-0.5 gap-0.5">
+<div class="h-full bg-primary rounded-xs w-2/3"></div>
+<div class="h-full bg-secondary rounded-xs w-1/12 animate-pulse"></div>
+<div class="h-full bg-transparent flex-1"></div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span class="">Sisa Sebelum: Rp450.000</span>
+<span class="text-on-surface font-bold">Sisa Akhir: Rp375.000</span>
+</div>
+</div>
+</section>
+<!-- Subtle Inline Confirmation State Feedback -->
+<div class="flex items-center justify-between px-space-sm py-2 rounded-lg bg-primary-fixed text-on-primary-fixed">
+<div class="flex items-center gap-2">
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1XOZjwXYElBLkgG4KiPOyocfudlOo-KoAdWboB58wOlshX78eXJkDSIwWqN9FKFiPn6TCNRnrS-Z3A44ltS3Su63UCBS61-ZmGzOnK2E6fLMGU0uSfYfNNzMHqtsdFtsXtI224YmZN8a2gZnEQtId3LXCuz7Xt9lz_iyRyjam-g7l5M0emSUMpL_8Fzc6kQwnbwngs_RWvz-MaGo38ezra4kv5W8BBVRkmdPDz2Xn-izkvbhyxD7tImVuw" alt="Siap" class="w-4 h-4 object-contain pixelated inline-block" style="image-rendering: pixelated; shape-rendering: crispedges;">
+<span class="font-label-sm text-label-sm uppercase font-bold">Data siap diposting ke ledger</span>
+</div>
+<span class="font-label-sm text-label-sm">LVL +10 EXP</span>
+</div>
+<!-- Primary Action Area & Footnote -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<button class="w-full py-3.5 px-space-md rounded-xl bg-error text-on-error font-headline-sm text-headline-sm uppercase tracking-wider flex items-center justify-center gap-space-xs shadow-[0_4px_12px_rgba(186,26,26,0.3)] active:scale-95 transition-all" type="button">
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1Ufj9a2cobQ66A7_P_R0NapKzxwc-d0l8y_NtgeO8glLwuUgeOm3X5ZJ7WQkrG1-jFaxMVpBnBXxXBd64nTT9JSiviQ8S4oTEcfcFT74luzxJT9FwOCHth_HUHeUvh54CZsikfpQfFptNVrSY4bAHQu7I4p3fxiuwBEAsIpVOaxnZdU6nDZ0MZSEtbcqr5Fdd3wiS1NkIrKX0pMr6gBMHnglm7Ef7vcs0_0aNs-NoLsxHg-NkFijHhzr-rp" alt="Kas Keluar" class="w-5 h-5 object-contain pixelated inline-block mr-2" style="image-rendering: pixelated; shape-rendering: crispedges;">
+<span class="">Simpan Pengeluaran</span>
+</button>
+<p class="font-label-sm text-label-sm text-center text-on-surface-variant leading-relaxed">
+      *Catatan internal Pixel Kas. Tidak mendebit rekening perbankan riil.
+    </p>
+</div>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.06)]" data-active-classes="text-primary font-bold"><div class="relative h-16 max-w-md mx-auto px-space-xs flex items-center justify-around"><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-12 transition-all text-primary font-bold" data-path="beranda" href="#"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UFNQAWngXwe8VMYld6dVr-K0su9Km4iX-t2kLH-mrE7LUgrYIKB5O2NkBAZw2RZ7u31MpyT-2ube1UcvSjp-LpuddVkaADn9KKRp_52PlYTQbfU741qHqk_NzZpqvs0T3SCBmEH5fEenQR2c2w-hg1EHKD6j8fHmQHpVOf7L2QjFtmI_hOMuyRv9OO_GdigxousnhFwrw10WjvGjPlswizdxNTILyTGh4iyum8dWQAlfop7VnkLhA9AYHC" alt="Beranda" class="w-5 h-5 object-contain pixelated" style="image-rendering: pixelated; shape-rendering: crispedges;"><span class="font-label-sm text-label-sm mt-0.5">Beranda</span></a><a class="flex flex-col items-center justify-center w-14 h-12 text-on-surface-variant hover:text-on-surface transition-all" data-path="anggaran" href="#"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XfXQ_nzTXWeQ65NrNGj0x11TwvcCegqNZG8u-oO3rjLOmKNx0UYA-9TqhWwzUN4YibX39PvHISZcNjgM9KmHcYpJD9gb8QRNUiU1hvC7lwnkftdu464l11W_6rJ6pmJgBYYkzTKltvliRETSxwVUsPfsEU6PHpju2ihxbpw4w932sxSa2aRKj3OYqaG_yt7TD4cDA4CnyziZv-wkaje_ajCFHyV5H72Ih4hXes66Ue9q2E1TYCCsn9QU4" alt="Anggaran" class="w-5 h-5 object-contain pixelated" style="image-rendering: pixelated; shape-rendering: crispedges;"><span class="font-label-sm text-label-sm mt-0.5">Anggaran</span></a><div class="relative flex flex-col items-center justify-center w-16 -mt-5"><button aria-label="Catat Transaksi" class="w-14 h-14 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shadow-[0_4px_12px_rgba(0,105,72,0.35)] active:scale-95 transition-transform" type="button"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XjMUMlNqIHiVyHgz5oiCES6DZSV0flSXl6I0PilUcGttKKcShlS3oHjvhKKy6h4MrXrwaHaD_NXWZ1Svf6WUNzzU0OP_1LX6tsK00eCOO7ipNR3sUwJIFgg1DrMOlyxHaHtTkPAfSccJ1tJKV7ZISDBZ6KZ0pcszDQX3Gyx4lK1N8RBodKjsbz661fhDNSneR-UbYQqY1ru9w8Y3sbFesmEaDCodIKi42zbzPBkee4Gb5-Gdn9cwecE1E" alt="Catat" class="w-7 h-7 object-contain pixelated" style="image-rendering: pixelated; shape-rendering: crispedges;"><span class="font-label-sm text-label-sm text-[9px] uppercase tracking-wider font-bold -mt-0.5">CATAT</span></button></div><a class="flex flex-col items-center justify-center w-14 h-12 text-on-surface-variant hover:text-on-surface transition-all" data-path="transaksi" href="#"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UkCwsjw07cVtMwrwr7gEa2BvreuuE3OkrvrmH1UKf05VnEVmxRGhS3As-VsRdy0qRtY-7S4BILTH290o3-FWXeXEnLLxsUUDBDuQqv1nymUOL7n-0jOXuavtC-x6VKh2vozaWJxnP2DCdu5U1v3oQ-rO-Hwkz7GP1azkgjRJBMpPL_DH9HjhExcGiIITFClCfeDO_QoLtOCiMKE8lvqhx81CooE4DpKJY4CMyCg5A8he7azCdC7qAeFe-U" alt="Transaksi" class="w-5 h-5 object-contain pixelated" style="image-rendering: pixelated; shape-rendering: crispedges;"><span class="font-label-sm text-label-sm mt-0.5">Transaksi</span></a><a class="flex flex-col items-center justify-center w-14 h-12 text-on-surface-variant hover:text-on-surface transition-all" data-path="dompet" href="#"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WYoKIIi3ZkaZX_yC1hf_XOxfO6A1JkvvSIPWKEu8jO-CJx9t_l52dOZ9gqzFeEWVBVVB1JEqbX9IC1QPwbCdjgKKD9wIP751-tp0vd4NgWvynJhD5UAIDBJfCORG02EhJOw0SaOw27MUs0O9yfe1fkmhwsXliOJXoSVedGy3fcBuOjMAtXUGf5ywZJheC_v0IbhHvWoxmYorAtbmOGlLCRq5brGA4q8NE46LnmmJdItS_B5EcxbNs9pME" alt="Dompet" class="w-5 h-5 object-contain pixelated" style="image-rendering: pixelated; shape-rendering: crispedges;"><span class="font-label-sm text-label-sm mt-0.5">Dompet</span></a></div></nav>
+
+</body></html>

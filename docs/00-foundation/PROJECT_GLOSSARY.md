@@ -9,90 +9,114 @@ antarmuka dan percakapan, dan **nama kode** dalam bahasa Inggris untuk dipakai
 sebagai nama kelas, field, dan file. Kode Saldough seluruhnya berbahasa Inggris;
 bahasa Indonesia hanya muncul di berkas terjemahan slang.
 
-## Istilah domain
+> **Catatan revisi (17 September 2026):** Seluruh istilah domain di dokumen ini
+> diganti. Saldough 1.0 memakai kosakata spreadsheet — siklus bulanan, baris
+> pemasukan, roll-up, rollover, pos tujuan. Saldough 2.0 berporos pada dompet,
+> transaksi, dan anggaran, jadi kosakata lama tidak lagi punya rujukan di kode.
+> Istilah 1.0 masih bisa dibaca lewat riwayat git dan lewat
+> [arsip perencanaan](../99-archive/README.md). Bagian arsitektur dan konvensi
+> penamaan tidak berubah kecuali satu koreksi yang disebut di tempatnya.
 
-Istilah di bagian ini berasal langsung dari cara kerja pemilik, seperti direkam
-di [MANUAL_PROCESS_ANALYSIS.md](MANUAL_PROCESS_ANALYSIS.md).
+## Bahasa yang dipakai aplikasi
+
+Saldough **mencatat** apa yang terjadi pada uang pemilik. Ia tidak memindahkan
+uang, tidak membayar, tidak menarik atau menyetor dana, dan tidak terhubung ke
+bank mana pun. Kosakata antarmuka harus mencerminkan itu.
+
+| Pakai | Jangan pakai | Sebabnya |
+|---|---|---|
+| Catat Transfer | Transfer Sekarang | Aplikasi tidak memindahkan uang, hanya mencatat bahwa uang sudah dipindahkan |
+| Transfer tercatat | Transfer berhasil | "Berhasil" menyiratkan ada operasi keuangan yang dijalankan |
+| Catat Pembayaran | Bayar Sekarang | Pembayaran terjadi di luar aplikasi |
+| Pembayaran tercatat | Pembayaran berhasil | Sama seperti di atas |
+| Catat Pengeluaran | Kirim Uang | Aplikasi tidak punya kemampuan mengirim apa pun |
+
+## Dompet dan transaksi
+
+Istilah di bagian ini adalah inti produk: di mana uang berada, dan apa yang
+terjadi padanya.
 
 | Nama Indonesia | Nama kode | Arti |
 |---|---|---|
-| Siklus bulanan | `MonthlyCycle` | Satu bulan anggaran utuh, berisi pemasukan, anggaran, dan rencana investasi. Diidentifikasi dengan `YYYY-MM`. Setara satu blok tabel di spreadsheet utama. |
-| Baris pemasukan | `IncomeLine` | Satu baris di bagian PEMASUKAN, misalnya `Gaji Koko` atau `THR Laufey`. |
-| Baris anggaran | `BudgetLine` | Satu baris di bagian ANGGARAN SEBULAN, misalnya `listrik` atau `Kos`. |
-| Baris tetap | `isTemplate: true` | Baris yang muncul hampir tiap bulan dan ikut terbawa saat rollover. |
-| Baris insidental | `isTemplate: false` | Baris yang hanya berlaku di satu bulan dan tidak terbawa saat rollover. |
-| Roll-up | `BudgetLineKind.rollUp` | Baris anggaran yang nominalnya bukan diketik, melainkan dihitung dari sumber lain. Tiga yang ada: belanja, dan dua kartu kredit. |
-| Sisa | `remainder` | Total pemasukan dikurangi total anggaran. Boleh negatif. |
-| Lewat anggaran | `isOverBudget` | Kondisi saat sisa bernilai negatif. |
-| Template siklus | `CycleTemplate` | Kumpulan baris tetap yang dipakai membuat siklus bulan berikutnya. |
-| Rollover | `rollOver` | Tindakan membuat siklus bulan baru dari template. |
+| Dompet | `Wallet` | Tempat uang pemilik tercatat berada. Contoh: `BCA`, `Bank Capital`, `Tunai`, `GoPay`, `Tabungan`. Tidak terhubung ke lembaga keuangan mana pun. |
+| Saldo awal | `initialBalance` | Nominal yang dinyatakan pemilik saat dompet dibuat. Bukan transaksi setoran. |
+| Saldo tercatat | `currentBalance` | Saldo dompet saat ini menurut catatan aplikasi. |
+| Total saldo | `totalBalance` | Jumlah saldo seluruh dompet aktif. Angka utama di Beranda. |
+| Transaksi | `Transaction` | Satu peristiwa keuangan yang benar-benar terjadi. Punya tanggal. Tiga jenis di bawah ini. |
+| Pemasukan | `IncomeTransaction` | Menambah saldo satu dompet. |
+| Pengeluaran | `ExpenseTransaction` | Mengurangi saldo satu dompet. Boleh ditautkan ke satu pos anggaran. |
+| Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. |
+| Kategori | `categoryKey` | Label pengelompokan transaksi, misalnya `makan` atau `transport`. |
+| Catat | `record` | Satu-satunya titik masuk pembuatan transaksi manual. Lihat bagian berikutnya. |
 
-## Pemasukan dan jam kerja
+Perhatikan bahwa **membuat anggaran tidak pernah mengubah saldo dompet**. Saldo
+hanya berubah kalau ada transaksi yang dicatat. Aturan ini dijabarkan di
+[ADR-011](../02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md).
 
-Istilah di bagian ini menjelaskan bagaimana penghasilan freelance per jam
-berubah menjadi satu baris pemasukan.
+## Pencatatan
+
+Istilah di bagian ini menjelaskan alur pembuatan transaksi.
 
 | Nama Indonesia | Nama kode | Arti |
 |---|---|---|
-| Sumber pemasukan | `IncomeSource` | Definisi sumber penghasilan yang berlaku lintas bulan, bukan nominal per bulan. |
-| Gaji tetap | `IncomeSourceKind.fixedSalary` | Sumber pemasukan bernominal sama tiap bulan. Contoh: `Gaji Koko`. |
-| Freelance per jam | `IncomeSourceKind.hourlyFreelance` | Sumber pemasukan yang nominalnya dihitung dari jam kerja dikali tarif. Contoh: `Gaji Menul`. |
-| Sekali jalan | `IncomeSourceKind.adHoc` | Pemasukan sekali jalan tanpa aturan hitung. Contoh: `THR Laufey`. |
-| Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja freelance. |
-| Catatan jam | `WorkLogEntry` | Satu entri jam kerja harian: tanggal, jumlah jam, dan penanda buku baru. |
-| Hari buku baru | `startsNewBook` | Penanda pada catatan jam yang menandakan awal periode tagihan baru. |
-| Buku jam | `BillingBook` | Satu periode tagihan freelance, yaitu kumpulan catatan jam dari satu penanda buku baru sampai penanda berikutnya. |
-| Total jam | `totalHours` | Jumlah seluruh jam dalam satu buku jam. |
-| Gaji kotor | `grossPay` | Total jam dikali tarif per jam. |
+| CATAT | `RecordRouteKeys.sheet` | Tombol utama di navigasi bawah yang membuka pilihan jenis transaksi. Satu-satunya jalur kanonik pembuatan transaksi manual. |
+| Catat Pemasukan | `RecordKind.income` | Membuat satu `IncomeTransaction`. |
+| Catat Pengeluaran | `RecordKind.expense` | Membuat satu `ExpenseTransaction`. |
+| Catat Transfer | `RecordKind.transfer` | Membuat satu `TransferTransaction`. |
+| Pintasan kontekstual | — | Tombol di layar lain (misalnya rincian dompet) yang membuka CATAT dengan satu field sudah terisi. Bukan alur pencatatan tersendiri. |
+
+## Anggaran
+
+Istilah di bagian ini menjelaskan rencana pengeluaran. Anggaran adalah rencana,
+bukan pemesanan uang.
+
+| Nama Indonesia | Nama kode | Arti |
+|---|---|---|
+| Anggaran | `Budget` | Satu rencana pengeluaran untuk satu periode, terikat pada satu dompet. Boleh ada beberapa sekaligus. |
+| Pos anggaran | `BudgetItem` | Satu baris di dalam anggaran, misalnya `Belanja` atau `Listrik`. |
+| Nominal rencana | `plannedAmount` | Berapa yang direncanakan, baik di tingkat anggaran maupun pos. |
+| Jumlah dan harga satuan | `quantity`, `unitPrice` | Rincian opsional sebuah pos, untuk pos yang berupa daftar belanja. |
+| Terpakai | `spent` | Jumlah pengeluaran yang tertaut. Dihitung dari transaksi, tidak pernah disimpan. |
+| Sisa anggaran | `remaining` | Nominal rencana dikurangi terpakai. Boleh negatif. |
+| Progres | `progress` | Terpakai dibagi nominal rencana. |
+| Belum terpakai | `BudgetItemStatus.planned` | Belum ada pengeluaran yang tertaut. |
+| Terpakai sebagian | `BudgetItemStatus.partiallySpent` | Sudah ada pengeluaran, masih di bawah rencana. |
+| Selesai | `BudgetItemStatus.completed` | Terpakai sama dengan nominal rencana. |
+| Lewat anggaran | `BudgetItemStatus.overspent` | Terpakai melebihi nominal rencana. |
+| Periode | `BudgetPeriod` | Rentang berlakunya anggaran: `weekly` atau `monthly`. |
+| Template anggaran | `BudgetTemplate` | Definisi yang bisa dipakai ulang untuk membuat anggaran baru. Bukan anggaran aktif. |
+
+Sebuah anggaran terikat pada **satu** dompet, dan hanya pengeluaran dari dompet
+itu yang menambah `spent`. Konsekuensinya dicatat terbuka sebagai risiko di
+[ADR-011](../02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md).
+
+## Freelance
+
+Istilah di bagian ini menjelaskan penghasilan yang sudah dikerjakan tetapi belum
+tentu sudah diterima. Ini domain pendukung, bukan inti.
+
+| Nama Indonesia | Nama kode | Arti |
+|---|---|---|
+| Proyek freelance | `FreelanceProject` | Klien atau proyek beserta tarif per jam dan aturan potongannya. |
+| Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja. |
+| Worklog | `WorklogEntry` | Satu entri kerja: tanggal dan jumlah jam. |
+| Diperoleh | `earnedAmount` | Jam dikali tarif. Pekerjaan yang sudah selesai, **belum tentu diterima**. |
+| Pembayaran freelance | `FreelancePayment` | Kumpulan worklog yang ditagihkan sebagai satu pembayaran. |
+| Belum dibayar | `PaymentStatus.pending` | Pembayaran belum diterima. Tidak menyentuh saldo dompet. |
+| Sudah dibayar | `PaymentStatus.paid` | Pembayaran sudah dicatat diterima, dan sudah menghasilkan satu `IncomeTransaction`. |
+| Tanggal pembayaran | `expectedDate` | Perkiraan kapan pembayaran diterima. |
 | Potongan | `DeductionRule` | Pengurang gaji kotor, berupa per mil atau nominal tetap. |
-| Gaji bersih | `netPay` | Gaji kotor dikurangi seluruh potongan. Angka ini yang masuk ke baris pemasukan. |
+| Gaji kotor | `grossPay` | Total jam dikali tarif per jam. |
+| Gaji bersih | `netPay` | Gaji kotor dikurangi seluruh potongan. Angka inilah yang jadi nominal `IncomeTransaction` saat pembayaran dicatat. |
 
-Perhatikan bahwa **buku jam tidak sama dengan bulan kalender**. Satu buku jam
-bisa membentang dari akhir bulan ke pertengahan bulan berikutnya, dan panjangnya
-bervariasi dari delapan hari sampai hampir satu bulan.
+Bedakan dengan tegas antara **diperoleh** dan **diterima**. Kerja yang sudah
+selesai tidak pernah menambah saldo dompet. Saldo baru berubah saat pemilik
+mencatat bahwa pembayarannya benar-benar diterima.
 
-## Belanja
-
-Istilah di bagian ini menjelaskan bagaimana dua daftar belanja menjadi satu
-baris anggaran.
-
-| Nama Indonesia | Nama kode | Arti |
-|---|---|---|
-| Rencana belanja | `GroceryPlan` | Kumpulan daftar mingguan dan bulanan beserta pengali minggunya. |
-| Daftar mingguan | `weeklyItems` | Bahan yang habis tiap minggu dan dibeli berulang. |
-| Daftar bulanan | `monthlyItems` | Kebutuhan yang bertahan sebulan dan dibeli sekali. |
-| Item belanja | `GroceryItem` | Satu bahan: nama, jumlah, harga satuan, dan harga. |
-| Harga timpaan | `amountOverride` | Harga yang diketik manual dan mengabaikan hasil jumlah dikali harga satuan. |
-| Pengali minggu | `weeksPerMonth` | Berapa kali daftar mingguan dihitung dalam sebulan. Default empat. |
-| Total sebulan | `groceryRollUp` | Subtotal mingguan dikali pengali minggu, ditambah subtotal bulanan. |
-
-## Kartu kredit
-
-Istilah di bagian ini menjelaskan bagaimana transaksi kartu menjadi satu baris
-anggaran.
-
-| Nama Indonesia | Nama kode | Arti |
-|---|---|---|
-| Kartu | `CreditCard` | Satu kartu kredit beserta tanggal cetak tagihannya. |
-| Siklus tagihan | `CardStatement` | Satu periode tagihan pada satu kartu, berisi transaksi periode itu. |
-| Transaksi kartu | `CardTransaction` | Satu transaksi: tanggal, merchant, nominal, dan catatan. |
-| Langganan | `RecurringSubscription` | Template transaksi yang berulang tiap siklus dengan nominal tetap. Contoh: Netflix Rp65.000. |
-| Total tagihan | `cardRollUp` | Jumlah seluruh transaksi dalam satu siklus tagihan. |
-
-## Investasi
-
-Istilah di bagian ini menjelaskan pembagian sisa ke pos tujuan.
-
-| Nama Indonesia | Nama kode | Arti |
-|---|---|---|
-| Pos tujuan | `Goal` | Tujuan keuangan bersaldo. Contoh: `ANAK`, `RUMAH`, `PENSIUN`, `SEKOLAH`, `KYOTO`, `SAHAM`. |
-| Rencana investasi | `InvestmentPlan` | Bagian siklus bulanan yang membagi sisa ke pos tujuan. |
-| Return deposit | `returnDeposit` | Tambahan dana di luar sisa yang ikut dibagikan ke pos. |
-| Budget investasi | `investmentBudget` | Sisa ditambah return deposit. Ini yang dibagi berdasarkan persentase. |
-| Alokasi | `Allocation` | Bagian satu pos: persentase dan nominal hasil hitungnya. |
-| Pinjaman antar pos | `GoalLoan` | Peminjaman dana dari satu pos untuk keperluan pos lain. |
-| Pokok pinjaman | `principal` | Nominal yang dipinjam. |
-| Pengembalian | `repaid` | Nominal yang dikembalikan. Boleh berbeda dari pokok. |
+Perhatikan juga bahwa **pembayaran tidak mengikuti bulan kalender**. Satu
+pembayaran bisa mencakup jam kerja yang membentang dari akhir bulan ke
+pertengahan bulan berikutnya, dan panjangnya bervariasi dari delapan hari sampai
+hampir satu bulan.
 
 ## Istilah arsitektur
 
@@ -106,29 +130,43 @@ Penjelasan lengkapnya ada di
 | `UiEffect` | Aksi sekali jalan dari bloc ke UI, misalnya menampilkan snackbar atau berpindah halaman. |
 | `EffectRegistry` | Pendaftaran penangan efek. Memetakan tipe efek ke fungsi penanganannya. |
 | `EffectListener` | Widget yang menjembatani efek dari bloc ke penanganannya di UI. |
-| `Failure` | Kelas dasar kesalahan dari `package:failures`. Dilempar dengan `throw`, bukan dibungkus `Either`. |
-| `RouteKey` | Identitas rute bertipe dari `package:navigation`, misalnya `cycle.detail`. |
+| `Failure` | Kelas dasar kesalahan dari `package:failures`. Dikembalikan sebagai `Left` dari `Either<Failure, T>` lewat `RepositoryGuard`, bukan dilempar dengan `throw`. |
+| `RepositoryGuard` | Mixin yang membungkus operasi data supaya kesalahannya keluar sebagai `Left`, bukan sebagai lemparan. |
+| `RouteKey` | Identitas rute bertipe dari `package:navigation`, misalnya `wallet.detail`. |
 | `RouteInput` | Argumen bertipe yang dikirim ke sebuah rute. |
 | `FeatureRouteModule` | Kumpulan rute milik satu fitur. |
 | `IsolatedScope` | Kontainer dependensi terpisah milik satu fitur, dari `package:di`. |
 | `StoredValue` | Pembungkus baca-tulis satu nilai di penyimpanan, dari `package:api_storage`. |
-| Roll-up otomatis | Mekanisme yang memperbarui baris anggaran roll-up saat sumbernya berubah. |
+| `AppIcon` | Pembungkus ikon yang memetakan kunci semantik ke aset gambar, supaya penggantian set ikon tidak menyentuh berkas halaman. |
+
+> **Koreksi (17 September 2026):** Baris `Failure` di atas sebelumnya berbunyi
+> "Dilempar dengan `throw`, bukan dibungkus `Either`". Itu sudah salah sejak
+> [ADR-0005](../02-architecture/adr/0005-either-failure-convention.md) dibalik
+> pada 10 September 2026, tetapi glosariumnya tidak ikut diperbarui. Kode selalu
+> mengikuti ADR-0005, jadi yang keliru hanya dokumen ini.
 
 ## Konvensi penamaan
 
 Aturan ini berlaku untuk seluruh kode dan dokumen di repositori.
 
-- Kelas memakai `PascalCase`, misalnya `MonthlyCycle` dan `CycleBloc`.
-- Variabel dan fungsi memakai `camelCase`, misalnya `totalHours`.
-- Berkas memakai `snake_case`, misalnya `monthly_cycle.dart`.
-- Anggota privat diawali garis bawah, misalnya `_calculateRemainder`.
-- Nama entitas domain tidak disingkat. Tulis `CardStatement`, bukan `CardStmt`.
-- Nama pos tujuan disimpan sebagai data, bukan sebagai enum. Pemilik bisa
-  menambah atau mengubah pos tanpa mengubah kode.
+- Kelas memakai `PascalCase`, misalnya `Wallet` dan `TransactionBloc`.
+- Variabel dan fungsi memakai `camelCase`, misalnya `currentBalance`.
+- Berkas memakai `snake_case`, misalnya `expense_transaction.dart`.
+- Anggota privat diawali garis bawah, misalnya `_recomputeBalance`.
+- Nama entitas domain tidak disingkat. Tulis `FreelancePayment`, bukan
+  `FrlPayment`.
+- Nama dompet dan kategori disimpan sebagai data, bukan sebagai enum. Pemilik
+  bisa menambah atau mengubahnya tanpa mengubah kode.
+- Jenis transaksi justru sebaliknya: `IncomeTransaction`, `ExpenseTransaction`,
+  dan `TransferTransaction` adalah tipe tertutup (`sealed`), karena menambah
+  jenis baru mengubah aturan perhitungan saldo dan harus dipikirkan, bukan
+  diketik pemilik.
 
 ## Langkah berikutnya
 
-Lanjutkan ke [MANUAL_PROCESS_ANALYSIS.md](MANUAL_PROCESS_ANALYSIS.md) untuk
-memahami asal setiap istilah domain, atau ke
-[DOMAIN_MODEL.md](../02-architecture/DOMAIN_MODEL.md) untuk melihat entitas dan
-rumusnya.
+Lanjutkan ke [PRD 2.0](../01-product/prd-saldough-2.0.md) untuk melihat apa yang
+dibangun, atau ke [DOMAIN_MODEL.md](../02-architecture/DOMAIN_MODEL.md) untuk
+melihat entitas dan rumusnya. Untuk memahami kebiasaan keuangan pemilik yang
+melatarbelakangi produk ini, baca
+[MANUAL_PROCESS_ANALYSIS.md](MANUAL_PROCESS_ANALYSIS.md) — dokumen itu tetap
+berlaku meski produknya berganti bentuk.

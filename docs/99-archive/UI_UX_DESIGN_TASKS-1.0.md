@@ -1,12 +1,19 @@
-# Tugas desain UI/UX
+# Tugas desain UI/UX — Saldough 1.0 (arsip)
+
+> **Arsip.** Dokumen ini milik Saldough 1.0, produk pengganti spreadsheet yang
+> berporos pada `MonthlyCycle`. Ia dibekukan pada 17 September 2026 saat produk
+> dialihkan ke model Dompet + Transaksi + Anggaran, dan tidak lagi diperbarui.
+> Kode yang dirujuknya bisa dipulihkan lewat tag git `pre-pivot-1.0`. Daftar
+> kerja yang berlaku sekarang ada di
+> [TASK_LIST.md](../04-planning/TASK_LIST.md).
 
 Dokumen ini melacak pekerjaan desain visual Saldough, terpisah dari
-[TASK_LIST.md](TASK_LIST.md) yang melacak pekerjaan kode. Keduanya memetakan
+[TASK_LIST-1.0.md](TASK_LIST-1.0.md) yang melacak pekerjaan kode. Keduanya memetakan
 ke requirement PRD yang sama, tapi desain selesai lebih dulu — sejalan
 dengan preferensi pemilik "dokumentasi dan desain lebih dulu, kode menyusul".
 
 Setiap tugas desain diberi identitas `D-<fase>.<nomor>`, memakai nomor fase
-yang sama dengan [ROADMAP.md](ROADMAP.md), supaya satu fitur mudah dilacak
+yang sama dengan [ROADMAP-1.0.md](ROADMAP-1.0.md), supaya satu fitur mudah dilacak
 dari desain sampai kode. Desain tidak punya Fase 0 (gerbang dependensi) atau
 Fase 7 (sinkronisasi) sendiri — keduanya tidak punya permukaan visual baru
 di MVP.
@@ -357,7 +364,7 @@ diminta terpisah") sekarang diselesaikan:
   `…OnLight`; nilainya kini resmi di
   [ADR-0006](../02-architecture/adr/0006-design-token-semantic-color-mapping.md)
   bagian "Varian `…OnLight`", dan pengerjaan kodenya dilacak sebagai UX-22 di
-  [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md). Catatan kontras lama dengan
+  [UX_REVIEW_FIXES-1.0.md](UX_REVIEW_FIXES-1.0.md). Catatan kontras lama dengan
   demikian baru tertutup penuh sekarang.
 - **`.claude/CLAUDE.md` dan `AGENT_CONTEXT.md`**: baris `new-health-duel`
   diperbarui dari "acuan tema" menjadi "acuan pola teknis theming Flutter

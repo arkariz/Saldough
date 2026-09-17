@@ -1,13 +1,20 @@
-# Daftar tugas dan progres
+# Daftar tugas dan progres — Saldough 1.0 (arsip)
+
+> **Arsip.** Dokumen ini milik Saldough 1.0, produk pengganti spreadsheet yang
+> berporos pada `MonthlyCycle`. Ia dibekukan pada 17 September 2026 saat produk
+> dialihkan ke model Dompet + Transaksi + Anggaran, dan tidak lagi diperbarui.
+> Kode yang dirujuknya bisa dipulihkan lewat tag git `pre-pivot-1.0`. Daftar
+> kerja yang berlaku sekarang ada di
+> [TASK_LIST.md](../04-planning/TASK_LIST.md).
 
 Dokumen ini adalah daftar kerja Saldough beserta status penyelesaiannya.
 Perbarui kotak centang di sini setiap kali sebuah tugas selesai.
 
-Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md). Untuk
+Untuk alasan di balik urutan fase, lihat [ROADMAP-1.0.md](ROADMAP-1.0.md). Untuk
 pekerjaan desain visual per fase — yang selesai lebih dulu daripada kode —
-lihat [UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md). Untuk perbaikan yang
+lihat [UI_UX_DESIGN_TASKS-1.0.md](UI_UX_DESIGN_TASKS-1.0.md). Untuk perbaikan yang
 lahir dari review UX terhadap kode yang sudah jalan — bukan tugas fase baru —
-lihat [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md).
+lihat [UX_REVIEW_FIXES-1.0.md](UX_REVIEW_FIXES-1.0.md).
 
 ## Cara memakai dokumen ini
 

@@ -1,4 +1,11 @@
-# Perbaikan hasil review UX — daftar kerja dan progres
+# Perbaikan hasil review UX — Saldough 1.0 (arsip)
+
+> **Arsip.** Dokumen ini milik Saldough 1.0, produk pengganti spreadsheet yang
+> berporos pada `MonthlyCycle`. Ia dibekukan pada 17 September 2026 saat produk
+> dialihkan ke model Dompet + Transaksi + Anggaran, dan tidak lagi diperbarui.
+> Kode yang dirujuknya bisa dipulihkan lewat tag git `pre-pivot-1.0`. Daftar
+> kerja yang berlaku sekarang ada di
+> [TASK_LIST.md](../04-planning/TASK_LIST.md).
 
 Dokumen ini adalah daftar kerja untuk menindaklanjuti review produk/UX yang
 dijalankan skill [`ux-review`](../../.claude/skills/ux-review/SKILL.md) pada
@@ -13,7 +20,7 @@ ditambah, tes yang perlu ditulis, dan cara memverifikasinya.
 
 ## Cara memakai dokumen ini
 
-Aturan pencentangan sama ketat dengan [TASK_LIST.md](TASK_LIST.md): kotak
+Aturan pencentangan sama ketat dengan [TASK_LIST-1.0.md](TASK_LIST-1.0.md): kotak
 hanya dicentang kalau perbaikannya **selesai dan terverifikasi**. Pekerjaan
 setengah jalan dibiarkan kosong dengan catatan satu baris apa yang kurang.
 
@@ -1838,8 +1845,8 @@ gagal.
 ## Catatan pengerjaan
 
 Bagian ini diisi saat item dikerjakan — satu entri per ronde, mengikuti
-kebiasaan [TASK_LIST.md](TASK_LIST.md) dan
-[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md): apa yang dikerjakan, apa yang
+kebiasaan [TASK_LIST-1.0.md](TASK_LIST-1.0.md) dan
+[UI_UX_DESIGN_TASKS-1.0.md](UI_UX_DESIGN_TASKS-1.0.md): apa yang dikerjakan, apa yang
 diputuskan pemilik, apa yang sengaja ditunda, dan hasil verifikasinya
 (`flutter analyze`, `flutter test`, rekonsiliasi seed kalau menyentuh angka).
 

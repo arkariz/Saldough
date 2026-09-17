@@ -1,8 +1,15 @@
-# Roadmap
+# Roadmap — Saldough 1.0 (arsip)
+
+> **Arsip.** Dokumen ini milik Saldough 1.0, produk pengganti spreadsheet yang
+> berporos pada `MonthlyCycle`. Ia dibekukan pada 17 September 2026 saat produk
+> dialihkan ke model Dompet + Transaksi + Anggaran, dan tidak lagi diperbarui.
+> Kode yang dirujuknya bisa dipulihkan lewat tag git `pre-pivot-1.0`. Daftar
+> kerja yang berlaku sekarang ada di
+> [TASK_LIST.md](../04-planning/TASK_LIST.md).
 
 Dokumen ini menjelaskan urutan pengerjaan Saldough dan alasan di balik
 urutannya. Untuk daftar tugas yang bisa langsung dikerjakan beserta
-progresnya, lihat [TASK_LIST.md](TASK_LIST.md).
+progresnya, lihat [TASK_LIST-1.0.md](TASK_LIST-1.0.md).
 
 ## Prinsip penyusunan fase
 

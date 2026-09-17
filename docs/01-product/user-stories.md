@@ -1,263 +1,249 @@
 # User stories
 
 Dokumen ini menerjemahkan kebutuhan fungsional di
-[PRD](prd-saldough-1.0.md) menjadi cerita dari sudut pandang pemilik. Gunakan
+[PRD](prd-saldough-2.0.md) menjadi cerita dari sudut pandang pemilik. Gunakan
 dokumen ini saat merancang alur layar; gunakan PRD saat memastikan kelengkapan
 kebutuhan.
 
 Semua cerita memakai satu peran, yaitu **pemilik**, karena MVP dipakai satu
 orang. Peran kedua baru muncul pada tahap sinkronisasi.
 
-Setiap cerita mencantumkan requirement PRD yang dipenuhinya.
+> **Catatan versi (17 September 2026):** Seluruh cerita di dokumen ini ditulis
+> ulang untuk Saldough 2.0. Cerita 1.0 berporos pada siklus bulanan spreadsheet
+> dan sudah tidak punya rujukan di produk maupun kode. Versi lamanya bisa dibaca
+> lewat riwayat git.
 
-## Epik 1: Menutup bulan
+## Epik 1: Tahu uang saya di mana
 
-Ini alur paling sering dipakai dan paling banyak memakan waktu pada proses
-manual.
+**US-01 — Melihat seluruh uang saya dalam satu layar**
 
-**US-01 — Membuat bulan baru tanpa menyalin manual**
+Sebagai pemilik, saya ingin melihat total uang saya beserta rinciannya per
+dompet dalam satu layar, supaya saya tidak perlu membuka aplikasi bank satu per
+satu untuk tahu posisi keuangan saya.
 
-Sebagai pemilik, saya ingin membuat siklus bulan berikutnya dalam satu tindakan,
-supaya saya tidak perlu menyalin blok bulan lalu dan menyuntingnya baris per
-baris.
+- Total saldo seluruh dompet aktif tampil paling menonjol.
+- Tiap dompet menampilkan nama, ikon, dan saldo tercatatnya.
+- Saldo negatif ditampilkan apa adanya dengan tanda minus, bukan ditolak.
+- Memenuhi FR-WAL-003 dan FR-HOME-001.
 
-- Baris tetap terbawa, baris insidental tidak.
-- Baris roll-up dihitung ulang, bukan disalin nominalnya.
-- Memenuhi FR-TPL-001 dan FR-TPL-003.
+**US-02 — Mendaftarkan tempat uang saya berada**
 
-**US-02 — Diingatkan baris mana yang belum ditinjau**
+Sebagai pemilik, saya ingin mendaftarkan rekening, uang tunai, dan dompet
+digital saya beserta saldonya hari ini, supaya aplikasi punya titik awal yang
+benar.
 
-Sebagai pemilik, saya ingin tiap baris hasil rollover ditandai perlu ditinjau,
-supaya tidak ada baris lama yang lolos tanpa saya periksa.
+- Saya mengisi nama, ikon, dan saldo awal.
+- Saldo awal adalah pernyataan keadaan, bukan transaksi setoran, jadi ia tidak
+  muncul sebagai pemasukan di riwayat.
+- Kalau saya salah mengetik saldo awalnya, saya bisa membetulkannya belakangan
+  dan seluruh saldo ikut dihitung ulang.
+- Memenuhi FR-WAL-001 dan FR-WAL-002.
 
-- Baris yang belum ditinjau tampil dengan warna `needsReview`.
-- Ringkasan siklus menampilkan berapa baris yang masih menunggu.
-- Penanda hilang setelah saya mengonfirmasi baris itu.
-- Memenuhi FR-TPL-002.
+**US-03 — Menelusuri apa saja yang terjadi pada satu dompet**
 
-Cerita ini lahir dari kesalahan nyata: label `Kos agustus - september` terbawa
-tiga bulan berturut-turut tanpa terdeteksi.
+Sebagai pemilik, saya ingin membuka satu dompet dan melihat transaksi apa saja
+yang menyentuhnya, supaya saya bisa mencocokkan saldo tercatat dengan saldo
+sebenarnya.
 
-**US-03 — Melihat sisa bulan berjalan kapan saja**
+- Rincian dompet menampilkan transaksi terbarunya.
+- Ada jalan ke daftar transaksi lengkap yang sudah tersaring ke dompet itu.
+- Ada pintasan mencatat transaksi dengan dompet ini sudah terpilih.
+- Memenuhi FR-WAL-004 dan FR-REC-002.
 
-Sebagai pemilik, saya ingin melihat sisa bulan ini dari layar utama, supaya saya
-bisa memutuskan pengeluaran saat sedang di luar.
+## Epik 2: Mencatat yang terjadi
 
-- Sisa tampil sebagai total pemasukan dikurangi total anggaran.
-- Sisa negatif tampil sebagai kondisi lewat anggaran, bukan kesalahan.
-- Memenuhi FR-CYCLE-001.
+**US-04 — Mencatat pengeluaran sambil berdiri di kasir**
 
-**US-04 — Menambah pengeluaran tak terduga**
+Sebagai pemilik, saya ingin mencatat pengeluaran dalam hitungan detik lewat satu
+tombol yang selalu ada di tempat yang sama, supaya saya benar-benar mencatatnya
+dan tidak menundanya sampai lupa.
 
-Sebagai pemilik, saya ingin menambah baris anggaran insidental seperti `bengkel`
-atau `Barber`, supaya pengeluaran di luar rencana tetap tercatat tanpa mengotori
-template bulan berikutnya.
+- Tombol CATAT selalu ada di tengah navigasi bawah dan dibedakan secara visual.
+- Satu ketukan membuka pilihan pemasukan, pengeluaran, atau transfer.
+- Seluruh pengisian selesai dalam satu layar tanpa berpindah halaman.
+- Memenuhi FR-REC-001, FR-TXN-002, dan NFR-UX-001.
 
-- Baris baru bawaannya insidental.
-- Baris insidental tidak terbawa saat rollover.
-- Memenuhi FR-CYCLE-002 dan FR-TPL-001.
+**US-05 — Mencatat pemasukan yang masuk**
 
-## Epik 2: Penghasilan freelance
+Sebagai pemilik, saya ingin mencatat uang yang masuk beserta dompet tujuannya,
+supaya saldo saya ikut naik dan sumbernya tetap tercatat.
 
-Alur ini menggantikan penjumlahan jam manual dan perhitungan potongan tangan.
+- Saya mengisi nominal, dompet tujuan, tanggal, dan kategori.
+- Saldo dompet tujuan bertambah sebesar nominal itu.
+- Memenuhi FR-TXN-001.
 
-**US-05 — Mencatat jam kerja hari ini dengan cepat**
+**US-06 — Mencatat pemindahan uang antar dompet**
 
-Sebagai pemilik, saya ingin mencatat jam kerja hari ini dalam satu layar singkat
-dari ponsel, supaya saya tidak perlu membuka Google Form di laptop.
+Sebagai pemilik, saya ingin mencatat bahwa saya memindahkan uang dari satu
+dompet ke dompet lain, supaya kedua saldo ikut berubah tanpa membuat total uang
+saya terlihat bertambah atau berkurang.
 
-- Cukup mengisi tanggal dan jumlah jam.
-- Selesai di bawah 15 detik.
-- Memenuhi FR-TIME-001 dan NFR-UX-001.
+- Dompet asal berkurang dan dompet tujuan bertambah dengan nominal yang sama.
+- Total saldo seluruh dompet tidak berubah sama sekali.
+- Layarnya menyatakan dengan jelas bahwa aplikasi hanya mencatat, bukan
+  memindahkan uang sungguhan.
+- Memenuhi FR-TXN-003 dan NFR-UX-005.
 
-**US-06 — Menandai awal periode tagihan**
+**US-07 — Menelusuri riwayat dan menyaringnya**
 
-Sebagai pemilik, saya ingin menandai sebuah entri sebagai hari buku baru, supaya
-periode tagihan mengikuti kesepakatan kerja saya, bukan bulan kalender.
+Sebagai pemilik, saya ingin melihat seluruh transaksi saya terkelompok per
+tanggal dan bisa menyaringnya, supaya saya bisa mencari satu pengeluaran tanpa
+menggulir berbulan-bulan.
 
-- Penanda membuka buku jam baru.
-- Buku jam bisa membentang lintas bulan.
-- Memenuhi FR-TIME-001 dan FR-TIME-002.
+- Transaksi terurut dari yang terbaru dan dikelompokkan per tanggal.
+- Ada penyaring jenis, dompet, dan kategori.
+- Pemasukan, pengeluaran, dan transfer bisa dibedakan sekilas.
+- Memenuhi FR-TXN-004.
 
-**US-07 — Menutup buku dan mendapat gaji bersih**
+**US-08 — Membetulkan catatan yang salah**
 
-Sebagai pemilik, saya ingin menutup buku jam lalu langsung mendapat gaji bersih,
-supaya saya tidak menjumlah jam dan menghitung pajak 2,5% dengan tangan.
+Sebagai pemilik, saya ingin menyunting atau menghapus transaksi yang saya catat
+keliru, supaya saldo saya kembali benar tanpa perlu mencatat transaksi
+penyeimbang.
 
-- Gaji kotor dihitung dari total jam dikali tarif.
-- Potongan diterapkan otomatis.
-- Rincian gaji kotor, potongan, dan gaji bersih terlihat.
-- Memenuhi FR-TIME-003 dan FR-INC-003.
+- Seluruh field bisa disunting, termasuk dompetnya.
+- Saldo dompet lama dan dompet baru sama-sama dihitung ulang saat dompetnya
+  berpindah.
+- Penghapusan meminta konfirmasi dan mengembalikan saldo ke keadaan sebelumnya.
+- Memenuhi FR-TXN-005.
 
-**US-08 — Memasukkan gaji bersih ke bulan yang tepat**
+Cerita ini lahir dari kesalahan nyata di Saldough 1.0: sebuah baris berlabel
+"Kos agustus - september" terbawa keliru selama tiga bulan berturut-turut karena
+membetulkannya terasa lebih repot daripada membiarkannya.
 
-Sebagai pemilik, saya ingin memilih siklus bulan mana yang menerima gaji bersih
-dari sebuah buku jam, karena periode tagihan tidak selalu jatuh di bulan yang
-sama.
+## Epik 3: Merencanakan pengeluaran
 
-- Baris pemasukan terisi otomatis dari hasil hitung.
-- Memenuhi FR-TIME-003 dan FR-INC-002.
+**US-09 — Merencanakan tanpa uang saya ikut terpotong**
 
-## Epik 3: Belanja
+Sebagai pemilik, saya ingin membuat anggaran belanja tanpa saldo dompet saya
+ikut berkurang, supaya rencana dan kenyataan tidak tercampur.
 
-Alur ini menghapus penyalinan satu angka dari spreadsheet `bulanan`.
+- Membuat anggaran Rp3.000.000 dari dompet BCA tidak mengubah saldo BCA sama
+  sekali.
+- Saldo baru berubah kalau saya mencatat pengeluaran sungguhan.
+- Memenuhi FR-BUD-001.
 
-**US-09 — Menyusun daftar belanja mingguan dan bulanan**
+**US-10 — Menjalankan beberapa anggaran sekaligus**
 
-Sebagai pemilik, saya ingin mengelola dua daftar belanja terpisah, supaya
-struktur yang sudah saya pakai tetap sama.
+Sebagai pemilik, saya ingin punya beberapa anggaran aktif berbarengan dengan
+periode yang berbeda-beda, supaya belanja mingguan dan tagihan bulanan tidak
+harus dipaksa masuk ke satu kotak yang sama.
 
-- Daftar mingguan dan bulanan dikelola sendiri-sendiri.
-- Tiap item punya nama, jumlah, dan harga satuan.
-- Memenuhi FR-GROC-001.
+- Saya tidak perlu menutup satu anggaran sebelum membuat yang lain.
+- Beberapa anggaran boleh memakai dompet yang sama.
+- Satu anggaran boleh mingguan sementara yang lain bulanan.
+- Memenuhi FR-BUD-001.
 
-**US-10 — Menimpa harga yang tidak sesuai perkalian**
+**US-11 — Merinci anggaran jadi daftar belanja**
 
-Sebagai pemilik, saya ingin mengetik harga manual pada item tertentu, karena
-kadang saya membeli sebagian saja atau mendapat harga berbeda.
+Sebagai pemilik, saya ingin memecah anggaran jadi pos-pos dengan jumlah dan
+harga satuan, supaya daftar belanja bulanan saya tetap serinci sebelumnya.
 
-- Harga bawaan tetap jumlah dikali harga satuan.
-- Item yang harganya ditimpa diberi tanda.
-- Memenuhi FR-GROC-002.
+- Tiap pos punya nama dan nominal rencana.
+- Pos yang berupa barang belanjaan bisa diisi jumlah dan harga satuan, dan
+  nominalnya dihitung dari keduanya.
+- Saya bisa melihat selisih antara jumlah seluruh pos dan nominal anggaran.
+- Memenuhi FR-BUD-002.
 
-Cerita ini lahir dari data nyata: sampo tercatat `1 × Rp41.300` dengan harga
-Rp24.000, dan popok tercatat `1 × Rp180.000` dengan harga Rp22.500.
+**US-12 — Tahu sisa anggaran sebelum memutuskan membeli**
 
-**US-11 — Total belanja masuk anggaran otomatis**
+Sebagai pemilik, saya ingin melihat berapa yang sudah terpakai dan berapa
+sisanya per pos, supaya saya bisa memutuskan di tempat apakah sebuah pembelian
+masih masuk anggaran.
 
-Sebagai pemilik, saya ingin total belanja sebulan langsung menjadi satu baris
-anggaran, supaya saya tidak mengetik ulang angkanya.
+- Pengeluaran yang saya tautkan ke sebuah pos langsung menambah angka
+  terpakainya.
+- Tiap pos menampilkan status: belum terpakai, terpakai sebagian, selesai, atau
+  lewat anggaran.
+- Pos yang lewat anggaran ditandai jelas, bukan diperlakukan sebagai kesalahan.
+- Memenuhi FR-BUD-003 dan FR-BUD-004.
 
-- Total dihitung sebagai subtotal mingguan dikali pengali minggu ditambah
-  subtotal bulanan.
-- Baris anggaran ikut berubah saat daftar belanja disunting.
-- Memenuhi FR-GROC-003.
+**US-13 — Tidak menyusun ulang anggaran yang sama tiap bulan**
 
-## Epik 4: Kartu kredit
+Sebagai pemilik, saya ingin menyimpan susunan anggaran yang berulang sebagai
+template, supaya bulan berikutnya saya tinggal memakainya lagi.
 
-Alur ini menghapus penjumlahan transaksi manual dan pengetikan ulang total.
+- Template bisa dibuat, disunting, digandakan, diaktifkan, dan dinonaktifkan.
+- Anggaran yang lahir dari template berdiri sendiri, dan menyuntingnya tidak
+  mengubah templatenya.
+- Memenuhi FR-BUD-005.
 
-**US-12 — Mencatat transaksi segera setelah terjadi**
+## Epik 4: Penghasilan freelance
 
-Sebagai pemilik, saya ingin mencatat transaksi kartu dari ponsel begitu
-transaksi terjadi, supaya tidak ada yang terlewat sampai akhir siklus.
+**US-14 — Mencatat jam kerja tanpa menganggapnya sudah cair**
 
-- Transaksi masuk ke siklus yang sedang berjalan secara otomatis.
-- Memenuhi FR-CARD-002 dan NFR-UX-001.
+Sebagai pemilik, saya ingin mencatat jam kerja freelance saya dan melihat berapa
+yang sudah saya peroleh, tanpa angka itu masuk ke saldo dompet saya, supaya saya
+tidak merasa punya uang yang sebenarnya belum diterima.
 
-**US-13 — Menyimpan catatan tanpa mengotori nama merchant**
+- Saya mencatat proyek, tanggal, dan jumlah jam.
+- Aplikasi menghitung nominal yang diperoleh dari jam dikali tarif.
+- Saldo dompet saya tidak berubah sama sekali.
+- Memenuhi FR-FRL-002.
 
-Sebagai pemilik, saya ingin menulis catatan seperti `cicilan 1` di kolom
-terpisah, supaya nama merchant tetap bersih dan bisa dikenali sebagai langganan.
+**US-15 — Menagih beberapa hari kerja sebagai satu pembayaran**
 
-- Catatan disimpan terpisah dari nama merchant.
-- Memenuhi FR-CARD-002.
+Sebagai pemilik, saya ingin menggabungkan beberapa hari kerja jadi satu
+pembayaran beserta potongannya, supaya saya tahu berapa bersih yang akan saya
+terima dan kapan.
 
-**US-14 — Tidak mengetik ulang langganan tiap siklus**
+- Beberapa entri worklog digabung jadi satu pembayaran.
+- Gaji kotor, potongan, dan gaji bersihnya terlihat terpisah.
+- Periodenya tidak harus mengikuti batas bulan kalender.
+- Memenuhi FR-FRL-003.
 
-Sebagai pemilik, saya ingin langganan seperti Netflix dan Claude AI disiapkan
-otomatis tiap siklus baru, supaya saya tinggal mengonfirmasi.
+Periode tagihan nyata pemilik pernah membentang dari delapan hari sampai hampir
+sebulan, misalnya 29 Oktober sampai 26 November 2025.
 
-- Transaksi langganan muncul menunggu konfirmasi.
-- Nominal bisa disesuaikan sebelum dikonfirmasi, karena harga langganan berubah.
-- Memenuhi FR-CARD-004.
+**US-16 — Mencatat pembayaran yang akhirnya cair**
 
-**US-15 — Total tagihan masuk anggaran otomatis**
+Sebagai pemilik, saya ingin mencatat bahwa sebuah pembayaran freelance sudah
+saya terima beserta dompet tujuannya, supaya saldo saya naik tepat sekali dan
+statusnya berubah jadi sudah dibayar.
 
-Sebagai pemilik, saya ingin total tiap siklus tagihan langsung menjadi baris
-`CC TOKPED` atau `CC BRI TOUCH` di anggaran, supaya saya tidak menjumlah dan
-menyalinnya.
+- Pencatatan itu membuat tepat satu transaksi pemasukan sebesar gaji bersih.
+- Pembayaran yang sama tidak bisa dicatat dua kali.
+- Layarnya menyatakan ini pencatatan, bukan aplikasi yang membayarkan.
+- Memenuhi FR-FRL-004 dan NFR-UX-005.
 
-- Baris anggaran ikut berubah saat transaksi disunting.
-- Memenuhi FR-CARD-005.
+**US-17 — Melihat berapa yang masih menggantung**
 
-## Epik 5: Investasi
+Sebagai pemilik, saya ingin melihat total penghasilan freelance yang sudah saya
+kerjakan tetapi belum dibayar, supaya saya tahu berapa yang masih ditunggu.
 
-Alur ini menggantikan perhitungan persentase manual dan pengecekan validator
-secara visual.
+- Ringkasannya muncul di Beranda hanya kalau memang ada yang tertunda.
+- Dari situ saya bisa masuk ke daftar worklog dan pembayaran.
+- Memenuhi FR-FRL-005 dan FR-HOME-003.
 
-**US-16 — Membagi sisa ke pos tujuan berdasarkan persentase**
+## Epik 5: Gambaran sehari-hari
 
-Sebagai pemilik, saya ingin mengisi persentase tiap pos lalu nominalnya dihitung
-otomatis, supaya saya tidak mengalikan sendiri.
+**US-18 — Membaca posisi bulan ini sekali lihat**
 
-- Budget investasi adalah sisa ditambah return deposit.
-- Nominal tiap pos adalah budget dikali persentasenya.
-- Memenuhi FR-INV-002.
+Sebagai pemilik, saya ingin satu layar yang menjawab berapa uang saya, berapa
+yang masuk dan keluar bulan ini, dan bagaimana anggaran saya berjalan, supaya
+saya tidak perlu menyusun gambaran itu sendiri dari beberapa layar.
 
-**US-17 — Diperingatkan kalau persentase tidak genap 100**
-
-Sebagai pemilik, saya ingin diperingatkan kalau total persentase bukan 100,
-supaya tidak ada sisa yang menggantung tanpa tujuan.
-
-- Jumlah persentase selalu terlihat.
-- Jumlah 0 diterima sebagai tanda bulan itu belum dialokasikan.
-- Memenuhi FR-INV-003.
-
-**US-18 — Meminjam dana antar pos**
-
-Sebagai pemilik, saya ingin mencatat peminjaman dana dari satu pos untuk
-keperluan pos lain beserta pengembaliannya, supaya saldo tiap pos tetap benar.
-
-- Pokok dan pengembalian dicatat terpisah, karena nilainya bisa berbeda.
-- Saldo kedua pos ikut diperbarui.
-- Memenuhi FR-INV-004 dan FR-INV-005.
-
-Cerita ini lahir dari data nyata: pokok Rp9.300.000 dikembalikan Rp9.331.000.
-
-**US-19 — Memakai satu daftar pos di semua tempat**
-
-Sebagai pemilik, saya ingin daftar pos yang sama dipakai untuk alokasi maupun
-pinjaman, supaya tidak ada pos yang tercatat di satu tempat tapi hilang di
-tempat lain.
-
-- Memenuhi FR-INV-001.
-
-## Epik 6: Pindah dari spreadsheet
-
-**US-20 — Membuka aplikasi dengan riwayat yang sudah ada**
-
-Sebagai pemilik, saya ingin riwayat yang saya punya sudah ada begitu saya
-mulai memakai aplikasi, supaya saldo pos saya benar dan saya bisa langsung
-melanjutkan, bukan memulai dari nol.
-
-- Siklus bulanan, riwayat jam kerja, transaksi kartu, dan pos tujuan ikut
-  termuat — untuk bagian yang datanya saya sediakan.
-- Angkanya sama persis dengan spreadsheet asli.
-- Proses ini sekali jalan di belakang layar sebelum saya mulai memakai
-  aplikasi sehari-hari — bukan langkah yang saya lakukan sendiri lewat
-  aplikasi.
-- Memenuhi FR-SEED-001.
-
-> **Catatan revisi (11 September 2026):** versi sebelumnya menyebut rentang
-> tetap "November 2025 sampai September 2026" dan menyiratkan proses ini
-> terjadi "saat pertama membuka aplikasi" (kesan ada langkah di dalam
-> aplikasi). Keduanya diralat: cakupan data mengikuti apa yang pemilik
-> benar-benar sediakan, dan prosesnya adalah operasi sekali pakai di luar
-> aplikasi (skrip pengembang), bukan alur yang pemilik jalankan sendiri.
-
-**US-21 — Percaya bahwa hitungannya benar**
-
-Sebagai pemilik, saya ingin hasil hitung aplikasi sama persis dengan
-spreadsheet saya, supaya saya berani berhenti membuka spreadsheet.
-
-- Tidak ada selisih rupiah pada data historis.
-- Memenuhi FR-CYCLE-004, NFR-ACC-001, dan NFR-ACC-002.
+- Total saldo, pemasukan bulan berjalan, dan pengeluaran bulan berjalan tampil
+  bersama.
+- Transfer tidak ikut dihitung sebagai pemasukan maupun pengeluaran.
+- Ringkasan anggaran dan transaksi terbaru ikut tampil.
+- Memenuhi FR-HOME-001, FR-HOME-002, dan FR-HOME-004.
 
 ## Prioritas
 
-Urutan ini menentukan susunan fase di
-[ROADMAP](../04-planning/ROADMAP.md).
+Urutan pengerjaan mengikuti loop inti produk: tempat uang dulu, lalu peristiwa,
+baru rencana.
 
 | Prioritas | Cerita | Alasan |
 |---|---|---|
-| Wajib | US-01 sampai US-04, US-21 | Siklus bulanan adalah inti produk. Tanpa ini tidak ada yang bisa dipakai. |
-| Wajib | US-05 sampai US-08 | Penghasilan freelance berubah tiap bulan dan paling banyak menuntut hitungan manual. |
-| Wajib | US-09 sampai US-15 | Dua titik salin manual yang tersisa. |
-| Wajib | US-16 sampai US-19 | Melengkapi siklus bulanan sampai tuntas. |
-| Sebaiknya | US-20 | Membuat aplikasi langsung berguna, tetapi aplikasi tetap jalan tanpanya. |
+| 1 | US-02, US-05, US-04, US-06 | Tanpa dompet dan transaksi, tidak ada satu pun angka yang bisa ditampilkan |
+| 2 | US-01, US-03, US-07, US-08 | Membaca dan membetulkan apa yang sudah dicatat |
+| 3 | US-09 sampai US-13 | Anggaran butuh transaksi lebih dulu supaya progresnya punya isi |
+| 4 | US-14 sampai US-17 | Freelance adalah domain pendukung, bukan inti |
+| 5 | US-18 | Beranda baru bermakna setelah semua di atas menghasilkan data |
 
 ## Langkah berikutnya
 
-Lanjutkan ke [PRD](prd-saldough-1.0.md) untuk kebutuhan lengkapnya, atau ke
-[daftar tugas](../04-planning/TASK_LIST.md) untuk melihat urutan pengerjaannya.
+Lanjutkan ke [DOMAIN_MODEL.md](../02-architecture/DOMAIN_MODEL.md) untuk melihat
+entitas dan rumus yang mendukung cerita di atas, atau ke
+[TASK_LIST.md](../04-planning/TASK_LIST.md) untuk melihat urutan pengerjaannya.

@@ -2,9 +2,22 @@
 
 ## 1. Ringkasan
 
-Saldough adalah aplikasi Flutter untuk Android dan iOS untuk mencatat dan
-mengelola keuangan pribadi. Intinya tiga hal: **di mana uang berada**, **apa
-yang terjadi padanya**, dan **ke mana ia direncanakan pergi**.
+Saldough adalah aplikasi Flutter untuk Android dan iOS untuk **mencatat,
+memahami, dan mengelola keuangan pribadi** berdasarkan aktivitas keuangan yang
+benar-benar terjadi. Intinya tiga hal: **di mana uang berada**, **apa yang
+terjadi padanya**, dan **ke mana ia direncanakan pergi**.
+
+Alurnya satu kalimat:
+
+```
+Rencanakan  →  Catat  →  Pahami
+  Anggaran      CATAT     Beranda
+```
+
+Pengguna merencanakan penggunaan uang lewat **Anggaran**, mencatat kejadian
+finansial lewat **CATAT**, mengetahui posisi uangnya lewat **Dompet**, dan
+melacak pekerjaan freelance yang sudah dikerjakan tetapi belum dibayar lewat
+**Worklog**.
 
 | | |
 |---|---|
@@ -12,6 +25,9 @@ yang terjadi padanya**, dan **ke mana ia direncanakan pergi**.
 | **Platform** | Android dan iOS |
 | **Versi dokumen** | 2.0 |
 | **Status** | Draf, menunggu implementasi |
+| **Jenis produk** | Pengelolaan keuangan pribadi |
+| **Pengguna sasaran** | Perorangan |
+| **Bahasa utama** | Indonesia |
 | **Pemilik** | muhammadrisky1401@gmail.com |
 | **Terakhir diperbarui** | 17 September 2026 |
 
@@ -23,51 +39,113 @@ yang terjadi padanya**, dan **ke mana ia direncanakan pergi**.
 > sejarah, dan seluruh identitas `FR-CYCLE`, `FR-TPL`, `FR-GROC`, `FR-CARD`,
 > dan `FR-INV` di dalamnya tidak lagi berlaku.
 
+> **Catatan perluasan (17 September 2026):** Versi pertama dokumen ini ditulis
+> untuk **satu pengguna**, yaitu pemilik. Atas arahan pemilik, dokumen ini
+> sekarang ditulis **setingkat produk**: kebutuhannya dinyatakan untuk pengguna
+> perorangan pada umumnya, supaya PRD bisa menjadi sumber tunggal untuk desain
+> antarmuka, pengembangan, dan validasi cakupan. Pemilik tetap menjadi pengguna
+> pertama dan satu-satunya penguji MVP. Konsekuensi yang belum selesai dari
+> perluasan ini dicatat jujur di [§3](#ukuran-keberhasilan) dan
+> [§13](#13-pertanyaan-terbuka), bukan disembunyikan.
+
 Saldough **mencatat**, bukan **melakukan**. Aplikasi ini tidak memindahkan uang,
 tidak membayar, tidak menarik atau menyetor dana, dan tidak terhubung ke bank
-mana pun. Ketika pemilik mencatat transfer dari BCA ke GoPay, yang terjadi
+mana pun. Ketika pengguna mencatat transfer dari BCA ke GoPay, yang terjadi
 adalah dua angka di dalam aplikasi berubah — bukan sebuah transaksi perbankan.
 Batasan ini bukan kekurangan teknis melainkan definisi produk, dan seluruh
 kosakata antarmuka harus mencerminkannya.
 
 ## 2. Pernyataan masalah
 
-Pemilik perlu tahu berapa uang yang ia punya dan di mana uang itu berada.
-Sebelumnya ia mengelola keuangannya lewat empat Google Spreadsheet yang saling
-mereferensi manual, dan Saldough 1.0 dibangun untuk menggantikan proses itu
-persis apa adanya.
+Pengelolaan keuangan pribadi tercecer di banyak tempat sekaligus. Saldo
+rekening harus diingat atau dicek satu per satu; pengeluaran dicatat manual
+tetapi dampaknya terhadap rencana tidak kelihatan; riwayat transaksi ada
+tetapi tidak bisa dipakai untuk memahami keadaan dengan cepat.
 
-Pendekatan itu memecahkan masalah pencatatan bulanan, tetapi meninggalkan tiga
-masalah yang tidak bisa diselesaikan dari dalam modelnya sendiri:
+Empat masalah muncul berulang:
 
-- **Tidak ada jawaban untuk "berapa uang saya sekarang".** Spreadsheet, dan
-  Saldough 1.0 yang menirunya, mencatat rencana per bulan — bukan saldo. Tidak
-  ada satu pun tempat yang menyimpan berapa isi rekening atau dompet digital
-  pada hari tertentu.
-- **Tidak ada catatan peristiwa.** Baris `Kos Rp2.500.000` di bulan Maret
-  menyatakan rencana, bukan kejadian. Tidak ada tanggal, tidak ada dompet asal,
-  dan tidak ada cara menelusuri ke mana uang benar-benar pergi.
-- **Struktur bulanannya mengikat terlalu kencang.** Anggaran belanja mingguan,
-  tagihan yang periodenya bukan bulan kalender, dan penghasilan freelance yang
-  periodenya delapan hari sampai sebulan semuanya harus dipaksa masuk ke kotak
-  `YYYY-MM`.
+- **Uang tersebar, posisinya tidak pernah utuh.** Rekening bank, tunai, dompet
+  digital, dan tabungan masing-masing punya angkanya sendiri, dan tidak ada
+  satu tempat yang menjumlahkannya.
+- **Anggaran disalahpahami sebagai uang yang sudah dipisahkan.** Membuat
+  anggaran belanja Rp3.000.000 terasa seperti menyisihkan Rp3.000.000, padahal
+  uangnya masih utuh di rekening. Aplikasi yang mengaburkan beda ini membuat
+  penggunanya merasa lebih kaya daripada kenyataan.
+- **Penghasilan freelance yang sudah dikerjakan tercampur dengan yang sudah
+  diterima.** Pekerjaan senilai Rp1.800.000 yang baru dibayar akhir bulan bukan
+  uang yang bisa dipakai hari ini, tetapi banyak pencatatan memperlakukan
+  keduanya sama.
+- **Mencatat terasa merepotkan.** Kalau pencatatan menuntut pengguna tahu lebih
+  dulu di layar mana ia harus berada, kebiasaan mencatatnya berhenti — dan
+  begitu berhenti, seluruh fitur lain kehilangan nilainya.
 
-Masalah keempat muncul dari cara Saldough 1.0 dipakai sehari-hari: alurnya
-terasa rumit. Untuk mencatat satu hal, pemilik harus tahu lebih dulu di layar
-mana ia berada dan bagaimana angkanya akan mengalir ke tempat lain.
+Akibatnya pertanyaan yang paling sederhana justru paling sulit dijawab:
+
+- Berapa uang saya sekarang?
+- Bulan ini saya sudah menerima berapa, dan menghabiskan berapa?
+- Anggaran mana yang hampir habis?
+- Uang saya ada di mana?
+- Berapa penghasilan freelance yang sudah saya kerjakan tetapi belum diterima?
+
+> **Asal usul.** Masalah di atas ditemukan lewat pengalaman pemilik mengelola
+> keuangannya dengan empat Google Spreadsheet yang saling mereferensi manual,
+> lalu dengan Saldough 1.0 yang menirunya persis. Pendekatan itu memecahkan
+> pencatatan bulanan tetapi tidak punya konsep saldo maupun transaksi, sehingga
+> tiga masalah pertama tidak bisa diselesaikan dari dalam modelnya sendiri.
+> Rekamannya ada di
+> [analisis proses manual](../00-foundation/MANUAL_PROCESS_ANALYSIS.md).
 
 ## 3. Tujuan dan ukuran keberhasilan
 
-### Tujuan produk
+### Tujuan utama
+
+Memberi pengguna **gambaran keadaan keuangan pribadi yang jelas dan mudah
+dipahami**, tanpa spreadsheet dan tanpa pencatatan yang rumit.
+
+### Tujuan turunan
 
 - Menjawab "berapa uang saya, dan di mana" dalam satu layar, kapan saja.
 - Membuat pencatatan satu transaksi memakan waktu di bawah sepuluh detik, lewat
   satu titik masuk yang selalu sama.
-- Memisahkan dengan tegas antara uang yang **ada**, uang yang **direncanakan**,
-  dan uang yang **sudah dikerjakan tetapi belum diterima**.
+- Membantu pengguna mengendalikan pengeluaran lewat anggaran, tanpa pernah
+  menyiratkan anggaran memisahkan uang.
+- Memisahkan dengan tegas antara uang yang **ada**, uang yang
+  **direncanakan**, dan uang yang **sudah dikerjakan tetapi belum diterima**.
+- Memberi rasa kemajuan terhadap keadaan keuangan, bukan sekadar daftar angka.
 - Tetap berguna tanpa koneksi internet dan tanpa akun.
 
+### Ukuran keberhasilan
+
+Ukuran yang dipakai adalah **ukuran perilaku**, bukan ukuran kesombongan.
+Pertanyaannya bukan berapa banyak layar yang dibuka, melainkan apakah pencatatan
+menjadi kebiasaan.
+
+| Ukuran | Definisi |
+|---|---|
+| Aktivasi | Pengguna mencatat transaksi pertamanya |
+| Frekuensi pencatatan | Jumlah transaksi yang dicatat per pengguna aktif per minggu |
+| Adopsi anggaran | Pengguna membuat sedikitnya satu anggaran |
+| Keterlibatan anggaran | Pengguna kembali membuka progres anggarannya |
+| Adopsi freelance | Pengguna memakai worklog atau pelacakan pembayaran |
+| Retensi | Pengguna masih aktif pada hari ke-7 dan hari ke-30 |
+
+Isyarat produk yang paling menentukan:
+
+> **Apakah pengguna kembali untuk mencatat transaksi secara rutin?**
+
+Kalau kebiasaan mencatat tidak terbentuk, fitur lain kehilangan nilainya.
+
+⚠ **Ukuran ini belum bisa diukur lintas pengguna di MVP, dan itu disengaja.**
+NFR-SEC-001 melarang panggilan jaringan sama sekali, dan MVP tidak punya akun
+maupun backend — sehingga tidak ada telemetri yang bisa menghitung "persentase
+pengguna". Di MVP keenam ukuran itu dinilai pada **pemakaian pemilik sendiri**,
+diamati langsung. Menambahkan telemetri berarti membatalkan NFR-SEC-001, dan
+itu keputusan pemilik, bukan keputusan yang boleh diambil diam-diam saat
+menulis kode. Pertanyaannya terbuka di [§13](#13-pertanyaan-terbuka).
+
 ### Ukuran keberhasilan MVP
+
+Sampai telemetri diputuskan, MVP dinyatakan berhasil kalau:
 
 - Pemilik memakai Saldough sebagai satu-satunya catatan keuangannya selama satu
   bulan penuh tanpa kembali ke spreadsheet.
@@ -79,17 +157,35 @@ mana ia berada dan bagaimana angkanya akan mengalir ke tempat lain.
 
 ## 4. Pengguna sasaran
 
-### Persona utama
+### Pengguna utama
 
-Pemilik aplikasi: satu orang yang mengelola keuangan pribadinya sendiri, punya
-dua sumber penghasilan (gaji tetap dan freelance per jam), menyimpan uang di
-beberapa tempat sekaligus (rekening bank, tunai, dompet digital), dan sudah
-terbiasa menganggarkan secara sadar.
+Perorangan yang ingin mengelola keuangan pribadinya secara manual — karyawan,
+pekerja lepas, pengembang, mahasiswa, profesional muda, atau keluarga kecil.
+Yang menyatukan mereka bukan profesinya melainkan keadaannya: uangnya ada di
+beberapa tempat, sebagian penghasilannya tidak datang di tanggal yang pasti,
+dan ia mau mencatat asal mencatatnya tidak merepotkan.
 
-### Persona sekunder
+Ciri-ciri yang diasumsikan produk ini:
 
-Tidak ada. MVP dipakai satu orang di satu perangkat. Peran kedua baru relevan
-kalau sinkronisasi antar perangkat dikerjakan, dan itu di luar MVP.
+- punya beberapa rekening bank, uang tunai, dompet digital, dan tabungan;
+- punya penghasilan tetap, penghasilan lepas, atau keduanya;
+- menjalankan beberapa anggaran sekaligus, dengan periode yang tidak selalu
+  sama;
+- terbiasa dengan aplikasi ponsel, tidak terbiasa dengan akuntansi.
+
+### Pengguna pertama
+
+Pemilik aplikasi, yang mengelola keuangannya sendiri dengan dua sumber
+penghasilan (gaji tetap dan freelance per jam) dan menyimpan uang di beberapa
+tempat sekaligus. Ia adalah satu-satunya pengguna MVP dan satu-satunya penguji
+[ukuran keberhasilan](#ukuran-keberhasilan) di atas.
+
+### Bukan pengguna sasaran
+
+Pelaku usaha yang butuh pembukuan, tim yang butuh keuangan bersama, dan siapa
+pun yang mengharapkan aplikasi ini terhubung ke rekeningnya. Peran kedua di satu
+akun baru relevan kalau sinkronisasi antar perangkat dikerjakan, dan itu di luar
+MVP.
 
 ### Kasus penggunaan utama
 
@@ -107,23 +203,40 @@ yang ada sekarang, di mana, dan apa saja yang sudah terjadi padanya. Ia
 melakukannya tanpa backend, tanpa akun, tanpa koneksi bank, dan tanpa
 mengirimkan satu byte pun ke luar perangkat.
 
-Berbeda dari aplikasi keuangan umum, Saldough memisahkan secara eksplisit antara
-penghasilan yang **sudah dikerjakan** dan yang **sudah diterima** — pembedaan
-yang penting bagi pekerja lepas dan biasanya tidak tersedia di aplikasi
-sejenis.
+Dua pembeda terhadap aplikasi keuangan umum:
+
+- **Anggaran dinyatakan sebagai rencana, bukan pemesanan uang.** Membuat
+  anggaran tidak pernah mengubah saldo dompet mana pun, dan antarmuka tidak
+  pernah menyiratkan sebaliknya.
+- **Penghasilan yang sudah dikerjakan dipisahkan dari yang sudah diterima.**
+  Pembedaan ini penting bagi pekerja lepas dan biasanya tidak tersedia di
+  aplikasi sejenis.
+
+### Prinsip produk
+
+Lima kalimat yang menjadi tulang produk ini. Setiap keputusan fitur diukur
+terhadapnya.
+
+1. **Ketahui di mana uangmu.** Dompet menjawab posisi uang.
+2. **Ketahui apa yang terjadi.** Transaksi menjawab kejadian finansial.
+3. **Ketahui ke mana uang direncanakan pergi.** Anggaran menjawab rencana.
+4. **Ketahui apa yang sudah kamu peroleh.** Worklog freelance menjawab
+   penghasilan yang sudah dikerjakan.
+5. **Jaga hambatan mencatat tetap rendah.** CATAT membuat pencatatan jadi
+   tindakan utama yang selalu satu ketukan jauhnya.
 
 ## 6. Cakupan MVP
 
 ### Termasuk dalam MVP
 
 - Dompet: buat, sunting, saldo awal, saldo tercatat, riwayat per dompet.
-- Transaksi: pemasukan, pengeluaran, transfer, daftar, penyaring, sunting,
-  hapus.
+- Transaksi: pemasukan, pengeluaran, transfer, daftar, rincian, penyaring,
+  sunting, hapus.
 - Alur CATAT sebagai titik masuk tunggal pencatatan manual.
 - Anggaran: beberapa anggaran aktif sekaligus, pos anggaran, progres, status,
-  template.
+  penyaring, dan template dasar.
 - Freelance: proyek, worklog, pembayaran, dan pencatatan pembayaran diterima.
-- Beranda sebagai ringkasan.
+- Beranda sebagai ringkasan, beserta keadaan kosongnya.
 - Terang dan gelap, bahasa Indonesia dan Inggris.
 
 ### Di luar MVP
@@ -132,10 +245,42 @@ sejenis.
 - Kartu kredit sebagai dompet liabilitas. Modelnya menampungnya tanpa konsep
   tambahan, tetapi tidak dikerjakan sekarang.
 - Impor data historis dari Saldough 1.0. Aplikasi mulai dari saldo awal.
-- Investasi, laporan tahunan, analitik lanjutan, dan akuntansi.
+- Investasi, pelacakan utang, laporan tahunan, analitik lanjutan, dan
+  akuntansi.
 - Multi-mata-uang, akun bersama, sinkronisasi antar perangkat.
 - Transaksi berulang otomatis.
-- Pemindaian struk dan saran keuangan otomatis.
+- Pemindaian struk, ekspor-impor data, dan asisten keuangan berbasis AI.
+
+**Template freelance** ([FR-FRL-006](#75-freelance)) termasuk dalam dokumen ini
+tetapi **bukan bagian dari MVP wajib**. Ia dikerjakan di Fase 7 bersama template
+anggaran, setelah lingkaran inti terbukti berjalan.
+
+### Definisi selesai MVP
+
+MVP dianggap cukup untuk dirilis ketika satu lingkaran penuh bisa dijalankan
+dari awal sampai akhir, dan tiap langkahnya menggerakkan angka persis seperti
+yang dijanjikan model:
+
+```
+Buat dompet
+      ↓
+Catat pemasukan          →  saldo dompet naik
+      ↓
+Buat anggaran            →  saldo dompet TIDAK berubah
+      ↓
+Catat pengeluaran        →  saldo dompet turun, terpakai anggaran naik
+      ↓
+Catat transfer           →  dompet A turun, dompet B naik, total tetap
+      ↓
+Catat worklog freelance  →  diperoleh naik, saldo dompet TIDAK berubah
+      ↓
+Catat pembayaran         →  saldo dompet naik tepat satu kali,
+                            pembayaran jadi sudah dibayar
+```
+
+Lingkaran inilah produknya. Fitur lain tidak boleh mengganggu atau memperumit
+lingkaran ini; kalau sebuah fitur membuat salah satu langkah di atas terasa
+lebih berat, fitur itu yang salah tempat.
 
 ## 7. Kebutuhan fungsional
 
@@ -217,6 +362,17 @@ sejenis.
 - [ ] Menghapus transaksi dengan konfirmasi, dan mengembalikan saldo dompet ke
       keadaan sebelum transaksi itu ada.
 
+**FR-TXN-006 — Menampilkan rincian satu transaksi**
+
+- [ ] Menampilkan jenis, nominal, kategori, dompet, tanggal, dan catatan.
+- [ ] Menampilkan anggaran dan pos anggaran yang tertaut, kalau ada, beserta
+      jalan ke anggaran itu.
+- [ ] Menampilkan transfer sebagai pasangan asal dan tujuan — "Dari", "Ke",
+      "Jumlah" — dengan judul **Transfer tercatat**.
+- [ ] Tidak memakai kosakata yang menyiratkan aplikasi menjalankan transaksi,
+      seperti "Transfer berhasil", "Pembayaran berhasil", atau "Kirim Uang".
+- [ ] Menyediakan aksi sunting dan hapus untuk transaksi itu.
+
 ### 7.3 Alur CATAT
 
 **FR-REC-001 — Titik masuk tunggal pencatatan**
@@ -274,19 +430,18 @@ sejenis.
 - [ ] Memperbarui progres seketika saat transaksi dicatat, disunting, atau
       dihapus.
 
-**FR-BUD-004 — Menampilkan daftar anggaran beserta progresnya**
+**FR-BUD-004 — Menampilkan Ikhtisar Anggaran**
+
+Ini layar daftar, dicapai dari navigasi bawah.
 
 - [ ] Menampilkan ringkasan lintas seluruh anggaran aktif di puncak layar:
       total rencana, total terpakai, dan total sisa.
 - [ ] **Menampilkan daftar seluruh anggaran, bukan papan satu anggaran.**
 - [ ] Menampilkan pada tiap kartu anggaran: nama, dompet, periode, nominal
       rencana, terpakai, sisa, progres, dan status.
-- [ ] Menampilkan nominal rencana, terpakai, dan sisa untuk tiap pos di dalam
-      sebuah anggaran.
-- [ ] Menampilkan status tiap pos: belum terpakai, terpakai sebagian, selesai,
-      atau lewat anggaran.
-- [ ] Menampilkan anggaran maupun pos yang lewat anggaran dengan warna
-      `overBudget`, bukan sebagai kesalahan.
+- [ ] Menampilkan anggaran yang lewat anggaran dengan warna `overBudget`, bukan
+      sebagai kesalahan.
+- [ ] Membuka rincian anggaran saat sebuah kartu ditekan.
 
 **FR-BUD-005 — Template anggaran**
 
@@ -305,6 +460,21 @@ sejenis.
 - [ ] Menjaga penyaringnya tetap sederhana — daftar dan pilihan, bukan
       antarmuka akuntansi.
 
+**FR-BUD-007 — Menampilkan rincian satu anggaran**
+
+- [ ] Menampilkan nama, dompet, periode, nominal rencana, terpakai, sisa, dan
+      progres anggaran itu.
+- [ ] Menampilkan seluruh pos anggaran beserta nominal rencana, terpakai, sisa,
+      dan progresnya masing-masing.
+- [ ] Menampilkan status tiap pos: belum terpakai, terpakai sebagian, selesai,
+      atau lewat anggaran.
+- [ ] Menampilkan pos yang lewat anggaran dengan warna `overBudget`, bukan
+      sebagai kesalahan.
+- [ ] Menyediakan pintasan kontekstual **Catat Pengeluaran** dan **Catat
+      Transfer** yang membuka CATAT dengan dompet dan pos anggaran sudah
+      terpilih — bukan formulir pencatatan tersendiri.
+- [ ] Menampilkan transaksi yang sudah tertaut ke anggaran itu.
+
 ### 7.5 Freelance
 
 **FR-FRL-001 — Mengelola proyek freelance**
@@ -314,8 +484,12 @@ sejenis.
 
 **FR-FRL-002 — Mencatat worklog**
 
-- [ ] Mencatat entri kerja berisi proyek, tanggal, dan jumlah jam.
-- [ ] Menghitung nominal yang diperoleh dari jam dikali tarif per jam.
+- [ ] Mencatat entri kerja berisi proyek, tanggal, jumlah jam, dan catatan
+      opsional.
+- [ ] Menghitung nominal yang diperoleh dari jam dikali tarif per jam, dan
+      menampilkan tarif yang dipakai di entri itu.
+- [ ] Menampilkan tanggal pembayaran, dompet tujuan, dan status pembayaran entri
+      itu kalau ia sudah masuk ke sebuah pembayaran.
 - [ ] Menyunting dan menghapus entri yang belum masuk pembayaran.
 - [ ] **Tidak mengubah saldo dompet mana pun.**
 
@@ -338,14 +512,28 @@ sejenis.
 
 **FR-FRL-005 — Ikhtisar Freelance**
 
-- [ ] Menyediakan satu layar Ikhtisar Freelance dengan dua tab: Worklog sebagai
-      tab bawaan, dan Pembayaran.
+- [ ] Menyediakan satu layar Ikhtisar Freelance dengan tiga tab: Worklog sebagai
+      tab bawaan, Pembayaran, dan Template.
+- [ ] Menyembunyikan tab Template sampai FR-FRL-006 dikerjakan di Fase 7,
+      sehingga MVP hanya menampilkan dua tab.
 - [ ] Menampilkan total jam kerja, nominal yang diperoleh, yang sudah dibayar,
       dan yang belum dibayar.
 - [ ] Menampilkan daftar pembayaran beserta status dan tanggalnya.
 - [ ] **Dicapai dari dua titik masuk yang keduanya mendarat di layar yang
       sama:** ringkasan di Beranda, dan CATAT → Catat Pemasukan → Freelance.
 - [ ] Bukan tujuan navigasi bawah.
+
+**FR-FRL-006 — Template freelance**
+
+Di luar MVP wajib; dikerjakan di Fase 7 bersama template anggaran.
+
+- [ ] Menyimpan struktur kerja berulang berisi proyek atau klien, tarif per jam,
+      dompet bawaan, jadwal pembayaran, dan penanda aktif atau nonaktif.
+- [ ] Membuat, menyunting, menggandakan, mengaktifkan, menonaktifkan, dan
+      menghapus template.
+- [ ] Membuat proyek freelance baru dari sebuah template.
+- [ ] **Tidak mengubah saldo dompet mana pun saat template dibuat atau
+      disunting.**
 
 ### 7.6 Beranda
 
@@ -377,6 +565,17 @@ sejenis.
 
 - [ ] Menampilkan beberapa transaksi terbaru.
 - [ ] Menyediakan jalan ke layar Transaksi.
+
+**FR-HOME-005 — Keadaan kosong dan langkah pertama**
+
+- [ ] Menampilkan "Belum ada transaksi" beserta ajakan **Catat Transaksi**
+      selama belum ada satu pun transaksi tercatat.
+- [ ] Mengarahkan ajakan itu ke alur CATAT yang sama, bukan ke formulir
+      tersendiri.
+- [ ] Mengarahkan pengguna yang belum punya dompet untuk membuat dompet
+      pertamanya beserta saldo awalnya lebih dulu.
+- [ ] Menyembunyikan kartu ringkasan yang belum punya isi, alih-alih
+      menampilkan angka nol berderet.
 
 ## 8. Kebutuhan non-fungsional
 
@@ -477,9 +676,34 @@ semantik terpisah untuk pemasukan, pengeluaran, dan peringatan, serta satu set
 ikon pixel-art yang dipakai konsisten. Yang dihindari: biru fintech generik,
 gradasi berlebihan, glassmorphism, dan nuansa perbankan korporat.
 
-Angka adalah isi utama layar ini, jadi tipografi angka diutamakan keterbacaannya
-di atas gaya. Seluruh nominal memakai pengelompokan ribuan dan tanda minus yang
+Identitasnya **pixel-art yang dipoles dengan nuansa voxel**, bukan retro
+nostalgia. Huruf bergaya pixel atau display dipakai **terbatas** — untuk merek
+dan penekanan visual saja, tidak pernah untuk angka maupun teks isi. Angka
+adalah isi utama hampir tiap layar, jadi keterbacaan angka diutamakan di atas
+gaya, dan seluruh nominal memakai pengelompokan ribuan dan tanda minus yang
 jelas.
+
+Ikon memakai satu set pixel-art yang dipakai konsisten lewat lapisan `AppIcon`:
+satu konsep selalu memakai ikon yang sama di seluruh aplikasi, tidak ada ikon
+Material yang dipanggil langsung dari berkas halaman, tidak ada emoji, tidak ada
+logo bank atau perusahaan sungguhan, dan status dinyatakan lewat bentuk ikon
+maupun warnanya sekaligus — bukan warna saja.
+
+### Lima prinsip antarmuka
+
+1. **Mencatat, bukan memproses.** Antarmuka selalu menyatakan bahwa aplikasi
+   merekam kejadian. "Catat Transfer", bukan "Transfer". "Transfer tercatat",
+   bukan "Transfer berhasil".
+2. **Uang nyata berbeda dari uang rencana.** Tidak ada satu pun elemen yang
+   menyiratkan membuat anggaran mengeluarkan uang dari dompet.
+3. **Diperoleh berbeda dari diterima.** Penghasilan freelance selalu
+   menampilkan ketiganya terpisah: diperoleh, sudah dibayar, belum dibayar.
+4. **Satu sistem pencatatan.** Seluruh pembuatan transaksi manual bermuara ke
+   CATAT. Pintasan kontekstual boleh mengisi field lebih dulu, tetapi tidak
+   boleh membuat alur paralel.
+5. **Kerumitan bertingkat.** Tindakan sederhana tetap sederhana. Template, pos
+   anggaran, dan pelacakan pembayaran freelance tidak boleh membuat pencatatan
+   satu pengeluaran jadi lebih berat.
 
 ## 11. Risiko dan mitigasi
 
@@ -509,6 +733,17 @@ jelas.
 - Apakah kategori transaksi perlu daftar bawaan, atau seluruhnya diketik
   pemilik sendiri.
 - Apakah periode anggaran perlu lebih dari mingguan dan bulanan.
+- **Bagaimana ukuran keberhasilan perilaku diukur.** Aktivasi, frekuensi
+  pencatatan, adopsi anggaran, dan retensi D7/D30 tidak bisa dihitung lintas
+  pengguna tanpa telemetri, sementara NFR-SEC-001 melarang panggilan jaringan
+  sama sekali. Pilihannya: tetap tanpa telemetri dan menilai dari pemakaian
+  pemilik sendiri, atau membatalkan NFR-SEC-001. Keputusan pemilik.
+- Apakah kategori transaksi dan kategori anggaran perlu ikonnya sendiri. Kalau
+  ya, jumlah dan daftarnya menentukan cakupan aset pixel-art yang harus
+  disiapkan — lihat
+  [ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md).
+- Huruf display bergaya pixel untuk merek belum dipilih. Sampai ada, penekanan
+  visual memakai Archivo Black.
 
 ## 14. Lampiran
 

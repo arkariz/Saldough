@@ -30,6 +30,8 @@ bank mana pun. Kosakata antarmuka harus mencerminkan itu.
 | Catat Pembayaran | Bayar Sekarang | Pembayaran terjadi di luar aplikasi |
 | Pembayaran tercatat | Pembayaran berhasil | Sama seperti di atas |
 | Catat Pengeluaran | Kirim Uang | Aplikasi tidak punya kemampuan mengirim apa pun |
+| Pengeluaran tercatat | Pembayaran terkirim | Yang tersimpan adalah catatan, bukan perintah bayar |
+| Transfer tercatat — Dari, Ke, Jumlah | Transfer Successful | Judul rincian transfer menyatakan rekaman, bukan hasil operasi |
 
 ## Dompet dan transaksi
 
@@ -111,7 +113,7 @@ tentu sudah diterima. Ini domain pendukung, bukan inti.
 | Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja. |
 | Worklog | `WorklogEntry` | Satu entri kerja: tanggal dan jumlah jam. |
 | Diperoleh | `earnedAmount` | Jam dikali tarif. Pekerjaan yang sudah selesai, **belum tentu diterima**. |
-| Ikhtisar Freelance | `FreelanceRouteKeys.overview` | Satu layar berisi dua tab, Worklog dan Pembayaran, tujuan dari kedua titik masuk freelance. |
+| Ikhtisar Freelance | `FreelanceRouteKeys.overview` | Satu layar berisi tiga tab — Worklog, Pembayaran, Template — tujuan dari kedua titik masuk freelance. Tab Template baru muncul di Fase 7; MVP menampilkan dua tab. |
 | Pembayaran freelance | `FreelancePayment` | Kumpulan worklog yang ditagihkan sebagai satu pembayaran. |
 | Belum dibayar | `PaymentStatus.pending` | Pembayaran belum diterima. Tidak menyentuh saldo dompet. |
 | Sudah dibayar | `PaymentStatus.paid` | Pembayaran sudah dicatat diterima, dan sudah menghasilkan satu `IncomeTransaction`. |
@@ -119,6 +121,7 @@ tentu sudah diterima. Ini domain pendukung, bukan inti.
 | Potongan | `DeductionRule` | Pengurang gaji kotor, berupa per mil atau nominal tetap. |
 | Gaji kotor | `grossPay` | Total jam dikali tarif per jam. |
 | Gaji bersih | `netPay` | Gaji kotor dikurangi seluruh potongan. Angka inilah yang jadi nominal `IncomeTransaction` saat pembayaran dicatat. |
+| Template freelance | `FreelanceTemplate` | Struktur kerja berulang — tarif, potongan, dompet bawaan, jadwal — yang bisa dipakai membuat proyek baru. Di luar MVP wajib. |
 
 Bedakan dengan tegas antara **diperoleh** dan **diterima**. Kerja yang sudah
 selesai tidak pernah menambah saldo dompet. Saldo baru berubah saat pemilik

@@ -8,6 +8,15 @@
 - **Status:** Accepted
 - **Cakupan:** Global
 
+> **Catatan perluasan (17 September 2026):** Versi pertama ADR ini menetapkan
+> dua puluh dua kunci ikon dalam lima kelompok dan dua peran huruf. Setelah
+> PRD ditulis ulang setingkat produk, dua kekurangan terlihat: tidak ada satu
+> pun ikon untuk **kategori transaksi dan kategori anggaran** — padahal kategori
+> muncul di tiap baris transaksi dan tiap pos anggaran — dan tidak ada ikon
+> khusus freelance. Arahan visual pemilik juga menyebut **huruf display bergaya
+> pixel untuk merek**, yang tidak punya tempat dalam dua peran huruf. Ketiganya
+> ditambahkan di bawah. Keputusan pokok ADR ini tidak berubah.
+
 ## 2. Konteks
 
 [ADR-0006](0006-design-token-semantic-color-mapping.md) menetapkan bahasa visual
@@ -105,9 +114,16 @@ menyaingi makna `income` dan `expense`. Slate dingin juga menjauhkannya dari
 
 ### Tipografi
 
-Dua peran, bukan tiga. Archivo Black untuk angka dan judul; Space Grotesk untuk
-teks isi. **Bangers dihapus**: suara stiker komik tidak sejalan dengan identitas
-pixel-art, dan label pendek kini memakai Space Grotesk tebal berjarak huruf.
+Dua peran wajib, satu peran opsional. Archivo Black untuk angka dan judul;
+Space Grotesk untuk teks isi. **Bangers dihapus**: suara stiker komik tidak
+sejalan dengan identitas pixel-art, dan label pendek kini memakai Space Grotesk
+tebal berjarak huruf.
+
+Peran ketiga adalah **huruf display bergaya pixel**, dipakai **terbatas** untuk
+merek dan penekanan visual saja — nama aplikasi, layar pembuka, judul keadaan
+kosong. Ia tidak pernah dipakai untuk angka maupun teks isi, sebab keterbacaan
+angka adalah nilai inti proyek ini. Hurufnya belum dipilih; sampai ada,
+penekanan visual memakai Archivo Black dan tidak ada yang hilang.
 
 Keterbacaan angka tidak boleh dikorbankan demi gaya. Ketepatan angka adalah
 nilai inti proyek ini, dan angka adalah isi utama hampir setiap layar.
@@ -134,15 +150,28 @@ isian sementara. Saat aset masuk, yang berubah hanya satu berkas peta — bukan
 puluhan berkas halaman. Ini alasan lapisan itu ada, dan satu-satunya cara fase
 UI bisa berjalan tanpa menunggu.
 
-Kunci yang dibutuhkan, dua puluh dua buah:
+Kunci yang dibutuhkan, dua puluh sembilan buah dalam enam kelompok:
 
 | Kelompok | Kunci |
 |---|---|
 | Navigasi | `home`, `budget`, `record`, `transactions`, `wallets` |
 | Jenis dompet | `walletBank`, `walletCash`, `walletEwallet`, `walletSavings`, `walletCard` |
 | Jenis transaksi | `income`, `expense`, `transfer` |
-| Status | `pending`, `paid` |
+| Kategori | `categoryFood`, `categoryTransport`, `categoryHousehold`, `categoryBills`, `categoryEntertainment`, `categoryOther` |
+| Freelance | `freelance`, `worklog` |
+| Status dan umpan balik | `pending`, `paid`, `overBudget`, `empty` |
 | Aksi | `add`, `edit`, `delete`, `calendar`, `check`, `chevronLeft`, `chevronRight` |
+
+Kelompok **Kategori** sengaja dibiarkan pendek dan berakhir di `categoryOther`.
+Daftar kategori transaksi dan kategori anggaran belum diputuskan pemilik — itu
+salah satu pertanyaan terbuka
+[PRD 2.0 §13](../../01-product/prd-saldough-2.0.md#13-pertanyaan-terbuka) — dan
+menambah kunci baru ke `IconKey` berbiaya satu baris, sementara menggambar aset
+untuk kategori yang ternyata tidak dipakai berbiaya jauh lebih mahal.
+
+Status dinyatakan lewat **bentuk ikon dan warna sekaligus**, tidak pernah lewat
+warna saja. Ini bukan gaya melainkan syarat keterbacaan bagi mata yang sulit
+membedakan warna.
 
 ## 4. Opsi yang dipertimbangkan
 
@@ -255,6 +284,11 @@ dengan hilangnya satu kelas kesalahan — memakai varian yang keliru sebagai tek
   makna keuangan memakai `income`, `expense`, `overBudget`, `transfer`, atau
   `pending`.
 - Memakai emoji sebagai ikon.
+- Mencampur gaya ikon: satu konsep harus memakai satu ikon yang sama di seluruh
+  aplikasi, dan seluruh ikon berasal dari satu set yang sama.
+- Memakai logo bank atau perusahaan sungguhan, kecuali pemilik memintanya
+  secara khusus.
+- Memakai huruf display pixel untuk angka atau teks isi.
 - Menghidupkan kembali bayangan keras, halftone, atau rotasi sebagai hiasan.
 
 ## 8. Kriteria peninjauan ulang

@@ -27,13 +27,13 @@ Terakhir diperbarui: 17 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 13 | T-0.1 sebagian, lihat catatannya |
 | 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 10 | 0 | Belum dimulai |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
-| 4 — Anggaran | 9 | 0 | Belum dimulai |
+| 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
-| 6 — Beranda | 5 | 0 | Belum dimulai |
-| 7 — Template dan poles | 6 | 0 | Belum dimulai |
-| **Total MVP** | **70** | **13** | |
+| 6 — Beranda | 6 | 0 | Belum dimulai |
+| 7 — Template dan poles | 7 | 0 | Belum dimulai |
+| **Total MVP** | **75** | **13** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -52,7 +52,7 @@ rencana kerja.
       betulkan drift `Failure` yang usang sejak ADR-0005 dibalik.
 - [x] **T-0.3** Tulis `prd-saldough-2.0.md` mengikuti kerangka §1–§14 versi 1.0.
 - [x] **T-0.4** Tulis ulang `user-stories.md`.
-- [x] **T-0.5** Tulis ulang `DOMAIN_MODEL.md` dengan delapan entitas, rumus, dan
+- [x] **T-0.5** Tulis ulang `DOMAIN_MODEL.md` dengan sembilan entitas, rumus, dan
       invariannya.
 - [x] **T-0.6** Tulis ADR-011 sampai ADR-014.
 - [x] **T-0.7** Tandai ADR-0006 dan ADR-0008 digantikan; beri ADR-0002 catatan
@@ -164,7 +164,8 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
 ### Fondasi tampilan
 
 - [ ] **T-2.1** Buat `AppIcon(IconKey)` di `lib/core/presentation/widgets/`
-      dengan 22 kunci semantik, diisi ikon Material sebagai isian sementara.
+      dengan 29 kunci semantik dalam enam kelompok, diisi ikon Material sebagai
+      isian sementara.
       ⚠ `IconKey` adalah `enum` supaya kunci yang belum dipetakan gagal saat
       kompilasi, bukan saat dijalankan.
       ⚠ Aset pixel-art dari pemilik masuk di T-7.4. Lapisan ini ada supaya
@@ -207,6 +208,14 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       ⚠ Pembetulan dilakukan dengan menyunting atau menghapus, tidak pernah
       dengan mencatat transaksi penyeimbang.
       Memenuhi FR-TXN-005.
+- [ ] **T-2.11** Buat layar rincian satu transaksi: jenis, nominal, kategori,
+      dompet, tanggal, catatan, beserta aksi sunting dan hapus.
+      ⚠ Transfer memakai judul **Transfer tercatat** dan tata letak "Dari / Ke /
+      Jumlah". Dilarang memakai "Transfer berhasil", "Pembayaran berhasil",
+      atau "Kirim Uang" di mana pun.
+      ⚠ Baris anggaran tertaut baru terisi setelah Fase 4; sampai itu bagiannya
+      tidak ditampilkan, bukan ditampilkan kosong.
+      Memenuhi FR-TXN-006.
 
 ### Dompet
 
@@ -333,6 +342,18 @@ tanpa menyelesaikan apa pun.
       ⚠ Jaga penyaringnya tetap sederhana — daftar dan pilihan, bukan antarmuka
       akuntansi.
       Memenuhi FR-BUD-001 dan FR-BUD-006.
+- [ ] **T-4.10** Buat layar rincian satu anggaran: nama, dompet, periode, angka
+      anggaran, seluruh pos beserta progres dan statusnya, transaksi yang sudah
+      tertaut, serta pintasan **Catat Pengeluaran** dan **Catat Transfer**.
+      ⚠ Kedua pintasan membuka CATAT dengan dompet dan pos sudah terpilih —
+      bukan formulir pencatatan tersendiri. Itu aturan produk, bukan preferensi.
+      ⚠ Status pos ada empat: belum terpakai, terpakai sebagian, selesai, lewat
+      anggaran. Yang lewat anggaran memakai warna `overBudget`, bukan gaya
+      kesalahan.
+      Memenuhi FR-BUD-007 dan FR-REC-002.
+- [ ] **T-4.11** Lengkapi baris anggaran tertaut di layar rincian transaksi
+      (T-2.11), beserta jalan ke anggarannya.
+      Memenuhi FR-TXN-006.
 
 ## Fase 5: Freelance
 
@@ -345,7 +366,8 @@ tanpa menyelesaikan apa pun.
       ⚠ Ketiganya sengaja tidak dipartisi karena lajunya rendah. Tinjau ulang
       kalau entrinya melewati beberapa ratus.
       Memenuhi NFR-REL-003.
-- [ ] **T-5.3** Buat layar worklog: catat, sunting, dan hapus entri, dengan
+- [ ] **T-5.3** Buat layar worklog: catat, sunting, dan hapus entri berisi
+      proyek, tanggal, jam, dan catatan opsional, dengan
       nominal yang diperoleh dihitung dari jam dikali tarif.
       ⚠ **Tidak pernah menyentuh saldo dompet.** Mencatat kerja bukan menerima
       uang.
@@ -367,6 +389,9 @@ tanpa menyelesaikan apa pun.
       ⚠ Kedua titik masuk mendarat di layar yang **sama**: ringkasan di Beranda,
       dan CATAT → Catat Pemasukan → Freelance.
       ⚠ Freelance bukan tujuan navigasi bawah.
+      ⚠ Tab ketiga (Template) baru ditambahkan di T-7.7. Buat `TabBar`-nya
+      menerima jumlah tab yang bervariasi sekarang, supaya penambahannya nanti
+      tidak membongkar layar ini.
       Memenuhi FR-FRL-005.
 - [ ] **T-5.7** Tulis uji: worklog tidak mengubah saldo; pembayaran yang dicatat
       diterima menambah saldo tepat satu kali; `netPay` 37 jam pada tarif
@@ -401,6 +426,14 @@ seluruh fitur di atasnya menghasilkan data.
 - [ ] **T-6.5** Jalankan di perangkat, ukur waktu tampil Beranda, dan telusuri
       loop inti penuh sampai pencatatan pembayaran freelance.
       Memenuhi NFR-PERF-001 dan NFR-PERF-002.
+- [ ] **T-6.6** Buat keadaan kosong Beranda: "Belum ada transaksi" beserta
+      ajakan **Catat Transaksi**, dan arahan membuat dompet pertama kalau belum
+      ada dompet sama sekali.
+      ⚠ Ajakannya membuka alur CATAT yang sama, bukan formulir tersendiri.
+      ⚠ Kartu ringkasan yang belum punya isi disembunyikan, bukan ditampilkan
+      sebagai deretan angka nol. Layar pertama menentukan apakah aplikasi ini
+      dipakai lagi besok.
+      Memenuhi FR-HOME-005.
 
 ## Fase 7: Template dan poles
 
@@ -415,6 +448,13 @@ seluruh fitur di atasnya menghasilkan data.
       ⚠ Anggaran hasil template berdiri sendiri. Menyuntingnya tidak mengubah
       templatenya, dan sebaliknya.
       Memenuhi FR-BUD-005.
+- [ ] **T-7.7** Buat `FreelanceTemplate` beserta repositori, layar CRUD-nya
+      sebagai tab ketiga Ikhtisar Freelance, dan pembuatan proyek dari template.
+      ⚠ Hubungannya sama persis dengan `BudgetTemplate` terhadap `Budget`:
+      template adalah definisi, proyek adalah salinan mandiri. Menyunting
+      template tidak mengubah proyek yang sudah dibuat darinya.
+      ⚠ Template tidak pernah menyentuh saldo dompet mana pun.
+      Memenuhi FR-FRL-006.
 - [ ] **T-7.4** Masukkan aset ikon pixel-art dari pemilik ke peta `AppIcon`.
       ⚠ Terhambat sampai asetnya tersedia. Kalau belum tiba saat fase ini
       selesai, keputusan identitas ikon perlu diambil ulang — "sementara" yang
@@ -443,23 +483,27 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-TXN-003 | T-1.3, T-2.4, T-4.4 |
 | FR-TXN-004 | T-1.4, T-2.5 |
 | FR-TXN-005 | T-1.4, T-2.6 |
+| FR-TXN-006 | T-2.11, T-4.11 |
 | FR-REC-001 | T-2.3, T-2.4 |
-| FR-REC-002 | T-2.8 |
+| FR-REC-002 | T-2.8, T-4.10 |
 | FR-BUD-001 | T-4.1, T-4.3, T-4.5, T-4.9 |
 | FR-BUD-002 | T-4.1, T-4.6 |
 | FR-BUD-003 | T-4.4 |
 | FR-BUD-006 | T-4.9 |
 | FR-BUD-004 | T-4.2, T-4.5 |
 | FR-BUD-005 | T-7.1, T-7.2, T-7.3 |
+| FR-BUD-007 | T-4.10 |
 | FR-FRL-001 | T-5.1 |
 | FR-FRL-002 | T-5.1, T-5.3 |
 | FR-FRL-003 | T-5.4 |
 | FR-FRL-004 | T-5.5 |
-| FR-FRL-005 | T-5.6 |
+| FR-FRL-005 | T-5.6, T-7.7 |
+| FR-FRL-006 | T-7.7 |
 | FR-HOME-001 | T-6.1 |
 | FR-HOME-002 | T-6.2 |
 | FR-HOME-003 | T-6.3 |
 | FR-HOME-004 | T-6.4 |
+| FR-HOME-005 | T-6.6 |
 | NFR-ACC-001 | T-1.7, T-5.7 |
 | NFR-ACC-002 | T-1.7, T-2.9, T-4.7, T-5.7 |
 | NFR-ACC-003 | T-1.5, T-1.6, T-1.7 |
@@ -468,11 +512,11 @@ Tabel ini memastikan tidak ada kebutuhan di
 | NFR-REL-001 | Terpenuhi sendirinya — tidak ada panggilan jaringan di MVP |
 | NFR-REL-002 | T-1.2, T-1.4 |
 | NFR-REL-003 | T-1.2, T-4.3, T-5.2 |
-| NFR-UX-001 | T-2.4, T-2.10, T-7.6 |
+| NFR-UX-001 | T-2.4, T-2.10, T-6.6, T-7.6 |
 | NFR-UX-002 | T-2.1, T-7.4 |
 | NFR-UX-003 | T-2.2, T-3.5 |
 | NFR-UX-004 | T-1.9, T-4.8, T-5.8 |
-| NFR-UX-005 | T-2.4, T-5.5 |
+| NFR-UX-005 | T-2.4, T-2.11, T-5.5 |
 | NFR-SEC-001 | Terpenuhi sendirinya — tidak ada panggilan jaringan di MVP |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

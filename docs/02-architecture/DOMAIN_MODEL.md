@@ -39,7 +39,7 @@ murni, bukan `~/` yang memotong ke arah nol dan salah untuk nilai negatif
 
 ## Ringkasan entitas
 
-Delapan entitas, dikelompokkan jadi tiga lingkaran: inti, rencana, dan
+Sembilan entitas, dikelompokkan jadi tiga lingkaran: inti, rencana, dan
 pendukung.
 
 | Entitas | Lingkaran | Peran |
@@ -52,6 +52,7 @@ pendukung.
 | `FreelanceProject` | Pendukung | Klien beserta tarif dan potongannya |
 | `WorklogEntry` | Pendukung | Kerja yang sudah selesai |
 | `FreelancePayment` | Pendukung | Tagihan yang menunggu dibayar |
+| `FreelanceTemplate` | Pendukung | Struktur kerja berulang yang bisa dipakai ulang |
 
 Tidak ada entitas untuk saldo turunan, ringkasan bulanan, `spent`, `remaining`,
 `progress`, maupun `status`. Semuanya dihitung ulang saat diakses.
@@ -284,10 +285,16 @@ tarif 2,5% tidak bisa diwakili bilangan bulat dalam satuan persen.
 | `projectId` | `String` | Proyek yang dikerjakan. |
 | `date` | `DateTime` | Tanggal kerja. |
 | `hours` | `int` | Jumlah jam. |
+| `note` | `String?` | Catatan bebas tentang apa yang dikerjakan. |
 | `paymentId` | `String?` | Pembayaran yang menagihkan entri ini. Null berarti belum ditagihkan. |
 
 `WorklogEntry` **tidak pernah** menyentuh saldo dompet mana pun. Mencatat kerja
 bukan menerima uang.
+
+Tarif per jam, tanggal pembayaran, dompet tujuan, dan status pembayaran
+**tidak** disimpan di entri. Ketiga yang terakhir diturunkan lewat `paymentId`,
+dan tarifnya diturunkan lewat `projectId` — sehingga satu entri tidak pernah
+bisa menyatakan status yang berbeda dari pembayaran yang menagihkannya.
 
 ### Pembayaran
 
@@ -331,6 +338,26 @@ Saat pembayaran dicatat diterima, ia membuat **tepat satu**
 itu di `incomeTransactionId`, dan berubah status jadi `paid`. Field itu, begitu
 terisi, jadi penjaga supaya pembayaran yang sama tidak bisa dicatat dua kali.
 
+### Template freelance
+
+Di luar MVP wajib; dikerjakan di Fase 7 bersama template anggaran.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas template. |
+| `name` | `String` | Nama klien atau proyek. |
+| `hourlyRate` | `int` | Tarif per jam dalam sen. |
+| `deductionRules` | `List<DeductionRule>` | Potongan bawaan. |
+| `defaultWalletId` | `String?` | Dompet tujuan bawaan untuk pembayarannya. |
+| `paymentSchedule` | `PaymentSchedule` | Jadwal penagihan bawaan. |
+| `isEnabled` | `bool` | Template nonaktif tidak ditawarkan saat membuat proyek. |
+
+Hubungannya dengan `FreelanceProject` sama persis dengan hubungan
+`BudgetTemplate` dengan `Budget`: template adalah **definisi**, proyek adalah
+**salinan mandiri**. Menyunting template tidak pernah mengubah proyek yang sudah
+dibuat darinya, dan membuat atau menyunting template tidak pernah menyentuh
+saldo dompet mana pun.
+
 ## Invarian
 
 Aturan berikut harus benar setiap saat, dan masing-masing punya uji unitnya
@@ -344,8 +371,9 @@ sendiri.
 4. **Anggaran tidak menyentuh saldo.** Membuat, menyunting, atau menghapus
    `Budget`, `BudgetItem`, maupun `BudgetTemplate` tidak mengubah saldo dompet
    mana pun.
-5. **Worklog tidak menyentuh saldo.** Mencatat, menyunting, atau menghapus
-   `WorklogEntry` tidak mengubah saldo dompet mana pun.
+5. **Worklog dan template freelance tidak menyentuh saldo.** Mencatat,
+   menyunting, atau menghapus `WorklogEntry` maupun `FreelanceTemplate` tidak
+   mengubah saldo dompet mana pun.
 6. **Pembayaran menghasilkan tepat satu transaksi.** Sebuah `FreelancePayment`
    yang `paid` punya tepat satu `incomeTransactionId`, dan tidak bisa dicatat
    diterima untuk kedua kalinya.

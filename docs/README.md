@@ -138,7 +138,7 @@ Aturan ini berlaku untuk seluruh dokumen di direktori ini.
 - **ADR.** Empat digit berurutan, sembilan seksi sesuai
   [template](02-architecture/adr/0000-template.md). Opsi ditandai
   `(Dipilih)` pada yang menang.
-- **Requirement.** Diberi identitas seperti `FR-CYCLE-001` dan dirujuk dari ADR
+- **Requirement.** Diberi identitas seperti `FR-WAL-001` dan dirujuk dari ADR
   maupun daftar tugas.
 - **Angka.** Setiap rumus disertai angka bukti dari catatan keuangan nyata
   pemilik. Jangan menulis rumus tanpa buktinya.

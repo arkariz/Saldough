@@ -45,12 +45,12 @@ Terakhir diperbarui: 17 September 2026.
 
 | Fase | Tugas desain | Selesai | Status |
 |---|---|---|---|
-| 2 — Layar inti | 5 | 0 | Belum dimulai |
+| 2 — Layar inti | 6 | 0 | Belum dimulai |
 | 4 — Anggaran | 3 | 0 | Belum dimulai |
 | 5 — Freelance | 3 | 0 | Belum dimulai |
-| 6 — Beranda | 1 | 0 | Belum dimulai |
-| 7 — Template dan poles | 1 | 0 | Belum dimulai |
-| **Total** | **13** | **0** | |
+| 6 — Beranda | 2 | 0 | Belum dimulai |
+| 7 — Template dan poles | 2 | 0 | Belum dimulai |
+| **Total** | **16** | **0** | |
 
 ## Fase 2: Layar inti
 
@@ -94,6 +94,13 @@ ulang kanvasnya.
       Memenuhi FR-WAL-001, FR-WAL-002, FR-WAL-003, FR-WAL-004, dan
       FR-REC-002.
 
+- [ ] **D-2.6** Layar rincian satu transaksi: jenis, nominal, kategori, dompet,
+      tanggal, catatan, anggaran tertaut, beserta aksi sunting dan hapus.
+      ⚠ Transfer memakai judul **Transfer tercatat** dan tata letak "Dari / Ke /
+      Jumlah". Kosakata yang menyiratkan aplikasi menjalankan transaksi dilarang
+      muncul di kanvas — termasuk dalam teks contoh.
+      Memenuhi FR-TXN-006.
+
 ## Fase 4: Anggaran
 
 - [ ] **D-4.1** Layar Anggaran: ringkasan lintas anggaran di puncak (total
@@ -121,8 +128,8 @@ ulang kanvasnya.
 ## Fase 5: Freelance
 
 - [ ] **D-5.1** Layar **Ikhtisar Freelance**: ringkasan di puncak (total jam,
-      diperoleh, sudah dibayar, belum dibayar) lalu dua tab — Worklog sebagai
-      tab bawaan, dan Pembayaran.
+      diperoleh, sudah dibayar, belum dibayar) lalu dua tab di MVP — Worklog
+      sebagai tab bawaan, dan Pembayaran. Tab ketiga menyusul di D-7.2.
       ⚠ Ini **satu** layar, dan kedua titik masuk mendarat di sini: ringkasan
       Beranda, dan CATAT → Catat Pemasukan → Freelance.
       ⚠ Freelance bukan tujuan navigasi bawah, jadi layar ini tidak punya tab
@@ -152,9 +159,23 @@ ulang kanvasnya.
       ⚠ **Jangan menaruh daftar worklog di Beranda.** Beranda memuat
       ringkasan, bukan daftar kerja.
       Memenuhi FR-HOME-001, FR-HOME-002, FR-HOME-003, dan FR-HOME-004.
+- [ ] **D-6.2** Keadaan kosong Beranda dan langkah pertama: layar tanpa dompet,
+      layar tanpa transaksi, dan ajakan **Catat Transaksi**.
+      ⚠ Ini kanvas yang paling menentukan apakah aplikasi dipakai lagi besok,
+      dan justru yang paling sering dilewati. Gambar keduanya, bukan salah satu.
+      ⚠ Kartu ringkasan yang belum punya isi disembunyikan, bukan digambar
+      sebagai deretan angka nol.
+      Memenuhi FR-HOME-005.
 
 ## Fase 7: Template dan poles
 
+- [ ] **D-7.2** Tab Template pada Ikhtisar Freelance beserta layar sunting
+      templatenya: tarif, potongan, dompet bawaan, jadwal pembayaran, dan
+      penanda aktif atau nonaktif.
+      ⚠ Bentuknya mengikuti layar template anggaran, bukan pola baru.
+      ⚠ Tab ini membuat Ikhtisar Freelance punya tiga tab. Periksa ulang
+      kanvas D-5.1 supaya lebarnya masih muat di layar ponsel tersempit.
+      Memenuhi FR-FRL-006.
 - [ ] **D-7.1** Penerapan aset ikon pixel-art dari pemilik ke peta
       `AppIcon`, menggantikan ikon Material sementara di seluruh layar
       yang sudah ada.

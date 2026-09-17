@@ -1,197 +1,215 @@
 # Roadmap
 
-Dokumen ini menjelaskan urutan pengerjaan Saldough dan alasan di balik
+Dokumen ini menjelaskan urutan pengerjaan Saldough 2.0 dan alasan di balik
 urutannya. Untuk daftar tugas yang bisa langsung dikerjakan beserta
-progresnya, lihat [TASK_LIST.md](TASK_LIST.md).
+progresnya, lihat [TASK_LIST.md](TASK_LIST.md). Untuk pekerjaan desain
+visual yang menurunkan fase-fase ini jadi layar, lihat
+[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
 
 ## Prinsip penyusunan fase
 
-Tiga aturan menentukan urutan di bawah ini.
+Empat aturan menentukan urutan di bawah ini.
 
-**Risiko terbesar diuji lebih dulu.** Resolusi paket internal berpotensi gagal
-karena deklarasi `resolution: workspace`. Kalau itu terjadi, seluruh rencana
-arsitektur berubah. Karena itu resolusi dijadikan gerbang paling awal, bukan
-detail teknis yang diurus sambil jalan.
+**Aplikasi selalu bisa dijalankan.** `flutter analyze` dan `flutter test`
+harus hijau di tiap commit. Tidak ada fase yang meninggalkan repositori
+dalam keadaan rusak menunggu fase berikutnya, dan itu berlaku juga selama
+dua model domain hidup berdampingan di Fase 1 dan 2.
 
-**Setiap fase menghasilkan aplikasi yang tetap berjalan.** Tidak ada fase yang
-meninggalkan aplikasi dalam keadaan rusak menunggu fase berikutnya.
+**Fitur baru tumbuh di samping yang lama, cutover terjadi sekali.** Saldough
+2.0 ditulis sebagai folder fitur baru di sebelah `cycle`, `card`,
+`investment`, `grocery`, dan `income`, bukan menggantikannya sepotong demi
+sepotong. Kode lama dihapus dalam satu commit di Fase 3, bukan dicicil.
+Alasan lengkap strategi ini ada di
+[ADR-014](../02-architecture/adr/0014-strategi-pivot-saldough-2.md).
 
-**Urutan mengikuti aliran data, bukan kemudahan.** Siklus bulanan dikerjakan
-lebih dulu karena semua fitur lain memasok angka ke sana. Membangun pemasok
-sebelum penerimanya berarti tidak ada tempat untuk membuktikan hasilnya benar.
+**Urutan mengikuti loop inti produk.** Saldough 2.0 menjawab tiga pertanyaan
+berurutan: di mana uang berada, apa yang terjadi padanya, dan ke mana ia
+direncanakan pergi. Karena itu tempat uang — dompet — dikerjakan lebih
+dulu, disusul peristiwa — transaksi lewat CATAT — dan baru rencana —
+anggaran. Freelance menyusul sebagai domain pendukung yang memasok
+pemasukan ke buku besar yang sama.
+
+**Beranda dikerjakan terakhir.** Beranda hanya meringkas apa yang sudah ada
+di dompet, transaksi, anggaran, dan freelance. Membangunnya lebih awal
+berarti membangun ringkasan untuk data yang belum ada.
 
 ## Ringkasan fase
 
 | Fase | Nama | Hasil |
 |---|---|---|
-| 0 | Gerbang dependensi | Resolusi paket terbukti berhasil |
-| 1 | Fondasi | Aplikasi berjalan dengan tema, terjemahan, DI, dan rute |
-| 2 | Siklus bulanan | Inti produk bisa dipakai |
-| 3 | Pemasukan dan timesheet | Penghasilan freelance terhitung otomatis |
-| 4 | Roll-up | Tiga titik salin manual hilang |
-| 5 | Investasi | Siklus bulanan lengkap |
-| 6 | Seed | Riwayat spreadsheet tersedia di aplikasi |
-| 7 | Sinkronisasi | Di luar MVP |
+| 0 | Dokumen Saldough 2.0 | Seluruh keputusan produk dan arsitektur tertulis |
+| 1 | Domain inti dompet dan transaksi | Buku besar tercatat dan teruji, tanpa UI |
+| 2 | Layar inti CATAT/Transaksi/Dompet | Aplikasi baru bisa dipakai sehari-hari |
+| 3 | Cutover | Satu model domain tersisa di repositori |
+| 4 | Anggaran | Rencana belanja bisa dibuat dan dipantau |
+| 5 | Freelance | Penghasilan lepas tercatat sampai diterima |
+| 6 | Beranda | Ringkasan keadaan keuangan dalam satu layar |
+| 7 | Template dan poles | Anggaran berulang cepat dibuat, ikon final terpasang |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya.
 
-## Fase 0: Gerbang dependensi
+## Fase 0: Dokumen Saldough 2.0
 
-Membuktikan bahwa paket internal bisa di-resolve dari repositori terpisah.
+Menulis ulang seluruh dokumen produk dan arsitektur sebelum satu baris kode
+baru ditulis, sejalan dengan preferensi pemilik "dokumentasi lebih dulu,
+kode menyusul". Tidak ada kode aplikasi di fase ini.
 
-Fase ini adalah gerbang. Tidak ada pekerjaan Fase 1 yang dimulai sebelum
-`flutter pub get` berhasil, karena kegagalan di sini mengubah cara seluruh
-aplikasi disusun.
+Urutan penulisannya meniru urutan Saldough 1.0: istilah dulu lewat
+glosarium, lalu produk lewat PRD dan user stories, lalu domain lewat
+`DOMAIN_MODEL.md`, lalu keputusan arsitektur lewat ADR-011 sampai ADR-014,
+dan baru rencana kerja lewat roadmap dan daftar tugas. Urutan ini penting
+karena setiap dokumen belakangan merujuk istilah dan keputusan yang sudah
+ditetapkan di dokumen sebelumnya.
 
-Kalau resolusi gagal, jalur pemulihan yang sudah disetujui adalah mendorong
-branch kompatibilitas di `advance-mobile-platform` yang melepas
-`resolution: workspace` pada paket yang dipakai. Rinciannya ada di
-[ADR-0001](../02-architecture/adr/0001-internal-package-dependency-strategy.md).
+**Selesai kalau:** seluruh dokumen di `docs/` konsisten dengan model Dompet
++ Transaksi + Anggaran, tautan relatifnya hidup, dan `.claude/CLAUDE.md`
+beserta `AGENT_CONTEXT.md` tidak lagi menyuntikkan konteks yang basi ke
+sesi berikutnya.
 
-**Selesai kalau:** `flutter pub get` dan `flutter analyze` berjalan bersih pada
-proyek kosong yang sudah menarik seluruh paket internal.
+## Fase 1: Domain inti — dompet dan transaksi
 
-## Fase 1: Fondasi
+Membangun buku besar yang belum pernah ada di Saldough 1.0: entitas
+`Wallet` dan `Transaction`, penyimpanan berpartisi per bulan, dan
+pemeliharaan saldo tercatat. Fase ini tanpa UI sama sekali, sehingga
+kebenarannya dibuktikan lewat uji unit dengan angka nyata, bukan lewat
+layar.
 
-Menyiapkan kerangka aplikasi tanpa fitur domain.
+⚠ Fase ini dan Fase 2 terikat invarian yang sama: tidak satu pun berkas di
+`lib/features/{cycle,card,investment,grocery,income}` atau
+`lib/shared/goal` boleh disentuh, dan seluruh uji lama wajib tetap lulus
+tanpa disunting. Kalau ada uji lama gagal, itu bukti fitur baru menyentuh
+sesuatu yang seharusnya tidak.
 
-Isi fase ini adalah lapisan tema beserta tokennya, penyiapan slang dua bahasa,
-bootstrap dua fase dengan `DiBoot`, registri rute, penangan efek, dan widget
-bersama seperti `AppCard` dan `AppMoneyText`.
+**Selesai kalau:** saldo dompet yang tersimpan identik dengan hasil
+penghitungan ulang dari seluruh transaksi, dibuktikan lewat uji, dan
+`WalletRepository` beserta `TransactionRepository` terdaftar di
+`RootModule` tanpa mengubah satu baris pun kode lama.
 
-Widget bersama sengaja dibuat di fase ini, bukan nanti saat pengulangan sudah
-terlanjur muncul. Di `new-health-duel`, dekorasi kartu yang sama terulang di
-sekitar delapan berkas justru karena widget bersamanya tidak pernah dibuat.
+## Fase 2: Layar inti — CATAT, Transaksi, Dompet
 
-Pemformat uang juga masuk fase ini, karena aturan pembulatan setengah ke atas
-dari satuan sen harus ada sebelum ada layar yang menampilkan nominal.
+Menyalakan aplikasi baru sampai bisa dipakai sehari-hari: mencatat
+pemasukan, pengeluaran, dan transfer lewat alur CATAT, melihat riwayatnya,
+dan melihat saldo tiap dompet.
 
-**Selesai kalau:** aplikasi berjalan di Android dan iOS, menampilkan satu layar
-contoh dengan tema terang dan gelap, teks dari slang, dan navigasi lewat efek.
+Fase ini selesai **sebelum** cutover karena aplikasi baru harus sudah
+layak dipakai sehari-hari sebelum yang lama dibuang. Menghapus fitur lama
+lebih dulu tanpa pengganti yang berfungsi berarti pemilik kehilangan
+alat pencatatan di tengah pivot.
 
-## Fase 2: Siklus bulanan
+Satu kanvas desain tunggal untuk seluruh layar inti dikerjakan di awal
+fase ini, bukan satu kanvas per fase. Rinciannya ada di
+[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
 
-Membangun inti produk.
+**Selesai kalau:** pemilik bisa membuat dompet, mencatat pemasukan,
+pengeluaran, dan transfer, lalu melihat saldo bergerak persis seperti
+yang dijanjikan model — seluruhnya lewat aplikasi baru, tanpa menyentuh
+fitur lama.
 
-Fase ini mencakup entitas `MonthlyCycle`, baris pemasukan dan anggaran, rumus
-total dan sisa, tampilan siklus, penyuntingan baris, serta template dan
-rollover.
+## Fase 3: Cutover
 
-Rollover dengan penanda perlu ditinjau adalah bagian terpenting, karena inilah
-yang menjawab nyeri utama pemilik. Rinciannya ada di
-[ADR-0008](../02-architecture/adr/0008-monthly-cycle-template-and-rollup.md).
+Menghapus seluruh fitur Saldough 1.0 dalam satu commit: `cycle`, `card`,
+`investment`, `grocery`, `income`, dan `shared/goal`, beserta shell lama
+dan seluruh adapter lintas fitur yang menghubungkannya.
 
-Baris roll-up sudah dikenali jenisnya di fase ini, tetapi sumbernya baru ada di
-Fase 4. Sampai itu, baris roll-up ditampilkan bernilai nol dengan penanda bahwa
-sumbernya belum tersedia.
+Fase ini adalah **gerbang**, bukan pekerjaan yang bisa dicicil ke fase
+lain. Keenam port lintas fitur — `RollUpResolver`, `CardCatalog`,
+`GroceryCycleGateway`, `CycleIncomeWriter`, `CycleInvestmentGateway`, dan
+`IncomeWorklogGateway` — semuanya bermuara ke `cycle`. Menghapus sebagian
+darinya lebih awal meninggalkan galat berantai di `RootModule` dan
+`MainShellPage` tanpa menyelesaikan apa pun, karena adapter yang tersisa
+tetap menunjuk ke tipe yang sudah hilang. Satu-satunya cara aman adalah
+menghapus keenamnya sekaligus, di satu commit, setelah penggantinya
+terbukti berfungsi di Fase 2. Alasan lengkapnya ada di
+[ADR-014](../02-architecture/adr/0014-strategi-pivot-saldough-2.md).
 
-**Selesai kalau:** pemilik bisa membuat siklus, menyunting baris, melihat sisa
-termasuk sisa negatif, dan membuat bulan berikutnya lewat rollover.
+**Selesai kalau:** `flutter analyze` bersih, `flutter test` hijau dengan
+baseline uji baru yang dicatat apa adanya, dan tidak ada satu pun rujukan
+tersisa ke fitur yang dihapus.
 
-## Fase 3: Pemasukan dan timesheet
+## Fase 4: Anggaran
 
-Menghapus perhitungan gaji manual.
+Membangun rencana belanja: anggaran dengan pos-posnya, progres yang
+dihitung langsung dari transaksi tertaut, dan status tiap pos.
 
-Fase ini mencakup sumber pemasukan dengan tiga tipenya, aturan potongan
-persentase dan nominal tetap, pencatatan jam kerja, pengelompokan ke buku jam
-lewat penanda hari buku baru, serta penutupan buku yang menghasilkan gaji bersih
-dan menyuntikkannya ke baris pemasukan.
+Anggaran menyusul transaksi karena progresnya diturunkan dari transaksi
+yang sudah tercatat di Fase 1 dan 2 — tidak ada rumus anggaran yang bisa
+diuji sebelum ada pengeluaran sungguhan untuk dihitung.
 
-Fase ini butuh satu jawaban dari pemilik sebelum bisa selesai, yaitu tarif per
-jam pada sumber `Gaji Menul`. Nilai itu tidak tercatat di spreadsheet mana pun
-dan tidak bisa disimpulkan balik dari data yang ada.
+**Selesai kalau:** membuat anggaran tidak pernah mengubah saldo dompet
+mana pun, dan progres pos anggaran berubah seketika saat pengeluaran
+tertaut dicatat, disunting, atau dihapus.
 
-**Selesai kalau:** menutup satu buku jam menghasilkan gaji bersih yang sama
-persis dengan catatan spreadsheet untuk bulan yang sama.
+## Fase 5: Freelance
 
-## Fase 4: Roll-up
+Membangun domain pendukung yang memasok pemasukan ke buku besar: proyek
+freelance, worklog, pengelompokan jadi pembayaran, dan pencatatan
+pembayaran diterima.
 
-Menghapus tiga titik salin manual yang tersisa.
+Freelance menyusul anggaran karena keduanya independen satu sama lain,
+tetapi sama-sama bergantung pada `Wallet` dan `Transaction` dari Fase 1.
+Pencatatan pembayaran diterima di fase ini adalah satu-satunya titik yang
+mengubah saldo dompet — worklog dan pengelompokan pembayaran murni
+pencatatan tanpa efek finansial.
 
-Fase ini mencakup rencana belanja dengan daftar mingguan dan bulanan beserta
-harga timpaan, kartu kredit dengan siklus tagihan dan transaksi, langganan
-berulang, dan penyambungan keduanya ke baris anggaran roll-up.
+**Selesai kalau:** mencatat worklog dan mengelompokkannya jadi pembayaran
+tidak pernah mengubah saldo dompet, dan mencatat pembayaran diterima
+menambah saldo tepat satu kali lewat tepat satu `IncomeTransaction`.
 
-Setelah fase ini, tidak ada lagi angka yang perlu disalin antar dokumen. Ini
-tonggak terpenting produk: sejak titik ini, aplikasi sudah lebih baik daripada
-spreadsheet untuk pemakaian sehari-hari.
+## Fase 6: Beranda
 
-**Selesai kalau:** menyunting daftar belanja atau menambah transaksi kartu
-langsung mengubah baris anggaran tanpa tindakan tambahan.
+Merangkai ringkasan saldo, arus bulan berjalan, progres anggaran, dan
+penghasilan freelance yang belum dibayar ke dalam satu layar.
 
-## Fase 5: Investasi
+Beranda dikerjakan terakhir di antara layar karena ia hanya bermakna
+setelah dompet, transaksi, anggaran, dan freelance sudah menghasilkan
+data sungguhan untuk diringkas. Membangunnya lebih awal berarti menguji
+ringkasan terhadap data kosong atau karangan.
 
-Melengkapi siklus bulanan sampai tuntas.
+**Selesai kalau:** Beranda tampil penuh di bawah satu detik pada
+perangkat kelas menengah, dan loop inti penuh — dari mencatat transaksi
+sampai pencatatan pembayaran freelance — bisa ditelusuri dari layar ini.
 
-Fase ini mencakup pos tujuan bersaldo, alokasi persentase dengan validasi total
-100, pinjaman antar pos, dan riwayat pergerakan saldo tiap pos.
+## Fase 7: Template dan poles
 
-Fase ini terakhir di antara fitur domain karena bergantung pada sisa, yang baru
-benar setelah pemasukan dan seluruh roll-up tersedia.
+Menambahkan template anggaran untuk pos yang berulang tiap periode,
+memasukkan aset ikon pixel-art dari pemilik ke `AppIcon`, dan memoles
+keadaan pemuatan, kosong, serta konfirmasi tindakan merusak di seluruh
+layar.
 
-**Selesai kalau:** alokasi menghasilkan nominal yang sama persis dengan
-spreadsheet, dan saldo pos memperhitungkan alokasi maupun pinjaman.
+Fase ini terakhir karena template mengandaikan anggaran biasa sudah
+berjalan, dan pemasangan aset ikon mengandaikan seluruh layar yang
+memakainya sudah ada lewat lapisan `AppIcon` yang dipasang di Fase 2.
 
-## Fase 6: Seed
-
-Menulis data historis yang pemilik punya langsung ke penyimpanan lokal,
-sekali jalan, lewat skrip pengembang — BUKAN fitur di dalam aplikasi.
-
-> **Catatan revisi (11 September 2026):** fase ini semula dibayangkan
-> sebagai layar impor di dalam aplikasi ("Impor Seed") yang memuat rentang
-> tetap November 2025–September 2026. Pemilik memutuskan sebaliknya:
-> operasi sekali pakai tanpa UI dan tanpa versi produksi (tidak ikut
-> ter-*build* ke rilis), cakupan data mengikuti apa yang pemilik benar-
-> benar punya saat skrip dijalankan — bisa sebagian, bisa tidak mencakup
-> semua jenis data sama sekali. Lihat ADR-0009 untuk pola implementasinya
-> (`tool/`, bukan `features/seed/`).
-
-Fase ini tetap jadi pembuktian menyeluruh untuk data yang diimpor: kalau
-angkanya cocok persis dengan spreadsheet asli, aplikasi terbukti bisa
-dipercaya untuk bagian itu.
-
-Fase ini butuh data historis sungguhan dari pemilik sebelum bisa dikerjakan
-— tiga jawaban terkonfirmasi sebelumnya (saldo awal tiap pos tujuan,
-tanggal cetak tagihan tiap kartu, kepastian pos pinjaman sama dengan pos
-alokasi) sudah terjawab, tapi datanya sendiri (isi keempat spreadsheet)
-belum tersedia di repositori ini.
-
-**Selesai kalau:** seluruh data yang pemilik sediakan termuat dan tidak ada
-satu pun selisih rupiah terhadap spreadsheet, untuk bagian yang diimpor.
-
-## Fase 7: Sinkronisasi
-
-Di luar MVP. Mencakup sinkronisasi ke Firebase atau Google Drive, dan rumah
-tangga dua pengguna.
-
-Keputusan penyimpanan berbasis dokumen JSON di
-[ADR-0002](../02-architecture/adr/0002-local-first-hive-document-storage.md)
-sengaja menyiapkan jalan ke sini, karena dokumen JSON bisa dipetakan langsung ke
-dokumen Firestore atau berkas di Drive.
-
-Fase ini juga yang menghidupkan `api_network` dan `dio_network`, dua paket
-internal yang sengaja ditunda pada MVP.
+**Selesai kalau:** anggaran baru bisa dibuat dari template tanpa menyunting
+templatenya, dan seluruh layar memakai aset ikon final alih-alih ikon
+Material sementara — atau, kalau asetnya belum tiba, keputusan soal
+identitas ikon ditinjau ulang sebagaimana disebut di
+[ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md).
 
 ## Ketergantungan antar fase
 
 ```
-Fase 0 ──► Fase 1 ──► Fase 2 ──┬──► Fase 3 ──┐
-                                │             ├──► Fase 5 ──► Fase 6 ──► Fase 7
-                                └──► Fase 4 ──┘
+Fase 0 ──► Fase 1 ──► Fase 2 ──► Fase 3 ──┬──► Fase 4 ──┐
+                                           ├──► Fase 5 ──┼──► Fase 6 ──► Fase 7
+                                           └─────────────┘
 ```
 
-Fase 3 dan Fase 4 tidak saling bergantung dan bisa dikerjakan dalam urutan mana
-pun setelah Fase 2 selesai.
+Fase 4 dan Fase 5 tidak saling bergantung dan bisa dikerjakan dalam
+urutan mana pun setelah Fase 3 selesai. Keduanya harus selesai sebelum
+Fase 6, karena Beranda meringkas hasil keduanya.
 
 ## Yang bisa dikerjakan lebih awal
 
-Tiga pertanyaan terbuka di
-[PRD bagian 13](../01-product/prd-saldough-1.0.md) sebaiknya dijawab pemilik
-sebelum fase yang membutuhkannya dimulai, supaya tidak menjadi penghambat.
+Dua pekerjaan tidak terikat urutan fase di atas dan bisa berjalan paralel
+dengan fase manapun yang sedang dikerjakan.
 
-| Pertanyaan | Dibutuhkan pada |
-|---|---|
-| Tarif per jam `Gaji Menul` | Fase 3 |
-| Tanggal cetak tagihan tiap kartu | Fase 4 |
-| Saldo awal tiap pos tujuan | Fase 6 |
-| Apakah pos pinjaman sama dengan pos alokasi | Fase 5 |
+Desain kanvas untuk layar inti dan struktur `AppIcon` bisa dikerjakan
+sejak awal Fase 2 tanpa menunggu domain anggaran maupun freelance selesai,
+karena keduanya hanya bergantung pada dompet dan transaksi yang sudah ada
+sejak Fase 1.
+
+Aset ikon pixel-art dari pemilik bisa datang kapan saja tanpa memblokir
+fase manapun. Lapisan `AppIcon` yang dipasang di Fase 2 memakai ikon
+Material sebagai isian sementara sampai asetnya tiba, sehingga
+kedatangannya tidak pernah jadi gerbang bagi fase lain — pemasangannya
+sendiri baru terjadi di Fase 7.

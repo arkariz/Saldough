@@ -1,15 +1,18 @@
 # Dokumentasi Saldough
 
-Saldough adalah aplikasi Flutter untuk Android dan iOS yang menggantikan sistem
-pencatatan keuangan berbasis empat Google Spreadsheet yang dikelola manual.
-Dokumentasi ini memuat seluruh keputusan produk dan arsitekturnya.
+Saldough adalah aplikasi Flutter untuk Android dan iOS untuk mencatat dan
+mengelola keuangan pribadi, berporos pada Dompet, Transaksi, dan Anggaran,
+dengan Freelance Worklog sebagai domain pendukung. Aplikasi ini mencatat,
+bukan melakukan — ia tidak memindahkan uang, tidak membayar, dan tidak
+terhubung ke bank mana pun. Dokumentasi ini memuat seluruh keputusan produk
+dan arsitekturnya.
 
 Halaman ini adalah titik masuk. Ikuti jalur baca yang sesuai peran Anda di
 bawah.
 
-**Status proyek:** dokumentasi selesai, implementasi belum dimulai.
-**Versi dokumentasi:** 1.1
-**Terakhir diperbarui:** 10 September 2026
+**Status proyek:** Fase 0 — menulis dokumen Saldough 2.0.
+**Versi dokumentasi:** 2.0
+**Terakhir diperbarui:** 17 September 2026
 
 ## Jalur baca
 
@@ -22,27 +25,32 @@ memahami produknya.
    bagaimana pemilik bekerja hari ini, dan mengapa aplikasi ini dibuat.
 2. [Glosarium proyek](00-foundation/PROJECT_GLOSSARY.md) — istilah yang dipakai
    di seluruh dokumen dan kode.
-3. [PRD](01-product/prd-saldough-1.0.md) — apa yang dibangun.
+3. [PRD 2.0](01-product/prd-saldough-2.0.md) — apa yang dibangun.
 4. [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md) — bagaimana
    membangunnya.
-5. [Daftar tugas](04-planning/TASK_LIST.md) — apa yang bisa dikerjakan sekarang.
+5. [Roadmap](04-planning/ROADMAP.md) — urutan fase pengerjaannya.
+6. [Daftar tugas](04-planning/TASK_LIST.md) — apa yang bisa dikerjakan sekarang.
 
 ### Akan menulis kode
 
 Mulai dari arsitektur, lalu langsung ke tugas. ADR yang disebut di bawah
 menjelaskan konvensi yang divalidasi dari repositori acuan, dan menyalin pola
 acuan tanpa membacanya akan salah — terutama karena sebagian konvensi baru
-dikonfirmasi lewat eksplorasi kedua (10 September 2026) dan membalik keputusan
-pertama.
+dikonfirmasi lewat eksplorasi kedua dan membalik keputusan pertama.
 
 1. [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md)
 2. [Model domain](02-architecture/DOMAIN_MODEL.md) — terutama aturan
-   representasi uang.
+   representasi uang dan model Dompet/Transaksi/Anggaran.
 3. [ADR-0003](02-architecture/adr/0003-effect-bloc-state-management.md),
    [ADR-0004](02-architecture/adr/0004-typed-route-registry-navigation.md),
-   [ADR-0005](02-architecture/adr/0005-either-failure-convention.md), dan
-   [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md)
-4. [Daftar tugas](04-planning/TASK_LIST.md)
+   [ADR-0005](02-architecture/adr/0005-either-failure-convention.md),
+   [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md),
+   dan
+   [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md)
+4. [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) — invarian
+   "jangan sentuh fitur lama" yang berlaku selama Fase 1 dan 2. Jangan
+   dilewatkan.
+5. [Daftar tugas](04-planning/TASK_LIST.md)
 
 ### Meninjau keputusan arsitektur
 
@@ -63,16 +71,22 @@ docs/
 │   └── PROJECT_GLOSSARY.md
 ├── 01-product/                # apa yang dibangun
 │   ├── prd-saldough-1.0.md
+│   ├── prd-saldough-2.0.md
 │   └── user-stories.md
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md
 │   └── adr/
-└── 04-planning/               # urutan dan progres
-    ├── ROADMAP.md
-    ├── TASK_LIST.md
-    ├── UI_UX_DESIGN_TASKS.md
-    └── UX_REVIEW_FIXES.md
+├── 04-planning/                # urutan dan progres
+│   ├── ROADMAP.md
+│   ├── TASK_LIST.md
+│   └── UI_UX_DESIGN_TASKS.md
+└── 99-archive/                 # rekaman Saldough 1.0, dibekukan
+    ├── README.md
+    ├── ROADMAP-1.0.md
+    ├── TASK_LIST-1.0.md
+    ├── UI_UX_DESIGN_TASKS-1.0.md
+    └── UX_REVIEW_FIXES-1.0.md
 ```
 
 ## Daftar ADR
@@ -85,25 +99,30 @@ docs/
 | [0003](02-architecture/adr/0003-effect-bloc-state-management.md) | State management berbasis bloc dengan efek terdaftar | Accepted |
 | [0004](02-architecture/adr/0004-typed-route-registry-navigation.md) | Navigasi lewat registri rute bertipe | Accepted |
 | [0005](02-architecture/adr/0005-either-failure-convention.md) | Konvensi kesalahan: `Either<Failure, T>` via fpdart | Accepted (revisi) |
-| [0006](02-architecture/adr/0006-design-token-semantic-color-mapping.md) | Token desain dan pemetaan warna semantik | Accepted |
+| [0006](02-architecture/adr/0006-design-token-semantic-color-mapping.md) | Token desain dan pemetaan warna semantik | Superseded by ADR-013 |
 | [0007](02-architecture/adr/0007-slang-localization.md) | Terjemahan antarmuka dengan slang | Accepted |
-| [0008](02-architecture/adr/0008-monthly-cycle-template-and-rollup.md) | Siklus bulanan: template, rollover, dan roll-up | Accepted |
+| [0008](02-architecture/adr/0008-monthly-cycle-template-and-rollup.md) | Siklus bulanan: template, rollover, dan roll-up | Superseded by ADR-011 |
 | [0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) | Struktur folder: zona core / shared / features | Accepted |
 | [0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) | Konvensi pengujian: `mocktail` dan `bloc_test` | Accepted (revisi) |
+| [0011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) | Model domain inti: dompet, transaksi, dan anggaran | Accepted |
+| [0012](02-architecture/adr/0012-tata-letak-penyimpanan-buku-besar.md) | Tata letak penyimpanan buku besar transaksi | Accepted |
+| [0013](02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md) | Bahasa visual v2 dan sistem ikon | Accepted |
+| [0014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) | Strategi pivot ke Saldough 2.0 | Accepted |
 
 ## Pertanyaan yang sering muncul
 
 | Pertanyaan | Jawabannya ada di |
 |---|---|
 | Mengapa aplikasi ini dibuat? | [Analisis proses manual](00-foundation/MANUAL_PROCESS_ANALYSIS.md) |
-| Apa arti istilah "buku jam" atau "roll-up"? | [Glosarium](00-foundation/PROJECT_GLOSSARY.md) |
+| Apa arti istilah "worklog" atau "CATAT"? | [Glosarium](00-foundation/PROJECT_GLOSSARY.md) |
 | Mengapa nominal disimpan dalam satuan sen? | [Model domain](02-architecture/DOMAIN_MODEL.md), bagian aturan representasi uang |
 | Mengapa kesalahan dikembalikan sebagai `Either<Failure, T>`? | [ADR-0005](02-architecture/adr/0005-either-failure-convention.md) |
 | Mengapa struktur foldernya tiga zona, bukan feature-first sederhana? | [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md) |
 | Mengapa `flutter-architecture-studi` (tanpa `-bank`) tidak dipakai? | [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md), bagian dasar keputusan |
 | Mengapa pengujian memakai `mocktail`/`bloc_test` padahal repo acuan tidak? | [ADR-0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) |
-| Apa risiko terbesar proyek ini? | [ADR-0001](02-architecture/adr/0001-internal-package-dependency-strategy.md) |
-| Berapa nilai seed yang sudah dikonfirmasi pemilik? | [Model domain](02-architecture/DOMAIN_MODEL.md#nilai-seed-terkonfirmasi) |
+| Mengapa membuat anggaran tidak mengubah saldo dompet? | [Model domain](02-architecture/DOMAIN_MODEL.md) dan [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) |
+| Mengapa fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) belum dihapus? | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
+| Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
 | Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |
 
@@ -119,10 +138,10 @@ Aturan ini berlaku untuk seluruh dokumen di direktori ini.
 - **ADR.** Empat digit berurutan, sembilan seksi sesuai
   [template](02-architecture/adr/0000-template.md). Opsi ditandai
   `(Dipilih)` pada yang menang.
-- **Requirement.** Diberi identitas seperti `FR-CYCLE-001` dan dirujuk dari ADR
+- **Requirement.** Diberi identitas seperti `FR-WAL-001` dan dirujuk dari ADR
   maupun daftar tugas.
-- **Angka.** Setiap rumus disertai angka bukti dari spreadsheet asli. Jangan
-  menulis rumus tanpa buktinya.
+- **Angka.** Setiap rumus disertai angka bukti dari catatan keuangan nyata
+  pemilik. Jangan menulis rumus tanpa buktinya.
 - **Struktur.** Satu H1 per dokumen. Setiap judul diikuti minimal satu paragraf
   pengantar sebelum daftar atau sub-judul.
 - **Tautan.** Memakai tautan relatif antar dokumen, dengan teks tautan yang
@@ -142,3 +161,6 @@ sekali tulis.
 - Temuan baru soal proses manual masuk ke
   [analisis proses manual](00-foundation/MANUAL_PROCESS_ANALYSIS.md) lebih dulu,
   baru diturunkan ke dokumen lain.
+- Dokumen yang isinya rekaman riwayat produk yang sudah dihentikan dipindahkan
+  ke [`docs/99-archive/`](99-archive/README.md) dan dibekukan di sana, bukan
+  dihapus maupun disunting mengikuti keputusan baru.

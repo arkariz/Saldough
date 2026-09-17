@@ -8,6 +8,16 @@
 - **Status:** Accepted
 - **Cakupan:** Global
 
+> **Catatan perluasan (17 September 2026):** Keputusan ini **tetap berlaku**.
+> Pola satu dokumen JSON per agregat di atas satu box Hive dipakai apa adanya
+> oleh Saldough 2.0. Yang berubah hanya bentuk agregatnya: buku besar transaksi
+> tidak berbatas dan bertambah selamanya, tidak seperti `MonthlyCycle` yang
+> jumlahnya sepuluh dokumen. Aturan tambahan untuk kasus itu — partisi per
+> bulan, dan `Wallet.currentBalance` yang di-cache beserta penyeimbangnya —
+> ditetapkan di
+> [ADR-012](0012-tata-letak-penyimpanan-buku-besar.md), yang memperluas ADR ini,
+> bukan menggantikannya.
+
 ## 2. Konteks
 
 MVP Saldough tidak punya backend. Seluruh data tersimpan di perangkat, dan

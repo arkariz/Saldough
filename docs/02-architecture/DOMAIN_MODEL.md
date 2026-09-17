@@ -1,459 +1,417 @@
 # Model domain
 
-Dokumen ini menerjemahkan proses manual yang direkam di
-[MANUAL_PROCESS_ANALYSIS.md](../00-foundation/MANUAL_PROCESS_ANALYSIS.md)
-menjadi entitas, rumus, dan invarian yang bisa langsung diimplementasikan.
+Dokumen ini menerjemahkan kebutuhan produk di
+[PRD 2.0](../01-product/prd-saldough-2.0.md) menjadi entitas, rumus, dan
+invarian yang bisa langsung diimplementasikan.
 
 Model ini murni domain. Tidak ada satu pun entitas di sini yang boleh mengimpor
 Flutter, Hive, atau paket infrastruktur lain. Aturan lengkapnya ada di
 [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md).
 
-Nama kelas dan field memakai bahasa Inggris sesuai
-[glosarium](../00-foundation/PROJECT_GLOSSARY.md).
+> **Catatan versi (17 September 2026):** Dokumen ini ditulis ulang total untuk
+> Saldough 2.0. Model 1.0 berporos pada `MonthlyCycle` dengan baris pemasukan
+> dan anggaran milik satu bulan; model 2.0 berporos pada dompet, transaksi
+> bertanggal, dan anggaran yang berdiri sendiri. Tidak ada satu pun entitas 1.0
+> yang bertahan apa adanya. Versi lamanya bisa dibaca lewat riwayat git.
 
 ## Aturan representasi uang
 
-Sebelum membahas entitas, satu aturan berlaku menyeluruh: **semua nominal
-disimpan sebagai bilangan bulat dalam satuan sen**, yaitu seperseratus rupiah.
-Pembulatan ke rupiah hanya dilakukan saat menampilkan.
+Seluruh nominal adalah `int` dalam satuan **sen**, bukan rupiah, dan bukan
+`double`. Pembulatan hanya terjadi saat menampilkan.
 
-Aturan ini bukan pilihan gaya. Aturan ini diturunkan dari perilaku spreadsheet
-yang sebenarnya. Pajak 2,5% menghasilkan pecahan setengah rupiah, dan
-spreadsheet tidak membulatkan pajak sebelum menguranginya dari gaji kotor. Kalau
-aplikasi membulatkan lebih awal, hasilnya meleset satu rupiah dari catatan
-pemilik.
+Aturan ini bukan preferensi gaya. Potongan pajak freelance 2,5% menghasilkan
+pecahan setengah rupiah, dan membulatkannya terlalu dini meleset satu rupiah:
 
-Bukti dari gaji kotor Rp3.117.500:
+```
+grossPay   = Rp3.117.500          = 311.750.000 sen
+pajak 2,5% = 311.750.000 × 25 ~/ 1000 =   7.793.750 sen
+netPay     = 311.750.000 − 7.793.750  = 303.956.250 sen
+tampil     = Rp3.039.563            (pembulatan setengah ke atas)
+```
 
-| Cara hitung | Hasil |
-|---|---|
-| Bulatkan pajak dulu: `3.117.500 − 77.938` | Rp3.039.562 (meleset) |
-| Kurangi eksak lalu bulatkan: `3.117.500 × 0,975` | Rp3.039.563 (cocok) |
+Kalau pajaknya dibulatkan lebih dulu ke Rp77.938, gaji bersihnya jadi
+Rp3.039.562 — meleset satu rupiah dari catatan pemilik. Menghitung di satuan sen
+dengan tarif per mil menghilangkan kebutuhan pembulatan perantara sama sekali.
 
-Aritmatika integer sen mereproduksi spreadsheet persis di seluruh lima bulan
-yang punya data gaji bersih:
-
-| Gaji kotor (sen) | Pajak (sen) | Gaji bersih (sen) | Tampil | Spreadsheet |
-|---|---|---|---|---|
-| 735.000.000 | 18.375.000 | 716.625.000 | Rp7.166.250 | Rp7.166.250 |
-| 105.000.000 | 2.625.000 | 102.375.000 | Rp1.023.750 | Rp1.023.750 |
-| 268.250.000 | 6.706.250 | 261.543.750 | Rp2.615.438 | Rp2.615.438 |
-| 311.750.000 | 7.793.750 | 303.956.250 | Rp3.039.563 | Rp3.039.563 |
-| 108.750.000 | 2.718.750 | 106.031.250 | Rp1.060.313 | Rp1.060.313 |
-
-Tiga konsekuensi yang mengikat implementasi:
-
-- Tipe seluruh field nominal adalah `int` dalam sen. Jangan pernah memakai
-  `double` untuk uang.
-- Persentase dihitung sebagai `nilai * persen ~/ 100` pada satuan sen, bukan
-  lewat perkalian pecahan.
-- Pembulatan ke rupiah memakai pembulatan setengah ke atas, dan hanya terjadi di
-  lapisan presentasi.
+Pembulatan tampilan memakai setengah ke atas dan aritmetika bilangan bulat
+murni, bukan `~/` yang memotong ke arah nol dan salah untuk nilai negatif
+(`-7 ~/ 2` menghasilkan `-3`, padahal yang benar `-4`).
 
 ## Ringkasan entitas
 
-Model terbagi menjadi lima kelompok. Siklus bulanan adalah agregat inti; empat
-kelompok lain memasok angka ke dalamnya.
+Sembilan entitas, dikelompokkan jadi tiga lingkaran: inti, rencana, dan
+pendukung.
 
-```
-            ┌─────────────────────────────────────────┐
-            │            MonthlyCycle                 │
-            │  id: "2026-09"                          │
-            │  ├── incomeLines:  List<IncomeLine>     │
-            │  ├── budgetLines:  List<BudgetLine>     │
-            │  └── investmentPlan: InvestmentPlan     │
-            └─────────────────────────────────────────┘
-                 ▲              ▲                ▲
-                 │              │                │
-   ┌─────────────┘        ┌─────┴──────┐    ┌────┴─────────┐
-   │                      │            │    │              │
-IncomeSource        GroceryPlan   CardStatement        Goal
-   │                                    │                 │
-WorkLogEntry                     CardTransaction       GoalLoan
-   │                                    │
-BillingBook                  RecurringSubscription
-   │
-DeductionRule
-```
+| Entitas | Lingkaran | Peran |
+|---|---|---|
+| `Wallet` | Inti | Tempat uang tercatat berada |
+| `Transaction` | Inti | Peristiwa yang terjadi pada uang |
+| `Budget` | Rencana | Rencana pengeluaran satu periode |
+| `BudgetItem` | Rencana | Satu baris di dalam rencana itu |
+| `BudgetTemplate` | Rencana | Definisi yang bisa dipakai ulang |
+| `FreelanceProject` | Pendukung | Klien beserta tarif dan potongannya |
+| `WorklogEntry` | Pendukung | Kerja yang sudah selesai |
+| `FreelancePayment` | Pendukung | Tagihan yang menunggu dibayar |
+| `FreelanceTemplate` | Pendukung | Struktur kerja berulang yang bisa dipakai ulang |
 
-## Siklus bulanan
+Tidak ada entitas untuk saldo turunan, ringkasan bulanan, `spent`, `remaining`,
+`progress`, maupun `status`. Semuanya dihitung ulang saat diakses.
 
-`MonthlyCycle` adalah agregat inti dan satu-satunya entitas yang disimpan per
-bulan. Satu siklus setara dengan satu blok tabel di spreadsheet utama.
+## Dompet
+
+`Wallet` menyatakan di mana uang pemilik tercatat berada. Ia tidak terhubung ke
+lembaga keuangan mana pun; `BCA Rp5.000.000` berarti "pemilik menyatakan
+tercatat ada Rp5.000.000 di sana".
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Format `YYYY-MM`, misalnya `2026-09`. |
-| `incomeLines` | `List<IncomeLine>` | Baris di bagian pemasukan. |
-| `budgetLines` | `List<BudgetLine>` | Baris di bagian anggaran. |
-| `investmentPlan` | `InvestmentPlan` | Rencana pembagian sisa. |
-| `closedAt` | `DateTime?` | Terisi saat siklus dikunci. Null berarti masih berjalan. |
+| `id` | `String` | Identitas dompet. |
+| `name` | `String` | Nama yang dipilih pemilik, misalnya `BCA` atau `GoPay`. |
+| `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-013](adr/0013-bahasa-visual-dan-sistem-ikon.md). |
+| `initialBalance` | `int` | Saldo saat dompet dibuat, dalam sen. Boleh nol, boleh negatif. |
+| `currentBalance` | `int` | Saldo tercatat saat ini, dalam sen. Disimpan demi kecepatan, lihat catatan di bawah. |
+| `isActive` | `bool` | Dompet tidak aktif tidak muncul di pemilih, tapi transaksinya tetap ada. |
+
+`currentBalance` adalah satu-satunya nilai turunan yang **disimpan** di seluruh
+model ini. Penyimpangan itu diambil sadar karena total saldo adalah angka utama
+aplikasi dan tidak boleh memaksa pemindaian seluruh riwayat tiap kali layar
+digambar. Alasan lengkap dan penyeimbangnya ada di
+[ADR-012](adr/0012-tata-letak-penyimpanan-buku-besar.md).
 
 Nilai turunan yang dihitung, bukan disimpan:
 
 ```
-totalIncome = Σ incomeLines.amount
-totalBudget = Σ budgetLines.amount
-remainder   = totalIncome − totalBudget
-isOverBudget = remainder < 0
+currentBalance = initialBalance
+               + Σ income.amount     dengan income.walletId     = wallet.id
+               − Σ expense.amount    dengan expense.walletId    = wallet.id
+               + Σ transfer.amount   dengan transfer.toWalletId = wallet.id
+               − Σ transfer.amount   dengan transfer.fromWalletId = wallet.id
+
+totalBalance   = Σ wallet.currentBalance  untuk wallet.isActive
 ```
 
-`remainder` boleh negatif. Ini bukan kondisi kesalahan, melainkan keadaan nyata
-yang pernah terjadi. Bukti: siklus dengan pemasukan Rp8.900.000 dan anggaran
-Rp10.237.042 menghasilkan sisa −Rp1.337.042. Antarmuka harus menampilkannya
-dengan warna `overBudget`, bukan menolak menyimpannya.
+Rumus pertama itulah yang dipakai `recomputeWalletBalances()` untuk membuktikan
+bahwa nilai tersimpan tidak melenceng. Bukti: dompet bersaldo awal Rp5.000.000
+yang menerima pemasukan Rp2.615.438, mengeluarkan Rp3.068.500, dan mengirim
+transfer Rp1.000.000 berakhir di Rp3.546.938 — dan angka itu harus sama persis
+apakah dibaca dari `currentBalance` atau dihitung ulang dari nol.
 
-### Baris pemasukan
+Saldo boleh negatif. Itu keadaan nyata, bukan kesalahan, dan ditampilkan dengan
+warna `expense` beserta tanda minus U+2212.
 
-| Field | Tipe | Keterangan |
-|---|---|---|
-| `id` | `String` | Identitas baris. |
-| `label` | `String` | Nama yang tampil, misalnya `Gaji Koko`. |
-| `amount` | `int` | Nominal dalam sen. |
-| `sourceId` | `String?` | Rujukan ke `IncomeSource`. Null untuk baris yang diketik lepas. |
-| `isTemplate` | `bool` | True kalau baris ikut terbawa saat rollover. |
-| `needsReview` | `bool` | True kalau baris ini hasil rollover yang belum dikonfirmasi pemilik. |
+## Transaksi
 
-### Baris anggaran
+`Transaction` adalah tipe tertutup (`sealed`) dengan tiga anggota. Ia tertutup
+karena menambah jenis baru mengubah aturan perhitungan saldo, jadi harus
+dipikirkan dan diuji, bukan diketik pemilik.
 
-| Field | Tipe | Keterangan |
-|---|---|---|
-| `id` | `String` | Identitas baris. |
-| `label` | `String` | Nama yang tampil, misalnya `listrik`. |
-| `amount` | `int` | Nominal dalam sen. |
-| `kind` | `BudgetLineKind` | `manual` atau `rollUp`. |
-| `rollUpSource` | `RollUpSource?` | Wajib terisi kalau `kind` bernilai `rollUp`. |
-| `isTemplate` | `bool` | True kalau baris ikut terbawa saat rollover. |
-| `needsReview` | `bool` | True kalau baris ini hasil rollover yang belum dikonfirmasi pemilik. |
-
-> **Catatan 10 September 2026:** field `needsReview` tidak ada di draf tabel
-> ini semula, padahal ADR-0008 aturan 3 dan FR-TPL-002 sudah mengikat bahwa
-> setiap baris hasil rollover wajib bisa ditandai "perlu ditinjau" dan
-> penandanya wajib bisa dihapus pemilik satu per satu. Ditambahkan saat
-> implementasi Fase 2, bukan keputusan produk baru — cuma menutup celah
-> dokumentasi. Nilai bawaan `false`; rollover mengisi `true` pada baris hasil
-> salinan, dan penyuntingan manual oleh pemilik mengembalikannya ke `false`
-> (lihat `RollOverCycle` dan `CycleBloc` di ARCHITECTURE_OVERVIEW.md).
-
-`RollUpSource` menunjuk asal angka untuk baris yang tidak diketik manual:
-
-- `grocery` untuk baris `Bulanan`.
-- `card(cardId)` untuk baris `CC TOKPED` dan `CC BRI TOUCH`.
-
-Baris ber-`kind` `rollUp` tidak boleh disunting nominalnya secara langsung.
-Nominalnya selalu hasil hitung dari sumbernya. Aturan ini yang menghapus
-pekerjaan menyalin angka antar spreadsheet.
-
-## Sumber pemasukan dan jam kerja
-
-Kelompok ini menghasilkan nominal untuk baris pemasukan yang punya `sourceId`.
-
-### Sumber pemasukan
-
-`IncomeSource` adalah definisi yang berlaku lintas bulan, bukan nominal per
-bulan.
+Field yang dimiliki ketiganya:
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Identitas sumber. |
-| `name` | `String` | Nama, misalnya `Gaji Menul`. |
-| `kind` | `IncomeSourceKind` | `fixedSalary`, `hourlyFreelance`, atau `adHoc`. |
-| `fixedAmount` | `int?` | Nominal tetap dalam sen. Dipakai kalau `kind` bernilai `fixedSalary`. |
-| `hourlyRate` | `int?` | Tarif per jam dalam sen. Dipakai kalau `kind` bernilai `hourlyFreelance`. |
-| `deductionRules` | `List<DeductionRule>` | Potongan yang berlaku. Kosong untuk sumber selain freelance. |
+| `id` | `String` | Identitas transaksi. |
+| `date` | `DateTime` | Kapan peristiwanya terjadi, bukan kapan dicatat. |
+| `amount` | `int` | Nominal dalam sen. Selalu positif; arahnya ditentukan jenisnya. |
+| `note` | `String` | Catatan bebas, boleh kosong. |
+| `categoryKey` | `String?` | Label pengelompokan, boleh kosong. |
 
-### Aturan potongan
+### Pemasukan
+
+`IncomeTransaction` menambah saldo satu dompet.
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Identitas aturan. |
-| `label` | `String` | Nama, misalnya `Pajak`. |
-| `kind` | `DeductionKind` | `percentage` atau `fixedAmount`. |
-| `value` | `int` | Untuk `percentage`, nilai per mil (perseribu). Untuk `fixedAmount`, nominal dalam sen. |
+| `walletId` | `String` | Dompet yang bertambah. |
 
-> **Catatan 10 September 2026:** draf awal menulis `value` sebagai "nilai per
-> seratus" (persentase bulat). Itu tidak bisa merepresentasikan tarif pajak
-> nyata 2,5% sebagai `int`. Diperbaiki ke per mil (2,5% tersimpan sebagai
-> `25`) saat implementasi Fase 3 — menutup celah dokumentasi, bukan keputusan
-> produk baru. Rumus di bawah diperbarui mengikuti (`~/ 1000`, bukan
-> `~/ 100`).
+### Pengeluaran
 
-Aturan yang berlaku hari ini pada `Gaji Menul`: pajak sebesar 2,5% (`value:
-25`) sebagai potongan persentase, ditambah potongan bernominal tetap yang
-muncul sesekali seperti `jajan` dan `webinar` senilai Rp150.000.
+`ExpenseTransaction` mengurangi saldo satu dompet, dan boleh ditautkan ke satu
+pos anggaran.
 
-**Nilai `hourlyRate` terkonfirmasi pemilik: Rp72.500.** Ini adalah data yang
-tersimpan di `IncomeSource`, bukan konstanta kode — pemilik bisa mengubahnya
-kapan saja lewat antarmuka. Nilai ini dipakai sebagai seed Fase 6, bukan nilai
-bawaan terprogram.
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `walletId` | `String` | Dompet yang berkurang. |
+| `budgetItemId` | `String?` | Pos anggaran yang ditambahi angka terpakainya. Null berarti pengeluaran di luar anggaran mana pun. |
 
-### Catatan jam dan buku jam
+Tautan ke pos anggaran hanya sah kalau dompet anggarannya sama dengan
+`walletId`. Aturan itu ditegakkan saat pengeluaran disimpan, dan pemilih pos di
+antarmuka hanya menawarkan pos yang memenuhinya.
 
-`WorkLogEntry` merekam satu hari kerja.
+### Transfer
+
+`TransferTransaction` memindahkan catatan uang antar dompet. Ia tidak mengubah
+total uang pemilik, hanya tempatnya.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `fromWalletId` | `String` | Dompet yang berkurang. |
+| `toWalletId` | `String` | Dompet yang bertambah. Harus berbeda dari `fromWalletId`. |
+| `budgetItemId` | `String?` | Pos anggaran yang ditambahi angka terpakainya, untuk pos yang memang berupa rencana pemindahan dana. Null berarti transfer di luar anggaran mana pun. |
+
+Transfer bisa ditautkan ke pos anggaran karena sebagian rencana pengeluaran
+memang berbentuk pemindahan, bukan belanja. Anggaran `Tabungan` dari dompet
+`BCA` dipenuhi dengan mentransfer ke dompet `Tabungan`, bukan dengan
+mengeluarkan uang. Yang menentukan apakah transfer itu terhitung adalah
+`fromWalletId` — uang keluar dari dompet anggaran — bukan `walletId` seperti
+pada pengeluaran.
+
+Transfer tidak pernah dihitung sebagai pemasukan maupun pengeluaran di ringkasan
+mana pun. Kalau ia ikut dihitung, satu pemindahan Rp1.000.000 dari BCA ke GoPay
+akan tampil sebagai pemasukan Rp1.000.000 sekaligus pengeluaran Rp1.000.000 —
+dua angka yang sama-sama tidak benar.
+
+## Anggaran
+
+`Budget` adalah rencana pengeluaran, bukan pemesanan uang. Membuatnya tidak
+pernah mengubah saldo dompet mana pun.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas anggaran. |
+| `name` | `String` | Nama yang dipilih pemilik, misalnya `Belanja` atau `Rumah tangga`. |
+| `walletId` | `String` | Dompet sumber. **Wajib**, dan menyaring pengeluaran mana yang terhitung. |
+| `period` | `BudgetPeriod` | `weekly` atau `monthly`. |
+| `startDate` | `DateTime` | Awal berlakunya periode. |
+| `plannedAmount` | `int` | Nominal rencana dalam sen. |
+| `items` | `List<BudgetItem>` | Pos-pos di dalamnya. Boleh kosong. |
+| `isArchived` | `bool` | Anggaran yang diarsipkan tidak muncul di daftar aktif, tetapi transaksi yang tertaut padanya tetap ada dan tetap terhitung di riwayat. |
+
+Beberapa anggaran boleh aktif sekaligus, boleh berbagi satu dompet, dan boleh
+berbeda periode. Tidak ada kewajiban menutup satu anggaran sebelum membuat yang
+lain.
+
+### Pos anggaran
+
+`BudgetItem` adalah satu baris di dalam anggaran.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas pos. |
+| `name` | `String` | Nama pos, misalnya `Ikan kembung` atau `Listrik`. |
+| `plannedAmount` | `int` | Nominal rencana dalam sen. |
+| `quantity` | `int?` | Jumlah barang, untuk pos yang berupa daftar belanja. |
+| `unitPrice` | `int?` | Harga satuan dalam sen. |
+
+Kalau `quantity` dan `unitPrice` terisi, `plannedAmount` dihitung dari keduanya;
+kalau tidak, ia diketik langsung. Dua field itu ada supaya daftar belanja
+pemilik — yang sungguhan berisi 35 item dengan harga satuan — tetap bisa dicatat
+serinci sebelumnya, tanpa memerlukan domain belanja tersendiri.
+
+Nilai turunan yang dihitung, bukan disimpan:
+
+```
+item.plannedAmount = quantity × unitPrice          bila keduanya terisi
+item.spent         = Σ expense.amount
+                     dengan expense.budgetItemId = item.id
+                     dan    expense.walletId     = budget.walletId
+                   + Σ transfer.amount
+                     dengan transfer.budgetItemId = item.id
+                     dan    transfer.fromWalletId = budget.walletId
+item.remaining     = item.plannedAmount − item.spent
+item.progress      = item.spent ÷ item.plannedAmount
+
+budget.plannedAmount = nominal yang diketik pemilik
+budget.spent         = Σ item.spent
+budget.remaining     = budget.plannedAmount − budget.spent
+```
+
+Bukti: daftar belanja nyata pemilik berisi subtotal mingguan Rp576.600 yang
+berulang empat kali dalam sebulan ditambah subtotal bulanan Rp762.100,
+menghasilkan rencana Rp3.068.500. Di model 2.0 angka itu bukan lagi hasil rumus
+pengali minggu, melainkan jumlah `plannedAmount` seluruh pos di dalam satu
+anggaran bulanan.
+
+Status anggaran dihitung dari `isArchived` dan periodenya, bukan disimpan:
+
+```
+aktif    : bukan isArchived, dan periodenya belum lewat
+selesai  : bukan isArchived, dan periodenya sudah lewat
+nonaktif : isArchived
+```
+
+Ketiganya adalah penyaring di layar Anggaran. Hanya `nonaktif` yang butuh
+penanda tersimpan; dua lainnya turunan dari tanggal, sehingga sebuah anggaran
+berpindah dari `aktif` ke `selesai` sendirinya tanpa ada yang menuliskannya.
+
+Status pos dihitung dari `spent` dan `plannedAmount`:
+
+```
+planned         : spent = 0
+partiallySpent  : 0 < spent < plannedAmount
+completed       : spent = plannedAmount
+overspent       : spent > plannedAmount
+```
+
+### Template anggaran
+
+`BudgetTemplate` adalah definisi yang bisa dipakai ulang, bukan anggaran aktif.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas template. |
+| `name` | `String` | Nama template. |
+| `items` | `List<BudgetItem>` | Pos bawaan beserta nominal rencananya. |
+| `isEnabled` | `bool` | Template nonaktif tidak ditawarkan saat membuat anggaran. |
+
+Membuat anggaran dari template menghasilkan `Budget` mandiri: menyuntingnya
+tidak mengubah templatenya, dan menyunting template tidak mengubah anggaran yang
+sudah lahir darinya.
+
+## Freelance
+
+Domain pendukung. Ia ada karena penghasilan freelance punya satu sifat yang
+tidak dimiliki pemasukan biasa: pekerjaannya selesai jauh sebelum uangnya
+diterima.
+
+### Proyek
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | Identitas proyek. |
+| `name` | `String` | Nama klien atau proyek. |
+| `hourlyRate` | `int` | Tarif per jam dalam sen. |
+| `deductionRules` | `List<DeductionRule>` | Potongan yang berlaku untuk proyek ini. |
+
+`DeductionRule` punya `id`, `label`, `kind` (`percentage` atau `fixedAmount`),
+dan `value`. Untuk `percentage`, `value` adalah **per mil**, bukan per seratus:
+pajak 2,5% ditulis `25`. Pemilihan per mil bukan gaya melainkan keharusan, sebab
+tarif 2,5% tidak bisa diwakili bilangan bulat dalam satuan persen.
+
+### Worklog
 
 | Field | Tipe | Keterangan |
 |---|---|---|
 | `id` | `String` | Identitas entri. |
+| `projectId` | `String` | Proyek yang dikerjakan. |
 | `date` | `DateTime` | Tanggal kerja. |
 | `hours` | `int` | Jumlah jam. |
-| `startsNewBook` | `bool` | True kalau entri ini memulai periode tagihan baru. |
+| `note` | `String?` | Catatan bebas tentang apa yang dikerjakan. |
+| `paymentId` | `String?` | Pembayaran yang menagihkan entri ini. Null berarti belum ditagihkan. |
 
-`BillingBook` adalah periode tagihan, yaitu kumpulan entri dari satu penanda
-buku baru sampai penanda berikutnya.
+`WorklogEntry` **tidak pernah** menyentuh saldo dompet mana pun. Mencatat kerja
+bukan menerima uang.
 
-| Field | Tipe | Keterangan |
-|---|---|---|
-| `id` | `String` | Identitas buku. |
-| `sourceId` | `String` | Rujukan ke `IncomeSource` bertipe freelance. |
-| `startDate` | `DateTime` | Tanggal entri pertama. |
-| `endDate` | `DateTime?` | Tanggal entri terakhir. Null selama buku masih terbuka. |
-| `entries` | `List<WorkLogEntry>` | Entri dalam periode ini. |
-| `netPayAmount` | `int?` | Gaji bersih hasil `CalculateNetPay` saat buku ditutup, dalam sen. Null selama buku masih terbuka — lihat catatan di bawah. |
-| `injectedCycleId` | `String?` | Siklus tujuan penyuntikan (T-3.9). Null kalau belum disuntikkan. |
-| `injectedIncomeLineId` | `String?` | Baris pemasukan tujuan di siklus itu. Null kalau belum disuntikkan. |
+Tarif per jam, tanggal pembayaran, dompet tujuan, dan status pembayaran
+**tidak** disimpan di entri. Ketiga yang terakhir diturunkan lewat `paymentId`,
+dan tarifnya diturunkan lewat `projectId` — sehingga satu entri tidak pernah
+bisa menyatakan status yang berbeda dari pembayaran yang menagihkannya.
 
-> **Catatan 10 September 2026:** tiga field terakhir tidak ada di draf tabel
-> ini semula. Ditambahkan saat implementasi Fase 3 supaya nilai gaji bersih
-> sebuah buku yang sudah ditutup tetap tetap (tidak dihitung ulang diam-diam
-> kalau `IncomeSource`-nya kelak berubah tarif) dan supaya "sudah disuntikkan
-> ke siklus mana" bisa ditampilkan di riwayat (FR-TIME-004) tanpa menyuntik
-> dua kali. Menutup celah dokumentasi, bukan keputusan produk baru.
-
-Buku jam **tidak** dipotong per bulan kalender. Periode ditentukan semata oleh
-penanda `startsNewBook`. Data nyata menunjukkan panjang periode bervariasi dari
-delapan hari sampai hampir satu bulan penuh, misalnya 29 Agustus sampai
-5 September 2026 sebanyak 15 jam, dan 29 Oktober sampai 26 November 2025
-sebanyak 125 jam.
-
-Rumus dari buku jam menjadi baris pemasukan:
-
-```
-totalHours = Σ entries.hours
-grossPay   = totalHours × source.hourlyRate
-deduction(rule) = rule.kind == percentage
-                    ? grossPay × rule.value ~/ 1000
-                    : rule.value
-netPay     = grossPay − Σ deduction(rule)
-```
-
-Potongan persentase selalu dihitung dari gaji kotor, bukan dari nilai berjalan
-setelah potongan sebelumnya. Ini sesuai spreadsheet, di mana kolom gaji kotor
-berulang di setiap baris potongan.
-
-Rumus di atas dihitung murni dalam sen — `~/` di sini tidak pernah kehilangan
-presisi untuk kombinasi gaji kotor rupiah bulat dan tarif satu desimal persen
-(sen memberi dua digit presisi ekstra di atas rupiah, mil memberi satu digit
-ekstra di atas persen). Spreadsheet aslinya membulatkan potongan ke rupiah
-**sebelum** mengurangi dari gaji kotor — itu sumber selisih satu rupiah yang
-pernah ditemukan (lihat `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md`,
-kasus Rp3.117.500: membulatkan potongan lebih dulu menghasilkan Rp3.039.562,
-padahal jawaban benar Rp3.039.563). `netPay` di sini selalu dihitung dari
-`deduction(rule)` yang belum dibulatkan — pembulatan ke rupiah hanya terjadi
-saat `AppMoneyFormatter` menampilkannya.
-
-## Belanja
-
-`GroceryPlan` menghasilkan nominal untuk baris anggaran ber-`rollUpSource`
-`grocery`. Satu dokumen PER BULAN (ADR-0008, bagian 8b) — `id`-nya sama
-persis dengan `id` `MonthlyCycle` yang ditautkan (tautan 1:1, bukan satu
-dokumen dibaca bersama seluruh siklus terbuka seperti sebelum revisi ini).
+### Pembayaran
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Format `YYYY-MM`, sama dengan `id` `MonthlyCycle` yang ditautkan. |
-| `weeklyItems` | `List<GroceryItem>` | Daftar mingguan. |
-| `monthlyItems` | `List<GroceryItem>` | Daftar bulanan. |
-| `weeksPerMonth` | `int` | Pengali daftar mingguan. Default 4. |
+| `id` | `String` | Identitas pembayaran. |
+| `projectId` | `String` | Proyek yang ditagihkan. |
+| `entryIds` | `List<String>` | Entri worklog yang tercakup. |
+| `expectedDate` | `DateTime` | Perkiraan tanggal diterima. |
+| `walletId` | `String?` | Dompet tujuan. Terisi saat pembayaran dicatat diterima. |
+| `status` | `PaymentStatus` | `pending` atau `paid`. |
+| `incomeTransactionId` | `String?` | Transaksi pemasukan yang lahir saat pembayaran dicatat diterima. |
 
-Bulan yang belum pernah disunting TIDAK kosong — `GroceryPlanRepositoryImpl`
-menyalin `weeklyItems`/`monthlyItems`/`weeksPerMonth` dari bulan sebelumnya
-(kalau ada), baru benar-benar tersimpan sendiri saat pemilik pertama kali
-menyimpan perubahan pada bulan itu.
+Nilai turunan yang dihitung, bukan disimpan:
 
-`GroceryItem` merekam satu bahan.
+```
+entry.earnedAmount = entry.hours × project.hourlyRate
+payment.grossPay   = Σ earnedAmount untuk seluruh entri tercakup
+deduction(rule)    = grossPay × rule.value ~/ 1000   bila rule.kind = percentage
+                     rule.value                       bila rule.kind = fixedAmount
+payment.netPay     = grossPay − Σ deduction(rule)
+```
+
+Setiap potongan persentase selalu dihitung dari **gaji kotor**, bukan dari nilai
+berjalan setelah potongan sebelumnya. Potongan tidak beranak.
+
+Bukti dari data nyata pemilik: satu pembayaran berisi 37 jam pada tarif
+Rp72.500 menghasilkan gaji kotor Rp2.682.500; pajak 2,5% memotong Rp67.062,50;
+gaji bersihnya Rp2.615.437,50 yang tampil sebagai **Rp2.615.438**. Dihitung di
+satuan sen:
+
+```
+grossPay  = 37 × 7.250.000       = 268.250.000 sen
+pajak     = 268.250.000 × 25 ~/ 1000 =   6.706.250 sen
+netPay    = 268.250.000 − 6.706.250  = 261.543.750 sen
+tampil    = Rp2.615.438
+```
+
+Saat pembayaran dicatat diterima, ia membuat **tepat satu**
+`IncomeTransaction` sebesar `netPay` ke dompet tujuan, menyimpan id transaksi
+itu di `incomeTransactionId`, dan berubah status jadi `paid`. Field itu, begitu
+terisi, jadi penjaga supaya pembayaran yang sama tidak bisa dicatat dua kali.
+
+### Template freelance
+
+Di luar MVP wajib; dikerjakan di Fase 7 bersama template anggaran.
 
 | Field | Tipe | Keterangan |
 |---|---|---|
-| `id` | `String` | Identitas item. |
-| `name` | `String` | Nama bahan. |
-| `quantity` | `int` | Jumlah. |
-| `unitPrice` | `int` | Harga satuan dalam sen. |
-| `amountOverride` | `int?` | Harga manual yang mengabaikan hasil perkalian. |
+| `id` | `String` | Identitas template. |
+| `name` | `String` | Nama klien atau proyek. |
+| `hourlyRate` | `int` | Tarif per jam dalam sen. |
+| `deductionRules` | `List<DeductionRule>` | Potongan bawaan. |
+| `defaultWalletId` | `String?` | Dompet tujuan bawaan untuk pembayarannya. |
+| `paymentSchedule` | `PaymentSchedule` | Jadwal penagihan bawaan. |
+| `isEnabled` | `bool` | Template nonaktif tidak ditawarkan saat membuat proyek. |
 
-```
-item.amount   = amountOverride ?? (quantity × unitPrice)
-weeklySubtotal  = Σ weeklyItems.amount
-monthlySubtotal = Σ monthlyItems.amount
-groceryRollUp   = weeklySubtotal × weeksPerMonth + monthlySubtotal
-```
-
-Bukti: `576.600 × 4 + 762.100 = 3.068.500`, sama persis dengan baris `Bulanan`
-di siklus yang bersangkutan.
-
-`amountOverride` wajib ada karena spreadsheet asli memuat koreksi manual. Sampo
-tercatat `1 × Rp41.300` tetapi harganya Rp24.000, dan popok tercatat
-`1 × Rp180.000` tetapi harganya Rp22.500. Model yang memaksa perkalian akan
-menolak data nyata pemilik.
-
-## Kartu kredit
-
-`CardStatement` menghasilkan nominal untuk baris anggaran ber-`rollUpSource`
-`card`.
-
-| Entitas | Field |
-|---|---|
-| `CreditCard` | `id`, `name`, `statementDayOfMonth` |
-| `CardStatement` | `id`, `cardId`, `periodStart`, `periodEnd`, `transactions`, `closedAt` |
-| `CardTransaction` | `id`, `date`, `merchant`, `amount`, `note`, `isConfirmed` |
-| `RecurringSubscription` | `id`, `cardId`, `merchant`, `amount`, `dayOfMonth`, `isActive` |
-
-```
-cardRollUp = Σ statement.transactions.where(isConfirmed).amount
-```
-
-> **Catatan revisi (T-4.6/T-4.10, 10 September 2026):** `isConfirmed`
-> ditambahkan ke `CardTransaction` — tidak ada di tabel semula dokumen ini.
-> Bawaan `true` untuk transaksi yang diketik manual; `false` untuk hasil
-> penyiapan otomatis dari `RecurringSubscription` yang belum dikonfirmasi
-> pemilik (lihat paragraf di bawah). Formula `cardRollUp` di atas juga
-> dikoreksi untuk menyaring `isConfirmed` — versi awal menjumlahkan seluruh
-> transaksi tanpa penyaring ini, yang berarti nominal langganan yang belum
-> dikonfirmasi (dan bisa berubah) akan ikut terhitung ke anggaran sebelum
-> pemilik sempat memeriksanya.
-
-**Nilai `statementDayOfMonth` terkonfirmasi pemilik: tanggal 15**, berlaku
-sebagai nilai seed untuk kartu yang diimpor di Fase 6. Sama seperti
-`hourlyRate`, ini data pada `CreditCard`, bukan konstanta kode — tiap kartu
-boleh punya tanggal cetak berbeda dan pemilik bisa mengubahnya.
-
-`CardTransaction` punya field `note` terpisah dari `merchant`. Di spreadsheet,
-kolom merchant dipakai menampung catatan seperti `PT Tokopedia cicilan 1` dan
-`ulanzi tripod canceled?`. Memisahkan keduanya menjaga nama merchant tetap
-bersih sehingga bisa dicocokkan dengan `RecurringSubscription`.
-
-`RecurringSubscription` menyiapkan transaksi berulang di awal siklus baru.
-Transaksi hasil penyiapan tetap perlu dikonfirmasi pemilik, karena nominal
-langganan bisa berubah. Contoh nyata: Claude AI tercatat Rp337.760 di satu
-siklus dan Rp358.600 di siklus lain.
-
-## Investasi
-
-Kelompok ini membagi sisa siklus ke pos tujuan.
-
-### Rencana investasi
-
-| Field | Tipe | Keterangan |
-|---|---|---|
-| `returnDeposit` | `int` | Tambahan dana dalam sen. Nol kalau tidak ada. |
-| `allocations` | `List<Allocation>` | Pembagian per pos. |
-
-| `Allocation` | Tipe | Keterangan |
-|---|---|---|
-| `goalId` | `String` | Rujukan ke `Goal`. |
-| `percentage` | `int` | Persentase, bilangan bulat 0 sampai 100. |
-
-```
-investmentBudget  = cycle.remainder + returnDeposit
-allocation.amount = investmentBudget × allocation.percentage ~/ 100
-```
-
-Bukti dari siklus dengan sisa Rp3.086.960: `× 15% = 463.044` dan
-`× 55% = 1.697.828`. Bukti dari siklus dengan sisa Rp5.370.616:
-`× 20% = 1.074.123` dan `× 40% = 2.148.246`.
-
-### Pos tujuan dan pinjaman
-
-| Entitas | Field |
-|---|---|
-| `Goal` | `id`, `name`, `openingBalance` |
-| `GoalLoan` | `id`, `fromGoalId`, `toGoalId`, `principal`, `repaid`, `date`, `note` |
-
-```
-goal.balance = openingBalance
-             + Σ alokasi ke pos ini dari seluruh siklus tertutup
-             + Σ pinjaman yang dikembalikan ke pos ini
-             − Σ pokok pinjaman yang keluar dari pos ini
-```
-
-`principal` dan `repaid` disimpan terpisah karena nilainya bisa berbeda.
-Contoh nyata: pinjaman pokok Rp9.300.000 dikembalikan Rp9.331.000, selisih
-Rp31.000.
-
-Enam pos yang berlaku hari ini adalah `ANAK`, `RUMAH`, `PENSIUN`, `SEKOLAH`,
-`KYOTO`, dan `SAHAM` — **ini bukan daftar tertutup.** Nama pos disimpan sebagai
-data, bukan enum, dan FR-INV-001 sudah mengizinkan pemilik menambah pos baru
-kapan saja. `GoalLoan` hanya boleh merujuk `Goal` yang benar-benar terdaftar
-(lihat invarian di bawah) — ini keputusan sadar, bukan kelonggaran: kalau
-pemilik ingin melacak formal pinjaman semacam contoh lama di spreadsheet
-(`Travel To Japan`, `Kuliah tata`, yang saat itu tidak ada di pos manapun),
-langkahnya adalah mendaftarkan keduanya sebagai `Goal` baru lebih dulu
-(dengan `openingBalance` default 0), bukan menulis label bebas di `GoalLoan`.
-Ini menutup ketidaksinkronan yang ada di spreadsheet, di mana bagian pinjaman
-dan bagian alokasi memakai dua daftar nama yang berbeda.
-
-**Nilai `openingBalance` terkonfirmasi pemilik: 0 untuk seluruh pos**, berlaku
-sebagai nilai seed Fase 6. Pemilik memilih tidak merekonstruksi saldo historis
-pos tujuan saat ini.
-
-## Template dan rollover
-
-`CycleTemplate` menyimpan kerangka siklus berikutnya.
-
-| Field | Tipe | Keterangan |
-|---|---|---|
-| `incomeLines` | `List<IncomeLine>` | Baris pemasukan tetap. |
-| `budgetLines` | `List<BudgetLine>` | Baris anggaran tetap. |
-| `defaultAllocations` | `List<Allocation>` | Persentase alokasi bawaan. |
-
-Rollover membuat siklus bulan baru dengan aturan berikut:
-
-1. Salin hanya baris ber-`isTemplate` true. Baris insidental bulan sebelumnya
-   tidak ikut.
-2. Untuk baris ber-`kind` `rollUp`, jangan salin nominalnya. Hitung ulang dari
-   sumbernya di siklus baru.
-3. Tandai setiap baris tetap sebagai perlu ditinjau, supaya pemilik menyesuaikan
-   nominal yang berubah seperti listrik dan kos.
-4. Salin `defaultAllocations` apa adanya.
-
-Aturan ketiga menjawab langsung nyeri utama pemilik. Label `Kos agustus -
-september` yang terbawa tiga bulan berturut-turut membuktikan bahwa penyalinan
-manual membuat baris lama lolos tanpa ditinjau.
+Hubungannya dengan `FreelanceProject` sama persis dengan hubungan
+`BudgetTemplate` dengan `Budget`: template adalah **definisi**, proyek adalah
+**salinan mandiri**. Menyunting template tidak pernah mengubah proyek yang sudah
+dibuat darinya, dan membuat atau menyunting template tidak pernah menyentuh
+saldo dompet mana pun.
 
 ## Invarian
 
-Aturan berikut harus dijaga model dan diuji.
+Aturan berikut harus benar setiap saat, dan masing-masing punya uji unitnya
+sendiri.
 
-| Invarian | Alasan |
-|---|---|
-| `Σ allocations.percentage` bernilai 0 atau 100. | Spreadsheet punya sel validator dengan aturan persis ini. Nilai 0 berarti bulan itu belum dialokasikan. |
-| `remainder` boleh negatif. | Terbukti terjadi, dan harus tampil sebagai kondisi lewat anggaran. |
-| Baris ber-`kind` `rollUp` tidak bisa disunting nominalnya. | Nominalnya turunan. Menyuntingnya akan memunculkan kembali masalah salin manual. |
-| Baris ber-`kind` `rollUp` wajib punya `rollUpSource`. | Tanpa sumber, nominalnya tidak bisa dihitung. |
-| Satu buku jam hanya boleh punya satu entri ber-`startsNewBook` true, yaitu entri pertamanya. | Penanda inilah yang mendefinisikan batas periode. |
-| `id` siklus unik dan berformat `YYYY-MM`. | Satu bulan hanya boleh punya satu siklus. |
-| Seluruh nominal bertipe `int` dalam sen. | Menjaga hasil hitung sama persis dengan spreadsheet. |
-| `goalId` pada alokasi dan pinjaman harus menunjuk `Goal` yang ada. | Mencegah ketidaksinkronan daftar pos seperti di spreadsheet. |
+1. **Uang selalu `int` sen.** Tidak ada `double` di jalur nominal mana pun.
+2. **Saldo tersimpan sama dengan saldo turunan.** `wallet.currentBalance` harus
+   identik dengan hasil `recomputeWalletBalances()` untuk dompet itu.
+3. **Transfer tidak mengubah total.** Sebelum dan sesudah sebuah transfer,
+   `totalBalance` seluruh dompet bernilai sama.
+4. **Anggaran tidak menyentuh saldo.** Membuat, menyunting, atau menghapus
+   `Budget`, `BudgetItem`, maupun `BudgetTemplate` tidak mengubah saldo dompet
+   mana pun.
+5. **Worklog dan template freelance tidak menyentuh saldo.** Mencatat,
+   menyunting, atau menghapus `WorklogEntry` maupun `FreelanceTemplate` tidak
+   mengubah saldo dompet mana pun.
+6. **Pembayaran menghasilkan tepat satu transaksi.** Sebuah `FreelancePayment`
+   yang `paid` punya tepat satu `incomeTransactionId`, dan tidak bisa dicatat
+   diterima untuk kedua kalinya.
+7. **Nominal transaksi selalu positif.** Arah uang ditentukan jenis transaksi,
+   bukan tanda nominalnya.
+8. **Transfer butuh dua dompet berbeda.** `fromWalletId` tidak boleh sama dengan
+   `toWalletId`.
+9. **Transaksi hanya menambah `spent` anggaran yang sedompet.** Pengeluaran
+   dicocokkan lewat `walletId`, transfer lewat `fromWalletId`. Transaksi dari
+   dompet lain tidak terhitung, meski tertaut ke pos anggaran itu.
+10. **Satu transaksi menaikkan paling banyak satu pos anggaran.** Baik
+    pengeluaran maupun transfer hanya punya satu `budgetItemId`, sehingga satu
+    peristiwa tidak pernah terhitung di dua anggaran sekaligus.
+11. **Transfer yang tertaut pos anggaran tetap tidak mengubah total saldo.**
+    Menautkannya ke anggaran hanya memengaruhi angka rencana, bukan uangnya.
+12. **Saldo boleh negatif.** Ini keadaan nyata, bukan kondisi kesalahan, dan
+    tidak boleh menolak penyimpanan.
 
-## Nilai seed terkonfirmasi
+## Nilai terkonfirmasi
 
-Tiga nilai yang semula tidak bisa disimpulkan dari spreadsheet sudah
-dikonfirmasi pemilik pada 10 September 2026. Ketiganya adalah **data seed**,
-bukan konstanta kode — field yang menampungnya (`hourlyRate`,
-`statementDayOfMonth`, `openingBalance`) tetap bisa disunting pemilik kapan
-saja lewat antarmuka.
+Nilai berikut sudah dipastikan pemilik dan tidak perlu ditanyakan ulang.
 
-| Nilai | Field | Seed |
+| Nilai | Angka | Sumber |
 |---|---|---|
-| Tarif per jam `Gaji Menul` | `IncomeSource.hourlyRate` | Rp72.500 |
-| Tanggal cetak tagihan kartu | `CreditCard.statementDayOfMonth` | 15 |
-| Saldo awal tiap pos tujuan | `Goal.openingBalance` | 0 |
+| Tarif freelance per jam | Rp72.500 | Dikonfirmasi pemilik saat Saldough 1.0; tarif ini tidak pernah tercatat di spreadsheet |
+| Potongan pajak freelance | 2,5%, ditulis `25` per mil | Konsisten di seluruh riwayat pembayaran |
+| Bahasa dasar antarmuka | Indonesia, tambahan Inggris | Preferensi pemilik |
 
-Satu hal terkait lain yang juga sudah diputuskan: `GoalLoan` hanya merujuk
-`Goal` yang terdaftar, dengan daftar `Goal` yang terbuka — lihat bagian
-"Pos tujuan dan pinjaman" di atas.
+Nilai berikut **belum** ada dan harus diisi pemilik saat aplikasi pertama kali
+dipakai, karena Saldough 1.0 tidak pernah mencatatnya sama sekali:
+
+- Daftar dompet beserta saldo awalnya. Tidak ada satu pun saldo dompet yang
+  tercatat di data 1.0, jadi tidak ada yang bisa dimigrasikan.
+- Daftar kategori transaksi.
 
 ## Langkah berikutnya
 
 Lanjutkan ke [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md) untuk melihat
-bagaimana model ini dipetakan ke lapisan dan paket, atau ke
-[PRD](../01-product/prd-saldough-1.0.md) untuk melihat kebutuhan produknya.
+bagaimana entitas di atas dipetakan ke lapisan dan folder, atau ke
+[ADR-011](adr/0011-model-domain-dompet-transaksi-anggaran.md) untuk alasan di
+balik bentuk modelnya.

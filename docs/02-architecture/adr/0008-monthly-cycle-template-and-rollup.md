@@ -5,8 +5,19 @@
 - **Decision ID:** ADR-008
 - **Tanggal:** 2026-09-09
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted
+- **Status:** Superseded by ADR-011
 - **Cakupan:** Fitur: siklus bulanan, belanja, kartu kredit
+
+> **Catatan penggantian (17 September 2026):** ADR ini digantikan
+> [ADR-011](0011-model-domain-dompet-transaksi-anggaran.md). Seluruh mekanisme
+> yang diputuskan di sini — `CycleTemplate`, rollover antar bulan, penanda
+> `needsReview`, dan baris anggaran ber-`BudgetLineKind.rollUp` yang nominalnya
+> dihitung dari fitur lain — dihapus pada pivot ke Saldough 2.0. Penggantinya
+> bukan mekanisme serupa melainkan model yang berbeda: angka terpakai sebuah pos
+> anggaran selalu berasal dari transaksi nyata yang bertanggal, bukan dari
+> perhitungan ulang lintas fitur. `BudgetTemplate` di model baru hanya
+> menyalin susunan pos, dan tidak pernah menyalin nominal hasil hitungan. Isi di
+> bawah ini dibiarkan utuh sebagai rekaman.
 
 ## 2. Konteks
 

@@ -5,8 +5,19 @@
 - **Decision ID:** ADR-006
 - **Tanggal:** 2026-09-09, direvisi 2026-09-10
 - **Fase roadmap:** Fase 1
-- **Status:** Accepted (revisi)
+- **Status:** Superseded by ADR-013
 - **Cakupan:** Global
+
+> **Catatan penggantian (17 September 2026):** ADR ini digantikan
+> [ADR-013](0013-bahasa-visual-dan-sistem-ikon.md). Tiga dari enam slot warna
+> semantiknya — `investment`, `rollUp`, dan `needsReview` — menamai konsep yang
+> dihapus pada pivot ke Saldough 2.0, dan motif komiknya (bayangan keras
+> beroffset, halftone, badge berotasi, huruf Bangers) ditinggalkan atas
+> permintaan pemilik yang meminta identitas pixel-art bernuansa aplikasi mobile
+> modern. Yang **dipertahankan** ADR-013 dari sini: dasar krem `#F2E9D8`, tinta
+> `#161310`, peran huruf Archivo Black dan Space Grotesk, token
+> `AppSpacing`/`AppRadius`/`AppDurations`, serta kewajiban tiap warna lolos
+> rasio kontras 4,5:1. Isi di bawah ini dibiarkan utuh sebagai rekaman.
 
 > **Catatan revisi (2026-09-10):** Versi pertama ADR ini memilih palet dan
 > tipografi "dark sports-tech" langsung dari `new-health-duel` (hijau neon,
@@ -277,7 +288,7 @@ kepercayaan massal — dipakai satu orang yang memang menyukainya.
 ## 8b. Catatan revisi
 
 **11 September 2026 — varian `…OnLight` ditambahkan.** Review UX (skill
-`ux-review`, lihat [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)
+`ux-review`, lihat [UX_REVIEW_FIXES.md](../../99-archive/UX_REVIEW_FIXES-1.0.md)
 item UX-22) mengukur kontras WCAG seluruh slot semantik terhadap nilai hex di
 ADR ini, dan menemukan enam slot gagal ambang keterbacaan di mode terang saat
 dipakai sebagai teks atau ikon. Yang paling parah dua elemen terpenting di

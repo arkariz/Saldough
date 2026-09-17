@@ -87,8 +87,8 @@ Lapisan `presentation` tidak pernah mengimpor `data`. Keduanya bertemu di
 Saldough memakai tiga zona tidak tumpang tindih — `core/`, `shared/<module>/`,
 `features/<feature>/` — sesuai [ADR-0009](adr/0009-core-shared-features-zone-layout.md).
 Ini mengganti asumsi feature-first sederhana dari rencana awal, yang tidak
-punya jawaban untuk di mana entitas lintas fitur (seperti `Goal`) seharusnya
-tinggal.
+punya jawaban untuk di mana entitas lintas fitur (seperti `Wallet` dan
+`Transaction`) seharusnya tinggal.
 
 ```
 saldough/
@@ -123,20 +123,23 @@ saldough/
 │   │   ├── utils/formatters/             # pemformat uang dan tanggal
 │   │   └── i18n/                         # keluaran slang
 │   ├── shared/                           # kapabilitas dipakai ≥2 fitur, module-first
-│   │   └── goal/
-│   │       ├── goal.dart                 # barrel — satu-satunya jalur impor ke modul ini
-│   │       ├── domain/{goal.dart, goal_repository.dart}
-│   │       └── data/{goal_model.dart, goal_repository_impl.dart}
+│   │   ├── wallet/                       # dikonsumsi transaction, budget, freelance, home
+│   │   │   ├── wallet.dart               # barrel — satu-satunya jalur impor ke modul ini
+│   │   │   ├── domain/{wallet.dart, wallet_repository.dart}
+│   │   │   └── data/{wallet_model.dart, wallet_repository_impl.dart}
+│   │   └── transaction/                  # dikonsumsi budget, home, wallet, record, freelance
+│   │       ├── transaction.dart          # barrel
+│   │       ├── domain/{transaction.dart, transaction_repository.dart}
+│   │       └── data/{transaction_model.dart, transaction_repository_impl.dart}
 │   └── features/                         # graf milik satu fitur
-│       ├── cycle/                        # siklus bulanan
-│       ├── income/                       # sumber pemasukan
-│       ├── worklog/                      # timesheet dan buku jam
-│       ├── grocery/                      # rencana belanja
-│       ├── card/                         # kartu kredit
-│       └── investment/                   # alokasi & pinjaman antar pos (konsumen shared/goal)
+│       ├── home/                         # ringkasan, tanpa domain sendiri
+│       ├── wallet/                       # pengelolaan dompet (konsumen shared/wallet)
+│       ├── transaction/                  # daftar dan penyaring riwayat
+│       ├── record/                       # alur CATAT — satu-satunya penulis transaksi manual
+│       ├── budget/                       # anggaran, pos, dan template
+│       └── freelance/                    # proyek, worklog, pembayaran
 ├── tool/                                 # skrip pengembang sekali pakai, TIDAK ikut di-build ke rilis
-│   ├── seed_import.dart                  # Fase 6 — lihat catatan revisi ADR-0009
-│   └── seed_data.json                    # data historis nyata, lihat TASK_LIST.md Fase 6
+│   └── seed_data.json                    # data historis nyata 1.0, disimpan sebagai rekaman
 └── test/
     ├── shared/                           # cermin struktur lib/shared
     └── features/                         # cermin struktur lib/features
@@ -146,31 +149,34 @@ Setiap `features/<feature>/` punya susunan internal yang sama — `domain/`
 dan `data/` privat (tidak diimpor fitur lain), `presentation/`, dan `di/`:
 
 ```
-features/cycle/
+features/budget/
 ├── data/
-│   ├── models/           # model serialisasi dengan fromJson dan toJson
-│   ├── datasources/      # akses Hive
-│   └── repositories/     # implementasi antarmuka domain, with RepositoryGuard
+│   ├── models/            # model serialisasi dengan fromJson dan toJson
+│   └── repositories/      # implementasi antarmuka domain, with RepositoryGuard
 ├── di/
-│   └── cycle_scope.dart  # IsolatedScope
+│   └── budget_scope.dart  # IsolatedScope
 ├── domain/
-│   ├── entities/         # MonthlyCycle, BudgetLine, IncomeLine
-│   ├── repositories/     # abstract interface class
-│   └── usecases/         # RollOverCycle, CalculateRemainder
+│   ├── entities/          # Budget, BudgetItem, BudgetTemplate
+│   ├── repositories/      # abstract interface class
+│   └── usecases/          # CalculateBudgetProgress
 └── presentation/
     ├── bloc/
-    │   ├── cycle_bloc.dart
-    │   ├── cycle_event.dart
-    │   ├── cycle_side_effect.dart        # part dari cycle_bloc.dart
-    │   └── state/cycle_state.dart
+    │   ├── budget_bloc.dart
+    │   ├── budget_event.dart
+    │   ├── budget_effect.dart            # part dari budget_bloc.dart
+    │   └── budget_state.dart
     ├── navigation/
-    │   ├── cycle_route_keys.dart         # satu-satunya berkas yang boleh diimpor fitur lain
-    │   └── cycle_route_module.dart
+    │   ├── budget_route_keys.dart        # satu-satunya berkas yang boleh diimpor fitur lain
+    │   └── budget_route_module.dart
     ├── pages/
     └── widgets/
 ```
 
-`shared/<module>/` (lihat `shared/goal/` di atas) disusun module-first —
+Fitur yang tidak punya entitas sendiri — `home` dan `record` — hanya berisi
+`presentation/` dan `di/`. Keduanya membaca dan menulis lewat modul `shared/`,
+bukan lewat domain fitur lain.
+
+`shared/<module>/` (lihat `shared/wallet/` di atas) disusun module-first —
 `domain/` + `data/` di balik satu barrel, **tanpa `presentation/`** — dan
 diimpor fitur lain hanya lewat barrel itu, tidak pernah lewat jalur berkas di
 dalamnya.
@@ -185,7 +191,7 @@ Saldough memakainya langsung:
 | Bloc screen-local, tanpa dependensi repository | `BlocProvider.create()` di level rute | Bloc formulir sederhana yang tidak menyentuh penyimpanan |
 | Singleton app-wide, kelas sendiri, ctor sinkron | `@LazySingleton(as: Interface)` langsung — **default** | `AppMoneyFormatter`, layanan lokal tanpa dependensi async |
 | Tipe pihak ketiga / async / `@Named` | Factory method di kelas `@module` | `HiveKeyValueStorage.initialize(...)` di `RootModule` |
-| Graf milik satu fitur, dependensi induk perlu dibatasi, atau ada urutan async | `IsolatedScope` di `features/<fitur>/di/<fitur>_scope.dart` | `CycleScope`, `InvestmentScope` |
+| Graf milik satu fitur, dependensi induk perlu dibatasi, atau ada urutan async | `IsolatedScope` di `features/<fitur>/di/<fitur>_scope.dart` | `BudgetScope`, `FreelanceScope` |
 
 Heuristik satu baris: **`shared/` → root injectable · `features/` → scope ·
 bloc screen-local → route provider.**
@@ -388,7 +394,7 @@ terdaftar melempar `UnregisteredEffectError` saat dipancarkan.
 ## Menulis satu fitur
 
 Bagian ini menjelaskan alur satu fitur dari domain sampai antarmuka. Contohnya
-memakai fitur siklus bulanan.
+memakai modul `shared/transaction` dan fitur `budget`.
 
 ### Domain
 
@@ -399,16 +405,17 @@ Antarmuka repository memakai `abstract interface class` dan mengembalikan
 `Future<Either<Failure, T>>` — lihat [ADR-0005](adr/0005-either-failure-convention.md).
 
 ```dart
-abstract interface class CycleRepository {
-  Future<Either<Failure, MonthlyCycle>> getCycle(String id);
-  Future<Either<Failure, List<String>>> listCycleIds();
-  Future<Either<Failure, Unit>> saveCycle(MonthlyCycle cycle);
+abstract interface class TransactionRepository {
+  Future<Either<Failure, List<Transaction>>> listByMonth(String monthId);
+  Future<Either<Failure, Transaction>> getById(String monthId, String id);
+  Future<Either<Failure, Unit>> record(Transaction transaction);
+  Future<Either<Failure, Unit>> recomputeWalletBalances();
 }
 ```
 
 Use case memuat rumus dan merupakan tempat paling penting untuk diuji.
-`CalculateRemainder`, `RollOverCycle`, dan `CalculateNetPay` semuanya Dart murni
-sehingga bisa diuji tanpa Flutter.
+`CalculateBudgetProgress`, `CalculateWalletBalance`, dan `CalculateNetPay`
+semuanya Dart murni sehingga bisa diuji tanpa Flutter.
 
 ### Data
 
@@ -421,17 +428,21 @@ Implementasi repository memakai `with RepositoryGuard` dari
 mentah menjadi `Failure`:
 
 ```dart
-final class CycleRepositoryImpl with RepositoryGuard implements CycleRepository {
-  const CycleRepositoryImpl({required this._storage});
+final class TransactionRepositoryImpl
+    with RepositoryGuard
+    implements TransactionRepository {
+  const TransactionRepositoryImpl({required this._storage});
   final KeyValueStorage _storage;
 
   @override
-  Future<Either<Failure, MonthlyCycle>> getCycle(String id) => guard(() async {
-    final stored = await _storage.read(CycleStorageKeys.cycle(id).value);
-    if (stored == null) {
-      throw StateError('Cycle $id not found in local storage');
+  Future<Either<Failure, Transaction>> getById(String monthId, String id) =>
+      guard(() async {
+    final month = await _readMonth(monthId);
+    final found = month.where((t) => t.id == id).firstOrNull;
+    if (found == null) {
+      throw StateError('Transaction $id not found in $monthId');
     }
-    return CycleModel.fromJson(jsonDecode(stored)).toEntity();
+    return found;
   });
 
   @override
@@ -455,29 +466,33 @@ State memperluas `UiState<T>`. Field yang memengaruhi tampilan masuk `props`;
 `effect` tidak pernah masuk `props`.
 
 ```dart
-final class CycleState extends UiState<CycleState> {
-  const CycleState({
-    required this.cycle,
+final class BudgetState extends UiState<BudgetState> {
+  const BudgetState({
+    required this.budgets,
     required this.isLoading,
     super.effect,
   });
 
-  factory CycleState.initial() =>
-      CycleState(cycle: MonthlyCycle.empty(), isLoading: false);
+  factory BudgetState.initial() =>
+      const BudgetState(budgets: [], isLoading: true);
 
-  final MonthlyCycle cycle;
+  final List<Budget> budgets;
   final bool isLoading;
 
   @override
-  CycleState copyWith({MonthlyCycle? cycle, bool? isLoading, UiEffect? effect}) =>
-      CycleState(
-        cycle: cycle ?? this.cycle,
+  BudgetState copyWith({
+    List<Budget>? budgets,
+    bool? isLoading,
+    UiEffect? effect,
+  }) =>
+      BudgetState(
+        budgets: budgets ?? this.budgets,
         isLoading: isLoading ?? this.isLoading,
         effect: effect,
       );
 
   @override
-  List<Object?> get props => [cycle, isLoading];
+  List<Object?> get props => [budgets, isLoading];
 }
 ```
 
@@ -486,21 +501,17 @@ Efek ditulis sebagai `extension` di berkas `part`, supaya berkas bloc tetap
 ringkas.
 
 ```dart
-Future<void> _onRollOverRequested(
-  CycleRollOverRequested event,
-  Emitter<CycleState> emit,
+Future<void> _onBudgetSaved(
+  BudgetSaved event,
+  Emitter<BudgetState> emit,
 ) async {
   emit(state.copyWith(isLoading: true));
-  final result = await _rollOverCycle(event.fromCycleId);
+  final result = await _repository.saveBudget(event.budget);
   switch (result) {
     case Left(value: final failure):
       emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
-    case Right(value: final next):
-      emit(state.copyWith(
-        cycle: next,
-        isLoading: false,
-        effect: _effectCycleCreated(next.id),
-      ));
+    case Right():
+      add(const BudgetsLoaded());
   }
 }
 ```
@@ -508,9 +519,9 @@ Future<void> _onRollOverRequested(
 Halaman membungkus isinya dengan `EffectListener`:
 
 ```dart
-EffectListener<CycleBloc, CycleState>(
-  child: BlocBuilder<CycleBloc, CycleState>(
-    builder: (context, state) => CycleView(cycle: state.cycle),
+EffectListener<BudgetBloc, BudgetState>(
+  child: BlocBuilder<BudgetBloc, BudgetState>(
+    builder: (context, state) => BudgetView(budgets: state.budgets),
   ),
 )
 ```
@@ -520,14 +531,14 @@ EffectListener<CycleBloc, CycleState>(
 Kunci rute dan modul rute dipisah agar fitur lain tidak menarik pohon widget.
 
 ```dart
-// cycle_route_keys.dart — satu-satunya berkas yang boleh diimpor fitur lain
-final class CycleDetailInput extends RouteInput {
-  const CycleDetailInput({required this.cycleId});
-  final String cycleId;
+// wallet_route_keys.dart — satu-satunya berkas yang boleh diimpor fitur lain
+final class WalletDetailInput extends RouteInput {
+  const WalletDetailInput({required this.walletId});
+  final String walletId;
 }
 
-abstract final class CycleRouteKeys {
-  static const detail = RouteKey<CycleDetailInput>('cycle.detail');
+abstract final class WalletRouteKeys {
+  static const detail = RouteKey<WalletDetailInput>('wallet.detail');
 }
 ```
 
@@ -536,15 +547,15 @@ harus diambil **sebelum** `ScopeWidget` disisipkan, karena `ScopeProvider` belum
 ada di pohon saat `create` dijalankan.
 
 ```dart
-RouteNode.typed<CycleDetailInput>(
-  key: CycleRouteKeys.detail,
+RouteNode.typed<WalletDetailInput>(
+  key: WalletRouteKeys.detail,
   builder: (context, input) {
     final parentContainer = ScopeProvider.of(context);
-    return ScopeWidget<CycleScope>(
-      create: () => CycleScope(parentContainer: parentContainer),
+    return ScopeWidget<WalletScope>(
+      create: () => WalletScope(parentContainer: parentContainer),
       builder: (context, scope) => BlocProvider.value(
-        value: scope.container.get<CycleBloc>(),
-        child: CyclePage(cycleId: input.cycleId),
+        value: scope.container.get<WalletBloc>(),
+        child: WalletDetailPage(walletId: input.walletId),
       ),
     );
   },
@@ -552,14 +563,17 @@ RouteNode.typed<CycleDetailInput>(
 ```
 
 **Shell navigasi utama** (`MainShellPage`, `lib/core/presentation/shell/`) —
-bilah navigasi bawah 4 tab (Siklus/Pemasukan/Belanja/Investasi), layar awal
-aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan langsung di
-`AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab tetap
-dipasang lewat `ScopeWidget` fiturnya sendiri di dalam `IndexedStack` (bukan
-`StatefulShellRoute` — lihat catatan revisi ADR-0004 §8). Worklog (dari tab
-Pemasukan) dan Card (dari tab Belanja) dicapai lewat `NavigatePushEffect`
-yang didorong bloc (`IncomeSourceBloc`/`GroceryBloc`), bukan tab tersendiri —
-pola resmi untuk "layar sekunder dari fitur lain", lihat ADR-0004.
+bilah navigasi bawah lima tujuan (Beranda/Anggaran/CATAT/Transaksi/Dompet),
+layar awal aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan
+langsung di `AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab
+tetap dipasang lewat `ScopeWidget` fiturnya sendiri di dalam `IndexedStack`
+(bukan `StatefulShellRoute` — lihat catatan revisi ADR-0004 §8).
+
+**CATAT bukan tujuan navigasi biasa.** Ia menempati posisi tengah di bilah
+navigasi tetapi tidak mengganti isi `IndexedStack`; menekannya membuka lembar
+pilihan jenis transaksi. Layar sekunder — rincian dompet, Freelance, penyunting
+anggaran — dicapai lewat `NavigatePushEffect` yang didorong bloc, bukan tab
+tersendiri, mengikuti pola resmi "layar sekunder dari fitur lain" di ADR-0004.
 
 ### Injeksi dependensi
 
@@ -569,22 +583,27 @@ eksplisit di `bridge`. Ini disengaja oleh paket, dan berfungsi sebagai daftar
 putih ketergantungan fitur.
 
 ```dart
-final class CycleScope extends IsolatedScope {
-  CycleScope({required super.parentContainer});
+final class BudgetScope extends IsolatedScope {
+  BudgetScope({required super.parentContainer});
 
   @override
   void bridge(GetIt c) {
     c.registerSingleton<KeyValueStorage>(parent<KeyValueStorage>());
-    c.registerSingleton<GoalRepository>(parent<GoalRepository>());
+    c.registerSingleton<WalletRepository>(parent<WalletRepository>());
+    c.registerSingleton<TransactionRepository>(parent<TransactionRepository>());
   }
 
   @override
   void register(GetIt c) {
-    c.registerLazySingleton<CycleRepository>(
-      () => CycleRepositoryImpl(storage: c<KeyValueStorage>()),
+    c.registerLazySingleton<BudgetRepository>(
+      () => BudgetRepositoryImpl(storage: c<KeyValueStorage>()),
     );
-    c.registerLazySingleton<CycleBloc>(
-      () => CycleBloc(repository: c<CycleRepository>()),
+    c.registerLazySingleton<BudgetBloc>(
+      () => BudgetBloc(
+        repository: c<BudgetRepository>(),
+        walletRepository: c<WalletRepository>(),
+        transactionRepository: c<TransactionRepository>(),
+      ),
       dispose: (bloc) => bloc.close(),
     );
   }
@@ -598,7 +617,7 @@ use case domain paling utama, karena di situlah rumus keuangan berada.
 
 | Yang diuji | Cara |
 |---|---|
-| Use case domain | Uji unit Dart murni, memakai angka nyata dari spreadsheet |
+| Use case domain | Uji unit Dart murni, memakai angka nyata dari catatan keuangan pemilik |
 | Repository | `InMemoryKeyValueStorage` dari `memory_storage` |
 | Bloc | `bloc_test`, dengan repository dipalsukan memakai `mocktail` — lihat [ADR-0010](adr/0010-mocktail-bloc-test-convention.md) |
 | Widget | Uji widget untuk komponen bersama |
@@ -611,26 +630,33 @@ permintaan eksplisit pemilik, bukan temuan teknis. Lihat
 dan alasannya.
 
 Aturan yang mengikat: **setiap rumus di
-[DOMAIN_MODEL.md](DOMAIN_MODEL.md) punya uji unit dengan angka nyata dari
-spreadsheet sebagai kasus ujinya.** Ini memenuhi NFR-ACC-002, dan merupakan
-satu-satunya cara membuktikan aplikasi bisa dipercaya menggantikan
-spreadsheet.
+[DOMAIN_MODEL.md](DOMAIN_MODEL.md) punya uji unit dengan angka nyata sebagai
+kasus ujinya.** Ini memenuhi NFR-ACC-002, dan merupakan satu-satunya cara
+membuktikan angka yang ditampilkan aplikasi bisa dipercaya.
 
-Kasus uji yang wajib ada, seluruhnya sudah diverifikasi terhadap data asli:
+Kasus uji yang wajib ada, seluruhnya memakai angka dari catatan keuangan nyata
+pemilik:
 
 | Rumus | Masukan | Keluaran yang benar |
 |---|---|---|
-| `groceryRollUp` | mingguan 576.600, bulanan 762.100, pengali 4 | 3.068.500 |
 | `netPay` | kotor 3.117.500, pajak 2,5% | 3.039.563 |
-| `netPay` | kotor 2.682.500, pajak 2,5% | 2.615.438 |
-| `remainder` | pemasukan 15.839.563, anggaran 13.382.490 | 2.457.073 |
-| `remainder` negatif | pemasukan 8.900.000, anggaran 10.237.042 | −1.337.042 |
-| `allocation.amount` | budget 3.086.960, 15% | 463.044 |
-| `allocation.amount` | budget 3.086.960, 55% | 1.697.828 |
+| `netPay` | kotor 2.682.500 (37 jam × 72.500), pajak 2,5% | 2.615.438 |
+| `currentBalance` | awal 5.000.000, masuk 2.615.438, keluar 3.068.500, transfer keluar 1.000.000 | 3.546.938 |
+| `currentBalance` negatif | awal 500.000, keluar 1.837.042 | −1.337.042 |
+| `totalBalance` setelah transfer | dompet A −1.000.000, dompet B +1.000.000 | tidak berubah |
+| `budget.spent` | pos 1.000.000 + 500.000 + 300.000 + 700.000 + 500.000 | 3.000.000 |
+| `item.status` | rencana 1.000.000, terpakai 1.200.000 | `overspent` |
 
-Uji `netPay` adalah yang paling penting. Membulatkan pajak sebelum
-menguranginya menghasilkan 3.039.562, meleset satu rupiah. Uji ini yang menjaga
-aturan aritmatika integer sen tidak dilanggar diam-diam.
+Dua uji paling penting berdiri di atas alasan yang berbeda.
+
+`netPay` menjaga aritmatika integer sen. Membulatkan pajak sebelum
+menguranginya menghasilkan 3.039.562, meleset satu rupiah dari catatan pemilik.
+
+**Uji saldo tersimpan versus saldo turunan** menjaga keputusan
+[ADR-012](adr/0012-tata-letak-penyimpanan-buku-besar.md). Ia mencatat
+serangkaian transaksi, lalu membuktikan `wallet.currentBalance` identik dengan
+hasil `recomputeWalletBalances()`. Tanpa uji itu, keputusan menyimpan nilai
+turunan tidak boleh diambil sama sekali.
 
 ## Lint
 

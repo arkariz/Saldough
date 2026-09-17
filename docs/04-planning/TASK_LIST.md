@@ -25,7 +25,7 @@ Terakhir diperbarui: 17 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
-| 0 — Dokumen Saldough 2.0 | 14 | 9 | Sedang dikerjakan |
+| 0 — Dokumen Saldough 2.0 | 14 | 12 | Sedang dikerjakan |
 | 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 10 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
@@ -33,7 +33,7 @@ Terakhir diperbarui: 17 September 2026.
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 5 | 0 | Belum dimulai |
 | 7 — Template dan poles | 6 | 0 | Belum dimulai |
-| **Total MVP** | **69** | **9** | |
+| **Total MVP** | **69** | **12** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -58,10 +58,10 @@ rencana kerja.
 - [x] **T-0.7** Tandai ADR-0006 dan ADR-0008 digantikan; beri ADR-0002 catatan
       perluasan.
 - [x] **T-0.8** Sunting terarah `ARCHITECTURE_OVERVIEW.md`.
-- [ ] **T-0.9** Tulis ulang `ROADMAP.md` dengan prinsip penyusunan fase baru.
+- [x] **T-0.9** Tulis ulang `ROADMAP.md` dengan prinsip penyusunan fase baru.
 - [x] **T-0.10** Tulis `TASK_LIST.md` baru berisi breakdown seluruh fase.
-- [ ] **T-0.11** Tulis `UI_UX_DESIGN_TASKS.md` baru.
-- [ ] **T-0.12** Perbarui `docs/README.md`: pohon dokumen, daftar ADR, jalur
+- [x] **T-0.11** Tulis `UI_UX_DESIGN_TASKS.md` baru.
+- [x] **T-0.12** Perbarui `docs/README.md`: pohon dokumen, daftar ADR, jalur
       baca.
 - [x] **T-0.13** Tulis ulang `.claude/CLAUDE.md` dan `.claude/AGENT_CONTEXT.md`.
       ⚠ Kedua berkas ini disuntik ke konteks tiap sesi. Isi yang basi bukan

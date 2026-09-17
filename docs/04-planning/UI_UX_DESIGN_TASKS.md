@@ -1,0 +1,135 @@
+# Tugas desain UI/UX
+
+Dokumen ini melacak pekerjaan desain visual Saldough 2.0, terpisah dari
+[TASK_LIST.md](TASK_LIST.md) yang melacak pekerjaan kode. Keduanya memetakan
+ke requirement [PRD 2.0](../01-product/prd-saldough-2.0.md) yang sama, tapi
+desain selesai lebih dulu — sejalan dengan preferensi pemilik "dokumentasi
+dan desain lebih dulu, kode menyusul".
+
+Setiap tugas desain diberi identitas `D-<fase>.<nomor>`, memakai nomor fase
+yang sama dengan [ROADMAP.md](ROADMAP.md), supaya satu layar mudah dilacak
+dari desain sampai kode. Desain tidak punya Fase 0 (dokumen) atau Fase 3
+(cutover) sendiri — keduanya tidak punya permukaan visual baru, sama seperti
+dokumen 1.0 melewati fase gerbang dan fase sinkronisasinya.
+
+## Tautan Design Canvas
+
+Belum ada Design Canvas untuk Saldough 2.0. Kanvas pertamanya dibuat di
+**D-2.1**, sebagai satu kanvas tunggal yang mencakup seluruh layar inti
+Fase 2 sekaligus — bukan satu kanvas per fase seperti di 1.0 — karena
+Beranda, CATAT, Transaksi, Dompet, dan Anggaran memakai kartu dan baris
+yang sama, dan memecahnya per fase akan mengulang pekerjaan yang sama.
+Kanvas itu diperluas, bukan diganti, saat layar Anggaran (Fase 4),
+Freelance (Fase 5), dan Beranda (Fase 6) ditambahkan. Tautannya diisi di
+bagian ini begitu kanvas pertama diterbitkan.
+
+## Cara memakai dokumen ini
+
+Aturan pencentangan sama ketatnya dengan `TASK_LIST.md`: sebuah kotak hanya
+dicentang kalau artboard-nya benar-benar ada di Design Canvas yang
+diterbitkan, bukan baru direncanakan.
+
+| Penanda | Arti |
+|---|---|
+| `- [ ]` | Belum dimulai |
+| `- [~]` | Dalam Design Canvas yang sedang dikerjakan |
+| `- [x]` | Selesai, ada di Design Canvas yang sudah diterbitkan |
+
+Setiap tugas diakhiri baris `Memenuhi FR-xxx.` yang menautkannya ke
+[PRD 2.0](../01-product/prd-saldough-2.0.md), dan tanda `⚠` menandai jebakan
+yang sudah diketahui — baca sebelum mengerjakan, bukan sesudah.
+
+## Ringkasan progres
+
+Terakhir diperbarui: 17 September 2026.
+
+| Fase | Tugas desain | Selesai | Status |
+|---|---|---|---|
+| 2 — Layar inti | 5 | 0 | Belum dimulai |
+| 4 — Anggaran | 2 | 0 | Belum dimulai |
+| 5 — Freelance | 2 | 0 | Belum dimulai |
+| 6 — Beranda | 1 | 0 | Belum dimulai |
+| 7 — Template dan poles | 1 | 0 | Belum dimulai |
+| **Total** | **11** | **0** | |
+
+## Fase 2: Layar inti
+
+Satu kanvas tunggal untuk seluruh layar inti, dikerjakan di awal fase ini —
+bukan satu kanvas per fase seperti di 1.0 — karena layar-layarnya saling
+terkait erat dan memecahnya akan mengulang pekerjaan kartu dan baris yang
+sama berkali-kali. Kanvas ini memakai ikon Material sebagai isian sementara;
+aset pixel-art dari pemilik dipasang belakangan di D-7.1 tanpa menggambar
+ulang kanvasnya.
+
+- [ ] **D-2.1** Sistem desain dan token: palet dari ADR-013 (`accent`,
+      `income`, `expense`, `overBudget`, `transfer`, `pending`,
+      `textPrimary`, `textMuted`, `background`, `cardBackground`) untuk
+      mode terang dan gelap, pasangan huruf Archivo Black (angka dan
+      judul) dan Space Grotesk (teks isi), serta komponen dasar kartu dan
+      baris transaksi.
+      ⚠ Seluruh nilai warna dan tipografi diambil dari
+      [ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md)
+      apa adanya. Jangan mengarang hex atau pasangan huruf baru.
+      Memenuhi NFR-UX-003.
+- [ ] **D-2.2** Shell navigasi: lima tujuan `Beranda | Anggaran | CATAT |
+      Transaksi | Dompet` dengan CATAT di tengah, dibedakan secara visual
+      dari empat tujuan lainnya.
+      ⚠ CATAT bukan tujuan navigasi biasa — ia membuka lembar pilihan,
+      bukan mengganti isi layar yang sedang aktif.
+      Memenuhi FR-REC-001.
+- [ ] **D-2.3** Layar CATAT beserta tiga formulirnya: catat pemasukan,
+      catat pengeluaran, dan catat transfer.
+      ⚠ Kosakata tombol dan pesan menyatakan pencatatan, bukan tindakan
+      keuangan — "Catat Transfer", bukan "Transfer Sekarang".
+      Memenuhi FR-REC-001, FR-TXN-001, FR-TXN-002, FR-TXN-003, NFR-UX-001,
+      dan NFR-UX-005.
+- [ ] **D-2.4** Layar Transaksi: riwayat dikelompokkan per tanggal dengan
+      penyaring jenis, dompet, dan kategori, dan pembedaan visual antara
+      pemasukan, pengeluaran, dan transfer.
+      Memenuhi FR-TXN-004.
+- [ ] **D-2.5** Layar Dompet dan rincian dompet: daftar dompet aktif
+      beserta total saldo, tambah dan sunting dompet, serta layar rincian
+      satu dompet dengan riwayat tersaring dan pintasan ke CATAT dengan
+      dompet itu sudah terpilih.
+      Memenuhi FR-WAL-001, FR-WAL-002, FR-WAL-003, FR-WAL-004, dan
+      FR-REC-002.
+
+## Fase 4: Anggaran
+
+- [ ] **D-4.1** Layar Anggaran: daftar anggaran aktif beserta progresnya,
+      dan status tiap pos anggaran (belum terpakai, terpakai sebagian,
+      selesai, lewat anggaran).
+      Memenuhi FR-BUD-001 dan FR-BUD-004.
+- [ ] **D-4.2** Layar sunting anggaran dan pos anggaran, termasuk jumlah
+      dan harga satuan opsional untuk pos berupa daftar belanja.
+      Memenuhi FR-BUD-002.
+
+## Fase 5: Freelance
+
+- [ ] **D-5.1** Layar proyek freelance dan worklog: kelola proyek beserta
+      tarif per jam, dan catat entri kerja harian.
+      ⚠ Layar ini tidak pernah menampilkan perubahan saldo dompet — kerja
+      selesai bukan uang diterima.
+      Memenuhi FR-FRL-001 dan FR-FRL-002.
+- [ ] **D-5.2** Layar pengelompokan worklog jadi pembayaran, pencatatan
+      pembayaran diterima, dan ringkasan freelance.
+      ⚠ Kosakata pencatatan pembayaran diterima menyatakan pencatatan,
+      bukan pembayaran yang dijalankan aplikasi.
+      Memenuhi FR-FRL-003, FR-FRL-004, dan FR-FRL-005.
+
+## Fase 6: Beranda
+
+- [ ] **D-6.1** Layar Beranda: total saldo dan arus bulan berjalan,
+      ringkasan anggaran, ringkasan freelance yang disembunyikan
+      sepenuhnya kalau tidak ada pembayaran tertunda, dan transaksi
+      terbaru.
+      Memenuhi FR-HOME-001, FR-HOME-002, FR-HOME-003, dan FR-HOME-004.
+
+## Fase 7: Template dan poles
+
+- [ ] **D-7.1** Penerapan aset ikon pixel-art dari pemilik ke peta
+      `AppIcon`, menggantikan ikon Material sementara di seluruh layar
+      yang sudah ada.
+      ⚠ Terhambat sampai asetnya tersedia. Kanvas layar tidak digambar
+      ulang untuk perubahan ini — hanya peta ikonnya yang berubah.
+      Memenuhi NFR-UX-002.

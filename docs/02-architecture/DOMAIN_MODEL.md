@@ -67,7 +67,7 @@ tercatat ada Rp5.000.000 di sana".
 |---|---|---|
 | `id` | `String` | Identitas dompet. |
 | `name` | `String` | Nama yang dipilih pemilik, misalnya `BCA` atau `GoPay`. |
-| `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-013](adr/0013-bahasa-visual-dan-sistem-ikon.md). |
+| `iconKey` | `String` | Kunci semantik ikon, bukan path aset. Lihat [ADR-015](adr/0015-adopsi-bahasa-visual-pixel-kas.md). |
 | `initialBalance` | `int` | Saldo saat dompet dibuat, dalam sen. Boleh nol, boleh negatif. |
 | `currentBalance` | `int` | Saldo tercatat saat ini, dalam sen. Disimpan demi kecepatan, lihat catatan di bawah. |
 | `isActive` | `bool` | Dompet tidak aktif tidak muncul di pemilih, tapi transaksinya tetap ada. |

@@ -181,10 +181,16 @@ berjalan, dan pemasangan aset ikon mengandaikan seluruh layar yang
 memakainya sudah ada lewat lapisan `AppIcon` yang dipasang di Fase 2.
 
 **Selesai kalau:** anggaran baru bisa dibuat dari template tanpa menyunting
-templatenya, dan seluruh layar memakai aset ikon final alih-alih ikon
-Material sementara — atau, kalau asetnya belum tiba, keputusan soal
-identitas ikon ditinjau ulang sebagaimana disebut di
-[ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md).
+templatenya, dan seluruh layar memakai aset ikon final dari
+`docs/stitch_pixel_finance_tracker/` alih-alih ikon Material sementara.
+
+> **Catatan (17 September 2026):** Aset ikon sudah tiba di repositori jauh
+> lebih awal dari perkiraan — sebelum Fase 1 pun dimulai, bukan menjelang
+> Fase 7. Urutan fase di sini tidak diubah karena mengintegrasikannya lebih
+> awal berarti menulis widget `AppHardCard`/`AppSegmentedProgressBar` (lihat
+> [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md))
+> sebelum satu pun layar domain ada untuk mengujinya. Tapi ini keputusan yang
+> layak ditinjau ulang pemilik, bukan diasumsikan tetap di Fase 7 selamanya.
 
 ## Ketergantungan antar fase
 

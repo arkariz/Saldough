@@ -81,6 +81,7 @@ docs/
 │   ├── ROADMAP.md
 │   ├── TASK_LIST.md
 │   └── UI_UX_DESIGN_TASKS.md
+├── stitch_pixel_finance_tracker/  # rujukan visual dari pemilik — lihat ADR-015
 └── 99-archive/                 # rekaman Saldough 1.0, dibekukan
     ├── README.md
     ├── ROADMAP-1.0.md
@@ -106,8 +107,9 @@ docs/
 | [0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) | Konvensi pengujian: `mocktail` dan `bloc_test` | Accepted (revisi) |
 | [0011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) | Model domain inti: dompet, transaksi, dan anggaran | Accepted |
 | [0012](02-architecture/adr/0012-tata-letak-penyimpanan-buku-besar.md) | Tata letak penyimpanan buku besar transaksi | Accepted |
-| [0013](02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md) | Bahasa visual v2 dan sistem ikon | Accepted |
+| [0013](02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md) | Bahasa visual v2 dan sistem ikon | Superseded by ADR-015 |
 | [0014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) | Strategi pivot ke Saldough 2.0 | Accepted |
+| [0015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) | Adopsi bahasa visual dari paket desain pemilik | Accepted |
 
 ## Pertanyaan yang sering muncul
 
@@ -123,7 +125,8 @@ docs/
 | Mengapa membuat anggaran tidak mengubah saldo dompet? | [Model domain](02-architecture/DOMAIN_MODEL.md) dan [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) |
 | Mengapa fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) belum dihapus? | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
 | Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
-| Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md) |
+| Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
+| Kenapa ada bayangan keras beroffset di tiap kartu? | [ADR-015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |
 
 ## Konvensi penulisan

@@ -77,11 +77,10 @@ Keadaan repositori sebelum pivot adalah commit `13c7939`, yang selamanya jadi
 leluhur `main`. Tidak ada folder `lib/legacy/`.
 
 > **Catatan (17 September 2026):** Tag `pre-pivot-1.0` dibuat menunjuk commit
-> itu, tetapi gagal di-push — relay git lingkungan pengerjaan hanya mengizinkan
-> pembaruan `refs/heads/*`. Jalur pemulihan yang mengikat karena itu adalah
-> **commit SHA**, bukan nama tagnya. Lihat
-> [indeks arsip](../../99-archive/README.md) untuk cara membuat tagnya dari
-> mesin pemilik kalau diinginkan.
+> itu, tetapi gagal di-push dari lingkungan agen — relay gitnya hanya
+> mengizinkan pembaruan `refs/heads/*`. Pemilik mem-push tagnya sendiri dari
+> mesinnya, dan tag sudah terkonfirmasi ada di remote menunjuk `13c7939`. Lihat
+> [indeks arsip](../../99-archive/README.md).
 
 ### Satu branch dan satu PR per fase
 

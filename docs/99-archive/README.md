@@ -42,15 +42,10 @@ git checkout 13c7939
 ```
 
 Commit `13c7939` adalah keadaan repositori tepat sebelum pivot dimulai, dan ia
-selamanya jadi leluhur `main`. Tag `pre-pivot-1.0` yang menunjuk ke commit yang
-sama dibuat di mesin tempat pivot dikerjakan, tetapi **belum ada di remote**:
-relay git lingkungan itu hanya mengizinkan pembaruan `refs/heads/*`, bukan
-`refs/tags/*`. Kalau tag itu diinginkan di remote, buat dari mesin pemilik:
-
-```
-git tag -a pre-pivot-1.0 13c7939 -m "Saldough 1.0 sebelum pivot"
-git push origin pre-pivot-1.0
-```
+selamanya jadi leluhur `main`. Tag `pre-pivot-1.0` menunjuk ke commit yang
+sama dan **sudah ada di remote** — dibuat di mesin tempat pivot dikerjakan,
+lalu di-push dari mesin pemilik setelah relay git lingkungan agen menolaknya
+(relay itu hanya mengizinkan pembaruan `refs/heads/*`, bukan `refs/tags/*`).
 
 Alasan memilih riwayat git dicatat di
 [ADR-014](../02-architecture/adr/0014-strategi-pivot-saldough-2.md).

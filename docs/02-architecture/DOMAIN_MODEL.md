@@ -145,6 +145,14 @@ total uang pemilik, hanya tempatnya.
 |---|---|---|
 | `fromWalletId` | `String` | Dompet yang berkurang. |
 | `toWalletId` | `String` | Dompet yang bertambah. Harus berbeda dari `fromWalletId`. |
+| `budgetItemId` | `String?` | Pos anggaran yang ditambahi angka terpakainya, untuk pos yang memang berupa rencana pemindahan dana. Null berarti transfer di luar anggaran mana pun. |
+
+Transfer bisa ditautkan ke pos anggaran karena sebagian rencana pengeluaran
+memang berbentuk pemindahan, bukan belanja. Anggaran `Tabungan` dari dompet
+`BCA` dipenuhi dengan mentransfer ke dompet `Tabungan`, bukan dengan
+mengeluarkan uang. Yang menentukan apakah transfer itu terhitung adalah
+`fromWalletId` — uang keluar dari dompet anggaran — bukan `walletId` seperti
+pada pengeluaran.
 
 Transfer tidak pernah dihitung sebagai pemasukan maupun pengeluaran di ringkasan
 mana pun. Kalau ia ikut dihitung, satu pemindahan Rp1.000.000 dari BCA ke GoPay
@@ -165,6 +173,7 @@ pernah mengubah saldo dompet mana pun.
 | `startDate` | `DateTime` | Awal berlakunya periode. |
 | `plannedAmount` | `int` | Nominal rencana dalam sen. |
 | `items` | `List<BudgetItem>` | Pos-pos di dalamnya. Boleh kosong. |
+| `isArchived` | `bool` | Anggaran yang diarsipkan tidak muncul di daftar aktif, tetapi transaksi yang tertaut padanya tetap ada dan tetap terhitung di riwayat. |
 
 Beberapa anggaran boleh aktif sekaligus, boleh berbagi satu dompet, dan boleh
 berbeda periode. Tidak ada kewajiban menutup satu anggaran sebelum membuat yang
@@ -194,6 +203,9 @@ item.plannedAmount = quantity × unitPrice          bila keduanya terisi
 item.spent         = Σ expense.amount
                      dengan expense.budgetItemId = item.id
                      dan    expense.walletId     = budget.walletId
+                   + Σ transfer.amount
+                     dengan transfer.budgetItemId = item.id
+                     dan    transfer.fromWalletId = budget.walletId
 item.remaining     = item.plannedAmount − item.spent
 item.progress      = item.spent ÷ item.plannedAmount
 
@@ -207,6 +219,18 @@ berulang empat kali dalam sebulan ditambah subtotal bulanan Rp762.100,
 menghasilkan rencana Rp3.068.500. Di model 2.0 angka itu bukan lagi hasil rumus
 pengali minggu, melainkan jumlah `plannedAmount` seluruh pos di dalam satu
 anggaran bulanan.
+
+Status anggaran dihitung dari `isArchived` dan periodenya, bukan disimpan:
+
+```
+aktif    : bukan isArchived, dan periodenya belum lewat
+selesai  : bukan isArchived, dan periodenya sudah lewat
+nonaktif : isArchived
+```
+
+Ketiganya adalah penyaring di layar Anggaran. Hanya `nonaktif` yang butuh
+penanda tersimpan; dua lainnya turunan dari tanggal, sehingga sebuah anggaran
+berpindah dari `aktif` ke `selesai` sendirinya tanpa ada yang menuliskannya.
 
 Status pos dihitung dari `spent` dan `plannedAmount`:
 
@@ -304,9 +328,8 @@ tampil    = Rp2.615.438
 
 Saat pembayaran dicatat diterima, ia membuat **tepat satu**
 `IncomeTransaction` sebesar `netPay` ke dompet tujuan, menyimpan id transaksi
-itu di `incomeTransactionId`, dan berubah status jadi `paid`. `incomeTransactionId`
-yang sudah terisi adalah penjaga supaya pembayaran yang sama tidak bisa dicatat
-dua kali.
+itu di `incomeTransactionId`, dan berubah status jadi `paid`. Field itu, begitu
+terisi, jadi penjaga supaya pembayaran yang sama tidak bisa dicatat dua kali.
 
 ## Invarian
 
@@ -330,9 +353,15 @@ sendiri.
    bukan tanda nominalnya.
 8. **Transfer butuh dua dompet berbeda.** `fromWalletId` tidak boleh sama dengan
    `toWalletId`.
-9. **Pengeluaran hanya menambah `spent` anggaran yang sedompet.** Pengeluaran
-   dari dompet lain tidak terhitung, meski tertaut ke pos anggaran itu.
-10. **Saldo boleh negatif.** Ini keadaan nyata, bukan kondisi kesalahan, dan
+9. **Transaksi hanya menambah `spent` anggaran yang sedompet.** Pengeluaran
+   dicocokkan lewat `walletId`, transfer lewat `fromWalletId`. Transaksi dari
+   dompet lain tidak terhitung, meski tertaut ke pos anggaran itu.
+10. **Satu transaksi menaikkan paling banyak satu pos anggaran.** Baik
+    pengeluaran maupun transfer hanya punya satu `budgetItemId`, sehingga satu
+    peristiwa tidak pernah terhitung di dua anggaran sekaligus.
+11. **Transfer yang tertaut pos anggaran tetap tidak mengubah total saldo.**
+    Menautkannya ke anggaran hanya memengaruhi angka rencana, bukan uangnya.
+12. **Saldo boleh negatif.** Ini keadaan nyata, bukan kondisi kesalahan, dan
     tidak boleh menolak penyimpanan.
 
 ## Nilai terkonfirmasi

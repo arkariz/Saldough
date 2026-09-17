@@ -245,8 +245,10 @@ sejenis.
       ditutup lebih dulu.
 - [ ] Mengizinkan beberapa anggaran berbagi satu dompet.
 - [ ] Mengizinkan anggaran berbeda punya periode berbeda.
+- [ ] Mengarsipkan dan mengaktifkan kembali anggaran tanpa menghapus transaksi
+      yang sudah tertaut padanya.
 - [ ] **Tidak mengubah saldo dompet mana pun saat anggaran dibuat, disunting,
-      atau dihapus.**
+      diarsipkan, atau dihapus.**
 
 **FR-BUD-002 — Mengelola pos anggaran**
 
@@ -257,23 +259,34 @@ sejenis.
 - [ ] Menampilkan selisih antara jumlah nominal seluruh pos dan nominal rencana
       anggaran.
 
-**FR-BUD-003 — Menautkan pengeluaran ke pos anggaran**
+**FR-BUD-003 — Menautkan transaksi ke pos anggaran**
 
 - [ ] Menautkan satu pengeluaran ke paling banyak satu pos anggaran.
+- [ ] Menautkan satu transfer ke paling banyak satu pos anggaran, untuk pos yang
+      memang berupa rencana pemindahan dana seperti setoran tabungan.
 - [ ] Menghitung `spent` sebuah pos dari transaksi yang tertaut padanya, bukan
       dari nilai yang disimpan.
-- [ ] Hanya menghitung pengeluaran yang dompetnya sama dengan dompet anggaran.
+- [ ] Hanya menghitung pengeluaran yang `walletId`-nya sama dengan dompet
+      anggaran, dan transfer yang `fromWalletId`-nya sama dengan dompet
+      anggaran.
+- [ ] Memastikan satu transaksi menaikkan paling banyak satu pos anggaran,
+      supaya tidak terhitung ganda.
 - [ ] Memperbarui progres seketika saat transaksi dicatat, disunting, atau
       dihapus.
 
-**FR-BUD-004 — Menampilkan progres dan status**
+**FR-BUD-004 — Menampilkan daftar anggaran beserta progresnya**
 
-- [ ] Menampilkan nominal rencana, terpakai, dan sisa untuk tiap anggaran dan
-      tiap pos.
+- [ ] Menampilkan ringkasan lintas seluruh anggaran aktif di puncak layar:
+      total rencana, total terpakai, dan total sisa.
+- [ ] **Menampilkan daftar seluruh anggaran, bukan papan satu anggaran.**
+- [ ] Menampilkan pada tiap kartu anggaran: nama, dompet, periode, nominal
+      rencana, terpakai, sisa, progres, dan status.
+- [ ] Menampilkan nominal rencana, terpakai, dan sisa untuk tiap pos di dalam
+      sebuah anggaran.
 - [ ] Menampilkan status tiap pos: belum terpakai, terpakai sebagian, selesai,
       atau lewat anggaran.
-- [ ] Menampilkan pos yang lewat anggaran dengan warna `overBudget`, bukan
-      sebagai kesalahan.
+- [ ] Menampilkan anggaran maupun pos yang lewat anggaran dengan warna
+      `overBudget`, bukan sebagai kesalahan.
 
 **FR-BUD-005 — Template anggaran**
 
@@ -283,6 +296,14 @@ sejenis.
 - [ ] Memperlakukan anggaran hasil template sebagai anggaran mandiri yang
       perubahannya tidak memengaruhi templatenya.
 - [ ] Tidak mengubah saldo dompet mana pun saat template dibuat atau disunting.
+
+**FR-BUD-006 — Menyaring daftar anggaran**
+
+- [ ] Menyaring anggaran berdasarkan status: semua, aktif, selesai, atau
+      nonaktif.
+- [ ] Menyaring anggaran berdasarkan dompet.
+- [ ] Menjaga penyaringnya tetap sederhana — daftar dan pilihan, bukan
+      antarmuka akuntansi.
 
 ### 7.5 Freelance
 
@@ -315,12 +336,16 @@ sejenis.
 - [ ] Menyatakan dengan jelas bahwa ini pencatatan pembayaran, bukan pembayaran
       yang dijalankan aplikasi.
 
-**FR-FRL-005 — Ringkasan freelance**
+**FR-FRL-005 — Ikhtisar Freelance**
 
-- [ ] Menampilkan total yang sudah diperoleh tetapi belum dibayar.
-- [ ] Menampilkan daftar pembayaran beserta statusnya.
-- [ ] Dicapai dari Beranda dan dari alur CATAT pemasukan, bukan dari navigasi
-      bawah.
+- [ ] Menyediakan satu layar Ikhtisar Freelance dengan dua tab: Worklog sebagai
+      tab bawaan, dan Pembayaran.
+- [ ] Menampilkan total jam kerja, nominal yang diperoleh, yang sudah dibayar,
+      dan yang belum dibayar.
+- [ ] Menampilkan daftar pembayaran beserta status dan tanggalnya.
+- [ ] **Dicapai dari dua titik masuk yang keduanya mendarat di layar yang
+      sama:** ringkasan di Beranda, dan CATAT → Catat Pemasukan → Freelance.
+- [ ] Bukan tujuan navigasi bawah.
 
 ### 7.6 Beranda
 
@@ -333,13 +358,18 @@ sejenis.
 
 **FR-HOME-002 — Ringkasan anggaran**
 
-- [ ] Menampilkan total nominal rencana dan total terpakai seluruh anggaran
-      aktif.
+- [ ] Menampilkan total nominal rencana, total terpakai, dan total sisa seluruh
+      anggaran aktif.
 - [ ] Menyediakan jalan ke layar Anggaran.
 
 **FR-HOME-003 — Ringkasan freelance**
 
-- [ ] Menampilkan total penghasilan freelance yang belum dibayar.
+- [ ] Menampilkan total jam kerja, nominal yang diperoleh, yang sudah dibayar,
+      dan yang belum dibayar.
+- [ ] Menampilkan tanggal pembayaran terdekat yang belum diterima.
+- [ ] Menyediakan satu jalan ke Ikhtisar Freelance.
+- [ ] **Tidak menampilkan entri worklog satu per satu.** Beranda memuat
+      ringkasan, bukan daftar kerja.
 - [ ] Menyembunyikan ringkasan ini sepenuhnya kalau tidak ada pembayaran yang
       tertunda.
 

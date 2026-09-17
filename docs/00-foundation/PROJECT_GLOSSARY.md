@@ -45,7 +45,7 @@ terjadi padanya.
 | Transaksi | `Transaction` | Satu peristiwa keuangan yang benar-benar terjadi. Punya tanggal. Tiga jenis di bawah ini. |
 | Pemasukan | `IncomeTransaction` | Menambah saldo satu dompet. |
 | Pengeluaran | `ExpenseTransaction` | Mengurangi saldo satu dompet. Boleh ditautkan ke satu pos anggaran. |
-| Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. |
+| Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. Boleh ditautkan ke satu pos anggaran, untuk pos yang berupa rencana pemindahan seperti setoran tabungan. |
 | Kategori | `categoryKey` | Label pengelompokan transaksi, misalnya `makan` atau `transport`. |
 | Catat | `record` | Satu-satunya titik masuk pembuatan transaksi manual. Lihat bagian berikutnya. |
 
@@ -76,18 +76,28 @@ bukan pemesanan uang.
 | Pos anggaran | `BudgetItem` | Satu baris di dalam anggaran, misalnya `Belanja` atau `Listrik`. |
 | Nominal rencana | `plannedAmount` | Berapa yang direncanakan, baik di tingkat anggaran maupun pos. |
 | Jumlah dan harga satuan | `quantity`, `unitPrice` | Rincian opsional sebuah pos, untuk pos yang berupa daftar belanja. |
-| Terpakai | `spent` | Jumlah pengeluaran yang tertaut. Dihitung dari transaksi, tidak pernah disimpan. |
+| Terpakai | `spent` | Jumlah transaksi yang tertaut, baik pengeluaran maupun transfer. Dihitung dari transaksi, tidak pernah disimpan. |
 | Sisa anggaran | `remaining` | Nominal rencana dikurangi terpakai. Boleh negatif. |
 | Progres | `progress` | Terpakai dibagi nominal rencana. |
-| Belum terpakai | `BudgetItemStatus.planned` | Belum ada pengeluaran yang tertaut. |
-| Terpakai sebagian | `BudgetItemStatus.partiallySpent` | Sudah ada pengeluaran, masih di bawah rencana. |
+| Belum terpakai | `BudgetItemStatus.planned` | Belum ada transaksi yang tertaut. |
+| Terpakai sebagian | `BudgetItemStatus.partiallySpent` | Sudah ada transaksi tertaut, masih di bawah rencana. |
 | Selesai | `BudgetItemStatus.completed` | Terpakai sama dengan nominal rencana. |
 | Lewat anggaran | `BudgetItemStatus.overspent` | Terpakai melebihi nominal rencana. |
 | Periode | `BudgetPeriod` | Rentang berlakunya anggaran: `weekly` atau `monthly`. |
 | Template anggaran | `BudgetTemplate` | Definisi yang bisa dipakai ulang untuk membuat anggaran baru. Bukan anggaran aktif. |
+| Anggaran aktif | status turunan | Belum diarsipkan dan periodenya belum lewat. |
+| Anggaran selesai | status turunan | Belum diarsipkan tetapi periodenya sudah lewat. |
+| Anggaran nonaktif | `isArchived` | Diarsipkan pemilik. Transaksi yang tertaut padanya tetap ada. |
 
-Sebuah anggaran terikat pada **satu** dompet, dan hanya pengeluaran dari dompet
-itu yang menambah `spent`. Konsekuensinya dicatat terbuka sebagai risiko di
+Perhatikan bahwa **Selesai** dipakai dua kali dengan cakupan berbeda: sebagai
+status sebuah **pos** ia berarti terpakai sama dengan rencana, sementara sebagai
+status sebuah **anggaran** ia berarti periodenya sudah lewat. Di antarmuka,
+status anggaran selalu ditulis lengkap — "Anggaran selesai" — supaya tidak
+tertukar.
+
+Sebuah anggaran terikat pada **satu** dompet, dan hanya transaksi yang keluar
+dari dompet itu yang menambah `spent` — pengeluaran dicocokkan lewat `walletId`,
+transfer lewat `fromWalletId`. Konsekuensinya dicatat terbuka sebagai risiko di
 [ADR-011](../02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md).
 
 ## Freelance
@@ -101,6 +111,7 @@ tentu sudah diterima. Ini domain pendukung, bukan inti.
 | Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja. |
 | Worklog | `WorklogEntry` | Satu entri kerja: tanggal dan jumlah jam. |
 | Diperoleh | `earnedAmount` | Jam dikali tarif. Pekerjaan yang sudah selesai, **belum tentu diterima**. |
+| Ikhtisar Freelance | `FreelanceRouteKeys.overview` | Satu layar berisi dua tab, Worklog dan Pembayaran, tujuan dari kedua titik masuk freelance. |
 | Pembayaran freelance | `FreelancePayment` | Kumpulan worklog yang ditagihkan sebagai satu pembayaran. |
 | Belum dibayar | `PaymentStatus.pending` | Pembayaran belum diterima. Tidak menyentuh saldo dompet. |
 | Sudah dibayar | `PaymentStatus.paid` | Pembayaran sudah dicatat diterima, dan sudah menghasilkan satu `IncomeTransaction`. |

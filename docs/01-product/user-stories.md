@@ -158,7 +158,40 @@ masih masuk anggaran.
 - Pos yang lewat anggaran ditandai jelas, bukan diperlakukan sebagai kesalahan.
 - Memenuhi FR-BUD-003 dan FR-BUD-004.
 
-**US-13 — Tidak menyusun ulang anggaran yang sama tiap bulan**
+**US-13 — Menganggarkan setoran tabungan, bukan cuma belanja**
+
+Sebagai pemilik, saya ingin membuat anggaran untuk uang yang saya sisihkan ke
+tabungan, supaya rencana menabung saya terlihat dan terlacak sama seperti
+rencana belanja.
+
+- Anggaran `Tabungan` dari dompet BCA saya penuhi dengan mentransfer ke dompet
+  Tabungan, bukan dengan mengeluarkan uang.
+- Transfer itu menambah angka terpakai pos anggarannya, tetapi tidak mengubah
+  total uang saya.
+- Satu transfer hanya terhitung di satu anggaran, meski dompet tujuannya juga
+  punya anggaran sendiri.
+- Memenuhi FR-BUD-003 dan FR-TXN-003.
+
+Cerita ini lahir dari kebiasaan nyata pemilik membagi sisa bulanan ke enam pos
+tabungan. Di Saldough 1.0 itu fitur tersendiri; di 2.0 ia cuma transfer yang
+ditautkan ke pos anggaran.
+
+**US-14 — Menemukan anggaran yang saya cari di antara banyak anggaran**
+
+Sebagai pemilik, saya ingin melihat ringkasan seluruh anggaran sekaligus lalu
+menyaringnya, supaya punya beberapa anggaran aktif tidak membuat layarnya jadi
+sulit dibaca.
+
+- Puncak layar menampilkan total rencana, total terpakai, dan total sisa dari
+  seluruh anggaran aktif.
+- Tiap kartu menampilkan nama, dompet, periode, rencana, terpakai, sisa,
+  progres, dan status — dompetnya terbaca tanpa membuka anggarannya.
+- Saya bisa menyaring berdasarkan status dan berdasarkan dompet.
+- Anggaran yang sudah tidak saya pakai bisa saya arsipkan tanpa menghapus
+  transaksinya.
+- Memenuhi FR-BUD-004, FR-BUD-006, dan FR-BUD-001.
+
+**US-15 — Tidak menyusun ulang anggaran yang sama tiap bulan**
 
 Sebagai pemilik, saya ingin menyimpan susunan anggaran yang berulang sebagai
 template, supaya bulan berikutnya saya tinggal memakainya lagi.
@@ -170,7 +203,7 @@ template, supaya bulan berikutnya saya tinggal memakainya lagi.
 
 ## Epik 4: Penghasilan freelance
 
-**US-14 — Mencatat jam kerja tanpa menganggapnya sudah cair**
+**US-16 — Mencatat jam kerja tanpa menganggapnya sudah cair**
 
 Sebagai pemilik, saya ingin mencatat jam kerja freelance saya dan melihat berapa
 yang sudah saya peroleh, tanpa angka itu masuk ke saldo dompet saya, supaya saya
@@ -181,7 +214,7 @@ tidak merasa punya uang yang sebenarnya belum diterima.
 - Saldo dompet saya tidak berubah sama sekali.
 - Memenuhi FR-FRL-002.
 
-**US-15 — Menagih beberapa hari kerja sebagai satu pembayaran**
+**US-17 — Menagih beberapa hari kerja sebagai satu pembayaran**
 
 Sebagai pemilik, saya ingin menggabungkan beberapa hari kerja jadi satu
 pembayaran beserta potongannya, supaya saya tahu berapa bersih yang akan saya
@@ -195,7 +228,7 @@ terima dan kapan.
 Periode tagihan nyata pemilik pernah membentang dari delapan hari sampai hampir
 sebulan, misalnya 29 Oktober sampai 26 November 2025.
 
-**US-16 — Mencatat pembayaran yang akhirnya cair**
+**US-18 — Mencatat pembayaran yang akhirnya cair**
 
 Sebagai pemilik, saya ingin mencatat bahwa sebuah pembayaran freelance sudah
 saya terima beserta dompet tujuannya, supaya saldo saya naik tepat sekali dan
@@ -206,7 +239,7 @@ statusnya berubah jadi sudah dibayar.
 - Layarnya menyatakan ini pencatatan, bukan aplikasi yang membayarkan.
 - Memenuhi FR-FRL-004 dan NFR-UX-005.
 
-**US-17 — Melihat berapa yang masih menggantung**
+**US-19 — Melihat berapa yang masih menggantung**
 
 Sebagai pemilik, saya ingin melihat total penghasilan freelance yang sudah saya
 kerjakan tetapi belum dibayar, supaya saya tahu berapa yang masih ditunggu.
@@ -217,7 +250,7 @@ kerjakan tetapi belum dibayar, supaya saya tahu berapa yang masih ditunggu.
 
 ## Epik 5: Gambaran sehari-hari
 
-**US-18 — Membaca posisi bulan ini sekali lihat**
+**US-20 — Membaca posisi bulan ini sekali lihat**
 
 Sebagai pemilik, saya ingin satu layar yang menjawab berapa uang saya, berapa
 yang masuk dan keluar bulan ini, dan bagaimana anggaran saya berjalan, supaya
@@ -238,9 +271,9 @@ baru rencana.
 |---|---|---|
 | 1 | US-02, US-05, US-04, US-06 | Tanpa dompet dan transaksi, tidak ada satu pun angka yang bisa ditampilkan |
 | 2 | US-01, US-03, US-07, US-08 | Membaca dan membetulkan apa yang sudah dicatat |
-| 3 | US-09 sampai US-13 | Anggaran butuh transaksi lebih dulu supaya progresnya punya isi |
-| 4 | US-14 sampai US-17 | Freelance adalah domain pendukung, bukan inti |
-| 5 | US-18 | Beranda baru bermakna setelah semua di atas menghasilkan data |
+| 3 | US-09 sampai US-15 | Anggaran butuh transaksi lebih dulu supaya progresnya punya isi |
+| 4 | US-16 sampai US-19 | Freelance adalah domain pendukung, bukan inti |
+| 5 | US-20 | Beranda baru bermakna setelah semua di atas menghasilkan data |
 
 ## Langkah berikutnya
 

@@ -29,11 +29,11 @@ Terakhir diperbarui: 17 September 2026.
 | 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 10 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
-| 4 — Anggaran | 8 | 0 | Belum dimulai |
+| 4 — Anggaran | 9 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 5 | 0 | Belum dimulai |
 | 7 — Template dan poles | 6 | 0 | Belum dimulai |
-| **Total MVP** | **69** | **13** | |
+| **Total MVP** | **70** | **13** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -107,6 +107,9 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       `TransferTransaction`, beserta antarmuka `TransactionRepository`.
       ⚠ Nominal selalu positif; arah uang ditentukan jenis transaksinya. Dan
       `fromWalletId` tidak boleh sama dengan `toWalletId`.
+      ⚠ `ExpenseTransaction` **dan** `TransferTransaction` sama-sama punya
+      `budgetItemId`. Transfer bisa memenuhi pos anggaran berupa rencana
+      pemindahan, misalnya setoran tabungan.
       Memenuhi FR-TXN-001, FR-TXN-002, dan FR-TXN-003.
 - [ ] **T-1.4** Buat `shared/transaction/data/`: `TransactionModel` dan
       `TransactionRepositoryImpl` dengan **partisi per bulan** — kunci
@@ -276,24 +279,38 @@ tanpa menyelesaikan apa pun.
 
 - [ ] **T-4.1** Buat `features/budget/domain/`: `Budget`, `BudgetItem`,
       `BudgetPeriod`, dan `BudgetItemStatus`.
-      ⚠ `Budget.walletId` wajib terisi, dan ikatan itu menyaring pengeluaran
-      mana yang terhitung.
+      ⚠ `Budget.walletId` wajib terisi, dan ikatan itu menyaring transaksi mana
+      yang terhitung.
+      ⚠ `Budget.isArchived` adalah satu-satunya bagian siklus hidup yang
+      disimpan. Status `aktif` dan `selesai` turunan dari periodenya.
       Memenuhi FR-BUD-001 dan FR-BUD-002.
 - [ ] **T-4.2** Buat use case `CalculateBudgetProgress` — Dart murni,
-      menghasilkan `spent`, `remaining`, `progress`, dan status tiap pos.
+      menghasilkan `spent`, `remaining`, `progress`, status tiap pos, dan status
+      anggaran.
+      ⚠ `spent` menjumlahkan **dua** jenis transaksi: pengeluaran yang
+      `walletId`-nya cocok, dan transfer yang `fromWalletId`-nya cocok.
+      Melewatkan salah satunya membuat angka anggaran salah tanpa gejala.
       ⚠ Tidak satu pun nilai itu disimpan. Semuanya dihitung ulang saat
       diakses.
       Memenuhi FR-BUD-004.
 - [ ] **T-4.3** Buat `features/budget/data/`: `BudgetModel` dan repositorinya
       di atas kunci `budget/all`.
       Memenuhi FR-BUD-001 dan NFR-REL-003.
-- [ ] **T-4.4** Tambahkan pemilih pos anggaran di formulir pengeluaran CATAT.
-      ⚠ Pemilih hanya menawarkan pos yang dompet anggarannya sama dengan dompet
-      asal pengeluaran.
-      Memenuhi FR-BUD-003 dan FR-TXN-002.
-- [ ] **T-4.5** Buat layar Anggaran: daftar anggaran aktif beserta progresnya.
-      ⚠ Beberapa anggaran boleh aktif sekaligus, berbagi dompet, dan berbeda
+- [ ] **T-4.4** Tambahkan pemilih pos anggaran di formulir pengeluaran **dan**
+      formulir transfer CATAT.
+      ⚠ Di formulir pengeluaran, pemilih menyaring terhadap `walletId`; di
+      formulir transfer, terhadap `fromWalletId`.
+      ⚠ Satu transaksi hanya boleh menaikkan satu pos. Jangan menawarkan tautan
+      ke anggaran dompet tujuan juga — itu hitung ganda.
+      Memenuhi FR-BUD-003, FR-TXN-002, dan FR-TXN-003.
+- [ ] **T-4.5** Buat layar Anggaran: ringkasan lintas anggaran di puncak (total
+      rencana, terpakai, sisa), lalu daftar kartu anggaran.
+      ⚠ **Layar ini daftar seluruh anggaran, bukan papan satu anggaran.**
+      Beberapa anggaran boleh aktif sekaligus, berbagi dompet, dan berbeda
       periode. Jangan membuat objek anggaran bulanan global.
+      ⚠ Tiap kartu wajib memuat delapan hal: nama, dompet, periode, nominal
+      rencana, terpakai, sisa, progres, dan status. Nama dompet harus terbaca
+      tanpa membuka anggarannya.
       Memenuhi FR-BUD-001 dan FR-BUD-004.
 - [ ] **T-4.6** Buat layar sunting anggaran beserta posnya, termasuk jumlah dan
       harga satuan opsional.
@@ -303,9 +320,19 @@ tanpa menyelesaikan apa pun.
 - [ ] **T-4.7** Tulis uji: membuat anggaran tidak mengubah saldo dompet mana
       pun; pengeluaran dari dompet lain tidak menambah `spent`; status pos
       benar di keempat kondisinya.
+      ⚠ Wajib juga: transfer yang tertaut pos menambah `spent` pos itu; transfer
+      yang `fromWalletId`-nya bukan dompet anggaran **tidak** menambah; dan
+      transfer yang tertaut anggaran tetap tidak mengubah total saldo.
       Memenuhi NFR-ACC-002.
 - [ ] **T-4.8** Tambahkan namespace i18n `budget` dan daftarkan `BudgetScope`.
       Memenuhi NFR-UX-004.
+- [ ] **T-4.9** Tambahkan pengarsipan anggaran dan penyaring daftar: status
+      (semua, aktif, selesai, nonaktif) dan dompet.
+      ⚠ Mengarsipkan tidak menghapus transaksi yang sudah tertaut, dan tidak
+      mengubah saldo dompet mana pun.
+      ⚠ Jaga penyaringnya tetap sederhana — daftar dan pilihan, bukan antarmuka
+      akuntansi.
+      Memenuhi FR-BUD-001 dan FR-BUD-006.
 
 ## Fase 5: Freelance
 
@@ -335,8 +362,10 @@ tanpa menyelesaikan apa pun.
       pembayaran yang sama tidak bisa dicatat dua kali. Status dan id transaksi
       berubah dalam satu operasi, tidak pernah terpisah.
       Memenuhi FR-FRL-004 dan NFR-UX-005.
-- [ ] **T-5.6** Buat ringkasan freelance beserta titik masuknya dari Beranda dan
-      dari CATAT pemasukan.
+- [ ] **T-5.6** Buat layar **Ikhtisar Freelance** dengan dua tab — Worklog
+      sebagai tab bawaan, dan Pembayaran — beserta kedua titik masuknya.
+      ⚠ Kedua titik masuk mendarat di layar yang **sama**: ringkasan di Beranda,
+      dan CATAT → Catat Pemasukan → Freelance.
       ⚠ Freelance bukan tujuan navigasi bawah.
       Memenuhi FR-FRL-005.
 - [ ] **T-5.7** Tulis uji: worklog tidak mengubah saldo; pembayaran yang dicatat
@@ -358,10 +387,14 @@ seluruh fitur di atasnya menghasilkan data.
       ikut dihitung, satu pemindahan Rp1.000.000 akan tampil sebagai pemasukan
       sekaligus pengeluaran — dua angka yang sama-sama salah.
       Memenuhi FR-HOME-001.
-- [ ] **T-6.2** Tampilkan ringkasan anggaran beserta jalan ke layar Anggaran.
+- [ ] **T-6.2** Tampilkan ringkasan anggaran — total rencana, terpakai, dan
+      sisa — beserta jalan ke layar Anggaran.
       Memenuhi FR-HOME-002.
-- [ ] **T-6.3** Tampilkan ringkasan freelance, dan sembunyikan sepenuhnya kalau
-      tidak ada pembayaran yang tertunda.
+- [ ] **T-6.3** Tampilkan ringkasan freelance: total jam, diperoleh, sudah
+      dibayar, belum dibayar, dan tanggal pembayaran terdekat yang belum
+      diterima. Sembunyikan sepenuhnya kalau tidak ada pembayaran tertunda.
+      ⚠ **Jangan menampilkan entri worklog satu per satu di Beranda.** Beranda
+      memuat ringkasan; daftar kerjanya ada di Ikhtisar Freelance.
       Memenuhi FR-HOME-003.
 - [ ] **T-6.4** Tampilkan transaksi terbaru beserta jalan ke layar Transaksi.
       Memenuhi FR-HOME-004.
@@ -407,14 +440,15 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-WAL-004 | T-2.8 |
 | FR-TXN-001 | T-1.3, T-2.4 |
 | FR-TXN-002 | T-1.3, T-2.4, T-4.4 |
-| FR-TXN-003 | T-1.3, T-2.4 |
+| FR-TXN-003 | T-1.3, T-2.4, T-4.4 |
 | FR-TXN-004 | T-1.4, T-2.5 |
 | FR-TXN-005 | T-1.4, T-2.6 |
 | FR-REC-001 | T-2.3, T-2.4 |
 | FR-REC-002 | T-2.8 |
-| FR-BUD-001 | T-4.1, T-4.3, T-4.5 |
+| FR-BUD-001 | T-4.1, T-4.3, T-4.5, T-4.9 |
 | FR-BUD-002 | T-4.1, T-4.6 |
 | FR-BUD-003 | T-4.4 |
+| FR-BUD-006 | T-4.9 |
 | FR-BUD-004 | T-4.2, T-4.5 |
 | FR-BUD-005 | T-7.1, T-7.2, T-7.3 |
 | FR-FRL-001 | T-5.1 |

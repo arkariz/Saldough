@@ -3,7 +3,7 @@
 ## 1. Metadata
 
 - **Decision ID:** ADR-011
-- **Tanggal:** 2026-09-17
+- **Tanggal:** 2026-09-17, diperluas 2026-09-17
 - **Fase roadmap:** Fase 0
 - **Status:** Accepted
 - **Cakupan:** Global
@@ -62,10 +62,29 @@ Rp5.000.000. Saldo hanya berubah kalau ada transaksi yang dicatat.
 
 ### Satu anggaran terikat satu dompet, dan ikatan itu menyaring
 
-`Budget.walletId` wajib terisi. Hanya pengeluaran yang `walletId`-nya sama
-dengan `Budget.walletId` yang menambah `spent`. Pengeluaran dari dompet lain
-tidak terhitung meski ditautkan ke pos anggaran itu, dan pemilih pos di
-antarmuka hanya menawarkan pos yang dompetnya cocok.
+`Budget.walletId` wajib terisi. Hanya transaksi yang keluar dari dompet itu yang
+menambah `spent`: pengeluaran dicocokkan lewat `walletId`, transfer lewat
+`fromWalletId`. Transaksi dari dompet lain tidak terhitung meski ditautkan ke pos
+anggaran itu, dan pemilih pos di antarmuka hanya menawarkan pos yang dompetnya
+cocok.
+
+> **Catatan perluasan (17 September 2026):** Versi pertama ADR ini hanya
+> mengizinkan **pengeluaran** ditautkan ke pos anggaran; `TransferTransaction`
+> tidak punya `budgetItemId` sama sekali. Itu **keliru**, dan sekarang
+> diperluas. Sebagian rencana pengeluaran memang berbentuk pemindahan, bukan
+> belanja: anggaran `Tabungan` dari dompet `BCA` dipenuhi dengan mentransfer ke
+> dompet `Tabungan`. Tanpa tautan itu, anggaran semacam itu tidak bisa berjalan
+> sama sekali — dan itu persis kebiasaan nyata pemilik, yang dulu membagi sisa
+> bulanan ke enam pos tabungan. Dua aturan menyertai perluasan ini: transfer
+> dicocokkan lewat `fromWalletId` (bukan `walletId`), dan satu transaksi tetap
+> hanya boleh menaikkan **satu** pos anggaran supaya tidak terhitung ganda saat
+> dompet tujuannya juga punya anggaran.
+>
+> Perluasan kedua di tanggal yang sama: `Budget` mendapat `isArchived`. Versi
+> pertama tidak punya siklus hidup anggaran sama sekali, sehingga penyaring
+> "aktif / selesai / nonaktif" yang diminta produk tidak bisa diimplementasikan.
+> Hanya `nonaktif` yang butuh penanda tersimpan; `aktif` dan `selesai` turunan
+> dari periodenya, mengikuti prinsip bahwa yang bisa dihitung tidak disimpan.
 
 ### Beberapa anggaran aktif sekaligus
 
@@ -214,9 +233,12 @@ supaya bisa ditinjau setelah dipakai sebulan.
 - Nominal transaksi selalu positif. Arah uang ditentukan jenis transaksinya,
   bukan tanda nominalnya.
 - `fromWalletId` dan `toWalletId` pada transfer harus berbeda.
-- Setiap perhitungan `spent` wajib menyaring `expense.walletId` terhadap
-  `budget.walletId`. Melewatkan penyaring itu membuat angka anggaran salah tanpa
-  gejala yang kelihatan.
+- Setiap perhitungan `spent` wajib menyaring dompetnya: `expense.walletId` dan
+  `transfer.fromWalletId`, keduanya terhadap `budget.walletId`. Melewatkan
+  penyaring itu membuat angka anggaran salah tanpa gejala yang kelihatan.
+- Satu transaksi hanya boleh punya satu `budgetItemId`. Jangan menambahkan
+  tautan kedua "supaya transfer bisa terhitung di anggaran asal dan tujuan" —
+  itu menghasilkan hitung ganda.
 - Potongan persentase selalu dihitung dari gaji kotor, tidak pernah dari nilai
   berjalan setelah potongan sebelumnya.
 - `FreelancePayment` yang `status = paid` wajib punya `incomeTransactionId`.
@@ -248,8 +270,11 @@ Keputusan ini ditinjau ulang kalau salah satu terjadi:
   perlu jalan pintas, misalnya transaksi berulang.
 - Kartu kredit dimasukkan ke cakupan. Aturan tagihan dan pembayarannya perlu
   ADR sendiri.
-- Muncul kebutuhan satu pengeluaran ditautkan ke lebih dari satu pos anggaran.
+- Muncul kebutuhan satu transaksi ditautkan ke lebih dari satu pos anggaran.
   Model saat ini sengaja membatasinya jadi paling banyak satu.
+- Pemilik mendapati anggaran yang berisi campuran pos belanja dan pos setoran
+  terasa membingungkan dibaca. Kalau itu terjadi, pemisahan jenis pos perlu
+  dipertimbangkan.
 
 ## 9. Artefak terkait
 

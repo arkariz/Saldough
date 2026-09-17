@@ -46,11 +46,11 @@ Terakhir diperbarui: 17 September 2026.
 | Fase | Tugas desain | Selesai | Status |
 |---|---|---|---|
 | 2 — Layar inti | 5 | 0 | Belum dimulai |
-| 4 — Anggaran | 2 | 0 | Belum dimulai |
-| 5 — Freelance | 2 | 0 | Belum dimulai |
+| 4 — Anggaran | 3 | 0 | Belum dimulai |
+| 5 — Freelance | 3 | 0 | Belum dimulai |
 | 6 — Beranda | 1 | 0 | Belum dimulai |
 | 7 — Template dan poles | 1 | 0 | Belum dimulai |
-| **Total** | **11** | **0** | |
+| **Total** | **13** | **0** | |
 
 ## Fase 2: Layar inti
 
@@ -96,33 +96,61 @@ ulang kanvasnya.
 
 ## Fase 4: Anggaran
 
-- [ ] **D-4.1** Layar Anggaran: daftar anggaran aktif beserta progresnya,
-      dan status tiap pos anggaran (belum terpakai, terpakai sebagian,
-      selesai, lewat anggaran).
-      Memenuhi FR-BUD-001 dan FR-BUD-004.
-- [ ] **D-4.2** Layar sunting anggaran dan pos anggaran, termasuk jumlah
-      dan harga satuan opsional untuk pos berupa daftar belanja.
-      Memenuhi FR-BUD-002.
+- [ ] **D-4.1** Layar Anggaran: ringkasan lintas anggaran di puncak (total
+      rencana, terpakai, sisa), lalu daftar kartu anggaran, lalu penyaring
+      status dan dompet.
+      ⚠ **Ini layar daftar, bukan papan satu anggaran.** Rancang untuk
+      beberapa anggaran aktif sekaligus yang berbagi dompet dan berbeda
+      periode.
+      ⚠ Tiap kartu wajib memuat delapan hal: nama, dompet, periode, nominal
+      rencana, terpakai, sisa, progres, dan status. Nama dompet harus terbaca
+      tanpa membuka anggarannya.
+      Memenuhi FR-BUD-001, FR-BUD-004, dan FR-BUD-006.
+- [ ] **D-4.2** Layar rincian satu anggaran: pos-posnya beserta status
+      masing-masing (belum terpakai, terpakai sebagian, selesai, lewat
+      anggaran), dan aksi kontekstual "Catat Pengeluaran" atau "Catat
+      Transfer" pada tiap pos.
+      ⚠ Aksi kontekstual membuka CATAT dengan field terisi, bukan formulir
+      pencatatan tersendiri.
+      Memenuhi FR-BUD-003, FR-BUD-004, dan FR-REC-002.
+- [ ] **D-4.3** Layar sunting anggaran dan pos anggaran, termasuk jumlah
+      dan harga satuan opsional untuk pos berupa daftar belanja, serta aksi
+      arsipkan dan aktifkan kembali.
+      Memenuhi FR-BUD-001 dan FR-BUD-002.
 
 ## Fase 5: Freelance
 
-- [ ] **D-5.1** Layar proyek freelance dan worklog: kelola proyek beserta
-      tarif per jam, dan catat entri kerja harian.
+- [ ] **D-5.1** Layar **Ikhtisar Freelance**: ringkasan di puncak (total jam,
+      diperoleh, sudah dibayar, belum dibayar) lalu dua tab — Worklog sebagai
+      tab bawaan, dan Pembayaran.
+      ⚠ Ini **satu** layar, dan kedua titik masuk mendarat di sini: ringkasan
+      Beranda, dan CATAT → Catat Pemasukan → Freelance.
+      ⚠ Freelance bukan tujuan navigasi bawah, jadi layar ini tidak punya tab
+      di bilah navigasi.
+      Memenuhi FR-FRL-005.
+- [ ] **D-5.2** Tab Worklog beserta pengelolaan proyek: tarif per jam, aturan
+      potongan, dan pencatatan entri kerja harian.
       ⚠ Layar ini tidak pernah menampilkan perubahan saldo dompet — kerja
       selesai bukan uang diterima.
       Memenuhi FR-FRL-001 dan FR-FRL-002.
-- [ ] **D-5.2** Layar pengelompokan worklog jadi pembayaran, pencatatan
-      pembayaran diterima, dan ringkasan freelance.
+- [ ] **D-5.3** Tab Pembayaran: pengelompokan worklog jadi pembayaran dengan
+      rincian gaji kotor, potongan, dan gaji bersih, serta pencatatan
+      pembayaran diterima.
       ⚠ Kosakata pencatatan pembayaran diterima menyatakan pencatatan,
       bukan pembayaran yang dijalankan aplikasi.
-      Memenuhi FR-FRL-003, FR-FRL-004, dan FR-FRL-005.
+      Memenuhi FR-FRL-003 dan FR-FRL-004.
 
 ## Fase 6: Beranda
 
-- [ ] **D-6.1** Layar Beranda: total saldo dan arus bulan berjalan,
-      ringkasan anggaran, ringkasan freelance yang disembunyikan
-      sepenuhnya kalau tidak ada pembayaran tertunda, dan transaksi
+- [ ] **D-6.1** Layar Beranda: total saldo dan arus bulan berjalan, ringkasan
+      anggaran (rencana, terpakai, sisa), ringkasan freelance, dan transaksi
       terbaru.
+      ⚠ Kartu freelance memuat total jam, diperoleh, sudah dibayar, belum
+      dibayar, dan tanggal pembayaran terdekat — lalu satu jalan ke Ikhtisar
+      Freelance. Ia disembunyikan sepenuhnya kalau tidak ada pembayaran
+      tertunda.
+      ⚠ **Jangan menaruh daftar worklog di Beranda.** Beranda memuat
+      ringkasan, bukan daftar kerja.
       Memenuhi FR-HOME-001, FR-HOME-002, FR-HOME-003, dan FR-HOME-004.
 
 ## Fase 7: Template dan poles

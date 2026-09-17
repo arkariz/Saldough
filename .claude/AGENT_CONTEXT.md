@@ -1,182 +1,193 @@
 # Konteks agent Saldough
 
-**Baca dokumen ini lebih dulu sebelum menyentuh kode apa pun.**
-
-Dokumen ini memuat aturan arsitektur yang mengikat. Alasannya ada di
-[ADR](../docs/02-architecture/adr/); di sini hanya aturannya.
+Berkas ini memuat aturan yang mengikat penulisan kode Saldough. Baca sebelum
+menyentuh `lib/`, bukan sesudah.
 
 ## Bacaan wajib sebelum menulis kode
 
 | Urutan | Dokumen | Mengapa |
 |---|---|---|
 | 1 | [ARCHITECTURE_OVERVIEW.md](../docs/02-architecture/ARCHITECTURE_OVERVIEW.md) | Lapisan, struktur folder, pemetaan paket |
-| 2 | [DOMAIN_MODEL.md](../docs/02-architecture/DOMAIN_MODEL.md) | Entitas, rumus, dan aturan representasi uang |
-| 3 | [TASK_LIST.md](../docs/04-planning/TASK_LIST.md) | Tugas yang sedang dikerjakan |
+| 2 | [DOMAIN_MODEL.md](../docs/02-architecture/DOMAIN_MODEL.md) | Entitas, rumus, invarian, dan aturan representasi uang |
+| 3 | [TASK_LIST.md](../docs/04-planning/TASK_LIST.md) | Tugas yang sedang dikerjakan beserta jebakannya |
 
 ## Empat jebakan terbesar
 
-Referensi arsitektur Saldough adalah `arkariz/flutter-architecture-studi-bank`
-(branch `refactor/platform-migration`, folder `lib/v2`) — bukan
-`new-health-duel` (yang kini hanya acuan pola teknis theming Flutter, bukan
-acuan visual — lihat ADR-0006) dan bukan
-`flutter-architecture-studi` tanpa `-bank` (tidak dipakai sama sekali, `lib/v2`
-di situ tidak ada, `lib/app` yang ada memakai Riverpod).
+Empat hal ini yang paling sering salah, dan tiga di antaranya gagal **tanpa
+gejala yang kelihatan**.
 
-| Jebakan | Kesalahan yang mudah terjadi | Yang benar untuk Saldough |
-|---|---|---|
-| Kesalahan | Menyalin asumsi versi dokumen lama: `throw Failure` + `on Failure catch` | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard`. Lihat [ADR-0005](../docs/02-architecture/adr/0005-either-failure-convention.md) |
-| Bagian legacy repo acuan | Menyalin `ArchitectureBride*`, seam `Get.find()`/`Get.put()`, `getx_nav_effect_handler` | Saldough greenfield: `main()` → `runApp()` langsung, tanpa jembatan apa pun. Itu khusus migrasi GetX mereka |
-| Design system repo acuan | Menyalin atau mencoba mengakses `mobile_dsl` (privat, tak bisa diakses) | Pola teknis theming dari `new-health-duel`, palet/tipografi (gaya komik/meme) orisinal Saldough ([ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md)) |
-| Ejaan | Meniru typo `fondation`, `architecture_bride` dari repo acuan | Saldough pakai ejaan baku: `foundation/` |
-
-Struktur folder memakai tiga zona `core/`/`shared/<module>/`/`features/<feature>/`,
-bukan feature-first murni — lihat
-[ADR-0009](../docs/02-architecture/adr/0009-core-shared-features-zone-layout.md).
+1. **Menyentuh fitur lama selama Fase 1 dan 2.** Repositori memuat dua model
+   domain sekaligus sampai cutover di Fase 3. Fitur baru ditulis sebagai folder
+   baru; `lib/features/{cycle,card,investment,grocery,income}` dan
+   `lib/shared/goal` tidak disentuh sama sekali. Dibuktikan tiap PR dengan
+   `git diff --stat`.
+2. **Menyimpan nilai turunan.** `spent`, `remaining`, `progress`, status pos,
+   gaji kotor, gaji bersih, dan total saldo semuanya dihitung ulang saat
+   diakses. Satu-satunya pengecualian adalah `Wallet.currentBalance`, dan
+   pengecualian itu hanya sah kalau `recomputeWalletBalances()` beserta ujinya
+   ada.
+3. **Stub repository yang statis di uji bloc.** `Bloc` tidak memancarkan state
+   yang sama dengan state sebelumnya. Kalau stub `listX()` selalu mengembalikan
+   data yang sama, pemuatan ulang setelah penyimpanan akan tampak seperti bloc
+   tidak memancarkan apa pun — dan galatnya berbunyi "expected 1 state, got 0",
+   bukan menunjuk ke stubnya. Buat stub mencerminkan hasil penulisan terakhir.
+4. **Menghapus slot warna atau namespace i18n lama terlalu dini.** Layar lama
+   masih memakainya sampai Fase 3. Menghapusnya di Fase 1 atau 2 membuat
+   `flutter analyze` merah tanpa memajukan apa pun. Fase 1 dan 2 hanya
+   **menambah**; penghapusan dikerjakan di T-3.5 dan T-3.6.
 
 ## Aturan yang mengikat
 
 ### Lapisan dan zona
 
-- Lapisan `domain` **tidak boleh** mengimpor Flutter, Hive, atau
-  `api_storage`. Dart murni saja.
-- Lapisan `presentation` **tidak boleh** mengimpor lapisan `data`. Keduanya
-  bertemu di `domain` lewat antarmuka repository.
-- `core/` **tidak pernah** berisi entitas bisnis — hanya infra tanpa makna
-  domain (DI, navigasi, effect handler, tema, pemformat, `RepositoryGuard`).
-- `shared/<module>/` diimpor hanya lewat barrel-nya (`<module>.dart`), tidak
-  pernah lewat jalur berkas di dalamnya. Disusun module-first
-  (`domain/`+`data/`), **tanpa `presentation/`** kecuali dicatat eksplisit
-  sebagai pengecualian di ADR.
-- Impor antar fitur hanya lewat `<fitur>_route_keys.dart`. Jangan pernah
-  mengimpor berkas halaman fitur lain.
-- Seluruh impor memakai `package:saldough/...`. Impor relatif hanya boleh di
-  berkas barrel dan direktif `part`.
+- Tiga zona tidak tumpang tindih: `core/` (infra, tanpa makna bisnis),
+  `shared/<modul>/` (dipakai ≥2 fitur, module-first, tanpa `presentation/`),
+  `features/<fitur>/`.
+- `domain/` tidak mengimpor apa pun — tanpa Flutter, tanpa Hive, tanpa paket
+  infrastruktur.
+- `presentation/` tidak pernah mengimpor `data/` secara langsung.
+- `domain/` dan `data/` sebuah fitur privat; fitur lain hanya boleh mengimpor
+  `<fitur>_route_keys.dart`.
+- Penulisan lintas fitur lewat port kecil milik fitur konsumen, dikawat di
+  `RootModule` — bukan lewat promosi ke `shared/`.
+- `Wallet` dan `Transaction` tinggal di `shared/` karena dibaca lebih dari dua
+  fitur. Presentation-nya tetap di `features/`.
 
 ### Uang
 
-- Nominal bertipe `int` dalam satuan **sen**, yaitu seperseratus rupiah.
-- **Jangan pernah** memakai `double` untuk uang.
-- Persentase dihitung sebagai `nilai * persen ~/ 100` pada satuan sen.
-- Pembulatan ke rupiah memakai setengah ke atas, dan **hanya** di lapisan
-  presentasi.
-
-Alasannya konkret: pajak 2,5% menghasilkan pecahan setengah rupiah. Membulatkan
-terlalu dini membuat gaji bersih meleset satu rupiah dari catatan pemilik.
-`3.117.500` dikurangi pajak menghasilkan `3.039.563`, bukan `3.039.562`.
+- Selalu `int` satuan sen. Tidak pernah `double`.
+- Pembulatan hanya saat menampilkan, setengah ke atas, aritmetika bilangan bulat
+  murni. Jangan memakai `~/` untuk pembulatan tampilan — ia memotong ke arah nol
+  dan salah untuk nilai negatif.
+- Potongan persentase disimpan **per mil**, bukan per seratus. Pajak 2,5%
+  ditulis `25`.
+- Potongan persentase selalu dihitung dari gaji kotor, tidak pernah dari nilai
+  berjalan setelah potongan sebelumnya.
 
 ### Kesalahan
 
-- Repository dan use case mengembalikan `Future<Either<Failure, T>>`, **bukan**
-  `Future<T>` polos dan **bukan** melempar `Failure`.
-- Implementasi repository memakai `with RepositoryGuard` dan memanggil
-  `guard()`/`guardVoid()` — jangan menulis `try`/`catch` manual.
-- Bloc membongkar hasilnya dengan `switch` pada `Left`/`Right`, bukan
-  `on Failure catch`.
-- Impor `Either`/`left`/`right`/`unit` dari `package:dependencies`, bukan
-  langsung dari `package:fpdart`.
-- Pesan untuk pengguna diambil dari `failure.userMessage`, tidak pernah dari
-  `failure.message`.
-- Lihat [ADR-0005](../docs/02-architecture/adr/0005-either-failure-convention.md)
-  untuk contoh lengkap `RepositoryGuard` dan alasan kebalikan keputusan ini.
+- Repository mengembalikan `Future<Either<Failure, T>>` lewat mixin
+  `RepositoryGuard`. Tidak pernah melempar.
+- Bloc membongkarnya dengan `switch (result) { case Left(...) ... case
+  Right(...) ... }`.
+- `Failure` tidak memperluas `Exception` maupun `Error`, jadi melemparnya
+  melanggar lint `only_throw_errors`.
 
 ### State
 
-- State fitur memperluas `UiState<T>`.
-- `effect` **tidak pernah** masuk `props`.
-- Efek fitur ditulis sebagai `extension` di berkas `part`.
-- Penangan efek didaftarkan sekali sebelum `runApp`.
-- Navigasi yang dipicu logika dikirim sebagai efek, bukan dipanggil dari widget.
-- `keyId` pada efek navigasi selalu diambil dari konstanta kunci rute, tidak
-  pernah string harfiah.
+- State memperluas `UiState<T>`. `effect` tidak pernah masuk `props`.
+- Efek dibangun di berkas `part` sebagai `extension` privat.
+- Efek sekali jalan lewat `UiEffect` dan `EffectListener`. Transisi state yang
+  perlu direaksikan UI dipantau `BlocListener`, bukan dijadikan efek.
+
+### Penyimpanan
+
+- Satu dokumen JSON per kunci, tiap dokumen membawa `schemaVersion`.
+- Transaksi dipartisi per bulan: `transaction/YYYY-MM`, dengan indeks
+  `transaction/_index`. Bulan tujuan ditentukan `transaction.date`, bukan
+  `DateTime.now()`.
+- Urutan penulisan mengikat: dokumen transaksi lebih dulu, dokumen dompet
+  menyusul. Transaksi adalah kebenaran, saldo adalah cache-nya.
 
 ### Tampilan
 
-- Warna selalu lewat `context.appColors` atau `Theme.of(context).colorScheme`.
-- Jarak, sudut, durasi, dan elevasi selalu lewat token. Tidak pernah harfiah.
-- Teks antarmuka selalu lewat slang. Tidak pernah harfiah.
-- Nominal ditampilkan lewat `AppMoneyText`.
-- Kartu memakai garis tepi tebal dan bayangan keras offset di KEDUA mode,
-  bukan bayangan lembut Material dan bukan batas rambut di mode gelap. Ini
-  motif yang disengaja, lihat [ADR-0006](../docs/02-architecture/adr/0006-design-token-semantic-color-mapping.md).
+- Warna lewat `context.appColors`, tidak pernah hex literal di berkas widget.
+- Ikon lewat `AppIcon(IconKey.xxx)`. `Icons.*` hanya boleh muncul di berkas peta
+  ikon.
+- Nominal uang selalu lewat `AppMoneyText`.
+- Kosakata menyatakan pencatatan, bukan tindakan keuangan.
 
 ### Penamaan
 
-- Kelas `PascalCase`, variabel `camelCase`, berkas `snake_case`.
-- Anggota privat diawali garis bawah.
-- Nama entitas tidak disingkat. Tulis `CardStatement`, bukan `CardStmt`.
-- Nama slot warna semantik: `income`, `expense`, `overBudget`, `investment`,
-  `rollUp`, `needsReview`. Jangan memakai `opponent` atau `gold`.
+- Kelas `PascalCase`, variabel dan fungsi `camelCase`, berkas `snake_case`,
+  anggota privat diawali garis bawah.
+- Nama entitas domain tidak disingkat.
+- Nama dompet dan kategori disimpan sebagai data, bukan enum. Jenis transaksi
+  justru `sealed`, karena menambah jenis mengubah aturan perhitungan saldo.
 
 ## Yang TIDAK boleh dilakukan
 
 - Memakai Riverpod, Provider, atau GetX.
 - Memakai `freezed`. Monorepo internal tidak memakainya di mana pun.
-- Membuat fake tulis tangan (`_FakeXyz implements Interface`) untuk mock
-  repository/use case — pakai `mocktail` (`MockXyz extends Mock implements
-  Interface`) dan `bloc_test` untuk bloc. Lihat
+- Membuat fake tulis tangan (`_FakeXyz implements Interface`) — pakai `mocktail`
+  dan `bloc_test`. Lihat
   [ADR-0010](../docs/02-architecture/adr/0010-mocktail-bloc-test-convention.md).
-  Ini keputusan yang menyimpang dari repo acuan arsitektur, atas permintaan
-  eksplisit pemilik.
-- Menyalin `ArchitectureBride*`, seam `Get.find()`, atau `mobile_dsl` dari
-  repo acuan arsitektur — itu spesifik migrasi legacy mereka.
+- Menyalin `ArchitectureBride*`, seam `Get.find()`, atau `mobile_dsl` dari repo
+  acuan arsitektur.
 - Mengimpor Flutter di lapisan domain.
 - Meletakkan entitas bisnis di `core/`.
 - Memakai `double` untuk nominal uang.
-- Menyunting nominal baris roll-up secara langsung.
-- Menyalin nominal baris roll-up saat rollover.
-- Menulis `GoalLoan` dengan label bebas — `fromGoalId`/`toGoalId` harus
-  merujuk `Goal` yang sudah terdaftar.
+- Menyimpan `spent`, `remaining`, `progress`, atau status pos sebagai field.
+- Membuat entitas "ringkasan bulanan". Ringkasan adalah hasil query.
+- Membuat transaksi penyeimbang untuk membetulkan catatan yang salah. Sunting
+  atau hapus transaksinya, lalu hitung ulang saldo.
+- Memperlakukan `initialBalance` sebagai transaksi pemasukan.
+- Membuat formulir pencatatan transaksi di luar alur CATAT.
+- Menghitung transfer sebagai pemasukan atau pengeluaran.
+- Menambah saldo dompet dari worklog. Hanya pencatatan pembayaran diterima yang
+  boleh.
+- Menghidupkan kembali mekanisme roll-up, rollover, atau `needsReview` dari
+  Saldough 1.0.
+- Membuat folder `lib/legacy/` atau sejenisnya.
 - Mengubah branch `main` di repositori manapun.
 - Melanjutkan pekerjaan saat terhambat. Berhenti dan laporkan.
 
 ## Yang WAJIB dilakukan
 
 - Ikuti **kode** paket internal, bukan README-nya. Beberapa README diketahui
-  tidak sinkron dengan kodenya. Contoh: `NavigateGoEffect` menerima `keyId` dan
-  `input`, bukan `route`; `AppBlocObserver` bukan `const`; `HiveKeyValueStorage`
-  dibuat lewat `initialize(boxName:)` dan `HiveStorageInitializer` sudah tidak
-  ada.
-- Tulis uji unit untuk setiap rumus domain, memakai angka nyata dari spreadsheet
-  sebagai kasus uji.
+  tidak sinkron. Contoh: `NavigateGoEffect` menerima `keyId` dan `input`, bukan
+  `route`; `AppBlocObserver` bukan `const`; `HiveKeyValueStorage` dibuat lewat
+  `initialize(boxName:)`.
+- Tulis uji unit untuk setiap rumus domain, memakai angka nyata sebagai kasus
+  uji.
+- Jalankan `flutter analyze` dan `flutter test` sebelum tiap PR, dan pastikan
+  keduanya bersih.
 - Perbarui kotak centang di `TASK_LIST.md` setelah menyelesaikan tugas.
 - Centang hanya kalau benar-benar selesai dan terverifikasi. Pekerjaan sebagian
-  tetap kosong disertai catatan.
+  tetap kosong disertai catatan `⚠ Sebagian`.
 
-## Nilai seed yang sudah terkonfirmasi (jangan tanya ulang)
+## Nilai yang sudah terkonfirmasi (jangan tanya ulang)
 
-Empat hal ini sudah dijawab pemilik pada 10 September 2026 — jangan tanya
-ulang, langsung pakai nilainya sebagai data seed (bukan konstanta kode):
+| Nilai | Angka |
+|---|---|
+| Tarif freelance per jam | Rp72.500 |
+| Potongan pajak freelance | 2,5%, ditulis `25` per mil |
+| Ikatan anggaran ke dompet | Wajib, dan menyaring pengeluaran mana yang terhitung |
+| Data historis Saldough 1.0 | Tidak diimpor sama sekali; aplikasi mulai dari saldo awal |
+| Aksen utama | `#3B3A8F` terang, `#8B8AF5` gelap |
 
-| Nilai | Field | Seed |
-|---|---|---|
-| Tarif per jam `Gaji Menul` | `IncomeSource.hourlyRate` | Rp72.500 |
-| Tanggal cetak tagihan kartu | `CreditCard.statementDayOfMonth` | 15 |
-| Saldo awal tiap pos tujuan | `Goal.openingBalance` | 0 |
-| Daftar pos untuk `GoalLoan` | `fromGoalId`/`toGoalId` | Pos resmi terdaftar saja, daftar terbuka (bukan label bebas) |
+Nilai berikut **belum ada** dan harus diisi pemilik, bukan dikarang: daftar
+dompet beserta saldo awalnya, dan daftar kategori transaksi.
 
 ## Kapan harus berhenti dan bertanya
 
 Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
 
-- `flutter pub get` gagal karena `resolution: workspace` pada paket internal.
-  Ini gerbang Fase 0 dan sudah punya jalur pemulihan tertulis di
-  [ADR-0001](../docs/02-architecture/adr/0001-internal-package-dependency-strategy.md).
-- Hasil hitung berbeda dari spreadsheet. Cari akarnya di aturan pembulatan lebih
-  dulu, dan jangan mengubah rumusnya sampai penyebabnya jelas.
-- Menemukan konvensi di repo acuan yang belum terdokumentasi di ADR manapun
-  dan berdampak signifikan pada kode yang sedang ditulis.
+- `flutter pub get` gagal menyelesaikan paket internal. Jalur pemulihannya ada
+  di [ADR-0001](../docs/02-architecture/adr/0001-internal-package-dependency-strategy.md).
+- Saldo tersimpan tidak cocok dengan saldo yang dihitung ulang. Cari akarnya di
+  urutan penulisan lebih dulu, dan jangan menambal dengan menulis ulang saldo.
+- Sebuah uji lama gagal selama Fase 1 atau 2. Itu bukti fitur baru menyentuh
+  sesuatu yang seharusnya tidak — jangan menyunting uji lamanya.
+- Aset ikon pixel-art dibutuhkan tetapi belum tersedia. Pakai isian sementara di
+  peta `AppIcon`, jangan merancang sistem ikon sendiri.
+- Muncul kebutuhan yang tidak disebut PRD 2.0. Pakai implementasi paling
+  sederhana yang masuk akal, lalu laporkan sebagai keputusan terbuka.
 
 ## Kasus uji wajib
 
-Angka berikut sudah diverifikasi terhadap spreadsheet asli dan harus menjadi
-kasus uji. Kalau salah satu gagal, ada yang salah pada aturan aritmatika.
-
-| Rumus | Masukan | Keluaran |
+| Rumus | Masukan | Keluaran yang benar |
 |---|---|---|
-| `groceryRollUp` | 576.600 × 4 + 762.100 | 3.068.500 |
 | `netPay` | kotor 3.117.500, pajak 2,5% | 3.039.563 |
-| `netPay` | kotor 2.682.500, pajak 2,5% | 2.615.438 |
-| `remainder` | 15.839.563 − 13.382.490 | 2.457.073 |
-| `remainder` negatif | 8.900.000 − 10.237.042 | −1.337.042 |
-| `allocation` | 3.086.960 × 15% | 463.044 |
-| `allocation` | 3.086.960 × 55% | 1.697.828 |
+| `netPay` | kotor 2.682.500 (37 jam × 72.500), pajak 2,5% | 2.615.438 |
+| `currentBalance` | awal 5.000.000, masuk 2.615.438, keluar 3.068.500, transfer keluar 1.000.000 | 3.546.938 |
+| `totalBalance` setelah transfer | dompet A −1.000.000, dompet B +1.000.000 | tidak berubah |
+| `budget.spent` | pos 1.000.000 + 500.000 + 300.000 + 700.000 + 500.000 | 3.000.000 |
+| `item.status` | rencana 1.000.000, terpakai 1.200.000 | `overspent` |
+
+Dua uji berdiri di atas alasan yang berbeda dan keduanya wajib. `netPay`
+menjaga aritmetika integer sen — membulatkan pajak lebih dulu menghasilkan
+3.039.562, meleset satu rupiah. **Uji saldo tersimpan versus saldo turunan**
+menjaga keputusan [ADR-012](../docs/02-architecture/adr/0012-tata-letak-penyimpanan-buku-besar.md);
+tanpa uji itu, menyimpan `Wallet.currentBalance` tidak boleh dilakukan sama
+sekali.

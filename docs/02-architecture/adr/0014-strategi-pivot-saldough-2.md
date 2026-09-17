@@ -46,7 +46,8 @@ diperbaiki.
 
 Saldough 2.0 dibangun **di repositori yang sama**, sebagai **folder fitur baru
 di samping yang lama**, dan peralihannya terjadi dalam **satu kali cutover** di
-Fase 3. Kode lama dipulihkan lewat **tag git**, bukan lewat folder `legacy/`.
+Fase 3. Kode lama dipulihkan lewat **riwayat git**, bukan lewat folder
+`legacy/`.
 
 Yang mengikat:
 
@@ -70,10 +71,17 @@ menghapus `cycle`, `card`, `investment`, `grocery`, `income`, dan `shared/goal`,
 menukar shell, lalu membersihkan i18n, DI, dan registri rute. Penghapusannya
 `git rm`, yang tidak memerlukan pembacaan berkas sama sekali.
 
-### Pemulihan lewat tag, bukan folder
+### Pemulihan lewat riwayat git, bukan folder
 
-Kode 1.0 ditandai `pre-pivot-1.0` sebelum pekerjaan dimulai. Tidak ada folder
-`lib/legacy/`.
+Keadaan repositori sebelum pivot adalah commit `13c7939`, yang selamanya jadi
+leluhur `main`. Tidak ada folder `lib/legacy/`.
+
+> **Catatan (17 September 2026):** Tag `pre-pivot-1.0` dibuat menunjuk commit
+> itu, tetapi gagal di-push — relay git lingkungan pengerjaan hanya mengizinkan
+> pembaruan `refs/heads/*`. Jalur pemulihan yang mengikat karena itu adalah
+> **commit SHA**, bukan nama tagnya. Lihat
+> [indeks arsip](../../99-archive/README.md) untuk cara membuat tagnya dari
+> mesin pemilik kalau diinginkan.
 
 ### Satu branch dan satu PR per fase
 
@@ -195,7 +203,8 @@ keberadaannya harus disebut eksplisit — yang dikerjakan oleh
 
 ### Batasan yang harus dijaga
 
-- Tag `pre-pivot-1.0` dibuat sebelum berkas apa pun dihapus.
+- Commit terakhir sebelum penghapusan apa pun dicatat sebagai jalur pemulihan,
+  dan SHA-nya disebut eksplisit di indeks arsip.
 - Di Fase 1 dan 2, `RootModule` hanya ditambahi. Tidak ada baris lama yang
   diubah atau dihapus.
 - Fitur baru tidak mengimpor apa pun dari `lib/features/{cycle,card,investment,
@@ -241,7 +250,7 @@ keberadaannya harus disebut eksplisit — yang dikerjakan oleh
 
 ### Rujukan kode
 
-- Tag `pre-pivot-1.0` — keadaan repositori sebelum pivot.
+- Commit `13c7939` — keadaan repositori sebelum pivot.
 - `lib/core/di/src/root_module.dart` — satu-satunya berkas yang melihat lebih
   dari satu fitur.
 - `lib/core/presentation/shell/main_shell_page.dart` — shell yang ditukar saat

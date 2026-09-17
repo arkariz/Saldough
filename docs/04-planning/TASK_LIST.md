@@ -25,7 +25,7 @@ Terakhir diperbarui: 17 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
-| 0 — Dokumen Saldough 2.0 | 14 | 8 | Sedang dikerjakan |
+| 0 — Dokumen Saldough 2.0 | 14 | 7 | Sedang dikerjakan |
 | 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 10 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
@@ -33,7 +33,7 @@ Terakhir diperbarui: 17 September 2026.
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 5 | 0 | Belum dimulai |
 | 7 — Template dan poles | 6 | 0 | Belum dimulai |
-| **Total MVP** | **69** | **8** | |
+| **Total MVP** | **69** | **7** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -41,10 +41,13 @@ Tidak ada kode aplikasi di fase ini. Urutannya meniru urutan penulisan Saldough
 1.0: istilah dulu, lalu produk, lalu domain, lalu keputusan arsitektur, baru
 rencana kerja.
 
-- [x] **T-0.1** Buat tag git `pre-pivot-1.0`, pindahkan dokumen perencanaan 1.0
-      ke `docs/99-archive/`, dan tulis indeks arsipnya.
-      ⚠ Tag ini satu-satunya jalur pemulihan kode 1.0 setelah Fase 3. Ia harus
-      ada di remote, bukan cuma lokal.
+- [ ] **T-0.1** Tandai keadaan repositori sebelum pivot, pindahkan dokumen
+      perencanaan 1.0 ke `docs/99-archive/`, dan tulis indeks arsipnya.
+      ⚠ **Sebagian.** Arsip dan indeksnya selesai, tetapi tagnya gagal di-push:
+      relay git lingkungan ini hanya mengizinkan pembaruan `refs/heads/*`. Jalur
+      pemulihan yang berlaku karena itu adalah commit `13c7939`, yang sudah ada
+      di remote sebagai leluhur `main`. Perintah membuat tagnya dari mesin
+      pemilik dicatat di [indeks arsip](../99-archive/README.md).
 - [x] **T-0.2** Tulis ulang `PROJECT_GLOSSARY.md` dengan istilah baru, sekalian
       betulkan drift `Failure` yang usang sejak ADR-0005 dibalik.
 - [x] **T-0.3** Tulis `prd-saldough-2.0.md` mengikuti kerangka §1–§14 versi 1.0.

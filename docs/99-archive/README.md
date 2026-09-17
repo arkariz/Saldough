@@ -34,12 +34,23 @@ Dua dokumen 1.0 lain sengaja **tidak** dipindahkan ke sini:
 ## Memulihkan kode 1.0
 
 Kode fitur `cycle`, `card`, `investment`, `grocery`, dan `income` dihapus pada
-Fase 3 pivot. Pemulihannya lewat tag git, bukan lewat folder mati yang harus
+Fase 3 pivot. Pemulihannya lewat riwayat git, bukan lewat folder mati yang harus
 terus lolos `flutter analyze`:
 
 ```
-git checkout pre-pivot-1.0
+git checkout 13c7939
 ```
 
-Alasan memilih tag dicatat di
+Commit `13c7939` adalah keadaan repositori tepat sebelum pivot dimulai, dan ia
+selamanya jadi leluhur `main`. Tag `pre-pivot-1.0` yang menunjuk ke commit yang
+sama dibuat di mesin tempat pivot dikerjakan, tetapi **belum ada di remote**:
+relay git lingkungan itu hanya mengizinkan pembaruan `refs/heads/*`, bukan
+`refs/tags/*`. Kalau tag itu diinginkan di remote, buat dari mesin pemilik:
+
+```
+git tag -a pre-pivot-1.0 13c7939 -m "Saldough 1.0 sebelum pivot"
+git push origin pre-pivot-1.0
+```
+
+Alasan memilih riwayat git dicatat di
 [ADR-014](../02-architecture/adr/0014-strategi-pivot-saldough-2.md).

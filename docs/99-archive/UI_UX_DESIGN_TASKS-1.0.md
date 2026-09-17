@@ -3,7 +3,7 @@
 > **Arsip.** Dokumen ini milik Saldough 1.0, produk pengganti spreadsheet yang
 > berporos pada `MonthlyCycle`. Ia dibekukan pada 17 September 2026 saat produk
 > dialihkan ke model Dompet + Transaksi + Anggaran, dan tidak lagi diperbarui.
-> Kode yang dirujuknya bisa dipulihkan lewat tag git `pre-pivot-1.0`. Daftar
+> Kode yang dirujuknya bisa dipulihkan dari commit `13c7939`. Daftar
 > kerja yang berlaku sekarang ada di
 > [TASK_LIST.md](../04-planning/TASK_LIST.md).
 

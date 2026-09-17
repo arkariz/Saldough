@@ -5,8 +5,14 @@
 - **Decision ID:** ADR-013
 - **Tanggal:** 2026-09-17
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md)
 - **Cakupan:** Global
+
+> **Digantikan (17 September 2026):** Paket desain lengkap dari pemilik tiba
+> beberapa jam setelah ADR ini disetujui — 26 layar dan 67 ikon, dengan
+> palet, tipografi, dan sistem bayangan yang berbeda dari yang ditetapkan di
+> sini. Pemilik mengonfirmasi bahasa visual paket itu yang dipakai, bukan
+> yang ada di bawah ini. Lihat [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md).
 
 > **Catatan perluasan (17 September 2026):** Versi pertama ADR ini menetapkan
 > dua puluh dua kunci ikon dalam lima kelompok dan dua peran huruf. Setelah

@@ -169,8 +169,10 @@ Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
   urutan penulisan lebih dulu, dan jangan menambal dengan menulis ulang saldo.
 - Sebuah uji lama gagal selama Fase 1 atau 2. Itu bukti fitur baru menyentuh
   sesuatu yang seharusnya tidak — jangan menyunting uji lamanya.
-- Aset ikon pixel-art dibutuhkan tetapi belum tersedia. Pakai isian sementara di
-  peta `AppIcon`, jangan merancang sistem ikon sendiri.
+- `IconKey` butuh kunci yang belum ada padanan asetnya di
+  `docs/stitch_pixel_finance_tracker/icon_*/`. Pakai isian Material sementara,
+  jangan merancang ikon sendiri — lihat daftar padanan di
+  [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
 - Muncul kebutuhan yang tidak disebut PRD 2.0. Pakai implementasi paling
   sederhana yang masuk akal, lalu laporkan sebagai keputusan terbuka.
 

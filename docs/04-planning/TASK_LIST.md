@@ -176,8 +176,10 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       keenam varian `…OnLight`) **tidak** dihapus di fase ini — layar lama
       memakainya. Dihapus di T-3.5.
       ⚠ Nilai hex dan rasio kontrasnya sudah ditetapkan di
-      [ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md).
-      Jangan mengarang nilai baru.
+      [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
+      Jangan mengarang nilai baru. `overBudget` dan `transfer` masing-masing
+      berbagi hex dengan `expense` dan `textMuted` — itu disengaja, bukan
+      salah salin.
       Memenuhi NFR-UX-003.
 - [ ] **T-2.3** Buat `AppShellPage` di `lib/core/presentation/shell/` — lima
       tujuan dengan CATAT di tengah, `IndexedStack`, didaftarkan di rute
@@ -454,13 +456,18 @@ seluruh fitur di atasnya menghasilkan data.
       template tidak mengubah proyek yang sudah dibuat darinya.
       ⚠ Template tidak pernah menyentuh saldo dompet mana pun.
       Memenuhi FR-FRL-006.
-- [ ] **T-7.4** Masukkan aset ikon pixel-art dari pemilik ke peta `AppIcon`.
-      ⚠ Terhambat sampai asetnya tersedia. Kalau belum tiba saat fase ini
-      selesai, keputusan identitas ikon perlu diambil ulang — "sementara" yang
-      berlangsung selamanya bukan keputusan.
+- [ ] **T-7.4** Konversi 67 SVG dari `docs/stitch_pixel_finance_tracker/icon_*/
+      code.html` jadi aset Flutter di `assets/icons/`, lalu masukkan ke peta
+      `AppIcon` menggantikan isian Material — padanannya sudah ditetapkan di
+      [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
+      ⚠ Asetnya sudah tersedia di repositori sejak sebelum Fase 1 — bukan lagi
+      menunggu kiriman pemilik. Kunci yang belum punya padanan (`add`, `edit`,
+      `delete`, `chevronLeft`, `chevronRight`) tetap Material sampai ada.
       Memenuhi NFR-UX-002.
-- [ ] **T-7.5** Sesuaikan aksen terhadap aset kalau perlu, dan perbarui ADR-013
-      dengan hasilnya.
+- [ ] **T-7.5** Terapkan sistem elevasi bayangan keras (`AppHardCard`) dan
+      bilah progres tersegmentasi (`AppSegmentedProgressBar`) dari ADR-015 ke
+      seluruh kartu dan bilah progres yang sudah dibangun Fase 2–6, kalau
+      belum dikerjakan langsung di fase masing-masing.
 - [ ] **T-7.6** Poles: skeleton pemuatan pertama, keadaan kosong tiap layar, dan
       konfirmasi tiap tindakan merusak.
       ⚠ Pakai ulang `AppSkeleton` dan `showConfirmDelete` yang sudah ada.

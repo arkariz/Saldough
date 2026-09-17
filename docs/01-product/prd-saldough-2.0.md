@@ -670,18 +670,21 @@ Beranda | Anggaran | CATAT | Transaksi | Dompet
 ```
 
 Bahasa visualnya diuraikan di
-[ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md): dasar
-krem hangat, tinta gelap yang terbaca, satu aksen utama yang kuat, warna
-semantik terpisah untuk pemasukan, pengeluaran, dan peringatan, serta satu set
-ikon pixel-art yang dipakai konsisten. Yang dihindari: biru fintech generik,
-gradasi berlebihan, glassmorphism, dan nuansa perbankan korporat.
+[ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md): dasar
+perkamen hangat, tinta gelap yang terbaca, warna semantik terpisah untuk
+pemasukan, pengeluaran, dan peringatan, kartu bergaris tepi tegas dengan
+bayangan keras beroffset, dan satu set ikon pixel-art isometrik yang dipakai
+konsisten. Yang dihindari: biru fintech generik, gradasi berlebihan,
+glassmorphism, dan nuansa perbankan korporat — bayangan keras di sini
+disengaja, bukan pengecualian dari larangan itu.
 
-Identitasnya **pixel-art yang dipoles dengan nuansa voxel**, bukan retro
-nostalgia. Huruf bergaya pixel atau display dipakai **terbatas** — untuk merek
-dan penekanan visual saja, tidak pernah untuk angka maupun teks isi. Angka
-adalah isi utama hampir tiap layar, jadi keterbacaan angka diutamakan di atas
-gaya, dan seluruh nominal memakai pengelompokan ribuan dan tanda minus yang
-jelas.
+Identitasnya **pixel-art bergaya indie game modern**, bukan retro nostalgia
+murni. Judul dan angka besar memakai satu peran huruf tebal; teks isi memakai
+peran humanis yang mudah dibaca; nominal dan lencana status memakai huruf
+tabular supaya digit rata di kolom. Tidak ada huruf display pixel terpisah —
+identitas "pixel"-nya ada di ikon, bukan di tipografi. Angka adalah isi utama
+hampir tiap layar, jadi keterbacaan angka diutamakan di atas gaya, dan seluruh
+nominal memakai pengelompokan ribuan dan tanda minus yang jelas.
 
 Ikon memakai satu set pixel-art yang dipakai konsisten lewat lapisan `AppIcon`:
 satu konsep selalu memakai ikon yang sama di seluruh aplikasi, tidak ada ikon
@@ -738,12 +741,15 @@ maupun warnanya sekaligus — bukan warna saja.
   pengguna tanpa telemetri, sementara NFR-SEC-001 melarang panggilan jaringan
   sama sekali. Pilihannya: tetap tanpa telemetri dan menilai dari pemakaian
   pemilik sendiri, atau membatalkan NFR-SEC-001. Keputusan pemilik.
-- Apakah kategori transaksi dan kategori anggaran perlu ikonnya sendiri. Kalau
-  ya, jumlah dan daftarnya menentukan cakupan aset pixel-art yang harus
-  disiapkan — lihat
-  [ADR-013](../02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md).
-- Huruf display bergaya pixel untuk merek belum dipilih. Sampai ada, penekanan
-  visual memakai Archivo Black.
+- **Daftar kategori transaksi dan anggaran final.** Aset dari pemilik sudah
+  membawa 14 ikon kategori konkret (lihat
+  [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)),
+  jauh lebih kaya dari 4 kunci generik yang ada sekarang. Sinyal kuat, tapi
+  daftar final tetap keputusan produk tersendiri, belum diambil.
+- Apakah status pembayaran freelance perlu status ketiga, "lewat jatuh
+  tempo", selain "belum dibayar" dan "sudah dibayar" — aset membawa ikon
+  untuk itu (`icon_freelance_overdue_payment`) yang belum punya padanan di
+  `PaymentStatus`.
 
 ## 14. Lampiran
 

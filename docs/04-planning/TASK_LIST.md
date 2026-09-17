@@ -25,7 +25,7 @@ Terakhir diperbarui: 17 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
-| 0 — Dokumen Saldough 2.0 | 14 | 12 | Sedang dikerjakan |
+| 0 — Dokumen Saldough 2.0 | 14 | 13 | T-0.1 sebagian, lihat catatannya |
 | 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 10 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
@@ -33,7 +33,7 @@ Terakhir diperbarui: 17 September 2026.
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 5 | 0 | Belum dimulai |
 | 7 — Template dan poles | 6 | 0 | Belum dimulai |
-| **Total MVP** | **69** | **12** | |
+| **Total MVP** | **69** | **13** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -66,10 +66,14 @@ rencana kerja.
 - [x] **T-0.13** Tulis ulang `.claude/CLAUDE.md` dan `.claude/AGENT_CONTEXT.md`.
       ⚠ Kedua berkas ini disuntik ke konteks tiap sesi. Isi yang basi bukan
       cuma memboroskan, tapi menyesatkan agent berikutnya.
-- [ ] **T-0.14** Verifikasi seluruh tautan relatif `docs/` hidup, tidak ada ADR
+- [x] **T-0.14** Verifikasi seluruh tautan relatif `docs/` hidup, tidak ada ADR
       yang dirujuk tapi belum ada, lalu commit dan push.
-      ⚠ `flutter analyze` dan `flutter test` harus tetap sama persis dengan
-      sebelum fase ini, karena tidak ada kode yang disentuh.
+      Terverifikasi 17 September 2026: seluruh tautan relatif di `docs/` dan
+      `.claude/` resolve, tidak ada ADR yang dirujuk tapi belum ada, dan
+      `git diff --name-only 13c7939..HEAD -- lib test pubspec.yaml assets tool`
+      mengembalikan **nol berkas** — bukti lebih kuat daripada menjalankan
+      ulang `analyze`/`test`, karena tidak ada kode yang bisa berubah
+      hasilnya. `flutter analyze` tetap 0 isu.
 
 ## Fase 1: Domain inti — dompet dan transaksi
 

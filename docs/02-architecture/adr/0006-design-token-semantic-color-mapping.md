@@ -288,7 +288,7 @@ kepercayaan massal — dipakai satu orang yang memang menyukainya.
 ## 8b. Catatan revisi
 
 **11 September 2026 — varian `…OnLight` ditambahkan.** Review UX (skill
-`ux-review`, lihat [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)
+`ux-review`, lihat [UX_REVIEW_FIXES.md](../../99-archive/UX_REVIEW_FIXES-1.0.md)
 item UX-22) mengukur kontras WCAG seluruh slot semantik terhadap nilai hex di
 ADR ini, dan menemukan enam slot gagal ambang keterbacaan di mode terang saat
 dipakai sebagai teks atau ikon. Yang paling parah dua elemen terpenting di

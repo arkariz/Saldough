@@ -161,7 +161,7 @@ found!".
 
 ## Fase 1: Fondasi
 
-*Desain: [D-1.1](UI_UX_DESIGN_TASKS.md#fase-1-sistem-desain).*
+*Desain: [D-1.1](UI_UX_DESIGN_TASKS-1.0.md#fase-1-sistem-desain).*
 
 ### Tema dan token
 
@@ -299,7 +299,7 @@ found!".
 
 ## Fase 2: Siklus bulanan
 
-*Desain: [D-2.1 sampai D-2.4](UI_UX_DESIGN_TASKS.md#fase-2-siklus-bulanan).*
+*Desain: [D-2.1 sampai D-2.4](UI_UX_DESIGN_TASKS-1.0.md#fase-2-siklus-bulanan).*
 
 ### Domain
 
@@ -411,7 +411,7 @@ galat. Folder `linux/`/`build/` dihapus lagi setelahnya, tidak masuk repo.
 
 ## Fase 3: Pemasukan dan timesheet
 
-*Desain: [D-3.1 sampai D-3.3](UI_UX_DESIGN_TASKS.md#fase-3-pemasukan-dan-timesheet).*
+*Desain: [D-3.1 sampai D-3.3](UI_UX_DESIGN_TASKS-1.0.md#fase-3-pemasukan-dan-timesheet).*
 
 - [x] **T-3.1** Buat entitas `IncomeSource` dengan tiga tipe dan
       `DeductionRule` dengan dua tipe.
@@ -511,7 +511,7 @@ tanpa galat dan `CycleBloc` tetap memuat siklus berjalan dengan normal.
 
 ## Fase 4: Roll-up
 
-*Desain: [D-4.1 sampai D-4.3](UI_UX_DESIGN_TASKS.md#fase-4-roll-up).*
+*Desain: [D-4.1 sampai D-4.3](UI_UX_DESIGN_TASKS-1.0.md#fase-4-roll-up).*
 
 ### Belanja
 
@@ -622,7 +622,7 @@ siklus berjalan dengan normal.
 
 ## Fase 5: Investasi
 
-*Desain: [D-5.1 sampai D-5.2](UI_UX_DESIGN_TASKS.md#fase-5-investasi).*
+*Desain: [D-5.1 sampai D-5.2](UI_UX_DESIGN_TASKS-1.0.md#fase-5-investasi).*
 
 - [x] **T-5.1** Buat entitas `Goal` dengan saldo awal (seed: 0 untuk semua
       pos), dipakai bersama oleh alokasi maupun pinjaman lewat `shared/goal/`
@@ -700,7 +700,7 @@ Investasi lewat menu pengembang (tidak ada alat otomasi GUI di sandbox ini).
 
 ## Fase 6: Seed
 
-*Desain: [D-6.1](UI_UX_DESIGN_TASKS.md#fase-6-seed) — lihat catatan revisi di
+*Desain: [D-6.1](UI_UX_DESIGN_TASKS-1.0.md#fase-6-seed) — lihat catatan revisi di
 berkas itu; desainnya TIDAK akan diimplementasikan sebagai layar aplikasi.*
 
 ⚠ **Catatan revisi (11 September 2026):** fase ini semula dibayangkan sebagai

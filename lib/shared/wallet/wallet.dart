@@ -4,5 +4,6 @@
 library;
 
 export 'data/wallet_repository_impl.dart';
+export 'domain/usecases/calculate_wallet_balance.dart';
 export 'domain/wallet.dart';
 export 'domain/wallet_repository.dart';

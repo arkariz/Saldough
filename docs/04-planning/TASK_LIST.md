@@ -26,14 +26,14 @@ Terakhir diperbarui: 17 September 2026.
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
-| 1 — Domain inti: dompet dan transaksi | 9 | 4 | Dompet dan transaksi selesai, saldo menyusul |
+| 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **17** | |
+| **Total MVP** | **75** | **20** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -118,21 +118,27 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       dari dokumen asal **sebelum** menambah ke dokumen tujuan, supaya
       kegagalan di tengah tidak menghasilkan transaksi ganda.
       Memenuhi FR-TXN-004, FR-TXN-005, dan NFR-PERF-002.
-- [ ] **T-1.5** Buat use case `CalculateWalletBalance` — Dart murni, menghitung
+- [x] **T-1.5** Buat use case `CalculateWalletBalance` — Dart murni, menghitung
       saldo dari `initialBalance` ditambah seluruh transaksi yang menyentuh
       dompet itu.
       Memenuhi FR-WAL-003 dan NFR-ACC-003.
-- [ ] **T-1.6** Terapkan pemeliharaan `Wallet.currentBalance` saat transaksi
+- [x] **T-1.6** Terapkan pemeliharaan `Wallet.currentBalance` saat transaksi
       dicatat, disunting, atau dihapus, beserta `recomputeWalletBalances()`.
       ⚠ Urutan penulisan mengikat: dokumen transaksi lebih dulu, dokumen dompet
       menyusul. Transaksi adalah kebenaran, saldo adalah cache-nya. Lihat
       [ADR-012](../02-architecture/adr/0012-tata-letak-penyimpanan-buku-besar.md).
+      Diterapkan sebagai `RecordTransaction` (shared/transaction/domain/
+      usecases/) yang membungkus `TransactionRepository.saveTransaction`/
+      `deleteTransaction` lalu memanggil `RecomputeWalletBalances.forWallets`
+      untuk dompet yang terdampak — bukan aritmetika delta, supaya tidak ada
+      kelas galat "drift" akibat penjumlahan bertahap.
       Memenuhi NFR-ACC-003 dan NFR-PERF-002.
 
 ### Verifikasi dan wiring
 
-- [ ] **T-1.7** Tulis uji domain dan data dengan angka nyata: `netPay` kotor
-      3.117.500 pajak 2,5% menghasilkan 3.039.563; saldo awal 5.000.000 dengan
+- [x] **T-1.7** Tulis uji domain dan data dengan angka nyata: `netPay` kotor
+      3.117.500 pajak 2,5% menghasilkan 3.039.563 (sudah ada di
+      `test/shared/income/`, dari sebelum pivot); saldo awal 5.000.000 dengan
       masuk 2.615.438, keluar 3.068.500, dan transfer keluar 1.000.000
       menghasilkan 3.546.938.
       ⚠ **Uji saldo tersimpan versus saldo turunan wajib ada.** Tanpa uji yang

@@ -21,6 +21,15 @@ abstract final class AppRadius {
   /// Sudut sangat besar, cukup untuk bentuk pil pada tombol/badge bulat.
   static const double full = 999;
 
+  /// Sudut kartu dan tombol ADR-015 (`0.25rem`) — nilai berbeda dari [sm]
+  /// ADR-0006 (8px); jangan disamakan, keduanya milik bahasa visual yang
+  /// berbeda (lihat `PixelTheme`). Lencana status dan pil kategori ADR-015
+  /// memakai [none] (sudut tegas), bukan token ini.
+  static const double pixelSm = 4;
+
+  /// [BorderRadius] seragam dari [pixelSm].
+  static BorderRadius get pixelSmAll => BorderRadius.circular(pixelSm);
+
   /// [BorderRadius] seragam dari [sm].
   static BorderRadius get smAll => BorderRadius.circular(sm);
 

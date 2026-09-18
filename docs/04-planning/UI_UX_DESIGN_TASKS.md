@@ -80,6 +80,11 @@ ada, hanya konversinya yang belum.
       dan `transfer` sengaja berbagi hex dengan `expense`/`textMuted`.
       Rujukan: seluruh folder `pixel_kas_*` di
       `docs/stitch_pixel_finance_tracker/`, terutama `pixel_kas/DESIGN.md`.
+      ⚠ **Bagian kode tugas ini sudah dikerjakan di T-2.12** (`TASK_LIST.md`)
+      atas permintaan pemilik — `AppColorsExtension.pixelLight`/`pixelDark`,
+      tiga peran huruf lewat `PixelTheme`, `AppHardCard`, dan
+      `AppSegmentedProgressBar`. Yang masih tersisa dari D-2.1 murni
+      kanvas VISUAL (mockup di alat desain) itu sendiri — belum dikerjakan.
       Memenuhi NFR-UX-003.
 - [ ] **D-2.2** Shell navigasi: lima tujuan `Beranda | Anggaran | CATAT |
       Transaksi | Dompet` dengan CATAT di tengah, dibedakan secara visual

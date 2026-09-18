@@ -34,6 +34,7 @@ import 'package:saldough/features/worklog/domain/repositories/cycle_income_write
 import 'package:saldough/features/worklog/presentation/navigation/worklog_route_module.dart';
 import 'package:saldough/shared/goal/goal.dart';
 import 'package:saldough/shared/income/income.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Pendaftaran dependensi akar, dipanggil dari [DiBoot.run]. Urutannya
@@ -83,6 +84,9 @@ abstract final class RootModule {
     );
     container.registerLazySingleton<WalletRepository>(
       () => WalletRepositoryImpl(storage: container<KeyValueStorage>()),
+    );
+    container.registerLazySingleton<TransactionRepository>(
+      () => TransactionRepositoryImpl(storage: container<KeyValueStorage>()),
     );
   }
 

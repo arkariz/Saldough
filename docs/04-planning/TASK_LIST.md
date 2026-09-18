@@ -26,14 +26,14 @@ Terakhir diperbarui: 17 September 2026.
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
-| 1 — Domain inti: dompet dan transaksi | 9 | 2 | Dompet selesai, transaksi menyusul |
+| 1 — Domain inti: dompet dan transaksi | 9 | 4 | Dompet dan transaksi selesai, saldo menyusul |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **15** | |
+| **Total MVP** | **75** | **17** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -101,7 +101,7 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
 
 ### Transaksi
 
-- [ ] **T-1.3** Buat `shared/transaction/domain/`: `Transaction` sebagai
+- [x] **T-1.3** Buat `shared/transaction/domain/`: `Transaction` sebagai
       `sealed class` dengan `IncomeTransaction`, `ExpenseTransaction`, dan
       `TransferTransaction`, beserta antarmuka `TransactionRepository`.
       ⚠ Nominal selalu positif; arah uang ditentukan jenis transaksinya. Dan
@@ -110,7 +110,7 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       `budgetItemId`. Transfer bisa memenuhi pos anggaran berupa rencana
       pemindahan, misalnya setoran tabungan.
       Memenuhi FR-TXN-001, FR-TXN-002, dan FR-TXN-003.
-- [ ] **T-1.4** Buat `shared/transaction/data/`: `TransactionModel` dan
+- [x] **T-1.4** Buat `shared/transaction/data/`: `TransactionModel` dan
       `TransactionRepositoryImpl` dengan **partisi per bulan** — kunci
       `transaction/YYYY-MM` plus indeks `transaction/_index`.
       ⚠ Bulan tujuan ditentukan `transaction.date`, bukan `DateTime.now()`.
@@ -142,12 +142,12 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       ⚠ Uji juga wajib membuktikan transfer tidak mengubah total saldo seluruh
       dompet.
       Memenuhi NFR-ACC-001, NFR-ACC-002, dan NFR-ACC-003.
-- [ ] **T-1.8** Daftarkan `WalletRepository` dan `TransactionRepository` di
+- [x] **T-1.8** Daftarkan `WalletRepository` dan `TransactionRepository` di
       `RootModule`.
       ⚠ Hanya **ditambahi**. Tidak satu pun baris lama di `RootModule` boleh
       diubah atau dihapus sampai Fase 3.
-      ⚠ **Sebagian.** `WalletRepository` sudah terdaftar bersama T-1.1/T-1.2.
-      `TransactionRepository` menyusul bersama T-1.3/T-1.4.
+      ⚠ **Selesai penuh.** `WalletRepository` terdaftar bersama T-1.1/T-1.2,
+      `TransactionRepository` terdaftar bersama T-1.3/T-1.4.
 - [ ] **T-1.9** Tambahkan namespace i18n `wallet` dan `transaction` di
       `assets/i18n/{id,en}.i18n.json`, lalu regenerasi slang.
       ⚠ Namespace lama (`cycle`, `grocery`, `card`, `investment`, `worklog`,

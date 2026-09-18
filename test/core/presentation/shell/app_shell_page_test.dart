@@ -19,8 +19,8 @@ import 'package:saldough/shared/wallet/wallet.dart';
 final class _FailingWalletRepository implements WalletRepository {
   @override
   Future<Either<Failure, List<Wallet>>> listWallets() async => const Left(
-        SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'),
-      );
+    SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'),
+  );
 
   @override
   Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => throw UnimplementedError();
@@ -45,12 +45,19 @@ void main() {
   });
 
   Widget pumpableShell() {
-    return ScopeProvider(container: container, child: const MaterialApp(home: AppShellPage()));
+    return ScopeProvider(
+      container: container,
+      child: const MaterialApp(home: AppShellPage()),
+    );
   }
 
   group('AppShellPage', () {
     testWidgets('menampilkan lima tujuan navigasi dengan CATAT di tengah', (tester) async {
       await tester.pumpWidget(pumpableShell());
+      await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
       await tester.pump();
 
       expect(find.byType(NavigationDestination), findsNWidgets(5));
@@ -70,6 +77,10 @@ void main() {
     testWidgets('Beranda tampil sebagai tab awal', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
+      await tester.pump();
 
       expect(find.widgetWithText(AppBar, t.appShell.homeTabLabel), findsOneWidget);
       final nav = tester.widget<NavigationBar>(find.byType(NavigationBar));
@@ -78,6 +89,10 @@ void main() {
 
     testWidgets('menekan tujuan Dompet berpindah ke tab Dompet, melompati CATAT', (tester) async {
       await tester.pumpWidget(pumpableShell());
+      await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
       await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel));
@@ -91,6 +106,10 @@ void main() {
     testWidgets('menekan tujuan Transaksi berpindah ke tab Transaksi', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
+      await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
       await tester.pumpAndSettle();
@@ -100,6 +119,10 @@ void main() {
 
     testWidgets('menekan CATAT membuka lembar tiga pilihan (FR-REC-001), TIDAK mengganti tab aktif', (tester) async {
       await tester.pumpWidget(pumpableShell());
+      await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
       await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
@@ -122,6 +145,10 @@ void main() {
 
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
+      await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
@@ -134,6 +161,10 @@ void main() {
 
     testWidgets('menutup lembar pilihan CATAT tanpa memilih kembali ke tab sebelumnya', (tester) async {
       await tester.pumpWidget(pumpableShell());
+      await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
       await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.budgetTabLabel));
@@ -157,6 +188,10 @@ void main() {
         );
 
         await tester.pumpWidget(pumpableShell());
+        await tester.pump();
+        // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+        // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+        // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
         await tester.pump();
 
         await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
@@ -187,6 +222,10 @@ void main() {
 
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
+      await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
@@ -216,8 +255,15 @@ void main() {
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 
       await tester.pumpWidget(
-        ScopeProvider(container: failingContainer, child: const MaterialApp(home: AppShellPage())),
+        ScopeProvider(
+          container: failingContainer,
+          child: const MaterialApp(home: AppShellPage()),
+        ),
       );
+      await tester.pump();
+      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
+      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
+      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
       await tester.pump();
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));

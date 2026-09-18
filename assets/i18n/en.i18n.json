@@ -260,5 +260,30 @@
     "categorySuggestionShopping": "Shopping",
     "categorySuggestionTransport": "Transport",
     "categorySuggestionBills": "Bills"
+  },
+  "transaction": {
+    "pageTitle": "Transactions",
+    "allFilterLabel": "All $count",
+    "incomeFilterLabel": "Income $count",
+    "expenseFilterLabel": "Expense $count",
+    "transferFilterLabel": "Transfer $count",
+    "walletFilterAllLabel": "All Wallets",
+    "walletFilterLabel": "Wallet",
+    "categoryFilterAllLabel": "All Categories",
+    "categoryFilterLabel": "Category",
+    "todayLabel": "Today",
+    "yesterdayLabel": "Yesterday",
+    "incomeBadge": "+IN",
+    "expenseBadge": "-OUT",
+    "transferBadge": "# TRANSFER",
+    "untitledTransaction": "Untitled",
+    "emptyMonthTitle": "No transactions yet",
+    "emptyMonthSubtitle": "This month's transactions will show up here once you record them through RECORD.",
+    "emptyMonthCta": "Record your first transaction",
+    "emptyFilterTitle": "No transactions match the filter",
+    "emptyFilterSubtitle": "Try changing or clearing the active filters.",
+    "clearFiltersButton": "Clear filters",
+    "loadErrorTitle": "Failed to load transactions",
+    "loadErrorSubtitle": "Check and try loading again."
   }
 }

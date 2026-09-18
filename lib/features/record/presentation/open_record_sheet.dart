@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
+import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:state_management/state_management.dart';
+
+/// Membuka alur CATAT: [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu
+/// satu dari tiga formulir, dalam LOOP -- menekan tombol kembali di formulir
+/// mengembalikan `BackToChoice`, yang membuka ulang [RecordChoiceSheet]
+/// alih-alih menutup seluruh alur.
+///
+/// Diekstrak dari `_AppShellPageState._openRecordSheet` (T-2.4) menjadi
+/// fungsi tingkat atas supaya CATAT bisa dipicu dari lebih dari satu tempat
+/// tanpa menduplikasi alurnya -- CLAUDE.md aturan 8: CATAT satu-satunya
+/// jalur pembuatan transaksi manual, jangan membuat formulir pencatatan
+/// tersendiri. Titik panggil pertama: `AppShellPage._onDestinationSelected`.
+/// Titik panggil kedua (T-2.5): CTA keadaan kosong `TransactionListPage`
+/// saat bulan berjalan genuinely belum punya transaksi.
+///
+/// [context] harus berada di keturunan `BlocProvider<RecordBloc>` (dipasang
+/// sekali di `AppShellPage`, membungkus seluruh tab dan lembar yang
+/// dibukanya) supaya `context.read<RecordBloc>()` di bawah ini menemukannya.
+Future<void> openRecordSheet(BuildContext context) async {
+  final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
+  await bloc.stream.firstWhere((s) => !s.isLoading);
+  if (!context.mounted) return;
+  // Kegagalan pemuatan sudah ditampilkan lewat efek galat `RecordBloc`
+  // (snackbar dari `EffectListener`) -- jangan lanjut membuka lembar
+  // pilihan, yang widget dompetnya akan salah menampilkan "belum ada
+  // dompet" padahal masalahnya pembacaan yang gagal.
+  if (bloc.state.loadFailed) return;
+
+  while (true) {
+    final choice = await showModalBottomSheet<RecordChoice>(
+      context: context,
+      builder: (_) => const RecordChoiceSheet(),
+    );
+    if (choice == null || !context.mounted) return;
+
+    final wallets = bloc.state.wallets;
+    final result = await showModalBottomSheet<Object>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => switch (choice) {
+        RecordChoice.income => IncomeFormSheet(wallets: wallets),
+        RecordChoice.expense => ExpenseFormSheet(wallets: wallets),
+        RecordChoice.transfer => TransferFormSheet(wallets: wallets),
+      },
+    );
+    if (result == null || !context.mounted) return;
+    if (result is BackToChoice) continue;
+    if (result is RecordEvent) {
+      bloc.add(result);
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => RecordSavingDialog(bloc: bloc),
+      );
+      return;
+    }
+  }
+}

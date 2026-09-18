@@ -52,6 +52,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$shell$id shell = Translations$shell$id.internal(_root);
 	late final Translations$appShell$id appShell = Translations$appShell$id.internal(_root);
 	late final Translations$record$id record = Translations$record$id.internal(_root);
+	late final Translations$transaction$id transaction = Translations$transaction$id.internal(_root);
 }
 
 // Path: app
@@ -873,6 +874,84 @@ class Translations$record$id {
 	String get categorySuggestionBills => 'Tagihan';
 }
 
+// Path: transaction
+class Translations$transaction$id {
+	Translations$transaction$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Transaksi'
+	String get pageTitle => 'Transaksi';
+
+	/// id: 'Semua $count'
+	String allFilterLabel({required Object count}) => 'Semua ${count}';
+
+	/// id: 'Pemasukan $count'
+	String incomeFilterLabel({required Object count}) => 'Pemasukan ${count}';
+
+	/// id: 'Pengeluaran $count'
+	String expenseFilterLabel({required Object count}) => 'Pengeluaran ${count}';
+
+	/// id: 'Transfer $count'
+	String transferFilterLabel({required Object count}) => 'Transfer ${count}';
+
+	/// id: 'Semua Dompet'
+	String get walletFilterAllLabel => 'Semua Dompet';
+
+	/// id: 'Dompet'
+	String get walletFilterLabel => 'Dompet';
+
+	/// id: 'Semua Kategori'
+	String get categoryFilterAllLabel => 'Semua Kategori';
+
+	/// id: 'Kategori'
+	String get categoryFilterLabel => 'Kategori';
+
+	/// id: 'Hari Ini'
+	String get todayLabel => 'Hari Ini';
+
+	/// id: 'Kemarin'
+	String get yesterdayLabel => 'Kemarin';
+
+	/// id: '+MASUK'
+	String get incomeBadge => '+MASUK';
+
+	/// id: '-KELUAR'
+	String get expenseBadge => '-KELUAR';
+
+	/// id: '# MUTASI'
+	String get transferBadge => '# MUTASI';
+
+	/// id: 'Tanpa judul'
+	String get untitledTransaction => 'Tanpa judul';
+
+	/// id: 'Belum ada transaksi'
+	String get emptyMonthTitle => 'Belum ada transaksi';
+
+	/// id: 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.'
+	String get emptyMonthSubtitle => 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.';
+
+	/// id: 'Catat transaksi pertama'
+	String get emptyMonthCta => 'Catat transaksi pertama';
+
+	/// id: 'Tidak ada transaksi yang cocok dengan filter'
+	String get emptyFilterTitle => 'Tidak ada transaksi yang cocok dengan filter';
+
+	/// id: 'Coba ganti atau hapus filter yang sedang aktif.'
+	String get emptyFilterSubtitle => 'Coba ganti atau hapus filter yang sedang aktif.';
+
+	/// id: 'Hapus filter'
+	String get clearFiltersButton => 'Hapus filter';
+
+	/// id: 'Transaksi gagal dimuat'
+	String get loadErrorTitle => 'Transaksi gagal dimuat';
+
+	/// id: 'Periksa lagi lalu coba muat ulang.'
+	String get loadErrorSubtitle => 'Periksa lagi lalu coba muat ulang.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1121,6 +1200,29 @@ extension on Translations {
 			'record.categorySuggestionShopping' => 'Belanja',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Tagihan',
+			'transaction.pageTitle' => 'Transaksi',
+			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
+			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
+			'transaction.expenseFilterLabel' => ({required Object count}) => 'Pengeluaran ${count}',
+			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
+			'transaction.walletFilterAllLabel' => 'Semua Dompet',
+			'transaction.walletFilterLabel' => 'Dompet',
+			'transaction.categoryFilterAllLabel' => 'Semua Kategori',
+			'transaction.categoryFilterLabel' => 'Kategori',
+			'transaction.todayLabel' => 'Hari Ini',
+			'transaction.yesterdayLabel' => 'Kemarin',
+			'transaction.incomeBadge' => '+MASUK',
+			'transaction.expenseBadge' => '-KELUAR',
+			'transaction.transferBadge' => '# MUTASI',
+			'transaction.untitledTransaction' => 'Tanpa judul',
+			'transaction.emptyMonthTitle' => 'Belum ada transaksi',
+			'transaction.emptyMonthSubtitle' => 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.',
+			'transaction.emptyMonthCta' => 'Catat transaksi pertama',
+			'transaction.emptyFilterTitle' => 'Tidak ada transaksi yang cocok dengan filter',
+			'transaction.emptyFilterSubtitle' => 'Coba ganti atau hapus filter yang sedang aktif.',
+			'transaction.clearFiltersButton' => 'Hapus filter',
+			'transaction.loadErrorTitle' => 'Transaksi gagal dimuat',
+			'transaction.loadErrorSubtitle' => 'Periksa lagi lalu coba muat ulang.',
 			_ => null,
 		};
 	}

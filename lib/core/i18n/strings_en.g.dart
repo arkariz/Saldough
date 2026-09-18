@@ -50,6 +50,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$shell$en shell = _Translations$shell$en._(_root);
 	@override late final _Translations$appShell$en appShell = _Translations$appShell$en._(_root);
 	@override late final _Translations$record$en record = _Translations$record$en._(_root);
+	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
 }
 
 // Path: app
@@ -391,6 +392,38 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get categorySuggestionBills => 'Bills';
 }
 
+// Path: transaction
+class _Translations$transaction$en extends Translations$transaction$id {
+	_Translations$transaction$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get pageTitle => 'Transactions';
+	@override String allFilterLabel({required Object count}) => 'All ${count}';
+	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
+	@override String expenseFilterLabel({required Object count}) => 'Expense ${count}';
+	@override String transferFilterLabel({required Object count}) => 'Transfer ${count}';
+	@override String get walletFilterAllLabel => 'All Wallets';
+	@override String get walletFilterLabel => 'Wallet';
+	@override String get categoryFilterAllLabel => 'All Categories';
+	@override String get categoryFilterLabel => 'Category';
+	@override String get todayLabel => 'Today';
+	@override String get yesterdayLabel => 'Yesterday';
+	@override String get incomeBadge => '+IN';
+	@override String get expenseBadge => '-OUT';
+	@override String get transferBadge => '# TRANSFER';
+	@override String get untitledTransaction => 'Untitled';
+	@override String get emptyMonthTitle => 'No transactions yet';
+	@override String get emptyMonthSubtitle => 'This month\'s transactions will show up here once you record them through RECORD.';
+	@override String get emptyMonthCta => 'Record your first transaction';
+	@override String get emptyFilterTitle => 'No transactions match the filter';
+	@override String get emptyFilterSubtitle => 'Try changing or clearing the active filters.';
+	@override String get clearFiltersButton => 'Clear filters';
+	@override String get loadErrorTitle => 'Failed to load transactions';
+	@override String get loadErrorSubtitle => 'Check and try loading again.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -639,6 +672,29 @@ extension on TranslationsEn {
 			'record.categorySuggestionShopping' => 'Shopping',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Bills',
+			'transaction.pageTitle' => 'Transactions',
+			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
+			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
+			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expense ${count}',
+			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
+			'transaction.walletFilterAllLabel' => 'All Wallets',
+			'transaction.walletFilterLabel' => 'Wallet',
+			'transaction.categoryFilterAllLabel' => 'All Categories',
+			'transaction.categoryFilterLabel' => 'Category',
+			'transaction.todayLabel' => 'Today',
+			'transaction.yesterdayLabel' => 'Yesterday',
+			'transaction.incomeBadge' => '+IN',
+			'transaction.expenseBadge' => '-OUT',
+			'transaction.transferBadge' => '# TRANSFER',
+			'transaction.untitledTransaction' => 'Untitled',
+			'transaction.emptyMonthTitle' => 'No transactions yet',
+			'transaction.emptyMonthSubtitle' => 'This month\'s transactions will show up here once you record them through RECORD.',
+			'transaction.emptyMonthCta' => 'Record your first transaction',
+			'transaction.emptyFilterTitle' => 'No transactions match the filter',
+			'transaction.emptyFilterSubtitle' => 'Try changing or clearing the active filters.',
+			'transaction.clearFiltersButton' => 'Clear filters',
+			'transaction.loadErrorTitle' => 'Failed to load transactions',
+			'transaction.loadErrorSubtitle' => 'Check and try loading again.',
 			_ => null,
 		};
 	}

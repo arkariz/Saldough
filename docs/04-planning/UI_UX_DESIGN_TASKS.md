@@ -105,6 +105,16 @@ ada, hanya konversinya yang belum.
 - [ ] **D-2.4** Layar Transaksi: riwayat dikelompokkan per tanggal dengan
       penyaring jenis, dompet, dan kategori, dan pembedaan visual antara
       pemasukan, pengeluaran, dan transfer.
+      ⚠ **Bagian kode tugas ini sudah dikerjakan di T-2.5** (`TASK_LIST.md`),
+      langsung memakai sistem desain ADR-015 (`PixelTheme`/`AppHardCard`/
+      `AppChip`) sejak awal. Yang masih tersisa dari D-2.4 murni kanvas VISUAL
+      (mockup di alat desain) itu sendiri -- belum dikerjakan, sama seperti
+      D-2.1/D-2.3.
+      ⚠ **Bidang pencarian teks di rujukan visual SENGAJA tidak ikut
+      diimplementasikan** di T-2.5 -- tidak dituntut FR-TXN-004 dan tidak
+      bernaung di tugas bernomor mana pun. Kalau kanvas desain ini nanti
+      dikerjakan, tetap boleh menyertakan bidang pencarian sebagai rujukan
+      visual, tapi implementasi kodenya menunggu tugas bernomor terpisah.
       Rujukan: `pixel_kas_daftar_transaksi`, keadaan kosongnya
       `pixel_kas_riwayat_transaksi_kosong`.
       Memenuhi FR-TXN-004.

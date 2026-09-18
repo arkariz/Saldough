@@ -27,13 +27,13 @@ Terakhir diperbarui: 18 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 4 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 5 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **24** | |
+| **Total MVP** | **76** | **25** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -326,8 +326,47 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       lembar (pilihan lalu formulir) sudah tertutup.
       Memenuhi FR-REC-001, FR-TXN-001, FR-TXN-002, FR-TXN-003, NFR-UX-001, dan
       NFR-UX-005.
-- [ ] **T-2.5** Buat `features/transaction/`: daftar riwayat dikelompokkan per
+- [x] **T-2.5** Buat `features/transaction/`: daftar riwayat dikelompokkan per
       tanggal, dengan penyaring jenis, dompet, dan kategori.
+      ⚠ **Bidang pencarian teks di rujukan visual (`pixel_kas_daftar_transaksi`)
+      SENGAJA tidak dibangun** -- tidak dituntut FR-TXN-004 dan tidak bernaung
+      di tugas bernomor mana pun. Dicatat sebagai celah untuk tugas mendatang
+      bernomor, bukan diselundupkan masuk di sini.
+      ⚠ Sistem desain ADR-015 (`PixelTheme`/`AppHardCard`/`AppChip`/
+      `AppMoneyText`) dipakai SEJAK AWAL, bukan retrofit belakangan seperti
+      T-2.4 -- setiap section (header ringkasan bulan, tiap kelompok tanggal)
+      adalah `AppHardCard` tersendiri.
+      ⚠ **Kategori tetap field bebas, bukan enum** -- `categoryOptions`
+      dihitung `TransactionBloc` dari kunci kategori DISTINCT yang benar-benar
+      muncul di transaksi bulan berjalan, dihitung ulang tiap bulan berganti,
+      bukan daftar tetap (`PROJECT_GLOSSARY.md` §"Konvensi penamaan").
+      ⚠ Penyaring dompet dan kategori dibangun sebagai DUA DROPDOWN ringkas
+      berdampingan, bukan meniru persis baris chip mockup untuk elemen ini --
+      FR-TXN-004 hanya menuntut "penyaring dompet dan kategori" ada, bentuk
+      persisnya keputusan implementasi. Filter JENIS tetap baris `AppChip`
+      yang bisa digeser horizontal (`SingleChildScrollView` + `Row`, BUKAN
+      `Wrap` -- `Wrap` adalah bug yang sama yang sempat membuat chip CATAT
+      tampil bertumpuk vertikal, lihat catatan T-2.4).
+      ⚠ **`TransactionScope` dipasang BERSEBELAHAN dengan `RecordScope`**, di
+      level `AppShellPage`, keduanya dibangun dari kontainer akar yang sama
+      (ditangkap sekali di awal `build`) -- BUKAN bersarang di dalam
+      `RecordScope` (yang kebetulan membawa `WalletRepository`/
+      `TransactionRepository` juga, tapi mengandalkan itu akan membuat
+      `TransactionScope` diam-diam bergantung pada `RecordScope`). Dipasang
+      di level shell (bukan di dalam `TransactionListPage` sendiri) karena tab
+      ini persisten selama shell hidup (`IndexedStack` menjaga seluruh tab
+      tetap ada di pohon widget).
+      ⚠ `AppShellPage._openRecordSheet` DIEKSTRAK jadi fungsi tingkat atas
+      `openRecordSheet` (`features/record/presentation/open_record_sheet.dart`)
+      supaya CTA keadaan kosong bulan bisa memicu alur CATAT yang SAMA persis
+      (CLAUDE.md aturan 8), bukan formulir pencatatan tersendiri.
+      ⚠ Dua keadaan kosong DIBEDAKAN: bulan genuinely belum ada transaksi
+      (`rawTransactions` kosong) menampilkan ilustrasi + CTA CATAT; filter
+      menyisakan nol hasil (transaksi ADA tapi tersaring semua) menampilkan
+      pesan lebih singkat + tombol hapus filter, TANPA ilustrasi "belum ada
+      transaksi" yang akan menyesatkan. Kegagalan pembacaan (`loadFailed`)
+      keadaan KETIGA yang terpisah dari keduanya (pola `RecordState.loadFailed`
+      T-2.4).
       Memenuhi FR-TXN-004.
 - [ ] **T-2.6** Tambahkan penyuntingan dan penghapusan transaksi.
       ⚠ Saat dompet sebuah transaksi berpindah, saldo dompet lama **dan** baru

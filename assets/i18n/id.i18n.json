@@ -260,5 +260,30 @@
     "categorySuggestionShopping": "Belanja",
     "categorySuggestionTransport": "Transport",
     "categorySuggestionBills": "Tagihan"
+  },
+  "transaction": {
+    "pageTitle": "Transaksi",
+    "allFilterLabel": "Semua $count",
+    "incomeFilterLabel": "Pemasukan $count",
+    "expenseFilterLabel": "Pengeluaran $count",
+    "transferFilterLabel": "Transfer $count",
+    "walletFilterAllLabel": "Semua Dompet",
+    "walletFilterLabel": "Dompet",
+    "categoryFilterAllLabel": "Semua Kategori",
+    "categoryFilterLabel": "Kategori",
+    "todayLabel": "Hari Ini",
+    "yesterdayLabel": "Kemarin",
+    "incomeBadge": "+MASUK",
+    "expenseBadge": "-KELUAR",
+    "transferBadge": "# MUTASI",
+    "untitledTransaction": "Tanpa judul",
+    "emptyMonthTitle": "Belum ada transaksi",
+    "emptyMonthSubtitle": "Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.",
+    "emptyMonthCta": "Catat transaksi pertama",
+    "emptyFilterTitle": "Tidak ada transaksi yang cocok dengan filter",
+    "emptyFilterSubtitle": "Coba ganti atau hapus filter yang sedang aktif.",
+    "clearFiltersButton": "Hapus filter",
+    "loadErrorTitle": "Transaksi gagal dimuat",
+    "loadErrorSubtitle": "Periksa lagi lalu coba muat ulang."
   }
 }

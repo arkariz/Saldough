@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_chip_picker.dart';
+import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+/// Nominal cepat yang ditawarkan formulir pemasukan (rupiah, bukan sen) --
+/// mengikuti pola pilihan cepat yang sungguhan terpasang di rujukan visual
+/// `pixel_kas_catat_pemasukan`.
+const _quickAmounts = [500000, 1000000, 5000000];
+
+/// Saran kategori pemasukan yang sering dipakai.
+List<String> _categorySuggestions() => [
+      t.record.categorySuggestionSalary,
+      t.record.categorySuggestionBonus,
+      t.record.categorySuggestionSales,
+      t.record.categorySuggestionGift,
+    ];
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
-/// `Navigator.pop` saat disimpan; `AppShellPage` yang mengirimkannya ke
-/// `RecordBloc`, mengikuti pola `IncomeSourceEditSheet` yang sudah ada.
+/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali;
+/// `AppShellPage` yang menafsirkan hasilnya, mengikuti pola
+/// `IncomeSourceEditSheet` yang sudah ada.
 class IncomeFormSheet extends StatefulWidget {
   /// Membuat [IncomeFormSheet] dengan [wallets] sebagai pilihan tujuan.
   const IncomeFormSheet({required this.wallets, super.key});
@@ -39,8 +55,8 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   }
 
   int? get _amountSen {
-    final rupiah = int.tryParse(_amountController.text.trim());
-    return rupiah == null || rupiah <= 0 ? null : rupiah * 100;
+    final rupiah = parseRecordAmount(_amountController.text);
+    return rupiah == null ? null : rupiah * 100;
   }
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
@@ -74,30 +90,36 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.record.incomeAction, style: Theme.of(context).textTheme.headlineSmall),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(const BackToChoice()),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(t.record.incomeAction, style: Theme.of(context).textTheme.headlineSmall),
+              ],
+            ),
             const SizedBox(height: AppSpacing.md),
-            TextField(
+            RecordAmountField(
               controller: _amountController,
+              label: t.record.amountFieldHint,
+              quickAmounts: _quickAmounts,
               autofocus: true,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: t.record.amountFieldHint),
-              onChanged: (_) => setState(() {}),
+              onChanged: () => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
-            WalletChipPicker(
+            WalletPickerField(
               label: t.record.toWalletFieldLabel,
               wallets: widget.wallets,
               selectedId: _walletId,
               onSelected: (id) => setState(() => _walletId = id),
+              previewAmountSen: _amountSen,
             ),
             const SizedBox(height: AppSpacing.sm),
             RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
             const SizedBox(height: AppSpacing.sm),
-            TextField(
-              controller: _categoryController,
-              decoration: InputDecoration(labelText: t.record.categoryFieldHint),
-            ),
+            RecordCategoryField(controller: _categoryController, suggestions: _categorySuggestions()),
             const SizedBox(height: AppSpacing.sm),
             TextField(
               controller: _noteController,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
@@ -33,10 +34,17 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).first, amount);
-    if (selectWallet) {
-      await tester.tap(find.byType(AppChip).first);
-    }
     await tester.pump();
+    if (selectWallet) {
+      // WalletPickerField: ketuk kartu "belum dipilih" untuk membuka lembar
+      // pemilih, lalu ketuk nama dompet di dalamnya (menggantikan AppChip
+      // lama).
+      await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
+      await tester.tap(find.text(t.record.walletNotSelectedPrompt));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(wallets.first.name));
+      await tester.pumpAndSettle();
+    }
     await tester.ensureVisible(find.byType(AppButton));
     await tester.tap(find.byType(AppButton));
     await tester.pumpAndSettle();

@@ -817,6 +817,60 @@ class Translations$record$id {
 
 	/// id: 'Transfer tercatat.'
 	String get transferSavedMessage => 'Transfer tercatat.';
+
+	/// id: 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.'
+	String get disclaimerMessage => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.';
+
+	/// id: 'Catat uang yang masuk ke salah satu dompet.'
+	String get incomeSubtitle => 'Catat uang yang masuk ke salah satu dompet.';
+
+	/// id: 'Catat uang yang keluar dari salah satu dompet.'
+	String get expenseSubtitle => 'Catat uang yang keluar dari salah satu dompet.';
+
+	/// id: 'Catat perpindahan uang antar dompet milikmu sendiri.'
+	String get transferSubtitle => 'Catat perpindahan uang antar dompet milikmu sendiri.';
+
+	/// id: 'Menambah saldo dompet'
+	String get incomeEffectLabel => 'Menambah saldo dompet';
+
+	/// id: 'Mengurangi saldo dompet'
+	String get expenseEffectLabel => 'Mengurangi saldo dompet';
+
+	/// id: 'Total saldo tidak berubah'
+	String get transferEffectLabel => 'Total saldo tidak berubah';
+
+	/// id: 'Ganti'
+	String get changeWalletAction => 'Ganti';
+
+	/// id: 'Belum dipilih'
+	String get walletNotSelectedPrompt => 'Belum dipilih';
+
+	/// id: 'Menyimpan...'
+	String get savingMessage => 'Menyimpan...';
+
+	/// id: 'Gaji'
+	String get categorySuggestionSalary => 'Gaji';
+
+	/// id: 'Bonus'
+	String get categorySuggestionBonus => 'Bonus';
+
+	/// id: 'Penjualan'
+	String get categorySuggestionSales => 'Penjualan';
+
+	/// id: 'Hadiah'
+	String get categorySuggestionGift => 'Hadiah';
+
+	/// id: 'Makan'
+	String get categorySuggestionFood => 'Makan';
+
+	/// id: 'Belanja'
+	String get categorySuggestionShopping => 'Belanja';
+
+	/// id: 'Transport'
+	String get categorySuggestionTransport => 'Transport';
+
+	/// id: 'Tagihan'
+	String get categorySuggestionBills => 'Tagihan';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1049,6 +1103,24 @@ extension on Translations {
 			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
 			'record.expenseSavedMessage' => 'Pengeluaran tercatat.',
 			'record.transferSavedMessage' => 'Transfer tercatat.',
+			'record.disclaimerMessage' => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.',
+			'record.incomeSubtitle' => 'Catat uang yang masuk ke salah satu dompet.',
+			'record.expenseSubtitle' => 'Catat uang yang keluar dari salah satu dompet.',
+			'record.transferSubtitle' => 'Catat perpindahan uang antar dompet milikmu sendiri.',
+			'record.incomeEffectLabel' => 'Menambah saldo dompet',
+			'record.expenseEffectLabel' => 'Mengurangi saldo dompet',
+			'record.transferEffectLabel' => 'Total saldo tidak berubah',
+			'record.changeWalletAction' => 'Ganti',
+			'record.walletNotSelectedPrompt' => 'Belum dipilih',
+			'record.savingMessage' => 'Menyimpan...',
+			'record.categorySuggestionSalary' => 'Gaji',
+			'record.categorySuggestionBonus' => 'Bonus',
+			'record.categorySuggestionSales' => 'Penjualan',
+			'record.categorySuggestionGift' => 'Hadiah',
+			'record.categorySuggestionFood' => 'Makan',
+			'record.categorySuggestionShopping' => 'Belanja',
+			'record.categorySuggestionTransport' => 'Transport',
+			'record.categorySuggestionBills' => 'Tagihan',
 			_ => null,
 		};
 	}

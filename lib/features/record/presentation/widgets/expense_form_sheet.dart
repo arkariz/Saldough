@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_chip_picker.dart';
+import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+/// Nominal cepat yang ditawarkan formulir pengeluaran (rupiah, bukan sen).
+const _quickAmounts = [10000, 50000, 100000];
+
+/// Saran kategori pengeluaran yang sering dipakai.
+List<String> _categorySuggestions() => [
+      t.record.categorySuggestionFood,
+      t.record.categorySuggestionShopping,
+      t.record.categorySuggestionTransport,
+      t.record.categorySuggestionBills,
+    ];
 
 /// Formulir catat pengeluaran (FR-TXN-002) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [ExpenseRecorded] lewat
-/// `Navigator.pop` saat disimpan.
+/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
 ///
 /// ⚠ Tautan ke pos anggaran (bagian FR-TXN-002 yang menyebut "tautan
 /// opsional ke satu pos anggaran") belum ada di sini — `Budget` belum
@@ -44,8 +57,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   }
 
   int? get _amountSen {
-    final rupiah = int.tryParse(_amountController.text.trim());
-    return rupiah == null || rupiah <= 0 ? null : rupiah * 100;
+    final rupiah = parseRecordAmount(_amountController.text);
+    return rupiah == null ? null : rupiah * 100;
   }
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
@@ -79,30 +92,37 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.record.expenseAction, style: Theme.of(context).textTheme.headlineSmall),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(const BackToChoice()),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(t.record.expenseAction, style: Theme.of(context).textTheme.headlineSmall),
+              ],
+            ),
             const SizedBox(height: AppSpacing.md),
-            TextField(
+            RecordAmountField(
               controller: _amountController,
+              label: t.record.amountFieldHint,
+              quickAmounts: _quickAmounts,
               autofocus: true,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: t.record.amountFieldHint),
-              onChanged: (_) => setState(() {}),
+              onChanged: () => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
-            WalletChipPicker(
+            WalletPickerField(
               label: t.record.fromWalletFieldLabel,
               wallets: widget.wallets,
               selectedId: _walletId,
               onSelected: (id) => setState(() => _walletId = id),
+              previewAmountSen: _amountSen,
+              previewIsCredit: false,
             ),
             const SizedBox(height: AppSpacing.sm),
             RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
             const SizedBox(height: AppSpacing.sm),
-            TextField(
-              controller: _categoryController,
-              decoration: InputDecoration(labelText: t.record.categoryFieldHint),
-            ),
+            RecordCategoryField(controller: _categoryController, suggestions: _categorySuggestions()),
             const SizedBox(height: AppSpacing.sm),
             TextField(
               controller: _noteController,

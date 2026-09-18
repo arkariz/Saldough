@@ -31,9 +31,15 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     final result = await _walletRepository.listWallets();
     switch (result) {
       case Left(value: final failure):
-        emit(state.copyWith(isLoading: false, effect: _effectError(failure)));
+        emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
-        emit(state.copyWith(wallets: wallets.where((w) => w.isActive).toList(), isLoading: false));
+        emit(
+          state.copyWith(
+            wallets: wallets.where((w) => w.isActive).toList(),
+            isLoading: false,
+            loadFailed: false,
+          ),
+        );
     }
   }
 

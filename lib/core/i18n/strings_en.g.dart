@@ -371,6 +371,24 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeSavedMessage => 'Income recorded.';
 	@override String get expenseSavedMessage => 'Expense recorded.';
 	@override String get transferSavedMessage => 'Transfer recorded.';
+	@override String get disclaimerMessage => 'Saldough only records manual history. It never moves money automatically.';
+	@override String get incomeSubtitle => 'Record money coming into one of your wallets.';
+	@override String get expenseSubtitle => 'Record money going out of one of your wallets.';
+	@override String get transferSubtitle => 'Record money moving between your own wallets.';
+	@override String get incomeEffectLabel => 'Adds to wallet balance';
+	@override String get expenseEffectLabel => 'Reduces wallet balance';
+	@override String get transferEffectLabel => 'Total balance stays the same';
+	@override String get changeWalletAction => 'Change';
+	@override String get walletNotSelectedPrompt => 'Not selected yet';
+	@override String get savingMessage => 'Saving...';
+	@override String get categorySuggestionSalary => 'Salary';
+	@override String get categorySuggestionBonus => 'Bonus';
+	@override String get categorySuggestionSales => 'Sales';
+	@override String get categorySuggestionGift => 'Gift';
+	@override String get categorySuggestionFood => 'Food';
+	@override String get categorySuggestionShopping => 'Shopping';
+	@override String get categorySuggestionTransport => 'Transport';
+	@override String get categorySuggestionBills => 'Bills';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -603,6 +621,24 @@ extension on TranslationsEn {
 			'record.incomeSavedMessage' => 'Income recorded.',
 			'record.expenseSavedMessage' => 'Expense recorded.',
 			'record.transferSavedMessage' => 'Transfer recorded.',
+			'record.disclaimerMessage' => 'Saldough only records manual history. It never moves money automatically.',
+			'record.incomeSubtitle' => 'Record money coming into one of your wallets.',
+			'record.expenseSubtitle' => 'Record money going out of one of your wallets.',
+			'record.transferSubtitle' => 'Record money moving between your own wallets.',
+			'record.incomeEffectLabel' => 'Adds to wallet balance',
+			'record.expenseEffectLabel' => 'Reduces wallet balance',
+			'record.transferEffectLabel' => 'Total balance stays the same',
+			'record.changeWalletAction' => 'Change',
+			'record.walletNotSelectedPrompt' => 'Not selected yet',
+			'record.savingMessage' => 'Saving...',
+			'record.categorySuggestionSalary' => 'Salary',
+			'record.categorySuggestionBonus' => 'Bonus',
+			'record.categorySuggestionSales' => 'Sales',
+			'record.categorySuggestionGift' => 'Gift',
+			'record.categorySuggestionFood' => 'Food',
+			'record.categorySuggestionShopping' => 'Shopping',
+			'record.categorySuggestionTransport' => 'Transport',
+			'record.categorySuggestionBills' => 'Bills',
 			_ => null,
 		};
 	}

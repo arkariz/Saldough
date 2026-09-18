@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_chip_picker.dart';
+import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+/// Nominal cepat yang ditawarkan formulir transfer (rupiah, bukan sen).
+const _quickAmounts = [500000, 1000000, 5000000];
 
 /// Formulir catat transfer (FR-TXN-003) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [TransferRecorded] lewat
-/// `Navigator.pop` saat disimpan.
+/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
 ///
 /// ⚠ Kosakata tombol menyatakan pencatatan, bukan tindakan keuangan —
 /// "Catat Transfer", bukan "Transfer Sekarang" atau "Kirim Uang" (UX-05).
+/// Tidak ada field kategori di sini -- `TransferRecorded` tidak punya
+/// `categoryKey` (lihat `RecordEvent`), berbeda dari formulir pemasukan dan
+/// pengeluaran.
 class TransferFormSheet extends StatefulWidget {
   /// Membuat [TransferFormSheet] dengan [wallets] sebagai pilihan asal/tujuan.
   const TransferFormSheet({required this.wallets, super.key});
@@ -40,8 +47,8 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   }
 
   int? get _amountSen {
-    final rupiah = int.tryParse(_amountController.text.trim());
-    return rupiah == null || rupiah <= 0 ? null : rupiah * 100;
+    final rupiah = parseRecordAmount(_amountController.text);
+    return rupiah == null ? null : rupiah * 100;
   }
 
   /// FR-TXN-003: menolak transfer ke dompet yang sama dengan asalnya.
@@ -75,29 +82,40 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.record.transferAction, style: Theme.of(context).textTheme.headlineSmall),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(const BackToChoice()),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(t.record.transferAction, style: Theme.of(context).textTheme.headlineSmall),
+              ],
+            ),
             const SizedBox(height: AppSpacing.md),
-            TextField(
+            RecordAmountField(
               controller: _amountController,
+              label: t.record.amountFieldHint,
+              quickAmounts: _quickAmounts,
               autofocus: true,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: t.record.amountFieldHint),
-              onChanged: (_) => setState(() {}),
+              onChanged: () => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.sm),
-            WalletChipPicker(
+            WalletPickerField(
               label: t.record.fromWalletFieldLabel,
               wallets: widget.wallets,
               selectedId: _fromWalletId,
               onSelected: (id) => setState(() => _fromWalletId = id),
+              previewAmountSen: _amountSen,
+              previewIsCredit: false,
             ),
             const SizedBox(height: AppSpacing.sm),
-            WalletChipPicker(
+            WalletPickerField(
               label: t.record.destinationWalletFieldLabel,
               wallets: widget.wallets,
               selectedId: _toWalletId,
               onSelected: (id) => setState(() => _toWalletId = id),
+              previewAmountSen: _amountSen,
             ),
             if (_sameWallet) ...[
               const SizedBox(height: AppSpacing.xs),
@@ -111,7 +129,11 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               decoration: InputDecoration(labelText: t.record.noteFieldHint),
             ),
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: t.record.transferAction, onPressed: _canSubmit ? _submit : null),
+            AppButton(
+              label: t.record.transferAction,
+              color: context.appColors.transfer,
+              onPressed: _canSubmit ? _submit : null,
+            ),
           ],
         ),
       ),

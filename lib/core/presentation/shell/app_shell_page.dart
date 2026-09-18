@@ -12,6 +12,7 @@ import 'package:saldough/features/record/presentation/widgets/expense_form_sheet
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -79,10 +80,12 @@ class _AppShellPageState extends State<AppShellPage> {
   }
 
   /// Membuka alur CATAT: [RecordChoiceSheet] (tiga pilihan, FR-REC-001),
-  /// lalu satu dari tiga formulir. Kedua lembar sengaja terpisah, bukan
-  /// satu lembar yang berpindah "halaman" internal — masing-masing
-  /// `showModalBottomSheet` sendiri, dengan [Navigator.pop] yang
-  /// mengembalikan pilihan/hasilnya ke sini.
+  /// lalu satu dari tiga formulir, dalam LOOP -- menekan tombol kembali di
+  /// formulir mengembalikan `BackToChoice`, yang membuka ulang
+  /// [RecordChoiceSheet] alih-alih menutup seluruh alur. Kedua lembar
+  /// sengaja terpisah, bukan satu lembar yang berpindah "halaman" internal
+  /// — masing-masing `showModalBottomSheet` sendiri, dengan [Navigator.pop]
+  /// yang mengembalikan pilihan/hasilnya ke sini.
   ///
   /// Formulir TIDAK membaca `RecordBloc` lewat `context` sendiri (rute
   /// modalnya bukan keturunan `BlocProvider` yang dipasang di [build] —
@@ -90,28 +93,51 @@ class _AppShellPageState extends State<AppShellPage> {
   /// di sini, di context yang benar, lalu wallet-nya diteruskan sebagai
   /// data biasa dan event hasil formulir dikirim balik ke bloc secara
   /// eksplisit — pola yang sama seperti `IncomeSourceEditSheet`.
+  ///
+  /// Setelah event terkirim, [RecordSavingDialog] tampil sampai
+  /// penyimpanannya selesai — sebelumnya `bloc.add(event)` dipanggil tanpa
+  /// umpan balik visual sama sekali (kedua lembar sudah tertutup saat itu),
+  /// risiko nyata pemakai mengira tidak terjadi apa-apa dan mencatat ulang.
   Future<void> _openRecordSheet(BuildContext context) async {
     final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
     await bloc.stream.firstWhere((s) => !s.isLoading);
     if (!context.mounted) return;
+    // Kegagalan pemuatan sudah ditampilkan lewat efek galat `RecordBloc`
+    // (snackbar dari `EffectListener`) -- jangan lanjut membuka lembar
+    // pilihan, yang widget dompetnya akan salah menampilkan "belum ada
+    // dompet" padahal masalahnya pembacaan yang gagal.
+    if (bloc.state.loadFailed) return;
 
-    final choice = await showModalBottomSheet<RecordChoice>(
-      context: context,
-      builder: (_) => const RecordChoiceSheet(),
-    );
-    if (choice == null || !context.mounted) return;
+    while (true) {
+      final choice = await showModalBottomSheet<RecordChoice>(
+        context: context,
+        builder: (_) => const RecordChoiceSheet(),
+      );
+      if (choice == null || !context.mounted) return;
 
-    final wallets = bloc.state.wallets;
-    final event = await showModalBottomSheet<RecordEvent>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => switch (choice) {
-        RecordChoice.income => IncomeFormSheet(wallets: wallets),
-        RecordChoice.expense => ExpenseFormSheet(wallets: wallets),
-        RecordChoice.transfer => TransferFormSheet(wallets: wallets),
-      },
-    );
-    if (event != null) bloc.add(event);
+      final wallets = bloc.state.wallets;
+      final result = await showModalBottomSheet<Object>(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => switch (choice) {
+          RecordChoice.income => IncomeFormSheet(wallets: wallets),
+          RecordChoice.expense => ExpenseFormSheet(wallets: wallets),
+          RecordChoice.transfer => TransferFormSheet(wallets: wallets),
+        },
+      );
+      if (result == null || !context.mounted) return;
+      if (result is BackToChoice) continue;
+      if (result is RecordEvent) {
+        bloc.add(result);
+        if (!context.mounted) return;
+        await showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => RecordSavingDialog(bloc: bloc),
+        );
+        return;
+      }
+    }
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
@@ -40,15 +41,24 @@ void main() {
       await openSheet(tester, (r) => result = r);
 
       await tester.enterText(find.byType(TextField).first, '100000');
-      // Kedua `WalletChipPicker` memiliki chip 'BCA · ...' -- pilih BCA untuk
-      // asal (chip pertama) MAUPUN tujuan (chip pertama picker kedua).
-      final bcaChips = find.widgetWithText(AppChip, 'BCA · Rp5.000.000');
-      await tester.ensureVisible(bcaChips.at(0));
-      await tester.tap(bcaChips.at(0));
       await tester.pump();
-      await tester.ensureVisible(bcaChips.at(1));
-      await tester.tap(bcaChips.at(1));
-      await tester.pump();
+      // Kedua `WalletPickerField` (asal/tujuan) sama-sama menampilkan
+      // "belum dipilih" mula-mula -- ketuk yang pertama (asal), pilih BCA di
+      // lembar pemilihnya, lalu ketuk sisanya (satu-satunya yang belum
+      // dipilih sekarang, yaitu tujuan) dan pilih BCA lagi supaya sama
+      // dengan asal.
+      await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt).first);
+      await tester.tap(find.text(t.record.walletNotSelectedPrompt).first);
+      await tester.pumpAndSettle();
+      // `.last` -- di dalam lembar pemilih adalah kemunculan TERBARU nama
+      // dompet ini di pohon widget (lembar sebelumnya masih ada di baliknya).
+      await tester.tap(find.text('BCA').last);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
+      await tester.tap(find.text(t.record.walletNotSelectedPrompt));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA').last);
+      await tester.pumpAndSettle();
 
       expect(find.byType(AppButton), findsOneWidget);
       final button = tester.widget<AppButton>(find.byType(AppButton));
@@ -65,16 +75,19 @@ void main() {
       await openSheet(tester, (r) => result = r);
 
       await tester.enterText(find.byType(TextField).first, '100000');
-      // Kedua WalletChipPicker (asal/tujuan) menampilkan wallets yang sama,
-      // jadi 'BCA'/'GoPay' masing-masing muncul dua kali -- pilih lewat
-      // indeks urutan render, bukan teks (yang ambigu di sini): [0]=BCA
-      // (asal), [1]=GoPay (asal), [2]=BCA (tujuan), [3]=GoPay (tujuan).
-      await tester.ensureVisible(find.byType(AppChip).at(0));
-      await tester.tap(find.byType(AppChip).at(0));
       await tester.pump();
-      await tester.ensureVisible(find.byType(AppChip).at(3));
-      await tester.tap(find.byType(AppChip).at(3));
-      await tester.pump();
+      // Field pertama (asal) -> BCA, field kedua (tujuan) -> GoPay.
+      await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt).first);
+      await tester.tap(find.text(t.record.walletNotSelectedPrompt).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA').last);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
+      await tester.tap(find.text(t.record.walletNotSelectedPrompt));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('GoPay').last);
+      await tester.pumpAndSettle();
+
       await tester.ensureVisible(find.byType(AppButton));
       await tester.tap(find.byType(AppButton));
       await tester.pumpAndSettle();

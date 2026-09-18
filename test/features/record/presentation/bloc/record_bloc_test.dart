@@ -1,9 +1,37 @@
+import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
+
+/// Pembungkus [WalletRepository] yang bisa dipaksa gagal lewat [shouldFail],
+/// dipakai untuk menguji `RecordState.loadFailed` tanpa mocktail -- perilaku
+/// yang diuji murni "gagal lalu berhasil lagi", bukan interaksi method.
+final class _FlakyWalletRepository implements WalletRepository {
+  _FlakyWalletRepository(this._delegate);
+
+  final WalletRepository _delegate;
+
+  /// `true` membuat [listWallets] SELALU mengembalikan `Left`.
+  bool shouldFail = false;
+
+  @override
+  Future<Either<Failure, List<Wallet>>> listWallets() async {
+    if (shouldFail) {
+      return const Left(SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'));
+    }
+    return _delegate.listWallets();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => _delegate.saveWallet(wallet);
+
+  @override
+  Future<Either<Failure, Unit>> deleteWallet(String id) => _delegate.deleteWallet(id);
+}
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -57,6 +85,29 @@ void main() {
 
       expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
       expect(bloc.state.wallets.map((w) => w.id), isNot(contains('lama')));
+    });
+
+    test('kegagalan pemuatan dompet menyetel loadFailed true, pemuatan berhasil berikutnya menyetelnya balik ke false', () async {
+      final flaky = _FlakyWalletRepository(walletRepository)..shouldFail = true;
+      final bloc = RecordBloc(
+        walletRepository: flaky,
+        recordTransaction: RecordTransaction(
+          transactionRepository: transactionRepository,
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: flaky,
+            transactionRepository: transactionRepository,
+          ),
+        ),
+      )..add(const RecordWalletsLoaded());
+      await bloc.stream.firstWhere((s) => !s.isLoading);
+      expect(bloc.state.loadFailed, isTrue);
+      expect(bloc.state.wallets, isEmpty);
+
+      flaky.shouldFail = false;
+      bloc.add(const RecordWalletsLoaded());
+      await bloc.stream.firstWhere((s) => !s.isLoading);
+      expect(bloc.state.loadFailed, isFalse);
+      expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
     });
 
     test('IncomeRecorded mencatat transaksi dan menambah saldo dompet tujuan', () async {

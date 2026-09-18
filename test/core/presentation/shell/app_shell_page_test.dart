@@ -1,4 +1,6 @@
+import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
@@ -6,8 +8,26 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+/// Dobel gagal untuk [WalletRepository] -- `listWallets()` SELALU
+/// mengembalikan `Left`, mensimulasikan pembacaan yang gagal (bukan
+/// genuinely kosong). Hanya `listWallets()` yang dipakai uji di berkas ini;
+/// dua metode lain melempar kalau sampai terpanggil.
+final class _FailingWalletRepository implements WalletRepository {
+  @override
+  Future<Either<Failure, List<Wallet>>> listWallets() async => const Left(
+        SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'),
+      );
+
+  @override
+  Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => throw UnimplementedError();
+
+  @override
+  Future<Either<Failure, Unit>> deleteWallet(String id) => throw UnimplementedError();
+}
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -145,8 +165,13 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(find.widgetWithText(TextField, t.record.amountFieldHint), '75000');
-        await tester.tap(find.widgetWithText(AppChip, 'BCA · Rp0'));
         await tester.pump();
+        await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
+        await tester.tap(find.text(t.record.walletNotSelectedPrompt));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('BCA'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.widgetWithText(AppButton, t.record.incomeAction));
         await tester.tap(find.widgetWithText(AppButton, t.record.incomeAction));
         await tester.pumpAndSettle();
 
@@ -154,5 +179,52 @@ void main() {
         expect(wallets.single.currentBalance, 7500000);
       },
     );
+
+    testWidgets('menutup formulir dengan BackToChoice membuka ulang RecordChoiceSheet', (tester) async {
+      await walletRepository.saveWallet(
+        const Wallet(id: 'w1', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+
+      await tester.pumpWidget(pumpableShell());
+      await tester.pump();
+
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.record.incomeAction).first);
+      await tester.pumpAndSettle();
+
+      // Sekarang di formulir pemasukan -- pastikan RecordChoiceSheet sudah
+      // tertutup.
+      expect(find.byType(RecordChoiceSheet), findsNothing);
+      expect(find.text(t.record.amountFieldHint), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      // Kembali ke RecordChoiceSheet, bukan menutup seluruh alur CATAT.
+      expect(find.byType(RecordChoiceSheet), findsOneWidget);
+      expect(find.text(t.record.incomeAction), findsWidgets);
+      expect(find.text(t.record.expenseAction), findsWidgets);
+      expect(find.text(t.record.transferAction), findsWidgets);
+    });
+
+    testWidgets('kegagalan pemuatan dompet tidak pernah menampilkan RecordChoiceSheet (hanya snackbar galat)', (
+      tester,
+    ) async {
+      final failingContainer = GetIt.asNewInstance()
+        ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
+        ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
+
+      await tester.pumpWidget(
+        ScopeProvider(container: failingContainer, child: const MaterialApp(home: AppShellPage())),
+      );
+      await tester.pump();
+
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RecordChoiceSheet), findsNothing);
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
   });
 }

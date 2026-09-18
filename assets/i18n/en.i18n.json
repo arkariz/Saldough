@@ -241,6 +241,24 @@
     "sameWalletWarning": "Source and destination wallets can't be the same.",
     "incomeSavedMessage": "Income recorded.",
     "expenseSavedMessage": "Expense recorded.",
-    "transferSavedMessage": "Transfer recorded."
+    "transferSavedMessage": "Transfer recorded.",
+    "disclaimerMessage": "Saldough only records manual history. It never moves money automatically.",
+    "incomeSubtitle": "Record money coming into one of your wallets.",
+    "expenseSubtitle": "Record money going out of one of your wallets.",
+    "transferSubtitle": "Record money moving between your own wallets.",
+    "incomeEffectLabel": "Adds to wallet balance",
+    "expenseEffectLabel": "Reduces wallet balance",
+    "transferEffectLabel": "Total balance stays the same",
+    "changeWalletAction": "Change",
+    "walletNotSelectedPrompt": "Not selected yet",
+    "savingMessage": "Saving...",
+    "categorySuggestionSalary": "Salary",
+    "categorySuggestionBonus": "Bonus",
+    "categorySuggestionSales": "Sales",
+    "categorySuggestionGift": "Gift",
+    "categorySuggestionFood": "Food",
+    "categorySuggestionShopping": "Shopping",
+    "categorySuggestionTransport": "Transport",
+    "categorySuggestionBills": "Bills"
   }
 }

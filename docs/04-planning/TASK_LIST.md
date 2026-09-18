@@ -26,14 +26,14 @@ Terakhir diperbarui: 17 September 2026.
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
-| 1 — Domain inti: dompet dan transaksi | 9 | 0 | Belum dimulai |
+| 1 — Domain inti: dompet dan transaksi | 9 | 2 | Dompet selesai, transaksi menyusul |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 0 | Belum dimulai |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **13** | |
+| **Total MVP** | **75** | **15** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -88,14 +88,14 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
 
 ### Dompet
 
-- [ ] **T-1.1** Buat `shared/wallet/domain/`: entitas `Wallet` dan antarmuka
+- [x] **T-1.1** Buat `shared/wallet/domain/`: entitas `Wallet` dan antarmuka
       `WalletRepository`.
       ⚠ `Wallet` masuk `shared/`, bukan `features/`, karena dibaca
       `transaction`, `budget`, `freelance`, dan `home` — ambang "2+ konsumen"
       [ADR-0009](../02-architecture/adr/0009-core-shared-features-zone-layout.md)
       terpenuhi sejak awal.
       Memenuhi FR-WAL-001 dan FR-WAL-002.
-- [ ] **T-1.2** Buat `shared/wallet/data/`: `WalletModel` dengan
+- [x] **T-1.2** Buat `shared/wallet/data/`: `WalletModel` dengan
       `schemaVersion`, dan `WalletRepositoryImpl` di atas kunci `wallet/all`.
       Memenuhi FR-WAL-001 dan NFR-REL-003.
 
@@ -146,6 +146,8 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       `RootModule`.
       ⚠ Hanya **ditambahi**. Tidak satu pun baris lama di `RootModule` boleh
       diubah atau dihapus sampai Fase 3.
+      ⚠ **Sebagian.** `WalletRepository` sudah terdaftar bersama T-1.1/T-1.2.
+      `TransactionRepository` menyusul bersama T-1.3/T-1.4.
 - [ ] **T-1.9** Tambahkan namespace i18n `wallet` dan `transaction` di
       `assets/i18n/{id,en}.i18n.json`, lalu regenerasi slang.
       ⚠ Namespace lama (`cycle`, `grocery`, `card`, `investment`, `worklog`,

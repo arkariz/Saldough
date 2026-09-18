@@ -180,4 +180,76 @@ void main() {
       expect(light.lerp(dark, 1).accent, dark.accent);
     });
   });
+
+  group('AppColorsExtension.pixelLight/pixelDark (palet penuh ADR-015)', () {
+    const minRatio = 4.5;
+    final pixelLight = AppColorsExtension.pixelLight;
+    final pixelDark = AppColorsExtension.pixelDark;
+
+    test('nilai hex sesuai tabel palet ADR-015, bukan hasil karangan', () {
+      expect(pixelLight.income, const Color(0xFF006948));
+      expect(pixelLight.expense, const Color(0xFFBA1A1A));
+      expect(pixelLight.overBudget, const Color(0xFFBA1A1A));
+      expect(pixelLight.background, const Color(0xFFFFF8F5));
+      expect(pixelLight.cardBackground, const Color(0xFFFFFFFF));
+      expect(pixelLight.textPrimary, const Color(0xFF1E1B19));
+      expect(pixelLight.textMuted, const Color(0xFF3D4A42));
+
+      expect(pixelDark.income, const Color(0xFF009767));
+      expect(pixelDark.expense, const Color(0xFFEA4B4B));
+      expect(pixelDark.overBudget, const Color(0xFFEA4B4B));
+      expect(pixelDark.background, const Color(0xFF14120F));
+      expect(pixelDark.cardBackground, const Color(0xFF1F1C18));
+      expect(pixelDark.textPrimary, const Color(0xFFF2ECE7));
+      expect(pixelDark.textMuted, const Color(0xFF708A7A));
+    });
+
+    test('overBudget sama persis dengan expense di kedua mode, disengaja (ADR-015)', () {
+      expect(pixelLight.overBudget, pixelLight.expense);
+      expect(pixelDark.overBudget, pixelDark.expense);
+    });
+
+    test('edge memakai textPrimary, sesuai ADR-015 ("garis tepi struktural")', () {
+      expect(pixelLight.edge, pixelLight.textPrimary);
+      expect(pixelDark.edge, pixelDark.textPrimary);
+    });
+
+    test('slot accent/onAccent/transfer/pending sudah sama sejak T-2.2, tidak berubah', () {
+      expect(pixelLight.accent, AppColorsExtension.light.accent);
+      expect(pixelLight.transfer, AppColorsExtension.light.transfer);
+      expect(pixelLight.pending, AppColorsExtension.light.pending);
+      expect(pixelDark.accent, AppColorsExtension.dark.accent);
+      expect(pixelDark.transfer, AppColorsExtension.dark.transfer);
+      expect(pixelDark.pending, AppColorsExtension.dark.pending);
+    });
+
+    test('slot khusus layar lama (investment/rollUp/needsReview) diwarisi apa adanya', () {
+      expect(pixelLight.investment, AppColorsExtension.light.investment);
+      expect(pixelLight.rollUp, AppColorsExtension.light.rollUp);
+      expect(pixelLight.needsReview, AppColorsExtension.light.needsReview);
+      expect(pixelDark.investment, AppColorsExtension.dark.investment);
+    });
+
+    for (final entry in {
+      'income': pixelLight.income,
+      'expense': pixelLight.expense,
+      'textPrimary': pixelLight.textPrimary,
+      'textMuted': pixelLight.textMuted,
+    }.entries) {
+      test('${entry.key} (pixelLight) lolos >= $minRatio:1 terhadap cardBackground', () {
+        expect(_contrastRatio(entry.value, pixelLight.cardBackground), greaterThanOrEqualTo(minRatio));
+      });
+    }
+
+    for (final entry in {
+      'income': pixelDark.income,
+      'expense': pixelDark.expense,
+      'textPrimary': pixelDark.textPrimary,
+      'textMuted': pixelDark.textMuted,
+    }.entries) {
+      test('${entry.key} (pixelDark) lolos >= $minRatio:1 terhadap cardBackground', () {
+        expect(_contrastRatio(entry.value, pixelDark.cardBackground), greaterThanOrEqualTo(minRatio));
+      });
+    }
+  });
 }

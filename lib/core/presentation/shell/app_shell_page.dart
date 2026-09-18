@@ -41,6 +41,12 @@ import 'package:state_management/state_management.dart';
 /// sudah tertutup — pola yang sama seperti snackbar `IncomeSourceBloc`
 /// tetap tampil di `IncomeSourceListPage` setelah `IncomeSourceEditSheet`
 /// ditutup.
+///
+/// Seluruh shell ini (tab dan lembar yang dibukanya) dibungkus
+/// `PixelTheme` — bahasa visual ADR-015 (palet, tipografi, radius, garis
+/// tepi) — sebagai pembungkus TERLUAR, di luar `ScopeWidget<RecordScope>`.
+/// Layar dan lembar baru berikutnya otomatis mewarisinya cukup dengan
+/// dirender di dalam shell ini, tanpa perlu membungkus dirinya sendiri.
 class AppShellPage extends StatefulWidget {
   /// Membuat [AppShellPage].
   const AppShellPage({super.key});
@@ -121,40 +127,47 @@ class _AppShellPageState extends State<AppShellPage> {
       _ComingSoonTab(icon: IconKey.transactions, label: t.appShell.transactionsTabLabel),
       _ComingSoonTab(icon: IconKey.wallets, label: t.appShell.walletsTabLabel),
     ];
-    return ScopeWidget<RecordScope>(
-      create: () => RecordScope(parentContainer: parentContainer),
-      builder: (context, scope) {
-        return BlocProvider.value(
-          value: scope.container<RecordBloc>(),
-          child: EffectListener<RecordBloc, RecordState>(
-            // `Builder` di sini bukan hiasan: context yang dipakai
-            // `_onDestinationSelected`/`_openRecordSheet` HARUS berada DI
-            // BAWAH `BlocProvider` di atas supaya `context.read<RecordBloc>()`
-            // menemukannya. Context milik parameter `builder` ScopeWidget
-            // ATAU `build(BuildContext context)` di luar sini keduanya
-            // leluhur `BlocProvider` ini, bukan keturunannya.
-            child: Builder(
-              builder: (context) => Scaffold(
-                body: IndexedStack(index: _activeTab, children: tabs),
-                bottomNavigationBar: NavigationBar(
-                  selectedIndex: _navIndexFor(_activeTab),
-                  onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
-                  destinations: [
-                    NavigationDestination(icon: const AppIcon(IconKey.home), label: t.appShell.homeTabLabel),
-                    NavigationDestination(icon: const AppIcon(IconKey.budget), label: t.appShell.budgetTabLabel),
-                    NavigationDestination(icon: const AppIcon(IconKey.record), label: t.appShell.recordAction),
-                    NavigationDestination(
-                      icon: const AppIcon(IconKey.transactions),
-                      label: t.appShell.transactionsTabLabel,
-                    ),
-                    NavigationDestination(icon: const AppIcon(IconKey.wallets), label: t.appShell.walletsTabLabel),
-                  ],
+    // PixelTheme membungkus SELURUH shell (tab + lembar CATAT yang dibuka
+    // dari dalamnya) dengan bahasa visual ADR-015 -- lihat dokumentasi
+    // kelas [PixelTheme]. Tema global (`AppTheme`/ADR-0006) tidak disentuh;
+    // layar lama di luar shell ini tidak terpengaruh. Dipasang sebagai
+    // pembungkus TERLUAR, di luar `ScopeWidget<RecordScope>`.
+    return PixelTheme(
+      child: ScopeWidget<RecordScope>(
+        create: () => RecordScope(parentContainer: parentContainer),
+        builder: (context, scope) {
+          return BlocProvider.value(
+            value: scope.container<RecordBloc>(),
+            child: EffectListener<RecordBloc, RecordState>(
+              // `Builder` di sini bukan hiasan: context yang dipakai
+              // `_onDestinationSelected`/`_openRecordSheet` HARUS berada DI
+              // BAWAH `BlocProvider` di atas supaya `context.read<RecordBloc>()`
+              // menemukannya. Context milik parameter `builder` ScopeWidget
+              // ATAU `build(BuildContext context)` di luar sini keduanya
+              // leluhur `BlocProvider` ini, bukan keturunannya.
+              child: Builder(
+                builder: (context) => Scaffold(
+                  body: IndexedStack(index: _activeTab, children: tabs),
+                  bottomNavigationBar: NavigationBar(
+                    selectedIndex: _navIndexFor(_activeTab),
+                    onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
+                    destinations: [
+                      NavigationDestination(icon: const AppIcon(IconKey.home), label: t.appShell.homeTabLabel),
+                      NavigationDestination(icon: const AppIcon(IconKey.budget), label: t.appShell.budgetTabLabel),
+                      NavigationDestination(icon: const AppIcon(IconKey.record), label: t.appShell.recordAction),
+                      NavigationDestination(
+                        icon: const AppIcon(IconKey.transactions),
+                        label: t.appShell.transactionsTabLabel,
+                      ),
+                      NavigationDestination(icon: const AppIcon(IconKey.wallets), label: t.appShell.walletsTabLabel),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

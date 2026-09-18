@@ -14,4 +14,10 @@ abstract final class AppBorder {
   /// Lebar baku garis tepi komik — dipakai `AppCard`, `AppButton`,
   /// `AppChip`, dan `ThemeData` (`cardTheme`/`elevatedButtonTheme`).
   static const double thick = 2.5;
+
+  /// Lebar garis tepi ADR-015 ("garis tepi 2px solid" di seluruh level
+  /// elevasi). Nilai berbeda dari [thick] ADR-0006 (2.5px); jangan
+  /// disamakan, keduanya milik bahasa visual yang berbeda (lihat
+  /// `PixelTheme`).
+  static const double pixelThick = 2;
 }

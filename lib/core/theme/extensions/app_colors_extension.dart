@@ -133,6 +133,52 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Penghasilan freelance yang belum dibayar. Nilai resmi ADR-015.
   final Color pending;
 
+  /// Palet mode terang penuh ADR-015 — dipakai layar Saldough 2.0 lewat
+  /// `PixelTheme`, BUKAN [light]. `income`/`expense`/`overBudget`/
+  /// `background`/`cardBackground`/`textPrimary`/`textMuted`/`edge` diganti
+  /// nilai resmi ADR-015 (lihat tabel §"Palet" ADR-015); `accent`/
+  /// `onAccent`/`transfer`/`pending` sudah sama sejak T-2.2. Slot yang
+  /// murni milik layar lama (`investment`, `rollUp`, `needsReview`, dan
+  /// varian `…OnLight`) sengaja diwariskan apa adanya dari [light] — layar
+  /// baru tidak pernah membacanya.
+  ///
+  /// `divider` dan `shimmerBase`/`shimmerHighlight` tidak didefinisikan
+  /// ADR-015; diturunkan dari `textPrimary`/`background`/`cardBackground`
+  /// barunya dengan proporsi yang sama seperti [light] menurunkannya dari
+  /// nilai ADR-0006, bukan warna karangan baru.
+  static final AppColorsExtension pixelLight = light.copyWith(
+    income: const Color(0xFF006948),
+    expense: const Color(0xFFBA1A1A),
+    overBudget: const Color(0xFFBA1A1A),
+    background: const Color(0xFFFFF8F5),
+    cardBackground: const Color(0xFFFFFFFF),
+    edge: const Color(0xFF1E1B19),
+    textPrimary: const Color(0xFF1E1B19),
+    textMuted: const Color(0xFF3D4A42),
+    divider: const Color(0x241E1B19),
+    shimmerBase: const Color(0xFFFAF2EE),
+    shimmerHighlight: const Color(0xFFFFFFFF),
+  );
+
+  /// Palet mode gelap penuh ADR-015 — pasangan [pixelLight]. Lihat
+  /// dokumentasi [pixelLight] untuk aturan penurunan tiap slot.
+  static final AppColorsExtension pixelDark = dark.copyWith(
+    income: const Color(0xFF009767),
+    expense: const Color(0xFFEA4B4B),
+    overBudget: const Color(0xFFEA4B4B),
+    background: const Color(0xFF14120F),
+    cardBackground: const Color(0xFF1F1C18),
+    edge: const Color(0xFFF2ECE7),
+    textPrimary: const Color(0xFFF2ECE7),
+    textMuted: const Color(0xFF708A7A),
+    divider: const Color(0x2EF2ECE7),
+    shimmerBase: const Color(0xFF1F1C18),
+    // +13 tiap kanal dari cardBackground barunya -- rasio relatif yang
+    // sama dengan cardBackground->shimmerHighlight [dark] lama (ADR-015
+    // tidak mendefinisikan slot ini).
+    shimmerHighlight: const Color(0xFF2C2925),
+  );
+
   /// Palet mode terang, nilai resmi dari ADR-0006.
   static const light = AppColorsExtension(
     income: Color(0xFF1E9E46),

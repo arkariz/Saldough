@@ -27,13 +27,13 @@ Terakhir diperbarui: 18 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 3 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 4 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **23** | |
+| **Total MVP** | **76** | **24** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -246,6 +246,50 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       `context.go('/shell')` atau navigasi langsung saat uji manual T-2.10),
       belum ditautkan dari mana pun di alur pemakaian normal.
       Memenuhi FR-REC-001.
+- [x] **T-2.12** Sistem desain ADR-015 penuh untuk layar baru: palet
+      `pixelLight`/`pixelDark`, tiga peran huruf (Space Grotesk/Plus
+      Jakarta Sans/Space Mono), `AppHardCard` (bayangan keras offset), dan
+      `AppSegmentedProgressBar`, dipasang lewat `PixelTheme` yang
+      membungkus `AppShellPage`.
+      ⚠ **Dimajukan atas permintaan eksplisit pemilik** — sebelumnya ini
+      terpecah antara `D-2.1` (kanvas desain, belum dikerjakan) dan
+      **T-7.5** (kode, aslinya dijadwalkan akhir MVP: "kalau belum
+      dikerjakan langsung di fase masing-masing"). Pemilik memilih
+      mengerjakannya sekarang supaya seluruh layar Fase 2 dan seterusnya
+      langsung memakai bahasa visual final, bukan menambal di T-7.5.
+      ⚠ **`PixelTheme` bukan tema aplikasi global.** `AppTheme`/ADR-0006
+      tetap dipakai `MaterialApp` (layar lama tidak disentuh dan tidak
+      berubah tampilannya). `PixelTheme` dipasang SATU KALI di
+      `AppShellPage`, membungkus seluruh tab dan lembar yang dibukanya
+      (termasuk lembar CATAT — `Theme` Flutter otomatis diteruskan ke
+      `showModalBottomSheet`/`showDialog` lewat `InheritedTheme.capture`,
+      dibuktikan lewat tes). Layar baru berikutnya (T-2.5 dst.) otomatis
+      mewarisi bahasa visual ini cukup dengan dirender di dalam shell,
+      tanpa perlu membungkus dirinya sendiri.
+      ⚠ `income`/`expense`/`overBudget`/`background`/`cardBackground`/
+      `textPrimary`/`textMuted` versi ADR-015 TIDAK menimpa slot lama
+      `AppColorsExtension.light`/`dark` (dipakai layar lama, dan ada uji
+      regresi yang menegaskan nilai itu tidak berubah) — disimpan sebagai
+      instance BARU `AppColorsExtension.pixelLight`/`pixelDark` (`copyWith`
+      dari yang lama), dipilih otomatis lewat `PixelTheme` berdasar
+      `Brightness` ambient. Ini menuntaskan keputusan terbuka T-2.2 soal
+      kapan/di mana palet penuh ADR-015 diadopsi.
+      ⚠ Token baru (`AppRadius.pixelSm`, `AppBorder.pixelThick`,
+      `AppElevation.pixelCard`/`pixelInteractive`) ditambahkan sebagai
+      ANGGOTA BARU di kelas token yang sudah ada (bukan kelas baru maupun
+      menimpa nilai lama) — `AppRadius.sm`/`AppBorder.thick`/dst. milik
+      ADR-0006 tidak berubah, tetap dipakai layar lama.
+      ⚠ Ambang warna `AppSegmentedProgressBar` (income <70%, pending
+      70–100%, overBudget ≥100%) mengisi celah kecil di teks ADR-015
+      sendiri (yang hanya eksplisit menyebut "70–90%" untuk `pending`) —
+      lihat komentar kelasnya untuk penalarannya, tinjau ulang kalau
+      pemilik menginginkan potongan persen berbeda.
+      ⚠ Belum dikerjakan: kanvas desain visual `D-2.1` itu sendiri (mockup
+      di alat desain), dan retrofit `AppButton`/`AppChip`/`AppCard` supaya
+      bentuknya (bukan cuma warnanya) ikut ADR-015 — keduanya bukan
+      penghalang untuk mulai memakai `PixelTheme` di layar baru.
+      Memenuhi NFR-UX-003. Sebagian memenuhi maksud `D-2.1` dan `T-7.5`
+      (dicatat silang di kedua tempat itu).
 
 ### Pencatatan dan riwayat
 
@@ -525,6 +569,13 @@ seluruh fitur di atasnya menghasilkan data.
       bilah progres tersegmentasi (`AppSegmentedProgressBar`) dari ADR-015 ke
       seluruh kartu dan bilah progres yang sudah dibangun Fase 2–6, kalau
       belum dikerjakan langsung di fase masing-masing.
+      ⚠ Widget `AppHardCard`/`AppSegmentedProgressBar` dan `PixelTheme`
+      pembungkusnya sudah dibuat di **T-2.12** (dimajukan atas permintaan
+      pemilik). Sisa tugas ini di sini: pastikan SETIAP layar Fase 2–6
+      benar-benar memakainya (bukan `Container`/`ProgressIndicator`
+      polos), dan retrofit bentuk `AppButton`/`AppChip`/`AppCard` supaya
+      radius/garis tepinya juga ikut ADR-015 (T-2.12 baru menyamakan
+      warna dan tipografi, belum bentuk ketiga widget itu).
 - [ ] **T-7.6** Poles: skeleton pemuatan pertama, keadaan kosong tiap layar, dan
       konfirmasi tiap tindakan merusak.
       ⚠ Pakai ulang `AppSkeleton` dan `showConfirmDelete` yang sudah ada.

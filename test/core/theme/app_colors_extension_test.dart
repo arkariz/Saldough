@@ -102,4 +102,82 @@ void main() {
       expect(lerped.incomeOnLight, dark.incomeOnLight);
     });
   });
+
+  group('AppColorsExtension slot ADR-015 (accent/onAccent/transfer/pending, NFR-UX-003)', () {
+    const minRatio = 4.5;
+    const light = AppColorsExtension.light;
+    const dark = AppColorsExtension.dark;
+
+    test('nilai hex sesuai ADR-015, bukan hasil karangan', () {
+      expect(light.accent, const Color(0xFFA73A00));
+      expect(light.transfer, const Color(0xFF3D4A42));
+      expect(light.pending, const Color(0xFF8D4B00));
+      expect(dark.accent, const Color(0xFFE95100));
+      expect(dark.transfer, const Color(0xFF708A7A));
+      expect(dark.pending, const Color(0xFFCA6C00));
+    });
+
+    test('overBudget dan transfer berbagi hex dengan expense/textMuted ADR-015 secara sengaja', () {
+      // `overBudget` di kelas ini masih nilai ADR-0006 lama (belum diganti
+      // di T-2.2 ini — lihat catatan TASK_LIST T-2.2), jadi yang diverifikasi
+      // di sini murni bahwa `transfer` ADR-015 (0x3D4A42/0x708A7A) BUKAN
+      // salah salin: nilainya memang identik dengan `textMuted` versi
+      // ADR-015 (bukan `textMuted` lama di kelas ini, yang nilainya beda).
+      const adr015TextMutedLight = Color(0xFF3D4A42);
+      const adr015TextMutedDark = Color(0xFF708A7A);
+      expect(light.transfer, adr015TextMutedLight);
+      expect(dark.transfer, adr015TextMutedDark);
+    });
+
+    for (final entry in {'accent': light.accent, 'transfer': light.transfer, 'pending': light.pending}.entries) {
+      test('${entry.key} (terang) lolos >= $minRatio:1 terhadap cardBackground terang', () {
+        final ratio = _contrastRatio(entry.value, light.cardBackground);
+        expect(ratio, greaterThanOrEqualTo(minRatio));
+      });
+
+      test('${entry.key} (terang) lolos >= $minRatio:1 terhadap background terang', () {
+        final ratio = _contrastRatio(entry.value, light.background);
+        expect(ratio, greaterThanOrEqualTo(minRatio));
+      });
+    }
+
+    for (final entry in {'accent': dark.accent, 'transfer': dark.transfer, 'pending': dark.pending}.entries) {
+      test('${entry.key} (gelap) lolos >= $minRatio:1 terhadap cardBackground gelap', () {
+        final ratio = _contrastRatio(entry.value, dark.cardBackground);
+        expect(ratio, greaterThanOrEqualTo(minRatio));
+      });
+
+      test('${entry.key} (gelap) lolos >= $minRatio:1 terhadap background gelap', () {
+        final ratio = _contrastRatio(entry.value, dark.background);
+        expect(ratio, greaterThanOrEqualTo(minRatio));
+      });
+    }
+
+    test('onAccent (terang) lolos >= $minRatio:1 di atas isian accent', () {
+      final ratio = _contrastRatio(light.onAccent, light.accent);
+      expect(ratio, greaterThanOrEqualTo(minRatio));
+    });
+
+    test('onAccent (gelap) lolos >= $minRatio:1 di atas isian accent — celah ADR-015 diisi manual', () {
+      // ADR-015 hanya menyatakan kontras teks putih di atas `accent` mode
+      // terang (6,46:1). Putih di atas `accent` gelap cuma 3,72:1 — gagal.
+      // Nilai onAccent gelap di sini BUKAN dari ADR-015; lihat dokumentasi
+      // field `onAccent`.
+      final ratio = _contrastRatio(dark.onAccent, dark.accent);
+      expect(ratio, greaterThanOrEqualTo(minRatio));
+    });
+
+    test('copyWith mempertahankan slot ADR-015 kalau tidak diisi', () {
+      final copy = light.copyWith(textPrimary: Colors.black);
+      expect(copy.accent, light.accent);
+      expect(copy.onAccent, light.onAccent);
+      expect(copy.transfer, light.transfer);
+      expect(copy.pending, light.pending);
+    });
+
+    test('lerp(t: 0/1) pada slot ADR-015 mengembalikan warna awal/akhir', () {
+      expect(light.lerp(dark, 0).accent, light.accent);
+      expect(light.lerp(dark, 1).accent, dark.accent);
+    });
+  });
 }

@@ -27,13 +27,13 @@ Terakhir diperbarui: 18 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 1 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 2 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **21** | |
+| **Total MVP** | **75** | **22** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -191,7 +191,7 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       ditunda ke saat layar keadaan-kosong nyata dibangun, T-2.7/T-2.11 dst,
       bukan bagian lapisan kunci ikon murni).
       Memenuhi NFR-UX-002.
-- [ ] **T-2.2** Tambahkan slot warna `accent`, `onAccent`, `transfer`, dan
+- [x] **T-2.2** Tambahkan slot warna `accent`, `onAccent`, `transfer`, dan
       `pending` ke `AppColorsExtension`, beserta uji kontrasnya.
       ⚠ Slot lama (`investment`, `rollUp`, `needsReview`, `onNeedsReview`, dan
       keenam varian `…OnLight`) **tidak** dihapus di fase ini — layar lama
@@ -201,6 +201,32 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       Jangan mengarang nilai baru. `overBudget` dan `transfer` masing-masing
       berbagi hex dengan `expense` dan `textMuted` — itu disengaja, bukan
       salah salin.
+      ⚠ **Dikerjakan literal sesuai cakupan di atas** — hanya EMPAT slot ini
+      yang ditambahkan. ADR-015 sendiri menyatakan "enam slot semantik
+      dipertahankan dari ADR-013; nilainya diganti seluruhnya" (mencakup
+      `income`, `expense`, `overBudget` juga, bukan cuma keempat slot di
+      atas), tetapi TASK_LIST ini secara eksplisit hanya meminta menambah
+      `accent`/`onAccent`/`transfer`/`pending` — nilai `income`, `expense`,
+      `overBudget`, `background`, `cardBackground`, `textPrimary`,
+      `textMuted` di kelas ini **tidak disentuh**, tetap ADR-0006 lama.
+      Belum ada tugas bernomor yang menugaskan penggantian penuh ketujuh
+      slot itu (T-3.5 hanya menghapus empat slot `investment`/`rollUp`/
+      `needsReview`/`onNeedsReview`, bukan mengganti nilai `income`/
+      `expense`/dst). **Keputusan terbuka** untuk pemilik: kapan/di tugas
+      mana palet penuh ADR-015 (termasuk bayangan keras dan bilah progres
+      tersegmentasi yang disebut ADR-015 §7) diadopsi untuk seluruh
+      aplikasi — kandidat wajar adalah menjelang/saat T-3.5 (cutover),
+      karena baru di situ layar lama yang bergantung ke nilai ADR-0006
+      dihapus.
+      ⚠ **Celah ADR-015 diisi manual**: ADR-015 hanya menyatakan kontras
+      teks putih di atas `accent` untuk mode TERANG (6,46:1); tidak ada
+      padanan mode gelap. Teks putih di atas `accent` gelap (`#E95100`)
+      cuma 3,72:1 — gagal ambang 4,5:1. `onAccent` gelap di sini memakai
+      `#14120F` (nilai `background` gelap ADR-015 sendiri, bukan warna
+      baru) yang menghasilkan 5,02:1 terhadap `accent` gelap — ADR-015
+      sudah mencatat pasangan hex yang sama itu di tabelnya. Ini pengisi
+      celah, bukan keputusan ADR-015 — tinjau ulang kalau pemilik punya
+      preferensi lain untuk warna teks di atas tombol CATAT mode gelap.
       Memenuhi NFR-UX-003.
 - [ ] **T-2.3** Buat `AppShellPage` di `lib/core/presentation/shell/` — lima
       tujuan dengan CATAT di tengah, `IndexedStack`, didaftarkan di rute

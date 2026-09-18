@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 /// Slot warna semantik Saldough, dipasang lewat [ThemeData.extensions].
 ///
-/// Enam slot keuangan (`income`, `expense`, `overBudget`, `investment`,
-/// `rollUp`, `needsReview`) plus slot netral untuk panel/teks/skeleton.
-/// Nilai hex dan perannya didokumentasikan di ADR-0006 — jangan menulis
-/// warna harfiah di widget, selalu lewat `context.appColors`.
+/// Enam slot keuangan lama (`income`, `expense`, `overBudget`, `investment`,
+/// `rollUp`, `needsReview`, nilai ADR-0006) plus slot netral untuk
+/// panel/teks/skeleton, dan empat slot baru dari ADR-015 (`accent`,
+/// `onAccent`, `transfer`, `pending`) untuk layar Saldough 2.0. Jangan
+/// menulis warna harfiah di widget, selalu lewat `context.appColors`.
 class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Membuat [AppColorsExtension] dengan seluruh slot wajib diisi.
   const AppColorsExtension({
@@ -30,6 +31,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.divider,
     required this.shimmerBase,
     required this.shimmerHighlight,
+    required this.accent,
+    required this.onAccent,
+    required this.transfer,
+    required this.pending,
   });
 
   /// Nominal masuk, dan sisa siklus yang positif.
@@ -102,6 +107,32 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Kilau skeleton loading.
   final Color shimmerHighlight;
 
+  /// Tindakan utama, termasuk tombol CATAT. Nilai resmi ADR-015 — jangan
+  /// dipakai untuk menyatakan makna keuangan (nominal), hanya untuk tombol
+  /// dan aksi.
+  final Color accent;
+
+  /// Warna teks/ikon di atas isian [accent].
+  ///
+  /// Mode terang memakai putih persis seperti dinyatakan ADR-015 ("teks
+  /// putih di atas `accent` menghasilkan 6,46:1"). ADR-015 tidak menyebutkan
+  /// padanan mode gelap — putih di atas `accent` gelap (`#E95100`) hanya
+  /// 3,72:1, di bawah ambang 4,5:1. Nilai mode gelap di sini memakai
+  /// [background] gelap (`#14120F`), bukan warna baru: ADR-015 sendiri sudah
+  /// mencatat pasangan hex yang sama (`accent` gelap terhadap latar gelap)
+  /// menghasilkan 5,02:1. Ini keputusan pengisi celah, bukan nilai ADR-015
+  /// — tinjau ulang kalau pemilik punya preferensi lain.
+  final Color onAccent;
+
+  /// Transfer antar dompet. Nilai resmi ADR-015 — sengaja berbagi hex dengan
+  /// [textMuted] versi ADR-015 (bukan [textMuted] lama di sini, lihat
+  /// dokumentasi kelas), supaya transfer tetap netral dan tidak menyaingi
+  /// makna [income]/[expense].
+  final Color transfer;
+
+  /// Penghasilan freelance yang belum dibayar. Nilai resmi ADR-015.
+  final Color pending;
+
   /// Palet mode terang, nilai resmi dari ADR-0006.
   static const light = AppColorsExtension(
     income: Color(0xFF1E9E46),
@@ -125,6 +156,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     divider: Color(0x24161310),
     shimmerBase: Color(0xFFEFE6D2),
     shimmerHighlight: Color(0xFFFFFFFF),
+    accent: Color(0xFFA73A00),
+    onAccent: Color(0xFFFFFFFF),
+    transfer: Color(0xFF3D4A42),
+    pending: Color(0xFF8D4B00),
   );
 
   /// Palet mode gelap, nilai resmi dari ADR-0006.
@@ -152,6 +187,11 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     divider: Color(0x2EF2E9D8),
     shimmerBase: Color(0xFF1C1A17),
     shimmerHighlight: Color(0xFF29271F),
+    accent: Color(0xFFE95100),
+    // Lihat dokumentasi field onAccent — pengisi celah, bukan nilai ADR-015.
+    onAccent: Color(0xFF14120F),
+    transfer: Color(0xFF708A7A),
+    pending: Color(0xFFCA6C00),
   );
 
   @override
@@ -177,6 +217,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? divider,
     Color? shimmerBase,
     Color? shimmerHighlight,
+    Color? accent,
+    Color? onAccent,
+    Color? transfer,
+    Color? pending,
   }) {
     return AppColorsExtension(
       income: income ?? this.income,
@@ -200,6 +244,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       divider: divider ?? this.divider,
       shimmerBase: shimmerBase ?? this.shimmerBase,
       shimmerHighlight: shimmerHighlight ?? this.shimmerHighlight,
+      accent: accent ?? this.accent,
+      onAccent: onAccent ?? this.onAccent,
+      transfer: transfer ?? this.transfer,
+      pending: pending ?? this.pending,
     );
   }
 
@@ -228,6 +276,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       divider: Color.lerp(divider, other.divider, t)!,
       shimmerBase: Color.lerp(shimmerBase, other.shimmerBase, t)!,
       shimmerHighlight: Color.lerp(shimmerHighlight, other.shimmerHighlight, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
+      onAccent: Color.lerp(onAccent, other.onAccent, t)!,
+      transfer: Color.lerp(transfer, other.transfer, t)!,
+      pending: Color.lerp(pending, other.pending, t)!,
     );
   }
 }

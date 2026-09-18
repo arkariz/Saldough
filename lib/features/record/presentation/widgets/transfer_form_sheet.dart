@@ -93,12 +93,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            RecordAmountField(
-              controller: _amountController,
-              label: t.record.amountFieldHint,
-              quickAmounts: _quickAmounts,
-              autofocus: true,
-              onChanged: () => setState(() {}),
+            AppHardCard(
+              child:RecordAmountField(
+                controller: _amountController,
+                label: t.record.amountFieldHint,
+                quickAmounts: _quickAmounts,
+                autofocus: true,
+                onChanged: () => setState(() {}),
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             WalletPickerField(
@@ -122,11 +124,15 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               Text(t.record.sameWalletWarning, style: TextStyle(color: context.appColors.expense)),
             ],
             const SizedBox(height: AppSpacing.sm),
-            RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
+            AppHardCard(
+              child:RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
+            ),
             const SizedBox(height: AppSpacing.sm),
-            TextField(
-              controller: _noteController,
-              decoration: InputDecoration(labelText: t.record.noteFieldHint),
+            AppHardCard(
+              child:TextField(
+                controller: _noteController,
+                decoration: InputDecoration(labelText: t.record.noteFieldHint),
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             AppButton(

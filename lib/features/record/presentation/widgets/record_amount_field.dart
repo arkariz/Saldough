@@ -102,13 +102,16 @@ class RecordAmountField extends StatelessWidget {
         ),
         if (quickAmounts.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.xs,
-            children: [
-              for (final amount in quickAmounts)
-                AppChip(label: '+Rp${_formatThousands(amount)}', onTap: () => _addQuickAmount(amount)),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (var i = 0; i < quickAmounts.length; i++) ...[
+                  if (i > 0) const SizedBox(width: AppSpacing.sm),
+                  AppChip(label: '+Rp${_formatThousands(quickAmounts[i])}', onTap: () => _addQuickAmount(quickAmounts[i])),
+                ],
+              ],
+            ),
           ),
         ],
       ],

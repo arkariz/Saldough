@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Chip bergaris tepi tebal, dipakai untuk badge status (`needsReview`),
@@ -19,6 +20,7 @@ class AppChip extends StatefulWidget {
     required this.label,
     this.selected = false,
     this.color,
+    this.icon,
     this.onTap,
     this.shout = false,
     super.key,
@@ -32,6 +34,11 @@ class AppChip extends StatefulWidget {
 
   /// Warna isian saat [selected]. Bawaan `colorScheme.primary`.
   final Color? color;
+
+  /// Ikon kecil sebelum [label], kalau ada. Bawaan `null` -- tanpa ikon,
+  /// seperti sebelumnya. Dipakai chip kategori bergambar (ADR-015); chip
+  /// pilihan nominal cepat dan badge status sengaja tetap tanpa ikon.
+  final IconKey? icon;
 
   /// Dipanggil saat chip diketuk. `null` membuat chip non-interaktif.
   final VoidCallback? onTap;
@@ -84,14 +91,23 @@ class _AppChipState extends State<AppChip> {
                 borderRadius: AppRadius.fullAll,
                 border: Border.all(color: colors.edge, width: AppBorder.thick),
               ),
-              child: Text(
-                widget.label,
-                style: widget.shout
-                    ? AppTheme.shout(color: textColor)
-                    : Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: textColor,
-                          fontWeight: FontWeight.w700,
-                        ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.icon != null) ...[
+                    AppIcon(widget.icon!, size: 16, color: textColor),
+                    const SizedBox(width: 4),
+                  ],
+                  Text(
+                    widget.label,
+                    style: widget.shout
+                        ? AppTheme.shout(color: textColor)
+                        : Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: textColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                  ),
+                ],
               ),
             ),
           ),

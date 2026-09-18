@@ -23,6 +23,13 @@ List<String> _categorySuggestions() => [
       t.record.categorySuggestionGift,
     ];
 
+// `IconKey` belum punya kunci per-kategori pemasukan (Gaji/Bonus/Penjualan/
+// Hadiah) -- `IconKey.income` generik dipakai sebagai placeholder untuk
+// semuanya sampai daftar kategori pemasukan final diputuskan pemilik,
+// mengikuti pola yang sama seperti catatan `Wallet.iconKey` di
+// `wallet_picker_field.dart`.
+List<IconKey?> _categoryIcons() => const [IconKey.income, IconKey.income, IconKey.income, IconKey.income];
+
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
 /// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali;
@@ -101,12 +108,14 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            RecordAmountField(
-              controller: _amountController,
-              label: t.record.amountFieldHint,
-              quickAmounts: _quickAmounts,
-              autofocus: true,
-              onChanged: () => setState(() {}),
+            AppHardCard(
+              child:RecordAmountField(
+                controller: _amountController,
+                label: t.record.amountFieldHint,
+                quickAmounts: _quickAmounts,
+                autofocus: true,
+                onChanged: () => setState(() {}),
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             WalletPickerField(
@@ -117,13 +126,23 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
               previewAmountSen: _amountSen,
             ),
             const SizedBox(height: AppSpacing.sm),
-            RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
+            AppHardCard(
+              child:RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
+            ),
             const SizedBox(height: AppSpacing.sm),
-            RecordCategoryField(controller: _categoryController, suggestions: _categorySuggestions()),
+            AppHardCard(
+              child:RecordCategoryField(
+                controller: _categoryController,
+                suggestions: _categorySuggestions(),
+                icons: _categoryIcons(),
+              ),
+            ),
             const SizedBox(height: AppSpacing.sm),
-            TextField(
-              controller: _noteController,
-              decoration: InputDecoration(labelText: t.record.noteFieldHint),
+            AppHardCard(
+              child:TextField(
+                controller: _noteController,
+                decoration: InputDecoration(labelText: t.record.noteFieldHint),
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             AppButton(label: t.record.incomeAction, onPressed: _canSubmit ? _submit : null),

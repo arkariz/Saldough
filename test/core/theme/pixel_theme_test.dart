@@ -80,6 +80,35 @@ void main() {
       expect(sheetText.data, AppColorsExtension.pixelLight.income.toString());
     });
 
+    testWidgets('showModalBottomSheet di dalam PixelTheme berlatar colors.background, bukan putih polos', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: PixelTheme(
+            child: Builder(
+              builder: (context) => Scaffold(
+                body: ElevatedButton(
+                  onPressed: () => showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) => const SizedBox(height: 100, child: Text('isi lembar')),
+                  ),
+                  child: const Text('buka'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('buka'));
+      await tester.pumpAndSettle();
+
+      // `Material` terluar di dalam rute lembar bawah -- itu yang mewarnai
+      // permukaan sheet, bukan `Material` lain di pohon (mis. milik tombol).
+      final sheetMaterial = tester.widgetList<Material>(find.ancestor(of: find.text('isi lembar'), matching: find.byType(Material))).last;
+      expect(sheetMaterial.color, AppColorsExtension.pixelLight.background);
+    });
+
     testWidgets('memilih pixelDark saat ambient brightness gelap', (tester) async {
       await tester.pumpWidget(
         MaterialApp(

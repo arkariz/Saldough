@@ -48,6 +48,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$grocery$en grocery = _Translations$grocery$en._(_root);
 	@override late final _Translations$investment$en investment = _Translations$investment$en._(_root);
 	@override late final _Translations$shell$en shell = _Translations$shell$en._(_root);
+	@override late final _Translations$appShell$en appShell = _Translations$appShell$en._(_root);
 }
 
 // Path: app
@@ -331,6 +332,21 @@ class _Translations$shell$en extends Translations$shell$id {
 	@override String get investmentTabLabel => 'Investment';
 }
 
+// Path: appShell
+class _Translations$appShell$en extends Translations$appShell$id {
+	_Translations$appShell$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get homeTabLabel => 'Home';
+	@override String get budgetTabLabel => 'Budget';
+	@override String get recordAction => 'Record';
+	@override String get transactionsTabLabel => 'Transactions';
+	@override String get walletsTabLabel => 'Wallets';
+	@override String get comingSoonMessage => 'Coming soon.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -539,6 +555,12 @@ extension on TranslationsEn {
 			'shell.incomeTabLabel' => 'Income',
 			'shell.groceryTabLabel' => 'Shopping',
 			'shell.investmentTabLabel' => 'Investment',
+			'appShell.homeTabLabel' => 'Home',
+			'appShell.budgetTabLabel' => 'Budget',
+			'appShell.recordAction' => 'Record',
+			'appShell.transactionsTabLabel' => 'Transactions',
+			'appShell.walletsTabLabel' => 'Wallets',
+			'appShell.comingSoonMessage' => 'Coming soon.',
 			_ => null,
 		};
 	}

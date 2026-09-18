@@ -216,5 +216,13 @@
     "incomeTabLabel": "Income",
     "groceryTabLabel": "Shopping",
     "investmentTabLabel": "Investment"
+  },
+  "appShell": {
+    "homeTabLabel": "Home",
+    "budgetTabLabel": "Budget",
+    "recordAction": "Record",
+    "transactionsTabLabel": "Transactions",
+    "walletsTabLabel": "Wallets",
+    "comingSoonMessage": "Coming soon."
   }
 }

@@ -27,13 +27,13 @@ Terakhir diperbarui: 18 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 2 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 3 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **22** | |
+| **Total MVP** | **75** | **23** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -228,13 +228,23 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       celah, bukan keputusan ADR-015 — tinjau ulang kalau pemilik punya
       preferensi lain untuk warna teks di atas tombol CATAT mode gelap.
       Memenuhi NFR-UX-003.
-- [ ] **T-2.3** Buat `AppShellPage` di `lib/core/presentation/shell/` — lima
+- [x] **T-2.3** Buat `AppShellPage` di `lib/core/presentation/shell/` — lima
       tujuan dengan CATAT di tengah, `IndexedStack`, didaftarkan di rute
       sementara `/shell`.
       ⚠ Berkas baru dengan nama baru. `main_shell_page.dart` yang lama tidak
       disentuh sampai T-3.4.
       ⚠ CATAT bukan tujuan navigasi biasa: ia tidak mengganti isi
       `IndexedStack`, melainkan membuka lembar pilihan.
+      Isi keempat tab lain (Beranda/Anggaran/Transaksi/Dompet) dan lembar
+      CATAT masih `_ComingSoonTab`/isian sementara — fiturnya sendiri belum
+      ada (Transaksi T-2.5, Dompet T-2.7, Anggaran Fase 4, Beranda Fase 6,
+      CATAT sungguhan T-2.4). Menukarnya jadi layar nyata adalah edit
+      lokal di `app_shell_page.dart`, bukan menulis ulang shell.
+      `AppRouteRegistry.build` ditambahi param opsional `shellBuilder`
+      untuk mendaftarkan `/shell` — `homePath`/`MainShellPage` tidak
+      disentuh, rute `/shell` hanya bisa dibuka manual (mis. lewat
+      `context.go('/shell')` atau navigasi langsung saat uji manual T-2.10),
+      belum ditautkan dari mana pun di alur pemakaian normal.
       Memenuhi FR-REC-001.
 
 ### Pencatatan dan riwayat

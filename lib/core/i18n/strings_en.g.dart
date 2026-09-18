@@ -49,6 +49,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$investment$en investment = _Translations$investment$en._(_root);
 	@override late final _Translations$shell$en shell = _Translations$shell$en._(_root);
 	@override late final _Translations$appShell$en appShell = _Translations$appShell$en._(_root);
+	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 }
 
 // Path: app
@@ -347,6 +348,49 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get comingSoonMessage => 'Coming soon.';
 }
 
+// Path: record
+class _Translations$record$en extends Translations$record$id {
+	_Translations$record$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get sheetTitle => 'Record';
+	@override String get incomeAction => 'Record Income';
+	@override String get expenseAction => 'Record Expense';
+	@override String get transferAction => 'Record Transfer';
+	@override String get amountFieldHint => 'Amount (Rp)';
+	@override String get toWalletFieldLabel => 'Into Wallet';
+	@override String get fromWalletFieldLabel => 'From Wallet';
+	@override String get destinationWalletFieldLabel => 'To Wallet';
+	@override String get dateFieldLabel => 'Date';
+	@override String get categoryFieldHint => 'Category (optional)';
+	@override String get noteFieldHint => 'Note (optional)';
+	@override String get noWalletsMessage => 'No wallets yet. Create one in the Wallets tab first.';
+	@override String get sameWalletWarning => 'Source and destination wallets can\'t be the same.';
+	@override String get incomeSavedMessage => 'Income recorded.';
+	@override String get expenseSavedMessage => 'Expense recorded.';
+	@override String get transferSavedMessage => 'Transfer recorded.';
+	@override String get disclaimerMessage => 'Saldough only records manual history. It never moves money automatically.';
+	@override String get incomeSubtitle => 'Record money coming into one of your wallets.';
+	@override String get expenseSubtitle => 'Record money going out of one of your wallets.';
+	@override String get transferSubtitle => 'Record money moving between your own wallets.';
+	@override String get incomeEffectLabel => 'Adds to wallet balance';
+	@override String get expenseEffectLabel => 'Reduces wallet balance';
+	@override String get transferEffectLabel => 'Total balance stays the same';
+	@override String get changeWalletAction => 'Change';
+	@override String get walletNotSelectedPrompt => 'Not selected yet';
+	@override String get savingMessage => 'Saving...';
+	@override String get categorySuggestionSalary => 'Salary';
+	@override String get categorySuggestionBonus => 'Bonus';
+	@override String get categorySuggestionSales => 'Sales';
+	@override String get categorySuggestionGift => 'Gift';
+	@override String get categorySuggestionFood => 'Food';
+	@override String get categorySuggestionShopping => 'Shopping';
+	@override String get categorySuggestionTransport => 'Transport';
+	@override String get categorySuggestionBills => 'Bills';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -561,6 +605,40 @@ extension on TranslationsEn {
 			'appShell.transactionsTabLabel' => 'Transactions',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'appShell.comingSoonMessage' => 'Coming soon.',
+			'record.sheetTitle' => 'Record',
+			'record.incomeAction' => 'Record Income',
+			'record.expenseAction' => 'Record Expense',
+			'record.transferAction' => 'Record Transfer',
+			'record.amountFieldHint' => 'Amount (Rp)',
+			'record.toWalletFieldLabel' => 'Into Wallet',
+			'record.fromWalletFieldLabel' => 'From Wallet',
+			'record.destinationWalletFieldLabel' => 'To Wallet',
+			'record.dateFieldLabel' => 'Date',
+			'record.categoryFieldHint' => 'Category (optional)',
+			'record.noteFieldHint' => 'Note (optional)',
+			'record.noWalletsMessage' => 'No wallets yet. Create one in the Wallets tab first.',
+			'record.sameWalletWarning' => 'Source and destination wallets can\'t be the same.',
+			'record.incomeSavedMessage' => 'Income recorded.',
+			'record.expenseSavedMessage' => 'Expense recorded.',
+			'record.transferSavedMessage' => 'Transfer recorded.',
+			'record.disclaimerMessage' => 'Saldough only records manual history. It never moves money automatically.',
+			'record.incomeSubtitle' => 'Record money coming into one of your wallets.',
+			'record.expenseSubtitle' => 'Record money going out of one of your wallets.',
+			'record.transferSubtitle' => 'Record money moving between your own wallets.',
+			'record.incomeEffectLabel' => 'Adds to wallet balance',
+			'record.expenseEffectLabel' => 'Reduces wallet balance',
+			'record.transferEffectLabel' => 'Total balance stays the same',
+			'record.changeWalletAction' => 'Change',
+			'record.walletNotSelectedPrompt' => 'Not selected yet',
+			'record.savingMessage' => 'Saving...',
+			'record.categorySuggestionSalary' => 'Salary',
+			'record.categorySuggestionBonus' => 'Bonus',
+			'record.categorySuggestionSales' => 'Sales',
+			'record.categorySuggestionGift' => 'Gift',
+			'record.categorySuggestionFood' => 'Food',
+			'record.categorySuggestionShopping' => 'Shopping',
+			'record.categorySuggestionTransport' => 'Transport',
+			'record.categorySuggestionBills' => 'Bills',
 			_ => null,
 		};
 	}

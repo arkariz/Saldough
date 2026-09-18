@@ -51,6 +51,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$investment$id investment = Translations$investment$id.internal(_root);
 	late final Translations$shell$id shell = Translations$shell$id.internal(_root);
 	late final Translations$appShell$id appShell = Translations$appShell$id.internal(_root);
+	late final Translations$record$id record = Translations$record$id.internal(_root);
 }
 
 // Path: app
@@ -761,6 +762,117 @@ class Translations$appShell$id {
 	String get comingSoonMessage => 'Segera hadir.';
 }
 
+// Path: record
+class Translations$record$id {
+	Translations$record$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat'
+	String get sheetTitle => 'Catat';
+
+	/// id: 'Catat Pemasukan'
+	String get incomeAction => 'Catat Pemasukan';
+
+	/// id: 'Catat Pengeluaran'
+	String get expenseAction => 'Catat Pengeluaran';
+
+	/// id: 'Catat Transfer'
+	String get transferAction => 'Catat Transfer';
+
+	/// id: 'Nominal (Rp)'
+	String get amountFieldHint => 'Nominal (Rp)';
+
+	/// id: 'Masuk ke Dompet'
+	String get toWalletFieldLabel => 'Masuk ke Dompet';
+
+	/// id: 'Dari Dompet'
+	String get fromWalletFieldLabel => 'Dari Dompet';
+
+	/// id: 'Ke Dompet'
+	String get destinationWalletFieldLabel => 'Ke Dompet';
+
+	/// id: 'Tanggal'
+	String get dateFieldLabel => 'Tanggal';
+
+	/// id: 'Kategori (opsional)'
+	String get categoryFieldHint => 'Kategori (opsional)';
+
+	/// id: 'Catatan (opsional)'
+	String get noteFieldHint => 'Catatan (opsional)';
+
+	/// id: 'Belum ada dompet. Buat dompet dulu di tab Dompet.'
+	String get noWalletsMessage => 'Belum ada dompet. Buat dompet dulu di tab Dompet.';
+
+	/// id: 'Dompet asal dan tujuan tidak boleh sama.'
+	String get sameWalletWarning => 'Dompet asal dan tujuan tidak boleh sama.';
+
+	/// id: 'Pemasukan tercatat.'
+	String get incomeSavedMessage => 'Pemasukan tercatat.';
+
+	/// id: 'Pengeluaran tercatat.'
+	String get expenseSavedMessage => 'Pengeluaran tercatat.';
+
+	/// id: 'Transfer tercatat.'
+	String get transferSavedMessage => 'Transfer tercatat.';
+
+	/// id: 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.'
+	String get disclaimerMessage => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.';
+
+	/// id: 'Catat uang yang masuk ke salah satu dompet.'
+	String get incomeSubtitle => 'Catat uang yang masuk ke salah satu dompet.';
+
+	/// id: 'Catat uang yang keluar dari salah satu dompet.'
+	String get expenseSubtitle => 'Catat uang yang keluar dari salah satu dompet.';
+
+	/// id: 'Catat perpindahan uang antar dompet milikmu sendiri.'
+	String get transferSubtitle => 'Catat perpindahan uang antar dompet milikmu sendiri.';
+
+	/// id: 'Menambah saldo dompet'
+	String get incomeEffectLabel => 'Menambah saldo dompet';
+
+	/// id: 'Mengurangi saldo dompet'
+	String get expenseEffectLabel => 'Mengurangi saldo dompet';
+
+	/// id: 'Total saldo tidak berubah'
+	String get transferEffectLabel => 'Total saldo tidak berubah';
+
+	/// id: 'Ganti'
+	String get changeWalletAction => 'Ganti';
+
+	/// id: 'Belum dipilih'
+	String get walletNotSelectedPrompt => 'Belum dipilih';
+
+	/// id: 'Menyimpan...'
+	String get savingMessage => 'Menyimpan...';
+
+	/// id: 'Gaji'
+	String get categorySuggestionSalary => 'Gaji';
+
+	/// id: 'Bonus'
+	String get categorySuggestionBonus => 'Bonus';
+
+	/// id: 'Penjualan'
+	String get categorySuggestionSales => 'Penjualan';
+
+	/// id: 'Hadiah'
+	String get categorySuggestionGift => 'Hadiah';
+
+	/// id: 'Makan'
+	String get categorySuggestionFood => 'Makan';
+
+	/// id: 'Belanja'
+	String get categorySuggestionShopping => 'Belanja';
+
+	/// id: 'Transport'
+	String get categorySuggestionTransport => 'Transport';
+
+	/// id: 'Tagihan'
+	String get categorySuggestionBills => 'Tagihan';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -975,6 +1087,40 @@ extension on Translations {
 			'appShell.transactionsTabLabel' => 'Transaksi',
 			'appShell.walletsTabLabel' => 'Dompet',
 			'appShell.comingSoonMessage' => 'Segera hadir.',
+			'record.sheetTitle' => 'Catat',
+			'record.incomeAction' => 'Catat Pemasukan',
+			'record.expenseAction' => 'Catat Pengeluaran',
+			'record.transferAction' => 'Catat Transfer',
+			'record.amountFieldHint' => 'Nominal (Rp)',
+			'record.toWalletFieldLabel' => 'Masuk ke Dompet',
+			'record.fromWalletFieldLabel' => 'Dari Dompet',
+			'record.destinationWalletFieldLabel' => 'Ke Dompet',
+			'record.dateFieldLabel' => 'Tanggal',
+			'record.categoryFieldHint' => 'Kategori (opsional)',
+			'record.noteFieldHint' => 'Catatan (opsional)',
+			'record.noWalletsMessage' => 'Belum ada dompet. Buat dompet dulu di tab Dompet.',
+			'record.sameWalletWarning' => 'Dompet asal dan tujuan tidak boleh sama.',
+			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
+			'record.expenseSavedMessage' => 'Pengeluaran tercatat.',
+			'record.transferSavedMessage' => 'Transfer tercatat.',
+			'record.disclaimerMessage' => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.',
+			'record.incomeSubtitle' => 'Catat uang yang masuk ke salah satu dompet.',
+			'record.expenseSubtitle' => 'Catat uang yang keluar dari salah satu dompet.',
+			'record.transferSubtitle' => 'Catat perpindahan uang antar dompet milikmu sendiri.',
+			'record.incomeEffectLabel' => 'Menambah saldo dompet',
+			'record.expenseEffectLabel' => 'Mengurangi saldo dompet',
+			'record.transferEffectLabel' => 'Total saldo tidak berubah',
+			'record.changeWalletAction' => 'Ganti',
+			'record.walletNotSelectedPrompt' => 'Belum dipilih',
+			'record.savingMessage' => 'Menyimpan...',
+			'record.categorySuggestionSalary' => 'Gaji',
+			'record.categorySuggestionBonus' => 'Bonus',
+			'record.categorySuggestionSales' => 'Penjualan',
+			'record.categorySuggestionGift' => 'Hadiah',
+			'record.categorySuggestionFood' => 'Makan',
+			'record.categorySuggestionShopping' => 'Belanja',
+			'record.categorySuggestionTransport' => 'Transport',
+			'record.categorySuggestionBills' => 'Tagihan',
 			_ => null,
 		};
 	}

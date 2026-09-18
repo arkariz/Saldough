@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:saldough/core/theme/extensions/app_colors_extension.dart';
 import 'package:saldough/core/theme/tokens/app_border.dart';
 import 'package:saldough/core/theme/tokens/app_radius.dart';
@@ -58,6 +57,14 @@ class PixelTheme extends StatelessWidget {
       dividerColor: colors.divider,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
+      // `showModalBottomSheet` mengambil warna dari sini, bukan dari
+      // `colorScheme.surface` -- tanpa ini lembar CATAT dkk. terlihat putih
+      // polos (warna kartu), bukan krem hangat `colors.background` yang
+      // dimaksud ADR-015.
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colors.background,
+        modalBackgroundColor: colors.background,
+      ),
       // AppHardCard adalah cara utama menampilkan kartu ADR-015 (bayangan
       // keras offset, bukan elevasi Material) -- cardTheme di sini hanya
       // jaring pengaman untuk widget Material bawaan (`Card`) kalau
@@ -76,7 +83,11 @@ class PixelTheme extends StatelessWidget {
         foregroundColor: colors.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: GoogleFonts.spaceGrotesk(fontSize: 20, fontWeight: FontWeight.w700, color: colors.textPrimary),
+        titleTextStyle: const TextStyle(
+          fontFamily: 'SpaceGrotesk',
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ).copyWith(color: colors.textPrimary),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -99,8 +110,8 @@ class PixelTheme extends StatelessWidget {
   // menimpa seluruh slot termasuk yang sudah diisi huruf lain.
   static TextTheme _buildTextTheme(TextTheme base, AppColorsExtension colors) {
     TextStyle? display(TextStyle? base, Color color) =>
-        GoogleFonts.spaceGrotesk(textStyle: base, color: color, fontWeight: FontWeight.w700);
-    TextStyle? body(TextStyle? base, Color color) => GoogleFonts.plusJakartaSans(textStyle: base, color: color);
+        base?.copyWith(fontFamily: 'SpaceGrotesk', color: color, fontWeight: FontWeight.w700);
+    TextStyle? body(TextStyle? base, Color color) => base?.copyWith(fontFamily: 'PlusJakartaSans', color: color);
 
     return base.copyWith(
       displayLarge: display(base.displayLarge, colors.textPrimary),
@@ -131,7 +142,8 @@ abstract final class PixelTypography {
   /// [TextTheme.headlineSmall]) dan lencana status pendek. Lihat ADR-015
   /// §Tipografi: "monospace menjaga digitnya rata".
   static TextStyle tabularMono(BuildContext context, {double fontSize = 14, Color? color}) {
-    return GoogleFonts.spaceMono(
+    return TextStyle(
+      fontFamily: 'SpaceMono',
       fontSize: fontSize,
       fontWeight: FontWeight.w700,
       letterSpacing: 0.6,

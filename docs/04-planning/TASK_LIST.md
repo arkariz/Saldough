@@ -27,13 +27,13 @@ Terakhir diperbarui: 18 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 3 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 4 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **23** | |
+| **Total MVP** | **75** | **24** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -249,12 +249,37 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
 
 ### Pencatatan dan riwayat
 
-- [ ] **T-2.4** Buat `features/record/`: lembar CATAT beserta tiga formulir —
+- [x] **T-2.4** Buat `features/record/`: lembar CATAT beserta tiga formulir —
       pemasukan, pengeluaran, dan transfer.
       ⚠ Ini satu-satunya jalur pembuatan transaksi manual. Jangan membuat
       formulir pencatatan tersendiri di layar mana pun.
       ⚠ Kosakata tombol dan pesan menyatakan pencatatan, bukan tindakan
       keuangan. "Catat Transfer", bukan "Transfer Sekarang".
+      ⚠ **Kategori transaksi adalah field teks bebas**, bukan daftar pilihan
+      tertutup — `PROJECT_GLOSSARY.md` §"Konvensi penamaan" eksplisit:
+      "Nama dompet dan kategori disimpan sebagai data, bukan sebagai enum.
+      Pemilik bisa menambah atau mengubahnya tanpa mengubah kode." Enam
+      `categoryFood`/`categoryTransport`/dst. di `IconKey` (T-2.1) TIDAK
+      dipakai sebagai daftar pilihan formulir ini — itu kunci ikon, bukan
+      kamus kategori.
+      ⚠ Tautan ke pos anggaran (bagian FR-TXN-002) belum ada di formulir
+      pengeluaran — `Budget` baru dibangun Fase 4 (T-4.4), mengikuti pola
+      "tidak ditampilkan, bukan ditampilkan kosong" yang sama seperti baris
+      anggaran di T-2.11.
+      ⚠ FR-TXN-003 ("menolak transfer ke dompet yang sama") ditegakkan DUA
+      kali: `assert` di `TransferTransaction` (Fase 1, tidak berjalan di
+      rilis production) DAN tombol Catat yang dinonaktifkan di formulir ini
+      kalau dompet asal/tujuan sama — baris pertahanan yang benar-benar
+      jalan di production adalah yang di formulir.
+      ⚠ Isi visual (bayangan keras ADR-015, bilah progres tersegmentasi,
+      palet penuh) belum diadopsi di formulir ini — widget Material biasa
+      (`TextField`, `AppChip`, `AppButton`) dari lapisan yang sudah ada.
+      Sama seperti keputusan terbuka T-2.2, ini bukan kelalaian: belum ada
+      tugas bernomor yang menugaskan adopsi visual penuh untuk layar baru.
+      `RecordBloc` dipasang lewat `ScopeWidget<RecordScope>` yang
+      membungkus `AppShellPage` (bukan dibuat ulang tiap lembar CATAT
+      dibuka), supaya efek galat/berhasilnya tetap tampil walau kedua
+      lembar (pilihan lalu formulir) sudah tertutup.
       Memenuhi FR-REC-001, FR-TXN-001, FR-TXN-002, FR-TXN-003, NFR-UX-001, dan
       NFR-UX-005.
 - [ ] **T-2.5** Buat `features/transaction/`: daftar riwayat dikelompokkan per

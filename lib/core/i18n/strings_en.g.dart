@@ -49,6 +49,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$investment$en investment = _Translations$investment$en._(_root);
 	@override late final _Translations$shell$en shell = _Translations$shell$en._(_root);
 	@override late final _Translations$appShell$en appShell = _Translations$appShell$en._(_root);
+	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 }
 
 // Path: app
@@ -347,6 +348,31 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get comingSoonMessage => 'Coming soon.';
 }
 
+// Path: record
+class _Translations$record$en extends Translations$record$id {
+	_Translations$record$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get sheetTitle => 'Record';
+	@override String get incomeAction => 'Record Income';
+	@override String get expenseAction => 'Record Expense';
+	@override String get transferAction => 'Record Transfer';
+	@override String get amountFieldHint => 'Amount (Rp)';
+	@override String get toWalletFieldLabel => 'Into Wallet';
+	@override String get fromWalletFieldLabel => 'From Wallet';
+	@override String get destinationWalletFieldLabel => 'To Wallet';
+	@override String get dateFieldLabel => 'Date';
+	@override String get categoryFieldHint => 'Category (optional)';
+	@override String get noteFieldHint => 'Note (optional)';
+	@override String get noWalletsMessage => 'No wallets yet. Create one in the Wallets tab first.';
+	@override String get sameWalletWarning => 'Source and destination wallets can\'t be the same.';
+	@override String get incomeSavedMessage => 'Income recorded.';
+	@override String get expenseSavedMessage => 'Expense recorded.';
+	@override String get transferSavedMessage => 'Transfer recorded.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -561,6 +587,22 @@ extension on TranslationsEn {
 			'appShell.transactionsTabLabel' => 'Transactions',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'appShell.comingSoonMessage' => 'Coming soon.',
+			'record.sheetTitle' => 'Record',
+			'record.incomeAction' => 'Record Income',
+			'record.expenseAction' => 'Record Expense',
+			'record.transferAction' => 'Record Transfer',
+			'record.amountFieldHint' => 'Amount (Rp)',
+			'record.toWalletFieldLabel' => 'Into Wallet',
+			'record.fromWalletFieldLabel' => 'From Wallet',
+			'record.destinationWalletFieldLabel' => 'To Wallet',
+			'record.dateFieldLabel' => 'Date',
+			'record.categoryFieldHint' => 'Category (optional)',
+			'record.noteFieldHint' => 'Note (optional)',
+			'record.noWalletsMessage' => 'No wallets yet. Create one in the Wallets tab first.',
+			'record.sameWalletWarning' => 'Source and destination wallets can\'t be the same.',
+			'record.incomeSavedMessage' => 'Income recorded.',
+			'record.expenseSavedMessage' => 'Expense recorded.',
+			'record.transferSavedMessage' => 'Transfer recorded.',
 			_ => null,
 		};
 	}

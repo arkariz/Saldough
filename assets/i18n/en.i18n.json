@@ -224,5 +224,23 @@
     "transactionsTabLabel": "Transactions",
     "walletsTabLabel": "Wallets",
     "comingSoonMessage": "Coming soon."
+  },
+  "record": {
+    "sheetTitle": "Record",
+    "incomeAction": "Record Income",
+    "expenseAction": "Record Expense",
+    "transferAction": "Record Transfer",
+    "amountFieldHint": "Amount (Rp)",
+    "toWalletFieldLabel": "Into Wallet",
+    "fromWalletFieldLabel": "From Wallet",
+    "destinationWalletFieldLabel": "To Wallet",
+    "dateFieldLabel": "Date",
+    "categoryFieldHint": "Category (optional)",
+    "noteFieldHint": "Note (optional)",
+    "noWalletsMessage": "No wallets yet. Create one in the Wallets tab first.",
+    "sameWalletWarning": "Source and destination wallets can't be the same.",
+    "incomeSavedMessage": "Income recorded.",
+    "expenseSavedMessage": "Expense recorded.",
+    "transferSavedMessage": "Transfer recorded."
   }
 }

@@ -224,5 +224,23 @@
     "transactionsTabLabel": "Transaksi",
     "walletsTabLabel": "Dompet",
     "comingSoonMessage": "Segera hadir."
+  },
+  "record": {
+    "sheetTitle": "Catat",
+    "incomeAction": "Catat Pemasukan",
+    "expenseAction": "Catat Pengeluaran",
+    "transferAction": "Catat Transfer",
+    "amountFieldHint": "Nominal (Rp)",
+    "toWalletFieldLabel": "Masuk ke Dompet",
+    "fromWalletFieldLabel": "Dari Dompet",
+    "destinationWalletFieldLabel": "Ke Dompet",
+    "dateFieldLabel": "Tanggal",
+    "categoryFieldHint": "Kategori (opsional)",
+    "noteFieldHint": "Catatan (opsional)",
+    "noWalletsMessage": "Belum ada dompet. Buat dompet dulu di tab Dompet.",
+    "sameWalletWarning": "Dompet asal dan tujuan tidak boleh sama.",
+    "incomeSavedMessage": "Pemasukan tercatat.",
+    "expenseSavedMessage": "Pengeluaran tercatat.",
+    "transferSavedMessage": "Transfer tercatat."
   }
 }

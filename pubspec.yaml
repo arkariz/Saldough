@@ -42,6 +42,7 @@ dependencies:
       ref: failures-v2.0.2
   flutter:
     sdk: flutter
+  flutter_svg: ^2.3.0
   go_router: ^17.3.0
   google_fonts: ^8.1.0
   hive_storage:
@@ -99,3 +100,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/i18n/
+    - assets/icons/

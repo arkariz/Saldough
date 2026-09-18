@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Status: Overspent / Defisit / Melebihi Anggaran (Red Alert with Downward Overflow Bar) -->
+  <!-- Red Warning Badge -->
+  <rect x="5" y="6" width="22" height="20" fill="#1e1e1e"/>
+  <rect x="6" y="7" width="20" height="18" fill="#ef4444"/>
+  <rect x="6" y="7" width="20" height="2" fill="#fca5a5"/>
+  <rect x="6" y="23" width="20" height="2" fill="#991b1b"/>
+  <!-- Downward Break-Out Arrow & Alert Exclamation -->
+  <rect x="10" y="11" width="4" height="2" fill="#ffffff"/>
+  <rect x="10" y="14" width="4" height="2" fill="#ffffff"/>
+  <rect x="10" y="17" width="4" height="2" fill="#ffffff"/>
+  <!-- Negative Downward Overflow Arrow -->
+  <rect x="19" y="10" width="3" height="6" fill="#ffffff"/>
+  <rect x="17" y="15" width="7" height="2" fill="#ffffff"/>
+  <rect x="18" y="17" width="5" height="2" fill="#ffffff"/>
+  <rect x="19" y="19" width="3" height="2" fill="#ffffff"/>
+  <rect x="20" y="21" width="1" height="1" fill="#ffffff"/>
+</svg>

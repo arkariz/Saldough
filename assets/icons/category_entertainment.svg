@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Pixel Art Entertainment / Games Icon: Retro 8-Bit Voxel Gamepad Controller -->
+  <!-- Controller Body Outline -->
+  <rect x="4" y="9" width="24" height="14" fill="#1e1e1e"/>
+  <rect x="5" y="10" width="22" height="12" fill="#475569"/>
+  <rect x="5" y="10" width="22" height="2" fill="#94a3b8"/>
+  <rect x="5" y="18" width="22" height="4" fill="#334155"/>
+  <!-- D-Pad (Left Side, Plus Shape) -->
+  <rect x="7" y="13" width="7" height="3" fill="#1e1e1e"/>
+  <rect x="9" y="11" width="3" height="7" fill="#1e1e1e"/>
+  <rect x="8" y="14" width="5" height="1" fill="#cbd5e1"/>
+  <rect x="10" y="12" width="1" height="5" fill="#cbd5e1"/>
+  <!-- Action Buttons (Right Side, A/B Jewels) -->
+  <rect x="21" y="12" width="3" height="3" fill="#1e1e1e"/>
+  <rect x="21" y="12" width="3" height="3" fill="#ef4444"/>
+  <rect x="22" y="12" width="1" height="1" fill="#fca5a5"/>
+
+  <rect x="18" y="15" width="3" height="3" fill="#1e1e1e"/>
+  <rect x="18" y="15" width="3" height="3" fill="#facc15"/>
+  <rect x="19" y="15" width="1" height="1" fill="#fef08a"/>
+  <!-- Center Select/Start Slits -->
+  <rect x="13" y="16" width="2" height="1" fill="#1e1e1e"/>
+  <rect x="16" y="16" width="2" height="1" fill="#1e1e1e"/>
+</svg>

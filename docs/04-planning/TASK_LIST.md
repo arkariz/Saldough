@@ -21,19 +21,19 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 17 September 2026.
+Terakhir diperbarui: 18 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 0 | Belum dimulai |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 11 | 1 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **75** | **20** | |
+| **Total MVP** | **75** | **21** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -170,13 +170,26 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
 
 ### Fondasi tampilan
 
-- [ ] **T-2.1** Buat `AppIcon(IconKey)` di `lib/core/presentation/widgets/`
-      dengan 29 kunci semantik dalam enam kelompok, diisi ikon Material sebagai
-      isian sementara.
+- [x] **T-2.1** Buat `AppIcon(IconKey)` di `lib/core/presentation/widgets/`
+      dengan 32 kunci semantik dalam tujuh kelompok.
       ⚠ `IconKey` adalah `enum` supaya kunci yang belum dipetakan gagal saat
       kompilasi, bukan saat dijalankan.
-      ⚠ Aset pixel-art dari pemilik masuk di T-7.4. Lapisan ini ada supaya
-      penggantiannya jadi satu berkas, bukan puluhan berkas halaman.
+      ⚠ **Diselesaikan lebih awal dari rencana semula** — rencana T-2.1 di
+      atas ditulis sebelum paket aset pemilik tiba, dan mengasumsikan seluruh
+      ikon memakai isian Material sampai T-7.4. ADR-015 (sudah *Accepted*
+      sebelum T-2.1 dikerjakan) mengubah itu secara eksplisit: 67 SVG asli
+      32×32 di `docs/stitch_pixel_finance_tracker/icon_*/code.html` "siap
+      dikonversi jadi aset Flutter... saat T-7.4/T-2.1 dikerjakan". 23 dari 32
+      `IconKey` memakai SVG asli itu (dikonversi ke `assets/icons/*.svg`,
+      dirender lewat `flutter_svg`, ditambahkan sebagai dependensi baru);
+      sisanya tetap ikon Material sementara karena memang belum ada padanan
+      asetnya (ADR-015 §7 "Aset cadangan"): `add`, `edit`, `delete`,
+      `chevronLeft`, `chevronRight`, tiga kunci kategori
+      (`categoryHousehold`, `categoryBills`, `categoryOther`, menunggu
+      daftar kategori final), dan `empty` (asetnya satu lembar sprite
+      1024×1024 belum terpotong per keadaan kosong — pemotongannya
+      ditunda ke saat layar keadaan-kosong nyata dibangun, T-2.7/T-2.11 dst,
+      bukan bagian lapisan kunci ikon murni).
       Memenuhi NFR-UX-002.
 - [ ] **T-2.2** Tambahkan slot warna `accent`, `onAccent`, `transfer`, dan
       `pending` ke `AppColorsExtension`, beserta uji kontrasnya.

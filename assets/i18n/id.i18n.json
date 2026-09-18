@@ -216,5 +216,13 @@
     "incomeTabLabel": "Pemasukan",
     "groceryTabLabel": "Belanja",
     "investmentTabLabel": "Investasi"
+  },
+  "appShell": {
+    "homeTabLabel": "Beranda",
+    "budgetTabLabel": "Anggaran",
+    "recordAction": "Catat",
+    "transactionsTabLabel": "Transaksi",
+    "walletsTabLabel": "Dompet",
+    "comingSoonMessage": "Segera hadir."
   }
 }

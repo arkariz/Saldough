@@ -50,6 +50,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$grocery$id grocery = Translations$grocery$id.internal(_root);
 	late final Translations$investment$id investment = Translations$investment$id.internal(_root);
 	late final Translations$shell$id shell = Translations$shell$id.internal(_root);
+	late final Translations$appShell$id appShell = Translations$appShell$id.internal(_root);
 }
 
 // Path: app
@@ -733,6 +734,33 @@ class Translations$shell$id {
 	String get investmentTabLabel => 'Investasi';
 }
 
+// Path: appShell
+class Translations$appShell$id {
+	Translations$appShell$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Beranda'
+	String get homeTabLabel => 'Beranda';
+
+	/// id: 'Anggaran'
+	String get budgetTabLabel => 'Anggaran';
+
+	/// id: 'Catat'
+	String get recordAction => 'Catat';
+
+	/// id: 'Transaksi'
+	String get transactionsTabLabel => 'Transaksi';
+
+	/// id: 'Dompet'
+	String get walletsTabLabel => 'Dompet';
+
+	/// id: 'Segera hadir.'
+	String get comingSoonMessage => 'Segera hadir.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -941,6 +969,12 @@ extension on Translations {
 			'shell.incomeTabLabel' => 'Pemasukan',
 			'shell.groceryTabLabel' => 'Belanja',
 			'shell.investmentTabLabel' => 'Investasi',
+			'appShell.homeTabLabel' => 'Beranda',
+			'appShell.budgetTabLabel' => 'Anggaran',
+			'appShell.recordAction' => 'Catat',
+			'appShell.transactionsTabLabel' => 'Transaksi',
+			'appShell.walletsTabLabel' => 'Dompet',
+			'appShell.comingSoonMessage' => 'Segera hadir.',
 			_ => null,
 		};
 	}

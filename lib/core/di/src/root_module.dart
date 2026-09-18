@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/shell/main_shell_page.dart';
 import 'package:saldough/features/card/data/adapters/card_catalog_impl.dart';
 import 'package:saldough/features/card/data/card_roll_up_resolver.dart';
@@ -191,6 +192,7 @@ abstract final class RootModule {
         registry: registry,
         initialLocation: _initialLocation,
         homeBuilder: (context) => const MainShellPage(),
+        shellBuilder: (context) => const AppShellPage(),
       ),
     );
   }

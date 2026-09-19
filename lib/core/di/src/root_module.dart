@@ -200,7 +200,7 @@ abstract final class RootModule {
   // Shell navigasi utama (`MainShellPage`, bottom nav 4 tab) sebagai layar
   // awal sejak wiring navigasi lintas fitur — sebelumnya layar siklus
   // bulanan langsung (Fase 2), kini salah satu tab di dalam shell.
-  static const String _initialLocation = AppRouteRegistry.homePath;
+  static const String _initialLocation = AppRouteRegistry.shellPath;
 }
 
 /// Menggabungkan resolver roll-up tiap fitur sumber (`grocery`, `card`) jadi

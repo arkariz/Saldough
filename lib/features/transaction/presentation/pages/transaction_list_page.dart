@@ -102,23 +102,19 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         // dengan angka nol ("Semua 0").
                         if (state.rawTransactions.isNotEmpty) ...[
                           const SizedBox(height: AppSpacing.md),
-                          TransactionSearchRow(
+                          TransactionSearchField(
                             query: state.searchQuery,
                             onQueryChanged: (query) => bloc.add(TransactionSearchChanged(query)),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          TransactionWalletCategoryRow(
                             wallets: state.wallets,
                             walletFilter: state.walletFilter,
                             onWalletChanged: (id) => bloc.add(TransactionWalletFilterChanged(id)),
+                            categoryOptions: state.categoryOptions,
+                            categoryFilter: state.categoryFilter,
+                            onCategoryChanged: (key) => bloc.add(TransactionCategoryFilterChanged(key)),
                           ),
-                          if (state.categoryOptions.isNotEmpty) ...[
-                            const SizedBox(height: AppSpacing.sm),
-                            TransactionCategoryFilter(
-                              categoryOptions: state.categoryOptions,
-                              categoryFilter: state.categoryFilter,
-                              onChanged: (key) => bloc.add(
-                                TransactionCategoryFilterChanged(key),
-                              ),
-                            ),
-                          ],
                         ],
                         const SizedBox(height: AppSpacing.sm),
                         TransactionTypeFilterRow(

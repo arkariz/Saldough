@@ -199,3 +199,14 @@ python tool/recolor_icons.py assets/icons assets/icons
   widget bersama, sedangkan CLAUDE.md dan ADR-014 mewajibkan fitur lama tidak
   disentuh sampai cutover Fase 3. Penggantian total kelas itu masuk daftar
   Fase 3, bersama penghapusan `light`/`dark`.
+
+### 6.3 Ikon tambahan untuk penyaring Transaksi
+
+13 ikon dikonversi dari paket desain pemilik (`icon_category_*` untuk kopi,
+pendidikan, listrik, dana darurat, bahan bakar, belanja bahan makanan,
+kesehatan, internet, investasi, hewan peliharaan, belanja; `icon_action_search`;
+`icon_action_filter`) dan diselaraskan dengan `tool/recolor_icons.py`.
+`categoryHousehold`/`categoryBills`/`categoryOther` yang sebelumnya ikon
+Material kini menunjuk ikon pixel-art terdekat (keranjang, lampu, struk).
+Kategori adalah teks bebas, jadi ikon kategori di dropdown dicari lewat
+pencocokan kata kunci (`categoryIconFor`), bukan pemetaan tetap.

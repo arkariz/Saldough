@@ -72,6 +72,39 @@ enum IconKey {
   /// Kategori lainnya, di luar kategori bernama lainnya.
   categoryOther,
 
+  /// Kategori kopi/minuman.
+  categoryCoffee,
+
+  /// Kategori pendidikan.
+  categoryEducation,
+
+  /// Kategori listrik.
+  categoryElectricity,
+
+  /// Kategori dana darurat.
+  categoryEmergencyFund,
+
+  /// Kategori bahan bakar.
+  categoryFuel,
+
+  /// Kategori belanja bahan makanan.
+  categoryGroceries,
+
+  /// Kategori kesehatan.
+  categoryHealth,
+
+  /// Kategori internet.
+  categoryInternet,
+
+  /// Kategori investasi.
+  categoryInvestment,
+
+  /// Kategori hewan peliharaan.
+  categoryPets,
+
+  /// Kategori belanja/berbelanja.
+  categoryShopping,
+
   // Freelance
 
   /// Proyek freelance.
@@ -120,6 +153,9 @@ enum IconKey {
   /// Kolom pencarian.
   search,
 
+  /// Tombol penyaring (corong).
+  filter,
+
   /// Penanda dropdown kecil pada tombol penyaring.
   dropdown,
 
@@ -149,6 +185,24 @@ const Map<IconKey, String> _assetPaths = {
   // Sementara memakai ikon "restoran" sampai daftar kategori final
   // diputuskan pemilik — lihat catatan kategori di ADR-015.
   IconKey.categoryFood: 'assets/icons/category_food.svg',
+  IconKey.categoryCoffee: 'assets/icons/category_coffee.svg',
+  IconKey.categoryEducation: 'assets/icons/category_education.svg',
+  IconKey.categoryElectricity: 'assets/icons/category_electricity.svg',
+  IconKey.categoryEmergencyFund: 'assets/icons/category_emergency_fund.svg',
+  IconKey.categoryFuel: 'assets/icons/category_fuel.svg',
+  IconKey.categoryGroceries: 'assets/icons/category_groceries.svg',
+  IconKey.categoryHealth: 'assets/icons/category_health.svg',
+  IconKey.categoryInternet: 'assets/icons/category_internet.svg',
+  IconKey.categoryInvestment: 'assets/icons/category_investment.svg',
+  IconKey.categoryPets: 'assets/icons/category_pets.svg',
+  IconKey.categoryShopping: 'assets/icons/category_shopping.svg',
+  // Padanan terdekat untuk kunci lama yang belum punya ikon sendiri di paket
+  // desain: Belanja -> keranjang, Tagihan -> lampu listrik, Lainnya -> struk.
+  IconKey.categoryHousehold: 'assets/icons/category_groceries.svg',
+  IconKey.categoryBills: 'assets/icons/category_electricity.svg',
+  IconKey.categoryOther: 'assets/icons/transactions.svg',
+  IconKey.search: 'assets/icons/search.svg',
+  IconKey.filter: 'assets/icons/filter.svg',
   IconKey.freelance: 'assets/icons/freelance.svg',
   IconKey.worklog: 'assets/icons/worklog.svg',
   IconKey.pending: 'assets/icons/pending.svg',
@@ -163,16 +217,12 @@ const Map<IconKey, String> _assetPaths = {
 /// sumbernya bukan SVG siap pakai (`empty`, ilustrasi sprite besar yang
 /// belum dipotong — lihat ADR-015 §"empty bukan ikon kecil").
 const Map<IconKey, IconData> _materialFallback = {
-  IconKey.categoryHousehold: Icons.house_outlined,
-  IconKey.categoryBills: Icons.receipt_long_outlined,
-  IconKey.categoryOther: Icons.more_horiz,
   IconKey.empty: Icons.inbox_outlined,
   IconKey.add: Icons.add,
   IconKey.edit: Icons.edit_outlined,
   IconKey.delete: Icons.delete_outline,
   IconKey.chevronLeft: Icons.chevron_left,
   IconKey.chevronRight: Icons.chevron_right,
-  IconKey.search: Icons.search,
   IconKey.dropdown: Icons.arrow_drop_down,
   IconKey.locked: Icons.lock_outline,
 };
@@ -210,4 +260,23 @@ class AppIcon extends StatelessWidget {
     assert(fallback != null, 'IconKey.$iconKey belum dipetakan di AppIcon.');
     return Icon(fallback, size: size, color: color);
   }
+}
+
+/// Ikon pixel-art untuk dompet ber-`Wallet.iconKey` [key]. `Wallet.iconKey`
+/// menyimpan nama [IconKey] (`walletBank`, `walletCash`, `walletEwallet`,
+/// `walletSavings`, `walletCard`); nilai lain -- termasuk yang tidak dikenal
+/// -- jatuh ke [IconKey.wallets] alih-alih melempar, karena kunci ini data
+/// tersimpan yang bisa berasal dari versi aplikasi lain.
+IconKey walletIconKey(String key) {
+  const walletKeys = {
+    IconKey.walletBank,
+    IconKey.walletCash,
+    IconKey.walletEwallet,
+    IconKey.walletSavings,
+    IconKey.walletCard,
+  };
+  for (final candidate in walletKeys) {
+    if (candidate.name == key) return candidate;
+  }
+  return IconKey.wallets;
 }

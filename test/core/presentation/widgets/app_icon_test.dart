@@ -33,18 +33,33 @@ void main() {
       IconKey.overBudget,
       IconKey.check,
       IconKey.calendar,
-    ];
-
-    const fallbackKeys = [
       IconKey.categoryHousehold,
       IconKey.categoryBills,
       IconKey.categoryOther,
+      IconKey.categoryCoffee,
+      IconKey.categoryEducation,
+      IconKey.categoryElectricity,
+      IconKey.categoryEmergencyFund,
+      IconKey.categoryFuel,
+      IconKey.categoryGroceries,
+      IconKey.categoryHealth,
+      IconKey.categoryInternet,
+      IconKey.categoryInvestment,
+      IconKey.categoryPets,
+      IconKey.categoryShopping,
+      IconKey.search,
+      IconKey.filter,
+    ];
+
+    const fallbackKeys = [
       IconKey.empty,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,
       IconKey.chevronLeft,
       IconKey.chevronRight,
+      IconKey.dropdown,
+      IconKey.locked,
     ];
 
     for (final key in mappedKeys) {
@@ -63,7 +78,7 @@ void main() {
       });
     }
 
-    testWidgets('seluruh 32 IconKey terpetakan (tidak ada yang gagal assert)', (tester) async {
+    testWidgets('seluruh IconKey terpetakan (tidak ada yang gagal assert)', (tester) async {
       for (final key in IconKey.values) {
         await pumpIcon(tester, key);
         expect(tester.takeException(), isNull, reason: 'IconKey.$key gagal dirender');
@@ -82,6 +97,23 @@ void main() {
       );
       final icon = tester.widget<Icon>(find.byType(Icon));
       expect(icon.color, Colors.red);
+    });
+  });
+
+  group('walletIconKey', () {
+    test('memetakan nama IconKey dompet ke IconKey yang sama', () {
+      expect(walletIconKey('walletBank'), IconKey.walletBank);
+      expect(walletIconKey('walletCash'), IconKey.walletCash);
+      expect(walletIconKey('walletEwallet'), IconKey.walletEwallet);
+      expect(walletIconKey('walletSavings'), IconKey.walletSavings);
+      expect(walletIconKey('walletCard'), IconKey.walletCard);
+    });
+
+    test('kunci tidak dikenal atau bukan jenis dompet jatuh ke ikon dompet generik, bukan melempar', () {
+      expect(walletIconKey('bank'), IconKey.wallets);
+      expect(walletIconKey(''), IconKey.wallets);
+      // Nama IconKey yang valid tapi bukan jenis dompet tidak boleh lolos.
+      expect(walletIconKey('categoryFood'), IconKey.wallets);
     });
   });
 }

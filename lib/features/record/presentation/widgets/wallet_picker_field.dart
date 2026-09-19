@@ -151,21 +151,29 @@ class WalletPickerField extends StatelessWidget {
                     const AppIcon(IconKey.chevronRight, size: 20),
                   ],
                 ),
+                // Pratinjau saldo + "Ganti" hanya kalau dompet sudah dipilih:
+                // pada keadaan kosong seluruh kartu sudah bisa diketuk (ada
+                // panah), jadi tombol "Ganti" hanya menambah tinggi kartu tanpa
+                // isi. Pratinjau di `Expanded` (ia `Wrap`, jadi turun baris
+                // sendiri) supaya "Ganti" tetap di kanan tanpa mengimpit nominal.
                 if (selected != null) ...[
                   const SizedBox(height: AppSpacing.xs),
-                  _SelectedWalletPreview(
-                    wallet: selected,
-                    previewAmountSen: previewAmountSen,
-                    previewIsCredit: previewIsCredit,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _SelectedWalletPreview(
+                          wallet: selected,
+                          previewAmountSen: previewAmountSen,
+                          previewIsCredit: previewIsCredit,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _openPicker(context),
+                        child: Text(t.record.changeWalletAction),
+                      ),
+                    ],
                   ),
                 ],
-                Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: TextButton(
-                    onPressed: () => _openPicker(context),
-                    child: Text(t.record.changeWalletAction),
-                  ),
-                ),
               ],
             ),
           ),
@@ -208,12 +216,22 @@ class _SelectedWalletPreview extends StatelessWidget {
               style: TextStyle(color: colors.textMuted, decoration: TextDecoration.lineThrough),
             ),
           ),
-          Text('→', style: TextStyle(color: colors.textMuted)),
-          _FitLeft(
-            child: Text(
-              AppMoneyFormatter.format(after),
-              style: TextStyle(color: afterColor, fontWeight: FontWeight.w700),
-            ),
+          // Panah dan nominal sesudah SATU anak `Wrap`: keduanya turun baris
+          // bersama, panah tidak pernah tertinggal sendirian di ujung baris.
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('→', style: TextStyle(color: colors.textMuted)),
+              const SizedBox(width: AppSpacing.xs),
+              Flexible(
+                child: _FitLeft(
+                  child: Text(
+                    AppMoneyFormatter.format(after),
+                    style: TextStyle(color: afterColor, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );

@@ -180,7 +180,8 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.text(t.record.walletNotSelectedPrompt), findsOneWidget);
-      expect(find.text(t.record.changeWalletAction), findsOneWidget);
+      // Belum terpilih: tanpa tombol "Ganti" (seluruh kartu sudah bisa diketuk).
+      expect(find.text(t.record.changeWalletAction), findsNothing);
     });
 
     testWidgets('kartu memakai ikon sesuai jenis dompet, bukan ikon generik', (tester) async {

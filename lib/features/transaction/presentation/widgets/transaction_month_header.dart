@@ -129,7 +129,7 @@ class TransactionMonthHeader extends StatelessWidget {
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: colors.income,
+                      color: colors.incomeFill,
                       boxShadow: [
                         BoxShadow(
                           color: colors.edge,
@@ -263,7 +263,7 @@ class _ShareBar extends StatelessWidget {
             Expanded(
               child: Container(
                 height: 8,
-                color: i < incomeSegments ? colors.income : colors.expense,
+                color: i < incomeSegments ? colors.incomeFill : colors.expenseFill,
               ),
             ),
           ],

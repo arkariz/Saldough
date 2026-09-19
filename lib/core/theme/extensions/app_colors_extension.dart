@@ -35,6 +35,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.onAccent,
     required this.transfer,
     required this.pending,
+    required this.incomeFill,
+    required this.expenseFill,
+    required this.transferFill,
   });
 
   /// Nominal masuk, dan sisa siklus yang positif.
@@ -107,9 +110,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Kilau skeleton loading.
   final Color shimmerHighlight;
 
-  /// Tindakan utama, termasuk tombol CATAT. Nilai resmi ADR-015 — jangan
-  /// dipakai untuk menyatakan makna keuangan (nominal), hanya untuk tombol
-  /// dan aksi.
+  /// Tindakan utama: tombol utama, CATAT, kursor, tab aktif. Palet pixel:
+  /// terracotta `#C2410C` sejak ADR-016 (sebelumnya `#A73A00` ADR-015).
+  /// Jangan dipakai untuk menyatakan makna keuangan (nominal), hanya untuk
+  /// tombol dan aksi.
   final Color accent;
 
   /// Warna teks/ikon di atas isian [accent].
@@ -124,14 +128,29 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// — tinjau ulang kalau pemilik punya preferensi lain.
   final Color onAccent;
 
-  /// Transfer antar dompet. Nilai resmi ADR-015 — sengaja berbagi hex dengan
-  /// [textMuted] versi ADR-015 (bukan [textMuted] lama di sini, lihat
-  /// dokumentasi kelas), supaya transfer tetap netral dan tidak menyaingi
-  /// makna [income]/[expense].
+  /// Transfer antar dompet, versi TEKS-AMAN. Palet lama: netral abu-hijau
+  /// (ADR-015). Palet pixel: BIRU sejak ADR-016 -- transfer dibedakan lewat
+  /// hue yang jauh dari [income]/[expense], bukan lagi lewat netralitas.
+  /// Untuk bidang besar pakai [transferFill].
   final Color transfer;
 
-  /// Penghasilan freelance yang belum dibayar. Nilai resmi ADR-015.
+  /// Status menunggu/mendekati batas: penghasilan freelance yang belum
+  /// dibayar, anggaran mendekati batas. Amber (ADR-016), BUKAN jenis
+  /// transaksi. Teks-aman.
   final Color pending;
+
+  /// Isian [income] untuk BIDANG BESAR (garis aksen, kotak ikon, bilah
+  /// segmen) -- ADR-016. Di palet pixel mode terang lebih cerah dari [income]
+  /// (yang dijaga >= 4,5:1 sebagai teks), cukup >= 3:1 sebagai komponen
+  /// non-teks. Jangan dipakai untuk TEKS. Palet lama dan mode gelap: sama
+  /// dengan [income].
+  final Color incomeFill;
+
+  /// Isian [expense] untuk bidang besar. Lihat [incomeFill].
+  final Color expenseFill;
+
+  /// Isian [transfer] untuk bidang besar. Lihat [incomeFill].
+  final Color transferFill;
 
   /// Palet mode terang penuh ADR-015 — dipakai layar Saldough 2.0 lewat
   /// `PixelTheme`, BUKAN [light]. `income`/`expense`/`overBudget`/
@@ -146,15 +165,30 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// ADR-015; diturunkan dari `textPrimary`/`background`/`cardBackground`
   /// barunya dengan proporsi yang sama seperti [light] menurunkannya dari
   /// nilai ADR-0006, bukan warna karangan baru.
+  ///
+  /// Direvisi ADR-016 ("satu peran, satu warna"): `income`/`expense`/
+  /// `overBudget`/`transfer`/`pending`/`accent`/`textMuted` bukan lagi nilai
+  /// tabel ADR-015, dan varian `…OnLight` kini sama dengan slot teks-aman
+  /// masing-masing (sebelumnya diwarisi dari palet lama, sehingga
+  /// `AppMoneyText` memakai hijau lama dan oranye-coklat untuk negatif).
   static final AppColorsExtension pixelLight = light.copyWith(
-    income: const Color(0xFF006948),
-    expense: const Color(0xFFBA1A1A),
-    overBudget: const Color(0xFFBA1A1A),
+    income: const Color(0xFF15803D),
+    expense: const Color(0xFFB91C1C),
+    overBudget: const Color(0xFFB91C1C),
+    incomeOnLight: const Color(0xFF15803D),
+    expenseOnLight: const Color(0xFFB91C1C),
+    overBudgetOnLight: const Color(0xFFB91C1C),
+    incomeFill: const Color(0xFF16A34A),
+    expenseFill: const Color(0xFFDC2626),
+    transfer: const Color(0xFF1D4ED8),
+    transferFill: const Color(0xFF2563EB),
+    pending: const Color(0xFFA16207),
+    accent: const Color(0xFFC2410C),
     background: const Color(0xFFFFF8F5),
     cardBackground: const Color(0xFFFFFFFF),
     edge: const Color(0xFF1E1B19),
     textPrimary: const Color(0xFF1E1B19),
-    textMuted: const Color(0xFF3D4A42),
+    textMuted: const Color(0xFF57534E),
     divider: const Color(0x241E1B19),
     shimmerBase: const Color(0xFFFAF2EE),
     shimmerHighlight: const Color(0xFFFFFFFF),
@@ -163,14 +197,23 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Palet mode gelap penuh ADR-015 — pasangan [pixelLight]. Lihat
   /// dokumentasi [pixelLight] untuk aturan penurunan tiap slot.
   static final AppColorsExtension pixelDark = dark.copyWith(
-    income: const Color(0xFF009767),
-    expense: const Color(0xFFEA4B4B),
-    overBudget: const Color(0xFFEA4B4B),
+    // Mode gelap: nilai teks-aman dan isian sama (ADR-016).
+    income: const Color(0xFF22C55E),
+    expense: const Color(0xFFF87171),
+    overBudget: const Color(0xFFF87171),
+    incomeOnLight: const Color(0xFF22C55E),
+    expenseOnLight: const Color(0xFFF87171),
+    overBudgetOnLight: const Color(0xFFF87171),
+    incomeFill: const Color(0xFF22C55E),
+    expenseFill: const Color(0xFFF87171),
+    transfer: const Color(0xFF60A5FA),
+    transferFill: const Color(0xFF60A5FA),
+    pending: const Color(0xFFF59E0B),
     background: const Color(0xFF14120F),
     cardBackground: const Color(0xFF1F1C18),
     edge: const Color(0xFFF2ECE7),
     textPrimary: const Color(0xFFF2ECE7),
-    textMuted: const Color(0xFF708A7A),
+    textMuted: const Color(0xFFA8A29E),
     divider: const Color(0x2EF2ECE7),
     shimmerBase: const Color(0xFF1F1C18),
     // +13 tiap kanal dari cardBackground barunya -- rasio relatif yang
@@ -206,6 +249,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     onAccent: Color(0xFFFFFFFF),
     transfer: Color(0xFF3D4A42),
     pending: Color(0xFF8D4B00),
+    // Palet lama tidak membedakan teks dan isian -- disetel sama.
+    incomeFill: Color(0xFF1E9E46),
+    expenseFill: Color(0xFFE13553),
+    transferFill: Color(0xFF3D4A42),
   );
 
   /// Palet mode gelap, nilai resmi dari ADR-0006.
@@ -238,6 +285,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     onAccent: Color(0xFF14120F),
     transfer: Color(0xFF708A7A),
     pending: Color(0xFFCA6C00),
+    incomeFill: Color(0xFF3DDC68),
+    expenseFill: Color(0xFFFF4D6A),
+    transferFill: Color(0xFF708A7A),
   );
 
   @override
@@ -267,6 +317,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? onAccent,
     Color? transfer,
     Color? pending,
+    Color? incomeFill,
+    Color? expenseFill,
+    Color? transferFill,
   }) {
     return AppColorsExtension(
       income: income ?? this.income,
@@ -294,6 +347,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       onAccent: onAccent ?? this.onAccent,
       transfer: transfer ?? this.transfer,
       pending: pending ?? this.pending,
+      incomeFill: incomeFill ?? this.incomeFill,
+      expenseFill: expenseFill ?? this.expenseFill,
+      transferFill: transferFill ?? this.transferFill,
     );
   }
 
@@ -326,6 +382,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       onAccent: Color.lerp(onAccent, other.onAccent, t)!,
       transfer: Color.lerp(transfer, other.transfer, t)!,
       pending: Color.lerp(pending, other.pending, t)!,
+      incomeFill: Color.lerp(incomeFill, other.incomeFill, t)!,
+      expenseFill: Color.lerp(expenseFill, other.expenseFill, t)!,
+      transferFill: Color.lerp(transferFill, other.transferFill, t)!,
     );
   }
 }
@@ -336,6 +395,5 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 /// sehingga tidak pernah melempar.
 extension AppColorsContext on BuildContext {
   /// Slot warna semantik tema aktif.
-  AppColorsExtension get appColors =>
-      Theme.of(this).extension<AppColorsExtension>() ?? AppColorsExtension.light;
+  AppColorsExtension get appColors => Theme.of(this).extension<AppColorsExtension>() ?? AppColorsExtension.light;
 }

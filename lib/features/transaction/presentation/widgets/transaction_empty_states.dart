@@ -75,8 +75,8 @@ class TransactionEmptyMonthState extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      colors.income.withValues(alpha: 0.16),
-                      colors.income.withValues(alpha: 0),
+                      colors.accent.withValues(alpha: 0.16),
+                      colors.accent.withValues(alpha: 0),
                     ],
                   ),
                 ),
@@ -151,7 +151,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [
-            AppIcon(IconKey.locked, size: 18, color: colors.pending),
+            AppIcon(IconKey.locked, size: 18, color: colors.textMuted),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(

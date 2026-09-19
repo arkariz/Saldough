@@ -93,33 +93,22 @@ enum TransactionKind {
   transfer,
 }
 
-/// Palet pembeda jenis transaksi, LOKAL layar ini -- sengaja lebih cerah dan
-/// berjarak hue lebar (hijau ~140°, merah ~0°, biru ~220°) daripada token
-/// semantik ADR-015 (`income` #006948, `expense` #BA1A1A, `pending` #8D4B00),
-/// yang ketiganya gelap dan berdekatan sehingga tint pastelnya jadi
-/// pink/krem/sage yang mirip. Biru dipilih untuk transfer (bukan amber):
-/// amber hanya ~38° dari merah, dan pasangan merah/hijau saja rawan bagi
-/// buta warna -- biru terpisah dari keduanya.
-///
-/// [kindFill] untuk bidang besar (garis aksen, kotak ikon, nuansa latar);
-/// [kindInk] lebih gelap, untuk teks dan isian lencana yang memuat teks putih
-/// (kontras >= 4,5:1 di atas putih). Mode gelap memakai nilai terang yang
-/// sama untuk keduanya. ADR-015 menjadikan transfer netral; menyimpang dari
-/// itu adalah keputusan pemilik untuk layar ini, bukan perubahan token global.
+/// Pemetaan jenis transaksi ke token warna semantik (ADR-016) -- tidak ada
+/// hex harfiah di sini. [kindFill] untuk bidang besar (garis aksen, kotak
+/// ikon, nuansa latar); [kindInk] untuk teks dan isian lencana bertulisan
+/// putih, dijaga >= 4,5:1.
 extension TransactionKindPalette on AppColorsExtension {
-  bool get _isDark => textPrimary.computeLuminance() > 0.5;
-
   /// Warna isian bidang besar untuk [kind].
   Color kindFill(TransactionKind kind) => switch (kind) {
-    TransactionKind.income => _isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
-    TransactionKind.expense => _isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
-    TransactionKind.transfer => _isDark ? const Color(0xFF60A5FA) : const Color(0xFF2563EB),
+    TransactionKind.income => incomeFill,
+    TransactionKind.expense => expenseFill,
+    TransactionKind.transfer => transferFill,
   };
 
   /// Warna teks/lencana untuk [kind], kontras aman di atas putih.
   Color kindInk(TransactionKind kind) => switch (kind) {
-    TransactionKind.income => _isDark ? const Color(0xFF4ADE80) : const Color(0xFF15803D),
-    TransactionKind.expense => _isDark ? const Color(0xFFF87171) : const Color(0xFFB91C1C),
-    TransactionKind.transfer => _isDark ? const Color(0xFF60A5FA) : const Color(0xFF1D4ED8),
+    TransactionKind.income => income,
+    TransactionKind.expense => expense,
+    TransactionKind.transfer => transfer,
   };
 }

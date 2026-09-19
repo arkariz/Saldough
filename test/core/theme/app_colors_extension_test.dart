@@ -50,7 +50,8 @@ void main() {
         expect(
           ratio,
           greaterThanOrEqualTo(minRatio),
-          reason: '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap kartu '
+          reason:
+              '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap kartu '
               'putih — di bawah ambang keterbacaan.',
         );
       });
@@ -60,7 +61,8 @@ void main() {
         expect(
           ratio,
           greaterThanOrEqualTo(minRatio),
-          reason: '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap dasar '
+          reason:
+              '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap dasar '
               'krem — di bawah ambang keterbacaan.',
         );
       });
@@ -181,27 +183,43 @@ void main() {
     });
   });
 
-  group('AppColorsExtension.pixelLight/pixelDark (palet penuh ADR-015)', () {
-    const minRatio = 4.5;
+  group('AppColorsExtension.pixelLight/pixelDark (palet ADR-015 direvisi ADR-016)', () {
+    const textRatio = 4.5;
+    // WCAG 1.4.11: komponen non-teks (garis aksen, kotak ikon, bilah).
+    const graphicRatio = 3.0;
+    // ADR-016: tiga warna jenis transaksi harus berjarak hue selebar ini.
+    const minHueGap = 60.0;
     final pixelLight = AppColorsExtension.pixelLight;
     final pixelDark = AppColorsExtension.pixelDark;
 
-    test('nilai hex sesuai tabel palet ADR-015, bukan hasil karangan', () {
-      expect(pixelLight.income, const Color(0xFF006948));
-      expect(pixelLight.expense, const Color(0xFFBA1A1A));
-      expect(pixelLight.overBudget, const Color(0xFFBA1A1A));
+    double hueGap(Color a, Color b) {
+      final diff = (HSLColor.fromColor(a).hue - HSLColor.fromColor(b).hue).abs();
+      return diff > 180 ? 360 - diff : diff;
+    }
+
+    test('nilai hex sesuai tabel ADR-016, bukan hasil karangan', () {
+      expect(pixelLight.income, const Color(0xFF15803D));
+      expect(pixelLight.incomeFill, const Color(0xFF16A34A));
+      expect(pixelLight.expense, const Color(0xFFB91C1C));
+      expect(pixelLight.expenseFill, const Color(0xFFDC2626));
+      expect(pixelLight.transfer, const Color(0xFF1D4ED8));
+      expect(pixelLight.transferFill, const Color(0xFF2563EB));
+      expect(pixelLight.pending, const Color(0xFFA16207));
+      expect(pixelLight.accent, const Color(0xFFC2410C));
       expect(pixelLight.background, const Color(0xFFFFF8F5));
       expect(pixelLight.cardBackground, const Color(0xFFFFFFFF));
       expect(pixelLight.textPrimary, const Color(0xFF1E1B19));
-      expect(pixelLight.textMuted, const Color(0xFF3D4A42));
+      expect(pixelLight.textMuted, const Color(0xFF57534E));
 
-      expect(pixelDark.income, const Color(0xFF009767));
-      expect(pixelDark.expense, const Color(0xFFEA4B4B));
-      expect(pixelDark.overBudget, const Color(0xFFEA4B4B));
+      expect(pixelDark.income, const Color(0xFF22C55E));
+      expect(pixelDark.expense, const Color(0xFFF87171));
+      expect(pixelDark.transfer, const Color(0xFF60A5FA));
+      expect(pixelDark.pending, const Color(0xFFF59E0B));
+      expect(pixelDark.accent, const Color(0xFFE95100));
       expect(pixelDark.background, const Color(0xFF14120F));
       expect(pixelDark.cardBackground, const Color(0xFF1F1C18));
       expect(pixelDark.textPrimary, const Color(0xFFF2ECE7));
-      expect(pixelDark.textMuted, const Color(0xFF708A7A));
+      expect(pixelDark.textMuted, const Color(0xFFA8A29E));
     });
 
     test('overBudget sama persis dengan expense di kedua mode, disengaja (ADR-015)', () {
@@ -214,13 +232,20 @@ void main() {
       expect(pixelDark.edge, pixelDark.textPrimary);
     });
 
-    test('slot accent/onAccent/transfer/pending sudah sama sejak T-2.2, tidak berubah', () {
-      expect(pixelLight.accent, AppColorsExtension.light.accent);
-      expect(pixelLight.transfer, AppColorsExtension.light.transfer);
-      expect(pixelLight.pending, AppColorsExtension.light.pending);
-      expect(pixelDark.accent, AppColorsExtension.dark.accent);
-      expect(pixelDark.transfer, AppColorsExtension.dark.transfer);
-      expect(pixelDark.pending, AppColorsExtension.dark.pending);
+    test('varian OnLight palet pixel sama dengan slot teks-aman, bukan warisan palet lama', () {
+      // Tanpa ini AppMoneyText di layar baru memakai hijau lama dan
+      // oranye-coklat untuk angka negatif (ADR-016 §2 butir 4).
+      for (final palette in [pixelLight, pixelDark]) {
+        expect(palette.incomeOnLight, palette.income);
+        expect(palette.expenseOnLight, palette.expense);
+        expect(palette.overBudgetOnLight, palette.overBudget);
+      }
+    });
+
+    test('accent/transfer/pending sengaja berbeda dari palet lama (revisi ADR-016)', () {
+      expect(pixelLight.accent, isNot(AppColorsExtension.light.accent));
+      expect(pixelLight.transfer, isNot(AppColorsExtension.light.transfer));
+      expect(pixelLight.pending, isNot(AppColorsExtension.light.pending));
     });
 
     test('slot khusus layar lama (investment/rollUp/needsReview) diwarisi apa adanya', () {
@@ -230,26 +255,58 @@ void main() {
       expect(pixelDark.investment, AppColorsExtension.dark.investment);
     });
 
-    for (final entry in {
-      'income': pixelLight.income,
-      'expense': pixelLight.expense,
-      'textPrimary': pixelLight.textPrimary,
-      'textMuted': pixelLight.textMuted,
-    }.entries) {
-      test('${entry.key} (pixelLight) lolos >= $minRatio:1 terhadap cardBackground', () {
-        expect(_contrastRatio(entry.value, pixelLight.cardBackground), greaterThanOrEqualTo(minRatio));
+    for (final mode in {'pixelLight': pixelLight, 'pixelDark': pixelDark}.entries) {
+      final palette = mode.value;
+      for (final entry in {
+        'income': palette.income,
+        'expense': palette.expense,
+        'transfer': palette.transfer,
+        'pending': palette.pending,
+        'accent': palette.accent,
+        'textPrimary': palette.textPrimary,
+        'textMuted': palette.textMuted,
+      }.entries) {
+        test('${entry.key} (${mode.key}) lolos >= $textRatio:1 sebagai teks di kartu dan latar', () {
+          expect(_contrastRatio(entry.value, palette.cardBackground), greaterThanOrEqualTo(textRatio));
+          expect(_contrastRatio(entry.value, palette.background), greaterThanOrEqualTo(textRatio));
+        });
+      }
+
+      for (final entry in {
+        'incomeFill': palette.incomeFill,
+        'expenseFill': palette.expenseFill,
+        'transferFill': palette.transferFill,
+      }.entries) {
+        test('${entry.key} (${mode.key}) lolos >= $graphicRatio:1 sebagai bidang di kartu dan latar', () {
+          expect(_contrastRatio(entry.value, palette.cardBackground), greaterThanOrEqualTo(graphicRatio));
+          expect(_contrastRatio(entry.value, palette.background), greaterThanOrEqualTo(graphicRatio));
+        });
+      }
+
+      test('tiga warna jenis transaksi (${mode.key}) berjarak hue >= $minHueGap derajat', () {
+        final fills = [palette.incomeFill, palette.expenseFill, palette.transferFill];
+        for (var i = 0; i < fills.length; i++) {
+          for (var j = i + 1; j < fills.length; j++) {
+            expect(hueGap(fills[i], fills[j]), greaterThanOrEqualTo(minHueGap));
+          }
+        }
       });
     }
 
-    for (final entry in {
-      'income': pixelDark.income,
-      'expense': pixelDark.expense,
-      'textPrimary': pixelDark.textPrimary,
-      'textMuted': pixelDark.textMuted,
-    }.entries) {
-      test('${entry.key} (pixelDark) lolos >= $minRatio:1 terhadap cardBackground', () {
-        expect(_contrastRatio(entry.value, pixelDark.cardBackground), greaterThanOrEqualTo(minRatio));
-      });
-    }
+    test('onAccent (terang) lolos >= $textRatio:1 di atas isian accent palet pixel', () {
+      expect(_contrastRatio(pixelLight.onAccent, pixelLight.accent), greaterThanOrEqualTo(textRatio));
+    });
+
+    test('onAccent (gelap) lolos >= $textRatio:1 di atas isian accent palet pixel', () {
+      expect(_contrastRatio(pixelDark.onAccent, pixelDark.accent), greaterThanOrEqualTo(textRatio));
+    });
+
+    test('copyWith dan lerp mengikutsertakan slot Fill', () {
+      final copy = pixelLight.copyWith(incomeFill: Colors.black);
+      expect(copy.incomeFill, Colors.black);
+      expect(copy.expenseFill, pixelLight.expenseFill);
+      expect(pixelLight.lerp(pixelDark, 0).transferFill, pixelLight.transferFill);
+      expect(pixelLight.lerp(pixelDark, 1).transferFill, pixelDark.transferFill);
+    });
   });
 }

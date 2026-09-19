@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-015
 - **Tanggal:** 2026-09-17
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted
+- **Status:** Accepted (§Palet direvisi oleh [ADR-016](0016-revisi-palet-satu-peran-satu-warna.md))
 - **Cakupan:** Global
 
 ## 2. Konteks

@@ -114,7 +114,7 @@ class PixelTheme extends StatelessWidget {
             fontFamily: 'SpaceMono',
             fontSize: 10,
             fontWeight: FontWeight.w700,
-            color: states.contains(WidgetState.selected) ? colors.income : colors.textMuted,
+            color: states.contains(WidgetState.selected) ? colors.accent : colors.textMuted,
           ),
         ),
       ),

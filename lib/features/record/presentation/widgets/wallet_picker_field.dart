@@ -74,15 +74,16 @@ class WalletPickerField extends StatelessWidget {
                   onTap: () => Navigator.of(sheetContext).pop(wallet.id),
                   child: AppHardCard(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const AppIcon(IconKey.wallets, size: 28),
+                        AppIcon(walletIconKey(wallet.iconKey), size: 32),
                         const SizedBox(width: AppSpacing.sm),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(wallet.name, style: Theme.of(sheetContext).textTheme.titleMedium),
-                              Text(AppMoneyFormatter.format(wallet.currentBalance)),
+                              _FitLeft(child: Text(AppMoneyFormatter.format(wallet.currentBalance))),
                             ],
                           ),
                         ),
@@ -124,30 +125,47 @@ class WalletPickerField extends StatelessWidget {
         GestureDetector(
           onTap: () => _openPicker(context),
           child: AppHardCard(
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Ikon dompet per jenis (`Wallet.iconKey` -> `IconKey`) belum
-                // ada pemetaannya di manapun di kode -- lihat catatan
-                // `IconKey.wallets` di `app_icon.dart`. Pemetaan sungguhan
-                // adalah pekerjaan T-2.7 saat UI `feature/wallet` dibangun;
-                // di sini cukup ikon generik yang selalu valid.
-                const AppIcon(IconKey.wallets, size: 28),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: selected == null
-                      ? Text(t.record.walletNotSelectedPrompt, style: TextStyle(color: colors.textMuted))
-                      : _SelectedWalletPreview(
-                          wallet: selected,
-                          previewAmountSen: previewAmountSen,
-                          previewIsCredit: previewIsCredit,
-                        ),
+                // Baris atas: ikon jenis dompet, nama (membungkus ke banyak
+                // baris, tidak dipotong), dan penanda buka pemilih. Tombol
+                // "Ganti" dan pratinjau saldo SENGAJA di baris tersendiri di
+                // bawahnya: kalau semuanya sebaris, kolom nama hanya kebagian
+                // ~150px pada layar 360px, nama dompet yang panjang menumpuk
+                // belasan baris, dan pratinjau saldo meluap.
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppIcon(selected == null ? IconKey.wallets : walletIconKey(selected.iconKey), size: 32),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        selected?.name ?? t.record.walletNotSelectedPrompt,
+                        style: selected == null
+                            ? TextStyle(color: colors.textMuted)
+                            : Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    const AppIcon(IconKey.chevronRight, size: 20),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                TextButton(
-                  onPressed: () => _openPicker(context),
-                  child: Text(t.record.changeWalletAction),
+                if (selected != null) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  _SelectedWalletPreview(
+                    wallet: selected,
+                    previewAmountSen: previewAmountSen,
+                    previewIsCredit: previewIsCredit,
+                  ),
+                ],
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: TextButton(
+                    onPressed: () => _openPicker(context),
+                    child: Text(t.record.changeWalletAction),
+                  ),
                 ),
-                const AppIcon(IconKey.chevronRight, size: 20),
               ],
             ),
           ),
@@ -169,35 +187,50 @@ class _SelectedWalletPreview extends StatelessWidget {
     final colors = context.appColors;
     final amount = previewAmountSen;
     final hasPreview = amount != null && amount > 0;
-    final after = hasPreview ? (previewIsCredit ? wallet.currentBalance + amount : wallet.currentBalance - amount) : null;
+    final after = hasPreview
+        ? (previewIsCredit ? wallet.currentBalance + amount : wallet.currentBalance - amount)
+        : null;
     final afterColor = previewIsCredit ? colors.income : colors.expense;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
-        if (hasPreview && after != null)
-          Row(
-            children: [
-              Text(
-                AppMoneyFormatter.format(wallet.currentBalance),
-                style: TextStyle(
-                  color: colors.textMuted,
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Icon(Icons.arrow_forward, size: 14, color: colors.textMuted),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                AppMoneyFormatter.format(after),
-                style: TextStyle(color: afterColor, fontWeight: FontWeight.w700),
-              ),
-            ],
-          )
-        else
-          Text(AppMoneyFormatter.format(wallet.currentBalance)),
-      ],
-    );
+    // `Wrap` + `FittedBox`: dua nominal besar (sebelum -> sesudah) tidak muat
+    // sebaris pada layar sempit atau teks besar. Wrap menurunkan yang kedua ke
+    // baris berikutnya; FittedBox memperkecil satu nominal yang sendirian
+    // lebih lebar dari kartu, alih-alih meluap.
+    if (hasPreview && after != null) {
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: AppSpacing.xs,
+        runSpacing: AppSpacing.xs,
+        children: [
+          _FitLeft(
+            child: Text(
+              AppMoneyFormatter.format(wallet.currentBalance),
+              style: TextStyle(color: colors.textMuted, decoration: TextDecoration.lineThrough),
+            ),
+          ),
+          Text('→', style: TextStyle(color: colors.textMuted)),
+          _FitLeft(
+            child: Text(
+              AppMoneyFormatter.format(after),
+              style: TextStyle(color: afterColor, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      );
+    }
+    return _FitLeft(child: Text(AppMoneyFormatter.format(wallet.currentBalance)));
+  }
+}
+
+/// Memperkecil [child] (bukan memotong atau meluap) kalau lebih lebar dari
+/// ruang yang tersedia, rata kiri.
+class _FitLeft extends StatelessWidget {
+  const _FitLeft({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerStart, child: child);
   }
 }

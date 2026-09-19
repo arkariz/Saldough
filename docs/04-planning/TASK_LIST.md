@@ -432,6 +432,13 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       bawah label kalau tidak muat. Diuji pada 360px + teks 2x dengan nama dompet,
       kategori, catatan, dan nominal miliaran; tes yang sama ikut menangkap
       header kelompok tanggal di daftar yang meluap.
+      ⚠ `WalletPickerField` (kartu "Dari Dompet"/"Ke Dompet"/"Masuk ke Dompet"
+      di tiga formulir CATAT) mengalami masalah yang sama dan diperbaiki: nama
+      dompet + "Ganti" + panah + pratinjau saldo tidak lagi berdesakan dalam satu
+      `Row` (kolom nama hanya ~150px di layar 360px; pratinjau saldo meluap 742px
+      pada tes). Kini baris atas = ikon jenis dompet + nama membungkus + panah;
+      pratinjau saldo (`Wrap` + `FittedBox`) dan "Ganti" di bawahnya. Ikon dompet
+      kini per jenis (`walletIconKey`), bukan ikon generik.
       Memenuhi FR-TXN-006.
 
 ### Dompet

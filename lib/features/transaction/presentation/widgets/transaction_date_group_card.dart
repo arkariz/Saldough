@@ -5,14 +5,20 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
+import 'package:saldough/features/transaction/presentation/widgets/transaction_surfaces.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Satu tanggal, satu [AppHardCard] -- header (tanggal + jumlah bersih hari
-/// itu, TIDAK menghitung transfer) di atas daftar transaksinya (FR-TXN-004).
+/// Satu tanggal: judul (ikon, hari/tanggal, jumlah bersih hari itu --
+/// TIDAK menghitung transfer) di atas, lalu tiap transaksinya sebagai kartu
+/// sendiri (FR-TXN-004), persis rujukan visual `pixel_kas_daftar_transaksi`.
 class TransactionDateGroupCard extends StatelessWidget {
   /// Membuat [TransactionDateGroupCard].
-  const TransactionDateGroupCard({required this.group, required this.walletsById, super.key});
+  const TransactionDateGroupCard({
+    required this.group,
+    required this.walletsById,
+    super.key,
+  });
 
   /// Kelompok satu tanggal, sudah tersaring dan terurut oleh
   /// `TransactionBloc`.
@@ -22,42 +28,95 @@ class TransactionDateGroupCard extends StatelessWidget {
   /// jadi nama.
   final Map<String, Wallet> walletsById;
 
-  String _dateLabel(DateTime date) {
+  /// Judul kelompok dan, untuk "Hari Ini"/"Kemarin", tanggal ringkasnya.
+  (String title, String? date) _dateLabel(DateTime date) {
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
     final yesterday = todayOnly.subtract(const Duration(days: 1));
-    if (date == todayOnly) return t.transaction.todayLabel;
-    if (date == yesterday) return t.transaction.yesterdayLabel;
-    return CycleMonthFormatter.formatDate(date);
+    final short = CycleMonthFormatter.formatDateShort(date);
+    if (date == todayOnly) return (t.transaction.todayLabel, short);
+    if (date == yesterday) return (t.transaction.yesterdayLabel, short);
+    return (short, null);
   }
 
   @override
   Widget build(BuildContext context) {
-    return AppHardCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+    final colors = context.appColors;
+    final (title, date) = _dateLabel(group.date);
+    final net = group.netSen;
+    final (chipFill, chipText) = net > 0
+        ? (colors.kindFill(TransactionKind.income).withValues(alpha: 0.18), colors.kindInk(TransactionKind.income))
+        : net < 0
+        ? (colors.kindFill(TransactionKind.expense).withValues(alpha: 0.16), colors.kindInk(TransactionKind.expense))
+        : (colors.toneHigh, colors.textMuted);
+    final netText = net > 0 ? '+${AppMoneyFormatter.format(net)}' : AppMoneyFormatter.format(net);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xs,
+            vertical: AppSpacing.xs,
+          ),
+          child: Row(
             children: [
-              Expanded(
-                child: Text(_dateLabel(group.date), style: Theme.of(context).textTheme.titleMedium),
+              const AppIcon(IconKey.calendar, size: 16),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontSize: 16),
+                ),
               ),
-              AppMoneyText(sen: group.netSen, style: Theme.of(context).textTheme.titleMedium),
+              if (date != null) ...[
+                const SizedBox(width: 6),
+                Text(
+                  date,
+                  style: transactionLabelStyle(
+                    context,
+                    color: colors.textMuted,
+                  ).copyWith(fontWeight: FontWeight.w400),
+                ),
+              ],
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: chipFill,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  netText,
+                  style: transactionLabelStyle(context, color: chipText),
+                ),
+              ),
             ],
           ),
-          const Divider(height: AppSpacing.lg),
-          for (var i = 0; i < group.transactions.length; i++) ...[
-            if (i > 0) const SizedBox(height: AppSpacing.sm),
-            TransactionRow(transaction: group.transactions[i], walletsById: walletsById),
-          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        for (var i = 0; i < group.transactions.length; i++) ...[
+          if (i > 0) const SizedBox(height: AppSpacing.sm),
+          TransactionRow(
+            transaction: group.transactions[i],
+            walletsById: walletsById,
+          ),
         ],
-      ),
+      ],
     );
   }
 }
 
-/// Satu baris transaksi: ikon jenis, judul (kategori atau catatan), dompet +
-/// jam, nominal berwarna+bertanda per jenis, dan lencana jenis kecil.
+/// Satu kartu transaksi: kotak ikon jenis berwarna, judul (kategori atau
+/// catatan), dompet + jam, nominal berwarna+bertanda per jenis, dan lencana
+/// jenis kecil.
 ///
 /// SENGAJA tidak interaktif (tanpa `onTap`/riak sentuh) -- T-2.11 (layar
 /// rincian transaksi) belum ada, dan menampilkan baris yang terlihat bisa
@@ -65,7 +124,11 @@ class TransactionDateGroupCard extends StatelessWidget {
 /// interaktif sama sekali (pola yang sama seperti `_ComingSoonTab`).
 class TransactionRow extends StatelessWidget {
   /// Membuat [TransactionRow].
-  const TransactionRow({required this.transaction, required this.walletsById, super.key});
+  const TransactionRow({
+    required this.transaction,
+    required this.walletsById,
+    super.key,
+  });
 
   /// Transaksi yang ditampilkan.
   final Transaction transaction;
@@ -84,78 +147,141 @@ class TransactionRow extends StatelessWidget {
     return t.transaction.untitledTransaction;
   }
 
-  String _subtitle() => switch (transaction) {
-    IncomeTransaction(:final walletId) => '${_walletName(walletId)} · ${_time(transaction.date)}',
-    ExpenseTransaction(:final walletId) => '${_walletName(walletId)} · ${_time(transaction.date)}',
-    TransferTransaction(:final fromWalletId, :final toWalletId) =>
-      '${_walletName(fromWalletId)} → ${_walletName(toWalletId)} · ${_time(transaction.date)}',
-  };
+  /// Baris kedua: `Dompet • 09:30`, atau `Asal → Tujuan • 09:30` untuk
+  /// transfer (nama dompetnya ditebalkan, seperti rujukan visual).
+  Widget _subtitle(BuildContext context) {
+    final muted = Theme.of(context).textTheme.bodySmall;
+    final strong = muted?.copyWith(
+      color: context.appColors.textPrimary,
+      fontWeight: FontWeight.w700,
+    );
+    final time = ' • ${_time(transaction.date)}';
+    return switch (transaction) {
+      TransferTransaction(:final fromWalletId, :final toWalletId) => Text.rich(
+        TextSpan(
+          style: muted,
+          children: [
+            TextSpan(text: _walletName(fromWalletId), style: strong),
+            const TextSpan(text: ' → '),
+            TextSpan(text: _walletName(toWalletId), style: strong),
+            TextSpan(text: time),
+          ],
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => Text(
+        '${_walletName(walletId)}$time',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: muted,
+      ),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final (icon, color, badge, amountText) = switch (transaction) {
+    // Tiap jenis punya WARNA-nya sendiri di lima tempat sekaligus (garis
+    // aksen, kotak ikon, nominal, lencana, nuansa latar) supaya terbedakan
+    // sekilas saat menggulir: hijau = masuk, merah = keluar, biru = mutasi.
+    // Lihat [TransactionKindPalette] untuk alasan pemilihan warnanya.
+    final (kind, icon, badge, amountText) = switch (transaction) {
       IncomeTransaction() => (
+        TransactionKind.income,
         IconKey.income,
-        colors.income,
         t.transaction.incomeBadge,
         '+${AppMoneyFormatter.format(transaction.amount)}',
       ),
       ExpenseTransaction() => (
+        TransactionKind.expense,
         IconKey.expense,
-        colors.expense,
         t.transaction.expenseBadge,
         '−${AppMoneyFormatter.format(transaction.amount)}',
       ),
       TransferTransaction() => (
+        TransactionKind.transfer,
         IconKey.transfer,
-        colors.transfer,
         t.transaction.transferBadge,
         AppMoneyFormatter.format(transaction.amount),
       ),
     };
+    final tint = colors.kindFill(kind);
+    final ink = colors.kindInk(kind);
 
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(color: color.withValues(alpha: 0.15), shape: BoxShape.circle),
-          child: AppIcon(icon, size: 20),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return TransactionSlab(
+      color: Color.alphaBlend(tint.withValues(alpha: 0.07), colors.cardBackground),
+      padding: EdgeInsets.zero,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(_title(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
-              Text(_subtitle(), style: Theme.of(context).textTheme.labelSmall?.copyWith(color: colors.textMuted)),
+              ColoredBox(color: tint, child: const SizedBox(width: 6)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Color.alphaBlend(tint.withValues(alpha: 0.22), colors.cardBackground),
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(color: Color.lerp(ink, colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
+                          ],
+                        ),
+                        child: AppIcon(icon, size: 30),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _title(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            _subtitle(context),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
+                          const SizedBox(height: 4),
+                          _TypeBadge(label: badge, color: ink),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              amountText,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 2),
-            _TypeBadge(label: badge, color: color),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }
 
-/// Lencana jenis kecil ("+MASUK"/"-KELUAR"/"# MUTASI") pada tiap baris.
+/// Lencana jenis ("+MASUK"/"-KELUAR"/"# MUTASI") pada tiap baris -- isian
+/// SOLID warna jenis dengan teks terbalik, bukan tint pucat, karena lencana
+/// inilah penanda jenis yang paling cepat terbaca.
 ///
 /// Bukan [AppChip] -- [AppChip] menegakkan area sentuh minimum 44px (UX-31,
 /// benar untuk chip yang BISA diketuk), sedangkan lencana ini murni
 /// dekoratif/informatif per baris (tidak ada `onTap`) sehingga area sentuh
 /// sebesar itu hanya akan membuat daftar transaksi jadi tidak proporsional
-/// padat. Warna dan bentuknya tetap mengikuti bahasa visual ADR-015.
+/// padat.
 class _TypeBadge extends StatelessWidget {
   const _TypeBadge({required this.label, required this.color});
 
@@ -166,13 +292,9 @@ class _TypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: 2),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: AppRadius.fullAll,
-        border: Border.all(color: colors.edge, width: AppBorder.thick),
-      ),
-      child: Text(label, style: AppTheme.shout(fontSize: 10, color: colors.background)),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.cardBackground)),
     );
   }
 }

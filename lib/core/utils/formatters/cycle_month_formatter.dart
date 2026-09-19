@@ -17,6 +17,10 @@ abstract final class CycleMonthFormatter {
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
   ];
 
+  static const _idShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  static const _enShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   static const _enMonths = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
@@ -40,6 +44,13 @@ abstract final class CycleMonthFormatter {
   /// yang sama seperti [format], tidak menduplikasinya.
   static String formatDate(DateTime date) {
     final months = LocaleSettings.currentLocale == AppLocale.en ? _enMonths : _idMonths;
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  /// Memformat [date] ringkas — mis. `26 Okt 2026` — untuk judul kelompok
+  /// tanggal yang harus muat di samping label lain.
+  static String formatDateShort(DateTime date) {
+    final months = LocaleSettings.currentLocale == AppLocale.en ? _enShortMonths : _idShortMonths;
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }

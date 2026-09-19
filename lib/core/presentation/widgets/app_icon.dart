@@ -116,6 +116,15 @@ enum IconKey {
 
   /// Navigasi maju (mis. bulan berikutnya).
   chevronRight,
+
+  /// Kolom pencarian.
+  search,
+
+  /// Penanda dropdown kecil pada tombol penyaring.
+  dropdown,
+
+  /// Penanda data tersimpan lokal/privat.
+  locked,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -163,6 +172,9 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.delete: Icons.delete_outline,
   IconKey.chevronLeft: Icons.chevron_left,
   IconKey.chevronRight: Icons.chevron_right,
+  IconKey.search: Icons.search,
+  IconKey.dropdown: Icons.arrow_drop_down,
+  IconKey.locked: Icons.lock_outline,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

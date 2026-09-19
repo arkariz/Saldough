@@ -127,6 +127,43 @@ void main() {
       expect(allTransactions, everyElement(isA<IncomeTransaction>()));
     });
 
+    test('pencarian mencocokkan kategori, catatan, dan nama dompet tanpa mengubah ringkasan bulan', () async {
+      final now = DateTime.now();
+      final day = DateTime(now.year, now.month, 5);
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(id: 'e1', date: day, amount: 30000, note: '', walletId: 'bca', categoryKey: 'Makan Siang'),
+      );
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(id: 'e2', date: day, amount: 20000, note: 'ojek kantor', walletId: 'bca'),
+      );
+      await transactionRepository.saveTransaction(
+        IncomeTransaction(id: 'i1', date: day, amount: 100000, note: '', walletId: 'gopay'),
+      );
+
+      final bloc = buildBloc()..add(const TransactionStarted());
+      await bloc.stream.firstWhere((s) => !s.isLoading);
+
+      List<String> ids() => bloc.state.groups.expand((g) => g.transactions).map((t) => t.id).toList()..sort();
+
+      bloc.add(const TransactionSearchChanged('  MAKAN '));
+      await bloc.stream.first;
+      expect(ids(), ['e1']);
+      expect(bloc.state.typeCounts[TransactionTypeFilter.all], 1);
+      expect(bloc.state.rawTransactions, hasLength(3));
+
+      bloc.add(const TransactionSearchChanged('ojek'));
+      await bloc.stream.first;
+      expect(ids(), ['e2']);
+
+      bloc.add(const TransactionSearchChanged('gopay'));
+      await bloc.stream.first;
+      expect(ids(), ['i1']);
+
+      bloc.add(const TransactionSearchChanged(''));
+      await bloc.stream.first;
+      expect(ids(), ['e1', 'e2', 'i1']);
+    });
+
     test('filter dompet dan kategori mempersempit hasil', () async {
       final now = DateTime.now();
       await transactionRepository.saveTransaction(

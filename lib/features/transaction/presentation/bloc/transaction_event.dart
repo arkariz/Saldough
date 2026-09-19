@@ -49,3 +49,13 @@ final class TransactionCategoryFilterChanged extends TransactionEvent {
   /// Kunci kategori yang dipilih, atau `null` untuk semua kategori.
   final String? categoryKey;
 }
+
+/// Mengganti kata kunci pencarian teks. String kosong berarti "tanpa
+/// pencarian".
+final class TransactionSearchChanged extends TransactionEvent {
+  /// Membuat [TransactionSearchChanged].
+  const TransactionSearchChanged(this.query);
+
+  /// Kata kunci baru, dicocokkan ke kategori, catatan, dan nama dompet.
+  final String query;
+}

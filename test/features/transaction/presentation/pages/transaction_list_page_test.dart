@@ -126,7 +126,12 @@ void main() {
         await openTransactionsTab(tester);
         expect(find.text(t.transaction.emptyMonthTitle), findsOneWidget);
 
-        await tester.tap(find.widgetWithText(AppButton, t.transaction.emptyMonthCta));
+        // Header ikut menggulir bersama isi, jadi CTA bisa berada di bawah
+        // layar pada viewport pendek -- gulir dulu seperti pengguna.
+        final cta = find.widgetWithText(AppButton, t.transaction.emptyMonthCta);
+        await tester.ensureVisible(cta);
+        await tester.pumpAndSettle();
+        await tester.tap(cta);
         await tester.pumpAndSettle();
 
         expect(find.byType(RecordChoiceSheet), findsOneWidget);

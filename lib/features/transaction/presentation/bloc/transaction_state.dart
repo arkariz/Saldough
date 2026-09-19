@@ -58,6 +58,7 @@ final class TransactionState extends UiState<TransactionState> {
     required this.groups,
     required this.typeCounts,
     required this.isLoading,
+    this.searchQuery = '',
     this.loadFailed = false,
     super.effect,
   });
@@ -119,6 +120,10 @@ final class TransactionState extends UiState<TransactionState> {
   /// jenisnya sendiri belum dipilih.
   final Map<TransactionTypeFilter, int> typeCounts;
 
+  /// Kata kunci pencarian aktif, kosong kalau tidak sedang mencari. Ikut
+  /// menyaring [groups] dan [typeCounts], tapi TIDAK [rawTransactions].
+  final String searchQuery;
+
   /// Sedang memuat transaksi bulan berjalan.
   final bool isLoading;
 
@@ -139,6 +144,7 @@ final class TransactionState extends UiState<TransactionState> {
     List<String>? categoryOptions,
     List<TransactionDateGroup>? groups,
     Map<TransactionTypeFilter, int>? typeCounts,
+    String? searchQuery,
     bool? isLoading,
     bool? loadFailed,
     UiEffect? effect,
@@ -153,6 +159,7 @@ final class TransactionState extends UiState<TransactionState> {
       categoryOptions: categoryOptions ?? this.categoryOptions,
       groups: groups ?? this.groups,
       typeCounts: typeCounts ?? this.typeCounts,
+      searchQuery: searchQuery ?? this.searchQuery,
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
       effect: effect,
@@ -170,6 +177,7 @@ final class TransactionState extends UiState<TransactionState> {
     categoryOptions,
     groups,
     typeCounts,
+    searchQuery,
     isLoading,
     loadFailed,
   ];

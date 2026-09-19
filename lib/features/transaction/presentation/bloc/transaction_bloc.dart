@@ -29,6 +29,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionTypeFilterChanged>(_onTypeFilterChanged);
     on<TransactionWalletFilterChanged>(_onWalletFilterChanged);
     on<TransactionCategoryFilterChanged>(_onCategoryFilterChanged);
+    on<TransactionSearchChanged>(_onSearchChanged);
   }
 
   final WalletRepository _walletRepository;
@@ -76,6 +77,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             typeFilter: state.typeFilter,
             walletFilter: state.walletFilter,
             categoryFilter: state.categoryFilter,
+            searchQuery: state.searchQuery,
           ),
         );
     }
@@ -90,6 +92,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         typeFilter: event.filter,
         walletFilter: state.walletFilter,
         categoryFilter: state.categoryFilter,
+        searchQuery: state.searchQuery,
       ),
     );
   }
@@ -103,6 +106,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         typeFilter: state.typeFilter,
         walletFilter: event.walletId,
         categoryFilter: state.categoryFilter,
+        searchQuery: state.searchQuery,
       ),
     );
   }
@@ -116,6 +120,21 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         typeFilter: state.typeFilter,
         walletFilter: state.walletFilter,
         categoryFilter: event.categoryKey,
+        searchQuery: state.searchQuery,
+      ),
+    );
+  }
+
+  void _onSearchChanged(TransactionSearchChanged event, Emitter<TransactionState> emit) {
+    emit(
+      _recomputed(
+        month: state.month,
+        wallets: state.wallets,
+        rawTransactions: state.rawTransactions,
+        typeFilter: state.typeFilter,
+        walletFilter: state.walletFilter,
+        categoryFilter: state.categoryFilter,
+        searchQuery: event.query,
       ),
     );
   }
@@ -133,12 +152,17 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required TransactionTypeFilter typeFilter,
     required String? walletFilter,
     required String? categoryFilter,
+    required String searchQuery,
   }) {
     final categoryOptions = _distinctCategories(rawTransactions);
+
+    final needle = searchQuery.trim().toLowerCase();
+    final walletNames = {for (final wallet in wallets) wallet.id: wallet.name.toLowerCase()};
 
     final walletCategoryFiltered = rawTransactions.where((transaction) {
       if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
       if (categoryFilter != null && transaction.categoryKey != categoryFilter) return false;
+      if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
       return true;
     }).toList();
 
@@ -159,10 +183,19 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       walletFilter: walletFilter,
       categoryFilter: categoryFilter,
       categoryOptions: categoryOptions,
+      searchQuery: searchQuery,
       groups: _groupByDate(fullyFiltered),
       typeCounts: typeCounts,
       isLoading: false,
     );
+  }
+
+  /// Cocok kalau [needle] (sudah huruf kecil) muncul di kategori, catatan,
+  /// atau nama salah satu dompet yang disentuh [transaction].
+  bool _matchesSearch(Transaction transaction, String needle, Map<String, String> walletNames) {
+    if ((transaction.categoryKey ?? '').toLowerCase().contains(needle)) return true;
+    if (transaction.note.toLowerCase().contains(needle)) return true;
+    return _walletIdsOf(transaction).any((id) => (walletNames[id] ?? '').contains(needle));
   }
 
   bool _matchesType(Transaction transaction, TransactionTypeFilter filter) => switch (filter) {

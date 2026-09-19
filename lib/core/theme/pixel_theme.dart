@@ -100,6 +100,24 @@ class PixelTheme extends StatelessWidget {
           ),
         ),
       ),
+      // Bilah bawah ADR-015: latar hangat sedikit di atas `background`, TANPA
+      // pil indikator Material (bawaannya teal, tidak ada di palet) -- tab
+      // aktif dibedakan lewat warna label saja, seperti rujukan visual.
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: Color.alphaBlend(colors.textPrimary.withValues(alpha: 0.025), colors.background),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        height: 64,
+        indicatorColor: Colors.transparent,
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => TextStyle(
+            fontFamily: 'SpaceMono',
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: states.contains(WidgetState.selected) ? colors.income : colors.textMuted,
+          ),
+        ),
+      ),
       dividerTheme: DividerThemeData(color: colors.divider, thickness: 1, space: 1),
       extensions: [colors],
     );

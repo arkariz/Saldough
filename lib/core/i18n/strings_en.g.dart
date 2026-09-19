@@ -400,6 +400,10 @@ class _Translations$transaction$en extends Translations$transaction$id {
 
 	// Translations
 	@override String get pageTitle => 'Transactions';
+	@override String get searchHint => 'Search notes / categories...';
+	@override String get monthStatusLabel => 'This month\'s log status';
+	@override String logCountBadge({required Object count}) => '${count} active logs';
+	@override String get netFlowLabel => 'Net flow';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
 	@override String expenseFilterLabel({required Object count}) => 'Expense ${count}';
@@ -682,6 +686,10 @@ extension on TranslationsEn {
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Bills',
 			'transaction.pageTitle' => 'Transactions',
+			'transaction.searchHint' => 'Search notes / categories...',
+			'transaction.monthStatusLabel' => 'This month\'s log status',
+			'transaction.logCountBadge' => ({required Object count}) => '${count} active logs',
+			'transaction.netFlowLabel' => 'Net flow',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expense ${count}',

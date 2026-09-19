@@ -885,17 +885,29 @@ class Translations$transaction$id {
 	/// id: 'Transaksi'
 	String get pageTitle => 'Transaksi';
 
+	/// id: 'Cari catatan / kategori...'
+	String get searchHint => 'Cari catatan / kategori...';
+
+	/// id: 'Status log bulan ini'
+	String get monthStatusLabel => 'Status log bulan ini';
+
+	/// id: '$count log aktif'
+	String logCountBadge({required Object count}) => '${count} log aktif';
+
+	/// id: 'Arus Bersih (Netto)'
+	String get netFlowLabel => 'Arus Bersih (Netto)';
+
 	/// id: 'Semua $count'
 	String allFilterLabel({required Object count}) => 'Semua ${count}';
 
-	/// id: 'Pemasukan $count'
-	String incomeFilterLabel({required Object count}) => 'Pemasukan ${count}';
+	/// id: 'Masuk $count'
+	String incomeFilterLabel({required Object count}) => 'Masuk ${count}';
 
-	/// id: 'Pengeluaran $count'
-	String expenseFilterLabel({required Object count}) => 'Pengeluaran ${count}';
+	/// id: 'Keluar $count'
+	String expenseFilterLabel({required Object count}) => 'Keluar ${count}';
 
-	/// id: 'Transfer $count'
-	String transferFilterLabel({required Object count}) => 'Transfer ${count}';
+	/// id: 'Mutasi $count'
+	String transferFilterLabel({required Object count}) => 'Mutasi ${count}';
 
 	/// id: 'Semua Dompet'
 	String get walletFilterAllLabel => 'Semua Dompet';
@@ -1228,10 +1240,14 @@ extension on Translations {
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Tagihan',
 			'transaction.pageTitle' => 'Transaksi',
+			'transaction.searchHint' => 'Cari catatan / kategori...',
+			'transaction.monthStatusLabel' => 'Status log bulan ini',
+			'transaction.logCountBadge' => ({required Object count}) => '${count} log aktif',
+			'transaction.netFlowLabel' => 'Arus Bersih (Netto)',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
-			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
-			'transaction.expenseFilterLabel' => ({required Object count}) => 'Pengeluaran ${count}',
-			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
+			'transaction.incomeFilterLabel' => ({required Object count}) => 'Masuk ${count}',
+			'transaction.expenseFilterLabel' => ({required Object count}) => 'Keluar ${count}',
+			'transaction.transferFilterLabel' => ({required Object count}) => 'Mutasi ${count}',
 			'transaction.walletFilterAllLabel' => 'Semua Dompet',
 			'transaction.walletFilterLabel' => 'Dompet',
 			'transaction.categoryFilterAllLabel' => 'Semua Kategori',

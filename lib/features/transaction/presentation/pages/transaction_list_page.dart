@@ -16,10 +16,9 @@ import 'package:state_management/state_management.dart';
 /// `AppShellPage`. Menampilkan transaksi bulan berjalan, terbaru dulu,
 /// dikelompokkan per tanggal, dengan penyaring jenis, dompet, dan kategori.
 ///
-/// TIDAK ADA bidang pencarian teks -- ada di rujukan visual
-/// (`pixel_kas_daftar_transaksi`) tapi tidak dituntut FR-TXN-004 dan tidak
-/// bernaung di tugas bernomor mana pun. Dicatat sebagai celah untuk tugas
-/// mendatang, bukan dibangun di sini.
+/// Pencarian teks mencocokkan kategori, catatan, dan nama dompet. Ilustrasi
+/// "streak" dan tanda tren "vs bulan lalu" pada rujukan visual TIDAK dibangun
+/// -- keduanya bukan bagian FR-TXN-004.
 ///
 /// Baris transaksi TIDAK bisa diketuk -- T-2.11 (layar rincian transaksi)
 /// belum ada, lihat `TransactionRow`.
@@ -40,6 +39,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
   void _clearFilters() {
     context.read<TransactionBloc>()
+      ..add(const TransactionSearchChanged(''))
       ..add(const TransactionTypeFilterChanged(TransactionTypeFilter.all))
       ..add(const TransactionWalletFilterChanged(null))
       ..add(const TransactionCategoryFilterChanged(null));
@@ -56,59 +56,87 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
             if (state.loadFailed) {
               return TransactionLoadErrorState(
-                onRetry: () => context.read<TransactionBloc>().add(const TransactionStarted()),
+                onRetry: () => context.read<TransactionBloc>().add(
+                  const TransactionStarted(),
+                ),
               );
             }
 
-            final walletsById = {for (final wallet in state.wallets) wallet.id: wallet};
+            final walletsById = {
+              for (final wallet in state.wallets) wallet.id: wallet,
+            };
 
-            return Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TransactionMonthHeader(
-                    month: state.month,
-                    rawTransactions: state.rawTransactions,
-                    onPreviousMonth: () => context.read<TransactionBloc>().add(
-                      TransactionMonthChanged(DateTime(state.month.year, state.month.month - 1)),
-                    ),
-                    onNextMonth: () => context.read<TransactionBloc>().add(
-                      TransactionMonthChanged(DateTime(state.month.year, state.month.month + 1)),
+            final bloc = context.read<TransactionBloc>();
+            return CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    AppSpacing.md,
+                    0,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TransactionMonthHeader(
+                          month: state.month,
+                          rawTransactions: state.rawTransactions,
+                          onPreviousMonth: () => bloc.add(
+                            TransactionMonthChanged(
+                              DateTime(state.month.year, state.month.month - 1),
+                            ),
+                          ),
+                          onNextMonth: () => bloc.add(
+                            TransactionMonthChanged(
+                              DateTime(state.month.year, state.month.month + 1),
+                            ),
+                          ),
+                        ),
+                        // Pencarian, dompet, dan kategori TETAP disembunyikan
+                        // saat bulan ini genuinely kosong (tidak ada gunanya
+                        // menyaring nol transaksi, dan rujukan visual
+                        // `pixel_kas_riwayat_transaksi_kosong` juga tidak
+                        // menampilkannya). Baris filter jenis tetap tampil
+                        // dengan angka nol ("Semua 0").
+                        if (state.rawTransactions.isNotEmpty) ...[
+                          const SizedBox(height: AppSpacing.md),
+                          TransactionSearchRow(
+                            query: state.searchQuery,
+                            onQueryChanged: (query) => bloc.add(TransactionSearchChanged(query)),
+                            wallets: state.wallets,
+                            walletFilter: state.walletFilter,
+                            onWalletChanged: (id) => bloc.add(TransactionWalletFilterChanged(id)),
+                          ),
+                          if (state.categoryOptions.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.sm),
+                            TransactionCategoryFilter(
+                              categoryOptions: state.categoryOptions,
+                              categoryFilter: state.categoryFilter,
+                              onChanged: (key) => bloc.add(
+                                TransactionCategoryFilterChanged(key),
+                              ),
+                            ),
+                          ],
+                        ],
+                        const SizedBox(height: AppSpacing.sm),
+                        TransactionTypeFilterRow(
+                          typeFilter: state.typeFilter,
+                          typeCounts: state.typeCounts,
+                          onChanged: (filter) => bloc.add(TransactionTypeFilterChanged(filter)),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  // Baris filter jenis tetap tampil walau bulan ini belum
-                  // punya transaksi sama sekali -- rujukan visual
-                  // `pixel_kas_riwayat_transaksi_kosong` menampilkannya
-                  // dengan angka nol ("Semua 0"), bukan menyembunyikannya.
-                  // Penyaring dompet/kategori TETAP disembunyikan saat
-                  // kosong (tidak ada gunanya menyaring nol transaksi, dan
-                  // rujukan visualnya sendiri tidak menampilkan baris itu
-                  // di keadaan kosong).
-                  TransactionTypeFilterRow(
-                    typeFilter: state.typeFilter,
-                    typeCounts: state.typeCounts,
-                    onChanged: (filter) => context.read<TransactionBloc>().add(TransactionTypeFilterChanged(filter)),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  if (state.rawTransactions.isNotEmpty) ...[
-                    TransactionWalletCategoryFilterRow(
-                      wallets: state.wallets,
-                      walletFilter: state.walletFilter,
-                      onWalletChanged: (id) => context.read<TransactionBloc>().add(TransactionWalletFilterChanged(id)),
-                      categoryOptions: state.categoryOptions,
-                      categoryFilter: state.categoryFilter,
-                      onCategoryChanged: (key) =>
-                          context.read<TransactionBloc>().add(TransactionCategoryFilterChanged(key)),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                  ],
-                  Expanded(
-                    child: _Body(state: state, walletsById: walletsById, onClearFilters: _clearFilters),
-                  ),
-                ],
-              ),
+                ),
+                _Body(
+                  state: state,
+                  walletsById: walletsById,
+                  onClearFilters: _clearFilters,
+                ),
+              ],
             );
           },
         ),
@@ -118,7 +146,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.state, required this.walletsById, required this.onClearFilters});
+  const _Body({
+    required this.state,
+    required this.walletsById,
+    required this.onClearFilters,
+  });
 
   final TransactionState state;
   final Map<String, Wallet> walletsById;
@@ -127,15 +159,41 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.rawTransactions.isEmpty) {
-      return TransactionEmptyMonthState(onRecord: () => openRecordSheet(context));
+      return SliverPadding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          0,
+          AppSpacing.md,
+          AppSpacing.md,
+        ),
+        sliver: SliverToBoxAdapter(
+          child: TransactionEmptyMonthState(
+            onRecord: () => openRecordSheet(context),
+          ),
+        ),
+      );
     }
     if (state.groups.isEmpty) {
-      return TransactionEmptyFilterState(onClearFilters: onClearFilters);
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: TransactionEmptyFilterState(onClearFilters: onClearFilters),
+      );
     }
-    return ListView.separated(
-      itemCount: state.groups.length,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-      itemBuilder: (context, index) => TransactionDateGroupCard(group: state.groups[index], walletsById: walletsById),
+    return SliverPadding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        0,
+        AppSpacing.md,
+        AppSpacing.lg,
+      ),
+      sliver: SliverList.separated(
+        itemCount: state.groups.length,
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
+        itemBuilder: (context, index) => TransactionDateGroupCard(
+          group: state.groups[index],
+          walletsById: walletsById,
+        ),
+      ),
     );
   }
 }

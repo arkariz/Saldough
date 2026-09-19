@@ -263,6 +263,10 @@
   },
   "transaction": {
     "pageTitle": "Transactions",
+    "searchHint": "Search notes / categories...",
+    "monthStatusLabel": "This month's log status",
+    "logCountBadge": "$count active logs",
+    "netFlowLabel": "Net flow",
     "allFilterLabel": "All $count",
     "incomeFilterLabel": "Income $count",
     "expenseFilterLabel": "Expense $count",

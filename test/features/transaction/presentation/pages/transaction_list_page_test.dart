@@ -67,6 +67,16 @@ void main() {
 
       expect(find.text(t.transaction.emptyMonthTitle), findsOneWidget);
       expect(find.text(t.transaction.emptyFilterTitle), findsNothing);
+      // Rujukan visual `pixel_kas_riwayat_transaksi_kosong`: baris filter
+      // jenis tetap tampil (dengan angka nol) di keadaan kosong, dan kartu
+      // "Panduan Catatan Kas" muncul di bawah kartu CATAT -- keduanya
+      // sempat hilang total di versi sebelumnya.
+      expect(find.text(t.transaction.allFilterLabel(count: 0)), findsOneWidget);
+      expect(find.text(t.transaction.emptyGuideTitle), findsOneWidget);
+      expect(find.text(t.transaction.emptyGuideIncomeTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.emptyGuideExpenseTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.emptyGuideTransferTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.trustFooterMessage), findsOneWidget);
     });
 
     testWidgets('filter yang menyisakan nol hasil menampilkan keadaan kosong filter, BUKAN keadaan kosong bulan', (

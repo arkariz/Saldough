@@ -927,14 +927,41 @@ class Translations$transaction$id {
 	/// id: 'Tanpa judul'
 	String get untitledTransaction => 'Tanpa judul';
 
+	/// id: 'Inventaris Kosong'
+	String get emptyMonthBadge => 'Inventaris Kosong';
+
 	/// id: 'Belum ada transaksi'
 	String get emptyMonthTitle => 'Belum ada transaksi';
 
-	/// id: 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.'
-	String get emptyMonthSubtitle => 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.';
+	/// id: 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.'
+	String get emptyMonthSubtitle => 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.';
 
-	/// id: 'Catat transaksi pertama'
-	String get emptyMonthCta => 'Catat transaksi pertama';
+	/// id: 'Catat Transaksi Sekarang'
+	String get emptyMonthCta => 'Catat Transaksi Sekarang';
+
+	/// id: 'Panduan Catatan Kas'
+	String get emptyGuideTitle => 'Panduan Catatan Kas';
+
+	/// id: 'Pemasukan'
+	String get emptyGuideIncomeTitle => 'Pemasukan';
+
+	/// id: 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.'
+	String get emptyGuideIncomeDescription => 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.';
+
+	/// id: 'Pengeluaran'
+	String get emptyGuideExpenseTitle => 'Pengeluaran';
+
+	/// id: 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.'
+	String get emptyGuideExpenseDescription => 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.';
+
+	/// id: 'Transfer Antar Dompet'
+	String get emptyGuideTransferTitle => 'Transfer Antar Dompet';
+
+	/// id: 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.'
+	String get emptyGuideTransferDescription => 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.';
+
+	/// id: 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu'
+	String get trustFooterMessage => 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu';
 
 	/// id: 'Tidak ada transaksi yang cocok dengan filter'
 	String get emptyFilterTitle => 'Tidak ada transaksi yang cocok dengan filter';
@@ -1215,9 +1242,18 @@ extension on Translations {
 			'transaction.expenseBadge' => '-KELUAR',
 			'transaction.transferBadge' => '# MUTASI',
 			'transaction.untitledTransaction' => 'Tanpa judul',
+			'transaction.emptyMonthBadge' => 'Inventaris Kosong',
 			'transaction.emptyMonthTitle' => 'Belum ada transaksi',
-			'transaction.emptyMonthSubtitle' => 'Transaksi bulan ini akan muncul di sini setelah kamu mencatatnya lewat CATAT.',
-			'transaction.emptyMonthCta' => 'Catat transaksi pertama',
+			'transaction.emptyMonthSubtitle' => 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.',
+			'transaction.emptyMonthCta' => 'Catat Transaksi Sekarang',
+			'transaction.emptyGuideTitle' => 'Panduan Catatan Kas',
+			'transaction.emptyGuideIncomeTitle' => 'Pemasukan',
+			'transaction.emptyGuideIncomeDescription' => 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.',
+			'transaction.emptyGuideExpenseTitle' => 'Pengeluaran',
+			'transaction.emptyGuideExpenseDescription' => 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.',
+			'transaction.emptyGuideTransferTitle' => 'Transfer Antar Dompet',
+			'transaction.emptyGuideTransferDescription' => 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.',
+			'transaction.trustFooterMessage' => 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu',
 			'transaction.emptyFilterTitle' => 'Tidak ada transaksi yang cocok dengan filter',
 			'transaction.emptyFilterSubtitle' => 'Coba ganti atau hapus filter yang sedang aktif.',
 			'transaction.clearFiltersButton' => 'Hapus filter',

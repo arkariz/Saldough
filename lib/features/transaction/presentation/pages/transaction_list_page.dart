@@ -78,13 +78,21 @@ class _TransactionListPageState extends State<TransactionListPage> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
+                  // Baris filter jenis tetap tampil walau bulan ini belum
+                  // punya transaksi sama sekali -- rujukan visual
+                  // `pixel_kas_riwayat_transaksi_kosong` menampilkannya
+                  // dengan angka nol ("Semua 0"), bukan menyembunyikannya.
+                  // Penyaring dompet/kategori TETAP disembunyikan saat
+                  // kosong (tidak ada gunanya menyaring nol transaksi, dan
+                  // rujukan visualnya sendiri tidak menampilkan baris itu
+                  // di keadaan kosong).
+                  TransactionTypeFilterRow(
+                    typeFilter: state.typeFilter,
+                    typeCounts: state.typeCounts,
+                    onChanged: (filter) => context.read<TransactionBloc>().add(TransactionTypeFilterChanged(filter)),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
                   if (state.rawTransactions.isNotEmpty) ...[
-                    TransactionTypeFilterRow(
-                      typeFilter: state.typeFilter,
-                      typeCounts: state.typeCounts,
-                      onChanged: (filter) => context.read<TransactionBloc>().add(TransactionTypeFilterChanged(filter)),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
                     TransactionWalletCategoryFilterRow(
                       wallets: state.wallets,
                       walletFilter: state.walletFilter,

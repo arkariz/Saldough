@@ -64,46 +64,46 @@ class TransactionDateGroupCard extends StatelessWidget {
             horizontal: AppSpacing.xs,
             vertical: AppSpacing.xs,
           ),
-          child: Row(
-            children: [
-              const AppIcon(IconKey.calendar, size: 16),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontSize: 16),
+          // `Wrap`, bukan `Row`: pada teks besar (aksesibilitas) atau layar
+          // sempit, judul + tanggal dan chip jumlah bersih tidak muat sebaris;
+          // chip turun ke baris berikutnya alih-alih meluap atau terpotong.
+          child: SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const AppIcon(IconKey.calendar, size: 16),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16)),
+                    ),
+                    if (date != null) ...[
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          date,
+                          style: transactionLabelStyle(
+                            context,
+                            color: colors.textMuted,
+                          ).copyWith(fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ),
-              if (date != null) ...[
-                const SizedBox(width: 6),
-                Text(
-                  date,
-                  style: transactionLabelStyle(
-                    context,
-                    color: colors.textMuted,
-                  ).copyWith(fontWeight: FontWeight.w400),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
+                  decoration: BoxDecoration(color: chipFill, borderRadius: BorderRadius.circular(4)),
+                  child: Text(netText, style: transactionLabelStyle(context, color: chipText)),
                 ),
               ],
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: chipFill,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  netText,
-                  style: transactionLabelStyle(context, color: chipText),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -147,9 +147,10 @@ class TransactionRow extends StatelessWidget {
 
   String _walletName(String id) => walletsById[id]?.name ?? '—';
 
-
   /// Baris kedua: `Dompet • 09:30`, atau `Asal → Tujuan • 09:30` untuk
-  /// transfer (nama dompetnya ditebalkan, seperti rujukan visual).
+  /// transfer (nama dompetnya ditebalkan, seperti rujukan visual). Boleh dua
+  /// baris: dengan satu baris, nama asal yang panjang menyembunyikan tujuannya
+  /// sama sekali ("Rekening Bank Central …").
   Widget _subtitle(BuildContext context) {
     final muted = Theme.of(context).textTheme.bodySmall;
     final strong = muted?.copyWith(
@@ -168,12 +169,12 @@ class TransactionRow extends StatelessWidget {
             TextSpan(text: time),
           ],
         ),
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
       IncomeTransaction(:final walletId) || ExpenseTransaction(:final walletId) => Text(
         '${_walletName(walletId)}$time',
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: muted,
       ),

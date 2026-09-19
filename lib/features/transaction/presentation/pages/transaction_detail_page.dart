@@ -356,7 +356,12 @@ class _Gap extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox(height: AppSpacing.md);
 }
 
-/// Satu baris "label ........ nilai".
+/// Satu baris "label ........ nilai": label di kiri, nilai di kanan kalau
+/// muat sebaris. Kalau tidak muat -- nilai panjang, layar sempit, atau teks
+/// besar dari pengaturan aksesibilitas -- nilai turun ke baris di bawah label
+/// dan boleh membungkus, alih-alih meluap atau terpotong. Itu sebabnya
+/// [Wrap], bukan `Row` dengan `Expanded`: `Row` tidak pernah turun baris,
+/// jadi label yang lebar langsung mengecilkan nilai sampai tidak terbaca.
 class _Row extends StatelessWidget {
   const _Row({required this.label, required this.value});
 
@@ -365,15 +370,17 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted)),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(
-          child: Align(alignment: AlignmentDirectional.centerEnd, child: value),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        spacing: AppSpacing.md,
+        runSpacing: AppSpacing.xs,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted)),
+          value,
+        ],
+      ),
     );
   }
 }
@@ -440,8 +447,14 @@ class _WalletRow extends StatelessWidget {
   }
 }
 
-/// Tata letak transfer: Dari -> Ke, lalu Jumlah. Sesuai FR-TXN-006, judulnya
-/// "Transfer tercatat" ada di kartu utama.
+/// Tata letak transfer: kartu Dari, panah, kartu Ke, lalu Jumlah. Sesuai
+/// FR-TXN-006, judulnya "Transfer tercatat" ada di kartu utama.
+///
+/// Kartu ditumpuk VERTIKAL dan masing-masing selebar penuh, bukan
+/// berdampingan: versi berdampingan memberi tiap sisi paruh lebar layar dikurangi
+/// ikon panah, jadi nama dompet yang panjang ("Rekening Bank Central Asia
+/// Utama") atau teks besar dari pengaturan aksesibilitas langsung terpotong.
+/// Di sini nama boleh membungkus ke banyak baris dan TIDAK PERNAH dipotong.
 class _TransferPair extends StatelessWidget {
   const _TransferPair({required this.from, required this.to, required this.amount});
 
@@ -456,36 +469,12 @@ class _TransferPair extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
-          child: Row(
-            children: [
-              Expanded(
-                child: _PairSide(
-                  label: t.transaction.detailFromLabel,
-                  wallet: from,
-                  delta: '−$money',
-                  deltaColor: colors.expense,
-                  alignment: CrossAxisAlignment.start,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                child: AppIcon(IconKey.transfer, size: 28),
-              ),
-              Expanded(
-                child: _PairSide(
-                  label: t.transaction.detailToLabel,
-                  wallet: to,
-                  delta: '+$money',
-                  deltaColor: colors.income,
-                  alignment: CrossAxisAlignment.end,
-                ),
-              ),
-            ],
-          ),
+        _PairCard(label: t.transaction.detailFromLabel, wallet: from, delta: '−$money', deltaColor: colors.expense),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          child: Center(child: AppIcon(IconKey.transfer, size: 28)),
         ),
+        _PairCard(label: t.transaction.detailToLabel, wallet: to, delta: '+$money', deltaColor: colors.income),
         const SizedBox(height: AppSpacing.md),
         _Row(
           label: t.transaction.detailAmountLabel,
@@ -496,38 +485,55 @@ class _TransferPair extends StatelessWidget {
   }
 }
 
-class _PairSide extends StatelessWidget {
-  const _PairSide({
-    required this.label,
-    required this.wallet,
-    required this.delta,
-    required this.deltaColor,
-    required this.alignment,
-  });
+/// Satu sisi transfer (Dari atau Ke): ikon jenis dompet di kiri; di kanannya
+/// label, nama dompet (membungkus, tidak dipotong), saldo saat ini, dan
+/// perubahan saldo akibat transfer ini.
+class _PairCard extends StatelessWidget {
+  const _PairCard({required this.label, required this.wallet, required this.delta, required this.deltaColor});
 
   final String label;
   final Wallet? wallet;
   final String delta;
   final Color deltaColor;
-  final CrossAxisAlignment alignment;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final wallet = this.wallet;
-    return Column(
-      crossAxisAlignment: alignment,
-      children: [
-        Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.textMuted)),
-        const SizedBox(height: AppSpacing.xs),
-        AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey)),
-        Text(
-          wallet?.name ?? '—',
-          textAlign: alignment == CrossAxisAlignment.end ? TextAlign.end : TextAlign.start,
-          style: _valueStyle(context),
-        ),
-        Text(delta, style: transactionLabelStyle(context, size: 11, color: deltaColor)),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey), size: 32),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.textMuted)),
+                Text(wallet?.name ?? '—', style: _valueStyle(context)),
+                if (wallet != null)
+                  Text(
+                    '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
+                    style: transactionLabelStyle(
+                      context,
+                      color: colors.textMuted,
+                    ).copyWith(fontWeight: FontWeight.w400),
+                  ),
+                const SizedBox(height: AppSpacing.xs),
+                // Nominal besar tidak boleh terpotong: kecilkan, bukan elipsis.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(delta, style: transactionLabelStyle(context, size: 13, color: deltaColor)),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -579,9 +585,12 @@ class _DeleteLink extends StatelessWidget {
           children: [
             AppIcon(IconKey.delete, size: 18, color: colors.expense),
             const SizedBox(width: AppSpacing.xs),
-            Text(
-              t.transaction.deleteAction.toUpperCase(),
-              style: transactionLabelStyle(context, size: 12, color: colors.expense),
+            Flexible(
+              child: Text(
+                t.transaction.deleteAction.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: transactionLabelStyle(context, size: 12, color: colors.expense),
+              ),
             ),
           ],
         ),

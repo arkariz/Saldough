@@ -426,6 +426,12 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       supaya sunting/hapus memuat ulang daftar di belakangnya.
       ⚠ Baris di daftar riwayat kini bisa diketuk; sebelumnya sengaja tidak
       interaktif karena layar ini belum ada.
+      ⚠ Konten layar rincian TIDAK boleh terpotong atau meluap: kartu Dari/Ke
+      ditumpuk vertikal (bukan berdampingan) dengan nama dompet yang membungkus
+      ke banyak baris; baris label/nilai memakai `Wrap` sehingga nilai turun di
+      bawah label kalau tidak muat. Diuji pada 360px + teks 2x dengan nama dompet,
+      kategori, catatan, dan nominal miliaran; tes yang sama ikut menangkap
+      header kelompok tanggal di daftar yang meluap.
       Memenuhi FR-TXN-006.
 
 ### Dompet

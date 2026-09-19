@@ -242,6 +242,95 @@ void main() {
       }
     });
 
+    testWidgets(
+      'kartu Dari/Ke: nama dompet sangat panjang, layar sempit, dan teks 2x TIDAK overflow maupun terpotong',
+      (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(360, 3200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+        const fromName = 'Rekening Bank Central Asia Utama Pribadi Nomor Satu';
+        const toName = 'Dompet Digital Belanja Online Bulanan Keluarga Besar';
+        await seedWallet('bca', fromName);
+        await seedWallet('gopay', toName, initial: 0);
+        await transactionRepository.saveTransaction(
+          TransferTransaction(
+            id: 't1',
+            date: DateTime.now(),
+            amount: 123456789000,
+            note: 'top-up',
+            fromWalletId: 'bca',
+            toWalletId: 'gopay',
+          ),
+        );
+        await recompute({'bca', 'gopay'});
+        await openTransactionsTab(tester);
+        await tester.tap(find.text('top-up'));
+        await tester.pumpAndSettle();
+
+        // Teks besar diterapkan SETELAH rincian terbuka, supaya yang diuji hanya
+        // layar rincian (bukan daftar di belakangnya).
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull, reason: 'tidak boleh ada RenderFlex overflow');
+        for (final name in [fromName, toName]) {
+          final finder = find.descendant(of: find.byType(TransactionDetailPage), matching: find.text(name));
+          expect(finder, findsOneWidget, reason: '$name harus tampil utuh');
+          final text = tester.widget<Text>(finder);
+          expect(text.overflow, isNot(TextOverflow.ellipsis), reason: 'nama dompet tidak boleh dielipsis');
+          expect(text.maxLines, isNull, reason: 'nama dompet boleh membungkus ke banyak baris');
+        }
+        // Nominal miliaran tetap tampil (diperkecil, bukan dipotong).
+        expect(find.text('−Rp1.234.567.890'), findsOneWidget);
+        expect(find.text('+Rp1.234.567.890'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'rincian pengeluaran: dompet, kategori, dan catatan sangat panjang pada layar sempit + teks 2x tidak overflow',
+      (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(360, 4000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+        const walletName = 'Rekening Bank Central Asia Utama Pribadi Nomor Satu';
+        const category = 'Belanja Bulanan Kebutuhan Rumah Tangga dan Keluarga Besar';
+        const note =
+            'Belanja mingguan di supermarket dekat rumah untuk kebutuhan dapur, kamar mandi, dan acara keluarga';
+        await seedWallet('bca', walletName);
+        await transactionRepository.saveTransaction(
+          ExpenseTransaction(
+            id: 'e1',
+            date: DateTime.now(),
+            amount: 123456789000,
+            note: note,
+            walletId: 'bca',
+            categoryKey: category,
+          ),
+        );
+        await recompute({'bca'});
+        await openTransactionsTab(tester);
+        await tester.tap(find.text(category));
+        await tester.pumpAndSettle();
+
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull, reason: 'tidak boleh ada RenderFlex overflow');
+        final detail = find.byType(TransactionDetailPage);
+        expect(find.descendant(of: detail, matching: find.text(walletName)), findsOneWidget);
+        expect(find.descendant(of: detail, matching: find.text(category)), findsWidgets);
+        expect(find.descendant(of: detail, matching: find.text('“$note”')), findsOneWidget);
+      },
+    );
+
     testWidgets('menghapus lewat konfirmasi menutup rincian, membuang baris, dan mengembalikan saldo dompet', (
       tester,
     ) async {

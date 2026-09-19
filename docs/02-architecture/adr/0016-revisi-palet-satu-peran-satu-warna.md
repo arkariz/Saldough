@@ -130,11 +130,9 @@ rawan bagi buta warna.
   "peristiwa berwarna" yang ikut menarik mata.
 - `accent` (hue 17°) tetap dekat dengan `expense` (0°). Dijaga lewat aturan
   peran di atas: `accent` hanya untuk aksi, tidak pernah untuk nominal.
-- **Belum diputuskan:** ikon pixel-art dari paket desain membawa warna
-  tertanam (dompet coklat, panah kuning, dll.) dan tidak bisa diwarnai ulang
-  lewat token. Warna itu adalah bagian identitas gaya pixel pemilik; menyelaraskan
-  dengan palet ini berarti menggambar ulang berkas SVG, di luar cakupan ADR
-  ini.
+- Ikon pixel-art membawa warna tertanam yang tidak bisa ditint lewat token;
+  diselaraskan per keluarga hue lewat pemetaan warna di §6.1 (bukan digambar
+  ulang).
 - **Belum diputuskan:** `AppSegmentedProgressBar` (ambang 70%/100%) tetap
   memakai slot `income`/`pending`/`overBudget` versi teks-aman; bisa dipindah
   ke slot `…Fill` saat layar Anggaran dibangun.
@@ -149,3 +147,55 @@ rawan bagi buta warna.
   abu; ditolak pemilik karena jenisnya tetap kurang terlihat.
 - **Palet lokal per fitur.** Sudah dicoba di T-2.5 dan menghasilkan dua
   nuansa untuk makna yang sama di satu layar.
+
+## 6. Tambahan (2026-09-19): ikon dan struktur token
+
+Setelah §3 diterapkan, pemilik mengizinkan penggantian menyeluruh bila perlu.
+Pengukuran menunjukkan dua hal yang ikut menyebabkan kesan berantakan dan
+tidak tersentuh token:
+
+### 6.1 Warna tertanam di ikon pixel-art
+
+23 ikon di `assets/icons/` membawa 59 warna hex dari palet Tailwind campuran:
+abu slate kebiruan, emerald, sky, teal, pink, dan sebagainya. Warna itu
+tertanam di SVG, jadi tidak ikut token dan tidak bisa ditint.
+
+Keputusan: **selaraskan per keluarga hue**, bukan menggambar ulang.
+
+| Keluarga | Sebelum | Sesudah |
+|---|---|---|
+| Garis luar | `#1E1E1E` | `#1E1B19` (sama dengan `edge`) |
+| Netral | slate `#F8FAFC…#334155` | stone hangat `#FFFFFF…#44403C` (selaras `textMuted` `#57534E`) |
+| Hijau | emerald `#34D399…#064E3B` | rampa `income`: `#4ADE80 / #22C55E / #16A34A / #15803D / #14532D` |
+| Merah | `#EF4444` | `#DC2626` (= `expenseFill`) |
+| Biru | sky `#BAE6FD…#0284C7` dan teal `#CCFBF1…#0F766E` | satu rampa `transfer`: `#DBEAFE…#1E3A8A` (= `transferFill` `#2563EB`) |
+| Celengan | pink `#FBCFE8…#831843` | terracotta `#FED7AA…#5C1F0A` (keluarga `accent`) |
+
+Kuning, emas, coklat, dan oranye (bahan dompet, koin, atap) sengaja
+dibiarkan: keluarga hangat itu sudah selaras dengan terracotta dan krem.
+Hanya `assets/icons/` yang diubah; berkas asli pemilik di
+`docs/stitch_pixel_finance_tracker/` tidak disentuh, sehingga perubahan ini
+bisa dibalik lewat git. Pemetaannya ada di `tool/recolor_icons.py` supaya ikon
+baru yang dikonversi kemudian (ADR-015 §7) diselaraskan dengan cara yang sama:
+
+```bash
+python tool/recolor_icons.py assets/icons assets/icons
+```
+
+### 6.2 Struktur token
+
+- `AppColorsExtension.pixelLight`/`pixelDark` kini **konstruktor eksplisit**,
+  bukan `light.copyWith(...)`. Dengan `copyWith`, slot yang lupa diisi diwarisi
+  diam-diam dari palet lama, dan itulah cara `AppMoneyText` sempat memakai
+  oranye-coklat untuk angka negatif. Sekarang slot baru wajib diisi untuk
+  palet pixel saat kompilasi. Slot milik layar lama (`investment`, `rollUp`,
+  `needsReview`) diisi padanan keluarga hue ADR-016.
+- Tingkat permukaan (`surfaceLow`, `surfaceMid`, `surfaceHigh`) dan pewarna
+  `tinted(fill, strength)` dipindah dari fitur `transaction` ke ekstensi
+  `AppColorsSurfaces` di `core/theme`. Widget tidak boleh menulis
+  `Color.alphaBlend(...)` sendiri lagi.
+- **Tidak dilakukan:** mengganti `AppColorsExtension` dengan kelas baru.
+  Kelas itu masih dibaca lima berkas fitur lama dan 13 berkas lain lewat
+  widget bersama, sedangkan CLAUDE.md dan ADR-014 mewajibkan fitur lama tidak
+  disentuh sampai cutover Fase 3. Penggantian total kelas itu masuk daftar
+  Fase 3, bersama penghapusan `light`/`dark`.

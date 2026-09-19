@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
   <!-- Pixel Art Digital Wallet / Mobile E-Wallet Phone Icon -->
-  <rect x="8" y="4" width="16" height="24" fill="#1e1e1e"/>
+  <rect x="8" y="4" width="16" height="24" fill="#1E1B19"/>
   <!-- Phone Body -->
-  <rect x="9" y="5" width="14" height="22" fill="#334155"/>
-  <rect x="9" y="5" width="14" height="1" fill="#64748b"/>
+  <rect x="9" y="5" width="14" height="22" fill="#44403C"/>
+  <rect x="9" y="5" width="14" height="1" fill="#78716C"/>
   <!-- Screen Area -->
-  <rect x="10" y="7" width="12" height="17" fill="#0284c7"/>
-  <rect x="10" y="7" width="12" height="3" fill="#38bdf8"/>
+  <rect x="10" y="7" width="12" height="17" fill="#2563EB"/>
+  <rect x="10" y="7" width="12" height="3" fill="#60A5FA"/>
   <!-- Digital Wallet Card graphic inside screen -->
-  <rect x="12" y="11" width="8" height="6" fill="#1e1e1e"/>
-  <rect x="13" y="12" width="6" height="4" fill="#059669"/>
-  <rect x="15" y="13" width="2" height="2" fill="#34d399"/>
+  <rect x="12" y="11" width="8" height="6" fill="#1E1B19"/>
+  <rect x="13" y="12" width="6" height="4" fill="#16A34A"/>
+  <rect x="15" y="13" width="2" height="2" fill="#4ADE80"/>
   <!-- QR / Digital Pay Pixels at screen bottom -->
-  <rect x="12" y="19" width="2" height="2" fill="#ffffff"/>
-  <rect x="15" y="19" width="2" height="2" fill="#ffffff"/>
-  <rect x="18" y="19" width="2" height="2" fill="#ffffff"/>
-  <rect x="13" y="22" width="6" height="1" fill="#bae6fd"/>
+  <rect x="12" y="19" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="15" y="19" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="18" y="19" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="13" y="22" width="6" height="1" fill="#BFDBFE"/>
   <!-- Home Indicator / Notch -->
-  <rect x="14" y="5" width="4" height="1" fill="#1e1e1e"/>
-  <rect x="14" y="25" width="4" height="1" fill="#64748b"/>
+  <rect x="14" y="5" width="4" height="1" fill="#1E1B19"/>
+  <rect x="14" y="25" width="4" height="1" fill="#78716C"/>
 </svg>

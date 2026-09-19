@@ -189,8 +189,8 @@ void main() {
     const graphicRatio = 3.0;
     // ADR-016: tiga warna jenis transaksi harus berjarak hue selebar ini.
     const minHueGap = 60.0;
-    final pixelLight = AppColorsExtension.pixelLight;
-    final pixelDark = AppColorsExtension.pixelDark;
+    const pixelLight = AppColorsExtension.pixelLight;
+    const pixelDark = AppColorsExtension.pixelDark;
 
     double hueGap(Color a, Color b) {
       final diff = (HSLColor.fromColor(a).hue - HSLColor.fromColor(b).hue).abs();
@@ -248,11 +248,14 @@ void main() {
       expect(pixelLight.pending, isNot(AppColorsExtension.light.pending));
     });
 
-    test('slot khusus layar lama (investment/rollUp/needsReview) diwarisi apa adanya', () {
-      expect(pixelLight.investment, AppColorsExtension.light.investment);
-      expect(pixelLight.rollUp, AppColorsExtension.light.rollUp);
-      expect(pixelLight.needsReview, AppColorsExtension.light.needsReview);
-      expect(pixelDark.investment, AppColorsExtension.dark.investment);
+    test('slot khusus layar lama diisi eksplisit di palet pixel, teks-amannya lolos kontras', () {
+      // Palet pixel bukan lagi `light.copyWith(...)`, jadi slot ini tidak
+      // diwarisi diam-diam. Tetap dijaga kontrasnya kalau suatu saat terbaca.
+      for (final palette in [pixelLight, pixelDark]) {
+        for (final ink in [palette.investmentOnLight, palette.rollUpOnLight, palette.needsReviewOnLight]) {
+          expect(_contrastRatio(ink, palette.cardBackground), greaterThanOrEqualTo(textRatio));
+        }
+      }
     });
 
     for (final mode in {'pixelLight': pixelLight, 'pixelDark': pixelDark}.entries) {

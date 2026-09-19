@@ -152,74 +152,87 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Isian [transfer] untuk bidang besar. Lihat [incomeFill].
   final Color transferFill;
 
-  /// Palet mode terang penuh ADR-015 — dipakai layar Saldough 2.0 lewat
-  /// `PixelTheme`, BUKAN [light]. `income`/`expense`/`overBudget`/
-  /// `background`/`cardBackground`/`textPrimary`/`textMuted`/`edge` diganti
-  /// nilai resmi ADR-015 (lihat tabel §"Palet" ADR-015); `accent`/
-  /// `onAccent`/`transfer`/`pending` sudah sama sejak T-2.2. Slot yang
-  /// murni milik layar lama (`investment`, `rollUp`, `needsReview`, dan
-  /// varian `…OnLight`) sengaja diwariskan apa adanya dari [light] — layar
-  /// baru tidak pernah membacanya.
+  /// Palet mode terang layar Saldough 2.0 (`PixelTheme`), BUKAN [light].
   ///
-  /// `divider` dan `shimmerBase`/`shimmerHighlight` tidak didefinisikan
-  /// ADR-015; diturunkan dari `textPrimary`/`background`/`cardBackground`
-  /// barunya dengan proporsi yang sama seperti [light] menurunkannya dari
-  /// nilai ADR-0006, bukan warna karangan baru.
+  /// Dibangun dengan konstruktor EKSPLISIT, bukan `light.copyWith(...)`:
+  /// dengan `copyWith`, tiap slot yang lupa diisi diwarisi diam-diam dari
+  /// palet lama (itulah yang membuat `AppMoneyText` sempat memakai
+  /// oranye-coklat untuk angka negatif). Kini slot baru wajib diisi di sini
+  /// saat kompilasi. Nilainya: tabel §"Palet" ADR-015 sebagaimana direvisi
+  /// ADR-016 (satu peran, satu warna).
   ///
-  /// Direvisi ADR-016 ("satu peran, satu warna"): `income`/`expense`/
-  /// `overBudget`/`transfer`/`pending`/`accent`/`textMuted` bukan lagi nilai
-  /// tabel ADR-015, dan varian `…OnLight` kini sama dengan slot teks-aman
-  /// masing-masing (sebelumnya diwarisi dari palet lama, sehingga
-  /// `AppMoneyText` memakai hijau lama dan oranye-coklat untuk negatif).
-  static final AppColorsExtension pixelLight = light.copyWith(
-    income: const Color(0xFF15803D),
-    expense: const Color(0xFFB91C1C),
-    overBudget: const Color(0xFFB91C1C),
-    incomeOnLight: const Color(0xFF15803D),
-    expenseOnLight: const Color(0xFFB91C1C),
-    overBudgetOnLight: const Color(0xFFB91C1C),
-    incomeFill: const Color(0xFF16A34A),
-    expenseFill: const Color(0xFFDC2626),
-    transfer: const Color(0xFF1D4ED8),
-    transferFill: const Color(0xFF2563EB),
-    pending: const Color(0xFFA16207),
-    accent: const Color(0xFFC2410C),
-    background: const Color(0xFFFFF8F5),
-    cardBackground: const Color(0xFFFFFFFF),
-    edge: const Color(0xFF1E1B19),
-    textPrimary: const Color(0xFF1E1B19),
-    textMuted: const Color(0xFF57534E),
-    divider: const Color(0x241E1B19),
-    shimmerBase: const Color(0xFFFAF2EE),
-    shimmerHighlight: const Color(0xFFFFFFFF),
+  /// Slot milik layar lama (`investment`, `rollUp`, `needsReview`) tidak
+  /// dibaca layar baru; diisi dengan padanan keluarga hue ADR-016 supaya
+  /// kalau suatu saat terbaca, hasilnya tetap selaras.
+  static const AppColorsExtension pixelLight = AppColorsExtension(
+    income: Color(0xFF15803D),
+    expense: Color(0xFFB91C1C),
+    overBudget: Color(0xFFB91C1C),
+    investment: Color(0xFFD97706),
+    rollUp: Color(0xFF2563EB),
+    needsReview: Color(0xFFFACC15),
+    onNeedsReview: Color(0xFF1E1B19),
+    incomeOnLight: Color(0xFF15803D),
+    expenseOnLight: Color(0xFFB91C1C),
+    overBudgetOnLight: Color(0xFFB91C1C),
+    investmentOnLight: Color(0xFFA16207),
+    rollUpOnLight: Color(0xFF1D4ED8),
+    needsReviewOnLight: Color(0xFFA16207),
+    background: Color(0xFFFFF8F5),
+    cardBackground: Color(0xFFFFFFFF),
+    edge: Color(0xFF1E1B19),
+    textPrimary: Color(0xFF1E1B19),
+    textMuted: Color(0xFF57534E),
+    // `divider`/`shimmer*` tidak didefinisikan ADR-015; diturunkan dari
+    // `textPrimary`/`background`/`cardBackground` dengan proporsi yang sama
+    // seperti palet lama menurunkannya dari nilai ADR-0006.
+    divider: Color(0x241E1B19),
+    shimmerBase: Color(0xFFFAF2EE),
+    shimmerHighlight: Color(0xFFFFFFFF),
+    accent: Color(0xFFC2410C),
+    onAccent: Color(0xFFFFFFFF),
+    transfer: Color(0xFF1D4ED8),
+    pending: Color(0xFFA16207),
+    incomeFill: Color(0xFF16A34A),
+    expenseFill: Color(0xFFDC2626),
+    transferFill: Color(0xFF2563EB),
   );
 
-  /// Palet mode gelap penuh ADR-015 — pasangan [pixelLight]. Lihat
-  /// dokumentasi [pixelLight] untuk aturan penurunan tiap slot.
-  static final AppColorsExtension pixelDark = dark.copyWith(
-    // Mode gelap: nilai teks-aman dan isian sama (ADR-016).
-    income: const Color(0xFF22C55E),
-    expense: const Color(0xFFF87171),
-    overBudget: const Color(0xFFF87171),
-    incomeOnLight: const Color(0xFF22C55E),
-    expenseOnLight: const Color(0xFFF87171),
-    overBudgetOnLight: const Color(0xFFF87171),
-    incomeFill: const Color(0xFF22C55E),
-    expenseFill: const Color(0xFFF87171),
-    transfer: const Color(0xFF60A5FA),
-    transferFill: const Color(0xFF60A5FA),
-    pending: const Color(0xFFF59E0B),
-    background: const Color(0xFF14120F),
-    cardBackground: const Color(0xFF1F1C18),
-    edge: const Color(0xFFF2ECE7),
-    textPrimary: const Color(0xFFF2ECE7),
-    textMuted: const Color(0xFFA8A29E),
-    divider: const Color(0x2EF2ECE7),
-    shimmerBase: const Color(0xFF1F1C18),
-    // +13 tiap kanal dari cardBackground barunya -- rasio relatif yang
-    // sama dengan cardBackground->shimmerHighlight [dark] lama (ADR-015
-    // tidak mendefinisikan slot ini).
-    shimmerHighlight: const Color(0xFF2C2925),
+  /// Palet mode gelap layar Saldough 2.0 -- pasangan [pixelLight], juga
+  /// konstruktor eksplisit. Pada mode gelap nilai teks-aman dan isian sama
+  /// (ADR-016).
+  static const AppColorsExtension pixelDark = AppColorsExtension(
+    income: Color(0xFF22C55E),
+    expense: Color(0xFFF87171),
+    overBudget: Color(0xFFF87171),
+    investment: Color(0xFFF59E0B),
+    rollUp: Color(0xFF60A5FA),
+    needsReview: Color(0xFFFACC15),
+    onNeedsReview: Color(0xFF14120F),
+    incomeOnLight: Color(0xFF22C55E),
+    expenseOnLight: Color(0xFFF87171),
+    overBudgetOnLight: Color(0xFFF87171),
+    investmentOnLight: Color(0xFFF59E0B),
+    rollUpOnLight: Color(0xFF60A5FA),
+    needsReviewOnLight: Color(0xFFFACC15),
+    background: Color(0xFF14120F),
+    cardBackground: Color(0xFF1F1C18),
+    edge: Color(0xFFF2ECE7),
+    textPrimary: Color(0xFFF2ECE7),
+    textMuted: Color(0xFFA8A29E),
+    divider: Color(0x2EF2ECE7),
+    shimmerBase: Color(0xFF1F1C18),
+    // +13 tiap kanal dari cardBackground -- rasio relatif yang sama dengan
+    // cardBackground->shimmerHighlight palet gelap lama.
+    shimmerHighlight: Color(0xFF2C2925),
+    accent: Color(0xFFE95100),
+    // Putih di atas accent gelap hanya 3,72:1; latar gelap 5,02:1.
+    onAccent: Color(0xFF14120F),
+    transfer: Color(0xFF60A5FA),
+    pending: Color(0xFFF59E0B),
+    incomeFill: Color(0xFF22C55E),
+    expenseFill: Color(0xFFF87171),
+    transferFill: Color(0xFF60A5FA),
   );
 
   /// Palet mode terang, nilai resmi dari ADR-0006.
@@ -396,4 +409,26 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 extension AppColorsContext on BuildContext {
   /// Slot warna semantik tema aktif.
   AppColorsExtension get appColors => Theme.of(this).extension<AppColorsExtension>() ?? AppColorsExtension.light;
+}
+
+/// Tiga tingkat permukaan hangat di atas [AppColorsExtension.background]
+/// ("surface-container" pada rujukan visual), dan pewarna tint -- diturunkan
+/// dari `background`/`textPrimary`/`cardBackground`, bukan hex tetap, jadi
+/// otomatis benar di kedua mode. Satu-satunya tempat turunan ini dihitung;
+/// widget tidak boleh lagi menulis `Color.alphaBlend(...)` sendiri.
+extension AppColorsSurfaces on AppColorsExtension {
+  Color _tone(double alpha) => Color.alphaBlend(textPrimary.withValues(alpha: alpha), background);
+
+  /// Setingkat di atas `background` (`surface-container-low`).
+  Color get surfaceLow => _tone(0.025);
+
+  /// `surface-container` -- konsol bulan, wadah tab.
+  Color get surfaceMid => _tone(0.05);
+
+  /// `surface-container-high` -- lencana netral.
+  Color get surfaceHigh => _tone(0.085);
+
+  /// [fill] dilarutkan ke [cardBackground] sebesar [strength] (0..1) -- latar
+  /// pucat berwarna untuk kotak ikon, nuansa kartu, dan lencana lembut.
+  Color tinted(Color fill, double strength) => Color.alphaBlend(fill.withValues(alpha: strength), cardBackground);
 }

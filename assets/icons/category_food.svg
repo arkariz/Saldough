@@ -1,24 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
   <!-- Pixel Art Restaurant / Dining Icon: Voxel Fork, Spoon & Center Dish -->
   <!-- Cloche / Plate in Center -->
-  <rect x="9" y="16" width="14" height="10" fill="#1e1e1e"/>
-  <rect x="10" y="17" width="12" height="8" fill="#e2e8f0"/>
-  <rect x="10" y="17" width="12" height="2" fill="#ffffff"/>
-  <rect x="11" y="22" width="10" height="3" fill="#cbd5e1"/>
+  <rect x="9" y="16" width="14" height="10" fill="#1E1B19"/>
+  <rect x="10" y="17" width="12" height="8" fill="#E7E5E4"/>
+  <rect x="10" y="17" width="12" height="2" fill="#FFFFFF"/>
+  <rect x="11" y="22" width="10" height="3" fill="#D6D3D1"/>
   <!-- Dish Dome / Cloche Lid -->
-  <rect x="11" y="11" width="10" height="6" fill="#1e1e1e"/>
-  <rect x="12" y="12" width="8" height="5" fill="#f1f5f9"/>
-  <rect x="13" y="12" width="6" height="2" fill="#ffffff"/>
-  <rect x="15" y="9" width="2" height="3" fill="#1e1e1e"/>
-  <rect x="15" y="9" width="2" height="1" fill="#facc15"/>
+  <rect x="11" y="11" width="10" height="6" fill="#1E1B19"/>
+  <rect x="12" y="12" width="8" height="5" fill="#F5F5F4"/>
+  <rect x="13" y="12" width="6" height="2" fill="#FFFFFF"/>
+  <rect x="15" y="9" width="2" height="3" fill="#1E1B19"/>
+  <rect x="15" y="9" width="2" height="1" fill="#FACC15"/>
   <!-- Fork (Left) -->
-  <rect x="4" y="8" width="4" height="18" fill="#1e1e1e"/>
-  <rect x="5" y="9" width="2" height="16" fill="#94a3b8"/>
-  <rect x="4" y="9" width="4" height="6" fill="#cbd5e1"/>
-  <rect x="5" y="9" width="1" height="3" fill="#1e1e1e"/>
+  <rect x="4" y="8" width="4" height="18" fill="#1E1B19"/>
+  <rect x="5" y="9" width="2" height="16" fill="#A8A29E"/>
+  <rect x="4" y="9" width="4" height="6" fill="#D6D3D1"/>
+  <rect x="5" y="9" width="1" height="3" fill="#1E1B19"/>
   <!-- Spoon / Knife (Right) -->
-  <rect x="24" y="8" width="4" height="18" fill="#1e1e1e"/>
-  <rect x="25" y="9" width="2" height="16" fill="#94a3b8"/>
-  <rect x="24" y="9" width="4" height="6" fill="#cbd5e1"/>
-  <rect x="25" y="10" width="2" height="3" fill="#ffffff"/>
+  <rect x="24" y="8" width="4" height="18" fill="#1E1B19"/>
+  <rect x="25" y="9" width="2" height="16" fill="#A8A29E"/>
+  <rect x="24" y="9" width="4" height="6" fill="#D6D3D1"/>
+  <rect x="25" y="10" width="2" height="3" fill="#FFFFFF"/>
 </svg>

@@ -76,7 +76,7 @@ class TransactionMonthHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TransactionSlab(
-          color: colors.tone,
+          color: colors.surfaceMid,
           padding: const EdgeInsets.all(AppSpacing.xs),
           child: Row(
             children: [
@@ -119,7 +119,7 @@ class TransactionMonthHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         TransactionSlab(
-          color: colors.toneLow,
+          color: colors.surfaceLow,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -156,7 +156,7 @@ class TransactionMonthHeader extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: colors.toneHigh,
+                      color: colors.surfaceHigh,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -253,7 +253,7 @@ class _ShareBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
-        color: colors.toneHigh,
+        color: colors.surfaceHigh,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(

@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
   <!-- Pixel Art Transactions Icon: Ledger Bill / Receipt with Arrows -->
-  <rect x="7" y="4" width="18" height="24" fill="#1e1e1e"/>
-  <rect x="8" y="5" width="16" height="22" fill="#fff8f5"/>
+  <rect x="7" y="4" width="18" height="24" fill="#1E1B19"/>
+  <rect x="8" y="5" width="16" height="22" fill="#FFF8F5"/>
   <!-- Shading & Folded Edge -->
-  <rect x="20" y="5" width="4" height="22" fill="#e0d8d5"/>
+  <rect x="20" y="5" width="4" height="22" fill="#E0D8D5"/>
   <!-- Receipt Header Band -->
-  <rect x="10" y="7" width="12" height="3" fill="#059669"/>
+  <rect x="10" y="7" width="12" height="3" fill="#16A34A"/>
   <!-- Transaction rows -->
-  <rect x="10" y="12" width="8" height="2" fill="#334155"/>
-  <rect x="20" y="12" width="2" height="2" fill="#10b981"/>
+  <rect x="10" y="12" width="8" height="2" fill="#44403C"/>
+  <rect x="20" y="12" width="2" height="2" fill="#22C55E"/>
 
-  <rect x="10" y="16" width="7" height="2" fill="#334155"/>
-  <rect x="19" y="16" width="3" height="2" fill="#ef4444"/>
+  <rect x="10" y="16" width="7" height="2" fill="#44403C"/>
+  <rect x="19" y="16" width="3" height="2" fill="#DC2626"/>
 
-  <rect x="10" y="20" width="9" height="2" fill="#334155"/>
-  <rect x="20" y="20" width="2" height="2" fill="#3b82f6"/>
+  <rect x="10" y="20" width="9" height="2" fill="#44403C"/>
+  <rect x="20" y="20" width="2" height="2" fill="#3B82F6"/>
   <!-- Serrated bottom receipt edge -->
   <rect x="8" y="26" width="2" height="2" fill="none"/>
-  <rect x="12" y="26" width="2" height="2" fill="#1e1e1e"/>
-  <rect x="16" y="26" width="2" height="2" fill="#1e1e1e"/>
-  <rect x="20" y="26" width="2" height="2" fill="#1e1e1e"/>
+  <rect x="12" y="26" width="2" height="2" fill="#1E1B19"/>
+  <rect x="16" y="26" width="2" height="2" fill="#1E1B19"/>
+  <rect x="20" y="26" width="2" height="2" fill="#1E1B19"/>
 </svg>

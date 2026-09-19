@@ -48,7 +48,7 @@ class TransactionTypeFilterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.tone,
+      color: colors.surfaceMid,
       padding: const EdgeInsets.all(AppSpacing.xs),
       shadow: 2,
       child: Row(

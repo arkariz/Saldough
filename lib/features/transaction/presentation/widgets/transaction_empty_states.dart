@@ -38,7 +38,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: colors.pending.withValues(alpha: 0.15),
+                  color: colors.tinted(colors.pending, 0.15),
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
@@ -107,7 +107,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         TransactionSlab(
-          color: colors.tone,
+          color: colors.surfaceMid,
           shadow: 0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

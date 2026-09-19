@@ -1,22 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Tiga tingkat permukaan hangat ("surface-container" pada rujukan visual
-/// `pixel_kas_daftar_transaksi`), diturunkan dari `background` dan
-/// `textPrimary` -- bukan hex tetap -- supaya otomatis benar di mode gelap.
-extension TransactionSurfaceTones on AppColorsExtension {
-  Color _tone(double alpha) => Color.alphaBlend(textPrimary.withValues(alpha: alpha), background);
-
-  /// Setingkat di atas `background` (`surface-container-low`).
-  Color get toneLow => _tone(0.025);
-
-  /// `surface-container` -- konsol bulan, wadah tab jenis.
-  Color get tone => _tone(0.05);
-
-  /// `surface-container-high` -- lencana netral.
-  Color get toneHigh => _tone(0.085);
-}
-
 /// Panel datar dengan bayangan keras HANYA di sisi bawah, persis
 /// `shadow-[0_3px_0_0_#1e1b19]` pada rujukan visual layar ini (beda dari
 /// `AppHardCard` yang bergaris tepi penuh + bayangan kanan-bawah).

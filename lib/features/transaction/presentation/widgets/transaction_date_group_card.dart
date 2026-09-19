@@ -45,10 +45,10 @@ class TransactionDateGroupCard extends StatelessWidget {
     final (title, date) = _dateLabel(group.date);
     final net = group.netSen;
     final (chipFill, chipText) = net > 0
-        ? (colors.kindFill(TransactionKind.income).withValues(alpha: 0.18), colors.kindInk(TransactionKind.income))
+        ? (colors.tinted(colors.kindFill(TransactionKind.income), 0.18), colors.kindInk(TransactionKind.income))
         : net < 0
-        ? (colors.kindFill(TransactionKind.expense).withValues(alpha: 0.16), colors.kindInk(TransactionKind.expense))
-        : (colors.toneHigh, colors.textMuted);
+        ? (colors.tinted(colors.kindFill(TransactionKind.expense), 0.16), colors.kindInk(TransactionKind.expense))
+        : (colors.surfaceHigh, colors.textMuted);
     final netText = net > 0 ? '+${AppMoneyFormatter.format(net)}' : AppMoneyFormatter.format(net);
 
     return Column(
@@ -210,7 +210,7 @@ class TransactionRow extends StatelessWidget {
     final ink = colors.kindInk(kind);
 
     return TransactionSlab(
-      color: Color.alphaBlend(tint.withValues(alpha: 0.07), colors.cardBackground),
+      color: colors.tinted(tint, 0.07),
       padding: EdgeInsets.zero,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
@@ -229,7 +229,7 @@ class TransactionRow extends StatelessWidget {
                         height: 44,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Color.alphaBlend(tint.withValues(alpha: 0.22), colors.cardBackground),
+                          color: colors.tinted(tint, 0.22),
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
                             BoxShadow(color: Color.lerp(ink, colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),

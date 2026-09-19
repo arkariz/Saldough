@@ -21,19 +21,19 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 18 September 2026.
+Terakhir diperbarui: 19 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 5 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 7 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **25** | |
+| **Total MVP** | **76** | **27** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -328,10 +328,12 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       NFR-UX-005.
 - [x] **T-2.5** Buat `features/transaction/`: daftar riwayat dikelompokkan per
       tanggal, dengan penyaring jenis, dompet, dan kategori.
-      ⚠ **Bidang pencarian teks di rujukan visual (`pixel_kas_daftar_transaksi`)
-      SENGAJA tidak dibangun** -- tidak dituntut FR-TXN-004 dan tidak bernaung
-      di tugas bernomor mana pun. Dicatat sebagai celah untuk tugas mendatang
-      bernomor, bukan diselundupkan masuk di sini.
+      ⚠ **Bidang pencarian teks DIBANGUN belakangan**, bukan di T-2.5 semula
+      (yang sengaja menundanya karena tidak dituntut FR-TXN-004): ditambahkan
+      saat layar disesuaikan dengan rujukan visual `pixel_kas_daftar_transaksi`.
+      `TransactionSearchChanged` mencocokkan kategori, catatan, dan nama dompet;
+      ikut menyaring daftar dan hitungan per jenis, tetapi TIDAK memengaruhi
+      ringkasan bulan (`rawTransactions`).
       ⚠ Sistem desain ADR-015 (`PixelTheme`/`AppHardCard`/`AppChip`/
       `AppMoneyText`) dipakai SEJAK AWAL, bukan retrofit belakangan seperti
       T-2.4 -- setiap section (header ringkasan bulan, tiap kelompok tanggal)
@@ -343,10 +345,14 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       ⚠ Penyaring dompet dan kategori dibangun sebagai DUA DROPDOWN ringkas
       berdampingan, bukan meniru persis baris chip mockup untuk elemen ini --
       FR-TXN-004 hanya menuntut "penyaring dompet dan kategori" ada, bentuk
-      persisnya keputusan implementasi. Filter JENIS tetap baris `AppChip`
-      yang bisa digeser horizontal (`SingleChildScrollView` + `Row`, BUKAN
-      `Wrap` -- `Wrap` adalah bug yang sama yang sempat membuat chip CATAT
-      tampil bertumpuk vertikal, lihat catatan T-2.4).
+      persisnya keputusan implementasi. Filter JENIS kini satu konsol
+      segmen empat tab bergambar (`Row` + `Expanded`, BUKAN `Wrap` -- `Wrap`
+      adalah bug yang sempat membuat chip CATAT tampil bertumpuk vertikal,
+      lihat catatan T-2.4). Sesudah penyesuaian visual, kedua dropdown
+      sama lebar di bawah kolom cari (sebelumnya kategori berdiri sendiri di
+      satu baris), item dropdown bergambar (ikon jenis dompet dari
+      `Wallet.iconKey`, ikon kategori lewat pencocokan kata kunci karena
+      kategori teks bebas).
       ⚠ **`TransactionScope` dipasang BERSEBELAHAN dengan `RecordScope`**, di
       level `AppShellPage`, keduanya dibangun dari kontainer akar yang sama
       (ditangkap sekali di awal `build`) -- BUKAN bersarang di dalam
@@ -367,20 +373,59 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       transaksi" yang akan menyesatkan. Kegagalan pembacaan (`loadFailed`)
       keadaan KETIGA yang terpisah dari keduanya (pola `RecordState.loadFailed`
       T-2.4).
+      ⚠ Warna dan ikon direvisi setelah pembangunan awal: palet pixel diganti
+      [ADR-016](../02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md)
+      (satu peran satu warna; transfer biru, menyimpang dari ADR-015 atas
+      keputusan pemilik) dan warna tertanam ikon pixel-art diselaraskan.
       Memenuhi FR-TXN-004.
-- [ ] **T-2.6** Tambahkan penyuntingan dan penghapusan transaksi.
+- [x] **T-2.6** Tambahkan penyuntingan dan penghapusan transaksi.
       ⚠ Saat dompet sebuah transaksi berpindah, saldo dompet lama **dan** baru
       sama-sama dihitung ulang.
       ⚠ Pembetulan dilakukan dengan menyunting atau menghapus, tidak pernah
       dengan mencatat transaksi penyeimbang.
+      ⚠ Logika domainnya sudah ada sejak T-1.6 (`RecordTransaction` dengan
+      `previousTransaction` dan `delete`); tugas ini lapisan presentasinya:
+      `TransactionBloc` menerima `TransactionUpdated`/`TransactionDeleted`,
+      menulis lewat `RecordTransaction`, lalu memuat ulang dompet DAN transaksi
+      bulan itu TANPA `isLoading` (daftar tidak berkedip jadi kerangka).
+      Kegagalan tulis memancarkan galat dan tidak mengubah daftar maupun saldo.
+      ⚠ **Sunting memakai ulang tiga formulir CATAT** (parameter `initial`),
+      bukan formulir baru; pembukanya `openEditTransactionSheet` ada di
+      `features/record` karena formulirnya milik fitur itu. Ini bukan jalur
+      pembuatan (CLAUDE.md aturan 8): `id` dipertahankan dan transaksinya
+      ditimpa. Objek hasil dibangun BARU, bukan lewat `copyWith`, karena
+      `copyWith` (`?? this.x`) tidak bisa mengosongkan kategori yang dihapus.
+      ⚠ **Formulir sunting menerima dompet dengan saldo SEBELUM transaksi itu
+      ada.** `currentBalance` sudah memuat transaksi yang disunting, jadi tanpa
+      pembalikan itu pratinjau saldo ("sebelum -> sesudah") mengurangkannya dua
+      kali. Ditemukan lewat uji emulator (Rp425.000 -> Rp350.000 padahal tidak
+      ada perubahan); tes regresinya ada di `transaction_list_page_test.dart`.
+      ⚠ **`EffectListener<TransactionBloc>` dipasang di shell.** Sebelumnya
+      efek `TransactionBloc` tidak didengarkan siapa pun, jadi snackbar hasil
+      sunting/hapus tidak akan pernah tampil.
+      ⚠ Keterbatasan yang diketahui: formulir hanya menerima rupiah utuh, jadi
+      transaksi yang nominalnya punya sen pecahan dibulatkan ke bawah saat
+      disunting. Belum bisa terjadi lewat UI (formulir CATAT juga rupiah utuh),
+      tetapi bisa lewat data hasil impor.
       Memenuhi FR-TXN-005.
-- [ ] **T-2.11** Buat layar rincian satu transaksi: jenis, nominal, kategori,
+- [x] **T-2.11** Buat layar rincian satu transaksi: jenis, nominal, kategori,
       dompet, tanggal, catatan, beserta aksi sunting dan hapus.
       ⚠ Transfer memakai judul **Transfer tercatat** dan tata letak "Dari / Ke /
       Jumlah". Dilarang memakai "Transfer berhasil", "Pembayaran berhasil",
-      atau "Kirim Uang" di mana pun.
+      atau "Kirim Uang" di mana pun. (Diuji: seluruh `Text` di layar transfer
+      dipindai terhadap kosakata terlarang.)
       ⚠ Baris anggaran tertaut baru terisi setelah Fase 4; sampai itu bagiannya
-      tidak ditampilkan, bukan ditampilkan kosong.
+      tidak ditampilkan, bukan ditampilkan kosong. Yang juga SENGAJA tidak
+      dibangun dari rujukan visual: "ID catatan" (transaksi tidak punya nomor
+      tampilan) dan kartu "Format Entri Transfer" (ilustrasi desain, bukan
+      fitur).
+      ⚠ Layar rincian adalah rute yang di-push, dan rute itu TIDAK mewarisi
+      `Theme` maupun `BlocProvider` dari pohon asalnya (beda dengan
+      `showModalBottomSheet`). `openTransactionDetail` memasang ulang
+      `PixelTheme` dan `BlocProvider.value` dengan `TransactionBloc` yang SAMA,
+      supaya sunting/hapus memuat ulang daftar di belakangnya.
+      ⚠ Baris di daftar riwayat kini bisa diketuk; sebelumnya sengaja tidak
+      interaktif karena layar ini belum ada.
       Memenuhi FR-TXN-006.
 
 ### Dompet

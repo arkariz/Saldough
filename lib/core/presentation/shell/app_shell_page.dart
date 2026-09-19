@@ -11,6 +11,7 @@ import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
+import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:state_management/state_management.dart';
 
@@ -132,35 +133,43 @@ class _AppShellPageState extends State<AppShellPage> {
                 builder: (context, transactionScope) {
                   return BlocProvider.value(
                     value: transactionScope.container<TransactionBloc>(),
-                    // `Builder` di sini bukan hiasan: context yang dipakai
-                    // `_onDestinationSelected`/`openRecordSheet` HARUS berada
-                    // DI BAWAH kedua `BlocProvider` di atas supaya
-                    // `context.read<RecordBloc>()` menemukannya. Context
-                    // milik parameter `builder` ScopeWidget ATAU
-                    // `build(BuildContext context)` di luar sini keduanya
-                    // leluhur `BlocProvider` ini, bukan keturunannya.
-                    child: Builder(
-                      builder: (context) => Scaffold(
-                        body: IndexedStack(index: _activeTab, children: tabs),
-                        bottomNavigationBar: NavigationBar(
-                          selectedIndex: _navIndexFor(_activeTab),
-                          onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
-                          destinations: [
-                            NavigationDestination(icon: const AppIcon(IconKey.home), label: t.appShell.homeTabLabel),
-                            NavigationDestination(
-                              icon: const AppIcon(IconKey.budget),
-                              label: t.appShell.budgetTabLabel,
-                            ),
-                            NavigationDestination(icon: const AppIcon(IconKey.record), label: t.appShell.recordAction),
-                            NavigationDestination(
-                              icon: const AppIcon(IconKey.transactions),
-                              label: t.appShell.transactionsTabLabel,
-                            ),
-                            NavigationDestination(
-                              icon: const AppIcon(IconKey.wallets),
-                              label: t.appShell.walletsTabLabel,
-                            ),
-                          ],
+                    // Snackbar hasil sunting/hapus transaksi (T-2.6). Dipasang
+                    // di shell, bukan di layar rincian, supaya tetap tampil
+                    // walau layar rincian sudah ditutup saat hasilnya tiba.
+                    child: EffectListener<TransactionBloc, TransactionState>(
+                      // `Builder` di sini bukan hiasan: context yang dipakai
+                      // `_onDestinationSelected`/`openRecordSheet` HARUS berada
+                      // DI BAWAH kedua `BlocProvider` di atas supaya
+                      // `context.read<RecordBloc>()` menemukannya. Context
+                      // milik parameter `builder` ScopeWidget ATAU
+                      // `build(BuildContext context)` di luar sini keduanya
+                      // leluhur `BlocProvider` ini, bukan keturunannya.
+                      child: Builder(
+                        builder: (context) => Scaffold(
+                          body: IndexedStack(index: _activeTab, children: tabs),
+                          bottomNavigationBar: NavigationBar(
+                            selectedIndex: _navIndexFor(_activeTab),
+                            onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
+                            destinations: [
+                              NavigationDestination(icon: const AppIcon(IconKey.home), label: t.appShell.homeTabLabel),
+                              NavigationDestination(
+                                icon: const AppIcon(IconKey.budget),
+                                label: t.appShell.budgetTabLabel,
+                              ),
+                              NavigationDestination(
+                                icon: const AppIcon(IconKey.record),
+                                label: t.appShell.recordAction,
+                              ),
+                              NavigationDestination(
+                                icon: const AppIcon(IconKey.transactions),
+                                label: t.appShell.transactionsTabLabel,
+                              ),
+                              NavigationDestination(
+                                icon: const AppIcon(IconKey.wallets),
+                                label: t.appShell.walletsTabLabel,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

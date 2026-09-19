@@ -9,6 +9,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -138,5 +139,180 @@ void main() {
         expect(find.text(t.record.incomeAction), findsWidgets);
       },
     );
+  });
+
+  group('TransactionDetailPage (T-2.11) dan sunting/hapus (T-2.6)', () {
+    // Viewport tinggi supaya seluruh layar rincian terbangun tanpa menggulir.
+    void useTallViewport(WidgetTester tester) {
+      tester.view.physicalSize = const Size(800, 2600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+    }
+
+    Future<void> seedWallet(String id, String name, {int initial = 100000000}) async {
+      await walletRepository.saveWallet(
+        Wallet(id: id, name: name, iconKey: 'walletBank', initialBalance: initial, currentBalance: initial),
+      );
+    }
+
+    Future<void> recompute(Set<String> ids) => RecomputeWalletBalances(
+      walletRepository: walletRepository,
+      transactionRepository: transactionRepository,
+    ).forWallets(ids);
+
+    Future<int> balanceOf(String id) async {
+      final wallets = (await walletRepository.listWallets()).fold<List<Wallet>>((_) => [], (r) => r);
+      return wallets.firstWhere((w) => w.id == id).currentBalance;
+    }
+
+    Future<void> seedExpense() async {
+      await seedWallet('bca', 'BCA');
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(
+          id: 'e1',
+          date: DateTime.now(),
+          amount: 7500000,
+          note: 'nasi padang',
+          walletId: 'bca',
+          categoryKey: 'Makan Siang',
+        ),
+      );
+      await recompute({'bca'});
+    }
+
+    testWidgets('mengetuk baris membuka rincian: jenis, nominal, kategori, dompet + saldo, tanggal, catatan', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedExpense();
+      await openTransactionsTab(tester);
+
+      await tester.tap(find.text('Makan Siang'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TransactionDetailPage), findsOneWidget);
+      expect(find.text(t.transaction.detailExpenseTitle.toUpperCase()), findsOneWidget);
+      expect(find.text('−Rp75.000'), findsWidgets);
+      expect(find.text(t.transaction.detailExpenseWalletLabel), findsOneWidget);
+      expect(find.text('BCA'), findsOneWidget);
+      expect(find.text('${t.transaction.detailCurrentBalance}: Rp925.000'), findsOneWidget);
+      expect(find.text('“nasi padang”'), findsOneWidget);
+      // Baris anggaran belum ada sebelum Fase 4: bagiannya tidak ditampilkan.
+      expect(find.textContaining('Anggaran'), findsNothing);
+    });
+
+    testWidgets('transfer memakai judul "Transfer tercatat" dan Dari / Ke / Jumlah, tanpa kosakata terlarang', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedWallet('bca', 'BCA');
+      await seedWallet('gopay', 'GoPay', initial: 0);
+      await transactionRepository.saveTransaction(
+        TransferTransaction(
+          id: 't1',
+          date: DateTime.now(),
+          amount: 5000000,
+          note: 'top-up',
+          fromWalletId: 'bca',
+          toWalletId: 'gopay',
+        ),
+      );
+      await recompute({'bca', 'gopay'});
+      await openTransactionsTab(tester);
+
+      await tester.tap(find.text('top-up'));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.transaction.detailTransferTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.detailFromLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.detailToLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.detailAmountLabel), findsOneWidget);
+      expect(find.text('−Rp50.000'), findsOneWidget);
+      expect(find.text('+Rp50.000'), findsOneWidget);
+
+      // FR-TXN-006: aplikasi hanya mencatat, tidak pernah "menjalankan".
+      const forbidden = ['transfer berhasil', 'pembayaran berhasil', 'kirim uang', 'transfer successful'];
+      final texts = tester
+          .widgetList<Text>(find.byType(Text))
+          .map((w) => (w.data ?? w.textSpan?.toPlainText() ?? '').toLowerCase());
+      for (final text in texts) {
+        for (final word in forbidden) {
+          expect(text.contains(word), isFalse, reason: '"$text" memuat kosakata terlarang "$word"');
+        }
+      }
+    });
+
+    testWidgets('menghapus lewat konfirmasi menutup rincian, membuang baris, dan mengembalikan saldo dompet', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedExpense();
+      expect(await balanceOf('bca'), 92500000);
+      await openTransactionsTab(tester);
+      await tester.tap(find.text('Makan Siang'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
+      await tester.pumpAndSettle();
+      expect(find.text(t.transaction.deleteConfirmTitle), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, t.common.delete));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TransactionDetailPage), findsNothing);
+      expect(find.text('Makan Siang'), findsNothing);
+      expect(find.text(t.transaction.deletedMessage), findsOneWidget);
+      expect(await balanceOf('bca'), 100000000, reason: 'saldo kembali ke keadaan sebelum transaksi ada');
+    });
+
+    testWidgets('membatalkan konfirmasi hapus tidak menghapus apa pun', (tester) async {
+      useTallViewport(tester);
+      await seedExpense();
+      await openTransactionsTab(tester);
+      await tester.tap(find.text('Makan Siang'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(TextButton, t.common.cancel));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TransactionDetailPage), findsOneWidget);
+      expect(await balanceOf('bca'), 92500000);
+    });
+
+    testWidgets('sunting memakai formulir yang sama, terisi awal, dan menyimpan perubahan + saldo baru', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedExpense();
+      await openTransactionsTab(tester);
+      await tester.tap(find.text('Makan Siang'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(AppButton, t.transaction.editAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.transaction.editSheetTitle), findsOneWidget);
+      expect(find.text('75.000'), findsOneWidget, reason: 'nominal terisi awal, berpemisah ribuan');
+      // Pratinjau saldo memakai saldo SEBELUM transaksi ini (Rp1.000.000), bukan
+      // saldo sekarang yang sudah dikurangi -- kalau tidak, 75.000 dipotong dua
+      // kali (925.000 -> 850.000).
+      expect(find.text('Rp1.000.000'), findsOneWidget);
+      expect(find.text('Rp925.000'), findsOneWidget);
+      expect(find.text('Rp850.000'), findsNothing);
+
+      await tester.enterText(find.widgetWithText(TextField, t.record.amountFieldHint), '90000');
+      await tester.pump();
+      await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
+      await tester.tap(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TransactionDetailPage), findsNothing);
+      expect(find.text('−Rp90.000'), findsWidgets);
+      expect(find.text(t.transaction.updatedMessage), findsOneWidget);
+      expect(await balanceOf('bca'), 91000000);
+      final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
+      expect(all, hasLength(1), reason: 'menimpa transaksi lama, tidak mencatat transaksi penyeimbang');
+    });
   });
 }

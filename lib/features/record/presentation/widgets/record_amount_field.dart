@@ -5,6 +5,10 @@ import 'package:saldough/core/theme/theme.dart';
 
 /// Mengubah [value] (rupiah, bukan sen) jadi teks berpemisah ribuan ala
 /// Indonesia, mis. `5000000` -> `"5.000.000"`.
+/// Memformat [rupiah] (rupiah, bukan sen) dengan pemisah ribuan, untuk
+/// mengisi awal field saat menyunting transaksi tersimpan.
+String formatRecordAmount(int rupiah) => _formatThousands(rupiah);
+
 String _formatThousands(int value) {
   final digits = value.toString();
   final buffer = StringBuffer();

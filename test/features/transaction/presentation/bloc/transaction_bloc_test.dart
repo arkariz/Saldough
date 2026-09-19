@@ -6,6 +6,7 @@ import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:state_management/state_management.dart';
 
 /// Pembungkus [TransactionRepository] yang bisa dipaksa gagal lewat
 /// [shouldFail], dipakai untuk menguji `TransactionState.loadFailed` tanpa
@@ -17,6 +18,9 @@ final class _FlakyTransactionRepository implements TransactionRepository {
 
   /// `true` membuat [listTransactionsInMonth] SELALU mengembalikan `Left`.
   bool shouldFail = false;
+
+  /// `true` membuat [saveTransaction] dan [deleteTransaction] SELALU mengembalikan `Left`.
+  bool failWrites = false;
 
   @override
   Future<Either<Failure, List<Transaction>>> listTransactionsInMonth(DateTime month) async {
@@ -30,12 +34,23 @@ final class _FlakyTransactionRepository implements TransactionRepository {
   Future<Either<Failure, List<Transaction>>> listAllTransactions() => _delegate.listAllTransactions();
 
   @override
-  Future<Either<Failure, Unit>> saveTransaction(Transaction transaction, {DateTime? previousDate}) =>
-      _delegate.saveTransaction(transaction, previousDate: previousDate);
+  Future<Either<Failure, Unit>> saveTransaction(Transaction transaction, {DateTime? previousDate}) async {
+    if (failWrites) return const Left(SystemFailure(code: FailureCode('TEST_WRITE_FAILURE'), message: 'tulis gagal'));
+    return _delegate.saveTransaction(transaction, previousDate: previousDate);
+  }
 
   @override
-  Future<Either<Failure, Unit>> deleteTransaction(String id, DateTime date) => _delegate.deleteTransaction(id, date);
+  Future<Either<Failure, Unit>> deleteTransaction(String id, DateTime date) async {
+    if (failWrites) return const Left(SystemFailure(code: FailureCode('TEST_WRITE_FAILURE'), message: 'tulis gagal'));
+    return _delegate.deleteTransaction(id, date);
+  }
 }
+
+/// `RecordTransaction` sungguhan di atas repositori yang diberikan.
+RecordTransaction _recorder(WalletRepository wallets, TransactionRepository transactions) => RecordTransaction(
+  transactionRepository: transactions,
+  recomputeWalletBalances: RecomputeWalletBalances(walletRepository: wallets, transactionRepository: transactions),
+);
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -55,9 +70,17 @@ void main() {
   });
 
   TransactionBloc buildBloc({TransactionRepository? repository}) {
+    final repo = repository ?? transactionRepository;
     return TransactionBloc(
       walletRepository: walletRepository,
-      transactionRepository: repository ?? transactionRepository,
+      transactionRepository: repo,
+      recordTransaction: RecordTransaction(
+        transactionRepository: repo,
+        recomputeWalletBalances: RecomputeWalletBalances(
+          walletRepository: walletRepository,
+          transactionRepository: repo,
+        ),
+      ),
     );
   }
 
@@ -250,8 +273,11 @@ void main() {
 
     test('kegagalan pembacaan dompet menyetel loadFailed true, bukan keadaan kosong', () async {
       final failing = _FailingWalletRepository();
-      final bloc = TransactionBloc(walletRepository: failing, transactionRepository: transactionRepository)
-        ..add(const TransactionStarted());
+      final bloc = TransactionBloc(
+        walletRepository: failing,
+        transactionRepository: transactionRepository,
+        recordTransaction: _recorder(failing, transactionRepository),
+      )..add(const TransactionStarted());
       await bloc.stream.firstWhere((s) => !s.isLoading);
 
       expect(bloc.state.loadFailed, isTrue);
@@ -262,8 +288,11 @@ void main() {
       'kegagalan pembacaan transaksi menyetel loadFailed true, pemuatan berhasil berikutnya menyetelnya balik',
       () async {
         final flaky = _FlakyTransactionRepository(transactionRepository)..shouldFail = true;
-        final bloc = TransactionBloc(walletRepository: walletRepository, transactionRepository: flaky)
-          ..add(const TransactionStarted());
+        final bloc = TransactionBloc(
+          walletRepository: walletRepository,
+          transactionRepository: flaky,
+          recordTransaction: _recorder(walletRepository, flaky),
+        )..add(const TransactionStarted());
         await bloc.stream.firstWhere((s) => !s.isLoading);
         expect(bloc.state.loadFailed, isTrue);
 
@@ -273,6 +302,144 @@ void main() {
         expect(bloc.state.loadFailed, isFalse);
       },
     );
+  });
+
+  group('TransactionBloc sunting dan hapus (T-2.6, FR-TXN-005)', () {
+    final now = DateTime.now();
+    final day = DateTime(now.year, now.month, 5);
+
+    Future<int> balanceOf(String walletId) async {
+      final wallets = (await walletRepository.listWallets()).fold<List<Wallet>>((_) => [], (r) => r);
+      return wallets.firstWhere((w) => w.id == walletId).currentBalance;
+    }
+
+    Future<TransactionBloc> startedBloc({TransactionRepository? repository}) async {
+      final bloc = buildBloc(repository: repository)..add(const TransactionStarted());
+      await bloc.stream.firstWhere((s) => !s.isLoading);
+      return bloc;
+    }
+
+    Future<TransactionState> nextWithEffect(TransactionBloc bloc) => bloc.stream.firstWhere((s) => s.hasEffect);
+
+    Future<IncomeTransaction> seedIncome({int amount = 100000, String walletId = 'bca'}) async {
+      final income = IncomeTransaction(id: 'i1', date: day, amount: amount, note: 'gaji', walletId: walletId);
+      await transactionRepository.saveTransaction(income);
+      await RecomputeWalletBalances(
+        walletRepository: walletRepository,
+        transactionRepository: transactionRepository,
+      ).forWallets({walletId});
+      return income;
+    }
+
+    test(
+      'menyunting nominal menimpa transaksi (bukan menambah), menghitung ulang saldo, dan memuat ulang daftar',
+      () async {
+        final original = await seedIncome();
+        expect(await balanceOf('bca'), 100000);
+        final bloc = await startedBloc();
+
+        final updated = IncomeTransaction(id: 'i1', date: day, amount: 250000, note: 'gaji', walletId: 'bca');
+        bloc.add(TransactionUpdated(original: original, updated: updated));
+        final state = await nextWithEffect(bloc);
+
+        expect(await balanceOf('bca'), 250000);
+        expect(state.rawTransactions, [updated]);
+        expect(
+          state.wallets.firstWhere((w) => w.id == 'bca').currentBalance,
+          250000,
+          reason: 'dompet di state ikut segar',
+        );
+        expect(state.isLoading, isFalse, reason: 'daftar tidak boleh berkedip jadi kerangka pemuatan');
+      },
+    );
+
+    test('memindahkan transaksi ke dompet lain menghitung ulang saldo dompet LAMA dan BARU', () async {
+      final original = await seedIncome();
+      final bloc = await startedBloc();
+
+      final updated = IncomeTransaction(id: 'i1', date: day, amount: 100000, note: 'gaji', walletId: 'gopay');
+      bloc.add(TransactionUpdated(original: original, updated: updated));
+      await nextWithEffect(bloc);
+
+      expect(await balanceOf('bca'), 0, reason: 'dompet lama kehilangan transaksinya');
+      expect(await balanceOf('gopay'), 100000, reason: 'dompet baru menerimanya');
+    });
+
+    test('memindahkan tanggal ke bulan lain memindahkan transaksi antar bulan tanpa menggandakan', () async {
+      final original = await seedIncome();
+      final bloc = await startedBloc();
+
+      final nextMonth = DateTime(now.year, now.month + 1, 5);
+      final updated = IncomeTransaction(id: 'i1', date: nextMonth, amount: 100000, note: 'gaji', walletId: 'bca');
+      bloc.add(TransactionUpdated(original: original, updated: updated));
+      final state = await nextWithEffect(bloc);
+
+      expect(state.rawTransactions, isEmpty, reason: 'sudah tidak ada di bulan asal');
+      final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
+      expect(all, [updated], reason: 'tepat satu salinan, di bulan tujuan');
+    });
+
+    test('menghapus mengembalikan saldo dompet ke keadaan sebelum transaksi itu ada', () async {
+      final original = await seedIncome();
+      expect(await balanceOf('bca'), 100000);
+      final bloc = await startedBloc();
+
+      bloc.add(TransactionDeleted(original));
+      final state = await nextWithEffect(bloc);
+
+      expect(await balanceOf('bca'), 0);
+      expect(state.rawTransactions, isEmpty);
+      expect(state.groups, isEmpty);
+    });
+
+    test('menghapus transfer menghitung ulang KEDUA dompetnya', () async {
+      final transfer = TransferTransaction(
+        id: 't1',
+        date: day,
+        amount: 50000,
+        note: '',
+        fromWalletId: 'bca',
+        toWalletId: 'gopay',
+      );
+      await transactionRepository.saveTransaction(transfer);
+      await RecomputeWalletBalances(
+        walletRepository: walletRepository,
+        transactionRepository: transactionRepository,
+      ).forWallets({'bca', 'gopay'});
+      expect(await balanceOf('bca'), -50000);
+      expect(await balanceOf('gopay'), 50000);
+      final bloc = await startedBloc();
+
+      bloc.add(TransactionDeleted(transfer));
+      await nextWithEffect(bloc);
+
+      expect(await balanceOf('bca'), 0);
+      expect(await balanceOf('gopay'), 0);
+    });
+
+    test('berhasil memancarkan snackbar sukses; gagal menulis memancarkan galat dan TIDAK mengubah daftar', () async {
+      final original = await seedIncome();
+      final flaky = _FlakyTransactionRepository(transactionRepository);
+      final bloc = await startedBloc(repository: flaky);
+      final before = bloc.state.rawTransactions;
+
+      flaky.failWrites = true;
+      bloc.add(
+        TransactionUpdated(
+          original: original,
+          updated: IncomeTransaction(id: 'i1', date: day, amount: 999, note: 'x', walletId: 'bca'),
+        ),
+      );
+      final failed = await nextWithEffect(bloc);
+      expect((failed.effect! as ShowSnackBarEffect).severity, FeedbackSeverity.error);
+      expect(failed.rawTransactions, before, reason: 'daftar tidak berubah kalau tulis gagal');
+      expect(await balanceOf('bca'), 100000, reason: 'saldo tidak berubah kalau tulis gagal');
+
+      flaky.failWrites = false;
+      bloc.add(TransactionDeleted(original));
+      final ok = await bloc.stream.firstWhere((s) => s.effect is ShowSnackBarEffect && s.rawTransactions.isEmpty);
+      expect((ok.effect! as ShowSnackBarEffect).severity, FeedbackSeverity.success);
+    });
   });
 }
 

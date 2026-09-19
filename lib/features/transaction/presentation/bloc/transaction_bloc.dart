@@ -22,18 +22,24 @@ part 'transaction_event.dart';
 /// pengelompokan tanggal berkali-kali per detik.
 final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   /// Membuat [TransactionBloc].
-  TransactionBloc({required this._walletRepository, required this._transactionRepository})
-    : super(TransactionState.initial()) {
+  TransactionBloc({
+    required this._walletRepository,
+    required this._transactionRepository,
+    required this._recordTransaction,
+  }) : super(TransactionState.initial()) {
     on<TransactionStarted>(_onStarted);
     on<TransactionMonthChanged>(_onMonthChanged);
     on<TransactionTypeFilterChanged>(_onTypeFilterChanged);
     on<TransactionWalletFilterChanged>(_onWalletFilterChanged);
     on<TransactionCategoryFilterChanged>(_onCategoryFilterChanged);
     on<TransactionSearchChanged>(_onSearchChanged);
+    on<TransactionUpdated>(_onUpdated);
+    on<TransactionDeleted>(_onDeleted);
   }
 
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
+  final RecordTransaction _recordTransaction;
 
   Future<void> _onStarted(TransactionStarted event, Emitter<TransactionState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -43,6 +49,37 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
         await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+    }
+  }
+
+  Future<void> _onUpdated(TransactionUpdated event, Emitter<TransactionState> emit) async {
+    final result = await _recordTransaction(event.updated, previousTransaction: event.original);
+    await _afterWrite(result, t.transaction.updatedMessage, emit);
+  }
+
+  Future<void> _onDeleted(TransactionDeleted event, Emitter<TransactionState> emit) async {
+    final result = await _recordTransaction.delete(event.transaction);
+    await _afterWrite(result, t.transaction.deletedMessage, emit);
+  }
+
+  /// Sesudah sunting/hapus: kalau gagal, pertahankan layar apa adanya dan
+  /// tampilkan galat; kalau berhasil, muat ulang dompet DAN transaksi bulan
+  /// ini (saldo dompet berubah, jadi "saldo saat ini" di layar rincian harus
+  /// ikut segar) TANPA `isLoading` -- daftar tidak boleh berkedip jadi
+  /// kerangka pemuatan tiap kali satu baris disunting.
+  Future<void> _afterWrite(Either<Failure, Unit> result, String successMessage, Emitter<TransactionState> emit) async {
+    switch (result) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
+      case Right():
+        final walletsResult = await _walletRepository.listWallets();
+        switch (walletsResult) {
+          case Left(value: final failure):
+            emit(state.copyWith(effect: _effectError(failure)));
+          case Right(value: final wallets):
+            await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+            if (!state.loadFailed) emit(state.copyWith(effect: _effectSaved(successMessage)));
+        }
     }
   }
 

@@ -17,6 +17,10 @@ abstract final class CycleMonthFormatter {
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
   ];
 
+  static const _idWeekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
+  static const _enWeekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   static const _idShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
   static const _enShortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -52,5 +56,12 @@ abstract final class CycleMonthFormatter {
   static String formatDateShort(DateTime date) {
     final months = LocaleSettings.currentLocale == AppLocale.en ? _enShortMonths : _idShortMonths;
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  /// Memformat [date] lengkap dengan nama hari -- mis. `Sabtu, 26 Oktober
+  /// 2024` -- untuk layar rincian transaksi.
+  static String formatDateWithWeekday(DateTime date) {
+    final weekdays = LocaleSettings.currentLocale == AppLocale.en ? _enWeekdays : _idWeekdays;
+    return '${weekdays[date.weekday - 1]}, ${formatDate(date)}';
   }
 }

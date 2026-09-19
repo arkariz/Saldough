@@ -8,6 +8,7 @@ import 'package:saldough/features/record/presentation/widgets/record_category_fi
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Nominal cepat yang ditawarkan formulir pengeluaran (rupiah, bukan sen).
@@ -42,10 +43,16 @@ List<IconKey?> _categoryIcons() => const [
 /// anggaran di layar rincian transaksi (T-2.11).
 class ExpenseFormSheet extends StatefulWidget {
   /// Membuat [ExpenseFormSheet] dengan [wallets] sebagai pilihan asal.
-  const ExpenseFormSheet({required this.wallets, super.key});
+  const ExpenseFormSheet({required this.wallets, this.initial, super.key});
 
   /// Dompet aktif yang bisa dipilih sebagai asal.
   final List<Wallet> wallets;
+
+  /// Transaksi yang disunting. `null` = mode CATAT (transaksi baru). Kalau
+  /// terisi, formulir terisi awal, tombol berjudul "Simpan Perubahan", dan
+  /// tombol kembali hanya menutup lembar (tidak ada lembar pilihan CATAT
+  /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
+  final ExpenseTransaction? initial;
 
   @override
   State<ExpenseFormSheet> createState() => _ExpenseFormSheetState();
@@ -57,6 +64,18 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   final _noteController = TextEditingController();
   String? _walletId;
   DateTime _date = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    final tx = widget.initial;
+    if (tx == null) return;
+    _amountController.text = formatRecordAmount(tx.amount ~/ 100);
+    _date = tx.date;
+    _noteController.text = tx.note;
+    _walletId = tx.walletId;
+    _categoryController.text = tx.categoryKey ?? '';
+  }
 
   @override
   void dispose() {
@@ -106,10 +125,13 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(const BackToChoice()),
+                  onPressed: () => Navigator.of(context).pop(widget.initial == null ? const BackToChoice() : null),
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(t.record.expenseAction, style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  widget.initial == null ? t.record.expenseAction : t.transaction.editSheetTitle,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
@@ -151,7 +173,10 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            AppButton(label: t.record.expenseAction, onPressed: _canSubmit ? _submit : null),
+            AppButton(
+              label: widget.initial == null ? t.record.expenseAction : t.transaction.saveChangesAction,
+              onPressed: _canSubmit ? _submit : null,
+            ),
           ],
         ),
       ),

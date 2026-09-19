@@ -59,3 +59,30 @@ final class TransactionSearchChanged extends TransactionEvent {
   /// Kata kunci baru, dicocokkan ke kategori, catatan, dan nama dompet.
   final String query;
 }
+
+/// Menyimpan hasil penyuntingan satu transaksi (FR-TXN-005). [updated]
+/// membawa `id` yang SAMA dengan [original] -- penyuntingan menimpa
+/// transaksinya, tidak pernah mencatat transaksi penyeimbang. [original]
+/// dibawa serta karena `RecordTransaction` butuh tanggal dan dompet lamanya:
+/// pindah bulan menghapus dokumen asal lebih dulu (T-1.4), dan dompet lama
+/// maupun baru sama-sama dihitung ulang saldonya (T-1.6).
+final class TransactionUpdated extends TransactionEvent {
+  /// Membuat [TransactionUpdated].
+  const TransactionUpdated({required this.original, required this.updated});
+
+  /// Transaksi sebelum disunting.
+  final Transaction original;
+
+  /// Transaksi setelah disunting, `id` sama dengan [original].
+  final Transaction updated;
+}
+
+/// Menghapus satu transaksi dari riwayat (FR-TXN-005). Saldo dompet yang
+/// tersentuh dihitung ulang tanpa transaksi ini.
+final class TransactionDeleted extends TransactionEvent {
+  /// Membuat [TransactionDeleted].
+  const TransactionDeleted(this.transaction);
+
+  /// Transaksi yang dihapus.
+  final Transaction transaction;
+}

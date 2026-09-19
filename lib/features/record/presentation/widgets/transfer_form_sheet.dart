@@ -7,6 +7,7 @@ import 'package:saldough/features/record/presentation/widgets/record_amount_fiel
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Nominal cepat yang ditawarkan formulir transfer (rupiah, bukan sen).
@@ -23,10 +24,16 @@ const _quickAmounts = [500000, 1000000, 5000000];
 /// pengeluaran.
 class TransferFormSheet extends StatefulWidget {
   /// Membuat [TransferFormSheet] dengan [wallets] sebagai pilihan asal/tujuan.
-  const TransferFormSheet({required this.wallets, super.key});
+  const TransferFormSheet({required this.wallets, this.initial, super.key});
 
   /// Dompet aktif yang bisa dipilih sebagai asal maupun tujuan.
   final List<Wallet> wallets;
+
+  /// Transaksi yang disunting. `null` = mode CATAT (transaksi baru). Kalau
+  /// terisi, formulir terisi awal, tombol berjudul "Simpan Perubahan", dan
+  /// tombol kembali hanya menutup lembar (tidak ada lembar pilihan CATAT
+  /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
+  final TransferTransaction? initial;
 
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
@@ -38,6 +45,18 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   String? _fromWalletId;
   String? _toWalletId;
   DateTime _date = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    final tx = widget.initial;
+    if (tx == null) return;
+    _amountController.text = formatRecordAmount(tx.amount ~/ 100);
+    _date = tx.date;
+    _noteController.text = tx.note;
+    _fromWalletId = tx.fromWalletId;
+    _toWalletId = tx.toWalletId;
+  }
 
   @override
   void dispose() {
@@ -86,10 +105,13 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(const BackToChoice()),
+                  onPressed: () => Navigator.of(context).pop(widget.initial == null ? const BackToChoice() : null),
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(t.record.transferAction, style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  widget.initial == null ? t.record.transferAction : t.transaction.editSheetTitle,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
@@ -136,7 +158,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             ),
             const SizedBox(height: AppSpacing.md),
             AppButton(
-              label: t.record.transferAction,
+              label: widget.initial == null ? t.record.transferAction : t.transaction.saveChangesAction,
               color: context.appColors.transfer,
               onPressed: _canSubmit ? _submit : null,
             ),

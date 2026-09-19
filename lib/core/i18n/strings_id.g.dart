@@ -989,6 +989,81 @@ class Translations$transaction$id {
 
 	/// id: 'Periksa lagi lalu coba muat ulang.'
 	String get loadErrorSubtitle => 'Periksa lagi lalu coba muat ulang.';
+
+	/// id: 'Kembali'
+	String get detailBackLabel => 'Kembali';
+
+	/// id: 'Pemasukan tercatat'
+	String get detailIncomeTitle => 'Pemasukan tercatat';
+
+	/// id: 'Pengeluaran tercatat'
+	String get detailExpenseTitle => 'Pengeluaran tercatat';
+
+	/// id: 'Transfer tercatat'
+	String get detailTransferTitle => 'Transfer tercatat';
+
+	/// id: 'Jenis Entri'
+	String get detailTypeLabel => 'Jenis Entri';
+
+	/// id: 'Pemasukan'
+	String get detailIncomeType => 'Pemasukan';
+
+	/// id: 'Pengeluaran'
+	String get detailExpenseType => 'Pengeluaran';
+
+	/// id: 'Transfer antar dompet'
+	String get detailTransferType => 'Transfer antar dompet';
+
+	/// id: 'Kategori'
+	String get detailCategoryLabel => 'Kategori';
+
+	/// id: 'Dompet Tujuan'
+	String get detailIncomeWalletLabel => 'Dompet Tujuan';
+
+	/// id: 'Dompet Sumber'
+	String get detailExpenseWalletLabel => 'Dompet Sumber';
+
+	/// id: 'Saldo saat ini'
+	String get detailCurrentBalance => 'Saldo saat ini';
+
+	/// id: 'Catatan Manual'
+	String get detailNoteLabel => 'Catatan Manual';
+
+	/// id: 'Dari'
+	String get detailFromLabel => 'Dari';
+
+	/// id: 'Ke'
+	String get detailToLabel => 'Ke';
+
+	/// id: 'Jumlah'
+	String get detailAmountLabel => 'Jumlah';
+
+	/// id: 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.'
+	String get detailManualNote => 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.';
+
+	/// id: 'Ubah Catatan Ini'
+	String get editAction => 'Ubah Catatan Ini';
+
+	/// id: 'Hapus Catatan dari Riwayat'
+	String get deleteAction => 'Hapus Catatan dari Riwayat';
+
+	/// id: 'Ubah Catatan'
+	String get editSheetTitle => 'Ubah Catatan';
+
+	/// id: 'Simpan Perubahan'
+	String get saveChangesAction => 'Simpan Perubahan';
+
+	/// id: 'Hapus catatan ini?'
+	String get deleteConfirmTitle => 'Hapus catatan ini?';
+
+	/// id: 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.'
+	String get deleteConfirmMessage => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.';
+
+	/// id: 'Perubahan tersimpan.'
+	String get updatedMessage => 'Perubahan tersimpan.';
+
+	/// id: 'Catatan dihapus.'
+	String get deletedMessage => 'Catatan dihapus.';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1275,6 +1350,31 @@ extension on Translations {
 			'transaction.clearFiltersButton' => 'Hapus filter',
 			'transaction.loadErrorTitle' => 'Transaksi gagal dimuat',
 			'transaction.loadErrorSubtitle' => 'Periksa lagi lalu coba muat ulang.',
+			'transaction.detailBackLabel' => 'Kembali',
+			'transaction.detailIncomeTitle' => 'Pemasukan tercatat',
+			'transaction.detailExpenseTitle' => 'Pengeluaran tercatat',
+			'transaction.detailTransferTitle' => 'Transfer tercatat',
+			'transaction.detailTypeLabel' => 'Jenis Entri',
+			'transaction.detailIncomeType' => 'Pemasukan',
+			'transaction.detailExpenseType' => 'Pengeluaran',
+			'transaction.detailTransferType' => 'Transfer antar dompet',
+			'transaction.detailCategoryLabel' => 'Kategori',
+			'transaction.detailIncomeWalletLabel' => 'Dompet Tujuan',
+			'transaction.detailExpenseWalletLabel' => 'Dompet Sumber',
+			'transaction.detailCurrentBalance' => 'Saldo saat ini',
+			'transaction.detailNoteLabel' => 'Catatan Manual',
+			'transaction.detailFromLabel' => 'Dari',
+			'transaction.detailToLabel' => 'Ke',
+			'transaction.detailAmountLabel' => 'Jumlah',
+			'transaction.detailManualNote' => 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.',
+			'transaction.editAction' => 'Ubah Catatan Ini',
+			'transaction.deleteAction' => 'Hapus Catatan dari Riwayat',
+			'transaction.editSheetTitle' => 'Ubah Catatan',
+			'transaction.saveChangesAction' => 'Simpan Perubahan',
+			'transaction.deleteConfirmTitle' => 'Hapus catatan ini?',
+			'transaction.deleteConfirmMessage' => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.',
+			'transaction.updatedMessage' => 'Perubahan tersimpan.',
+			'transaction.deletedMessage' => 'Catatan dihapus.',
 			_ => null,
 		};
 	}

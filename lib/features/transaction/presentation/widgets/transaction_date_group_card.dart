@@ -5,6 +5,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
+import 'package:saldough/features/transaction/presentation/transaction_display.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_surfaces.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -17,6 +18,7 @@ class TransactionDateGroupCard extends StatelessWidget {
   const TransactionDateGroupCard({
     required this.group,
     required this.walletsById,
+    this.onTransactionTap,
     super.key,
   });
 
@@ -27,6 +29,9 @@ class TransactionDateGroupCard extends StatelessWidget {
   /// Peta `id` dompet -> [Wallet], untuk menerjemahkan `walletId` tiap baris
   /// jadi nama.
   final Map<String, Wallet> walletsById;
+
+  /// Dipanggil dengan transaksi yang diketuk (membuka layar rincian).
+  final ValueChanged<Transaction>? onTransactionTap;
 
   /// Judul kelompok dan, untuk "Hari Ini"/"Kemarin", tanggal ringkasnya.
   (String title, String? date) _dateLabel(DateTime date) {
@@ -107,6 +112,7 @@ class TransactionDateGroupCard extends StatelessWidget {
           TransactionRow(
             transaction: group.transactions[i],
             walletsById: walletsById,
+            onTap: onTransactionTap == null ? null : () => onTransactionTap!(group.transactions[i]),
           ),
         ],
       ],
@@ -118,15 +124,15 @@ class TransactionDateGroupCard extends StatelessWidget {
 /// catatan), dompet + jam, nominal berwarna+bertanda per jenis, dan lencana
 /// jenis kecil.
 ///
-/// SENGAJA tidak interaktif (tanpa `onTap`/riak sentuh) -- T-2.11 (layar
-/// rincian transaksi) belum ada, dan menampilkan baris yang terlihat bisa
-/// diketuk tapi tidak melakukan apa pun lebih menyesatkan daripada tidak
-/// interaktif sama sekali (pola yang sama seperti `_ComingSoonTab`).
+/// Diketuk membuka layar rincian (T-2.11) lewat [onTap]. Tanpa riak sentuh
+/// (dimatikan global oleh `PixelTheme`); baris `null` [onTap] tidak
+/// interaktif.
 class TransactionRow extends StatelessWidget {
   /// Membuat [TransactionRow].
   const TransactionRow({
     required this.transaction,
     required this.walletsById,
+    this.onTap,
     super.key,
   });
 
@@ -136,16 +142,11 @@ class TransactionRow extends StatelessWidget {
   /// Peta `id` dompet -> [Wallet].
   final Map<String, Wallet> walletsById;
 
+  /// Dipanggil saat baris diketuk.
+  final VoidCallback? onTap;
+
   String _walletName(String id) => walletsById[id]?.name ?? '—';
 
-  String _time(DateTime date) => '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-
-  String _title() {
-    final category = transaction.categoryKey;
-    if (category != null && category.isNotEmpty) return category;
-    if (transaction.note.isNotEmpty) return transaction.note;
-    return t.transaction.untitledTransaction;
-  }
 
   /// Baris kedua: `Dompet • 09:30`, atau `Asal → Tujuan • 09:30` untuk
   /// transfer (nama dompetnya ditebalkan, seperti rujukan visual).
@@ -155,7 +156,7 @@ class TransactionRow extends StatelessWidget {
       color: context.appColors.textPrimary,
       fontWeight: FontWeight.w700,
     );
-    final time = ' • ${_time(transaction.date)}';
+    final time = ' • ${transactionTime(transaction.date)}';
     return switch (transaction) {
       TransferTransaction(:final fromWalletId, :final toWalletId) => Text.rich(
         TextSpan(
@@ -209,7 +210,7 @@ class TransactionRow extends StatelessWidget {
     final tint = colors.kindFill(kind);
     final ink = colors.kindInk(kind);
 
-    return TransactionSlab(
+    final card = TransactionSlab(
       color: colors.tinted(tint, 0.07),
       padding: EdgeInsets.zero,
       child: ClipRRect(
@@ -243,7 +244,7 @@ class TransactionRow extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _title(),
+                              transactionTitle(transaction),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
@@ -270,6 +271,7 @@ class TransactionRow extends StatelessWidget {
         ),
       ),
     );
+    return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: card);
   }
 }
 

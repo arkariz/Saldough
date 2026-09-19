@@ -5,6 +5,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
+import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_empty_states.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
@@ -20,8 +21,8 @@ import 'package:state_management/state_management.dart';
 /// "streak" dan tanda tren "vs bulan lalu" pada rujukan visual TIDAK dibangun
 /// -- keduanya bukan bagian FR-TXN-004.
 ///
-/// Baris transaksi TIDAK bisa diketuk -- T-2.11 (layar rincian transaksi)
-/// belum ada, lihat `TransactionRow`.
+/// Baris transaksi bisa diketuk dan membuka `TransactionDetailPage` (T-2.11),
+/// tempat sunting dan hapus (T-2.6).
 class TransactionListPage extends StatefulWidget {
   /// Membuat [TransactionListPage].
   const TransactionListPage({super.key});
@@ -188,6 +189,7 @@ class _Body extends StatelessWidget {
         itemBuilder: (context, index) => TransactionDateGroupCard(
           group: state.groups[index],
           walletsById: walletsById,
+          onTransactionTap: (transaction) => openTransactionDetail(context, transaction),
         ),
       ),
     );

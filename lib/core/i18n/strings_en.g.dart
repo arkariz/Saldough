@@ -435,6 +435,31 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get clearFiltersButton => 'Clear filters';
 	@override String get loadErrorTitle => 'Failed to load transactions';
 	@override String get loadErrorSubtitle => 'Check and try loading again.';
+	@override String get detailBackLabel => 'Back';
+	@override String get detailIncomeTitle => 'Income recorded';
+	@override String get detailExpenseTitle => 'Expense recorded';
+	@override String get detailTransferTitle => 'Transfer recorded';
+	@override String get detailTypeLabel => 'Entry type';
+	@override String get detailIncomeType => 'Income';
+	@override String get detailExpenseType => 'Expense';
+	@override String get detailTransferType => 'Transfer between wallets';
+	@override String get detailCategoryLabel => 'Category';
+	@override String get detailIncomeWalletLabel => 'Destination Wallet';
+	@override String get detailExpenseWalletLabel => 'Source Wallet';
+	@override String get detailCurrentBalance => 'Current balance';
+	@override String get detailNoteLabel => 'Manual Note';
+	@override String get detailFromLabel => 'From';
+	@override String get detailToLabel => 'To';
+	@override String get detailAmountLabel => 'Amount';
+	@override String get detailManualNote => 'This entry is a manual record in Saldough. Wallet balances are calculated from the data you enter, with no connection to a bank account.';
+	@override String get editAction => 'Edit This Entry';
+	@override String get deleteAction => 'Delete Entry from History';
+	@override String get editSheetTitle => 'Edit Entry';
+	@override String get saveChangesAction => 'Save Changes';
+	@override String get deleteConfirmTitle => 'Delete this entry?';
+	@override String get deleteConfirmMessage => 'The entry is removed from history, and wallet balances are recalculated without it.';
+	@override String get updatedMessage => 'Changes saved.';
+	@override String get deletedMessage => 'Entry deleted.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -721,6 +746,31 @@ extension on TranslationsEn {
 			'transaction.clearFiltersButton' => 'Clear filters',
 			'transaction.loadErrorTitle' => 'Failed to load transactions',
 			'transaction.loadErrorSubtitle' => 'Check and try loading again.',
+			'transaction.detailBackLabel' => 'Back',
+			'transaction.detailIncomeTitle' => 'Income recorded',
+			'transaction.detailExpenseTitle' => 'Expense recorded',
+			'transaction.detailTransferTitle' => 'Transfer recorded',
+			'transaction.detailTypeLabel' => 'Entry type',
+			'transaction.detailIncomeType' => 'Income',
+			'transaction.detailExpenseType' => 'Expense',
+			'transaction.detailTransferType' => 'Transfer between wallets',
+			'transaction.detailCategoryLabel' => 'Category',
+			'transaction.detailIncomeWalletLabel' => 'Destination Wallet',
+			'transaction.detailExpenseWalletLabel' => 'Source Wallet',
+			'transaction.detailCurrentBalance' => 'Current balance',
+			'transaction.detailNoteLabel' => 'Manual Note',
+			'transaction.detailFromLabel' => 'From',
+			'transaction.detailToLabel' => 'To',
+			'transaction.detailAmountLabel' => 'Amount',
+			'transaction.detailManualNote' => 'This entry is a manual record in Saldough. Wallet balances are calculated from the data you enter, with no connection to a bank account.',
+			'transaction.editAction' => 'Edit This Entry',
+			'transaction.deleteAction' => 'Delete Entry from History',
+			'transaction.editSheetTitle' => 'Edit Entry',
+			'transaction.saveChangesAction' => 'Save Changes',
+			'transaction.deleteConfirmTitle' => 'Delete this entry?',
+			'transaction.deleteConfirmMessage' => 'The entry is removed from history, and wallet balances are recalculated without it.',
+			'transaction.updatedMessage' => 'Changes saved.',
+			'transaction.deletedMessage' => 'Entry deleted.',
 			_ => null,
 		};
 	}

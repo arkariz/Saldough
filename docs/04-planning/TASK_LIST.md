@@ -315,11 +315,41 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       rilis production) DAN tombol Catat yang dinonaktifkan di formulir ini
       kalau dompet asal/tujuan sama — baris pertahanan yang benar-benar
       jalan di production adalah yang di formulir.
-      ⚠ Isi visual (bayangan keras ADR-015, bilah progres tersegmentasi,
-      palet penuh) belum diadopsi di formulir ini — widget Material biasa
-      (`TextField`, `AppChip`, `AppButton`) dari lapisan yang sudah ada.
-      Sama seperti keputusan terbuka T-2.2, ini bukan kelalaian: belum ada
-      tugas bernomor yang menugaskan adopsi visual penuh untuk layar baru.
+      ⚠ **Tampilan direvisi mengikuti rujukan visual** (`pixel_kas_catat_transaksi`,
+      `..._pemasukan`, `..._pengeluaran`, `..._transfer_antar_dompet`) setelah
+      pembangunan awal yang masih widget Material polos. Pemilih jenis dan
+      ketiga formulir kini layar penuh (`showRecordSheet`: `isScrollControlled` +
+      `useSafeArea`) berkerangka `RecordFormFrame` (kop "Langkah 2 // Transaksi",
+      kartu bantuan, tombol simpan berwarna jenis, catatan kaki). Nominal =
+      kartu berkotak angka besar + pilihan cepat `+10rb`; tanggal = pintasan
+      Hari Ini/Kemarin + kotak tanggal (jam dipertahankan saat hari digeser);
+      tiap formulir menutup dengan kartu ringkasan akibat pada saldo.
+      ⚠ **Kategori dan dompet dipilih lewat dropdown yang SAMA dengan penyaring
+      layar Transaksi** (`AppMenuSelectButton`, dulu `_FilterMenuButton`
+      privat, kini di `core/presentation/widgets/`), bukan kisi ubin, daftar
+      terbuka, atau lembar pemilih -- keputusan pemilik supaya seluruh pilihan
+      dropdown di aplikasi seragam. `RecordCategoryField`: menu berisi saran +
+      "Lainnya" (membuka kolom ketik bebas) + "Tanpa kategori". `WalletSelectField`
+      (transfer memakai kop titik + lencana selisih, `showDelta`): nama dompet
+      membungkus pada tombolnya, tidak dipotong.
+      ⚠ Pemilih jenis dibedakan menurut fungsinya: kop = bilah datar, kartu info
+      = pita tanpa bayangan, dan tiga kartu jenis masing-masing bernuansa warna
+      jenisnya (garis aksen, latar, bilah aksi penuh) dengan diagram alur uang
+      (`Luar → + Dompet`, `− Dompet → Luar`, `− Dompet asal → + Dompet tujuan`).
+      Seluruh warna dari token ADR-016 (`kindInk`/
+      `kindFill`), tanpa hex harfiah. `TransactionSlab`, `TransactionKind`,
+      `transactionLabelStyle`, dan `categoryIconFor` dipindah ke
+      `lib/core/presentation/widgets/` supaya `record` dan `transaction`
+      memakainya tanpa saling mengimpor (aturan tiga zona).
+      ⚠ Bagian rujukan yang SENGAJA tidak dibangun: "Biaya Admin / Transfer"
+      (`TransferRecorded` tidak punya biaya; mencatatnya = keputusan domain
+      baru berupa transaksi pengeluaran pendamping), "Alokasikan ke Anggaran
+      Bulanan?" (Fase 4, T-4.4), kartu "Catat ke Freelance Worklog" (Fase 5),
+      dan gamifikasi "LVL +10 EXP" (bukan kebutuhan produk). Tombol "+ Kustom"
+      di kop kategori digantikan ubin "Lainnya".
+      ⚠ Ikon kategori pemasukan (Gaji/Bonus/Penjualan/Hadiah) masih ikon
+      `income` generik -- paket ikon pemilik belum punya ikon per kategori
+      pemasukan.
       `RecordBloc` dipasang lewat `ScopeWidget<RecordScope>` yang
       membungkus `AppShellPage` (bukan dibuat ulang tiap lembar CATAT
       dibuka), supaya efek galat/berhasilnya tetap tampil walau kedua

@@ -155,8 +155,8 @@ void main() {
       await tester.tap(find.text(t.record.incomeAction).first);
       await tester.pumpAndSettle();
 
-      expect(find.text(t.record.toWalletFieldLabel), findsOneWidget);
-      expect(find.text(t.record.amountFieldHint), findsOneWidget);
+      expect(find.text(t.record.toWalletFieldLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
     });
 
     testWidgets('menutup lembar pilihan CATAT tanpa memilih kembali ke tab sebelumnya', (tester) async {
@@ -199,12 +199,12 @@ void main() {
         await tester.tap(find.text(t.record.incomeAction).first);
         await tester.pumpAndSettle();
 
-        await tester.enterText(find.widgetWithText(TextField, t.record.amountFieldHint), '75000');
+        await tester.enterText(find.byType(TextField).first, '75000');
         await tester.pump();
         await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
         await tester.tap(find.text(t.record.walletNotSelectedPrompt));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('BCA'));
+        await tester.tap(find.text('BCA').last);
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.widgetWithText(AppButton, t.record.incomeAction));
         await tester.tap(find.widgetWithText(AppButton, t.record.incomeAction));
@@ -212,6 +212,12 @@ void main() {
 
         final wallets = (await walletRepository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
         expect(wallets.single.currentBalance, 7500000);
+
+        // Transaksi yang baru dicatat langsung tampil di tab Transaksi tanpa
+        // memulai ulang aplikasi.
+        await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
+        await tester.pumpAndSettle();
+        expect(find.text('+Rp75.000'), findsWidgets);
       },
     );
 
@@ -235,9 +241,9 @@ void main() {
       // Sekarang di formulir pemasukan -- pastikan RecordChoiceSheet sudah
       // tertutup.
       expect(find.byType(RecordChoiceSheet), findsNothing);
-      expect(find.text(t.record.amountFieldHint), findsOneWidget);
+      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
       await tester.pumpAndSettle();
 
       // Kembali ke RecordChoiceSheet, bukan menutup seluruh alur CATAT.

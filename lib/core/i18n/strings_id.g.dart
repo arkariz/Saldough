@@ -477,8 +477,8 @@ class Translations$card$id {
 	/// id: 'Nominal (Rp)'
 	String get amountFieldHint => 'Nominal (Rp)';
 
-	/// id: 'Catatan (opsional)'
-	String get noteFieldHint => 'Catatan (opsional)';
+	/// id: 'Tulis catatan singkat'
+	String get noteFieldHint => 'Tulis catatan singkat';
 
 	/// id: 'Catat'
 	String get addTransactionButton => 'Catat';
@@ -672,8 +672,8 @@ class Translations$investment$id {
 	/// id: 'Dikembalikan (Rp)'
 	String get repaidFieldHint => 'Dikembalikan (Rp)';
 
-	/// id: 'Catatan (opsional)'
-	String get noteFieldHint => 'Catatan (opsional)';
+	/// id: 'Tulis catatan singkat'
+	String get noteFieldHint => 'Tulis catatan singkat';
 
 	/// id: 'Riwayat'
 	String get historyTitle => 'Riwayat';
@@ -771,8 +771,8 @@ class Translations$record$id {
 
 	// Translations
 
-	/// id: 'Catat'
-	String get sheetTitle => 'Catat';
+	/// id: 'Catat Transaksi'
+	String get sheetTitle => 'Catat Transaksi';
 
 	/// id: 'Catat Pemasukan'
 	String get incomeAction => 'Catat Pemasukan';
@@ -782,9 +782,6 @@ class Translations$record$id {
 
 	/// id: 'Catat Transfer'
 	String get transferAction => 'Catat Transfer';
-
-	/// id: 'Nominal (Rp)'
-	String get amountFieldHint => 'Nominal (Rp)';
 
 	/// id: 'Masuk ke Dompet'
 	String get toWalletFieldLabel => 'Masuk ke Dompet';
@@ -801,8 +798,8 @@ class Translations$record$id {
 	/// id: 'Kategori (opsional)'
 	String get categoryFieldHint => 'Kategori (opsional)';
 
-	/// id: 'Catatan (opsional)'
-	String get noteFieldHint => 'Catatan (opsional)';
+	/// id: 'Tulis catatan singkat'
+	String get noteFieldHint => 'Tulis catatan singkat';
 
 	/// id: 'Belum ada dompet. Buat dompet dulu di tab Dompet.'
 	String get noWalletsMessage => 'Belum ada dompet. Buat dompet dulu di tab Dompet.';
@@ -840,9 +837,6 @@ class Translations$record$id {
 	/// id: 'Total saldo tidak berubah'
 	String get transferEffectLabel => 'Total saldo tidak berubah';
 
-	/// id: 'Ganti'
-	String get changeWalletAction => 'Ganti';
-
 	/// id: 'Belum dipilih'
 	String get walletNotSelectedPrompt => 'Belum dipilih';
 
@@ -872,6 +866,144 @@ class Translations$record$id {
 
 	/// id: 'Tagihan'
 	String get categorySuggestionBills => 'Tagihan';
+
+	/// id: 'Pilih jenis peristiwa finansial yang ingin dicatat.'
+	String get sheetSubtitle => 'Pilih jenis peristiwa finansial yang ingin dicatat.';
+
+	/// id: 'Info Pencatatan'
+	String get noticeTitle => 'Info Pencatatan';
+
+	/// id: 'Contoh:'
+	String get examplesLabel => 'Contoh:';
+
+	/// id: 'Uang Masuk'
+	String get incomeBadge => 'Uang Masuk';
+
+	/// id: 'Uang Keluar'
+	String get expenseBadge => 'Uang Keluar';
+
+	/// id: 'Mutasi Internal'
+	String get transferBadge => 'Mutasi Internal';
+
+	/// id: 'Pilih Pemasukan'
+	String get pickIncomeAction => 'Pilih Pemasukan';
+
+	/// id: 'Pilih Pengeluaran'
+	String get pickExpenseAction => 'Pilih Pengeluaran';
+
+	/// id: 'Pilih Transfer'
+	String get pickTransferAction => 'Pilih Transfer';
+
+	/// id: 'Tarik Tunai'
+	String get transferExampleCash => 'Tarik Tunai';
+
+	/// id: 'Top-up e-Wallet'
+	String get transferExampleTopUp => 'Top-up e-Wallet';
+
+	/// id: 'Pindah Rekening'
+	String get transferExampleMove => 'Pindah Rekening';
+
+	/// id: 'Langkah 2 // Transaksi'
+	String get stepLabel => 'Langkah 2 // Transaksi';
+
+	/// id: 'Sunting // Transaksi'
+	String get editStepLabel => 'Sunting // Transaksi';
+
+	/// id: 'Aturan Kas: Saldo Terpotong'
+	String get expenseRuleTitle => 'Aturan Kas: Saldo Terpotong';
+
+	/// id: 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.'
+	String get expenseRuleBody => 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.';
+
+	/// id: 'Penting'
+	String get transferNoticeTitle => 'Penting';
+
+	/// id: 'Ini catatan perpindahan uang manual yang sudah kamu lakukan di dunia nyata. Bukan transfer bank otomatis.'
+	String get transferNoticeBody => 'Ini catatan perpindahan uang manual yang sudah kamu lakukan di dunia nyata. Bukan transfer bank otomatis.';
+
+	/// id: 'Nominal Masuk'
+	String get amountLabelIncome => 'Nominal Masuk';
+
+	/// id: 'Nominal Pengeluaran'
+	String get amountLabelExpense => 'Nominal Pengeluaran';
+
+	/// id: 'Nominal Transfer'
+	String get amountLabelTransfer => 'Nominal Transfer';
+
+	/// id: 'Bersihkan'
+	String get clearAmountAction => 'Bersihkan';
+
+	/// id: 'Kategori'
+	String get categorySectionLabel => 'Kategori';
+
+	/// id: 'Opsional'
+	String get optionalHint => 'Opsional';
+
+	/// id: 'Lainnya'
+	String get categoryOtherLabel => 'Lainnya';
+
+	/// id: 'Ketik kategori sendiri'
+	String get categoryCustomHint => 'Ketik kategori sendiri';
+
+	/// id: 'Hiburan'
+	String get categorySuggestionEntertainment => 'Hiburan';
+
+	/// id: 'Investasi'
+	String get categorySuggestionInvestment => 'Investasi';
+
+	/// id: 'Dompet Sumber Dana'
+	String get expenseWalletSectionLabel => 'Dompet Sumber Dana';
+
+	/// id: 'Keterangan / Catatan'
+	String get noteSectionLabel => 'Keterangan / Catatan';
+
+	/// id: 'Saldo berkurang'
+	String get balanceDecreasesCaption => 'Saldo berkurang';
+
+	/// id: 'Saldo bertambah'
+	String get balanceIncreasesCaption => 'Saldo bertambah';
+
+	/// id: 'Saldo $wallet akan bertambah $amount saat dicatat.'
+	String incomeSummary({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan bertambah ${amount} saat dicatat.';
+
+	/// id: 'Saldo $wallet akan berkurang $amount saat dicatat.'
+	String expenseSummary({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan berkurang ${amount} saat dicatat.';
+
+	/// id: 'Ringkasan Catatan Mutasi'
+	String get transferSummaryTitle => 'Ringkasan Catatan Mutasi';
+
+	/// id: 'Dompet $wallet berkurang $amount'
+	String transferSummaryFrom({required Object wallet, required Object amount}) => 'Dompet ${wallet} berkurang ${amount}';
+
+	/// id: 'Dompet $wallet bertambah $amount'
+	String transferSummaryTo({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}';
+
+	/// id: '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.'
+	String get footnote => '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.';
+
+	/// id: 'Saldo'
+	String get balanceLabel => 'Saldo';
+
+	/// id: 'Pilih kategori'
+	String get categoryPlaceholder => 'Pilih kategori';
+
+	/// id: 'Tanpa kategori'
+	String get categoryNoneLabel => 'Tanpa kategori';
+
+	/// id: 'Tahap 1 // Pilih Jenis'
+	String get choiceStepLabel => 'Tahap 1 // Pilih Jenis';
+
+	/// id: 'Luar'
+	String get flowOutside => 'Luar';
+
+	/// id: 'Dompet'
+	String get flowWallet => 'Dompet';
+
+	/// id: 'Dompet asal'
+	String get flowSourceWallet => 'Dompet asal';
+
+	/// id: 'Dompet tujuan'
+	String get flowTargetWallet => 'Dompet tujuan';
 }
 
 // Path: transaction
@@ -1197,7 +1329,7 @@ extension on Translations {
 			'card.addTransactionTitle' => 'Catat transaksi',
 			'card.merchantFieldHint' => 'Merchant',
 			'card.amountFieldHint' => 'Nominal (Rp)',
-			'card.noteFieldHint' => 'Catatan (opsional)',
+			'card.noteFieldHint' => 'Tulis catatan singkat',
 			'card.addTransactionButton' => 'Catat',
 			'card.subscriptionsTitleFor' => ({required Object cardName}) => 'Langganan berulang — ${cardName}',
 			'card.emptySubscriptions' => 'Belum ada langganan terdaftar.',
@@ -1256,7 +1388,7 @@ extension on Translations {
 			'investment.toGoalFieldHint' => 'Ke pos',
 			'investment.principalFieldHint' => 'Pokok (Rp)',
 			'investment.repaidFieldHint' => 'Dikembalikan (Rp)',
-			'investment.noteFieldHint' => 'Catatan (opsional)',
+			'investment.noteFieldHint' => 'Tulis catatan singkat',
 			'investment.historyTitle' => 'Riwayat',
 			'investment.allocationHistoryLabel' => ({required Object cycleId}) => 'Alokasi siklus ${cycleId}',
 			'investment.loanInLabel' => ({required Object fromName}) => 'Pinjaman dari ${fromName}',
@@ -1280,17 +1412,16 @@ extension on Translations {
 			'appShell.transactionsTabLabel' => 'Transaksi',
 			'appShell.walletsTabLabel' => 'Dompet',
 			'appShell.comingSoonMessage' => 'Segera hadir.',
-			'record.sheetTitle' => 'Catat',
+			'record.sheetTitle' => 'Catat Transaksi',
 			'record.incomeAction' => 'Catat Pemasukan',
 			'record.expenseAction' => 'Catat Pengeluaran',
 			'record.transferAction' => 'Catat Transfer',
-			'record.amountFieldHint' => 'Nominal (Rp)',
 			'record.toWalletFieldLabel' => 'Masuk ke Dompet',
 			'record.fromWalletFieldLabel' => 'Dari Dompet',
 			'record.destinationWalletFieldLabel' => 'Ke Dompet',
 			'record.dateFieldLabel' => 'Tanggal',
 			'record.categoryFieldHint' => 'Kategori (opsional)',
-			'record.noteFieldHint' => 'Catatan (opsional)',
+			'record.noteFieldHint' => 'Tulis catatan singkat',
 			'record.noWalletsMessage' => 'Belum ada dompet. Buat dompet dulu di tab Dompet.',
 			'record.sameWalletWarning' => 'Dompet asal dan tujuan tidak boleh sama.',
 			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
@@ -1303,7 +1434,6 @@ extension on Translations {
 			'record.incomeEffectLabel' => 'Menambah saldo dompet',
 			'record.expenseEffectLabel' => 'Mengurangi saldo dompet',
 			'record.transferEffectLabel' => 'Total saldo tidak berubah',
-			'record.changeWalletAction' => 'Ganti',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
 			'record.categorySuggestionSalary' => 'Gaji',
@@ -1314,6 +1444,52 @@ extension on Translations {
 			'record.categorySuggestionShopping' => 'Belanja',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Tagihan',
+			'record.sheetSubtitle' => 'Pilih jenis peristiwa finansial yang ingin dicatat.',
+			'record.noticeTitle' => 'Info Pencatatan',
+			'record.examplesLabel' => 'Contoh:',
+			'record.incomeBadge' => 'Uang Masuk',
+			'record.expenseBadge' => 'Uang Keluar',
+			'record.transferBadge' => 'Mutasi Internal',
+			'record.pickIncomeAction' => 'Pilih Pemasukan',
+			'record.pickExpenseAction' => 'Pilih Pengeluaran',
+			'record.pickTransferAction' => 'Pilih Transfer',
+			'record.transferExampleCash' => 'Tarik Tunai',
+			'record.transferExampleTopUp' => 'Top-up e-Wallet',
+			'record.transferExampleMove' => 'Pindah Rekening',
+			'record.stepLabel' => 'Langkah 2 // Transaksi',
+			'record.editStepLabel' => 'Sunting // Transaksi',
+			'record.expenseRuleTitle' => 'Aturan Kas: Saldo Terpotong',
+			'record.expenseRuleBody' => 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.',
+			'record.transferNoticeTitle' => 'Penting',
+			'record.transferNoticeBody' => 'Ini catatan perpindahan uang manual yang sudah kamu lakukan di dunia nyata. Bukan transfer bank otomatis.',
+			'record.amountLabelIncome' => 'Nominal Masuk',
+			'record.amountLabelExpense' => 'Nominal Pengeluaran',
+			'record.amountLabelTransfer' => 'Nominal Transfer',
+			'record.clearAmountAction' => 'Bersihkan',
+			'record.categorySectionLabel' => 'Kategori',
+			'record.optionalHint' => 'Opsional',
+			'record.categoryOtherLabel' => 'Lainnya',
+			'record.categoryCustomHint' => 'Ketik kategori sendiri',
+			'record.categorySuggestionEntertainment' => 'Hiburan',
+			'record.categorySuggestionInvestment' => 'Investasi',
+			'record.expenseWalletSectionLabel' => 'Dompet Sumber Dana',
+			'record.noteSectionLabel' => 'Keterangan / Catatan',
+			'record.balanceDecreasesCaption' => 'Saldo berkurang',
+			'record.balanceIncreasesCaption' => 'Saldo bertambah',
+			'record.incomeSummary' => ({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan bertambah ${amount} saat dicatat.',
+			'record.expenseSummary' => ({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan berkurang ${amount} saat dicatat.',
+			'record.transferSummaryTitle' => 'Ringkasan Catatan Mutasi',
+			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} berkurang ${amount}',
+			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}',
+			'record.footnote' => '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.',
+			'record.balanceLabel' => 'Saldo',
+			'record.categoryPlaceholder' => 'Pilih kategori',
+			'record.categoryNoneLabel' => 'Tanpa kategori',
+			'record.choiceStepLabel' => 'Tahap 1 // Pilih Jenis',
+			'record.flowOutside' => 'Luar',
+			'record.flowWallet' => 'Dompet',
+			'record.flowSourceWallet' => 'Dompet asal',
+			'record.flowTargetWallet' => 'Dompet tujuan',
 			'transaction.pageTitle' => 'Transaksi',
 			'transaction.searchHint' => 'Cari catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',

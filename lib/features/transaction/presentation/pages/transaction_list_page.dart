@@ -165,7 +165,11 @@ class _Body extends StatelessWidget {
         ),
         sliver: SliverToBoxAdapter(
           child: TransactionEmptyMonthState(
-            onRecord: () => openRecordSheet(context),
+            onRecord: () async {
+              final bloc = context.read<TransactionBloc>();
+              await openRecordSheet(context);
+              bloc.add(const TransactionRefreshed());
+            },
           ),
         ),
       );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/show_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
@@ -35,16 +36,15 @@ Future<void> openRecordSheet(BuildContext context) async {
   if (bloc.state.loadFailed) return;
 
   while (true) {
-    final choice = await showModalBottomSheet<RecordChoice>(
-      context: context,
+    final choice = await showRecordSheet<RecordChoice>(
+      context,
       builder: (_) => const RecordChoiceSheet(),
     );
     if (choice == null || !context.mounted) return;
 
     final wallets = bloc.state.wallets;
-    final result = await showModalBottomSheet<Object>(
-      context: context,
-      isScrollControlled: true,
+    final result = await showRecordSheet<Object>(
+      context,
       builder: (_) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(wallets: wallets),
         RecordChoice.expense => ExpenseFormSheet(wallets: wallets),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/transaction/presentation/widgets/transaction_surfaces.dart';
 
 /// Keadaan kosong saat bulan berjalan GENUINELY belum punya transaksi sama
 /// sekali (`rawTransactions` kosong, bukan gagal dibaca) -- rujukan visual

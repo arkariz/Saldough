@@ -89,9 +89,19 @@ class _AppShellPageState extends State<AppShellPage> {
   /// Kebalikan [_tabIndexFor] — indeks `NavigationBar` untuk tab aktif.
   int _navIndexFor(int tabIndex) => tabIndex < _recordNavIndex ? tabIndex : tabIndex + 1;
 
+  /// Membuka alur CATAT, lalu memuat ulang daftar transaksi: `TransactionBloc`
+  /// hidup di level shell dan hanya memuat saat `TransactionListPage` dibuat,
+  /// jadi tanpa ini transaksi yang baru dicatat tidak tampil di tab Transaksi
+  /// sampai aplikasi dimulai ulang.
+  Future<void> _openRecord(BuildContext context) async {
+    final transactions = context.read<TransactionBloc>();
+    await openRecordSheet(context);
+    transactions.add(const TransactionRefreshed());
+  }
+
   void _onDestinationSelected(BuildContext context, int navIndex) {
     if (navIndex == _recordNavIndex) {
-      unawaited(openRecordSheet(context));
+      unawaited(_openRecord(context));
       return;
     }
     setState(() => _activeTab = _tabIndexFor(navIndex));

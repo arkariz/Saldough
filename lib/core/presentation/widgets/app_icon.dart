@@ -161,6 +161,9 @@ enum IconKey {
 
   /// Penanda data tersimpan lokal/privat.
   locked,
+
+  /// Menutup lembar atau layar.
+  close,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -225,6 +228,7 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.chevronRight: Icons.chevron_right,
   IconKey.dropdown: Icons.arrow_drop_down,
   IconKey.locked: Icons.lock_outline,
+  IconKey.close: Icons.close,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

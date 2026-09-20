@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
+import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
+import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -18,24 +20,19 @@ const _quickAmounts = [500000, 1000000, 5000000];
 
 /// Saran kategori pemasukan yang sering dipakai.
 List<String> _categorySuggestions() => [
-      t.record.categorySuggestionSalary,
-      t.record.categorySuggestionBonus,
-      t.record.categorySuggestionSales,
-      t.record.categorySuggestionGift,
-    ];
-
-// `IconKey` belum punya kunci per-kategori pemasukan (Gaji/Bonus/Penjualan/
-// Hadiah) -- `IconKey.income` generik dipakai sebagai placeholder untuk
-// semuanya sampai daftar kategori pemasukan final diputuskan pemilik,
-// mengikuti pola yang sama seperti catatan `Wallet.iconKey` di
-// `wallet_picker_field.dart`.
-List<IconKey?> _categoryIcons() => const [IconKey.income, IconKey.income, IconKey.income, IconKey.income];
+  t.record.categorySuggestionSalary,
+  t.record.categorySuggestionBonus,
+  t.record.categorySuggestionSales,
+  t.record.categorySuggestionGift,
+  t.record.categorySuggestionInvestment,
+];
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
 /// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali;
 /// `AppShellPage` yang menafsirkan hasilnya, mengikuti pola
-/// `IncomeSourceEditSheet` yang sudah ada.
+/// `IncomeSourceEditSheet` yang sudah ada. Tata letaknya mengikuti rujukan
+/// visual `pixel_kas_catat_pemasukan`.
 class IncomeFormSheet extends StatefulWidget {
   /// Membuat [IncomeFormSheet] dengan [wallets] sebagai pilihan tujuan.
   const IncomeFormSheet({required this.wallets, this.initial, super.key});
@@ -87,6 +84,13 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
+  Wallet? get _wallet {
+    for (final wallet in widget.wallets) {
+      if (wallet.id == _walletId) return wallet;
+    }
+    return null;
+  }
+
   void _submit() {
     final amount = _amountSen;
     final walletId = _walletId;
@@ -104,76 +108,54 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.md,
-        bottom: AppSpacing.md + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(widget.initial == null ? const BackToChoice() : null),
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  widget.initial == null ? t.record.incomeAction : t.transaction.editSheetTitle,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppHardCard(
-              child:RecordAmountField(
-                controller: _amountController,
-                label: t.record.amountFieldHint,
-                quickAmounts: _quickAmounts,
-                autofocus: true,
-                onChanged: () => setState(() {}),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            WalletPickerField(
-              label: t.record.toWalletFieldLabel,
-              wallets: widget.wallets,
-              selectedId: _walletId,
-              onSelected: (id) => setState(() => _walletId = id),
-              previewAmountSen: _amountSen,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:RecordCategoryField(
-                controller: _categoryController,
-                suggestions: _categorySuggestions(),
-                icons: _categoryIcons(),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:TextField(
-                controller: _noteController,
-                decoration: InputDecoration(labelText: t.record.noteFieldHint),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppButton(
-              label: widget.initial == null ? t.record.incomeAction : t.transaction.saveChangesAction,
-              onPressed: _canSubmit ? _submit : null,
-            ),
-          ],
+    final editing = widget.initial != null;
+    final wallet = _wallet;
+    final amount = _amountSen;
+    return RecordFormFrame(
+      kind: TransactionKind.income,
+      title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
+      isEditing: editing,
+      onBack: () => Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      submitLabel: editing ? t.transaction.saveChangesAction : t.record.incomeAction,
+      onSubmit: _canSubmit ? _submit : null,
+      children: [
+        RecordAmountField(
+          controller: _amountController,
+          label: t.record.amountLabelIncome,
+          kind: TransactionKind.income,
+          quickAmounts: _quickAmounts,
+          autofocus: true,
+          onChanged: () => setState(() {}),
         ),
-      ),
+        RecordCategoryField(
+          controller: _categoryController,
+          suggestions: _categorySuggestions(),
+          kind: TransactionKind.income,
+        ),
+        WalletSelectField(
+          label: t.record.toWalletFieldLabel,
+          wallets: widget.wallets,
+          selectedId: _walletId,
+          onSelected: (id) => setState(() => _walletId = id),
+          previewAmountSen: amount,
+        ),
+        RecordDateField(
+          date: _date,
+          kind: TransactionKind.income,
+          onChanged: (date) => setState(() => _date = date),
+        ),
+        RecordNoteField(controller: _noteController, kind: TransactionKind.income),
+        if (_canSubmit && wallet != null && amount != null)
+          RecordSummaryCard(
+            kind: TransactionKind.income,
+            children: [
+              Text(
+                t.record.incomeSummary(wallet: wallet.name, amount: AppMoneyFormatter.format(amount)),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

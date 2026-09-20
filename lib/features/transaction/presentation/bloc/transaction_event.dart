@@ -13,6 +13,15 @@ final class TransactionStarted extends TransactionEvent {
   const TransactionStarted();
 }
 
+/// Memuat ulang dompet dan transaksi bulan yang sedang tampil TANPA
+/// `isLoading` -- dikirim sesudah alur CATAT selesai (transaksi baru dan
+/// saldo dompet yang berubah harus muncul di daftar), ketika daftar sudah
+/// tampil dan tidak boleh berkedip jadi kerangka pemuatan.
+final class TransactionRefreshed extends TransactionEvent {
+  /// Membuat [TransactionRefreshed].
+  const TransactionRefreshed();
+}
+
 /// Berpindah ke bulan [month] (navigasi bulan sebelumnya/berikutnya) --
 /// HANYA memuat ulang transaksi, dompet tidak diambil ulang.
 final class TransactionMonthChanged extends TransactionEvent {

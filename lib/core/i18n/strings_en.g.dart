@@ -228,7 +228,7 @@ class _Translations$card$en extends Translations$card$id {
 	@override String get addTransactionTitle => 'Log transaction';
 	@override String get merchantFieldHint => 'Merchant';
 	@override String get amountFieldHint => 'Amount (Rp)';
-	@override String get noteFieldHint => 'Note (optional)';
+	@override String get noteFieldHint => 'Write a short note';
 	@override String get addTransactionButton => 'Log';
 	@override String subscriptionsTitleFor({required Object cardName}) => 'Recurring subscriptions — ${cardName}';
 	@override String get emptySubscriptions => 'No subscriptions yet.';
@@ -305,7 +305,7 @@ class _Translations$investment$en extends Translations$investment$id {
 	@override String get toGoalFieldHint => 'To goal';
 	@override String get principalFieldHint => 'Principal (Rp)';
 	@override String get repaidFieldHint => 'Repaid (Rp)';
-	@override String get noteFieldHint => 'Note (optional)';
+	@override String get noteFieldHint => 'Write a short note';
 	@override String get historyTitle => 'History';
 	@override String allocationHistoryLabel({required Object cycleId}) => 'Allocation for cycle ${cycleId}';
 	@override String loanInLabel({required Object fromName}) => 'Loan from ${fromName}';
@@ -356,17 +356,16 @@ class _Translations$record$en extends Translations$record$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get sheetTitle => 'Record';
+	@override String get sheetTitle => 'Record Transaction';
 	@override String get incomeAction => 'Record Income';
 	@override String get expenseAction => 'Record Expense';
 	@override String get transferAction => 'Record Transfer';
-	@override String get amountFieldHint => 'Amount (Rp)';
 	@override String get toWalletFieldLabel => 'Into Wallet';
 	@override String get fromWalletFieldLabel => 'From Wallet';
 	@override String get destinationWalletFieldLabel => 'To Wallet';
 	@override String get dateFieldLabel => 'Date';
 	@override String get categoryFieldHint => 'Category (optional)';
-	@override String get noteFieldHint => 'Note (optional)';
+	@override String get noteFieldHint => 'Write a short note';
 	@override String get noWalletsMessage => 'No wallets yet. Create one in the Wallets tab first.';
 	@override String get sameWalletWarning => 'Source and destination wallets can\'t be the same.';
 	@override String get incomeSavedMessage => 'Income recorded.';
@@ -379,7 +378,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeEffectLabel => 'Adds to wallet balance';
 	@override String get expenseEffectLabel => 'Reduces wallet balance';
 	@override String get transferEffectLabel => 'Total balance stays the same';
-	@override String get changeWalletAction => 'Change';
 	@override String get walletNotSelectedPrompt => 'Not selected yet';
 	@override String get savingMessage => 'Saving...';
 	@override String get categorySuggestionSalary => 'Salary';
@@ -390,6 +388,52 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get categorySuggestionShopping => 'Shopping';
 	@override String get categorySuggestionTransport => 'Transport';
 	@override String get categorySuggestionBills => 'Bills';
+	@override String get sheetSubtitle => 'Pick the kind of financial event you want to record.';
+	@override String get noticeTitle => 'Recording notice';
+	@override String get examplesLabel => 'Examples:';
+	@override String get incomeBadge => 'Money in';
+	@override String get expenseBadge => 'Money out';
+	@override String get transferBadge => 'Internal move';
+	@override String get pickIncomeAction => 'Pick Income';
+	@override String get pickExpenseAction => 'Pick Expense';
+	@override String get pickTransferAction => 'Pick Transfer';
+	@override String get transferExampleCash => 'Cash withdrawal';
+	@override String get transferExampleTopUp => 'e-Wallet top-up';
+	@override String get transferExampleMove => 'Move accounts';
+	@override String get stepLabel => 'Step 2 // Transaction';
+	@override String get editStepLabel => 'Edit // Transaction';
+	@override String get expenseRuleTitle => 'Cash rule: balance is reduced';
+	@override String get expenseRuleBody => 'An expense immediately reduces the balance of the wallet you pick below.';
+	@override String get transferNoticeTitle => 'Important';
+	@override String get transferNoticeBody => 'This records a money move you already made in the real world. It is not an automatic bank transfer.';
+	@override String get amountLabelIncome => 'Income amount';
+	@override String get amountLabelExpense => 'Expense amount';
+	@override String get amountLabelTransfer => 'Transfer amount';
+	@override String get clearAmountAction => 'Clear';
+	@override String get categorySectionLabel => 'Category';
+	@override String get optionalHint => 'Optional';
+	@override String get categoryOtherLabel => 'Other';
+	@override String get categoryCustomHint => 'Type your own category';
+	@override String get categorySuggestionEntertainment => 'Fun';
+	@override String get categorySuggestionInvestment => 'Investing';
+	@override String get expenseWalletSectionLabel => 'Source wallet';
+	@override String get noteSectionLabel => 'Note';
+	@override String get balanceDecreasesCaption => 'Balance goes down';
+	@override String get balanceIncreasesCaption => 'Balance goes up';
+	@override String incomeSummary({required Object wallet, required Object amount}) => '${wallet} will go up by ${amount} once recorded.';
+	@override String expenseSummary({required Object wallet, required Object amount}) => '${wallet} will go down by ${amount} once recorded.';
+	@override String get transferSummaryTitle => 'Move summary';
+	@override String transferSummaryFrom({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}';
+	@override String transferSummaryTo({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}';
+	@override String get footnote => '*Internal Saldough record. Does not debit or send money from any real bank account.';
+	@override String get balanceLabel => 'Balance';
+	@override String get categoryPlaceholder => 'Pick a category';
+	@override String get categoryNoneLabel => 'No category';
+	@override String get choiceStepLabel => 'Step 1 // Pick a type';
+	@override String get flowOutside => 'Outside';
+	@override String get flowWallet => 'Wallet';
+	@override String get flowSourceWallet => 'Source wallet';
+	@override String get flowTargetWallet => 'Target wallet';
 }
 
 // Path: transaction
@@ -593,7 +637,7 @@ extension on TranslationsEn {
 			'card.addTransactionTitle' => 'Log transaction',
 			'card.merchantFieldHint' => 'Merchant',
 			'card.amountFieldHint' => 'Amount (Rp)',
-			'card.noteFieldHint' => 'Note (optional)',
+			'card.noteFieldHint' => 'Write a short note',
 			'card.addTransactionButton' => 'Log',
 			'card.subscriptionsTitleFor' => ({required Object cardName}) => 'Recurring subscriptions — ${cardName}',
 			'card.emptySubscriptions' => 'No subscriptions yet.',
@@ -652,7 +696,7 @@ extension on TranslationsEn {
 			'investment.toGoalFieldHint' => 'To goal',
 			'investment.principalFieldHint' => 'Principal (Rp)',
 			'investment.repaidFieldHint' => 'Repaid (Rp)',
-			'investment.noteFieldHint' => 'Note (optional)',
+			'investment.noteFieldHint' => 'Write a short note',
 			'investment.historyTitle' => 'History',
 			'investment.allocationHistoryLabel' => ({required Object cycleId}) => 'Allocation for cycle ${cycleId}',
 			'investment.loanInLabel' => ({required Object fromName}) => 'Loan from ${fromName}',
@@ -676,17 +720,16 @@ extension on TranslationsEn {
 			'appShell.transactionsTabLabel' => 'Transactions',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'appShell.comingSoonMessage' => 'Coming soon.',
-			'record.sheetTitle' => 'Record',
+			'record.sheetTitle' => 'Record Transaction',
 			'record.incomeAction' => 'Record Income',
 			'record.expenseAction' => 'Record Expense',
 			'record.transferAction' => 'Record Transfer',
-			'record.amountFieldHint' => 'Amount (Rp)',
 			'record.toWalletFieldLabel' => 'Into Wallet',
 			'record.fromWalletFieldLabel' => 'From Wallet',
 			'record.destinationWalletFieldLabel' => 'To Wallet',
 			'record.dateFieldLabel' => 'Date',
 			'record.categoryFieldHint' => 'Category (optional)',
-			'record.noteFieldHint' => 'Note (optional)',
+			'record.noteFieldHint' => 'Write a short note',
 			'record.noWalletsMessage' => 'No wallets yet. Create one in the Wallets tab first.',
 			'record.sameWalletWarning' => 'Source and destination wallets can\'t be the same.',
 			'record.incomeSavedMessage' => 'Income recorded.',
@@ -699,7 +742,6 @@ extension on TranslationsEn {
 			'record.incomeEffectLabel' => 'Adds to wallet balance',
 			'record.expenseEffectLabel' => 'Reduces wallet balance',
 			'record.transferEffectLabel' => 'Total balance stays the same',
-			'record.changeWalletAction' => 'Change',
 			'record.walletNotSelectedPrompt' => 'Not selected yet',
 			'record.savingMessage' => 'Saving...',
 			'record.categorySuggestionSalary' => 'Salary',
@@ -710,6 +752,52 @@ extension on TranslationsEn {
 			'record.categorySuggestionShopping' => 'Shopping',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Bills',
+			'record.sheetSubtitle' => 'Pick the kind of financial event you want to record.',
+			'record.noticeTitle' => 'Recording notice',
+			'record.examplesLabel' => 'Examples:',
+			'record.incomeBadge' => 'Money in',
+			'record.expenseBadge' => 'Money out',
+			'record.transferBadge' => 'Internal move',
+			'record.pickIncomeAction' => 'Pick Income',
+			'record.pickExpenseAction' => 'Pick Expense',
+			'record.pickTransferAction' => 'Pick Transfer',
+			'record.transferExampleCash' => 'Cash withdrawal',
+			'record.transferExampleTopUp' => 'e-Wallet top-up',
+			'record.transferExampleMove' => 'Move accounts',
+			'record.stepLabel' => 'Step 2 // Transaction',
+			'record.editStepLabel' => 'Edit // Transaction',
+			'record.expenseRuleTitle' => 'Cash rule: balance is reduced',
+			'record.expenseRuleBody' => 'An expense immediately reduces the balance of the wallet you pick below.',
+			'record.transferNoticeTitle' => 'Important',
+			'record.transferNoticeBody' => 'This records a money move you already made in the real world. It is not an automatic bank transfer.',
+			'record.amountLabelIncome' => 'Income amount',
+			'record.amountLabelExpense' => 'Expense amount',
+			'record.amountLabelTransfer' => 'Transfer amount',
+			'record.clearAmountAction' => 'Clear',
+			'record.categorySectionLabel' => 'Category',
+			'record.optionalHint' => 'Optional',
+			'record.categoryOtherLabel' => 'Other',
+			'record.categoryCustomHint' => 'Type your own category',
+			'record.categorySuggestionEntertainment' => 'Fun',
+			'record.categorySuggestionInvestment' => 'Investing',
+			'record.expenseWalletSectionLabel' => 'Source wallet',
+			'record.noteSectionLabel' => 'Note',
+			'record.balanceDecreasesCaption' => 'Balance goes down',
+			'record.balanceIncreasesCaption' => 'Balance goes up',
+			'record.incomeSummary' => ({required Object wallet, required Object amount}) => '${wallet} will go up by ${amount} once recorded.',
+			'record.expenseSummary' => ({required Object wallet, required Object amount}) => '${wallet} will go down by ${amount} once recorded.',
+			'record.transferSummaryTitle' => 'Move summary',
+			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}',
+			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}',
+			'record.footnote' => '*Internal Saldough record. Does not debit or send money from any real bank account.',
+			'record.balanceLabel' => 'Balance',
+			'record.categoryPlaceholder' => 'Pick a category',
+			'record.categoryNoneLabel' => 'No category',
+			'record.choiceStepLabel' => 'Step 1 // Pick a type',
+			'record.flowOutside' => 'Outside',
+			'record.flowWallet' => 'Wallet',
+			'record.flowSourceWallet' => 'Source wallet',
+			'record.flowTargetWallet' => 'Target wallet',
 			'transaction.pageTitle' => 'Transactions',
 			'transaction.searchHint' => 'Search notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',

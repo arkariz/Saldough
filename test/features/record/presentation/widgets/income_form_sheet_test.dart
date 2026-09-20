@@ -36,13 +36,11 @@ void main() {
     await tester.enterText(find.byType(TextField).first, amount);
     await tester.pump();
     if (selectWallet) {
-      // WalletPickerField: ketuk kartu "belum dipilih" untuk membuka lembar
-      // pemilih, lalu ketuk nama dompet di dalamnya (menggantikan AppChip
-      // lama).
+      // Daftar dompet terbuka (bukan lembar pemilih): ketuk barisnya langsung.
       await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
       await tester.tap(find.text(t.record.walletNotSelectedPrompt));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(wallets.first.name));
+      await tester.tap(find.text(wallets.first.name).last);
       await tester.pumpAndSettle();
     }
     await tester.ensureVisible(find.byType(AppButton));

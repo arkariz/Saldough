@@ -28,6 +28,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this._recordTransaction,
   }) : super(TransactionState.initial()) {
     on<TransactionStarted>(_onStarted);
+    on<TransactionRefreshed>(_onRefreshed);
     on<TransactionMonthChanged>(_onMonthChanged);
     on<TransactionTypeFilterChanged>(_onTypeFilterChanged);
     on<TransactionWalletFilterChanged>(_onWalletFilterChanged);
@@ -47,6 +48,16 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     switch (walletsResult) {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
+      case Right(value: final wallets):
+        await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+    }
+  }
+
+  Future<void> _onRefreshed(TransactionRefreshed event, Emitter<TransactionState> emit) async {
+    final walletsResult = await _walletRepository.listWallets();
+    switch (walletsResult) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
       case Right(value: final wallets):
         await _loadMonth(month: state.month, wallets: wallets, emit: emit);
     }

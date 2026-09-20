@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/show_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
@@ -34,9 +35,8 @@ Future<Transaction?> openEditTransactionSheet(
   required List<Wallet> wallets,
 }) async {
   final baseWallets = _withoutEffectOf(transaction, wallets);
-  final result = await showModalBottomSheet<Object>(
-    context: context,
-    isScrollControlled: true,
+  final result = await showRecordSheet<Object>(
+    context,
     builder: (_) => switch (transaction) {
       IncomeTransaction() => IncomeFormSheet(wallets: baseWallets, initial: transaction),
       ExpenseTransaction() => ExpenseFormSheet(wallets: baseWallets, initial: transaction),

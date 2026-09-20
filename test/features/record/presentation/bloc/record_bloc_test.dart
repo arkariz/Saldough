@@ -87,28 +87,31 @@ void main() {
       expect(bloc.state.wallets.map((w) => w.id), isNot(contains('lama')));
     });
 
-    test('kegagalan pemuatan dompet menyetel loadFailed true, pemuatan berhasil berikutnya menyetelnya balik ke false', () async {
-      final flaky = _FlakyWalletRepository(walletRepository)..shouldFail = true;
-      final bloc = RecordBloc(
-        walletRepository: flaky,
-        recordTransaction: RecordTransaction(
-          transactionRepository: transactionRepository,
-          recomputeWalletBalances: RecomputeWalletBalances(
-            walletRepository: flaky,
+    test(
+      'kegagalan pemuatan dompet menyetel loadFailed true, pemuatan berhasil berikutnya menyetelnya balik ke false',
+      () async {
+        final flaky = _FlakyWalletRepository(walletRepository)..shouldFail = true;
+        final bloc = RecordBloc(
+          walletRepository: flaky,
+          recordTransaction: RecordTransaction(
             transactionRepository: transactionRepository,
+            recomputeWalletBalances: RecomputeWalletBalances(
+              walletRepository: flaky,
+              transactionRepository: transactionRepository,
+            ),
           ),
-        ),
-      )..add(const RecordWalletsLoaded());
-      await bloc.stream.firstWhere((s) => !s.isLoading);
-      expect(bloc.state.loadFailed, isTrue);
-      expect(bloc.state.wallets, isEmpty);
+        )..add(const RecordWalletsLoaded());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        expect(bloc.state.loadFailed, isTrue);
+        expect(bloc.state.wallets, isEmpty);
 
-      flaky.shouldFail = false;
-      bloc.add(const RecordWalletsLoaded());
-      await bloc.stream.firstWhere((s) => !s.isLoading);
-      expect(bloc.state.loadFailed, isFalse);
-      expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
-    });
+        flaky.shouldFail = false;
+        bloc.add(const RecordWalletsLoaded());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        expect(bloc.state.loadFailed, isFalse);
+        expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
+      },
+    );
 
     test('IncomeRecorded mencatat transaksi dan menambah saldo dompet tujuan', () async {
       final bloc = buildBloc()
@@ -121,7 +124,9 @@ void main() {
 
     test('ExpenseRecorded mencatat transaksi dan mengurangi saldo dompet asal', () async {
       final bloc = buildBloc()
-        ..add(ExpenseRecorded(walletId: 'bca', amount: 75000, date: DateTime(2026, 9), note: 'kopi', categoryKey: 'makan'));
+        ..add(
+          ExpenseRecorded(walletId: 'bca', amount: 75000, date: DateTime(2026, 9), note: 'kopi', categoryKey: 'makan'),
+        );
       await bloc.stream.firstWhere((s) => !s.isSaving);
 
       expect(await balanceOf('bca'), 499925000);
@@ -130,7 +135,13 @@ void main() {
     test('TransferRecorded mengurangi dompet asal dan menambah dompet tujuan sekaligus', () async {
       final bloc = buildBloc()
         ..add(
-          TransferRecorded(fromWalletId: 'bca', toWalletId: 'gopay', amount: 100000000, date: DateTime(2026, 9), note: ''),
+          TransferRecorded(
+            fromWalletId: 'bca',
+            toWalletId: 'gopay',
+            amount: 100000000,
+            date: DateTime(2026, 9),
+            note: '',
+          ),
         );
       await bloc.stream.firstWhere((s) => !s.isSaving);
 

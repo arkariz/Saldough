@@ -85,6 +85,25 @@ void main() {
   }
 
   group('TransactionBloc', () {
+    test('TransactionRefreshed memuat ulang transaksi baru tanpa pernah menyalakan isLoading', () async {
+      final bloc = buildBloc()..add(const TransactionStarted());
+      await bloc.stream.firstWhere((s) => !s.isLoading);
+      expect(bloc.state.groups, isEmpty);
+
+      final now = DateTime.now();
+      await transactionRepository.saveTransaction(
+        IncomeTransaction(id: 'baru', date: DateTime(now.year, now.month, 2), amount: 100000, note: 'gaji', walletId: 'bca'),
+      );
+      final emitted = <TransactionState>[];
+      final sub = bloc.stream.listen(emitted.add);
+      bloc.add(const TransactionRefreshed());
+      await bloc.stream.firstWhere((s) => s.groups.isNotEmpty);
+      await sub.cancel();
+
+      expect(bloc.state.groups.single.transactions.single.id, 'baru');
+      expect(emitted.any((s) => s.isLoading), isFalse, reason: 'daftar tidak boleh berkedip jadi kerangka');
+    });
+
     test('TransactionStarted memuat dompet dan mengelompokkan transaksi bulan berjalan per tanggal', () async {
       final now = DateTime.now();
       await transactionRepository.saveTransaction(

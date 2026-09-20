@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/features/transaction/presentation/transaction_category_icon.dart';
+import 'package:saldough/core/presentation/widgets/category_icon.dart';
 
 void main() {
   group('categoryIconFor', () {

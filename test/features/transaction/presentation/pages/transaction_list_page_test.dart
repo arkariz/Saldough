@@ -390,7 +390,7 @@ void main() {
       expect(find.text('Rp925.000'), findsOneWidget);
       expect(find.text('Rp850.000'), findsNothing);
 
-      await tester.enterText(find.widgetWithText(TextField, t.record.amountFieldHint), '90000');
+      await tester.enterText(find.byType(TextField).first, '90000');
       await tester.pump();
       await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
       await tester.tap(find.widgetWithText(AppButton, t.transaction.saveChangesAction));

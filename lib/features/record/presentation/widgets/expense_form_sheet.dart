@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_picker_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
+import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
+import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -16,31 +18,25 @@ const _quickAmounts = [10000, 50000, 100000];
 
 /// Saran kategori pengeluaran yang sering dipakai.
 List<String> _categorySuggestions() => [
-      t.record.categorySuggestionFood,
-      t.record.categorySuggestionShopping,
-      t.record.categorySuggestionTransport,
-      t.record.categorySuggestionBills,
-    ];
-
-/// Ikon per [_categorySuggestions], searah indeks (Makan/Belanja/Transport/
-/// Tagihan) -- `categoryHousehold`/`categoryBills` adalah padanan terdekat
-/// yang ada di `IconKey` untuk Belanja/Tagihan, bukan kategori tersendiri.
-List<IconKey?> _categoryIcons() => const [
-      IconKey.categoryFood,
-      IconKey.categoryHousehold,
-      IconKey.categoryTransport,
-      IconKey.categoryBills,
-    ];
+  t.record.categorySuggestionFood,
+  t.record.categorySuggestionShopping,
+  t.record.categorySuggestionTransport,
+  t.record.categorySuggestionBills,
+  t.record.categorySuggestionEntertainment,
+];
 
 /// Formulir catat pengeluaran (FR-TXN-002) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [ExpenseRecorded] lewat
 /// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
+/// Tata letaknya mengikuti rujukan visual `pixel_kas_catat_pengeluaran`.
 ///
 /// ⚠ Tautan ke pos anggaran (bagian FR-TXN-002 yang menyebut "tautan
-/// opsional ke satu pos anggaran") belum ada di sini — `Budget` belum
-/// dibangun sampai Fase 4. Tautan itu ditambahkan di T-4.4, bukan
-/// ditampilkan kosong sekarang, mengikuti pola yang sama seperti baris
-/// anggaran di layar rincian transaksi (T-2.11).
+/// opsional ke satu pos anggaran", kartu "Alokasikan ke Anggaran Bulanan?"
+/// di rujukan visual) belum ada di sini — `Budget` belum dibangun sampai
+/// Fase 4. Tautan itu ditambahkan di T-4.4, bukan ditampilkan kosong
+/// sekarang, mengikuti pola yang sama seperti baris anggaran di layar rincian
+/// transaksi (T-2.11). Elemen gamifikasi rujukan ("LVL +10 EXP") tidak
+/// dibangun: bukan bagian kebutuhan produk.
 class ExpenseFormSheet extends StatefulWidget {
   /// Membuat [ExpenseFormSheet] dengan [wallets] sebagai pilihan asal.
   const ExpenseFormSheet({required this.wallets, this.initial, super.key});
@@ -92,6 +88,13 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
+  Wallet? get _wallet {
+    for (final wallet in widget.wallets) {
+      if (wallet.id == _walletId) return wallet;
+    }
+    return null;
+  }
+
   void _submit() {
     final amount = _amountSen;
     final walletId = _walletId;
@@ -109,77 +112,56 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.md,
-        bottom: AppSpacing.md + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(widget.initial == null ? const BackToChoice() : null),
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  widget.initial == null ? t.record.expenseAction : t.transaction.editSheetTitle,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppHardCard(
-              child:RecordAmountField(
-                controller: _amountController,
-                label: t.record.amountFieldHint,
-                quickAmounts: _quickAmounts,
-                autofocus: true,
-                onChanged: () => setState(() {}),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            WalletPickerField(
-              label: t.record.fromWalletFieldLabel,
-              wallets: widget.wallets,
-              selectedId: _walletId,
-              onSelected: (id) => setState(() => _walletId = id),
-              previewAmountSen: _amountSen,
-              previewIsCredit: false,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:RecordDateField(date: _date, onChanged: (date) => setState(() => _date = date)),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:RecordCategoryField(
-                controller: _categoryController,
-                suggestions: _categorySuggestions(),
-                icons: _categoryIcons(),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppHardCard(
-              child:TextField(
-                controller: _noteController,
-                decoration: InputDecoration(labelText: t.record.noteFieldHint),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppButton(
-              label: widget.initial == null ? t.record.expenseAction : t.transaction.saveChangesAction,
-              onPressed: _canSubmit ? _submit : null,
-            ),
-          ],
+    final editing = widget.initial != null;
+    final wallet = _wallet;
+    final amount = _amountSen;
+    return RecordFormFrame(
+      kind: TransactionKind.expense,
+      title: editing ? t.transaction.editSheetTitle : t.record.expenseAction,
+      isEditing: editing,
+      onBack: () => Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      notice: RecordNotice(title: t.record.expenseRuleTitle, body: t.record.expenseRuleBody),
+      submitLabel: editing ? t.transaction.saveChangesAction : t.record.expenseAction,
+      onSubmit: _canSubmit ? _submit : null,
+      children: [
+        RecordAmountField(
+          controller: _amountController,
+          label: t.record.amountLabelExpense,
+          kind: TransactionKind.expense,
+          quickAmounts: _quickAmounts,
+          autofocus: true,
+          onChanged: () => setState(() {}),
         ),
-      ),
+        RecordCategoryField(
+          controller: _categoryController,
+          suggestions: _categorySuggestions(),
+          kind: TransactionKind.expense,
+        ),
+        WalletSelectField(
+          label: t.record.expenseWalletSectionLabel,
+          wallets: widget.wallets,
+          selectedId: _walletId,
+          onSelected: (id) => setState(() => _walletId = id),
+          previewAmountSen: amount,
+          previewIsCredit: false,
+        ),
+        RecordDateField(
+          date: _date,
+          kind: TransactionKind.expense,
+          onChanged: (date) => setState(() => _date = date),
+        ),
+        RecordNoteField(controller: _noteController, kind: TransactionKind.expense),
+        if (_canSubmit && wallet != null && amount != null)
+          RecordSummaryCard(
+            kind: TransactionKind.expense,
+            children: [
+              Text(
+                t.record.expenseSummary(wallet: wallet.name, amount: AppMoneyFormatter.format(amount)),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

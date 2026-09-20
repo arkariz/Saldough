@@ -1,4 +1,4 @@
-import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
 
 /// Pasangan ikon pixel-art untuk sebuah kategori, dicari dari kata kunci pada
 /// namanya.
@@ -25,13 +25,22 @@ const List<(IconKey, List<String>)> _rules = [
   (IconKey.categoryInternet, ['internet', 'wifi', 'pulsa', 'kuota']),
   (IconKey.categoryBills, ['tagihan', 'bill', 'cicilan', 'sewa', 'kontrakan']),
   (IconKey.categoryHealth, ['sehat', 'health', 'obat', 'dokter', 'medis', 'apotek', 'pharmacy', 'klinik']),
-  (IconKey.categoryEducation, ['sekolah', 'kuliah', 'kursus', 'education', 'school', 'course', 'tuition', 'buku', 'spp']),
+  (
+    IconKey.categoryEducation,
+    ['sekolah', 'kuliah', 'kursus', 'education', 'school', 'course', 'tuition', 'buku', 'spp'],
+  ),
   (IconKey.categoryPets, ['hewan', 'peliharaan', 'kucing', 'anjing']),
   (IconKey.categoryInvestment, ['invest', 'saham', 'reksa', 'crypto', 'kripto', 'stock', 'emas']),
-  (IconKey.categoryEntertainment, ['hibur', 'entertain', 'game', 'nonton', 'film', 'musik', 'netflix', 'spotify', 'bioskop', 'konser']),
+  (
+    IconKey.categoryEntertainment,
+    ['hibur', 'entertain', 'game', 'nonton', 'film', 'musik', 'netflix', 'spotify', 'bioskop', 'konser'],
+  ),
   (IconKey.categoryFood, ['makan', 'food', 'resto', 'warung', 'lunch', 'dinner', 'sarapan', 'snack', 'jajan']),
   (IconKey.categoryCoffee, ['kopi', 'coffee', 'cafe', 'kafe', 'ngopi']),
   (IconKey.categoryShopping, ['shop', 'mall', 'fashion', 'baju', 'pakaian', 'online']),
   (IconKey.categoryGroceries, ['belanja', 'grocer', 'supermarket', 'sembako', 'pasar', 'market']),
-  (IconKey.income, ['gaji', 'salary', 'bonus', 'penjualan', 'sales', 'hadiah', 'gift', 'honor', 'freelance', 'dividen']),
+  (
+    IconKey.income,
+    ['gaji', 'salary', 'bonus', 'penjualan', 'sales', 'hadiah', 'gift', 'honor', 'freelance', 'dividen'],
+  ),
 ];

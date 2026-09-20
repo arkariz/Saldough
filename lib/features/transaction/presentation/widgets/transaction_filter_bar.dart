@@ -3,8 +3,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
-import 'package:saldough/features/transaction/presentation/transaction_category_icon.dart';
-import 'package:saldough/features/transaction/presentation/widgets/transaction_surfaces.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Wadah segmen jenis transaksi (Semua/Masuk/Keluar/Mutasi) ala "kartrid
@@ -220,7 +218,7 @@ class TransactionWalletCategoryRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _FilterMenuButton<String>(
+          child: AppMenuSelectButton<String>(
             icon: selectedWallet == null ? IconKey.wallets : walletIconKey(selectedWallet.iconKey),
             label: selectedWallet?.name ?? t.transaction.walletFilterLabel,
             options: [
@@ -233,91 +231,17 @@ class TransactionWalletCategoryRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.xs),
         Expanded(
-          child: _FilterMenuButton<String>(
+          child: AppMenuSelectButton<String>(
             icon: selectedCategory == null ? IconKey.filter : categoryIconFor(selectedCategory),
             label: selectedCategory ?? t.transaction.categoryFilterLabel,
             options: [
               for (final category in categoryOptions) (value: category, label: category, icon: categoryIconFor(category)),
             ],
             allLabel: t.transaction.categoryFilterAllLabel,
-            allIcon: IconKey.filter,
             onSelected: onCategoryChanged,
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Tombol putih kecil bergaya rujukan ("Dompet ▾") yang membuka menu pilihan
-/// bergambar. `null` pada [onSelected] berarti pilihan "Semua". Selebar ruang
-/// yang diberikan induknya; label terpotong dengan elipsis kalau panjang.
-class _FilterMenuButton<T> extends StatelessWidget {
-  const _FilterMenuButton({
-    required this.icon,
-    required this.label,
-    required this.options,
-    required this.allLabel,
-    required this.allIcon,
-    required this.onSelected,
-  });
-
-  final IconKey icon;
-  final String label;
-  final List<({T value, String label, IconKey icon})> options;
-  final String allLabel;
-  final IconKey allIcon;
-  final ValueChanged<T?> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return PopupMenuButton<int>(
-      // Indeks, bukan nilai: `PopupMenuButton` tidak memanggil `onSelected`
-      // untuk nilai `null`, padahal "Semua" justru diwakili `null`.
-      onSelected: (index) => onSelected(index < 0 ? null : options[index].value),
-      color: colors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-        side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
-      ),
-      itemBuilder: (_) => [
-        _item(value: -1, icon: allIcon, label: allLabel),
-        for (var i = 0; i < options.length; i++) _item(value: i, icon: options[i].icon, label: options[i].label),
-      ],
-      child: TransactionSlab(
-        radius: 4,
-        shadow: 2,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 10),
-        child: Row(
-          children: [
-            AppIcon(icon, size: 22),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: transactionLabelStyle(context, color: colors.textPrimary),
-              ),
-            ),
-            AppIcon(IconKey.dropdown, size: 18, color: colors.textMuted),
-          ],
-        ),
-      ),
-    );
-  }
-
-  PopupMenuItem<int> _item({required int value, required IconKey icon, required String label}) {
-    return PopupMenuItem<int>(
-      value: value,
-      child: Row(
-        children: [
-          AppIcon(icon),
-          const SizedBox(width: AppSpacing.sm),
-          Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
-        ],
-      ),
     );
   }
 }

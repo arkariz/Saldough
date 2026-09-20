@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 
 /// Kolom catatan bebas: judul bagian di atas, kartu putih berikon pena di
 /// bawahnya (rujukan visual `pixel_kas_catat_pengeluaran`, bagian
@@ -23,7 +22,7 @@ class RecordNoteField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RecordSectionLabel(t.record.noteSectionLabel, hint: t.record.optionalHint),
+        AppSectionLabel(t.record.noteSectionLabel, hint: t.record.optionalHint),
         const SizedBox(height: AppSpacing.xs),
         TransactionSlab(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),

@@ -138,7 +138,10 @@ class _CycleTabState extends State<_CycleTab> {
         // ulang saat tab DIAKTIFKAN lagi ditangani `didUpdateWidget` di atas.
         final cycleId = bloc.state.cycle.id.isEmpty ? _currentCycleId() : bloc.state.cycle.id;
         if (bloc.state.cycle.id.isEmpty) bloc.add(CycleOpened(cycleId));
-        return BlocProvider.value(value: bloc, child: CyclePage(cycleId: cycleId));
+        return BlocProvider.value(
+          value: bloc,
+          child: CyclePage(cycleId: cycleId),
+        );
       },
     );
   }

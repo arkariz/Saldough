@@ -51,6 +51,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$appShell$en appShell = _Translations$appShell$en._(_root);
 	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
+	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
 }
 
 // Path: app
@@ -506,6 +507,61 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get deletedMessage => 'Entry deleted.';
 }
 
+// Path: wallet
+class _Translations$wallet$en extends Translations$wallet$id {
+	_Translations$wallet$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get heading => 'My Wallets';
+	@override String get subtitle => 'Where your cash stands right now';
+	@override String activeBadge({required Object count}) => '${count} active';
+	@override String get totalLabel => 'Total balance of all wallets';
+	@override String get manualNoteTitle => 'Manual record';
+	@override String get manualNoteBody => 'Balances are computed from the entries you record yourself, not synced automatically from any bank.';
+	@override String get listHeading => 'Wallets';
+	@override String get balanceLabel => 'Current balance';
+	@override String get addAction => 'Add New Wallet';
+	@override String get inactiveHeading => 'Inactive Wallets';
+	@override String get inactiveBadge => 'Inactive';
+	@override String get typeBank => 'Bank account';
+	@override String get typeCash => 'Cash';
+	@override String get typeEwallet => 'Digital wallet';
+	@override String get typeSavings => 'Savings';
+	@override String get typeCard => 'Card';
+	@override String get emptyBadge => 'No wallets yet';
+	@override String get emptyTitle => 'No wallets recorded yet';
+	@override String get emptyBody => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.';
+	@override String get loadErrorTitle => 'Couldn\'t load wallets';
+	@override String get loadErrorSubtitle => 'Wallet data couldn\'t be read. Try again.';
+	@override String get addTitle => 'Add New Wallet';
+	@override String get editTitle => 'Edit Wallet';
+	@override String get addStepLabel => 'Wallet // New';
+	@override String get editStepLabel => 'Wallet // Edit';
+	@override String get nameLabel => 'Wallet name';
+	@override String get nameHint => 'E.g. Mandiri Savings, OVO, Cash Box';
+	@override String get nameRequiredHint => 'Required';
+	@override String get nameMaxHint => 'Max. 24 characters';
+	@override String get iconLabel => 'Pick an icon';
+	@override String get initialBalanceLabel => 'Starting balance right now';
+	@override String get initialBalanceHelp => 'The starting balance is the money there right now, before you began recording. It states a situation, it is not a deposit, so it never shows in history.';
+	@override String get currentBalanceLabel => 'Recorded balance right now';
+	@override String get editBalanceNote => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via RECORD.';
+	@override String get activeSwitchLabel => 'Wallet is active';
+	@override String get activeSwitchHelp => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.';
+	@override String get saveAddAction => 'Save Wallet';
+	@override String get deleteAction => 'Delete Wallet';
+	@override String get deleteHelp => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.';
+	@override String get deleteConfirmTitle => 'Delete wallet?';
+	@override String deleteConfirmMessage({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.';
+	@override String get savedMessage => 'Wallet saved.';
+	@override String get updatedMessage => 'Wallet updated.';
+	@override String get deletedMessage => 'Wallet deleted.';
+	@override String get deleteBlockedMessage => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.';
+	@override String get privacyNote => 'Data is stored locally and privately on your device.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -859,6 +915,52 @@ extension on TranslationsEn {
 			'transaction.deleteConfirmMessage' => 'The entry is removed from history, and wallet balances are recalculated without it.',
 			'transaction.updatedMessage' => 'Changes saved.',
 			'transaction.deletedMessage' => 'Entry deleted.',
+			'wallet.heading' => 'My Wallets',
+			'wallet.subtitle' => 'Where your cash stands right now',
+			'wallet.activeBadge' => ({required Object count}) => '${count} active',
+			'wallet.totalLabel' => 'Total balance of all wallets',
+			'wallet.manualNoteTitle' => 'Manual record',
+			'wallet.manualNoteBody' => 'Balances are computed from the entries you record yourself, not synced automatically from any bank.',
+			'wallet.listHeading' => 'Wallets',
+			'wallet.balanceLabel' => 'Current balance',
+			'wallet.addAction' => 'Add New Wallet',
+			'wallet.inactiveHeading' => 'Inactive Wallets',
+			'wallet.inactiveBadge' => 'Inactive',
+			'wallet.typeBank' => 'Bank account',
+			'wallet.typeCash' => 'Cash',
+			'wallet.typeEwallet' => 'Digital wallet',
+			'wallet.typeSavings' => 'Savings',
+			'wallet.typeCard' => 'Card',
+			'wallet.emptyBadge' => 'No wallets yet',
+			'wallet.emptyTitle' => 'No wallets recorded yet',
+			'wallet.emptyBody' => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.',
+			'wallet.loadErrorTitle' => 'Couldn\'t load wallets',
+			'wallet.loadErrorSubtitle' => 'Wallet data couldn\'t be read. Try again.',
+			'wallet.addTitle' => 'Add New Wallet',
+			'wallet.editTitle' => 'Edit Wallet',
+			'wallet.addStepLabel' => 'Wallet // New',
+			'wallet.editStepLabel' => 'Wallet // Edit',
+			'wallet.nameLabel' => 'Wallet name',
+			'wallet.nameHint' => 'E.g. Mandiri Savings, OVO, Cash Box',
+			'wallet.nameRequiredHint' => 'Required',
+			'wallet.nameMaxHint' => 'Max. 24 characters',
+			'wallet.iconLabel' => 'Pick an icon',
+			'wallet.initialBalanceLabel' => 'Starting balance right now',
+			'wallet.initialBalanceHelp' => 'The starting balance is the money there right now, before you began recording. It states a situation, it is not a deposit, so it never shows in history.',
+			'wallet.currentBalanceLabel' => 'Recorded balance right now',
+			'wallet.editBalanceNote' => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via RECORD.',
+			'wallet.activeSwitchLabel' => 'Wallet is active',
+			'wallet.activeSwitchHelp' => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.',
+			'wallet.saveAddAction' => 'Save Wallet',
+			'wallet.deleteAction' => 'Delete Wallet',
+			'wallet.deleteHelp' => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.',
+			'wallet.deleteConfirmTitle' => 'Delete wallet?',
+			'wallet.deleteConfirmMessage' => ({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.',
+			'wallet.savedMessage' => 'Wallet saved.',
+			'wallet.updatedMessage' => 'Wallet updated.',
+			'wallet.deletedMessage' => 'Wallet deleted.',
+			'wallet.deleteBlockedMessage' => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.',
+			'wallet.privacyNote' => 'Data is stored locally and privately on your device.',
 			_ => null,
 		};
 	}

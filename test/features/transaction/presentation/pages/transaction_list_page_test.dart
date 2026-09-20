@@ -58,6 +58,9 @@ void main() {
     // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
     // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
     await tester.pump();
+    // Tiga `pump()` -- ScopeWidget<WalletScope> (T-2.7) bersarang setelah
+    // TransactionScope, jadi initialisasinya baru mulai satu frame lagi.
+    await tester.pump();
     await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
     await tester.pumpAndSettle();
   }
@@ -114,6 +117,7 @@ void main() {
       );
       await tester.pump();
       await tester.pump();
+      await tester.pump(); // WalletScope (T-2.7), bersarang setelah TransactionScope.
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
       await tester.pumpAndSettle();
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/record/presentation/widgets/fit_start.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Saldo [wallet] saat ini; kalau [previewAmountSen] sudah nominal yang valid,

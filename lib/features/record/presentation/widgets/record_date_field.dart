@@ -3,8 +3,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
-import 'package:saldough/features/record/presentation/widgets/fit_start.dart';
-import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 
 /// Bagian waktu formulir CATAT: pintasan "Hari Ini" / "Kemarin" dan kotak
 /// tanggal yang membuka [showDatePicker] (rujukan visual
@@ -53,7 +51,7 @@ class RecordDateField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RecordSectionLabel(t.record.dateFieldLabel),
+        AppSectionLabel(t.record.dateFieldLabel),
         const SizedBox(height: AppSpacing.xs),
         // `Wrap`: pintasan dan kotak tanggal tidak muat sebaris pada layar
         // sempit atau teks besar; kotak turun baris alih-alih meluap.

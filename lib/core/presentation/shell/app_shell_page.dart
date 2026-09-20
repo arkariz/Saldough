@@ -13,6 +13,10 @@ import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
+import 'package:saldough/features/wallet/di/wallet_scope.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
+import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:state_management/state_management.dart';
 
 /// Shell navigasi baru Saldough 2.0 — lima tujuan (Beranda, Anggaran, CATAT,
@@ -81,6 +85,7 @@ class _AppShellPageState extends State<AppShellPage> {
   int _activeTab = 0;
 
   static const _recordNavIndex = 2;
+  static const _walletsTabIndex = 3;
 
   /// Indeks `IndexedStack` (0..3) untuk indeks `NavigationBar` (0..4,
   /// melompati CATAT di posisi 2).
@@ -95,8 +100,10 @@ class _AppShellPageState extends State<AppShellPage> {
   /// sampai aplikasi dimulai ulang.
   Future<void> _openRecord(BuildContext context) async {
     final transactions = context.read<TransactionBloc>();
+    final wallets = context.read<WalletBloc>();
     await openRecordSheet(context);
     transactions.add(const TransactionRefreshed());
+    wallets.add(const WalletRefreshed());
   }
 
   void _onDestinationSelected(BuildContext context, int navIndex) {
@@ -104,6 +111,9 @@ class _AppShellPageState extends State<AppShellPage> {
       unawaited(_openRecord(context));
       return;
     }
+    // Saldo dompet bisa berubah lewat transaksi yang disunting/dihapus di tab
+    // Transaksi, jadi disegarkan tiap tab Dompet dibuka.
+    if (_tabIndexFor(navIndex) == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
     setState(() => _activeTab = _tabIndexFor(navIndex));
   }
 
@@ -118,7 +128,7 @@ class _AppShellPageState extends State<AppShellPage> {
       _ComingSoonTab(icon: IconKey.home, label: t.appShell.homeTabLabel),
       _ComingSoonTab(icon: IconKey.budget, label: t.appShell.budgetTabLabel),
       const TransactionListPage(),
-      _ComingSoonTab(icon: IconKey.wallets, label: t.appShell.walletsTabLabel),
+      const WalletListPage(),
     ];
     // PixelTheme membungkus SELURUH shell (tab + lembar CATAT yang dibuka
     // dari dalamnya) dengan bahasa visual ADR-015 -- lihat dokumentasi
@@ -154,31 +164,44 @@ class _AppShellPageState extends State<AppShellPage> {
                       // milik parameter `builder` ScopeWidget ATAU
                       // `build(BuildContext context)` di luar sini keduanya
                       // leluhur `BlocProvider` ini, bukan keturunannya.
-                      child: Builder(
-                        builder: (context) => Scaffold(
-                          body: IndexedStack(index: _activeTab, children: tabs),
-                          bottomNavigationBar: NavigationBar(
-                            selectedIndex: _navIndexFor(_activeTab),
-                            onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
-                            destinations: [
-                              NavigationDestination(icon: const AppIcon(IconKey.home), label: t.appShell.homeTabLabel),
-                              NavigationDestination(
-                                icon: const AppIcon(IconKey.budget),
-                                label: t.appShell.budgetTabLabel,
+                      child: ScopeWidget<WalletScope>(
+                        create: () => WalletScope(parentContainer: parentContainer),
+                        builder: (context, walletScope) => BlocProvider.value(
+                          value: walletScope.container<WalletBloc>(),
+                          // Snackbar hasil tambah/sunting/hapus dompet (T-2.7), di shell supaya
+                          // tetap tampil walau formulirnya sudah tertutup saat hasilnya tiba.
+                          child: EffectListener<WalletBloc, WalletState>(
+                            child: Builder(
+                              builder: (context) => Scaffold(
+                                body: IndexedStack(index: _activeTab, children: tabs),
+                                bottomNavigationBar: NavigationBar(
+                                  selectedIndex: _navIndexFor(_activeTab),
+                                  onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
+                                  destinations: [
+                                    NavigationDestination(
+                                      icon: const AppIcon(IconKey.home),
+                                      label: t.appShell.homeTabLabel,
+                                    ),
+                                    NavigationDestination(
+                                      icon: const AppIcon(IconKey.budget),
+                                      label: t.appShell.budgetTabLabel,
+                                    ),
+                                    NavigationDestination(
+                                      icon: const AppIcon(IconKey.record),
+                                      label: t.appShell.recordAction,
+                                    ),
+                                    NavigationDestination(
+                                      icon: const AppIcon(IconKey.transactions),
+                                      label: t.appShell.transactionsTabLabel,
+                                    ),
+                                    NavigationDestination(
+                                      icon: const AppIcon(IconKey.wallets),
+                                      label: t.appShell.walletsTabLabel,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              NavigationDestination(
-                                icon: const AppIcon(IconKey.record),
-                                label: t.appShell.recordAction,
-                              ),
-                              NavigationDestination(
-                                icon: const AppIcon(IconKey.transactions),
-                                label: t.appShell.transactionsTabLabel,
-                              ),
-                              NavigationDestination(
-                                icon: const AppIcon(IconKey.wallets),
-                                label: t.appShell.walletsTabLabel,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),

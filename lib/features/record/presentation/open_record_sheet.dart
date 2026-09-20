@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
-import 'package:saldough/features/record/presentation/show_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
@@ -36,14 +36,14 @@ Future<void> openRecordSheet(BuildContext context) async {
   if (bloc.state.loadFailed) return;
 
   while (true) {
-    final choice = await showRecordSheet<RecordChoice>(
+    final choice = await showFullScreenSheet<RecordChoice>(
       context,
       builder: (_) => const RecordChoiceSheet(),
     );
     if (choice == null || !context.mounted) return;
 
     final wallets = bloc.state.wallets;
-    final result = await showRecordSheet<Object>(
+    final result = await showFullScreenSheet<Object>(
       context,
       builder: (_) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(wallets: wallets),

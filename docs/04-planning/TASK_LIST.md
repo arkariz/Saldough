@@ -21,19 +21,19 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 19 September 2026.
+Terakhir diperbarui: 20 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 7 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 8 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **27** | |
+| **Total MVP** | **76** | **28** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -318,7 +318,7 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       ⚠ **Tampilan direvisi mengikuti rujukan visual** (`pixel_kas_catat_transaksi`,
       `..._pemasukan`, `..._pengeluaran`, `..._transfer_antar_dompet`) setelah
       pembangunan awal yang masih widget Material polos. Pemilih jenis dan
-      ketiga formulir kini layar penuh (`showRecordSheet`: `isScrollControlled` +
+      ketiga formulir kini layar penuh (`showFullScreenSheet`: `isScrollControlled` +
       `useSafeArea`) berkerangka `RecordFormFrame` (kop "Langkah 2 // Transaksi",
       kartu bantuan, tombol simpan berwarna jenis, catatan kaki). Nominal =
       kartu berkotak angka besar + pilihan cepat `+10rb`; tanggal = pintasan
@@ -473,10 +473,42 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
 
 ### Dompet
 
-- [ ] **T-2.7** Buat `features/wallet/`: daftar dompet, total saldo, serta
+- [x] **T-2.7** Buat `features/wallet/`: daftar dompet, total saldo, serta
       tambah dan sunting dompet.
       ⚠ Saldo awal adalah pernyataan keadaan, bukan transaksi setoran. Ia tidak
       muncul di riwayat.
+      ⚠ Diuji: dompet baru disimpan dengan `currentBalance == initialBalance`
+      dan TIDAK ada `Transaction` yang lahir. Menyunting nama/ikon/status tidak
+      menyentuh saldo tercatat; hanya mengganti saldo awal yang menghitungnya
+      ulang lewat `RecomputeWalletBalances.forWallets` (penyeimbang tunggal,
+      ADR-012). Kolom saldo awal hanya menerima rupiah utuh >= 0 (sama seperti
+      formulir CATAT), jadi pada mode sunting saldo awal yang TIDAK disentuh
+      dikirim `null` = tidak diubah, supaya nilai tersimpan yang tak terwakili
+      kolom (negatif atau bersen pecahan) tidak tertimpa diam-diam.
+      ⚠ Cakupan FR-WAL-001 penuh: tambah, sunting nama/ikon, nonaktifkan
+      (sakelar "Dompet aktif"; dompet nonaktif tampil di bagian tersendiri dan
+      tidak ikut total maupun pemilih dompet CATAT), dan hapus HANYA kalau
+      belum punya transaksi sama sekali (`listAllTransactions` diperiksa untuk
+      dompet pemasukan/pengeluaran DAN asal/tujuan transfer; ditolak dengan
+      pesan "nonaktifkan saja"), dengan konfirmasi.
+      ⚠ Saldo negatif tampil dengan warna `expense` dan tanda minus, bukan
+      sebagai kesalahan (FR-WAL-003); total hanya menjumlahkan dompet aktif.
+      ⚠ `WalletBloc` dipasang di shell lewat `WalletScope` (ketiga
+      `ScopeWidget` bersarang, jadi uji shell butuh tiga `pump()`). Saldo
+      disegarkan (`WalletRefreshed`, tanpa kerangka pemuatan) tiap tab Dompet
+      dibuka dan sesudah alur CATAT, karena saldo bisa berubah lewat transaksi
+      yang disunting/dihapus di tab lain.
+      ⚠ Bagian rujukan yang sengaja tidak dibangun: "Atur Urutan" dan lencana
+      "UTAMA" (tidak ada konsep urutan/dompet utama di domain), subjudul dan
+      "Catatan tambahan" per dompet (`Wallet` tidak punya field catatan),
+      "Tipe kategori" (jenis diturunkan dari ikon), tombol "Transfer Kas"
+      (transfer hanya lewat CATAT, aturan 8), hitungan "transaksi bulan ini"
+      per dompet, dan kartu "Konsep Kantong Kas". Kartu dompet sementara
+      membuka formulir sunting; T-2.8 menggantinya dengan layar rincian.
+      ⚠ Komponen yang dipakai bersama `record` dan `wallet` diangkat ke
+      `lib/core/presentation/widgets/`: `AppSectionLabel`, `AppQuickChip`,
+      `FitStart`, `showFullScreenSheet`, dan helper input rupiah
+      (`core/utils/formatters/rupiah_input.dart`).
       Memenuhi FR-WAL-001, FR-WAL-002, dan FR-WAL-003.
 - [ ] **T-2.8** Buat layar rincian dompet: riwayat tersaring dan pintasan ke
       CATAT dengan dompet ini sudah terpilih.

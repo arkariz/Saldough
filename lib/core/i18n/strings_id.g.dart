@@ -53,6 +53,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$appShell$id appShell = Translations$appShell$id.internal(_root);
 	late final Translations$record$id record = Translations$record$id.internal(_root);
 	late final Translations$transaction$id transaction = Translations$transaction$id.internal(_root);
+	late final Translations$wallet$id wallet = Translations$wallet$id.internal(_root);
 }
 
 // Path: app
@@ -1198,6 +1199,153 @@ class Translations$transaction$id {
 	String get deletedMessage => 'Catatan dihapus.';
 }
 
+// Path: wallet
+class Translations$wallet$id {
+	Translations$wallet$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Dompet Saya'
+	String get heading => 'Dompet Saya';
+
+	/// id: 'Posisi saldo kas saat ini'
+	String get subtitle => 'Posisi saldo kas saat ini';
+
+	/// id: '$count kantong aktif'
+	String activeBadge({required Object count}) => '${count} kantong aktif';
+
+	/// id: 'Total saldo semua dompet'
+	String get totalLabel => 'Total saldo semua dompet';
+
+	/// id: 'Catatan Manual'
+	String get manualNoteTitle => 'Catatan Manual';
+
+	/// id: 'Saldo dihitung dari catatan yang kamu buat sendiri, bukan sinkronisasi otomatis dari bank.'
+	String get manualNoteBody => 'Saldo dihitung dari catatan yang kamu buat sendiri, bukan sinkronisasi otomatis dari bank.';
+
+	/// id: 'Daftar Dompet'
+	String get listHeading => 'Daftar Dompet';
+
+	/// id: 'Saldo Aktif'
+	String get balanceLabel => 'Saldo Aktif';
+
+	/// id: 'Tambah Dompet Baru'
+	String get addAction => 'Tambah Dompet Baru';
+
+	/// id: 'Dompet Nonaktif'
+	String get inactiveHeading => 'Dompet Nonaktif';
+
+	/// id: 'Nonaktif'
+	String get inactiveBadge => 'Nonaktif';
+
+	/// id: 'Bank / Rekening'
+	String get typeBank => 'Bank / Rekening';
+
+	/// id: 'Uang Tunai'
+	String get typeCash => 'Uang Tunai';
+
+	/// id: 'Dompet Digital'
+	String get typeEwallet => 'Dompet Digital';
+
+	/// id: 'Tabungan'
+	String get typeSavings => 'Tabungan';
+
+	/// id: 'Kartu'
+	String get typeCard => 'Kartu';
+
+	/// id: 'Belum ada dompet'
+	String get emptyBadge => 'Belum ada dompet';
+
+	/// id: 'Belum ada dompet tercatat'
+	String get emptyTitle => 'Belum ada dompet tercatat';
+
+	/// id: 'Tambahkan dompet pertama untuk mulai mencatat posisi uangmu. Bisa berupa rekening bank, e-wallet, atau uang tunai di saku.'
+	String get emptyBody => 'Tambahkan dompet pertama untuk mulai mencatat posisi uangmu. Bisa berupa rekening bank, e-wallet, atau uang tunai di saku.';
+
+	/// id: 'Dompet gagal dimuat'
+	String get loadErrorTitle => 'Dompet gagal dimuat';
+
+	/// id: 'Data dompet tidak terbaca. Coba lagi.'
+	String get loadErrorSubtitle => 'Data dompet tidak terbaca. Coba lagi.';
+
+	/// id: 'Tambah Dompet Baru'
+	String get addTitle => 'Tambah Dompet Baru';
+
+	/// id: 'Ubah Dompet'
+	String get editTitle => 'Ubah Dompet';
+
+	/// id: 'Dompet // Baru'
+	String get addStepLabel => 'Dompet // Baru';
+
+	/// id: 'Dompet // Ubah'
+	String get editStepLabel => 'Dompet // Ubah';
+
+	/// id: 'Nama Dompet'
+	String get nameLabel => 'Nama Dompet';
+
+	/// id: 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai'
+	String get nameHint => 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai';
+
+	/// id: 'Wajib'
+	String get nameRequiredHint => 'Wajib';
+
+	/// id: 'Maks. 24 karakter'
+	String get nameMaxHint => 'Maks. 24 karakter';
+
+	/// id: 'Pilih Ikon'
+	String get iconLabel => 'Pilih Ikon';
+
+	/// id: 'Saldo Awal Saat Ini'
+	String get initialBalanceLabel => 'Saldo Awal Saat Ini';
+
+	/// id: 'Saldo awal adalah uang yang ada saat ini, sebelum pencatatan transaksi dimulai. Ia pernyataan keadaan, bukan setoran, jadi tidak muncul di riwayat.'
+	String get initialBalanceHelp => 'Saldo awal adalah uang yang ada saat ini, sebelum pencatatan transaksi dimulai. Ia pernyataan keadaan, bukan setoran, jadi tidak muncul di riwayat.';
+
+	/// id: 'Saldo Tercatat Saat Ini'
+	String get currentBalanceLabel => 'Saldo Tercatat Saat Ini';
+
+	/// id: 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.'
+	String get editBalanceNote => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.';
+
+	/// id: 'Dompet aktif'
+	String get activeSwitchLabel => 'Dompet aktif';
+
+	/// id: 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.'
+	String get activeSwitchHelp => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.';
+
+	/// id: 'Simpan Dompet'
+	String get saveAddAction => 'Simpan Dompet';
+
+	/// id: 'Hapus Dompet'
+	String get deleteAction => 'Hapus Dompet';
+
+	/// id: 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.'
+	String get deleteHelp => 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.';
+
+	/// id: 'Hapus dompet?'
+	String get deleteConfirmTitle => 'Hapus dompet?';
+
+	/// id: 'Dompet $name akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.'
+	String deleteConfirmMessage({required Object name}) => 'Dompet ${name} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.';
+
+	/// id: 'Dompet tersimpan.'
+	String get savedMessage => 'Dompet tersimpan.';
+
+	/// id: 'Dompet diperbarui.'
+	String get updatedMessage => 'Dompet diperbarui.';
+
+	/// id: 'Dompet dihapus.'
+	String get deletedMessage => 'Dompet dihapus.';
+
+	/// id: 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.'
+	String get deleteBlockedMessage => 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.';
+
+	/// id: 'Data tersimpan lokal dan privat di perangkatmu.'
+	String get privacyNote => 'Data tersimpan lokal dan privat di perangkatmu.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1551,6 +1699,52 @@ extension on Translations {
 			'transaction.deleteConfirmMessage' => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.',
 			'transaction.updatedMessage' => 'Perubahan tersimpan.',
 			'transaction.deletedMessage' => 'Catatan dihapus.',
+			'wallet.heading' => 'Dompet Saya',
+			'wallet.subtitle' => 'Posisi saldo kas saat ini',
+			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
+			'wallet.totalLabel' => 'Total saldo semua dompet',
+			'wallet.manualNoteTitle' => 'Catatan Manual',
+			'wallet.manualNoteBody' => 'Saldo dihitung dari catatan yang kamu buat sendiri, bukan sinkronisasi otomatis dari bank.',
+			'wallet.listHeading' => 'Daftar Dompet',
+			'wallet.balanceLabel' => 'Saldo Aktif',
+			'wallet.addAction' => 'Tambah Dompet Baru',
+			'wallet.inactiveHeading' => 'Dompet Nonaktif',
+			'wallet.inactiveBadge' => 'Nonaktif',
+			'wallet.typeBank' => 'Bank / Rekening',
+			'wallet.typeCash' => 'Uang Tunai',
+			'wallet.typeEwallet' => 'Dompet Digital',
+			'wallet.typeSavings' => 'Tabungan',
+			'wallet.typeCard' => 'Kartu',
+			'wallet.emptyBadge' => 'Belum ada dompet',
+			'wallet.emptyTitle' => 'Belum ada dompet tercatat',
+			'wallet.emptyBody' => 'Tambahkan dompet pertama untuk mulai mencatat posisi uangmu. Bisa berupa rekening bank, e-wallet, atau uang tunai di saku.',
+			'wallet.loadErrorTitle' => 'Dompet gagal dimuat',
+			'wallet.loadErrorSubtitle' => 'Data dompet tidak terbaca. Coba lagi.',
+			'wallet.addTitle' => 'Tambah Dompet Baru',
+			'wallet.editTitle' => 'Ubah Dompet',
+			'wallet.addStepLabel' => 'Dompet // Baru',
+			'wallet.editStepLabel' => 'Dompet // Ubah',
+			'wallet.nameLabel' => 'Nama Dompet',
+			'wallet.nameHint' => 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai',
+			'wallet.nameRequiredHint' => 'Wajib',
+			'wallet.nameMaxHint' => 'Maks. 24 karakter',
+			'wallet.iconLabel' => 'Pilih Ikon',
+			'wallet.initialBalanceLabel' => 'Saldo Awal Saat Ini',
+			'wallet.initialBalanceHelp' => 'Saldo awal adalah uang yang ada saat ini, sebelum pencatatan transaksi dimulai. Ia pernyataan keadaan, bukan setoran, jadi tidak muncul di riwayat.',
+			'wallet.currentBalanceLabel' => 'Saldo Tercatat Saat Ini',
+			'wallet.editBalanceNote' => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.',
+			'wallet.activeSwitchLabel' => 'Dompet aktif',
+			'wallet.activeSwitchHelp' => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.',
+			'wallet.saveAddAction' => 'Simpan Dompet',
+			'wallet.deleteAction' => 'Hapus Dompet',
+			'wallet.deleteHelp' => 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.',
+			'wallet.deleteConfirmTitle' => 'Hapus dompet?',
+			'wallet.deleteConfirmMessage' => ({required Object name}) => 'Dompet ${name} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.',
+			'wallet.savedMessage' => 'Dompet tersimpan.',
+			'wallet.updatedMessage' => 'Dompet diperbarui.',
+			'wallet.deletedMessage' => 'Dompet dihapus.',
+			'wallet.deleteBlockedMessage' => 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.',
+			'wallet.privacyNote' => 'Data tersimpan lokal dan privat di perangkatmu.',
 			_ => null,
 		};
 	}

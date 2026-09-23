@@ -27,13 +27,13 @@ Terakhir diperbarui: 23 September 2026.
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 9 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 12 | Selesai |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **29** | |
+| **Total MVP** | **76** | **35** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -551,16 +551,49 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
 
 ### Verifikasi
 
-- [ ] **T-2.9** Tulis uji bloc untuk `record`, `transaction`, dan `wallet`
+- [x] **T-2.9** Tulis uji bloc untuk `record`, `transaction`, dan `wallet`
       memakai `mocktail` dan `bloc_test`.
-      ⚠ `Bloc` tidak memancarkan state yang sama dengan state sebelumnya.
-      Stub repository yang mengembalikan data statis akan membuat pemuatan
-      ulang tampak seperti tidak memancarkan apa pun. Buat stub mencerminkan
-      hasil penulisan terakhir.
+      ⚠ Menulis ulang `record_bloc_test.dart`/`transaction_bloc_test.dart`/
+      `wallet_bloc_test.dart` (T-2.4/T-2.5/T-2.7 sebelumnya memakai fake
+      tulis tangan di atas `InMemoryKeyValueStorage`, menyimpang dari
+      ADR-0010). `WalletRepository`/`TransactionRepository` di-mock lewat
+      `test/helpers/mocks.dart` (dipakai lintas ketiga berkas, sesuai batasan
+      ADR-0010 §8 "≥3 berkas"); `RecordTransaction`/`RecomputeWalletBalances`
+      TIDAK di-mock -- keduanya `final class`, tidak bisa `implements` dari
+      luar library-nya, dan lagipula logikanya murni Dart yang justru ingin
+      diuji SUNGGUHAN di atas repository yang di-mock (pola ADR-0010 §4
+      "use case diuji dengan mock yang sama").
+      ⚠ Jebakan yang persis diperingatkan tugas ini: karena mock tidak
+      mengingat pemanggilan sebelumnya (beda dari fake/`InMemoryKeyValueStorage`),
+      `listWallets()` yang dipanggil ULANG setelah `saveWallet()`/recompute
+      (pola "tulis lalu muat ulang" di `_afterWrite`) harus di-stub eksplisit
+      mengembalikan nilai "seolah sudah tersimpan" -- lihat komentar di
+      `transaction_bloc_test.dart` uji "menyunting nominal...". Tanpa ini,
+      state akhir yang dibaca ulang tetap menunjukkan nilai lama walau
+      `saveWallet` sudah diverifikasi terpanggil dengan argumen yang benar.
+      ⚠ `registerFallbackValue` wajib untuk SETIAP tipe non-primitif yang
+      dipakai lewat `any()`/`captureAny()` -- lupa satu tipe (mis. `Transaction`
+      untuk `verifyNever(() => repo.saveTransaction(any()))`) melempar
+      `Bad state` yang GAGALNYA baru terlihat di uji sesudahnya, bukan di
+      uji yang sebenarnya salah (mirip gejala ADR-0010 §7's "ketahuan saat
+      runtime, bukan lebih awal").
       Memenuhi NFR-ACC-002.
-- [ ] **T-2.10** Jalankan di perangkat atau emulator, telusuri loop inti: buat
+- [x] **T-2.10** Jalankan di perangkat atau emulator, telusuri loop inti: buat
       dompet, catat pemasukan, catat pengeluaran, catat transfer, dan pastikan
       saldo bergerak persis seperti yang dijanjikan model.
+      ⚠ Ditelusuri di emulator (`emulator-5554`): dompet baru "Dompet Uji"
+      (CASH, saldo awal Rp0) dibuat lewat tab Dompet, lalu tiga transaksi
+      dicatat lewat pintasan CATAT di layar rincian dompet itu sendiri
+      (T-2.8) — pemasukan Rp1.000.000 (Rp0 → Rp1.000.000), pengeluaran
+      Rp250.000 (→ Rp750.000), transfer Rp500.000 ke Rekening BCA
+      (→ Rp250.000, dan BCA naik Rp1.234.567.890 → Rp1.235.067.890 di layar
+      Dompet). Ringkasan Masuk/Keluar/Neto (T-2.8, ronde kedua) terbukti
+      benar sepanjang jalan: Rp1.000.000/Rp0/+Rp1.000.000 setelah pemasukan,
+      lalu Rp1.000.000/Rp250.000/+Rp750.000 setelah pengeluaran, TIDAK
+      berubah lagi setelah transfer (aturan 7 — transfer tidak dihitung).
+      Setiap dompet pra-terisi dengan dompet sasaran CATAT-nya sendiri
+      (FR-REC-002), dan snackbar "Income recorded."/"Expense recorded."/
+      "Transfer recorded." tampil tiap kali.
       Memenuhi NFR-PERF-001 dan NFR-UX-001.
 
 ## Fase 3: Cutover

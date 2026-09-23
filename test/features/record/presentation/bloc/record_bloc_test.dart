@@ -1,170 +1,255 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:memory_storage/memory_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
-/// Pembungkus [WalletRepository] yang bisa dipaksa gagal lewat [shouldFail],
-/// dipakai untuk menguji `RecordState.loadFailed` tanpa mocktail -- perilaku
-/// yang diuji murni "gagal lalu berhasil lagi", bukan interaksi method.
-final class _FlakyWalletRepository implements WalletRepository {
-  _FlakyWalletRepository(this._delegate);
+import '../../../../helpers/mocks.dart';
 
-  final WalletRepository _delegate;
-
-  /// `true` membuat [listWallets] SELALU mengembalikan `Left`.
-  bool shouldFail = false;
-
-  @override
-  Future<Either<Failure, List<Wallet>>> listWallets() async {
-    if (shouldFail) {
-      return const Left(SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'));
-    }
-    return _delegate.listWallets();
-  }
-
-  @override
-  Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => _delegate.saveWallet(wallet);
-
-  @override
-  Future<Either<Failure, Unit>> deleteWallet(String id) => _delegate.deleteWallet(id);
-}
+const _forcedFailure = SystemFailure(
+  code: FailureCode('TEST_FORCED_FAILURE'),
+  message: 'dipaksa gagal untuk uji',
+);
 
 void main() {
-  late InMemoryKeyValueStorage storage;
-  late WalletRepositoryImpl walletRepository;
-  late TransactionRepositoryImpl transactionRepository;
+  late MockWalletRepository walletRepository;
+  late MockTransactionRepository transactionRepository;
 
-  setUp(() async {
-    storage = InMemoryKeyValueStorage();
-    walletRepository = WalletRepositoryImpl(storage: storage);
-    transactionRepository = TransactionRepositoryImpl(storage: storage);
-    await walletRepository.saveWallet(
-      const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 500000000),
-    );
-    await walletRepository.saveWallet(
-      const Wallet(id: 'gopay', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 0, currentBalance: 0),
-    );
-    await walletRepository.saveWallet(
-      const Wallet(
-        id: 'lama',
-        name: 'Dompet Lama',
-        iconKey: 'walletCash',
-        initialBalance: 0,
-        currentBalance: 0,
-        isActive: false,
-      ),
-    );
+  setUpAll(() {
+    registerFallbackValue(fallbackWallet);
+    registerFallbackValue(fallbackTransaction);
   });
 
-  RecordBloc buildBloc() {
-    return RecordBloc(
-      walletRepository: walletRepository,
-      recordTransaction: RecordTransaction(
-        transactionRepository: transactionRepository,
-        recomputeWalletBalances: RecomputeWalletBalances(
-          walletRepository: walletRepository,
-          transactionRepository: transactionRepository,
+  setUp(() {
+    walletRepository = MockWalletRepository();
+    transactionRepository = MockTransactionRepository();
+    when(() => walletRepository.listWallets()).thenAnswer(
+      (_) async => const Right([
+        Wallet(
+          id: 'bca',
+          name: 'BCA',
+          iconKey: 'walletBank',
+          initialBalance: 500000000,
+          currentBalance: 500000000,
         ),
-      ),
+        Wallet(
+          id: 'gopay',
+          name: 'GoPay',
+          iconKey: 'walletEwallet',
+          initialBalance: 0,
+          currentBalance: 0,
+        ),
+        Wallet(
+          id: 'lama',
+          name: 'Dompet Lama',
+          iconKey: 'walletCash',
+          initialBalance: 0,
+          currentBalance: 0,
+          isActive: false,
+        ),
+      ]),
     );
-  }
+    when(
+      () => transactionRepository.saveTransaction(
+        any(),
+        previousDate: any(named: 'previousDate'),
+      ),
+    ).thenAnswer(
+      (_) async => const Right(unit),
+    );
+    when(
+      () => walletRepository.saveWallet(any()),
+    ).thenAnswer((_) async => const Right(unit));
+  });
 
-  Future<int> balanceOf(String walletId) async {
-    final wallets = (await walletRepository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
-    return wallets.firstWhere((w) => w.id == walletId).currentBalance;
-  }
+  RecordBloc buildBloc() => RecordBloc(
+    walletRepository: walletRepository,
+    recordTransaction: RecordTransaction(
+      transactionRepository: transactionRepository,
+      recomputeWalletBalances: RecomputeWalletBalances(
+        walletRepository: walletRepository,
+        transactionRepository: transactionRepository,
+      ),
+    ),
+  );
 
   group('RecordBloc', () {
-    test('RecordWalletsLoaded memuat dompet AKTIF saja', () async {
-      final bloc = buildBloc()..add(const RecordWalletsLoaded());
-      await bloc.stream.firstWhere((s) => !s.isLoading);
-
-      expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
-      expect(bloc.state.wallets.map((w) => w.id), isNot(contains('lama')));
-    });
-
-    test(
-      'kegagalan pemuatan dompet menyetel loadFailed true, pemuatan berhasil berikutnya menyetelnya balik ke false',
-      () async {
-        final flaky = _FlakyWalletRepository(walletRepository)..shouldFail = true;
-        final bloc = RecordBloc(
-          walletRepository: flaky,
-          recordTransaction: RecordTransaction(
-            transactionRepository: transactionRepository,
-            recomputeWalletBalances: RecomputeWalletBalances(
-              walletRepository: flaky,
-              transactionRepository: transactionRepository,
-            ),
-          ),
-        )..add(const RecordWalletsLoaded());
-        await bloc.stream.firstWhere((s) => !s.isLoading);
-        expect(bloc.state.loadFailed, isTrue);
-        expect(bloc.state.wallets, isEmpty);
-
-        flaky.shouldFail = false;
-        bloc.add(const RecordWalletsLoaded());
-        await bloc.stream.firstWhere((s) => !s.isLoading);
-        expect(bloc.state.loadFailed, isFalse);
-        expect(bloc.state.wallets.map((w) => w.id), containsAll(['bca', 'gopay']));
+    blocTest<RecordBloc, RecordState>(
+      'RecordWalletsLoaded memuat dompet AKTIF saja',
+      build: buildBloc,
+      act: (bloc) => bloc.add(const RecordWalletsLoaded()),
+      skip: 1,
+      verify: (bloc) {
+        expect(
+          bloc.state.wallets.map((w) => w.id),
+          containsAll(['bca', 'gopay']),
+        );
+        expect(bloc.state.wallets.map((w) => w.id), isNot(contains('lama')));
       },
     );
 
-    test('IncomeRecorded mencatat transaksi dan menambah saldo dompet tujuan', () async {
-      final bloc = buildBloc()
-        ..add(IncomeRecorded(walletId: 'bca', amount: 261543800, date: DateTime(2026, 9), note: 'gaji'));
-      await bloc.stream.firstWhere((s) => !s.isSaving);
+    blocTest<RecordBloc, RecordState>(
+      'kegagalan pemuatan dompet menyetel loadFailed true',
+      setUp: () => when(
+        () => walletRepository.listWallets(),
+      ).thenAnswer((_) async => const Left(_forcedFailure)),
+      build: buildBloc,
+      act: (bloc) => bloc.add(const RecordWalletsLoaded()),
+      skip: 1,
+      expect: () => [
+        isA<RecordState>()
+            .having((s) => s.loadFailed, 'loadFailed', true)
+            .having((s) => s.wallets, 'wallets', isEmpty),
+      ],
+    );
 
-      expect(await balanceOf('bca'), 761543800);
-      expect(bloc.state.effect, isA<ShowSnackBarEffect>());
-    });
-
-    test('ExpenseRecorded mencatat transaksi dan mengurangi saldo dompet asal', () async {
-      final bloc = buildBloc()
-        ..add(
-          ExpenseRecorded(walletId: 'bca', amount: 75000, date: DateTime(2026, 9), note: 'kopi', categoryKey: 'makan'),
+    blocTest<RecordBloc, RecordState>(
+      'IncomeRecorded mencatat transaksi dan menambah saldo dompet tujuan',
+      setUp: () {
+        when(() => transactionRepository.listAllTransactions()).thenAnswer(
+          (_) async => Right([
+            IncomeTransaction(
+              id: 'i1',
+              date: DateTime(2026, 9),
+              amount: 261543800,
+              note: 'gaji',
+              walletId: 'bca',
+            ),
+          ]),
         );
-      await bloc.stream.firstWhere((s) => !s.isSaving);
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        IncomeRecorded(
+          walletId: 'bca',
+          amount: 261543800,
+          date: DateTime(2026, 9),
+          note: 'gaji',
+        ),
+      ),
+      verify: (bloc) {
+        final saved =
+            verify(
+                  () => walletRepository.saveWallet(captureAny()),
+                ).captured.single
+                as Wallet;
+        expect(
+          saved.currentBalance,
+          761543800,
+          reason: '500.000.000 awal + 261.543.800',
+        );
+        expect(bloc.state.effect, isA<ShowSnackBarEffect>());
+      },
+    );
 
-      expect(await balanceOf('bca'), 499925000);
-    });
+    blocTest<RecordBloc, RecordState>(
+      'ExpenseRecorded mencatat transaksi dan mengurangi saldo dompet asal',
+      setUp: () {
+        when(() => transactionRepository.listAllTransactions()).thenAnswer(
+          (_) async => Right([
+            ExpenseTransaction(
+              id: 'e1',
+              date: DateTime(2026, 9),
+              amount: 75000,
+              note: 'kopi',
+              walletId: 'bca',
+              categoryKey: 'makan',
+            ),
+          ]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        ExpenseRecorded(
+          walletId: 'bca',
+          amount: 75000,
+          date: DateTime(2026, 9),
+          note: 'kopi',
+          categoryKey: 'makan',
+        ),
+      ),
+      verify: (bloc) {
+        final saved =
+            verify(
+                  () => walletRepository.saveWallet(captureAny()),
+                ).captured.single
+                as Wallet;
+        expect(saved.currentBalance, 499925000);
+      },
+    );
 
-    test('TransferRecorded mengurangi dompet asal dan menambah dompet tujuan sekaligus', () async {
-      final bloc = buildBloc()
-        ..add(
-          TransferRecorded(
-            fromWalletId: 'bca',
-            toWalletId: 'gopay',
-            amount: 100000000,
-            date: DateTime(2026, 9),
-            note: '',
+    blocTest<RecordBloc, RecordState>(
+      'TransferRecorded mengurangi dompet asal dan menambah dompet tujuan sekaligus',
+      setUp: () {
+        when(() => transactionRepository.listAllTransactions()).thenAnswer(
+          (_) async => Right([
+            TransferTransaction(
+              id: 't1',
+              date: DateTime(2026, 9),
+              amount: 100000000,
+              note: '',
+              fromWalletId: 'bca',
+              toWalletId: 'gopay',
+            ),
+          ]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        TransferRecorded(
+          fromWalletId: 'bca',
+          toWalletId: 'gopay',
+          amount: 100000000,
+          date: DateTime(2026, 9),
+          note: '',
+        ),
+      ),
+      verify: (bloc) {
+        final saved = verify(
+          () => walletRepository.saveWallet(captureAny()),
+        ).captured.cast<Wallet>();
+        expect(
+          saved.firstWhere((w) => w.id == 'bca').currentBalance,
+          400000000,
+        );
+        expect(
+          saved.firstWhere((w) => w.id == 'gopay').currentBalance,
+          100000000,
+        );
+      },
+    );
+
+    blocTest<RecordBloc, RecordState>(
+      'gagal menulis memancarkan efek galat, bukan galat berhasil',
+      setUp: () {
+        when(
+          () => transactionRepository.saveTransaction(
+            any(),
+            previousDate: any(named: 'previousDate'),
           ),
+        ).thenAnswer((_) async => const Left(_forcedFailure));
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        IncomeRecorded(
+          walletId: 'bca',
+          amount: 1000,
+          date: DateTime(2026, 9),
+          note: '',
+        ),
+      ),
+      verify: (bloc) {
+        expect(
+          (bloc.state.effect! as ShowSnackBarEffect).severity,
+          FeedbackSeverity.error,
         );
-      await bloc.stream.firstWhere((s) => !s.isSaving);
-
-      expect(await balanceOf('bca'), 400000000);
-      expect(await balanceOf('gopay'), 100000000);
-    });
-
-    test('efek berhasil berbeda kalimatnya per jenis transaksi', () async {
-      final incomeBloc = buildBloc()
-        ..add(IncomeRecorded(walletId: 'bca', amount: 1000, date: DateTime(2026, 9), note: ''));
-      await incomeBloc.stream.firstWhere((s) => !s.isSaving);
-      final incomeEffect = incomeBloc.state.effect;
-      expect(incomeEffect, isA<ShowSnackBarEffect>());
-
-      final transferBloc = buildBloc()
-        ..add(
-          TransferRecorded(fromWalletId: 'bca', toWalletId: 'gopay', amount: 1000, date: DateTime(2026, 9), note: ''),
-        );
-      await transferBloc.stream.firstWhere((s) => !s.isSaving);
-      final transferEffect = transferBloc.state.effect;
-      expect(transferEffect, isA<ShowSnackBarEffect>());
-
-      expect((incomeEffect! as ShowSnackBarEffect).message, isNot((transferEffect! as ShowSnackBarEffect).message));
-    });
+        verifyNever(() => walletRepository.saveWallet(any()));
+      },
+    );
   });
 }

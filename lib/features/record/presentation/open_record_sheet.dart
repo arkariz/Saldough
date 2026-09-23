@@ -25,7 +25,14 @@ import 'package:state_management/state_management.dart';
 /// [context] harus berada di keturunan `BlocProvider<RecordBloc>` (dipasang
 /// sekali di `AppShellPage`, membungkus seluruh tab dan lembar yang
 /// dibukanya) supaya `context.read<RecordBloc>()` di bawah ini menemukannya.
-Future<void> openRecordSheet(BuildContext context) async {
+///
+/// [initialWalletId], kalau terisi, mengisi awal dompet pada formulir yang
+/// dipilih pengguna (FR-REC-002) -- pintasan kontekstual dari layar rincian
+/// dompet (T-2.8). Titik panggil ketiga: `WalletDetailPage`.
+Future<void> openRecordSheet(
+  BuildContext context, {
+  String? initialWalletId,
+}) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
   if (!context.mounted) return;
@@ -46,9 +53,18 @@ Future<void> openRecordSheet(BuildContext context) async {
     final result = await showFullScreenSheet<Object>(
       context,
       builder: (_) => switch (choice) {
-        RecordChoice.income => IncomeFormSheet(wallets: wallets),
-        RecordChoice.expense => ExpenseFormSheet(wallets: wallets),
-        RecordChoice.transfer => TransferFormSheet(wallets: wallets),
+        RecordChoice.income => IncomeFormSheet(
+          wallets: wallets,
+          initialWalletId: initialWalletId,
+        ),
+        RecordChoice.expense => ExpenseFormSheet(
+          wallets: wallets,
+          initialWalletId: initialWalletId,
+        ),
+        RecordChoice.transfer => TransferFormSheet(
+          wallets: wallets,
+          initialWalletId: initialWalletId,
+        ),
       },
     );
     if (result == null || !context.mounted) return;

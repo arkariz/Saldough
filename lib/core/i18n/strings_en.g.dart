@@ -560,6 +560,16 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get deletedMessage => 'Wallet deleted.';
 	@override String get deleteBlockedMessage => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.';
 	@override String get privacyNote => 'Data is stored locally and privately on your device.';
+	@override String get detailBackLabel => 'Back';
+	@override String get detailEditAction => 'Edit';
+	@override String get detailRecentHeading => 'This Month\'s Transactions';
+	@override String get detailIncomeLabel => 'In';
+	@override String get detailExpenseLabel => 'Out';
+	@override String get detailNetLabel => 'Net';
+	@override String get detailRecentEmptyTitle => 'No transactions yet';
+	@override String get detailRecentEmpty => 'No transactions this month for this wallet yet.';
+	@override String get detailViewAllAction => 'View All Transactions';
+	@override String get detailRecordAction => 'Record a Transaction for This Wallet';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -961,6 +971,16 @@ extension on TranslationsEn {
 			'wallet.deletedMessage' => 'Wallet deleted.',
 			'wallet.deleteBlockedMessage' => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.',
 			'wallet.privacyNote' => 'Data is stored locally and privately on your device.',
+			'wallet.detailBackLabel' => 'Back',
+			'wallet.detailEditAction' => 'Edit',
+			'wallet.detailRecentHeading' => 'This Month\'s Transactions',
+			'wallet.detailIncomeLabel' => 'In',
+			'wallet.detailExpenseLabel' => 'Out',
+			'wallet.detailNetLabel' => 'Net',
+			'wallet.detailRecentEmptyTitle' => 'No transactions yet',
+			'wallet.detailRecentEmpty' => 'No transactions this month for this wallet yet.',
+			'wallet.detailViewAllAction' => 'View All Transactions',
+			'wallet.detailRecordAction' => 'Record a Transaction for This Wallet',
 			_ => null,
 		};
 	}

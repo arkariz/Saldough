@@ -39,7 +39,12 @@ List<String> _categorySuggestions() => [
 /// dibangun: bukan bagian kebutuhan produk.
 class ExpenseFormSheet extends StatefulWidget {
   /// Membuat [ExpenseFormSheet] dengan [wallets] sebagai pilihan asal.
-  const ExpenseFormSheet({required this.wallets, this.initial, super.key});
+  const ExpenseFormSheet({
+    required this.wallets,
+    this.initial,
+    this.initialWalletId,
+    super.key,
+  });
 
   /// Dompet aktif yang bisa dipilih sebagai asal.
   final List<Wallet> wallets;
@@ -49,6 +54,11 @@ class ExpenseFormSheet extends StatefulWidget {
   /// tombol kembali hanya menutup lembar (tidak ada lembar pilihan CATAT
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final ExpenseTransaction? initial;
+
+  /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
+  /// dompet). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
+  /// dompet transaksi itu sendiri.
+  final String? initialWalletId;
 
   @override
   State<ExpenseFormSheet> createState() => _ExpenseFormSheetState();
@@ -65,7 +75,10 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial;
-    if (tx == null) return;
+    if (tx == null) {
+      _walletId = widget.initialWalletId;
+      return;
+    }
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
     _date = tx.date;
     _noteController.text = tx.note;
@@ -105,7 +118,9 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         amount: amount,
         date: _date,
         note: _noteController.text.trim(),
-        categoryKey: _categoryController.text.trim().isEmpty ? null : _categoryController.text.trim(),
+        categoryKey: _categoryController.text.trim().isEmpty
+            ? null
+            : _categoryController.text.trim(),
       ),
     );
   }
@@ -119,9 +134,15 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
       kind: TransactionKind.expense,
       title: editing ? t.transaction.editSheetTitle : t.record.expenseAction,
       isEditing: editing,
-      onBack: () => Navigator.of(context).pop(editing ? null : const BackToChoice()),
-      notice: RecordNotice(title: t.record.expenseRuleTitle, body: t.record.expenseRuleBody),
-      submitLabel: editing ? t.transaction.saveChangesAction : t.record.expenseAction,
+      onBack: () =>
+          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      notice: RecordNotice(
+        title: t.record.expenseRuleTitle,
+        body: t.record.expenseRuleBody,
+      ),
+      submitLabel: editing
+          ? t.transaction.saveChangesAction
+          : t.record.expenseAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
         RecordAmountField(
@@ -150,13 +171,19 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           kind: TransactionKind.expense,
           onChanged: (date) => setState(() => _date = date),
         ),
-        RecordNoteField(controller: _noteController, kind: TransactionKind.expense),
+        RecordNoteField(
+          controller: _noteController,
+          kind: TransactionKind.expense,
+        ),
         if (_canSubmit && wallet != null && amount != null)
           RecordSummaryCard(
             kind: TransactionKind.expense,
             children: [
               Text(
-                t.record.expenseSummary(wallet: wallet.name, amount: AppMoneyFormatter.format(amount)),
+                t.record.expenseSummary(
+                  wallet: wallet.name,
+                  amount: AppMoneyFormatter.format(amount),
+                ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

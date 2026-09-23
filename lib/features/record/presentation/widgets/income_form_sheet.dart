@@ -35,7 +35,12 @@ List<String> _categorySuggestions() => [
 /// visual `pixel_kas_catat_pemasukan`.
 class IncomeFormSheet extends StatefulWidget {
   /// Membuat [IncomeFormSheet] dengan [wallets] sebagai pilihan tujuan.
-  const IncomeFormSheet({required this.wallets, this.initial, super.key});
+  const IncomeFormSheet({
+    required this.wallets,
+    this.initial,
+    this.initialWalletId,
+    super.key,
+  });
 
   /// Dompet aktif yang bisa dipilih sebagai tujuan.
   final List<Wallet> wallets;
@@ -45,6 +50,11 @@ class IncomeFormSheet extends StatefulWidget {
   /// tombol kembali hanya menutup lembar (tidak ada lembar pilihan CATAT
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final IncomeTransaction? initial;
+
+  /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
+  /// dompet). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
+  /// dompet transaksi itu sendiri.
+  final String? initialWalletId;
 
   @override
   State<IncomeFormSheet> createState() => _IncomeFormSheetState();
@@ -61,7 +71,10 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial;
-    if (tx == null) return;
+    if (tx == null) {
+      _walletId = widget.initialWalletId;
+      return;
+    }
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
     _date = tx.date;
     _noteController.text = tx.note;
@@ -101,7 +114,9 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         amount: amount,
         date: _date,
         note: _noteController.text.trim(),
-        categoryKey: _categoryController.text.trim().isEmpty ? null : _categoryController.text.trim(),
+        categoryKey: _categoryController.text.trim().isEmpty
+            ? null
+            : _categoryController.text.trim(),
       ),
     );
   }
@@ -115,8 +130,11 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       kind: TransactionKind.income,
       title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
       isEditing: editing,
-      onBack: () => Navigator.of(context).pop(editing ? null : const BackToChoice()),
-      submitLabel: editing ? t.transaction.saveChangesAction : t.record.incomeAction,
+      onBack: () =>
+          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      submitLabel: editing
+          ? t.transaction.saveChangesAction
+          : t.record.incomeAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
         RecordAmountField(
@@ -144,13 +162,19 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           kind: TransactionKind.income,
           onChanged: (date) => setState(() => _date = date),
         ),
-        RecordNoteField(controller: _noteController, kind: TransactionKind.income),
+        RecordNoteField(
+          controller: _noteController,
+          kind: TransactionKind.income,
+        ),
         if (_canSubmit && wallet != null && amount != null)
           RecordSummaryCard(
             kind: TransactionKind.income,
             children: [
               Text(
-                t.record.incomeSummary(wallet: wallet.name, amount: AppMoneyFormatter.format(amount)),
+                t.record.incomeSummary(
+                  wallet: wallet.name,
+                  amount: AppMoneyFormatter.format(amount),
+                ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

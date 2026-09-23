@@ -414,6 +414,16 @@
     "updatedMessage": "Dompet diperbarui.",
     "deletedMessage": "Dompet dihapus.",
     "deleteBlockedMessage": "Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.",
-    "privacyNote": "Data tersimpan lokal dan privat di perangkatmu."
+    "privacyNote": "Data tersimpan lokal dan privat di perangkatmu.",
+    "detailBackLabel": "Kembali",
+    "detailEditAction": "Sunting",
+    "detailRecentHeading": "Transaksi Bulan Ini",
+    "detailIncomeLabel": "Masuk",
+    "detailExpenseLabel": "Keluar",
+    "detailNetLabel": "Neto",
+    "detailRecentEmptyTitle": "Belum ada transaksi",
+    "detailRecentEmpty": "Belum ada transaksi bulan ini untuk dompet ini.",
+    "detailViewAllAction": "Lihat Semua Transaksi",
+    "detailRecordAction": "Catat Transaksi Dompet Ini"
   }
 }

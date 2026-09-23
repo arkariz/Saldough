@@ -414,6 +414,16 @@
     "updatedMessage": "Wallet updated.",
     "deletedMessage": "Wallet deleted.",
     "deleteBlockedMessage": "This wallet already has transactions, so it can't be deleted. Deactivate it instead.",
-    "privacyNote": "Data is stored locally and privately on your device."
+    "privacyNote": "Data is stored locally and privately on your device.",
+    "detailBackLabel": "Back",
+    "detailEditAction": "Edit",
+    "detailRecentHeading": "This Month's Transactions",
+    "detailIncomeLabel": "In",
+    "detailExpenseLabel": "Out",
+    "detailNetLabel": "Net",
+    "detailRecentEmptyTitle": "No transactions yet",
+    "detailRecentEmpty": "No transactions this month for this wallet yet.",
+    "detailViewAllAction": "View All Transactions",
+    "detailRecordAction": "Record a Transaction for This Wallet"
   }
 }

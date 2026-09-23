@@ -34,7 +34,12 @@ const _quickAmounts = [500000, 1000000, 5000000];
 /// saldo dan pembatalannya) yang belum diputuskan pemilik.
 class TransferFormSheet extends StatefulWidget {
   /// Membuat [TransferFormSheet] dengan [wallets] sebagai pilihan asal/tujuan.
-  const TransferFormSheet({required this.wallets, this.initial, super.key});
+  const TransferFormSheet({
+    required this.wallets,
+    this.initial,
+    this.initialWalletId,
+    super.key,
+  });
 
   /// Dompet aktif yang bisa dipilih sebagai asal maupun tujuan.
   final List<Wallet> wallets;
@@ -44,6 +49,11 @@ class TransferFormSheet extends StatefulWidget {
   /// tombol kembali hanya menutup lembar (tidak ada lembar pilihan CATAT
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final TransferTransaction? initial;
+
+  /// Dompet ASAL pra-terpilih (FR-REC-002, pintasan dari layar rincian
+  /// dompet) -- pintasan dari satu dompet paling wajar berarti "dari dompet
+  /// ini", bukan tujuannya. Diabaikan kalau [initial] terisi.
+  final String? initialWalletId;
 
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
@@ -60,7 +70,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial;
-    if (tx == null) return;
+    if (tx == null) {
+      _fromWalletId = widget.initialWalletId;
+      return;
+    }
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
     _date = tx.date;
     _noteController.text = tx.note;
@@ -85,7 +98,11 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   /// domain yang tidak berjalan di rilis production.
   bool get _sameWallet => _fromWalletId != null && _fromWalletId == _toWalletId;
 
-  bool get _canSubmit => _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
+  bool get _canSubmit =>
+      _amountSen != null &&
+      _fromWalletId != null &&
+      _toWalletId != null &&
+      !_sameWallet;
 
   Wallet? _find(String? id) {
     for (final wallet in widget.wallets) {
@@ -122,9 +139,15 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       kind: TransactionKind.transfer,
       title: editing ? t.transaction.editSheetTitle : t.record.transferAction,
       isEditing: editing,
-      onBack: () => Navigator.of(context).pop(editing ? null : const BackToChoice()),
-      notice: RecordNotice(title: t.record.transferNoticeTitle, body: t.record.transferNoticeBody),
-      submitLabel: editing ? t.transaction.saveChangesAction : t.record.transferAction,
+      onBack: () =>
+          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      notice: RecordNotice(
+        title: t.record.transferNoticeTitle,
+        body: t.record.transferNoticeBody,
+      ),
+      submitLabel: editing
+          ? t.transaction.saveChangesAction
+          : t.record.transferAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
         RecordAmountField(
@@ -160,7 +183,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             ),
             if (_sameWallet) ...[
               const SizedBox(height: AppSpacing.xs),
-              Text(t.record.sameWalletWarning, style: TextStyle(color: colors.expense)),
+              Text(
+                t.record.sameWalletWarning,
+                style: TextStyle(color: colors.expense),
+              ),
             ],
           ],
         ),
@@ -169,7 +195,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           kind: TransactionKind.transfer,
           onChanged: (date) => setState(() => _date = date),
         ),
-        RecordNoteField(controller: _noteController, kind: TransactionKind.transfer),
+        RecordNoteField(
+          controller: _noteController,
+          kind: TransactionKind.transfer,
+        ),
         if (_canSubmit && from != null && to != null && money != null)
           RecordSummaryCard(
             kind: TransactionKind.transfer,
@@ -177,15 +206,23 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             children: [
               Text(
                 t.record.transferSummaryFrom(wallet: from.name, amount: money),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: colors.expense, fontWeight: FontWeight.w700),
+                style:
+                    Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(
+                      color: colors.expense,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               Text(
                 t.record.transferSummaryTo(wallet: to.name, amount: money),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: colors.income, fontWeight: FontWeight.w700),
+                style:
+                    Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(
+                      color: colors.income,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
             ],
           ),

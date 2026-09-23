@@ -1344,6 +1344,36 @@ class Translations$wallet$id {
 
 	/// id: 'Data tersimpan lokal dan privat di perangkatmu.'
 	String get privacyNote => 'Data tersimpan lokal dan privat di perangkatmu.';
+
+	/// id: 'Kembali'
+	String get detailBackLabel => 'Kembali';
+
+	/// id: 'Sunting'
+	String get detailEditAction => 'Sunting';
+
+	/// id: 'Transaksi Bulan Ini'
+	String get detailRecentHeading => 'Transaksi Bulan Ini';
+
+	/// id: 'Masuk'
+	String get detailIncomeLabel => 'Masuk';
+
+	/// id: 'Keluar'
+	String get detailExpenseLabel => 'Keluar';
+
+	/// id: 'Neto'
+	String get detailNetLabel => 'Neto';
+
+	/// id: 'Belum ada transaksi'
+	String get detailRecentEmptyTitle => 'Belum ada transaksi';
+
+	/// id: 'Belum ada transaksi bulan ini untuk dompet ini.'
+	String get detailRecentEmpty => 'Belum ada transaksi bulan ini untuk dompet ini.';
+
+	/// id: 'Lihat Semua Transaksi'
+	String get detailViewAllAction => 'Lihat Semua Transaksi';
+
+	/// id: 'Catat Transaksi Dompet Ini'
+	String get detailRecordAction => 'Catat Transaksi Dompet Ini';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1745,6 +1775,16 @@ extension on Translations {
 			'wallet.deletedMessage' => 'Dompet dihapus.',
 			'wallet.deleteBlockedMessage' => 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.',
 			'wallet.privacyNote' => 'Data tersimpan lokal dan privat di perangkatmu.',
+			'wallet.detailBackLabel' => 'Kembali',
+			'wallet.detailEditAction' => 'Sunting',
+			'wallet.detailRecentHeading' => 'Transaksi Bulan Ini',
+			'wallet.detailIncomeLabel' => 'Masuk',
+			'wallet.detailExpenseLabel' => 'Keluar',
+			'wallet.detailNetLabel' => 'Neto',
+			'wallet.detailRecentEmptyTitle' => 'Belum ada transaksi',
+			'wallet.detailRecentEmpty' => 'Belum ada transaksi bulan ini untuk dompet ini.',
+			'wallet.detailViewAllAction' => 'Lihat Semua Transaksi',
+			'wallet.detailRecordAction' => 'Catat Transaksi Dompet Ini',
 			_ => null,
 		};
 	}

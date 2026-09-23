@@ -21,19 +21,19 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 20 September 2026.
+Terakhir diperbarui: 23 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
-| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 8 | Berjalan |
+| 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 9 | Berjalan |
 | 3 — Cutover | 9 | 0 | Gerbang |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **28** | |
+| **Total MVP** | **76** | **29** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -510,10 +510,43 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       `FitStart`, `showFullScreenSheet`, dan helper input rupiah
       (`core/utils/formatters/rupiah_input.dart`).
       Memenuhi FR-WAL-001, FR-WAL-002, dan FR-WAL-003.
-- [ ] **T-2.8** Buat layar rincian dompet: riwayat tersaring dan pintasan ke
+- [x] **T-2.8** Buat layar rincian dompet: riwayat tersaring dan pintasan ke
       CATAT dengan dompet ini sudah terpilih.
-      ⚠ Pintasan kontekstual memakai alur dan entitas CATAT yang sama persis,
-      bukan implementasi tersendiri.
+      ⚠ `WalletDetailPage` (`features/wallet/presentation/pages/`) dibuka
+      lewat `openWalletDetail`, dipush dari `WalletListPage` -- kartu dompet
+      TIDAK lagi membuka formulir sunting langsung (T-2.7), sekarang membuka
+      layar ini; tombol "Sunting" pindah ke bilah atasnya. Sunting yang
+      berhasil MENUTUP layar ini (pola sama seperti `TransactionDetailPage._edit`);
+      hapus baru menutupnya kalau sungguhan berhasil (bisa diblokir kalau
+      dompet sudah punya transaksi, lihat T-2.7), supaya pesan blokirnya
+      tetap terlihat di layar yang sama.
+      ⚠ Riwayat di layar ini HANYA transaksi BULAN BERJALAN, diambil dari
+      `TransactionBloc.rawTransactions` yang sudah dimuat di level shell
+      (bukan bloc baru) -- `TransactionRepository.listAllTransactions()`
+      reserved untuk penghitungan ulang saldo, bukan untuk merender layar
+      (ADR-012, buku besar dipartisi per bulan). Maks 5 transaksi terbaru
+      ditampilkan; "Lihat Semua Transaksi" mengirim
+      `TransactionWalletFilterChanged` ke `TransactionBloc` yang SAMA lalu
+      mem-push `TransactionListPage` (pola push+`BlocProvider.value` sama
+      seperti `openTransactionDetail`) -- filternya bertahan sampai
+      pengguna menghapusnya sendiri, bukan sesuatu yang salah.
+      ⚠ Pintasan CATAT (FR-REC-002) menambah parameter `initialWalletId` pada
+      `openRecordSheet`/`IncomeFormSheet`/`ExpenseFormSheet`/`TransferFormSheet`
+      -- diabaikan kalau mode sunting (`initial` terisi). Untuk transfer,
+      dompet pintasan mengisi ASAL (`_fromWalletId`), bukan tujuan, karena
+      pintasan dari satu dompet paling wajar dibaca "dari dompet ini". Tetap
+      memakai alur dan entitas CATAT yang sama persis (loop pilihan lalu
+      formulir di `openRecordSheet`), bukan implementasi tersendiri.
+      ⚠ Ronde kedua (umpan balik pemilik): ditambah ringkasan Masuk/Keluar/
+      Neto bulan ini di atas daftar riwayat (`_MonthSummaryRow`) -- dihitung
+      dari SELURUH transaksi bulan yang menyentuh dompet ini (bukan hanya 5
+      baris yang ditampilkan), dan transfer TIDAK ikut dihitung (CLAUDE.md
+      aturan 7), sama seperti `TransactionMonthHeader._totals` di tab
+      Transaksi. Keadaan kosong riwayat diganti dari teks polos menjadi
+      ikon + judul + deskripsi (`_EmptyRecentTransactions`), bahasa visual
+      yang sama dengan `TransactionEmptyMonthState`/`WalletEmptyState`
+      lainnya, diperkecil skalanya karena ini bagian dari halaman, bukan
+      seluruh layar (CTA "Catat" sudah ada di atas, tidak diulang).
       Memenuhi FR-WAL-004 dan FR-REC-002.
 
 ### Verifikasi

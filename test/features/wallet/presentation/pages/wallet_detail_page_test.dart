@@ -158,70 +158,111 @@ void main() {
       },
     );
 
+    Future<void> seedMonth() async {
+      await seedWallet('a', 'BCA', current: 100000000);
+      await seedWallet('b', 'GoPay', icon: 'walletEwallet');
+      final now = DateTime.now();
+      await transactionRepository.saveTransaction(
+        IncomeTransaction(
+          id: 'i1',
+          date: now,
+          amount: 500000000,
+          note: '',
+          walletId: 'a',
+        ),
+      );
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(
+          id: 'e1',
+          date: now,
+          amount: 7500000,
+          note: '',
+          walletId: 'a',
+        ),
+      );
+      await transactionRepository.saveTransaction(
+        TransferTransaction(
+          id: 't1',
+          date: now,
+          amount: 20000000,
+          note: '',
+          fromWalletId: 'a',
+          toWalletId: 'b',
+        ),
+      );
+    }
+
     testWidgets(
-      'ringkasan masuk/keluar/neto bulan ini -- transfer tidak ikut dihitung (aturan 7)',
+      'ringkasan bulan ini: pemasukan/pengeluaran tanpa transfer (aturan 7), '
+      'transfer di baris sendiri, perubahan saldo menyertakannya',
+      (tester) async {
+        await seedMonth();
+        await openDetail(tester, 'BCA');
+
+        expect(
+          find.text('Rp5.000.000'),
+          findsOneWidget,
+          reason: 'pemasukan: hanya pemasukan',
+        );
+        expect(
+          find.text('Rp75.000'),
+          findsOneWidget,
+          reason: 'pengeluaran: hanya pengeluaran, transfer tidak ikut',
+        );
+        expect(
+          find.text(t.wallet.detailTransferOutLabel.toUpperCase()),
+          findsOneWidget,
+        );
+        expect(find.text('−Rp200.000'), findsOneWidget);
+        expect(
+          find.text('+Rp4.725.000'),
+          findsOneWidget,
+          reason: 'perubahan saldo = 5.000.000 - 75.000 - 200.000',
+        );
+        expect(find.text(t.wallet.detailBalanceChangeLabel.toUpperCase()), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'dompet yang hanya menerima transfer: pemasukan tetap Rp0, '
+      'tetapi transfer masuk dan perubahan saldo tampil',
+      (tester) async {
+        await seedMonth();
+        await openDetail(tester, 'GoPay');
+
+        expect(
+          find.text(t.wallet.detailTransferInLabel.toUpperCase()),
+          findsOneWidget,
+        );
+        expect(
+          find.text('+Rp200.000'),
+          findsNWidgets(2),
+          reason: 'transfer masuk dan perubahan saldo sama-sama +Rp200.000',
+        );
+      },
+    );
+
+    testWidgets(
+      'tanpa transfer bulan ini, baris transfer tidak tampil',
       (tester) async {
         await seedWallet('a', 'BCA', current: 100000000);
-        await seedWallet('b', 'GoPay', icon: 'walletEwallet');
-        final now = DateTime.now();
-        await transactionRepository.saveTransaction(
-          IncomeTransaction(
-            id: 'i1',
-            date: now,
-            amount: 500000000,
-            note: '',
-            walletId: 'a',
-          ),
-        );
         await transactionRepository.saveTransaction(
           ExpenseTransaction(
             id: 'e1',
-            date: now,
+            date: DateTime.now(),
             amount: 7500000,
             note: '',
             walletId: 'a',
           ),
         );
-        await transactionRepository.saveTransaction(
-          TransferTransaction(
-            id: 't1',
-            date: now,
-            amount: 20000000,
-            note: '',
-            fromWalletId: 'a',
-            toWalletId: 'b',
-          ),
-        );
         await openDetail(tester, 'BCA');
 
         expect(
-          find.text(t.wallet.detailIncomeLabel.toUpperCase()),
-          findsOneWidget,
+          find.text(t.wallet.detailTransferInLabel.toUpperCase()),
+          findsNothing,
         );
-        expect(
-          find.text(t.wallet.detailExpenseLabel.toUpperCase()),
-          findsOneWidget,
-        );
-        expect(
-          find.text(t.wallet.detailNetLabel.toUpperCase()),
-          findsOneWidget,
-        );
-        expect(
-          find.text('Rp5.000.000'),
-          findsOneWidget,
-          reason: 'masuk: hanya pemasukan',
-        );
-        expect(
-          find.text('Rp75.000'),
-          findsOneWidget,
-          reason: 'keluar: hanya pengeluaran',
-        );
-        expect(
-          find.text('+Rp4.925.000'),
-          findsOneWidget,
-          reason:
-              'neto = masuk - keluar, transfer Rp200.000 tidak ikut dihitung',
-        );
+        // Perubahan saldo di ringkasan, dan baris transaksinya di daftar.
+        expect(find.text('−Rp75.000'), findsNWidgets(2));
       },
     );
 

@@ -730,14 +730,11 @@ class Translations$wallet$id {
 	/// id: 'Transaksi Bulan Ini'
 	String get detailRecentHeading => 'Transaksi Bulan Ini';
 
-	/// id: 'Masuk'
-	String get detailIncomeLabel => 'Masuk';
+	/// id: 'Pemasukan'
+	String get detailIncomeLabel => 'Pemasukan';
 
-	/// id: 'Keluar'
-	String get detailExpenseLabel => 'Keluar';
-
-	/// id: 'Neto'
-	String get detailNetLabel => 'Neto';
+	/// id: 'Pengeluaran'
+	String get detailExpenseLabel => 'Pengeluaran';
 
 	/// id: 'Belum ada transaksi'
 	String get detailRecentEmptyTitle => 'Belum ada transaksi';
@@ -750,6 +747,15 @@ class Translations$wallet$id {
 
 	/// id: 'Catat Transaksi Dompet Ini'
 	String get detailRecordAction => 'Catat Transaksi Dompet Ini';
+
+	/// id: 'Transfer masuk'
+	String get detailTransferInLabel => 'Transfer masuk';
+
+	/// id: 'Transfer keluar'
+	String get detailTransferOutLabel => 'Transfer keluar';
+
+	/// id: 'Perubahan saldo'
+	String get detailBalanceChangeLabel => 'Perubahan saldo';
 }
 
 // Path: budget
@@ -1275,13 +1281,15 @@ extension on Translations {
 			'wallet.detailBackLabel' => 'Kembali',
 			'wallet.detailEditAction' => 'Sunting',
 			'wallet.detailRecentHeading' => 'Transaksi Bulan Ini',
-			'wallet.detailIncomeLabel' => 'Masuk',
-			'wallet.detailExpenseLabel' => 'Keluar',
-			'wallet.detailNetLabel' => 'Neto',
+			'wallet.detailIncomeLabel' => 'Pemasukan',
+			'wallet.detailExpenseLabel' => 'Pengeluaran',
 			'wallet.detailRecentEmptyTitle' => 'Belum ada transaksi',
 			'wallet.detailRecentEmpty' => 'Belum ada transaksi bulan ini untuk dompet ini.',
 			'wallet.detailViewAllAction' => 'Lihat Semua Transaksi',
 			'wallet.detailRecordAction' => 'Catat Transaksi Dompet Ini',
+			'wallet.detailTransferInLabel' => 'Transfer masuk',
+			'wallet.detailTransferOutLabel' => 'Transfer keluar',
+			'wallet.detailBalanceChangeLabel' => 'Perubahan saldo',
 			'budget.heading' => 'Anggaran Saya',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
 			'budget.summaryTitle' => 'Total rencana anggaran aktif',

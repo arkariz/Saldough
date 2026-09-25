@@ -219,13 +219,15 @@
     "detailBackLabel": "Back",
     "detailEditAction": "Edit",
     "detailRecentHeading": "This Month's Transactions",
-    "detailIncomeLabel": "In",
-    "detailExpenseLabel": "Out",
-    "detailNetLabel": "Net",
+    "detailIncomeLabel": "Income",
+    "detailExpenseLabel": "Expenses",
     "detailRecentEmptyTitle": "No transactions yet",
     "detailRecentEmpty": "No transactions this month for this wallet yet.",
     "detailViewAllAction": "View All Transactions",
-    "detailRecordAction": "Record a Transaction for This Wallet"
+    "detailRecordAction": "Record a Transaction for This Wallet",
+    "detailTransferInLabel": "Transfers in",
+    "detailTransferOutLabel": "Transfers out",
+    "detailBalanceChangeLabel": "Balance change"
   },
   "budget": {
     "heading": "My Budgets",

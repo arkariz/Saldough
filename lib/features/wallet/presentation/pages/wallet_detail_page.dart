@@ -185,7 +185,10 @@ class WalletDetailPage extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _MonthSummaryRow(transactions: touched),
+                        _MonthSummaryRow(
+                          transactions: touched,
+                          walletId: current.id,
+                        ),
                         const SizedBox(height: AppSpacing.md),
                         if (recent.isEmpty)
                           const _EmptyRecentTransactions()
@@ -357,70 +360,124 @@ class _HeroCard extends StatelessWidget {
   }
 }
 
-/// Ringkasan masuk/keluar/neto bulan berjalan untuk transaksi yang menyentuh
-/// dompet ini. Transfer TIDAK dihitung (CLAUDE.md aturan 7 -- transfer tidak
-/// pernah dihitung sebagai pemasukan maupun pengeluaran), sama seperti
-/// `TransactionMonthHeader._totals` di tab Transaksi.
+/// Ringkasan bulan berjalan untuk dompet ini (T-2.8, direvisi 25 September
+/// 2026): pemasukan, pengeluaran, transfer masuk/keluar, dan perubahan saldo.
+///
+/// Pemasukan dan pengeluaran TIDAK menyertakan transfer (CLAUDE.md aturan 7,
+/// sama seperti `TransactionMonthHeader._totals` di tab Transaksi). Tetapi di
+/// tingkat SATU dompet transfer adalah perubahan saldo yang nyata -- tanpa
+/// baris transfer, dompet yang hanya diisi lewat transfer (mis. Tabungan)
+/// selalu tampil Rp0 walau saldonya naik. Karena itu transfer tampil di baris
+/// sendiri berwarna `transfer` (bukan hijau/merah, supaya tidak terbaca
+/// sebagai pemasukan/pengeluaran), dan angka penutupnya "Perubahan saldo"
+/// (pemasukan − pengeluaran + transfer masuk − transfer keluar), bukan
+/// "Neto" -- istilah itu di tab Transaksi berarti pemasukan − pengeluaran.
 class _MonthSummaryRow extends StatelessWidget {
-  const _MonthSummaryRow({required this.transactions});
+  const _MonthSummaryRow({required this.transactions, required this.walletId});
 
   /// Transaksi bulan ini yang menyentuh dompet ini (belum dipotong ke 5
   /// baris terbaru) -- ringkasan harus mencerminkan SELURUH bulan, bukan
   /// hanya baris yang ditampilkan.
   final List<Transaction> transactions;
 
-  ({int income, int expense}) get _totals {
+  /// Dompet yang diringkas -- menentukan arah tiap transfer.
+  final String walletId;
+
+  ({int income, int expense, int transferIn, int transferOut}) get _totals {
     var income = 0;
     var expense = 0;
+    var transferIn = 0;
+    var transferOut = 0;
     for (final transaction in transactions) {
       switch (transaction) {
         case IncomeTransaction():
           income += transaction.amount;
         case ExpenseTransaction():
           expense += transaction.amount;
-        case TransferTransaction():
-          break;
+        case TransferTransaction(:final fromWalletId, :final toWalletId):
+          if (toWalletId == walletId) transferIn += transaction.amount;
+          if (fromWalletId == walletId) transferOut += transaction.amount;
       }
     }
-    return (income: income, expense: expense);
+    return (
+      income: income,
+      expense: expense,
+      transferIn: transferIn,
+      transferOut: transferOut,
+    );
   }
+
+  /// Nominal bertanda: `+` untuk positif, `-` (dari formatter) untuk negatif.
+  String _signed(int sen) => sen > 0
+      ? '+${AppMoneyFormatter.format(sen)}'
+      : AppMoneyFormatter.format(sen);
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final totals = _totals;
-    final net = totals.income - totals.expense;
-    final netColor = net > 0
+    final hasTransfers = totals.transferIn != 0 || totals.transferOut != 0;
+    final change =
+        totals.income -
+        totals.expense +
+        totals.transferIn -
+        totals.transferOut;
+    final changeColor = change > 0
         ? colors.income
-        : net < 0
+        : change < 0
         ? colors.expense
         : colors.textPrimary;
     return TransactionSlab(
       color: colors.surfaceLow,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            child: _SummaryStat(
-              label: t.wallet.detailIncomeLabel,
-              amount: AppMoneyFormatter.format(totals.income),
-              color: colors.income,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: _SummaryStat(
+                  label: t.wallet.detailIncomeLabel,
+                  amount: AppMoneyFormatter.format(totals.income),
+                  color: colors.income,
+                ),
+              ),
+              Expanded(
+                child: _SummaryStat(
+                  label: t.wallet.detailExpenseLabel,
+                  amount: AppMoneyFormatter.format(totals.expense),
+                  color: colors.expense,
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: _SummaryStat(
-              label: t.wallet.detailExpenseLabel,
-              amount: AppMoneyFormatter.format(totals.expense),
-              color: colors.expense,
+          if (hasTransfers) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                Expanded(
+                  child: _SummaryStat(
+                    label: t.wallet.detailTransferInLabel,
+                    amount: _signed(totals.transferIn),
+                    color: colors.transfer,
+                  ),
+                ),
+                Expanded(
+                  child: _SummaryStat(
+                    label: t.wallet.detailTransferOutLabel,
+                    amount: _signed(-totals.transferOut),
+                    color: colors.transfer,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Expanded(
-            child: _SummaryStat(
-              label: t.wallet.detailNetLabel,
-              amount: net > 0
-                  ? '+${AppMoneyFormatter.format(net)}'
-                  : AppMoneyFormatter.format(net),
-              color: netColor,
-            ),
+          ],
+          const SizedBox(height: AppSpacing.sm),
+          Divider(color: colors.divider, height: 1),
+          const SizedBox(height: AppSpacing.sm),
+          _SummaryStat(
+            label: t.wallet.detailBalanceChangeLabel,
+            amount: _signed(change),
+            color: changeColor,
           ),
         ],
       ),

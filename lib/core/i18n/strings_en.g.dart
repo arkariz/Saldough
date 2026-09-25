@@ -309,13 +309,15 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get detailBackLabel => 'Back';
 	@override String get detailEditAction => 'Edit';
 	@override String get detailRecentHeading => 'This Month\'s Transactions';
-	@override String get detailIncomeLabel => 'In';
-	@override String get detailExpenseLabel => 'Out';
-	@override String get detailNetLabel => 'Net';
+	@override String get detailIncomeLabel => 'Income';
+	@override String get detailExpenseLabel => 'Expenses';
 	@override String get detailRecentEmptyTitle => 'No transactions yet';
 	@override String get detailRecentEmpty => 'No transactions this month for this wallet yet.';
 	@override String get detailViewAllAction => 'View All Transactions';
 	@override String get detailRecordAction => 'Record a Transaction for This Wallet';
+	@override String get detailTransferInLabel => 'Transfers in';
+	@override String get detailTransferOutLabel => 'Transfers out';
+	@override String get detailBalanceChangeLabel => 'Balance change';
 }
 
 // Path: budget
@@ -643,13 +645,15 @@ extension on TranslationsEn {
 			'wallet.detailBackLabel' => 'Back',
 			'wallet.detailEditAction' => 'Edit',
 			'wallet.detailRecentHeading' => 'This Month\'s Transactions',
-			'wallet.detailIncomeLabel' => 'In',
-			'wallet.detailExpenseLabel' => 'Out',
-			'wallet.detailNetLabel' => 'Net',
+			'wallet.detailIncomeLabel' => 'Income',
+			'wallet.detailExpenseLabel' => 'Expenses',
 			'wallet.detailRecentEmptyTitle' => 'No transactions yet',
 			'wallet.detailRecentEmpty' => 'No transactions this month for this wallet yet.',
 			'wallet.detailViewAllAction' => 'View All Transactions',
 			'wallet.detailRecordAction' => 'Record a Transaction for This Wallet',
+			'wallet.detailTransferInLabel' => 'Transfers in',
+			'wallet.detailTransferOutLabel' => 'Transfers out',
+			'wallet.detailBalanceChangeLabel' => 'Balance change',
 			'budget.heading' => 'My Budgets',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.summaryTitle' => 'Total of active budgets',

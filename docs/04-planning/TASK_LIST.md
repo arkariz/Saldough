@@ -550,6 +550,13 @@ pemasukan, pengeluaran, dan transfer, lalu melihat saldonya.
       yang sama dengan `TransactionEmptyMonthState`/`WalletEmptyState`
       lainnya, diperkecil skalanya karena ini bagian dari halaman, bukan
       seluruh layar (CTA "Catat" sudah ada di atas, tidak diulang).
+      ⚠ **Direvisi 25 September 2026 (masukan pemilik):** ringkasan bulan
+      dompet kini Pemasukan / Pengeluaran (tetap tanpa transfer, aturan 7),
+      Transfer masuk / Transfer keluar berwarna `transfer` (hanya tampil kalau
+      ada), dan "Perubahan saldo" = pemasukan − pengeluaran + transfer masuk −
+      transfer keluar, menggantikan "Neto". Tanpa ini dompet yang hanya diisi
+      lewat transfer (mis. Tabungan) selalu tampil Rp0 walau saldonya naik.
+      "Neto" di tab Transaksi tetap pemasukan − pengeluaran.
       Memenuhi FR-WAL-004 dan FR-REC-002.
 
 ### Verifikasi

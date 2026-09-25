@@ -219,13 +219,15 @@
     "detailBackLabel": "Kembali",
     "detailEditAction": "Sunting",
     "detailRecentHeading": "Transaksi Bulan Ini",
-    "detailIncomeLabel": "Masuk",
-    "detailExpenseLabel": "Keluar",
-    "detailNetLabel": "Neto",
+    "detailIncomeLabel": "Pemasukan",
+    "detailExpenseLabel": "Pengeluaran",
     "detailRecentEmptyTitle": "Belum ada transaksi",
     "detailRecentEmpty": "Belum ada transaksi bulan ini untuk dompet ini.",
     "detailViewAllAction": "Lihat Semua Transaksi",
-    "detailRecordAction": "Catat Transaksi Dompet Ini"
+    "detailRecordAction": "Catat Transaksi Dompet Ini",
+    "detailTransferInLabel": "Transfer masuk",
+    "detailTransferOutLabel": "Transfer keluar",
+    "detailBalanceChangeLabel": "Perubahan saldo"
   },
   "budget": {
     "heading": "Anggaran Saya",

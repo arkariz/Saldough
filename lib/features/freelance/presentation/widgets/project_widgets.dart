@@ -193,6 +193,101 @@ class ProjectCard extends StatelessWidget {
   }
 }
 
+/// Kartu satu proyek di tab Pembayaran: ikon tagihan, nama, lalu tagihan
+/// tertunda (gaji bersih, jumlah, perkiraan terdekat) dan yang sudah
+/// diterima. Mengetuknya membuka tab Pembayaran di rincian proyek.
+class ProjectPaymentCard extends StatelessWidget {
+  /// Membuat [ProjectPaymentCard].
+  const ProjectPaymentCard({required this.project, required this.stats, required this.onTap, super.key});
+
+  /// Proyek yang ditampilkan.
+  final FreelanceProject project;
+
+  /// Angka pembayaran proyek.
+  final ProjectPaymentStats stats;
+
+  /// Membuka rincian proyek di tab Pembayaran.
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    Widget line(IconKey icon, String label, int amount, String caption, Color color) => Container(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(color: colors.tinted(color, 0.1), borderRadius: BorderRadius.circular(4)),
+      child: Row(
+        children: [
+          AppIcon(icon, size: 28),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
+                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+              ],
+            ),
+          ),
+          Text(
+            AppMoneyFormatter.format(amount),
+            style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+          ),
+        ],
+      ),
+    );
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: TransactionSlab(
+          shadowColor: stats.pendingCount > 0 ? colors.pending : null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  const FreelanceIconBox(IconKey.invoice, size: 48),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(child: Text(project.name, style: textTheme.titleMedium)),
+                  AppIcon(IconKey.chevronRight, color: colors.textMuted),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              if (stats.isEmpty)
+                Text(t.freelance.projectPaymentsNone, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted))
+              else ...[
+                line(
+                  IconKey.pending,
+                  t.freelance.statusPending,
+                  stats.pendingNet,
+                  switch (stats.nextExpectedDate) {
+                    final date? => t.freelance.nextExpected(
+                      count: stats.pendingCount,
+                      date: CycleMonthFormatter.formatDateShort(date),
+                    ),
+                    null => t.freelance.pendingNone,
+                  },
+                  colors.pending,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                line(
+                  IconKey.paid,
+                  t.freelance.statusPaid,
+                  stats.paidNet,
+                  t.freelance.paymentCount(count: stats.paidCount),
+                  colors.income,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Kartu bergaris putus-putus di akhir daftar proyek: ajakan menambah
 /// proyek.
 class AddProjectCard extends StatelessWidget {

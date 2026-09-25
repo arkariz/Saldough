@@ -416,12 +416,6 @@
     "pendingTotalLabel": "Pending (net)",
     "paidTotalLabel": "Received (net)",
     "paymentCount": "Payments: $count",
-    "paymentAddAction": "Create Payment",
-    "paymentAddDisabledHint": "All worklog entries are already in a payment.",
-    "pendingSectionLabel": "Awaiting payment",
-    "pendingEmpty": "No pending payments.",
-    "paidSectionLabel": "Received payment history",
-    "paidEmpty": "No payments received yet.",
     "paymentStepLabel": "Freelance payment",
     "paymentAddTitle": "Create Payment",
     "paymentCreateRuleBody": "Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.",
@@ -472,6 +466,15 @@
     "projectsEmptyBadge": "No projects yet",
     "projectsEmptyTitle": "No projects yet",
     "unbilledLabel": "Unbilled",
-    "unbilledNone": "Everything is billed"
+    "unbilledNone": "Everything is billed",
+    "paymentsEmptyBadge": "No invoices yet",
+    "paymentsEmptyTitle": "No payments yet",
+    "paymentsEmptyBody": "Tap Bill below to group unbilled work hours into one payment.",
+    "paymentsEmptyOverviewBody": "Open a project in the Worklog tab, then tap Bill to group its work hours into a payment.",
+    "paymentsFilteredEmpty": "No payments with this status.",
+    "projectPaymentsNone": "No payments for this project yet.",
+    "nextExpected": "Invoices: $count · next $date",
+    "pendingNone": "Nothing pending",
+    "paymentWorkRange": "Work $range"
   }
 }

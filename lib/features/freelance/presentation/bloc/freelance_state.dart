@@ -81,6 +81,37 @@ final class ProjectStats {
   final DateTime? lastEntryDate;
 }
 
+/// Angka pembayaran satu proyek untuk kartu proyek di tab Pembayaran.
+/// Nominal adalah gaji BERSIH, sama dengan yang masuk ke dompet.
+final class ProjectPaymentStats {
+  /// Membuat [ProjectPaymentStats].
+  const ProjectPaymentStats({
+    required this.pendingCount,
+    required this.pendingNet,
+    required this.nextExpectedDate,
+    required this.paidCount,
+    required this.paidNet,
+  });
+
+  /// Jumlah pembayaran tertunda.
+  final int pendingCount;
+
+  /// Total gaji bersih tertunda, sen.
+  final int pendingNet;
+
+  /// Tanggal perkiraan terdekat di antara pembayaran tertunda.
+  final DateTime? nextExpectedDate;
+
+  /// Jumlah pembayaran diterima.
+  final int paidCount;
+
+  /// Total gaji bersih diterima, sen.
+  final int paidNet;
+
+  /// Apakah proyek ini punya pembayaran sama sekali.
+  bool get isEmpty => pendingCount == 0 && paidCount == 0;
+}
+
 /// State `FreelanceBloc`. Nilai turunan (diperoleh, gaji kotor/bersih,
 /// status entri) dihitung di sini, tidak pernah disimpan.
 final class FreelanceState extends UiState<FreelanceState> {
@@ -214,6 +245,57 @@ final class FreelanceState extends UiState<FreelanceState> {
       paidAmount: paid,
       lastEntryDate: last,
     );
+  }
+
+  /// Tanggal yang mewakili [payment] di daftar: tanggal diterima kalau sudah
+  /// diterima, selain itu tanggal perkiraannya.
+  DateTime paymentDateOf(FreelancePayment payment) => payment.receivedDate ?? payment.expectedDate;
+
+  /// Pembayaran [projectId], tanggal terbaru di atas.
+  List<FreelancePayment> paymentsOfProject(String projectId) =>
+      payments.where((p) => p.projectId == projectId).toList()
+        ..sort((a, b) => paymentDateOf(b).compareTo(paymentDateOf(a)));
+
+  /// Angka pembayaran [projectId].
+  ProjectPaymentStats paymentStatsOf(String projectId) {
+    var pendingCount = 0;
+    var pendingNet = 0;
+    var paidCount = 0;
+    var paidNet = 0;
+    DateTime? next;
+    for (final payment in payments) {
+      if (payment.projectId != projectId) continue;
+      final net = breakdownOf(payment).netPay;
+      if (payment.isPaid) {
+        paidCount++;
+        paidNet += net;
+      } else {
+        pendingCount++;
+        pendingNet += net;
+        if (next == null || payment.expectedDate.isBefore(next)) next = payment.expectedDate;
+      }
+    }
+    return ProjectPaymentStats(
+      pendingCount: pendingCount,
+      pendingNet: pendingNet,
+      nextExpectedDate: next,
+      paidCount: paidCount,
+      paidNet: paidNet,
+    );
+  }
+
+  /// Proyek untuk tab Pembayaran: yang punya tagihan tertunda di atas,
+  /// perkiraan terdekat lebih dulu; sisanya menyusul sesuai urutan simpan.
+  List<FreelanceProject> get projectsByNextPayment {
+    final stats = {for (final project in projects) project.id: paymentStatsOf(project.id)};
+    return [...projects]..sort((a, b) {
+      final nextA = stats[a.id]!.nextExpectedDate;
+      final nextB = stats[b.id]!.nextExpectedDate;
+      if (nextA == null && nextB == null) return 0;
+      if (nextA == null) return 1;
+      if (nextB == null) return -1;
+      return nextA.compareTo(nextB);
+    });
   }
 
   /// Entri terbaru di atas.

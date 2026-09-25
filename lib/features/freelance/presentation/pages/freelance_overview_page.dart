@@ -5,7 +5,6 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/di/freelance_scope.dart';
-import 'package:saldough/features/freelance/domain/entities/freelance_payment.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
 import 'package:saldough/features/freelance/presentation/freelance_actions.dart';
@@ -188,114 +187,72 @@ class _PaymentsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    Widget paymentCard(FreelancePayment payment) {
-      final entries = state.entriesOf(payment);
-      return FreelancePaymentCard(
-        payment: payment,
-        projectName: state.projectOf(payment.projectId)?.name ?? t.freelance.unknownProject,
-        breakdown: state.breakdownOf(payment),
-        entryCount: entries.length,
-        hours: entries.fold(0, (sum, e) => sum + e.hours),
-        walletName: switch (payment.walletId) {
-          final walletId? => state.walletOf(walletId)?.name,
-          null => null,
-        },
-        actions: payment.isPaid
-            ? [
-                TextButton(
-                  onPressed: () => cancelReceipt(context, payment),
-                  child: Text(t.freelance.receiptCancelAction),
-                ),
-              ]
-            : [
-                AppButton(
-                  label: t.freelance.receiveAction,
-                  color: colors.income,
-                  onPressed: () => receivePayment(context, payment),
-                ),
-                TextButton(
-                  onPressed: () => changePaymentDate(context, payment),
-                  child: Text(t.freelance.paymentChangeDateAction),
-                ),
-                TextButton(
-                  onPressed: () => deletePayment(context, payment),
-                  child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: colors.expense)),
-                ),
-              ],
-      );
-    }
-
-    return Column(
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
       children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+        FreelanceNotice(title: t.freelance.receiveRuleTitle, body: t.freelance.paymentsRuleBody),
+        const SizedBox(height: AppSpacing.md),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              FreelanceNotice(title: t.freelance.receiveRuleTitle, body: t.freelance.paymentsRuleBody),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                    child: _TotalTile(
-                      label: t.freelance.pendingTotalLabel,
-                      amount: state.pendingNetTotal,
-                      caption: t.freelance.paymentCount(count: state.pendingPayments.length),
-                      color: colors.pending,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: _TotalTile(
-                      label: t.freelance.paidTotalLabel,
-                      amount: state.paidNetTotal,
-                      caption: t.freelance.paymentCount(count: state.paidPayments.length),
-                      color: colors.income,
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _TotalTile(
+                  icon: IconKey.pending,
+                  label: t.freelance.pendingTotalLabel,
+                  amount: state.pendingNetTotal,
+                  caption: t.freelance.paymentCount(count: state.pendingPayments.length),
+                  color: colors.pending,
+                ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              _IconLabel(icon: IconKey.pending, label: t.freelance.pendingSectionLabel),
-              const SizedBox(height: AppSpacing.xs),
-              if (state.pendingPayments.isEmpty)
-                Text(t.freelance.pendingEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted))
-              else
-                for (final payment in state.pendingPayments) ...[
-                  paymentCard(payment),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
-              const SizedBox(height: AppSpacing.md),
-              _IconLabel(icon: IconKey.paid, label: t.freelance.paidSectionLabel),
-              const SizedBox(height: AppSpacing.xs),
-              if (state.paidPayments.isEmpty)
-                Text(t.freelance.paidEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted))
-              else
-                for (final payment in state.paidPayments) ...[
-                  paymentCard(payment),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: _TotalTile(
+                  icon: IconKey.paid,
+                  label: t.freelance.paidTotalLabel,
+                  amount: state.paidNetTotal,
+                  caption: t.freelance.paymentCount(count: state.paidPayments.length),
+                  color: colors.income,
+                ),
+              ),
             ],
           ),
         ),
-        FreelanceBottomBar(
-          children: [
-            AppButton(
-              label: state.projectsWithUnbilled.isEmpty
-                  ? t.freelance.paymentAddDisabledHint
-                  : t.freelance.paymentAddAction,
-              onPressed: state.projectsWithUnbilled.isEmpty ? null : () => createPayment(context),
+        const SizedBox(height: AppSpacing.md),
+        if (state.payments.isEmpty)
+          FreelanceEmptyState(
+            badge: t.freelance.paymentsEmptyBadge,
+            title: t.freelance.paymentsEmptyTitle,
+            body: t.freelance.paymentsEmptyOverviewBody,
+            icons: const [IconKey.invoice, IconKey.pending, IconKey.paid],
+          )
+        else ...[
+          AppSectionLabel(t.freelance.projectsLabel),
+          const SizedBox(height: AppSpacing.xs),
+          for (final project in state.projectsByNextPayment) ...[
+            ProjectPaymentCard(
+              project: project,
+              stats: state.paymentStatsOf(project.id),
+              onTap: () => openFreelanceProject(context, project, showPayments: true),
             ),
+            const SizedBox(height: AppSpacing.sm),
           ],
-        ),
+        ],
       ],
     );
   }
 }
 
 class _TotalTile extends StatelessWidget {
-  const _TotalTile({required this.label, required this.amount, required this.caption, required this.color});
+  const _TotalTile({
+    required this.icon,
+    required this.label,
+    required this.amount,
+    required this.caption,
+    required this.color,
+  });
 
+  final IconKey icon;
   final String label;
   final int amount;
   final String caption;
@@ -310,7 +267,15 @@ class _TotalTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
+          Row(
+            children: [
+              AppIcon(icon, size: 18),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
+              ),
+            ],
+          ),
           const SizedBox(height: 2),
           FitStart(
             child: Text(
@@ -321,24 +286,6 @@ class _TotalTile extends StatelessWidget {
           Text(caption, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
         ],
       ),
-    );
-  }
-}
-
-class _IconLabel extends StatelessWidget {
-  const _IconLabel({required this.icon, required this.label});
-
-  final IconKey icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        AppIcon(icon, size: 20),
-        const SizedBox(width: AppSpacing.xs),
-        Expanded(child: AppSectionLabel(label)),
-      ],
     );
   }
 }

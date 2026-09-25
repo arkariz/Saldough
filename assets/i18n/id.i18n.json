@@ -416,12 +416,6 @@
     "pendingTotalLabel": "Tertunda (bersih)",
     "paidTotalLabel": "Diterima (bersih)",
     "paymentCount": "$count pembayaran",
-    "paymentAddAction": "Buat Pembayaran",
-    "paymentAddDisabledHint": "Semua entri worklog sudah masuk pembayaran.",
-    "pendingSectionLabel": "Menunggu pembayaran",
-    "pendingEmpty": "Tidak ada pembayaran tertunda.",
-    "paidSectionLabel": "Riwayat pembayaran diterima",
-    "paidEmpty": "Belum ada pembayaran yang diterima.",
     "paymentStepLabel": "Pembayaran freelance",
     "paymentAddTitle": "Buat Pembayaran",
     "paymentCreateRuleBody": "Membuat pembayaran hanya mengelompokkan jam kerja jadi satu tagihan. Saldo dompet belum berubah sampai pembayaran dicatat diterima.",
@@ -472,6 +466,15 @@
     "projectsEmptyBadge": "Slot proyek kosong",
     "projectsEmptyTitle": "Belum ada proyek",
     "unbilledLabel": "Belum ditagih",
-    "unbilledNone": "Semua sudah ditagih"
+    "unbilledNone": "Semua sudah ditagih",
+    "paymentsEmptyBadge": "Belum ada tagihan",
+    "paymentsEmptyTitle": "Belum ada pembayaran",
+    "paymentsEmptyBody": "Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.",
+    "paymentsEmptyOverviewBody": "Buka proyek di tab Worklog, lalu tekan Tagih untuk mengelompokkan jam kerjanya jadi pembayaran.",
+    "paymentsFilteredEmpty": "Tidak ada pembayaran dengan status ini.",
+    "projectPaymentsNone": "Belum ada pembayaran untuk proyek ini.",
+    "nextExpected": "$count tagihan · terdekat $date",
+    "pendingNone": "Tidak ada yang ditunggu",
+    "paymentWorkRange": "Kerja $range"
   }
 }

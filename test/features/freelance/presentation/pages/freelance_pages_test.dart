@@ -148,8 +148,14 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
+    // Tab Pembayaran berisi kartu proyek; pembayarannya di rincian proyek.
     await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
     await tester.pumpAndSettle();
+    expect(find.byType(ProjectPaymentCard), findsOneWidget);
+    await tester.tap(find.byType(ProjectPaymentCard));
+    await tester.pumpAndSettle();
+    // Terbuka langsung di tab Pembayaran, penyaring bawaan Tertunda.
+    expect(find.text('${t.freelance.statusPending} (1)'), findsOneWidget);
     await tester.tap(find.text(t.freelance.receiveAction));
     await tester.pumpAndSettle();
     // Lembar pencatatan: gaji bersih Rp2.615.438, dompet tunggal terpilih.
@@ -163,6 +169,9 @@ void main() {
     final income = _right(await transactionRepository.listAllTransactions()).single as IncomeTransaction;
     expect(income.amount, 261543750);
     expect(income.freelancePaymentId, 'pay');
+    // Pembayaran yang baru diterima keluar dari penyaring Tertunda.
+    await tester.tap(find.text('${t.freelance.filterAll} (1)'));
+    await tester.pumpAndSettle();
     expect(find.text(t.freelance.receiptCancelAction), findsOneWidget);
     expect(find.text(t.freelance.receiveAction), findsNothing);
   });

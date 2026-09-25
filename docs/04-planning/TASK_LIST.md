@@ -901,7 +901,12 @@ tanpa menyelesaikan apa pun.
       penyaring status (bawaan belum ditagih), dikelompokkan per bulan
       dengan subtotal, dimuat bertahap. Tombol utama menempel di dasar layar
       (Buat Pembayaran; + Worklog/Tagih di rincian proyek). Worklog hanya
-      ditambahkan dari rincian proyek; kartu Tambah Proyek di atas daftar proyek. Ikon pixel
+      ditambahkan dari rincian proyek; kartu Tambah Proyek di atas daftar proyek.
+      Tab Pembayaran mengikuti pola yang sama: total tertunda/diterima lalu
+      kartu proyek versi pembayaran (tertunda beserta perkiraan terdekat,
+      diterima), urut perkiraan terdekat. Pembayaran tampil di tab
+      Pembayaran rincian proyek dengan penyaring (bawaan Tertunda) dan
+      kelompok bulan; menagih hanya lewat Tagih di rincian proyek. Ikon pixel
       `hourly_rate`, `invoice`, `work_completed` dikonversi dari rujukan
       (sebagian T-7.4) dan dipakai bersama ilustrasi keadaan kosong.
       Memenuhi FR-FRL-005.

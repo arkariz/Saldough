@@ -282,7 +282,7 @@ class FreelancePaymentCard extends StatelessWidget {
   /// Membuat [FreelancePaymentCard].
   const FreelancePaymentCard({
     required this.payment,
-    required this.projectName,
+    required this.title,
     required this.breakdown,
     required this.entryCount,
     required this.hours,
@@ -294,8 +294,8 @@ class FreelancePaymentCard extends StatelessWidget {
   /// Pembayaran yang ditampilkan.
   final FreelancePayment payment;
 
-  /// Nama proyeknya.
-  final String projectName;
+  /// Judul kartu, mis. rentang tanggal kerja yang ditagih.
+  final String title;
 
   /// Rincian gajinya.
   final NetPayBreakdown breakdown;
@@ -331,7 +331,7 @@ class FreelancePaymentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(projectName, style: textTheme.titleMedium),
+                    Text(title, style: textTheme.titleMedium),
                     Text(
                       t.freelance.paymentEntriesSummary(count: entryCount, hours: hours),
                       style: textTheme.bodySmall?.copyWith(color: colors.textMuted),

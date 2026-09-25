@@ -23,10 +23,4 @@ const fallbackWallet = Wallet(
 
 /// Transaksi netral untuk [registerFallbackValue] -- placeholder `any()`
 /// pada argumen bertipe `Transaction` (mis. `saveTransaction`).
-final fallbackTransaction = ExpenseTransaction(
-  id: '_fallback',
-  date: DateTime(2026),
-  amount: 1,
-  note: '',
-  walletId: '_fallback',
-);
+final fallbackTransaction = ExpenseTransaction(id: '_fallback', date: DateTime(2026), amount: 1, note: '', walletId: '_fallback');

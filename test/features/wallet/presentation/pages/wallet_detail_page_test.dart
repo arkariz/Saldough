@@ -6,8 +6,6 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
-import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
@@ -32,7 +30,6 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
-      ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,
@@ -72,7 +69,6 @@ void main() {
     await tester.pump();
     await tester.pump();
     await tester.pump();
-    await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.tap(
       find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel),
     );
@@ -215,7 +211,8 @@ void main() {
         expect(
           find.text('+Rp4.925.000'),
           findsOneWidget,
-          reason: 'neto = masuk - keluar, transfer Rp200.000 tidak ikut dihitung',
+          reason:
+              'neto = masuk - keluar, transfer Rp200.000 tidak ikut dihitung',
         );
       },
     );
@@ -325,9 +322,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final transactions = (await transactionRepository.listAllTransactions()).getOrElse(
-        (_) => throw StateError('expected Right'),
-      );
+      final transactions = (await transactionRepository.listAllTransactions())
+          .getOrElse(
+            (_) => throw StateError('expected Right'),
+          );
       expect(transactions.single, isA<ExpenseTransaction>());
       expect((transactions.single as ExpenseTransaction).walletId, 'a');
     });

@@ -16,10 +16,7 @@ void main() {
     storage = InMemoryKeyValueStorage();
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
-    recompute = RecomputeWalletBalances(
-      walletRepository: walletRepository,
-      transactionRepository: transactionRepository,
-    );
+    recompute = RecomputeWalletBalances(walletRepository: walletRepository, transactionRepository: transactionRepository);
   });
 
   group('RecomputeWalletBalances', () {
@@ -28,13 +25,7 @@ void main() {
       'transfer keluar 1.000.000 menghasilkan 3.546.938',
       () async {
         const bca = Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 0);
-        const tabungan = Wallet(
-          id: 'tabungan',
-          name: 'Tabungan',
-          iconKey: 'walletSavings',
-          initialBalance: 0,
-          currentBalance: 0,
-        );
+        const tabungan = Wallet(id: 'tabungan', name: 'Tabungan', iconKey: 'walletSavings', initialBalance: 0, currentBalance: 0);
         await walletRepository.saveWallet(bca);
         await walletRepository.saveWallet(tabungan);
 
@@ -67,13 +58,7 @@ void main() {
 
     test('transfer tidak mengubah total saldo seluruh dompet', () async {
       const bca = Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 0);
-      const gopay = Wallet(
-        id: 'gopay',
-        name: 'GoPay',
-        iconKey: 'walletEwallet',
-        initialBalance: 100000000,
-        currentBalance: 0,
-      );
+      const gopay = Wallet(id: 'gopay', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 100000000, currentBalance: 0);
       await walletRepository.saveWallet(bca);
       await walletRepository.saveWallet(gopay);
       final totalSebelum = bca.initialBalance + gopay.initialBalance;
@@ -97,13 +82,7 @@ void main() {
 
     test('forWallets hanya menyentuh dompet yang disebutkan', () async {
       const bca = Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 999);
-      const gopay = Wallet(
-        id: 'gopay',
-        name: 'GoPay',
-        iconKey: 'walletEwallet',
-        initialBalance: 100000000,
-        currentBalance: 999,
-      );
+      const gopay = Wallet(id: 'gopay', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 100000000, currentBalance: 999);
       await walletRepository.saveWallet(bca);
       await walletRepository.saveWallet(gopay);
 
@@ -115,13 +94,7 @@ void main() {
     });
 
     test('dompet tanpa transaksi apa pun tetap memakai initialBalance', () async {
-      const wallet = Wallet(
-        id: 'w1',
-        name: 'Tunai',
-        iconKey: 'walletCash',
-        initialBalance: 50000000,
-        currentBalance: 0,
-      );
+      const wallet = Wallet(id: 'w1', name: 'Tunai', iconKey: 'walletCash', initialBalance: 50000000, currentBalance: 0);
       await walletRepository.saveWallet(wallet);
 
       await recompute();

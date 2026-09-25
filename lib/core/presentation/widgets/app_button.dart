@@ -74,7 +74,9 @@ class _AppButtonState extends State<AppButton> {
         ),
         decoration: BoxDecoration(
           borderRadius: AppRadius.smAll,
-          boxShadow: isDisabled ? null : AppElevation.hardShadow(colors.edge, offset: pressed ? 0 : AppElevation.sm),
+          boxShadow: isDisabled
+              ? null
+              : AppElevation.hardShadow(colors.edge, offset: pressed ? 0 : AppElevation.sm),
         ),
         child: leadingIcon != null
             ? ElevatedButton.icon(

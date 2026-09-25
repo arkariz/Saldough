@@ -44,9 +44,9 @@ abstract final class AppTheme {
 
   /// Gaya huruf "shout" (Bangers) untuk label/badge bergaya stiker komik.
   static TextStyle shout({double fontSize = 14, Color? color}) => _withFallback(
-    GoogleFonts.bangers(fontSize: fontSize, color: color, letterSpacing: 0.4),
-    _shoutFallback,
-  )!;
+        GoogleFonts.bangers(fontSize: fontSize, color: color, letterSpacing: 0.4),
+        _shoutFallback,
+      )!;
 
   /// Tema mode terang.
   static ThemeData get lightTheme => _build(AppColorsExtension.light, Brightness.light);
@@ -56,17 +56,19 @@ abstract final class AppTheme {
 
   static ThemeData _build(AppColorsExtension colors, Brightness brightness) {
     final base = brightness == Brightness.light ? ThemeData.light() : ThemeData.dark();
-    final colorScheme = (brightness == Brightness.light ? const ColorScheme.light() : const ColorScheme.dark())
+    final colorScheme = (brightness == Brightness.light
+            ? const ColorScheme.light()
+            : const ColorScheme.dark())
         .copyWith(
-          brightness: brightness,
-          surface: colors.cardBackground,
-          onSurface: colors.textPrimary,
-          primary: colors.income,
-          onPrimary: brightness == Brightness.light ? Colors.white : colors.background,
-          error: colors.expense,
-          onError: Colors.white,
-          outline: colors.edge,
-        );
+      brightness: brightness,
+      surface: colors.cardBackground,
+      onSurface: colors.textPrimary,
+      primary: colors.income,
+      onPrimary: brightness == Brightness.light ? Colors.white : colors.background,
+      error: colors.expense,
+      onError: Colors.white,
+      outline: colors.edge,
+    );
 
     return base.copyWith(
       brightness: brightness,

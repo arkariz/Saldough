@@ -6,9 +6,7 @@ void main() {
   group('AppChip', () {
     testWidgets('tanpa icon -- hanya menampilkan label, tidak merender AppIcon', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: AppChip(label: 'Makan')),
-        ),
+        const MaterialApp(home: Scaffold(body: AppChip(label: 'Makan'))),
       );
 
       expect(find.text('Makan'), findsOneWidget);
@@ -17,11 +15,7 @@ void main() {
 
     testWidgets('dengan icon -- merender AppIcon di samping label', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: AppChip(label: 'Makan', icon: IconKey.categoryFood),
-          ),
-        ),
+        const MaterialApp(home: Scaffold(body: AppChip(label: 'Makan', icon: IconKey.categoryFood))),
       );
 
       expect(find.text('Makan'), findsOneWidget);
@@ -33,9 +27,7 @@ void main() {
     testWidgets('selected true tetap merender icon bersama label', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: AppChip(label: 'Transport', icon: IconKey.categoryTransport, selected: true),
-          ),
+          home: Scaffold(body: AppChip(label: 'Transport', icon: IconKey.categoryTransport, selected: true)),
         ),
       );
 

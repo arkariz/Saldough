@@ -7,8 +7,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
-import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -27,7 +25,6 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
-      ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,
@@ -54,8 +51,8 @@ void main() {
     );
   }
 
-  Future<List<Wallet>> stored() async =>
-      (await walletRepository.listWallets()).getOrElse((_) => throw StateError('expected Right'));
+  Future<List<Wallet>> stored() async => (await walletRepository.listWallets())
+      .getOrElse((_) => throw StateError('expected Right'));
 
   void tallViewport(WidgetTester tester) {
     tester.view.physicalSize = const Size(800, 3200);
@@ -74,7 +71,6 @@ void main() {
     await tester.pump();
     await tester.pump();
     await tester.pump();
-    await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.tap(
       find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel),
     );
@@ -194,9 +190,8 @@ void main() {
         expect(wallets.single.currentBalance, 50000000);
         expect(find.text('Dompet Saku'), findsOneWidget);
         expect(find.text(t.wallet.savedMessage), findsOneWidget);
-        final transactions = (await transactionRepository.listAllTransactions()).getOrElse(
-          (_) => throw StateError('x'),
-        );
+        final transactions = (await transactionRepository.listAllTransactions())
+            .getOrElse((_) => throw StateError('x'));
         expect(
           transactions,
           isEmpty,

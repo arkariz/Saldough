@@ -100,9 +100,9 @@ class _AppChipState extends State<AppChip> {
                     style: widget.shout
                         ? AppTheme.shout(color: textColor)
                         : Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: textColor,
-                            fontWeight: FontWeight.w700,
-                          ),
+                              color: textColor,
+                              fontWeight: FontWeight.w700,
+                            ),
                   ),
                 ],
               ),

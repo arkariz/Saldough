@@ -17,9 +17,7 @@ void main() {
       expect(text.data, isNot(AppColorsExtension.light.income.toString()));
     });
 
-    testWidgets('di luar PixelTheme, context.appColors tetap AppTheme.light (layar lama tidak terpengaruh)', (
-      tester,
-    ) async {
+    testWidgets('di luar PixelTheme, context.appColors tetap AppTheme.light (layar lama tidak terpengaruh)', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.lightTheme,
@@ -35,9 +33,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.lightTheme,
-          home: PixelTheme(
-            child: Builder(builder: (context) => Text('x', style: Theme.of(context).textTheme.headlineSmall)),
-          ),
+          home: PixelTheme(child: Builder(builder: (context) => Text('x', style: Theme.of(context).textTheme.headlineSmall))),
         ),
       );
 
@@ -49,9 +45,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.lightTheme,
-          home: PixelTheme(
-            child: Builder(builder: (context) => Text('x', style: Theme.of(context).textTheme.bodyMedium)),
-          ),
+          home: PixelTheme(child: Builder(builder: (context) => Text('x', style: Theme.of(context).textTheme.bodyMedium))),
         ),
       );
 
@@ -86,9 +80,7 @@ void main() {
       expect(sheetText.data, AppColorsExtension.pixelLight.income.toString());
     });
 
-    testWidgets('showModalBottomSheet di dalam PixelTheme berlatar colors.background, bukan putih polos', (
-      tester,
-    ) async {
+    testWidgets('showModalBottomSheet di dalam PixelTheme berlatar colors.background, bukan putih polos', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.lightTheme,
@@ -113,9 +105,7 @@ void main() {
 
       // `Material` terluar di dalam rute lembar bawah -- itu yang mewarnai
       // permukaan sheet, bukan `Material` lain di pohon (mis. milik tombol).
-      final sheetMaterial = tester
-          .widgetList<Material>(find.ancestor(of: find.text('isi lembar'), matching: find.byType(Material)))
-          .last;
+      final sheetMaterial = tester.widgetList<Material>(find.ancestor(of: find.text('isi lembar'), matching: find.byType(Material))).last;
       expect(sheetMaterial.color, AppColorsExtension.pixelLight.background);
     });
 

@@ -39,8 +39,8 @@ class AppMoneyText extends StatelessWidget {
     final autoColor = sen > 0
         ? colors.income
         : sen < 0
-        ? colors.overBudget
-        : colors.textPrimary;
+            ? colors.overBudget
+            : colors.textPrimary;
 
     final base = style ?? Theme.of(context).textTheme.headlineSmall;
 

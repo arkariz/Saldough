@@ -21,13 +21,11 @@ mixin RepositoryGuard {
     try {
       return right(await run());
     } on FormatException catch (e, st) {
-      return left(
-        SystemFailure(
-          code: const FailureCode('PERSISTENCE_PARSE_ERROR'),
-          message: e.message,
-          details: FailureDetails(cause: e, stackTrace: st),
-        ),
-      );
+      return left(SystemFailure(
+        code: const FailureCode('PERSISTENCE_PARSE_ERROR'),
+        message: e.message,
+        details: FailureDetails(cause: e, stackTrace: st),
+      ));
     } on Failure catch (e) {
       // Paket penyimpanan (hive_storage, api_storage) sudah melempar
       // Failure yang tepat (PersistenceFailure dkk) — teruskan apa adanya.
@@ -40,10 +38,11 @@ mixin RepositoryGuard {
   }
 
   /// Varian [guard] untuk operasi tanpa nilai balik.
-  Future<Either<Failure, Unit>> guardVoid(Future<void> Function() run) => guard(() async {
-    await run();
-    return unit;
-  });
+  Future<Either<Failure, Unit>> guardVoid(Future<void> Function() run) =>
+      guard(() async {
+        await run();
+        return unit;
+      });
 
   /// Hook untuk memetakan exception spesifik fitur. Override di implementasi
   /// repository yang butuh pemetaan tambahan (lihat

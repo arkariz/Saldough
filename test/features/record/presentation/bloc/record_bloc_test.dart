@@ -102,7 +102,9 @@ void main() {
       act: (bloc) => bloc.add(const RecordWalletsLoaded()),
       skip: 1,
       expect: () => [
-        isA<RecordState>().having((s) => s.loadFailed, 'loadFailed', true).having((s) => s.wallets, 'wallets', isEmpty),
+        isA<RecordState>()
+            .having((s) => s.loadFailed, 'loadFailed', true)
+            .having((s) => s.wallets, 'wallets', isEmpty),
       ],
     );
 

@@ -30,9 +30,9 @@ void main() {
       act: (bloc) => bloc.add(const ExampleNoteStarted()),
       expect: () => [
         isA<ExampleNoteState>().having((s) => s.isLoading, 'isLoading', true),
-        isA<ExampleNoteState>().having((s) => s.isLoading, 'isLoading', false).having((s) => s.notes, 'notes', [
-          const ExampleNote(id: '1', text: 'halo'),
-        ]),
+        isA<ExampleNoteState>()
+            .having((s) => s.isLoading, 'isLoading', false)
+            .having((s) => s.notes, 'notes', [const ExampleNote(id: '1', text: 'halo')]),
       ],
     );
 

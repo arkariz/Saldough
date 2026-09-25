@@ -42,10 +42,7 @@ void main() {
 
     testWidgets('level interactive memakai offset bayangan 4px', (tester) async {
       final decoration = await pumpAndGetDecoration(tester, elevation: AppHardElevation.interactive);
-      expect(
-        decoration.boxShadow!.single.offset,
-        const Offset(AppElevation.pixelInteractive, AppElevation.pixelInteractive),
-      );
+      expect(decoration.boxShadow!.single.offset, const Offset(AppElevation.pixelInteractive, AppElevation.pixelInteractive));
     });
 
     testWidgets('level interactive yang ditekan menekan bayangan ke 0', (tester) async {

@@ -32,12 +32,12 @@ abstract final class AppElevation {
   /// piksel dengan warna [edge] — tiru motif `box-shadow: Npx Npx 0 edge`
   /// dari Design Canvas.
   static List<BoxShadow> hardShadow(Color edge, {double offset = md}) => [
-    BoxShadow(color: edge, offset: Offset(offset, offset)),
-  ];
+        BoxShadow(color: edge, offset: Offset(offset, offset)),
+      ];
 
   /// Bayangan lembar bawah ADR-015 ("Level 3 — Lembar bawah": `0px -4px 0px`,
   /// mengarah ke atas karena lembar berada di bawah layar).
   static List<BoxShadow> pixelBottomSheetShadow(Color edge) => [
-    BoxShadow(color: edge, offset: const Offset(0, -pixelInteractive)),
-  ];
+        BoxShadow(color: edge, offset: const Offset(0, -pixelInteractive)),
+      ];
 }

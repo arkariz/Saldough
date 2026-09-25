@@ -1459,6 +1459,9 @@ class Translations$freelance$id {
 
 	/// id: 'Ubah'
 	String get changeAction => 'Ubah';
+
+	/// id: 'Hapus pemasukan'
+	String get receiptCancelConfirmAction => 'Hapus pemasukan';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1915,6 +1918,7 @@ extension on Translations {
 			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
+			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
 			_ => null,
 		};
 	}

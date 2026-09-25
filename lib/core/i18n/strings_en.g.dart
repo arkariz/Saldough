@@ -449,7 +449,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get totalHoursLabel => 'Hours worked';
 	@override String hoursValue({required Object hours}) => '${hours} h';
 	@override String get hourShort => 'h';
-	@override String projectCount({required Object count}) => '${count} projects';
+	@override String projectCount({required Object count}) => 'Projects: ${count}';
 	@override String get earnedLabel => 'Total earned';
 	@override String get earnedCaption => 'Hours × rate, before deductions';
 	@override String get paidLabel => 'Received';
@@ -524,7 +524,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentsRuleBody => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.';
 	@override String get pendingTotalLabel => 'Pending (net)';
 	@override String get paidTotalLabel => 'Received (net)';
-	@override String paymentCount({required Object count}) => '${count} payments';
+	@override String paymentCount({required Object count}) => 'Payments: ${count}';
 	@override String get paymentAddAction => 'Create Payment';
 	@override String get paymentAddDisabledHint => 'All worklog entries are already in a payment.';
 	@override String get pendingSectionLabel => 'Awaiting payment';
@@ -535,7 +535,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentAddTitle => 'Create Payment';
 	@override String get paymentCreateRuleBody => 'Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.';
 	@override String paymentEntriesLabel({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)';
-	@override String paymentEntriesSummary({required Object count, required Object hours}) => '${count} entries · ${hours} h';
+	@override String paymentEntriesSummary({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h';
 	@override String get expectedDateLabel => 'Expected date received';
 	@override String get grossPayLabel => 'Gross pay';
 	@override String get netPayLabel => 'Net pay';
@@ -565,6 +565,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get receiptCancelConfirmMessage => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.';
 	@override String get receiptCancelledMessage => 'Receipt cancelled. The payment is pending again.';
 	@override String get changeAction => 'Change';
+	@override String get receiptCancelConfirmAction => 'Delete income';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -905,7 +906,7 @@ extension on TranslationsEn {
 			'freelance.totalHoursLabel' => 'Hours worked',
 			'freelance.hoursValue' => ({required Object hours}) => '${hours} h',
 			'freelance.hourShort' => 'h',
-			'freelance.projectCount' => ({required Object count}) => '${count} projects',
+			'freelance.projectCount' => ({required Object count}) => 'Projects: ${count}',
 			'freelance.earnedLabel' => 'Total earned',
 			'freelance.earnedCaption' => 'Hours × rate, before deductions',
 			'freelance.paidLabel' => 'Received',
@@ -980,7 +981,7 @@ extension on TranslationsEn {
 			'freelance.paymentsRuleBody' => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.',
 			'freelance.pendingTotalLabel' => 'Pending (net)',
 			'freelance.paidTotalLabel' => 'Received (net)',
-			'freelance.paymentCount' => ({required Object count}) => '${count} payments',
+			'freelance.paymentCount' => ({required Object count}) => 'Payments: ${count}',
 			'freelance.paymentAddAction' => 'Create Payment',
 			'freelance.paymentAddDisabledHint' => 'All worklog entries are already in a payment.',
 			'freelance.pendingSectionLabel' => 'Awaiting payment',
@@ -991,7 +992,7 @@ extension on TranslationsEn {
 			'freelance.paymentAddTitle' => 'Create Payment',
 			'freelance.paymentCreateRuleBody' => 'Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.',
 			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)',
-			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entries · ${hours} h',
+			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h',
 			'freelance.expectedDateLabel' => 'Expected date received',
 			'freelance.grossPayLabel' => 'Gross pay',
 			'freelance.netPayLabel' => 'Net pay',
@@ -1021,6 +1022,7 @@ extension on TranslationsEn {
 			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
 			'freelance.changeAction' => 'Change',
+			'freelance.receiptCancelConfirmAction' => 'Delete income',
 			_ => null,
 		};
 	}

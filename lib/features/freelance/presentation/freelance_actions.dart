@@ -166,7 +166,7 @@ Future<void> cancelReceipt(BuildContext context, FreelancePayment payment) async
     context,
     title: t.freelance.receiptCancelConfirmTitle,
     message: t.freelance.receiptCancelConfirmMessage,
-    confirmLabel: t.freelance.receiptCancelAction,
+    confirmLabel: t.freelance.receiptCancelConfirmAction,
   );
   if (confirmed) bloc.add(FreelanceReceiptCancelled(payment));
 }

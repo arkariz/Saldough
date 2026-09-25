@@ -56,46 +56,52 @@ class FreelanceSummaryCard extends StatelessWidget {
         children: [
           Text(t.freelance.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Expanded(
-                child: _Tile(
-                  label: t.freelance.totalHoursLabel,
-                  value: t.freelance.hoursValue(hours: summary.totalHours),
-                  caption: t.freelance.projectCount(count: projectCount),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _Tile(
+                    label: t.freelance.totalHoursLabel,
+                    value: t.freelance.hoursValue(hours: summary.totalHours),
+                    caption: t.freelance.projectCount(count: projectCount),
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: _Tile(
-                  label: t.freelance.earnedLabel,
-                  value: AppMoneyFormatter.format(summary.earned),
-                  caption: t.freelance.earnedCaption,
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: _Tile(
+                    label: t.freelance.earnedLabel,
+                    value: AppMoneyFormatter.format(summary.earned),
+                    caption: t.freelance.earnedCaption,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Expanded(
-                child: _Tile(
-                  label: t.freelance.paidLabel,
-                  value: AppMoneyFormatter.format(summary.paid),
-                  caption: t.freelance.paidCaption,
-                  color: colors.income,
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _Tile(
+                    label: t.freelance.paidLabel,
+                    value: AppMoneyFormatter.format(summary.paid),
+                    caption: t.freelance.paidCaption,
+                    color: colors.income,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: _Tile(
-                  label: t.freelance.unpaidLabel,
-                  value: AppMoneyFormatter.format(summary.unpaid),
-                  caption: t.freelance.unpaidCaption,
-                  color: colors.pending,
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: _Tile(
+                    label: t.freelance.unpaidLabel,
+                    value: AppMoneyFormatter.format(summary.unpaid),
+                    caption: t.freelance.unpaidCaption,
+                    color: colors.pending,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           if (summary.earned > 0) ...[
             const SizedBox(height: AppSpacing.sm),
@@ -104,6 +110,9 @@ class FreelanceSummaryCard extends StatelessWidget {
               child: SizedBox(
                 height: 8,
                 child: Row(
+                  // `stretch`: ColoredBox tanpa anak setinggi nol kalau
+                  // tinggi Row tidak dipaksakan ke anak-anaknya.
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     if (summary.paid > 0)
                       Expanded(

@@ -344,7 +344,7 @@
     "totalHoursLabel": "Hours worked",
     "hoursValue": "$hours h",
     "hourShort": "h",
-    "projectCount": "$count projects",
+    "projectCount": "Projects: $count",
     "earnedLabel": "Total earned",
     "earnedCaption": "Hours × rate, before deductions",
     "paidLabel": "Received",
@@ -419,7 +419,7 @@
     "paymentsRuleBody": "Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet's balance.",
     "pendingTotalLabel": "Pending (net)",
     "paidTotalLabel": "Received (net)",
-    "paymentCount": "$count payments",
+    "paymentCount": "Payments: $count",
     "paymentAddAction": "Create Payment",
     "paymentAddDisabledHint": "All worklog entries are already in a payment.",
     "pendingSectionLabel": "Awaiting payment",
@@ -430,7 +430,7 @@
     "paymentAddTitle": "Create Payment",
     "paymentCreateRuleBody": "Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.",
     "paymentEntriesLabel": "Billed entries: $count ($hours h)",
-    "paymentEntriesSummary": "$count entries · $hours h",
+    "paymentEntriesSummary": "Entries: $count · $hours h",
     "expectedDateLabel": "Expected date received",
     "grossPayLabel": "Gross pay",
     "netPayLabel": "Net pay",
@@ -459,6 +459,7 @@
     "receiptCancelConfirmTitle": "Cancel receipt?",
     "receiptCancelConfirmMessage": "Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.",
     "receiptCancelledMessage": "Receipt cancelled. The payment is pending again.",
-    "changeAction": "Change"
+    "changeAction": "Change",
+    "receiptCancelConfirmAction": "Delete income"
   }
 }

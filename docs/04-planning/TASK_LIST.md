@@ -887,10 +887,14 @@ tanpa menyelesaikan apa pun.
       sendiri. Titik masuk CATAT: kartu Freelance di formulir pemasukan
       (rujukan `pixel_kas_catat_pemasukan` "PATH B") yang mengembalikan
       `OpenFreelance`. Titik masuk Beranda menyusul di T-6.3.
-      ⚠ Di emulator baru terlihat kartu Freelance di formulir pemasukan;
-      emulator terlalu lambat (ANR berulang) untuk menelusuri sisanya. Alur
-      lengkapnya diuji lewat shell sungguhan di uji widget, dan ditelusuri di
-      perangkat bersama T-6.5.
+      Diverifikasi di emulator (build rilis, `emulator-5554`): CATAT →
+      Pemasukan → Freelance, tambah proyek dengan pajak 2,5%, worklog 37 jam,
+      buat pembayaran (gaji bersih Rp2.615.438), catat diterima ke BCA (saldo
+      naik tepat Rp2.615.438), rincian transaksinya terkunci, batalkan
+      penerimaan (saldo kembali), lalu hapus pembayaran, entri, dan proyek
+      uji. Temuan yang diperbaiki: bilah porsi ringkasan tidak tampil (tinggi
+      nol), tinggi ubin ringkasan tidak sejajar, label jamak bahasa Inggris,
+      dan tombol konfirmasi "Cancel"/"Cancel receipt" yang membingungkan.
       Memenuhi FR-FRL-005.
 - [x] **T-5.7** Tulis uji: worklog tidak mengubah saldo; pembayaran yang dicatat
       diterima menambah saldo tepat satu kali; `netPay` 37 jam pada tarif

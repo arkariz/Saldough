@@ -459,6 +459,7 @@
     "receiptCancelConfirmTitle": "Batalkan penerimaan?",
     "receiptCancelConfirmMessage": "Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.",
     "receiptCancelledMessage": "Penerimaan dibatalkan. Pembayaran kembali tertunda.",
-    "changeAction": "Ubah"
+    "changeAction": "Ubah",
+    "receiptCancelConfirmAction": "Hapus pemasukan"
   }
 }

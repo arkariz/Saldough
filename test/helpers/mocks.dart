@@ -1,6 +1,9 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/features/budget/domain/entities/budget.dart';
+import 'package:saldough/features/budget/domain/entities/budget_period.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -41,3 +44,17 @@ class FakeBudgetItemCatalog implements BudgetItemCatalog {
   @override
   Future<Either<Failure, List<BudgetItemOption>>> listOptions() async => Right(options);
 }
+
+/// Mock [BudgetRepository] (ADR-0010) -- uji bloc `budget`.
+class MockBudgetRepository extends Mock implements BudgetRepository {}
+
+/// Anggaran netral untuk [registerFallbackValue] -- placeholder `any()` pada
+/// argumen bertipe `Budget` (mis. `saveBudget`).
+final fallbackBudget = Budget(
+  id: '_fallback',
+  name: '_fallback',
+  walletId: '_fallback',
+  period: BudgetPeriod.monthly,
+  startDate: DateTime(2026),
+  plannedAmount: 0,
+);

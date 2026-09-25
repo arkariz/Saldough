@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -25,11 +26,14 @@ import 'package:state_management/state_management.dart';
 /// dipasang ulang di sini: [PixelTheme], `WalletBloc` yang SAMA (sunting/
 /// hapus memuat ulang daftar di belakangnya), `TransactionBloc` yang SAMA
 /// (untuk riwayat tersaring dan pintasan "Lihat Semua Transaksi"), dan
-/// `RecordBloc` yang SAMA (pintasan CATAT, FR-REC-002).
+/// `RecordBloc` yang SAMA (pintasan CATAT, FR-REC-002). `BudgetBloc`, kalau
+/// ada, diteruskan supaya rincian transaksi dari sini punya jalan ke
+/// anggarannya (T-4.11).
 Future<void> openWalletDetail(BuildContext context, Wallet wallet) {
   final walletBloc = context.read<WalletBloc>();
   final transactionBloc = context.read<TransactionBloc>();
   final recordBloc = context.read<RecordBloc>();
+  final budgetBloc = context.read<BudgetBloc?>();
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => PixelTheme(
@@ -38,6 +42,7 @@ Future<void> openWalletDetail(BuildContext context, Wallet wallet) {
             BlocProvider.value(value: walletBloc),
             BlocProvider.value(value: transactionBloc),
             BlocProvider.value(value: recordBloc),
+            if (budgetBloc != null) BlocProvider.value(value: budgetBloc),
           ],
           child: WalletDetailPage(wallet: wallet),
         ),

@@ -2,89 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
+import 'package:saldough/features/budget/presentation/budget_actions.dart';
+import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_empty_states.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_filter_bar.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_summary_card.dart';
-import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
-
-/// Membuka formulir TAMBAH anggaran, lalu mengirim hasilnya ke `BudgetBloc`.
-Future<void> addBudget(BuildContext context) async {
-  final bloc = context.read<BudgetBloc>();
-  final result = await showFullScreenSheet<BudgetFormResult>(
-    context,
-    builder: (_) => BudgetFormSheet(wallets: bloc.state.activeWallets),
-  );
-  if (result case BudgetFormSaved(
-    :final name,
-    :final walletId,
-    :final period,
-    :final startDate,
-    :final plannedAmount,
-    :final items,
-  )) {
-    bloc.add(
-      BudgetAdded(
-        name: name,
-        walletId: walletId,
-        period: period,
-        startDate: startDate,
-        plannedAmount: plannedAmount,
-        items: items,
-      ),
-    );
-  }
-}
-
-/// Membuka formulir SUNTING [budget] dan meneruskan hasilnya (simpan,
-/// arsip, hapus) ke `BudgetBloc`. Mengembalikan hasil formulir supaya layar
-/// rincian bisa menutup dirinya sesudah anggaran dihapus.
-Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async {
-  final bloc = context.read<BudgetBloc>();
-  final wallets = <Wallet>[
-    ...bloc.state.activeWallets,
-    // Dompet anggaran ini tetap jadi pilihan walau sudah dinonaktifkan.
-    if (bloc.state.walletOf(budget.walletId) case final wallet? when !wallet.isActive) wallet,
-  ];
-  final result = await showFullScreenSheet<BudgetFormResult>(
-    context,
-    builder: (_) => BudgetFormSheet(wallets: wallets, initial: budget),
-  );
-  switch (result) {
-    case BudgetFormSaved(
-      :final name,
-      :final walletId,
-      :final period,
-      :final startDate,
-      :final plannedAmount,
-      :final items,
-    ):
-      bloc.add(
-        BudgetEdited(
-          budget.copyWith(
-            name: name,
-            walletId: walletId,
-            period: period,
-            startDate: startDate,
-            plannedAmount: plannedAmount,
-            items: items,
-          ),
-        ),
-      );
-    case BudgetFormArchiveToggled():
-      bloc.add(BudgetArchiveToggled(budget));
-    case BudgetFormDeleted():
-      bloc.add(BudgetDeleted(budget));
-    case null:
-      break;
-  }
-  return result;
-}
 
 /// Layar Anggaran (T-4.5/T-4.9; FR-BUD-001/004/006): ringkasan lintas
 /// anggaran aktif, penyaring status dan dompet, lalu daftar kartu anggaran.
@@ -96,11 +22,8 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
 /// tab persisten selama shell hidup; progres disegarkan tiap tab ini dibuka
 /// dan sesudah alur CATAT (lihat `AppShellPage`).
 class BudgetListPage extends StatefulWidget {
-  /// Membuat [BudgetListPage]. [onOpenBudget] dipanggil saat kartu diketuk.
-  const BudgetListPage({this.onOpenBudget, super.key});
-
-  /// Membuka rincian anggaran; bawaan membuka formulir sunting.
-  final void Function(BuildContext context, Budget budget)? onOpenBudget;
+  /// Membuat [BudgetListPage].
+  const BudgetListPage({super.key});
 
   @override
   State<BudgetListPage> createState() => _BudgetListPageState();
@@ -166,7 +89,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       budget: budget,
                       progress: state.progress[budget.id]!,
                       walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
-                      onTap: () => (widget.onOpenBudget ?? editBudget)(context, budget),
+                      onTap: () => openBudgetDetail(context, budget),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],

@@ -4,10 +4,15 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/open_edit_transaction_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/transaction_display.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -21,10 +26,11 @@ import 'package:state_management/state_management.dart';
 /// ("Transfer berhasil", "Pembayaran berhasil", "Kirim Uang") DILARANG di
 /// mana pun -- Saldough hanya mencatat.
 ///
-/// TIDAK ditampilkan: baris "Pos Anggaran" (baru terisi setelah Fase 4;
-/// bagiannya tidak ditampilkan, bukan ditampilkan kosong), "ID catatan"
-/// (transaksi tidak punya nomor tampilan), dan kartu "Format Entri Transfer"
-/// (ilustrasi desain, bukan fitur).
+/// Baris "Anggaran" (T-4.11) tampil kalau transaksi tertaut ke pos anggaran
+/// yang masih ada, beserta jalan ke rincian anggarannya.
+///
+/// TIDAK ditampilkan: "ID catatan" (transaksi tidak punya nomor tampilan)
+/// dan kartu "Format Entri Transfer" (ilustrasi desain, bukan fitur).
 ///
 /// Membaca dompet dari [TransactionBloc] (nama dan "saldo saat ini"), jadi
 /// harus berada di bawah `BlocProvider<TransactionBloc>` -- lihat
@@ -64,6 +70,17 @@ class TransactionDetailPage extends StatelessWidget {
     navigator.pop();
   }
 
+  /// Jalan ke rincian anggaran [item] — hanya kalau blok yang dibutuhkan
+  /// layar itu tersedia di rute ini dan anggarannya masih ada.
+  VoidCallback? _budgetOpener(BuildContext context, BudgetItemOption item) {
+    final budgets = context.read<BudgetBloc?>();
+    if (budgets == null || context.read<RecordBloc?>() == null || context.read<WalletBloc?>() == null) return null;
+    for (final budget in budgets.state.budgets) {
+      if (budget.id == item.budgetId) return () => openBudgetDetail(context, budget);
+    }
+    return null;
+  }
+
   Future<void> _delete(BuildContext context) async {
     final bloc = context.read<TransactionBloc>();
     final navigator = Navigator.of(context);
@@ -84,6 +101,10 @@ class TransactionDetailPage extends StatelessWidget {
         child: BlocBuilder<TransactionBloc, TransactionState>(
           builder: (context, state) {
             final walletsById = {for (final wallet in state.wallets) wallet.id: wallet};
+            final budgetItem = state.budgetItemOf(switch (transaction) {
+              ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
+              IncomeTransaction() => null,
+            });
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
@@ -91,7 +112,12 @@ class TransactionDetailPage extends StatelessWidget {
                 const SizedBox(height: AppSpacing.md),
                 _HeroCard(transaction: transaction),
                 const SizedBox(height: AppSpacing.md),
-                _DetailsCard(transaction: transaction, walletsById: walletsById),
+                _DetailsCard(
+                  transaction: transaction,
+                  walletsById: walletsById,
+                  budgetItem: budgetItem,
+                  onOpenBudget: budgetItem == null ? null : _budgetOpener(context, budgetItem),
+                ),
                 const SizedBox(height: AppSpacing.md),
                 const _ManualNote(),
                 const SizedBox(height: AppSpacing.md),
@@ -278,10 +304,21 @@ class _HeroCard extends StatelessWidget {
 /// Kartu rincian: jenis, kategori, dompet (+ saldo saat ini), atau pasangan
 /// Dari / Ke / Jumlah untuk transfer, lalu catatan manual.
 class _DetailsCard extends StatelessWidget {
-  const _DetailsCard({required this.transaction, required this.walletsById});
+  const _DetailsCard({
+    required this.transaction,
+    required this.walletsById,
+    required this.budgetItem,
+    required this.onOpenBudget,
+  });
 
   final Transaction transaction;
   final Map<String, Wallet> walletsById;
+
+  /// Pos anggaran tertaut, atau `null`.
+  final BudgetItemOption? budgetItem;
+
+  /// Membuka rincian anggaran [budgetItem], atau `null` kalau tidak bisa.
+  final VoidCallback? onOpenBudget;
 
   @override
   Widget build(BuildContext context) {
@@ -327,6 +364,10 @@ class _DetailsCard extends StatelessWidget {
               amount: tx.amount,
             ),
           },
+          if (budgetItem case final item?) ...[
+            const _Gap(),
+            _BudgetRow(item: item, onOpen: onOpenBudget),
+          ],
           if (tx.note.isNotEmpty) ...[
             const _Gap(),
             Text(
@@ -344,6 +385,60 @@ class _DetailsCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Baris "Anggaran": pos · anggaran, dan tautan ke rincian anggarannya
+/// (T-4.11, FR-TXN-006).
+class _BudgetRow extends StatelessWidget {
+  const _BudgetRow({required this.item, required this.onOpen});
+
+  final BudgetItemOption item;
+  final VoidCallback? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final open = onOpen;
+    return Semantics(
+      button: open != null,
+      child: GestureDetector(
+        onTap: open,
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.transaction.budgetLabel.toUpperCase(),
+                    style: transactionLabelStyle(context, color: colors.textMuted),
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const AppIcon(IconKey.budget, size: 20),
+                      const SizedBox(width: AppSpacing.xs),
+                      Expanded(child: Text('${item.itemName} · ${item.budgetName}', style: _valueStyle(context))),
+                    ],
+                  ),
+                  if (open != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      t.transaction.openBudgetAction.toUpperCase(),
+                      style: transactionLabelStyle(context, color: colors.accent),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (open != null) const AppIcon(IconKey.chevronRight),
+          ],
+        ),
       ),
     );
   }
@@ -610,13 +705,25 @@ class _DeleteLink extends StatelessWidget {
 /// dengan bahasa visual ADR-015 alih-alih tema global lama, dan `TransactionBloc`
 /// yang SAMA (bukan instance baru) supaya sunting/hapus memuat ulang daftar
 /// di belakangnya.
+///
+/// `BudgetBloc`, `RecordBloc`, dan `WalletBloc` ikut dipasang ulang KALAU ada
+/// di pohon asal — dipakai jalan ke rincian anggaran (T-4.11). Rute yang
+/// dibuka tanpa ketiganya tetap berfungsi, hanya tanpa tautan itu.
 Future<void> openTransactionDetail(BuildContext context, Transaction transaction) {
   final bloc = context.read<TransactionBloc>();
+  final budgetBloc = context.read<BudgetBloc?>();
+  final recordBloc = context.read<RecordBloc?>();
+  final walletBloc = context.read<WalletBloc?>();
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => PixelTheme(
-        child: BlocProvider.value(
-          value: bloc,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: bloc),
+            if (budgetBloc != null) BlocProvider.value(value: budgetBloc),
+            if (recordBloc != null) BlocProvider.value(value: recordBloc),
+            if (walletBloc != null) BlocProvider.value(value: walletBloc),
+          ],
           child: TransactionDetailPage(transaction: transaction),
         ),
       ),

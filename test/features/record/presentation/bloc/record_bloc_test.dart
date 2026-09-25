@@ -3,6 +3,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -80,6 +81,70 @@ void main() {
   );
 
   group('RecordBloc', () {
+    blocTest<RecordBloc, RecordState>(
+      'RecordWalletsLoaded ikut memuat pos anggaran untuk pemilih (T-4.4)',
+      build: () => RecordBloc(
+        walletRepository: walletRepository,
+        budgetItemCatalog: const FakeBudgetItemCatalog([
+          BudgetItemOption(
+            budgetId: 'b1',
+            budgetName: 'Rumah tangga',
+            itemId: 'beras',
+            itemName: 'Beras',
+            walletId: 'bca',
+            isActive: true,
+          ),
+        ]),
+        recordTransaction: RecordTransaction(
+          transactionRepository: transactionRepository,
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: walletRepository,
+            transactionRepository: transactionRepository,
+          ),
+        ),
+      ),
+      act: (bloc) => bloc.add(const RecordWalletsLoaded()),
+      skip: 1,
+      verify: (bloc) => expect(bloc.state.budgetItems.map((o) => o.itemId), ['beras']),
+    );
+
+    blocTest<RecordBloc, RecordState>(
+      'ExpenseRecorded menyimpan budgetItemId pada transaksi (FR-BUD-003)',
+      setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        ExpenseRecorded(walletId: 'bca', amount: 57660000, date: DateTime(2026, 9, 5), note: '', budgetItemId: 'beras'),
+      ),
+      verify: (_) {
+        final saved = verify(
+          () => transactionRepository.saveTransaction(captureAny(), previousDate: any(named: 'previousDate')),
+        ).captured.single;
+        expect((saved as ExpenseTransaction).budgetItemId, 'beras');
+      },
+    );
+
+    blocTest<RecordBloc, RecordState>(
+      'TransferRecorded menyimpan budgetItemId pada transaksi (FR-BUD-003)',
+      setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        TransferRecorded(
+          fromWalletId: 'bca',
+          toWalletId: 'gopay',
+          amount: 50000000,
+          date: DateTime(2026, 9, 6),
+          note: '',
+          budgetItemId: 'tabungan',
+        ),
+      ),
+      verify: (_) {
+        final saved = verify(
+          () => transactionRepository.saveTransaction(captureAny(), previousDate: any(named: 'previousDate')),
+        ).captured.single;
+        expect((saved as TransferTransaction).budgetItemId, 'tabungan');
+      },
+    );
+
     blocTest<RecordBloc, RecordState>(
       'RecordWalletsLoaded memuat dompet AKTIF saja',
       build: buildBloc,

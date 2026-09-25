@@ -525,13 +525,18 @@ Ini layar daftar, dicapai dari navigasi bawah.
 
 **FR-FRL-005 — Ikhtisar Freelance**
 
-- [ ] Menyediakan satu layar Ikhtisar Freelance dengan tiga tab: Worklog sebagai
-      tab bawaan, Pembayaran, dan Template.
-- [ ] Menyembunyikan tab Template sampai FR-FRL-006 dikerjakan di Fase 7,
-      sehingga MVP hanya menampilkan dua tab.
+- [ ] Menyediakan satu layar Ikhtisar Freelance **tanpa tab**: ringkasan upah
+      dan jam, lalu daftar proyek. Tiap kartu proyek menggabungkan sisi
+      worklog (belum ditagih) dan sisi pembayaran (tertunda beserta perkiraan
+      terdekat, dan diterima). *(Direvisi 25 Sep 2026 atas keputusan pemilik;
+      semula tiga tab Worklog, Pembayaran, Template.)*
+- [ ] Menyediakan rincian proyek dengan dua tab, Worklog dan Pembayaran, tempat
+      entri dan pembayaran proyek itu dikelola.
 - [ ] Menampilkan total jam kerja, nominal yang diperoleh, yang sudah dibayar,
       dan yang belum dibayar.
-- [ ] Menampilkan daftar pembayaran beserta status dan tanggalnya.
+- [ ] Menampilkan daftar pembayaran beserta status dan tanggalnya, per proyek.
+- [ ] Penempatan Template freelance (FR-FRL-006) diputuskan ulang sebelum
+      Fase 7, karena Ikhtisar tidak lagi bertab.
 - [ ] **Dicapai dari dua titik masuk yang keduanya mendarat di layar yang
       sama:** ringkasan di Beranda, dan CATAT → Catat Pemasukan → Freelance.
 - [ ] Bukan tujuan navigasi bawah.

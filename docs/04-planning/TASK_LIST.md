@@ -919,6 +919,63 @@ tanpa menyelesaikan apa pun.
 - [x] **T-5.8** Tambahkan namespace i18n `freelance` dan daftarkan
       `FreelanceScope`.
       Memenuhi NFR-UX-004.
+- [ ] **T-5.9** Rombak Ikhtisar Freelance jadi **satu layar utama tanpa
+      tab** (keputusan pemilik, 25 Sep 2026, sesudah mencoba versi dua tab
+      di emulator). Belum dikodekan; ini catatan serah terima untuk sesi
+      berikutnya. PRD FR-FRL-005 dan glosarium sudah direvisi.
+
+      **Keadaan kode sekarang** (branch `claude/freelance-fase-5`, commit
+      `da8e927`, 428 uji lulus):
+      - `pages/freelance_overview_page.dart`: `DefaultTabController` dua tab
+        (`_WorklogTab`: kartu aturan, `FreelanceSummaryCard`, label Proyek,
+        `AddProjectCard`, `ProjectCard` per proyek; `_PaymentsTab`: kartu
+        aturan, dua `_TotalTile`, `ProjectPaymentCard` per proyek urut
+        `projectsByNextPayment`).
+      - `pages/freelance_project_page.dart`: rincian proyek, **sudah**
+        bertab Worklog dan Pembayaran dengan penyaring, kelompok bulan, dan
+        bilah dasar + Worklog / Tagih (n). `openFreelanceProject(context,
+        project, showPayments:)`.
+      - `widgets/project_widgets.dart`: `ProjectCard` (sisi worklog) dan
+        `ProjectPaymentCard` (sisi pembayaran), plus `FreelanceIconBox`,
+        `FreelanceShareBar`, `AddProjectCard`, `FreelanceEmptyState`,
+        `FreelanceBottomBar`, `WorklogMonthHeader`.
+      - `bloc/freelance_state.dart`: `summary`, `statsOf` (`ProjectStats`,
+        kotor), `paymentStatsOf` (`ProjectPaymentStats`, bersih),
+        `projectsByNextPayment`, `pendingNetTotal`, `paidNetTotal`.
+
+      **Yang harus dibangun:**
+      1. Ikhtisar Freelance = satu `ListView` tanpa `TabBar`/`DefaultTabController`,
+         urutan: kartu aturan (`ruleBody`), ringkasan upah & jam, label
+         Proyek, `AddProjectCard` (tetap di atas daftar), lalu kartu proyek
+         gabungan. Tanpa bilah tombol di dasar layar.
+      2. **Ringkasan** menggabungkan `FreelanceSummaryCard` (jam, diperoleh,
+         diterima, belum diterima — kotor) dengan total tertunda dan diterima
+         versi bersih dari `_PaymentsTab`. ⚠ Jangan menampilkan dua angka
+         "diterima" (kotor dan bersih) berdampingan tanpa label yang
+         membedakan; usulan: ubin kotor tetap, lalu satu baris "Tertunda
+         (bersih) · perkiraan terdekat" dan "Diterima (bersih)".
+      3. **Kartu proyek gabungan** menggantikan `ProjectCard` dan
+         `ProjectPaymentCard`: ikon, nama, tarif dan potongan; baris belum
+         ditagih (jam + nominal kotor); baris tertunda (bersih, jumlah
+         tagihan, perkiraan terdekat); baris diterima (bersih); bilah porsi
+         diterima/tertunda/belum ditagih; tanggal entri terakhir. Satu
+         ketukan membuka rincian proyek di tab Worklog. Urutan kartu: yang
+         punya tagihan tertunda di atas menurut perkiraan terdekat, sisanya
+         menyusul (`projectsByNextPayment`).
+      4. Rincian proyek **tidak berubah** (sudah bertab). Parameter
+         `showPayments` boleh dihapus kalau tidak ada pemanggil lagi.
+      5. Bersihkan kunci i18n yang tak terpakai (`worklogTab`/`paymentsTab`
+         tetap dipakai rincian proyek); perbarui uji
+         `test/features/freelance/presentation/pages/freelance_pages_test.dart`
+         (alur Catat Diterima sekarang: Ikhtisar → kartu proyek → tab
+         Pembayaran di rincian). Verifikasi di emulator dengan build rilis
+         (`flutter run --release`; build debug memicu ANR di emulator ini).
+
+      ⚠ **Pertanyaan terbuka untuk pemilik sebelum T-7.7:** tab Template
+      semula direncanakan sebagai tab ketiga Ikhtisar. Karena Ikhtisar kini
+      tanpa tab, template perlu tempat baru (usulan: tombol di kop Ikhtisar,
+      atau pilihan "dari template" di formulir Tambah Proyek).
+      Memenuhi FR-FRL-005.
 
 ## Fase 6: Beranda
 

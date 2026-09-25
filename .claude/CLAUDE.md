@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 25 September 2026
-**Fase saat ini:** Fase 6 — Beranda (Fase 0–5 selesai)
+**Fase saat ini:** Fase 5 — sisa T-5.9 (rombak Ikhtisar Freelance), lalu Fase 6 Beranda
 
 ## Apa ini
 
@@ -42,7 +42,9 @@ Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
 opsional ke pos anggaran), riwayat Transaksi, Dompet, Anggaran (daftar,
 rincian, pos, arsip, penyaring), dan Freelance (proyek, worklog, pembayaran,
 pencatatan pembayaran diterima; dibuka dari CATAT → Catat Pemasukan).
-Berikutnya Beranda (Fase 6).
+**Sisa Fase 5:** T-5.9 di TASK_LIST — rombak Ikhtisar Freelance jadi satu
+layar tanpa tab dengan kartu proyek gabungan (belum dikodekan, catatannya
+lengkap di sana). Sesudah itu Beranda (Fase 6).
 
 ## Fakta proyek
 

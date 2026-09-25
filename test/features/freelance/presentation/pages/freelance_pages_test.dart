@@ -18,6 +18,9 @@ import 'package:saldough/features/freelance/domain/entities/freelance_project.da
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
+import 'package:saldough/features/freelance/presentation/pages/freelance_project_page.dart';
+import 'package:saldough/features/freelance/presentation/widgets/freelance_cards.dart';
+import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -131,8 +134,19 @@ void main() {
     await openShell(tester);
     await openFreelanceThroughRecord(tester);
 
-    // Entri yang sudah masuk pembayaran tampil tertunda.
-    expect(find.text(t.freelance.statusPending.toUpperCase()), findsOneWidget);
+    // Tab Worklog berisi kartu proyek; entrinya ada di rincian proyek.
+    expect(find.byType(ProjectCard), findsOneWidget);
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+    expect(find.byType(FreelanceProjectPage), findsOneWidget);
+    // Tak ada entri belum ditagih, jadi penyaring bawaan jatuh ke "Semua";
+    // entri yang sudah masuk pembayaran tampil tertunda dan terkunci.
+    expect(
+      find.descendant(of: find.byType(WorklogEntryCard), matching: find.text(t.freelance.statusPending.toUpperCase())),
+      findsOneWidget,
+    );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
     await tester.pumpAndSettle();
@@ -178,5 +192,38 @@ void main() {
     expect(find.text(t.transaction.detailFreelanceNote), findsOneWidget);
     expect(find.text(t.transaction.editAction), findsNothing);
     expect(find.bySemanticsLabel(t.transaction.deleteAction), findsNothing);
+  });
+
+  testWidgets('rincian proyek: penyaring bawaan belum ditagih, dikelompokkan per bulan, Tagih membuka pembayaran', (
+    tester,
+  ) async {
+    tallViewport(tester);
+    await freelanceRepository.saveProject(project);
+    await freelanceRepository.saveEntries([
+      WorklogEntry(id: 'a', projectId: 'studio', date: DateTime(2026, 9, 3), hours: 4, hourlyRate: 7250000),
+      WorklogEntry(id: 'b', projectId: 'studio', date: DateTime(2026, 9, 10), hours: 2, hourlyRate: 7250000),
+      WorklogEntry(id: 'c', projectId: 'studio', date: DateTime(2026, 8, 20), hours: 8, hourlyRate: 7250000),
+      entry,
+    ]);
+    await freelanceRepository.savePayment(payment);
+    await openShell(tester);
+    await openFreelanceThroughRecord(tester);
+
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+
+    // Bawaan: hanya 3 entri belum ditagih, dalam dua kelompok bulan.
+    expect(find.byType(WorklogEntryCard), findsNWidgets(3));
+    expect(find.byType(WorklogMonthHeader), findsNWidgets(2));
+    expect(find.text('${t.freelance.statusUnbilled} (3)'), findsOneWidget);
+
+    await tester.tap(find.text('${t.freelance.filterAll} (4)'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WorklogEntryCard), findsNWidgets(4));
+
+    await tester.tap(find.text(t.freelance.billAction(count: 3)));
+    await tester.pumpAndSettle();
+    expect(find.text(t.freelance.paymentAddTitle), findsWidgets);
+    expect(find.text(t.freelance.paymentEntriesLabel(count: 3, hours: 14).toUpperCase()), findsOneWidget);
   });
 }

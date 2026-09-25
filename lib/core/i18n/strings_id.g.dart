@@ -1142,9 +1142,6 @@ class Translations$freelance$id {
 	/// id: 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.'
 	String get projectsEmpty => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.';
 
-	/// id: '+ Proyek'
-	String get projectAddAction => '+ Proyek';
-
 	/// id: 'Proyek freelance'
 	String get projectStepLabel => 'Proyek freelance';
 
@@ -1240,12 +1237,6 @@ class Translations$freelance$id {
 
 	/// id: 'Pilih proyek'
 	String get projectPick => 'Pilih proyek';
-
-	/// id: 'Daftar entri jam kerja'
-	String get entriesLabel => 'Daftar entri jam kerja';
-
-	/// id: 'Belum ada entri worklog.'
-	String get entriesEmpty => 'Belum ada entri worklog.';
 
 	/// id: 'Tambah Worklog'
 	String get entryAddAction => 'Tambah Worklog';
@@ -1462,6 +1453,54 @@ class Translations$freelance$id {
 
 	/// id: 'Hapus pemasukan'
 	String get receiptCancelConfirmAction => 'Hapus pemasukan';
+
+	/// id: 'Tagih ($count)'
+	String billAction({required Object count}) => 'Tagih (${count})';
+
+	/// id: 'Belum ada jam kerja'
+	String get entriesEmptyBadge => 'Belum ada jam kerja';
+
+	/// id: 'Belum ada worklog'
+	String get entriesEmptyTitle => 'Belum ada worklog';
+
+	/// id: 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah. Mencatat kerja tidak menambah saldo dompet.'
+	String get entriesEmptyBody => 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah. Mencatat kerja tidak menambah saldo dompet.';
+
+	/// id: 'Tidak ada entri dengan status ini.'
+	String get entriesFilteredEmpty => 'Tidak ada entri dengan status ini.';
+
+	/// id: '+ Worklog'
+	String get entryAddShortAction => '+ Worklog';
+
+	/// id: '$count entri'
+	String entryCountLabel({required Object count}) => '${count} entri';
+
+	/// id: 'Semua'
+	String get filterAll => 'Semua';
+
+	/// id: 'Terakhir $date'
+	String lastEntryOn({required Object date}) => 'Terakhir ${date}';
+
+	/// id: 'Tanpa potongan'
+	String get noDeductions => 'Tanpa potongan';
+
+	/// id: 'Belum ada entri'
+	String get noEntriesYet => 'Belum ada entri';
+
+	/// id: 'Total $hours jam · $amount'
+	String projectTotals({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}';
+
+	/// id: 'Slot proyek kosong'
+	String get projectsEmptyBadge => 'Slot proyek kosong';
+
+	/// id: 'Belum ada proyek'
+	String get projectsEmptyTitle => 'Belum ada proyek';
+
+	/// id: 'Belum ditagih'
+	String get unbilledLabel => 'Belum ditagih';
+
+	/// id: 'Semua sudah ditagih'
+	String get unbilledNone => 'Semua sudah ditagih';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1812,7 +1851,6 @@ extension on Translations {
 			'freelance.paidRatio' => ({required Object percent}) => '${percent}% sudah diterima',
 			'freelance.projectsLabel' => 'Proyek',
 			'freelance.projectsEmpty' => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.',
-			'freelance.projectAddAction' => '+ Proyek',
 			'freelance.projectStepLabel' => 'Proyek freelance',
 			'freelance.projectAddTitle' => 'Tambah Proyek',
 			'freelance.projectEditTitle' => 'Ubah Proyek',
@@ -1845,8 +1883,6 @@ extension on Translations {
 			'freelance.projectDeletedMessage' => 'Proyek dihapus.',
 			'freelance.projectLabel' => 'Proyek',
 			'freelance.projectPick' => 'Pilih proyek',
-			'freelance.entriesLabel' => 'Daftar entri jam kerja',
-			'freelance.entriesEmpty' => 'Belum ada entri worklog.',
 			'freelance.entryAddAction' => 'Tambah Worklog',
 			'freelance.entryStepLabel' => 'Log pekerjaan',
 			'freelance.entryAddTitle' => 'Tambah Worklog',
@@ -1919,6 +1955,22 @@ extension on Translations {
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
+			'freelance.billAction' => ({required Object count}) => 'Tagih (${count})',
+			'freelance.entriesEmptyBadge' => 'Belum ada jam kerja',
+			'freelance.entriesEmptyTitle' => 'Belum ada worklog',
+			'freelance.entriesEmptyBody' => 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah. Mencatat kerja tidak menambah saldo dompet.',
+			'freelance.entriesFilteredEmpty' => 'Tidak ada entri dengan status ini.',
+			'freelance.entryAddShortAction' => '+ Worklog',
+			'freelance.entryCountLabel' => ({required Object count}) => '${count} entri',
+			'freelance.filterAll' => 'Semua',
+			'freelance.lastEntryOn' => ({required Object date}) => 'Terakhir ${date}',
+			'freelance.noDeductions' => 'Tanpa potongan',
+			'freelance.noEntriesYet' => 'Belum ada entri',
+			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}',
+			'freelance.projectsEmptyBadge' => 'Slot proyek kosong',
+			'freelance.projectsEmptyTitle' => 'Belum ada proyek',
+			'freelance.unbilledLabel' => 'Belum ditagih',
+			'freelance.unbilledNone' => 'Semua sudah ditagih',
 			_ => null,
 		};
 	}

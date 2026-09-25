@@ -25,6 +25,62 @@ final class FreelanceSummary {
   int get unpaid => earned - paid;
 }
 
+/// Status tagihan satu entri worklog, diturunkan dari pembayarannya.
+enum EntryBillingStatus {
+  /// Belum masuk pembayaran mana pun.
+  unbilled,
+
+  /// Sudah masuk pembayaran yang belum diterima.
+  pending,
+
+  /// Pembayarannya sudah dicatat diterima.
+  paid,
+}
+
+/// Angka satu proyek untuk kartu proyek dan layar rinciannya. Seluruh
+/// nominal adalah gaji kotor entri (jam × tarif).
+final class ProjectStats {
+  /// Membuat [ProjectStats].
+  const ProjectStats({
+    required this.entryCount,
+    required this.totalHours,
+    required this.earned,
+    required this.unbilledCount,
+    required this.unbilledHours,
+    required this.unbilledAmount,
+    required this.pendingAmount,
+    required this.paidAmount,
+    required this.lastEntryDate,
+  });
+
+  /// Jumlah entri.
+  final int entryCount;
+
+  /// Total jam.
+  final int totalHours;
+
+  /// Total diperoleh, sen.
+  final int earned;
+
+  /// Jumlah entri belum ditagih.
+  final int unbilledCount;
+
+  /// Jam belum ditagih.
+  final int unbilledHours;
+
+  /// Nominal belum ditagih, sen.
+  final int unbilledAmount;
+
+  /// Nominal yang sudah ditagih tetapi belum diterima, sen.
+  final int pendingAmount;
+
+  /// Nominal yang pembayarannya sudah diterima, sen.
+  final int paidAmount;
+
+  /// Tanggal entri terbaru, atau `null` kalau belum ada entri.
+  final DateTime? lastEntryDate;
+}
+
 /// State `FreelanceBloc`. Nilai turunan (diperoleh, gaji kotor/bersih,
 /// status entri) dihitung di sini, tidak pernah disimpan.
 final class FreelanceState extends UiState<FreelanceState> {
@@ -107,6 +163,58 @@ final class FreelanceState extends UiState<FreelanceState> {
     grossPay: entriesOf(payment).fold(0, (sum, e) => sum + e.earnedAmount),
     deductionRules: payment.deductionRules,
   );
+
+  /// Status tagihan [entry].
+  EntryBillingStatus statusOf(WorklogEntry entry) => switch (paymentOf(entry)) {
+    null => EntryBillingStatus.unbilled,
+    FreelancePayment(isPaid: true) => EntryBillingStatus.paid,
+    _ => EntryBillingStatus.pending,
+  };
+
+  /// Entri [projectId], terbaru di atas.
+  List<WorklogEntry> entriesOfProject(String projectId) =>
+      entries.where((e) => e.projectId == projectId).toList()..sort((a, b) => b.date.compareTo(a.date));
+
+  /// Angka [projectId] untuk kartu dan rincian proyek.
+  ProjectStats statsOf(String projectId) {
+    var count = 0;
+    var hours = 0;
+    var earned = 0;
+    var unbilledCount = 0;
+    var unbilledHours = 0;
+    var unbilled = 0;
+    var pending = 0;
+    var paid = 0;
+    DateTime? last;
+    for (final entry in entries) {
+      if (entry.projectId != projectId) continue;
+      count++;
+      hours += entry.hours;
+      earned += entry.earnedAmount;
+      if (last == null || entry.date.isAfter(last)) last = entry.date;
+      switch (statusOf(entry)) {
+        case EntryBillingStatus.unbilled:
+          unbilledCount++;
+          unbilledHours += entry.hours;
+          unbilled += entry.earnedAmount;
+        case EntryBillingStatus.pending:
+          pending += entry.earnedAmount;
+        case EntryBillingStatus.paid:
+          paid += entry.earnedAmount;
+      }
+    }
+    return ProjectStats(
+      entryCount: count,
+      totalHours: hours,
+      earned: earned,
+      unbilledCount: unbilledCount,
+      unbilledHours: unbilledHours,
+      unbilledAmount: unbilled,
+      pendingAmount: pending,
+      paidAmount: paid,
+      lastEntryDate: last,
+    );
+  }
 
   /// Entri terbaru di atas.
   List<WorklogEntry> get sortedEntries => [...entries]..sort((a, b) => b.date.compareTo(a.date));

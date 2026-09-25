@@ -59,13 +59,16 @@ final class EntryFormDeleted extends EntryFormResult {
 /// kartu aturan di puncak formulir.
 class EntryFormSheet extends StatefulWidget {
   /// Membuat [EntryFormSheet]. [initial] `null` = entri baru.
-  const EntryFormSheet({required this.projects, this.initial, super.key});
+  const EntryFormSheet({required this.projects, this.initial, this.initialProjectId, super.key});
 
   /// Proyek yang bisa dipilih.
   final List<FreelanceProject> projects;
 
   /// Entri yang disunting.
   final WorklogEntry? initial;
+
+  /// Proyek pra-terpilih untuk entri baru (dari rincian proyek).
+  final String? initialProjectId;
 
   @override
   State<EntryFormSheet> createState() => _EntryFormSheetState();
@@ -83,7 +86,11 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
     super.initState();
     final entry = widget.initial;
     if (entry == null) {
-      if (widget.projects.length == 1) _selectProject(widget.projects.single.id);
+      if (widget.initialProjectId case final id?) {
+        _selectProject(id);
+      } else if (widget.projects.length == 1) {
+        _selectProject(widget.projects.single.id);
+      }
       return;
     }
     _projectId = entry.projectId;

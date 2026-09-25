@@ -459,7 +459,6 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String paidRatio({required Object percent}) => '${percent}% received';
 	@override String get projectsLabel => 'Projects';
 	@override String get projectsEmpty => 'No projects yet. Add a client or project with its hourly rate first.';
-	@override String get projectAddAction => '+ Project';
 	@override String get projectStepLabel => 'Freelance project';
 	@override String get projectAddTitle => 'Add Project';
 	@override String get projectEditTitle => 'Edit Project';
@@ -492,8 +491,6 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get projectDeletedMessage => 'Project deleted.';
 	@override String get projectLabel => 'Project';
 	@override String get projectPick => 'Choose a project';
-	@override String get entriesLabel => 'Work hour entries';
-	@override String get entriesEmpty => 'No worklog entries yet.';
 	@override String get entryAddAction => 'Add Worklog';
 	@override String get entryStepLabel => 'Work log';
 	@override String get entryAddTitle => 'Add Worklog';
@@ -566,6 +563,22 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get receiptCancelledMessage => 'Receipt cancelled. The payment is pending again.';
 	@override String get changeAction => 'Change';
 	@override String get receiptCancelConfirmAction => 'Delete income';
+	@override String billAction({required Object count}) => 'Bill (${count})';
+	@override String get entriesEmptyBadge => 'No work hours yet';
+	@override String get entriesEmptyTitle => 'No worklog yet';
+	@override String get entriesEmptyBody => 'Record this project\'s work hours with the + Worklog button below. Recording work does not add to any wallet balance.';
+	@override String get entriesFilteredEmpty => 'No entries with this status.';
+	@override String get entryAddShortAction => '+ Worklog';
+	@override String entryCountLabel({required Object count}) => 'Entries: ${count}';
+	@override String get filterAll => 'All';
+	@override String lastEntryOn({required Object date}) => 'Last ${date}';
+	@override String get noDeductions => 'No deductions';
+	@override String get noEntriesYet => 'No entries yet';
+	@override String projectTotals({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}';
+	@override String get projectsEmptyBadge => 'No projects yet';
+	@override String get projectsEmptyTitle => 'No projects yet';
+	@override String get unbilledLabel => 'Unbilled';
+	@override String get unbilledNone => 'Everything is billed';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -916,7 +929,6 @@ extension on TranslationsEn {
 			'freelance.paidRatio' => ({required Object percent}) => '${percent}% received',
 			'freelance.projectsLabel' => 'Projects',
 			'freelance.projectsEmpty' => 'No projects yet. Add a client or project with its hourly rate first.',
-			'freelance.projectAddAction' => '+ Project',
 			'freelance.projectStepLabel' => 'Freelance project',
 			'freelance.projectAddTitle' => 'Add Project',
 			'freelance.projectEditTitle' => 'Edit Project',
@@ -949,8 +961,6 @@ extension on TranslationsEn {
 			'freelance.projectDeletedMessage' => 'Project deleted.',
 			'freelance.projectLabel' => 'Project',
 			'freelance.projectPick' => 'Choose a project',
-			'freelance.entriesLabel' => 'Work hour entries',
-			'freelance.entriesEmpty' => 'No worklog entries yet.',
 			'freelance.entryAddAction' => 'Add Worklog',
 			'freelance.entryStepLabel' => 'Work log',
 			'freelance.entryAddTitle' => 'Add Worklog',
@@ -1023,6 +1033,22 @@ extension on TranslationsEn {
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
 			'freelance.changeAction' => 'Change',
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
+			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
+			'freelance.entriesEmptyBadge' => 'No work hours yet',
+			'freelance.entriesEmptyTitle' => 'No worklog yet',
+			'freelance.entriesEmptyBody' => 'Record this project\'s work hours with the + Worklog button below. Recording work does not add to any wallet balance.',
+			'freelance.entriesFilteredEmpty' => 'No entries with this status.',
+			'freelance.entryAddShortAction' => '+ Worklog',
+			'freelance.entryCountLabel' => ({required Object count}) => 'Entries: ${count}',
+			'freelance.filterAll' => 'All',
+			'freelance.lastEntryOn' => ({required Object date}) => 'Last ${date}',
+			'freelance.noDeductions' => 'No deductions',
+			'freelance.noEntriesYet' => 'No entries yet',
+			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}',
+			'freelance.projectsEmptyBadge' => 'No projects yet',
+			'freelance.projectsEmptyTitle' => 'No projects yet',
+			'freelance.unbilledLabel' => 'Unbilled',
+			'freelance.unbilledNone' => 'Everything is billed',
 			_ => null,
 		};
 	}

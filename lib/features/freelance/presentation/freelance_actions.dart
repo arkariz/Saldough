@@ -21,8 +21,9 @@ Future<void> addProject(BuildContext context) async {
   }
 }
 
-/// Membuka formulir SUNTING [project].
-Future<void> editProject(BuildContext context, FreelanceProject project) async {
+/// Membuka formulir SUNTING [project]. Mengembalikan `true` kalau proyek
+/// dihapus, supaya layar rinciannya bisa menutup diri.
+Future<bool> editProject(BuildContext context, FreelanceProject project) async {
   final bloc = context.read<FreelanceBloc>();
   final result = await showFullScreenSheet<ProjectFormResult>(
     context,
@@ -36,24 +37,29 @@ Future<void> editProject(BuildContext context, FreelanceProject project) async {
         ),
       );
     case ProjectFormDeleted():
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       final confirmed = await showConfirmDelete(
         context,
         title: t.freelance.projectDeleteConfirmTitle,
         message: t.freelance.projectDeleteConfirmMessage(name: project.name),
       );
-      if (confirmed) bloc.add(FreelanceProjectDeleted(project));
+      if (confirmed) {
+        bloc.add(FreelanceProjectDeleted(project));
+        return true;
+      }
     case null:
       break;
   }
+  return false;
 }
 
-/// Membuka formulir TAMBAH entri worklog.
-Future<void> addEntry(BuildContext context) async {
+/// Membuka formulir TAMBAH entri worklog; [projectId] mengisi awal
+/// proyeknya (dari rincian proyek).
+Future<void> addEntry(BuildContext context, {String? projectId}) async {
   final bloc = context.read<FreelanceBloc>();
   final result = await showFullScreenSheet<EntryFormResult>(
     context,
-    builder: (_) => EntryFormSheet(projects: bloc.state.projects),
+    builder: (_) => EntryFormSheet(projects: bloc.state.projects, initialProjectId: projectId),
   );
   if (result case EntryFormSaved(:final projectId, :final date, :final hours, :final hourlyRate, :final note)) {
     bloc.add(FreelanceEntryAdded(projectId: projectId, date: date, hours: hours, hourlyRate: hourlyRate, note: note));
@@ -93,8 +99,9 @@ Future<void> editEntry(BuildContext context, WorklogEntry entry) async {
   }
 }
 
-/// Membuka formulir pengelompokan worklog jadi pembayaran.
-Future<void> createPayment(BuildContext context) async {
+/// Membuka formulir pengelompokan worklog jadi pembayaran; [projectId]
+/// memilih proyeknya lebih dulu (tombol Tagih di rincian proyek).
+Future<void> createPayment(BuildContext context, {String? projectId}) async {
   final bloc = context.read<FreelanceBloc>();
   final state = bloc.state;
   final projects = state.projectsWithUnbilled;
@@ -102,6 +109,7 @@ Future<void> createPayment(BuildContext context) async {
     context,
     builder: (_) => PaymentFormSheet(
       projects: projects,
+      initialProjectId: projectId,
       unbilledEntries: {for (final project in projects) project.id: state.unbilledEntriesOf(project.id)},
     ),
   );

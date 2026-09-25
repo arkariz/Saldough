@@ -113,6 +113,15 @@ enum IconKey {
   /// Entri worklog.
   worklog,
 
+  /// Tarif per jam proyek freelance.
+  hourlyRate,
+
+  /// Tagihan/pembayaran freelance yang dikelompokkan dari worklog.
+  invoice,
+
+  /// Kerja selesai (jam yang sudah dikerjakan).
+  workCompleted,
+
   // Status dan umpan balik
 
   /// `PaymentStatus.pending` — pembayaran freelance belum diterima.
@@ -208,6 +217,9 @@ const Map<IconKey, String> _assetPaths = {
   IconKey.filter: 'assets/icons/filter.svg',
   IconKey.freelance: 'assets/icons/freelance.svg',
   IconKey.worklog: 'assets/icons/worklog.svg',
+  IconKey.hourlyRate: 'assets/icons/hourly_rate.svg',
+  IconKey.invoice: 'assets/icons/invoice.svg',
+  IconKey.workCompleted: 'assets/icons/work_completed.svg',
   IconKey.pending: 'assets/icons/pending.svg',
   IconKey.paid: 'assets/icons/paid.svg',
   IconKey.overBudget: 'assets/icons/over_budget.svg',

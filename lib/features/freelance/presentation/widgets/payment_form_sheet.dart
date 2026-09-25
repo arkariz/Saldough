@@ -37,7 +37,15 @@ final class PaymentFormSaved {
 /// proyek saat ini, disalin ke pembayaran (ADR-019).
 class PaymentFormSheet extends StatefulWidget {
   /// Membuat [PaymentFormSheet].
-  const PaymentFormSheet({required this.projects, required this.unbilledEntries, super.key});
+  const PaymentFormSheet({
+    required this.projects,
+    required this.unbilledEntries,
+    this.initialProjectId,
+    super.key,
+  });
+
+  /// Proyek pra-terpilih (tombol Tagih di rincian proyek).
+  final String? initialProjectId;
 
   /// Proyek yang masih punya entri belum ditagihkan.
   final List<FreelanceProject> projects;
@@ -59,7 +67,12 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.projects.length == 1) _selectProject(widget.projects.single.id);
+    final initial = widget.initialProjectId;
+    if (initial != null && widget.projects.any((p) => p.id == initial)) {
+      _selectProject(initial);
+    } else if (widget.projects.length == 1) {
+      _selectProject(widget.projects.single.id);
+    }
   }
 
   void _selectProject(String id) {

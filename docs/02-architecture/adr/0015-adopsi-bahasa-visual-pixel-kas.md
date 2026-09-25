@@ -256,7 +256,9 @@ lain.
 dan `icon_action_search` (kandidat kunci baru untuk FR-TXN-004/FR-BUD-006,
 belum diputuskan), `icon_freelance_client`/`developer_coding`/`hourly_rate`/
 `invoice`/`overdue_payment`/`work_completed` (lebih detail dari yang
-dibutuhkan `IconKey` saat ini — `overdue_payment` khususnya sinyal status
+dibutuhkan `IconKey` saat ini; `hourly_rate`, `invoice`, dan `work_completed`
+sudah dipetakan ke `IconKey.hourlyRate`/`invoice`/`workCompleted` di Fase 5
+untuk kartu proyek freelance — `overdue_payment` khususnya sinyal status
 "lewat jatuh tempo" yang tidak ada di `PaymentStatus` sekarang, hanya
 `pending`/`paid`), `icon_status_almost_empty`/`information`/`locked`/
 `on_track`/`planned`/`success`/`unlocked`/`warning`, `icon_transaction_

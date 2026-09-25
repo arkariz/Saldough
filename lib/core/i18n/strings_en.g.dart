@@ -347,7 +347,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemStatusPartiallySpent => 'Partially spent';
 	@override String get itemStatusCompleted => 'Completed';
 	@override String get itemStatusOverspent => 'Over budget';
-	@override String itemCount({required Object count}) => '${count} items';
+	@override String itemCount({required Object count}) => 'Items: ${count}';
 	@override String get emptyBadge => 'No plans yet';
 	@override String get emptyTitle => 'No budgets yet';
 	@override String get emptyBody => 'Plan a weekly or monthly spending limit for one wallet. Creating a budget does not reduce any wallet balance.';
@@ -665,7 +665,7 @@ extension on TranslationsEn {
 			'budget.itemStatusPartiallySpent' => 'Partially spent',
 			'budget.itemStatusCompleted' => 'Completed',
 			'budget.itemStatusOverspent' => 'Over budget',
-			'budget.itemCount' => ({required Object count}) => '${count} items',
+			'budget.itemCount' => ({required Object count}) => 'Items: ${count}',
 			'budget.emptyBadge' => 'No plans yet',
 			'budget.emptyTitle' => 'No budgets yet',
 			'budget.emptyBody' => 'Plan a weekly or monthly spending limit for one wallet. Creating a budget does not reduce any wallet balance.',

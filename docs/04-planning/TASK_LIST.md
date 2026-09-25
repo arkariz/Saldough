@@ -29,11 +29,11 @@ Terakhir diperbarui: 25 September 2026.
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 12 | Selesai |
 | 3 — Cutover | 9 | 9 | Selesai |
-| 4 — Anggaran | 11 | 0 | Belum dimulai |
+| 4 — Anggaran | 11 | 11 | Selesai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **44** | |
+| **Total MVP** | **76** | **55** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -678,14 +678,20 @@ tanpa menyelesaikan apa pun.
 
 ## Fase 4: Anggaran
 
-- [ ] **T-4.1** Buat `features/budget/domain/`: `Budget`, `BudgetItem`,
+- [x] **T-4.1** Buat `features/budget/domain/`: `Budget`, `BudgetItem`,
       `BudgetPeriod`, dan `BudgetItemStatus`.
       ⚠ `Budget.walletId` wajib terisi, dan ikatan itu menyaring transaksi mana
       yang terhitung.
       ⚠ `Budget.isArchived` adalah satu-satunya bagian siklus hidup yang
       disimpan. Status `aktif` dan `selesai` turunan dari periodenya.
+      ⚠ **Keputusan pengisi celah:** akhir periode EKSKLUSIF
+      (`BudgetPeriod.endFrom`); bulanan dijepit ke hari terakhir bulan
+      berikutnya (mulai 31 Jan → akhir 28/29 Feb, bukan 3 Mar). Status siklus
+      hidup memakai `BudgetStatus` (aktif/selesai/nonaktif). `BudgetItem`
+      menyimpan `enteredAmount` ATAU `quantity`+`unitPrice`; `plannedAmount`
+      getter turunan.
       Memenuhi FR-BUD-001 dan FR-BUD-002.
-- [ ] **T-4.2** Buat use case `CalculateBudgetProgress` — Dart murni,
+- [x] **T-4.2** Buat use case `CalculateBudgetProgress` — Dart murni,
       menghasilkan `spent`, `remaining`, `progress`, status tiap pos, dan status
       anggaran.
       ⚠ `spent` menjumlahkan **dua** jenis transaksi: pengeluaran yang
@@ -693,18 +699,31 @@ tanpa menyelesaikan apa pun.
       Melewatkan salah satunya membuat angka anggaran salah tanpa gejala.
       ⚠ Tidak satu pun nilai itu disimpan. Semuanya dihitung ulang saat
       diakses.
+      Rencana nol tidak bisa dibagi: `progress` 0 kalau belum terpakai, 1
+      kalau sudah (statusnya tetap `overspent`). `BudgetProgress` juga
+      membawa `spendingStatus` tingkat anggaran (empat kondisi yang sama).
       Memenuhi FR-BUD-004.
-- [ ] **T-4.3** Buat `features/budget/data/`: `BudgetModel` dan repositorinya
+- [x] **T-4.3** Buat `features/budget/data/`: `BudgetModel` dan repositorinya
       di atas kunci `budget/all`.
+      `BudgetRepository` didaftarkan di `RootModule`, bukan di
+      `BudgetScope`, karena juga dibaca CATAT dan rincian transaksi lewat
+      port `BudgetItemCatalog` (ADR-0009).
       Memenuhi FR-BUD-001 dan NFR-REL-003.
-- [ ] **T-4.4** Tambahkan pemilih pos anggaran di formulir pengeluaran **dan**
+- [x] **T-4.4** Tambahkan pemilih pos anggaran di formulir pengeluaran **dan**
       formulir transfer CATAT.
       ⚠ Di formulir pengeluaran, pemilih menyaring terhadap `walletId`; di
       formulir transfer, terhadap `fromWalletId`.
       ⚠ Satu transaksi hanya boleh menaikkan satu pos. Jangan menawarkan tautan
       ke anggaran dompet tujuan juga — itu hitung ganda.
+      Port `BudgetItemCatalog` milik `record`, implementasi
+      `BudgetItemCatalogImpl` di `budget/data/adapters/`. Hanya pos anggaran
+      AKTIF dompet asal yang ditawarkan, ditambah pos yang sedang dipakai
+      transaksi yang disunting. Pilihan batal otomatis kalau dompet asal
+      diganti. Pemilih tidak tampil kalau dompet belum punya pos. Sunting
+      transaksi kini ikut bisa mengubah tautan pos (sebelumnya dipertahankan
+      apa adanya).
       Memenuhi FR-BUD-003, FR-TXN-002, dan FR-TXN-003.
-- [ ] **T-4.5** Buat layar Anggaran: ringkasan lintas anggaran di puncak (total
+- [x] **T-4.5** Buat layar Anggaran: ringkasan lintas anggaran di puncak (total
       rencana, terpakai, sisa), lalu daftar kartu anggaran.
       ⚠ **Layar ini daftar seluruh anggaran, bukan papan satu anggaran.**
       Beberapa anggaran boleh aktif sekaligus, berbagi dompet, dan berbeda
@@ -712,29 +731,50 @@ tanpa menyelesaikan apa pun.
       ⚠ Tiap kartu wajib memuat delapan hal: nama, dompet, periode, nominal
       rencana, terpakai, sisa, progres, dan status. Nama dompet harus terbaca
       tanpa membuka anggarannya.
+      ⚠ **Progres dihitung dari `listAllTransactions`**, bukan transaksi
+      sebulan: rumus `spent` tidak punya saringan tanggal, jadi transaksi
+      tertaut di luar bulan periode tetap harus terhitung. NFR-PERF-002 hanya
+      mengikat Beranda dan Dompet; tinjau ulang kalau buku besar membesar.
+      Ringkasan puncak hanya menjumlahkan anggaran AKTIF.
+      `AppSegmentedProgressBar.colorFor` dibetulkan: tepat 100% (pos
+      selesai) `pending`, `overBudget` baru di atas 100% sesuai ADR-015.
       Memenuhi FR-BUD-001 dan FR-BUD-004.
-- [ ] **T-4.6** Buat layar sunting anggaran beserta posnya, termasuk jumlah dan
+- [x] **T-4.6** Buat layar sunting anggaran beserta posnya, termasuk jumlah dan
       harga satuan opsional.
       ⚠ Jumlah dikali harga satuan ada supaya daftar belanja pemilik yang
       sungguhan berisi 35 item tetap bisa dicatat serinci sebelumnya.
+      Selisih jumlah pos vs rencana ditampilkan, dengan pintasan "Pakai
+      jumlah pos" (FR-BUD-002). Bagian rujukan yang sengaja tidak dibangun:
+      periode "Kustom", jenis pos "rencana transfer" (pos tidak berjenis),
+      "buat dari template" (Fase 7).
       Memenuhi FR-BUD-002.
-- [ ] **T-4.7** Tulis uji: membuat anggaran tidak mengubah saldo dompet mana
+- [x] **T-4.7** Tulis uji: membuat anggaran tidak mengubah saldo dompet mana
       pun; pengeluaran dari dompet lain tidak menambah `spent`; status pos
       benar di keempat kondisinya.
       ⚠ Wajib juga: transfer yang tertaut pos menambah `spent` pos itu; transfer
       yang `fromWalletId`-nya bukan dompet anggaran **tidak** menambah; dan
       transfer yang tertaut anggaran tetap tidak mengubah total saldo.
+      Bukti: `calculate_budget_progress_test` (angka nyata Rp3.068.500,
+      empat status, transfer asal/tujuan, total saldo tetap),
+      `budget_bloc_test` (tambah/arsip/hapus `verifyNever` pada tulis dompet
+      dan transaksi), `budget_repository_impl_test` (saldo dompet utuh
+      sesudah anggaran dibuat dan diarsipkan).
       Memenuhi NFR-ACC-002.
-- [ ] **T-4.8** Tambahkan namespace i18n `budget` dan daftarkan `BudgetScope`.
+- [x] **T-4.8** Tambahkan namespace i18n `budget` dan daftarkan `BudgetScope`.
+      `BudgetScope` dipasang di `AppShellPage` bersebelahan dengan scope
+      lain; uji shell butuh satu `pump()` tambahan per scope bersarang.
       Memenuhi NFR-UX-004.
-- [ ] **T-4.9** Tambahkan pengarsipan anggaran dan penyaring daftar: status
+- [x] **T-4.9** Tambahkan pengarsipan anggaran dan penyaring daftar: status
       (semua, aktif, selesai, nonaktif) dan dompet.
       ⚠ Mengarsipkan tidak menghapus transaksi yang sudah tertaut, dan tidak
       mengubah saldo dompet mana pun.
       ⚠ Jaga penyaringnya tetap sederhana — daftar dan pilihan, bukan antarmuka
       akuntansi.
+      Keadaan "tidak ada yang cocok" dibedakan dari "belum ada anggaran",
+      dengan tombol atur ulang penyaring. Tanpa dompet aktif, layar
+      menjelaskan perlunya dompet dan tidak menawarkan tombol buat.
       Memenuhi FR-BUD-001 dan FR-BUD-006.
-- [ ] **T-4.10** Buat layar rincian satu anggaran: nama, dompet, periode, angka
+- [x] **T-4.10** Buat layar rincian satu anggaran: nama, dompet, periode, angka
       anggaran, seluruh pos beserta progres dan statusnya, transaksi yang sudah
       tertaut, serta pintasan **Catat Pengeluaran** dan **Catat Transfer**.
       ⚠ Kedua pintasan membuka CATAT dengan dompet dan pos sudah terpilih —
@@ -742,9 +782,24 @@ tanpa menyelesaikan apa pun.
       ⚠ Status pos ada empat: belum terpakai, terpakai sebagian, selesai, lewat
       anggaran. Yang lewat anggaran memakai warna `overBudget`, bukan gaya
       kesalahan.
+      Pintasan tingkat anggaran memilih dompet; pintasan di kartu pos juga
+      memilih posnya (`openRecordSheet(initialChoice:, initialBudgetItemId:)`,
+      lembar pilihan dilewati tetapi tombol kembali tetap kembali ke sana).
+      Pintasan disembunyikan untuk anggaran nonaktif. Progres disegarkan
+      sesudah CATAT dan sesudah transaksi tertaut disunting/dihapus.
+      ⚠ **Diverifikasi di emulator (25 September 2026):** dompet BCA
+      Rp5.000.000 → anggaran "Rumah tangga" Rp3.068.500 (saldo tetap
+      Rp5.000.000) → pos Beras 2 × Rp75.000 → pintasan pos membuka formulir
+      pengeluaran dengan BCA dan "Beras · Rumah tangga" terpilih → catat
+      Rp75.000: saldo Rp4.925.000, terpakai Rp75.000, sisa Rp2.993.500, pos
+      50% "terpakai sebagian", transaksi muncul di daftar tertaut, seketika
+      tanpa menutup layar.
       Memenuhi FR-BUD-007 dan FR-REC-002.
-- [ ] **T-4.11** Lengkapi baris anggaran tertaut di layar rincian transaksi
+- [x] **T-4.11** Lengkapi baris anggaran tertaut di layar rincian transaksi
       (T-2.11), beserta jalan ke anggarannya.
+      Blok anggaran diteruskan ke rute rincian transaksi secara opsional
+      (`context.read<X?>()`): tanpa `BudgetBloc` barisnya tetap tampil,
+      hanya tanpa tautan. Diverifikasi di emulator bersama T-4.10.
       Memenuhi FR-TXN-006.
 
 ## Fase 5: Freelance

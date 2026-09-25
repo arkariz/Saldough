@@ -250,7 +250,7 @@
     "itemStatusPartiallySpent": "Partially spent",
     "itemStatusCompleted": "Completed",
     "itemStatusOverspent": "Over budget",
-    "itemCount": "$count items",
+    "itemCount": "Items: $count",
     "emptyBadge": "No plans yet",
     "emptyTitle": "No budgets yet",
     "emptyBody": "Plan a weekly or monthly spending limit for one wallet. Creating a budget does not reduce any wallet balance.",

@@ -1,5 +1,6 @@
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 
 /// Model serialisasi [Budget] beserta posnya, terpisah dari entitas domain
@@ -93,6 +94,9 @@ final class BudgetModel {
 }
 
 /// Model serialisasi [BudgetItem], disimpan di dalam dokumen [BudgetModel].
+///
+/// `kind` dan `targetWalletId` baru sejak ADR-018; pos yang tersimpan tanpa
+/// `kind` dibaca sebagai [BudgetItemKind.expense].
 final class BudgetItemModel {
   /// Membuat [BudgetItemModel].
   const BudgetItemModel({
@@ -101,6 +105,8 @@ final class BudgetItemModel {
     this.enteredAmount,
     this.quantity,
     this.unitPrice,
+    this.kind = 'expense',
+    this.targetWalletId,
   });
 
   /// Membaca [BudgetItemModel] dari JSON.
@@ -110,6 +116,8 @@ final class BudgetItemModel {
     enteredAmount: json['enteredAmount'] as int?,
     quantity: json['quantity'] as int?,
     unitPrice: json['unitPrice'] as int?,
+    kind: json['kind'] as String? ?? 'expense',
+    targetWalletId: json['targetWalletId'] as String?,
   );
 
   /// Membuat [BudgetItemModel] dari entitas domain [BudgetItem].
@@ -119,6 +127,8 @@ final class BudgetItemModel {
     enteredAmount: item.enteredAmount,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
+    kind: item.kind.name,
+    targetWalletId: item.targetWalletId,
   );
 
   /// Identitas pos.
@@ -136,6 +146,12 @@ final class BudgetItemModel {
   /// Harga satuan, dalam sen.
   final int? unitPrice;
 
+  /// Nama [BudgetItemKind].
+  final String kind;
+
+  /// Dompet tujuan pos transfer.
+  final String? targetWalletId;
+
   /// Menulis [BudgetItemModel] ke JSON.
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -143,6 +159,8 @@ final class BudgetItemModel {
     'enteredAmount': enteredAmount,
     'quantity': quantity,
     'unitPrice': unitPrice,
+    'kind': kind,
+    'targetWalletId': targetWalletId,
   };
 
   /// Mengubah model ini jadi entitas domain [BudgetItem].
@@ -152,5 +170,7 @@ final class BudgetItemModel {
     enteredAmount: enteredAmount,
     quantity: quantity,
     unitPrice: unitPrice,
+    kind: BudgetItemKind.values.byName(kind),
+    targetWalletId: targetWalletId,
   );
 }

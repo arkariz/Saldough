@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 
 /// Satu baris di dalam `Budget`, misalnya `Ikan kembung` atau `Listrik`.
 /// Lihat DOMAIN_MODEL.md bagian "Pos anggaran".
@@ -8,6 +9,9 @@ import 'package:dependencies/dependencies.dart';
 /// yang berupa daftar belanja. Kalau keduanya terisi, rincian yang menang —
 /// [plannedAmount] selalu diturunkan, tidak pernah disimpan terpisah dari
 /// sumbernya.
+///
+/// Pos berjenis [BudgetItemKind.transfer] wajib punya [targetWalletId] dan
+/// tidak boleh dirinci jadi jumlah × harga satuan (ADR-018).
 final class BudgetItem extends Equatable {
   /// Membuat [BudgetItem]. Isi [enteredAmount], atau [quantity] beserta
   /// [unitPrice].
@@ -17,9 +21,15 @@ final class BudgetItem extends Equatable {
     this.enteredAmount,
     this.quantity,
     this.unitPrice,
+    this.kind = BudgetItemKind.expense,
+    this.targetWalletId,
   }) : assert(
          enteredAmount != null || (quantity != null && unitPrice != null),
          'Pos anggaran butuh nominal yang diketik, atau jumlah beserta harga satuan.',
+       ),
+       assert(
+         kind != BudgetItemKind.transfer || (targetWalletId != null && quantity == null && unitPrice == null),
+         'Pos transfer butuh dompet tujuan dan nominal yang diketik langsung.',
        );
 
   /// Identitas pos.
@@ -38,6 +48,16 @@ final class BudgetItem extends Equatable {
   /// Harga satuan dalam sen.
   final int? unitPrice;
 
+  /// Jenis pos. Data lama tanpa jenis dibaca sebagai pengeluaran.
+  final BudgetItemKind kind;
+
+  /// Dompet tujuan untuk pos [BudgetItemKind.transfer]; `null` untuk pos
+  /// pengeluaran. Selalu berbeda dari dompet anggarannya.
+  final String? targetWalletId;
+
+  /// Apakah pos ini rencana transfer.
+  bool get isTransfer => kind == BudgetItemKind.transfer;
+
   /// Apakah nominal rencana dirinci jadi jumlah × harga satuan.
   bool get isItemized => quantity != null && unitPrice != null;
 
@@ -46,5 +66,5 @@ final class BudgetItem extends Equatable {
   int get plannedAmount => isItemized ? quantity! * unitPrice! : enteredAmount!;
 
   @override
-  List<Object?> get props => [id, name, enteredAmount, quantity, unitPrice];
+  List<Object?> get props => [id, name, enteredAmount, quantity, unitPrice, kind, targetWalletId];
 }

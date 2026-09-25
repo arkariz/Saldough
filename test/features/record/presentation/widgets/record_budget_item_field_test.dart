@@ -3,7 +3,7 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 
 void main() {
-  const bca = BudgetItemOption(
+  const beras = BudgetItemOption(
     budgetId: 'b1',
     budgetName: 'Rumah tangga',
     itemId: 'beras',
@@ -11,7 +11,16 @@ void main() {
     walletId: 'bca',
     isActive: true,
   );
-  const gopay = BudgetItemOption(
+  const setoran = BudgetItemOption(
+    budgetId: 'b1',
+    budgetName: 'Rumah tangga',
+    itemId: 'setoran',
+    itemName: 'Setoran tabungan',
+    walletId: 'bca',
+    isActive: true,
+    transferToWalletId: 'tabungan',
+  );
+  const kopi = BudgetItemOption(
     budgetId: 'b2',
     budgetName: 'Jajan',
     itemId: 'kopi',
@@ -19,7 +28,7 @@ void main() {
     walletId: 'gopay',
     isActive: true,
   );
-  const finished = BudgetItemOption(
+  const listrik = BudgetItemOption(
     budgetId: 'b3',
     budgetName: 'Agustus',
     itemId: 'listrik',
@@ -27,25 +36,42 @@ void main() {
     walletId: 'bca',
     isActive: false,
   );
-  const all = [bca, gopay, finished];
+  const all = [beras, setoran, kopi, listrik];
 
-  group('budgetItemChoicesFor (T-4.4)', () {
-    test('hanya pos anggaran dompet yang diberikan', () {
-      expect(budgetItemChoicesFor(all, 'bca', null), [bca]);
-      expect(budgetItemChoicesFor(all, 'gopay', null), [gopay]);
+  group('expenseBudgetChoicesFor (ADR-018)', () {
+    test('hanya pos PENGELUARAN aktif milik dompet asal', () {
+      expect(expenseBudgetChoicesFor(all, 'bca', null), [beras]);
+      expect(expenseBudgetChoicesFor(all, 'gopay', null), [kopi]);
+    });
+
+    test('pos transfer tidak pernah ditawarkan ke pengeluaran', () {
+      expect(expenseBudgetChoicesFor(all, 'bca', 'setoran'), [beras]);
     });
 
     test('tanpa dompet terpilih, tidak ada pilihan', () {
-      expect(budgetItemChoicesFor(all, null, null), isEmpty);
+      expect(expenseBudgetChoicesFor(all, null, null), isEmpty);
     });
 
-    test('pos anggaran yang tidak aktif hanya muncul kalau sedang dipakai transaksi yang disunting', () {
-      expect(budgetItemChoicesFor(all, 'bca', 'listrik'), [bca, finished]);
+    test('pos anggaran tidak aktif hanya muncul kalau sedang dipakai transaksi yang disunting', () {
+      expect(expenseBudgetChoicesFor(all, 'bca', 'listrik'), [beras, listrik]);
+    });
+  });
+
+  group('transferBudgetChoicesFor (ADR-018)', () {
+    test('hanya pos TRANSFER dengan dompet asal dan tujuan yang cocok', () {
+      expect(transferBudgetChoicesFor(all, 'bca', 'tabungan', null), [setoran]);
     });
 
-    test('pilihan yang tersimpan tidak ikut kalau dompetnya lain', () {
-      // Transfer dari GoPay yang dulu tertaut pos BCA: pos BCA tidak ditawarkan.
-      expect(budgetItemChoicesFor(all, 'gopay', 'beras'), [gopay]);
+    test('dompet tujuan lain: pos transfer tidak ditawarkan', () {
+      expect(transferBudgetChoicesFor(all, 'bca', 'gopay', null), isEmpty);
+    });
+
+    test('dompet tujuan belum dipilih: belum ada pilihan', () {
+      expect(transferBudgetChoicesFor(all, 'bca', null, null), isEmpty);
+    });
+
+    test('pos pengeluaran tidak pernah ditawarkan ke transfer', () {
+      expect(transferBudgetChoicesFor(all, 'bca', 'tabungan', 'beras'), [setoran]);
     });
   });
 }

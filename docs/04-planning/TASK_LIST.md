@@ -719,6 +719,9 @@ tanpa menyelesaikan apa pun.
       formulir transfer, terhadap `fromWalletId`.
       ⚠ Satu transaksi hanya boleh menaikkan satu pos. Jangan menawarkan tautan
       ke anggaran dompet tujuan juga — itu hitung ganda.
+      ⚠ **Direvisi ADR-018:** pos berjenis. Pengeluaran hanya ditawari pos
+      pengeluaran dompet asal; transfer hanya pos transfer yang asal DAN
+      tujuannya cocok (pemilih tampil sesudah kedua dompet dipilih).
       Port `BudgetItemCatalog` milik `record`, implementasi
       `BudgetItemCatalogImpl` di `budget/data/adapters/`. Hanya pos anggaran
       AKTIF dompet asal yang ditawarkan, ditambah pos yang sedang dipakai
@@ -749,9 +752,12 @@ tanpa menyelesaikan apa pun.
       sungguhan berisi 35 item tetap bisa dicatat serinci sebelumnya.
       ⚠ **Direvisi ADR-017:** kolom nominal rencana dan baris "Selisih
       dengan rencana" dihapus, diganti kartu "Total rencana anggaran" yang
-      menjumlahkan pos. Minimal satu pos wajib sebelum bisa disimpan. Bagian rujukan yang sengaja tidak dibangun:
-      periode "Kustom", jenis pos "rencana transfer" (pos tidak berjenis),
-      "buat dari template" (Fase 7).
+      menjumlahkan pos. Minimal satu pos wajib sebelum bisa disimpan.
+      ⚠ **Direvisi ADR-018:** formulir pos punya pilihan jenis (pengeluaran/
+      transfer, dikunci kalau pos sudah punya transaksi tertaut); pos transfer
+      memilih dompet tujuan dan tidak bisa dirinci jumlah × harga. Bagian
+      rujukan yang sengaja tidak dibangun: periode "Kustom" dan "buat dari
+      template" (Fase 7).
       Memenuhi FR-BUD-002.
 - [x] **T-4.7** Tulis uji: membuat anggaran tidak mengubah saldo dompet mana
       pun; pengeluaran dari dompet lain tidak menambah `spent`; status pos
@@ -787,9 +793,12 @@ tanpa menyelesaikan apa pun.
       ⚠ Status pos ada empat: belum terpakai, terpakai sebagian, selesai, lewat
       anggaran. Yang lewat anggaran memakai warna `overBudget`, bukan gaya
       kesalahan.
-      Pintasan tingkat anggaran memilih dompet; pintasan di kartu pos juga
-      memilih posnya (`openRecordSheet(initialChoice:, initialBudgetItemId:)`,
-      lembar pilihan dilewati tetapi tombol kembali tetap kembali ke sana).
+      ⚠ **Direvisi ADR-018 (25 September 2026):** pintasan tingkat anggaran
+      dihapus (transaksi tanpa pos tidak terhitung). Tiap pos punya SATU
+      tombol sesuai jenisnya; pos transfer juga mengisi dompet tujuan
+      (`openRecordSheet(initialChoice:, initialBudgetItemId:,
+      initialToWalletId:)`, lembar pilihan dilewati tetapi tombol kembali
+      tetap kembali ke sana).
       Pintasan di kartu pos juga mengisi nominal dengan SISA pos (rencana −
       terpakai; kosong kalau sisa ≤ 0), permintaan pemilik 25 September 2026
       — sisa, bukan rencana penuh, supaya pos yang terpakai sebagian tidak

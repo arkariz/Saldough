@@ -178,7 +178,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get flowTargetWallet => 'Target wallet';
 	@override String get budgetItemLabel => 'Budget item';
 	@override String get budgetItemNone => 'No budget';
-	@override String get budgetItemHelp => 'Optional. Only active budget items from this wallet are offered.';
+	@override String get budgetItemHelp => 'Optional. Only active budget items matching the wallets above are offered.';
 }
 
 // Path: transaction
@@ -410,11 +410,20 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get detailLinkedHeading => 'Linked Transactions';
 	@override String get detailLinkedEmpty => 'No transactions are linked to this budget yet.';
 	@override String get detailHowTitle => 'How budget items work';
-	@override String detailHowBody({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.';
+	@override String detailHowBody({required Object wallet}) => 'Record through the button on each item. Expense items count expenses from ${wallet}; transfer items count transfers from ${wallet} to their destination wallet. The budget itself never deducts a balance.';
 	@override String get unknownWallet => 'Wallet not found';
 	@override String get totalPlannedLabel => 'Total planned budget';
 	@override String get itemsRequiredHint => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.';
 	@override String walletUnchangedNote({required Object wallet}) => '${wallet} balance unchanged';
+	@override String get itemKindLabel => 'Item type';
+	@override String get itemKindExpense => 'Expense';
+	@override String get itemKindTransfer => 'Transfer';
+	@override String get itemKindLockedHint => 'The type can\'t be changed because this item already has linked transactions.';
+	@override String get itemTargetWalletLabel => 'Destination wallet';
+	@override String get itemTargetWalletHelp => 'Only transfers from the budget wallet to this wallet count toward the item.';
+	@override String get itemNoTargetWallet => 'You need another active wallet as the transfer destination.';
+	@override String itemTransferTo({required Object wallet}) => 'To ${wallet}';
+	@override String itemTargetConflict({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -521,7 +530,7 @@ extension on TranslationsEn {
 			'record.flowTargetWallet' => 'Target wallet',
 			'record.budgetItemLabel' => 'Budget item',
 			'record.budgetItemNone' => 'No budget',
-			'record.budgetItemHelp' => 'Optional. Only active budget items from this wallet are offered.',
+			'record.budgetItemHelp' => 'Optional. Only active budget items matching the wallets above are offered.',
 			'transaction.pageTitle' => 'Transactions',
 			'transaction.searchHint' => 'Search notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -726,11 +735,20 @@ extension on TranslationsEn {
 			'budget.detailLinkedHeading' => 'Linked Transactions',
 			'budget.detailLinkedEmpty' => 'No transactions are linked to this budget yet.',
 			'budget.detailHowTitle' => 'How budget items work',
-			'budget.detailHowBody' => ({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.',
+			'budget.detailHowBody' => ({required Object wallet}) => 'Record through the button on each item. Expense items count expenses from ${wallet}; transfer items count transfers from ${wallet} to their destination wallet. The budget itself never deducts a balance.',
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Total planned budget',
 			'budget.itemsRequiredHint' => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
+			'budget.itemKindLabel' => 'Item type',
+			'budget.itemKindExpense' => 'Expense',
+			'budget.itemKindTransfer' => 'Transfer',
+			'budget.itemKindLockedHint' => 'The type can\'t be changed because this item already has linked transactions.',
+			'budget.itemTargetWalletLabel' => 'Destination wallet',
+			'budget.itemTargetWalletHelp' => 'Only transfers from the budget wallet to this wallet count toward the item.',
+			'budget.itemNoTargetWallet' => 'You need another active wallet as the transfer destination.',
+			'budget.itemTransferTo' => ({required Object wallet}) => 'To ${wallet}',
+			'budget.itemTargetConflict' => ({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.',
 			_ => null,
 		};
 	}

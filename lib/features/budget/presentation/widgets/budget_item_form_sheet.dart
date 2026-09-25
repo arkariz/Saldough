@@ -4,7 +4,9 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Hasil [BudgetItemFormSheet]; `null` berarti dibatalkan.
 sealed class BudgetItemFormResult {
@@ -27,16 +29,29 @@ final class BudgetItemFormDeleted extends BudgetItemFormResult {
   const BudgetItemFormDeleted();
 }
 
-/// Formulir satu pos anggaran (FR-BUD-002): nama, lalu nominal rencana yang
-/// diketik langsung ATAU dirinci jadi jumlah × harga satuan untuk pos
-/// berupa daftar belanja. Perubahannya baru tersimpan saat anggarannya
-/// disimpan.
+/// Formulir satu pos anggaran (FR-BUD-002, ADR-018): jenis, nama, lalu
+/// nominal rencana.
+///
+/// - Pos **pengeluaran**: nominal diketik langsung ATAU dirinci jadi jumlah ×
+///   harga satuan untuk pos berupa daftar belanja.
+/// - Pos **transfer**: nominal selalu diketik langsung, ditambah dompet
+///   tujuan yang wajib.
+///
+/// Jenis dikunci ([kindLocked]) kalau pos sudah punya transaksi tertaut.
+/// Perubahannya baru tersimpan saat anggarannya disimpan.
 class BudgetItemFormSheet extends StatefulWidget {
   /// Membuat [BudgetItemFormSheet]. [initial] `null` = pos baru.
-  const BudgetItemFormSheet({this.initial, super.key});
+  const BudgetItemFormSheet({required this.targetWallets, this.initial, this.kindLocked = false, super.key});
 
   /// Pos yang disunting.
   final BudgetItem? initial;
+
+  /// Pilihan dompet tujuan pos transfer — pemanggil sudah mengecualikan
+  /// dompet anggaran itu sendiri.
+  final List<Wallet> targetWallets;
+
+  /// Jenis pos tidak bisa diganti (sudah punya transaksi tertaut).
+  final bool kindLocked;
 
   @override
   State<BudgetItemFormSheet> createState() => _BudgetItemFormSheetState();
@@ -48,6 +63,10 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
   final _quantity = TextEditingController();
   final _unitPrice = TextEditingController();
   bool _itemized = false;
+  BudgetItemKind _kind = BudgetItemKind.expense;
+  String? _targetWalletId;
+
+  bool get _isTransfer => _kind == BudgetItemKind.transfer;
 
   @override
   void initState() {
@@ -55,6 +74,8 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
     final item = widget.initial;
     if (item == null) return;
     _name.text = item.name;
+    _kind = item.kind;
+    _targetWalletId = item.targetWalletId;
     _itemized = item.isItemized;
     if (item.isItemized) {
       _quantity.text = '${item.quantity}';
@@ -75,18 +96,29 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
 
   /// Nominal rencana pos saat ini dalam sen, atau `null` kalau belum lengkap.
   int? get _total {
-    if (!_itemized) return BudgetMoneyField.senOf(_amount);
+    if (_isTransfer || !_itemized) return BudgetMoneyField.senOf(_amount);
     final quantity = BudgetQuantityField.valueOf(_quantity);
     final price = BudgetMoneyField.senOf(_unitPrice);
     return quantity == null || price == null ? null : quantity * price;
   }
 
-  bool get _canSave => _name.text.trim().isNotEmpty && _total != null;
+  bool get _canSave =>
+      _name.text.trim().isNotEmpty &&
+      _total != null &&
+      (!_isTransfer || widget.targetWallets.any((w) => w.id == _targetWalletId));
 
   void _save() {
     if (!_canSave) return;
     final id = widget.initial?.id ?? DateTime.now().microsecondsSinceEpoch.toString();
-    final item = _itemized
+    final item = _isTransfer
+        ? BudgetItem(
+            id: id,
+            name: _name.text.trim(),
+            enteredAmount: BudgetMoneyField.senOf(_amount),
+            kind: BudgetItemKind.transfer,
+            targetWalletId: _targetWalletId,
+          )
+        : _itemized
         ? BudgetItem(
             id: id,
             name: _name.text.trim(),
@@ -116,17 +148,67 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 title: editing ? t.budget.itemEditTitle : t.budget.itemAddTitle,
               ),
               const SizedBox(height: AppSpacing.md),
+              AppSectionLabel(t.budget.itemKindLabel),
+              const SizedBox(height: AppSpacing.xs),
+              IgnorePointer(
+                ignoring: widget.kindLocked,
+                child: Opacity(
+                  opacity: widget.kindLocked ? 0.6 : 1,
+                  child: BudgetSegmented<BudgetItemKind>(
+                    options: [
+                      (BudgetItemKind.expense, t.budget.itemKindExpense),
+                      (BudgetItemKind.transfer, t.budget.itemKindTransfer),
+                    ],
+                    selected: _kind,
+                    onChanged: (value) => setState(() => _kind = value),
+                  ),
+                ),
+              ),
+              if (widget.kindLocked) ...[
+                const SizedBox(height: 4),
+                Text(
+                  t.budget.itemKindLockedHint,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.budget.itemNameLabel, hint: t.budget.requiredHint),
               const SizedBox(height: AppSpacing.xs),
               BudgetTextField(controller: _name, hint: t.budget.itemNameHint, autofocus: !editing, onChanged: refresh),
               const SizedBox(height: AppSpacing.md),
-              BudgetSegmented<bool>(
-                options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
-                selected: _itemized,
-                onChanged: (value) => setState(() => _itemized = value),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              if (_itemized) ...[
+              if (_isTransfer) ...[
+                AppSectionLabel(t.budget.itemTargetWalletLabel, hint: t.budget.requiredHint),
+                const SizedBox(height: 2),
+                Text(
+                  t.budget.itemTargetWalletHelp,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                if (widget.targetWallets.isEmpty)
+                  Text(t.budget.itemNoTargetWallet, style: TextStyle(color: colors.pending))
+                else
+                  AppMenuSelectButton<String>(
+                    icon: IconKey.transfer,
+                    label: widget.targetWallets.where((w) => w.id == _targetWalletId).firstOrNull?.name ??
+                        t.budget.itemTargetWalletLabel,
+                    isPlaceholder: !widget.targetWallets.any((w) => w.id == _targetWalletId),
+                    wrapLabel: true,
+                    options: [
+                      for (final wallet in widget.targetWallets)
+                        (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+                    ],
+                    onSelected: (id) => setState(() => _targetWalletId = id),
+                  ),
+                const SizedBox(height: AppSpacing.md),
+              ] else ...[
+                BudgetSegmented<bool>(
+                  options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
+                  selected: _itemized,
+                  onChanged: (value) => setState(() => _itemized = value),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              if (!_isTransfer && _itemized) ...[
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

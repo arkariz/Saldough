@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_status.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
@@ -25,7 +26,13 @@ void main() {
     items: const [
       BudgetItem(id: 'mingguan', name: 'Belanja mingguan', quantity: 4, unitPrice: 57660000),
       BudgetItem(id: 'bulanan', name: 'Belanja bulanan', enteredAmount: 76210000),
-      BudgetItem(id: 'tabungan', name: 'Setoran tabungan', enteredAmount: 50000000),
+      BudgetItem(
+        id: 'tabungan',
+        name: 'Setoran tabungan',
+        enteredAmount: 50000000,
+        kind: BudgetItemKind.transfer,
+        targetWalletId: 'tabungan',
+      ),
     ],
   );
 
@@ -102,6 +109,21 @@ void main() {
         transfer('t1', 50000000, from: 'gopay', to: 'bca', item: 'tabungan'),
       ], now: now);
       expect(result.items[2].spent, 0);
+    });
+
+    test('transfer ke dompet selain tujuan pos TIDAK terhitung (ADR-018)', () {
+      final result = calculate(budget, [transfer('t1', 50000000, to: 'gopay', item: 'tabungan')], now: now);
+      expect(result.items[2].spent, 0);
+    });
+
+    test('pengeluaran yang tertaut ke pos transfer TIDAK terhitung (ADR-018)', () {
+      final result = calculate(budget, [expense('e1', 50000000, item: 'tabungan')], now: now);
+      expect(result.items[2].spent, 0);
+    });
+
+    test('transfer yang tertaut ke pos pengeluaran TIDAK terhitung (ADR-018)', () {
+      final result = calculate(budget, [transfer('t1', 57660000, item: 'mingguan')], now: now);
+      expect(result.items[0].spent, 0);
     });
 
     test('pemasukan tidak pernah terhitung', () {

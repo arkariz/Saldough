@@ -123,7 +123,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
   List<BudgetItemOption> get _budgetChoices =>
-      budgetItemChoicesFor(widget.budgetItems, _walletId, _budgetItemId);
+      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId);
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.

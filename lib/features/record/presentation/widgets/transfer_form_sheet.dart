@@ -43,6 +43,7 @@ class TransferFormSheet extends StatefulWidget {
     this.budgetItems = const [],
     this.initialBudgetItemId,
     this.initialAmountSen,
+    this.initialToWalletId,
     super.key,
   });
 
@@ -60,10 +61,9 @@ class TransferFormSheet extends StatefulWidget {
   /// ini", bukan tujuannya. Diabaikan kalau [initial] terisi.
   final String? initialWalletId;
 
-  /// Seluruh pos anggaran; formulir menyaringnya per dompet ASAL.
-  ///
-  /// ⚠ Hanya dompet asal: satu transfer menaikkan paling banyak satu pos,
-  /// jadi pos anggaran dompet tujuan tidak ditawarkan (T-4.4).
+  /// Seluruh pos anggaran; formulir hanya menawarkan pos TRANSFER yang
+  /// dompet anggarannya dompet asal dan dompet tujuannya dompet tujuan
+  /// transfer ini (ADR-018).
   final List<BudgetItemOption> budgetItems;
 
   /// Pos anggaran pra-terpilih (FR-REC-002). Diabaikan kalau [initial]
@@ -74,6 +74,10 @@ class TransferFormSheet extends StatefulWidget {
   /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau bukan
   /// rupiah utuh (kolom nominal hanya menerima rupiah utuh).
   final int? initialAmountSen;
+
+  /// Dompet TUJUAN pra-terpilih (pintasan pos transfer anggaran: dompet
+  /// tujuan pos itu). Diabaikan kalau [initial] terisi.
+  final String? initialToWalletId;
 
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
@@ -93,6 +97,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     final tx = widget.initial;
     if (tx == null) {
       _fromWalletId = widget.initialWalletId;
+      _toWalletId = widget.initialToWalletId;
       _budgetItemId = widget.initialBudgetItemId;
       final amount = widget.initialAmountSen;
       if (amount != null && amount > 0 && amount % 100 == 0) {
@@ -132,10 +137,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       !_sameWallet;
 
   List<BudgetItemOption> get _budgetChoices =>
-      budgetItemChoicesFor(widget.budgetItems, _fromWalletId, _budgetItemId);
+      transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId);
 
-  /// Pos terpilih kalau masih sah untuk dompet ASAL saat ini, selain itu
-  /// `null`.
+  /// Pos terpilih kalau masih sah untuk pasangan dompet asal/tujuan saat
+  /// ini, selain itu `null`.
   String? get _validBudgetItemId =>
       _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
@@ -207,14 +212,6 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               previewAmountSen: amount,
               previewIsCredit: false,
             ),
-            if (_budgetChoices.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.md),
-              RecordBudgetItemField(
-                choices: _budgetChoices,
-                selectedId: _validBudgetItemId,
-                onSelected: (id) => setState(() => _budgetItemId = id),
-              ),
-            ],
             const SizedBox(height: AppSpacing.md),
             WalletSelectField(
               label: t.record.destinationWalletFieldLabel,
@@ -225,6 +222,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               onSelected: (id) => setState(() => _toWalletId = id),
               previewAmountSen: amount,
             ),
+            if (_budgetChoices.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.md),
+              RecordBudgetItemField(
+                choices: _budgetChoices,
+                selectedId: _validBudgetItemId,
+                onSelected: (id) => setState(() => _budgetItemId = id),
+              ),
+            ],
             if (_sameWallet) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(

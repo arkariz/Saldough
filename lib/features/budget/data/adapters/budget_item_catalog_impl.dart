@@ -28,6 +28,7 @@ final class BudgetItemCatalogImpl implements BudgetItemCatalog {
               itemName: item.name,
               walletId: budget.walletId,
               isActive: budget.statusAt(now) == BudgetStatus.active,
+              transferToWalletId: item.targetWalletId,
             ),
       ],
     );

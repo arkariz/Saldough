@@ -11,7 +11,7 @@ Future<void> addBudget(BuildContext context) async {
   final bloc = context.read<BudgetBloc>();
   final result = await showFullScreenSheet<BudgetFormResult>(
     context,
-    builder: (_) => BudgetFormSheet(wallets: bloc.state.activeWallets),
+    builder: (_) => BudgetFormSheet(wallets: bloc.state.activeWallets, allWallets: bloc.state.wallets),
   );
   if (result case BudgetFormSaved(
     :final name,
@@ -44,7 +44,12 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
   ];
   final result = await showFullScreenSheet<BudgetFormResult>(
     context,
-    builder: (_) => BudgetFormSheet(wallets: wallets, initial: budget),
+    builder: (_) => BudgetFormSheet(
+      wallets: wallets,
+      initial: budget,
+      allWallets: bloc.state.wallets,
+      lockedItemIds: bloc.state.lockedItemIds(budget),
+    ),
   );
   switch (result) {
     case BudgetFormSaved(

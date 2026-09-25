@@ -102,7 +102,7 @@
     "flowTargetWallet": "Dompet tujuan",
     "budgetItemLabel": "Pos anggaran",
     "budgetItemNone": "Tanpa anggaran",
-    "budgetItemHelp": "Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan."
+    "budgetItemHelp": "Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan."
   },
   "transaction": {
     "pageTitle": "Transaksi",
@@ -313,10 +313,19 @@
     "detailLinkedHeading": "Transaksi Tertaut",
     "detailLinkedEmpty": "Belum ada transaksi yang tertaut ke anggaran ini.",
     "detailHowTitle": "Cara kerja pos anggaran",
-    "detailHowBody": "Saat mencatat pengeluaran atau transfer dari dompet $wallet, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.",
+    "detailHowBody": "Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari $wallet; pos transfer menghitung transfer dari $wallet ke dompet tujuannya. Anggaran sendiri tidak pernah memotong saldo.",
     "unknownWallet": "Dompet tidak ditemukan",
     "totalPlannedLabel": "Total rencana anggaran",
     "itemsRequiredHint": "Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.",
-    "walletUnchangedNote": "Saldo $wallet tetap"
+    "walletUnchangedNote": "Saldo $wallet tetap",
+    "itemKindLabel": "Jenis pos",
+    "itemKindExpense": "Pengeluaran",
+    "itemKindTransfer": "Transfer",
+    "itemKindLockedHint": "Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.",
+    "itemTargetWalletLabel": "Dompet tujuan",
+    "itemTargetWalletHelp": "Hanya transfer dari dompet anggaran ke dompet ini yang terhitung ke pos.",
+    "itemNoTargetWallet": "Butuh dompet aktif lain sebagai tujuan transfer.",
+    "itemTransferTo": "Ke $wallet",
+    "itemTargetConflict": "Pos transfer \"$name\" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya."
   }
 }

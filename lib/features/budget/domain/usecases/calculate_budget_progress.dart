@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_status.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -10,15 +11,10 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// Tidak satu pun hasilnya disimpan; dihitung ulang setiap kali diakses.
 /// Lihat DOMAIN_MODEL.md bagian "Pos anggaran" untuk rumusnya.
 ///
-/// ⚠ `spent` sebuah pos menjumlahkan **dua** jenis transaksi yang
-/// `budgetItemId`-nya menunjuk pos itu:
-/// - [ExpenseTransaction] yang `walletId`-nya sama dengan `budget.walletId`;
-/// - [TransferTransaction] yang `fromWalletId`-nya sama dengan
-///   `budget.walletId`.
-///
-/// Melewatkan salah satunya membuat angka anggaran salah tanpa gejala.
-/// Pemasukan tidak pernah terhitung, dan tidak ada saringan tanggal —
-/// tautan pos yang menentukan, bukan periode.
+/// ⚠ `spent` sebuah pos menjumlahkan transaksi yang `budgetItemId`-nya
+/// menunjuk pos itu DAN sejenis dengan posnya (ADR-018) — lihat
+/// [countsTowardBudgetItem]. Pemasukan tidak pernah terhitung, dan tidak ada
+/// saringan tanggal — tautan pos yang menentukan, bukan periode.
 final class CalculateBudgetProgress {
   /// Membuat [CalculateBudgetProgress].
   const CalculateBudgetProgress();
@@ -28,17 +24,16 @@ final class CalculateBudgetProgress {
   /// [transactions] boleh berisi transaksi apa saja — yang tidak tertaut ke
   /// pos [budget] diabaikan.
   BudgetProgress call(Budget budget, Iterable<Transaction> transactions, {required DateTime now}) {
+    final itemsById = {for (final item in budget.items) item.id: item};
     final spentByItem = <String, int>{for (final item in budget.items) item.id: 0};
     for (final transaction in transactions) {
-      final (itemId, walletId) = switch (transaction) {
-        ExpenseTransaction(:final budgetItemId, :final walletId) => (budgetItemId, walletId),
-        TransferTransaction(:final budgetItemId, :final fromWalletId) => (budgetItemId, fromWalletId),
-        IncomeTransaction() => (null, null),
+      final itemId = switch (transaction) {
+        ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
+        IncomeTransaction() => null,
       };
-      if (itemId == null || walletId != budget.walletId) continue;
-      final current = spentByItem[itemId];
-      if (current == null) continue;
-      spentByItem[itemId] = current + transaction.amount;
+      final item = itemsById[itemId];
+      if (item == null || !countsTowardBudgetItem(budget, item, transaction)) continue;
+      spentByItem[item.id] = spentByItem[item.id]! + transaction.amount;
     }
 
     final items = [
@@ -122,6 +117,23 @@ final class BudgetItemProgress extends Equatable {
   @override
   List<Object?> get props => [item, spent, status];
 }
+
+/// Apakah [transaction] terhitung ke [item] milik [budget] (ADR-018),
+/// DENGAN anggapan `budgetItemId`-nya sudah menunjuk [item]:
+/// - pos pengeluaran: hanya [ExpenseTransaction] yang `walletId`-nya dompet
+///   anggaran;
+/// - pos transfer: hanya [TransferTransaction] DARI dompet anggaran KE
+///   `item.targetWalletId`.
+///
+/// Satu-satunya tempat aturan ini ditulis — dipakai hitungan progres dan
+/// daftar transaksi tertaut, supaya keduanya tidak pernah berbeda.
+bool countsTowardBudgetItem(Budget budget, BudgetItem item, Transaction transaction) =>
+    switch ((item.kind, transaction)) {
+      (BudgetItemKind.expense, ExpenseTransaction(:final walletId)) => walletId == budget.walletId,
+      (BudgetItemKind.transfer, TransferTransaction(:final fromWalletId, :final toWalletId)) =>
+        fromWalletId == budget.walletId && toWalletId == item.targetWalletId,
+      _ => false,
+    };
 
 /// `spent ÷ plannedAmount`, tidak dijepit — lewat anggaran menghasilkan nilai
 /// di atas 1. Rencana nol tidak bisa dibagi: hasilnya 0 kalau belum ada yang

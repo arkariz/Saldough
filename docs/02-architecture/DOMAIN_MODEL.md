@@ -189,23 +189,33 @@ lain.
 | `name` | `String` | Nama pos, misalnya `Ikan kembung` atau `Listrik`. |
 | `plannedAmount` | `int` | Nominal rencana dalam sen. |
 | `quantity` | `int?` | Jumlah barang, untuk pos yang berupa daftar belanja. |
-| `unitPrice` | `int?` | Harga satuan dalam sen. |
+| `unitPrice` | `int?` | Harga satuan dalam sen. Hanya untuk pos pengeluaran. |
+| `kind` | `BudgetItemKind` | `expense` (rencana belanja) atau `transfer` (rencana pemindahan dana). Bawaan `expense`. |
+| `targetWalletId` | `String?` | Dompet tujuan. **Wajib** untuk pos transfer, dan berbeda dari dompet anggaran; `null` untuk pos pengeluaran. |
 
 Kalau `quantity` dan `unitPrice` terisi, `plannedAmount` dihitung dari keduanya;
 kalau tidak, ia diketik langsung. Dua field itu ada supaya daftar belanja
 pemilik — yang sungguhan berisi 35 item dengan harga satuan — tetap bisa dicatat
 serinci sebelumnya, tanpa memerlukan domain belanja tersendiri.
 
+Pos berjenis ([ADR-018](adr/0018-jenis-pos-anggaran.md)). Transaksi yang
+tertaut ke pos yang berbeda jenis tidak terhitung, begitu pula transfer yang
+dompet tujuannya bukan `targetWalletId` pos itu. Pos transfer selalu diketik
+langsung, tanpa jumlah × harga satuan.
+
 Nilai turunan yang dihitung, bukan disimpan:
 
 ```
 item.plannedAmount = quantity × unitPrice          bila keduanya terisi
-item.spent         = Σ expense.amount
-                     dengan expense.budgetItemId = item.id
-                     dan    expense.walletId     = budget.walletId
-                   + Σ transfer.amount
-                     dengan transfer.budgetItemId = item.id
-                     dan    transfer.fromWalletId = budget.walletId
+item.spent         = bila item.kind = expense:
+                       Σ expense.amount
+                       dengan expense.budgetItemId = item.id
+                       dan    expense.walletId     = budget.walletId
+                     bila item.kind = transfer:
+                       Σ transfer.amount
+                       dengan transfer.budgetItemId = item.id
+                       dan    transfer.fromWalletId = budget.walletId
+                       dan    transfer.toWalletId   = item.targetWalletId
 item.remaining     = item.plannedAmount − item.spent
 item.progress      = item.spent ÷ item.plannedAmount
 

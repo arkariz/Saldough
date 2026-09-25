@@ -126,19 +126,27 @@ final class BudgetState extends UiState<BudgetState> {
   int get activeSpent => activeProgress.fold(0, (sum, p) => sum + p.spent);
 
   /// Transaksi yang tertaut ke salah satu pos [budget] dan benar-benar
-  /// terhitung (dompetnya cocok), terbaru di atas.
+  /// terhitung (aturan yang sama dengan progres, [countsTowardBudgetItem]),
+  /// terbaru di atas.
   List<Transaction> linkedTransactions(Budget budget) {
-    final itemIds = {for (final item in budget.items) item.id};
+    final itemsById = {for (final item in budget.items) item.id: item};
     return transactions.where((transaction) {
-      return switch (transaction) {
-        ExpenseTransaction(:final budgetItemId, :final walletId) =>
-          itemIds.contains(budgetItemId) && walletId == budget.walletId,
-        TransferTransaction(:final budgetItemId, :final fromWalletId) =>
-          itemIds.contains(budgetItemId) && fromWalletId == budget.walletId,
-        IncomeTransaction() => false,
+      final itemId = switch (transaction) {
+        ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
+        IncomeTransaction() => null,
       };
+      final item = itemsById[itemId];
+      return item != null && countsTowardBudgetItem(budget, item, transaction);
     }).toList()..sort((a, b) => b.date.compareTo(a.date));
   }
+
+  /// `id` pos [budget] yang sudah punya transaksi tertaut — jenisnya dikunci
+  /// (ADR-018), supaya transaksi lama tidak diam-diam berhenti terhitung.
+  Set<String> lockedItemIds(Budget budget) => {
+    for (final transaction in linkedTransactions(budget))
+      if (transaction case ExpenseTransaction(:final budgetItemId?) || TransferTransaction(:final budgetItemId?))
+        budgetItemId,
+  };
 
   @override
   BudgetState copyWith({

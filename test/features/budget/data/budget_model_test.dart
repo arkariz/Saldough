@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/budget/data/models/budget_model.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 
 void main() {
   group('BudgetModel (ADR-017)', () {
@@ -32,6 +34,26 @@ void main() {
       }).toJson();
 
       expect(json.containsKey('plannedAmount'), isFalse);
+    });
+  });
+
+  group('BudgetItemModel (ADR-018)', () {
+    test('pos transfer tersimpan dan terbaca utuh: jenis dan dompet tujuan', () {
+      const item = BudgetItem(
+        id: 'setoran',
+        name: 'Setoran tabungan',
+        enteredAmount: 50000000,
+        kind: BudgetItemKind.transfer,
+        targetWalletId: 'tabungan',
+      );
+      final restored = BudgetItemModel.fromJson(BudgetItemModel.fromEntity(item).toJson()).toEntity();
+      expect(restored, item);
+    });
+
+    test('pos lama tanpa kunci kind dibaca sebagai pengeluaran', () {
+      final item = BudgetItemModel.fromJson({'id': 'beras', 'name': 'Beras', 'enteredAmount': 100}).toEntity();
+      expect(item.kind, BudgetItemKind.expense);
+      expect(item.targetWalletId, isNull);
     });
   });
 }

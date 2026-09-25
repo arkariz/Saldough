@@ -421,14 +421,16 @@ lebih berat, fitur itu yang salah tempat.
 
 **FR-BUD-003 — Menautkan transaksi ke pos anggaran**
 
-- [ ] Menautkan satu pengeluaran ke paling banyak satu pos anggaran.
-- [ ] Menautkan satu transfer ke paling banyak satu pos anggaran, untuk pos yang
-      memang berupa rencana pemindahan dana seperti setoran tabungan.
+- [ ] Menautkan satu pengeluaran ke paling banyak satu pos anggaran berjenis
+      pengeluaran.
+- [ ] Menautkan satu transfer ke paling banyak satu pos anggaran berjenis
+      transfer, yang dompet tujuannya sama dengan dompet tujuan transfer itu
+      ([ADR-018](../02-architecture/adr/0018-jenis-pos-anggaran.md)).
 - [ ] Menghitung `spent` sebuah pos dari transaksi yang tertaut padanya, bukan
       dari nilai yang disimpan.
 - [ ] Hanya menghitung pengeluaran yang `walletId`-nya sama dengan dompet
       anggaran, dan transfer yang `fromWalletId`-nya sama dengan dompet
-      anggaran.
+      anggaran dan `toWalletId`-nya sama dengan dompet tujuan pos.
 - [ ] Memastikan satu transaksi menaikkan paling banyak satu pos anggaran,
       supaya tidak terhitung ganda.
 - [ ] Memperbarui progres seketika saat transaksi dicatat, disunting, atau
@@ -474,9 +476,11 @@ Ini layar daftar, dicapai dari navigasi bawah.
       atau lewat anggaran.
 - [ ] Menampilkan pos yang lewat anggaran dengan warna `overBudget`, bukan
       sebagai kesalahan.
-- [ ] Menyediakan pintasan kontekstual **Catat Pengeluaran** dan **Catat
-      Transfer** yang membuka CATAT dengan dompet dan pos anggaran sudah
-      terpilih — bukan formulir pencatatan tersendiri.
+- [ ] Menyediakan satu pintasan di tiap pos sesuai jenisnya — **Catat
+      Pengeluaran** atau **Catat Transfer** — yang membuka CATAT dengan dompet,
+      pos, sisa nominal, dan (untuk pos transfer) dompet tujuan sudah terisi —
+      bukan formulir pencatatan tersendiri. Tidak ada pintasan di tingkat
+      anggaran, karena transaksi tanpa pos tidak terhitung (ADR-018).
 - [ ] Menampilkan transaksi yang sudah tertaut ke anggaran itu.
 
 ### 7.5 Freelance

@@ -64,13 +64,20 @@ final class BudgetFormDeleted extends BudgetFormResult {
 /// ditampilkan sebagai "Total rencana" yang ikut berubah tiap pos ditambah,
 /// disunting, atau dihapus (ADR-017). Minimal satu pos wajib ada.
 ///
+/// Pos berjenis pengeluaran atau transfer (ADR-018); jenis pos yang sudah
+/// punya transaksi tertaut dikunci ([lockedItemIds]).
+///
 /// ⚠ Bagian rujukan yang sengaja tidak dibangun: periode "Kustom" (domain
-/// hanya mingguan/bulanan), jenis pos "rencana transfer" (pos tidak punya
-/// jenis — pengeluaran maupun transfer boleh ditautkan ke pos mana pun),
-/// dan "buat dari template" (FR-BUD-005, Fase 7).
+/// hanya mingguan/bulanan) dan "buat dari template" (FR-BUD-005, Fase 7).
 class BudgetFormSheet extends StatefulWidget {
   /// Membuat [BudgetFormSheet]. [initial] `null` = anggaran baru.
-  const BudgetFormSheet({required this.wallets, this.initial, super.key});
+  const BudgetFormSheet({
+    required this.wallets,
+    this.initial,
+    this.allWallets = const [],
+    this.lockedItemIds = const {},
+    super.key,
+  });
 
   /// Dompet yang bisa dipilih — pemanggil menyertakan dompet milik
   /// [initial] walau sudah nonaktif, supaya pilihannya tidak hilang.
@@ -78,6 +85,14 @@ class BudgetFormSheet extends StatefulWidget {
 
   /// Anggaran yang disunting.
   final Budget? initial;
+
+  /// Seluruh dompet, untuk pilihan dan nama dompet tujuan pos transfer
+  /// (dompet nonaktif hanya muncul kalau sudah jadi tujuan pos itu).
+  final List<Wallet> allWallets;
+
+  /// `id` pos yang sudah punya transaksi tertaut — jenisnya dikunci
+  /// (ADR-018).
+  final Set<String> lockedItemIds;
 
   @override
   State<BudgetFormSheet> createState() => _BudgetFormSheetState();
@@ -124,7 +139,26 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
 
   int get _itemsTotal => _items.fold(0, (sum, item) => sum + item.plannedAmount);
 
-  bool get _canSave => _name.text.trim().isNotEmpty && _walletId != null && _items.isNotEmpty;
+  bool get _canSave =>
+      _name.text.trim().isNotEmpty && _walletId != null && _items.isNotEmpty && _conflictingItem == null;
+
+  /// Pos transfer yang dompet tujuannya sama dengan dompet anggaran — tidak
+  /// sah (transfer ke dompet yang sama), terjadi kalau dompet anggaran
+  /// diganti sesudah pos transfer dibuat.
+  BudgetItem? get _conflictingItem =>
+      _items.where((item) => item.isTransfer && item.targetWalletId == _walletId).firstOrNull;
+
+  /// Pilihan dompet tujuan pos transfer: dompet aktif selain dompet
+  /// anggaran, ditambah tujuan pos yang sedang disunting walau nonaktif.
+  List<Wallet> _targetWalletsFor(BudgetItem? item) => [
+    for (final wallet in widget.allWallets.isEmpty ? widget.wallets : widget.allWallets)
+      if (wallet.id != _walletId && (wallet.isActive || wallet.id == item?.targetWalletId)) wallet,
+  ];
+
+  String? _walletName(String? id) => (widget.allWallets.isEmpty ? widget.wallets : widget.allWallets)
+      .where((wallet) => wallet.id == id)
+      .firstOrNull
+      ?.name;
 
   Budget get _draft => Budget(
     id: widget.initial?.id ?? '',
@@ -147,7 +181,14 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
   Future<void> _editItem([int? index]) async {
     final result = await showFullScreenSheet<BudgetItemFormResult>(
       context,
-      builder: (_) => BudgetItemFormSheet(initial: index == null ? null : _items[index]),
+      builder: (_) {
+        final item = index == null ? null : _items[index];
+        return BudgetItemFormSheet(
+          initial: item,
+          targetWallets: _targetWalletsFor(item),
+          kindLocked: item != null && widget.lockedItemIds.contains(item.id),
+        );
+      },
     );
     if (!mounted) return;
     setState(() {
@@ -286,11 +327,22 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
               const SizedBox(height: AppSpacing.xs),
               for (var i = 0; i < _items.length; i++) ...[
-                _ItemRow(item: _items[i], onTap: () => _editItem(i)),
+                _ItemRow(
+                  item: _items[i],
+                  targetWalletName: _walletName(_items[i].targetWalletId),
+                  onTap: () => _editItem(i),
+                ),
                 const SizedBox(height: AppSpacing.xs),
               ],
               AppButton(label: t.budget.addItemAction, color: colors.textMuted, onPressed: _editItem),
               const SizedBox(height: AppSpacing.sm),
+              if (_conflictingItem case final item?) ...[
+                Text(
+                  t.budget.itemTargetConflict(name: item.name),
+                  style: textTheme.bodySmall?.copyWith(color: colors.overBudget),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+              ],
               _PlannedTotalCard(
                 total: _itemsTotal,
                 itemCount: _items.length,
@@ -377,9 +429,10 @@ class _WalletChoice extends StatelessWidget {
 }
 
 class _ItemRow extends StatelessWidget {
-  const _ItemRow({required this.item, required this.onTap});
+  const _ItemRow({required this.item, required this.targetWalletName, required this.onTap});
 
   final BudgetItem item;
+  final String? targetWalletName;
   final VoidCallback onTap;
 
   @override
@@ -400,6 +453,13 @@ class _ItemRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(item.name, style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    BudgetBadge(
+                      label: item.isTransfer
+                          ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
+                          : t.budget.itemKindExpense,
+                      color: item.isTransfer ? colors.transfer : colors.textMuted,
+                    ),
                     if (item.isItemized)
                       Text(
                         t.budget.itemItemizedDetail(

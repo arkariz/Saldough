@@ -56,9 +56,12 @@ Future<void> openBudgetDetail(BuildContext context, Budget budget) {
 /// anggaran, seluruh pos dengan progres dan statusnya, transaksi tertaut,
 /// serta pintasan **Catat Pengeluaran** dan **Catat Transfer**.
 ///
-/// ⚠ Kedua pintasan membuka CATAT biasa (`openRecordSheet`) dengan dompet —
-/// dan, dari kartu pos, pos anggarannya — sudah terpilih. Bukan formulir
-/// pencatatan tersendiri (aturan 8 CLAUDE.md, FR-REC-002).
+/// ⚠ Pencatatan dari layar ini HANYA lewat kartu pos (ADR-018): tiap pos
+/// punya satu tombol sesuai jenisnya, yang membuka CATAT biasa
+/// (`openRecordSheet`) dengan dompet, pos, dan sisa nominal sudah terisi —
+/// untuk pos transfer, dompet tujuannya juga. Tidak ada pintasan di tingkat
+/// anggaran, karena transaksi tanpa pos tidak terhitung ke anggaran mana pun.
+/// Bukan formulir pencatatan tersendiri (aturan 8 CLAUDE.md, FR-REC-002).
 ///
 /// Membaca anggaran dari `BudgetBloc` (bukan [budget] langsung) supaya
 /// progres yang berubah sesudah CATAT tampil tanpa menutup layar ini.
@@ -70,24 +73,21 @@ class BudgetDetailPage extends StatelessWidget {
   /// salinan terbarunya).
   final Budget budget;
 
-  /// Dari kartu pos, [itemId] dan [amountSen] (sisa pos) ikut terisi; dari
-  /// pintasan tingkat anggaran hanya dompetnya.
-  Future<void> _record(
-    BuildContext context,
-    Budget current,
-    RecordChoice choice, {
-    String? itemId,
-    int? amountSen,
-  }) async {
+  /// Membuka CATAT untuk pos [progress]: jenis formulir mengikuti jenis pos,
+  /// dengan dompet anggaran, pos, sisa nominal, dan — untuk pos transfer —
+  /// dompet tujuan sudah terisi.
+  Future<void> _record(BuildContext context, Budget current, BudgetItemProgress progress) async {
+    final item = progress.item;
     final budgets = context.read<BudgetBloc>();
     final transactions = context.read<TransactionBloc>();
     final wallets = context.read<WalletBloc>();
     await openRecordSheet(
       context,
       initialWalletId: current.walletId,
-      initialChoice: choice,
-      initialBudgetItemId: itemId,
-      initialAmountSen: amountSen,
+      initialChoice: item.isTransfer ? RecordChoice.transfer : RecordChoice.expense,
+      initialBudgetItemId: item.id,
+      initialAmountSen: progress.remaining,
+      initialToWalletId: item.targetWalletId,
     );
     budgets.add(const BudgetRefreshed());
     transactions.add(const TransactionRefreshed());
@@ -129,19 +129,6 @@ class BudgetDetailPage extends StatelessWidget {
                 _TopBar(onEdit: () => _edit(context, current)),
                 const SizedBox(height: AppSpacing.md),
                 _HeroCard(budget: current, progress: progress, wallet: wallet),
-                if (canRecord) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  AppButton(
-                    label: t.budget.detailRecordExpenseAction,
-                    onPressed: () => _record(context, current, RecordChoice.expense),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  AppButton(
-                    label: t.budget.detailRecordTransferAction,
-                    color: context.appColors.transfer,
-                    onPressed: () => _record(context, current, RecordChoice.transfer),
-                  ),
-                ],
                 const SizedBox(height: AppSpacing.lg),
                 AppSectionLabel(t.budget.detailItemsHeading, hint: t.budget.itemCount(count: current.items.length)),
                 const SizedBox(height: AppSpacing.xs),
@@ -151,24 +138,8 @@ class BudgetDetailPage extends StatelessWidget {
                   for (final itemProgress in progress.items) ...[
                     _ItemCard(
                       progress: itemProgress,
-                      onRecordExpense: canRecord
-                          ? () => _record(
-                              context,
-                              current,
-                              RecordChoice.expense,
-                              itemId: itemProgress.item.id,
-                              amountSen: itemProgress.remaining,
-                            )
-                          : null,
-                      onRecordTransfer: canRecord
-                          ? () => _record(
-                              context,
-                              current,
-                              RecordChoice.transfer,
-                              itemId: itemProgress.item.id,
-                              amountSen: itemProgress.remaining,
-                            )
-                          : null,
+                      targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
+                      onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],
@@ -394,11 +365,15 @@ class _Stat extends StatelessWidget {
 /// rencana/terpakai/sisa, dan pintasan CATAT dengan pos ini terpilih.
 /// Lewat anggaran memakai `overBudget`, bukan gaya kesalahan (FR-BUD-007).
 class _ItemCard extends StatelessWidget {
-  const _ItemCard({required this.progress, required this.onRecordExpense, required this.onRecordTransfer});
+  const _ItemCard({required this.progress, required this.targetWalletName, required this.onRecord});
 
   final BudgetItemProgress progress;
-  final VoidCallback? onRecordExpense;
-  final VoidCallback? onRecordTransfer;
+
+  /// Nama dompet tujuan pos transfer.
+  final String? targetWalletName;
+
+  /// Membuka CATAT untuk pos ini, atau `null` (anggaran nonaktif).
+  final VoidCallback? onRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -420,6 +395,13 @@ class _ItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(item.name, style: textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    BudgetBadge(
+                      label: item.isTransfer
+                          ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
+                          : t.budget.itemKindExpense,
+                      color: item.isTransfer ? colors.transfer : colors.textMuted,
+                    ),
                     if (item.isItemized)
                       Text(
                         t.budget.itemItemizedDetail(
@@ -455,22 +437,17 @@ class _ItemCard extends StatelessWidget {
               ),
             ],
           ),
-          if (onRecordExpense != null || onRecordTransfer != null) ...[
+          if (onRecord case final record?) ...[
             const SizedBox(height: AppSpacing.xs),
-            Wrap(
-              alignment: WrapAlignment.end,
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
-              children: [
-                if (onRecordExpense != null)
-                  AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: onRecordExpense!),
-                if (onRecordTransfer != null)
-                  AppQuickChip(
-                    label: t.budget.detailRecordTransferAction,
-                    color: colors.tinted(colors.transferFill, 0.2),
-                    onTap: onRecordTransfer!,
-                  ),
-              ],
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: item.isTransfer
+                  ? AppQuickChip(
+                      label: t.budget.detailRecordTransferAction,
+                      color: colors.tinted(colors.transferFill, 0.2),
+                      onTap: record,
+                    )
+                  : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
             ),
           ],
         ],

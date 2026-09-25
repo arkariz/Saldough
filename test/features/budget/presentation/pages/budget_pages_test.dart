@@ -10,12 +10,14 @@ import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -158,5 +160,48 @@ void main() {
     expect(find.byType(TransactionDetailPage), findsNothing);
     expect(find.byType(BudgetDetailPage), findsOneWidget);
     expect(find.byType(BudgetDetailPage, skipOffstage: false), findsNWidgets(2));
+  });
+
+  testWidgets('pos transfer: satu tombol, membuka transfer dengan dompet tujuan dan pos terisi (ADR-018)', (tester) async {
+    tallViewport(tester);
+    await walletRepository.saveWallet(
+      const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 500000000),
+    );
+    await walletRepository.saveWallet(
+      const Wallet(id: 'tabungan', name: 'Tabungan', iconKey: 'walletSavings', initialBalance: 0, currentBalance: 0),
+    );
+    await budgetRepository.saveBudget(
+      Budget(
+        id: 'rumah',
+        name: 'Rumah tangga',
+        walletId: 'bca',
+        period: BudgetPeriod.monthly,
+        startDate: DateTime(now.year, now.month),
+        items: const [
+          BudgetItem(
+            id: 'setoran',
+            name: 'Setoran',
+            enteredAmount: 50000000,
+            kind: BudgetItemKind.transfer,
+            targetWalletId: 'tabungan',
+          ),
+        ],
+      ),
+    );
+    await openBudgetTab(tester);
+    await tester.tap(find.byType(BudgetCard));
+    await tester.pumpAndSettle();
+
+    // Tidak ada pintasan di tingkat anggaran; pos transfer hanya punya tombol transfer.
+    expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.widgetWithText(AppQuickChip, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.textContaining(t.budget.itemTransferTo(wallet: 'Tabungan').toUpperCase()), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(AppQuickChip, t.budget.detailRecordTransferAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(TransferFormSheet), findsOneWidget);
+    // Pos transfer hanya ditawarkan kalau asal BCA DAN tujuan Tabungan — jadi
+    // label terpilih ini membuktikan dompet tujuan sudah terisi.
+    expect(find.text('Setoran · Rumah tangga'), findsOneWidget);
   });
 }

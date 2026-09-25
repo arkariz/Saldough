@@ -18,6 +18,7 @@ final class BudgetItemOption extends Equatable {
     required this.itemName,
     required this.walletId,
     required this.isActive,
+    this.transferToWalletId,
   });
 
   /// Anggaran pemilik pos.
@@ -36,13 +37,21 @@ final class BudgetItemOption extends Equatable {
   /// sama dengan dompet asal; transfer, dengan `fromWalletId`-nya.
   final String walletId;
 
+  /// Dompet tujuan kalau pos ini rencana transfer; `null` = pos pengeluaran
+  /// (ADR-018). Pos transfer hanya ditawarkan ke transfer DARI [walletId] KE
+  /// dompet ini; pos pengeluaran hanya ke pengeluaran dari [walletId].
+  final String? transferToWalletId;
+
+  /// Apakah pos ini rencana transfer.
+  bool get isTransfer => transferToWalletId != null;
+
   /// Anggarannya aktif (belum diarsipkan dan periodenya belum lewat). Hanya
   /// yang aktif ditawarkan untuk transaksi baru; yang tidak aktif tetap ada
   /// supaya tautan transaksi lama tetap terbaca saat disunting.
   final bool isActive;
 
   @override
-  List<Object?> get props => [budgetId, budgetName, itemId, itemName, walletId, isActive];
+  List<Object?> get props => [budgetId, budgetName, itemId, itemName, walletId, isActive, transferToWalletId];
 }
 
 /// Port milik `record`: daftar pos anggaran untuk pemilih di formulir

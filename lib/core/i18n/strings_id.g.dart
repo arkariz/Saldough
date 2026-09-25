@@ -373,8 +373,8 @@ class Translations$record$id {
 	/// id: 'Tanpa anggaran'
 	String get budgetItemNone => 'Tanpa anggaran';
 
-	/// id: 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.'
-	String get budgetItemHelp => 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.';
+	/// id: 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.'
+	String get budgetItemHelp => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.';
 }
 
 // Path: transaction
@@ -1015,8 +1015,8 @@ class Translations$budget$id {
 	/// id: 'Cara kerja pos anggaran'
 	String get detailHowTitle => 'Cara kerja pos anggaran';
 
-	/// id: 'Saat mencatat pengeluaran atau transfer dari dompet $wallet, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.'
-	String detailHowBody({required Object wallet}) => 'Saat mencatat pengeluaran atau transfer dari dompet ${wallet}, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.';
+	/// id: 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari $wallet; pos transfer menghitung transfer dari $wallet ke dompet tujuannya. Anggaran sendiri tidak pernah memotong saldo.'
+	String detailHowBody({required Object wallet}) => 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari ${wallet}; pos transfer menghitung transfer dari ${wallet} ke dompet tujuannya. Anggaran sendiri tidak pernah memotong saldo.';
 
 	/// id: 'Dompet tidak ditemukan'
 	String get unknownWallet => 'Dompet tidak ditemukan';
@@ -1029,6 +1029,33 @@ class Translations$budget$id {
 
 	/// id: 'Saldo $wallet tetap'
 	String walletUnchangedNote({required Object wallet}) => 'Saldo ${wallet} tetap';
+
+	/// id: 'Jenis pos'
+	String get itemKindLabel => 'Jenis pos';
+
+	/// id: 'Pengeluaran'
+	String get itemKindExpense => 'Pengeluaran';
+
+	/// id: 'Transfer'
+	String get itemKindTransfer => 'Transfer';
+
+	/// id: 'Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.'
+	String get itemKindLockedHint => 'Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.';
+
+	/// id: 'Dompet tujuan'
+	String get itemTargetWalletLabel => 'Dompet tujuan';
+
+	/// id: 'Hanya transfer dari dompet anggaran ke dompet ini yang terhitung ke pos.'
+	String get itemTargetWalletHelp => 'Hanya transfer dari dompet anggaran ke dompet ini yang terhitung ke pos.';
+
+	/// id: 'Butuh dompet aktif lain sebagai tujuan transfer.'
+	String get itemNoTargetWallet => 'Butuh dompet aktif lain sebagai tujuan transfer.';
+
+	/// id: 'Ke $wallet'
+	String itemTransferTo({required Object wallet}) => 'Ke ${wallet}';
+
+	/// id: 'Pos transfer "$name" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.'
+	String itemTargetConflict({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1135,7 +1162,7 @@ extension on Translations {
 			'record.flowTargetWallet' => 'Dompet tujuan',
 			'record.budgetItemLabel' => 'Pos anggaran',
 			'record.budgetItemNone' => 'Tanpa anggaran',
-			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.',
+			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.',
 			'transaction.pageTitle' => 'Transaksi',
 			'transaction.searchHint' => 'Cari catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -1340,11 +1367,20 @@ extension on Translations {
 			'budget.detailLinkedHeading' => 'Transaksi Tertaut',
 			'budget.detailLinkedEmpty' => 'Belum ada transaksi yang tertaut ke anggaran ini.',
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
-			'budget.detailHowBody' => ({required Object wallet}) => 'Saat mencatat pengeluaran atau transfer dari dompet ${wallet}, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.',
+			'budget.detailHowBody' => ({required Object wallet}) => 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari ${wallet}; pos transfer menghitung transfer dari ${wallet} ke dompet tujuannya. Anggaran sendiri tidak pernah memotong saldo.',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			'budget.totalPlannedLabel' => 'Total rencana anggaran',
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tetap',
+			'budget.itemKindLabel' => 'Jenis pos',
+			'budget.itemKindExpense' => 'Pengeluaran',
+			'budget.itemKindTransfer' => 'Transfer',
+			'budget.itemKindLockedHint' => 'Jenis tidak bisa diganti karena pos ini sudah punya transaksi tertaut.',
+			'budget.itemTargetWalletLabel' => 'Dompet tujuan',
+			'budget.itemTargetWalletHelp' => 'Hanya transfer dari dompet anggaran ke dompet ini yang terhitung ke pos.',
+			'budget.itemNoTargetWallet' => 'Butuh dompet aktif lain sebagai tujuan transfer.',
+			'budget.itemTransferTo' => ({required Object wallet}) => 'Ke ${wallet}',
+			'budget.itemTargetConflict' => ({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.',
 			_ => null,
 		};
 	}

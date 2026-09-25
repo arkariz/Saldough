@@ -102,7 +102,7 @@
     "flowTargetWallet": "Target wallet",
     "budgetItemLabel": "Budget item",
     "budgetItemNone": "No budget",
-    "budgetItemHelp": "Optional. Only active budget items from this wallet are offered."
+    "budgetItemHelp": "Optional. Only active budget items matching the wallets above are offered."
   },
   "transaction": {
     "pageTitle": "Transactions",
@@ -313,10 +313,19 @@
     "detailLinkedHeading": "Linked Transactions",
     "detailLinkedEmpty": "No transactions are linked to this budget yet.",
     "detailHowTitle": "How budget items work",
-    "detailHowBody": "When recording an expense or transfer from $wallet, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.",
+    "detailHowBody": "Record through the button on each item. Expense items count expenses from $wallet; transfer items count transfers from $wallet to their destination wallet. The budget itself never deducts a balance.",
     "unknownWallet": "Wallet not found",
     "totalPlannedLabel": "Total planned budget",
     "itemsRequiredHint": "Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.",
-    "walletUnchangedNote": "$wallet balance unchanged"
+    "walletUnchangedNote": "$wallet balance unchanged",
+    "itemKindLabel": "Item type",
+    "itemKindExpense": "Expense",
+    "itemKindTransfer": "Transfer",
+    "itemKindLockedHint": "The type can't be changed because this item already has linked transactions.",
+    "itemTargetWalletLabel": "Destination wallet",
+    "itemTargetWalletHelp": "Only transfers from the budget wallet to this wallet count toward the item.",
+    "itemNoTargetWallet": "You need another active wallet as the transfer destination.",
+    "itemTransferTo": "To $wallet",
+    "itemTargetConflict": "Transfer item \"$name\" points to the budget's own wallet. Change the item's destination or the budget wallet."
   }
 }

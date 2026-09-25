@@ -21,19 +21,19 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 23 September 2026.
+Terakhir diperbarui: 25 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
 | 0 — Dokumen Saldough 2.0 | 14 | 14 | Selesai |
 | 1 — Domain inti: dompet dan transaksi | 9 | 9 | Selesai |
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 12 | Selesai |
-| 3 — Cutover | 9 | 0 | Gerbang |
+| 3 — Cutover | 9 | 9 | Selesai |
 | 4 — Anggaran | 11 | 0 | Belum dimulai |
 | 5 — Freelance | 8 | 0 | Belum dimulai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **35** | |
+| **Total MVP** | **76** | **44** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -154,11 +154,14 @@ menyentuh sesuatu yang seharusnya tidak. Lihat
       diubah atau dihapus sampai Fase 3.
       ⚠ **Selesai penuh.** `WalletRepository` terdaftar bersama T-1.1/T-1.2,
       `TransactionRepository` terdaftar bersama T-1.3/T-1.4.
-- [ ] **T-1.9** Tambahkan namespace i18n `wallet` dan `transaction` di
+- [x] **T-1.9** Tambahkan namespace i18n `wallet` dan `transaction` di
       `assets/i18n/{id,en}.i18n.json`, lalu regenerasi slang.
       ⚠ Namespace lama (`cycle`, `grocery`, `card`, `investment`, `worklog`,
       `income`) **tidak** dihapus di fase ini — layar lama masih memakainya dan
       penghapusannya akan membuat `flutter analyze` merah. Dihapus di T-3.6.
+      ⚠ **Kotak baru dicentang saat cutover (25 September 2026).** Namespace
+      `wallet` dan `transaction` sudah ada dan dipakai layar Fase 2 sejak
+      lama; hanya kotaknya yang terlewat.
       Memenuhi NFR-UX-004.
 
 ## Fase 2: Layar inti — CATAT, Transaksi, Dompet
@@ -606,35 +609,72 @@ model domain sekaligus; sesudahnya hanya tersisa satu.
 bermuara ke `cycle`, jadi penghapusan sebagian meninggalkan galat berantai
 tanpa menyelesaikan apa pun.
 
-- [ ] **T-3.1** Pindahkan `CalculateNetPay`, `DeductionRule`, dan
+- [x] **T-3.1** Pindahkan `CalculateNetPay`, `DeductionRule`, dan
       `NetPayBreakdown` dari `lib/shared/income/domain/` ke
       `lib/features/freelance/domain/`, beserta ujinya.
+      ⚠ **Signature berubah.** `CalculateNetPay` dulu menerima `IncomeSource`
+      (entitas 1.0 yang ikut terhapus di T-3.2); kini menerima `totalHours`,
+      `hourlyRate`, dan `deductionRules` mentah karena `FreelanceProject` baru
+      lahir di T-5.1. `DeductionKind` dan `DeductionAmount` ikut pindah
+      (keduanya dependensi langsung). Entitas di `domain/entities/`, use case
+      di `domain/usecases/`. Uji ditambah kasus bukti DOMAIN_MODEL.md: 37 jam
+      × Rp72.500 pajak 2,5% → 261.543.750 sen.
       ⚠ Dikerjakan **sebelum** penghapusan di T-3.2, supaya aritmetika per mil
       yang sudah teruji tidak ikut terhapus.
       ⚠ Setelah pivot hanya ada satu konsumen, sehingga ambang "2+ konsumen"
       ADR-0009 tidak lagi terpenuhi dan promosinya ke `shared/` kehilangan
       dasar.
-- [ ] **T-3.2** Hapus `lib/features/{cycle,card,investment,grocery,income}`,
+- [x] **T-3.2** Hapus `lib/features/{cycle,card,investment,grocery,income}`,
       `lib/shared/goal/`, dan sisa `lib/shared/income/`.
-- [ ] **T-3.3** Hapus tes fitur lama di `test/features/` dan `test/shared/`.
-- [ ] **T-3.4** Bersihkan `RootModule` dari seluruh adapter lintas fitur lama,
+      ⚠ **`lib/features/worklog/` (worklog 1.0) ikut dihapus** walau tidak
+      tercantum di sini: ia bergantung pada `cycle` dan `shared/income` lewat
+      `IncomeWorklogGateway`/`CycleIncomeWriter` sehingga tidak bisa
+      dikompilasi tanpa keduanya, dan namespace i18n-nya memang dihapus
+      T-3.6. Freelance 2.0 dibangun ulang di Fase 5. `example_note`
+      dipertahankan — tidak bergantung pada fitur lama, masih dicapai lewat
+      menu pengembang.
+- [x] **T-3.3** Hapus tes fitur lama di `test/features/` dan `test/shared/`.
+      ⚠ Uji `test/shared/{wallet,transaction}` milik 2.0 dan TIDAK dihapus.
+- [x] **T-3.4** Bersihkan `RootModule` dari seluruh adapter lintas fitur lama,
       tukar rute `/home` ke `AppShellPage`, lalu hapus `main_shell_page.dart`
       dan rute sementara `/shell`.
-- [ ] **T-3.5** Hapus slot warna `investment`, `rollUp`, `needsReview`,
+      `AppRouteRegistry.build` kehilangan parameter `shellBuilder` dan
+      konstanta `shellPath`; `/home` kini lokasi awal.
+- [x] **T-3.5** Hapus slot warna `investment`, `rollUp`, `needsReview`,
       `onNeedsReview`, dan keenam varian `…OnLight` dari `AppColorsExtension`,
       lalu perbarui uji kontrasnya.
-- [ ] **T-3.6** Hapus namespace i18n `cycle`, `grocery`, `card`, `investment`,
+      Pengganti di pemakai yang tersisa: `AppMoneyText` → `income`/
+      `overBudget` (di palet pixel identik dengan varian `…OnLight` yang
+      dihapus, jadi tampilan tidak berubah); snackbar `info` → `textPrimary`
+      (netral, padanan `inverseSurface`); `AppChip` terpilih → selalu
+      `background`; tombol `ElevatedButton` gelap di `AppTheme` →
+      `background`. Uji kontras: grup varian on-light ADR-0006 dihapus,
+      `overBudget` ditambahkan ke uji teks-aman palet pixel.
+      ⚠ Palet lama `light`/`dark` (ADR-0006) masih tema global `AppTheme`;
+      di sana `income` sebagai teks hanya 3,48:1. Aman selama seluruh layar
+      berada di bawah `PixelTheme` — kandidat dihapus/diganti di T-7.x.
+- [x] **T-3.6** Hapus namespace i18n `cycle`, `grocery`, `card`, `investment`,
       `worklog`, dan `income`, lalu regenerasi slang.
-- [ ] **T-3.7** Hapus `tool/seed_import.dart`.
+      Namespace `shell` (label tab `MainShellPage`) ikut dihapus.
+- [x] **T-3.7** Hapus `tool/seed_import.dart`.
       ⚠ Skrip itu mengimpor repository fitur lama dan tidak akan kompilasi
       setelah T-3.2. `tool/seed_data.json` **dipertahankan** sebagai rekaman
       data historis nyata pemilik.
-- [ ] **T-3.8** Perbarui `description` di `pubspec.yaml` yang masih berbunyi
+      Dev dependency `hive_ce` (hanya dipakai skrip ini) ikut dihapus dari
+      `pubspec.yaml`.
+- [x] **T-3.8** Perbarui `description` di `pubspec.yaml` yang masih berbunyi
       "pengganti sistem spreadsheet manual".
-- [ ] **T-3.9** Catat baseline uji yang baru apa adanya di catatan pengerjaan.
+- [x] **T-3.9** Catat baseline uji yang baru apa adanya di catatan pengerjaan.
       ⚠ Jumlah uji akan **turun tajam** karena sekitar 2.900 baris uji hilang
       bersama fiturnya. Jangan mengejar angka lama dengan menulis uji yang
       tidak bermakna.
+      **Baseline 25 September 2026:** `flutter analyze` bersih (dua info
+      `cascade_invocations` di `RootModule` dan `ExampleNoteScope`
+      diperbaiki); **333 uji lulus** di 33 berkas uji; 11.369 baris Dart di
+      `lib/` (115 berkas, tanpa `.g.dart`). Angka uji lebih tinggi dari 169
+      pra-pivot karena uji Fase 1–2 sudah lebih banyak daripada uji 1.0 yang
+      hilang. Cutover menghapus ±17.800 baris (termasuk ±1.280 baris keluaran
+      slang).
 
 ## Fase 4: Anggaran
 

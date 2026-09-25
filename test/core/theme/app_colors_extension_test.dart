@@ -27,84 +27,6 @@ double _contrastRatio(Color a, Color b) {
 }
 
 void main() {
-  group('AppColorsExtension varian on-light (ADR-0006, UX-22)', () {
-    // Ambang WCAG untuk teks normal. Dipakai juga untuk ikon kecil (bukan
-    // ambang teks besar 3:1 yang lebih longgar) supaya marginnya aman untuk
-    // kasus terkecil (ikon 14-18px seperti badge "perlu ditinjau").
-    const minRatio = 4.5;
-    const light = AppColorsExtension.light;
-    const dark = AppColorsExtension.dark;
-
-    final lightVariants = <String, Color>{
-      'incomeOnLight': light.incomeOnLight,
-      'expenseOnLight': light.expenseOnLight,
-      'overBudgetOnLight': light.overBudgetOnLight,
-      'investmentOnLight': light.investmentOnLight,
-      'rollUpOnLight': light.rollUpOnLight,
-      'needsReviewOnLight': light.needsReviewOnLight,
-    };
-
-    for (final entry in lightVariants.entries) {
-      test('${entry.key} lolos >= $minRatio:1 terhadap cardBackground terang', () {
-        final ratio = _contrastRatio(entry.value, light.cardBackground);
-        expect(
-          ratio,
-          greaterThanOrEqualTo(minRatio),
-          reason:
-              '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap kartu '
-              'putih — di bawah ambang keterbacaan.',
-        );
-      });
-
-      test('${entry.key} lolos >= $minRatio:1 terhadap background terang (dasar krem)', () {
-        final ratio = _contrastRatio(entry.value, light.background);
-        expect(
-          ratio,
-          greaterThanOrEqualTo(minRatio),
-          reason:
-              '${entry.key} hanya ${ratio.toStringAsFixed(2)}:1 terhadap dasar '
-              'krem — di bawah ambang keterbacaan.',
-        );
-      });
-    }
-
-    test('mode gelap tidak butuh varian terpisah — nilainya sama dengan slot aslinya', () {
-      expect(dark.incomeOnLight, dark.income);
-      expect(dark.expenseOnLight, dark.expense);
-      expect(dark.overBudgetOnLight, dark.overBudget);
-      expect(dark.investmentOnLight, dark.investment);
-      expect(dark.rollUpOnLight, dark.rollUp);
-      expect(dark.needsReviewOnLight, dark.needsReview);
-    });
-
-    test('slot asli (isian) TIDAK ikut berubah oleh penambahan varian on-light', () {
-      // Regresi ADR-0006: isian (chip terpilih, badge, tombol) tetap
-      // memakai hex aslinya — hanya teks/ikon yang pindah ke varian.
-      expect(light.income, const Color(0xFF1E9E46));
-      expect(light.expense, const Color(0xFFE13553));
-      expect(light.overBudget, const Color(0xFFF07B12));
-      expect(light.investment, const Color(0xFFD99B00));
-      expect(light.rollUp, const Color(0xFF2D6FE0));
-      expect(light.needsReview, const Color(0xFFFFD400));
-    });
-
-    test('copyWith mempertahankan seluruh varian on-light kalau tidak diisi', () {
-      final copy = light.copyWith(textPrimary: Colors.black);
-      expect(copy.incomeOnLight, light.incomeOnLight);
-      expect(copy.needsReviewOnLight, light.needsReviewOnLight);
-    });
-
-    test('lerp(t: 0) mengembalikan warna awal untuk varian on-light', () {
-      final lerped = light.lerp(dark, 0);
-      expect(lerped.incomeOnLight, light.incomeOnLight);
-    });
-
-    test('lerp(t: 1) mengembalikan warna akhir untuk varian on-light', () {
-      final lerped = light.lerp(dark, 1);
-      expect(lerped.incomeOnLight, dark.incomeOnLight);
-    });
-  });
-
   group('AppColorsExtension slot ADR-015 (accent/onAccent/transfer/pending, NFR-UX-003)', () {
     const minRatio = 4.5;
     const light = AppColorsExtension.light;
@@ -232,30 +154,10 @@ void main() {
       expect(pixelDark.edge, pixelDark.textPrimary);
     });
 
-    test('varian OnLight palet pixel sama dengan slot teks-aman, bukan warisan palet lama', () {
-      // Tanpa ini AppMoneyText di layar baru memakai hijau lama dan
-      // oranye-coklat untuk angka negatif (ADR-016 §2 butir 4).
-      for (final palette in [pixelLight, pixelDark]) {
-        expect(palette.incomeOnLight, palette.income);
-        expect(palette.expenseOnLight, palette.expense);
-        expect(palette.overBudgetOnLight, palette.overBudget);
-      }
-    });
-
     test('accent/transfer/pending sengaja berbeda dari palet lama (revisi ADR-016)', () {
       expect(pixelLight.accent, isNot(AppColorsExtension.light.accent));
       expect(pixelLight.transfer, isNot(AppColorsExtension.light.transfer));
       expect(pixelLight.pending, isNot(AppColorsExtension.light.pending));
-    });
-
-    test('slot khusus layar lama diisi eksplisit di palet pixel, teks-amannya lolos kontras', () {
-      // Palet pixel bukan lagi `light.copyWith(...)`, jadi slot ini tidak
-      // diwarisi diam-diam. Tetap dijaga kontrasnya kalau suatu saat terbaca.
-      for (final palette in [pixelLight, pixelDark]) {
-        for (final ink in [palette.investmentOnLight, palette.rollUpOnLight, palette.needsReviewOnLight]) {
-          expect(_contrastRatio(ink, palette.cardBackground), greaterThanOrEqualTo(textRatio));
-        }
-      }
     });
 
     for (final mode in {'pixelLight': pixelLight, 'pixelDark': pixelDark}.entries) {
@@ -263,6 +165,7 @@ void main() {
       for (final entry in {
         'income': palette.income,
         'expense': palette.expense,
+        'overBudget': palette.overBudget,
         'transfer': palette.transfer,
         'pending': palette.pending,
         'accent': palette.accent,

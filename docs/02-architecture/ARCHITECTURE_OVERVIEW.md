@@ -562,7 +562,7 @@ RouteNode.typed<WalletDetailInput>(
 ),
 ```
 
-**Shell navigasi utama** (`MainShellPage`, `lib/core/presentation/shell/`) —
+**Shell navigasi utama** (`AppShellPage`, `lib/core/presentation/shell/`) —
 bilah navigasi bawah lima tujuan (Beranda/Anggaran/CATAT/Transaksi/Dompet),
 layar awal aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan
 langsung di `AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab

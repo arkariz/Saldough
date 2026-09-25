@@ -18,7 +18,9 @@ void registerSnackBarEffectHandler(EffectRegistry registry) {
       FeedbackSeverity.success => colors.income,
       FeedbackSeverity.warning => colors.overBudget,
       FeedbackSeverity.error => colors.expense,
-      FeedbackSeverity.info => colors.rollUp,
+      // Netral, padanan `inverseSurface` Material: gelap di mode terang,
+      // terang di mode gelap. Slot `rollUp` yang dulu dipakai dihapus T-3.5.
+      FeedbackSeverity.info => colors.textPrimary,
     };
 
     ScaffoldMessenger.of(context).showSnackBar(

@@ -12,31 +12,21 @@ import 'package:saldough/core/foundation/navigation/route_node_go_router_ext.dar
 abstract final class AppRouteRegistry {
   AppRouteRegistry._();
 
-  /// Path rute `home` (shell navigasi utama, `MainShellPage`) — satu-
+  /// Path rute `home` (shell navigasi utama, `AppShellPage`) — satu-
   /// satunya rute yang dibangun langsung sebagai `GoRoute` di sini, di
   /// luar `RouteRegistry`, karena bukan milik satu fitur (lihat
-  /// `MainShellPage`).
+  /// `AppShellPage`).
   static const homePath = '/home';
 
-  /// Path rute sementara `shell` (shell navigasi baru, `AppShellPage`,
-  /// T-2.3). Berdampingan dengan [homePath] sampai T-3.4 menukar
-  /// `/home` ke `AppShellPage` dan menghapus rute ini.
-  static const shellPath = '/shell';
-
   /// Membangun [GoRouter] dari [registry], dimulai dari [initialLocation].
-  /// [homeBuilder] membangun layar untuk [homePath]. [shellBuilder]
-  /// opsional membangun layar untuk [shellPath] — `null` sampai T-2.3
-  /// menyediakannya.
+  /// [homeBuilder] membangun layar untuk [homePath].
   static GoRouter build({
     required RouteRegistry registry,
     required String initialLocation,
     required WidgetBuilder homeBuilder,
-    WidgetBuilder? shellBuilder,
   }) {
     final routes = [
       GoRoute(path: homePath, name: 'home', builder: (context, state) => homeBuilder(context)),
-      if (shellBuilder != null)
-        GoRoute(path: shellPath, name: 'shell', builder: (context, state) => shellBuilder(context)),
       ...registry.registeredNodes.map((node) => node.toGoRoute(_pathFor(node.keyId))),
     ];
 

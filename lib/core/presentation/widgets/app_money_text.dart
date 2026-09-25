@@ -33,14 +33,13 @@ class AppMoneyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    // Varian on-light, bukan slot mentah — nominal selalu TEKS, tidak
-    // pernah isian, jadi kontrasnya harus aman di atas kartu/dasar terang
-    // (ADR-0006 bagian "Varian on-light"; di mode gelap nilainya sama
-    // dengan slot aslinya, jadi tidak perlu bercabang per tema).
+    // `income`/`overBudget` di palet pixel sudah teks-aman (>= 4,5:1,
+    // ADR-016), jadi varian `…OnLight` ADR-0006 tidak dibutuhkan lagi dan
+    // dihapus saat cutover T-3.5.
     final autoColor = sen > 0
-        ? colors.incomeOnLight
+        ? colors.income
         : sen < 0
-            ? colors.overBudgetOnLight
+            ? colors.overBudget
             : colors.textPrimary;
 
     final base = style ?? Theme.of(context).textTheme.headlineSmall;

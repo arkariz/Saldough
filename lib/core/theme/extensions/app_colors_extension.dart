@@ -2,27 +2,18 @@ import 'package:flutter/material.dart';
 
 /// Slot warna semantik Saldough, dipasang lewat [ThemeData.extensions].
 ///
-/// Enam slot keuangan lama (`income`, `expense`, `overBudget`, `investment`,
-/// `rollUp`, `needsReview`, nilai ADR-0006) plus slot netral untuk
-/// panel/teks/skeleton, dan empat slot baru dari ADR-015 (`accent`,
-/// `onAccent`, `transfer`, `pending`) untuk layar Saldough 2.0. Jangan
-/// menulis warna harfiah di widget, selalu lewat `context.appColors`.
+/// Tiga slot keuangan (`income`, `expense`, `overBudget`) plus slot netral
+/// untuk panel/teks/skeleton, empat slot dari ADR-015 (`accent`, `onAccent`,
+/// `transfer`, `pending`), dan tiga slot isian ADR-016 (`…Fill`). Slot khusus
+/// layar Saldough 1.0 (`investment`, `rollUp`, `needsReview`, beserta varian
+/// `…OnLight`) dihapus saat cutover T-3.5. Jangan menulis warna harfiah di
+/// widget, selalu lewat `context.appColors`.
 class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Membuat [AppColorsExtension] dengan seluruh slot wajib diisi.
   const AppColorsExtension({
     required this.income,
     required this.expense,
     required this.overBudget,
-    required this.investment,
-    required this.rollUp,
-    required this.needsReview,
-    required this.onNeedsReview,
-    required this.incomeOnLight,
-    required this.expenseOnLight,
-    required this.overBudgetOnLight,
-    required this.investmentOnLight,
-    required this.rollUpOnLight,
-    required this.needsReviewOnLight,
     required this.background,
     required this.cardBackground,
     required this.edge,
@@ -48,42 +39,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 
   /// Sisa siklus yang negatif. Jangan pakai [expense] untuk ini.
   final Color overBudget;
-
-  /// Pos tujuan dan alokasi dana investasi.
-  final Color investment;
-
-  /// Baris yang nominalnya dihitung dari sumber lain (roll-up belanja/kartu).
-  final Color rollUp;
-
-  /// Baris hasil rollover yang belum ditinjau/dikonfirmasi pemilik.
-  final Color needsReview;
-
-  /// Warna teks/ikon di atas isian [needsReview].
-  final Color onNeedsReview;
-
-  /// Varian [income] untuk dipakai sebagai TEKS atau IKON di atas dasar
-  /// terang. Slot aslinya hanya 3.48:1 di atas kartu putih — cukup sebagai
-  /// isian dengan teks gelap di atasnya, tidak cukup sebagai teks itu sendiri.
-  /// Lihat ADR-0006 bagian "Varian on-light". Di mode gelap nilainya sama
-  /// dengan slot aslinya, karena di sana kontrasnya sudah memadai.
-  final Color incomeOnLight;
-
-  /// Varian [expense] untuk teks/ikon di atas dasar terang.
-  final Color expenseOnLight;
-
-  /// Varian [overBudget] untuk teks/ikon di atas dasar terang. Dipakai antara
-  /// lain oleh sisa siklus yang negatif — angka terpenting di layar utama.
-  final Color overBudgetOnLight;
-
-  /// Varian [investment] untuk teks/ikon di atas dasar terang.
-  final Color investmentOnLight;
-
-  /// Varian [rollUp] untuk teks/ikon di atas dasar terang.
-  final Color rollUpOnLight;
-
-  /// Varian [needsReview] untuk teks/ikon di atas dasar terang. Slot aslinya
-  /// hanya 1.43:1 di atas kartu putih — praktis tak terlihat.
-  final Color needsReviewOnLight;
 
   /// Dasar layar.
   final Color background;
@@ -160,24 +115,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// oranye-coklat untuk angka negatif). Kini slot baru wajib diisi di sini
   /// saat kompilasi. Nilainya: tabel §"Palet" ADR-015 sebagaimana direvisi
   /// ADR-016 (satu peran, satu warna).
-  ///
-  /// Slot milik layar lama (`investment`, `rollUp`, `needsReview`) tidak
-  /// dibaca layar baru; diisi dengan padanan keluarga hue ADR-016 supaya
-  /// kalau suatu saat terbaca, hasilnya tetap selaras.
   static const AppColorsExtension pixelLight = AppColorsExtension(
     income: Color(0xFF15803D),
     expense: Color(0xFFB91C1C),
     overBudget: Color(0xFFB91C1C),
-    investment: Color(0xFFD97706),
-    rollUp: Color(0xFF2563EB),
-    needsReview: Color(0xFFFACC15),
-    onNeedsReview: Color(0xFF1E1B19),
-    incomeOnLight: Color(0xFF15803D),
-    expenseOnLight: Color(0xFFB91C1C),
-    overBudgetOnLight: Color(0xFFB91C1C),
-    investmentOnLight: Color(0xFFA16207),
-    rollUpOnLight: Color(0xFF1D4ED8),
-    needsReviewOnLight: Color(0xFFA16207),
     background: Color(0xFFFFF8F5),
     cardBackground: Color(0xFFFFFFFF),
     edge: Color(0xFF1E1B19),
@@ -205,16 +146,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     income: Color(0xFF22C55E),
     expense: Color(0xFFF87171),
     overBudget: Color(0xFFF87171),
-    investment: Color(0xFFF59E0B),
-    rollUp: Color(0xFF60A5FA),
-    needsReview: Color(0xFFFACC15),
-    onNeedsReview: Color(0xFF14120F),
-    incomeOnLight: Color(0xFF22C55E),
-    expenseOnLight: Color(0xFFF87171),
-    overBudgetOnLight: Color(0xFFF87171),
-    investmentOnLight: Color(0xFFF59E0B),
-    rollUpOnLight: Color(0xFF60A5FA),
-    needsReviewOnLight: Color(0xFFFACC15),
     background: Color(0xFF14120F),
     cardBackground: Color(0xFF1F1C18),
     edge: Color(0xFFF2ECE7),
@@ -240,16 +171,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     income: Color(0xFF1E9E46),
     expense: Color(0xFFE13553),
     overBudget: Color(0xFFF07B12),
-    investment: Color(0xFFD99B00),
-    rollUp: Color(0xFF2D6FE0),
-    needsReview: Color(0xFFFFD400),
-    onNeedsReview: Color(0xFF161310),
-    incomeOnLight: Color(0xFF15702F),
-    expenseOnLight: Color(0xFFB01C3A),
-    overBudgetOnLight: Color(0xFFA84F05),
-    investmentOnLight: Color(0xFF7A5400),
-    rollUpOnLight: Color(0xFF2159BE),
-    needsReviewOnLight: Color(0xFF756000),
     background: Color(0xFFF2E9D8),
     cardBackground: Color(0xFFFFFFFF),
     edge: Color(0xFF161310),
@@ -273,18 +194,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     income: Color(0xFF3DDC68),
     expense: Color(0xFFFF4D6A),
     overBudget: Color(0xFFFF8C3D),
-    investment: Color(0xFFFFD23F),
-    rollUp: Color(0xFF5B9CFF),
-    needsReview: Color(0xFFFFE14D),
-    onNeedsReview: Color(0xFF14120F),
-    // Mode gelap tidak butuh varian: rasio terendah slot aslinya 5.39:1.
-    // Disetel sama supaya pemakai token tidak perlu bercabang per tema.
-    incomeOnLight: Color(0xFF3DDC68),
-    expenseOnLight: Color(0xFFFF4D6A),
-    overBudgetOnLight: Color(0xFFFF8C3D),
-    investmentOnLight: Color(0xFFFFD23F),
-    rollUpOnLight: Color(0xFF5B9CFF),
-    needsReviewOnLight: Color(0xFFFFE14D),
     background: Color(0xFF0E0D0B),
     cardBackground: Color(0xFF1C1A17),
     edge: Color(0xFFF2E9D8),
@@ -308,16 +217,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? income,
     Color? expense,
     Color? overBudget,
-    Color? investment,
-    Color? rollUp,
-    Color? needsReview,
-    Color? onNeedsReview,
-    Color? incomeOnLight,
-    Color? expenseOnLight,
-    Color? overBudgetOnLight,
-    Color? investmentOnLight,
-    Color? rollUpOnLight,
-    Color? needsReviewOnLight,
     Color? background,
     Color? cardBackground,
     Color? edge,
@@ -338,16 +237,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       income: income ?? this.income,
       expense: expense ?? this.expense,
       overBudget: overBudget ?? this.overBudget,
-      investment: investment ?? this.investment,
-      rollUp: rollUp ?? this.rollUp,
-      needsReview: needsReview ?? this.needsReview,
-      onNeedsReview: onNeedsReview ?? this.onNeedsReview,
-      incomeOnLight: incomeOnLight ?? this.incomeOnLight,
-      expenseOnLight: expenseOnLight ?? this.expenseOnLight,
-      overBudgetOnLight: overBudgetOnLight ?? this.overBudgetOnLight,
-      investmentOnLight: investmentOnLight ?? this.investmentOnLight,
-      rollUpOnLight: rollUpOnLight ?? this.rollUpOnLight,
-      needsReviewOnLight: needsReviewOnLight ?? this.needsReviewOnLight,
       background: background ?? this.background,
       cardBackground: cardBackground ?? this.cardBackground,
       edge: edge ?? this.edge,
@@ -373,16 +262,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       income: Color.lerp(income, other.income, t)!,
       expense: Color.lerp(expense, other.expense, t)!,
       overBudget: Color.lerp(overBudget, other.overBudget, t)!,
-      investment: Color.lerp(investment, other.investment, t)!,
-      rollUp: Color.lerp(rollUp, other.rollUp, t)!,
-      needsReview: Color.lerp(needsReview, other.needsReview, t)!,
-      onNeedsReview: Color.lerp(onNeedsReview, other.onNeedsReview, t)!,
-      incomeOnLight: Color.lerp(incomeOnLight, other.incomeOnLight, t)!,
-      expenseOnLight: Color.lerp(expenseOnLight, other.expenseOnLight, t)!,
-      overBudgetOnLight: Color.lerp(overBudgetOnLight, other.overBudgetOnLight, t)!,
-      investmentOnLight: Color.lerp(investmentOnLight, other.investmentOnLight, t)!,
-      rollUpOnLight: Color.lerp(rollUpOnLight, other.rollUpOnLight, t)!,
-      needsReviewOnLight: Color.lerp(needsReviewOnLight, other.needsReviewOnLight, t)!,
       background: Color.lerp(background, other.background, t)!,
       cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
       edge: Color.lerp(edge, other.edge, t)!,

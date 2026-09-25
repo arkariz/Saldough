@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 17 September 2026
-**Fase saat ini:** Fase 0 — menulis dokumen Saldough 2.0
+**Terakhir diperbarui:** 25 September 2026
+**Fase saat ini:** Fase 4 — Anggaran (Fase 0–3 selesai)
 
 ## Apa ini
 
@@ -31,21 +31,17 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 
 ## Status
 
-Repositori ini **berisi kode Flutter yang berjalan** — 13.777 baris, 169 uji
-lulus. Tetapi seluruh kode fitur itu milik **Saldough 1.0**, produk pengganti
-spreadsheet yang sudah dihentikan.
+Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
+`grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah
+dihapus, dan kini repositori hanya memuat model **Dompet + Transaksi +
+Anggaran**. Baseline sesudah cutover: 11.369 baris Dart di `lib/` (tanpa
+berkas `.g.dart`), 33 berkas uji, 333 uji lulus, `flutter analyze` bersih.
+Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
-Produk sedang dipivot ke model **Dompet + Transaksi + Anggaran**, dengan
-Freelance Worklog sebagai domain pendukung. Fase 0 menulis dokumennya; kode
-baru mulai di Fase 1.
-
-⚠ **Selama Fase 1 dan 2 berlaku satu invarian yang paling mudah dilanggar:**
-jangan menyentuh satu pun berkas di
-`lib/features/{cycle,card,investment,grocery,income}` atau `lib/shared/goal`.
-Fitur baru ditulis sebagai folder baru di sampingnya, `RootModule` hanya
-ditambahi, dan seluruh uji lama wajib tetap lulus tanpa disunting. Invarian ini
-berakhir di Fase 3 saat cutover. Alasannya di
-[ADR-014](../docs/02-architecture/adr/0014-strategi-pivot-saldough-2.md).
+Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer), riwayat
+Transaksi, dan Dompet. Berikutnya Fase 4 (Anggaran), lalu Freelance (Fase 5,
+`CalculateNetPay` sudah menunggu di `lib/features/freelance/domain/`) dan
+Beranda (Fase 6).
 
 ## Fakta proyek
 

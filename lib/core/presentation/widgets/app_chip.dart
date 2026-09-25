@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Chip bergaris tepi tebal, dipakai untuk badge status (`needsReview`),
+/// Chip bergaris tepi tebal, dipakai untuk badge status,
 /// label pilihan cepat, dan tag insidental/tetap.
 ///
 /// [selected] menukar isian jadi [color] penuh (bawaan
@@ -63,14 +63,11 @@ class _AppChipState extends State<AppChip> {
     setState(() => _pressed = value);
   }
 
-  Color _onFill(Color fill, AppColorsExtension colors) =>
-      fill == colors.needsReview ? colors.onNeedsReview : colors.background;
-
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final fill = widget.color ?? Theme.of(context).colorScheme.primary;
-    final textColor = widget.selected ? _onFill(fill, colors) : colors.textPrimary;
+    final textColor = widget.selected ? colors.background : colors.textPrimary;
     final pressed = _pressed && widget.onTap != null;
 
     return GestureDetector(

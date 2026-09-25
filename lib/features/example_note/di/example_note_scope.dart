@@ -19,12 +19,13 @@ final class ExampleNoteScope extends IsolatedScope {
 
   @override
   void register(GetIt c) {
-    c.registerLazySingleton<ExampleNoteRepository>(
-      () => ExampleNoteRepositoryImpl(storage: c<KeyValueStorage>()),
-    );
-    c.registerLazySingleton<ExampleNoteBloc>(
-      () => ExampleNoteBloc(repository: c<ExampleNoteRepository>())..add(const ExampleNoteStarted()),
-      dispose: (bloc) => bloc.close(),
-    );
+    c
+      ..registerLazySingleton<ExampleNoteRepository>(
+        () => ExampleNoteRepositoryImpl(storage: c<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<ExampleNoteBloc>(
+        () => ExampleNoteBloc(repository: c<ExampleNoteRepository>())..add(const ExampleNoteStarted()),
+        dispose: (bloc) => bloc.close(),
+      );
   }
 }

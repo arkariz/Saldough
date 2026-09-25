@@ -103,7 +103,7 @@ abstract final class AppTheme {
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: colors.income,
-          foregroundColor: brightness == Brightness.light ? Colors.white : colors.onNeedsReview,
+          foregroundColor: brightness == Brightness.light ? Colors.white : colors.background,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.smAll,
             side: BorderSide(color: colors.edge, width: AppBorder.thick),

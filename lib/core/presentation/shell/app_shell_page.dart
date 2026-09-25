@@ -20,10 +20,8 @@ import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dar
 import 'package:state_management/state_management.dart';
 
 /// Shell navigasi baru Saldough 2.0 — lima tujuan (Beranda, Anggaran, CATAT,
-/// Transaksi, Dompet) dengan CATAT di tengah, dipasang di rute sementara
-/// `/shell` (T-2.3). Berdampingan dengan `MainShellPage` sampai T-3.4
-/// menukar `/home` ke sini dan menghapus `MainShellPage` beserta rute
-/// sementara ini.
+/// Transaksi, Dompet) dengan CATAT di tengah, dipasang di rute `/home`
+/// (T-2.3, ditukar dari rute sementara `/shell` saat cutover T-3.4).
 ///
 /// CATAT **bukan** tujuan navigasi biasa — menekannya tidak mengganti isi
 /// `IndexedStack`, melainkan membuka lembar pilihan (lihat

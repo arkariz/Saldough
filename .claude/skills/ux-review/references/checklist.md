@@ -1,144 +1,170 @@
-# Checklist review UX/produk Saldough
+# Checklist review UX/produk Saldough 2.0
 
 Setiap poin menyebut DI MANA mengecek dan APA konsekuensinya kalau gagal.
-Lewati poin yang tidak relevan ke fitur yang sedang direview, tapi jangan
+Lewati poin yang tidak relevan ke layar yang sedang direview, tapi jangan
 lewati kategori seluruhnya tanpa alasan.
 
 ## A. Information architecture & navigasi
 
-- Apakah aksi utama tiap layar (tambah baris, tutup siklus, rollover) jelas
-  posisinya tanpa perlu menjelajah? Bandingkan dengan PRD — FR mana yang
-  seharusnya jadi aksi utama layar itu.
-- Chevron navigasi siklus (`cycle_page.dart`, digerbang `CycleState.hasCycle`)
-  — kalau dinonaktifkan (`onPressed: null`), apakah tampilannya beda dari
-  yang aktif? `IconButton` bawaan Flutter meredupkan otomatis, tapi cek
-  tetap — kalau warnanya dari `context.appColors` literal, peredupan bawaan
-  bisa tidak kebagian efek.
-- Aksi destruktif/jarang dipakai (hapus siklus, buka kembali siklus
-  tertutup) — apakah cukup mudah ditemukan SAAT dibutuhkan, tapi tidak
-  gampang tersenggol tidak sengaja? Cek ada dialog konfirmasi untuk yang
-  destruktif (`cycle_page.dart` bagian hapus siklus).
-- Rute yang dicapai lewat `context.push` (bukan tab) — `/income/list`,
-  `/worklog`, layar kartu dari grocery, dst. Pastikan ada jalan balik yang
-  jelas (app bar back, bukan cuma gesture), dan state di layar asal
-  tersegarkan setelah balik kalau memang ada datanya yang bisa berubah
-  (lihat Fix #8 di TASK_LIST.md — ini sudah pernah jadi masalah nyata).
+- **CATAT selalu satu ketukan jauhnya** (prinsip produk #5, FR-REC-001).
+  Slot tengah `AppShellPage` membuka `RecordChoiceSheet`, bukan tab. Cek
+  lembar itu bisa dibuka dari tab mana pun, dan tidak ada layar yang
+  menyembunyikan navigasi bawah tanpa jalan balik.
+- **Tidak ada formulir pencatatan tersendiri** (aturan 8 CLAUDE.md). Setiap
+  CTA "catat" di layar lain (keadaan kosong Transaksi, pintasan di rincian
+  dompet) harus memanggil `openRecordSheet`, bukan membangun formulir
+  sendiri. Pintasan kontekstual (FR-REC-002) cukup mengisi dompet sasaran
+  lebih dulu.
+- Layar sekunder (rincian transaksi, rincian dompet) dibuka lewat
+  `Navigator.push` dengan `PixelTheme` dan bloc yang dipasang ulang. Cek ada
+  jalan balik yang jelas (app bar back, bukan hanya gesture), dan layar
+  asal ikut segar setelah kembali kalau datanya bisa berubah (sunting/hapus
+  transaksi dari rincian → daftar dan saldo dompet ikut berubah).
+- Aksi destruktif (hapus transaksi, hapus/nonaktifkan dompet) mudah
+  ditemukan saat dibutuhkan tapi tidak gampang tersenggol, dan lewat
+  `ConfirmDeleteDialog`.
+- Tab yang masih `_ComingSoonTab` (Beranda, Anggaran) — pesannya jujur
+  bahwa fitur belum ada, bukan tampak seperti layar rusak/kosong.
 
 ## B. Alur dan penyelesaian tugas
 
-- Ikuti SATU alur penuh dari kode (bukan cuma satu widget): event dari
-  tombol → handler di `*_bloc.dart` → state baru → apa yang berubah di
-  `*_page.dart`. Ada jalan buntu? (Misalnya state berubah tapi tidak ada
-  widget yang membaca field itu.)
-- Tiap `Either` yang di-`switch` di bloc — cabang `Left` menghasilkan efek
-  yang terlihat pemakai (`ShowSnackBarEffect` dsb)? Cabang yang memakai
-  `.getOrElse((_) => const [])` MENELAN kegagalan secara diam — itu wajar
-  untuk data sekunder (daftar sumber/kartu saat memuat layar), tapi kalau
-  dipakai di jalur yang pemilik anggap aksi utama (menyimpan, menghapus),
-  itu temuan: pemilik tidak akan tahu kalau gagal.
-- Pilihan yang tampil tapi tidak bisa dipilih (contoh: chip Rencana
-  Belanja/kartu yang sudah terpakai, `line_edit_sheet.dart`
-  `_budgetSourceChip`) — apakah ada tanda VISUAL kenapa tidak bisa
-  dipilih, atau cuma diam tidak merespons ketukan?
-- Alur yang butuh >1 layar (tambah sumber pemasukan dari tengah-tengah
-  tambah baris pemasukan) — apakah pemilik tahu dia akan balik ke tempat
-  semula, atau terasa seperti "nyasar"?
+- **NFR-UX-001: pencatatan selesai dalam satu layar.** Ikuti alur
+  pemasukan, pengeluaran, dan transfer dari `record_choice_sheet.dart` →
+  `*_form_sheet.dart` → `RecordBloc` → snackbar. Ada langkah yang memaksa
+  pindah halaman di tengah jalan (mis. harus membuat dompet dulu di layar
+  lain tanpa kembali ke formulir)?
+- Kondisi awal yang menghalangi: belum ada dompet sama sekali, atau hanya
+  ada satu dompet (transfer butuh dua). Apakah formulir menjelaskan APA
+  yang harus dilakukan, atau hanya tombol simpan yang mati tanpa alasan?
+- Ikuti SATU alur penuh dari kode: event dari tombol → handler di
+  `*_bloc.dart` → state/efek baru → apa yang berubah di layar. Ada jalan
+  buntu (state berubah tapi tidak ada widget yang membaca field itu)?
+- Tiap `Either` yang di-`switch` di bloc — cabang `Left` harus menghasilkan
+  efek yang terlihat pemakai (`ShowSnackBarEffect` dsb). Kegagalan yang
+  ditelan diam-diam wajar untuk data sekunder, tapi di jalur aksi utama
+  (simpan, hapus) itu temuan: pemilik tidak tahu kalau gagal.
+- Validasi formulir: nominal nol/kosong, dompet asal = tujuan pada
+  transfer, tanggal di masa depan. Pesannya muncul di dekat field yang
+  salah dan menjelaskan cara memperbaikinya?
+- Penyaring Transaksi (jenis, dompet, kategori, pencarian, bulan) —
+  kombinasinya bisa menghasilkan daftar kosong. Apakah keadaan kosong
+  membedakan "memang belum ada transaksi" dari "tidak ada yang cocok dengan
+  penyaring", dan menawarkan cara mengatur ulang penyaring?
 
 ## C. Cakupan state
 
-- Kosong (`emptyIncome`, `emptyBudget`, dst di i18n) — teksnya cuma bilang
-  "tidak ada data" atau mengarahkan aksi (mis. "tambah baris pertama")?
-- Memuat (`isLoading`) — ada layar yang kosong total sekilas sebelum data
-  datang (flash putih/kosong), padahal bisa pakai skeleton/shimmer token
-  yang sudah ada (`shimmerBase`/`shimmerHighlight` di `AppColorsExtension`)?
-- `needsReview` — baris yang ditandai ini maknanya "hasil rollover, belum
-  dikonfirmasi" (ADR-0008). Apakah makna itu tersampaikan ke pemilik tanpa
-  harus baca dokumentasi (badge + aksi konfirmasi cukup jelas), atau cuma
-  warna tanpa keterangan?
-- `rollUpSourceUnavailable` (baris `rollUp` yang sumbernya belum ada,
-  misal kartu belum dibuat) — apakah pemilik diberi tahu APA yang harus
-  dilakukan (buat dulu sumbernya), atau cuma lihat nominal 0 tanpa
-  penjelasan?
-- Siklus tertutup (`isClosed`, ADR-0008 freeze-on-close) — saat pemilik
-  mencoba menyunting dan ditolak (`_effectCycleClosed`), apakah pesannya
-  menjelaskan KENAPA (tertutup) dan APA solusinya (buka kembali), atau
-  cuma "tidak bisa"?
+- **Memuat** (`isLoading`) — pakai `AppSkeleton` (token `shimmerBase`/
+  `shimmerHighlight`), bukan layar kosong sekilas.
+- **Gagal memuat** (`loadFailed`) — ada pesan dan tombol "Coba lagi"
+  (`t.common.retry`), bukan daftar kosong yang tampak seperti "belum ada
+  data".
+- **Kosong** (`wallet_empty_states.dart`, `transaction_empty_states.dart`)
+  — mengarahkan aksi pertama (buat dompet, catat transaksi), bukan sekadar
+  "tidak ada data". Bandingkan dengan rujukan `pixel_kas_dompet_belum_ada_data`
+  dan `pixel_kas_riwayat_transaksi_kosong`.
+- **Menyimpan** (`isSaving`, `record_saving_dialog.dart`) — tombol simpan
+  tidak bisa ditekan dua kali sehingga transaksi tercatat ganda.
+- **Konfirmasi hasil** — snackbar sesudah mencatat memakai kosakata
+  "tercatat" (lihat D).
+- **Dompet nonaktif** — tampil beda dari dompet aktif, tidak muncul
+  sebagai pilihan sasaran di formulir CATAT baru, dan transaksi lamanya
+  tetap terlihat.
+- **Saldo negatif** boleh terjadi (DOMAIN_MODEL). Tampil dengan tanda dan
+  warna yang jelas (`AppMoneyText` → `overBudget`), bukan diblokir atau
+  disembunyikan.
 
-## D. Konten/copy (bahasa Indonesia)
+## D. Konten/copy
 
-- Istilah yang dipakai di `id.i18n.json` cocok dengan `PROJECT_GLOSSARY.md`?
-  Istilah yang SERING salah kalau ditulis bebas: "siklus" (bukan "bulan"
-  atau "periode"), "baris" (bukan "item" atau "entri"), "rencana belanja"
-  (bukan "grocery plan" dicampur Indonesia-Inggris).
-  Istilah yang salah di satu tempat tapi benar di tempat lain itu temuan
-  nyata (inkonsistensi ternama pemakai paling sering diperhatikan).
-- Pesan galat (`t.common.genericErrorMessage` sebagai fallback) — kalau
-  SEMUA kegagalan jatuh ke pesan generik ini, itu temuan: `Failure.
-  userMessage` yang spesifik ada di domain tapi tidak sampai ke pemakai.
-  Cek apakah `userMessage` tiap `Failure` subclass benar-benar dipakai.
-- Dialog konfirmasi (hapus siklus, dst) — apakah kalimatnya menyebut
-  KONSEKUENSI konkret (baris apa yang hilang), bukan cuma "yakin?".
+- **NFR-UX-005: mencatat, bukan melakukan.** Periksa `id.i18n.json` dan
+  `en.i18n.json` terhadap tabel "Bahasa yang dipakai aplikasi" di
+  `PROJECT_GLOSSARY.md`: "Catat Transfer" bukan "Transfer Sekarang",
+  "Transfer tercatat" bukan "Transfer berhasil", tidak ada "Kirim",
+  "Bayar Sekarang", atau "berhasil" untuk operasi keuangan. Ini juga
+  berlaku untuk copy bahasa Inggris ("recorded", bukan "sent"/"successful").
+- **NFR-UX-002: istilah persis glosarium.** "Dompet" (bukan "akun"/
+  "rekening" sebagai nama konsep), "Saldo tercatat", "Total saldo",
+  "Pemasukan"/"Pengeluaran"/"Transfer", "Kategori". Istilah yang benar di
+  satu layar tapi salah di layar lain adalah temuan nyata.
+- **NFR-UX-004: dua bahasa lengkap.** Kunci yang ada di `id` tapi tidak di
+  `en` (atau sebaliknya), atau teks harfiah di widget yang tidak lewat
+  `t.xxx`.
+- Pesan galat — kalau SEMUA kegagalan jatuh ke `t.common.
+  genericErrorMessage`, itu temuan: `Failure.userMessage` yang spesifik
+  tidak sampai ke pemakai.
+- Dialog konfirmasi hapus menyebut KONSEKUENSI konkret: menghapus transaksi
+  mengubah saldo dompet; menghapus dompet diblokir kalau sudah punya
+  transaksi — pesan blokirnya menawarkan jalan keluar (nonaktifkan).
 
-## E. Konsistensi token visual (bisa dijawab dari kode saja)
+## E. Konsistensi bahasa visual (bisa dijawab dari kode saja)
 
-- Grep literal yang seharusnya token: `Color(0x`, `EdgeInsets.all(` atau
-  `EdgeInsets.symmetric(` dengan angka mentah (bukan `AppSpacing.xx`),
-  `BorderRadius.circular(` dengan angka mentah (bukan `AppRadius.xx`), di
-  luar `lib/core/theme/`. Tiap hit adalah pelanggaran aturan "Tampilan"
-  di `AGENT_CONTEXT.md` — dan risikonya nyata: nilai itu tidak ikut
-  berubah kalau token direvisi nanti.
-- Grep nominal uang yang diformat manual (`~/ 100`, `NumberFormat`
-  langsung di widget) di luar `AppMoneyText`/`AppMoneyFormatter` — ADR
-  soal ketepatan angka berarti SATU jalur format, bukan reimplementasi
-  per layar yang bisa beda pembulatan.
-- Slot warna semantik (`income`/`expense`/`overBudget`/`investment`/
-  `rollUp`/`needsReview`) dipakai sesuai maknanya? Pakai `expense` untuk
-  menampilkan sesuatu yang bukan pengeluaran (mis. tombol hapus netral)
-  adalah penyalahgunaan slot, bukan cuma soal warna.
-- Mode gelap: kartu/panel pakai batas rambut (`colors.edge`/`divider`),
-  bukan `BoxShadow` — cek widget yang dipakai di kedua tema, bukan cuma
-  terang.
+- **Satu peran, satu warna (ADR-016).** Hijau/merah (`income`/`expense`)
+  tidak pernah menandai pilihan atau tab aktif; terracotta (`accent`) tidak
+  pernah menandai nominal; biru (`transfer`) hanya untuk transfer; amber
+  (`pending`) untuk status, bukan jenis transaksi.
+- **Teks-aman vs isian.** `…Fill` (`incomeFill`/`expenseFill`/
+  `transferFill`) hanya untuk bidang besar (garis aksen, kotak ikon,
+  bilah). Kalau `…Fill` dipakai untuk TEKS, kontrasnya bisa di bawah 4,5:1.
+- Grep literal yang seharusnya token, di luar `lib/core/theme/`:
+  `Color(0x`, `Colors.` (kecuali transparan), `EdgeInsets` dengan angka
+  mentah (bukan `AppSpacing`), `BorderRadius.circular(` angka mentah (bukan
+  `AppRadius`), `BoxShadow` manual (seharusnya `AppHardCard`).
+- **Ikon** lewat `AppIcon(IconKey.xxx)`/`CategoryIcon`. `Icons.*` hanya boleh
+  di berkas peta ikon (`AGENT_CONTEXT.md` "Tampilan").
+- **Nominal uang** selalu lewat `AppMoneyText`/`AppMoneyFormatter`. Grep
+  `~/ 100`, `NumberFormat`, atau `toStringAsFixed` di widget — pemformatan
+  manual bisa beda pembulatan dari jalur resmi.
+- Setiap layar/rute 2.0 berada di bawah `PixelTheme`. Rute yang di-push
+  tanpa `PixelTheme` jatuh ke palet ADR-0006 lama. Gejalanya: warna,
+  font, dan radius tiba-tiba berbeda.
+- Mode gelap: kartu memakai garis tepi `edge` dan bayangan keras
+  `AppHardCard` versi gelap, bukan bayangan lembut Material.
 
-## F. Aksesibilitas & ergonomi sentuh (cek dari kode)
+## F. Aksesibilitas & ergonomi sentuh
 
-- `IconButton`/`GestureDetector` kecil (ikon saja, tanpa label) — ukuran
-  area ketuk efektif kira-kira ≥44×44 — kalau ada `SizedBox`/`padding`
-  yang memperkecil area di bawah itu, itu temuan (lihat `mobile-design`
-  skill untuk acuan ukuran).
-- Status nonaktif (`onPressed: null`, `Opacity` di `_budgetSourceChip`)
-  — bedanya dengan status aktif harus lebih dari satu sinyal (warna SAJA
-  gampang tidak kebaca orang buta warna) — idealnya warna + opacity/ikon.
-- Teks yang panjangnya tidak dibatasi pemilik (nama kartu, label sumber
-  pemasukan custom) dalam `Chip`/judul sempit — ada `overflow`/`maxLines`
-  eksplisit, atau berpotensi meluber/terpotong aneh?
+- Target sentuh ≥44×44 — `IconButton`/`GestureDetector` kecil, chip
+  (`AppChip` sudah menjamin 44px; cek pemakaian `GestureDetector` mentah).
+- Status nonaktif/terpilih dibedakan lebih dari satu sinyal (warna SAJA
+  tidak terbaca buta warna) — warna + ikon/garis tepi/teks.
+- Teks yang panjangnya ditentukan pemilik (nama dompet, catatan transaksi,
+  nama kategori) dalam ruang sempit — ada `overflow`/`maxLines` eksplisit
+  atau `FitStart`, bukan meluber. Nominal besar (miliaran rupiah) di kartu
+  dompet dan kartu Dari/Ke transfer adalah kasus yang sudah pernah
+  bermasalah.
+- `Semantics`/label untuk ikon tanpa teks (tombol filter, pencarian,
+  kalender).
 
-## G. Konsistensi dengan aturan domain (UX yang bersinggungan dengan korektnes)
+## G. Konsistensi dengan aturan domain
 
-- Baris `rollUp`/field nominal yang dibekukan (ADR-0008) — apakah UI
-  secara visual membedakan baris yang BISA disunting (`kind == .manual`)
-  dari yang TIDAK BISA, SEBELUM pemakai mencoba mengetuknya dan ditolak?
-  Kalau tampilannya identik dan baru ditolak setelah tap, itu friksi nyata
-  meski secara teknis "benar" (backend-nya sudah menolak dengan benar).
-- Fix #9 (cegah duplikat sumber roll-up) — chip yang dinonaktifkan harus
-  tetap MENYEBUT kenapa (misal lewat tooltip/teks), bukan cuma warna pudar
-  yang mudah disangka "belum dipilih saja".
+- **Transfer tidak dihitung sebagai pemasukan/pengeluaran** (aturan 7).
+  Ringkasan Masuk/Keluar/Neto (header bulan Transaksi, rincian dompet) tidak
+  boleh berubah karena transfer. Pastikan juga UI tidak menyiratkan
+  sebaliknya (mis. transfer ditampilkan dengan tanda +/− dan warna
+  masuk/keluar di ringkasan).
+- **Saldo awal bukan transaksi** — tidak muncul di riwayat sebagai
+  "pemasukan", dan copy formulir dompet tidak menyebutnya "setoran".
+- **Sunting transaksi** memakai formulir CATAT yang sama
+  (`open_edit_transaction_sheet.dart`), bukan formulir kedua dengan field
+  berbeda.
+- Nama dompet tidak terhubung ke bank sungguhan — ikon/logo/copy tidak
+  boleh menyiratkan koneksi ("Sinkronkan", "Hubungkan akun").
 
-## H. Cek regresi atas perbaikan yang sudah ada
+## H. Cek regresi atas keputusan yang sudah diambil
 
-Sebelum menutup review, grep cepat tiap item di bawah masih benar di kode
-saat ini (daftar ini dari `docs/04-planning/TASK_LIST.md`, jangan laporkan
-ulang sebagai temuan BARU — kalau salah satunya ternyata sudah berubah,
-sebut eksplisit "regresi atas Fix #N"):
+Sebelum menutup review, cek cepat keputusan yang tercatat di
+`TASK_LIST.md` Fase 2 masih berlaku di kode. Jangan laporkan sebagai temuan
+BARU. Kalau berubah, sebut "regresi atas T-x.y":
 
-1. Format bulan app bar ikut locale (`CycleMonthFormatter`).
-2. Tidak ada icon button Income/Worklog redundan di app bar cycle.
-3. Hint + tombol tambah sumber pemasukan saat `sources` kosong.
-4. Baris pemasukan bertaut sumber ikut berubah kalau sumbernya disunting
-   (selama siklus belum ditutup).
-5. Chevron navigasi dibatasi ke siklus yang benar-benar ada
-   (`existingCycleIds`).
-6. Ada aksi hapus siklus (hanya siklus terakhir, belum ditutup).
-7. Baris anggaran baru bisa ditautkan ke Rencana Belanja/kartu dari UI.
-8. Sumber pemasukan baru tersegarkan tanpa pindah tab
-   (`CycleIncomeSourcesRefreshRequested`).
-9. Tidak bisa menautkan dua baris anggaran ke sumber roll-up yang sama.
+1. CATAT dibuka dari slot tengah navigasi dan dari CTA keadaan kosong lewat
+   `openRecordSheet` yang SAMA (T-2.4, T-2.5).
+2. Rincian dompet membuka CATAT dengan dompet itu sudah terisi (T-2.8,
+   FR-REC-002).
+3. Kartu Dari/Ke transfer tidak terpotong atau meluap, termasuk untuk
+   nominal besar (commit "Perbaiki kartu Dari/Ke transfer").
+4. `WalletPickerField`: nama dompet dan saldo tidak terpotong, tombol
+   Ganti sebaris (commit "Rapikan WalletPickerField").
+5. Penyaring Transaksi berupa dropdown berikon, sejalan dengan rujukan
+   visual (T-2.5).
+6. Hapus dompet yang sudah punya transaksi diblokir dengan pesan yang
+   menawarkan nonaktifkan (T-2.7).
+7. Ringkasan Masuk/Keluar/Neto rincian dompet tidak berubah oleh transfer
+   (T-2.8, diverifikasi di T-2.10).

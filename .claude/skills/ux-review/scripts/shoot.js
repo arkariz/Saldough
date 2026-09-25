@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Screenshot helper untuk metode cadangan "jalankan sebagai Flutter Web" —
-// lihat ../references/web-run-method.md. Jalankan dengan
-// NODE_PATH=/opt/node22/lib/node_modules supaya `playwright` (terpasang
-// global di sandbox ini) ke-resolve tanpa perlu `npm install` lokal.
+// Screenshot helper untuk pilihan terakhir "Flutter Web" — lihat
+// ../references/render-method.md bagian 3. Butuh paket `playwright` beserta
+// browser Chromium-nya. Kalau terpasang global, arahkan NODE_PATH ke folder
+// node_modules global (`npm root -g`) alih-alih `npm install` di repo ini.
 //
 // Usage:
 //   node shoot.js --url http://localhost:8080 --out /tmp/shot.png \

@@ -118,3 +118,5 @@ app.*.symbols
 
 # FVM Version Cache
 .fvm/
+# graphify — graph pengetahuan lokal, dibangun ulang lewat `graphify update .`
+graphify-out/

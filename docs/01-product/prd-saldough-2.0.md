@@ -396,7 +396,9 @@ lebih berat, fitur itu yang salah tempat.
 
 **FR-BUD-001 — Mengelola beberapa anggaran aktif**
 
-- [ ] Membuat anggaran dengan nama, dompet, periode, dan nominal rencana.
+- [ ] Membuat anggaran dengan nama, dompet, periode, dan minimal satu pos.
+      Nominal rencananya adalah jumlah pos
+      ([ADR-017](../02-architecture/adr/0017-rencana-anggaran-adalah-jumlah-pos.md)).
 - [ ] Mengizinkan beberapa anggaran aktif sekaligus tanpa mengharuskan yang lama
       ditutup lebih dulu.
 - [ ] Mengizinkan beberapa anggaran berbagi satu dompet.
@@ -412,8 +414,10 @@ lebih berat, fitur itu yang salah tempat.
 - [ ] Menerima nominal rencana per pos.
 - [ ] Menerima jumlah dan harga satuan opsional untuk pos yang berupa daftar
       belanja, dan menghitung nominal rencananya dari keduanya.
-- [ ] Menampilkan selisih antara jumlah nominal seluruh pos dan nominal rencana
-      anggaran.
+- [ ] Menampilkan nominal rencana anggaran sebagai jumlah seluruh pos, yang
+      ikut berubah setiap kali pos ditambah, disunting, atau dihapus.
+      (Menggantikan kriteria "selisih antara jumlah pos dan nominal rencana
+      anggaran" — dicabut ADR-017.)
 
 **FR-BUD-003 — Menautkan transaksi ke pos anggaran**
 

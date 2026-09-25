@@ -378,14 +378,9 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get periodLabel => 'Period';
 	@override String get startDateLabel => 'Starts';
 	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
-	@override String get plannedAmountLabel => 'Planned amount';
-	@override String get plannedAmountHelp => 'The limit for the whole budget. It does not have to equal the sum of its items.';
 	@override String get itemsLabel => 'Budget items';
-	@override String get itemsHelp => 'Planned purchases or planned transfers. Optional.';
+	@override String get itemsHelp => 'Planned purchases or planned transfers. The budget total is the sum of all items.';
 	@override String get addItemAction => 'Add Item';
-	@override String get itemsTotalLabel => 'Sum of all items';
-	@override String get differenceLabel => 'Difference from plan';
-	@override String get useItemsTotalAction => 'Use item total';
 	@override String get saveAddAction => 'Save Budget';
 	@override String get archiveAction => 'Archive Budget';
 	@override String get unarchiveAction => 'Reactivate';
@@ -417,6 +412,9 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get detailHowTitle => 'How budget items work';
 	@override String detailHowBody({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.';
 	@override String get unknownWallet => 'Wallet not found';
+	@override String get totalPlannedLabel => 'Total planned budget';
+	@override String get itemsRequiredHint => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.';
+	@override String walletUnchangedNote({required Object wallet}) => '${wallet} balance unchanged';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -696,14 +694,9 @@ extension on TranslationsEn {
 			'budget.periodLabel' => 'Period',
 			'budget.startDateLabel' => 'Starts',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
-			'budget.plannedAmountLabel' => 'Planned amount',
-			'budget.plannedAmountHelp' => 'The limit for the whole budget. It does not have to equal the sum of its items.',
 			'budget.itemsLabel' => 'Budget items',
-			'budget.itemsHelp' => 'Planned purchases or planned transfers. Optional.',
+			'budget.itemsHelp' => 'Planned purchases or planned transfers. The budget total is the sum of all items.',
 			'budget.addItemAction' => 'Add Item',
-			'budget.itemsTotalLabel' => 'Sum of all items',
-			'budget.differenceLabel' => 'Difference from plan',
-			'budget.useItemsTotalAction' => 'Use item total',
 			'budget.saveAddAction' => 'Save Budget',
 			'budget.archiveAction' => 'Archive Budget',
 			'budget.unarchiveAction' => 'Reactivate',
@@ -735,6 +728,9 @@ extension on TranslationsEn {
 			'budget.detailHowTitle' => 'How budget items work',
 			'budget.detailHowBody' => ({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.',
 			'budget.unknownWallet' => 'Wallet not found',
+			'budget.totalPlannedLabel' => 'Total planned budget',
+			'budget.itemsRequiredHint' => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.',
+			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			_ => null,
 		};
 	}

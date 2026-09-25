@@ -16,7 +16,6 @@ void main() {
         walletId: 'bca',
         period: BudgetPeriod.monthly,
         startDate: DateTime(2026, 9),
-        plannedAmount: 100,
         items: const [
           BudgetItem(id: 'beras', name: 'Beras', enteredAmount: 50),
           BudgetItem(id: 'susu', name: 'Susu', enteredAmount: 50),
@@ -30,7 +29,6 @@ void main() {
         walletId: 'bca',
         period: BudgetPeriod.monthly,
         startDate: DateTime(2026, 8),
-        plannedAmount: 100,
         items: const [BudgetItem(id: 'listrik', name: 'Listrik', enteredAmount: 100)],
       ),
     );

@@ -18,7 +18,6 @@ Future<void> addBudget(BuildContext context) async {
     :final walletId,
     :final period,
     :final startDate,
-    :final plannedAmount,
     :final items,
   )) {
     bloc.add(
@@ -27,7 +26,6 @@ Future<void> addBudget(BuildContext context) async {
         walletId: walletId,
         period: period,
         startDate: startDate,
-        plannedAmount: plannedAmount,
         items: items,
       ),
     );
@@ -54,8 +52,7 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
       :final walletId,
       :final period,
       :final startDate,
-      :final plannedAmount,
-      :final items,
+        :final items,
     ):
       bloc.add(
         BudgetEdited(
@@ -64,8 +61,7 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
             walletId: walletId,
             period: period,
             startDate: startDate,
-            plannedAmount: plannedAmount,
-            items: items,
+                items: items,
           ),
         ),
       );

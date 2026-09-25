@@ -56,5 +56,4 @@ final fallbackBudget = Budget(
   walletId: '_fallback',
   period: BudgetPeriod.monthly,
   startDate: DateTime(2026),
-  plannedAmount: 0,
 );

@@ -18,7 +18,6 @@ void main() {
     walletId: 'bca',
     period: BudgetPeriod.monthly,
     startDate: DateTime(2026, 9),
-    plannedAmount: 306850000,
     items: const [
       BudgetItem(id: 'mingguan', name: 'Belanja mingguan', quantity: 4, unitPrice: 57660000),
       BudgetItem(id: 'bulanan', name: 'Belanja bulanan', enteredAmount: 76210000),
@@ -54,7 +53,6 @@ void main() {
           walletId: 'gopay',
           period: BudgetPeriod.weekly,
           startDate: DateTime(2026, 9, 7),
-          plannedAmount: 57660000,
         ),
       );
       await repository.saveBudget(budget.copyWith(isArchived: true));

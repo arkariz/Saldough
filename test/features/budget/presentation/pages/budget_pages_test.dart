@@ -37,7 +37,6 @@ void main() {
     walletId: 'bca',
     period: BudgetPeriod.monthly,
     startDate: DateTime(now.year, now.month),
-    plannedAmount: 306850000,
     items: const [BudgetItem(id: 'beras', name: 'Beras', quantity: 2, unitPrice: 7500000)],
   );
 
@@ -106,9 +105,10 @@ void main() {
     expect(card, findsOneWidget);
     expect(find.descendant(of: card, matching: find.text('Rumah tangga')), findsOneWidget);
     expect(find.descendant(of: card, matching: find.text('BCA')), findsOneWidget);
-    // Terpakai Rp75.000; sisa 3.068.500 − 75.000 = Rp2.993.500.
+    // Rencana = pos Beras 2 × Rp75.000 = Rp150.000 (ADR-017); terpakai
+    // Rp75.000, sisa Rp75.000.
     expect(find.descendant(of: card, matching: find.text('Rp75.000')), findsOneWidget);
-    expect(find.descendant(of: card, matching: find.textContaining('Rp2.993.500')), findsOneWidget);
+    expect(find.descendant(of: card, matching: find.textContaining('Rp75.000 / Rp150.000')), findsOneWidget);
   });
 
   testWidgets('rincian anggaran menampilkan pos dan transaksi tertaut, lalu pintasan pos membuka CATAT terisi dompet, pos, dan sisa nominal (T-4.10)', (

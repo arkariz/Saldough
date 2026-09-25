@@ -70,7 +70,6 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       walletId: event.walletId,
       period: event.period,
       startDate: event.startDate,
-      plannedAmount: event.plannedAmount,
       items: event.items,
     );
     await _afterWrite(await _budgetRepository.saveBudget(budget), t.budget.savedMessage, emit);

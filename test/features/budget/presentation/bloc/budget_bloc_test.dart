@@ -30,7 +30,6 @@ void main() {
     walletId: 'bca',
     period: BudgetPeriod.monthly,
     startDate: DateTime(2026, 9),
-    plannedAmount: 306850000,
     items: const [BudgetItem(id: 'belanja', name: 'Belanja', enteredAmount: 230640000)],
   );
   final august = Budget(
@@ -39,7 +38,6 @@ void main() {
     walletId: 'bca',
     period: BudgetPeriod.monthly,
     startDate: DateTime(2026, 8),
-    plannedAmount: 100000000,
   );
   final archived = Budget(
     id: 'jajan',
@@ -47,7 +45,6 @@ void main() {
     walletId: 'gopay',
     period: BudgetPeriod.weekly,
     startDate: DateTime(2026, 9, 14),
-    plannedAmount: 20000000,
     isArchived: true,
   );
 
@@ -128,7 +125,8 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(const BudgetStarted()),
       verify: (bloc) {
-        expect(bloc.state.activePlanned, 306850000);
+        // Rencana = jumlah pos anggaran aktif (satu pos Rp2.306.400), ADR-017.
+        expect(bloc.state.activePlanned, 230640000);
         expect(bloc.state.activeSpent, 57660000);
       },
     );
@@ -180,7 +178,6 @@ void main() {
           walletId: 'bca',
           period: BudgetPeriod.weekly,
           startDate: DateTime(2026, 9, 14),
-          plannedAmount: 57660000,
           items: const [],
         ),
       ),

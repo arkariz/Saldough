@@ -281,14 +281,9 @@
     "periodLabel": "Periode",
     "startDateLabel": "Mulai",
     "periodRange": "$start – $end",
-    "plannedAmountLabel": "Nominal rencana",
-    "plannedAmountHelp": "Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.",
     "itemsLabel": "Pos anggaran",
-    "itemsHelp": "Rincian rencana belanja atau rencana transfer. Boleh kosong.",
+    "itemsHelp": "Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.",
     "addItemAction": "Tambah Pos",
-    "itemsTotalLabel": "Jumlah seluruh pos",
-    "differenceLabel": "Selisih dengan rencana",
-    "useItemsTotalAction": "Pakai jumlah pos",
     "saveAddAction": "Simpan Anggaran",
     "archiveAction": "Arsipkan Anggaran",
     "unarchiveAction": "Aktifkan Kembali",
@@ -319,6 +314,9 @@
     "detailLinkedEmpty": "Belum ada transaksi yang tertaut ke anggaran ini.",
     "detailHowTitle": "Cara kerja pos anggaran",
     "detailHowBody": "Saat mencatat pengeluaran atau transfer dari dompet $wallet, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.",
-    "unknownWallet": "Dompet tidak ditemukan"
+    "unknownWallet": "Dompet tidak ditemukan",
+    "totalPlannedLabel": "Total rencana anggaran",
+    "itemsRequiredHint": "Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.",
+    "walletUnchangedNote": "Saldo $wallet tetap"
   }
 }

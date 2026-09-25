@@ -13,14 +13,15 @@ void main() {
   final now = DateTime(2026, 9, 15);
 
   // Anggaran bulanan nyata pemilik: subtotal mingguan Rp576.600 × 4 +
-  // subtotal bulanan Rp762.100 = Rp3.068.500 (DOMAIN_MODEL.md).
+  // subtotal bulanan Rp762.100 = Rp3.068.500 (DOMAIN_MODEL.md), ditambah pos
+  // setoran tabungan Rp500.000 untuk kasus transfer. Rencana anggaran =
+  // jumlah ketiga pos = Rp3.568.500 (ADR-017).
   final budget = Budget(
     id: 'b1',
     name: 'Rumah tangga',
     walletId: 'bca',
     period: BudgetPeriod.monthly,
     startDate: DateTime(2026, 9),
-    plannedAmount: 306850000,
     items: const [
       BudgetItem(id: 'mingguan', name: 'Belanja mingguan', quantity: 4, unitPrice: 57660000),
       BudgetItem(id: 'bulanan', name: 'Belanja bulanan', enteredAmount: 76210000),
@@ -49,16 +50,22 @@ void main() {
       );
 
   group('CalculateBudgetProgress', () {
-    test('pos yang dirinci: 4 × Rp576.600 = Rp2.306.400, dan jumlah seluruh pos = rencana Rp3.068.500', () {
+    test('pos yang dirinci: 4 × Rp576.600 = Rp2.306.400; belanja mingguan + bulanan = Rp3.068.500', () {
       expect(budget.items[0].plannedAmount, 230640000);
       final itemsTotal = budget.items.take(2).fold(0, (sum, i) => sum + i.plannedAmount);
       expect(itemsTotal, 306850000);
     });
 
+    test('rencana anggaran selalu jumlah seluruh pos, tidak diketik terpisah (ADR-017)', () {
+      expect(budget.plannedAmount, 356850000);
+      expect(calculate(budget, const [], now: now).plannedAmount, 356850000);
+      expect(budget.copyWith(items: const []).plannedAmount, 0);
+    });
+
     test('tanpa transaksi: spent 0, sisa = rencana, seluruh pos belum terpakai', () {
       final result = calculate(budget, const [], now: now);
       expect(result.spent, 0);
-      expect(result.remaining, 306850000);
+      expect(result.remaining, 356850000);
       expect(result.progress, 0);
       expect(result.items.map((i) => i.status), everyElement(BudgetItemStatus.planned));
     });
@@ -69,7 +76,7 @@ void main() {
       expect(result.items[0].remaining, 172980000);
       expect(result.items[0].progress, 0.25);
       expect(result.spent, 57660000);
-      expect(result.remaining, 249190000);
+      expect(result.remaining, 299190000);
     });
 
     test('pengeluaran dari dompet lain TIDAK menambah spent walau budgetItemId cocok', () {
@@ -135,7 +142,7 @@ void main() {
     });
 
     test('spent anggaran = Σ spent pos, dan sisa boleh negatif', () {
-      final small = budget.copyWith(plannedAmount: 50000000);
+      final small = budget.copyWith(items: const [BudgetItem(id: 'bulanan', name: 'Belanja bulanan', enteredAmount: 50000000)]);
       final result = calculate(small, [expense('e1', 76210000, item: 'bulanan')], now: now);
       expect(result.spent, 76210000);
       expect(result.remaining, -26210000);

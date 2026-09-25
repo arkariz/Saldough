@@ -4,7 +4,6 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/core/utils/formatters/rupiah_input.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
@@ -27,7 +26,6 @@ final class BudgetFormSaved extends BudgetFormResult {
     required this.walletId,
     required this.period,
     required this.startDate,
-    required this.plannedAmount,
     required this.items,
   });
 
@@ -43,10 +41,7 @@ final class BudgetFormSaved extends BudgetFormResult {
   /// Awal periode.
   final DateTime startDate;
 
-  /// Nominal rencana, sen.
-  final int plannedAmount;
-
-  /// Pos-pos.
+  /// Pos-pos, minimal satu; nominal rencana anggaran adalah jumlahnya.
   final List<BudgetItem> items;
 }
 
@@ -64,6 +59,10 @@ final class BudgetFormDeleted extends BudgetFormResult {
 
 /// Formulir buat dan sunting anggaran (FR-BUD-001/002, T-4.6), layar penuh
 /// lewat `showFullScreenSheet`, mengikuti rujukan `pixel_kas_tambah_anggaran`.
+///
+/// Nominal rencana anggaran TIDAK diketik terpisah: selalu jumlah pos, dan
+/// ditampilkan sebagai "Total rencana" yang ikut berubah tiap pos ditambah,
+/// disunting, atau dihapus (ADR-017). Minimal satu pos wajib ada.
 ///
 /// ⚠ Bagian rujukan yang sengaja tidak dibangun: periode "Kustom" (domain
 /// hanya mingguan/bulanan), jenis pos "rencana transfer" (pos tidak punya
@@ -86,7 +85,6 @@ class BudgetFormSheet extends StatefulWidget {
 
 class _BudgetFormSheetState extends State<BudgetFormSheet> {
   final _name = TextEditingController();
-  final _planned = TextEditingController();
   String? _walletId;
   BudgetPeriod _period = BudgetPeriod.monthly;
   late DateTime _startDate;
@@ -105,7 +103,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
       return;
     }
     _name.text = budget.name;
-    _planned.text = BudgetMoneyField.initialText(budget.plannedAmount);
     _walletId = budget.walletId;
     _period = budget.period;
     _startDate = budget.startDate;
@@ -115,13 +112,19 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
   @override
   void dispose() {
     _name.dispose();
-    _planned.dispose();
     super.dispose();
+  }
+
+  String? get _selectedWalletName {
+    for (final wallet in widget.wallets) {
+      if (wallet.id == _walletId) return wallet.name;
+    }
+    return null;
   }
 
   int get _itemsTotal => _items.fold(0, (sum, item) => sum + item.plannedAmount);
 
-  bool get _canSave => _name.text.trim().isNotEmpty && _walletId != null && BudgetMoneyField.senOf(_planned) != null;
+  bool get _canSave => _name.text.trim().isNotEmpty && _walletId != null && _items.isNotEmpty;
 
   Budget get _draft => Budget(
     id: widget.initial?.id ?? '',
@@ -129,7 +132,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     walletId: _walletId ?? '',
     period: _period,
     startDate: _startDate,
-    plannedAmount: BudgetMoneyField.senOf(_planned) ?? 0,
   );
 
   Future<void> _pickStartDate() async {
@@ -164,11 +166,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     });
   }
 
-  void _useItemsTotal() {
-    final rupiah = _itemsTotal ~/ 100;
-    setState(() => _planned.text = rupiah <= 0 ? '' : formatRupiahInput(rupiah));
-  }
-
   void _save() {
     if (!_canSave) return;
     Navigator.of(context).pop(
@@ -177,7 +174,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
         walletId: _walletId!,
         period: _period,
         startDate: _startDate,
-        plannedAmount: BudgetMoneyField.senOf(_planned)!,
         items: _items,
       ),
     );
@@ -199,8 +195,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final budget = widget.initial;
-    final planned = BudgetMoneyField.senOf(_planned) ?? 0;
-    final difference = planned - _itemsTotal;
     void refresh(String _) => setState(() {});
     return SizedBox.expand(
       child: Padding(
@@ -287,13 +281,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              AppSectionLabel(t.budget.plannedAmountLabel, hint: t.budget.requiredHint),
-              const SizedBox(height: AppSpacing.xs),
-              BudgetMoneyField(controller: _planned, onChanged: refresh, large: true),
-              const SizedBox(height: 4),
-              Text(t.budget.plannedAmountHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-              const SizedBox(height: AppSpacing.md),
-              AppSectionLabel(t.budget.itemsLabel, hint: t.budget.itemCount(count: _items.length)),
+              AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
               const SizedBox(height: 2),
               Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
               const SizedBox(height: AppSpacing.xs),
@@ -302,31 +290,12 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                 const SizedBox(height: AppSpacing.xs),
               ],
               AppButton(label: t.budget.addItemAction, color: colors.textMuted, onPressed: _editItem),
-              if (_items.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.sm),
-                TransactionSlab(
-                  color: colors.surfaceLow,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _TotalRow(label: t.budget.itemsTotalLabel, sen: _itemsTotal, color: colors.textPrimary),
-                      const SizedBox(height: 4),
-                      _TotalRow(
-                        label: t.budget.differenceLabel,
-                        sen: difference,
-                        color: difference < 0 ? colors.overBudget : colors.textPrimary,
-                      ),
-                      if (difference != 0) ...[
-                        const SizedBox(height: AppSpacing.xs),
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: AppQuickChip(label: t.budget.useItemsTotalAction, onTap: _useItemsTotal),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
+              const SizedBox(height: AppSpacing.sm),
+              _PlannedTotalCard(
+                total: _itemsTotal,
+                itemCount: _items.length,
+                walletName: _selectedWalletName,
+              ),
               const SizedBox(height: AppSpacing.lg),
               AppButton(
                 label: _editing ? t.transaction.saveChangesAction : t.budget.saveAddAction,
@@ -460,22 +429,55 @@ class _ItemRow extends StatelessWidget {
   }
 }
 
-class _TotalRow extends StatelessWidget {
-  const _TotalRow({required this.label, required this.sen, required this.color});
+/// Total rencana anggaran = jumlah pos (ADR-017), rujukan
+/// `pixel_kas_tambah_anggaran` bagian "Total Rencana Anggaran". Tanpa pos,
+/// kartu ini menjelaskan bahwa minimal satu pos dibutuhkan.
+class _PlannedTotalCard extends StatelessWidget {
+  const _PlannedTotalCard({required this.total, required this.itemCount, required this.walletName});
 
-  final String label;
-  final int sen;
-  final Color color;
+  final int total;
+  final int itemCount;
+  final String? walletName;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: context.appColors.textMuted)),
-        ),
-        Text(AppMoneyFormatter.format(sen), style: PixelTypography.tabularMono(context, color: color)),
-      ],
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    return TransactionSlab(
+      color: colors.surfaceLow,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.budget.totalPlannedLabel.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+          const SizedBox(height: 2),
+          FitStart(
+            child: Text(
+              AppMoneyFormatter.format(total),
+              style: textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(height: 4),
+          if (itemCount == 0)
+            Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.pending))
+          else
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: AppSpacing.sm,
+              runSpacing: 2,
+              children: [
+                Text(
+                  t.budget.itemCount(count: itemCount),
+                  style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                ),
+                if (walletName != null)
+                  Text(
+                    t.budget.walletUnchangedNote(wallet: walletName!),
+                    style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                  ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

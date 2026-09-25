@@ -690,6 +690,10 @@ tanpa menyelesaikan apa pun.
       hidup memakai `BudgetStatus` (aktif/selesai/nonaktif). `BudgetItem`
       menyimpan `enteredAmount` ATAU `quantity`+`unitPrice`; `plannedAmount`
       getter turunan.
+      ⚠ **Direvisi ADR-017 (25 September 2026):** `Budget.plannedAmount`
+      juga turunan, `Σ item.plannedAmount`, tidak lagi diketik terpisah.
+      `BudgetModel` skema 2 berhenti menulisnya dan mengabaikannya saat
+      membaca skema 1.
       Memenuhi FR-BUD-001 dan FR-BUD-002.
 - [x] **T-4.2** Buat use case `CalculateBudgetProgress` — Dart murni,
       menghasilkan `spent`, `remaining`, `progress`, status tiap pos, dan status
@@ -743,8 +747,9 @@ tanpa menyelesaikan apa pun.
       harga satuan opsional.
       ⚠ Jumlah dikali harga satuan ada supaya daftar belanja pemilik yang
       sungguhan berisi 35 item tetap bisa dicatat serinci sebelumnya.
-      Selisih jumlah pos vs rencana ditampilkan, dengan pintasan "Pakai
-      jumlah pos" (FR-BUD-002). Bagian rujukan yang sengaja tidak dibangun:
+      ⚠ **Direvisi ADR-017:** kolom nominal rencana dan baris "Selisih
+      dengan rencana" dihapus, diganti kartu "Total rencana anggaran" yang
+      menjumlahkan pos. Minimal satu pos wajib sebelum bisa disimpan. Bagian rujukan yang sengaja tidak dibangun:
       periode "Kustom", jenis pos "rencana transfer" (pos tidak berjenis),
       "buat dari template" (Fase 7).
       Memenuhi FR-BUD-002.

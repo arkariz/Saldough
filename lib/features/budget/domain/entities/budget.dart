@@ -9,6 +9,11 @@ import 'package:saldough/features/budget/domain/entities/budget_status.dart';
 /// atau mengarsipkannya tidak pernah mengubah saldo dompet mana pun (aturan 5
 /// CLAUDE.md). Beberapa anggaran boleh aktif sekaligus, berbagi satu dompet,
 /// dan berbeda periode. Lihat DOMAIN_MODEL.md bagian "Anggaran".
+///
+/// Nominal rencananya SELALU jumlah pos ([plannedAmount]), tidak diketik
+/// terpisah — ADR-017. Anggaran tanpa pos tidak bisa melacak pengeluaran apa
+/// pun (transaksi hanya bisa ditautkan ke pos), jadi formulir mewajibkan
+/// minimal satu pos.
 final class Budget extends Equatable {
   /// Membuat [Budget].
   const Budget({
@@ -17,7 +22,6 @@ final class Budget extends Equatable {
     required this.walletId,
     required this.period,
     required this.startDate,
-    required this.plannedAmount,
     this.items = const [],
     this.isArchived = false,
   });
@@ -38,12 +42,13 @@ final class Budget extends Equatable {
   /// Awal berlakunya periode. Hanya tanggalnya yang dipakai.
   final DateTime startDate;
 
-  /// Nominal rencana tingkat anggaran dalam sen, diketik pemilik — bukan
-  /// jumlah nominal rencana posnya.
-  final int plannedAmount;
-
-  /// Pos-pos di dalamnya. Boleh kosong.
+  /// Pos-pos di dalamnya. Formulir mewajibkan minimal satu; entitas tetap
+  /// menerima daftar kosong (rencana nol) supaya data lama tidak rusak.
   final List<BudgetItem> items;
+
+  /// Nominal rencana dalam sen: `Σ item.plannedAmount`. Turunan, tidak
+  /// pernah disimpan (ADR-017).
+  int get plannedAmount => items.fold(0, (sum, item) => sum + item.plannedAmount);
 
   /// Satu-satunya bagian siklus hidup yang disimpan. Lihat [statusAt].
   final bool isArchived;
@@ -64,7 +69,6 @@ final class Budget extends Equatable {
     String? walletId,
     BudgetPeriod? period,
     DateTime? startDate,
-    int? plannedAmount,
     List<BudgetItem>? items,
     bool? isArchived,
   }) {
@@ -74,12 +78,11 @@ final class Budget extends Equatable {
       walletId: walletId ?? this.walletId,
       period: period ?? this.period,
       startDate: startDate ?? this.startDate,
-      plannedAmount: plannedAmount ?? this.plannedAmount,
       items: items ?? this.items,
       isArchived: isArchived ?? this.isArchived,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, walletId, period, startDate, plannedAmount, items, isArchived];
+  List<Object?> get props => [id, name, walletId, period, startDate, items, isArchived];
 }

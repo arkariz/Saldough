@@ -76,7 +76,7 @@ bukan pemesanan uang.
 |---|---|---|
 | Anggaran | `Budget` | Satu rencana pengeluaran untuk satu periode, terikat pada satu dompet. Boleh ada beberapa sekaligus. |
 | Pos anggaran | `BudgetItem` | Satu baris di dalam anggaran, misalnya `Belanja` atau `Listrik`. |
-| Nominal rencana | `plannedAmount` | Berapa yang direncanakan, baik di tingkat anggaran maupun pos. |
+| Nominal rencana | `plannedAmount` | Berapa yang direncanakan. Di tingkat pos diketik (atau jumlah × harga satuan); di tingkat anggaran selalu jumlah seluruh posnya (ADR-017). |
 | Jumlah dan harga satuan | `quantity`, `unitPrice` | Rincian opsional sebuah pos, untuk pos yang berupa daftar belanja. |
 | Terpakai | `spent` | Jumlah transaksi yang tertaut, baik pengeluaran maupun transfer. Dihitung dari transaksi, tidak pernah disimpan. |
 | Sisa anggaran | `remaining` | Nominal rencana dikurangi terpakai. Boleh negatif. |

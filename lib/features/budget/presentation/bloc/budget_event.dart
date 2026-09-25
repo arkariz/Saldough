@@ -29,7 +29,6 @@ final class BudgetAdded extends BudgetEvent {
     required this.walletId,
     required this.period,
     required this.startDate,
-    required this.plannedAmount,
     required this.items,
   });
 
@@ -45,10 +44,7 @@ final class BudgetAdded extends BudgetEvent {
   /// Awal periode.
   final DateTime startDate;
 
-  /// Nominal rencana, sen.
-  final int plannedAmount;
-
-  /// Pos-pos.
+  /// Pos-pos; nominal rencana anggaran adalah jumlahnya (ADR-017).
   final List<BudgetItem> items;
 }
 

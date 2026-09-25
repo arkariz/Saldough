@@ -172,8 +172,7 @@ pernah mengubah saldo dompet mana pun.
 | `walletId` | `String` | Dompet sumber. **Wajib**, dan menyaring pengeluaran mana yang terhitung. |
 | `period` | `BudgetPeriod` | `weekly` atau `monthly`. |
 | `startDate` | `DateTime` | Awal berlakunya periode. |
-| `plannedAmount` | `int` | Nominal rencana dalam sen. |
-| `items` | `List<BudgetItem>` | Pos-pos di dalamnya. Boleh kosong. |
+| `items` | `List<BudgetItem>` | Pos-pos di dalamnya. **Minimal satu** saat dibuat lewat formulir. |
 | `isArchived` | `bool` | Anggaran yang diarsipkan tidak muncul di daftar aktif, tetapi transaksi yang tertaut padanya tetap ada dan tetap terhitung di riwayat. |
 
 Beberapa anggaran boleh aktif sekaligus, boleh berbagi satu dompet, dan boleh
@@ -210,7 +209,7 @@ item.spent         = Σ expense.amount
 item.remaining     = item.plannedAmount − item.spent
 item.progress      = item.spent ÷ item.plannedAmount
 
-budget.plannedAmount = nominal yang diketik pemilik
+budget.plannedAmount = Σ item.plannedAmount
 budget.spent         = Σ item.spent
 budget.remaining     = budget.plannedAmount − budget.spent
 ```
@@ -220,6 +219,11 @@ berulang empat kali dalam sebulan ditambah subtotal bulanan Rp762.100,
 menghasilkan rencana Rp3.068.500. Di model 2.0 angka itu bukan lagi hasil rumus
 pengali minggu, melainkan jumlah `plannedAmount` seluruh pos di dalam satu
 anggaran bulanan.
+
+Nominal rencana anggaran **tidak diketik terpisah** dari posnya
+([ADR-017](adr/0017-rencana-anggaran-adalah-jumlah-pos.md)). Transaksi hanya
+bisa ditautkan ke pos, jadi rencana yang tidak terbagi ke pos tidak pernah bisa
+dilacak. Ruang cadangan dibuat sebagai pos biasa, misalnya `Lain-lain`.
 
 Status anggaran dihitung dari `isArchived` dan periodenya, bukan disimpan:
 

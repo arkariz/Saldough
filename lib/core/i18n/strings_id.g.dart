@@ -919,29 +919,14 @@ class Translations$budget$id {
 	/// id: '$start – $end'
 	String periodRange({required Object start, required Object end}) => '${start} – ${end}';
 
-	/// id: 'Nominal rencana'
-	String get plannedAmountLabel => 'Nominal rencana';
-
-	/// id: 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.'
-	String get plannedAmountHelp => 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.';
-
 	/// id: 'Pos anggaran'
 	String get itemsLabel => 'Pos anggaran';
 
-	/// id: 'Rincian rencana belanja atau rencana transfer. Boleh kosong.'
-	String get itemsHelp => 'Rincian rencana belanja atau rencana transfer. Boleh kosong.';
+	/// id: 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.'
+	String get itemsHelp => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.';
 
 	/// id: 'Tambah Pos'
 	String get addItemAction => 'Tambah Pos';
-
-	/// id: 'Jumlah seluruh pos'
-	String get itemsTotalLabel => 'Jumlah seluruh pos';
-
-	/// id: 'Selisih dengan rencana'
-	String get differenceLabel => 'Selisih dengan rencana';
-
-	/// id: 'Pakai jumlah pos'
-	String get useItemsTotalAction => 'Pakai jumlah pos';
 
 	/// id: 'Simpan Anggaran'
 	String get saveAddAction => 'Simpan Anggaran';
@@ -1035,6 +1020,15 @@ class Translations$budget$id {
 
 	/// id: 'Dompet tidak ditemukan'
 	String get unknownWallet => 'Dompet tidak ditemukan';
+
+	/// id: 'Total rencana anggaran'
+	String get totalPlannedLabel => 'Total rencana anggaran';
+
+	/// id: 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.'
+	String get itemsRequiredHint => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.';
+
+	/// id: 'Saldo $wallet tetap'
+	String walletUnchangedNote({required Object wallet}) => 'Saldo ${wallet} tetap';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -1314,14 +1308,9 @@ extension on Translations {
 			'budget.periodLabel' => 'Periode',
 			'budget.startDateLabel' => 'Mulai',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
-			'budget.plannedAmountLabel' => 'Nominal rencana',
-			'budget.plannedAmountHelp' => 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.',
 			'budget.itemsLabel' => 'Pos anggaran',
-			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Boleh kosong.',
+			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.',
 			'budget.addItemAction' => 'Tambah Pos',
-			'budget.itemsTotalLabel' => 'Jumlah seluruh pos',
-			'budget.differenceLabel' => 'Selisih dengan rencana',
-			'budget.useItemsTotalAction' => 'Pakai jumlah pos',
 			'budget.saveAddAction' => 'Simpan Anggaran',
 			'budget.archiveAction' => 'Arsipkan Anggaran',
 			'budget.unarchiveAction' => 'Aktifkan Kembali',
@@ -1353,6 +1342,9 @@ extension on Translations {
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
 			'budget.detailHowBody' => ({required Object wallet}) => 'Saat mencatat pengeluaran atau transfer dari dompet ${wallet}, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
+			'budget.totalPlannedLabel' => 'Total rencana anggaran',
+			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.',
+			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tetap',
 			_ => null,
 		};
 	}

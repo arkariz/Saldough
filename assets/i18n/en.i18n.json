@@ -281,14 +281,9 @@
     "periodLabel": "Period",
     "startDateLabel": "Starts",
     "periodRange": "$start – $end",
-    "plannedAmountLabel": "Planned amount",
-    "plannedAmountHelp": "The limit for the whole budget. It does not have to equal the sum of its items.",
     "itemsLabel": "Budget items",
-    "itemsHelp": "Planned purchases or planned transfers. Optional.",
+    "itemsHelp": "Planned purchases or planned transfers. The budget total is the sum of all items.",
     "addItemAction": "Add Item",
-    "itemsTotalLabel": "Sum of all items",
-    "differenceLabel": "Difference from plan",
-    "useItemsTotalAction": "Use item total",
     "saveAddAction": "Save Budget",
     "archiveAction": "Archive Budget",
     "unarchiveAction": "Reactivate",
@@ -319,6 +314,9 @@
     "detailLinkedEmpty": "No transactions are linked to this budget yet.",
     "detailHowTitle": "How budget items work",
     "detailHowBody": "When recording an expense or transfer from $wallet, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.",
-    "unknownWallet": "Wallet not found"
+    "unknownWallet": "Wallet not found",
+    "totalPlannedLabel": "Total planned budget",
+    "itemsRequiredHint": "Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.",
+    "walletUnchangedNote": "$wallet balance unchanged"
   }
 }

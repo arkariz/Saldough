@@ -900,7 +900,8 @@ tanpa menyelesaikan apa pun.
       terakhir) yang membuka **rincian proyek** — entri proyek itu saja,
       penyaring status (bawaan belum ditagih), dikelompokkan per bulan
       dengan subtotal, dimuat bertahap. Tombol utama menempel di dasar layar
-      (Tambah Worklog, Buat Pembayaran, + Worklog/Tagih). Ikon pixel
+      (Buat Pembayaran; + Worklog/Tagih di rincian proyek). Worklog hanya
+      ditambahkan dari rincian proyek; kartu Tambah Proyek di atas daftar proyek. Ikon pixel
       `hourly_rate`, `invoice`, `work_completed` dikonversi dari rujukan
       (sebagian T-7.4) dan dipakai bersama ilustrasi keadaan kosong.
       Memenuhi FR-FRL-005.

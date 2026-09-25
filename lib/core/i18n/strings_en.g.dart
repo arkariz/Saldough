@@ -491,7 +491,6 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get projectDeletedMessage => 'Project deleted.';
 	@override String get projectLabel => 'Project';
 	@override String get projectPick => 'Choose a project';
-	@override String get entryAddAction => 'Add Worklog';
 	@override String get entryStepLabel => 'Work log';
 	@override String get entryAddTitle => 'Add Worklog';
 	@override String get entryEditTitle => 'Edit Worklog';
@@ -961,7 +960,6 @@ extension on TranslationsEn {
 			'freelance.projectDeletedMessage' => 'Project deleted.',
 			'freelance.projectLabel' => 'Project',
 			'freelance.projectPick' => 'Choose a project',
-			'freelance.entryAddAction' => 'Add Worklog',
 			'freelance.entryStepLabel' => 'Work log',
 			'freelance.entryAddTitle' => 'Add Worklog',
 			'freelance.entryEditTitle' => 'Edit Worklog',

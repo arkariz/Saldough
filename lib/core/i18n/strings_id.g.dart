@@ -1238,9 +1238,6 @@ class Translations$freelance$id {
 	/// id: 'Pilih proyek'
 	String get projectPick => 'Pilih proyek';
 
-	/// id: 'Tambah Worklog'
-	String get entryAddAction => 'Tambah Worklog';
-
 	/// id: 'Log pekerjaan'
 	String get entryStepLabel => 'Log pekerjaan';
 
@@ -1883,7 +1880,6 @@ extension on Translations {
 			'freelance.projectDeletedMessage' => 'Proyek dihapus.',
 			'freelance.projectLabel' => 'Proyek',
 			'freelance.projectPick' => 'Pilih proyek',
-			'freelance.entryAddAction' => 'Tambah Worklog',
 			'freelance.entryStepLabel' => 'Log pekerjaan',
 			'freelance.entryAddTitle' => 'Tambah Worklog',
 			'freelance.entryEditTitle' => 'Ubah Worklog',

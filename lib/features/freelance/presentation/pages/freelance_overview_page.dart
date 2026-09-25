@@ -161,6 +161,8 @@ class _WorklogTab extends StatelessWidget {
                 const SizedBox(height: AppSpacing.md),
                 AppSectionLabel(t.freelance.projectsLabel),
                 const SizedBox(height: AppSpacing.xs),
+                AddProjectCard(onTap: () => addProject(context)),
+                const SizedBox(height: AppSpacing.sm),
                 for (final project in state.projects) ...[
                   ProjectCard(
                     project: project,
@@ -169,15 +171,10 @@ class _WorklogTab extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],
-                AddProjectCard(onTap: () => addProject(context)),
               ],
             ],
           ),
         ),
-        if (hasProjects)
-          FreelanceBottomBar(
-            children: [AppButton(label: t.freelance.entryAddAction, onPressed: () => addEntry(context))],
-          ),
       ],
     );
   }

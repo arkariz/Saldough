@@ -105,10 +105,19 @@ class TransactionDetailPage extends StatelessWidget {
               ExpenseTransaction(:final budgetItemId) || TransferTransaction(:final budgetItemId) => budgetItemId,
               IncomeTransaction() => null,
             });
+            // Pemasukan milik pembayaran freelance hanya diubah lewat
+            // pembayarannya (ADR-019): tanpa sunting dan hapus di sini.
+            final ownedByFreelance = switch (transaction) {
+              IncomeTransaction(isFreelancePayment: true) => true,
+              _ => false,
+            };
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
-                _TopBar(onEdit: () => _edit(context, state), onDelete: () => _delete(context)),
+                if (ownedByFreelance)
+                  const _TopBar()
+                else
+                  _TopBar(onEdit: () => _edit(context, state), onDelete: () => _delete(context)),
                 const SizedBox(height: AppSpacing.md),
                 _HeroCard(transaction: transaction),
                 const SizedBox(height: AppSpacing.md),
@@ -119,11 +128,15 @@ class TransactionDetailPage extends StatelessWidget {
                   onOpenBudget: budgetItem == null ? null : _budgetOpener(context, budgetItem),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                const _ManualNote(),
-                const SizedBox(height: AppSpacing.md),
-                AppButton(label: t.transaction.editAction, onPressed: () => _edit(context, state)),
-                const SizedBox(height: AppSpacing.sm),
-                _DeleteLink(onPressed: () => _delete(context)),
+                if (ownedByFreelance)
+                  _ManualNote(text: t.transaction.detailFreelanceNote)
+                else ...[
+                  _ManualNote(text: t.transaction.detailManualNote),
+                  const SizedBox(height: AppSpacing.md),
+                  AppButton(label: t.transaction.editAction, onPressed: () => _edit(context, state)),
+                  const SizedBox(height: AppSpacing.sm),
+                  _DeleteLink(onPressed: () => _delete(context)),
+                ],
                 const SizedBox(height: AppSpacing.md),
               ],
             );
@@ -134,12 +147,14 @@ class TransactionDetailPage extends StatelessWidget {
   }
 }
 
-/// Bilah atas: kembali di kiri, ubah dan hapus (ikon) di kanan.
+/// Bilah atas: kembali di kiri, ubah dan hapus (ikon) di kanan. Tanpa
+/// [onEdit]/[onDelete], hanya tombol kembali (transaksi milik pembayaran
+/// freelance).
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.onEdit, required this.onDelete});
+  const _TopBar({this.onEdit, this.onDelete});
 
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -166,21 +181,24 @@ class _TopBar extends StatelessWidget {
               ),
             ),
           ),
-          _SquareAction(
-            icon: IconKey.edit,
-            color: colors.cardBackground,
-            iconColor: colors.textPrimary,
-            semanticLabel: t.transaction.editAction,
-            onTap: onEdit,
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          _SquareAction(
-            icon: IconKey.delete,
-            color: colors.tinted(colors.expenseFill, 0.16),
-            iconColor: colors.expense,
-            semanticLabel: t.transaction.deleteAction,
-            onTap: onDelete,
-          ),
+          if (onEdit case final onEdit?)
+            _SquareAction(
+              icon: IconKey.edit,
+              color: colors.cardBackground,
+              iconColor: colors.textPrimary,
+              semanticLabel: t.transaction.editAction,
+              onTap: onEdit,
+            ),
+          if (onDelete case final onDelete?) ...[
+            const SizedBox(width: AppSpacing.xs),
+            _SquareAction(
+              icon: IconKey.delete,
+              color: colors.tinted(colors.expenseFill, 0.16),
+              iconColor: colors.expense,
+              semanticLabel: t.transaction.deleteAction,
+              onTap: onDelete,
+            ),
+          ],
         ],
       ),
     );
@@ -639,7 +657,9 @@ class _PairCard extends StatelessWidget {
 /// Catatan bahwa ini rekaman manual, bukan transaksi yang dijalankan aplikasi
 /// -- batas produk Saldough (CLAUDE.md "Apa ini").
 class _ManualNote extends StatelessWidget {
-  const _ManualNote();
+  const _ManualNote({required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -655,7 +675,7 @@ class _ManualNote extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              t.transaction.detailManualNote,
+              text,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
             ),
           ),

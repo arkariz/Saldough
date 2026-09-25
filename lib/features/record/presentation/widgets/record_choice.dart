@@ -18,3 +18,12 @@ final class BackToChoice {
   /// Membuat [BackToChoice].
   const BackToChoice();
 }
+
+/// Nilai sentinel dikembalikan formulir pemasukan saat pemakai memilih kartu
+/// Freelance (FR-FRL-005: CATAT → Catat Pemasukan → Freelance).
+/// `openRecordSheet` menafsirkannya dengan menutup alur CATAT lalu membuka
+/// Ikhtisar Freelance.
+final class OpenFreelance {
+  /// Membuat [OpenFreelance].
+  const OpenFreelance();
+}

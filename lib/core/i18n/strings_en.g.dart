@@ -46,6 +46,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
 	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
 	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
+	@override late final _Translations$freelance$en freelance = _Translations$freelance$en._(_root);
 }
 
 // Path: app
@@ -179,6 +180,8 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get budgetItemLabel => 'Budget item';
 	@override String get budgetItemNone => 'No budget';
 	@override String get budgetItemHelp => 'Optional. Only active budget items matching the wallets above are offered.';
+	@override String get freelanceCalloutTitle => 'Freelance pay?';
+	@override String get freelanceCalloutBody => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.';
 }
 
 // Path: transaction
@@ -251,6 +254,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get deletedMessage => 'Entry deleted.';
 	@override String get budgetLabel => 'Budget';
 	@override String get openBudgetAction => 'View budget';
+	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
 }
 
 // Path: wallet
@@ -428,6 +432,141 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String itemTargetConflict({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.';
 }
 
+// Path: freelance
+class _Translations$freelance$en extends Translations$freelance$id {
+	_Translations$freelance$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Freelance';
+	@override String worklogTab({required Object count}) => 'Worklog (${count})';
+	@override String paymentsTab({required Object count}) => 'Payments (${count})';
+	@override String get loadErrorTitle => 'Freelance data failed to load';
+	@override String get ruleTitle => 'Freelance cash rule';
+	@override String get ruleBody => 'Finished work hours do not add to any wallet balance. Money reaches a wallet only when its payment is recorded as received.';
+	@override String get summaryTitle => 'Pay & hours summary';
+	@override String get totalHoursLabel => 'Hours worked';
+	@override String hoursValue({required Object hours}) => '${hours} h';
+	@override String get hourShort => 'h';
+	@override String projectCount({required Object count}) => '${count} projects';
+	@override String get earnedLabel => 'Total earned';
+	@override String get earnedCaption => 'Hours × rate, before deductions';
+	@override String get paidLabel => 'Received';
+	@override String get paidCaption => 'Payment already recorded';
+	@override String get unpaidLabel => 'Not received';
+	@override String get unpaidCaption => 'Unbilled or pending';
+	@override String paidRatio({required Object percent}) => '${percent}% received';
+	@override String get projectsLabel => 'Projects';
+	@override String get projectsEmpty => 'No projects yet. Add a client or project with its hourly rate first.';
+	@override String get projectAddAction => '+ Project';
+	@override String get projectStepLabel => 'Freelance project';
+	@override String get projectAddTitle => 'Add Project';
+	@override String get projectEditTitle => 'Edit Project';
+	@override String get projectNameLabel => 'Client or project name';
+	@override String get projectNameHint => 'Example: Studio Koding';
+	@override String get requiredHint => 'Required';
+	@override String get hourlyRateLabel => 'Hourly rate';
+	@override String get hourlyRateHelp => 'Default rate for new entries. Changing it does not change entries already recorded.';
+	@override String get deductionsLabel => 'Deductions';
+	@override String get deductionsHelp => 'Taken from the gross pay of each payment, such as tax. Changing them does not change payments already created.';
+	@override String get deductionAddAction => 'Add deduction';
+	@override String get deductionTitle => 'Deduction';
+	@override String get deductionLabelLabel => 'Deduction name';
+	@override String get deductionLabelHint => 'Example: Tax';
+	@override String get deductionKindPercentage => 'Percent';
+	@override String get deductionKindFixed => 'Fixed amount';
+	@override String get deductionPercentLabel => 'Percent of gross pay';
+	@override String get deductionPercentHelp => 'At most one decimal place, for example 2.5.';
+	@override String get deductionAmountLabel => 'Amount per payment';
+	@override String get deductionSaveAction => 'Save deduction';
+	@override String get deductionRemoveAction => 'Remove deduction';
+	@override String get projectSaveAction => 'Save project';
+	@override String get projectDeleteAction => 'Delete project';
+	@override String get projectDeleteLockedHint => 'A project that already has worklog entries cannot be deleted.';
+	@override String get projectDeleteConfirmTitle => 'Delete project?';
+	@override String projectDeleteConfirmMessage({required Object name}) => 'Project "${name}" will be deleted.';
+	@override String get projectDeleteRefused => 'This project already has worklog entries, so it cannot be deleted.';
+	@override String get projectSavedMessage => 'Project saved.';
+	@override String get projectUpdatedMessage => 'Project changes saved.';
+	@override String get projectDeletedMessage => 'Project deleted.';
+	@override String get projectLabel => 'Project';
+	@override String get projectPick => 'Choose a project';
+	@override String get entriesLabel => 'Work hour entries';
+	@override String get entriesEmpty => 'No worklog entries yet.';
+	@override String get entryAddAction => 'Add Worklog';
+	@override String get entryStepLabel => 'Work log';
+	@override String get entryAddTitle => 'Add Worklog';
+	@override String get entryEditTitle => 'Edit Worklog';
+	@override String get entryRuleBody => 'Recording work hours does not add to any wallet balance. The money is recorded only when its payment is received.';
+	@override String get workDateLabel => 'Work date';
+	@override String get hoursLabel => 'Duration';
+	@override String get entryRateHelp => 'Filled from the project rate. Change it if this entry\'s rate differs.';
+	@override String get noteLabel => 'Note';
+	@override String get noteHint => 'What was done (optional)';
+	@override String get entrySaveAction => 'Save Worklog';
+	@override String get entrySaveHint => 'This amount is recorded as earned, not yet received.';
+	@override String get entryDeleteAction => 'Delete entry';
+	@override String get entryDeleteConfirmTitle => 'Delete worklog entry?';
+	@override String get entryDeleteConfirmMessage => 'This entry will be deleted. Wallet balances do not change.';
+	@override String get entryLockedMessage => 'Entries already in a payment cannot be edited or deleted.';
+	@override String get entrySavedMessage => 'Worklog saved.';
+	@override String get entryUpdatedMessage => 'Worklog changes saved.';
+	@override String get entryDeletedMessage => 'Worklog deleted.';
+	@override String hoursTimesRate({required Object hours, required Object rate}) => '${hours} h × ${rate}';
+	@override String get statusUnbilled => 'Unbilled';
+	@override String get statusPending => 'Pending';
+	@override String get statusPaid => 'Received';
+	@override String expectedOn({required Object date}) => 'Expected ${date}';
+	@override String receivedOn({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}';
+	@override String get unknownProject => 'Deleted project';
+	@override String get unknownWallet => 'deleted wallet';
+	@override String get paymentsRuleBody => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.';
+	@override String get pendingTotalLabel => 'Pending (net)';
+	@override String get paidTotalLabel => 'Received (net)';
+	@override String paymentCount({required Object count}) => '${count} payments';
+	@override String get paymentAddAction => 'Create Payment';
+	@override String get paymentAddDisabledHint => 'All worklog entries are already in a payment.';
+	@override String get pendingSectionLabel => 'Awaiting payment';
+	@override String get pendingEmpty => 'No pending payments.';
+	@override String get paidSectionLabel => 'Received payment history';
+	@override String get paidEmpty => 'No payments received yet.';
+	@override String get paymentStepLabel => 'Freelance payment';
+	@override String get paymentAddTitle => 'Create Payment';
+	@override String get paymentCreateRuleBody => 'Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.';
+	@override String paymentEntriesLabel({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)';
+	@override String paymentEntriesSummary({required Object count, required Object hours}) => '${count} entries · ${hours} h';
+	@override String get expectedDateLabel => 'Expected date received';
+	@override String get grossPayLabel => 'Gross pay';
+	@override String get netPayLabel => 'Net pay';
+	@override String get netPayNotPositive => 'Deductions cannot equal or exceed gross pay.';
+	@override String get paymentCreateAction => 'Create Payment';
+	@override String get paymentChangeDateAction => 'Change date';
+	@override String get paymentDeleteAction => 'Delete';
+	@override String get paymentDeleteConfirmTitle => 'Delete payment?';
+	@override String get paymentDeleteConfirmMessage => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.';
+	@override String get paymentEntriesInvalid => 'The chosen entries are already billed or belong to another project.';
+	@override String get paymentPaidLocked => 'A received payment cannot be deleted. Cancel its receipt first.';
+	@override String get paymentAlreadyPaid => 'This payment is already recorded as received.';
+	@override String get paymentCreatedMessage => 'Payment created.';
+	@override String get paymentUpdatedMessage => 'Payment date updated.';
+	@override String get paymentDeletedMessage => 'Payment deleted.';
+	@override String get receiveTitle => 'Record Payment Received';
+	@override String get receiveRuleTitle => 'A record, not a payment';
+	@override String get receiveRuleBody => 'Saldough does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.';
+	@override String get receiveAmountLabel => 'Amount received';
+	@override String get receiveWalletLabel => 'Receiving wallet';
+	@override String get receiveDateLabel => 'Date received';
+	@override String receiveNoteDefault({required Object project}) => 'Freelance payment ${project}';
+	@override String get receiveAction => 'Record Received';
+	@override String get paymentReceivedMessage => 'Payment recorded as received. Wallet balance increased.';
+	@override String get receiptCancelAction => 'Cancel receipt';
+	@override String get receiptCancelConfirmTitle => 'Cancel receipt?';
+	@override String get receiptCancelConfirmMessage => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.';
+	@override String get receiptCancelledMessage => 'Receipt cancelled. The payment is pending again.';
+	@override String get changeAction => 'Change';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -533,6 +672,8 @@ extension on TranslationsEn {
 			'record.budgetItemLabel' => 'Budget item',
 			'record.budgetItemNone' => 'No budget',
 			'record.budgetItemHelp' => 'Optional. Only active budget items matching the wallets above are offered.',
+			'record.freelanceCalloutTitle' => 'Freelance pay?',
+			'record.freelanceCalloutBody' => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.',
 			'transaction.pageTitle' => 'Transactions',
 			'transaction.searchHint' => 'Search notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -596,6 +737,7 @@ extension on TranslationsEn {
 			'transaction.deletedMessage' => 'Entry deleted.',
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
+			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
 			'wallet.heading' => 'My Wallets',
 			'wallet.subtitle' => 'Where your cash stands right now',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active',
@@ -753,6 +895,132 @@ extension on TranslationsEn {
 			'budget.itemNoTargetWallet' => 'You need another active wallet as the transfer destination.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'To ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.',
+			'freelance.title' => 'Freelance',
+			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
+			'freelance.paymentsTab' => ({required Object count}) => 'Payments (${count})',
+			'freelance.loadErrorTitle' => 'Freelance data failed to load',
+			'freelance.ruleTitle' => 'Freelance cash rule',
+			'freelance.ruleBody' => 'Finished work hours do not add to any wallet balance. Money reaches a wallet only when its payment is recorded as received.',
+			'freelance.summaryTitle' => 'Pay & hours summary',
+			'freelance.totalHoursLabel' => 'Hours worked',
+			'freelance.hoursValue' => ({required Object hours}) => '${hours} h',
+			'freelance.hourShort' => 'h',
+			'freelance.projectCount' => ({required Object count}) => '${count} projects',
+			'freelance.earnedLabel' => 'Total earned',
+			'freelance.earnedCaption' => 'Hours × rate, before deductions',
+			'freelance.paidLabel' => 'Received',
+			'freelance.paidCaption' => 'Payment already recorded',
+			'freelance.unpaidLabel' => 'Not received',
+			'freelance.unpaidCaption' => 'Unbilled or pending',
+			'freelance.paidRatio' => ({required Object percent}) => '${percent}% received',
+			'freelance.projectsLabel' => 'Projects',
+			'freelance.projectsEmpty' => 'No projects yet. Add a client or project with its hourly rate first.',
+			'freelance.projectAddAction' => '+ Project',
+			'freelance.projectStepLabel' => 'Freelance project',
+			'freelance.projectAddTitle' => 'Add Project',
+			'freelance.projectEditTitle' => 'Edit Project',
+			'freelance.projectNameLabel' => 'Client or project name',
+			'freelance.projectNameHint' => 'Example: Studio Koding',
+			'freelance.requiredHint' => 'Required',
+			'freelance.hourlyRateLabel' => 'Hourly rate',
+			'freelance.hourlyRateHelp' => 'Default rate for new entries. Changing it does not change entries already recorded.',
+			'freelance.deductionsLabel' => 'Deductions',
+			'freelance.deductionsHelp' => 'Taken from the gross pay of each payment, such as tax. Changing them does not change payments already created.',
+			'freelance.deductionAddAction' => 'Add deduction',
+			'freelance.deductionTitle' => 'Deduction',
+			'freelance.deductionLabelLabel' => 'Deduction name',
+			'freelance.deductionLabelHint' => 'Example: Tax',
+			'freelance.deductionKindPercentage' => 'Percent',
+			'freelance.deductionKindFixed' => 'Fixed amount',
+			'freelance.deductionPercentLabel' => 'Percent of gross pay',
+			'freelance.deductionPercentHelp' => 'At most one decimal place, for example 2.5.',
+			'freelance.deductionAmountLabel' => 'Amount per payment',
+			'freelance.deductionSaveAction' => 'Save deduction',
+			'freelance.deductionRemoveAction' => 'Remove deduction',
+			'freelance.projectSaveAction' => 'Save project',
+			'freelance.projectDeleteAction' => 'Delete project',
+			'freelance.projectDeleteLockedHint' => 'A project that already has worklog entries cannot be deleted.',
+			'freelance.projectDeleteConfirmTitle' => 'Delete project?',
+			'freelance.projectDeleteConfirmMessage' => ({required Object name}) => 'Project "${name}" will be deleted.',
+			'freelance.projectDeleteRefused' => 'This project already has worklog entries, so it cannot be deleted.',
+			'freelance.projectSavedMessage' => 'Project saved.',
+			'freelance.projectUpdatedMessage' => 'Project changes saved.',
+			'freelance.projectDeletedMessage' => 'Project deleted.',
+			'freelance.projectLabel' => 'Project',
+			'freelance.projectPick' => 'Choose a project',
+			'freelance.entriesLabel' => 'Work hour entries',
+			'freelance.entriesEmpty' => 'No worklog entries yet.',
+			'freelance.entryAddAction' => 'Add Worklog',
+			'freelance.entryStepLabel' => 'Work log',
+			'freelance.entryAddTitle' => 'Add Worklog',
+			'freelance.entryEditTitle' => 'Edit Worklog',
+			'freelance.entryRuleBody' => 'Recording work hours does not add to any wallet balance. The money is recorded only when its payment is received.',
+			'freelance.workDateLabel' => 'Work date',
+			'freelance.hoursLabel' => 'Duration',
+			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this entry\'s rate differs.',
+			'freelance.noteLabel' => 'Note',
+			'freelance.noteHint' => 'What was done (optional)',
+			'freelance.entrySaveAction' => 'Save Worklog',
+			'freelance.entrySaveHint' => 'This amount is recorded as earned, not yet received.',
+			'freelance.entryDeleteAction' => 'Delete entry',
+			'freelance.entryDeleteConfirmTitle' => 'Delete worklog entry?',
+			'freelance.entryDeleteConfirmMessage' => 'This entry will be deleted. Wallet balances do not change.',
+			'freelance.entryLockedMessage' => 'Entries already in a payment cannot be edited or deleted.',
+			'freelance.entrySavedMessage' => 'Worklog saved.',
+			'freelance.entryUpdatedMessage' => 'Worklog changes saved.',
+			'freelance.entryDeletedMessage' => 'Worklog deleted.',
+			'freelance.hoursTimesRate' => ({required Object hours, required Object rate}) => '${hours} h × ${rate}',
+			'freelance.statusUnbilled' => 'Unbilled',
+			'freelance.statusPending' => 'Pending',
+			'freelance.statusPaid' => 'Received',
+			'freelance.expectedOn' => ({required Object date}) => 'Expected ${date}',
+			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}',
+			'freelance.unknownProject' => 'Deleted project',
+			'freelance.unknownWallet' => 'deleted wallet',
+			'freelance.paymentsRuleBody' => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.',
+			'freelance.pendingTotalLabel' => 'Pending (net)',
+			'freelance.paidTotalLabel' => 'Received (net)',
+			'freelance.paymentCount' => ({required Object count}) => '${count} payments',
+			'freelance.paymentAddAction' => 'Create Payment',
+			'freelance.paymentAddDisabledHint' => 'All worklog entries are already in a payment.',
+			'freelance.pendingSectionLabel' => 'Awaiting payment',
+			'freelance.pendingEmpty' => 'No pending payments.',
+			'freelance.paidSectionLabel' => 'Received payment history',
+			'freelance.paidEmpty' => 'No payments received yet.',
+			'freelance.paymentStepLabel' => 'Freelance payment',
+			'freelance.paymentAddTitle' => 'Create Payment',
+			'freelance.paymentCreateRuleBody' => 'Creating a payment only groups work hours into one invoice. Wallet balances do not change until the payment is recorded as received.',
+			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)',
+			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entries · ${hours} h',
+			'freelance.expectedDateLabel' => 'Expected date received',
+			'freelance.grossPayLabel' => 'Gross pay',
+			'freelance.netPayLabel' => 'Net pay',
+			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
+			'freelance.paymentCreateAction' => 'Create Payment',
+			'freelance.paymentChangeDateAction' => 'Change date',
+			'freelance.paymentDeleteAction' => 'Delete',
+			'freelance.paymentDeleteConfirmTitle' => 'Delete payment?',
+			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
+			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
+			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
+			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
+			'freelance.paymentCreatedMessage' => 'Payment created.',
+			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
+			'freelance.paymentDeletedMessage' => 'Payment deleted.',
+			'freelance.receiveTitle' => 'Record Payment Received',
+			'freelance.receiveRuleTitle' => 'A record, not a payment',
+			'freelance.receiveRuleBody' => 'Saldough does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.',
+			'freelance.receiveAmountLabel' => 'Amount received',
+			'freelance.receiveWalletLabel' => 'Receiving wallet',
+			'freelance.receiveDateLabel' => 'Date received',
+			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance payment ${project}',
+			'freelance.receiveAction' => 'Record Received',
+			'freelance.paymentReceivedMessage' => 'Payment recorded as received. Wallet balance increased.',
+			'freelance.receiptCancelAction' => 'Cancel receipt',
+			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
+			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
+			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
+			'freelance.changeAction' => 'Change',
 			_ => null,
 		};
 	}

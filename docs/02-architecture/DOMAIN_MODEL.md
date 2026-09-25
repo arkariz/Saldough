@@ -122,6 +122,7 @@ Field yang dimiliki ketiganya:
 | Field | Tipe | Keterangan |
 |---|---|---|
 | `walletId` | `String` | Dompet yang bertambah. |
+| `freelancePaymentId` | `String?` | Pembayaran freelance yang melahirkan transaksi ini. Kalau terisi, transaksi hanya bisa diubah lewat pembayarannya ([ADR-019](adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md)). |
 
 ### Pengeluaran
 
@@ -299,16 +300,21 @@ tarif 2,5% tidak bisa diwakili bilangan bulat dalam satuan persen.
 | `projectId` | `String` | Proyek yang dikerjakan. |
 | `date` | `DateTime` | Tanggal kerja. |
 | `hours` | `int` | Jumlah jam. |
+| `hourlyRate` | `int` | Tarif per jam dalam sen, disalin dari proyek saat entri dicatat ([ADR-019](adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md)). |
 | `note` | `String?` | Catatan bebas tentang apa yang dikerjakan. |
 | `paymentId` | `String?` | Pembayaran yang menagihkan entri ini. Null berarti belum ditagihkan. |
 
 `WorklogEntry` **tidak pernah** menyentuh saldo dompet mana pun. Mencatat kerja
 bukan menerima uang.
 
-Tarif per jam, tanggal pembayaran, dompet tujuan, dan status pembayaran
-**tidak** disimpan di entri. Ketiga yang terakhir diturunkan lewat `paymentId`,
-dan tarifnya diturunkan lewat `projectId` — sehingga satu entri tidak pernah
+Tanggal pembayaran, dompet tujuan, dan status pembayaran **tidak** disimpan di
+entri. Ketiganya diturunkan lewat `paymentId`, sehingga satu entri tidak pernah
 bisa menyatakan status yang berbeda dari pembayaran yang menagihkannya.
+
+Tarif per jam **disimpan** di entri, bukan diturunkan dari proyek. Mengubah
+tarif proyek hanya berlaku untuk entri berikutnya, sehingga kerja yang sudah
+selesai tidak berubah nilainya ([ADR-019](adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md)).
+Entri yang sudah masuk pembayaran tidak bisa disunting atau dihapus.
 
 ### Pembayaran
 
@@ -316,18 +322,21 @@ bisa menyatakan status yang berbeda dari pembayaran yang menagihkannya.
 |---|---|---|
 | `id` | `String` | Identitas pembayaran. |
 | `projectId` | `String` | Proyek yang ditagihkan. |
-| `entryIds` | `List<String>` | Entri worklog yang tercakup. |
+| `entryIds` | `List<String>` | Entri worklog yang tercakup, semuanya dari proyek yang sama. |
+| `deductionRules` | `List<DeductionRule>` | Potongan, disalin dari proyek saat pembayaran dibuat ([ADR-019](adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md)). |
 | `expectedDate` | `DateTime` | Perkiraan tanggal diterima. |
 | `walletId` | `String?` | Dompet tujuan. Terisi saat pembayaran dicatat diterima. |
 | `status` | `PaymentStatus` | `pending` atau `paid`. |
 | `incomeTransactionId` | `String?` | Transaksi pemasukan yang lahir saat pembayaran dicatat diterima. |
+| `receivedDate` | `DateTime?` | Tanggal uangnya diterima, sama dengan tanggal transaksinya. Terisi bersama `incomeTransactionId`. |
 
 Nilai turunan yang dihitung, bukan disimpan:
 
 ```
-entry.earnedAmount = entry.hours × project.hourlyRate
+entry.earnedAmount = entry.hours × entry.hourlyRate
 payment.grossPay   = Σ earnedAmount untuk seluruh entri tercakup
 deduction(rule)    = grossPay × rule.value ~/ 1000   bila rule.kind = percentage
+                     (rule dari payment.deductionRules)
                      rule.value                       bila rule.kind = fixedAmount
 payment.netPay     = grossPay − Σ deduction(rule)
 ```
@@ -351,6 +360,17 @@ Saat pembayaran dicatat diterima, ia membuat **tepat satu**
 `IncomeTransaction` sebesar `netPay` ke dompet tujuan, menyimpan id transaksi
 itu di `incomeTransactionId`, dan berubah status jadi `paid`. Field itu, begitu
 terisi, jadi penjaga supaya pembayaran yang sama tidak bisa dicatat dua kali.
+
+Id transaksi itu diturunkan dari id pembayaran (`freelance-<paymentId>`), dan
+transaksinya ditulis lebih dulu. Kalau penulisan pembayaran gagal di tengah,
+mencatat ulang menimpa transaksi yang sama, bukan membuat yang kedua.
+Transaksinya tidak bisa disunting atau dihapus dari tab Transaksi; pembayaran
+yang sudah diterima punya aksi **Batalkan penerimaan** yang mengembalikannya ke
+`pending` lebih dulu, baru menghapus transaksinya.
+
+Pembayaran yang masih `pending` boleh diubah tanggal perkiraannya, atau dihapus
+supaya entrinya kembali belum ditagihkan. Proyek hanya bisa dihapus selama
+belum punya entri worklog.
 
 ### Template freelance
 

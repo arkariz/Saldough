@@ -495,7 +495,9 @@ Ini layar daftar, dicapai dari navigasi bawah.
 - [ ] Mencatat entri kerja berisi proyek, tanggal, jumlah jam, dan catatan
       opsional.
 - [ ] Menghitung nominal yang diperoleh dari jam dikali tarif per jam, dan
-      menampilkan tarif yang dipakai di entri itu.
+      menampilkan tarif yang dipakai di entri itu. Tarif disalin dari proyek
+      saat entri dicatat dan boleh diubah; mengubah tarif proyek tidak
+      mengubah entri lama (ADR-019).
 - [ ] Menampilkan tanggal pembayaran, dompet tujuan, dan status pembayaran entri
       itu kalau ia sudah masuk ke sebuah pembayaran.
 - [ ] Menyunting dan menghapus entri yang belum masuk pembayaran.
@@ -515,6 +517,9 @@ Ini layar daftar, dicapai dari navigasi bawah.
 - [ ] Membuat tepat satu transaksi pemasukan sebesar gaji bersih.
 - [ ] Menambah saldo dompet tujuan tepat satu kali.
 - [ ] Menandai pembayaran itu sudah dibayar, dan mencegahnya dicatat dua kali.
+- [ ] Transaksi pemasukannya hanya bisa diubah lewat pembayarannya: tidak bisa
+      disunting atau dihapus dari tab Transaksi, dan pembayaran yang sudah
+      diterima bisa dibatalkan penerimaannya (ADR-019).
 - [ ] Menyatakan dengan jelas bahwa ini pencatatan pembayaran, bukan pembayaran
       yang dijalankan aplikasi.
 

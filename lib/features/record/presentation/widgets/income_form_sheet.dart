@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -166,6 +167,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           controller: _noteController,
           kind: TransactionKind.income,
         ),
+        if (!editing) const _FreelanceCallout(),
         if (_canSubmit && wallet != null && amount != null)
           RecordSummaryCard(
             kind: TransactionKind.income,
@@ -180,6 +182,50 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
             ],
           ),
       ],
+    );
+  }
+}
+
+/// Kartu jalan ke Ikhtisar Freelance (FR-FRL-005, rujukan
+/// `pixel_kas_catat_pemasukan` "PATH B"): honor freelance yang sudah
+/// dikerjakan belum tentu sudah diterima, jadi dicatat lewat worklog dan
+/// pembayaran, bukan sebagai pemasukan biasa. Mengembalikan [OpenFreelance].
+class _FreelanceCallout extends StatelessWidget {
+  const _FreelanceCallout();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pop(const OpenFreelance()),
+        behavior: HitTestBehavior.opaque,
+        child: TransactionSlab(
+          color: colors.tinted(colors.pending, 0.1),
+          shadowColor: colors.pending,
+          child: Row(
+            children: [
+              const AppIcon(IconKey.worklog, size: 32),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(t.record.freelanceCalloutTitle, style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 2),
+                    Text(
+                      t.record.freelanceCalloutBody,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    ),
+                  ],
+                ),
+              ),
+              AppIcon(IconKey.chevronRight, color: colors.pending),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

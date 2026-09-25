@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 25 September 2026
-**Fase saat ini:** Fase 5 — Freelance (Fase 0–4 selesai)
+**Fase saat ini:** Fase 6 — Beranda (Fase 0–5 selesai)
 
 ## Apa ini
 
@@ -39,10 +39,10 @@ berkas `.g.dart`), 33 berkas uji, 333 uji lulus, `flutter analyze` bersih.
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
-opsional ke pos anggaran), riwayat Transaksi, Dompet, dan Anggaran (daftar,
-rincian, pos, arsip, penyaring). Berikutnya Freelance (Fase 5,
-`CalculateNetPay` sudah menunggu di `lib/features/freelance/domain/`), lalu
-Beranda (Fase 6).
+opsional ke pos anggaran), riwayat Transaksi, Dompet, Anggaran (daftar,
+rincian, pos, arsip, penyaring), dan Freelance (proyek, worklog, pembayaran,
+pencatatan pembayaran diterima; dibuka dari CATAT → Catat Pemasukan).
+Berikutnya Beranda (Fase 6).
 
 ## Fakta proyek
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
@@ -37,6 +38,11 @@ import 'package:state_management/state_management.dart';
 /// pengeluaran/transfer (sisa pos anggaran), dan [initialToWalletId] dompet
 /// tujuan transfer (dompet tujuan pos transfer, ADR-018). Menekan kembali di formulir tetap
 /// membuka lembar pilihan — alurnya sama persis dengan CATAT biasa.
+///
+/// Kartu Freelance di formulir pemasukan menutup alur ini dan membuka
+/// Ikhtisar Freelance ([OpenFreelance]); `Future` ini baru selesai sesudah
+/// layar itu ditutup, supaya pemanggil menyegarkan saldo sesudah pembayaran
+/// dicatat diterima.
 Future<void> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
@@ -93,6 +99,12 @@ Future<void> openRecordSheet(
     );
     if (result == null || !context.mounted) return;
     if (result is BackToChoice) continue;
+    // CATAT → Catat Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
+    // pemanggil menyegarkan saldo sesudahnya seperti biasa.
+    if (result is OpenFreelance) {
+      await openFreelanceOverview(context);
+      return;
+    }
     if (result is RecordEvent) {
       bloc.add(result);
       if (!context.mounted) return;

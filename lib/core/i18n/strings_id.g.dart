@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$transaction$id transaction = Translations$transaction$id.internal(_root);
 	late final Translations$wallet$id wallet = Translations$wallet$id.internal(_root);
 	late final Translations$budget$id budget = Translations$budget$id.internal(_root);
+	late final Translations$freelance$id freelance = Translations$freelance$id.internal(_root);
 }
 
 // Path: app
@@ -375,6 +376,12 @@ class Translations$record$id {
 
 	/// id: 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.'
 	String get budgetItemHelp => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.';
+
+	/// id: 'Honor freelance?'
+	String get freelanceCalloutTitle => 'Honor freelance?';
+
+	/// id: 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.'
+	String get freelanceCalloutBody => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.';
 }
 
 // Path: transaction
@@ -573,6 +580,9 @@ class Translations$transaction$id {
 
 	/// id: 'Lihat anggaran'
 	String get openBudgetAction => 'Lihat anggaran';
+
+	/// id: 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.'
+	String get detailFreelanceNote => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.';
 }
 
 // Path: wallet
@@ -1064,6 +1074,393 @@ class Translations$budget$id {
 	String itemTargetConflict({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.';
 }
 
+// Path: freelance
+class Translations$freelance$id {
+	Translations$freelance$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Freelance'
+	String get title => 'Freelance';
+
+	/// id: 'Worklog ($count)'
+	String worklogTab({required Object count}) => 'Worklog (${count})';
+
+	/// id: 'Pembayaran ($count)'
+	String paymentsTab({required Object count}) => 'Pembayaran (${count})';
+
+	/// id: 'Data freelance gagal dimuat'
+	String get loadErrorTitle => 'Data freelance gagal dimuat';
+
+	/// id: 'Aturan kas freelance'
+	String get ruleTitle => 'Aturan kas freelance';
+
+	/// id: 'Jam kerja yang selesai tidak menambah saldo dompet. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.'
+	String get ruleBody => 'Jam kerja yang selesai tidak menambah saldo dompet. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.';
+
+	/// id: 'Ringkasan upah & jam'
+	String get summaryTitle => 'Ringkasan upah & jam';
+
+	/// id: 'Waktu kerja'
+	String get totalHoursLabel => 'Waktu kerja';
+
+	/// id: '$hours jam'
+	String hoursValue({required Object hours}) => '${hours} jam';
+
+	/// id: 'jam'
+	String get hourShort => 'jam';
+
+	/// id: '$count proyek'
+	String projectCount({required Object count}) => '${count} proyek';
+
+	/// id: 'Total diperoleh'
+	String get earnedLabel => 'Total diperoleh';
+
+	/// id: 'Jam × tarif, sebelum potongan'
+	String get earnedCaption => 'Jam × tarif, sebelum potongan';
+
+	/// id: 'Sudah diterima'
+	String get paidLabel => 'Sudah diterima';
+
+	/// id: 'Pembayarannya sudah dicatat'
+	String get paidCaption => 'Pembayarannya sudah dicatat';
+
+	/// id: 'Belum diterima'
+	String get unpaidLabel => 'Belum diterima';
+
+	/// id: 'Belum ditagih atau tertunda'
+	String get unpaidCaption => 'Belum ditagih atau tertunda';
+
+	/// id: '$percent% sudah diterima'
+	String paidRatio({required Object percent}) => '${percent}% sudah diterima';
+
+	/// id: 'Proyek'
+	String get projectsLabel => 'Proyek';
+
+	/// id: 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.'
+	String get projectsEmpty => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.';
+
+	/// id: '+ Proyek'
+	String get projectAddAction => '+ Proyek';
+
+	/// id: 'Proyek freelance'
+	String get projectStepLabel => 'Proyek freelance';
+
+	/// id: 'Tambah Proyek'
+	String get projectAddTitle => 'Tambah Proyek';
+
+	/// id: 'Ubah Proyek'
+	String get projectEditTitle => 'Ubah Proyek';
+
+	/// id: 'Nama klien atau proyek'
+	String get projectNameLabel => 'Nama klien atau proyek';
+
+	/// id: 'Contoh: Studio Koding'
+	String get projectNameHint => 'Contoh: Studio Koding';
+
+	/// id: 'Wajib'
+	String get requiredHint => 'Wajib';
+
+	/// id: 'Tarif per jam'
+	String get hourlyRateLabel => 'Tarif per jam';
+
+	/// id: 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.'
+	String get hourlyRateHelp => 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.';
+
+	/// id: 'Potongan'
+	String get deductionsLabel => 'Potongan';
+
+	/// id: 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.'
+	String get deductionsHelp => 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.';
+
+	/// id: 'Tambah potongan'
+	String get deductionAddAction => 'Tambah potongan';
+
+	/// id: 'Potongan'
+	String get deductionTitle => 'Potongan';
+
+	/// id: 'Nama potongan'
+	String get deductionLabelLabel => 'Nama potongan';
+
+	/// id: 'Contoh: Pajak'
+	String get deductionLabelHint => 'Contoh: Pajak';
+
+	/// id: 'Persen'
+	String get deductionKindPercentage => 'Persen';
+
+	/// id: 'Nominal tetap'
+	String get deductionKindFixed => 'Nominal tetap';
+
+	/// id: 'Persen dari gaji kotor'
+	String get deductionPercentLabel => 'Persen dari gaji kotor';
+
+	/// id: 'Paling banyak satu angka di belakang koma, misalnya 2,5.'
+	String get deductionPercentHelp => 'Paling banyak satu angka di belakang koma, misalnya 2,5.';
+
+	/// id: 'Nominal per pembayaran'
+	String get deductionAmountLabel => 'Nominal per pembayaran';
+
+	/// id: 'Simpan potongan'
+	String get deductionSaveAction => 'Simpan potongan';
+
+	/// id: 'Hapus potongan'
+	String get deductionRemoveAction => 'Hapus potongan';
+
+	/// id: 'Simpan proyek'
+	String get projectSaveAction => 'Simpan proyek';
+
+	/// id: 'Hapus proyek'
+	String get projectDeleteAction => 'Hapus proyek';
+
+	/// id: 'Proyek yang sudah punya entri worklog tidak bisa dihapus.'
+	String get projectDeleteLockedHint => 'Proyek yang sudah punya entri worklog tidak bisa dihapus.';
+
+	/// id: 'Hapus proyek?'
+	String get projectDeleteConfirmTitle => 'Hapus proyek?';
+
+	/// id: 'Proyek "$name" akan dihapus.'
+	String projectDeleteConfirmMessage({required Object name}) => 'Proyek "${name}" akan dihapus.';
+
+	/// id: 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.'
+	String get projectDeleteRefused => 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.';
+
+	/// id: 'Proyek tersimpan.'
+	String get projectSavedMessage => 'Proyek tersimpan.';
+
+	/// id: 'Perubahan proyek tersimpan.'
+	String get projectUpdatedMessage => 'Perubahan proyek tersimpan.';
+
+	/// id: 'Proyek dihapus.'
+	String get projectDeletedMessage => 'Proyek dihapus.';
+
+	/// id: 'Proyek'
+	String get projectLabel => 'Proyek';
+
+	/// id: 'Pilih proyek'
+	String get projectPick => 'Pilih proyek';
+
+	/// id: 'Daftar entri jam kerja'
+	String get entriesLabel => 'Daftar entri jam kerja';
+
+	/// id: 'Belum ada entri worklog.'
+	String get entriesEmpty => 'Belum ada entri worklog.';
+
+	/// id: 'Tambah Worklog'
+	String get entryAddAction => 'Tambah Worklog';
+
+	/// id: 'Log pekerjaan'
+	String get entryStepLabel => 'Log pekerjaan';
+
+	/// id: 'Tambah Worklog'
+	String get entryAddTitle => 'Tambah Worklog';
+
+	/// id: 'Ubah Worklog'
+	String get entryEditTitle => 'Ubah Worklog';
+
+	/// id: 'Mencatat jam kerja tidak menambah saldo dompet mana pun. Uangnya baru tercatat saat pembayarannya diterima.'
+	String get entryRuleBody => 'Mencatat jam kerja tidak menambah saldo dompet mana pun. Uangnya baru tercatat saat pembayarannya diterima.';
+
+	/// id: 'Tanggal kerja'
+	String get workDateLabel => 'Tanggal kerja';
+
+	/// id: 'Durasi pengerjaan'
+	String get hoursLabel => 'Durasi pengerjaan';
+
+	/// id: 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.'
+	String get entryRateHelp => 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.';
+
+	/// id: 'Catatan'
+	String get noteLabel => 'Catatan';
+
+	/// id: 'Apa yang dikerjakan (opsional)'
+	String get noteHint => 'Apa yang dikerjakan (opsional)';
+
+	/// id: 'Simpan Worklog'
+	String get entrySaveAction => 'Simpan Worklog';
+
+	/// id: 'Nominal ini tercatat sebagai diperoleh, belum diterima.'
+	String get entrySaveHint => 'Nominal ini tercatat sebagai diperoleh, belum diterima.';
+
+	/// id: 'Hapus entri'
+	String get entryDeleteAction => 'Hapus entri';
+
+	/// id: 'Hapus entri worklog?'
+	String get entryDeleteConfirmTitle => 'Hapus entri worklog?';
+
+	/// id: 'Entri ini akan dihapus. Saldo dompet tidak berubah.'
+	String get entryDeleteConfirmMessage => 'Entri ini akan dihapus. Saldo dompet tidak berubah.';
+
+	/// id: 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.'
+	String get entryLockedMessage => 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.';
+
+	/// id: 'Worklog tersimpan.'
+	String get entrySavedMessage => 'Worklog tersimpan.';
+
+	/// id: 'Perubahan worklog tersimpan.'
+	String get entryUpdatedMessage => 'Perubahan worklog tersimpan.';
+
+	/// id: 'Worklog dihapus.'
+	String get entryDeletedMessage => 'Worklog dihapus.';
+
+	/// id: '$hours jam × $rate'
+	String hoursTimesRate({required Object hours, required Object rate}) => '${hours} jam × ${rate}';
+
+	/// id: 'Belum ditagih'
+	String get statusUnbilled => 'Belum ditagih';
+
+	/// id: 'Tertunda'
+	String get statusPending => 'Tertunda';
+
+	/// id: 'Diterima'
+	String get statusPaid => 'Diterima';
+
+	/// id: 'Perkiraan diterima $date'
+	String expectedOn({required Object date}) => 'Perkiraan diterima ${date}';
+
+	/// id: 'Diterima $date di $wallet'
+	String receivedOn({required Object date, required Object wallet}) => 'Diterima ${date} di ${wallet}';
+
+	/// id: 'Proyek terhapus'
+	String get unknownProject => 'Proyek terhapus';
+
+	/// id: 'dompet terhapus'
+	String get unknownWallet => 'dompet terhapus';
+
+	/// id: 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.'
+	String get paymentsRuleBody => 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.';
+
+	/// id: 'Tertunda (bersih)'
+	String get pendingTotalLabel => 'Tertunda (bersih)';
+
+	/// id: 'Diterima (bersih)'
+	String get paidTotalLabel => 'Diterima (bersih)';
+
+	/// id: '$count pembayaran'
+	String paymentCount({required Object count}) => '${count} pembayaran';
+
+	/// id: 'Buat Pembayaran'
+	String get paymentAddAction => 'Buat Pembayaran';
+
+	/// id: 'Semua entri worklog sudah masuk pembayaran.'
+	String get paymentAddDisabledHint => 'Semua entri worklog sudah masuk pembayaran.';
+
+	/// id: 'Menunggu pembayaran'
+	String get pendingSectionLabel => 'Menunggu pembayaran';
+
+	/// id: 'Tidak ada pembayaran tertunda.'
+	String get pendingEmpty => 'Tidak ada pembayaran tertunda.';
+
+	/// id: 'Riwayat pembayaran diterima'
+	String get paidSectionLabel => 'Riwayat pembayaran diterima';
+
+	/// id: 'Belum ada pembayaran yang diterima.'
+	String get paidEmpty => 'Belum ada pembayaran yang diterima.';
+
+	/// id: 'Pembayaran freelance'
+	String get paymentStepLabel => 'Pembayaran freelance';
+
+	/// id: 'Buat Pembayaran'
+	String get paymentAddTitle => 'Buat Pembayaran';
+
+	/// id: 'Membuat pembayaran hanya mengelompokkan jam kerja jadi satu tagihan. Saldo dompet belum berubah sampai pembayaran dicatat diterima.'
+	String get paymentCreateRuleBody => 'Membuat pembayaran hanya mengelompokkan jam kerja jadi satu tagihan. Saldo dompet belum berubah sampai pembayaran dicatat diterima.';
+
+	/// id: 'Entri ditagih: $count ($hours jam)'
+	String paymentEntriesLabel({required Object count, required Object hours}) => 'Entri ditagih: ${count} (${hours} jam)';
+
+	/// id: '$count entri · $hours jam'
+	String paymentEntriesSummary({required Object count, required Object hours}) => '${count} entri · ${hours} jam';
+
+	/// id: 'Perkiraan tanggal diterima'
+	String get expectedDateLabel => 'Perkiraan tanggal diterima';
+
+	/// id: 'Gaji kotor'
+	String get grossPayLabel => 'Gaji kotor';
+
+	/// id: 'Gaji bersih'
+	String get netPayLabel => 'Gaji bersih';
+
+	/// id: 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.'
+	String get netPayNotPositive => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.';
+
+	/// id: 'Buat Pembayaran'
+	String get paymentCreateAction => 'Buat Pembayaran';
+
+	/// id: 'Ubah tanggal'
+	String get paymentChangeDateAction => 'Ubah tanggal';
+
+	/// id: 'Hapus'
+	String get paymentDeleteAction => 'Hapus';
+
+	/// id: 'Hapus pembayaran?'
+	String get paymentDeleteConfirmTitle => 'Hapus pembayaran?';
+
+	/// id: 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.'
+	String get paymentDeleteConfirmMessage => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.';
+
+	/// id: 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.'
+	String get paymentEntriesInvalid => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.';
+
+	/// id: 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.'
+	String get paymentPaidLocked => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.';
+
+	/// id: 'Pembayaran ini sudah dicatat diterima.'
+	String get paymentAlreadyPaid => 'Pembayaran ini sudah dicatat diterima.';
+
+	/// id: 'Pembayaran dibuat.'
+	String get paymentCreatedMessage => 'Pembayaran dibuat.';
+
+	/// id: 'Tanggal pembayaran diperbarui.'
+	String get paymentUpdatedMessage => 'Tanggal pembayaran diperbarui.';
+
+	/// id: 'Pembayaran dihapus.'
+	String get paymentDeletedMessage => 'Pembayaran dihapus.';
+
+	/// id: 'Catat Pembayaran Diterima'
+	String get receiveTitle => 'Catat Pembayaran Diterima';
+
+	/// id: 'Pencatatan, bukan pembayaran'
+	String get receiveRuleTitle => 'Pencatatan, bukan pembayaran';
+
+	/// id: 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.'
+	String get receiveRuleBody => 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.';
+
+	/// id: 'Nominal diterima'
+	String get receiveAmountLabel => 'Nominal diterima';
+
+	/// id: 'Dompet penerima'
+	String get receiveWalletLabel => 'Dompet penerima';
+
+	/// id: 'Tanggal diterima'
+	String get receiveDateLabel => 'Tanggal diterima';
+
+	/// id: 'Pembayaran freelance $project'
+	String receiveNoteDefault({required Object project}) => 'Pembayaran freelance ${project}';
+
+	/// id: 'Catat Diterima'
+	String get receiveAction => 'Catat Diterima';
+
+	/// id: 'Pembayaran dicatat diterima. Saldo dompet bertambah.'
+	String get paymentReceivedMessage => 'Pembayaran dicatat diterima. Saldo dompet bertambah.';
+
+	/// id: 'Batalkan penerimaan'
+	String get receiptCancelAction => 'Batalkan penerimaan';
+
+	/// id: 'Batalkan penerimaan?'
+	String get receiptCancelConfirmTitle => 'Batalkan penerimaan?';
+
+	/// id: 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.'
+	String get receiptCancelConfirmMessage => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.';
+
+	/// id: 'Penerimaan dibatalkan. Pembayaran kembali tertunda.'
+	String get receiptCancelledMessage => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.';
+
+	/// id: 'Ubah'
+	String get changeAction => 'Ubah';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1169,6 +1566,8 @@ extension on Translations {
 			'record.budgetItemLabel' => 'Pos anggaran',
 			'record.budgetItemNone' => 'Tanpa anggaran',
 			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.',
+			'record.freelanceCalloutTitle' => 'Honor freelance?',
+			'record.freelanceCalloutBody' => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.',
 			'transaction.pageTitle' => 'Transaksi',
 			'transaction.searchHint' => 'Cari catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -1232,6 +1631,7 @@ extension on Translations {
 			'transaction.deletedMessage' => 'Catatan dihapus.',
 			'transaction.budgetLabel' => 'Anggaran',
 			'transaction.openBudgetAction' => 'Lihat anggaran',
+			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
 			'wallet.heading' => 'Dompet Saya',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
 			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
@@ -1389,6 +1789,132 @@ extension on Translations {
 			'budget.itemNoTargetWallet' => 'Butuh dompet aktif lain sebagai tujuan transfer.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'Ke ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.',
+			'freelance.title' => 'Freelance',
+			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
+			'freelance.paymentsTab' => ({required Object count}) => 'Pembayaran (${count})',
+			'freelance.loadErrorTitle' => 'Data freelance gagal dimuat',
+			'freelance.ruleTitle' => 'Aturan kas freelance',
+			'freelance.ruleBody' => 'Jam kerja yang selesai tidak menambah saldo dompet. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.',
+			'freelance.summaryTitle' => 'Ringkasan upah & jam',
+			'freelance.totalHoursLabel' => 'Waktu kerja',
+			'freelance.hoursValue' => ({required Object hours}) => '${hours} jam',
+			'freelance.hourShort' => 'jam',
+			'freelance.projectCount' => ({required Object count}) => '${count} proyek',
+			'freelance.earnedLabel' => 'Total diperoleh',
+			'freelance.earnedCaption' => 'Jam × tarif, sebelum potongan',
+			'freelance.paidLabel' => 'Sudah diterima',
+			'freelance.paidCaption' => 'Pembayarannya sudah dicatat',
+			'freelance.unpaidLabel' => 'Belum diterima',
+			'freelance.unpaidCaption' => 'Belum ditagih atau tertunda',
+			'freelance.paidRatio' => ({required Object percent}) => '${percent}% sudah diterima',
+			'freelance.projectsLabel' => 'Proyek',
+			'freelance.projectsEmpty' => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.',
+			'freelance.projectAddAction' => '+ Proyek',
+			'freelance.projectStepLabel' => 'Proyek freelance',
+			'freelance.projectAddTitle' => 'Tambah Proyek',
+			'freelance.projectEditTitle' => 'Ubah Proyek',
+			'freelance.projectNameLabel' => 'Nama klien atau proyek',
+			'freelance.projectNameHint' => 'Contoh: Studio Koding',
+			'freelance.requiredHint' => 'Wajib',
+			'freelance.hourlyRateLabel' => 'Tarif per jam',
+			'freelance.hourlyRateHelp' => 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.',
+			'freelance.deductionsLabel' => 'Potongan',
+			'freelance.deductionsHelp' => 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.',
+			'freelance.deductionAddAction' => 'Tambah potongan',
+			'freelance.deductionTitle' => 'Potongan',
+			'freelance.deductionLabelLabel' => 'Nama potongan',
+			'freelance.deductionLabelHint' => 'Contoh: Pajak',
+			'freelance.deductionKindPercentage' => 'Persen',
+			'freelance.deductionKindFixed' => 'Nominal tetap',
+			'freelance.deductionPercentLabel' => 'Persen dari gaji kotor',
+			'freelance.deductionPercentHelp' => 'Paling banyak satu angka di belakang koma, misalnya 2,5.',
+			'freelance.deductionAmountLabel' => 'Nominal per pembayaran',
+			'freelance.deductionSaveAction' => 'Simpan potongan',
+			'freelance.deductionRemoveAction' => 'Hapus potongan',
+			'freelance.projectSaveAction' => 'Simpan proyek',
+			'freelance.projectDeleteAction' => 'Hapus proyek',
+			'freelance.projectDeleteLockedHint' => 'Proyek yang sudah punya entri worklog tidak bisa dihapus.',
+			'freelance.projectDeleteConfirmTitle' => 'Hapus proyek?',
+			'freelance.projectDeleteConfirmMessage' => ({required Object name}) => 'Proyek "${name}" akan dihapus.',
+			'freelance.projectDeleteRefused' => 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.',
+			'freelance.projectSavedMessage' => 'Proyek tersimpan.',
+			'freelance.projectUpdatedMessage' => 'Perubahan proyek tersimpan.',
+			'freelance.projectDeletedMessage' => 'Proyek dihapus.',
+			'freelance.projectLabel' => 'Proyek',
+			'freelance.projectPick' => 'Pilih proyek',
+			'freelance.entriesLabel' => 'Daftar entri jam kerja',
+			'freelance.entriesEmpty' => 'Belum ada entri worklog.',
+			'freelance.entryAddAction' => 'Tambah Worklog',
+			'freelance.entryStepLabel' => 'Log pekerjaan',
+			'freelance.entryAddTitle' => 'Tambah Worklog',
+			'freelance.entryEditTitle' => 'Ubah Worklog',
+			'freelance.entryRuleBody' => 'Mencatat jam kerja tidak menambah saldo dompet mana pun. Uangnya baru tercatat saat pembayarannya diterima.',
+			'freelance.workDateLabel' => 'Tanggal kerja',
+			'freelance.hoursLabel' => 'Durasi pengerjaan',
+			'freelance.entryRateHelp' => 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.',
+			'freelance.noteLabel' => 'Catatan',
+			'freelance.noteHint' => 'Apa yang dikerjakan (opsional)',
+			'freelance.entrySaveAction' => 'Simpan Worklog',
+			'freelance.entrySaveHint' => 'Nominal ini tercatat sebagai diperoleh, belum diterima.',
+			'freelance.entryDeleteAction' => 'Hapus entri',
+			'freelance.entryDeleteConfirmTitle' => 'Hapus entri worklog?',
+			'freelance.entryDeleteConfirmMessage' => 'Entri ini akan dihapus. Saldo dompet tidak berubah.',
+			'freelance.entryLockedMessage' => 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.',
+			'freelance.entrySavedMessage' => 'Worklog tersimpan.',
+			'freelance.entryUpdatedMessage' => 'Perubahan worklog tersimpan.',
+			'freelance.entryDeletedMessage' => 'Worklog dihapus.',
+			'freelance.hoursTimesRate' => ({required Object hours, required Object rate}) => '${hours} jam × ${rate}',
+			'freelance.statusUnbilled' => 'Belum ditagih',
+			'freelance.statusPending' => 'Tertunda',
+			'freelance.statusPaid' => 'Diterima',
+			'freelance.expectedOn' => ({required Object date}) => 'Perkiraan diterima ${date}',
+			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Diterima ${date} di ${wallet}',
+			'freelance.unknownProject' => 'Proyek terhapus',
+			'freelance.unknownWallet' => 'dompet terhapus',
+			'freelance.paymentsRuleBody' => 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.',
+			'freelance.pendingTotalLabel' => 'Tertunda (bersih)',
+			'freelance.paidTotalLabel' => 'Diterima (bersih)',
+			'freelance.paymentCount' => ({required Object count}) => '${count} pembayaran',
+			'freelance.paymentAddAction' => 'Buat Pembayaran',
+			'freelance.paymentAddDisabledHint' => 'Semua entri worklog sudah masuk pembayaran.',
+			'freelance.pendingSectionLabel' => 'Menunggu pembayaran',
+			'freelance.pendingEmpty' => 'Tidak ada pembayaran tertunda.',
+			'freelance.paidSectionLabel' => 'Riwayat pembayaran diterima',
+			'freelance.paidEmpty' => 'Belum ada pembayaran yang diterima.',
+			'freelance.paymentStepLabel' => 'Pembayaran freelance',
+			'freelance.paymentAddTitle' => 'Buat Pembayaran',
+			'freelance.paymentCreateRuleBody' => 'Membuat pembayaran hanya mengelompokkan jam kerja jadi satu tagihan. Saldo dompet belum berubah sampai pembayaran dicatat diterima.',
+			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Entri ditagih: ${count} (${hours} jam)',
+			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entri · ${hours} jam',
+			'freelance.expectedDateLabel' => 'Perkiraan tanggal diterima',
+			'freelance.grossPayLabel' => 'Gaji kotor',
+			'freelance.netPayLabel' => 'Gaji bersih',
+			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
+			'freelance.paymentCreateAction' => 'Buat Pembayaran',
+			'freelance.paymentChangeDateAction' => 'Ubah tanggal',
+			'freelance.paymentDeleteAction' => 'Hapus',
+			'freelance.paymentDeleteConfirmTitle' => 'Hapus pembayaran?',
+			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
+			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
+			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
+			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
+			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
+			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
+			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
+			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
+			'freelance.receiveRuleTitle' => 'Pencatatan, bukan pembayaran',
+			'freelance.receiveRuleBody' => 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.',
+			'freelance.receiveAmountLabel' => 'Nominal diterima',
+			'freelance.receiveWalletLabel' => 'Dompet penerima',
+			'freelance.receiveDateLabel' => 'Tanggal diterima',
+			'freelance.receiveNoteDefault' => ({required Object project}) => 'Pembayaran freelance ${project}',
+			'freelance.receiveAction' => 'Catat Diterima',
+			'freelance.paymentReceivedMessage' => 'Pembayaran dicatat diterima. Saldo dompet bertambah.',
+			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
+			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
+			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
+			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
+			'freelance.changeAction' => 'Ubah',
 			_ => null,
 		};
 	}

@@ -5,33 +5,32 @@ import 'package:saldough/features/freelance/domain/usecases/calculate_net_pay.da
 
 void main() {
   group('CalculateNetPay', () {
-    final calculate = CalculateNetPay();
+    const calculate = CalculateNetPay();
 
     const tax = [
       DeductionRule(id: 'pajak', label: 'Pajak', kind: DeductionKind.percentage, value: 25),
     ];
 
     // Lima kasus nyata dari MANUAL_PROCESS_ANALYSIS.md (pajak 2,5% konsisten
-    // di seluruh tujuh bulan yang punya data) — lihat T-3.3 di TASK_LIST-1.0.md. `totalHours` di
-    // sini bersifat sintetis (tarif per jam bukan bagian dari catatan
-    // historis, cuma `hourlyRate` hasil × `totalHours` yang perlu pas dengan
-    // gaji kotor nyata), tapi gaji kotor, potongan, dan gaji bersihnya nyata.
+    // di seluruh tujuh bulan yang punya data) — lihat T-3.3 di TASK_LIST-1.0.md.
+    // Gaji kotor, potongan, dan gaji bersihnya nyata. Sejak ADR-019 gaji kotor
+    // diberikan langsung, karena entri satu pembayaran boleh bertarif berbeda.
     test('Rp7.350.000 dengan pajak 2,5% (pembagian genap, tanpa pembulatan)', () {
-      final result = calculate(totalHours: 1, hourlyRate: 735000000, deductionRules: tax);
+      final result = calculate(grossPay: 735000000, deductionRules: tax);
       expect(result.grossPay, 735000000);
       expect(result.deductions.single.amount, 18375000);
       expect(result.netPay, 716625000);
     });
 
     test('Rp1.740.000 dengan pajak 2,5% (pembagian genap, tanpa pembulatan)', () {
-      final result = calculate(totalHours: 1, hourlyRate: 174000000, deductionRules: tax);
+      final result = calculate(grossPay: 174000000, deductionRules: tax);
       expect(result.grossPay, 174000000);
       expect(result.deductions.single.amount, 4350000);
       expect(result.netPay, 169650000);
     });
 
     test('Rp2.682.500 dengan pajak 2,5% (dibulatkan dari 67.062,5 di spreadsheet)', () {
-      final result = calculate(totalHours: 1, hourlyRate: 268250000, deductionRules: tax);
+      final result = calculate(grossPay: 268250000, deductionRules: tax);
       expect(result.grossPay, 268250000);
       expect(result.deductions.single.amount, 6706250);
       expect(result.netPay, 261543750);
@@ -42,36 +41,35 @@ void main() {
       // mengurangi dari gaji kotor menghasilkan Rp3.039.562 — meleset satu
       // rupiah dari jawaban benar. Di sini potongan TIDAK dibulatkan sebelum
       // dikurangi (311750000 × 25 ~/ 1000 = 7793750 sen, pas, tanpa sisa).
-      final result = calculate(totalHours: 1, hourlyRate: 311750000, deductionRules: tax);
+      final result = calculate(grossPay: 311750000, deductionRules: tax);
       expect(result.grossPay, 311750000);
       expect(result.deductions.single.amount, 7793750);
       expect(result.netPay, 303956250);
     });
 
     test('Rp1.087.500 dengan pajak 2,5% (dibulatkan dari 27.187,5 di spreadsheet)', () {
-      final result = calculate(totalHours: 1, hourlyRate: 108750000, deductionRules: tax);
+      final result = calculate(grossPay: 108750000, deductionRules: tax);
       expect(result.grossPay, 108750000);
       expect(result.deductions.single.amount, 2718750);
       expect(result.netPay, 106031250);
     });
 
     test('37 jam × Rp72.500 dengan pajak 2,5% menghasilkan Rp2.615.438 (DOMAIN_MODEL.md)', () {
-      final result = calculate(totalHours: 37, hourlyRate: 7250000, deductionRules: tax);
+      final result = calculate(grossPay: 37 * 7250000, deductionRules: tax);
       expect(result.grossPay, 268250000);
       expect(result.deductions.single.amount, 6706250);
       expect(result.netPay, 261543750);
     });
 
-    test('gaji kotor = totalHours × hourlyRate', () {
-      final result = calculate(totalHours: 40, hourlyRate: 7250000);
+    test('tanpa potongan, gaji bersih = gaji kotor', () {
+      final result = calculate(grossPay: 290000000);
       expect(result.grossPay, 290000000);
       expect(result.netPay, 290000000);
     });
 
     test('potongan fixedAmount tidak bergantung pada gaji kotor', () {
       final result = calculate(
-        totalHours: 40,
-        hourlyRate: 7250000,
+        grossPay: 290000000,
         deductionRules: const [
           DeductionRule(id: 'jajan', label: 'jajan', kind: DeductionKind.fixedAmount, value: 15000000),
         ],
@@ -82,8 +80,7 @@ void main() {
 
     test('beberapa potongan selalu dihitung dari gaji kotor yang sama, bukan nilai berjalan', () {
       final result = calculate(
-        totalHours: 1,
-        hourlyRate: 100000000,
+        grossPay: 100000000,
         deductionRules: const [
           DeductionRule(id: 'pajak', label: 'Pajak', kind: DeductionKind.percentage, value: 100),
           DeductionRule(id: 'jajan', label: 'jajan', kind: DeductionKind.fixedAmount, value: 5000000),

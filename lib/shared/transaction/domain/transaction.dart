@@ -40,10 +40,19 @@ final class IncomeTransaction extends Transaction {
     required super.note,
     required this.walletId,
     super.categoryKey,
+    this.freelancePaymentId,
   });
 
   /// Dompet yang bertambah.
   final String walletId;
+
+  /// Pembayaran freelance yang melahirkan transaksi ini. Kalau terisi,
+  /// transaksi ini milik pembayarannya: tidak bisa disunting atau dihapus
+  /// dari tab Transaksi, hanya lewat Ikhtisar Freelance (ADR-019).
+  final String? freelancePaymentId;
+
+  /// Apakah transaksi ini milik sebuah pembayaran freelance.
+  bool get isFreelancePayment => freelancePaymentId != null;
 
   /// Salinan [IncomeTransaction] dengan field yang disebutkan diganti.
   IncomeTransaction copyWith({
@@ -60,11 +69,12 @@ final class IncomeTransaction extends Transaction {
       note: note ?? this.note,
       categoryKey: categoryKey ?? this.categoryKey,
       walletId: walletId ?? this.walletId,
+      freelancePaymentId: freelancePaymentId,
     );
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryKey, walletId];
+  List<Object?> get props => [id, date, amount, note, categoryKey, walletId, freelancePaymentId];
 }
 
 /// Mengurangi saldo satu dompet, dan boleh ditautkan ke satu pos anggaran.

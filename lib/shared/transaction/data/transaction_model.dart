@@ -19,6 +19,7 @@ final class TransactionModel {
     this.budgetItemId,
     this.fromWalletId,
     this.toWalletId,
+    this.freelancePaymentId,
   });
 
   /// Membaca [TransactionModel] dari JSON.
@@ -33,6 +34,7 @@ final class TransactionModel {
         budgetItemId: json['budgetItemId'] as String?,
         fromWalletId: json['fromWalletId'] as String?,
         toWalletId: json['toWalletId'] as String?,
+        freelancePaymentId: json['freelancePaymentId'] as String?,
       );
 
   /// Membuat [TransactionModel] dari entitas domain [Transaction].
@@ -45,6 +47,7 @@ final class TransactionModel {
             note: transaction.note,
             categoryKey: transaction.categoryKey,
             walletId: transaction.walletId,
+            freelancePaymentId: transaction.freelancePaymentId,
           ),
         ExpenseTransaction() => TransactionModel(
             id: transaction.id,
@@ -106,6 +109,11 @@ final class TransactionModel {
   /// Dompet tujuan — dipakai `transfer` saja.
   final String? toWalletId;
 
+  /// Pembayaran freelance pemilik transaksi — dipakai `income` saja
+  /// (ADR-019). Kunci ini baru ditulis kalau terisi, jadi dokumen lama tidak
+  /// berubah bentuk.
+  final String? freelancePaymentId;
+
   /// Menulis [TransactionModel] ke JSON.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -118,6 +126,7 @@ final class TransactionModel {
         'budgetItemId': budgetItemId,
         'fromWalletId': fromWalletId,
         'toWalletId': toWalletId,
+        if (freelancePaymentId != null) 'freelancePaymentId': freelancePaymentId,
       };
 
   /// Mengubah model jadi entitas domain [Transaction].
@@ -133,6 +142,7 @@ final class TransactionModel {
             note: note,
             categoryKey: categoryKey,
             walletId: walletId ?? (throw FormatException('TransactionModel income tanpa walletId: $id')),
+            freelancePaymentId: freelancePaymentId,
           ),
         _typeExpense => ExpenseTransaction(
             id: id,

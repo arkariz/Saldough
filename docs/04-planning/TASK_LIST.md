@@ -828,34 +828,54 @@ tanpa menyelesaikan apa pun.
 
 ## Fase 5: Freelance
 
-- [ ] **T-5.1** Buat `features/freelance/domain/`: `FreelanceProject`,
+- [x] **T-5.1** Buat `features/freelance/domain/`: `FreelanceProject`,
       `WorklogEntry`, `FreelancePayment`, dan `PaymentStatus`, di samping
       `CalculateNetPay` yang sudah dipindahkan di T-3.1.
+      Revisi [ADR-019](../02-architecture/adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md):
+      entri menyimpan `hourlyRate`, pembayaran menyimpan salinan
+      `deductionRules` dan `receivedDate`, sehingga mengubah proyek tidak
+      mengubah kerja atau pembayaran lama. `CalculateNetPay` kini menerima
+      `grossPay` langsung.
       Memenuhi FR-FRL-001 dan FR-FRL-002.
-- [ ] **T-5.2** Buat `features/freelance/data/`: repositori di atas kunci
+- [x] **T-5.2** Buat `features/freelance/data/`: repositori di atas kunci
       `freelance/projects`, `freelance/worklog`, dan `freelance/payments`.
       ⚠ Ketiganya sengaja tidak dipartisi karena lajunya rendah. Tinjau ulang
       kalau entrinya melewati beberapa ratus.
+      Satu `FreelanceRepository` untuk ketiga kunci, didaftarkan di
+      `RootModule`.
       Memenuhi NFR-REL-003.
-- [ ] **T-5.3** Buat layar worklog: catat, sunting, dan hapus entri berisi
+- [x] **T-5.3** Buat layar worklog: catat, sunting, dan hapus entri berisi
       proyek, tanggal, jam, dan catatan opsional, dengan
       nominal yang diperoleh dihitung dari jam dikali tarif.
       ⚠ **Tidak pernah menyentuh saldo dompet.** Mencatat kerja bukan menerima
       uang.
+      Tarif terisi dari proyek dan boleh diubah per entri. Entri yang sudah
+      masuk pembayaran terkunci. Proyek dikelola di tab yang sama, dan hanya
+      bisa dihapus selama belum punya entri (ADR-019).
       Memenuhi FR-FRL-002.
-- [ ] **T-5.4** Buat pengelompokan worklog jadi pembayaran, menampilkan gaji
+- [x] **T-5.4** Buat pengelompokan worklog jadi pembayaran, menampilkan gaji
       kotor, potongan, dan gaji bersih terpisah.
       ⚠ Potongan persentase selalu dihitung dari gaji kotor, tidak pernah dari
       nilai berjalan setelah potongan sebelumnya. Potongan tidak beranak.
       ⚠ Periode pembayaran tidak mengikuti batas bulan kalender.
+      Entri dipilih satu per satu dari entri belum ditagih satu proyek.
+      Pembayaran tertunda boleh diubah tanggalnya atau dihapus (entrinya
+      kembali belum ditagih). Entri ditandai lebih dulu, pembayaran menyusul;
+      `paymentId` yang menunjuk pembayaran yang tidak ada dibaca sebagai belum
+      ditagih.
       Memenuhi FR-FRL-003.
-- [ ] **T-5.5** Terapkan pencatatan pembayaran diterima, yang membuat tepat
+- [x] **T-5.5** Terapkan pencatatan pembayaran diterima, yang membuat tepat
       satu `IncomeTransaction` sebesar gaji bersih.
       ⚠ `incomeTransactionId` yang sudah terisi adalah penjaga supaya
       pembayaran yang sama tidak bisa dicatat dua kali. Status dan id transaksi
       berubah dalam satu operasi, tidak pernah terpisah.
+      `ReceiveFreelancePayment`: transaksi lebih dulu dengan id
+      `freelance-<paymentId>` (pengulangan menimpa, tidak menggandakan), baru
+      pembayaran. Transaksinya membawa `freelancePaymentId` dan tidak bisa
+      disunting/dihapus dari tab Transaksi; gantinya aksi **Batalkan
+      penerimaan** (ADR-019).
       Memenuhi FR-FRL-004 dan NFR-UX-005.
-- [ ] **T-5.6** Buat layar **Ikhtisar Freelance** dengan dua tab — Worklog
+- [x] **T-5.6** Buat layar **Ikhtisar Freelance** dengan dua tab — Worklog
       sebagai tab bawaan, dan Pembayaran — beserta kedua titik masuknya.
       ⚠ Kedua titik masuk mendarat di layar yang **sama**: ringkasan di Beranda,
       dan CATAT → Catat Pemasukan → Freelance.
@@ -863,12 +883,22 @@ tanpa menyelesaikan apa pun.
       ⚠ Tab ketiga (Template) baru ditambahkan di T-7.7. Buat `TabBar`-nya
       menerima jumlah tab yang bervariasi sekarang, supaya penambahannya nanti
       tidak membongkar layar ini.
+      `openFreelanceOverview` mendorong layar penuh dengan `FreelanceScope`
+      sendiri. Titik masuk CATAT: kartu Freelance di formulir pemasukan
+      (rujukan `pixel_kas_catat_pemasukan` "PATH B") yang mengembalikan
+      `OpenFreelance`. Titik masuk Beranda menyusul di T-6.3.
+      ⚠ Di emulator baru terlihat kartu Freelance di formulir pemasukan;
+      emulator terlalu lambat (ANR berulang) untuk menelusuri sisanya. Alur
+      lengkapnya diuji lewat shell sungguhan di uji widget, dan ditelusuri di
+      perangkat bersama T-6.5.
       Memenuhi FR-FRL-005.
-- [ ] **T-5.7** Tulis uji: worklog tidak mengubah saldo; pembayaran yang dicatat
+- [x] **T-5.7** Tulis uji: worklog tidak mengubah saldo; pembayaran yang dicatat
       diterima menambah saldo tepat satu kali; `netPay` 37 jam pada tarif
       72.500 dengan pajak 2,5% menghasilkan 2.615.438.
+      Diuji ujung ke ujung di atas penyimpanan memori (bloc, use case, layar
+      lewat shell), termasuk pengulangan sesudah kegagalan penulisan.
       Memenuhi NFR-ACC-001 dan NFR-ACC-002.
-- [ ] **T-5.8** Tambahkan namespace i18n `freelance` dan daftarkan
+- [x] **T-5.8** Tambahkan namespace i18n `freelance` dan daftarkan
       `FreelanceScope`.
       Memenuhi NFR-UX-004.
 

@@ -9,6 +9,8 @@ import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
+import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
+import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -61,6 +63,12 @@ abstract final class RootModule {
       // diimplementasikan `budget` — pola port kecil ADR-0009.
       ..registerLazySingleton<BudgetItemCatalog>(
         () => BudgetItemCatalogImpl(repository: container<BudgetRepository>()),
+      )
+      // Milik fitur `freelance`, di akar karena `FreelanceScope` dibuat dan
+      // dibuang tiap Ikhtisar Freelance dibuka (lihat `FreelanceScope`), dan
+      // Beranda (Fase 6) akan membacanya juga.
+      ..registerLazySingleton<FreelanceRepository>(
+        () => FreelanceRepositoryImpl(storage: container<KeyValueStorage>()),
       );
   }
 

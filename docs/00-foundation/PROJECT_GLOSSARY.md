@@ -113,9 +113,9 @@ tentu sudah diterima. Ini domain pendukung, bukan inti.
 |---|---|---|
 | Proyek freelance | `FreelanceProject` | Klien atau proyek beserta tarif per jam dan aturan potongannya. |
 | Tarif per jam | `hourlyRate` | Nilai rupiah per satu jam kerja. |
-| Worklog | `WorklogEntry` | Satu entri kerja: tanggal dan jumlah jam. |
+| Worklog | `WorklogEntry` | Satu entri kerja: tanggal, jumlah jam, dan tarif per jam yang dipakai. |
 | Diperoleh | `earnedAmount` | Jam dikali tarif. Pekerjaan yang sudah selesai, **belum tentu diterima**. |
-| Ikhtisar Freelance | `FreelanceRouteKeys.overview` | Satu layar berisi tiga tab — Worklog, Pembayaran, Template — tujuan dari kedua titik masuk freelance. Tab Template baru muncul di Fase 7; MVP menampilkan dua tab. |
+| Ikhtisar Freelance | `FreelanceOverviewPage` | Satu layar berisi tiga tab — Worklog, Pembayaran, Template — tujuan dari kedua titik masuk freelance. Tab Template baru muncul di Fase 7; MVP menampilkan dua tab. |
 | Pembayaran freelance | `FreelancePayment` | Kumpulan worklog yang ditagihkan sebagai satu pembayaran. |
 | Belum dibayar | `PaymentStatus.pending` | Pembayaran belum diterima. Tidak menyentuh saldo dompet. |
 | Sudah dibayar | `PaymentStatus.paid` | Pembayaran sudah dicatat diterima, dan sudah menghasilkan satu `IncomeTransaction`. |

@@ -18,9 +18,9 @@ final class BudgetItem extends Equatable {
     this.quantity,
     this.unitPrice,
   }) : assert(
-          enteredAmount != null || (quantity != null && unitPrice != null),
-          'Pos anggaran butuh nominal yang diketik, atau jumlah beserta harga satuan.',
-        );
+         enteredAmount != null || (quantity != null && unitPrice != null),
+         'Pos anggaran butuh nominal yang diketik, atau jumlah beserta harga satuan.',
+       );
 
   /// Identitas pos.
   final String id;

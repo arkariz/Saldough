@@ -20,42 +20,41 @@ final class BudgetRepositoryImpl with RepositoryGuard implements BudgetRepositor
   final KeyValueStorage _storage;
 
   StoredValue<List<BudgetModel>> get _store => StoredValue<List<BudgetModel>>.json(
-        key: _budgetsKey,
-        fromJson: (json) => (json['items'] as List<dynamic>)
-            .map((e) => BudgetModel.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        toJson: (models) => {
-          'schemaVersion': BudgetModel.schemaVersion,
-          'items': models.map((m) => m.toJson()).toList(),
-        },
-        storage: _storage,
-      );
+    key: _budgetsKey,
+    fromJson: (json) =>
+        (json['items'] as List<dynamic>).map((e) => BudgetModel.fromJson(e as Map<String, dynamic>)).toList(),
+    toJson: (models) => {
+      'schemaVersion': BudgetModel.schemaVersion,
+      'items': models.map((m) => m.toJson()).toList(),
+    },
+    storage: _storage,
+  );
 
   @override
   Future<Either<Failure, List<Budget>>> listBudgets() => guard(() async {
-        final models = await _store.read();
-        return (models ?? const []).map((m) => m.toEntity()).toList();
-      });
+    final models = await _store.read();
+    return (models ?? const []).map((m) => m.toEntity()).toList();
+  });
 
   @override
   Future<Either<Failure, Unit>> saveBudget(Budget budget) => guardVoid(() async {
-        final models = await _store.read() ?? <BudgetModel>[];
-        final index = models.indexWhere((m) => m.id == budget.id);
-        final model = BudgetModel.fromEntity(budget);
-        // Menimpa di posisi semula supaya urutan daftar tidak melompat
-        // setiap kali sebuah anggaran disunting.
-        final next = [...models];
-        if (index == -1) {
-          next.add(model);
-        } else {
-          next[index] = model;
-        }
-        await _store.write(next);
-      });
+    final models = await _store.read() ?? <BudgetModel>[];
+    final index = models.indexWhere((m) => m.id == budget.id);
+    final model = BudgetModel.fromEntity(budget);
+    // Menimpa di posisi semula supaya urutan daftar tidak melompat
+    // setiap kali sebuah anggaran disunting.
+    final next = [...models];
+    if (index == -1) {
+      next.add(model);
+    } else {
+      next[index] = model;
+    }
+    await _store.write(next);
+  });
 
   @override
   Future<Either<Failure, Unit>> deleteBudget(String id) => guardVoid(() async {
-        final models = await _store.read() ?? <BudgetModel>[];
-        await _store.write(models.where((m) => m.id != id).toList());
-      });
+    final models = await _store.read() ?? <BudgetModel>[];
+    await _store.write(models.where((m) => m.id != id).toList());
+  });
 }

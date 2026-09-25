@@ -45,6 +45,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$record$en record = _Translations$record$en._(_root);
 	@override late final _Translations$transaction$en transaction = _Translations$transaction$en._(_root);
 	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
+	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
 }
 
 // Path: app
@@ -175,6 +176,9 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get flowWallet => 'Wallet';
 	@override String get flowSourceWallet => 'Source wallet';
 	@override String get flowTargetWallet => 'Target wallet';
+	@override String get budgetItemLabel => 'Budget item';
+	@override String get budgetItemNone => 'No budget';
+	@override String get budgetItemHelp => 'Optional. Only active budget items from this wallet are offered.';
 }
 
 // Path: transaction
@@ -245,6 +249,8 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get deleteConfirmMessage => 'The entry is removed from history, and wallet balances are recalculated without it.';
 	@override String get updatedMessage => 'Changes saved.';
 	@override String get deletedMessage => 'Entry deleted.';
+	@override String get budgetLabel => 'Budget';
+	@override String get openBudgetAction => 'View budget';
 }
 
 // Path: wallet
@@ -310,6 +316,107 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get detailRecentEmpty => 'No transactions this month for this wallet yet.';
 	@override String get detailViewAllAction => 'View All Transactions';
 	@override String get detailRecordAction => 'Record a Transaction for This Wallet';
+}
+
+// Path: budget
+class _Translations$budget$en extends Translations$budget$id {
+	_Translations$budget$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get heading => 'My Budgets';
+	@override String activeBadge({required Object count}) => '${count} active';
+	@override String get summaryTitle => 'Total of active budgets';
+	@override String summaryPercent({required Object percent}) => '${percent}% spent';
+	@override String get plannedLabel => 'Planned';
+	@override String get spentLabel => 'Spent';
+	@override String get remainingLabel => 'Remaining';
+	@override String spentPercentLabel({required Object percent}) => 'Spent (${percent}%)';
+	@override String get summaryNote => 'A budget is a spending plan, not a deduction from your wallet. Balances only change when an expense or transfer is recorded.';
+	@override String get filterAll => 'All';
+	@override String get filterActive => 'Active';
+	@override String get filterFinished => 'Finished';
+	@override String get filterArchived => 'Inactive';
+	@override String get filterWalletLabel => 'Wallet';
+	@override String get filterWalletAll => 'All wallets';
+	@override String get addAction => 'Create New Budget';
+	@override String get periodWeekly => 'Weekly';
+	@override String get periodMonthly => 'Monthly';
+	@override String get itemStatusPlanned => 'Not yet spent';
+	@override String get itemStatusPartiallySpent => 'Partially spent';
+	@override String get itemStatusCompleted => 'Completed';
+	@override String get itemStatusOverspent => 'Over budget';
+	@override String itemCount({required Object count}) => '${count} items';
+	@override String get emptyBadge => 'No plans yet';
+	@override String get emptyTitle => 'No budgets yet';
+	@override String get emptyBody => 'Plan a weekly or monthly spending limit for one wallet. Creating a budget does not reduce any wallet balance.';
+	@override String get emptyFilteredTitle => 'No matching budgets';
+	@override String get emptyFilteredBody => 'No budget has the selected status and wallet.';
+	@override String get resetFilterAction => 'Show all budgets';
+	@override String get noWalletTitle => 'Create a wallet first';
+	@override String get noWalletBody => 'Every budget belongs to one wallet. Add a wallet in the Wallets tab, then come back here.';
+	@override String get loadErrorTitle => 'Budgets failed to load';
+	@override String get loadErrorSubtitle => 'Budget data could not be read. Try again.';
+	@override String get savedMessage => 'Budget saved.';
+	@override String get updatedMessage => 'Budget changes saved.';
+	@override String get deletedMessage => 'Budget deleted.';
+	@override String get archivedMessage => 'Budget archived.';
+	@override String get unarchivedMessage => 'Budget reactivated.';
+	@override String get addStepLabel => 'New budget';
+	@override String get editStepLabel => 'Edit budget';
+	@override String get addTitle => 'Create Budget';
+	@override String get editTitle => 'Edit Budget';
+	@override String get ruleTitle => 'Budget rule';
+	@override String get ruleBody => 'This plan does not deduct from your wallet. The balance only decreases when you record a transaction.';
+	@override String get nameLabel => 'Budget name';
+	@override String get nameHint => 'Example: Household Needs';
+	@override String get requiredHint => 'Required';
+	@override String get walletLabel => 'Linked wallet';
+	@override String get walletHelp => 'Only expenses and outgoing transfers from this wallet count toward the budget.';
+	@override String walletBalance({required Object amount}) => 'Balance: ${amount}';
+	@override String get periodLabel => 'Period';
+	@override String get startDateLabel => 'Starts';
+	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
+	@override String get plannedAmountLabel => 'Planned amount';
+	@override String get plannedAmountHelp => 'The limit for the whole budget. It does not have to equal the sum of its items.';
+	@override String get itemsLabel => 'Budget items';
+	@override String get itemsHelp => 'Planned purchases or planned transfers. Optional.';
+	@override String get addItemAction => 'Add Item';
+	@override String get itemsTotalLabel => 'Sum of all items';
+	@override String get differenceLabel => 'Difference from plan';
+	@override String get useItemsTotalAction => 'Use item total';
+	@override String get saveAddAction => 'Save Budget';
+	@override String get archiveAction => 'Archive Budget';
+	@override String get unarchiveAction => 'Reactivate';
+	@override String get archiveHelp => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.';
+	@override String get deleteAction => 'Delete Budget';
+	@override String get deleteConfirmTitle => 'Delete budget?';
+	@override String deleteConfirmMessage({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.';
+	@override String get itemAddTitle => 'Add Item';
+	@override String get itemEditTitle => 'Edit Item';
+	@override String get itemNameLabel => 'Item name';
+	@override String get itemNameHint => 'Example: Rice';
+	@override String get itemModeAmount => 'Amount';
+	@override String get itemModeItemized => 'Quantity × price';
+	@override String get itemAmountLabel => 'Planned amount';
+	@override String get itemQuantityLabel => 'Quantity';
+	@override String get itemUnitPriceLabel => 'Unit price';
+	@override String get itemTotalLabel => 'Item total';
+	@override String itemItemizedDetail({required Object quantity, required Object price}) => '${quantity} × ${price}';
+	@override String get itemSaveAction => 'Save Item';
+	@override String get itemDeleteAction => 'Delete Item';
+	@override String get detailBackLabel => 'Budget List';
+	@override String get detailEditAction => 'Edit budget';
+	@override String get detailRecordExpenseAction => 'Record Expense';
+	@override String get detailRecordTransferAction => 'Record Transfer';
+	@override String get detailItemsHeading => 'Budget Items';
+	@override String get detailNoItems => 'This budget has no items yet. Add items via Edit so expenses can be linked.';
+	@override String get detailLinkedHeading => 'Linked Transactions';
+	@override String get detailLinkedEmpty => 'No transactions are linked to this budget yet.';
+	@override String get detailHowTitle => 'How budget items work';
+	@override String detailHowBody({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.';
+	@override String get unknownWallet => 'Wallet not found';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -414,6 +521,9 @@ extension on TranslationsEn {
 			'record.flowWallet' => 'Wallet',
 			'record.flowSourceWallet' => 'Source wallet',
 			'record.flowTargetWallet' => 'Target wallet',
+			'record.budgetItemLabel' => 'Budget item',
+			'record.budgetItemNone' => 'No budget',
+			'record.budgetItemHelp' => 'Optional. Only active budget items from this wallet are offered.',
 			'transaction.pageTitle' => 'Transactions',
 			'transaction.searchHint' => 'Search notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -475,6 +585,8 @@ extension on TranslationsEn {
 			'transaction.deleteConfirmMessage' => 'The entry is removed from history, and wallet balances are recalculated without it.',
 			'transaction.updatedMessage' => 'Changes saved.',
 			'transaction.deletedMessage' => 'Entry deleted.',
+			'transaction.budgetLabel' => 'Budget',
+			'transaction.openBudgetAction' => 'View budget',
 			'wallet.heading' => 'My Wallets',
 			'wallet.subtitle' => 'Where your cash stands right now',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active',
@@ -531,6 +643,98 @@ extension on TranslationsEn {
 			'wallet.detailRecentEmpty' => 'No transactions this month for this wallet yet.',
 			'wallet.detailViewAllAction' => 'View All Transactions',
 			'wallet.detailRecordAction' => 'Record a Transaction for This Wallet',
+			'budget.heading' => 'My Budgets',
+			'budget.activeBadge' => ({required Object count}) => '${count} active',
+			'budget.summaryTitle' => 'Total of active budgets',
+			'budget.summaryPercent' => ({required Object percent}) => '${percent}% spent',
+			'budget.plannedLabel' => 'Planned',
+			'budget.spentLabel' => 'Spent',
+			'budget.remainingLabel' => 'Remaining',
+			'budget.spentPercentLabel' => ({required Object percent}) => 'Spent (${percent}%)',
+			'budget.summaryNote' => 'A budget is a spending plan, not a deduction from your wallet. Balances only change when an expense or transfer is recorded.',
+			'budget.filterAll' => 'All',
+			'budget.filterActive' => 'Active',
+			'budget.filterFinished' => 'Finished',
+			'budget.filterArchived' => 'Inactive',
+			'budget.filterWalletLabel' => 'Wallet',
+			'budget.filterWalletAll' => 'All wallets',
+			'budget.addAction' => 'Create New Budget',
+			'budget.periodWeekly' => 'Weekly',
+			'budget.periodMonthly' => 'Monthly',
+			'budget.itemStatusPlanned' => 'Not yet spent',
+			'budget.itemStatusPartiallySpent' => 'Partially spent',
+			'budget.itemStatusCompleted' => 'Completed',
+			'budget.itemStatusOverspent' => 'Over budget',
+			'budget.itemCount' => ({required Object count}) => '${count} items',
+			'budget.emptyBadge' => 'No plans yet',
+			'budget.emptyTitle' => 'No budgets yet',
+			'budget.emptyBody' => 'Plan a weekly or monthly spending limit for one wallet. Creating a budget does not reduce any wallet balance.',
+			'budget.emptyFilteredTitle' => 'No matching budgets',
+			'budget.emptyFilteredBody' => 'No budget has the selected status and wallet.',
+			'budget.resetFilterAction' => 'Show all budgets',
+			'budget.noWalletTitle' => 'Create a wallet first',
+			'budget.noWalletBody' => 'Every budget belongs to one wallet. Add a wallet in the Wallets tab, then come back here.',
+			'budget.loadErrorTitle' => 'Budgets failed to load',
+			'budget.loadErrorSubtitle' => 'Budget data could not be read. Try again.',
+			'budget.savedMessage' => 'Budget saved.',
+			'budget.updatedMessage' => 'Budget changes saved.',
+			'budget.deletedMessage' => 'Budget deleted.',
+			'budget.archivedMessage' => 'Budget archived.',
+			'budget.unarchivedMessage' => 'Budget reactivated.',
+			'budget.addStepLabel' => 'New budget',
+			'budget.editStepLabel' => 'Edit budget',
+			'budget.addTitle' => 'Create Budget',
+			'budget.editTitle' => 'Edit Budget',
+			'budget.ruleTitle' => 'Budget rule',
+			'budget.ruleBody' => 'This plan does not deduct from your wallet. The balance only decreases when you record a transaction.',
+			'budget.nameLabel' => 'Budget name',
+			'budget.nameHint' => 'Example: Household Needs',
+			'budget.requiredHint' => 'Required',
+			'budget.walletLabel' => 'Linked wallet',
+			'budget.walletHelp' => 'Only expenses and outgoing transfers from this wallet count toward the budget.',
+			'budget.walletBalance' => ({required Object amount}) => 'Balance: ${amount}',
+			'budget.periodLabel' => 'Period',
+			'budget.startDateLabel' => 'Starts',
+			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'budget.plannedAmountLabel' => 'Planned amount',
+			'budget.plannedAmountHelp' => 'The limit for the whole budget. It does not have to equal the sum of its items.',
+			'budget.itemsLabel' => 'Budget items',
+			'budget.itemsHelp' => 'Planned purchases or planned transfers. Optional.',
+			'budget.addItemAction' => 'Add Item',
+			'budget.itemsTotalLabel' => 'Sum of all items',
+			'budget.differenceLabel' => 'Difference from plan',
+			'budget.useItemsTotalAction' => 'Use item total',
+			'budget.saveAddAction' => 'Save Budget',
+			'budget.archiveAction' => 'Archive Budget',
+			'budget.unarchiveAction' => 'Reactivate',
+			'budget.archiveHelp' => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.',
+			'budget.deleteAction' => 'Delete Budget',
+			'budget.deleteConfirmTitle' => 'Delete budget?',
+			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
+			'budget.itemAddTitle' => 'Add Item',
+			'budget.itemEditTitle' => 'Edit Item',
+			'budget.itemNameLabel' => 'Item name',
+			'budget.itemNameHint' => 'Example: Rice',
+			'budget.itemModeAmount' => 'Amount',
+			'budget.itemModeItemized' => 'Quantity × price',
+			'budget.itemAmountLabel' => 'Planned amount',
+			'budget.itemQuantityLabel' => 'Quantity',
+			'budget.itemUnitPriceLabel' => 'Unit price',
+			'budget.itemTotalLabel' => 'Item total',
+			'budget.itemItemizedDetail' => ({required Object quantity, required Object price}) => '${quantity} × ${price}',
+			'budget.itemSaveAction' => 'Save Item',
+			'budget.itemDeleteAction' => 'Delete Item',
+			'budget.detailBackLabel' => 'Budget List',
+			'budget.detailEditAction' => 'Edit budget',
+			'budget.detailRecordExpenseAction' => 'Record Expense',
+			'budget.detailRecordTransferAction' => 'Record Transfer',
+			'budget.detailItemsHeading' => 'Budget Items',
+			'budget.detailNoItems' => 'This budget has no items yet. Add items via Edit so expenses can be linked.',
+			'budget.detailLinkedHeading' => 'Linked Transactions',
+			'budget.detailLinkedEmpty' => 'No transactions are linked to this budget yet.',
+			'budget.detailHowTitle' => 'How budget items work',
+			'budget.detailHowBody' => ({required Object wallet}) => 'When recording an expense or transfer from ${wallet}, pick one of these items. Spent grows from that transaction; the budget itself never deducts a balance.',
+			'budget.unknownWallet' => 'Wallet not found',
 			_ => null,
 		};
 	}

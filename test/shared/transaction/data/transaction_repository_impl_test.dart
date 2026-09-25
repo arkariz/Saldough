@@ -36,8 +36,20 @@ void main() {
     });
 
     test('transaksi bulan berbeda tidak saling bercampur', () async {
-      final agustus = ExpenseTransaction(id: 't1', date: DateTime(2026, 8, 20), amount: 50000, note: 'kopi', walletId: 'w1');
-      final september = ExpenseTransaction(id: 't2', date: DateTime(2026, 9, 2), amount: 75000, note: 'makan', walletId: 'w1');
+      final agustus = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 8, 20),
+        amount: 50000,
+        note: 'kopi',
+        walletId: 'w1',
+      );
+      final september = ExpenseTransaction(
+        id: 't2',
+        date: DateTime(2026, 9, 2),
+        amount: 75000,
+        note: 'makan',
+        walletId: 'w1',
+      );
       await repository.saveTransaction(agustus);
       await repository.saveTransaction(september);
 
@@ -49,8 +61,20 @@ void main() {
     });
 
     test('listAllTransactions mengembalikan transaksi lintas bulan', () async {
-      final agustus = ExpenseTransaction(id: 't1', date: DateTime(2026, 8, 20), amount: 50000, note: 'kopi', walletId: 'w1');
-      final september = ExpenseTransaction(id: 't2', date: DateTime(2026, 9, 2), amount: 75000, note: 'makan', walletId: 'w1');
+      final agustus = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 8, 20),
+        amount: 50000,
+        note: 'kopi',
+        walletId: 'w1',
+      );
+      final september = ExpenseTransaction(
+        id: 't2',
+        date: DateTime(2026, 9, 2),
+        amount: 75000,
+        note: 'makan',
+        walletId: 'w1',
+      );
       await repository.saveTransaction(agustus);
       await repository.saveTransaction(september);
 
@@ -61,7 +85,13 @@ void main() {
     });
 
     test('menyimpan ulang transaksi ber-id sama pada bulan sama menimpa, bukan menambah', () async {
-      final original = ExpenseTransaction(id: 't1', date: DateTime(2026, 9, 2), amount: 50000, note: 'kopi', walletId: 'w1');
+      final original = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 9, 2),
+        amount: 50000,
+        note: 'kopi',
+        walletId: 'w1',
+      );
       await repository.saveTransaction(original);
       await repository.saveTransaction(original.copyWith(amount: 60000, note: 'kopi + kue'));
 
@@ -73,7 +103,13 @@ void main() {
     });
 
     test('menyunting transaksi yang memindahkan bulan menghapus dari dokumen lama', () async {
-      final original = ExpenseTransaction(id: 't1', date: DateTime(2026, 8, 30), amount: 50000, note: 'kopi', walletId: 'w1');
+      final original = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 8, 30),
+        amount: 50000,
+        note: 'kopi',
+        walletId: 'w1',
+      );
       await repository.saveTransaction(original);
 
       final moved = original.copyWith(date: DateTime(2026, 9));
@@ -86,7 +122,13 @@ void main() {
     });
 
     test('menyunting transaksi yang tetap di bulan sama tidak menggandakannya', () async {
-      final original = ExpenseTransaction(id: 't1', date: DateTime(2026, 9, 2), amount: 50000, note: 'kopi', walletId: 'w1');
+      final original = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 9, 2),
+        amount: 50000,
+        note: 'kopi',
+        walletId: 'w1',
+      );
       await repository.saveTransaction(original);
 
       final edited = original.copyWith(date: DateTime(2026, 9, 10), amount: 60000);
@@ -116,33 +158,42 @@ void main() {
       expect(result.getOrElse((_) => throw StateError('expected Right')), hasLength(1));
     });
 
-    test('IncomeTransaction, ExpenseTransaction, dan TransferTransaction bulat-pergi (round-trip) dalam satu bulan', () async {
-      final income = IncomeTransaction(id: 't1', date: DateTime(2026, 9), amount: 500000000, note: 'gaji', walletId: 'bca');
-      final expense = ExpenseTransaction(
-        id: 't2',
-        date: DateTime(2026, 9, 2),
-        amount: 75000,
-        note: 'makan siang',
-        walletId: 'bca',
-        budgetItemId: 'makan',
-      );
-      final transfer = TransferTransaction(
-        id: 't3',
-        date: DateTime(2026, 9, 3),
-        amount: 1000000,
-        note: 'setoran tabungan',
-        fromWalletId: 'bca',
-        toWalletId: 'tabungan',
-        budgetItemId: 'tabungan-item',
-      );
+    test(
+      'IncomeTransaction, ExpenseTransaction, dan TransferTransaction bulat-pergi (round-trip) dalam satu bulan',
+      () async {
+        final income = IncomeTransaction(
+          id: 't1',
+          date: DateTime(2026, 9),
+          amount: 500000000,
+          note: 'gaji',
+          walletId: 'bca',
+        );
+        final expense = ExpenseTransaction(
+          id: 't2',
+          date: DateTime(2026, 9, 2),
+          amount: 75000,
+          note: 'makan siang',
+          walletId: 'bca',
+          budgetItemId: 'makan',
+        );
+        final transfer = TransferTransaction(
+          id: 't3',
+          date: DateTime(2026, 9, 3),
+          amount: 1000000,
+          note: 'setoran tabungan',
+          fromWalletId: 'bca',
+          toWalletId: 'tabungan',
+          budgetItemId: 'tabungan-item',
+        );
 
-      await repository.saveTransaction(income);
-      await repository.saveTransaction(expense);
-      await repository.saveTransaction(transfer);
+        await repository.saveTransaction(income);
+        await repository.saveTransaction(expense);
+        await repository.saveTransaction(transfer);
 
-      final result = await repository.listTransactionsInMonth(DateTime(2026, 9));
-      final txs = result.getOrElse((_) => throw StateError('expected Right'));
-      expect(txs, containsAll([income, expense, transfer]));
-    });
+        final result = await repository.listTransactionsInMonth(DateTime(2026, 9));
+        final txs = result.getOrElse((_) => throw StateError('expected Right'));
+        expect(txs, containsAll([income, expense, transfer]));
+      },
+    );
   });
 }

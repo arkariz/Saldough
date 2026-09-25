@@ -47,6 +47,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$record$id record = Translations$record$id.internal(_root);
 	late final Translations$transaction$id transaction = Translations$transaction$id.internal(_root);
 	late final Translations$wallet$id wallet = Translations$wallet$id.internal(_root);
+	late final Translations$budget$id budget = Translations$budget$id.internal(_root);
 }
 
 // Path: app
@@ -365,6 +366,15 @@ class Translations$record$id {
 
 	/// id: 'Dompet tujuan'
 	String get flowTargetWallet => 'Dompet tujuan';
+
+	/// id: 'Pos anggaran'
+	String get budgetItemLabel => 'Pos anggaran';
+
+	/// id: 'Tanpa anggaran'
+	String get budgetItemNone => 'Tanpa anggaran';
+
+	/// id: 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.'
+	String get budgetItemHelp => 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.';
 }
 
 // Path: transaction
@@ -557,6 +567,12 @@ class Translations$transaction$id {
 
 	/// id: 'Catatan dihapus.'
 	String get deletedMessage => 'Catatan dihapus.';
+
+	/// id: 'Anggaran'
+	String get budgetLabel => 'Anggaran';
+
+	/// id: 'Lihat anggaran'
+	String get openBudgetAction => 'Lihat anggaran';
 }
 
 // Path: wallet
@@ -736,6 +752,291 @@ class Translations$wallet$id {
 	String get detailRecordAction => 'Catat Transaksi Dompet Ini';
 }
 
+// Path: budget
+class Translations$budget$id {
+	Translations$budget$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Anggaran Saya'
+	String get heading => 'Anggaran Saya';
+
+	/// id: '$count aktif'
+	String activeBadge({required Object count}) => '${count} aktif';
+
+	/// id: 'Total rencana anggaran aktif'
+	String get summaryTitle => 'Total rencana anggaran aktif';
+
+	/// id: '$percent% terpakai'
+	String summaryPercent({required Object percent}) => '${percent}% terpakai';
+
+	/// id: 'Rencana'
+	String get plannedLabel => 'Rencana';
+
+	/// id: 'Terpakai'
+	String get spentLabel => 'Terpakai';
+
+	/// id: 'Sisa'
+	String get remainingLabel => 'Sisa';
+
+	/// id: 'Terpakai ($percent%)'
+	String spentPercentLabel({required Object percent}) => 'Terpakai (${percent}%)';
+
+	/// id: 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.'
+	String get summaryNote => 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.';
+
+	/// id: 'Semua'
+	String get filterAll => 'Semua';
+
+	/// id: 'Aktif'
+	String get filterActive => 'Aktif';
+
+	/// id: 'Selesai'
+	String get filterFinished => 'Selesai';
+
+	/// id: 'Nonaktif'
+	String get filterArchived => 'Nonaktif';
+
+	/// id: 'Dompet'
+	String get filterWalletLabel => 'Dompet';
+
+	/// id: 'Semua dompet'
+	String get filterWalletAll => 'Semua dompet';
+
+	/// id: 'Buat Anggaran Baru'
+	String get addAction => 'Buat Anggaran Baru';
+
+	/// id: 'Mingguan'
+	String get periodWeekly => 'Mingguan';
+
+	/// id: 'Bulanan'
+	String get periodMonthly => 'Bulanan';
+
+	/// id: 'Belum terpakai'
+	String get itemStatusPlanned => 'Belum terpakai';
+
+	/// id: 'Terpakai sebagian'
+	String get itemStatusPartiallySpent => 'Terpakai sebagian';
+
+	/// id: 'Selesai'
+	String get itemStatusCompleted => 'Selesai';
+
+	/// id: 'Lewat anggaran'
+	String get itemStatusOverspent => 'Lewat anggaran';
+
+	/// id: '$count pos'
+	String itemCount({required Object count}) => '${count} pos';
+
+	/// id: 'Slot rencana kosong'
+	String get emptyBadge => 'Slot rencana kosong';
+
+	/// id: 'Belum ada anggaran'
+	String get emptyTitle => 'Belum ada anggaran';
+
+	/// id: 'Rencanakan batas belanja mingguan atau bulanan untuk satu dompet. Membuat anggaran tidak mengurangi saldo dompet.'
+	String get emptyBody => 'Rencanakan batas belanja mingguan atau bulanan untuk satu dompet. Membuat anggaran tidak mengurangi saldo dompet.';
+
+	/// id: 'Tidak ada anggaran yang cocok'
+	String get emptyFilteredTitle => 'Tidak ada anggaran yang cocok';
+
+	/// id: 'Tidak ada anggaran dengan status dan dompet yang dipilih.'
+	String get emptyFilteredBody => 'Tidak ada anggaran dengan status dan dompet yang dipilih.';
+
+	/// id: 'Tampilkan semua anggaran'
+	String get resetFilterAction => 'Tampilkan semua anggaran';
+
+	/// id: 'Buat dompet dulu'
+	String get noWalletTitle => 'Buat dompet dulu';
+
+	/// id: 'Setiap anggaran terikat ke satu dompet. Tambahkan dompet di tab Dompet, lalu kembali ke sini.'
+	String get noWalletBody => 'Setiap anggaran terikat ke satu dompet. Tambahkan dompet di tab Dompet, lalu kembali ke sini.';
+
+	/// id: 'Anggaran gagal dimuat'
+	String get loadErrorTitle => 'Anggaran gagal dimuat';
+
+	/// id: 'Data anggaran tidak bisa dibaca. Coba lagi.'
+	String get loadErrorSubtitle => 'Data anggaran tidak bisa dibaca. Coba lagi.';
+
+	/// id: 'Anggaran tersimpan.'
+	String get savedMessage => 'Anggaran tersimpan.';
+
+	/// id: 'Perubahan anggaran tersimpan.'
+	String get updatedMessage => 'Perubahan anggaran tersimpan.';
+
+	/// id: 'Anggaran dihapus.'
+	String get deletedMessage => 'Anggaran dihapus.';
+
+	/// id: 'Anggaran diarsipkan.'
+	String get archivedMessage => 'Anggaran diarsipkan.';
+
+	/// id: 'Anggaran diaktifkan kembali.'
+	String get unarchivedMessage => 'Anggaran diaktifkan kembali.';
+
+	/// id: 'Anggaran baru'
+	String get addStepLabel => 'Anggaran baru';
+
+	/// id: 'Sunting anggaran'
+	String get editStepLabel => 'Sunting anggaran';
+
+	/// id: 'Buat Anggaran'
+	String get addTitle => 'Buat Anggaran';
+
+	/// id: 'Ubah Anggaran'
+	String get editTitle => 'Ubah Anggaran';
+
+	/// id: 'Aturan Anggaran'
+	String get ruleTitle => 'Aturan Anggaran';
+
+	/// id: 'Rencana ini tidak memotong saldo dompetmu. Saldo hanya berkurang saat kamu mencatat transaksi.'
+	String get ruleBody => 'Rencana ini tidak memotong saldo dompetmu. Saldo hanya berkurang saat kamu mencatat transaksi.';
+
+	/// id: 'Nama anggaran'
+	String get nameLabel => 'Nama anggaran';
+
+	/// id: 'Contoh: Kebutuhan Rumah Tangga'
+	String get nameHint => 'Contoh: Kebutuhan Rumah Tangga';
+
+	/// id: 'Wajib'
+	String get requiredHint => 'Wajib';
+
+	/// id: 'Dompet terkait'
+	String get walletLabel => 'Dompet terkait';
+
+	/// id: 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.'
+	String get walletHelp => 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.';
+
+	/// id: 'Saldo: $amount'
+	String walletBalance({required Object amount}) => 'Saldo: ${amount}';
+
+	/// id: 'Periode'
+	String get periodLabel => 'Periode';
+
+	/// id: 'Mulai'
+	String get startDateLabel => 'Mulai';
+
+	/// id: '$start – $end'
+	String periodRange({required Object start, required Object end}) => '${start} – ${end}';
+
+	/// id: 'Nominal rencana'
+	String get plannedAmountLabel => 'Nominal rencana';
+
+	/// id: 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.'
+	String get plannedAmountHelp => 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.';
+
+	/// id: 'Pos anggaran'
+	String get itemsLabel => 'Pos anggaran';
+
+	/// id: 'Rincian rencana belanja atau rencana transfer. Boleh kosong.'
+	String get itemsHelp => 'Rincian rencana belanja atau rencana transfer. Boleh kosong.';
+
+	/// id: 'Tambah Pos'
+	String get addItemAction => 'Tambah Pos';
+
+	/// id: 'Jumlah seluruh pos'
+	String get itemsTotalLabel => 'Jumlah seluruh pos';
+
+	/// id: 'Selisih dengan rencana'
+	String get differenceLabel => 'Selisih dengan rencana';
+
+	/// id: 'Pakai jumlah pos'
+	String get useItemsTotalAction => 'Pakai jumlah pos';
+
+	/// id: 'Simpan Anggaran'
+	String get saveAddAction => 'Simpan Anggaran';
+
+	/// id: 'Arsipkan Anggaran'
+	String get archiveAction => 'Arsipkan Anggaran';
+
+	/// id: 'Aktifkan Kembali'
+	String get unarchiveAction => 'Aktifkan Kembali';
+
+	/// id: 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.'
+	String get archiveHelp => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.';
+
+	/// id: 'Hapus Anggaran'
+	String get deleteAction => 'Hapus Anggaran';
+
+	/// id: 'Hapus anggaran?'
+	String get deleteConfirmTitle => 'Hapus anggaran?';
+
+	/// id: 'Anggaran "$name" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.'
+	String deleteConfirmMessage({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.';
+
+	/// id: 'Tambah Pos'
+	String get itemAddTitle => 'Tambah Pos';
+
+	/// id: 'Ubah Pos'
+	String get itemEditTitle => 'Ubah Pos';
+
+	/// id: 'Nama pos'
+	String get itemNameLabel => 'Nama pos';
+
+	/// id: 'Contoh: Beras'
+	String get itemNameHint => 'Contoh: Beras';
+
+	/// id: 'Nominal'
+	String get itemModeAmount => 'Nominal';
+
+	/// id: 'Jumlah × harga'
+	String get itemModeItemized => 'Jumlah × harga';
+
+	/// id: 'Nominal rencana'
+	String get itemAmountLabel => 'Nominal rencana';
+
+	/// id: 'Jumlah'
+	String get itemQuantityLabel => 'Jumlah';
+
+	/// id: 'Harga satuan'
+	String get itemUnitPriceLabel => 'Harga satuan';
+
+	/// id: 'Total pos'
+	String get itemTotalLabel => 'Total pos';
+
+	/// id: '$quantity × $price'
+	String itemItemizedDetail({required Object quantity, required Object price}) => '${quantity} × ${price}';
+
+	/// id: 'Simpan Pos'
+	String get itemSaveAction => 'Simpan Pos';
+
+	/// id: 'Hapus Pos'
+	String get itemDeleteAction => 'Hapus Pos';
+
+	/// id: 'Daftar Anggaran'
+	String get detailBackLabel => 'Daftar Anggaran';
+
+	/// id: 'Sunting anggaran'
+	String get detailEditAction => 'Sunting anggaran';
+
+	/// id: 'Catat Pengeluaran'
+	String get detailRecordExpenseAction => 'Catat Pengeluaran';
+
+	/// id: 'Catat Transfer'
+	String get detailRecordTransferAction => 'Catat Transfer';
+
+	/// id: 'Pos Anggaran'
+	String get detailItemsHeading => 'Pos Anggaran';
+
+	/// id: 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.'
+	String get detailNoItems => 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.';
+
+	/// id: 'Transaksi Tertaut'
+	String get detailLinkedHeading => 'Transaksi Tertaut';
+
+	/// id: 'Belum ada transaksi yang tertaut ke anggaran ini.'
+	String get detailLinkedEmpty => 'Belum ada transaksi yang tertaut ke anggaran ini.';
+
+	/// id: 'Cara kerja pos anggaran'
+	String get detailHowTitle => 'Cara kerja pos anggaran';
+
+	/// id: 'Saat mencatat pengeluaran atau transfer dari dompet $wallet, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.'
+	String detailHowBody({required Object wallet}) => 'Saat mencatat pengeluaran atau transfer dari dompet ${wallet}, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.';
+
+	/// id: 'Dompet tidak ditemukan'
+	String get unknownWallet => 'Dompet tidak ditemukan';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -838,6 +1139,9 @@ extension on Translations {
 			'record.flowWallet' => 'Dompet',
 			'record.flowSourceWallet' => 'Dompet asal',
 			'record.flowTargetWallet' => 'Dompet tujuan',
+			'record.budgetItemLabel' => 'Pos anggaran',
+			'record.budgetItemNone' => 'Tanpa anggaran',
+			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran aktif dari dompet ini yang ditawarkan.',
 			'transaction.pageTitle' => 'Transaksi',
 			'transaction.searchHint' => 'Cari catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -899,6 +1203,8 @@ extension on Translations {
 			'transaction.deleteConfirmMessage' => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.',
 			'transaction.updatedMessage' => 'Perubahan tersimpan.',
 			'transaction.deletedMessage' => 'Catatan dihapus.',
+			'transaction.budgetLabel' => 'Anggaran',
+			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'wallet.heading' => 'Dompet Saya',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
 			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
@@ -955,6 +1261,98 @@ extension on Translations {
 			'wallet.detailRecentEmpty' => 'Belum ada transaksi bulan ini untuk dompet ini.',
 			'wallet.detailViewAllAction' => 'Lihat Semua Transaksi',
 			'wallet.detailRecordAction' => 'Catat Transaksi Dompet Ini',
+			'budget.heading' => 'Anggaran Saya',
+			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
+			'budget.summaryTitle' => 'Total rencana anggaran aktif',
+			'budget.summaryPercent' => ({required Object percent}) => '${percent}% terpakai',
+			'budget.plannedLabel' => 'Rencana',
+			'budget.spentLabel' => 'Terpakai',
+			'budget.remainingLabel' => 'Sisa',
+			'budget.spentPercentLabel' => ({required Object percent}) => 'Terpakai (${percent}%)',
+			'budget.summaryNote' => 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.',
+			'budget.filterAll' => 'Semua',
+			'budget.filterActive' => 'Aktif',
+			'budget.filterFinished' => 'Selesai',
+			'budget.filterArchived' => 'Nonaktif',
+			'budget.filterWalletLabel' => 'Dompet',
+			'budget.filterWalletAll' => 'Semua dompet',
+			'budget.addAction' => 'Buat Anggaran Baru',
+			'budget.periodWeekly' => 'Mingguan',
+			'budget.periodMonthly' => 'Bulanan',
+			'budget.itemStatusPlanned' => 'Belum terpakai',
+			'budget.itemStatusPartiallySpent' => 'Terpakai sebagian',
+			'budget.itemStatusCompleted' => 'Selesai',
+			'budget.itemStatusOverspent' => 'Lewat anggaran',
+			'budget.itemCount' => ({required Object count}) => '${count} pos',
+			'budget.emptyBadge' => 'Slot rencana kosong',
+			'budget.emptyTitle' => 'Belum ada anggaran',
+			'budget.emptyBody' => 'Rencanakan batas belanja mingguan atau bulanan untuk satu dompet. Membuat anggaran tidak mengurangi saldo dompet.',
+			'budget.emptyFilteredTitle' => 'Tidak ada anggaran yang cocok',
+			'budget.emptyFilteredBody' => 'Tidak ada anggaran dengan status dan dompet yang dipilih.',
+			'budget.resetFilterAction' => 'Tampilkan semua anggaran',
+			'budget.noWalletTitle' => 'Buat dompet dulu',
+			'budget.noWalletBody' => 'Setiap anggaran terikat ke satu dompet. Tambahkan dompet di tab Dompet, lalu kembali ke sini.',
+			'budget.loadErrorTitle' => 'Anggaran gagal dimuat',
+			'budget.loadErrorSubtitle' => 'Data anggaran tidak bisa dibaca. Coba lagi.',
+			'budget.savedMessage' => 'Anggaran tersimpan.',
+			'budget.updatedMessage' => 'Perubahan anggaran tersimpan.',
+			'budget.deletedMessage' => 'Anggaran dihapus.',
+			'budget.archivedMessage' => 'Anggaran diarsipkan.',
+			'budget.unarchivedMessage' => 'Anggaran diaktifkan kembali.',
+			'budget.addStepLabel' => 'Anggaran baru',
+			'budget.editStepLabel' => 'Sunting anggaran',
+			'budget.addTitle' => 'Buat Anggaran',
+			'budget.editTitle' => 'Ubah Anggaran',
+			'budget.ruleTitle' => 'Aturan Anggaran',
+			'budget.ruleBody' => 'Rencana ini tidak memotong saldo dompetmu. Saldo hanya berkurang saat kamu mencatat transaksi.',
+			'budget.nameLabel' => 'Nama anggaran',
+			'budget.nameHint' => 'Contoh: Kebutuhan Rumah Tangga',
+			'budget.requiredHint' => 'Wajib',
+			'budget.walletLabel' => 'Dompet terkait',
+			'budget.walletHelp' => 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.',
+			'budget.walletBalance' => ({required Object amount}) => 'Saldo: ${amount}',
+			'budget.periodLabel' => 'Periode',
+			'budget.startDateLabel' => 'Mulai',
+			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'budget.plannedAmountLabel' => 'Nominal rencana',
+			'budget.plannedAmountHelp' => 'Batas rencana seluruh anggaran. Tidak harus sama dengan jumlah pos.',
+			'budget.itemsLabel' => 'Pos anggaran',
+			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Boleh kosong.',
+			'budget.addItemAction' => 'Tambah Pos',
+			'budget.itemsTotalLabel' => 'Jumlah seluruh pos',
+			'budget.differenceLabel' => 'Selisih dengan rencana',
+			'budget.useItemsTotalAction' => 'Pakai jumlah pos',
+			'budget.saveAddAction' => 'Simpan Anggaran',
+			'budget.archiveAction' => 'Arsipkan Anggaran',
+			'budget.unarchiveAction' => 'Aktifkan Kembali',
+			'budget.archiveHelp' => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.',
+			'budget.deleteAction' => 'Hapus Anggaran',
+			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
+			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
+			'budget.itemAddTitle' => 'Tambah Pos',
+			'budget.itemEditTitle' => 'Ubah Pos',
+			'budget.itemNameLabel' => 'Nama pos',
+			'budget.itemNameHint' => 'Contoh: Beras',
+			'budget.itemModeAmount' => 'Nominal',
+			'budget.itemModeItemized' => 'Jumlah × harga',
+			'budget.itemAmountLabel' => 'Nominal rencana',
+			'budget.itemQuantityLabel' => 'Jumlah',
+			'budget.itemUnitPriceLabel' => 'Harga satuan',
+			'budget.itemTotalLabel' => 'Total pos',
+			'budget.itemItemizedDetail' => ({required Object quantity, required Object price}) => '${quantity} × ${price}',
+			'budget.itemSaveAction' => 'Simpan Pos',
+			'budget.itemDeleteAction' => 'Hapus Pos',
+			'budget.detailBackLabel' => 'Daftar Anggaran',
+			'budget.detailEditAction' => 'Sunting anggaran',
+			'budget.detailRecordExpenseAction' => 'Catat Pengeluaran',
+			'budget.detailRecordTransferAction' => 'Catat Transfer',
+			'budget.detailItemsHeading' => 'Pos Anggaran',
+			'budget.detailNoItems' => 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.',
+			'budget.detailLinkedHeading' => 'Transaksi Tertaut',
+			'budget.detailLinkedEmpty' => 'Belum ada transaksi yang tertaut ke anggaran ini.',
+			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
+			'budget.detailHowBody' => ({required Object wallet}) => 'Saat mencatat pengeluaran atau transfer dari dompet ${wallet}, pilih salah satu pos di sini. Terpakai bertambah dari transaksi itu; anggaran sendiri tidak memotong saldo.',
+			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			_ => null,
 		};
 	}

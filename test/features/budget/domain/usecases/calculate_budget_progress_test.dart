@@ -28,11 +28,25 @@ void main() {
     ],
   );
 
-  ExpenseTransaction expense(String id, int amount, {String walletId = 'bca', String? item}) =>
-      ExpenseTransaction(id: id, date: DateTime(2026, 9, 5), amount: amount, note: '', walletId: walletId, budgetItemId: item);
+  ExpenseTransaction expense(String id, int amount, {String walletId = 'bca', String? item}) => ExpenseTransaction(
+    id: id,
+    date: DateTime(2026, 9, 5),
+    amount: amount,
+    note: '',
+    walletId: walletId,
+    budgetItemId: item,
+  );
 
   TransferTransaction transfer(String id, int amount, {String from = 'bca', String to = 'tabungan', String? item}) =>
-      TransferTransaction(id: id, date: DateTime(2026, 9, 6), amount: amount, note: '', fromWalletId: from, toWalletId: to, budgetItemId: item);
+      TransferTransaction(
+        id: id,
+        date: DateTime(2026, 9, 6),
+        amount: amount,
+        note: '',
+        fromWalletId: from,
+        toWalletId: to,
+        budgetItemId: item,
+      );
 
   group('CalculateBudgetProgress', () {
     test('pos yang dirinci: 4 × Rp576.600 = Rp2.306.400, dan jumlah seluruh pos = rencana Rp3.068.500', () {
@@ -77,7 +91,9 @@ void main() {
 
     test('transfer yang fromWalletId-nya bukan dompet anggaran TIDAK menambah spent', () {
       // Masuk KE dompet anggaran, bukan keluar darinya.
-      final result = calculate(budget, [transfer('t1', 50000000, from: 'gopay', to: 'bca', item: 'tabungan')], now: now);
+      final result = calculate(budget, [
+        transfer('t1', 50000000, from: 'gopay', to: 'bca', item: 'tabungan'),
+      ], now: now);
       expect(result.items[2].spent, 0);
     });
 
@@ -141,7 +157,13 @@ void main() {
 
     test('transfer yang tertaut anggaran tetap tidak mengubah total saldo seluruh dompet', () {
       const bca = Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 0);
-      const tabungan = Wallet(id: 'tabungan', name: 'Tabungan', iconKey: 'walletBank', initialBalance: 100000000, currentBalance: 0);
+      const tabungan = Wallet(
+        id: 'tabungan',
+        name: 'Tabungan',
+        iconKey: 'walletBank',
+        initialBalance: 100000000,
+        currentBalance: 0,
+      );
       const balance = CalculateWalletBalance();
       final transactions = [transfer('t1', 50000000, item: 'tabungan')];
 

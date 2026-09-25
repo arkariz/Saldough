@@ -99,10 +99,10 @@ final class BudgetItemProgress extends Equatable {
 
   /// Menurunkan progres [item] dari [spent].
   factory BudgetItemProgress.of(BudgetItem item, {required int spent}) => BudgetItemProgress(
-        item: item,
-        spent: spent,
-        status: BudgetItemStatus.from(spent: spent, plannedAmount: item.plannedAmount),
-      );
+    item: item,
+    spent: spent,
+    status: BudgetItemStatus.from(spent: spent, plannedAmount: item.plannedAmount),
+  );
 
   /// Pos yang dihitung.
   final BudgetItem item;

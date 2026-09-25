@@ -61,11 +61,11 @@ class AppHardCard extends StatelessWidget {
   final Color? color;
 
   double get _offset => switch (elevation) {
-        AppHardElevation.flat => 0,
-        AppHardElevation.card => AppElevation.pixelCard,
-        AppHardElevation.interactive => AppElevation.pixelInteractive,
-        AppHardElevation.bottomSheet => AppElevation.pixelInteractive,
-      };
+    AppHardElevation.flat => 0,
+    AppHardElevation.card => AppElevation.pixelCard,
+    AppHardElevation.interactive => AppElevation.pixelInteractive,
+    AppHardElevation.bottomSheet => AppElevation.pixelInteractive,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +85,8 @@ class AppHardCard extends StatelessWidget {
     final shadow = switch (elevation) {
       AppHardElevation.flat => const <BoxShadow>[],
       AppHardElevation.bottomSheet => AppElevation.pixelBottomSheetShadow(colors.textPrimary),
-      AppHardElevation.card || AppHardElevation.interactive =>
-        AppElevation.hardShadow(colors.textPrimary, offset: shadowOffset),
+      AppHardElevation.card ||
+      AppHardElevation.interactive => AppElevation.hardShadow(colors.textPrimary, offset: shadowOffset),
     };
 
     return AnimatedContainer(

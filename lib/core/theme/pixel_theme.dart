@@ -38,16 +38,17 @@ class PixelTheme extends StatelessWidget {
 
   static ThemeData _build(AppColorsExtension colors, Brightness brightness) {
     final base = brightness == Brightness.light ? ThemeData.light() : ThemeData.dark();
-    final colorScheme = (brightness == Brightness.light ? const ColorScheme.light() : const ColorScheme.dark()).copyWith(
-      brightness: brightness,
-      surface: colors.cardBackground,
-      onSurface: colors.textPrimary,
-      primary: colors.accent,
-      onPrimary: colors.onAccent,
-      error: colors.expense,
-      onError: Colors.white,
-      outline: colors.edge,
-    );
+    final colorScheme = (brightness == Brightness.light ? const ColorScheme.light() : const ColorScheme.dark())
+        .copyWith(
+          brightness: brightness,
+          surface: colors.cardBackground,
+          onSurface: colors.textPrimary,
+          primary: colors.accent,
+          onPrimary: colors.onAccent,
+          error: colors.expense,
+          onError: Colors.white,
+          outline: colors.edge,
+        );
 
     return base.copyWith(
       brightness: brightness,

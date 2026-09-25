@@ -56,8 +56,7 @@ void main() {
     isActive: isActive,
   );
 
-  String? messageOf(WalletState state) =>
-      (state.effect as ShowSnackBarEffect?)?.message;
+  String? messageOf(WalletState state) => (state.effect as ShowSnackBarEffect?)?.message;
 
   group('WalletBloc -- memuat', () {
     blocTest<WalletBloc, WalletState>(
@@ -66,8 +65,7 @@ void main() {
         when(
           () => walletRepository.listWallets(),
         ).thenAnswer(
-          (_) async =>
-              Right([wallet('a'), wallet('b', name: 'Lama', isActive: false)]),
+          (_) async => Right([wallet('a'), wallet('b', name: 'Lama', isActive: false)]),
         );
       },
       build: buildBloc,
@@ -264,8 +262,7 @@ void main() {
         when(
           () => walletRepository.listWallets(),
         ).thenAnswer(
-          (_) async =>
-              Right([wallet('a', initial: 50000000, current: 50000000)]),
+          (_) async => Right([wallet('a', initial: 50000000, current: 50000000)]),
         );
         when(() => transactionRepository.listAllTransactions()).thenAnswer(
           (_) async => Right([

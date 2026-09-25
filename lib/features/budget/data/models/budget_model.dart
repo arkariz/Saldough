@@ -23,29 +23,27 @@ final class BudgetModel {
 
   /// Membaca [BudgetModel] dari JSON.
   factory BudgetModel.fromJson(Map<String, dynamic> json) => BudgetModel(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        walletId: json['walletId'] as String,
-        period: json['period'] as String,
-        startDate: DateTime.parse(json['startDate'] as String),
-        plannedAmount: json['plannedAmount'] as int,
-        items: (json['items'] as List<dynamic>)
-            .map((e) => BudgetItemModel.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        isArchived: json['isArchived'] as bool,
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    walletId: json['walletId'] as String,
+    period: json['period'] as String,
+    startDate: DateTime.parse(json['startDate'] as String),
+    plannedAmount: json['plannedAmount'] as int,
+    items: (json['items'] as List<dynamic>).map((e) => BudgetItemModel.fromJson(e as Map<String, dynamic>)).toList(),
+    isArchived: json['isArchived'] as bool,
+  );
 
   /// Membuat [BudgetModel] dari entitas domain [Budget].
   factory BudgetModel.fromEntity(Budget budget) => BudgetModel(
-        id: budget.id,
-        name: budget.name,
-        walletId: budget.walletId,
-        period: budget.period.name,
-        startDate: budget.startDate,
-        plannedAmount: budget.plannedAmount,
-        items: budget.items.map(BudgetItemModel.fromEntity).toList(),
-        isArchived: budget.isArchived,
-      );
+    id: budget.id,
+    name: budget.name,
+    walletId: budget.walletId,
+    period: budget.period.name,
+    startDate: budget.startDate,
+    plannedAmount: budget.plannedAmount,
+    items: budget.items.map(BudgetItemModel.fromEntity).toList(),
+    isArchived: budget.isArchived,
+  );
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
   static const schemaVersion = 1;
@@ -76,27 +74,27 @@ final class BudgetModel {
 
   /// Menulis [BudgetModel] ke JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'walletId': walletId,
-        'period': period,
-        'startDate': startDate.toIso8601String(),
-        'plannedAmount': plannedAmount,
-        'items': items.map((i) => i.toJson()).toList(),
-        'isArchived': isArchived,
-      };
+    'id': id,
+    'name': name,
+    'walletId': walletId,
+    'period': period,
+    'startDate': startDate.toIso8601String(),
+    'plannedAmount': plannedAmount,
+    'items': items.map((i) => i.toJson()).toList(),
+    'isArchived': isArchived,
+  };
 
   /// Mengubah model ini jadi entitas domain [Budget].
   Budget toEntity() => Budget(
-        id: id,
-        name: name,
-        walletId: walletId,
-        period: BudgetPeriod.values.byName(period),
-        startDate: startDate,
-        plannedAmount: plannedAmount,
-        items: items.map((i) => i.toEntity()).toList(),
-        isArchived: isArchived,
-      );
+    id: id,
+    name: name,
+    walletId: walletId,
+    period: BudgetPeriod.values.byName(period),
+    startDate: startDate,
+    plannedAmount: plannedAmount,
+    items: items.map((i) => i.toEntity()).toList(),
+    isArchived: isArchived,
+  );
 }
 
 /// Model serialisasi [BudgetItem], disimpan di dalam dokumen [BudgetModel].
@@ -112,21 +110,21 @@ final class BudgetItemModel {
 
   /// Membaca [BudgetItemModel] dari JSON.
   factory BudgetItemModel.fromJson(Map<String, dynamic> json) => BudgetItemModel(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        enteredAmount: json['enteredAmount'] as int?,
-        quantity: json['quantity'] as int?,
-        unitPrice: json['unitPrice'] as int?,
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    enteredAmount: json['enteredAmount'] as int?,
+    quantity: json['quantity'] as int?,
+    unitPrice: json['unitPrice'] as int?,
+  );
 
   /// Membuat [BudgetItemModel] dari entitas domain [BudgetItem].
   factory BudgetItemModel.fromEntity(BudgetItem item) => BudgetItemModel(
-        id: item.id,
-        name: item.name,
-        enteredAmount: item.enteredAmount,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-      );
+    id: item.id,
+    name: item.name,
+    enteredAmount: item.enteredAmount,
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+  );
 
   /// Identitas pos.
   final String id;
@@ -145,19 +143,19 @@ final class BudgetItemModel {
 
   /// Menulis [BudgetItemModel] ke JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'enteredAmount': enteredAmount,
-        'quantity': quantity,
-        'unitPrice': unitPrice,
-      };
+    'id': id,
+    'name': name,
+    'enteredAmount': enteredAmount,
+    'quantity': quantity,
+    'unitPrice': unitPrice,
+  };
 
   /// Mengubah model ini jadi entitas domain [BudgetItem].
   BudgetItem toEntity() => BudgetItem(
-        id: id,
-        name: name,
-        enteredAmount: enteredAmount,
-        quantity: quantity,
-        unitPrice: unitPrice,
-      );
+    id: id,
+    name: name,
+    enteredAmount: enteredAmount,
+    quantity: quantity,
+    unitPrice: unitPrice,
+  );
 }

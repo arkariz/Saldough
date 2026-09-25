@@ -6,7 +6,8 @@ import 'package:saldough/core/theme/theme.dart';
 /// (tiga tempat yang sudah dikonfirmasi ADR-015 §7 memakainya).
 ///
 /// Warnanya mengikuti [value] terhadap ambang semantik ADR-015: `income`
-/// di bawah 70%, `pending` 70–100%, `overBudget` di atas 100%. ⚠ ADR-015
+/// di bawah 70%, `pending` 70–100% (termasuk tepat 100%), `overBudget` di
+/// atas 100%. ⚠ ADR-015
 /// sendiri hanya menyebut ambang eksplisit "70–90%" untuk `pending` dan
 /// "di atas 100%" untuk `overBudget`, tanpa menyebut 90–100% — di sini
 /// `pending` diperpanjang sampai tepat di bawah 100% (bukan berhenti di
@@ -50,7 +51,9 @@ class AppSegmentedProgressBar extends StatelessWidget {
   /// logikanya.
   static Color colorFor(BuildContext context, double value) {
     final colors = context.appColors;
-    if (value >= 1.0) return colors.overBudget;
+    // `>` bukan `>=`: tepat 100% adalah pos "selesai" (terpakai sama dengan
+    // rencana), bukan "lewat anggaran" -- lihat `BudgetItemStatus`.
+    if (value > 1.0) return colors.overBudget;
     if (value >= 0.7) return colors.pending;
     return colors.income;
   }

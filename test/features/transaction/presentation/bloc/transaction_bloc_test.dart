@@ -164,8 +164,7 @@ void main() {
       expect: () => [
         isA<TransactionState>().having((s) => s.isLoading, 'isLoading', false),
       ],
-      verify: (bloc) =>
-          expect(bloc.state.groups.single.transactions.single.id, 'baru'),
+      verify: (bloc) => expect(bloc.state.groups.single.transactions.single.id, 'baru'),
     );
 
     blocTest<TransactionBloc, TransactionState>(
@@ -249,12 +248,7 @@ void main() {
       },
       skip: 1,
       verify: (bloc) {
-        List<String> ids() =>
-            bloc.state.groups
-                .expand((g) => g.transactions)
-                .map((t) => t.id)
-                .toList()
-              ..sort();
+        List<String> ids() => bloc.state.groups.expand((g) => g.transactions).map((t) => t.id).toList()..sort();
         expect(ids(), ['e1']);
         expect(bloc.state.typeCounts[TransactionTypeFilter.all], 1);
         expect(
@@ -289,8 +283,7 @@ void main() {
         bloc.add(const TransactionWalletFilterChanged('gopay'));
       },
       skip: 1,
-      verify: (bloc) =>
-          expect(bloc.state.groups.expand((g) => g.transactions), hasLength(1)),
+      verify: (bloc) => expect(bloc.state.groups.expand((g) => g.transactions), hasLength(1)),
     );
 
     blocTest<TransactionBloc, TransactionState>(
@@ -359,9 +352,7 @@ void main() {
           () => transactionRepository.listTransactionsInMonth(any()),
         ).thenAnswer((_) async {
           call++;
-          return call == 1
-              ? const Left(_forcedFailure)
-              : const Right(<Transaction>[]);
+          return call == 1 ? const Left(_forcedFailure) : const Right(<Transaction>[]);
         });
       },
       build: buildBloc,

@@ -39,7 +39,9 @@ void main() {
 
   group('RecordTransaction', () {
     test('mencatat pemasukan menambah saldo dompet tujuan', () async {
-      await record(IncomeTransaction(id: 't1', date: DateTime(2026, 9), amount: 261543800, note: 'gaji', walletId: 'bca'));
+      await record(
+        IncomeTransaction(id: 't1', date: DateTime(2026, 9), amount: 261543800, note: 'gaji', walletId: 'bca'),
+      );
       expect(await balanceOf('bca'), 761543800);
     });
 
@@ -64,7 +66,13 @@ void main() {
     });
 
     test('menyunting nominal transaksi memperbarui saldo sesuai nilai baru, bukan menambahkannya', () async {
-      final expense = ExpenseTransaction(id: 't1', date: DateTime(2026, 9), amount: 75000, note: 'kopi', walletId: 'bca');
+      final expense = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 9),
+        amount: 75000,
+        note: 'kopi',
+        walletId: 'bca',
+      );
       await record(expense);
       expect(await balanceOf('bca'), 499925000);
 
@@ -74,7 +82,13 @@ void main() {
     });
 
     test('menyunting transaksi yang memindahkan dompet menghitung ulang KEDUANYA', () async {
-      final expense = ExpenseTransaction(id: 't1', date: DateTime(2026, 9), amount: 75000, note: 'kopi', walletId: 'bca');
+      final expense = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 9),
+        amount: 75000,
+        note: 'kopi',
+        walletId: 'bca',
+      );
       await record(expense);
       expect(await balanceOf('bca'), 499925000);
       expect(await balanceOf('gopay'), 0);
@@ -82,12 +96,22 @@ void main() {
       final moved = expense.copyWith(walletId: 'gopay');
       await record(moved, previousTransaction: expense);
 
-      expect(await balanceOf('bca'), 500000000, reason: 'dompet lama kembali ke initialBalance setelah transaksinya pindah');
+      expect(
+        await balanceOf('bca'),
+        500000000,
+        reason: 'dompet lama kembali ke initialBalance setelah transaksinya pindah',
+      );
       expect(await balanceOf('gopay'), -75000);
     });
 
     test('menghapus transaksi mengembalikan saldo dompet yang terdampak', () async {
-      final expense = ExpenseTransaction(id: 't1', date: DateTime(2026, 9), amount: 75000, note: 'kopi', walletId: 'bca');
+      final expense = ExpenseTransaction(
+        id: 't1',
+        date: DateTime(2026, 9),
+        amount: 75000,
+        note: 'kopi',
+        walletId: 'bca',
+      );
       await record(expense);
       expect(await balanceOf('bca'), 499925000);
 
@@ -116,8 +140,9 @@ void main() {
     test('urutan penulisan: transaksi tetap tersimpan meski penulisan dompet diperiksa sesudahnya', () async {
       await record(IncomeTransaction(id: 't1', date: DateTime(2026, 9), amount: 500000, note: 'gaji', walletId: 'bca'));
 
-      final transactions = (await transactionRepository.listTransactionsInMonth(DateTime(2026, 9)))
-          .getOrElse((_) => throw StateError('expected Right'));
+      final transactions = (await transactionRepository.listTransactionsInMonth(
+        DateTime(2026, 9),
+      )).getOrElse((_) => throw StateError('expected Right'));
       expect(transactions, hasLength(1));
     });
   });

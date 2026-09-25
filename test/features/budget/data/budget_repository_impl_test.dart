@@ -47,14 +47,16 @@ void main() {
 
     test('menyimpan ulang id sama menimpa di posisi semula, bukan menambah', () async {
       await repository.saveBudget(budget);
-      await repository.saveBudget(Budget(
-        id: 'b2',
-        name: 'Belanja',
-        walletId: 'gopay',
-        period: BudgetPeriod.weekly,
-        startDate: DateTime(2026, 9, 7),
-        plannedAmount: 57660000,
-      ));
+      await repository.saveBudget(
+        Budget(
+          id: 'b2',
+          name: 'Belanja',
+          walletId: 'gopay',
+          period: BudgetPeriod.weekly,
+          startDate: DateTime(2026, 9, 7),
+          plannedAmount: 57660000,
+        ),
+      );
       await repository.saveBudget(budget.copyWith(isArchived: true));
 
       final budgets = read(await repository.listBudgets());
@@ -70,7 +72,13 @@ void main() {
 
     test('membuat dan mengarsipkan anggaran tidak mengubah saldo dompet mana pun', () async {
       final wallets = WalletRepositoryImpl(storage: storage);
-      const bca = Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 500000000, currentBalance: 500000000);
+      const bca = Wallet(
+        id: 'bca',
+        name: 'BCA',
+        iconKey: 'walletBank',
+        initialBalance: 500000000,
+        currentBalance: 500000000,
+      );
       await wallets.saveWallet(bca);
 
       await repository.saveBudget(budget);

@@ -38,7 +38,10 @@ class RupiahInputFormatter extends TextInputFormatter {
     if (digits.isEmpty) return TextEditingValue.empty;
 
     final formatted = formatRupiahInput(int.parse(digits));
-    return TextEditingValue(text: formatted, selection: TextSelection.collapsed(offset: formatted.length));
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
   }
 }
 

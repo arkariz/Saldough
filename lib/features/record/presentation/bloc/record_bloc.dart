@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -16,7 +17,8 @@ part 'record_event.dart';
 /// tetap sesuai (ADR-012).
 final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// Membuat [RecordBloc].
-  RecordBloc({required this._walletRepository, required this._recordTransaction}) : super(RecordState.initial()) {
+  RecordBloc({required this._walletRepository, required this._recordTransaction, required this._budgetItemCatalog})
+    : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
     on<ExpenseRecorded>(_onExpenseRecorded);
@@ -25,6 +27,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
 
   final WalletRepository _walletRepository;
   final RecordTransaction _recordTransaction;
+  final BudgetItemCatalog _budgetItemCatalog;
 
   Future<void> _onWalletsLoaded(RecordWalletsLoaded event, Emitter<RecordState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -33,9 +36,13 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
+        // Pos anggaran adalah data sekunder: kegagalan membacanya tidak
+        // boleh menghalangi pencatatan, cukup tanpa pilihan tautan anggaran.
+        final budgetItems = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
         emit(
           state.copyWith(
             wallets: wallets.where((w) => w.isActive).toList(),
+            budgetItems: budgetItems,
             isLoading: false,
             loadFailed: false,
           ),
@@ -63,6 +70,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       note: event.note,
       categoryKey: event.categoryKey,
       walletId: event.walletId,
+      budgetItemId: event.budgetItemId,
     );
     await _save(transaction, emit, _effectSaved(t.record.expenseSavedMessage));
   }
@@ -75,6 +83,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       note: event.note,
       fromWalletId: event.fromWalletId,
       toWalletId: event.toWalletId,
+      budgetItemId: event.budgetItemId,
     );
     await _save(transaction, emit, _effectSaved(t.record.transferSavedMessage));
   }

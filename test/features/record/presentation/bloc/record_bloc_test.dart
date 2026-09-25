@@ -68,6 +68,7 @@ void main() {
   });
 
   RecordBloc buildBloc() => RecordBloc(
+    budgetItemCatalog: const FakeBudgetItemCatalog(),
     walletRepository: walletRepository,
     recordTransaction: RecordTransaction(
       transactionRepository: transactionRepository,

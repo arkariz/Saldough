@@ -3,8 +3,10 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
@@ -38,6 +40,8 @@ class TransferFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.initialWalletId,
+    this.budgetItems = const [],
+    this.initialBudgetItemId,
     super.key,
   });
 
@@ -55,6 +59,16 @@ class TransferFormSheet extends StatefulWidget {
   /// ini", bukan tujuannya. Diabaikan kalau [initial] terisi.
   final String? initialWalletId;
 
+  /// Seluruh pos anggaran; formulir menyaringnya per dompet ASAL.
+  ///
+  /// ⚠ Hanya dompet asal: satu transfer menaikkan paling banyak satu pos,
+  /// jadi pos anggaran dompet tujuan tidak ditawarkan (T-4.4).
+  final List<BudgetItemOption> budgetItems;
+
+  /// Pos anggaran pra-terpilih (FR-REC-002). Diabaikan kalau [initial]
+  /// terisi.
+  final String? initialBudgetItemId;
+
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
 }
@@ -64,6 +78,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   final _noteController = TextEditingController();
   String? _fromWalletId;
   String? _toWalletId;
+  String? _budgetItemId;
   DateTime _date = DateTime.now();
 
   @override
@@ -72,8 +87,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     final tx = widget.initial;
     if (tx == null) {
       _fromWalletId = widget.initialWalletId;
+      _budgetItemId = widget.initialBudgetItemId;
       return;
     }
+    _budgetItemId = tx.budgetItemId;
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
     _date = tx.date;
     _noteController.text = tx.note;
@@ -104,6 +121,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       _toWalletId != null &&
       !_sameWallet;
 
+  List<BudgetItemOption> get _budgetChoices =>
+      budgetItemChoicesFor(widget.budgetItems, _fromWalletId, _budgetItemId);
+
+  /// Pos terpilih kalau masih sah untuk dompet ASAL saat ini, selain itu
+  /// `null`.
+  String? get _validBudgetItemId =>
+      _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
+
   Wallet? _find(String? id) {
     for (final wallet in widget.wallets) {
       if (wallet.id == id) return wallet;
@@ -123,6 +148,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
         amount: amount,
         date: _date,
         note: _noteController.text.trim(),
+        budgetItemId: _validBudgetItemId,
       ),
     );
   }
@@ -171,6 +197,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               previewAmountSen: amount,
               previewIsCredit: false,
             ),
+            if (_budgetChoices.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.md),
+              RecordBudgetItemField(
+                choices: _budgetChoices,
+                selectedId: _validBudgetItemId,
+                onSelected: (id) => setState(() => _budgetItemId = id),
+              ),
+            ],
             const SizedBox(height: AppSpacing.md),
             WalletSelectField(
               label: t.record.destinationWalletFieldLabel,

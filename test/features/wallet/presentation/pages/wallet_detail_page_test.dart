@@ -6,12 +6,17 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+import '../../../../helpers/mocks.dart';
 
 /// Uji T-2.8 (FR-WAL-004, FR-REC-002): layar rincian dompet -- info dompet,
 /// riwayat bulan berjalan yang tersaring ke dompet ini, jalan ke daftar
@@ -30,6 +35,8 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,
@@ -69,6 +76,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     await tester.pump();
+    await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.tap(
       find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
@@ -17,9 +18,9 @@ import 'package:saldough/shared/wallet/wallet.dart';
 /// mempertahankan `id` transaksi asal -- pembetulan selalu lewat sunting atau
 /// hapus, tidak pernah lewat transaksi penyeimbang.
 ///
-/// Nilai yang tidak ada di formulir dipertahankan dari [transaction]:
-/// `budgetItemId` (tautan anggaran, Fase 4) dan, untuk transfer,
-/// `categoryKey`. Objek dibangun BARU, bukan lewat `copyWith`, karena
+/// Nilai yang tidak ada di formulir dipertahankan dari [transaction]: untuk
+/// transfer, `categoryKey`. Tautan pos anggaran (T-4.4) ikut disunting lewat
+/// pemilih pos di formulir, dengan pilihan dari [budgetItems]. Objek dibangun BARU, bukan lewat `copyWith`, karena
 /// `copyWith` (`?? this.x`) tidak bisa mengosongkan kategori yang dihapus
 /// pengguna.
 ///
@@ -33,14 +34,15 @@ Future<Transaction?> openEditTransactionSheet(
   BuildContext context, {
   required Transaction transaction,
   required List<Wallet> wallets,
+  List<BudgetItemOption> budgetItems = const [],
 }) async {
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
     context,
     builder: (_) => switch (transaction) {
       IncomeTransaction() => IncomeFormSheet(wallets: baseWallets, initial: transaction),
-      ExpenseTransaction() => ExpenseFormSheet(wallets: baseWallets, initial: transaction),
-      TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction),
+      ExpenseTransaction() => ExpenseFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
+      TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
     },
   );
 
@@ -58,8 +60,15 @@ Future<Transaction?> openEditTransactionSheet(
         categoryKey: categoryKey,
       ),
     (
-      ExpenseTransaction(:final budgetItemId),
-      ExpenseRecorded(:final date, :final amount, :final note, :final walletId, :final categoryKey),
+      ExpenseTransaction(),
+      ExpenseRecorded(
+        :final date,
+        :final amount,
+        :final note,
+        :final walletId,
+        :final categoryKey,
+        :final budgetItemId,
+      ),
     ) =>
       ExpenseTransaction(
         id: transaction.id,
@@ -71,8 +80,15 @@ Future<Transaction?> openEditTransactionSheet(
         budgetItemId: budgetItemId,
       ),
     (
-      TransferTransaction(categoryKey: final originalCategory, :final budgetItemId),
-      TransferRecorded(:final date, :final amount, :final note, :final fromWalletId, :final toWalletId),
+      TransferTransaction(categoryKey: final originalCategory),
+      TransferRecorded(
+        :final date,
+        :final amount,
+        :final note,
+        :final fromWalletId,
+        :final toWalletId,
+        :final budgetItemId,
+      ),
     ) =>
       TransferTransaction(
         id: transaction.id,

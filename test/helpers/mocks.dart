@@ -1,4 +1,7 @@
+import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -24,3 +27,17 @@ const fallbackWallet = Wallet(
 /// Transaksi netral untuk [registerFallbackValue] -- placeholder `any()`
 /// pada argumen bertipe `Transaction` (mis. `saveTransaction`).
 final fallbackTransaction = ExpenseTransaction(id: '_fallback', date: DateTime(2026), amount: 1, note: '', walletId: '_fallback');
+
+/// [BudgetItemCatalog] palsu yang selalu mengembalikan [options] -- cukup
+/// untuk seluruh uji yang tidak menguji pos anggaran (daftar kosong), dan
+/// untuk uji T-4.4 yang memberi pilihan sendiri.
+class FakeBudgetItemCatalog implements BudgetItemCatalog {
+  /// Membuat [FakeBudgetItemCatalog].
+  const FakeBudgetItemCatalog([this.options = const []]);
+
+  /// Pilihan yang dikembalikan [listOptions].
+  final List<BudgetItemOption> options;
+
+  @override
+  Future<Either<Failure, List<BudgetItemOption>>> listOptions() async => Right(options);
+}

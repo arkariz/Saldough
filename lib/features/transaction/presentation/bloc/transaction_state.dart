@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -58,6 +59,7 @@ final class TransactionState extends UiState<TransactionState> {
     required this.groups,
     required this.typeCounts,
     required this.isLoading,
+    this.budgetItems = const [],
     this.searchQuery = '',
     this.loadFailed = false,
     super.effect,
@@ -86,6 +88,21 @@ final class TransactionState extends UiState<TransactionState> {
   /// Seluruh dompet (aktif maupun tidak) -- untuk penyaring dompet dan
   /// penerjemah `walletId` -> nama pada tiap baris.
   final List<Wallet> wallets;
+
+  /// Seluruh pos anggaran — untuk baris "Anggaran" di rincian transaksi
+  /// (T-4.11) dan pemilih pos saat menyunting (T-4.4). Data sekunder:
+  /// kosong kalau gagal dimuat.
+  final List<BudgetItemOption> budgetItems;
+
+  /// Pos anggaran ber-`itemId` [itemId], atau `null` kalau tidak ada lagi
+  /// (anggarannya sudah dihapus).
+  BudgetItemOption? budgetItemOf(String? itemId) {
+    if (itemId == null) return null;
+    for (final option in budgetItems) {
+      if (option.itemId == itemId) return option;
+    }
+    return null;
+  }
 
   /// Transaksi bulan [month] APA ADANYA dari repository, belum tersaring.
   /// Sumber kebenaran untuk [categoryOptions] dan ringkasan bulan (yang
@@ -137,6 +154,7 @@ final class TransactionState extends UiState<TransactionState> {
   TransactionState copyWith({
     DateTime? month,
     List<Wallet>? wallets,
+    List<BudgetItemOption>? budgetItems,
     List<Transaction>? rawTransactions,
     TransactionTypeFilter? typeFilter,
     String? walletFilter,
@@ -152,6 +170,7 @@ final class TransactionState extends UiState<TransactionState> {
     return TransactionState(
       month: month ?? this.month,
       wallets: wallets ?? this.wallets,
+      budgetItems: budgetItems ?? this.budgetItems,
       rawTransactions: rawTransactions ?? this.rawTransactions,
       typeFilter: typeFilter ?? this.typeFilter,
       walletFilter: walletFilter ?? this.walletFilter,
@@ -170,6 +189,7 @@ final class TransactionState extends UiState<TransactionState> {
   List<Object?> get props => [
     month,
     wallets,
+    budgetItems,
     rawTransactions,
     typeFilter,
     walletFilter,

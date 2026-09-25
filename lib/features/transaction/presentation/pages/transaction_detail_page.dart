@@ -53,7 +53,12 @@ class TransactionDetailPage extends StatelessWidget {
       for (final w in state.wallets)
         if (w.isActive || _walletIds.contains(w.id)) w,
     ];
-    final updated = await openEditTransactionSheet(context, transaction: transaction, wallets: wallets);
+    final updated = await openEditTransactionSheet(
+      context,
+      transaction: transaction,
+      wallets: wallets,
+      budgetItems: state.budgetItems,
+    );
     if (updated == null || updated == transaction) return;
     bloc.add(TransactionUpdated(original: transaction, updated: updated));
     navigator.pop();

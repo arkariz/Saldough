@@ -6,7 +6,7 @@ sealed class RecordEvent {
   const RecordEvent();
 }
 
-/// Memuat daftar dompet aktif untuk pemilih tiap formulir.
+/// Memuat daftar dompet aktif (dan pos anggaran) untuk pemilih tiap formulir.
 final class RecordWalletsLoaded extends RecordEvent {
   /// Membuat [RecordWalletsLoaded].
   const RecordWalletsLoaded();
@@ -48,6 +48,7 @@ final class ExpenseRecorded extends RecordEvent {
     required this.date,
     required this.note,
     this.categoryKey,
+    this.budgetItemId,
   });
 
   /// Dompet asal.
@@ -64,6 +65,9 @@ final class ExpenseRecorded extends RecordEvent {
 
   /// Label pengelompokan bebas, boleh kosong.
   final String? categoryKey;
+
+  /// Pos anggaran yang ditautkan (T-4.4), atau `null`.
+  final String? budgetItemId;
 }
 
 /// Mencatat transfer antar dompet (FR-TXN-003).
@@ -75,6 +79,7 @@ final class TransferRecorded extends RecordEvent {
     required this.amount,
     required this.date,
     required this.note,
+    this.budgetItemId,
   });
 
   /// Dompet asal.
@@ -92,4 +97,8 @@ final class TransferRecorded extends RecordEvent {
 
   /// Catatan bebas, boleh kosong.
   final String note;
+
+  /// Pos anggaran yang ditautkan (T-4.4), atau `null`. Hanya pos milik
+  /// anggaran dompet ASAL yang sah — lihat `budgetItemChoicesFor`.
+  final String? budgetItemId;
 }

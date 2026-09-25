@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
@@ -30,19 +32,18 @@ List<String> _categorySuggestions() => [
 /// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
 /// Tata letaknya mengikuti rujukan visual `pixel_kas_catat_pengeluaran`.
 ///
-/// ⚠ Tautan ke pos anggaran (bagian FR-TXN-002 yang menyebut "tautan
-/// opsional ke satu pos anggaran", kartu "Alokasikan ke Anggaran Bulanan?"
-/// di rujukan visual) belum ada di sini — `Budget` belum dibangun sampai
-/// Fase 4. Tautan itu ditambahkan di T-4.4, bukan ditampilkan kosong
-/// sekarang, mengikuti pola yang sama seperti baris anggaran di layar rincian
-/// transaksi (T-2.11). Elemen gamifikasi rujukan ("LVL +10 EXP") tidak
-/// dibangun: bukan bagian kebutuhan produk.
+/// Tautan opsional ke satu pos anggaran (FR-TXN-002, T-4.4) lewat
+/// [RecordBudgetItemField]: hanya pos anggaran aktif yang dompetnya sama
+/// dengan dompet asal pengeluaran ini. Elemen gamifikasi rujukan
+/// ("LVL +10 EXP") tidak dibangun: bukan bagian kebutuhan produk.
 class ExpenseFormSheet extends StatefulWidget {
   /// Membuat [ExpenseFormSheet] dengan [wallets] sebagai pilihan asal.
   const ExpenseFormSheet({
     required this.wallets,
     this.initial,
     this.initialWalletId,
+    this.budgetItems = const [],
+    this.initialBudgetItemId,
     super.key,
   });
 
@@ -60,6 +61,13 @@ class ExpenseFormSheet extends StatefulWidget {
   /// dompet transaksi itu sendiri.
   final String? initialWalletId;
 
+  /// Seluruh pos anggaran; formulir menyaringnya per dompet asal.
+  final List<BudgetItemOption> budgetItems;
+
+  /// Pos anggaran pra-terpilih (FR-REC-002, pintasan dari rincian anggaran).
+  /// Diabaikan kalau [initial] terisi.
+  final String? initialBudgetItemId;
+
   @override
   State<ExpenseFormSheet> createState() => _ExpenseFormSheetState();
 }
@@ -69,6 +77,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   final _categoryController = TextEditingController();
   final _noteController = TextEditingController();
   String? _walletId;
+  String? _budgetItemId;
   DateTime _date = DateTime.now();
 
   @override
@@ -77,8 +86,10 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     final tx = widget.initial;
     if (tx == null) {
       _walletId = widget.initialWalletId;
+      _budgetItemId = widget.initialBudgetItemId;
       return;
     }
+    _budgetItemId = tx.budgetItemId;
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
     _date = tx.date;
     _noteController.text = tx.note;
@@ -101,6 +112,14 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
+  List<BudgetItemOption> get _budgetChoices =>
+      budgetItemChoicesFor(widget.budgetItems, _walletId, _budgetItemId);
+
+  /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
+  /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
+  String? get _validBudgetItemId =>
+      _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
+
   Wallet? get _wallet {
     for (final wallet in widget.wallets) {
       if (wallet.id == _walletId) return wallet;
@@ -121,6 +140,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         categoryKey: _categoryController.text.trim().isEmpty
             ? null
             : _categoryController.text.trim(),
+        budgetItemId: _validBudgetItemId,
       ),
     );
   }
@@ -166,6 +186,12 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           previewAmountSen: amount,
           previewIsCredit: false,
         ),
+        if (_budgetChoices.isNotEmpty)
+          RecordBudgetItemField(
+            choices: _budgetChoices,
+            selectedId: _validBudgetItemId,
+            onSelected: (id) => setState(() => _budgetItemId = id),
+          ),
         RecordDateField(
           date: _date,
           kind: TransactionKind.expense,

@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -17,7 +18,8 @@ final class TransactionScope extends IsolatedScope {
   void bridge(GetIt c) {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
-      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
   }
 
   @override
@@ -26,6 +28,7 @@ final class TransactionScope extends IsolatedScope {
       () => TransactionBloc(
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
+        budgetItemCatalog: c<BudgetItemCatalog>(),
         recordTransaction: RecordTransaction(
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(

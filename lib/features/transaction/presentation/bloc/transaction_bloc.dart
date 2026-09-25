@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -26,6 +27,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this._walletRepository,
     required this._transactionRepository,
     required this._recordTransaction,
+    required this._budgetItemCatalog,
   }) : super(TransactionState.initial()) {
     on<TransactionStarted>(_onStarted);
     on<TransactionRefreshed>(_onRefreshed);
@@ -41,6 +43,14 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
   final RecordTransaction _recordTransaction;
+  final BudgetItemCatalog _budgetItemCatalog;
+
+  /// Memuat pos anggaran (data sekunder — gagal berarti daftar kosong, tidak
+  /// menghalangi riwayat tampil).
+  Future<void> _loadBudgetItems(Emitter<TransactionState> emit) async {
+    final items = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
+    emit(state.copyWith(budgetItems: items));
+  }
 
   Future<void> _onStarted(TransactionStarted event, Emitter<TransactionState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -49,6 +59,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       case Left(value: final failure):
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
+        await _loadBudgetItems(emit);
         await _loadMonth(month: state.month, wallets: wallets, emit: emit);
     }
   }
@@ -59,6 +70,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right(value: final wallets):
+        await _loadBudgetItems(emit);
         await _loadMonth(month: state.month, wallets: wallets, emit: emit);
     }
   }
@@ -226,6 +238,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     return TransactionState(
       month: month,
       wallets: wallets,
+      budgetItems: state.budgetItems,
       rawTransactions: rawTransactions,
       typeFilter: typeFilter,
       walletFilter: walletFilter,

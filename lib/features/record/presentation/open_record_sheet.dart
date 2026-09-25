@@ -29,9 +29,17 @@ import 'package:state_management/state_management.dart';
 /// [initialWalletId], kalau terisi, mengisi awal dompet pada formulir yang
 /// dipilih pengguna (FR-REC-002) -- pintasan kontekstual dari layar rincian
 /// dompet (T-2.8). Titik panggil ketiga: `WalletDetailPage`.
+///
+/// [initialChoice], kalau terisi, melewati lembar pilihan dan langsung
+/// membuka formulir itu; [initialBudgetItemId] mengisi awal pos anggarannya
+/// (FR-BUD-007/FR-REC-002, pintasan "Catat Pengeluaran"/"Catat Transfer" di
+/// rincian anggaran, T-4.10). Menekan kembali di formulir tetap membuka
+/// lembar pilihan — alurnya sama persis dengan CATAT biasa.
 Future<void> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
+  RecordChoice? initialChoice,
+  String? initialBudgetItemId,
 }) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
@@ -42,14 +50,19 @@ Future<void> openRecordSheet(
   // dompet" padahal masalahnya pembacaan yang gagal.
   if (bloc.state.loadFailed) return;
 
+  var preselected = initialChoice;
   while (true) {
-    final choice = await showFullScreenSheet<RecordChoice>(
-      context,
-      builder: (_) => const RecordChoiceSheet(),
-    );
+    final choice =
+        preselected ??
+        await showFullScreenSheet<RecordChoice>(
+          context,
+          builder: (_) => const RecordChoiceSheet(),
+        );
+    preselected = null;
     if (choice == null || !context.mounted) return;
 
     final wallets = bloc.state.wallets;
+    final budgetItems = bloc.state.budgetItems;
     final result = await showFullScreenSheet<Object>(
       context,
       builder: (_) => switch (choice) {
@@ -60,10 +73,14 @@ Future<void> openRecordSheet(
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
           initialWalletId: initialWalletId,
+          budgetItems: budgetItems,
+          initialBudgetItemId: initialBudgetItemId,
         ),
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
           initialWalletId: initialWalletId,
+          budgetItems: budgetItems,
+          initialBudgetItemId: initialBudgetItemId,
         ),
       },
     );

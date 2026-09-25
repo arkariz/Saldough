@@ -1,3 +1,4 @@
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
@@ -8,6 +9,7 @@ final class RecordState extends UiState<RecordState> {
     required this.wallets,
     required this.isLoading,
     required this.isSaving,
+    this.budgetItems = const [],
     this.loadFailed = false,
     super.effect,
   });
@@ -17,6 +19,11 @@ final class RecordState extends UiState<RecordState> {
 
   /// Seluruh dompet aktif, sebagai pilihan pada tiap formulir CATAT.
   final List<Wallet> wallets;
+
+  /// Seluruh pos anggaran untuk pemilih di formulir pengeluaran dan transfer
+  /// (T-4.4). Data sekunder: kalau gagal dimuat, daftarnya kosong dan CATAT
+  /// tetap berjalan tanpa tautan anggaran.
+  final List<BudgetItemOption> budgetItems;
 
   /// Sedang memuat daftar dompet.
   final bool isLoading;
@@ -32,9 +39,17 @@ final class RecordState extends UiState<RecordState> {
   final bool loadFailed;
 
   @override
-  RecordState copyWith({List<Wallet>? wallets, bool? isLoading, bool? isSaving, bool? loadFailed, UiEffect? effect}) {
+  RecordState copyWith({
+    List<Wallet>? wallets,
+    List<BudgetItemOption>? budgetItems,
+    bool? isLoading,
+    bool? isSaving,
+    bool? loadFailed,
+    UiEffect? effect,
+  }) {
     return RecordState(
       wallets: wallets ?? this.wallets,
+      budgetItems: budgetItems ?? this.budgetItems,
       isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
       loadFailed: loadFailed ?? this.loadFailed,
@@ -43,5 +58,5 @@ final class RecordState extends UiState<RecordState> {
   }
 
   @override
-  List<Object?> get props => [wallets, isLoading, isSaving, loadFailed];
+  List<Object?> get props => [wallets, budgetItems, isLoading, isSaving, loadFailed];
 }

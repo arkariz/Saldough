@@ -5,9 +5,11 @@ import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
+import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -54,6 +56,11 @@ abstract final class RootModule {
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).
       ..registerLazySingleton<BudgetRepository>(
         () => BudgetRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Port milik `record` (pemilih pos anggaran CATAT, T-4.4),
+      // diimplementasikan `budget` — pola port kecil ADR-0009.
+      ..registerLazySingleton<BudgetItemCatalog>(
+        () => BudgetItemCatalogImpl(repository: container<BudgetRepository>()),
       );
   }
 

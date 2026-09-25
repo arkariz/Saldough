@@ -785,7 +785,10 @@ tanpa menyelesaikan apa pun.
       Pintasan tingkat anggaran memilih dompet; pintasan di kartu pos juga
       memilih posnya (`openRecordSheet(initialChoice:, initialBudgetItemId:)`,
       lembar pilihan dilewati tetapi tombol kembali tetap kembali ke sana).
-      Pintasan disembunyikan untuk anggaran nonaktif. Progres disegarkan
+      Pintasan di kartu pos juga mengisi nominal dengan SISA pos (rencana −
+      terpakai; kosong kalau sisa ≤ 0), permintaan pemilik 25 September 2026
+      — sisa, bukan rencana penuh, supaya pos yang terpakai sebagian tidak
+      langsung lewat anggaran. Pintasan disembunyikan untuk anggaran nonaktif. Progres disegarkan
       sesudah CATAT dan sesudah transaksi tertaut disunting/dihapus.
       ⚠ **Diverifikasi di emulator (25 September 2026):** dompet BCA
       Rp5.000.000 → anggaran "Rumah tangga" Rp3.068.500 (saldo tetap

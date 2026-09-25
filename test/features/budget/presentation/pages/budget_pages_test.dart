@@ -111,7 +111,7 @@ void main() {
     expect(find.descendant(of: card, matching: find.textContaining('Rp2.993.500')), findsOneWidget);
   });
 
-  testWidgets('rincian anggaran menampilkan pos dan transaksi tertaut, lalu pintasan pos membuka CATAT terisi (T-4.10)', (
+  testWidgets('rincian anggaran menampilkan pos dan transaksi tertaut, lalu pintasan pos membuka CATAT terisi dompet, pos, dan sisa nominal (T-4.10)', (
     tester,
   ) async {
     tallViewport(tester);
@@ -131,6 +131,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
+    // Nominal terisi SISA pos: rencana 2 × Rp75.000 − terpakai Rp75.000.
+    final amountField = find.descendant(of: find.byType(ExpenseFormSheet), matching: find.byType(TextField)).first;
+    expect(tester.widget<TextField>(amountField).controller!.text, '75.000');
   });
 
   testWidgets('rincian transaksi tertaut menampilkan baris Anggaran beserta jalan ke anggarannya (T-4.11)', (

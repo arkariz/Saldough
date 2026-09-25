@@ -33,13 +33,15 @@ import 'package:state_management/state_management.dart';
 /// [initialChoice], kalau terisi, melewati lembar pilihan dan langsung
 /// membuka formulir itu; [initialBudgetItemId] mengisi awal pos anggarannya
 /// (FR-BUD-007/FR-REC-002, pintasan "Catat Pengeluaran"/"Catat Transfer" di
-/// rincian anggaran, T-4.10). Menekan kembali di formulir tetap membuka
-/// lembar pilihan — alurnya sama persis dengan CATAT biasa.
+/// rincian anggaran, T-4.10). [initialAmountSen] mengisi awal nominal
+/// pengeluaran/transfer (sisa pos anggaran). Menekan kembali di formulir tetap
+/// membuka lembar pilihan — alurnya sama persis dengan CATAT biasa.
 Future<void> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
   RecordChoice? initialChoice,
   String? initialBudgetItemId,
+  int? initialAmountSen,
 }) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
@@ -75,12 +77,14 @@ Future<void> openRecordSheet(
           initialWalletId: initialWalletId,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
+          initialAmountSen: initialAmountSen,
         ),
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
           initialWalletId: initialWalletId,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
+          initialAmountSen: initialAmountSen,
         ),
       },
     );

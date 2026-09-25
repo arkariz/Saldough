@@ -70,7 +70,15 @@ class BudgetDetailPage extends StatelessWidget {
   /// salinan terbarunya).
   final Budget budget;
 
-  Future<void> _record(BuildContext context, Budget current, RecordChoice choice, {String? itemId}) async {
+  /// Dari kartu pos, [itemId] dan [amountSen] (sisa pos) ikut terisi; dari
+  /// pintasan tingkat anggaran hanya dompetnya.
+  Future<void> _record(
+    BuildContext context,
+    Budget current,
+    RecordChoice choice, {
+    String? itemId,
+    int? amountSen,
+  }) async {
     final budgets = context.read<BudgetBloc>();
     final transactions = context.read<TransactionBloc>();
     final wallets = context.read<WalletBloc>();
@@ -79,6 +87,7 @@ class BudgetDetailPage extends StatelessWidget {
       initialWalletId: current.walletId,
       initialChoice: choice,
       initialBudgetItemId: itemId,
+      initialAmountSen: amountSen,
     );
     budgets.add(const BudgetRefreshed());
     transactions.add(const TransactionRefreshed());
@@ -143,10 +152,22 @@ class BudgetDetailPage extends StatelessWidget {
                     _ItemCard(
                       progress: itemProgress,
                       onRecordExpense: canRecord
-                          ? () => _record(context, current, RecordChoice.expense, itemId: itemProgress.item.id)
+                          ? () => _record(
+                              context,
+                              current,
+                              RecordChoice.expense,
+                              itemId: itemProgress.item.id,
+                              amountSen: itemProgress.remaining,
+                            )
                           : null,
                       onRecordTransfer: canRecord
-                          ? () => _record(context, current, RecordChoice.transfer, itemId: itemProgress.item.id)
+                          ? () => _record(
+                              context,
+                              current,
+                              RecordChoice.transfer,
+                              itemId: itemProgress.item.id,
+                              amountSen: itemProgress.remaining,
+                            )
                           : null,
                     ),
                     const SizedBox(height: AppSpacing.sm),

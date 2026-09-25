@@ -42,6 +42,7 @@ class TransferFormSheet extends StatefulWidget {
     this.initialWalletId,
     this.budgetItems = const [],
     this.initialBudgetItemId,
+    this.initialAmountSen,
     super.key,
   });
 
@@ -69,6 +70,11 @@ class TransferFormSheet extends StatefulWidget {
   /// terisi.
   final String? initialBudgetItemId;
 
+  /// Nominal pra-isi dalam sen (pintasan pos anggaran: sisa pos itu).
+  /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau bukan
+  /// rupiah utuh (kolom nominal hanya menerima rupiah utuh).
+  final int? initialAmountSen;
+
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
 }
@@ -88,6 +94,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     if (tx == null) {
       _fromWalletId = widget.initialWalletId;
       _budgetItemId = widget.initialBudgetItemId;
+      final amount = widget.initialAmountSen;
+      if (amount != null && amount > 0 && amount % 100 == 0) {
+        _amountController.text = formatRecordAmount(amount ~/ 100);
+      }
       return;
     }
     _budgetItemId = tx.budgetItemId;

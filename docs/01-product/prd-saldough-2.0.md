@@ -251,9 +251,9 @@ terhadapnya.
 - Transaksi berulang otomatis.
 - Pemindaian struk, ekspor-impor data, dan asisten keuangan berbasis AI.
 
-**Template freelance** ([FR-FRL-006](#75-freelance)) termasuk dalam dokumen ini
-tetapi **bukan bagian dari MVP wajib**. Ia dikerjakan di Fase 7 bersama template
-anggaran, setelah lingkaran inti terbukti berjalan.
+**Template freelance** ([FR-FRL-006](#75-freelance)) **deprecated** sejak 26 Sep
+2026 atas keputusan pemilik dan tidak dikerjakan. Proyek freelance dibuat
+langsung lewat Tambah Proyek.
 
 ### Definisi selesai MVP
 
@@ -535,15 +535,14 @@ Ini layar daftar, dicapai dari navigasi bawah.
 - [ ] Menampilkan total jam kerja, nominal yang diperoleh, yang sudah dibayar,
       dan yang belum dibayar.
 - [ ] Menampilkan daftar pembayaran beserta status dan tanggalnya, per proyek.
-- [ ] Penempatan Template freelance (FR-FRL-006) diputuskan ulang sebelum
-      Fase 7, karena Ikhtisar tidak lagi bertab.
 - [ ] **Dicapai dari dua titik masuk yang keduanya mendarat di layar yang
       sama:** ringkasan di Beranda, dan CATAT → Catat Pemasukan → Freelance.
 - [ ] Bukan tujuan navigasi bawah.
 
-**FR-FRL-006 — Template freelance**
+**FR-FRL-006 — Template freelance** — ~~deprecated~~
 
-Di luar MVP wajib; dikerjakan di Fase 7 bersama template anggaran.
+*(Deprecated 26 Sep 2026 atas keputusan pemilik; tidak dikerjakan.)* Butir di bawah
+disimpan sebagai catatan sejarah saja.
 
 - [ ] Menyimpan struktur kerja berulang berisi proyek atau klien, tarif per jam,
       dompet bawaan, jadwal pembayaran, dan penanda aktif atau nonaktif.

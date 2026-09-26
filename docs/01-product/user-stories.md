@@ -293,7 +293,7 @@ yang sama tinggal dibuat dari situ.
 - Proyek yang dibuat dari template adalah salinan mandiri; menyunting
   templatenya tidak mengubah proyek yang sudah berjalan.
 - Template tidak pernah mengubah saldo dompet mana pun.
-- Di luar MVP wajib; dikerjakan di Fase 7.
+- *(Deprecated 26 Sep 2026 atas keputusan pemilik; tidak dikerjakan.)*
 - Memenuhi FR-FRL-006.
 
 ## Epik 5: Gambaran sehari-hari

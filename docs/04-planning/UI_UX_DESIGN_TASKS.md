@@ -222,7 +222,8 @@ ada, hanya konversinya yang belum.
 
 ## Fase 7: Template dan poles
 
-- [ ] **D-7.2** Tab Template pada Ikhtisar Freelance beserta layar sunting
+- [ ] ~~**D-7.2**~~ *(Deprecated 26 Sep 2026 atas keputusan pemilik; tidak dikerjakan.)*
+      Tab Template pada Ikhtisar Freelance beserta layar sunting
       templatenya: tarif, potongan, dompet bawaan, jadwal pembayaran, dan
       penanda aktif atau nonaktif.
       ⚠ Bentuknya mengikuti layar template anggaran, bukan pola baru.

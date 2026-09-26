@@ -32,8 +32,8 @@ Terakhir diperbarui: 26 September 2026.
 | 4 — Anggaran | 11 | 11 | Selesai |
 | 5 — Freelance | 9 | 8 | Berjalan — T-5.9 (Ikhtisar tanpa tab) belum dikodekan |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
-| 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **77** | **63** | |
+| 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
+| **Total MVP** | **76** | **64** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -971,10 +971,8 @@ tanpa menyelesaikan apa pun.
          Pembayaran di rincian). Verifikasi di emulator dengan build rilis
          (`flutter run --release`; build debug memicu ANR di emulator ini).
 
-      ⚠ **Pertanyaan terbuka untuk pemilik sebelum T-7.7:** tab Template
-      semula direncanakan sebagai tab ketiga Ikhtisar. Karena Ikhtisar kini
-      tanpa tab, template perlu tempat baru (usulan: tombol di kop Ikhtisar,
-      atau pilihan "dari template" di formulir Tambah Proyek).
+      Template freelance (T-7.7) deprecated 26 Sep 2026, jadi Ikhtisar
+      tidak perlu menyediakan tempat untuknya.
       Memenuhi FR-FRL-005.
 
 ## Fase 6: Beranda
@@ -1013,8 +1011,14 @@ seluruh fitur di atasnya menghasilkan data.
 
 ## Fase 7: Template dan poles
 
-- [ ] **T-7.1** Buat `BudgetTemplate` beserta repositorinya di atas kunci
+- [x] **T-7.1** Buat `BudgetTemplate` beserta repositorinya di atas kunci
       `budget_template/all`.
+      `BudgetTemplate` (nama, pos, `isEnabled`; rencana = jumlah pos seperti
+      ADR-017) memakai `BudgetItem` dan `BudgetItemModel` yang sama dengan
+      anggaran, tanpa dompet maupun periode. `BudgetTemplateRepository`
+      didaftarkan di `RootModule` di samping `BudgetRepository`. Diuji di atas
+      penyimpanan memori, termasuk bahwa template dan anggaran tidak saling
+      menimpa (diuji mutasi: kunci sengaja disamakan → uji merah).
       Memenuhi FR-BUD-005.
 - [ ] **T-7.2** Buat layar template: buat, sunting, gandakan, aktifkan,
       nonaktifkan, dan hapus.
@@ -1023,8 +1027,23 @@ seluruh fitur di atasnya menghasilkan data.
 - [ ] **T-7.3** Terapkan pembuatan anggaran dari template.
       ⚠ Anggaran hasil template berdiri sendiri. Menyuntingnya tidak mengubah
       templatenya, dan sebaliknya.
+      ⚠ Sebagian: domain selesai, UI belum. `CreateBudgetFromTemplate`
+      (Dart murni) menyalin nama dan pos ke `Budget` baru untuk dompet,
+      periode, dan tanggal yang dipilih, dengan **id pos baru** dari
+      `newItemId` (id pos template yang dipakai ulang membuat satu transaksi
+      terhitung di dua anggaran). Pos transfer yang dompet tujuannya sama
+      dengan dompet anggaran menghasilkan `BudgetFromTemplateNeedsTarget`:
+      **pemilik diminta menyesuaikan dompet tujuannya** (keputusan pemilik,
+      26 Sep 2026), lalu use case dipanggil ulang dengan `targetWalletIds`.
+      Diuji mutasi (id dipakai ulang → merah; deteksi bentrok dimatikan →
+      merah). Sisa: UI pemilihan template di formulir anggaran dan pemilih
+      dompet tujuan pengganti.
+      ⚠ `newItemId` harus unik di dalam satu putaran — id
+      `microsecondsSinceEpoch` polos bisa kembar kalau dipanggil beruntun.
       Memenuhi FR-BUD-005.
-- [ ] **T-7.7** Buat `FreelanceTemplate` beserta repositori, layar CRUD-nya
+- [ ] ~~**T-7.7**~~ **Deprecated 26 Sep 2026 atas keputusan pemilik; tidak
+      dikerjakan dan tidak dihitung di ringkasan.** Catatan semula:
+      Buat `FreelanceTemplate` beserta repositori, layar CRUD-nya
       sebagai tab ketiga Ikhtisar Freelance, dan pembuatan proyek dari template.
       ⚠ Hubungannya sama persis dengan `BudgetTemplate` terhadap `Budget`:
       template adalah definisi, proyek adalah salinan mandiri. Menyunting
@@ -1085,8 +1104,8 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-FRL-002 | T-5.1, T-5.3 |
 | FR-FRL-003 | T-5.4 |
 | FR-FRL-004 | T-5.5 |
-| FR-FRL-005 | T-5.6, T-7.7 |
-| FR-FRL-006 | T-7.7 |
+| FR-FRL-005 | T-5.6, T-5.9 |
+| FR-FRL-006 | — (deprecated) |
 | FR-HOME-001 | T-6.1 |
 | FR-HOME-002 | T-6.2 |
 | FR-HOME-003 | T-6.3 |

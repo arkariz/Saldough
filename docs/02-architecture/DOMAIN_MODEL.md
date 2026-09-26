@@ -52,7 +52,7 @@ pendukung.
 | `FreelanceProject` | Pendukung | Klien beserta tarif dan potongannya |
 | `WorklogEntry` | Pendukung | Kerja yang sudah selesai |
 | `FreelancePayment` | Pendukung | Tagihan yang menunggu dibayar |
-| `FreelanceTemplate` | Pendukung | Struktur kerja berulang yang bisa dipakai ulang |
+| ~~`FreelanceTemplate`~~ | Pendukung | Deprecated 26 Sep 2026, tidak dikerjakan |
 
 Tidak ada entitas untuk saldo turunan, ringkasan bulanan, `spent`, `remaining`,
 `progress`, maupun `status`. Semuanya dihitung ulang saat diakses.
@@ -270,7 +270,12 @@ overspent       : spent > plannedAmount
 
 Membuat anggaran dari template menghasilkan `Budget` mandiri: menyuntingnya
 tidak mengubah templatenya, dan menyunting template tidak mengubah anggaran yang
-sudah lahir darinya.
+sudah lahir darinya. Template tidak menyimpan dompet maupun periode; keduanya
+dipilih saat anggaran dibuat. Setiap pos mendapat id baru, supaya transaksi
+yang tertaut ke pos satu anggaran tidak ikut terhitung di anggaran lain dari
+template yang sama. Kalau dompet tujuan sebuah pos transfer sama dengan dompet
+anggaran yang dipilih, pemilik diminta menyesuaikan dompet tujuannya sebelum
+anggaran dibuat.
 
 ## Freelance
 
@@ -372,9 +377,10 @@ Pembayaran yang masih `pending` boleh diubah tanggal perkiraannya, atau dihapus
 supaya entrinya kembali belum ditagihkan. Proyek hanya bisa dihapus selama
 belum punya entri worklog.
 
-### Template freelance
+### Template freelance (deprecated)
 
-Di luar MVP wajib; dikerjakan di Fase 7 bersama template anggaran.
+*(Deprecated 26 Sep 2026 atas keputusan pemilik; tidak dikerjakan.)* Rancangan di
+bawah disimpan sebagai catatan sejarah; jangan membuat entitas ini.
 
 | Field | Tipe | Keterangan |
 |---|---|---|
@@ -405,8 +411,8 @@ sendiri.
 4. **Anggaran tidak menyentuh saldo.** Membuat, menyunting, atau menghapus
    `Budget`, `BudgetItem`, maupun `BudgetTemplate` tidak mengubah saldo dompet
    mana pun.
-5. **Worklog dan template freelance tidak menyentuh saldo.** Mencatat,
-   menyunting, atau menghapus `WorklogEntry` maupun `FreelanceTemplate` tidak
+5. **Worklog tidak menyentuh saldo.** Mencatat,
+   menyunting, atau menghapus `WorklogEntry` tidak
    mengubah saldo dompet mana pun.
 6. **Pembayaran menghasilkan tepat satu transaksi.** Sebuah `FreelancePayment`
    yang `paid` punya tepat satu `incomeTransactionId`, dan tidak bisa dicatat

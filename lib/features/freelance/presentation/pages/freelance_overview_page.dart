@@ -55,8 +55,8 @@ typedef _FreelanceTab = ({String label, Widget Function(FreelanceState state) bu
 /// Pembayaran.
 ///
 /// Daftar tab dibangun dari [_tabsFor], dan `DefaultTabController`
-/// mengikuti panjangnya — tab Template (T-7.7) cukup ditambahkan sebagai
-/// satu entri lagi, tanpa membongkar layar ini.
+/// mengikuti panjangnya. Tabnya akan dilepas di T-5.9 (Ikhtisar tanpa tab);
+/// tab Template (T-7.7) deprecated.
 class FreelanceOverviewPage extends StatefulWidget {
   /// Membuat [FreelanceOverviewPage].
   const FreelanceOverviewPage({super.key});

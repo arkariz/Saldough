@@ -123,7 +123,7 @@ tentu sudah diterima. Ini domain pendukung, bukan inti.
 | Potongan | `DeductionRule` | Pengurang gaji kotor, berupa per mil atau nominal tetap. |
 | Gaji kotor | `grossPay` | Total jam dikali tarif per jam. |
 | Gaji bersih | `netPay` | Gaji kotor dikurangi seluruh potongan. Angka inilah yang jadi nominal `IncomeTransaction` saat pembayaran dicatat. |
-| Template freelance | `FreelanceTemplate` | Struktur kerja berulang — tarif, potongan, dompet bawaan, jadwal — yang bisa dipakai membuat proyek baru. Di luar MVP wajib. |
+| Template freelance | `FreelanceTemplate` | Struktur kerja berulang — tarif, potongan, dompet bawaan, jadwal — yang bisa dipakai membuat proyek baru. **Deprecated** 26 Sep 2026, tidak dikerjakan. |
 
 Bedakan dengan tegas antara **diperoleh** dan **diterima**. Kerja yang sudah
 selesai tidak pernah menambah saldo dompet. Saldo baru berubah saat pemilik

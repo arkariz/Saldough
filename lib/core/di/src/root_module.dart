@@ -7,7 +7,9 @@ import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
+import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
@@ -58,6 +60,11 @@ abstract final class RootModule {
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).
       ..registerLazySingleton<BudgetRepository>(
         () => BudgetRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Template anggaran (T-7.1), kunci `budget_template/all`. Di akar
+      // bersama `BudgetRepository` supaya `BudgetScope` cukup membawanya.
+      ..registerLazySingleton<BudgetTemplateRepository>(
+        () => BudgetTemplateRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Port milik `record` (pemilih pos anggaran CATAT, T-4.4),
       // diimplementasikan `budget` — pola port kecil ADR-0009.

@@ -32,8 +32,8 @@ Terakhir diperbarui: 26 September 2026.
 | 4 — Anggaran | 11 | 11 | Selesai |
 | 5 — Freelance | 9 | 8 | Berjalan — T-5.9 (Ikhtisar tanpa tab) belum dikodekan |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
-| 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **77** | **63** | |
+| 7 — Template dan poles | 7 | 1 | Berjalan — T-7.1 selesai |
+| **Total MVP** | **77** | **64** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -1013,8 +1013,19 @@ seluruh fitur di atasnya menghasilkan data.
 
 ## Fase 7: Template dan poles
 
-- [ ] **T-7.1** Buat `BudgetTemplate` beserta repositorinya di atas kunci
+- [x] **T-7.1** Buat `BudgetTemplate` beserta repositorinya di atas kunci
       `budget_template/all`.
+      `BudgetTemplate` (nama, pos, `isEnabled`; rencana = jumlah pos seperti
+      ADR-017) memakai `BudgetItem` dan `BudgetItemModel` yang sama dengan
+      anggaran, tanpa dompet maupun periode. `BudgetTemplateRepository`
+      didaftarkan di `RootModule` di samping `BudgetRepository`. Diuji di atas
+      penyimpanan memori, termasuk bahwa template dan anggaran tidak saling
+      menimpa (diuji mutasi: kunci sengaja disamakan → uji merah).
+      ⚠ Untuk T-7.3: pos transfer di template membawa `targetWalletId`,
+      padahal dompet anggaran baru dipilih saat anggaran dibuat. Kalau dompet
+      yang dipilih sama dengan dompet tujuan pos itu, perilakunya belum
+      diputuskan pemilik. Id pos juga harus dibuat baru saat anggaran lahir
+      dari template, supaya transaksi tidak tertaut ke dua anggaran sekaligus.
       Memenuhi FR-BUD-005.
 - [ ] **T-7.2** Buat layar template: buat, sunting, gandakan, aktifkan,
       nonaktifkan, dan hapus.

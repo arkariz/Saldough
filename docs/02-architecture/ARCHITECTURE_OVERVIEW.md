@@ -132,7 +132,7 @@ saldough/
 │   │       ├── domain/{transaction.dart, transaction_repository.dart}
 │   │       └── data/{transaction_model.dart, transaction_repository_impl.dart}
 │   └── features/                         # graf milik satu fitur
-│       ├── home/                         # ringkasan, tanpa domain sendiri
+│       ├── home/                         # ringkasan; domain/ hanya berisi port
 │       ├── wallet/                       # pengelolaan dompet (konsumen shared/wallet)
 │       ├── transaction/                  # daftar dan penyaring riwayat
 │       ├── record/                       # alur CATAT — satu-satunya penulis transaksi manual
@@ -172,9 +172,12 @@ features/budget/
     └── widgets/
 ```
 
-Fitur yang tidak punya entitas sendiri — `home` dan `record` — hanya berisi
-`presentation/` dan `di/`. Keduanya membaca dan menulis lewat modul `shared/`,
-bukan lewat domain fitur lain.
+Fitur yang tidak punya entitas sendiri — `home` dan `record` — berisi
+`presentation/`, `di/`, dan paling banyak `domain/` untuk **port** miliknya
+sendiri (`record`: `BudgetItemCatalog`; `home`: `BudgetOverviewSource`,
+`FreelanceOverviewSource`). Keduanya membaca dan menulis lewat modul `shared/`
+atau lewat port itu — implementasinya di `data/adapters/` fitur penyedia,
+dikawat di `RootModule` — tidak pernah lewat domain fitur lain.
 
 `shared/<module>/` (lihat `shared/wallet/` di atas) disusun module-first —
 `domain/` + `data/` di balik satu barrel, **tanpa `presentation/`** — dan

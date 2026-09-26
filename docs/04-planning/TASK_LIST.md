@@ -21,7 +21,7 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 25 September 2026.
+Terakhir diperbarui: 26 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -30,10 +30,10 @@ Terakhir diperbarui: 25 September 2026.
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 12 | Selesai |
 | 3 — Cutover | 9 | 9 | Selesai |
 | 4 — Anggaran | 11 | 11 | Selesai |
-| 5 — Freelance | 8 | 0 | Belum dimulai |
+| 5 — Freelance | 9 | 8 | Berjalan — T-5.9 (Ikhtisar tanpa tab) belum dikodekan |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 7 | 0 | Belum dimulai |
-| **Total MVP** | **76** | **55** | |
+| **Total MVP** | **77** | **63** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 

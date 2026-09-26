@@ -6,5 +6,6 @@ library;
 export 'data/transaction_repository_impl.dart';
 export 'domain/transaction.dart';
 export 'domain/transaction_repository.dart';
+export 'domain/usecases/calculate_cash_flow.dart';
 export 'domain/usecases/recompute_wallet_balances.dart';
 export 'domain/usecases/record_transaction.dart';

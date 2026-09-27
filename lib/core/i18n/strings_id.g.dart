@@ -1542,15 +1542,6 @@ class Translations$home$id {
 	/// id: 'Anggaran aktif'
 	String get budgetTitle => 'Anggaran aktif';
 
-	/// id: '$percent% terpakai'
-	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
-
-	/// id: '$amount terpakai'
-	String budgetSpent({required Object amount}) => '${amount} terpakai';
-
-	/// id: 'Rencana $amount'
-	String budgetPlanned({required Object amount}) => 'Rencana ${amount}';
-
 	/// id: 'Sisa'
 	String get budgetRemaining => 'Sisa';
 
@@ -1563,23 +1554,8 @@ class Translations$home$id {
 	/// id: 'Freelance'
 	String get freelanceTitle => 'Freelance';
 
-	/// id: '$count tertunda'
-	String freelancePendingBadge({required Object count}) => '${count} tertunda';
-
-	/// id: 'Waktu kerja'
-	String get freelanceHours => 'Waktu kerja';
-
-	/// id: 'Diperoleh (kotor)'
-	String get freelanceEarned => 'Diperoleh (kotor)';
-
 	/// id: 'Diterima: $amount'
 	String freelancePaid({required Object amount}) => 'Diterima: ${amount}';
-
-	/// id: 'Belum diterima: $amount'
-	String freelanceUnpaid({required Object amount}) => 'Belum diterima: ${amount}';
-
-	/// id: 'Perkiraan terdekat: $date'
-	String freelanceNext({required Object date}) => 'Perkiraan terdekat: ${date}';
 
 	/// id: 'Lihat Freelance'
 	String get freelanceAction => 'Lihat Freelance';
@@ -1643,6 +1619,27 @@ class Translations$home$id {
 
 	/// id: 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.'
 	String get guideFreelanceBody => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.';
+
+	/// id: '$spent terpakai dari $planned'
+	String budgetSpentOf({required Object spent, required Object planned}) => '${spent} terpakai dari ${planned}';
+
+	/// id: 'Belum diterima (kotor)'
+	String get freelanceUnpaidTitle => 'Belum diterima (kotor)';
+
+	/// id: 'Jatuh tempo'
+	String get freelanceDueLabel => 'Jatuh tempo';
+
+	/// id: '$count tagihan tertunda'
+	String freelancePendingInvoices({required Object count}) => '${count} tagihan tertunda';
+
+	/// id: '$hours · diperoleh $earned'
+	String freelanceSummaryLine({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}';
+
+	/// id: 'Buka $name'
+	String openCard({required Object name}) => 'Buka ${name}';
+
+	/// id: '$percent% terpakai'
+	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -2123,19 +2120,11 @@ extension on Translations {
 			'home.incomeTag' => '+ Masuk',
 			'home.expenseTag' => '− Keluar',
 			'home.budgetTitle' => 'Anggaran aktif',
-			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
-			'home.budgetSpent' => ({required Object amount}) => '${amount} terpakai',
-			'home.budgetPlanned' => ({required Object amount}) => 'Rencana ${amount}',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePendingBadge' => ({required Object count}) => '${count} tertunda',
-			'home.freelanceHours' => 'Waktu kerja',
-			'home.freelanceEarned' => 'Diperoleh (kotor)',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
-			'home.freelanceUnpaid' => ({required Object amount}) => 'Belum diterima: ${amount}',
-			'home.freelanceNext' => ({required Object date}) => 'Perkiraan terdekat: ${date}',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
@@ -2157,6 +2146,13 @@ extension on Translations {
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Piutang',
 			'home.guideFreelanceBody' => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.',
+			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} terpakai dari ${planned}',
+			'home.freelanceUnpaidTitle' => 'Belum diterima (kotor)',
+			'home.freelanceDueLabel' => 'Jatuh tempo',
+			'home.freelancePendingInvoices' => ({required Object count}) => '${count} tagihan tertunda',
+			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
+			'home.openCard' => ({required Object name}) => 'Buka ${name}',
+			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
 			_ => null,
 		};
 	}

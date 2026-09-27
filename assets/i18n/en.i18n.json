@@ -475,7 +475,7 @@
   "home": {
     "loadErrorTitle": "Home failed to load",
     "balanceLabel": "Total active cash",
-    "walletCount": "$count active wallets",
+    "walletCount": "Active wallets: $count",
     "moreWallets": "+$count more",
     "startBadge": "Start recording",
     "noWalletsBody": "No wallet balance recorded yet.",
@@ -486,19 +486,11 @@
     "incomeTag": "+ In",
     "expenseTag": "− Out",
     "budgetTitle": "Active budgets",
-    "budgetUsedBadge": "$percent% used",
-    "budgetSpent": "$amount used",
-    "budgetPlanned": "Plan $amount",
     "budgetRemaining": "Remaining",
     "budgetOver": "Over plan",
     "budgetAction": "View Budgets",
     "freelanceTitle": "Freelance",
-    "freelancePendingBadge": "$count pending",
-    "freelanceHours": "Hours worked",
-    "freelanceEarned": "Earned (gross)",
     "freelancePaid": "Received: $amount",
-    "freelanceUnpaid": "Not received: $amount",
-    "freelanceNext": "Next expected: $date",
     "freelanceAction": "View Freelance",
     "recentTitle": "Recent transactions",
     "seeAll": "See all",
@@ -519,6 +511,13 @@
     "guideBudgetBody": "Plan your spending limits. Creating a budget never deducts from any wallet balance.",
     "guideFreelanceTitle": "Freelance",
     "guideFreelanceTag": "Receivables",
-    "guideFreelanceBody": "Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received."
+    "guideFreelanceBody": "Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.",
+    "budgetSpentOf": "$spent used of $planned",
+    "freelanceUnpaidTitle": "Not received (gross)",
+    "freelanceDueLabel": "Due",
+    "freelancePendingInvoices": "Pending invoices: $count",
+    "freelanceSummaryLine": "$hours · earned $earned",
+    "openCard": "Open $name",
+    "budgetUsedBadge": "$percent% used"
   }
 }

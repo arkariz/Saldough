@@ -588,7 +588,7 @@ class _Translations$home$en extends Translations$home$id {
 	// Translations
 	@override String get loadErrorTitle => 'Home failed to load';
 	@override String get balanceLabel => 'Total active cash';
-	@override String walletCount({required Object count}) => '${count} active wallets';
+	@override String walletCount({required Object count}) => 'Active wallets: ${count}';
 	@override String moreWallets({required Object count}) => '+${count} more';
 	@override String get startBadge => 'Start recording';
 	@override String get noWalletsBody => 'No wallet balance recorded yet.';
@@ -599,19 +599,11 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get incomeTag => '+ In';
 	@override String get expenseTag => '− Out';
 	@override String get budgetTitle => 'Active budgets';
-	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
-	@override String budgetSpent({required Object amount}) => '${amount} used';
-	@override String budgetPlanned({required Object amount}) => 'Plan ${amount}';
 	@override String get budgetRemaining => 'Remaining';
 	@override String get budgetOver => 'Over plan';
 	@override String get budgetAction => 'View Budgets';
 	@override String get freelanceTitle => 'Freelance';
-	@override String freelancePendingBadge({required Object count}) => '${count} pending';
-	@override String get freelanceHours => 'Hours worked';
-	@override String get freelanceEarned => 'Earned (gross)';
 	@override String freelancePaid({required Object amount}) => 'Received: ${amount}';
-	@override String freelanceUnpaid({required Object amount}) => 'Not received: ${amount}';
-	@override String freelanceNext({required Object date}) => 'Next expected: ${date}';
 	@override String get freelanceAction => 'View Freelance';
 	@override String get recentTitle => 'Recent transactions';
 	@override String get seeAll => 'See all';
@@ -633,6 +625,13 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get guideFreelanceTitle => 'Freelance';
 	@override String get guideFreelanceTag => 'Receivables';
 	@override String get guideFreelanceBody => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.';
+	@override String budgetSpentOf({required Object spent, required Object planned}) => '${spent} used of ${planned}';
+	@override String get freelanceUnpaidTitle => 'Not received (gross)';
+	@override String get freelanceDueLabel => 'Due';
+	@override String freelancePendingInvoices({required Object count}) => 'Pending invoices: ${count}';
+	@override String freelanceSummaryLine({required Object hours, required Object earned}) => '${hours} · earned ${earned}';
+	@override String openCard({required Object name}) => 'Open ${name}';
+	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1102,7 +1101,7 @@ extension on TranslationsEn {
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total active cash',
-			'home.walletCount' => ({required Object count}) => '${count} active wallets',
+			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.moreWallets' => ({required Object count}) => '+${count} more',
 			'home.startBadge' => 'Start recording',
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
@@ -1113,19 +1112,11 @@ extension on TranslationsEn {
 			'home.incomeTag' => '+ In',
 			'home.expenseTag' => '− Out',
 			'home.budgetTitle' => 'Active budgets',
-			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
-			'home.budgetSpent' => ({required Object amount}) => '${amount} used',
-			'home.budgetPlanned' => ({required Object amount}) => 'Plan ${amount}',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePendingBadge' => ({required Object count}) => '${count} pending',
-			'home.freelanceHours' => 'Hours worked',
-			'home.freelanceEarned' => 'Earned (gross)',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
-			'home.freelanceUnpaid' => ({required Object amount}) => 'Not received: ${amount}',
-			'home.freelanceNext' => ({required Object date}) => 'Next expected: ${date}',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
@@ -1147,6 +1138,13 @@ extension on TranslationsEn {
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Receivables',
 			'home.guideFreelanceBody' => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.',
+			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} used of ${planned}',
+			'home.freelanceUnpaidTitle' => 'Not received (gross)',
+			'home.freelanceDueLabel' => 'Due',
+			'home.freelancePendingInvoices' => ({required Object count}) => 'Pending invoices: ${count}',
+			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
+			'home.openCard' => ({required Object name}) => 'Open ${name}',
+			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
 			_ => null,
 		};
 	}

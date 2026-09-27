@@ -9,16 +9,26 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-// Kartu-kartu Beranda, mengikuti rujukan visual `pixel_kas_beranda` dan
-// `pixel_kas_beranda_belum_ada_data` (ADR-015): panel bergaris tepi dengan
-// bayangan keras, lencana bersudut tegas, garis putus-putus, dan tombol kecil
-// "Lihat … →". Hiasan rujukan yang tidak punya dasar di produk sengaja tidak
-// dibangun: "Status: Sinkron" (Saldough tidak terhubung ke mana pun),
-// "Estimasi total" (saldo tercatat pasti), tombol "Intip", dan level/quest.
+// Kartu-kartu Beranda, rujukan visual `pixel_kas_beranda` dan
+// `pixel_kas_beranda_belum_ada_data` (ADR-015).
+//
+// Pembeda antarkartu (review UX Fase 6) tidak memakai warna per fitur —
+// ADR-016 "satu peran, satu warna" melarangnya. Pembedanya:
+// 1. Hierarki: kartu saldo dibalik (latar arang) sebagai kartu utama.
+// 2. Bentuk isi sesuai sifat fiturnya: anggaran = meteran (Sisa jadi angka
+//    utama), freelance = tagihan (belum diterima + potongan jatuh tempo).
+// 3. Garis aksen kiri berwarna MAKNA: hijau/merah untuk arus, warna status
+//    progres untuk anggaran, amber (status tertunda) untuk freelance.
+// 4. Ikon kartu = ikon tujuan di navigasi bawah, di kotak 40px.
+//
+// Hiasan rujukan tanpa dasar produk sengaja tidak dibangun: "Status: Sinkron"
+// (Saldough tidak terhubung ke mana pun), "Estimasi total" (saldo tercatat
+// pasti), tombol "Intip", dan level/quest.
 
-/// Kartu total saldo dompet aktif (FR-HOME-001) beserta strip dompetnya. Tanpa
-/// dompet sama sekali, kartu ini mengarahkan membuat dompet pertama
-/// (FR-HOME-005).
+/// Kartu utama Beranda: total saldo dompet aktif (FR-HOME-001) beserta strip
+/// dompetnya, dibalik warnanya (latar arang, teks krem) supaya jadi titik
+/// mulai mata. Tanpa dompet sama sekali, kartu ini mengarahkan membuat dompet
+/// pertama (FR-HOME-005).
 class HomeBalanceCard extends StatelessWidget {
   /// Membuat [HomeBalanceCard].
   const HomeBalanceCard({
@@ -47,25 +57,29 @@ class HomeBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
+    // Kartu terbalik: latar = warna teks utama, tinta = warna kartu. Pada
+    // mode gelap keduanya ikut terbalik, jadi kartu ini tetap kontras.
+    final ink = colors.cardBackground;
+    final inkMuted = ink.withValues(alpha: 0.72);
     final formatted = AppMoneyFormatter.format(total);
     final sign = formatted.startsWith('−') ? '−' : '';
     final number = formatted.replaceFirst(RegExp('^−?Rp'), '');
     return AppHardCard(
+      color: colors.textPrimary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              const _IconBox(IconKey.walletSavings),
-              const SizedBox(width: AppSpacing.xs),
+              const _IconBox(IconKey.wallets, size: 32),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   t.home.balanceLabel.toUpperCase(),
-                  style: transactionLabelStyle(context, size: 11, color: colors.textMuted),
+                  style: transactionLabelStyle(context, size: 11, color: inkMuted),
                 ),
               ),
-              if (hasNoWallets) _Badge(t.home.startBadge, color: colors.expense),
+              if (hasNoWallets) _Badge(t.home.startBadge, color: colors.accent),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -74,71 +88,67 @@ class HomeBalanceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(
-                  '${sign}Rp',
-                  style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent),
-                ),
+                Text('${sign}Rp', style: PixelTypography.tabularMono(context, fontSize: 16, color: inkMuted)),
                 const SizedBox(width: 4),
-                Text(number, style: PixelTypography.tabularMono(context, fontSize: 32, color: colors.textPrimary)),
+                Text(number, style: PixelTypography.tabularMono(context, fontSize: 34, color: ink)),
               ],
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
           if (hasNoWallets) ...[
-            Row(
-              children: [
-                AppIcon(IconKey.empty, size: 18, color: colors.textMuted),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: Text(t.home.noWalletsBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-                ),
-              ],
-            ),
+            Text(t.home.noWalletsBody, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: inkMuted)),
             const SizedBox(height: AppSpacing.sm),
-            _Strip(
+            _InsetPanel(
+              color: ink.withValues(alpha: 0.1),
               child: Row(
                 children: [
-                  _IconBox(IconKey.wallets, color: colors.pending),
+                  Expanded(
+                    child: Text(
+                      t.home.addWalletPrompt,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: ink),
+                    ),
+                  ),
                   const SizedBox(width: AppSpacing.sm),
-                  Expanded(child: Text(t.home.addWalletPrompt, style: textTheme.bodySmall)),
-                  const SizedBox(width: AppSpacing.xs),
-                  _TextLink(label: t.home.addWalletAction, onTap: onAddWallet),
+                  _PillButton(label: t.home.addWalletAction, onTap: onAddWallet),
                 ],
               ),
             ),
-          ] else
-            _Strip(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    t.home.walletCount(count: activeWallets.length).toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.textMuted),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Row(
-                    children: [
-                      for (final (index, wallet) in activeWallets.take(_stripCount).indexed) ...[
-                        if (index > 0) const SizedBox(width: 6),
-                        Expanded(
-                          child: _MiniTile(
-                            label: wallet.name,
-                            value: AppMoneyFormatter.format(wallet.currentBalance),
-                          ),
-                        ),
-                      ],
-                      if (activeWallets.length > _stripCount) ...[
-                        const SizedBox(width: 6),
-                        _MiniTile(
-                          label: t.home.moreWallets(count: activeWallets.length - _stripCount),
-                          value: '',
-                        ),
-                      ],
-                    ],
+          ] else ...[
+            Text(
+              t.home.walletCount(count: activeWallets.length).toUpperCase(),
+              style: transactionLabelStyle(context, color: inkMuted),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              children: [
+                for (final (index, wallet) in activeWallets.take(_stripCount).indexed) ...[
+                  if (index > 0) const SizedBox(width: 6),
+                  Expanded(
+                    child: _InsetPanel(
+                      color: ink.withValues(alpha: 0.1),
+                      child: _StatText(
+                        label: wallet.name,
+                        value: AppMoneyFormatter.format(wallet.currentBalance),
+                        labelColor: inkMuted,
+                        valueColor: ink,
+                        uppercase: false,
+                      ),
+                    ),
                   ),
                 ],
-              ),
+                if (activeWallets.length > _stripCount) ...[
+                  const SizedBox(width: 6),
+                  _InsetPanel(
+                    color: ink.withValues(alpha: 0.1),
+                    child: Text(
+                      t.home.moreWallets(count: activeWallets.length - _stripCount),
+                      style: transactionLabelStyle(context, color: inkMuted),
+                    ),
+                  ),
+                ],
+              ],
             ),
+          ],
         ],
       ),
     );
@@ -161,31 +171,30 @@ class HomeCashFlowRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final monthLabel = CycleMonthFormatter.formatMonthShort(month);
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: _FlowTile(
-              label: t.home.incomeLabel(month: monthLabel),
-              tag: t.home.incomeTag,
-              amount: cashFlow.income,
-              icon: IconKey.income,
-              color: colors.income,
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: _FlowTile(
+            label: t.home.incomeLabel(month: monthLabel),
+            tag: t.home.incomeTag,
+            amount: cashFlow.income,
+            icon: IconKey.income,
+            color: colors.income,
+            stripe: colors.incomeFill,
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: _FlowTile(
-              label: t.home.expenseLabel(month: monthLabel),
-              tag: t.home.expenseTag,
-              amount: cashFlow.expense,
-              icon: IconKey.expense,
-              color: colors.expense,
-            ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: _FlowTile(
+            label: t.home.expenseLabel(month: monthLabel),
+            tag: t.home.expenseTag,
+            amount: cashFlow.expense,
+            icon: IconKey.expense,
+            color: colors.expense,
+            stripe: colors.expenseFill,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -197,6 +206,7 @@ class _FlowTile extends StatelessWidget {
     required this.amount,
     required this.icon,
     required this.color,
+    required this.stripe,
   });
 
   final String label;
@@ -204,11 +214,13 @@ class _FlowTile extends StatelessWidget {
   final int amount;
   final IconKey icon;
   final Color color;
+  final Color stripe;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppHardCard(
+    return _StripeCard(
+      stripe: stripe,
       padding: const EdgeInsets.all(AppSpacing.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,10 +232,9 @@ class _FlowTile extends StatelessWidget {
                 child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
               ),
               const SizedBox(width: AppSpacing.xs),
-              _IconBox(icon, color: color),
+              _IconBox(icon, color: stripe),
             ],
           ),
-          const Spacer(),
           const SizedBox(height: AppSpacing.sm),
           Text(tag.toUpperCase(), style: transactionLabelStyle(context, color: color)),
           FitStart(
@@ -238,8 +249,10 @@ class _FlowTile extends StatelessWidget {
   }
 }
 
-/// Ringkasan anggaran aktif (FR-HOME-002): persen terpakai, bilah bersegmen,
-/// terpakai dari rencana, sisa, dan jalan ke layar Anggaran.
+/// Ringkasan anggaran aktif sebagai **meteran** (FR-HOME-002): sisa jadi angka
+/// utama, bilah segmen di bawahnya, dan persen terpakai. Garis aksen dan
+/// warnanya mengikuti status progres (hijau, amber mendekati batas, merah
+/// lewat rencana). Seluruh kartu membuka layar Anggaran.
 class HomeBudgetCard extends StatelessWidget {
   /// Membuat [HomeBudgetCard].
   const HomeBudgetCard({required this.overview, required this.onOpen, super.key});
@@ -254,71 +267,69 @@ class HomeBudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final ratio = overview.plannedAmount <= 0 ? 0.0 : overview.spent / overview.plannedAmount;
-    final percent = (ratio * 100).round();
-    final barColor = AppSegmentedProgressBar.colorFor(context, ratio);
+    final status = AppSegmentedProgressBar.colorFor(context, ratio);
     final over = overview.remaining < 0;
-    return AppHardCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _CardTitle(
-            icon: IconKey.budget,
-            title: t.home.budgetTitle,
-            badge: _Badge(t.home.budgetUsedBadge(percent: percent), color: barColor),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _SegmentBar(ratio: ratio, color: barColor),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t.home.budgetSpent(amount: AppMoneyFormatter.format(overview.spent)),
-                  style: transactionLabelStyle(context, color: colors.textMuted),
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  t.home.budgetPlanned(amount: AppMoneyFormatter.format(overview.plannedAmount)),
-                  textAlign: TextAlign.end,
-                  style: transactionLabelStyle(context, color: colors.textMuted),
-                ),
-              ),
-            ],
-          ),
-          const _DashedDivider(),
-          _Footer(
-            leading: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return _TappableCard(
+      semanticsLabel: t.home.budgetAction,
+      onTap: onOpen,
+      child: _StripeCard(
+        stripe: status,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _FeatureHeader(icon: IconKey.budget, title: t.home.budgetTitle),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  (over ? t.home.budgetOver : t.home.budgetRemaining).toUpperCase(),
-                  style: transactionLabelStyle(context, color: colors.textMuted),
-                ),
-                FitStart(
-                  child: Text(
-                    AppMoneyFormatter.format(overview.remaining),
-                    style: PixelTypography.tabularMono(
-                      context,
-                      fontSize: 18,
-                      color: over ? colors.overBudget : colors.income,
-                    ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (over ? t.home.budgetOver : t.home.budgetRemaining).toUpperCase(),
+                        style: transactionLabelStyle(context, color: colors.textMuted),
+                      ),
+                      FitStart(
+                        child: Text(
+                          AppMoneyFormatter.format(overview.remaining),
+                          style: PixelTypography.tabularMono(
+                            context,
+                            fontSize: 26,
+                            color: over ? colors.overBudget : colors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(width: AppSpacing.sm),
+                _Badge(t.home.budgetUsedBadge(percent: (ratio * 100).round()), color: status),
               ],
             ),
-            action: _HardLinkButton(label: t.home.budgetAction, onTap: onOpen),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.sm),
+            _SegmentBar(ratio: ratio, color: status),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              t.home.budgetSpentOf(
+                spent: AppMoneyFormatter.format(overview.spent),
+                planned: AppMoneyFormatter.format(overview.plannedAmount),
+              ),
+              style: transactionLabelStyle(context, color: colors.textMuted),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Ringkasan freelance (FR-HOME-003): jam, diperoleh, diterima dan belum
-/// diterima — semuanya gaji KOTOR, sama dengan puncak Ikhtisar Freelance —
-/// perkiraan pembayaran terdekat, dan satu jalan ke Ikhtisar. Tidak ada entri
-/// worklog satu per satu.
+/// Ringkasan freelance sebagai **tagihan** (FR-HOME-003): nominal yang belum
+/// diterima (kotor, sama dengan puncak Ikhtisar Freelance) dan potongan
+/// "jatuh tempo" berisi perkiraan pembayaran terdekat, dipisah garis sobek
+/// seperti struk. Jam, diperoleh, dan diterima turun jadi baris kecil. Garis
+/// aksennya amber karena isinya status tertunda. Tidak ada entri worklog satu
+/// per satu. Seluruh kartu membuka Ikhtisar Freelance.
 class HomeFreelanceCard extends StatelessWidget {
   /// Membuat [HomeFreelanceCard].
   const HomeFreelanceCard({required this.overview, required this.onOpen, super.key});
@@ -332,76 +343,97 @@ class HomeFreelanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppHardCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _CardTitle(
-            icon: IconKey.worklog,
-            title: t.home.freelanceTitle,
-            badge: _Badge(t.home.freelancePendingBadge(count: overview.pendingCount), color: colors.pending),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _Strip(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _StatText(
-                    label: t.home.freelanceHours,
-                    value: t.freelance.hoursValue(hours: overview.totalHours),
+    return _TappableCard(
+      semanticsLabel: t.home.freelanceAction,
+      onTap: onOpen,
+      child: _StripeCard(
+        stripe: colors.pending,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _FeatureHeader(icon: IconKey.freelance, title: t.home.freelanceTitle),
+            const SizedBox(height: AppSpacing.md),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.home.freelanceUnpaidTitle.toUpperCase(),
+                          style: transactionLabelStyle(context, color: colors.textMuted),
+                        ),
+                        FitStart(
+                          child: Text(
+                            AppMoneyFormatter.format(overview.unpaid),
+                            style: PixelTypography.tabularMono(context, fontSize: 24, color: colors.pending),
+                          ),
+                        ),
+                        Text(
+                          t.home.freelancePendingInvoices(count: overview.pendingCount),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: _StatText(
-                    label: t.home.freelanceEarned,
-                    value: AppMoneyFormatter.format(overview.earned),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    child: _VerticalTear(),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            spacing: AppSpacing.sm,
-            runSpacing: 2,
-            children: [
-              Text(
-                t.home.freelancePaid(amount: AppMoneyFormatter.format(overview.paid)),
-                style: transactionLabelStyle(context, color: colors.income),
+                  Expanded(
+                    flex: 2,
+                    child: _InsetPanel(
+                      color: colors.tinted(colors.pending, 0.12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            t.home.freelanceDueLabel.toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: transactionLabelStyle(context, color: colors.textMuted),
+                          ),
+                          const SizedBox(height: 2),
+                          FitStart(
+                            child: Text(
+                              CycleMonthFormatter.formatDateShort(overview.nextExpectedDate),
+                              style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                t.home.freelanceUnpaid(amount: AppMoneyFormatter.format(overview.unpaid)),
-                style: transactionLabelStyle(context, color: colors.pending),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          _SplitGauge(paid: overview.paid, unpaid: overview.unpaid),
-          const _DashedDivider(),
-          _Footer(
-            leading: Row(
-              children: [
-                const AppIcon(IconKey.calendar, size: 18),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    t.home.freelanceNext(date: CycleMonthFormatter.formatDateShort(overview.nextExpectedDate)),
-                    style: transactionLabelStyle(context, color: colors.textMuted),
-                  ),
-                ),
-              ],
             ),
-            action: _HardLinkButton(label: t.home.freelanceAction, onTap: onOpen),
-          ),
-        ],
+            const _DashedDivider(),
+            Text(
+              t.home.freelanceSummaryLine(
+                hours: t.freelance.hoursValue(hours: overview.totalHours),
+                earned: AppMoneyFormatter.format(overview.earned),
+              ),
+              style: transactionLabelStyle(context, color: colors.textMuted),
+            ),
+            const SizedBox(height: 4),
+            _SplitGauge(paid: overview.paid, unpaid: overview.unpaid),
+            const SizedBox(height: 4),
+            Text(
+              t.home.freelancePaid(amount: AppMoneyFormatter.format(overview.paid)),
+              style: transactionLabelStyle(context, color: colors.income),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Judul bagian "Transaksi terbaru" dengan tautan "Lihat semua" (FR-HOME-004).
+/// Judul bagian, mis. "Transaksi terbaru" dengan tautan "Lihat semua"
+/// (FR-HOME-004).
 class HomeSectionHeader extends StatelessWidget {
   /// Membuat [HomeSectionHeader].
   const HomeSectionHeader({required this.icon, required this.title, this.trailing, super.key});
@@ -480,11 +512,7 @@ class HomeEmptyTransactions extends StatelessWidget {
             width: 112,
             height: 112,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors.surfaceHigh,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [BoxShadow(color: colors.tinted(colors.accent, 0.2), offset: const Offset(4, -4))],
-            ),
+            decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: AppRadius.pixelSmAll),
             child: const AppIcon(IconKey.transactions, size: 80),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -505,7 +533,7 @@ class HomeEmptyTransactions extends StatelessWidget {
                 : AppButton(label: t.home.recordAction, onPressed: onRecord),
           ),
           const SizedBox(height: AppSpacing.sm),
-          _TextLink(label: t.home.budgetLink, onTap: onBudget, color: colors.expense),
+          _TextLink(label: t.home.budgetLink, onTap: onBudget),
         ],
       ),
     );
@@ -520,9 +548,12 @@ class HomeGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final rules = [
-      (IconKey.wallets, t.home.guideWalletTitle, t.home.guideWalletTag, t.home.guideWalletBody, colors.income),
-      (IconKey.budget, t.home.guideBudgetTitle, t.home.guideBudgetTag, t.home.guideBudgetBody, colors.expense),
+    // Warna kotak ikon mengikuti makna ADR-016: dompet menyimpan uang (hijau),
+    // anggaran hanya rencana (netral), freelance berisi status tertunda
+    // (amber).
+    final rules = <(IconKey, String, String, String, Color?)>[
+      (IconKey.wallets, t.home.guideWalletTitle, t.home.guideWalletTag, t.home.guideWalletBody, colors.incomeFill),
+      (IconKey.budget, t.home.guideBudgetTitle, t.home.guideBudgetTag, t.home.guideBudgetBody, null),
       (
         IconKey.freelance,
         t.home.guideFreelanceTitle,
@@ -580,23 +611,78 @@ class HomeGuide extends StatelessWidget {
   }
 }
 
-/// Judul kartu: ikon, judul, dan lencana di kanan.
-class _CardTitle extends StatelessWidget {
-  const _CardTitle({required this.icon, required this.title, required this.badge});
+/// Kartu keras dengan garis aksen tebal di sisi kiri berwarna [stripe] —
+/// penanda fitur sekilas pandang, warnanya selalu warna MAKNA ADR-016.
+class _StripeCard extends StatelessWidget {
+  const _StripeCard({required this.stripe, required this.child, this.padding = const EdgeInsets.all(AppSpacing.md)});
 
-  final IconKey icon;
-  final String title;
-  final Widget badge;
+  final Color stripe;
+  final Widget child;
+  final EdgeInsets padding;
+
+  static const _stripeWidth = 6.0;
 
   @override
   Widget build(BuildContext context) {
+    return AppHardCard(
+      padding: EdgeInsets.zero,
+      child: ClipRRect(
+        borderRadius: AppRadius.pixelSmAll,
+        child: Stack(
+          children: [
+            Padding(
+              padding: padding.copyWith(left: padding.left + _stripeWidth),
+              child: child,
+            ),
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: _stripeWidth,
+              child: ColoredBox(color: stripe),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Membungkus kartu supaya seluruhnya bisa diketuk, dengan label semantik.
+class _TappableCard extends StatelessWidget {
+  const _TappableCard({required this.semanticsLabel, required this.onTap, required this.child});
+
+  final String semanticsLabel;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: semanticsLabel,
+      child: GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: child),
+    );
+  }
+}
+
+/// Judul kartu fitur: ikon tujuan (sama dengan navigasi bawah) di kotak
+/// 40px, judul, dan chevron tanda kartu bisa dibuka.
+class _FeatureHeader extends StatelessWidget {
+  const _FeatureHeader({required this.icon, required this.title});
+
+  final IconKey icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Row(
       children: [
-        AppIcon(icon, size: 22),
-        const SizedBox(width: AppSpacing.xs),
+        _IconBox(icon, size: 40),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
-        const SizedBox(width: AppSpacing.xs),
-        badge,
+        AppIcon(IconKey.chevronRight, color: colors.textMuted),
       ],
     );
   }
@@ -613,9 +699,9 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
       decoration: BoxDecoration(
-        color: colors.tinted(color, 0.18),
+        color: Color.alphaBlend(colors.tinted(color, 0.22), colors.cardBackground),
         border: Border.all(color: colors.textPrimary),
       ),
       child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textPrimary)),
@@ -623,7 +709,7 @@ class _Badge extends StatelessWidget {
   }
 }
 
-/// Kotak ikon kecil bergaris tepi, isian tipis [color].
+/// Kotak ikon bergaris tepi, isian tipis [color] (netral kalau `null`).
 class _IconBox extends StatelessWidget {
   const _IconBox(this.icon, {this.color, this.size = 24});
 
@@ -639,75 +725,50 @@ class _IconBox extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceMid : colors.tinted(color!, 0.22),
+        color: color == null ? colors.surfaceMid : Color.alphaBlend(colors.tinted(color!, 0.22), colors.cardBackground),
         border: Border.all(color: colors.textPrimary),
       ),
-      child: AppIcon(icon, size: size * 0.75),
+      child: AppIcon(icon, size: size * 0.72),
     );
   }
 }
 
-/// Strip bergaris tepi tipis berlatar permukaan rendah di dalam kartu.
-class _Strip extends StatelessWidget {
-  const _Strip({required this.child});
+/// Bidang tanpa garis tepi di dalam kartu — cukup latar tipis, supaya garis
+/// hitam hanya milik kartu terluar.
+class _InsetPanel extends StatelessWidget {
+  const _InsetPanel({required this.child, this.color});
 
   final Widget child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs + 2),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        color: colors.surfaceLow,
-        border: Border.all(color: colors.textPrimary),
+        color: color ?? context.appColors.surfaceLow,
+        borderRadius: AppRadius.pixelSmAll,
       ),
       child: child,
     );
   }
 }
 
-/// Ubin kecil satu dompet di strip kartu saldo.
-class _MiniTile extends StatelessWidget {
-  const _MiniTile({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: colors.cardBackground,
-        border: Border.all(color: colors.textPrimary),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: transactionLabelStyle(context, color: colors.textMuted),
-          ),
-          if (value.isNotEmpty)
-            FitStart(
-              child: Text(value, style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textPrimary)),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Label kecil redup di atas nilai tebal.
+/// Label kecil di atas nilai tebal.
 class _StatText extends StatelessWidget {
-  const _StatText({required this.label, required this.value});
+  const _StatText({
+    required this.label,
+    required this.value,
+    this.labelColor,
+    this.valueColor,
+    this.uppercase = true,
+  });
 
   final String label;
   final String value;
+  final Color? labelColor;
+  final Color? valueColor;
+  final bool uppercase;
 
   @override
   Widget build(BuildContext context) {
@@ -715,17 +776,25 @@ class _StatText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+        Text(
+          uppercase ? label.toUpperCase() : label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: transactionLabelStyle(context, color: labelColor ?? colors.textMuted),
+        ),
         FitStart(
-          child: Text(value, style: PixelTypography.tabularMono(context, color: colors.textPrimary)),
+          child: Text(
+            value,
+            style: PixelTypography.tabularMono(context, fontSize: 12, color: valueColor ?? colors.textPrimary),
+          ),
         ),
       ],
     );
   }
 }
 
-/// Bilah 10 segmen selebar kartu dalam bingkai bergaris tepi — "HP bar"
-/// rujukan. Tiap segmen 10%; lewat rencana memenuhi seluruh bilah.
+/// Bilah 10 segmen selebar kartu dalam bingkai — "HP bar" rujukan. Tiap
+/// segmen 10%; lewat rencana memenuhi seluruh bilah.
 class _SegmentBar extends StatelessWidget {
   const _SegmentBar({required this.ratio, required this.color});
 
@@ -743,7 +812,7 @@ class _SegmentBar extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: colors.surfaceHigh,
-        border: Border.all(color: colors.textPrimary, width: 2),
+        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -780,7 +849,7 @@ class _SplitGauge extends StatelessWidget {
           if (paid > 0)
             Expanded(
               flex: paid,
-              child: ColoredBox(color: colors.income),
+              child: ColoredBox(color: colors.incomeFill),
             ),
           if (unpaid > 0)
             Expanded(
@@ -793,73 +862,67 @@ class _SplitGauge extends StatelessWidget {
   }
 }
 
-/// Garis putus-putus pemisah kaki kartu.
+/// Garis putus-putus mendatar — garis sobek struk di kartu tagihan.
 class _DashedDivider extends StatelessWidget {
   const _DashedDivider();
 
   @override
   Widget build(BuildContext context) {
-    final color = context.appColors.divider;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const dash = 6.0;
-          const gap = 4.0;
-          final count = (constraints.maxWidth / (dash + gap)).floor();
-          return Row(
-            children: [
-              for (var i = 0; i < count; i++) ...[
-                if (i > 0) const SizedBox(width: gap),
-                SizedBox(
-                  width: dash,
-                  height: 2,
-                  child: ColoredBox(color: color),
-                ),
-              ],
-            ],
-          );
-        },
+      child: SizedBox(
+        height: 2,
+        width: double.infinity,
+        child: CustomPaint(painter: _DashPainter(color: context.appColors.divider, vertical: false)),
       ),
     );
   }
 }
 
-/// Kaki kartu: isi di kiri, tombol di kanan.
-class _Footer extends StatelessWidget {
-  const _Footer({required this.leading, required this.action});
-
-  final Widget leading;
-  final Widget action;
+/// Garis putus-putus tegak — pemisah potongan "jatuh tempo" di kartu tagihan.
+class _VerticalTear extends StatelessWidget {
+  const _VerticalTear();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(child: leading),
-        const SizedBox(width: AppSpacing.sm),
-        // Tombol boleh menyempit (labelnya membungkus) di layar sempit atau
-        // teks diperbesar, alih-alih meluber.
-        Flexible(child: action),
-      ],
+    return SizedBox(
+      width: 2,
+      child: CustomPaint(painter: _DashPainter(color: context.appColors.divider, vertical: true)),
     );
   }
 }
 
-/// Tombol kecil bergaris tepi berbayangan keras dengan panah, mis.
-/// "Lihat Anggaran →". Ditekan menggeser isi dan menghapus bayangannya.
-class _HardLinkButton extends StatefulWidget {
-  const _HardLinkButton({required this.label, required this.onTap});
+class _DashPainter extends CustomPainter {
+  _DashPainter({required this.color, required this.vertical});
+
+  final Color color;
+  final bool vertical;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const dash = 6.0;
+    const gap = 4.0;
+    final paint = Paint()..color = color;
+    final length = vertical ? size.height : size.width;
+    for (var d = 0.0; d < length; d += dash + gap) {
+      final end = (d + dash).clamp(0.0, length);
+      canvas.drawRect(
+        vertical ? Rect.fromLTRB(0, d, size.width, end) : Rect.fromLTRB(d, 0, end, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashPainter oldDelegate) => oldDelegate.color != color || oldDelegate.vertical != vertical;
+}
+
+/// Tombol pil kecil terisi aksen, untuk aksi di atas kartu arang.
+class _PillButton extends StatelessWidget {
+  const _PillButton({required this.label, required this.onTap});
 
   final String label;
   final VoidCallback onTap;
-
-  @override
-  State<_HardLinkButton> createState() => _HardLinkButtonState();
-}
-
-class _HardLinkButtonState extends State<_HardLinkButton> {
-  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -867,31 +930,16 @@ class _HardLinkButtonState extends State<_HardLinkButton> {
     return Semantics(
       button: true,
       child: GestureDetector(
-        onTap: widget.onTap,
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapUp: (_) => setState(() => _pressed = false),
-        onTapCancel: () => setState(() => _pressed = false),
-        child: AnimatedContainer(
-          duration: AppDurations.fast,
-          transform: Matrix4.translationValues(_pressed ? 2 : 0, _pressed ? 2 : 0, 0),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 6),
-          decoration: BoxDecoration(
-            color: colors.surfaceLow,
-            border: Border.all(color: colors.textPrimary),
-            boxShadow: [if (!_pressed) BoxShadow(color: colors.textPrimary, offset: const Offset(2, 2))],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(
-                  widget.label,
-                  style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textPrimary),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Icon(Icons.arrow_forward, size: 14, color: colors.textPrimary),
-            ],
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+              decoration: BoxDecoration(color: colors.accent, borderRadius: AppRadius.pixelSmAll),
+              child: Text(label, style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.onAccent)),
+            ),
           ),
         ),
       ),
@@ -899,18 +947,17 @@ class _HardLinkButtonState extends State<_HardLinkButton> {
   }
 }
 
-/// Tautan teks kecil tebal.
+/// Tautan teks kecil beraksen.
 class _TextLink extends StatelessWidget {
-  const _TextLink({required this.label, required this.onTap, this.chevron = false, this.color});
+  const _TextLink({required this.label, required this.onTap, this.chevron = false});
 
   final String label;
   final VoidCallback onTap;
   final bool chevron;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final ink = color ?? context.appColors.accent;
+    final ink = context.appColors.accent;
     return Semantics(
       button: true,
       child: GestureDetector(
@@ -924,7 +971,7 @@ class _TextLink extends StatelessWidget {
               Flexible(
                 child: Text(label, style: PixelTypography.tabularMono(context, fontSize: 12, color: ink)),
               ),
-              if (chevron) Icon(Icons.chevron_right, size: 16, color: ink),
+              if (chevron) AppIcon(IconKey.chevronRight, size: 16, color: ink),
             ],
           ),
         ),

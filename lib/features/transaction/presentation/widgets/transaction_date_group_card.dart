@@ -144,6 +144,9 @@ class TransactionRow extends StatelessWidget {
   /// Dipanggil saat baris diketuk.
   final VoidCallback? onTap;
 
+  /// Lebar maksimum kolom nominal + lencana.
+  static const _amountMaxWidth = 160.0;
+
   String _walletName(String id) => walletsById[id]?.name ?? '—';
 
   /// Baris kedua: `Dompet • 09:30`, atau `Asal → Tujuan • 09:30` untuk
@@ -254,13 +257,29 @@ class TransactionRow extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
-                          const SizedBox(height: 4),
-                          _TypeBadge(label: badge, color: ink),
-                        ],
+                      // Lebar kolom nominal dibatasi: nominal dan lencana mengecil
+                      // di layar sempit atau teks diperbesar, bukan meluber
+                      // (ketahuan uji Beranda 360px + teks 2x). Tidak memakai
+                      // `Flexible`, yang membagi ruang sama rata dengan judul
+                      // sehingga judul terpotong walau ruangnya cukup.
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: _amountMaxWidth),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
+                            ),
+                            const SizedBox(height: 4),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: _TypeBadge(label: badge, color: ink),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

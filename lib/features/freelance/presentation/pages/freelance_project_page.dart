@@ -200,16 +200,18 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       for (final filter in EntryFilter.values) filter: entries.where((e) => filter.matches(state.statusOf(e))).length,
     };
     final rows = _entryRows(entries.where((e) => _entryFilter.matches(state.statusOf(e))).toList());
-    String label(EntryFilter filter) => switch (filter) {
-      EntryFilter.all => t.freelance.filterAll,
-      EntryFilter.unbilled => t.freelance.statusUnbilled,
-      EntryFilter.pending => t.freelance.statusPending,
-      EntryFilter.paid => t.freelance.statusPaid,
+    final colors = context.appColors;
+    _FilterOption<EntryFilter> option(EntryFilter filter) => switch (filter) {
+      EntryFilter.all => (filter, t.freelance.filterAll, IconKey.worklog, colors.accent),
+      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled, IconKey.workCompleted, colors.textPrimary),
+      EntryFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
+      EntryFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
     };
     return _SectionList(
       storageKey: 'worklog',
       filters: _FilterRow<EntryFilter>(
-        options: [for (final filter in EntryFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
+        options: [for (final filter in EntryFilter.values) option(filter)],
+        counts: counts,
         selected: _entryFilter,
         onChanged: (filter) => setState(() => _entryFilter = filter),
       ),
@@ -248,15 +250,17 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
   Widget _paymentList(FreelanceState state, List<FreelancePayment> payments) {
     final counts = {for (final filter in PaymentFilter.values) filter: payments.where(filter.matches).length};
     final rows = _paymentRows(state, payments.where(_paymentFilter.matches).toList());
-    String label(PaymentFilter filter) => switch (filter) {
-      PaymentFilter.all => t.freelance.filterAll,
-      PaymentFilter.pending => t.freelance.statusPending,
-      PaymentFilter.paid => t.freelance.statusPaid,
+    final colors = context.appColors;
+    _FilterOption<PaymentFilter> option(PaymentFilter filter) => switch (filter) {
+      PaymentFilter.all => (filter, t.freelance.filterAll, IconKey.invoice, colors.accent),
+      PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
+      PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
     };
     return _SectionList(
       storageKey: 'payments',
       filters: _FilterRow<PaymentFilter>(
-        options: [for (final filter in PaymentFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
+        options: [for (final filter in PaymentFilter.values) option(filter)],
+        counts: counts,
         selected: _paymentFilter,
         onChanged: (filter) => setState(() => _paymentFilter = filter),
       ),
@@ -615,27 +619,133 @@ class _StatTile extends StatelessWidget {
 }
 
 /// Chip penyaring beserta jumlahnya.
-class _FilterRow<T> extends StatelessWidget {
-  const _FilterRow({required this.options, required this.selected, required this.onChanged});
+/// Satu pilihan penyaring: nilai, label, ikon status, dan warnanya.
+typedef _FilterOption<T> = (T value, String label, IconKey icon, Color color);
 
-  final List<(T, String)> options;
+/// Penyaring status berupa deretan ubin pixel selebar layar. Tiap ubin
+/// memuat ikon status, jumlahnya dalam angka besar, dan labelnya — jadi
+/// sekaligus ringkasan per status. Ubin terpilih diwarnai sesuai statusnya
+/// dan terangkat di atas bayangan keras; sisanya datar dan redup.
+class _FilterRow<T> extends StatelessWidget {
+  const _FilterRow({required this.options, required this.counts, required this.selected, required this.onChanged});
+
+  final List<_FilterOption<T>> options;
+  final Map<T, int> counts;
   final T selected;
   final ValueChanged<T> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: AppSpacing.xs),
+      child: IntrinsicHeight(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (final (value, label) in options) ...[
-              AppChip(label: label, selected: value == selected, color: colors.accent, onTap: () => onChanged(value)),
-              const SizedBox(width: AppSpacing.xs),
+            for (final (index, (value, label, icon, color)) in options.indexed) ...[
+              if (index > 0) const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: _FilterTile(
+                  label: label,
+                  count: counts[value] ?? 0,
+                  icon: icon,
+                  color: color,
+                  selected: value == selected,
+                  onTap: () => onChanged(value),
+                ),
+              ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterTile extends StatefulWidget {
+  const _FilterTile({
+    required this.label,
+    required this.count,
+    required this.icon,
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final IconKey icon;
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  State<_FilterTile> createState() => _FilterTileState();
+}
+
+class _FilterTileState extends State<_FilterTile> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final selected = widget.selected;
+    // Terpilih: terangkat 3px di atas bayangan keras; ditekan: turun rata.
+    final lift = selected && !_pressed ? 3.0 : 0.0;
+    final ink = selected ? widget.color : colors.textMuted;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '${widget.label} (${widget.count})',
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
+          duration: AppDurations.fast,
+          margin: EdgeInsets.only(top: 3 - lift, bottom: lift),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.xs, AppSpacing.sm, AppSpacing.xs, AppSpacing.sm),
+          decoration: BoxDecoration(
+            color: selected ? colors.tinted(widget.color, 0.14) : colors.surfaceLow,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: selected ? widget.color : Colors.transparent, width: AppBorder.thick),
+            boxShadow: [
+              if (lift > 0) BoxShadow(color: widget.color, offset: Offset(0, lift)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Opacity(opacity: selected ? 1 : 0.55, child: AppIcon(widget.icon, size: 20)),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: FitStart(
+                      child: Text(
+                        '${widget.count}',
+                        style: PixelTypography.tabularMono(
+                          context,
+                          fontSize: 18,
+                          color: selected ? colors.textPrimary : colors.textMuted,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                widget.label.toUpperCase(),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: transactionLabelStyle(context, size: 9, color: ink),
+              ),
+            ],
+          ),
         ),
       ),
     );

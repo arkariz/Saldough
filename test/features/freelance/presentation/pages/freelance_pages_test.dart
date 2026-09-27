@@ -151,7 +151,7 @@ void main() {
     // Tertunda.
     await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
     await tester.pumpAndSettle();
-    expect(find.text('${t.freelance.statusPending} (1)'), findsOneWidget);
+    expect(find.bySemanticsLabel('${t.freelance.statusPending} (1)'), findsOneWidget);
     await tester.tap(find.text(t.freelance.receiveAction));
     await tester.pumpAndSettle();
     // Lembar pencatatan: gaji bersih Rp2.615.438, dompet tunggal terpilih.
@@ -166,7 +166,7 @@ void main() {
     expect(income.amount, 261543750);
     expect(income.freelancePaymentId, 'pay');
     // Pembayaran yang baru diterima keluar dari penyaring Tertunda.
-    await tester.tap(find.text('${t.freelance.filterAll} (1)'));
+    await tester.tap(find.bySemanticsLabel('${t.freelance.filterAll} (1)'));
     await tester.pumpAndSettle();
     expect(find.text(t.freelance.receiptCancelAction), findsOneWidget);
     expect(find.text(t.freelance.receiveAction), findsNothing);
@@ -228,9 +228,9 @@ void main() {
     // Bawaan: hanya 3 entri belum ditagih, dalam dua kelompok bulan.
     expect(find.byType(WorklogEntryCard), findsNWidgets(3));
     expect(find.byType(WorklogMonthHeader), findsNWidgets(2));
-    expect(find.text('${t.freelance.statusUnbilled} (3)'), findsOneWidget);
+    expect(find.bySemanticsLabel('${t.freelance.statusUnbilled} (3)'), findsOneWidget);
 
-    await tester.tap(find.text('${t.freelance.filterAll} (4)'));
+    await tester.tap(find.bySemanticsLabel('${t.freelance.filterAll} (4)'));
     await tester.pumpAndSettle();
     expect(find.byType(WorklogEntryCard), findsNWidgets(4));
 
@@ -238,5 +238,20 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(t.freelance.paymentAddTitle), findsWidgets);
     expect(find.text(t.freelance.paymentEntriesLabel(count: 3, hours: 14).toUpperCase()), findsOneWidget);
+  });
+
+  testWidgets('rincian proyek di layar 360px: ubin penyaring tidak overflow', (tester) async {
+    tester.view.physicalSize = const Size(360, 3200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await seedPendingPayment();
+    await openShell(tester);
+    await openFreelanceThroughRecord(tester);
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    // Empat ubin: Semua, Belum ditagih, Tertunda, Diterima.
+    expect(find.bySemanticsLabel('${t.freelance.statusUnbilled} (0)'), findsOneWidget);
   });
 }

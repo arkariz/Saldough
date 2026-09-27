@@ -127,9 +127,17 @@ class FreelanceAmountLine extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.xs),
-          Text(
-            AppMoneyFormatter.format(amount),
-            style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+          // Nominal besar di layar sempit atau teks diperbesar mengecil,
+          // bukan meluber ke kanan.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                AppMoneyFormatter.format(amount),
+                style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+              ),
+            ),
           ),
         ],
       ),

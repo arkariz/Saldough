@@ -35,6 +35,32 @@ Terakhir diperbarui: 27 September 2026.
 | 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
 | **Total MVP** | **76** | **71** | |
 
+## Keputusan terbuka
+
+Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
+diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
+
+- **KT-1 — Ringkasan anggaran memindai seluruh riwayat transaksi**
+  (dicatat 27 Sep 2026, temuan T-6.5).
+  `BudgetOverviewSourceImpl` (ringkasan anggaran Beranda) dan `BudgetBloc`
+  (layar Anggaran) membaca `TransactionRepository.listAllTransactions()` tiap
+  kali ada anggaran aktif, karena terpakai ditentukan **tautan transaksi ke
+  pos anggaran**, bukan bulan transaksinya. Akibatnya waktu tampil Beranda dan
+  layar Anggaran ikut bertambah seiring panjangnya riwayat — bertentangan
+  dengan NFR-PERF-002. Belum terasa sekarang; terasa setelah riwayat
+  bertahun-tahun.
+  Pilihan:
+  1. **Batasi ke bulan periode anggaran** (`listTransactionsInMonth` untuk
+     tiap bulan yang disentuh periode). Murah, tanpa perubahan penyimpanan.
+     Risiko: transaksi tertaut pos tetapi bertanggal di luar periode tidak
+     terhitung lagi — perlu diputuskan apakah itu boleh terjadi, atau dicegah
+     di formulir CATAT.
+  2. **Indeks tautan pos** — dokumen per anggaran berisi id transaksi yang
+     tertaut, dipelihara saat transaksi disimpan, disunting, atau dihapus.
+     Tepat untuk seluruh kasus, tetapi menambah satu jalur tulis yang harus
+     tetap konsisten (seperti `Wallet.currentBalance`, ADR-012).
+  3. **Biarkan** sampai ada data nyata yang lambat, dan ukur ulang di T-6.5.
+
 ## Fase 0: Dokumen Saldough 2.0
 
 Tidak ada kode aplikasi di fase ini. Urutannya meniru urutan penulisan Saldough
@@ -1042,12 +1068,8 @@ seluruh fitur di atasnya menghasilkan data.
       pertama 515–628 ms (tiga kali `am start -W`), di bawah 1 detik.
       Loop: dompet → proyek → worklog → tagih → Catat Diterima → anggaran →
       Beranda memperbarui saldo, arus, kartu anggaran, dan kartu freelance.
-      ⚠ **Terbuka untuk pemilik:** `BudgetOverviewSourceImpl` (juga
-      `BudgetBloc`) masih membaca `listAllTransactions` karena terpakai
-      ditentukan tautan pos, bukan bulan transaksi. Selama ada anggaran
-      aktif, ringkasan anggaran Beranda ikut memindai seluruh riwayat —
-      bertentangan dengan NFR-PERF-002 untuk riwayat panjang. Perlu keputusan:
-      batasi ke bulan periode anggaran, atau simpan indeks tautan pos.
+      ⚠ **Terbuka untuk pemilik:** ringkasan anggaran masih memindai seluruh
+      riwayat — lihat **KT-1** di bagian "Keputusan terbuka".
       Memenuhi NFR-PERF-001 dan NFR-PERF-002.
 - [x] **T-6.6** Buat keadaan kosong Beranda: "Belum ada transaksi" beserta
       ajakan **Catat Transaksi**, dan arahan membuat dompet pertama kalau belum

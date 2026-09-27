@@ -45,8 +45,9 @@ pencatatan pembayaran diterima; dibuka dari CATAT → Catat Pemasukan).
 Beranda (Fase 6) juga sudah berjalan: total saldo, arus bulan berjalan,
 ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
 **Berikutnya Fase 7:** layar template anggaran (T-7.2), pembuatan anggaran
-dari template (sisa T-7.3), ikon SVG, dan poles. Satu keputusan terbuka untuk
-pemilik tercatat di T-6.5 (ringkasan anggaran masih memindai seluruh riwayat).
+dari template (sisa T-7.3), ikon SVG, dan poles. Keputusan yang menunggu
+pemilik ada di bagian "Keputusan terbuka" TASK_LIST (mis. KT-1: ringkasan
+anggaran masih memindai seluruh riwayat).
 
 ## Fakta proyek
 

@@ -49,17 +49,17 @@ void main() {
       IconKey.categoryShopping,
       IconKey.search,
       IconKey.filter,
+      IconKey.locked,
+      IconKey.empty,
     ];
 
     const fallbackKeys = [
-      IconKey.empty,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,
       IconKey.chevronLeft,
       IconKey.chevronRight,
       IconKey.dropdown,
-      IconKey.locked,
     ];
 
     for (final key in mappedKeys) {

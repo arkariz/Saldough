@@ -72,6 +72,18 @@ void main() {
     expect(ids.toSet().intersection(template.items.map((i) => i.id).toSet()), isEmpty);
   });
 
+  test('draftItems: pos template dengan id baru dan rencana sama, untuk formulir sebelum dompet dipilih', () {
+    final items = create.draftItems(template, newItemId: newItemId);
+
+    expect(items.map((i) => i.id), ['pos-0', 'pos-1', 'pos-2']);
+    expect(items.fold(0, (sum, i) => sum + i.plannedAmount), template.plannedAmount);
+    expect(items.first.quantity, 4);
+    // Dompet tujuan transfer disalin apa adanya; bentrok ditangani formulir.
+    expect(items.last.targetWalletId, 'jago');
+    // Salinan, bukan objek template yang sama.
+    expect(items.map((i) => i.id).toSet().intersection(template.items.map((i) => i.id).toSet()), isEmpty);
+  });
+
   test('nama anggaran boleh diganti tanpa mengubah templatenya', () {
     final budget = (run(name: 'Belanja Oktober') as BudgetFromTemplateReady).budget;
     expect(budget.name, 'Belanja Oktober');

@@ -51,21 +51,28 @@ final class CreateBudgetFromTemplate {
         walletId: walletId,
         period: period,
         startDate: startDate,
-        items: [
-          for (final item in template.items)
-            BudgetItem(
-              id: newItemId(),
-              name: item.name,
-              enteredAmount: item.enteredAmount,
-              quantity: item.quantity,
-              unitPrice: item.unitPrice,
-              kind: item.kind,
-              targetWalletId: item.isTransfer ? targetOf(item) : null,
-            ),
-        ],
+        items: [for (final item in template.items) _copy(item, newItemId(), targetOf(item))],
       ),
     );
   }
+
+  /// Pos [template] dengan id BARU, untuk mengisi awal formulir anggaran
+  /// SEBELUM dompetnya dipilih. Dompet tujuan pos transfer disalin apa
+  /// adanya; bentrok dengan dompet anggaran ditangani formulir (pemilik
+  /// diminta mengganti tujuannya, sama seperti [BudgetFromTemplateNeedsTarget]).
+  List<BudgetItem> draftItems(BudgetTemplate template, {required String Function() newItemId}) => [
+    for (final item in template.items) _copy(item, newItemId(), item.targetWalletId),
+  ];
+
+  static BudgetItem _copy(BudgetItem item, String id, String? targetWalletId) => BudgetItem(
+    id: id,
+    name: item.name,
+    enteredAmount: item.enteredAmount,
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    kind: item.kind,
+    targetWalletId: item.isTransfer ? targetWalletId : null,
+  );
 }
 
 /// Hasil [CreateBudgetFromTemplate].

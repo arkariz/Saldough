@@ -475,7 +475,8 @@ class HomeEmptyTransactions extends StatelessWidget {
             height: 112,
             alignment: Alignment.center,
             decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: AppRadius.pixelSmAll),
-            child: const AppIcon(IconKey.transactions, size: 80),
+            // Peti kosong, sama dengan ilustrasi "Inventaris kosong" rujukan.
+            child: const AppIcon(IconKey.empty, size: 80),
           ),
           const SizedBox(height: AppSpacing.md),
           _Badge(t.home.emptyBadge, color: colors.textMuted),

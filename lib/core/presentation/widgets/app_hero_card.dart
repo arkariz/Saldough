@@ -9,7 +9,8 @@ import 'package:saldough/core/theme/theme.dart';
 /// dan titik mulai mata sebelum kartu-kartu rincian di bawahnya.
 ///
 /// Dibedakan dari kartu biasa tanpa meminjam warna makna uang (ADR-016):
-/// latar krem hangat [AppColorsSurfaces.surfaceMid] (turunan warna latar,
+/// latar krem hangat [AppColorsSurfaces.surfaceMid] (`surfaceHigh` di mode
+/// gelap; keduanya turunan warna latar,
 /// jadi tetap satu keluarga dengan tema di kedua mode), garis tepi 2px, dan
 /// bayangan keras lebih tebal ([AppElevation.pixelInteractive]) dari kartu
 /// biasa ([AppElevation.pixelCard]). Kepalanya seragam di semua layar: kotak
@@ -45,7 +46,10 @@ class AppHeroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: colors.surfaceMid,
+        // Mode gelap: `surfaceMid` hampir sama dengan `cardBackground`, jadi
+        // kartu utama tak lagi menonjol dan `HeroInset` di dalamnya hilang.
+        // Satu tingkat lebih terang di sana (T-7.6).
+        color: Theme.of(context).brightness == Brightness.dark ? colors.surfaceHigh : colors.surfaceMid,
         borderRadius: AppRadius.pixelSmAll,
         border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
         // Bawaan `hardShadow` = 4px, lebih tebal dari kartu biasa (3px).

@@ -428,6 +428,43 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemNoTargetWallet => 'You need another active wallet as the transfer destination.';
 	@override String itemTransferTo({required Object wallet}) => 'To ${wallet}';
 	@override String itemTargetConflict({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.';
+	@override String get templatesAction => 'Budget Templates';
+	@override String get templatesTitle => 'Budget Templates';
+	@override String templatesSavedBadge({required Object count}) => 'Saved: ${count}';
+	@override String get templatesInfoTitle => 'What is a budget template?';
+	@override String get templatesInfoBody => 'A reusable set of planned items, so you never type them from scratch. Using a template creates a separate new budget and never deducts from any wallet balance.';
+	@override String templateItemCount({required Object count}) => 'Items: ${count}';
+	@override String get templateItemsLabel => 'Planned items';
+	@override String get templateTotalLabel => 'Planned total';
+	@override String get templateUseAction => 'Use This Template';
+	@override String get templateEditAction => 'Edit';
+	@override String get templateDuplicateAction => 'Duplicate';
+	@override String get templateInactiveBadge => 'Inactive';
+	@override String get templateAddAction => 'Create New Template';
+	@override String get templatesFooter => 'Templates can be edited any time without changing budgets already created from them.';
+	@override String get templatesEmptyBadge => 'No templates yet';
+	@override String get templatesEmptyTitle => 'No templates yet';
+	@override String get templatesEmptyBody => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.';
+	@override String get templateNeedsWallet => 'Create an active wallet first to use a template.';
+	@override String get templatesLoadError => 'Templates failed to load';
+	@override String get templateStepLabel => 'Budget template';
+	@override String get templateAddTitle => 'Create Template';
+	@override String get templateEditTitle => 'Edit Template';
+	@override String get templateRuleBody => 'A template is only a plan layout. Saving it never changes any wallet balance; the wallet and period are chosen when the template is used.';
+	@override String get templateNameHint => 'Example: Monthly groceries';
+	@override String get templateEnabledLabel => 'Offer this template';
+	@override String get templateEnabledHelp => 'Inactive templates stay saved but cannot be used to create a budget.';
+	@override String get templateSaveAction => 'Save Template';
+	@override String get templateDeleteAction => 'Delete Template';
+	@override String get templateDeleteConfirmTitle => 'Delete template?';
+	@override String templateDeleteConfirmMessage({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.';
+	@override String get templateSavedMessage => 'Template saved.';
+	@override String get templateUpdatedMessage => 'Template changes saved.';
+	@override String get templateDeletedMessage => 'Template deleted.';
+	@override String get templateDuplicatedMessage => 'Template duplicated.';
+	@override String templateCopyName({required Object name}) => '${name} (copy)';
+	@override String fromTemplateStepLabel({required Object name}) => 'From template ${name}';
+	@override String get templateNameLabel => 'Template name';
 }
 
 // Path: freelance
@@ -957,6 +994,43 @@ extension on TranslationsEn {
 			'budget.itemNoTargetWallet' => 'You need another active wallet as the transfer destination.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'To ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.',
+			'budget.templatesAction' => 'Budget Templates',
+			'budget.templatesTitle' => 'Budget Templates',
+			'budget.templatesSavedBadge' => ({required Object count}) => 'Saved: ${count}',
+			'budget.templatesInfoTitle' => 'What is a budget template?',
+			'budget.templatesInfoBody' => 'A reusable set of planned items, so you never type them from scratch. Using a template creates a separate new budget and never deducts from any wallet balance.',
+			'budget.templateItemCount' => ({required Object count}) => 'Items: ${count}',
+			'budget.templateItemsLabel' => 'Planned items',
+			'budget.templateTotalLabel' => 'Planned total',
+			'budget.templateUseAction' => 'Use This Template',
+			'budget.templateEditAction' => 'Edit',
+			'budget.templateDuplicateAction' => 'Duplicate',
+			'budget.templateInactiveBadge' => 'Inactive',
+			'budget.templateAddAction' => 'Create New Template',
+			'budget.templatesFooter' => 'Templates can be edited any time without changing budgets already created from them.',
+			'budget.templatesEmptyBadge' => 'No templates yet',
+			'budget.templatesEmptyTitle' => 'No templates yet',
+			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
+			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
+			'budget.templatesLoadError' => 'Templates failed to load',
+			'budget.templateStepLabel' => 'Budget template',
+			'budget.templateAddTitle' => 'Create Template',
+			'budget.templateEditTitle' => 'Edit Template',
+			'budget.templateRuleBody' => 'A template is only a plan layout. Saving it never changes any wallet balance; the wallet and period are chosen when the template is used.',
+			'budget.templateNameHint' => 'Example: Monthly groceries',
+			'budget.templateEnabledLabel' => 'Offer this template',
+			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
+			'budget.templateSaveAction' => 'Save Template',
+			'budget.templateDeleteAction' => 'Delete Template',
+			'budget.templateDeleteConfirmTitle' => 'Delete template?',
+			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.',
+			'budget.templateSavedMessage' => 'Template saved.',
+			'budget.templateUpdatedMessage' => 'Template changes saved.',
+			'budget.templateDeletedMessage' => 'Template deleted.',
+			'budget.templateDuplicatedMessage' => 'Template duplicated.',
+			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
+			'budget.fromTemplateStepLabel' => ({required Object name}) => 'From template ${name}',
+			'budget.templateNameLabel' => 'Template name',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Payments (${count})',
@@ -1115,6 +1189,8 @@ extension on TranslationsEn {
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
+			_ => null,
+		} ?? switch (path) {
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',

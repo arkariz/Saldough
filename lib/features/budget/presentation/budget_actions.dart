@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
+import 'package:saldough/features/budget/domain/entities/budget_template.dart';
+import 'package:saldough/features/budget/domain/usecases/create_budget_from_template.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -30,6 +32,41 @@ Future<void> addBudget(BuildContext context) async {
       ),
     );
   }
+}
+
+/// Membuat anggaran baru dari [template] (T-7.3, FR-BUD-005): membuka
+/// formulir TAMBAH anggaran yang SAMA, terisi nama dan pos template dengan id
+/// pos baru, lalu mengirim hasilnya ke `BudgetBloc`. Dompet dan periode
+/// dipilih di formulir; pos transfer yang tujuannya bentrok dengan dompet itu
+/// ditandai formulir sampai pemilik mengganti tujuannya.
+///
+/// Mengembalikan `true` kalau anggaran jadi dibuat. Template tidak berubah.
+Future<bool> useBudgetTemplate(BuildContext context, BudgetTemplate template) async {
+  final bloc = context.read<BudgetBloc>();
+  final stamp = DateTime.now().microsecondsSinceEpoch;
+  var sequence = 0;
+  final items = const CreateBudgetFromTemplate().draftItems(template, newItemId: () => '$stamp-${sequence++}');
+  final result = await showFullScreenSheet<BudgetFormResult>(
+    context,
+    builder: (_) => BudgetFormSheet(
+      wallets: bloc.state.activeWallets,
+      allWallets: bloc.state.wallets,
+      prefillName: template.name,
+      prefillItems: items,
+      templateName: template.name,
+    ),
+  );
+  if (result case BudgetFormSaved(
+    :final name,
+    :final walletId,
+    :final period,
+    :final startDate,
+    :final items,
+  )) {
+    bloc.add(BudgetAdded(name: name, walletId: walletId, period: period, startDate: startDate, items: items));
+    return true;
+  }
+  return false;
 }
 
 /// Membuka formulir SUNTING [budget] dan meneruskan hasilnya (simpan,

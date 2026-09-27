@@ -20,7 +20,18 @@ class AppButton extends StatefulWidget {
     this.color,
     this.icon,
     super.key,
-  });
+  }) : secondary = false;
+
+  /// Tombol SEKUNDER: isian krem terang dan teks gelap dengan garis tepi dan
+  /// bayangan keras yang sama — untuk aksi pendamping (Ubah, Duplikat,
+  /// Tambah pos, Arsipkan) supaya tidak bersaing dengan tombol utama.
+  const AppButton.secondary({
+    required this.label,
+    required this.onPressed,
+    this.icon,
+    super.key,
+  }) : color = null,
+       secondary = true;
 
   /// Teks tombol.
   final String label;
@@ -33,6 +44,9 @@ class AppButton extends StatefulWidget {
 
   /// Ikon opsional di depan [label].
   final IconData? icon;
+
+  /// Varian sekunder, lihat [AppButton.secondary].
+  final bool secondary;
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -49,15 +63,17 @@ class _AppButtonState extends State<AppButton> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final fill = widget.color ?? Theme.of(context).colorScheme.primary;
+    final fill = widget.secondary ? colors.surfaceMid : widget.color ?? Theme.of(context).colorScheme.primary;
     final isDisabled = widget.onPressed == null;
     final leadingIcon = widget.icon;
     final pressed = _pressed && !isDisabled;
     final style = ElevatedButton.styleFrom(
       backgroundColor: isDisabled ? colors.textMuted.withValues(alpha: 0.3) : fill,
+      foregroundColor: widget.secondary ? colors.textPrimary : null,
+      // Bentuk ADR-015: radius pixel 4 dan garis tepi 2px (T-7.5).
       shape: RoundedRectangleBorder(
-        borderRadius: AppRadius.smAll,
-        side: BorderSide(color: colors.edge, width: AppBorder.thick),
+        borderRadius: AppRadius.pixelSmAll,
+        side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
       ),
     );
 
@@ -73,10 +89,8 @@ class _AppButtonState extends State<AppButton> {
           0,
         ),
         decoration: BoxDecoration(
-          borderRadius: AppRadius.smAll,
-          boxShadow: isDisabled
-              ? null
-              : AppElevation.hardShadow(colors.edge, offset: pressed ? 0 : AppElevation.sm),
+          borderRadius: AppRadius.pixelSmAll,
+          boxShadow: isDisabled ? null : AppElevation.hardShadow(colors.edge, offset: pressed ? 0 : AppElevation.sm),
         ),
         child: leadingIcon != null
             ? ElevatedButton.icon(

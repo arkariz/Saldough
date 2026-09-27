@@ -67,8 +67,14 @@ final class BudgetFormDeleted extends BudgetFormResult {
 /// Pos berjenis pengeluaran atau transfer (ADR-018); jenis pos yang sudah
 /// punya transaksi tertaut dikunci ([lockedItemIds]).
 ///
+/// Anggaran baru boleh diisi awal dari template ([prefillName],
+/// [prefillItems], [templateName]; FR-BUD-005, T-7.3). Pos isian awal sudah
+/// ber-id baru (`CreateBudgetFromTemplate.draftItems`); pos transfer yang
+/// tujuannya ternyata sama dengan dompet yang dipilih ditandai dan menahan
+/// simpan sampai pemilik mengganti tujuannya — sama untuk pos yang diketik.
+///
 /// ⚠ Bagian rujukan yang sengaja tidak dibangun: periode "Kustom" (domain
-/// hanya mingguan/bulanan) dan "buat dari template" (FR-BUD-005, Fase 7).
+/// hanya mingguan/bulanan).
 class BudgetFormSheet extends StatefulWidget {
   /// Membuat [BudgetFormSheet]. [initial] `null` = anggaran baru.
   const BudgetFormSheet({
@@ -76,6 +82,9 @@ class BudgetFormSheet extends StatefulWidget {
     this.initial,
     this.allWallets = const [],
     this.lockedItemIds = const {},
+    this.prefillName,
+    this.prefillItems = const [],
+    this.templateName,
     super.key,
   });
 
@@ -93,6 +102,15 @@ class BudgetFormSheet extends StatefulWidget {
   /// `id` pos yang sudah punya transaksi tertaut — jenisnya dikunci
   /// (ADR-018).
   final Set<String> lockedItemIds;
+
+  /// Nama awal anggaran baru (dari template).
+  final String? prefillName;
+
+  /// Pos awal anggaran baru (dari template), sudah ber-id baru.
+  final List<BudgetItem> prefillItems;
+
+  /// Nama template asal, untuk label langkah; `null` = anggaran kosong.
+  final String? templateName;
 
   @override
   State<BudgetFormSheet> createState() => _BudgetFormSheetState();
@@ -115,6 +133,8 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     final budget = widget.initial;
     if (budget == null) {
       if (widget.wallets.length == 1) _walletId = widget.wallets.single.id;
+      _name.text = widget.prefillName ?? '';
+      _items = [...widget.prefillItems];
       return;
     }
     _name.text = budget.name;
@@ -246,7 +266,12 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               BudgetFormHeader(
-                stepLabel: _editing ? t.budget.editStepLabel : t.budget.addStepLabel,
+                stepLabel: _editing
+                    ? t.budget.editStepLabel
+                    : switch (widget.templateName) {
+                        final name? => t.budget.fromTemplateStepLabel(name: name),
+                        null => t.budget.addStepLabel,
+                      },
                 title: _editing ? t.budget.editTitle : t.budget.addTitle,
               ),
               const SizedBox(height: AppSpacing.md),
@@ -327,14 +352,14 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
               const SizedBox(height: AppSpacing.xs),
               for (var i = 0; i < _items.length; i++) ...[
-                _ItemRow(
+                BudgetItemRow(
                   item: _items[i],
                   targetWalletName: _walletName(_items[i].targetWalletId),
                   onTap: () => _editItem(i),
                 ),
                 const SizedBox(height: AppSpacing.xs),
               ],
-              AppButton(label: t.budget.addItemAction, color: colors.textMuted, onPressed: _editItem),
+              AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
               const SizedBox(height: AppSpacing.sm),
               if (_conflictingItem case final item?) ...[
                 Text(
@@ -355,9 +380,8 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               ),
               if (budget != null) ...[
                 const SizedBox(height: AppSpacing.lg),
-                AppButton(
+                AppButton.secondary(
                   label: budget.isArchived ? t.budget.unarchiveAction : t.budget.archiveAction,
-                  color: colors.textMuted,
                   onPressed: () => Navigator.of(context).pop(const BudgetFormArchiveToggled()),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -428,11 +452,19 @@ class _WalletChoice extends StatelessWidget {
   }
 }
 
-class _ItemRow extends StatelessWidget {
-  const _ItemRow({required this.item, required this.targetWalletName, required this.onTap});
+/// Satu baris pos di formulir anggaran dan formulir template: nama, jenis
+/// (dan tujuan transfer), rincian jumlah × harga, dan nominal rencana.
+class BudgetItemRow extends StatelessWidget {
+  /// Membuat [BudgetItemRow].
+  const BudgetItemRow({required this.item, required this.targetWalletName, required this.onTap, super.key});
 
+  /// Pos yang ditampilkan.
   final BudgetItem item;
+
+  /// Nama dompet tujuan pos transfer.
   final String? targetWalletName;
+
+  /// Membuka formulir pos.
   final VoidCallback onTap;
 
   @override

@@ -225,21 +225,23 @@ const Map<IconKey, String> _assetPaths = {
   IconKey.overBudget: 'assets/icons/over_budget.svg',
   IconKey.check: 'assets/icons/check.svg',
   IconKey.calendar: 'assets/icons/calendar.svg',
+  // T-7.4: `icon_status_locked` dan `icon_storage_chest_peti_simpanan` —
+  // peti simpanan dipakai untuk keadaan kosong, sama dengan ilustrasi
+  // "Inventaris kosong" di rujukan `pixel_kas_beranda_belum_ada_data`.
+  IconKey.locked: 'assets/icons/locked.svg',
+  IconKey.empty: 'assets/icons/empty.svg',
 };
 
-/// Isian Material sementara untuk kunci yang belum ada padanan asetnya di
-/// paket desain pemilik (ADR-015 §7 "Aset cadangan"), atau yang aset
-/// sumbernya bukan SVG siap pakai (`empty`, ilustrasi sprite besar yang
-/// belum dipotong — lihat ADR-015 §"empty bukan ikon kecil").
+/// Isian Material untuk kunci yang TIDAK punya padanan di paket desain
+/// pemilik (ADR-015 §7 "Aset cadangan"): aksi generik tambah, sunting,
+/// hapus, panah, dan tutup. Sisa kunci sudah memakai SVG sejak T-7.4.
 const Map<IconKey, IconData> _materialFallback = {
-  IconKey.empty: Icons.inbox_outlined,
   IconKey.add: Icons.add,
   IconKey.edit: Icons.edit_outlined,
   IconKey.delete: Icons.delete_outline,
   IconKey.chevronLeft: Icons.chevron_left,
   IconKey.chevronRight: Icons.chevron_right,
   IconKey.dropdown: Icons.arrow_drop_down,
-  IconKey.locked: Icons.lock_outline,
   IconKey.close: Icons.close,
 };
 

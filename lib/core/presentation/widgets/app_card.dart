@@ -34,13 +34,14 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final radius = borderRadius ?? AppRadius.mdAll;
+    // ADR-015: radius pixel 4 dan tepi 2px (T-7.5).
+    final radius = borderRadius ?? AppRadius.pixelSmAll;
     return Container(
       padding: padding,
       decoration: BoxDecoration(
         color: colors.cardBackground,
         borderRadius: radius,
-        border: Border.all(color: colors.edge, width: AppBorder.thick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
         boxShadow: elevation > 0 ? AppElevation.hardShadow(colors.edge, offset: elevation) : null,
       ),
       child: child,

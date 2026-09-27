@@ -85,8 +85,9 @@ class _AppChipState extends State<AppChip> {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
               decoration: BoxDecoration(
                 color: widget.selected ? fill : Colors.transparent,
-                borderRadius: AppRadius.fullAll,
-                border: Border.all(color: colors.edge, width: AppBorder.thick),
+                // ADR-015: pil kategori/lencana bersudut tegas, tepi 2px (T-7.5).
+                borderRadius: BorderRadius.zero,
+                border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

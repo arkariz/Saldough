@@ -1064,6 +1064,117 @@ class Translations$budget$id {
 
 	/// id: 'Pos transfer "$name" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.'
 	String itemTargetConflict({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.';
+
+	/// id: 'Template Anggaran'
+	String get templatesAction => 'Template Anggaran';
+
+	/// id: 'Template Anggaran'
+	String get templatesTitle => 'Template Anggaran';
+
+	/// id: '$count tersimpan'
+	String templatesSavedBadge({required Object count}) => '${count} tersimpan';
+
+	/// id: 'Apa itu template anggaran?'
+	String get templatesInfoTitle => 'Apa itu template anggaran?';
+
+	/// id: 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Memakai template membuat anggaran baru yang terpisah, dan tidak memotong saldo dompet mana pun.'
+	String get templatesInfoBody => 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Memakai template membuat anggaran baru yang terpisah, dan tidak memotong saldo dompet mana pun.';
+
+	/// id: '$count pos'
+	String templateItemCount({required Object count}) => '${count} pos';
+
+	/// id: 'Daftar pos rencana'
+	String get templateItemsLabel => 'Daftar pos rencana';
+
+	/// id: 'Total rencana'
+	String get templateTotalLabel => 'Total rencana';
+
+	/// id: 'Gunakan Template Ini'
+	String get templateUseAction => 'Gunakan Template Ini';
+
+	/// id: 'Ubah'
+	String get templateEditAction => 'Ubah';
+
+	/// id: 'Duplikat'
+	String get templateDuplicateAction => 'Duplikat';
+
+	/// id: 'Nonaktif'
+	String get templateInactiveBadge => 'Nonaktif';
+
+	/// id: 'Buat Template Baru'
+	String get templateAddAction => 'Buat Template Baru';
+
+	/// id: 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.'
+	String get templatesFooter => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.';
+
+	/// id: 'Belum ada template'
+	String get templatesEmptyBadge => 'Belum ada template';
+
+	/// id: 'Belum ada template'
+	String get templatesEmptyTitle => 'Belum ada template';
+
+	/// id: 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.'
+	String get templatesEmptyBody => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.';
+
+	/// id: 'Buat dompet aktif dulu untuk memakai template.'
+	String get templateNeedsWallet => 'Buat dompet aktif dulu untuk memakai template.';
+
+	/// id: 'Template gagal dimuat'
+	String get templatesLoadError => 'Template gagal dimuat';
+
+	/// id: 'Template anggaran'
+	String get templateStepLabel => 'Template anggaran';
+
+	/// id: 'Buat Template'
+	String get templateAddTitle => 'Buat Template';
+
+	/// id: 'Ubah Template'
+	String get templateEditTitle => 'Ubah Template';
+
+	/// id: 'Template hanya susunan rencana. Menyimpannya tidak mengubah saldo dompet mana pun; dompet dan periode dipilih saat template dipakai.'
+	String get templateRuleBody => 'Template hanya susunan rencana. Menyimpannya tidak mengubah saldo dompet mana pun; dompet dan periode dipilih saat template dipakai.';
+
+	/// id: 'Contoh: Belanja bulanan'
+	String get templateNameHint => 'Contoh: Belanja bulanan';
+
+	/// id: 'Tawarkan template ini'
+	String get templateEnabledLabel => 'Tawarkan template ini';
+
+	/// id: 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.'
+	String get templateEnabledHelp => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.';
+
+	/// id: 'Simpan Template'
+	String get templateSaveAction => 'Simpan Template';
+
+	/// id: 'Hapus Template'
+	String get templateDeleteAction => 'Hapus Template';
+
+	/// id: 'Hapus template?'
+	String get templateDeleteConfirmTitle => 'Hapus template?';
+
+	/// id: 'Template "$name" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.'
+	String templateDeleteConfirmMessage({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.';
+
+	/// id: 'Template tersimpan.'
+	String get templateSavedMessage => 'Template tersimpan.';
+
+	/// id: 'Perubahan template tersimpan.'
+	String get templateUpdatedMessage => 'Perubahan template tersimpan.';
+
+	/// id: 'Template dihapus.'
+	String get templateDeletedMessage => 'Template dihapus.';
+
+	/// id: 'Template digandakan.'
+	String get templateDuplicatedMessage => 'Template digandakan.';
+
+	/// id: '$name (salinan)'
+	String templateCopyName({required Object name}) => '${name} (salinan)';
+
+	/// id: 'Dari template $name'
+	String fromTemplateStepLabel({required Object name}) => 'Dari template ${name}';
+
+	/// id: 'Nama template'
+	String get templateNameLabel => 'Nama template';
 }
 
 // Path: freelance
@@ -1961,6 +2072,43 @@ extension on Translations {
 			'budget.itemNoTargetWallet' => 'Butuh dompet aktif lain sebagai tujuan transfer.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'Ke ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.',
+			'budget.templatesAction' => 'Template Anggaran',
+			'budget.templatesTitle' => 'Template Anggaran',
+			'budget.templatesSavedBadge' => ({required Object count}) => '${count} tersimpan',
+			'budget.templatesInfoTitle' => 'Apa itu template anggaran?',
+			'budget.templatesInfoBody' => 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Memakai template membuat anggaran baru yang terpisah, dan tidak memotong saldo dompet mana pun.',
+			'budget.templateItemCount' => ({required Object count}) => '${count} pos',
+			'budget.templateItemsLabel' => 'Daftar pos rencana',
+			'budget.templateTotalLabel' => 'Total rencana',
+			'budget.templateUseAction' => 'Gunakan Template Ini',
+			'budget.templateEditAction' => 'Ubah',
+			'budget.templateDuplicateAction' => 'Duplikat',
+			'budget.templateInactiveBadge' => 'Nonaktif',
+			'budget.templateAddAction' => 'Buat Template Baru',
+			'budget.templatesFooter' => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.',
+			'budget.templatesEmptyBadge' => 'Belum ada template',
+			'budget.templatesEmptyTitle' => 'Belum ada template',
+			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
+			'budget.templateNeedsWallet' => 'Buat dompet aktif dulu untuk memakai template.',
+			'budget.templatesLoadError' => 'Template gagal dimuat',
+			'budget.templateStepLabel' => 'Template anggaran',
+			'budget.templateAddTitle' => 'Buat Template',
+			'budget.templateEditTitle' => 'Ubah Template',
+			'budget.templateRuleBody' => 'Template hanya susunan rencana. Menyimpannya tidak mengubah saldo dompet mana pun; dompet dan periode dipilih saat template dipakai.',
+			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
+			'budget.templateEnabledLabel' => 'Tawarkan template ini',
+			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
+			'budget.templateSaveAction' => 'Simpan Template',
+			'budget.templateDeleteAction' => 'Hapus Template',
+			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
+			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.',
+			'budget.templateSavedMessage' => 'Template tersimpan.',
+			'budget.templateUpdatedMessage' => 'Perubahan template tersimpan.',
+			'budget.templateDeletedMessage' => 'Template dihapus.',
+			'budget.templateDuplicatedMessage' => 'Template digandakan.',
+			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
+			'budget.fromTemplateStepLabel' => ({required Object name}) => 'Dari template ${name}',
+			'budget.templateNameLabel' => 'Nama template',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Pembayaran (${count})',
@@ -2119,6 +2267,8 @@ extension on Translations {
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
+			_ => null,
+		} ?? switch (path) {
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',

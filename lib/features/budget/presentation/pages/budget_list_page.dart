@@ -6,6 +6,7 @@ import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/budget_actions.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
+import 'package:saldough/features/budget/presentation/pages/budget_template_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_empty_states.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_filter_bar.dart';
@@ -51,7 +52,11 @@ class _BudgetListPageState extends State<BudgetListPage> {
             if (state.budgets.isEmpty) {
               return ListView(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                children: [BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null)],
+                children: [
+                  BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null),
+                  const SizedBox(height: AppSpacing.md),
+                  _TemplatesButton(onTap: () => openBudgetTemplates(context)),
+                ],
               );
             }
 
@@ -95,11 +100,26 @@ class _BudgetListPageState extends State<BudgetListPage> {
                   ],
                 const SizedBox(height: AppSpacing.xs),
                 if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
+                const SizedBox(height: AppSpacing.sm),
+                _TemplatesButton(onTap: () => openBudgetTemplates(context)),
               ],
             );
           },
         ),
       ),
     );
+  }
+}
+
+/// Jalan ke layar Template Anggaran (T-7.2) — tombol sekunder di bawah
+/// "Buat anggaran".
+class _TemplatesButton extends StatelessWidget {
+  const _TemplatesButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppButton.secondary(label: t.budget.templatesAction, onPressed: onTap);
   }
 }

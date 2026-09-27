@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 27 September 2026
-**Fase saat ini:** Fase 7 — template anggaran dan poles (Fase 5 dan 6 selesai)
+**Fase saat ini:** MVP selesai (Fase 0–7, 76/76 tugas) — menunggu keputusan terbuka
 
 ## Apa ini
 
@@ -44,8 +44,9 @@ rincian, pos, arsip, penyaring), dan Freelance (proyek, worklog, pembayaran,
 pencatatan pembayaran diterima; dibuka dari CATAT → Catat Pemasukan).
 Beranda (Fase 6) juga sudah berjalan: total saldo, arus bulan berjalan,
 ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
-**Berikutnya Fase 7:** layar template anggaran (T-7.2), pembuatan anggaran
-dari template (sisa T-7.3), ikon SVG, dan poles. Keputusan yang menunggu
+Fase 7 juga selesai: template anggaran (layar, gandakan, aktif/nonaktif,
+anggaran dari template), ikon SVG, bentuk ADR-015, dan poles state.
+Seluruh tugas MVP di TASK_LIST sudah tercentang. Keputusan yang menunggu
 pemilik ada di bagian "Keputusan terbuka" TASK_LIST (mis. KT-1: ringkasan
 anggaran masih memindai seluruh riwayat).
 

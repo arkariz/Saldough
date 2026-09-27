@@ -88,7 +88,7 @@ class BudgetFilteredEmptyState extends StatelessWidget {
             style: TextStyle(color: colors.textMuted),
           ),
           const SizedBox(height: AppSpacing.md),
-          AppButton(label: t.budget.resetFilterAction, color: colors.textMuted, onPressed: onReset),
+          AppButton.secondary(label: t.budget.resetFilterAction, onPressed: onReset),
         ],
       ),
     );

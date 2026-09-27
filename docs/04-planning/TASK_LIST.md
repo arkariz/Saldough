@@ -35,8 +35,8 @@ Terakhir diperbarui: 27 September 2026.
 | 4 — Anggaran | 11 | 11 | Selesai |
 | 5 — Freelance | 9 | 9 | Selesai |
 | 6 — Beranda | 6 | 6 | Selesai |
-| 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
-| **Total MVP** | **76** | **71** | |
+| 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
+| **Total MVP** | **76** | **76** | |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 0 | Belum dimulai — 10 item terkunci: UX-1, UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
 
 ## Keputusan terbuka
@@ -1101,11 +1101,18 @@ seluruh fitur di atasnya menghasilkan data.
       penyimpanan memori, termasuk bahwa template dan anggaran tidak saling
       menimpa (diuji mutasi: kunci sengaja disamakan → uji merah).
       Memenuhi FR-BUD-005.
-- [ ] **T-7.2** Buat layar template: buat, sunting, gandakan, aktifkan,
+- [x] **T-7.2** Buat layar template: buat, sunting, gandakan, aktifkan,
       nonaktifkan, dan hapus.
       ⚠ Membuat atau menyunting template tidak mengubah saldo dompet mana pun.
+      ⚠ Selesai (27 Sep 2026, branch `claude/template-poles-fase-7`):
+      `BudgetTemplatePage` dibuka dari layar Anggaran (tombol "Template
+      Anggaran"), dengan `BudgetTemplateScope`/`BudgetTemplateBloc` sendiri
+      yang hidup selama layar terbuka. Kartu per template mengikuti rujukan
+      `pixel_kas_template_anggaran`; aktif/nonaktif dan hapus ada di
+      `BudgetTemplateFormSheet`. Gandakan memberi id pos baru. Diuji bloc
+      (saldo dompet tetap) dan layar.
       Memenuhi FR-BUD-005.
-- [ ] **T-7.3** Terapkan pembuatan anggaran dari template.
+- [x] **T-7.3** Terapkan pembuatan anggaran dari template.
       ⚠ Anggaran hasil template berdiri sendiri. Menyuntingnya tidak mengubah
       templatenya, dan sebaliknya.
       ⚠ Sebagian: domain selesai, UI belum. `CreateBudgetFromTemplate`
@@ -1121,6 +1128,12 @@ seluruh fitur di atasnya menghasilkan data.
       dompet tujuan pengganti.
       ⚠ `newItemId` harus unik di dalam satu putaran — id
       `microsecondsSinceEpoch` polos bisa kembar kalau dipanggil beruntun.
+      ⚠ Selesai: "Gunakan template ini" membuka formulir anggaran yang SAMA,
+      terisi lewat `CreateBudgetFromTemplate.draftItems` (id pos baru,
+      `stamp-urutan`). Dompet dan periode dipilih di formulir; pos transfer
+      yang tujuannya bentrok ditandai dan menahan simpan sampai tujuannya
+      diganti — mekanisme formulir yang sudah ada. Diuji mutasi (id pos
+      dipakai ulang → uji domain, bloc, dan layar merah).
       Memenuhi FR-BUD-005.
 - [ ] ~~**T-7.7**~~ **Deprecated 26 Sep 2026 atas keputusan pemilik; tidak
       dikerjakan dan tidak dihitung di ringkasan.** Catatan semula:
@@ -1131,15 +1144,23 @@ seluruh fitur di atasnya menghasilkan data.
       template tidak mengubah proyek yang sudah dibuat darinya.
       ⚠ Template tidak pernah menyentuh saldo dompet mana pun.
       Memenuhi FR-FRL-006.
-- [ ] **T-7.4** Konversi 67 SVG dari `docs/stitch_pixel_finance_tracker/icon_*/
+- [x] **T-7.4** Konversi 67 SVG dari `docs/stitch_pixel_finance_tracker/icon_*/
       code.html` jadi aset Flutter di `assets/icons/`, lalu masukkan ke peta
       `AppIcon` menggantikan isian Material — padanannya sudah ditetapkan di
       [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
       ⚠ Asetnya sudah tersedia di repositori sejak sebelum Fase 1 — bukan lagi
       menunggu kiriman pemilik. Kunci yang belum punya padanan (`add`, `edit`,
       `delete`, `chevronLeft`, `chevronRight`) tetap Material sampai ada.
+      ⚠ Selesai (27 Sep 2026): 44 kunci memakai SVG di `assets/icons/`
+      (diselaraskan ADR-016 lewat `tool/recolor_icons.py`). Terakhir
+      ditambahkan `locked` (`icon_status_locked`) dan `empty` (peti simpanan,
+      sama dengan ilustrasi "Inventaris kosong" rujukan). Yang tetap Material
+      karena tidak punya padanan: `add`, `edit`, `delete`, `chevronLeft`,
+      `chevronRight`, `dropdown`, `close`. Ikon rujukan lain (mis.
+      `transaction_recurring_*`, `status_warning`) belum punya kunci pemakai,
+      jadi tidak dikonversi.
       Memenuhi NFR-UX-002.
-- [ ] **T-7.5** Terapkan sistem elevasi bayangan keras (`AppHardCard`) dan
+- [x] **T-7.5** Terapkan sistem elevasi bayangan keras (`AppHardCard`) dan
       bilah progres tersegmentasi (`AppSegmentedProgressBar`) dari ADR-015 ke
       seluruh kartu dan bilah progres yang sudah dibangun Fase 2–6, kalau
       belum dikerjakan langsung di fase masing-masing.
@@ -1150,9 +1171,32 @@ seluruh fitur di atasnya menghasilkan data.
       polos), dan retrofit bentuk `AppButton`/`AppChip`/`AppCard` supaya
       radius/garis tepinya juga ikut ADR-015 (T-2.12 baru menyamakan
       warna dan tipografi, belum bentuk ketiga widget itu).
-- [ ] **T-7.6** Poles: skeleton pemuatan pertama, keadaan kosong tiap layar, dan
+      ⚠ Selesai (27 Sep 2026): audit tidak menemukan bilah progres polos
+      (`BudgetProgressBar` sudah `AppSegmentedProgressBar`). Bentuk
+      diretrofit: `AppButton` radius pixel 4 + tepi 2px dan varian baru
+      `AppButton.secondary` (9 tombol abu gelap jadi sekunder), `AppChip`
+      sudut tegas 0px + tepi 2px, `AppCard` radius pixel 4 + tepi 2px.
+      Kartu utama tiap tab memakai `AppHeroCard` (Fase 6). Enam `BoxShadow`
+      manual `Offset(0, 2)` (tab terpilih, kotak ikon) sengaja dibiarkan:
+      itu bayangan BAWAH ala `TransactionSlab` dari rujukan, sedangkan
+      `AppElevation.hardShadow` kanan-bawah — menggantinya mengubah tampilan.
+- [x] **T-7.6** Poles: skeleton pemuatan pertama, keadaan kosong tiap layar, dan
       konfirmasi tiap tindakan merusak.
       ⚠ Pakai ulang `AppSkeleton` dan `showConfirmDelete` yang sudah ada.
+      ⚠ Selesai (27 Sep 2026), hasil audit:
+      - Skeleton: semua layar yang memuat sendiri sudah punya skeleton dan
+        layar "coba lagi". Satu celah diperbaiki: riwayat di rincian dompet
+        menampilkan ruang kosong saat memuat (terbaca "belum ada transaksi"),
+        kini kerangka tiga baris.
+      - Keadaan kosong: ada di setiap layar (Beranda, Anggaran + hasil
+        penyaring, Transaksi + penyaring, Dompet, rincian dompet, Freelance,
+        rincian proyek, Template). Ilustrasi Beranda kini peti kosong.
+      - Konfirmasi: hapus anggaran, template, dompet, transaksi, proyek,
+        entri worklog, pembayaran, dan batalkan penerimaan semuanya lewat
+        `showConfirmDelete`. Arsip dan nonaktif dapat dibalik, jadi tanpa
+        konfirmasi.
+      - Mode gelap dicek di perangkat: `AppHeroCard` memakai `surfaceHigh`
+        di mode gelap karena `surfaceMid` di sana sama dengan warna kartu.
       Memenuhi NFR-UX-001.
 
 ## Cakupan requirement

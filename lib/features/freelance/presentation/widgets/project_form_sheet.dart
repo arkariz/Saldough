@@ -157,7 +157,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
                 _DeductionRow(rule: rule, onTap: () => _editDeduction(index)),
                 const SizedBox(height: AppSpacing.xs),
               ],
-              AppButton(label: t.freelance.deductionAddAction, color: colors.textMuted, onPressed: _editDeduction),
+              AppButton.secondary(label: t.freelance.deductionAddAction, onPressed: _editDeduction),
               const SizedBox(height: AppSpacing.lg),
               AppButton(label: t.freelance.projectSaveAction, onPressed: _canSave ? _save : null),
               if (editing && widget.canDelete) ...[

@@ -173,7 +173,18 @@ class WalletDetailPage extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 BlocBuilder<TransactionBloc, TransactionState>(
                   builder: (context, txState) {
-                    if (txState.isLoading) return const SizedBox.shrink();
+                    // Kerangka, bukan ruang kosong: kosong terbaca seperti
+                    // "belum ada transaksi" padahal masih dimuat (T-7.6).
+                    if (txState.isLoading) {
+                      return Column(
+                        children: [
+                          for (var i = 0; i < 3; i++) ...[
+                            if (i > 0) const SizedBox(height: AppSpacing.sm),
+                            const AppSkeleton(height: 64),
+                          ],
+                        ],
+                      );
+                    }
                     final touched = txState.rawTransactions
                         .where((tx) => _touches(tx, current.id))
                         .toList();
@@ -207,9 +218,8 @@ class WalletDetailPage extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
+                AppButton.secondary(
                   label: t.wallet.detailViewAllAction,
-                  color: context.appColors.textMuted,
                   onPressed: () => _viewAllTransactions(context, current.id),
                 ),
               ],

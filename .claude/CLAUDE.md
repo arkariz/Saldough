@@ -23,7 +23,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Struktur kode** | `docs/02-architecture/ARCHITECTURE_OVERVIEW.md` |
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
-| **Tugas dan progres** | `docs/04-planning/TASK_LIST.md` |
+| **Tugas dan progres** | `docs/04-planning/TASK_LIST.md`, plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
@@ -48,6 +48,11 @@ ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
 dari template (sisa T-7.3), ikon SVG, dan poles. Keputusan yang menunggu
 pemilik ada di bagian "Keputusan terbuka" TASK_LIST (mis. KT-1: ringkasan
 anggaran masih memindai seluruh riwayat).
+
+**Jalur UX di luar MVP:** 13 perbaikan hasil review UX 27 Sep 2026 ada di
+`docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-13). Saat mengecek
+progres, baca dokumen itu bersama TASK_LIST; empat item (UX-1, UX-4, UX-8,
+UX-10) menunggu keputusan pemilik.
 
 ## Fakta proyek
 

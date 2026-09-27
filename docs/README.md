@@ -80,7 +80,8 @@ docs/
 ├── 04-planning/                # urutan dan progres
 │   ├── ROADMAP.md
 │   ├── TASK_LIST.md
-│   └── UI_UX_DESIGN_TASKS.md
+│   ├── UI_UX_DESIGN_TASKS.md
+│   └── UX_REVIEW_FIXES.md     # perbaikan hasil review UX 2.0
 ├── stitch_pixel_finance_tracker/  # rujukan visual dari pemilik — lihat ADR-015
 └── 99-archive/                 # rekaman Saldough 1.0, dibekukan
     ├── README.md
@@ -127,7 +128,7 @@ docs/
 | Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
 | Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
 | Kenapa ada bayangan keras beroffset di tiap kartu? | [ADR-015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
-| Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) |
+| Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) dan [perbaikan hasil review UX](04-planning/UX_REVIEW_FIXES.md) |
 
 ## Konvensi penulisan
 

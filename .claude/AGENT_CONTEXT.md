@@ -10,6 +10,7 @@ menyentuh `lib/`, bukan sesudah.
 | 1 | [ARCHITECTURE_OVERVIEW.md](../docs/02-architecture/ARCHITECTURE_OVERVIEW.md) | Lapisan, struktur folder, pemetaan paket |
 | 2 | [DOMAIN_MODEL.md](../docs/02-architecture/DOMAIN_MODEL.md) | Entitas, rumus, invarian, dan aturan representasi uang |
 | 3 | [TASK_LIST.md](../docs/04-planning/TASK_LIST.md) | Tugas yang sedang dikerjakan beserta jebakannya |
+| 4 | [UX_REVIEW_FIXES.md](../docs/04-planning/UX_REVIEW_FIXES.md) | Perbaikan hasil review UX (di luar MVP), aturan dan keputusan yang menunggu pemilik |
 
 ## Empat jebakan terbesar
 

@@ -39,6 +39,11 @@ tab yang masih `_ComingSoonTab` di `AppShellPage` memang disengaja.
    pencarian, dst. Jangan laporkan ulang sebagai temuan baru. Kalau kode
    ternyata meregresi salah satunya, sebut eksplisit sebagai **regresi atas
    T-x.y**.
+   Temuan review sebelumnya beserta statusnya tercatat di
+   `docs/04-planning/UX_REVIEW_FIXES.md`. Jangan laporkan ulang item yang
+   sudah ada di sana — sebut nomor UX-nya, dan laporkan hanya kalau statusnya
+   berubah (mis. item dicentang tetapi kodenya meregresi).
+
 4. **Jalankan checklist** — `references/checklist.md`, kategori demi
    kategori. Tiap temuan HARUS menyebut berkas:baris dan konsekuensi nyata ke
    pemakai (bukan "kurang rapi" tanpa alasan). Sebagian besar poin bisa

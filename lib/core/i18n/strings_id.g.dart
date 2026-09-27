@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$wallet$id wallet = Translations$wallet$id.internal(_root);
 	late final Translations$budget$id budget = Translations$budget$id.internal(_root);
 	late final Translations$freelance$id freelance = Translations$freelance$id.internal(_root);
+	late final Translations$home$id home = Translations$home$id.internal(_root);
 }
 
 // Path: app
@@ -121,9 +122,6 @@ class Translations$appShell$id {
 
 	/// id: 'Dompet'
 	String get walletsTabLabel => 'Dompet';
-
-	/// id: 'Segera hadir.'
-	String get comingSoonMessage => 'Segera hadir.';
 }
 
 // Path: record
@@ -1497,6 +1495,156 @@ class Translations$freelance$id {
 	String paymentWorkRange({required Object range}) => 'Kerja ${range}';
 }
 
+// Path: home
+class Translations$home$id {
+	Translations$home$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Beranda gagal dimuat'
+	String get loadErrorTitle => 'Beranda gagal dimuat';
+
+	/// id: 'Total kas aktif'
+	String get balanceLabel => 'Total kas aktif';
+
+	/// id: '$count dompet aktif'
+	String walletCount({required Object count}) => '${count} dompet aktif';
+
+	/// id: '+$count lainnya'
+	String moreWallets({required Object count}) => '+${count} lainnya';
+
+	/// id: 'Mulai catat'
+	String get startBadge => 'Mulai catat';
+
+	/// id: 'Belum ada saldo dompet yang tercatat.'
+	String get noWalletsBody => 'Belum ada saldo dompet yang tercatat.';
+
+	/// id: 'Isi dompet fisik atau rekening bank pertamamu.'
+	String get addWalletPrompt => 'Isi dompet fisik atau rekening bank pertamamu.';
+
+	/// id: '+ Dompet'
+	String get addWalletAction => '+ Dompet';
+
+	/// id: 'Pemasukan $month'
+	String incomeLabel({required Object month}) => 'Pemasukan ${month}';
+
+	/// id: 'Pengeluaran $month'
+	String expenseLabel({required Object month}) => 'Pengeluaran ${month}';
+
+	/// id: '+ Masuk'
+	String get incomeTag => '+ Masuk';
+
+	/// id: '− Keluar'
+	String get expenseTag => '− Keluar';
+
+	/// id: 'Anggaran aktif'
+	String get budgetTitle => 'Anggaran aktif';
+
+	/// id: '$percent% terpakai'
+	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
+
+	/// id: '$amount terpakai'
+	String budgetSpent({required Object amount}) => '${amount} terpakai';
+
+	/// id: 'Rencana $amount'
+	String budgetPlanned({required Object amount}) => 'Rencana ${amount}';
+
+	/// id: 'Sisa'
+	String get budgetRemaining => 'Sisa';
+
+	/// id: 'Lewat rencana'
+	String get budgetOver => 'Lewat rencana';
+
+	/// id: 'Lihat Anggaran'
+	String get budgetAction => 'Lihat Anggaran';
+
+	/// id: 'Freelance'
+	String get freelanceTitle => 'Freelance';
+
+	/// id: '$count tertunda'
+	String freelancePendingBadge({required Object count}) => '${count} tertunda';
+
+	/// id: 'Waktu kerja'
+	String get freelanceHours => 'Waktu kerja';
+
+	/// id: 'Diperoleh (kotor)'
+	String get freelanceEarned => 'Diperoleh (kotor)';
+
+	/// id: 'Diterima: $amount'
+	String freelancePaid({required Object amount}) => 'Diterima: ${amount}';
+
+	/// id: 'Belum diterima: $amount'
+	String freelanceUnpaid({required Object amount}) => 'Belum diterima: ${amount}';
+
+	/// id: 'Perkiraan terdekat: $date'
+	String freelanceNext({required Object date}) => 'Perkiraan terdekat: ${date}';
+
+	/// id: 'Lihat Freelance'
+	String get freelanceAction => 'Lihat Freelance';
+
+	/// id: 'Transaksi terbaru'
+	String get recentTitle => 'Transaksi terbaru';
+
+	/// id: 'Lihat semua'
+	String get seeAll => 'Lihat semua';
+
+	/// id: 'Inventaris kosong'
+	String get emptyBadge => 'Inventaris kosong';
+
+	/// id: 'Belum ada transaksi'
+	String get emptyTitle => 'Belum ada transaksi';
+
+	/// id: 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.'
+	String get emptyBody => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.';
+
+	/// id: 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.'
+	String get emptyNoWalletBody => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.';
+
+	/// id: 'Catat Transaksi'
+	String get recordAction => 'Catat Transaksi';
+
+	/// id: 'Buat Dompet Pertama'
+	String get createWalletAction => 'Buat Dompet Pertama';
+
+	/// id: 'Atau buat anggaran pengeluaran'
+	String get budgetLink => 'Atau buat anggaran pengeluaran';
+
+	/// id: 'Panduan singkat'
+	String get guideTitle => 'Panduan singkat';
+
+	/// id: '3 aturan utama'
+	String get guideCount => '3 aturan utama';
+
+	/// id: 'Dompet'
+	String get guideWalletTitle => 'Dompet';
+
+	/// id: 'Aset nyata'
+	String get guideWalletTag => 'Aset nyata';
+
+	/// id: 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.'
+	String get guideWalletBody => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.';
+
+	/// id: 'Anggaran'
+	String get guideBudgetTitle => 'Anggaran';
+
+	/// id: 'Rencana'
+	String get guideBudgetTag => 'Rencana';
+
+	/// id: 'Rencanakan batas belanja. Membuat anggaran tidak memotong saldo dompet mana pun.'
+	String get guideBudgetBody => 'Rencanakan batas belanja. Membuat anggaran tidak memotong saldo dompet mana pun.';
+
+	/// id: 'Freelance'
+	String get guideFreelanceTitle => 'Freelance';
+
+	/// id: 'Piutang'
+	String get guideFreelanceTag => 'Piutang';
+
+	/// id: 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.'
+	String get guideFreelanceBody => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1520,7 +1668,6 @@ extension on Translations {
 			'appShell.recordAction' => 'Catat',
 			'appShell.transactionsTabLabel' => 'Transaksi',
 			'appShell.walletsTabLabel' => 'Dompet',
-			'appShell.comingSoonMessage' => 'Segera hadir.',
 			'record.sheetTitle' => 'Catat Transaksi',
 			'record.incomeAction' => 'Catat Pemasukan',
 			'record.expenseAction' => 'Catat Pengeluaran',
@@ -1963,6 +2110,53 @@ extension on Translations {
 			'freelance.paymentsFilteredEmpty' => 'Tidak ada pembayaran dengan status ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
+			'home.loadErrorTitle' => 'Beranda gagal dimuat',
+			'home.balanceLabel' => 'Total kas aktif',
+			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
+			'home.moreWallets' => ({required Object count}) => '+${count} lainnya',
+			'home.startBadge' => 'Mulai catat',
+			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
+			'home.addWalletPrompt' => 'Isi dompet fisik atau rekening bank pertamamu.',
+			'home.addWalletAction' => '+ Dompet',
+			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
+			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
+			'home.incomeTag' => '+ Masuk',
+			'home.expenseTag' => '− Keluar',
+			'home.budgetTitle' => 'Anggaran aktif',
+			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
+			'home.budgetSpent' => ({required Object amount}) => '${amount} terpakai',
+			'home.budgetPlanned' => ({required Object amount}) => 'Rencana ${amount}',
+			'home.budgetRemaining' => 'Sisa',
+			'home.budgetOver' => 'Lewat rencana',
+			'home.budgetAction' => 'Lihat Anggaran',
+			'home.freelanceTitle' => 'Freelance',
+			'home.freelancePendingBadge' => ({required Object count}) => '${count} tertunda',
+			'home.freelanceHours' => 'Waktu kerja',
+			'home.freelanceEarned' => 'Diperoleh (kotor)',
+			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
+			'home.freelanceUnpaid' => ({required Object amount}) => 'Belum diterima: ${amount}',
+			'home.freelanceNext' => ({required Object date}) => 'Perkiraan terdekat: ${date}',
+			'home.freelanceAction' => 'Lihat Freelance',
+			'home.recentTitle' => 'Transaksi terbaru',
+			'home.seeAll' => 'Lihat semua',
+			'home.emptyBadge' => 'Inventaris kosong',
+			'home.emptyTitle' => 'Belum ada transaksi',
+			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
+			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
+			'home.recordAction' => 'Catat Transaksi',
+			'home.createWalletAction' => 'Buat Dompet Pertama',
+			'home.budgetLink' => 'Atau buat anggaran pengeluaran',
+			'home.guideTitle' => 'Panduan singkat',
+			'home.guideCount' => '3 aturan utama',
+			'home.guideWalletTitle' => 'Dompet',
+			'home.guideWalletTag' => 'Aset nyata',
+			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
+			'home.guideBudgetTitle' => 'Anggaran',
+			'home.guideBudgetTag' => 'Rencana',
+			'home.guideBudgetBody' => 'Rencanakan batas belanja. Membuat anggaran tidak memotong saldo dompet mana pun.',
+			'home.guideFreelanceTitle' => 'Freelance',
+			'home.guideFreelanceTag' => 'Piutang',
+			'home.guideFreelanceBody' => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.',
 			_ => null,
 		};
 	}

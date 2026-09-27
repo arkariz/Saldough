@@ -9,8 +9,10 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
+import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/entities/deduction_kind.dart';
 import 'package:saldough/features/freelance/domain/entities/deduction_rule.dart';
@@ -22,6 +24,8 @@ import 'package:saldough/features/freelance/presentation/pages/freelance_overvie
 import 'package:saldough/features/freelance/presentation/pages/freelance_project_page.dart';
 import 'package:saldough/features/freelance/presentation/widgets/freelance_cards.dart';
 import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -71,6 +75,15 @@ void main() {
     freelanceRepository = FreelanceRepositoryImpl(storage: storage);
     final budgetRepository = BudgetRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<BudgetOverviewSource>(
+        () => BudgetOverviewSourceImpl(
+          budgetRepository: budgetRepository,
+          transactionRepository: transactionRepository,
+        ),
+      )
+      ..registerLazySingleton<FreelanceOverviewSource>(
+        () => FreelanceOverviewSourceImpl(repository: freelanceRepository),
+      )
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
@@ -94,7 +107,7 @@ void main() {
         child: const MaterialApp(home: AppShellPage()),
       ),
     );
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 5; i++) {
       await tester.pump();
     }
   }

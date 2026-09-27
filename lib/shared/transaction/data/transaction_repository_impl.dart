@@ -70,6 +70,20 @@ final class TransactionRepositoryImpl with RepositoryGuard implements Transactio
       });
 
   @override
+  Future<Either<Failure, List<Transaction>>> listRecentTransactions(int limit) => guard(() async {
+        final months = await _indexStore.read() ?? const <String>[];
+        final result = <Transaction>[];
+        // Indeks terurut naik, jadi dibaca dari belakang; bulan yang lebih lama
+        // tidak pernah dibuka begitu [limit] terpenuhi.
+        for (final monthKey in months.reversed) {
+          if (result.length >= limit) break;
+          final models = await _monthStore(monthKey).read() ?? const <TransactionModel>[];
+          result.addAll(models.map((m) => m.toEntity()).toList()..sort((a, b) => b.date.compareTo(a.date)));
+        }
+        return result.take(limit).toList();
+      });
+
+  @override
   Future<Either<Failure, Unit>> saveTransaction(Transaction transaction, {DateTime? previousDate}) =>
       guardVoid(() async {
         final targetMonthKey = _monthKeyFor(transaction.date);

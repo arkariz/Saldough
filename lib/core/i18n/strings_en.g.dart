@@ -47,6 +47,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$wallet$en wallet = _Translations$wallet$en._(_root);
 	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
 	@override late final _Translations$freelance$en freelance = _Translations$freelance$en._(_root);
+	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 }
 
 // Path: app
@@ -89,7 +90,6 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get recordAction => 'Record';
 	@override String get transactionsTabLabel => 'Transactions';
 	@override String get walletsTabLabel => 'Wallets';
-	@override String get comingSoonMessage => 'Coming soon.';
 }
 
 // Path: record
@@ -579,6 +579,62 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String paymentWorkRange({required Object range}) => 'Work ${range}';
 }
 
+// Path: home
+class _Translations$home$en extends Translations$home$id {
+	_Translations$home$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get loadErrorTitle => 'Home failed to load';
+	@override String get balanceLabel => 'Total active cash';
+	@override String walletCount({required Object count}) => '${count} active wallets';
+	@override String moreWallets({required Object count}) => '+${count} more';
+	@override String get startBadge => 'Start recording';
+	@override String get noWalletsBody => 'No wallet balance recorded yet.';
+	@override String get addWalletPrompt => 'Add your first cash wallet or bank account.';
+	@override String get addWalletAction => '+ Wallet';
+	@override String incomeLabel({required Object month}) => 'Income ${month}';
+	@override String expenseLabel({required Object month}) => 'Expenses ${month}';
+	@override String get incomeTag => '+ In';
+	@override String get expenseTag => '− Out';
+	@override String get budgetTitle => 'Active budgets';
+	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
+	@override String budgetSpent({required Object amount}) => '${amount} used';
+	@override String budgetPlanned({required Object amount}) => 'Plan ${amount}';
+	@override String get budgetRemaining => 'Remaining';
+	@override String get budgetOver => 'Over plan';
+	@override String get budgetAction => 'View Budgets';
+	@override String get freelanceTitle => 'Freelance';
+	@override String freelancePendingBadge({required Object count}) => '${count} pending';
+	@override String get freelanceHours => 'Hours worked';
+	@override String get freelanceEarned => 'Earned (gross)';
+	@override String freelancePaid({required Object amount}) => 'Received: ${amount}';
+	@override String freelanceUnpaid({required Object amount}) => 'Not received: ${amount}';
+	@override String freelanceNext({required Object date}) => 'Next expected: ${date}';
+	@override String get freelanceAction => 'View Freelance';
+	@override String get recentTitle => 'Recent transactions';
+	@override String get seeAll => 'See all';
+	@override String get emptyBadge => 'Empty inventory';
+	@override String get emptyTitle => 'No transactions yet';
+	@override String get emptyBody => 'Start by recording your first income, expense, or transfer.';
+	@override String get emptyNoWalletBody => 'Create your first wallet with its starting balance, then record your first transaction.';
+	@override String get recordAction => 'Record Transaction';
+	@override String get createWalletAction => 'Create First Wallet';
+	@override String get budgetLink => 'Or create a spending budget';
+	@override String get guideTitle => 'Quick guide';
+	@override String get guideCount => '3 core rules';
+	@override String get guideWalletTitle => 'Wallets';
+	@override String get guideWalletTag => 'Real assets';
+	@override String get guideWalletBody => 'Record bank accounts, digital wallets, or cash with their current balance.';
+	@override String get guideBudgetTitle => 'Budgets';
+	@override String get guideBudgetTag => 'Plans';
+	@override String get guideBudgetBody => 'Plan your spending limits. Creating a budget never deducts from any wallet balance.';
+	@override String get guideFreelanceTitle => 'Freelance';
+	@override String get guideFreelanceTag => 'Receivables';
+	@override String get guideFreelanceBody => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -602,7 +658,6 @@ extension on TranslationsEn {
 			'appShell.recordAction' => 'Record',
 			'appShell.transactionsTabLabel' => 'Transactions',
 			'appShell.walletsTabLabel' => 'Wallets',
-			'appShell.comingSoonMessage' => 'Coming soon.',
 			'record.sheetTitle' => 'Record Transaction',
 			'record.incomeAction' => 'Record Income',
 			'record.expenseAction' => 'Record Expense',
@@ -1045,6 +1100,53 @@ extension on TranslationsEn {
 			'freelance.paymentsFilteredEmpty' => 'No payments with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
+			'home.loadErrorTitle' => 'Home failed to load',
+			'home.balanceLabel' => 'Total active cash',
+			'home.walletCount' => ({required Object count}) => '${count} active wallets',
+			'home.moreWallets' => ({required Object count}) => '+${count} more',
+			'home.startBadge' => 'Start recording',
+			'home.noWalletsBody' => 'No wallet balance recorded yet.',
+			'home.addWalletPrompt' => 'Add your first cash wallet or bank account.',
+			'home.addWalletAction' => '+ Wallet',
+			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
+			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
+			'home.incomeTag' => '+ In',
+			'home.expenseTag' => '− Out',
+			'home.budgetTitle' => 'Active budgets',
+			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
+			'home.budgetSpent' => ({required Object amount}) => '${amount} used',
+			'home.budgetPlanned' => ({required Object amount}) => 'Plan ${amount}',
+			'home.budgetRemaining' => 'Remaining',
+			'home.budgetOver' => 'Over plan',
+			'home.budgetAction' => 'View Budgets',
+			'home.freelanceTitle' => 'Freelance',
+			'home.freelancePendingBadge' => ({required Object count}) => '${count} pending',
+			'home.freelanceHours' => 'Hours worked',
+			'home.freelanceEarned' => 'Earned (gross)',
+			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
+			'home.freelanceUnpaid' => ({required Object amount}) => 'Not received: ${amount}',
+			'home.freelanceNext' => ({required Object date}) => 'Next expected: ${date}',
+			'home.freelanceAction' => 'View Freelance',
+			'home.recentTitle' => 'Recent transactions',
+			'home.seeAll' => 'See all',
+			'home.emptyBadge' => 'Empty inventory',
+			'home.emptyTitle' => 'No transactions yet',
+			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
+			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
+			'home.recordAction' => 'Record Transaction',
+			'home.createWalletAction' => 'Create First Wallet',
+			'home.budgetLink' => 'Or create a spending budget',
+			'home.guideTitle' => 'Quick guide',
+			'home.guideCount' => '3 core rules',
+			'home.guideWalletTitle' => 'Wallets',
+			'home.guideWalletTag' => 'Real assets',
+			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
+			'home.guideBudgetTitle' => 'Budgets',
+			'home.guideBudgetTag' => 'Plans',
+			'home.guideBudgetBody' => 'Plan your spending limits. Creating a budget never deducts from any wallet balance.',
+			'home.guideFreelanceTitle' => 'Freelance',
+			'home.guideFreelanceTag' => 'Receivables',
+			'home.guideFreelanceBody' => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.',
 			_ => null,
 		};
 	}

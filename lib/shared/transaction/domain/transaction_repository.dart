@@ -22,6 +22,13 @@ abstract interface class TransactionRepository {
   /// **bukan** untuk merender layar — layar memakai [listTransactionsInMonth].
   Future<Either<Failure, List<Transaction>>> listAllTransactions();
 
+  /// Paling banyak [limit] transaksi terbaru, tanggal terbaru di atas.
+  ///
+  /// Membaca dokumen bulan dari yang terbaru ke belakang dan berhenti begitu
+  /// [limit] terpenuhi, jadi biayanya mengikuti [limit], bukan panjang
+  /// riwayat (NFR-PERF-002). Dipakai Beranda (FR-HOME-004).
+  Future<Either<Failure, List<Transaction>>> listRecentTransactions(int limit);
+
   /// Menyimpan [transaction] — menambah kalau `id` baru, menimpa kalau
   /// sudah ada.
   ///

@@ -9,6 +9,10 @@ import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_list_page.dart';
+import 'package:saldough/features/home/di/home_scope.dart';
+import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
+import 'package:saldough/features/home/presentation/bloc/home_state.dart';
+import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/record/di/record_scope.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
@@ -33,10 +37,10 @@ import 'package:state_management/state_management.dart';
 /// lewat [_tabIndexFor]/[_navIndexFor], menyisipkan CATAT di posisi tengah
 /// tanpa memberinya slot `IndexedStack`.
 ///
-/// Tab yang fiturnya belum dibangun masih [_ComingSoonTab] (Beranda, Fase 6).
-/// Transaksi (T-2.5), Dompet (T-2.7), dan Anggaran (T-4.5) sudah nyata. Menukar tab sisanya jadi layar
-/// sungguhan berarti mengganti satu entri di daftar `tabs` pada `build`,
-/// bukan menulis ulang shell ini.
+/// Keempat tab sudah nyata: Beranda (Fase 6), Anggaran (T-4.5), Transaksi
+/// (T-2.5), dan Dompet (T-2.7). Beranda menerima callback perpindahan tab dan
+/// CATAT dari shell ini, supaya bloc tujuannya disegarkan dengan cara yang
+/// sama seperti saat tabnya dipilih dari navigasi bawah.
 ///
 /// CATAT sendiri (T-2.4) sudah nyata: menekannya membuka
 /// [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu satu dari tiga
@@ -86,7 +90,9 @@ class _AppShellPageState extends State<AppShellPage> {
   int _activeTab = 0;
 
   static const _recordNavIndex = 2;
+  static const _homeTabIndex = 0;
   static const _budgetTabIndex = 1;
+  static const _transactionsTabIndex = 2;
   static const _walletsTabIndex = 3;
 
   /// Indeks `IndexedStack` (0..3) untuk indeks `NavigationBar` (0..4,
@@ -104,10 +110,12 @@ class _AppShellPageState extends State<AppShellPage> {
     final transactions = context.read<TransactionBloc>();
     final wallets = context.read<WalletBloc>();
     final budgets = context.read<BudgetBloc>();
+    final home = context.read<HomeBloc>();
     await openRecordSheet(context);
     transactions.add(const TransactionRefreshed());
     wallets.add(const WalletRefreshed());
     budgets.add(const BudgetRefreshed());
+    home.add(const HomeRefreshed());
   }
 
   void _onDestinationSelected(BuildContext context, int navIndex) {
@@ -121,6 +129,9 @@ class _AppShellPageState extends State<AppShellPage> {
     // Progres anggaran dihitung dari transaksi, yang bisa berubah di tab lain
     // (FR-BUD-003: progres berubah seketika saat transaksi disunting/dihapus).
     if (_tabIndexFor(navIndex) == _budgetTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
+    // Angka Beranda dihitung dari seluruh fitur lain, yang bisa berubah di
+    // tab mana pun.
+    if (_tabIndexFor(navIndex) == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
     setState(() => _activeTab = _tabIndexFor(navIndex));
   }
 
@@ -129,10 +140,15 @@ class _AppShellPageState extends State<AppShellPage> {
     final parentContainer = ScopeProvider.of(context);
     // Empat tujuan nyata di `IndexedStack`, urutan Beranda, Anggaran,
     // Transaksi, Dompet — sama seperti destinations minus CATAT. Dibangun
-    // di `build` (bukan `static const`) karena labelnya lewat `t`, yang
-    // bukan konstanta kompilasi.
-    final tabs = [
-      _ComingSoonTab(icon: IconKey.home, label: t.appShell.homeTabLabel),
+    // dengan context DI BAWAH seluruh `BlocProvider` (lihat `Builder` di
+    // bawah), karena callback Beranda membaca bloc-bloc itu.
+    List<Widget> tabsFor(BuildContext context) => [
+      HomePage(
+        onRecord: () => _openRecord(context),
+        onShowBudgets: () => _onDestinationSelected(context, _navIndexFor(_budgetTabIndex)),
+        onShowTransactions: () => _onDestinationSelected(context, _navIndexFor(_transactionsTabIndex)),
+        onShowWallets: () => _onDestinationSelected(context, _navIndexFor(_walletsTabIndex)),
+      ),
       const BudgetListPage(),
       const TransactionListPage(),
       const WalletListPage(),
@@ -184,34 +200,44 @@ class _AppShellPageState extends State<AppShellPage> {
                               builder: (context, budgetScope) => BlocProvider.value(
                                 value: budgetScope.container<BudgetBloc>(),
                                 child: EffectListener<BudgetBloc, BudgetState>(
-                                  child: Builder(
-                                    builder: (context) => Scaffold(
-                                      body: IndexedStack(index: _activeTab, children: tabs),
-                                      bottomNavigationBar: NavigationBar(
-                                        selectedIndex: _navIndexFor(_activeTab),
-                                        onDestinationSelected: (navIndex) => _onDestinationSelected(context, navIndex),
-                                        destinations: [
-                                          NavigationDestination(
-                                            icon: const AppIcon(IconKey.home),
-                                            label: t.appShell.homeTabLabel,
+                                  // Beranda (Fase 6): pola yang sama.
+                                  child: ScopeWidget<HomeScope>(
+                                    create: () => HomeScope(parentContainer: parentContainer),
+                                    builder: (context, homeScope) => BlocProvider.value(
+                                      value: homeScope.container<HomeBloc>(),
+                                      child: EffectListener<HomeBloc, HomeState>(
+                                        child: Builder(
+                                          builder: (context) => Scaffold(
+                                            body: IndexedStack(index: _activeTab, children: tabsFor(context)),
+                                            bottomNavigationBar: NavigationBar(
+                                              selectedIndex: _navIndexFor(_activeTab),
+                                              onDestinationSelected: (navIndex) =>
+                                                  _onDestinationSelected(context, navIndex),
+                                              destinations: [
+                                                NavigationDestination(
+                                                  icon: const AppIcon(IconKey.home),
+                                                  label: t.appShell.homeTabLabel,
+                                                ),
+                                                NavigationDestination(
+                                                  icon: const AppIcon(IconKey.budget),
+                                                  label: t.appShell.budgetTabLabel,
+                                                ),
+                                                NavigationDestination(
+                                                  icon: const AppIcon(IconKey.record),
+                                                  label: t.appShell.recordAction,
+                                                ),
+                                                NavigationDestination(
+                                                  icon: const AppIcon(IconKey.transactions),
+                                                  label: t.appShell.transactionsTabLabel,
+                                                ),
+                                                NavigationDestination(
+                                                  icon: const AppIcon(IconKey.wallets),
+                                                  label: t.appShell.walletsTabLabel,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          NavigationDestination(
-                                            icon: const AppIcon(IconKey.budget),
-                                            label: t.appShell.budgetTabLabel,
-                                          ),
-                                          NavigationDestination(
-                                            icon: const AppIcon(IconKey.record),
-                                            label: t.appShell.recordAction,
-                                          ),
-                                          NavigationDestination(
-                                            icon: const AppIcon(IconKey.transactions),
-                                            label: t.appShell.transactionsTabLabel,
-                                          ),
-                                          NavigationDestination(
-                                            icon: const AppIcon(IconKey.wallets),
-                                            label: t.appShell.walletsTabLabel,
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -228,34 +254,6 @@ class _AppShellPageState extends State<AppShellPage> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-/// Isian sementara satu tab, sampai fitur sungguhannya dibangun.
-class _ComingSoonTab extends StatelessWidget {
-  const _ComingSoonTab({required this.icon, required this.label});
-
-  final IconKey icon;
-
-  /// Judul tab, sudah diterjemahkan oleh pemanggil.
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Scaffold(
-      appBar: AppBar(title: Text(label)),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(icon, size: 48, color: colors.textMuted),
-            const SizedBox(height: AppSpacing.sm),
-            Text(t.appShell.comingSoonMessage, style: TextStyle(color: colors.textMuted)),
-          ],
-        ),
       ),
     );
   }

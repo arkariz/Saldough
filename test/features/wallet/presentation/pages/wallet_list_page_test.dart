@@ -9,6 +9,8 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
@@ -30,6 +32,8 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
+      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
@@ -79,6 +83,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
+    await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
     await tester.tap(
       find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel),
     );

@@ -60,6 +60,29 @@ void main() {
       expect(txs, hasLength(2));
     });
 
+    test('listRecentTransactions: terbaru di atas lintas bulan, tanpa membuka bulan yang tidak perlu', () async {
+      final lama = ExpenseTransaction(id: 'lama', date: DateTime(2020, 1, 5), amount: 1, note: 'lama', walletId: 'w1');
+      final agustus = ExpenseTransaction(id: 'agu', date: DateTime(2026, 8, 30), amount: 1, note: 'agu', walletId: 'w1');
+      final sep1 = ExpenseTransaction(id: 'sep1', date: DateTime(2026, 9, 2), amount: 1, note: 'a', walletId: 'w1');
+      final sep9 = ExpenseTransaction(id: 'sep9', date: DateTime(2026, 9, 9), amount: 1, note: 'b', walletId: 'w1');
+      for (final t in [lama, agustus, sep9, sep1]) {
+        await repository.saveTransaction(t);
+      }
+      // Dokumen bulan lama dirusak: kalau sampai dibaca, hasilnya Left.
+      await storage.write('transaction_2020-01', '{rusak');
+
+      final result = await repository.listRecentTransactions(3);
+      final txs = result.getOrElse((_) => throw StateError('expected Right'));
+      expect(txs.map((t) => t.id), ['sep9', 'sep1', 'agu']);
+    });
+
+    test('listRecentTransactions dengan riwayat lebih pendek dari limit mengembalikan semuanya', () async {
+      final a = ExpenseTransaction(id: 'a', date: DateTime(2026, 8, 30), amount: 1, note: 'a', walletId: 'w1');
+      await repository.saveTransaction(a);
+      final result = await repository.listRecentTransactions(5);
+      expect(result.getOrElse((_) => throw StateError('expected Right')), [a]);
+    });
+
     test('menyimpan ulang transaksi ber-id sama pada bulan sama menimpa, bukan menambah', () async {
       final original = ExpenseTransaction(id: 't1', date: DateTime(2026, 9, 2), amount: 50000, note: 'kopi', walletId: 'w1');
       await repository.saveTransaction(original);

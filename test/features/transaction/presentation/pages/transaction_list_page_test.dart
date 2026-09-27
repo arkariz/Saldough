@@ -10,6 +10,8 @@ import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
@@ -45,6 +47,8 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
+      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
@@ -69,6 +73,7 @@ void main() {
     // TransactionScope, jadi initialisasinya baru mulai satu frame lagi.
     await tester.pump();
     await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
+    await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
     await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
     await tester.pumpAndSettle();
   }
@@ -114,6 +119,8 @@ void main() {
 
     testWidgets('kegagalan pembacaan menampilkan keadaan galat, bukan keadaan kosong', (tester) async {
       final failingContainer = GetIt.asNewInstance()
+        ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
+        ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
@@ -128,6 +135,7 @@ void main() {
       await tester.pump();
       await tester.pump();
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
+      await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
       await tester.pump(); // WalletScope (T-2.7), bersarang setelah TransactionScope.
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
       await tester.pumpAndSettle();

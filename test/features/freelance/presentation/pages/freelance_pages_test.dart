@@ -217,6 +217,14 @@ void main() {
     await tester.tap(find.byType(ProjectCard));
     await tester.pumpAndSettle();
 
+    // Kop proyek satu kali, di atas tab — bukan disalin di dalam tiap tab.
+    // 51 jam × Rp72.500 = Rp3.697.500.
+    final header = find.text(
+      t.freelance.projectTotals(hours: 51, amount: AppMoneyFormatter.format(369750000)),
+    );
+    expect(header, findsOneWidget);
+    expect(find.descendant(of: find.byType(TabBarView), matching: header), findsNothing);
+
     // Bawaan: hanya 3 entri belum ditagih, dalam dua kelompok bulan.
     expect(find.byType(WorklogEntryCard), findsNWidgets(3));
     expect(find.byType(WorklogMonthHeader), findsNWidgets(2));

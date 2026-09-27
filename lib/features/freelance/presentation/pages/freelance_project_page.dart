@@ -133,22 +133,42 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                   },
                 ),
               ],
-              bottom: TabBar(
-                tabs: [
-                  Tab(text: t.freelance.worklogTab(count: entries.length)),
-                  Tab(text: t.freelance.paymentsTab(count: payments.length)),
-                ],
-              ),
             ),
             body: SafeArea(
               child: Column(
                 children: [
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        _worklogList(state, project, stats, entries),
-                        _paymentList(state, project, stats, payments),
+                    // Kop proyek satu kali di atas tab, ikut tergulir; bilah
+                    // tab menempel. Isi tiap tab hanya penyaring dan daftarnya.
+                    child: NestedScrollView(
+                      headerSliverBuilder: (context, _) => [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+                          sliver: SliverToBoxAdapter(
+                            child: _ProjectHeader(project: project, stats: stats),
+                          ),
+                        ),
+                        SliverOverlapAbsorber(
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                          sliver: SliverPersistentHeader(
+                            pinned: true,
+                            delegate: _TabBarDelegate(
+                              TabBar(
+                                tabs: [
+                                  Tab(text: t.freelance.worklogTab(count: entries.length)),
+                                  Tab(text: t.freelance.paymentsTab(count: payments.length)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
+                      body: TabBarView(
+                        children: [
+                          _worklogList(state, entries),
+                          _paymentList(state, payments),
+                        ],
+                      ),
                     ),
                   ),
                   FreelanceBottomBar(
@@ -175,7 +195,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     );
   }
 
-  Widget _worklogList(FreelanceState state, FreelanceProject project, ProjectStats stats, List<WorklogEntry> entries) {
+  Widget _worklogList(FreelanceState state, List<WorklogEntry> entries) {
     final counts = {
       for (final filter in EntryFilter.values) filter: entries.where((e) => filter.matches(state.statusOf(e))).length,
     };
@@ -187,7 +207,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       EntryFilter.paid => t.freelance.statusPaid,
     };
     return _SectionList(
-      header: _ProjectHeader(project: project, stats: stats),
+      storageKey: 'worklog',
       filters: _FilterRow<EntryFilter>(
         options: [for (final filter in EntryFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
         selected: _entryFilter,
@@ -225,12 +245,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     );
   }
 
-  Widget _paymentList(
-    FreelanceState state,
-    FreelanceProject project,
-    ProjectStats stats,
-    List<FreelancePayment> payments,
-  ) {
+  Widget _paymentList(FreelanceState state, List<FreelancePayment> payments) {
     final counts = {for (final filter in PaymentFilter.values) filter: payments.where(filter.matches).length};
     final rows = _paymentRows(state, payments.where(_paymentFilter.matches).toList());
     String label(PaymentFilter filter) => switch (filter) {
@@ -239,7 +254,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       PaymentFilter.paid => t.freelance.statusPaid,
     };
     return _SectionList(
-      header: _ProjectHeader(project: project, stats: stats),
+      storageKey: 'payments',
       filters: _FilterRow<PaymentFilter>(
         options: [for (final filter in PaymentFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
         selected: _paymentFilter,
@@ -353,18 +368,21 @@ class _PaymentCard extends StatelessWidget {
   }
 }
 
-/// Satu tab rincian proyek: kop, penyaring, lalu baris-barisnya yang dimuat
-/// bertahap, atau [empty] kalau tidak ada baris.
+/// Satu tab rincian proyek: penyaring, lalu baris-barisnya yang dimuat
+/// bertahap, atau [empty] kalau tidak ada baris. Kop proyek dan bilah tab
+/// milik `NestedScrollView` di atasnya; [SliverOverlapInjector] menjaga
+/// baris pertama tidak tertutup bilah tab yang menempel.
 class _SectionList extends StatelessWidget {
   const _SectionList({
-    required this.header,
+    required this.storageKey,
     required this.filters,
     required this.rows,
     required this.empty,
     required this.buildRow,
   });
 
-  final Widget header;
+  /// Kunci posisi gulir tab ini, supaya tidak tertukar dengan tab lain.
+  final String storageKey;
   final Widget filters;
   final List<_Row> rows;
   final Widget empty;
@@ -372,17 +390,45 @@ class _SectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
-      itemCount: 2 + (rows.isEmpty ? 1 : rows.length),
-      itemBuilder: (context, index) => switch (index) {
-        0 => header,
-        1 => filters,
-        _ when rows.isEmpty => empty,
-        _ => buildRow(context, rows[index - 2]),
-      },
+    return CustomScrollView(
+      key: PageStorageKey(storageKey),
+      slivers: [
+        SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.lg),
+          sliver: SliverList.builder(
+            itemCount: 1 + (rows.isEmpty ? 1 : rows.length),
+            itemBuilder: (context, index) => switch (index) {
+              0 => filters,
+              _ when rows.isEmpty => empty,
+              _ => buildRow(context, rows[index - 1]),
+            },
+          ),
+        ),
+      ],
     );
   }
+}
+
+/// Bilah tab yang menempel di atas daftar saat kop proyek tergulir keluar.
+class _TabBarDelegate extends SliverPersistentHeaderDelegate {
+  _TabBarDelegate(this.tabBar);
+
+  final TabBar tabBar;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ColoredBox(color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+  }
+
+  @override
+  bool shouldRebuild(_TabBarDelegate oldDelegate) => oldDelegate.tabBar != tabBar;
 }
 
 class _FilteredEmpty extends StatelessWidget {

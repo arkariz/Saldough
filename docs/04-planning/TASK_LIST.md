@@ -6,7 +6,7 @@ Perbarui kotak centang di sini setiap kali sebuah tugas selesai.
 Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md). Untuk
 pekerjaan desain visual, lihat
 [UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md). Perbaikan hasil review UX
-27 Sep 2026 punya daftar kerja sendiri di
+27 Sep 2026 (UX dan UI) punya daftar kerja sendiri di
 [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md) — **baca juga saat mengecek
 progres**; ringkasannya ada di tabel di bawah. Daftar kerja Saldough 1.0
 beserta seluruh catatan pengerjaannya diarsipkan di
@@ -37,7 +37,7 @@ Terakhir diperbarui: 27 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
 | **Total MVP** | **76** | **71** | |
-| UX — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 13 | 0 | Belum dimulai — UX-1, UX-4, UX-8, UX-10 menunggu keputusan pemilik |
+| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 0 | Belum dimulai — 10 item terkunci: UX-1, UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
 
 ## Keputusan terbuka
 

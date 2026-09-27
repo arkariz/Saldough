@@ -111,6 +111,11 @@ docs/
 | [0013](02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md) | Bahasa visual v2 dan sistem ikon | Superseded by ADR-015 |
 | [0014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) | Strategi pivot ke Saldough 2.0 | Accepted |
 | [0015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) | Adopsi bahasa visual dari paket desain pemilik | Accepted |
+| [0016](02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md) | Revisi palet ADR-015: satu peran, satu warna | Accepted |
+| [0017](02-architecture/adr/0017-rencana-anggaran-adalah-jumlah-pos.md) | Rencana anggaran adalah jumlah posnya | Accepted |
+| [0018](02-architecture/adr/0018-jenis-pos-anggaran.md) | Pos anggaran punya jenis: pengeluaran atau transfer | Accepted |
+| [0019](02-architecture/adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md) | Tarif di entri worklog, transaksi milik pembayaran freelance | Accepted |
+| [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Proposed |
 
 ## Pertanyaan yang sering muncul
 

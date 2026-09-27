@@ -7,6 +7,14 @@ Review itu dilengkapi riset pola aplikasi keuangan yang sukses (Money
 Manager, Copilot, Monarch, YNAB) dan pedoman umum NN/g. Sumbernya ada di
 bagian [Sumber riset](#sumber-riset).
 
+Pada hari yang sama menyusul **review UI** (tata letak, jenis komponen, warna,
+penekanan) terhadap commit `185455f`, dengan tujuh layar dirender di Flutter
+Web 390×844, termasuk mode gelap. Temuannya jadi UX-14 s.d. UX-22 di bagian
+[UI: penekanan, warna, tipografi, tata letak](#ui-penekanan-warna-tipografi-tata-letak),
+dan keputusan desainnya diusulkan di
+[ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
+(Proposed).
+
 Review tidak mengubah kode. Dokumen inilah jembatan dari temuan ke pekerjaan.
 Setiap item memuat berkas dan barisnya, akibatnya ke pemilik, langkah
 perbaikan, dan cara memverifikasinya, supaya bisa dikerjakan tanpa menjalankan
@@ -66,11 +74,12 @@ Terakhir diperbarui: 27 September 2026.
 
 | Tingkat | Item | Selesai |
 |---|---|---|
-| 🟠 Friksi | 8 | 0 |
-| 🟡 Polish | 5 | 0 |
-| **Total** | **13** | **0** |
+| 🟠 Friksi | 12 | 0 |
+| 🟡 Polish | 10 | 0 |
+| **Total** | **22** | **0** |
 
-Terkunci menunggu keputusan pemilik: UX-1, UX-4, UX-8, UX-10.
+Terkunci menunggu keputusan pemilik: UX-1, UX-4, UX-8, UX-10, dan UX-14,
+UX-15, UX-16, UX-18, UX-20, UX-21 (keenamnya lewat persetujuan ADR-020).
 
 ## Keputusan pemilik yang dibutuhkan
 
@@ -86,6 +95,9 @@ dijawab.
   Konfirmasi tetap untuk hapus dompet, anggaran, dan proyek.
 - **UX-10** — Warna bilah progres anggaran (ADR-016 baris 136 menyebutnya
   "belum diputuskan") dan penanda laju waktu periode.
+- **ADR-020** — Setujui, ubah, atau tolak usulan hierarki penekanan
+  (varian tombol, label minimal 11px, satu penanda warna per baris, bilah
+  hanya untuk progres). Membuka UX-14, UX-15, UX-16, UX-18, UX-20, UX-21.
 
 ## Friksi
 
@@ -212,6 +224,76 @@ tugas, tetapi murah dan menaikkan kualitas terasa.
       produk #5 menjadikannya tindakan utama.
       Perbaikan: penekanan visual (kotak aksen terracotta atau ukuran lebih
       besar) sesuai ADR-015.
+      Catatan review UI: ADR-015 baris 182 sudah menetapkan "FAB CATAT"
+      berelevasi interaktif, jadi item ini **menyelaraskan kode dengan ADR
+      yang berlaku**, bukan keputusan baru. Label tab 10px juga masuk UX-15.
+
+## UI: penekanan, warna, tipografi, tata letak
+
+Sembilan item dari review UI. Enam di antaranya terkunci sampai
+[ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
+disetujui, karena mengubah cara komponen ADR-015 dipakai. Tiga lainnya
+menegakkan aturan yang sudah berlaku dan bisa dikerjakan sekarang.
+
+- [ ] **UX-14** 🟠⛔ [E] **Semua tombol memakai penekanan tertinggi.**
+      `app_button.dart` hanya punya satu gaya (isian, garis tepi 2px,
+      bayangan keras), dipakai 40 kali; tidak ada gaya bergaris tepi atau
+      tonal. "Simpan", "Hapus", "Tambah Dompet Baru", dan "Buat Anggaran
+      Baru" sama kuatnya; Beranda kosong punya dua ajakan dompet yang
+      bersaing.
+      Perbaikan (ADR-020 §3.1): varian `primary`/`secondary`/`tertiary`,
+      bawaan `primary`; paling banyak satu `primary` per layar. Tinjau 40
+      titik pakai.
+      Verifikasi: uji widget tiap varian; render tiap tab.
+- [ ] **UX-15** 🟠⛔ [F] **Label mikro terlalu kecil dan terlalu sering kapital.**
+      `kind_surfaces.dart:58` — `transactionLabelStyle` bawaan 10px, dipakai
+      112 kali (sekitar 78 di 10px, 10 di 9px); 71 `toUpperCase()`. Label
+      navigasi bawah 10px (`pixel_theme.dart:115`).
+      Perbaikan (ADR-020 §3.2): bawaan 11px, tidak ada label di bawah 11px;
+      kapital hanya untuk lencana dan kop 1–3 kata.
+      Verifikasi: render 360dp dan 390dp, tidak ada teks terpotong baru.
+- [ ] **UX-16** 🟡⛔ [E] **Empat penanda merah di satu baris transaksi.**
+      Garis aksen, kotak ikon, nominal, dan lencana "−KELUAR" sekaligus
+      (`TransactionRow`, `transaction_date_group_card.dart`). Daftar
+      pengeluaran jadi dinding merah dan merah kehilangan fungsi sinyalnya.
+      Perbaikan (ADR-020 §3.3): tanda `−` dan warna nominal, ditambah satu
+      penanda jenis; lencana hanya di rincian.
+- [ ] **UX-17** 🟠 [E] **Snackbar sukses memakai hijau "uang masuk".**
+      `snackbar_effect_handler.dart:18` — `success → colors.income`.
+      "Pengeluaran tercatat." tampil hijau, bertentangan dengan ADR-016.
+      Perbaikan: latar netral (`textPrimary`, teks `background`) dengan ikon
+      centang; galat tetap `expense`. Menegakkan ADR-016, tidak terkunci.
+      Verifikasi: uji widget warna snackbar per `FeedbackSeverity`.
+- [ ] **UX-18** 🟡⛔ [E] **Bilah bersegmen punya dua arti.**
+      `transaction_month_header.dart:183` memakai bilah untuk proporsi
+      masuk/keluar tanpa legenda; di anggaran bilah yang sama berarti
+      terpakai dari rencana. Dengan satu pengeluaran, bilah penuh merah dan
+      terbaca "anggaran habis".
+      Perbaikan (ADR-020 §3.5): ganti dengan angka Masuk dan Keluar kecil di
+      bawah Netto.
+- [ ] **UX-19** 🟠 [E] **Ikon jenis transaksi nyaris hilang di mode gelap.**
+      Terlihat di render gelap: ikon pixel di kotak Pemasukan/Pengeluaran
+      Beranda dan kotak ikon baris transaksi berkontras rendah. Uji kontras
+      otomatis (`app_colors_extension_test.dart`) hanya mencakup teks.
+      Perbaikan: isian kotak ikon mode gelap lebih terang (alfa `…Fill` lebih
+      tinggi) atau bingkai terang tipis. Menegakkan NFR-UX-003.
+      Verifikasi: render mode gelap Beranda dan Transaksi.
+- [ ] **UX-20** 🟡⛔ [A] **Kartu dompet terlalu tinggi untuk isinya.**
+      `wallet_card.dart` — sekitar 130px untuk nama, jenis, dan saldo; tiga
+      dompet memenuhi layar, dan "SALDO AKTIF" diulang di tiap kartu.
+      Perbaikan: varian baris ringkas (64–72px: ikon, nama dan jenis, saldo
+      rata kanan) di daftar; kartu besar cukup di rincian dompet.
+- [ ] **UX-21** 🟡⛔ [A] **Kop Transaksi sekitar 480px sebelum isi pertama.**
+      Konsol bulan, kartu utama, kolom cari, dua dropdown, dan empat tab
+      jenis; transaksi pertama baru di y≈520 pada layar 844.
+      Perbaikan: gabungkan penyaring dompet dan kategori ke satu tombol
+      "Filter" yang membuka lembar; kartu utama lebih pendek (tanpa bilah,
+      lihat UX-18).
+- [ ] **UX-22** 🟡 [D] **Label ganda untuk satu angka.**
+      Kartu arus Beranda (`home_cards.dart`, `_FlowTile`): "PEMASUKAN SEP",
+      lalu "+ MASUK", lalu nominal. Label kedua mubazir karena tanda `+`/`−`
+      sudah ada di nominal.
+      Perbaikan: hapus label kedua beserta kunci i18n-nya bila tak terpakai.
 
 ## Di luar cakupan review UX
 
@@ -237,3 +319,10 @@ hanya pola kualitatifnya.
 - [Copilot Money Review 2026 — The Penny Hoarder](https://www.thepennyhoarder.com/budgeting/budgeting-copilot-money-review/)
 - [Why People Quit Budgeting Apps in 30 Days — SpendTrak](https://spendtrak.app/blog/why-people-quit-budgeting-apps)
 - [How Great Budget App Design Increases User Retention — Onething](https://www.onething.design/post/budget-app-design)
+- [Visual Hierarchy in UX: Definition — NN/g](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/)
+- [5 Principles of Visual Design in UX — NN/g](https://www.nngroup.com/articles/principles-visual-design/)
+- [Typography for Glanceable Reading — NN/g](https://www.nngroup.com/articles/glanceable-fonts/)
+- [All Caps — Stanford University](https://uit.stanford.edu/accessibility/learn-about/typography/all-caps)
+- [Buttons — Material Design 3](https://m3.material.io/components/buttons/guidelines)
+- [The elements of fintech typography: readable money — Bootcamp](https://medium.com/design-bootcamp/the-elements-of-fintech-typography-part-1-readable-money-b6c1226acbde)
+- [Fintech App Design: Balance and Transactions Screen — floow.design](https://www.floow.design/blog/how-to-design-a-fintech-app-screen)

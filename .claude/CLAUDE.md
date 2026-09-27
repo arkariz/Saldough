@@ -49,10 +49,11 @@ dari template (sisa T-7.3), ikon SVG, dan poles. Keputusan yang menunggu
 pemilik ada di bagian "Keputusan terbuka" TASK_LIST (mis. KT-1: ringkasan
 anggaran masih memindai seluruh riwayat).
 
-**Jalur UX di luar MVP:** 13 perbaikan hasil review UX 27 Sep 2026 ada di
-`docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-13). Saat mengecek
-progres, baca dokumen itu bersama TASK_LIST; empat item (UX-1, UX-4, UX-8,
-UX-10) menunggu keputusan pemilik.
+**Jalur UX/UI di luar MVP:** 22 perbaikan hasil review UX dan UI 27 Sep
+2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
+mengecek progres, baca dokumen itu bersama TASK_LIST. Sepuluh item terkunci:
+UX-1, UX-4, UX-8, UX-10 menunggu keputusan pemilik, dan enam item UI menunggu
+persetujuan ADR-020 (Proposed, hierarki penekanan bahasa visual pixel).
 
 ## Fakta proyek
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/di/freelance_scope.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
@@ -48,15 +47,9 @@ Future<void> openFreelanceOverview(BuildContext context) {
   );
 }
 
-/// Satu tab Ikhtisar Freelance: label (dengan jumlah) dan isinya.
-typedef _FreelanceTab = ({String label, Widget Function(FreelanceState state) build});
-
-/// Ikhtisar Freelance (T-5.6, FR-FRL-005): tab Worklog (bawaan) dan
-/// Pembayaran.
-///
-/// Daftar tab dibangun dari [_tabsFor], dan `DefaultTabController`
-/// mengikuti panjangnya. Tabnya akan dilepas di T-5.9 (Ikhtisar tanpa tab);
-/// tab Template (T-7.7) deprecated.
+/// Ikhtisar Freelance (FR-FRL-005, T-5.9): satu layar tanpa tab — kartu
+/// aturan, ringkasan upah & jam, lalu kartu proyek. Worklog dan pembayaran
+/// satu proyek ada di rinciannya.
 class FreelanceOverviewPage extends StatefulWidget {
   /// Membuat [FreelanceOverviewPage].
   const FreelanceOverviewPage({super.key});
@@ -72,37 +65,21 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
     context.read<FreelanceBloc>().add(const FreelanceStarted());
   }
 
-  List<_FreelanceTab> _tabsFor(FreelanceState state) => [
-    (label: t.freelance.worklogTab(count: state.entries.length), build: (s) => _WorklogTab(state: s)),
-    (label: t.freelance.paymentsTab(count: state.payments.length), build: (s) => _PaymentsTab(state: s)),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FreelanceBloc, FreelanceState>(
-      builder: (context, state) {
-        final tabs = _tabsFor(state);
-        return DefaultTabController(
-          length: tabs.length,
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(t.freelance.title),
-              bottom: state.isLoading || state.loadFailed
-                  ? null
-                  : TabBar(tabs: [for (final tab in tabs) Tab(text: tab.label)]),
+    return Scaffold(
+      appBar: AppBar(title: Text(t.freelance.title)),
+      body: SafeArea(
+        child: BlocBuilder<FreelanceBloc, FreelanceState>(
+          builder: (context, state) => switch (state) {
+            FreelanceState(isLoading: true) => const AppSkeletonPage(),
+            FreelanceState(loadFailed: true) => _LoadError(
+              onRetry: () => context.read<FreelanceBloc>().add(const FreelanceStarted()),
             ),
-            body: SafeArea(
-              child: switch (state) {
-                FreelanceState(isLoading: true) => const AppSkeletonPage(),
-                FreelanceState(loadFailed: true) => _LoadError(
-                  onRetry: () => context.read<FreelanceBloc>().add(const FreelanceStarted()),
-                ),
-                _ => TabBarView(children: [for (final tab in tabs) tab.build(state)]),
-              },
-            ),
-          ),
-        );
-      },
+            _ => _Overview(state: state),
+          },
+        ),
+      ),
     );
   }
 }
@@ -130,162 +107,49 @@ class _LoadError extends StatelessWidget {
   }
 }
 
-class _WorklogTab extends StatelessWidget {
-  const _WorklogTab({required this.state});
+class _Overview extends StatelessWidget {
+  const _Overview({required this.state});
 
   final FreelanceState state;
 
   @override
   Widget build(BuildContext context) {
-    final hasProjects = state.projects.isNotEmpty;
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
-            children: [
-              FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.ruleBody),
-              const SizedBox(height: AppSpacing.md),
-              if (!hasProjects)
-                FreelanceEmptyState(
-                  badge: t.freelance.projectsEmptyBadge,
-                  title: t.freelance.projectsEmptyTitle,
-                  body: t.freelance.projectsEmpty,
-                  icons: const [IconKey.freelance, IconKey.worklog, IconKey.hourlyRate],
-                  actionLabel: t.freelance.projectAddTitle,
-                  onAction: () => addProject(context),
-                )
-              else ...[
-                FreelanceSummaryCard(summary: state.summary, projectCount: state.projects.length),
-                const SizedBox(height: AppSpacing.md),
-                AppSectionLabel(t.freelance.projectsLabel),
-                const SizedBox(height: AppSpacing.xs),
-                AddProjectCard(onTap: () => addProject(context)),
-                const SizedBox(height: AppSpacing.sm),
-                for (final project in state.projects) ...[
-                  ProjectCard(
-                    project: project,
-                    stats: state.statsOf(project.id),
-                    onTap: () => openFreelanceProject(context, project),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PaymentsTab extends StatelessWidget {
-  const _PaymentsTab({required this.state});
-
-  final FreelanceState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
     return ListView(
       padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
       children: [
-        FreelanceNotice(title: t.freelance.receiveRuleTitle, body: t.freelance.paymentsRuleBody),
+        FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.ruleBody),
         const SizedBox(height: AppSpacing.md),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: _TotalTile(
-                  icon: IconKey.pending,
-                  label: t.freelance.pendingTotalLabel,
-                  amount: state.pendingNetTotal,
-                  caption: t.freelance.paymentCount(count: state.pendingPayments.length),
-                  color: colors.pending,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: _TotalTile(
-                  icon: IconKey.paid,
-                  label: t.freelance.paidTotalLabel,
-                  amount: state.paidNetTotal,
-                  caption: t.freelance.paymentCount(count: state.paidPayments.length),
-                  color: colors.income,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        if (state.payments.isEmpty)
+        if (state.projects.isEmpty)
           FreelanceEmptyState(
-            badge: t.freelance.paymentsEmptyBadge,
-            title: t.freelance.paymentsEmptyTitle,
-            body: t.freelance.paymentsEmptyOverviewBody,
-            icons: const [IconKey.invoice, IconKey.pending, IconKey.paid],
+            badge: t.freelance.projectsEmptyBadge,
+            title: t.freelance.projectsEmptyTitle,
+            body: t.freelance.projectsEmpty,
+            icons: const [IconKey.freelance, IconKey.worklog, IconKey.hourlyRate],
+            actionLabel: t.freelance.projectAddTitle,
+            onAction: () => addProject(context),
           )
         else ...[
+          FreelanceSummaryCard(
+            summary: state.summary,
+            projectCount: state.projects.length,
+            payments: state.paymentTotals,
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionLabel(t.freelance.projectsLabel),
           const SizedBox(height: AppSpacing.xs),
+          AddProjectCard(onTap: () => addProject(context)),
+          const SizedBox(height: AppSpacing.sm),
           for (final project in state.projectsByNextPayment) ...[
-            ProjectPaymentCard(
+            ProjectCard(
               project: project,
-              stats: state.paymentStatsOf(project.id),
-              onTap: () => openFreelanceProject(context, project, showPayments: true),
+              stats: state.statsOf(project.id),
+              paymentStats: state.paymentStatsOf(project.id),
+              onTap: () => openFreelanceProject(context, project),
             ),
             const SizedBox(height: AppSpacing.sm),
           ],
         ],
       ],
-    );
-  }
-}
-
-class _TotalTile extends StatelessWidget {
-  const _TotalTile({
-    required this.icon,
-    required this.label,
-    required this.amount,
-    required this.caption,
-    required this.color,
-  });
-
-  final IconKey icon;
-  final String label;
-  final int amount;
-  final String caption;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return TransactionSlab(
-      color: colors.tinted(color, 0.1),
-      shadow: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              AppIcon(icon, size: 18),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          FitStart(
-            child: Text(
-              AppMoneyFormatter.format(amount),
-              style: PixelTypography.tabularMono(context, fontSize: 17, color: colors.textPrimary),
-            ),
-          ),
-          Text(caption, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-        ],
-      ),
     );
   }
 }

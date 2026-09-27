@@ -74,18 +74,100 @@ class FreelanceShareBar extends StatelessWidget {
   }
 }
 
-/// Kartu satu proyek di tab Worklog: ikon, nama, tarif dan potongan, angka
-/// belum ditagih, bilah porsi (belum ditagih / tertunda / diterima), dan
-/// tanggal entri terakhir. Mengetuknya membuka rincian proyek.
+/// Satu baris nominal di kartu freelance: ikon, label kapital, keterangan,
+/// dan nominal di kanan. Tanpa [color], latarnya permukaan netral dan
+/// labelnya redup.
+class FreelanceAmountLine extends StatelessWidget {
+  /// Membuat [FreelanceAmountLine].
+  const FreelanceAmountLine({
+    required this.icon,
+    required this.label,
+    required this.caption,
+    required this.amount,
+    this.color,
+    super.key,
+  });
+
+  /// Ikon.
+  final IconKey icon;
+
+  /// Label; ditampilkan kapital.
+  final String label;
+
+  /// Keterangan di bawah label.
+  final String caption;
+
+  /// Nominal, sen.
+  final int amount;
+
+  /// Warna label dan latar tipis; `null` untuk baris netral.
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: color == null ? colors.surfaceLow : colors.tinted(color!, 0.1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        children: [
+          AppIcon(icon, size: 28),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color ?? colors.textMuted)),
+                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          // Nominal besar di layar sempit atau teks diperbesar mengecil,
+          // bukan meluber ke kanan.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                AppMoneyFormatter.format(amount),
+                style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Kartu satu proyek di Ikhtisar Freelance (T-5.9): ikon, nama, tarif dan
+/// potongan; baris belum ditagih (jam dan nominal kotor); baris tertunda
+/// dan diterima (gaji bersih) kalau ada; bilah porsi diterima / tertunda /
+/// belum ditagih; dan tanggal entri terakhir. Mengetuknya membuka rincian
+/// proyek.
 class ProjectCard extends StatelessWidget {
   /// Membuat [ProjectCard].
-  const ProjectCard({required this.project, required this.stats, required this.onTap, super.key});
+  const ProjectCard({
+    required this.project,
+    required this.stats,
+    required this.paymentStats,
+    required this.onTap,
+    super.key,
+  });
 
   /// Proyek yang ditampilkan.
   final FreelanceProject project;
 
-  /// Angka proyek.
+  /// Angka worklog proyek (kotor).
   final ProjectStats stats;
+
+  /// Angka pembayaran proyek (bersih).
+  final ProjectPaymentStats paymentStats;
 
   /// Membuka rincian proyek.
   final VoidCallback onTap;
@@ -104,6 +186,7 @@ class ProjectCard extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: TransactionSlab(
+          shadowColor: paymentStats.pendingCount > 0 ? colors.pending : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -124,37 +207,37 @@ class ProjectCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.sm),
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(4)),
-                child: Row(
-                  children: [
-                    const AppIcon(IconKey.workCompleted, size: 28),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.freelance.unbilledLabel.toUpperCase(),
-                            style: transactionLabelStyle(context, color: colors.textMuted),
-                          ),
-                          Text(
-                            stats.unbilledCount == 0
-                                ? t.freelance.unbilledNone
-                                : t.freelance.hoursValue(hours: stats.unbilledHours),
-                            style: textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      AppMoneyFormatter.format(stats.unbilledAmount),
-                      style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
-                    ),
-                  ],
-                ),
+              FreelanceAmountLine(
+                icon: IconKey.workCompleted,
+                label: t.freelance.unbilledLabel,
+                caption: stats.unbilledCount == 0
+                    ? t.freelance.unbilledNone
+                    : t.freelance.hoursValue(hours: stats.unbilledHours),
+                amount: stats.unbilledAmount,
               ),
+              if (paymentStats.pendingCount > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
+                FreelanceAmountLine(
+                  icon: IconKey.pending,
+                  label: t.freelance.pendingTotalLabel,
+                  caption: t.freelance.nextExpected(
+                    count: paymentStats.pendingCount,
+                    date: CycleMonthFormatter.formatDateShort(paymentStats.nextExpectedDate!),
+                  ),
+                  amount: paymentStats.pendingNet,
+                  color: colors.pending,
+                ),
+              ],
+              if (paymentStats.paidCount > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
+                FreelanceAmountLine(
+                  icon: IconKey.paid,
+                  label: t.freelance.paidTotalLabel,
+                  caption: t.freelance.paymentCount(count: paymentStats.paidCount),
+                  amount: paymentStats.paidNet,
+                  color: colors.income,
+                ),
+              ],
               if (stats.earned > 0) ...[
                 const SizedBox(height: AppSpacing.sm),
                 FreelanceShareBar(
@@ -193,102 +276,7 @@ class ProjectCard extends StatelessWidget {
   }
 }
 
-/// Kartu satu proyek di tab Pembayaran: ikon tagihan, nama, lalu tagihan
-/// tertunda (gaji bersih, jumlah, perkiraan terdekat) dan yang sudah
-/// diterima. Mengetuknya membuka tab Pembayaran di rincian proyek.
-class ProjectPaymentCard extends StatelessWidget {
-  /// Membuat [ProjectPaymentCard].
-  const ProjectPaymentCard({required this.project, required this.stats, required this.onTap, super.key});
-
-  /// Proyek yang ditampilkan.
-  final FreelanceProject project;
-
-  /// Angka pembayaran proyek.
-  final ProjectPaymentStats stats;
-
-  /// Membuka rincian proyek di tab Pembayaran.
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    Widget line(IconKey icon, String label, int amount, String caption, Color color) => Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(color: colors.tinted(color, 0.1), borderRadius: BorderRadius.circular(4)),
-      child: Row(
-        children: [
-          AppIcon(icon, size: 28),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
-                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-              ],
-            ),
-          ),
-          Text(
-            AppMoneyFormatter.format(amount),
-            style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
-          ),
-        ],
-      ),
-    );
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: TransactionSlab(
-          shadowColor: stats.pendingCount > 0 ? colors.pending : null,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  const FreelanceIconBox(IconKey.invoice, size: 48),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(child: Text(project.name, style: textTheme.titleMedium)),
-                  AppIcon(IconKey.chevronRight, color: colors.textMuted),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              if (stats.isEmpty)
-                Text(t.freelance.projectPaymentsNone, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted))
-              else ...[
-                line(
-                  IconKey.pending,
-                  t.freelance.statusPending,
-                  stats.pendingNet,
-                  switch (stats.nextExpectedDate) {
-                    final date? => t.freelance.nextExpected(
-                      count: stats.pendingCount,
-                      date: CycleMonthFormatter.formatDateShort(date),
-                    ),
-                    null => t.freelance.pendingNone,
-                  },
-                  colors.pending,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                line(
-                  IconKey.paid,
-                  t.freelance.statusPaid,
-                  stats.paidNet,
-                  t.freelance.paymentCount(count: stats.paidCount),
-                  colors.income,
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Kartu bergaris putus-putus di akhir daftar proyek: ajakan menambah
+/// Kartu bergaris putus-putus di atas daftar proyek: ajakan menambah
 /// proyek.
 class AddProjectCard extends StatelessWidget {
   /// Membuat [AddProjectCard].
@@ -314,9 +302,13 @@ class AddProjectCard extends StatelessWidget {
               children: [
                 AppIcon(IconKey.add, color: colors.accent),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
-                  t.freelance.projectAddTitle.toUpperCase(),
-                  style: transactionLabelStyle(context, size: 12, color: colors.accent),
+                // Teks diperbesar membungkus ke baris berikutnya, bukan meluber.
+                Flexible(
+                  child: Text(
+                    t.freelance.projectAddTitle.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: transactionLabelStyle(context, size: 12, color: colors.accent),
+                  ),
                 ),
               ],
             ),
@@ -499,9 +491,17 @@ class WorklogMonthHeader extends StatelessWidget {
           const AppIcon(IconKey.calendar, size: 20),
           const SizedBox(width: AppSpacing.xs),
           Expanded(child: Text(CycleMonthFormatter.format(key), style: Theme.of(context).textTheme.titleSmall)),
-          Text(
-            '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
-            style: transactionLabelStyle(context, color: colors.textMuted),
+          const SizedBox(width: AppSpacing.xs),
+          // Subtotal mengecil di layar sempit atau teks diperbesar.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
+                style: transactionLabelStyle(context, color: colors.textMuted),
+              ),
+            ),
           ),
         ],
       ),

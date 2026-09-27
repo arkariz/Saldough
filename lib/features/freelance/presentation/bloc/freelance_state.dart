@@ -65,8 +65,9 @@ final class ProjectStats {
   final DateTime? lastEntryDate;
 }
 
-/// Angka pembayaran satu proyek untuk kartu proyek di tab Pembayaran.
-/// Nominal adalah gaji BERSIH, sama dengan yang masuk ke dompet.
+/// Angka pembayaran satu proyek (atau seluruh proyek) untuk kartu proyek
+/// dan ringkasan Ikhtisar. Nominal adalah gaji BERSIH, sama dengan yang
+/// masuk ke dompet.
 final class ProjectPaymentStats {
   /// Membuat [ProjectPaymentStats].
   const ProjectPaymentStats({
@@ -241,14 +242,19 @@ final class FreelanceState extends UiState<FreelanceState> {
         ..sort((a, b) => paymentDateOf(b).compareTo(paymentDateOf(a)));
 
   /// Angka pembayaran [projectId].
-  ProjectPaymentStats paymentStatsOf(String projectId) {
+  ProjectPaymentStats paymentStatsOf(String projectId) =>
+      _paymentStats(payments.where((p) => p.projectId == projectId));
+
+  /// Angka pembayaran seluruh proyek, untuk ringkasan Ikhtisar.
+  ProjectPaymentStats get paymentTotals => _paymentStats(payments);
+
+  ProjectPaymentStats _paymentStats(Iterable<FreelancePayment> payments) {
     var pendingCount = 0;
     var pendingNet = 0;
     var paidCount = 0;
     var paidNet = 0;
     DateTime? next;
     for (final payment in payments) {
-      if (payment.projectId != projectId) continue;
       final net = breakdownOf(payment).netPay;
       if (payment.isPaid) {
         paidCount++;
@@ -268,7 +274,7 @@ final class FreelanceState extends UiState<FreelanceState> {
     );
   }
 
-  /// Proyek untuk tab Pembayaran: yang punya tagihan tertunda di atas,
+  /// Urutan kartu proyek di Ikhtisar: yang punya tagihan tertunda di atas,
   /// perkiraan terdekat lebih dulu; sisanya menyusul sesuai urutan simpan.
   List<FreelanceProject> get projectsByNextPayment {
     final stats = {for (final project in projects) project.id: paymentStatsOf(project.id)};

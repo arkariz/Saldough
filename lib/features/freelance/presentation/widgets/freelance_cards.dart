@@ -36,13 +36,24 @@ class FreelanceBadge extends StatelessWidget {
 
 /// Ringkasan upah dan jam (FR-FRL-005, rujukan
 /// `pixel_kas_freelance_overview_worklog`): waktu kerja, total diperoleh,
-/// sudah diterima, belum diterima, dan bilah porsinya. Semuanya gaji kotor.
+/// sudah diterima, belum diterima, dan bilah porsinya — semuanya gaji kotor.
+/// Kalau sudah ada pembayaran, di bawahnya menyusul baris tertunda dan
+/// diterima versi gaji BERSIH, dengan label "(bersih)" supaya tidak tertukar
+/// dengan ubin kotor (T-5.9).
 class FreelanceSummaryCard extends StatelessWidget {
   /// Membuat [FreelanceSummaryCard].
-  const FreelanceSummaryCard({required this.summary, required this.projectCount, super.key});
+  const FreelanceSummaryCard({
+    required this.summary,
+    required this.projectCount,
+    required this.payments,
+    super.key,
+  });
 
   /// Ringkasan yang ditampilkan.
   final FreelanceSummary summary;
+
+  /// Angka pembayaran seluruh proyek (bersih).
+  final ProjectPaymentStats payments;
 
   /// Jumlah proyek.
   final int projectCount;
@@ -115,6 +126,29 @@ class FreelanceSummaryCard extends StatelessWidget {
             Text(
               t.freelance.paidRatio(percent: (ratio * 100).round()),
               style: transactionLabelStyle(context, color: colors.textMuted),
+            ),
+          ],
+          if (payments.pendingCount > 0) ...[
+            const SizedBox(height: AppSpacing.sm),
+            FreelanceAmountLine(
+              icon: IconKey.pending,
+              label: t.freelance.pendingTotalLabel,
+              caption: t.freelance.nextExpected(
+                count: payments.pendingCount,
+                date: CycleMonthFormatter.formatDateShort(payments.nextExpectedDate!),
+              ),
+              amount: payments.pendingNet,
+              color: colors.pending,
+            ),
+          ],
+          if (payments.paidCount > 0) ...[
+            const SizedBox(height: AppSpacing.xs),
+            FreelanceAmountLine(
+              icon: IconKey.paid,
+              label: t.freelance.paidTotalLabel,
+              caption: t.freelance.paymentCount(count: payments.paidCount),
+              amount: payments.paidNet,
+              color: colors.income,
             ),
           ],
         ],
@@ -250,9 +284,17 @@ class WorklogEntryCard extends StatelessWidget {
                       style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textMuted),
                     ),
                   ),
-                  Text(
-                    AppMoneyFormatter.format(entry.earnedAmount),
-                    style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                  const SizedBox(width: AppSpacing.xs),
+                  // Nominal mengecil di layar sempit atau teks diperbesar.
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Text(
+                        AppMoneyFormatter.format(entry.earnedAmount),
+                        style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -453,9 +453,9 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get earnedLabel => 'Total earned';
 	@override String get earnedCaption => 'Hours × rate, before deductions';
 	@override String get paidLabel => 'Received';
-	@override String get paidCaption => 'Payment already recorded';
+	@override String get paidCaption => 'Gross pay · payment already recorded';
 	@override String get unpaidLabel => 'Not received';
-	@override String get unpaidCaption => 'Unbilled or pending';
+	@override String get unpaidCaption => 'Gross pay · unbilled or pending';
 	@override String paidRatio({required Object percent}) => '${percent}% received';
 	@override String get projectsLabel => 'Projects';
 	@override String get projectsEmpty => 'No projects yet. Add a client or project with its hourly rate first.';
@@ -517,7 +517,6 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String receivedOn({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}';
 	@override String get unknownProject => 'Deleted project';
 	@override String get unknownWallet => 'deleted wallet';
-	@override String get paymentsRuleBody => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.';
 	@override String get pendingTotalLabel => 'Pending (net)';
 	@override String get paidTotalLabel => 'Received (net)';
 	@override String paymentCount({required Object count}) => 'Payments: ${count}';
@@ -575,11 +574,8 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentsEmptyBadge => 'No invoices yet';
 	@override String get paymentsEmptyTitle => 'No payments yet';
 	@override String get paymentsEmptyBody => 'Tap Bill below to group unbilled work hours into one payment.';
-	@override String get paymentsEmptyOverviewBody => 'Open a project in the Worklog tab, then tap Bill to group its work hours into a payment.';
 	@override String get paymentsFilteredEmpty => 'No payments with this status.';
-	@override String get projectPaymentsNone => 'No payments for this project yet.';
 	@override String nextExpected({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}';
-	@override String get pendingNone => 'Nothing pending';
 	@override String paymentWorkRange({required Object range}) => 'Work ${range}';
 }
 
@@ -925,9 +921,9 @@ extension on TranslationsEn {
 			'freelance.earnedLabel' => 'Total earned',
 			'freelance.earnedCaption' => 'Hours × rate, before deductions',
 			'freelance.paidLabel' => 'Received',
-			'freelance.paidCaption' => 'Payment already recorded',
+			'freelance.paidCaption' => 'Gross pay · payment already recorded',
 			'freelance.unpaidLabel' => 'Not received',
-			'freelance.unpaidCaption' => 'Unbilled or pending',
+			'freelance.unpaidCaption' => 'Gross pay · unbilled or pending',
 			'freelance.paidRatio' => ({required Object percent}) => '${percent}% received',
 			'freelance.projectsLabel' => 'Projects',
 			'freelance.projectsEmpty' => 'No projects yet. Add a client or project with its hourly rate first.',
@@ -989,7 +985,6 @@ extension on TranslationsEn {
 			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Received ${date} in ${wallet}',
 			'freelance.unknownProject' => 'Deleted project',
 			'freelance.unknownWallet' => 'deleted wallet',
-			'freelance.paymentsRuleBody' => 'Tap Record Received only when the money has actually reached your account. This creates one income record and adds to the chosen wallet\'s balance.',
 			'freelance.pendingTotalLabel' => 'Pending (net)',
 			'freelance.paidTotalLabel' => 'Received (net)',
 			'freelance.paymentCount' => ({required Object count}) => 'Payments: ${count}',
@@ -1047,11 +1042,8 @@ extension on TranslationsEn {
 			'freelance.paymentsEmptyBadge' => 'No invoices yet',
 			'freelance.paymentsEmptyTitle' => 'No payments yet',
 			'freelance.paymentsEmptyBody' => 'Tap Bill below to group unbilled work hours into one payment.',
-			'freelance.paymentsEmptyOverviewBody' => 'Open a project in the Worklog tab, then tap Bill to group its work hours into a payment.',
 			'freelance.paymentsFilteredEmpty' => 'No payments with this status.',
-			'freelance.projectPaymentsNone' => 'No payments for this project yet.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
-			'freelance.pendingNone' => 'Nothing pending',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			_ => null,
 		};

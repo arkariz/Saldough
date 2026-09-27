@@ -21,7 +21,7 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 26 September 2026.
+Terakhir diperbarui: 27 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -30,10 +30,10 @@ Terakhir diperbarui: 26 September 2026.
 | 2 — Layar inti: CATAT, Transaksi, Dompet | 12 | 12 | Selesai |
 | 3 — Cutover | 9 | 9 | Selesai |
 | 4 — Anggaran | 11 | 11 | Selesai |
-| 5 — Freelance | 9 | 8 | Berjalan — T-5.9 (Ikhtisar tanpa tab) belum dikodekan |
+| 5 — Freelance | 9 | 9 | Selesai |
 | 6 — Beranda | 6 | 0 | Belum dimulai |
 | 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
-| **Total MVP** | **76** | **64** | |
+| **Total MVP** | **76** | **65** | |
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -919,10 +919,20 @@ tanpa menyelesaikan apa pun.
 - [x] **T-5.8** Tambahkan namespace i18n `freelance` dan daftarkan
       `FreelanceScope`.
       Memenuhi NFR-UX-004.
-- [ ] **T-5.9** Rombak Ikhtisar Freelance jadi **satu layar utama tanpa
+- [x] **T-5.9** Rombak Ikhtisar Freelance jadi **satu layar utama tanpa
       tab** (keputusan pemilik, 25 Sep 2026, sesudah mencoba versi dua tab
-      di emulator). Belum dikodekan; ini catatan serah terima untuk sesi
-      berikutnya. PRD FR-FRL-005 dan glosarium sudah direvisi.
+      di emulator). PRD FR-FRL-005 dan glosarium sudah direvisi.
+      ⚠ **Selesai** (27 Sep 2026, branch `claude/freelance-t-5-9`): Ikhtisar
+      satu `ListView`; ringkasan memakai ubin kotor (keterangan kini
+      menyebut "Gaji kotor") ditambah baris "Tertunda (bersih)" dan
+      "Diterima (bersih)" dari `FreelanceState.paymentTotals`, yang hanya
+      tampil kalau ada isinya; `ProjectCard` gabungan menggantikan
+      `ProjectPaymentCard`, barisnya memakai `FreelanceAmountLine`;
+      `showPayments`, `_PaymentsTab`, `_TotalTile`, dan empat kunci i18n
+      yatim dihapus. 454 uji lulus (termasuk uji state baru, diuji mutasi).
+      Diverifikasi di emulator dengan build rilis: proyek → 3 entri → tagih
+      2 → Catat Diterima menambah saldo BCA tepat Rp848.250 satu kali.
+      Catatan serah terima aslinya di bawah dibiarkan sebagai jejak.
 
       **Keadaan kode sekarang** (branch `claude/freelance-fase-5`, commit
       `da8e927`, 428 uji lulus):

@@ -7,6 +7,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
@@ -114,16 +115,13 @@ void main() {
     await freelanceRepository.savePayment(payment);
   }
 
-  testWidgets('CATAT → Catat Pemasukan → kartu Freelance membuka Ikhtisar Freelance dengan tab Worklog', (
-    tester,
-  ) async {
+  testWidgets('CATAT → Catat Pemasukan → kartu Freelance membuka Ikhtisar Freelance tanpa tab', (tester) async {
     tallViewport(tester);
     await openShell(tester);
     await openFreelanceThroughRecord(tester);
 
     expect(find.byType(FreelanceOverviewPage), findsOneWidget);
-    expect(find.text(t.freelance.worklogTab(count: 0)), findsOneWidget);
-    expect(find.text(t.freelance.paymentsTab(count: 0)), findsOneWidget);
+    expect(find.byType(TabBar), findsNothing);
     expect(find.text(t.freelance.projectsEmpty), findsOneWidget);
     expect(find.text(t.freelance.ruleBody), findsOneWidget);
   });
@@ -134,8 +132,11 @@ void main() {
     await openShell(tester);
     await openFreelanceThroughRecord(tester);
 
-    // Tab Worklog berisi kartu proyek; entrinya ada di rincian proyek.
+    // Ikhtisar satu layar: tertunda bersih tampil di ringkasan dan di kartu
+    // proyek, berlabel "(bersih)".
     expect(find.byType(ProjectCard), findsOneWidget);
+    expect(find.text(t.freelance.pendingTotalLabel.toUpperCase()), findsNWidgets(2));
+    expect(find.text(AppMoneyFormatter.format(261543750)), findsNWidgets(2));
     await tester.tap(find.byType(ProjectCard));
     await tester.pumpAndSettle();
     expect(find.byType(FreelanceProjectPage), findsOneWidget);
@@ -145,17 +146,12 @@ void main() {
       find.descendant(of: find.byType(WorklogEntryCard), matching: find.text(t.freelance.statusPending.toUpperCase())),
       findsOneWidget,
     );
-    await tester.pageBack();
-    await tester.pumpAndSettle();
 
-    // Tab Pembayaran berisi kartu proyek; pembayarannya di rincian proyek.
+    // Pembayarannya di tab Pembayaran rincian proyek, penyaring bawaan
+    // Tertunda.
     await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
     await tester.pumpAndSettle();
-    expect(find.byType(ProjectPaymentCard), findsOneWidget);
-    await tester.tap(find.byType(ProjectPaymentCard));
-    await tester.pumpAndSettle();
-    // Terbuka langsung di tab Pembayaran, penyaring bawaan Tertunda.
-    expect(find.text('${t.freelance.statusPending} (1)'), findsOneWidget);
+    expect(find.bySemanticsLabel('${t.freelance.statusPending} (1)'), findsOneWidget);
     await tester.tap(find.text(t.freelance.receiveAction));
     await tester.pumpAndSettle();
     // Lembar pencatatan: gaji bersih Rp2.615.438, dompet tunggal terpilih.
@@ -170,7 +166,7 @@ void main() {
     expect(income.amount, 261543750);
     expect(income.freelancePaymentId, 'pay');
     // Pembayaran yang baru diterima keluar dari penyaring Tertunda.
-    await tester.tap(find.text('${t.freelance.filterAll} (1)'));
+    await tester.tap(find.bySemanticsLabel('${t.freelance.filterAll} (1)'));
     await tester.pumpAndSettle();
     expect(find.text(t.freelance.receiptCancelAction), findsOneWidget);
     expect(find.text(t.freelance.receiveAction), findsNothing);
@@ -221,12 +217,20 @@ void main() {
     await tester.tap(find.byType(ProjectCard));
     await tester.pumpAndSettle();
 
+    // Kop proyek satu kali, di atas tab — bukan disalin di dalam tiap tab.
+    // 51 jam × Rp72.500 = Rp3.697.500.
+    final header = find.text(
+      t.freelance.projectTotals(hours: 51, amount: AppMoneyFormatter.format(369750000)),
+    );
+    expect(header, findsOneWidget);
+    expect(find.descendant(of: find.byType(TabBarView), matching: header), findsNothing);
+
     // Bawaan: hanya 3 entri belum ditagih, dalam dua kelompok bulan.
     expect(find.byType(WorklogEntryCard), findsNWidgets(3));
     expect(find.byType(WorklogMonthHeader), findsNWidgets(2));
-    expect(find.text('${t.freelance.statusUnbilled} (3)'), findsOneWidget);
+    expect(find.bySemanticsLabel('${t.freelance.statusUnbilled} (3)'), findsOneWidget);
 
-    await tester.tap(find.text('${t.freelance.filterAll} (4)'));
+    await tester.tap(find.bySemanticsLabel('${t.freelance.filterAll} (4)'));
     await tester.pumpAndSettle();
     expect(find.byType(WorklogEntryCard), findsNWidgets(4));
 
@@ -234,5 +238,42 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(t.freelance.paymentAddTitle), findsWidgets);
     expect(find.text(t.freelance.paymentEntriesLabel(count: 3, hours: 14).toUpperCase()), findsOneWidget);
+  });
+
+  testWidgets('Freelance di layar 360px + teks 2x: ikhtisar, rincian proyek, dan tab pembayaran tidak overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 3200);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(() {
+      tester.view.reset();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+    await seedPendingPayment();
+    await openShell(tester);
+    await openFreelanceThroughRecord(tester);
+
+    // Ikhtisar: kartu proyek dan kartu tambah proyek.
+    expect(find.byType(AddProjectCard), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+
+    // Kop proyek, ubin penyaring, judul bulan, dan kartu entri.
+    expect(tester.takeException(), isNull);
+    // Empat ubin: Semua, Belum ditagih, Tertunda, Diterima.
+    expect(find.bySemanticsLabel('${t.freelance.statusUnbilled} (0)'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel('${t.freelance.filterAll} (1)'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WorklogEntryCard), findsOneWidget);
+    expect(find.byType(WorklogMonthHeader), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
+    await tester.pumpAndSettle();
+    expect(find.byType(FreelancePaymentCard), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

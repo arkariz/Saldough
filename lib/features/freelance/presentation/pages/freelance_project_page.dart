@@ -18,17 +18,14 @@ import 'package:state_management/state_management.dart';
 /// Membuka rincian [project] di atas Ikhtisar Freelance, memakai
 /// `FreelanceBloc` yang sama. Snackbar hasil aksinya tetap tampil lewat
 /// `EffectListener` milik Ikhtisar Freelance di bawahnya.
-///
-/// [showPayments] membuka tab Pembayaran lebih dulu (dari tab Pembayaran di
-/// Ikhtisar Freelance); bawaannya tab Worklog.
-Future<void> openFreelanceProject(BuildContext context, FreelanceProject project, {bool showPayments = false}) {
+Future<void> openFreelanceProject(BuildContext context, FreelanceProject project) {
   final bloc = context.read<FreelanceBloc>();
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => PixelTheme(
         child: BlocProvider.value(
           value: bloc,
-          child: FreelanceProjectPage(projectId: project.id, showPayments: showPayments),
+          child: FreelanceProjectPage(projectId: project.id),
         ),
       ),
     ),
@@ -84,13 +81,10 @@ enum PaymentFilter {
 /// tagih entri yang belum ditagih.
 class FreelanceProjectPage extends StatefulWidget {
   /// Membuat [FreelanceProjectPage].
-  const FreelanceProjectPage({required this.projectId, this.showPayments = false, super.key});
+  const FreelanceProjectPage({required this.projectId, super.key});
 
   /// Proyek yang ditampilkan; dibaca ulang dari state tiap kali berubah.
   final String projectId;
-
-  /// Membuka tab Pembayaran lebih dulu.
-  final bool showPayments;
 
   @override
   State<FreelanceProjectPage> createState() => _FreelanceProjectPageState();
@@ -126,7 +120,6 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
         final payments = state.paymentsOfProject(project.id);
         return DefaultTabController(
           length: 2,
-          initialIndex: widget.showPayments ? 1 : 0,
           child: Scaffold(
             appBar: AppBar(
               title: Text(project.name),
@@ -140,22 +133,42 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                   },
                 ),
               ],
-              bottom: TabBar(
-                tabs: [
-                  Tab(text: t.freelance.worklogTab(count: entries.length)),
-                  Tab(text: t.freelance.paymentsTab(count: payments.length)),
-                ],
-              ),
             ),
             body: SafeArea(
               child: Column(
                 children: [
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        _worklogList(state, project, stats, entries),
-                        _paymentList(state, project, stats, payments),
+                    // Kop proyek satu kali di atas tab, ikut tergulir; bilah
+                    // tab menempel. Isi tiap tab hanya penyaring dan daftarnya.
+                    child: NestedScrollView(
+                      headerSliverBuilder: (context, _) => [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+                          sliver: SliverToBoxAdapter(
+                            child: _ProjectHeader(project: project, stats: stats),
+                          ),
+                        ),
+                        SliverOverlapAbsorber(
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                          sliver: SliverPersistentHeader(
+                            pinned: true,
+                            delegate: _TabBarDelegate(
+                              TabBar(
+                                tabs: [
+                                  Tab(text: t.freelance.worklogTab(count: entries.length)),
+                                  Tab(text: t.freelance.paymentsTab(count: payments.length)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
+                      body: TabBarView(
+                        children: [
+                          _worklogList(state, entries),
+                          _paymentList(state, payments),
+                        ],
+                      ),
                     ),
                   ),
                   FreelanceBottomBar(
@@ -182,21 +195,23 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     );
   }
 
-  Widget _worklogList(FreelanceState state, FreelanceProject project, ProjectStats stats, List<WorklogEntry> entries) {
+  Widget _worklogList(FreelanceState state, List<WorklogEntry> entries) {
     final counts = {
       for (final filter in EntryFilter.values) filter: entries.where((e) => filter.matches(state.statusOf(e))).length,
     };
     final rows = _entryRows(entries.where((e) => _entryFilter.matches(state.statusOf(e))).toList());
-    String label(EntryFilter filter) => switch (filter) {
-      EntryFilter.all => t.freelance.filterAll,
-      EntryFilter.unbilled => t.freelance.statusUnbilled,
-      EntryFilter.pending => t.freelance.statusPending,
-      EntryFilter.paid => t.freelance.statusPaid,
+    final colors = context.appColors;
+    _FilterOption<EntryFilter> option(EntryFilter filter) => switch (filter) {
+      EntryFilter.all => (filter, t.freelance.filterAll, IconKey.worklog, colors.accent),
+      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled, IconKey.workCompleted, colors.textPrimary),
+      EntryFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
+      EntryFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
     };
     return _SectionList(
-      header: _ProjectHeader(project: project, stats: stats),
+      storageKey: 'worklog',
       filters: _FilterRow<EntryFilter>(
-        options: [for (final filter in EntryFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
+        options: [for (final filter in EntryFilter.values) option(filter)],
+        counts: counts,
         selected: _entryFilter,
         onChanged: (filter) => setState(() => _entryFilter = filter),
       ),
@@ -232,23 +247,20 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     );
   }
 
-  Widget _paymentList(
-    FreelanceState state,
-    FreelanceProject project,
-    ProjectStats stats,
-    List<FreelancePayment> payments,
-  ) {
+  Widget _paymentList(FreelanceState state, List<FreelancePayment> payments) {
     final counts = {for (final filter in PaymentFilter.values) filter: payments.where(filter.matches).length};
     final rows = _paymentRows(state, payments.where(_paymentFilter.matches).toList());
-    String label(PaymentFilter filter) => switch (filter) {
-      PaymentFilter.all => t.freelance.filterAll,
-      PaymentFilter.pending => t.freelance.statusPending,
-      PaymentFilter.paid => t.freelance.statusPaid,
+    final colors = context.appColors;
+    _FilterOption<PaymentFilter> option(PaymentFilter filter) => switch (filter) {
+      PaymentFilter.all => (filter, t.freelance.filterAll, IconKey.invoice, colors.accent),
+      PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
+      PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
     };
     return _SectionList(
-      header: _ProjectHeader(project: project, stats: stats),
+      storageKey: 'payments',
       filters: _FilterRow<PaymentFilter>(
-        options: [for (final filter in PaymentFilter.values) (filter, '${label(filter)} (${counts[filter]})')],
+        options: [for (final filter in PaymentFilter.values) option(filter)],
+        counts: counts,
         selected: _paymentFilter,
         onChanged: (filter) => setState(() => _paymentFilter = filter),
       ),
@@ -360,18 +372,21 @@ class _PaymentCard extends StatelessWidget {
   }
 }
 
-/// Satu tab rincian proyek: kop, penyaring, lalu baris-barisnya yang dimuat
-/// bertahap, atau [empty] kalau tidak ada baris.
+/// Satu tab rincian proyek: penyaring, lalu baris-barisnya yang dimuat
+/// bertahap, atau [empty] kalau tidak ada baris. Kop proyek dan bilah tab
+/// milik `NestedScrollView` di atasnya; [SliverOverlapInjector] menjaga
+/// baris pertama tidak tertutup bilah tab yang menempel.
 class _SectionList extends StatelessWidget {
   const _SectionList({
-    required this.header,
+    required this.storageKey,
     required this.filters,
     required this.rows,
     required this.empty,
     required this.buildRow,
   });
 
-  final Widget header;
+  /// Kunci posisi gulir tab ini, supaya tidak tertukar dengan tab lain.
+  final String storageKey;
   final Widget filters;
   final List<_Row> rows;
   final Widget empty;
@@ -379,17 +394,45 @@ class _SectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
-      itemCount: 2 + (rows.isEmpty ? 1 : rows.length),
-      itemBuilder: (context, index) => switch (index) {
-        0 => header,
-        1 => filters,
-        _ when rows.isEmpty => empty,
-        _ => buildRow(context, rows[index - 2]),
-      },
+    return CustomScrollView(
+      key: PageStorageKey(storageKey),
+      slivers: [
+        SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.lg),
+          sliver: SliverList.builder(
+            itemCount: 1 + (rows.isEmpty ? 1 : rows.length),
+            itemBuilder: (context, index) => switch (index) {
+              0 => filters,
+              _ when rows.isEmpty => empty,
+              _ => buildRow(context, rows[index - 1]),
+            },
+          ),
+        ),
+      ],
     );
   }
+}
+
+/// Bilah tab yang menempel di atas daftar saat kop proyek tergulir keluar.
+class _TabBarDelegate extends SliverPersistentHeaderDelegate {
+  _TabBarDelegate(this.tabBar);
+
+  final TabBar tabBar;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ColoredBox(color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+  }
+
+  @override
+  bool shouldRebuild(_TabBarDelegate oldDelegate) => oldDelegate.tabBar != tabBar;
 }
 
 class _FilteredEmpty extends StatelessWidget {
@@ -462,9 +505,16 @@ class _ProjectHeader extends StatelessWidget {
                       children: [
                         const AppIcon(IconKey.hourlyRate, size: 20),
                         const SizedBox(width: 4),
-                        Text(
-                          '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
-                          style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                        // Tarif mengecil di layar sempit atau teks diperbesar.
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
+                              style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -576,27 +626,133 @@ class _StatTile extends StatelessWidget {
 }
 
 /// Chip penyaring beserta jumlahnya.
-class _FilterRow<T> extends StatelessWidget {
-  const _FilterRow({required this.options, required this.selected, required this.onChanged});
+/// Satu pilihan penyaring: nilai, label, ikon status, dan warnanya.
+typedef _FilterOption<T> = (T value, String label, IconKey icon, Color color);
 
-  final List<(T, String)> options;
+/// Penyaring status berupa deretan ubin pixel selebar layar. Tiap ubin
+/// memuat ikon status, jumlahnya dalam angka besar, dan labelnya — jadi
+/// sekaligus ringkasan per status. Ubin terpilih diwarnai sesuai statusnya
+/// dan terangkat di atas bayangan keras; sisanya datar dan redup.
+class _FilterRow<T> extends StatelessWidget {
+  const _FilterRow({required this.options, required this.counts, required this.selected, required this.onChanged});
+
+  final List<_FilterOption<T>> options;
+  final Map<T, int> counts;
   final T selected;
   final ValueChanged<T> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: AppSpacing.xs),
+      child: IntrinsicHeight(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (final (value, label) in options) ...[
-              AppChip(label: label, selected: value == selected, color: colors.accent, onTap: () => onChanged(value)),
-              const SizedBox(width: AppSpacing.xs),
+            for (final (index, (value, label, icon, color)) in options.indexed) ...[
+              if (index > 0) const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: _FilterTile(
+                  label: label,
+                  count: counts[value] ?? 0,
+                  icon: icon,
+                  color: color,
+                  selected: value == selected,
+                  onTap: () => onChanged(value),
+                ),
+              ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterTile extends StatefulWidget {
+  const _FilterTile({
+    required this.label,
+    required this.count,
+    required this.icon,
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final IconKey icon;
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  State<_FilterTile> createState() => _FilterTileState();
+}
+
+class _FilterTileState extends State<_FilterTile> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final selected = widget.selected;
+    // Terpilih: terangkat 3px di atas bayangan keras; ditekan: turun rata.
+    final lift = selected && !_pressed ? 3.0 : 0.0;
+    final ink = selected ? widget.color : colors.textMuted;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '${widget.label} (${widget.count})',
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
+          duration: AppDurations.fast,
+          margin: EdgeInsets.only(top: 3 - lift, bottom: lift),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.xs, AppSpacing.sm, AppSpacing.xs, AppSpacing.sm),
+          decoration: BoxDecoration(
+            color: selected ? colors.tinted(widget.color, 0.14) : colors.surfaceLow,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: selected ? widget.color : Colors.transparent, width: AppBorder.thick),
+            boxShadow: [
+              if (lift > 0) BoxShadow(color: widget.color, offset: Offset(0, lift)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Opacity(opacity: selected ? 1 : 0.55, child: AppIcon(widget.icon, size: 20)),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: FitStart(
+                      child: Text(
+                        '${widget.count}',
+                        style: PixelTypography.tabularMono(
+                          context,
+                          fontSize: 18,
+                          color: selected ? colors.textPrimary : colors.textMuted,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                widget.label.toUpperCase(),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: transactionLabelStyle(context, size: 9, color: ink),
+              ),
+            ],
+          ),
         ),
       ),
     );

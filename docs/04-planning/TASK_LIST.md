@@ -985,15 +985,35 @@ seluruh fitur di atasnya menghasilkan data.
       ⚠ Transfer tidak dihitung sebagai pemasukan maupun pengeluaran. Kalau ia
       ikut dihitung, satu pemindahan Rp1.000.000 akan tampil sebagai pemasukan
       sekaligus pengeluaran — dua angka yang sama-sama salah.
+      ⚠ Sebagian: domain selesai, UI belum. `CalculateCashFlow` di
+      `shared/transaction` (diekspor barrel) menjumlahkan pemasukan dan
+      pengeluaran bulan kalender, transfer dilewati; diuji mutasi (transfer
+      ikut dihitung → merah). Total saldo tetap `Σ currentBalance` dompet
+      aktif, seperti `WalletState.totalBalance`.
       Memenuhi FR-HOME-001.
 - [ ] **T-6.2** Tampilkan ringkasan anggaran — total rencana, terpakai, dan
       sisa — beserta jalan ke layar Anggaran.
+      ⚠ Sebagian: domain selesai, UI belum. Port `BudgetOverviewSource` milik
+      `home` (ADR-0009), diimplementasikan `BudgetOverviewSourceImpl` di
+      `budget/data/adapters/` memakai `CalculateBudgetProgress` yang sama
+      dengan layar Anggaran, dikawat di `RootModule`. Hanya anggaran aktif;
+      sisa boleh negatif. Diuji mutasi (anggaran nonaktif ikut → merah).
       Memenuhi FR-HOME-002.
 - [ ] **T-6.3** Tampilkan ringkasan freelance: total jam, diperoleh, sudah
       dibayar, belum dibayar, dan tanggal pembayaran terdekat yang belum
       diterima. Sembunyikan sepenuhnya kalau tidak ada pembayaran tertunda.
       ⚠ **Jangan menampilkan entri worklog satu per satu di Beranda.** Beranda
       memuat ringkasan; daftar kerjanya ada di Ikhtisar Freelance.
+      ⚠ Sebagian: domain selesai, UI belum. Port `FreelanceOverviewSource`
+      milik `home` mengembalikan `null` kalau tidak ada pembayaran tertunda,
+      selain itu jam, diperoleh, dibayar, belum dibayar (semuanya **kotor**,
+      sama dengan puncak Ikhtisar), jumlah tertunda, dan perkiraan terdekat.
+      Rumus ringkasan dipindah ke `SummarizeWorklog` (domain `freelance`) dan
+      dipakai bersama `FreelanceState.summary`, supaya Beranda dan Ikhtisar
+      tidak pernah berbeda. Diuji mutasi (tertunda dianggap dibayar → merah;
+      perkiraan terjauh → merah).
+      ⚠ Label UI harus menyebut "kotor" — lihat peringatan T-5.9 tentang dua
+      angka "diterima".
       Memenuhi FR-HOME-003.
 - [ ] **T-6.4** Tampilkan transaksi terbaru beserta jalan ke layar Transaksi.
       Memenuhi FR-HOME-004.

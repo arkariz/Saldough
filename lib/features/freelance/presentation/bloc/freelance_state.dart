@@ -3,27 +3,11 @@ import 'package:saldough/features/freelance/domain/entities/freelance_project.da
 import 'package:saldough/features/freelance/domain/entities/net_pay_breakdown.dart';
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/domain/usecases/calculate_net_pay.dart';
+import 'package:saldough/features/freelance/domain/usecases/summarize_worklog.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
-/// Ringkasan worklog di puncak Ikhtisar Freelance (FR-FRL-005). Seluruh
-/// nominal adalah gaji KOTOR (jam × tarif): [paid] + [unpaid] = [earned].
-final class FreelanceSummary {
-  /// Membuat [FreelanceSummary].
-  const FreelanceSummary({required this.totalHours, required this.earned, required this.paid});
-
-  /// Total jam seluruh entri.
-  final int totalHours;
-
-  /// Total diperoleh (kotor), sen.
-  final int earned;
-
-  /// Bagian [earned] yang pembayarannya sudah dicatat diterima, sen.
-  final int paid;
-
-  /// Bagian [earned] yang belum diterima — belum ditagihkan maupun tertunda.
-  int get unpaid => earned - paid;
-}
+export 'package:saldough/features/freelance/domain/usecases/summarize_worklog.dart' show FreelanceSummary;
 
 /// Status tagihan satu entri worklog, diturunkan dari pembayarannya.
 enum EntryBillingStatus {
@@ -317,17 +301,7 @@ final class FreelanceState extends UiState<FreelanceState> {
   int get paidNetTotal => paidPayments.fold(0, (sum, p) => sum + breakdownOf(p).netPay);
 
   /// Ringkasan worklog (FR-FRL-005).
-  FreelanceSummary get summary {
-    var hours = 0;
-    var earned = 0;
-    var paid = 0;
-    for (final entry in entries) {
-      hours += entry.hours;
-      earned += entry.earnedAmount;
-      if (paymentOf(entry)?.isPaid ?? false) paid += entry.earnedAmount;
-    }
-    return FreelanceSummary(totalHours: hours, earned: earned, paid: paid);
-  }
+  FreelanceSummary get summary => const SummarizeWorklog()(entries, payments);
 
   @override
   FreelanceState copyWith({

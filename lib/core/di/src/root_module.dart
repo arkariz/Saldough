@@ -6,13 +6,17 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
+import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
+import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -71,11 +75,24 @@ abstract final class RootModule {
       ..registerLazySingleton<BudgetItemCatalog>(
         () => BudgetItemCatalogImpl(repository: container<BudgetRepository>()),
       )
+      // Port milik `home` (ringkasan anggaran Beranda, T-6.2),
+      // diimplementasikan `budget` — pola port kecil ADR-0009.
+      ..registerLazySingleton<BudgetOverviewSource>(
+        () => BudgetOverviewSourceImpl(
+          budgetRepository: container<BudgetRepository>(),
+          transactionRepository: container<TransactionRepository>(),
+        ),
+      )
       // Milik fitur `freelance`, di akar karena `FreelanceScope` dibuat dan
       // dibuang tiap Ikhtisar Freelance dibuka (lihat `FreelanceScope`), dan
       // Beranda (Fase 6) akan membacanya juga.
       ..registerLazySingleton<FreelanceRepository>(
         () => FreelanceRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Port milik `home` (ringkasan freelance Beranda, T-6.3),
+      // diimplementasikan `freelance`.
+      ..registerLazySingleton<FreelanceOverviewSource>(
+        () => FreelanceOverviewSourceImpl(repository: container<FreelanceRepository>()),
       );
   }
 

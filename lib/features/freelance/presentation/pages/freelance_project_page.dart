@@ -18,17 +18,14 @@ import 'package:state_management/state_management.dart';
 /// Membuka rincian [project] di atas Ikhtisar Freelance, memakai
 /// `FreelanceBloc` yang sama. Snackbar hasil aksinya tetap tampil lewat
 /// `EffectListener` milik Ikhtisar Freelance di bawahnya.
-///
-/// [showPayments] membuka tab Pembayaran lebih dulu (dari tab Pembayaran di
-/// Ikhtisar Freelance); bawaannya tab Worklog.
-Future<void> openFreelanceProject(BuildContext context, FreelanceProject project, {bool showPayments = false}) {
+Future<void> openFreelanceProject(BuildContext context, FreelanceProject project) {
   final bloc = context.read<FreelanceBloc>();
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => PixelTheme(
         child: BlocProvider.value(
           value: bloc,
-          child: FreelanceProjectPage(projectId: project.id, showPayments: showPayments),
+          child: FreelanceProjectPage(projectId: project.id),
         ),
       ),
     ),
@@ -84,13 +81,10 @@ enum PaymentFilter {
 /// tagih entri yang belum ditagih.
 class FreelanceProjectPage extends StatefulWidget {
   /// Membuat [FreelanceProjectPage].
-  const FreelanceProjectPage({required this.projectId, this.showPayments = false, super.key});
+  const FreelanceProjectPage({required this.projectId, super.key});
 
   /// Proyek yang ditampilkan; dibaca ulang dari state tiap kali berubah.
   final String projectId;
-
-  /// Membuka tab Pembayaran lebih dulu.
-  final bool showPayments;
 
   @override
   State<FreelanceProjectPage> createState() => _FreelanceProjectPageState();
@@ -126,7 +120,6 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
         final payments = state.paymentsOfProject(project.id);
         return DefaultTabController(
           length: 2,
-          initialIndex: widget.showPayments ? 1 : 0,
           child: Scaffold(
             appBar: AppBar(
               title: Text(project.name),

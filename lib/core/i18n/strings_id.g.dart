@@ -1124,14 +1124,14 @@ class Translations$freelance$id {
 	/// id: 'Sudah diterima'
 	String get paidLabel => 'Sudah diterima';
 
-	/// id: 'Pembayarannya sudah dicatat'
-	String get paidCaption => 'Pembayarannya sudah dicatat';
+	/// id: 'Gaji kotor · pembayarannya sudah dicatat'
+	String get paidCaption => 'Gaji kotor · pembayarannya sudah dicatat';
 
 	/// id: 'Belum diterima'
 	String get unpaidLabel => 'Belum diterima';
 
-	/// id: 'Belum ditagih atau tertunda'
-	String get unpaidCaption => 'Belum ditagih atau tertunda';
+	/// id: 'Gaji kotor · belum ditagih atau tertunda'
+	String get unpaidCaption => 'Gaji kotor · belum ditagih atau tertunda';
 
 	/// id: '$percent% sudah diterima'
 	String paidRatio({required Object percent}) => '${percent}% sudah diterima';
@@ -1316,9 +1316,6 @@ class Translations$freelance$id {
 	/// id: 'dompet terhapus'
 	String get unknownWallet => 'dompet terhapus';
 
-	/// id: 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.'
-	String get paymentsRuleBody => 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.';
-
 	/// id: 'Tertunda (bersih)'
 	String get pendingTotalLabel => 'Tertunda (bersih)';
 
@@ -1490,20 +1487,11 @@ class Translations$freelance$id {
 	/// id: 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.'
 	String get paymentsEmptyBody => 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.';
 
-	/// id: 'Buka proyek di tab Worklog, lalu tekan Tagih untuk mengelompokkan jam kerjanya jadi pembayaran.'
-	String get paymentsEmptyOverviewBody => 'Buka proyek di tab Worklog, lalu tekan Tagih untuk mengelompokkan jam kerjanya jadi pembayaran.';
-
 	/// id: 'Tidak ada pembayaran dengan status ini.'
 	String get paymentsFilteredEmpty => 'Tidak ada pembayaran dengan status ini.';
 
-	/// id: 'Belum ada pembayaran untuk proyek ini.'
-	String get projectPaymentsNone => 'Belum ada pembayaran untuk proyek ini.';
-
 	/// id: '$count tagihan · terdekat $date'
 	String nextExpected({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}';
-
-	/// id: 'Tidak ada yang ditunggu'
-	String get pendingNone => 'Tidak ada yang ditunggu';
 
 	/// id: 'Kerja $range'
 	String paymentWorkRange({required Object range}) => 'Kerja ${range}';
@@ -1851,9 +1839,9 @@ extension on Translations {
 			'freelance.earnedLabel' => 'Total diperoleh',
 			'freelance.earnedCaption' => 'Jam × tarif, sebelum potongan',
 			'freelance.paidLabel' => 'Sudah diterima',
-			'freelance.paidCaption' => 'Pembayarannya sudah dicatat',
+			'freelance.paidCaption' => 'Gaji kotor · pembayarannya sudah dicatat',
 			'freelance.unpaidLabel' => 'Belum diterima',
-			'freelance.unpaidCaption' => 'Belum ditagih atau tertunda',
+			'freelance.unpaidCaption' => 'Gaji kotor · belum ditagih atau tertunda',
 			'freelance.paidRatio' => ({required Object percent}) => '${percent}% sudah diterima',
 			'freelance.projectsLabel' => 'Proyek',
 			'freelance.projectsEmpty' => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.',
@@ -1915,7 +1903,6 @@ extension on Translations {
 			'freelance.receivedOn' => ({required Object date, required Object wallet}) => 'Diterima ${date} di ${wallet}',
 			'freelance.unknownProject' => 'Proyek terhapus',
 			'freelance.unknownWallet' => 'dompet terhapus',
-			'freelance.paymentsRuleBody' => 'Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.',
 			'freelance.pendingTotalLabel' => 'Tertunda (bersih)',
 			'freelance.paidTotalLabel' => 'Diterima (bersih)',
 			'freelance.paymentCount' => ({required Object count}) => '${count} pembayaran',
@@ -1973,11 +1960,8 @@ extension on Translations {
 			'freelance.paymentsEmptyBadge' => 'Belum ada tagihan',
 			'freelance.paymentsEmptyTitle' => 'Belum ada pembayaran',
 			'freelance.paymentsEmptyBody' => 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.',
-			'freelance.paymentsEmptyOverviewBody' => 'Buka proyek di tab Worklog, lalu tekan Tagih untuk mengelompokkan jam kerjanya jadi pembayaran.',
 			'freelance.paymentsFilteredEmpty' => 'Tidak ada pembayaran dengan status ini.',
-			'freelance.projectPaymentsNone' => 'Belum ada pembayaran untuk proyek ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
-			'freelance.pendingNone' => 'Tidak ada yang ditunggu',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
 			_ => null,
 		};

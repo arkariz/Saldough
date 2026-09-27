@@ -348,9 +348,9 @@
     "earnedLabel": "Total diperoleh",
     "earnedCaption": "Jam × tarif, sebelum potongan",
     "paidLabel": "Sudah diterima",
-    "paidCaption": "Pembayarannya sudah dicatat",
+    "paidCaption": "Gaji kotor · pembayarannya sudah dicatat",
     "unpaidLabel": "Belum diterima",
-    "unpaidCaption": "Belum ditagih atau tertunda",
+    "unpaidCaption": "Gaji kotor · belum ditagih atau tertunda",
     "paidRatio": "$percent% sudah diterima",
     "projectsLabel": "Proyek",
     "projectsEmpty": "Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.",
@@ -412,7 +412,6 @@
     "receivedOn": "Diterima $date di $wallet",
     "unknownProject": "Proyek terhapus",
     "unknownWallet": "dompet terhapus",
-    "paymentsRuleBody": "Tekan Catat Diterima hanya saat uangnya benar-benar sudah masuk ke rekeningmu. Aksi ini membuat satu catatan pemasukan dan menambah saldo dompet pilihan.",
     "pendingTotalLabel": "Tertunda (bersih)",
     "paidTotalLabel": "Diterima (bersih)",
     "paymentCount": "$count pembayaran",
@@ -470,11 +469,8 @@
     "paymentsEmptyBadge": "Belum ada tagihan",
     "paymentsEmptyTitle": "Belum ada pembayaran",
     "paymentsEmptyBody": "Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.",
-    "paymentsEmptyOverviewBody": "Buka proyek di tab Worklog, lalu tekan Tagih untuk mengelompokkan jam kerjanya jadi pembayaran.",
     "paymentsFilteredEmpty": "Tidak ada pembayaran dengan status ini.",
-    "projectPaymentsNone": "Belum ada pembayaran untuk proyek ini.",
     "nextExpected": "$count tagihan · terdekat $date",
-    "pendingNone": "Tidak ada yang ditunggu",
     "paymentWorkRange": "Kerja $range"
   }
 }

@@ -172,7 +172,6 @@
     "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance."
   },
   "wallet": {
-    "heading": "My Wallets",
     "subtitle": "Where your cash stands right now",
     "activeBadge": "$count active",
     "totalLabel": "Total balance of all wallets",
@@ -232,7 +231,6 @@
     "detailBalanceChangeLabel": "Balance change"
   },
   "budget": {
-    "heading": "My Budgets",
     "activeBadge": "$count active",
     "summaryTitle": "Total of active budgets",
     "summaryPercent": "$percent% spent",

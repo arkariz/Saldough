@@ -591,9 +591,6 @@ class Translations$wallet$id {
 
 	// Translations
 
-	/// id: 'Dompet Saya'
-	String get heading => 'Dompet Saya';
-
 	/// id: 'Posisi saldo kas saat ini'
 	String get subtitle => 'Posisi saldo kas saat ini';
 
@@ -773,9 +770,6 @@ class Translations$budget$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// id: 'Anggaran Saya'
-	String get heading => 'Anggaran Saya';
 
 	/// id: '$count aktif'
 	String activeBadge({required Object count}) => '${count} aktif';
@@ -1812,7 +1806,6 @@ extension on Translations {
 			'transaction.budgetLabel' => 'Anggaran',
 			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
-			'wallet.heading' => 'Dompet Saya',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
 			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
 			'wallet.totalLabel' => 'Total saldo semua dompet',
@@ -1870,7 +1863,6 @@ extension on Translations {
 			'wallet.detailTransferInLabel' => 'Transfer masuk',
 			'wallet.detailTransferOutLabel' => 'Transfer keluar',
 			'wallet.detailBalanceChangeLabel' => 'Perubahan saldo',
-			'budget.heading' => 'Anggaran Saya',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
 			'budget.summaryTitle' => 'Total rencana anggaran aktif',
 			'budget.summaryPercent' => ({required Object percent}) => '${percent}% terpakai',

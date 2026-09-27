@@ -14,7 +14,8 @@ import 'package:saldough/shared/wallet/wallet.dart';
 //
 // Pembeda antarkartu (review UX Fase 6) tidak memakai warna per fitur —
 // ADR-016 "satu peran, satu warna" melarangnya. Pembedanya:
-// 1. Hierarki: kartu saldo dibalik (latar arang) sebagai kartu utama.
+// 1. Hierarki: kartu saldo memakai `AppHeroCard`, kartu utama yang sama
+//    dengan puncak tab Anggaran, Transaksi, dan Dompet.
 // 2. Bentuk isi sesuai sifat fiturnya: anggaran = meteran (Sisa jadi angka
 //    utama), freelance = tagihan (belum diterima + potongan jatuh tempo).
 // 3. Garis aksen kiri berwarna MAKNA: hijau/merah untuk arus, warna status
@@ -25,10 +26,9 @@ import 'package:saldough/shared/wallet/wallet.dart';
 // (Saldough tidak terhubung ke mana pun), "Estimasi total" (saldo tercatat
 // pasti), tombol "Intip", dan level/quest.
 
-/// Kartu utama Beranda: total saldo dompet aktif (FR-HOME-001) beserta strip
-/// dompetnya, dibalik warnanya (latar arang, teks krem) supaya jadi titik
-/// mulai mata. Tanpa dompet sama sekali, kartu ini mengarahkan membuat dompet
-/// pertama (FR-HOME-005).
+/// Kartu utama Beranda ([AppHeroCard]): total saldo dompet aktif
+/// (FR-HOME-001) beserta strip dompetnya. Tanpa dompet sama sekali, kartu ini
+/// mengarahkan membuat dompet pertama (FR-HOME-005).
 class HomeBalanceCard extends StatelessWidget {
   /// Membuat [HomeBalanceCard].
   const HomeBalanceCard({
@@ -57,57 +57,23 @@ class HomeBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    // Kartu terbalik: latar = warna teks utama, tinta = warna kartu. Pada
-    // mode gelap keduanya ikut terbalik, jadi kartu ini tetap kontras.
-    final ink = colors.cardBackground;
-    final inkMuted = ink.withValues(alpha: 0.72);
-    final formatted = AppMoneyFormatter.format(total);
-    final sign = formatted.startsWith('−') ? '−' : '';
-    final number = formatted.replaceFirst(RegExp('^−?Rp'), '');
-    return AppHardCard(
-      color: colors.textPrimary,
+    final textTheme = Theme.of(context).textTheme;
+    return AppHeroCard(
+      icon: IconKey.home,
+      label: t.home.balanceLabel,
+      trailing: hasNoWallets ? _Badge(t.home.startBadge, color: colors.accent) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              const _IconBox(IconKey.wallets, size: 32),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  t.home.balanceLabel.toUpperCase(),
-                  style: transactionLabelStyle(context, size: 11, color: inkMuted),
-                ),
-              ),
-              if (hasNoWallets) _Badge(t.home.startBadge, color: colors.accent),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          FitStart(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text('${sign}Rp', style: PixelTypography.tabularMono(context, fontSize: 16, color: inkMuted)),
-                const SizedBox(width: 4),
-                Text(number, style: PixelTypography.tabularMono(context, fontSize: 34, color: ink)),
-              ],
-            ),
-          ),
+          HeroAmount(AppMoneyFormatter.format(total), color: total < 0 ? colors.expense : null),
           const SizedBox(height: AppSpacing.sm),
           if (hasNoWallets) ...[
-            Text(t.home.noWalletsBody, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: inkMuted)),
+            Text(t.home.noWalletsBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
             const SizedBox(height: AppSpacing.sm),
-            _InsetPanel(
-              color: ink.withValues(alpha: 0.1),
+            HeroInset(
               child: Row(
                 children: [
-                  Expanded(
-                    child: Text(
-                      t.home.addWalletPrompt,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: ink),
-                    ),
-                  ),
+                  Expanded(child: Text(t.home.addWalletPrompt, style: textTheme.bodySmall)),
                   const SizedBox(width: AppSpacing.sm),
                   _PillButton(label: t.home.addWalletAction, onTap: onAddWallet),
                 ],
@@ -116,7 +82,7 @@ class HomeBalanceCard extends StatelessWidget {
           ] else ...[
             Text(
               t.home.walletCount(count: activeWallets.length).toUpperCase(),
-              style: transactionLabelStyle(context, color: inkMuted),
+              style: transactionLabelStyle(context, color: colors.textMuted),
             ),
             const SizedBox(height: AppSpacing.xs),
             Row(
@@ -124,13 +90,10 @@ class HomeBalanceCard extends StatelessWidget {
                 for (final (index, wallet) in activeWallets.take(_stripCount).indexed) ...[
                   if (index > 0) const SizedBox(width: 6),
                   Expanded(
-                    child: _InsetPanel(
-                      color: ink.withValues(alpha: 0.1),
+                    child: HeroInset(
                       child: _StatText(
                         label: wallet.name,
                         value: AppMoneyFormatter.format(wallet.currentBalance),
-                        labelColor: inkMuted,
-                        valueColor: ink,
                         uppercase: false,
                       ),
                     ),
@@ -138,11 +101,10 @@ class HomeBalanceCard extends StatelessWidget {
                 ],
                 if (activeWallets.length > _stripCount) ...[
                   const SizedBox(width: 6),
-                  _InsetPanel(
-                    color: ink.withValues(alpha: 0.1),
+                  HeroInset(
                     child: Text(
                       t.home.moreWallets(count: activeWallets.length - _stripCount),
-                      style: transactionLabelStyle(context, color: inkMuted),
+                      style: transactionLabelStyle(context, color: colors.textMuted),
                     ),
                   ),
                 ],
@@ -701,7 +663,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
       decoration: BoxDecoration(
-        color: Color.alphaBlend(colors.tinted(color, 0.22), colors.cardBackground),
+        color: colors.tinted(color, 0.22),
         border: Border.all(color: colors.textPrimary),
       ),
       child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textPrimary)),
@@ -725,7 +687,7 @@ class _IconBox extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceMid : Color.alphaBlend(colors.tinted(color!, 0.22), colors.cardBackground),
+        color: color == null ? colors.surfaceMid : colors.tinted(color!, 0.22),
         border: Border.all(color: colors.textPrimary),
       ),
       child: AppIcon(icon, size: size * 0.72),
@@ -756,18 +718,10 @@ class _InsetPanel extends StatelessWidget {
 
 /// Label kecil di atas nilai tebal.
 class _StatText extends StatelessWidget {
-  const _StatText({
-    required this.label,
-    required this.value,
-    this.labelColor,
-    this.valueColor,
-    this.uppercase = true,
-  });
+  const _StatText({required this.label, required this.value, this.uppercase = true});
 
   final String label;
   final String value;
-  final Color? labelColor;
-  final Color? valueColor;
   final bool uppercase;
 
   @override
@@ -780,12 +734,12 @@ class _StatText extends StatelessWidget {
           uppercase ? label.toUpperCase() : label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: transactionLabelStyle(context, color: labelColor ?? colors.textMuted),
+          style: transactionLabelStyle(context, color: colors.textMuted),
         ),
         FitStart(
           child: Text(
             value,
-            style: PixelTypography.tabularMono(context, fontSize: 12, color: valueColor ?? colors.textPrimary),
+            style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textPrimary),
           ),
         ),
       ],

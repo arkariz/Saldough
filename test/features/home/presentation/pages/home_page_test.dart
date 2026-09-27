@@ -5,6 +5,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -203,7 +204,7 @@ void main() {
     await openShell(tester);
 
     // Total saldo dompet aktif: Rp5.250.000 + Rp0.
-    expect(find.text('5.250.000'), findsOneWidget);
+    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
     // Transfer Rp1.000.000 tidak dihitung; pengeluaran tahun lalu juga tidak.
     final month = CycleMonthFormatter.formatMonthShort(now);
     final flow = find.byType(HomeCashFlowRow);

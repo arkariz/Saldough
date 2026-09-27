@@ -117,77 +117,26 @@ class TransactionMonthHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        TransactionSlab(
-          color: colors.surfaceLow,
+        AppHeroCard(
+          icon: IconKey.transactions,
+          label: t.transaction.monthStatusLabel,
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
+            decoration: BoxDecoration(color: colors.cardBackground, borderRadius: AppRadius.pixelSmAll),
+            child: Text(
+              t.transaction.logCountBadge(count: rawTransactions.length).toUpperCase(),
+              style: transactionLabelStyle(context, color: colors.textMuted),
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: colors.incomeFill,
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.edge,
-                          offset: const Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: Text(
-                      t.transaction.monthStatusLabel.toUpperCase(),
-                      overflow: TextOverflow.ellipsis,
-                      style: transactionLabelStyle(
-                        context,
-                        color: colors.textMuted,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colors.surfaceHigh,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      t.transaction.logCountBadge(count: rawTransactions.length).toUpperCase(),
-                      style: transactionLabelStyle(
-                        context,
-                        color: colors.textMuted,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
               Text(
                 t.transaction.netFlowLabel,
-                style: transactionLabelStyle(
-                  context,
-                  color: colors.textMuted,
-                ).copyWith(fontWeight: FontWeight.w400),
+                style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 2),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  netText,
-                  style: textTheme.titleLarge?.copyWith(
-                    fontSize: 22,
-                    color: netColor,
-                  ),
-                ),
-              ),
+              HeroAmount(netText, color: netColor),
               if (totals.income + totals.expense > 0) ...[
                 const SizedBox(height: AppSpacing.sm),
                 _ShareBar(income: totals.income, expense: totals.expense),

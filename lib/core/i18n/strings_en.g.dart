@@ -264,7 +264,6 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get heading => 'My Wallets';
 	@override String get subtitle => 'Where your cash stands right now';
 	@override String activeBadge({required Object count}) => '${count} active';
 	@override String get totalLabel => 'Total balance of all wallets';
@@ -331,7 +330,6 @@ class _Translations$budget$en extends Translations$budget$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get heading => 'My Budgets';
 	@override String activeBadge({required Object count}) => '${count} active';
 	@override String get summaryTitle => 'Total of active budgets';
 	@override String summaryPercent({required Object percent}) => '${percent}% spent';
@@ -804,7 +802,6 @@ extension on TranslationsEn {
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
 			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
-			'wallet.heading' => 'My Wallets',
 			'wallet.subtitle' => 'Where your cash stands right now',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active',
 			'wallet.totalLabel' => 'Total balance of all wallets',
@@ -862,7 +859,6 @@ extension on TranslationsEn {
 			'wallet.detailTransferInLabel' => 'Transfers in',
 			'wallet.detailTransferOutLabel' => 'Transfers out',
 			'wallet.detailBalanceChangeLabel' => 'Balance change',
-			'budget.heading' => 'My Budgets',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
 			'budget.summaryTitle' => 'Total of active budgets',
 			'budget.summaryPercent' => ({required Object percent}) => '${percent}% spent',

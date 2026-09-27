@@ -172,7 +172,6 @@
     "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance."
   },
   "wallet": {
-    "heading": "Dompet Saya",
     "subtitle": "Posisi saldo kas saat ini",
     "activeBadge": "$count kantong aktif",
     "totalLabel": "Total saldo semua dompet",
@@ -232,7 +231,6 @@
     "detailBalanceChangeLabel": "Perubahan saldo"
   },
   "budget": {
-    "heading": "Anggaran Saya",
     "activeBadge": "$count aktif",
     "summaryTitle": "Total rencana anggaran aktif",
     "summaryPercent": "$percent% terpakai",

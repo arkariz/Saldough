@@ -6,10 +6,10 @@ import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/usecases/calculate_budget_progress.dart';
 import 'package:saldough/features/budget/presentation/budget_display.dart';
 
-/// Ringkasan puncak layar Anggaran (FR-BUD-004, rujukan
-/// `pixel_kas_daftar_anggaran`): total rencana, terpakai, dan sisa lintas
-/// seluruh anggaran AKTIF, bilah progres gabungan, dan pengingat bahwa
-/// anggaran bukan pemotongan saldo.
+/// Kartu utama layar Anggaran ([AppHeroCard], FR-BUD-004, rujukan
+/// `pixel_kas_daftar_anggaran`): SISA lintas seluruh anggaran AKTIF sebagai
+/// angka utama, lalu bilah progres gabungan, rencana dan terpakai, dan
+/// pengingat bahwa anggaran bukan pemotongan saldo.
 class BudgetSummaryCard extends StatelessWidget {
   /// Membuat [BudgetSummaryCard].
   const BudgetSummaryCard({required this.planned, required this.spent, required this.activeCount, super.key});
@@ -29,24 +29,18 @@ class BudgetSummaryCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final remaining = planned - spent;
     final ratio = progressRatio(spent: spent, plannedAmount: planned);
-    return TransactionSlab(
+    return AppHeroCard(
+      icon: IconKey.budget,
+      label: t.budget.remainingLabel,
+      trailing: BudgetBadge(
+        label: t.budget.activeBadge(count: activeCount),
+        color: colors.income,
+        background: colors.tinted(colors.incomeFill, 0.2),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.xs,
-            children: [
-              Text(t.budget.heading, style: textTheme.titleLarge),
-              BudgetBadge(
-                label: t.budget.activeBadge(count: activeCount),
-                color: colors.income,
-                background: colors.tinted(colors.incomeFill, 0.2),
-              ),
-            ],
-          ),
+          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.overBudget : null),
           const SizedBox(height: AppSpacing.sm),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
@@ -71,24 +65,12 @@ class BudgetSummaryCard extends StatelessWidget {
                 child: _Stat(label: t.budget.plannedLabel, sen: planned, color: colors.textPrimary),
               ),
               Expanded(
-                child: _Stat(label: t.budget.spentLabel, sen: spent, color: colors.expense),
-              ),
-              Expanded(
-                child: _Stat(
-                  label: t.budget.remainingLabel,
-                  sen: remaining,
-                  color: remaining < 0 ? colors.overBudget : colors.income,
-                  alignEnd: true,
-                ),
+                child: _Stat(label: t.budget.spentLabel, sen: spent, color: colors.expense, alignEnd: true),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: BorderRadius.circular(8)),
-            child: Text(t.budget.summaryNote, style: textTheme.bodySmall),
-          ),
+          HeroInset(child: Text(t.budget.summaryNote, style: textTheme.bodySmall)),
         ],
       ),
     );

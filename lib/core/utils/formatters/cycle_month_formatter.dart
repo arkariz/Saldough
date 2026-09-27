@@ -58,6 +58,13 @@ abstract final class CycleMonthFormatter {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  /// Nama bulan singkat [date] saja — mis. `Sep` — untuk label sempit
+  /// seperti "Pemasukan Sep" di Beranda.
+  static String formatMonthShort(DateTime date) {
+    final months = LocaleSettings.currentLocale == AppLocale.en ? _enShortMonths : _idShortMonths;
+    return months[date.month - 1];
+  }
+
   /// Memformat [date] lengkap dengan nama hari -- mis. `Sabtu, 26 Oktober
   /// 2024` -- untuk layar rincian transaksi.
   static String formatDateWithWeekday(DateTime date) {

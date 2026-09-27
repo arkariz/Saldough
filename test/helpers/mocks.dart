@@ -4,6 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -29,7 +31,13 @@ const fallbackWallet = Wallet(
 
 /// Transaksi netral untuk [registerFallbackValue] -- placeholder `any()`
 /// pada argumen bertipe `Transaction` (mis. `saveTransaction`).
-final fallbackTransaction = ExpenseTransaction(id: '_fallback', date: DateTime(2026), amount: 1, note: '', walletId: '_fallback');
+final fallbackTransaction = ExpenseTransaction(
+  id: '_fallback',
+  date: DateTime(2026),
+  amount: 1,
+  note: '',
+  walletId: '_fallback',
+);
 
 /// [BudgetItemCatalog] palsu yang selalu mengembalikan [options] -- cukup
 /// untuk seluruh uji yang tidak menguji pos anggaran (daftar kosong), dan
@@ -57,3 +65,29 @@ final fallbackBudget = Budget(
   period: BudgetPeriod.monthly,
   startDate: DateTime(2026),
 );
+
+/// [BudgetOverviewSource] palsu untuk uji yang membuka shell tanpa menguji
+/// Beranda: [overview] tetap, bawaannya tanpa anggaran aktif.
+class FakeBudgetOverviewSource implements BudgetOverviewSource {
+  /// Membuat [FakeBudgetOverviewSource].
+  const FakeBudgetOverviewSource([this.overview = const BudgetOverview(activeCount: 0, plannedAmount: 0, spent: 0)]);
+
+  /// Ringkasan yang dikembalikan.
+  final BudgetOverview overview;
+
+  @override
+  Future<Either<Failure, BudgetOverview>> activeBudgetOverview() async => Right(overview);
+}
+
+/// [FreelanceOverviewSource] palsu: [overview] tetap, bawaannya `null`
+/// (tanpa pembayaran tertunda).
+class FakeFreelanceOverviewSource implements FreelanceOverviewSource {
+  /// Membuat [FakeFreelanceOverviewSource].
+  const FakeFreelanceOverviewSource([this.overview]);
+
+  /// Ringkasan yang dikembalikan.
+  final FreelanceOverview? overview;
+
+  @override
+  Future<Either<Failure, FreelanceOverview?>> freelanceOverview() async => Right(overview);
+}

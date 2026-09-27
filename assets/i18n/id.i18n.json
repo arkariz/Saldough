@@ -18,8 +18,7 @@
     "budgetTabLabel": "Anggaran",
     "recordAction": "Catat",
     "transactionsTabLabel": "Transaksi",
-    "walletsTabLabel": "Dompet",
-    "comingSoonMessage": "Segera hadir."
+    "walletsTabLabel": "Dompet"
   },
   "record": {
     "sheetTitle": "Catat Transaksi",
@@ -173,7 +172,6 @@
     "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance."
   },
   "wallet": {
-    "heading": "Dompet Saya",
     "subtitle": "Posisi saldo kas saat ini",
     "activeBadge": "$count kantong aktif",
     "totalLabel": "Total saldo semua dompet",
@@ -233,7 +231,6 @@
     "detailBalanceChangeLabel": "Perubahan saldo"
   },
   "budget": {
-    "heading": "Anggaran Saya",
     "activeBadge": "$count aktif",
     "summaryTitle": "Total rencana anggaran aktif",
     "summaryPercent": "$percent% terpakai",
@@ -472,5 +469,53 @@
     "paymentsFilteredEmpty": "Tidak ada pembayaran dengan status ini.",
     "nextExpected": "$count tagihan · terdekat $date",
     "paymentWorkRange": "Kerja $range"
+  },
+  "home": {
+    "loadErrorTitle": "Beranda gagal dimuat",
+    "balanceLabel": "Total kas aktif",
+    "walletCount": "$count dompet aktif",
+    "moreWallets": "+$count lainnya",
+    "startBadge": "Mulai catat",
+    "noWalletsBody": "Belum ada saldo dompet yang tercatat.",
+    "addWalletPrompt": "Isi dompet fisik atau rekening bank pertamamu.",
+    "addWalletAction": "+ Dompet",
+    "incomeLabel": "Pemasukan $month",
+    "expenseLabel": "Pengeluaran $month",
+    "incomeTag": "+ Masuk",
+    "expenseTag": "− Keluar",
+    "budgetTitle": "Anggaran aktif",
+    "budgetRemaining": "Sisa",
+    "budgetOver": "Lewat rencana",
+    "budgetAction": "Lihat Anggaran",
+    "freelanceTitle": "Freelance",
+    "freelancePaid": "Diterima: $amount",
+    "freelanceAction": "Lihat Freelance",
+    "recentTitle": "Transaksi terbaru",
+    "seeAll": "Lihat semua",
+    "emptyBadge": "Inventaris kosong",
+    "emptyTitle": "Belum ada transaksi",
+    "emptyBody": "Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.",
+    "emptyNoWalletBody": "Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.",
+    "recordAction": "Catat Transaksi",
+    "createWalletAction": "Buat Dompet Pertama",
+    "budgetLink": "Atau buat anggaran pengeluaran",
+    "guideTitle": "Panduan singkat",
+    "guideCount": "3 aturan utama",
+    "guideWalletTitle": "Dompet",
+    "guideWalletTag": "Aset nyata",
+    "guideWalletBody": "Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.",
+    "guideBudgetTitle": "Anggaran",
+    "guideBudgetTag": "Rencana",
+    "guideBudgetBody": "Rencanakan batas belanja. Membuat anggaran tidak memotong saldo dompet mana pun.",
+    "guideFreelanceTitle": "Freelance",
+    "guideFreelanceTag": "Piutang",
+    "guideFreelanceBody": "Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.",
+    "budgetSpentOf": "$spent terpakai dari $planned",
+    "freelanceUnpaidTitle": "Belum diterima (kotor)",
+    "freelanceDueLabel": "Jatuh tempo",
+    "freelancePendingInvoices": "$count tagihan tertunda",
+    "freelanceSummaryLine": "$hours · diperoleh $earned",
+    "openCard": "Buka $name",
+    "budgetUsedBadge": "$percent% terpakai"
   }
 }

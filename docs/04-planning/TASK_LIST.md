@@ -31,9 +31,35 @@ Terakhir diperbarui: 27 September 2026.
 | 3 — Cutover | 9 | 9 | Selesai |
 | 4 — Anggaran | 11 | 11 | Selesai |
 | 5 — Freelance | 9 | 9 | Selesai |
-| 6 — Beranda | 6 | 0 | Belum dimulai |
+| 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 1 | Berjalan — T-7.1 selesai, T-7.3 sebagian (T-7.7 deprecated) |
-| **Total MVP** | **76** | **65** | |
+| **Total MVP** | **76** | **71** | |
+
+## Keputusan terbuka
+
+Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
+diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
+
+- **KT-1 — Ringkasan anggaran memindai seluruh riwayat transaksi**
+  (dicatat 27 Sep 2026, temuan T-6.5).
+  `BudgetOverviewSourceImpl` (ringkasan anggaran Beranda) dan `BudgetBloc`
+  (layar Anggaran) membaca `TransactionRepository.listAllTransactions()` tiap
+  kali ada anggaran aktif, karena terpakai ditentukan **tautan transaksi ke
+  pos anggaran**, bukan bulan transaksinya. Akibatnya waktu tampil Beranda dan
+  layar Anggaran ikut bertambah seiring panjangnya riwayat — bertentangan
+  dengan NFR-PERF-002. Belum terasa sekarang; terasa setelah riwayat
+  bertahun-tahun.
+  Pilihan:
+  1. **Batasi ke bulan periode anggaran** (`listTransactionsInMonth` untuk
+     tiap bulan yang disentuh periode). Murah, tanpa perubahan penyimpanan.
+     Risiko: transaksi tertaut pos tetapi bertanggal di luar periode tidak
+     terhitung lagi — perlu diputuskan apakah itu boleh terjadi, atau dicegah
+     di formulir CATAT.
+  2. **Indeks tautan pos** — dokumen per anggaran berisi id transaksi yang
+     tertaut, dipelihara saat transaksi disimpan, disunting, atau dihapus.
+     Tepat untuk seluruh kasus, tetapi menambah satu jalur tulis yang harus
+     tetap konsisten (seperti `Wallet.currentBalance`, ADR-012).
+  3. **Biarkan** sampai ada data nyata yang lambat, dan ukur ulang di T-6.5.
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -990,18 +1016,22 @@ tanpa menyelesaikan apa pun.
 Beranda dikerjakan terakhir di antara layar karena ia hanya bermakna setelah
 seluruh fitur di atasnya menghasilkan data.
 
-- [ ] **T-6.1** Tampilkan total saldo, pemasukan bulan berjalan, dan pengeluaran
+- [x] **T-6.1** Tampilkan total saldo, pemasukan bulan berjalan, dan pengeluaran
       bulan berjalan.
       ⚠ Transfer tidak dihitung sebagai pemasukan maupun pengeluaran. Kalau ia
       ikut dihitung, satu pemindahan Rp1.000.000 akan tampil sebagai pemasukan
       sekaligus pengeluaran — dua angka yang sama-sama salah.
-      ⚠ Sebagian: domain selesai, UI belum. `CalculateCashFlow` di
+      ⚠ Selesai (27 Sep 2026, branch `claude/beranda-fase-6`): UI di
+      `features/home/` (`HomeScope`, `HomeBloc`, `HomePage`, `home_cards.dart`),
+      rujukan `pixel_kas_beranda`. Arus dibaca dari SATU dokumen bulan
+      (`listTransactionsInMonth`), bukan seluruh riwayat.
+      Catatan domain sebelumnya: `CalculateCashFlow` di
       `shared/transaction` (diekspor barrel) menjumlahkan pemasukan dan
       pengeluaran bulan kalender, transfer dilewati; diuji mutasi (transfer
       ikut dihitung → merah). Total saldo tetap `Σ currentBalance` dompet
       aktif, seperti `WalletState.totalBalance`.
       Memenuhi FR-HOME-001.
-- [ ] **T-6.2** Tampilkan ringkasan anggaran — total rencana, terpakai, dan
+- [x] **T-6.2** Tampilkan ringkasan anggaran — total rencana, terpakai, dan
       sisa — beserta jalan ke layar Anggaran.
       ⚠ Sebagian: domain selesai, UI belum. Port `BudgetOverviewSource` milik
       `home` (ADR-0009), diimplementasikan `BudgetOverviewSourceImpl` di
@@ -1009,7 +1039,7 @@ seluruh fitur di atasnya menghasilkan data.
       dengan layar Anggaran, dikawat di `RootModule`. Hanya anggaran aktif;
       sisa boleh negatif. Diuji mutasi (anggaran nonaktif ikut → merah).
       Memenuhi FR-HOME-002.
-- [ ] **T-6.3** Tampilkan ringkasan freelance: total jam, diperoleh, sudah
+- [x] **T-6.3** Tampilkan ringkasan freelance: total jam, diperoleh, sudah
       dibayar, belum dibayar, dan tanggal pembayaran terdekat yang belum
       diterima. Sembunyikan sepenuhnya kalau tidak ada pembayaran tertunda.
       ⚠ **Jangan menampilkan entri worklog satu per satu di Beranda.** Beranda
@@ -1025,18 +1055,35 @@ seluruh fitur di atasnya menghasilkan data.
       ⚠ Label UI harus menyebut "kotor" — lihat peringatan T-5.9 tentang dua
       angka "diterima".
       Memenuhi FR-HOME-003.
-- [ ] **T-6.4** Tampilkan transaksi terbaru beserta jalan ke layar Transaksi.
+- [x] **T-6.4** Tampilkan transaksi terbaru beserta jalan ke layar Transaksi.
+      ⚠ Selesai: lima transaksi terbaru lewat `listRecentTransactions(limit)`
+      baru di `TransactionRepository`, yang membaca dokumen bulan dari yang
+      terbaru dan berhenti begitu limit terpenuhi (diuji dengan dokumen
+      bulan lama yang dirusak, diuji mutasi). "Lihat semua" pindah ke tab
+      Transaksi; baris membuka rincian transaksi.
       Memenuhi FR-HOME-004.
-- [ ] **T-6.5** Jalankan di perangkat, ukur waktu tampil Beranda, dan telusuri
+- [x] **T-6.5** Jalankan di perangkat, ukur waktu tampil Beranda, dan telusuri
       loop inti penuh sampai pencatatan pembayaran freelance.
+      ⚠ Selesai (emulator API 35, build rilis): buka dingin sampai frame
+      pertama 515–628 ms (tiga kali `am start -W`), di bawah 1 detik.
+      Loop: dompet → proyek → worklog → tagih → Catat Diterima → anggaran →
+      Beranda memperbarui saldo, arus, kartu anggaran, dan kartu freelance.
+      ⚠ **Terbuka untuk pemilik:** ringkasan anggaran masih memindai seluruh
+      riwayat — lihat **KT-1** di bagian "Keputusan terbuka".
       Memenuhi NFR-PERF-001 dan NFR-PERF-002.
-- [ ] **T-6.6** Buat keadaan kosong Beranda: "Belum ada transaksi" beserta
+- [x] **T-6.6** Buat keadaan kosong Beranda: "Belum ada transaksi" beserta
       ajakan **Catat Transaksi**, dan arahan membuat dompet pertama kalau belum
       ada dompet sama sekali.
       ⚠ Ajakannya membuka alur CATAT yang sama, bukan formulir tersendiri.
       ⚠ Kartu ringkasan yang belum punya isi disembunyikan, bukan ditampilkan
       sebagai deretan angka nol. Layar pertama menentukan apakah aplikasi ini
       dipakai lagi besok.
+      ⚠ Selesai: tanpa dompet, tombol utamanya "Buat Dompet Pertama" (ke tab
+      Dompet); dengan dompet, "Catat Transaksi" membuka alur CATAT yang
+      sama. Pemasukan/pengeluaran, anggaran, dan freelance disembunyikan
+      kalau belum punya isi — **menyimpang dari rujukan**
+      `pixel_kas_beranda_belum_ada_data` yang menampilkan Rp0, karena PRD
+      menang. Panduan singkat tiga aturan mengikuti rujukan.
       Memenuhi FR-HOME-005.
 
 ## Fase 7: Template dan poles

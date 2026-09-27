@@ -18,8 +18,7 @@
     "budgetTabLabel": "Budget",
     "recordAction": "Record",
     "transactionsTabLabel": "Transactions",
-    "walletsTabLabel": "Wallets",
-    "comingSoonMessage": "Coming soon."
+    "walletsTabLabel": "Wallets"
   },
   "record": {
     "sheetTitle": "Record Transaction",
@@ -173,7 +172,6 @@
     "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance."
   },
   "wallet": {
-    "heading": "My Wallets",
     "subtitle": "Where your cash stands right now",
     "activeBadge": "$count active",
     "totalLabel": "Total balance of all wallets",
@@ -233,7 +231,6 @@
     "detailBalanceChangeLabel": "Balance change"
   },
   "budget": {
-    "heading": "My Budgets",
     "activeBadge": "$count active",
     "summaryTitle": "Total of active budgets",
     "summaryPercent": "$percent% spent",
@@ -472,5 +469,53 @@
     "paymentsFilteredEmpty": "No payments with this status.",
     "nextExpected": "Invoices: $count · next $date",
     "paymentWorkRange": "Work $range"
+  },
+  "home": {
+    "loadErrorTitle": "Home failed to load",
+    "balanceLabel": "Total active cash",
+    "walletCount": "Active wallets: $count",
+    "moreWallets": "+$count more",
+    "startBadge": "Start recording",
+    "noWalletsBody": "No wallet balance recorded yet.",
+    "addWalletPrompt": "Add your first cash wallet or bank account.",
+    "addWalletAction": "+ Wallet",
+    "incomeLabel": "Income $month",
+    "expenseLabel": "Expenses $month",
+    "incomeTag": "+ In",
+    "expenseTag": "− Out",
+    "budgetTitle": "Active budgets",
+    "budgetRemaining": "Remaining",
+    "budgetOver": "Over plan",
+    "budgetAction": "View Budgets",
+    "freelanceTitle": "Freelance",
+    "freelancePaid": "Received: $amount",
+    "freelanceAction": "View Freelance",
+    "recentTitle": "Recent transactions",
+    "seeAll": "See all",
+    "emptyBadge": "Empty inventory",
+    "emptyTitle": "No transactions yet",
+    "emptyBody": "Start by recording your first income, expense, or transfer.",
+    "emptyNoWalletBody": "Create your first wallet with its starting balance, then record your first transaction.",
+    "recordAction": "Record Transaction",
+    "createWalletAction": "Create First Wallet",
+    "budgetLink": "Or create a spending budget",
+    "guideTitle": "Quick guide",
+    "guideCount": "3 core rules",
+    "guideWalletTitle": "Wallets",
+    "guideWalletTag": "Real assets",
+    "guideWalletBody": "Record bank accounts, digital wallets, or cash with their current balance.",
+    "guideBudgetTitle": "Budgets",
+    "guideBudgetTag": "Plans",
+    "guideBudgetBody": "Plan your spending limits. Creating a budget never deducts from any wallet balance.",
+    "guideFreelanceTitle": "Freelance",
+    "guideFreelanceTag": "Receivables",
+    "guideFreelanceBody": "Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.",
+    "budgetSpentOf": "$spent used of $planned",
+    "freelanceUnpaidTitle": "Not received (gross)",
+    "freelanceDueLabel": "Due",
+    "freelancePendingInvoices": "Pending invoices: $count",
+    "freelanceSummaryLine": "$hours · earned $earned",
+    "openCard": "Open $name",
+    "budgetUsedBadge": "$percent% used"
   }
 }

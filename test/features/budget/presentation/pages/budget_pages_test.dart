@@ -7,6 +7,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
+import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
@@ -15,12 +16,16 @@ import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
+import 'package:saldough/features/home/domain/budget_overview_source.dart';
+import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+import '../../../../helpers/mocks.dart';
 
 /// Uji alur layar Anggaran lewat shell sungguhan dengan penyimpanan di
 /// memori: daftar (T-4.5), rincian (T-4.10), dan pintasan CATAT yang membuka
@@ -50,6 +55,13 @@ void main() {
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     budgetRepository = BudgetRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<BudgetOverviewSource>(
+        () => BudgetOverviewSourceImpl(
+          budgetRepository: budgetRepository,
+          transactionRepository: transactionRepository,
+        ),
+      )
+      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
@@ -65,7 +77,7 @@ void main() {
   Future<void> openBudgetTab(WidgetTester tester) async {
     await tester.pumpWidget(ScopeProvider(container: container, child: const MaterialApp(home: AppShellPage())));
     // Empat ScopeWidget bersarang (Record, Transaction, Wallet, Budget).
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 5; i++) {
       await tester.pump();
     }
     await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.budgetTabLabel));

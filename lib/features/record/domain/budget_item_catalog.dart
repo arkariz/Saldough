@@ -17,7 +17,9 @@ final class BudgetItemOption extends Equatable {
     required this.itemId,
     required this.itemName,
     required this.walletId,
-    required this.isActive,
+    required this.startDate,
+    required this.endDate,
+    this.isArchived = false,
     this.transferToWalletId,
   });
 
@@ -45,13 +47,34 @@ final class BudgetItemOption extends Equatable {
   /// Apakah pos ini rencana transfer.
   bool get isTransfer => transferToWalletId != null;
 
-  /// Anggarannya aktif (belum diarsipkan dan periodenya belum lewat). Hanya
-  /// yang aktif ditawarkan untuk transaksi baru; yang tidak aktif tetap ada
-  /// supaya tautan transaksi lama tetap terbaca saat disunting.
-  final bool isActive;
+  /// Awal periode anggaran; hanya tanggalnya yang dipakai.
+  final DateTime startDate;
+
+  /// Akhir periode anggaran, eksklusif.
+  final DateTime endDate;
+
+  /// Anggarannya diarsipkan — tidak ditawarkan lagi, kecuali sudah dipakai
+  /// transaksi yang sedang disunting.
+  final bool isArchived;
+
+  /// Apakah transaksi bertanggal [date] boleh ditautkan ke pos ini:
+  /// `startDate ≤ date < endDate` (keputusan KT-1). Pos yang periodenya tidak
+  /// mencakup tanggal transaksi tidak pernah terhitung, jadi tidak ditawarkan.
+  bool covers(DateTime date) =>
+      !date.isBefore(DateTime(startDate.year, startDate.month, startDate.day)) && date.isBefore(endDate);
 
   @override
-  List<Object?> get props => [budgetId, budgetName, itemId, itemName, walletId, isActive, transferToWalletId];
+  List<Object?> get props => [
+    budgetId,
+    budgetName,
+    itemId,
+    itemName,
+    walletId,
+    startDate,
+    endDate,
+    isArchived,
+    transferToWalletId,
+  ];
 }
 
 /// Port milik `record`: daftar pos anggaran untuk pemilih di formulir

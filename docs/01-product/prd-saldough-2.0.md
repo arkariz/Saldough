@@ -433,6 +433,9 @@ lebih berat, fitur itu yang salah tempat.
       anggaran dan `toWalletId`-nya sama dengan dompet tujuan pos.
 - [ ] Memastikan satu transaksi menaikkan paling banyak satu pos anggaran,
       supaya tidak terhitung ganda.
+- [ ] Hanya menautkan dan menghitung transaksi yang tanggalnya berada di
+      dalam periode anggaran. Pemilih pos hanya menawarkan pos anggaran yang
+      periodenya mencakup tanggal transaksi (keputusan KT-1).
 - [ ] Memperbarui progres seketika saat transaksi dicatat, disunting, atau
       dihapus.
 
@@ -461,7 +464,7 @@ Ini layar daftar, dicapai dari navigasi bawah.
 **FR-BUD-006 — Menyaring daftar anggaran**
 
 - [ ] Menyaring anggaran berdasarkan status: semua, aktif, selesai, atau
-      nonaktif.
+      nonaktif. Penyaring bawaan: aktif (keputusan KT-1).
 - [ ] Menyaring anggaran berdasarkan dompet.
 - [ ] Menjaga penyaringnya tetap sederhana — daftar dan pilihan, bukan
       antarmuka akuntansi.

@@ -7,7 +7,7 @@ import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 
 void main() {
-  test('BudgetItemCatalogImpl memetakan tiap pos, dengan isActive dari status anggaran', () async {
+  test('BudgetItemCatalogImpl memetakan tiap pos beserta periode dan arsip anggarannya', () async {
     final repository = BudgetRepositoryImpl(storage: InMemoryKeyValueStorage());
     await repository.saveBudget(
       Budget(
@@ -29,16 +29,19 @@ void main() {
         walletId: 'bca',
         period: BudgetPeriod.monthly,
         startDate: DateTime(2026, 8),
+        isArchived: true,
         items: const [BudgetItem(id: 'listrik', name: 'Listrik', enteredAmount: 100)],
       ),
     );
 
-    final catalog = BudgetItemCatalogImpl(repository: repository, now: () => DateTime(2026, 9, 15));
+    final catalog = BudgetItemCatalogImpl(repository: repository);
     final options = (await catalog.listOptions()).getOrElse((_) => throw StateError('expected Right'));
 
     expect(options.map((o) => o.itemId), ['beras', 'susu', 'listrik']);
     expect(options.first.budgetName, 'Rumah tangga');
     expect(options.first.walletId, 'bca');
-    expect(options.map((o) => o.isActive), [true, true, false]);
+    expect(options.map((o) => o.startDate), [DateTime(2026, 9), DateTime(2026, 9), DateTime(2026, 8)]);
+    expect(options.map((o) => o.endDate), [DateTime(2026, 10), DateTime(2026, 10), DateTime(2026, 9)]);
+    expect(options.map((o) => o.isArchived), [false, false, true]);
   });
 }

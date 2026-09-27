@@ -4,6 +4,7 @@ import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/usecases/calculate_budget_progress.dart';
+import 'package:saldough/features/budget/domain/usecases/read_transactions_in_months.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
@@ -12,9 +13,8 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// layar Anggaran, jadi Beranda dan ringkasan di puncak layar Anggaran tidak
 /// pernah berbeda.
 ///
-/// ⚠ Seperti `BudgetBloc`, terpakai dihitung dari
-/// [TransactionRepository.listAllTransactions] — tautan pos yang menentukan,
-/// bukan bulan transaksinya.
+/// Hanya dokumen bulan yang disentuh periode anggaran AKTIF yang dibaca
+/// (keputusan KT-1, NFR-PERF-002), bukan seluruh riwayat.
 final class BudgetOverviewSourceImpl implements BudgetOverviewSource {
   /// Membuat [BudgetOverviewSourceImpl]. [now] bisa diganti di uji.
   BudgetOverviewSourceImpl({
@@ -40,7 +40,7 @@ final class BudgetOverviewSourceImpl implements BudgetOverviewSource {
     if (budgets.isEmpty) return const Right(BudgetOverview(activeCount: 0, plannedAmount: 0, spent: 0));
 
     final List<Transaction> transactions;
-    switch (await _transactionRepository.listAllTransactions()) {
+    switch (await ReadTransactionsInMonths(_transactionRepository)(budgets.expand((b) => b.months))) {
       case Left(:final value):
         return Left(value);
       case Right(:final value):

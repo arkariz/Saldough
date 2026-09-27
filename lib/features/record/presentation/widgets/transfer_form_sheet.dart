@@ -137,7 +137,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       !_sameWallet;
 
   List<BudgetItemOption> get _budgetChoices =>
-      transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId);
+      transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId, _date);
 
   /// Pos terpilih kalau masih sah untuk pasangan dompet asal/tujuan saat
   /// ini, selain itu `null`.
@@ -244,6 +244,8 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           kind: TransactionKind.transfer,
           onChanged: (date) => setState(() => _date = date),
         ),
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+          RecordBudgetItemOutOfPeriodNotice(option: dropped),
         RecordNoteField(
           controller: _noteController,
           kind: TransactionKind.transfer,

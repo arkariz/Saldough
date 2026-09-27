@@ -4,8 +4,10 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
+import 'package:saldough/features/budget/domain/entities/budget_status.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/usecases/calculate_budget_progress.dart';
+import 'package:saldough/features/budget/domain/usecases/read_transactions_in_months.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -21,11 +23,12 @@ part 'budget_event.dart';
 /// atau `TransactionRepository` untuk menulis — anggaran adalah rencana,
 /// bukan pemesanan uang (aturan 5 CLAUDE.md).
 ///
-/// ⚠ Progres dihitung dari [TransactionRepository.listAllTransactions],
-/// bukan transaksi satu bulan. Rumus `spent` (DOMAIN_MODEL.md) tidak punya
-/// saringan tanggal — tautan pos yang menentukan — jadi transaksi tertaut
-/// yang tanggalnya di luar periode tetap harus terhitung. Membatasi ke bulan
-/// periode akan membuat angkanya salah tanpa gejala; ketepatan didahulukan.
+/// Progres hanya dihitung untuk anggaran yang ditampilkan, dari dokumen bulan
+/// yang disentuh periodenya saja — bukan seluruh riwayat (keputusan KT-1,
+/// NFR-PERF-002). Transaksi hanya terhitung ke anggaran yang periodenya
+/// mencakup tanggalnya, jadi bulan periode sudah cukup untuk angka yang tepat.
+/// Penyaring bawaan "Aktif"; bulan anggaran selesai dan nonaktif baru dibaca
+/// saat penyaringnya dipilih.
 final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   /// Membuat [BudgetBloc]. [now] bisa diganti di uji.
   BudgetBloc({
@@ -42,8 +45,10 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<BudgetEdited>(_onEdited);
     on<BudgetArchiveToggled>(_onArchiveToggled);
     on<BudgetDeleted>(_onDeleted);
-    on<BudgetStatusFilterChanged>((event, emit) => emit(state.copyWith(statusFilter: event.filter)));
-    on<BudgetWalletFilterChanged>((event, emit) => emit(state.copyWith(walletFilter: () => event.walletId)));
+    on<BudgetStatusFilterChanged>((event, emit) => _showFiltered((s) => s.copyWith(statusFilter: event.filter), emit));
+    on<BudgetWalletFilterChanged>(
+      (event, emit) => _showFiltered((s) => s.copyWith(walletFilter: () => event.walletId), emit),
+    );
   }
 
   final BudgetRepository _budgetRepository;
@@ -51,6 +56,24 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   final TransactionRepository _transactionRepository;
   final CalculateBudgetProgress _calculateProgress;
   final DateTime Function() _now;
+  late final _readMonths = ReadTransactionsInMonths(_transactionRepository);
+
+  /// Bulan buku besar yang isinya sudah ada di `state.transactions` sejak
+  /// pemuatan terakhir.
+  final Set<DateTime> _loadedMonths = {};
+
+  /// Ekor antrean [_serial].
+  Future<void> _queue = Future.value();
+
+  /// Menjalankan [body] sesudah pemuatan atau penggantian penyaring
+  /// sebelumnya selesai. Keduanya membaca bulan buku besar dan memancarkan
+  /// state utuh; tanpa antrean, penyaring yang dipilih saat pemuatan masih
+  /// berjalan tertimpa hasil pemuatan itu.
+  Future<void> _serial(Future<void> Function() body) {
+    final run = _queue.then((_) => body());
+    _queue = run.then((_) {}, onError: (Object _) {});
+    return run;
+  }
 
   Future<void> _onStarted(BudgetStarted event, Emitter<BudgetState> emit) async {
     emit(state.copyWith(isLoading: true, loadFailed: false));
@@ -92,35 +115,76 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     await _afterWrite(await _budgetRepository.deleteBudget(event.budget.id), t.budget.deletedMessage, emit);
   }
 
-  /// Membaca anggaran, dompet, dan seluruh transaksi, lalu menghitung progres
-  /// tiap anggaran pada saat [_now].
+  /// Membaca anggaran dan dompet, lalu menghitung progres anggaran yang
+  /// ditampilkan pada saat [_now]. Progres yang sudah ada tetap dihitung
+  /// ulang, supaya layar rincian yang sedang terbuka tidak kehilangan angkanya.
   Future<void> _load(
     Emitter<BudgetState> emit, {
     required BudgetState Function(Failure) onFailure,
     UiEffect? onSuccess,
-  }) async {
+  }) => _serial(() async {
     final budgets = await _budgetRepository.listBudgets();
     final wallets = await _walletRepository.listWallets();
-    final transactions = await _transactionRepository.listAllTransactions();
-    switch ((budgets, wallets, transactions)) {
-      case (Right(value: final budgets), Right(value: final wallets), Right(value: final transactions)):
+    switch ((budgets, wallets)) {
+      case (Right(value: final budgets), Right(value: final wallets)):
         final now = _now();
-        emit(
-          state.copyWith(
-            budgets: budgets,
-            wallets: wallets,
-            transactions: transactions,
-            progress: {for (final budget in budgets) budget.id: _calculateProgress(budget, transactions, now: now)},
-            isLoading: false,
-            loadFailed: false,
-            effect: onSuccess,
-          ),
+        _loadedMonths.clear();
+        final next = state.copyWith(
+          budgets: budgets,
+          wallets: wallets,
+          statuses: {for (final budget in budgets) budget.id: budget.statusAt(now)},
+          transactions: const [],
         );
-      case (Left(value: final failure), _, _) ||
-          (_, Left(value: final failure), _) ||
-          (_, _, Left(value: final failure)):
+        switch (await _withProgress(next, now)) {
+          case Left(value: final failure):
+            emit(onFailure(failure));
+          case Right(value: final loaded):
+            emit(loaded.copyWith(isLoading: false, loadFailed: false, effect: onSuccess));
+        }
+      case (Left(value: final failure), _) || (_, Left(value: final failure)):
         emit(onFailure(failure));
     }
+  });
+
+  /// Menerapkan penyaring baru, membaca bulan yang belum dibaca kalau
+  /// penyaring itu menampilkan anggaran lain.
+  Future<void> _showFiltered(BudgetState Function(BudgetState) change, Emitter<BudgetState> emit) => _serial(() async {
+    switch (await _withProgress(change(state), _now())) {
+      case Left(value: final failure):
+        emit(state.copyWith(effect: _effectError(failure)));
+      case Right(value: final updated):
+        emit(updated);
+    }
+  });
+
+  /// [next] dengan progres setiap anggaran yang dibutuhkan layar: yang aktif
+  /// (ringkasan), yang lolos penyaring, dan yang progresnya sudah ada. Hanya
+  /// bulan periode yang belum ada di [_loadedMonths] yang dibaca.
+  Future<Either<Failure, BudgetState>> _withProgress(BudgetState next, DateTime now) async {
+    final needed = [
+      for (final budget in next.budgets)
+        if (next.statuses[budget.id] == BudgetStatus.active ||
+            next.passesFilters(budget) ||
+            next.progress.containsKey(budget.id))
+          budget,
+    ];
+    final missing = {for (final budget in needed) ...budget.months}.difference(_loadedMonths);
+    var transactions = next.transactions;
+    if (missing.isNotEmpty) {
+      switch (await _readMonths(missing)) {
+        case Left(:final value):
+          return Left(value);
+        case Right(:final value):
+          _loadedMonths.addAll(missing);
+          transactions = [...transactions, ...value];
+      }
+    }
+    return Right(
+      next.copyWith(
+        transactions: transactions,
+        progress: {for (final budget in needed) budget.id: _calculateProgress(budget, transactions, now: now)},
+      ),
+    );
   }
 
   /// Sesudah menulis: kalau gagal, tampilkan galat; kalau berhasil, muat

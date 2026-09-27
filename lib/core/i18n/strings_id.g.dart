@@ -372,8 +372,11 @@ class Translations$record$id {
 	/// id: 'Tanpa anggaran'
 	String get budgetItemNone => 'Tanpa anggaran';
 
-	/// id: 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.'
-	String get budgetItemHelp => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.';
+	/// id: 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.'
+	String get budgetItemHelp => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.';
+
+	/// id: 'Tanggal ini di luar periode anggaran "$name", jadi transaksi ini tidak lagi masuk anggaran itu.'
+	String budgetItemOutOfPeriod({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.';
 
 	/// id: 'Honor freelance?'
 	String get freelanceCalloutTitle => 'Honor freelance?';
@@ -1850,7 +1853,8 @@ extension on Translations {
 			'record.flowTargetWallet' => 'Dompet tujuan',
 			'record.budgetItemLabel' => 'Pos anggaran',
 			'record.budgetItemNone' => 'Tanpa anggaran',
-			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.',
+			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.',
+			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.',
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
 			'record.freelanceCalloutBody' => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.',
 			'transaction.pageTitle' => 'Transaksi',
@@ -2266,9 +2270,9 @@ extension on Translations {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
-			'home.recentTitle' => 'Transaksi terbaru',
 			_ => null,
 		} ?? switch (path) {
+			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',

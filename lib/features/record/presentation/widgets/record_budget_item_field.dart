@@ -4,33 +4,73 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 
-/// Pos PENGELUARAN yang boleh ditawarkan ke pengeluaran dari [walletId]:
-/// pos pengeluaran anggaran AKTIF milik dompet itu, ditambah [selectedId]
-/// kalau sedang dipakai transaksi yang disunting (walau anggarannya sudah
-/// selesai/diarsipkan), supaya tautannya tidak hilang diam-diam. Pos transfer
-/// tidak pernah ditawarkan ke pengeluaran (ADR-018).
-List<BudgetItemOption> expenseBudgetChoicesFor(List<BudgetItemOption> all, String? walletId, String? selectedId) => [
+/// Apakah [option] boleh ditawarkan ke transaksi bertanggal [date]:
+/// periodenya mencakup [date] (keputusan KT-1), dan anggarannya tidak
+/// diarsipkan — kecuali pos itu [selectedId] milik transaksi yang disunting,
+/// supaya tautannya tidak hilang diam-diam.
+bool _offeredOn(BudgetItemOption option, DateTime date, String? selectedId) =>
+    option.covers(date) && (!option.isArchived || option.itemId == selectedId);
+
+/// Pos PENGELUARAN yang boleh ditawarkan ke pengeluaran dari [walletId] pada
+/// [date] (lihat [_offeredOn]). Pos transfer tidak pernah ditawarkan ke
+/// pengeluaran (ADR-018).
+List<BudgetItemOption> expenseBudgetChoicesFor(
+  List<BudgetItemOption> all,
+  String? walletId,
+  String? selectedId,
+  DateTime date,
+) => [
   for (final option in all)
-    if (!option.isTransfer && option.walletId == walletId && (option.isActive || option.itemId == selectedId)) option,
+    if (!option.isTransfer && option.walletId == walletId && _offeredOn(option, date, selectedId)) option,
 ];
 
 /// Pos TRANSFER yang boleh ditawarkan ke transfer dari [fromWalletId] ke
 /// [toWalletId]: dompet anggarannya harus dompet asal DAN dompet tujuan posnya
-/// harus dompet tujuan transfer (ADR-018). Satu transaksi hanya menaikkan satu
-/// pos, jadi pos anggaran milik dompet tujuan tidak pernah ditawarkan.
+/// harus dompet tujuan transfer (ADR-018), dan periodenya mencakup [date]
+/// (lihat [_offeredOn]). Satu transaksi hanya menaikkan satu pos, jadi pos
+/// anggaran milik dompet tujuan tidak pernah ditawarkan.
 List<BudgetItemOption> transferBudgetChoicesFor(
   List<BudgetItemOption> all,
   String? fromWalletId,
   String? toWalletId,
   String? selectedId,
+  DateTime date,
 ) => [
   for (final option in all)
     if (option.isTransfer &&
         option.walletId == fromWalletId &&
         option.transferToWalletId == toWalletId &&
-        (option.isActive || option.itemId == selectedId))
+        _offeredOn(option, date, selectedId))
       option,
 ];
+
+/// Pos [selectedId] kalau tautannya lepas HANYA karena [date] di luar periode
+/// anggarannya — formulir memberi tahu pemakai, tidak diam-diam (KT-1).
+BudgetItemOption? budgetItemOutsidePeriod(List<BudgetItemOption> all, String? selectedId, DateTime date) {
+  for (final option in all) {
+    if (option.itemId == selectedId && !option.covers(date)) return option;
+  }
+  return null;
+}
+
+/// Pemberitahuan di bawah tanggal saat tautan ke [option] lepas karena
+/// tanggal transaksi keluar dari periode anggarannya (KT-1). Tautannya
+/// kembali sendiri kalau tanggalnya dikembalikan ke dalam periode.
+class RecordBudgetItemOutOfPeriodNotice extends StatelessWidget {
+  /// Membuat [RecordBudgetItemOutOfPeriodNotice].
+  const RecordBudgetItemOutOfPeriodNotice({required this.option, super.key});
+
+  /// Pos yang tautannya lepas.
+  final BudgetItemOption option;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      t.record.budgetItemOutOfPeriod(name: option.budgetName),
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.pending),
+    );
+  }
+}
 
 /// Pemilih opsional pos anggaran di formulir pengeluaran dan transfer CATAT
 /// (T-4.4, FR-BUD-003). Tidak tampil sama sekali kalau tidak ada pos yang

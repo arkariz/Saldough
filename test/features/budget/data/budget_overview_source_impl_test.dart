@@ -70,6 +70,40 @@ void main() {
     expect(overview.remaining, 239190000);
   });
 
+  test('hanya bulan periode anggaran aktif yang dibaca, bukan seluruh riwayat (KT-1)', () async {
+    final ledger = MockTransactionRepository();
+    when(() => ledger.listTransactionsInMonth(any())).thenAnswer((_) async => const Right([]));
+    await budgets.saveBudget(budget('aktif', start: DateTime(2026, 9, 15)));
+    await budgets.saveBudget(budget('selesai', start: DateTime(2026, 7)));
+
+    await BudgetOverviewSourceImpl(
+      budgetRepository: budgets,
+      transactionRepository: ledger,
+      now: () => now,
+    ).activeBudgetOverview();
+
+    final months = verify(() => ledger.listTransactionsInMonth(captureAny())).captured;
+    expect(months.toSet(), {DateTime(2026, 9), DateTime(2026, 10)});
+    verifyNever(ledger.listAllTransactions);
+  });
+
+  test('transaksi tertaut bertanggal di luar periode tidak terhitung (KT-1)', () async {
+    await budgets.saveBudget(budget('aktif', start: DateTime(2026, 9), amount: 500));
+    await transactions.saveTransaction(spend('t1', 'aktif-pos', 100));
+    await transactions.saveTransaction(
+      ExpenseTransaction(
+        id: 't2',
+        date: DateTime(2026, 8, 30),
+        amount: 400,
+        note: '',
+        walletId: 'bca',
+        budgetItemId: 'aktif-pos',
+      ),
+    );
+
+    expect(read(await source.activeBudgetOverview()).spent, 100);
+  });
+
   test('pemakaian melewati rencana membuat sisa negatif, tidak dipotong ke nol', () async {
     await budgets.saveBudget(budget('aktif', start: DateTime(2026, 9), amount: 100));
     await transactions.saveTransaction(spend('t1', 'aktif-pos', 150));

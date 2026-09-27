@@ -101,7 +101,8 @@
     "flowTargetWallet": "Target wallet",
     "budgetItemLabel": "Budget item",
     "budgetItemNone": "No budget",
-    "budgetItemHelp": "Optional. Only active budget items matching the wallets above are offered.",
+    "budgetItemHelp": "Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.",
+    "budgetItemOutOfPeriod": "This date is outside the \"$name\" budget period, so this transaction no longer counts toward it.",
     "freelanceCalloutTitle": "Freelance pay?",
     "freelanceCalloutBody": "Finished work isn't always paid yet. Record work hours and payments in Freelance."
   },

@@ -37,6 +37,7 @@ Terakhir diperbarui: 27 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
+| 8 — Tindak lanjut pasca-MVP | 1 | 1 | Selesai |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 0 | Belum dimulai — 10 item terkunci: UX-1, UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
 
 ## Keputusan terbuka
@@ -44,26 +45,8 @@ Terakhir diperbarui: 27 September 2026.
 Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
 diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
 
-- **KT-1 — Ringkasan anggaran memindai seluruh riwayat transaksi**
-  (dicatat 27 Sep 2026, temuan T-6.5).
-  `BudgetOverviewSourceImpl` (ringkasan anggaran Beranda) dan `BudgetBloc`
-  (layar Anggaran) membaca `TransactionRepository.listAllTransactions()` tiap
-  kali ada anggaran aktif, karena terpakai ditentukan **tautan transaksi ke
-  pos anggaran**, bukan bulan transaksinya. Akibatnya waktu tampil Beranda dan
-  layar Anggaran ikut bertambah seiring panjangnya riwayat — bertentangan
-  dengan NFR-PERF-002. Belum terasa sekarang; terasa setelah riwayat
-  bertahun-tahun.
-  Pilihan:
-  1. **Batasi ke bulan periode anggaran** (`listTransactionsInMonth` untuk
-     tiap bulan yang disentuh periode). Murah, tanpa perubahan penyimpanan.
-     Risiko: transaksi tertaut pos tetapi bertanggal di luar periode tidak
-     terhitung lagi — perlu diputuskan apakah itu boleh terjadi, atau dicegah
-     di formulir CATAT.
-  2. **Indeks tautan pos** — dokumen per anggaran berisi id transaksi yang
-     tertaut, dipelihara saat transaksi disimpan, disunting, atau dihapus.
-     Tepat untuk seluruh kasus, tetapi menambah satu jalur tulis yang harus
-     tetap konsisten (seperti `Wallet.currentBalance`, ADR-012).
-  3. **Biarkan** sampai ada data nyata yang lambat, dan ukur ulang di T-6.5.
+Belum ada. KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi)
+diputuskan 27 Sep 2026 dan dikerjakan di T-8.1.
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -1198,6 +1181,36 @@ seluruh fitur di atasnya menghasilkan data.
       - Mode gelap dicek di perangkat: `AppHeroCard` memakai `surfaceHigh`
         di mode gelap karena `surfaceMid` di sana sama dengan warna kartu.
       Memenuhi NFR-UX-001.
+
+## Fase 8: Tindak lanjut pasca-MVP
+
+- [x] **T-8.1** Batasi hitungan anggaran ke bulan periodenya (keputusan
+      KT-1, NFR-PERF-002).
+      Keputusan pemilik 27 Sep 2026: transaksi hanya boleh ditautkan ke pos
+      anggaran yang periodenya mencakup tanggal transaksi — belanja sebelum
+      periode dimulai tidak pernah terjadi. Pilihan "indeks tautan pos" tidak
+      dipakai.
+      - `countsTowardBudgetItem` menambah syarat tanggal di dalam periode,
+        jadi hitungan progres dan daftar transaksi tertaut tetap satu aturan.
+        Tautan lama di luar periode tidak terhitung, tanpa migrasi.
+      - CATAT menawarkan pos berdasarkan tanggal transaksi, bukan hari ini.
+        Mengubah tanggal ke luar periode melepas tautan dan memberi tahu.
+      - Ringkasan anggaran Beranda dan layar Anggaran hanya membaca dokumen
+        bulan yang disentuh periode anggaran yang ditampilkan.
+      - Penyaring bawaan layar Anggaran menjadi **Aktif**. Anggaran selesai
+        dan nonaktif dihitung saat penyaringnya dipilih.
+      Hasil: `Budget.covers`/`Budget.months`, `ReadTransactionsInMonths`
+      (membaca dokumen bulan tertentu saja). `BudgetOverviewSourceImpl` dan
+      `BudgetBloc` tidak lagi memanggil `listAllTransactions`; pemakai yang
+      tersisa hanya hitung ulang saldo dan hapus dompet. `BudgetBloc`
+      menyimpan `statuses` untuk penyaring, menghitung progres hanya untuk
+      anggaran aktif, yang lolos penyaring, dan yang sudah pernah dihitung
+      (layar rincian tetap punya angka), membaca bulan yang belum dibaca
+      saja, dan mengantrekan pemuatan dengan penggantian penyaring supaya
+      penyaring tidak tertimpa. `BudgetItemOption` membawa periode dan
+      `isArchived` alih-alih `isActive`; CATAT menampilkan pemberitahuan
+      saat tautan lepas karena tanggal. Diuji termasuk mutasi (syarat
+      tanggal, pilihan CATAT, `months`, anggaran yang lolos penyaring).
 
 ## Cakupan requirement
 

@@ -52,6 +52,7 @@ void main() {
     registerFallbackValue(fallbackBudget);
     registerFallbackValue(fallbackWallet);
     registerFallbackValue(fallbackTransaction);
+    registerFallbackValue(DateTime(2000));
   });
 
   setUp(() {
@@ -65,7 +66,22 @@ void main() {
         Wallet(id: 'gopay', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 0, currentBalance: 0),
       ]),
     );
-    when(() => transactionRepository.listAllTransactions()).thenAnswer(
+    // Buku besar per bulan (ADR-012). Agustus berisi transaksi yang tertaut ke
+    // pos anggaran September — di luar periodenya, jadi tidak terhitung (KT-1).
+    when(() => transactionRepository.listTransactionsInMonth(any())).thenAnswer((_) async => const Right([]));
+    when(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 8))).thenAnswer(
+      (_) async => Right([
+        ExpenseTransaction(
+          id: 'e0',
+          date: DateTime(2026, 8, 31),
+          amount: 9900000,
+          note: '',
+          walletId: 'bca',
+          budgetItemId: 'belanja',
+        ),
+      ]),
+    );
+    when(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 9))).thenAnswer(
       (_) async => Right([
         ExpenseTransaction(
           id: 'e1',
@@ -106,17 +122,44 @@ void main() {
 
   group('BudgetBloc', () {
     blocTest<BudgetBloc, BudgetState>(
-      'BudgetStarted memuat anggaran dan menghitung progres dari transaksi tertaut',
+      'BudgetStarted: penyaring bawaan Aktif, hanya bulan periode anggaran aktif yang dibaca (KT-1)',
       build: buildBloc,
       act: (bloc) => bloc.add(const BudgetStarted()),
       verify: (bloc) {
         final state = bloc.state;
         expect(state.isLoading, isFalse);
+        expect(state.statusFilter, BudgetStatusFilter.active);
+        expect(state.visibleBudgets.map((b) => b.id), ['rumah']);
+        expect(state.statuses, {
+          'rumah': BudgetStatus.active,
+          'agustus': BudgetStatus.finished,
+          'jajan': BudgetStatus.archived,
+        });
+        expect(state.progress.keys, ['rumah']);
         expect(state.progress['rumah']!.spent, 57660000);
-        expect(state.progress['rumah']!.status, BudgetStatus.active);
-        expect(state.progress['agustus']!.status, BudgetStatus.finished);
-        expect(state.progress['jajan']!.status, BudgetStatus.archived);
         expect(state.linkedTransactions(household).map((t) => t.id), ['e1']);
+        verify(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 9))).called(1);
+        verifyNever(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 8)));
+        verifyNever(() => transactionRepository.listAllTransactions());
+      },
+    );
+
+    blocTest<BudgetBloc, BudgetState>(
+      'penyaring Semua membaca bulan anggaran lain; transaksi tertaut di luar periode tidak terhitung',
+      build: buildBloc,
+      act: (bloc) => bloc
+        ..add(const BudgetStarted())
+        ..add(const BudgetStatusFilterChanged(BudgetStatusFilter.all)),
+      verify: (bloc) {
+        final state = bloc.state;
+        expect(state.progress.keys.toSet(), {'rumah', 'agustus', 'jajan'});
+        expect(state.transactions.map((t) => t.id), containsAll(['e0', 'e1']));
+        // e0 (31 Agustus) tertaut ke pos September, tetapi di luar periodenya.
+        expect(state.progress['rumah']!.spent, 57660000);
+        expect(state.linkedTransactions(household).map((t) => t.id), ['e1']);
+        // September dibaca sekali saja, tidak diulang saat penyaring berganti.
+        verify(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 9))).called(1);
+        verify(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 8))).called(1);
       },
     );
 
@@ -161,6 +204,7 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc
         ..add(const BudgetStarted())
+        ..add(const BudgetStatusFilterChanged(BudgetStatusFilter.all))
         ..add(const BudgetWalletFilterChanged('gopay'))
         ..add(const BudgetWalletFilterChanged(null)),
       verify: (bloc) {

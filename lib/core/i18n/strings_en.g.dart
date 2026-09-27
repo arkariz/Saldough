@@ -179,7 +179,8 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get flowTargetWallet => 'Target wallet';
 	@override String get budgetItemLabel => 'Budget item';
 	@override String get budgetItemNone => 'No budget';
-	@override String get budgetItemHelp => 'Optional. Only active budget items matching the wallets above are offered.';
+	@override String get budgetItemHelp => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.';
+	@override String budgetItemOutOfPeriod({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.';
 	@override String get freelanceCalloutTitle => 'Freelance pay?';
 	@override String get freelanceCalloutBody => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.';
 }
@@ -772,7 +773,8 @@ extension on TranslationsEn {
 			'record.flowTargetWallet' => 'Target wallet',
 			'record.budgetItemLabel' => 'Budget item',
 			'record.budgetItemNone' => 'No budget',
-			'record.budgetItemHelp' => 'Optional. Only active budget items matching the wallets above are offered.',
+			'record.budgetItemHelp' => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.',
+			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.',
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
 			'record.freelanceCalloutBody' => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.',
 			'transaction.pageTitle' => 'Transactions',
@@ -1188,9 +1190,9 @@ extension on TranslationsEn {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
-			'home.recentTitle' => 'Recent transactions',
 			_ => null,
 		} ?? switch (path) {
+			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',

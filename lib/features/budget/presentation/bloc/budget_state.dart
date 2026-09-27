@@ -31,7 +31,9 @@ enum BudgetStatusFilter {
 /// State `BudgetBloc`.
 ///
 /// [progress] dihitung ulang oleh bloc setiap kali anggaran atau transaksi
-/// dimuat — tidak pernah disimpan ke penyimpanan (FR-BUD-003).
+/// dimuat — tidak pernah disimpan ke penyimpanan (FR-BUD-003). Hanya anggaran
+/// yang ditampilkan yang punya progres (keputusan KT-1): yang aktif, yang
+/// lolos penyaring, dan yang sudah pernah dihitung sejak pemuatan terakhir.
 final class BudgetState extends UiState<BudgetState> {
   /// Membuat [BudgetState].
   const BudgetState({
@@ -40,8 +42,9 @@ final class BudgetState extends UiState<BudgetState> {
     required this.transactions,
     required this.progress,
     required this.isLoading,
+    this.statuses = const {},
     this.loadFailed = false,
-    this.statusFilter = BudgetStatusFilter.all,
+    this.statusFilter = BudgetStatusFilter.active,
     this.walletFilter,
     super.effect,
   });
@@ -62,11 +65,16 @@ final class BudgetState extends UiState<BudgetState> {
   /// terbaca walau dompetnya sudah dinonaktifkan.
   final List<Wallet> wallets;
 
-  /// Seluruh transaksi yang dipakai menghitung [progress].
+  /// Transaksi dari bulan-bulan periode anggaran di [progress] — bukan
+  /// seluruh riwayat (KT-1).
   final List<Transaction> transactions;
 
-  /// Progres tiap anggaran, per `Budget.id`.
+  /// Progres anggaran yang ditampilkan, per `Budget.id`. Lihat kelas.
   final Map<String, BudgetProgress> progress;
+
+  /// Status siklus hidup SETIAP anggaran, per `Budget.id` — penyaring dan
+  /// hitungan per status tidak butuh transaksi.
+  final Map<String, BudgetStatus> statuses;
 
   /// Sedang memuat untuk pertama kali.
   final bool isLoading;
@@ -91,18 +99,18 @@ final class BudgetState extends UiState<BudgetState> {
   /// Dompet aktif — pilihan dompet saat membuat anggaran baru.
   List<Wallet> get activeWallets => wallets.where((w) => w.isActive).toList();
 
+  /// Apakah [budget] lolos kedua penyaring.
+  bool passesFilters(Budget budget) =>
+      (walletFilter == null || budget.walletId == walletFilter) && statusFilter.matches(statuses[budget.id]!);
+
   /// Anggaran yang lolos kedua penyaring, urut: aktif, selesai, nonaktif;
   /// di dalam tiap kelompok yang periodenya paling baru di atas.
   List<Budget> get visibleBudgets {
-    final visible =
-        budgets
-            .where((b) => walletFilter == null || b.walletId == walletFilter)
-            .where((b) => statusFilter.matches(progress[b.id]!.status))
-            .toList()
-          ..sort((a, b) {
-            final byStatus = progress[a.id]!.status.index.compareTo(progress[b.id]!.status.index);
-            return byStatus != 0 ? byStatus : b.startDate.compareTo(a.startDate);
-          });
+    final visible = budgets.where(passesFilters).toList()
+      ..sort((a, b) {
+        final byStatus = statuses[a.id]!.index.compareTo(statuses[b.id]!.index);
+        return byStatus != 0 ? byStatus : b.startDate.compareTo(a.startDate);
+      });
     return visible;
   }
 
@@ -111,7 +119,7 @@ final class BudgetState extends UiState<BudgetState> {
     final inWallet = budgets.where((b) => walletFilter == null || b.walletId == walletFilter);
     return {
       for (final filter in BudgetStatusFilter.values)
-        filter: inWallet.where((b) => filter.matches(progress[b.id]!.status)).length,
+        filter: inWallet.where((b) => filter.matches(statuses[b.id]!)).length,
     };
   }
 
@@ -154,6 +162,7 @@ final class BudgetState extends UiState<BudgetState> {
     List<Wallet>? wallets,
     List<Transaction>? transactions,
     Map<String, BudgetProgress>? progress,
+    Map<String, BudgetStatus>? statuses,
     bool? isLoading,
     bool? loadFailed,
     BudgetStatusFilter? statusFilter,
@@ -165,6 +174,7 @@ final class BudgetState extends UiState<BudgetState> {
       wallets: wallets ?? this.wallets,
       transactions: transactions ?? this.transactions,
       progress: progress ?? this.progress,
+      statuses: statuses ?? this.statuses,
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
       statusFilter: statusFilter ?? this.statusFilter,
@@ -179,6 +189,7 @@ final class BudgetState extends UiState<BudgetState> {
     wallets,
     transactions,
     progress,
+    statuses,
     isLoading,
     loadFailed,
     statusFilter,

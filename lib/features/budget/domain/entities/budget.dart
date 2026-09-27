@@ -56,6 +56,27 @@ final class Budget extends Equatable {
   /// Batas akhir periode, eksklusif. Lihat [BudgetPeriod.endFrom].
   DateTime get endDate => period.endFrom(startDate);
 
+  /// Apakah [date] berada di dalam periode: `startDate ≤ date < endDate`,
+  /// hanya tanggal [startDate] yang dipakai. Transaksi hanya terhitung ke
+  /// anggaran yang periodenya mencakup tanggalnya (keputusan KT-1).
+  bool covers(DateTime date) =>
+      !date.isBefore(DateTime(startDate.year, startDate.month, startDate.day)) && date.isBefore(endDate);
+
+  /// Awal tiap bulan yang disentuh periode, urut naik — dokumen buku besar
+  /// yang cukup dibaca untuk menghitung anggaran ini (ADR-012, KT-1).
+  List<DateTime> get months {
+    final end = endDate;
+    final last = DateTime(end.year, end.month, end.day - 1);
+    return [
+      for (
+        var month = DateTime(startDate.year, startDate.month);
+        !month.isAfter(last);
+        month = DateTime(month.year, month.month + 1)
+      )
+        month,
+    ];
+  }
+
   /// Status siklus hidup pada saat [now]. [BudgetStatus.finished] mulai
   /// berlaku tepat di [endDate].
   BudgetStatus statusAt(DateTime now) {

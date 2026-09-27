@@ -33,8 +33,9 @@ List<String> _categorySuggestions() => [
 /// Tata letaknya mengikuti rujukan visual `pixel_kas_catat_pengeluaran`.
 ///
 /// Tautan opsional ke satu pos anggaran (FR-TXN-002, T-4.4) lewat
-/// [RecordBudgetItemField]: hanya pos anggaran aktif yang dompetnya sama
-/// dengan dompet asal pengeluaran ini. Elemen gamifikasi rujukan
+/// [RecordBudgetItemField]: hanya pos anggaran yang dompetnya sama dengan
+/// dompet asal pengeluaran ini dan periodenya mencakup tanggalnya (KT-1).
+/// Elemen gamifikasi rujukan
 /// ("LVL +10 EXP") tidak dibangun: bukan bagian kebutuhan produk.
 class ExpenseFormSheet extends StatefulWidget {
   /// Membuat [ExpenseFormSheet] dengan [wallets] sebagai pilihan asal.
@@ -123,7 +124,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
   List<BudgetItemOption> get _budgetChoices =>
-      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId);
+      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId, _date);
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
@@ -207,6 +208,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           kind: TransactionKind.expense,
           onChanged: (date) => setState(() => _date = date),
         ),
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+          RecordBudgetItemOutOfPeriodNotice(option: dropped),
         RecordNoteField(
           controller: _noteController,
           kind: TransactionKind.expense,

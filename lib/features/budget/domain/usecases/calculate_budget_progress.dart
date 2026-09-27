@@ -13,8 +13,8 @@ import 'package:saldough/shared/transaction/transaction.dart';
 ///
 /// ⚠ `spent` sebuah pos menjumlahkan transaksi yang `budgetItemId`-nya
 /// menunjuk pos itu DAN sejenis dengan posnya (ADR-018) — lihat
-/// [countsTowardBudgetItem]. Pemasukan tidak pernah terhitung, dan tidak ada
-/// saringan tanggal — tautan pos yang menentukan, bukan periode.
+/// [countsTowardBudgetItem]. Pemasukan tidak pernah terhitung, dan hanya
+/// transaksi bertanggal di dalam periode anggaran yang dihitung (KT-1).
 final class CalculateBudgetProgress {
   /// Membuat [CalculateBudgetProgress].
   const CalculateBudgetProgress();
@@ -119,7 +119,8 @@ final class BudgetItemProgress extends Equatable {
 }
 
 /// Apakah [transaction] terhitung ke [item] milik [budget] (ADR-018),
-/// DENGAN anggapan `budgetItemId`-nya sudah menunjuk [item]:
+/// DENGAN anggapan `budgetItemId`-nya sudah menunjuk [item]. Tanggalnya
+/// harus di dalam periode [budget] ([Budget.covers], KT-1), lalu:
 /// - pos pengeluaran: hanya [ExpenseTransaction] yang `walletId`-nya dompet
 ///   anggaran;
 /// - pos transfer: hanya [TransferTransaction] DARI dompet anggaran KE
@@ -128,6 +129,7 @@ final class BudgetItemProgress extends Equatable {
 /// Satu-satunya tempat aturan ini ditulis — dipakai hitungan progres dan
 /// daftar transaksi tertaut, supaya keduanya tidak pernah berbeda.
 bool countsTowardBudgetItem(Budget budget, BudgetItem item, Transaction transaction) =>
+    budget.covers(transaction.date) &&
     switch ((item.kind, transaction)) {
       (BudgetItemKind.expense, ExpenseTransaction(:final walletId)) => walletId == budget.walletId,
       (BudgetItemKind.transfer, TransferTransaction(:final fromWalletId, :final toWalletId)) =>

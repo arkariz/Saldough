@@ -101,7 +101,8 @@
     "flowTargetWallet": "Dompet tujuan",
     "budgetItemLabel": "Pos anggaran",
     "budgetItemNone": "Tanpa anggaran",
-    "budgetItemHelp": "Opsional. Hanya pos anggaran aktif yang cocok dengan dompet di atas yang ditawarkan.",
+    "budgetItemHelp": "Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.",
+    "budgetItemOutOfPeriod": "Tanggal ini di luar periode anggaran \"$name\", jadi transaksi ini tidak lagi masuk anggaran itu.",
     "freelanceCalloutTitle": "Honor freelance?",
     "freelanceCalloutBody": "Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance."
   },

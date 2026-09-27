@@ -85,14 +85,15 @@ void main() {
       'RecordWalletsLoaded ikut memuat pos anggaran untuk pemilih (T-4.4)',
       build: () => RecordBloc(
         walletRepository: walletRepository,
-        budgetItemCatalog: const FakeBudgetItemCatalog([
+        budgetItemCatalog: FakeBudgetItemCatalog([
           BudgetItemOption(
             budgetId: 'b1',
             budgetName: 'Rumah tangga',
             itemId: 'beras',
             itemName: 'Beras',
             walletId: 'bca',
-            isActive: true,
+            startDate: DateTime(2026, 9),
+            endDate: DateTime(2026, 10),
           ),
         ]),
         recordTransaction: RecordTransaction(
@@ -168,9 +169,7 @@ void main() {
       act: (bloc) => bloc.add(const RecordWalletsLoaded()),
       skip: 1,
       expect: () => [
-        isA<RecordState>()
-            .having((s) => s.loadFailed, 'loadFailed', true)
-            .having((s) => s.wallets, 'wallets', isEmpty),
+        isA<RecordState>().having((s) => s.loadFailed, 'loadFailed', true).having((s) => s.wallets, 'wallets', isEmpty),
       ],
     );
 

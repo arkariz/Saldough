@@ -138,6 +138,13 @@ Tautan ke pos anggaran hanya sah kalau dompet anggarannya sama dengan
 `walletId`. Aturan itu ditegakkan saat pengeluaran disimpan, dan pemilih pos di
 antarmuka hanya menawarkan pos yang memenuhinya.
 
+Tautan juga hanya sah kalau **tanggal transaksi berada di dalam periode
+anggaran** (`budget.startDate ≤ date < budget.endDate`, keputusan KT-1). Pemilih
+pos hanya menawarkan pos anggaran yang periodenya mencakup tanggal transaksi;
+mengubah tanggal ke luar periode melepas tautannya. Karena itu `spent` sebuah
+anggaran cukup dihitung dari dokumen bulan yang disentuh periodenya, tidak
+dari seluruh riwayat (NFR-PERF-002).
+
 ### Transfer
 
 `TransferTransaction` memindahkan catatan uang antar dompet. Ia tidak mengubah
@@ -212,11 +219,13 @@ item.spent         = bila item.kind = expense:
                        Σ expense.amount
                        dengan expense.budgetItemId = item.id
                        dan    expense.walletId     = budget.walletId
+                       dan    expense.date di dalam periode anggaran
                      bila item.kind = transfer:
                        Σ transfer.amount
                        dengan transfer.budgetItemId = item.id
                        dan    transfer.fromWalletId = budget.walletId
                        dan    transfer.toWalletId   = item.targetWalletId
+                       dan    transfer.date di dalam periode anggaran
 item.remaining     = item.plannedAmount − item.spent
 item.progress      = item.spent ÷ item.plannedAmount
 
@@ -431,6 +440,9 @@ sendiri.
     Menautkannya ke anggaran hanya memengaruhi angka rencana, bukan uangnya.
 12. **Saldo boleh negatif.** Ini keadaan nyata, bukan kondisi kesalahan, dan
     tidak boleh menolak penyimpanan.
+13. **Transaksi hanya menambah `spent` anggaran yang periodenya mencakup
+    tanggalnya.** Transaksi tertaut yang bertanggal di luar periode (data
+    sebelum keputusan KT-1) tidak terhitung.
 
 ## Nilai terkonfirmasi
 

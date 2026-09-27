@@ -92,6 +92,30 @@ void main() {
       expect(result.spent, 0);
     });
 
+    test('transaksi tertaut di luar periode TIDAK terhitung (KT-1)', () {
+      final before = ExpenseTransaction(
+        id: 'e1',
+        date: DateTime(2026, 8, 31, 23, 59),
+        amount: 100,
+        note: '',
+        walletId: 'bca',
+        budgetItemId: 'mingguan',
+      );
+      final atEnd = TransferTransaction(
+        id: 't1',
+        date: DateTime(2026, 10),
+        amount: 200,
+        note: '',
+        fromWalletId: 'bca',
+        toWalletId: 'tabungan',
+        budgetItemId: 'tabungan',
+      );
+      final result = calculate(budget, [before, atEnd, expense('e2', 300, item: 'mingguan')], now: now);
+      expect(result.items[0].spent, 300);
+      expect(result.items[2].spent, 0);
+      expect(result.spent, 300);
+    });
+
     test('pengeluaran tanpa tautan pos tidak terhitung', () {
       final result = calculate(budget, [expense('e1', 57660000)], now: now);
       expect(result.spent, 0);

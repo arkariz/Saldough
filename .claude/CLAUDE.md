@@ -47,8 +47,10 @@ ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
 Fase 7 juga selesai: template anggaran (layar, gandakan, aktif/nonaktif,
 anggaran dari template), ikon SVG, bentuk ADR-015, dan poles state.
 Seluruh tugas MVP di TASK_LIST sudah tercentang. Keputusan yang menunggu
-pemilik ada di bagian "Keputusan terbuka" TASK_LIST (mis. KT-1: ringkasan
-anggaran masih memindai seluruh riwayat).
+pemilik ada di bagian "Keputusan terbuka" TASK_LIST. KT-1 sudah diputuskan
+dan dikerjakan di T-8.1: transaksi hanya boleh ditautkan ke pos anggaran yang
+periodenya mencakup tanggalnya, sehingga anggaran cukup membaca dokumen bulan
+periodenya.
 
 **Jalur UX/UI di luar MVP:** 22 perbaikan hasil review UX dan UI 27 Sep
 2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat

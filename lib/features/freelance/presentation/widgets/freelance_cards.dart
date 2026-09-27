@@ -284,9 +284,17 @@ class WorklogEntryCard extends StatelessWidget {
                       style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textMuted),
                     ),
                   ),
-                  Text(
-                    AppMoneyFormatter.format(entry.earnedAmount),
-                    style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                  const SizedBox(width: AppSpacing.xs),
+                  // Nominal mengecil di layar sempit atau teks diperbesar.
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Text(
+                        AppMoneyFormatter.format(entry.earnedAmount),
+                        style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                      ),
+                    ),
                   ),
                 ],
               ),

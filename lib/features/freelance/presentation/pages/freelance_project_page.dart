@@ -505,9 +505,16 @@ class _ProjectHeader extends StatelessWidget {
                       children: [
                         const AppIcon(IconKey.hourlyRate, size: 20),
                         const SizedBox(width: 4),
-                        Text(
-                          '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
-                          style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                        // Tarif mengecil di layar sempit atau teks diperbesar.
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
+                              style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                            ),
+                          ),
                         ),
                       ],
                     ),

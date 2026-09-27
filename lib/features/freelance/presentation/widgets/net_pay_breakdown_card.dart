@@ -24,12 +24,20 @@ class NetPayBreakdownCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(label, style: strong ? textTheme.titleSmall : textTheme.bodyMedium)),
-          Text(
-            value,
-            style: PixelTypography.tabularMono(
-              context,
-              fontSize: strong ? 16 : 14,
-              color: color ?? colors.textPrimary,
+          const SizedBox(width: AppSpacing.xs),
+          // Nominal mengecil di layar sempit atau teks diperbesar.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                value,
+                style: PixelTypography.tabularMono(
+                  context,
+                  fontSize: strong ? 16 : 14,
+                  color: color ?? colors.textPrimary,
+                ),
+              ),
             ),
           ),
         ],

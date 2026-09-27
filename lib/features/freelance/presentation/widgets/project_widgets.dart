@@ -302,9 +302,13 @@ class AddProjectCard extends StatelessWidget {
               children: [
                 AppIcon(IconKey.add, color: colors.accent),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
-                  t.freelance.projectAddTitle.toUpperCase(),
-                  style: transactionLabelStyle(context, size: 12, color: colors.accent),
+                // Teks diperbesar membungkus ke baris berikutnya, bukan meluber.
+                Flexible(
+                  child: Text(
+                    t.freelance.projectAddTitle.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: transactionLabelStyle(context, size: 12, color: colors.accent),
+                  ),
                 ),
               ],
             ),
@@ -487,9 +491,17 @@ class WorklogMonthHeader extends StatelessWidget {
           const AppIcon(IconKey.calendar, size: 20),
           const SizedBox(width: AppSpacing.xs),
           Expanded(child: Text(CycleMonthFormatter.format(key), style: Theme.of(context).textTheme.titleSmall)),
-          Text(
-            '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
-            style: transactionLabelStyle(context, color: colors.textMuted),
+          const SizedBox(width: AppSpacing.xs),
+          // Subtotal mengecil di layar sempit atau teks diperbesar.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(
+                '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
+                style: transactionLabelStyle(context, color: colors.textMuted),
+              ),
+            ),
           ),
         ],
       ),

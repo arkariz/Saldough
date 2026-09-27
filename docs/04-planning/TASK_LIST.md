@@ -37,8 +37,9 @@ Terakhir diperbarui: 27 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 1 | 1 | Selesai |
-| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 0 | Belum dimulai — 10 item terkunci: UX-1, UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
+| 8 — Tindak lanjut pasca-MVP | 3 | 1 | Berjalan |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 0 | KO dijawab; mulai T-9.1 |
+| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 12 | Berjalan — 9 item sisa terkunci: UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
 
 ## Keputusan terbuka
 
@@ -1211,6 +1212,40 @@ seluruh fitur di atasnya menghasilkan data.
       `isArchived` alih-alih `isActive`; CATAT menampilkan pemberitahuan
       saat tautan lepas karena tanggal. Diuji termasuk mutasi (syarat
       tanggal, pilihan CATAT, `months`, anggaran yang lolos penyaring).
+- [ ] **T-8.2** (Opsional, dari UX-6 langkah 2) Mode pencarian Transaksi
+      lintas bulan. Saat ini pencarian dan penyaring hanya mencakup bulan
+      yang dibuka, dan teksnya sudah menyebut itu. Perlu cara membaca bulan
+      lain tanpa `listAllTransactions` di jalur layar (NFR-PERF-002).
+- [ ] **T-8.3** Ganti nama aplikasi menjadi **Tanukonomy** (dipilih pemilik
+      27 Sep 2026, riset di
+      [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md)).
+      Prasyarat: cek merek dagang resmi (DJKI, USPTO, EUIPO, WIPO; kelas 9
+      dan 36), amankan domain dan nama di Play Console/App Store Connect.
+      Lalu ADR penggantian nama; nama tampilan, ID aplikasi (sebelum rilis
+      pertama), teks i18n yang menyebut "Saldough", ikon, dokumen. Nama
+      paket Dart `saldough` boleh tetap.
+
+## Fase 9: Onboarding, info, dan tur spotlight
+
+Rincian, konten, dan key spotlight ada di
+[ONBOARDING_PLAN.md](ONBOARDING_PLAN.md). T-9.1 menunggu keputusan pemilik
+KO-1..KO-7 di dokumen itu (dijawab 27 Sep 2026). Berkaitan dengan UX-1: edukasi CATAT pindah dari
+lembar pilihan ke onboarding dan tur CATAT.
+
+- [ ] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
+- [ ] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
+      dipilih; pemilik membuat gambar dari brief konten
+      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md).
+- [ ] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`.
+- [ ] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka.
+- [ ] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,
+      `SpotlightTarget`.
+- [ ] **T-9.5** Tur Beranda (TR-HOME).
+- [ ] **T-9.6** Tur CATAT (TR-CATAT), bersama UX-1.
+- [ ] **T-9.7** Tur Dompet, Transaksi, Anggaran.
+- [ ] **T-9.8** Tur rincian anggaran dan Freelance.
+- [ ] **T-9.9** Lapis info: putar ulang tur, lihat pengenalan, setel ulang.
+- [ ] **T-9.10** Verifikasi menyeluruh di emulator.
 
 ## Cakupan requirement
 

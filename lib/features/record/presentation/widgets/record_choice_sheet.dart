@@ -229,7 +229,7 @@ class _ChoiceCard extends StatelessWidget {
                                   height: 52,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: colors.tinted(fill, 0.22),
+                                    color: colors.iconTile(fill),
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(

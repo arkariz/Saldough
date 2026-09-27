@@ -23,13 +23,17 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Struktur kode** | `docs/02-architecture/ARCHITECTURE_OVERVIEW.md` |
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
-| **Tugas dan progres** | `docs/04-planning/TASK_LIST.md`, plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX) |
+| **Tugas dan progres** | `docs/04-planning/TASK_LIST.md`, plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
 | **Dokumen Saldough 1.0** | `docs/99-archive/` |
 
 ## Status
+
+**Rebranding:** nama aplikasi baru **Tanukonomy** dipilih 27 Sep 2026
+(maskot tanuki juru catat), belum dieksekusi — T-8.3, riset di
+`docs/01-product/ASO_NAME_RESEARCH.md`.
 
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah
@@ -54,8 +58,8 @@ periodenya.
 
 **Jalur UX/UI di luar MVP:** 22 perbaikan hasil review UX dan UI 27 Sep
 2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
-mengecek progres, baca dokumen itu bersama TASK_LIST. Sepuluh item terkunci:
-UX-1, UX-4, UX-8, UX-10 menunggu keputusan pemilik, dan enam item UI menunggu
+mengecek progres, baca dokumen itu bersama TASK_LIST. 12 item selesai 27 Sep 2026; sembilan sisanya terkunci:
+UX-4, UX-8, UX-10 menunggu keputusan pemilik (UX-1 diputuskan, dikerjakan di Fase 9), dan enam item UI menunggu
 persetujuan ADR-020 (Proposed, hierarki penekanan bahasa visual pixel).
 
 ## Fakta proyek

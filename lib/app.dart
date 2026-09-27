@@ -1,8 +1,10 @@
 import 'package:di/di.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Widget akar Saldough.
@@ -24,6 +26,10 @@ class SaldoughApp extends StatelessWidget {
   /// Router aplikasi, dibangun dari [RouteRegistry] lewat [AppRouteRegistry].
   final GoRouter router;
 
+  /// Terjemahan komponen bawaan Flutter (pemilih tanggal, menu salin/tempel,
+  /// label semantik), mengikuti locale slang — NFR-UX-004, UX-5.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = GlobalMaterialLocalizations.delegates;
+
   @override
   Widget build(BuildContext context) {
     return ScopeProvider(
@@ -32,6 +38,9 @@ class SaldoughApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
+        locale: TranslationProvider.of(context).flutterLocale,
+        supportedLocales: AppLocaleUtils.supportedLocales,
+        localizationsDelegates: localizationsDelegates,
         routerConfig: router,
         builder: (context, child) => _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
       ),

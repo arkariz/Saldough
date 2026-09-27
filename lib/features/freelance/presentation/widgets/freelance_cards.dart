@@ -247,9 +247,8 @@ class WorklogEntryCard extends StatelessWidget {
         ),
       ),
     };
-    return GestureDetector(
+    return AppTappable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: TransactionSlab(
         padding: const EdgeInsets.all(AppSpacing.sm),
         child: Column(

@@ -168,7 +168,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get transferSummaryTitle => 'Move summary';
 	@override String transferSummaryFrom({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}';
 	@override String transferSummaryTo({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}';
-	@override String get footnote => '*Internal Saldough record. Does not debit or send money from any real bank account.';
 	@override String get balanceLabel => 'Balance';
 	@override String get categoryPlaceholder => 'Pick a category';
 	@override String get categoryNoneLabel => 'No category';
@@ -193,7 +192,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 
 	// Translations
 	@override String get pageTitle => 'Transactions';
-	@override String get searchHint => 'Search notes / categories...';
+	@override String get searchHint => 'Search this month: notes / categories...';
 	@override String get monthStatusLabel => 'This month\'s log status';
 	@override String logCountBadge({required Object count}) => '${count} active logs';
 	@override String get netFlowLabel => 'Net flow';
@@ -223,8 +222,8 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get emptyGuideTransferTitle => 'Transfer Between Wallets';
 	@override String get emptyGuideTransferDescription => 'Moves the recorded balance between wallets without changing your total net worth.';
 	@override String get trustFooterMessage => 'Every transaction is recorded manually • 100% private, kept on your device';
-	@override String get emptyFilterTitle => 'No transactions match the filter';
-	@override String get emptyFilterSubtitle => 'Try changing or clearing the active filters.';
+	@override String get emptyFilterTitle => 'No transactions this month match the filter';
+	@override String get emptyFilterSubtitle => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.';
 	@override String get clearFiltersButton => 'Clear filters';
 	@override String get loadErrorTitle => 'Failed to load transactions';
 	@override String get loadErrorSubtitle => 'Check and try loading again.';
@@ -628,12 +627,8 @@ class _Translations$home$en extends Translations$home$id {
 	@override String moreWallets({required Object count}) => '+${count} more';
 	@override String get startBadge => 'Start recording';
 	@override String get noWalletsBody => 'No wallet balance recorded yet.';
-	@override String get addWalletPrompt => 'Add your first cash wallet or bank account.';
-	@override String get addWalletAction => '+ Wallet';
 	@override String incomeLabel({required Object month}) => 'Income ${month}';
 	@override String expenseLabel({required Object month}) => 'Expenses ${month}';
-	@override String get incomeTag => '+ In';
-	@override String get expenseTag => '− Out';
 	@override String get budgetTitle => 'Active budgets';
 	@override String get budgetRemaining => 'Remaining';
 	@override String get budgetOver => 'Over plan';
@@ -762,7 +757,6 @@ extension on TranslationsEn {
 			'record.transferSummaryTitle' => 'Move summary',
 			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}',
 			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}',
-			'record.footnote' => '*Internal Saldough record. Does not debit or send money from any real bank account.',
 			'record.balanceLabel' => 'Balance',
 			'record.categoryPlaceholder' => 'Pick a category',
 			'record.categoryNoneLabel' => 'No category',
@@ -778,7 +772,7 @@ extension on TranslationsEn {
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
 			'record.freelanceCalloutBody' => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.',
 			'transaction.pageTitle' => 'Transactions',
-			'transaction.searchHint' => 'Search notes / categories...',
+			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} active logs',
 			'transaction.netFlowLabel' => 'Net flow',
@@ -808,8 +802,8 @@ extension on TranslationsEn {
 			'transaction.emptyGuideTransferTitle' => 'Transfer Between Wallets',
 			'transaction.emptyGuideTransferDescription' => 'Moves the recorded balance between wallets without changing your total net worth.',
 			'transaction.trustFooterMessage' => 'Every transaction is recorded manually • 100% private, kept on your device',
-			'transaction.emptyFilterTitle' => 'No transactions match the filter',
-			'transaction.emptyFilterSubtitle' => 'Try changing or clearing the active filters.',
+			'transaction.emptyFilterTitle' => 'No transactions this month match the filter',
+			'transaction.emptyFilterSubtitle' => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.',
 			'transaction.clearFiltersButton' => 'Clear filters',
 			'transaction.loadErrorTitle' => 'Failed to load transactions',
 			'transaction.loadErrorSubtitle' => 'Check and try loading again.',
@@ -1177,12 +1171,8 @@ extension on TranslationsEn {
 			'home.moreWallets' => ({required Object count}) => '+${count} more',
 			'home.startBadge' => 'Start recording',
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
-			'home.addWalletPrompt' => 'Add your first cash wallet or bank account.',
-			'home.addWalletAction' => '+ Wallet',
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
-			'home.incomeTag' => '+ In',
-			'home.expenseTag' => '− Out',
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
@@ -1190,13 +1180,13 @@ extension on TranslationsEn {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
-			_ => null,
-		} ?? switch (path) {
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
+			_ => null,
+		} ?? switch (path) {
 			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
 			'home.recordAction' => 'Record Transaction',
 			'home.createWalletAction' => 'Create First Wallet',

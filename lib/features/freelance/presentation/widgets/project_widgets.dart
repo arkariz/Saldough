@@ -30,7 +30,7 @@ class FreelanceIconBox extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceMid : colors.tinted(color!, 0.18),
+        color: colors.iconTile(color),
         borderRadius: BorderRadius.circular(4),
       ),
       child: AppIcon(icon, size: size * 0.7),

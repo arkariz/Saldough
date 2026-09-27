@@ -4,6 +4,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -66,11 +67,13 @@ void main() {
     when(
       () => walletRepository.saveWallet(any()),
     ).thenAnswer((_) async => const Right(unit));
+    when(() => transactionRepository.listRecentTransactions(any())).thenAnswer((_) async => const Right([]));
   });
 
   RecordBloc buildBloc() => RecordBloc(
     budgetItemCatalog: const FakeBudgetItemCatalog(),
     walletRepository: walletRepository,
+    transactionRepository: transactionRepository,
     recordTransaction: RecordTransaction(
       transactionRepository: transactionRepository,
       recomputeWalletBalances: RecomputeWalletBalances(
@@ -82,9 +85,50 @@ void main() {
 
   group('RecordBloc', () {
     blocTest<RecordBloc, RecordState>(
+      'RecordWalletsLoaded menurunkan isian bawaan dari transaksi terbaru, hanya dompet aktif (UX-2, UX-3)',
+      setUp: () => when(() => transactionRepository.listRecentTransactions(any())).thenAnswer(
+        (_) async => Right([
+          ExpenseTransaction(id: 'e1', date: DateTime(2026, 9, 9), amount: 1, note: '', walletId: 'lama'),
+          ExpenseTransaction(
+            id: 'e2',
+            date: DateTime(2026, 9, 8),
+            amount: 1,
+            note: '',
+            walletId: 'gopay',
+            categoryKey: 'Kopi',
+          ),
+        ]),
+      ),
+      build: buildBloc,
+      act: (bloc) => bloc.add(const RecordWalletsLoaded()),
+      skip: 1,
+      verify: (bloc) {
+        // Dompet nonaktif "lama" dilewati walau paling baru.
+        expect(bloc.state.defaults.expenseWalletId, 'gopay');
+        expect(bloc.state.defaults.expenseCategories, ['Kopi']);
+      },
+    );
+
+    blocTest<RecordBloc, RecordState>(
+      'riwayat gagal dibaca: CATAT tetap jalan tanpa isian bawaan',
+      setUp: () => when(
+        () => transactionRepository.listRecentTransactions(any()),
+      ).thenAnswer((_) async => const Left(SystemFailure(code: FailureCode.unknown, message: 'x'))),
+      build: buildBloc,
+      act: (bloc) => bloc.add(const RecordWalletsLoaded()),
+      skip: 1,
+      verify: (bloc) {
+        expect(bloc.state.loadFailed, isFalse);
+        expect(bloc.state.wallets.map((w) => w.id), ['bca', 'gopay']);
+        expect(bloc.state.defaults, const RecordDefaults());
+      },
+    );
+
+    blocTest<RecordBloc, RecordState>(
       'RecordWalletsLoaded ikut memuat pos anggaran untuk pemilih (T-4.4)',
       build: () => RecordBloc(
         walletRepository: walletRepository,
+        transactionRepository: transactionRepository,
         budgetItemCatalog: FakeBudgetItemCatalog([
           BudgetItemOption(
             budgetId: 'b1',

@@ -72,13 +72,11 @@ class RecordFormFrame extends StatelessWidget {
               if (notice != null) ...[const SizedBox(height: AppSpacing.md), notice!],
               for (final child in children) ...[const SizedBox(height: AppSpacing.md), child],
               const SizedBox(height: AppSpacing.lg),
+              // Tanpa catatan kaki "tidak mendebit uang" di tiap formulir:
+              // penafian itu cukup sekali per alur (lembar pilihan CATAT,
+              // rincian transaksi, rincian dompet), dan label tombol "Catat…"
+              // sudah membawa maknanya (NFR-UX-005, UX-9).
               AppButton(label: submitLabel, color: colors.kindInk(kind), onPressed: onSubmit),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                t.record.footnote,
-                textAlign: TextAlign.center,
-                style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
-              ),
             ],
           ),
         ),
@@ -135,7 +133,7 @@ class _Header extends StatelessWidget {
           height: 44,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: colors.tinted(colors.kindFill(kind), 0.22),
+            color: colors.iconTile(colors.kindFill(kind)),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),

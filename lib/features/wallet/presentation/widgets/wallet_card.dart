@@ -25,9 +25,8 @@ class WalletCard extends StatelessWidget {
     final colors = context.appColors;
     final typeLabel = walletTypeLabel(wallet.iconKey);
     final negative = wallet.currentBalance < 0;
-    return GestureDetector(
+    return AppTappable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Opacity(
         opacity: wallet.isActive ? 1 : 0.6,
         child: TransactionSlab(

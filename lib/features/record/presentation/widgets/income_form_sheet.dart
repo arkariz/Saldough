@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
@@ -40,6 +41,7 @@ class IncomeFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.initialWalletId,
+    this.recentCategories = const [],
     super.key,
   });
 
@@ -53,9 +55,13 @@ class IncomeFormSheet extends StatefulWidget {
   final IncomeTransaction? initial;
 
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
-  /// dompet). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
+  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
   /// dompet transaksi itu sendiri.
   final String? initialWalletId;
+
+  /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
+  /// ditawarkan sebelum saran bawaan (UX-3).
+  final List<String> recentCategories;
 
   @override
   State<IncomeFormSheet> createState() => _IncomeFormSheetState();
@@ -148,7 +154,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         ),
         RecordCategoryField(
           controller: _categoryController,
-          suggestions: _categorySuggestions(),
+          suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
           kind: TransactionKind.income,
         ),
         WalletSelectField(

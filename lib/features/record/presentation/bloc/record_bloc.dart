@@ -2,6 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -17,8 +18,12 @@ part 'record_event.dart';
 /// tetap sesuai (ADR-012).
 final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// Membuat [RecordBloc].
-  RecordBloc({required this._walletRepository, required this._recordTransaction, required this._budgetItemCatalog})
-    : super(RecordState.initial()) {
+  RecordBloc({
+    required this._walletRepository,
+    required this._transactionRepository,
+    required this._recordTransaction,
+    required this._budgetItemCatalog,
+  }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
     on<ExpenseRecorded>(_onExpenseRecorded);
@@ -26,8 +31,12 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   }
 
   final WalletRepository _walletRepository;
+  final TransactionRepository _transactionRepository;
   final RecordTransaction _recordTransaction;
   final BudgetItemCatalog _budgetItemCatalog;
+
+  /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
+  static const _recentLimit = 100;
 
   Future<void> _onWalletsLoaded(RecordWalletsLoaded event, Emitter<RecordState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -39,10 +48,15 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         // Pos anggaran adalah data sekunder: kegagalan membacanya tidak
         // boleh menghalangi pencatatan, cukup tanpa pilihan tautan anggaran.
         final budgetItems = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
+        final active = wallets.where((w) => w.isActive).toList();
+        // Isian bawaan juga data sekunder (UX-2, UX-3). Biayanya mengikuti
+        // [_recentLimit], bukan panjang riwayat (NFR-PERF-002).
+        final recent = (await _transactionRepository.listRecentTransactions(_recentLimit)).getOrElse((_) => const []);
         emit(
           state.copyWith(
-            wallets: wallets.where((w) => w.isActive).toList(),
+            wallets: active,
             budgetItems: budgetItems,
+            defaults: RecordDefaults.from(recent, activeWalletIds: {for (final w in active) w.id}),
             isLoading: false,
             loadFailed: false,
           ),

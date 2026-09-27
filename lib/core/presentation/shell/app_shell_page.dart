@@ -223,7 +223,7 @@ class _AppShellPageState extends State<AppShellPage> {
                                                   label: t.appShell.budgetTabLabel,
                                                 ),
                                                 NavigationDestination(
-                                                  icon: const AppIcon(IconKey.record),
+                                                  icon: const _RecordNavIcon(),
                                                   label: t.appShell.recordAction,
                                                 ),
                                                 NavigationDestination(
@@ -255,6 +255,30 @@ class _AppShellPageState extends State<AppShellPage> {
           );
         },
       ),
+    );
+  }
+}
+
+/// Ikon slot CATAT: kotak aksen dengan garis tepi dan bayangan keras level
+/// "Interaktif" ADR-015 ("FAB CATAT"), supaya tindakan utama aplikasi tidak
+/// tampil setara empat tab lain (prinsip produk #5, UX-13).
+class _RecordNavIcon extends StatelessWidget {
+  const _RecordNavIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Container(
+      width: 44,
+      height: 32,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: colors.accent,
+        borderRadius: AppRadius.pixelSmAll,
+        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        boxShadow: AppElevation.hardShadow(colors.textPrimary),
+      ),
+      child: AppIcon(IconKey.record, size: 20, color: colors.onAccent),
     );
   }
 }

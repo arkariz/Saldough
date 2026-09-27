@@ -13,6 +13,7 @@ export 'app_quick_chip.dart';
 export 'app_section_label.dart';
 export 'app_segmented_progress_bar.dart';
 export 'app_skeleton.dart';
+export 'app_tappable.dart';
 export 'category_icon.dart';
 export 'confirm_delete_dialog.dart';
 export 'fit_start.dart';

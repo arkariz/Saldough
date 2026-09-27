@@ -339,9 +339,6 @@ class Translations$record$id {
 	/// id: 'Dompet $wallet bertambah $amount'
 	String transferSummaryTo({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}';
 
-	/// id: '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.'
-	String get footnote => '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.';
-
 	/// id: 'Saldo'
 	String get balanceLabel => 'Saldo';
 
@@ -396,8 +393,8 @@ class Translations$transaction$id {
 	/// id: 'Transaksi'
 	String get pageTitle => 'Transaksi';
 
-	/// id: 'Cari catatan / kategori...'
-	String get searchHint => 'Cari catatan / kategori...';
+	/// id: 'Cari di bulan ini: catatan / kategori...'
+	String get searchHint => 'Cari di bulan ini: catatan / kategori...';
 
 	/// id: 'Status log bulan ini'
 	String get monthStatusLabel => 'Status log bulan ini';
@@ -486,11 +483,11 @@ class Translations$transaction$id {
 	/// id: 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu'
 	String get trustFooterMessage => 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu';
 
-	/// id: 'Tidak ada transaksi yang cocok dengan filter'
-	String get emptyFilterTitle => 'Tidak ada transaksi yang cocok dengan filter';
+	/// id: 'Tidak ada transaksi bulan ini yang cocok dengan filter'
+	String get emptyFilterTitle => 'Tidak ada transaksi bulan ini yang cocok dengan filter';
 
-	/// id: 'Coba ganti atau hapus filter yang sedang aktif.'
-	String get emptyFilterSubtitle => 'Coba ganti atau hapus filter yang sedang aktif.';
+	/// id: 'Pencarian dan filter hanya mencakup bulan yang sedang dibuka. Ganti bulan, atau ganti dan hapus filter.'
+	String get emptyFilterSubtitle => 'Pencarian dan filter hanya mencakup bulan yang sedang dibuka. Ganti bulan, atau ganti dan hapus filter.';
 
 	/// id: 'Hapus filter'
 	String get clearFiltersButton => 'Hapus filter';
@@ -1629,23 +1626,11 @@ class Translations$home$id {
 	/// id: 'Belum ada saldo dompet yang tercatat.'
 	String get noWalletsBody => 'Belum ada saldo dompet yang tercatat.';
 
-	/// id: 'Isi dompet fisik atau rekening bank pertamamu.'
-	String get addWalletPrompt => 'Isi dompet fisik atau rekening bank pertamamu.';
-
-	/// id: '+ Dompet'
-	String get addWalletAction => '+ Dompet';
-
 	/// id: 'Pemasukan $month'
 	String incomeLabel({required Object month}) => 'Pemasukan ${month}';
 
 	/// id: 'Pengeluaran $month'
 	String expenseLabel({required Object month}) => 'Pengeluaran ${month}';
-
-	/// id: '+ Masuk'
-	String get incomeTag => '+ Masuk';
-
-	/// id: '− Keluar'
-	String get expenseTag => '− Keluar';
 
 	/// id: 'Anggaran aktif'
 	String get budgetTitle => 'Anggaran aktif';
@@ -1842,7 +1827,6 @@ extension on Translations {
 			'record.transferSummaryTitle' => 'Ringkasan Catatan Mutasi',
 			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} berkurang ${amount}',
 			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}',
-			'record.footnote' => '*Catatan internal Saldough. Tidak mendebit atau mengirim uang di rekening bank sungguhan.',
 			'record.balanceLabel' => 'Saldo',
 			'record.categoryPlaceholder' => 'Pilih kategori',
 			'record.categoryNoneLabel' => 'Tanpa kategori',
@@ -1858,7 +1842,7 @@ extension on Translations {
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
 			'record.freelanceCalloutBody' => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.',
 			'transaction.pageTitle' => 'Transaksi',
-			'transaction.searchHint' => 'Cari catatan / kategori...',
+			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} log aktif',
 			'transaction.netFlowLabel' => 'Arus Bersih (Netto)',
@@ -1888,8 +1872,8 @@ extension on Translations {
 			'transaction.emptyGuideTransferTitle' => 'Transfer Antar Dompet',
 			'transaction.emptyGuideTransferDescription' => 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.',
 			'transaction.trustFooterMessage' => 'Semua transaksi dicatat manual • Privasi 100% aman di perangkatmu',
-			'transaction.emptyFilterTitle' => 'Tidak ada transaksi yang cocok dengan filter',
-			'transaction.emptyFilterSubtitle' => 'Coba ganti atau hapus filter yang sedang aktif.',
+			'transaction.emptyFilterTitle' => 'Tidak ada transaksi bulan ini yang cocok dengan filter',
+			'transaction.emptyFilterSubtitle' => 'Pencarian dan filter hanya mencakup bulan yang sedang dibuka. Ganti bulan, atau ganti dan hapus filter.',
 			'transaction.clearFiltersButton' => 'Hapus filter',
 			'transaction.loadErrorTitle' => 'Transaksi gagal dimuat',
 			'transaction.loadErrorSubtitle' => 'Periksa lagi lalu coba muat ulang.',
@@ -2257,12 +2241,8 @@ extension on Translations {
 			'home.moreWallets' => ({required Object count}) => '+${count} lainnya',
 			'home.startBadge' => 'Mulai catat',
 			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
-			'home.addWalletPrompt' => 'Isi dompet fisik atau rekening bank pertamamu.',
-			'home.addWalletAction' => '+ Dompet',
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
-			'home.incomeTag' => '+ Masuk',
-			'home.expenseTag' => '− Keluar',
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
@@ -2270,13 +2250,13 @@ extension on Translations {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
-			_ => null,
-		} ?? switch (path) {
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
+			_ => null,
+		} ?? switch (path) {
 			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
 			'home.recordAction' => 'Catat Transaksi',
 			'home.createWalletAction' => 'Buat Dompet Pertama',

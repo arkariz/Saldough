@@ -86,7 +86,6 @@ class _HomePageState extends State<HomePage> {
           total: state.totalBalance,
           activeWallets: state.activeWallets,
           hasNoWallets: state.hasNoWallets,
-          onAddWallet: widget.onShowWallets,
         ),
         // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
         if (state.hasTransactions) ...[

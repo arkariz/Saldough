@@ -149,7 +149,8 @@ void main() {
           find.text(t.record.noteSectionLabel.toUpperCase()),
           findsOneWidget,
         );
-        expect(find.text(t.record.footnote), findsOneWidget);
+        // Penafian tidak diulang di tiap formulir (UX-9).
+        expect(find.textContaining('Tidak mendebit'), findsNothing);
       },
     );
 

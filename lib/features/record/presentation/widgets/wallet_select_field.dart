@@ -119,6 +119,9 @@ class WalletSelectField extends StatelessWidget {
             options: [
               for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
             ],
+            // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
+            // isinya (UX-11).
+            detailFor: (id) => AppMoneyFormatter.format(wallets.firstWhere((w) => w.id == id).currentBalance),
             onSelected: (id) {
               if (id != null) onSelected(id);
             },

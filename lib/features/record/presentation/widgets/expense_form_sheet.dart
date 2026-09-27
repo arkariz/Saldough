@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
@@ -43,6 +44,7 @@ class ExpenseFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.initialWalletId,
+    this.recentCategories = const [],
     this.budgetItems = const [],
     this.initialBudgetItemId,
     this.initialAmountSen,
@@ -59,9 +61,13 @@ class ExpenseFormSheet extends StatefulWidget {
   final ExpenseTransaction? initial;
 
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
-  /// dompet). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
+  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
   /// dompet transaksi itu sendiri.
   final String? initialWalletId;
+
+  /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
+  /// ditawarkan sebelum saran bawaan (UX-3).
+  final List<String> recentCategories;
 
   /// Seluruh pos anggaran; formulir menyaringnya per dompet asal.
   final List<BudgetItemOption> budgetItems;
@@ -186,7 +192,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         ),
         RecordCategoryField(
           controller: _categoryController,
-          suggestions: _categorySuggestions(),
+          suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
           kind: TransactionKind.expense,
         ),
         WalletSelectField(

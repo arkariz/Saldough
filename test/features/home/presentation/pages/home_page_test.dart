@@ -178,7 +178,9 @@ void main() {
     expect(find.byType(HomeBudgetCard), findsNothing);
     expect(find.byType(HomeFreelanceCard), findsNothing);
 
-    await tester.tap(find.text(t.home.addWalletAction));
+    // Satu ajakan membuat dompet, dan tanpa tautan anggaran yang buntu (UX-7).
+    expect(find.text(t.home.budgetLink), findsNothing);
+    await tester.tap(find.text(t.home.createWalletAction));
     await tester.pumpAndSettle();
     expect(navIndex(tester), 4);
   });
@@ -215,8 +217,8 @@ void main() {
       ),
       findsOne,
     );
-    expect(find.descendant(of: flow, matching: find.text('Rp5.000.000')), findsOneWidget);
-    expect(find.descendant(of: flow, matching: find.text('Rp750.000')), findsOneWidget);
+    expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);
+    expect(find.descendant(of: flow, matching: find.text('−Rp750.000')), findsOneWidget);
     // Anggaran aktif: rencana 2 × Rp75.000.
     expect(find.byType(HomeBudgetCard), findsOneWidget);
     expect(find.text(t.home.budgetSpentOf(spent: 'Rp0', planned: 'Rp150.000')), findsOneWidget);

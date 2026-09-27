@@ -247,9 +247,8 @@ class _TopBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
+            child: AppTappable(
               onTap: () => Navigator.of(context).maybePop(),
-              behavior: HitTestBehavior.opaque,
               child: Row(
                 children: [
                   const SizedBox(width: AppSpacing.xs),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
+import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
@@ -29,7 +30,9 @@ import 'package:state_management/state_management.dart';
 ///
 /// [initialWalletId], kalau terisi, mengisi awal dompet pada formulir yang
 /// dipilih pengguna (FR-REC-002) -- pintasan kontekstual dari layar rincian
-/// dompet (T-2.8). Titik panggil ketiga: `WalletDetailPage`.
+/// dompet (T-2.8). Titik panggil ketiga: `WalletDetailPage`. Tanpa pintasan,
+/// dompet awal adalah satu-satunya dompet aktif, atau dompet terakhir yang
+/// dipakai untuk jenis itu ([initialWalletFor], UX-2).
 ///
 /// [initialChoice], kalau terisi, melewati lembar pilihan dan langsung
 /// membuka formulir itu; [initialBudgetItemId] mengisi awal pos anggarannya
@@ -73,27 +76,38 @@ Future<void> openRecordSheet(
 
     final wallets = bloc.state.wallets;
     final budgetItems = bloc.state.budgetItems;
+    final defaults = bloc.state.defaults;
+    final activeIds = [for (final wallet in wallets) wallet.id];
+    String? walletFor(String? lastUsed) =>
+        initialWalletFor(shortcut: initialWalletId, activeWalletIds: activeIds, lastUsed: lastUsed);
+    final transferFrom = walletFor(defaults.transferFromWalletId);
+    // Tujuan terakhir hanya dipakai kalau asalnya juga dari transfer terakhir.
+    final transferTo =
+        initialToWalletId ??
+        (transferFrom == defaults.transferFromWalletId ? defaults.transferToWalletId : null);
     final result = await showFullScreenSheet<Object>(
       context,
       builder: (_) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(
           wallets: wallets,
-          initialWalletId: initialWalletId,
+          initialWalletId: walletFor(defaults.incomeWalletId),
+          recentCategories: defaults.incomeCategories,
         ),
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
-          initialWalletId: initialWalletId,
+          initialWalletId: walletFor(defaults.expenseWalletId),
+          recentCategories: defaults.expenseCategories,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,
         ),
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
-          initialWalletId: initialWalletId,
+          initialWalletId: transferFrom,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,
-          initialToWalletId: initialToWalletId,
+          initialToWalletId: transferTo,
         ),
       },
     );

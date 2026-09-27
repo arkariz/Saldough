@@ -30,6 +30,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
     this.allIcon = IconKey.filter,
     this.wrapLabel = false,
     this.isPlaceholder = false,
+    this.detailFor,
     super.key,
   });
 
@@ -57,6 +58,10 @@ class AppMenuSelectButton<T> extends StatelessWidget {
   /// Meredupkan label (keadaan "belum dipilih").
   final bool isPlaceholder;
 
+  /// Teks kecil rata kanan di tiap item menu, mis. saldo dompet (UX-11);
+  /// `null` = tanpa teks itu.
+  final String? Function(T value)? detailFor;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -71,8 +76,15 @@ class AppMenuSelectButton<T> extends StatelessWidget {
         side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
       ),
       itemBuilder: (_) => [
-        if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel),
-        for (var i = 0; i < options.length; i++) _item(value: i, icon: options[i].icon, label: options[i].label),
+        if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel, context: context),
+        for (var i = 0; i < options.length; i++)
+          _item(
+            value: i,
+            icon: options[i].icon,
+            label: options[i].label,
+            detail: detailFor?.call(options[i].value),
+            context: context,
+          ),
       ],
       child: TransactionSlab(
         radius: 4,
@@ -97,14 +109,35 @@ class AppMenuSelectButton<T> extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<int> _item({required int value, required IconKey icon, required String label}) {
+  PopupMenuItem<int> _item({
+    required int value,
+    required IconKey icon,
+    required String label,
+    required BuildContext context,
+    String? detail,
+  }) {
     return PopupMenuItem<int>(
       value: value,
       child: Row(
         children: [
           AppIcon(icon),
           const SizedBox(width: AppSpacing.sm),
-          Flexible(child: Text(label, overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis)),
+          // [detail] di bawah label, bukan rata kanan: nominal panjang di
+          // layar sempit atau teks diperbesar tidak mendesak labelnya.
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(label, overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis),
+                if (detail != null)
+                  Text(
+                    detail,
+                    style: PixelTypography.tabularMono(context, fontSize: 12, color: context.appColors.textMuted),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );

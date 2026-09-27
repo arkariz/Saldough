@@ -252,11 +252,9 @@ void main() {
 
         await tester.enterText(find.byType(TextField).first, '75000');
         await tester.pump();
-        await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
-        await tester.tap(find.text(t.record.walletNotSelectedPrompt));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('BCA').last);
-        await tester.pumpAndSettle();
+        // Satu-satunya dompet aktif sudah terpilih tanpa membuka menu (UX-2).
+        expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);
+        expect(find.text('BCA'), findsWidgets);
         await tester.ensureVisible(find.widgetWithText(AppButton, t.record.incomeAction));
         await tester.tap(find.widgetWithText(AppButton, t.record.incomeAction));
         await tester.pumpAndSettle();

@@ -215,4 +215,26 @@ void main() {
       expect(pixelLight.lerp(pixelDark, 1).transferFill, pixelDark.transferFill);
     });
   });
+
+  group('iconTile — garis ikon pixel tetap terbaca (NFR-UX-003, UX-19)', () {
+    // Warna garis tepi seluruh ikon pixel di assets/icons.
+    const iconOutline = Color(0xFF1E1B19);
+    const minRatio = 3.0;
+
+    for (final (name, colors) in [('terang', AppColorsExtension.light), ('gelap', AppColorsExtension.dark)]) {
+      final fills = {
+        'netral': null,
+        'income': colors.incomeFill,
+        'expense': colors.expenseFill,
+        'transfer': colors.transferFill,
+        'pending': colors.pending,
+      };
+      for (final entry in fills.entries) {
+        test('${entry.key} ($name) >= $minRatio:1 terhadap garis ikon', () {
+          final ratio = _contrastRatio(iconOutline, colors.iconTile(entry.value));
+          expect(ratio, greaterThanOrEqualTo(minRatio), reason: 'rasio ${ratio.toStringAsFixed(2)}');
+        });
+      }
+    }
+  });
 }

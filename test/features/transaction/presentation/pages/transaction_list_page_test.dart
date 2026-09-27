@@ -114,6 +114,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(t.transaction.emptyFilterTitle), findsOneWidget);
+      // Menyebut lingkup bulan yang dibuka (UX-6).
+      expect(find.text(t.transaction.emptyFilterSubtitle), findsOneWidget);
       expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
     });
 

@@ -310,4 +310,14 @@ extension AppColorsSurfaces on AppColorsExtension {
   /// [fill] dilarutkan ke [cardBackground] sebesar [strength] (0..1) -- latar
   /// pucat berwarna untuk kotak ikon, nuansa kartu, dan lencana lembut.
   Color tinted(Color fill, double strength) => Color.alphaBlend(fill.withValues(alpha: strength), cardBackground);
+
+  /// Latar kotak ikon pixel berwarna [fill] (`null` = netral). Ikon pixel
+  /// bergaris hampir hitam, jadi di mode gelap latarnya pastel TERANG — isian
+  /// tipis di atas kartu gelap membuat garis ikonnya hilang (NFR-UX-003,
+  /// UX-19). Mode terang tetap [tinted] 0,22.
+  Color iconTile(Color? fill) {
+    final isDark = cardBackground.computeLuminance() < 0.5;
+    if (!isDark) return fill == null ? surfaceMid : tinted(fill, 0.22);
+    return Color.alphaBlend((fill ?? textMuted).withValues(alpha: 0.3), textPrimary);
+  }
 }

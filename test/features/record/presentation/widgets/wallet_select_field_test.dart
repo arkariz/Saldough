@@ -63,6 +63,14 @@ void main() {
   }
 
   group('WalletSelectField', () {
+    testWidgets('menu menampilkan saldo tiap dompet sebelum dipilih (UX-11)', (tester) async {
+      await tester.pumpWidget(pumpable());
+      await openMenu(tester);
+
+      expect(find.text(AppMoneyFormatter.format(500000000)), findsOneWidget);
+      expect(find.text(AppMoneyFormatter.format(100000)), findsOneWidget);
+    });
+
     testWidgets('menampilkan ajakan "belum dipilih" kalau selectedId null, tanpa saldo', (tester) async {
       await tester.pumpWidget(pumpable());
 

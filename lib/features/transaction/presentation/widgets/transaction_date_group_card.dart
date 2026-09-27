@@ -233,7 +233,7 @@ class TransactionRow extends StatelessWidget {
                         height: 44,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: colors.tinted(tint, 0.22),
+                          color: colors.iconTile(tint),
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
                             BoxShadow(color: Color.lerp(ink, colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
@@ -290,7 +290,7 @@ class TransactionRow extends StatelessWidget {
         ),
       ),
     );
-    return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: card);
+    return AppTappable(onTap: onTap, child: card);
   }
 }
 

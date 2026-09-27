@@ -28,14 +28,14 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Kartu utama Beranda ([AppHeroCard]): total saldo dompet aktif
 /// (FR-HOME-001) beserta strip dompetnya. Tanpa dompet sama sekali, kartu ini
-/// mengarahkan membuat dompet pertama (FR-HOME-005).
+/// hanya menjelaskan; ajakan membuat dompet pertama ada di
+/// [HomeEmptyTransactions] (FR-HOME-005, UX-7).
 class HomeBalanceCard extends StatelessWidget {
   /// Membuat [HomeBalanceCard].
   const HomeBalanceCard({
     required this.total,
     required this.activeWallets,
     required this.hasNoWallets,
-    required this.onAddWallet,
     super.key,
   });
 
@@ -47,9 +47,6 @@ class HomeBalanceCard extends StatelessWidget {
 
   /// Belum ada dompet sama sekali.
   final bool hasNoWallets;
-
-  /// Membuka jalan membuat dompet pertama.
-  final VoidCallback onAddWallet;
 
   /// Dompet yang muat di strip; sisanya diringkas "+n lainnya".
   static const _stripCount = 3;
@@ -67,18 +64,10 @@ class HomeBalanceCard extends StatelessWidget {
         children: [
           HeroAmount(AppMoneyFormatter.format(total), color: total < 0 ? colors.expense : null),
           const SizedBox(height: AppSpacing.sm),
+          // Tanpa dompet, satu-satunya ajakan membuat dompet ada di kartu
+          // kosong di bawah (UX-7) — tidak ada tombol kedua di sini.
           if (hasNoWallets) ...[
             Text(t.home.noWalletsBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-            const SizedBox(height: AppSpacing.sm),
-            HeroInset(
-              child: Row(
-                children: [
-                  Expanded(child: Text(t.home.addWalletPrompt, style: textTheme.bodySmall)),
-                  const SizedBox(width: AppSpacing.sm),
-                  _PillButton(label: t.home.addWalletAction, onTap: onAddWallet),
-                ],
-              ),
-            ),
           ] else ...[
             Text(
               t.home.walletCount(count: activeWallets.length).toUpperCase(),
@@ -138,7 +127,7 @@ class HomeCashFlowRow extends StatelessWidget {
         Expanded(
           child: _FlowTile(
             label: t.home.incomeLabel(month: monthLabel),
-            tag: t.home.incomeTag,
+            sign: '+',
             amount: cashFlow.income,
             icon: IconKey.income,
             color: colors.income,
@@ -149,7 +138,7 @@ class HomeCashFlowRow extends StatelessWidget {
         Expanded(
           child: _FlowTile(
             label: t.home.expenseLabel(month: monthLabel),
-            tag: t.home.expenseTag,
+            sign: '−',
             amount: cashFlow.expense,
             icon: IconKey.expense,
             color: colors.expense,
@@ -161,10 +150,12 @@ class HomeCashFlowRow extends StatelessWidget {
   }
 }
 
+/// Satu label, lalu nominal bertanda. Tanda `+`/`−` sudah membawa arah uang,
+/// jadi tidak ada label kedua "+ MASUK"/"− KELUAR" (UX-22).
 class _FlowTile extends StatelessWidget {
   const _FlowTile({
     required this.label,
-    required this.tag,
+    required this.sign,
     required this.amount,
     required this.icon,
     required this.color,
@@ -172,7 +163,7 @@ class _FlowTile extends StatelessWidget {
   });
 
   final String label;
-  final String tag;
+  final String sign;
   final int amount;
   final IconKey icon;
   final Color color;
@@ -198,10 +189,9 @@ class _FlowTile extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Text(tag.toUpperCase(), style: transactionLabelStyle(context, color: color)),
           FitStart(
             child: Text(
-              AppMoneyFormatter.format(amount),
+              '$sign${AppMoneyFormatter.format(amount)}',
               style: PixelTypography.tabularMono(context, fontSize: 18, color: color),
             ),
           ),
@@ -495,8 +485,12 @@ class HomeEmptyTransactions extends StatelessWidget {
                 ? AppButton(label: t.home.createWalletAction, onPressed: onAddWallet)
                 : AppButton(label: t.home.recordAction, onPressed: onRecord),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          _TextLink(label: t.home.budgetLink, onTap: onBudget),
+          // Anggaran butuh dompet; tanpa dompet tautan ini buntu di layar
+          // Anggaran "Buat dompet dulu" (UX-7).
+          if (!hasNoWallets) ...[
+            const SizedBox(height: AppSpacing.sm),
+            _TextLink(label: t.home.budgetLink, onTap: onBudget),
+          ],
         ],
       ),
     );
@@ -688,7 +682,7 @@ class _IconBox extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceMid : colors.tinted(color!, 0.22),
+        color: colors.iconTile(color),
         border: Border.all(color: colors.textPrimary),
       ),
       child: AppIcon(icon, size: size * 0.72),
@@ -872,36 +866,6 @@ class _DashPainter extends CustomPainter {
   bool shouldRepaint(_DashPainter oldDelegate) => oldDelegate.color != color || oldDelegate.vertical != vertical;
 }
 
-/// Tombol pil kecil terisi aksen, untuk aksi di atas kartu arang.
-class _PillButton extends StatelessWidget {
-  const _PillButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-              decoration: BoxDecoration(color: colors.accent, borderRadius: AppRadius.pixelSmAll),
-              child: Text(label, style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.onAccent)),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// Tautan teks kecil beraksen.
 class _TextLink extends StatelessWidget {
   const _TextLink({required this.label, required this.onTap, this.chevron = false});
@@ -913,7 +877,10 @@ class _TextLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ink = context.appColors.accent;
+    // Simpul semantik sendiri: tanpa `container`, tautan di kartu kosong
+    // tergabung ke label kartu dan tidak bisa diaktifkan tersendiri (UX-12).
     return Semantics(
+      container: true,
       button: true,
       child: GestureDetector(
         onTap: onTap,

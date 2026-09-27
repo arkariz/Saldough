@@ -27,6 +27,7 @@ final class RecordScope extends IsolatedScope {
     c.registerLazySingleton<RecordBloc>(
       () => RecordBloc(
         walletRepository: c<WalletRepository>(),
+        transactionRepository: c<TransactionRepository>(),
         budgetItemCatalog: c<BudgetItemCatalog>(),
         recordTransaction: RecordTransaction(
           transactionRepository: c<TransactionRepository>(),

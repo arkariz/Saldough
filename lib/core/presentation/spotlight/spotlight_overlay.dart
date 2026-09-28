@@ -384,7 +384,11 @@ class _DoneBadge extends StatelessWidget {
             border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
             boxShadow: AppElevation.hardShadow(colors.textPrimary),
           ),
-          child: const AppIcon(IconKey.check, size: 40),
+          // Aksen, bukan hijau bawaan ikonnya: hijau milik uang masuk (ADR-016).
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(colors.accent, BlendMode.srcIn),
+            child: const AppIcon(IconKey.check, size: 40),
+          ),
         ),
       ),
     );

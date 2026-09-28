@@ -56,6 +56,11 @@ class SpotlightController extends ChangeNotifier {
   Future<TutorialProgress> _loadProgress() async =>
       _progress ??= (await _repository.load()).getOrElse((_) => TutorialProgress.empty);
 
+  /// True kalau [tour] akan tampil bila dimulai sekarang (belum selesai dan
+  /// tidak ada tur lain yang tampil) — dipakai pemicu sebelum menyiapkan
+  /// layar, mis. menggulir ke atas.
+  Future<bool> wouldStart(TourId tour) async => !isActive && !_starting && !(await _loadProgress()).hasCompleted(tour);
+
   /// Memulai [tour] kalau belum selesai (atau [force]), dengan langkah yang
   /// targetnya tidak terpasang dilewati. Mengembalikan true kalau tur tampil.
   Future<bool> maybeStart(TourId tour, {bool force = false}) async {

@@ -194,7 +194,12 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
       case 3:
         return [
           for (final (i, x) in [-0.6, 0.0, 0.6].indexed)
-            pop(Alignment(x, -0.95), const _Tile(IconKey.check, size: 36), 300 + i * 250, phase: i / 3),
+            pop(
+              Alignment(x, -0.95),
+              _Tile(IconKey.check, size: 36, tint: colors.textPrimary),
+              300 + i * 250,
+              phase: i / 3,
+            ),
           Align(
             alignment: const Alignment(0, 0.95),
             child: _SegmentFill(loop: _loop),
@@ -211,10 +216,14 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
 
 /// Kotak ikon pixel kecil bergaris tepi dan berbayangan keras.
 class _Tile extends StatelessWidget {
-  const _Tile(this.icon, {this.size = 40});
+  const _Tile(this.icon, {this.size = 40, this.tint});
 
   final IconKey icon;
   final double size;
+
+  /// Mewarnai ulang ikon satu warna — mis. centang hijau di luar OB-3, yang
+  /// melanggar "hijau hanya untuk uang masuk" (ADR-016).
+  final Color? tint;
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +237,12 @@ class _Tile extends StatelessWidget {
         border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
         boxShadow: AppElevation.hardShadow(colors.textPrimary, offset: AppElevation.pixelCard),
       ),
-      child: AppIcon(icon, size: size * 0.55),
+      child: tint == null
+          ? AppIcon(icon, size: size * 0.55)
+          : ColorFiltered(
+              colorFilter: ColorFilter.mode(tint!, BlendMode.srcIn),
+              child: AppIcon(icon, size: size * 0.55),
+            ),
     );
   }
 }

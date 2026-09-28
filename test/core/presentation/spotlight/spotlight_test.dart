@@ -186,4 +186,31 @@ void main() {
     expect(find.text(t.tour.walletAddTitle), findsNothing);
     expect((await progress()).hasCompleted(TourId.wallet), isTrue);
   });
+
+  testWidgets('daftar yang tergulir kembali ke atas sebelum tur mulai', (tester) async {
+    Widget list({required bool ready}) => TourTrigger(
+      tour: TourId.wallet,
+      ready: ready,
+      child: Scaffold(
+        body: ListView(
+          children: [
+            const SpotlightTarget(
+              spotlightKey: SpotlightKey.walletSummary,
+              child: SizedBox(height: 120, child: Placeholder()),
+            ),
+            for (var i = 0; i < 40; i++) SizedBox(height: 80, child: Text('baris $i')),
+          ],
+        ),
+      ),
+    );
+    await pump(tester, list(ready: false));
+    await tester.drag(find.byType(ListView), const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    expect(find.byType(Placeholder), findsNothing);
+
+    await pump(tester, list(ready: true));
+
+    expect(find.byType(Placeholder), findsOneWidget);
+    expect(bubbleWithLabel(1, 1, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
+  });
 }

@@ -74,6 +74,8 @@ dependencies:
 dev_dependencies:
   bloc_test: ^10.0.0
   build_runner: any
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
   flutter_test:
     sdk: flutter
   injectable_generator: any
@@ -90,6 +92,38 @@ dev_dependencies:
       ref: 9b96fb4353f913270f72518198e598e900d6646c  # memory_storage-v1.1.1 + fix URL + fix ref api_storage
   mocktail: ^1.0.4
   slang_build_runner: ^4.7.0
+
+# Ikon peluncur dan splash screen Android, dari maskot tanuki (ADR-015).
+# `assets/icon/` sengaja TIDAK didaftarkan di `flutter: assets:` di bawah --
+# berkasnya hanya sumber untuk dua generator ini saat `dart run ...`, bukan
+# aset yang dibundel ke aplikasi. Hanya Android yang disasar (`ios: false`);
+# ikon iOS menyusul di T-8.3 (ganti nama) karena butuh artwork tanpa
+# transparansi terpisah. Jalankan ulang setelah artwork/warna berubah:
+#   dart run flutter_launcher_icons
+#   dart run flutter_native_splash:create
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: false
+  image_path: "assets/icon/legacy.png"
+  adaptive_icon_background: "#BD5D41"
+  adaptive_icon_foreground: "assets/icon/foreground.png"
+  min_sdk_android: 23
+
+flutter_native_splash:
+  color: "#FFF8F5" # colors.background mode terang (app_colors_extension.dart)
+  color_dark: "#231F1B" # colors.background mode gelap
+  image: "assets/icon/splash.png"
+  image_dark: "assets/icon/splash.png"
+  android: true
+  ios: false
+  web: false
+  android_12:
+    image: "assets/icon/splash_android12.png"
+    image_dark: "assets/icon/splash_android12.png"
+    icon_background_color: "#BD5D41"
+    icon_background_color_dark: "#BD5D41"
+    color: "#FFF8F5"
+    color_dark: "#231F1B"
 
 flutter:
   uses-material-design: true

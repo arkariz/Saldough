@@ -81,10 +81,17 @@ lengkapnya:
   basis data merek dagang resmi.
 - **Amankan domain dan nama di Play Console/App Store Connect.** Belum
   dilakukan.
-- **Ikon aplikasi** (`android/app/src/main/res/mipmap-*/ic_launcher.png`,
-  `ios/Runner/Assets.xcassets/AppIcon.appiconset/`). **Sengaja tidak
-  diubah** — belum ada aset ikon final bermaskot tanuki; mengganti ikon
-  butuh artwork baru, bukan penggantian teks.
+- **Ikon aplikasi Android** — ✅ **selesai 28 September 2026.** Pemilik
+  menyerahkan artwork ikon persegi bermaskot tanuki
+  (`assets/illustration/app_icon.png`). Ikon peluncur (adaptif + legacy,
+  seluruh mipmap) dan splash screen (terang/gelap, termasuk Android 12+)
+  dibuat lewat `flutter_launcher_icons`/`flutter_native_splash`
+  (konfigurasi di `pubspec.yaml`, sumber turunan di `assets/icon/`).
+  **Ikon iOS** (`ios/Runner/Assets.xcassets/AppIcon.appiconset/`) **masih
+  menunggu** — artwork yang ada punya latar transparan (dipakai sebagai
+  lapisan foreground ikon adaptif Android); iOS mengabaikan kanal alfa dan
+  menampilkan area transparan sebagai hitam, jadi butuh versi full-bleed
+  tanpa transparansi sebelum dipakai di sana.
 - **Sapuan penggantian nama di seluruh dokumen produk** (README, PRD,
   glosarium, dan dokumen `docs/` lain yang menyebut "Saldough" sebagai nama
   produk secara naratif). **Sengaja ditunda** — beberapa dokumen itu
@@ -98,9 +105,10 @@ lengkapnya:
 ## 5. Konsekuensi
 
 - Aplikasi kini tampil sebagai "Tanukonomy" dan berjalan di atas
-  `applicationId`/bundle identifier `com.arkarizdev.tanukonomy`, tapi
-  masih dengan ikon lama — tidak masalah untuk build pengembangan, TAPI
-  **jangan rilis ke toko dalam keadaan ini**: ikon harus final sebelum
+  `applicationId`/bundle identifier `com.arkarizdev.tanukonomy`, dengan
+  ikon peluncur dan splash Android sudah bermaskot tanuki. Ikon iOS masih
+  ikon Flutter bawaan — tidak masalah untuk build pengembangan, TAPI
+  **jangan rilis ke toko dalam keadaan ini**: ikon iOS harus final sebelum
   rilis pertama, dan trademark/domain/Play Console/App Store Connect tetap
   harus diverifikasi pemilik sebelum rilis pertama walau ID aplikasi sudah
   dikunci di kode (mengubahnya lagi sesudah rilis pertama praktis tidak

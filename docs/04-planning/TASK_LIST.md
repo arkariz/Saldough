@@ -1270,11 +1270,24 @@ seluruh fitur di atasnya menghasilkan data.
       (`namespace`+`applicationId`), `ios/Runner.xcodeproj/project.pbxproj`
       (`PRODUCT_BUNDLE_IDENTIFIER`, termasuk `RunnerTests`), dan direktori
       paket Kotlin `MainActivity.kt` dipindah + `package`-nya disesuaikan.
+      **Ikon peluncur dan splash screen Android selesai (28 Sep 2026)**,
+      dari artwork ikon persegi (`assets/illustration/app_icon.png`,
+      diserahkan pemilik) via `flutter_launcher_icons` dan
+      `flutter_native_splash` (konfigurasi di `pubspec.yaml`; sumber
+      turunan di `assets/icon/`). Latar ikon adaptif dan chip splash
+      Android 12+ memakai warna isian asli artwork `#BD5D41`, bukan
+      `colors.accent` aplikasi -- keduanya mirip tapi sengaja dibedakan
+      supaya ikon tetap identik dengan artwork yang diserahkan. Splash
+      memakai `colors.background` terang/gelap (`#FFF8F5`/`#231F1B`) supaya
+      menyambung mulus ke layar pertama. **Hanya Android**; ikon iOS
+      ditunda (lihat di bawah, butuh sumber tanpa transparansi terpisah
+      karena iOS mengabaikan kanal alfa).
       **Belum dikerjakan, dan SENGAJA menunggu pemilik**: kedua prasyarat
       di atas (cek merek dagang, amankan domain/nama toko -- belum ada
       bukti keduanya sudah dilakukan; ID aplikasi di kode TIDAK
-      menggantikan verifikasi ini), ikon (butuh artwork tanuki baru, bukan
-      penggantian teks), dan sapuan penggantian nama di seluruh dokumen
+      menggantikan verifikasi ini), ikon iOS (artwork Android transparan
+      tidak bisa dipakai langsung -- App Store mengabaikan alfa dan
+      menampilkannya hitam), dan sapuan penggantian nama di seluruh dokumen
       produk (README, PRD, glosarium -- ditunda supaya tidak dikerjakan dua
       kali kalau cek merek dagang menggagalkan nama ini). **Jangan rilis ke
       toko sebelum ketiga hal ini selesai.**

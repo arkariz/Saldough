@@ -173,7 +173,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                   ),
                   FreelanceBottomBar(
                     children: [
-                      AppButton(
+                      AppButton.secondary(
                         label: t.freelance.entryAddShortAction,
                         onPressed: () => addEntry(context, projectId: project.id),
                       ),

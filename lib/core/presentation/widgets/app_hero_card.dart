@@ -82,7 +82,7 @@ class AppHeroCard extends StatelessWidget {
                   children: [
                     Text(
                       label.toUpperCase(),
-                      style: transactionLabelStyle(context, size: 11, color: colors.textMuted),
+                      style: transactionLabelStyle(context, color: colors.textMuted),
                     ),
                     ?trailing,
                   ],

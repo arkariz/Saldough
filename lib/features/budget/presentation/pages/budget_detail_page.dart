@@ -327,6 +327,14 @@ class _HeroCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           BudgetProgressBar(value: progress.progress, height: 14),
+          const SizedBox(height: 4),
+          // Penanda laju waktu (ADR-020 §3.5/UX-10): "terpakai X%" sendirian
+          // tidak menjawab "apakah aku masih di jalur" -- dibandingkan
+          // dengan fraksi periode yang sudah berlalu.
+          Text(
+            t.budget.paceLabel(percent: (budget.elapsedRatio(DateTime.now()) * 100).round()).toUpperCase(),
+            style: transactionLabelStyle(context, color: colors.textMuted),
+          ),
         ],
       ),
     );

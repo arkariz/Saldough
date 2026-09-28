@@ -405,8 +405,14 @@ class HomeSectionHeader extends StatelessWidget {
       children: [
         AppIcon(icon, size: 22),
         const SizedBox(width: AppSpacing.xs),
-        Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
-        ?trailing,
+        Expanded(
+          child: Text(title, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.titleMedium),
+        ),
+        // `Flexible`, bukan langsung `?trailing` -- label mikro naik ke
+        // 11px minimum (ADR-020 §3.2) butuh sedikit lebih banyak ruang;
+        // tanpa ini `trailing` panjang di teks 2x meluap (ketahuan uji
+        // Freelance 360px + teks 2x, yang melewati `HomeGuide`).
+        if (trailing != null) Flexible(child: trailing!),
       ],
     );
   }
@@ -527,6 +533,8 @@ class HomeGuide extends StatelessWidget {
           title: t.home.guideTitle,
           trailing: Text(
             t.home.guideCount.toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: transactionLabelStyle(context, color: colors.textMuted),
           ),
         ),

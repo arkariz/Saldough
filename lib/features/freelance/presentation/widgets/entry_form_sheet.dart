@@ -222,9 +222,9 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               ),
               if (editing) ...[
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
+                AppButton.secondary(
                   label: t.freelance.entryDeleteAction,
-                  color: colors.expense,
+                  textColor: colors.expense,
                   onPressed: () => Navigator.of(context).pop(const EntryFormDeleted()),
                 ),
               ],

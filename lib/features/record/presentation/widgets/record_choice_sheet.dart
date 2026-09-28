@@ -303,7 +303,7 @@ class _ChoiceCard extends StatelessWidget {
                                     ),
                                     child: Text(
                                       example,
-                                      style: transactionLabelStyle(context, size: 11, color: colors.textPrimary),
+                                      style: transactionLabelStyle(context, color: colors.textPrimary),
                                     ),
                                   ),
                               ],
@@ -395,7 +395,7 @@ class _FlowChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 3),
       decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(4)),
-      child: Text('$sign${step.label}', style: transactionLabelStyle(context, size: 11, color: ink)),
+      child: Text('$sign${step.label}', style: transactionLabelStyle(context, color: ink)),
     );
   }
 }

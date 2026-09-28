@@ -391,7 +391,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                   style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                AppButton(label: t.budget.deleteAction, color: colors.expense, onPressed: _delete),
+                AppButton.secondary(label: t.budget.deleteAction, textColor: colors.expense, onPressed: _delete),
               ],
             ],
           ),

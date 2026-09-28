@@ -322,7 +322,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               ),
               if (wallet != null) ...[
                 const SizedBox(height: AppSpacing.lg),
-                AppButton(label: t.wallet.deleteAction, color: colors.expense, onPressed: _delete),
+                AppButton.secondary(label: t.wallet.deleteAction, textColor: colors.expense, onPressed: _delete),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   t.wallet.deleteHelp,

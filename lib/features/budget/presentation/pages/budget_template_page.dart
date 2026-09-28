@@ -155,7 +155,8 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],
-                  if (state.templates.isNotEmpty) AppButton(label: t.budget.templateAddAction, onPressed: _add),
+                  if (state.templates.isNotEmpty)
+                    AppButton.secondary(label: t.budget.templateAddAction, onPressed: _add),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     t.budget.templatesFooter,

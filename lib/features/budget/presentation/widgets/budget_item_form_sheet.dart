@@ -264,9 +264,9 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
               AppButton(label: t.budget.itemSaveAction, onPressed: _canSave ? _save : null),
               if (editing) ...[
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
+                AppButton.secondary(
                   label: t.budget.itemDeleteAction,
-                  color: colors.expense,
+                  textColor: colors.expense,
                   onPressed: () => Navigator.of(context).pop(const BudgetItemFormDeleted()),
                 ),
               ],

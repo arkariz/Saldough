@@ -162,9 +162,9 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
               AppButton(label: t.freelance.projectSaveAction, onPressed: _canSave ? _save : null),
               if (editing && widget.canDelete) ...[
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
+                AppButton.secondary(
                   label: t.freelance.projectDeleteAction,
-                  color: colors.expense,
+                  textColor: colors.expense,
                   onPressed: () => Navigator.of(context).pop(const ProjectFormDeleted()),
                 ),
               ] else if (editing) ...[
@@ -345,9 +345,9 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
               ),
               if (editing) ...[
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
+                AppButton.secondary(
                   label: t.freelance.deductionRemoveAction,
-                  color: colors.expense,
+                  textColor: colors.expense,
                   onPressed: () => Navigator.of(context).pop(const _DeductionRemoved()),
                 ),
               ],

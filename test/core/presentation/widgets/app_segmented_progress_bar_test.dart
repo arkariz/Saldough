@@ -34,12 +34,12 @@ void main() {
       expect(filled.length, 5);
     });
 
-    testWidgets('di bawah 70% memakai warna income', (tester) async {
+    testWidgets('di bawah 70% memakai warna netral (ADR-020 -- bukan income lagi)', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 0.5)))),
       );
       final context = tester.element(find.byType(AppSegmentedProgressBar));
-      expect(AppSegmentedProgressBar.colorFor(context, 0.5), context.appColors.income);
+      expect(AppSegmentedProgressBar.colorFor(context, 0.5), context.appColors.textPrimary);
     });
 
     testWidgets('70%-99% memakai warna pending', (tester) async {

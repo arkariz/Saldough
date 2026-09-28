@@ -190,23 +190,20 @@ class TransactionRow extends StatelessWidget {
     // aksen, kotak ikon, nominal, lencana, nuansa latar) supaya terbedakan
     // sekilas saat menggulir: hijau = masuk, merah = keluar, biru = mutasi.
     // Lihat [TransactionKindPalette] untuk alasan pemilihan warnanya.
-    final (kind, icon, badge, amountText) = switch (transaction) {
+    final (kind, icon, amountText) = switch (transaction) {
       IncomeTransaction() => (
         TransactionKind.income,
         IconKey.income,
-        t.transaction.incomeBadge,
         '+${AppMoneyFormatter.format(transaction.amount)}',
       ),
       ExpenseTransaction() => (
         TransactionKind.expense,
         IconKey.expense,
-        t.transaction.expenseBadge,
         '−${AppMoneyFormatter.format(transaction.amount)}',
       ),
       TransferTransaction() => (
         TransactionKind.transfer,
         IconKey.transfer,
-        t.transaction.transferBadge,
         AppMoneyFormatter.format(transaction.amount),
       ),
     };
@@ -222,7 +219,6 @@ class TransactionRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ColoredBox(color: tint, child: const SizedBox(width: 6)),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.sm),
@@ -257,28 +253,22 @@ class TransactionRow extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
-                      // Lebar kolom nominal dibatasi: nominal dan lencana mengecil
-                      // di layar sempit atau teks diperbesar, bukan meluber
+                      // Lebar kolom nominal dibatasi: nominal mengecil di
+                      // layar sempit atau teks diperbesar, bukan meluber
                       // (ketahuan uji Beranda 360px + teks 2x). Tidak memakai
                       // `Flexible`, yang membagi ruang sama rata dengan judul
                       // sehingga judul terpotong walau ruangnya cukup.
+                      //
+                      // ADR-020 §3.3: satu penanda warna per baris (kotak
+                      // ikon), ditambah tanda +/− dan warna pada nominal --
+                      // TANPA garis aksen maupun lencana jenis lagi (lencana
+                      // "+MASUK"/"-KELUAR" kini hanya di layar rincian).
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: _amountMaxWidth),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: AlignmentDirectional.centerEnd,
-                              child: Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
-                            ),
-                            const SizedBox(height: 4),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: AlignmentDirectional.centerEnd,
-                              child: _TypeBadge(label: badge, color: ink),
-                            ),
-                          ],
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
                         ),
                       ),
                     ],
@@ -291,31 +281,5 @@ class TransactionRow extends StatelessWidget {
       ),
     );
     return AppTappable(onTap: onTap, child: card);
-  }
-}
-
-/// Lencana jenis ("+MASUK"/"-KELUAR"/"# MUTASI") pada tiap baris -- isian
-/// SOLID warna jenis dengan teks terbalik, bukan tint pucat, karena lencana
-/// inilah penanda jenis yang paling cepat terbaca.
-///
-/// Bukan [AppChip] -- [AppChip] menegakkan area sentuh minimum 44px (UX-31,
-/// benar untuk chip yang BISA diketuk), sedangkan lencana ini murni
-/// dekoratif/informatif per baris (tidak ada `onTap`) sehingga area sentuh
-/// sebesar itu hanya akan membuat daftar transaksi jadi tidak proporsional
-/// padat.
-class _TypeBadge extends StatelessWidget {
-  const _TypeBadge({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.cardBackground)),
-    );
   }
 }

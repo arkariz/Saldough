@@ -5,15 +5,15 @@ import 'package:saldough/core/theme/theme.dart';
 /// melengkung kontinu. Dipakai Beranda, Anggaran, dan Ikhtisar Freelance
 /// (tiga tempat yang sudah dikonfirmasi ADR-015 §7 memakainya).
 ///
-/// Warnanya mengikuti [value] terhadap ambang semantik ADR-015: `income`
-/// di bawah 70%, `pending` 70–100% (termasuk tepat 100%), `overBudget` di
-/// atas 100%. ⚠ ADR-015
-/// sendiri hanya menyebut ambang eksplisit "70–90%" untuk `pending` dan
-/// "di atas 100%" untuk `overBudget`, tanpa menyebut 90–100% — di sini
-/// `pending` diperpanjang sampai tepat di bawah 100% (bukan berhenti di
-/// 90%) supaya seluruh rentang 0–100% punya warna, dan `overBudget` hanya
-/// mulai persis saat lewat rencana. Tinjau ulang kalau pemilik
-/// menginginkan potongan berbeda.
+/// Warnanya mengikuti [value] terhadap ambang semantik ADR-020 §3.1 (merevisi
+/// ADR-016 baris 136 "belum diputuskan"): NETRAL (`textPrimary`) di bawah
+/// 70%, `pending` (amber) 70–100% (termasuk tepat 100%), `overBudget` (merah)
+/// di atas 100%. ⚠ Sebelumnya sisi sehat memakai `income` (hijau) --
+/// diganti supaya hijau tetap khusus uang masuk (ADR-016 "satu peran, satu
+/// warna"), bukan berarti ganda "sehat" DAN "pemasukan". `pending`
+/// diperpanjang sampai tepat di bawah 100% (bukan berhenti di 90% seperti
+/// disebut ADR-015) supaya seluruh rentang 0–100% punya warna, dan
+/// `overBudget` hanya mulai persis saat lewat rencana.
 ///
 /// Dipakai HANYA di dalam subtree `PixelTheme` — sama seperti
 /// [AppHardCard], warnanya baru bernilai ADR-015 kalau `PixelTheme`
@@ -55,7 +55,7 @@ class AppSegmentedProgressBar extends StatelessWidget {
     // rencana), bukan "lewat anggaran" -- lihat `BudgetItemStatus`.
     if (value > 1.0) return colors.overBudget;
     if (value >= 0.7) return colors.pending;
-    return colors.income;
+    return colors.textPrimary;
   }
 
   @override

@@ -55,15 +55,22 @@ class TransactionSlab extends StatelessWidget {
 }
 
 /// Teks kecil Space Mono tebal berhuruf-besar-gaya "label" rujukan visual.
+///
+/// [size] dijepit ke minimum [kMinLabelSize] (ADR-020 §3.2) -- pemanggil
+/// boleh minta lebih kecil untuk kompatibilitas rujukan visual lama, tapi
+/// hasilnya tidak akan pernah lebih kecil dari itu.
 TextStyle transactionLabelStyle(
   BuildContext context, {
-  double size = 10,
+  double size = kMinLabelSize,
   Color? color,
-}) => PixelTypography.tabularMono(
-  context,
-  fontSize: size,
-  color: color,
-).copyWith(letterSpacing: size * 0.08);
+}) {
+  final clamped = size < kMinLabelSize ? kMinLabelSize : size;
+  return PixelTypography.tabularMono(
+    context,
+    fontSize: clamped,
+    color: color,
+  ).copyWith(letterSpacing: clamped * 0.08);
+}
 
 /// Jenis transaksi untuk pewarnaan -- lihat [TransactionKindPalette].
 enum TransactionKind {

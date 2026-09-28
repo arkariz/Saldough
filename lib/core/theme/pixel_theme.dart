@@ -112,7 +112,8 @@ class PixelTheme extends StatelessWidget {
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => TextStyle(
             fontFamily: 'SpaceMono',
-            fontSize: 10,
+            // Minimum 11px (ADR-020 §3.2) -- sebelumnya 10px.
+            fontSize: kMinLabelSize,
             fontWeight: FontWeight.w700,
             color: states.contains(WidgetState.selected) ? colors.accent : colors.textMuted,
           ),
@@ -150,6 +151,10 @@ class PixelTheme extends StatelessWidget {
     );
   }
 }
+
+/// Ukuran minimum label mikro (ADR-020 §3.2) -- tidak ada label lebih kecil
+/// dari ini di seluruh aplikasi.
+const double kMinLabelSize = 11;
 
 /// Gaya huruf ADR-015 yang tidak punya slot [TextTheme] baku.
 abstract final class PixelTypography {

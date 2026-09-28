@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-020
 - **Tanggal:** 2026-09-27
 - **Fase roadmap:** Fase 7 (poles), jalur UX di luar MVP
-- **Status:** Proposed
+- **Status:** Accepted (28 September 2026, disetujui apa adanya)
 - **Cakupan:** Global — `AppButton`, `transactionLabelStyle`, baris
   transaksi, snackbar, `AppSegmentedProgressBar`, navigasi bawah.
 - **Merevisi:** [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md) §3
@@ -154,6 +154,7 @@ beberapa layar tidak lagi identik piksel demi piksel dengan rujukan visual
 ---
 
 **Penulis keputusan:** Claude (draf dari review UI)
-**Ditinjau oleh:** —
-**Tanggal disetujui:** —
-**Status implementasi:** Belum dimulai — menunggu persetujuan pemilik
+**Ditinjau oleh:** Pemilik
+**Tanggal disetujui:** 2026-09-28
+**Status implementasi:** Berjalan — lihat UX-14, UX-15, UX-16, UX-18, UX-20,
+UX-21 di [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)

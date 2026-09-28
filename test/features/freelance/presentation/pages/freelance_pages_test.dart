@@ -271,6 +271,12 @@ void main() {
     expect(find.byType(AddProjectCard), findsOneWidget);
     expect(tester.takeException(), isNull);
 
+    // Label mikro naik ke 11px minimum (ADR-020 §3.2) menambah tinggi kartu
+    // di atasnya, jadi `ProjectCard` tidak selalu ada di viewport tanpa
+    // digulir dulu -- `ensureVisible` sebelum `tap` (bukan menaikkan tinggi
+    // kanvas tes lebih jauh, yang cuma menunda masalah yang sama).
+    await tester.ensureVisible(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
     await tester.tap(find.byType(ProjectCard));
     await tester.pumpAndSettle();
 

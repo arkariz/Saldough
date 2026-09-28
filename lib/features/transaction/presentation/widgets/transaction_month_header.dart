@@ -139,7 +139,7 @@ class TransactionMonthHeader extends StatelessWidget {
               HeroAmount(netText, color: netColor),
               if (totals.income + totals.expense > 0) ...[
                 const SizedBox(height: AppSpacing.sm),
-                _ShareBar(income: totals.income, expense: totals.expense),
+                _FlowNumbers(income: totals.income, expense: totals.expense),
               ],
             ],
           ),
@@ -180,43 +180,54 @@ class _StepperButton extends StatelessWidget {
   }
 }
 
-/// Bilah segmen pemasukan (hijau) lawan pengeluaran (merah) bulan ini --
-/// sepuluh blok, minimal satu blok untuk sisi yang tidak nol.
-class _ShareBar extends StatelessWidget {
-  const _ShareBar({required this.income, required this.expense});
+/// Angka Masuk dan Keluar bulan ini, kecil di bawah Netto (ADR-020 §3.5 --
+/// menggantikan bilah bersegmen `_ShareBar` lama: bilah bersegmen di
+/// aplikasi ini kini HANYA berarti progres terhadap rencana anggaran, jadi
+/// proporsi masuk/keluar di sini tidak boleh memakai bentuk yang sama).
+class _FlowNumbers extends StatelessWidget {
+  const _FlowNumbers({required this.income, required this.expense});
 
   final int income;
   final int expense;
 
-  static const _segments = 10;
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Row(
+      children: [
+        Expanded(child: _FlowNumber(label: t.transaction.flowIncomeLabel, amount: income, color: colors.income)),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(child: _FlowNumber(label: t.transaction.flowExpenseLabel, amount: expense, color: colors.expense)),
+      ],
+    );
+  }
+}
+
+class _FlowNumber extends StatelessWidget {
+  const _FlowNumber({required this.label, required this.amount, required this.color});
+
+  final String label;
+  final int amount;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final total = income + expense;
-    var incomeSegments = (income * _segments / total).round();
-    if (income > 0 && incomeSegments == 0) incomeSegments = 1;
-    if (expense > 0 && incomeSegments == _segments) incomeSegments = _segments - 1;
-
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: colors.surfaceHigh,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Row(
-        children: [
-          for (var i = 0; i < _segments; i++) ...[
-            if (i > 0) const SizedBox(width: AppSpacing.xs),
-            Expanded(
-              child: Container(
-                height: 8,
-                color: i < incomeSegments ? colors.incomeFill : colors.expenseFill,
-              ),
-            ),
-          ],
-        ],
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '${label.toUpperCase()} ',
+          style: transactionLabelStyle(context, color: colors.textMuted),
+        ),
+        Flexible(
+          child: Text(
+            AppMoneyFormatter.format(amount),
+            overflow: TextOverflow.ellipsis,
+            style: PixelTypography.tabularMono(context, fontSize: 13, color: color),
+          ),
+        ),
+      ],
     );
   }
 }

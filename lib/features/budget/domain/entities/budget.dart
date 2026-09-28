@@ -84,6 +84,22 @@ final class Budget extends Equatable {
     return now.isBefore(endDate) ? BudgetStatus.active : BudgetStatus.finished;
   }
 
+  /// Fraksi periode ini yang sudah berlalu pada [now], 0.0–1.0 -- penanda
+  /// laju waktu (ADR-020 §3.5/UX-10), dibandingkan dengan `progress` (fraksi
+  /// rencana yang sudah terpakai) supaya pemilik tahu "apakah aku masih di
+  /// jalur", bukan cuma "berapa yang sudah terpakai".
+  ///
+  /// Sebelum [startDate] menghasilkan 0; pada atau sesudah [endDate]
+  /// menghasilkan 1. Periode sehari (`totalDays == 0`, mis. dibuat dan
+  /// berakhir hari yang sama) dianggap sudah penuh berlalu.
+  double elapsedRatio(DateTime now) {
+    final start = DateTime(startDate.year, startDate.month, startDate.day);
+    final totalDays = endDate.difference(start).inDays;
+    if (totalDays <= 0) return 1;
+    final elapsedDays = DateTime(now.year, now.month, now.day).difference(start).inDays;
+    return (elapsedDays / totalDays).clamp(0.0, 1.0);
+  }
+
   /// Salinan [Budget] dengan field yang disebutkan diganti.
   Budget copyWith({
     String? name,

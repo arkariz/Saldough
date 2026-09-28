@@ -38,7 +38,7 @@ Terakhir diperbarui: 28 September 2026.
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
-| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 1 | T-9.1a selesai; draf T-9.1 (ADR-021 + teks) menunggu tinjauan pemilik |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 6 | T-9.1–T-9.5 selesai; titik tinjau visual menunggu pemilik sebelum T-9.6 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 21 | ADR-020 disetujui dan dikerjakan penuh; satu-satunya sisa (UX-1) sengaja ditunda ke Fase 9 |
 
 ## Keputusan terbuka
@@ -1285,20 +1285,24 @@ Rincian, konten, dan key spotlight ada di
 KO-1..KO-7 di dokumen itu (dijawab 27 Sep 2026). Berkaitan dengan UX-1: edukasi CATAT pindah dari
 lembar pilihan ke onboarding dan tur CATAT.
 
-- [ ] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
-      Draf selesai 28 Sep 2026: [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md)
-      (Proposed) dan namespace slang `onboarding`, `tour`, `info`, plus label
-      pengalih CATAT. **Menunggu tinjauan pemilik** sebelum T-9.2.
+- [x] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
+      [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md)
+      disetujui pemilik 28 Sep 2026; namespace slang `onboarding`, `tour`,
+      `info`, plus label pengalih CATAT.
 - [x] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
       dipilih; pemilik membuat gambar dari brief konten
       [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md). Lima PNG
       (`assets/illustration/onboarding_{1..5}.png`, latar transparan)
       diserahkan 28 Sep 2026; dipasang di T-9.3.
-- [ ] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`.
-- [ ] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka.
-- [ ] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,
-      `SpotlightTarget`.
-- [ ] **T-9.5** Tur Beranda (TR-HOME).
+- [x] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`
+      (`lib/core/tutorial/`).
+- [x] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka, dengan
+      adegan bergerak (`lib/core/presentation/motion/`).
+- [x] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,
+      `SpotlightTarget` (plus `TourTrigger`, `TourVisibility`).
+- [x] **T-9.5** Tur Beranda (TR-HOME). Diperiksa di emulator 384dp terang dan
+      gelap 28 Sep 2026; **titik tinjau kedua** (visual dan gerak) menunggu
+      pemilik sebelum T-9.6.
 - [ ] **T-9.6** Tur CATAT (TR-CATAT), bersama UX-1.
 - [ ] **T-9.7** Tur Dompet, Transaksi, Anggaran.
 - [ ] **T-9.8** Tur rincian anggaran dan Freelance.

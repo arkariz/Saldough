@@ -1,3 +1,5 @@
+import 'package:dependencies/dependencies.dart';
+
 /// Tur spotlight yang dikenal aplikasi (ADR-021 §3.4). [name] adalah id
 /// yang disimpan di dokumen progres — jangan diganti nama tanpa migrasi.
 enum TourId {
@@ -30,7 +32,7 @@ enum TourId {
 ///
 /// Bukan data keuangan: kehilangan dokumen ini hanya berarti pengenalan dan
 /// tur tampil lagi.
-final class TutorialProgress {
+final class TutorialProgress extends Equatable {
   /// Membuat [TutorialProgress].
   const TutorialProgress({required this.onboardingDone, required this.completedTours});
 
@@ -54,12 +56,5 @@ final class TutorialProgress {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is TutorialProgress &&
-      other.onboardingDone == onboardingDone &&
-      other.completedTours.length == completedTours.length &&
-      other.completedTours.containsAll(completedTours);
-
-  @override
-  int get hashCode => Object.hash(onboardingDone, Object.hashAllUnordered(completedTours));
+  List<Object?> get props => [onboardingDone, completedTours];
 }

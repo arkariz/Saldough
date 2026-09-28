@@ -40,6 +40,7 @@ Terakhir diperbarui: 28 September 2026.
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
+| Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 
 ## Keputusan terbuka
 

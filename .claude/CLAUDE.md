@@ -25,6 +25,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
 | **Tugas dan progres** | `docs/04-planning/TASK_LIST.md`, plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
+| **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
 | **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
 | **Dokumen Saldough 1.0** | `docs/99-archive/` |
@@ -60,6 +61,13 @@ periodenya.
 2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
 mengecek progres, baca dokumen itu bersama TASK_LIST. Seluruh 22 item selesai
 28 Sep 2026 (ADR-020 Accepted; UX-1 dikerjakan bersama T-9.6).
+
+**Situs web:** landing Tanukonomy, halaman `/beta` untuk uji coba tertutup,
+kebijakan privasi, serta syarat dan ketentuan ada di repo terpisah
+`arkariz/tanukonomy-web` (Astro statis, id/en). Tangkapan layarnya dirender
+dari aplikasi ini lewat `tools/screenshots/` di repo itu; kalau tampilan
+aplikasi berubah besar, render ulang. Klaim di situs (tanpa server, tanpa
+akun, tanpa analitik) harus tetap benar terhadap aplikasi.
 
 **Fase 9 (onboarding dan tur):** desainnya di
 [ADR-021](../docs/02-architecture/adr/0021-onboarding-dan-tur-spotlight.md).

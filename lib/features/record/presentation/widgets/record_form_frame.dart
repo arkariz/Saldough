@@ -136,7 +136,7 @@ class _Header extends StatelessWidget {
             color: colors.iconTile(colors.kindFill(kind)),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
-              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
+              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.edge, 0.4)!, offset: const Offset(0, 2)),
             ],
           ),
           child: AppIcon(recordKindIcon(kind), size: 28),

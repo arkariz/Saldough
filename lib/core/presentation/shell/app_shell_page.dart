@@ -322,8 +322,8 @@ class _RecordNavIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.accent,
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
-        boxShadow: AppElevation.hardShadow(colors.textPrimary),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+        boxShadow: AppElevation.hardShadow(colors.edge),
       ),
       child: AppIcon(IconKey.record, size: 20, color: colors.onAccent),
     );

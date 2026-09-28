@@ -233,7 +233,7 @@ class _ChoiceCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(4),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Color.lerp(ink, colors.textPrimary, 0.4)!,
+                                        color: Color.lerp(ink, colors.edge, 0.4)!,
                                         offset: const Offset(0, 3),
                                       ),
                                     ],

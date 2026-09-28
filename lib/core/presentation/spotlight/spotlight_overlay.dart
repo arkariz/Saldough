@@ -187,7 +187,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                               scrim: const Color(0xFF120F0E).withValues(alpha: 0.74),
                               border: colors.accent.withValues(alpha: bright ? 1 : 0.35),
                               tail: colors.cardBackground,
-                              edge: colors.textPrimary,
+                              edge: colors.edge,
                             ),
                           ),
                         ),
@@ -238,8 +238,8 @@ class _Bubble extends StatelessWidget {
           decoration: BoxDecoration(
             color: colors.cardBackground,
             borderRadius: AppRadius.pixelSmAll,
-            border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.textPrimary),
+            border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+            boxShadow: AppElevation.hardShadow(colors.edge),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -312,7 +312,7 @@ class _MascotAvatar extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         color: colors.surfaceMid,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
       ),
       child: ClipRect(
         child: PixelBob(
@@ -351,7 +351,7 @@ class _StepBlocks extends StatelessWidget {
             margin: const EdgeInsets.only(right: 3),
             decoration: BoxDecoration(
               color: i <= current ? colors.accent : colors.cardBackground,
-              border: Border.all(color: colors.textPrimary),
+              border: Border.all(color: colors.edge),
             ),
           ),
         const SizedBox(width: AppSpacing.xs),
@@ -381,8 +381,8 @@ class _DoneBadge extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: colors.cardBackground,
-            border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.textPrimary),
+            border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+            boxShadow: AppElevation.hardShadow(colors.edge),
           ),
           // Aksen, bukan hijau bawaan ikonnya: hijau milik uang masuk (ADR-016).
           child: ColorFiltered(

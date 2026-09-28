@@ -146,18 +146,25 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     income: Color(0xFF22C55E),
     expense: Color(0xFFF87171),
     overBudget: Color(0xFFF87171),
-    background: Color(0xFF14120F),
-    cardBackground: Color(0xFF1F1C18),
-    edge: Color(0xFFF2ECE7),
+    // Arang hangat, bukan hampir-hitam (amandemen ADR-016, 28 Sep 2026):
+    // `#14120F` dengan garis tepi krem terang terlalu keras kontrasnya.
+    // Teks tetap 14:1 di latar dan 12,5:1 di kartu.
+    background: Color(0xFF231F1B),
+    cardBackground: Color(0xFF2D2823),
+    // Garis tepi dan bayangan keras redup (4,1:1 terhadap latar, 3,6:1
+    // terhadap kartu; ambang batas komponen 3:1), bukan warna teks. Di mode terang `edge`
+    // sama dengan teks, jadi mode terang tidak berubah.
+    edge: Color(0xFF8A7D6E),
     textPrimary: Color(0xFFF2ECE7),
     textMuted: Color(0xFFA8A29E),
     divider: Color(0x2EF2ECE7),
-    shimmerBase: Color(0xFF1F1C18),
-    // +13 tiap kanal dari cardBackground -- rasio relatif yang sama dengan
-    // cardBackground->shimmerHighlight palet gelap lama.
-    shimmerHighlight: Color(0xFF2C2925),
-    accent: Color(0xFFE95100),
-    // Putih di atas accent gelap hanya 3,72:1; latar gelap 5,02:1.
+    shimmerBase: Color(0xFF2D2823),
+    // +13 tiap kanal dari cardBackground, sama seperti palet sebelumnya.
+    shimmerHighlight: Color(0xFF3A3530),
+    // Sedikit lebih terang dari `#E95100` sejak latar jadi arang (amandemen
+    // ADR-016): sebagai teks 4,84:1 di kartu dan 5,43:1 di latar.
+    accent: Color(0xFFF46B1C),
+    // Teks gelap di atas accent 6,2:1 (putih tidak lolos).
     onAccent: Color(0xFF14120F),
     transfer: Color(0xFF60A5FA),
     pending: Color(0xFFF59E0B),

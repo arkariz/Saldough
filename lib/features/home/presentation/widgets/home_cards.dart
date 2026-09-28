@@ -667,7 +667,7 @@ class _Badge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
       decoration: BoxDecoration(
         color: colors.tinted(color, 0.22),
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textPrimary)),
     );
@@ -691,7 +691,7 @@ class _IconBox extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: colors.iconTile(color),
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: AppIcon(icon, size: size * 0.72),
     );
@@ -769,7 +769,7 @@ class _SegmentBar extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: colors.surfaceHigh,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -798,7 +798,7 @@ class _SplitGauge extends StatelessWidget {
       height: 10,
       decoration: BoxDecoration(
         color: colors.surfaceHigh,
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

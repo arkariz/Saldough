@@ -137,9 +137,11 @@ void main() {
       expect(pixelDark.expense, const Color(0xFFF87171));
       expect(pixelDark.transfer, const Color(0xFF60A5FA));
       expect(pixelDark.pending, const Color(0xFFF59E0B));
-      expect(pixelDark.accent, const Color(0xFFE95100));
-      expect(pixelDark.background, const Color(0xFF14120F));
-      expect(pixelDark.cardBackground, const Color(0xFF1F1C18));
+      // Amandemen ADR-016 28 Sep 2026: latar arang hangat, bukan hampir-hitam.
+      expect(pixelDark.accent, const Color(0xFFF46B1C));
+      expect(pixelDark.background, const Color(0xFF231F1B));
+      expect(pixelDark.cardBackground, const Color(0xFF2D2823));
+      expect(pixelDark.edge, const Color(0xFF8A7D6E));
       expect(pixelDark.textPrimary, const Color(0xFFF2ECE7));
       expect(pixelDark.textMuted, const Color(0xFFA8A29E));
     });
@@ -149,9 +151,10 @@ void main() {
       expect(pixelDark.overBudget, pixelDark.expense);
     });
 
-    test('edge memakai textPrimary, sesuai ADR-015 ("garis tepi struktural")', () {
+    test('edge = textPrimary di mode terang; di mode gelap redup tapi >= 3:1 batas komponen (amandemen ADR-016)', () {
       expect(pixelLight.edge, pixelLight.textPrimary);
-      expect(pixelDark.edge, pixelDark.textPrimary);
+      expect(pixelDark.edge, isNot(pixelDark.textPrimary));
+      expect(_contrastRatio(pixelDark.edge, pixelDark.background), greaterThanOrEqualTo(3.0));
     });
 
     test('accent/transfer/pending sengaja berbeda dari palet lama (revisi ADR-016)', () {

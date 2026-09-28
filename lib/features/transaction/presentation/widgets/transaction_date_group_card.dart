@@ -232,7 +232,7 @@ class TransactionRow extends StatelessWidget {
                           color: colors.iconTile(tint),
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
-                            BoxShadow(color: Color.lerp(ink, colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
+                            BoxShadow(color: Color.lerp(ink, colors.edge, 0.4)!, offset: const Offset(0, 2)),
                           ],
                         ),
                         child: AppIcon(icon, size: 30),

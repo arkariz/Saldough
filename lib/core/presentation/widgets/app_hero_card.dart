@@ -51,9 +51,9 @@ class AppHeroCard extends StatelessWidget {
         // Satu tingkat lebih terang di sana (T-7.6).
         color: Theme.of(context).brightness == Brightness.dark ? colors.surfaceHigh : colors.surfaceMid,
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
         // Bawaan `hardShadow` = 4px, lebih tebal dari kartu biasa (3px).
-        boxShadow: AppElevation.hardShadow(colors.textPrimary),
+        boxShadow: AppElevation.hardShadow(colors.edge),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,7 +66,7 @@ class AppHeroCard extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: colors.cardBackground,
-                  border: Border.all(color: colors.textPrimary),
+                  border: Border.all(color: colors.edge),
                 ),
                 child: AppIcon(icon),
               ),

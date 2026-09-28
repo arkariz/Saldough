@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:saldough/core/presentation/spotlight/spotlight_key.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_tours.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 
-/// Otak tur spotlight (ADR-021 §3.3): registri target, progres, dan tur
-/// yang sedang tampil. Dipegang `SpotlightHost`.
+/// Otak tur spotlight (ADR-021 §3.3): registri target, progres per langkah,
+/// dan tur yang sedang tampil. Dipegang `SpotlightHost`.
 class SpotlightController extends ChangeNotifier {
   /// Membuat [SpotlightController] di atas [repository].
   SpotlightController({required this._repository});
@@ -25,7 +24,7 @@ class SpotlightController extends ChangeNotifier {
   /// True saat sebuah tur tampil.
   bool get isActive => _tour != null;
 
-  /// Langkah tur aktif sesudah disaring.
+  /// Langkah yang tampil pada putaran tur ini, sesudah disaring.
   List<SpotlightStep> get steps => _steps;
 
   /// Indeks langkah yang tampil.
@@ -56,24 +55,31 @@ class SpotlightController extends ChangeNotifier {
   Future<TutorialProgress> _loadProgress() async =>
       _progress ??= (await _repository.load()).getOrElse((_) => TutorialProgress.empty);
 
-  /// True kalau [tour] akan tampil bila dimulai sekarang (belum selesai dan
-  /// tidak ada tur lain yang tampil) — dipakai pemicu sebelum menyiapkan
-  /// layar, mis. menggulir ke atas.
-  Future<bool> wouldStart(TourId tour) async => !isActive && !_starting && !(await _loadProgress()).hasCompleted(tour);
+  /// True kalau [tour] punya langkah yang belum dilihat dan targetnya sedang
+  /// tampil — dipakai pemicu sebelum menyiapkan layar (mis. menggulir ke
+  /// atas), supaya layar tidak digulir untuk tur yang tidak akan tampil.
+  Future<bool> wouldStart(TourId tour) async {
+    if (isActive || _starting) return false;
+    final progress = await _loadProgress();
+    return tourSteps[tour]!.any((key) => !progress.hasSeen(key) && targetContext(key) != null);
+  }
 
-  /// Memulai [tour] kalau belum selesai (atau [force]), dengan langkah yang
-  /// targetnya tidak terpasang dilewati. Mengembalikan true kalau tur tampil.
+  /// Memulai [tour] dengan langkah yang targetnya tampil dan belum dilihat —
+  /// atau semua langkah yang tampil kalau [force] ("Tur layar ini").
+  /// Mengembalikan true kalau tur tampil.
+  ///
+  /// Karena progres dicatat per langkah, elemen yang baru muncul belakangan
+  /// (kartu anggaran, kartu Freelance, ...) disorot sendiri saat pertama
+  /// tampil, tanpa mengulang langkah yang sudah dilihat (ADR-021 §3.1).
   Future<bool> maybeStart(TourId tour, {bool force = false}) async {
     if (isActive || _starting) return false;
     _starting = true;
     try {
-      if (!force && (await _loadProgress()).hasCompleted(tour)) return false;
+      final progress = await _loadProgress();
       final available = [
         for (final step in spotlightStepsFor(tour))
-          if (targetContext(step.key) != null) step,
+          if ((force || !progress.hasSeen(step.key)) && targetContext(step.key) != null) step,
       ];
-      // Belum ada target sama sekali: coba lagi saat pemicu berikutnya,
-      // jangan tandai selesai.
       if (available.isEmpty) return false;
       _tour = tour;
       _steps = available;
@@ -93,18 +99,19 @@ class SpotlightController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Menutup tur dan menandainya selesai — dipakai "Selesai", "Lewati tur",
-  /// dan tombol kembali sistem.
+  /// Menutup tur — dipakai "Selesai", "Lewati tur", dan tombol kembali
+  /// sistem. Semua langkah putaran ini ditandai sudah dilihat; langkah untuk
+  /// elemen yang belum tampil tetap menunggu.
   Future<void> finish() async {
-    final tour = _tour;
-    if (tour == null) return;
+    if (!isActive) return;
+    final shown = [for (final step in _steps) step.key];
     _tour = null;
     _steps = const [];
     _index = 0;
     final progress = await _loadProgress();
-    _progress = progress.copyWith(completedTours: {...progress.completedTours, tour});
+    _progress = progress.copyWith(seenSteps: {...progress.seenSteps, ...shown});
     notifyListeners();
-    await _repository.markTourDone(tour);
+    await _repository.markStepsSeen(shown);
   }
 
   /// Mengembalikan onboarding dan semua tur ke belum dilihat.

@@ -17,30 +17,37 @@ void main() {
     expect(await loaded(), TutorialProgress.empty);
   });
 
-  test('menandai onboarding dan tur selesai lalu membacanya kembali', () async {
+  test('menandai onboarding dan langkah dilihat lalu membacanya kembali', () async {
     await repository.markOnboardingDone();
-    await repository.markTourDone(TourId.home);
-    await repository.markTourDone(TourId.wallet);
+    await repository.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord]);
+    await repository.markStepsSeen([SpotlightKey.walletAdd]);
 
     final progress = await loaded();
     expect(progress.onboardingDone, isTrue);
-    expect(progress.completedTours, {TourId.home, TourId.wallet});
+    expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord, SpotlightKey.walletAdd});
   });
 
-  test('resetTour hanya mengembalikan satu tur', () async {
+  test('tur selesai hanya kalau semua langkahnya sudah dilihat', () async {
+    await repository.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord]);
+    expect((await loaded()).hasCompleted(TourId.home), isFalse);
+
+    await repository.markStepsSeen(tourSteps[TourId.home]!);
+    expect((await loaded()).hasCompleted(TourId.home), isTrue);
+  });
+
+  test('resetTour hanya mengembalikan langkah tur itu', () async {
     await repository.markOnboardingDone();
-    await repository.markTourDone(TourId.home);
-    await repository.markTourDone(TourId.budget);
+    await repository.markStepsSeen([...tourSteps[TourId.home]!, ...tourSteps[TourId.budget]!]);
     await repository.resetTour(TourId.home);
 
     final progress = await loaded();
     expect(progress.onboardingDone, isTrue);
-    expect(progress.completedTours, {TourId.budget});
+    expect(progress.seenSteps, tourSteps[TourId.budget]!.toSet());
   });
 
   test('resetAll mengembalikan semuanya ke belum dilihat', () async {
     await repository.markOnboardingDone();
-    await repository.markTourDone(TourId.record);
+    await repository.markStepsSeen([SpotlightKey.recordKind]);
     await repository.resetAll();
 
     expect(await loaded(), TutorialProgress.empty);
@@ -50,20 +57,34 @@ void main() {
     await storage.write('tutorial_progress', '{bukan json');
     expect((await repository.load()).isLeft(), isTrue);
 
-    await repository.markTourDone(TourId.home);
-    expect(await loaded(), const TutorialProgress(onboardingDone: false, completedTours: {TourId.home}));
+    await repository.markStepsSeen([SpotlightKey.homeBalance]);
+    expect(await loaded(), const TutorialProgress(onboardingDone: false, seenSteps: {SpotlightKey.homeBalance}));
   });
 
   test('bentuk field salah dianggap rusak', () async {
-    await storage.write('tutorial_progress', '{"schemaVersion":1,"onboardingDone":"ya","completedTours":[]}');
+    await storage.write('tutorial_progress', '{"schemaVersion":2,"onboardingDone":"ya","seenSteps":[]}');
     expect((await repository.load()).isLeft(), isTrue);
   });
 
-  test('id tur yang tidak dikenal diabaikan', () async {
+  test('id langkah yang tidak dikenal diabaikan', () async {
     await storage.write(
       'tutorial_progress',
-      '{"schemaVersion":1,"onboardingDone":true,"completedTours":["home","tur_masa_depan"]}',
+      '{"schemaVersion":2,"onboardingDone":true,"seenSteps":["homeBalance","langkah_masa_depan"]}',
     );
-    expect(await loaded(), const TutorialProgress(onboardingDone: true, completedTours: {TourId.home}));
+    expect(await loaded(), const TutorialProgress(onboardingDone: true, seenSteps: {SpotlightKey.homeBalance}));
+  });
+
+  test('versi 1 dimigrasi: tur selesai berarti semua langkahnya sudah dilihat', () async {
+    await storage.write(
+      'tutorial_progress',
+      '{"schemaVersion":1,"onboardingDone":true,"completedTours":["wallet","tur_masa_depan"]}',
+    );
+
+    final progress = await loaded();
+    expect(progress.onboardingDone, isTrue);
+    expect(progress.seenSteps, tourSteps[TourId.wallet]!.toSet());
+
+    await repository.markStepsSeen([SpotlightKey.homeBalance]);
+    expect(await storage.read('tutorial_progress'), contains('"schemaVersion":2'));
   });
 }

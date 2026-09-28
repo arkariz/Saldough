@@ -87,7 +87,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.tour.walletAddTitle), findsNothing);
-    expect((await progress()).completedTours, {TourId.wallet});
+    expect((await progress()).hasCompleted(TourId.wallet), isTrue);
 
     // Host baru di atas penyimpanan yang sama: tur tidak tampil lagi.
     await tester.pumpWidget(const SizedBox());
@@ -125,6 +125,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(t.tour.walletAddTitle), findsOneWidget);
     expect(find.text(t.tour.walletCardTitle), findsNothing);
+  });
+
+  testWidgets('elemen yang muncul belakangan disorot sendiri, tanpa mengulang yang sudah dilihat', (tester) async {
+    await pump(tester, screen(withCard: false));
+    await tester.tap(find.text(t.tour.skipAction));
+    await tester.pumpAndSettle();
+    expect((await progress()).hasCompleted(TourId.wallet), isFalse);
+
+    // Kartu dompet pertama muncul (data baru): hanya langkah itu yang tampil.
+    await pump(tester, screen());
+
+    expect(bubbleWithLabel(1, 1, t.tour.walletCardTitle, t.tour.walletCardBody), findsOneWidget);
+    await tester.tap(find.text(t.tour.doneAction));
+    await tester.pumpAndSettle();
+    expect((await progress()).hasCompleted(TourId.wallet), isTrue);
   });
 
   testWidgets('ketukan pada target diserap selama tur', (tester) async {
@@ -184,7 +199,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text(t.tour.walletAddTitle), findsNothing);
-    expect((await progress()).hasCompleted(TourId.wallet), isTrue);
+    expect((await progress()).seenSteps, {SpotlightKey.walletSummary, SpotlightKey.walletAdd});
   });
 
   testWidgets('daftar yang tergulir kembali ke atas sebelum tur mulai', (tester) async {
@@ -201,6 +216,13 @@ void main() {
             for (var i = 0; i < 40; i++) SizedBox(height: 80, child: Text('baris $i')),
           ],
         ),
+        // Target di luar daftar (seperti slot CATAT navigasi bawah) yang
+        // selalu tampil -- ia yang membuat tur mulai walau target di puncak
+        // daftar sudah dibuang.
+        bottomNavigationBar: const SpotlightTarget(
+          spotlightKey: SpotlightKey.walletAdd,
+          child: SizedBox(height: 56, child: Text('tambah')),
+        ),
       ),
     );
     await pump(tester, list(ready: false));
@@ -211,6 +233,6 @@ void main() {
     await pump(tester, list(ready: true));
 
     expect(find.byType(Placeholder), findsOneWidget);
-    expect(bubbleWithLabel(1, 1, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
+    expect(bubbleWithLabel(1, 2, t.tour.walletSummaryTitle, t.tour.walletSummaryBody), findsOneWidget);
   });
 }

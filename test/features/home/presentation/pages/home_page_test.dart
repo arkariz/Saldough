@@ -309,25 +309,45 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(t.tour.homeRecordTitle), findsNothing);
-      expect((await tutorials.load()).getOrElse((_) => TutorialProgress.empty).hasCompleted(TourId.home), isTrue);
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord});
     });
 
-    testWidgets('data lengkap: empat langkah termasuk arus dan anggaran', (tester) async {
+    testWidgets('data lengkap: enam langkah termasuk arus, anggaran, Freelance, dan transaksi terbaru', (tester) async {
       tallViewport(tester);
       await seedFull();
       await openShellWithTours(tester);
 
-      expect(step(1, 4, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
-      for (final title in [t.tour.homeRecordTitle, t.tour.homeCashFlowTitle, t.tour.homeBudgetTitle]) {
+      expect(step(1, 6, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      final rest = [
+        (t.tour.homeRecordTitle, t.tour.homeRecordBody),
+        (t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody),
+        (t.tour.homeBudgetTitle, t.tour.homeBudgetBody),
+        (t.tour.homeFreelanceTitle, t.tour.homeFreelanceBody),
+        (t.tour.homeRecentTitle, t.tour.homeRecentBody),
+      ];
+      for (final (i, (title, body)) in rest.indexed) {
         await tester.tap(find.text(t.tour.nextAction));
         await tester.pumpAndSettle();
-        expect(find.text(title), findsOneWidget);
+        expect(step(i + 2, 6, title, body), findsOneWidget);
       }
+    });
+
+    testWidgets('kartu yang muncul belakangan disorot sendiri saat pertama tampil', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await tutorials.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord]);
+      await seedFull();
+      await openShellWithTours(tester);
+
+      // Saldo dan CATAT sudah dilihat; tinggal empat kartu yang baru muncul.
+      expect(step(1, 4, t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody), findsOneWidget);
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
     });
 
     testWidgets('tidak tampil lagi sesudah selesai', (tester) async {
       await seedWallet();
-      await tutorials.markTourDone(TourId.home);
+      await tutorials.markStepsSeen(tourSteps[TourId.home]!);
       await openShellWithTours(tester);
 
       expect(find.text(t.tour.homeBalanceTitle), findsNothing);

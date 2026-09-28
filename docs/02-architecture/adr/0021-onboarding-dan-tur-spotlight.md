@@ -44,17 +44,30 @@ Satu dokumen `KeyValueStorage` dengan kunci
 `StorageKey(namespace: 'tutorial', name: 'progress')`:
 
 ```json
-{ "schemaVersion": 1, "onboardingDone": true, "completedTours": ["home", "wallet"] }
+{ "schemaVersion": 2, "onboardingDone": true, "seenSteps": ["homeBalance", "homeRecord"] }
 ```
+
+- **Progres dicatat per langkah, bukan per tur** (amandemen 28 Sep 2026,
+  diminta pemilik). Banyak target baru muncul sesudah fitur lain dipakai:
+  kartu arus, anggaran, Freelance, dan transaksi terbaru di Beranda, kartu
+  dompet pertama, kartu pos anggaran. Dengan progres per tur, tur layar
+  sudah "selesai" sebelum kartu-kartu itu ada, sehingga mereka tidak pernah
+  disorot. Dengan progres per langkah, tiap elemen disorot sekali saat
+  pertama tampil, tanpa mengulang langkah yang sudah dilihat. Sebuah tur
+  dianggap selesai kalau semua langkahnya sudah dilihat.
+- Versi 1 (`completedTours`, hanya pernah ada di build pengembangan)
+  dimigrasi saat dibaca: tur yang selesai berarti semua langkahnya sudah
+  dilihat.
 
 - `TutorialProgressRepository` beserta implementasinya ada di
   `lib/core/tutorial/`, dengan pola `RepositoryGuard` + `StoredValue.json`
   seperti `WalletRepositoryImpl`. Letaknya di `core` karena komponen
   spotlight di `core` memakainya, dan data ini bukan data keuangan.
-- Operasi: `load`, `markOnboardingDone`, `markTourDone`, `resetTour`,
+- Operasi: `load`, `markOnboardingDone`, `markStepsSeen`, `resetTour`,
   `resetAll`. Semuanya mengembalikan `Either<Failure, T>`.
 - **Dokumen rusak dianggap belum dilihat.** Pemanggil memetakan `Left`
-  menjadi `TutorialProgress.empty`. Id tur yang tidak dikenal diabaikan.
+  menjadi `TutorialProgress.empty`. Id langkah atau tur yang tidak dikenal
+  diabaikan.
   Akibat terburuknya pengguna melihat pengenalan sekali lagi, dan itu jauh
   lebih ringan daripada aplikasi gagal dibuka.
 - Tanpa analitik dan tanpa jaringan (prinsip 8 ONBOARDING_PLAN).
@@ -96,16 +109,27 @@ Satu dokumen `KeyValueStorage` dengan kunci
     `TickerMode`-nya tetap aktif (ditemukan saat T-9.4)
   - rutenya sedang di depan
 
-  Trigger memeriksa ulang saat salah satu syarat berubah.
+  Trigger memeriksa ulang saat salah satu syarat berubah, dan setiap kali
+  layarnya dibangun ulang dengan data baru, supaya kartu yang baru muncul
+  langsung disorot. Sebelum tur mulai, daftar di layar itu digulir ke atas
+  (lihat catatan di bawah), tapi hanya kalau ada langkah belum dilihat yang
+  targetnya sedang tampil (`wouldStart`).
 - **`SpotlightController.maybeStart(tour, {force})`** melakukan hal berikut:
   - memeriksa progres
-  - menyaring langkah yang targetnya tidak terpasang (langkah bersyarat
-    dilewati diam-diam)
+  - menyaring langkah yang sudah dilihat (kecuali `force`, yaitu "Tur layar
+    ini") dan langkah yang targetnya tidak terpasang (langkah bersyarat
+    dilewati diam-diam, lalu menunggu targetnya tampil)
   - menggulir target ke dalam layar
   - menampilkan overlay
 
   Lanjut di langkah terakhir, Lewati tur, dan tombol kembali sistem
-  (`BackButtonListener`) semuanya menandai tur selesai.
+  (`WidgetsBindingObserver.didPopRoute`) semuanya menandai langkah-langkah
+  putaran itu sudah dilihat. Langkah untuk elemen yang belum tampil tetap
+  menunggu.
+- **Daftar digulir ke atas sebelum tur mulai.** `ListView` membuang item di
+  luar layar, termasuk target di puncaknya. Tanpa ini, tur Beranda yang
+  dibuka dalam keadaan tergulir kehilangan langkah pertamanya (ditemukan di
+  emulator saat T-9.5).
 - **Overlay menyerap semua ketukan.** Target tidak menjalankan aksinya
   selama tur.
 - **Tanpa host, semuanya diam.** `SpotlightTarget` hanya meneruskan `child`,
@@ -114,7 +138,7 @@ Satu dokumen `KeyValueStorage` dengan kunci
 
 ### 3.4 Daftar tur
 
-Isinya mengikuti ONBOARDING_PLAN §4.3, dengan tiga penyesuaian:
+Isinya mengikuti ONBOARDING_PLAN §4.3, dengan empat penyesuaian:
 
 | Tur (`TourId`) | Layar | Syarat `ready` |
 |---|---|---|
@@ -136,6 +160,10 @@ Isinya mengikuti ONBOARDING_PLAN §4.3, dengan tiga penyesuaian:
   pencarian "hanya mencakup bulan ini", dan itu tidak lagi benar.
 - **`record.kind` menyorot pengalih tiga segmen** (§3.6), bukan lembar
   pilihan.
+- **Tur Beranda punya enam langkah:** saldo, CATAT, arus bulan ini,
+  anggaran, lalu dua langkah baru, yaitu **kartu Freelance**
+  (`homeFreelance`) dan **transaksi terbaru** (`homeRecent`). Empat langkah
+  terakhir baru tampil setelah kartunya muncul (§3.1).
 
 ### 3.5 Lapis info (KO-4)
 

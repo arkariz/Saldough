@@ -109,7 +109,9 @@ buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
   kembali sistem menandai tur itu selesai. Mengetuk target tidak menjalankan
   aksinya selama tur (menghindari membuka lembar di tengah tur).
 - **Langkah bersyarat:** langkah yang targetnya tidak ada dilewati diam-diam
-  (mis. kartu anggaran Beranda saat belum ada anggaran aktif).
+  (mis. kartu anggaran Beranda saat belum ada anggaran aktif), lalu disorot
+  sendiri saat targetnya pertama kali tampil. Progres dicatat per langkah
+  ([ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) §3.1).
 - **Pembaca layar:** gelembung diumumkan sebagai dialog dengan label
   "Langkah 1 dari 3: <judul>. <isi>"; fokus pindah ke gelembung.
 
@@ -138,6 +140,8 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | `home.record` | Slot CATAT navigasi bawah (`_RecordNavIcon`, `app_shell_page.dart`) | Satu pintu mencatat | Semua uang masuk, keluar, dan pindah dompet dicatat dari sini. | Selalu |
 | `home.cashFlow` | `HomeCashFlowRow` | Arus bulan ini | Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung. | Ada transaksi |
 | `home.budget` | `HomeBudgetCard` | Sisa anggaran aktif | Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya. | Ada anggaran aktif |
+| `home.freelance` | `HomeFreelanceCard` | Ringkasan freelance | Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima. | Ada data freelance *(ditambah 28 Sep 2026)* |
+| `home.recent` | Kepala "Transaksi terbaru" | Transaksi terbaru | Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan. | Ada transaksi *(ditambah 28 Sep 2026)* |
 
 **TR-CATAT — Alur CATAT** *(bergantung bentuk UX-1, KO-5)*
 

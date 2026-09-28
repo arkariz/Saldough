@@ -1878,6 +1878,18 @@ class Translations$tour$id {
 	/// id: 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.'
 	String get homeBudgetBody => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.';
 
+	/// id: 'Ringkasan freelance'
+	String get homeFreelanceTitle => 'Ringkasan freelance';
+
+	/// id: 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.'
+	String get homeFreelanceBody => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.';
+
+	/// id: 'Transaksi terbaru'
+	String get homeRecentTitle => 'Transaksi terbaru';
+
+	/// id: 'Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan.'
+	String get homeRecentBody => 'Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan.';
+
 	/// id: 'Pilih jenisnya'
 	String get recordKindTitle => 'Pilih jenisnya';
 
@@ -2605,6 +2617,10 @@ extension on Translations {
 			'tour.homeCashFlowBody' => 'Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung.',
 			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
 			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
+			'tour.homeFreelanceTitle' => 'Ringkasan freelance',
+			'tour.homeFreelanceBody' => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.',
+			'tour.homeRecentTitle' => 'Transaksi terbaru',
+			'tour.homeRecentBody' => 'Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan.',
 			'tour.recordKindTitle' => 'Pilih jenisnya',
 			'tour.recordKindBody' => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.',
 			'tour.recordAmountTitle' => 'Nominal',

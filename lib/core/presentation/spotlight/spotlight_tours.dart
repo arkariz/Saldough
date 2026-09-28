@@ -1,5 +1,4 @@
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/spotlight/spotlight_key.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Satu langkah tur: elemen yang disorot dan teksnya.
@@ -17,48 +16,40 @@ final class SpotlightStep {
   final String body;
 }
 
-/// Langkah [tour], urut (ONBOARDING_PLAN §4.3, disesuaikan ADR-021 §3.4).
-/// Langkah yang targetnya tidak terpasang dilewati saat tur dimulai.
-List<SpotlightStep> spotlightStepsFor(TourId tour) {
+/// Langkah [tour] beserta teksnya, urut [tourSteps]. Langkah yang targetnya
+/// tidak tampil, atau yang sudah dilihat, disaring saat tur dimulai.
+List<SpotlightStep> spotlightStepsFor(TourId tour) => [
+  for (final key in tourSteps[tour]!) spotlightStep(key),
+];
+
+/// Teks langkah [key] (ONBOARDING_PLAN §4.3, ADR-021 §3.4).
+SpotlightStep spotlightStep(SpotlightKey key) {
   final tr = t.tour;
-  return switch (tour) {
-    TourId.home => [
-      SpotlightStep(SpotlightKey.homeBalance, tr.homeBalanceTitle, tr.homeBalanceBody),
-      SpotlightStep(SpotlightKey.homeRecord, tr.homeRecordTitle, tr.homeRecordBody),
-      SpotlightStep(SpotlightKey.homeCashFlow, tr.homeCashFlowTitle, tr.homeCashFlowBody),
-      SpotlightStep(SpotlightKey.homeBudget, tr.homeBudgetTitle, tr.homeBudgetBody),
-    ],
-    TourId.record => [
-      SpotlightStep(SpotlightKey.recordKind, tr.recordKindTitle, tr.recordKindBody),
-      SpotlightStep(SpotlightKey.recordAmount, tr.recordAmountTitle, tr.recordAmountBody),
-      SpotlightStep(SpotlightKey.recordWallet, tr.recordWalletTitle, tr.recordWalletBody),
-      SpotlightStep(SpotlightKey.recordBudgetItem, tr.recordBudgetItemTitle, tr.recordBudgetItemBody),
-    ],
-    TourId.wallet => [
-      SpotlightStep(SpotlightKey.walletSummary, tr.walletSummaryTitle, tr.walletSummaryBody),
-      SpotlightStep(SpotlightKey.walletCard, tr.walletCardTitle, tr.walletCardBody),
-      SpotlightStep(SpotlightKey.walletAdd, tr.walletAddTitle, tr.walletAddBody),
-    ],
-    TourId.transaction => [
-      SpotlightStep(SpotlightKey.txnMonth, tr.txnMonthTitle, tr.txnMonthBody),
-      SpotlightStep(SpotlightKey.txnFilter, tr.txnFilterTitle, tr.txnFilterBody),
-      SpotlightStep(SpotlightKey.txnRow, tr.txnRowTitle, tr.txnRowBody),
-    ],
-    TourId.budget => [
-      SpotlightStep(SpotlightKey.budgetSummary, tr.budgetSummaryTitle, tr.budgetSummaryBody),
-      SpotlightStep(SpotlightKey.budgetFilter, tr.budgetFilterTitle, tr.budgetFilterBody),
-      SpotlightStep(SpotlightKey.budgetTemplates, tr.budgetTemplatesTitle, tr.budgetTemplatesBody),
-    ],
-    TourId.budgetDetail => [
-      SpotlightStep(SpotlightKey.budgetDetailItem, tr.budgetDetailItemTitle, tr.budgetDetailItemBody),
-      SpotlightStep(SpotlightKey.budgetDetailRecord, tr.budgetDetailRecordTitle, tr.budgetDetailRecordBody),
-    ],
-    TourId.freelance => [
-      SpotlightStep(SpotlightKey.freelanceProject, tr.freelanceProjectTitle, tr.freelanceProjectBody),
-    ],
-    TourId.freelanceProject => [
-      SpotlightStep(SpotlightKey.freelanceWorklog, tr.freelanceWorklogTitle, tr.freelanceWorklogBody),
-      SpotlightStep(SpotlightKey.freelanceReceive, tr.freelanceReceiveTitle, tr.freelanceReceiveBody),
-    ],
+  final (title, body) = switch (key) {
+    SpotlightKey.homeBalance => (tr.homeBalanceTitle, tr.homeBalanceBody),
+    SpotlightKey.homeRecord => (tr.homeRecordTitle, tr.homeRecordBody),
+    SpotlightKey.homeCashFlow => (tr.homeCashFlowTitle, tr.homeCashFlowBody),
+    SpotlightKey.homeBudget => (tr.homeBudgetTitle, tr.homeBudgetBody),
+    SpotlightKey.homeFreelance => (tr.homeFreelanceTitle, tr.homeFreelanceBody),
+    SpotlightKey.homeRecent => (tr.homeRecentTitle, tr.homeRecentBody),
+    SpotlightKey.recordKind => (tr.recordKindTitle, tr.recordKindBody),
+    SpotlightKey.recordAmount => (tr.recordAmountTitle, tr.recordAmountBody),
+    SpotlightKey.recordWallet => (tr.recordWalletTitle, tr.recordWalletBody),
+    SpotlightKey.recordBudgetItem => (tr.recordBudgetItemTitle, tr.recordBudgetItemBody),
+    SpotlightKey.walletSummary => (tr.walletSummaryTitle, tr.walletSummaryBody),
+    SpotlightKey.walletCard => (tr.walletCardTitle, tr.walletCardBody),
+    SpotlightKey.walletAdd => (tr.walletAddTitle, tr.walletAddBody),
+    SpotlightKey.txnMonth => (tr.txnMonthTitle, tr.txnMonthBody),
+    SpotlightKey.txnFilter => (tr.txnFilterTitle, tr.txnFilterBody),
+    SpotlightKey.txnRow => (tr.txnRowTitle, tr.txnRowBody),
+    SpotlightKey.budgetSummary => (tr.budgetSummaryTitle, tr.budgetSummaryBody),
+    SpotlightKey.budgetFilter => (tr.budgetFilterTitle, tr.budgetFilterBody),
+    SpotlightKey.budgetTemplates => (tr.budgetTemplatesTitle, tr.budgetTemplatesBody),
+    SpotlightKey.budgetDetailItem => (tr.budgetDetailItemTitle, tr.budgetDetailItemBody),
+    SpotlightKey.budgetDetailRecord => (tr.budgetDetailRecordTitle, tr.budgetDetailRecordBody),
+    SpotlightKey.freelanceProject => (tr.freelanceProjectTitle, tr.freelanceProjectBody),
+    SpotlightKey.freelanceWorklog => (tr.freelanceWorklogTitle, tr.freelanceWorklogBody),
+    SpotlightKey.freelanceReceive => (tr.freelanceReceiveTitle, tr.freelanceReceiveBody),
   };
+  return SpotlightStep(key, title, body);
 }

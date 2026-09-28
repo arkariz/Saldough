@@ -52,6 +52,9 @@ class _TourTriggerState extends State<TourTrigger> {
     _schedule();
   }
 
+  /// Setiap pembangunan ulang dengan data baru dicek lagi: elemen yang baru
+  /// muncul (mis. kartu anggaran sesudah anggaran pertama) punya langkah
+  /// sendiri yang belum dilihat.
   @override
   void didUpdateWidget(TourTrigger oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -76,7 +79,8 @@ class _TourTriggerState extends State<TourTrigger> {
     if (!mounted || controller == null || !_eligible()) return;
     if (!await controller.wouldStart(widget.tour) || !mounted) return;
     // Daftar yang tergulir membuang item di luar layar, termasuk target di
-    // puncaknya. Kembali ke atas dulu -- hanya saat tur memang akan tampil.
+    // puncaknya. Kembali ke atas dulu -- hanya saat tur memang akan tampil,
+    // supaya langkah-langkahnya urut dari atas.
     final scrollable = _firstScrollable(context);
     if (scrollable != null && scrollable.position.pixels > scrollable.position.minScrollExtent) {
       scrollable.position.jumpTo(scrollable.position.minScrollExtent);

@@ -81,8 +81,9 @@ class _HomePageState extends State<HomePage> {
   Widget _content(BuildContext context, HomeState state) {
     final budget = state.budget;
     final freelance = state.freelance;
-    // TR-HOME (ADR-021 §3.4): mulai begitu ada dompet. Kartu arus dan
-    // anggaran hanya disorot kalau tampil -- langkahnya dilewati diam-diam.
+    // TR-HOME (ADR-021 §3.4): mulai begitu ada dompet. Kartu yang baru
+    // muncul belakangan (arus, anggaran, Freelance, transaksi terbaru)
+    // disorot sendiri saat pertama tampil -- progres dicatat per langkah.
     return TourTrigger(
       tour: TourId.home,
       ready: !state.hasNoWallets,
@@ -114,17 +115,23 @@ class _HomePageState extends State<HomePage> {
           ],
           if (freelance != null) ...[
             const SizedBox(height: AppSpacing.md),
-            HomeFreelanceCard(
-              overview: freelance,
-              onOpen: () => _thenRefresh(() => openFreelanceOverview(context)),
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.homeFreelance,
+              child: HomeFreelanceCard(
+                overview: freelance,
+                onOpen: () => _thenRefresh(() => openFreelanceOverview(context)),
+              ),
             ),
           ],
           const SizedBox(height: AppSpacing.lg),
           if (state.hasTransactions) ...[
-            HomeSectionHeader(
-              icon: IconKey.transactions,
-              title: t.home.recentTitle,
-              trailing: HomeTextLink(label: t.home.seeAll, onTap: widget.onShowTransactions),
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.homeRecent,
+              child: HomeSectionHeader(
+                icon: IconKey.transactions,
+                title: t.home.recentTitle,
+                trailing: HomeTextLink(label: t.home.seeAll, onTap: widget.onShowTransactions),
+              ),
             ),
             for (final transaction in state.recentTransactions) ...[
               const SizedBox(height: AppSpacing.sm),

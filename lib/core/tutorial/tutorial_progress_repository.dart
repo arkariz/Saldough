@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/tutorial/spotlight_key.dart';
 import 'package:saldough/core/tutorial/tutorial_progress.dart';
 
 /// Penyimpanan [TutorialProgress] (ADR-021 §3.1).
@@ -14,10 +15,10 @@ abstract interface class TutorialProgressRepository {
   /// Menandai onboarding selesai.
   Future<Either<Failure, Unit>> markOnboardingDone();
 
-  /// Menandai [tour] selesai.
-  Future<Either<Failure, Unit>> markTourDone(TourId tour);
+  /// Menandai [steps] sudah dilihat.
+  Future<Either<Failure, Unit>> markStepsSeen(Iterable<SpotlightKey> steps);
 
-  /// Mengembalikan [tour] ke belum dilihat.
+  /// Mengembalikan seluruh langkah [tour] ke belum dilihat.
   Future<Either<Failure, Unit>> resetTour(TourId tour);
 
   /// Mengembalikan onboarding dan seluruh tur ke belum dilihat.

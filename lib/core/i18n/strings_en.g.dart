@@ -725,6 +725,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeCashFlowBody => 'Income and expenses for the current month. Transfers between wallets aren\'t counted.';
 	@override String get homeBudgetTitle => 'Active budget left';
 	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
+	@override String get homeFreelanceTitle => 'Freelance summary';
+	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when a payment is recorded as received.';
+	@override String get homeRecentTitle => 'Recent transactions';
+	@override String get homeRecentBody => 'Your latest records. Tap one for details, or See all for the month-by-month history.';
 	@override String get recordKindTitle => 'Pick the kind';
 	@override String get recordKindBody => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.';
 	@override String get recordAmountTitle => 'Amount';
@@ -1365,6 +1369,10 @@ extension on TranslationsEn {
 			'tour.homeCashFlowBody' => 'Income and expenses for the current month. Transfers between wallets aren\'t counted.',
 			'tour.homeBudgetTitle' => 'Active budget left',
 			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
+			'tour.homeFreelanceTitle' => 'Freelance summary',
+			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when a payment is recorded as received.',
+			'tour.homeRecentTitle' => 'Recent transactions',
+			'tour.homeRecentBody' => 'Your latest records. Tap one for details, or See all for the month-by-month history.',
 			'tour.recordKindTitle' => 'Pick the kind',
 			'tour.recordKindBody' => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.',
 			'tour.recordAmountTitle' => 'Amount',

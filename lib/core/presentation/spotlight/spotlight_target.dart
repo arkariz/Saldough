@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_host.dart';
-import 'package:saldough/core/presentation/spotlight/spotlight_key.dart';
+import 'package:saldough/core/tutorial/spotlight_key.dart';
 
 /// Menandai [child] sebagai target [spotlightKey] (ADR-021 §3.3).
 ///

@@ -1,4 +1,6 @@
-/// Kunci stabil tiap elemen yang bisa disorot tur (ONBOARDING_PLAN §4.3).
+/// Kunci stabil tiap elemen yang bisa disorot tur (ONBOARDING_PLAN §4.3),
+/// sekaligus satuan progres tutorial (ADR-021 §3.1): yang disimpan adalah
+/// langkah yang sudah dilihat, jadi [name] tidak boleh diganti tanpa migrasi.
 /// Dipasang lewat `SpotlightTarget` di titik pemakaian widget-nya.
 enum SpotlightKey {
   /// Kartu total saldo Beranda.
@@ -12,6 +14,12 @@ enum SpotlightKey {
 
   /// Kartu anggaran aktif Beranda.
   homeBudget,
+
+  /// Kartu ringkasan Freelance Beranda.
+  homeFreelance,
+
+  /// Bagian transaksi terbaru Beranda.
+  homeRecent,
 
   /// Pengalih jenis CATAT.
   recordKind,

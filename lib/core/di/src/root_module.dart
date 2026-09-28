@@ -5,6 +5,7 @@ import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
@@ -93,6 +94,11 @@ abstract final class RootModule {
       // diimplementasikan `freelance`.
       ..registerLazySingleton<FreelanceOverviewSource>(
         () => FreelanceOverviewSourceImpl(repository: container<FreelanceRepository>()),
+      )
+      // Progres onboarding dan tur spotlight (ADR-021 §3.1), kunci
+      // `tutorial/progress`. Bukan data keuangan.
+      ..registerLazySingleton<TutorialProgressRepository>(
+        () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
       );
   }
 

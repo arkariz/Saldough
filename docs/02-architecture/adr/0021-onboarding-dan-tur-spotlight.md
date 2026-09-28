@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-021
 - **Tanggal:** 2026-09-28
 - **Fase roadmap:** Fase 9 (T-9.1)
-- **Status:** Proposed (menunggu tinjauan pemilik)
+- **Status:** Accepted (28 September 2026, disetujui pemilik)
 - **Cakupan:** Global — gerbang saat aplikasi dibuka, penyimpanan progres
   tutorial, komponen spotlight, bahasa gerak (motion), alur CATAT (UX-1).
 - **Berkaitan:** [ONBOARDING_PLAN.md](../../04-planning/ONBOARDING_PLAN.md)

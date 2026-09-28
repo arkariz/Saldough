@@ -48,6 +48,9 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$budget$en budget = _Translations$budget$en._(_root);
 	@override late final _Translations$freelance$en freelance = _Translations$freelance$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
+	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
+	@override late final _Translations$tour$en tour = _Translations$tour$en._(_root);
+	@override late final _Translations$info$en info = _Translations$info$en._(_root);
 }
 
 // Path: app
@@ -182,6 +185,10 @@ class _Translations$record$en extends Translations$record$id {
 	@override String budgetItemOutOfPeriod({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.';
 	@override String get freelanceCalloutTitle => 'Freelance pay?';
 	@override String get freelanceCalloutBody => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.';
+	@override String get kindSwitcherLabel => 'Transaction kind';
+	@override String get kindExpense => 'Out';
+	@override String get kindIncome => 'In';
+	@override String get kindTransfer => 'Transfer';
 }
 
 // Path: transaction
@@ -673,6 +680,107 @@ class _Translations$home$en extends Translations$home$id {
 	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
 }
 
+// Path: onboarding
+class _Translations$onboarding$en extends Translations$onboarding$id {
+	_Translations$onboarding$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get skipAction => 'Skip';
+	@override String get nextAction => 'Next';
+	@override String get startAction => 'Start';
+	@override String get closeAction => 'Close';
+	@override String pageIndicatorLabel({required Object current, required Object total}) => 'Page ${current} of ${total}';
+	@override String get page1Title => 'All your money, one book';
+	@override String get page1Body => 'See where your money is, what happens to it, and where you plan for it to go — all in your personal cash book.';
+	@override String get page2Title => 'Know where your money is';
+	@override String get page2Body => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.';
+	@override String get page3Title => 'Record in seconds';
+	@override String get page3Body => 'Money in, money out, or moved between wallets — tap RECORD. Your usual wallet and favorite categories are already waiting.';
+	@override String get page4Title => 'Plan, then track';
+	@override String get page4Body => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.';
+	@override String get finalTitle => 'Start with your first wallet';
+	@override String get finalBody => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.';
+	@override String get createWalletAction => 'Create First Wallet';
+	@override String get laterAction => 'Maybe later';
+}
+
+// Path: tour
+class _Translations$tour$en extends Translations$tour$id {
+	_Translations$tour$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get nextAction => 'Next';
+	@override String get doneAction => 'Done';
+	@override String get skipAction => 'Skip tour';
+	@override String stepCounter({required Object current, required Object total}) => '${current}/${total}';
+	@override String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current} of ${total}: ${title}. ${body}';
+	@override String get homeBalanceTitle => 'Total recorded balance';
+	@override String get homeBalanceBody => 'The sum of all active wallets. This is your record, not a synced bank balance.';
+	@override String get homeRecordTitle => 'One door for recording';
+	@override String get homeRecordBody => 'Every bit of money in, out, and between wallets is recorded from here.';
+	@override String get homeCashFlowTitle => 'This month\'s flow';
+	@override String get homeCashFlowBody => 'Income and expenses for the current month. Transfers between wallets aren\'t counted.';
+	@override String get homeBudgetTitle => 'Active budget left';
+	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
+	@override String get recordKindTitle => 'Pick the kind';
+	@override String get recordKindBody => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.';
+	@override String get recordAmountTitle => 'Amount';
+	@override String get recordAmountBody => 'Type the amount, or use the quick buttons.';
+	@override String get recordWalletTitle => 'Wallet filled in for you';
+	@override String get recordWalletBody => 'The wallet you used last is already selected. Change it if needed.';
+	@override String get recordBudgetItemTitle => 'Link to a budget';
+	@override String get recordBudgetItemBody => 'Optional. A linked expense adds to that item\'s used amount, as long as its date is inside the budget period.';
+	@override String get walletSummaryTitle => 'Total across wallets';
+	@override String get walletSummaryBody => 'The sum of recorded balances of active wallets.';
+	@override String get walletCardTitle => 'Wallet details';
+	@override String get walletCardBody => 'Tap to see this wallet\'s history and record straight from there.';
+	@override String get walletAddTitle => 'Add a wallet';
+	@override String get walletAddBody => 'Bank account, e-wallet, or cash. The starting balance can be changed later; the recorded balance is recalculated.';
+	@override String get txnMonthTitle => 'One month per view';
+	@override String get txnMonthBody => 'Switch months to see other history. The in and out totals here cover only the month shown.';
+	@override String get txnFilterTitle => 'Search and filter';
+	@override String get txnFilterBody => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.';
+	@override String get txnRowTitle => 'Edit or delete';
+	@override String get txnRowBody => 'Tap a transaction for its details; from there you can edit, record it again, or delete it, and balances are recalculated.';
+	@override String get budgetSummaryTitle => 'Left across active budgets';
+	@override String get budgetSummaryBody => 'Plan minus used. Creating a budget never lowers a wallet balance.';
+	@override String get budgetFilterTitle => 'Active first';
+	@override String get budgetFilterBody => 'The list shows active budgets. Choose Finished or Inactive to see older ones.';
+	@override String get budgetTemplatesTitle => 'Use templates';
+	@override String get budgetTemplatesBody => 'Save a recurring set of items, then create new budgets from it.';
+	@override String get budgetDetailItemTitle => 'Budget item';
+	@override String get budgetDetailItemBody => 'Used goes up from transactions linked to this item within the budget period.';
+	@override String get budgetDetailRecordTitle => 'Record from an item';
+	@override String get budgetDetailRecordBody => 'Opens RECORD with this item already selected.';
+	@override String get freelanceProjectTitle => 'Projects and rates';
+	@override String get freelanceProjectBody => 'Each project has an hourly rate and deductions. Tap a project to log hours and payments.';
+	@override String get freelanceWorklogTitle => 'Hours worked';
+	@override String get freelanceWorklogBody => 'Logging hours doesn\'t add to any balance. This is income earned, not yet received.';
+	@override String get freelanceReceiveTitle => 'Money actually arrives';
+	@override String get freelanceReceiveBody => 'A wallet balance only goes up when a payment is recorded as received.';
+}
+
+// Path: info
+class _Translations$info$en extends Translations$info$id {
+	_Translations$info$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get menuTooltip => 'Info and tours';
+	@override String get replayTourAction => 'Tour this screen';
+	@override String get showIntroAction => 'Tanukonomy introduction';
+	@override String get resetAllAction => 'Reset all tutorials';
+	@override String get resetConfirmTitle => 'Reset tutorials?';
+	@override String get resetConfirmMessage => 'The introduction and every tour will show again like the first time. Your financial data isn\'t touched.';
+	@override String get resetConfirmAction => 'Reset';
+	@override String get resetDoneMessage => 'Tutorials reset.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -779,6 +887,10 @@ extension on TranslationsEn {
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.',
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
 			'record.freelanceCalloutBody' => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.',
+			'record.kindSwitcherLabel' => 'Transaction kind',
+			'record.kindExpense' => 'Out',
+			'record.kindIncome' => 'In',
+			'record.kindTransfer' => 'Transfer',
 			'transaction.pageTitle' => 'Transactions',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1189,12 +1301,12 @@ extension on TranslationsEn {
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
-			_ => null,
-		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
@@ -1225,6 +1337,80 @@ extension on TranslationsEn {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
 			'home.openCard' => ({required Object name}) => 'Open ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
+			'onboarding.skipAction' => 'Skip',
+			'onboarding.nextAction' => 'Next',
+			'onboarding.startAction' => 'Start',
+			'onboarding.closeAction' => 'Close',
+			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
+			'onboarding.page1Title' => 'All your money, one book',
+			'onboarding.page1Body' => 'See where your money is, what happens to it, and where you plan for it to go — all in your personal cash book.',
+			'onboarding.page2Title' => 'Know where your money is',
+			'onboarding.page2Body' => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.',
+			'onboarding.page3Title' => 'Record in seconds',
+			'onboarding.page3Body' => 'Money in, money out, or moved between wallets — tap RECORD. Your usual wallet and favorite categories are already waiting.',
+			'onboarding.page4Title' => 'Plan, then track',
+			'onboarding.page4Body' => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.',
+			'onboarding.finalTitle' => 'Start with your first wallet',
+			'onboarding.finalBody' => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.',
+			'onboarding.createWalletAction' => 'Create First Wallet',
+			'onboarding.laterAction' => 'Maybe later',
+			'tour.nextAction' => 'Next',
+			'tour.doneAction' => 'Done',
+			'tour.skipAction' => 'Skip tour',
+			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
+			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Step ${current} of ${total}: ${title}. ${body}',
+			'tour.homeBalanceTitle' => 'Total recorded balance',
+			'tour.homeBalanceBody' => 'The sum of all active wallets. This is your record, not a synced bank balance.',
+			'tour.homeRecordTitle' => 'One door for recording',
+			'tour.homeRecordBody' => 'Every bit of money in, out, and between wallets is recorded from here.',
+			'tour.homeCashFlowTitle' => 'This month\'s flow',
+			'tour.homeCashFlowBody' => 'Income and expenses for the current month. Transfers between wallets aren\'t counted.',
+			'tour.homeBudgetTitle' => 'Active budget left',
+			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
+			'tour.recordKindTitle' => 'Pick the kind',
+			'tour.recordKindBody' => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.',
+			'tour.recordAmountTitle' => 'Amount',
+			'tour.recordAmountBody' => 'Type the amount, or use the quick buttons.',
+			'tour.recordWalletTitle' => 'Wallet filled in for you',
+			'tour.recordWalletBody' => 'The wallet you used last is already selected. Change it if needed.',
+			'tour.recordBudgetItemTitle' => 'Link to a budget',
+			'tour.recordBudgetItemBody' => 'Optional. A linked expense adds to that item\'s used amount, as long as its date is inside the budget period.',
+			'tour.walletSummaryTitle' => 'Total across wallets',
+			'tour.walletSummaryBody' => 'The sum of recorded balances of active wallets.',
+			'tour.walletCardTitle' => 'Wallet details',
+			'tour.walletCardBody' => 'Tap to see this wallet\'s history and record straight from there.',
+			'tour.walletAddTitle' => 'Add a wallet',
+			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. The starting balance can be changed later; the recorded balance is recalculated.',
+			'tour.txnMonthTitle' => 'One month per view',
+			'tour.txnMonthBody' => 'Switch months to see other history. The in and out totals here cover only the month shown.',
+			'tour.txnFilterTitle' => 'Search and filter',
+			'tour.txnFilterBody' => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.',
+			'tour.txnRowTitle' => 'Edit or delete',
+			'tour.txnRowBody' => 'Tap a transaction for its details; from there you can edit, record it again, or delete it, and balances are recalculated.',
+			'tour.budgetSummaryTitle' => 'Left across active budgets',
+			'tour.budgetSummaryBody' => 'Plan minus used. Creating a budget never lowers a wallet balance.',
+			'tour.budgetFilterTitle' => 'Active first',
+			'tour.budgetFilterBody' => 'The list shows active budgets. Choose Finished or Inactive to see older ones.',
+			'tour.budgetTemplatesTitle' => 'Use templates',
+			'tour.budgetTemplatesBody' => 'Save a recurring set of items, then create new budgets from it.',
+			'tour.budgetDetailItemTitle' => 'Budget item',
+			'tour.budgetDetailItemBody' => 'Used goes up from transactions linked to this item within the budget period.',
+			'tour.budgetDetailRecordTitle' => 'Record from an item',
+			'tour.budgetDetailRecordBody' => 'Opens RECORD with this item already selected.',
+			'tour.freelanceProjectTitle' => 'Projects and rates',
+			'tour.freelanceProjectBody' => 'Each project has an hourly rate and deductions. Tap a project to log hours and payments.',
+			'tour.freelanceWorklogTitle' => 'Hours worked',
+			'tour.freelanceWorklogBody' => 'Logging hours doesn\'t add to any balance. This is income earned, not yet received.',
+			'tour.freelanceReceiveTitle' => 'Money actually arrives',
+			'tour.freelanceReceiveBody' => 'A wallet balance only goes up when a payment is recorded as received.',
+			'info.menuTooltip' => 'Info and tours',
+			'info.replayTourAction' => 'Tour this screen',
+			'info.showIntroAction' => 'Tanukonomy introduction',
+			'info.resetAllAction' => 'Reset all tutorials',
+			'info.resetConfirmTitle' => 'Reset tutorials?',
+			'info.resetConfirmMessage' => 'The introduction and every tour will show again like the first time. Your financial data isn\'t touched.',
+			'info.resetConfirmAction' => 'Reset',
+			'info.resetDoneMessage' => 'Tutorials reset.',
 			_ => null,
 		};
 	}

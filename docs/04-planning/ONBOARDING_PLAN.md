@@ -1,7 +1,7 @@
 # Rencana onboarding, info, dan tutorial spotlight — Saldough 2.0
 
 **Dibuat:** 27 September 2026
-**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md))
+**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md)); ilustrasi diserahkan dan desain teknis diusulkan di [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) 28 Sep 2026. Teks final ada di slang (`onboarding`, `tour`, `info`); tabel §4.3 tetap draf asal, dan ADR-021 §3.4 mencatat penyesuaiannya.
 **Berkaitan:** [UX-1](UX_REVIEW_FIXES.md) (CATAT selalu melewati lembar
 pilihan), [PRD §5 dan §10](../01-product/prd-saldough-2.0.md),
 [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),

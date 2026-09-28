@@ -38,7 +38,7 @@ Terakhir diperbarui: 28 September 2026.
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
-| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 0 | KO dijawab; mulai T-9.1 |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 1 | T-9.1a selesai; draf T-9.1 (ADR-021 + teks) menunggu tinjauan pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 21 | ADR-020 disetujui dan dikerjakan penuh; satu-satunya sisa (UX-1) sengaja ditunda ke Fase 9 |
 
 ## Keputusan terbuka
@@ -1286,9 +1286,14 @@ KO-1..KO-7 di dokumen itu (dijawab 27 Sep 2026). Berkaitan dengan UX-1: edukasi 
 lembar pilihan ke onboarding dan tur CATAT.
 
 - [ ] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
-- [ ] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
+      Draf selesai 28 Sep 2026: [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md)
+      (Proposed) dan namespace slang `onboarding`, `tour`, `info`, plus label
+      pengalih CATAT. **Menunggu tinjauan pemilik** sebelum T-9.2.
+- [x] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
       dipilih; pemilik membuat gambar dari brief konten
-      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md).
+      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md). Lima PNG
+      (`assets/illustration/onboarding_{1..5}.png`, latar transparan)
+      diserahkan 28 Sep 2026; dipasang di T-9.3.
 - [ ] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`.
 - [ ] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka.
 - [ ] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,

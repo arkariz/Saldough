@@ -50,6 +50,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$budget$id budget = Translations$budget$id.internal(_root);
 	late final Translations$freelance$id freelance = Translations$freelance$id.internal(_root);
 	late final Translations$home$id home = Translations$home$id.internal(_root);
+	late final Translations$onboarding$id onboarding = Translations$onboarding$id.internal(_root);
+	late final Translations$tour$id tour = Translations$tour$id.internal(_root);
+	late final Translations$info$id info = Translations$info$id.internal(_root);
 }
 
 // Path: app
@@ -380,6 +383,18 @@ class Translations$record$id {
 
 	/// id: 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.'
 	String get freelanceCalloutBody => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.';
+
+	/// id: 'Jenis transaksi'
+	String get kindSwitcherLabel => 'Jenis transaksi';
+
+	/// id: 'Keluar'
+	String get kindExpense => 'Keluar';
+
+	/// id: 'Masuk'
+	String get kindIncome => 'Masuk';
+
+	/// id: 'Transfer'
+	String get kindTransfer => 'Transfer';
 }
 
 // Path: transaction
@@ -1759,6 +1774,255 @@ class Translations$home$id {
 	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
 }
 
+// Path: onboarding
+class Translations$onboarding$id {
+	Translations$onboarding$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Lewati'
+	String get skipAction => 'Lewati';
+
+	/// id: 'Lanjut'
+	String get nextAction => 'Lanjut';
+
+	/// id: 'Mulai'
+	String get startAction => 'Mulai';
+
+	/// id: 'Tutup'
+	String get closeAction => 'Tutup';
+
+	/// id: 'Halaman $current dari $total'
+	String pageIndicatorLabel({required Object current, required Object total}) => 'Halaman ${current} dari ${total}';
+
+	/// id: 'Semua uangmu, satu buku'
+	String get page1Title => 'Semua uangmu, satu buku';
+
+	/// id: 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.'
+	String get page1Body => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.';
+
+	/// id: 'Tahu di mana uangmu'
+	String get page2Title => 'Tahu di mana uangmu';
+
+	/// id: 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.'
+	String get page2Body => 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.';
+
+	/// id: 'Catat dalam hitungan detik'
+	String get page3Title => 'Catat dalam hitungan detik';
+
+	/// id: 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.'
+	String get page3Body => 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.';
+
+	/// id: 'Rencanakan, lalu pantau'
+	String get page4Title => 'Rencanakan, lalu pantau';
+
+	/// id: 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.'
+	String get page4Body => 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.';
+
+	/// id: 'Mulai dari dompet pertamamu'
+	String get finalTitle => 'Mulai dari dompet pertamamu';
+
+	/// id: 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.'
+	String get finalBody => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.';
+
+	/// id: 'Buat Dompet Pertama'
+	String get createWalletAction => 'Buat Dompet Pertama';
+
+	/// id: 'Nanti saja'
+	String get laterAction => 'Nanti saja';
+}
+
+// Path: tour
+class Translations$tour$id {
+	Translations$tour$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Lanjut'
+	String get nextAction => 'Lanjut';
+
+	/// id: 'Selesai'
+	String get doneAction => 'Selesai';
+
+	/// id: 'Lewati tur'
+	String get skipAction => 'Lewati tur';
+
+	/// id: '$current/$total'
+	String stepCounter({required Object current, required Object total}) => '${current}/${total}';
+
+	/// id: 'Langkah $current dari $total: $title. $body'
+	String stepSemantics({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current} dari ${total}: ${title}. ${body}';
+
+	/// id: 'Total saldo tercatat'
+	String get homeBalanceTitle => 'Total saldo tercatat';
+
+	/// id: 'Jumlah saldo semua dompet aktif. Ini catatanmu, bukan saldo bank yang disinkron.'
+	String get homeBalanceBody => 'Jumlah saldo semua dompet aktif. Ini catatanmu, bukan saldo bank yang disinkron.';
+
+	/// id: 'Satu pintu mencatat'
+	String get homeRecordTitle => 'Satu pintu mencatat';
+
+	/// id: 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.'
+	String get homeRecordBody => 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.';
+
+	/// id: 'Arus bulan ini'
+	String get homeCashFlowTitle => 'Arus bulan ini';
+
+	/// id: 'Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung.'
+	String get homeCashFlowBody => 'Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung.';
+
+	/// id: 'Sisa anggaran aktif'
+	String get homeBudgetTitle => 'Sisa anggaran aktif';
+
+	/// id: 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.'
+	String get homeBudgetBody => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.';
+
+	/// id: 'Pilih jenisnya'
+	String get recordKindTitle => 'Pilih jenisnya';
+
+	/// id: 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.'
+	String get recordKindBody => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.';
+
+	/// id: 'Nominal'
+	String get recordAmountTitle => 'Nominal';
+
+	/// id: 'Ketik nominalnya, atau pakai tombol cepat.'
+	String get recordAmountBody => 'Ketik nominalnya, atau pakai tombol cepat.';
+
+	/// id: 'Dompet terisi otomatis'
+	String get recordWalletTitle => 'Dompet terisi otomatis';
+
+	/// id: 'Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu.'
+	String get recordWalletBody => 'Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu.';
+
+	/// id: 'Tautkan ke anggaran'
+	String get recordBudgetItemTitle => 'Tautkan ke anggaran';
+
+	/// id: 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.'
+	String get recordBudgetItemBody => 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.';
+
+	/// id: 'Total semua dompet'
+	String get walletSummaryTitle => 'Total semua dompet';
+
+	/// id: 'Jumlah saldo tercatat dompet aktif.'
+	String get walletSummaryBody => 'Jumlah saldo tercatat dompet aktif.';
+
+	/// id: 'Rincian dompet'
+	String get walletCardTitle => 'Rincian dompet';
+
+	/// id: 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.'
+	String get walletCardBody => 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.';
+
+	/// id: 'Tambah dompet'
+	String get walletAddTitle => 'Tambah dompet';
+
+	/// id: 'Rekening, e-wallet, atau tunai. Saldo awal bisa diubah nanti; saldo tercatat dihitung ulang.'
+	String get walletAddBody => 'Rekening, e-wallet, atau tunai. Saldo awal bisa diubah nanti; saldo tercatat dihitung ulang.';
+
+	/// id: 'Satu bulan per tampilan'
+	String get txnMonthTitle => 'Satu bulan per tampilan';
+
+	/// id: 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.'
+	String get txnMonthBody => 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.';
+
+	/// id: 'Cari dan saring'
+	String get txnFilterTitle => 'Cari dan saring';
+
+	/// id: 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.'
+	String get txnFilterBody => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.';
+
+	/// id: 'Sunting atau hapus'
+	String get txnRowTitle => 'Sunting atau hapus';
+
+	/// id: 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.'
+	String get txnRowBody => 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.';
+
+	/// id: 'Sisa semua anggaran aktif'
+	String get budgetSummaryTitle => 'Sisa semua anggaran aktif';
+
+	/// id: 'Rencana dikurangi terpakai. Membuat anggaran tidak mengurangi saldo dompet.'
+	String get budgetSummaryBody => 'Rencana dikurangi terpakai. Membuat anggaran tidak mengurangi saldo dompet.';
+
+	/// id: 'Aktif lebih dulu'
+	String get budgetFilterTitle => 'Aktif lebih dulu';
+
+	/// id: 'Daftar menampilkan anggaran aktif. Pilih Selesai atau Nonaktif untuk melihat yang lama.'
+	String get budgetFilterBody => 'Daftar menampilkan anggaran aktif. Pilih Selesai atau Nonaktif untuk melihat yang lama.';
+
+	/// id: 'Pakai template'
+	String get budgetTemplatesTitle => 'Pakai template';
+
+	/// id: 'Simpan susunan pos yang berulang, lalu buat anggaran baru darinya.'
+	String get budgetTemplatesBody => 'Simpan susunan pos yang berulang, lalu buat anggaran baru darinya.';
+
+	/// id: 'Pos anggaran'
+	String get budgetDetailItemTitle => 'Pos anggaran';
+
+	/// id: 'Terpakai naik dari transaksi yang ditautkan ke pos ini dalam periode anggaran.'
+	String get budgetDetailItemBody => 'Terpakai naik dari transaksi yang ditautkan ke pos ini dalam periode anggaran.';
+
+	/// id: 'Catat dari pos'
+	String get budgetDetailRecordTitle => 'Catat dari pos';
+
+	/// id: 'Membuka CATAT dengan pos ini sudah terpilih.'
+	String get budgetDetailRecordBody => 'Membuka CATAT dengan pos ini sudah terpilih.';
+
+	/// id: 'Proyek dan tarif'
+	String get freelanceProjectTitle => 'Proyek dan tarif';
+
+	/// id: 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.'
+	String get freelanceProjectBody => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.';
+
+	/// id: 'Jam kerja'
+	String get freelanceWorklogTitle => 'Jam kerja';
+
+	/// id: 'Mencatat jam kerja tidak menambah saldo. Ini penghasilan yang diperoleh, belum diterima.'
+	String get freelanceWorklogBody => 'Mencatat jam kerja tidak menambah saldo. Ini penghasilan yang diperoleh, belum diterima.';
+
+	/// id: 'Uang benar-benar masuk'
+	String get freelanceReceiveTitle => 'Uang benar-benar masuk';
+
+	/// id: 'Saldo dompet baru bertambah saat pembayaran dicatat diterima.'
+	String get freelanceReceiveBody => 'Saldo dompet baru bertambah saat pembayaran dicatat diterima.';
+}
+
+// Path: info
+class Translations$info$id {
+	Translations$info$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Info dan tur'
+	String get menuTooltip => 'Info dan tur';
+
+	/// id: 'Tur layar ini'
+	String get replayTourAction => 'Tur layar ini';
+
+	/// id: 'Pengenalan Tanukonomy'
+	String get showIntroAction => 'Pengenalan Tanukonomy';
+
+	/// id: 'Setel ulang semua tutorial'
+	String get resetAllAction => 'Setel ulang semua tutorial';
+
+	/// id: 'Setel ulang tutorial?'
+	String get resetConfirmTitle => 'Setel ulang tutorial?';
+
+	/// id: 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.'
+	String get resetConfirmMessage => 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.';
+
+	/// id: 'Setel Ulang'
+	String get resetConfirmAction => 'Setel Ulang';
+
+	/// id: 'Tutorial disetel ulang.'
+	String get resetDoneMessage => 'Tutorial disetel ulang.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1865,6 +2129,10 @@ extension on Translations {
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.',
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
 			'record.freelanceCalloutBody' => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.',
+			'record.kindSwitcherLabel' => 'Jenis transaksi',
+			'record.kindExpense' => 'Keluar',
+			'record.kindIncome' => 'Masuk',
+			'record.kindTransfer' => 'Transfer',
 			'transaction.pageTitle' => 'Transaksi',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2275,12 +2543,12 @@ extension on Translations {
 			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
-			_ => null,
-		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
@@ -2311,6 +2579,80 @@ extension on Translations {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
 			'home.openCard' => ({required Object name}) => 'Buka ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
+			'onboarding.skipAction' => 'Lewati',
+			'onboarding.nextAction' => 'Lanjut',
+			'onboarding.startAction' => 'Mulai',
+			'onboarding.closeAction' => 'Tutup',
+			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Halaman ${current} dari ${total}',
+			'onboarding.page1Title' => 'Semua uangmu, satu buku',
+			'onboarding.page1Body' => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.',
+			'onboarding.page2Title' => 'Tahu di mana uangmu',
+			'onboarding.page2Body' => 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.',
+			'onboarding.page3Title' => 'Catat dalam hitungan detik',
+			'onboarding.page3Body' => 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.',
+			'onboarding.page4Title' => 'Rencanakan, lalu pantau',
+			'onboarding.page4Body' => 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.',
+			'onboarding.finalTitle' => 'Mulai dari dompet pertamamu',
+			'onboarding.finalBody' => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.',
+			'onboarding.createWalletAction' => 'Buat Dompet Pertama',
+			'onboarding.laterAction' => 'Nanti saja',
+			'tour.nextAction' => 'Lanjut',
+			'tour.doneAction' => 'Selesai',
+			'tour.skipAction' => 'Lewati tur',
+			'tour.stepCounter' => ({required Object current, required Object total}) => '${current}/${total}',
+			'tour.stepSemantics' => ({required Object current, required Object total, required Object title, required Object body}) => 'Langkah ${current} dari ${total}: ${title}. ${body}',
+			'tour.homeBalanceTitle' => 'Total saldo tercatat',
+			'tour.homeBalanceBody' => 'Jumlah saldo semua dompet aktif. Ini catatanmu, bukan saldo bank yang disinkron.',
+			'tour.homeRecordTitle' => 'Satu pintu mencatat',
+			'tour.homeRecordBody' => 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.',
+			'tour.homeCashFlowTitle' => 'Arus bulan ini',
+			'tour.homeCashFlowBody' => 'Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung.',
+			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
+			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
+			'tour.recordKindTitle' => 'Pilih jenisnya',
+			'tour.recordKindBody' => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.',
+			'tour.recordAmountTitle' => 'Nominal',
+			'tour.recordAmountBody' => 'Ketik nominalnya, atau pakai tombol cepat.',
+			'tour.recordWalletTitle' => 'Dompet terisi otomatis',
+			'tour.recordWalletBody' => 'Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu.',
+			'tour.recordBudgetItemTitle' => 'Tautkan ke anggaran',
+			'tour.recordBudgetItemBody' => 'Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran.',
+			'tour.walletSummaryTitle' => 'Total semua dompet',
+			'tour.walletSummaryBody' => 'Jumlah saldo tercatat dompet aktif.',
+			'tour.walletCardTitle' => 'Rincian dompet',
+			'tour.walletCardBody' => 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.',
+			'tour.walletAddTitle' => 'Tambah dompet',
+			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldo awal bisa diubah nanti; saldo tercatat dihitung ulang.',
+			'tour.txnMonthTitle' => 'Satu bulan per tampilan',
+			'tour.txnMonthBody' => 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.',
+			'tour.txnFilterTitle' => 'Cari dan saring',
+			'tour.txnFilterBody' => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.',
+			'tour.txnRowTitle' => 'Sunting atau hapus',
+			'tour.txnRowBody' => 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.',
+			'tour.budgetSummaryTitle' => 'Sisa semua anggaran aktif',
+			'tour.budgetSummaryBody' => 'Rencana dikurangi terpakai. Membuat anggaran tidak mengurangi saldo dompet.',
+			'tour.budgetFilterTitle' => 'Aktif lebih dulu',
+			'tour.budgetFilterBody' => 'Daftar menampilkan anggaran aktif. Pilih Selesai atau Nonaktif untuk melihat yang lama.',
+			'tour.budgetTemplatesTitle' => 'Pakai template',
+			'tour.budgetTemplatesBody' => 'Simpan susunan pos yang berulang, lalu buat anggaran baru darinya.',
+			'tour.budgetDetailItemTitle' => 'Pos anggaran',
+			'tour.budgetDetailItemBody' => 'Terpakai naik dari transaksi yang ditautkan ke pos ini dalam periode anggaran.',
+			'tour.budgetDetailRecordTitle' => 'Catat dari pos',
+			'tour.budgetDetailRecordBody' => 'Membuka CATAT dengan pos ini sudah terpilih.',
+			'tour.freelanceProjectTitle' => 'Proyek dan tarif',
+			'tour.freelanceProjectBody' => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.',
+			'tour.freelanceWorklogTitle' => 'Jam kerja',
+			'tour.freelanceWorklogBody' => 'Mencatat jam kerja tidak menambah saldo. Ini penghasilan yang diperoleh, belum diterima.',
+			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
+			'tour.freelanceReceiveBody' => 'Saldo dompet baru bertambah saat pembayaran dicatat diterima.',
+			'info.menuTooltip' => 'Info dan tur',
+			'info.replayTourAction' => 'Tur layar ini',
+			'info.showIntroAction' => 'Pengenalan Tanukonomy',
+			'info.resetAllAction' => 'Setel ulang semua tutorial',
+			'info.resetConfirmTitle' => 'Setel ulang tutorial?',
+			'info.resetConfirmMessage' => 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.',
+			'info.resetConfirmAction' => 'Setel Ulang',
+			'info.resetDoneMessage' => 'Tutorial disetel ulang.',
 			_ => null,
 		};
 	}

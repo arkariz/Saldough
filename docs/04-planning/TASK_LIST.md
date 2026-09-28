@@ -41,6 +41,7 @@ Terakhir diperbarui: 28 September 2026.
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
+| Persiapan akun, sinkronisasi, dan analitik — belum digarap di kode, draf jawaban Play Console di [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) | 1 | 1 | Draf selesai 28 Sep 2026 (metode akun: OAuth); isi ulang formulir Play Console persis sebelum build berfitur ini diunggah, jangan sebelum itu |
 
 ## Keputusan terbuka
 

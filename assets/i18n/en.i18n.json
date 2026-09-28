@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Saldough"
+    "title": "Tanukonomy"
   },
   "common": {
     "save": "Save",
@@ -36,7 +36,7 @@
     "incomeSavedMessage": "Income recorded.",
     "expenseSavedMessage": "Expense recorded.",
     "transferSavedMessage": "Transfer recorded.",
-    "disclaimerMessage": "Saldough only records manual history. It never moves money automatically.",
+    "disclaimerMessage": "Tanukonomy only records manual history. It never moves money automatically.",
     "incomeSubtitle": "Record money coming into one of your wallets.",
     "expenseSubtitle": "Record money going out of one of your wallets.",
     "transferSubtitle": "Record money moving between your own wallets.",
@@ -140,6 +140,11 @@
     "emptyFilterTitle": "No transactions this month match the filter",
     "emptyFilterSubtitle": "Search and filters only cover the month that is open. Change the month, or change or clear the filters.",
     "clearFiltersButton": "Clear filters",
+    "crossMonthSearchButton": "Search other months",
+    "crossMonthSearchingLabel": "Searching earlier months...",
+    "crossMonthResultsHeader": "Found in other months",
+    "crossMonthLoadMoreButton": "Search further back",
+    "crossMonthNoMoreResults": "Not found in earlier months.",
     "loadErrorTitle": "Failed to load transactions",
     "loadErrorSubtitle": "Check and try loading again.",
     "detailBackLabel": "Back",
@@ -158,7 +163,7 @@
     "detailFromLabel": "From",
     "detailToLabel": "To",
     "detailAmountLabel": "Amount",
-    "detailManualNote": "This entry is a manual record in Saldough. Wallet balances are calculated from the data you enter, with no connection to a bank account.",
+    "detailManualNote": "This entry is a manual record in Tanukonomy. Wallet balances are calculated from the data you enter, with no connection to a bank account.",
     "editAction": "Edit This Entry",
     "deleteAction": "Delete Entry from History",
     "editSheetTitle": "Edit Entry",
@@ -471,7 +476,7 @@
     "paymentDeletedMessage": "Payment deleted.",
     "receiveTitle": "Record Payment Received",
     "receiveRuleTitle": "A record, not a payment",
-    "receiveRuleBody": "Saldough does not receive or move money. Record only money that has actually reached your account; the chosen wallet's balance grows by the net pay.",
+    "receiveRuleBody": "Tanukonomy does not receive or move money. Record only money that has actually reached your account; the chosen wallet's balance grows by the net pay.",
     "receiveAmountLabel": "Amount received",
     "receiveWalletLabel": "Receiving wallet",
     "receiveDateLabel": "Date received",

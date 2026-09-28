@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.saldough.saldough"
+    namespace = "com.arkarizdev.tanukonomy"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.saldough.saldough"
+        applicationId = "com.arkarizdev.tanukonomy"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // Dipin ke 23 (bukan flutter.minSdkVersion) karena flutter_secure_storage 10

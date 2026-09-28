@@ -57,7 +57,7 @@ class _Translations$app$en extends Translations$app$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Saldough';
+	@override String get title => 'Tanukonomy';
 }
 
 // Path: common
@@ -114,7 +114,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeSavedMessage => 'Income recorded.';
 	@override String get expenseSavedMessage => 'Expense recorded.';
 	@override String get transferSavedMessage => 'Transfer recorded.';
-	@override String get disclaimerMessage => 'Saldough only records manual history. It never moves money automatically.';
+	@override String get disclaimerMessage => 'Tanukonomy only records manual history. It never moves money automatically.';
 	@override String get incomeSubtitle => 'Record money coming into one of your wallets.';
 	@override String get expenseSubtitle => 'Record money going out of one of your wallets.';
 	@override String get transferSubtitle => 'Record money moving between your own wallets.';
@@ -225,6 +225,11 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get emptyFilterTitle => 'No transactions this month match the filter';
 	@override String get emptyFilterSubtitle => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.';
 	@override String get clearFiltersButton => 'Clear filters';
+	@override String get crossMonthSearchButton => 'Search other months';
+	@override String get crossMonthSearchingLabel => 'Searching earlier months...';
+	@override String get crossMonthResultsHeader => 'Found in other months';
+	@override String get crossMonthLoadMoreButton => 'Search further back';
+	@override String get crossMonthNoMoreResults => 'Not found in earlier months.';
 	@override String get loadErrorTitle => 'Failed to load transactions';
 	@override String get loadErrorSubtitle => 'Check and try loading again.';
 	@override String get detailBackLabel => 'Back';
@@ -243,7 +248,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get detailFromLabel => 'From';
 	@override String get detailToLabel => 'To';
 	@override String get detailAmountLabel => 'Amount';
-	@override String get detailManualNote => 'This entry is a manual record in Saldough. Wallet balances are calculated from the data you enter, with no connection to a bank account.';
+	@override String get detailManualNote => 'This entry is a manual record in Tanukonomy. Wallet balances are calculated from the data you enter, with no connection to a bank account.';
 	@override String get editAction => 'Edit This Entry';
 	@override String get deleteAction => 'Delete Entry from History';
 	@override String get editSheetTitle => 'Edit Entry';
@@ -577,7 +582,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentDeletedMessage => 'Payment deleted.';
 	@override String get receiveTitle => 'Record Payment Received';
 	@override String get receiveRuleTitle => 'A record, not a payment';
-	@override String get receiveRuleBody => 'Saldough does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.';
+	@override String get receiveRuleBody => 'Tanukonomy does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.';
 	@override String get receiveAmountLabel => 'Amount received';
 	@override String get receiveWalletLabel => 'Receiving wallet';
 	@override String get receiveDateLabel => 'Date received';
@@ -673,7 +678,7 @@ class _Translations$home$en extends Translations$home$id {
 extension on TranslationsEn {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
-			'app.title' => 'Saldough',
+			'app.title' => 'Tanukonomy',
 			'common.save' => 'Save',
 			'common.cancel' => 'Cancel',
 			'common.delete' => 'Delete',
@@ -703,7 +708,7 @@ extension on TranslationsEn {
 			'record.incomeSavedMessage' => 'Income recorded.',
 			'record.expenseSavedMessage' => 'Expense recorded.',
 			'record.transferSavedMessage' => 'Transfer recorded.',
-			'record.disclaimerMessage' => 'Saldough only records manual history. It never moves money automatically.',
+			'record.disclaimerMessage' => 'Tanukonomy only records manual history. It never moves money automatically.',
 			'record.incomeSubtitle' => 'Record money coming into one of your wallets.',
 			'record.expenseSubtitle' => 'Record money going out of one of your wallets.',
 			'record.transferSubtitle' => 'Record money moving between your own wallets.',
@@ -805,6 +810,11 @@ extension on TranslationsEn {
 			'transaction.emptyFilterTitle' => 'No transactions this month match the filter',
 			'transaction.emptyFilterSubtitle' => 'Search and filters only cover the month that is open. Change the month, or change or clear the filters.',
 			'transaction.clearFiltersButton' => 'Clear filters',
+			'transaction.crossMonthSearchButton' => 'Search other months',
+			'transaction.crossMonthSearchingLabel' => 'Searching earlier months...',
+			'transaction.crossMonthResultsHeader' => 'Found in other months',
+			'transaction.crossMonthLoadMoreButton' => 'Search further back',
+			'transaction.crossMonthNoMoreResults' => 'Not found in earlier months.',
 			'transaction.loadErrorTitle' => 'Failed to load transactions',
 			'transaction.loadErrorSubtitle' => 'Check and try loading again.',
 			'transaction.detailBackLabel' => 'Back',
@@ -823,7 +833,7 @@ extension on TranslationsEn {
 			'transaction.detailFromLabel' => 'From',
 			'transaction.detailToLabel' => 'To',
 			'transaction.detailAmountLabel' => 'Amount',
-			'transaction.detailManualNote' => 'This entry is a manual record in Saldough. Wallet balances are calculated from the data you enter, with no connection to a bank account.',
+			'transaction.detailManualNote' => 'This entry is a manual record in Tanukonomy. Wallet balances are calculated from the data you enter, with no connection to a bank account.',
 			'transaction.editAction' => 'Edit This Entry',
 			'transaction.deleteAction' => 'Delete Entry from History',
 			'transaction.editSheetTitle' => 'Edit Entry',
@@ -1130,7 +1140,7 @@ extension on TranslationsEn {
 			'freelance.paymentDeletedMessage' => 'Payment deleted.',
 			'freelance.receiveTitle' => 'Record Payment Received',
 			'freelance.receiveRuleTitle' => 'A record, not a payment',
-			'freelance.receiveRuleBody' => 'Saldough does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.',
+			'freelance.receiveRuleBody' => 'Tanukonomy does not receive or move money. Record only money that has actually reached your account; the chosen wallet\'s balance grows by the net pay.',
 			'freelance.receiveAmountLabel' => 'Amount received',
 			'freelance.receiveWalletLabel' => 'Receiving wallet',
 			'freelance.receiveDateLabel' => 'Date received',
@@ -1180,13 +1190,13 @@ extension on TranslationsEn {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
+			_ => null,
+		} ?? switch (path) {
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
-			_ => null,
-		} ?? switch (path) {
 			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
 			'home.recordAction' => 'Record Transaction',
 			'home.createWalletAction' => 'Create First Wallet',

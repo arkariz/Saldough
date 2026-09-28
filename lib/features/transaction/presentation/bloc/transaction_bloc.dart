@@ -36,6 +36,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionWalletFilterChanged>(_onWalletFilterChanged);
     on<TransactionCategoryFilterChanged>(_onCategoryFilterChanged);
     on<TransactionSearchChanged>(_onSearchChanged);
+    on<TransactionSearchAcrossMonthsRequested>(_onSearchAcrossMonthsRequested);
     on<TransactionUpdated>(_onUpdated);
     on<TransactionDeleted>(_onDeleted);
   }
@@ -44,6 +45,12 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionRepository _transactionRepository;
   final RecordTransaction _recordTransaction;
   final BudgetItemCatalog _budgetItemCatalog;
+
+  /// Berapa bulan dipindai sekali tekan "Cari di bulan lain"/"Cari lebih
+  /// jauh" -- cukup kecil supaya satu ketukan tidak membaca banyak dokumen
+  /// bulan sekaligus (NFR-PERF-002), tapi cukup besar supaya riwayat pendek
+  /// biasanya habis dalam satu atau dua ketukan.
+  static const _crossMonthBatchSize = 3;
 
   /// Memuat pos anggaran (data sekunder — gagal berarti daftar kosong, tidak
   /// menghalangi riwayat tampil).
@@ -195,6 +202,101 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         walletFilter: state.walletFilter,
         categoryFilter: state.categoryFilter,
         searchQuery: event.query,
+      ),
+    );
+  }
+
+  /// Melanjutkan pencarian lintas bulan (T-8.2): memindai [_crossMonthBatchSize]
+  /// bulan berikutnya sebelum [TransactionState.month] yang belum dipindai,
+  /// menyaringnya dengan filter/kata kunci AKTIF, lalu menambah hasilnya ke
+  /// [TransactionState.crossMonthGroups]. Tidak pernah memanggil
+  /// `listAllTransactions()` -- hanya membuka dokumen bulan yang benar-benar
+  /// akan dipindai batch ini, satu per satu lewat [TransactionRepository.listTransactionsInMonth].
+  Future<void> _onSearchAcrossMonthsRequested(
+    TransactionSearchAcrossMonthsRequested event,
+    Emitter<TransactionState> emit,
+  ) async {
+    if (state.searchQuery.trim().isEmpty) return;
+    if (state.crossMonthExhausted || state.isSearchingCrossMonth) return;
+
+    // Jepret kriteria saat ini -- kalau berubah sebelum pemindaian batch ini
+    // selesai (`_recomputed` lain sudah jalan lebih dulu dan mereset field
+    // lintas bulan), hasil batch ini dibuang di akhir, bukan ditimpakan ke
+    // kriteria yang sudah tidak berlaku.
+    final month = state.month;
+    final typeFilter = state.typeFilter;
+    final walletFilter = state.walletFilter;
+    final categoryFilter = state.categoryFilter;
+    final searchQuery = state.searchQuery;
+
+    emit(state.copyWith(isSearchingCrossMonth: true));
+
+    var availableMonths = state.availableMonths;
+    if (availableMonths.isEmpty) {
+      final monthsResult = await _transactionRepository.listAvailableMonths();
+      switch (monthsResult) {
+        case Left(value: final failure):
+          emit(state.copyWith(isSearchingCrossMonth: false, effect: _effectError(failure)));
+          return;
+        case Right(value: final months):
+          availableMonths = months;
+      }
+    }
+
+    bool sameCriteria() =>
+        state.month == month &&
+        state.typeFilter == typeFilter &&
+        state.walletFilter == walletFilter &&
+        state.categoryFilter == categoryFilter &&
+        state.searchQuery == searchQuery;
+
+    final candidates = availableMonths.where((m) => m.isBefore(month)).toList()
+      ..sort((a, b) => b.compareTo(a));
+    final alreadyScanned = state.crossMonthScannedMonths;
+    final remaining = candidates.where((m) => !alreadyScanned.contains(m)).toList();
+    final batch = remaining.take(_crossMonthBatchSize).toList();
+
+    if (batch.isEmpty) {
+      if (sameCriteria()) {
+        emit(state.copyWith(availableMonths: availableMonths, isSearchingCrossMonth: false, crossMonthExhausted: true));
+      }
+      return;
+    }
+
+    final walletNames = {for (final wallet in state.wallets) wallet.id: wallet.name.toLowerCase()};
+    final needle = searchQuery.trim().toLowerCase();
+    final matches = [for (final group in state.crossMonthGroups) ...group.transactions];
+
+    for (final monthToScan in batch) {
+      final result = await _transactionRepository.listTransactionsInMonth(monthToScan);
+      switch (result) {
+        case Left(value: final failure):
+          if (sameCriteria()) {
+            emit(state.copyWith(availableMonths: availableMonths, isSearchingCrossMonth: false, effect: _effectError(failure)));
+          }
+          return;
+        case Right(value: final transactions):
+          matches.addAll(
+            transactions.where((transaction) {
+              if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
+              if (categoryFilter != null && transaction.categoryKey != categoryFilter) return false;
+              if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
+              return _matchesType(transaction, typeFilter);
+            }),
+          );
+      }
+    }
+
+    if (!sameCriteria()) return;
+
+    final scanned = [...alreadyScanned, ...batch];
+    emit(
+      state.copyWith(
+        availableMonths: availableMonths,
+        crossMonthScannedMonths: scanned,
+        crossMonthGroups: _groupByDate(matches),
+        isSearchingCrossMonth: false,
+        crossMonthExhausted: scanned.length >= candidates.length,
       ),
     );
   }

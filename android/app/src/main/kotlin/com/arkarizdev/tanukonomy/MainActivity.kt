@@ -1,4 +1,4 @@
-package com.saldough.saldough
+package com.arkarizdev.tanukonomy
 
 import io.flutter.embedding.android.FlutterActivity
 

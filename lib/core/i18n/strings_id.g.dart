@@ -60,8 +60,8 @@ class Translations$app$id {
 
 	// Translations
 
-	/// id: 'Saldough'
-	String get title => 'Saldough';
+	/// id: 'Tanukonomy'
+	String get title => 'Tanukonomy';
 }
 
 // Path: common
@@ -177,8 +177,8 @@ class Translations$record$id {
 	/// id: 'Transfer tercatat.'
 	String get transferSavedMessage => 'Transfer tercatat.';
 
-	/// id: 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.'
-	String get disclaimerMessage => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.';
+	/// id: 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.'
+	String get disclaimerMessage => 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.';
 
 	/// id: 'Catat uang yang masuk ke salah satu dompet.'
 	String get incomeSubtitle => 'Catat uang yang masuk ke salah satu dompet.';
@@ -492,6 +492,21 @@ class Translations$transaction$id {
 	/// id: 'Hapus filter'
 	String get clearFiltersButton => 'Hapus filter';
 
+	/// id: 'Cari di bulan lain'
+	String get crossMonthSearchButton => 'Cari di bulan lain';
+
+	/// id: 'Mencari di bulan sebelumnya...'
+	String get crossMonthSearchingLabel => 'Mencari di bulan sebelumnya...';
+
+	/// id: 'Ditemukan di bulan lain'
+	String get crossMonthResultsHeader => 'Ditemukan di bulan lain';
+
+	/// id: 'Cari lebih jauh'
+	String get crossMonthLoadMoreButton => 'Cari lebih jauh';
+
+	/// id: 'Tidak ditemukan di bulan-bulan sebelumnya.'
+	String get crossMonthNoMoreResults => 'Tidak ditemukan di bulan-bulan sebelumnya.';
+
 	/// id: 'Transaksi gagal dimuat'
 	String get loadErrorTitle => 'Transaksi gagal dimuat';
 
@@ -546,8 +561,8 @@ class Translations$transaction$id {
 	/// id: 'Jumlah'
 	String get detailAmountLabel => 'Jumlah';
 
-	/// id: 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.'
-	String get detailManualNote => 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.';
+	/// id: 'Catatan ini adalah rekaman manual di Tanukonomy. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.'
+	String get detailManualNote => 'Catatan ini adalah rekaman manual di Tanukonomy. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.';
 
 	/// id: 'Ubah Catatan Ini'
 	String get editAction => 'Ubah Catatan Ini';
@@ -1494,8 +1509,8 @@ class Translations$freelance$id {
 	/// id: 'Pencatatan, bukan pembayaran'
 	String get receiveRuleTitle => 'Pencatatan, bukan pembayaran';
 
-	/// id: 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.'
-	String get receiveRuleBody => 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.';
+	/// id: 'Tanukonomy tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.'
+	String get receiveRuleBody => 'Tanukonomy tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.';
 
 	/// id: 'Nominal diterima'
 	String get receiveAmountLabel => 'Nominal diterima';
@@ -1743,7 +1758,7 @@ class Translations$home$id {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
-			'app.title' => 'Saldough',
+			'app.title' => 'Tanukonomy',
 			'common.save' => 'Simpan',
 			'common.cancel' => 'Batal',
 			'common.delete' => 'Hapus',
@@ -1773,7 +1788,7 @@ extension on Translations {
 			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
 			'record.expenseSavedMessage' => 'Pengeluaran tercatat.',
 			'record.transferSavedMessage' => 'Transfer tercatat.',
-			'record.disclaimerMessage' => 'Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.',
+			'record.disclaimerMessage' => 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.',
 			'record.incomeSubtitle' => 'Catat uang yang masuk ke salah satu dompet.',
 			'record.expenseSubtitle' => 'Catat uang yang keluar dari salah satu dompet.',
 			'record.transferSubtitle' => 'Catat perpindahan uang antar dompet milikmu sendiri.',
@@ -1875,6 +1890,11 @@ extension on Translations {
 			'transaction.emptyFilterTitle' => 'Tidak ada transaksi bulan ini yang cocok dengan filter',
 			'transaction.emptyFilterSubtitle' => 'Pencarian dan filter hanya mencakup bulan yang sedang dibuka. Ganti bulan, atau ganti dan hapus filter.',
 			'transaction.clearFiltersButton' => 'Hapus filter',
+			'transaction.crossMonthSearchButton' => 'Cari di bulan lain',
+			'transaction.crossMonthSearchingLabel' => 'Mencari di bulan sebelumnya...',
+			'transaction.crossMonthResultsHeader' => 'Ditemukan di bulan lain',
+			'transaction.crossMonthLoadMoreButton' => 'Cari lebih jauh',
+			'transaction.crossMonthNoMoreResults' => 'Tidak ditemukan di bulan-bulan sebelumnya.',
 			'transaction.loadErrorTitle' => 'Transaksi gagal dimuat',
 			'transaction.loadErrorSubtitle' => 'Periksa lagi lalu coba muat ulang.',
 			'transaction.detailBackLabel' => 'Kembali',
@@ -1893,7 +1913,7 @@ extension on Translations {
 			'transaction.detailFromLabel' => 'Dari',
 			'transaction.detailToLabel' => 'Ke',
 			'transaction.detailAmountLabel' => 'Jumlah',
-			'transaction.detailManualNote' => 'Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.',
+			'transaction.detailManualNote' => 'Catatan ini adalah rekaman manual di Tanukonomy. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.',
 			'transaction.editAction' => 'Ubah Catatan Ini',
 			'transaction.deleteAction' => 'Hapus Catatan dari Riwayat',
 			'transaction.editSheetTitle' => 'Ubah Catatan',
@@ -2200,7 +2220,7 @@ extension on Translations {
 			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
 			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
 			'freelance.receiveRuleTitle' => 'Pencatatan, bukan pembayaran',
-			'freelance.receiveRuleBody' => 'Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.',
+			'freelance.receiveRuleBody' => 'Tanukonomy tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.',
 			'freelance.receiveAmountLabel' => 'Nominal diterima',
 			'freelance.receiveWalletLabel' => 'Dompet penerima',
 			'freelance.receiveDateLabel' => 'Tanggal diterima',
@@ -2250,13 +2270,13 @@ extension on Translations {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
+			_ => null,
+		} ?? switch (path) {
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
-			_ => null,
-		} ?? switch (path) {
 			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
 			'home.recordAction' => 'Catat Transaksi',
 			'home.createWalletAction' => 'Buat Dompet Pertama',

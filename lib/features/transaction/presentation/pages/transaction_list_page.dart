@@ -175,9 +175,27 @@ class _Body extends StatelessWidget {
       );
     }
     if (state.groups.isEmpty) {
+      final bloc = context.read<TransactionBloc>();
       return SliverFillRemaining(
         hasScrollBody: false,
-        child: TransactionEmptyFilterState(onClearFilters: onClearFilters),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.lg),
+          child: Column(
+            children: [
+              TransactionEmptyFilterState(onClearFilters: onClearFilters),
+              if (state.searchQuery.trim().isNotEmpty)
+                TransactionCrossMonthSearchSection(
+                  hasScanned: state.crossMonthScannedMonths.isNotEmpty,
+                  isSearching: state.isSearchingCrossMonth,
+                  exhausted: state.crossMonthExhausted,
+                  groups: state.crossMonthGroups,
+                  walletsById: walletsById,
+                  onSearch: () => bloc.add(const TransactionSearchAcrossMonthsRequested()),
+                  onTransactionTap: (transaction) => openTransactionDetail(context, transaction),
+                ),
+            ],
+          ),
+        ),
       );
     }
     return SliverPadding(

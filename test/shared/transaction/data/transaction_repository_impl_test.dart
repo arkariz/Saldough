@@ -139,6 +139,24 @@ void main() {
       expect(result.getOrElse((_) => throw StateError('expected Right')), hasLength(1));
     });
 
+    test('listAvailableMonths mengembalikan bulan yang pernah ditulis, terurut naik', () async {
+      final september = ExpenseTransaction(id: 't1', date: DateTime(2026, 9, 2), amount: 1, note: 'a', walletId: 'w1');
+      final januari = ExpenseTransaction(id: 't2', date: DateTime(2026, 1, 5), amount: 1, note: 'b', walletId: 'w1');
+      final agustus = ExpenseTransaction(id: 't3', date: DateTime(2026, 8, 20), amount: 1, note: 'c', walletId: 'w1');
+      await repository.saveTransaction(september);
+      await repository.saveTransaction(januari);
+      await repository.saveTransaction(agustus);
+
+      final result = await repository.listAvailableMonths();
+      final months = result.getOrElse((_) => throw StateError('expected Right'));
+      expect(months, [DateTime(2026), DateTime(2026, 8), DateTime(2026, 9)]);
+    });
+
+    test('listAvailableMonths kosong kalau belum pernah ada transaksi', () async {
+      final result = await repository.listAvailableMonths();
+      expect(result.getOrElse((_) => throw StateError('expected Right')), isEmpty);
+    });
+
     test('IncomeTransaction, ExpenseTransaction, dan TransferTransaction bulat-pergi (round-trip) dalam satu bulan', () async {
       final income = IncomeTransaction(id: 't1', date: DateTime(2026, 9), amount: 500000000, note: 'gaji', walletId: 'bca');
       final expense = ExpenseTransaction(

@@ -29,6 +29,16 @@ abstract interface class TransactionRepository {
   /// riwayat (NFR-PERF-002). Dipakai Beranda (FR-HOME-004).
   Future<Either<Failure, List<Transaction>>> listRecentTransactions(int limit);
 
+  /// Bulan (tanggal selalu hari pertama) yang pernah punya transaksi,
+  /// terurut naik -- dibaca dari dokumen indeks saja, tanpa membuka satu pun
+  /// dokumen bulan.
+  ///
+  /// Dipakai untuk pencarian lintas bulan (T-8.2): pemanggil tahu bulan mana
+  /// saja yang ADA sebelum memutuskan bulan mana yang dibuka lewat
+  /// [listTransactionsInMonth], jadi jalur layar tidak pernah perlu
+  /// [listAllTransactions].
+  Future<Either<Failure, List<DateTime>>> listAvailableMonths();
+
   /// Menyimpan [transaction] — menambah kalau `id` baru, menimpa kalau
   /// sudah ada.
   ///

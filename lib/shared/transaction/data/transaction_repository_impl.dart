@@ -84,6 +84,16 @@ final class TransactionRepositoryImpl with RepositoryGuard implements Transactio
       });
 
   @override
+  Future<Either<Failure, List<DateTime>>> listAvailableMonths() => guard(() async {
+        final months = await _indexStore.read() ?? const <String>[];
+        return months.map((monthKey) {
+          final parts = monthKey.split('-');
+          return DateTime(int.parse(parts[0]), int.parse(parts[1]));
+        }).toList()
+          ..sort();
+      });
+
+  @override
   Future<Either<Failure, Unit>> saveTransaction(Transaction transaction, {DateTime? previousDate}) =>
       guardVoid(() async {
         final targetMonthKey = _monthKeyFor(transaction.date);

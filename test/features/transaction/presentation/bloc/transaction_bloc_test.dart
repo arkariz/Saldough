@@ -384,6 +384,95 @@ void main() {
     );
   });
 
+  group('TransactionBloc -- pencarian lintas bulan (T-8.2, UX-6)', () {
+    void stubMonthlyTransactions(Map<DateTime, List<Transaction>> byMonth) {
+      when(() => transactionRepository.listTransactionsInMonth(any())).thenAnswer((invocation) async {
+        final month = invocation.positionalArguments[0] as DateTime;
+        return Right<Failure, List<Transaction>>(byMonth[DateTime(month.year, month.month)] ?? const []);
+      });
+    }
+
+    blocTest<TransactionBloc, TransactionState>(
+      'tidak memindai apa pun kalau kata kunci pencarian kosong',
+      setUp: () => stubMonthlyTransactions(const {}),
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc.add(const TransactionSearchAcrossMonthsRequested());
+      },
+      skip: 1,
+      verify: (bloc) {
+        verifyNever(() => transactionRepository.listAvailableMonths());
+        expect(bloc.state.crossMonthScannedMonths, isEmpty);
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'memindai bulan sebelumnya dan menemukan transaksi yang cocok, lalu berhenti karena riwayat habis',
+      setUp: () {
+        stubMonthlyTransactions({
+          DateTime(2026, 8): [
+            ExpenseTransaction(id: 'agu1', date: DateTime(2026, 8, 15), amount: 40000, note: 'tagihan listrik', walletId: 'bca'),
+          ],
+          DateTime(2026, 7): [
+            ExpenseTransaction(id: 'jul1', date: DateTime(2026, 7, 10), amount: 10000, note: 'lain-lain', walletId: 'bca'),
+          ],
+        });
+        when(() => transactionRepository.listAvailableMonths()).thenAnswer(
+          (_) async => Right([DateTime(2026, 7), DateTime(2026, 8), DateTime(2026, 9)]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc.add(TransactionMonthChanged(DateTime(2026, 9)));
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc
+          ..add(const TransactionSearchChanged('tagihan'))
+          ..add(const TransactionSearchAcrossMonthsRequested());
+        await bloc.stream.firstWhere((s) => !s.isSearchingCrossMonth && s.crossMonthScannedMonths.isNotEmpty);
+      },
+      verify: (bloc) {
+        expect(bloc.state.crossMonthScannedMonths, containsAll([DateTime(2026, 8), DateTime(2026, 7)]));
+        expect(bloc.state.crossMonthGroups.expand((g) => g.transactions).map((t) => t.id), ['agu1']);
+        expect(bloc.state.crossMonthExhausted, isTrue);
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'mengubah kata kunci pencarian mereset hasil pindai lintas bulan sebelumnya',
+      setUp: () {
+        stubMonthlyTransactions({
+          DateTime(2026, 8): [
+            ExpenseTransaction(id: 'agu1', date: DateTime(2026, 8, 15), amount: 40000, note: 'tagihan listrik', walletId: 'bca'),
+          ],
+        });
+        when(() => transactionRepository.listAvailableMonths()).thenAnswer(
+          (_) async => Right([DateTime(2026, 8), DateTime(2026, 9)]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc.add(TransactionMonthChanged(DateTime(2026, 9)));
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc
+          ..add(const TransactionSearchChanged('tagihan'))
+          ..add(const TransactionSearchAcrossMonthsRequested());
+        await bloc.stream.firstWhere((s) => !s.isSearchingCrossMonth && s.crossMonthScannedMonths.isNotEmpty);
+        bloc.add(const TransactionSearchChanged('lain'));
+      },
+      verify: (bloc) {
+        expect(bloc.state.crossMonthScannedMonths, isEmpty);
+        expect(bloc.state.crossMonthGroups, isEmpty);
+        expect(bloc.state.crossMonthExhausted, isFalse);
+      },
+    );
+  });
+
   group('TransactionBloc -- sunting dan hapus (T-2.6, FR-TXN-005)', () {
     final day = DateTime.now();
 

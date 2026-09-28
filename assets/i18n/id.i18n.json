@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Saldough"
+    "title": "Tanukonomy"
   },
   "common": {
     "save": "Simpan",
@@ -36,7 +36,7 @@
     "incomeSavedMessage": "Pemasukan tercatat.",
     "expenseSavedMessage": "Pengeluaran tercatat.",
     "transferSavedMessage": "Transfer tercatat.",
-    "disclaimerMessage": "Saldough hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.",
+    "disclaimerMessage": "Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.",
     "incomeSubtitle": "Catat uang yang masuk ke salah satu dompet.",
     "expenseSubtitle": "Catat uang yang keluar dari salah satu dompet.",
     "transferSubtitle": "Catat perpindahan uang antar dompet milikmu sendiri.",
@@ -140,6 +140,11 @@
     "emptyFilterTitle": "Tidak ada transaksi bulan ini yang cocok dengan filter",
     "emptyFilterSubtitle": "Pencarian dan filter hanya mencakup bulan yang sedang dibuka. Ganti bulan, atau ganti dan hapus filter.",
     "clearFiltersButton": "Hapus filter",
+    "crossMonthSearchButton": "Cari di bulan lain",
+    "crossMonthSearchingLabel": "Mencari di bulan sebelumnya...",
+    "crossMonthResultsHeader": "Ditemukan di bulan lain",
+    "crossMonthLoadMoreButton": "Cari lebih jauh",
+    "crossMonthNoMoreResults": "Tidak ditemukan di bulan-bulan sebelumnya.",
     "loadErrorTitle": "Transaksi gagal dimuat",
     "loadErrorSubtitle": "Periksa lagi lalu coba muat ulang.",
     "detailBackLabel": "Kembali",
@@ -158,7 +163,7 @@
     "detailFromLabel": "Dari",
     "detailToLabel": "Ke",
     "detailAmountLabel": "Jumlah",
-    "detailManualNote": "Catatan ini adalah rekaman manual di Saldough. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.",
+    "detailManualNote": "Catatan ini adalah rekaman manual di Tanukonomy. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.",
     "editAction": "Ubah Catatan Ini",
     "deleteAction": "Hapus Catatan dari Riwayat",
     "editSheetTitle": "Ubah Catatan",
@@ -471,7 +476,7 @@
     "paymentDeletedMessage": "Pembayaran dihapus.",
     "receiveTitle": "Catat Pembayaran Diterima",
     "receiveRuleTitle": "Pencatatan, bukan pembayaran",
-    "receiveRuleBody": "Saldough tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.",
+    "receiveRuleBody": "Tanukonomy tidak menerima atau memindahkan uang. Catat hanya uang yang sudah benar-benar masuk ke rekeningmu; saldo dompet pilihan akan bertambah sebesar gaji bersih.",
     "receiveAmountLabel": "Nominal diterima",
     "receiveWalletLabel": "Dompet penerima",
     "receiveDateLabel": "Tanggal diterima",

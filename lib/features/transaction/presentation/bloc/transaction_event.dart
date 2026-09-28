@@ -69,6 +69,16 @@ final class TransactionSearchChanged extends TransactionEvent {
   final String query;
 }
 
+/// Melanjutkan pencarian ke bulan-bulan sebelum [TransactionState.month]
+/// (T-8.2, UX-6 langkah 2) -- dikirim saat pengguna menekan "Cari di bulan
+/// lain" atau "Cari lebih jauh". Tidak berefek kalau [TransactionState.searchQuery]
+/// kosong atau riwayat sebelum bulan ini sudah habis dipindai
+/// ([TransactionState.crossMonthExhausted]).
+final class TransactionSearchAcrossMonthsRequested extends TransactionEvent {
+  /// Membuat [TransactionSearchAcrossMonthsRequested].
+  const TransactionSearchAcrossMonthsRequested();
+}
+
 /// Menyimpan hasil penyuntingan satu transaksi (FR-TXN-005). [updated]
 /// membawa `id` yang SAMA dengan [original] -- penyuntingan menimpa
 /// transaksinya, tidak pernah mencatat transaksi penyeimbang. [original]

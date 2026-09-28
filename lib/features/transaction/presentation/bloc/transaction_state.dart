@@ -62,6 +62,11 @@ final class TransactionState extends UiState<TransactionState> {
     this.budgetItems = const [],
     this.searchQuery = '',
     this.loadFailed = false,
+    this.availableMonths = const [],
+    this.crossMonthScannedMonths = const [],
+    this.crossMonthGroups = const [],
+    this.isSearchingCrossMonth = false,
+    this.crossMonthExhausted = false,
     super.effect,
   });
 
@@ -150,6 +155,28 @@ final class TransactionState extends UiState<TransactionState> {
   /// sesungguhnya adalah pembacaan yang gagal.
   final bool loadFailed;
 
+  /// Bulan yang pernah punya transaksi, terurut naik -- diisi sekali dari
+  /// `TransactionRepository.listAvailableMonths()` saat pencarian lintas
+  /// bulan pertama kali diminta (T-8.2). Kosong berarti belum pernah diminta.
+  final List<DateTime> availableMonths;
+
+  /// Bulan sebelum [month] yang SUDAH dipindai pencarian lintas bulan,
+  /// terlepas dari filter/kata kunci yang mana -- direset ke kosong tiap kali
+  /// filter, kata kunci, atau bulan berubah (lihat `TransactionBloc._recomputed`),
+  /// karena hasil pindaian lama tidak lagi berarti untuk kriteria yang baru.
+  final List<DateTime> crossMonthScannedMonths;
+
+  /// Transaksi dari [crossMonthScannedMonths] yang cocok dengan filter dan
+  /// kata kunci aktif, dikelompokkan per tanggal seperti [groups].
+  final List<TransactionDateGroup> crossMonthGroups;
+
+  /// Sedang memindai satu tumpuk bulan sebelumnya (T-8.2).
+  final bool isSearchingCrossMonth;
+
+  /// `true` kalau seluruh bulan sebelum [month] di [availableMonths] sudah
+  /// habis dipindai -- tombol "Cari lebih jauh" disembunyikan sesudah ini.
+  final bool crossMonthExhausted;
+
   @override
   TransactionState copyWith({
     DateTime? month,
@@ -165,6 +192,11 @@ final class TransactionState extends UiState<TransactionState> {
     String? searchQuery,
     bool? isLoading,
     bool? loadFailed,
+    List<DateTime>? availableMonths,
+    List<DateTime>? crossMonthScannedMonths,
+    List<TransactionDateGroup>? crossMonthGroups,
+    bool? isSearchingCrossMonth,
+    bool? crossMonthExhausted,
     UiEffect? effect,
   }) {
     return TransactionState(
@@ -181,6 +213,11 @@ final class TransactionState extends UiState<TransactionState> {
       searchQuery: searchQuery ?? this.searchQuery,
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
+      availableMonths: availableMonths ?? this.availableMonths,
+      crossMonthScannedMonths: crossMonthScannedMonths ?? this.crossMonthScannedMonths,
+      crossMonthGroups: crossMonthGroups ?? this.crossMonthGroups,
+      isSearchingCrossMonth: isSearchingCrossMonth ?? this.isSearchingCrossMonth,
+      crossMonthExhausted: crossMonthExhausted ?? this.crossMonthExhausted,
       effect: effect,
     );
   }
@@ -200,5 +237,10 @@ final class TransactionState extends UiState<TransactionState> {
     searchQuery,
     isLoading,
     loadFailed,
+    availableMonths,
+    crossMonthScannedMonths,
+    crossMonthGroups,
+    isSearchingCrossMonth,
+    crossMonthExhausted,
   ];
 }

@@ -116,6 +116,7 @@ docs/
 | [0018](02-architecture/adr/0018-jenis-pos-anggaran.md) | Pos anggaran punya jenis: pengeluaran atau transfer | Accepted |
 | [0019](02-architecture/adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md) | Tarif di entri worklog, transaksi milik pembayaran freelance | Accepted |
 | [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Proposed |
+| [0022](02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md) | Ganti nama aplikasi menjadi Tanukonomy | Accepted (sebagian dilaksanakan) |
 
 ## Pertanyaan yang sering muncul
 

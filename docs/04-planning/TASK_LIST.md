@@ -24,7 +24,7 @@ terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 27 September 2026.
+Terakhir diperbarui: 28 September 2026.
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -37,7 +37,7 @@ Terakhir diperbarui: 27 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 3 | 1 | Berjalan |
+| 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 0 | KO dijawab; mulai T-9.1 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 12 | Berjalan — 9 item sisa terkunci: UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
 
@@ -1212,10 +1212,41 @@ seluruh fitur di atasnya menghasilkan data.
       `isArchived` alih-alih `isActive`; CATAT menampilkan pemberitahuan
       saat tautan lepas karena tanggal. Diuji termasuk mutasi (syarat
       tanggal, pilihan CATAT, `months`, anggaran yang lolos penyaring).
-- [ ] **T-8.2** (Opsional, dari UX-6 langkah 2) Mode pencarian Transaksi
+- [x] **T-8.2** (Opsional, dari UX-6 langkah 2) Mode pencarian Transaksi
       lintas bulan. Saat ini pencarian dan penyaring hanya mencakup bulan
       yang dibuka, dan teksnya sudah menyebut itu. Perlu cara membaca bulan
       lain tanpa `listAllTransactions` di jalur layar (NFR-PERF-002).
+      ⚠ **Selesai (28 September 2026):** `TransactionRepository.listAvailableMonths()`
+      baru (bulan yang pernah punya transaksi, dibaca dari dokumen indeks
+      saja) memberi tahu `TransactionBloc` bulan mana yang ADA sebelum
+      membukanya satu per satu lewat `listTransactionsInMonth` yang sudah
+      ada — `listAllTransactions()` tetap reserved untuk penghitungan ulang
+      saldo, tidak pernah dipanggil dari jalur ini.
+      ⚠ Tombol "Cari di bulan lain" hanya tampil saat filter aktif bulan ini
+      genuinely kosong DAN ada kata kunci pencarian (`TransactionSearchAcrossMonthsRequested`)
+      -- menyaring jenis/dompet/kategori tanpa kata kunci tidak pernah
+      menawarkan ini, karena bulan lain tidak akan pernah "cocok" dengan
+      filter jenis semata. Tiap ketukan memindai maksimal 3 bulan sebelum
+      bulan yang dibuka (`_crossMonthBatchSize`), menandainya "sudah
+      dipindai", dan mengumpulkan transaksi yang lolos filter/kata kunci
+      AKTIF ke `TransactionState.crossMonthGroups` -- diulang lewat tombol
+      "Cari lebih jauh" sampai `crossMonthExhausted` (habis riwayat sebelum
+      bulan ini).
+      ⚠ Mengubah bulan, filter, atau kata kunci mereset seluruh state lintas
+      bulan (`_recomputed` membangun `TransactionState` lewat konstruktor
+      langsung, bukan `copyWith`, jadi field lintas bulan otomatis kembali
+      ke bawaan) -- hasil pindaian lama tidak pernah tertinggal menempel ke
+      kriteria yang baru. Kriteria di-jepret di awal tiap pemindaian batch
+      dan dicocokkan ulang sebelum `emit` hasilnya, supaya kalau kriteria
+      berubah sebelum satu batch (hingga 3 pembacaan dokumen bulan) selesai,
+      hasil basi itu dibuang, bukan ditimpakan ke state yang sudah tidak
+      berlaku.
+      Diuji: `transaction_repository_impl_test.dart` (`listAvailableMonths`
+      terurut naik, kosong kalau belum ada riwayat) dan
+      `transaction_bloc_test.dart` (tanpa kata kunci tidak memindai apa
+      pun/`listAvailableMonths` tidak pernah dipanggil; memindai dan
+      menemukan transaksi lintas bulan lalu berhenti karena riwayat habis;
+      mengubah kata kunci mereset hasil pindaian).
 - [ ] **T-8.3** Ganti nama aplikasi menjadi **Tanukonomy** (dipilih pemilik
       27 Sep 2026, riset di
       [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md)).
@@ -1224,6 +1255,28 @@ seluruh fitur di atasnya menghasilkan data.
       Lalu ADR penggantian nama; nama tampilan, ID aplikasi (sebelum rilis
       pertama), teks i18n yang menyebut "Saldough", ikon, dokumen. Nama
       paket Dart `saldough` boleh tetap.
+      ⚠ **Sebagian dikerjakan (28 September 2026), lihat
+      [ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md)
+      untuk rinciannya.** Bagian yang murni kosmetik dan gampang dibatalkan
+      sudah selesai TANPA menunggu prasyarat: `android:label` dan
+      `CFBundleDisplayName`/`CFBundleName` jadi "Tanukonomy"; keempat
+      kemunculan "Saldough" di teks i18n yang dibaca pengguna
+      (`app.title`, `record.disclaimerMessage`,
+      `transaction.detailManualNote`, `freelance.receiveRuleBody`) diganti.
+      **ID aplikasi juga sudah diganti** (atas instruksi eksplisit pemilik,
+      bukan menunggu prasyarat toko selesai lebih dulu): `com.saldough.saldough`
+      → **`com.arkarizdev.tanukonomy`** di `android/app/build.gradle.kts`
+      (`namespace`+`applicationId`), `ios/Runner.xcodeproj/project.pbxproj`
+      (`PRODUCT_BUNDLE_IDENTIFIER`, termasuk `RunnerTests`), dan direktori
+      paket Kotlin `MainActivity.kt` dipindah + `package`-nya disesuaikan.
+      **Belum dikerjakan, dan SENGAJA menunggu pemilik**: kedua prasyarat
+      di atas (cek merek dagang, amankan domain/nama toko -- belum ada
+      bukti keduanya sudah dilakukan; ID aplikasi di kode TIDAK
+      menggantikan verifikasi ini), ikon (butuh artwork tanuki baru, bukan
+      penggantian teks), dan sapuan penggantian nama di seluruh dokumen
+      produk (README, PRD, glosarium -- ditunda supaya tidak dikerjakan dua
+      kali kalau cek merek dagang menggagalkan nama ini). **Jangan rilis ke
+      toko sebelum ketiga hal ini selesai.**
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

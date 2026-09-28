@@ -5,7 +5,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Widget akar Saldough.
 ///
@@ -14,7 +16,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// lewat `ScopeProvider.of(context)` sebelum memasang `ScopeWidget`-nya
 /// sendiri (lihat ARCHITECTURE_OVERVIEW.md bagian "Navigasi").
 ///
-/// Juga memasang tombol menu pengembang (hanya di build debug, T-1.10) lewat
+/// Juga memasang [SpotlightHost] (tur spotlight, ADR-021) dan tombol menu pengembang (hanya di build debug, T-1.10) lewat
 /// `builder:` `MaterialApp.router`, sehingga muncul di atas layar apa pun.
 class SaldoughApp extends StatelessWidget {
   /// Membuat [SaldoughApp] dengan [getIt] (kontainer akar) dan [router].
@@ -42,7 +44,12 @@ class SaldoughApp extends StatelessWidget {
         supportedLocales: AppLocaleUtils.supportedLocales,
         localizationsDelegates: localizationsDelegates,
         routerConfig: router,
-        builder: (context, child) => _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
+        // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
+        // lembar modal (ADR-021 §3.3).
+        builder: (context, child) => SpotlightHost(
+          repository: getIt<TutorialProgressRepository>(),
+          child: _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
+        ),
       ),
     );
   }

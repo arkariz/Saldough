@@ -90,8 +90,10 @@ Satu dokumen `KeyValueStorage` dengan kunci
 - **`TourTrigger(tour:, ready:)`** memulai tur sesudah frame pertama hanya
   jika tiga syarat terpenuhi:
   - `ready` (data termuat dan syarat tur terpenuhi)
-  - `TickerMode` aktif, supaya tab tersembunyi di `IndexedStack` tidak ikut
-    memicu
+  - tab-nya tampil menurut `TourVisibility`, yang dipasang shell di tiap
+    tab. `TickerMode` tidak bisa dipakai: `IndexedStack` membungkus tab
+    tersembunyi dengan `Visibility(maintainAnimation: true)`, jadi
+    `TickerMode`-nya tetap aktif (ditemukan saat T-9.4)
   - rutenya sedang di depan
 
   Trigger memeriksa ulang saat salah satu syarat berubah.

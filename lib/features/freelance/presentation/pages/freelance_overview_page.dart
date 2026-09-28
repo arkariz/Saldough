@@ -1,8 +1,10 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/freelance/di/freelance_scope.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
@@ -114,7 +116,11 @@ class _Overview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    // TR-FREELANCE (ADR-021 §3.4): proyek pertama, begitu ada proyek.
+    return TourTrigger(
+      tour: TourId.freelance,
+      ready: state.projects.isNotEmpty,
+      child: ListView(
       padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
       children: [
         FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.ruleBody),
@@ -139,17 +145,21 @@ class _Overview extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           AddProjectCard(onTap: () => addProject(context)),
           const SizedBox(height: AppSpacing.sm),
-          for (final project in state.projectsByNextPayment) ...[
-            ProjectCard(
-              project: project,
-              stats: state.statsOf(project.id),
-              paymentStats: state.paymentStatsOf(project.id),
-              onTap: () => openFreelanceProject(context, project),
+          for (final (i, project) in state.projectsByNextPayment.indexed) ...[
+            SpotlightTarget(
+              spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
+              child: ProjectCard(
+                project: project,
+                stats: state.statsOf(project.id),
+                paymentStats: state.paymentStatsOf(project.id),
+                onTap: () => openFreelanceProject(context, project),
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
           ],
         ],
       ],
+      ),
     );
   }
 }

@@ -455,5 +455,20 @@ void main() {
         (t.tour.budgetFilterTitle, t.tour.budgetFilterBody),
       ]);
     });
+
+    testWidgets('Rincian anggaran: pos pertama lalu tombol catatnya (TR-BUDGET-DETAIL, T-9.8)', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await tutorials.markStepsSeen(tourSteps[TourId.budget]!);
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await tester.tap(find.text('Rumah tangga').first);
+      await tester.pumpAndSettle();
+
+      await walkThrough(tester, [
+        (t.tour.budgetDetailItemTitle, t.tour.budgetDetailItemBody),
+        (t.tour.budgetDetailRecordTitle, t.tour.budgetDetailRecordBody),
+      ]);
+    });
   });
 }

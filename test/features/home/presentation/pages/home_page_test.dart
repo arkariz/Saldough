@@ -470,5 +470,39 @@ void main() {
         (t.tour.budgetDetailRecordTitle, t.tour.budgetDetailRecordBody),
       ]);
     });
+
+    testWidgets('Menu info: "Tur layar ini" memutar ulang tur yang sudah dilihat (T-9.9)', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+
+      await tester.tap(find.byTooltip(t.info.menuTooltip).first);
+      await tester.pumpAndSettle();
+      expect(find.text(t.info.showIntroAction), findsOneWidget);
+      expect(find.text(t.info.resetAllAction), findsOneWidget);
+      await tester.tap(find.text(t.info.replayTourAction));
+      await tester.pumpAndSettle();
+
+      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+    });
+
+    testWidgets('Menu info: setel ulang semua tutorial meminta konfirmasi lalu mengosongkan progres', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await tutorials.markOnboardingDone();
+      await openShellWithTours(tester);
+
+      await tester.tap(find.byTooltip(t.info.menuTooltip).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.info.resetAllAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.info.resetConfirmMessage), findsOneWidget);
+      await tester.tap(find.text(t.info.resetConfirmAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.info.resetDoneMessage), findsOneWidget);
+      expect((await tutorials.load()).getOrElse((_) => TutorialProgress.empty), TutorialProgress.empty);
+    });
   });
 }

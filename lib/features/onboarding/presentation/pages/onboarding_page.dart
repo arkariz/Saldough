@@ -5,17 +5,9 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/motion/motion.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_scene.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
-
-/// Cara onboarding dibuka.
-enum OnboardingMode {
-  /// Pembukaan pertama (KO-1): diakhiri dengan ajakan dompet pertama.
-  firstRun,
-
-  /// Dari menu info "Pengenalan Tanukonomy": diakhiri dengan "Tutup".
-  review,
-}
 
 /// Cara pengguna meninggalkan onboarding.
 enum OnboardingOutcome {

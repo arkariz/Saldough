@@ -6,6 +6,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -185,6 +186,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(homes.last, ShellStartAction.createWallet);
+      expect((await progress()).onboardingDone, isTrue);
+    });
+
+    testWidgets('Menu info "Pengenalan Tanukonomy" membuka onboarding mode tinjau tanpa mengubah progres', (
+      tester,
+    ) async {
+      await repository.markOnboardingDone();
+      final router = GoRouter(
+        initialLocation: '/layar',
+        routes: [
+          GoRoute(
+            path: '/layar',
+            builder: (context, state) => const Scaffold(body: Center(child: TutorialInfoButton(tour: TourId.home))),
+          ),
+          GoRoute(path: AppRouteRegistry.onboardingPath, builder: buildOnboardingRoute),
+        ],
+      );
+      addTearDown(router.dispose);
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp.router(
+            routerConfig: router,
+            builder: (context, child) => _still(SpotlightHost(repository: repository, child: child!)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip(t.info.menuTooltip));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.info.showIntroAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.onboarding.page1Title), findsOneWidget);
+
+      await tester.tap(find.text(t.onboarding.closeAction));
+      await tester.pumpAndSettle();
+      expect(find.byType(TutorialInfoButton), findsOneWidget);
       expect((await progress()).onboardingDone, isTrue);
     });
   });

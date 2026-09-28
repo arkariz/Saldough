@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
@@ -56,6 +57,7 @@ class HomeBalanceCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return AppHeroCard(
+      tour: TourId.home,
       icon: IconKey.home,
       label: t.home.balanceLabel,
       trailing: hasNoWallets ? _Badge(t.home.startBadge, color: colors.accent) : null,

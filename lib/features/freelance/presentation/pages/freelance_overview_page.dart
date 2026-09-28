@@ -70,7 +70,10 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.freelance.title)),
+      appBar: AppBar(
+        title: Text(t.freelance.title),
+        actions: const [TutorialInfoButton(tour: TourId.freelance)],
+      ),
       body: SafeArea(
         child: BlocBuilder<FreelanceBloc, FreelanceState>(
           builder: (context, state) => switch (state) {

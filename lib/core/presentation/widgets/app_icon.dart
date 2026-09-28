@@ -173,6 +173,9 @@ enum IconKey {
 
   /// Menutup lembar atau layar.
   close,
+
+  /// Info dan tur layar (ADR-021 §3.5).
+  info,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -243,6 +246,7 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.chevronRight: Icons.chevron_right,
   IconKey.dropdown: Icons.arrow_drop_down,
   IconKey.close: Icons.close,
+  IconKey.info: Icons.info_outline,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

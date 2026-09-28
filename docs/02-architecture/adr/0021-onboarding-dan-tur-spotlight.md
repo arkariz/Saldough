@@ -179,8 +179,11 @@ Isinya mengikuti ONBOARDING_PLAN §4.3, dengan empat penyesuaian:
 
 ### 3.5 Lapis info (KO-4)
 
-- `AppHeroCard` mendapat parameter opsional `onInfo`, yang merender ikon info
-  kecil sesudah `trailing`. Ikon ini dipasang di kartu utama Beranda, Dompet,
+- `AppHeroCard` mendapat parameter opsional `tour`, yang merender
+  `TutorialInfoButton` (ikon info kecil, target sentuh 44px) di ujung kanan
+  kepala. Tanpa `SpotlightHost` tombol ini tidak tampil. `OnboardingMode`
+  pindah ke `core/tutorial` supaya tombol di `core` bisa membuka pengenalan
+  mode tinjau tanpa mengimpor fitur. Ikon ini dipasang di kartu utama Beranda, Dompet,
   Transaksi, dan Anggaran. Ikhtisar Freelance tidak memakai `AppHeroCard`, jadi
   ikonnya dipasang di aksi bilah atasnya.
 - Menu berisi tiga item:

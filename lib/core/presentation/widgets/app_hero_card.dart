@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/spotlight/tutorial_info_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Kartu utama di puncak tiap tab navigasi bawah (Beranda, Anggaran,
 /// Transaksi, Dompet): SATU angka yang menjawab pertanyaan utama layar itu,
@@ -25,6 +27,7 @@ class AppHeroCard extends StatelessWidget {
     required this.label,
     required this.child,
     this.trailing,
+    this.tour,
     super.key,
   });
 
@@ -36,6 +39,10 @@ class AppHeroCard extends StatelessWidget {
 
   /// Isi kanan kepala, mis. lencana jumlah.
   final Widget? trailing;
+
+  /// Tur layar ini; kalau diisi, ikon info (putar ulang tur, pengenalan,
+  /// setel ulang) tampil di ujung kanan kepala (KO-4, ADR-021 §3.5).
+  final TourId? tour;
 
   /// Isi kartu; biasanya [HeroAmount] lalu rinciannya.
   final Widget child;
@@ -88,6 +95,7 @@ class AppHeroCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (tour case final tour?) TutorialInfoButton(tour: tour),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),

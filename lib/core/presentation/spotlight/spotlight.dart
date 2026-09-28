@@ -8,3 +8,4 @@ export 'spotlight_host.dart';
 export 'spotlight_target.dart';
 export 'spotlight_tours.dart';
 export 'tour_trigger.dart';
+export 'tutorial_info_button.dart';

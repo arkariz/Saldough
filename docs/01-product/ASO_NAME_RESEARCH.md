@@ -120,6 +120,50 @@ dipakai. Kalau pemilik memprioritaskan pasar Indonesia dan biaya ganti nol,
 | Kolom kata kunci (iOS) | 100 | `offline,freelance,income,spending,planner,wallet,cash,manager,ledger,worklog,hours,finance` | `pemasukan,dompet,kas,harian,pribadi,rumah tangga,freelance,offline,budget,tabungan` |
 | Short description (Play) | 80 | `Private expense & budget tracker. Offline, no bank link, freelance hours too.` | `Catat pemasukan, pengeluaran & anggaran. Offline, tanpa akun, tanpa bank.` |
 
+## 5a. Contoh metadata (Tanukonomy, nama terpilih 27 Sep 2026)
+
+Tabel §5 di atas dibuat untuk **Tallipop** sebelum pemilik memilih
+**Tanukonomy** (§8, putaran 4) — tabel ini menggantikannya untuk nama yang
+sungguhan dipakai. Metode pemilihan kata sama: kata kunci bervolume tinggi
+(*budget*, *expense*, *catatan keuangan*) di judul karena ruangnya paling
+sempit dan paling sering dibaca; kata kunci berpersaingan rendah
+(*freelance income tracker*) dan pembeda produk (worklog, dompet) di
+subtitle dan kolom kata kunci, yang ruangnya lebih longgar.
+
+| Kolom | Batas | `en` | `id` |
+|---|---|---|---|
+| Nama/Judul | 30 | `Tanukonomy: Budget & Expense` (28) | `Tanukonomy: Catatan Keuangan` (28) |
+| Subtitle (iOS) | 30 | `Freelance income & budget log` (29) | `Dompet, anggaran & freelance` (28) |
+| Kolom kata kunci (iOS) | 100 | `offline,freelance,income,spending,planner,wallet,cash,manager,ledger,worklog,hours,finance` | `pemasukan,dompet,kas,harian,pribadi,rumah tangga,freelance,offline,budget,tabungan` |
+| Short description (Play) | 80 | `Private expense & budget tracker. Offline, no bank link, freelance hours too.` | `Catat pemasukan, pengeluaran & anggaran. Offline, tanpa akun, tanpa bank.` |
+
+Alasan tiap pilihan:
+
+- **Judul EN "Budget & Expense"** (bukan "...Log"/"...Tracker") — dua kata
+  kunci bervolume tertinggi di riset §2 (*budget app*, *expense tracker*),
+  muat 28/30 karakter tanpa kata pengisi.
+- **Judul ID "Catatan Keuangan"** — frasa dengan median rating pesaing
+  paling rendah di antara kata kunci ID bervolume besar (§2), dan paling
+  umum diketik dibanding "anggaran" atau "pengeluaran" sendirian.
+- **Subtitle EN "Freelance income & budget log"** — memuat *freelance
+  income tracker*, kata kunci dengan median rating pesaing **19** (paling
+  rendah di seluruh riset §2) DAN pembeda produk sungguhan (worklog
+  freelance). "log" menutup pola *tally* yang identitas maskotnya sudah
+  memegang buku catatan (§8).
+- **Subtitle ID "Dompet, anggaran & freelance"** — tiga pilar produk
+  (Dompet, Anggaran, Freelance) sekaligus, bukan sinonim "catatan
+  keuangan" dari judul (menghindari pemborosan ruang mengulang kata kunci
+  yang sama).
+- Kolom kata kunci dan short description dipakai APA ADANYA dari §5 --
+  keduanya generik terhadap fitur (offline, freelance, worklog, tanpa
+  bank), tidak menyebut nama merek, jadi tidak perlu diubah untuk nama
+  baru.
+
+⚠ Ini tetap contoh, bukan keputusan final — belum melewati cek skor
+popularitas Apple Search Ads (§7 langkah 4) maupun cek merek dagang resmi
+(§7 langkah 2, prasyarat [ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md)
+sebelum rilis pertama).
+
 Kata kunci berpersaingan rendah (*freelance income tracker*, *private expense
 tracker*) dan pembeda (*budget planner* sebagai rencana, *worklog*) ditaruh
 di subtitle dan kolom kata kunci; kata kunci bervolume tinggi (*budget*,

@@ -173,16 +173,18 @@ class _TransactionSearchFieldState extends State<TransactionSearchField> {
   }
 }
 
-/// Penyaring dompet dan kategori berdampingan, dua tombol dropdown sama lebar
-/// (FR-TXN-004). Keduanya SELALU tampil berdua supaya baris tidak berubah
-/// bentuk antar bulan; kategori diisi dari [categoryOptions], yang dihitung
-/// `TransactionBloc` dari kunci DISTINCT yang benar-benar muncul bulan ini --
-/// BUKAN daftar tetap (kategori adalah data bebas, `PROJECT_GLOSSARY.md`
-/// §"Konvensi penamaan"). Tiap item bergambar: ikon jenis dompet dari
-/// `Wallet.iconKey`, ikon kategori dari [categoryIconFor].
-class TransactionWalletCategoryRow extends StatelessWidget {
-  /// Membuat [TransactionWalletCategoryRow].
-  const TransactionWalletCategoryRow({
+/// Tombol tunggal "Filter" yang membuka lembar berisi penyaring dompet DAN
+/// kategori (UX-21 -- menggantikan dua dropdown berdampingan
+/// `TransactionWalletCategoryRow` supaya kop Transaksi lebih pendek).
+/// Menampilkan lencana jumlah filter aktif (0, 1, atau 2).
+///
+/// Kategori diisi dari [categoryOptions], yang dihitung `TransactionBloc`
+/// dari kunci DISTINCT yang benar-benar muncul bulan ini -- BUKAN daftar
+/// tetap (kategori adalah data bebas, `PROJECT_GLOSSARY.md` §"Konvensi
+/// penamaan").
+class TransactionFilterButton extends StatelessWidget {
+  /// Membuat [TransactionFilterButton].
+  const TransactionFilterButton({
     required this.wallets,
     required this.walletFilter,
     required this.onWalletChanged,
@@ -210,15 +212,94 @@ class TransactionWalletCategoryRow extends StatelessWidget {
   /// Dipanggil dengan kategori yang baru dipilih, `null` untuk semua.
   final ValueChanged<String?> onCategoryChanged;
 
+  int get _activeCount => (walletFilter != null ? 1 : 0) + (categoryFilter != null ? 1 : 0);
+
+  Future<void> _openSheet(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.sm))),
+    builder: (sheetContext) => _TransactionFilterSheet(
+      wallets: wallets,
+      walletFilter: walletFilter,
+      onWalletChanged: onWalletChanged,
+      categoryOptions: categoryOptions,
+      categoryFilter: categoryFilter,
+      onCategoryChanged: onCategoryChanged,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final activeCount = _activeCount;
+    return AppTappable(
+      onTap: () => _openSheet(context),
+      label: activeCount > 0 ? '${t.transaction.filterButtonLabel} ($activeCount)' : t.transaction.filterButtonLabel,
+      child: TransactionSlab(
+        padding: EdgeInsets.zero,
+        radius: 4,
+        shadow: 2,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Center(child: AppIcon(IconKey.filter, size: 22, color: activeCount > 0 ? colors.accent : null)),
+              if (activeCount > 0)
+                Positioned(
+                  right: 2,
+                  top: 2,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(color: colors.accent, borderRadius: BorderRadius.circular(999)),
+                    child: Text(
+                      '$activeCount',
+                      style: transactionLabelStyle(context, color: colors.onAccent),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TransactionFilterSheet extends StatelessWidget {
+  const _TransactionFilterSheet({
+    required this.wallets,
+    required this.walletFilter,
+    required this.onWalletChanged,
+    required this.categoryOptions,
+    required this.categoryFilter,
+    required this.onCategoryChanged,
+  });
+
+  final List<Wallet> wallets;
+  final String? walletFilter;
+  final ValueChanged<String?> onWalletChanged;
+  final List<String> categoryOptions;
+  final String? categoryFilter;
+  final ValueChanged<String?> onCategoryChanged;
+
   @override
   Widget build(BuildContext context) {
     final selectedWallet = wallets.where((wallet) => wallet.id == walletFilter).firstOrNull;
-    final selectedCategory = categoryFilter;
-
-    return Row(
-      children: [
-        Expanded(
-          child: AppMenuSelectButton<String>(
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md + MediaQuery.of(context).viewPadding.bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.transaction.filterSheetTitle, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.md),
+          AppMenuSelectButton<String>(
             icon: selectedWallet == null ? IconKey.wallets : walletIconKey(selectedWallet.iconKey),
             label: selectedWallet?.name ?? t.transaction.walletFilterLabel,
             options: [
@@ -226,22 +307,24 @@ class TransactionWalletCategoryRow extends StatelessWidget {
             ],
             allLabel: t.transaction.walletFilterAllLabel,
             allIcon: IconKey.wallets,
+            wrapLabel: true,
             onSelected: onWalletChanged,
           ),
-        ),
-        const SizedBox(width: AppSpacing.xs),
-        Expanded(
-          child: AppMenuSelectButton<String>(
-            icon: selectedCategory == null ? IconKey.filter : categoryIconFor(selectedCategory),
-            label: selectedCategory ?? t.transaction.categoryFilterLabel,
+          const SizedBox(height: AppSpacing.sm),
+          AppMenuSelectButton<String>(
+            icon: categoryFilter == null ? IconKey.filter : categoryIconFor(categoryFilter!),
+            label: categoryFilter ?? t.transaction.categoryFilterLabel,
             options: [
               for (final category in categoryOptions) (value: category, label: category, icon: categoryIconFor(category)),
             ],
             allLabel: t.transaction.categoryFilterAllLabel,
+            wrapLabel: true,
             onSelected: onCategoryChanged,
           ),
-        ),
-      ],
+          const SizedBox(height: AppSpacing.md),
+          AppButton(label: t.transaction.filterSheetDoneAction, onPressed: () => Navigator.of(context).pop()),
+        ],
+      ),
     );
   }
 }

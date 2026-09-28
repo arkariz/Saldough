@@ -15,6 +15,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
+import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -117,6 +118,51 @@ void main() {
       // Menyebut lingkup bulan yang dibuka (UX-6).
       expect(find.text(t.transaction.emptyFilterSubtitle), findsOneWidget);
       expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
+    });
+
+    testWidgets('tombol Filter (UX-21): membuka lembar, memilih dompet menyaring daftar dan menampilkan lencana', (
+      tester,
+    ) async {
+      await walletRepository.saveWallet(
+        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+      await walletRepository.saveWallet(
+        const Wallet(id: 'gopay', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 0, currentBalance: 0),
+      );
+      final now = DateTime.now();
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(id: 'e1', date: now, amount: 30000, note: 'kopi', walletId: 'bca'),
+      );
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(id: 'e2', date: now, amount: 40000, note: 'ojek', walletId: 'gopay'),
+      );
+
+      await openTransactionsTab(tester);
+      // Dua dropdown lama tidak ada lagi di halaman -- satu tombol Filter
+      // saja (dropdownnya sendiri baru muncul di dalam lembar).
+      expect(find.byType(AppMenuSelectButton<String>), findsNothing);
+      expect(find.bySemanticsLabel(t.transaction.filterButtonLabel), findsOneWidget);
+
+      await tester.tap(find.bySemanticsLabel(t.transaction.filterButtonLabel));
+      await tester.pumpAndSettle();
+      expect(find.text(t.transaction.filterSheetTitle), findsOneWidget);
+
+      // Dropdown dompet ada di dalam lembar (posisi pertama) -- mengetuknya
+      // membuka menu pilihan, lalu pilih "BCA".
+      await tester.tap(find.byType(AppMenuSelectButton<String>).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.transaction.filterSheetDoneAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text('kopi'), findsOneWidget);
+      expect(find.text('ojek'), findsNothing);
+      // Lencana jumlah filter aktif pada tombol Filter.
+      expect(
+        find.descendant(of: find.byType(TransactionFilterButton), matching: find.text('1')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('kegagalan pembacaan menampilkan keadaan galat, bukan keadaan kosong', (tester) async {

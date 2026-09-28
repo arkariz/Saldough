@@ -14,6 +14,7 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
+import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -333,9 +334,9 @@ void main() {
 
         expect(find.byType(TransactionListPage), findsOneWidget);
         expect(
-          find.text('BCA'),
-          findsWidgets,
-          reason: 'label penyaring dompet menampilkan dompet terpilih',
+          find.descendant(of: find.byType(TransactionFilterButton), matching: find.text('1')),
+          findsOneWidget,
+          reason: 'lencana tombol Filter menandakan satu filter (dompet) aktif',
         );
         expect(find.text('kopi'), findsOneWidget);
         expect(

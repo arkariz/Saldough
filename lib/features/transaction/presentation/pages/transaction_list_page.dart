@@ -103,18 +103,29 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         // dengan angka nol ("Semua 0").
                         if (state.rawTransactions.isNotEmpty) ...[
                           const SizedBox(height: AppSpacing.md),
-                          TransactionSearchField(
-                            query: state.searchQuery,
-                            onQueryChanged: (query) => bloc.add(TransactionSearchChanged(query)),
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          TransactionWalletCategoryRow(
-                            wallets: state.wallets,
-                            walletFilter: state.walletFilter,
-                            onWalletChanged: (id) => bloc.add(TransactionWalletFilterChanged(id)),
-                            categoryOptions: state.categoryOptions,
-                            categoryFilter: state.categoryFilter,
-                            onCategoryChanged: (key) => bloc.add(TransactionCategoryFilterChanged(key)),
+                          // UX-21: dompet dan kategori digabung ke SATU
+                          // tombol "Filter" di samping kolom cari (dulu
+                          // baris dropdown terpisah di bawahnya) supaya kop
+                          // Transaksi lebih pendek.
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: TransactionSearchField(
+                                  query: state.searchQuery,
+                                  onQueryChanged: (query) => bloc.add(TransactionSearchChanged(query)),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              TransactionFilterButton(
+                                wallets: state.wallets,
+                                walletFilter: state.walletFilter,
+                                onWalletChanged: (id) => bloc.add(TransactionWalletFilterChanged(id)),
+                                categoryOptions: state.categoryOptions,
+                                categoryFilter: state.categoryFilter,
+                                onCategoryChanged: (key) => bloc.add(TransactionCategoryFilterChanged(key)),
+                              ),
+                            ],
                           ),
                         ],
                         const SizedBox(height: AppSpacing.sm),

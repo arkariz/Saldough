@@ -14,6 +14,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -340,6 +341,21 @@ void main() {
 
       expect(find.byType(RecordChoiceSheet), findsNothing);
       expect(find.byType(SnackBar), findsOneWidget);
+    });
+
+    testWidgets('aksi awal createWallet membuka formulir dompet sekali (ADR-021 §3.2)', (tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: const MaterialApp(home: AppShellPage(startAction: ShellStartAction.createWallet)),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WalletFormSheet), findsOneWidget);
+      // Tetap di Beranda -- tur Beranda menyusul sesudah dompet dibuat.
+      final nav = tester.widget<NavigationBar>(find.byType(NavigationBar));
+      expect(nav.selectedIndex, 0);
     });
   });
 }

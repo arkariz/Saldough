@@ -77,7 +77,11 @@ import 'package:state_management/state_management.dart';
 /// dirender di dalam shell ini, tanpa perlu membungkus dirinya sendiri.
 class AppShellPage extends StatefulWidget {
   /// Membuat [AppShellPage].
-  const AppShellPage({super.key});
+  const AppShellPage({this.startAction, super.key});
+
+  /// Aksi yang dijalankan sekali sesudah shell siap, mis. membuka formulir
+  /// dompet dari ajakan akhir onboarding (ADR-021 §3.2).
+  final ShellStartAction? startAction;
 
   @override
   State<AppShellPage> createState() => _AppShellPageState();
@@ -88,6 +92,9 @@ class _AppShellPageState extends State<AppShellPage> {
   /// pernah jadi tab "terpilih" yang persisten — menekannya membuka lembar
   /// lalu kembali ke tab yang sedang aktif.
   int _activeTab = 0;
+
+  /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
+  bool _startActionDone = false;
 
   static const _recordNavIndex = 2;
   static const _homeTabIndex = 0;
@@ -116,6 +123,23 @@ class _AppShellPageState extends State<AppShellPage> {
     wallets.add(const WalletRefreshed());
     budgets.add(const BudgetRefreshed());
     home.add(const HomeRefreshed());
+  }
+
+  /// Menjalankan [AppShellPage.startAction] sekali, sesudah frame pertama
+  /// yang context-nya sudah berada di bawah seluruh `BlocProvider` shell.
+  void _maybeRunStartAction(BuildContext context) {
+    final action = widget.startAction;
+    if (action == null || _startActionDone) return;
+    _startActionDone = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!context.mounted) return;
+      switch (action) {
+        case ShellStartAction.createWallet:
+          final home = context.read<HomeBloc>();
+          await openAddWalletSheet(context);
+          home.add(const HomeRefreshed());
+      }
+    });
   }
 
   void _onDestinationSelected(BuildContext context, int navIndex) {
@@ -207,7 +231,9 @@ class _AppShellPageState extends State<AppShellPage> {
                                       value: homeScope.container<HomeBloc>(),
                                       child: EffectListener<HomeBloc, HomeState>(
                                         child: Builder(
-                                          builder: (context) => Scaffold(
+                                          builder: (context) {
+                                            _maybeRunStartAction(context);
+                                            return Scaffold(
                                             body: IndexedStack(index: _activeTab, children: tabsFor(context)),
                                             bottomNavigationBar: NavigationBar(
                                               selectedIndex: _navIndexFor(_activeTab),
@@ -236,7 +262,8 @@ class _AppShellPageState extends State<AppShellPage> {
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                          );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -257,6 +284,13 @@ class _AppShellPageState extends State<AppShellPage> {
       ),
     );
   }
+}
+
+/// Aksi yang dijalankan [AppShellPage] sekali saat dibuka.
+enum ShellStartAction {
+  /// Pindah ke tab Dompet dan membuka formulir tambah dompet — ajakan
+  /// "Buat Dompet Pertama" onboarding (KO-6).
+  createWallet,
 }
 
 /// Ikon slot CATAT: kotak aksen dengan garis tepi dan bayangan keras level

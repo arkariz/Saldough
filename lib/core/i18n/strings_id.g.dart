@@ -1788,9 +1788,6 @@ class Translations$onboarding$id {
 	/// id: 'Lanjut'
 	String get nextAction => 'Lanjut';
 
-	/// id: 'Mulai'
-	String get startAction => 'Mulai';
-
 	/// id: 'Tutup'
 	String get closeAction => 'Tutup';
 
@@ -2581,7 +2578,6 @@ extension on Translations {
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
-			'onboarding.startAction' => 'Mulai',
 			'onboarding.closeAction' => 'Tutup',
 			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Halaman ${current} dari ${total}',
 			'onboarding.page1Title' => 'Semua uangmu, satu buku',

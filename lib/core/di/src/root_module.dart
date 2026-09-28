@@ -18,6 +18,7 @@ import 'package:saldough/features/freelance/data/repositories/freelance_reposito
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -43,7 +44,7 @@ abstract final class RootModule {
     await _registerStorage(container);
     _registerSharedRepositories(container);
     final registry = _registerRouteRegistry(container);
-    _registerRouter(container, registry);
+    await _registerRouter(container, registry);
   }
 
   static Future<void> _registerStorage(GetIt container) async {
@@ -108,18 +109,24 @@ abstract final class RootModule {
     return registry;
   }
 
-  static void _registerRouter(GetIt container, RouteRegistry registry) {
+  static Future<void> _registerRouter(GetIt container, RouteRegistry registry) async {
     container.registerSingleton<GoRouter>(
       AppRouteRegistry.build(
         registry: registry,
-        initialLocation: _initialLocation,
-        homeBuilder: (context) => const AppShellPage(),
+        initialLocation: await _initialLocation(container),
+        homeBuilder: (context, state) => AppShellPage(startAction: state.extra is ShellStartAction ? state.extra! as ShellStartAction : null),
+        onboardingBuilder: buildOnboardingRoute,
       ),
     );
   }
 
   // Shell navigasi Saldough 2.0 (`AppShellPage`, lima slot navigasi bawah)
-  // sebagai layar awal. Sejak cutover T-3.4 ia menempati `/home`, bukan lagi
-  // rute sementara `/shell`.
-  static const String _initialLocation = AppRouteRegistry.homePath;
+  // di `/home` adalah layar awal -- kecuali onboarding belum selesai di
+  // perangkat ini (ADR-021 §3.2, KO-1). Dibaca sekali di sini, sebelum
+  // `runApp`, jadi tidak ada frame yang berkedip. Dokumen progres rusak
+  // dianggap belum dilihat.
+  static Future<String> _initialLocation(GetIt container) async {
+    final progress = (await container<TutorialProgressRepository>().load()).getOrElse((_) => TutorialProgress.empty);
+    return progress.onboardingDone ? AppRouteRegistry.homePath : AppRouteRegistry.onboardingPath;
+  }
 }

@@ -566,7 +566,6 @@
   "onboarding": {
     "skipAction": "Skip",
     "nextAction": "Next",
-    "startAction": "Start",
     "closeAction": "Close",
     "pageIndicatorLabel": "Page $current of $total",
     "page1Title": "All your money, one book",

@@ -27,7 +27,10 @@ final class TutorialProgressRepositoryImpl with RepositoryGuard implements Tutor
     toJson: (progress) => {
       'schemaVersion': schemaVersion,
       'onboardingDone': progress.onboardingDone,
-      'completedTours': [for (final tour in TourId.values) if (progress.hasCompleted(tour)) tour.name],
+      'completedTours': [
+        for (final tour in TourId.values)
+          if (progress.hasCompleted(tour)) tour.name,
+      ],
     },
     storage: _storage,
   );

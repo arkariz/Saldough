@@ -689,7 +689,6 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	// Translations
 	@override String get skipAction => 'Skip';
 	@override String get nextAction => 'Next';
-	@override String get startAction => 'Start';
 	@override String get closeAction => 'Close';
 	@override String pageIndicatorLabel({required Object current, required Object total}) => 'Page ${current} of ${total}';
 	@override String get page1Title => 'All your money, one book';
@@ -1339,7 +1338,6 @@ extension on TranslationsEn {
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
-			'onboarding.startAction' => 'Start',
 			'onboarding.closeAction' => 'Close',
 			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
 			'onboarding.page1Title' => 'All your money, one book',

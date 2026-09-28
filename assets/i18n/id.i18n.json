@@ -566,7 +566,6 @@
   "onboarding": {
     "skipAction": "Lewati",
     "nextAction": "Lanjut",
-    "startAction": "Mulai",
     "closeAction": "Tutup",
     "pageIndicatorLabel": "Halaman $current dari $total",
     "page1Title": "Semua uangmu, satu buku",

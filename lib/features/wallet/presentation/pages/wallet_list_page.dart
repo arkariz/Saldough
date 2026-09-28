@@ -41,26 +41,7 @@ class _WalletListPageState extends State<WalletListPage> {
   /// Membuka formulir TAMBAH dompet baru. Sunting/hapus dompet yang sudah
   /// ada pindah ke [WalletDetailPage] (T-2.8) -- kartu dompet membuka layar
   /// rincian, bukan langsung formulir sunting.
-  Future<void> _addWallet(BuildContext context) async {
-    final bloc = context.read<WalletBloc>();
-    final result = await showFullScreenSheet<WalletFormResult>(
-      context,
-      builder: (_) => const WalletFormSheet(),
-    );
-    if (result case WalletFormSaved(
-      :final name,
-      :final iconKey,
-      :final initialBalance,
-    )) {
-      bloc.add(
-        WalletAdded(
-          name: name,
-          iconKey: iconKey,
-          initialBalance: initialBalance ?? 0,
-        ),
-      );
-    }
-  }
+  Future<void> _addWallet(BuildContext context) => openAddWalletSheet(context);
 
   @override
   Widget build(BuildContext context) {
@@ -140,5 +121,32 @@ class _WalletListPageState extends State<WalletListPage> {
         ),
       ),
     );
+  }
+}
+
+/// Membuka formulir TAMBAH dompet dan, kalau disimpan, menunggu sampai
+/// [WalletBloc] selesai memproses simpanannya. Dipakai tab Dompet dan ajakan
+/// "Buat Dompet Pertama" onboarding (ADR-021 §3.2) -- satu formulir yang sama,
+/// bukan formulir baru. [context] harus berada di bawah `BlocProvider<WalletBloc>`.
+Future<void> openAddWalletSheet(BuildContext context) async {
+  final bloc = context.read<WalletBloc>();
+  final result = await showFullScreenSheet<WalletFormResult>(
+    context,
+    builder: (_) => const WalletFormSheet(),
+  );
+  if (result case WalletFormSaved(
+    :final name,
+    :final iconKey,
+    :final initialBalance,
+  )) {
+    final processed = bloc.stream.first;
+    bloc.add(
+      WalletAdded(
+        name: name,
+        iconKey: iconKey,
+        initialBalance: initialBalance ?? 0,
+      ),
+    );
+    await processed;
   }
 }

@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 27 September 2026
-**Fase saat ini:** MVP selesai (Fase 0–7, 76/76 tugas) — menunggu keputusan terbuka
+**Terakhir diperbarui:** 28 September 2026
+**Fase saat ini:** MVP selesai (Fase 0–7); Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026 di branch `claude/fase-9-onboarding`
 
 ## Apa ini
 
@@ -58,9 +58,18 @@ periodenya.
 
 **Jalur UX/UI di luar MVP:** 22 perbaikan hasil review UX dan UI 27 Sep
 2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
-mengecek progres, baca dokumen itu bersama TASK_LIST. 12 item selesai 27 Sep 2026; sembilan sisanya terkunci:
-UX-4, UX-8, UX-10 menunggu keputusan pemilik (UX-1 diputuskan, dikerjakan di Fase 9), dan enam item UI menunggu
-persetujuan ADR-020 (Proposed, hierarki penekanan bahasa visual pixel).
+mengecek progres, baca dokumen itu bersama TASK_LIST. Seluruh 22 item selesai
+28 Sep 2026 (ADR-020 Accepted; UX-1 dikerjakan bersama T-9.6).
+
+**Fase 9 (onboarding dan tur):** desainnya di
+[ADR-021](../docs/02-architecture/adr/0021-onboarding-dan-tur-spotlight.md).
+Progres tutorial dicatat **per langkah** (`SpotlightKey`), jadi elemen yang
+baru muncul belakangan disorot sekali saat pertama tampil. Layar baru yang
+butuh tur: pasang `SpotlightTarget` di titik pemakaian widget, `TourTrigger`
+di halaman, tambah kunci ke `tourSteps` dan teks `tour.*`. Mode gelap
+dilunakkan ke arang hangat (ADR-016 §7). Teks antarmuka menjelaskan manfaat
+dan cara kerja, bukan penafian ("bukan transfer bank otomatis" dan
+sejenisnya sudah dihapus 28 Sep 2026).
 
 ## Fakta proyek
 

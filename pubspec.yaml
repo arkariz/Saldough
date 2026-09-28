@@ -96,6 +96,7 @@ flutter:
   assets:
     - assets/i18n/
     - assets/icons/
+    - assets/illustration/
     - assets/fonts/licenses/
   # Font ADR-015 dibundel lokal, bukan diambil lewat `google_fonts` saat
   # runtime -- app ini tanpa panggilan jaringan sama sekali (CLAUDE.md).

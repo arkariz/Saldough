@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 
 /// Kartu utama layar Dompet ([AppHeroCard], rujukan visual
@@ -26,6 +27,7 @@ class WalletSummaryCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return AppHeroCard(
+      tour: TourId.wallet,
       icon: IconKey.wallets,
       label: t.wallet.totalLabel,
       trailing: Container(
@@ -44,21 +46,6 @@ class WalletSummaryCard extends StatelessWidget {
         children: [
           HeroAmount(AppMoneyFormatter.format(totalBalance), color: totalBalance < 0 ? colors.expense : null),
           Text(t.wallet.subtitle, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-          const SizedBox(height: AppSpacing.sm),
-          HeroInset(
-            child: Text.rich(
-              TextSpan(
-                style: textTheme.bodySmall,
-                children: [
-                  TextSpan(
-                    text: '${t.wallet.manualNoteTitle}: ',
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  TextSpan(text: t.wallet.manualNoteBody),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );

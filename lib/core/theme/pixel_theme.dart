@@ -75,7 +75,7 @@ class PixelTheme extends StatelessWidget {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.pixelSmAll,
-          side: BorderSide(color: colors.textPrimary, width: AppBorder.pixelThick),
+          side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -96,7 +96,7 @@ class PixelTheme extends StatelessWidget {
           foregroundColor: colors.onAccent,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.pixelSmAll,
-            side: BorderSide(color: colors.textPrimary, width: AppBorder.pixelThick),
+            side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
           ),
         ),
       ),

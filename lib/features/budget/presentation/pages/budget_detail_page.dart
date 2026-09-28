@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_status.dart';
@@ -123,7 +125,11 @@ class BudgetDetailPage extends StatelessWidget {
             final canRecord = progress.status != BudgetStatus.archived;
             final linked = state.linkedTransactions(current);
             final walletsById = {for (final w in state.wallets) w.id: w};
-            return ListView(
+            // TR-BUDGET-DETAIL (ADR-021 §3.4): pos pertama dan tombol catatnya.
+            return TourTrigger(
+              tour: TourId.budgetDetail,
+              ready: true,
+              child: ListView(
               padding: const EdgeInsets.all(AppSpacing.md),
               children: [
                 _TopBar(onEdit: () => _edit(context, current)),
@@ -135,8 +141,9 @@ class BudgetDetailPage extends StatelessWidget {
                 if (current.items.isEmpty)
                   Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.textMuted))
                 else
-                  for (final itemProgress in progress.items) ...[
+                  for (final (i, itemProgress) in progress.items.indexed) ...[
                     _ItemCard(
+                      spotlighted: i == 0,
                       progress: itemProgress,
                       targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
                       onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
@@ -160,6 +167,7 @@ class BudgetDetailPage extends StatelessWidget {
                 const SizedBox(height: AppSpacing.lg),
                 _HowItWorks(walletName: wallet?.name ?? t.budget.unknownWallet),
               ],
+              ),
             );
           },
         ),
@@ -372,7 +380,15 @@ class _Stat extends StatelessWidget {
 /// rencana/terpakai/sisa, dan pintasan CATAT dengan pos ini terpilih.
 /// Lewat anggaran memakai `overBudget`, bukan gaya kesalahan (FR-BUD-007).
 class _ItemCard extends StatelessWidget {
-  const _ItemCard({required this.progress, required this.targetWalletName, required this.onRecord});
+  const _ItemCard({
+    required this.progress,
+    required this.targetWalletName,
+    required this.onRecord,
+    this.spotlighted = false,
+  });
+
+  /// True untuk pos pertama: kartunya dan tombol catatnya jadi target tur.
+  final bool spotlighted;
 
   final BudgetItemProgress progress;
 
@@ -389,7 +405,9 @@ class _ItemCard extends StatelessWidget {
     final item = progress.item;
     final statusColor = budgetItemStatusColor(context, progress.status);
     final overspent = progress.status == BudgetItemStatus.overspent;
-    return TransactionSlab(
+    return SpotlightTarget(
+      spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
+      child: TransactionSlab(
       color: overspent ? colors.tinted(colors.expenseFill, 0.08) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -448,16 +466,20 @@ class _ItemCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Align(
               alignment: AlignmentDirectional.centerEnd,
-              child: item.isTransfer
+              child: SpotlightTarget(
+                spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
+                child: item.isTransfer
                   ? AppQuickChip(
                       label: t.budget.detailRecordTransferAction,
                       color: colors.tinted(colors.transferFill, 0.2),
                       onTap: record,
                     )
                   : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
+              ),
             ),
           ],
         ],
+      ),
       ),
     );
   }

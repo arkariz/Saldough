@@ -5,7 +5,9 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -25,7 +27,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -195,7 +197,7 @@ void main() {
     expect(find.text(t.home.emptyTitle), findsOneWidget);
     await tester.tap(find.text(t.home.recordAction));
     await tester.pumpAndSettle();
-    expect(find.byType(RecordChoiceSheet), findsOneWidget);
+    expect(find.byType(RecordFormHost), findsOneWidget);
   });
 
   testWidgets('saldo, arus bulan ini tanpa transfer, anggaran, freelance, dan transaksi terbaru (FR-HOME-001..004)', (
@@ -259,5 +261,248 @@ void main() {
 
     expect(find.byType(HomeBalanceCard), findsOneWidget);
     expect(find.byType(HomeFreelanceCard), findsOneWidget);
+  });
+
+  group('TR-HOME (ADR-021)', () {
+    late TutorialProgressRepositoryImpl tutorials;
+
+    setUp(() => tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage()));
+
+    Future<void> openShellWithTours(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+            home: const AppShellPage(),
+          ),
+        ),
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    Finder step(int current, int total, String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
+
+    testWidgets('tidak tampil sebelum ada dompet', (tester) async {
+      await openShellWithTours(tester);
+
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+    });
+
+    testWidgets('dompet tanpa transaksi: kartu arus dan anggaran dilewati', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+
+      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(2, 2, t.tour.homeRecordTitle, t.tour.homeRecordBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.tour.homeRecordTitle), findsNothing);
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord});
+    });
+
+    testWidgets('data lengkap: enam langkah termasuk arus, anggaran, Freelance, dan transaksi terbaru', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+
+      expect(step(1, 6, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      final rest = [
+        (t.tour.homeRecordTitle, t.tour.homeRecordBody),
+        (t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody),
+        (t.tour.homeBudgetTitle, t.tour.homeBudgetBody),
+        (t.tour.homeFreelanceTitle, t.tour.homeFreelanceBody),
+        (t.tour.homeRecentTitle, t.tour.homeRecentBody),
+      ];
+      for (final (i, (title, body)) in rest.indexed) {
+        await tester.tap(find.text(t.tour.nextAction));
+        await tester.pumpAndSettle();
+        expect(step(i + 2, 6, title, body), findsOneWidget);
+      }
+    });
+
+    testWidgets('kartu yang muncul belakangan disorot sendiri saat pertama tampil', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await tutorials.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord]);
+      await seedFull();
+      await openShellWithTours(tester);
+
+      // Saldo dan CATAT sudah dilihat; tinggal empat kartu yang baru muncul.
+      expect(step(1, 4, t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody), findsOneWidget);
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+    });
+
+    testWidgets('tidak tampil lagi sesudah selesai', (tester) async {
+      await seedWallet();
+      await tutorials.markStepsSeen(tourSteps[TourId.home]!);
+      await openShellWithTours(tester);
+
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+    });
+  });
+
+  group('TR-WALLET, TR-TXN, TR-BUDGET (ADR-021, T-9.7)', () {
+    late TutorialProgressRepositoryImpl tutorials;
+
+    setUp(() async {
+      tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+      // Tur Beranda sudah dilihat, supaya yang diuji hanya tur tab.
+      await tutorials.markStepsSeen(tourSteps[TourId.home]!);
+    });
+
+    Future<void> openShellWithTours(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+            home: const AppShellPage(),
+          ),
+        ),
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> openTab(WidgetTester tester, String label) async {
+      await tester.tap(find.widgetWithText(NavigationDestination, label));
+      await tester.pumpAndSettle();
+    }
+
+    Finder step(int current, int total, String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
+
+    Future<void> walkThrough(WidgetTester tester, List<(String, String)> steps) async {
+      for (final (i, (title, body)) in steps.indexed) {
+        expect(step(i + 1, steps.length, title, body), findsOneWidget);
+        await tester.tap(find.text(i == steps.length - 1 ? t.tour.doneAction : t.tour.nextAction));
+        await tester.pumpAndSettle();
+      }
+    }
+
+    testWidgets('Dompet: ringkasan, dompet pertama, lalu tambah — hanya saat tab Dompet dibuka', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+      expect(find.text(t.tour.walletSummaryTitle), findsNothing);
+
+      await openTab(tester, t.appShell.walletsTabLabel);
+      await walkThrough(tester, [
+        (t.tour.walletSummaryTitle, t.tour.walletSummaryBody),
+        (t.tour.walletCardTitle, t.tour.walletCardBody),
+        (t.tour.walletAddTitle, t.tour.walletAddBody),
+      ]);
+
+      await openTab(tester, t.appShell.homeTabLabel);
+      await openTab(tester, t.appShell.walletsTabLabel);
+      expect(find.text(t.tour.walletSummaryTitle), findsNothing);
+    });
+
+    testWidgets('Transaksi: tidak tampil saat bulan ini kosong', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      expect(find.text(t.tour.txnMonthTitle), findsNothing);
+    });
+
+    testWidgets('Transaksi: bulan berisi menyorot bulan, cari/Filter, dan baris pertama', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+
+      await walkThrough(tester, [
+        (t.tour.txnMonthTitle, t.tour.txnMonthBody),
+        (t.tour.txnFilterTitle, t.tour.txnFilterBody),
+        (t.tour.txnRowTitle, t.tour.txnRowBody),
+      ]);
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.hasCompleted(TourId.transaction), isTrue);
+    });
+
+    testWidgets('Anggaran kosong: hanya Template; ringkasan dan penyaring menyusul saat ada anggaran', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await walkThrough(tester, [(t.tour.budgetTemplatesTitle, t.tour.budgetTemplatesBody)]);
+
+      await tester.pumpWidget(const SizedBox());
+      await seedFull();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await walkThrough(tester, [
+        (t.tour.budgetSummaryTitle, t.tour.budgetSummaryBody),
+        (t.tour.budgetFilterTitle, t.tour.budgetFilterBody),
+      ]);
+    });
+
+    testWidgets('Rincian anggaran: pos pertama lalu tombol catatnya (TR-BUDGET-DETAIL, T-9.8)', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await tutorials.markStepsSeen(tourSteps[TourId.budget]!);
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await tester.tap(find.text('Rumah tangga').first);
+      await tester.pumpAndSettle();
+
+      await walkThrough(tester, [
+        (t.tour.budgetDetailItemTitle, t.tour.budgetDetailItemBody),
+        (t.tour.budgetDetailRecordTitle, t.tour.budgetDetailRecordBody),
+      ]);
+    });
+
+    testWidgets('Menu info: "Tur layar ini" memutar ulang tur yang sudah dilihat (T-9.9)', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+
+      await tester.tap(find.byTooltip(t.info.menuTooltip).first);
+      await tester.pumpAndSettle();
+      expect(find.text(t.info.showIntroAction), findsOneWidget);
+      expect(find.text(t.info.resetAllAction), findsOneWidget);
+      await tester.tap(find.text(t.info.replayTourAction));
+      await tester.pumpAndSettle();
+
+      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+    });
+
+    testWidgets('Menu info: setel ulang semua tutorial meminta konfirmasi lalu mengosongkan progres', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await tutorials.markOnboardingDone();
+      await openShellWithTours(tester);
+
+      await tester.tap(find.byTooltip(t.info.menuTooltip).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.info.resetAllAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.info.resetConfirmMessage), findsOneWidget);
+      await tester.tap(find.text(t.info.resetConfirmAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.info.resetDoneMessage), findsOneWidget);
+      expect((await tutorials.load()).getOrElse((_) => TutorialProgress.empty), TutorialProgress.empty);
+    });
   });
 }

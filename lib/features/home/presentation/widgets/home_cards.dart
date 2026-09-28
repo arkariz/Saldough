@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
@@ -56,6 +57,7 @@ class HomeBalanceCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return AppHeroCard(
+      tour: TourId.home,
       icon: IconKey.home,
       label: t.home.balanceLabel,
       trailing: hasNoWallets ? _Badge(t.home.startBadge, color: colors.accent) : null,
@@ -667,7 +669,7 @@ class _Badge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
       decoration: BoxDecoration(
         color: colors.tinted(color, 0.22),
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textPrimary)),
     );
@@ -691,7 +693,7 @@ class _IconBox extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: colors.iconTile(color),
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: AppIcon(icon, size: size * 0.72),
     );
@@ -769,7 +771,7 @@ class _SegmentBar extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: colors.surfaceHigh,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -798,7 +800,7 @@ class _SplitGauge extends StatelessWidget {
       height: 10,
       decoration: BoxDecoration(
         color: colors.surfaceHigh,
-        border: Border.all(color: colors.textPrimary),
+        border: Border.all(color: colors.edge),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

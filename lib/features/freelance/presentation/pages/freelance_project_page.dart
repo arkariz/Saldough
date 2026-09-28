@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_payment.dart';
@@ -134,7 +136,12 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                 ),
               ],
             ),
-            body: SafeArea(
+            // TR-FREELANCE-PROJECT: tab worklog di sini; aksi "catat diterima"
+            // disorot pemicu di tab Pembayaran saat tab itu dibuka.
+            body: TourTrigger(
+              tour: TourId.freelanceProject,
+              ready: true,
+              child: SafeArea(
               child: Column(
                 children: [
                   Expanded(
@@ -155,7 +162,10 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                             delegate: _TabBarDelegate(
                               TabBar(
                                 tabs: [
-                                  Tab(text: t.freelance.worklogTab(count: entries.length)),
+                                  SpotlightTarget(
+                                    spotlightKey: SpotlightKey.freelanceWorklog,
+                                    child: Tab(text: t.freelance.worklogTab(count: entries.length)),
+                                  ),
                                   Tab(text: t.freelance.paymentsTab(count: payments.length)),
                                 ],
                               ),
@@ -188,6 +198,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                   ),
                 ],
               ),
+            ),
             ),
           ),
         );
@@ -256,7 +267,12 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
       PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
     };
-    return _SectionList(
+    // Pembayaran tertunda pertama: aksi "catat diterima"-nya jadi target tur.
+    final firstPendingId = payments.where((p) => !p.isPaid).firstOrNull?.id;
+    return TourTrigger(
+      tour: TourId.freelanceProject,
+      ready: true,
+      child: _SectionList(
       storageKey: 'payments',
       filters: _FilterRow<PaymentFilter>(
         options: [for (final filter in PaymentFilter.values) option(filter)],
@@ -281,10 +297,15 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
         ),
         _PaymentRow(:final payment) => Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: _PaymentCard(state: state, payment: payment),
+          child: _PaymentCard(
+            state: state,
+            payment: payment,
+            spotlightReceive: payment.id == firstPendingId,
+          ),
         ),
         _EntryRow() => const SizedBox.shrink(),
       },
+      ),
     );
   }
 
@@ -326,10 +347,14 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
 /// Kartu satu pembayaran di rincian proyek, berjudul rentang tanggal kerja
 /// yang ditagihnya, beserta aksinya.
 class _PaymentCard extends StatelessWidget {
-  const _PaymentCard({required this.state, required this.payment});
+  const _PaymentCard({required this.state, required this.payment, this.spotlightReceive = false});
 
   final FreelanceState state;
   final FreelancePayment payment;
+
+  /// True untuk pembayaran tertunda pertama: tombol "catat diterima"-nya
+  /// jadi target tur `freelanceReceive`.
+  final bool spotlightReceive;
 
   @override
   Widget build(BuildContext context) {
@@ -354,10 +379,13 @@ class _PaymentCard extends StatelessWidget {
       actions: payment.isPaid
           ? [TextButton(onPressed: () => cancelReceipt(context, payment), child: Text(t.freelance.receiptCancelAction))]
           : [
-              AppButton(
-                label: t.freelance.receiveAction,
-                color: colors.income,
-                onPressed: () => receivePayment(context, payment),
+              SpotlightTarget(
+                spotlightKey: spotlightReceive ? SpotlightKey.freelanceReceive : null,
+                child: AppButton(
+                  label: t.freelance.receiveAction,
+                  color: colors.income,
+                  onPressed: () => receivePayment(context, payment),
+                ),
               ),
               TextButton(
                 onPressed: () => changePaymentDate(context, payment),

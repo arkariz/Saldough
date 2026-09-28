@@ -154,7 +154,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 ignoring: widget.kindLocked,
                 child: Opacity(
                   opacity: widget.kindLocked ? 0.6 : 1,
-                  child: BudgetSegmented<BudgetItemKind>(
+                  child: AppSegmented<BudgetItemKind>(
                     options: [
                       (BudgetItemKind.expense, t.budget.itemKindExpense),
                       (BudgetItemKind.transfer, t.budget.itemKindTransfer),
@@ -201,7 +201,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                   ),
                 const SizedBox(height: AppSpacing.md),
               ] else ...[
-                BudgetSegmented<bool>(
+                AppSegmented<bool>(
                   options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
                   selected: _itemized,
                   onChanged: (value) => setState(() => _itemized = value),

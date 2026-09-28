@@ -1,7 +1,7 @@
 # Rencana onboarding, info, dan tutorial spotlight — Saldough 2.0
 
 **Dibuat:** 27 September 2026
-**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md))
+**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md)); ilustrasi diserahkan dan desain teknis diusulkan di [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) 28 Sep 2026. Teks final ada di slang (`onboarding`, `tour`, `info`); tabel §4.3 tetap draf asal, dan ADR-021 §3.4 mencatat penyesuaiannya.
 **Berkaitan:** [UX-1](UX_REVIEW_FIXES.md) (CATAT selalu melewati lembar
 pilihan), [PRD §5 dan §10](../01-product/prd-saldough-2.0.md),
 [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),
@@ -109,7 +109,9 @@ buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
   kembali sistem menandai tur itu selesai. Mengetuk target tidak menjalankan
   aksinya selama tur (menghindari membuka lembar di tengah tur).
 - **Langkah bersyarat:** langkah yang targetnya tidak ada dilewati diam-diam
-  (mis. kartu anggaran Beranda saat belum ada anggaran aktif).
+  (mis. kartu anggaran Beranda saat belum ada anggaran aktif), lalu disorot
+  sendiri saat targetnya pertama kali tampil. Progres dicatat per langkah
+  ([ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) §3.1).
 - **Pembaca layar:** gelembung diumumkan sebagai dialog dengan label
   "Langkah 1 dari 3: <judul>. <isi>"; fokus pindah ke gelembung.
 
@@ -138,12 +140,15 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | `home.record` | Slot CATAT navigasi bawah (`_RecordNavIcon`, `app_shell_page.dart`) | Satu pintu mencatat | Semua uang masuk, keluar, dan pindah dompet dicatat dari sini. | Selalu |
 | `home.cashFlow` | `HomeCashFlowRow` | Arus bulan ini | Pemasukan dan pengeluaran bulan berjalan. Transfer antar dompet tidak dihitung. | Ada transaksi |
 | `home.budget` | `HomeBudgetCard` | Sisa anggaran aktif | Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya. | Ada anggaran aktif |
+| `home.freelance` | `HomeFreelanceCard` | Ringkasan freelance | Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima. | Ada data freelance *(ditambah 28 Sep 2026)* |
+| `home.recent` | Kepala "Transaksi terbaru" | Transaksi terbaru | Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan. | Ada transaksi *(ditambah 28 Sep 2026)* |
 
 **TR-CATAT — Alur CATAT** *(bergantung bentuk UX-1, KO-5)*
 
 | Key | Target | Judul | Isi | Syarat |
 |---|---|---|---|---|
 | `record.kind` | Pilihan jenis (lembar pilihan, atau pengalih tiga segmen kalau UX-1 diterapkan) | Pilih jenisnya | Pemasukan menambah saldo, pengeluaran mengurangi, transfer hanya memindahkan antar dompetmu. | Selalu |
+| `record.freelance` | Kartu "Honor freelance?" formulir Pemasukan (dipindah ke atas nominal) | Honor freelance lewat jalur sendiri | Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung. | Formulir Pemasukan *(ditambah 28 Sep 2026)* |
 | `record.amount` | `RecordAmountField` | Nominal | Ketik nominalnya, atau pakai tombol cepat. | Selalu |
 | `record.wallet` | `WalletSelectField` | Dompet terisi otomatis | Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu. | ≥2 dompet aktif |
 | `record.budgetItem` | `RecordBudgetItemField` | Tautkan ke anggaran | Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran. | Ada pos yang ditawarkan |

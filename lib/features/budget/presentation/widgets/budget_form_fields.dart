@@ -168,65 +168,6 @@ class BudgetQuantityField extends StatelessWidget {
   }
 }
 
-/// Dua (atau lebih) pilihan bergaya tab — periode dan mode nominal pos.
-class BudgetSegmented<T> extends StatelessWidget {
-  /// Membuat [BudgetSegmented].
-  const BudgetSegmented({required this.options, required this.selected, required this.onChanged, super.key});
-
-  /// Pilihan beserta labelnya, sesuai urutan.
-  final List<(T, String)> options;
-
-  /// Pilihan aktif.
-  final T selected;
-
-  /// Dipanggil dengan pilihan baru.
-  final ValueChanged<T> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      shadow: 2,
-      child: Row(
-        children: [
-          for (final (value, label) in options) ...[
-            if (value != options.first.$1) const SizedBox(width: AppSpacing.xs),
-            Expanded(
-              child: Semantics(
-                button: true,
-                selected: value == selected,
-                child: GestureDetector(
-                  onTap: () => onChanged(value),
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    constraints: const BoxConstraints(minHeight: 44),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: value == selected ? colors.accent : Colors.transparent,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      label.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: transactionLabelStyle(
-                        context,
-                        size: 12,
-                        color: value == selected ? colors.onAccent : colors.textMuted,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 /// Bilah atas formulir: tombol kembali, judul bertingkat dua.
 class BudgetFormHeader extends StatelessWidget {
   /// Membuat [BudgetFormHeader].

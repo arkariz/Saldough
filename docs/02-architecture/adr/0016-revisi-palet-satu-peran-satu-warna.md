@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-016
 - **Tanggal:** 2026-09-19
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted
+- **Status:** Accepted (diamandemen 2026-09-28, §7: mode gelap arang hangat)
 - **Cakupan:** Global untuk subtree `PixelTheme` (layar Saldough 2.0). Palet
   Saldough 1.0 (`AppColorsExtension.light`/`dark`, ADR-0006) TIDAK berubah.
 - **Merevisi:** tabel "Palet" dan "Rekonsiliasi nominal pengeluaran" di
@@ -210,3 +210,43 @@ kesehatan, internet, investasi, hewan peliharaan, belanja; `icon_action_search`;
 Material kini menunjuk ikon pixel-art terdekat (keranjang, lampu, struk).
 Kategori adalah teks bebas, jadi ikon kategori di dropdown dicari lewat
 pencocokan kata kunci (`categoryIconFor`), bukan pemetaan tetap.
+
+## 7. Amandemen (2026-09-28): mode gelap arang hangat
+
+Saat meninjau onboarding Fase 9 di emulator, pemilik menilai mode gelap
+terlalu keras. Latar `#14120F` hampir hitam pekat, dan semua garis tepi serta
+bayangan keras memakai warna teks, krem hampir putih `#F2ECE7`. Hasilnya
+panel krem terang di atas hitam, dengan kontras jauh melebihi yang
+dibutuhkan (15,96:1).
+
+Keputusan, hanya untuk mode gelap:
+
+- **Latar dan kartu naik ke arang hangat:** `background` `#231F1B`,
+  `cardBackground` `#2D2823`. `shimmerBase` dan `shimmerHighlight` mengikuti
+  (`#2D2823`, `#3A3530`).
+- **Garis tepi dan bayangan keras memakai `edge`, bukan `textPrimary`.**
+  Di mode gelap nilainya menjadi coklat keabuan redup `#8A7D6E`. Rasionya
+  4,1:1 terhadap latar dan 3,6:1 terhadap kartu, masih di atas ambang 3:1
+  untuk batas komponen (WCAG 1.4.11). Di mode terang `edge` tetap sama dengan `textPrimary`,
+  jadi mode terang tidak berubah sepiksel pun. Tiga puluh pemakaian
+  `textPrimary` sebagai garis tepi atau bayangan dipindah ke `edge`.
+- **`accent` gelap sedikit diterangkan:** dari `#E95100` ke `#F46B1C`. Di
+  latar yang lebih terang, `#E95100` sebagai teks tinggal 3,92:1 di kartu,
+  di bawah 4,5:1. `onAccent` tetap `#14120F`, dengan rasio 6,2:1 di atas
+  accent baru.
+
+Kontras mode gelap sesudah amandemen:
+
+| Slot | Hex | Kartu | Latar |
+|---|---|---|---|
+| `income`, `incomeFill` | `#22C55E` | 6,40 | 7,18 |
+| `expense`, `overBudget`, `expenseFill` | `#F87171` | 5,27 | 5,92 |
+| `transfer`, `transferFill` | `#60A5FA` | 5,74 | 6,44 |
+| `pending` | `#F59E0B` | 6,79 | 7,62 |
+| `accent` | `#F46B1C` | 4,84 | 5,43 |
+| `textMuted` | `#A8A29E` | 5,79 | 6,49 |
+| `textPrimary` | `#F2ECE7` | 12,46 | 13,97 |
+| `edge` (garis tepi, bayangan keras) | `#8A7D6E` | 3,64 | 4,08 |
+
+Semua slot teks-aman tetap ≥ 4,5:1 di kartu dan latar. Uji
+`app_colors_extension_test.dart` menjaganya.

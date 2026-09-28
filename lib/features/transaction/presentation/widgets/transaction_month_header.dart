@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -118,6 +119,7 @@ class TransactionMonthHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         AppHeroCard(
+          tour: TourId.transaction,
           icon: IconKey.transactions,
           label: t.transaction.monthStatusLabel,
           trailing: Container(

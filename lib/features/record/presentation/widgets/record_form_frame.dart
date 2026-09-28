@@ -30,6 +30,7 @@ class RecordFormFrame extends StatelessWidget {
     required this.onSubmit,
     required this.children,
     this.notice,
+    this.kindSwitcher,
     super.key,
   });
 
@@ -54,6 +55,9 @@ class RecordFormFrame extends StatelessWidget {
   /// Kartu bantuan tepat di bawah kop (opsional).
   final Widget? notice;
 
+  /// Pengalih jenis CATAT di antara kop dan [notice] (UX-1, opsional).
+  final Widget? kindSwitcher;
+
   /// Bagian-bagian formulir, dari atas ke bawah.
   final List<Widget> children;
 
@@ -69,11 +73,12 @@ class RecordFormFrame extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Header(kind: kind, title: title, isEditing: isEditing, onBack: onBack),
+              if (kindSwitcher != null) ...[const SizedBox(height: AppSpacing.md), kindSwitcher!],
               if (notice != null) ...[const SizedBox(height: AppSpacing.md), notice!],
               for (final child in children) ...[const SizedBox(height: AppSpacing.md), child],
               const SizedBox(height: AppSpacing.lg),
               // Tanpa catatan kaki "tidak mendebit uang" di tiap formulir:
-              // penafian itu cukup sekali per alur (lembar pilihan CATAT,
+              // penafian itu cukup sekali per alur (onboarding dan tur CATAT,
               // rincian transaksi, rincian dompet), dan label tombol "Catat…"
               // sudah membawa maknanya (NFR-UX-005, UX-9).
               AppButton(label: submitLabel, color: colors.kindInk(kind), onPressed: onSubmit),
@@ -136,7 +141,7 @@ class _Header extends StatelessWidget {
             color: colors.iconTile(colors.kindFill(kind)),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
-              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
+              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.edge, 0.4)!, offset: const Offset(0, 2)),
             ],
           ),
           child: AppIcon(recordKindIcon(kind), size: 28),

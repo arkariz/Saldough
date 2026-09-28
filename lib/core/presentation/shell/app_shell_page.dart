@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
@@ -32,7 +33,7 @@ import 'package:state_management/state_management.dart';
 /// (T-2.3, ditukar dari rute sementara `/shell` saat cutover T-3.4).
 ///
 /// CATAT **bukan** tujuan navigasi biasa — menekannya tidak mengganti isi
-/// `IndexedStack`, melainkan membuka lembar pilihan (lihat
+/// `IndexedStack`, melainkan membuka lembar CATAT (lihat
 /// [openRecordSheet]). Empat tujuan lain dipetakan ke `IndexedStack`
 /// lewat [_tabIndexFor]/[_navIndexFor], menyisipkan CATAT di posisi tengah
 /// tanpa memberinya slot `IndexedStack`.
@@ -42,9 +43,9 @@ import 'package:state_management/state_management.dart';
 /// CATAT dari shell ini, supaya bloc tujuannya disegarkan dengan cara yang
 /// sama seperti saat tabnya dipilih dari navigasi bawah.
 ///
-/// CATAT sendiri (T-2.4) sudah nyata: menekannya membuka
-/// [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu satu dari tiga
-/// formulir `features/record/`, lewat [openRecordSheet] (diekstrak dari
+/// CATAT sendiri (T-2.4) sudah nyata: menekannya membuka satu lembar
+/// formulir `features/record/` dengan pengalih tiga jenis (FR-REC-001, UX-1),
+/// lewat [openRecordSheet] (diekstrak dari
 /// `State` ini ke fungsi tingkat atas di T-2.5 supaya CTA keadaan kosong
 /// `TransactionListPage` bisa memicu alur yang SAMA, bukan formulir
 /// pencatatan tersendiri — CLAUDE.md aturan 8). `RecordBloc` dipasang
@@ -77,7 +78,11 @@ import 'package:state_management/state_management.dart';
 /// dirender di dalam shell ini, tanpa perlu membungkus dirinya sendiri.
 class AppShellPage extends StatefulWidget {
   /// Membuat [AppShellPage].
-  const AppShellPage({super.key});
+  const AppShellPage({this.startAction, super.key});
+
+  /// Aksi yang dijalankan sekali sesudah shell siap, mis. membuka formulir
+  /// dompet dari ajakan akhir onboarding (ADR-021 §3.2).
+  final ShellStartAction? startAction;
 
   @override
   State<AppShellPage> createState() => _AppShellPageState();
@@ -88,6 +93,9 @@ class _AppShellPageState extends State<AppShellPage> {
   /// pernah jadi tab "terpilih" yang persisten — menekannya membuka lembar
   /// lalu kembali ke tab yang sedang aktif.
   int _activeTab = 0;
+
+  /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
+  bool _startActionDone = false;
 
   static const _recordNavIndex = 2;
   static const _homeTabIndex = 0;
@@ -116,6 +124,23 @@ class _AppShellPageState extends State<AppShellPage> {
     wallets.add(const WalletRefreshed());
     budgets.add(const BudgetRefreshed());
     home.add(const HomeRefreshed());
+  }
+
+  /// Menjalankan [AppShellPage.startAction] sekali, sesudah frame pertama
+  /// yang context-nya sudah berada di bawah seluruh `BlocProvider` shell.
+  void _maybeRunStartAction(BuildContext context) {
+    final action = widget.startAction;
+    if (action == null || _startActionDone) return;
+    _startActionDone = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!context.mounted) return;
+      switch (action) {
+        case ShellStartAction.createWallet:
+          final home = context.read<HomeBloc>();
+          await openAddWalletSheet(context);
+          home.add(const HomeRefreshed());
+      }
+    });
   }
 
   void _onDestinationSelected(BuildContext context, int navIndex) {
@@ -207,8 +232,19 @@ class _AppShellPageState extends State<AppShellPage> {
                                       value: homeScope.container<HomeBloc>(),
                                       child: EffectListener<HomeBloc, HomeState>(
                                         child: Builder(
-                                          builder: (context) => Scaffold(
-                                            body: IndexedStack(index: _activeTab, children: tabsFor(context)),
+                                          builder: (context) {
+                                            _maybeRunStartAction(context);
+                                            return Scaffold(
+                                            body: IndexedStack(
+                                                index: _activeTab,
+                                                // `IndexedStack` menjaga tab tersembunyi tetap
+                                                // hidup; tur hanya boleh mulai di tab yang tampil
+                                                // (ADR-021 §3.3).
+                                                children: [
+                                                  for (final (i, tab) in tabsFor(context).indexed)
+                                                    TourVisibility(visible: i == _activeTab, child: tab),
+                                                ],
+                                              ),
                                             bottomNavigationBar: NavigationBar(
                                               selectedIndex: _navIndexFor(_activeTab),
                                               onDestinationSelected: (navIndex) =>
@@ -223,7 +259,10 @@ class _AppShellPageState extends State<AppShellPage> {
                                                   label: t.appShell.budgetTabLabel,
                                                 ),
                                                 NavigationDestination(
-                                                  icon: const _RecordNavIcon(),
+                                                  icon: const SpotlightTarget(
+                                                    spotlightKey: SpotlightKey.homeRecord,
+                                                    child: _RecordNavIcon(),
+                                                  ),
                                                   label: t.appShell.recordAction,
                                                 ),
                                                 NavigationDestination(
@@ -236,7 +275,8 @@ class _AppShellPageState extends State<AppShellPage> {
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                          );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -259,6 +299,13 @@ class _AppShellPageState extends State<AppShellPage> {
   }
 }
 
+/// Aksi yang dijalankan [AppShellPage] sekali saat dibuka.
+enum ShellStartAction {
+  /// Pindah ke tab Dompet dan membuka formulir tambah dompet — ajakan
+  /// "Buat Dompet Pertama" onboarding (KO-6).
+  createWallet,
+}
+
 /// Ikon slot CATAT: kotak aksen dengan garis tepi dan bayangan keras level
 /// "Interaktif" ADR-015 ("FAB CATAT"), supaya tindakan utama aplikasi tidak
 /// tampil setara empat tab lain (prinsip produk #5, UX-13).
@@ -275,8 +322,8 @@ class _RecordNavIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.accent,
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
-        boxShadow: AppElevation.hardShadow(colors.textPrimary),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+        boxShadow: AppElevation.hardShadow(colors.edge),
       ),
       child: AppIcon(IconKey.record, size: 20, color: colors.onAccent),
     );

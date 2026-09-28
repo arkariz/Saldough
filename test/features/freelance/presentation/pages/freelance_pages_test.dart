@@ -7,6 +7,8 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -115,10 +117,10 @@ void main() {
   Future<void> openFreelanceThroughRecord(WidgetTester tester) async {
     await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(t.record.pickIncomeAction));
+    await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text(t.record.freelanceCalloutTitle));
-    await tester.tap(find.text(t.record.freelanceCalloutTitle));
+    await tester.ensureVisible(find.textContaining(t.record.freelanceCalloutTitle));
+    await tester.tap(find.textContaining(t.record.freelanceCalloutTitle));
     await tester.pumpAndSettle();
   }
 
@@ -294,5 +296,56 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(FreelancePaymentCard), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('TR-FREELANCE: proyek di ikhtisar, tab worklog di rincian, lalu catat diterima di tab Pembayaran', (
+    tester,
+  ) async {
+    tallViewport(tester);
+    await seedPendingPayment();
+    final tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+    await tutorials.markStepsSeen([...tourSteps[TourId.home]!, ...tourSteps[TourId.record]!]);
+    await tester.pumpWidget(
+      ScopeProvider(
+        container: container,
+        child: MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(disableAnimations: true),
+            child: SpotlightHost(repository: tutorials, child: child!),
+          ),
+          home: const AppShellPage(),
+        ),
+      ),
+    );
+    for (var i = 0; i < 5; i++) {
+      await tester.pump();
+    }
+    await tester.pumpAndSettle();
+    Finder step(String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: 1, total: 1, title: title, body: body));
+    Future<void> done() async {
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+    }
+
+    await openFreelanceThroughRecord(tester);
+    expect(step(t.tour.freelanceProjectTitle, t.tour.freelanceProjectBody), findsOneWidget);
+    await done();
+
+    await tester.tap(find.byType(ProjectCard));
+    await tester.pumpAndSettle();
+    // Tab Pembayaran belum dibuka: aksi terimanya belum tampil, jadi hanya
+    // tab worklog yang disorot.
+    expect(step(t.tour.freelanceWorklogTitle, t.tour.freelanceWorklogBody), findsOneWidget);
+    await done();
+
+    await tester.tap(find.text(t.freelance.paymentsTab(count: 1)));
+    await tester.pumpAndSettle();
+    expect(step(t.tour.freelanceReceiveTitle, t.tour.freelanceReceiveBody), findsOneWidget);
+    await done();
+
+    final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+    expect(progress.hasCompleted(TourId.freelance), isTrue);
+    expect(progress.hasCompleted(TourId.freelanceProject), isTrue);
   });
 }

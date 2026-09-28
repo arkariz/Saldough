@@ -38,8 +38,8 @@ Terakhir diperbarui: 28 September 2026.
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
-| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 0 | KO dijawab; mulai T-9.1 |
-| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 21 | ADR-020 disetujui dan dikerjakan penuh; satu-satunya sisa (UX-1) sengaja ditunda ke Fase 9 |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
+| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 
 ## Keputusan terbuka
 
@@ -1285,20 +1285,44 @@ Rincian, konten, dan key spotlight ada di
 KO-1..KO-7 di dokumen itu (dijawab 27 Sep 2026). Berkaitan dengan UX-1: edukasi CATAT pindah dari
 lembar pilihan ke onboarding dan tur CATAT.
 
-- [ ] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
-- [ ] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
+- [x] **T-9.1** ADR-021 onboarding dan spotlight, plus teks final `id`/`en`.
+      [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md)
+      disetujui pemilik 28 Sep 2026; namespace slang `onboarding`, `tour`,
+      `info`, plus label pengalih CATAT.
+- [x] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
       dipilih; pemilik membuat gambar dari brief konten
-      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md).
-- [ ] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`.
-- [ ] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka.
-- [ ] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,
-      `SpotlightTarget`.
-- [ ] **T-9.5** Tur Beranda (TR-HOME).
-- [ ] **T-9.6** Tur CATAT (TR-CATAT), bersama UX-1.
-- [ ] **T-9.7** Tur Dompet, Transaksi, Anggaran.
-- [ ] **T-9.8** Tur rincian anggaran dan Freelance.
-- [ ] **T-9.9** Lapis info: putar ulang tur, lihat pengenalan, setel ulang.
-- [ ] **T-9.10** Verifikasi menyeluruh di emulator.
+      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md). Lima PNG
+      (`assets/illustration/onboarding_{1..5}.png`, latar transparan)
+      diserahkan 28 Sep 2026; dipasang di T-9.3.
+- [x] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`
+      (`lib/core/tutorial/`).
+- [x] **T-9.3** Layar onboarding dan gerbangnya saat aplikasi dibuka, dengan
+      adegan bergerak (`lib/core/presentation/motion/`).
+- [x] **T-9.4** Komponen `SpotlightOverlay`, `SpotlightController`,
+      `SpotlightTarget` (plus `TourTrigger`, `TourVisibility`).
+- [x] **T-9.5** Tur Beranda (TR-HOME). Diperiksa di emulator 384dp terang dan
+      gelap 28 Sep 2026; titik tinjau kedua disetujui pemilik (mode gelap
+      dilunakkan, ADR-016 §7).
+- [x] **T-9.6** Tur CATAT (TR-CATAT), bersama UX-1: CATAT langsung ke
+      formulir Pengeluaran dengan pengalih tiga jenis; tur menyorot pengalih,
+      nominal, dompet, dan pos anggaran (bila ditawarkan).
+- [x] **T-9.7** Tur Dompet, Transaksi, Anggaran. Transaksi hanya saat bulan
+      tampil berisi; Anggaran kosong menyorot Template dulu, ringkasan dan
+      penyaring menyusul begitu ada anggaran.
+- [x] **T-9.8** Tur rincian anggaran dan Freelance: pos pertama dan tombol
+      catatnya; proyek pertama di ikhtisar; tab worklog di rincian proyek;
+      "catat diterima" disorot saat tab Pembayaran dibuka.
+- [x] **T-9.9** Lapis info: putar ulang tur, lihat pengenalan, setel ulang.
+      Ikon info di kartu utama keempat tab (`AppHeroCard.tour`) dan di bilah
+      atas ikhtisar Freelance.
+- [x] **T-9.10** Verifikasi menyeluruh di emulator (28 Sep 2026, build rilis,
+      emulator 384dp): pengguna lama (build `main` berisi dompet, lalu
+      diperbarui) melihat onboarding sekali dengan data utuh (KO-1) dan tidak
+      lagi sesudah dibuka ulang; menu info (putar ulang, pengenalan mode
+      tinjau, setel ulang dengan konfirmasi); pengguna baru: onboarding,
+      tur Beranda, CATAT, transaksi pertama memunculkan sorotan kartu Beranda
+      yang baru tampil, tur Transaksi dan Anggaran; mode gelap. Freelance dan
+      rincian anggaran diverifikasi lewat uji widget shell sungguhan.
 
 ## Cakupan requirement
 

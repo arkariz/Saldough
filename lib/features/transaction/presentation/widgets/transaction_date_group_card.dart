@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
@@ -18,8 +19,13 @@ class TransactionDateGroupCard extends StatelessWidget {
     required this.group,
     required this.walletsById,
     this.onTransactionTap,
+    this.firstRowSpotlightKey,
     super.key,
   });
+
+  /// Kunci tur untuk baris pertama kelompok ini (mis. `txnRow` di kelompok
+  /// teratas tab Transaksi, ADR-021); null berarti tidak ada yang disorot.
+  final SpotlightKey? firstRowSpotlightKey;
 
   /// Kelompok satu tanggal, sudah tersaring dan terurut oleh
   /// `TransactionBloc`.
@@ -108,10 +114,13 @@ class TransactionDateGroupCard extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         for (var i = 0; i < group.transactions.length; i++) ...[
           if (i > 0) const SizedBox(height: AppSpacing.sm),
-          TransactionRow(
-            transaction: group.transactions[i],
-            walletsById: walletsById,
-            onTap: onTransactionTap == null ? null : () => onTransactionTap!(group.transactions[i]),
+          SpotlightTarget(
+            spotlightKey: i == 0 ? firstRowSpotlightKey : null,
+            child: TransactionRow(
+              transaction: group.transactions[i],
+              walletsById: walletsById,
+              onTap: onTransactionTap == null ? null : () => onTransactionTap!(group.transactions[i]),
+            ),
           ),
         ],
       ],
@@ -232,7 +241,7 @@ class TransactionRow extends StatelessWidget {
                           color: colors.iconTile(tint),
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
-                            BoxShadow(color: Color.lerp(ink, colors.textPrimary, 0.4)!, offset: const Offset(0, 2)),
+                            BoxShadow(color: Color.lerp(ink, colors.edge, 0.4)!, offset: const Offset(0, 2)),
                           ],
                         ),
                         child: AppIcon(icon, size: 30),

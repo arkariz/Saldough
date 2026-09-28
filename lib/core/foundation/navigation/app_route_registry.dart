@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_node_go_router_ext.dart';
@@ -18,15 +17,24 @@ abstract final class AppRouteRegistry {
   /// `AppShellPage`).
   static const homePath = '/home';
 
+  /// Path rute onboarding (ADR-021 §3.2) — dibangun langsung di sini seperti
+  /// [homePath], karena ia gerbang aplikasi, bukan milik satu fitur modul
+  /// rute.
+  static const onboardingPath = '/onboarding';
+
   /// Membangun [GoRouter] dari [registry], dimulai dari [initialLocation].
-  /// [homeBuilder] membangun layar untuk [homePath].
+  /// [homeBuilder] membangun layar untuk [homePath], [onboardingBuilder]
+  /// untuk [onboardingPath]; keduanya menerima [GoRouterState] supaya bisa
+  /// membaca `extra`.
   static GoRouter build({
     required RouteRegistry registry,
     required String initialLocation,
-    required WidgetBuilder homeBuilder,
+    required GoRouterWidgetBuilder homeBuilder,
+    required GoRouterWidgetBuilder onboardingBuilder,
   }) {
     final routes = [
-      GoRoute(path: homePath, name: 'home', builder: (context, state) => homeBuilder(context)),
+      GoRoute(path: homePath, name: 'home', builder: homeBuilder),
+      GoRoute(path: onboardingPath, name: 'onboarding', builder: onboardingBuilder),
       ...registry.registeredNodes.map((node) => node.toGoRoute(_pathFor(node.keyId))),
     ];
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -31,7 +32,7 @@ List<String> _categorySuggestions() => [
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
-/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali;
+/// `Navigator.pop` saat disimpan; tombol kembali menutup CATAT;
 /// `AppShellPage` yang menafsirkan hasilnya, mengikuti pola
 /// `IncomeSourceEditSheet` yang sudah ada. Tata letaknya mengikuti rujukan
 /// visual `pixel_kas_catat_pemasukan`.
@@ -43,6 +44,7 @@ class IncomeFormSheet extends StatefulWidget {
     this.prefill,
     this.initialWalletId,
     this.recentCategories = const [],
+    this.kindSwitcher,
     super.key,
   });
 
@@ -62,6 +64,10 @@ class IncomeFormSheet extends StatefulWidget {
   /// tetap hari ini, bukan tanggal transaksi sumber. Diabaikan kalau
   /// [initial] terisi.
   final IncomeTransaction? prefill;
+
+  /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
+  /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
+  final Widget? kindSwitcher;
 
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -146,35 +152,52 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
     final wallet = _wallet;
     final amount = _amountSen;
     return RecordFormFrame(
+      kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.income,
       title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
       isEditing: editing,
-      onBack: () =>
-          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+      onBack: () => Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : t.record.incomeAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
-        RecordAmountField(
-          controller: _amountController,
-          label: t.record.amountLabelIncome,
-          kind: TransactionKind.income,
-          quickAmounts: _quickAmounts,
-          autofocus: true,
-          onChanged: () => setState(() {}),
+        // Di atas nominal: keputusan "honor freelance atau pemasukan biasa"
+        // diambil sebelum mengisi apa pun (dulu di dasar formulir, mudah
+        // terlewat).
+        if (!editing)
+          const SpotlightTarget(
+            spotlightKey: SpotlightKey.recordFreelance,
+            child: _FreelanceCallout(),
+          ),
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordAmount,
+          child: RecordAmountField(
+            controller: _amountController,
+            label: t.record.amountLabelIncome,
+            kind: TransactionKind.income,
+            quickAmounts: _quickAmounts,
+            autofocus: true,
+            onChanged: () => setState(() {}),
+          ),
         ),
         RecordCategoryField(
           controller: _categoryController,
-          suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
+          suggestions: mergeCategorySuggestions(
+            widget.recentCategories,
+            _categorySuggestions(),
+          ),
           kind: TransactionKind.income,
         ),
-        WalletSelectField(
-          label: t.record.toWalletFieldLabel,
-          wallets: widget.wallets,
-          selectedId: _walletId,
-          onSelected: (id) => setState(() => _walletId = id),
-          previewAmountSen: amount,
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordWallet,
+          child: WalletSelectField(
+            label: t.record.toWalletFieldLabel,
+            wallets: widget.wallets,
+            selectedId: _walletId,
+            onSelected: (id) => setState(() => _walletId = id),
+            previewAmountSen: amount,
+          ),
         ),
         RecordDateField(
           date: _date,
@@ -185,7 +208,6 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           controller: _noteController,
           kind: TransactionKind.income,
         ),
-        if (!editing) const _FreelanceCallout(),
         if (_canSubmit && wallet != null && amount != null)
           RecordSummaryCard(
             kind: TransactionKind.income,
@@ -214,6 +236,8 @@ class _FreelanceCallout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    // Ringkas, satu baris: penjelasannya ada di langkah tur `recordFreelance`.
     return Semantics(
       button: true,
       child: GestureDetector(
@@ -222,21 +246,30 @@ class _FreelanceCallout extends StatelessWidget {
         child: TransactionSlab(
           color: colors.tinted(colors.pending, 0.1),
           shadowColor: colors.pending,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm + AppSpacing.xs,
+            vertical: AppSpacing.sm,
+          ),
           child: Row(
             children: [
-              const AppIcon(IconKey.worklog, size: 32),
+              const AppIcon(IconKey.worklog),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(t.record.freelanceCalloutTitle, style: Theme.of(context).textTheme.titleSmall),
-                    const SizedBox(height: 2),
-                    Text(
-                      t.record.freelanceCalloutBody,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
-                    ),
-                  ],
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${t.record.freelanceCalloutTitle} ',
+                        style: textTheme.titleSmall,
+                      ),
+                      TextSpan(
+                        text: t.record.freelanceCalloutAction,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               AppIcon(IconKey.chevronRight, color: colors.pending),

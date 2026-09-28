@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/spotlight/tutorial_info_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Kartu utama di puncak tiap tab navigasi bawah (Beranda, Anggaran,
 /// Transaksi, Dompet): SATU angka yang menjawab pertanyaan utama layar itu,
@@ -25,6 +27,7 @@ class AppHeroCard extends StatelessWidget {
     required this.label,
     required this.child,
     this.trailing,
+    this.tour,
     super.key,
   });
 
@@ -36,6 +39,10 @@ class AppHeroCard extends StatelessWidget {
 
   /// Isi kanan kepala, mis. lencana jumlah.
   final Widget? trailing;
+
+  /// Tur layar ini; kalau diisi, ikon info (putar ulang tur, pengenalan,
+  /// setel ulang) tampil di ujung kanan kepala (KO-4, ADR-021 §3.5).
+  final TourId? tour;
 
   /// Isi kartu; biasanya [HeroAmount] lalu rinciannya.
   final Widget child;
@@ -51,9 +58,9 @@ class AppHeroCard extends StatelessWidget {
         // Satu tingkat lebih terang di sana (T-7.6).
         color: Theme.of(context).brightness == Brightness.dark ? colors.surfaceHigh : colors.surfaceMid,
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.textPrimary, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
         // Bawaan `hardShadow` = 4px, lebih tebal dari kartu biasa (3px).
-        boxShadow: AppElevation.hardShadow(colors.textPrimary),
+        boxShadow: AppElevation.hardShadow(colors.edge),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,7 +73,7 @@ class AppHeroCard extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: colors.cardBackground,
-                  border: Border.all(color: colors.textPrimary),
+                  border: Border.all(color: colors.edge),
                 ),
                 child: AppIcon(icon),
               ),
@@ -88,6 +95,7 @@ class AppHeroCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (tour case final tour?) TutorialInfoButton(tour: tour),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),

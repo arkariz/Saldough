@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/usecases/calculate_budget_progress.dart';
 import 'package:saldough/features/budget/presentation/budget_display.dart';
@@ -30,6 +31,7 @@ class BudgetSummaryCard extends StatelessWidget {
     final remaining = planned - spent;
     final ratio = progressRatio(spent: spent, plannedAmount: planned);
     return AppHeroCard(
+      tour: TourId.budget,
       icon: IconKey.budget,
       label: t.budget.remainingLabel,
       trailing: BudgetBadge(

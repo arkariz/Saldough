@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -7,7 +8,6 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
@@ -20,7 +20,7 @@ const _quickAmounts = [500000, 1000000, 5000000];
 
 /// Formulir catat transfer (FR-TXN-003) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [TransferRecorded] lewat
-/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
+/// `Navigator.pop` saat disimpan; tombol kembali menutup CATAT.
 /// Tata letaknya mengikuti rujukan visual
 /// `pixel_kas_catat_transfer_antar_dompet`.
 ///
@@ -45,6 +45,7 @@ class TransferFormSheet extends StatefulWidget {
     this.initialBudgetItemId,
     this.initialAmountSen,
     this.initialToWalletId,
+    this.kindSwitcher,
     super.key,
   });
 
@@ -62,6 +63,10 @@ class TransferFormSheet extends StatefulWidget {
   /// anggaran) tapi TETAP mode CATAT dan tanggalnya tetap hari ini, bukan
   /// tanggal transaksi sumber. Diabaikan kalau [initial] terisi.
   final TransferTransaction? prefill;
+
+  /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
+  /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
+  final Widget? kindSwitcher;
 
   /// Dompet ASAL pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet) -- pintasan dari satu dompet paling wajar berarti "dari dompet
@@ -186,11 +191,12 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     final amount = _amountSen;
     final money = amount == null ? null : AppMoneyFormatter.format(amount);
     return RecordFormFrame(
+      kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.transfer,
       title: editing ? t.transaction.editSheetTitle : t.record.transferAction,
       isEditing: editing,
       onBack: () =>
-          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+          Navigator.of(context).pop(),
       notice: RecordNotice(
         title: t.record.transferNoticeTitle,
         body: t.record.transferNoticeBody,
@@ -200,26 +206,32 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           : t.record.transferAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
-        RecordAmountField(
-          controller: _amountController,
-          label: t.record.amountLabelTransfer,
-          kind: TransactionKind.transfer,
-          quickAmounts: _quickAmounts,
-          autofocus: true,
-          onChanged: () => setState(() {}),
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordAmount,
+          child: RecordAmountField(
+            controller: _amountController,
+            label: t.record.amountLabelTransfer,
+            kind: TransactionKind.transfer,
+            quickAmounts: _quickAmounts,
+            autofocus: true,
+            onChanged: () => setState(() {}),
+          ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            WalletSelectField(
-              label: t.record.fromWalletFieldLabel,
-              caption: t.record.balanceDecreasesCaption,
-              showDelta: true,
-              wallets: widget.wallets,
-              selectedId: _fromWalletId,
-              onSelected: (id) => setState(() => _fromWalletId = id),
-              previewAmountSen: amount,
-              previewIsCredit: false,
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.recordWallet,
+              child: WalletSelectField(
+                label: t.record.fromWalletFieldLabel,
+                caption: t.record.balanceDecreasesCaption,
+                showDelta: true,
+                wallets: widget.wallets,
+                selectedId: _fromWalletId,
+                onSelected: (id) => setState(() => _fromWalletId = id),
+                previewAmountSen: amount,
+                previewIsCredit: false,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             WalletSelectField(
@@ -233,10 +245,13 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             ),
             if (_budgetChoices.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
-              RecordBudgetItemField(
-                choices: _budgetChoices,
-                selectedId: _validBudgetItemId,
-                onSelected: (id) => setState(() => _budgetItemId = id),
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recordBudgetItem,
+                child: RecordBudgetItemField(
+                  choices: _budgetChoices,
+                  selectedId: _validBudgetItemId,
+                  onSelected: (id) => setState(() => _budgetItemId = id),
+                ),
               ),
             ],
             if (_sameWallet) ...[

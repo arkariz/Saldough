@@ -11,6 +11,7 @@ export 'app_menu_select_button.dart';
 export 'app_money_text.dart';
 export 'app_quick_chip.dart';
 export 'app_section_label.dart';
+export 'app_segmented.dart';
 export 'app_segmented_progress_bar.dart';
 export 'app_skeleton.dart';
 export 'app_tappable.dart';

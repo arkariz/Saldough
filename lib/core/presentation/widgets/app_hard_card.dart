@@ -76,17 +76,17 @@ class AppHardCard extends StatelessWidget {
 
     final border = elevation == AppHardElevation.bottomSheet
         ? Border(
-            top: BorderSide(color: colors.textPrimary, width: AppBorder.pixelThick),
-            left: BorderSide(color: colors.textPrimary, width: AppBorder.pixelThick),
-            right: BorderSide(color: colors.textPrimary, width: AppBorder.pixelThick),
+            top: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+            left: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+            right: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
           )
-        : Border.all(color: colors.textPrimary, width: AppBorder.pixelThick);
+        : Border.all(color: colors.edge, width: AppBorder.pixelThick);
 
     final shadow = switch (elevation) {
       AppHardElevation.flat => const <BoxShadow>[],
-      AppHardElevation.bottomSheet => AppElevation.pixelBottomSheetShadow(colors.textPrimary),
+      AppHardElevation.bottomSheet => AppElevation.pixelBottomSheetShadow(colors.edge),
       AppHardElevation.card || AppHardElevation.interactive =>
-        AppElevation.hardShadow(colors.textPrimary, offset: shadowOffset),
+        AppElevation.hardShadow(colors.edge, offset: shadowOffset),
     };
 
     return AnimatedContainer(

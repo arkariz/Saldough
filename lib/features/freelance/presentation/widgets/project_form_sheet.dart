@@ -281,7 +281,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                 onChanged: refresh,
               ),
               const SizedBox(height: AppSpacing.md),
-              BudgetSegmented<DeductionKind>(
+              AppSegmented<DeductionKind>(
                 options: [
                   (DeductionKind.percentage, t.freelance.deductionKindPercentage),
                   (DeductionKind.fixedAmount, t.freelance.deductionKindFixed),

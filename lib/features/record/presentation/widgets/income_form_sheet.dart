@@ -40,6 +40,7 @@ class IncomeFormSheet extends StatefulWidget {
   const IncomeFormSheet({
     required this.wallets,
     this.initial,
+    this.prefill,
     this.initialWalletId,
     this.recentCategories = const [],
     super.key,
@@ -54,9 +55,18 @@ class IncomeFormSheet extends StatefulWidget {
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final IncomeTransaction? initial;
 
+  /// Transaksi sumber untuk "Catat lagi" (UX-4) -- BEDA dari [initial]:
+  /// formulir terisi awal (nominal, kategori, catatan, dompet) tapi TETAP
+  /// mode CATAT (tombol "Catat Pemasukan", bukan "Simpan Perubahan"; hasil
+  /// yang disimpan transaksi BARU, bukan menimpa yang lama) dan tanggalnya
+  /// tetap hari ini, bukan tanggal transaksi sumber. Diabaikan kalau
+  /// [initial] terisi.
+  final IncomeTransaction? prefill;
+
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
-  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
-  /// dompet transaksi itu sendiri.
+  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
+  /// atau [prefill] terisi -- keduanya selalu memakai dompet transaksi itu
+  /// sendiri.
   final String? initialWalletId;
 
   /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
@@ -77,13 +87,15 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   @override
   void initState() {
     super.initState();
-    final tx = widget.initial;
+    final tx = widget.initial ?? widget.prefill;
     if (tx == null) {
       _walletId = widget.initialWalletId;
       return;
     }
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
-    _date = tx.date;
+    // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
+    // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
+    if (widget.initial != null) _date = tx.date;
     _noteController.text = tx.note;
     _walletId = tx.walletId;
     _categoryController.text = tx.categoryKey ?? '';

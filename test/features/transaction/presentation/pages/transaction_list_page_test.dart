@@ -402,7 +402,7 @@ void main() {
       },
     );
 
-    testWidgets('menghapus lewat konfirmasi menutup rincian, membuang baris, dan mengembalikan saldo dompet', (
+    testWidgets('UX-8: menghapus LANGSUNG tanpa dialog, menutup rincian, membuang baris, dan mengembalikan saldo dompet', (
       tester,
     ) async {
       useTallViewport(tester);
@@ -414,17 +414,17 @@ void main() {
 
       await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
       await tester.pumpAndSettle();
-      expect(find.text(t.transaction.deleteConfirmTitle), findsOneWidget);
-      await tester.tap(find.widgetWithText(TextButton, t.common.delete));
-      await tester.pumpAndSettle();
 
+      // Tidak ada dialog konfirmasi -- rincian sudah tertutup dan
+      // transaksinya sudah hilang seketika.
       expect(find.byType(TransactionDetailPage), findsNothing);
       expect(find.text('Makan Siang'), findsNothing);
       expect(find.text(t.transaction.deletedMessage), findsOneWidget);
+      expect(find.text(t.transaction.undoDeleteAction), findsOneWidget, reason: 'snackbar menawarkan Urungkan');
       expect(await balanceOf('bca'), 100000000, reason: 'saldo kembali ke keadaan sebelum transaksi ada');
     });
 
-    testWidgets('membatalkan konfirmasi hapus tidak menghapus apa pun', (tester) async {
+    testWidgets('UX-8: menekan Urungkan pada snackbar mengembalikan transaksi dan saldonya persis', (tester) async {
       useTallViewport(tester);
       await seedExpense();
       await openTransactionsTab(tester);
@@ -433,11 +433,17 @@ void main() {
 
       await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, t.common.cancel));
+      expect(find.text('Makan Siang'), findsNothing);
+      expect(await balanceOf('bca'), 100000000);
+
+      await tester.tap(find.text(t.transaction.undoDeleteAction));
       await tester.pumpAndSettle();
 
-      expect(find.byType(TransactionDetailPage), findsOneWidget);
-      expect(await balanceOf('bca'), 92500000);
+      expect(find.text('Makan Siang'), findsOneWidget);
+      expect(find.text(t.transaction.restoredMessage), findsOneWidget);
+      expect(await balanceOf('bca'), 92500000, reason: 'saldo persis seperti sebelum dihapus');
+      final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
+      expect(all, hasLength(1), reason: 'dikembalikan dengan id yang sama, bukan transaksi baru');
     });
 
     testWidgets('sunting memakai formulir yang sama, terisi awal, dan menyimpan perubahan + saldo baru', (
@@ -473,6 +479,34 @@ void main() {
       expect(await balanceOf('bca'), 91000000);
       final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
       expect(all, hasLength(1), reason: 'menimpa transaksi lama, tidak mencatat transaksi penyeimbang');
+    });
+
+    testWidgets('Catat lagi (UX-4): membuka CATAT terisi dari transaksi ini sebagai transaksi BARU bertanggal hari ini', (
+      tester,
+    ) async {
+      useTallViewport(tester);
+      await seedExpense();
+      await openTransactionsTab(tester);
+      await tester.tap(find.text('Makan Siang'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.recordAgainAction));
+      await tester.tap(find.widgetWithText(AppButton, t.transaction.recordAgainAction));
+      await tester.pumpAndSettle();
+
+      // Terisi dari transaksi sumber (nominal, kategori, dompet) -- TAPI
+      // bukan lembar sunting: judulnya formulir CATAT biasa.
+      expect(find.text(t.transaction.editSheetTitle), findsNothing);
+      expect(find.text(t.record.expenseAction), findsWidgets);
+      expect(find.text('75.000'), findsOneWidget, reason: 'nominal terisi dari transaksi sumber');
+      expect(find.text('Makan Siang'), findsWidgets, reason: 'kategori terisi dari transaksi sumber');
+
+      await tester.tap(find.widgetWithText(AppButton, t.record.expenseAction));
+      await tester.pumpAndSettle();
+
+      expect(await balanceOf('bca'), 85000000, reason: '925.000 dikurangi 75.000 lagi, transaksi BARU bukan sunting');
+      final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
+      expect(all, hasLength(2), reason: 'transaksi lama tetap ada, ditambah satu transaksi baru');
     });
   });
 }

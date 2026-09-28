@@ -1,6 +1,8 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -39,6 +41,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionSearchAcrossMonthsRequested>(_onSearchAcrossMonthsRequested);
     on<TransactionUpdated>(_onUpdated);
     on<TransactionDeleted>(_onDeleted);
+    on<TransactionRestored>(_onRestored);
   }
 
   final WalletRepository _walletRepository;
@@ -84,20 +87,31 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   Future<void> _onUpdated(TransactionUpdated event, Emitter<TransactionState> emit) async {
     final result = await _recordTransaction(event.updated, previousTransaction: event.original);
-    await _afterWrite(result, t.transaction.updatedMessage, emit);
+    await _afterWrite(result, emit, successEffect: () => _effectSaved(t.transaction.updatedMessage));
   }
 
   Future<void> _onDeleted(TransactionDeleted event, Emitter<TransactionState> emit) async {
     final result = await _recordTransaction.delete(event.transaction);
-    await _afterWrite(result, t.transaction.deletedMessage, emit);
+    // UX-8: bukan dialog konfirmasi lagi -- hapus langsung, dengan snackbar
+    // "Urungkan" sebagai jalan pulih.
+    await _afterWrite(result, emit, successEffect: () => _effectDeletedWithUndo(event.transaction));
   }
 
-  /// Sesudah sunting/hapus: kalau gagal, pertahankan layar apa adanya dan
-  /// tampilkan galat; kalau berhasil, muat ulang dompet DAN transaksi bulan
-  /// ini (saldo dompet berubah, jadi "saldo saat ini" di layar rincian harus
-  /// ikut segar) TANPA `isLoading` -- daftar tidak boleh berkedip jadi
-  /// kerangka pemuatan tiap kali satu baris disunting.
-  Future<void> _afterWrite(Either<Failure, Unit> result, String successMessage, Emitter<TransactionState> emit) async {
+  Future<void> _onRestored(TransactionRestored event, Emitter<TransactionState> emit) async {
+    final result = await _recordTransaction(event.transaction);
+    await _afterWrite(result, emit, successEffect: () => _effectSaved(t.transaction.restoredMessage));
+  }
+
+  /// Sesudah sunting/hapus/urungkan: kalau gagal, pertahankan layar apa
+  /// adanya dan tampilkan galat; kalau berhasil, muat ulang dompet DAN
+  /// transaksi bulan ini (saldo dompet berubah, jadi "saldo saat ini" di
+  /// layar rincian harus ikut segar) TANPA `isLoading` -- daftar tidak boleh
+  /// berkedip jadi kerangka pemuatan tiap kali satu baris disunting.
+  Future<void> _afterWrite(
+    Either<Failure, Unit> result,
+    Emitter<TransactionState> emit, {
+    required UiEffect Function() successEffect,
+  }) async {
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
@@ -108,7 +122,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             emit(state.copyWith(effect: _effectError(failure)));
           case Right(value: final wallets):
             await _loadMonth(month: state.month, wallets: wallets, emit: emit);
-            if (!state.loadFailed) emit(state.copyWith(effect: _effectSaved(successMessage)));
+            if (!state.loadFailed) emit(state.copyWith(effect: successEffect()));
         }
     }
   }

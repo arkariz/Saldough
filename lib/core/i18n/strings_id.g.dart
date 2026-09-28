@@ -405,6 +405,12 @@ class Translations$transaction$id {
 	/// id: 'Arus Bersih (Netto)'
 	String get netFlowLabel => 'Arus Bersih (Netto)';
 
+	/// id: 'Masuk'
+	String get flowIncomeLabel => 'Masuk';
+
+	/// id: 'Keluar'
+	String get flowExpenseLabel => 'Keluar';
+
 	/// id: 'Semua $count'
 	String allFilterLabel({required Object count}) => 'Semua ${count}';
 
@@ -429,20 +435,20 @@ class Translations$transaction$id {
 	/// id: 'Kategori'
 	String get categoryFilterLabel => 'Kategori';
 
+	/// id: 'Filter'
+	String get filterButtonLabel => 'Filter';
+
+	/// id: 'Filter Transaksi'
+	String get filterSheetTitle => 'Filter Transaksi';
+
+	/// id: 'Selesai'
+	String get filterSheetDoneAction => 'Selesai';
+
 	/// id: 'Hari Ini'
 	String get todayLabel => 'Hari Ini';
 
 	/// id: 'Kemarin'
 	String get yesterdayLabel => 'Kemarin';
-
-	/// id: '+MASUK'
-	String get incomeBadge => '+MASUK';
-
-	/// id: '-KELUAR'
-	String get expenseBadge => '-KELUAR';
-
-	/// id: '# MUTASI'
-	String get transferBadge => '# MUTASI';
 
 	/// id: 'Tanpa judul'
 	String get untitledTransaction => 'Tanpa judul';
@@ -567,6 +573,9 @@ class Translations$transaction$id {
 	/// id: 'Ubah Catatan Ini'
 	String get editAction => 'Ubah Catatan Ini';
 
+	/// id: 'Catat Lagi'
+	String get recordAgainAction => 'Catat Lagi';
+
 	/// id: 'Hapus Catatan dari Riwayat'
 	String get deleteAction => 'Hapus Catatan dari Riwayat';
 
@@ -576,17 +585,17 @@ class Translations$transaction$id {
 	/// id: 'Simpan Perubahan'
 	String get saveChangesAction => 'Simpan Perubahan';
 
-	/// id: 'Hapus catatan ini?'
-	String get deleteConfirmTitle => 'Hapus catatan ini?';
-
-	/// id: 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.'
-	String get deleteConfirmMessage => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.';
-
 	/// id: 'Perubahan tersimpan.'
 	String get updatedMessage => 'Perubahan tersimpan.';
 
 	/// id: 'Catatan dihapus.'
 	String get deletedMessage => 'Catatan dihapus.';
+
+	/// id: 'Urungkan'
+	String get undoDeleteAction => 'Urungkan';
+
+	/// id: 'Catatan dikembalikan.'
+	String get restoredMessage => 'Catatan dikembalikan.';
 
 	/// id: 'Anggaran'
 	String get budgetLabel => 'Anggaran';
@@ -623,9 +632,6 @@ class Translations$wallet$id {
 
 	/// id: 'Daftar Dompet'
 	String get listHeading => 'Daftar Dompet';
-
-	/// id: 'Saldo Aktif'
-	String get balanceLabel => 'Saldo Aktif';
 
 	/// id: 'Tambah Dompet Baru'
 	String get addAction => 'Tambah Dompet Baru';
@@ -806,6 +812,9 @@ class Translations$budget$id {
 
 	/// id: 'Terpakai ($percent%)'
 	String spentPercentLabel({required Object percent}) => 'Terpakai (${percent}%)';
+
+	/// id: 'Periode berjalan ($percent%)'
+	String paceLabel({required Object percent}) => 'Periode berjalan (${percent}%)';
 
 	/// id: 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.'
 	String get summaryNote => 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.';
@@ -1861,6 +1870,8 @@ extension on Translations {
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} log aktif',
 			'transaction.netFlowLabel' => 'Arus Bersih (Netto)',
+			'transaction.flowIncomeLabel' => 'Masuk',
+			'transaction.flowExpenseLabel' => 'Keluar',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Masuk ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Keluar ${count}',
@@ -1869,11 +1880,11 @@ extension on Translations {
 			'transaction.walletFilterLabel' => 'Dompet',
 			'transaction.categoryFilterAllLabel' => 'Semua Kategori',
 			'transaction.categoryFilterLabel' => 'Kategori',
+			'transaction.filterButtonLabel' => 'Filter',
+			'transaction.filterSheetTitle' => 'Filter Transaksi',
+			'transaction.filterSheetDoneAction' => 'Selesai',
 			'transaction.todayLabel' => 'Hari Ini',
 			'transaction.yesterdayLabel' => 'Kemarin',
-			'transaction.incomeBadge' => '+MASUK',
-			'transaction.expenseBadge' => '-KELUAR',
-			'transaction.transferBadge' => '# MUTASI',
 			'transaction.untitledTransaction' => 'Tanpa judul',
 			'transaction.emptyMonthBadge' => 'Inventaris Kosong',
 			'transaction.emptyMonthTitle' => 'Belum ada transaksi',
@@ -1915,13 +1926,14 @@ extension on Translations {
 			'transaction.detailAmountLabel' => 'Jumlah',
 			'transaction.detailManualNote' => 'Catatan ini adalah rekaman manual di Tanukonomy. Saldo dompet dihitung dari data yang kamu masukkan, tanpa terhubung ke rekening bank.',
 			'transaction.editAction' => 'Ubah Catatan Ini',
+			'transaction.recordAgainAction' => 'Catat Lagi',
 			'transaction.deleteAction' => 'Hapus Catatan dari Riwayat',
 			'transaction.editSheetTitle' => 'Ubah Catatan',
 			'transaction.saveChangesAction' => 'Simpan Perubahan',
-			'transaction.deleteConfirmTitle' => 'Hapus catatan ini?',
-			'transaction.deleteConfirmMessage' => 'Catatan dihapus dari riwayat, dan saldo dompet dihitung ulang tanpa catatan ini.',
 			'transaction.updatedMessage' => 'Perubahan tersimpan.',
 			'transaction.deletedMessage' => 'Catatan dihapus.',
+			'transaction.undoDeleteAction' => 'Urungkan',
+			'transaction.restoredMessage' => 'Catatan dikembalikan.',
 			'transaction.budgetLabel' => 'Anggaran',
 			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
@@ -1931,7 +1943,6 @@ extension on Translations {
 			'wallet.manualNoteTitle' => 'Catatan Manual',
 			'wallet.manualNoteBody' => 'Saldo dihitung dari catatan yang kamu buat sendiri, bukan sinkronisasi otomatis dari bank.',
 			'wallet.listHeading' => 'Daftar Dompet',
-			'wallet.balanceLabel' => 'Saldo Aktif',
 			'wallet.addAction' => 'Tambah Dompet Baru',
 			'wallet.inactiveHeading' => 'Dompet Nonaktif',
 			'wallet.inactiveBadge' => 'Nonaktif',
@@ -1989,6 +2000,7 @@ extension on Translations {
 			'budget.spentLabel' => 'Terpakai',
 			'budget.remainingLabel' => 'Sisa',
 			'budget.spentPercentLabel' => ({required Object percent}) => 'Terpakai (${percent}%)',
+			'budget.paceLabel' => ({required Object percent}) => 'Periode berjalan (${percent}%)',
 			'budget.summaryNote' => 'Anggaran adalah rencana belanja, bukan pemotongan saldo dompet. Saldo baru berkurang saat pengeluaran atau transfer dicatat.',
 			'budget.filterAll' => 'Semua',
 			'budget.filterActive' => 'Aktif',
@@ -2267,11 +2279,11 @@ extension on Translations {
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
+			_ => null,
+		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
-			_ => null,
-		} ?? switch (path) {
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',

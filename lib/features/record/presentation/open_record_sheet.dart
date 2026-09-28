@@ -9,6 +9,7 @@ import 'package:saldough/features/record/presentation/widgets/record_choice.dart
 import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
 /// Membuka alur CATAT: [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu
@@ -46,6 +47,14 @@ import 'package:state_management/state_management.dart';
 /// Ikhtisar Freelance ([OpenFreelance]); `Future` ini baru selesai sesudah
 /// layar itu ditutup, supaya pemanggil menyegarkan saldo sesudah pembayaran
 /// dicatat diterima.
+///
+/// [prefillFrom] (UX-4, "Catat lagi") melewati lembar pilihan seperti
+/// [initialChoice] (jenisnya diturunkan dari tipe transaksinya) dan mengisi
+/// nominal, kategori, catatan, dompet, dan pos anggaran dari transaksi itu
+/// -- TAPI TETAP mode CATAT (transaksi BARU, bukan menimpa yang lama) dan
+/// tanggalnya hari ini, bukan tanggal transaksi sumber. Kalau dompet
+/// transaksi sumber sudah nonaktif, dropdown dompet formulir tampil kosong
+/// (dompet nonaktif tidak ditawarkan CATAT) -- pemakai memilih dompet baru.
 Future<void> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
@@ -53,6 +62,7 @@ Future<void> openRecordSheet(
   String? initialBudgetItemId,
   int? initialAmountSen,
   String? initialToWalletId,
+  Transaction? prefillFrom,
 }) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
@@ -63,7 +73,14 @@ Future<void> openRecordSheet(
   // dompet" padahal masalahnya pembacaan yang gagal.
   if (bloc.state.loadFailed) return;
 
-  var preselected = initialChoice;
+  var preselected =
+      initialChoice ??
+      switch (prefillFrom) {
+        IncomeTransaction() => RecordChoice.income,
+        ExpenseTransaction() => RecordChoice.expense,
+        TransferTransaction() => RecordChoice.transfer,
+        null => null,
+      };
   while (true) {
     final choice =
         preselected ??
@@ -85,16 +102,24 @@ Future<void> openRecordSheet(
     final transferTo =
         initialToWalletId ??
         (transferFrom == defaults.transferFromWalletId ? defaults.transferToWalletId : null);
+    // `is`, bukan `as prefillFrom as Foo?` -- kalau pemakai menekan kembali
+    // lalu memilih jenis LAIN dari yang tersirat `prefillFrom`, `as` yang
+    // tidak cocok akan melempar, sedangkan `is` cukup mengembalikan `null`.
+    final incomePrefill = prefillFrom is IncomeTransaction ? prefillFrom : null;
+    final expensePrefill = prefillFrom is ExpenseTransaction ? prefillFrom : null;
+    final transferPrefill = prefillFrom is TransferTransaction ? prefillFrom : null;
     final result = await showFullScreenSheet<Object>(
       context,
       builder: (_) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(
           wallets: wallets,
+          prefill: incomePrefill,
           initialWalletId: walletFor(defaults.incomeWalletId),
           recentCategories: defaults.incomeCategories,
         ),
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
+          prefill: expensePrefill,
           initialWalletId: walletFor(defaults.expenseWalletId),
           recentCategories: defaults.expenseCategories,
           budgetItems: budgetItems,
@@ -103,6 +128,7 @@ Future<void> openRecordSheet(
         ),
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
+          prefill: transferPrefill,
           initialWalletId: transferFrom,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,

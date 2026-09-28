@@ -39,6 +39,7 @@ class TransferFormSheet extends StatefulWidget {
   const TransferFormSheet({
     required this.wallets,
     this.initial,
+    this.prefill,
     this.initialWalletId,
     this.budgetItems = const [],
     this.initialBudgetItemId,
@@ -56,9 +57,15 @@ class TransferFormSheet extends StatefulWidget {
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final TransferTransaction? initial;
 
+  /// Transaksi sumber untuk "Catat lagi" (UX-4) -- BEDA dari [initial]:
+  /// formulir terisi awal (nominal, catatan, dompet asal/tujuan, pos
+  /// anggaran) tapi TETAP mode CATAT dan tanggalnya tetap hari ini, bukan
+  /// tanggal transaksi sumber. Diabaikan kalau [initial] terisi.
+  final TransferTransaction? prefill;
+
   /// Dompet ASAL pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet) -- pintasan dari satu dompet paling wajar berarti "dari dompet
-  /// ini", bukan tujuannya. Diabaikan kalau [initial] terisi.
+  /// ini", bukan tujuannya. Diabaikan kalau [initial] atau [prefill] terisi.
   final String? initialWalletId;
 
   /// Seluruh pos anggaran; formulir hanya menawarkan pos TRANSFER yang
@@ -94,7 +101,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   @override
   void initState() {
     super.initState();
-    final tx = widget.initial;
+    final tx = widget.initial ?? widget.prefill;
     if (tx == null) {
       _fromWalletId = widget.initialWalletId;
       _toWalletId = widget.initialToWalletId;
@@ -107,7 +114,9 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     }
     _budgetItemId = tx.budgetItemId;
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
-    _date = tx.date;
+    // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
+    // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
+    if (widget.initial != null) _date = tx.date;
     _noteController.text = tx.note;
     _fromWalletId = tx.fromWalletId;
     _toWalletId = tx.toWalletId;

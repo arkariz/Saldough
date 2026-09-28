@@ -9,6 +9,7 @@ import 'package:saldough/features/budget/presentation/pages/budget_detail_page.d
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/open_edit_transaction_sheet.dart';
+import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/transaction_display.dart';
@@ -81,17 +82,28 @@ class TransactionDetailPage extends StatelessWidget {
     return null;
   }
 
-  Future<void> _delete(BuildContext context) async {
+  /// "Catat lagi" (UX-4): membuka CATAT terisi dari transaksi ini, tapi
+  /// sebagai transaksi BARU bertanggal hari ini -- lewat `openRecordSheet`
+  /// yang sama seperti alur CATAT biasa (CLAUDE.md aturan 8), bukan
+  /// formulir pencatatan tersendiri.
+  Future<void> _recordAgain(BuildContext context) async {
     final bloc = context.read<TransactionBloc>();
-    final navigator = Navigator.of(context);
-    final confirmed = await showConfirmDelete(
-      context,
-      title: t.transaction.deleteConfirmTitle,
-      message: t.transaction.deleteConfirmMessage,
-    );
-    if (!confirmed) return;
+    await openRecordSheet(context, prefillFrom: transaction);
+    if (!context.mounted) return;
+    bloc.add(const TransactionRefreshed());
+  }
+
+  /// UX-8: hapus LANGSUNG tanpa dialog konfirmasi -- pemakai bisa
+  /// mengurungkannya lewat aksi "Urungkan" pada snackbar yang tampil
+  /// sesudahnya (`TransactionBloc._effectDeletedWithUndo`). Konfirmasi
+  /// tetap dipakai untuk hapus dompet, anggaran, dan proyek (keputusan
+  /// pemilik, UX_REVIEW_FIXES.md UX-8) -- transaksi TIDAK bisa dibatalkan
+  /// tak bisa dibalik, karena Urungkan menyimpannya kembali persis (id
+  /// sama, saldo dihitung ulang).
+  void _delete(BuildContext context) {
+    final bloc = context.read<TransactionBloc>();
+    Navigator.of(context).pop();
     bloc.add(TransactionDeleted(transaction));
-    navigator.pop();
   }
 
   @override
@@ -134,6 +146,11 @@ class TransactionDetailPage extends StatelessWidget {
                   _ManualNote(text: t.transaction.detailManualNote),
                   const SizedBox(height: AppSpacing.md),
                   AppButton(label: t.transaction.editAction, onPressed: () => _edit(context, state)),
+                  const SizedBox(height: AppSpacing.sm),
+                  AppButton.secondary(
+                    label: t.transaction.recordAgainAction,
+                    onPressed: () => _recordAgain(context),
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   _DeleteLink(onPressed: () => _delete(context)),
                 ],
@@ -284,7 +301,7 @@ class _HeroCard extends StatelessWidget {
               color: colors.tinted(colors.kindFill(kind), 0.16),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, size: 11, color: ink)),
+            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, color: ink)),
           ),
           const SizedBox(height: AppSpacing.md),
           FittedBox(

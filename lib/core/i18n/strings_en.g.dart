@@ -196,6 +196,8 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get monthStatusLabel => 'This month\'s log status';
 	@override String logCountBadge({required Object count}) => '${count} active logs';
 	@override String get netFlowLabel => 'Net flow';
+	@override String get flowIncomeLabel => 'In';
+	@override String get flowExpenseLabel => 'Out';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
 	@override String expenseFilterLabel({required Object count}) => 'Expense ${count}';
@@ -204,11 +206,11 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get walletFilterLabel => 'Wallet';
 	@override String get categoryFilterAllLabel => 'All Categories';
 	@override String get categoryFilterLabel => 'Category';
+	@override String get filterButtonLabel => 'Filter';
+	@override String get filterSheetTitle => 'Filter Transactions';
+	@override String get filterSheetDoneAction => 'Done';
 	@override String get todayLabel => 'Today';
 	@override String get yesterdayLabel => 'Yesterday';
-	@override String get incomeBadge => '+IN';
-	@override String get expenseBadge => '-OUT';
-	@override String get transferBadge => '# TRANSFER';
 	@override String get untitledTransaction => 'Untitled';
 	@override String get emptyMonthBadge => 'Empty Ledger';
 	@override String get emptyMonthTitle => 'No transactions yet';
@@ -250,13 +252,14 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get detailAmountLabel => 'Amount';
 	@override String get detailManualNote => 'This entry is a manual record in Tanukonomy. Wallet balances are calculated from the data you enter, with no connection to a bank account.';
 	@override String get editAction => 'Edit This Entry';
+	@override String get recordAgainAction => 'Record Again';
 	@override String get deleteAction => 'Delete Entry from History';
 	@override String get editSheetTitle => 'Edit Entry';
 	@override String get saveChangesAction => 'Save Changes';
-	@override String get deleteConfirmTitle => 'Delete this entry?';
-	@override String get deleteConfirmMessage => 'The entry is removed from history, and wallet balances are recalculated without it.';
 	@override String get updatedMessage => 'Changes saved.';
 	@override String get deletedMessage => 'Entry deleted.';
+	@override String get undoDeleteAction => 'Undo';
+	@override String get restoredMessage => 'Entry restored.';
 	@override String get budgetLabel => 'Budget';
 	@override String get openBudgetAction => 'View budget';
 	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
@@ -275,7 +278,6 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get manualNoteTitle => 'Manual record';
 	@override String get manualNoteBody => 'Balances are computed from the entries you record yourself, not synced automatically from any bank.';
 	@override String get listHeading => 'Wallets';
-	@override String get balanceLabel => 'Current balance';
 	@override String get addAction => 'Add New Wallet';
 	@override String get inactiveHeading => 'Inactive Wallets';
 	@override String get inactiveBadge => 'Inactive';
@@ -342,6 +344,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get spentLabel => 'Spent';
 	@override String get remainingLabel => 'Remaining';
 	@override String spentPercentLabel({required Object percent}) => 'Spent (${percent}%)';
+	@override String paceLabel({required Object percent}) => 'Period elapsed (${percent}%)';
 	@override String get summaryNote => 'A budget is a spending plan, not a deduction from your wallet. Balances only change when an expense or transfer is recorded.';
 	@override String get filterAll => 'All';
 	@override String get filterActive => 'Active';
@@ -781,6 +784,8 @@ extension on TranslationsEn {
 			'transaction.monthStatusLabel' => 'This month\'s log status',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} active logs',
 			'transaction.netFlowLabel' => 'Net flow',
+			'transaction.flowIncomeLabel' => 'In',
+			'transaction.flowExpenseLabel' => 'Out',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expense ${count}',
@@ -789,11 +794,11 @@ extension on TranslationsEn {
 			'transaction.walletFilterLabel' => 'Wallet',
 			'transaction.categoryFilterAllLabel' => 'All Categories',
 			'transaction.categoryFilterLabel' => 'Category',
+			'transaction.filterButtonLabel' => 'Filter',
+			'transaction.filterSheetTitle' => 'Filter Transactions',
+			'transaction.filterSheetDoneAction' => 'Done',
 			'transaction.todayLabel' => 'Today',
 			'transaction.yesterdayLabel' => 'Yesterday',
-			'transaction.incomeBadge' => '+IN',
-			'transaction.expenseBadge' => '-OUT',
-			'transaction.transferBadge' => '# TRANSFER',
 			'transaction.untitledTransaction' => 'Untitled',
 			'transaction.emptyMonthBadge' => 'Empty Ledger',
 			'transaction.emptyMonthTitle' => 'No transactions yet',
@@ -835,13 +840,14 @@ extension on TranslationsEn {
 			'transaction.detailAmountLabel' => 'Amount',
 			'transaction.detailManualNote' => 'This entry is a manual record in Tanukonomy. Wallet balances are calculated from the data you enter, with no connection to a bank account.',
 			'transaction.editAction' => 'Edit This Entry',
+			'transaction.recordAgainAction' => 'Record Again',
 			'transaction.deleteAction' => 'Delete Entry from History',
 			'transaction.editSheetTitle' => 'Edit Entry',
 			'transaction.saveChangesAction' => 'Save Changes',
-			'transaction.deleteConfirmTitle' => 'Delete this entry?',
-			'transaction.deleteConfirmMessage' => 'The entry is removed from history, and wallet balances are recalculated without it.',
 			'transaction.updatedMessage' => 'Changes saved.',
 			'transaction.deletedMessage' => 'Entry deleted.',
+			'transaction.undoDeleteAction' => 'Undo',
+			'transaction.restoredMessage' => 'Entry restored.',
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
 			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
@@ -851,7 +857,6 @@ extension on TranslationsEn {
 			'wallet.manualNoteTitle' => 'Manual record',
 			'wallet.manualNoteBody' => 'Balances are computed from the entries you record yourself, not synced automatically from any bank.',
 			'wallet.listHeading' => 'Wallets',
-			'wallet.balanceLabel' => 'Current balance',
 			'wallet.addAction' => 'Add New Wallet',
 			'wallet.inactiveHeading' => 'Inactive Wallets',
 			'wallet.inactiveBadge' => 'Inactive',
@@ -909,6 +914,7 @@ extension on TranslationsEn {
 			'budget.spentLabel' => 'Spent',
 			'budget.remainingLabel' => 'Remaining',
 			'budget.spentPercentLabel' => ({required Object percent}) => 'Spent (${percent}%)',
+			'budget.paceLabel' => ({required Object percent}) => 'Period elapsed (${percent}%)',
 			'budget.summaryNote' => 'A budget is a spending plan, not a deduction from your wallet. Balances only change when an expense or transfer is recorded.',
 			'budget.filterAll' => 'All',
 			'budget.filterActive' => 'Active',
@@ -1187,11 +1193,11 @@ extension on TranslationsEn {
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
+			_ => null,
+		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
-			_ => null,
-		} ?? switch (path) {
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',

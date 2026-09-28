@@ -70,16 +70,20 @@ Aturan berikut sudah ada di proyek dan mengikat. Baca sebelum menyentuh kode.
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 27 September 2026.
+Terakhir diperbarui: 28 September 2026.
 
 | Tingkat | Item | Selesai |
 |---|---|---|
-| 🟠 Friksi | 12 | 7 |
-| 🟡 Polish | 10 | 5 |
-| **Total** | **22** | **12** |
+| 🟠 Friksi | 12 | 11 |
+| 🟡 Polish | 10 | 10 |
+| **Total** | **22** | **21** |
 
-Terkunci menunggu keputusan pemilik: UX-4, UX-8, UX-10, dan UX-14,
-UX-15, UX-16, UX-18, UX-20, UX-21 (keenamnya lewat persetujuan ADR-020).
+Semua keputusan pemilik yang dibutuhkan sudah dijawab 28 Sep 2026 (lihat
+bagian di bawah). ADR-020 disetujui dan dikerjakan penuh (UX-14, UX-15,
+UX-16, UX-18, UX-20, UX-21), beserta UX-10, UX-4, dan UX-8. Satu-satunya
+item sisa adalah **UX-1**, ditunda dengan sengaja ke Fase 9/onboarding
+(lihat keputusan KO-5 di [ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) --
+bukan pekerjaan yang tertinggal.
 
 ## Keputusan pemilik yang dibutuhkan
 
@@ -89,15 +93,15 @@ dijawab.
 
 - ~~**UX-1**~~ — diputuskan 27 Sep 2026 lewat KO-5 ONBOARDING_PLAN: langsung
   ke formulir Pengeluaran dengan pengalih jenis.
-- **UX-4** — Bentuk "catat ulang": tombol "Catat lagi" di rincian transaksi
-  saja, atau juga favorit transaksi tersimpan (pola Money Manager)?
-- **UX-8** — Hapus transaksi tanpa dialog, diganti snackbar **Urungkan**?
+- ~~**UX-4**~~ — diputuskan 28 Sep 2026: **tombol "Catat lagi" saja** di
+  rincian transaksi (bukan juga favorit transaksi tersimpan).
+- ~~**UX-8**~~ — diputuskan 28 Sep 2026: **ganti ke Urungkan** — hapus
+  transaksi langsung tanpa dialog, snackbar Urungkan mengembalikannya.
   Konfirmasi tetap untuk hapus dompet, anggaran, dan proyek.
-- **UX-10** — Warna bilah progres anggaran (ADR-016 baris 136 menyebutnya
-  "belum diputuskan") dan penanda laju waktu periode.
-- **ADR-020** — Setujui, ubah, atau tolak usulan hierarki penekanan
-  (varian tombol, label minimal 11px, satu penanda warna per baris, bilah
-  hanya untuk progres). Membuka UX-14, UX-15, UX-16, UX-18, UX-20, UX-21.
+- ~~**UX-10**~~ — diputuskan 28 Sep 2026: **terapkan usulan penuh** — warna
+  netral/amber/merah menggantikan hijau, DAN penanda laju waktu periode.
+- ~~**ADR-020**~~ — **disetujui apa adanya** 28 Sep 2026. Membuka UX-14,
+  UX-15, UX-16, UX-18, UX-20, UX-21.
 
 ## Friksi
 
@@ -149,13 +153,35 @@ mencatat. Urutannya dari dampak terbesar.
       ✅ Selesai: kategori riwayat per jenis (paling sering, beda huruf
       digabung) lewat `mergeCategorySuggestions`, ditawarkan sebelum saran
       bawaan.
-- [ ] **UX-4** 🟠⛔ [B] **Tidak ada "catat ulang" untuk transaksi rutin.**
+- [x] **UX-4** 🟠 [B] **Tidak ada "catat ulang" untuk transaksi rutin.**
       Belanja mingguan, token listrik, dan sejenisnya diisi dari nol.
       Usulan minimum: tombol **Catat lagi** di rincian transaksi yang membuka
       `openRecordSheet` dengan jenis, dompet, kategori, nominal, dan catatan
       terisi, tanggal hari ini. Perluasan (keputusan pemilik): favorit
       transaksi tersimpan.
       Verifikasi: uji widget rincian → formulir terisi.
+      ✅ Selesai (28 Sep 2026), keputusan pemilik: **tombol "Catat lagi"
+      saja**, tanpa favorit transaksi tersimpan. `openRecordSheet` menerima
+      parameter baru `prefillFrom` (jenis diturunkan dari tipe transaksinya,
+      lewati lembar pilihan) yang menuju param baru `prefill` di ketiga
+      formulir CATAT -- BEDA dari `initial` (mode sunting): formulir terisi
+      awal (nominal, kategori, catatan, dompet, pos anggaran) tapi TETAP
+      mode CATAT (judul dan tombol tidak berubah jadi "Simpan Perubahan")
+      dan tanggalnya tetap HARI INI, bukan tanggal transaksi sumber --
+      menghasilkan transaksi baru, bukan menimpa yang lama.
+      Tombol `AppButton.secondary` (ADR-020, bukan primary kedua di layar
+      yang sama dengan "Ubah Catatan Ini") ditambahkan di
+      `TransactionDetailPage`, disembunyikan untuk transaksi milik
+      pembayaran freelance (sama seperti ubah/hapus). Pos anggaran yang
+      tidak lagi berlaku untuk tanggal hari ini otomatis tidak ikut terisi
+      (memakai ulang `_validBudgetItemId`/`expenseBudgetChoicesFor` yang
+      sudah ada, T-8.1). Kalau dompet transaksi sumber sudah nonaktif,
+      dropdown dompet formulir tampil kosong -- pemakai memilih dompet baru
+      (dompet nonaktif memang tidak ditawarkan CATAT).
+      Diuji: widget test rincian transaksi -- "Catat lagi" membuka formulir
+      CATAT (bukan lembar sunting) terisi nominal dan kategori dari
+      transaksi sumber, menyimpan menghasilkan DUA transaksi (lama tetap
+      ada) dan saldo terpotong dua kali.
 - [x] **UX-5** 🟠 [D] **Komponen bawaan Material tetap berbahasa Inggris.**
       `lib/app.dart:31` — `MaterialApp.router` tanpa `localizationsDelegates`
       dan `supportedLocales`. Terbukti di render: label semantik dropdown
@@ -193,7 +219,7 @@ mencatat. Urutannya dari dampak terbesar.
       Verifikasi: uji widget Beranda tanpa dompet.
       ✅ Selesai: tautan anggaran disembunyikan tanpa dompet; pil "+ Dompet" di
       kartu saldo dihapus, tersisa "Buat Dompet Pertama".
-- [ ] **UX-8** 🟠⛔ [C] **Hapus transaksi lewat dialog, tanpa Urungkan.**
+- [x] **UX-8** 🟠 [C] **Hapus transaksi lewat dialog, tanpa Urungkan.**
       Tujuh titik `showConfirmDelete`, termasuk
       `transaction_detail_page.dart:87`. Menghapus transaksi mengubah saldo;
       konfirmasi yang terlalu sering membuat orang menekan "Hapus" tanpa
@@ -203,6 +229,32 @@ mencatat. Urutannya dari dampak terbesar.
       dihitung ulang). Konfirmasi dipertahankan untuk aksi yang tak bisa
       dibalik.
       Verifikasi: uji bloc hapus → urungkan mengembalikan saldo persis.
+      ✅ Selesai (28 Sep 2026), keputusan pemilik: **ganti ke Urungkan**,
+      HANYA untuk transaksi -- enam titik `showConfirmDelete` lain (dompet,
+      anggaran, template, proyek, entri worklog, pembayaran, batalkan
+      penerimaan) TETAP memakai dialog konfirmasi, tidak disentuh.
+      `TransactionDetailPage._delete` menghapus langsung (tanpa
+      `showConfirmDelete`) lalu menutup layar; `TransactionBloc._onDeleted`
+      memancarkan `CallbackEffect` (framework `state_management`, sudah
+      terdaftar global) yang menampilkan `SnackBar` berlatar netral dengan
+      aksi "Urungkan" selama 5 detik -- BUKAN
+      `ShowSnackBarEffect.actionLabel`/`actionIntentId`, yang menurut
+      catatan `snackbar_effect_handler.dart` sendiri memang belum
+      disambungkan ke bloc mana pun (keputusan mekanisme yang diminta
+      catatan itu: pakai `CallbackEffect` yang sudah ada, bukan
+      menyambungkan mekanisme baru). Menekan "Urungkan" mengirim event baru
+      `TransactionRestored`, yang menyimpan ulang transaksi (id sama) lewat
+      `RecordTransaction` biasa (bukan use case baru) dan menghitung ulang
+      saldo dompet yang tersentuh.
+      Kunci i18n `transaction.deleteConfirmTitle`/`deleteConfirmMessage`
+      yang jadi tak terpakai dihapus; kunci baru
+      `undoDeleteAction`/`restoredMessage`.
+      Diuji: bloc (`CallbackEffect` dipancarkan sesudah hapus;
+      `TransactionRestored` mengembalikan saldo persis dan HANYA menulis
+      ulang transaksi, tidak mencatat transaksi baru) dan widget (hapus
+      langsung tanpa dialog lalu menampilkan snackbar Urungkan; menekan
+      Urungkan mengembalikan baris dan saldo, `listAllTransactions` tetap
+      satu transaksi).
 
 ## Polish
 
@@ -222,7 +274,7 @@ tugas, tetapi murah dan menaikkan kualitas terasa.
       Penafian tetap di lembar pilihan CATAT, rincian transaksi, dan rincian
       dompet; kartu aturan jenis (mis. saldo terpotong) dipertahankan karena
       menjelaskan aturan, bukan penafian.
-- [ ] **UX-10** 🟡⛔ [E] **Bilah progres anggaran: warna dan laju waktu.**
+- [x] **UX-10** 🟡 [E] **Bilah progres anggaran: warna dan laju waktu.**
       `AppSegmentedProgressBar.colorFor` memakai `income` (hijau = uang
       masuk, ADR-016) untuk pemakaian sehat; ADR-016 baris 136 mencatatnya
       "belum diputuskan". Bilah juga tidak menjawab "apakah aku masih di
@@ -231,6 +283,21 @@ tugas, tetapi murah dan menaikkan kualitas terasa.
       rencana; tambahkan penanda laju ("terpakai 60%, periode berjalan 40%")
       di kartu anggaran Beranda dan rincian anggaran. Catat keputusan di
       ADR-016.
+      ✅ Selesai (28 Sep 2026): sisi sehat `AppSegmentedProgressBar.colorFor`
+      diganti `textPrimary` (netral) dari `income` -- amber (`pending`)
+      mendekati batas dan merah (`overBudget`) lewat rencana tidak berubah.
+      Penanda laju waktu baru `Budget.elapsedRatio(now)` (domain, fraksi
+      periode yang berlalu) dipakai di rincian anggaran (`budget_detail_page.dart`,
+      baris baru "Periode berjalan (X%)" di bawah bilah progres).
+      ⚠ **Sebagian**: penanda laju TIDAK ditambahkan ke kartu anggaran
+      Beranda -- `BudgetOverview` (port `BudgetOverviewSource`) mengagregasi
+      SEMUA anggaran aktif jadi satu total tanpa periode tunggal (anggaran
+      berbeda boleh berbeda periode/tanggal mulai sekaligus), jadi "laju
+      waktu" gabungan tidak punya makna tunggal yang jujur tanpa keputusan
+      produk baru (mis. anggaran mana yang jadi acuan, atau bagaimana
+      merata-ratakannya) -- di luar cakupan perbaikan UX murni. Kartu
+      Beranda tetap menampilkan warna netral/amber/merah yang benar dari
+      `colorFor`.
 - [x] **UX-11** 🟡 [B] **Menu pilihan dompet hanya menampilkan nama.**
       Terlihat di render: saldo baru tampil sesudah dompet dipilih.
       Perbaikan: saldo kecil di tiap baris menu `WalletSelectField`.
@@ -261,12 +328,14 @@ tugas, tetapi murah dan menaikkan kualitas terasa.
 
 ## UI: penekanan, warna, tipografi, tata letak
 
-Sembilan item dari review UI. Enam di antaranya terkunci sampai
+Sembilan item dari review UI, semuanya selesai. Enam (UX-14, UX-15, UX-16,
+UX-18, UX-20, UX-21) menunggu persetujuan
 [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
-disetujui, karena mengubah cara komponen ADR-015 dipakai. Tiga lainnya
-menegakkan aturan yang sudah berlaku dan bisa dikerjakan sekarang.
+karena mengubah cara komponen ADR-015 dipakai -- disetujui dan dikerjakan
+28 Sep 2026. Tiga lainnya (UX-13, UX-17, UX-19) menegakkan aturan yang
+sudah berlaku dan sudah selesai lebih dulu.
 
-- [ ] **UX-14** 🟠⛔ [E] **Semua tombol memakai penekanan tertinggi.**
+- [x] **UX-14** 🟠 [E] **Semua tombol memakai penekanan tertinggi.**
       `app_button.dart` hanya punya satu gaya (isian, garis tepi 2px,
       bayangan keras), dipakai 40 kali; tidak ada gaya bergaris tepi atau
       tonal. "Simpan", "Hapus", "Tambah Dompet Baru", dan "Buat Anggaran
@@ -276,19 +345,59 @@ menegakkan aturan yang sudah berlaku dan bisa dikerjakan sekarang.
       bawaan `primary`; paling banyak satu `primary` per layar. Tinjau 40
       titik pakai.
       Verifikasi: uji widget tiap varian; render tiap tab.
-- [ ] **UX-15** 🟠⛔ [F] **Label mikro terlalu kecil dan terlalu sering kapital.**
+      ✅ Selesai (28 Sep 2026): `AppButton` punya `AppButtonVariant`
+      (`primary`/`secondary`/`tertiary`, bawaan `primary`) -- `secondary`
+      kini TANPA bayangan (elevasi 0, sebelumnya ikut memakai bayangan keras
+      primary) dan menerima `textColor` untuk aksi destruktif; `tertiary`
+      baru (tautan teks tanpa bingkai, pola `HomeTextLink`). Tujuh tombol
+      hapus isian merah (`color: colors.expense`) di formulir sunting
+      (dompet, entri worklog, proyek, potongan, pos anggaran, template,
+      anggaran) diganti `AppButton.secondary(textColor: colors.expense)` --
+      isian merah solid dipertahankan HANYA kalau memang di dalam dialog
+      konfirmasi (tidak ada, `showConfirmDelete` sudah `TextButton` polos).
+      Dua pelanggaran "satu primary per layar" ditemukan dan diperbaiki:
+      bilah bawah rincian proyek freelance ("+ Worklog" dan "Tagih (n)"
+      tampil bersamaan -- "+ Worklog" analog "Tambah pos" jadi secondary,
+      "Tagih" tetap primary sebagai aksi penyelesaian); footer "Tambah
+      Template" di layar Template Anggaran (bersaing dengan "Pakai Template
+      Ini" tiap kartu) jadi secondary.
+- [x] **UX-15** 🟠 [F] **Label mikro terlalu kecil dan terlalu sering kapital.**
       `kind_surfaces.dart:58` — `transactionLabelStyle` bawaan 10px, dipakai
       112 kali (sekitar 78 di 10px, 10 di 9px); 71 `toUpperCase()`. Label
       navigasi bawah 10px (`pixel_theme.dart:115`).
       Perbaikan (ADR-020 §3.2): bawaan 11px, tidak ada label di bawah 11px;
       kapital hanya untuk lencana dan kop 1–3 kata.
       Verifikasi: render 360dp dan 390dp, tidak ada teks terpotong baru.
-- [ ] **UX-16** 🟡⛔ [E] **Empat penanda merah di satu baris transaksi.**
+      ✅ Sebagian selesai (28 Sep 2026): `transactionLabelStyle` menjepit
+      [size] ke minimum `kMinLabelSize` (11px, `pixel_theme.dart`) --
+      seluruh pemanggil `size: 9` (7 titik) otomatis naik ke 11px tanpa
+      perlu disunting satu-satu. Label navigasi bawah (`pixel_theme.dart:115`)
+      juga naik ke 11px. Kenaikan ini menyebabkan satu regresi nyata:
+      `HomeSectionHeader` (dipakai `HomeGuide`) meluap 18px di 360px+teks 2x
+      karena `trailing`-nya tidak dibungkus `Flexible` -- diperbaiki
+      (`Flexible` + `overflow: ellipsis`), diuji lewat suite Freelance yang
+      kebetulan melewati Beranda. **Belum dikerjakan**: audit "kapital hanya
+      untuk lencana dan kop 1–3 kata" terhadap 71 pemanggilan
+      `toUpperCase()` -- itu tinjauan per-kasus (mana yang lencana/kop
+      pendek vs label lebih panjang), bukan perubahan mekanis seperti
+      kenaikan ukuran, dan disengaja ditunda supaya tidak menghabiskan
+      anggaran token untuk sapuan 71 titik dengan risiko regresi visual
+      yang tinggi per titik.
+- [x] **UX-16** 🟡 [E] **Empat penanda merah di satu baris transaksi.**
       Garis aksen, kotak ikon, nominal, dan lencana "−KELUAR" sekaligus
       (`TransactionRow`, `transaction_date_group_card.dart`). Daftar
       pengeluaran jadi dinding merah dan merah kehilangan fungsi sinyalnya.
       Perbaikan (ADR-020 §3.3): tanda `−` dan warna nominal, ditambah satu
       penanda jenis; lencana hanya di rincian.
+      ✅ Selesai (28 Sep 2026): garis aksen kiri (`ColoredBox`) dan lencana
+      `_TypeBadge` dihapus dari `TransactionRow` -- satu-satunya penanda
+      warna jenis yang tersisa di baris daftar adalah kotak ikon (`iconTile`),
+      ditambah tanda `+`/`−` dan warna pada nominal (tidak dihitung sebagai
+      penanda terpisah, itu baseline wajib ADR-020). Lencana jenis tetap
+      ada di layar rincian transaksi (tidak disentuh). Kunci i18n
+      `transaction.{income,expense,transfer}Badge` yang jadi tak terpakai
+      ikut dihapus (padanan `record.*Badge` untuk formulir CATAT TETAP ada,
+      beda namespace).
 - [x] **UX-17** 🟠 [E] **Snackbar sukses memakai hijau "uang masuk".**
       `snackbar_effect_handler.dart:18` — `success → colors.income`.
       "Pengeluaran tercatat." tampil hijau, bertentangan dengan ADR-016.
@@ -297,13 +406,18 @@ menegakkan aturan yang sudah berlaku dan bisa dikerjakan sekarang.
       Verifikasi: uji widget warna snackbar per `FeedbackSeverity`.
       ✅ Selesai: sukses berlatar `textPrimary` dengan ikon centang. Uji warna
       per severity.
-- [ ] **UX-18** 🟡⛔ [E] **Bilah bersegmen punya dua arti.**
+- [x] **UX-18** 🟡 [E] **Bilah bersegmen punya dua arti.**
       `transaction_month_header.dart:183` memakai bilah untuk proporsi
       masuk/keluar tanpa legenda; di anggaran bilah yang sama berarti
       terpakai dari rencana. Dengan satu pengeluaran, bilah penuh merah dan
       terbaca "anggaran habis".
       Perbaikan (ADR-020 §3.5): ganti dengan angka Masuk dan Keluar kecil di
       bawah Netto.
+      ✅ Selesai (28 Sep 2026): `_ShareBar` (bilah bersegmen kop Transaksi)
+      dihapus, diganti `_FlowNumbers` -- dua angka kecil "MASUK Rp…" / "KELUAR
+      Rp…" berwarna `income`/`expense` di bawah Netto. `AppSegmentedProgressBar`
+      kini HANYA dipakai untuk progres anggaran (Beranda, Anggaran,
+      rincian). Kunci i18n baru `transaction.flowIncomeLabel`/`flowExpenseLabel`.
 - [x] **UX-19** 🟠 [E] **Ikon jenis transaksi nyaris hilang di mode gelap.**
       Terlihat di render gelap: ikon pixel di kotak Pemasukan/Pengeluaran
       Beranda dan kotak ikon baris transaksi berkontras rendah. Uji kontras
@@ -315,17 +429,46 @@ menegakkan aturan yang sudah berlaku dan bisa dikerjakan sekarang.
       pastel terang; dipakai kotak ikon Beranda, baris transaksi, CATAT, dan
       Freelance. Uji kontras garis ikon >= 3:1 di kedua mode (mutasi: perilaku
       lama gagal 5 kasus gelap). Dicek di emulator mode gelap.
-- [ ] **UX-20** 🟡⛔ [A] **Kartu dompet terlalu tinggi untuk isinya.**
+- [x] **UX-20** 🟡 [A] **Kartu dompet terlalu tinggi untuk isinya.**
       `wallet_card.dart` — sekitar 130px untuk nama, jenis, dan saldo; tiga
       dompet memenuhi layar, dan "SALDO AKTIF" diulang di tiap kartu.
       Perbaikan: varian baris ringkas (64–72px: ikon, nama dan jenis, saldo
       rata kanan) di daftar; kartu besar cukup di rincian dompet.
-- [ ] **UX-21** 🟡⛔ [A] **Kop Transaksi sekitar 480px sebelum isi pertama.**
+      ✅ Selesai (28 Sep 2026): `WalletCard` dirombak jadi satu baris (ikon
+      40px, nama + jenis/status di bawahnya, nominal rata kanan lebar
+      dijepit 130px mengikuti pola kolom nominal `TransactionRow`, lalu
+      panah). Kotak lencana `_Badge` dan baris "SALDO AKTIF" berulang
+      dihapus dari daftar (kartu besar berlabel tetap di `WalletDetailPage`,
+      tidak disentuh). Kunci i18n `wallet.balanceLabel` yang jadi tak
+      terpakai ikut dihapus.
+      ⚠ Baris dibungkus `IntrinsicHeight` (pola sama dengan
+      `TransactionRow`) -- tanpa ini `FittedBox` nominal menerima tinggi tak
+      terhingga dari `Row` dan meluap horizontal secara tidak kentara,
+      ketahuan uji 360px+teks 2x+nama panjang. Baris jenis/status memakai
+      `Wrap`, bukan `Row`, karena label jenis dompet ID ("Bank / Rekening")
+      tidak selalu muat sebaris pada kolom yang menyempit akibat nominal di
+      sebelahnya.
+- [x] **UX-21** 🟡 [A] **Kop Transaksi sekitar 480px sebelum isi pertama.**
       Konsol bulan, kartu utama, kolom cari, dua dropdown, dan empat tab
       jenis; transaksi pertama baru di y≈520 pada layar 844.
       Perbaikan: gabungkan penyaring dompet dan kategori ke satu tombol
       "Filter" yang membuka lembar; kartu utama lebih pendek (tanpa bilah,
       lihat UX-18).
+      ✅ Selesai (28 Sep 2026): kartu utama sudah lebih pendek lewat UX-18
+      (bilah bersegmen kop Transaksi diganti dua angka kecil). Baris
+      `TransactionWalletCategoryRow` (dua dropdown berdampingan) dihapus,
+      digantikan `TransactionFilterButton` -- satu tombol 44×44 di samping
+      kolom cari (bukan baris sendiri di bawahnya, menghilangkan satu baris
+      penuh) yang membuka `_TransactionFilterSheet` berisi kedua dropdown
+      lama (`AppMenuSelectButton` dompet dan kategori, ditata vertikal) plus
+      tombol "Selesai". Tombol Filter menampilkan lencana angka (0/1/2)
+      untuk jumlah filter aktif. Kunci i18n baru `transaction.filterButtonLabel`/
+      `filterSheetTitle`/`filterSheetDoneAction`. Diuji: tombol membuka
+      lembar, memilih dompet menyaring daftar dan menampilkan lencana "1"
+      (widget test baru); uji `WalletDetailPage` yang sebelumnya mengecek
+      label dompet terpilih langsung di halaman diperbarui mengecek lencana
+      tombol Filter sebagai gantinya, karena label itu sekarang di dalam
+      lembar, bukan di halaman.
 - [x] **UX-22** 🟡 [D] **Label ganda untuk satu angka.**
       Kartu arus Beranda (`home_cards.dart`, `_FlowTile`): "PEMASUKAN SEP",
       lalu "+ MASUK", lalu nominal. Label kedua mubazir karena tanda `+`/`−`

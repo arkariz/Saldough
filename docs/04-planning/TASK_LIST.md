@@ -39,7 +39,7 @@ Terakhir diperbarui: 28 September 2026.
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 0 | KO dijawab; mulai T-9.1 |
-| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 12 | Berjalan — 9 item sisa terkunci: UX-4, UX-8, UX-10, dan enam item UI menunggu [ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) |
+| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 21 | ADR-020 disetujui dan dikerjakan penuh; satu-satunya sisa (UX-1) sengaja ditunda ke Fase 9 |
 
 ## Keputusan terbuka
 

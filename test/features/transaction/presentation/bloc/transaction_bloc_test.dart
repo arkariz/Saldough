@@ -709,6 +709,77 @@ void main() {
                 ).captured.single
                 as Wallet;
         expect(saved.currentBalance, 0);
+        // UX-8: bukan dialog konfirmasi -- efek yang dipancarkan sesudah
+        // hapus adalah `CallbackEffect` (menampilkan snackbar "Urungkan"),
+        // bukan `ShowSnackBarEffect` polos yang dipakai sunting/urungkan.
+        expect(bloc.state.effect, isA<CallbackEffect>());
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'UX-8: TransactionRestored menyimpan ulang transaksi yang dihapus, saldo persis seperti sebelum dihapus',
+      setUp: () {
+        stubMonthSequence([
+          [],
+          [
+            IncomeTransaction(
+              id: 'i1',
+              date: day,
+              amount: 100000,
+              note: 'gaji',
+              walletId: 'bca',
+            ),
+          ],
+        ]);
+        when(() => transactionRepository.listAllTransactions()).thenAnswer(
+          (_) async => Right([
+            IncomeTransaction(
+              id: 'i1',
+              date: day,
+              amount: 100000,
+              note: 'gaji',
+              walletId: 'bca',
+            ),
+          ]),
+        );
+        when(() => walletRepository.listWallets()).thenAnswer(
+          (_) async => const Right([
+            Wallet(
+              id: 'bca',
+              name: 'BCA',
+              iconKey: 'walletBank',
+              initialBalance: 0,
+              currentBalance: 100000,
+            ),
+          ]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc.add(
+          TransactionRestored(
+            IncomeTransaction(
+              id: 'i1',
+              date: day,
+              amount: 100000,
+              note: 'gaji',
+              walletId: 'bca',
+            ),
+          ),
+        );
+      },
+      skip: 1,
+      verify: (bloc) {
+        verify(() => transactionRepository.saveTransaction(any())).called(1);
+        final saved =
+            verify(
+                  () => walletRepository.saveWallet(captureAny()),
+                ).captured.single
+                as Wallet;
+        expect(saved.currentBalance, 100000);
+        expect(bloc.state.effect, isA<ShowSnackBarEffect>());
       },
     );
 

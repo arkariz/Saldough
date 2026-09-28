@@ -43,6 +43,7 @@ class ExpenseFormSheet extends StatefulWidget {
   const ExpenseFormSheet({
     required this.wallets,
     this.initial,
+    this.prefill,
     this.initialWalletId,
     this.recentCategories = const [],
     this.budgetItems = const [],
@@ -60,9 +61,18 @@ class ExpenseFormSheet extends StatefulWidget {
   /// untuk kembali). Hasil yang dikembalikan sama seperti mode CATAT.
   final ExpenseTransaction? initial;
 
+  /// Transaksi sumber untuk "Catat lagi" (UX-4) -- BEDA dari [initial]:
+  /// formulir terisi awal (nominal, kategori, catatan, dompet, pos anggaran)
+  /// tapi TETAP mode CATAT dan tanggalnya tetap hari ini, bukan tanggal
+  /// transaksi sumber. Pos anggaran yang tidak lagi berlaku untuk hari ini
+  /// otomatis tidak ikut terisi ([_validBudgetItemId]). Diabaikan kalau
+  /// [initial] terisi.
+  final ExpenseTransaction? prefill;
+
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
-  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial] terisi -- mode sunting selalu memakai
-  /// dompet transaksi itu sendiri.
+  /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
+  /// atau [prefill] terisi -- keduanya selalu memakai dompet transaksi itu
+  /// sendiri.
   final String? initialWalletId;
 
   /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
@@ -96,7 +106,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   @override
   void initState() {
     super.initState();
-    final tx = widget.initial;
+    final tx = widget.initial ?? widget.prefill;
     if (tx == null) {
       _walletId = widget.initialWalletId;
       _budgetItemId = widget.initialBudgetItemId;
@@ -108,7 +118,9 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     }
     _budgetItemId = tx.budgetItemId;
     _amountController.text = formatRecordAmount(tx.amount ~/ 100);
-    _date = tx.date;
+    // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
+    // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
+    if (widget.initial != null) _date = tx.date;
     _noteController.text = tx.note;
     _walletId = tx.walletId;
     _categoryController.text = tx.categoryKey ?? '';

@@ -96,12 +96,25 @@ final class TransactionUpdated extends TransactionEvent {
   final Transaction updated;
 }
 
-/// Menghapus satu transaksi dari riwayat (FR-TXN-005). Saldo dompet yang
-/// tersentuh dihitung ulang tanpa transaksi ini.
+/// Menghapus satu transaksi dari riwayat (FR-TXN-005), TANPA dialog
+/// konfirmasi (UX-8) -- saldo dompet yang tersentuh dihitung ulang tanpa
+/// transaksi ini, dan snackbar hasilnya menawarkan "Urungkan"
+/// ([TransactionRestored]).
 final class TransactionDeleted extends TransactionEvent {
   /// Membuat [TransactionDeleted].
   const TransactionDeleted(this.transaction);
 
   /// Transaksi yang dihapus.
+  final Transaction transaction;
+}
+
+/// Menyimpan ulang [transaction] (id sama) setelah dihapus (UX-8, tombol
+/// "Urungkan" pada snackbar [TransactionDeleted]) -- saldo dompet yang
+/// tersentuh dihitung ulang termasuk transaksi ini lagi.
+final class TransactionRestored extends TransactionEvent {
+  /// Membuat [TransactionRestored].
+  const TransactionRestored(this.transaction);
+
+  /// Transaksi yang dikembalikan, `id` sama dengan yang dihapus.
   final Transaction transaction;
 }

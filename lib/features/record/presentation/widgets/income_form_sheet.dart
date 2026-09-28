@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -31,7 +32,7 @@ List<String> _categorySuggestions() => [
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
-/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali;
+/// `Navigator.pop` saat disimpan; tombol kembali menutup CATAT;
 /// `AppShellPage` yang menafsirkan hasilnya, mengikuti pola
 /// `IncomeSourceEditSheet` yang sudah ada. Tata letaknya mengikuti rujukan
 /// visual `pixel_kas_catat_pemasukan`.
@@ -43,6 +44,7 @@ class IncomeFormSheet extends StatefulWidget {
     this.prefill,
     this.initialWalletId,
     this.recentCategories = const [],
+    this.kindSwitcher,
     super.key,
   });
 
@@ -62,6 +64,10 @@ class IncomeFormSheet extends StatefulWidget {
   /// tetap hari ini, bukan tanggal transaksi sumber. Diabaikan kalau
   /// [initial] terisi.
   final IncomeTransaction? prefill;
+
+  /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
+  /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
+  final Widget? kindSwitcher;
 
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -146,35 +152,42 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
     final wallet = _wallet;
     final amount = _amountSen;
     return RecordFormFrame(
+      kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.income,
       title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
       isEditing: editing,
       onBack: () =>
-          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+          Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : t.record.incomeAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
-        RecordAmountField(
-          controller: _amountController,
-          label: t.record.amountLabelIncome,
-          kind: TransactionKind.income,
-          quickAmounts: _quickAmounts,
-          autofocus: true,
-          onChanged: () => setState(() {}),
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordAmount,
+          child: RecordAmountField(
+            controller: _amountController,
+            label: t.record.amountLabelIncome,
+            kind: TransactionKind.income,
+            quickAmounts: _quickAmounts,
+            autofocus: true,
+            onChanged: () => setState(() {}),
+          ),
         ),
         RecordCategoryField(
           controller: _categoryController,
           suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
           kind: TransactionKind.income,
         ),
-        WalletSelectField(
-          label: t.record.toWalletFieldLabel,
-          wallets: widget.wallets,
-          selectedId: _walletId,
-          onSelected: (id) => setState(() => _walletId = id),
-          previewAmountSen: amount,
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordWallet,
+          child: WalletSelectField(
+            label: t.record.toWalletFieldLabel,
+            wallets: widget.wallets,
+            selectedId: _walletId,
+            onSelected: (id) => setState(() => _walletId = id),
+            previewAmountSen: amount,
+          ),
         ),
         RecordDateField(
           date: _date,

@@ -102,7 +102,6 @@ class _Translations$record$en extends Translations$record$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get sheetTitle => 'Record Transaction';
 	@override String get incomeAction => 'Record Income';
 	@override String get expenseAction => 'Record Expense';
 	@override String get transferAction => 'Record Transfer';
@@ -117,13 +116,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeSavedMessage => 'Income recorded.';
 	@override String get expenseSavedMessage => 'Expense recorded.';
 	@override String get transferSavedMessage => 'Transfer recorded.';
-	@override String get disclaimerMessage => 'Tanukonomy only records manual history. It never moves money automatically.';
-	@override String get incomeSubtitle => 'Record money coming into one of your wallets.';
-	@override String get expenseSubtitle => 'Record money going out of one of your wallets.';
-	@override String get transferSubtitle => 'Record money moving between your own wallets.';
-	@override String get incomeEffectLabel => 'Adds to wallet balance';
-	@override String get expenseEffectLabel => 'Reduces wallet balance';
-	@override String get transferEffectLabel => 'Total balance stays the same';
 	@override String get walletNotSelectedPrompt => 'Not selected yet';
 	@override String get savingMessage => 'Saving...';
 	@override String get categorySuggestionSalary => 'Salary';
@@ -134,19 +126,10 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get categorySuggestionShopping => 'Shopping';
 	@override String get categorySuggestionTransport => 'Transport';
 	@override String get categorySuggestionBills => 'Bills';
-	@override String get sheetSubtitle => 'Pick the kind of financial event you want to record.';
-	@override String get noticeTitle => 'Recording notice';
-	@override String get examplesLabel => 'Examples:';
 	@override String get incomeBadge => 'Money in';
 	@override String get expenseBadge => 'Money out';
 	@override String get transferBadge => 'Internal move';
-	@override String get pickIncomeAction => 'Pick Income';
-	@override String get pickExpenseAction => 'Pick Expense';
-	@override String get pickTransferAction => 'Pick Transfer';
-	@override String get transferExampleCash => 'Cash withdrawal';
-	@override String get transferExampleTopUp => 'e-Wallet top-up';
-	@override String get transferExampleMove => 'Move accounts';
-	@override String get stepLabel => 'Step 2 // Transaction';
+	@override String get stepLabel => 'Record // Transaction';
 	@override String get editStepLabel => 'Edit // Transaction';
 	@override String get expenseRuleTitle => 'Cash rule: balance is reduced';
 	@override String get expenseRuleBody => 'An expense immediately reduces the balance of the wallet you pick below.';
@@ -174,11 +157,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get balanceLabel => 'Balance';
 	@override String get categoryPlaceholder => 'Pick a category';
 	@override String get categoryNoneLabel => 'No category';
-	@override String get choiceStepLabel => 'Step 1 // Pick a type';
-	@override String get flowOutside => 'Outside';
-	@override String get flowWallet => 'Wallet';
-	@override String get flowSourceWallet => 'Source wallet';
-	@override String get flowTargetWallet => 'Target wallet';
 	@override String get budgetItemLabel => 'Budget item';
 	@override String get budgetItemNone => 'No budget';
 	@override String get budgetItemHelp => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.';
@@ -807,7 +785,6 @@ extension on TranslationsEn {
 			'appShell.recordAction' => 'Record',
 			'appShell.transactionsTabLabel' => 'Transactions',
 			'appShell.walletsTabLabel' => 'Wallets',
-			'record.sheetTitle' => 'Record Transaction',
 			'record.incomeAction' => 'Record Income',
 			'record.expenseAction' => 'Record Expense',
 			'record.transferAction' => 'Record Transfer',
@@ -822,13 +799,6 @@ extension on TranslationsEn {
 			'record.incomeSavedMessage' => 'Income recorded.',
 			'record.expenseSavedMessage' => 'Expense recorded.',
 			'record.transferSavedMessage' => 'Transfer recorded.',
-			'record.disclaimerMessage' => 'Tanukonomy only records manual history. It never moves money automatically.',
-			'record.incomeSubtitle' => 'Record money coming into one of your wallets.',
-			'record.expenseSubtitle' => 'Record money going out of one of your wallets.',
-			'record.transferSubtitle' => 'Record money moving between your own wallets.',
-			'record.incomeEffectLabel' => 'Adds to wallet balance',
-			'record.expenseEffectLabel' => 'Reduces wallet balance',
-			'record.transferEffectLabel' => 'Total balance stays the same',
 			'record.walletNotSelectedPrompt' => 'Not selected yet',
 			'record.savingMessage' => 'Saving...',
 			'record.categorySuggestionSalary' => 'Salary',
@@ -839,19 +809,10 @@ extension on TranslationsEn {
 			'record.categorySuggestionShopping' => 'Shopping',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Bills',
-			'record.sheetSubtitle' => 'Pick the kind of financial event you want to record.',
-			'record.noticeTitle' => 'Recording notice',
-			'record.examplesLabel' => 'Examples:',
 			'record.incomeBadge' => 'Money in',
 			'record.expenseBadge' => 'Money out',
 			'record.transferBadge' => 'Internal move',
-			'record.pickIncomeAction' => 'Pick Income',
-			'record.pickExpenseAction' => 'Pick Expense',
-			'record.pickTransferAction' => 'Pick Transfer',
-			'record.transferExampleCash' => 'Cash withdrawal',
-			'record.transferExampleTopUp' => 'e-Wallet top-up',
-			'record.transferExampleMove' => 'Move accounts',
-			'record.stepLabel' => 'Step 2 // Transaction',
+			'record.stepLabel' => 'Record // Transaction',
 			'record.editStepLabel' => 'Edit // Transaction',
 			'record.expenseRuleTitle' => 'Cash rule: balance is reduced',
 			'record.expenseRuleBody' => 'An expense immediately reduces the balance of the wallet you pick below.',
@@ -879,11 +840,6 @@ extension on TranslationsEn {
 			'record.balanceLabel' => 'Balance',
 			'record.categoryPlaceholder' => 'Pick a category',
 			'record.categoryNoneLabel' => 'No category',
-			'record.choiceStepLabel' => 'Step 1 // Pick a type',
-			'record.flowOutside' => 'Outside',
-			'record.flowWallet' => 'Wallet',
-			'record.flowSourceWallet' => 'Source wallet',
-			'record.flowTargetWallet' => 'Target wallet',
 			'record.budgetItemLabel' => 'Budget item',
 			'record.budgetItemNone' => 'No budget',
 			'record.budgetItemHelp' => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.',
@@ -1304,8 +1260,6 @@ extension on TranslationsEn {
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
@@ -1328,6 +1282,8 @@ extension on TranslationsEn {
 			'home.guideWalletTag' => 'Real assets',
 			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
 			'home.guideBudgetTitle' => 'Budgets',
+			_ => null,
+		} ?? switch (path) {
 			'home.guideBudgetTag' => 'Plans',
 			'home.guideBudgetBody' => 'Plan your spending limits. Creating a budget never deducts from any wallet balance.',
 			'home.guideFreelanceTitle' => 'Freelance',

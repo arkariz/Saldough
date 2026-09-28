@@ -77,6 +77,10 @@ class _TourTriggerState extends State<TourTrigger> {
     _scheduled = false;
     final controller = SpotlightHost.maybeOf(context, listen: false);
     if (!mounted || controller == null || !_eligible()) return;
+    // Lembar yang masih meluncur masuk (mis. CATAT) membuat target berpindah
+    // tempat; tunggu animasi rutenya selesai dulu.
+    await _routeSettled();
+    if (!mounted || !_eligible()) return;
     if (!await controller.wouldStart(widget.tour) || !mounted) return;
     // Daftar yang tergulir membuang item di luar layar, termasuk target di
     // puncaknya. Kembali ke atas dulu -- hanya saat tur memang akan tampil,
@@ -86,7 +90,22 @@ class _TourTriggerState extends State<TourTrigger> {
       scrollable.position.jumpTo(scrollable.position.minScrollExtent);
       await WidgetsBinding.instance.endOfFrame;
     }
-    if (mounted && _eligible()) await controller.maybeStart(widget.tour);
+    if (mounted && _eligible()) await controller.maybeStart(widget.tour, navigator: Navigator.maybeOf(context));
+  }
+
+  Future<void> _routeSettled() {
+    final animation = ModalRoute.of(context)?.animation;
+    if (animation == null || animation.isCompleted) return Future.value();
+    final settled = Completer<void>();
+    void listener(AnimationStatus status) {
+      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+        animation.removeStatusListener(listener);
+        if (!settled.isCompleted) settled.complete();
+      }
+    }
+
+    animation.addStatusListener(listener);
+    return settled.future;
   }
 
   /// `Scrollable` vertikal pertama di bawah pemicu ini, kalau ada.

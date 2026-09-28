@@ -135,9 +135,6 @@ class Translations$record$id {
 
 	// Translations
 
-	/// id: 'Catat Transaksi'
-	String get sheetTitle => 'Catat Transaksi';
-
 	/// id: 'Catat Pemasukan'
 	String get incomeAction => 'Catat Pemasukan';
 
@@ -180,27 +177,6 @@ class Translations$record$id {
 	/// id: 'Transfer tercatat.'
 	String get transferSavedMessage => 'Transfer tercatat.';
 
-	/// id: 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.'
-	String get disclaimerMessage => 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.';
-
-	/// id: 'Catat uang yang masuk ke salah satu dompet.'
-	String get incomeSubtitle => 'Catat uang yang masuk ke salah satu dompet.';
-
-	/// id: 'Catat uang yang keluar dari salah satu dompet.'
-	String get expenseSubtitle => 'Catat uang yang keluar dari salah satu dompet.';
-
-	/// id: 'Catat perpindahan uang antar dompet milikmu sendiri.'
-	String get transferSubtitle => 'Catat perpindahan uang antar dompet milikmu sendiri.';
-
-	/// id: 'Menambah saldo dompet'
-	String get incomeEffectLabel => 'Menambah saldo dompet';
-
-	/// id: 'Mengurangi saldo dompet'
-	String get expenseEffectLabel => 'Mengurangi saldo dompet';
-
-	/// id: 'Total saldo tidak berubah'
-	String get transferEffectLabel => 'Total saldo tidak berubah';
-
 	/// id: 'Belum dipilih'
 	String get walletNotSelectedPrompt => 'Belum dipilih';
 
@@ -231,15 +207,6 @@ class Translations$record$id {
 	/// id: 'Tagihan'
 	String get categorySuggestionBills => 'Tagihan';
 
-	/// id: 'Pilih jenis peristiwa finansial yang ingin dicatat.'
-	String get sheetSubtitle => 'Pilih jenis peristiwa finansial yang ingin dicatat.';
-
-	/// id: 'Info Pencatatan'
-	String get noticeTitle => 'Info Pencatatan';
-
-	/// id: 'Contoh:'
-	String get examplesLabel => 'Contoh:';
-
 	/// id: 'Uang Masuk'
 	String get incomeBadge => 'Uang Masuk';
 
@@ -249,26 +216,8 @@ class Translations$record$id {
 	/// id: 'Mutasi Internal'
 	String get transferBadge => 'Mutasi Internal';
 
-	/// id: 'Pilih Pemasukan'
-	String get pickIncomeAction => 'Pilih Pemasukan';
-
-	/// id: 'Pilih Pengeluaran'
-	String get pickExpenseAction => 'Pilih Pengeluaran';
-
-	/// id: 'Pilih Transfer'
-	String get pickTransferAction => 'Pilih Transfer';
-
-	/// id: 'Tarik Tunai'
-	String get transferExampleCash => 'Tarik Tunai';
-
-	/// id: 'Top-up e-Wallet'
-	String get transferExampleTopUp => 'Top-up e-Wallet';
-
-	/// id: 'Pindah Rekening'
-	String get transferExampleMove => 'Pindah Rekening';
-
-	/// id: 'Langkah 2 // Transaksi'
-	String get stepLabel => 'Langkah 2 // Transaksi';
+	/// id: 'Catat // Transaksi'
+	String get stepLabel => 'Catat // Transaksi';
 
 	/// id: 'Sunting // Transaksi'
 	String get editStepLabel => 'Sunting // Transaksi';
@@ -350,21 +299,6 @@ class Translations$record$id {
 
 	/// id: 'Tanpa kategori'
 	String get categoryNoneLabel => 'Tanpa kategori';
-
-	/// id: 'Tahap 1 // Pilih Jenis'
-	String get choiceStepLabel => 'Tahap 1 // Pilih Jenis';
-
-	/// id: 'Luar'
-	String get flowOutside => 'Luar';
-
-	/// id: 'Dompet'
-	String get flowWallet => 'Dompet';
-
-	/// id: 'Dompet asal'
-	String get flowSourceWallet => 'Dompet asal';
-
-	/// id: 'Dompet tujuan'
-	String get flowTargetWallet => 'Dompet tujuan';
 
 	/// id: 'Pos anggaran'
 	String get budgetItemLabel => 'Pos anggaran';
@@ -2055,7 +1989,6 @@ extension on Translations {
 			'appShell.recordAction' => 'Catat',
 			'appShell.transactionsTabLabel' => 'Transaksi',
 			'appShell.walletsTabLabel' => 'Dompet',
-			'record.sheetTitle' => 'Catat Transaksi',
 			'record.incomeAction' => 'Catat Pemasukan',
 			'record.expenseAction' => 'Catat Pengeluaran',
 			'record.transferAction' => 'Catat Transfer',
@@ -2070,13 +2003,6 @@ extension on Translations {
 			'record.incomeSavedMessage' => 'Pemasukan tercatat.',
 			'record.expenseSavedMessage' => 'Pengeluaran tercatat.',
 			'record.transferSavedMessage' => 'Transfer tercatat.',
-			'record.disclaimerMessage' => 'Tanukonomy hanya mencatat riwayat manual. Aplikasi ini tidak pernah memindahkan uang secara otomatis.',
-			'record.incomeSubtitle' => 'Catat uang yang masuk ke salah satu dompet.',
-			'record.expenseSubtitle' => 'Catat uang yang keluar dari salah satu dompet.',
-			'record.transferSubtitle' => 'Catat perpindahan uang antar dompet milikmu sendiri.',
-			'record.incomeEffectLabel' => 'Menambah saldo dompet',
-			'record.expenseEffectLabel' => 'Mengurangi saldo dompet',
-			'record.transferEffectLabel' => 'Total saldo tidak berubah',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
 			'record.categorySuggestionSalary' => 'Gaji',
@@ -2087,19 +2013,10 @@ extension on Translations {
 			'record.categorySuggestionShopping' => 'Belanja',
 			'record.categorySuggestionTransport' => 'Transport',
 			'record.categorySuggestionBills' => 'Tagihan',
-			'record.sheetSubtitle' => 'Pilih jenis peristiwa finansial yang ingin dicatat.',
-			'record.noticeTitle' => 'Info Pencatatan',
-			'record.examplesLabel' => 'Contoh:',
 			'record.incomeBadge' => 'Uang Masuk',
 			'record.expenseBadge' => 'Uang Keluar',
 			'record.transferBadge' => 'Mutasi Internal',
-			'record.pickIncomeAction' => 'Pilih Pemasukan',
-			'record.pickExpenseAction' => 'Pilih Pengeluaran',
-			'record.pickTransferAction' => 'Pilih Transfer',
-			'record.transferExampleCash' => 'Tarik Tunai',
-			'record.transferExampleTopUp' => 'Top-up e-Wallet',
-			'record.transferExampleMove' => 'Pindah Rekening',
-			'record.stepLabel' => 'Langkah 2 // Transaksi',
+			'record.stepLabel' => 'Catat // Transaksi',
 			'record.editStepLabel' => 'Sunting // Transaksi',
 			'record.expenseRuleTitle' => 'Aturan Kas: Saldo Terpotong',
 			'record.expenseRuleBody' => 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.',
@@ -2127,11 +2044,6 @@ extension on Translations {
 			'record.balanceLabel' => 'Saldo',
 			'record.categoryPlaceholder' => 'Pilih kategori',
 			'record.categoryNoneLabel' => 'Tanpa kategori',
-			'record.choiceStepLabel' => 'Tahap 1 // Pilih Jenis',
-			'record.flowOutside' => 'Luar',
-			'record.flowWallet' => 'Dompet',
-			'record.flowSourceWallet' => 'Dompet asal',
-			'record.flowTargetWallet' => 'Dompet tujuan',
 			'record.budgetItemLabel' => 'Pos anggaran',
 			'record.budgetItemNone' => 'Tanpa anggaran',
 			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.',
@@ -2552,8 +2464,6 @@ extension on Translations {
 			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
@@ -2576,6 +2486,8 @@ extension on Translations {
 			'home.guideWalletTag' => 'Aset nyata',
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
+			_ => null,
+		} ?? switch (path) {
 			'home.guideBudgetTag' => 'Rencana',
 			'home.guideBudgetBody' => 'Rencanakan batas belanja. Membuat anggaran tidak memotong saldo dompet mana pun.',
 			'home.guideFreelanceTitle' => 'Freelance',

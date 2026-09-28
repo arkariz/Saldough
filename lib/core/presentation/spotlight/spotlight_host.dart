@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_controller.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_overlay.dart';
@@ -8,8 +6,9 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 /// Pemegang [SpotlightController] dan lapisan tur (ADR-021 §3.3).
 ///
 /// Dipasang di `MaterialApp.builder`, di atas `Navigator`, sehingga lapisan
-/// tur juga menutupi lembar modal. Selama tur tampil, tombol kembali sistem
-/// menutup tur (dan menandainya selesai), bukan menutup layar di bawahnya.
+/// tur juga menutupi lembar modal. Tombol kembali selama tur ditangani rute
+/// penahan milik `SpotlightController.maybeStart`: ia menutup tur (dan
+/// menandai langkahnya dilihat), bukan layar di bawahnya.
 class SpotlightHost extends StatefulWidget {
   /// Membuat [SpotlightHost] di atas [repository].
   const SpotlightHost({required this.repository, required this.child, super.key});
@@ -31,29 +30,13 @@ class SpotlightHost extends StatefulWidget {
   State<SpotlightHost> createState() => _SpotlightHostState();
 }
 
-class _SpotlightHostState extends State<SpotlightHost> with WidgetsBindingObserver {
+class _SpotlightHostState extends State<SpotlightHost> {
   late final SpotlightController _controller = SpotlightController(repository: widget.repository);
 
   @override
-  void initState() {
-    super.initState();
-    // Didaftarkan sebelum `Router` (host adalah leluhurnya), jadi mendapat
-    // giliran pertama menangani tombol kembali.
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
-  }
-
-  @override
-  Future<bool> didPopRoute() async {
-    if (!_controller.isActive) return false;
-    unawaited(_controller.finish());
-    return true;
   }
 
   @override

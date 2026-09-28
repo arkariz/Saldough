@@ -123,8 +123,14 @@ Satu dokumen `KeyValueStorage` dengan kunci
   - menampilkan overlay
 
   Lanjut di langkah terakhir, Lewati tur, dan tombol kembali sistem
-  (`WidgetsBindingObserver.didPopRoute`) semuanya menandai langkah-langkah
-  putaran itu sudah dilihat. Langkah untuk elemen yang belum tampil tetap
+  semuanya menandai langkah-langkah putaran itu sudah dilihat. Tombol
+  kembali ditangkap lewat **rute transparan** yang didorong ke `Navigator`
+  layar pemicu selama tur tampil: rute teratas selalu yang ditutup tombol
+  kembali, jadi yang tertutup adalah tur, bukan lembar CATAT di baliknya.
+  Cara ini tidak bergantung pada urutan penangan tombol kembali (awalnya
+  `WidgetsBindingObserver.didPopRoute`, yang kalah urutan dari `Navigator`
+  di aplikasi tanpa router; ditemukan saat T-9.6). Rute itu juga melepas
+  fokus bidang teks, jadi papan ketik turun selama tur. Langkah untuk elemen yang belum tampil tetap
   menunggu.
 - **Daftar digulir ke atas sebelum tur mulai.** `ListView` membuang item di
   luar layar, termasuk target di puncaknya. Tanpa ini, tur Beranda yang

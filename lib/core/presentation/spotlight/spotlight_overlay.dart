@@ -171,7 +171,12 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                 final hole = _displayRect;
                 final bright = !_blink.isAnimating || _blink.value < 0.5;
                 final size = MediaQuery.sizeOf(context);
-                final below = hole == null || (size.height - hole.bottom) >= hole.top;
+                // Papan ketik (mis. bidang nominal CATAT yang langsung fokus)
+                // mengurangi ruang bawah; gelembung tidak boleh tertutup.
+                final keyboard = MediaQuery.viewInsetsOf(context).bottom;
+                final safe = MediaQuery.paddingOf(context);
+                final bottomLimit = size.height - math.max(keyboard, safe.bottom);
+                final below = hole == null || (bottomLimit - hole.bottom) >= hole.top;
                 return Material(
                   type: MaterialType.transparency,
                   child: Stack(
@@ -193,7 +198,11 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                         ),
                       ),
                       CustomSingleChildLayout(
-                        delegate: _BubbleLayout(hole: hole, below: below, padding: MediaQuery.paddingOf(context)),
+                        delegate: _BubbleLayout(
+                          hole: hole,
+                          below: below,
+                          padding: safe.copyWith(bottom: math.max(keyboard, safe.bottom)),
+                        ),
                         child: _completing
                             ? _DoneBadge(animation: _done)
                             : _Bubble(controller: controller, onNext: _onNext),

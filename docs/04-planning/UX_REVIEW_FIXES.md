@@ -74,16 +74,15 @@ Terakhir diperbarui: 28 September 2026.
 
 | Tingkat | Item | Selesai |
 |---|---|---|
-| 🟠 Friksi | 12 | 11 |
+| 🟠 Friksi | 12 | 12 |
 | 🟡 Polish | 10 | 10 |
-| **Total** | **22** | **21** |
+| **Total** | **22** | **22** |
 
 Semua keputusan pemilik yang dibutuhkan sudah dijawab 28 Sep 2026 (lihat
 bagian di bawah). ADR-020 disetujui dan dikerjakan penuh (UX-14, UX-15,
-UX-16, UX-18, UX-20, UX-21), beserta UX-10, UX-4, dan UX-8. Satu-satunya
-item sisa adalah **UX-1**, ditunda dengan sengaja ke Fase 9/onboarding
-(lihat keputusan KO-5 di [ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) --
-bukan pekerjaan yang tertinggal.
+UX-16, UX-18, UX-20, UX-21), beserta UX-10, UX-4, dan UX-8. **UX-1**
+dikerjakan bersama T-9.6 Fase 9 (28 Sep 2026), jadi seluruh 22 item
+selesai.
 
 ## Keputusan pemilik yang dibutuhkan
 
@@ -108,7 +107,7 @@ dijawab.
 Delapan item berikut memperlambat atau membingungkan tugas harian, terutama
 mencatat. Urutannya dari dampak terbesar.
 
-- [ ] **UX-1** 🟠 [B] **CATAT selalu melewati lembar pilihan layar penuh.**
+- [x] **UX-1** 🟠 [B] **CATAT selalu melewati lembar pilihan layar penuh.**
       `open_record_sheet.dart` (loop pilihan), `record_choice_sheet.dart:43-101`.
       Setiap pencatatan: CATAT → tiga kartu edukasi (alur, contoh, efek saldo,
       "Info Pencatatan") → pilih jenis → formulir. Di layar 390×844 kartu
@@ -125,6 +124,15 @@ mencatat. Urutannya dari dampak terbesar.
       Pengeluaran dengan pengalih tiga segmen; lembar pilihan dihapus;
       edukasinya pindah ke onboarding dan tur CATAT. Dikerjakan bersama T-9.6
       ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)).
+      ✅ Selesai (28 Sep 2026, T-9.6): `openRecordSheet` membuka satu
+      `RecordFormHost` yang langsung berisi formulir Pengeluaran, dengan
+      `RecordKindSwitcher` (Keluar | Masuk | Transfer, `AppSegmented` yang
+      dipindah dari fitur budget) di bawah kop. `RecordChoiceSheet`, loop
+      pilihan, dan `BackToChoice` dihapus; tombol kembali menutup CATAT.
+      `initialChoice`/`prefillFrom` menentukan segmen awal. Label langkah
+      jadi "Catat // Transaksi". Edukasinya pindah ke OB-3 dan tur CATAT.
+      Uji shell: satu ketukan ke formulir, pengalih mengganti formulir,
+      kembali menutup alur.
 - [x] **UX-2** 🟠 [B] **Dompet tidak pernah terisi otomatis.**
       `expense_form_sheet.dart:85,94` — `_walletId` hanya dari
       `initialWalletId`, selain itu `null`; pola sama di pemasukan dan

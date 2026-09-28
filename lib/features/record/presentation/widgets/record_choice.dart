@@ -1,4 +1,5 @@
-/// Tiga pilihan yang ditawarkan CATAT saat dibuka (FR-REC-001).
+/// Tiga jenis yang ditawarkan CATAT (FR-REC-001), dipilih lewat
+/// `RecordKindSwitcher` di atas formulir (UX-1).
 enum RecordChoice {
   /// Catat pemasukan.
   income,
@@ -8,15 +9,6 @@ enum RecordChoice {
 
   /// Catat transfer antar dompet.
   transfer,
-}
-
-/// Nilai sentinel dikembalikan formulir CATAT saat pemakai menekan tombol
-/// kembali, membedakannya dari `Navigator.pop(null)` (dibatalkan seluruhnya)
-/// dan dari `RecordEvent` (disimpan). `AppShellPage` menafsirkan ini dengan
-/// membuka ulang [RecordChoiceSheet], bukan menutup alur CATAT.
-final class BackToChoice {
-  /// Membuat [BackToChoice].
-  const BackToChoice();
 }
 
 /// Nilai sentinel dikembalikan formulir pemasukan saat pemakai memilih kartu

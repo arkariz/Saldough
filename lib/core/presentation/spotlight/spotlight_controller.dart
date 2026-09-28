@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight_tours.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
@@ -17,6 +19,10 @@ class SpotlightController extends ChangeNotifier {
   TourId? _tour;
   List<SpotlightStep> _steps = const [];
   int _index = 0;
+
+  /// Rute transparan penahan tombol kembali selama tur tampil (lihat
+  /// [maybeStart]).
+  Route<void>? _backGuard;
 
   /// Tur yang sedang tampil, atau null.
   TourId? get activeTour => _tour;
@@ -71,7 +77,13 @@ class SpotlightController extends ChangeNotifier {
   /// Karena progres dicatat per langkah, elemen yang baru muncul belakangan
   /// (kartu anggaran, kartu Freelance, ...) disorot sendiri saat pertama
   /// tampil, tanpa mengulang langkah yang sudah dilihat (ADR-021 §3.1).
-  Future<bool> maybeStart(TourId tour, {bool force = false}) async {
+  ///
+  /// [navigator] (Navigator layar yang memicu) menerima rute transparan
+  /// selama tur tampil. Tombol kembali sistem selalu menutup rute teratas,
+  /// jadi ia menutup tur -- bukan lembar atau layar di baliknya -- apa pun
+  /// urutan pendaftaran penangan tombol kembali. Rute itu juga melepas fokus
+  /// bidang teks (papan ketik turun selama tur).
+  Future<bool> maybeStart(TourId tour, {bool force = false, NavigatorState? navigator}) async {
     if (isActive || _starting) return false;
     _starting = true;
     try {
@@ -84,6 +96,16 @@ class SpotlightController extends ChangeNotifier {
       _tour = tour;
       _steps = available;
       _index = 0;
+      if (navigator != null && navigator.mounted) {
+        final guard = PageRouteBuilder<void>(
+          opaque: false,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          pageBuilder: (_, _, _) => const SizedBox.shrink(),
+        );
+        _backGuard = guard;
+        unawaited(navigator.push(guard).then((_) => finish()));
+      }
       notifyListeners();
       return true;
     } finally {
@@ -108,6 +130,9 @@ class SpotlightController extends ChangeNotifier {
     _tour = null;
     _steps = const [];
     _index = 0;
+    final guard = _backGuard;
+    _backGuard = null;
+    if (guard != null && guard.isActive) guard.navigator?.removeRoute(guard);
     final progress = await _loadProgress();
     _progress = progress.copyWith(seenSteps: {...progress.seenSteps, ...shown});
     notifyListeners();

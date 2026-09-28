@@ -11,7 +11,7 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
@@ -358,9 +358,8 @@ void main() {
       await tester.tap(cta);
       await tester.pumpAndSettle();
 
-      expect(find.byType(RecordChoiceSheet), findsOneWidget);
-      await tester.tap(find.text(t.record.expenseAction).first);
-      await tester.pumpAndSettle();
+      // CATAT langsung ke formulir Pengeluaran (UX-1).
+      expect(find.byType(RecordFormHost), findsOneWidget);
 
       // Dompet sudah terisi tanpa disentuh -- prompt "belum dipilih" tidak
       // tampil, dan nama dompetnya sudah ada di formulir.

@@ -27,7 +27,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -197,7 +197,7 @@ void main() {
     expect(find.text(t.home.emptyTitle), findsOneWidget);
     await tester.tap(find.text(t.home.recordAction));
     await tester.pumpAndSettle();
-    expect(find.byType(RecordChoiceSheet), findsOneWidget);
+    expect(find.byType(RecordFormHost), findsOneWidget);
   });
 
   testWidgets('saldo, arus bulan ini tanpa transfer, anggaran, freelance, dan transaksi terbaru (FR-HOME-001..004)', (

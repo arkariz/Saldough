@@ -33,7 +33,7 @@ import 'package:state_management/state_management.dart';
 /// (T-2.3, ditukar dari rute sementara `/shell` saat cutover T-3.4).
 ///
 /// CATAT **bukan** tujuan navigasi biasa — menekannya tidak mengganti isi
-/// `IndexedStack`, melainkan membuka lembar pilihan (lihat
+/// `IndexedStack`, melainkan membuka lembar CATAT (lihat
 /// [openRecordSheet]). Empat tujuan lain dipetakan ke `IndexedStack`
 /// lewat [_tabIndexFor]/[_navIndexFor], menyisipkan CATAT di posisi tengah
 /// tanpa memberinya slot `IndexedStack`.
@@ -43,9 +43,9 @@ import 'package:state_management/state_management.dart';
 /// CATAT dari shell ini, supaya bloc tujuannya disegarkan dengan cara yang
 /// sama seperti saat tabnya dipilih dari navigasi bawah.
 ///
-/// CATAT sendiri (T-2.4) sudah nyata: menekannya membuka
-/// [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu satu dari tiga
-/// formulir `features/record/`, lewat [openRecordSheet] (diekstrak dari
+/// CATAT sendiri (T-2.4) sudah nyata: menekannya membuka satu lembar
+/// formulir `features/record/` dengan pengalih tiga jenis (FR-REC-001, UX-1),
+/// lewat [openRecordSheet] (diekstrak dari
 /// `State` ini ke fungsi tingkat atas di T-2.5 supaya CTA keadaan kosong
 /// `TransactionListPage` bisa memicu alur yang SAMA, bukan formulir
 /// pencatatan tersendiri — CLAUDE.md aturan 8). `RecordBloc` dipasang

@@ -13,7 +13,7 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -206,8 +206,9 @@ void main() {
         await tester.tap(cta);
         await tester.pumpAndSettle();
 
-        expect(find.byType(RecordChoiceSheet), findsOneWidget);
-        expect(find.text(t.record.incomeAction), findsWidgets);
+        // CATAT langsung ke formulir Pengeluaran (UX-1).
+        expect(find.byType(RecordFormHost), findsOneWidget);
+        expect(find.text(t.record.amountLabelExpense.toUpperCase()), findsOneWidget);
       },
     );
   });

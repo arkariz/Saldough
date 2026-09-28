@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
@@ -8,7 +9,6 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
@@ -30,7 +30,7 @@ List<String> _categorySuggestions() => [
 
 /// Formulir catat pengeluaran (FR-TXN-002) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [ExpenseRecorded] lewat
-/// `Navigator.pop` saat disimpan, atau `BackToChoice` lewat tombol kembali.
+/// `Navigator.pop` saat disimpan; tombol kembali menutup CATAT.
 /// Tata letaknya mengikuti rujukan visual `pixel_kas_catat_pengeluaran`.
 ///
 /// Tautan opsional ke satu pos anggaran (FR-TXN-002, T-4.4) lewat
@@ -49,6 +49,7 @@ class ExpenseFormSheet extends StatefulWidget {
     this.budgetItems = const [],
     this.initialBudgetItemId,
     this.initialAmountSen,
+    this.kindSwitcher,
     super.key,
   });
 
@@ -68,6 +69,10 @@ class ExpenseFormSheet extends StatefulWidget {
   /// otomatis tidak ikut terisi ([_validBudgetItemId]). Diabaikan kalau
   /// [initial] terisi.
   final ExpenseTransaction? prefill;
+
+  /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
+  /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
+  final Widget? kindSwitcher;
 
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -180,11 +185,12 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     final wallet = _wallet;
     final amount = _amountSen;
     return RecordFormFrame(
+      kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.expense,
       title: editing ? t.transaction.editSheetTitle : t.record.expenseAction,
       isEditing: editing,
       onBack: () =>
-          Navigator.of(context).pop(editing ? null : const BackToChoice()),
+          Navigator.of(context).pop(),
       notice: RecordNotice(
         title: t.record.expenseRuleTitle,
         body: t.record.expenseRuleBody,
@@ -194,32 +200,41 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           : t.record.expenseAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
-        RecordAmountField(
-          controller: _amountController,
-          label: t.record.amountLabelExpense,
-          kind: TransactionKind.expense,
-          quickAmounts: _quickAmounts,
-          autofocus: true,
-          onChanged: () => setState(() {}),
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordAmount,
+          child: RecordAmountField(
+            controller: _amountController,
+            label: t.record.amountLabelExpense,
+            kind: TransactionKind.expense,
+            quickAmounts: _quickAmounts,
+            autofocus: true,
+            onChanged: () => setState(() {}),
+          ),
         ),
         RecordCategoryField(
           controller: _categoryController,
           suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
           kind: TransactionKind.expense,
         ),
-        WalletSelectField(
-          label: t.record.expenseWalletSectionLabel,
-          wallets: widget.wallets,
-          selectedId: _walletId,
-          onSelected: (id) => setState(() => _walletId = id),
-          previewAmountSen: amount,
-          previewIsCredit: false,
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.recordWallet,
+          child: WalletSelectField(
+            label: t.record.expenseWalletSectionLabel,
+            wallets: widget.wallets,
+            selectedId: _walletId,
+            onSelected: (id) => setState(() => _walletId = id),
+            previewAmountSen: amount,
+            previewIsCredit: false,
+          ),
         ),
         if (_budgetChoices.isNotEmpty)
-          RecordBudgetItemField(
-            choices: _budgetChoices,
-            selectedId: _validBudgetItemId,
-            onSelected: (id) => setState(() => _budgetItemId = id),
+          SpotlightTarget(
+            spotlightKey: SpotlightKey.recordBudgetItem,
+            child: RecordBudgetItemField(
+              choices: _budgetChoices,
+              selectedId: _validBudgetItemId,
+              onSelected: (id) => setState(() => _budgetItemId = id),
+            ),
           ),
         RecordDateField(
           date: _date,

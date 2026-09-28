@@ -306,7 +306,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               const SizedBox(height: AppSpacing.sm),
               AppSectionLabel(t.budget.periodLabel),
               const SizedBox(height: AppSpacing.xs),
-              BudgetSegmented<BudgetPeriod>(
+              AppSegmented<BudgetPeriod>(
                 options: [
                   (BudgetPeriod.monthly, t.budget.periodMonthly),
                   (BudgetPeriod.weekly, t.budget.periodWeekly),

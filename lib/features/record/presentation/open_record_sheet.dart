@@ -6,16 +6,17 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
-/// Membuka alur CATAT: [RecordChoiceSheet] (tiga pilihan, FR-REC-001), lalu
-/// satu dari tiga formulir, dalam LOOP -- menekan tombol kembali di formulir
-/// mengembalikan `BackToChoice`, yang membuka ulang [RecordChoiceSheet]
-/// alih-alih menutup seluruh alur.
+/// Membuka alur CATAT: satu lembar [RecordFormHost] yang langsung berisi
+/// formulir Pengeluaran, dengan pengalih Keluar | Masuk | Transfer di atasnya
+/// (UX-1, KO-5). Lembar pilihan edukasi yang dulu selalu mendahului formulir
+/// sudah dihapus; isinya pindah ke onboarding (OB-3) dan tur CATAT.
+/// Tombol kembali di formulir menutup alur.
 ///
 /// Diekstrak dari `_AppShellPageState._openRecordSheet` (T-2.4) menjadi
 /// fungsi tingkat atas supaya CATAT bisa dipicu dari lebih dari satu tempat
@@ -35,21 +36,20 @@ import 'package:state_management/state_management.dart';
 /// dompet awal adalah satu-satunya dompet aktif, atau dompet terakhir yang
 /// dipakai untuk jenis itu ([initialWalletFor], UX-2).
 ///
-/// [initialChoice], kalau terisi, melewati lembar pilihan dan langsung
-/// membuka formulir itu; [initialBudgetItemId] mengisi awal pos anggarannya
+/// [initialChoice], kalau terisi, menentukan jenis yang terpilih saat lembar
+/// dibuka (bawaannya pengeluaran); [initialBudgetItemId] mengisi awal pos anggarannya
 /// (FR-BUD-007/FR-REC-002, pintasan "Catat Pengeluaran"/"Catat Transfer" di
 /// rincian anggaran, T-4.10). [initialAmountSen] mengisi awal nominal
 /// pengeluaran/transfer (sisa pos anggaran), dan [initialToWalletId] dompet
-/// tujuan transfer (dompet tujuan pos transfer, ADR-018). Menekan kembali di formulir tetap
-/// membuka lembar pilihan — alurnya sama persis dengan CATAT biasa.
+/// tujuan transfer (dompet tujuan pos transfer, ADR-018).
 ///
 /// Kartu Freelance di formulir pemasukan menutup alur ini dan membuka
 /// Ikhtisar Freelance ([OpenFreelance]); `Future` ini baru selesai sesudah
 /// layar itu ditutup, supaya pemanggil menyegarkan saldo sesudah pembayaran
 /// dicatat diterima.
 ///
-/// [prefillFrom] (UX-4, "Catat lagi") melewati lembar pilihan seperti
-/// [initialChoice] (jenisnya diturunkan dari tipe transaksinya) dan mengisi
+/// [prefillFrom] (UX-4, "Catat lagi") menentukan jenis awal seperti
+/// [initialChoice] (diturunkan dari tipe transaksinya) dan mengisi
 /// nominal, kategori, catatan, dompet, dan pos anggaran dari transaksi itu
 /// -- TAPI TETAP mode CATAT (transaksi BARU, bukan menimpa yang lama) dan
 /// tanggalnya hari ini, bukan tanggal transaksi sumber. Kalau dompet
@@ -73,49 +73,40 @@ Future<void> openRecordSheet(
   // dompet" padahal masalahnya pembacaan yang gagal.
   if (bloc.state.loadFailed) return;
 
-  var preselected =
+  final initial =
       initialChoice ??
       switch (prefillFrom) {
         IncomeTransaction() => RecordChoice.income,
         ExpenseTransaction() => RecordChoice.expense,
         TransferTransaction() => RecordChoice.transfer,
-        null => null,
+        null => RecordChoice.expense,
       };
-  while (true) {
-    final choice =
-        preselected ??
-        await showFullScreenSheet<RecordChoice>(
-          context,
-          builder: (_) => const RecordChoiceSheet(),
-        );
-    preselected = null;
-    if (choice == null || !context.mounted) return;
-
-    final wallets = bloc.state.wallets;
-    final budgetItems = bloc.state.budgetItems;
-    final defaults = bloc.state.defaults;
-    final activeIds = [for (final wallet in wallets) wallet.id];
-    String? walletFor(String? lastUsed) =>
-        initialWalletFor(shortcut: initialWalletId, activeWalletIds: activeIds, lastUsed: lastUsed);
-    final transferFrom = walletFor(defaults.transferFromWalletId);
-    // Tujuan terakhir hanya dipakai kalau asalnya juga dari transfer terakhir.
-    final transferTo =
-        initialToWalletId ??
-        (transferFrom == defaults.transferFromWalletId ? defaults.transferToWalletId : null);
-    // `is`, bukan `as prefillFrom as Foo?` -- kalau pemakai menekan kembali
-    // lalu memilih jenis LAIN dari yang tersirat `prefillFrom`, `as` yang
-    // tidak cocok akan melempar, sedangkan `is` cukup mengembalikan `null`.
-    final incomePrefill = prefillFrom is IncomeTransaction ? prefillFrom : null;
-    final expensePrefill = prefillFrom is ExpenseTransaction ? prefillFrom : null;
-    final transferPrefill = prefillFrom is TransferTransaction ? prefillFrom : null;
-    final result = await showFullScreenSheet<Object>(
-      context,
-      builder: (_) => switch (choice) {
+  final wallets = bloc.state.wallets;
+  final budgetItems = bloc.state.budgetItems;
+  final defaults = bloc.state.defaults;
+  final activeIds = [for (final wallet in wallets) wallet.id];
+  String? walletFor(String? lastUsed) =>
+      initialWalletFor(shortcut: initialWalletId, activeWalletIds: activeIds, lastUsed: lastUsed);
+  final transferFrom = walletFor(defaults.transferFromWalletId);
+  // Tujuan terakhir hanya dipakai kalau asalnya juga dari transfer terakhir.
+  final transferTo =
+      initialToWalletId ?? (transferFrom == defaults.transferFromWalletId ? defaults.transferToWalletId : null);
+  // `is`, bukan `as` -- kalau pemakai mengganti jenis lewat pengalih, jenis
+  // yang tidak cocok dengan `prefillFrom` cukup mendapat `null`.
+  final incomePrefill = prefillFrom is IncomeTransaction ? prefillFrom : null;
+  final expensePrefill = prefillFrom is ExpenseTransaction ? prefillFrom : null;
+  final transferPrefill = prefillFrom is TransferTransaction ? prefillFrom : null;
+  final result = await showFullScreenSheet<Object>(
+    context,
+    builder: (_) => RecordFormHost(
+      initialChoice: initial,
+      formFor: (choice, kindSwitcher) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(
           wallets: wallets,
           prefill: incomePrefill,
           initialWalletId: walletFor(defaults.incomeWalletId),
           recentCategories: defaults.incomeCategories,
+          kindSwitcher: kindSwitcher,
         ),
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
@@ -125,6 +116,7 @@ Future<void> openRecordSheet(
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,
+          kindSwitcher: kindSwitcher,
         ),
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
@@ -134,26 +126,26 @@ Future<void> openRecordSheet(
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,
           initialToWalletId: transferTo,
+          kindSwitcher: kindSwitcher,
         ),
       },
+    ),
+  );
+  if (result == null || !context.mounted) return;
+  // CATAT → Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
+  // pemanggil menyegarkan saldo sesudahnya seperti biasa.
+  if (result is OpenFreelance) {
+    await openFreelanceOverview(context);
+    return;
+  }
+  if (result is RecordEvent) {
+    bloc.add(result);
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => RecordSavingDialog(bloc: bloc),
     );
-    if (result == null || !context.mounted) return;
-    if (result is BackToChoice) continue;
-    // CATAT → Catat Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
-    // pemanggil menyegarkan saldo sesudahnya seperti biasa.
-    if (result is OpenFreelance) {
-      await openFreelanceOverview(context);
-      return;
-    }
-    if (result is RecordEvent) {
-      bloc.add(result);
-      if (!context.mounted) return;
-      await showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => RecordSavingDialog(bloc: bloc),
-      );
-      return;
-    }
+    return;
   }
 }

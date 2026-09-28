@@ -7,13 +7,15 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/presentation/widgets/record_choice_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -149,7 +151,7 @@ void main() {
       expect(find.widgetWithText(AppBar, t.appShell.transactionsTabLabel), findsOneWidget);
     });
 
-    testWidgets('menekan CATAT membuka lembar tiga pilihan (FR-REC-001), TIDAK mengganti tab aktif', (tester) async {
+    testWidgets('menekan CATAT membuka lembar CATAT dengan tiga jenis (FR-REC-001, UX-1), TIDAK mengganti tab aktif', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
       // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
@@ -165,9 +167,9 @@ void main() {
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.record.incomeAction), findsWidgets);
-      expect(find.text(t.record.expenseAction), findsWidgets);
-      expect(find.text(t.record.transferAction), findsWidgets);
+      expect(find.text(t.record.kindExpense.toUpperCase()), findsOneWidget);
+      expect(find.text(t.record.kindIncome.toUpperCase()), findsOneWidget);
+      expect(find.text(t.record.kindTransfer.toUpperCase()), findsOneWidget);
 
       // Tab yang aktif di baliknya tetap Beranda (tab awal), bukan CATAT --
       // CATAT tidak pernah jadi tab "terpilih" yang persisten.
@@ -175,7 +177,7 @@ void main() {
       expect(nav.selectedIndex, 0);
     });
 
-    testWidgets('memilih "Catat Pemasukan" dari lembar pilihan membuka formulir pemasukan', (tester) async {
+    testWidgets('memilih Masuk di pengalih CATAT membuka formulir pemasukan', (tester) async {
       await walletRepository.saveWallet(
         const Wallet(id: 'w1', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
       );
@@ -194,7 +196,7 @@ void main() {
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(t.record.incomeAction).first);
+      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
       await tester.pumpAndSettle();
 
       expect(find.text(t.record.toWalletFieldLabel.toUpperCase()), findsOneWidget);
@@ -248,7 +250,7 @@ void main() {
 
         await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
         await tester.pumpAndSettle();
-        await tester.tap(find.text(t.record.incomeAction).first);
+        await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
         await tester.pumpAndSettle();
 
         await tester.enterText(find.byType(TextField).first, '75000');
@@ -271,44 +273,41 @@ void main() {
       },
     );
 
-    testWidgets('menutup formulir dengan BackToChoice membuka ulang RecordChoiceSheet', (tester) async {
+    testWidgets('CATAT langsung ke Pengeluaran, pengalih mengganti formulir, kembali menutup alur (UX-1)', (
+      tester,
+    ) async {
       await walletRepository.saveWallet(
         const Wallet(id: 'w1', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
       );
 
       await tester.pumpWidget(pumpableShell());
-      await tester.pump();
-      // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
-      // ScopeWidget<RecordScope>, jadi initialisasi async-nya baru mulai satu
-      // frame setelah RecordScope selesai; satu `pump()` saja belum cukup.
-      await tester.pump();
-      // Tiga `pump()` -- ScopeWidget<WalletScope> (T-2.7) bersarang setelah
-      // TransactionScope, jadi initialisasinya baru mulai satu frame lagi.
-      await tester.pump();
-      await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
-      await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
 
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(t.record.incomeAction).first);
-      await tester.pumpAndSettle();
 
-      // Sekarang di formulir pemasukan -- pastikan RecordChoiceSheet sudah
-      // tertutup.
-      expect(find.byType(RecordChoiceSheet), findsNothing);
+      // Satu ketukan: formulir Pengeluaran, bukan lembar pilihan.
+      expect(find.byType(RecordFormHost), findsOneWidget);
+      expect(find.text(t.record.amountLabelExpense.toUpperCase()), findsOneWidget);
+
+      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+      await tester.pumpAndSettle();
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
+
+      await tester.tap(find.text(t.record.kindTransfer.toUpperCase()));
+      await tester.pumpAndSettle();
+      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsNothing);
+      expect(find.text(t.record.transferAction), findsWidgets);
 
       await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
       await tester.pumpAndSettle();
 
-      // Kembali ke RecordChoiceSheet, bukan menutup seluruh alur CATAT.
-      expect(find.byType(RecordChoiceSheet), findsOneWidget);
-      expect(find.text(t.record.incomeAction), findsWidgets);
-      expect(find.text(t.record.expenseAction), findsWidgets);
-      expect(find.text(t.record.transferAction), findsWidgets);
+      expect(find.byType(RecordFormHost), findsNothing);
     });
 
-    testWidgets('kegagalan pemuatan dompet tidak pernah menampilkan RecordChoiceSheet (hanya snackbar galat)', (
+    testWidgets('kegagalan pemuatan dompet tidak pernah membuka lembar CATAT (hanya snackbar galat)', (
       tester,
     ) async {
       final failingContainer = GetIt.asNewInstance()
@@ -339,7 +338,7 @@ void main() {
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
       await tester.pumpAndSettle();
 
-      expect(find.byType(RecordChoiceSheet), findsNothing);
+      expect(find.byType(RecordFormHost), findsNothing);
       expect(find.byType(SnackBar), findsOneWidget);
     });
 
@@ -356,6 +355,82 @@ void main() {
       // Tetap di Beranda -- tur Beranda menyusul sesudah dompet dibuat.
       final nav = tester.widget<NavigationBar>(find.byType(NavigationBar));
       expect(nav.selectedIndex, 0);
+    });
+  });
+
+  group('TR-CATAT (ADR-021, T-9.6)', () {
+    late TutorialProgressRepositoryImpl tutorials;
+
+    setUp(() async {
+      tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+      // Tur Beranda sudah dilihat, supaya yang diuji hanya tur CATAT.
+      await tutorials.markStepsSeen(tourSteps[TourId.home]!);
+      await walletRepository.saveWallet(
+        const Wallet(id: 'w1', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+    });
+
+    Future<void> openShellWithTours(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+            home: const AppShellPage(),
+          ),
+        ),
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    Finder step(int current, int total, String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
+
+    testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dan dompet; berikutnya tidak', (tester) async {
+      await openShellWithTours(tester);
+
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+
+      // Tanpa pos anggaran yang ditawarkan, langkah pos dilewati.
+      expect(step(1, 3, t.tour.recordKindTitle, t.tour.recordKindBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(2, 3, t.tour.recordAmountTitle, t.tour.recordAmountBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(3, 3, t.tour.recordWalletTitle, t.tour.recordWalletBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+
+      // Tur tidak menutup lembar CATAT di baliknya.
+      expect(find.byType(RecordFormHost), findsOneWidget);
+      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.recordKindTitle), findsNothing);
+      expect(find.byType(RecordFormHost), findsOneWidget);
+    });
+
+    testWidgets('tombol kembali saat tur menutup tur, bukan lembar CATAT', (tester) async {
+      await openShellWithTours(tester);
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.recordKindTitle), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.tour.recordKindTitle), findsNothing);
+      expect(find.byType(RecordFormHost), findsOneWidget);
     });
   });
 }

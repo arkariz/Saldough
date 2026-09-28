@@ -133,9 +133,10 @@ flutter:
     - assets/illustration/
     - assets/fonts/licenses/
   # Font ADR-015 dibundel lokal, bukan diambil lewat `google_fonts` saat
-  # runtime -- app ini tanpa panggilan jaringan sama sekali (CLAUDE.md).
-  # Hanya bobot yang benar-benar dipakai `PixelTheme` yang didaftarkan; lihat
-  # komentar di `pixel_theme.dart`.
+  # runtime -- render UI dasar tidak boleh bergantung koneksi first-run,
+  # terlepas dari fitur online lain yang sedang direncanakan (CLAUDE.md
+  # "Status"). Hanya bobot yang benar-benar dipakai `PixelTheme` yang
+  # didaftarkan; lihat komentar di `pixel_theme.dart`.
   fonts:
     - family: SpaceGrotesk
       fonts:

@@ -4,14 +4,16 @@ import 'package:saldough/core/tutorial/spotlight_key.dart';
 
 /// Menandai [child] sebagai target [spotlightKey] (ADR-021 §3.3).
 ///
-/// Tanpa `SpotlightHost` di atasnya (mis. di uji), widget ini hanya
-/// meneruskan [child].
+/// [spotlightKey] null berarti tidak ada yang ditandai — dipakai untuk pola
+/// "hanya item pertama daftar yang disorot" tanpa mengubah susunan pohon
+/// widget antar-item. Tanpa `SpotlightHost` di atasnya (mis. di uji),
+/// widget ini hanya meneruskan [child].
 class SpotlightTarget extends StatefulWidget {
   /// Membuat [SpotlightTarget].
   const SpotlightTarget({required this.spotlightKey, required this.child, super.key});
 
-  /// Kunci target.
-  final SpotlightKey spotlightKey;
+  /// Kunci target, atau null untuk tidak menandai apa pun.
+  final SpotlightKey? spotlightKey;
 
   /// Widget yang disorot.
   final Widget child;
@@ -23,32 +25,39 @@ class SpotlightTarget extends StatefulWidget {
 class _SpotlightTargetState extends State<SpotlightTarget> {
   final GlobalKey _key = GlobalKey();
 
+  void _register(SpotlightKey? key) {
+    if (key != null) SpotlightHost.maybeOf(context, listen: false)?.register(key, _key);
+  }
+
+  void _unregister(SpotlightKey? key) {
+    if (key != null) SpotlightHost.maybeOf(context, listen: false)?.unregister(key, _key);
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    SpotlightHost.maybeOf(context, listen: false)?.register(widget.spotlightKey, _key);
+    _register(widget.spotlightKey);
   }
 
   @override
   void didUpdateWidget(SpotlightTarget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spotlightKey != widget.spotlightKey) {
-      SpotlightHost.maybeOf(context, listen: false)
-        ?..unregister(oldWidget.spotlightKey, _key)
-        ..register(widget.spotlightKey, _key);
+      _unregister(oldWidget.spotlightKey);
+      _register(widget.spotlightKey);
     }
   }
 
   @override
   void deactivate() {
-    SpotlightHost.maybeOf(context, listen: false)?.unregister(widget.spotlightKey, _key);
+    _unregister(widget.spotlightKey);
     super.deactivate();
   }
 
   @override
   void activate() {
     super.activate();
-    SpotlightHost.maybeOf(context, listen: false)?.register(widget.spotlightKey, _key);
+    _register(widget.spotlightKey);
   }
 
   @override

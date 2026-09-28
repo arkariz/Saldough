@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
@@ -67,7 +69,11 @@ class _WalletListPageState extends State<WalletListPage> {
             final active = state.activeWallets;
             final inactive = state.inactiveWallets;
             final colors = context.appColors;
-            return ListView(
+            // TR-WALLET (ADR-021 §3.4): ringkasan, dompet pertama, tambah.
+            return TourTrigger(
+              tour: TourId.wallet,
+              ready: true,
+              child: ListView(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.md,
                 AppSpacing.sm,
@@ -75,24 +81,34 @@ class _WalletListPageState extends State<WalletListPage> {
                 AppSpacing.lg,
               ),
               children: [
-                WalletSummaryCard(
-                  activeCount: active.length,
-                  totalBalance: state.totalBalance,
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.walletSummary,
+                  child: WalletSummaryCard(
+                    activeCount: active.length,
+                    totalBalance: state.totalBalance,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppSectionLabel(t.wallet.listHeading),
                 const SizedBox(height: AppSpacing.xs),
-                for (final wallet in active) ...[
-                  WalletCard(
-                    wallet: wallet,
-                    onTap: () => openWalletDetail(context, wallet),
+                for (final (i, wallet) in active.indexed) ...[
+                  SpotlightTarget(
+                    // Hanya dompet pertama yang disorot.
+                    spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
+                    child: WalletCard(
+                      wallet: wallet,
+                      onTap: () => openWalletDetail(context, wallet),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],
                 const SizedBox(height: AppSpacing.xs),
-                AppButton(
-                  label: t.wallet.addAction,
-                  onPressed: () => _addWallet(context),
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.walletAdd,
+                  child: AppButton(
+                    label: t.wallet.addAction,
+                    onPressed: () => _addWallet(context),
+                  ),
                 ),
                 if (inactive.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.lg),
@@ -116,6 +132,7 @@ class _WalletListPageState extends State<WalletListPage> {
                   ).copyWith(fontWeight: FontWeight.w400),
                 ),
               ],
+              ),
             );
           },
         ),

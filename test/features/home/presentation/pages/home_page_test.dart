@@ -353,4 +353,107 @@ void main() {
       expect(find.text(t.tour.homeBalanceTitle), findsNothing);
     });
   });
+
+  group('TR-WALLET, TR-TXN, TR-BUDGET (ADR-021, T-9.7)', () {
+    late TutorialProgressRepositoryImpl tutorials;
+
+    setUp(() async {
+      tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+      // Tur Beranda sudah dilihat, supaya yang diuji hanya tur tab.
+      await tutorials.markStepsSeen(tourSteps[TourId.home]!);
+    });
+
+    Future<void> openShellWithTours(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+            home: const AppShellPage(),
+          ),
+        ),
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> openTab(WidgetTester tester, String label) async {
+      await tester.tap(find.widgetWithText(NavigationDestination, label));
+      await tester.pumpAndSettle();
+    }
+
+    Finder step(int current, int total, String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
+
+    Future<void> walkThrough(WidgetTester tester, List<(String, String)> steps) async {
+      for (final (i, (title, body)) in steps.indexed) {
+        expect(step(i + 1, steps.length, title, body), findsOneWidget);
+        await tester.tap(find.text(i == steps.length - 1 ? t.tour.doneAction : t.tour.nextAction));
+        await tester.pumpAndSettle();
+      }
+    }
+
+    testWidgets('Dompet: ringkasan, dompet pertama, lalu tambah — hanya saat tab Dompet dibuka', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+      expect(find.text(t.tour.walletSummaryTitle), findsNothing);
+
+      await openTab(tester, t.appShell.walletsTabLabel);
+      await walkThrough(tester, [
+        (t.tour.walletSummaryTitle, t.tour.walletSummaryBody),
+        (t.tour.walletCardTitle, t.tour.walletCardBody),
+        (t.tour.walletAddTitle, t.tour.walletAddBody),
+      ]);
+
+      await openTab(tester, t.appShell.homeTabLabel);
+      await openTab(tester, t.appShell.walletsTabLabel);
+      expect(find.text(t.tour.walletSummaryTitle), findsNothing);
+    });
+
+    testWidgets('Transaksi: tidak tampil saat bulan ini kosong', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      expect(find.text(t.tour.txnMonthTitle), findsNothing);
+    });
+
+    testWidgets('Transaksi: bulan berisi menyorot bulan, cari/Filter, dan baris pertama', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+
+      await walkThrough(tester, [
+        (t.tour.txnMonthTitle, t.tour.txnMonthBody),
+        (t.tour.txnFilterTitle, t.tour.txnFilterBody),
+        (t.tour.txnRowTitle, t.tour.txnRowBody),
+      ]);
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.hasCompleted(TourId.transaction), isTrue);
+    });
+
+    testWidgets('Anggaran kosong: hanya Template; ringkasan dan penyaring menyusul saat ada anggaran', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await walkThrough(tester, [(t.tour.budgetTemplatesTitle, t.tour.budgetTemplatesBody)]);
+
+      await tester.pumpWidget(const SizedBox());
+      await seedFull();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.budgetTabLabel);
+      await walkThrough(tester, [
+        (t.tour.budgetSummaryTitle, t.tour.budgetSummaryBody),
+        (t.tour.budgetFilterTitle, t.tour.budgetFilterBody),
+      ]);
+    });
+  });
 }

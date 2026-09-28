@@ -38,7 +38,7 @@ Terakhir diperbarui: 28 September 2026.
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
-| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 7 | T-9.1–T-9.6 selesai; berikutnya T-9.7 |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 8 | T-9.1–T-9.7 selesai; berikutnya T-9.8 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 
 ## Keputusan terbuka
@@ -1306,7 +1306,9 @@ lembar pilihan ke onboarding dan tur CATAT.
 - [x] **T-9.6** Tur CATAT (TR-CATAT), bersama UX-1: CATAT langsung ke
       formulir Pengeluaran dengan pengalih tiga jenis; tur menyorot pengalih,
       nominal, dompet, dan pos anggaran (bila ditawarkan).
-- [ ] **T-9.7** Tur Dompet, Transaksi, Anggaran.
+- [x] **T-9.7** Tur Dompet, Transaksi, Anggaran. Transaksi hanya saat bulan
+      tampil berisi; Anggaran kosong menyorot Template dulu, ringkasan dan
+      penyaring menyusul begitu ada anggaran.
 - [ ] **T-9.8** Tur rincian anggaran dan Freelance.
 - [ ] **T-9.9** Lapis info: putar ulang tur, lihat pengenalan, setel ulang.
 - [ ] **T-9.10** Verifikasi menyeluruh di emulator.

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -68,7 +70,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
             };
 
             final bloc = context.read<TransactionBloc>();
-            return CustomScrollView(
+            // TR-TXN (ADR-021 §3.4): hanya saat bulan ini punya transaksi.
+            return TourTrigger(
+              tour: TourId.transaction,
+              ready: state.rawTransactions.isNotEmpty,
+              child: CustomScrollView(
               slivers: [
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
@@ -81,17 +87,20 @@ class _TransactionListPageState extends State<TransactionListPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        TransactionMonthHeader(
-                          month: state.month,
-                          rawTransactions: state.rawTransactions,
-                          onPreviousMonth: () => bloc.add(
-                            TransactionMonthChanged(
-                              DateTime(state.month.year, state.month.month - 1),
+                        SpotlightTarget(
+                          spotlightKey: SpotlightKey.txnMonth,
+                          child: TransactionMonthHeader(
+                            month: state.month,
+                            rawTransactions: state.rawTransactions,
+                            onPreviousMonth: () => bloc.add(
+                              TransactionMonthChanged(
+                                DateTime(state.month.year, state.month.month - 1),
+                              ),
                             ),
-                          ),
-                          onNextMonth: () => bloc.add(
-                            TransactionMonthChanged(
-                              DateTime(state.month.year, state.month.month + 1),
+                            onNextMonth: () => bloc.add(
+                              TransactionMonthChanged(
+                                DateTime(state.month.year, state.month.month + 1),
+                              ),
                             ),
                           ),
                         ),
@@ -107,7 +116,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           // tombol "Filter" di samping kolom cari (dulu
                           // baris dropdown terpisah di bawahnya) supaya kop
                           // Transaksi lebih pendek.
-                          Row(
+                          SpotlightTarget(
+                            spotlightKey: SpotlightKey.txnFilter,
+                            child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
@@ -127,6 +138,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                               ),
                             ],
                           ),
+                          ),
                         ],
                         const SizedBox(height: AppSpacing.sm),
                         TransactionTypeFilterRow(
@@ -145,6 +157,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                   onClearFilters: _clearFilters,
                 ),
               ],
+              ),
             );
           },
         ),
@@ -223,6 +236,7 @@ class _Body extends StatelessWidget {
           group: state.groups[index],
           walletsById: walletsById,
           onTransactionTap: (transaction) => openTransactionDetail(context, transaction),
+          firstRowSpotlightKey: index == 0 ? SpotlightKey.txnRow : null,
         ),
       ),
     );

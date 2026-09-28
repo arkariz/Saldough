@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/budget_actions.dart';
@@ -50,13 +52,22 @@ class _BudgetListPageState extends State<BudgetListPage> {
             }
             final canAdd = state.activeWallets.isNotEmpty;
             if (state.budgets.isEmpty) {
-              return ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                children: [
-                  BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null),
-                  const SizedBox(height: AppSpacing.md),
-                  _TemplatesButton(onTap: () => openBudgetTemplates(context)),
-                ],
+              // TR-BUDGET: di keadaan kosong hanya Template yang tampil;
+              // ringkasan dan penyaring disorot sendiri begitu ada anggaran.
+              return TourTrigger(
+                tour: TourId.budget,
+                ready: true,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  children: [
+                    BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null),
+                    const SizedBox(height: AppSpacing.md),
+                    SpotlightTarget(
+                      spotlightKey: SpotlightKey.budgetTemplates,
+                      child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
+                    ),
+                  ],
+                ),
               );
             }
 
@@ -64,22 +75,31 @@ class _BudgetListPageState extends State<BudgetListPage> {
             final visible = state.visibleBudgets;
             final usedWalletIds = {for (final budget in state.budgets) budget.walletId};
             final filterWallets = state.wallets.where((w) => usedWalletIds.contains(w.id)).toList();
-            return ListView(
+            return TourTrigger(
+              tour: TourId.budget,
+              ready: true,
+              child: ListView(
               padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.lg),
               children: [
-                BudgetSummaryCard(
-                  planned: state.activePlanned,
-                  spent: state.activeSpent,
-                  activeCount: state.activeProgress.length,
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.budgetSummary,
+                  child: BudgetSummaryCard(
+                    planned: state.activePlanned,
+                    spent: state.activeSpent,
+                    activeCount: state.activeProgress.length,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                BudgetFilterBar(
-                  statusFilter: state.statusFilter,
-                  statusCounts: state.statusCounts,
-                  wallets: filterWallets,
-                  walletFilter: state.walletFilter,
-                  onStatusChanged: (filter) => bloc.add(BudgetStatusFilterChanged(filter)),
-                  onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.budgetFilter,
+                  child: BudgetFilterBar(
+                    statusFilter: state.statusFilter,
+                    statusCounts: state.statusCounts,
+                    wallets: filterWallets,
+                    walletFilter: state.walletFilter,
+                    onStatusChanged: (filter) => bloc.add(BudgetStatusFilterChanged(filter)),
+                    onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 if (visible.isEmpty)
@@ -101,8 +121,12 @@ class _BudgetListPageState extends State<BudgetListPage> {
                 const SizedBox(height: AppSpacing.xs),
                 if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
                 const SizedBox(height: AppSpacing.sm),
-                _TemplatesButton(onTap: () => openBudgetTemplates(context)),
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.budgetTemplates,
+                  child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
+                ),
               ],
+              ),
             );
           },
         ),

@@ -5,7 +5,9 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -259,5 +261,76 @@ void main() {
 
     expect(find.byType(HomeBalanceCard), findsOneWidget);
     expect(find.byType(HomeFreelanceCard), findsOneWidget);
+  });
+
+  group('TR-HOME (ADR-021)', () {
+    late TutorialProgressRepositoryImpl tutorials;
+
+    setUp(() => tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage()));
+
+    Future<void> openShellWithTours(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+            home: const AppShellPage(),
+          ),
+        ),
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    Finder step(int current, int total, String title, String body) =>
+        find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
+
+    testWidgets('tidak tampil sebelum ada dompet', (tester) async {
+      await openShellWithTours(tester);
+
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+    });
+
+    testWidgets('dompet tanpa transaksi: kartu arus dan anggaran dilewati', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+
+      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(2, 2, t.tour.homeRecordTitle, t.tour.homeRecordBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.tour.homeRecordTitle), findsNothing);
+      expect((await tutorials.load()).getOrElse((_) => TutorialProgress.empty).hasCompleted(TourId.home), isTrue);
+    });
+
+    testWidgets('data lengkap: empat langkah termasuk arus dan anggaran', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await openShellWithTours(tester);
+
+      expect(step(1, 4, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      for (final title in [t.tour.homeRecordTitle, t.tour.homeCashFlowTitle, t.tour.homeBudgetTitle]) {
+        await tester.tap(find.text(t.tour.nextAction));
+        await tester.pumpAndSettle();
+        expect(find.text(title), findsOneWidget);
+      }
+    });
+
+    testWidgets('tidak tampil lagi sesudah selesai', (tester) async {
+      await seedWallet();
+      await tutorials.markTourDone(TourId.home);
+      await openShellWithTours(tester);
+
+      expect(find.text(t.tour.homeBalanceTitle), findsNothing);
+    });
   });
 }

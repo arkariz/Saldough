@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
@@ -234,7 +235,16 @@ class _AppShellPageState extends State<AppShellPage> {
                                           builder: (context) {
                                             _maybeRunStartAction(context);
                                             return Scaffold(
-                                            body: IndexedStack(index: _activeTab, children: tabsFor(context)),
+                                            body: IndexedStack(
+                                                index: _activeTab,
+                                                // `IndexedStack` menjaga tab tersembunyi tetap
+                                                // hidup; tur hanya boleh mulai di tab yang tampil
+                                                // (ADR-021 §3.3).
+                                                children: [
+                                                  for (final (i, tab) in tabsFor(context).indexed)
+                                                    TourVisibility(visible: i == _activeTab, child: tab),
+                                                ],
+                                              ),
                                             bottomNavigationBar: NavigationBar(
                                               selectedIndex: _navIndexFor(_activeTab),
                                               onDestinationSelected: (navIndex) =>
@@ -249,7 +259,10 @@ class _AppShellPageState extends State<AppShellPage> {
                                                   label: t.appShell.budgetTabLabel,
                                                 ),
                                                 NavigationDestination(
-                                                  icon: const _RecordNavIcon(),
+                                                  icon: const SpotlightTarget(
+                                                    spotlightKey: SpotlightKey.homeRecord,
+                                                    child: _RecordNavIcon(),
+                                                  ),
                                                   label: t.appShell.recordAction,
                                                 ),
                                                 NavigationDestination(

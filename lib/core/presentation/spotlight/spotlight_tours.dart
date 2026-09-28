@@ -33,6 +33,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.homeFreelance => (tr.homeFreelanceTitle, tr.homeFreelanceBody),
     SpotlightKey.homeRecent => (tr.homeRecentTitle, tr.homeRecentBody),
     SpotlightKey.recordKind => (tr.recordKindTitle, tr.recordKindBody),
+    SpotlightKey.recordFreelance => (tr.recordFreelanceTitle, tr.recordFreelanceBody),
     SpotlightKey.recordAmount => (tr.recordAmountTitle, tr.recordAmountBody),
     SpotlightKey.recordWallet => (tr.recordWalletTitle, tr.recordWalletBody),
     SpotlightKey.recordBudgetItem => (tr.recordBudgetItemTitle, tr.recordBudgetItemBody),

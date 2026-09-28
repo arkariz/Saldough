@@ -170,6 +170,12 @@ Isinya mengikuti ONBOARDING_PLAN §4.3, dengan empat penyesuaian:
   anggaran, lalu dua langkah baru, yaitu **kartu Freelance**
   (`homeFreelance`) dan **transaksi terbaru** (`homeRecent`). Empat langkah
   terakhir baru tampil setelah kartunya muncul (§3.1).
+- **Tur CATAT punya langkah `recordFreelance`** untuk kartu "Honor
+  freelance?" di formulir Pemasukan (masukan pemilik saat T-9.6: jalur
+  honor freelance mudah terlewat). Kartu itu juga dipindah dari dasar
+  formulir ke atas nominal dalam bentuk satu baris, karena keputusan
+  "honor atau pemasukan biasa" diambil sebelum mengisi apa pun. Langkahnya
+  tampil sendiri (1/1) saat Masuk pertama kali dipilih.
 
 ### 3.5 Lapis info (KO-4)
 

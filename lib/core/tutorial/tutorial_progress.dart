@@ -41,6 +41,9 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   ],
   TourId.record: [
     SpotlightKey.recordKind,
+    // Hanya tampil di formulir Pemasukan; karena progres per langkah, ia
+    // disorot sendiri saat Masuk pertama kali dipilih.
+    SpotlightKey.recordFreelance,
     SpotlightKey.recordAmount,
     SpotlightKey.recordWallet,
     SpotlightKey.recordBudgetItem,

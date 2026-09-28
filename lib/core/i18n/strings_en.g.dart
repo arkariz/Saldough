@@ -162,7 +162,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get budgetItemHelp => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.';
 	@override String budgetItemOutOfPeriod({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.';
 	@override String get freelanceCalloutTitle => 'Freelance pay?';
-	@override String get freelanceCalloutBody => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.';
+	@override String get freelanceCalloutAction => 'Record it in Freelance';
 	@override String get kindSwitcherLabel => 'Transaction kind';
 	@override String get kindExpense => 'Out';
 	@override String get kindIncome => 'In';
@@ -709,6 +709,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeRecentBody => 'Your latest records. Tap one for details, or See all for the month-by-month history.';
 	@override String get recordKindTitle => 'Pick the kind';
 	@override String get recordKindBody => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.';
+	@override String get recordFreelanceTitle => 'Freelance pay has its own path';
+	@override String get recordFreelanceBody => 'Money from a freelance project is recorded as a received payment in Freelance, not as regular income. That keeps its work hours and invoice connected.';
 	@override String get recordAmountTitle => 'Amount';
 	@override String get recordAmountBody => 'Type the amount, or use the quick buttons.';
 	@override String get recordWalletTitle => 'Wallet filled in for you';
@@ -845,7 +847,7 @@ extension on TranslationsEn {
 			'record.budgetItemHelp' => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.',
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.',
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
-			'record.freelanceCalloutBody' => 'Finished work isn\'t always paid yet. Record work hours and payments in Freelance.',
+			'record.freelanceCalloutAction' => 'Record it in Freelance',
 			'record.kindSwitcherLabel' => 'Transaction kind',
 			'record.kindExpense' => 'Out',
 			'record.kindIncome' => 'In',
@@ -1331,6 +1333,8 @@ extension on TranslationsEn {
 			'tour.homeRecentBody' => 'Your latest records. Tap one for details, or See all for the month-by-month history.',
 			'tour.recordKindTitle' => 'Pick the kind',
 			'tour.recordKindBody' => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.',
+			'tour.recordFreelanceTitle' => 'Freelance pay has its own path',
+			'tour.recordFreelanceBody' => 'Money from a freelance project is recorded as a received payment in Freelance, not as regular income. That keeps its work hours and invoice connected.',
 			'tour.recordAmountTitle' => 'Amount',
 			'tour.recordAmountBody' => 'Type the amount, or use the quick buttons.',
 			'tour.recordWalletTitle' => 'Wallet filled in for you',

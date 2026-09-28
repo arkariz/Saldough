@@ -315,8 +315,8 @@ class Translations$record$id {
 	/// id: 'Honor freelance?'
 	String get freelanceCalloutTitle => 'Honor freelance?';
 
-	/// id: 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.'
-	String get freelanceCalloutBody => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.';
+	/// id: 'Catat lewat Freelance'
+	String get freelanceCalloutAction => 'Catat lewat Freelance';
 
 	/// id: 'Jenis transaksi'
 	String get kindSwitcherLabel => 'Jenis transaksi';
@@ -1830,6 +1830,12 @@ class Translations$tour$id {
 	/// id: 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.'
 	String get recordKindBody => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.';
 
+	/// id: 'Honor freelance lewat jalur sendiri'
+	String get recordFreelanceTitle => 'Honor freelance lewat jalur sendiri';
+
+	/// id: 'Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung.'
+	String get recordFreelanceBody => 'Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung.';
+
 	/// id: 'Nominal'
 	String get recordAmountTitle => 'Nominal';
 
@@ -2049,7 +2055,7 @@ extension on Translations {
 			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.',
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.',
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
-			'record.freelanceCalloutBody' => 'Kerja selesai belum tentu uangnya sudah masuk. Catat jam kerja dan pembayarannya di Freelance.',
+			'record.freelanceCalloutAction' => 'Catat lewat Freelance',
 			'record.kindSwitcherLabel' => 'Jenis transaksi',
 			'record.kindExpense' => 'Keluar',
 			'record.kindIncome' => 'Masuk',
@@ -2535,6 +2541,8 @@ extension on Translations {
 			'tour.homeRecentBody' => 'Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan.',
 			'tour.recordKindTitle' => 'Pilih jenisnya',
 			'tour.recordKindBody' => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.',
+			'tour.recordFreelanceTitle' => 'Honor freelance lewat jalur sendiri',
+			'tour.recordFreelanceBody' => 'Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung.',
 			'tour.recordAmountTitle' => 'Nominal',
 			'tour.recordAmountBody' => 'Ketik nominalnya, atau pakai tombol cepat.',
 			'tour.recordWalletTitle' => 'Dompet terisi otomatis',

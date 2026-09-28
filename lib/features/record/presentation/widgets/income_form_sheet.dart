@@ -156,13 +156,20 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       kind: TransactionKind.income,
       title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
       isEditing: editing,
-      onBack: () =>
-          Navigator.of(context).pop(),
+      onBack: () => Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : t.record.incomeAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
+        // Di atas nominal: keputusan "honor freelance atau pemasukan biasa"
+        // diambil sebelum mengisi apa pun (dulu di dasar formulir, mudah
+        // terlewat).
+        if (!editing)
+          const SpotlightTarget(
+            spotlightKey: SpotlightKey.recordFreelance,
+            child: _FreelanceCallout(),
+          ),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
           child: RecordAmountField(
@@ -176,7 +183,10 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         ),
         RecordCategoryField(
           controller: _categoryController,
-          suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
+          suggestions: mergeCategorySuggestions(
+            widget.recentCategories,
+            _categorySuggestions(),
+          ),
           kind: TransactionKind.income,
         ),
         SpotlightTarget(
@@ -198,7 +208,6 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           controller: _noteController,
           kind: TransactionKind.income,
         ),
-        if (!editing) const _FreelanceCallout(),
         if (_canSubmit && wallet != null && amount != null)
           RecordSummaryCard(
             kind: TransactionKind.income,
@@ -227,6 +236,8 @@ class _FreelanceCallout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    // Ringkas, satu baris: penjelasannya ada di langkah tur `recordFreelance`.
     return Semantics(
       button: true,
       child: GestureDetector(
@@ -235,21 +246,30 @@ class _FreelanceCallout extends StatelessWidget {
         child: TransactionSlab(
           color: colors.tinted(colors.pending, 0.1),
           shadowColor: colors.pending,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm + AppSpacing.xs,
+            vertical: AppSpacing.sm,
+          ),
           child: Row(
             children: [
-              const AppIcon(IconKey.worklog, size: 32),
+              const AppIcon(IconKey.worklog),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(t.record.freelanceCalloutTitle, style: Theme.of(context).textTheme.titleSmall),
-                    const SizedBox(height: 2),
-                    Text(
-                      t.record.freelanceCalloutBody,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
-                    ),
-                  ],
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${t.record.freelanceCalloutTitle} ',
+                        style: textTheme.titleSmall,
+                      ),
+                      TextSpan(
+                        text: t.record.freelanceCalloutAction,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               AppIcon(IconKey.chevronRight, color: colors.pending),

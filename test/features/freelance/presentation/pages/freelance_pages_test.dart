@@ -117,8 +117,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text(t.record.freelanceCalloutTitle));
-    await tester.tap(find.text(t.record.freelanceCalloutTitle));
+    await tester.ensureVisible(find.textContaining(t.record.freelanceCalloutTitle));
+    await tester.tap(find.textContaining(t.record.freelanceCalloutTitle));
     await tester.pumpAndSettle();
   }
 

@@ -148,6 +148,7 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | Key | Target | Judul | Isi | Syarat |
 |---|---|---|---|---|
 | `record.kind` | Pilihan jenis (lembar pilihan, atau pengalih tiga segmen kalau UX-1 diterapkan) | Pilih jenisnya | Pemasukan menambah saldo, pengeluaran mengurangi, transfer hanya memindahkan antar dompetmu. | Selalu |
+| `record.freelance` | Kartu "Honor freelance?" formulir Pemasukan (dipindah ke atas nominal) | Honor freelance lewat jalur sendiri | Uang dari proyek freelance dicatat sebagai pembayaran diterima di Freelance, bukan pemasukan biasa. Jam kerja dan tagihannya tetap nyambung. | Formulir Pemasukan *(ditambah 28 Sep 2026)* |
 | `record.amount` | `RecordAmountField` | Nominal | Ketik nominalnya, atau pakai tombol cepat. | Selalu |
 | `record.wallet` | `WalletSelectField` | Dompet terisi otomatis | Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu. | ≥2 dompet aktif |
 | `record.budgetItem` | `RecordBudgetItemField` | Tautkan ke anggaran | Opsional. Pengeluaran yang ditautkan menambah angka terpakai pos itu, selama tanggalnya di dalam periode anggaran. | Ada pos yang ditawarkan |

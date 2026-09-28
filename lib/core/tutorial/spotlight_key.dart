@@ -24,6 +24,9 @@ enum SpotlightKey {
   /// Pengalih jenis CATAT.
   recordKind,
 
+  /// Kartu "Honor freelance?" di formulir Pemasukan CATAT.
+  recordFreelance,
+
   /// Bidang nominal CATAT.
   recordAmount,
 

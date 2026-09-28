@@ -420,6 +420,24 @@ void main() {
       expect(find.byType(RecordFormHost), findsOneWidget);
     });
 
+    testWidgets('memilih Masuk pertama kali menyorot jalur Freelance di atas nominal', (tester) async {
+      await tutorials.markStepsSeen([SpotlightKey.recordKind, SpotlightKey.recordAmount, SpotlightKey.recordWallet]);
+      await openShellWithTours(tester);
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.pumpAndSettle();
+      // Pengeluaran sudah dikenal: tidak ada tur.
+      expect(find.text(t.tour.recordKindTitle), findsNothing);
+
+      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+      await tester.pumpAndSettle();
+
+      expect(step(1, 1, t.tour.recordFreelanceTitle, t.tour.recordFreelanceBody), findsOneWidget);
+      // Kartu Freelance ada di atas bidang nominal.
+      final callout = tester.getRect(find.textContaining(t.record.freelanceCalloutTitle));
+      final amount = tester.getRect(find.text(t.record.amountLabelIncome.toUpperCase()));
+      expect(callout.bottom, lessThan(amount.top));
+    });
+
     testWidgets('tombol kembali saat tur menutup tur, bukan lembar CATAT', (tester) async {
       await openShellWithTours(tester);
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));

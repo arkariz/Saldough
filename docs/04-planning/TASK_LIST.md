@@ -22,9 +22,42 @@ sudah diketahui — baca sebelum mengerjakan tugasnya, bukan sesudah.
 Kotak dicentang hanya kalau pekerjaannya benar-benar selesai **dan**
 terverifikasi. Pekerjaan sebagian tetap kosong disertai catatan `⚠ Sebagian`.
 
+### Menambah tugas baru (improvement atau fitur)
+
+1. **Belum dijadwalkan?** Tambahkan satu baris ke tabel
+   [Antrean](#antrean-belum-dijadwalkan) dengan nomor `B-<n>` berikutnya.
+   Cukup satu kalimat, penanggung jawab (agen atau pemilik), dan tautan
+   sumbernya.
+2. **Siap dikerjakan?** Pindahkan ke fase yang sedang berjalan (sekarang
+   Fase 8, tindak lanjut pasca-MVP) sebagai `- [ ] **T-8.<n>**` dengan nomor
+   berikutnya, pakai templat di bawah, lalu hapus baris `B-<n>`-nya dan tulis
+   `(dari B-<n>)` di tugas barunya. Kelompok besar yang berdiri sendiri
+   (mis. sinkronisasi) membuka fase baru, `## Fase 10`, dan satu baris di
+   [ROADMAP.md](ROADMAP.md).
+3. **Selesai?** Centang, isi hasilnya (apa yang diverifikasi dan bagaimana),
+   perbarui tabel **Ringkasan progres** dan tanggalnya, dan kalau perlu
+   `.claude/CLAUDE.md` bagian "Status".
+4. **Menyentuh kebutuhan produk?** Tambahkan barisnya ke tabel
+   [Cakupan requirement](#cakupan-requirement). Keputusan arsitektur baru
+   ditulis sebagai ADR (nomor berikutnya di `docs/02-architecture/adr/`,
+   daftarnya di [docs/README.md](../README.md)).
+5. **Butuh keputusan pemilik?** Tulis di
+   [Keputusan terbuka](#keputusan-terbuka) sebagai `KT-<n>`, jangan menebak
+   di kode.
+
+Templat tugas:
+
+```markdown
+- [ ] **T-8.<n>** <Judul satu baris> (dari B-<n> / tanggal / sumber).
+      <Konteks: apa yang salah atau dibutuhkan, dan mengapa sekarang.>
+      ⚠ <Jebakan yang sudah diketahui, kalau ada.>
+      Verifikasi: <uji atau pemeriksaan yang membuktikan selesai>.
+      Memenuhi FR-xxx.   <!-- atau "Di luar PRD: <alasan>" -->
+```
+
 ## Ringkasan progres
 
-Terakhir diperbarui: 28 September 2026.
+Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -37,11 +70,12 @@ Terakhir diperbarui: 28 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 6 | 5 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store; T-8.5 (akun lebih matang, ADR-024) selesai; T-8.6 (mata uang, ADR-025) selesai |
+| 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
-| Persiapan akun, sinkronisasi, dan analitik — belum digarap di kode, draf jawaban Play Console di [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) | 1 | 1 | Draf selesai 28 Sep 2026 (metode akun: OAuth); isi ulang formulir Play Console persis sebelum build berfitur ini diunggah, jangan sebelum itu |
+| Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
+| Antrean (`B-n`, belum dijadwalkan) | 8 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -1256,7 +1290,10 @@ seluruh fitur di atasnya menghasilkan data.
       pun/`listAvailableMonths` tidak pernah dipanggil; memindai dan
       menemukan transaksi lintas bulan lalu berhenti karena riwayat habis;
       mengubah kata kunci mereset hasil pindaian).
-- [ ] **T-8.3** Ganti nama aplikasi menjadi **Tanukonomy** (dipilih pemilik
+- [ ] **T-8.3** Ganti nama aplikasi menjadi **Tanukonomy** *(29 Sep 2026:
+      pemilik melaporkan prasyarat di luar repo — merek dagang, domain, nama
+      toko, setelan Firebase — sudah selesai; sisanya kode/dokumen: sapuan
+      nama di dokumen (B-1) dan ikon iOS (B-12).)* (dipilih pemilik
       27 Sep 2026, riset di
       [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md)).
       Prasyarat: cek merek dagang resmi (DJKI, USPTO, EUIPO, WIPO; kelas 9
@@ -1314,8 +1351,8 @@ seluruh fitur di atasnya menghasilkan data.
       besar (skema, aturan keamanan, resolusi konflik), ADR sendiri nanti.
       Ikon `IconKey.account` masih `Icons.person_outline`
       (`_materialFallback`) sampai ada artwork pixel-art.
-      **Menunggu pemilik sebelum submit ke Play Store** (bukan kode, aksi
-      di luar repo): taruh `google-services.json`, aktifkan provider Google
+      **Aksi pemilik di luar repo (selesai per 29 Sep 2026, dilaporkan
+      pemilik; closed testing sudah terbit):** taruh `google-services.json`, aktifkan provider Google
       dan Email/Password di Firebase Console, isi
       `FirebaseConfig.googleServerClientId`, daftarkan SHA-1/SHA-256 upload
       key DAN Play App Signing key ke Firebase — daftar lengkap di
@@ -1355,10 +1392,73 @@ seluruh fitur di atasnya menghasilkan data.
       hanya di urutan teratas), tombol lanjut nonaktif sampai ada pilihan,
       dan onboarding baru ditandai selesai setelah mata uang tersimpan. 16 uji
       onboarding lulus; tiga jaminan gerbang dibuktikan lewat uji mutasi.
-      **Belum:** klaim situs `tanukonomy-web`, dan `flutter analyze` serta
-      seluruh rangkaian uji sesudah perubahan onboarding. **Belum
-      diverifikasi agen di emulator:** keyboard desimal, layar Akun, dan
-      langkah mata uang di onboarding (dicoba pemilik).
+      Sesudah perubahan onboarding: seluruh rangkaian uji lulus (612 uji,
+      29 Sep 2026) dan `flutter analyze` tanpa error atau peringatan (11
+      info `unnecessary_unawaited` di berkas uji, sudah ada sebelumnya —
+      lihat B-9). **Belum:** klaim situs `tanukonomy-web` (B-4).
+      **Belum diverifikasi agen di emulator:** keyboard desimal, layar Akun,
+      dan langkah mata uang di onboarding (dicoba pemilik, B-5).
+- [x] **T-8.7** Persiapan rilis Android — pekerjaan di luar tugas tercatat,
+      direkonstruksi dari riwayat commit 28–29 Sep 2026.
+      **Selesai 29 Sep 2026 atas laporan pemilik:** build rilis sudah dibuat,
+      diunggah, dan dipublikasikan ke **closed testing** di Play Console;
+      formulir Keamanan Data, listing, dan keputusan §1 listing sudah diisi
+      pemilik. (Diverifikasi pemilik, bukan agen; detail penandatanganan di
+      bawah tetap benar dan berguna untuk rilis berikutnya.)
+      - `a081bfe` `android/app/build.gradle.kts` membaca `android/key.properties`
+        (gitignore, begitu pula `*.jks`) dan memasang `signingConfigs.release`;
+        tanpa berkas itu, rilis jatuh ke kunci debug supaya
+        `flutter run --release` tetap jalan. Ini kunci **unggah** untuk Play App
+        Signing. ⚠ Keystore PKCS12: `storePassword` dan `keyPassword` harus
+        sama persis, kalau beda build gagal "Given final block not properly
+        padded". Cadangkan `.jks` dan `key.properties` di luar repo.
+      - Izin `INTERNET` ada di manifes utama (bukan hanya debug/profile),
+        dibutuhkan Firebase Auth/Analytics/Crashlytics di build rilis
+        (`ec2721a` hanya menghapus komentar penjelasnya).
+      - `8b0ff57`, `a2de9d1` `android/app/google-services.json` masuk repo
+        dan `FirebaseConfig.googleServerClientId` diisi dari klien OAuth web
+        di dalamnya (ADR-023).
+      - `05c6e21` versi `0.1.0+1` → **`0.2.0+3`**, dan `shorebird.yaml`
+        (`app_id`, bukan rahasia) didaftarkan sebagai aset di `pubspec.yaml`
+        untuk pembaruan kode lewat Shorebird.
+      - `7ed1a93` [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (draf listing)
+        dan tambahan di ASO_NAME_RESEARCH.md.
+      ⚠ Tiap `flutter build`/`flutter run` menulis ulang `minSdk` di
+      `android/app/build.gradle.kts` menjadi `flutter.minSdkVersion`;
+      kembalikan ke `23` sebelum commit (`flutter_secure_storage` 10
+      menuntutnya).
+- [x] **T-8.8** Label navigasi bawah tidak terbungkus di 360dp, dan chip
+      nominal cepat mengikuti bahasa (29 Sep 2026; ditemukan saat merender
+      tangkapan layar Play Store di emulator 1080×2160, densitas 420).
+      - Label tab "Transactions" terbungkus jadi "Transaction" + "s" (lebar
+        teks 83,8dp di slot 72dp; SpaceMono 11px tebal). Mengecilkan font
+        dilarang ADR-020 §3.2 (minimum 11px), jadi labelnya diganti: tab dan
+        judul layar riwayat kini **Riwayat** (id) dan **History** (en),
+        `appShell.transactionsTabLabel` dan `transaction.pageTitle`. Kata
+        "transaksi" sebagai benda ("Catat Transaksi", "Transaksi terbaru",
+        "Filter Transaksi") tidak diganti. Nama kunci i18n dibiarkan.
+      - Sufiks chip nominal cepat pindah dari `money_input.dart` ke i18n
+        (`common.quickAmountThousands`/`quickAmountMillions`): `+10rb`/`+5jt`
+        (id), `+10k`/`+5M` (en). Di HEAD sebelumnya kodenya sudah memilih per
+        bahasa lewat percabangan; kini teksnya di berkas terjemahan.
+      Diuji: `app_shell_page_test.dart` (lebar 360dp, kedua bahasa, font asli
+      SpaceMono dimuat; tiap label sebaris, tanpa overflow; terbukti merah
+      dengan label lama) dan `record_amount_field_test.dart` (chip `+10k`,
+      tanpa `rb`, di bahasa Inggris). ⚠ Uji yang mengganti bahasa di
+      `testWidgets` harus memuat pustaka `en` lewat
+      `tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en))`;
+      `setLocale` langsung menggantung dan `setLocaleSync` melempar
+      "Deferred library l_en was not loaded". Di luar PRD (polish).
+      Tangkapan layar Play Store dan situs perlu dirender ulang (B-3).
+
+- [x] **T-8.9** Hapus fitur contoh `example_note` (dari B-10, 29 Sep 2026,
+      diputuskan pemilik). Sisa templat proyek yang hanya dapat dicapai dari
+      menu pengembang debug. Dihapus `lib/features/example_note/` dan
+      `test/features/example_note/`, pendaftarannya di
+      `lib/core/di/src/root_module.dart` (`_featureModules` kini kosong), baris
+      di peta konteks skill `ux-review` dan pohon ARCHITECTURE_OVERVIEW.md.
+      Verifikasi: `flutter analyze` tanpa isu baru dan seluruh uji lulus
+      (609 uji lulus; 3 uji `example_note` ikut dihapus dari 612). Di luar PRD (kebersihan).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 
@@ -1405,6 +1505,25 @@ lembar pilihan ke onboarding dan tur CATAT.
       tur Beranda, CATAT, transaksi pertama memunculkan sorotan kartu Beranda
       yang baru tampil, tur Transaksi dan Anggaran; mode gelap. Freelance dan
       rincian anggaran diverifikasi lewat uji widget shell sungguhan.
+
+## Antrean (belum dijadwalkan)
+
+Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
+menambah dan memindahkannya ada di
+[Menambah tugas baru](#menambah-tugas-baru-improvement-atau-fitur). Kolom
+**Siapa**: *pemilik* = butuh aksi di luar repo atau keputusan pemilik,
+*agen* = bisa dikerjakan langsung.
+
+| ID | Tugas | Siapa | Sumber |
+|---|---|---|---|
+| B-1 | Sapuan penggantian nama "Saldough" → "Tanukonomy" di README, PRD, glosarium, dan dokumen lain (prasyarat merek dagang/domain/toko sudah dipenuhi pemilik 29 Sep 2026, jadi tidak lagi tertahan). Nama kode repositori dan paket Dart `saldough` tetap. Lakukan dengan sekali sapuan, bukan sepotong-sepotong. | agen | T-8.3, ADR-022 §4 |
+| B-4 | Selaraskan klaim situs `tanukonomy-web` (repo terpisah, `docs/TASKS.md` di sana) dengan aplikasi: **akun opsional dan analitik/Crashlytics sudah ada** (ADR-023, dikonfirmasi pemilik 29 Sep 2026), jadi klaim lama "tanpa akun, tanpa analitik" harus diganti; tambahkan pilihan mata uang (ADR-025). Cocokkan dengan kebijakan privasi dan formulir Keamanan Data yang sudah diisi di Play Console. Render ulang tangkapan layar (label Riwayat/History). | agen | T-8.4, T-8.6, T-8.8 |
+| B-5 | Verifikasi di perangkat/emulator yang belum tercatat: keyboard desimal untuk mata uang berdesimal, layar Akun, langkah mata uang di onboarding, masuk Google/email sungguhan, hapus akun. Catat hasilnya di T-8.5/T-8.6. | pemilik | T-8.5, T-8.6 |
+| B-7 | Rancang **sinkronisasi data keuangan** ke server (ADR baru, `## Fase 10`). Wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti dengan peringatan, tanpa penggabungan) dan menjawab KT-2. Proyek besar: skema, aturan keamanan, resolusi konflik. | pemilik memutuskan, lalu agen | T-8.4, ADR-024 |
+| B-8 | Ikon pixel-art untuk `IconKey.account` (kini `Icons.person_outline` di `_materialFallback`). Butuh artwork pemilik; jangan merancang sendiri (ADR-015). | pemilik | T-8.4 |
+| B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
+| B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
+| B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 
 ## Cakupan requirement
 

@@ -10,9 +10,13 @@ dan arsitekturnya.
 Halaman ini adalah titik masuk. Ikuti jalur baca yang sesuai peran Anda di
 bawah.
 
-**Status proyek:** Fase 0 — menulis dokumen Saldough 2.0.
-**Versi dokumentasi:** 2.0
-**Terakhir diperbarui:** 17 September 2026
+**Status proyek:** MVP selesai (Fase 0–7) dan onboarding selesai (Fase 9);
+Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan. Nama tampilan
+aplikasi kini **Tanukonomy** ([ADR-022](02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md));
+dokumen ini masih memakai nama kode "Saldough" sampai prasyarat ganti nama
+terpenuhi.
+**Versi dokumentasi:** 2.1
+**Terakhir diperbarui:** 29 September 2026
 
 ## Jalur baca
 
@@ -47,10 +51,22 @@ dikonfirmasi lewat eksplorasi kedua dan membalik keputusan pertama.
    [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md),
    dan
    [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md)
-4. [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) — invarian
-   "jangan sentuh fitur lama" yang berlaku selama Fase 1 dan 2. Jangan
-   dilewatkan.
+4. [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) — strategi
+   pivot dan alasannya. Invarian "jangan sentuh fitur lama" sudah tidak
+   berlaku sejak cutover Fase 3; kode 1.0 tinggal di riwayat git.
 5. [Daftar tugas](04-planning/TASK_LIST.md)
+
+### Menambah task improvement atau fitur
+
+1. [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru"
+   (langkah dan templat), lalu tabel "Antrean" untuk melihat apa yang sudah
+   menunggu.
+2. [Perbaikan hasil review UX](04-planning/UX_REVIEW_FIXES.md) kalau
+   temuannya soal UX atau tampilan; daftar itu punya nomor `UX-n` sendiri.
+3. Keputusan yang mengubah arsitektur atau perilaku produk: tulis ADR baru
+   (nomor berikutnya di tabel di bawah) dan tautkan dari tugasnya.
+4. Setelah selesai, perbarui ringkasan progres di TASK_LIST dan bagian
+   "Status" di [`.claude/CLAUDE.md`](../.claude/CLAUDE.md).
 
 ### Meninjau keputusan arsitektur
 
@@ -72,16 +88,21 @@ docs/
 ├── 01-product/                # apa yang dibangun
 │   ├── prd-saldough-1.0.md
 │   ├── prd-saldough-2.0.md
-│   └── user-stories.md
+│   ├── user-stories.md
+│   └── ASO_NAME_RESEARCH.md       # riset nama Tanukonomy dan kata kunci toko
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md
 │   └── adr/
 ├── 04-planning/                # urutan dan progres
 │   ├── ROADMAP.md
-│   ├── TASK_LIST.md
-│   ├── UI_UX_DESIGN_TASKS.md
-│   └── UX_REVIEW_FIXES.md     # perbaikan hasil review UX 2.0
+│   ├── TASK_LIST.md           # tugas, progres, antrean B-n; mulai dari sini
+│   ├── UI_UX_DESIGN_TASKS.md  # rencana desain awal (tidak dipakai, lihat bannernya)
+│   ├── UX_REVIEW_FIXES.md     # perbaikan hasil review UX 2.0 (UX-1..UX-22)
+│   ├── ONBOARDING_PLAN.md     # rencana onboarding dan tur (Fase 9)
+│   ├── ONBOARDING_ART_BRIEF.md
+│   ├── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
+│   └── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
 ├── stitch_pixel_finance_tracker/  # rujukan visual dari pemilik — lihat ADR-015
 └── 99-archive/                 # rekaman Saldough 1.0, dibekukan
     ├── README.md
@@ -115,8 +136,14 @@ docs/
 | [0017](02-architecture/adr/0017-rencana-anggaran-adalah-jumlah-pos.md) | Rencana anggaran adalah jumlah posnya | Accepted |
 | [0018](02-architecture/adr/0018-jenis-pos-anggaran.md) | Pos anggaran punya jenis: pengeluaran atau transfer | Accepted |
 | [0019](02-architecture/adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md) | Tarif di entri worklog, transaksi milik pembayaran freelance | Accepted |
-| [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Proposed |
+| [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Accepted |
+| [0021](02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) | Onboarding dan tur spotlight | Accepted |
 | [0022](02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md) | Ganti nama aplikasi menjadi Tanukonomy | Accepted (sebagian dilaksanakan) |
+| [0023](02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md) | Identitas opsional: Firebase Auth, Analytics, Crashlytics | Accepted |
+| [0024](02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md) | Kepemilikan data lokal dan akun | Accepted |
+| [0025](02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md) | Satu mata uang per aplikasi | Accepted |
+
+ADR berikutnya memakai nomor **0026**.
 
 ## Pertanyaan yang sering muncul
 
@@ -130,10 +157,13 @@ docs/
 | Mengapa `flutter-architecture-studi` (tanpa `-bank`) tidak dipakai? | [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md), bagian dasar keputusan |
 | Mengapa pengujian memakai `mocktail`/`bloc_test` padahal repo acuan tidak? | [ADR-0010](02-architecture/adr/0010-mocktail-bloc-test-convention.md) |
 | Mengapa membuat anggaran tidak mengubah saldo dompet? | [Model domain](02-architecture/DOMAIN_MODEL.md) dan [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) |
-| Mengapa fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) belum dihapus? | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
+| Ke mana fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) pergi? (dihapus di cutover Fase 3) | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
 | Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
 | Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
 | Kenapa ada bayangan keras beroffset di tiap kartu? | [ADR-015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
+| Bagaimana menambah tugas baru? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru" |
+| Apa yang menunggu di antrean? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Antrean" |
+| Apa yang harus diisi sebelum submit ke Play Store? | [PLAY_DATA_SAFETY.md](04-planning/PLAY_DATA_SAFETY.md) dan [PLAY_STORE_LISTING.md](04-planning/PLAY_STORE_LISTING.md) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) dan [perbaikan hasil review UX](04-planning/UX_REVIEW_FIXES.md) |
 
 ## Konvensi penulisan

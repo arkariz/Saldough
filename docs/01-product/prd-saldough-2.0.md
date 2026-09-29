@@ -527,7 +527,7 @@ Ini layar daftar, dicapai dari navigasi bawah.
 - [ ] Menambah saldo dompet tujuan tepat satu kali.
 - [ ] Menandai pembayaran itu sudah dibayar, dan mencegahnya dicatat dua kali.
 - [ ] Transaksi pemasukannya hanya bisa diubah lewat pembayarannya: tidak bisa
-      disunting atau dihapus dari tab Transaksi, dan pembayaran yang sudah
+      disunting atau dihapus dari tab Riwayat, dan pembayaran yang sudah
       diterima bisa dibatalkan penerimaannya (ADR-019).
 - [ ] Menyatakan dengan jelas bahwa ini pencatatan pembayaran, bukan pembayaran
       yang dijalankan aplikasi.
@@ -701,8 +701,12 @@ Navigasi bawah berisi lima tujuan dengan CATAT di tengah sebagai tindakan utama
 yang dibedakan secara visual:
 
 ```
-Beranda | Anggaran | CATAT | Transaksi | Dompet
+Beranda | Anggaran | CATAT | Riwayat | Dompet
 ```
+
+Tab riwayat transaksi bernama **Riwayat** (id) / **History** (en) sejak 29
+September 2026, karena "Transactions" terbungkus di layar 360dp. Kata
+"transaksi" sebagai benda tetap dipakai.
 
 Bahasa visualnya diuraikan di
 [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md): dasar

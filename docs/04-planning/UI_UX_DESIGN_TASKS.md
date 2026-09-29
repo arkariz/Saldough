@@ -12,6 +12,19 @@ dari desain sampai kode. Desain tidak punya Fase 0 (dokumen) atau Fase 3
 (cutover) sendiri — keduanya tidak punya permukaan visual baru, sama seperti
 dokumen 1.0 melewati fase gerbang dan fase sinkronisasinya.
 
+> **Status (29 September 2026): rencana ini tidak dijalankan sebagaimana
+> ditulis.** Design Canvas D-2.1 tidak pernah dibuat, sehingga seluruh kotak
+> `D-*` di bawah tetap kosong. Sebagai gantinya pemilik menyerahkan paket
+> rujukan visual (`docs/stitch_pixel_finance_tracker/`, diadopsi di
+> [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)
+> dan direvisi di ADR-016 dan ADR-020), dan layar dirancang langsung di kode,
+> lalu ditinjau lewat [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md). Ikon SVG
+> (D-7.1) dan bentuk ADR-015 sudah terpasang di kode (T-7.4, T-7.5) beserta
+> poles state (T-7.6).
+> Jangan menambah tugas desain baru di sini: tugas UX/UI baru masuk
+> [TASK_LIST.md](TASK_LIST.md) (Antrean) atau UX_REVIEW_FIXES.md. Dokumen ini
+> dipertahankan sebagai rekaman rencana awal.
+
 ## Tautan Design Canvas
 
 Belum ada Design Canvas untuk Saldough 2.0. Kanvas pertamanya dibuat di

@@ -384,7 +384,7 @@ terisi, jadi penjaga supaya pembayaran yang sama tidak bisa dicatat dua kali.
 Id transaksi itu diturunkan dari id pembayaran (`freelance-<paymentId>`), dan
 transaksinya ditulis lebih dulu. Kalau penulisan pembayaran gagal di tengah,
 mencatat ulang menimpa transaksi yang sama, bukan membuat yang kedua.
-Transaksinya tidak bisa disunting atau dihapus dari tab Transaksi; pembayaran
+Transaksinya tidak bisa disunting atau dihapus dari tab Riwayat; pembayaran
 yang sudah diterima punya aksi **Batalkan penerimaan** yang mengembalikannya ke
 `pending` lebih dulu, baru menghapus transaksinya.
 

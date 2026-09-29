@@ -17,11 +17,13 @@ menyentuh `lib/`, bukan sesudah.
 Empat hal ini yang paling sering salah, dan tiga di antaranya gagal **tanpa
 gejala yang kelihatan**.
 
-1. **Menyentuh fitur lama selama Fase 1 dan 2.** Repositori memuat dua model
-   domain sekaligus sampai cutover di Fase 3. Fitur baru ditulis sebagai folder
-   baru; `lib/features/{cycle,card,investment,grocery,income}` dan
-   `lib/shared/goal` tidak disentuh sama sekali. Dibuktikan tiap PR dengan
-   `git diff --stat`.
+1. **Menulis simbol mata uang atau teks bahasa langsung di kode.** Mata uang
+   aktif bisa 14 pilihan ([ADR-025](../docs/02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md)),
+   jadi tidak ada `Rp` di widget: tampilkan lewat `AppMoneyText`/
+   `AppMoneyFormatter`, input lewat `money_input.dart`. Teks yang dibaca
+   pengguna, termasuk sufiks kecil seperti `rb`/`k` pada chip nominal, selalu
+   lewat slang di **kedua** bahasa. Percabangan `if (locale == en)` di kode
+   adalah tanda salah.
 2. **Menyimpan nilai turunan.** `spent`, `remaining`, `progress`, status pos,
    gaji kotor, gaji bersih, dan total saldo semuanya dihitung ulang saat
    diakses. Satu-satunya pengecualian adalah `Wallet.currentBalance`, dan
@@ -32,10 +34,14 @@ gejala yang kelihatan**.
    data yang sama, pemuatan ulang setelah penyimpanan akan tampak seperti bloc
    tidak memancarkan apa pun — dan galatnya berbunyi "expected 1 state, got 0",
    bukan menunjuk ke stubnya. Buat stub mencerminkan hasil penulisan terakhir.
-4. **Menghapus slot warna atau namespace i18n lama terlalu dini.** Layar lama
-   masih memakainya sampai Fase 3. Menghapusnya di Fase 1 atau 2 membuat
-   `flutter analyze` merah tanpa memajukan apa pun. Fase 1 dan 2 hanya
-   **menambah**; penghapusan dikerjakan di T-3.5 dan T-3.6.
+4. **Label yang tidak muat di layar sempit.** Font label minimum 11px
+   (ADR-020 §3.2), jadi label bahasa Inggris yang panjang terbungkus di 360dp
+   (kasus nyata: "Transactions" di tab bawah, kini "History"). Jangan
+   memperbaikinya dengan mengecilkan font; pendekkan katanya, dan uji di lebar
+   360dp untuk kedua bahasa dengan font asli dimuat (contoh:
+   `test/core/presentation/shell/app_shell_page_test.dart`). Di uji widget,
+   mengganti bahasa harus lewat
+   `tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en))`.
 
 ## Aturan yang mengikat
 
@@ -95,7 +101,7 @@ gejala yang kelihatan**.
 - Warna lewat `context.appColors`, tidak pernah hex literal di berkas widget.
 - Ikon lewat `AppIcon(IconKey.xxx)`. `Icons.*` hanya boleh muncul di berkas peta
   ikon.
-- Nominal uang selalu lewat `AppMoneyText`.
+- Nominal uang selalu lewat `AppMoneyText`/`AppMoneyFormatter`, tidak pernah string `Rp` atau simbol lain di widget.
 - Kosakata menyatakan pencatatan, bukan tindakan keuangan.
 
 ### Penamaan
@@ -129,7 +135,7 @@ gejala yang kelihatan**.
   boleh.
 - Menghidupkan kembali mekanisme roll-up, rollover, atau `needsReview` dari
   Saldough 1.0.
-- Membuat folder `lib/legacy/` atau sejenisnya.
+- Membuat folder `lib/legacy/` atau sejenisnya (kode 1.0 sudah dihapus; pulihkan dari riwayat git kalau perlu).
 - Mengubah branch `main` di repositori manapun.
 - Melanjutkan pekerjaan saat terhambat. Berhenti dan laporkan.
 
@@ -168,8 +174,9 @@ Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
   di [ADR-0001](../docs/02-architecture/adr/0001-internal-package-dependency-strategy.md).
 - Saldo tersimpan tidak cocok dengan saldo yang dihitung ulang. Cari akarnya di
   urutan penulisan lebih dulu, dan jangan menambal dengan menulis ulang saldo.
-- Sebuah uji lama gagal selama Fase 1 atau 2. Itu bukti fitur baru menyentuh
-  sesuatu yang seharusnya tidak — jangan menyunting uji lamanya.
+- Sebuah uji lama gagal oleh perubahan yang seharusnya tidak menyentuhnya.
+  Itu bukti perubahan itu mengubah perilaku lain — cari tahu apa, jangan
+  menyunting uji lamanya supaya lulus.
 - `IconKey` butuh kunci yang belum ada padanan asetnya di
   `docs/stitch_pixel_finance_tracker/icon_*/`. Pakai isian Material sementara,
   jangan merancang ikon sendiri — lihat daftar padanan di

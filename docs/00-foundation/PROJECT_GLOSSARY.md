@@ -50,6 +50,10 @@ terjadi padanya.
 | Transfer | `TransferTransaction` | Memindahkan catatan uang dari satu dompet ke dompet lain. Total saldo tidak berubah, hanya tempatnya. Boleh ditautkan ke satu pos anggaran, untuk pos yang berupa rencana pemindahan seperti setoran tabungan. |
 | Kategori | `categoryKey` | Label pengelompokan transaksi, misalnya `makan` atau `transport`. |
 | Catat | `record` | Satu-satunya titik masuk pembuatan transaksi manual. Lihat bagian berikutnya. |
+| Riwayat / History | `TransactionListPage` | Nama tab dan judul layar daftar transaksi (sebelumnya "Transaksi", diganti 29 Sep 2026 karena label terbungkus di 360dp). Kunci i18n masih `appShell.transactionsTabLabel`. ADR dan catatan lama yang menyebut "tab Transaksi" merujuk layar yang sama. |
+| Mata uang aktif | `ActiveCurrency` | Satu mata uang untuk seluruh aplikasi, bawaan IDR, dipilih saat onboarding dan bisa diganti di layar Akun tanpa konversi nominal. Lihat [ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md). |
+| Akun | `AuthRepository` | Identitas opsional (Google atau email/sandi); data lokal milik perangkat, bukan akun. Lihat [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md). |
+| Onboarding, tur, lapis info | `SpotlightKey`, `TourTrigger` | Pengenalan sekali di pembukaan pertama, sorotan per elemen sekali di tempatnya, dan menu info untuk memutar ulang. Lihat [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md). |
 
 Perhatikan bahwa **membuat anggaran tidak pernah mengubah saldo dompet**. Saldo
 hanya berubah kalau ada transaksi yang dicatat. Aturan ini dijabarkan di

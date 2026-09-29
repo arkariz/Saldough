@@ -1,25 +1,28 @@
 # Isian Play Console: setelan toko dan listing (ASO)
 
 **Tanggal:** 29 September 2026
-**Status:** Draf siap tempel — keputusan pemilik di §1 belum diambil
+**Status:** Sudah diisi pemilik di Play Console (dilaporkan 29 Sep 2026, closed testing terbit); dokumen ini kini rujukan untuk perubahan berikutnya
 **Rujukan:** [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md) §2
 dan §5a (kata kunci), [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan
 Data, App access), [ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md),
 [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
 
 Semua teks di bawah sudah dihitung panjangnya dan dicocokkan dengan
-aplikasi saat ini (versi `0.2.0+3`). Kalau fitur berubah, cocokkan ulang
+aplikasi saat ini (versi `0.2.0+3`, mata uang dan label navigasi diperbarui
+29 September 2026 — tangkapan layar dan deskripsi di Play Console perlu dicocokkan kalau belum, B-4). Kalau fitur berubah, cocokkan ulang
 — klaim listing yang tidak sesuai aplikasi melanggar kebijakan metadata
 Play.
 
 ## 1. Keputusan pemilik sebelum mengisi
 
-1. **Negara distribusi.** Aplikasi **hanya memakai Rupiah**
-   (`lib/core/utils/formatters/money_formatter.dart` selalu menulis
-   "Rp"). Rekomendasi: rilis **Indonesia saja** dulu, buka negara lain
-   setelah ada dukungan mata uang lain. Pengguna luar negeri yang melihat
-   "Rp" di tangkapan layar akan memberi rating rendah, dan rating itu
-   berlaku global.
+1. **Negara distribusi.** ~~Aplikasi hanya memakai Rupiah~~ — **basi sejak
+   29 September 2026**: aplikasi mendukung 14 mata uang, satu per aplikasi,
+   dipilih pemakai saat onboarding
+   ([ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md),
+   T-8.6). Risiko "Rp di tangkapan layar" tetap ada karena tangkapan layar
+   dirender dengan IDR: kalau membuka negara selain Indonesia, sertakan
+   tangkapan layar bermata uang lain atau tetap mulai dari Indonesia saja.
+   Keputusan §1 sudah diambil dan diisi pemilik di Play Console (29 Sep 2026); catatan hasilnya tidak ada di repo, cek langsung di Play Console.
 2. **Bahasa bawaan listing.** Kalau Indonesia saja: bawaan `id-ID`,
    terjemahan `en-US` (untuk pengguna Indonesia yang HP-nya berbahasa
    Inggris). Kalau global: bawaan `en-US`, terjemahan `id-ID`.
@@ -207,7 +210,7 @@ TAMPILAN
 • Gaya pixel yang hangat dengan maskot tanuki
 • Mode gelap mengikuti setelan HP
 • Tur singkat di setiap layar saat pertama kali dibuka
-• Bahasa Indonesia dan Inggris, nominal dalam Rupiah
+• Bahasa Indonesia dan Inggris, dengan pilihan mata uang (Rupiah bawaan)
 
 Tanukonomy mencatat, bukan melakukan: aplikasi ini membantumu memahami dan merencanakan uang, tanpa menyentuh rekeningmu.
 ```
@@ -256,7 +259,7 @@ LOOK AND FEEL
 • Warm pixel-art style with a tanuki mascot
 • Dark mode follows your phone's setting
 • A short guided tour on each screen the first time you open it
-• Available in English and Indonesian; amounts are shown in Indonesian Rupiah (IDR)
+• Available in English and Indonesian, with a choice of currency (Rupiah by default)
 
 Tanukonomy records, it doesn't transact: it helps you understand and plan your money without touching your bank account.
 ```
@@ -368,7 +371,9 @@ simpan PNG tanpa transparansi, lalu tempel `01-beranda` dan
 - Kata "terbaik", "#1", "gratis", "diskon", atau emoji di nama aplikasi.
 - Nama aplikasi pesaing, atau daftar kata kunci tanpa kalimat.
 - Klaim yang tidak didukung aplikasi: "100% privat", "tanpa pelacakan",
-  "sinkronisasi"/"cadangan" (belum ada), mata uang selain Rupiah.
+  "sinkronisasi"/"cadangan" (belum ada), "tanpa akun" atau "offline
+  sepenuhnya" (akun opsional dan analitik sudah ada, ADR-023), dan jumlah
+  mata uang yang tidak sesuai kenyataan (sekarang 14).
 - Testimoni atau rating buatan.
 
 ## 6. Sesudah rilis
@@ -378,5 +383,5 @@ simpan PNG tanpa transparansi, lalu tempel `01-beranda` dan
   singkat.
 - Setelah pemasangan cukup, uji varian deskripsi singkat dan ikon lewat
   **Store listing experiments**.
-- Kalau mata uang lain ditambahkan: buka negara baru, perbarui §1 dan teks
-  "Rupiah" di deskripsi.
+- Mata uang lain sudah didukung (T-8.6): kalau membuka negara baru,
+  putuskan §1 dan sesuaikan tangkapan layar serta teks "Rupiah" di deskripsi.

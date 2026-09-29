@@ -45,8 +45,15 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 5 | Freelance | Penghasilan lepas tercatat sampai diterima |
 | 6 | Beranda | Ringkasan keadaan keuangan dalam satu layar |
 | 7 | Template dan poles | Anggaran berulang cepat dibuat, ikon final terpasang |
+| 8 | Tindak lanjut pasca-MVP | Anggaran hanya membaca bulannya, pencarian lintas bulan, ganti nama Tanukonomy, akun opsional, Analytics/Crashlytics, satu mata uang per aplikasi, persiapan rilis |
+| 9 | Onboarding, info, dan tur spotlight | Pengguna baru paham aplikasinya sebelum mencatat, tiap layar dijelaskan sekali di tempatnya |
 
-Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya.
+Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
+lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
+
+**Status per 29 September 2026:** Fase 0–7 dan 9 selesai; Fase 8 berjalan
+(sisa: prasyarat ganti nama T-8.3 dan verifikasi build rilis T-8.7, keduanya
+menunggu pemilik). Rincian dan antrean di [TASK_LIST.md](TASK_LIST.md).
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -191,6 +198,47 @@ templatenya, dan seluruh layar memakai aset ikon final dari
 > [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md))
 > sebelum satu pun layar domain ada untuk mengujinya. Tapi ini keputusan yang
 > layak ditinjau ulang pemilik, bukan diasumsikan tetap di Fase 7 selamanya.
+
+## Fase 8: Tindak lanjut pasca-MVP
+
+Kumpulan pekerjaan yang muncul setelah MVP dipakai dan disiapkan untuk
+rilis. Berbeda dari fase-fase awal, isinya tidak berurutan ketat: tiap
+tugas berdiri sendiri dan boleh dikerjakan kapan pun. Di sinilah tugas
+kecil baru ditambahkan (lihat "Menambah tugas baru" di TASK_LIST).
+
+Isinya: batas bulan periode anggaran (KT-1), pencarian Transaksi lintas
+bulan, ganti nama menjadi Tanukonomy
+([ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md)),
+identitas opsional beserta Analytics dan Crashlytics
+([ADR-023](../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)),
+kepemilikan data dan akun
+([ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)),
+satu mata uang per aplikasi
+([ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md)),
+persiapan rilis Android, dan polish label layar sempit.
+
+**Selesai kalau:** aplikasi diunggah ke jalur uji Play Console dengan
+formulir Keamanan Data dan listing yang cocok dengan isi build, dan
+prasyarat ganti nama (merek dagang, domain, nama toko) sudah dipenuhi.
+
+**Batas yang dijaga:** akun tetap opsional dan pencatatan inti tidak boleh
+bergantung pada jaringan (NFR-REL-001 yang direvisi 28 Sep 2026).
+Sinkronisasi data keuangan ke server **bukan** bagian fase ini — proyek
+terpisah yang butuh ADR sendiri (B-7 di antrean TASK_LIST).
+
+## Fase 9: Onboarding, info, dan tur spotlight
+
+Pengenalan sekali di pembukaan pertama, tur spotlight per layar, dan lapis
+info untuk memutar ulang keduanya. Dikerjakan setelah tab-tabnya stabil
+karena tur menyorot elemen nyata. Desainnya di
+[ONBOARDING_PLAN.md](ONBOARDING_PLAN.md) dan
+[ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md);
+langkah mata uang ditambahkan sebagai gerbang di
+[ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md) §3.7.
+
+**Selesai kalau:** pengguna lama melihat pengenalan sekali dengan data
+utuh, pengguna baru dituntun sampai transaksi pertama, dan semuanya bisa
+diputar ulang dari menu info. (Tercapai 28 Sep 2026, T-9.10.)
 
 ## Ketergantungan antar fase
 

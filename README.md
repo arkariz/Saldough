@@ -1,33 +1,43 @@
 # Saldough
 
-Aplikasi Flutter untuk Android dan iOS yang menggantikan sistem pencatatan
-keuangan pribadi berbasis empat Google Spreadsheet yang dikelola manual.
+Aplikasi Flutter untuk Android dan iOS untuk mencatat dan mengelola keuangan
+pribadi. Intinya tiga hal: **di mana uang berada** (Dompet), **apa yang
+terjadi padanya** (Transaksi lewat CATAT), dan **ke mana ia direncanakan
+pergi** (Anggaran), dengan pekerjaan freelance yang belum dibayar dilacak
+lewat Freelance.
 
-Saldough tidak memperkenalkan cara menganggar yang baru. Struktur, istilah, dan
-alurnya sengaja dibuat sama dengan spreadsheet yang sudah dipakai. Yang dihapus
-hanya pekerjaan tangannya: menyalin angka antar dokumen, menjumlah jam kerja,
-menghitung potongan pajak, dan menyalin ulang struktur bulan.
+Nama tampilan di toko adalah **Tanukonomy** (maskot tanuki juru catat, lihat
+[ADR-022](docs/02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md));
+"Saldough" tetap menjadi nama kode repositori dan paket Dart.
 
-**Status:** dokumentasi selesai, implementasi belum dimulai.
+Aplikasi ini **mencatat**, bukan **melakukan**: ia tidak memindahkan uang,
+tidak membayar, dan tidak terhubung ke bank mana pun.
 
-## Yang dikerjakan aplikasi ini
+**Status (29 September 2026):** MVP selesai (Fase 0–7), onboarding dan tur
+selesai (Fase 9), Fase 8 (persiapan rilis) berjalan. Versi `0.2.0+3`, belum
+dirilis ke toko. Progres rinci dan antrean tugas ada di
+[TASK_LIST.md](docs/04-planning/TASK_LIST.md).
 
-Sistem manual yang digantikan terdiri dari empat spreadsheet dengan tiga titik
-salin manual setiap bulan.
+## Yang sudah berjalan
 
-| Sumber | Menghasilkan | Sebelumnya disalin tangan ke |
-|---|---|---|
-| Timesheet jam kerja | Total jam per periode | Gaji kotor di buku utama |
-| Daftar belanja | Total belanja sebulan | Baris `Bulanan` di anggaran |
-| Transaksi kartu kredit | Total per siklus tagihan | Baris `CC` di anggaran |
+| Bagian | Isi |
+|---|---|
+| CATAT | Pemasukan, pengeluaran, dan transfer dari satu lembar, dengan tautan opsional ke pos anggaran |
+| Riwayat | Transaksi per bulan dikelompokkan per tanggal, penyaring, pencarian lintas bulan, sunting, hapus dengan Urungkan |
+| Dompet | Saldo tercatat, total saldo, rincian dengan ringkasan bulan |
+| Anggaran | Anggaran, pos, template, progres per pos, arsip |
+| Freelance | Proyek, worklog, pembayaran, pencatatan pembayaran diterima |
+| Beranda | Total saldo, arus bulan berjalan, ringkasan anggaran dan freelance |
+| Onboarding | Pengenalan sekali, tur spotlight per layar, lapis info |
+| Akun (opsional) | Masuk dengan Google atau email; pencatatan inti tidak butuh akun atau koneksi |
+| Mata uang | Satu mata uang untuk seluruh aplikasi, bawaan IDR, dipilih saat onboarding |
 
-Saldough menghitung ketiganya otomatis, membuat bulan baru dari template tanpa
-membawa baris insidental, dan membagi sisa ke pos investasi berdasarkan
-persentase.
+Sinkronisasi data keuangan ke server **belum ada**; data tinggal di perangkat.
 
 ## Mulai dari mana
 
-Baca [dokumentasi](docs/README.md). Halaman itu memuat jalur baca sesuai peran.
+Baca [dokumentasi](docs/README.md); halaman itu memuat jalur baca sesuai
+peran, termasuk cara menambah task improvement atau fitur baru.
 
 Kalau akan langsung menulis kode, mulai dari
 [aturan arsitektur](.claude/AGENT_CONTEXT.md) lalu
@@ -37,37 +47,58 @@ Kalau akan langsung menulis kode, mulai dari
 
 | Bagian | Pilihan |
 |---|---|
-| Kerangka | Flutter 3.47.2, Dart 3.13.2 |
+| Kerangka | Flutter 3.47.2, Dart 3.13.2, Android `minSdk` 23 |
 | Arsitektur | Tiga zona `core`/`shared`/`features`, mengikuti `flutter-architecture-studi-bank` |
 | State | Bloc dengan efek terdaftar, dari `package:state_management` |
 | Navigasi | Registri rute bertipe dari `package:navigation`, di atas `go_router` |
-| Penyimpanan | Hive lewat `package:api_storage` dan `package:hive_storage` |
+| Penyimpanan | Lokal-first, Hive lewat `package:api_storage` dan `package:hive_storage` |
 | Kesalahan | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard` |
 | Injeksi dependensi | `package:di`, GetIt dengan lingkup per fitur |
 | Terjemahan | slang, bahasa dasar Indonesia dan tambahan Inggris |
-| Tema | `new-health-duel`, dipetakan ulang ke konteks keuangan |
+| Tema | `PixelTheme`, bahasa visual pixel-art ([ADR-015](docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)) |
+| Akun dan analitik | Firebase Auth, Analytics, Crashlytics ([ADR-023](docs/02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)) |
+| Pembaruan kode | Shorebird (`shorebird.yaml`) |
 
 Paket internal berasal dari
 [`arkariz/advance-mobile-platform`](https://github.com/arkariz/advance-mobile-platform),
-dikonsumsi sebagai git dependency yang dipin per tag.
+dikonsumsi sebagai git dependency; cara dipinnya dijelaskan di komentar
+`pubspec.yaml` dan [ADR-0001](docs/02-architecture/adr/0001-internal-package-dependency-strategy.md).
 
 ## Ketepatan angka
 
-Seluruh nominal disimpan sebagai bilangan bulat dalam satuan sen, dan pembulatan
-hanya dilakukan saat menampilkan. Aturan ini bukan pilihan gaya: pajak 2,5% pada
-penghasilan freelance menghasilkan pecahan setengah rupiah, dan pembulatan yang
-terlalu dini membuat hasilnya meleset satu rupiah dari catatan asli.
+Seluruh nominal disimpan sebagai bilangan bulat dalam satuan sen (seperseratus
+satuan utama mata uang), dan pembulatan hanya dilakukan saat menampilkan.
+Aturan ini bukan pilihan gaya: pajak 2,5% pada penghasilan freelance
+menghasilkan pecahan setengah rupiah, dan pembulatan yang terlalu dini membuat
+hasilnya meleset satu rupiah dari catatan asli.
 
-Setiap rumus domain diuji memakai angka nyata dari spreadsheet sebagai kasus
-uji. Rinciannya di [model domain](docs/02-architecture/DOMAIN_MODEL.md).
+Setiap rumus domain diuji memakai angka nyata sebagai kasus uji. Rinciannya di
+[model domain](docs/02-architecture/DOMAIN_MODEL.md).
+
+## Menjalankan dan menguji
+
+```
+flutter pub get
+dart run slang          # setelah mengubah assets/i18n/*.i18n.json
+flutter analyze
+flutter test
+```
+
+Build rilis Android memakai kunci unggah dari `android/key.properties`
+(tidak ada di repositori); catatannya ada di T-8.7
+[TASK_LIST.md](docs/04-planning/TASK_LIST.md). Tiap `flutter build` menulis
+ulang `minSdk` di `android/app/build.gradle.kts`; kembalikan ke `23` sebelum
+commit.
 
 ## Struktur repositori
 
 ```
 Saldough/
 ├── .claude/          # konteks dan aturan untuk agent
+├── android/, ios/    # proyek platform
+├── assets/           # terjemahan (i18n), ikon, ilustrasi, font
 ├── docs/             # PRD, arsitektur, ADR, dan rencana
-└── README.md
+├── lib/              # kode aplikasi: core/, shared/, features/
+├── test/             # cermin struktur lib/
+└── tool/             # skrip pengembang sekali pakai
 ```
-
-Kode aplikasi akan menempati `lib/` setelah Fase 0 selesai.

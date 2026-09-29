@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 28 September 2026
-**Fase saat ini:** MVP selesai (Fase 0–7); Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026 di branch `claude/fase-9-onboarding`
+**Terakhir diperbarui:** 29 September 2026
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan. Versi `0.2.0+3`, belum dirilis ke toko.
 
 ## Apa ini
 
@@ -23,7 +23,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Struktur kode** | `docs/02-architecture/ARCHITECTURE_OVERVIEW.md` |
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
-| **Tugas dan progres** | `docs/04-planning/TASK_LIST.md`, plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `docs/04-planning/PLAY_DATA_SAFETY.md` (draf formulir Keamanan Data Play Console untuk akun/sinkronisasi/analitik), `docs/04-planning/PLAY_STORE_LISTING.md` (setelan toko dan listing Play, ASO) |
+| **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"), plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `docs/04-planning/PLAY_DATA_SAFETY.md` (draf formulir Keamanan Data Play Console untuk akun/sinkronisasi/analitik), `docs/04-planning/PLAY_STORE_LISTING.md` (setelan toko dan listing Play, ASO) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
 | **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
@@ -32,8 +32,10 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 
 ## Status
 
-**Rebranding:** nama aplikasi baru **Tanukonomy** dipilih 27 Sep 2026
-(maskot tanuki juru catat), belum dieksekusi — T-8.3, riset di
+**Rebranding:** nama aplikasi **Tanukonomy** (dipilih 27 Sep 2026, maskot
+tanuki juru catat) sudah dipakai di aplikasi dan toko; prasyarat merek
+dagang/domain/nama toko dilaporkan pemilik selesai 29 Sep 2026. Sisa T-8.3:
+sapuan nama di dokumen (B-1) dan ikon iOS (B-12). Riset di
 `docs/01-product/ASO_NAME_RESEARCH.md`.
 
 **Fitur online (T-8.4):** invarian lama "tanpa panggilan jaringan sama
@@ -47,9 +49,9 @@ Anggaran, Freelance) tetap wajib berfungsi penuh tanpa koneksi.
 `lib/shared/auth/` (Firebase Auth, Google Sign-In + email/sandi untuk
 peninjau Play), `lib/core/foundation/analytics/` (Firebase Analytics,
 Crashlytics), `lib/features/account/` (layar Akun, ikon di app bar
-Beranda). Ini pertama kalinya aplikasi memanggil jaringan; syarat sebelum
-submit Play Store (setelan Firebase Console, bukan kode) ada di
-`docs/04-planning/PLAY_DATA_SAFETY.md`.
+Beranda). Ini pertama kalinya aplikasi memanggil jaringan; setelan Firebase
+Console dan formulir Keamanan Data sudah dikerjakan pemilik (29 Sep 2026);
+catatannya ada di `docs/04-planning/PLAY_DATA_SAFETY.md`.
 **Akun tetap opsional** (tanpa gerbang login) dan data lokal milik
 perangkat, bukan akun —
 [ADR-024](../docs/02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
@@ -67,11 +69,25 @@ Nominal tetap `int` sen (seperseratus satuan utama). Tampilkan lewat
 `AppMoneyFormatter`, input lewat `money_input.dart`; jangan menulis `Rp`
 atau simbol lain langsung di widget.
 
+**Rilis Android (T-8.7):** penandatanganan rilis lewat
+`android/key.properties` (gitignore, tidak ada di repo), versi `0.2.0+3`,
+Shorebird (`shorebird.yaml`), `google-services.json` sudah di repo. Pemilik
+sudah membangun, mengunggah, dan mempublikasikan **closed testing** di Play
+Console (29 Sep 2026) dan mengisi formulir Keamanan Data serta listing.
+**Tab Transaksi bernama Riwayat** (id) / **History** (en) sejak 29 Sep 2026
+(T-8.8) karena "Transactions" terbungkus di 360dp; kata "transaksi" sebagai
+benda tidak diganti, dan kunci i18n `appShell.transactionsTabLabel` tetap.
+Antrean pekerjaan yang sudah diketahui tapi belum dijadwalkan (`B-n`, mis.
+sapuan nama Tanukonomy di dokumen, klaim situs yang basi karena akun/analitik
+sudah ada, ikon iOS, sinkronisasi) ada di TASK_LIST.
+
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah
 dihapus, dan kini repositori hanya memuat model **Dompet + Transaksi +
 Anggaran**. Baseline sesudah cutover: 11.369 baris Dart di `lib/` (tanpa
-berkas `.g.dart`), 33 berkas uji, 333 uji lulus, `flutter analyze` bersih.
+berkas `.g.dart`), 33 berkas uji, 333 uji lulus. Baseline 29 Sep 2026:
+28.413 baris, 69 berkas uji, 609 uji lulus, `flutter analyze` tanpa error
+atau peringatan (11 info `unnecessary_unawaited` di uji, B-9).
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
@@ -82,7 +98,9 @@ Beranda (Fase 6) juga sudah berjalan: total saldo, arus bulan berjalan,
 ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
 Fase 7 juga selesai: template anggaran (layar, gandakan, aktif/nonaktif,
 anggaran dari template), ikon SVG, bentuk ADR-015, dan poles state.
-Seluruh tugas MVP di TASK_LIST sudah tercentang. Keputusan yang menunggu
+Seluruh tugas MVP di TASK_LIST sudah tercentang. Tugas baru (improvement
+atau fitur) ditambahkan mengikuti "Menambah tugas baru" di TASK_LIST; jangan
+membuat daftar tugas di dokumen lain. Keputusan yang menunggu
 pemilik ada di bagian "Keputusan terbuka" TASK_LIST. KT-1 sudah diputuskan
 dan dikerjakan di T-8.1: transaksi hanya boleh ditautkan ke pos anggaran yang
 periodenya mencakup tanggalnya, sehingga anggaran cukup membaca dokumen bulan
@@ -97,8 +115,9 @@ mengecek progres, baca dokumen itu bersama TASK_LIST. Seluruh 22 item selesai
 kebijakan privasi, serta syarat dan ketentuan ada di repo terpisah
 `arkariz/tanukonomy-web` (Astro statis, id/en). Tangkapan layarnya dirender
 dari aplikasi ini lewat `tools/screenshots/` di repo itu; kalau tampilan
-aplikasi berubah besar, render ulang. Klaim di situs (tanpa server, tanpa
-akun, tanpa analitik) harus tetap benar terhadap aplikasi.
+aplikasi berubah besar, render ulang. Klaim di situs harus tetap benar
+terhadap aplikasi: sejak ADR-023 aplikasi punya akun opsional, Analytics, dan
+Crashlytics, jadi klaim lama "tanpa akun, tanpa analitik" perlu diganti (B-4).
 
 **Fase 9 (onboarding dan tur):** desainnya di
 [ADR-021](../docs/02-architecture/adr/0021-onboarding-dan-tur-spotlight.md).

@@ -112,7 +112,9 @@ dipahami**, tanpa spreadsheet dan tanpa pencatatan yang rumit.
 - Memisahkan dengan tegas antara uang yang **ada**, uang yang
   **direncanakan**, dan uang yang **sudah dikerjakan tetapi belum diterima**.
 - Memberi rasa kemajuan terhadap keadaan keuangan, bukan sekadar daftar angka.
-- Tetap berguna tanpa koneksi internet dan tanpa akun.
+- Pencatatan inti (CATAT, Transaksi, Dompet, Anggaran, Freelance) tetap
+  berguna tanpa koneksi internet dan tanpa akun, walau fitur pelengkap lain
+  boleh membutuhkan keduanya (lihat §13).
 
 ### Ukuran keberhasilan
 
@@ -136,12 +138,13 @@ Isyarat produk yang paling menentukan:
 Kalau kebiasaan mencatat tidak terbentuk, fitur lain kehilangan nilainya.
 
 ⚠ **Ukuran ini belum bisa diukur lintas pengguna di MVP, dan itu disengaja.**
-NFR-SEC-001 melarang panggilan jaringan sama sekali, dan MVP tidak punya akun
-maupun backend — sehingga tidak ada telemetri yang bisa menghitung "persentase
-pengguna". Di MVP keenam ukuran itu dinilai pada **pemakaian pemilik sendiri**,
-diamati langsung. Menambahkan telemetri berarti membatalkan NFR-SEC-001, dan
-itu keputusan pemilik, bukan keputusan yang boleh diambil diam-diam saat
-menulis kode. Pertanyaannya terbuka di [§13](#13-pertanyaan-terbuka).
+MVP tidak punya akun maupun telemetri pemakaian — sehingga tidak ada cara
+menghitung "persentase pengguna". Di MVP keenam ukuran itu dinilai pada
+**pemakaian pemilik sendiri**, diamati langsung. NFR-SEC-001 (28 Sep 2026)
+sudah direvisi untuk mengizinkan panggilan jaringan bagi fitur online yang
+jelas keperluannya, tapi itu **tidak otomatis berarti telemetri perilaku
+diizinkan** — mengumpulkan data pemakaian tetap keputusan produk terpisah,
+belum diambil. Pertanyaannya terbuka di [§13](#13-pertanyaan-terbuka).
 
 ### Ukuran keberhasilan MVP
 
@@ -199,9 +202,12 @@ MVP.
 ## 5. Proposisi nilai
 
 Saldough menjawab pertanyaan yang tidak bisa dijawab spreadsheet: berapa uang
-yang ada sekarang, di mana, dan apa saja yang sudah terjadi padanya. Ia
-melakukannya tanpa backend, tanpa akun, tanpa koneksi bank, dan tanpa
-mengirimkan satu byte pun ke luar perangkat.
+yang ada sekarang, di mana, dan apa saja yang sudah terjadi padanya.
+Pencatatannya tidak pernah terhubung ke bank sungguhan — transfer yang
+dicatat adalah dua angka di dalam aplikasi yang berubah, bukan transaksi
+perbankan. Data keuangan pengguna tidak dikirim ke luar perangkat tanpa
+keperluan yang jelas dan sepengetahuan pengguna (NFR-SEC-001); ini tetap
+berlaku walau fitur online direncanakan (lihat §13).
 
 Dua pembeda terhadap aplikasi keuangan umum:
 
@@ -625,7 +631,11 @@ memaksa pemindaian menyeluruh untuk menampilkan saldo.
 
 ### 8.3 Keandalan
 
-**NFR-REL-001** Seluruh fungsi berjalan tanpa koneksi internet.
+**NFR-REL-001** Seluruh fungsi pencatatan inti (CATAT, Transaksi, Dompet,
+Anggaran, Freelance) berjalan tanpa koneksi internet. Fitur online yang
+direncanakan (§13) boleh membutuhkan koneksi untuk bagiannya sendiri, tapi
+tidak boleh memblokir atau memperlambat pencatatan inti saat perangkat
+offline.
 
 **NFR-REL-002** Data bertahan setelah aplikasi ditutup, diperbarui, dan
 perangkat dinyalakan ulang.
@@ -653,8 +663,13 @@ mengirim, atau membayarkan uang.
 
 ### 8.5 Keamanan
 
-**NFR-SEC-001** Tidak ada data keuangan yang meninggalkan perangkat. Aplikasi
-tidak melakukan panggilan jaringan sama sekali di MVP.
+**NFR-SEC-001** Data keuangan pengguna tidak dikirim ke luar perangkat tanpa
+keperluan yang jelas dan sepengetahuan pengguna. Panggilan jaringan
+diperbolehkan hanya untuk fitur yang secara eksplisit membutuhkannya (mis.
+verifikasi pembelian/langganan) — bukan telemetri atau pengumpulan data
+pemakaian diam-diam, yang tetap keputusan produk terpisah (lihat §3 dan
+§13). ⚠ Direvisi 28 September 2026; sebelumnya melarang panggilan jaringan
+sama sekali.
 
 ### 8.6 Dukungan platform
 
@@ -758,9 +773,20 @@ maupun warnanya sekaligus — bukan warna saja.
 - Apakah periode anggaran perlu lebih dari mingguan dan bulanan.
 - **Bagaimana ukuran keberhasilan perilaku diukur.** Aktivasi, frekuensi
   pencatatan, adopsi anggaran, dan retensi D7/D30 tidak bisa dihitung lintas
-  pengguna tanpa telemetri, sementara NFR-SEC-001 melarang panggilan jaringan
-  sama sekali. Pilihannya: tetap tanpa telemetri dan menilai dari pemakaian
-  pemilik sendiri, atau membatalkan NFR-SEC-001. Keputusan pemilik.
+  pengguna tanpa telemetri. NFR-SEC-001 direvisi 28 September 2026 sehingga
+  tidak lagi melarang panggilan jaringan sama sekali, tapi itu tidak otomatis
+  berarti telemetri perilaku diizinkan — mengumpulkan data pemakaian
+  pengguna tetap keputusan produk tersendiri, belum diambil. Sampai
+  diputuskan, keenam ukuran itu tetap dinilai dari pemakaian pemilik
+  sendiri.
+- **Arsitektur fitur online yang direncanakan (28 September 2026).** Pemilik
+  ingin mengembangkan fitur berbasis jaringan (freemium/paywall dibahas
+  sebagai kandidat pertama), tapi bentuknya belum didesain: apakah perlu
+  akun, backend sendiri atau murni layanan pihak ketiga (mis. Google Play
+  Billing tanpa backend Saldough), dan data apa yang boleh dikirim.
+  NFR-SEC-001/NFR-REL-001 sudah direvisi untuk membuka jalan ini, tapi
+  keputusan desain konkretnya menyusul sebagai ADR baru sebelum
+  diimplementasikan — lihat T-8.4 di TASK_LIST.
 - **Daftar kategori transaksi dan anggaran final.** Aset dari pemilik sudah
   membawa 14 ikon kategori konkret (lihat
   [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)),

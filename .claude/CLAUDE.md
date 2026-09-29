@@ -36,6 +36,17 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 (maskot tanuki juru catat), belum dieksekusi — T-8.3, riset di
 `docs/01-product/ASO_NAME_RESEARCH.md`.
 
+**Rencana fitur online (28 Sep 2026):** pemilik berencana mengembangkan
+fitur berbasis jaringan (freemium/paywall dibahas sebagai kandidat pertama).
+Invarian lama "tanpa panggilan jaringan sama sekali" **tidak lagi mutlak** —
+lihat T-8.4 di TASK_LIST. NFR-SEC-001 dan NFR-REL-001 di
+`docs/01-product/prd-saldough-2.0.md` §8 sudah direvisi untuk mengizinkan
+panggilan jaringan yang jelas keperluannya (bukan telemetri diam-diam), dan
+pencatatan inti (CATAT, Transaksi, Dompet, Anggaran, Freelance) tetap wajib
+berfungsi penuh tanpa koneksi. Arsitektur konkret fitur online itu sendiri —
+backend apa, data apa yang boleh keluar perangkat — **belum diputuskan**;
+tulis ADR baru begitu desainnya ada, jangan menebak di kode.
+
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah
 dihapus, dan kini repositori hanya memuat model **Dompet + Transaksi +
@@ -85,7 +96,7 @@ sejenisnya sudah dihapus 28 Sep 2026).
 - Satu branch dan satu PR per fase, misalnya `claude/pivot-docs-fase-0`
 - Nama paket Dart: `saldough`, seluruh impor memakai `package:saldough/...`
 - Flutter 3.47.2, Dart 3.13.2, Android `minSdk` 23
-- Penyimpanan lokal, tanpa backend, tanpa panggilan jaringan sama sekali
+- Penyimpanan lokal-first; fitur online sedang direncanakan, lihat "Status"
 - Terjemahan slang, bahasa dasar `id`, tambahan `en`
 - Keadaan sebelum pivot: commit `13c7939`
 

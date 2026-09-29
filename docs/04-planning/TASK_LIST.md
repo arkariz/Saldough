@@ -37,7 +37,7 @@ Terakhir diperbarui: 28 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 3 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik |
+| 8 — Tindak lanjut pasca-MVP | 4 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik, T-8.4 (arsitektur fitur online) menunggu desain |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -1292,6 +1292,21 @@ seluruh fitur di atasnya menghasilkan data.
       produk (README, PRD, glosarium -- ditunda supaya tidak dikerjakan dua
       kali kalau cek merek dagang menggagalkan nama ini). **Jangan rilis ke
       toko sebelum ketiga hal ini selesai.**
+- [ ] **T-8.4** Desain arsitektur fitur online (28 September 2026, pemilik
+      berencana freemium/paywall sebagai kandidat pertama, kemungkinan
+      fitur online lain menyusul).
+      ⚠ **Dokumen sudah diperbarui, kode belum disentuh.** NFR-SEC-001 dan
+      NFR-REL-001 di `docs/01-product/prd-saldough-2.0.md` §8 direvisi
+      supaya tidak lagi melarang panggilan jaringan sama sekali -- lihat
+      §13 "Arsitektur fitur online yang direncanakan" untuk pertanyaan yang
+      belum terjawab (akun atau tidak, backend sendiri atau murni Play
+      Billing, data apa yang boleh keluar perangkat). CLAUDE.md "Status"
+      juga sudah mencatat perubahan ini.
+      Sebelum kode apa pun ditulis: tulis ADR baru (menggantikan/memperluas
+      ADR-0002 sesuai konvensi) begitu bentuk fiturnya konkret. Pencatatan
+      inti (CATAT, Transaksi, Dompet, Anggaran, Freelance) wajib tetap
+      berfungsi penuh tanpa koneksi -- fitur online tidak boleh
+      memblokirnya (NFR-REL-001).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 
@@ -1381,7 +1396,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | NFR-ACC-003 | T-1.5, T-1.6, T-1.7 |
 | NFR-PERF-001 | T-2.10, T-6.5 |
 | NFR-PERF-002 | T-1.4, T-1.6, T-6.5 |
-| NFR-REL-001 | Terpenuhi sendirinya — tidak ada panggilan jaringan di MVP |
+| NFR-REL-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-REL-002 | T-1.2, T-1.4 |
 | NFR-REL-003 | T-1.2, T-4.3, T-5.2 |
 | NFR-UX-001 | T-2.4, T-2.10, T-6.6, T-7.6 |
@@ -1389,7 +1404,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | NFR-UX-003 | T-2.2, T-3.5 |
 | NFR-UX-004 | T-1.9, T-4.8, T-5.8 |
 | NFR-UX-005 | T-2.4, T-2.11, T-5.5 |
-| NFR-SEC-001 | Terpenuhi sendirinya — tidak ada panggilan jaringan di MVP |
+| NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 
 ## Catatan pengerjaan (Fase 0)

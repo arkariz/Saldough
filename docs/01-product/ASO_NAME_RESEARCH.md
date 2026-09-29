@@ -159,6 +159,11 @@ Alasan tiap pilihan:
   bank), tidak menyebut nama merek, jadi tidak perlu diubah untuk nama
   baru.
 
+➜ Isian Play Console final (setelan toko, listing id/en, grafis) ada di
+[PLAY_STORE_LISTING.md](../04-planning/PLAY_STORE_LISTING.md). Deskripsi
+singkat di sana **mengganti** draf di atas: "tanpa akun" dan "Private" tidak
+lagi tepat sejak ADR-023 (akun opsional, Analytics, Crashlytics).
+
 ⚠ Ini tetap contoh, bukan keputusan final — belum melewati cek skor
 popularitas Apple Search Ads (§7 langkah 4) maupun cek merek dagang resmi
 (§7 langkah 2, prasyarat [ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md)

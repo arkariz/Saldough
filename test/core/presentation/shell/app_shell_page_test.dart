@@ -2,6 +2,8 @@ import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
@@ -454,5 +456,46 @@ void main() {
       expect(find.text(t.tour.recordKindTitle), findsNothing);
       expect(find.byType(RecordFormHost), findsOneWidget);
     });
+  });
+
+  group('AppShellPage -- label navigasi di layar sempit', () {
+    // Font asli dimuat supaya lebar label terukur seperti di perangkat (bawaan
+    // uji memakai Ahem, yang tiap glifnya selebar ukuran font).
+    setUpAll(() async {
+      final loader = FontLoader('SpaceMono')..addFont(rootBundle.load('assets/fonts/SpaceMono-Bold.ttf'));
+      await loader.load();
+    });
+
+    for (final locale in [AppLocale.id, AppLocale.en]) {
+      testWidgets('lebar 360dp, locale ${locale.languageCode}: tiap label sebaris, tanpa overflow', (tester) async {
+        await tester.runAsync(() => LocaleSettings.setLocale(locale));
+        addTearDown(() => LocaleSettings.setLocaleSync(AppLocale.id));
+        tester.view
+          ..physicalSize = const Size(360, 720)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(pumpableShell());
+        for (var i = 0; i < 5; i++) {
+          await tester.pump(); // Lima ScopeWidget bersarang, lihat uji di atas.
+        }
+
+        expect(tester.takeException(), isNull);
+        final labels = tester.widgetList<NavigationDestination>(find.byType(NavigationDestination)).map((d) => d.label);
+        for (final label in labels) {
+          final texts = find.descendant(of: find.byType(NavigationBar), matching: find.text(label));
+          expect(texts, findsWidgets);
+          for (final element in texts.evaluate()) {
+            final paragraph = element.renderObject! as RenderParagraph;
+            // Lebar tanpa pembungkusan harus muat di lebar yang tersedia.
+            expect(
+              paragraph.getMaxIntrinsicWidth(double.infinity),
+              lessThanOrEqualTo(paragraph.size.width),
+              reason: '"$label" terbungkus ke baris kedua',
+            );
+          }
+        }
+      });
+    }
   });
 }

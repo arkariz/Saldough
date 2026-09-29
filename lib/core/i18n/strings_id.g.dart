@@ -77,6 +77,12 @@ class Translations$common$id {
 
 	// Translations
 
+	/// id: '+${amount}rb'
+	String quickAmountThousands({required Object amount}) => '+${amount}rb';
+
+	/// id: '+${amount}jt'
+	String quickAmountMillions({required Object amount}) => '+${amount}jt';
+
 	/// id: 'Simpan'
 	String get save => 'Simpan';
 
@@ -122,8 +128,8 @@ class Translations$appShell$id {
 	/// id: 'Catat'
 	String get recordAction => 'Catat';
 
-	/// id: 'Transaksi'
-	String get transactionsTabLabel => 'Transaksi';
+	/// id: 'Riwayat'
+	String get transactionsTabLabel => 'Riwayat';
 
 	/// id: 'Dompet'
 	String get walletsTabLabel => 'Dompet';
@@ -341,8 +347,8 @@ class Translations$transaction$id {
 
 	// Translations
 
-	/// id: 'Transaksi'
-	String get pageTitle => 'Transaksi';
+	/// id: 'Riwayat'
+	String get pageTitle => 'Riwayat';
 
 	/// id: 'Cari di bulan ini: catatan / kategori...'
 	String get searchHint => 'Cari di bulan ini: catatan / kategori...';
@@ -2191,6 +2197,8 @@ extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'app.title' => 'Tanukonomy',
+			'common.quickAmountThousands' => ({required Object amount}) => '+${amount}rb',
+			'common.quickAmountMillions' => ({required Object amount}) => '+${amount}jt',
 			'common.save' => 'Simpan',
 			'common.cancel' => 'Batal',
 			'common.delete' => 'Hapus',
@@ -2203,7 +2211,7 @@ extension on Translations {
 			'appShell.homeTabLabel' => 'Beranda',
 			'appShell.budgetTabLabel' => 'Anggaran',
 			'appShell.recordAction' => 'Catat',
-			'appShell.transactionsTabLabel' => 'Transaksi',
+			'appShell.transactionsTabLabel' => 'Riwayat',
 			'appShell.walletsTabLabel' => 'Dompet',
 			'record.incomeAction' => 'Catat Pemasukan',
 			'record.expenseAction' => 'Catat Pengeluaran',
@@ -2270,7 +2278,7 @@ extension on Translations {
 			'record.kindExpense' => 'Keluar',
 			'record.kindIncome' => 'Masuk',
 			'record.kindTransfer' => 'Transfer',
-			'transaction.pageTitle' => 'Transaksi',
+			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} log aktif',
@@ -2700,10 +2708,10 @@ extension on Translations {
 			'home.guideWalletTag' => 'Aset nyata',
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
-			'home.guideBudgetTag' => 'Rencana',
-			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			_ => null,
 		} ?? switch (path) {
+			'home.guideBudgetTag' => 'Rencana',
+			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Piutang',
 			'home.guideFreelanceBody' => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.',

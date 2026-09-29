@@ -3,6 +3,8 @@
     "title": "Tanukonomy"
   },
   "common": {
+    "quickAmountThousands": "+${amount}rb",
+    "quickAmountMillions": "+${amount}jt",
     "save": "Simpan",
     "cancel": "Batal",
     "delete": "Hapus",
@@ -17,7 +19,7 @@
     "homeTabLabel": "Beranda",
     "budgetTabLabel": "Anggaran",
     "recordAction": "Catat",
-    "transactionsTabLabel": "Transaksi",
+    "transactionsTabLabel": "Riwayat",
     "walletsTabLabel": "Dompet"
   },
   "record": {
@@ -88,7 +90,7 @@
     "kindTransfer": "Transfer"
   },
   "transaction": {
-    "pageTitle": "Transaksi",
+    "pageTitle": "Riwayat",
     "searchHint": "Cari di bulan ini: catatan / kategori...",
     "monthStatusLabel": "Status log bulan ini",
     "logCountBadge": "$count log aktif",

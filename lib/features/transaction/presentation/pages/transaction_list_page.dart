@@ -15,7 +15,7 @@ import 'package:saldough/features/transaction/presentation/widgets/transaction_m
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
-/// Layar riwayat transaksi (T-2.5, FR-TXN-004) -- tab "Transaksi" di
+/// Layar riwayat transaksi (T-2.5, FR-TXN-004) -- tab "Riwayat" di
 /// `AppShellPage`. Menampilkan transaksi bulan berjalan, terbaru dulu,
 /// dikelompokkan per tanggal, dengan penyaring jenis, dompet, dan kategori.
 ///

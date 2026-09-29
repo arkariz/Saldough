@@ -83,12 +83,12 @@ class MoneyInputFormatter extends TextInputFormatter {
 }
 
 /// Label ringkas pilihan cepat [sen]: `10.000` → `+10rb`, `5.000.000` →
-/// `+5jt` (id) atau `+10k`, `+5M` (en); nominal yang tidak bulat ribu/juta
-/// ditulis penuh (`+500`).
+/// `+5jt` (id) atau `+10k`, `+5M` (en), teksnya dari i18n
+/// `common.quickAmount*`; nominal yang tidak bulat ribu/juta ditulis penuh
+/// (`+500`).
 String formatQuickAmount(int sen) {
   final whole = sen ~/ 100;
-  final en = LocaleSettings.currentLocale == AppLocale.en;
-  if (whole >= 1000000 && whole % 1000000 == 0) return '+${whole ~/ 1000000}${en ? 'M' : 'jt'}';
-  if (whole >= 1000 && whole % 1000 == 0) return '+${whole ~/ 1000}${en ? 'k' : 'rb'}';
+  if (whole >= 1000000 && whole % 1000000 == 0) return t.common.quickAmountMillions(amount: whole ~/ 1000000);
+  if (whole >= 1000 && whole % 1000 == 0) return t.common.quickAmountThousands(amount: whole ~/ 1000);
   return '+${formatMoneyInput(sen)}';
 }

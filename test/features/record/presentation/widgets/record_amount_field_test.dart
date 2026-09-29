@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -67,5 +68,27 @@ void main() {
 
     final ys = ['+10rb', '+50rb', '+100rb'].map((l) => tester.getTopLeft(find.text(l)).dy).toSet();
     expect(ys, hasLength(1), reason: 'Container(alignment) di dalam Wrap membuat chip melebar penuh dan bertumpuk');
+  });
+
+  testWidgets('label chip pilihan cepat mengikuti bahasa (Inggris: k, bukan rb)', (tester) async {
+    await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
+    addTearDown(() => LocaleSettings.setLocaleSync(AppLocale.id));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: RecordAmountField(
+            controller: TextEditingController(),
+            label: 'Amount',
+            kind: TransactionKind.expense,
+            quickAmounts: const [1000000, 5000000, 10000000],
+          ),
+        ),
+      ),
+    );
+
+    for (final label in ['+10k', '+50k', '+100k']) {
+      expect(find.text(label), findsOneWidget);
+    }
+    expect(find.textContaining('rb'), findsNothing);
   });
 }

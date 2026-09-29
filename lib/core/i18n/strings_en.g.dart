@@ -72,6 +72,8 @@ class _Translations$common$en extends Translations$common$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String quickAmountThousands({required Object amount}) => '+${amount}k';
+	@override String quickAmountMillions({required Object amount}) => '+${amount}M';
 	@override String get save => 'Save';
 	@override String get cancel => 'Cancel';
 	@override String get delete => 'Delete';
@@ -93,7 +95,7 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get homeTabLabel => 'Home';
 	@override String get budgetTabLabel => 'Budget';
 	@override String get recordAction => 'Record';
-	@override String get transactionsTabLabel => 'Transactions';
+	@override String get transactionsTabLabel => 'History';
 	@override String get walletsTabLabel => 'Wallets';
 }
 
@@ -178,7 +180,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get pageTitle => 'Transactions';
+	@override String get pageTitle => 'History';
 	@override String get searchHint => 'Search this month: notes / categories...';
 	@override String get monthStatusLabel => 'This month\'s log status';
 	@override String logCountBadge({required Object count}) => '${count} active logs';
@@ -869,6 +871,8 @@ extension on TranslationsEn {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'app.title' => 'Tanukonomy',
+			'common.quickAmountThousands' => ({required Object amount}) => '+${amount}k',
+			'common.quickAmountMillions' => ({required Object amount}) => '+${amount}M',
 			'common.save' => 'Save',
 			'common.cancel' => 'Cancel',
 			'common.delete' => 'Delete',
@@ -881,7 +885,7 @@ extension on TranslationsEn {
 			'appShell.homeTabLabel' => 'Home',
 			'appShell.budgetTabLabel' => 'Budget',
 			'appShell.recordAction' => 'Record',
-			'appShell.transactionsTabLabel' => 'Transactions',
+			'appShell.transactionsTabLabel' => 'History',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'record.incomeAction' => 'Record Income',
 			'record.expenseAction' => 'Record Expense',
@@ -948,7 +952,7 @@ extension on TranslationsEn {
 			'record.kindExpense' => 'Out',
 			'record.kindIncome' => 'In',
 			'record.kindTransfer' => 'Transfer',
-			'transaction.pageTitle' => 'Transactions',
+			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
 			'transaction.logCountBadge' => ({required Object count}) => '${count} active logs',
@@ -1378,10 +1382,10 @@ extension on TranslationsEn {
 			'home.guideWalletTag' => 'Real assets',
 			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
 			'home.guideBudgetTitle' => 'Budgets',
-			'home.guideBudgetTag' => 'Plans',
-			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
 			_ => null,
 		} ?? switch (path) {
+			'home.guideBudgetTag' => 'Plans',
+			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Receivables',
 			'home.guideFreelanceBody' => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.',

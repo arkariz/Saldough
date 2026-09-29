@@ -1348,10 +1348,17 @@ seluruh fitur di atasnya menghasilkan data.
       `BudgetMoneyField` menerima desimal untuk mata uang berdesimal;
       pilihan cepat dihitung dari langkah per mata uang (IDR tetap sama
       persis). `flutter analyze` tanpa isu baru, 605 uji lulus; uji
-      pembangun ulang terbukti merah tanpa penandaan ulangnya. **Belum:**
-      pertanyaan mata uang di onboarding, dan klaim situs `tanukonomy-web`.
-      **Belum diverifikasi agen di emulator:** keyboard desimal dan tampilan
-      layar Akun (dicoba pemilik).
+      pembangun ulang terbukti merah tanpa penandaan ulangnya.
+      Onboarding pertama kali kini menanyakan mata uang sebagai gerbang
+      yang tidak bisa terlewat (ADR-025 §3.7): semua jalan keluar melewatinya,
+      tanpa tombol lewati dan tanpa pilihan otomatis (saran wilayah perangkat
+      hanya di urutan teratas), tombol lanjut nonaktif sampai ada pilihan,
+      dan onboarding baru ditandai selesai setelah mata uang tersimpan. 16 uji
+      onboarding lulus; tiga jaminan gerbang dibuktikan lewat uji mutasi.
+      **Belum:** klaim situs `tanukonomy-web`, dan `flutter analyze` serta
+      seluruh rangkaian uji sesudah perubahan onboarding. **Belum
+      diverifikasi agen di emulator:** keyboard desimal, layar Akun, dan
+      langkah mata uang di onboarding (dicoba pemilik).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

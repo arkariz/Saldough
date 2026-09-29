@@ -114,9 +114,10 @@ bekerja dalam **sen**, bukan satuan utama:
   `KeyValueStorage` (`settings/currency`) dengan `Either<Failure, T>`.
   `main.dart` memuatnya sesudah `di.run()` dan sebelum `runApp()`. Gagal
   dibaca atau kode tidak dikenal berarti IDR, bukan aplikasi gagal dibuka.
-- Tidak ada deteksi otomatis dari wilayah perangkat. Pengguna lama yang
-  perangkatnya berbahasa Inggris tidak boleh tiba-tiba melihat datanya
-  bertanda `$`.
+- Wilayah perangkat tidak pernah memilih mata uang secara otomatis.
+  Pengguna lama yang perangkatnya berbahasa Inggris tidak boleh tiba-tiba
+  melihat datanya bertanda `$`. Wilayah perangkat hanya dipakai sebagai
+  **saran urutan** di onboarding (§3.7, `AppCurrency.forCountry`).
 
 ### 3.6 Mengganti mata uang
 
@@ -128,6 +129,38 @@ bekerja dalam **sen**, bukan satuan utama:
   sudah terbuka di bawah layar Akun ikut memakai simbol baru. Formatter
   dipanggil statis, jadi tidak ada dependensi `InheritedWidget` yang bisa
   memicu pembangunan ulang biasa.
+
+### 3.7 Memilih mata uang di onboarding
+
+Pengguna baru memilih mata uang sebagai gerbang terakhir onboarding pertama
+kali, dan pilihan ini tidak boleh terlewat secara tidak sengaja:
+
+- **Semua jalan keluar lewat gerbang.** "Lewati", "Buat Dompet Pertama",
+  "Nanti saja", dan "Sudah punya akun? Masuk" semuanya membuka langkah pilih
+  mata uang lebih dulu. Hasil jalan keluar itu (mis. membuka formulir
+  dompet) baru dijalankan sesudah mata uang dipilih.
+- **Tanpa jalan pintas di langkah itu.** Tidak ada tombol lewati dan tidak
+  ada pilihan yang terpilih otomatis. Mata uang yang cocok dengan wilayah
+  perangkat hanya ditaruh paling atas dengan keterangan "Sesuai wilayah
+  perangkatmu".
+- **Tombol lanjut terkunci sampai ada pilihan.** Nonaktif dengan label
+  "Pilih mata uang dulu", lalu menyebut kodenya ("Pakai USD") setelah satu
+  mata uang diketuk. Ketukan beruntun dari tombol "Lanjut" sebelumnya tidak
+  bisa memilih apa pun.
+- **Tersimpan sebelum selesai.** `buildOnboardingRoute` menyimpan mata uang
+  lewat `CurrencyPreferenceRepository` lebih dulu; onboarding baru ditandai
+  selesai kalau penyimpanan berhasil. Kalau gagal, pengguna tetap di langkah
+  itu dengan pesan galat, jadi pilihannya tidak diam-diam jatuh ke IDR saat
+  aplikasi dibuka ulang.
+- **Kembali tidak kehilangan posisi.** "Kembali" dan tombol kembali sistem
+  membawa ke layar geser yang sama.
+- **Mode tinjau tidak bertanya.** Onboarding dari menu info tidak
+  menanyakan mata uang; gantinya di layar Akun (§3.6).
+- Judul dan daftar menggulir bersama, supaya tetap muat dengan teks 2× di
+  layar 360dp.
+
+Pengguna lama yang sudah menyelesaikan onboarding sebelum fitur ini tidak
+ditanya ulang; datanya tetap IDR sampai diganti dari layar Akun.
 
 ## 4. Alternatif yang ditolak
 
@@ -156,9 +189,8 @@ bekerja dalam **sen**, bukan satuan utama:
   jadi saldo awal atau anggaran bernilai pecahan cent bisa disunting ulang.
   Untuk mata uang tanpa desimal, nilai tersimpan yang bukan satuan utuh
   tetap tidak diisikan ke kolom (perilaku lama).
-- Onboarding belum menanyakan mata uang. Pengguna baru di luar Indonesia
-  harus menemukannya di layar Akun. Dicatat sebagai tindak lanjut, bukan
-  bagian ADR ini.
+- Pengguna baru selalu memilih mata uang di onboarding (§3.7). Pengguna
+  lama tidak ditanya ulang.
 - Situs `tanukonomy-web` belum menyebut dukungan mata uang lain.
 
 ## 6. Kriteria tinjauan
@@ -169,4 +201,8 @@ bekerja dalam **sen**, bukan satuan utama:
 - Uji input: mengetik desimal, membatasi dua angka, pemisah yang diketik
   dinormalkan, IDR menolak desimal.
 - Uji penyimpanan: kode tak dikenal atau dokumen rusak jatuh ke IDR.
+- Uji onboarding: setiap jalan keluar lewat langkah mata uang, tombol lanjut
+  nonaktif tanpa pilihan, saran wilayah tidak terpilih otomatis, dan
+  onboarding belum selesai kalau penyimpanan gagal. Ketiga jaminan terakhir
+  dibuktikan lewat uji mutasi (uji merah saat kodenya dirusak).
 - `flutter analyze` bersih dan seluruh uji lama lulus dengan bawaan IDR.

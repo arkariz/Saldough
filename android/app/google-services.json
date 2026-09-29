@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "696822782042",
+    "project_id": "tanukonomy",
+    "storage_bucket": "tanukonomy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696822782042:android:21c084382f80428f39e063",
+        "android_client_info": {
+          "package_name": "com.arkarizdev.tanukonomy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696822782042-klfurfjja11e37vo6arc9kksd9gb2g3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arkarizdev.tanukonomy",
+            "certificate_hash": "68c0e5c332bc887602596d0215207732d4c97fcb"
+          }
+        },
+        {
+          "client_id": "696822782042-nj0f2iiffh4cr48p8fho9bpff0g2vf5t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arkarizdev.tanukonomy",
+            "certificate_hash": "ce81bdce046551b1cd176ef850d1dd0cff6be200"
+          }
+        },
+        {
+          "client_id": "696822782042-n1udc0kvopehg7g7td3nqqmcv10urljn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeP1dGBiXs-S0y_-_VzEdksk6WhXdZCcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696822782042-n1udc0kvopehg7g7td3nqqmcv10urljn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

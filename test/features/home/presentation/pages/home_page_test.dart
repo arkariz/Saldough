@@ -29,8 +29,11 @@ import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+import '../../../../helpers/fake_auth_repository.dart';
 
 /// Uji Beranda (Fase 6, FR-HOME-001..005) lewat shell sungguhan dengan
 /// penyimpanan di memori dan implementasi port yang asli.
@@ -53,6 +56,7 @@ void main() {
     budgetRepository = BudgetRepositoryImpl(storage: storage);
     freelanceRepository = FreelanceRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)

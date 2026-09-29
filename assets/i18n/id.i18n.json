@@ -555,7 +555,8 @@
     "finalTitle": "Mulai dari dompet pertamamu",
     "finalBody": "Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.",
     "createWalletAction": "Buat Dompet Pertama",
-    "laterAction": "Nanti saja"
+    "laterAction": "Nanti saja",
+    "signInAction": "Sudah punya akun? Masuk"
   },
   "tour": {
     "nextAction": "Lanjut",
@@ -626,16 +627,36 @@
   },
   "account": {
     "title": "Akun",
-    "signedOutBody": "Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.",
+    "signedOutTitle": "Siapkan akunmu",
+    "signedOutBody": "Semua pencatatan berjalan penuh tanpa akun. Akun menyiapkan cadangan dan sinkronisasi antarperangkat yang sedang kami bangun.",
     "googleSignInAction": "Masuk dengan Google",
     "emailSignInToggle": "Masuk dengan email",
+    "emailFormHint": "Untuk akun yang sudah dibuatkan khusus untukmu.",
     "emailLabel": "Email",
     "passwordLabel": "Kata sandi",
     "emailSignInAction": "Masuk",
+    "emailRequired": "Isi email dan kata sandi dulu.",
+    "signedInMessage": "Kamu sudah masuk.",
+    "signedOutMessage": "Kamu sudah keluar.",
+    "methodGoogle": "Masuk lewat Google",
+    "methodPassword": "Masuk lewat email",
+    "dataTitle": "Data kamu",
+    "dataBody": "Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.",
     "signOutAction": "Keluar",
+    "dangerTitle": "Zona bahaya",
+    "dangerBody": "Menghapus akun bersifat permanen dan tidak bisa dibatalkan.",
     "deleteAction": "Hapus Akun",
     "deleteConfirmTitle": "Hapus akun?",
-    "deleteConfirmBody": "Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.",
-    "deletedMessage": "Akun dihapus."
+    "deleteConfirmBody": "Akunmu dihapus permanen. Dompet, transaksi, dan anggaran di perangkat ini tetap ada.",
+    "deletePasswordTitle": "Masukkan kata sandi",
+    "deletePasswordBody": "Demi keamanan, masukkan lagi kata sandimu untuk menghapus akun.",
+    "deletedMessage": "Akun dihapus.",
+    "errors": {
+      "network": "Tidak bisa terhubung. Periksa koneksi internetmu, lalu coba lagi.",
+      "wrongCredentials": "Email atau kata sandi salah.",
+      "tooManyRequests": "Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.",
+      "userDisabled": "Akun ini dinonaktifkan.",
+      "other": "Gagal masuk. Coba lagi."
+    }
   }
 }

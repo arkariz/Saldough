@@ -17,9 +17,11 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../helpers/fake_auth_repository.dart';
 import '../../../helpers/mocks.dart';
 
 /// Dobel gagal untuk [WalletRepository] -- `listWallets()` SELALU
@@ -50,6 +52,7 @@ void main() {
     storage = InMemoryKeyValueStorage();
     walletRepository = WalletRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
@@ -311,6 +314,7 @@ void main() {
       tester,
     ) async {
       final failingContainer = GetIt.asNewInstance()
+        ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
         ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
         ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))

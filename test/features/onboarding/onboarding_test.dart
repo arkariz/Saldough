@@ -79,11 +79,22 @@ void main() {
       expect(outcomes, [OnboardingOutcome.dismissed]);
     });
 
+    testWidgets('"Sudah punya akun? Masuk" di layar akhir (ADR-024)', (tester) async {
+      await pumpPage(tester);
+      await goToLast(tester);
+
+      await tester.tap(find.text(t.onboarding.signInAction));
+      await tester.pumpAndSettle();
+
+      expect(outcomes, [OnboardingOutcome.signIn]);
+    });
+
     testWidgets('mode tinjau diakhiri dengan Tutup, tanpa ajakan dompet', (tester) async {
       await pumpPage(tester, mode: OnboardingMode.review);
       await goToLast(tester);
 
       expect(find.text(t.onboarding.createWalletAction), findsNothing);
+      expect(find.text(t.onboarding.signInAction), findsNothing);
       await tester.tap(find.widgetWithText(ElevatedButton, t.onboarding.closeAction));
       await tester.pumpAndSettle();
 
@@ -186,6 +197,20 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(homes.last, ShellStartAction.createWallet);
+      expect((await progress()).onboardingDone, isTrue);
+    });
+
+    testWidgets('Masuk ke Beranda dengan aksi buka layar Akun', (tester) async {
+      final homes = await pumpRouter(tester);
+      for (var i = 0; i < 4; i++) {
+        await tester.tap(find.text(t.onboarding.nextAction));
+        await tester.pumpAndSettle();
+      }
+
+      await tester.tap(find.text(t.onboarding.signInAction));
+      await tester.pumpAndSettle();
+
+      expect(homes.last, ShellStartAction.openAccount);
       expect((await progress()).onboardingDone, isTrue);
     });
 

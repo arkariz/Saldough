@@ -61,6 +61,8 @@ menguji aplikasi. Tetap isi kolom "App access" dengan salah satu:
 - **Kalau tetap ingin memberi akun uji:** buat satu akun email/sandi manual
   di Firebase Console (Authentication → Users → Add user), lalu tempel
   kredensialnya di App access. **Jangan** pakai akun Google pribadi pemilik.
+  Instruksi untuk peninjau (ADR-024): "Ketuk ikon akun di kanan atas
+  Beranda → *Sign in with email* → masukkan kredensial di atas."
 
 ### Jenis data yang dideklarasikan
 

@@ -37,7 +37,7 @@ Terakhir diperbarui: 28 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 4 | 3 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store |
+| 8 — Tindak lanjut pasca-MVP | 5 | 4 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store; T-8.5 (akun lebih matang, ADR-024) selesai |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -48,8 +48,15 @@ Terakhir diperbarui: 28 September 2026.
 Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
 diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
 
-Belum ada. KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi)
-diputuskan 27 Sep 2026 dan dikerjakan di T-8.1.
+- **KT-2** Nasib data lokal saat pengguna **keluar** dari akun yang sudah
+  terikat sinkronisasi: tetap di perangkat, atau ditawarkan untuk dihapus?
+  Baru relevan saat sinkronisasi didesain —
+  [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
+  §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
+  tanpa penggabungan.)
+
+KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi) diputuskan
+27 Sep 2026 dan dikerjakan di T-8.1.
 
 ## Fase 0: Dokumen Saldough 2.0
 
@@ -1317,6 +1324,20 @@ seluruh fitur di atasnya menghasilkan data.
       **Belum ada uji otomatis** untuk `FirebaseAuthRepositoryImpl`/
       `AccountBloc` (butuh mock `firebase_auth`/`google_sign_in`) — susulan,
       dicatat di sini supaya tidak terlupa, bukan diam-diam dilewati.
+      Disusul di T-8.5.
+- [x] **T-8.5** Akun yang lebih matang, tetap opsional (29 Sep 2026) —
+      [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md).
+      Layar Akun (kartu profil, metode masuk, "Data kamu", zona bahaya,
+      form email/sandi peninjau di balik tautan), tawaran masuk di slide
+      akhir onboarding, avatar status akun di Beranda, galat auth lewat
+      i18n, hapus akun email/sandi meminta sandi saat sesi lama, dan uji
+      `FirebaseAuthRepositoryImpl`/`AccountBloc`/layar Akun. Aturan
+      kepemilikan data untuk sinkronisasi nanti ada di ADR-024 §3.3 (tanpa
+      kode). `flutter analyze` bersih, 578 uji lulus; uji mutasi re-auth
+      hapus akun merah tanpa cabangnya. Diperiksa di emulator Pixel 9 Pro:
+      onboarding → "Sudah punya akun? Masuk" → layar Akun, form email, dan
+      validasi kosong. **Belum diverifikasi agen:** masuk Google/email
+      sungguhan dan hapus akun (butuh kredensial asli — dicoba pemilik).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

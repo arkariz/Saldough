@@ -4,7 +4,7 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/features/account/presentation/pages/account_page.dart';
+import 'package:saldough/features/account/presentation/widgets/account_avatar.dart';
 import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
@@ -66,14 +66,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.appShell.homeTabLabel),
-        actions: [
-          // Titik masuk layar Akun (ADR-023) -- identitas opsional, belum
-          // ada di navigasi bawah karena bukan aktivitas harian.
-          IconButton(
-            icon: const AppIcon(IconKey.account),
-            tooltip: t.account.title,
-            onPressed: () => openAccountPage(context),
-          ),
+        actions: const [
+          // Titik masuk layar Akun (ADR-023/024) -- identitas opsional, bukan
+          // navigasi bawah karena bukan aktivitas harian.
+          AccountAvatarButton(),
         ],
       ),
       body: SafeArea(

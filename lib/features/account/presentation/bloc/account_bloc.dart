@@ -10,7 +10,7 @@ import 'package:state_management/state_management.dart';
 part 'account_effect.dart';
 part 'account_event.dart';
 
-/// Bloc layar Akun (ADR-023). Identitas opsional — tidak ada layar
+/// Bloc layar Akun (ADR-023, ADR-024). Identitas opsional — tidak ada layar
 /// pencatatan inti yang bergantung pada bloc ini.
 final class AccountBloc extends Bloc<AccountEvent, AccountState> {
   /// Membuat [AccountBloc].
@@ -36,43 +36,63 @@ final class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(state.copyWith(user: () => event.user));
   }
 
-  Future<void> _onGoogleSignInRequested(AccountGoogleSignInRequested event, Emitter<AccountState> emit) async {
-    emit(state.copyWith(isBusy: true));
-    switch (await _authRepository.signInWithGoogle()) {
+  Future<void> _signIn(
+    Emitter<AccountState> emit,
+    AccountAction action,
+    Future<Either<Failure, AppUser>> Function() run,
+  ) async {
+    emit(state.copyWith(pending: () => action));
+    switch (await run()) {
+      // Pengguna menutup dialog Google sendiri — bukan galat, diam saja.
+      case Left(value: final failure) when failure.code == AuthFailureCodes.canceled:
+        emit(state.copyWith(pending: () => null));
       case Left(value: final failure):
-        emit(state.copyWith(isBusy: false, effect: _effectError(failure)));
+        emit(state.copyWith(pending: () => null, effect: _effectError(failure)));
       case Right(value: final user):
-        emit(state.copyWith(isBusy: false, user: () => user));
+        emit(
+          state.copyWith(pending: () => null, user: () => user, effect: _effectSuccess(t.account.signedInMessage)),
+        );
     }
   }
 
+  Future<void> _onGoogleSignInRequested(AccountGoogleSignInRequested event, Emitter<AccountState> emit) =>
+      _signIn(emit, AccountAction.googleSignIn, _authRepository.signInWithGoogle);
+
   Future<void> _onEmailSignInRequested(AccountEmailSignInRequested event, Emitter<AccountState> emit) async {
-    emit(state.copyWith(isBusy: true));
-    switch (await _authRepository.signInWithEmailAndPassword(email: event.email, password: event.password)) {
-      case Left(value: final failure):
-        emit(state.copyWith(isBusy: false, effect: _effectError(failure)));
-      case Right(value: final user):
-        emit(state.copyWith(isBusy: false, user: () => user));
+    if (event.email.isEmpty || event.password.isEmpty) {
+      emit(state.copyWith(effect: ShowSnackBarEffect(message: t.account.emailRequired, severity: .warning)));
+      return;
     }
+    await _signIn(
+      emit,
+      AccountAction.emailSignIn,
+      () => _authRepository.signInWithEmailAndPassword(email: event.email, password: event.password),
+    );
   }
 
   Future<void> _onSignOutRequested(AccountSignOutRequested event, Emitter<AccountState> emit) async {
-    emit(state.copyWith(isBusy: true));
+    emit(state.copyWith(pending: () => AccountAction.signOut));
     switch (await _authRepository.signOut()) {
       case Left(value: final failure):
-        emit(state.copyWith(isBusy: false, effect: _effectError(failure)));
+        emit(state.copyWith(pending: () => null, effect: _effectError(failure)));
       case Right():
-        emit(state.copyWith(isBusy: false, user: () => null));
+        emit(
+          state.copyWith(pending: () => null, user: () => null, effect: _effectSuccess(t.account.signedOutMessage)),
+        );
     }
   }
 
   Future<void> _onDeletionRequested(AccountDeletionRequested event, Emitter<AccountState> emit) async {
-    emit(state.copyWith(isBusy: true));
-    switch (await _authRepository.deleteAccount()) {
+    emit(state.copyWith(pending: () => AccountAction.delete, needsPassword: false));
+    switch (await _authRepository.deleteAccount(password: event.password)) {
+      case Left(value: final failure) when failure.code == AuthFailureCodes.passwordRequired:
+        emit(state.copyWith(pending: () => null, needsPassword: true));
+      case Left(value: final failure) when failure.code == AuthFailureCodes.canceled:
+        emit(state.copyWith(pending: () => null));
       case Left(value: final failure):
-        emit(state.copyWith(isBusy: false, effect: _effectError(failure)));
+        emit(state.copyWith(pending: () => null, effect: _effectError(failure)));
       case Right():
-        emit(state.copyWith(isBusy: false, user: () => null, effect: _effectDeleted()));
+        emit(state.copyWith(pending: () => null, user: () => null, effect: _effectSuccess(t.account.deletedMessage)));
     }
   }
 

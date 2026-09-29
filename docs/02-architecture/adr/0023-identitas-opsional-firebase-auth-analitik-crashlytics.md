@@ -213,7 +213,9 @@ Bukan port per fitur (bukan keputusan domain, cross-cutting seperti
 
 - Pemilik memutuskan taksonomi event Analytics kustom — ADR ini tidak
   mengatur itu, tulis amandemen atau ADR baru.
-- Sinkronisasi data keuangan mulai didesain — proyek terpisah, ADR sendiri.
+- Sinkronisasi data keuangan mulai didesain — proyek terpisah, ADR sendiri,
+  yang wajib mematuhi aturan kepemilikan data di
+  [ADR-024](0024-kepemilikan-data-lokal-dan-akun.md) §3.3.
 - Artwork ikon akun pixel-art tersedia — ganti `IconKey.account` dari
   `_materialFallback` ke `_assetPaths`.
 

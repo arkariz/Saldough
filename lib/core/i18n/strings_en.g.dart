@@ -680,6 +680,7 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get finalBody => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.';
 	@override String get createWalletAction => 'Create First Wallet';
 	@override String get laterAction => 'Maybe later';
+	@override String get signInAction => 'Have an account? Sign in';
 }
 
 // Path: tour
@@ -771,17 +772,45 @@ class _Translations$account$en extends Translations$account$id {
 
 	// Translations
 	@override String get title => 'Account';
-	@override String get signedOutBody => 'An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.';
+	@override String get signedOutTitle => 'Set up your account';
+	@override String get signedOutBody => 'Everything you record works fully without an account. An account prepares you for the backup and cross-device sync we\'re building.';
 	@override String get googleSignInAction => 'Sign in with Google';
 	@override String get emailSignInToggle => 'Sign in with email';
+	@override String get emailFormHint => 'For accounts that were created for you.';
 	@override String get emailLabel => 'Email';
 	@override String get passwordLabel => 'Password';
 	@override String get emailSignInAction => 'Sign in';
+	@override String get emailRequired => 'Enter your email and password first.';
+	@override String get signedInMessage => 'You\'re signed in.';
+	@override String get signedOutMessage => 'You\'re signed out.';
+	@override String get methodGoogle => 'Signed in with Google';
+	@override String get methodPassword => 'Signed in with email';
+	@override String get dataTitle => 'Your data';
+	@override String get dataBody => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.';
 	@override String get signOutAction => 'Sign out';
+	@override String get dangerTitle => 'Danger zone';
+	@override String get dangerBody => 'Deleting your account is permanent and can\'t be undone.';
 	@override String get deleteAction => 'Delete Account';
 	@override String get deleteConfirmTitle => 'Delete account?';
-	@override String get deleteConfirmBody => 'This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren\'t connected.';
+	@override String get deleteConfirmBody => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.';
+	@override String get deletePasswordTitle => 'Enter your password';
+	@override String get deletePasswordBody => 'For your security, enter your password again to delete your account.';
 	@override String get deletedMessage => 'Account deleted.';
+	@override late final _Translations$account$errors$en errors = _Translations$account$errors$en._(_root);
+}
+
+// Path: account.errors
+class _Translations$account$errors$en extends Translations$account$errors$id {
+	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get network => 'Can\'t connect. Check your internet connection, then try again.';
+	@override String get wrongCredentials => 'Wrong email or password.';
+	@override String get tooManyRequests => 'Too many attempts. Wait a moment, then try again.';
+	@override String get userDisabled => 'This account has been disabled.';
+	@override String get other => 'Couldn\'t sign in. Try again.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1332,6 +1361,7 @@ extension on TranslationsEn {
 			'onboarding.finalBody' => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.',
 			'onboarding.createWalletAction' => 'Create First Wallet',
 			'onboarding.laterAction' => 'Maybe later',
+			'onboarding.signInAction' => 'Have an account? Sign in',
 			'tour.nextAction' => 'Next',
 			'tour.doneAction' => 'Done',
 			'tour.skipAction' => 'Skip tour',
@@ -1396,17 +1426,35 @@ extension on TranslationsEn {
 			'info.resetConfirmAction' => 'Reset',
 			'info.resetDoneMessage' => 'Tutorials reset.',
 			'account.title' => 'Account',
-			'account.signedOutBody' => 'An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.',
+			'account.signedOutTitle' => 'Set up your account',
+			'account.signedOutBody' => 'Everything you record works fully without an account. An account prepares you for the backup and cross-device sync we\'re building.',
 			'account.googleSignInAction' => 'Sign in with Google',
 			'account.emailSignInToggle' => 'Sign in with email',
+			'account.emailFormHint' => 'For accounts that were created for you.',
 			'account.emailLabel' => 'Email',
 			'account.passwordLabel' => 'Password',
 			'account.emailSignInAction' => 'Sign in',
+			'account.emailRequired' => 'Enter your email and password first.',
+			'account.signedInMessage' => 'You\'re signed in.',
+			'account.signedOutMessage' => 'You\'re signed out.',
+			'account.methodGoogle' => 'Signed in with Google',
+			'account.methodPassword' => 'Signed in with email',
+			'account.dataTitle' => 'Your data',
+			'account.dataBody' => 'Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn\'t touch them.',
 			'account.signOutAction' => 'Sign out',
+			'account.dangerTitle' => 'Danger zone',
+			'account.dangerBody' => 'Deleting your account is permanent and can\'t be undone.',
 			'account.deleteAction' => 'Delete Account',
 			'account.deleteConfirmTitle' => 'Delete account?',
-			'account.deleteConfirmBody' => 'This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren\'t connected.',
+			'account.deleteConfirmBody' => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.',
+			'account.deletePasswordTitle' => 'Enter your password',
+			'account.deletePasswordBody' => 'For your security, enter your password again to delete your account.',
 			'account.deletedMessage' => 'Account deleted.',
+			'account.errors.network' => 'Can\'t connect. Check your internet connection, then try again.',
+			'account.errors.wrongCredentials' => 'Wrong email or password.',
+			'account.errors.tooManyRequests' => 'Too many attempts. Wait a moment, then try again.',
+			'account.errors.userDisabled' => 'This account has been disabled.',
+			'account.errors.other' => 'Couldn\'t sign in. Try again.',
 			_ => null,
 		};
 	}

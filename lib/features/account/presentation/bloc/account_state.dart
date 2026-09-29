@@ -1,11 +1,26 @@
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
 
-/// Status layar Akun (ADR-023): belum masuk, sedang memproses, atau sudah
-/// masuk sebagai [user].
+/// Aksi layar Akun yang bisa sedang berjalan — tombolnya menampilkan
+/// indikator memuat, tombol lain dinonaktifkan.
+enum AccountAction {
+  /// Masuk dengan Google.
+  googleSignIn,
+
+  /// Masuk dengan email/sandi.
+  emailSignIn,
+
+  /// Keluar.
+  signOut,
+
+  /// Hapus akun.
+  delete,
+}
+
+/// Status layar Akun (ADR-023, ADR-024).
 final class AccountState extends UiState<AccountState> {
   /// Membuat [AccountState].
-  const AccountState({required this.user, this.isBusy = false, super.effect});
+  const AccountState({required this.user, this.pending, this.needsPassword = false, super.effect});
 
   /// State awal, sebelum status masuk diketahui.
   factory AccountState.initial() => const AccountState(user: null);
@@ -13,17 +28,29 @@ final class AccountState extends UiState<AccountState> {
   /// Pengguna yang sedang masuk, atau `null` kalau belum/tidak lagi masuk.
   final AppUser? user;
 
-  /// Sedang memproses masuk/keluar/hapus akun — tombol dinonaktifkan
-  /// selagi ini `true` supaya tidak terkirim dobel.
-  final bool isBusy;
+  /// Aksi yang sedang berjalan, atau `null` kalau tidak ada.
+  final AccountAction? pending;
+
+  /// Hapus akun email/sandi butuh sandi karena sesinya sudah lama — layar
+  /// meminta sandi lalu mengirim ulang permintaan hapus.
+  final bool needsPassword;
+
+  /// Ada aksi yang sedang berjalan.
+  bool get isBusy => pending != null;
 
   @override
-  AccountState copyWith({AppUser? Function()? user, bool? isBusy, UiEffect? effect}) => AccountState(
-        user: user != null ? user() : this.user,
-        isBusy: isBusy ?? this.isBusy,
-        effect: effect,
-      );
+  AccountState copyWith({
+    AppUser? Function()? user,
+    AccountAction? Function()? pending,
+    bool? needsPassword,
+    UiEffect? effect,
+  }) => AccountState(
+    user: user != null ? user() : this.user,
+    pending: pending != null ? pending() : this.pending,
+    needsPassword: needsPassword ?? this.needsPassword,
+    effect: effect,
+  );
 
   @override
-  List<Object?> get props => [user, isBusy];
+  List<Object?> get props => [user, pending, needsPassword];
 }

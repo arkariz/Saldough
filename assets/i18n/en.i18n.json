@@ -555,7 +555,8 @@
     "finalTitle": "Start with your first wallet",
     "finalBody": "Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.",
     "createWalletAction": "Create First Wallet",
-    "laterAction": "Maybe later"
+    "laterAction": "Maybe later",
+    "signInAction": "Have an account? Sign in"
   },
   "tour": {
     "nextAction": "Next",
@@ -626,16 +627,36 @@
   },
   "account": {
     "title": "Account",
-    "signedOutBody": "An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.",
+    "signedOutTitle": "Set up your account",
+    "signedOutBody": "Everything you record works fully without an account. An account prepares you for the backup and cross-device sync we're building.",
     "googleSignInAction": "Sign in with Google",
     "emailSignInToggle": "Sign in with email",
+    "emailFormHint": "For accounts that were created for you.",
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "emailSignInAction": "Sign in",
+    "emailRequired": "Enter your email and password first.",
+    "signedInMessage": "You're signed in.",
+    "signedOutMessage": "You're signed out.",
+    "methodGoogle": "Signed in with Google",
+    "methodPassword": "Signed in with email",
+    "dataTitle": "Your data",
+    "dataBody": "Wallets, transactions, and budgets are stored on this device. Signing out or deleting your account doesn't touch them.",
     "signOutAction": "Sign out",
+    "dangerTitle": "Danger zone",
+    "dangerBody": "Deleting your account is permanent and can't be undone.",
     "deleteAction": "Delete Account",
     "deleteConfirmTitle": "Delete account?",
-    "deleteConfirmBody": "This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren't connected.",
-    "deletedMessage": "Account deleted."
+    "deleteConfirmBody": "Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.",
+    "deletePasswordTitle": "Enter your password",
+    "deletePasswordBody": "For your security, enter your password again to delete your account.",
+    "deletedMessage": "Account deleted.",
+    "errors": {
+      "network": "Can't connect. Check your internet connection, then try again.",
+      "wrongCredentials": "Wrong email or password.",
+      "tooManyRequests": "Too many attempts. Wait a moment, then try again.",
+      "userDisabled": "This account has been disabled.",
+      "other": "Couldn't sign in. Try again."
+    }
   }
 }

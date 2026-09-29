@@ -39,8 +39,11 @@ abstract interface class AuthRepository {
   /// Menghapus akun secara permanen dari penyedia identitas.
   ///
   /// ⚠ Ini menghapus identitas Firebase, BUKAN dompet/transaksi/anggaran di
-  /// perangkat — keduanya belum terhubung sama sekali (cakupan ADR-023).
-  /// Menangani `requires-recent-login` dengan re-autentikasi Google sekali
-  /// secara internal, supaya sesi lama tidak membuat penghapusan gagal.
-  Future<Either<Failure, Unit>> deleteAccount();
+  /// perangkat — data lokal milik perangkat, bukan akun (ADR-024 §3.2).
+  ///
+  /// Kalau sesi terlalu lama (`requires-recent-login`), akun Google
+  /// di-re-autentikasi lewat Google sekali secara internal; akun email/sandi
+  /// memakai [password], dan tanpa [password] mengembalikan
+  /// `Left` berkode `AuthFailureCodes.passwordRequired` supaya UI memintanya.
+  Future<Either<Failure, Unit>> deleteAccount({String? password});
 }

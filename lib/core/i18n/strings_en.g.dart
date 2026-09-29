@@ -51,6 +51,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$tour$en tour = _Translations$tour$en._(_root);
 	@override late final _Translations$info$en info = _Translations$info$en._(_root);
+	@override late final _Translations$account$en account = _Translations$account$en._(_root);
 }
 
 // Path: app
@@ -762,6 +763,27 @@ class _Translations$info$en extends Translations$info$id {
 	@override String get resetDoneMessage => 'Tutorials reset.';
 }
 
+// Path: account
+class _Translations$account$en extends Translations$account$id {
+	_Translations$account$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Account';
+	@override String get signedOutBody => 'An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.';
+	@override String get googleSignInAction => 'Sign in with Google';
+	@override String get emailSignInToggle => 'Sign in with email';
+	@override String get emailLabel => 'Email';
+	@override String get passwordLabel => 'Password';
+	@override String get emailSignInAction => 'Sign in';
+	@override String get signOutAction => 'Sign out';
+	@override String get deleteAction => 'Delete Account';
+	@override String get deleteConfirmTitle => 'Delete account?';
+	@override String get deleteConfirmBody => 'This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren\'t connected.';
+	@override String get deletedMessage => 'Account deleted.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1373,6 +1395,18 @@ extension on TranslationsEn {
 			'info.resetConfirmMessage' => 'The introduction and every tour will show again like the first time. Your financial data isn\'t touched.',
 			'info.resetConfirmAction' => 'Reset',
 			'info.resetDoneMessage' => 'Tutorials reset.',
+			'account.title' => 'Account',
+			'account.signedOutBody' => 'An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.',
+			'account.googleSignInAction' => 'Sign in with Google',
+			'account.emailSignInToggle' => 'Sign in with email',
+			'account.emailLabel' => 'Email',
+			'account.passwordLabel' => 'Password',
+			'account.emailSignInAction' => 'Sign in',
+			'account.signOutAction' => 'Sign out',
+			'account.deleteAction' => 'Delete Account',
+			'account.deleteConfirmTitle' => 'Delete account?',
+			'account.deleteConfirmBody' => 'This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren\'t connected.',
+			'account.deletedMessage' => 'Account deleted.',
 			_ => null,
 		};
 	}

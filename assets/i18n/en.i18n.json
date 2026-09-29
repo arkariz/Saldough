@@ -623,5 +623,19 @@
     "resetConfirmMessage": "The introduction and every tour will show again like the first time. Your financial data isn't touched.",
     "resetConfirmAction": "Reset",
     "resetDoneMessage": "Tutorials reset."
+  },
+  "account": {
+    "title": "Account",
+    "signedOutBody": "An account is entirely optional. Recording keeps working fully without signing in — the account is only for future features like sync and a premium plan.",
+    "googleSignInAction": "Sign in with Google",
+    "emailSignInToggle": "Sign in with email",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "emailSignInAction": "Sign in",
+    "signOutAction": "Sign out",
+    "deleteAction": "Delete Account",
+    "deleteConfirmTitle": "Delete account?",
+    "deleteConfirmBody": "This permanently deletes your account identity. Wallets, transactions, and budgets on this device are NOT deleted — the two aren't connected.",
+    "deletedMessage": "Account deleted."
   }
 }

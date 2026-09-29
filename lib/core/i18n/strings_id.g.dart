@@ -53,6 +53,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$onboarding$id onboarding = Translations$onboarding$id.internal(_root);
 	late final Translations$tour$id tour = Translations$tour$id.internal(_root);
 	late final Translations$info$id info = Translations$info$id.internal(_root);
+	late final Translations$account$id account = Translations$account$id.internal(_root);
 }
 
 // Path: app
@@ -1966,6 +1967,51 @@ class Translations$info$id {
 	String get resetDoneMessage => 'Tutorial disetel ulang.';
 }
 
+// Path: account
+class Translations$account$id {
+	Translations$account$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Akun'
+	String get title => 'Akun';
+
+	/// id: 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.'
+	String get signedOutBody => 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.';
+
+	/// id: 'Masuk dengan Google'
+	String get googleSignInAction => 'Masuk dengan Google';
+
+	/// id: 'Masuk dengan email'
+	String get emailSignInToggle => 'Masuk dengan email';
+
+	/// id: 'Email'
+	String get emailLabel => 'Email';
+
+	/// id: 'Kata sandi'
+	String get passwordLabel => 'Kata sandi';
+
+	/// id: 'Masuk'
+	String get emailSignInAction => 'Masuk';
+
+	/// id: 'Keluar'
+	String get signOutAction => 'Keluar';
+
+	/// id: 'Hapus Akun'
+	String get deleteAction => 'Hapus Akun';
+
+	/// id: 'Hapus akun?'
+	String get deleteConfirmTitle => 'Hapus akun?';
+
+	/// id: 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.'
+	String get deleteConfirmBody => 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.';
+
+	/// id: 'Akun dihapus.'
+	String get deletedMessage => 'Akun dihapus.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -2577,6 +2623,18 @@ extension on Translations {
 			'info.resetConfirmMessage' => 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.',
 			'info.resetConfirmAction' => 'Setel Ulang',
 			'info.resetDoneMessage' => 'Tutorial disetel ulang.',
+			'account.title' => 'Akun',
+			'account.signedOutBody' => 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.',
+			'account.googleSignInAction' => 'Masuk dengan Google',
+			'account.emailSignInToggle' => 'Masuk dengan email',
+			'account.emailLabel' => 'Email',
+			'account.passwordLabel' => 'Kata sandi',
+			'account.emailSignInAction' => 'Masuk',
+			'account.signOutAction' => 'Keluar',
+			'account.deleteAction' => 'Hapus Akun',
+			'account.deleteConfirmTitle' => 'Hapus akun?',
+			'account.deleteConfirmBody' => 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.',
+			'account.deletedMessage' => 'Akun dihapus.',
 			_ => null,
 		};
 	}

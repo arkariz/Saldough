@@ -37,7 +37,7 @@ Terakhir diperbarui: 28 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 4 | 2 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik, T-8.4 (arsitektur fitur online) menunggu desain |
+| 8 — Tindak lanjut pasca-MVP | 4 | 3 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -1292,21 +1292,31 @@ seluruh fitur di atasnya menghasilkan data.
       produk (README, PRD, glosarium -- ditunda supaya tidak dikerjakan dua
       kali kalau cek merek dagang menggagalkan nama ini). **Jangan rilis ke
       toko sebelum ketiga hal ini selesai.**
-- [ ] **T-8.4** Desain arsitektur fitur online (28 September 2026, pemilik
-      berencana freemium/paywall sebagai kandidat pertama, kemungkinan
-      fitur online lain menyusul).
-      ⚠ **Dokumen sudah diperbarui, kode belum disentuh.** NFR-SEC-001 dan
-      NFR-REL-001 di `docs/01-product/prd-saldough-2.0.md` §8 direvisi
-      supaya tidak lagi melarang panggilan jaringan sama sekali -- lihat
-      §13 "Arsitektur fitur online yang direncanakan" untuk pertanyaan yang
-      belum terjawab (akun atau tidak, backend sendiri atau murni Play
-      Billing, data apa yang boleh keluar perangkat). CLAUDE.md "Status"
-      juga sudah mencatat perubahan ini.
-      Sebelum kode apa pun ditulis: tulis ADR baru (menggantikan/memperluas
-      ADR-0002 sesuai konvensi) begitu bentuk fiturnya konkret. Pencatatan
-      inti (CATAT, Transaksi, Dompet, Anggaran, Freelance) wajib tetap
-      berfungsi penuh tanpa koneksi -- fitur online tidak boleh
-      memblokirnya (NFR-REL-001).
+- [x] **T-8.4** Desain arsitektur fitur online — **identitas, Analytics,
+      Crashlytics selesai 29 September 2026**, lihat
+      [ADR-023](../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md).
+      Firebase Auth (Google Sign-In + email/sandi untuk peninjau Play),
+      Firebase Analytics, dan Crashlytics terpasang; `lib/shared/auth/`,
+      `lib/core/foundation/analytics/`, `lib/features/account/` (layar
+      Akun, ikon di app bar Beranda). Akun sepenuhnya opsional — pencatatan
+      inti tidak menyentuhnya sama sekali (NFR-REL-001 terjaga; diverifikasi
+      `flutter analyze` bersih dan 555 uji lulus, semuanya sebelum
+      perubahan ini juga sudah lulus).
+      **Belum digarap** (bukan bagian ADR-023, lihat §2-nya): sinkronisasi
+      dompet/transaksi/anggaran ke server — proyek terpisah, jauh lebih
+      besar (skema, aturan keamanan, resolusi konflik), ADR sendiri nanti.
+      Ikon `IconKey.account` masih `Icons.person_outline`
+      (`_materialFallback`) sampai ada artwork pixel-art.
+      **Menunggu pemilik sebelum submit ke Play Store** (bukan kode, aksi
+      di luar repo): taruh `google-services.json`, aktifkan provider Google
+      dan Email/Password di Firebase Console, isi
+      `FirebaseConfig.googleServerClientId`, daftarkan SHA-1/SHA-256 upload
+      key DAN Play App Signing key ke Firebase — daftar lengkap di
+      [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) "Sebelum submit ke Play
+      Console".
+      **Belum ada uji otomatis** untuk `FirebaseAuthRepositoryImpl`/
+      `AccountBloc` (butuh mock `firebase_auth`/`google_sign_in`) — susulan,
+      dicatat di sini supaya tidak terlupa, bukan diam-diam dilewati.
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

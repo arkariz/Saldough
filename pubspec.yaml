@@ -40,6 +40,14 @@ dependencies:
       url: https://github.com/arkariz/advance-mobile-platform
       path: core/failures
       ref: failures-v2.0.2
+  # ADR-023: identitas opsional, analitik, dan crash reporting. Pertama
+  # kalinya aplikasi memanggil jaringan -- lihat NFR-SEC-001/NFR-REL-001
+  # hasil revisi 28 Sep 2026 dan `android/app/google-services.json`
+  # (ditaruh manual oleh pemilik, tidak dibuat lewat kode).
+  firebase_analytics: ^12.6.0
+  firebase_auth: ^6.7.0
+  firebase_core: ^4.15.0
+  firebase_crashlytics: ^5.4.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -47,6 +55,7 @@ dependencies:
   flutter_svg: ^2.3.0
   go_router: ^17.3.0
   google_fonts: ^8.1.0
+  google_sign_in: ^7.2.0
   hive_storage:
     git:
       url: https://github.com/arkariz/advance-mobile-platform

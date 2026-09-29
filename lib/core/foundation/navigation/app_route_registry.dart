@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show NavigatorObserver;
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_node_go_router_ext.dart';
@@ -31,6 +32,7 @@ abstract final class AppRouteRegistry {
     required String initialLocation,
     required GoRouterWidgetBuilder homeBuilder,
     required GoRouterWidgetBuilder onboardingBuilder,
+    List<NavigatorObserver> observers = const [],
   }) {
     final routes = [
       GoRoute(path: homePath, name: 'home', builder: homeBuilder),
@@ -42,6 +44,7 @@ abstract final class AppRouteRegistry {
       initialLocation: initialLocation,
       debugLogDiagnostics: kDebugMode,
       routes: routes,
+      observers: observers,
     );
   }
 

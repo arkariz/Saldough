@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ADR-023: pertama kalinya aplikasi butuh ini -- build debug sudah
+         otomatis dapat izin ini lewat manifest debug bawaan Flutter, tapi
+         build rilis tidak. Dibutuhkan Firebase Auth/Analytics/Crashlytics. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Tanukonomy"
         android:name="${applicationName}"

@@ -556,7 +556,13 @@
     "finalBody": "Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.",
     "createWalletAction": "Create First Wallet",
     "laterAction": "Maybe later",
-    "signInAction": "Have an account? Sign in"
+    "signInAction": "Have an account? Sign in",
+    "backAction": "Back",
+    "currencyTitle": "Choose your currency",
+    "currencyBody": "Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you've already recorded aren't converted.",
+    "currencySuggested": "Matches your device region",
+    "currencyChooseFirst": "Choose a currency first",
+    "currencyConfirm": "Use $code"
   },
   "tour": {
     "nextAction": "Next",

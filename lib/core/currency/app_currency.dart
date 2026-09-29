@@ -72,6 +72,28 @@ enum AppCurrency {
     }
     return null;
   }
+
+  /// Saran mata uang untuk kode negara perangkat [countryCode] (ISO 3166
+  /// alfa-2), atau `null` kalau tidak ada yang cocok. Hanya saran urutan di
+  /// onboarding, tidak pernah dipilih otomatis (ADR-025 §3.7).
+  static AppCurrency? forCountry(String? countryCode) => switch (countryCode?.toUpperCase()) {
+    'ID' => idr,
+    'US' => usd,
+    'GB' => gbp,
+    'JP' => jpy,
+    'CN' => cny,
+    'KR' => krw,
+    'IN' => inr,
+    'SG' => sgd,
+    'MY' => myr,
+    'TH' => thb,
+    'PH' => php,
+    'VN' => vnd,
+    'AU' => aud,
+    'AT' || 'BE' || 'CY' || 'DE' || 'EE' || 'ES' || 'FI' || 'FR' || 'GR' || 'HR' || 'IE' || 'IT' || 'LT' || 'LU' ||
+    'LV' || 'MT' || 'NL' || 'PT' || 'SI' || 'SK' => eur,
+    _ => null,
+  };
 }
 
 /// Kelipatan langkah pilihan cepat per konteks (ADR-025 §3.4).

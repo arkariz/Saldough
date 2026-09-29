@@ -682,6 +682,12 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get createWalletAction => 'Create First Wallet';
 	@override String get laterAction => 'Maybe later';
 	@override String get signInAction => 'Have an account? Sign in';
+	@override String get backAction => 'Back';
+	@override String get currencyTitle => 'Choose your currency';
+	@override String get currencyBody => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.';
+	@override String get currencySuggested => 'Matches your device region';
+	@override String get currencyChooseFirst => 'Choose a currency first';
+	@override String currencyConfirm({required Object code}) => 'Use ${code}';
 }
 
 // Path: tour
@@ -1403,6 +1409,12 @@ extension on TranslationsEn {
 			'onboarding.createWalletAction' => 'Create First Wallet',
 			'onboarding.laterAction' => 'Maybe later',
 			'onboarding.signInAction' => 'Have an account? Sign in',
+			'onboarding.backAction' => 'Back',
+			'onboarding.currencyTitle' => 'Choose your currency',
+			'onboarding.currencyBody' => 'Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you\'ve already recorded aren\'t converted.',
+			'onboarding.currencySuggested' => 'Matches your device region',
+			'onboarding.currencyChooseFirst' => 'Choose a currency first',
+			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
 			'tour.nextAction' => 'Next',
 			'tour.doneAction' => 'Done',
 			'tour.skipAction' => 'Skip tour',

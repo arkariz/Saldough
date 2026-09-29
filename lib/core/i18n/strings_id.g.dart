@@ -1762,6 +1762,24 @@ class Translations$onboarding$id {
 
 	/// id: 'Sudah punya akun? Masuk'
 	String get signInAction => 'Sudah punya akun? Masuk';
+
+	/// id: 'Kembali'
+	String get backAction => 'Kembali';
+
+	/// id: 'Pilih mata uangmu'
+	String get currencyTitle => 'Pilih mata uangmu';
+
+	/// id: 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.'
+	String get currencyBody => 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.';
+
+	/// id: 'Sesuai wilayah perangkatmu'
+	String get currencySuggested => 'Sesuai wilayah perangkatmu';
+
+	/// id: 'Pilih mata uang dulu'
+	String get currencyChooseFirst => 'Pilih mata uang dulu';
+
+	/// id: 'Pakai $code'
+	String currencyConfirm({required Object code}) => 'Pakai ${code}';
 }
 
 // Path: tour
@@ -2713,6 +2731,12 @@ extension on Translations {
 			'onboarding.createWalletAction' => 'Buat Dompet Pertama',
 			'onboarding.laterAction' => 'Nanti saja',
 			'onboarding.signInAction' => 'Sudah punya akun? Masuk',
+			'onboarding.backAction' => 'Kembali',
+			'onboarding.currencyTitle' => 'Pilih mata uangmu',
+			'onboarding.currencyBody' => 'Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.',
+			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
+			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
+			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
 			'tour.nextAction' => 'Lanjut',
 			'tour.doneAction' => 'Selesai',
 			'tour.skipAction' => 'Lewati tur',

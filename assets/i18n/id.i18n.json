@@ -556,7 +556,13 @@
     "finalBody": "Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.",
     "createWalletAction": "Buat Dompet Pertama",
     "laterAction": "Nanti saja",
-    "signInAction": "Sudah punya akun? Masuk"
+    "signInAction": "Sudah punya akun? Masuk",
+    "backAction": "Kembali",
+    "currencyTitle": "Pilih mata uangmu",
+    "currencyBody": "Semua nominal di Tanukonomy memakai mata uang ini. Nanti bisa diganti di layar Akun, tapi angka yang sudah dicatat tidak dikonversi.",
+    "currencySuggested": "Sesuai wilayah perangkatmu",
+    "currencyChooseFirst": "Pilih mata uang dulu",
+    "currencyConfirm": "Pakai $code"
   },
   "tour": {
     "nextAction": "Lanjut",

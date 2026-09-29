@@ -120,13 +120,18 @@ saldough/
 │   │   │   ├── tokens/{app_spacing, app_radius, app_durations, app_elevation}.dart
 │   │   │   └── extensions/app_colors_extension.dart
 │   │   ├── presentation/widgets/         # AppCard, AppButton, AppChip, AppMoneyText
-│   │   ├── utils/formatters/             # pemformat uang dan tanggal
+│   │   ├── utils/formatters/             # pemformat uang (AppMoneyFormatter, money_input) dan tanggal
+│   │   ├── currency/                     # mata uang aktif, satu per aplikasi (ADR-025)
+│   │   ├── tutorial/                     # progres onboarding dan tur, di atas KeyValueStorage (ADR-021)
+│   │   ├── config/                       # konfigurasi Firebase (ADR-023)
+│   │   ├── foundation/analytics/         # Firebase Analytics dan Crashlytics (ADR-023)
 │   │   └── i18n/                         # keluaran slang
 │   ├── shared/                           # kapabilitas dipakai ≥2 fitur, module-first
 │   │   ├── wallet/                       # dikonsumsi transaction, budget, freelance, home
 │   │   │   ├── wallet.dart               # barrel — satu-satunya jalur impor ke modul ini
 │   │   │   ├── domain/{wallet.dart, wallet_repository.dart}
 │   │   │   └── data/{wallet_model.dart, wallet_repository_impl.dart}
+│   │   ├── auth/                         # identitas opsional, Firebase Auth (ADR-023, ADR-024)
 │   │   └── transaction/                  # dikonsumsi budget, home, wallet, record, freelance
 │   │       ├── transaction.dart          # barrel
 │   │       ├── domain/{transaction.dart, transaction_repository.dart}
@@ -137,7 +142,9 @@ saldough/
 │       ├── transaction/                  # daftar dan penyaring riwayat
 │       ├── record/                       # alur CATAT — satu-satunya penulis transaksi manual
 │       ├── budget/                       # anggaran, pos, dan template
-│       └── freelance/                    # proyek, worklog, pembayaran
+│       ├── freelance/                    # proyek, worklog, pembayaran
+│       ├── account/                      # layar Akun: masuk, mata uang, data (ADR-024, ADR-025)
+│       └── onboarding/                   # pengenalan pembukaan pertama (ADR-021)
 ├── tool/                                 # skrip pengembang sekali pakai, TIDAK ikut di-build ke rilis
 │   └── seed_data.json                    # data historis nyata 1.0, disimpan sebagai rekaman
 └── test/
@@ -566,7 +573,7 @@ RouteNode.typed<WalletDetailInput>(
 ```
 
 **Shell navigasi utama** (`AppShellPage`, `lib/core/presentation/shell/`) —
-bilah navigasi bawah lima tujuan (Beranda/Anggaran/CATAT/Transaksi/Dompet),
+bilah navigasi bawah lima tujuan (Beranda/Anggaran/CATAT/Riwayat/Dompet),
 layar awal aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan
 langsung di `AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab
 tetap dipasang lewat `ScopeWidget` fiturnya sendiri di dalam `IndexedStack`

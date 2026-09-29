@@ -14,7 +14,6 @@ import 'package:saldough/features/budget/data/repositories/budget_repository_imp
 import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
-import 'package:saldough/features/example_note/presentation/navigation/example_note_route_module.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
@@ -35,12 +34,10 @@ abstract final class RootModule {
   /// Seluruh modul rute fitur yang terdaftar di aplikasi.
   ///
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
-  /// penemuan otomatis, sesuai desain `FeatureRouteModule`. `example_note`
-  /// tetap terdaftar sebagai fitur bukti pola (lihat T-1.12), dapat dicapai
-  /// lewat menu pengembang mode debug, bukan lagi lokasi awal.
-  static const List<FeatureRouteModule> _featureModules = [
-    ExampleNoteRouteModule(),
-  ];
+  /// penemuan otomatis, sesuai desain `FeatureRouteModule`. Kosong sejak
+  /// `example_note` (fitur bukti pola) dihapus; layar aplikasi dipasang lewat
+  /// `AppShellPage` dan `Navigator`, bukan registri ini.
+  static const List<FeatureRouteModule> _featureModules = [];
 
   /// Menjalankan seluruh pendaftaran akar ke [container].
   static Future<void> registerAll(GetIt container) async {

@@ -33,7 +33,6 @@ widget tidak mengecek flag itu, itu temuan nyata, bukan dugaan.
 | `transaction` (riwayat) | `pages/transaction_list_page.dart`, `pages/transaction_detail_page.dart` | `presentation/bloc/transaction_bloc.dart` (`TransactionState`: `month`, filter jenis/dompet/kategori, `searchQuery`, `groups`, `typeCounts`, `isLoading`, `loadFailed`) | `transaction_filter_bar.dart`, `transaction_month_header.dart`, `transaction_date_group_card.dart`, `transaction_empty_states.dart`, `transaction_display.dart` |
 | `wallet` | `pages/wallet_list_page.dart`, `pages/wallet_detail_page.dart` | `presentation/bloc/wallet_bloc.dart` (`WalletState`: `wallets`, `isLoading`, `loadFailed`) | `wallet_card.dart`, `wallet_summary_card.dart`, `wallet_form_sheet.dart`, `wallet_empty_states.dart`, `wallet_type.dart` |
 | `freelance` | Belum ada layar (Fase 5). Baru domain `CalculateNetPay` | — | — |
-| `example_note` | Fitur bukti pola, hanya dari menu pengembang debug | — | Bukan bagian produk — **jangan direview** |
 
 Domain bersama: `lib/shared/wallet/` dan `lib/shared/transaction/`.
 Keduanya relevan kalau perlu tahu apa yang sebenarnya dihitung (mis.

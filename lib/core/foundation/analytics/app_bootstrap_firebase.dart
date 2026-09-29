@@ -42,10 +42,6 @@ abstract final class AppBootstrap {
       return true;
     };
 
-    // `googleServerClientId` bawaannya `null`, sama dengan bawaan parameter
-    // ini -- akan berhenti redundan begitu pemilik mengisinya, lihat
-    // `FirebaseConfig`.
-    // ignore: avoid_redundant_argument_values
     await GoogleSignIn.instance.initialize(serverClientId: FirebaseConfig.googleServerClientId);
   }
 }

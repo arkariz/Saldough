@@ -19,5 +19,6 @@ abstract final class FirebaseConfig {
   /// audiensnya tidak cocok, dan `signInWithCredential` di Firebase akan
   /// gagal. Lihat README google_sign_in v7 dan dokumentasi FlutterFire
   /// "Configure Google Sign-In" untuk detail per platform.
-  static const String? googleServerClientId = null;
+  static const String googleServerClientId =
+      '696822782042-n1udc0kvopehg7g7td3nqqmcv10urljn.apps.googleusercontent.com';
 }

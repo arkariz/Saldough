@@ -5,6 +5,11 @@ plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // ADR-023. Butuh android/app/google-services.json (ditaruh manual oleh
+    // pemilik dari Firebase Console -- aman dikomit, bukan rahasia seperti
+    // key.properties).
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 // Upload key untuk Google Play App Signing. Detail dan password ada di

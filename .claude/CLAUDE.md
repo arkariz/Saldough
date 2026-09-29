@@ -36,16 +36,23 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 (maskot tanuki juru catat), belum dieksekusi — T-8.3, riset di
 `docs/01-product/ASO_NAME_RESEARCH.md`.
 
-**Rencana fitur online (28 Sep 2026):** pemilik berencana mengembangkan
-fitur berbasis jaringan (freemium/paywall dibahas sebagai kandidat pertama).
-Invarian lama "tanpa panggilan jaringan sama sekali" **tidak lagi mutlak** —
-lihat T-8.4 di TASK_LIST. NFR-SEC-001 dan NFR-REL-001 di
-`docs/01-product/prd-saldough-2.0.md` §8 sudah direvisi untuk mengizinkan
-panggilan jaringan yang jelas keperluannya (bukan telemetri diam-diam), dan
-pencatatan inti (CATAT, Transaksi, Dompet, Anggaran, Freelance) tetap wajib
-berfungsi penuh tanpa koneksi. Arsitektur konkret fitur online itu sendiri —
-backend apa, data apa yang boleh keluar perangkat — **belum diputuskan**;
-tulis ADR baru begitu desainnya ada, jangan menebak di kode.
+**Fitur online (T-8.4):** invarian lama "tanpa panggilan jaringan sama
+sekali" **tidak lagi mutlak**. NFR-SEC-001/NFR-REL-001 di
+`docs/01-product/prd-saldough-2.0.md` §8 direvisi 28 Sep 2026 untuk
+mengizinkan ini, dengan syarat pencatatan inti (CATAT, Transaksi, Dompet,
+Anggaran, Freelance) tetap wajib berfungsi penuh tanpa koneksi.
+**Identitas opsional, Analytics, dan Crashlytics sudah masuk kode 29 Sep
+2026** — lihat
+[ADR-023](../docs/02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md):
+`lib/shared/auth/` (Firebase Auth, Google Sign-In + email/sandi untuk
+peninjau Play), `lib/core/foundation/analytics/` (Firebase Analytics,
+Crashlytics), `lib/features/account/` (layar Akun, ikon di app bar
+Beranda). Ini pertama kalinya aplikasi memanggil jaringan; syarat sebelum
+submit Play Store (setelan Firebase Console, bukan kode) ada di
+`docs/04-planning/PLAY_DATA_SAFETY.md`.
+**Sinkronisasi data keuangan ke server belum ada** — di luar cakupan
+ADR-023, proyek terpisah yang jauh lebih besar; tulis ADR baru begitu
+desainnya ada, jangan menebak di kode.
 
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah

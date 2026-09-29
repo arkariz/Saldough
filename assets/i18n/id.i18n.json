@@ -623,5 +623,19 @@
     "resetConfirmMessage": "Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.",
     "resetConfirmAction": "Setel Ulang",
     "resetDoneMessage": "Tutorial disetel ulang."
+  },
+  "account": {
+    "title": "Akun",
+    "signedOutBody": "Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.",
+    "googleSignInAction": "Masuk dengan Google",
+    "emailSignInToggle": "Masuk dengan email",
+    "emailLabel": "Email",
+    "passwordLabel": "Kata sandi",
+    "emailSignInAction": "Masuk",
+    "signOutAction": "Keluar",
+    "deleteAction": "Hapus Akun",
+    "deleteConfirmTitle": "Hapus akun?",
+    "deleteConfirmBody": "Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.",
+    "deletedMessage": "Akun dihapus."
   }
 }

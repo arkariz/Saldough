@@ -1,115 +1,140 @@
 # Draf formulir Keamanan Data Play Console
 
-Diperbarui 28 September 2026. Draf jawaban untuk bagian **App content → Data
-safety** di Play Console, disiapkan lebih dulu karena fitur akun,
-sinkronisasi, dan analitik pemakaian direncanakan (lihat
-`docs/04-planning/TASK_LIST.md` dan repo `arkariz/tanukonomy-web`
-`docs/TASKS.md` W-9).
+Diperbarui 29 September 2026 (ADR-023: identitas, Analytics, Crashlytics
+sudah masuk kode). Draf jawaban untuk bagian **App content → Data safety**
+di Play Console.
 
 ## Aturan paling penting
 
 **Formulir ini berlaku per rilis** — per APK/AAB yang diunggah, bukan sekali
 untuk selamanya. Google memverifikasi lewat pemindaian SDK di build yang
-sungguhan diunggah. Isi formulir sesuai **build yang sedang kamu unggah**,
-bukan rencana produk:
+sungguhan diunggah. Isi formulir sesuai **build yang sedang kamu unggah**:
 
-- Build sekarang (uji coba tertutup, tanpa backend sama sekali) → **jawaban
-  di bagian "Sekarang" di bawah.**
-- Build nanti, sesudah akun/sinkronisasi/analitik sungguhan ditambahkan ke
-  kode → **jawaban di bagian "Nanti" di bawah**, dan isi ulang formulirnya
-  persis sebelum build itu diunggah.
+- Build tanpa `google-services.json`/sebelum ADR-023 → bagian "Sebelum
+  ADR-023" di bawah.
+- Build yang sudah menyertakan Firebase Auth, Analytics, dan Crashlytics
+  (kode sudah ada per 29 September 2026) → bagian "Rilis ini (ADR-023)".
+  **Ini yang berlaku untuk pengajuan Play Store pertama.**
+- Sinkronisasi data dompet/transaksi/anggaran ke server **belum ada di
+  kode** — bagian "Nanti" tetap berupa rencana, ADR tersendiri belum
+  ditulis.
 
 Mengisi "Ya, mengumpulkan data" untuk build yang faktanya tidak melakukan itu
 (atau sebaliknya) melanggar kebijakan Play dan bisa berujung penurunan
 aplikasi atau penangguhan akun developer.
 
-Kapan pun formulir ini diisi ulang, **cocokkan dengan kebijakan privasi**
-(`privasi.astro`/`en/privacy.astro` §6–§7 di repo `tanukonomy-web`) —
-keduanya harus bercerita hal yang sama tentang data apa yang diambil dan
-untuk apa.
+Kapan pun formulir ini diisi, **cocokkan dengan kebijakan privasi**
+(`privasi.astro`/`en/privacy.astro` di repo `tanukonomy-web`) — keduanya
+harus bercerita hal yang sama tentang data apa yang diambil dan untuk apa.
 
-## Sekarang (build tanpa akun/sinkronisasi/analitik)
+## Sebelum ADR-023 (tanpa jaringan sama sekali)
 
 | Pertanyaan | Jawaban |
 |---|---|
 | Apakah aplikasi mengumpulkan atau membagikan data pengguna wajib? | **Tidak** |
 
-Alasannya sesuai arsitektur aplikasi saat ini: tanpa server, tanpa
-`http`/panggilan jaringan sama sekali (`CLAUDE.md` "Fakta proyek"). Kalau
-pertanyaan susulan "Apakah semua data pengguna dienkripsi saat pengiriman"
-tetap muncul meski jawaban di atas "Tidak", pilih **Tidak berlaku** kalau
-ada, atau biarkan default Play Console (biasanya pertanyaan itu tersembunyi
-begitu jawaban pertama "Tidak").
+Sudah tidak relevan lagi untuk pengajuan Play Store pertama — dicatat di
+sini hanya sebagai riwayat, kalau build lama ini pernah diunggah ke jalur
+uji coba.
 
-## Nanti (build dengan akun OAuth, sinkronisasi, dan analitik pemakaian)
+## Rilis ini (ADR-023): identitas, Analytics, Crashlytics
 
-Metode akun yang direncanakan: **OAuth (Google/Apple Sign-In)**, bukan
-nama-pengguna-dan-sandi buatan sendiri — paling sedikit gesekan pendaftaran,
-dan keamanan kredensial diserahkan ke Google/Apple, bukan ditangani sendiri.
+**Belum ada sinkronisasi data keuangan.** Dompet, transaksi, anggaran, dan
+proyek freelance tetap 100% lokal — hanya identitas akun (kalau pengguna
+memilih masuk), event pemakaian dasar, dan log crash yang meninggalkan
+perangkat.
 
 | Pertanyaan | Jawaban | Catatan |
 |---|---|---|
 | Mengumpulkan/membagikan data pengguna wajib? | **Ya** | |
-| Semua data dienkripsi saat pengiriman? | **Ya** | Wajib TLS/HTTPS untuk seluruh panggilan API sinkronisasi — bukan pilihan, ini syarat teknis minimum sebelum backend-nya boleh dianggap selesai. |
-| Metode pembuatan akun (pilih semua yang sesuai) | **OAuth** | Kalau nanti Apple Sign-In juga ditambahkan (wajib oleh Apple kalau ada OAuth lain di versi iOS), tetap satu kotak "OAuth" — Play Console tidak memisahkan per penyedia. |
-| Bisakah pengguna meminta datanya dihapus? | **Ya** | Sediakan **hapus akun di dalam aplikasi** (bukan cuma lewat email/tiket) — cara paling gampang lolos syarat ini dan sudah dijanjikan di kebijakan privasi §6 ("cara menghapus akun kembali"). |
+| Semua data dienkripsi saat pengiriman? | **Ya** | Firebase Auth/Analytics/Crashlytics SDK memakai HTTPS/TLS bawaan — tidak ada konfigurasi tambahan dari kita. |
+| Metode pembuatan akun (pilih semua yang sesuai) | **OAuth**, **Nama pengguna dan sandi** | Google Sign-In (OAuth) untuk pengguna sungguhan; email/sandi ditambahkan khusus supaya peninjau Google Play bisa masuk tanpa akun Google sungguhan (layar consent OAuth proyek belum diverifikasi Google membatasi ke tester eksplisit). Sign in with Apple **ditunda** sampai iOS digarap — Play Store tidak mensyaratkannya. |
+| Bisakah pengguna meminta datanya dihapus? | **Ya** | Di dalam aplikasi (ikon Akun di Beranda → Hapus Akun) DAN lewat halaman web — isi kolom "URL hapus akun" dengan `https://tanukonomy.app/hapus-akun/` (atau domain aktif; lihat repo `tanukonomy-web`). |
+
+### App access (peninjau Play)
+
+Akun **sepenuhnya opsional** — tidak ada fitur pencatatan yang terkunci di
+baliknya, jadi secara ketat peninjau tidak perlu kredensial apa pun untuk
+menguji aplikasi. Tetap isi kolom "App access" dengan salah satu:
+
+- **Termudah:** tulis bahwa seluruh fitur bisa diuji tanpa masuk/akun.
+- **Kalau tetap ingin memberi akun uji:** buat satu akun email/sandi manual
+  di Firebase Console (Authentication → Users → Add user), lalu tempel
+  kredensialnya di App access. **Jangan** pakai akun Google pribadi pemilik.
 
 ### Jenis data yang dideklarasikan
 
-Formulir lalu meminta detail per **jenis data**: dikumpulkan/dibagikan,
-wajib/opsional, dan tujuannya. Untuk cakupan akun + sinkronisasi + analitik
-pemakaian saja (belum termasuk catat-otomatis dari foto struk/suara — itu
-jenis data lain, didaftarkan terpisah kalau fitur itu digarap):
-
 | Kategori Play | Sub-jenis | Dikumpulkan | Dibagikan | Wajib/opsional | Tujuan |
 |---|---|---|---|---|---|
-| Info pribadi | Alamat email | Ya | Tidak | **Opsional** | Fungsionalitas aplikasi, manajemen akun |
-| Info pribadi | ID pengguna | Ya | Tidak | Opsional | Fungsionalitas aplikasi |
-| Info finansial | Info finansial lainnya (dompet, transaksi, anggaran) | Ya | Tidak | Opsional | Fungsionalitas aplikasi (sinkronisasi) — **bukan** analitik atau iklan |
-| Aktivitas aplikasi | Interaksi aplikasi | Ya | Tergantung penyedia analitik | Opsional* | Analitik |
+| Info pribadi | Alamat email | Ya (kalau masuk) | Tidak | Opsional | Manajemen akun |
+| Info pribadi | ID pengguna | Ya (kalau masuk) | Tidak | Opsional | Manajemen akun |
+| Aktivitas aplikasi | Interaksi aplikasi | Ya | Tidak\* | Wajib\*\* | Analitik |
+| App info dan performa | Log error/crash | Ya | Tidak\* | Wajib\*\* | Diagnostik |
 
-`*` Data akun boleh ditandai opsional karena pencatatan inti tetap jalan
-tanpa akun (dijanjikan di landing dan kebijakan privasi). Analitik pemakaian
-sendiri biasanya tidak bisa dimatikan per pengguna kecuali penyedianya
-menyediakan opt-out — kalau begitu, tandai kolom "wajib" untuk baris
-Interaksi aplikasi dan jelaskan di kebijakan privasi (sudah ada janji soal
-ini di §7).
+`*` Firebase Analytics dan Crashlytics adalah produk Google sendiri (bukan
+SDK pihak ketiga di luar Google) — per
+[pemetaan Data safety resmi Google](https://support.google.com/faqs/answer/9022221),
+keduanya ditandai **"dikumpulkan, tidak dibagikan"** selama dipakai lewat
+jalur default (tanpa mengekspor ke BigQuery/produk Google lain yang
+membagikannya lebih lanjut — kita tidak melakukan itu). Verifikasi ulang di
+halaman itu kalau ada perubahan konfigurasi.
 
-**"Dibagikan" untuk baris Interaksi aplikasi bergantung pada penyedia
-analitik yang dipilih** (belum diputuskan). Contoh:
+`**` Analytics dan Crashlytics **tidak terikat status masuk** — berjalan
+untuk semua pengguna, bahkan yang tidak pernah membuat akun (ADR-023 §3),
+jadi ditandai wajib, bukan opsional. Ini beda dari data akun (opsional,
+karena akunnya sendiri opsional).
 
-- **Firebase Analytics/Google Analytics for Firebase** — Google punya
-  [halaman pemetaan Data safety resmi](https://support.google.com/faqs/answer/9022221)
-  per SDK; datanya umumnya ditandai "dikumpulkan, tidak dibagikan" kalau
-  cuma dipakai lewat jalur first-party mereka sendiri.
-- Penyedia analitik lain (Mixpanel, PostHog, Amplitude, dst.) sering
-  ditandai "dibagikan" karena datanya diproses di server pihak ketiga di
-  luar Google.
-
-Cek [pemetaan Data safety SDK Google](https://developer.android.com/guide/topics/data/collect-share)
-persis untuk SDK yang akhirnya dipakai sebelum mengisi kolom "dibagikan".
+**Tidak ada** baris "Info finansial" di rilis ini — dompet/transaksi/
+anggaran tidak pernah meninggalkan perangkat (beda dari draf sebelumnya,
+lihat riwayat git dokumen ini).
 
 ### Belum termasuk di draf ini
 
+- **Sinkronisasi data keuangan ke server** — belum ada di kode. Kalau
+  digarap, tambah baris "Info finansial: Info finansial lainnya" dengan
+  status opsional, dan pilih "Dibagikan: Tidak" kalau backend tetap
+  Firebase/Google, atau "Ya" kalau pindah ke penyedia lain.
 - **Info pembayaran** (langganan premium/freemium) — biasanya lewat Google
-  Play Billing, yang punya jalur deklarasi sendiri di Play Console
-  (Play Billing tidak mengharuskan kamu mendeklarasikan info kartu sebagai
-  data yang "dikumpulkan aplikasi", karena diproses Google, bukan kode
-  sendiri) — verifikasi ulang saat langganan digarap.
+  Play Billing, yang punya jalur deklarasi sendiri di Play Console (tidak
+  perlu dideklarasikan sebagai data yang "dikumpulkan aplikasi", karena
+  diproses Google, bukan kode sendiri) — verifikasi ulang saat langganan
+  digarap.
 - **Foto struk dan catatan suara** (item "Catat otomatis" di
   `docs/TASKS.md` W-10 repo `tanukonomy-web`) — kalau digarap, tambah baris
   "Foto dan video" serta "Berkas audio: rekaman suara/audio" di tabel jenis
-  data, plus jelaskan di kebijakan privasi bahwa berkasnya diproses untuk
-  jadi draf CATAT lalu (idealnya) dihapus, bukan disimpan mentah selamanya.
+  data.
 
-## Sebelum mengisi ulang formulir untuk rilis "Nanti"
+## Sebelum mengisi ulang formulir untuk sinkronisasi data keuangan ("Nanti")
 
-1. Backend sinkronisasi sudah pakai HTTPS/TLS untuk semua panggilannya.
-2. Penyedia analitik sudah dipilih dan dicek halaman pemetaan Data safety-nya.
-3. Hapus akun bisa dilakukan dari dalam aplikasi.
-4. Kebijakan privasi (`privasi.astro`/`en/privacy.astro`) diperbarui
-   menyebut penyedia analitik dan server sinkronisasi yang sungguhan
-   dipakai (§6–§7 sudah menjanjikan ini; P-8 di `docs/TASKS.md` repo
+1. ADR baru ditulis untuk arsitektur sinkronisasi (T-8.4 di TASK_LIST) —
+   backend apa, data apa yang boleh keluar perangkat.
+2. Backend sinkronisasi sudah pakai HTTPS/TLS untuk semua panggilannya.
+3. Hapus akun di dalam aplikasi juga menghapus data tersinkronnya di server
+   (bukan cuma identitas), dalam tenggat yang disebut kebijakan privasi.
+4. Kebijakan privasi (`privasi.astro`/`en/privacy.astro`) dan halaman hapus
+   akun (`hapus-akun.astro`/`en/delete-account.astro`) diperbarui menyebut
+   server sinkronisasi yang sungguhan dipakai (P-8 di `docs/TASKS.md` repo
    `tanukonomy-web` mencatatnya sebagai syarat sebelum fitur aktif).
 5. `LEGAL_EFFECTIVE_DATE` di `src/config.ts` (repo `tanukonomy-web`)
    diperbarui bersamaan.
+
+## Sebelum submit ke Play Console (rilis ini)
+
+1. `android/app/google-services.json` sudah ditaruh pemilik.
+2. Provider **Google** dan **Email/Password** diaktifkan di Firebase
+   Console → Authentication → Sign-in method (dua-duanya, bukan cuma satu).
+3. `FirebaseConfig.googleServerClientId` (`lib/core/config/firebase_config.dart`)
+   diisi dengan OAuth Web client ID dari proyek Firebase yang sama —
+   Google Sign-In di Android tidak akan menghasilkan `idToken` yang valid
+   untuk Firebase tanpa ini.
+4. SHA-1 **dan** SHA-256 dari kunci upload **dan** kunci Play App Signing
+   (Play Console → Setup → App integrity, setelah upload pertama)
+   didaftarkan di Firebase Console → Project settings → Your apps. Kalau
+   cuma SHA debug/upload yang didaftarkan, Google Sign-In gagal di build
+   sungguhan dari Play Store meski lolos saat diuji lokal.
+5. Satu akun email/sandi tester dibuat manual di Firebase Console untuk
+   dicantumkan di App access (opsional, lihat di atas).
+6. Kebijakan privasi `tanukonomy-web` §6/§7 menyebut Firebase Authentication
+   dan Firebase Analytics/Crashlytics secara eksplisit (bukan lagi
+   "penyedia belum dipilih"), dan halaman hapus akun §3 sudah jadi langkah
+   pasti, bukan janji "belum tersedia".

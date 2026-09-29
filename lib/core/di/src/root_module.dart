@@ -3,6 +3,7 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
@@ -20,6 +21,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -100,7 +102,11 @@ abstract final class RootModule {
       // `tutorial/progress`. Bukan data keuangan.
       ..registerLazySingleton<TutorialProgressRepository>(
         () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
-      );
+      )
+      // Identitas opsional (ADR-023). Singleton akar karena status masuk
+      // dibaca dari mana saja (ikon akun di Beranda) tanpa terikat satu
+      // layar/scope.
+      ..registerLazySingleton<AuthRepository>(FirebaseAuthRepositoryImpl.new);
   }
 
   static RouteRegistry _registerRouteRegistry(GetIt container) {
@@ -116,6 +122,8 @@ abstract final class RootModule {
         initialLocation: await _initialLocation(container),
         homeBuilder: (context, state) => AppShellPage(startAction: state.extra is ShellStartAction ? state.extra! as ShellStartAction : null),
         onboardingBuilder: buildOnboardingRoute,
+        // `screen_view` otomatis (ADR-023) -- belum ada event kustom.
+        observers: [AppBootstrap.analyticsObserver],
       ),
     );
   }

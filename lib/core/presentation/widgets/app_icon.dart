@@ -176,6 +176,9 @@ enum IconKey {
 
   /// Info dan tur layar (ADR-021 §3.5).
   info,
+
+  /// Akun opsional (ADR-023): masuk, keluar, hapus akun.
+  account,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -247,6 +250,8 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.dropdown: Icons.arrow_drop_down,
   IconKey.close: Icons.close,
   IconKey.info: Icons.info_outline,
+  // Belum ada padanan pixel-art; lihat ADR-023 §7.
+  IconKey.account: Icons.person_outline,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

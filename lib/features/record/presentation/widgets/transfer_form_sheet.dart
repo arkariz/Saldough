@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -14,9 +16,6 @@ import 'package:saldough/features/record/presentation/widgets/record_note_field.
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
-/// Nominal cepat yang ditawarkan formulir transfer (rupiah, bukan sen).
-const _quickAmounts = [500000, 1000000, 5000000];
 
 /// Formulir catat transfer (FR-TXN-003) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [TransferRecorded] lewat
@@ -83,8 +82,8 @@ class TransferFormSheet extends StatefulWidget {
   final String? initialBudgetItemId;
 
   /// Nominal pra-isi dalam sen (pintasan pos anggaran: sisa pos itu).
-  /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau bukan
-  /// rupiah utuh (kolom nominal hanya menerima rupiah utuh).
+  /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau tidak
+  /// bisa ditulis utuh di kolom nominal (`isMoneyInputExact`).
   final int? initialAmountSen;
 
   /// Dompet TUJUAN pra-terpilih (pintasan pos transfer anggaran: dompet
@@ -112,13 +111,13 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       _toWalletId = widget.initialToWalletId;
       _budgetItemId = widget.initialBudgetItemId;
       final amount = widget.initialAmountSen;
-      if (amount != null && amount > 0 && amount % 100 == 0) {
-        _amountController.text = formatRecordAmount(amount ~/ 100);
+      if (amount != null && amount > 0 && isMoneyInputExact(amount)) {
+        _amountController.text = formatMoneyInput(amount);
       }
       return;
     }
     _budgetItemId = tx.budgetItemId;
-    _amountController.text = formatRecordAmount(tx.amount ~/ 100);
+    _amountController.text = formatMoneyInput(tx.amount);
     // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
     // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
     if (widget.initial != null) _date = tx.date;
@@ -134,10 +133,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
     super.dispose();
   }
 
-  int? get _amountSen {
-    final rupiah = parseRecordAmount(_amountController.text);
-    return rupiah == null ? null : rupiah * 100;
-  }
+  int? get _amountSen => parseMoneyInput(_amountController.text);
 
   /// FR-TXN-003: menolak transfer ke dompet yang sama dengan asalnya.
   /// Ditegakkan di sini (tombol dinonaktifkan), bukan hanya lewat `assert`
@@ -212,7 +208,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
             controller: _amountController,
             label: t.record.amountLabelTransfer,
             kind: TransactionKind.transfer,
-            quickAmounts: _quickAmounts,
+            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.incomeOrTransfer),
             autofocus: true,
             onChanged: () => setState(() {}),
           ),

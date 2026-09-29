@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/rupiah_input.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 
 /// Kolom teks polos di dalam slab — nama anggaran dan nama pos.
 class BudgetTextField extends StatelessWidget {
@@ -59,7 +60,7 @@ class BudgetTextField extends StatelessWidget {
   }
 }
 
-/// Kolom nominal rupiah utuh (berpemisah ribuan). Nilai dibaca pemanggil
+/// Kolom nominal mata uang aktif (berpemisah ribuan, ADR-025). Nilai dibaca pemanggil
 /// lewat [senOf] — satuan sen, sesuai aturan uang proyek.
 class BudgetMoneyField extends StatelessWidget {
   /// Membuat [BudgetMoneyField].
@@ -75,13 +76,11 @@ class BudgetMoneyField extends StatelessWidget {
   final bool large;
 
   /// Nominal dalam sen dari isi [controller], atau `null` kalau kosong/nol.
-  static int? senOf(TextEditingController controller) {
-    final rupiah = parseRupiahInput(controller.text);
-    return rupiah == null ? null : rupiah * 100;
-  }
+  static int? senOf(TextEditingController controller) => parseMoneyInput(controller.text);
 
-  /// Teks awal untuk [sen]: kosong kalau nol atau bukan rupiah utuh.
-  static String initialText(int? sen) => sen == null || sen <= 0 || sen % 100 != 0 ? '' : formatRupiahInput(sen ~/ 100);
+  /// Teks awal untuk [sen]: kosong kalau nol atau tidak bisa ditulis utuh
+  /// di kolom (lihat `isMoneyInputExact`).
+  static String initialText(int? sen) => sen == null || sen <= 0 || !isMoneyInputExact(sen) ? '' : formatMoneyInput(sen);
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +95,13 @@ class BudgetMoneyField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
       child: Row(
         children: [
-          Text('Rp', style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
+          Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: TextField(
               controller: controller,
-              keyboardType: TextInputType.number,
-              inputFormatters: [RupiahInputFormatter()],
+              keyboardType: moneyKeyboardType,
+              inputFormatters: [MoneyInputFormatter()],
               cursorColor: colors.accent,
               style: style,
               onChanged: onChanged,

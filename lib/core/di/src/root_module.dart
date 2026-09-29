@@ -3,6 +3,7 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
@@ -102,6 +103,10 @@ abstract final class RootModule {
       // `tutorial/progress`. Bukan data keuangan.
       ..registerLazySingleton<TutorialProgressRepository>(
         () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Pilihan mata uang (ADR-025 §3.5), kunci `settings/currency`.
+      ..registerLazySingleton<CurrencyPreferenceRepository>(
+        () => CurrencyPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Identitas opsional (ADR-023). Singleton akar karena status masuk
       // dibaca dari mana saja (ikon akun di Beranda) tanpa terikat satu

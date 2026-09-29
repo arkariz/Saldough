@@ -4,6 +4,7 @@ import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:saldough/app.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/di/di.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
@@ -36,6 +37,12 @@ Future<void> main() async {
 
   await LocaleSettings.useDeviceLocale();
   await di.run(rootGetIt);
+
+  // ADR-025 §3.5: mata uang harus sudah terpasang sebelum layar pertama
+  // memformat nominal. Gagal dibaca berarti bawaan (IDR).
+  ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
+    (_) => AppCurrency.idr,
+  );
 
   registerEffectHandlers();
 

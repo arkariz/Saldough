@@ -52,6 +52,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tour$en tour = _Translations$tour$en._(_root);
 	@override late final _Translations$info$en info = _Translations$info$en._(_root);
 	@override late final _Translations$account$en account = _Translations$account$en._(_root);
+	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 }
 
 // Path: app
@@ -799,6 +800,23 @@ class _Translations$account$en extends Translations$account$id {
 	@override late final _Translations$account$errors$en errors = _Translations$account$errors$en._(_root);
 }
 
+// Path: currency
+class _Translations$currency$en extends Translations$currency$id {
+	_Translations$currency$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get settingsTitle => 'Settings';
+	@override String get label => 'Currency';
+	@override String get pickerTitle => 'Choose currency';
+	@override String changeTitle({required Object code}) => 'Switch to ${code}?';
+	@override String changeBody({required Object before, required Object after}) => 'Amounts you\'ve already recorded aren\'t converted; only the symbol changes. For example, ${before} will show as ${after}.';
+	@override String get changeAction => 'Switch';
+	@override String changedMessage({required Object code}) => 'Currency switched to ${code}.';
+	@override late final _Translations$currency$names$en names = _Translations$currency$names$en._(_root);
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -811,6 +829,29 @@ class _Translations$account$errors$en extends Translations$account$errors$id {
 	@override String get tooManyRequests => 'Too many attempts. Wait a moment, then try again.';
 	@override String get userDisabled => 'This account has been disabled.';
 	@override String get other => 'Couldn\'t sign in. Try again.';
+}
+
+// Path: currency.names
+class _Translations$currency$names$en extends Translations$currency$names$id {
+	_Translations$currency$names$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get idr => 'Indonesian Rupiah';
+	@override String get usd => 'US Dollar';
+	@override String get eur => 'Euro';
+	@override String get gbp => 'British Pound';
+	@override String get jpy => 'Japanese Yen';
+	@override String get cny => 'Chinese Yuan';
+	@override String get krw => 'South Korean Won';
+	@override String get inr => 'Indian Rupee';
+	@override String get sgd => 'Singapore Dollar';
+	@override String get myr => 'Malaysian Ringgit';
+	@override String get thb => 'Thai Baht';
+	@override String get php => 'Philippine Peso';
+	@override String get vnd => 'Vietnamese Dong';
+	@override String get aud => 'Australian Dollar';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1455,6 +1496,27 @@ extension on TranslationsEn {
 			'account.errors.tooManyRequests' => 'Too many attempts. Wait a moment, then try again.',
 			'account.errors.userDisabled' => 'This account has been disabled.',
 			'account.errors.other' => 'Couldn\'t sign in. Try again.',
+			'currency.settingsTitle' => 'Settings',
+			'currency.label' => 'Currency',
+			'currency.pickerTitle' => 'Choose currency',
+			'currency.changeTitle' => ({required Object code}) => 'Switch to ${code}?',
+			'currency.changeBody' => ({required Object before, required Object after}) => 'Amounts you\'ve already recorded aren\'t converted; only the symbol changes. For example, ${before} will show as ${after}.',
+			'currency.changeAction' => 'Switch',
+			'currency.changedMessage' => ({required Object code}) => 'Currency switched to ${code}.',
+			'currency.names.idr' => 'Indonesian Rupiah',
+			'currency.names.usd' => 'US Dollar',
+			'currency.names.eur' => 'Euro',
+			'currency.names.gbp' => 'British Pound',
+			'currency.names.jpy' => 'Japanese Yen',
+			'currency.names.cny' => 'Chinese Yuan',
+			'currency.names.krw' => 'South Korean Won',
+			'currency.names.inr' => 'Indian Rupee',
+			'currency.names.sgd' => 'Singapore Dollar',
+			'currency.names.myr' => 'Malaysian Ringgit',
+			'currency.names.thb' => 'Thai Baht',
+			'currency.names.php' => 'Philippine Peso',
+			'currency.names.vnd' => 'Vietnamese Dong',
+			'currency.names.aud' => 'Australian Dollar',
 			_ => null,
 		};
 	}

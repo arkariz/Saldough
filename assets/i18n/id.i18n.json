@@ -658,5 +658,30 @@
       "userDisabled": "Akun ini dinonaktifkan.",
       "other": "Gagal masuk. Coba lagi."
     }
+  },
+  "currency": {
+    "settingsTitle": "Pengaturan",
+    "label": "Mata uang",
+    "pickerTitle": "Pilih mata uang",
+    "changeTitle": "Ganti ke $code?",
+    "changeBody": "Angka yang sudah dicatat tidak dikonversi, hanya simbolnya yang berganti. Contoh: $before akan tampil sebagai $after.",
+    "changeAction": "Ganti",
+    "changedMessage": "Mata uang diganti ke $code.",
+    "names": {
+      "idr": "Rupiah Indonesia",
+      "usd": "Dolar AS",
+      "eur": "Euro",
+      "gbp": "Pound Inggris",
+      "jpy": "Yen Jepang",
+      "cny": "Yuan Tiongkok",
+      "krw": "Won Korea Selatan",
+      "inr": "Rupee India",
+      "sgd": "Dolar Singapura",
+      "myr": "Ringgit Malaysia",
+      "thb": "Baht Thailand",
+      "php": "Peso Filipina",
+      "vnd": "Dong Vietnam",
+      "aud": "Dolar Australia"
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/active_currency.dart';
 import 'package:saldough/core/presentation/spotlight/tutorial_info_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
@@ -106,7 +107,7 @@ class AppHeroCard extends StatelessWidget {
   }
 }
 
-/// Angka utama [AppHeroCard]: awalan "Rp" kecil redup dan angka besar,
+/// Angka utama [AppHeroCard]: awalan simbol mata uang kecil redup dan angka besar,
 /// mengecil sendiri kalau tidak muat. [color] mewarnai angkanya (mis. merah
 /// untuk saldo negatif); bawaan warna teks utama.
 class HeroAmount extends StatelessWidget {
@@ -123,8 +124,9 @@ class HeroAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final match = RegExp(r'^([+−-]?)Rp(.*)$').firstMatch(formatted);
-    final prefix = match == null ? '' : '${match[1]}Rp';
+    final symbol = ActiveCurrency.value.symbol;
+    final match = RegExp('^([+−-]?)${RegExp.escape(symbol)}(.*)\$').firstMatch(formatted);
+    final prefix = match == null ? '' : '${match[1]}$symbol';
     final number = match == null ? formatted : match[2]!;
     final prefixStyle = PixelTypography.tabularMono(context, fontSize: 16, color: color ?? colors.textMuted);
     // Satu `Text.rich`: tetap terbaca sebagai satu nominal utuh (pembaca
@@ -135,7 +137,7 @@ class HeroAmount extends StatelessWidget {
           children: [
             if (prefix.isNotEmpty) ...[
               TextSpan(text: prefix.substring(0, prefix.length - 1), style: prefixStyle),
-              // Jarak "Rp" ke angka lewat `letterSpacing` huruf terakhirnya,
+              // Jarak simbol ke angka lewat `letterSpacing` huruf terakhirnya,
               // bukan spasi, supaya teks nominalnya tetap utuh.
               TextSpan(text: prefix.substring(prefix.length - 1), style: prefixStyle.copyWith(letterSpacing: 4)),
             ],

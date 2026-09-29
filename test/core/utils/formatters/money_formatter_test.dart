@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 
 void main() {
@@ -33,6 +35,50 @@ void main() {
 
     test('mengelompokkan ribuan dengan titik pada nominal besar', () {
       expect(AppMoneyFormatter.format(1583956300), 'Rp15.839.563');
+    });
+  });
+
+  group('AppMoneyFormatter.format mata uang lain (ADR-025)', () {
+    void useCurrency(AppCurrency currency) {
+      ActiveCurrency.notifier.value = currency;
+      addTearDown(() => ActiveCurrency.notifier.value = AppCurrency.idr);
+    }
+
+    test('USD selalu dua desimal, pemisah mengikuti bahasa Indonesia', () {
+      useCurrency(AppCurrency.usd);
+      expect(AppMoneyFormatter.format(123456), r'$1.234,56');
+      expect(AppMoneyFormatter.format(5000), r'$50,00');
+      expect(AppMoneyFormatter.format(0), r'$0,00');
+    });
+
+    test('USD berbahasa Inggris memakai koma ribuan dan titik desimal', () async {
+      useCurrency(AppCurrency.usd);
+      await LocaleSettings.setLocale(AppLocale.en);
+      addTearDown(() => LocaleSettings.setLocale(AppLocale.id));
+      expect(AppMoneyFormatter.format(123456), r'$1,234.56');
+    });
+
+    test('USD negatif tanpa pembulatan, tanda minus U+2212', () {
+      useCurrency(AppCurrency.usd);
+      expect(AppMoneyFormatter.format(-150), r'−$1,50');
+      expect(AppMoneyFormatter.format(-1), r'−$0,01');
+    });
+
+    test('JPY tanpa desimal, dibulatkan setengah ke atas seperti IDR', () {
+      useCurrency(AppCurrency.jpy);
+      expect(AppMoneyFormatter.format(123450), '¥1.235');
+      expect(AppMoneyFormatter.format(-150), '−¥1');
+    });
+
+    test('IDR berbahasa Inggris memakai koma ribuan', () async {
+      await LocaleSettings.setLocale(AppLocale.en);
+      addTearDown(() => LocaleSettings.setLocale(AppLocale.id));
+      expect(AppMoneyFormatter.format(1583956300), 'Rp15,839,563');
+    });
+
+    test('parameter currency hanya menimpa satu panggilan', () {
+      expect(AppMoneyFormatter.format(5000000, currency: AppCurrency.usd), r'$50.000,00');
+      expect(AppMoneyFormatter.format(5000000), 'Rp50.000');
     });
   });
 }

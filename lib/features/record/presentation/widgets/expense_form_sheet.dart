@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
@@ -15,9 +17,6 @@ import 'package:saldough/features/record/presentation/widgets/record_note_field.
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
-/// Nominal cepat yang ditawarkan formulir pengeluaran (rupiah, bukan sen).
-const _quickAmounts = [10000, 50000, 100000];
 
 /// Saran kategori pengeluaran yang sering dipakai.
 List<String> _categorySuggestions() => [
@@ -92,8 +91,8 @@ class ExpenseFormSheet extends StatefulWidget {
   final String? initialBudgetItemId;
 
   /// Nominal pra-isi dalam sen (pintasan pos anggaran: sisa pos itu).
-  /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau bukan
-  /// rupiah utuh (kolom nominal hanya menerima rupiah utuh).
+  /// Diabaikan kalau [initial] terisi, kalau tidak positif, atau kalau tidak
+  /// bisa ditulis utuh di kolom nominal (`isMoneyInputExact`).
   final int? initialAmountSen;
 
   @override
@@ -116,13 +115,13 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
       _walletId = widget.initialWalletId;
       _budgetItemId = widget.initialBudgetItemId;
       final amount = widget.initialAmountSen;
-      if (amount != null && amount > 0 && amount % 100 == 0) {
-        _amountController.text = formatRecordAmount(amount ~/ 100);
+      if (amount != null && amount > 0 && isMoneyInputExact(amount)) {
+        _amountController.text = formatMoneyInput(amount);
       }
       return;
     }
     _budgetItemId = tx.budgetItemId;
-    _amountController.text = formatRecordAmount(tx.amount ~/ 100);
+    _amountController.text = formatMoneyInput(tx.amount);
     // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
     // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
     if (widget.initial != null) _date = tx.date;
@@ -139,10 +138,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     super.dispose();
   }
 
-  int? get _amountSen {
-    final rupiah = parseRecordAmount(_amountController.text);
-    return rupiah == null ? null : rupiah * 100;
-  }
+  int? get _amountSen => parseMoneyInput(_amountController.text);
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
@@ -206,7 +202,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
             controller: _amountController,
             label: t.record.amountLabelExpense,
             kind: TransactionKind.expense,
-            quickAmounts: _quickAmounts,
+            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.expense),
             autofocus: true,
             onChanged: () => setState(() {}),
           ),

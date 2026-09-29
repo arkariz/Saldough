@@ -19,6 +19,12 @@ Flutter, Hive, atau paket infrastruktur lain. Aturan lengkapnya ada di
 Seluruh nominal adalah `int` dalam satuan **sen**, bukan rupiah, dan bukan
 `double`. Pembulatan hanya terjadi saat menampilkan.
 
+"Sen" berarti seperseratus satuan utama **mata uang aktif**. Aplikasi memakai
+satu mata uang untuk seluruh data, dipilih pengguna (bawaan Rupiah); mengganti
+mata uang tidak mengonversi angka, hanya simbol dan formatnya
+([ADR-025](adr/0025-satu-mata-uang-per-aplikasi.md)). Contoh di bawah memakai
+Rupiah.
+
 Aturan ini bukan preferensi gaya. Potongan pajak freelance 2,5% menghasilkan
 pecahan setengah rupiah, dan membulatkannya terlalu dini meleset satu rupiah:
 

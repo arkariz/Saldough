@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -15,6 +16,9 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 /// kontainer akar — setiap modul rute fitur mengambil kontainer induknya
 /// lewat `ScopeProvider.of(context)` sebelum memasang `ScopeWidget`-nya
 /// sendiri (lihat ARCHITECTURE_OVERVIEW.md bagian "Navigasi").
+///
+/// Dibungkus [ActiveCurrencyRebuilder] supaya mengganti mata uang ikut
+/// memperbarui layar yang sudah terbuka (ADR-025 §3.6).
 ///
 /// Juga memasang [SpotlightHost] (tur spotlight, ADR-021) dan tombol menu pengembang (hanya di build debug, T-1.10) lewat
 /// `builder:` `MaterialApp.router`, sehingga muncul di atas layar apa pun.
@@ -34,21 +38,23 @@ class SaldoughApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopeProvider(
-      container: getIt,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        locale: TranslationProvider.of(context).flutterLocale,
-        supportedLocales: AppLocaleUtils.supportedLocales,
-        localizationsDelegates: localizationsDelegates,
-        routerConfig: router,
-        // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
-        // lembar modal (ADR-021 §3.3).
-        builder: (context, child) => SpotlightHost(
-          repository: getIt<TutorialProgressRepository>(),
-          child: _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
+    return ActiveCurrencyRebuilder(
+      child: ScopeProvider(
+        container: getIt,
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          locale: TranslationProvider.of(context).flutterLocale,
+          supportedLocales: AppLocaleUtils.supportedLocales,
+          localizationsDelegates: localizationsDelegates,
+          routerConfig: router,
+          // Lapisan tur spotlight di atas `Navigator`, supaya juga menutupi
+          // lembar modal (ADR-021 §3.3).
+          builder: (context, child) => SpotlightHost(
+            repository: getIt<TutorialProgressRepository>(),
+            child: _WithDebugMenu(router: router, registry: getIt<RouteRegistry>(), child: child),
+          ),
         ),
       ),
     );

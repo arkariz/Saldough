@@ -7,6 +7,7 @@ import 'package:saldough/features/account/di/account_scope.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
 import 'package:saldough/features/account/presentation/widgets/account_avatar.dart';
+import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
 
@@ -33,6 +34,7 @@ Future<void> openAccountPage(BuildContext context) {
 /// Layar Akun (ADR-023, ADR-024). Akun opsional: belum masuk menawarkan
 /// Google (dan email/sandi khusus peninjau di balik tautan); sudah masuk
 /// menampilkan profil, status data, keluar, dan zona bahaya hapus akun.
+/// Keduanya memuat bagian "Pengaturan" (mata uang, ADR-025).
 class AccountPage extends StatefulWidget {
   /// Membuat [AccountPage].
   const AccountPage({super.key});
@@ -178,6 +180,8 @@ class _SignedOutState extends State<_SignedOut> {
             onPressed: state.isBusy ? null : _submitEmail,
           ),
         ],
+        const SizedBox(height: AppSpacing.xl),
+        const CurrencySettingSection(),
       ],
     );
   }
@@ -245,6 +249,8 @@ class _SignedIn extends StatelessWidget {
           label: _busyLabel(t.account.signOutAction, state, AccountAction.signOut),
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
+        const SizedBox(height: AppSpacing.lg),
+        const CurrencySettingSection(),
         const SizedBox(height: AppSpacing.xl),
         Divider(color: colors.divider),
         const SizedBox(height: AppSpacing.md),

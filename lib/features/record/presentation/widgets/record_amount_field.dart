@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/rupiah_input.dart';
-
-/// Memformat [rupiah] (rupiah, bukan sen) dengan pemisah ribuan, untuk
-/// mengisi awal field saat menyunting transaksi tersimpan.
-String formatRecordAmount(int rupiah) => formatRupiahInput(rupiah);
-
-/// Membaca balik teks [RecordAmountField] jadi `int` rupiah, atau `null`
-/// kalau kosong/nol/negatif. Lihat `parseRupiahInput`.
-int? parseRecordAmount(String text) => parseRupiahInput(text);
+import 'package:saldough/core/utils/formatters/money_input.dart';
 
 /// Kartu nominal berpemisah ribuan, dengan pilihan cepat nominal umum
 /// (rujukan visual: `pixel_kas_catat_pengeluaran` bagian "Nominal").
 ///
 /// Dipakai ketiga formulir CATAT. Kop kartu memuat label dan penanda jenis
-/// berwarna ("Uang Keluar"); di bawahnya kotak angka besar dengan awalan "Rp";
+/// berwarna ("Uang Keluar"); di bawahnya kotak angka besar dengan awalan
+/// simbol mata uang aktif (ADR-025); isinya dibaca lewat `parseMoneyInput`;
 /// lalu chip `+10rb` dst. dan "Bersihkan".
 class RecordAmountField extends StatelessWidget {
   /// Membuat [RecordAmountField].
@@ -36,10 +30,10 @@ class RecordAmountField extends StatelessWidget {
   /// Judul kartu, mis. "Nominal Pengeluaran".
   final String label;
 
-  /// Jenis transaksi: mewarnai penanda, awalan "Rp", dan kursor.
+  /// Jenis transaksi: mewarnai penanda, awalan simbol, dan kursor.
   final TransactionKind kind;
 
-  /// Nominal (rupiah, bukan sen) yang ditawarkan sebagai pilihan cepat.
+  /// Nominal (sen) yang ditawarkan sebagai pilihan cepat.
   final List<int> quickAmounts;
 
   /// Fokus otomatis saat formulir dibuka.
@@ -59,8 +53,8 @@ class RecordAmountField extends StatelessWidget {
   }
 
   void _addQuickAmount(int amount) {
-    final current = parseRecordAmount(controller.text) ?? 0;
-    _setText(formatRupiahInput(current + amount));
+    final current = parseMoneyInput(controller.text) ?? 0;
+    _setText(formatMoneyInput(current + amount));
   }
 
   String get _pill => switch (kind) {
@@ -106,14 +100,14 @@ class RecordAmountField extends StatelessWidget {
             decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                Text('Rp', style: PixelTypography.tabularMono(context, fontSize: 16, color: ink)),
+                Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: ink)),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: TextField(
                     controller: controller,
                     autofocus: autofocus,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [RupiahInputFormatter()],
+                    keyboardType: moneyKeyboardType,
+                    inputFormatters: [MoneyInputFormatter()],
                     cursorColor: ink,
                     style: bigStyle,
                     decoration: InputDecoration(
@@ -137,7 +131,7 @@ class RecordAmountField extends StatelessWidget {
             runSpacing: AppSpacing.xs,
             children: [
               for (final amount in quickAmounts)
-                AppQuickChip(label: formatRupiahShort(amount), onTap: () => _addQuickAmount(amount)),
+                AppQuickChip(label: formatQuickAmount(amount), onTap: () => _addQuickAmount(amount)),
               AppQuickChip(
                 label: t.record.clearAmountAction,
                 color: colors.tinted(colors.pending, 0.22),

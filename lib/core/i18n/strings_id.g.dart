@@ -54,6 +54,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$tour$id tour = Translations$tour$id.internal(_root);
 	late final Translations$info$id info = Translations$info$id.internal(_root);
 	late final Translations$account$id account = Translations$account$id.internal(_root);
+	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 }
 
 // Path: app
@@ -2056,6 +2057,38 @@ class Translations$account$id {
 	late final Translations$account$errors$id errors = Translations$account$errors$id.internal(_root);
 }
 
+// Path: currency
+class Translations$currency$id {
+	Translations$currency$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pengaturan'
+	String get settingsTitle => 'Pengaturan';
+
+	/// id: 'Mata uang'
+	String get label => 'Mata uang';
+
+	/// id: 'Pilih mata uang'
+	String get pickerTitle => 'Pilih mata uang';
+
+	/// id: 'Ganti ke $code?'
+	String changeTitle({required Object code}) => 'Ganti ke ${code}?';
+
+	/// id: 'Angka yang sudah dicatat tidak dikonversi, hanya simbolnya yang berganti. Contoh: $before akan tampil sebagai $after.'
+	String changeBody({required Object before, required Object after}) => 'Angka yang sudah dicatat tidak dikonversi, hanya simbolnya yang berganti. Contoh: ${before} akan tampil sebagai ${after}.';
+
+	/// id: 'Ganti'
+	String get changeAction => 'Ganti';
+
+	/// id: 'Mata uang diganti ke $code.'
+	String changedMessage({required Object code}) => 'Mata uang diganti ke ${code}.';
+
+	late final Translations$currency$names$id names = Translations$currency$names$id.internal(_root);
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2078,6 +2111,57 @@ class Translations$account$errors$id {
 
 	/// id: 'Gagal masuk. Coba lagi.'
 	String get other => 'Gagal masuk. Coba lagi.';
+}
+
+// Path: currency.names
+class Translations$currency$names$id {
+	Translations$currency$names$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Rupiah Indonesia'
+	String get idr => 'Rupiah Indonesia';
+
+	/// id: 'Dolar AS'
+	String get usd => 'Dolar AS';
+
+	/// id: 'Euro'
+	String get eur => 'Euro';
+
+	/// id: 'Pound Inggris'
+	String get gbp => 'Pound Inggris';
+
+	/// id: 'Yen Jepang'
+	String get jpy => 'Yen Jepang';
+
+	/// id: 'Yuan Tiongkok'
+	String get cny => 'Yuan Tiongkok';
+
+	/// id: 'Won Korea Selatan'
+	String get krw => 'Won Korea Selatan';
+
+	/// id: 'Rupee India'
+	String get inr => 'Rupee India';
+
+	/// id: 'Dolar Singapura'
+	String get sgd => 'Dolar Singapura';
+
+	/// id: 'Ringgit Malaysia'
+	String get myr => 'Ringgit Malaysia';
+
+	/// id: 'Baht Thailand'
+	String get thb => 'Baht Thailand';
+
+	/// id: 'Peso Filipina'
+	String get php => 'Peso Filipina';
+
+	/// id: 'Dong Vietnam'
+	String get vnd => 'Dong Vietnam';
+
+	/// id: 'Dolar Australia'
+	String get aud => 'Dolar Australia';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -2722,6 +2806,27 @@ extension on Translations {
 			'account.errors.tooManyRequests' => 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.',
 			'account.errors.userDisabled' => 'Akun ini dinonaktifkan.',
 			'account.errors.other' => 'Gagal masuk. Coba lagi.',
+			'currency.settingsTitle' => 'Pengaturan',
+			'currency.label' => 'Mata uang',
+			'currency.pickerTitle' => 'Pilih mata uang',
+			'currency.changeTitle' => ({required Object code}) => 'Ganti ke ${code}?',
+			'currency.changeBody' => ({required Object before, required Object after}) => 'Angka yang sudah dicatat tidak dikonversi, hanya simbolnya yang berganti. Contoh: ${before} akan tampil sebagai ${after}.',
+			'currency.changeAction' => 'Ganti',
+			'currency.changedMessage' => ({required Object code}) => 'Mata uang diganti ke ${code}.',
+			'currency.names.idr' => 'Rupiah Indonesia',
+			'currency.names.usd' => 'Dolar AS',
+			'currency.names.eur' => 'Euro',
+			'currency.names.gbp' => 'Pound Inggris',
+			'currency.names.jpy' => 'Yen Jepang',
+			'currency.names.cny' => 'Yuan Tiongkok',
+			'currency.names.krw' => 'Won Korea Selatan',
+			'currency.names.inr' => 'Rupee India',
+			'currency.names.sgd' => 'Dolar Singapura',
+			'currency.names.myr' => 'Ringgit Malaysia',
+			'currency.names.thb' => 'Baht Thailand',
+			'currency.names.php' => 'Peso Filipina',
+			'currency.names.vnd' => 'Dong Vietnam',
+			'currency.names.aud' => 'Dolar Australia',
 			_ => null,
 		};
 	}

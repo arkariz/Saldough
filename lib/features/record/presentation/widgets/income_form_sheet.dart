@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -15,11 +17,6 @@ import 'package:saldough/features/record/presentation/widgets/record_note_field.
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
-/// Nominal cepat yang ditawarkan formulir pemasukan (rupiah, bukan sen) --
-/// mengikuti pola pilihan cepat yang sungguhan terpasang di rujukan visual
-/// `pixel_kas_catat_pemasukan`.
-const _quickAmounts = [500000, 1000000, 5000000];
 
 /// Saran kategori pemasukan yang sering dipakai.
 List<String> _categorySuggestions() => [
@@ -98,7 +95,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       _walletId = widget.initialWalletId;
       return;
     }
-    _amountController.text = formatRecordAmount(tx.amount ~/ 100);
+    _amountController.text = formatMoneyInput(tx.amount);
     // Tanggal HANYA diambil dari `initial` (mode sunting) -- "Catat lagi"
     // (`prefill`) tetap mencatat hari ini, bukan tanggal transaksi sumber.
     if (widget.initial != null) _date = tx.date;
@@ -115,10 +112,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
     super.dispose();
   }
 
-  int? get _amountSen {
-    final rupiah = parseRecordAmount(_amountController.text);
-    return rupiah == null ? null : rupiah * 100;
-  }
+  int? get _amountSen => parseMoneyInput(_amountController.text);
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
@@ -176,7 +170,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
             controller: _amountController,
             label: t.record.amountLabelIncome,
             kind: TransactionKind.income,
-            quickAmounts: _quickAmounts,
+            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.incomeOrTransfer),
             autofocus: true,
             onChanged: () => setState(() {}),
           ),

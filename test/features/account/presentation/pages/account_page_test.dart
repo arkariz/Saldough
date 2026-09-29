@@ -3,6 +3,8 @@ import 'package:di/di.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/account/presentation/pages/account_page.dart';
@@ -17,7 +19,11 @@ void main() {
 
   Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn}) async {
     repository = FakeAuthRepository(signedIn: signedIn);
-    final container = GetIt.asNewInstance()..registerSingleton<AuthRepository>(repository);
+    final container = GetIt.asNewInstance()
+      ..registerSingleton<AuthRepository>(repository)
+      ..registerSingleton<CurrencyPreferenceRepository>(
+        CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      );
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
@@ -80,5 +86,28 @@ void main() {
 
     expect(repository.deletePasswords, [null, 'rahasia']);
     expect(find.text(t.account.signedOutTitle), findsOneWidget);
+  });
+
+  testWidgets('ganti mata uang: pilih, lihat contoh tanpa konversi, konfirmasi', (tester) async {
+    addTearDown(() => ActiveCurrency.notifier.value = AppCurrency.idr);
+    await pumpAccount(tester);
+
+    final setting = find.byKey(const ValueKey('currency-setting'));
+    await tester.ensureVisible(setting);
+    expect(find.text('IDR · ${t.currency.names.idr}'), findsOneWidget);
+
+    await tester.tap(setting);
+    await tester.pumpAndSettle();
+    final usd = find.byKey(const ValueKey('currency-option-USD'));
+    await tester.ensureVisible(usd);
+    await tester.tap(usd);
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.currency.changeBody(before: 'Rp50.000', after: r'$50.000,00')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('currency-change-confirm')));
+    await tester.pumpAndSettle();
+
+    expect(ActiveCurrency.value, AppCurrency.usd);
+    expect(find.text('USD · ${t.currency.names.usd}'), findsOneWidget);
   });
 }

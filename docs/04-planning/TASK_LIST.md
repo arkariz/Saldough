@@ -37,7 +37,7 @@ Terakhir diperbarui: 28 September 2026.
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 5 | 4 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store; T-8.5 (akun lebih matang, ADR-024) selesai |
+| 8 — Tindak lanjut pasca-MVP | 6 | 5 | Berjalan -- T-8.3 (ganti nama) menunggu prasyarat pemilik; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) kodenya selesai, menunggu setelan Firebase Console pemilik sebelum submit Play Store; T-8.5 (akun lebih matang, ADR-024) selesai; T-8.6 (mata uang, ADR-025) selesai |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -1338,6 +1338,20 @@ seluruh fitur di atasnya menghasilkan data.
       onboarding → "Sudah punya akun? Masuk" → layar Akun, form email, dan
       validasi kosong. **Belum diverifikasi agen:** masuk Google/email
       sungguhan dan hapus akun (butuh kredensial asli — dicoba pemilik).
+- [x] **T-8.6** Dukungan mata uang selain Rupiah (29 Sep 2026) —
+      [ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md).
+      Satu mata uang untuk seluruh aplikasi (14 pilihan, bawaan IDR),
+      dipilih di layar Akun bagian "Pengaturan", tanpa konversi saat diganti
+      (dialog menampilkan contoh `Rp50.000 → $50.000,00`). Satuan simpanan
+      tetap sen, jadi tanpa migrasi data. Pemisah ribuan/desimal mengikuti
+      bahasa aplikasi. Kolom nominal CATAT, saldo awal dompet, dan
+      `BudgetMoneyField` menerima desimal untuk mata uang berdesimal;
+      pilihan cepat dihitung dari langkah per mata uang (IDR tetap sama
+      persis). `flutter analyze` tanpa isu baru, 605 uji lulus; uji
+      pembangun ulang terbukti merah tanpa penandaan ulangnya. **Belum:**
+      pertanyaan mata uang di onboarding, dan klaim situs `tanukonomy-web`.
+      **Belum diverifikasi agen di emulator:** keyboard desimal dan tampilan
+      layar Akun (dicoba pemilik).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

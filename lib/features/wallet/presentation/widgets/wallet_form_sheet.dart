@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/core/utils/formatters/rupiah_input.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Panjang nama dompet maksimum (rujukan visual: "Maks. 24 karakter").
 const walletNameMaxLength = 24;
-
-/// Nominal cepat saldo awal (rupiah, bukan sen), sesuai rujukan visual.
-const _quickAmounts = [100000, 500000, 1000000, 5000000];
 
 /// Hasil formulir dompet, dikembalikan lewat `Navigator.pop`; `null` berarti
 /// dibatalkan.
@@ -95,10 +93,10 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
     _nameController.text = wallet.name;
     _iconKey = wallet.iconKey;
     _isActive = wallet.isActive;
-    // Hanya saldo awal yang terwakili kolom rupiah utuh yang diisi; yang lain
+    // Hanya saldo awal yang bisa ditulis utuh di kolom yang diisi; yang lain
     // dibiarkan kosong dan tidak akan dikirim kecuali disentuh.
-    if (wallet.initialBalance >= 0 && wallet.initialBalance % 100 == 0) {
-      _balanceController.text = wallet.initialBalance == 0 ? '' : formatRupiahInput(wallet.initialBalance ~/ 100);
+    if (wallet.initialBalance >= 0 && isMoneyInputExact(wallet.initialBalance)) {
+      _balanceController.text = wallet.initialBalance == 0 ? '' : formatMoneyInput(wallet.initialBalance);
     }
   }
 
@@ -111,8 +109,8 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
 
   bool get _canSave => _nameController.text.trim().isNotEmpty;
 
-  void _setBalance(int rupiah) {
-    final text = rupiah <= 0 ? '' : formatRupiahInput(rupiah);
+  void _setBalance(int sen) {
+    final text = sen <= 0 ? '' : formatMoneyInput(sen);
     setState(() {
       _balanceTouched = true;
       _balanceController.value = TextEditingValue(
@@ -124,7 +122,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
 
   void _save() {
     if (!_canSave) return;
-    final sen = (parseRupiahInput(_balanceController.text) ?? 0) * 100;
+    final sen = parseMoneyInput(_balanceController.text) ?? 0;
     Navigator.of(context).pop(
       WalletFormSaved(
         name: _nameController.text.trim(),
@@ -231,13 +229,13 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                       decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
                       child: Row(
                         children: [
-                          Text('Rp', style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
+                          Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
                           const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: TextField(
                               controller: _balanceController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [RupiahInputFormatter()],
+                              keyboardType: moneyKeyboardType,
+                              inputFormatters: [MoneyInputFormatter()],
                               cursorColor: colors.accent,
                               style: bigStyle,
                               onChanged: (_) => setState(() => _balanceTouched = true),
@@ -268,10 +266,10 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 spacing: AppSpacing.xs,
                 runSpacing: AppSpacing.xs,
                 children: [
-                  for (final amount in _quickAmounts)
+                  for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
                     AppQuickChip(
-                      label: formatRupiahShort(amount),
-                      onTap: () => _setBalance((parseRupiahInput(_balanceController.text) ?? 0) + amount),
+                      label: formatQuickAmount(amount),
+                      onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
                     ),
                   AppQuickChip(
                     label: t.record.clearAmountAction,

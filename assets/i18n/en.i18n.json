@@ -658,5 +658,30 @@
       "userDisabled": "This account has been disabled.",
       "other": "Couldn't sign in. Try again."
     }
+  },
+  "currency": {
+    "settingsTitle": "Settings",
+    "label": "Currency",
+    "pickerTitle": "Choose currency",
+    "changeTitle": "Switch to $code?",
+    "changeBody": "Amounts you've already recorded aren't converted; only the symbol changes. For example, $before will show as $after.",
+    "changeAction": "Switch",
+    "changedMessage": "Currency switched to $code.",
+    "names": {
+      "idr": "Indonesian Rupiah",
+      "usd": "US Dollar",
+      "eur": "Euro",
+      "gbp": "British Pound",
+      "jpy": "Japanese Yen",
+      "cny": "Chinese Yuan",
+      "krw": "South Korean Won",
+      "inr": "Indian Rupee",
+      "sgd": "Singapore Dollar",
+      "myr": "Malaysian Ringgit",
+      "thb": "Thai Baht",
+      "php": "Philippine Peso",
+      "vnd": "Vietnamese Dong",
+      "aud": "Australian Dollar"
+    }
   }
 }

@@ -60,6 +60,13 @@ ADR-023, proyek terpisah yang jauh lebih besar; tulis ADR baru begitu
 desainnya ada, wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti
 dengan peringatan, tanpa penggabungan), jangan menebak di kode.
 
+**Mata uang (T-8.6):** satu mata uang untuk seluruh aplikasi, bawaan IDR,
+dipilih di layar Akun —
+[ADR-025](../docs/02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md).
+Nominal tetap `int` sen (seperseratus satuan utama). Tampilkan lewat
+`AppMoneyFormatter`, input lewat `money_input.dart`; jangan menulis `Rp`
+atau simbol lain langsung di widget.
+
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah
 dihapus, dan kini repositori hanya memuat model **Dompet + Transaksi +

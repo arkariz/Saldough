@@ -2,6 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
@@ -14,10 +16,14 @@ AuthenticationFailure _auth(FailureCode code) => AuthenticationFailure(code: cod
 
 void main() {
   late FakeAuthRepository repository;
+  late CurrencyPreferenceRepository currencyRepository;
 
-  setUp(() => repository = FakeAuthRepository());
+  setUp(() {
+    repository = FakeAuthRepository();
+    currencyRepository = CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage());
+  });
 
-  AccountBloc buildBloc() => AccountBloc(authRepository: repository);
+  AccountBloc buildBloc() => AccountBloc(authRepository: repository, currencyRepository: currencyRepository);
 
   String? messageOf(AccountState state) => (state.effect as ShowSnackBarEffect?)?.message;
   FeedbackSeverity? severityOf(AccountState state) => (state.effect as ShowSnackBarEffect?)?.severity;
@@ -158,4 +164,30 @@ void main() {
       isA<AccountState>().having((s) => s.user, 'user', isNull),
     ],
   );
+
+  group('mata uang (ADR-025)', () {
+    tearDown(() => ActiveCurrency.notifier.value = AppCurrency.idr);
+
+    blocTest<AccountBloc, AccountState>(
+      'menyimpan pilihan, memasang mata uang aktif, lalu memberi pesan sukses',
+      build: buildBloc,
+      act: (bloc) => bloc.add(const AccountCurrencyChangeRequested(AppCurrency.usd)),
+      expect: () => [
+        isA<AccountState>()
+            .having(messageOf, 'pesan', t.currency.changedMessage(code: 'USD'))
+            .having(severityOf, 'severity', FeedbackSeverity.success),
+      ],
+      verify: (_) async {
+        expect(ActiveCurrency.value, AppCurrency.usd);
+        expect((await currencyRepository.load()).getOrElse((_) => AppCurrency.idr), AppCurrency.usd);
+      },
+    );
+
+    blocTest<AccountBloc, AccountState>(
+      'memilih mata uang yang sedang aktif tidak melakukan apa-apa',
+      build: buildBloc,
+      act: (bloc) => bloc.add(const AccountCurrencyChangeRequested(AppCurrency.idr)),
+      expect: () => <AccountState>[],
+    );
+  });
 }

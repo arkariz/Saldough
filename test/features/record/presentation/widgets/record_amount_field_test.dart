@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 
 void main() {
@@ -19,7 +20,7 @@ void main() {
       await tester.pump();
 
       expect(controller.text, '5.000.000');
-      expect(parseRecordAmount(controller.text), 5000000);
+      expect(parseMoneyInput(controller.text), 500000000);
     });
 
     testWidgets('chip pilihan cepat menambah ke nilai yang sudah terurai, lalu memformat ulang', (tester) async {
@@ -31,7 +32,7 @@ void main() {
               controller: controller,
               label: 'Nominal',
               kind: TransactionKind.expense,
-              quickAmounts: const [10000, 50000],
+              quickAmounts: const [1000000, 5000000],
             ),
           ),
         ),
@@ -45,7 +46,7 @@ void main() {
       await tester.pump();
 
       expect(controller.text, '30.000');
-      expect(parseRecordAmount(controller.text), 30000);
+      expect(parseMoneyInput(controller.text), 3000000);
     });
   });
 
@@ -58,7 +59,7 @@ void main() {
             controller: controller,
             label: 'Nominal',
             kind: TransactionKind.expense,
-            quickAmounts: const [10000, 50000, 100000],
+            quickAmounts: const [1000000, 5000000, 10000000],
           ),
         ),
       ),
@@ -66,16 +67,5 @@ void main() {
 
     final ys = ['+10rb', '+50rb', '+100rb'].map((l) => tester.getTopLeft(find.text(l)).dy).toSet();
     expect(ys, hasLength(1), reason: 'Container(alignment) di dalam Wrap membuat chip melebar penuh dan bertumpuk');
-  });
-
-  group('parseRecordAmount', () {
-    test('membaca balik teks berpemisah ribuan jadi int rupiah', () {
-      expect(parseRecordAmount('5.000.000'), 5000000);
-    });
-
-    test('mengembalikan null untuk teks kosong, nol, atau negatif', () {
-      expect(parseRecordAmount(''), isNull);
-      expect(parseRecordAmount('0'), isNull);
-    });
   });
 }

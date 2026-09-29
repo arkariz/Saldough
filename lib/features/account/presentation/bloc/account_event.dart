@@ -55,3 +55,13 @@ final class AccountDeletionRequested extends AccountEvent {
   /// [AccountState.needsPassword] meminta.
   final String? password;
 }
+
+/// Mata uang baru dipilih dan dikonfirmasi di bagian "Pengaturan"
+/// (ADR-025 §3.6).
+final class AccountCurrencyChangeRequested extends AccountEvent {
+  /// Membuat [AccountCurrencyChangeRequested].
+  const AccountCurrencyChangeRequested(this.currency);
+
+  /// Mata uang yang dipilih.
+  final AppCurrency currency;
+}

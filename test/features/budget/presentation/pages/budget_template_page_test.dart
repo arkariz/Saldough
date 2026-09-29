@@ -21,9 +21,11 @@ import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 
 T _right<T>(Either<Failure, T> result) => result.getOrElse((_) => throw StateError('expected Right'));
@@ -54,6 +56,7 @@ void main() {
     budgetRepository = BudgetRepositoryImpl(storage: storage);
     templateRepository = BudgetTemplateRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)

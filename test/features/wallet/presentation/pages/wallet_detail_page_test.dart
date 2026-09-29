@@ -16,9 +16,11 @@ import 'package:saldough/features/transaction/presentation/pages/transaction_det
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 
 /// Uji T-2.8 (FR-WAL-004, FR-REC-002): layar rincian dompet -- info dompet,
@@ -38,6 +40,7 @@ void main() {
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))

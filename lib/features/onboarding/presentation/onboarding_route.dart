@@ -25,7 +25,11 @@ Widget buildOnboardingRoute(BuildContext context, GoRouterState state) {
       if (!context.mounted) return;
       context.go(
         AppRouteRegistry.homePath,
-        extra: outcome == OnboardingOutcome.createWallet ? ShellStartAction.createWallet : null,
+        extra: switch (outcome) {
+          OnboardingOutcome.createWallet => ShellStartAction.createWallet,
+          OnboardingOutcome.signIn => ShellStartAction.openAccount,
+          OnboardingOutcome.dismissed => null,
+        },
       );
     },
   );

@@ -50,9 +50,15 @@ Crashlytics), `lib/features/account/` (layar Akun, ikon di app bar
 Beranda). Ini pertama kalinya aplikasi memanggil jaringan; syarat sebelum
 submit Play Store (setelan Firebase Console, bukan kode) ada di
 `docs/04-planning/PLAY_DATA_SAFETY.md`.
+**Akun tetap opsional** (tanpa gerbang login) dan data lokal milik
+perangkat, bukan akun —
+[ADR-024](../docs/02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
+(29 Sep 2026, T-8.5). Galat auth dipetakan ke `AuthFailureCodes`, teksnya
+di i18n `account.errors.*`, bukan di lapisan data.
 **Sinkronisasi data keuangan ke server belum ada** — di luar cakupan
 ADR-023, proyek terpisah yang jauh lebih besar; tulis ADR baru begitu
-desainnya ada, jangan menebak di kode.
+desainnya ada, wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti
+dengan peringatan, tanpa penggabungan), jangan menebak di kode.
 
 Cutover Fase 3 selesai: kode Saldough 1.0 (`cycle`, `card`, `investment`,
 `grocery`, `income`, worklog lama, `shared/goal`, `shared/income`) sudah

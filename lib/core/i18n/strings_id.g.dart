@@ -1758,6 +1758,9 @@ class Translations$onboarding$id {
 
 	/// id: 'Nanti saja'
 	String get laterAction => 'Nanti saja';
+
+	/// id: 'Sudah punya akun? Masuk'
+	String get signInAction => 'Sudah punya akun? Masuk';
 }
 
 // Path: tour
@@ -1978,14 +1981,20 @@ class Translations$account$id {
 	/// id: 'Akun'
 	String get title => 'Akun';
 
-	/// id: 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.'
-	String get signedOutBody => 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.';
+	/// id: 'Siapkan akunmu'
+	String get signedOutTitle => 'Siapkan akunmu';
+
+	/// id: 'Semua pencatatan berjalan penuh tanpa akun. Akun menyiapkan cadangan dan sinkronisasi antarperangkat yang sedang kami bangun.'
+	String get signedOutBody => 'Semua pencatatan berjalan penuh tanpa akun. Akun menyiapkan cadangan dan sinkronisasi antarperangkat yang sedang kami bangun.';
 
 	/// id: 'Masuk dengan Google'
 	String get googleSignInAction => 'Masuk dengan Google';
 
 	/// id: 'Masuk dengan email'
 	String get emailSignInToggle => 'Masuk dengan email';
+
+	/// id: 'Untuk akun yang sudah dibuatkan khusus untukmu.'
+	String get emailFormHint => 'Untuk akun yang sudah dibuatkan khusus untukmu.';
 
 	/// id: 'Email'
 	String get emailLabel => 'Email';
@@ -1996,8 +2005,35 @@ class Translations$account$id {
 	/// id: 'Masuk'
 	String get emailSignInAction => 'Masuk';
 
+	/// id: 'Isi email dan kata sandi dulu.'
+	String get emailRequired => 'Isi email dan kata sandi dulu.';
+
+	/// id: 'Kamu sudah masuk.'
+	String get signedInMessage => 'Kamu sudah masuk.';
+
+	/// id: 'Kamu sudah keluar.'
+	String get signedOutMessage => 'Kamu sudah keluar.';
+
+	/// id: 'Masuk lewat Google'
+	String get methodGoogle => 'Masuk lewat Google';
+
+	/// id: 'Masuk lewat email'
+	String get methodPassword => 'Masuk lewat email';
+
+	/// id: 'Data kamu'
+	String get dataTitle => 'Data kamu';
+
+	/// id: 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.'
+	String get dataBody => 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.';
+
 	/// id: 'Keluar'
 	String get signOutAction => 'Keluar';
+
+	/// id: 'Zona bahaya'
+	String get dangerTitle => 'Zona bahaya';
+
+	/// id: 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.'
+	String get dangerBody => 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.';
 
 	/// id: 'Hapus Akun'
 	String get deleteAction => 'Hapus Akun';
@@ -2005,11 +2041,43 @@ class Translations$account$id {
 	/// id: 'Hapus akun?'
 	String get deleteConfirmTitle => 'Hapus akun?';
 
-	/// id: 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.'
-	String get deleteConfirmBody => 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.';
+	/// id: 'Akunmu dihapus permanen. Dompet, transaksi, dan anggaran di perangkat ini tetap ada.'
+	String get deleteConfirmBody => 'Akunmu dihapus permanen. Dompet, transaksi, dan anggaran di perangkat ini tetap ada.';
+
+	/// id: 'Masukkan kata sandi'
+	String get deletePasswordTitle => 'Masukkan kata sandi';
+
+	/// id: 'Demi keamanan, masukkan lagi kata sandimu untuk menghapus akun.'
+	String get deletePasswordBody => 'Demi keamanan, masukkan lagi kata sandimu untuk menghapus akun.';
 
 	/// id: 'Akun dihapus.'
 	String get deletedMessage => 'Akun dihapus.';
+
+	late final Translations$account$errors$id errors = Translations$account$errors$id.internal(_root);
+}
+
+// Path: account.errors
+class Translations$account$errors$id {
+	Translations$account$errors$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Tidak bisa terhubung. Periksa koneksi internetmu, lalu coba lagi.'
+	String get network => 'Tidak bisa terhubung. Periksa koneksi internetmu, lalu coba lagi.';
+
+	/// id: 'Email atau kata sandi salah.'
+	String get wrongCredentials => 'Email atau kata sandi salah.';
+
+	/// id: 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.'
+	String get tooManyRequests => 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.';
+
+	/// id: 'Akun ini dinonaktifkan.'
+	String get userDisabled => 'Akun ini dinonaktifkan.';
+
+	/// id: 'Gagal masuk. Coba lagi.'
+	String get other => 'Gagal masuk. Coba lagi.';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -2560,6 +2628,7 @@ extension on Translations {
 			'onboarding.finalBody' => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.',
 			'onboarding.createWalletAction' => 'Buat Dompet Pertama',
 			'onboarding.laterAction' => 'Nanti saja',
+			'onboarding.signInAction' => 'Sudah punya akun? Masuk',
 			'tour.nextAction' => 'Lanjut',
 			'tour.doneAction' => 'Selesai',
 			'tour.skipAction' => 'Lewati tur',
@@ -2624,17 +2693,35 @@ extension on Translations {
 			'info.resetConfirmAction' => 'Setel Ulang',
 			'info.resetDoneMessage' => 'Tutorial disetel ulang.',
 			'account.title' => 'Akun',
-			'account.signedOutBody' => 'Akun sepenuhnya opsional. Pencatatan tetap berfungsi penuh tanpa masuk — akun cuma untuk fitur mendatang seperti sinkronisasi dan langganan premium.',
+			'account.signedOutTitle' => 'Siapkan akunmu',
+			'account.signedOutBody' => 'Semua pencatatan berjalan penuh tanpa akun. Akun menyiapkan cadangan dan sinkronisasi antarperangkat yang sedang kami bangun.',
 			'account.googleSignInAction' => 'Masuk dengan Google',
 			'account.emailSignInToggle' => 'Masuk dengan email',
+			'account.emailFormHint' => 'Untuk akun yang sudah dibuatkan khusus untukmu.',
 			'account.emailLabel' => 'Email',
 			'account.passwordLabel' => 'Kata sandi',
 			'account.emailSignInAction' => 'Masuk',
+			'account.emailRequired' => 'Isi email dan kata sandi dulu.',
+			'account.signedInMessage' => 'Kamu sudah masuk.',
+			'account.signedOutMessage' => 'Kamu sudah keluar.',
+			'account.methodGoogle' => 'Masuk lewat Google',
+			'account.methodPassword' => 'Masuk lewat email',
+			'account.dataTitle' => 'Data kamu',
+			'account.dataBody' => 'Dompet, transaksi, dan anggaran tersimpan di perangkat ini. Keluar atau menghapus akun tidak menyentuhnya.',
 			'account.signOutAction' => 'Keluar',
+			'account.dangerTitle' => 'Zona bahaya',
+			'account.dangerBody' => 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.',
 			'account.deleteAction' => 'Hapus Akun',
 			'account.deleteConfirmTitle' => 'Hapus akun?',
-			'account.deleteConfirmBody' => 'Ini menghapus identitas akunmu secara permanen. Dompet, transaksi, dan anggaran di perangkat ini TIDAK ikut terhapus — keduanya belum terhubung.',
+			'account.deleteConfirmBody' => 'Akunmu dihapus permanen. Dompet, transaksi, dan anggaran di perangkat ini tetap ada.',
+			'account.deletePasswordTitle' => 'Masukkan kata sandi',
+			'account.deletePasswordBody' => 'Demi keamanan, masukkan lagi kata sandimu untuk menghapus akun.',
 			'account.deletedMessage' => 'Akun dihapus.',
+			'account.errors.network' => 'Tidak bisa terhubung. Periksa koneksi internetmu, lalu coba lagi.',
+			'account.errors.wrongCredentials' => 'Email atau kata sandi salah.',
+			'account.errors.tooManyRequests' => 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.',
+			'account.errors.userDisabled' => 'Akun ini dinonaktifkan.',
+			'account.errors.other' => 'Gagal masuk. Coba lagi.',
 			_ => null,
 		};
 	}

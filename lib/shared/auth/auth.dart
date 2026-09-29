@@ -3,5 +3,6 @@
 library;
 
 export 'data/repositories/firebase_auth_repository_impl.dart';
+export 'domain/auth_failure_codes.dart';
 export 'domain/entities/app_user.dart';
 export 'domain/repositories/auth_repository.dart';

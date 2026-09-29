@@ -16,6 +16,9 @@ enum OnboardingOutcome {
 
   /// "Buat Dompet Pertama" (KO-6).
   createWallet,
+
+  /// "Sudah punya akun? Masuk" (ADR-024 §3.1).
+  signIn,
 }
 
 /// Onboarding empat layar geser + satu layar akhir (ONBOARDING_PLAN §3,
@@ -186,6 +189,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
           child: AppButton.tertiary(
             label: t.onboarding.laterAction,
             onPressed: _finishing ? null : () => _finish(OnboardingOutcome.dismissed),
+          ),
+        ),
+        Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: AppButton.tertiary(
+              label: t.onboarding.signInAction,
+              onPressed: _finishing ? null : () => _finish(OnboardingOutcome.signIn),
+            ),
           ),
         ),
       ],

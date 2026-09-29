@@ -6,6 +6,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/account/presentation/pages/account_page.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
@@ -139,6 +140,8 @@ class _AppShellPageState extends State<AppShellPage> {
           final home = context.read<HomeBloc>();
           await openAddWalletSheet(context);
           home.add(const HomeRefreshed());
+        case ShellStartAction.openAccount:
+          await openAccountPage(context);
       }
     });
   }
@@ -304,6 +307,9 @@ enum ShellStartAction {
   /// Pindah ke tab Dompet dan membuka formulir tambah dompet — ajakan
   /// "Buat Dompet Pertama" onboarding (KO-6).
   createWallet,
+
+  /// Membuka layar Akun — "Sudah punya akun? Masuk" onboarding (ADR-024).
+  openAccount,
 }
 
 /// Ikon slot CATAT: kotak aksen dengan garis tepi dan bayangan keras level

@@ -22,9 +22,11 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
+import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 
 /// Uji alur layar Anggaran lewat shell sungguhan dengan penyimpanan di
@@ -55,6 +57,7 @@ void main() {
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     budgetRepository = BudgetRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
+      ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(
         () => BudgetOverviewSourceImpl(
           budgetRepository: budgetRepository,

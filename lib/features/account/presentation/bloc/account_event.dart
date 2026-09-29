@@ -49,5 +49,9 @@ final class AccountSignOutRequested extends AccountEvent {
 /// Penghapusan akun dikonfirmasi lewat dialog.
 final class AccountDeletionRequested extends AccountEvent {
   /// Membuat [AccountDeletionRequested].
-  const AccountDeletionRequested();
+  const AccountDeletionRequested({this.password});
+
+  /// Sandi untuk re-autentikasi akun email/sandi, diisi setelah
+  /// [AccountState.needsPassword] meminta.
+  final String? password;
 }

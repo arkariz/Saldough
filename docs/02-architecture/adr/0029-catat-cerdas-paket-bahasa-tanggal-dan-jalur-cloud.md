@@ -78,8 +78,20 @@ memeriksa:
 - `date` tidak sesudah hari tangkap dan tidak sebelum tahun 2000 (batas
   pemilih tanggal CATAT).
 
+- bila bahasa bukti punya paket dan `SpokenDateParser` mengenali
+  kutipannya, tafsiran paket sama dengan `date` (verifikasi M3, H2, 30 Sep
+  2026: "kemarin" tidak boleh menjadi 1 Sep). Kutipan yang tidak dikenali
+  paket tetap dipercaya ke model. Resolver tetap tanpa kata tanggal: kata
+  datang dari `DateLexicon` paket.
+
 Gagal salah satu → `DraftIssue.dateUnclear` dan tanggal bawaan. Tanpa
 `dateText`, `date` diabaikan.
+
+Pagar nominal juga diperketat di verifikasi M3 (H1): kutipan nominal selain
+harus substring teks bukti, nilainya harus sama dengan frasa bilangan utuh
+(`SpokenAmountParser.findAll`) yang ditumpanginya, sehingga kutipan yang
+memotong angka ("350" dari "350 ribu", "5 juta" dari "1,5 juta") menjadi
+`amountMissing`.
 
 Pola yang dikenali:
 

@@ -37,19 +37,25 @@ abstract final class AppBootstrap {
   static Future<void> run() async {
     await Firebase.initializeApp();
 
-    // App Check: Play Integrity / App Attest di rilis; penyedia debug di mode
-    // debug (token debug-nya didaftarkan di Firebase Console).
-    await FirebaseAppCheck.instance.activate(
-      providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
-      providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestWithDeviceCheckFallbackProvider(),
-    );
-
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     PlatformDispatcher.instance.onError = (error, stack) {
       unawaited(FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
       return true;
     };
+
+    // App Check: Play Integrity / App Attest di rilis; penyedia debug di mode
+    // debug (token debug-nya didaftarkan di Firebase Console). Sesudah
+    // Crashlytics, supaya kegagalannya terlaporkan dan tidak mematikan
+    // pelaporan crash; tanpa App Check hanya Firebase AI yang terdampak.
+    try {
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+        providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+      );
+    } on Object catch (error) {
+      recordNonFatal(error, reason: 'AppCheck');
+    }
 
     await GoogleSignIn.instance.initialize(serverClientId: FirebaseConfig.googleServerClientId);
   }

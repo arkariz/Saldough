@@ -87,6 +87,13 @@ void main() {
     expect(draft.issues, {DraftIssue.amountWithoutUnit});
   });
 
+  test('cloud melempar Error (bukan Exception): draf aturan, tidak tertahan', () async {
+    final cloud = _FakeCloud(() async => throw StateError('sdk'));
+    final draft = await compose(composer(cloud: cloud), evidence('parkir 5'));
+    expect(cloud.calls, 1);
+    expect(draft.issues, {DraftIssue.amountWithoutUnit});
+  });
+
   test('cloud tidak pernah menjawab: draf aturan sesudah batas waktu', () async {
     final cloud = _FakeCloud(() => Completer<Either<Failure, InterpretedTransaction>>().future);
     final draft = await compose(

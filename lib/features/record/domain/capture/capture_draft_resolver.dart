@@ -1,4 +1,5 @@
 import 'package:saldough/core/utils/formatters/spoken_amount_parser.dart';
+import 'package:saldough/core/utils/formatters/spoken_date_parser.dart';
 import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
 import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
@@ -11,11 +12,14 @@ import 'package:saldough/shared/wallet/wallet.dart';
 /// mencegah keluaran model mengarang data:
 ///
 /// - nominal hanya diambil dari frasa yang **benar-benar ada** di teks bukti,
-///   lalu dihitung [SpokenAmountParser] dalam `int` sen;
+///   lalu dihitung [SpokenAmountParser] dalam `int` sen -- dan nilainya harus
+///   sama dengan frasa bilangan utuh di teks itu, jadi kutipan yang memotong
+///   angka ("350" dari "350 ribu") ditolak;
 /// - dompet dan kategori hanya dicocokkan ke daftar yang ada, tidak pernah
 ///   dibuat;
-/// - tanggal hanya dipakai bila kutipannya ada di teks bukti dan tidak di
-///   masa depan;
+/// - tanggal hanya dipakai bila kutipannya ada di teks bukti, tidak di masa
+///   depan, dan -- bila paket bahasa mengenali kutipannya -- sama dengan
+///   tafsiran [SpokenDateParser];
 /// - hal yang meragukan menjadi [DraftIssue], bukan tebakan.
 ///
 /// Resolver tidak mengenal kata bahasa apa pun (ADR-029 §3.1): bilangan kata
@@ -93,14 +97,12 @@ final class CaptureDraftResolver {
       issues.add(DraftIssue.amountMissing);
       return null;
     }
-    final result = SpokenAmountParser.parse(
-      phrase,
-      lexicon: language?.numbers ?? NumberLexicon.neutral,
-      currencyCode: currencyCode,
-    );
+    final lexicon = language?.numbers ?? NumberLexicon.neutral;
+    final result = SpokenAmountParser.parse(phrase, lexicon: lexicon, currencyCode: currencyCode);
     switch (result.issue) {
       case null:
-        return result.sen;
+        if (_isWholeAmount(evidenceText, phrase, result.sen, lexicon)) return result.sen;
+        issues.add(DraftIssue.amountMissing);
       case SpokenAmountIssue.missing:
         issues.add(DraftIssue.amountMissing);
       case SpokenAmountIssue.multiple:
@@ -113,6 +115,18 @@ final class CaptureDraftResolver {
         issues.add(DraftIssue.currencyUnsupported);
     }
     return null;
+  }
+
+  /// `true` bila salah satu kemunculan [phrase] di [evidenceText] bertumpang
+  /// tindih dengan frasa bilangan utuh bernilai [sen]. Kutipan yang memotong
+  /// angka ("5 ribu" dari "25 ribu", "2000" dari "20000") tetap substring,
+  /// tetapi nilainya berbeda dari frasa utuhnya.
+  bool _isWholeAmount(String evidenceText, String phrase, int? sen, NumberLexicon lexicon) {
+    final text = _normalize(evidenceText);
+    final spans = SpokenAmountParser.findAll(text, lexicon: lexicon);
+    return _occurrences(text, _normalize(phrase)).any(
+      (at) => spans.any((s) => s.start < at.$2 && at.$1 < s.end && s.sen == sen),
+    );
   }
 
   String? _resolveWallet(String? spoken, Set<DraftIssue> issues) {
@@ -137,10 +151,45 @@ final class CaptureDraftResolver {
         date != null &&
         _normalize(evidence.text).contains(_normalize(quote)) &&
         !DateTime(date.year, date.month, date.day).isAfter(DateTime(captured.year, captured.month, captured.day)) &&
-        date.year >= 2000;
+        date.year >= 2000 &&
+        _dateAgrees(evidence, quote, date);
     if (valid) return date;
     issues.add(DraftIssue.dateUnclear);
     return fallback;
+  }
+
+  /// `false` bila paket bahasa mengenali [quote] sebagai tanggal lain dari
+  /// [date] ("kemarin" tetapi model menjawab 1 Sep). Kutipan yang tidak
+  /// dikenali paket (atau bahasa tanpa paket) dipercaya ke model.
+  bool _dateAgrees(CaptureEvidence evidence, String quote, DateTime date) {
+    final language = this.language;
+    if (language == null) return true;
+    final text = _normalize(evidence.text);
+    final spans = SpokenDateParser.findAll(
+      text,
+      lexicon: language.dates,
+      numbers: language.numbers,
+      today: evidence.capturedAt,
+    );
+    var recognized = false;
+    for (final at in _occurrences(text, _normalize(quote))) {
+      for (final span in spans.where((s) => s.start < at.$2 && at.$1 < s.end)) {
+        recognized = true;
+        final parsed = span.date;
+        if (parsed != null && parsed.year == date.year && parsed.month == date.month && parsed.day == date.day) {
+          return true;
+        }
+      }
+    }
+    return !recognized;
+  }
+}
+
+/// Rentang (awal, akhir) setiap kemunculan [needle] di [text].
+Iterable<(int, int)> _occurrences(String text, String needle) sync* {
+  if (needle.isEmpty) return;
+  for (var at = text.indexOf(needle); at >= 0; at = text.indexOf(needle, at + 1)) {
+    yield (at, at + needle.length);
   }
 }
 

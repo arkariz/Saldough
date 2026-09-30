@@ -63,11 +63,11 @@ final class CaptureDraftComposer {
     );
 
     RecordDraft? ruleDraft;
-    // if (language != null) {
-    //   final interpreted = await _interpret(ruleInterpreterFor(language), evidence, context);
-    //   if (interpreted != null) ruleDraft = resolver.resolve(evidence, interpreted);
-    //   if (ruleDraft != null && ruleDraft.isConfident) return ruleDraft;
-    // }
+    if (language != null) {
+      final interpreted = await _interpret(ruleInterpreterFor(language), evidence, context);
+      if (interpreted != null) ruleDraft = resolver.resolve(evidence, interpreted);
+      if (ruleDraft != null && ruleDraft.isConfident) return ruleDraft;
+    }
 
     final cloud = cloudInterpreter;
     if (cloud != null) {
@@ -78,8 +78,8 @@ final class CaptureDraftComposer {
     return ruleDraft ?? resolver.resolve(evidence, const InterpretedTransaction());
   }
 
-  /// Hasil [interpreter], atau `null` bila galat, melempar, atau lewat
-  /// [timeout].
+  /// Hasil [interpreter], atau `null` bila galat, melempar apa pun (termasuk
+  /// `Error` dari SDK), atau lewat [timeout].
   Future<InterpretedTransaction?> _interpret(
     TransactionInterpreter interpreter,
     CaptureEvidence evidence,
@@ -93,7 +93,7 @@ final class CaptureDraftComposer {
         Right(:final value) => value,
         Left() => null,
       };
-    } on Exception {
+    } on Object {
       return null;
     }
   }

@@ -248,7 +248,46 @@ Data diperbarui sebelum unggah.
 
 ### Hasil
 
-_(diisi saat verifikasi)_
+**Tanggal:** 30 Sep 2026 · **Cakupan:** tinjauan kode di `78eadbe` (squash
+PR #38, tag `0.3.0+4`), tanpa perangkat.
+
+**Status: TIDAK LULUS** — temuan G1 (S5) harus diperbaiki, dan T-11.6 serta
+daftar periksa perangkat belum dikerjakan.
+
+**Otomatis:** `flutter analyze` bersih; **817 uji lulus, 6 gagal**
+(`capture_draft_composer_test` ×5, `voice_capture_bloc_test` ×1) — semuanya
+akibat G1.
+
+#### Temuan
+
+| # | Tingkat | Risiko | Temuan | Bukti |
+|---|---|---|---|---|
+| G1 | **Blokir** | S5, C2, C4 | Jalur aturan `CaptureDraftComposer` dikomentari (ikut ter-commit di `48851ff`, T-11.7): **setiap** transkrip dikirim ke Gemini, bukan hanya yang ragu (ADR-029 §3.4), dan saat offline/cloud gagal draf selalu kosong (nominal tidak terisi) — ucapan luring tidak lagi berguna. Klaim catatan rilis dan rencana Keamanan Data ("hanya bila transkrip kurang jelas") menjadi salah. | `capture_draft_composer.dart:66-70`; 6 uji gagal |
+| G2 | Sedang | S2 | `SpeechToText()` adalah singleton dan `initialize` hanya memasang `onError`/`onStatus` sekali per proses. `SystemSpeechTranscriber` dibuat per `RecordScope`; bila lingkup itu dibuat ulang dalam proses yang sama, instance baru tidak pernah menerima status "done" atau galat, jadi sesi tanpa ucapan tertahan di "Mendengarkan" sampai lembar ditutup. Perbaikan: pasang `errorListener`/`statusListener` sebelum setiap `listen`. | `speech_to_text` 7.5.0 `speech_to_text.dart:313-319`; `record_scope.dart:45` |
+| G3 | Sedang | S3 | `_start` tidak menangkap `ListenFailedException` dari `_speech.listen`, dan `listen` yang tidak mulai (`started == false`) tidak mengirim apa pun: lembar tertahan di tahap "starting" tanpa pesan, galatnya lolos sebagai crash fatal. "Ketik saja" tetap bisa dipakai, jadi tidak buntu total. | `system_speech_transcriber.dart:67` |
+
+**Lulus (kode):** aliran sesi ditutup tepat sekali (`_finish` memeriksa
+`isClosed`), jeda `_errorGrace` dijaga `identical(controller, _controller)`;
+`VoiceCaptureBloc.close` membatalkan sesi dan `showVoiceCaptureSheet`
+menutup bloc di `finally` (termasuk tutup dengan geser); tidak ada
+rekursi `openRecordSheet` (suara hanya dari FAB shell, pintasan
+dompet/pos anggaran tidak berlaku); locale ucapan mengikuti bahasa aplikasi
+(`id_ID`/`en_US`) plus pertanyaan sekali untuk pengguna lama (T-11.14);
+ke Crashlytics hanya kode galat + locale, `RecordDraft.sourceText` tidak
+dipakai di luar domain (tidak tersimpan, tidak ke Analytics); izin
+`RECORD_AUDIO` + `<queries>` `RecognitionService`, dua kunci Info.plist,
+tanpa izin Bluetooth.
+
+**Belum dikerjakan:** T-11.6 (Keamanan Data, kebijakan privasi, pemberitahuan
+penguji); seluruh daftar periksa perangkat. **Keputusan terbuka:** izin
+ditolak permanen belum mengarahkan ke pengaturan.
+
+**Tindak lanjut (30 Sep 2026, T-11.15):** G1 jalur aturan dipulihkan; G2
+pendengar galat/status dipasang ulang setiap sesi; G3 `listen` yang melempar
+atau tidak mulai dalam 5 dtk menjadi `SpeechFailure.other` dan dilaporkan
+(`listen_failed` / `listen_not_started`). Uji regresi dengan pengenal palsu
+yang meniru singleton `SpeechToText`. 836 uji lulus. Status kode M2 menjadi
+lulus; M2 tetap menunggu T-11.6 dan daftar periksa perangkat.
 
 ---
 
@@ -297,4 +336,36 @@ di TASK_LIST T-11.9.
 
 ### Hasil
 
-_(diisi saat verifikasi)_
+**Tanggal:** 30 Sep 2026 · **Cakupan:** tinjauan kode T-11.7 di `78eadbe`,
+tanpa perangkat; T-11.8 dan T-11.9 belum dikerjakan.
+
+**Status: TIDAK LULUS** — G1 (lihat M2) dan H1 (C1) harus diperbaiki.
+
+#### Temuan
+
+| # | Tingkat | Risiko | Temuan | Bukti |
+|---|---|---|---|---|
+| H1 | **Blokir** | C1 | Pagar kutipan nominal hanya `contains`, jadi kutipan model yang memotong angka lolos dengan nominal salah **tanpa issue** (probe): "makan 350 ribu" + `"350"` → Rp350; "kopi 25 ribu" + `"5 ribu"` → Rp5.000; "gaji 1,5 juta" + `"5 juta"` → Rp5.000.000; "parkir 20000" + `"2000"` → Rp2.000. Jalur aturan tidak terkena (kutipannya rentang `findAll`). Perbaikan: kutipan wajib sama dengan satu rentang utuh `SpokenAmountParser.findAll(evidence.text)`. | `capture_draft_resolver.dart:92` |
+| H2 | Sedang | C1 | Nilai tanggal dari model diterima asal kutipannya ada dan tidak di masa depan: "kopi 5000 kemarin" + `date` 2026-09-01 → 1 Sep tanpa issue. Perbaikan: bila bahasa punya paket, tafsir ulang kutipan dengan `SpokenDateParser` dan wajib sama. | `capture_draft_resolver.dart:136-141` |
+| H3 | Rendah | C4 | Penyusun dan interpreter cloud hanya menangkap `Exception`; `Error` dari SDK lolos dari `compose` dan lembar tertahan di "memahami" (kontraknya "tidak pernah gagal"). | `capture_draft_composer.dart:96`, `firebase_ai_transaction_interpreter.dart:46` |
+| H4 | Rendah | — | `FirebaseAppCheck.activate` berjalan sebelum Crashlytics dipasang; bila ia melempar, pelaporan crash ikut tidak aktif. | `app_bootstrap_firebase.dart:42-48` |
+| H5 | Catatan | C5 | iOS belum punya `GoogleService-Info.plist` maupun entitlement App Attest: cloud di iOS selalu `Left` dan jatuh ke aturan (sesudah G1 diperbaiki). Bukan regresi. | `ios/Runner/` |
+
+**Lulus (kode):** C2 — prompt hanya teks, nama dompet/kategori aktif,
+tanggal, dan kode bahasa (diuji); `responseSchema` = kontrak ADR-027 §3.2 +
+`date`; JSON rusak/kosong dan galat jaringan → `Left`; batas waktu 5 dtk;
+tanggal yang tidak ada di kalender dibuang. C6 — `firebase_ai` dan
+`speech_to_text` hanya diimpor di `record/data` dan `record/di`; domain
+tanpa impor Flutter/data, jadi mengganti penyedia cukup di DI.
+
+**Belum dikerjakan:** T-11.8 (C3, Blaze), T-11.9 (C7, benchmark), setelan
+Console (AI Logic, App Check), seluruh daftar periksa perangkat.
+
+**Tindak lanjut (30 Sep 2026, T-11.15):** H1 kutipan nominal wajib sama
+nilainya dengan frasa bilangan utuh yang ditumpanginya; H2 tanggal model
+wajib sama dengan tafsiran paket bila paket mengenali kutipannya (ADR-029
+§3.2 diperbarui); H3 penyusun dan interpreter cloud menangkap `Object`; H4
+App Check diaktifkan sesudah Crashlytics, kegagalannya non-fatal. H5 tetap
+catatan (butuh konfigurasi Firebase iOS dari pemilik). Kasus probe menjadi
+uji regresi (`capture_draft_resolver_test`). Status kode M3 menjadi lulus;
+M3 tetap menunggu T-11.8, T-11.9, setelan Console, dan perangkat.

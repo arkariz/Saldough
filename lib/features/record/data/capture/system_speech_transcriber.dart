@@ -15,12 +15,20 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   /// Membuat [SystemSpeechTranscriber]. [reportError] menerima kode galat
   /// mentah pengenal (bawaan: non-fatal Crashlytics), supaya pemetaan ke
   /// [SpeechFailure] bisa dicocokkan dengan perangkat nyata.
-  SystemSpeechTranscriber({SpeechToText? speech, void Function(SpeechRecognizerError error)? reportError})
-    : _speech = speech ?? SpeechToText(),
-      _reportError = reportError ?? _reportToCrashlytics;
+  /// [startTimeout] membatasi tunggu sampai pengenal benar-benar mulai.
+  SystemSpeechTranscriber({
+    SpeechToText? speech,
+    void Function(SpeechRecognizerError error)? reportError,
+    this._startTimeout = const Duration(seconds: 5),
+  }) : _speech = speech ?? SpeechToText(),
+       _reportError = reportError ?? _reportToCrashlytics;
 
   final SpeechToText _speech;
   final void Function(SpeechRecognizerError error) _reportError;
+  final Duration _startTimeout;
+
+  /// Pengenal sudah memberi kabar (status, suara, atau hasil) di sesi ini.
+  bool _started = false;
   String _localeId = '';
   StreamController<SpeechUpdate>? _controller;
   String _lastWords = '';
@@ -47,6 +55,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
     _controller = controller;
     _lastWords = '';
     _errorReason = null;
+    _started = false;
     _localeId = localeId;
     unawaited(_start(controller, localeId, phrases));
     return controller.stream;
@@ -64,25 +73,55 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
       _finish(SpeechFailed(permitted ? SpeechFailure.unavailable : SpeechFailure.permissionDenied));
       return;
     }
-    await _speech.listen(
-      onResult: _onResult,
-      onSoundLevelChange: _onSoundLevel,
-      listenOptions: SpeechListenOptions(
-        localeId: localeId,
-        pauseFor: _pauseFor,
-        listenFor: _listenFor,
-        cancelOnError: true,
-        contextualPhrases: phrases.isEmpty ? null : phrases,
-      ),
+    // `SpeechToText` adalah singleton dan `initialize` hanya memasang
+    // pendengar di panggilan pertama per proses. Pasang ulang setiap sesi,
+    // supaya instance ini (mis. sesudah `RecordScope` dibuat ulang) tetap
+    // menerima status "done" dan galat.
+    _speech
+      ..errorListener = _onError
+      ..statusListener = _onStatus;
+    try {
+      await _speech.listen(
+        onResult: _onResult,
+        onSoundLevelChange: _onSoundLevel,
+        listenOptions: SpeechListenOptions(
+          localeId: localeId,
+          pauseFor: _pauseFor,
+          listenFor: _listenFor,
+          cancelOnError: true,
+          contextualPhrases: phrases.isEmpty ? null : phrases,
+        ),
+      );
+    } on Object {
+      _failToStart(controller, 'listen_failed');
+      return;
+    }
+    // Pengenal yang tidak mulai tidak mengirim kabar apa pun; tanpa batas
+    // ini lembar rekam tertahan di tahap "memulai".
+    unawaited(
+      Future<void>.delayed(_startTimeout, () {
+        if (!_started) _failToStart(controller, 'listen_not_started');
+      }),
     );
+  }
+
+  /// Menutup sesi [controller] (bila masih sesi ini) karena pengenal gagal
+  /// mulai, dan melaporkan [code].
+  void _failToStart(StreamController<SpeechUpdate> controller, String code) {
+    if (!identical(controller, _controller)) return;
+    _reportError(SpeechRecognizerError(code: code, localeId: _localeId, permanent: false));
+    unawaited(_speech.cancel().catchError((_) {}));
+    _finish(const SpeechFailed(SpeechFailure.other));
   }
 
   /// Level mentah plugin kira-kira -2..10 dB (Android) -- dipetakan ke 0..1.
   void _onSoundLevel(double level) {
+    _started = true;
     _controller?.add(SpeechLevel(((level + 2) / 12).clamp(0.0, 1.0)));
   }
 
   void _onResult(SpeechRecognitionResult result) {
+    _started = true;
     _lastWords = result.recognizedWords;
     if (result.finalResult) {
       _finishWithWordsOr(SpeechFailure.noMatch);
@@ -92,6 +131,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   }
 
   void _onError(SpeechRecognitionError error) {
+    _started = true;
     final reason = speechFailureFor(error.errorMsg);
     // Diam dan tidak terdengar adalah pemakaian biasa, bukan galat.
     if (reason != SpeechFailure.noMatch) {
@@ -103,6 +143,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   }
 
   void _onStatus(String status) {
+    _started = true;
     if (status == SpeechToText.listeningStatus) _controller?.add(const SpeechListening());
     // "done" tanpa hasil akhir: pakai kata terakhir kalau ada.
     final controller = _controller;

@@ -43,7 +43,8 @@ final class FirebaseAiTransactionInterpreter implements TransactionInterpreter {
       final parsed = raw == null ? null : parseExtraction(raw, capturedAt: evidence.capturedAt);
       if (parsed == null) return left(const SystemFailure(code: FailureCode.unknown, message: 'cloud: bad JSON'));
       return right(parsed);
-    } on Exception catch (error) {
+    } on Object catch (error) {
+      // Termasuk `Error` dari SDK: penyusun draf tidak boleh tertahan.
       return left(SystemFailure(code: FailureCode.unknown, message: 'cloud: $error'));
     }
   }

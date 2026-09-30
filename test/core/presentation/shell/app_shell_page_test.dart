@@ -20,6 +20,7 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -59,6 +60,7 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
   });
@@ -321,6 +323,7 @@ void main() {
         ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+        ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 

@@ -17,6 +17,7 @@ import 'package:saldough/features/transaction/presentation/pages/transaction_lis
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -45,6 +46,7 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,

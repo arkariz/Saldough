@@ -7,7 +7,11 @@ import 'package:saldough/features/record/presentation/widgets/expense_form_sheet
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/categories.dart';
+
 void main() {
+  setUp(() => useCategories(['Makan']));
+
   const wallets = [
     Wallet(
       id: 'bca',
@@ -230,7 +234,7 @@ void main() {
           amount: 7500000,
           note: 'nasi padang',
           walletId: 'bca',
-          categoryKey: 'Makan',
+          categoryId: 'Makan',
         ),
       );
 

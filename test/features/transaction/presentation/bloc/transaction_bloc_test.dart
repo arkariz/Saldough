@@ -9,6 +9,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
+import '../../../../helpers/categories.dart';
 import '../../../../helpers/mocks.dart';
 
 const _forcedFailure = SystemFailure(
@@ -21,6 +22,8 @@ const _writeFailure = SystemFailure(
 );
 
 void main() {
+  setUp(() => useCategories(['makan', 'Makan Siang', 'tagihan']));
+
   late MockWalletRepository walletRepository;
   late MockTransactionRepository transactionRepository;
 
@@ -102,7 +105,7 @@ void main() {
               amount: 30000,
               note: 'kopi',
               walletId: 'bca',
-              categoryKey: 'makan',
+              categoryId: 'makan',
             ),
             TransferTransaction(
               id: 't1',
@@ -223,7 +226,7 @@ void main() {
               amount: 30000,
               note: '',
               walletId: 'bca',
-              categoryKey: 'Makan Siang',
+              categoryId: 'Makan Siang',
             ),
             ExpenseTransaction(
               id: 'e2',
@@ -307,7 +310,7 @@ void main() {
               amount: 30000,
               note: '',
               walletId: 'bca',
-              categoryKey: 'makan',
+              categoryId: 'makan',
             ),
           ],
           [
@@ -317,7 +320,7 @@ void main() {
               amount: 20000,
               note: '',
               walletId: 'bca',
-              categoryKey: 'tagihan',
+              categoryId: 'tagihan',
             ),
           ],
         ]);

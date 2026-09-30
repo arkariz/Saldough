@@ -22,6 +22,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -59,8 +60,17 @@ abstract final class RootModule {
       ..registerLazySingleton<WalletRepository>(
         () => WalletRepositoryImpl(storage: container<KeyValueStorage>()),
       )
-      ..registerLazySingleton<TransactionRepository>(
+      // Satu instans untuk dua peran: buku besar, dan port migrasi label
+      // kategori lama (ADR-026 §3.4) yang butuh tata letak buku besar.
+      ..registerLazySingleton<TransactionRepositoryImpl>(
         () => TransactionRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<TransactionRepository>(container.call<TransactionRepositoryImpl>)
+      ..registerLazySingleton<LegacyCategoryLabels>(container.call<TransactionRepositoryImpl>)
+      // Kategori (ADR-026), kunci `category/all`. Dipakai CATAT, Transaksi,
+      // dan layar Kategori di Akun.
+      ..registerLazySingleton<CategoryRepository>(
+        () => CategoryRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).

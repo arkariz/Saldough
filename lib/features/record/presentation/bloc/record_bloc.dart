@@ -4,6 +4,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -23,17 +24,20 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     required this._transactionRepository,
     required this._recordTransaction,
     required this._budgetItemCatalog,
+    required this._createCategory,
   }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
     on<ExpenseRecorded>(_onExpenseRecorded);
     on<TransferRecorded>(_onTransferRecorded);
+    on<RecordFailureOccurred>((event, emit) => emit(state.copyWith(effect: _effectError(event.failure))));
   }
 
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
   final RecordTransaction _recordTransaction;
   final BudgetItemCatalog _budgetItemCatalog;
+  final CreateCategory _createCategory;
 
   /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
   static const _recentLimit = 100;
@@ -70,7 +74,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       date: event.date,
       amount: event.amount,
       note: event.note,
-      categoryKey: event.categoryKey,
+      categoryId: event.categoryId,
       walletId: event.walletId,
     );
     await _save(transaction, emit, _effectSaved(t.record.incomeSavedMessage));
@@ -82,7 +86,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       date: event.date,
       amount: event.amount,
       note: event.note,
-      categoryKey: event.categoryKey,
+      categoryId: event.categoryId,
       walletId: event.walletId,
       budgetItemId: event.budgetItemId,
     );
@@ -110,6 +114,24 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         emit(state.copyWith(isSaving: false, effect: onSaved));
+    }
+  }
+
+  /// "Tambah kategori" dari formulir CATAT maupun sunting (ADR-026 §3.6).
+  ///
+  /// Bukan event: formulir butuh kategori hasilnya untuk langsung
+  /// memilihnya, dan membuat kategori tidak mengubah state CATAT (daftar
+  /// kategori dibaca dari `ActiveCategories`, yang diperbarui repository).
+  /// Gagal menyimpan ditampilkan lewat efek galat biasa dan mengembalikan
+  /// `null`.
+  Future<Category?> createCategory(CategoryKind kind, String name) async {
+    final result = await _createCategory(kind, name);
+    switch (result) {
+      case Left(value: final failure):
+        if (!isClosed) add(RecordFailureOccurred(failure));
+        return null;
+      case Right(value: final category):
+        return category;
     }
   }
 

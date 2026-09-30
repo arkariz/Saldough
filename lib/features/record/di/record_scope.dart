@@ -1,6 +1,7 @@
 import 'package:di/di.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -19,7 +20,8 @@ final class RecordScope extends IsolatedScope {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
-      ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
+      ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>())
+      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
   }
 
   @override
@@ -29,6 +31,7 @@ final class RecordScope extends IsolatedScope {
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
         budgetItemCatalog: c<BudgetItemCatalog>(),
+        createCategory: CreateCategory(repository: c<CategoryRepository>()),
         recordTransaction: RecordTransaction(
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(

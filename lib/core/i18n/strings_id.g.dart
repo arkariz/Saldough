@@ -55,6 +55,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$info$id info = Translations$info$id.internal(_root);
 	late final Translations$account$id account = Translations$account$id.internal(_root);
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
+	late final Translations$category$id category = Translations$category$id.internal(_root);
 }
 
 // Path: app
@@ -164,9 +165,6 @@ class Translations$record$id {
 	/// id: 'Tanggal'
 	String get dateFieldLabel => 'Tanggal';
 
-	/// id: 'Kategori (opsional)'
-	String get categoryFieldHint => 'Kategori (opsional)';
-
 	/// id: 'Tulis catatan singkat'
 	String get noteFieldHint => 'Tulis catatan singkat';
 
@@ -190,30 +188,6 @@ class Translations$record$id {
 
 	/// id: 'Menyimpan...'
 	String get savingMessage => 'Menyimpan...';
-
-	/// id: 'Gaji'
-	String get categorySuggestionSalary => 'Gaji';
-
-	/// id: 'Bonus'
-	String get categorySuggestionBonus => 'Bonus';
-
-	/// id: 'Penjualan'
-	String get categorySuggestionSales => 'Penjualan';
-
-	/// id: 'Hadiah'
-	String get categorySuggestionGift => 'Hadiah';
-
-	/// id: 'Makan'
-	String get categorySuggestionFood => 'Makan';
-
-	/// id: 'Belanja'
-	String get categorySuggestionShopping => 'Belanja';
-
-	/// id: 'Transport'
-	String get categorySuggestionTransport => 'Transport';
-
-	/// id: 'Tagihan'
-	String get categorySuggestionBills => 'Tagihan';
 
 	/// id: 'Uang Masuk'
 	String get incomeBadge => 'Uang Masuk';
@@ -259,18 +233,6 @@ class Translations$record$id {
 
 	/// id: 'Opsional'
 	String get optionalHint => 'Opsional';
-
-	/// id: 'Lainnya'
-	String get categoryOtherLabel => 'Lainnya';
-
-	/// id: 'Ketik kategori sendiri'
-	String get categoryCustomHint => 'Ketik kategori sendiri';
-
-	/// id: 'Hiburan'
-	String get categorySuggestionEntertainment => 'Hiburan';
-
-	/// id: 'Investasi'
-	String get categorySuggestionInvestment => 'Investasi';
 
 	/// id: 'Dompet Sumber Dana'
 	String get expenseWalletSectionLabel => 'Dompet Sumber Dana';
@@ -337,6 +299,9 @@ class Translations$record$id {
 
 	/// id: 'Transfer'
 	String get kindTransfer => 'Transfer';
+
+	/// id: 'Tambah kategori'
+	String get categoryAddLabel => 'Tambah kategori';
 }
 
 // Path: transaction
@@ -2113,6 +2078,82 @@ class Translations$currency$id {
 	late final Translations$currency$names$id names = Translations$currency$names$id.internal(_root);
 }
 
+// Path: category
+class Translations$category$id {
+	Translations$category$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get builtIn => {
+		'food': 'Makan & Minum',
+		'groceries': 'Belanja Harian',
+		'transport': 'Transportasi',
+		'bills': 'Tagihan',
+		'internet': 'Pulsa & Internet',
+		'health': 'Kesehatan',
+		'entertainment': 'Hiburan',
+		'shopping': 'Belanja',
+		'education': 'Pendidikan',
+		'family': 'Keluarga',
+		'donation': 'Donasi',
+		'expenseOther': 'Lainnya',
+		'salary': 'Gaji',
+		'freelance': 'Freelance',
+		'bonus': 'Bonus',
+		'gift': 'Hadiah',
+		'incomeOther': 'Lainnya',
+	};
+
+	/// id: 'Kategori'
+	String get title => 'Kategori';
+
+	/// id: 'Kategori'
+	String get accountEntryTitle => 'Kategori';
+
+	/// id: 'Atur daftar kategori pemasukan dan pengeluaran.'
+	String get accountEntryBody => 'Atur daftar kategori pemasukan dan pengeluaran.';
+
+	/// id: 'Pengeluaran'
+	String get expenseTab => 'Pengeluaran';
+
+	/// id: 'Pemasukan'
+	String get incomeTab => 'Pemasukan';
+
+	/// id: 'Tambah kategori'
+	String get addAction => 'Tambah kategori';
+
+	/// id: 'Kategori baru'
+	String get addTitle => 'Kategori baru';
+
+	/// id: 'Ganti nama kategori'
+	String get renameTitle => 'Ganti nama kategori';
+
+	/// id: 'Nama kategori'
+	String get nameHint => 'Nama kategori';
+
+	/// id: 'Arsipkan'
+	String get archiveAction => 'Arsipkan';
+
+	/// id: 'Pulihkan'
+	String get restoreAction => 'Pulihkan';
+
+	/// id: 'Terarsip'
+	String get archivedSection => 'Terarsip';
+
+	/// id: 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.'
+	String get archivedHint => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.';
+
+	/// id: 'Belum ada kategori aktif.'
+	String get emptyActive => 'Belum ada kategori aktif.';
+
+	/// id: 'Kategori "${name}" diarsipkan.'
+	String archivedMessage({required Object name}) => 'Kategori "${name}" diarsipkan.';
+
+	/// id: 'Kategori "${name}" dipulihkan.'
+	String restoredMessage({required Object name}) => 'Kategori "${name}" dipulihkan.';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2220,7 +2261,6 @@ extension on Translations {
 			'record.fromWalletFieldLabel' => 'Dari Dompet',
 			'record.destinationWalletFieldLabel' => 'Ke Dompet',
 			'record.dateFieldLabel' => 'Tanggal',
-			'record.categoryFieldHint' => 'Kategori (opsional)',
 			'record.noteFieldHint' => 'Tulis catatan singkat',
 			'record.noWalletsMessage' => 'Belum ada dompet. Buat dompet dulu di tab Dompet.',
 			'record.sameWalletWarning' => 'Dompet asal dan tujuan tidak boleh sama.',
@@ -2229,14 +2269,6 @@ extension on Translations {
 			'record.transferSavedMessage' => 'Transfer tercatat.',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
-			'record.categorySuggestionSalary' => 'Gaji',
-			'record.categorySuggestionBonus' => 'Bonus',
-			'record.categorySuggestionSales' => 'Penjualan',
-			'record.categorySuggestionGift' => 'Hadiah',
-			'record.categorySuggestionFood' => 'Makan',
-			'record.categorySuggestionShopping' => 'Belanja',
-			'record.categorySuggestionTransport' => 'Transport',
-			'record.categorySuggestionBills' => 'Tagihan',
 			'record.incomeBadge' => 'Uang Masuk',
 			'record.expenseBadge' => 'Uang Keluar',
 			'record.transferBadge' => 'Mutasi Internal',
@@ -2252,10 +2284,6 @@ extension on Translations {
 			'record.clearAmountAction' => 'Bersihkan',
 			'record.categorySectionLabel' => 'Kategori',
 			'record.optionalHint' => 'Opsional',
-			'record.categoryOtherLabel' => 'Lainnya',
-			'record.categoryCustomHint' => 'Ketik kategori sendiri',
-			'record.categorySuggestionEntertainment' => 'Hiburan',
-			'record.categorySuggestionInvestment' => 'Investasi',
 			'record.expenseWalletSectionLabel' => 'Dompet Sumber Dana',
 			'record.noteSectionLabel' => 'Keterangan / Catatan',
 			'record.balanceDecreasesCaption' => 'Saldo berkurang',
@@ -2278,6 +2306,7 @@ extension on Translations {
 			'record.kindExpense' => 'Keluar',
 			'record.kindIncome' => 'Masuk',
 			'record.kindTransfer' => 'Transfer',
+			'record.categoryAddLabel' => 'Tambah kategori',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2708,8 +2737,6 @@ extension on Translations {
 			'home.guideWalletTag' => 'Aset nyata',
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
-			_ => null,
-		} ?? switch (path) {
 			'home.guideBudgetTag' => 'Rencana',
 			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			'home.guideFreelanceTitle' => 'Freelance',
@@ -2722,6 +2749,8 @@ extension on Translations {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
 			'home.openCard' => ({required Object name}) => 'Buka ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
+			_ => null,
+		} ?? switch (path) {
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -2859,6 +2888,39 @@ extension on Translations {
 			'currency.names.php' => 'Peso Filipina',
 			'currency.names.vnd' => 'Dong Vietnam',
 			'currency.names.aud' => 'Dolar Australia',
+			'category.builtIn.food' => 'Makan & Minum',
+			'category.builtIn.groceries' => 'Belanja Harian',
+			'category.builtIn.transport' => 'Transportasi',
+			'category.builtIn.bills' => 'Tagihan',
+			'category.builtIn.internet' => 'Pulsa & Internet',
+			'category.builtIn.health' => 'Kesehatan',
+			'category.builtIn.entertainment' => 'Hiburan',
+			'category.builtIn.shopping' => 'Belanja',
+			'category.builtIn.education' => 'Pendidikan',
+			'category.builtIn.family' => 'Keluarga',
+			'category.builtIn.donation' => 'Donasi',
+			'category.builtIn.expenseOther' => 'Lainnya',
+			'category.builtIn.salary' => 'Gaji',
+			'category.builtIn.freelance' => 'Freelance',
+			'category.builtIn.bonus' => 'Bonus',
+			'category.builtIn.gift' => 'Hadiah',
+			'category.builtIn.incomeOther' => 'Lainnya',
+			'category.title' => 'Kategori',
+			'category.accountEntryTitle' => 'Kategori',
+			'category.accountEntryBody' => 'Atur daftar kategori pemasukan dan pengeluaran.',
+			'category.expenseTab' => 'Pengeluaran',
+			'category.incomeTab' => 'Pemasukan',
+			'category.addAction' => 'Tambah kategori',
+			'category.addTitle' => 'Kategori baru',
+			'category.renameTitle' => 'Ganti nama kategori',
+			'category.nameHint' => 'Nama kategori',
+			'category.archiveAction' => 'Arsipkan',
+			'category.restoreAction' => 'Pulihkan',
+			'category.archivedSection' => 'Terarsip',
+			'category.archivedHint' => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.',
+			'category.emptyActive' => 'Belum ada kategori aktif.',
+			'category.archivedMessage' => ({required Object name}) => 'Kategori "${name}" diarsipkan.',
+			'category.restoredMessage' => ({required Object name}) => 'Kategori "${name}" dipulihkan.',
 			_ => null,
 		};
 	}

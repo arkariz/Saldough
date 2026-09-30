@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 
+import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:saldough/core/di/di.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:state_management/state_management.dart';
 
 /// Kontainer DI akar. Lihat ARCHITECTURE_OVERVIEW.md bagian "Bootstrap".
@@ -43,6 +45,20 @@ Future<void> main() async {
   ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
     (_) => AppCurrency.idr,
   );
+
+  // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama
+  // membaca judul transaksi. Gagal tidak menghalangi aplikasi terbuka
+  // (NFR-REL-001); dicoba lagi pada pembukaan berikutnya.
+  final categoryRepository = rootGetIt<CategoryRepository>();
+  final migrated = await MigrateLegacyCategories(
+    categoryRepository: categoryRepository,
+    legacyLabels: rootGetIt<LegacyCategoryLabels>(),
+  )(builtInName: (key) => t.category.builtIn[key] ?? key);
+  if (migrated case Left(value: final failure)) {
+    developer.log('Migrasi kategori gagal, dicoba lagi nanti', error: failure, name: 'MigrateLegacyCategories');
+  }
+  // Mengisi `ActiveCategories` (lewat repository) untuk judul transaksi.
+  await categoryRepository.listCategories();
 
   registerEffectHandlers();
 

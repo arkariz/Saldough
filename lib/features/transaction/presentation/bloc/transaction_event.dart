@@ -53,10 +53,10 @@ final class TransactionWalletFilterChanged extends TransactionEvent {
 /// Mengganti filter kategori. `null` berarti "semua kategori".
 final class TransactionCategoryFilterChanged extends TransactionEvent {
   /// Membuat [TransactionCategoryFilterChanged].
-  const TransactionCategoryFilterChanged(this.categoryKey);
+  const TransactionCategoryFilterChanged(this.categoryId);
 
-  /// Kunci kategori yang dipilih, atau `null` untuk semua kategori.
-  final String? categoryKey;
+  /// Id kategori yang dipilih, atau `null` untuk semua kategori.
+  final String? categoryId;
 }
 
 /// Mengganti kata kunci pencarian teks. String kosong berarti "tanpa

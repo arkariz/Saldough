@@ -9,6 +9,7 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/account/presentation/pages/account_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 
@@ -23,7 +24,8 @@ void main() {
       ..registerSingleton<AuthRepository>(repository)
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
-      );
+      )
+      ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()));
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
@@ -74,6 +76,7 @@ void main() {
     );
 
     await tester.ensureVisible(find.byKey(const ValueKey('account-delete')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('account-delete')));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, t.account.deleteAction));
@@ -109,5 +112,40 @@ void main() {
 
     expect(ActiveCurrency.value, AppCurrency.usd);
     expect(find.text('USD · ${t.currency.names.usd}'), findsOneWidget);
+  });
+
+  testWidgets('Kategori (ADR-026): tambah, ganti nama, arsipkan, lalu pulihkan', (tester) async {
+    addTearDown(() => ActiveCategories.notifier.value = const []);
+    await pumpAccount(tester);
+
+    await tester.ensureVisible(find.byKey(const ValueKey('category-setting')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('category-setting')));
+    await tester.pumpAndSettle();
+    expect(find.text(t.category.emptyActive), findsOneWidget);
+
+    await tester.tap(find.text(t.category.addAction));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Arisan');
+    await tester.tap(find.text(t.common.save));
+    await tester.pumpAndSettle();
+    expect(find.text('Arisan'), findsOneWidget);
+
+    await tester.tap(find.text('Arisan'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Arisan RT');
+    await tester.tap(find.text(t.common.save));
+    await tester.pumpAndSettle();
+    expect(find.text('Arisan RT'), findsOneWidget);
+
+    await tester.tap(find.text(t.category.archiveAction));
+    await tester.pumpAndSettle();
+    expect(find.text(t.category.archivedSection.toUpperCase()), findsOneWidget);
+    expect(ActiveCategories.notifier.value.single.isArchived, isTrue);
+
+    await tester.tap(find.text(t.category.restoreAction));
+    await tester.pumpAndSettle();
+    expect(find.text(t.category.archivedSection.toUpperCase()), findsNothing);
+    expect(ActiveCategories.notifier.value.single.isArchived, isFalse);
   });
 }

@@ -24,7 +24,7 @@ void main() {
         date: DateTime(2026, 9, 15),
         amount: 500000000,
         note: 'gaji bulanan',
-        categoryKey: 'gaji',
+        categoryId: 'builtin.salary',
         walletId: 'w1',
       );
 

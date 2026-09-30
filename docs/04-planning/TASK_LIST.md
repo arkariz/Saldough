@@ -72,7 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 9 | 0 | Berjalan -- ADR-026/027 Accepted 30 Sep 2026; T-11.1 (sistem kategori) dikerjakan |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 9 | 1 | Berjalan -- ADR-026/027 Accepted 30 Sep 2026; T-11.1 (sistem kategori) selesai, berikutnya T-11.2 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1517,7 +1517,7 @@ keputusan arsitektur di [ADR-026](../02-architecture/adr/0026-sistem-kategori.md
 Nomor 11, karena Fase 10 dicadangkan untuk sinkronisasi (B-7). Dari B-13 dan
 B-14.
 
-- [ ] **T-11.1** Sistem kategori (dari B-13, ADR-026): entitas `Category`,
+- [x] **T-11.1** Sistem kategori (dari B-13, ADR-026): entitas `Category`,
       repository, set bawaan, migrasi `categoryKey` → `categoryId` (label
       transfer dibuang), pemilih kategori CATAT dengan "Tambah kategori",
       penyaring/judul Transaksi memakai id, layar Kategori dari Akun.
@@ -1525,6 +1525,18 @@ B-14.
       kategori lebih dulu, id `legacy.*` deterministik, uji idempoten.
       Verifikasi: uji migrasi, `flutter analyze`, seluruh uji lulus, cek di
       emulator dengan data lama.
+      Hasil (30 Sep 2026): `lib/shared/category/` (entitas, 17 kategori
+      bawaan dengan alias, `CategoryRepositoryImpl`, `CreateCategory`,
+      `MigrateLegacyCategories` lewat port `LegacyCategoryLabels` yang
+      diimplementasikan `TransactionRepositoryImpl`, `ActiveCategories`),
+      skema transaksi 2 (`categoryId`), pemilih kategori CATAT dengan
+      "Tambah kategori", layar Kategori dari Akun. 621 uji lulus,
+      `flutter analyze` bersih. Emulator Pixel 9 Pro: pemasangan baru
+      menanam kategori bawaan, layar Kategori dan pemilih CATAT berjalan,
+      "Tambah kategori" langsung terpilih. **Belum dicek di emulator dengan
+      data skema 1 sungguhan** (migrasi hanya diuji dengan dokumen JSON skema
+      1 di penyimpanan memori) — cek di perangkat closed testing pemilik
+      sebelum rilis.
 - [ ] **T-11.2** Tipe domain Catat Cerdas (`CaptureEvidence`,
       `TransactionInterpreter`, `InterpretedTransaction`, `RecordDraft`,
       `DraftIssue`) dan `SpokenAmountParser` (ADR-027 §3.1–3.3).

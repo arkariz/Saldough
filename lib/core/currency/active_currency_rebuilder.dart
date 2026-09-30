@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:saldough/core/currency/active_currency.dart';
 
 /// Membangun ulang seluruh keturunannya saat [ActiveCurrency] berganti
-/// (ADR-025 §3.6).
+/// (ADR-025 §3.6), atau saat [also] memberi tahu perubahan (daftar kategori,
+/// ADR-026 §3.5).
 ///
 /// Formatter nominal dipanggil statis, jadi tidak ada `InheritedWidget` yang
 /// bisa memberi tahu layar yang sudah terbuka (termasuk rute di bawah layar
@@ -12,10 +13,14 @@ import 'package:saldough/core/currency/active_currency.dart';
 /// sama.
 class ActiveCurrencyRebuilder extends StatefulWidget {
   /// Membuat [ActiveCurrencyRebuilder] di atas [child].
-  const ActiveCurrencyRebuilder({required this.child, super.key});
+  const ActiveCurrencyRebuilder({required this.child, this.also, super.key});
 
   /// Subpohon yang dibangun ulang.
   final Widget child;
+
+  /// Nilai statis lain yang dibaca langsung oleh layar (di luar `core`, jadi
+  /// diberikan pemanggil), misalnya `ActiveCategories.notifier`.
+  final Listenable? also;
 
   @override
   State<ActiveCurrencyRebuilder> createState() => _ActiveCurrencyRebuilderState();
@@ -26,11 +31,13 @@ class _ActiveCurrencyRebuilderState extends State<ActiveCurrencyRebuilder> {
   void initState() {
     super.initState();
     ActiveCurrency.notifier.addListener(_rebuildAll);
+    widget.also?.addListener(_rebuildAll);
   }
 
   @override
   void dispose() {
     ActiveCurrency.notifier.removeListener(_rebuildAll);
+    widget.also?.removeListener(_rebuildAll);
     super.dispose();
   }
 

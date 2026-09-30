@@ -9,6 +9,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/shared/category/category.dart';
 
 /// Widget akar Saldough.
 ///
@@ -18,7 +19,8 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 /// sendiri (lihat ARCHITECTURE_OVERVIEW.md bagian "Navigasi").
 ///
 /// Dibungkus [ActiveCurrencyRebuilder] supaya mengganti mata uang ikut
-/// memperbarui layar yang sudah terbuka (ADR-025 §3.6).
+/// memperbarui layar yang sudah terbuka (ADR-025 §3.6), begitu juga mengganti
+/// nama atau mengarsipkan kategori (ADR-026 §3.5).
 ///
 /// Juga memasang [SpotlightHost] (tur spotlight, ADR-021) dan tombol menu pengembang (hanya di build debug, T-1.10) lewat
 /// `builder:` `MaterialApp.router`, sehingga muncul di atas layar apa pun.
@@ -39,6 +41,7 @@ class SaldoughApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActiveCurrencyRebuilder(
+      also: ActiveCategories.notifier,
       child: ScopeProvider(
         container: getIt,
         child: MaterialApp.router(

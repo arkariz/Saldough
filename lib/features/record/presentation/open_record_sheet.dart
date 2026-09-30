@@ -9,6 +9,7 @@ import 'package:saldough/features/record/presentation/widgets/record_choice.dart
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
@@ -105,14 +106,16 @@ Future<void> openRecordSheet(
           wallets: wallets,
           prefill: incomePrefill,
           initialWalletId: walletFor(defaults.incomeWalletId),
-          recentCategories: defaults.incomeCategories,
+          frequentCategoryIds: defaults.incomeCategoryIds,
+          onCreateCategory: (name) => bloc.createCategory(CategoryKind.income, name),
           kindSwitcher: kindSwitcher,
         ),
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
           prefill: expensePrefill,
           initialWalletId: walletFor(defaults.expenseWalletId),
-          recentCategories: defaults.expenseCategories,
+          frequentCategoryIds: defaults.expenseCategoryIds,
+          onCreateCategory: (name) => bloc.createCategory(CategoryKind.expense, name),
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,

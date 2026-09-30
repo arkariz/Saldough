@@ -14,6 +14,7 @@ import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/transaction_display.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -65,6 +66,7 @@ class TransactionDetailPage extends StatelessWidget {
       transaction: transaction,
       wallets: wallets,
       budgetItems: state.budgetItems,
+      onCreateCategory: context.read<RecordBloc?>()?.createCategory,
     );
     if (updated == null || updated == transaction) return;
     bloc.add(TransactionUpdated(original: transaction, updated: updated));
@@ -363,7 +365,7 @@ class _DetailsCard extends StatelessWidget {
       ExpenseTransaction() => t.transaction.detailExpenseType,
       TransferTransaction() => t.transaction.detailTransferType,
     };
-    final category = tx.categoryKey;
+    final category = ActiveCategories.byId(tx.categoryId);
 
     return TransactionSlab(
       shadow: 0,
@@ -375,7 +377,7 @@ class _DetailsCard extends StatelessWidget {
             label: t.transaction.detailTypeLabel,
             value: Text(typeLabel, style: _valueStyle(context)),
           ),
-          if (category != null && category.isNotEmpty) ...[
+          if (category != null) ...[
             const _Gap(),
             _Row(
               label: t.transaction.detailCategoryLabel,
@@ -520,7 +522,7 @@ class _Row extends StatelessWidget {
 class _CategoryChip extends StatelessWidget {
   const _CategoryChip({required this.category});
 
-  final String category;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
@@ -531,10 +533,10 @@ class _CategoryChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AppIcon(categoryIconFor(category), size: 18),
+          AppIcon(categoryIcon(category), size: 18),
           const SizedBox(width: AppSpacing.xs),
           Flexible(
-            child: Text(category, style: transactionLabelStyle(context, size: 12, color: colors.textPrimary)),
+            child: Text(category.name, style: transactionLabelStyle(context, size: 12, color: colors.textPrimary)),
           ),
         ],
       ),

@@ -2,6 +2,8 @@ import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
+import 'package:saldough/shared/category/domain/category.dart';
+import 'package:saldough/shared/category/domain/legacy_category_labels.dart';
 import 'package:saldough/shared/transaction/data/transaction_model.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 import 'package:saldough/shared/transaction/domain/transaction_repository.dart';
@@ -20,7 +22,10 @@ String _monthKeyFor(DateTime date) =>
 /// Kunci `transaction_YYYY-MM` menyimpan satu bulan; kunci `transaction__index`
 /// menyimpan daftar bulan yang pernah ditulis, satu-satunya cara tahu bulan
 /// mana saja yang ada — [KeyValueStorage] tidak punya operasi "daftar kunci".
-final class TransactionRepositoryImpl with RepositoryGuard implements TransactionRepository {
+///
+/// Juga mengimplementasikan port [LegacyCategoryLabels] (ADR-026 §3.4) karena
+/// hanya kelas ini yang tahu tata letak dokumen bulan.
+final class TransactionRepositoryImpl with RepositoryGuard implements TransactionRepository, LegacyCategoryLabels {
   /// Membuat [TransactionRepositoryImpl] di atas [_storage].
   const TransactionRepositoryImpl({required this._storage});
 
@@ -111,9 +116,13 @@ final class TransactionRepositoryImpl with RepositoryGuard implements Transactio
 
         final targetStore = _monthStore(targetMonthKey);
         final targetModels = await targetStore.read() ?? <TransactionModel>[];
+        var model = TransactionModel.fromEntity(transaction);
+        for (final previous in targetModels) {
+          if (previous.id == transaction.id) model = model.keepingLegacyCategoryOf(previous);
+        }
         final next = [
           ...targetModels.where((m) => m.id != transaction.id),
-          TransactionModel.fromEntity(transaction),
+          model,
         ];
         await targetStore.write(next);
         await _markMonthPresent(targetMonthKey);
@@ -124,5 +133,47 @@ final class TransactionRepositoryImpl with RepositoryGuard implements Transactio
         final store = _monthStore(_monthKeyFor(date));
         final models = await store.read() ?? <TransactionModel>[];
         await store.write(models.where((m) => m.id != id).toList());
+      });
+
+  @override
+  Future<Either<Failure, List<LegacyCategoryLabel>>> listLabels() => guard(() async {
+        final months = await _indexStore.read() ?? const <String>[];
+        final labels = <String, LegacyCategoryLabel>{};
+        for (final monthKey in months) {
+          for (final model in await _monthStore(monthKey).read() ?? const <TransactionModel>[]) {
+            final label = model.legacyCategoryKey?.trim() ?? '';
+            if (label.isEmpty || model.isTransfer || model.categoryId != null) continue;
+            final kind = model.isIncome ? CategoryKind.income : CategoryKind.expense;
+            labels.putIfAbsent('${kind.name}|${normalizeCategoryText(label)}', () => LegacyCategoryLabel(kind: kind, label: label));
+          }
+        }
+        return labels.values.toList();
+      });
+
+  @override
+  Future<Either<Failure, Unit>> replaceLabels(String? Function(LegacyCategoryLabel label) idFor) =>
+      guardVoid(() async {
+        final months = await _indexStore.read() ?? const <String>[];
+        for (final monthKey in months) {
+          final store = _monthStore(monthKey);
+          final models = await store.read() ?? const <TransactionModel>[];
+          if (!models.any((m) => m.legacyCategoryKey != null)) continue;
+          await store.write([
+            for (final model in models)
+              if (model.legacyCategoryKey == null)
+                model
+              else
+                model.withMigratedCategory(
+                  model.isTransfer || model.legacyCategoryKey!.trim().isEmpty
+                      ? null
+                      : idFor(
+                          LegacyCategoryLabel(
+                            kind: model.isIncome ? CategoryKind.income : CategoryKind.expense,
+                            label: model.legacyCategoryKey!.trim(),
+                          ),
+                        ),
+                ),
+          ]);
+        }
       });
 }

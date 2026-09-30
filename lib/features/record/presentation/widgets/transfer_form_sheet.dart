@@ -25,9 +25,8 @@ import 'package:saldough/shared/wallet/wallet.dart';
 ///
 /// ⚠ Kosakata tombol menyatakan pencatatan, bukan tindakan keuangan —
 /// "Catat Transfer", bukan "Transfer Sekarang" atau "Kirim Uang" (UX-05).
-/// Tidak ada field kategori di sini -- `TransferRecorded` tidak punya
-/// `categoryKey` (lihat `RecordEvent`), berbeda dari formulir pemasukan dan
-/// pengeluaran.
+/// Tidak ada field kategori di sini -- transfer tidak berkategori (ADR-026),
+/// berbeda dari formulir pemasukan dan pengeluaran.
 ///
 /// ⚠ Bagian "Biaya Admin / Transfer" di rujukan visual TIDAK dibangun:
 /// `TransferRecorded` tidak punya biaya, dan mencatatnya berarti keputusan

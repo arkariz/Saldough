@@ -17,9 +17,11 @@ import 'package:saldough/features/record/presentation/widgets/record_form_host.d
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/categories.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 
@@ -38,6 +40,8 @@ final class _FailingWalletRepository implements WalletRepository {
 }
 
 void main() {
+  setUp(() => useCategories(['Makan Siang', 'Belanja Bulanan Kebutuhan Rumah Tangga dan Keluarga Besar']));
+
   late InMemoryKeyValueStorage storage;
   late WalletRepositoryImpl walletRepository;
   late TransactionRepositoryImpl transactionRepository;
@@ -55,6 +59,7 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
   });
@@ -175,6 +180,7 @@ void main() {
         ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+        ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
         ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
 
@@ -250,7 +256,7 @@ void main() {
           amount: 7500000,
           note: 'nasi padang',
           walletId: 'bca',
-          categoryKey: 'Makan Siang',
+          categoryId: 'Makan Siang',
         ),
       );
       await recompute({'bca'});
@@ -388,7 +394,7 @@ void main() {
             amount: 123456789000,
             note: note,
             walletId: 'bca',
-            categoryKey: category,
+            categoryId: category,
           ),
         );
         await recompute({'bca'});

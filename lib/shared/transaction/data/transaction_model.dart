@@ -14,7 +14,8 @@ final class TransactionModel {
     required this.date,
     required this.amount,
     required this.note,
-    this.categoryKey,
+    this.categoryId,
+    this.legacyCategoryKey,
     this.walletId,
     this.budgetItemId,
     this.fromWalletId,
@@ -29,7 +30,8 @@ final class TransactionModel {
         date: DateTime.parse(json['date'] as String),
         amount: json['amount'] as int,
         note: json['note'] as String,
-        categoryKey: json['categoryKey'] as String?,
+        categoryId: json['categoryId'] as String?,
+        legacyCategoryKey: json['categoryKey'] as String?,
         walletId: json['walletId'] as String?,
         budgetItemId: json['budgetItemId'] as String?,
         fromWalletId: json['fromWalletId'] as String?,
@@ -45,7 +47,7 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
-            categoryKey: transaction.categoryKey,
+            categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             freelancePaymentId: transaction.freelancePaymentId,
           ),
@@ -55,7 +57,7 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
-            categoryKey: transaction.categoryKey,
+            categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             budgetItemId: transaction.budgetItemId,
           ),
@@ -65,7 +67,6 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
-            categoryKey: transaction.categoryKey,
             fromWalletId: transaction.fromWalletId,
             toWalletId: transaction.toWalletId,
             budgetItemId: transaction.budgetItemId,
@@ -77,7 +78,9 @@ final class TransactionModel {
   static const _typeTransfer = 'transfer';
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
-  static const schemaVersion = 1;
+  ///
+  /// Versi 2 (ADR-026): `categoryKey` teks bebas diganti `categoryId`.
+  static const schemaVersion = 2;
 
   /// Identitas transaksi.
   final String id;
@@ -94,8 +97,14 @@ final class TransactionModel {
   /// Catatan bebas.
   final String note;
 
-  /// Label pengelompokan.
-  final String? categoryKey;
+  /// Kategori — dipakai `income` dan `expense` (ADR-026).
+  final String? categoryId;
+
+  /// Label kategori teks bebas skema 1, hanya dibaca untuk migrasi
+  /// (`MigrateLegacyCategories`) dan tidak pernah sampai ke entitas domain.
+  /// Tetap ditulis ulang selama belum dimigrasi, supaya menyunting transaksi
+  /// sebelum migrasi berhasil tidak menghapus labelnya.
+  final String? legacyCategoryKey;
 
   /// Dompet yang tersentuh — dipakai `income` dan `expense`.
   final String? walletId;
@@ -114,6 +123,48 @@ final class TransactionModel {
   /// berubah bentuk.
   final String? freelancePaymentId;
 
+  /// Salinan dengan kategori [categoryId] dan label lama dibuang — hasil
+  /// migrasi ADR-026 §3.4.
+  TransactionModel withMigratedCategory(String? categoryId) => TransactionModel(
+        id: id,
+        type: type,
+        date: date,
+        amount: amount,
+        note: note,
+        categoryId: type == _typeTransfer ? null : (this.categoryId ?? categoryId),
+        walletId: walletId,
+        budgetItemId: budgetItemId,
+        fromWalletId: fromWalletId,
+        toWalletId: toWalletId,
+        freelancePaymentId: freelancePaymentId,
+      );
+
+  /// Salinan yang membawa [legacyCategoryKey] milik [previous] — dipakai saat
+  /// menimpa dokumen skema 1 yang belum dimigrasi, supaya labelnya tidak
+  /// hilang karena entitas domain tidak mengenalnya.
+  TransactionModel keepingLegacyCategoryOf(TransactionModel previous) =>
+      categoryId != null || previous.legacyCategoryKey == null || isTransfer
+          ? this
+          : TransactionModel(
+              id: id,
+              type: type,
+              date: date,
+              amount: amount,
+              note: note,
+              legacyCategoryKey: previous.legacyCategoryKey,
+              walletId: walletId,
+              budgetItemId: budgetItemId,
+              fromWalletId: fromWalletId,
+              toWalletId: toWalletId,
+              freelancePaymentId: freelancePaymentId,
+            );
+
+  /// `true` untuk transfer (tidak berkategori).
+  bool get isTransfer => type == _typeTransfer;
+
+  /// `true` untuk pemasukan.
+  bool get isIncome => type == _typeIncome;
+
   /// Menulis [TransactionModel] ke JSON.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -121,7 +172,8 @@ final class TransactionModel {
         'date': date.toIso8601String(),
         'amount': amount,
         'note': note,
-        'categoryKey': categoryKey,
+        if (categoryId != null) 'categoryId': categoryId,
+        if (legacyCategoryKey != null) 'categoryKey': legacyCategoryKey,
         'walletId': walletId,
         'budgetItemId': budgetItemId,
         'fromWalletId': fromWalletId,
@@ -140,7 +192,7 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
-            categoryKey: categoryKey,
+            categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel income tanpa walletId: $id')),
             freelancePaymentId: freelancePaymentId,
           ),
@@ -149,7 +201,7 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
-            categoryKey: categoryKey,
+            categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel expense tanpa walletId: $id')),
             budgetItemId: budgetItemId,
           ),
@@ -158,7 +210,6 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
-            categoryKey: categoryKey,
             fromWalletId: fromWalletId ?? (throw FormatException('TransactionModel transfer tanpa fromWalletId: $id')),
             toWalletId: toWalletId ?? (throw FormatException('TransactionModel transfer tanpa toWalletId: $id')),
             budgetItemId: budgetItemId,

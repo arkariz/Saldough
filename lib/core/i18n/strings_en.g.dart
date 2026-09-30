@@ -53,6 +53,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$info$en info = _Translations$info$en._(_root);
 	@override late final _Translations$account$en account = _Translations$account$en._(_root);
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
+	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 }
 
 // Path: app
@@ -113,7 +114,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get fromWalletFieldLabel => 'From Wallet';
 	@override String get destinationWalletFieldLabel => 'To Wallet';
 	@override String get dateFieldLabel => 'Date';
-	@override String get categoryFieldHint => 'Category (optional)';
 	@override String get noteFieldHint => 'Write a short note';
 	@override String get noWalletsMessage => 'No wallets yet. Create one in the Wallets tab first.';
 	@override String get sameWalletWarning => 'Source and destination wallets can\'t be the same.';
@@ -122,14 +122,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get transferSavedMessage => 'Transfer recorded.';
 	@override String get walletNotSelectedPrompt => 'Not selected yet';
 	@override String get savingMessage => 'Saving...';
-	@override String get categorySuggestionSalary => 'Salary';
-	@override String get categorySuggestionBonus => 'Bonus';
-	@override String get categorySuggestionSales => 'Sales';
-	@override String get categorySuggestionGift => 'Gift';
-	@override String get categorySuggestionFood => 'Food';
-	@override String get categorySuggestionShopping => 'Shopping';
-	@override String get categorySuggestionTransport => 'Transport';
-	@override String get categorySuggestionBills => 'Bills';
 	@override String get incomeBadge => 'Money in';
 	@override String get expenseBadge => 'Money out';
 	@override String get transferBadge => 'Internal move';
@@ -145,10 +137,6 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get clearAmountAction => 'Clear';
 	@override String get categorySectionLabel => 'Category';
 	@override String get optionalHint => 'Optional';
-	@override String get categoryOtherLabel => 'Other';
-	@override String get categoryCustomHint => 'Type your own category';
-	@override String get categorySuggestionEntertainment => 'Fun';
-	@override String get categorySuggestionInvestment => 'Investing';
 	@override String get expenseWalletSectionLabel => 'Source wallet';
 	@override String get noteSectionLabel => 'Note';
 	@override String get balanceDecreasesCaption => 'Balance goes down';
@@ -171,6 +159,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get kindExpense => 'Out';
 	@override String get kindIncome => 'In';
 	@override String get kindTransfer => 'Transfer';
+	@override String get categoryAddLabel => 'Add category';
 }
 
 // Path: transaction
@@ -825,6 +814,50 @@ class _Translations$currency$en extends Translations$currency$id {
 	@override late final _Translations$currency$names$en names = _Translations$currency$names$en._(_root);
 }
 
+// Path: category
+class _Translations$category$en extends Translations$category$id {
+	_Translations$category$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override Map<String, String> get builtIn => {
+		'food': 'Food & Drinks',
+		'groceries': 'Groceries',
+		'transport': 'Transport',
+		'bills': 'Bills',
+		'internet': 'Phone & Internet',
+		'health': 'Health',
+		'entertainment': 'Entertainment',
+		'shopping': 'Shopping',
+		'education': 'Education',
+		'family': 'Family',
+		'donation': 'Donations',
+		'expenseOther': 'Other',
+		'salary': 'Salary',
+		'freelance': 'Freelance',
+		'bonus': 'Bonus',
+		'gift': 'Gifts',
+		'incomeOther': 'Other',
+	};
+	@override String get title => 'Categories';
+	@override String get accountEntryTitle => 'Categories';
+	@override String get accountEntryBody => 'Manage your income and expense categories.';
+	@override String get expenseTab => 'Expense';
+	@override String get incomeTab => 'Income';
+	@override String get addAction => 'Add category';
+	@override String get addTitle => 'New category';
+	@override String get renameTitle => 'Rename category';
+	@override String get nameHint => 'Category name';
+	@override String get archiveAction => 'Archive';
+	@override String get restoreAction => 'Restore';
+	@override String get archivedSection => 'Archived';
+	@override String get archivedHint => 'Not offered when recording, but old transactions keep it.';
+	@override String get emptyActive => 'No active categories yet.';
+	@override String archivedMessage({required Object name}) => '"${name}" archived.';
+	@override String restoredMessage({required Object name}) => '"${name}" restored.';
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -894,7 +927,6 @@ extension on TranslationsEn {
 			'record.fromWalletFieldLabel' => 'From Wallet',
 			'record.destinationWalletFieldLabel' => 'To Wallet',
 			'record.dateFieldLabel' => 'Date',
-			'record.categoryFieldHint' => 'Category (optional)',
 			'record.noteFieldHint' => 'Write a short note',
 			'record.noWalletsMessage' => 'No wallets yet. Create one in the Wallets tab first.',
 			'record.sameWalletWarning' => 'Source and destination wallets can\'t be the same.',
@@ -903,14 +935,6 @@ extension on TranslationsEn {
 			'record.transferSavedMessage' => 'Transfer recorded.',
 			'record.walletNotSelectedPrompt' => 'Not selected yet',
 			'record.savingMessage' => 'Saving...',
-			'record.categorySuggestionSalary' => 'Salary',
-			'record.categorySuggestionBonus' => 'Bonus',
-			'record.categorySuggestionSales' => 'Sales',
-			'record.categorySuggestionGift' => 'Gift',
-			'record.categorySuggestionFood' => 'Food',
-			'record.categorySuggestionShopping' => 'Shopping',
-			'record.categorySuggestionTransport' => 'Transport',
-			'record.categorySuggestionBills' => 'Bills',
 			'record.incomeBadge' => 'Money in',
 			'record.expenseBadge' => 'Money out',
 			'record.transferBadge' => 'Internal move',
@@ -926,10 +950,6 @@ extension on TranslationsEn {
 			'record.clearAmountAction' => 'Clear',
 			'record.categorySectionLabel' => 'Category',
 			'record.optionalHint' => 'Optional',
-			'record.categoryOtherLabel' => 'Other',
-			'record.categoryCustomHint' => 'Type your own category',
-			'record.categorySuggestionEntertainment' => 'Fun',
-			'record.categorySuggestionInvestment' => 'Investing',
 			'record.expenseWalletSectionLabel' => 'Source wallet',
 			'record.noteSectionLabel' => 'Note',
 			'record.balanceDecreasesCaption' => 'Balance goes down',
@@ -952,6 +972,7 @@ extension on TranslationsEn {
 			'record.kindExpense' => 'Out',
 			'record.kindIncome' => 'In',
 			'record.kindTransfer' => 'Transfer',
+			'record.categoryAddLabel' => 'Add category',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1382,8 +1403,6 @@ extension on TranslationsEn {
 			'home.guideWalletTag' => 'Real assets',
 			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
 			'home.guideBudgetTitle' => 'Budgets',
-			_ => null,
-		} ?? switch (path) {
 			'home.guideBudgetTag' => 'Plans',
 			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
 			'home.guideFreelanceTitle' => 'Freelance',
@@ -1396,6 +1415,8 @@ extension on TranslationsEn {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
 			'home.openCard' => ({required Object name}) => 'Open ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
+			_ => null,
+		} ?? switch (path) {
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -1533,6 +1554,39 @@ extension on TranslationsEn {
 			'currency.names.php' => 'Philippine Peso',
 			'currency.names.vnd' => 'Vietnamese Dong',
 			'currency.names.aud' => 'Australian Dollar',
+			'category.builtIn.food' => 'Food & Drinks',
+			'category.builtIn.groceries' => 'Groceries',
+			'category.builtIn.transport' => 'Transport',
+			'category.builtIn.bills' => 'Bills',
+			'category.builtIn.internet' => 'Phone & Internet',
+			'category.builtIn.health' => 'Health',
+			'category.builtIn.entertainment' => 'Entertainment',
+			'category.builtIn.shopping' => 'Shopping',
+			'category.builtIn.education' => 'Education',
+			'category.builtIn.family' => 'Family',
+			'category.builtIn.donation' => 'Donations',
+			'category.builtIn.expenseOther' => 'Other',
+			'category.builtIn.salary' => 'Salary',
+			'category.builtIn.freelance' => 'Freelance',
+			'category.builtIn.bonus' => 'Bonus',
+			'category.builtIn.gift' => 'Gifts',
+			'category.builtIn.incomeOther' => 'Other',
+			'category.title' => 'Categories',
+			'category.accountEntryTitle' => 'Categories',
+			'category.accountEntryBody' => 'Manage your income and expense categories.',
+			'category.expenseTab' => 'Expense',
+			'category.incomeTab' => 'Income',
+			'category.addAction' => 'Add category',
+			'category.addTitle' => 'New category',
+			'category.renameTitle' => 'Rename category',
+			'category.nameHint' => 'Category name',
+			'category.archiveAction' => 'Archive',
+			'category.restoreAction' => 'Restore',
+			'category.archivedSection' => 'Archived',
+			'category.archivedHint' => 'Not offered when recording, but old transactions keep it.',
+			'category.emptyActive' => 'No active categories yet.',
+			'category.archivedMessage' => ({required Object name}) => '"${name}" archived.',
+			'category.restoredMessage' => ({required Object name}) => '"${name}" restored.',
 			_ => null,
 		};
 	}

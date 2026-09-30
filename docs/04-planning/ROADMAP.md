@@ -240,6 +240,18 @@ langkah mata uang ditambahkan sebagai gerbang di
 utuh, pengguna baru dituntun sampai transaksi pertama, dan semuanya bisa
 diputar ulang dari menu info. (Tercapai 28 Sep 2026, T-9.10.)
 
+## Fase 11: Catat Cerdas — kategori dan suara
+
+Sistem kategori bawaan yang bisa diubah
+([ADR-026](../02-architecture/adr/0026-sistem-kategori.md)), lalu pencatatan
+dari suara yang mengisi formulir CATAT; notifikasi dan foto menyusul lewat
+kontrak yang sama ([ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)).
+Rincian di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md).
+
+**Selesai kalau:** transaksi berkategori tertutup, dan pengguna bisa
+mengucapkan satu transaksi lalu meninjaunya di formulir CATAT yang sudah
+terisi; hasil suara tidak pernah tersimpan tanpa konfirmasi.
+
 ## Ketergantungan antar fase
 
 ```

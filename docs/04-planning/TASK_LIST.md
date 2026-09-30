@@ -72,6 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 9 | 0 | Berjalan -- ADR-026/027 Accepted 30 Sep 2026; T-11.1 (sistem kategori) dikerjakan |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1506,6 +1507,41 @@ lembar pilihan ke onboarding dan tur CATAT.
       yang baru tampil, tur Transaksi dan Anggaran; mode gelap. Freelance dan
       rincian anggaran diverifikasi lewat uji widget shell sungguhan.
 
+## Fase 11: Catat Cerdas — kategori dan suara
+
+Riset, keputusan pemilik, dan rencana rinci di
+[VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md);
+keputusan arsitektur di [ADR-026](../02-architecture/adr/0026-sistem-kategori.md)
+(kategori) dan [ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)
+(bukti teks suara/notifikasi/foto, interpreter yang bisa diganti, draf CATAT).
+Nomor 11, karena Fase 10 dicadangkan untuk sinkronisasi (B-7). Dari B-13 dan
+B-14.
+
+- [ ] **T-11.1** Sistem kategori (dari B-13, ADR-026): entitas `Category`,
+      repository, set bawaan, migrasi `categoryKey` → `categoryId` (label
+      transfer dibuang), pemilih kategori CATAT dengan "Tambah kategori",
+      penyaring/judul Transaksi memakai id, layar Kategori dari Akun.
+      ⚠ Jebakan: migrasi menyentuh data closed testing — tulis dokumen
+      kategori lebih dulu, id `legacy.*` deterministik, uji idempoten.
+      Verifikasi: uji migrasi, `flutter analyze`, seluruh uji lulus, cek di
+      emulator dengan data lama.
+- [ ] **T-11.2** Tipe domain Catat Cerdas (`CaptureEvidence`,
+      `TransactionInterpreter`, `InterpretedTransaction`, `RecordDraft`,
+      `DraftIssue`) dan `SpokenAmountParser` (ADR-027 §3.1–3.3).
+- [ ] **T-11.3** `CaptureDraftResolver` + `RuleBasedTransactionInterpreter`
+      dengan dataset benchmark teks (§10 dokumen riset) sebagai uji.
+- [ ] **T-11.4** `openRecordSheet(draft:)` dan tiga formulir menerima draf
+      parsial (catatan, kategori, tanggal) dan menyorot issue.
+- [ ] **T-11.5** STT sistem (`speech_to_text`), izin mikrofon/ucapan Android
+      dan iOS, sheet rekam, tombol mikrofon di CATAT.
+- [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
+      (audio diproses Google/Apple; unduhan model dari Hugging Face).
+- [ ] **T-11.7** Spike model lokal termurah (Gemma 3 270M → 1B → Gemma 4
+      E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma.
+- [ ] **T-11.8** `LocalLlmTransactionInterpreter` + kaskade + unduhan opt-in
+      + gating perangkat.
+- [ ] **T-11.9** Benchmark lengkap dan keputusan adaptor Firebase AI.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -1524,8 +1560,8 @@ menambah dan memindahkannya ada di
 | B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
-| B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | agen (set bawaan disetujui, label transfer lama dibuang — pemilik 30 Sep 2026) | riset 30 Sep 2026 |
-| B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. Butuh ADR-0027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). Bergantung B-13. | agen, setelah B-13 | riset 30 Sep 2026 |
+| B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
 

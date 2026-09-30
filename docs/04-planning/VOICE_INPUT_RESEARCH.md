@@ -143,6 +143,13 @@ di pbxproj).
 
 ## 3. Arsitektur yang direkomendasikan
 
+> **Tambahan pemilik 30 Sep 2026:** input dari **notifikasi** dan **foto**
+> menyusul. Karena itu interpreter menerima `CaptureEvidence { source: voice |
+> notification | photo, text, capturedAt, origin? }` — bukan transkrip suara
+> saja — dan kode tinggal di `features/record/{domain,data,presentation}/capture/`.
+> Notifikasi dan foto hanya menambah penangkap (pendengar notifikasi, OCR);
+> interpreter, resolver, dan form CATAT sama. Lihat ADR-027.
+
 ```text
  [Tombol mic di pemilih CATAT]
             │
@@ -161,8 +168,8 @@ di pbxproj).
    └─ CascadingTransactionInterpreter   (rule → llm bila tidak yakin)
             │
             ▼
- VoiceDraftResolver (domain, deterministik, SATU untuk semua penyedia)
-   - SpokenAmountParser  → int sen (atau issue)
+ CaptureDraftResolver (domain, deterministik, SATU untuk semua penyedia)
+   - SpokenAmountParser  → int sen (atau issue); juga "Rp35.000,00" notifikasi
    - WalletMatcher       → walletId (atau issue)
    - CategoryMatcher     → categoryId (nama + alias bawaan; himpunan tertutup)
    - RelativeDateResolver (hari ini / kemarin)
@@ -469,7 +476,7 @@ normalisasi huruf kecil/spasi + jarak edit kecil), tanggal relatif
 Keluaran: `int` sen, dihitung dengan aritmetika bilangan bulat dari token.
 | Masukan | Aturan | IDR (0 desimal) |
 |---|---|---|
-| `5k`, `5rb`, `5 ribu` | ×1.000 | 5.000 (satuan utama; sen = satuan × 10^`fractionDigits`) |
+| `5k`, `5rb`, `5 ribu` | ×1.000 | 5.000 (satuan utama; sen = satuan × 100, ADR-025 §3.1) |
 | `5 juta`, `5jt` | ×1.000.000 | 5.000.000 |
 | `1,5 juta` | koma = desimal (locale id) → 1 + 5/10 juta, dihitung sebagai `15 × 100.000` | 1.500.000 |
 | `1.500.000` | titik = pemisah ribuan | 1.500.000 |
@@ -513,10 +520,10 @@ terdeteksi + tidak ada issue blokir.
 ## 8. Lokal vs cloud di balik abstraksi yang sama
 
 ```dart
-// lib/features/record/domain/voice/transaction_interpreter.dart (ilustrasi)
+// lib/features/record/domain/capture/transaction_interpreter.dart (ilustrasi)
 abstract interface class TransactionInterpreter {
   Future<Either<Failure, InterpretedTransaction>> interpret(
-    String transcript,
+    CaptureEvidence evidence,      // sumber (suara/notifikasi/foto) + teks + waktu
     InterpretationContext context, // nama dompet, kategori, tanggal hari ini
   );
 }
@@ -532,7 +539,7 @@ TransactionInterpreter
 
 - Mengembalikan `Either` agar selaras ADR-0005, bukan melempar.
 - Domain hanya mengenal `TransactionInterpreter`, `InterpretedTransaction`,
-  `InterpretationContext`, `VoiceDraftResolver`, `RecordDraft`, `DraftIssue`.
+  `InterpretationContext`, `CaptureDraftResolver`, `RecordDraft`, `DraftIssue`.
 - Pilihan implementasi di `RecordScope` berdasarkan setelan pengguna + kapabilitas
   perangkat; mengganti penyedia = satu baris registrasi DI.
 - Firebase: paket `firebase_ai` 4.0.0 (pengganti `firebase_vertexai`) [V];
@@ -653,7 +660,7 @@ LLM menaikkan overall accuracy < 10 poin, **tunda LLM**.
   (model termurah yang lolos benchmark, unduhan opt-in dari HF, perangkat
   ≥ 6 GB RAM; syarat RAM bisa diturunkan bila 270M lolos) dalam
   `CascadingTransactionInterpreter`, di balik `TransactionInterpreter`.
-- `VoiceDraftResolver` + `DraftIssue`.
+- `CaptureDraftResolver` + `DraftIssue`.
 - `RecordDraft` → form CATAT terisi; field bermasalah disorot; Simpan/Edit/Batal
   = perilaku form CATAT yang ada.
 - Event analytics tanpa isi transkrip (berhasil/diubah/dibatalkan, jenis issue).
@@ -708,7 +715,7 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 
 ### Fase 1 — Abstraksi domain
 - **Tujuan:** tipe domain murni + resolver.
-- **Berkas:** `lib/features/record/domain/voice/`
+- **Berkas:** `lib/features/record/domain/capture/`
   (`transaction_interpreter.dart`, `interpreted_transaction.dart`,
   `interpretation_context.dart`, `voice_draft_resolver.dart`, `draft_issue.dart`),
   `lib/features/record/domain/record_draft.dart`,
@@ -728,8 +735,8 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
   (`RECORD_AUDIO`, `<queries>` untuk `RecognitionService`),
   `ios/Runner/Info.plist` (`NSMicrophoneUsageDescription`,
   `NSSpeechRecognitionUsageDescription`), `ios/Podfile` bila dibutuhkan,
-  `lib/features/record/domain/voice/speech_transcriber.dart`,
-  `lib/features/record/data/voice/system_speech_transcriber.dart`.
+  `lib/features/record/domain/capture/speech_transcriber.dart`,
+  `lib/features/record/data/capture/system_speech_transcriber.dart`.
 - **Langkah:** interface `SpeechTranscriber` (stream parsial + hasil final,
   `Either`); `contextualPhrases` = nama dompet + "ribu/juta/rb/k"; deteksi
   on-device, simpan pilihan "izinkan pengenalan online".
@@ -744,7 +751,7 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 - **Tujuan:** `LocalLlmTransactionInterpreter` dengan model termurah yang lolos
   ambang (tangga §5: 270M → 1B → Gemma 4 E2B).
 - **Berkas:** `pubspec.yaml` (`flutter_gemma`),
-  `lib/features/record/data/voice/local_llm_transaction_interpreter.dart`,
+  `lib/features/record/data/capture/local_llm_transaction_interpreter.dart`,
   `.../model_download_repository.dart`, `lib/core/config/` (URL + sha256 model),
   layar setelan unduhan di Akun, layar Lisensi (NOTICE Gemma).
 - **Langkah:** pemilik mengunggah salinan `.litertlm` + NOTICE + Gemma Terms ke
@@ -764,8 +771,8 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 
 ### Fase 4 — Ekstraksi terstruktur
 - **Tujuan:** prompt + parsing JSON + cascade.
-- **Berkas:** `.../data/voice/prompt/transaction_extraction_prompt.dart`,
-  `.../data/voice/cascading_transaction_interpreter.dart`.
+- **Berkas:** `.../data/capture/prompt/transaction_extraction_prompt.dart`,
+  `.../data/capture/cascading_transaction_interpreter.dart`.
 - **Langkah:** prompt §7, temperatur 0, maks 96 token, 1 retry, verifikasi
   substring; cascade rule → LLM hanya bila tidak yakin.
 - **Uji:** dataset §10 dengan transkrip tetap; JSON validity.
@@ -773,7 +780,7 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
   transkrip.
 
 ### Fase 5 — Validasi
-- **Tujuan:** semua aturan §7 di `VoiceDraftResolver`.
+- **Tujuan:** semua aturan §7 di `CaptureDraftResolver`.
 - **Uji:** satu uji per baris tabel validasi; uji "provider-agnostik" (output
   interpreter palsu yang berhalusinasi dompet/nominal → ditolak).
 - **Penerimaan:** tidak ada jalur dari interpreter ke repository (dicek review +
@@ -781,8 +788,8 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 
 ### Fase 6 — UI
 - **Tujuan:** sheet rekam + form CATAT terisi draf.
-- **Berkas:** `lib/features/record/presentation/voice/voice_capture_sheet.dart`,
-  `.../voice/bloc/voice_entry_{bloc,event,state,effect}.dart`,
+- **Berkas:** `lib/features/record/presentation/capture/voice_capture_sheet.dart`,
+  `.../capture/bloc/voice_entry_{bloc,event,state,effect}.dart`,
   `open_record_sheet.dart` (parameter `RecordDraft? draft`),
   `expense_form_sheet.dart`/`income_form_sheet.dart`/`transfer_form_sheet.dart`
   (terima draf: catatan, kategori, tanggal; sorot issue),
@@ -799,7 +806,7 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 
 ### Fase 7 — Benchmark
 - **Tujuan:** angka nyata untuk memutuskan Fase 3/8.
-- **Berkas:** `test/features/record/voice/benchmark/voice_benchmark_cases.dart`
+- **Berkas:** `test/features/record/capture/benchmark/voice_benchmark_cases.dart`
   (dataset), skrip/uji laporan akurasi; dokumen hasil di bagian baru dokumen ini.
 - **Penerimaan:** laporan metrik §10 untuk parser aturan (wajib) dan LLM/cloud
   (bila dievaluasi), dengan rekomendasi lanjut/tunda.
@@ -807,7 +814,7 @@ dan uji di `test/features/record/` mengikuti ADR-0010.
 ### Fase 8 — Adaptor pivot cloud
 - **Tujuan:** `FirebaseAiTransactionInterpreter`.
 - **Berkas:** `pubspec.yaml` (`firebase_ai`, `firebase_app_check`),
-  `lib/features/record/data/voice/firebase_ai_transaction_interpreter.dart`,
+  `lib/features/record/data/capture/firebase_ai_transaction_interpreter.dart`,
   `app_bootstrap_firebase.dart` (aktivasi App Check), setelan persetujuan di Akun,
   `PLAY_DATA_SAFETY.md`, kebijakan privasi di repo `tanukonomy-web`.
 - **Langkah:** `responseSchema` sama dengan kontrak §7; timeout ±5 dtk; offline →
@@ -865,7 +872,7 @@ Yang dibangun pertama: **sistem kategori** (prasyarat), lalu **STT sistem
 Dart + form CATAT terisi draf**, lalu **Gemma lokal via `flutter_gemma`**,
 mulai dari model termurah yang lolos benchmark (270M → 1B → Gemma 4 E2B), sebagai
 interpreter lokal (Opsi A), semuanya di balik `TransactionInterpreter`
-dan `VoiceDraftResolver`. Alasannya:
+dan `CaptureDraftResolver`. Alasannya:
 
 - Kategori tertutup adalah syarat agar keluaran model bisa divalidasi; tanpa itu
   "kategori halusinasi" tidak bisa dibedakan dari label sah.

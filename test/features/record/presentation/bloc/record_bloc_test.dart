@@ -77,7 +77,7 @@ void main() {
     createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
-    recordTransaction: RecordTransaction(
+    recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
       transactionRepository: transactionRepository,
       recomputeWalletBalances: RecomputeWalletBalances(
         walletRepository: walletRepository,
@@ -144,7 +144,7 @@ void main() {
             endDate: DateTime(2026, 10),
           ),
         ]),
-        recordTransaction: RecordTransaction(
+        recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
           transactionRepository: transactionRepository,
           recomputeWalletBalances: RecomputeWalletBalances(
             walletRepository: walletRepository,

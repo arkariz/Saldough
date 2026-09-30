@@ -190,11 +190,8 @@ class _Body extends StatelessWidget {
         ),
         sliver: SliverToBoxAdapter(
           child: TransactionEmptyMonthState(
-            onRecord: () async {
-              final bloc = context.read<TransactionBloc>();
-              await openRecordSheet(context);
-              bloc.add(const TransactionRefreshed());
-            },
+            // Daftar dimuat ulang oleh `LedgerChanges` (ADR-030 §3.4).
+            onRecord: () => openRecordSheet(context),
           ),
         ),
       );

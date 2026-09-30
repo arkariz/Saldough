@@ -59,6 +59,7 @@ void main() {
     container = GetIt.asNewInstance()
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
       ..registerLazySingleton<BudgetItemCatalog>(() => BudgetItemCatalogImpl(repository: budgetRepository))

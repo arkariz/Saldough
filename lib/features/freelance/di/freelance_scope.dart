@@ -22,7 +22,8 @@ final class FreelanceScope extends IsolatedScope {
     c
       ..registerSingleton<FreelanceRepository>(parent<FreelanceRepository>())
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
-      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
   }
 
   @override
@@ -34,6 +35,7 @@ final class FreelanceScope extends IsolatedScope {
         receivePayment: ReceiveFreelancePayment(
           freelanceRepository: c<FreelanceRepository>(),
           recordTransaction: RecordTransaction(
+            ledgerChanges: c<LedgerChanges>(),
             transactionRepository: c<TransactionRepository>(),
             recomputeWalletBalances: RecomputeWalletBalances(
               walletRepository: c<WalletRepository>(),

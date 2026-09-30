@@ -68,7 +68,7 @@ void main() {
     await freelance.savePayment(payment);
     receive = ReceiveFreelancePayment(
       freelanceRepository: freelance,
-      recordTransaction: RecordTransaction(
+      recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
         transactionRepository: transactions,
         recomputeWalletBalances: RecomputeWalletBalances(
           walletRepository: wallets,

@@ -4,6 +4,7 @@
 library;
 
 export 'data/transaction_repository_impl.dart';
+export 'domain/ledger_changes.dart';
 export 'domain/transaction.dart';
 export 'domain/transaction_query.dart';
 export 'domain/transaction_repository.dart';

@@ -17,6 +17,7 @@ final class HomeScope extends IsolatedScope {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<BudgetOverviewSource>(parent<BudgetOverviewSource>())
       ..registerSingleton<FreelanceOverviewSource>(parent<FreelanceOverviewSource>());
   }
@@ -25,6 +26,7 @@ final class HomeScope extends IsolatedScope {
   void register(GetIt c) {
     c.registerLazySingleton<HomeBloc>(
       () => HomeBloc(
+        ledgerChanges: c<LedgerChanges>(),
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
         budgetOverviewSource: c<BudgetOverviewSource>(),

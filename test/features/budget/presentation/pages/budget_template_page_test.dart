@@ -61,6 +61,7 @@ void main() {
       ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage))
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
       ..registerLazySingleton<BudgetTemplateRepository>(() => templateRepository)

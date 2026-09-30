@@ -16,13 +16,15 @@ final class WalletScope extends IsolatedScope {
   void bridge(GetIt c) {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
-      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
   }
 
   @override
   void register(GetIt c) {
     c.registerLazySingleton<WalletBloc>(
       () => WalletBloc(
+        ledgerChanges: c<LedgerChanges>(),
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
         recomputeWalletBalances: RecomputeWalletBalances(

@@ -1,23 +1,32 @@
+import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:saldough/shared/transaction/data/transaction_repository_impl.dart';
+import 'package:saldough/shared/transaction/domain/ledger_changes.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 import 'package:saldough/shared/transaction/domain/usecases/recompute_wallet_balances.dart';
 import 'package:saldough/shared/transaction/domain/usecases/record_transaction.dart';
 import 'package:saldough/shared/wallet/data/wallet_repository_impl.dart';
 import 'package:saldough/shared/wallet/domain/wallet.dart';
 
+import '../../../../helpers/mocks.dart';
+
 void main() {
   late InMemoryKeyValueStorage storage;
   late WalletRepositoryImpl walletRepository;
   late TransactionRepositoryImpl transactionRepository;
   late RecordTransaction record;
+  late LedgerChanges ledgerChanges;
 
   setUp(() async {
     storage = InMemoryKeyValueStorage();
     walletRepository = WalletRepositoryImpl(storage: storage);
     transactionRepository = TransactionRepositoryImpl(storage: storage);
+    ledgerChanges = LedgerChanges();
     record = RecordTransaction(
+      ledgerChanges: ledgerChanges,
       transactionRepository: transactionRepository,
       recomputeWalletBalances: RecomputeWalletBalances(
         walletRepository: walletRepository,
@@ -119,6 +128,52 @@ void main() {
       final transactions = (await transactionRepository.listTransactionsInMonth(DateTime(2026, 9)))
           .getOrElse((_) => throw StateError('expected Right'));
       expect(transactions, hasLength(1));
+    });
+  });
+
+  group('LedgerChanges (ADR-030 §3.4)', () {
+    test('memancar sekali per catat dan per hapus, sesudah saldo tertulis', () async {
+      final balancesAtSignal = <int>[];
+      final subscription = ledgerChanges.changes.listen((_) async => balancesAtSignal.add(await balanceOf('bca')));
+      addTearDown(subscription.cancel);
+      final expense = ExpenseTransaction(
+        id: 'kopi',
+        date: DateTime(2026, 9, 30),
+        amount: 3500000,
+        note: 'Kopi',
+        walletId: 'bca',
+      );
+
+      await record(expense);
+      await pumpEventQueue();
+      await record.delete(expense);
+      await pumpEventQueue();
+
+      expect(balancesAtSignal, [496500000, 500000000]);
+    });
+
+    test('tidak memancar kalau transaksi gagal disimpan', () async {
+      registerFallbackValue(fallbackTransaction);
+      final failing = MockTransactionRepository();
+      when(() => failing.saveTransaction(any(), previousDate: any(named: 'previousDate'))).thenAnswer(
+        (_) async => left(const SystemFailure(code: FailureCode.unknown, message: 'disk penuh')),
+      );
+      var signals = 0;
+      final subscription = ledgerChanges.changes.listen((_) => signals++);
+      addTearDown(subscription.cancel);
+
+      final result = await RecordTransaction(
+        transactionRepository: failing,
+        recomputeWalletBalances: RecomputeWalletBalances(
+          walletRepository: walletRepository,
+          transactionRepository: failing,
+        ),
+        ledgerChanges: ledgerChanges,
+      )(fallbackTransaction);
+      await pumpEventQueue();
+
+      expect(result.isLeft(), isTrue);
+      expect(signals, 0);
     });
   });
 }

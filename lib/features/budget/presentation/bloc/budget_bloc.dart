@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -35,12 +37,16 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     required this._budgetRepository,
     required this._walletRepository,
     required this._transactionRepository,
+    required LedgerChanges ledgerChanges,
     this._calculateProgress = const CalculateBudgetProgress(),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(BudgetState.initial()) {
     on<BudgetStarted>(_onStarted);
     on<BudgetRefreshed>(_onRefreshed);
+    // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
+    // tanpa kerangka.
+    _ledgerSubscription = ledgerChanges.from(this).listen((_) => add(const BudgetRefreshed()));
     on<BudgetAdded>(_onAdded);
     on<BudgetEdited>(_onEdited);
     on<BudgetArchiveToggled>(_onArchiveToggled);
@@ -51,6 +57,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     );
   }
 
+  late final StreamSubscription<void> _ledgerSubscription;
   final BudgetRepository _budgetRepository;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
@@ -200,5 +207,11 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
           onSuccess: _effectSaved(successMessage),
         );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _ledgerSubscription.cancel();
+    return super.close();
   }
 }

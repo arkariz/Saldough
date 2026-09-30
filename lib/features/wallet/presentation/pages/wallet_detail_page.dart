@@ -82,13 +82,9 @@ class WalletDetailPage extends StatelessWidget {
           fromWalletId == walletId || toWalletId == walletId,
       };
 
-  Future<void> _record(BuildContext context) async {
-    final transactions = context.read<TransactionBloc>();
-    final wallets = context.read<WalletBloc>();
-    await openRecordSheet(context, initialWalletId: wallet.id);
-    transactions.add(const TransactionRefreshed());
-    wallets.add(const WalletRefreshed());
-  }
+  /// Riwayat dan saldo di layar ini dimuat ulang oleh `LedgerChanges`
+  /// sesudah transaksinya tersimpan (ADR-030 §3.4).
+  Future<void> _record(BuildContext context) => openRecordSheet(context, initialWalletId: wallet.id);
 
   /// Sunting selalu menutup layar ini sesudah dikirim (pola yang sama seperti
   /// `TransactionDetailPage._edit`) -- daftar dompet di belakangnya sudah

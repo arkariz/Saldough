@@ -20,6 +20,7 @@ const _forcedFailure = SystemFailure(
 void main() {
   late MockWalletRepository walletRepository;
   late MockTransactionRepository transactionRepository;
+  late LedgerChanges ledgerChanges;
 
   setUpAll(() {
     registerFallbackValue(fallbackWallet);
@@ -29,9 +30,11 @@ void main() {
   setUp(() {
     walletRepository = MockWalletRepository();
     transactionRepository = MockTransactionRepository();
+    ledgerChanges = LedgerChanges();
   });
 
   WalletBloc buildBloc() => WalletBloc(
+    ledgerChanges: ledgerChanges,
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
     recomputeWalletBalances: RecomputeWalletBalances(
@@ -407,5 +410,47 @@ void main() {
         verifyNever(() => walletRepository.deleteWallet(any()));
       },
     );
+  });
+
+  group('WalletBloc -- LedgerChanges (ADR-030 §3.4)', () {
+    blocTest<WalletBloc, WalletState>(
+      'sinyal dari tempat lain memuat ulang tanpa kerangka',
+      setUp: () {
+        var calls = 0;
+        when(() => walletRepository.listWallets()).thenAnswer(
+          (_) async => Right([wallet('a', initial: calls++ == 0 ? 100 : 250)]),
+        );
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const WalletStarted());
+        await pumpEventQueue();
+        ledgerChanges.notifyChanged();
+      },
+      expect: () => [
+        isA<WalletState>().having((s) => s.isLoading, 'isLoading', isTrue),
+        isA<WalletState>().having((s) => s.wallets.single.currentBalance, 'saldo', 100),
+        isA<WalletState>()
+            .having((s) => s.wallets.single.currentBalance, 'saldo', 250)
+            .having((s) => s.isLoading, 'isLoading', isFalse),
+      ],
+    );
+
+    test('menyimpan dompet memancarkan sinyal sekali, dengan dirinya sebagai sumber', () async {
+      when(() => walletRepository.saveWallet(any())).thenAnswer((_) async => const Right(unit));
+      when(() => walletRepository.listWallets()).thenAnswer((_) async => Right([wallet('a')]));
+      final sources = <Object?>[];
+      final subscription = ledgerChanges.changes.listen(sources.add);
+      addTearDown(subscription.cancel);
+      final bloc = buildBloc();
+      addTearDown(bloc.close);
+
+      bloc.add(const WalletAdded(name: 'BCA', iconKey: 'walletBank', initialBalance: 0));
+      await pumpEventQueue();
+
+      expect(sources, [same(bloc)]);
+      expect(messageOf(bloc.state), t.wallet.savedMessage);
+      verify(() => walletRepository.listWallets()).called(1);
+    });
   });
 }

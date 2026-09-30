@@ -27,6 +27,7 @@ final class RecordScope extends IsolatedScope {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>())
       ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
     // Opsional: kontainer induk yang tidak menyediakannya (mis. uji layar
@@ -62,6 +63,7 @@ final class RecordScope extends IsolatedScope {
               VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), composer: c<CaptureDraftComposer>()),
           speechLanguagePrompt: c.isRegistered<SpeechLanguagePrompt>() ? c<SpeechLanguagePrompt>() : null,
           recordTransaction: RecordTransaction(
+            ledgerChanges: c<LedgerChanges>(),
             transactionRepository: c<TransactionRepository>(),
             recomputeWalletBalances: RecomputeWalletBalances(
               walletRepository: c<WalletRepository>(),

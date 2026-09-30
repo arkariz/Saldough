@@ -17,6 +17,7 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -62,6 +63,7 @@ void main() {
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
   });
 
@@ -162,6 +164,35 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.transactionsTabLabel), findsOneWidget);
+    });
+
+    testWidgets('transaksi tersimpan di luar tab Riwayat tampil lewat LedgerChanges, tanpa muat ulang manual (ADR-030)', (
+      tester,
+    ) async {
+      await walletRepository.saveWallet(
+        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+      await tester.pumpWidget(pumpableShell());
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
+      await tester.pumpAndSettle();
+      final inHistory = find.descendant(of: find.byType(TransactionListPage), matching: find.text('Kopi sore'));
+      expect(inHistory, findsNothing);
+
+      final transactionRepository = container<TransactionRepository>();
+      await RecordTransaction(
+        transactionRepository: transactionRepository,
+        recomputeWalletBalances: RecomputeWalletBalances(
+          walletRepository: walletRepository,
+          transactionRepository: transactionRepository,
+        ),
+        ledgerChanges: container<LedgerChanges>(),
+      )(ExpenseTransaction(id: 'kopi', date: DateTime.now(), amount: 2500000, note: 'Kopi sore', walletId: 'bca'));
+      await tester.pumpAndSettle();
+
+      expect(inHistory, findsOneWidget);
     });
 
     testWidgets('menekan CATAT membuka lembar CATAT dengan tiga jenis (FR-REC-001, UX-1), TIDAK mengganti tab aktif', (tester) async {
@@ -331,6 +362,7 @@ void main() {
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
+        ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 
       await tester.pumpWidget(

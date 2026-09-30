@@ -61,6 +61,7 @@ void main() {
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
   });
 
@@ -182,6 +183,7 @@ void main() {
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
+        ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
         ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
 
       await tester.pumpWidget(

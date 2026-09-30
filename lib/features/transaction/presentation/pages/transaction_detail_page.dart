@@ -89,12 +89,7 @@ class TransactionDetailPage extends StatelessWidget {
   /// sebagai transaksi BARU bertanggal hari ini -- lewat `openRecordSheet`
   /// yang sama seperti alur CATAT biasa (CLAUDE.md aturan 8), bukan
   /// formulir pencatatan tersendiri.
-  Future<void> _recordAgain(BuildContext context) async {
-    final bloc = context.read<TransactionBloc>();
-    await openRecordSheet(context, prefillFrom: transaction);
-    if (!context.mounted) return;
-    bloc.add(const TransactionRefreshed());
-  }
+  Future<void> _recordAgain(BuildContext context) => openRecordSheet(context, prefillFrom: transaction);
 
   /// UX-8: hapus LANGSUNG tanpa dialog konfirmasi -- pemakai bisa
   /// mengurungkannya lewat aksi "Urungkan" pada snackbar yang tampil

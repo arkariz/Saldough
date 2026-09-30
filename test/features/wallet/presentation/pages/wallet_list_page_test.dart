@@ -42,6 +42,7 @@ void main() {
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,
       );

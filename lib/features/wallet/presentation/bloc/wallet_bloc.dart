@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -24,14 +26,20 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     required this._walletRepository,
     required this._transactionRepository,
     required this._recomputeWalletBalances,
+    required this._ledgerChanges,
   }) : super(WalletState.initial()) {
     on<WalletStarted>(_onStarted);
     on<WalletRefreshed>(_onRefreshed);
+    // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
+    // tanpa kerangka.
+    _ledgerSubscription = _ledgerChanges.from(this).listen((_) => add(const WalletRefreshed()));
     on<WalletAdded>(_onAdded);
     on<WalletEdited>(_onEdited);
     on<WalletDeleted>(_onDeleted);
   }
 
+  final LedgerChanges _ledgerChanges;
+  late final StreamSubscription<void> _ledgerSubscription;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
   final RecomputeWalletBalances _recomputeWalletBalances;
@@ -97,10 +105,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
   /// Apakah [transaction] memakai dompet ber-`id` [walletId] -- sebagai dompet
   /// pemasukan/pengeluaran, atau sebagai asal/tujuan transfer.
-  bool _touches(Transaction transaction, String walletId) => switch (transaction) {
-    IncomeTransaction(walletId: final id) || ExpenseTransaction(walletId: final id) => id == walletId,
-    TransferTransaction(:final fromWalletId, :final toWalletId) => fromWalletId == walletId || toWalletId == walletId,
-  };
+  bool _touches(Transaction transaction, String walletId) => walletIdsOf(transaction).contains(walletId);
 
   /// Sesudah menulis: kalau gagal, pertahankan layar dan tampilkan galat;
   /// kalau berhasil, muat ulang dompet TANPA `isLoading` (daftar tidak
@@ -110,6 +115,9 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
+        // Unit kerja dompet selesai (termasuk hitung ulang saldo saat
+        // disunting) -- baru sekarang layar lain boleh memuat ulang.
+        _ledgerChanges.notifyChanged(source: this);
         switch (await _walletRepository.listWallets()) {
           case Left(value: final failure):
             emit(state.copyWith(effect: _effectError(failure)));
@@ -117,5 +125,11 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
             emit(state.copyWith(wallets: wallets, effect: _effectSaved(successMessage)));
         }
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _ledgerSubscription.cancel();
+    return super.close();
   }
 }

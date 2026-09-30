@@ -18,13 +18,15 @@ final class BudgetScope extends IsolatedScope {
     c
       ..registerSingleton<BudgetRepository>(parent<BudgetRepository>())
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
-      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
   }
 
   @override
   void register(GetIt c) {
     c.registerLazySingleton<BudgetBloc>(
       () => BudgetBloc(
+        ledgerChanges: c<LedgerChanges>(),
         budgetRepository: c<BudgetRepository>(),
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),

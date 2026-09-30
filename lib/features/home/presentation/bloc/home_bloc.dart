@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -27,11 +29,15 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required this._transactionRepository,
     required this._budgetOverviewSource,
     required this._freelanceOverviewSource,
+    required LedgerChanges ledgerChanges,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
     on<HomeRefreshed>(_onRefreshed);
+    // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
+    // tanpa kerangka.
+    _ledgerSubscription = ledgerChanges.from(this).listen((_) => add(const HomeRefreshed()));
   }
 
   /// Jumlah transaksi terbaru yang ditampilkan.
@@ -39,6 +45,7 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   static const _calculateCashFlow = CalculateCashFlow();
 
+  late final StreamSubscription<void> _ledgerSubscription;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
   final BudgetOverviewSource _budgetOverviewSource;
@@ -97,5 +104,11 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
               : state.copyWith(effect: _effectError(failure)),
         );
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _ledgerSubscription.cancel();
+    return super.close();
   }
 }

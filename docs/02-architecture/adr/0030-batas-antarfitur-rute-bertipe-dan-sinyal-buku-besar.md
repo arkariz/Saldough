@@ -97,9 +97,10 @@ Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget
 
 ### 3.4 Sinkronisasi antarfitur: sinyal buku besar
 
-1. `LedgerChanges` (`shared/transaction/domain/`, Dart murni): `Stream<void>
-   changes` dan `notifyChanged()`. Satu instans di akar, dijembatani ke scope
-   yang membutuhkannya.
+1. `LedgerChanges` (`shared/transaction/domain/`, Dart murni):
+   `notifyChanged({source})`, `changes` (berisi sumbernya), dan `from(self)`
+   (kejadian yang bukan dari `self`). Satu instans di akar, dijembatani ke
+   scope yang membutuhkannya.
 2. Dipancarkan **sekali per unit kerja, sesudah semua dokumennya tertulis** —
    bukan per penulisan repository. Transaksi ditulis lebih dulu dan saldo
    dompet menyusul (ADR-012); memancarkan di antaranya membuat pelanggan
@@ -109,15 +110,18 @@ Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget
    berhasil (satu-satunya penulis yang mengorkestrasi unit kerjanya sendiri).
 3. Pelanggan: bloc yang menampilkan saldo atau transaksi (`TransactionBloc`,
    `WalletBloc`, `BudgetBloc`, `HomeBloc`, termasuk instans milik rute
-   rincian). Berlangganan di konstruktor, batal di `close`, dan memuat ulang
-   **tanpa** keadaan memuat (setara `*Refreshed`). Penulis boleh tetap memuat
-   ulang dirinya sesudah menulis; muatan ganda murah dan `Bloc` tidak
-   memancarkan state yang sama dua kali.
+   rincian). Berlangganan lewat `from(this)` di konstruktor, batal di
+   `close`, dan memuat ulang **tanpa** keadaan memuat (setara `*Refreshed`).
+   Bloc penulis memuat ulang dirinya sesudah menulis dan menyebut dirinya
+   sebagai `source` (`RecordTransaction` meneruskan `source`), jadi ia tidak
+   memuat ulang dua kali: `UiState` membandingkan `effect`, sehingga muatan
+   ulang kedua yang berjalan bersamaan bisa menimpa state berisi pesan
+   berhasil.
 4. Data lain tidak memakai sinyal: kategori sudah lewat `ActiveCategories`;
    anggaran dan freelance disegarkan saat kembali dari rute (`await
    pushRoute(…)` lalu `*Refreshed` bloc fitur sendiri) dan saat tab dipilih
-   (shell). Sinyal kedua baru ditambahkan kalau muncul penulis lintas fitur
-   untuk data itu.
+   (shell, termasuk tab Dompet sebagai jaring pengaman). Sinyal kedua baru
+   ditambahkan kalau muncul penulis lintas fitur untuk data itu.
 5. Shell tidak lagi memuat ulang bloc fitur lain sesudah CATAT.
 
 ### 3.5 Port dan widget lintas fitur

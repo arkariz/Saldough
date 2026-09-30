@@ -80,9 +80,8 @@ class BudgetDetailPage extends StatelessWidget {
   /// dompet tujuan sudah terisi.
   Future<void> _record(BuildContext context, Budget current, BudgetItemProgress progress) async {
     final item = progress.item;
-    final budgets = context.read<BudgetBloc>();
-    final transactions = context.read<TransactionBloc>();
-    final wallets = context.read<WalletBloc>();
+    // Progres, riwayat, dan saldo dimuat ulang oleh `LedgerChanges` sesudah
+    // transaksinya tersimpan (ADR-030 §3.4).
     await openRecordSheet(
       context,
       initialWalletId: current.walletId,
@@ -91,18 +90,12 @@ class BudgetDetailPage extends StatelessWidget {
       initialAmountSen: progress.remaining,
       initialToWalletId: item.targetWalletId,
     );
-    budgets.add(const BudgetRefreshed());
-    transactions.add(const TransactionRefreshed());
-    wallets.add(const WalletRefreshed());
   }
 
   /// Transaksi tertaut bisa disunting atau dihapus di rinciannya; progres
-  /// di sini harus ikut berubah sesudahnya (FR-BUD-003).
-  Future<void> _openTransaction(BuildContext context, Transaction transaction) async {
-    final budgets = context.read<BudgetBloc>();
-    await openTransactionDetail(context, transaction);
-    budgets.add(const BudgetRefreshed());
-  }
+  /// di sini ikut berubah lewat `LedgerChanges` (FR-BUD-003, ADR-030 §3.4).
+  Future<void> _openTransaction(BuildContext context, Transaction transaction) =>
+      openTransactionDetail(context, transaction);
 
   /// Hapus menutup layar ini; simpan dan arsip tidak (anggarannya masih ada
   /// dan layar ini menampilkan versi terbarunya).

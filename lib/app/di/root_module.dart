@@ -68,6 +68,8 @@ abstract final class RootModule {
         () => TransactionRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       ..registerLazySingleton<TransactionRepository>(container.call<TransactionRepositoryImpl>)
+      // Sinyal buku besar (ADR-030 §3.4): satu instans untuk seluruh scope.
+      ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<LegacyCategoryLabels>(container.call<TransactionRepositoryImpl>)
       // Kategori (ADR-026), kunci `category/all`. Dipakai CATAT, Transaksi,
       // dan layar Kategori di Akun.

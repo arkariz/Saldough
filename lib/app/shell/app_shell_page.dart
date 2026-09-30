@@ -102,21 +102,11 @@ class _AppShellPageState extends State<AppShellPage> {
   static const _transactionsTabIndex = 2;
   static const _walletsTabIndex = 3;
 
-  /// Membuka alur CATAT, lalu memuat ulang daftar transaksi: `TransactionBloc`
-  /// hidup di level shell dan hanya memuat saat `TransactionListPage` dibuat,
-  /// jadi tanpa ini transaksi yang baru dicatat tidak tampil di tab Transaksi
-  /// sampai aplikasi dimulai ulang.
-  Future<void> _openRecord(BuildContext context, {bool voice = false}) async {
-    final transactions = context.read<TransactionBloc>();
-    final wallets = context.read<WalletBloc>();
-    final budgets = context.read<BudgetBloc>();
-    final home = context.read<HomeBloc>();
-    await (voice ? openVoiceRecord(context) : openRecordSheet(context));
-    transactions.add(const TransactionRefreshed());
-    wallets.add(const WalletRefreshed());
-    budgets.add(const BudgetRefreshed());
-    home.add(const HomeRefreshed());
-  }
+  /// Membuka alur CATAT. Tab lain tidak dimuat ulang di sini: transaksi yang
+  /// tersimpan memancarkan `LedgerChanges`, dan setiap bloc tab
+  /// berlangganan sendiri (ADR-030 §3.4).
+  Future<void> _openRecord(BuildContext context, {bool voice = false}) =>
+      voice ? openVoiceRecord(context) : openRecordSheet(context);
 
   /// Menjalankan [AppShellPage.startAction] sekali, sesudah frame pertama
   /// yang context-nya sudah berada di bawah seluruh `BlocProvider` shell.
@@ -128,9 +118,9 @@ class _AppShellPageState extends State<AppShellPage> {
       if (!context.mounted) return;
       switch (action) {
         case ShellStartAction.createWallet:
-          final home = context.read<HomeBloc>();
+          // Dompet yang tersimpan memancarkan `LedgerChanges`; Beranda
+          // memuat ulang sendiri.
           await openAddWalletSheet(context);
-          home.add(const HomeRefreshed());
         case ShellStartAction.openAccount:
           await openAccountPage(context);
       }
@@ -138,14 +128,12 @@ class _AppShellPageState extends State<AppShellPage> {
   }
 
   void _onDestinationSelected(BuildContext context, int tabIndex) {
-    // Saldo dompet bisa berubah lewat transaksi yang disunting/dihapus di tab
-    // Transaksi, jadi disegarkan tiap tab Dompet dibuka.
+    // Perubahan transaksi dan saldo sampai lewat `LedgerChanges` (ADR-030
+    // §3.4); menyegarkan tab saat tampil tetap dipertahankan untuk data
+    // tanpa sinyal (anggaran, ringkasan freelance) dan penulis di luar
+    // aplikasi ini.
     if (tabIndex == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
-    // Progres anggaran dihitung dari transaksi, yang bisa berubah di tab lain
-    // (FR-BUD-003: progres berubah seketika saat transaksi disunting/dihapus).
     if (tabIndex == _budgetTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
-    // Angka Beranda dihitung dari seluruh fitur lain, yang bisa berubah di
-    // tab mana pun.
     if (tabIndex == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
     setState(() => _activeTab = tabIndex);
   }

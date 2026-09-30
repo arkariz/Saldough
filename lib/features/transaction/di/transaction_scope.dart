@@ -19,6 +19,7 @@ final class TransactionScope extends IsolatedScope {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
   }
 
@@ -26,10 +27,12 @@ final class TransactionScope extends IsolatedScope {
   void register(GetIt c) {
     c.registerLazySingleton<TransactionBloc>(
       () => TransactionBloc(
+        ledgerChanges: c<LedgerChanges>(),
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
         budgetItemCatalog: c<BudgetItemCatalog>(),
         recordTransaction: RecordTransaction(
+          ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),
           recomputeWalletBalances: RecomputeWalletBalances(
             walletRepository: c<WalletRepository>(),

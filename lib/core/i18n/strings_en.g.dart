@@ -160,6 +160,9 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get kindIncome => 'In';
 	@override String get kindTransfer => 'Transfer';
 	@override String get categoryAddLabel => 'Add category';
+	@override String get draftHeardLabel => 'Heard';
+	@override String get draftCheckTitle => 'Check before recording';
+	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
 }
 
 // Path: transaction
@@ -858,6 +861,24 @@ class _Translations$category$en extends Translations$category$id {
 	@override String restoredMessage({required Object name}) => '"${name}" restored.';
 }
 
+// Path: record.draftIssue
+class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
+	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get amountMissing => 'Couldn\'t catch the amount. Enter it yourself.';
+	@override String get amountMultiple => 'More than one amount was mentioned. Enter the right one.';
+	@override String get amountWithoutUnit => 'A number without a unit (thousand/million). Check the amount.';
+	@override String get amountAmbiguous => 'The amount can be read two ways. Check it.';
+	@override String get currencyUnsupported => 'The currency mentioned differs from the app currency.';
+	@override String get walletUnknown => 'The wallet mentioned doesn\'t exist. Pick a wallet.';
+	@override String get transferSourceMissing => 'The source wallet is unclear. Pick where it came from.';
+	@override String get transferTargetMissing => 'The destination wallet is unclear. Pick where it went.';
+	@override String get categoryUnknown => 'The category mentioned doesn\'t exist. Pick a category.';
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -973,6 +994,17 @@ extension on TranslationsEn {
 			'record.kindIncome' => 'In',
 			'record.kindTransfer' => 'Transfer',
 			'record.categoryAddLabel' => 'Add category',
+			'record.draftHeardLabel' => 'Heard',
+			'record.draftCheckTitle' => 'Check before recording',
+			'record.draftIssue.amountMissing' => 'Couldn\'t catch the amount. Enter it yourself.',
+			'record.draftIssue.amountMultiple' => 'More than one amount was mentioned. Enter the right one.',
+			'record.draftIssue.amountWithoutUnit' => 'A number without a unit (thousand/million). Check the amount.',
+			'record.draftIssue.amountAmbiguous' => 'The amount can be read two ways. Check it.',
+			'record.draftIssue.currencyUnsupported' => 'The currency mentioned differs from the app currency.',
+			'record.draftIssue.walletUnknown' => 'The wallet mentioned doesn\'t exist. Pick a wallet.',
+			'record.draftIssue.transferSourceMissing' => 'The source wallet is unclear. Pick where it came from.',
+			'record.draftIssue.transferTargetMissing' => 'The destination wallet is unclear. Pick where it went.',
+			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1404,6 +1436,8 @@ extension on TranslationsEn {
 			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
 			'home.guideBudgetTitle' => 'Budgets',
 			'home.guideBudgetTag' => 'Plans',
+			_ => null,
+		} ?? switch (path) {
 			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Receivables',
@@ -1415,8 +1449,6 @@ extension on TranslationsEn {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
 			'home.openCard' => ({required Object name}) => 'Open ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
-			_ => null,
-		} ?? switch (path) {
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',

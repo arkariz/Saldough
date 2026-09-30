@@ -75,7 +75,20 @@
     "kindExpense": "Out",
     "kindIncome": "In",
     "kindTransfer": "Transfer",
-    "categoryAddLabel": "Add category"
+    "categoryAddLabel": "Add category",
+    "draftHeardLabel": "Heard",
+    "draftCheckTitle": "Check before recording",
+    "draftIssue": {
+      "amountMissing": "Couldn't catch the amount. Enter it yourself.",
+      "amountMultiple": "More than one amount was mentioned. Enter the right one.",
+      "amountWithoutUnit": "A number without a unit (thousand/million). Check the amount.",
+      "amountAmbiguous": "The amount can be read two ways. Check it.",
+      "currencyUnsupported": "The currency mentioned differs from the app currency.",
+      "walletUnknown": "The wallet mentioned doesn't exist. Pick a wallet.",
+      "transferSourceMissing": "The source wallet is unclear. Pick where it came from.",
+      "transferTargetMissing": "The destination wallet is unclear. Pick where it went.",
+      "categoryUnknown": "The category mentioned doesn't exist. Pick a category."
+    }
   },
   "transaction": {
     "pageTitle": "History",

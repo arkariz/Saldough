@@ -75,7 +75,20 @@
     "kindExpense": "Keluar",
     "kindIncome": "Masuk",
     "kindTransfer": "Transfer",
-    "categoryAddLabel": "Tambah kategori"
+    "categoryAddLabel": "Tambah kategori",
+    "draftHeardLabel": "Tertangkap",
+    "draftCheckTitle": "Periksa sebelum mencatat",
+    "draftIssue": {
+      "amountMissing": "Nominal belum terbaca. Isi sendiri.",
+      "amountMultiple": "Ada lebih dari satu nominal. Isi yang benar.",
+      "amountWithoutUnit": "Angka tanpa satuan (ribu/juta). Pastikan nominalnya.",
+      "amountAmbiguous": "Nominal bisa dibaca dua cara. Pastikan nominalnya.",
+      "currencyUnsupported": "Mata uang yang disebut berbeda dari mata uang aplikasi.",
+      "walletUnknown": "Dompet yang disebut tidak ada. Pilih dompetnya.",
+      "transferSourceMissing": "Dompet asal belum jelas. Pilih dari dompet mana.",
+      "transferTargetMissing": "Dompet tujuan belum jelas. Pilih dompet tujuan.",
+      "categoryUnknown": "Kategori yang disebut tidak ada. Pilih kategorinya."
+    }
   },
   "transaction": {
     "pageTitle": "Riwayat",

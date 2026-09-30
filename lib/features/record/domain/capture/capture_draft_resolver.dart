@@ -67,6 +67,7 @@ final class CaptureDraftResolver {
       note: interpreted.note?.trim() ?? '',
       date: _resolveDate(evidence, interpreted.dateText),
       issues: issues,
+      sourceText: evidence.text,
     );
   }
 

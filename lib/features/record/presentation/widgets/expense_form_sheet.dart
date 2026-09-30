@@ -6,11 +6,13 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
@@ -34,6 +36,7 @@ class ExpenseFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.prefill,
+    this.draft,
     this.initialWalletId,
     this.frequentCategoryIds = const [],
     this.onCreateCategory,
@@ -91,6 +94,12 @@ class ExpenseFormSheet extends StatefulWidget {
   /// bisa ditulis utuh di kolom nominal (`isMoneyInputExact`).
   final int? initialAmountSen;
 
+  /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
+  /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta
+  /// hal yang perlu diperiksa. Diabaikan kalau [initial] atau [prefill]
+  /// terisi.
+  final RecordDraft? draft;
+
   @override
   State<ExpenseFormSheet> createState() => _ExpenseFormSheetState();
 }
@@ -107,6 +116,11 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial ?? widget.prefill;
+    final draft = widget.draft;
+    if (tx == null && draft != null) {
+      _applyDraft(draft);
+      return;
+    }
     if (tx == null) {
       _walletId = widget.initialWalletId;
       _budgetItemId = widget.initialBudgetItemId;
@@ -124,6 +138,17 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     _noteController.text = tx.note;
     _walletId = tx.walletId;
     _categoryId = tx.categoryId;
+  }
+
+  void _applyDraft(RecordDraft draft) {
+    final amount = draft.amountSen;
+    if (amount != null && amount > 0 && isMoneyInputExact(amount)) _amountController.text = formatMoneyInput(amount);
+    // Dompet yang disebut tapi tidak dikenal: biarkan kosong supaya dipilih,
+    // bukan diam-diam memakai dompet bawaan.
+    _walletId = draft.walletId ?? (draft.issues.contains(DraftIssue.walletUnknown) ? null : widget.initialWalletId);
+    _categoryId = draft.categoryId;
+    _noteController.text = draft.note;
+    if (draft.date != null) _date = draft.date!;
   }
 
   @override
@@ -189,6 +214,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           : t.record.expenseAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
+        if (widget.initial == null && widget.prefill == null && widget.draft != null)
+          RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
           child: RecordAmountField(

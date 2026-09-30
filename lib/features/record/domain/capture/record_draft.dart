@@ -46,6 +46,7 @@ final class RecordDraft extends Equatable {
     this.note = '',
     this.date,
     this.issues = const {},
+    this.sourceText,
   });
 
   /// Jenis transaksi.
@@ -72,9 +73,13 @@ final class RecordDraft extends Equatable {
   /// Hal yang perlu diperhatikan.
   final Set<DraftIssue> issues;
 
+  /// Teks bukti yang ditafsirkan (mis. transkrip), ditampilkan di formulir
+  /// supaya pengguna bisa mencocokkan. Tidak disimpan.
+  final String? sourceText;
+
   /// Draf lengkap tanpa masalah: nominal terisi dan tidak ada [issues].
   bool get isConfident => amountSen != null && issues.isEmpty;
 
   @override
-  List<Object?> get props => [kind, amountSen, walletId, toWalletId, categoryId, note, date, issues];
+  List<Object?> get props => [kind, amountSen, walletId, toWalletId, categoryId, note, date, issues, sourceText];
 }

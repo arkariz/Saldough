@@ -302,6 +302,14 @@ class Translations$record$id {
 
 	/// id: 'Tambah kategori'
 	String get categoryAddLabel => 'Tambah kategori';
+
+	/// id: 'Tertangkap'
+	String get draftHeardLabel => 'Tertangkap';
+
+	/// id: 'Periksa sebelum mencatat'
+	String get draftCheckTitle => 'Periksa sebelum mencatat';
+
+	late final Translations$record$draftIssue$id draftIssue = Translations$record$draftIssue$id.internal(_root);
 }
 
 // Path: transaction
@@ -2154,6 +2162,42 @@ class Translations$category$id {
 	String restoredMessage({required Object name}) => 'Kategori "${name}" dipulihkan.';
 }
 
+// Path: record.draftIssue
+class Translations$record$draftIssue$id {
+	Translations$record$draftIssue$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nominal belum terbaca. Isi sendiri.'
+	String get amountMissing => 'Nominal belum terbaca. Isi sendiri.';
+
+	/// id: 'Ada lebih dari satu nominal. Isi yang benar.'
+	String get amountMultiple => 'Ada lebih dari satu nominal. Isi yang benar.';
+
+	/// id: 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.'
+	String get amountWithoutUnit => 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.';
+
+	/// id: 'Nominal bisa dibaca dua cara. Pastikan nominalnya.'
+	String get amountAmbiguous => 'Nominal bisa dibaca dua cara. Pastikan nominalnya.';
+
+	/// id: 'Mata uang yang disebut berbeda dari mata uang aplikasi.'
+	String get currencyUnsupported => 'Mata uang yang disebut berbeda dari mata uang aplikasi.';
+
+	/// id: 'Dompet yang disebut tidak ada. Pilih dompetnya.'
+	String get walletUnknown => 'Dompet yang disebut tidak ada. Pilih dompetnya.';
+
+	/// id: 'Dompet asal belum jelas. Pilih dari dompet mana.'
+	String get transferSourceMissing => 'Dompet asal belum jelas. Pilih dari dompet mana.';
+
+	/// id: 'Dompet tujuan belum jelas. Pilih dompet tujuan.'
+	String get transferTargetMissing => 'Dompet tujuan belum jelas. Pilih dompet tujuan.';
+
+	/// id: 'Kategori yang disebut tidak ada. Pilih kategorinya.'
+	String get categoryUnknown => 'Kategori yang disebut tidak ada. Pilih kategorinya.';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2307,6 +2351,17 @@ extension on Translations {
 			'record.kindIncome' => 'Masuk',
 			'record.kindTransfer' => 'Transfer',
 			'record.categoryAddLabel' => 'Tambah kategori',
+			'record.draftHeardLabel' => 'Tertangkap',
+			'record.draftCheckTitle' => 'Periksa sebelum mencatat',
+			'record.draftIssue.amountMissing' => 'Nominal belum terbaca. Isi sendiri.',
+			'record.draftIssue.amountMultiple' => 'Ada lebih dari satu nominal. Isi yang benar.',
+			'record.draftIssue.amountWithoutUnit' => 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.',
+			'record.draftIssue.amountAmbiguous' => 'Nominal bisa dibaca dua cara. Pastikan nominalnya.',
+			'record.draftIssue.currencyUnsupported' => 'Mata uang yang disebut berbeda dari mata uang aplikasi.',
+			'record.draftIssue.walletUnknown' => 'Dompet yang disebut tidak ada. Pilih dompetnya.',
+			'record.draftIssue.transferSourceMissing' => 'Dompet asal belum jelas. Pilih dari dompet mana.',
+			'record.draftIssue.transferTargetMissing' => 'Dompet tujuan belum jelas. Pilih dompet tujuan.',
+			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2738,6 +2793,8 @@ extension on Translations {
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
 			'home.guideBudgetTag' => 'Rencana',
+			_ => null,
+		} ?? switch (path) {
 			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Piutang',
@@ -2749,8 +2806,6 @@ extension on Translations {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
 			'home.openCard' => ({required Object name}) => 'Buka ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
-			_ => null,
-		} ?? switch (path) {
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',

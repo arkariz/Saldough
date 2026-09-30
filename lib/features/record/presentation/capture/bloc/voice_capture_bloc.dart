@@ -14,9 +14,13 @@ import 'package:state_management/state_management.dart';
 part 'voice_capture_event.dart';
 part 'voice_capture_state.dart';
 
-/// Bloc lembar rekam Catat Cerdas (ADR-027): mendengarkan, menafsirkan
-/// transkrip, lalu menyusun [RecordDraft]. Tidak pernah menyimpan transaksi —
-/// drafnya dibuka di formulir CATAT.
+/// Bloc lembar rekam Catat Cerdas (ADR-027): menunggu pengguna menekan rekam,
+/// mendengarkan, menafsirkan transkrip, lalu menyusun [RecordDraft]. Tidak
+/// pernah menyimpan transaksi — drafnya dibuka di formulir CATAT.
+///
+/// Rekaman tidak pernah mulai sendiri: lembar dibuka di tahap
+/// [VoiceCapturePhase.idle], dan mikrofon baru dibuka oleh
+/// [VoiceCaptureStarted] dari tombol rekam.
 final class VoiceCaptureBloc extends Bloc<VoiceCaptureEvent, VoiceCaptureState> {
   /// Membuat [VoiceCaptureBloc].
   VoiceCaptureBloc({
@@ -40,7 +44,7 @@ final class VoiceCaptureBloc extends Bloc<VoiceCaptureEvent, VoiceCaptureState> 
   void _onStarted(VoiceCaptureStarted event, Emitter<VoiceCaptureState> emit) {
     _wallets = event.wallets;
     _categories = event.categories;
-    emit(const VoiceCaptureState());
+    emit(const VoiceCaptureState(phase: VoiceCapturePhase.starting));
     unawaited(_subscription?.cancel());
     _subscription = _transcriber
         .listen(localeId: event.localeId, phrases: [for (final w in event.wallets) w.name])
@@ -49,12 +53,18 @@ final class VoiceCaptureBloc extends Bloc<VoiceCaptureEvent, VoiceCaptureState> 
 
   Future<void> _onSpeechUpdated(_SpeechUpdated event, Emitter<VoiceCaptureState> emit) async {
     switch (event.update) {
+      case SpeechListening():
+        if (state.phase == VoiceCapturePhase.starting) emit(state.copyWith(phase: VoiceCapturePhase.listening));
+      case SpeechLevel(:final level):
+        if (state.phase == VoiceCapturePhase.starting || state.phase == VoiceCapturePhase.listening) {
+          emit(state.copyWith(phase: VoiceCapturePhase.listening, level: level));
+        }
       case SpeechPartial(:final text):
-        emit(state.copyWith(heardText: text));
+        emit(state.copyWith(phase: VoiceCapturePhase.listening, heardText: text));
       case SpeechFailed(:final reason):
         emit(state.copyWith(phase: VoiceCapturePhase.failed, failure: reason));
       case SpeechFinal(:final text):
-        emit(state.copyWith(phase: VoiceCapturePhase.interpreting, heardText: text));
+        emit(state.copyWith(phase: VoiceCapturePhase.interpreting, heardText: text, level: 0));
         final now = _clock();
         final evidence = CaptureEvidence(source: CaptureSource.voice, text: text, capturedAt: now);
         final context = InterpretationContext(

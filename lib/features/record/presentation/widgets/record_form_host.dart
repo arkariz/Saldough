@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 
@@ -15,17 +14,13 @@ import 'package:saldough/features/record/presentation/widgets/record_choice.dart
 /// `OpenFreelance`. Tur CATAT (TR-CATAT) dipicu dari sini.
 class RecordFormHost extends StatefulWidget {
   /// Membuat [RecordFormHost].
-  const RecordFormHost({required this.initialChoice, required this.formFor, this.voiceEnabled = false, super.key});
+  const RecordFormHost({required this.initialChoice, required this.formFor, super.key});
 
   /// Jenis yang terpilih saat dibuka; bawaan CATAT adalah pengeluaran.
   final RecordChoice initialChoice;
 
   /// Formulir untuk [RecordChoice], dengan pengalih jenis siap pasang.
   final Widget Function(RecordChoice choice, Widget kindSwitcher) formFor;
-
-  /// Menampilkan tombol mikrofon di samping pengalih (Catat Cerdas,
-  /// ADR-027). Menekannya menutup lembar dengan [StartVoiceCapture].
-  final bool voiceEnabled;
 
   @override
   State<RecordFormHost> createState() => _RecordFormHostState();
@@ -44,36 +39,11 @@ class _RecordFormHostState extends State<RecordFormHost> {
         key: ValueKey(_choice),
         child: widget.formFor(
           _choice,
-          _withVoice(
-            RecordKindSwitcher(selected: _choice, onChanged: (choice) => setState(() => _choice = choice)),
-          ),
+          RecordKindSwitcher(selected: _choice, onChanged: (choice) => setState(() => _choice = choice)),
         ),
       ),
     );
   }
-
-  Widget _withVoice(Widget switcher) {
-    if (!widget.voiceEnabled) return switcher;
-    return Row(
-      children: [
-        Expanded(child: switcher),
-        const SizedBox(width: AppSpacing.sm),
-        AppTappable(
-          key: const ValueKey('record-voice'),
-          label: t.record.voice.micLabel,
-          onTap: () => Navigator.of(context).pop(const StartVoiceCapture()),
-          child: const AppHardCard(child: AppIcon(IconKey.microphone)),
-        ),
-      ],
-    );
-  }
-}
-
-/// Hasil lembar CATAT saat pengguna menekan tombol mikrofon: `openRecordSheet`
-/// membuka lembar rekam lalu membuka CATAT lagi dengan drafnya.
-final class StartVoiceCapture {
-  /// Membuat [StartVoiceCapture].
-  const StartVoiceCapture();
 }
 
 /// Pengalih tiga segmen Keluar | Masuk | Transfer — pengganti lembar pilihan

@@ -54,6 +54,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$account$en account = _Translations$account$en._(_root);
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
+	@override late final _Translations$language$en language = _Translations$language$en._(_root);
 }
 
 // Path: app
@@ -683,6 +684,9 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get currencySuggested => 'Matches your device region';
 	@override String get currencyChooseFirst => 'Choose a currency first';
 	@override String currencyConfirm({required Object code}) => 'Use ${code}';
+	@override String get languageTitle => 'Choose your language';
+	@override String get languageBody => 'Used for the app and when recording by voice. You can change it later on the Account screen.';
+	@override String get languageConfirm => 'Continue';
 }
 
 // Path: tour
@@ -747,6 +751,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get freelanceWorklogBody => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.';
 	@override String get freelanceReceiveTitle => 'Money actually arrives';
 	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
+	@override String get homeVoiceTitle => 'Record by voice';
+	@override String get homeVoiceBody => 'Tap, say one transaction, then check the form before recording it.';
 }
 
 // Path: info
@@ -862,6 +868,18 @@ class _Translations$category$en extends Translations$category$id {
 	@override String restoredMessage({required Object name}) => '"${name}" restored.';
 }
 
+// Path: language
+class _Translations$language$en extends Translations$language$id {
+	_Translations$language$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get label => 'Language';
+	@override String get pickerTitle => 'Choose language';
+	@override String get hint => 'App text and voice recording';
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -889,12 +907,17 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	// Translations
 	@override String get title => 'Record by voice';
 	@override String get micLabel => 'Record by voice';
-	@override String get listening => 'Listening… say one transaction.';
+	@override String get listening => 'Recording… tap again when you are done.';
 	@override String get example => 'Example: “lunch 35 thousand with BCA”';
 	@override String get interpreting => 'Understanding…';
 	@override String get stopAction => 'Done';
 	@override String get typeInstead => 'Type instead';
 	@override late final _Translations$record$voice$failure$en failure = _Translations$record$voice$failure$en._(_root);
+	@override String get idleHint => 'Tap the microphone, then say one transaction.';
+	@override String get recordingBadge => 'REC';
+	@override String get startAction => 'Start recording';
+	@override String get stopButtonLabel => 'Stop recording';
+	@override String get retryAction => 'Record again';
 }
 
 // Path: account.errors
@@ -1039,7 +1062,7 @@ extension on TranslationsEn {
 			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
 			'record.voice.title' => 'Record by voice',
 			'record.voice.micLabel' => 'Record by voice',
-			'record.voice.listening' => 'Listening… say one transaction.',
+			'record.voice.listening' => 'Recording… tap again when you are done.',
 			'record.voice.example' => 'Example: “lunch 35 thousand with BCA”',
 			'record.voice.interpreting' => 'Understanding…',
 			'record.voice.stopAction' => 'Done',
@@ -1049,6 +1072,11 @@ extension on TranslationsEn {
 			'record.voice.failure.noMatch' => 'Didn\'t catch anything. Try again.',
 			'record.voice.failure.network' => 'Speech recognition on this device needs internet. Try again when online.',
 			'record.voice.failure.other' => 'Something went wrong. Try again.',
+			'record.voice.idleHint' => 'Tap the microphone, then say one transaction.',
+			'record.voice.recordingBadge' => 'REC',
+			'record.voice.startAction' => 'Start recording',
+			'record.voice.stopButtonLabel' => 'Stop recording',
+			'record.voice.retryAction' => 'Record again',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1463,13 +1491,13 @@ extension on TranslationsEn {
 			'home.budgetAction' => 'View Budgets',
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',
-			_ => null,
-		} ?? switch (path) {
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
 			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
 			'home.recordAction' => 'Record Transaction',
@@ -1516,6 +1544,9 @@ extension on TranslationsEn {
 			'onboarding.currencySuggested' => 'Matches your device region',
 			'onboarding.currencyChooseFirst' => 'Choose a currency first',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
+			'onboarding.languageTitle' => 'Choose your language',
+			'onboarding.languageBody' => 'Used for the app and when recording by voice. You can change it later on the Account screen.',
+			'onboarding.languageConfirm' => 'Continue',
 			'tour.nextAction' => 'Next',
 			'tour.doneAction' => 'Done',
 			'tour.skipAction' => 'Skip tour',
@@ -1571,6 +1602,8 @@ extension on TranslationsEn {
 			'tour.freelanceWorklogBody' => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.',
 			'tour.freelanceReceiveTitle' => 'Money actually arrives',
 			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
+			'tour.homeVoiceTitle' => 'Record by voice',
+			'tour.homeVoiceBody' => 'Tap, say one transaction, then check the form before recording it.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -1663,6 +1696,9 @@ extension on TranslationsEn {
 			'category.emptyActive' => 'No active categories yet.',
 			'category.archivedMessage' => ({required Object name}) => '"${name}" archived.',
 			'category.restoredMessage' => ({required Object name}) => '"${name}" restored.',
+			'language.label' => 'Language',
+			'language.pickerTitle' => 'Choose language',
+			'language.hint' => 'App text and voice recording',
 			_ => null,
 		};
 	}

@@ -31,6 +31,22 @@ final class SpeechPartial extends SpeechUpdate {
   final String text;
 }
 
+/// Kekuatan suara saat merekam, 0 (sunyi) sampai 1 (keras) -- hanya untuk
+/// umpan balik tampilan, bukan data.
+final class SpeechLevel extends SpeechUpdate {
+  /// Membuat [SpeechLevel].
+  const SpeechLevel(this.level);
+
+  /// Kekuatan suara ternormalisasi.
+  final double level;
+}
+
+/// Pengenal sudah benar-benar mendengarkan (mikrofon terbuka).
+final class SpeechListening extends SpeechUpdate {
+  /// Membuat [SpeechListening].
+  const SpeechListening();
+}
+
 /// Hasil akhir; sesi selesai.
 final class SpeechFinal extends SpeechUpdate {
   /// Membuat [SpeechFinal].

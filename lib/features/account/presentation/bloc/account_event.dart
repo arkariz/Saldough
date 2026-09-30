@@ -56,6 +56,15 @@ final class AccountDeletionRequested extends AccountEvent {
   final String? password;
 }
 
+/// Bahasa baru dipilih di bagian "Pengaturan" (ADR-028 §3.5).
+final class AccountLanguageChangeRequested extends AccountEvent {
+  /// Membuat [AccountLanguageChangeRequested].
+  const AccountLanguageChangeRequested(this.locale);
+
+  /// Bahasa baru (ADR-028).
+  final AppLocale locale;
+}
+
 /// Mata uang baru dipilih dan dikonfirmasi di bagian "Pengaturan"
 /// (ADR-025 §3.6).
 final class AccountCurrencyChangeRequested extends AccountEvent {

@@ -182,6 +182,9 @@ enum IconKey {
 
   /// Catat Cerdas suara (ADR-027): rekam ucapan di CATAT.
   microphone,
+
+  /// Berhenti merekam (lembar suara, ADR-027).
+  stop,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -257,6 +260,7 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.account: Icons.person_outline,
   // Belum ada padanan pixel-art (ADR-027).
   IconKey.microphone: Icons.mic_none,
+  IconKey.stop: Icons.stop_rounded,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

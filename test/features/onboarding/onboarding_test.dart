@@ -8,11 +8,13 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
 /// Gerak dimatikan: loop tanpa akhir membuat `pumpAndSettle` macet
 /// (ADR-021 §5).
@@ -47,23 +49,71 @@ bool _confirmEnabled(WidgetTester tester) =>
     tester.widget<ElevatedButton>(find.descendant(of: _confirm, matching: find.byType(ElevatedButton))).onPressed !=
     null;
 
+/// Melewati langkah bahasa (langkah pertama mode pertama kali, ADR-028).
+Future<void> _passLanguage(WidgetTester tester) async {
+  final confirm = find.byKey(const ValueKey('onboarding-language-confirm'));
+  await tester.ensureVisible(confirm);
+  await tester.pumpAndSettle();
+  await tester.tap(confirm);
+  await tester.pumpAndSettle();
+}
+
 void main() {
-  tearDown(() => ActiveCurrency.notifier.value = AppCurrency.idr);
+  tearDown(() {
+    ActiveCurrency.notifier.value = AppCurrency.idr;
+    LocaleSettings.setLocaleSync(AppLocale.id);
+    ActiveLanguage.notifier.value = AppLocale.id;
+  });
 
   group('OnboardingPage', () {
     late List<_Finished> outcomes;
+    late List<AppLocale> languages;
 
-    setUp(() => outcomes = []);
+    setUp(() {
+      outcomes = [];
+      languages = [];
+    });
 
-    Future<void> pumpPage(WidgetTester tester, {OnboardingMode mode = OnboardingMode.firstRun}) async {
+    Future<void> pumpPage(
+      WidgetTester tester, {
+      OnboardingMode mode = OnboardingMode.firstRun,
+      bool passLanguage = true,
+    }) async {
       await tester.pumpWidget(
         MaterialApp(
           builder: (context, child) => _still(child!),
-          home: OnboardingPage(mode: mode, onFinished: (outcome, currency) async => outcomes.add((outcome, currency))),
+          home: OnboardingPage(
+            mode: mode,
+            onFinished: (outcome, currency) async => outcomes.add((outcome, currency)),
+            onLanguageSelected: (locale) async => languages.add(locale),
+          ),
         ),
       );
       await tester.pumpAndSettle();
+      if (mode == OnboardingMode.firstRun && passLanguage) await _passLanguage(tester);
     }
+
+    testWidgets('mode pertama kali dimulai dengan pilih bahasa; bahasa saat ini terpilih (ADR-028)', (tester) async {
+      await pumpPage(tester, passLanguage: false);
+
+      expect(find.text(t.onboarding.languageTitle), findsOneWidget);
+      expect(find.text(t.onboarding.skipAction), findsNothing);
+      expect(find.byType(OnboardingPageIndicator), findsNothing);
+      expect(tester.getSemantics(find.byKey(const ValueKey('onboarding-language-id'))), isSemantics(isSelected: true));
+
+      await tester.tap(find.byKey(const ValueKey('onboarding-language-en')));
+      await tester.pumpAndSettle();
+      expect(languages, [AppLocale.en]);
+
+      await _passLanguage(tester);
+      expect(find.text(t.onboarding.page1Title), findsOneWidget);
+    });
+
+    testWidgets('mode tinjau tanpa langkah bahasa', (tester) async {
+      await pumpPage(tester, mode: OnboardingMode.review);
+      expect(find.text(t.onboarding.languageTitle), findsNothing);
+      expect(find.text(t.onboarding.page1Title), findsOneWidget);
+    });
 
     Future<void> goToLast(WidgetTester tester) async {
       for (var i = 0; i < 4; i++) {
@@ -214,6 +264,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await _passLanguage(tester);
       for (var i = 0; i < 4; i++) {
         expect(tester.takeException(), isNull);
         await tester.tap(find.text(t.onboarding.nextAction));
@@ -232,7 +284,9 @@ void main() {
     });
 
     testWidgets('adegan bergerak saat gerak diizinkan, tanpa galat', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: OnboardingPage(onFinished: (outcome, currency) async {})));
+      await tester.pumpWidget(
+        MaterialApp(home: OnboardingPage(mode: OnboardingMode.review, onFinished: (outcome, currency) async {})),
+      );
       // Loop tanpa akhir: maju dengan durasi tetap, bukan `pumpAndSettle`.
       for (var i = 0; i < 12; i++) {
         await tester.pump(const Duration(milliseconds: 250));
@@ -246,18 +300,21 @@ void main() {
     late InMemoryKeyValueStorage storage;
     late TutorialProgressRepositoryImpl repository;
     late CurrencyPreferenceRepository currencyRepository;
+    late LanguagePreferenceRepository languageRepository;
     late GetIt container;
 
     setUp(() {
       storage = InMemoryKeyValueStorage();
+      languageRepository = LanguagePreferenceRepositoryImpl(storage: storage);
       repository = TutorialProgressRepositoryImpl(storage: storage);
       currencyRepository = CurrencyPreferenceRepositoryImpl(storage: storage);
       container = GetIt.asNewInstance()
         ..registerSingleton<TutorialProgressRepository>(repository)
-        ..registerSingleton<CurrencyPreferenceRepository>(currencyRepository);
+        ..registerSingleton<CurrencyPreferenceRepository>(currencyRepository)
+        ..registerSingleton<ChangeAppLanguage>(ChangeAppLanguage(repository: languageRepository));
     });
 
-    Future<List<ShellStartAction?>> pumpRouter(WidgetTester tester) async {
+    Future<List<ShellStartAction?>> pumpRouter(WidgetTester tester, {bool passLanguage = true}) async {
       final homes = <ShellStartAction?>[];
       final router = GoRouter(
         initialLocation: AppRouteRegistry.onboardingPath,
@@ -280,8 +337,20 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      if (passLanguage) await _passLanguage(tester);
       return homes;
     }
+
+    testWidgets('memilih bahasa langsung diterapkan dan tersimpan (ADR-028)', (tester) async {
+      await pumpRouter(tester, passLanguage: false);
+
+      await tester.tap(find.byKey(const ValueKey('onboarding-language-en')));
+      await tester.pumpAndSettle();
+
+      expect(LocaleSettings.currentLocale, AppLocale.en);
+      expect(ActiveLanguage.value, AppLocale.en);
+      expect((await languageRepository.load()).getOrElse((_) => null), AppLocale.en);
+    });
 
     Future<TutorialProgress> progress() async => (await repository.load()).getOrElse((_) => TutorialProgress.empty);
 

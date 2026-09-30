@@ -92,7 +92,7 @@
     "voice": {
       "title": "Record by voice",
       "micLabel": "Record by voice",
-      "listening": "Listening… say one transaction.",
+      "listening": "Recording… tap again when you are done.",
       "example": "Example: “lunch 35 thousand with BCA”",
       "interpreting": "Understanding…",
       "stopAction": "Done",
@@ -103,7 +103,12 @@
         "noMatch": "Didn't catch anything. Try again.",
         "network": "Speech recognition on this device needs internet. Try again when online.",
         "other": "Something went wrong. Try again."
-      }
+      },
+      "idleHint": "Tap the microphone, then say one transaction.",
+      "recordingBadge": "REC",
+      "startAction": "Start recording",
+      "stopButtonLabel": "Stop recording",
+      "retryAction": "Record again"
     }
   },
   "transaction": {
@@ -581,7 +586,10 @@
     "currencyBody": "Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you've already recorded aren't converted.",
     "currencySuggested": "Matches your device region",
     "currencyChooseFirst": "Choose a currency first",
-    "currencyConfirm": "Use $code"
+    "currencyConfirm": "Use $code",
+    "languageTitle": "Choose your language",
+    "languageBody": "Used for the app and when recording by voice. You can change it later on the Account screen.",
+    "languageConfirm": "Continue"
   },
   "tour": {
     "nextAction": "Next",
@@ -638,7 +646,9 @@
     "freelanceWorklogTitle": "Hours worked",
     "freelanceWorklogBody": "Work hours are income you've earned. Group them into an invoice, then record it when you're paid.",
     "freelanceReceiveTitle": "Money actually arrives",
-    "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled."
+    "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled.",
+    "homeVoiceTitle": "Record by voice",
+    "homeVoiceBody": "Tap, say one transaction, then check the form before recording it."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -745,5 +755,10 @@
     "emptyActive": "No active categories yet.",
     "archivedMessage": "\"${name}\" archived.",
     "restoredMessage": "\"${name}\" restored."
+  },
+  "language": {
+    "label": "Language",
+    "pickerTitle": "Choose language",
+    "hint": "App text and voice recording"
   }
 }

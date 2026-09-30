@@ -1576,6 +1576,16 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       dua percobaan berikutnya. **Belum teruji:** ucapan sungguhan sampai
       formulir terisi, dan jalur izin ditolak — butuh perangkat (atau
       emulator dengan layanan pengenal dipilih).
+      Perbaikan dari pemilik (30 Sep 2026): (1) umpan balik rekam — lencana
+      REKAM berkedip dengan penghitung waktu, cincin berdenyut mengikuti
+      kekuatan suara, teks status per tahap; (2) pilihan bahasa di awal
+      onboarding dan di Akun, satu pilihan untuk tampilan dan ucapan
+      ([ADR-028](../02-architecture/adr/0028-bahasa-aplikasi-dipilih-pengguna.md));
+      (3) rekaman tidak lagi mulai sendiri — lembar dibuka di tahap siap;
+      (4) satu tombol bulat untuk mulai/berhenti/rekam ulang, plus "Ketik
+      saja"; (5) CATAT dan suara jadi dua FAB bertumpuk di kanan bawah,
+      navigasi bawah 4 tab, langkah tur baru `homeVoice`. 729 uji lulus.
+      Belum dicek di HP (terputus saat pemasangan).
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa

@@ -68,10 +68,31 @@ void main() {
     act: (bloc) => bloc.add(start),
     wait: const Duration(milliseconds: 10),
     expect: () => [
-      const VoiceCaptureState(),
-      const VoiceCaptureState(heardText: 'tadi ngopi'),
+      const VoiceCaptureState(phase: VoiceCapturePhase.starting),
+      const VoiceCaptureState(phase: VoiceCapturePhase.listening, heardText: 'tadi ngopi'),
     ],
   );
+
+  blocTest<VoiceCaptureBloc, VoiceCaptureState>(
+    'mikrofon terbuka dan level suara menjadikan tahap merekam',
+    build: () => build(_FakeTranscriber(const [SpeechListening(), SpeechLevel(0.6)])),
+    act: (bloc) => bloc.add(start),
+    wait: const Duration(milliseconds: 10),
+    expect: () => [
+      const VoiceCaptureState(phase: VoiceCapturePhase.starting),
+      const VoiceCaptureState(phase: VoiceCapturePhase.listening),
+      const VoiceCaptureState(phase: VoiceCapturePhase.listening, level: 0.6),
+    ],
+  );
+
+  test('lembar dibuka tanpa merekam: mikrofon baru dibuka setelah VoiceCaptureStarted', () async {
+    final transcriber = _FakeTranscriber(const []);
+    final bloc = build(transcriber);
+    await Future<void>.delayed(Duration.zero);
+    expect(bloc.state.phase, VoiceCapturePhase.idle);
+    expect(transcriber.localeId, isNull);
+    await bloc.close();
+  });
 
   blocTest<VoiceCaptureBloc, VoiceCaptureState>(
     'izin ditolak: tahap gagal dengan alasannya, tanpa draf',

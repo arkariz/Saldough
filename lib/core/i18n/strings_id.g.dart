@@ -56,6 +56,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$account$id account = Translations$account$id.internal(_root);
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 	late final Translations$category$id category = Translations$category$id.internal(_root);
+	late final Translations$language$id language = Translations$language$id.internal(_root);
 }
 
 // Path: app
@@ -1760,6 +1761,15 @@ class Translations$onboarding$id {
 
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
+
+	/// id: 'Pilih bahasa'
+	String get languageTitle => 'Pilih bahasa';
+
+	/// id: 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.'
+	String get languageBody => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.';
+
+	/// id: 'Lanjut'
+	String get languageConfirm => 'Lanjut';
 }
 
 // Path: tour
@@ -1934,6 +1944,12 @@ class Translations$tour$id {
 
 	/// id: 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.'
 	String get freelanceReceiveBody => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.';
+
+	/// id: 'Catat pakai suara'
+	String get homeVoiceTitle => 'Catat pakai suara';
+
+	/// id: 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.'
+	String get homeVoiceBody => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.';
 }
 
 // Path: info
@@ -2163,6 +2179,24 @@ class Translations$category$id {
 	String restoredMessage({required Object name}) => 'Kategori "${name}" dipulihkan.';
 }
 
+// Path: language
+class Translations$language$id {
+	Translations$language$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Bahasa'
+	String get label => 'Bahasa';
+
+	/// id: 'Pilih bahasa'
+	String get pickerTitle => 'Pilih bahasa';
+
+	/// id: 'Tampilan aplikasi dan bahasa ucapan'
+	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -2213,8 +2247,8 @@ class Translations$record$voice$id {
 	/// id: 'Catat pakai suara'
 	String get micLabel => 'Catat pakai suara';
 
-	/// id: 'Mendengarkan… ucapkan satu transaksi.'
-	String get listening => 'Mendengarkan… ucapkan satu transaksi.';
+	/// id: 'Merekam… ketuk lagi kalau sudah selesai.'
+	String get listening => 'Merekam… ketuk lagi kalau sudah selesai.';
 
 	/// id: 'Contoh: “makan siang 35 ribu pakai BCA”'
 	String get example => 'Contoh: “makan siang 35 ribu pakai BCA”';
@@ -2229,6 +2263,21 @@ class Translations$record$voice$id {
 	String get typeInstead => 'Ketik saja';
 
 	late final Translations$record$voice$failure$id failure = Translations$record$voice$failure$id.internal(_root);
+
+	/// id: 'Ketuk mikrofon, lalu ucapkan satu transaksi.'
+	String get idleHint => 'Ketuk mikrofon, lalu ucapkan satu transaksi.';
+
+	/// id: 'REKAM'
+	String get recordingBadge => 'REKAM';
+
+	/// id: 'Mulai merekam'
+	String get startAction => 'Mulai merekam';
+
+	/// id: 'Selesai merekam'
+	String get stopButtonLabel => 'Selesai merekam';
+
+	/// id: 'Rekam ulang'
+	String get retryAction => 'Rekam ulang';
 }
 
 // Path: account.errors
@@ -2421,7 +2470,7 @@ extension on Translations {
 			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
 			'record.voice.title' => 'Catat pakai suara',
 			'record.voice.micLabel' => 'Catat pakai suara',
-			'record.voice.listening' => 'Mendengarkan… ucapkan satu transaksi.',
+			'record.voice.listening' => 'Merekam… ketuk lagi kalau sudah selesai.',
 			'record.voice.example' => 'Contoh: “makan siang 35 ribu pakai BCA”',
 			'record.voice.interpreting' => 'Memahami…',
 			'record.voice.stopAction' => 'Selesai',
@@ -2431,6 +2480,11 @@ extension on Translations {
 			'record.voice.failure.noMatch' => 'Tidak ada ucapan yang tertangkap. Coba lagi.',
 			'record.voice.failure.network' => 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.',
 			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
+			'record.voice.idleHint' => 'Ketuk mikrofon, lalu ucapkan satu transaksi.',
+			'record.voice.recordingBadge' => 'REKAM',
+			'record.voice.startAction' => 'Mulai merekam',
+			'record.voice.stopButtonLabel' => 'Selesai merekam',
+			'record.voice.retryAction' => 'Rekam ulang',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2845,13 +2899,13 @@ extension on Translations {
 			'home.budgetAction' => 'Lihat Anggaran',
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',
-			_ => null,
-		} ?? switch (path) {
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
 			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
 			'home.recordAction' => 'Catat Transaksi',
@@ -2898,6 +2952,9 @@ extension on Translations {
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
+			'onboarding.languageTitle' => 'Pilih bahasa',
+			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.',
+			'onboarding.languageConfirm' => 'Lanjut',
 			'tour.nextAction' => 'Lanjut',
 			'tour.doneAction' => 'Selesai',
 			'tour.skipAction' => 'Lewati tur',
@@ -2953,6 +3010,8 @@ extension on Translations {
 			'tour.freelanceWorklogBody' => 'Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.',
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
+			'tour.homeVoiceTitle' => 'Catat pakai suara',
+			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -3045,6 +3104,9 @@ extension on Translations {
 			'category.emptyActive' => 'Belum ada kategori aktif.',
 			'category.archivedMessage' => ({required Object name}) => 'Kategori "${name}" diarsipkan.',
 			'category.restoredMessage' => ({required Object name}) => 'Kategori "${name}" dipulihkan.',
+			'language.label' => 'Bahasa',
+			'language.pickerTitle' => 'Pilih bahasa',
+			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
 			_ => null,
 		};
 	}

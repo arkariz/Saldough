@@ -57,6 +57,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
     }
     await _speech.listen(
       onResult: _onResult,
+      onSoundLevelChange: _onSoundLevel,
       listenOptions: SpeechListenOptions(
         localeId: localeId,
         pauseFor: _pauseFor,
@@ -65,6 +66,11 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
         contextualPhrases: phrases.isEmpty ? null : phrases,
       ),
     );
+  }
+
+  /// Level mentah plugin kira-kira -2..10 dB (Android) -- dipetakan ke 0..1.
+  void _onSoundLevel(double level) {
+    _controller?.add(SpeechLevel(((level + 2) / 12).clamp(0.0, 1.0)));
   }
 
   void _onResult(SpeechRecognitionResult result) {
@@ -96,6 +102,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   }
 
   void _onStatus(String status) {
+    if (status == SpeechToText.listeningStatus) _controller?.add(const SpeechListening());
     // "done" tanpa hasil akhir: pakai kata terakhir kalau ada.
     final controller = _controller;
     if (status == SpeechToText.doneStatus && controller != null) {

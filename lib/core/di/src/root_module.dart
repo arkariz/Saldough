@@ -6,6 +6,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
@@ -110,6 +111,22 @@ abstract final class RootModule {
       // `tutorial/progress`. Bukan data keuangan.
       ..registerLazySingleton<TutorialProgressRepository>(
         () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Pilihan bahasa (ADR-028), kunci `settings/language`. Mengganti bahasa
+      // ikut mengganti nama kategori bawaan yang belum diganti pengguna.
+      ..registerLazySingleton<LanguagePreferenceRepository>(
+        () => LanguagePreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<ChangeAppLanguage>(
+        () => ChangeAppLanguage(
+          repository: container<LanguagePreferenceRepository>(),
+          afterChange: (from, to) async {
+            await RelocalizeBuiltInCategories(repository: container<CategoryRepository>())(
+              oldName: (key) => from.buildSync().category.builtIn[key],
+              newName: (key) => to.buildSync().category.builtIn[key],
+            );
+          },
+        ),
       )
       // Pilihan mata uang (ADR-025 §3.5), kunci `settings/currency`.
       ..registerLazySingleton<CurrencyPreferenceRepository>(

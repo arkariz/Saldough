@@ -10,6 +10,7 @@ import 'package:saldough/core/di/di.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:state_management/state_management.dart';
 
@@ -39,6 +40,12 @@ Future<void> main() async {
 
   await LocaleSettings.useDeviceLocale();
   await di.run(rootGetIt);
+
+  // ADR-028: bahasa pilihan pengguna (kalau ada) menggantikan bahasa
+  // perangkat, sebelum migrasi kategori menanam nama bawaan.
+  final savedLanguage = (await rootGetIt<LanguagePreferenceRepository>().load()).getOrElse((_) => null);
+  if (savedLanguage != null) await LocaleSettings.setLocale(savedLanguage);
+  ActiveLanguage.notifier.value = LocaleSettings.currentLocale;
 
   // ADR-025 §3.5: mata uang harus sudah terpasang sebelum layar pertama
   // memformat nominal. Gagal dibaca berarti bawaan (IDR).

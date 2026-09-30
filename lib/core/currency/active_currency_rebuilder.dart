@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/currency/active_currency.dart';
+import 'package:saldough/core/language/active_language.dart';
 
 /// Membangun ulang seluruh keturunannya saat [ActiveCurrency] berganti
-/// (ADR-025 §3.6), atau saat [also] memberi tahu perubahan (daftar kategori,
+/// (ADR-025 §3.6) atau [ActiveLanguage] berganti (ADR-028), atau saat [also] memberi tahu perubahan (daftar kategori,
 /// ADR-026 §3.5).
 ///
 /// Formatter nominal dipanggil statis, jadi tidak ada `InheritedWidget` yang
@@ -31,12 +32,14 @@ class _ActiveCurrencyRebuilderState extends State<ActiveCurrencyRebuilder> {
   void initState() {
     super.initState();
     ActiveCurrency.notifier.addListener(_rebuildAll);
+    ActiveLanguage.notifier.addListener(_rebuildAll);
     widget.also?.addListener(_rebuildAll);
   }
 
   @override
   void dispose() {
     ActiveCurrency.notifier.removeListener(_rebuildAll);
+    ActiveLanguage.notifier.removeListener(_rebuildAll);
     widget.also?.removeListener(_rebuildAll);
     super.dispose();
   }

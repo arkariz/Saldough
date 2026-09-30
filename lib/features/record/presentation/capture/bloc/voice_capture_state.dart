@@ -2,7 +2,13 @@ part of 'voice_capture_bloc.dart';
 
 /// Tahap lembar rekam.
 enum VoiceCapturePhase {
-  /// Sedang mendengarkan.
+  /// Lembar terbuka, mikrofon belum dibuka; menunggu tombol rekam.
+  idle,
+
+  /// Tombol rekam ditekan; pengenal sedang menyiapkan mikrofon.
+  starting,
+
+  /// Sedang merekam.
   listening,
 
   /// Transkrip sedang ditafsirkan.
@@ -19,8 +25,9 @@ enum VoiceCapturePhase {
 final class VoiceCaptureState extends UiState<VoiceCaptureState> {
   /// Membuat [VoiceCaptureState].
   const VoiceCaptureState({
-    this.phase = VoiceCapturePhase.listening,
+    this.phase = VoiceCapturePhase.idle,
     this.heardText = '',
+    this.level = 0,
     this.draft,
     this.failure,
     super.effect,
@@ -32,6 +39,12 @@ final class VoiceCaptureState extends UiState<VoiceCaptureState> {
   /// Teks yang tertangkap sejauh ini.
   final String heardText;
 
+  /// Kekuatan suara terakhir, 0..1 -- hanya untuk animasi tombol rekam.
+  final double level;
+
+  /// Mikrofon sedang (atau hampir) terbuka.
+  bool get isRecording => phase == VoiceCapturePhase.starting || phase == VoiceCapturePhase.listening;
+
   /// Draf hasil, saat [phase] `done`.
   final RecordDraft? draft;
 
@@ -42,6 +55,7 @@ final class VoiceCaptureState extends UiState<VoiceCaptureState> {
   VoiceCaptureState copyWith({
     VoiceCapturePhase? phase,
     String? heardText,
+    double? level,
     RecordDraft? draft,
     SpeechFailure? failure,
     UiEffect? effect,
@@ -49,6 +63,7 @@ final class VoiceCaptureState extends UiState<VoiceCaptureState> {
     return VoiceCaptureState(
       phase: phase ?? this.phase,
       heardText: heardText ?? this.heardText,
+      level: level ?? this.level,
       draft: draft ?? this.draft,
       failure: failure ?? this.failure,
       effect: effect,
@@ -56,5 +71,5 @@ final class VoiceCaptureState extends UiState<VoiceCaptureState> {
   }
 
   @override
-  List<Object?> get props => [phase, heardText, draft, failure];
+  List<Object?> get props => [phase, heardText, level, draft, failure];
 }

@@ -190,7 +190,7 @@ void main() {
     expect(find.text(t.home.budgetLink), findsNothing);
     await tester.tap(find.text(t.home.createWalletAction));
     await tester.pumpAndSettle();
-    expect(navIndex(tester), 4);
+    expect(navIndex(tester), 3);
   });
 
   testWidgets('sudah ada dompet tanpa transaksi: Catat Transaksi membuka alur CATAT yang sama (aturan 8)', (
@@ -241,7 +241,7 @@ void main() {
 
     await tester.tap(find.text(t.home.seeAll));
     await tester.pumpAndSettle();
-    expect(navIndex(tester), 3);
+    expect(navIndex(tester), 2);
   });
 
   testWidgets('seluruh kartu anggaran bisa diketuk dan membuka tab Anggaran', (tester) async {
@@ -307,26 +307,30 @@ void main() {
       await seedWallet();
       await openShellWithTours(tester);
 
-      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      expect(step(1, 3, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
       await tester.tap(find.text(t.tour.nextAction));
       await tester.pumpAndSettle();
-      expect(step(2, 2, t.tour.homeRecordTitle, t.tour.homeRecordBody), findsOneWidget);
+      expect(step(2, 3, t.tour.homeRecordTitle, t.tour.homeRecordBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(3, 3, t.tour.homeVoiceTitle, t.tour.homeVoiceBody), findsOneWidget);
       await tester.tap(find.text(t.tour.doneAction));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.tour.homeRecordTitle), findsNothing);
+      expect(find.text(t.tour.homeVoiceTitle), findsNothing);
       final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
-      expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord});
+      expect(progress.seenSteps, {SpotlightKey.homeBalance, SpotlightKey.homeRecord, SpotlightKey.homeVoice});
     });
 
-    testWidgets('data lengkap: enam langkah termasuk arus, anggaran, Freelance, dan transaksi terbaru', (tester) async {
+    testWidgets('data lengkap: tujuh langkah termasuk suara, arus, anggaran, Freelance, dan transaksi terbaru', (tester) async {
       tallViewport(tester);
       await seedFull();
       await openShellWithTours(tester);
 
-      expect(step(1, 6, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      expect(step(1, 7, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
       final rest = [
         (t.tour.homeRecordTitle, t.tour.homeRecordBody),
+        (t.tour.homeVoiceTitle, t.tour.homeVoiceBody),
         (t.tour.homeCashFlowTitle, t.tour.homeCashFlowBody),
         (t.tour.homeBudgetTitle, t.tour.homeBudgetBody),
         (t.tour.homeFreelanceTitle, t.tour.homeFreelanceBody),
@@ -335,14 +339,14 @@ void main() {
       for (final (i, (title, body)) in rest.indexed) {
         await tester.tap(find.text(t.tour.nextAction));
         await tester.pumpAndSettle();
-        expect(step(i + 2, 6, title, body), findsOneWidget);
+        expect(step(i + 2, 7, title, body), findsOneWidget);
       }
     });
 
     testWidgets('kartu yang muncul belakangan disorot sendiri saat pertama tampil', (tester) async {
       tallViewport(tester);
       await seedWallet();
-      await tutorials.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord]);
+      await tutorials.markStepsSeen([SpotlightKey.homeBalance, SpotlightKey.homeRecord, SpotlightKey.homeVoice]);
       await seedFull();
       await openShellWithTours(tester);
 
@@ -490,7 +494,7 @@ void main() {
       await tester.tap(find.text(t.info.replayTourAction));
       await tester.pumpAndSettle();
 
-      expect(step(1, 2, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
+      expect(step(1, 3, t.tour.homeBalanceTitle, t.tour.homeBalanceBody), findsOneWidget);
     });
 
     testWidgets('Menu info: setel ulang semua tutorial meminta konfirmasi lalu mengosongkan progres', (tester) async {

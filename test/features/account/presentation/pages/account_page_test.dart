@@ -7,6 +7,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/account/presentation/pages/account_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -25,7 +26,10 @@ void main() {
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
-      ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()));
+      ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerSingleton<ChangeAppLanguage>(
+        ChangeAppLanguage(repository: LanguagePreferenceRepositoryImpl(storage: InMemoryKeyValueStorage())),
+      );
     await tester.pumpWidget(
       ScopeProvider(
         container: container,

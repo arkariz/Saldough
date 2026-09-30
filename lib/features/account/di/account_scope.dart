@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/category_manager_bloc.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -20,14 +21,19 @@ final class AccountScope extends IsolatedScope {
     c
       ..registerSingleton<AuthRepository>(parent<AuthRepository>())
       ..registerSingleton<CurrencyPreferenceRepository>(parent<CurrencyPreferenceRepository>())
-      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
+      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>())
+      ..registerSingleton<ChangeAppLanguage>(parent<ChangeAppLanguage>());
   }
 
   @override
   void register(GetIt c) {
     c
       ..registerLazySingleton<AccountBloc>(
-        () => AccountBloc(authRepository: c<AuthRepository>(), currencyRepository: c<CurrencyPreferenceRepository>()),
+        () => AccountBloc(
+          authRepository: c<AuthRepository>(),
+          currencyRepository: c<CurrencyPreferenceRepository>(),
+          changeLanguage: c<ChangeAppLanguage>(),
+        ),
         dispose: (bloc) => bloc.close(),
       )
       // Layar Kategori (ADR-026 §3.6), dibuka dari layar Akun.

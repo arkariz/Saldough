@@ -11,5 +11,6 @@ export 'domain/category_repository.dart';
 export 'domain/legacy_category_labels.dart';
 export 'domain/usecases/create_category.dart';
 export 'domain/usecases/migrate_legacy_categories.dart';
+export 'domain/usecases/relocalize_built_in_categories.dart';
 export 'presentation/category_display.dart';
 export 'presentation/category_name_dialog.dart';

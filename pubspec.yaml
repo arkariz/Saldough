@@ -44,7 +44,9 @@ dependencies:
   # kalinya aplikasi memanggil jaringan -- lihat NFR-SEC-001/NFR-REL-001
   # hasil revisi 28 Sep 2026 dan `android/app/google-services.json`
   # (ditaruh manual oleh pemilik, tidak dibuat lewat kode).
+  firebase_ai: ^4.0.0
   firebase_analytics: ^12.6.0
+  firebase_app_check: ^0.4.8
   firebase_auth: ^6.7.0
   firebase_core: ^4.15.0
   firebase_crashlytics: ^5.4.0

@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/features/record/data/capture/firebase_ai_transaction_interpreter.dart';
 import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
 import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
@@ -39,8 +40,8 @@ final class RecordScope extends IsolatedScope {
   void register(GetIt c) {
     c
       // Catat Cerdas (ADR-027, ADR-029): penangkap suara dan penyusun draf.
-      // Aturan per paket bahasa; penyedia cloud (Firebase AI, T-11.7)
-      // didaftarkan di `cloudInterpreter`.
+      // Aturan per paket bahasa; cloud (Firebase AI, T-11.7) hanya bila
+      // draf aturan ragu atau bahasanya tanpa paket.
       ..registerLazySingleton<SpeechTranscriber>(SystemSpeechTranscriber.new)
       ..registerLazySingleton<CaptureDraftComposer>(
         () => CaptureDraftComposer(
@@ -48,6 +49,7 @@ final class RecordScope extends IsolatedScope {
             language: language,
             categories: () => ActiveCategories.notifier.value,
           ),
+          cloudInterpreter: FirebaseAiTransactionInterpreter(),
         ),
       )
       ..registerLazySingleton<RecordBloc>(

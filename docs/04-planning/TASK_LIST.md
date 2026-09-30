@@ -72,7 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 14 | 9 | Berjalan -- T-11.1–11.4, T-11.10, T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 14 | 10 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1617,13 +1617,29 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa
       tier gratis memakai data untuk pelatihan (ADR-027 §3.5).
-- [ ] **T-11.7** `FirebaseAiTransactionInterpreter` (`firebase_ai`,
+- [x] **T-11.7** `FirebaseAiTransactionInterpreter` (`firebase_ai`,
       `googleAI()`, `responseSchema` = kontrak §3.2, model flash-lite
       stabil terkini) + `CascadingTransactionInterpreter` (aturan dulu, cloud
       bila ragu) + `firebase_app_check`. Tier gratis (Spark).
       Kaskade sudah disiapkan di T-11.13 (`CaptureDraftComposer`): cukup
       daftarkan interpreter Firebase AI di slot cloud-nya, yang juga
       mengisi `date` + `dateText` (ADR-029 §3.2).
+      Hasil (30 Sep 2026): `firebase_ai` 4.0.0 + `firebase_app_check`
+      0.4.8; `firebase_ai_transaction_interpreter.dart` (model
+      `gemini-3.5-flash-lite`, temperatur 0, `responseSchema` kutipan +
+      `date` YYYY-MM-DD, prompt hanya teks + nama dompet/kategori + tanggal +
+      bahasa; model dibuat saat pertama dipakai, jadi Firebase yang belum
+      terinisialisasi menjadi `Left`); tanggal yang tidak ada di kalender
+      dibuang; terdaftar di slot cloud `CaptureDraftComposer`. App Check
+      diaktifkan di `AppBootstrap.run` (Play Integrity / App Attest, penyedia
+      debug di mode debug). Uji: prompt tanpa saldo/id, JSON rusak, galat
+      jaringan, keluaran model lewat resolver (nominal karangan ditolak).
+      **Menunggu pemilik:** aktifkan Firebase AI Logic (Gemini Developer
+      API) di Console, daftarkan App Check (Play Integrity + SHA-256 kunci
+      rilis; token debug untuk build debug), biarkan penegakan App Check
+      mati sampai metrik menunjukkan permintaan sah. **Belum dicek di HP.**
+      Sampai Console diaktifkan, panggilan cloud gagal dan draf aturan
+      dipakai tanpa pesan galat (sesuai desain).
       ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
       harus jatuh ke draf aturan tanpa galat ke pengguna. Penerimaan
       koneksi (ADR-027 §3.5 butir 7): tanpa cek koneksi di muka, batas

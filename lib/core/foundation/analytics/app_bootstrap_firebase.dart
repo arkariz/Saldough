@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +9,8 @@ import 'package:flutter/widgets.dart' show NavigatorObserver;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:saldough/core/config/firebase_config.dart';
 
-/// Inisialisasi Firebase (ADR-023): Analytics, Crashlytics, dan Google
+/// Inisialisasi Firebase (ADR-023): Analytics, Crashlytics, App Check
+/// (wajib untuk Firebase AI Logic, ADR-027 §3.5 butir 5), dan Google
 /// Sign-In. Dipanggil sekali dari `main.dart`, sebelum `runApp`.
 ///
 /// ⚠ **Kegagalan di sini tidak boleh menghentikan aplikasi** (NFR-REL-001 —
@@ -34,6 +36,13 @@ abstract final class AppBootstrap {
   /// `GoogleSignIn.instance` siap dipakai `FirebaseAuthRepositoryImpl`.
   static Future<void> run() async {
     await Firebase.initializeApp();
+
+    // App Check: Play Integrity / App Attest di rilis; penyedia debug di mode
+    // debug (token debug-nya didaftarkan di Firebase Console).
+    await FirebaseAppCheck.instance.activate(
+      providerAndroid: kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+      providerApple: kDebugMode ? const AppleDebugProvider() : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+    );
 
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;

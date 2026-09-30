@@ -63,11 +63,11 @@ final class CaptureDraftComposer {
     );
 
     RecordDraft? ruleDraft;
-    if (language != null) {
-      final interpreted = await _interpret(ruleInterpreterFor(language), evidence, context);
-      if (interpreted != null) ruleDraft = resolver.resolve(evidence, interpreted);
-      if (ruleDraft != null && ruleDraft.isConfident) return ruleDraft;
-    }
+    // if (language != null) {
+    //   final interpreted = await _interpret(ruleInterpreterFor(language), evidence, context);
+    //   if (interpreted != null) ruleDraft = resolver.resolve(evidence, interpreted);
+    //   if (ruleDraft != null && ruleDraft.isConfident) return ruleDraft;
+    // }
 
     final cloud = cloudInterpreter;
     if (cloud != null) {

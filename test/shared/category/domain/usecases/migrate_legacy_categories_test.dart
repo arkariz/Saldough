@@ -2,10 +2,22 @@ import 'dart:convert';
 
 import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+
+/// Port label lama yang selalu gagal dibaca (regresi F6 verifikasi M1).
+final class _FailingLabels implements LegacyCategoryLabels {
+  @override
+  Future<Either<Failure, List<LegacyCategoryLabel>>> listLabels() async =>
+      const Left(SystemFailure(code: FailureCode.unknown, message: 'rusak'));
+
+  @override
+  Future<Either<Failure, Unit>> replaceLabels(String? Function(LegacyCategoryLabel label) idFor) async =>
+      const Right(unit);
+}
 
 /// Migrasi label kategori teks bebas ke `categoryId` (ADR-026 §3.4).
 void main() {
@@ -137,5 +149,16 @@ void main() {
     await run();
 
     expect((await categoryIdsById())['e1'], 'legacy.expense.arisan');
+  });
+
+  test('label lama gagal dibaca: kategori bawaan tetap tersimpan, penanda tidak ditulis (F6)', () async {
+    final result = await MigrateLegacyCategories(
+      categoryRepository: categories,
+      legacyLabels: _FailingLabels(),
+    )(builtInName: (key) => key);
+
+    expect(result.isLeft(), isTrue);
+    expect((await categories.listCategories()).getOrElse((_) => const []), hasLength(BuiltInCategories.all.length));
+    expect((await categories.isLegacyMigrationDone()).getOrElse((_) => true), isFalse);
   });
 }

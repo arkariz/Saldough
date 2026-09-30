@@ -86,7 +86,15 @@ sebelum layar pertama, dengan penanda `category/_migration`:
    (`categoryKey` → `categoryId`; transfer: label dibuang), lalu penanda.
 
 Gagal migrasi tidak menghalangi aplikasi terbuka (NFR-REL-001); dicoba lagi
-pada pembukaan berikutnya.
+pada pembukaan berikutnya. Kategori bawaan disimpan sebelum label lama dibaca,
+dan kegagalan dilaporkan ke Crashlytics sebagai non-fatal (verifikasi M1, F6).
+
+**Penggabungan lewat alias diterima (KT-3, 30 Sep 2026).** Verifikasi M1 di
+perangkat menunjukkan label berbeda milik pengguna ("Makan", "Kopi", "Food")
+melebur ke satu kategori bawaan lewat alias, dan judul transaksi lama berubah
+ke nama kategori bawaan. Pemilik memutuskan membiarkannya karena belum ada
+pengguna dengan data lama. Tinjau ulang kalau keadaan itu berubah sebelum
+rilis.
 
 ### 3.5 Tampilan
 

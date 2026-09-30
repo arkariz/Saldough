@@ -16,7 +16,9 @@ final class BuiltInCategory {
   final String iconKey;
 
   /// Kata kunci Indonesia dan Inggris, sudah dalam bentuk
-  /// [normalizeCategoryText]. Dipakai migrasi label lama dan pencocokan
+  /// [normalizeCategoryText]. Hanya kata yang hampir tidak mungkin berarti
+  /// lain ("air" dan "data" sengaja tidak masuk: "air mineral", "transfer
+  /// data" -- temuan F5 verifikasi M1). Dipakai migrasi label lama dan pencocokan
   /// pencatatan cerdas (ADR-027), bukan untuk ditampilkan.
   final List<String> aliases;
 
@@ -113,7 +115,8 @@ abstract final class BuiltInCategories {
         'listrik',
         'pln',
         'token listrik',
-        'air',
+        'tagihan air',
+        'air pdam',
         'pdam',
         'sewa',
         'kontrakan',
@@ -131,7 +134,7 @@ abstract final class BuiltInCategories {
       key: 'internet',
       kind: CategoryKind.expense,
       iconKey: 'categoryInternet',
-      aliases: ['pulsa', 'kuota', 'paket data', 'internet', 'wifi', 'indihome', 'data'],
+      aliases: ['pulsa', 'kuota', 'paket data', 'internet', 'wifi', 'indihome'],
     ),
     BuiltInCategory(
       key: 'health',
@@ -179,13 +182,13 @@ abstract final class BuiltInCategories {
       key: 'education',
       kind: CategoryKind.expense,
       iconKey: 'categoryEducation',
-      aliases: ['pendidikan', 'sekolah', 'kuliah', 'kursus', 'les', 'buku', 'spp', 'education', 'course'],
+      aliases: ['pendidikan', 'sekolah', 'kuliah', 'kursus', 'les privat', 'buku', 'spp', 'education', 'course'],
     ),
     BuiltInCategory(
       key: 'family',
       kind: CategoryKind.expense,
       iconKey: 'categoryHousehold',
-      aliases: ['keluarga', 'orang tua', 'anak', 'kiriman', 'family'],
+      aliases: ['keluarga', 'orang tua', 'kiriman', 'family'],
     ),
     BuiltInCategory(
       key: 'donation',
@@ -204,7 +207,7 @@ abstract final class BuiltInCategories {
       key: 'freelance',
       kind: CategoryKind.income,
       iconKey: 'income',
-      aliases: ['freelance', 'proyek', 'project', 'honor', 'fee'],
+      aliases: ['freelance', 'proyek', 'honor'],
     ),
     BuiltInCategory(
       key: 'bonus',

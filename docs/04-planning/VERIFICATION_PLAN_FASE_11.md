@@ -188,7 +188,12 @@ tercakup uji unit.
 | F9 | Rendah | — | Ganti nama boleh menghasilkan dua kategori sejenis bernama sama; "Catat lagi" bisa mencatat ke kategori terarsip. | `category_manager_bloc.dart`, form `prefill` |
 | F10 | Catatan | — | `RecordBloc.createCategory` metode publik (bukan event) — perlu diterima pemilik atau dicatat sebagai utang desain. | `record_bloc.dart` |
 
-**Butuh keputusan pemilik:** F1 (KT-3 di TASK_LIST).
+**Tindak lanjut (30 Sep 2026, T-11.10):** F1 diterima pemilik (belum ada
+pengguna dengan data lama; ADR-026 §3.4). F2–F6 diperbaiki dengan kasus probe
+sebagai uji regresi (724 uji lulus). F7–F10 ke antrean B-16. Dengan F1
+diterima dan F2–F6 tertutup, **M1 dianggap lulus** untuk build closed testing
+berikutnya; uji migrasi di HP tidak diulang karena perubahan F6 hanya urutan
+tulis dan tercakup uji unit.
 
 
 ---

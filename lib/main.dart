@@ -56,6 +56,7 @@ Future<void> main() async {
   )(builtInName: (key) => t.category.builtIn[key] ?? key);
   if (migrated case Left(value: final failure)) {
     developer.log('Migrasi kategori gagal, dicoba lagi nanti', error: failure, name: 'MigrateLegacyCategories');
+    AppBootstrap.recordNonFatal(failure, reason: 'MigrateLegacyCategories');
   }
   // Mengisi `ActiveCategories` (lewat repository) untuk judul transaksi.
   await categoryRepository.listCategories();

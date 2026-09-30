@@ -34,6 +34,24 @@ void main() {
       'Rp 35.000': 35000,
       'sebelas ribu': 11000,
       'beli dua kopi lima puluh ribu': 50000,
+      // Regresi verifikasi M1 (F2).
+      'satu setengah juta': 1500000,
+      'dua setengah juta': 2500000,
+      'satu koma lima juta': 1500000,
+      'nol koma lima juta': 500000,
+      'kopi 25 ribu 2 gelas': 25000,
+      'rokok tiga puluh ribu dua bungkus': 30000,
+      'dua ribu lima ratus': 2500,
+      'dua ratus ribu lima ratus': 200500,
+      'satu juta lima ratus': 1000500,
+      'seribu lima ratus': 1500,
+      'sejuta lima ratus ribu': 1500000,
+      'dua belas ribu lima ratus': 12500,
+      'Rp 1.250.000,-': 1250000,
+      'IDR 50,000.00': 50000,
+      'jam 12 makan 20 ribu': 20000,
+      'vitamin k 50 ribu': 50000,
+      'Transfer Rp50.000 berhasil. Ref 202609301234567890123456': 50000,
     };
     for (final MapEntry(key: text, value: units) in cases.entries) {
       test('"$text" -> $units', () {
@@ -66,6 +84,23 @@ void main() {
     test('tanpa nominal', () {
       expect(SpokenAmountParser.parse('tadi belanja').issue, SpokenAmountIssue.missing);
       expect(SpokenAmountParser.parse('barusan beli kopi sebelum meeting').issue, SpokenAmountIssue.missing);
+    });
+
+    test('nominal raksasa tidak meluap diam-diam (F2)', () {
+      for (final text in ['Rp 99.999.999.999.999.999', '999999999999999 juta', '5000 miliar']) {
+        final result = SpokenAmountParser.parse(text);
+        expect(result.sen == null || result.sen! > 0, isTrue, reason: '$text -> ${result.sen}');
+        expect(result.sen, isNull, reason: text);
+      }
+    });
+
+    test('deret digit panjang tidak melempar (F3)', () {
+      expect(() => SpokenAmountParser.parse('No rek 12345678901234567890123 saldo'), returnsNormally);
+      expect(SpokenAmountParser.parse('No rek 12345678901234567890123').issue, SpokenAmountIssue.missing);
+    });
+
+    test('desimal lebih dari 4 angka diragukan', () {
+      expect(SpokenAmountParser.parse('kopi 1,123456 juta').issue, SpokenAmountIssue.ambiguous);
     });
 
     test('mata uang lain', () {

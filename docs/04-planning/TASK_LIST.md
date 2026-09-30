@@ -90,14 +90,9 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
-- **KT-3** Cara migrasi label kategori lama (temuan F1 verifikasi M1,
-  [VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): saat ini
-  label dicocokkan ke kategori bawaan lewat alias sehingga "Makan", "Kopi",
-  dan "Food" melebur jadi satu. Pilihan: (a) tiap label unik jadi kategori
-  sendiri, hanya beda huruf/spasi yang digabung; (b) gabung hanya bila sama
-  persis dengan nama kategori bawaan atau saran lama aplikasi ("Makan",
-  "Gaji", "Transport", "Tagihan", …); (c) tetap seperti sekarang. Memblokir
-  build closed testing berikutnya.
+KT-3 (cara migrasi label kategori lama, temuan F1 verifikasi M1) diputuskan
+30 Sep 2026: dibiarkan apa adanya karena belum ada pengguna dengan data
+lama — dicatat di ADR-026 §3.4.
 
 KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi) diputuskan
 27 Sep 2026 dan dikerjakan di T-8.1.
@@ -1594,10 +1589,17 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
 - [ ] **T-11.8** Pindah ke tier berbayar (Blaze) sebelum rilis publik:
       billing, batas anggaran, cek ulang harga; tanpa perubahan kode.
       Dikerjakan pemilik; agen memperbarui dokumen.
-- [ ] **T-11.10** Perbaiki temuan verifikasi M1 F1–F6
-      ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)); F1
-      menunggu KT-3. Probe kasus gagal dijadikan uji regresi. Setelah itu
-      ulangi uji migrasi di HP. F7–F10 boleh masuk antrean.
+- [x] **T-11.10** Perbaiki temuan verifikasi M1
+      ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)).
+      Hasil (30 Sep 2026): F1 dibiarkan (KT-3, belum ada pengguna). F2
+      "setengah", "koma", sisa angka tak tersusun sesudah skala dipisah, batas
+      nominal 1 triliun satuan; F3 deret digit > 15 bukan nominal; F4 kata
+      pemasukan lemah kalah oleh tanda pengeluaran; F5 alias `air`, `data`,
+      `anak`, `les`, `fee`, `project` dibuang; F6 kategori bawaan disimpan
+      sebelum label dibaca + kegagalan migrasi ke Crashlytics
+      (`AppBootstrap.recordNonFatal`). Kasus probe jadi uji regresi; 724 uji
+      lulus. F7–F10 ke antrean B-16. Uji migrasi di HP tidak diulang: F1
+      diterima, dan perubahan F6 hanya mengubah urutan tulis (diuji unit).
 - [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
       transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
 
@@ -1620,6 +1622,7 @@ menambah dan memindahkannya ada di
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 | B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 

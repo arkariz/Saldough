@@ -105,6 +105,15 @@ void main() {
     // Campur bahasa
     ('coffee 25 ribu pakai BCA', e, 25000, 'bca', null, 'builtin.food', {}),
     ('tadi ngopi 25k', e, 25000, null, null, 'builtin.food', {}),
+    // Regresi verifikasi M1 (F2, F4, F5).
+    ('bayar masuk tol 20 ribu', e, 20000, null, null, 'builtin.transport', {}),
+    ('dapat diskon beli baju 100 ribu', e, 100000, null, null, 'builtin.shopping', {}),
+    ('beli pulsa bonus kuota 50 ribu', e, 50000, null, null, 'builtin.internet', {}),
+    ('beli air mineral 5 ribu', e, 5000, null, null, null, {}),
+    ('uang masuk 500 ribu', i, 500000, null, null, null, {}),
+    ('bonus 1 juta', i, 1000000, null, null, 'builtin.bonus', {}),
+    ('kopi 25 ribu 2 gelas', e, 25000, null, null, 'builtin.food', {}),
+    ('gaji satu setengah juta', i, 1500000, null, null, 'builtin.salary', {}),
   ];
 
   for (final (text, kind, units, wallet, toWallet, category, issues) in cases) {

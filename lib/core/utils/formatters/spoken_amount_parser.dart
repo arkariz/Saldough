@@ -230,8 +230,22 @@ const _rupiahWords = {
 final _digitToken = RegExp(r'^\d[\d.,]*$');
 final _digitWithSuffix = RegExp(r'^(\d[\d.,]*)(k|rb|ribu|jt|juta|m)$');
 
+/// Deret digit lebih panjang dari ini bukan nominal (nomor rekening,
+/// referensi transaksi) dan tidak pernah diurai -- mencegah `int.parse`
+/// meluap.
+const _maxDigits = 15;
+
+/// Nominal di atas ini (satuan utama) dianggap salah baca, bukan uang.
+const _maxUnits = 1000000000000;
+
+/// Paling banyak angka desimal yang diterima ("1,5" ya, "1,23456" ragu).
+const _maxFractionDigits = 4;
+
+int _digitCount(String w) => RegExp(r'\d').allMatches(w).length;
+
 bool _isNumberish(_Token token) {
   final w = token.word;
+  if ((_digitToken.hasMatch(w) || _digitWithSuffix.hasMatch(w)) && _digitCount(w) > _maxDigits) return false;
   return _digitToken.hasMatch(w) ||
       _digitWithSuffix.hasMatch(w) ||
       _digitWords.containsKey(w) ||
@@ -243,7 +257,8 @@ bool _isNumberish(_Token token) {
       w == 'puluh' ||
       w == 'belas' ||
       w == 'ratus' ||
-      w == 'setengah';
+      w == 'setengah' ||
+      w == 'koma';
 }
 
 // ---------------------------------------------------------------------------
@@ -259,6 +274,9 @@ final class _Rational {
   _Rational operator +(_Rational o) => _Rational(num * o.den + o.num * den, den * o.den);
   _Rational scale(int factor) => _Rational(num * factor, den);
   bool get isZero => num == 0;
+
+  /// Lebih besar dari [units] satuan utama.
+  bool exceeds(int units) => num > units * den;
 
   /// Nilai dalam sen (x100), atau `null` kalau lebih halus dari sen.
   int? get sen => (num * 100) % den == 0 ? (num * 100) ~/ den : null;
@@ -281,7 +299,11 @@ final class _Rational {
     final parts = s.split(decimalSep);
     if (parts.length != 2) return null;
     final whole = parts[0].replaceAll(groupSep, '');
-    return (value: _decimal(whole, parts[1]), grouped: true, ambiguous: parts[1].length > 2);
+    return (
+      value: _decimal(whole, parts[1]),
+      grouped: true,
+      ambiguous: parts[1].length > 2 || parts[1].length > _maxFractionDigits,
+    );
   }
 
   final sep = dots > 0 ? '.' : ',';
@@ -299,10 +321,15 @@ final class _Rational {
         : (value: _Rational(int.parse(parts.join())), grouped: true, ambiguous: true);
   }
   // "1,5" / "1.5" / "35.000,00"-tanpa-titik: desimal.
-  return (value: _decimal(parts[0], parts[1]), grouped: false, ambiguous: false);
+  return (
+    value: _decimal(parts[0], parts[1]),
+    grouped: false,
+    ambiguous: parts[1].length > _maxFractionDigits,
+  );
 }
 
 _Rational _decimal(String whole, String fraction) {
+  if (fraction.length > _maxFractionDigits) return const _Rational(0, 0);
   var den = 1;
   for (var i = 0; i < fraction.length; i++) {
     den *= 10;
@@ -312,7 +339,8 @@ _Rational _decimal(String whole, String fraction) {
 
 /// Mengevaluasi satu deret token bilangan yang bersebelahan. Bisa
 /// menghasilkan lebih dari satu nominal kalau skalanya naik lagi ("500 ribu
-/// 1 juta") atau ada dua angka digit berturut-turut.
+/// 1 juta"), ada dua angka digit berturut-turut, atau ada sisa tak tersusun
+/// sesudah skala ("25 ribu 2 gelas": "2" adalah jumlah barang, bukan Rp2).
 List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
   final results = <SpokenAmount>[];
 
@@ -326,19 +354,55 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
   var groupHasDigits = false;
   int? startIndex;
   int? endIndex;
+  // Token skala terakhir, dan sisa sesudahnya: sah hanya kalau tersusun
+  // ("dua ribu LIMA RATUS"), bukan satu angka lepas ("tiga puluh ribu DUA").
+  int? scaleIndex;
+  int? remainderStart;
+  var remainderComposed = false;
+  // "satu koma lima juta": bagian bulat dan digit desimal yang terkumpul.
+  _Rational? commaWhole;
+  var commaDigits = '';
+
+  void add(_Rational value, int from, int to, {required bool unit}) {
+    final bad = ambiguous || value.den == 0 || value.exceeds(_maxUnits);
+    final sen = bad ? null : value.sen;
+    results.add(
+      SpokenAmount(
+        text: text.substring(run[from].start, run[to].end),
+        sen: sen,
+        hasUnit: unit,
+        isAmbiguous: bad || sen == null,
+      ),
+    );
+  }
+
+  void closeComma() {
+    final whole = commaWhole;
+    if (whole == null) return;
+    commaWhole = null;
+    if (commaDigits.isEmpty) {
+      pending = whole;
+      return;
+    }
+    pending = whole + _decimal('0', commaDigits);
+    if (commaDigits.length > _maxFractionDigits) ambiguous = true;
+    commaDigits = '';
+  }
 
   void emit() {
-    final value = total + group + pending;
+    closeComma();
+    final remainder = group + pending;
     if (hasValue && startIndex != null) {
-      final sen = value.sen;
-      results.add(
-        SpokenAmount(
-          text: text.substring(run[startIndex!].start, run[endIndex!].end),
-          sen: ambiguous || sen == null ? null : sen,
-          hasUnit: hasUnit,
-          isAmbiguous: ambiguous || sen == null,
-        ),
-      );
+      final start = startIndex!;
+      final end = endIndex!;
+      final splitAt = scaleIndex;
+      final restFrom = remainderStart;
+      if (lastScale != 0 && !remainder.isZero && !remainderComposed && splitAt != null && restFrom != null) {
+        add(total, start, splitAt, unit: hasUnit);
+        add(remainder, restFrom, end, unit: false);
+      } else {
+        add(total + remainder, start, end, unit: hasUnit);
+      }
     }
     total = const _Rational(0);
     group = const _Rational(0);
@@ -350,21 +414,34 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
     groupHasDigits = false;
     startIndex = null;
     endIndex = null;
+    scaleIndex = null;
+    remainderStart = null;
+    remainderComposed = false;
   }
 
   void mark(int index) {
     startIndex ??= index;
     endIndex = index;
+    if (scaleIndex != null && index > scaleIndex! && remainderStart == null) remainderStart = index;
+  }
+
+  void composed() {
+    if (lastScale != 0) remainderComposed = true;
   }
 
   void applyScale(int scale, int index) {
+    closeComma();
     if (lastScale != 0 && scale >= lastScale) {
       // Skala naik lagi: nominal baru.
       emit();
     }
     var unit = group + pending;
     if (unit.isZero) unit = const _Rational(1);
-    total = total + unit.scale(scale);
+    if (unit.den == 0 || unit.exceeds(_maxUnits ~/ scale)) {
+      ambiguous = true;
+    } else {
+      total = total + unit.scale(scale);
+    }
     group = const _Rational(0);
     pending = const _Rational(0);
     groupHasDigits = false;
@@ -372,10 +449,35 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
     hasValue = true;
     hasUnit = true;
     mark(index);
+    scaleIndex = index;
+    remainderStart = null;
+    remainderComposed = false;
   }
 
   for (var i = 0; i < run.length; i++) {
     final w = run[i].word;
+    if (commaWhole != null) {
+      // Mengumpulkan digit desimal sesudah "koma".
+      if (_digitWords.containsKey(w)) {
+        commaDigits += '${_digitWords[w]}';
+        mark(i);
+        continue;
+      }
+      if (RegExp(r'^\d+$').hasMatch(w)) {
+        commaDigits += w;
+        mark(i);
+        continue;
+      }
+      closeComma();
+    }
+    if (w == 'koma') {
+      if (!hasValue) continue;
+      commaWhole = group + pending;
+      group = const _Rational(0);
+      pending = const _Rational(0);
+      mark(i);
+      continue;
+    }
     if (_rupiahWords.contains(w)) {
       // "Rp" di depan menandai uang; "rupiah" di belakang juga.
       if (w == 'rp' && hasValue) emit();
@@ -428,30 +530,36 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       pending = const _Rational(0);
       hasValue = true;
       mark(i);
+      composed();
       continue;
     }
     if (w == 'belas') {
       group = group + const _Rational(10) + pending;
       pending = const _Rational(0);
       mark(i);
+      composed();
       continue;
     }
     if (w == 'puluh') {
       group = group + pending.scale(10);
       pending = const _Rational(0);
       mark(i);
+      composed();
       continue;
     }
     if (w == 'ratus') {
       group = group + (pending.isZero ? const _Rational(1) : pending).scale(100);
       pending = const _Rational(0);
       mark(i);
+      composed();
       continue;
     }
     if (w == 'setengah') {
-      pending = const _Rational(1, 2);
+      // "setengah juta" = 0,5 juta; "satu setengah juta" = 1,5 juta.
+      pending = pending + const _Rational(1, 2);
       hasValue = true;
       mark(i);
+      composed();
       continue;
     }
     if (_seScaleWords.containsKey(w)) {
@@ -472,6 +580,7 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       hasUnit = true;
       lastScale = 1;
       mark(i);
+      scaleIndex = i;
       continue;
     }
   }

@@ -67,9 +67,14 @@ final class RuleBasedTransactionInterpreter implements TransactionInterpreter {
     );
   }
 
+  /// Jenis dari kata kunci. Kata pemasukan yang juga lazim di kalimat
+  /// pengeluaran ("masuk tol", "dapat diskon", "bonus kuota") hanya dihitung
+  /// kalau tidak ada tanda pengeluaran di kalimat yang sama.
   DraftKind _kindOf(String lower) {
-    if (_transferWords.any((w) => _hasWord(lower, w))) return DraftKind.transfer;
-    if (_incomeWords.any((w) => _hasWord(lower, w))) return DraftKind.income;
+    bool any(List<String> words) => words.any((w) => _hasWord(lower, w));
+    if (any(_transferWords)) return DraftKind.transfer;
+    if (any(_incomeWords)) return DraftKind.income;
+    if (any(_weakIncomeWords) && !any(_expenseCues)) return DraftKind.income;
     return DraftKind.expense;
   }
 
@@ -184,22 +189,30 @@ const _transferWords = [
   'setor tunai',
 ];
 
-const _incomeWords = [
-  'gaji',
-  'gajian',
-  'masuk',
-  'pemasukan',
-  'dapat',
-  'dapet',
-  'terima',
-  'diterima',
-  'bonus',
-  'thr',
-  'dibayar',
-  'salary',
-  'income',
-  'refund',
-  'cashback',
+/// Kata yang hampir pasti berarti pemasukan.
+const _incomeWords = ['gaji', 'gajian', 'pemasukan', 'thr', 'salary', 'income', 'refund', 'cashback'];
+
+/// Kata pemasukan yang juga muncul di kalimat pengeluaran.
+const _weakIncomeWords = ['masuk', 'dapat', 'dapet', 'terima', 'diterima', 'bonus', 'dibayar'];
+
+/// Tanda kalimat pengeluaran; mengalahkan [_weakIncomeWords].
+const _expenseCues = [
+  'beli',
+  'bayar',
+  'belanja',
+  'jajan',
+  'makan',
+  'isi',
+  'tol',
+  'parkir',
+  'diskon',
+  'potongan',
+  'ongkir',
+  'ongkos',
+  'pulsa',
+  'kuota',
+  'buy',
+  'pay',
 ];
 
 const _cashSpoken = ['cash', 'tunai', 'kas'];

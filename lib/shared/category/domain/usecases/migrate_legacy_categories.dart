@@ -41,18 +41,25 @@ final class MigrateLegacyCategories {
     }
 
     final storedIds = {for (final c in categories) c.id};
-    for (final (index, builtIn) in BuiltInCategories.all.indexed) {
-      if (storedIds.contains(builtIn.id)) continue;
-      categories.add(
-        Category(
-          id: builtIn.id,
-          kind: builtIn.kind,
-          name: builtInName(builtIn.key),
-          builtInKey: builtIn.key,
-          iconKey: builtIn.iconKey,
-          sortOrder: index,
-        ),
-      );
+    final missingBuiltIns = [
+      for (final (index, builtIn) in BuiltInCategories.all.indexed)
+        if (!storedIds.contains(builtIn.id))
+          Category(
+            id: builtIn.id,
+            kind: builtIn.kind,
+            name: builtInName(builtIn.key),
+            builtInKey: builtIn.key,
+            iconKey: builtIn.iconKey,
+            sortOrder: index,
+          ),
+    ];
+    // Kategori bawaan disimpan lebih dulu, terpisah dari pemindahan label:
+    // kalau membaca label lama gagal, pemilih kategori tetap berisi.
+    if (missingBuiltIns.isNotEmpty) {
+      if (await _categoryRepository.saveCategories(missingBuiltIns) case Left(value: final failure)) {
+        return left(failure);
+      }
+      categories.addAll(missingBuiltIns);
     }
 
     final List<LegacyCategoryLabel> labels;

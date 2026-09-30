@@ -44,4 +44,12 @@ abstract final class AppBootstrap {
 
     await GoogleSignIn.instance.initialize(serverClientId: FirebaseConfig.googleServerClientId);
   }
+
+  /// Melaporkan galat yang sudah ditangani (non-fatal) ke Crashlytics, mis.
+  /// migrasi data yang gagal dan akan dicoba lagi. Diam kalau Firebase belum
+  /// terinisialisasi (perangkat offline sejak pertama dibuka).
+  static void recordNonFatal(Object error, {required String reason}) {
+    if (Firebase.apps.isEmpty) return;
+    unawaited(FirebaseCrashlytics.instance.recordError(error, StackTrace.current, reason: reason));
+  }
 }

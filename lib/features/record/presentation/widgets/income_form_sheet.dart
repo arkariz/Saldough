@@ -6,26 +6,19 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
-import 'package:saldough/features/record/domain/record_defaults.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
-/// Saran kategori pemasukan yang sering dipakai.
-List<String> _categorySuggestions() => [
-  t.record.categorySuggestionSalary,
-  t.record.categorySuggestionBonus,
-  t.record.categorySuggestionSales,
-  t.record.categorySuggestionGift,
-  t.record.categorySuggestionInvestment,
-];
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat
@@ -39,8 +32,10 @@ class IncomeFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.prefill,
+    this.draft,
     this.initialWalletId,
-    this.recentCategories = const [],
+    this.frequentCategoryIds = const [],
+    this.onCreateCategory,
     this.kindSwitcher,
     super.key,
   });
@@ -72,9 +67,19 @@ class IncomeFormSheet extends StatefulWidget {
   /// sendiri.
   final String? initialWalletId;
 
-  /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
-  /// ditawarkan sebelum saran bawaan (UX-3).
-  final List<String> recentCategories;
+  /// Id kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
+  /// ditawarkan paling atas (UX-3).
+  final List<String> frequentCategoryIds;
+
+  /// Membuat kategori baru dari "Tambah kategori" (ADR-026 §3.6); `null`
+  /// berarti pilihan itu tidak ditawarkan.
+  final Future<Category?> Function(String name)? onCreateCategory;
+
+  /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
+  /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta
+  /// hal yang perlu diperiksa. Diabaikan kalau [initial] atau [prefill]
+  /// terisi.
+  final RecordDraft? draft;
 
   @override
   State<IncomeFormSheet> createState() => _IncomeFormSheetState();
@@ -82,7 +87,7 @@ class IncomeFormSheet extends StatefulWidget {
 
 class _IncomeFormSheetState extends State<IncomeFormSheet> {
   final _amountController = TextEditingController();
-  final _categoryController = TextEditingController();
+  String? _categoryId;
   final _noteController = TextEditingController();
   String? _walletId;
   DateTime _date = DateTime.now();
@@ -91,6 +96,17 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial ?? widget.prefill;
+    final draft = widget.draft;
+    if (tx == null && draft != null) {
+      final amount = draft.amountSen;
+      if (amount != null && amount > 0 && isMoneyInputExact(amount)) _amountController.text = formatMoneyInput(amount);
+      // Dompet yang disebut tapi tidak dikenal: biarkan kosong supaya dipilih.
+      _walletId = draft.walletId ?? (draft.issues.contains(DraftIssue.walletUnknown) ? null : widget.initialWalletId);
+      _categoryId = draft.categoryId;
+      _noteController.text = draft.note;
+      if (draft.date != null) _date = draft.date!;
+      return;
+    }
     if (tx == null) {
       _walletId = widget.initialWalletId;
       return;
@@ -101,13 +117,12 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
     if (widget.initial != null) _date = tx.date;
     _noteController.text = tx.note;
     _walletId = tx.walletId;
-    _categoryController.text = tx.categoryKey ?? '';
+    _categoryId = tx.categoryId;
   }
 
   @override
   void dispose() {
     _amountController.dispose();
-    _categoryController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -133,9 +148,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         amount: amount,
         date: _date,
         note: _noteController.text.trim(),
-        categoryKey: _categoryController.text.trim().isEmpty
-            ? null
-            : _categoryController.text.trim(),
+        categoryId: _categoryId,
       ),
     );
   }
@@ -156,6 +169,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           : t.record.incomeAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
+        if (!editing && widget.prefill == null && widget.draft != null) RecordDraftCard(draft: widget.draft!),
         // Di atas nominal: keputusan "honor freelance atau pemasukan biasa"
         // diambil sebelum mengisi apa pun (dulu di dasar formulir, mudah
         // terlewat).
@@ -176,12 +190,11 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           ),
         ),
         RecordCategoryField(
-          controller: _categoryController,
-          suggestions: mergeCategorySuggestions(
-            widget.recentCategories,
-            _categorySuggestions(),
-          ),
-          kind: TransactionKind.income,
+          value: _categoryId,
+          onChanged: (id) => setState(() => _categoryId = id),
+          categoryKind: CategoryKind.income,
+          frequentIds: widget.frequentCategoryIds,
+          onCreate: widget.onCreateCategory,
         ),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordWallet,

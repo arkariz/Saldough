@@ -6,9 +6,9 @@ import 'package:saldough/shared/transaction/transaction.dart';
 void main() {
   final day = DateTime(2026, 9, 10);
   ExpenseTransaction expense(String wallet, [String? category]) =>
-      ExpenseTransaction(id: 'e', date: day, amount: 1, note: '', walletId: wallet, categoryKey: category);
+      ExpenseTransaction(id: 'e', date: day, amount: 1, note: '', walletId: wallet, categoryId: category);
   IncomeTransaction income(String wallet, [String? category]) =>
-      IncomeTransaction(id: 'i', date: day, amount: 1, note: '', walletId: wallet, categoryKey: category);
+      IncomeTransaction(id: 'i', date: day, amount: 1, note: '', walletId: wallet, categoryId: category);
   TransferTransaction transfer(String from, String to) =>
       TransferTransaction(id: 't', date: day, amount: 1, note: '', fromWalletId: from, toWalletId: to);
 
@@ -49,31 +49,21 @@ void main() {
       expect(defaults.transferToWalletId, 'bca');
     });
 
-    test('kategori paling sering di atas, beda huruf besar-kecil digabung dengan ejaan terbaru', () {
+    test('id kategori paling sering di atas, seri dipecah oleh yang terbaru', () {
       final defaults = RecordDefaults.from(
         [
-          expense('bca', 'Listrik PLN'),
-          expense('bca', 'kopi'),
-          expense('bca', 'Kopi'),
-          expense('bca', 'listrik pln'),
-          expense('bca', 'Kopi'),
-          expense('bca', '  '),
-          income('bca', 'Gaji'),
+          expense('bca', 'builtin.bills'),
+          expense('bca', 'builtin.food'),
+          expense('bca', 'builtin.food'),
+          expense('bca', 'builtin.bills'),
+          expense('bca', 'builtin.food'),
+          expense('bca'),
+          income('bca', 'builtin.salary'),
         ],
         activeWalletIds: const {'bca'},
       );
-      expect(defaults.expenseCategories, ['kopi', 'Listrik PLN']);
-      expect(defaults.incomeCategories, ['Gaji']);
-    });
-  });
-
-  group('mergeCategorySuggestions (UX-3)', () {
-    test('riwayat lebih dulu, bawaan menyusul tanpa duplikat beda huruf', () {
-      expect(mergeCategorySuggestions(['makan', 'Listrik PLN'], ['Makan', 'Belanja']), [
-        'makan',
-        'Listrik PLN',
-        'Belanja',
-      ]);
+      expect(defaults.expenseCategoryIds, ['builtin.food', 'builtin.bills']);
+      expect(defaults.incomeCategoryIds, ['builtin.salary']);
     });
   });
 }

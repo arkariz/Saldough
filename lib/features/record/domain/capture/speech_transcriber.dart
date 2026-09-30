@@ -1,0 +1,87 @@
+/// Alasan pengenalan ucapan gagal.
+enum SpeechFailure {
+  /// Izin mikrofon atau pengenalan ucapan ditolak.
+  permissionDenied,
+
+  /// Perangkat tidak punya layanan pengenal ucapan, atau bahasanya tidak
+  /// didukung sama sekali.
+  unavailable,
+
+  /// Bahasanya didukung tetapi paket luringnya belum terunduh, dan tidak ada
+  /// internet (mis. paket English belum ada, mode pesawat).
+  languageOffline,
+
+  /// Tidak ada ucapan yang dikenali.
+  noMatch,
+
+  /// Pengenal membutuhkan jaringan dan jaringan tidak tersedia.
+  network,
+
+  /// Galat lain.
+  other,
+}
+
+/// Kabar dari satu sesi pengenalan ucapan.
+sealed class SpeechUpdate {
+  /// Membuat [SpeechUpdate].
+  const SpeechUpdate();
+}
+
+/// Hasil sementara selama pengguna masih berbicara.
+final class SpeechPartial extends SpeechUpdate {
+  /// Membuat [SpeechPartial].
+  const SpeechPartial(this.text);
+
+  /// Teks sementara.
+  final String text;
+}
+
+/// Kekuatan suara saat merekam, 0 (sunyi) sampai 1 (keras) -- hanya untuk
+/// umpan balik tampilan, bukan data.
+final class SpeechLevel extends SpeechUpdate {
+  /// Membuat [SpeechLevel].
+  const SpeechLevel(this.level);
+
+  /// Kekuatan suara ternormalisasi.
+  final double level;
+}
+
+/// Pengenal sudah benar-benar mendengarkan (mikrofon terbuka).
+final class SpeechListening extends SpeechUpdate {
+  /// Membuat [SpeechListening].
+  const SpeechListening();
+}
+
+/// Hasil akhir; sesi selesai.
+final class SpeechFinal extends SpeechUpdate {
+  /// Membuat [SpeechFinal].
+  const SpeechFinal(this.text);
+
+  /// Transkrip akhir.
+  final String text;
+}
+
+/// Sesi gagal; sesi selesai.
+final class SpeechFailed extends SpeechUpdate {
+  /// Membuat [SpeechFailed].
+  const SpeechFailed(this.reason);
+
+  /// Alasannya.
+  final SpeechFailure reason;
+}
+
+/// Port pengenal ucapan (ADR-027 §3.1, penangkap sumber `voice`).
+/// Implementasi: pengenal sistem (`speech_to_text`); kelak Whisper.
+abstract interface class SpeechTranscriber {
+  /// Mulai mendengarkan dalam [localeId] (mis. `id_ID`). [phrases] adalah
+  /// kata yang kemungkinan diucapkan (nama dompet) untuk membantu pengenal.
+  /// Aliran berakhir sesudah satu [SpeechFinal] atau [SpeechFailed].
+  ///
+  /// Sesi selalu berhenti sendiri (diam sebentar atau batas panjang sesi);
+  /// tidak ada berhenti manual, karena tombol berhenti tidak bisa diandalkan
+  /// di pengenal sistem (keputusan pemilik 30 Sep 2026).
+  Stream<SpeechUpdate> listen({required String localeId, List<String> phrases = const []});
+
+  /// Membatalkan sesi tanpa hasil.
+  Future<void> cancel();
+}

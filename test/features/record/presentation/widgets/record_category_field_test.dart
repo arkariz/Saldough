@@ -3,13 +3,41 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
+import 'package:saldough/shared/category/category.dart';
 
 void main() {
-  Widget pumpable(TextEditingController controller, {List<String> suggestions = const ['Makan', 'Transport']}) {
+  const food = Category(id: 'food', kind: CategoryKind.expense, name: 'Makan', iconKey: 'categoryFood');
+  const transport = Category(id: 'transport', kind: CategoryKind.expense, name: 'Transport', sortOrder: 1);
+  const salary = Category(id: 'salary', kind: CategoryKind.income, name: 'Gaji', sortOrder: 2);
+  const oldCategory = Category(
+    id: 'old',
+    kind: CategoryKind.expense,
+    name: 'Arisan lama',
+    isArchived: true,
+    sortOrder: 3,
+  );
+
+  setUp(() {
+    ActiveCategories.notifier.value = const [food, transport, salary, oldCategory];
+    addTearDown(() => ActiveCategories.notifier.value = const []);
+  });
+
+  Widget pumpable({
+    String? value,
+    ValueChanged<String?>? onChanged,
+    List<String> frequentIds = const [],
+    Future<Category?> Function(String name)? onCreate,
+  }) {
     return MaterialApp(
       home: Scaffold(
         body: SingleChildScrollView(
-          child: RecordCategoryField(controller: controller, suggestions: suggestions, kind: TransactionKind.expense),
+          child: RecordCategoryField(
+            value: value,
+            onChanged: onChanged ?? (_) {},
+            categoryKind: CategoryKind.expense,
+            frequentIds: frequentIds,
+            onCreate: onCreate,
+          ),
         ),
       ),
     );
@@ -20,109 +48,107 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  group('RecordCategoryField (dropdown)', () {
-    testWidgets('tombol menampilkan ajakan memilih; menu menawarkan saran, Lainnya, dan Tanpa kategori', (
+  group('RecordCategoryField (ADR-026)', () {
+    testWidgets('menu menawarkan kategori aktif sejenis dan "Tanpa kategori" -- bukan pemasukan, bukan terarsip', (
       tester,
     ) async {
-      await tester.pumpWidget(pumpable(TextEditingController()));
+      await tester.pumpWidget(pumpable());
       expect(find.text(t.record.categoryPlaceholder), findsOneWidget);
 
       await openMenu(tester);
 
       expect(find.text('Makan'), findsOneWidget);
       expect(find.text('Transport'), findsOneWidget);
-      expect(find.text(t.record.categoryOtherLabel), findsOneWidget);
+      expect(find.text('Gaji'), findsNothing);
+      expect(find.text('Arisan lama'), findsNothing);
       expect(find.text(t.record.categoryNoneLabel), findsOneWidget);
+      expect(find.text(t.record.categoryAddLabel), findsNothing, reason: 'tanpa onCreate');
     });
 
-    testWidgets('memilih saran mengisi kategori dan tombol menampilkannya dengan ikonnya', (tester) async {
-      final controller = TextEditingController();
-      await tester.pumpWidget(pumpable(controller));
+    testWidgets('kategori yang sering dipakai tampil paling atas', (tester) async {
+      await tester.pumpWidget(pumpable(frequentIds: const ['transport']));
+      await openMenu(tester);
 
+      final transportY = tester.getTopLeft(find.text('Transport')).dy;
+      final foodY = tester.getTopLeft(find.text('Makan')).dy;
+      expect(transportY, lessThan(foodY));
+    });
+
+    testWidgets('memilih kategori mengirim id-nya; tombol menampilkan nama dan ikonnya', (tester) async {
+      String? picked;
+      await tester.pumpWidget(pumpable(onChanged: (id) => picked = id));
       await openMenu(tester);
       await tester.tap(find.text('Makan'));
       await tester.pumpAndSettle();
+      expect(picked, 'food');
 
-      expect(controller.text, 'Makan');
-      expect(find.text('Makan'), findsOneWidget, reason: 'label tombol, menu sudah tertutup');
+      await tester.pumpWidget(pumpable(value: 'food'));
       expect(
         find.descendant(
           of: find.byType(AppMenuSelectButton<String>),
-          matching: find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == categoryIconFor('Makan')),
+          matching: find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.categoryFood),
         ),
         findsOneWidget,
       );
+      expect(find.text('Makan'), findsOneWidget);
     });
 
-    testWidgets('memilih saran lain menggantikan pilihan sebelumnya', (tester) async {
-      final controller = TextEditingController(text: 'Makan');
-      await tester.pumpWidget(pumpable(controller));
-
-      await openMenu(tester);
-      await tester.tap(find.text('Transport'));
-      await tester.pumpAndSettle();
-
-      expect(controller.text, 'Transport');
-    });
-
-    testWidgets('"Tanpa kategori" mengosongkan kategori (opsional)', (tester) async {
-      final controller = TextEditingController(text: 'Makan');
-      await tester.pumpWidget(pumpable(controller));
-
+    testWidgets('"Tanpa kategori" mengirim null', (tester) async {
+      String? picked = 'food';
+      await tester.pumpWidget(pumpable(value: 'food', onChanged: (id) => picked = id));
       await openMenu(tester);
       await tester.tap(find.text(t.record.categoryNoneLabel));
       await tester.pumpAndSettle();
-
-      expect(controller.text, isEmpty);
-      expect(find.text(t.record.categoryPlaceholder), findsOneWidget);
+      expect(picked, isNull);
     });
 
-    testWidgets('kolom ketik tersembunyi sampai "Lainnya" dipilih', (tester) async {
-      await tester.pumpWidget(pumpable(TextEditingController()));
-      expect(find.byType(TextField), findsNothing);
-
-      await openMenu(tester);
-      await tester.tap(find.text(t.record.categoryOtherLabel));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(TextField), findsOneWidget);
+    testWidgets('kategori terarsip yang sedang terpilih (mode sunting) tetap tampil namanya', (tester) async {
+      await tester.pumpWidget(pumpable(value: 'old'));
+      expect(find.text('Arisan lama'), findsOneWidget);
     });
 
-    testWidgets('nilai tetap teks bebas -- mengetik selain saran tetap diterima dan tampil di tombol', (tester) async {
-      final controller = TextEditingController();
-      await tester.pumpWidget(pumpable(controller));
-
-      await openMenu(tester);
-      await tester.tap(find.text(t.record.categoryOtherLabel));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'Oleh-oleh liburan');
-      await tester.pump();
-
-      expect(controller.text, 'Oleh-oleh liburan');
-      expect(
-        find.descendant(of: find.byType(AppMenuSelectButton<String>), matching: find.text('Oleh-oleh liburan')),
-        findsOneWidget,
+    testWidgets('"Tambah kategori" menanyakan nama, membuatnya, lalu memilihnya', (tester) async {
+      String? picked;
+      String? createdName;
+      await tester.pumpWidget(
+        pumpable(
+          onChanged: (id) => picked = id,
+          onCreate: (name) async {
+            createdName = name;
+            return Category(id: 'new', kind: CategoryKind.expense, name: name);
+          },
+        ),
       );
-    });
-
-    testWidgets('kategori kustom yang sudah ada (mode sunting) langsung membuka kolom ketik', (tester) async {
-      final controller = TextEditingController(text: 'Oleh-oleh liburan');
-      await tester.pumpWidget(pumpable(controller));
-
-      expect(find.byType(TextField), findsOneWidget);
-    });
-
-    testWidgets('memilih saran atau "Tanpa kategori" menutup kolom ketik kustom', (tester) async {
-      final controller = TextEditingController(text: 'Oleh-oleh liburan');
-      await tester.pumpWidget(pumpable(controller));
-      expect(find.byType(TextField), findsOneWidget);
-
       await openMenu(tester);
-      await tester.tap(find.text('Makan'));
+      await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
 
-      expect(controller.text, 'Makan');
-      expect(find.byType(TextField), findsNothing);
+      await tester.enterText(find.byType(TextField), '  Oleh-oleh  ');
+      await tester.pump();
+      await tester.tap(find.text(t.common.save));
+      await tester.pumpAndSettle();
+
+      expect(createdName, 'Oleh-oleh');
+      expect(picked, 'new');
+    });
+
+    testWidgets('membatalkan dialog nama tidak membuat apa pun', (tester) async {
+      var created = false;
+      await tester.pumpWidget(
+        pumpable(
+          onCreate: (name) async {
+            created = true;
+            return null;
+          },
+        ),
+      );
+      await openMenu(tester);
+      await tester.tap(find.text(t.record.categoryAddLabel));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.common.cancel));
+      await tester.pumpAndSettle();
+
+      expect(created, isFalse);
     });
   });
 }

@@ -20,7 +20,7 @@ final class IncomeRecorded extends RecordEvent {
     required this.amount,
     required this.date,
     required this.note,
-    this.categoryKey,
+    this.categoryId,
   });
 
   /// Dompet tujuan.
@@ -35,8 +35,8 @@ final class IncomeRecorded extends RecordEvent {
   /// Catatan bebas, boleh kosong.
   final String note;
 
-  /// Label pengelompokan bebas, boleh kosong.
-  final String? categoryKey;
+  /// Kategori (ADR-026), boleh kosong.
+  final String? categoryId;
 }
 
 /// Mencatat pengeluaran (FR-TXN-002).
@@ -47,7 +47,7 @@ final class ExpenseRecorded extends RecordEvent {
     required this.amount,
     required this.date,
     required this.note,
-    this.categoryKey,
+    this.categoryId,
     this.budgetItemId,
   });
 
@@ -63,8 +63,8 @@ final class ExpenseRecorded extends RecordEvent {
   /// Catatan bebas, boleh kosong.
   final String note;
 
-  /// Label pengelompokan bebas, boleh kosong.
-  final String? categoryKey;
+  /// Kategori (ADR-026), boleh kosong.
+  final String? categoryId;
 
   /// Pos anggaran yang ditautkan (T-4.4), atau `null`.
   final String? budgetItemId;
@@ -101,4 +101,14 @@ final class TransferRecorded extends RecordEvent {
   /// Pos anggaran yang ditautkan (T-4.4), atau `null`. Hanya pos milik
   /// anggaran dompet ASAL yang sah — lihat `budgetItemChoicesFor`.
   final String? budgetItemId;
+}
+
+/// Menampilkan galat dari operasi di luar event (mis. "Tambah kategori",
+/// `RecordBloc.createCategory`) lewat efek galat biasa.
+final class RecordFailureOccurred extends RecordEvent {
+  /// Membuat [RecordFailureOccurred].
+  const RecordFailureOccurred(this.failure);
+
+  /// Kegagalan yang ditampilkan.
+  final Failure failure;
 }

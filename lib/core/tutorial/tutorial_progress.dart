@@ -34,6 +34,7 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   TourId.home: [
     SpotlightKey.homeBalance,
     SpotlightKey.homeRecord,
+    SpotlightKey.homeVoice,
     SpotlightKey.homeCashFlow,
     SpotlightKey.homeBudget,
     SpotlightKey.homeFreelance,

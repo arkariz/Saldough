@@ -2,11 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -72,6 +74,7 @@ void main() {
 
   RecordBloc buildBloc() => RecordBloc(
     budgetItemCatalog: const FakeBudgetItemCatalog(),
+    createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
     recordTransaction: RecordTransaction(
@@ -95,7 +98,7 @@ void main() {
             amount: 1,
             note: '',
             walletId: 'gopay',
-            categoryKey: 'Kopi',
+            categoryId: 'builtin.food',
           ),
         ]),
       ),
@@ -105,7 +108,7 @@ void main() {
       verify: (bloc) {
         // Dompet nonaktif "lama" dilewati walau paling baru.
         expect(bloc.state.defaults.expenseWalletId, 'gopay');
-        expect(bloc.state.defaults.expenseCategories, ['Kopi']);
+        expect(bloc.state.defaults.expenseCategoryIds, ['builtin.food']);
       },
     );
 
@@ -127,6 +130,7 @@ void main() {
     blocTest<RecordBloc, RecordState>(
       'RecordWalletsLoaded ikut memuat pos anggaran untuk pemilih (T-4.4)',
       build: () => RecordBloc(
+        createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
         walletRepository: walletRepository,
         transactionRepository: transactionRepository,
         budgetItemCatalog: FakeBudgetItemCatalog([
@@ -267,7 +271,7 @@ void main() {
               amount: 75000,
               note: 'kopi',
               walletId: 'bca',
-              categoryKey: 'makan',
+              categoryId: 'builtin.food',
             ),
           ]),
         );
@@ -279,7 +283,7 @@ void main() {
           amount: 75000,
           date: DateTime(2026, 9),
           note: 'kopi',
-          categoryKey: 'makan',
+          categoryId: 'builtin.food',
         ),
       ),
       verify: (bloc) {

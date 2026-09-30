@@ -72,6 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 14 | 10 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -88,6 +89,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
+
+KT-3 (cara migrasi label kategori lama, temuan F1 verifikasi M1) diputuskan
+30 Sep 2026: dibiarkan apa adanya karena belum ada pengguna dengan data
+lama — dicatat di ADR-026 §3.4.
 
 KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi) diputuskan
 27 Sep 2026 dan dikerjakan di T-8.1.
@@ -1506,6 +1511,226 @@ lembar pilihan ke onboarding dan tur CATAT.
       yang baru tampil, tur Transaksi dan Anggaran; mode gelap. Freelance dan
       rincian anggaran diverifikasi lewat uji widget shell sungguhan.
 
+## Fase 11: Catat Cerdas — kategori dan suara
+
+Riset, keputusan pemilik, dan rencana rinci di
+[VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md);
+keputusan arsitektur di [ADR-026](../02-architecture/adr/0026-sistem-kategori.md)
+(kategori) dan [ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)
+(bukti teks suara/notifikasi/foto, interpreter yang bisa diganti, draf CATAT).
+Nomor 11, karena Fase 10 dicadangkan untuk sinkronisasi (B-7). Dari B-13 dan
+B-14.
+Verifikasi mendalam dilakukan per milestone (M1: T-11.1–11.4, M2:
+T-11.5–11.6, M3: T-11.7–11.9) — lihat
+[VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md).
+
+- [x] **T-11.1** Sistem kategori (dari B-13, ADR-026): entitas `Category`,
+      repository, set bawaan, migrasi `categoryKey` → `categoryId` (label
+      transfer dibuang), pemilih kategori CATAT dengan "Tambah kategori",
+      penyaring/judul Transaksi memakai id, layar Kategori dari Akun.
+      ⚠ Jebakan: migrasi menyentuh data closed testing — tulis dokumen
+      kategori lebih dulu, id `legacy.*` deterministik, uji idempoten.
+      Verifikasi: uji migrasi, `flutter analyze`, seluruh uji lulus, cek di
+      emulator dengan data lama.
+      Hasil (30 Sep 2026): `lib/shared/category/` (entitas, 17 kategori
+      bawaan dengan alias, `CategoryRepositoryImpl`, `CreateCategory`,
+      `MigrateLegacyCategories` lewat port `LegacyCategoryLabels` yang
+      diimplementasikan `TransactionRepositoryImpl`, `ActiveCategories`),
+      skema transaksi 2 (`categoryId`), pemilih kategori CATAT dengan
+      "Tambah kategori", layar Kategori dari Akun. 621 uji lulus,
+      `flutter analyze` bersih. Emulator Pixel 9 Pro: pemasangan baru
+      menanam kategori bawaan, layar Kategori dan pemilih CATAT berjalan,
+      "Tambah kategori" langsung terpilih. **Belum dicek di emulator dengan
+      data skema 1 sungguhan** (migrasi hanya diuji dengan dokumen JSON skema
+      1 di penyimpanan memori) — cek di perangkat closed testing pemilik
+      sebelum rilis.
+- [x] **T-11.2** Tipe domain Catat Cerdas (`CaptureEvidence`,
+      `TransactionInterpreter`, `InterpretedTransaction`, `RecordDraft`,
+      `DraftIssue`) dan `SpokenAmountParser` (ADR-027 §3.1–3.3).
+      Hasil (30 Sep 2026): `lib/features/record/domain/capture/`,
+      `lib/core/utils/formatters/spoken_amount_parser.dart` (bilangan kata,
+      satuan lisan, slang, "Rp35.000,00", aritmetika rasional `int`, tanpa
+      `double`); 32 uji nominal.
+- [x] **T-11.3** `CaptureDraftResolver` + `RuleBasedTransactionInterpreter`
+      dengan dataset benchmark teks (§10 dokumen riset) sebagai uji.
+      Hasil (30 Sep 2026): 30 kasus §10 (sederhana, alami, dompet, transfer,
+      ambigu, campur bahasa) lulus 100% di interpreter aturan, plus uji pagar
+      halusinasi (nominal/dompet/kategori karangan ditolak). Angka ini dari
+      kalimat teks, **bukan** transkrip suara nyata — ukur ulang di T-11.9.
+- [x] **T-11.4** `openRecordSheet(draft:)` dan tiga formulir menerima draf
+      parsial (catatan, kategori, tanggal) dan menyorot issue.
+      Hasil (30 Sep 2026): `RecordDraftCard` di atas formulir (teks
+      tertangkap + daftar hal yang perlu diperiksa); dompet tidak dikenal
+      dan transfer tanpa asal tidak diisi dompet bawaan. 691 uji lulus.
+- [ ] **T-11.5** STT sistem (`speech_to_text`), izin mikrofon/ucapan Android
+      dan iOS, sheet rekam, tombol mikrofon di CATAT.
+      Progres (30 Sep 2026, belum dicentang): `SpeechTranscriber` +
+      `SystemSpeechTranscriber`, `VoiceCaptureBloc` (4 uji), lembar rekam,
+      tombol mikrofon di samping pengalih CATAT, izin `RECORD_AUDIO` +
+      `<queries>` Android, dua kunci Info.plist iOS. 695 uji lulus.
+      Emulator Pixel 9 Pro: tombol mikrofon, lembar rekam, dan "Ketik saja"
+      kembali ke CATAT berjalan; emulator tidak punya layanan pengenal
+      terpilih ("no selected voice recognition service") dan aplikasi kini
+      melaporkannya dengan benar sebagai "belum punya pengenal ucapan". ANR
+      sekali terlihat sesudah pasang ulang build debug, tidak terulang di
+      dua percobaan berikutnya. **Belum teruji:** ucapan sungguhan sampai
+      formulir terisi, dan jalur izin ditolak — butuh perangkat (atau
+      emulator dengan layanan pengenal dipilih).
+      Perbaikan dari pemilik (30 Sep 2026): (1) umpan balik rekam — lencana
+      REKAM berkedip dengan penghitung waktu, cincin berdenyut mengikuti
+      kekuatan suara, teks status per tahap; (2) pilihan bahasa di awal
+      onboarding dan di Akun, satu pilihan untuk tampilan dan ucapan
+      ([ADR-028](../02-architecture/adr/0028-bahasa-aplikasi-dipilih-pengguna.md));
+      (3) rekaman tidak lagi mulai sendiri — lembar dibuka di tahap siap;
+      (4) satu tombol bulat untuk mulai/berhenti/rekam ulang, plus "Ketik
+      saja"; (5) CATAT dan suara jadi dua FAB bertumpuk di kanan bawah,
+      navigasi bawah 4 tab, langkah tur baru `homeVoice`. 729 uji lulus.
+      Dicek di Samsung SM-M156B 30 Sep 2026: tur `homeVoice` muncul sekali,
+      lembar suara terbuka di tahap siap, REKAM + cincin + indikator mikrofon
+      Android tampil saat merekam, hening ±5 dtk berakhir di "Rekam ulang",
+      "Ketik saja" membuka CATAT kosong, ganti bahasa di Akun mengubah semua
+      teks dan nama kategori bawaan (nama yang diganti pengguna tetap).
+      Temuan: FAB menutupi nominal baris terakhir — diperbaiki dengan
+      `AppSpacing.fabClearance` di keempat tab. Sisa: ucapan sungguhan oleh
+      pemilik, langkah bahasa onboarding (perlu pemasangan bersih).
+      Gagal jaringan (ADR-027 §3.5 butir 7): pesan "butuh internet" dan
+      "Ketik saja" jadi tombol utama; diuji di `voice_capture_sheet_test`.
+      Berhenti otomatis (keputusan pemilik 30 Sep 2026, tombol berhenti
+      tidak bekerja normal di HP): tombol berhenti manual dan
+      `SpeechTranscriber.stop` dihapus; selama merekam tombol bulat hanya
+      penanda ("Mendengarkan"), sesi berakhir sendiri sesudah diam 3 dtk
+      atau 20 dtk. Diuji di `voice_capture_sheet_test`; belum dicek di HP.
+      Hierarki teks lembar suara (keputusan pemilik 30 Sep 2026, terlalu
+      banyak teks yang mirip): per tahap satu pesan utama (transkrip
+      `titleMedium`, petunjuk/galat `bodyLarge`) dan paling banyak satu
+      keterangan kecil redup (`bodySmall`); label di bawah tombol hanya saat
+      gagal; saat memahami cukup transkrip + bilah kemajuan; "Merekam" tidak
+      diulang karena lencana REKAM sudah ada.
+      Paket bahasa luring (temuan pemilik 30 Sep 2026: English di mode
+      pesawat gagal "belum punya pengenal ucapan", Indonesia aman):
+      `error_language_unavailable` kini `SpeechFailure.languageOffline`
+      dengan pesan "sambungkan internet atau unduh paket bahasanya", "Ketik
+      saja" jadi utama; kode galat mentah pengenal (kecuali diam/tak
+      terdengar) dilaporkan non-fatal ke Crashlytics tanpa isi ucapan.
+      **Belum dicek di HP** bahwa Samsung memang mengirim kode itu.
+- [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
+      (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
+      Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa
+      tier gratis memakai data untuk pelatihan (ADR-027 §3.5).
+- [x] **T-11.7** `FirebaseAiTransactionInterpreter` (`firebase_ai`,
+      `googleAI()`, `responseSchema` = kontrak §3.2, model flash-lite
+      stabil terkini) + `CascadingTransactionInterpreter` (aturan dulu, cloud
+      bila ragu) + `firebase_app_check`. Tier gratis (Spark).
+      Kaskade sudah disiapkan di T-11.13 (`CaptureDraftComposer`): cukup
+      daftarkan interpreter Firebase AI di slot cloud-nya, yang juga
+      mengisi `date` + `dateText` (ADR-029 §3.2).
+      Hasil (30 Sep 2026): `firebase_ai` 4.0.0 + `firebase_app_check`
+      0.4.8; `firebase_ai_transaction_interpreter.dart` (model
+      `gemini-3.5-flash-lite`, temperatur 0, `responseSchema` kutipan +
+      `date` YYYY-MM-DD, prompt hanya teks + nama dompet/kategori + tanggal +
+      bahasa; model dibuat saat pertama dipakai, jadi Firebase yang belum
+      terinisialisasi menjadi `Left`); tanggal yang tidak ada di kalender
+      dibuang; terdaftar di slot cloud `CaptureDraftComposer`. App Check
+      diaktifkan di `AppBootstrap.run` (Play Integrity / App Attest, penyedia
+      debug di mode debug). Uji: prompt tanpa saldo/id, JSON rusak, galat
+      jaringan, keluaran model lewat resolver (nominal karangan ditolak).
+      **Menunggu pemilik:** aktifkan Firebase AI Logic (Gemini Developer
+      API) di Console, daftarkan App Check (Play Integrity + SHA-256 kunci
+      rilis; token debug untuk build debug), biarkan penegakan App Check
+      mati sampai metrik menunjukkan permintaan sah. **Belum dicek di HP.**
+      Sampai Console diaktifkan, panggilan cloud gagal dan draf aturan
+      dipakai tanpa pesan galat (sesuai desain).
+      ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
+      harus jatuh ke draf aturan tanpa galat ke pengguna. Penerimaan
+      koneksi (ADR-027 §3.5 butir 7): tanpa cek koneksi di muka, batas
+      waktu ±5 dtk, tanpa antrean kirim ulang; uji dengan fake yang
+      melempar galat jaringan dan yang tidak pernah menjawab.
+- [ ] **T-11.8** Pindah ke tier berbayar (Blaze) sebelum rilis publik:
+      billing, batas anggaran, cek ulang harga; tanpa perubahan kode.
+      Dikerjakan pemilik; agen memperbarui dokumen.
+- [x] **T-11.10** Perbaiki temuan verifikasi M1
+      ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)).
+      Hasil (30 Sep 2026): F1 dibiarkan (KT-3, belum ada pengguna). F2
+      "setengah", "koma", sisa angka tak tersusun sesudah skala dipisah, batas
+      nominal 1 triliun satuan; F3 deret digit > 15 bukan nominal; F4 kata
+      pemasukan lemah kalah oleh tanda pengeluaran; F5 alias `air`, `data`,
+      `anak`, `les`, `fee`, `project` dibuang; F6 kategori bawaan disimpan
+      sebelum label dibaca + kegagalan migrasi ke Crashlytics
+      (`AppBootstrap.recordNonFatal`). Kasus probe jadi uji regresi; 724 uji
+      lulus. F7–F10 ke antrean B-16. Uji migrasi di HP tidak diulang: F1
+      diterima, dan perubahan F6 hanya mengubah urutan tulis (diuji unit).
+- [x] **T-11.14** Tanya bahasa ucapan sekali untuk pengguna lama (30 Sep
+      2026, keputusan pemilik; ADR-028 §3.8). Pengguna yang update tidak
+      melihat langkah bahasa onboarding, sehingga bahasa ucapan diam-diam
+      mengikuti bahasa HP. Sebelum lembar suara dibuka pertama kali tanpa
+      pilihan tersimpan, tampilkan pilihan bahasa; simpan lewat
+      `ChangeAppLanguage`.
+      Verifikasi: uji `SpeechLanguagePrompt` dan lembar pilihannya.
+      Di luar PRD: perluasan ADR-028.
+      Hasil (30 Sep 2026): `SpeechLanguagePrompt` (`lib/core/language/`),
+      `speech_language_sheet.dart`, `openVoiceRecord` bertanya sebelum
+      lembar rekam; `RecordBloc.speechLanguagePrompt` lewat `RecordScope`.
+      **Belum dicek di HP** (butuh data pengguna lama tanpa
+      `settings/language`).
+- [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
+      transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
+- [x] **T-11.11** Paket bahasa Catat Cerdas (30 Sep 2026, tinjauan pemilik;
+      [ADR-029](../02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) §3.1).
+      Kosakata Indonesia tertanam di interpreter, resolver, dan
+      `SpokenAmountParser`; bahasa Inggris ditafsirkan dengan aturan
+      Indonesia. Pindahkan ke `CaptureLanguage` + `NumberLexicon`, registri
+      `CaptureLanguages` berisi `id` dan `en`, parser nominal generik.
+      ⚠ Jebakan: pemisah ribuan ikut bahasa ("35.000" id vs "5,000" en);
+      "may" dan "and" hanya bermakna di sebelah angka.
+      Verifikasi: benchmark §10 tetap lulus lewat paket `id`; benchmark
+      bahasa Inggris setara lewat paket `en`; `flutter analyze` bersih.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `lib/core/utils/formatters/number_lexicon.dart`
+      (`indonesian`, `english`, `neutral`), `SpokenAmountParser` membaca
+      peran kata dari leksikon (termasuk kata sambung "and"/"a" dan pemisah
+      ribuan per bahasa), `lib/features/record/domain/capture/language/`
+      (`CaptureLanguage`, `CaptureLanguages`, paket `id` dan `en`);
+      interpreter aturan dan resolver tidak lagi berisi kata bahasa apa pun.
+      Benchmark §10 tetap lulus lewat paket `id`; 9 kasus benchmark bahasa
+      Inggris + uji bilangan kata Inggris lulus.
+- [x] **T-11.12** Tanggal pasti dan angka polos IDR (30 Sep 2026, tinjauan
+      pemilik; ADR-029 §3.2–3.3). "beli kopi 5000 tanggal 27 september"
+      harus menghasilkan Rp5.000 pada 27 Sep. `SpokenDateParser` +
+      `DateLexicon`, field `InterpretedTransaction.date`, resolver hanya
+      memvalidasi (kutipan ada, tidak di masa depan), issue `dateUnclear`.
+      Tanpa tahun = tanggal terdekat yang sudah lewat.
+      `AppCurrency.plainAmountMinUnits` (IDR 100).
+      ⚠ Jebakan: rentang tanggal dikeluarkan dari pencarian nominal sebelum
+      memilih nominal; 31 Feb dan tahun masa depan → `dateUnclear`.
+      Verifikasi: uji parser tanggal (id/en, pergantian tahun, hari
+      saja, angka), kasus benchmark baru, pagar karangan tanggal.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `spoken_date_parser.dart` (`DateLexicon`
+      id/en: relatif, "N hari lalu", hari + bulan (+ tahun), "tanggal N" /
+      "on the Nth", angka H/B atau B/H; tanda hubung wajib bertahun supaya
+      "2-3 kopi" bukan tanggal), `InterpretedTransaction.date`,
+      `DraftIssue.dateUnclear` + teks i18n, `AppCurrency.plainAmountMinUnits`
+      (IDR 100) lewat `SpokenAmountParser.select`. "beli kopi 5000 tanggal
+      27 september" → Rp5.000, 27 Sep 2026, catatan "beli kopi". 808 uji
+      lulus, `flutter analyze` bersih.
+- [x] **T-11.13** `CaptureDraftComposer`: aturan → cloud, dan bahasa tanpa
+      paket langsung ke cloud (30 Sep 2026, tinjauan pemilik; ADR-029 §3.4).
+      Menggantikan rencana `CascadingTransactionInterpreter` di T-11.7.
+      `CaptureEvidence.languageCode`; slot cloud `null` sampai T-11.7.
+      ⚠ Jebakan: galat atau lewat batas waktu cloud tidak boleh menjadi
+      pesan galat; tanpa paket dan tanpa cloud → draf kosong, bukan gagal.
+      Verifikasi: uji komposer dengan fake (yakin, tidak yakin, tanpa paket,
+      cloud galat, cloud tidak menjawab); uji bloc suara.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `capture_draft_composer.dart` (domain),
+      `VoiceCaptureBloc` memakai penyusun (tidak ada lagi tahap gagal karena
+      tafsir), `VoiceCaptureStarted.languageCode` dari `ActiveLanguage`,
+      DI mendaftarkan penyusun dengan slot cloud `null`. 8 uji penyusun
+      (yakin, ragu → cloud, cloud galat/melempar/tidak menjawab, tanpa paket
+      → cloud, tanpa paket dan tanpa cloud → draf kosong, kode locale `en_US`)
+      + uji bloc bahasa tanpa paket. **Belum teruji:** ucapan nyata bahasa
+      Inggris di perangkat (masuk T-11.9).
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -1524,6 +1749,10 @@ menambah dan memindahkannya ada di
 | B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
+| B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
+| B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
+| B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
 

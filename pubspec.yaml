@@ -1,7 +1,7 @@
 name: saldough
 description: Pencatatan dan pengelolaan keuangan pribadi — dompet, transaksi, dan anggaran.
 publish_to: none
-version: 0.2.0+3
+version: 0.3.0+4
 
 environment:
   # ^3.12.0 (bukan ^3.11.4 seperti bawaan `flutter create`): constructor
@@ -44,7 +44,9 @@ dependencies:
   # kalinya aplikasi memanggil jaringan -- lihat NFR-SEC-001/NFR-REL-001
   # hasil revisi 28 Sep 2026 dan `android/app/google-services.json`
   # (ditaruh manual oleh pemilik, tidak dibuat lewat kode).
+  firebase_ai: ^4.0.0
   firebase_analytics: ^12.6.0
+  firebase_app_check: ^0.4.8
   firebase_auth: ^6.7.0
   firebase_core: ^4.15.0
   firebase_crashlytics: ^5.4.0
@@ -74,6 +76,7 @@ dependencies:
       ref: navigation-v1.1.1
   slang: ^4.7.0
   slang_flutter: ^4.7.0
+  speech_to_text: ^7.5.0
   state_management:
     git:
       url: https://github.com/arkariz/advance-mobile-platform

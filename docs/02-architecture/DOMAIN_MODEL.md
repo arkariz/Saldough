@@ -119,7 +119,10 @@ Field yang dimiliki ketiganya:
 | `date` | `DateTime` | Kapan peristiwanya terjadi, bukan kapan dicatat. |
 | `amount` | `int` | Nominal dalam sen. Selalu positif; arahnya ditentukan jenisnya. |
 | `note` | `String` | Catatan bebas, boleh kosong. |
-| `categoryKey` | `String?` | Label pengelompokan, boleh kosong. |
+
+Pemasukan dan pengeluaran juga punya `categoryId: String?` (kategori, boleh
+kosong; lihat bagian Kategori di bawah). Transfer tidak berkategori
+([ADR-026](adr/0026-sistem-kategori.md)).
 
 ### Pemasukan
 
@@ -128,6 +131,7 @@ Field yang dimiliki ketiganya:
 | Field | Tipe | Keterangan |
 |---|---|---|
 | `walletId` | `String` | Dompet yang bertambah. |
+| `categoryId` | `String?` | Kategori pemasukan, boleh kosong. |
 | `freelancePaymentId` | `String?` | Pembayaran freelance yang melahirkan transaksi ini. Kalau terisi, transaksi hanya bisa diubah lewat pembayarannya ([ADR-019](adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md)). |
 
 ### Pengeluaran
@@ -465,7 +469,28 @@ dipakai, karena Saldough 1.0 tidak pernah mencatatnya sama sekali:
 
 - Daftar dompet beserta saldo awalnya. Tidak ada satu pun saldo dompet yang
   tercatat di data 1.0, jadi tidak ada yang bisa dimigrasikan.
-- Daftar kategori transaksi.
+- ~~Daftar kategori transaksi.~~ Diputuskan 30 Sep 2026: set bawaan yang bisa
+  diubah pengguna ([ADR-026](adr/0026-sistem-kategori.md) §3.2).
+
+## Kategori
+
+`Category` ([ADR-026](adr/0026-sistem-kategori.md)) mengelompokkan pemasukan
+dan pengeluaran. Daftar datar, dipisah per jenis, berisi kategori bawaan yang
+bisa diubah dan kategori buatan pengguna.
+
+| Field | Tipe | Keterangan |
+|---|---|---|
+| `id` | `String` | `builtin.<key>`, `legacy.<jenis>.<label>` (hasil migrasi), atau id buatan. |
+| `kind` | `CategoryKind` | `expense` atau `income`. |
+| `name` | `String` | Nama tampilan; data milik pengguna. |
+| `builtInKey` | `String?` | Kunci kategori bawaan (alias dan ikon). |
+| `iconKey` | `String?` | Ikon; kosong berarti ditebak dari nama. |
+| `isArchived` | `bool` | Tidak ditawarkan lagi, tetapi transaksi lama tetap menunjuknya. |
+| `sortOrder` | `int` | Urutan di pemilih. |
+
+Aturan: kategori tidak dihapus selama ada transaksi, cukup diarsipkan;
+transaksi hanya boleh menunjuk kategori berjenis sama; transfer tidak pernah
+berkategori.
 
 ## Langkah berikutnya
 

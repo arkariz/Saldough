@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Wadah segmen jenis transaksi (Semua/Masuk/Keluar/Mutasi) ala "kartrid
@@ -286,6 +287,7 @@ class _TransactionFilterSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedWallet = wallets.where((wallet) => wallet.id == walletFilter).firstOrNull;
+    final selectedCategory = ActiveCategories.byId(categoryFilter);
     return Padding(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.md,
@@ -312,10 +314,12 @@ class _TransactionFilterSheet extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           AppMenuSelectButton<String>(
-            icon: categoryFilter == null ? IconKey.filter : categoryIconFor(categoryFilter!),
-            label: categoryFilter ?? t.transaction.categoryFilterLabel,
+            icon: selectedCategory == null ? IconKey.filter : categoryIcon(selectedCategory),
+            label: selectedCategory?.name ?? t.transaction.categoryFilterLabel,
             options: [
-              for (final category in categoryOptions) (value: category, label: category, icon: categoryIconFor(category)),
+              for (final id in categoryOptions)
+                if (ActiveCategories.byId(id) case final category?)
+                  (value: id, label: category.name, icon: categoryIcon(category)),
             ],
             allLabel: t.transaction.categoryFilterAllLabel,
             wrapLabel: true,

@@ -30,7 +30,6 @@
     "fromWalletFieldLabel": "From Wallet",
     "destinationWalletFieldLabel": "To Wallet",
     "dateFieldLabel": "Date",
-    "categoryFieldHint": "Category (optional)",
     "noteFieldHint": "Write a short note",
     "noWalletsMessage": "No wallets yet. Create one in the Wallets tab first.",
     "sameWalletWarning": "Source and destination wallets can't be the same.",
@@ -39,14 +38,6 @@
     "transferSavedMessage": "Transfer recorded.",
     "walletNotSelectedPrompt": "Not selected yet",
     "savingMessage": "Saving...",
-    "categorySuggestionSalary": "Salary",
-    "categorySuggestionBonus": "Bonus",
-    "categorySuggestionSales": "Sales",
-    "categorySuggestionGift": "Gift",
-    "categorySuggestionFood": "Food",
-    "categorySuggestionShopping": "Shopping",
-    "categorySuggestionTransport": "Transport",
-    "categorySuggestionBills": "Bills",
     "incomeBadge": "Money in",
     "expenseBadge": "Money out",
     "transferBadge": "Internal move",
@@ -62,10 +53,6 @@
     "clearAmountAction": "Clear",
     "categorySectionLabel": "Category",
     "optionalHint": "Optional",
-    "categoryOtherLabel": "Other",
-    "categoryCustomHint": "Type your own category",
-    "categorySuggestionEntertainment": "Fun",
-    "categorySuggestionInvestment": "Investing",
     "expenseWalletSectionLabel": "Source wallet",
     "noteSectionLabel": "Note",
     "balanceDecreasesCaption": "Balance goes down",
@@ -87,7 +74,47 @@
     "kindSwitcherLabel": "Transaction kind",
     "kindExpense": "Out",
     "kindIncome": "In",
-    "kindTransfer": "Transfer"
+    "kindTransfer": "Transfer",
+    "categoryAddLabel": "Add category",
+    "draftHeardLabel": "Heard",
+    "draftCheckTitle": "Check before recording",
+    "draftIssue": {
+      "amountMissing": "Couldn't catch the amount. Enter it yourself.",
+      "amountMultiple": "More than one amount was mentioned. Enter the right one.",
+      "amountWithoutUnit": "A number without a unit (thousand/million). Check the amount.",
+      "amountAmbiguous": "The amount can be read two ways. Check it.",
+      "currencyUnsupported": "The currency mentioned differs from the app currency.",
+      "walletUnknown": "The wallet mentioned doesn't exist. Pick a wallet.",
+      "transferSourceMissing": "The source wallet is unclear. Pick where it came from.",
+      "transferTargetMissing": "The destination wallet is unclear. Pick where it went.",
+      "categoryUnknown": "The category mentioned doesn't exist. Pick a category.",
+      "dateUnclear": "The date mentioned can't be used. Pick the date."
+    },
+    "voice": {
+      "title": "Record by voice",
+      "micLabel": "Record by voice",
+      "listening": "Go ahead, speak.",
+      "autoStopHint": "Stops by itself when you pause.",
+      "example": "Example: “lunch 35 thousand with BCA”",
+      "interpreting": "Understanding…",
+      "typeInstead": "Type instead",
+      "failure": {
+        "permissionDenied": "Microphone access was denied. Allow it in device settings.",
+        "unavailable": "This device doesn't have a speech recognizer yet.",
+        "languageOffline": "This language can't be recognized offline on this phone yet. Connect to the internet, or download its language pack in the device's speech recognition settings.",
+        "noMatch": "Didn't catch anything. Try again.",
+        "network": "Recognizing speech needs internet on this device. Connect and record again, or type instead.",
+        "other": "Something went wrong. Try again."
+      },
+      "idleHint": "Tap the microphone, then say one transaction.",
+      "recordingBadge": "REC",
+      "startAction": "Start recording",
+      "listeningButtonLabel": "Listening",
+      "retryAction": "Record again",
+      "languageTitle": "Which language will you speak?",
+      "languageBody": "Used to recognize your speech and for the app display. You can change it in Account.",
+      "languageContinue": "Continue"
+    }
   },
   "transaction": {
     "pageTitle": "History",
@@ -564,7 +591,10 @@
     "currencyBody": "Every amount in Tanukonomy uses this currency. You can change it later on the Account screen, but amounts you've already recorded aren't converted.",
     "currencySuggested": "Matches your device region",
     "currencyChooseFirst": "Choose a currency first",
-    "currencyConfirm": "Use $code"
+    "currencyConfirm": "Use $code",
+    "languageTitle": "Choose your language",
+    "languageBody": "Used for the app and when recording by voice. You can change it later on the Account screen.",
+    "languageConfirm": "Continue"
   },
   "tour": {
     "nextAction": "Next",
@@ -621,7 +651,9 @@
     "freelanceWorklogTitle": "Hours worked",
     "freelanceWorklogBody": "Work hours are income you've earned. Group them into an invoice, then record it when you're paid.",
     "freelanceReceiveTitle": "Money actually arrives",
-    "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled."
+    "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled.",
+    "homeVoiceTitle": "Record by voice",
+    "homeVoiceBody": "Tap, say one transaction, then check the form before recording it."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -691,5 +723,47 @@
       "vnd": "Vietnamese Dong",
       "aud": "Australian Dollar"
     }
+  },
+  "category": {
+    "builtIn(map)": {
+      "food": "Food & Drinks",
+      "groceries": "Groceries",
+      "transport": "Transport",
+      "bills": "Bills",
+      "internet": "Phone & Internet",
+      "health": "Health",
+      "entertainment": "Entertainment",
+      "shopping": "Shopping",
+      "education": "Education",
+      "family": "Family",
+      "donation": "Donations",
+      "expenseOther": "Other",
+      "salary": "Salary",
+      "freelance": "Freelance",
+      "bonus": "Bonus",
+      "gift": "Gifts",
+      "incomeOther": "Other"
+    },
+    "title": "Categories",
+    "accountEntryTitle": "Categories",
+    "accountEntryBody": "Manage your income and expense categories.",
+    "expenseTab": "Expense",
+    "incomeTab": "Income",
+    "addAction": "Add category",
+    "addTitle": "New category",
+    "renameTitle": "Rename category",
+    "nameHint": "Category name",
+    "archiveAction": "Archive",
+    "restoreAction": "Restore",
+    "archivedSection": "Archived",
+    "archivedHint": "Not offered when recording, but old transactions keep it.",
+    "emptyActive": "No active categories yet.",
+    "archivedMessage": "\"${name}\" archived.",
+    "restoredMessage": "\"${name}\" restored."
+  },
+  "language": {
+    "label": "Language",
+    "pickerTitle": "Choose language",
+    "hint": "App text and voice recording"
   }
 }

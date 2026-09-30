@@ -5,6 +5,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -200,7 +201,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         rawTransactions: state.rawTransactions,
         typeFilter: state.typeFilter,
         walletFilter: state.walletFilter,
-        categoryFilter: event.categoryKey,
+        categoryFilter: event.categoryId,
         searchQuery: state.searchQuery,
       ),
     );
@@ -293,7 +294,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           matches.addAll(
             transactions.where((transaction) {
               if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
-              if (categoryFilter != null && transaction.categoryKey != categoryFilter) return false;
+              if (categoryFilter != null && transaction.categoryId != categoryFilter) return false;
               if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
               return _matchesType(transaction, typeFilter);
             }),
@@ -337,7 +338,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
     final walletCategoryFiltered = rawTransactions.where((transaction) {
       if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
-      if (categoryFilter != null && transaction.categoryKey != categoryFilter) return false;
+      if (categoryFilter != null && transaction.categoryId != categoryFilter) return false;
       if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
       return true;
     }).toList();
@@ -370,7 +371,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   /// Cocok kalau [needle] (sudah huruf kecil) muncul di kategori, catatan,
   /// atau nama salah satu dompet yang disentuh [transaction].
   bool _matchesSearch(Transaction transaction, String needle, Map<String, String> walletNames) {
-    if ((transaction.categoryKey ?? '').toLowerCase().contains(needle)) return true;
+    if ((ActiveCategories.byId(transaction.categoryId)?.name ?? '').toLowerCase().contains(needle)) return true;
     if (transaction.note.toLowerCase().contains(needle)) return true;
     return _walletIdsOf(transaction).any((id) => (walletNames[id] ?? '').contains(needle));
   }
@@ -391,13 +392,14 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     TransferTransaction() => {transaction.fromWalletId, transaction.toWalletId},
   };
 
+  /// Id kategori yang dipakai [transactions], urut nama (ADR-026).
   List<String> _distinctCategories(List<Transaction> transactions) {
-    final keys = <String>{};
-    for (final transaction in transactions) {
-      final key = transaction.categoryKey;
-      if (key != null && key.isNotEmpty) keys.add(key);
-    }
-    return keys.toList()..sort();
+    final ids = <String>{
+      for (final transaction in transactions)
+        if (transaction.categoryId != null) transaction.categoryId!,
+    };
+    String nameOf(String id) => ActiveCategories.byId(id)?.name.toLowerCase() ?? id;
+    return ids.toList()..sort((a, b) => nameOf(a).compareTo(nameOf(b)));
   }
 
   List<TransactionDateGroup> _groupByDate(List<Transaction> transactions) {

@@ -7,10 +7,12 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
@@ -25,9 +27,8 @@ import 'package:saldough/shared/wallet/wallet.dart';
 ///
 /// ⚠ Kosakata tombol menyatakan pencatatan, bukan tindakan keuangan —
 /// "Catat Transfer", bukan "Transfer Sekarang" atau "Kirim Uang" (UX-05).
-/// Tidak ada field kategori di sini -- `TransferRecorded` tidak punya
-/// `categoryKey` (lihat `RecordEvent`), berbeda dari formulir pemasukan dan
-/// pengeluaran.
+/// Tidak ada field kategori di sini -- transfer tidak berkategori (ADR-026),
+/// berbeda dari formulir pemasukan dan pengeluaran.
 ///
 /// ⚠ Bagian "Biaya Admin / Transfer" di rujukan visual TIDAK dibangun:
 /// `TransferRecorded` tidak punya biaya, dan mencatatnya berarti keputusan
@@ -39,6 +40,7 @@ class TransferFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.prefill,
+    this.draft,
     this.initialWalletId,
     this.budgetItems = const [],
     this.initialBudgetItemId,
@@ -90,6 +92,12 @@ class TransferFormSheet extends StatefulWidget {
   /// tujuan pos itu). Diabaikan kalau [initial] terisi.
   final String? initialToWalletId;
 
+  /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
+  /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta
+  /// hal yang perlu diperiksa. Diabaikan kalau [initial] atau [prefill]
+  /// terisi.
+  final RecordDraft? draft;
+
   @override
   State<TransferFormSheet> createState() => _TransferFormSheetState();
 }
@@ -106,6 +114,18 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial ?? widget.prefill;
+    final draft = widget.draft;
+    if (tx == null && draft != null) {
+      final amount = draft.amountSen;
+      if (amount != null && amount > 0 && isMoneyInputExact(amount)) _amountController.text = formatMoneyInput(amount);
+      // Tanpa dompet bawaan: transfer dari draf wajib jelas asal dan
+      // tujuannya (keputusan pemilik 30 Sep 2026, "top up" = transfer).
+      _fromWalletId = draft.walletId;
+      _toWalletId = draft.toWalletId;
+      _noteController.text = draft.note;
+      if (draft.date != null) _date = draft.date!;
+      return;
+    }
     if (tx == null) {
       _fromWalletId = widget.initialWalletId;
       _toWalletId = widget.initialToWalletId;
@@ -202,6 +222,8 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           : t.record.transferAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
+        if (widget.initial == null && widget.prefill == null && widget.draft != null)
+          RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
           child: RecordAmountField(

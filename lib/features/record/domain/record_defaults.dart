@@ -3,7 +3,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Isian bawaan formulir CATAT yang diturunkan dari transaksi terbaru, tanpa
 /// penyimpanan baru (UX-2, UX-3): dompet terakhir per jenis dan kategori yang
-/// paling sering dipakai per jenis.
+/// paling sering dipakai per jenis (id kategori, ADR-026).
 final class RecordDefaults extends Equatable {
   /// Membuat [RecordDefaults].
   const RecordDefaults({
@@ -11,8 +11,8 @@ final class RecordDefaults extends Equatable {
     this.expenseWalletId,
     this.transferFromWalletId,
     this.transferToWalletId,
-    this.incomeCategories = const [],
-    this.expenseCategories = const [],
+    this.incomeCategoryIds = const [],
+    this.expenseCategoryIds = const [],
   });
 
   /// Menurunkan isian bawaan dari [recent] (terbaru di atas). Dompet yang
@@ -41,8 +41,8 @@ final class RecordDefaults extends Equatable {
       expenseWalletId: expense,
       transferFromWalletId: from,
       transferToWalletId: to,
-      incomeCategories: _frequentCategories(recent.whereType<IncomeTransaction>()),
-      expenseCategories: _frequentCategories(recent.whereType<ExpenseTransaction>()),
+      incomeCategoryIds: _frequentCategoryIds(recent.whereType<IncomeTransaction>()),
+      expenseCategoryIds: _frequentCategoryIds(recent.whereType<ExpenseTransaction>()),
     );
   }
 
@@ -58,11 +58,11 @@ final class RecordDefaults extends Equatable {
   /// Dompet tujuan transfer terakhir.
   final String? transferToWalletId;
 
-  /// Kategori pemasukan, paling sering di atas.
-  final List<String> incomeCategories;
+  /// Id kategori pemasukan, paling sering di atas.
+  final List<String> incomeCategoryIds;
 
-  /// Kategori pengeluaran, paling sering di atas.
-  final List<String> expenseCategories;
+  /// Id kategori pengeluaran, paling sering di atas.
+  final List<String> expenseCategoryIds;
 
   /// Paling banyak sekian kategori riwayat yang ditawarkan.
   static const maxCategories = 5;
@@ -73,44 +73,29 @@ final class RecordDefaults extends Equatable {
     expenseWalletId,
     transferFromWalletId,
     transferToWalletId,
-    incomeCategories,
-    expenseCategories,
+    incomeCategoryIds,
+    expenseCategoryIds,
   ];
 }
 
-/// Kategori [transactions] (terbaru di atas), paling sering di atas; seri
-/// dipecah oleh yang terbaru. Beda huruf besar-kecil dihitung satu kategori
-/// dengan ejaan terbarunya.
-List<String> _frequentCategories(Iterable<Transaction> transactions) {
+/// Id kategori [transactions] (terbaru di atas), paling sering di atas; seri
+/// dipecah oleh yang terbaru.
+List<String> _frequentCategoryIds(Iterable<Transaction> transactions) {
   final counts = <String, int>{};
-  final spelling = <String, String>{};
   final firstSeen = <String, int>{};
   var index = 0;
   for (final transaction in transactions) {
-    final category = transaction.categoryKey?.trim() ?? '';
-    if (category.isEmpty) continue;
-    final key = category.toLowerCase();
-    counts[key] = (counts[key] ?? 0) + 1;
-    spelling.putIfAbsent(key, () => category);
-    firstSeen.putIfAbsent(key, () => index++);
+    final id = transaction.categoryId;
+    if (id == null) continue;
+    counts[id] = (counts[id] ?? 0) + 1;
+    firstSeen.putIfAbsent(id, () => index++);
   }
-  final keys = counts.keys.toList()
+  final ids = counts.keys.toList()
     ..sort((a, b) {
       final byCount = counts[b]!.compareTo(counts[a]!);
       return byCount != 0 ? byCount : firstSeen[a]!.compareTo(firstSeen[b]!);
     });
-  return [for (final key in keys.take(RecordDefaults.maxCategories)) spelling[key]!];
-}
-
-/// Saran kategori formulir: kategori riwayat [frequent] lebih dulu, lalu
-/// saran bawaan [builtIn] yang belum ada — tanpa duplikat beda huruf
-/// besar-kecil (UX-3).
-List<String> mergeCategorySuggestions(List<String> frequent, List<String> builtIn) {
-  final seen = <String>{};
-  return [
-    for (final category in [...frequent, ...builtIn])
-      if (seen.add(category.toLowerCase())) category,
-  ];
+  return ids.take(RecordDefaults.maxCategories).toList();
 }
 
 /// Dompet awal formulir (UX-2): [shortcut] (pintasan kontekstual) selalu

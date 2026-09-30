@@ -8,6 +8,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_currency_step.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_language_step.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_scene.dart';
 import 'package:saldough/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
@@ -26,6 +27,10 @@ enum OnboardingOutcome {
 /// Onboarding empat layar geser + satu layar akhir (ONBOARDING_PLAN §3,
 /// ART_BRIEF §3), dengan adegan bergerak ADR-021 §3.7.
 ///
+/// Mode pertama kali dimulai dengan langkah pilih bahasa (ADR-028 §3.4):
+/// bahasa saat ini terpilih, dan mengetuk pilihan lain langsung mengganti
+/// teks lewat [OnboardingPage.onLanguageSelected].
+///
 /// Mode pertama kali: setiap jalan keluar ("Lewati", ajakan layar akhir)
 /// lebih dulu melewati langkah pilih mata uang yang tidak bisa dilewati
 /// (ADR-025 §3.7) — tanpa tombol lewati, tanpa pilihan otomatis, dan tombol
@@ -36,7 +41,12 @@ enum OnboardingOutcome {
 /// (lihat `buildOnboardingRoute`).
 class OnboardingPage extends StatefulWidget {
   /// Membuat [OnboardingPage].
-  const OnboardingPage({required this.onFinished, this.mode = OnboardingMode.firstRun, super.key});
+  const OnboardingPage({
+    required this.onFinished,
+    this.mode = OnboardingMode.firstRun,
+    this.onLanguageSelected,
+    super.key,
+  });
 
   /// Dipanggil saat pengguna meninggalkan onboarding. [currency] selalu
   /// terisi di mode pertama kali dan selalu `null` di mode tinjau.
@@ -44,6 +54,9 @@ class OnboardingPage extends StatefulWidget {
 
   /// Mode pembukaan.
   final OnboardingMode mode;
+
+  /// Menerapkan dan menyimpan bahasa yang diketuk di langkah bahasa.
+  final Future<void> Function(AppLocale locale)? onLanguageSelected;
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
@@ -63,6 +76,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
   );
 
   bool get _choosingCurrency => _pendingOutcome != null;
+
+  /// Langkah bahasa sedang tampil (hanya mode pertama kali, di awal).
+  late bool _choosingLanguage = widget.mode == OnboardingMode.firstRun;
+  AppLocale _language = LocaleSettings.currentLocale;
+
+  bool get _onStep => _choosingCurrency || _choosingLanguage;
+
+  Future<void> _selectLanguage(AppLocale locale) async {
+    setState(() => _language = locale);
+    await widget.onLanguageSelected?.call(locale);
+  }
 
   static const int _count = onboardingSlideCount;
 
@@ -144,6 +168,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     label: t.onboarding.backAction,
                                     onPressed: _finishing ? null : _backToSlides,
                                   )
+                                else if (_choosingLanguage)
+                                  const SizedBox.shrink()
                                 else if (!_isLast || review)
                                   AppButton.tertiary(
                                     label: review ? t.onboarding.closeAction : t.onboarding.skipAction,
@@ -159,18 +185,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               // Tetap terpasang saat langkah mata uang tampil,
                               // supaya "Kembali" mendarat di layar yang sama.
                               Offstage(
-                                offstage: _choosingCurrency,
+                                offstage: _onStep,
                                 child: PageView.builder(
                                   controller: _controller,
                                   itemCount: _count,
                                   onPageChanged: (page) => setState(() => _page = page),
                                   itemBuilder: (context, index) => OnboardingSlide(
                                     index: index,
-                                    active: index == _page && !_choosingCurrency,
+                                    active: index == _page && !_onStep,
                                     controller: _controller,
                                   ),
                                 ),
                               ),
+                              if (_choosingLanguage)
+                                OnboardingLanguageStep(selected: _language, onSelected: _selectLanguage),
                               if (_choosingCurrency)
                                 OnboardingCurrencyStep(
                                   selected: _currency,
@@ -186,7 +214,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              if (!_choosingCurrency) ...[
+                              if (!_onStep) ...[
                                 OnboardingPageIndicator(count: _count, current: _page),
                                 const SizedBox(height: AppSpacing.md),
                               ],
@@ -212,6 +240,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Widget _actions(BuildContext context, bool review) {
+    if (_choosingLanguage) {
+      return SizedBox(
+        key: const ValueKey('language'),
+        width: double.infinity,
+        child: AppButton(
+          key: const ValueKey('onboarding-language-confirm'),
+          label: t.onboarding.languageConfirm,
+          onPressed: () => setState(() => _choosingLanguage = false),
+        ),
+      );
+    }
     final pending = _pendingOutcome;
     if (pending != null) {
       final currency = _currency;

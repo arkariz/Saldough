@@ -18,6 +18,7 @@ import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/record/di/record_scope.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
+import 'package:saldough/features/record/presentation/capture/open_voice_record.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -29,15 +30,15 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:state_management/state_management.dart';
 
-/// Shell navigasi baru Saldough 2.0 — lima tujuan (Beranda, Anggaran, CATAT,
-/// Transaksi, Dompet) dengan CATAT di tengah, dipasang di rute `/home`
-/// (T-2.3, ditukar dari rute sementara `/shell` saat cutover T-3.4).
+/// Shell navigasi Saldough 2.0 — empat tab (Beranda, Anggaran, Transaksi,
+/// Dompet) di navigasi bawah, dan dua tombol mengambang bertumpuk di kanan
+/// bawah: CATAT (besar) dan catat pakai suara (kecil, di atasnya). Dipasang
+/// di rute `/home` (T-2.3, cutover T-3.4).
 ///
-/// CATAT **bukan** tujuan navigasi biasa — menekannya tidak mengganti isi
-/// `IndexedStack`, melainkan membuka lembar CATAT (lihat
-/// [openRecordSheet]). Empat tujuan lain dipetakan ke `IndexedStack`
-/// lewat [_tabIndexFor]/[_navIndexFor], menyisipkan CATAT di posisi tengah
-/// tanpa memberinya slot `IndexedStack`.
+/// Sejak perbaikan T-11.5 (30 Sep 2026) CATAT tidak lagi berada di tengah
+/// navigasi bawah: kedua tombol mengambang membuka lembar, bukan tab --
+/// [openRecordSheet] untuk formulir dan [openVoiceRecord] untuk suara
+/// (ADR-027).
 ///
 /// Keempat tab sudah nyata: Beranda (Fase 6), Anggaran (T-4.5), Transaksi
 /// (T-2.5), dan Dompet (T-2.7). Beranda menerima callback perpindahan tab dan
@@ -90,37 +91,27 @@ class AppShellPage extends StatefulWidget {
 }
 
 class _AppShellPageState extends State<AppShellPage> {
-  /// Indeks tab `IndexedStack` (0..3), TIDAK termasuk CATAT. CATAT tidak
-  /// pernah jadi tab "terpilih" yang persisten — menekannya membuka lembar
-  /// lalu kembali ke tab yang sedang aktif.
+  /// Indeks tab `IndexedStack` dan navigasi bawah (0..3).
   int _activeTab = 0;
 
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
 
-  static const _recordNavIndex = 2;
   static const _homeTabIndex = 0;
   static const _budgetTabIndex = 1;
   static const _transactionsTabIndex = 2;
   static const _walletsTabIndex = 3;
 
-  /// Indeks `IndexedStack` (0..3) untuk indeks `NavigationBar` (0..4,
-  /// melompati CATAT di posisi 2).
-  int _tabIndexFor(int navIndex) => navIndex < _recordNavIndex ? navIndex : navIndex - 1;
-
-  /// Kebalikan [_tabIndexFor] — indeks `NavigationBar` untuk tab aktif.
-  int _navIndexFor(int tabIndex) => tabIndex < _recordNavIndex ? tabIndex : tabIndex + 1;
-
   /// Membuka alur CATAT, lalu memuat ulang daftar transaksi: `TransactionBloc`
   /// hidup di level shell dan hanya memuat saat `TransactionListPage` dibuat,
   /// jadi tanpa ini transaksi yang baru dicatat tidak tampil di tab Transaksi
   /// sampai aplikasi dimulai ulang.
-  Future<void> _openRecord(BuildContext context) async {
+  Future<void> _openRecord(BuildContext context, {bool voice = false}) async {
     final transactions = context.read<TransactionBloc>();
     final wallets = context.read<WalletBloc>();
     final budgets = context.read<BudgetBloc>();
     final home = context.read<HomeBloc>();
-    await openRecordSheet(context);
+    await (voice ? openVoiceRecord(context) : openRecordSheet(context));
     transactions.add(const TransactionRefreshed());
     wallets.add(const WalletRefreshed());
     budgets.add(const BudgetRefreshed());
@@ -146,21 +137,17 @@ class _AppShellPageState extends State<AppShellPage> {
     });
   }
 
-  void _onDestinationSelected(BuildContext context, int navIndex) {
-    if (navIndex == _recordNavIndex) {
-      unawaited(_openRecord(context));
-      return;
-    }
+  void _onDestinationSelected(BuildContext context, int tabIndex) {
     // Saldo dompet bisa berubah lewat transaksi yang disunting/dihapus di tab
     // Transaksi, jadi disegarkan tiap tab Dompet dibuka.
-    if (_tabIndexFor(navIndex) == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
+    if (tabIndex == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
     // Progres anggaran dihitung dari transaksi, yang bisa berubah di tab lain
     // (FR-BUD-003: progres berubah seketika saat transaksi disunting/dihapus).
-    if (_tabIndexFor(navIndex) == _budgetTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
+    if (tabIndex == _budgetTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
     // Angka Beranda dihitung dari seluruh fitur lain, yang bisa berubah di
     // tab mana pun.
-    if (_tabIndexFor(navIndex) == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
-    setState(() => _activeTab = _tabIndexFor(navIndex));
+    if (tabIndex == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
+    setState(() => _activeTab = tabIndex);
   }
 
   @override
@@ -173,9 +160,9 @@ class _AppShellPageState extends State<AppShellPage> {
     List<Widget> tabsFor(BuildContext context) => [
       HomePage(
         onRecord: () => _openRecord(context),
-        onShowBudgets: () => _onDestinationSelected(context, _navIndexFor(_budgetTabIndex)),
-        onShowTransactions: () => _onDestinationSelected(context, _navIndexFor(_transactionsTabIndex)),
-        onShowWallets: () => _onDestinationSelected(context, _navIndexFor(_walletsTabIndex)),
+        onShowBudgets: () => _onDestinationSelected(context, _budgetTabIndex),
+        onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
+        onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
       ),
       const BudgetListPage(),
       const TransactionListPage(),
@@ -248,10 +235,14 @@ class _AppShellPageState extends State<AppShellPage> {
                                                     TourVisibility(visible: i == _activeTab, child: tab),
                                                 ],
                                               ),
+                                            floatingActionButton: _RecordFabs(
+                                              onRecord: () => unawaited(_openRecord(context)),
+                                              onVoice: () => unawaited(_openRecord(context, voice: true)),
+                                            ),
                                             bottomNavigationBar: NavigationBar(
-                                              selectedIndex: _navIndexFor(_activeTab),
-                                              onDestinationSelected: (navIndex) =>
-                                                  _onDestinationSelected(context, navIndex),
+                                              selectedIndex: _activeTab,
+                                              onDestinationSelected: (tabIndex) =>
+                                                  _onDestinationSelected(context, tabIndex),
                                               destinations: [
                                                 NavigationDestination(
                                                   icon: const AppIcon(IconKey.home),
@@ -260,13 +251,6 @@ class _AppShellPageState extends State<AppShellPage> {
                                                 NavigationDestination(
                                                   icon: const AppIcon(IconKey.budget),
                                                   label: t.appShell.budgetTabLabel,
-                                                ),
-                                                NavigationDestination(
-                                                  icon: const SpotlightTarget(
-                                                    spotlightKey: SpotlightKey.homeRecord,
-                                                    child: _RecordNavIcon(),
-                                                  ),
-                                                  label: t.appShell.recordAction,
                                                 ),
                                                 NavigationDestination(
                                                   icon: const AppIcon(IconKey.transactions),
@@ -312,26 +296,89 @@ enum ShellStartAction {
   openAccount,
 }
 
-/// Ikon slot CATAT: kotak aksen dengan garis tepi dan bayangan keras level
-/// "Interaktif" ADR-015 ("FAB CATAT"), supaya tindakan utama aplikasi tidak
-/// tampil setara empat tab lain (prinsip produk #5, UX-13).
-class _RecordNavIcon extends StatelessWidget {
-  const _RecordNavIcon();
+/// Dua tombol mengambang bertumpuk di kanan bawah: catat pakai suara (kecil,
+/// atas) dan CATAT (besar, bawah). Gaya "Interaktif" ADR-015 -- kotak aksen
+/// bergaris tepi dan bayangan keras -- supaya tindakan utama aplikasi tidak
+/// tampil setara tab (prinsip produk #5, UX-13).
+class _RecordFabs extends StatelessWidget {
+  const _RecordFabs({required this.onRecord, required this.onVoice});
+
+  final VoidCallback onRecord;
+  final VoidCallback onVoice;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Container(
-      width: 44,
-      height: 32,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: colors.accent,
-        borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-        boxShadow: AppElevation.hardShadow(colors.edge),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.homeVoice,
+          child: _PixelFab(
+            key: const ValueKey('shell-voice-fab'),
+            icon: IconKey.microphone,
+            label: t.record.voice.micLabel,
+            size: 60,
+            background: colors.cardBackground,
+            foreground: colors.textPrimary,
+            onTap: onVoice,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.homeRecord,
+          child: _PixelFab(
+            key: const ValueKey('shell-record-fab'),
+            icon: IconKey.record,
+            label: t.appShell.recordAction,
+            size: 60,
+            background: colors.accent,
+            foreground: colors.onAccent,
+            onTap: onRecord,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PixelFab extends StatelessWidget {
+  const _PixelFab({
+    required this.icon,
+    required this.label,
+    required this.size,
+    required this.background,
+    required this.foreground,
+    required this.onTap,
+    super.key,
+  });
+
+  final IconKey icon;
+  final String label;
+  final double size;
+  final Color background;
+  final Color foreground;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return AppTappable(
+      label: label,
+      onTap: onTap,
+      child: Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: AppRadius.pixelSmAll,
+          border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+          boxShadow: AppElevation.hardShadow(colors.edge),
+        ),
+        child: AppIcon(icon, size: size * 0.45, color: foreground),
       ),
-      child: AppIcon(IconKey.record, size: 20, color: colors.onAccent),
     );
   }
 }

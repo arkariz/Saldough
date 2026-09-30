@@ -5,6 +5,7 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -18,11 +19,13 @@ import 'package:saldough/shared/wallet/wallet.dart';
 /// mempertahankan `id` transaksi asal -- pembetulan selalu lewat sunting atau
 /// hapus, tidak pernah lewat transaksi penyeimbang.
 ///
-/// Nilai yang tidak ada di formulir dipertahankan dari [transaction]: untuk
-/// transfer, `categoryKey`. Tautan pos anggaran (T-4.4) ikut disunting lewat
+/// Transfer tidak berkategori (ADR-026). Tautan pos anggaran (T-4.4) ikut disunting lewat
 /// pemilih pos di formulir, dengan pilihan dari [budgetItems]. Objek dibangun BARU, bukan lewat `copyWith`, karena
 /// `copyWith` (`?? this.x`) tidak bisa mengosongkan kategori yang dihapus
 /// pengguna.
+///
+/// [onCreateCategory] menyalakan "Tambah kategori" di pemilih kategori
+/// (ADR-026 §3.6); tanpanya pilihan itu tidak ditawarkan.
 ///
 /// [wallets] adalah pilihan dompet di formulir -- pemanggil wajib menyertakan
 /// dompet milik [transaction] sendiri walau sudah dinonaktifkan, supaya
@@ -35,13 +38,23 @@ Future<Transaction?> openEditTransactionSheet(
   required Transaction transaction,
   required List<Wallet> wallets,
   List<BudgetItemOption> budgetItems = const [],
+  Future<Category?> Function(CategoryKind kind, String name)? onCreateCategory,
 }) async {
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
     context,
     builder: (_) => switch (transaction) {
-      IncomeTransaction() => IncomeFormSheet(wallets: baseWallets, initial: transaction),
-      ExpenseTransaction() => ExpenseFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
+      IncomeTransaction() => IncomeFormSheet(
+        wallets: baseWallets,
+        initial: transaction,
+        onCreateCategory: onCreateCategory == null ? null : (name) => onCreateCategory(CategoryKind.income, name),
+      ),
+      ExpenseTransaction() => ExpenseFormSheet(
+        wallets: baseWallets,
+        initial: transaction,
+        budgetItems: budgetItems,
+        onCreateCategory: onCreateCategory == null ? null : (name) => onCreateCategory(CategoryKind.expense, name),
+      ),
       TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
     },
   );
@@ -49,7 +62,7 @@ Future<Transaction?> openEditTransactionSheet(
   return switch ((transaction, result)) {
     (
       IncomeTransaction(),
-      IncomeRecorded(:final date, :final amount, :final note, :final walletId, :final categoryKey),
+      IncomeRecorded(:final date, :final amount, :final note, :final walletId, :final categoryId),
     ) =>
       IncomeTransaction(
         id: transaction.id,
@@ -57,7 +70,7 @@ Future<Transaction?> openEditTransactionSheet(
         amount: amount,
         note: note,
         walletId: walletId,
-        categoryKey: categoryKey,
+        categoryId: categoryId,
       ),
     (
       ExpenseTransaction(),
@@ -66,7 +79,7 @@ Future<Transaction?> openEditTransactionSheet(
         :final amount,
         :final note,
         :final walletId,
-        :final categoryKey,
+        :final categoryId,
         :final budgetItemId,
       ),
     ) =>
@@ -76,11 +89,11 @@ Future<Transaction?> openEditTransactionSheet(
         amount: amount,
         note: note,
         walletId: walletId,
-        categoryKey: categoryKey,
+        categoryId: categoryId,
         budgetItemId: budgetItemId,
       ),
     (
-      TransferTransaction(categoryKey: final originalCategory),
+      TransferTransaction(),
       TransferRecorded(
         :final date,
         :final amount,
@@ -97,7 +110,6 @@ Future<Transaction?> openEditTransactionSheet(
         note: note,
         fromWalletId: fromWalletId,
         toWalletId: toWalletId,
-        categoryKey: originalCategory,
         budgetItemId: budgetItemId,
       ),
     _ => null,

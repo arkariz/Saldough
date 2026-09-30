@@ -6,6 +6,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
@@ -22,6 +23,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -59,8 +61,17 @@ abstract final class RootModule {
       ..registerLazySingleton<WalletRepository>(
         () => WalletRepositoryImpl(storage: container<KeyValueStorage>()),
       )
-      ..registerLazySingleton<TransactionRepository>(
+      // Satu instans untuk dua peran: buku besar, dan port migrasi label
+      // kategori lama (ADR-026 §3.4) yang butuh tata letak buku besar.
+      ..registerLazySingleton<TransactionRepositoryImpl>(
         () => TransactionRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<TransactionRepository>(container.call<TransactionRepositoryImpl>)
+      ..registerLazySingleton<LegacyCategoryLabels>(container.call<TransactionRepositoryImpl>)
+      // Kategori (ADR-026), kunci `category/all`. Dipakai CATAT, Transaksi,
+      // dan layar Kategori di Akun.
+      ..registerLazySingleton<CategoryRepository>(
+        () => CategoryRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).
@@ -100,6 +111,29 @@ abstract final class RootModule {
       // `tutorial/progress`. Bukan data keuangan.
       ..registerLazySingleton<TutorialProgressRepository>(
         () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Pilihan bahasa (ADR-028), kunci `settings/language`. Mengganti bahasa
+      // ikut mengganti nama kategori bawaan yang belum diganti pengguna.
+      ..registerLazySingleton<LanguagePreferenceRepository>(
+        () => LanguagePreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<ChangeAppLanguage>(
+        () => ChangeAppLanguage(
+          repository: container<LanguagePreferenceRepository>(),
+          afterChange: (from, to) async {
+            await RelocalizeBuiltInCategories(repository: container<CategoryRepository>())(
+              oldName: (key) => from.buildSync().category.builtIn[key],
+              newName: (key) => to.buildSync().category.builtIn[key],
+            );
+          },
+        ),
+      )
+      // Pertanyaan bahasa ucapan sekali untuk pengguna lama (ADR-028 §3.8).
+      ..registerLazySingleton<SpeechLanguagePrompt>(
+        () => SpeechLanguagePrompt(
+          repository: container<LanguagePreferenceRepository>(),
+          changeLanguage: container<ChangeAppLanguage>(),
+        ),
       )
       // Pilihan mata uang (ADR-025 §3.5), kunci `settings/currency`.
       ..registerLazySingleton<CurrencyPreferenceRepository>(

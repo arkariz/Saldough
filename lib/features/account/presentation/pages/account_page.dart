@@ -6,8 +6,11 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/di/account_scope.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
+import 'package:saldough/features/account/presentation/bloc/category_manager_bloc.dart';
 import 'package:saldough/features/account/presentation/widgets/account_avatar.dart';
+import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
+import 'package:saldough/features/account/presentation/widgets/language_setting.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
 
@@ -21,8 +24,11 @@ Future<void> openAccountPage(BuildContext context) {
       builder: (_) => PixelTheme(
         child: ScopeWidget<AccountScope>(
           create: () => AccountScope(parentContainer: parentContainer),
-          builder: (context, scope) => BlocProvider.value(
-            value: scope.container<AccountBloc>(),
+          builder: (context, scope) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: scope.container<AccountBloc>()),
+              BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
+            ],
             child: const EffectListener<AccountBloc, AccountState>(child: AccountPage()),
           ),
         ),
@@ -182,6 +188,10 @@ class _SignedOutState extends State<_SignedOut> {
         ],
         const SizedBox(height: AppSpacing.xl),
         const CurrencySettingSection(),
+        const SizedBox(height: AppSpacing.sm),
+        const LanguageSettingEntry(),
+        const SizedBox(height: AppSpacing.sm),
+        const CategorySettingEntry(),
       ],
     );
   }
@@ -251,6 +261,10 @@ class _SignedIn extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         const CurrencySettingSection(),
+        const SizedBox(height: AppSpacing.sm),
+        const LanguageSettingEntry(),
+        const SizedBox(height: AppSpacing.sm),
+        const CategorySettingEntry(),
         const SizedBox(height: AppSpacing.xl),
         Divider(color: colors.divider),
         const SizedBox(height: AppSpacing.md),

@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:state_management/state_management.dart';
@@ -16,7 +17,8 @@ part 'account_event.dart';
 /// mata uang dari bagian "Pengaturan" layar yang sama (ADR-025 §3.6).
 final class AccountBloc extends Bloc<AccountEvent, AccountState> {
   /// Membuat [AccountBloc].
-  AccountBloc({required this._authRepository, required this._currencyRepository}) : super(AccountState.initial()) {
+  AccountBloc({required this._authRepository, required this._currencyRepository, this._changeLanguage})
+    : super(AccountState.initial()) {
     on<AccountStarted>(_onStarted);
     on<AccountAuthChanged>(_onAuthChanged);
     on<AccountGoogleSignInRequested>(_onGoogleSignInRequested);
@@ -24,10 +26,12 @@ final class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<AccountSignOutRequested>(_onSignOutRequested);
     on<AccountDeletionRequested>(_onDeletionRequested);
     on<AccountCurrencyChangeRequested>(_onCurrencyChangeRequested);
+    on<AccountLanguageChangeRequested>(_onLanguageChangeRequested);
   }
 
   final AuthRepository _authRepository;
   final CurrencyPreferenceRepository _currencyRepository;
+  final ChangeAppLanguage? _changeLanguage;
   StreamSubscription<AppUser?>? _authSubscription;
 
   void _onStarted(AccountStarted event, Emitter<AccountState> emit) {
@@ -97,6 +101,14 @@ final class AccountBloc extends Bloc<AccountEvent, AccountState> {
         emit(state.copyWith(pending: () => null, effect: _effectError(failure)));
       case Right():
         emit(state.copyWith(pending: () => null, user: () => null, effect: _effectSuccess(t.account.deletedMessage)));
+    }
+  }
+
+  Future<void> _onLanguageChangeRequested(AccountLanguageChangeRequested event, Emitter<AccountState> emit) async {
+    final change = _changeLanguage;
+    if (change == null || event.locale == LocaleSettings.currentLocale) return;
+    if (await change(event.locale) case Left()) {
+      emit(state.copyWith(effect: ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error)));
     }
   }
 

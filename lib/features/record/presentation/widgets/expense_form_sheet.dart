@@ -6,26 +6,19 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
-import 'package:saldough/features/record/domain/record_defaults.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
 import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-
-/// Saran kategori pengeluaran yang sering dipakai.
-List<String> _categorySuggestions() => [
-  t.record.categorySuggestionFood,
-  t.record.categorySuggestionShopping,
-  t.record.categorySuggestionTransport,
-  t.record.categorySuggestionBills,
-  t.record.categorySuggestionEntertainment,
-];
 
 /// Formulir catat pengeluaran (FR-TXN-002) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [ExpenseRecorded] lewat
@@ -43,8 +36,10 @@ class ExpenseFormSheet extends StatefulWidget {
     required this.wallets,
     this.initial,
     this.prefill,
+    this.draft,
     this.initialWalletId,
-    this.recentCategories = const [],
+    this.frequentCategoryIds = const [],
+    this.onCreateCategory,
     this.budgetItems = const [],
     this.initialBudgetItemId,
     this.initialAmountSen,
@@ -79,9 +74,13 @@ class ExpenseFormSheet extends StatefulWidget {
   /// sendiri.
   final String? initialWalletId;
 
-  /// Kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
-  /// ditawarkan sebelum saran bawaan (UX-3).
-  final List<String> recentCategories;
+  /// Id kategori yang paling sering dipakai untuk jenis ini, dari riwayat —
+  /// ditawarkan paling atas (UX-3).
+  final List<String> frequentCategoryIds;
+
+  /// Membuat kategori baru dari "Tambah kategori" (ADR-026 §3.6); `null`
+  /// berarti pilihan itu tidak ditawarkan.
+  final Future<Category?> Function(String name)? onCreateCategory;
 
   /// Seluruh pos anggaran; formulir menyaringnya per dompet asal.
   final List<BudgetItemOption> budgetItems;
@@ -95,13 +94,19 @@ class ExpenseFormSheet extends StatefulWidget {
   /// bisa ditulis utuh di kolom nominal (`isMoneyInputExact`).
   final int? initialAmountSen;
 
+  /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
+  /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta
+  /// hal yang perlu diperiksa. Diabaikan kalau [initial] atau [prefill]
+  /// terisi.
+  final RecordDraft? draft;
+
   @override
   State<ExpenseFormSheet> createState() => _ExpenseFormSheetState();
 }
 
 class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   final _amountController = TextEditingController();
-  final _categoryController = TextEditingController();
+  String? _categoryId;
   final _noteController = TextEditingController();
   String? _walletId;
   String? _budgetItemId;
@@ -111,6 +116,11 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   void initState() {
     super.initState();
     final tx = widget.initial ?? widget.prefill;
+    final draft = widget.draft;
+    if (tx == null && draft != null) {
+      _applyDraft(draft);
+      return;
+    }
     if (tx == null) {
       _walletId = widget.initialWalletId;
       _budgetItemId = widget.initialBudgetItemId;
@@ -127,13 +137,23 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     if (widget.initial != null) _date = tx.date;
     _noteController.text = tx.note;
     _walletId = tx.walletId;
-    _categoryController.text = tx.categoryKey ?? '';
+    _categoryId = tx.categoryId;
+  }
+
+  void _applyDraft(RecordDraft draft) {
+    final amount = draft.amountSen;
+    if (amount != null && amount > 0 && isMoneyInputExact(amount)) _amountController.text = formatMoneyInput(amount);
+    // Dompet yang disebut tapi tidak dikenal: biarkan kosong supaya dipilih,
+    // bukan diam-diam memakai dompet bawaan.
+    _walletId = draft.walletId ?? (draft.issues.contains(DraftIssue.walletUnknown) ? null : widget.initialWalletId);
+    _categoryId = draft.categoryId;
+    _noteController.text = draft.note;
+    if (draft.date != null) _date = draft.date!;
   }
 
   @override
   void dispose() {
     _amountController.dispose();
-    _categoryController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -167,9 +187,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         amount: amount,
         date: _date,
         note: _noteController.text.trim(),
-        categoryKey: _categoryController.text.trim().isEmpty
-            ? null
-            : _categoryController.text.trim(),
+        categoryId: _categoryId,
         budgetItemId: _validBudgetItemId,
       ),
     );
@@ -196,6 +214,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           : t.record.expenseAction,
       onSubmit: _canSubmit ? _submit : null,
       children: [
+        if (widget.initial == null && widget.prefill == null && widget.draft != null)
+          RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
           child: RecordAmountField(
@@ -208,9 +228,11 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           ),
         ),
         RecordCategoryField(
-          controller: _categoryController,
-          suggestions: mergeCategorySuggestions(widget.recentCategories, _categorySuggestions()),
-          kind: TransactionKind.expense,
+          value: _categoryId,
+          onChanged: (id) => setState(() => _categoryId = id),
+          categoryKind: CategoryKind.expense,
+          frequentIds: widget.frequentCategoryIds,
+          onCreate: widget.onCreateCategory,
         ),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordWallet,

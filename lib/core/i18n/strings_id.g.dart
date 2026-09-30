@@ -55,6 +55,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$info$id info = Translations$info$id.internal(_root);
 	late final Translations$account$id account = Translations$account$id.internal(_root);
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
+	late final Translations$category$id category = Translations$category$id.internal(_root);
+	late final Translations$language$id language = Translations$language$id.internal(_root);
 }
 
 // Path: app
@@ -164,9 +166,6 @@ class Translations$record$id {
 	/// id: 'Tanggal'
 	String get dateFieldLabel => 'Tanggal';
 
-	/// id: 'Kategori (opsional)'
-	String get categoryFieldHint => 'Kategori (opsional)';
-
 	/// id: 'Tulis catatan singkat'
 	String get noteFieldHint => 'Tulis catatan singkat';
 
@@ -190,30 +189,6 @@ class Translations$record$id {
 
 	/// id: 'Menyimpan...'
 	String get savingMessage => 'Menyimpan...';
-
-	/// id: 'Gaji'
-	String get categorySuggestionSalary => 'Gaji';
-
-	/// id: 'Bonus'
-	String get categorySuggestionBonus => 'Bonus';
-
-	/// id: 'Penjualan'
-	String get categorySuggestionSales => 'Penjualan';
-
-	/// id: 'Hadiah'
-	String get categorySuggestionGift => 'Hadiah';
-
-	/// id: 'Makan'
-	String get categorySuggestionFood => 'Makan';
-
-	/// id: 'Belanja'
-	String get categorySuggestionShopping => 'Belanja';
-
-	/// id: 'Transport'
-	String get categorySuggestionTransport => 'Transport';
-
-	/// id: 'Tagihan'
-	String get categorySuggestionBills => 'Tagihan';
 
 	/// id: 'Uang Masuk'
 	String get incomeBadge => 'Uang Masuk';
@@ -259,18 +234,6 @@ class Translations$record$id {
 
 	/// id: 'Opsional'
 	String get optionalHint => 'Opsional';
-
-	/// id: 'Lainnya'
-	String get categoryOtherLabel => 'Lainnya';
-
-	/// id: 'Ketik kategori sendiri'
-	String get categoryCustomHint => 'Ketik kategori sendiri';
-
-	/// id: 'Hiburan'
-	String get categorySuggestionEntertainment => 'Hiburan';
-
-	/// id: 'Investasi'
-	String get categorySuggestionInvestment => 'Investasi';
 
 	/// id: 'Dompet Sumber Dana'
 	String get expenseWalletSectionLabel => 'Dompet Sumber Dana';
@@ -337,6 +300,18 @@ class Translations$record$id {
 
 	/// id: 'Transfer'
 	String get kindTransfer => 'Transfer';
+
+	/// id: 'Tambah kategori'
+	String get categoryAddLabel => 'Tambah kategori';
+
+	/// id: 'Tertangkap'
+	String get draftHeardLabel => 'Tertangkap';
+
+	/// id: 'Periksa sebelum mencatat'
+	String get draftCheckTitle => 'Periksa sebelum mencatat';
+
+	late final Translations$record$draftIssue$id draftIssue = Translations$record$draftIssue$id.internal(_root);
+	late final Translations$record$voice$id voice = Translations$record$voice$id.internal(_root);
 }
 
 // Path: transaction
@@ -1786,6 +1761,15 @@ class Translations$onboarding$id {
 
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
+
+	/// id: 'Pilih bahasa'
+	String get languageTitle => 'Pilih bahasa';
+
+	/// id: 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.'
+	String get languageBody => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.';
+
+	/// id: 'Lanjut'
+	String get languageConfirm => 'Lanjut';
 }
 
 // Path: tour
@@ -1960,6 +1944,12 @@ class Translations$tour$id {
 
 	/// id: 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.'
 	String get freelanceReceiveBody => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.';
+
+	/// id: 'Catat pakai suara'
+	String get homeVoiceTitle => 'Catat pakai suara';
+
+	/// id: 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.'
+	String get homeVoiceBody => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.';
 }
 
 // Path: info
@@ -2113,6 +2103,195 @@ class Translations$currency$id {
 	late final Translations$currency$names$id names = Translations$currency$names$id.internal(_root);
 }
 
+// Path: category
+class Translations$category$id {
+	Translations$category$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get builtIn => {
+		'food': 'Makan & Minum',
+		'groceries': 'Belanja Harian',
+		'transport': 'Transportasi',
+		'bills': 'Tagihan',
+		'internet': 'Pulsa & Internet',
+		'health': 'Kesehatan',
+		'entertainment': 'Hiburan',
+		'shopping': 'Belanja',
+		'education': 'Pendidikan',
+		'family': 'Keluarga',
+		'donation': 'Donasi',
+		'expenseOther': 'Lainnya',
+		'salary': 'Gaji',
+		'freelance': 'Freelance',
+		'bonus': 'Bonus',
+		'gift': 'Hadiah',
+		'incomeOther': 'Lainnya',
+	};
+
+	/// id: 'Kategori'
+	String get title => 'Kategori';
+
+	/// id: 'Kategori'
+	String get accountEntryTitle => 'Kategori';
+
+	/// id: 'Atur daftar kategori pemasukan dan pengeluaran.'
+	String get accountEntryBody => 'Atur daftar kategori pemasukan dan pengeluaran.';
+
+	/// id: 'Pengeluaran'
+	String get expenseTab => 'Pengeluaran';
+
+	/// id: 'Pemasukan'
+	String get incomeTab => 'Pemasukan';
+
+	/// id: 'Tambah kategori'
+	String get addAction => 'Tambah kategori';
+
+	/// id: 'Kategori baru'
+	String get addTitle => 'Kategori baru';
+
+	/// id: 'Ganti nama kategori'
+	String get renameTitle => 'Ganti nama kategori';
+
+	/// id: 'Nama kategori'
+	String get nameHint => 'Nama kategori';
+
+	/// id: 'Arsipkan'
+	String get archiveAction => 'Arsipkan';
+
+	/// id: 'Pulihkan'
+	String get restoreAction => 'Pulihkan';
+
+	/// id: 'Terarsip'
+	String get archivedSection => 'Terarsip';
+
+	/// id: 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.'
+	String get archivedHint => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.';
+
+	/// id: 'Belum ada kategori aktif.'
+	String get emptyActive => 'Belum ada kategori aktif.';
+
+	/// id: 'Kategori "${name}" diarsipkan.'
+	String archivedMessage({required Object name}) => 'Kategori "${name}" diarsipkan.';
+
+	/// id: 'Kategori "${name}" dipulihkan.'
+	String restoredMessage({required Object name}) => 'Kategori "${name}" dipulihkan.';
+}
+
+// Path: language
+class Translations$language$id {
+	Translations$language$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Bahasa'
+	String get label => 'Bahasa';
+
+	/// id: 'Pilih bahasa'
+	String get pickerTitle => 'Pilih bahasa';
+
+	/// id: 'Tampilan aplikasi dan bahasa ucapan'
+	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
+}
+
+// Path: record.draftIssue
+class Translations$record$draftIssue$id {
+	Translations$record$draftIssue$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nominal belum terbaca. Isi sendiri.'
+	String get amountMissing => 'Nominal belum terbaca. Isi sendiri.';
+
+	/// id: 'Ada lebih dari satu nominal. Isi yang benar.'
+	String get amountMultiple => 'Ada lebih dari satu nominal. Isi yang benar.';
+
+	/// id: 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.'
+	String get amountWithoutUnit => 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.';
+
+	/// id: 'Nominal bisa dibaca dua cara. Pastikan nominalnya.'
+	String get amountAmbiguous => 'Nominal bisa dibaca dua cara. Pastikan nominalnya.';
+
+	/// id: 'Mata uang yang disebut berbeda dari mata uang aplikasi.'
+	String get currencyUnsupported => 'Mata uang yang disebut berbeda dari mata uang aplikasi.';
+
+	/// id: 'Dompet yang disebut tidak ada. Pilih dompetnya.'
+	String get walletUnknown => 'Dompet yang disebut tidak ada. Pilih dompetnya.';
+
+	/// id: 'Dompet asal belum jelas. Pilih dari dompet mana.'
+	String get transferSourceMissing => 'Dompet asal belum jelas. Pilih dari dompet mana.';
+
+	/// id: 'Dompet tujuan belum jelas. Pilih dompet tujuan.'
+	String get transferTargetMissing => 'Dompet tujuan belum jelas. Pilih dompet tujuan.';
+
+	/// id: 'Kategori yang disebut tidak ada. Pilih kategorinya.'
+	String get categoryUnknown => 'Kategori yang disebut tidak ada. Pilih kategorinya.';
+
+	/// id: 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.'
+	String get dateUnclear => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.';
+}
+
+// Path: record.voice
+class Translations$record$voice$id {
+	Translations$record$voice$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat pakai suara'
+	String get title => 'Catat pakai suara';
+
+	/// id: 'Catat pakai suara'
+	String get micLabel => 'Catat pakai suara';
+
+	/// id: 'Silakan bicara.'
+	String get listening => 'Silakan bicara.';
+
+	/// id: 'Berhenti sendiri saat kamu diam.'
+	String get autoStopHint => 'Berhenti sendiri saat kamu diam.';
+
+	/// id: 'Contoh: “makan siang 35 ribu pakai BCA”'
+	String get example => 'Contoh: “makan siang 35 ribu pakai BCA”';
+
+	/// id: 'Memahami…'
+	String get interpreting => 'Memahami…';
+
+	/// id: 'Ketik saja'
+	String get typeInstead => 'Ketik saja';
+
+	late final Translations$record$voice$failure$id failure = Translations$record$voice$failure$id.internal(_root);
+
+	/// id: 'Ketuk mikrofon, lalu ucapkan satu transaksi.'
+	String get idleHint => 'Ketuk mikrofon, lalu ucapkan satu transaksi.';
+
+	/// id: 'REKAM'
+	String get recordingBadge => 'REKAM';
+
+	/// id: 'Mulai merekam'
+	String get startAction => 'Mulai merekam';
+
+	/// id: 'Mendengarkan'
+	String get listeningButtonLabel => 'Mendengarkan';
+
+	/// id: 'Rekam ulang'
+	String get retryAction => 'Rekam ulang';
+
+	/// id: 'Kamu bicara dalam bahasa apa?'
+	String get languageTitle => 'Kamu bicara dalam bahasa apa?';
+
+	/// id: 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.'
+	String get languageBody => 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.';
+
+	/// id: 'Lanjut'
+	String get languageContinue => 'Lanjut';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2188,6 +2367,33 @@ class Translations$currency$names$id {
 	String get aud => 'Dolar Australia';
 }
 
+// Path: record.voice.failure
+class Translations$record$voice$failure$id {
+	Translations$record$voice$failure$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.'
+	String get permissionDenied => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.';
+
+	/// id: 'Perangkat ini belum punya pengenal ucapan.'
+	String get unavailable => 'Perangkat ini belum punya pengenal ucapan.';
+
+	/// id: 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.'
+	String get languageOffline => 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.';
+
+	/// id: 'Tidak ada ucapan yang tertangkap. Coba lagi.'
+	String get noMatch => 'Tidak ada ucapan yang tertangkap. Coba lagi.';
+
+	/// id: 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.'
+	String get network => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.';
+
+	/// id: 'Ada yang salah. Coba lagi.'
+	String get other => 'Ada yang salah. Coba lagi.';
+}
+
 /// The flat map containing all translations for locale <id>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -2220,7 +2426,6 @@ extension on Translations {
 			'record.fromWalletFieldLabel' => 'Dari Dompet',
 			'record.destinationWalletFieldLabel' => 'Ke Dompet',
 			'record.dateFieldLabel' => 'Tanggal',
-			'record.categoryFieldHint' => 'Kategori (opsional)',
 			'record.noteFieldHint' => 'Tulis catatan singkat',
 			'record.noWalletsMessage' => 'Belum ada dompet. Buat dompet dulu di tab Dompet.',
 			'record.sameWalletWarning' => 'Dompet asal dan tujuan tidak boleh sama.',
@@ -2229,14 +2434,6 @@ extension on Translations {
 			'record.transferSavedMessage' => 'Transfer tercatat.',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
-			'record.categorySuggestionSalary' => 'Gaji',
-			'record.categorySuggestionBonus' => 'Bonus',
-			'record.categorySuggestionSales' => 'Penjualan',
-			'record.categorySuggestionGift' => 'Hadiah',
-			'record.categorySuggestionFood' => 'Makan',
-			'record.categorySuggestionShopping' => 'Belanja',
-			'record.categorySuggestionTransport' => 'Transport',
-			'record.categorySuggestionBills' => 'Tagihan',
 			'record.incomeBadge' => 'Uang Masuk',
 			'record.expenseBadge' => 'Uang Keluar',
 			'record.transferBadge' => 'Mutasi Internal',
@@ -2252,10 +2449,6 @@ extension on Translations {
 			'record.clearAmountAction' => 'Bersihkan',
 			'record.categorySectionLabel' => 'Kategori',
 			'record.optionalHint' => 'Opsional',
-			'record.categoryOtherLabel' => 'Lainnya',
-			'record.categoryCustomHint' => 'Ketik kategori sendiri',
-			'record.categorySuggestionEntertainment' => 'Hiburan',
-			'record.categorySuggestionInvestment' => 'Investasi',
 			'record.expenseWalletSectionLabel' => 'Dompet Sumber Dana',
 			'record.noteSectionLabel' => 'Keterangan / Catatan',
 			'record.balanceDecreasesCaption' => 'Saldo berkurang',
@@ -2278,6 +2471,40 @@ extension on Translations {
 			'record.kindExpense' => 'Keluar',
 			'record.kindIncome' => 'Masuk',
 			'record.kindTransfer' => 'Transfer',
+			'record.categoryAddLabel' => 'Tambah kategori',
+			'record.draftHeardLabel' => 'Tertangkap',
+			'record.draftCheckTitle' => 'Periksa sebelum mencatat',
+			'record.draftIssue.amountMissing' => 'Nominal belum terbaca. Isi sendiri.',
+			'record.draftIssue.amountMultiple' => 'Ada lebih dari satu nominal. Isi yang benar.',
+			'record.draftIssue.amountWithoutUnit' => 'Angka tanpa satuan (ribu/juta). Pastikan nominalnya.',
+			'record.draftIssue.amountAmbiguous' => 'Nominal bisa dibaca dua cara. Pastikan nominalnya.',
+			'record.draftIssue.currencyUnsupported' => 'Mata uang yang disebut berbeda dari mata uang aplikasi.',
+			'record.draftIssue.walletUnknown' => 'Dompet yang disebut tidak ada. Pilih dompetnya.',
+			'record.draftIssue.transferSourceMissing' => 'Dompet asal belum jelas. Pilih dari dompet mana.',
+			'record.draftIssue.transferTargetMissing' => 'Dompet tujuan belum jelas. Pilih dompet tujuan.',
+			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
+			'record.draftIssue.dateUnclear' => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.',
+			'record.voice.title' => 'Catat pakai suara',
+			'record.voice.micLabel' => 'Catat pakai suara',
+			'record.voice.listening' => 'Silakan bicara.',
+			'record.voice.autoStopHint' => 'Berhenti sendiri saat kamu diam.',
+			'record.voice.example' => 'Contoh: “makan siang 35 ribu pakai BCA”',
+			'record.voice.interpreting' => 'Memahami…',
+			'record.voice.typeInstead' => 'Ketik saja',
+			'record.voice.failure.permissionDenied' => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.',
+			'record.voice.failure.unavailable' => 'Perangkat ini belum punya pengenal ucapan.',
+			'record.voice.failure.languageOffline' => 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.',
+			'record.voice.failure.noMatch' => 'Tidak ada ucapan yang tertangkap. Coba lagi.',
+			'record.voice.failure.network' => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.',
+			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
+			'record.voice.idleHint' => 'Ketuk mikrofon, lalu ucapkan satu transaksi.',
+			'record.voice.recordingBadge' => 'REKAM',
+			'record.voice.startAction' => 'Mulai merekam',
+			'record.voice.listeningButtonLabel' => 'Mendengarkan',
+			'record.voice.retryAction' => 'Rekam ulang',
+			'record.voice.languageTitle' => 'Kamu bicara dalam bahasa apa?',
+			'record.voice.languageBody' => 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.',
+			'record.voice.languageContinue' => 'Lanjut',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2687,6 +2914,8 @@ extension on Translations {
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
 			'home.budgetTitle' => 'Anggaran aktif',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
@@ -2708,8 +2937,6 @@ extension on Translations {
 			'home.guideWalletTag' => 'Aset nyata',
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
-			_ => null,
-		} ?? switch (path) {
 			'home.guideBudgetTag' => 'Rencana',
 			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			'home.guideFreelanceTitle' => 'Freelance',
@@ -2745,6 +2972,9 @@ extension on Translations {
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
+			'onboarding.languageTitle' => 'Pilih bahasa',
+			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.',
+			'onboarding.languageConfirm' => 'Lanjut',
 			'tour.nextAction' => 'Lanjut',
 			'tour.doneAction' => 'Selesai',
 			'tour.skipAction' => 'Lewati tur',
@@ -2800,6 +3030,8 @@ extension on Translations {
 			'tour.freelanceWorklogBody' => 'Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.',
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
+			'tour.homeVoiceTitle' => 'Catat pakai suara',
+			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -2859,6 +3091,42 @@ extension on Translations {
 			'currency.names.php' => 'Peso Filipina',
 			'currency.names.vnd' => 'Dong Vietnam',
 			'currency.names.aud' => 'Dolar Australia',
+			'category.builtIn.food' => 'Makan & Minum',
+			'category.builtIn.groceries' => 'Belanja Harian',
+			'category.builtIn.transport' => 'Transportasi',
+			'category.builtIn.bills' => 'Tagihan',
+			'category.builtIn.internet' => 'Pulsa & Internet',
+			'category.builtIn.health' => 'Kesehatan',
+			'category.builtIn.entertainment' => 'Hiburan',
+			'category.builtIn.shopping' => 'Belanja',
+			'category.builtIn.education' => 'Pendidikan',
+			'category.builtIn.family' => 'Keluarga',
+			'category.builtIn.donation' => 'Donasi',
+			'category.builtIn.expenseOther' => 'Lainnya',
+			'category.builtIn.salary' => 'Gaji',
+			'category.builtIn.freelance' => 'Freelance',
+			'category.builtIn.bonus' => 'Bonus',
+			'category.builtIn.gift' => 'Hadiah',
+			'category.builtIn.incomeOther' => 'Lainnya',
+			'category.title' => 'Kategori',
+			'category.accountEntryTitle' => 'Kategori',
+			'category.accountEntryBody' => 'Atur daftar kategori pemasukan dan pengeluaran.',
+			'category.expenseTab' => 'Pengeluaran',
+			'category.incomeTab' => 'Pemasukan',
+			'category.addAction' => 'Tambah kategori',
+			'category.addTitle' => 'Kategori baru',
+			'category.renameTitle' => 'Ganti nama kategori',
+			'category.nameHint' => 'Nama kategori',
+			'category.archiveAction' => 'Arsipkan',
+			'category.restoreAction' => 'Pulihkan',
+			'category.archivedSection' => 'Terarsip',
+			'category.archivedHint' => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.',
+			'category.emptyActive' => 'Belum ada kategori aktif.',
+			'category.archivedMessage' => ({required Object name}) => 'Kategori "${name}" diarsipkan.',
+			'category.restoredMessage' => ({required Object name}) => 'Kategori "${name}" dipulihkan.',
+			'language.label' => 'Bahasa',
+			'language.pickerTitle' => 'Pilih bahasa',
+			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
 			_ => null,
 		};
 	}

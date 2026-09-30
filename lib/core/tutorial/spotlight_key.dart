@@ -6,8 +6,11 @@ enum SpotlightKey {
   /// Kartu total saldo Beranda.
   homeBalance,
 
-  /// Slot CATAT navigasi bawah.
+  /// Tombol CATAT (FAB kanan bawah shell).
   homeRecord,
+
+  /// Tombol catat pakai suara (FAB di atas CATAT, ADR-027).
+  homeVoice,
 
   /// Arus bulan ini di Beranda.
   homeCashFlow,

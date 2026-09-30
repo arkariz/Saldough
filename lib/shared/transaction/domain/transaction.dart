@@ -11,7 +11,6 @@ sealed class Transaction extends Equatable {
     required this.date,
     required this.amount,
     required this.note,
-    this.categoryKey,
   }) : assert(amount > 0, 'Nominal transaksi harus positif; arah uang ditentukan jenisnya, bukan tandanya.');
 
   /// Identitas transaksi.
@@ -26,8 +25,9 @@ sealed class Transaction extends Equatable {
   /// Catatan bebas, boleh kosong.
   final String note;
 
-  /// Label pengelompokan, boleh kosong.
-  final String? categoryKey;
+  /// Kategori (ADR-026), boleh kosong. Hanya pemasukan dan pengeluaran yang
+  /// berkategori; transfer selalu `null`.
+  String? get categoryId => null;
 }
 
 /// Menambah saldo satu dompet.
@@ -39,12 +39,15 @@ final class IncomeTransaction extends Transaction {
     required super.amount,
     required super.note,
     required this.walletId,
-    super.categoryKey,
+    this.categoryId,
     this.freelancePaymentId,
   });
 
   /// Dompet yang bertambah.
   final String walletId;
+
+  @override
+  final String? categoryId;
 
   /// Pembayaran freelance yang melahirkan transaksi ini. Kalau terisi,
   /// transaksi ini milik pembayarannya: tidak bisa disunting atau dihapus
@@ -59,7 +62,7 @@ final class IncomeTransaction extends Transaction {
     DateTime? date,
     int? amount,
     String? note,
-    String? categoryKey,
+    String? categoryId,
     String? walletId,
   }) {
     return IncomeTransaction(
@@ -67,14 +70,14 @@ final class IncomeTransaction extends Transaction {
       date: date ?? this.date,
       amount: amount ?? this.amount,
       note: note ?? this.note,
-      categoryKey: categoryKey ?? this.categoryKey,
+      categoryId: categoryId ?? this.categoryId,
       walletId: walletId ?? this.walletId,
       freelancePaymentId: freelancePaymentId,
     );
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryKey, walletId, freelancePaymentId];
+  List<Object?> get props => [id, date, amount, note, categoryId, walletId, freelancePaymentId];
 }
 
 /// Mengurangi saldo satu dompet, dan boleh ditautkan ke satu pos anggaran.
@@ -86,12 +89,15 @@ final class ExpenseTransaction extends Transaction {
     required super.amount,
     required super.note,
     required this.walletId,
-    super.categoryKey,
+    this.categoryId,
     this.budgetItemId,
   });
 
   /// Dompet yang berkurang.
   final String walletId;
+
+  @override
+  final String? categoryId;
 
   /// Pos anggaran yang ditambahi angka terpakainya. `null` berarti
   /// pengeluaran di luar anggaran mana pun.
@@ -109,7 +115,7 @@ final class ExpenseTransaction extends Transaction {
     DateTime? date,
     int? amount,
     String? note,
-    String? categoryKey,
+    String? categoryId,
     String? walletId,
     String? budgetItemId,
   }) {
@@ -118,14 +124,14 @@ final class ExpenseTransaction extends Transaction {
       date: date ?? this.date,
       amount: amount ?? this.amount,
       note: note ?? this.note,
-      categoryKey: categoryKey ?? this.categoryKey,
+      categoryId: categoryId ?? this.categoryId,
       walletId: walletId ?? this.walletId,
       budgetItemId: budgetItemId ?? this.budgetItemId,
     );
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryKey, walletId, budgetItemId];
+  List<Object?> get props => [id, date, amount, note, categoryId, walletId, budgetItemId];
 }
 
 /// Memindahkan catatan uang antar dompet. Tidak mengubah total uang
@@ -140,7 +146,6 @@ final class TransferTransaction extends Transaction {
     required super.note,
     required this.fromWalletId,
     required this.toWalletId,
-    super.categoryKey,
     this.budgetItemId,
   }) : assert(fromWalletId != toWalletId, 'Transfer butuh dua dompet berbeda.');
 
@@ -167,7 +172,6 @@ final class TransferTransaction extends Transaction {
     DateTime? date,
     int? amount,
     String? note,
-    String? categoryKey,
     String? fromWalletId,
     String? toWalletId,
     String? budgetItemId,
@@ -177,7 +181,6 @@ final class TransferTransaction extends Transaction {
       date: date ?? this.date,
       amount: amount ?? this.amount,
       note: note ?? this.note,
-      categoryKey: categoryKey ?? this.categoryKey,
       fromWalletId: fromWalletId ?? this.fromWalletId,
       toWalletId: toWalletId ?? this.toWalletId,
       budgetItemId: budgetItemId ?? this.budgetItemId,
@@ -185,5 +188,5 @@ final class TransferTransaction extends Transaction {
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryKey, fromWalletId, toWalletId, budgetItemId];
+  List<Object?> get props => [id, date, amount, note, fromWalletId, toWalletId, budgetItemId];
 }

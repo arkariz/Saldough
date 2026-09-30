@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
+import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
@@ -9,6 +11,7 @@ import 'package:saldough/features/record/presentation/widgets/record_choice.dart
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
@@ -55,6 +58,11 @@ import 'package:state_management/state_management.dart';
 /// tanggalnya hari ini, bukan tanggal transaksi sumber. Kalau dompet
 /// transaksi sumber sudah nonaktif, dropdown dompet formulir tampil kosong
 /// (dompet nonaktif tidak ditawarkan CATAT) -- pemakai memilih dompet baru.
+///
+/// [draft] (Catat Cerdas, ADR-027 §3.4) menentukan jenis awal dan mengisi
+/// formulirnya, sama seperti [prefillFrom]: tetap mode CATAT, dan tidak ada
+/// yang tersimpan sebelum pengguna menekan Catat. Untuk transfer, dompet asal
+/// dan tujuan hanya diambil dari draf -- tanpa dompet bawaan.
 Future<void> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
@@ -63,6 +71,7 @@ Future<void> openRecordSheet(
   int? initialAmountSen,
   String? initialToWalletId,
   Transaction? prefillFrom,
+  RecordDraft? draft,
 }) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
@@ -75,6 +84,12 @@ Future<void> openRecordSheet(
 
   final initial =
       initialChoice ??
+      switch (draft?.kind) {
+        DraftKind.income => RecordChoice.income,
+        DraftKind.expense => RecordChoice.expense,
+        DraftKind.transfer => RecordChoice.transfer,
+        null => null,
+      } ??
       switch (prefillFrom) {
         IncomeTransaction() => RecordChoice.income,
         ExpenseTransaction() => RecordChoice.expense,
@@ -104,15 +119,19 @@ Future<void> openRecordSheet(
         RecordChoice.income => IncomeFormSheet(
           wallets: wallets,
           prefill: incomePrefill,
+          draft: draft?.kind == DraftKind.income ? draft : null,
           initialWalletId: walletFor(defaults.incomeWalletId),
-          recentCategories: defaults.incomeCategories,
+          frequentCategoryIds: defaults.incomeCategoryIds,
+          onCreateCategory: (name) => bloc.createCategory(CategoryKind.income, name),
           kindSwitcher: kindSwitcher,
         ),
         RecordChoice.expense => ExpenseFormSheet(
           wallets: wallets,
           prefill: expensePrefill,
+          draft: draft?.kind == DraftKind.expense ? draft : null,
           initialWalletId: walletFor(defaults.expenseWalletId),
-          recentCategories: defaults.expenseCategories,
+          frequentCategoryIds: defaults.expenseCategoryIds,
+          onCreateCategory: (name) => bloc.createCategory(CategoryKind.expense, name),
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,
           initialAmountSen: initialAmountSen,
@@ -121,6 +140,7 @@ Future<void> openRecordSheet(
         RecordChoice.transfer => TransferFormSheet(
           wallets: wallets,
           prefill: transferPrefill,
+          draft: draft?.kind == DraftKind.transfer ? draft : null,
           initialWalletId: transferFrom,
           budgetItems: budgetItems,
           initialBudgetItemId: initialBudgetItemId,

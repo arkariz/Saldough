@@ -2,122 +2,82 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/shared/category/category.dart';
 
-/// Nilai internal item "Lainnya" di menu -- BUKAN kategori yang tersimpan,
-/// hanya penanda untuk membuka kolom ketik. Memuat karakter kontrol supaya
-/// mustahil bertabrakan dengan kategori yang diketik pemakai.
-const _otherSentinel = '\u0000other';
+/// Nilai internal item "Tambah kategori" di menu -- BUKAN id kategori, hanya
+/// penanda untuk membuka dialog nama. Memuat karakter kontrol supaya mustahil
+/// bertabrakan dengan id kategori.
+const _addSentinel = '\u0000add';
 
 /// Pemilih kategori lewat dropdown [AppMenuSelectButton] -- tombol dan menu
-/// yang sama dengan penyaring kategori di layar Transaksi -- ditambah item
-/// "Lainnya" yang membuka kolom ketik bebas.
+/// yang sama dengan penyaring kategori di layar Transaksi (ADR-026 §3.6).
 ///
-/// Kategori TETAP teks bebas (`PROJECT_GLOSSARY.md` §"Konvensi penamaan" —
-/// "Nama dompet dan kategori disimpan sebagai data, bukan sebagai enum").
-/// [suggestions] murni pemercepat: memilih satu mengisi [controller],
-/// "Tanpa kategori" mengosongkannya (kategori opsional), dan "Lainnya"
-/// membuka kolom yang nilai akhirnya boleh apa saja.
-class RecordCategoryField extends StatefulWidget {
+/// Pilihannya kategori aktif berjenis [categoryKind] ([frequentIds] di atas),
+/// "Tanpa kategori" (kategori opsional), dan -- kalau [onCreate] diberikan --
+/// "Tambah kategori" yang membuat kategori baru lalu langsung memilihnya.
+/// Kategori terarsip yang sedang terpilih (menyunting transaksi lama) tetap
+/// tampil di tombol, tetapi tidak ditawarkan di menu.
+class RecordCategoryField extends StatelessWidget {
   /// Membuat [RecordCategoryField].
-  const RecordCategoryField({required this.controller, required this.suggestions, required this.kind, super.key});
+  const RecordCategoryField({
+    required this.value,
+    required this.onChanged,
+    required this.categoryKind,
+    this.frequentIds = const [],
+    this.onCreate,
+    super.key,
+  });
 
-  /// Pengendali teks kategori.
-  final TextEditingController controller;
+  /// Id kategori terpilih, atau `null`.
+  final String? value;
 
-  /// Saran kategori yang sering dipakai untuk jenis transaksi ini.
-  final List<String> suggestions;
+  /// Dipanggil dengan id kategori baru (atau `null` untuk "Tanpa kategori").
+  final ValueChanged<String?> onChanged;
 
-  /// Jenis transaksi: mewarnai kursor kolom ketik.
-  final TransactionKind kind;
+  /// Jenis kategori yang ditawarkan.
+  final CategoryKind categoryKind;
 
-  @override
-  State<RecordCategoryField> createState() => _RecordCategoryFieldState();
-}
+  /// Id kategori yang paling sering dipakai, ditawarkan paling atas (UX-3).
+  final List<String> frequentIds;
 
-class _RecordCategoryFieldState extends State<RecordCategoryField> {
-  late bool _customOpen;
+  /// Membuat kategori bernama tertentu; `null` berarti tanpa "Tambah kategori".
+  final Future<Category?> Function(String name)? onCreate;
 
-  /// Fokus otomatis kolom ketik hanya kalau dibuka lewat menu -- bukan saat
-  /// formulir sunting dibuka dengan kategori kustom yang sudah terisi, yang
-  /// akan memunculkan papan ketik tanpa diminta.
-  bool _focusCustom = false;
-
-  @override
-  void initState() {
-    super.initState();
-    final text = widget.controller.text;
-    _customOpen = text.isNotEmpty && !widget.suggestions.contains(text);
-  }
-
-  void _onSelected(String? value) {
-    if (value == null) {
-      setState(() => _customOpen = false);
-      widget.controller.text = '';
-    } else if (value == _otherSentinel) {
-      setState(() {
-        _customOpen = true;
-        _focusCustom = true;
-      });
-      // Mengganti saran yang sedang terpilih dengan kolom kosong.
-      if (widget.suggestions.contains(widget.controller.text)) widget.controller.text = '';
-    } else {
-      setState(() => _customOpen = false);
-      widget.controller.text = value;
+  Future<void> _onSelected(BuildContext context, String? selected) async {
+    if (selected != _addSentinel) {
+      onChanged(selected);
+      return;
     }
+    final create = onCreate;
+    if (create == null) return;
+    final name = await showCategoryNameDialog(context, title: t.category.addTitle);
+    if (name == null) return;
+    final created = await create(name);
+    if (created != null) onChanged(created.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
+    final selected = ActiveCategories.byId(value);
+    final options = ActiveCategories.selectable(categoryKind, frequentIds: frequentIds);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.categorySectionLabel, hint: t.record.optionalHint),
         const SizedBox(height: AppSpacing.xs),
-        // `ValueListenableBuilder` supaya label tombol ikut berubah saat
-        // pemakai mengetik di kolom kustom.
-        ValueListenableBuilder<TextEditingValue>(
-          valueListenable: widget.controller,
-          builder: (context, value, _) {
-            final text = value.text.trim();
-            final hasCategory = text.isNotEmpty;
-            return AppMenuSelectButton<String>(
-              icon: hasCategory ? categoryIconFor(text) : IconKey.categoryOther,
-              label: hasCategory ? text : (_customOpen ? t.record.categoryOtherLabel : t.record.categoryPlaceholder),
-              isPlaceholder: !hasCategory,
-              wrapLabel: true,
-              allLabel: t.record.categoryNoneLabel,
-              allIcon: IconKey.close,
-              options: [
-                for (final suggestion in widget.suggestions)
-                  (value: suggestion, label: suggestion, icon: categoryIconFor(suggestion)),
-                (value: _otherSentinel, label: t.record.categoryOtherLabel, icon: IconKey.categoryOther),
-              ],
-              onSelected: _onSelected,
-            );
-          },
+        AppMenuSelectButton<String>(
+          icon: selected != null ? categoryIcon(selected) : IconKey.categoryOther,
+          label: selected?.name ?? t.record.categoryPlaceholder,
+          isPlaceholder: selected == null,
+          wrapLabel: true,
+          allLabel: t.record.categoryNoneLabel,
+          allIcon: IconKey.close,
+          options: [
+            for (final category in options) (value: category.id, label: category.name, icon: categoryIcon(category)),
+            if (onCreate != null) (value: _addSentinel, label: t.record.categoryAddLabel, icon: IconKey.add),
+          ],
+          onSelected: (selected) => _onSelected(context, selected),
         ),
-        if (_customOpen) ...[
-          const SizedBox(height: AppSpacing.sm),
-          TransactionSlab(
-            radius: 4,
-            shadow: 2,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TextField(
-              controller: widget.controller,
-              autofocus: _focusCustom,
-              textCapitalization: TextCapitalization.sentences,
-              cursorColor: colors.kindInk(widget.kind),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                hintText: t.record.categoryCustomHint,
-                hintStyle: TextStyle(color: colors.textMuted),
-              ),
-            ),
-          ),
-        ],
       ],
     );
   }

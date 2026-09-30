@@ -1,6 +1,14 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/language/language.dart';
+import 'package:saldough/features/record/data/capture/firebase_ai_transaction_interpreter.dart';
+import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
+import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
+import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -19,25 +27,49 @@ final class RecordScope extends IsolatedScope {
     c
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
-      ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
+      ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>())
+      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
+    // Opsional: kontainer induk yang tidak menyediakannya (mis. uji layar
+    // lain) berarti suara dibuka tanpa bertanya bahasa.
+    if (parent.isRegistered<SpeechLanguagePrompt>()) {
+      c.registerSingleton<SpeechLanguagePrompt>(parent<SpeechLanguagePrompt>());
+    }
   }
 
   @override
   void register(GetIt c) {
-    c.registerLazySingleton<RecordBloc>(
-      () => RecordBloc(
-        walletRepository: c<WalletRepository>(),
-        transactionRepository: c<TransactionRepository>(),
-        budgetItemCatalog: c<BudgetItemCatalog>(),
-        recordTransaction: RecordTransaction(
+    c
+      // Catat Cerdas (ADR-027, ADR-029): penangkap suara dan penyusun draf.
+      // Aturan per paket bahasa; cloud (Firebase AI, T-11.7) hanya bila
+      // draf aturan ragu atau bahasanya tanpa paket.
+      ..registerLazySingleton<SpeechTranscriber>(SystemSpeechTranscriber.new)
+      ..registerLazySingleton<CaptureDraftComposer>(
+        () => CaptureDraftComposer(
+          ruleInterpreterFor: (language) => RuleBasedTransactionInterpreter(
+            language: language,
+            categories: () => ActiveCategories.notifier.value,
+          ),
+          cloudInterpreter: FirebaseAiTransactionInterpreter(),
+        ),
+      )
+      ..registerLazySingleton<RecordBloc>(
+        () => RecordBloc(
+          walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
-          recomputeWalletBalances: RecomputeWalletBalances(
-            walletRepository: c<WalletRepository>(),
+          budgetItemCatalog: c<BudgetItemCatalog>(),
+          createCategory: CreateCategory(repository: c<CategoryRepository>()),
+          voiceCaptureFactory: () =>
+              VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), composer: c<CaptureDraftComposer>()),
+          speechLanguagePrompt: c.isRegistered<SpeechLanguagePrompt>() ? c<SpeechLanguagePrompt>() : null,
+          recordTransaction: RecordTransaction(
             transactionRepository: c<TransactionRepository>(),
+            recomputeWalletBalances: RecomputeWalletBalances(
+              walletRepository: c<WalletRepository>(),
+              transactionRepository: c<TransactionRepository>(),
+            ),
           ),
         ),
-      ),
-      dispose: (bloc) => bloc.close(),
-    );
+        dispose: (bloc) => bloc.close(),
+      );
   }
 }

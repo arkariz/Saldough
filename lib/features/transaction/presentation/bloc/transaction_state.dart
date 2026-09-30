@@ -120,12 +120,11 @@ final class TransactionState extends UiState<TransactionState> {
   /// `id` dompet yang aktif difilter, `null` berarti semua dompet.
   final String? walletFilter;
 
-  /// Kunci kategori yang aktif difilter, `null` berarti semua kategori.
+  /// Id kategori yang aktif difilter, `null` berarti semua kategori.
   final String? categoryFilter;
 
-  /// Kunci kategori DISTINCT yang benar-benar muncul di [rawTransactions] --
-  /// bukan daftar tetap (`PROJECT_GLOSSARY.md` §"Konvensi penamaan": kategori
-  /// adalah data bebas, bukan enum). Dihitung ulang tiap [rawTransactions]
+  /// Id kategori DISTINCT yang benar-benar muncul di [rawTransactions], urut
+  /// nama (ADR-026) -- bukan seluruh daftar kategori. Dihitung ulang tiap [rawTransactions]
   /// berubah (bulan baru dimuat), bukan tiap filter berubah.
   final List<String> categoryOptions;
 

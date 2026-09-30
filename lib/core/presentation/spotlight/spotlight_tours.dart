@@ -28,6 +28,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
   final (title, body) = switch (key) {
     SpotlightKey.homeBalance => (tr.homeBalanceTitle, tr.homeBalanceBody),
     SpotlightKey.homeRecord => (tr.homeRecordTitle, tr.homeRecordBody),
+    SpotlightKey.homeVoice => (tr.homeVoiceTitle, tr.homeVoiceBody),
     SpotlightKey.homeCashFlow => (tr.homeCashFlowTitle, tr.homeCashFlowBody),
     SpotlightKey.homeBudget => (tr.homeBudgetTitle, tr.homeBudgetBody),
     SpotlightKey.homeFreelance => (tr.homeFreelanceTitle, tr.homeFreelanceBody),

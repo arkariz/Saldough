@@ -6,6 +6,10 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Tanukonomy memakai mikrofon saat kamu mencatat transaksi dengan suara.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Tanukonomy mengubah ucapanmu menjadi teks untuk mengisi formulir catatan transaksi.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Tanukonomy</string>
 	<key>CFBundleExecutable</key>

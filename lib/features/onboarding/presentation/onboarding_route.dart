@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -20,6 +21,13 @@ Widget buildOnboardingRoute(BuildContext context, GoRouterState state) {
   final mode = state.extra is OnboardingMode ? state.extra! as OnboardingMode : OnboardingMode.firstRun;
   return OnboardingPage(
     mode: mode,
+    // ADR-028 §3.4: bahasa langsung diterapkan dan disimpan saat diketuk.
+    onLanguageSelected: (locale) async {
+      final changed = await ScopeProvider.of(context)<ChangeAppLanguage>()(locale);
+      if (changed.isLeft() && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.common.genericErrorMessage)));
+      }
+    },
     onFinished: (outcome, currency) async {
       if (mode == OnboardingMode.review) {
         context.pop();

@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       tour: TourId.home,
       ready: !state.hasNoWallets,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.xl),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.fabClearance),
         children: [
           SpotlightTarget(
             spotlightKey: SpotlightKey.homeBalance,

@@ -20,6 +20,7 @@ import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -59,6 +60,7 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
   });
@@ -71,7 +73,7 @@ void main() {
   }
 
   group('AppShellPage', () {
-    testWidgets('menampilkan lima tujuan navigasi dengan CATAT di tengah', (tester) async {
+    testWidgets('empat tab navigasi, CATAT dan suara jadi tombol mengambang (T-11.5)', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
       // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
@@ -84,17 +86,23 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      expect(find.byType(NavigationDestination), findsNWidgets(5));
+      expect(find.byType(NavigationDestination), findsNWidgets(4));
       final labels = tester.widgetList<NavigationDestination>(find.byType(NavigationDestination)).map((d) => d.label);
       expect(
         labels,
         [
           t.appShell.homeTabLabel,
           t.appShell.budgetTabLabel,
-          t.appShell.recordAction,
           t.appShell.transactionsTabLabel,
           t.appShell.walletsTabLabel,
         ],
+      );
+      expect(find.byKey(const ValueKey('shell-record-fab')), findsOneWidget);
+      expect(find.byKey(const ValueKey('shell-voice-fab')), findsOneWidget);
+      // Tombol suara di atas tombol CATAT.
+      expect(
+        tester.getCenter(find.byKey(const ValueKey('shell-voice-fab'))).dy,
+        lessThan(tester.getCenter(find.byKey(const ValueKey('shell-record-fab'))).dy),
       );
     });
 
@@ -116,7 +124,7 @@ void main() {
       expect(nav.selectedIndex, 0);
     });
 
-    testWidgets('menekan tujuan Dompet berpindah ke tab Dompet, melompati CATAT', (tester) async {
+    testWidgets('menekan tujuan Dompet berpindah ke tab Dompet', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
       // Dua `pump()` -- ScopeWidget<TransactionScope> (T-2.5) bersarang setelah
@@ -134,7 +142,7 @@ void main() {
 
       expect(find.widgetWithText(AppBar, t.appShell.walletsTabLabel), findsOneWidget);
       final nav = tester.widget<NavigationBar>(find.byType(NavigationBar));
-      expect(nav.selectedIndex, 4);
+      expect(nav.selectedIndex, 3);
     });
 
     testWidgets('menekan tujuan Transaksi berpindah ke tab Transaksi', (tester) async {
@@ -169,7 +177,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       expect(find.text(t.record.kindExpense.toUpperCase()), findsOneWidget);
@@ -199,7 +207,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
       await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
       await tester.pumpAndSettle();
@@ -224,7 +232,7 @@ void main() {
       await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.budgetTabLabel));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       // Tutup lembar dengan tap di luar (barrier).
@@ -253,7 +261,7 @@ void main() {
         await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
         await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-        await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+        await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
         await tester.pumpAndSettle();
         await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
         await tester.pumpAndSettle();
@@ -290,7 +298,7 @@ void main() {
         await tester.pump();
       }
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       // Satu ketukan: formulir Pengeluaran, bukan lembar pilihan.
@@ -321,6 +329,7 @@ void main() {
         ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+        ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 
@@ -341,7 +350,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       expect(find.byType(RecordFormHost), findsNothing);
@@ -401,7 +410,7 @@ void main() {
     testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dan dompet; berikutnya tidak', (tester) async {
       await openShellWithTours(tester);
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       // Tanpa pos anggaran yang ditawarkan, langkah pos dilewati.
@@ -417,10 +426,13 @@ void main() {
 
       // Tur tidak menutup lembar CATAT di baliknya.
       expect(find.byType(RecordFormHost), findsOneWidget);
-      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
+      final back = find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft);
+      await tester.ensureVisible(back);
+      await tester.pumpAndSettle();
+      await tester.tap(back);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
       expect(find.text(t.tour.recordKindTitle), findsNothing);
       expect(find.byType(RecordFormHost), findsOneWidget);
@@ -429,7 +441,7 @@ void main() {
     testWidgets('memilih Masuk pertama kali menyorot jalur Freelance di atas nominal', (tester) async {
       await tutorials.markStepsSeen([SpotlightKey.recordKind, SpotlightKey.recordAmount, SpotlightKey.recordWallet]);
       await openShellWithTours(tester);
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
       // Pengeluaran sudah dikenal: tidak ada tur.
       expect(find.text(t.tour.recordKindTitle), findsNothing);
@@ -446,7 +458,7 @@ void main() {
 
     testWidgets('tombol kembali saat tur menutup tur, bukan lembar CATAT', (tester) async {
       await openShellWithTours(tester);
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.recordAction));
+      await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
       expect(find.text(t.tour.recordKindTitle), findsOneWidget);
 

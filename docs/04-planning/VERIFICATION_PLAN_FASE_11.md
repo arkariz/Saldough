@@ -134,7 +134,62 @@ Tidak ada temuan R1–R3, R5–R7. Temuan R4 atau kosmetik boleh masuk antrean.
 
 ### Hasil
 
-_(diisi saat verifikasi)_
+**Tanggal:** 30 Sep 2026 · **Perangkat:** Samsung Galaxy M15 5G (SM-M156B),
+Android 16, bahasa perangkat Inggris · **Build:** debug dari worktree
+`57772e8` (M1) dan `a1bcc5d` (sebelum Fase 11).
+
+**Status: TIDAK LULUS** — temuan F1 (R1), F2 dan F3 (R5) harus diperbaiki
+sebelum build apa pun diunggah ke closed testing.
+
+**Otomatis:** `flutter analyze` bersih; 691 uji lulus. Probe tambahan
+(`probe_test` di luar repo, 30 kasus) gagal di 12 kasus → F2–F5.
+
+**Uji migrasi di HP (data lama sungguhan):** build `a1bcc5d` dipasang,
+dibuat 1 dompet (BCA, saldo awal Rp5.000.000) dan 17 transaksi lewat UI lama
+(15 pengeluaran, 2 pemasukan; 10 berlabel, 7 tanpa label), lalu build M1
+dipasang **di atasnya** tanpa hapus data. Isi Hive diperiksa sebelum/sesudah.
+
+| Label lama | Hasil migrasi | Catatan |
+|---|---|---|
+| Makan, Kopi, KOPI, Food | `builtin.food` "Food & Drinks" | **4 label pengguna melebur jadi satu** (F1) |
+| air | `builtin.bills` "Bills" | salah makna bila "air mineral" (F1/F5) |
+| Data | `builtin.internet` "Phone & Internet" | alias `data` (F1/F5) |
+| Gaji | `builtin.salary` "Salary" | judul transaksi berubah bahasa (perangkat en) |
+| Proyek | `builtin.freelance` "Freelance" | alias |
+| Arisan, arisan | `legacy.expense.arisan` "Arisan" | ✅ ejaan beda digabung benar |
+| (tanpa label) ×7 | tanpa kategori | ✅ |
+
+Lulus: 17 transaksi utuh, saldo BCA tetap Rp10.655.000, `schemaVersion` 2,
+`categoryKey` hilang seluruhnya, penanda migrasi tertulis; buka ulang tidak
+menulis apa pun (ukuran berkas Hive identik) dan tidak ada kategori ganda;
+layar Kategori (ganti nama "Bills"→"Tagihan", arsip "Food & Drinks") langsung
+tampak di Riwayat tanpa restart; kategori terarsip tetap jadi judul transaksi
+lama dan tidak ditawarkan di CATAT; kategori sering dipakai tampil di atas;
+"Add category" dari CATAT langsung terpilih.
+
+**Tidak diuji di perangkat (alasan):** teks 2x dan lebar 360dp, serta
+penanaman nama kategori dalam bahasa Indonesia — butuh mengubah setelan
+sistem HP pemilik; draf CATAT (T-11.4) — belum ada jalur UI di M1, tercakup
+uji widget; label pada transfer lama — UI lama tidak bisa membuatnya,
+tercakup uji unit.
+
+#### Temuan
+
+| # | Tingkat | Risiko | Temuan | Bukti |
+|---|---|---|---|---|
+| F1 | **Blokir** | R1 | Migrasi mencocokkan label lama ke kategori bawaan lewat **alias**, sehingga label berbeda milik pengguna melebur permanen dan judul transaksi lama berubah (termasuk bahasanya). Tidak bisa dibatalkan setelah build terpasang. | Tabel di atas; `migrate_legacy_categories.dart:68` → `category_matcher.dart:18` |
+| F2 | **Blokir** | R5 | Nominal salah tanpa issue: "satu setengah juta" → 500.000; "dua setengah juta" → 500.000; "satu koma lima juta" → 5.000.000; "kopi 25 ribu 2 gelas" → 25.002; "tiga puluh ribu dua bungkus" → 30.002; "Rp 99.999.999.999.999.999" meluap jadi negatif. | probe P1–P3b, P4b; `spoken_amount_parser.dart` (`setengah`, digit sesudah skala, tanpa batas) |
+| F3 | **Blokir** | R5 | Deret digit ≥ 20 (nomor referensi di notifikasi/struk) melempar `FormatException` dari `int.parse`; lewat interpreter aturan ini membuat `VoiceCaptureBloc` tertahan di tahap "memahami". | probe P4 |
+| F4 | Tinggi | R6 | Kata kunci jenis terlalu longgar: "bayar masuk tol", "dapat diskon beli baju", "beli pulsa bonus kuota" → **pemasukan**, tanpa issue, jadi draf tampak yakin dan tidak dikirim ke cloud (ADR-027 §3.5). | probe I1–I3; `rule_based_transaction_interpreter.dart` `_incomeWords` |
+| F5 | Sedang | R6 | Alias bawaan terlalu lebar untuk pencocokan kalimat: "beli air mineral" → Tagihan; juga `data`, `anak`, `les`, `kos`, `fee`, `project`. | probe I4; `built_in_categories.dart` |
+| F6 | Sedang | R1 | Bila membaca label lama gagal, kategori bawaan tidak pernah disimpan (pemilih CATAT kosong); kegagalan migrasi hanya `developer.log`, tidak dilaporkan ke Crashlytics. | `migrate_legacy_categories.dart:58-83`, `main.dart:59` |
+| F7 | Rendah | R3 | Menyunting transaksi skema 1 yang **pindah bulan** sebelum migrasi berhasil membuang labelnya (`keepingLegacyCategoryOf` hanya melihat dokumen bulan tujuan). | `transaction_repository_impl.dart:117-122` |
+| F8 | Rendah | R4 | `ActiveCategories` memberi tahu di setiap baca (daftar baru selalu dianggap berubah) → seluruh aplikasi dibangun ulang tiap `listCategories`. | `category_repository_impl.dart` `_publish` |
+| F9 | Rendah | — | Ganti nama boleh menghasilkan dua kategori sejenis bernama sama; "Catat lagi" bisa mencatat ke kategori terarsip. | `category_manager_bloc.dart`, form `prefill` |
+| F10 | Catatan | — | `RecordBloc.createCategory` metode publik (bukan event) — perlu diterima pemilik atau dicatat sebagai utang desain. | `record_bloc.dart` |
+
+**Butuh keputusan pemilik:** F1 (KT-3 di TASK_LIST).
+
 
 ---
 

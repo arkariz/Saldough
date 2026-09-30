@@ -90,6 +90,15 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
+- **KT-3** Cara migrasi label kategori lama (temuan F1 verifikasi M1,
+  [VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): saat ini
+  label dicocokkan ke kategori bawaan lewat alias sehingga "Makan", "Kopi",
+  dan "Food" melebur jadi satu. Pilihan: (a) tiap label unik jadi kategori
+  sendiri, hanya beda huruf/spasi yang digabung; (b) gabung hanya bila sama
+  persis dengan nama kategori bawaan atau saran lama aplikasi ("Makan",
+  "Gaji", "Transport", "Tagihan", …); (c) tetap seperti sekarang. Memblokir
+  build closed testing berikutnya.
+
 KT-1 (ringkasan anggaran memindai seluruh riwayat transaksi) diputuskan
 27 Sep 2026 dan dikerjakan di T-8.1.
 
@@ -1585,6 +1594,10 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
 - [ ] **T-11.8** Pindah ke tier berbayar (Blaze) sebelum rilis publik:
       billing, batas anggaran, cek ulang harga; tanpa perubahan kode.
       Dikerjakan pemilik; agen memperbarui dokumen.
+- [ ] **T-11.10** Perbaiki temuan verifikasi M1 F1–F6
+      ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)); F1
+      menunggu KT-3. Probe kasus gagal dijadikan uji regresi. Setelah itu
+      ulangi uji migrasi di HP. F7–F10 boleh masuk antrean.
 - [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
       transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
 

@@ -4,15 +4,18 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/features/account/presentation/pages/account_page.dart';
+import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/routes.dart';
 
 void main() {
   late FakeAuthRepository repository;
@@ -22,6 +25,7 @@ void main() {
   Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn}) async {
     repository = FakeAuthRepository(signedIn: signedIn);
     final container = GetIt.asNewInstance()
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerSingleton<AuthRepository>(repository)
       ..registerSingleton<CurrencyPreferenceRepository>(
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
@@ -35,7 +39,10 @@ void main() {
         container: container,
         child: MaterialApp(
           home: Builder(
-            builder: (context) => TextButton(onPressed: () => openAccountPage(context), child: const Text('buka')),
+            builder: (context) => TextButton(
+              onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
+              child: const Text('buka'),
+            ),
           ),
         ),
       ),

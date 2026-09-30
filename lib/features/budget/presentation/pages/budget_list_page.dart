@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -7,7 +8,7 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/budget_actions.dart';
-import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_template_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_empty_states.dart';
@@ -37,6 +38,15 @@ class _BudgetListPageState extends State<BudgetListPage> {
   void initState() {
     super.initState();
     context.read<BudgetBloc>().add(const BudgetStarted());
+  }
+
+  /// Rincian memakai `BudgetBloc` miliknya sendiri (ADR-030 §3.3), jadi
+  /// daftar ini disegarkan sesudah rinciannya ditutup (sunting, arsip,
+  /// hapus).
+  Future<void> _openDetail(BuildContext context, String budgetId) async {
+    final bloc = context.read<BudgetBloc>();
+    await context.pushRoute(BudgetRouteKeys.detail, BudgetDetailInput(budgetId: budgetId));
+    bloc.add(const BudgetRefreshed());
   }
 
   @override
@@ -114,7 +124,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       budget: budget,
                       progress: state.progress[budget.id]!,
                       walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
-                      onTap: () => openBudgetDetail(context, budget),
+                      onTap: () => _openDetail(context, budget.id),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],

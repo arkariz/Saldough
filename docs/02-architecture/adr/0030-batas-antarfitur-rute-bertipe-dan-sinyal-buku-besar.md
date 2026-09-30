@@ -67,12 +67,18 @@ Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget
 
 ### 3.3 Navigasi antarfitur lewat kunci rute (ADR-0004 ditegakkan)
 
-1. Setiap **layar penuh** didaftarkan sebagai `RouteNode` di
+1. Setiap layar yang dibuka **dari luar fiturnya atau dari tab** didaftarkan
+   sebagai `RouteNode` di
    `features/<fitur>/presentation/navigation/<fitur>_route_module.dart`,
    kuncinya di `<fitur>_route_keys.dart` (`RouteKey<TInput>` + `RouteInput`).
-   Fitur lain hanya boleh mengimpor berkas kunci. `Navigator.push` dengan
-   `MaterialPageRoute` untuk layar fitur tidak dipakai lagi, termasuk di dalam
-   satu fitur, supaya aturannya satu dan bisa dicek mesin.
+   Fitur lain hanya boleh mengimpor berkas kunci. Daftar modulnya
+   `RootModule.featureModules`.
+   *Direvisi saat implementasi (T-12.5):* layar anak di dalam satu alur
+   fitur yang berbagi bloc pembukanya (template anggaran, rincian proyek
+   freelance, kategori) tetap `Navigator.push` di dalam fiturnya. Menjadikan
+   mereka rute berarti bloc terpisah dan penyegaran tambahan tanpa
+   mengurangi keterikatan antarfitur; batas yang dicek mesin adalah impor
+   antarfitur, bukan `MaterialPageRoute`.
 2. Pembangun `RouteNode` memasang dependensinya sendiri: `ScopeProvider.of(context)`
    (kontainer akar) → `ScopeWidget` fiturnya → `BlocProvider.value` →
    `EffectListener`, dibungkus `PixelTheme`. **Tidak ada lagi bloc yang
@@ -84,13 +90,28 @@ Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget
    - dari ketukan widget tanpa logika: helper bertipe
      `context.pushRoute(XRouteKeys.y, input)` di `core/foundation/navigation/`,
      yang memaksa pasangan kunci–input cocok saat kompilasi dan
-     mengembalikan `Future` hasil rute.
-4. **Lembar modal yang dibuka lintas fitur juga rute.** Di Saldough,
-   `RouteTransition.slideFromBottom` dirender `RouteNodeGoRouterExt` sebagai
-   `ModalBottomSheetRoute` (layar penuh, sudut atas `AppRadius.sm`, sama
-   dengan `showFullScreenSheet`), jadi CATAT dan sunting transaksi tetap
-   tampil sebagai lembar. Lembar formulir yang hanya dibuka di dalam satu
-   fitur tetap `showFullScreenSheet`.
+     mengembalikan `Future` hasil rute. Ia membangun rute Flutter dari
+     `RouteNode` yang sama dengan yang didaftarkan ke `go_router`, lalu
+     mendorongnya ke Navigator akar (registri diambil dari kontainer akar);
+     `go_router` tetap memegang rute bernama untuk `NavigateGoEffect`, menu
+     pengembang, dan tautan dalam.
+4. **Lembar modal lintas fitur juga rute.** Di Saldough,
+   `RouteTransition.slideFromBottom` dirender sebagai `ModalBottomSheetRoute`
+   (layar penuh, sudut atas `AppRadius.sm`, tema pemanggil ditangkap, sama
+   dengan `showFullScreenSheet`), dan `RouteTransition.none` sebagai **rute
+   alur transparan**: tak terlihat, memegang scope fiturnya, membuka lembar
+   dan dialognya sendiri, lalu menutup dirinya dengan hasilnya. CATAT,
+   sunting transaksi, dan catat pakai suara (`record.sheet`, `record.edit`,
+   `record.voice`) adalah alur, supaya `RecordBloc` hidup sampai penyimpanan
+   dan snackbar hasilnya selesai walau lembarnya sudah tertutup -- tampilan
+   dan urutannya sama dengan sebelum Fase 12. Lembar formulir yang hanya
+   dibuka di dalam satu fitur tetap `showFullScreenSheet`.
+6. **Rute yang menulis lalu menutup diri menunggu hasilnya dulu**
+   (`bloc.stream.firstWhere((s) => s.effect != null)`), karena blocnya ikut
+   tertutup bersama rutenya; snackbar tetap tampil karena `ScaffoldMessenger`
+   milik aplikasi. "Urungkan" hapus transaksi memanggil `RecordTransaction`
+   langsung (bukan bloc yang sudah tertutup) dan menampilkan hasilnya lewat
+   `feedbackSnackBar` dengan palet yang diambil saat rute masih hidup.
 5. Kunci berformat `<fitur>.<layar>`. Input membawa id atau entitas yang
    sudah dimuat; tautan dalam belum dibutuhkan, jadi `defaultInput` hanya
    didaftarkan untuk rute tanpa argumen.
@@ -133,10 +154,10 @@ Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget
 - Bidang formulir generik `budget_form_fields.dart` → `core/presentation/widgets/`
   dengan nama `AppForm*`. `wallet_select_field` → `shared/wallet/presentation/`,
   `transaction_date_group_card` → `shared/transaction/presentation/`,
-  `account_avatar` → `shared/auth/presentation/` (§3.2). Dua yang terakhir
-  menunggu tahapnya: kartu grup tanggal bergantung pada pengelompokan yang
-  baru menjadi domain di §3.6 (tahap 2), dan avatar membuka layar Akun,
-  jadi butuh kunci rute (tahap 4).
+  `account_avatar` → `shared/auth/presentation/` (§3.2; tombolnya menerima
+  `onPressed`, karena `shared/` tidak boleh mengenal kunci rute fitur).
+  Kartu grup tanggal pindah di tahap 2 (bergantung pada pengelompokan di
+  §3.6), avatar di tahap 4.
 
 ### 3.6 Logika query keluar dari bloc
 
@@ -157,9 +178,10 @@ menjadi fungsi murni di `shared/transaction/domain/` dengan uji unit;
 
 Batas di atas dicek `test/architecture/import_boundaries_test.dart`, yang
 membaca impor `lib/`: `core/` tidak mengimpor `shared/`/`features/`; fitur
-hanya mengimpor fitur lain lewat `*_route_keys.dart`; `shared/` saling impor
-lewat barrel; `domain/` tanpa Flutter dan tanpa `data/`/`presentation/`;
-`presentation/` tanpa `data/`; tidak ada `MaterialPageRoute` di `features/`.
+hanya mengimpor fitur lain lewat `*_route_keys.dart`, kecuali adapter di
+`data/adapters/` yang mengimplementasikan port di `domain/` fitur konsumen
+(pola port ADR-0009); `shared/` saling impor lewat barrel; `domain/` tanpa
+Flutter dan tanpa `data/`/`presentation/`; `presentation/` tanpa `data/`.
 
 ## 4. Opsi yang dipertimbangkan
 
@@ -275,4 +297,4 @@ Urutan dan satu commit per tahap (T-12.1 s.d. T-12.6 di TASK_LIST):
 **Penulis keputusan:** Tim Saldough
 **Ditinjau oleh:** Pemilik proyek (keputusan A1 dan A7, 30 Sep 2026)
 **Tanggal disetujui:** 2026-09-30
-**Status implementasi:** Direncanakan — Fase 12
+**Status implementasi:** Berjalan — Fase 12; §3.1–§3.7 diimplementasikan (T-12.2 s.d. T-12.5), §3.8 di T-12.6

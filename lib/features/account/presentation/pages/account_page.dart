@@ -1,41 +1,15 @@
-import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/account/di/account_scope.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
-import 'package:saldough/features/account/presentation/bloc/category_manager_bloc.dart';
-import 'package:saldough/features/account/presentation/widgets/account_avatar.dart';
 import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/language_setting.dart';
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/auth/auth_presentation.dart';
 import 'package:state_management/state_management.dart';
-
-/// Membuka layar Akun sebagai layar penuh, lengkap dengan [AccountScope]
-/// sendiri — pola yang sama seperti `openFreelanceOverview` (ADR-023).
-Future<void> openAccountPage(BuildContext context) {
-  final navigator = Navigator.of(context, rootNavigator: true);
-  final parentContainer = ScopeProvider.of(navigator.context);
-  return navigator.push(
-    MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: ScopeWidget<AccountScope>(
-          create: () => AccountScope(parentContainer: parentContainer),
-          builder: (context, scope) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: scope.container<AccountBloc>()),
-              BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
-            ],
-            child: const EffectListener<AccountBloc, AccountState>(child: AccountPage()),
-          ),
-        ),
-      ),
-    ),
-  );
-}
 
 /// Layar Akun (ADR-023, ADR-024). Akun opsional: belum masuk menawarkan
 /// Google (dan email/sandi khusus peninjau di balik tautan); sudah masuk

@@ -3,6 +3,8 @@ import 'package:saldough/core/foundation/effect_handler/src/nav_effect_handler.d
 import 'package:saldough/core/foundation/effect_handler/src/snackbar_effect_handler.dart';
 import 'package:state_management/state_management.dart';
 
+export 'src/snackbar_effect_handler.dart' show feedbackSnackBar;
+
 /// Mendaftarkan seluruh penangan efek baku Saldough ke [globalEffectRegistry].
 ///
 /// Dipanggil sekali, SEBELUM `runApp` — lihat `main.dart` dan

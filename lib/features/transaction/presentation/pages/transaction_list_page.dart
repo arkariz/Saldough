@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/features/record/presentation/open_record_sheet.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
-import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_empty_states.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_month_header.dart';
@@ -191,7 +192,7 @@ class _Body extends StatelessWidget {
         sliver: SliverToBoxAdapter(
           child: TransactionEmptyMonthState(
             // Daftar dimuat ulang oleh `LedgerChanges` (ADR-030 §3.4).
-            onRecord: () => openRecordSheet(context),
+            onRecord: () => context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput()),
           ),
         ),
       );
@@ -213,7 +214,8 @@ class _Body extends StatelessWidget {
                   groups: state.crossMonthGroups,
                   walletsById: walletsById,
                   onSearch: () => bloc.add(const TransactionSearchAcrossMonthsRequested()),
-                  onTransactionTap: (transaction) => openTransactionDetail(context, transaction),
+                  onTransactionTap: (transaction) =>
+                    context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
                 ),
             ],
           ),
@@ -233,7 +235,8 @@ class _Body extends StatelessWidget {
         itemBuilder: (context, index) => TransactionDateGroupCard(
           group: state.groups[index],
           walletsById: walletsById,
-          onTransactionTap: (transaction) => openTransactionDetail(context, transaction),
+          onTransactionTap: (transaction) =>
+                    context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
           firstRowSpotlightKey: index == 0 ? SpotlightKey.txnRow : null,
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -35,6 +36,7 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/routes.dart';
 
 /// Uji Beranda (Fase 6, FR-HOME-001..005) lewat shell sungguhan dengan
 /// penyimpanan di memori dan implementasi port yang asli.
@@ -60,6 +62,7 @@ void main() {
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
       ..registerLazySingleton<BudgetItemCatalog>(() => BudgetItemCatalogImpl(repository: budgetRepository))

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
+import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
@@ -155,7 +157,7 @@ Future<void> openRecordSheet(
   // CATAT → Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
   // pemanggil menyegarkan saldo sesudahnya seperti biasa.
   if (result is OpenFreelance) {
-    await openFreelanceOverview(context);
+    await context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput());
     return;
   }
   if (result is RecordEvent) {

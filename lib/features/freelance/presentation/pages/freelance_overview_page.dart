@@ -1,11 +1,9 @@
-import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/features/freelance/di/freelance_scope.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
 import 'package:saldough/features/freelance/presentation/freelance_actions.dart';
@@ -14,40 +12,6 @@ import 'package:saldough/features/freelance/presentation/widgets/freelance_cards
 import 'package:saldough/features/freelance/presentation/widgets/freelance_notice.dart';
 import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
 import 'package:state_management/state_management.dart';
-
-/// Membuka Ikhtisar Freelance sebagai layar penuh, lengkap dengan
-/// `FreelanceScope`-nya sendiri.
-///
-/// Titik masuk (FR-FRL-005) — semuanya mendarat di layar yang SAMA:
-/// CATAT → Catat Pemasukan → kartu Freelance (`openRecordSheet`), dan
-/// ringkasan freelance di Beranda (Fase 6). Freelance bukan tujuan navigasi
-/// bawah, jadi lingkupnya hidup selama layar ini terbuka saja.
-///
-/// Pemanggil yang memegang bloc dompet/transaksi/anggaran menyegarkannya
-/// sesudah `Future` ini selesai, karena mencatat pembayaran diterima
-/// menambah saldo.
-///
-/// Kontainer induk diambil dari context Navigator akar, bukan dari
-/// [context]: di dalam shell, `ScopeProvider` terdekat adalah kontainer scope
-/// fitur lain (mis. `RecordScope`) yang tidak membawa `FreelanceRepository`.
-/// Navigator akar berada tepat di bawah `ScopeProvider` akar (`app.dart`).
-Future<void> openFreelanceOverview(BuildContext context) {
-  final navigator = Navigator.of(context, rootNavigator: true);
-  final parentContainer = ScopeProvider.of(navigator.context);
-  return navigator.push(
-    MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: ScopeWidget<FreelanceScope>(
-          create: () => FreelanceScope(parentContainer: parentContainer),
-          builder: (context, scope) => BlocProvider.value(
-            value: scope.container<FreelanceBloc>(),
-            child: const EffectListener<FreelanceBloc, FreelanceState>(child: FreelanceOverviewPage()),
-          ),
-        ),
-      ),
-    ),
-  );
-}
 
 /// Ikhtisar Freelance (FR-FRL-005, T-5.9): satu layar tanpa tab — kartu
 /// aturan, ringkasan upah & jam, lalu kartu proyek. Worklog dan pembayaran

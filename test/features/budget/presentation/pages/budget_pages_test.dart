@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -29,6 +30,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
+import '../../../../helpers/routes.dart';
 
 /// Uji alur layar Anggaran lewat shell sungguhan dengan penyimpanan di
 /// memori: daftar (T-4.5), rincian (T-4.10), dan pintasan CATAT yang membuka
@@ -68,6 +70,7 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
       ..registerLazySingleton<BudgetItemCatalog>(() => BudgetItemCatalogImpl(repository: budgetRepository))

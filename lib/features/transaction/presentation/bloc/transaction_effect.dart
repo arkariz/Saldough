@@ -16,10 +16,17 @@ extension on TransactionBloc {
   /// `snackbar_effect_handler.dart` menyebut keduanya memang belum
   /// disambungkan ke bloc mana pun, dan `CallbackEffect` sudah menyediakan
   /// jalan langsung ke `BuildContext` tanpa mekanisme baru.
+  ///
+  /// Urungkan memanggil `RecordTransaction` langsung, bukan bloc ini: saat
+  /// diketuk, rute rincian pemilik bloc ini biasanya sudah tertutup
+  /// (ADR-030 §3.3). `LedgerChanges` memuat ulang layar yang tampil, dan
+  /// hasilnya ditampilkan dengan palet yang diambil sekarang.
   UiEffect _effectDeletedWithUndo(Transaction transaction) => CallbackEffect(
     callback: (context) {
       final colors = context.appColors;
-      ScaffoldMessenger.of(context).showSnackBar(
+      final messenger = ScaffoldMessenger.of(context);
+      final restore = _recordTransaction;
+      messenger.showSnackBar(
         SnackBar(
           content: Text(t.transaction.deletedMessage, style: TextStyle(color: colors.background)),
           backgroundColor: colors.textPrimary,
@@ -27,7 +34,18 @@ extension on TransactionBloc {
           action: SnackBarAction(
             label: t.transaction.undoDeleteAction,
             textColor: colors.accent,
-            onPressed: () => add(TransactionRestored(transaction)),
+            onPressed: () async {
+              final result = await restore(transaction);
+              messenger.showSnackBar(
+                feedbackSnackBar(colors, switch (result) {
+                  Left(value: final failure) => ShowSnackBarEffect(
+                    message: failure.userMessage ?? t.common.genericErrorMessage,
+                    severity: .error,
+                  ),
+                  Right() => ShowSnackBarEffect(message: t.transaction.restoredMessage, severity: .success),
+                }),
+              );
+            },
           ),
         ),
       );

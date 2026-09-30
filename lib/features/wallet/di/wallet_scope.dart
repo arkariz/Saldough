@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -22,17 +23,26 @@ final class WalletScope extends IsolatedScope {
 
   @override
   void register(GetIt c) {
-    c.registerLazySingleton<WalletBloc>(
-      () => WalletBloc(
-        ledgerChanges: c<LedgerChanges>(),
-        walletRepository: c<WalletRepository>(),
-        transactionRepository: c<TransactionRepository>(),
-        recomputeWalletBalances: RecomputeWalletBalances(
+    c
+      ..registerLazySingleton<WalletBloc>(
+        () => WalletBloc(
+          ledgerChanges: c<LedgerChanges>(),
           walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: c<WalletRepository>(),
+            transactionRepository: c<TransactionRepository>(),
+          ),
         ),
-      ),
-      dispose: (bloc) => bloc.close(),
-    );
+        dispose: (bloc) => bloc.close(),
+      )
+      // Riwayat rincian dompet (ADR-030 §3.3); hanya dibuat rute rincian.
+      ..registerLazySingleton<WalletActivityBloc>(
+        () => WalletActivityBloc(
+          transactionRepository: c<TransactionRepository>(),
+          ledgerChanges: c<LedgerChanges>(),
+        ),
+        dispose: (bloc) => bloc.close(),
+      );
   }
 }

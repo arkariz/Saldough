@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -27,6 +28,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../helpers/fake_auth_repository.dart';
 import '../../helpers/mocks.dart';
+import '../../helpers/routes.dart';
 
 /// Dobel gagal untuk [WalletRepository] -- `listWallets()` SELALU
 /// mengembalikan `Left`, mensimulasikan pembacaan yang gagal (bukan
@@ -64,6 +66,7 @@ void main() {
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
   });
 
@@ -363,6 +366,7 @@ void main() {
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
         ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
         ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
 
       await tester.pumpWidget(

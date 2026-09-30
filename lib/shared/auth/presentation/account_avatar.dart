@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/account/presentation/pages/account_page.dart';
 import 'package:saldough/shared/auth/auth.dart';
 
 /// Avatar akun berbingkai pixel: foto Google kalau ada, inisial kalau tidak,
@@ -57,8 +56,12 @@ class AccountAvatar extends StatelessWidget {
 /// sudah masuk (ADR-024). Mendengarkan [AuthRepository] langsung dari
 /// kontainer akar supaya Beranda tidak perlu tahu soal akun.
 class AccountAvatarButton extends StatefulWidget {
-  /// Membuat [AccountAvatarButton].
-  const AccountAvatarButton({super.key});
+  /// Membuat [AccountAvatarButton]; [onPressed] membuka layar Akun (milik
+  /// fitur `account`, jadi disuntikkan pemakai lewat kunci rutenya).
+  const AccountAvatarButton({required this.onPressed, super.key});
+
+  /// Membuka layar Akun.
+  final VoidCallback onPressed;
 
   @override
   State<AccountAvatarButton> createState() => _AccountAvatarButtonState();
@@ -85,7 +88,7 @@ class _AccountAvatarButtonState extends State<AccountAvatarButton> {
         final user = snapshot.data;
         return IconButton(
           tooltip: t.account.title,
-          onPressed: () => openAccountPage(context),
+          onPressed: widget.onPressed,
           icon: user == null ? const AppIcon(IconKey.account) : AccountAvatar(user: user, size: 28),
         );
       },

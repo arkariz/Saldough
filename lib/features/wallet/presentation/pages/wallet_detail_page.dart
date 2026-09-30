@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
-import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
-import 'package:saldough/features/record/presentation/open_record_sheet.dart';
-import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
-import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
-import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
-import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
+import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
+import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_state.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
@@ -19,50 +17,20 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
-/// Membuka [WalletDetailPage] untuk [wallet] (T-2.8, FR-WAL-004).
-///
-/// Rute yang di-push TIDAK mewarisi `Theme` maupun `BlocProvider` dari pohon
-/// asalnya (pola yang sama seperti `openTransactionDetail`), jadi ketiganya
-/// dipasang ulang di sini: [PixelTheme], `WalletBloc` yang SAMA (sunting/
-/// hapus memuat ulang daftar di belakangnya), `TransactionBloc` yang SAMA
-/// (untuk riwayat tersaring dan pintasan "Lihat Semua Transaksi"), dan
-/// `RecordBloc` yang SAMA (pintasan CATAT, FR-REC-002). `BudgetBloc`, kalau
-/// ada, diteruskan supaya rincian transaksi dari sini punya jalan ke
-/// anggarannya (T-4.11).
-Future<void> openWalletDetail(BuildContext context, Wallet wallet) {
-  final walletBloc = context.read<WalletBloc>();
-  final transactionBloc = context.read<TransactionBloc>();
-  final recordBloc = context.read<RecordBloc>();
-  final budgetBloc = context.read<BudgetBloc?>();
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: walletBloc),
-            BlocProvider.value(value: transactionBloc),
-            BlocProvider.value(value: recordBloc),
-            if (budgetBloc != null) BlocProvider.value(value: budgetBloc),
-          ],
-          child: WalletDetailPage(wallet: wallet),
-        ),
-      ),
-    ),
-  );
-}
+part 'wallet_detail_sections.dart';
 
 /// Layar rincian satu dompet (T-2.8, FR-WAL-004): nama, ikon, saldo tercatat,
 /// transaksi bulan ini yang menyentuh dompet ini, jalan ke daftar transaksi
 /// lengkap tersaring, dan pintasan CATAT dengan dompet ini sudah terpilih
 /// (FR-REC-002).
 ///
-/// Membaca dompet dari `WalletBloc` (bukan [wallet] langsung) supaya saldo
-/// yang berubah lewat CATAT (pintasan di layar ini sendiri) tampil segar
-/// tanpa menutup layar ini -- [wallet] hanya dipakai sebagai cadangan
-/// sebelum `WalletBloc` sempat memancarkan salinan terbarunya. Menyunting
-/// lewat tombol "Sunting" MENUTUP layar ini sesudah dikirim (lihat
-/// dokumentasi `_edit`) -- perubahannya tetap tampil di `WalletListPage` di
-/// belakangnya, sama seperti pola `TransactionDetailPage._edit`.
+/// Membaca dompet dari `WalletBloc` milik rutenya (`WalletRouteModule`,
+/// ADR-030 §3.3), bukan [wallet] langsung, supaya saldo yang berubah lewat
+/// CATAT (pintasan di layar ini sendiri) tampil segar tanpa menutup layar
+/// ini -- [wallet] hanya cadangan sebelum `WalletBloc` sempat memancarkan
+/// salinan terbarunya. Riwayat bulan ini dari `WalletActivityBloc`.
+/// Menyunting MENUTUP layar ini sesudah hasilnya tampil (lihat `_edit`);
+/// tab Dompet di belakangnya segar lewat `LedgerChanges`.
 ///
 /// ⚠ Riwayat di sini HANYA transaksi BULAN BERJALAN, sama seperti tab
 /// Transaksi (ADR-012 -- buku besar dipartisi per bulan, `listAllTransactions`
@@ -74,21 +42,14 @@ class WalletDetailPage extends StatelessWidget {
   /// Dompet yang ditampilkan (cuplikan saat layar dibuka).
   final Wallet wallet;
 
-  bool _touches(Transaction transaction, String walletId) =>
-      switch (transaction) {
-        IncomeTransaction(walletId: final id) => id == walletId,
-        ExpenseTransaction(walletId: final id) => id == walletId,
-        TransferTransaction(:final fromWalletId, :final toWalletId) =>
-          fromWalletId == walletId || toWalletId == walletId,
-      };
-
   /// Riwayat dan saldo di layar ini dimuat ulang oleh `LedgerChanges`
   /// sesudah transaksinya tersimpan (ADR-030 §3.4).
-  Future<void> _record(BuildContext context) => openRecordSheet(context, initialWalletId: wallet.id);
+  Future<void> _record(BuildContext context) =>
+      context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(initialWalletId: wallet.id));
 
-  /// Sunting selalu menutup layar ini sesudah dikirim (pola yang sama seperti
-  /// `TransactionDetailPage._edit`) -- daftar dompet di belakangnya sudah
-  /// segar lewat `WalletBloc` yang sama. Hapus BEDA: baru menutup layar ini
+  /// Sunting selalu menutup layar ini sesudah hasilnya tampil (bloc rute ini
+  /// ikut tertutup; pola yang sama seperti `TransactionDetailPage._edit`).
+  /// Hapus BEDA: baru menutup layar ini
   /// kalau penghapusan sungguhan berhasil, karena bisa diblokir (dompet
   /// sudah punya transaksi) dan layar rincian harus tetap menampilkan
   /// dompet yang masih ada beserta pesan blokirnya.
@@ -115,6 +76,7 @@ class WalletDetailPage extends StatelessWidget {
             initialBalance: initialBalance,
           ),
         );
+        await bloc.stream.firstWhere((s) => s.effect != null);
         navigator.pop();
       case WalletFormDeleted():
         bloc.add(WalletDeleted(current));
@@ -125,23 +87,10 @@ class WalletDetailPage extends StatelessWidget {
     }
   }
 
-  Future<void> _viewAllTransactions(
-    BuildContext context,
-    String walletId,
-  ) async {
-    final bloc = context.read<TransactionBloc>()
-      ..add(TransactionWalletFilterChanged(walletId));
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => PixelTheme(
-          child: BlocProvider.value(
-            value: bloc,
-            child: const TransactionListPage(),
-          ),
-        ),
-      ),
-    );
-  }
+  /// Riwayat tersaring dompet ini, terpisah dari tab Riwayat: penyaringnya
+  /// tidak lagi terbawa ke tab itu (ADR-030 §3.3).
+  Future<void> _viewAllTransactions(BuildContext context, String walletId) =>
+      context.pushRoute(TransactionRouteKeys.history, TransactionHistoryInput(walletId: walletId));
 
   @override
   Widget build(BuildContext context) {
@@ -167,11 +116,11 @@ class WalletDetailPage extends StatelessWidget {
                 const SizedBox(height: AppSpacing.lg),
                 AppSectionLabel(t.wallet.detailRecentHeading),
                 const SizedBox(height: AppSpacing.xs),
-                BlocBuilder<TransactionBloc, TransactionState>(
-                  builder: (context, txState) {
+                BlocBuilder<WalletActivityBloc, WalletActivityState>(
+                  builder: (context, activity) {
                     // Kerangka, bukan ruang kosong: kosong terbaca seperti
                     // "belum ada transaksi" padahal masih dimuat (T-7.6).
-                    if (txState.isLoading) {
+                    if (activity.isLoading) {
                       return Column(
                         children: [
                           for (var i = 0; i < 3; i++) ...[
@@ -181,13 +130,10 @@ class WalletDetailPage extends StatelessWidget {
                         ],
                       );
                     }
-                    final touched = txState.rawTransactions
-                        .where((tx) => _touches(tx, current.id))
-                        .toList();
-                    final recent = [...touched]
-                      ..sort((a, b) => b.date.compareTo(a.date));
+                    final touched = activity.transactions;
+                    final recent = touched;
                     final walletsById = {
-                      for (final w in txState.wallets) w.id: w,
+                      for (final w in walletState.wallets) w.id: w,
                     };
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -205,8 +151,10 @@ class WalletDetailPage extends StatelessWidget {
                             TransactionRow(
                               transaction: recent[i],
                               walletsById: walletsById,
-                              onTap: () =>
-                                  openTransactionDetail(context, recent[i]),
+                              onTap: () => context.pushRoute(
+                                TransactionRouteKeys.detail,
+                                TransactionDetailInput(recent[i]),
+                              ),
                             ),
                           ],
                       ],
@@ -221,371 +169,6 @@ class WalletDetailPage extends StatelessWidget {
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-/// Bilah atas: kembali di kiri, sunting (ikon) di kanan -- sama pola seperti
-/// `_TopBar` pada `TransactionDetailPage`.
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.onEdit});
-
-  final VoidCallback onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      child: Row(
-        children: [
-          Expanded(
-            child: AppTappable(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Row(
-                children: [
-                  const SizedBox(width: AppSpacing.xs),
-                  AppIcon(IconKey.chevronLeft, color: colors.textPrimary),
-                  const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    t.wallet.detailBackLabel.toUpperCase(),
-                    style: transactionLabelStyle(
-                      context,
-                      size: 12,
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Semantics(
-            button: true,
-            label: t.wallet.detailEditAction,
-            child: GestureDetector(
-              onTap: onEdit,
-              behavior: HitTestBehavior.opaque,
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: Center(
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: colors.cardBackground,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: AppIcon(
-                      IconKey.edit,
-                      size: 20,
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Kartu utama: ikon, nama, lencana jenis/nonaktif, dan saldo tercatat besar
-/// (merah + tanda minus kalau negatif, FR-WAL-003).
-class _HeroCard extends StatelessWidget {
-  const _HeroCard({required this.wallet});
-
-  final Wallet wallet;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final typeLabel = walletTypeLabel(wallet.iconKey);
-    final negative = wallet.currentBalance < 0;
-    return Opacity(
-      opacity: wallet.isActive ? 1 : 0.6,
-      child: TransactionSlab(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: colors.surfaceMid,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: AppIcon(walletIconKey(wallet.iconKey), size: 44),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              wallet.name,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 4),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: AppSpacing.xs,
-              runSpacing: 4,
-              children: [
-                if (typeLabel != null) _Badge(label: typeLabel),
-                if (!wallet.isActive)
-                  _Badge(label: t.wallet.inactiveBadge, color: colors.pending),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              t.wallet.currentBalanceLabel.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
-            ),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                AppMoneyFormatter.format(wallet.currentBalance),
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.headlineMedium?.copyWith(
-                      color: negative ? colors.expense : colors.textPrimary,
-                    ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Ringkasan bulan berjalan untuk dompet ini (T-2.8, direvisi 25 September
-/// 2026): pemasukan, pengeluaran, transfer masuk/keluar, dan perubahan saldo.
-///
-/// Pemasukan dan pengeluaran TIDAK menyertakan transfer (CLAUDE.md aturan 7,
-/// sama seperti `TransactionMonthHeader._totals` di tab Transaksi). Tetapi di
-/// tingkat SATU dompet transfer adalah perubahan saldo yang nyata -- tanpa
-/// baris transfer, dompet yang hanya diisi lewat transfer (mis. Tabungan)
-/// selalu tampil Rp0 walau saldonya naik. Karena itu transfer tampil di baris
-/// sendiri berwarna `transfer` (bukan hijau/merah, supaya tidak terbaca
-/// sebagai pemasukan/pengeluaran), dan angka penutupnya "Perubahan saldo"
-/// (pemasukan − pengeluaran + transfer masuk − transfer keluar), bukan
-/// "Neto" -- istilah itu di tab Transaksi berarti pemasukan − pengeluaran.
-class _MonthSummaryRow extends StatelessWidget {
-  const _MonthSummaryRow({required this.transactions, required this.walletId});
-
-  /// Transaksi bulan ini yang menyentuh dompet ini (belum dipotong ke 5
-  /// baris terbaru) -- ringkasan harus mencerminkan SELURUH bulan, bukan
-  /// hanya baris yang ditampilkan.
-  final List<Transaction> transactions;
-
-  /// Dompet yang diringkas -- menentukan arah tiap transfer.
-  final String walletId;
-
-  ({int income, int expense, int transferIn, int transferOut}) get _totals {
-    var income = 0;
-    var expense = 0;
-    var transferIn = 0;
-    var transferOut = 0;
-    for (final transaction in transactions) {
-      switch (transaction) {
-        case IncomeTransaction():
-          income += transaction.amount;
-        case ExpenseTransaction():
-          expense += transaction.amount;
-        case TransferTransaction(:final fromWalletId, :final toWalletId):
-          if (toWalletId == walletId) transferIn += transaction.amount;
-          if (fromWalletId == walletId) transferOut += transaction.amount;
-      }
-    }
-    return (
-      income: income,
-      expense: expense,
-      transferIn: transferIn,
-      transferOut: transferOut,
-    );
-  }
-
-  /// Nominal bertanda: `+` untuk positif, `-` (dari formatter) untuk negatif.
-  String _signed(int sen) => sen > 0
-      ? '+${AppMoneyFormatter.format(sen)}'
-      : AppMoneyFormatter.format(sen);
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final totals = _totals;
-    final hasTransfers = totals.transferIn != 0 || totals.transferOut != 0;
-    final change =
-        totals.income -
-        totals.expense +
-        totals.transferIn -
-        totals.transferOut;
-    final changeColor = change > 0
-        ? colors.income
-        : change < 0
-        ? colors.expense
-        : colors.textPrimary;
-    return TransactionSlab(
-      color: colors.surfaceLow,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: _SummaryStat(
-                  label: t.wallet.detailIncomeLabel,
-                  amount: AppMoneyFormatter.format(totals.income),
-                  color: colors.income,
-                ),
-              ),
-              Expanded(
-                child: _SummaryStat(
-                  label: t.wallet.detailExpenseLabel,
-                  amount: AppMoneyFormatter.format(totals.expense),
-                  color: colors.expense,
-                ),
-              ),
-            ],
-          ),
-          if (hasTransfers) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                Expanded(
-                  child: _SummaryStat(
-                    label: t.wallet.detailTransferInLabel,
-                    amount: _signed(totals.transferIn),
-                    color: colors.transfer,
-                  ),
-                ),
-                Expanded(
-                  child: _SummaryStat(
-                    label: t.wallet.detailTransferOutLabel,
-                    amount: _signed(-totals.transferOut),
-                    color: colors.transfer,
-                  ),
-                ),
-              ],
-            ),
-          ],
-          const SizedBox(height: AppSpacing.sm),
-          Divider(color: colors.divider, height: 1),
-          const SizedBox(height: AppSpacing.sm),
-          _SummaryStat(
-            label: t.wallet.detailBalanceChangeLabel,
-            amount: _signed(change),
-            color: changeColor,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryStat extends StatelessWidget {
-  const _SummaryStat({
-    required this.label,
-    required this.amount,
-    required this.color,
-  });
-
-  final String label;
-  final String amount;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: transactionLabelStyle(
-            context,
-            color: context.appColors.textMuted,
-          ),
-        ),
-        const SizedBox(height: 2),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: AlignmentDirectional.centerStart,
-          child: Text(
-            amount,
-            style: transactionLabelStyle(context, size: 14, color: color),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Keadaan kosong "belum ada transaksi bulan ini untuk dompet ini" -- ikon +
-/// judul + deskripsi, bahasa visual yang sama dengan `TransactionEmptyMonthState`
-/// dan `WalletEmptyState` (hanya diperkecil skalanya karena ini bagian dari
-/// halaman, bukan seluruh layar; CTA "Catat" sudah ada di atas, tidak
-/// diulang di sini).
-class _EmptyRecentTransactions extends StatelessWidget {
-  const _EmptyRecentTransactions();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(IconKey.transactions, size: 48, color: colors.textMuted),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              t.wallet.detailRecentEmptyTitle,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              t.wallet.detailRecentEmpty,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: colors.textMuted),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.label, this.color});
-
-  final String label;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: colors.surfaceMid,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: transactionLabelStyle(
-          context,
-          size: 9,
-          color: color ?? colors.textMuted,
         ),
       ),
     );

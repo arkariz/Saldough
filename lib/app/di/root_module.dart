@@ -9,19 +9,25 @@ import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
+import 'package:saldough/features/freelance/presentation/navigation/freelance_route_module.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
+import 'package:saldough/features/wallet/presentation/navigation/wallet_route_module.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -34,13 +40,20 @@ import 'package:saldough/shared/wallet/wallet.dart';
 abstract final class RootModule {
   RootModule._();
 
-  /// Seluruh modul rute fitur yang terdaftar di aplikasi.
+  /// Seluruh modul rute fitur yang terdaftar di aplikasi (ADR-0004,
+  /// ADR-030 §3.3). Fitur membuka layar fitur lain hanya lewat kunci rute,
+  /// dan `pushRoute` mencari simpulnya di registri ini.
   ///
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
-  /// penemuan otomatis, sesuai desain `FeatureRouteModule`. Kosong sejak
-  /// `example_note` (fitur bukti pola) dihapus; layar aplikasi dipasang lewat
-  /// `AppShellPage` dan `Navigator`, bukan registri ini.
-  static const List<FeatureRouteModule> _featureModules = [];
+  /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
+  static const List<FeatureRouteModule> featureModules = [
+    AccountRouteModule(),
+    BudgetRouteModule(),
+    FreelanceRouteModule(),
+    RecordRouteModule(),
+    TransactionRouteModule(),
+    WalletRouteModule(),
+  ];
 
   /// Menjalankan seluruh pendaftaran akar ke [container].
   static Future<void> registerAll(GetIt container) async {
@@ -149,7 +162,7 @@ abstract final class RootModule {
   }
 
   static RouteRegistry _registerRouteRegistry(GetIt container) {
-    final registry = RouteRegistry.fromModules(_featureModules);
+    final registry = RouteRegistry.fromModules(featureModules);
     container.registerSingleton<RouteRegistry>(registry);
     return registry;
   }

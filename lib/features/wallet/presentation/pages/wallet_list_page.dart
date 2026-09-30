@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -6,7 +7,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
-import 'package:saldough/features/wallet/presentation/pages/wallet_detail_page.dart';
+import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
@@ -97,7 +98,7 @@ class _WalletListPageState extends State<WalletListPage> {
                     spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
                     child: WalletCard(
                       wallet: wallet,
-                      onTap: () => openWalletDetail(context, wallet),
+                      onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -117,7 +118,7 @@ class _WalletListPageState extends State<WalletListPage> {
                   for (final wallet in inactive) ...[
                     WalletCard(
                       wallet: wallet,
-                      onTap: () => openWalletDetail(context, wallet),
+                      onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                   ],

@@ -73,7 +73,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 15 | 11 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
-| 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 4 | Berjalan -- T-12.1 (keputusan dan ADR), T-12.2 (pindah berkas), T-12.3 (query transaksi murni), dan T-12.4 (sinyal buku besar) selesai; berikutnya T-12.5 |
+| 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 5 | Berjalan -- T-12.1 (keputusan dan ADR), T-12.2 (pindah berkas), T-12.3 (query transaksi murni), T-12.4 (sinyal buku besar), dan T-12.5 (kunci rute) selesai; berikutnya T-12.6 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1831,7 +1831,7 @@ seluruh uji lulus.
       sebagai sumber, dan uji shell ujung ke ujung (dicek mutasi: gagal bila
       langganan `TransactionBloc` diputus). 850 uji lulus, `flutter analyze`
       bersih.
-- [ ] **T-12.5** Tahap 4: kunci dan modul rute per fitur (ADR-030 §3.3,
+- [x] **T-12.5** Tahap 4: kunci dan modul rute per fitur (ADR-030 §3.3,
       ADR-0004). Semua layar penuh jadi `RouteNode` dengan scope sendiri;
       CATAT dan sunting transaksi jadi rute lembar (`slideFromBottom`);
       helper `context.pushRoute`; nol `MaterialPageRoute` di `features/`;
@@ -1842,6 +1842,32 @@ seluruh uji lulus.
       Verifikasi: uji widget navigasi (rincian dompet/anggaran/transaksi,
       CATAT dari rincian), seluruh uji lulus, cek manual di emulator.
       Di luar PRD: kualitas arsitektur.
+      Hasil (1 Okt 2026): `context.pushRoute` bertipe
+      (`core/foundation/navigation/route_navigation.dart`); kunci dan modul
+      rute untuk account, budget, freelance, record, transaction, wallet
+      (9 rute) di `RootModule.featureModules`. CATAT, sunting transaksi,
+      dan suara jadi rute alur transparan (`RouteTransition.none`) yang
+      memegang `RecordScope`, jadi shell tidak lagi memasang `RecordBloc`.
+      Rincian dompet/anggaran/transaksi memasang scope sendiri; rincian
+      dompet memakai `WalletActivityBloc` baru (bukan `TransactionBloc` tab
+      Riwayat), "Lihat semua transaksi" jadi rute `transaction.history`
+      yang penyaringnya tidak lagi terbawa ke tab Riwayat. Rute yang menulis
+      lalu menutup diri menunggu hasilnya; "Urungkan" lewat
+      `RecordTransaction` langsung (`TransactionRestored` dihapus). Tombol
+      akun ke `shared/auth/presentation/`. Tiga halaman rincian dipecah ke
+      berkas `part` (`*_detail_sections.dart`, halaman utama 146–175 baris).
+      Layar anak satu fitur (template, proyek freelance, kategori) tetap
+      `Navigator.push` (ADR-030 §3.3 butir 1 direvisi). Impor antarfitur
+      26 → 13: 11 ke `*_route_keys.dart` dan 2 adapter port Beranda. Uji
+      baru: `pushRoute` (halaman, lembar bertema pemanggil, alur transparan,
+      kunci tak terdaftar), `WalletActivityBloc`, dan `GoRouter` aplikasi
+      dengan seluruh rute bernama. Uji asap emulator Pixel 7a API 35:
+      onboarding → buat dompet (aksi awal shell), CATAT pengeluaran →
+      snackbar dan saldo tab Dompet segar, rincian dompet → riwayat
+      tersaring → rincian transaksi → hapus → Urungkan, Akun dari Beranda,
+      CATAT → Masuk → Freelance; tanpa galat di log. Perubahan kecil yang
+      terlihat: rincian yang dibuka menampilkan kerangka sesaat karena
+      memuat datanya sendiri.
 - [ ] **T-12.6** Tahap 5: penutup. Fake tulis tangan di uji → `mocktail`
       (ADR-0010); `test/architecture/import_boundaries_test.dart` (ADR-030
       §3.8); sapuan ARCHITECTURE_OVERVIEW, AGENT_CONTEXT, dan CLAUDE.md.

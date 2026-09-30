@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -50,7 +51,6 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionSearchAcrossMonthsRequested>(_onSearchAcrossMonthsRequested);
     on<TransactionUpdated>(_onUpdated);
     on<TransactionDeleted>(_onDeleted);
-    on<TransactionRestored>(_onRestored);
   }
 
   late final StreamSubscription<void> _ledgerSubscription;
@@ -105,11 +105,6 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     // UX-8: bukan dialog konfirmasi lagi -- hapus langsung, dengan snackbar
     // "Urungkan" sebagai jalan pulih.
     await _afterWrite(result, emit, successEffect: () => _effectDeletedWithUndo(event.transaction));
-  }
-
-  Future<void> _onRestored(TransactionRestored event, Emitter<TransactionState> emit) async {
-    final result = await _recordTransaction(event.transaction, source: this);
-    await _afterWrite(result, emit, successEffect: () => _effectSaved(t.transaction.restoredMessage));
   }
 
   /// Sesudah sunting/hapus/urungkan: kalau gagal, pertahankan layar apa

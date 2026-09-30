@@ -14,7 +14,13 @@ Future<T?> showFullScreenSheet<T>(BuildContext context, {required WidgetBuilder 
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.sm))),
+    shape: fullScreenSheetShape,
     builder: builder,
   );
 }
+
+/// Bentuk lembar setinggi layar -- dipakai juga rute lembar
+/// (`RouteNodeRouteExt`, ADR-030 §3.3) supaya keduanya identik.
+const fullScreenSheetShape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.sm)),
+);

@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -23,6 +24,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
+import '../../../../helpers/routes.dart';
 
 /// Uji T-2.8 (FR-WAL-004, FR-REC-002): layar rincian dompet -- info dompet,
 /// riwayat bulan berjalan yang tersaring ke dompet ini, jalan ke daftar
@@ -49,6 +51,7 @@ void main() {
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,
       );

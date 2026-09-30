@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/presentation/widgets/full_screen_sheet.dart';
 
 /// Mengubah [RouteNode] (framework-agnostic dari `package:navigation`) jadi
 /// [GoRoute] yang sungguhan dipahami `go_router`.
@@ -57,20 +58,35 @@ extension RouteNodeGoRouterExt on RouteNode {
           ),
         );
       case RouteTransition.slideFromBottom:
-        return CustomTransitionPage<void>(
-          key: state.pageKey,
-          child: child,
-          transitionsBuilder: (_, animation, _, c) => SlideTransition(
-            position: Tween(begin: const Offset(0, 1), end: Offset.zero).animate(animation),
-            child: c,
-          ),
-        );
+        // Lembar modal, sama seperti `RouteNodeRouteExt` (ADR-030 §3.3).
+        return _ModalSheetPage<void>(key: state.pageKey, child: child);
       case RouteTransition.none:
+        // Rute alur transparan, sama seperti `RouteNodeRouteExt`.
         return CustomTransitionPage<void>(
           key: state.pageKey,
+          opaque: false,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
           child: child,
           transitionsBuilder: (_, _, _, c) => c,
         );
     }
   }
+}
+
+/// Halaman `go_router` untuk rute lembar: `ModalBottomSheetRoute` setinggi
+/// layar, identik dengan `showFullScreenSheet`.
+final class _ModalSheetPage<T> extends Page<T> {
+  const _ModalSheetPage({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Route<T> createRoute(BuildContext context) => ModalBottomSheetRoute<T>(
+    settings: this,
+    builder: (_) => child,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: fullScreenSheetShape,
+  );
 }

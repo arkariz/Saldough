@@ -4,6 +4,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -24,6 +25,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 import '../../../../helpers/categories.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
+import '../../../../helpers/routes.dart';
 
 /// Dobel gagal untuk [WalletRepository] -- lihat `app_shell_page_test.dart`.
 final class _FailingWalletRepository implements WalletRepository {
@@ -62,6 +64,7 @@ void main() {
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
   });
 
@@ -184,6 +187,7 @@ void main() {
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
         ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerSingleton<RouteRegistry>(appRouteRegistry())
         ..registerLazySingleton<TransactionRepository>(() => transactionRepository);
 
       await tester.pumpWidget(

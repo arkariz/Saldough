@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/features/account/presentation/widgets/account_avatar.dart';
-import 'package:saldough/features/freelance/presentation/pages/freelance_overview_page.dart';
+import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
+import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
-import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/shared/auth/auth_presentation.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 
@@ -66,10 +69,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.appShell.homeTabLabel),
-        actions: const [
+        actions: [
           // Titik masuk layar Akun (ADR-023/024) -- identitas opsional, bukan
           // navigasi bawah karena bukan aktivitas harian.
-          AccountAvatarButton(),
+          AccountAvatarButton(onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput())),
         ],
       ),
       body: SafeArea(
@@ -127,7 +130,7 @@ class _HomePageState extends State<HomePage> {
               spotlightKey: SpotlightKey.homeFreelance,
               child: HomeFreelanceCard(
                 overview: freelance,
-                onOpen: () => _thenRefresh(() => openFreelanceOverview(context)),
+                onOpen: () => _thenRefresh(() => context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput())),
               ),
             ),
           ],
@@ -146,7 +149,9 @@ class _HomePageState extends State<HomePage> {
               TransactionRow(
                 transaction: transaction,
                 walletsById: state.walletsById,
-                onTap: () => _thenRefresh(() => openTransactionDetail(context, transaction)),
+                onTap: () => _thenRefresh(
+                  () => context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
+                ),
               ),
             ],
           ] else ...[

@@ -319,7 +319,7 @@ class _RecordFabs extends StatelessWidget {
             key: const ValueKey('shell-voice-fab'),
             icon: IconKey.microphone,
             label: t.record.voice.micLabel,
-            size: 48,
+            size: 60,
             background: colors.cardBackground,
             foreground: colors.textPrimary,
             onTap: onVoice,

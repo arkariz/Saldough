@@ -179,6 +179,9 @@ enum IconKey {
 
   /// Akun opsional (ADR-023): masuk, keluar, hapus akun.
   account,
+
+  /// Catat Cerdas suara (ADR-027): rekam ucapan di CATAT.
+  microphone,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -252,6 +255,8 @@ const Map<IconKey, IconData> _materialFallback = {
   IconKey.info: Icons.info_outline,
   // Belum ada padanan pixel-art; lihat ADR-023 §7.
   IconKey.account: Icons.person_outline,
+  // Belum ada padanan pixel-art (ADR-027).
+  IconKey.microphone: Icons.mic_none,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

@@ -310,6 +310,7 @@ class Translations$record$id {
 	String get draftCheckTitle => 'Periksa sebelum mencatat';
 
 	late final Translations$record$draftIssue$id draftIssue = Translations$record$draftIssue$id.internal(_root);
+	late final Translations$record$voice$id voice = Translations$record$voice$id.internal(_root);
 }
 
 // Path: transaction
@@ -2198,6 +2199,38 @@ class Translations$record$draftIssue$id {
 	String get categoryUnknown => 'Kategori yang disebut tidak ada. Pilih kategorinya.';
 }
 
+// Path: record.voice
+class Translations$record$voice$id {
+	Translations$record$voice$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat pakai suara'
+	String get title => 'Catat pakai suara';
+
+	/// id: 'Catat pakai suara'
+	String get micLabel => 'Catat pakai suara';
+
+	/// id: 'Mendengarkan… ucapkan satu transaksi.'
+	String get listening => 'Mendengarkan… ucapkan satu transaksi.';
+
+	/// id: 'Contoh: “makan siang 35 ribu pakai BCA”'
+	String get example => 'Contoh: “makan siang 35 ribu pakai BCA”';
+
+	/// id: 'Memahami…'
+	String get interpreting => 'Memahami…';
+
+	/// id: 'Selesai'
+	String get stopAction => 'Selesai';
+
+	/// id: 'Ketik saja'
+	String get typeInstead => 'Ketik saja';
+
+	late final Translations$record$voice$failure$id failure = Translations$record$voice$failure$id.internal(_root);
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2271,6 +2304,30 @@ class Translations$currency$names$id {
 
 	/// id: 'Dolar Australia'
 	String get aud => 'Dolar Australia';
+}
+
+// Path: record.voice.failure
+class Translations$record$voice$failure$id {
+	Translations$record$voice$failure$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.'
+	String get permissionDenied => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.';
+
+	/// id: 'Perangkat ini belum punya pengenal ucapan.'
+	String get unavailable => 'Perangkat ini belum punya pengenal ucapan.';
+
+	/// id: 'Tidak ada ucapan yang tertangkap. Coba lagi.'
+	String get noMatch => 'Tidak ada ucapan yang tertangkap. Coba lagi.';
+
+	/// id: 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.'
+	String get network => 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.';
+
+	/// id: 'Ada yang salah. Coba lagi.'
+	String get other => 'Ada yang salah. Coba lagi.';
 }
 
 /// The flat map containing all translations for locale <id>.
@@ -2362,6 +2419,18 @@ extension on Translations {
 			'record.draftIssue.transferSourceMissing' => 'Dompet asal belum jelas. Pilih dari dompet mana.',
 			'record.draftIssue.transferTargetMissing' => 'Dompet tujuan belum jelas. Pilih dompet tujuan.',
 			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
+			'record.voice.title' => 'Catat pakai suara',
+			'record.voice.micLabel' => 'Catat pakai suara',
+			'record.voice.listening' => 'Mendengarkan… ucapkan satu transaksi.',
+			'record.voice.example' => 'Contoh: “makan siang 35 ribu pakai BCA”',
+			'record.voice.interpreting' => 'Memahami…',
+			'record.voice.stopAction' => 'Selesai',
+			'record.voice.typeInstead' => 'Ketik saja',
+			'record.voice.failure.permissionDenied' => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.',
+			'record.voice.failure.unavailable' => 'Perangkat ini belum punya pengenal ucapan.',
+			'record.voice.failure.noMatch' => 'Tidak ada ucapan yang tertangkap. Coba lagi.',
+			'record.voice.failure.network' => 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.',
+			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2781,6 +2850,8 @@ extension on Translations {
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
 			'home.emptyTitle' => 'Belum ada transaksi',
+			_ => null,
+		} ?? switch (path) {
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
 			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
 			'home.recordAction' => 'Catat Transaksi',
@@ -2793,8 +2864,6 @@ extension on Translations {
 			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
 			'home.guideBudgetTitle' => 'Anggaran',
 			'home.guideBudgetTag' => 'Rencana',
-			_ => null,
-		} ?? switch (path) {
 			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Piutang',

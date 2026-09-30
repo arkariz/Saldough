@@ -88,6 +88,22 @@
       "transferSourceMissing": "The source wallet is unclear. Pick where it came from.",
       "transferTargetMissing": "The destination wallet is unclear. Pick where it went.",
       "categoryUnknown": "The category mentioned doesn't exist. Pick a category."
+    },
+    "voice": {
+      "title": "Record by voice",
+      "micLabel": "Record by voice",
+      "listening": "Listening… say one transaction.",
+      "example": "Example: “lunch 35 thousand with BCA”",
+      "interpreting": "Understanding…",
+      "stopAction": "Done",
+      "typeInstead": "Type instead",
+      "failure": {
+        "permissionDenied": "Microphone access was denied. Allow it in device settings.",
+        "unavailable": "This device doesn't have a speech recognizer yet.",
+        "noMatch": "Didn't catch anything. Try again.",
+        "network": "Speech recognition on this device needs internet. Try again when online.",
+        "other": "Something went wrong. Try again."
+      }
     }
   },
   "transaction": {

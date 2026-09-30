@@ -1,6 +1,11 @@
 import 'package:di/di.dart';
+import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
+import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -26,21 +31,30 @@ final class RecordScope extends IsolatedScope {
 
   @override
   void register(GetIt c) {
-    c.registerLazySingleton<RecordBloc>(
-      () => RecordBloc(
-        walletRepository: c<WalletRepository>(),
-        transactionRepository: c<TransactionRepository>(),
-        budgetItemCatalog: c<BudgetItemCatalog>(),
-        createCategory: CreateCategory(repository: c<CategoryRepository>()),
-        recordTransaction: RecordTransaction(
+    c
+      // Catat Cerdas (ADR-027): penangkap suara dan penafsir. Mengganti
+      // penyedia (Gemma lokal, Firebase AI) cukup di sini.
+      ..registerLazySingleton<SpeechTranscriber>(SystemSpeechTranscriber.new)
+      ..registerLazySingleton<TransactionInterpreter>(
+        () => RuleBasedTransactionInterpreter(categories: () => ActiveCategories.notifier.value),
+      )
+      ..registerLazySingleton<RecordBloc>(
+        () => RecordBloc(
+          walletRepository: c<WalletRepository>(),
           transactionRepository: c<TransactionRepository>(),
-          recomputeWalletBalances: RecomputeWalletBalances(
-            walletRepository: c<WalletRepository>(),
+          budgetItemCatalog: c<BudgetItemCatalog>(),
+          createCategory: CreateCategory(repository: c<CategoryRepository>()),
+          voiceCaptureFactory: () =>
+              VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), interpreter: c<TransactionInterpreter>()),
+          recordTransaction: RecordTransaction(
             transactionRepository: c<TransactionRepository>(),
+            recomputeWalletBalances: RecomputeWalletBalances(
+              walletRepository: c<WalletRepository>(),
+              transactionRepository: c<TransactionRepository>(),
+            ),
           ),
         ),
-      ),
-      dispose: (bloc) => bloc.close(),
-    );
+        dispose: (bloc) => bloc.close(),
+      );
   }
 }

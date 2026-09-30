@@ -88,6 +88,22 @@
       "transferSourceMissing": "Dompet asal belum jelas. Pilih dari dompet mana.",
       "transferTargetMissing": "Dompet tujuan belum jelas. Pilih dompet tujuan.",
       "categoryUnknown": "Kategori yang disebut tidak ada. Pilih kategorinya."
+    },
+    "voice": {
+      "title": "Catat pakai suara",
+      "micLabel": "Catat pakai suara",
+      "listening": "Mendengarkan… ucapkan satu transaksi.",
+      "example": "Contoh: “makan siang 35 ribu pakai BCA”",
+      "interpreting": "Memahami…",
+      "stopAction": "Selesai",
+      "typeInstead": "Ketik saja",
+      "failure": {
+        "permissionDenied": "Izin mikrofon ditolak. Izinkan di pengaturan perangkat.",
+        "unavailable": "Perangkat ini belum punya pengenal ucapan.",
+        "noMatch": "Tidak ada ucapan yang tertangkap. Coba lagi.",
+        "network": "Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.",
+        "other": "Ada yang salah. Coba lagi."
+      }
     }
   },
   "transaction": {

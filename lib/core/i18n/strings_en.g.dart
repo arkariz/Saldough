@@ -163,6 +163,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get draftHeardLabel => 'Heard';
 	@override String get draftCheckTitle => 'Check before recording';
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
+	@override late final _Translations$record$voice$en voice = _Translations$record$voice$en._(_root);
 }
 
 // Path: transaction
@@ -879,6 +880,23 @@ class _Translations$record$draftIssue$en extends Translations$record$draftIssue$
 	@override String get categoryUnknown => 'The category mentioned doesn\'t exist. Pick a category.';
 }
 
+// Path: record.voice
+class _Translations$record$voice$en extends Translations$record$voice$id {
+	_Translations$record$voice$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Record by voice';
+	@override String get micLabel => 'Record by voice';
+	@override String get listening => 'Listening… say one transaction.';
+	@override String get example => 'Example: “lunch 35 thousand with BCA”';
+	@override String get interpreting => 'Understanding…';
+	@override String get stopAction => 'Done';
+	@override String get typeInstead => 'Type instead';
+	@override late final _Translations$record$voice$failure$en failure = _Translations$record$voice$failure$en._(_root);
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -914,6 +932,20 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: record.voice.failure
+class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
+	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get permissionDenied => 'Microphone access was denied. Allow it in device settings.';
+	@override String get unavailable => 'This device doesn\'t have a speech recognizer yet.';
+	@override String get noMatch => 'Didn\'t catch anything. Try again.';
+	@override String get network => 'Speech recognition on this device needs internet. Try again when online.';
+	@override String get other => 'Something went wrong. Try again.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1005,6 +1037,18 @@ extension on TranslationsEn {
 			'record.draftIssue.transferSourceMissing' => 'The source wallet is unclear. Pick where it came from.',
 			'record.draftIssue.transferTargetMissing' => 'The destination wallet is unclear. Pick where it went.',
 			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
+			'record.voice.title' => 'Record by voice',
+			'record.voice.micLabel' => 'Record by voice',
+			'record.voice.listening' => 'Listening… say one transaction.',
+			'record.voice.example' => 'Example: “lunch 35 thousand with BCA”',
+			'record.voice.interpreting' => 'Understanding…',
+			'record.voice.stopAction' => 'Done',
+			'record.voice.typeInstead' => 'Type instead',
+			'record.voice.failure.permissionDenied' => 'Microphone access was denied. Allow it in device settings.',
+			'record.voice.failure.unavailable' => 'This device doesn\'t have a speech recognizer yet.',
+			'record.voice.failure.noMatch' => 'Didn\'t catch anything. Try again.',
+			'record.voice.failure.network' => 'Speech recognition on this device needs internet. Try again when online.',
+			'record.voice.failure.other' => 'Something went wrong. Try again.',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1424,6 +1468,8 @@ extension on TranslationsEn {
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
 			'home.emptyTitle' => 'No transactions yet',
+			_ => null,
+		} ?? switch (path) {
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
 			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
 			'home.recordAction' => 'Record Transaction',
@@ -1436,8 +1482,6 @@ extension on TranslationsEn {
 			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
 			'home.guideBudgetTitle' => 'Budgets',
 			'home.guideBudgetTag' => 'Plans',
-			_ => null,
-		} ?? switch (path) {
 			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
 			'home.guideFreelanceTitle' => 'Freelance',
 			'home.guideFreelanceTag' => 'Receivables',

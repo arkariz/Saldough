@@ -1557,6 +1557,18 @@ B-14.
       dan transfer tanpa asal tidak diisi dompet bawaan. 691 uji lulus.
 - [ ] **T-11.5** STT sistem (`speech_to_text`), izin mikrofon/ucapan Android
       dan iOS, sheet rekam, tombol mikrofon di CATAT.
+      Progres (30 Sep 2026, belum dicentang): `SpeechTranscriber` +
+      `SystemSpeechTranscriber`, `VoiceCaptureBloc` (4 uji), lembar rekam,
+      tombol mikrofon di samping pengalih CATAT, izin `RECORD_AUDIO` +
+      `<queries>` Android, dua kunci Info.plist iOS. 695 uji lulus.
+      Emulator Pixel 9 Pro: tombol mikrofon, lembar rekam, dan "Ketik saja"
+      kembali ke CATAT berjalan; emulator tidak punya layanan pengenal
+      terpilih ("no selected voice recognition service") dan aplikasi kini
+      melaporkannya dengan benar sebagai "belum punya pengenal ucapan". ANR
+      sekali terlihat sesudah pasang ulang build debug, tidak terulang di
+      dua percobaan berikutnya. **Belum teruji:** ucapan sungguhan sampai
+      formulir terisi, dan jalur izin ditolak — butuh perangkat (atau
+      emulator dengan layanan pengenal dipilih).
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; unduhan model dari Hugging Face).
 - [ ] **T-11.7** Spike model lokal termurah (Gemma 3 270M → 1B → Gemma 4

@@ -1,0 +1,146 @@
+import 'dart:async';
+
+import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+
+/// [SpeechTranscriber] di atas pengenal ucapan bawaan Android/iOS lewat paket
+/// `speech_to_text` (riset §4). Mode server diizinkan pemilik (30 Sep 2026):
+/// bahasa Indonesia luring tidak terjamin di semua perangkat, jadi
+/// `onDevice` tidak dipaksa.
+final class SystemSpeechTranscriber implements SpeechTranscriber {
+  /// Membuat [SystemSpeechTranscriber].
+  SystemSpeechTranscriber({SpeechToText? speech}) : _speech = speech ?? SpeechToText();
+
+  final SpeechToText _speech;
+  StreamController<SpeechUpdate>? _controller;
+  String _lastWords = '';
+
+  /// Galat terakhir sesi ini; status "done" bisa datang lebih dulu darinya.
+  SpeechFailure? _errorReason;
+
+  /// Jeda sebelum menyimpulkan "tidak ada ucapan" dari status "done",
+  /// memberi kesempatan galat yang menyusul (mis. layanan pengenal tidak ada)
+  /// menjadi alasan yang dilaporkan.
+  static const _errorGrace = Duration(milliseconds: 400);
+
+  /// Batas diam sebelum sesi dianggap selesai; satu transaksi diucapkan
+  /// dalam satu napas.
+  static const _pauseFor = Duration(seconds: 3);
+
+  /// Batas panjang satu sesi.
+  static const _listenFor = Duration(seconds: 20);
+
+  @override
+  Stream<SpeechUpdate> listen({required String localeId, List<String> phrases = const []}) {
+    unawaited(_controller?.close());
+    final controller = StreamController<SpeechUpdate>();
+    _controller = controller;
+    _lastWords = '';
+    _errorReason = null;
+    unawaited(_start(controller, localeId, phrases));
+    return controller.stream;
+  }
+
+  Future<void> _start(StreamController<SpeechUpdate> controller, String localeId, List<String> phrases) async {
+    bool available;
+    try {
+      available = await _speech.initialize(onError: _onError, onStatus: _onStatus);
+    } on Object {
+      available = false;
+    }
+    if (!available) {
+      final permitted = await _speech.hasPermission;
+      _finish(SpeechFailed(permitted ? SpeechFailure.unavailable : SpeechFailure.permissionDenied));
+      return;
+    }
+    await _speech.listen(
+      onResult: _onResult,
+      listenOptions: SpeechListenOptions(
+        localeId: localeId,
+        pauseFor: _pauseFor,
+        listenFor: _listenFor,
+        cancelOnError: true,
+        contextualPhrases: phrases.isEmpty ? null : phrases,
+      ),
+    );
+  }
+
+  void _onResult(SpeechRecognitionResult result) {
+    _lastWords = result.recognizedWords;
+    if (result.finalResult) {
+      _finishWithWordsOr(SpeechFailure.noMatch);
+    } else {
+      _controller?.add(SpeechPartial(_lastWords));
+    }
+  }
+
+  void _onError(SpeechRecognitionError error) {
+    final message = error.errorMsg;
+    final reason = switch (message) {
+      'error_no_match' || 'error_speech_timeout' => SpeechFailure.noMatch,
+      'error_network' || 'error_network_timeout' || 'error_server' => SpeechFailure.network,
+      'error_permission' || 'error_insufficient_permissions' => SpeechFailure.permissionDenied,
+      // Tanpa layanan pengenal terpilih ("no selected voice recognition
+      // service") atau tanpa dukungan bahasa.
+      'error_client' ||
+      'error_language_not_supported' ||
+      'error_language_unavailable' ||
+      'error_cannot_check_support' => SpeechFailure.unavailable,
+      _ => SpeechFailure.other,
+    };
+    _errorReason = reason;
+    // Kata yang sudah tertangkap sebelum galat tetap dipakai.
+    _finishWithWordsOr(reason);
+  }
+
+  void _onStatus(String status) {
+    // "done" tanpa hasil akhir: pakai kata terakhir kalau ada.
+    final controller = _controller;
+    if (status == SpeechToText.doneStatus && controller != null) {
+      unawaited(
+        Future<void>.delayed(_errorGrace, () {
+          if (identical(controller, _controller)) _finishWithWordsOr(SpeechFailure.noMatch);
+        }),
+      );
+    }
+  }
+
+  /// Menutup sesi dengan kata yang sudah tertangkap, atau dengan [reason].
+  /// Tanpa kata, izin diperiksa lebih dulu: di Android, izin mikrofon yang
+  /// ditolak tampil sebagai sesi "selesai" tanpa hasil, bukan galat izin.
+  void _finishWithWordsOr(SpeechFailure reason) {
+    if (_lastWords.trim().isNotEmpty) {
+      _finish(SpeechFinal(_lastWords));
+      return;
+    }
+    final controller = _controller;
+    unawaited(
+      _speech.hasPermission.then((permitted) {
+        if (identical(controller, _controller)) {
+          _finish(SpeechFailed(permitted ? (_errorReason ?? reason) : SpeechFailure.permissionDenied));
+        }
+      }),
+    );
+  }
+
+  void _finish(SpeechUpdate update) {
+    final controller = _controller;
+    if (controller == null || controller.isClosed) return;
+    controller.add(update);
+    unawaited(controller.close());
+    _controller = null;
+  }
+
+  @override
+  Future<void> stop() => _speech.stop();
+
+  @override
+  Future<void> cancel() async {
+    await _speech.cancel();
+    final controller = _controller;
+    _controller = null;
+    await controller?.close();
+  }
+}

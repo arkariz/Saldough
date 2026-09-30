@@ -5,6 +5,7 @@ import 'package:saldough/features/record/domain/capture/interpreted_transaction.
 import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/capture/voice_capture_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
@@ -115,6 +116,7 @@ Future<void> openRecordSheet(
     context,
     builder: (_) => RecordFormHost(
       initialChoice: initial,
+      voiceEnabled: bloc.voiceCaptureFactory != null,
       formFor: (choice, kindSwitcher) => switch (choice) {
         RecordChoice.income => IncomeFormSheet(
           wallets: wallets,
@@ -152,6 +154,19 @@ Future<void> openRecordSheet(
     ),
   );
   if (result == null || !context.mounted) return;
+  // Tombol mikrofon (ADR-027): rekam, lalu buka CATAT lagi dengan drafnya --
+  // atau tanpa draf kalau pengguna memilih mengetik.
+  final voiceFactory = bloc.voiceCaptureFactory;
+  if (result is StartVoiceCapture && voiceFactory != null) {
+    final captured = await showVoiceCaptureSheet(context, bloc: voiceFactory(), wallets: wallets);
+    if (!context.mounted) return;
+    return openRecordSheet(
+      context,
+      initialWalletId: initialWalletId,
+      initialChoice: captured == null ? initial : null,
+      draft: captured,
+    );
+  }
   // CATAT → Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
   // pemanggil menyegarkan saldo sesudahnya seperti biasa.
   if (result is OpenFreelance) {

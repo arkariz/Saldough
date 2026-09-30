@@ -192,10 +192,10 @@ _(diisi saat verifikasi)_
 
 ---
 
-## Milestone 3 — Model lokal dan keputusan pivot (T-11.7 s.d. T-11.9)
+## Milestone 3 — Firebase AI dan kaskade (T-11.7 s.d. T-11.9)
 
-**Kapan:** setelah benchmark T-11.9 punya angka, sebelum model diaktifkan
-untuk pengguna.
+**Kapan:** setelah benchmark T-11.9 punya angka, dan sekali lagi (ringkas)
+tepat sebelum pindah ke tier berbayar dan rilis publik.
 
 **Rentang commit:** (commit awal T-11.7) .. (commit akhir T-11.9)
 
@@ -203,30 +203,37 @@ untuk pengguna.
 
 | # | Risiko |
 |---|---|
-| M1 | Keluaran model lolos pagar resolver (kutipan palsu yang kebetulan substring) |
-| M2 | Memori/ANR/kill OS saat memuat model di perangkat menengah |
-| M3 | Unduhan: checksum, lanjut-setelah-putus, ruang penyimpanan, versi lama tidak terhapus |
-| M4 | Lisensi Gemma: NOTICE, teks Terms, batasan penggunaan di syarat & ketentuan (repo web) |
-| M5 | Abstraksi tidak benar-benar bisa diganti: mengganti ke Firebase AI butuh ubah domain/UI |
-| M6 | Angka benchmark tidak jujur (hanya teks, bukan transkrip nyata; hanya flagship) |
+| C1 | Keluaran model lolos pagar resolver (kutipan palsu yang kebetulan substring) |
+| C2 | Data berlebih dikirim ke cloud (saldo, riwayat, id, `origin`) |
+| C3 | Tier gratis terbawa ke rilis publik (data keuangan dipakai pelatihan) |
+| C4 | Offline / kuota habis / galat jaringan membuat lembar rekam buntu, bukan jatuh ke draf aturan |
+| C5 | App Check belum aktif menjelang 2 Nov 2026 |
+| C6 | Abstraksi tidak benar-benar bisa diganti (mengganti penyedia butuh ubah domain/UI) |
+| C7 | Angka benchmark tidak jujur (hanya teks, bukan transkrip nyata) |
 
 ### Daftar periksa
 
-- [ ] Kaskade: aturan dulu, model hanya saat tidak yakin; ukur laju panggilan
-      model.
-- [ ] Gating perangkat: di bawah syarat, fitur tetap jalan dengan aturan.
-- [ ] Model dilepas saat idle; satu inferensi pada satu waktu.
-- [ ] Uji "pivot": ganti registrasi DI ke adaptor lain (atau palsu) tanpa
-      mengubah berkas domain/presentasi.
+- [ ] Kaskade: aturan dulu; cloud hanya saat `isConfident` salah. Ukur laju
+      panggilan cloud pada dataset §10.
+- [ ] Payload: periksa isi permintaan (log debug) — hanya teks + nama dompet +
+      nama kategori + tanggal.
+- [ ] `responseSchema` sama dengan kontrak ADR-027 §3.2; JSON rusak → draf
+      aturan.
+- [ ] Mode pesawat, kuota habis (simulasi 429), Firebase gagal init → draf
+      aturan, tanpa pesan galat yang membingungkan.
+- [ ] App Check aktif dan enforcement diuji di proyek uji.
+- [ ] Penguji closed testing sudah diberi tahu soal tier gratis; Keamanan
+      Data dan kebijakan privasi (repo web) sudah menyebut Gemini.
+- [ ] Sebelum rilis publik: proyek sudah Blaze, batas anggaran terpasang.
+- [ ] Uji "pivot": ganti registrasi DI ke interpreter palsu tanpa mengubah
+      berkas domain/presentasi.
 - [ ] Laporan benchmark: amount/type/wallet/category accuracy, JSON validity,
-      p50/p95 latensi, RAM puncak, ukuran model, di minimal 1 Android
-      menengah + 1 flagship + 1 iPhone.
-- [ ] Tangga model (270M → 1B → Gemma 4 E2B) dicatat beserta alasan naik.
+      p50/p95 latensi, laju fallback, di minimal 1 Android menengah + 1 iPhone.
 
 ### Kriteria lulus
 
-Tidak ada M1, M2, M4. Keputusan pivot (tetap lokal / tambah Firebase AI)
-tercatat di ADR-027 atau ADR baru dengan angka benchmark.
+Tidak ada C1–C4. C3 wajib nol sebelum rilis publik. Hasil benchmark tercatat
+di TASK_LIST T-11.9.
 
 ### Hasil
 

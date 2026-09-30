@@ -1573,12 +1573,20 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       formulir terisi, dan jalur izin ditolak — butuh perangkat (atau
       emulator dengan layanan pengenal dipilih).
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
-      (audio diproses Google/Apple; unduhan model dari Hugging Face).
-- [ ] **T-11.7** Spike model lokal termurah (Gemma 3 270M → 1B → Gemma 4
-      E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma.
-- [ ] **T-11.8** `LocalLlmTransactionInterpreter` + kaskade + unduhan opt-in
-      + gating perangkat.
-- [ ] **T-11.9** Benchmark lengkap dan keputusan adaptor Firebase AI.
+      (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
+      Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa
+      tier gratis memakai data untuk pelatihan (ADR-027 §3.5).
+- [ ] **T-11.7** `FirebaseAiTransactionInterpreter` (`firebase_ai`,
+      `googleAI()`, `responseSchema` = kontrak §3.2, model flash-lite
+      stabil terkini) + `CascadingTransactionInterpreter` (aturan dulu, cloud
+      bila ragu) + `firebase_app_check`. Tier gratis (Spark).
+      ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
+      harus jatuh ke draf aturan tanpa galat ke pengguna.
+- [ ] **T-11.8** Pindah ke tier berbayar (Blaze) sebelum rilis publik:
+      billing, batas anggaran, cek ulang harga; tanpa perubahan kode.
+      Dikerjakan pemilik; agen memperbarui dokumen.
+- [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
+      transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
 
 ## Antrean (belum dijadwalkan)
 
@@ -1599,6 +1607,7 @@ menambah dan memindahkannya ada di
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 | B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

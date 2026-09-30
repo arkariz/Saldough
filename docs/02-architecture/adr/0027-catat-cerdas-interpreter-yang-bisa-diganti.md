@@ -76,6 +76,30 @@ model. Implementasi: aturan (Dart), LLM lokal, Firebase AI, dan kaskade.
 lalu menekan Catat. Tidak ada layar pratinjau atau jalur simpan lain; hasil
 interpreter tidak pernah menyentuh repository.
 
+### 3.5 Penyedia model: Firebase AI Logic dulu (revisi 30 Sep 2026)
+
+Keputusan pemilik 30 Sep 2026 menggantikan arah "Gemma lokal dulu" di riset:
+
+1. **Penyedia pertama: Firebase AI Logic** (`firebase_ai`,
+   `FirebaseAI.googleAI()`, Gemini Developer API) dengan `responseSchema`
+   yang sama dengan kontrak §3.2, lewat `FirebaseAiTransactionInterpreter`.
+2. **Tier gratis (Spark) hanya untuk pengembangan dan closed testing.** Syarat
+   Gemini API: pada layanan tanpa bayar, prompt dan jawaban dipakai Google
+   untuk meningkatkan produk dan dapat dibaca peninjau manusia, dan Google
+   meminta tidak mengirim informasi pribadi ke sana. Karena itu penguji closed
+   testing diberi tahu, dan **sebelum rilis publik proyek pindah ke tier
+   berbayar** (Blaze) — tanpa perubahan kode. Syarat usia 18+ layanan ini
+   dicatat untuk rating konten Play.
+3. **Aturan dulu, cloud bila ragu.** `CascadingTransactionInterpreter`
+   memakai `RuleBasedTransactionInterpreter` lebih dulu; Firebase AI hanya
+   dipanggil bila draf aturan tidak yakin (`RecordDraft.isConfident` salah).
+   Offline, galat, atau kuota habis → draf aturan dipakai apa adanya.
+4. **Data yang dikirim:** hanya teks bukti + nama dompet aktif + nama
+   kategori aktif + tanggal. Tanpa saldo, riwayat, id, atau `origin`.
+5. **App Check** dipasang sebelum 2 Nov 2026 (wajib untuk AI Logic).
+6. **Gemma lokal ditunda** (antrean B-15); antarmuka `TransactionInterpreter`
+   tetap membuatnya bisa ditambahkan kemudian.
+
 ## 4. Opsi yang dipertimbangkan
 
 - **Opsi A — Model mengeluarkan JSON nilai final, langsung disimpan**
@@ -137,4 +161,4 @@ dirawat.
 **Penulis keputusan:** Claude (agen), atas keputusan pemilik
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-09-30
-**Status implementasi:** belum dimulai
+**Status implementasi:** berjalan (T-11.2 s.d. T-11.5 selesai; penyedia Firebase AI T-11.7)

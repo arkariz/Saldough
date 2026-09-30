@@ -1,5 +1,12 @@
 # Riset & Rencana Implementasi — Catat lewat Suara
 
+> **Revisi keputusan 30 Sep 2026:** penyedia model pertama diganti ke
+> **Firebase AI Logic tier gratis** (hanya untuk pengembangan dan closed
+> testing; pindah berbayar sebelum rilis publik), dengan parser aturan tetap
+> lebih dulu dan cloud hanya bila ragu. Gemma lokal ditunda (antrean B-15).
+> Bagian §5–§6 dan Fase 3 di bawah tetap disimpan sebagai rujukan untuk B-15.
+> Keputusan mengikat ada di ADR-027 §3.5.
+
 **Tanggal riset:** 30 September 2026 · **Status:** riset, belum ada kode;
 keputusan pemilik 30 Sep 2026: STT server boleh, Opsi A (Gemma lokal, mulai
 dari model termurah), sistem kategori dibangun sekalian (set bawaan disetujui,

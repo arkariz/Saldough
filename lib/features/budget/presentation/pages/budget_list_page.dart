@@ -79,7 +79,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
               tour: TourId.budget,
               ready: true,
               child: ListView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.fabClearance),
               children: [
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.budgetSummary,

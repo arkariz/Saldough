@@ -27,4 +27,9 @@ abstract final class AppSpacing {
 
   /// Jarak terbesar, dipakai untuk spasi vertikal besar seperti state kosong.
   static const double xxxl = 64;
+
+  /// Padding bawah daftar di tab shell, supaya baris terakhir bisa digulir
+  /// keluar dari bawah dua FAB bertumpuk (suara 48 + jarak 8 + CATAT 60,
+  /// bayangan keras, dan margin FAB 16).
+  static const double fabClearance = 144;
 }

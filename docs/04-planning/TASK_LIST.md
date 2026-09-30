@@ -1585,7 +1585,14 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       (4) satu tombol bulat untuk mulai/berhenti/rekam ulang, plus "Ketik
       saja"; (5) CATAT dan suara jadi dua FAB bertumpuk di kanan bawah,
       navigasi bawah 4 tab, langkah tur baru `homeVoice`. 729 uji lulus.
-      Belum dicek di HP (terputus saat pemasangan).
+      Dicek di Samsung SM-M156B 30 Sep 2026: tur `homeVoice` muncul sekali,
+      lembar suara terbuka di tahap siap, REKAM + cincin + indikator mikrofon
+      Android tampil saat merekam, hening ±5 dtk berakhir di "Rekam ulang",
+      "Ketik saja" membuka CATAT kosong, ganti bahasa di Akun mengubah semua
+      teks dan nama kategori bawaan (nama yang diganti pengguna tetap).
+      Temuan: FAB menutupi nominal baris terakhir — diperbaiki dengan
+      `AppSpacing.fabClearance` di keempat tab. Sisa: ucapan sungguhan oleh
+      pemilik, langkah bahasa onboarding (perlu pemasangan bersih).
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa

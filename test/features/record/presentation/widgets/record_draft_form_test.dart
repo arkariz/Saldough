@@ -59,7 +59,8 @@ void main() {
       (r) => result = r,
     );
 
-    expect(find.text('“Tadi makan siang 35 ribu pakai BCA”'), findsOneWidget);
+    // Draf tanpa masalah: kartu tidak tampil sama sekali (transkrip juga tidak).
+    expect(find.text('“Tadi makan siang 35 ribu pakai BCA”'), findsNothing);
     expect(find.text(t.record.draftCheckTitle), findsNothing);
     expect(find.text('35.000'), findsOneWidget);
     expect(find.text('makan siang'), findsOneWidget);

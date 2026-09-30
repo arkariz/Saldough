@@ -2372,6 +2372,9 @@ class Translations$record$voice$failure$id {
 	/// id: 'Perangkat ini belum punya pengenal ucapan.'
 	String get unavailable => 'Perangkat ini belum punya pengenal ucapan.';
 
+	/// id: 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.'
+	String get languageOffline => 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.';
+
 	/// id: 'Tidak ada ucapan yang tertangkap. Coba lagi.'
 	String get noMatch => 'Tidak ada ucapan yang tertangkap. Coba lagi.';
 
@@ -2481,6 +2484,7 @@ extension on Translations {
 			'record.voice.typeInstead' => 'Ketik saja',
 			'record.voice.failure.permissionDenied' => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.',
 			'record.voice.failure.unavailable' => 'Perangkat ini belum punya pengenal ucapan.',
+			'record.voice.failure.languageOffline' => 'Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.',
 			'record.voice.failure.noMatch' => 'Tidak ada ucapan yang tertangkap. Coba lagi.',
 			'record.voice.failure.network' => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.',
 			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
@@ -2901,9 +2905,9 @@ extension on Translations {
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
-			'home.freelanceTitle' => 'Freelance',
 			_ => null,
 		} ?? switch (path) {
+			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',

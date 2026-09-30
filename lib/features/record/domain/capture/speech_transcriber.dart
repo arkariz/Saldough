@@ -3,8 +3,13 @@ enum SpeechFailure {
   /// Izin mikrofon atau pengenalan ucapan ditolak.
   permissionDenied,
 
-  /// Perangkat tidak punya layanan pengenal ucapan.
+  /// Perangkat tidak punya layanan pengenal ucapan, atau bahasanya tidak
+  /// didukung sama sekali.
   unavailable,
+
+  /// Bahasanya didukung tetapi paket luringnya belum terunduh, dan tidak ada
+  /// internet (mis. paket English belum ada, mode pesawat).
+  languageOffline,
 
   /// Tidak ada ucapan yang dikenali.
   noMatch,

@@ -380,11 +380,14 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
 
 bool _typingIsPrimary(VoiceCaptureState state) =>
     state.phase == VoiceCapturePhase.failed &&
-    (state.failure == SpeechFailure.network || state.failure == SpeechFailure.unavailable);
+    (state.failure == SpeechFailure.network ||
+        state.failure == SpeechFailure.unavailable ||
+        state.failure == SpeechFailure.languageOffline);
 
 String _failureMessage(SpeechFailure? failure) => switch (failure) {
   SpeechFailure.permissionDenied => t.record.voice.failure.permissionDenied,
   SpeechFailure.unavailable => t.record.voice.failure.unavailable,
+  SpeechFailure.languageOffline => t.record.voice.failure.languageOffline,
   SpeechFailure.noMatch => t.record.voice.failure.noMatch,
   SpeechFailure.network => t.record.voice.failure.network,
   SpeechFailure.other || null => t.record.voice.failure.other,

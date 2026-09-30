@@ -1606,6 +1606,13 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       keterangan kecil redup (`bodySmall`); label di bawah tombol hanya saat
       gagal; saat memahami cukup transkrip + bilah kemajuan; "Merekam" tidak
       diulang karena lencana REKAM sudah ada.
+      Paket bahasa luring (temuan pemilik 30 Sep 2026: English di mode
+      pesawat gagal "belum punya pengenal ucapan", Indonesia aman):
+      `error_language_unavailable` kini `SpeechFailure.languageOffline`
+      dengan pesan "sambungkan internet atau unduh paket bahasanya", "Ketik
+      saja" jadi utama; kode galat mentah pengenal (kecuali diam/tak
+      terdengar) dilaporkan non-fatal ke Crashlytics tanpa isi ucapan.
+      **Belum dicek di HP** bahwa Samsung memang mengirim kode itu.
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa

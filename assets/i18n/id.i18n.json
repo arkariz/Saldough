@@ -101,6 +101,7 @@
       "failure": {
         "permissionDenied": "Izin mikrofon ditolak. Izinkan di pengaturan perangkat.",
         "unavailable": "Perangkat ini belum punya pengenal ucapan.",
+        "languageOffline": "Bahasa ini belum bisa dikenali tanpa internet di HP ini. Sambungkan internet, atau unduh paket bahasanya di setelan pengenalan ucapan perangkat.",
         "noMatch": "Tidak ada ucapan yang tertangkap. Coba lagi.",
         "network": "Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.",
         "other": "Ada yang salah. Coba lagi."

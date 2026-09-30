@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -10,10 +12,16 @@ import 'package:speech_to_text/speech_to_text.dart';
 /// bahasa Indonesia luring tidak terjamin di semua perangkat, jadi
 /// `onDevice` tidak dipaksa.
 final class SystemSpeechTranscriber implements SpeechTranscriber {
-  /// Membuat [SystemSpeechTranscriber].
-  SystemSpeechTranscriber({SpeechToText? speech}) : _speech = speech ?? SpeechToText();
+  /// Membuat [SystemSpeechTranscriber]. [reportError] menerima kode galat
+  /// mentah pengenal (bawaan: non-fatal Crashlytics), supaya pemetaan ke
+  /// [SpeechFailure] bisa dicocokkan dengan perangkat nyata.
+  SystemSpeechTranscriber({SpeechToText? speech, void Function(SpeechRecognizerError error)? reportError})
+    : _speech = speech ?? SpeechToText(),
+      _reportError = reportError ?? _reportToCrashlytics;
 
   final SpeechToText _speech;
+  final void Function(SpeechRecognizerError error) _reportError;
+  String _localeId = '';
   StreamController<SpeechUpdate>? _controller;
   String _lastWords = '';
 
@@ -39,6 +47,7 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
     _controller = controller;
     _lastWords = '';
     _errorReason = null;
+    _localeId = localeId;
     unawaited(_start(controller, localeId, phrases));
     return controller.stream;
   }
@@ -83,19 +92,11 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   }
 
   void _onError(SpeechRecognitionError error) {
-    final message = error.errorMsg;
-    final reason = switch (message) {
-      'error_no_match' || 'error_speech_timeout' => SpeechFailure.noMatch,
-      'error_network' || 'error_network_timeout' || 'error_server' => SpeechFailure.network,
-      'error_permission' || 'error_insufficient_permissions' => SpeechFailure.permissionDenied,
-      // Tanpa layanan pengenal terpilih ("no selected voice recognition
-      // service") atau tanpa dukungan bahasa.
-      'error_client' ||
-      'error_language_not_supported' ||
-      'error_language_unavailable' ||
-      'error_cannot_check_support' => SpeechFailure.unavailable,
-      _ => SpeechFailure.other,
-    };
+    final reason = speechFailureFor(error.errorMsg);
+    // Diam dan tidak terdengar adalah pemakaian biasa, bukan galat.
+    if (reason != SpeechFailure.noMatch) {
+      _reportError(SpeechRecognizerError(code: error.errorMsg, localeId: _localeId, permanent: error.permanent));
+    }
     _errorReason = reason;
     // Kata yang sudah tertangkap sebelum galat tetap dipakai.
     _finishWithWordsOr(reason);
@@ -148,3 +149,40 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
     await controller?.close();
   }
 }
+
+/// Galat mentah pengenal ucapan untuk dilaporkan. Hanya kode, bahasa, dan
+/// sifatnya -- tidak pernah isi ucapan.
+final class SpeechRecognizerError implements Exception {
+  /// Membuat [SpeechRecognizerError].
+  const SpeechRecognizerError({required this.code, required this.localeId, required this.permanent});
+
+  /// Kode dari plugin, mis. `error_language_unavailable`.
+  final String code;
+
+  /// Bahasa sesi, mis. `en_US`.
+  final String localeId;
+
+  /// Galat permanen menurut plugin.
+  final bool permanent;
+
+  @override
+  String toString() => 'SpeechRecognizerError($code, $localeId, permanent: $permanent)';
+}
+
+void _reportToCrashlytics(SpeechRecognizerError error) =>
+    AppBootstrap.recordNonFatal(error, reason: 'SpeechRecognizer');
+
+/// [SpeechFailure] untuk kode galat mentah `speech_to_text` (Android).
+@visibleForTesting
+SpeechFailure speechFailureFor(String code) => switch (code) {
+  'error_no_match' || 'error_speech_timeout' => SpeechFailure.noMatch,
+  'error_network' || 'error_network_timeout' || 'error_server' => SpeechFailure.network,
+  'error_permission' || 'error_insufficient_permissions' => SpeechFailure.permissionDenied,
+  // Bahasa didukung tetapi paket luringnya belum ada dan tidak ada internet
+  // (Android 12+, ERROR_LANGUAGE_UNAVAILABLE).
+  'error_language_unavailable' => SpeechFailure.languageOffline,
+  // Tanpa layanan pengenal terpilih ("no selected voice recognition
+  // service") atau bahasa tidak didukung sama sekali.
+  'error_client' || 'error_language_not_supported' || 'error_cannot_check_support' => SpeechFailure.unavailable,
+  _ => SpeechFailure.other,
+};

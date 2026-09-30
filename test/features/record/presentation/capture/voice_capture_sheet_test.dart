@@ -102,6 +102,16 @@ void main() {
     expect(typeInsteadVariant(tester), AppButtonVariant.primary);
   });
 
+  testWidgets('paket bahasa luring belum ada: pesan khusus, "Ketik saja" jadi tombol utama', (tester) async {
+    await pumpSheet(tester, const [SpeechFailed(SpeechFailure.languageOffline)]);
+
+    await tester.tap(find.byKey(const ValueKey('voice-record-button')));
+    await tester.pump(const Duration(milliseconds: 50));
+
+    expect(textOf(tester, 'voice-primary-text'), t.record.voice.failure.languageOffline);
+    expect(typeInsteadVariant(tester), AppButtonVariant.primary);
+  });
+
   testWidgets('tidak ada ucapan tertangkap: rekam ulang tetap jalan utama', (tester) async {
     await pumpSheet(tester, const [SpeechFailed(SpeechFailure.noMatch)]);
 

@@ -967,6 +967,7 @@ class _Translations$record$voice$failure$en extends Translations$record$voice$fa
 	// Translations
 	@override String get permissionDenied => 'Microphone access was denied. Allow it in device settings.';
 	@override String get unavailable => 'This device doesn\'t have a speech recognizer yet.';
+	@override String get languageOffline => 'This language can\'t be recognized offline on this phone yet. Connect to the internet, or download its language pack in the device\'s speech recognition settings.';
 	@override String get noMatch => 'Didn\'t catch anything. Try again.';
 	@override String get network => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.';
 	@override String get other => 'Something went wrong. Try again.';
@@ -1071,6 +1072,7 @@ extension on TranslationsEn {
 			'record.voice.typeInstead' => 'Type instead',
 			'record.voice.failure.permissionDenied' => 'Microphone access was denied. Allow it in device settings.',
 			'record.voice.failure.unavailable' => 'This device doesn\'t have a speech recognizer yet.',
+			'record.voice.failure.languageOffline' => 'This language can\'t be recognized offline on this phone yet. Connect to the internet, or download its language pack in the device\'s speech recognition settings.',
 			'record.voice.failure.noMatch' => 'Didn\'t catch anything. Try again.',
 			'record.voice.failure.network' => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.',
 			'record.voice.failure.other' => 'Something went wrong. Try again.',
@@ -1491,9 +1493,9 @@ extension on TranslationsEn {
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
-			'home.freelanceTitle' => 'Freelance',
 			_ => null,
 		} ?? switch (path) {
+			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',

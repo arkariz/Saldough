@@ -1516,6 +1516,9 @@ keputusan arsitektur di [ADR-026](../02-architecture/adr/0026-sistem-kategori.md
 (bukti teks suara/notifikasi/foto, interpreter yang bisa diganti, draf CATAT).
 Nomor 11, karena Fase 10 dicadangkan untuk sinkronisasi (B-7). Dari B-13 dan
 B-14.
+Verifikasi mendalam dilakukan per milestone (M1: T-11.1–11.4, M2:
+T-11.5–11.6, M3: T-11.7–11.9) — lihat
+[VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md).
 
 - [x] **T-11.1** Sistem kategori (dari B-13, ADR-026): entitas `Category`,
       repository, set bawaan, migrasi `categoryKey` → `categoryId` (label

@@ -167,6 +167,19 @@ kesalahan analisis.
 - `when(...).thenAnswer(...)` dipakai untuk stub asinkron; `when(...).thenReturn(...)`
   untuk stub sinkron.
 
+> **Catatan revisi (1 Oktober 2026, T-12.6, ADR-030):** fake tanpa keadaan
+> diganti `mocktail` beserta fungsi penyetel stub di `test/helpers/mocks.dart`
+> (`stubBudgetItemCatalog`, `stubBudgetOverviewSource`,
+> `stubFreelanceOverviewSource`, `failingWalletRepository`). Kriteria
+> peninjauan ulang §9 pertama terpenuhi untuk antarmuka yang **berperilaku**
+> — punya aliran atau keadaan yang berubah sepanjang uji — jadi fake tulis
+> tangan diizinkan di sana, satu fake per antarmuka dan tidak dicampur
+> `mocktail` untuk antarmuka yang sama: `AuthRepository`
+> (`FakeAuthRepository`: aliran status masuk), `SpeechTranscriber`
+> (`_FakeTranscriber`: aliran `SpeechUpdate` yang dikendalikan uji), dan
+> `SpeechToText` (`_FakeSpeech`: meniru singleton yang pendengarnya hanya
+> dipasang sekali). Antarmuka baru mulai dari `mocktail`.
+
 ### Antipola yang harus dihindari
 
 - Mencampur fake tulis tangan dan `mocktail` untuk interface yang sama.

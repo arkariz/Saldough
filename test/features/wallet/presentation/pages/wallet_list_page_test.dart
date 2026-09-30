@@ -38,10 +38,10 @@ void main() {
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
-      ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
-      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
+      ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
+      ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
-      ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)

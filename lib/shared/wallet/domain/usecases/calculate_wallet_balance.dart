@@ -1,4 +1,4 @@
-import 'package:saldough/shared/transaction/domain/transaction.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/domain/wallet.dart';
 
 /// Menghitung saldo turunan sebuah [Wallet] dari `initialBalance` ditambah

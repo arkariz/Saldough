@@ -72,7 +72,8 @@ presentation  ──►  domain  ◄──  data
 | `domain` | Entitas, antarmuka repository, use case | Tidak ada. Dart murni. |
 | `data` | Model serialisasi, sumber data, implementasi repository | `domain`, `core` |
 | `presentation` | Bloc, state, halaman, widget | `domain`, `core` |
-| `core` | Tema, terjemahan, DI, router, widget bersama | Paket eksternal |
+| `core` | Tema, terjemahan, infrastruktur rute dan efek, widget bersama, tanpa makna bisnis | Paket eksternal |
+| `app` | Akar komposisi: `RootModule`, `SaldoughApp`, `AppShellPage` | Semua zona |
 
 Aturan yang paling sering dilanggar dan paling penting dijaga: **lapisan domain
 tidak boleh mengimpor Flutter**. Tidak `material.dart`, tidak `widgets.dart`,
@@ -81,6 +82,11 @@ harus bisa diuji tanpa menjalankan Flutter.
 
 Lapisan `presentation` tidak pernah mengimpor `data`. Keduanya bertemu di
 `domain` lewat antarmuka repository, dan disambungkan di modul dependensi fitur.
+
+`lib/app/` adalah satu-satunya tempat (bersama `main.dart`) yang boleh melihat
+semua fitur; `core/` tidak mengimpor `shared/` maupun `features/`
+([ADR-030](adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)
+§3.1). Seluruh aturan impor ini dijaga `test/architecture/import_boundaries_test.dart`.
 
 ## Struktur folder
 
@@ -92,64 +98,35 @@ punya jawaban untuk di mana entitas lintas fitur (seperti `Wallet` dan
 
 ```
 saldough/
-├── assets/
-│   └── i18n/
-│       ├── id.i18n.json                  # bahasa dasar
-│       └── en.i18n.json
+├── assets/i18n/{id,en}.i18n.json         # bahasa dasar id
 ├── lib/
 │   ├── main.dart                         # bootstrap dua fase
-│   ├── app.dart                          # MaterialApp.router
+│   ├── app/                              # AKAR KOMPOSISI (ADR-030 §3.1)
+│   │   ├── app.dart                      # SaldoughApp, MaterialApp.router
+│   │   ├── di/{di.dart, root_module.dart}   # DiBoot, RootModule (+ featureModules)
+│   │   └── shell/app_shell_page.dart     # empat tab + tombol CATAT/suara
 │   ├── core/                             # infra lintas fitur, TANPA makna bisnis
-│   │   ├── di/
-│   │   │   ├── di.dart                   # DiBoot
-│   │   │   └── src/{app_injectable.dart, root_module.dart}
 │   │   ├── foundation/
-│   │   │   ├── effect_handler/
-│   │   │   │   ├── app_effect_registry.dart
-│   │   │   │   └── src/{nav_effect_handler.dart, snackbar_effect_handler.dart, dialog_effect_handler.dart}
-│   │   │   ├── navigation/
-│   │   │   │   ├── app_route_registry.dart
-│   │   │   │   └── route_node_go_router_ext.dart
-│   │   │   └── repository_guard.dart     # mixin RepositoryGuard — lihat ADR-0005
-│   │   ├── storage/
-│   │   │   ├── app_storage.dart
-│   │   │   └── app_storage_keys.dart
-│   │   ├── theme/
-│   │   │   ├── theme.dart                # barrel
-│   │   │   ├── app_theme.dart
-│   │   │   ├── tokens/{app_spacing, app_radius, app_durations, app_elevation}.dart
-│   │   │   └── extensions/app_colors_extension.dart
-│   │   ├── presentation/widgets/         # AppCard, AppButton, AppChip, AppMoneyText
-│   │   ├── utils/formatters/             # pemformat uang (AppMoneyFormatter, money_input) dan tanggal
-│   │   ├── currency/                     # mata uang aktif, satu per aplikasi (ADR-025)
-│   │   ├── tutorial/                     # progres onboarding dan tur, di atas KeyValueStorage (ADR-021)
-│   │   ├── config/                       # konfigurasi Firebase (ADR-023)
-│   │   ├── foundation/analytics/         # Firebase Analytics dan Crashlytics (ADR-023)
+│   │   │   ├── effect_handler/           # penangan efek baku, feedbackSnackBar
+│   │   │   ├── navigation/               # AppRouteRegistry, RouteNodeGoRouterExt, pushRoute
+│   │   │   ├── analytics/                # Firebase Analytics, Crashlytics, App Check (ADR-023)
+│   │   │   └── repository_guard.dart     # mixin RepositoryGuard — ADR-0005
+│   │   ├── theme/                        # tema, token, AppColorsExtension, PixelTheme
+│   │   ├── presentation/                 # widget bersama (AppCard, AppForm*, RunOnce), spotlight, motion
+│   │   ├── utils/formatters/             # uang (AppMoneyFormatter, money_input) dan tanggal
+│   │   ├── currency/  language/  tutorial/  config/
 │   │   └── i18n/                         # keluaran slang
 │   ├── shared/                           # kapabilitas dipakai ≥2 fitur, module-first
-│   │   ├── wallet/                       # dikonsumsi transaction, budget, freelance, home
-│   │   │   ├── wallet.dart               # barrel — satu-satunya jalur impor ke modul ini
-│   │   │   ├── domain/{wallet.dart, wallet_repository.dart}
-│   │   │   └── data/{wallet_model.dart, wallet_repository_impl.dart}
-│   │   ├── auth/                         # identitas opsional, Firebase Auth (ADR-023, ADR-024)
-│   │   └── transaction/                  # dikonsumsi budget, home, wallet, record, freelance
-│   │       ├── transaction.dart          # barrel
-│   │       ├── domain/{transaction.dart, transaction_repository.dart}
-│   │       └── data/{transaction_model.dart, transaction_repository_impl.dart}
+│   │   ├── wallet/                       # wallet.dart (domain+data), wallet_presentation.dart
+│   │   ├── transaction/                  # + LedgerChanges, transaction_query, transaction_presentation.dart
+│   │   ├── category/                     # ADR-026; category_presentation.dart
+│   │   ├── budget_catalog/               # port baca BudgetItemCatalog (ADR-030 §3.5)
+│   │   └── auth/                         # identitas opsional (ADR-023/024); auth_presentation.dart
 │   └── features/                         # graf milik satu fitur
 │       ├── home/                         # ringkasan; domain/ hanya berisi port
-│       ├── wallet/                       # pengelolaan dompet (konsumen shared/wallet)
-│       ├── transaction/                  # daftar dan penyaring riwayat
-│       ├── record/                       # alur CATAT — satu-satunya penulis transaksi manual
-│       ├── budget/                       # anggaran, pos, dan template
-│       ├── freelance/                    # proyek, worklog, pembayaran
-│       ├── account/                      # layar Akun: masuk, mata uang, data (ADR-024, ADR-025)
-│       └── onboarding/                   # pengenalan pembukaan pertama (ADR-021)
-├── tool/                                 # skrip pengembang sekali pakai, TIDAK ikut di-build ke rilis
-│   └── seed_data.json                    # data historis nyata 1.0, disimpan sebagai rekaman
-└── test/
-    ├── shared/                           # cermin struktur lib/shared
-    └── features/                         # cermin struktur lib/features
+│       ├── wallet/  transaction/  budget/  freelance/  account/  onboarding/
+│       └── record/                       # CATAT — satu-satunya penulis transaksi manual; capture/ (ADR-027/029)
+└── test/                                 # cermin lib/, + architecture/ dan helpers/
 ```
 
 Setiap `features/<feature>/` punya susunan internal yang sama — `domain/`
@@ -158,6 +135,7 @@ dan `data/` privat (tidak diimpor fitur lain), `presentation/`, dan `di/`:
 ```
 features/budget/
 ├── data/
+│   ├── adapters/          # implementasi port milik fitur lain (pola port ADR-0009)
 │   ├── models/            # model serialisasi dengan fromJson dan toJson
 │   └── repositories/      # implementasi antarmuka domain, with RepositoryGuard
 ├── di/
@@ -167,29 +145,28 @@ features/budget/
 │   ├── repositories/      # abstract interface class
 │   └── usecases/          # CalculateBudgetProgress
 └── presentation/
-    ├── bloc/
-    │   ├── budget_bloc.dart
-    │   ├── budget_event.dart
-    │   ├── budget_effect.dart            # part dari budget_bloc.dart
-    │   └── budget_state.dart
+    ├── bloc/              # budget_bloc.dart + part budget_effect/budget_event, budget_state.dart
     ├── navigation/
-    │   ├── budget_route_keys.dart        # satu-satunya berkas yang boleh diimpor fitur lain
-    │   └── budget_route_module.dart
-    ├── pages/
+    │   ├── budget_route_keys.dart        # SATU-SATUNYA berkas yang boleh diimpor fitur lain
+    │   └── budget_route_module.dart      # RouteNode + scope milik rute
+    ├── pages/             # halaman besar dipecah ke part *_sections.dart
     └── widgets/
 ```
 
-Fitur yang tidak punya entitas sendiri — `home` dan `record` — berisi
-`presentation/`, `di/`, dan paling banyak `domain/` untuk **port** miliknya
-sendiri (`record`: `BudgetItemCatalog`; `home`: `BudgetOverviewSource`,
-`FreelanceOverviewSource`). Keduanya membaca dan menulis lewat modul `shared/`
-atau lewat port itu — implementasinya di `data/adapters/` fitur penyedia,
-dikawat di `RootModule` — tidak pernah lewat domain fitur lain.
+Fitur `home` hanya berisi `presentation/`, `di/`, dan `domain/` untuk **port**
+miliknya (`BudgetOverviewSource`, `FreelanceOverviewSource`), yang
+implementasinya ada di `data/adapters/` fitur penyedia dan dikawat di
+`RootModule`. Port **baca** yang dipakai ≥2 fitur tinggal di `shared/`
+(`shared/budget_catalog/`, dipakai `record` dan `transaction`); port **tulis**
+tetap milik fitur konsumen. `record` punya `domain/capture/` dan
+`data/capture/` untuk Catat Cerdas (ADR-027, ADR-029).
 
-`shared/<module>/` (lihat `shared/wallet/` di atas) disusun module-first —
-`domain/` + `data/` di balik satu barrel, **tanpa `presentation/`** — dan
-diimpor fitur lain hanya lewat barrel itu, tidak pernah lewat jalur berkas di
-dalamnya.
+`shared/<module>/` disusun module-first — `domain/` + `data/` di balik barrel
+`<module>.dart` — dan diimpor dari luar hanya lewat barrel. Tampilan entitas
+modul yang dipakai ≥2 fitur boleh tinggal di `presentation/` modul itu, lewat
+barrel kedua `<module>_presentation.dart` supaya `domain/` yang mengimpor
+barrel utama tidak ikut menarik Flutter; tanpa bloc, page, scope, atau rute
+(ADR-030 §3.2).
 
 ## Cara memilih pola DI
 
@@ -538,13 +515,14 @@ EffectListener<BudgetBloc, BudgetState>(
 
 ### Navigasi
 
-Kunci rute dan modul rute dipisah agar fitur lain tidak menarik pohon widget.
+Kunci rute dan modul rute dipisah agar fitur lain tidak menarik pohon widget
+(ADR-0004, ditegakkan ulang oleh ADR-030 §3.3).
 
 ```dart
 // wallet_route_keys.dart — satu-satunya berkas yang boleh diimpor fitur lain
 final class WalletDetailInput extends RouteInput {
-  const WalletDetailInput({required this.walletId});
-  final String walletId;
+  const WalletDetailInput(this.wallet);
+  final Wallet wallet;
 }
 
 abstract final class WalletRouteKeys {
@@ -552,38 +530,73 @@ abstract final class WalletRouteKeys {
 }
 ```
 
-Modul rute adalah tempat lingkup dependensi fitur dipasang. Kontainer induk
-harus diambil **sebelum** `ScopeWidget` disisipkan, karena `ScopeProvider` belum
-ada di pohon saat `create` dijalankan.
+Modul rute memasang lingkup dependensi rutenya sendiri. Kontainer induk
+diambil **sebelum** `ScopeWidget` disisipkan, karena `ScopeProvider` belum ada
+di pohon saat `create` dijalankan. Tidak ada bloc yang dipinjam dari rute
+pemanggil; `RunOnce` memicu `*Started`.
 
 ```dart
 RouteNode.typed<WalletDetailInput>(
   key: WalletRouteKeys.detail,
   builder: (context, input) {
     final parentContainer = ScopeProvider.of(context);
-    return ScopeWidget<WalletScope>(
-      create: () => WalletScope(parentContainer: parentContainer),
-      builder: (context, scope) => BlocProvider.value(
-        value: scope.container.get<WalletBloc>(),
-        child: WalletDetailPage(walletId: input.walletId),
+    return PixelTheme(
+      child: ScopeWidget<WalletScope>(
+        create: () => WalletScope(parentContainer: parentContainer),
+        builder: (context, scope) {
+          final bloc = scope.container<WalletBloc>();
+          return BlocProvider.value(
+            value: bloc,
+            child: EffectListener<WalletBloc, WalletState>(
+              child: RunOnce(action: () => bloc.add(const WalletStarted()), child: WalletDetailPage(wallet: input.wallet)),
+            ),
+          );
+        },
       ),
     );
   },
 ),
 ```
 
-**Shell navigasi utama** (`AppShellPage`, `lib/core/presentation/shell/`) —
-bilah navigasi bawah lima tujuan (Beranda/Anggaran/CATAT/Riwayat/Dompet),
-layar awal aplikasi. Satu `GoRoute` mentah (bukan `RouteNode`) didaftarkan
-langsung di `AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab
-tetap dipasang lewat `ScopeWidget` fiturnya sendiri di dalam `IndexedStack`
-(bukan `StatefulShellRoute` — lihat catatan revisi ADR-0004 §8).
+Modul didaftarkan di `RootModule.featureModules`. Membuka rute:
 
-**CATAT bukan tujuan navigasi biasa.** Ia menempati posisi tengah di bilah
-navigasi tetapi tidak mengganti isi `IndexedStack`; menekannya membuka lembar
-pilihan jenis transaksi. Layar sekunder — rincian dompet, Freelance, penyunting
-anggaran — dicapai lewat `NavigatePushEffect` yang didorong bloc, bukan tab
-tersendiri, mengikuti pola resmi "layar sekunder dari fitur lain" di ADR-0004.
+- dari ketukan widget: `context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet))`
+  — pasangan kunci–input dicek saat kompilasi, hasilnya `Future` hasil rute;
+- dari logika bloc: `NavigatePushEffect(keyId: WalletRouteKeys.detail.id, input: …)`.
+
+`pushRoute` membangun rute Flutter dari `RouteNode` yang sama dengan yang
+didaftarkan ke `go_router`, lalu mendorongnya ke Navigator akar. Di Saldough
+`RouteTransition.slideFromBottom` berarti **lembar modal** setinggi layar
+(tema pemanggil ikut), dan `RouteTransition.none` berarti **rute alur
+transparan**: tak terlihat, memegang scope fiturnya, membuka lembar/dialognya
+sendiri, lalu menutup diri dengan hasilnya. CATAT, sunting transaksi, dan catat
+pakai suara (`RecordRouteKeys.sheet/edit/voice`) adalah alur, supaya
+`RecordBloc` hidup sampai penyimpanan dan snackbarnya selesai.
+
+Rute yang menulis lalu menutup diri menunggu efek hasilnya dulu (blocnya ikut
+tertutup bersama rute). Layar anak di dalam satu alur fitur yang berbagi bloc
+pembukanya (template anggaran, rincian proyek, kategori) boleh tetap
+`Navigator.push` di dalam fiturnya.
+
+**Shell navigasi utama** (`AppShellPage`, `lib/app/shell/`) — empat tab
+(Beranda/Anggaran/Riwayat/Dompet) dan dua tombol mengambang (CATAT, suara),
+layar awal aplikasi. Satu `GoRoute` mentah didaftarkan langsung di
+`AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab dipasang
+lewat `ScopeWidget` fiturnya di dalam `IndexedStack` (bukan
+`StatefulShellRoute` — catatan revisi ADR-0004 §8). Tombol mengambang membuka
+rute alur `record`; shell tidak memasang `RecordBloc`.
+
+### Sinkronisasi antarfitur
+
+Layar yang menampilkan saldo atau transaksi tetap segar lewat `LedgerChanges`
+(`shared/transaction/domain/`, ADR-030 §3.4), bukan dimuat ulang oleh shell
+atau halaman lain. Sinyal dipancarkan **sekali per unit kerja, sesudah
+transaksi dan saldo tertulis** — oleh `RecordTransaction` dan `WalletBloc`,
+tidak pernah oleh repository — dan membawa sumbernya. Bloc pelanggan
+(`TransactionBloc`, `WalletBloc`, `BudgetBloc`, `HomeBloc`,
+`WalletActivityBloc`) berlangganan lewat `ledgerChanges.from(this)` di
+konstruktor, batal di `close`, dan memuat ulang tanpa kerangka. Anggaran dan
+freelance disegarkan saat kembali dari rute dan saat tab dipilih.
 
 ### Injeksi dependensi
 
@@ -601,6 +614,7 @@ final class BudgetScope extends IsolatedScope {
     c.registerSingleton<KeyValueStorage>(parent<KeyValueStorage>());
     c.registerSingleton<WalletRepository>(parent<WalletRepository>());
     c.registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+    c.registerSingleton<LedgerChanges>(parent<LedgerChanges>());
   }
 
   @override
@@ -613,6 +627,7 @@ final class BudgetScope extends IsolatedScope {
         repository: c<BudgetRepository>(),
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
+        ledgerChanges: c<LedgerChanges>(),
       ),
       dispose: (bloc) => bloc.close(),
     );
@@ -632,8 +647,12 @@ use case domain paling utama, karena di situlah rumus keuangan berada.
 | Bloc | `bloc_test`, dengan repository dipalsukan memakai `mocktail` — lihat [ADR-0010](adr/0010-mocktail-bloc-test-convention.md) |
 | Widget | Uji widget untuk komponen bersama |
 
+Batas zona dan lapisan dijaga `test/architecture/import_boundaries_test.dart`
+(ADR-030 §3.8): ia membaca impor `lib/` dan melaporkan setiap impor terlarang.
+
 Saldough memakai `mocktail` untuk mock/stub dan `bloc_test` untuk menguji
-bloc. Ini **menyimpang** dari repo acuan arsitektur (`flutter-architecture-studi-bank`
+bloc; fake tulis tangan hanya untuk antarmuka berperilaku (`AuthRepository`,
+`SpeechTranscriber`, `SpeechToText`, catatan revisi ADR-0010). Ini **menyimpang** dari repo acuan arsitektur (`flutter-architecture-studi-bank`
 memakai fake tulis tangan tanpa pustaka mocking) — penyimpangan ini atas
 permintaan eksplisit pemilik, bukan temuan teknis. Lihat
 [ADR-0010](adr/0010-mocktail-bloc-test-convention.md) untuk contoh lengkap
@@ -688,10 +707,16 @@ menyimpang dari arsitektur.
 - Lapisan domain tidak mengimpor Flutter, Hive, atau paket infrastruktur.
 - Lapisan presentation tidak mengimpor lapisan data.
 - `core/` tidak pernah berisi entitas bisnis — hanya infra tanpa makna
-  domain.
-- `shared/<module>/` diimpor hanya lewat barrel-nya (`<module>.dart`), tidak
-  pernah lewat jalur berkas di dalamnya.
-- Impor antar fitur hanya lewat `<fitur>_route_keys.dart`.
+  domain — dan tidak mengimpor `shared/`, `features/`, maupun `app/`.
+- Akar komposisi (`RootModule`, `SaldoughApp`, `AppShellPage`) di `lib/app/`.
+- `shared/<module>/` diimpor hanya lewat barrel-nya (`<module>.dart` atau
+  `<module>_presentation.dart`), tidak pernah lewat jalur berkas di dalamnya.
+- Impor antar fitur hanya lewat `<fitur>_route_keys.dart`, kecuali adapter
+  `data/adapters/` yang mengimplementasikan port fitur konsumen.
+- Layar fitur lain dibuka lewat `context.pushRoute(kunci, input)`; tidak ada
+  bloc yang diteruskan antarrute.
+- Penulis buku besar memancarkan `LedgerChanges` sesudah unit kerjanya;
+  tidak ada `*Refreshed` bloc fitur lain dari shell atau halaman.
 - Seluruh impor memakai `package:saldough/...`, bukan impor relatif, kecuali di
   dalam berkas barrel dan direktif `part`.
 - Nominal bertipe `int` dalam satuan sen. Tidak pernah `double`.
@@ -700,7 +725,9 @@ menyimpang dari arsitektur.
 - `effect` tidak pernah masuk `props`.
 - Warna, jarak, sudut, dan durasi selalu lewat token, tidak pernah harfiah.
 - Teks antarmuka selalu lewat slang, tidak pernah harfiah.
-- Pengujian memakai `mocktail`/`bloc_test`, bukan fake tulis tangan.
+- Pengujian memakai `mocktail`/`bloc_test`, bukan fake tulis tangan (kecuali
+  antarmuka berperilaku, ADR-0010).
+- `test/architecture/import_boundaries_test.dart` harus lulus.
 - Ikuti kode paket internal, bukan README-nya. Beberapa README diketahui tidak
   sinkron dengan kodenya.
 

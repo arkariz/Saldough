@@ -2,9 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 import 'package:saldough/shared/transaction/domain/transaction_repository.dart';
-import 'package:saldough/shared/wallet/domain/usecases/calculate_wallet_balance.dart';
-import 'package:saldough/shared/wallet/domain/wallet.dart';
-import 'package:saldough/shared/wallet/domain/wallet_repository.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Menghitung ulang dan menulis `Wallet.currentBalance` dari nol, berdasarkan
 /// `initialBalance` ditambah seluruh transaksi yang tercatat.

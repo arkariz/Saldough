@@ -106,7 +106,8 @@ void main() {
     when(() => budgetRepository.deleteBudget(any())).thenAnswer((_) async => const Right(unit));
   });
 
-  BudgetBloc buildBloc() => BudgetBloc(ledgerChanges: LedgerChanges(), 
+  BudgetBloc buildBloc() => BudgetBloc(
+    ledgerChanges: LedgerChanges(),
     budgetRepository: budgetRepository,
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,

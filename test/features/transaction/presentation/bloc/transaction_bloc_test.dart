@@ -56,11 +56,13 @@ void main() {
     );
   });
 
-  TransactionBloc buildBloc() => TransactionBloc(ledgerChanges: LedgerChanges(), 
-    budgetItemCatalog: const FakeBudgetItemCatalog(),
+  TransactionBloc buildBloc() => TransactionBloc(
+    ledgerChanges: LedgerChanges(),
+    budgetItemCatalog: stubBudgetItemCatalog(),
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
-    recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
+    recordTransaction: RecordTransaction(
+      ledgerChanges: LedgerChanges(),
       transactionRepository: transactionRepository,
       recomputeWalletBalances: RecomputeWalletBalances(
         walletRepository: walletRepository,

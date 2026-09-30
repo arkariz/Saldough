@@ -67,7 +67,7 @@ void main() {
           transactionRepository: transactionRepository,
         ),
       )
-      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
+      ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())

@@ -60,8 +60,8 @@ void main() {
     templateRepository = BudgetTemplateRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
-      ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
-      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
+      ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
+      ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())

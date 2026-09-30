@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -372,7 +373,7 @@ void main() {
     testWidgets('mata uang gagal tersimpan: tetap di langkah mata uang, onboarding belum selesai', (tester) async {
       container
         ..unregister<CurrencyPreferenceRepository>()
-        ..registerSingleton<CurrencyPreferenceRepository>(_FailingCurrencyRepository());
+        ..registerSingleton<CurrencyPreferenceRepository>(_failingCurrencyRepository());
       await pumpRouter(tester);
 
       await tester.tap(find.text(t.onboarding.skipAction));
@@ -456,11 +457,15 @@ void main() {
   });
 }
 
-class _FailingCurrencyRepository implements CurrencyPreferenceRepository {
-  @override
-  Future<Either<Failure, AppCurrency>> load() async => const Right(AppCurrency.idr);
+class _MockCurrencyRepository extends Mock implements CurrencyPreferenceRepository {}
 
-  @override
-  Future<Either<Failure, Unit>> save(AppCurrency currency) async =>
-      const Left(SystemFailure(code: FailureCode.unknown, message: 'uji'));
+/// Memuat IDR, tetapi `save` selalu gagal.
+_MockCurrencyRepository _failingCurrencyRepository() {
+  registerFallbackValue(AppCurrency.idr);
+  final repository = _MockCurrencyRepository();
+  when(repository.load).thenAnswer((_) async => const Right(AppCurrency.idr));
+  when(() => repository.save(any())).thenAnswer(
+    (_) async => const Left(SystemFailure(code: FailureCode.unknown, message: 'uji')),
+  );
+  return repository;
 }

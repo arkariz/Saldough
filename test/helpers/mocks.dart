@@ -39,18 +39,16 @@ final fallbackTransaction = ExpenseTransaction(
   walletId: '_fallback',
 );
 
-/// [BudgetItemCatalog] palsu yang selalu mengembalikan [options] -- cukup
-/// untuk seluruh uji yang tidak menguji pos anggaran (daftar kosong), dan
-/// untuk uji T-4.4 yang memberi pilihan sendiri.
-class FakeBudgetItemCatalog implements BudgetItemCatalog {
-  /// Membuat [FakeBudgetItemCatalog].
-  const FakeBudgetItemCatalog([this.options = const []]);
+/// Mock [BudgetItemCatalog] (ADR-0010).
+class MockBudgetItemCatalog extends Mock implements BudgetItemCatalog {}
 
-  /// Pilihan yang dikembalikan [listOptions].
-  final List<BudgetItemOption> options;
-
-  @override
-  Future<Either<Failure, List<BudgetItemOption>>> listOptions() async => Right(options);
+/// [BudgetItemCatalog] yang selalu mengembalikan [options] -- cukup untuk
+/// uji yang tidak menguji pos anggaran (daftar kosong), dan untuk uji T-4.4
+/// yang memberi pilihan sendiri.
+MockBudgetItemCatalog stubBudgetItemCatalog([List<BudgetItemOption> options = const []]) {
+  final catalog = MockBudgetItemCatalog();
+  when(catalog.listOptions).thenAnswer((_) async => Right(options));
+  return catalog;
 }
 
 /// Mock [BudgetRepository] (ADR-0010) -- uji bloc `budget`.
@@ -66,28 +64,38 @@ final fallbackBudget = Budget(
   startDate: DateTime(2026),
 );
 
-/// [BudgetOverviewSource] palsu untuk uji yang membuka shell tanpa menguji
+/// Mock [BudgetOverviewSource] (ADR-0010).
+class MockBudgetOverviewSource extends Mock implements BudgetOverviewSource {}
+
+/// [BudgetOverviewSource] untuk uji yang membuka shell tanpa menguji
 /// Beranda: [overview] tetap, bawaannya tanpa anggaran aktif.
-class FakeBudgetOverviewSource implements BudgetOverviewSource {
-  /// Membuat [FakeBudgetOverviewSource].
-  const FakeBudgetOverviewSource([this.overview = const BudgetOverview(activeCount: 0, plannedAmount: 0, spent: 0)]);
-
-  /// Ringkasan yang dikembalikan.
-  final BudgetOverview overview;
-
-  @override
-  Future<Either<Failure, BudgetOverview>> activeBudgetOverview() async => Right(overview);
+MockBudgetOverviewSource stubBudgetOverviewSource([
+  BudgetOverview overview = const BudgetOverview(activeCount: 0, plannedAmount: 0, spent: 0),
+]) {
+  final source = MockBudgetOverviewSource();
+  when(source.activeBudgetOverview).thenAnswer((_) async => Right(overview));
+  return source;
 }
 
-/// [FreelanceOverviewSource] palsu: [overview] tetap, bawaannya `null`
+/// Mock [FreelanceOverviewSource] (ADR-0010).
+class MockFreelanceOverviewSource extends Mock implements FreelanceOverviewSource {}
+
+/// [FreelanceOverviewSource] dengan [overview] tetap, bawaannya `null`
 /// (tanpa pembayaran tertunda).
-class FakeFreelanceOverviewSource implements FreelanceOverviewSource {
-  /// Membuat [FakeFreelanceOverviewSource].
-  const FakeFreelanceOverviewSource([this.overview]);
+MockFreelanceOverviewSource stubFreelanceOverviewSource([FreelanceOverview? overview]) {
+  final source = MockFreelanceOverviewSource();
+  when(source.freelanceOverview).thenAnswer((_) async => Right(overview));
+  return source;
+}
 
-  /// Ringkasan yang dikembalikan.
-  final FreelanceOverview? overview;
-
-  @override
-  Future<Either<Failure, FreelanceOverview?>> freelanceOverview() async => Right(overview);
+/// [WalletRepository] yang `listWallets()`-nya SELALU gagal -- pembacaan
+/// yang gagal, bukan daftar yang memang kosong.
+MockWalletRepository failingWalletRepository() {
+  final repository = MockWalletRepository();
+  when(repository.listWallets).thenAnswer(
+    (_) async => const Left(
+      SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'),
+    ),
+  );
+  return repository;
 }

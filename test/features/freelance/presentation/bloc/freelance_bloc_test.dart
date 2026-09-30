@@ -47,7 +47,8 @@ void main() {
       walletRepository: wallets,
       receivePayment: ReceiveFreelancePayment(
         freelanceRepository: freelance,
-        recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
+        recordTransaction: RecordTransaction(
+          ledgerChanges: LedgerChanges(),
           transactionRepository: transactions,
           recomputeWalletBalances: RecomputeWalletBalances(
             walletRepository: wallets,

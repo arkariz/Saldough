@@ -73,11 +73,12 @@ void main() {
   });
 
   RecordBloc buildBloc() => RecordBloc(
-    budgetItemCatalog: const FakeBudgetItemCatalog(),
+    budgetItemCatalog: stubBudgetItemCatalog(),
     createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
-    recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
+    recordTransaction: RecordTransaction(
+      ledgerChanges: LedgerChanges(),
       transactionRepository: transactionRepository,
       recomputeWalletBalances: RecomputeWalletBalances(
         walletRepository: walletRepository,
@@ -133,7 +134,7 @@ void main() {
         createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
         walletRepository: walletRepository,
         transactionRepository: transactionRepository,
-        budgetItemCatalog: FakeBudgetItemCatalog([
+        budgetItemCatalog: stubBudgetItemCatalog([
           BudgetItemOption(
             budgetId: 'b1',
             budgetName: 'Rumah tangga',
@@ -144,7 +145,8 @@ void main() {
             endDate: DateTime(2026, 10),
           ),
         ]),
-        recordTransaction: RecordTransaction(ledgerChanges: LedgerChanges(), 
+        recordTransaction: RecordTransaction(
+          ledgerChanges: LedgerChanges(),
           transactionRepository: transactionRepository,
           recomputeWalletBalances: RecomputeWalletBalances(
             walletRepository: walletRepository,

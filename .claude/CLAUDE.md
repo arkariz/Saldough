@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 29 September 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan. Versi `0.2.0+3`, belum dirilis ke toko.
+**Terakhir diperbarui:** 1 Oktober 2026
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026. Versi `0.2.0+3`, belum dirilis ke toko.
 
 ## Apa ini
 
@@ -87,7 +87,9 @@ dihapus, dan kini repositori hanya memuat model **Dompet + Transaksi +
 Anggaran**. Baseline sesudah cutover: 11.369 baris Dart di `lib/` (tanpa
 berkas `.g.dart`), 33 berkas uji, 333 uji lulus. Baseline 29 Sep 2026:
 28.413 baris, 69 berkas uji, 609 uji lulus, `flutter analyze` tanpa error
-atau peringatan (11 info `unnecessary_unawaited` di uji, B-9).
+atau peringatan (11 info `unnecessary_unawaited` di uji, B-9). Baseline 1 Okt
+2026 (sesudah Fase 12): 34.516 baris, 88 berkas uji, 867 uji lulus,
+`flutter analyze` bersih.
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
@@ -110,6 +112,15 @@ periodenya.
 2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
 mengecek progres, baca dokumen itu bersama TASK_LIST. Seluruh 22 item selesai
 28 Sep 2026 (ADR-020 Accepted; UX-1 dikerjakan bersama T-9.6).
+
+**Batas arsitektur (Fase 12, ADR-030):** akar komposisi di `lib/app/`;
+`core/` tidak mengimpor fitur. Fitur lain dibuka lewat kunci rute
+(`<fitur>_route_keys.dart` + `context.pushRoute`), tiap rute memasang
+scope-nya sendiri; CATAT, sunting transaksi, dan suara adalah rute alur
+transparan fitur `record`. Layar saldo/transaksi segar lewat `LedgerChanges`
+(bukan `*Refreshed` dari shell). Tampilan entitas bersama di
+`shared/<modul>/presentation/` lewat `<modul>_presentation.dart`. Semua ini
+dijaga `test/architecture/import_boundaries_test.dart`.
 
 **Situs web:** landing Tanukonomy, halaman `/beta` untuk uji coba tertutup,
 kebijakan privasi, serta syarat dan ketentuan ada di repo terpisah

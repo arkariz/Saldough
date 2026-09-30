@@ -1,6 +1,4 @@
-import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
-import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
@@ -27,20 +25,6 @@ import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/routes.dart';
 
-/// Dobel gagal untuk [WalletRepository] -- lihat `app_shell_page_test.dart`.
-final class _FailingWalletRepository implements WalletRepository {
-  @override
-  Future<Either<Failure, List<Wallet>>> listWallets() async => const Left(
-    SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal untuk uji'),
-  );
-
-  @override
-  Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => throw UnimplementedError();
-
-  @override
-  Future<Either<Failure, Unit>> deleteWallet(String id) => throw UnimplementedError();
-}
-
 void main() {
   setUp(() => useCategories(['Makan Siang', 'Belanja Bulanan Kebutuhan Rumah Tangga dan Keluarga Besar']));
 
@@ -57,10 +41,10 @@ void main() {
     transactionRepository = TransactionRepositoryImpl(storage: storage);
     container = GetIt.asNewInstance()
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
-      ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
-      ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
+      ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
+      ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
-      ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+      ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
@@ -180,12 +164,12 @@ void main() {
     testWidgets('kegagalan pembacaan menampilkan keadaan galat, bukan keadaan kosong', (tester) async {
       final failingContainer = GetIt.asNewInstance()
         ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
-        ..registerLazySingleton<BudgetOverviewSource>(FakeBudgetOverviewSource.new)
-        ..registerLazySingleton<FreelanceOverviewSource>(FakeFreelanceOverviewSource.new)
+        ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
+        ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
-        ..registerLazySingleton<BudgetItemCatalog>(FakeBudgetItemCatalog.new)
+        ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
-        ..registerLazySingleton<WalletRepository>(_FailingWalletRepository.new)
+        ..registerLazySingleton<WalletRepository>(failingWalletRepository)
         ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
         ..registerLazySingleton<TransactionRepository>(() => transactionRepository);

@@ -297,4 +297,4 @@ Urutan dan satu commit per tahap (T-12.1 s.d. T-12.6 di TASK_LIST):
 **Penulis keputusan:** Tim Saldough
 **Ditinjau oleh:** Pemilik proyek (keputusan A1 dan A7, 30 Sep 2026)
 **Tanggal disetujui:** 2026-09-30
-**Status implementasi:** Berjalan — Fase 12; §3.1–§3.7 diimplementasikan (T-12.2 s.d. T-12.5), §3.8 di T-12.6
+**Status implementasi:** Diimplementasikan — Fase 12 selesai 1 Oktober 2026 (T-12.1 s.d. T-12.6)

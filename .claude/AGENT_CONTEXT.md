@@ -39,7 +39,7 @@ gejala yang kelihatan**.
    (kasus nyata: "Transactions" di tab bawah, kini "History"). Jangan
    memperbaikinya dengan mengecilkan font; pendekkan katanya, dan uji di lebar
    360dp untuk kedua bahasa dengan font asli dimuat (contoh:
-   `test/core/presentation/shell/app_shell_page_test.dart`). Di uji widget,
+   `test/app/shell/app_shell_page_test.dart`). Di uji widget,
    mengganti bahasa harus lewat
    `tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en))`.
 
@@ -47,14 +47,26 @@ gejala yang kelihatan**.
 
 ### Lapisan dan zona
 
-- Tiga zona tidak tumpang tindih: `core/` (infra, tanpa makna bisnis),
-  `shared/<modul>/` (dipakai ≥2 fitur, module-first, tanpa `presentation/`),
-  `features/<fitur>/`.
+- Tiga zona tidak tumpang tindih: `core/` (infra, tanpa makna bisnis, tidak
+  mengimpor `shared/`/`features/`/`app/`), `shared/<modul>/` (dipakai ≥2
+  fitur, module-first; `presentation/` hanya untuk tampilan entitas modul,
+  lewat barrel kedua `<modul>_presentation.dart`), `features/<fitur>/`.
+  Akar komposisi (`RootModule`, `SaldoughApp`, `AppShellPage`) di `lib/app/`
+  (ADR-030).
 - `domain/` tidak mengimpor apa pun — tanpa Flutter, tanpa Hive, tanpa paket
   infrastruktur.
 - `presentation/` tidak pernah mengimpor `data/` secara langsung.
 - `domain/` dan `data/` sebuah fitur privat; fitur lain hanya boleh mengimpor
-  `<fitur>_route_keys.dart`.
+  `presentation/navigation/<fitur>_route_keys.dart` dan membuka layarnya
+  lewat `context.pushRoute(kunci, input)`. Jangan meneruskan bloc antarrute;
+  tiap rute memasang scope-nya sendiri di `<fitur>_route_module.dart`.
+- Layar yang menampilkan saldo atau transaksi segar lewat `LedgerChanges`
+  (ADR-030 §3.4): penulis memancarkan sesudah unit kerja `Right`
+  (`RecordTransaction`, `WalletBloc`), pelanggan berlangganan lewat
+  `from(this)` dan batal di `close`. Jangan memanggil `*Refreshed` bloc fitur
+  lain.
+- `test/architecture/import_boundaries_test.dart` menjaga aturan di atas;
+  jangan melonggarkannya tanpa ADR.
 - Penulisan lintas fitur lewat port kecil milik fitur konsumen, dikawat di
   `RootModule` — bukan lewat promosi ke `shared/`.
 - `Wallet` dan `Transaction` tinggal di `shared/` karena dibaca lebih dari dua
@@ -117,7 +129,7 @@ gejala yang kelihatan**.
 - Memakai Riverpod, Provider, atau GetX.
 - Memakai `freezed`. Monorepo internal tidak memakainya di mana pun.
 - Membuat fake tulis tangan (`_FakeXyz implements Interface`) — pakai `mocktail`
-  dan `bloc_test`. Lihat
+  dan `bloc_test`; pengecualian hanya antarmuka berperilaku yang tercatat. Lihat
   [ADR-0010](../docs/02-architecture/adr/0010-mocktail-bloc-test-convention.md).
 - Menyalin `ArchitectureBride*`, seam `Get.find()`, atau `mobile_dsl` dari repo
   acuan arsitektur.

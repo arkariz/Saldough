@@ -252,6 +252,19 @@ Rincian di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md).
 mengucapkan satu transaksi lalu meninjaunya di formulir CATAT yang sudah
 terisi; hasil suara tidak pernah tersimpan tanpa konfirmasi.
 
+## Fase 12: Rapikan batas arsitektur
+
+Hasil review arsitektur 30 Sep 2026: lapisan di dalam modul sehat, tetapi
+batas antarfitur tidak mengikuti dokumen. Akar komposisi keluar dari
+`core/`, sinyal buku besar menggantikan pemuatan ulang manual di shell,
+dan kunci rute ADR-0004 ditegakkan ulang
+([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)).
+Tanpa perubahan perilaku yang terlihat pengguna.
+
+**Selesai kalau:** tidak ada impor antarfitur selain `*_route_keys.dart`,
+`core/` tidak mengimpor `shared/`/`features/`, shell tidak memuat ulang bloc
+fitur lain, dan uji batas impor menjaga semuanya.
+
 ## Ketergantungan antar fase
 
 ```

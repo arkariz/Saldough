@@ -190,6 +190,16 @@ dengan sebanyak ini layar.
 >   `StatefulShellRoute` sungguhan baru perlu dipertimbangkan — dicatat di
 >   sini sebagai kemungkinan langkah berikutnya, bukan kebutuhan sekarang.
 
+> **Catatan revisi (30 September 2026, ADR-030):** sejak pivot 2.0,
+> keputusan ini tidak lagi dijalankan: `RootModule._featureModules` kosong,
+> tidak ada `*_route_keys.dart`, dan layar dibuka lewat `Navigator.push`
+> dengan page fitur lain diimpor langsung (40 impor antarfitur). Pemilik
+> memutuskan keputusan ini **ditegakkan ulang**, bukan direvisi — lihat
+> [ADR-030](0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)
+> §3.3, yang menambahkan dua hal: lembar modal lintas fitur sebagai rute
+> (`slideFromBottom` → `ModalBottomSheetRoute`) dan helper
+> `context.pushRoute(key, input)` untuk ketukan widget tanpa logika bloc.
+
 ## 9. Artefak terkait
 
 ### Dokumentasi
@@ -208,7 +218,6 @@ dengan sebanyak ini layar.
 **Penulis keputusan:** Tim Saldough
 **Ditinjau oleh:** Pemilik proyek
 **Tanggal disetujui:** 2026-09-09
-**Status implementasi:** Diimplementasikan — `RouteRegistry`/`RouteNode`/
-`RouteKey` dipakai tiap fitur sejak Fase 1, efek navigasi punya konsumen
-nyata pertama dan `MainShellPage` (bilah bawah) sejak 11 September 2026
-(lihat catatan revisi di §8)
+**Status implementasi:** Diimplementasikan di Saldough 1.0; tidak dipakai
+fitur 2.0 sampai Fase 12 menegakkannya ulang (ADR-030, catatan revisi 30
+September 2026 di §8)

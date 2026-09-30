@@ -73,6 +73,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 15 | 11 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 1 | Berjalan -- T-12.1 (keputusan dan ADR) selesai; berikutnya T-12.2 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1742,6 +1743,72 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       penyusun dan interpreter cloud menangkap `Object` (H3); App Check
       sesudah Crashlytics (H4). 836 uji lulus, `flutter analyze` bersih.
       **Belum dicek di HP.**
+
+## Fase 12: Rapikan batas arsitektur
+
+Hasil review arsitektur 30 Sep 2026 (temuan A1–A11) dan keputusannya di
+[ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md).
+Satu commit per tugas, urutan mengikat: sinkronisasi (T-12.4) sebelum
+navigasi (T-12.5), karena halaman rincian baru bisa dibuka lewat rute
+setelah tidak lagi meminjam bloc fitur lain. Tanpa perubahan perilaku yang
+terlihat pengguna; setiap tugas ditutup dengan `flutter analyze` bersih dan
+seluruh uji lulus.
+
+- [x] **T-12.1** Tahap 0: keputusan dan ADR-030 (30 Sep 2026, review
+      arsitektur). Pemilik memutuskan A1 memakai kunci rute (ADR-0004
+      ditegakkan ulang) dan A7 mengizinkan `shared/<module>/presentation/`.
+      Hasil: ADR-030; catatan revisi ADR-0004 dan ADR-0009; Fase 12 di
+      ROADMAP; indeks ADR di `docs/README.md`.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-12.2** Tahap 1: pindah berkas tanpa ubah perilaku (ADR-030 §3.1,
+      §3.5, §3.7). Akar komposisi (`RootModule`, `di.dart`, `SaldoughApp`,
+      `AppShellPage`) ke `lib/app/`; `BudgetItemCatalog` ke
+      `shared/budget_catalog/`; `budget_form_fields.dart` ke
+      `core/presentation/widgets/` sebagai `AppForm*`; `wallet_select_field`,
+      `transaction_date_group_card`, `account_avatar` ke
+      `shared/<module>/presentation/`; parser ucapan ke
+      `features/record/domain/capture/`; `Icons.` di `app.dart` dan warna
+      harfiah `spotlight_overlay.dart` lewat token.
+      ⚠ Hanya jalur impor dan nama kelas yang berubah; kalau satu uji lama
+      gagal, itu tanda ada perilaku yang ikut berubah.
+      Verifikasi: `flutter analyze`, seluruh uji lulus, `core/` tidak lagi
+      mengimpor `shared/`/`features/`.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-12.3** Tahap 2: logika query transaksi jadi fungsi murni (ADR-030
+      §3.6). Penyaring jenis/dompet/kategori, pencarian, pengelompokan per
+      tanggal, dan jumlah bersih dari `TransactionBloc` ke
+      `shared/transaction/domain/`.
+      ⚠ Transfer tidak pernah dihitung sebagai pemasukan maupun pengeluaran
+      (aturan 7).
+      Verifikasi: uji unit fungsi murni dengan angka nyata; uji bloc lama
+      tetap lulus tanpa diubah.
+      Memenuhi FR-TXN-004.
+- [ ] **T-12.4** Tahap 3: sinyal buku besar `LedgerChanges` (ADR-030 §3.4).
+      Dipancarkan `RecordTransaction` dan `WalletBloc` sesudah unit kerja
+      `Right`; `TransactionBloc`, `WalletBloc`, `BudgetBloc`, `HomeBloc`
+      berlangganan; shell berhenti memuat ulang bloc lain sesudah CATAT.
+      ⚠ Jangan memancar dari repository (saldo menyusul transaksi, ADR-012);
+      batalkan langganan di `close`; stub uji bloc mencerminkan penulisan
+      terakhir (AGENT_CONTEXT jebakan 3).
+      Verifikasi: uji `RecordTransaction` (memancar hanya saat `Right`), uji
+      bloc pelanggan (memuat ulang tanpa kerangka), uji shell.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-12.5** Tahap 4: kunci dan modul rute per fitur (ADR-030 §3.3,
+      ADR-0004). Semua layar penuh jadi `RouteNode` dengan scope sendiri;
+      CATAT dan sunting transaksi jadi rute lembar (`slideFromBottom`);
+      helper `context.pushRoute`; nol `MaterialPageRoute` di `features/`;
+      halaman besar yang tersentuh dipecah (A9).
+      ⚠ Tampilan dan alur tidak boleh berubah: lembar tetap lembar, snackbar
+      hasil simpan tetap tampil sesudah lembar tertutup.
+      Verifikasi: uji widget navigasi (rincian dompet/anggaran/transaksi,
+      CATAT dari rincian), seluruh uji lulus, cek manual di emulator.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-12.6** Tahap 5: penutup. Fake tulis tangan di uji → `mocktail`
+      (ADR-0010); `test/architecture/import_boundaries_test.dart` (ADR-030
+      §3.8); sapuan ARCHITECTURE_OVERVIEW, AGENT_CONTEXT, dan CLAUDE.md.
+      Verifikasi: uji batas impor lulus dan gagal bila satu impor terlarang
+      ditambahkan.
+      Di luar PRD: kualitas arsitektur.
 
 ## Antrean (belum dijadwalkan)
 

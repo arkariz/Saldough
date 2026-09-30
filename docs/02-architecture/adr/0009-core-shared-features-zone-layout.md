@@ -301,7 +301,12 @@ ulang secara independen — diwariskan langsung dari bukti mereka.
   (`package:saldough/shared/goal/goal.dart`), tidak pernah lewat jalur
   berkas di dalamnya.
 - `shared/<module>/` tidak punya `presentation/` kecuali dicatat eksplisit
-  sebagai pengecualian di ADR ini.
+  sebagai pengecualian di ADR ini. **Direvisi 30 Sep 2026 (ADR-030 §3.2):**
+  `presentation/` boleh berisi widget dan helper tampilan untuk entitas
+  modul itu yang dipakai ≥2 fitur, tanpa bloc, page, scope, atau rute.
+- **Ditambahkan 30 Sep 2026 (ADR-030 §3.1):** akar komposisi (`RootModule`,
+  `SaldoughApp`, `AppShellPage`) tinggal di `lib/app/`, bukan `core/`;
+  `core/` tidak mengimpor `shared/` maupun `features/`.
 - `IsolatedScope.bridge()` mendaftarkan dependensi induk satu per satu
   (`c.registerSingleton<Dio>(parent<Dio>())`), tidak pernah meneruskan
   `parent` secara utuh.

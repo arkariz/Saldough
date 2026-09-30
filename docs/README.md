@@ -146,6 +146,7 @@ docs/
 | [0027](02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md) | Catat Cerdas: bukti teks, interpreter yang bisa diganti, draf CATAT | Accepted |
 | [0028](02-architecture/adr/0028-bahasa-aplikasi-dipilih-pengguna.md) | Bahasa aplikasi dipilih pengguna (tampilan + ucapan) | Accepted |
 | [0029](02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) | Catat Cerdas per bahasa: paket bahasa, tanggal pasti, jalur langsung ke cloud | Accepted |
+| [0030](02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md) | Batas antarfitur: akar komposisi, rute bertipe, sinyal buku besar, presentasi di shared | Accepted |
 
 ADR berikutnya memakai nomor **0030**.
 

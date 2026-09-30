@@ -101,7 +101,7 @@
         "permissionDenied": "Microphone access was denied. Allow it in device settings.",
         "unavailable": "This device doesn't have a speech recognizer yet.",
         "noMatch": "Didn't catch anything. Try again.",
-        "network": "Speech recognition on this device needs internet. Try again when online.",
+        "network": "Recognizing speech needs internet on this device. Connect and record again, or type instead.",
         "other": "Something went wrong. Try again."
       },
       "idleHint": "Tap the microphone, then say one transaction.",

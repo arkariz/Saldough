@@ -2372,8 +2372,8 @@ class Translations$record$voice$failure$id {
 	/// id: 'Tidak ada ucapan yang tertangkap. Coba lagi.'
 	String get noMatch => 'Tidak ada ucapan yang tertangkap. Coba lagi.';
 
-	/// id: 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.'
-	String get network => 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.';
+	/// id: 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.'
+	String get network => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.';
 
 	/// id: 'Ada yang salah. Coba lagi.'
 	String get other => 'Ada yang salah. Coba lagi.';
@@ -2478,7 +2478,7 @@ extension on Translations {
 			'record.voice.failure.permissionDenied' => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.',
 			'record.voice.failure.unavailable' => 'Perangkat ini belum punya pengenal ucapan.',
 			'record.voice.failure.noMatch' => 'Tidak ada ucapan yang tertangkap. Coba lagi.',
-			'record.voice.failure.network' => 'Pengenal ucapan di perangkat ini butuh internet. Coba lagi saat online.',
+			'record.voice.failure.network' => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.',
 			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
 			'record.voice.idleHint' => 'Ketuk mikrofon, lalu ucapkan satu transaksi.',
 			'record.voice.recordingBadge' => 'REKAM',

@@ -967,7 +967,7 @@ class _Translations$record$voice$failure$en extends Translations$record$voice$fa
 	@override String get permissionDenied => 'Microphone access was denied. Allow it in device settings.';
 	@override String get unavailable => 'This device doesn\'t have a speech recognizer yet.';
 	@override String get noMatch => 'Didn\'t catch anything. Try again.';
-	@override String get network => 'Speech recognition on this device needs internet. Try again when online.';
+	@override String get network => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.';
 	@override String get other => 'Something went wrong. Try again.';
 }
 
@@ -1070,7 +1070,7 @@ extension on TranslationsEn {
 			'record.voice.failure.permissionDenied' => 'Microphone access was denied. Allow it in device settings.',
 			'record.voice.failure.unavailable' => 'This device doesn\'t have a speech recognizer yet.',
 			'record.voice.failure.noMatch' => 'Didn\'t catch anything. Try again.',
-			'record.voice.failure.network' => 'Speech recognition on this device needs internet. Try again when online.',
+			'record.voice.failure.network' => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.',
 			'record.voice.failure.other' => 'Something went wrong. Try again.',
 			'record.voice.idleHint' => 'Tap the microphone, then say one transaction.',
 			'record.voice.recordingBadge' => 'REC',

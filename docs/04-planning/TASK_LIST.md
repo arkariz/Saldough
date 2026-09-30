@@ -1593,6 +1593,8 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       Temuan: FAB menutupi nominal baris terakhir — diperbaiki dengan
       `AppSpacing.fabClearance` di keempat tab. Sisa: ucapan sungguhan oleh
       pemilik, langkah bahasa onboarding (perlu pemasangan bersih).
+      Gagal jaringan (ADR-027 §3.5 butir 7): pesan "butuh internet" dan
+      "Ketik saja" jadi tombol utama; diuji di `voice_capture_sheet_test`.
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa
@@ -1602,7 +1604,10 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       stabil terkini) + `CascadingTransactionInterpreter` (aturan dulu, cloud
       bila ragu) + `firebase_app_check`. Tier gratis (Spark).
       ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
-      harus jatuh ke draf aturan tanpa galat ke pengguna.
+      harus jatuh ke draf aturan tanpa galat ke pengguna. Penerimaan
+      koneksi (ADR-027 §3.5 butir 7): tanpa cek koneksi di muka, batas
+      waktu ±5 dtk, tanpa antrean kirim ulang; uji dengan fake yang
+      melempar galat jaringan dan yang tidak pernah menjawab.
 - [ ] **T-11.8** Pindah ke tier berbayar (Blaze) sebelum rilis publik:
       billing, batas anggaran, cek ulang harga; tanpa perubahan kode.
       Dikerjakan pemilik; agen memperbarui dokumen.

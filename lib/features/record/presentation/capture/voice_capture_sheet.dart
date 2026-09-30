@@ -145,10 +145,21 @@ class VoiceCaptureSheet extends StatelessWidget {
                   const LinearProgressIndicator(),
                 ],
                 const SizedBox(height: AppSpacing.lg),
-                AppButton.secondary(
-                  label: t.record.voice.typeInstead,
-                  onPressed: () => Navigator.of(context).pop(const VoiceTypeInstead()),
-                ),
+                // Tanpa internet (atau tanpa pengenal), merekam ulang belum
+                // tentu berhasil -- mengetik jadi jalan utama. Pencatatan
+                // sendiri tetap penuh tanpa internet (NFR-REL-001).
+                if (_typingIsPrimary(state))
+                  AppButton(
+                    key: const ValueKey('voice-type-instead'),
+                    label: t.record.voice.typeInstead,
+                    onPressed: () => Navigator.of(context).pop(const VoiceTypeInstead()),
+                  )
+                else
+                  AppButton.secondary(
+                    key: const ValueKey('voice-type-instead'),
+                    label: t.record.voice.typeInstead,
+                    onPressed: () => Navigator.of(context).pop(const VoiceTypeInstead()),
+                  ),
               ],
             ),
           ),
@@ -336,6 +347,10 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
     );
   }
 }
+
+bool _typingIsPrimary(VoiceCaptureState state) =>
+    state.phase == VoiceCapturePhase.failed &&
+    (state.failure == SpeechFailure.network || state.failure == SpeechFailure.unavailable);
 
 String _failureMessage(SpeechFailure? failure) => switch (failure) {
   SpeechFailure.permissionDenied => t.record.voice.failure.permissionDenied,

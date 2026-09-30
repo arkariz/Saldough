@@ -99,6 +99,19 @@ Keputusan pemilik 30 Sep 2026 menggantikan arah "Gemma lokal dulu" di riset:
 5. **App Check** dipasang sebelum 2 Nov 2026 (wajib untuk AI Logic).
 6. **Gemma lokal ditunda** (antrean B-15); antarmuka `TransactionInterpreter`
    tetap membuatnya bisa ditambahkan kemudian.
+7. **Koneksi (keputusan pemilik 30 Sep 2026):** tidak ada pengecekan
+   koneksi di muka (`connectivity_plus` dan sejenisnya tidak dipakai) —
+   status jaringan tidak menjamin internet jalan, dan pengenal ucapan bisa
+   bekerja offline bila paket bahasanya terpasang. Setiap layanan dicoba,
+   lalu kegagalan nyatanya ditangani:
+   - STT gagal karena jaringan (`SpeechFailure.network`) → pesan "butuh
+     internet", tombol bulat tetap "Rekam ulang", dan "Ketik saja" naik jadi
+     tombol utama (sama untuk `unavailable`).
+   - Firebase AI: batas waktu ±5 dtk; offline, galat, atau lewat batas waktu
+     → draf aturan dibuka di CATAT dengan field bermasalah disorot, tanpa
+     pesan galat dan tanpa antrean kirim ulang (transkrip tidak disimpan).
+   - Tidak ada indikator offline di seluruh aplikasi: pencatatan inti penuh
+     tanpa internet (NFR-REL-001), jadi banner offline memberi kesan salah.
 
 ## 4. Opsi yang dipertimbangkan
 

@@ -9,22 +9,24 @@ sealed class VoiceCaptureEvent {
 /// Mulai (atau ulangi) merekam.
 final class VoiceCaptureStarted extends VoiceCaptureEvent {
   /// Membuat [VoiceCaptureStarted].
-  const VoiceCaptureStarted({required this.localeId, required this.wallets, required this.categories});
+  const VoiceCaptureStarted({
+    required this.localeId,
+    required this.languageCode,
+    required this.wallets,
+    required this.categories,
+  });
 
-  /// Bahasa ucapan, mis. `id_ID`.
+  /// Bahasa ucapan untuk pengenal, mis. `id_ID`.
   final String localeId;
+
+  /// Bahasa aplikasi (`id`, `en`), untuk memilih paket aturan (ADR-029).
+  final String languageCode;
 
   /// Dompet aktif (nama untuk pengenal dan pencocokan).
   final List<Wallet> wallets;
 
   /// Seluruh kategori.
   final List<Category> categories;
-}
-
-/// Pengguna selesai berbicara.
-final class VoiceCaptureStopped extends VoiceCaptureEvent {
-  /// Membuat [VoiceCaptureStopped].
-  const VoiceCaptureStopped();
 }
 
 final class _SpeechUpdated extends VoiceCaptureEvent {

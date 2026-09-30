@@ -896,6 +896,7 @@ class _Translations$record$draftIssue$en extends Translations$record$draftIssue$
 	@override String get transferSourceMissing => 'The source wallet is unclear. Pick where it came from.';
 	@override String get transferTargetMissing => 'The destination wallet is unclear. Pick where it went.';
 	@override String get categoryUnknown => 'The category mentioned doesn\'t exist. Pick a category.';
+	@override String get dateUnclear => 'The date mentioned can\'t be used. Pick the date.';
 }
 
 // Path: record.voice
@@ -907,16 +908,16 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	// Translations
 	@override String get title => 'Record by voice';
 	@override String get micLabel => 'Record by voice';
-	@override String get listening => 'Recording… tap again when you are done.';
+	@override String get listening => 'Go ahead, speak.';
+	@override String get autoStopHint => 'Stops by itself when you pause.';
 	@override String get example => 'Example: “lunch 35 thousand with BCA”';
 	@override String get interpreting => 'Understanding…';
-	@override String get stopAction => 'Done';
 	@override String get typeInstead => 'Type instead';
 	@override late final _Translations$record$voice$failure$en failure = _Translations$record$voice$failure$en._(_root);
 	@override String get idleHint => 'Tap the microphone, then say one transaction.';
 	@override String get recordingBadge => 'REC';
 	@override String get startAction => 'Start recording';
-	@override String get stopButtonLabel => 'Stop recording';
+	@override String get listeningButtonLabel => 'Listening';
 	@override String get retryAction => 'Record again';
 }
 
@@ -1060,12 +1061,13 @@ extension on TranslationsEn {
 			'record.draftIssue.transferSourceMissing' => 'The source wallet is unclear. Pick where it came from.',
 			'record.draftIssue.transferTargetMissing' => 'The destination wallet is unclear. Pick where it went.',
 			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
+			'record.draftIssue.dateUnclear' => 'The date mentioned can\'t be used. Pick the date.',
 			'record.voice.title' => 'Record by voice',
 			'record.voice.micLabel' => 'Record by voice',
-			'record.voice.listening' => 'Recording… tap again when you are done.',
+			'record.voice.listening' => 'Go ahead, speak.',
+			'record.voice.autoStopHint' => 'Stops by itself when you pause.',
 			'record.voice.example' => 'Example: “lunch 35 thousand with BCA”',
 			'record.voice.interpreting' => 'Understanding…',
-			'record.voice.stopAction' => 'Done',
 			'record.voice.typeInstead' => 'Type instead',
 			'record.voice.failure.permissionDenied' => 'Microphone access was denied. Allow it in device settings.',
 			'record.voice.failure.unavailable' => 'This device doesn\'t have a speech recognizer yet.',
@@ -1075,7 +1077,7 @@ extension on TranslationsEn {
 			'record.voice.idleHint' => 'Tap the microphone, then say one transaction.',
 			'record.voice.recordingBadge' => 'REC',
 			'record.voice.startAction' => 'Start recording',
-			'record.voice.stopButtonLabel' => 'Stop recording',
+			'record.voice.listeningButtonLabel' => 'Listening',
 			'record.voice.retryAction' => 'Record again',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
@@ -1490,9 +1492,9 @@ extension on TranslationsEn {
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			_ => null,
 		} ?? switch (path) {
+			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',

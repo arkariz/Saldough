@@ -30,6 +30,10 @@ enum DraftIssue {
 
   /// Kategori yang disebut tidak ada di daftar kategori.
   categoryUnknown,
+
+  /// Tanggal disebut tetapi tidak bisa dipakai: tidak ada di kalender, di
+  /// masa depan, atau kutipannya tidak ada di teks (ADR-029 §3.2).
+  dateUnclear,
 }
 
 /// Draf transaksi yang mengisi formulir CATAT (ADR-027 §3.4). Bukan

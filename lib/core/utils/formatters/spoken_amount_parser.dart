@@ -1,16 +1,24 @@
-/// Pengurai nominal dari teks bebas berbahasa Indonesia (dan sedikit
-/// Inggris): transkrip suara, teks notifikasi, teks struk (ADR-027 §3.3).
+/// Pengurai nominal dari teks bebas: transkrip suara, teks notifikasi, teks
+/// struk (ADR-027 §3.3).
 ///
 /// Berbeda dari `parseMoneyInput` (kolom ketik bernominal satu angka),
 /// pengurai ini mengenali satuan lisan ("ribu", "jt", "25k"), bilangan kata
-/// ("dua puluh lima ribu"), slang ("goceng"), dan awalan "Rp". Hasilnya
-/// selalu `int` sen — seperseratus satuan utama (ADR-025 §3.1) — dihitung
-/// dengan aritmetika bilangan bulat; tidak ada `double` di jalur ini.
+/// ("dua puluh lima ribu"), slang ("goceng"), dan awalan "Rp". Kata-kata itu
+/// datang dari [NumberLexicon] bahasanya (ADR-029 §3.1); pengurai sendiri
+/// hanya mengenal digit dan penanda mata uang. Hasilnya selalu `int` sen —
+/// seperseratus satuan utama (ADR-025 §3.1) — dihitung dengan aritmetika
+/// bilangan bulat; tidak ada `double` di jalur ini.
 ///
-/// Pengurai tidak menebak: dua nominal bersatuan dalam satu teks, angka tanpa
-/// satuan ("parkir 5"), dan "5,000" (ribuan atau desimal?) dilaporkan sebagai
-/// [SpokenAmountIssue], bukan dipilih salah satu.
+/// Pengurai tidak menebak: dua nominal dalam satu teks, angka tanpa satuan
+/// di bawah batas mata uangnya ("parkir 5"), dan "5,000" dalam bahasa
+/// Indonesia (ribuan atau desimal?) dilaporkan sebagai [SpokenAmountIssue],
+/// bukan dipilih salah satu.
 library;
+
+import 'package:saldough/core/currency/app_currency.dart';
+import 'package:saldough/core/utils/formatters/number_lexicon.dart';
+
+export 'package:saldough/core/utils/formatters/number_lexicon.dart';
 
 /// Masalah yang membuat nominal tidak bisa diisi dengan yakin.
 enum SpokenAmountIssue {
@@ -20,7 +28,8 @@ enum SpokenAmountIssue {
   /// Lebih dari satu nominal bersatuan ("kopi 25 ribu roti 15 ribu").
   multiple,
 
-  /// Angka tanpa satuan uang ("parkir 5").
+  /// Angka tanpa satuan uang di bawah batas angka polos mata uangnya
+  /// ("parkir 5"; ADR-029 §3.3).
   withoutUnit,
 
   /// Penulisan yang bisa dibaca dua cara ("5,000"), atau pecahan lebih
@@ -34,10 +43,23 @@ enum SpokenAmountIssue {
 /// Satu frasa nominal yang ditemukan di teks.
 final class SpokenAmount {
   /// Membuat [SpokenAmount].
-  const SpokenAmount({required this.text, required this.sen, required this.hasUnit, this.isAmbiguous = false});
+  const SpokenAmount({
+    required this.text,
+    required this.sen,
+    required this.hasUnit,
+    this.isAmbiguous = false,
+    this.start = 0,
+    this.end = 0,
+  });
 
   /// Potongan teks asli frasa ini, persis seperti di masukan.
   final String text;
+
+  /// Posisi awal [text] di masukan.
+  final int start;
+
+  /// Posisi akhir (eksklusif) [text] di masukan.
+  final int end;
 
   /// Nilainya dalam sen, atau `null` kalau [isAmbiguous].
   final int? sen;
@@ -69,44 +91,71 @@ final class SpokenAmountResult {
 abstract final class SpokenAmountParser {
   SpokenAmountParser._();
 
-  /// Memilih satu nominal dari [text]: satu-satunya frasa bersatuan.
+  /// Memilih satu nominal dari [text] dengan kosakata [lexicon] (lihat
+  /// [select]).
   ///
   /// [currencyCode] adalah mata uang aplikasi (ADR-025): menyebut mata uang
   /// lain ("10 dolar" saat aplikasi memakai IDR, atau "Rp" saat memakai USD)
   /// dilaporkan [SpokenAmountIssue.foreignCurrency].
-  static SpokenAmountResult parse(String text, {String currencyCode = 'IDR'}) {
+  static SpokenAmountResult parse(String text, {required NumberLexicon lexicon, String currencyCode = 'IDR'}) {
     final tokens = _tokenize(text);
     final own = _currencyWords[currencyCode] ?? const <String>{};
-    final foreign = {for (final words in _currencyWords.values) ...words}.difference(own);
+    final foreign = _moneyWords.difference(own);
     if (tokens.any((t) => foreign.contains(t.word))) {
       return const SpokenAmountResult(issue: SpokenAmountIssue.foreignCurrency);
     }
-    final found = findAll(text);
+    return select(findAll(text, lexicon: lexicon), currencyCode: currencyCode);
+  }
+
+  /// Memilih satu nominal dari [found]: satu-satunya frasa bersatuan; kalau
+  /// tidak ada, satu-satunya angka polos yang mencapai
+  /// [AppCurrency.plainAmountMinUnits] (ADR-029 §3.3).
+  static SpokenAmountResult select(List<SpokenAmount> found, {String currencyCode = 'IDR'}) {
+    SpokenAmountResult single(SpokenAmount amount) =>
+        SpokenAmountResult(amount: amount, issue: amount.isAmbiguous ? SpokenAmountIssue.ambiguous : null);
+
     final withUnit = found.where((a) => a.hasUnit).toList();
     if (withUnit.length > 1) return const SpokenAmountResult(issue: SpokenAmountIssue.multiple);
-    if (withUnit.length == 1) {
-      final amount = withUnit.single;
-      return SpokenAmountResult(amount: amount, issue: amount.isAmbiguous ? SpokenAmountIssue.ambiguous : null);
+    if (withUnit.length == 1) return single(withUnit.single);
+    final minUnits = AppCurrency.fromCode(currencyCode)?.plainAmountMinUnits;
+    if (minUnits != null) {
+      final plain = [
+        for (final amount in found)
+          if (!amount.isAmbiguous && (amount.sen ?? 0) >= minUnits * 100) amount,
+      ];
+      if (plain.length > 1) return const SpokenAmountResult(issue: SpokenAmountIssue.multiple);
+      if (plain.length == 1) return single(plain.single);
     }
     if (found.isNotEmpty) return SpokenAmountResult(amount: found.first, issue: SpokenAmountIssue.withoutUnit);
     return const SpokenAmountResult(issue: SpokenAmountIssue.missing);
   }
 
   /// Seluruh frasa bilangan di [text], urut kemunculan.
-  static List<SpokenAmount> findAll(String text) {
+  static List<SpokenAmount> findAll(String text, {required NumberLexicon lexicon}) {
     final tokens = _tokenize(text);
     final result = <SpokenAmount>[];
     var i = 0;
     while (i < tokens.length) {
-      if (!_isNumberish(tokens[i])) {
+      if (!_isNumberish(tokens[i], lexicon)) {
         i++;
         continue;
       }
       final start = i;
-      while (i < tokens.length && _isNumberish(tokens[i])) {
-        i++;
+      while (i < tokens.length) {
+        if (_isNumberish(tokens[i], lexicon)) {
+          i++;
+          continue;
+        }
+        // Kata sambung hanya ikut bila diapit kata bilangan ("two hundred and
+        // fifty", "half a million").
+        var j = i;
+        while (j < tokens.length && lexicon.connectors.contains(tokens[j].word)) {
+          j++;
+        }
+        if (j == i || j == tokens.length || !_isNumberish(tokens[j], lexicon)) break;
+        i = j;
       }
-      result.addAll(_evaluateRun(text, tokens.sublist(start, i)));
+      result.addAll(_evaluateRun(text, tokens.sublist(start, i), lexicon));
     }
     return result;
   }
@@ -166,69 +215,30 @@ bool _isWordChar(int c) =>
 // ---------------------------------------------------------------------------
 // Kosakata
 
-const _digitWords = {
-  'nol': 0,
-  'satu': 1,
-  'dua': 2,
-  'tiga': 3,
-  'empat': 4,
-  'lima': 5,
-  'enam': 6,
-  'tujuh': 7,
-  'delapan': 8,
-  'sembilan': 9,
-};
-
-/// Kata yang berdiri sendiri sebagai nilai di bawah seribu.
-const _smallWords = {'sepuluh': 10, 'sebelas': 11, 'seratus': 100};
-
-/// Satuan skala, termasuk bentuk "se-" dan singkatan.
-const _scaleWords = {
-  'ribu': 1000,
-  'rb': 1000,
-  'rebu': 1000,
-  'k': 1000,
-  'juta': 1000000,
-  'jt': 1000000,
-  'jta': 1000000,
-  'miliar': 1000000000,
-  'milyar': 1000000000,
-};
-
-/// Satuan skala berawalan "se-" (bernilai satu kali skalanya).
-const _seScaleWords = {'seribu': 1000, 'sejuta': 1000000, 'semiliar': 1000000000, 'semilyar': 1000000000};
-
-/// Slang nominal yang umum.
-const _slang = {'cepek': 100, 'gopek': 500, 'seceng': 1000, 'goceng': 5000, 'ceban': 10000, 'gocap': 50000};
-
-/// Kata penanda mata uang per kode ISO.
+/// Kata penanda mata uang per kode ISO. Bukan kosakata satu bahasa: kode
+/// dan nama mata uang dipakai lintas bahasa.
 const _currencyWords = {
   'IDR': {'rp', 'rupiah', 'idr'},
-  'USD': {'dolar', 'dollar', 'dollars', 'usd', r'$'},
-  'EUR': {'euro', 'eur'},
+  'USD': {'dolar', 'dollar', 'dollars', 'usd', 'bucks', r'$'},
+  'EUR': {'euro', 'euros', 'eur'},
   'JPY': {'yen', 'jpy'},
   'MYR': {'ringgit', 'myr'},
   'SGD': {'sgd'},
 };
 
-/// Awalan/akhiran yang menandai sebuah angka adalah uang.
-const _rupiahWords = {
-  'rp',
-  'rupiah',
-  'idr',
-  'dolar',
-  'dollar',
-  'dollars',
-  'usd',
-  r'$',
-  'euro',
-  'eur',
-  'yen',
-  'ringgit',
-};
+/// Seluruh penanda mata uang: di depan atau di belakang angka, menandainya
+/// sebagai uang.
+final Set<String> _moneyWords = {for (final words in _currencyWords.values) ...words};
 
 final _digitToken = RegExp(r'^\d[\d.,]*$');
-final _digitWithSuffix = RegExp(r'^(\d[\d.,]*)(k|rb|ribu|jt|juta|m)$');
+
+/// Digit berakhiran skala ("35rb", "25k") menurut [lexicon].
+({String digits, int scale})? _suffixed(String w, NumberLexicon lexicon) {
+  final match = RegExp(r'^(\d[\d.,]*)([a-z]+)$').firstMatch(w);
+  if (match == null) return null;
+  final scale = lexicon.digitSuffixes[match.group(2)];
+  return scale == null ? null : (digits: match.group(1)!, scale: scale);
+}
 
 /// Deret digit lebih panjang dari ini bukan nominal (nomor rekening,
 /// referensi transaksi) dan tidak pernah diurai -- mencegah `int.parse`
@@ -243,22 +253,21 @@ const _maxFractionDigits = 4;
 
 int _digitCount(String w) => RegExp(r'\d').allMatches(w).length;
 
-bool _isNumberish(_Token token) {
+bool _isNumberish(_Token token, NumberLexicon lexicon) {
   final w = token.word;
-  if ((_digitToken.hasMatch(w) || _digitWithSuffix.hasMatch(w)) && _digitCount(w) > _maxDigits) return false;
-  return _digitToken.hasMatch(w) ||
-      _digitWithSuffix.hasMatch(w) ||
-      _digitWords.containsKey(w) ||
-      _smallWords.containsKey(w) ||
-      _scaleWords.containsKey(w) ||
-      _seScaleWords.containsKey(w) ||
-      _slang.containsKey(w) ||
-      _rupiahWords.contains(w) ||
-      w == 'puluh' ||
-      w == 'belas' ||
-      w == 'ratus' ||
-      w == 'setengah' ||
-      w == 'koma';
+  final isDigits = _digitToken.hasMatch(w) || _suffixed(w, lexicon) != null;
+  if (isDigits) return _digitCount(w) <= _maxDigits;
+  return lexicon.digits.containsKey(w) ||
+      lexicon.values.containsKey(w) ||
+      lexicon.scales.containsKey(w) ||
+      lexicon.oneScales.containsKey(w) ||
+      lexicon.slang.containsKey(w) ||
+      _moneyWords.contains(w) ||
+      lexicon.tens.contains(w) ||
+      lexicon.teens.contains(w) ||
+      lexicon.hundreds.contains(w) ||
+      lexicon.half.contains(w) ||
+      lexicon.decimalPoint.contains(w);
 }
 
 // ---------------------------------------------------------------------------
@@ -283,7 +292,7 @@ final class _Rational {
 }
 
 /// Hasil membaca satu token angka: nilainya dan apakah pemisahnya meyakinkan.
-({_Rational value, bool grouped, bool ambiguous})? _readDigits(String raw) {
+({_Rational value, bool grouped, bool ambiguous})? _readDigits(String raw, NumberLexicon lexicon) {
   var s = raw;
   if (s.endsWith('.') || s.endsWith(',')) s = s.substring(0, s.length - 1);
   if (!RegExp(r'^\d[\d.,]*$').hasMatch(s)) return null;
@@ -314,11 +323,9 @@ final class _Rational {
     return groupsOfThree ? (value: _Rational(int.parse(parts.join())), grouped: true, ambiguous: false) : null;
   }
   if (parts[1].length == 3) {
-    // "35.000" lazim ribuan dalam bahasa Indonesia. "5,000" bisa ribuan gaya
-    // Inggris atau desimal gaya Indonesia -- jangan menebak.
-    return sep == '.'
-        ? (value: _Rational(int.parse(parts.join())), grouped: true, ambiguous: false)
-        : (value: _Rational(int.parse(parts.join())), grouped: true, ambiguous: true);
+    // Pemisah ribuan bahasanya ("35.000" dalam id, "5,000" dalam en) pasti
+    // ribuan. Pemisah lain bisa desimal -- jangan menebak.
+    return (value: _Rational(int.parse(parts.join())), grouped: true, ambiguous: sep != lexicon.groupSeparator);
   }
   // "1,5" / "1.5" / "35.000,00"-tanpa-titik: desimal.
   return (
@@ -341,7 +348,7 @@ _Rational _decimal(String whole, String fraction) {
 /// menghasilkan lebih dari satu nominal kalau skalanya naik lagi ("500 ribu
 /// 1 juta"), ada dua angka digit berturut-turut, atau ada sisa tak tersusun
 /// sesudah skala ("25 ribu 2 gelas": "2" adalah jumlah barang, bukan Rp2).
-List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
+List<SpokenAmount> _evaluateRun(String text, List<_Token> run, NumberLexicon lexicon) {
   final results = <SpokenAmount>[];
 
   var total = const _Rational(0);
@@ -372,6 +379,8 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
         sen: sen,
         hasUnit: unit,
         isAmbiguous: bad || sen == null,
+        start: run[from].start,
+        end: run[to].end,
       ),
     );
   }
@@ -456,10 +465,11 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
 
   for (var i = 0; i < run.length; i++) {
     final w = run[i].word;
+    if (lexicon.connectors.contains(w)) continue;
     if (commaWhole != null) {
       // Mengumpulkan digit desimal sesudah "koma".
-      if (_digitWords.containsKey(w)) {
-        commaDigits += '${_digitWords[w]}';
+      if (lexicon.digits.containsKey(w)) {
+        commaDigits += '${lexicon.digits[w]}';
         mark(i);
         continue;
       }
@@ -470,7 +480,7 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       }
       closeComma();
     }
-    if (w == 'koma') {
+    if (lexicon.decimalPoint.contains(w)) {
       if (!hasValue) continue;
       commaWhole = group + pending;
       group = const _Rational(0);
@@ -478,32 +488,26 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       mark(i);
       continue;
     }
-    if (_rupiahWords.contains(w)) {
+    if (_moneyWords.contains(w)) {
       // "Rp" di depan menandai uang; "rupiah" di belakang juga.
       if (w == 'rp' && hasValue) emit();
       hasUnit = true;
       mark(i);
       continue;
     }
-    final suffixed = _digitWithSuffix.firstMatch(w);
+    final suffixed = _suffixed(w, lexicon);
     if (suffixed != null) {
-      final read = _readDigits(suffixed.group(1)!);
+      final read = _readDigits(suffixed.digits, lexicon);
       if (read == null) continue;
       if (groupHasDigits) emit();
       pending = read.value;
       hasValue = true;
       ambiguous = ambiguous || read.ambiguous;
       mark(i);
-      final suffix = suffixed.group(2)!;
-      final scale = suffix == 'm' ? null : _scaleWords[suffix];
-      if (scale == null) {
-        emit();
-        continue;
-      }
-      applyScale(scale, i);
+      applyScale(suffixed.scale, i);
       continue;
     }
-    final read = _digitToken.hasMatch(w) ? _readDigits(w) : null;
+    final read = _digitToken.hasMatch(w) ? _readDigits(w, lexicon) : null;
     if (read != null) {
       // Dua angka digit berturut-turut tanpa skala di antaranya adalah dua
       // nominal ("25000 15000").
@@ -516,45 +520,45 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       mark(i);
       continue;
     }
-    if (_digitWords.containsKey(w)) {
+    if (lexicon.digits.containsKey(w)) {
       if (!pending.isZero) {
         group = group + pending;
       }
-      pending = _Rational(_digitWords[w]!);
+      pending = _Rational(lexicon.digits[w]!);
       hasValue = true;
       mark(i);
       continue;
     }
-    if (_smallWords.containsKey(w)) {
-      group = group + pending + _Rational(_smallWords[w]!);
+    if (lexicon.values.containsKey(w)) {
+      group = group + pending + _Rational(lexicon.values[w]!);
       pending = const _Rational(0);
       hasValue = true;
       mark(i);
       composed();
       continue;
     }
-    if (w == 'belas') {
+    if (lexicon.teens.contains(w)) {
       group = group + const _Rational(10) + pending;
       pending = const _Rational(0);
       mark(i);
       composed();
       continue;
     }
-    if (w == 'puluh') {
+    if (lexicon.tens.contains(w)) {
       group = group + pending.scale(10);
       pending = const _Rational(0);
       mark(i);
       composed();
       continue;
     }
-    if (w == 'ratus') {
+    if (lexicon.hundreds.contains(w)) {
       group = group + (pending.isZero ? const _Rational(1) : pending).scale(100);
       pending = const _Rational(0);
       mark(i);
       composed();
       continue;
     }
-    if (w == 'setengah') {
+    if (lexicon.half.contains(w)) {
       // "setengah juta" = 0,5 juta; "satu setengah juta" = 1,5 juta.
       pending = pending + const _Rational(1, 2);
       hasValue = true;
@@ -562,20 +566,20 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run) {
       composed();
       continue;
     }
-    if (_seScaleWords.containsKey(w)) {
+    if (lexicon.oneScales.containsKey(w)) {
       pending = const _Rational(1);
       hasValue = true;
-      applyScale(_seScaleWords[w]!, i);
+      applyScale(lexicon.oneScales[w]!, i);
       continue;
     }
-    if (_scaleWords.containsKey(w)) {
+    if (lexicon.scales.containsKey(w)) {
       if (!hasValue) continue; // "ribu" tanpa angka di depannya.
-      applyScale(_scaleWords[w]!, i);
+      applyScale(lexicon.scales[w]!, i);
       continue;
     }
-    if (_slang.containsKey(w)) {
+    if (lexicon.slang.containsKey(w)) {
       if (hasValue) emit();
-      total = _Rational(_slang[w]!);
+      total = _Rational(lexicon.slang[w]!);
       hasValue = true;
       hasUnit = true;
       lastScale = 1;

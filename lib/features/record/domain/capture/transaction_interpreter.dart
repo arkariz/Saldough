@@ -15,6 +15,7 @@ final class InterpretationContext extends Equatable {
     required this.expenseCategoryNames,
     required this.incomeCategoryNames,
     required this.today,
+    required this.currencyCode,
   });
 
   /// Nama dompet aktif.
@@ -29,8 +30,12 @@ final class InterpretationContext extends Equatable {
   /// Tanggal hari ini.
   final DateTime today;
 
+  /// Kode ISO mata uang aplikasi (ADR-025), untuk batas angka polos
+  /// (ADR-029 §3.3).
+  final String currencyCode;
+
   @override
-  List<Object?> get props => [walletNames, expenseCategoryNames, incomeCategoryNames, today];
+  List<Object?> get props => [walletNames, expenseCategoryNames, incomeCategoryNames, today, currencyCode];
 }
 
 /// Menafsirkan bukti teks menjadi kutipan terstruktur (ADR-027 §3.2).

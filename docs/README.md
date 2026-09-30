@@ -142,8 +142,12 @@ docs/
 | [0023](02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md) | Identitas opsional: Firebase Auth, Analytics, Crashlytics | Accepted |
 | [0024](02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md) | Kepemilikan data lokal dan akun | Accepted |
 | [0025](02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md) | Satu mata uang per aplikasi | Accepted |
+| [0026](02-architecture/adr/0026-sistem-kategori.md) | Sistem kategori: daftar bawaan yang bisa diubah | Accepted |
+| [0027](02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md) | Catat Cerdas: bukti teks, interpreter yang bisa diganti, draf CATAT | Accepted |
+| [0028](02-architecture/adr/0028-bahasa-aplikasi-dipilih-pengguna.md) | Bahasa aplikasi dipilih pengguna (tampilan + ucapan) | Accepted |
+| [0029](02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) | Catat Cerdas per bahasa: paket bahasa, tanggal pasti, jalur langsung ke cloud | Accepted |
 
-ADR berikutnya memakai nomor **0026**.
+ADR berikutnya memakai nomor **0030**.
 
 ## Pertanyaan yang sering muncul
 

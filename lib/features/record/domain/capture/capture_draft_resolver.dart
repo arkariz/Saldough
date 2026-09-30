@@ -1,6 +1,7 @@
 import 'package:saldough/core/utils/formatters/spoken_amount_parser.dart';
 import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
 import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
+import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
 import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -13,10 +14,21 @@ import 'package:saldough/shared/wallet/wallet.dart';
 ///   lalu dihitung [SpokenAmountParser] dalam `int` sen;
 /// - dompet dan kategori hanya dicocokkan ke daftar yang ada, tidak pernah
 ///   dibuat;
+/// - tanggal hanya dipakai bila kutipannya ada di teks bukti dan tidak di
+///   masa depan;
 /// - hal yang meragukan menjadi [DraftIssue], bukan tebakan.
+///
+/// Resolver tidak mengenal kata bahasa apa pun (ADR-029 §3.1): bilangan kata
+/// dan sinonim tunai datang dari [language], atau hanya digit bila bahasa
+/// bukti tidak punya paket.
 final class CaptureDraftResolver {
   /// Membuat [CaptureDraftResolver] untuk [wallets] aktif dan [categories].
-  const CaptureDraftResolver({required this.wallets, required this.categories, this.currencyCode = 'IDR'});
+  const CaptureDraftResolver({
+    required this.wallets,
+    required this.categories,
+    this.currencyCode = 'IDR',
+    this.language,
+  });
 
   /// Dompet aktif yang boleh dipilih.
   final List<Wallet> wallets;
@@ -26,6 +38,9 @@ final class CaptureDraftResolver {
 
   /// Kode ISO mata uang aplikasi (ADR-025).
   final String currencyCode;
+
+  /// Paket bahasa bukti, atau `null` bila bahasanya tidak punya paket.
+  final CaptureLanguage? language;
 
   /// Menyusun draf dari [interpreted] untuk [evidence].
   RecordDraft resolve(CaptureEvidence evidence, InterpretedTransaction interpreted) {
@@ -65,7 +80,7 @@ final class CaptureDraftResolver {
       toWalletId: toWalletId,
       categoryId: categoryId,
       note: interpreted.note?.trim() ?? '',
-      date: _resolveDate(evidence, interpreted.dateText),
+      date: _resolveDate(evidence, interpreted, issues),
       issues: issues,
       sourceText: evidence.text,
     );
@@ -78,7 +93,11 @@ final class CaptureDraftResolver {
       issues.add(DraftIssue.amountMissing);
       return null;
     }
-    final result = SpokenAmountParser.parse(phrase, currencyCode: currencyCode);
+    final result = SpokenAmountParser.parse(
+      phrase,
+      lexicon: language?.numbers ?? NumberLexicon.neutral,
+      currencyCode: currencyCode,
+    );
     switch (result.issue) {
       case null:
         return result.sen;
@@ -99,31 +118,38 @@ final class CaptureDraftResolver {
   String? _resolveWallet(String? spoken, Set<DraftIssue> issues) {
     final text = spoken?.trim() ?? '';
     if (text.isEmpty) return null;
-    final wallet = matchWallet(wallets, text);
+    final wallet = matchWallet(wallets, text, cashWords: language?.cashWords ?? const {});
     if (wallet == null) issues.add(DraftIssue.walletUnknown);
     return wallet?.id;
   }
 
-  DateTime? _resolveDate(CaptureEvidence evidence, String? dateText) {
-    final base = evidence.capturedAt;
-    final spoken = _normalize(dateText ?? '');
-    if (spoken.contains('kemarin lusa')) return base.subtract(const Duration(days: 2));
-    if (spoken.contains('kemarin') || spoken.contains('yesterday')) return base.subtract(const Duration(days: 1));
-    // Suara dicatat saat diucapkan (tanggal bawaan formulir); notifikasi dan
-    // struk memakai waktu buktinya.
-    return evidence.source == CaptureSource.voice ? null : base;
+  /// Tanggal tafsiran interpreter, bila kutipannya ada di teks bukti dan
+  /// tanggalnya sah (ADR-029 §3.2). Tanpa sebutan tanggal: suara dicatat saat
+  /// diucapkan (tanggal bawaan formulir); notifikasi dan struk memakai waktu
+  /// buktinya.
+  DateTime? _resolveDate(CaptureEvidence evidence, InterpretedTransaction interpreted, Set<DraftIssue> issues) {
+    final fallback = evidence.source == CaptureSource.voice ? null : evidence.capturedAt;
+    final quote = interpreted.dateText?.trim() ?? '';
+    if (quote.isEmpty) return fallback;
+    final date = interpreted.date;
+    final captured = evidence.capturedAt;
+    final valid =
+        date != null &&
+        _normalize(evidence.text).contains(_normalize(quote)) &&
+        !DateTime(date.year, date.month, date.day).isAfter(DateTime(captured.year, captured.month, captured.day)) &&
+        date.year >= 2000;
+    if (valid) return date;
+    issues.add(DraftIssue.dateUnclear);
+    return fallback;
   }
 }
 
-/// Sinonim dompet tunai: "cash", "tunai", dan "dompet" merujuk dompet yang
-/// sama.
-const _cashWords = {'cash', 'tunai', 'uang tunai', 'kas', 'dompet'};
-
 /// Dompet di [wallets] yang dirujuk [spoken]: nama sama persis (tanpa beda
 /// huruf/spasi), lalu satu-satunya dompet yang namanya memuat atau dimuat
-/// sebutan itu sebagai kata utuh, lalu sinonim tunai. `null` kalau tidak ada
-/// atau lebih dari satu kandidat -- tidak menebak.
-Wallet? matchWallet(List<Wallet> wallets, String spoken) {
+/// sebutan itu sebagai kata utuh, lalu sinonim tunai [cashWords] dari paket
+/// bahasa ("cash", "tunai", "dompet" merujuk dompet yang sama). `null` kalau
+/// tidak ada atau lebih dari satu kandidat -- tidak menebak.
+Wallet? matchWallet(List<Wallet> wallets, String spoken, {Set<String> cashWords = const {}}) {
   final needle = _normalize(spoken);
   if (needle.isEmpty) return null;
   for (final wallet in wallets) {
@@ -134,10 +160,10 @@ Wallet? matchWallet(List<Wallet> wallets, String spoken) {
       if (_containsWord(_normalize(wallet.name), needle) || _containsWord(needle, _normalize(wallet.name))) wallet,
   ];
   if (partial.length == 1) return partial.single;
-  if (_cashWords.contains(needle)) {
+  if (cashWords.contains(needle)) {
     final cash = [
       for (final wallet in wallets)
-        if (_cashWords.any((w) => _containsWord(_normalize(wallet.name), w)) || wallet.iconKey == 'walletCash') wallet,
+        if (cashWords.any((w) => _containsWord(_normalize(wallet.name), w)) || wallet.iconKey == 'walletCash') wallet,
     ];
     if (cash.length == 1) return cash.single;
   }

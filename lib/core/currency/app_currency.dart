@@ -5,7 +5,7 @@
 /// sini.
 enum AppCurrency {
   /// Rupiah; bawaan, dan mata uang seluruh data lama.
-  idr(code: 'IDR', symbol: 'Rp', fractionDigits: 0, step: 10000),
+  idr(code: 'IDR', symbol: 'Rp', fractionDigits: 0, step: 10000, plainAmountMinUnits: 100),
 
   /// Dolar AS.
   usd(code: 'USD', symbol: r'$', fractionDigits: 2, step: 1),
@@ -46,7 +46,13 @@ enum AppCurrency {
   /// Dolar Australia.
   aud(code: 'AUD', symbol: r'A$', fractionDigits: 2, step: 1);
 
-  const AppCurrency({required this.code, required this.symbol, required this.fractionDigits, required this.step});
+  const AppCurrency({
+    required this.code,
+    required this.symbol,
+    required this.fractionDigits,
+    required this.step,
+    this.plainAmountMinUnits,
+  });
 
   /// Kode ISO 4217.
   final String code;
@@ -60,6 +66,12 @@ enum AppCurrency {
   /// Satu langkah pilihan cepat dalam satuan utama; pilihan cepat adalah
   /// kelipatannya (ADR-025 §3.4). IDR 10.000 menghasilkan daftar lama.
   final int step;
+
+  /// Batas bawah (satuan utama) agar angka tanpa satuan dalam ucapan
+  /// diterima sebagai nominal: "parkir 2000" menjadi Rp2.000, sedangkan "2"
+  /// pada "beli 2 kopi" tetap jumlah barang (ADR-029 §3.3). `null` = angka
+  /// polos selalu disorot sebagai tanpa satuan.
+  final int? plainAmountMinUnits;
 
   /// Pilihan cepat dalam sen untuk [multipliers] kali [step].
   List<int> quickAmounts(List<int> multipliers) => [for (final m in multipliers) m * step * 100];

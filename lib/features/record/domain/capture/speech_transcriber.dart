@@ -71,10 +71,11 @@ abstract interface class SpeechTranscriber {
   /// Mulai mendengarkan dalam [localeId] (mis. `id_ID`). [phrases] adalah
   /// kata yang kemungkinan diucapkan (nama dompet) untuk membantu pengenal.
   /// Aliran berakhir sesudah satu [SpeechFinal] atau [SpeechFailed].
+  ///
+  /// Sesi selalu berhenti sendiri (diam sebentar atau batas panjang sesi);
+  /// tidak ada berhenti manual, karena tombol berhenti tidak bisa diandalkan
+  /// di pengenal sistem (keputusan pemilik 30 Sep 2026).
   Stream<SpeechUpdate> listen({required String localeId, List<String> phrases = const []});
-
-  /// Berhenti mendengarkan dan meminta hasil akhir.
-  Future<void> stop();
 
   /// Membatalkan sesi tanpa hasil.
   Future<void> cancel();

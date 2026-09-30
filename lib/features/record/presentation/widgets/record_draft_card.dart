@@ -15,20 +15,12 @@ class RecordDraftCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final heard = draft.sourceText?.trim() ?? '';
-    return AppHardCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (heard.isNotEmpty) ...[
-            Text(t.record.draftHeardLabel, style: textTheme.labelMedium?.copyWith(color: colors.textMuted)),
-            const SizedBox(height: AppSpacing.xs),
-            Text('“$heard”', style: textTheme.bodyLarge),
-          ],
-          if (draft.issues.isNotEmpty) ...[
-            if (heard.isNotEmpty) const SizedBox(height: AppSpacing.sm),
+    if (draft.issues.isNotEmpty) {
+      return AppHardCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Text(t.record.draftCheckTitle, style: textTheme.titleSmall),
             const SizedBox(height: AppSpacing.xs),
             for (final issue in DraftIssue.values)
@@ -45,9 +37,11 @@ class RecordDraftCard extends StatelessWidget {
                   ),
                 ),
           ],
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
 
@@ -62,4 +56,5 @@ String draftIssueMessage(DraftIssue issue) => switch (issue) {
   DraftIssue.transferSourceMissing => t.record.draftIssue.transferSourceMissing,
   DraftIssue.transferTargetMissing => t.record.draftIssue.transferTargetMissing,
   DraftIssue.categoryUnknown => t.record.draftIssue.categoryUnknown,
+  DraftIssue.dateUnclear => t.record.draftIssue.dateUnclear,
 };

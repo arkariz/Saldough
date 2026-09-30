@@ -17,7 +17,13 @@ enum CaptureSource {
 /// Bukti teks yang ditafsirkan menjadi draf transaksi.
 final class CaptureEvidence extends Equatable {
   /// Membuat [CaptureEvidence].
-  const CaptureEvidence({required this.source, required this.text, required this.capturedAt, this.origin});
+  const CaptureEvidence({
+    required this.source,
+    required this.text,
+    required this.capturedAt,
+    required this.languageCode,
+    this.origin,
+  });
 
   /// Asal bukti.
   final CaptureSource source;
@@ -30,10 +36,15 @@ final class CaptureEvidence extends Equatable {
   /// sebagai tanggal transaksi kalau teks tidak menyebut tanggal.
   final DateTime capturedAt;
 
+  /// Bahasa teks bukti (`id`, `en`): bahasa aplikasi, yang juga bahasa
+  /// ucapan (ADR-028). Menentukan paket aturan, atau langsung ke cloud bila
+  /// tidak ada paketnya (ADR-029 §3.4).
+  final String languageCode;
+
   /// Keterangan asal, mis. nama paket aplikasi pengirim notifikasi. Tidak
   /// pernah dikirim ke model.
   final String? origin;
 
   @override
-  List<Object?> get props => [source, text, capturedAt, origin];
+  List<Object?> get props => [source, text, capturedAt, languageCode, origin];
 }

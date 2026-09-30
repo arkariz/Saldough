@@ -141,9 +141,6 @@ final class SystemSpeechTranscriber implements SpeechTranscriber {
   }
 
   @override
-  Future<void> stop() => _speech.stop();
-
-  @override
   Future<void> cancel() async {
     await _speech.cancel();
     final controller = _controller;

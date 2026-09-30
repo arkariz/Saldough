@@ -87,15 +87,16 @@
       "walletUnknown": "Dompet yang disebut tidak ada. Pilih dompetnya.",
       "transferSourceMissing": "Dompet asal belum jelas. Pilih dari dompet mana.",
       "transferTargetMissing": "Dompet tujuan belum jelas. Pilih dompet tujuan.",
-      "categoryUnknown": "Kategori yang disebut tidak ada. Pilih kategorinya."
+      "categoryUnknown": "Kategori yang disebut tidak ada. Pilih kategorinya.",
+      "dateUnclear": "Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya."
     },
     "voice": {
       "title": "Catat pakai suara",
       "micLabel": "Catat pakai suara",
-      "listening": "Merekam… ketuk lagi kalau sudah selesai.",
+      "listening": "Silakan bicara.",
+      "autoStopHint": "Berhenti sendiri saat kamu diam.",
       "example": "Contoh: “makan siang 35 ribu pakai BCA”",
       "interpreting": "Memahami…",
-      "stopAction": "Selesai",
       "typeInstead": "Ketik saja",
       "failure": {
         "permissionDenied": "Izin mikrofon ditolak. Izinkan di pengaturan perangkat.",
@@ -107,7 +108,7 @@
       "idleHint": "Ketuk mikrofon, lalu ucapkan satu transaksi.",
       "recordingBadge": "REKAM",
       "startAction": "Mulai merekam",
-      "stopButtonLabel": "Selesai merekam",
+      "listeningButtonLabel": "Mendengarkan",
       "retryAction": "Rekam ulang"
     }
   },

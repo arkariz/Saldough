@@ -72,7 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 10 | 5 | Berjalan -- T-11.1–11.4 dan T-11.10 selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 13 | 8 | Berjalan -- T-11.1–11.4, T-11.10, dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1595,6 +1595,17 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       pemilik, langkah bahasa onboarding (perlu pemasangan bersih).
       Gagal jaringan (ADR-027 §3.5 butir 7): pesan "butuh internet" dan
       "Ketik saja" jadi tombol utama; diuji di `voice_capture_sheet_test`.
+      Berhenti otomatis (keputusan pemilik 30 Sep 2026, tombol berhenti
+      tidak bekerja normal di HP): tombol berhenti manual dan
+      `SpeechTranscriber.stop` dihapus; selama merekam tombol bulat hanya
+      penanda ("Mendengarkan"), sesi berakhir sendiri sesudah diam 3 dtk
+      atau 20 dtk. Diuji di `voice_capture_sheet_test`; belum dicek di HP.
+      Hierarki teks lembar suara (keputusan pemilik 30 Sep 2026, terlalu
+      banyak teks yang mirip): per tahap satu pesan utama (transkrip
+      `titleMedium`, petunjuk/galat `bodyLarge`) dan paling banyak satu
+      keterangan kecil redup (`bodySmall`); label di bawah tombol hanya saat
+      gagal; saat memahami cukup transkrip + bilah kemajuan; "Merekam" tidak
+      diulang karena lencana REKAM sudah ada.
 - [ ] **T-11.6** Pembaruan formulir Keamanan Data dan kebijakan privasi
       (audio diproses Google/Apple; teks transaksi yang tidak yakin dikirim ke
       Firebase AI / Gemini). Pemberitahuan ke penguji closed testing bahwa
@@ -1603,6 +1614,9 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       `googleAI()`, `responseSchema` = kontrak §3.2, model flash-lite
       stabil terkini) + `CascadingTransactionInterpreter` (aturan dulu, cloud
       bila ragu) + `firebase_app_check`. Tier gratis (Spark).
+      Kaskade sudah disiapkan di T-11.13 (`CaptureDraftComposer`): cukup
+      daftarkan interpreter Firebase AI di slot cloud-nya, yang juga
+      mengisi `date` + `dateText` (ADR-029 §3.2).
       ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
       harus jatuh ke draf aturan tanpa galat ke pengguna. Penerimaan
       koneksi (ADR-027 §3.5 butir 7): tanpa cek koneksi di muka, batas
@@ -1624,6 +1638,62 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       diterima, dan perubahan F6 hanya mengubah urutan tulis (diuji unit).
 - [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
       transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
+- [x] **T-11.11** Paket bahasa Catat Cerdas (30 Sep 2026, tinjauan pemilik;
+      [ADR-029](../02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) §3.1).
+      Kosakata Indonesia tertanam di interpreter, resolver, dan
+      `SpokenAmountParser`; bahasa Inggris ditafsirkan dengan aturan
+      Indonesia. Pindahkan ke `CaptureLanguage` + `NumberLexicon`, registri
+      `CaptureLanguages` berisi `id` dan `en`, parser nominal generik.
+      ⚠ Jebakan: pemisah ribuan ikut bahasa ("35.000" id vs "5,000" en);
+      "may" dan "and" hanya bermakna di sebelah angka.
+      Verifikasi: benchmark §10 tetap lulus lewat paket `id`; benchmark
+      bahasa Inggris setara lewat paket `en`; `flutter analyze` bersih.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `lib/core/utils/formatters/number_lexicon.dart`
+      (`indonesian`, `english`, `neutral`), `SpokenAmountParser` membaca
+      peran kata dari leksikon (termasuk kata sambung "and"/"a" dan pemisah
+      ribuan per bahasa), `lib/features/record/domain/capture/language/`
+      (`CaptureLanguage`, `CaptureLanguages`, paket `id` dan `en`);
+      interpreter aturan dan resolver tidak lagi berisi kata bahasa apa pun.
+      Benchmark §10 tetap lulus lewat paket `id`; 9 kasus benchmark bahasa
+      Inggris + uji bilangan kata Inggris lulus.
+- [x] **T-11.12** Tanggal pasti dan angka polos IDR (30 Sep 2026, tinjauan
+      pemilik; ADR-029 §3.2–3.3). "beli kopi 5000 tanggal 27 september"
+      harus menghasilkan Rp5.000 pada 27 Sep. `SpokenDateParser` +
+      `DateLexicon`, field `InterpretedTransaction.date`, resolver hanya
+      memvalidasi (kutipan ada, tidak di masa depan), issue `dateUnclear`.
+      Tanpa tahun = tanggal terdekat yang sudah lewat.
+      `AppCurrency.plainAmountMinUnits` (IDR 100).
+      ⚠ Jebakan: rentang tanggal dikeluarkan dari pencarian nominal sebelum
+      memilih nominal; 31 Feb dan tahun masa depan → `dateUnclear`.
+      Verifikasi: uji parser tanggal (id/en, pergantian tahun, hari
+      saja, angka), kasus benchmark baru, pagar karangan tanggal.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `spoken_date_parser.dart` (`DateLexicon`
+      id/en: relatif, "N hari lalu", hari + bulan (+ tahun), "tanggal N" /
+      "on the Nth", angka H/B atau B/H; tanda hubung wajib bertahun supaya
+      "2-3 kopi" bukan tanggal), `InterpretedTransaction.date`,
+      `DraftIssue.dateUnclear` + teks i18n, `AppCurrency.plainAmountMinUnits`
+      (IDR 100) lewat `SpokenAmountParser.select`. "beli kopi 5000 tanggal
+      27 september" → Rp5.000, 27 Sep 2026, catatan "beli kopi". 808 uji
+      lulus, `flutter analyze` bersih.
+- [x] **T-11.13** `CaptureDraftComposer`: aturan → cloud, dan bahasa tanpa
+      paket langsung ke cloud (30 Sep 2026, tinjauan pemilik; ADR-029 §3.4).
+      Menggantikan rencana `CascadingTransactionInterpreter` di T-11.7.
+      `CaptureEvidence.languageCode`; slot cloud `null` sampai T-11.7.
+      ⚠ Jebakan: galat atau lewat batas waktu cloud tidak boleh menjadi
+      pesan galat; tanpa paket dan tanpa cloud → draf kosong, bukan gagal.
+      Verifikasi: uji komposer dengan fake (yakin, tidak yakin, tanpa paket,
+      cloud galat, cloud tidak menjawab); uji bloc suara.
+      Di luar PRD: perluasan Catat Cerdas (ADR-027).
+      Hasil (30 Sep 2026): `capture_draft_composer.dart` (domain),
+      `VoiceCaptureBloc` memakai penyusun (tidak ada lagi tahap gagal karena
+      tafsir), `VoiceCaptureStarted.languageCode` dari `ActiveLanguage`,
+      DI mendaftarkan penyusun dengan slot cloud `null`. 8 uji penyusun
+      (yakin, ragu → cloud, cloud galat/melempar/tidak menjawab, tanpa paket
+      → cloud, tanpa paket dan tanpa cloud → draf kosong, kode locale `en_US`)
+      + uji bloc bahasa tanpa paket. **Belum teruji:** ucapan nyata bahasa
+      Inggris di perangkat (masuk T-11.9).
 
 ## Antrean (belum dijadwalkan)
 

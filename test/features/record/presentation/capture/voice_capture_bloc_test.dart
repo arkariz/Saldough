@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
+import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
 import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
+import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
 import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -26,21 +28,21 @@ final class _FakeTranscriber implements SpeechTranscriber {
   }
 
   @override
-  Future<void> stop() async {}
-
-  @override
   Future<void> cancel() async => cancelled = true;
 }
 
 void main() {
   const wallets = [Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0)];
   const food = Category(id: 'food', kind: CategoryKind.expense, name: 'Makan', builtInKey: 'food');
-  const start = VoiceCaptureStarted(localeId: 'id_ID', wallets: wallets, categories: [food]);
+  const start = VoiceCaptureStarted(localeId: 'id_ID', languageCode: 'id', wallets: wallets, categories: [food]);
   final now = DateTime(2026, 9, 30, 12);
 
   VoiceCaptureBloc build(_FakeTranscriber transcriber) => VoiceCaptureBloc(
     transcriber: transcriber,
-    interpreter: RuleBasedTransactionInterpreter(categories: () => const [food]),
+    composer: CaptureDraftComposer(
+      ruleInterpreterFor: (language) =>
+          RuleBasedTransactionInterpreter(language: language, categories: () => const [food]),
+    ),
     clock: () => now,
   );
 
@@ -59,6 +61,22 @@ void main() {
       expect(draft.walletId, 'bca');
       expect(draft.categoryId, 'food');
       expect(draft.sourceText, 'makan siang 35 ribu pakai BCA');
+    },
+  );
+
+  blocTest<VoiceCaptureBloc, VoiceCaptureState>(
+    'bahasa tanpa paket aturan dan tanpa cloud: formulir tetap terbuka dengan transkrip (ADR-029 §3.4)',
+    build: () => build(_FakeTranscriber(const [SpeechFinal('コーヒー 500円')])),
+    act: (bloc) => bloc.add(
+      const VoiceCaptureStarted(localeId: 'ja_JP', languageCode: 'ja', wallets: wallets, categories: [food]),
+    ),
+    wait: const Duration(milliseconds: 10),
+    verify: (bloc) {
+      expect(bloc.state.phase, VoiceCapturePhase.done);
+      final draft = bloc.state.draft!;
+      expect(draft.sourceText, 'コーヒー 500円');
+      expect(draft.amountSen, isNull);
+      expect(draft.issues, {DraftIssue.amountMissing});
     },
   );
 

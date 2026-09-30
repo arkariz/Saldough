@@ -45,6 +45,7 @@ Future<VoiceCaptureResult?> showVoiceCaptureSheet(
 }) async {
   final start = VoiceCaptureStarted(
     localeId: ActiveLanguage.speechLocaleId,
+    languageCode: ActiveLanguage.value.languageCode,
     wallets: wallets,
     categories: ActiveCategories.notifier.value,
   );
@@ -62,10 +63,17 @@ Future<VoiceCaptureResult?> showVoiceCaptureSheet(
   }
 }
 
-/// Isi lembar rekam: satu tombol bulat untuk mulai, berhenti, dan rekam
-/// ulang; lencana REKAM dengan penghitung waktu dan cincin yang berdenyut
-/// mengikuti kekuatan suara selama merekam. Bukan asisten percakapan -- satu
-/// ucapan, satu draf.
+/// Isi lembar rekam: satu tombol bulat untuk mulai dan rekam ulang; lencana
+/// REKAM dengan penghitung waktu dan cincin yang berdenyut mengikuti kekuatan
+/// suara selama merekam. Rekaman berhenti sendiri saat pengguna diam --
+/// tidak ada tombol berhenti. Bukan asisten percakapan -- satu ucapan, satu
+/// draf.
+///
+/// Teks berjenjang: per tahap hanya **satu** pesan utama (yang tertangkap
+/// lebih besar dari petunjuk) dan paling banyak satu keterangan kecil yang
+/// redup. Label di bawah tombol hanya muncul saat gagal ("Rekam ulang"); di
+/// tahap lain pesan utama sudah menjelaskan, dan labelnya tetap dibacakan
+/// pembaca layar.
 class VoiceCaptureSheet extends StatelessWidget {
   /// Membuat [VoiceCaptureSheet]. [start] dikirim tombol rekam.
   const VoiceCaptureSheet({required this.start, super.key});
@@ -74,14 +82,8 @@ class VoiceCaptureSheet extends StatelessWidget {
   final VoiceCaptureStarted start;
 
   void _onMainButton(BuildContext context, VoiceCaptureState state) {
-    final bloc = context.read<VoiceCaptureBloc>();
-    switch (state.phase) {
-      case VoiceCapturePhase.idle || VoiceCapturePhase.failed:
-        bloc.add(start);
-      case VoiceCapturePhase.starting || VoiceCapturePhase.listening:
-        bloc.add(const VoiceCaptureStopped());
-      case VoiceCapturePhase.interpreting || VoiceCapturePhase.done:
-        break;
+    if (state.phase == VoiceCapturePhase.idle || state.phase == VoiceCapturePhase.failed) {
+      context.read<VoiceCaptureBloc>().add(start);
     }
   }
 
@@ -97,7 +99,27 @@ class VoiceCaptureSheet extends StatelessWidget {
       },
       builder: (context, state) {
         final heard = state.heardText.trim();
+        final quoted = heard.isEmpty ? null : '“$heard”';
         final busy = state.phase == VoiceCapturePhase.interpreting || state.phase == VoiceCapturePhase.done;
+        final (String primary, TextStyle? primaryStyle) = switch (state.phase) {
+          VoiceCapturePhase.idle => (t.record.voice.idleHint, textTheme.bodyLarge),
+          VoiceCapturePhase.starting || VoiceCapturePhase.listening =>
+            quoted == null ? (t.record.voice.listening, textTheme.bodyLarge) : (quoted, textTheme.titleMedium),
+          VoiceCapturePhase.interpreting || VoiceCapturePhase.done => (
+            quoted ?? t.record.voice.interpreting,
+            textTheme.titleMedium,
+          ),
+          VoiceCapturePhase.failed => (_failureMessage(state.failure), textTheme.bodyLarge),
+        };
+        final secondary = switch (state.phase) {
+          VoiceCapturePhase.idle => t.record.voice.example,
+          VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.autoStopHint,
+          // Bilah kemajuan sudah menandai "sedang memahami".
+          VoiceCapturePhase.interpreting || VoiceCapturePhase.done => null,
+          VoiceCapturePhase.failed => null,
+        };
+        // Selama merekam tombol hanya penanda: sesi berhenti sendiri.
+        final tappable = state.phase == VoiceCapturePhase.idle || state.phase == VoiceCapturePhase.failed;
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
@@ -117,29 +139,28 @@ class VoiceCaptureSheet extends StatelessWidget {
                   child: _RecordButton(
                     phase: state.phase,
                     level: state.level,
-                    onPressed: busy ? null : () => _onMainButton(context, state),
+                    onPressed: tappable ? () => _onMainButton(context, state) : null,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Semantics(
                   liveRegion: true,
                   child: Text(
-                    switch (state.phase) {
-                      VoiceCapturePhase.idle => t.record.voice.idleHint,
-                      VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.listening,
-                      VoiceCapturePhase.interpreting || VoiceCapturePhase.done => t.record.voice.interpreting,
-                      VoiceCapturePhase.failed => _failureMessage(state.failure),
-                    },
+                    primary,
+                    key: const ValueKey('voice-primary-text'),
                     textAlign: TextAlign.center,
-                    style: textTheme.bodyLarge,
+                    style: primaryStyle?.copyWith(color: colors.textPrimary),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  heard.isEmpty ? t.record.voice.example : '“$heard”',
-                  textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium?.copyWith(color: heard.isEmpty ? colors.textMuted : colors.textPrimary),
-                ),
+                if (secondary != null) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    secondary,
+                    key: const ValueKey('voice-secondary-text'),
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  ),
+                ],
                 if (busy) ...[
                   const SizedBox(height: AppSpacing.md),
                   const LinearProgressIndicator(),
@@ -169,8 +190,9 @@ class VoiceCaptureSheet extends StatelessWidget {
   }
 }
 
-/// Tombol bulat utama: mikrofon (mulai / rekam ulang) atau kotak berhenti
-/// (sedang merekam), dengan cincin yang membesar mengikuti [level].
+/// Tombol bulat utama: mikrofon untuk mulai / rekam ulang. Selama merekam
+/// tombol tidak bisa diketuk dan menjadi penanda, dengan cincin yang
+/// membesar mengikuti [level].
 class _RecordButton extends StatefulWidget {
   const _RecordButton({required this.phase, required this.level, required this.onPressed});
 
@@ -186,6 +208,10 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
   late final AnimationController _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
 
   bool get _recording => widget.phase == VoiceCapturePhase.starting || widget.phase == VoiceCapturePhase.listening;
+
+  /// Tampak nonaktif: tidak bisa diketuk dan bukan sedang merekam (sedang
+  /// memahami).
+  bool get _dimmed => widget.onPressed == null && !_recording;
 
   @override
   void didChangeDependencies() {
@@ -223,7 +249,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
     final color = _recording ? colors.expense : colors.accent;
     final label = switch (widget.phase) {
       VoiceCapturePhase.idle => t.record.voice.startAction,
-      VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.stopButtonLabel,
+      VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.listeningButtonLabel,
       VoiceCapturePhase.failed => t.record.voice.retryAction,
       VoiceCapturePhase.interpreting || VoiceCapturePhase.done => t.record.voice.interpreting,
     };
@@ -254,7 +280,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
                   },
                 ),
               Semantics(
-                button: true,
+                button: widget.onPressed != null,
                 label: label,
                 child: AppTappable(
                   key: const ValueKey('voice-record-button'),
@@ -266,14 +292,14 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: widget.onPressed == null ? colors.surfaceMid : color,
+                      color: _dimmed ? colors.surfaceMid : color,
                       border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
                       boxShadow: AppElevation.hardShadow(colors.edge),
                     ),
                     child: AppIcon(
-                      _recording ? IconKey.stop : IconKey.microphone,
+                      IconKey.microphone,
                       size: 40,
-                      color: widget.onPressed == null ? colors.textMuted : colors.onAccent,
+                      color: _dimmed ? colors.textMuted : colors.onAccent,
                     ),
                   ),
                 ),
@@ -281,8 +307,12 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(label, style: Theme.of(context).textTheme.labelLarge),
+        // Label hanya saat gagal: aksi "Rekam ulang" tidak terbaca dari ikon
+        // saja. Di tahap lain pesan utama sudah menjelaskan.
+        if (widget.phase == VoiceCapturePhase.failed) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(label, style: Theme.of(context).textTheme.labelLarge),
+        ],
       ],
     );
   }

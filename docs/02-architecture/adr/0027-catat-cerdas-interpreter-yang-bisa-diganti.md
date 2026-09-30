@@ -66,7 +66,8 @@ model. Implementasi: aturan (Dart), LLM lokal, Firebase AI, dan kaskade.
 - dompet: dicocokkan ke dompet aktif; tidak pernah membuat dompet;
 - kategori: dicocokkan ke kategori aktif (nama + alias bawaan); tidak pernah
   membuat kategori;
-- tanggal: hari ini/kemarin dari teks, selain itu `capturedAt`;
+- tanggal: hari ini/kemarin dari teks, selain itu `capturedAt` (diganti
+  ADR-029 §3.2: tanggal ditafsirkan paket bahasa, resolver hanya memvalidasi);
 - transfer ("top up X"): tujuan = X, sumber hanya bila disebut; tanpa sumber
   → issue dan pengguna wajib memilih.
 
@@ -90,7 +91,9 @@ Keputusan pemilik 30 Sep 2026 menggantikan arah "Gemma lokal dulu" di riset:
    testing diberi tahu, dan **sebelum rilis publik proyek pindah ke tier
    berbayar** (Blaze) — tanpa perubahan kode. Syarat usia 18+ layanan ini
    dicatat untuk rating konten Play.
-3. **Aturan dulu, cloud bila ragu.** `CascadingTransactionInterpreter`
+3. **Aturan dulu, cloud bila ragu.** (Diganti ADR-029 §3.4:
+   `CaptureDraftComposer`, dan bahasa tanpa paket aturan langsung ke cloud.)
+   `CascadingTransactionInterpreter`
    memakai `RuleBasedTransactionInterpreter` lebih dulu; Firebase AI hanya
    dipanggil bila draf aturan tidak yakin (`RecordDraft.isConfident` salah).
    Offline, galat, atau kuota habis → draf aturan dipakai apa adanya.
@@ -174,4 +177,4 @@ dirawat.
 **Penulis keputusan:** Claude (agen), atas keputusan pemilik
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-09-30
-**Status implementasi:** berjalan (T-11.2 s.d. T-11.5 selesai; penyedia Firebase AI T-11.7)
+**Status implementasi:** berjalan (T-11.2 s.d. T-11.5 selesai; penyedia Firebase AI T-11.7). Diubah sebagian oleh ADR-029.

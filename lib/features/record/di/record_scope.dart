@@ -2,8 +2,8 @@ import 'package:di/di.dart';
 import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
 import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -32,11 +32,17 @@ final class RecordScope extends IsolatedScope {
   @override
   void register(GetIt c) {
     c
-      // Catat Cerdas (ADR-027): penangkap suara dan penafsir. Mengganti
-      // penyedia (Gemma lokal, Firebase AI) cukup di sini.
+      // Catat Cerdas (ADR-027, ADR-029): penangkap suara dan penyusun draf.
+      // Aturan per paket bahasa; penyedia cloud (Firebase AI, T-11.7)
+      // didaftarkan di `cloudInterpreter`.
       ..registerLazySingleton<SpeechTranscriber>(SystemSpeechTranscriber.new)
-      ..registerLazySingleton<TransactionInterpreter>(
-        () => RuleBasedTransactionInterpreter(categories: () => ActiveCategories.notifier.value),
+      ..registerLazySingleton<CaptureDraftComposer>(
+        () => CaptureDraftComposer(
+          ruleInterpreterFor: (language) => RuleBasedTransactionInterpreter(
+            language: language,
+            categories: () => ActiveCategories.notifier.value,
+          ),
+        ),
       )
       ..registerLazySingleton<RecordBloc>(
         () => RecordBloc(
@@ -45,7 +51,7 @@ final class RecordScope extends IsolatedScope {
           budgetItemCatalog: c<BudgetItemCatalog>(),
           createCategory: CreateCategory(repository: c<CategoryRepository>()),
           voiceCaptureFactory: () =>
-              VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), interpreter: c<TransactionInterpreter>()),
+              VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), composer: c<CaptureDraftComposer>()),
           recordTransaction: RecordTransaction(
             transactionRepository: c<TransactionRepository>(),
             recomputeWalletBalances: RecomputeWalletBalances(

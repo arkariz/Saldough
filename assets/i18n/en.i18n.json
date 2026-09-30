@@ -87,15 +87,16 @@
       "walletUnknown": "The wallet mentioned doesn't exist. Pick a wallet.",
       "transferSourceMissing": "The source wallet is unclear. Pick where it came from.",
       "transferTargetMissing": "The destination wallet is unclear. Pick where it went.",
-      "categoryUnknown": "The category mentioned doesn't exist. Pick a category."
+      "categoryUnknown": "The category mentioned doesn't exist. Pick a category.",
+      "dateUnclear": "The date mentioned can't be used. Pick the date."
     },
     "voice": {
       "title": "Record by voice",
       "micLabel": "Record by voice",
-      "listening": "Recording… tap again when you are done.",
+      "listening": "Go ahead, speak.",
+      "autoStopHint": "Stops by itself when you pause.",
       "example": "Example: “lunch 35 thousand with BCA”",
       "interpreting": "Understanding…",
-      "stopAction": "Done",
       "typeInstead": "Type instead",
       "failure": {
         "permissionDenied": "Microphone access was denied. Allow it in device settings.",
@@ -107,7 +108,7 @@
       "idleHint": "Tap the microphone, then say one transaction.",
       "recordingBadge": "REC",
       "startAction": "Start recording",
-      "stopButtonLabel": "Stop recording",
+      "listeningButtonLabel": "Listening",
       "retryAction": "Record again"
     }
   },

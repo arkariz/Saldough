@@ -2231,6 +2231,9 @@ class Translations$record$draftIssue$id {
 
 	/// id: 'Kategori yang disebut tidak ada. Pilih kategorinya.'
 	String get categoryUnknown => 'Kategori yang disebut tidak ada. Pilih kategorinya.';
+
+	/// id: 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.'
+	String get dateUnclear => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.';
 }
 
 // Path: record.voice
@@ -2247,17 +2250,17 @@ class Translations$record$voice$id {
 	/// id: 'Catat pakai suara'
 	String get micLabel => 'Catat pakai suara';
 
-	/// id: 'Merekam… ketuk lagi kalau sudah selesai.'
-	String get listening => 'Merekam… ketuk lagi kalau sudah selesai.';
+	/// id: 'Silakan bicara.'
+	String get listening => 'Silakan bicara.';
+
+	/// id: 'Berhenti sendiri saat kamu diam.'
+	String get autoStopHint => 'Berhenti sendiri saat kamu diam.';
 
 	/// id: 'Contoh: “makan siang 35 ribu pakai BCA”'
 	String get example => 'Contoh: “makan siang 35 ribu pakai BCA”';
 
 	/// id: 'Memahami…'
 	String get interpreting => 'Memahami…';
-
-	/// id: 'Selesai'
-	String get stopAction => 'Selesai';
 
 	/// id: 'Ketik saja'
 	String get typeInstead => 'Ketik saja';
@@ -2273,8 +2276,8 @@ class Translations$record$voice$id {
 	/// id: 'Mulai merekam'
 	String get startAction => 'Mulai merekam';
 
-	/// id: 'Selesai merekam'
-	String get stopButtonLabel => 'Selesai merekam';
+	/// id: 'Mendengarkan'
+	String get listeningButtonLabel => 'Mendengarkan';
 
 	/// id: 'Rekam ulang'
 	String get retryAction => 'Rekam ulang';
@@ -2468,12 +2471,13 @@ extension on Translations {
 			'record.draftIssue.transferSourceMissing' => 'Dompet asal belum jelas. Pilih dari dompet mana.',
 			'record.draftIssue.transferTargetMissing' => 'Dompet tujuan belum jelas. Pilih dompet tujuan.',
 			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
+			'record.draftIssue.dateUnclear' => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.',
 			'record.voice.title' => 'Catat pakai suara',
 			'record.voice.micLabel' => 'Catat pakai suara',
-			'record.voice.listening' => 'Merekam… ketuk lagi kalau sudah selesai.',
+			'record.voice.listening' => 'Silakan bicara.',
+			'record.voice.autoStopHint' => 'Berhenti sendiri saat kamu diam.',
 			'record.voice.example' => 'Contoh: “makan siang 35 ribu pakai BCA”',
 			'record.voice.interpreting' => 'Memahami…',
-			'record.voice.stopAction' => 'Selesai',
 			'record.voice.typeInstead' => 'Ketik saja',
 			'record.voice.failure.permissionDenied' => 'Izin mikrofon ditolak. Izinkan di pengaturan perangkat.',
 			'record.voice.failure.unavailable' => 'Perangkat ini belum punya pengenal ucapan.',
@@ -2483,7 +2487,7 @@ extension on Translations {
 			'record.voice.idleHint' => 'Ketuk mikrofon, lalu ucapkan satu transaksi.',
 			'record.voice.recordingBadge' => 'REKAM',
 			'record.voice.startAction' => 'Mulai merekam',
-			'record.voice.stopButtonLabel' => 'Selesai merekam',
+			'record.voice.listeningButtonLabel' => 'Mendengarkan',
 			'record.voice.retryAction' => 'Rekam ulang',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
@@ -2898,9 +2902,9 @@ extension on Translations {
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			_ => null,
 		} ?? switch (path) {
+			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',

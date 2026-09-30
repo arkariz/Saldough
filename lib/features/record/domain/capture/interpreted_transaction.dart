@@ -27,6 +27,7 @@ final class InterpretedTransaction extends Equatable {
     this.categoryName,
     this.note,
     this.dateText,
+    this.date,
   });
 
   /// Jenis yang ditafsirkan, atau `null` kalau tidak jelas.
@@ -47,9 +48,14 @@ final class InterpretedTransaction extends Equatable {
   /// Catatan singkat, mis. "makan siang".
   final String? note;
 
-  /// Sebutan tanggal ("kemarin").
+  /// Sebutan tanggal persis seperti di teks ("kemarin", "tanggal 27
+  /// september").
   final String? dateText;
 
+  /// Tafsiran [dateText] oleh interpreter (ADR-029 §3.2). Resolver hanya
+  /// memakainya bila [dateText] benar-benar ada di teks bukti.
+  final DateTime? date;
+
   @override
-  List<Object?> get props => [kind, amountText, walletText, toWalletText, categoryName, note, dateText];
+  List<Object?> get props => [kind, amountText, walletText, toWalletText, categoryName, note, dateText, date];
 }

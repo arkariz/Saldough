@@ -42,6 +42,15 @@ dan bisa diubah di layar Akun — mirip pilihan mata uang (ADR-025).
 7. **Kategori bawaan:** saat bahasa berganti, kategori bawaan yang namanya
    masih sama dengan nama bawaan bahasa lama diganti ke nama bahasa baru;
    yang sudah diganti pengguna tidak disentuh (`RelocalizeBuiltInCategories`).
+8. **Pengguna lama (sesudah update, keputusan pemilik 30 Sep 2026):**
+   onboarding tidak dibuka ulang, jadi bahasa tetap mengikuti perangkat.
+   Bahasa baru ditanyakan **sekali**, saat lembar "Catat pakai suara" pertama
+   kali dibuka dan belum ada pilihan tersimpan (`SpeechLanguagePrompt`):
+   di situlah bahasa perangkat bisa salah (HP berbahasa Inggris, bicara
+   Indonesia). Pilihannya disimpan lewat `ChangeAppLanguage` yang sama, jadi
+   tetap satu setelan untuk tampilan dan ucapan; pengguna yang tidak memakai
+   suara tidak pernah ditanya. Menutup pertanyaan = batal merekam, dan akan
+   ditanya lagi lain kali.
 
 ## 4. Opsi yang dipertimbangkan
 

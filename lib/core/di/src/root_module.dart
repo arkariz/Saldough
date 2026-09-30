@@ -128,6 +128,13 @@ abstract final class RootModule {
           },
         ),
       )
+      // Pertanyaan bahasa ucapan sekali untuk pengguna lama (ADR-028 §3.8).
+      ..registerLazySingleton<SpeechLanguagePrompt>(
+        () => SpeechLanguagePrompt(
+          repository: container<LanguagePreferenceRepository>(),
+          changeLanguage: container<ChangeAppLanguage>(),
+        ),
+      )
       // Pilihan mata uang (ADR-025 §3.5), kunci `settings/currency`.
       ..registerLazySingleton<CurrencyPreferenceRepository>(
         () => CurrencyPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),

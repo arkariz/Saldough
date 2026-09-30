@@ -110,7 +110,10 @@
       "recordingBadge": "REKAM",
       "startAction": "Mulai merekam",
       "listeningButtonLabel": "Mendengarkan",
-      "retryAction": "Rekam ulang"
+      "retryAction": "Rekam ulang",
+      "languageTitle": "Kamu bicara dalam bahasa apa?",
+      "languageBody": "Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.",
+      "languageContinue": "Lanjut"
     }
   },
   "transaction": {

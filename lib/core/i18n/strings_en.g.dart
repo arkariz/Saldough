@@ -919,6 +919,9 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	@override String get startAction => 'Start recording';
 	@override String get listeningButtonLabel => 'Listening';
 	@override String get retryAction => 'Record again';
+	@override String get languageTitle => 'Which language will you speak?';
+	@override String get languageBody => 'Used to recognize your speech and for the app display. You can change it in Account.';
+	@override String get languageContinue => 'Continue';
 }
 
 // Path: account.errors
@@ -1081,6 +1084,9 @@ extension on TranslationsEn {
 			'record.voice.startAction' => 'Start recording',
 			'record.voice.listeningButtonLabel' => 'Listening',
 			'record.voice.retryAction' => 'Record again',
+			'record.voice.languageTitle' => 'Which language will you speak?',
+			'record.voice.languageBody' => 'Used to recognize your speech and for the app display. You can change it in Account.',
+			'record.voice.languageContinue' => 'Continue',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1490,11 +1496,11 @@ extension on TranslationsEn {
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
 			'home.budgetTitle' => 'Active budgets',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
-			_ => null,
-		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',

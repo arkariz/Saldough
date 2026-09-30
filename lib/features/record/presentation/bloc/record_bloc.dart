@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
@@ -27,6 +28,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     required this._budgetItemCatalog,
     required this._createCategory,
     this.voiceCaptureFactory,
+    this.speechLanguagePrompt,
   }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
     on<IncomeRecorded>(_onIncomeRecorded);
@@ -44,6 +46,10 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// Membuat [VoiceCaptureBloc] baru untuk satu lembar rekam Catat Cerdas
   /// (ADR-027). `null` berarti tombol suara tidak ditawarkan di CATAT.
   final VoiceCaptureBloc Function()? voiceCaptureFactory;
+
+  /// Pertanyaan bahasa ucapan sekali sebelum lembar rekam pertama (ADR-028
+  /// §3.8), atau `null`.
+  final SpeechLanguagePrompt? speechLanguagePrompt;
 
   /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
   static const _recentLimit = 100;

@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
 import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
 import 'package:saldough/features/record/domain/budget_item_catalog.dart';
@@ -27,6 +28,11 @@ final class RecordScope extends IsolatedScope {
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>())
       ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
+    // Opsional: kontainer induk yang tidak menyediakannya (mis. uji layar
+    // lain) berarti suara dibuka tanpa bertanya bahasa.
+    if (parent.isRegistered<SpeechLanguagePrompt>()) {
+      c.registerSingleton<SpeechLanguagePrompt>(parent<SpeechLanguagePrompt>());
+    }
   }
 
   @override
@@ -52,6 +58,7 @@ final class RecordScope extends IsolatedScope {
           createCategory: CreateCategory(repository: c<CategoryRepository>()),
           voiceCaptureFactory: () =>
               VoiceCaptureBloc(transcriber: c<SpeechTranscriber>(), composer: c<CaptureDraftComposer>()),
+          speechLanguagePrompt: c.isRegistered<SpeechLanguagePrompt>() ? c<SpeechLanguagePrompt>() : null,
           recordTransaction: RecordTransaction(
             transactionRepository: c<TransactionRepository>(),
             recomputeWalletBalances: RecomputeWalletBalances(

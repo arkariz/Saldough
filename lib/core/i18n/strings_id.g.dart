@@ -2281,6 +2281,15 @@ class Translations$record$voice$id {
 
 	/// id: 'Rekam ulang'
 	String get retryAction => 'Rekam ulang';
+
+	/// id: 'Kamu bicara dalam bahasa apa?'
+	String get languageTitle => 'Kamu bicara dalam bahasa apa?';
+
+	/// id: 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.'
+	String get languageBody => 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.';
+
+	/// id: 'Lanjut'
+	String get languageContinue => 'Lanjut';
 }
 
 // Path: account.errors
@@ -2493,6 +2502,9 @@ extension on Translations {
 			'record.voice.startAction' => 'Mulai merekam',
 			'record.voice.listeningButtonLabel' => 'Mendengarkan',
 			'record.voice.retryAction' => 'Rekam ulang',
+			'record.voice.languageTitle' => 'Kamu bicara dalam bahasa apa?',
+			'record.voice.languageBody' => 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.',
+			'record.voice.languageContinue' => 'Lanjut',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2902,11 +2914,11 @@ extension on Translations {
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
 			'home.budgetTitle' => 'Anggaran aktif',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
-			_ => null,
-		} ?? switch (path) {
 			'home.freelanceTitle' => 'Freelance',
 			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',

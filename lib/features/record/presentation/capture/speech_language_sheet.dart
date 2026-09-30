@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
+
+/// Menanyakan bahasa ucapan sekali sebelum lembar rekam pertama (ADR-028
+/// §3.8). Mengembalikan bahasa terpilih, atau `null` kalau ditutup.
+Future<AppLocale?> showSpeechLanguageSheet(BuildContext context) => showModalBottomSheet<AppLocale>(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => const SpeechLanguageSheet(),
+);
+
+/// Isi lembar pilihan bahasa ucapan: judul, satu keterangan kecil, pilihan
+/// bahasa (bahasa aktif sudah terpilih), dan "Lanjut".
+class SpeechLanguageSheet extends StatefulWidget {
+  /// Membuat [SpeechLanguageSheet].
+  const SpeechLanguageSheet({super.key});
+
+  @override
+  State<SpeechLanguageSheet> createState() => _SpeechLanguageSheetState();
+}
+
+class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
+  AppLocale _selected = ActiveLanguage.value;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = context.appColors;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Semantics(header: true, child: Text(t.record.voice.languageTitle, style: textTheme.titleLarge)),
+            const SizedBox(height: AppSpacing.xs),
+            Text(t.record.voice.languageBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+            const SizedBox(height: AppSpacing.md),
+            for (final locale in AppLocale.values) ...[
+              Semantics(
+                selected: locale == _selected,
+                inMutuallyExclusiveGroup: true,
+                child: AppTappable(
+                  key: ValueKey('speech-language-${locale.languageCode}'),
+                  label: languageName(locale),
+                  onTap: () => setState(() => _selected = locale),
+                  child: AppHardCard(
+                    pressed: locale == _selected,
+                    color: locale == _selected ? colors.tinted(colors.accent, 0.18) : null,
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                    child: Row(
+                      children: [
+                        Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
+                        if (locale == _selected) const AppIcon(IconKey.check),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+            ],
+            const SizedBox(height: AppSpacing.md),
+            AppButton(
+              key: const ValueKey('speech-language-continue'),
+              label: t.record.voice.languageContinue,
+              onPressed: () => Navigator.of(context).pop(_selected),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

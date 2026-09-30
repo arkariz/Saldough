@@ -72,7 +72,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 13 | 8 | Berjalan -- T-11.1–11.4, T-11.10, dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 14 | 9 | Berjalan -- T-11.1–11.4, T-11.10, T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1643,6 +1643,19 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       (`AppBootstrap.recordNonFatal`). Kasus probe jadi uji regresi; 724 uji
       lulus. F7–F10 ke antrean B-16. Uji migrasi di HP tidak diulang: F1
       diterima, dan perubahan F6 hanya mengubah urutan tulis (diuji unit).
+- [x] **T-11.14** Tanya bahasa ucapan sekali untuk pengguna lama (30 Sep
+      2026, keputusan pemilik; ADR-028 §3.8). Pengguna yang update tidak
+      melihat langkah bahasa onboarding, sehingga bahasa ucapan diam-diam
+      mengikuti bahasa HP. Sebelum lembar suara dibuka pertama kali tanpa
+      pilihan tersimpan, tampilkan pilihan bahasa; simpan lewat
+      `ChangeAppLanguage`.
+      Verifikasi: uji `SpeechLanguagePrompt` dan lembar pilihannya.
+      Di luar PRD: perluasan ADR-028.
+      Hasil (30 Sep 2026): `SpeechLanguagePrompt` (`lib/core/language/`),
+      `speech_language_sheet.dart`, `openVoiceRecord` bertanya sebelum
+      lembar rekam; `RecordBloc.speechLanguagePrompt` lewat `RecordScope`.
+      **Belum dicek di HP** (butuh data pengguna lama tanpa
+      `settings/language`).
 - [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
       transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
 - [x] **T-11.11** Paket bahasa Catat Cerdas (30 Sep 2026, tinjauan pemilik;

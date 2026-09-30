@@ -110,7 +110,10 @@
       "recordingBadge": "REC",
       "startAction": "Start recording",
       "listeningButtonLabel": "Listening",
-      "retryAction": "Record again"
+      "retryAction": "Record again",
+      "languageTitle": "Which language will you speak?",
+      "languageBody": "Used to recognize your speech and for the app display. You can change it in Account.",
+      "languageContinue": "Continue"
     }
   },
   "transaction": {

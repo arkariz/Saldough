@@ -185,6 +185,9 @@ enum IconKey {
 
   /// Berhenti merekam (lembar suara, ADR-027).
   stop,
+
+  /// Tombol menu pengembang (hanya build debug, ADR-0004).
+  debugMenu,
 }
 
 /// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
@@ -261,6 +264,7 @@ const Map<IconKey, IconData> _materialFallback = {
   // Belum ada padanan pixel-art (ADR-027).
   IconKey.microphone: Icons.mic_none,
   IconKey.stop: Icons.stop_rounded,
+  IconKey.debugMenu: Icons.bug_report,
 };
 
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan

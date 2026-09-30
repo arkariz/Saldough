@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 
 /// Implementasi port [BudgetItemCatalog] milik `record` dari data anggaran
 /// (ADR-0009: port milik konsumen, implementasi di fitur penyedia, dikawat di

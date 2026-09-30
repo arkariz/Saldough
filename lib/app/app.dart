@@ -7,6 +7,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -101,7 +102,7 @@ class _WithDebugMenu extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: const Icon(Icons.bug_report),
+                  child: const AppIcon(IconKey.debugMenu),
                 ),
               ),
             ],

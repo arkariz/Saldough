@@ -3,11 +3,11 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
@@ -21,8 +21,9 @@ import 'package:saldough/features/freelance/domain/repositories/freelance_reposi
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
 import 'package:saldough/shared/auth/auth.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -156,7 +157,13 @@ abstract final class RootModule {
       AppRouteRegistry.build(
         registry: registry,
         initialLocation: await _initialLocation(container),
-        homeBuilder: (context, state) => AppShellPage(startAction: state.extra is ShellStartAction ? state.extra! as ShellStartAction : null),
+        homeBuilder: (context, state) => AppShellPage(
+          startAction: switch (state.extra) {
+            OnboardingOutcome.createWallet => ShellStartAction.createWallet,
+            OnboardingOutcome.signIn => ShellStartAction.openAccount,
+            _ => null,
+          },
+        ),
         onboardingBuilder: buildOnboardingRoute,
         // `screen_view` otomatis (ADR-023) -- belum ada event kustom.
         observers: [AppBootstrap.analyticsObserver],

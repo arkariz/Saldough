@@ -3,13 +3,12 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/freelance/domain/entities/net_pay_breakdown.dart';
 import 'package:saldough/features/freelance/presentation/widgets/freelance_form_fields.dart';
 import 'package:saldough/features/freelance/presentation/widgets/freelance_notice.dart';
 import 'package:saldough/features/freelance/presentation/widgets/net_pay_breakdown_card.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 /// Hasil [ReceivePaymentSheet] saat disimpan; `null` berarti dibatalkan.
 final class ReceivePaymentConfirmed {
@@ -85,7 +84,7 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.receiveTitle),
+              AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.receiveTitle),
               const SizedBox(height: AppSpacing.md),
               FreelanceNotice(
                 title: t.freelance.receiveRuleTitle,
@@ -130,7 +129,7 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.noteLabel),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: (_) {}),
+              AppFormTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: (_) {}),
               const SizedBox(height: AppSpacing.lg),
               AppButton(
                 label: t.freelance.receiveAction,

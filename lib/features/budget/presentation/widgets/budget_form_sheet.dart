@@ -8,7 +8,6 @@ import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/presentation/budget_display.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_item_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -265,7 +264,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(
+              AppFormHeader(
                 stepLabel: _editing
                     ? t.budget.editStepLabel
                     : switch (widget.templateName) {
@@ -289,7 +288,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(controller: _name, hint: t.budget.nameHint, autofocus: !_editing, onChanged: refresh),
+              AppFormTextField(controller: _name, hint: t.budget.nameHint, autofocus: !_editing, onChanged: refresh),
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.budget.walletLabel, hint: t.budget.requiredHint),
               const SizedBox(height: 2),

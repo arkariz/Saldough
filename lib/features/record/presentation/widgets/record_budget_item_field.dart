@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 
 /// Apakah [option] boleh ditawarkan ke transaksi bertanggal [date]:
 /// periodenya mencakup [date] (keputusan KT-1), dan anggarannya tidak

@@ -5,7 +5,6 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item_kind.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Hasil [BudgetItemFormSheet]; `null` berarti dibatalkan.
@@ -79,9 +78,9 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
     _itemized = item.isItemized;
     if (item.isItemized) {
       _quantity.text = '${item.quantity}';
-      _unitPrice.text = BudgetMoneyField.initialText(item.unitPrice);
+      _unitPrice.text = AppFormMoneyField.initialText(item.unitPrice);
     } else {
-      _amount.text = BudgetMoneyField.initialText(item.enteredAmount);
+      _amount.text = AppFormMoneyField.initialText(item.enteredAmount);
     }
   }
 
@@ -96,9 +95,9 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
 
   /// Nominal rencana pos saat ini dalam sen, atau `null` kalau belum lengkap.
   int? get _total {
-    if (_isTransfer || !_itemized) return BudgetMoneyField.senOf(_amount);
-    final quantity = BudgetQuantityField.valueOf(_quantity);
-    final price = BudgetMoneyField.senOf(_unitPrice);
+    if (_isTransfer || !_itemized) return AppFormMoneyField.senOf(_amount);
+    final quantity = AppFormQuantityField.valueOf(_quantity);
+    final price = AppFormMoneyField.senOf(_unitPrice);
     return quantity == null || price == null ? null : quantity * price;
   }
 
@@ -114,7 +113,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
         ? BudgetItem(
             id: id,
             name: _name.text.trim(),
-            enteredAmount: BudgetMoneyField.senOf(_amount),
+            enteredAmount: AppFormMoneyField.senOf(_amount),
             kind: BudgetItemKind.transfer,
             targetWalletId: _targetWalletId,
           )
@@ -122,10 +121,10 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
         ? BudgetItem(
             id: id,
             name: _name.text.trim(),
-            quantity: BudgetQuantityField.valueOf(_quantity),
-            unitPrice: BudgetMoneyField.senOf(_unitPrice),
+            quantity: AppFormQuantityField.valueOf(_quantity),
+            unitPrice: AppFormMoneyField.senOf(_unitPrice),
           )
-        : BudgetItem(id: id, name: _name.text.trim(), enteredAmount: BudgetMoneyField.senOf(_amount));
+        : BudgetItem(id: id, name: _name.text.trim(), enteredAmount: AppFormMoneyField.senOf(_amount));
     Navigator.of(context).pop(BudgetItemFormSaved(item));
   }
 
@@ -143,7 +142,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(
+              AppFormHeader(
                 stepLabel: t.budget.itemsLabel,
                 title: editing ? t.budget.itemEditTitle : t.budget.itemAddTitle,
               ),
@@ -174,7 +173,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.budget.itemNameLabel, hint: t.budget.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(controller: _name, hint: t.budget.itemNameHint, autofocus: !editing, onChanged: refresh),
+              AppFormTextField(controller: _name, hint: t.budget.itemNameHint, autofocus: !editing, onChanged: refresh),
               const SizedBox(height: AppSpacing.md),
               if (_isTransfer) ...[
                 AppSectionLabel(t.budget.itemTargetWalletLabel, hint: t.budget.requiredHint),
@@ -219,7 +218,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                         children: [
                           AppSectionLabel(t.budget.itemQuantityLabel),
                           const SizedBox(height: AppSpacing.xs),
-                          BudgetQuantityField(controller: _quantity, onChanged: refresh),
+                          AppFormQuantityField(controller: _quantity, onChanged: refresh),
                         ],
                       ),
                     ),
@@ -231,7 +230,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                         children: [
                           AppSectionLabel(t.budget.itemUnitPriceLabel),
                           const SizedBox(height: AppSpacing.xs),
-                          BudgetMoneyField(controller: _unitPrice, onChanged: refresh),
+                          AppFormMoneyField(controller: _unitPrice, onChanged: refresh),
                         ],
                       ),
                     ),
@@ -258,7 +257,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
               ] else ...[
                 AppSectionLabel(t.budget.itemAmountLabel),
                 const SizedBox(height: AppSpacing.xs),
-                BudgetMoneyField(controller: _amount, onChanged: refresh, large: true),
+                AppFormMoneyField(controller: _amount, onChanged: refresh, large: true),
               ],
               const SizedBox(height: AppSpacing.lg),
               AppButton(label: t.budget.itemSaveAction, onPressed: _canSave ? _save : null),

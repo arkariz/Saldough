@@ -15,10 +15,10 @@ import 'package:saldough/features/record/presentation/widgets/record_date_field.
 import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 /// Formulir catat pemasukan (FR-TXN-001) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [IncomeRecorded] lewat

@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 const _longName = 'Rekening Bank Central Asia Utama Pribadi Nomor Satu';
 const _otherLongName = 'Dompet Digital Belanja Online Bulanan Keluarga Besar';

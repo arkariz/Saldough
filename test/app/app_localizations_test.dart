@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/app.dart';
+import 'package:saldough/app/app.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 
 /// Komponen bawaan Flutter ikut berbahasa Indonesia (NFR-UX-004, UX-5).

@@ -3,8 +3,8 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_balance_preview.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 /// Pemilih satu dompet dari [wallets] lewat dropdown [AppMenuSelectButton] --
 /// tombol dan menu yang sama dengan penyaring dompet di layar Transaksi --

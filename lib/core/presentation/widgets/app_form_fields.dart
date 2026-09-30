@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
+// Bidang formulir bersama lembar Anggaran dan Freelance (ADR-030 §3.5);
+// semula `budget_form_fields.dart` di fitur `budget`.
+
 /// Kolom teks polos di dalam slab — nama anggaran dan nama pos.
-class BudgetTextField extends StatelessWidget {
-  /// Membuat [BudgetTextField].
-  const BudgetTextField({
+class AppFormTextField extends StatelessWidget {
+  /// Membuat [AppFormTextField].
+  const AppFormTextField({
     required this.controller,
     required this.hint,
     required this.onChanged,
@@ -62,9 +66,9 @@ class BudgetTextField extends StatelessWidget {
 
 /// Kolom nominal mata uang aktif (berpemisah ribuan, ADR-025). Nilai dibaca pemanggil
 /// lewat [senOf] — satuan sen, sesuai aturan uang proyek.
-class BudgetMoneyField extends StatelessWidget {
-  /// Membuat [BudgetMoneyField].
-  const BudgetMoneyField({required this.controller, required this.onChanged, this.large = false, super.key});
+class AppFormMoneyField extends StatelessWidget {
+  /// Membuat [AppFormMoneyField].
+  const AppFormMoneyField({required this.controller, required this.onChanged, this.large = false, super.key});
 
   /// Pengendali teks.
   final TextEditingController controller;
@@ -123,9 +127,9 @@ class BudgetMoneyField extends StatelessWidget {
 }
 
 /// Kolom bilangan bulat positif (jumlah barang).
-class BudgetQuantityField extends StatelessWidget {
-  /// Membuat [BudgetQuantityField].
-  const BudgetQuantityField({required this.controller, required this.onChanged, super.key});
+class AppFormQuantityField extends StatelessWidget {
+  /// Membuat [AppFormQuantityField].
+  const AppFormQuantityField({required this.controller, required this.onChanged, super.key});
 
   /// Pengendali teks.
   final TextEditingController controller;
@@ -168,9 +172,9 @@ class BudgetQuantityField extends StatelessWidget {
 }
 
 /// Bilah atas formulir: tombol kembali, judul bertingkat dua.
-class BudgetFormHeader extends StatelessWidget {
-  /// Membuat [BudgetFormHeader].
-  const BudgetFormHeader({required this.stepLabel, required this.title, super.key});
+class AppFormHeader extends StatelessWidget {
+  /// Membuat [AppFormHeader].
+  const AppFormHeader({required this.stepLabel, required this.title, super.key});
 
   /// Label kecil di atas judul.
   final String stepLabel;

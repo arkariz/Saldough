@@ -9,7 +9,6 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
@@ -314,15 +313,15 @@ void main() {
         ..registerSingleton<ChangeAppLanguage>(ChangeAppLanguage(repository: languageRepository));
     });
 
-    Future<List<ShellStartAction?>> pumpRouter(WidgetTester tester, {bool passLanguage = true}) async {
-      final homes = <ShellStartAction?>[];
+    Future<List<OnboardingOutcome?>> pumpRouter(WidgetTester tester, {bool passLanguage = true}) async {
+      final homes = <OnboardingOutcome?>[];
       final router = GoRouter(
         initialLocation: AppRouteRegistry.onboardingPath,
         routes: [
           GoRoute(
             path: AppRouteRegistry.homePath,
             builder: (context, state) {
-              homes.add(state.extra as ShellStartAction?);
+              homes.add(state.extra as OnboardingOutcome?);
               return const Text('beranda');
             },
           ),
@@ -398,7 +397,7 @@ void main() {
       await tester.pumpAndSettle();
       await _chooseCurrency(tester, AppCurrency.idr);
 
-      expect(homes.last, ShellStartAction.createWallet);
+      expect(homes.last, OnboardingOutcome.createWallet);
       expect((await progress()).onboardingDone, isTrue);
     });
 
@@ -413,7 +412,7 @@ void main() {
       await tester.pumpAndSettle();
       await _chooseCurrency(tester, AppCurrency.idr);
 
-      expect(homes.last, ShellStartAction.openAccount);
+      expect(homes.last, OnboardingOutcome.signIn);
       expect((await progress()).onboardingDone, isTrue);
     });
 

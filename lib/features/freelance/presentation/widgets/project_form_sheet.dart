@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/freelance/domain/entities/deduction_kind.dart';
 import 'package:saldough/features/freelance/domain/entities/deduction_rule.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
@@ -66,7 +65,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
     final project = widget.initial;
     if (project == null) return;
     _name.text = project.name;
-    _rate.text = BudgetMoneyField.initialText(project.hourlyRate);
+    _rate.text = AppFormMoneyField.initialText(project.hourlyRate);
     _deductions = project.deductionRules;
   }
 
@@ -77,7 +76,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
     super.dispose();
   }
 
-  bool get _canSave => _name.text.trim().isNotEmpty && BudgetMoneyField.senOf(_rate) != null;
+  bool get _canSave => _name.text.trim().isNotEmpty && AppFormMoneyField.senOf(_rate) != null;
 
   Future<void> _editDeduction([int? index]) async {
     final result = await showFullScreenSheet<Object>(
@@ -104,7 +103,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
     Navigator.of(context).pop(
       ProjectFormSaved(
         name: _name.text.trim(),
-        hourlyRate: BudgetMoneyField.senOf(_rate)!,
+        hourlyRate: AppFormMoneyField.senOf(_rate)!,
         deductionRules: _deductions,
       ),
     );
@@ -123,14 +122,14 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(
+              AppFormHeader(
                 stepLabel: t.freelance.projectStepLabel,
                 title: editing ? t.freelance.projectEditTitle : t.freelance.projectAddTitle,
               ),
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.projectNameLabel, hint: t.freelance.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(
+              AppFormTextField(
                 controller: _name,
                 hint: t.freelance.projectNameHint,
                 autofocus: !editing,
@@ -139,7 +138,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.hourlyRateLabel, hint: t.freelance.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetMoneyField(controller: _rate, onChanged: refresh, large: true),
+              AppFormMoneyField(controller: _rate, onChanged: refresh, large: true),
               const SizedBox(height: 4),
               Text(
                 t.freelance.hourlyRateHelp,
@@ -240,7 +239,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
     if (rule.kind == DeductionKind.percentage) {
       _percent.text = formatPerMilAsPercent(rule.value);
     } else {
-      _amount.text = BudgetMoneyField.initialText(rule.value);
+      _amount.text = AppFormMoneyField.initialText(rule.value);
     }
   }
 
@@ -253,7 +252,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
   }
 
   int? get _value =>
-      _kind == DeductionKind.percentage ? parsePercentToPerMil(_percent.text) : BudgetMoneyField.senOf(_amount);
+      _kind == DeductionKind.percentage ? parsePercentToPerMil(_percent.text) : AppFormMoneyField.senOf(_amount);
 
   bool get _canSave => _label.text.trim().isNotEmpty && _value != null;
 
@@ -270,11 +269,11 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(stepLabel: t.freelance.deductionsLabel, title: t.freelance.deductionTitle),
+              AppFormHeader(stepLabel: t.freelance.deductionsLabel, title: t.freelance.deductionTitle),
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.deductionLabelLabel, hint: t.freelance.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(
+              AppFormTextField(
                 controller: _label,
                 hint: t.freelance.deductionLabelHint,
                 autofocus: !editing,
@@ -327,7 +326,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
               ] else ...[
                 AppSectionLabel(t.freelance.deductionAmountLabel),
                 const SizedBox(height: AppSpacing.xs),
-                BudgetMoneyField(controller: _amount, onChanged: refresh),
+                AppFormMoneyField(controller: _amount, onChanged: refresh),
               ],
               const SizedBox(height: AppSpacing.lg),
               AppButton(

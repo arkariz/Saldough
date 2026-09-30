@@ -5,7 +5,6 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_item_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -145,7 +144,7 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(
+              AppFormHeader(
                 stepLabel: t.budget.templateStepLabel,
                 title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
               ),
@@ -157,7 +156,7 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.budget.templateNameLabel, hint: t.budget.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(
+              AppFormTextField(
                 controller: _name,
                 hint: t.budget.templateNameHint,
                 autofocus: !_editing,

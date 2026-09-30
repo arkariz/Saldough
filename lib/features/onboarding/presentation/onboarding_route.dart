@@ -6,17 +6,17 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/core/presentation/shell/app_shell_page.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart';
 
 /// Membangun rute `/onboarding` (ADR-021 §3.2).
 ///
 /// Mode pertama kali: menyimpan mata uang pilihan (ADR-025 §3.7), menandai
-/// onboarding selesai, lalu `go('/home')`, dengan
-/// [ShellStartAction.createWallet] kalau pengguna memilih "Buat Dompet
-/// Pertama". Mode tinjau (`extra: OnboardingMode.review`, dari menu info):
-/// cukup kembali, progres tidak disentuh.
+/// onboarding selesai, lalu `go('/home')` dengan [OnboardingOutcome] sebagai
+/// `extra` (kecuali `dismissed`); akar komposisi menerjemahkannya menjadi
+/// aksi awal shell, jadi fitur ini tidak mengenal shell (ADR-030 §3.1).
+/// Mode tinjau (`extra: OnboardingMode.review`, dari menu info): cukup
+/// kembali, progres tidak disentuh.
 Widget buildOnboardingRoute(BuildContext context, GoRouterState state) {
   final mode = state.extra is OnboardingMode ? state.extra! as OnboardingMode : OnboardingMode.firstRun;
   return OnboardingPage(
@@ -48,14 +48,7 @@ Widget buildOnboardingRoute(BuildContext context, GoRouterState state) {
       ActiveCurrency.notifier.value = chosen;
       await container<TutorialProgressRepository>().markOnboardingDone();
       if (!context.mounted) return;
-      context.go(
-        AppRouteRegistry.homePath,
-        extra: switch (outcome) {
-          OnboardingOutcome.createWallet => ShellStartAction.createWallet,
-          OnboardingOutcome.signIn => ShellStartAction.openAccount,
-          OnboardingOutcome.dismissed => null,
-        },
-      );
+      context.go(AppRouteRegistry.homePath, extra: outcome == OnboardingOutcome.dismissed ? null : outcome);
     },
   );
 }

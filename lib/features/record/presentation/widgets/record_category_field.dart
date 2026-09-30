@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/category/category_presentation.dart';
 
 /// Nilai internal item "Tambah kategori" di menu -- BUKAN id kategori, hanya
 /// penanda untuk membuka dialog nama. Memuat karakter kontrol supaya mustahil

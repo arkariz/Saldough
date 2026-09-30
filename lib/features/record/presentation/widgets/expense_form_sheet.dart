@@ -5,7 +5,6 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -15,10 +14,11 @@ import 'package:saldough/features/record/presentation/widgets/record_date_field.
 import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
-import 'package:saldough/features/record/presentation/widgets/wallet_select_field.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 /// Formulir catat pengeluaran (FR-TXN-002) — satu layar, tanpa berpindah
 /// halaman (NFR-UX-001). Mengembalikan [ExpenseRecorded] lewat

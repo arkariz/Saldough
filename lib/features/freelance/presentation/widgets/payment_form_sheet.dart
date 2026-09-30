@@ -4,7 +4,6 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/domain/usecases/calculate_net_pay.dart';
@@ -104,7 +103,7 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BudgetFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.paymentAddTitle),
+            AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.paymentAddTitle),
             const SizedBox(height: AppSpacing.md),
             FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.paymentCreateRuleBody),
             const SizedBox(height: AppSpacing.md),

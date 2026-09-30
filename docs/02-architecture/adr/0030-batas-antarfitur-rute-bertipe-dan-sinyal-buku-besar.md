@@ -60,8 +60,9 @@ disusun di `lib/app/`.
 
 Berisi widget dan helper tampilan untuk **entitas modul itu** yang dipakai ≥2
 fitur (mis. nama kategori, baris transaksi, pemilih dompet, avatar akun),
-diekspor lewat barrel modulnya. Tetap **tanpa** bloc, page, scope, dan rute —
-itu milik fitur. Widget tanpa entitas (bidang formulir, kartu) tetap di
+diekspor lewat barrel kedua `<module>_presentation.dart`, bukan barrel
+utama, supaya `domain/` yang mengimpor barrel utama tidak ikut menarik
+Flutter. Tetap **tanpa** bloc, page, scope, dan rute — itu milik fitur. Widget tanpa entitas (bidang formulir, kartu) tetap di
 `core/presentation/widgets/`.
 
 ### 3.3 Navigasi antarfitur lewat kunci rute (ADR-0004 ditegakkan)
@@ -128,7 +129,10 @@ itu milik fitur. Widget tanpa entitas (bidang formulir, kartu) tetap di
 - Bidang formulir generik `budget_form_fields.dart` → `core/presentation/widgets/`
   dengan nama `AppForm*`. `wallet_select_field` → `shared/wallet/presentation/`,
   `transaction_date_group_card` → `shared/transaction/presentation/`,
-  `account_avatar` → `shared/auth/presentation/` (§3.2).
+  `account_avatar` → `shared/auth/presentation/` (§3.2). Dua yang terakhir
+  menunggu tahapnya: kartu grup tanggal bergantung pada pengelompokan yang
+  baru menjadi domain di §3.6 (tahap 2), dan avatar membuka layar Akun,
+  jadi butuh kunci rute (tahap 4).
 
 ### 3.6 Logika query keluar dari bloc
 

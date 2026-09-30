@@ -3,7 +3,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/domain/entities/worklog_entry.dart';
 import 'package:saldough/features/freelance/presentation/freelance_format.dart';
@@ -96,7 +95,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
     _projectId = entry.projectId;
     _date = entry.date;
     _hours.text = '${entry.hours}';
-    _rate.text = BudgetMoneyField.initialText(entry.hourlyRate);
+    _rate.text = AppFormMoneyField.initialText(entry.hourlyRate);
     _note.text = entry.note ?? '';
   }
 
@@ -111,12 +110,12 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
   void _selectProject(String id) {
     _projectId = id;
     final project = widget.projects.where((p) => p.id == id).firstOrNull;
-    if (project != null) _rate.text = BudgetMoneyField.initialText(project.hourlyRate);
+    if (project != null) _rate.text = AppFormMoneyField.initialText(project.hourlyRate);
   }
 
-  int? get _hoursValue => BudgetQuantityField.valueOf(_hours);
+  int? get _hoursValue => AppFormQuantityField.valueOf(_hours);
 
-  int? get _rateValue => BudgetMoneyField.senOf(_rate);
+  int? get _rateValue => AppFormMoneyField.senOf(_rate);
 
   bool get _canSave => _projectId != null && _hoursValue != null && _rateValue != null;
 
@@ -149,7 +148,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              BudgetFormHeader(
+              AppFormHeader(
                 stepLabel: t.freelance.entryStepLabel,
                 title: editing ? t.freelance.entryEditTitle : t.freelance.entryAddTitle,
               ),
@@ -182,7 +181,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.hourlyRateLabel, hint: t.freelance.requiredHint),
               const SizedBox(height: AppSpacing.xs),
-              BudgetMoneyField(controller: _rate, onChanged: refresh),
+              AppFormMoneyField(controller: _rate, onChanged: refresh),
               const SizedBox(height: 4),
               Text(t.freelance.entryRateHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
               const SizedBox(height: AppSpacing.md),
@@ -211,7 +210,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               const SizedBox(height: AppSpacing.md),
               AppSectionLabel(t.freelance.noteLabel),
               const SizedBox(height: AppSpacing.xs),
-              BudgetTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: refresh),
+              AppFormTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: refresh),
               const SizedBox(height: AppSpacing.lg),
               AppButton(label: t.freelance.entrySaveAction, onPressed: _canSave ? _save : null),
               const SizedBox(height: AppSpacing.xs),

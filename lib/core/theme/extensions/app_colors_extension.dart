@@ -29,6 +29,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.incomeFill,
     required this.expenseFill,
     required this.transferFill,
+    required this.scrim,
   });
 
   /// Nominal masuk, dan sisa siklus yang positif.
@@ -107,6 +108,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// Isian [transfer] untuk bidang besar. Lihat [incomeFill].
   final Color transferFill;
 
+  /// Tirai gelap di belakang sorotan tur (ADR-021 §3.3), dipakai dengan
+  /// alfa di titik pakainya. Sama di semua palet: tirai selalu gelap.
+  final Color scrim;
+
   /// Palet mode terang layar Saldough 2.0 (`PixelTheme`), BUKAN [light].
   ///
   /// Dibangun dengan konstruktor EKSPLISIT, bukan `light.copyWith(...)`:
@@ -137,6 +142,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     incomeFill: Color(0xFF16A34A),
     expenseFill: Color(0xFFDC2626),
     transferFill: Color(0xFF2563EB),
+    scrim: Color(0xFF120F0E),
   );
 
   /// Palet mode gelap layar Saldough 2.0 -- pasangan [pixelLight], juga
@@ -171,6 +177,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     incomeFill: Color(0xFF22C55E),
     expenseFill: Color(0xFFF87171),
     transferFill: Color(0xFF60A5FA),
+    scrim: Color(0xFF120F0E),
   );
 
   /// Palet mode terang, nilai resmi dari ADR-0006.
@@ -194,6 +201,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     incomeFill: Color(0xFF1E9E46),
     expenseFill: Color(0xFFE13553),
     transferFill: Color(0xFF3D4A42),
+    scrim: Color(0xFF120F0E),
   );
 
   /// Palet mode gelap, nilai resmi dari ADR-0006.
@@ -217,6 +225,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     incomeFill: Color(0xFF3DDC68),
     expenseFill: Color(0xFFFF4D6A),
     transferFill: Color(0xFF708A7A),
+    scrim: Color(0xFF120F0E),
   );
 
   @override
@@ -239,6 +248,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? incomeFill,
     Color? expenseFill,
     Color? transferFill,
+    Color? scrim,
   }) {
     return AppColorsExtension(
       income: income ?? this.income,
@@ -259,6 +269,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       incomeFill: incomeFill ?? this.incomeFill,
       expenseFill: expenseFill ?? this.expenseFill,
       transferFill: transferFill ?? this.transferFill,
+      scrim: scrim ?? this.scrim,
     );
   }
 
@@ -284,6 +295,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       incomeFill: Color.lerp(incomeFill, other.incomeFill, t)!,
       expenseFill: Color.lerp(expenseFill, other.expenseFill, t)!,
       transferFill: Color.lerp(transferFill, other.transferFill, t)!,
+      scrim: Color.lerp(scrim, other.scrim, t)!,
     );
   }
 }

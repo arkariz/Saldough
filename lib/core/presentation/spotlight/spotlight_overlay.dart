@@ -189,7 +189,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                             painter: _ScrimPainter(
                               hole: hole,
                               below: below,
-                              scrim: const Color(0xFF120F0E).withValues(alpha: 0.74),
+                              scrim: colors.scrim.withValues(alpha: 0.74),
                               border: colors.accent.withValues(alpha: bright ? 1 : 0.35),
                               tail: colors.cardBackground,
                               edge: colors.edge,

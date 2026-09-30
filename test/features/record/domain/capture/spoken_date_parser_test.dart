@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/core/utils/formatters/number_lexicon.dart';
-import 'package:saldough/core/utils/formatters/spoken_date_parser.dart';
+import 'package:saldough/features/record/domain/capture/number_lexicon.dart';
+import 'package:saldough/features/record/domain/capture/spoken_date_parser.dart';
 
 /// Tanggal lisan (ADR-029 §3.2). Acuan: Rabu 30 Sep 2026 pukul 12.
 void main() {

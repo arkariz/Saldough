@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/core/utils/formatters/spoken_amount_parser.dart';
+import 'package:saldough/features/record/domain/capture/spoken_amount_parser.dart';
 
 const NumberLexicon _id = NumberLexicon.indonesian;
 const NumberLexicon _en = NumberLexicon.english;

@@ -3,7 +3,6 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
-import 'package:saldough/features/budget/presentation/widgets/budget_form_fields.dart';
 
 /// Tombol tanggal: label kecil, tanggal lengkap, dan ikon kalender. Membuka
 /// `showDatePicker`.
@@ -70,7 +69,7 @@ class FreelanceHoursField extends StatelessWidget {
   /// Membuat [FreelanceHoursField].
   const FreelanceHoursField({required this.controller, required this.onChanged, super.key});
 
-  /// Pengendali teks; dibaca pemanggil lewat `BudgetQuantityField.valueOf`.
+  /// Pengendali teks; dibaca pemanggil lewat `AppFormQuantityField.valueOf`.
   final TextEditingController controller;
 
   /// Dipanggil tiap nilai berubah.
@@ -83,7 +82,7 @@ class FreelanceHoursField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        BudgetQuantityField(controller: controller, onChanged: (_) => onChanged()),
+        AppFormQuantityField(controller: controller, onChanged: (_) => onChanged()),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 
 void main() {
   final september = (start: DateTime(2026, 9), end: DateTime(2026, 10));

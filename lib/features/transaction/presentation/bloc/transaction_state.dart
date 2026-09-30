@@ -1,5 +1,5 @@
 import 'package:dependencies/dependencies.dart';
-import 'package:saldough/features/record/domain/budget_item_catalog.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';

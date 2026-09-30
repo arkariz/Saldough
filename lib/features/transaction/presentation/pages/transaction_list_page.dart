@@ -8,10 +8,11 @@ import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
-import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_empty_states.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_month_header.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 

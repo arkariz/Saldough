@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/category/category_presentation.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Wadah segmen jenis transaksi (Semua/Masuk/Keluar/Mutasi) ala "kartrid

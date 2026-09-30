@@ -23,7 +23,9 @@ part 'transaction_event.dart';
 /// Penyaringan/pengelompokan dihitung SEKALI tiap kali salah satu inputnya
 /// berubah (bulan, atau salah satu filter) lewat [_recomputed] -- bukan di
 /// widget tiap `build()` -- supaya berpindah tab tidak menghitung ulang
-/// pengelompokan tanggal berkali-kali per detik.
+/// pengelompokan tanggal berkali-kali per detik. Aturan saring dan
+/// kelompoknya sendiri fungsi murni di `transaction_query.dart` (ADR-030
+/// §3.6); bloc ini hanya mengorkestrasi.
 final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   /// Membuat [TransactionBloc].
   TransactionBloc({
@@ -278,8 +280,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       return;
     }
 
-    final walletNames = {for (final wallet in state.wallets) wallet.id: wallet.name.toLowerCase()};
-    final needle = searchQuery.trim().toLowerCase();
+    final walletNames = _walletNames(state.wallets);
     final matches = [for (final group in state.crossMonthGroups) ...group.transactions];
 
     for (final monthToScan in batch) {
@@ -292,12 +293,15 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           return;
         case Right(value: final transactions):
           matches.addAll(
-            transactions.where((transaction) {
-              if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
-              if (categoryFilter != null && transaction.categoryId != categoryFilter) return false;
-              if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
-              return _matchesType(transaction, typeFilter);
-            }),
+            filterTransactions(
+              transactions,
+              categoryName: _categoryName,
+              walletNames: walletNames,
+              walletId: walletFilter,
+              categoryId: categoryFilter,
+              query: searchQuery,
+              type: typeFilter,
+            ),
           );
       }
     }
@@ -309,7 +313,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       state.copyWith(
         availableMonths: availableMonths,
         crossMonthScannedMonths: scanned,
-        crossMonthGroups: _groupByDate(matches),
+        crossMonthGroups: groupTransactionsByDate(matches),
         isSearchingCrossMonth: false,
         crossMonthExhausted: scanned.length >= candidates.length,
       ),
@@ -331,26 +335,20 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required String? categoryFilter,
     required String searchQuery,
   }) {
-    final categoryOptions = _distinctCategories(rawTransactions);
-
-    final needle = searchQuery.trim().toLowerCase();
-    final walletNames = {for (final wallet in wallets) wallet.id: wallet.name.toLowerCase()};
-
-    final walletCategoryFiltered = rawTransactions.where((transaction) {
-      if (walletFilter != null && !_walletIdsOf(transaction).contains(walletFilter)) return false;
-      if (categoryFilter != null && transaction.categoryId != categoryFilter) return false;
-      if (needle.isNotEmpty && !_matchesSearch(transaction, needle, walletNames)) return false;
-      return true;
-    }).toList();
-
-    final typeCounts = <TransactionTypeFilter, int>{
-      TransactionTypeFilter.all: walletCategoryFiltered.length,
-      TransactionTypeFilter.income: walletCategoryFiltered.whereType<IncomeTransaction>().length,
-      TransactionTypeFilter.expense: walletCategoryFiltered.whereType<ExpenseTransaction>().length,
-      TransactionTypeFilter.transfer: walletCategoryFiltered.whereType<TransferTransaction>().length,
-    };
-
-    final fullyFiltered = walletCategoryFiltered.where((transaction) => _matchesType(transaction, typeFilter)).toList();
+    // Angka chip jenis dihitung SEBELUM penyaring jenis diterapkan, supaya
+    // tiap chip menunjukkan berapa yang akan tampil kalau dipilih.
+    final walletCategoryFiltered = filterTransactions(
+      rawTransactions,
+      categoryName: _categoryName,
+      walletNames: _walletNames(wallets),
+      walletId: walletFilter,
+      categoryId: categoryFilter,
+      query: searchQuery,
+    );
+    final fullyFiltered = [
+      for (final transaction in walletCategoryFiltered)
+        if (matchesTransactionType(transaction, typeFilter)) transaction,
+    ];
 
     return TransactionState(
       month: month,
@@ -360,80 +358,15 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       typeFilter: typeFilter,
       walletFilter: walletFilter,
       categoryFilter: categoryFilter,
-      categoryOptions: categoryOptions,
+      categoryOptions: distinctCategoryIds(rawTransactions, categoryName: _categoryName),
       searchQuery: searchQuery,
-      groups: _groupByDate(fullyFiltered),
-      typeCounts: typeCounts,
+      groups: groupTransactionsByDate(fullyFiltered),
+      typeCounts: countTransactionsByType(walletCategoryFiltered),
       isLoading: false,
     );
   }
 
-  /// Cocok kalau [needle] (sudah huruf kecil) muncul di kategori, catatan,
-  /// atau nama salah satu dompet yang disentuh [transaction].
-  bool _matchesSearch(Transaction transaction, String needle, Map<String, String> walletNames) {
-    if ((ActiveCategories.byId(transaction.categoryId)?.name ?? '').toLowerCase().contains(needle)) return true;
-    if (transaction.note.toLowerCase().contains(needle)) return true;
-    return _walletIdsOf(transaction).any((id) => (walletNames[id] ?? '').contains(needle));
-  }
+  static String? _categoryName(String id) => ActiveCategories.byId(id)?.name;
 
-  bool _matchesType(Transaction transaction, TransactionTypeFilter filter) => switch (filter) {
-    TransactionTypeFilter.all => true,
-    TransactionTypeFilter.income => transaction is IncomeTransaction,
-    TransactionTypeFilter.expense => transaction is ExpenseTransaction,
-    TransactionTypeFilter.transfer => transaction is TransferTransaction,
-  };
-
-  /// Dompet yang tersentuh oleh [transaction] -- satu untuk pemasukan/
-  /// pengeluaran, dua untuk transfer. Dipakai supaya menyaring dompet "BCA"
-  /// juga menampilkan transfer yang menyentuh BCA sebagai asal ATAU tujuan.
-  Set<String> _walletIdsOf(Transaction transaction) => switch (transaction) {
-    IncomeTransaction() => {transaction.walletId},
-    ExpenseTransaction() => {transaction.walletId},
-    TransferTransaction() => {transaction.fromWalletId, transaction.toWalletId},
-  };
-
-  /// Id kategori yang dipakai [transactions], urut nama (ADR-026).
-  List<String> _distinctCategories(List<Transaction> transactions) {
-    final ids = <String>{
-      for (final transaction in transactions)
-        if (transaction.categoryId != null) transaction.categoryId!,
-    };
-    String nameOf(String id) => ActiveCategories.byId(id)?.name.toLowerCase() ?? id;
-    return ids.toList()..sort((a, b) => nameOf(a).compareTo(nameOf(b)));
-  }
-
-  List<TransactionDateGroup> _groupByDate(List<Transaction> transactions) {
-    final byDay = <DateTime, List<Transaction>>{};
-    for (final transaction in transactions) {
-      final day = DateTime(transaction.date.year, transaction.date.month, transaction.date.day);
-      byDay.putIfAbsent(day, () => []).add(transaction);
-    }
-    final days = byDay.keys.toList()..sort((a, b) => b.compareTo(a));
-    return [
-      for (final day in days)
-        TransactionDateGroup(
-          date: day,
-          netSen: _netSenOf(byDay[day]!),
-          transactions: byDay[day]!..sort((a, b) => b.date.compareTo(a.date)),
-        ),
-    ];
-  }
-
-  /// Pemasukan dikurangi pengeluaran pada satu tanggal. Transfer TIDAK ikut
-  /// dihitung (CLAUDE.md aturan 7 -- transfer tidak pernah terhitung sebagai
-  /// pemasukan maupun pengeluaran).
-  int _netSenOf(List<Transaction> transactions) {
-    var net = 0;
-    for (final transaction in transactions) {
-      switch (transaction) {
-        case IncomeTransaction():
-          net += transaction.amount;
-        case ExpenseTransaction():
-          net -= transaction.amount;
-        case TransferTransaction():
-          break;
-      }
-    }
-    return net;
-  }
+  static Map<String, String> _walletNames(List<Wallet> wallets) => {for (final wallet in wallets) wallet.id: wallet.name};
 }

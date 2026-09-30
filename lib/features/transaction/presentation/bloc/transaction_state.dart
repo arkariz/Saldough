@@ -1,49 +1,7 @@
-import 'package:dependencies/dependencies.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
-
-/// Jenis transaksi yang disaring layar riwayat (FR-TXN-004). `all` bukan
-/// "tanpa filter" di level data -- ia satu pilihan chip seperti tiga
-/// lainnya, hanya kebetulan tidak mengecualikan apa pun berdasarkan jenis.
-enum TransactionTypeFilter {
-  /// Semua jenis.
-  all,
-
-  /// Hanya `IncomeTransaction`.
-  income,
-
-  /// Hanya `ExpenseTransaction`.
-  expense,
-
-  /// Hanya `TransferTransaction`.
-  transfer,
-}
-
-/// Satu kelompok transaksi pada tanggal [date] yang sama, sudah tersaring
-/// dan terurut (terbaru dulu) sesuai filter aktif saat kelompok ini dihitung.
-final class TransactionDateGroup extends Equatable {
-  /// Membuat [TransactionDateGroup].
-  const TransactionDateGroup({
-    required this.date,
-    required this.netSen,
-    required this.transactions,
-  });
-
-  /// Tanggal kelompok ini, waktu diabaikan (`day`-precision).
-  final DateTime date;
-
-  /// Jumlah pemasukan dikurangi pengeluaran pada tanggal ini. Transfer
-  /// TIDAK ikut dihitung (CLAUDE.md aturan 7) -- boleh negatif.
-  final int netSen;
-
-  /// Transaksi pada tanggal ini, terbaru dulu.
-  final List<Transaction> transactions;
-
-  @override
-  List<Object?> get props => [date, netSen, transactions];
-}
 
 /// State [TransactionBloc].
 final class TransactionState extends UiState<TransactionState> {

@@ -10,7 +10,7 @@ import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
-import 'package:saldough/features/transaction/presentation/widgets/transaction_date_group_card.dart';
+import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 
 /// Beranda (Fase 6, FR-HOME-001..005), rujukan visual `pixel_kas_beranda` dan

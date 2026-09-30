@@ -73,7 +73,7 @@ Terakhir diperbarui: 29 September 2026 (609 uji lulus, 69 berkas uji, 28.413 bar
 | 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 15 | 11 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
-| 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 2 | Berjalan -- T-12.1 (keputusan dan ADR) dan T-12.2 (pindah berkas) selesai; berikutnya T-12.3 |
+| 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 3 | Berjalan -- T-12.1 (keputusan dan ADR), T-12.2 (pindah berkas), dan T-12.3 (query transaksi murni) selesai; berikutnya T-12.4 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -1784,7 +1784,7 @@ seluruh uji lulus.
       tidak berubah selain jalur impor dan `OnboardingOutcome`.
       `transaction_date_group_card` pindah di T-12.3, `account_avatar` di
       T-12.5.
-- [ ] **T-12.3** Tahap 2: logika query transaksi jadi fungsi murni (ADR-030
+- [x] **T-12.3** Tahap 2: logika query transaksi jadi fungsi murni (ADR-030
       §3.6). Penyaring jenis/dompet/kategori, pencarian, pengelompokan per
       tanggal, dan jumlah bersih dari `TransactionBloc` ke
       `shared/transaction/domain/`; `transaction_date_group_card` ke
@@ -1794,6 +1794,18 @@ seluruh uji lulus.
       Verifikasi: uji unit fungsi murni dengan angka nyata; uji bloc lama
       tetap lulus tanpa diubah.
       Memenuhi FR-TXN-004.
+      Hasil (30 Sep 2026): `shared/transaction/domain/transaction_query.dart`
+      (`filterTransactions`, `countTransactionsByType`,
+      `distinctCategoryIds`, `groupTransactionsByDate`, `netSenOf`,
+      `walletIdsOf`; nama kategori disuntikkan supaya tetap Dart murni);
+      `TransactionTypeFilter` dan `TransactionDateGroup` ikut pindah dari
+      state. `RecordTransaction` memakai `walletIdsOf` yang sama.
+      `TransactionBloc` 439 → 372 baris. Kartu grup tanggal dan
+      `transactionTitle`/`transactionTime` ke
+      `shared/transaction/presentation/` (barrel
+      `transaction_presentation.dart`). 9 uji baru (gaji 2.615.438, belanja
+      3.068.500, transfer 1.000.000); uji bloc lama lulus tanpa diubah; 845
+      uji lulus, `flutter analyze` bersih. Impor antarfitur 29 → 26.
 - [ ] **T-12.4** Tahap 3: sinyal buku besar `LedgerChanges` (ADR-030 §3.4).
       Dipancarkan `RecordTransaction` dan `WalletBloc` sesudah unit kerja
       `Right`; `TransactionBloc`, `WalletBloc`, `BudgetBloc`, `HomeBloc`

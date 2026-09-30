@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
+import 'package:saldough/shared/transaction/domain/transaction_query.dart';
 import 'package:saldough/shared/transaction/domain/transaction_repository.dart';
 import 'package:saldough/shared/transaction/domain/usecases/recompute_wallet_balances.dart';
 
@@ -40,8 +41,8 @@ final class RecordTransaction {
     return switch (saveResult) {
       Left(value: final failure) => left(failure),
       Right() => recomputeWalletBalances.forWallets({
-          ..._walletIdsOf(transaction),
-          if (previousTransaction != null) ..._walletIdsOf(previousTransaction),
+          ...walletIdsOf(transaction),
+          if (previousTransaction != null) ...walletIdsOf(previousTransaction),
         }),
     };
   }
@@ -52,13 +53,7 @@ final class RecordTransaction {
     final deleteResult = await transactionRepository.deleteTransaction(transaction.id, transaction.date);
     return switch (deleteResult) {
       Left(value: final failure) => left(failure),
-      Right() => recomputeWalletBalances.forWallets(_walletIdsOf(transaction)),
+      Right() => recomputeWalletBalances.forWallets(walletIdsOf(transaction)),
     };
   }
-
-  Set<String> _walletIdsOf(Transaction transaction) => switch (transaction) {
-        IncomeTransaction(:final walletId) => {walletId},
-        ExpenseTransaction(:final walletId) => {walletId},
-        TransferTransaction(fromWalletId: final from, toWalletId: final to) => {from, to},
-      };
 }

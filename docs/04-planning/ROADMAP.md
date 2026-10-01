@@ -47,13 +47,17 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 7 | Template dan poles | Anggaran berulang cepat dibuat, ikon final terpasang |
 | 8 | Tindak lanjut pasca-MVP | Anggaran hanya membaca bulannya, pencarian lintas bulan, ganti nama Tanukonomy, akun opsional, Analytics/Crashlytics, satu mata uang per aplikasi, persiapan rilis |
 | 9 | Onboarding, info, dan tur spotlight | Pengguna baru paham aplikasinya sebelum mencatat, tiap layar dijelaskan sekali di tempatnya |
+| 10 | (dicadangkan: sinkronisasi, B-7) | — |
+| 11 | Catat Cerdas: kategori dan suara | Transaksi berkategori tertutup; satu ucapan mengisi formulir CATAT |
+| 12 | Rapikan batas arsitektur | Fitur hanya saling kenal lewat kunci rute; uji batas impor menjaga |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
 
-**Status per 29 September 2026:** Fase 0–7 dan 9 selesai; Fase 8 berjalan
-(sisa: prasyarat ganti nama T-8.3 dan verifikasi build rilis T-8.7, keduanya
-menunggu pemilik). Rincian dan antrean di [TASK_LIST.md](TASK_LIST.md).
+**Status per 1 Oktober 2026:** Fase 0–7, 9, dan 12 selesai; Fase 8 dan 11
+berjalan (sisa Fase 8: sapuan nama dan ikon iOS T-8.3; sisa Fase 11: ucapan
+nyata T-11.5, Keamanan Data T-11.6, Firebase AI T-11.7–11.9). Rincian dan
+antrean di [TASK_LIST.md](TASK_LIST.md).
 
 ## Fase 0: Dokumen Saldough 2.0
 

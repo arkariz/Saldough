@@ -7,7 +7,7 @@
 > Bagian §5–§6 dan Fase 3 di bawah tetap disimpan sebagai rujukan untuk B-15.
 > Keputusan mengikat ada di ADR-027 §3.5.
 
-**Tanggal riset:** 30 September 2026 · **Status:** riset, belum ada kode;
+**Tanggal riset:** 30 September 2026 · **Status:** diimplementasi di Fase 11 (progres di TASK_LIST); semula
 keputusan pemilik 30 Sep 2026: STT server boleh, Opsi A (Gemma lokal, mulai
 dari model termurah), sistem kategori dibangun sekalian (set bawaan disetujui,
 label transfer lama dibuang), top-up = transfer ·
@@ -18,6 +18,17 @@ Label bukti dipakai di seluruh dokumen:
 - **[V]** fakta terverifikasi dari sumber resmi saat riset (tautan disertakan).
 - **[U]** belum terverifikasi / hanya sumber sekunder / dari ingatan.
 - **[E]** estimasi penulis, bukan hasil ukur.
+
+
+> **Catatan path (1 Okt 2026):** path berkas di rencana ini ditulis sebelum
+> implementasi dan Fase 12. Lokasi sebenarnya: kode suara di
+> `lib/features/record/{domain,data,presentation}/capture/` (parser ucapan
+> juga di `domain/capture/`, bukan `core/utils/formatters/`), kategori di
+> `lib/shared/category/` dan layar kelolanya di `lib/features/account/`,
+> registrasi DI di `lib/app/di/root_module.dart`, `RecordDraft` di
+> `domain/capture/record_draft.dart`, `BudgetItemCatalog` di
+> `lib/shared/budget_catalog/`. Gemma lokal ditunda (B-15), jadi
+> `local_llm_transaction_interpreter.dart` belum ada.
 
 ---
 

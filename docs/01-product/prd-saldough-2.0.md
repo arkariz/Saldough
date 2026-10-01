@@ -24,7 +24,7 @@ melacak pekerjaan freelance yang sudah dikerjakan tetapi belum dibayar lewat
 | **Nama produk** | Saldough |
 | **Platform** | Android dan iOS |
 | **Versi dokumen** | 2.0 |
-| **Status** | Draf, menunggu implementasi |
+| **Status** | Berlaku; MVP terimplementasi (lihat TASK_LIST) |
 | **Jenis produk** | Pengelolaan keuangan pribadi |
 | **Pengguna sasaran** | Perorangan |
 | **Bahasa utama** | Indonesia |
@@ -383,8 +383,9 @@ lebih berat, fitur itu yang salah tempat.
 
 **FR-REC-001 — Titik masuk tunggal pencatatan**
 
-- [ ] Menyediakan tombol CATAT di navigasi bawah, dibedakan secara visual dari
-      tujuan navigasi biasa.
+- [ ] Menyediakan tombol CATAT yang selalu terlihat dan dibedakan secara
+      visual dari tujuan navigasi biasa (FAB di kanan bawah sejak 30 Sep
+      2026, T-11.5).
 - [ ] Menawarkan tiga pilihan saat dibuka: catat pemasukan, catat pengeluaran,
       catat transfer.
 - [ ] Menjadi satu-satunya jalur pembuatan transaksi manual, sehingga tidak ada
@@ -697,11 +698,13 @@ Gambaran lengkapnya di
 
 ## 10. Prinsip antarmuka
 
-Navigasi bawah berisi lima tujuan dengan CATAT di tengah sebagai tindakan utama
-yang dibedakan secara visual:
+Navigasi bawah berisi empat tujuan. CATAT bukan tab: ia FAB utama di kanan
+bawah, dengan FAB kecil "Catat pakai suara" di atasnya (revisi 30 Sep 2026,
+T-11.5; sebelumnya CATAT adalah slot tengah dari lima):
 
 ```
-Beranda | Anggaran | CATAT | Riwayat | Dompet
+Beranda | Anggaran | Riwayat | Dompet          [suara]
+                                                [CATAT]
 ```
 
 Tab riwayat transaksi bernama **Riwayat** (id) / **History** (en) sejak 29

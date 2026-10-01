@@ -16,25 +16,35 @@
 
 ## Kode — zona `core` (dipakai semua layar)
 
-- `lib/core/theme/` — `AppColorsExtension` (palet `pixelLight`/`pixelDark` untuk layar 2.0; `light`/`dark` ADR-0006 hanya tema global lama), `PixelTheme`, token `AppSpacing`/`AppRadius`/`AppBorder`/`AppElevation`. Baca nilainya di sini, jangan menebak dari nama variabel.
-- `lib/core/presentation/widgets/` — komponen bersama: `AppHardCard`, `AppButton`, `AppChip`, `AppQuickChip`, `AppMoneyText`, `AppIcon`/`CategoryIcon`, `AppSkeleton`, `AppSegmentedProgressBar`, `FullScreenSheet`, `ConfirmDeleteDialog`, `AppMenuSelectButton`. Cek di sini dulu sebelum menilai "kenapa kartu ini beda dengan kartu itu" — biasanya bedanya hanya parameter.
-- `lib/core/presentation/shell/app_shell_page.dart` — shell di rute `/home`: lima slot navigasi bawah (Beranda, Anggaran, **CATAT** di tengah, Transaksi, Dompet). CATAT membuka lembar pilihan, bukan tab. Tab yang belum dibangun memakai `_ComingSoonTab`.
+- `lib/core/theme/` — `PixelTheme.light`/`.dark` adalah tema global `MaterialApp` (ADR-031); `AppColorsExtension` (`pixelLight`/`pixelDark`), token `AppSpacing`/`AppRadius`/`AppBorder`/`AppElevation`. Baca nilainya di sini, jangan menebak dari nama variabel.
+- `lib/core/presentation/widgets/` — komponen bersama: `AppHardCard`, `AppButton`, `AppQuickChip`, `AppSegmented`, `AppMoneyText`, `AppIcon`/`CategoryIcon`, `AppSkeleton`, `AppSegmentedProgressBar`, `FullScreenSheet`, `ConfirmDeleteDialog`, `AppMenuSelectButton`, `AppForm*`. Cek di sini dulu sebelum menilai "kenapa kartu ini beda dengan kartu itu" — biasanya bedanya hanya parameter.
+- `lib/app/shell/app_shell_page.dart` — shell di rute `/home`: empat tab navigasi bawah (Beranda, Anggaran, Riwayat, Dompet) dan dua FAB bertumpuk di kanan bawah (Catat pakai suara, CATAT). Fitur lain dibuka lewat `context.pushRoute(XRouteKeys.y, input)` (ADR-030).
 - `assets/i18n/id.i18n.json` (dan `en`) — seluruh copy antarmuka. Baca JSON-nya langsung untuk audit copy — lebih cepat daripada grep tiap `t.xxx.yyy`. Kode hasil slang ada di `lib/core/i18n/`.
 
 ## Kode — zona `features`
 
 Baca `*_state.dart` sebelum page/widget. Flag seperti `isLoading`,
 `loadFailed`, `isSaving` menentukan state apa yang SEHARUSNYA tampil. Kalau
-widget tidak mengecek flag itu, itu temuan nyata, bukan dugaan.
+widget tidak mengecek flag itu, itu temuan nyata, bukan dugaan. Semua path
+di bawah relatif ke `lib/features/<fitur>/presentation/`.
 
 | Fitur | Layar / lembar | Bloc | Widget penting |
 |---|---|---|---|
-| `record` (CATAT — satu-satunya jalur pembuatan transaksi manual) | `presentation/open_record_sheet.dart`, `open_edit_transaction_sheet.dart`; `widgets/record_choice_sheet.dart`, `income_form_sheet.dart`, `expense_form_sheet.dart`, `transfer_form_sheet.dart` | `presentation/bloc/record_bloc.dart` (`RecordState`: `wallets`, `isLoading`, `isSaving`, `loadFailed`) | `record_form_frame.dart`, `record_amount_field.dart`, `record_category_field.dart`, `wallet_select_field.dart`, `wallet_balance_preview.dart`, `record_saving_dialog.dart` |
-| `transaction` (riwayat) | `pages/transaction_list_page.dart`, `pages/transaction_detail_page.dart` | `presentation/bloc/transaction_bloc.dart` (`TransactionState`: `month`, filter jenis/dompet/kategori, `searchQuery`, `groups`, `typeCounts`, `isLoading`, `loadFailed`) | `transaction_filter_bar.dart`, `transaction_month_header.dart`, `transaction_date_group_card.dart`, `transaction_empty_states.dart`, `transaction_display.dart` |
-| `wallet` | `pages/wallet_list_page.dart`, `pages/wallet_detail_page.dart` | `presentation/bloc/wallet_bloc.dart` (`WalletState`: `wallets`, `isLoading`, `loadFailed`) | `wallet_card.dart`, `wallet_summary_card.dart`, `wallet_form_sheet.dart`, `wallet_empty_states.dart`, `wallet_type.dart` |
-| `freelance` | Belum ada layar (Fase 5). Baru domain `CalculateNetPay` | — | — |
+| `record` (CATAT — satu-satunya jalur pembuatan transaksi manual) | `open_record_sheet.dart`, `open_edit_transaction_sheet.dart`, `widgets/record_form_host.dart` (segmen keluar/masuk/transfer), `income_`/`expense_`/`transfer_form_sheet.dart`; suara: `capture/voice_capture_sheet.dart`, `capture/speech_language_sheet.dart` | `bloc/record_bloc.dart`, `capture/bloc/voice_capture_bloc.dart` | `record_form_frame.dart`, `record_amount_field.dart`, `record_category_field.dart`, `record_date_field.dart`, `record_draft_card.dart`, `record_saving_dialog.dart` |
+| `transaction` (Riwayat) | `pages/transaction_list_page.dart`, `pages/transaction_detail_page.dart` | `bloc/transaction_bloc.dart` | `transaction_filter_bar.dart`, `transaction_month_header.dart`, `transaction_empty_states.dart` |
+| `wallet` | `pages/wallet_list_page.dart`, `pages/wallet_detail_page.dart` | `bloc/wallet_bloc.dart`, `bloc/wallet_activity_bloc.dart` | `wallet_card.dart`, `wallet_summary_card.dart`, `wallet_form_sheet.dart`, `wallet_empty_states.dart` |
+| `budget` | `pages/budget_list_page.dart`, `budget_detail_page.dart`, `budget_template_page.dart` | `bloc/budget_bloc.dart`, `bloc/budget_template_bloc.dart` | `budget_card.dart`, `budget_form_sheet.dart`, `budget_item_form_sheet.dart`, `budget_summary_card.dart` |
+| `freelance` | `pages/freelance_overview_page.dart`, `freelance_project_page.dart` (dibuka dari CATAT → Catat Pemasukan → Freelance) | `bloc/freelance_bloc.dart` | `freelance_cards.dart`, `entry_form_sheet.dart`, `receive_payment_sheet.dart`, `net_pay_breakdown_card.dart` |
+| `home` | `pages/home_page.dart` | `bloc/home_bloc.dart` | `widgets/home_cards.dart` |
+| `account` | `pages/account_page.dart`, `pages/category_page.dart` | `bloc/account_bloc.dart`, `bloc/category_manager_bloc.dart` | `currency_setting.dart`, `language_setting.dart`, `category_setting.dart` |
+| `onboarding` | `pages/onboarding_page.dart` | — | `onboarding_language_step.dart`, `onboarding_currency_step.dart`, `onboarding_scene.dart` |
 
-Domain bersama: `lib/shared/wallet/` dan `lib/shared/transaction/`.
+Tampilan entitas bersama ada di `lib/shared/<modul>/presentation/` lewat
+barrel `<modul>_presentation.dart`: `wallet_select_field.dart`,
+`wallet_balance_preview.dart`, `transaction_date_group_card.dart`,
+`transaction_display.dart`, `category_display.dart`, `category_name_dialog.dart`.
+
+Domain bersama: `lib/shared/wallet/`, `lib/shared/transaction/`, `lib/shared/category/`.
 Keduanya relevan kalau perlu tahu apa yang sebenarnya dihitung (mis.
 `CalculateWalletBalance`, `RecomputeWalletBalances`) sebelum menilai angka
 yang tampil.

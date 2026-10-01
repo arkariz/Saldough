@@ -15,21 +15,19 @@ lewati kategori seluruhnya tanpa alasan.
   dompet) harus memanggil `openRecordSheet`, bukan membangun formulir
   sendiri. Pintasan kontekstual (FR-REC-002) cukup mengisi dompet sasaran
   lebih dulu.
-- Layar sekunder (rincian transaksi, rincian dompet) dibuka lewat
-  `Navigator.push` dengan `PixelTheme` dan bloc yang dipasang ulang. Cek ada
+- Layar sekunder (rincian transaksi, dompet, anggaran) dibuka lewat
+  `context.pushRoute` dengan scope dan bloc rutenya sendiri (ADR-030). Cek ada
   jalan balik yang jelas (app bar back, bukan hanya gesture), dan layar
   asal ikut segar setelah kembali kalau datanya bisa berubah (sunting/hapus
   transaksi dari rincian → daftar dan saldo dompet ikut berubah).
 - Aksi destruktif (hapus transaksi, hapus/nonaktifkan dompet) mudah
   ditemukan saat dibutuhkan tapi tidak gampang tersenggol, dan lewat
   `ConfirmDeleteDialog`.
-- Tab yang masih `_ComingSoonTab` (Beranda, Anggaran) — pesannya jujur
-  bahwa fitur belum ada, bukan tampak seperti layar rusak/kosong.
 
 ## B. Alur dan penyelesaian tugas
 
 - **NFR-UX-001: pencatatan selesai dalam satu layar.** Ikuti alur
-  pemasukan, pengeluaran, dan transfer dari `record_choice_sheet.dart` →
+  pemasukan, pengeluaran, dan transfer dari FAB CATAT → `record_form_host.dart` →
   `*_form_sheet.dart` → `RecordBloc` → snackbar. Ada langkah yang memaksa
   pindah halaman di tengah jalan (mis. harus membuat dompet dulu di layar
   lain tanpa kembali ke formulir)?
@@ -113,16 +111,17 @@ lewati kategori seluruhnya tanpa alasan.
 - **Nominal uang** selalu lewat `AppMoneyText`/`AppMoneyFormatter`. Grep
   `~/ 100`, `NumberFormat`, atau `toStringAsFixed` di widget — pemformatan
   manual bisa beda pembulatan dari jalur resmi.
-- Setiap layar/rute 2.0 berada di bawah `PixelTheme`. Rute yang di-push
-  tanpa `PixelTheme` jatuh ke palet ADR-0006 lama. Gejalanya: warna,
-  font, dan radius tiba-tiba berbeda.
+- `PixelTheme` adalah tema global (ADR-031). Layar yang membungkus dirinya
+  dengan `Theme(data: …)` sendiri, atau widget yang menulis warna/huruf
+  harfiah, adalah temuan: gejalanya warna, huruf, dan radius tiba-tiba
+  berbeda dari layar lain.
 - Mode gelap: kartu memakai garis tepi `edge` dan bayangan keras
   `AppHardCard` versi gelap, bukan bayangan lembut Material.
 
 ## F. Aksesibilitas & ergonomi sentuh
 
 - Target sentuh ≥44×44 — `IconButton`/`GestureDetector` kecil, chip
-  (`AppChip` sudah menjamin 44px; cek pemakaian `GestureDetector` mentah).
+  (cek batas minimum di `AppQuickChip`/`AppTappable` dan pemakaian `GestureDetector` mentah).
 - Status nonaktif/terpilih dibedakan lebih dari satu sinyal (warna SAJA
   tidak terbaca buta warna) — warna + ikon/garis tepi/teks.
 - Teks yang panjangnya ditentukan pemilik (nama dompet, catatan transaksi,

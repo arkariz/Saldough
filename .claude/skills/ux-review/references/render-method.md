@@ -34,7 +34,7 @@ Loop inti Fase 2 sudah diverifikasi dengan cara ini (T-2.10, `emulator-5554`).
 6. Mode gelap: `adb shell cmd uimode night yes` (kembalikan dengan `no`).
 
 ⚠ Tombol bulat kecil di kanan bawah pada build debug adalah menu
-pengembang (`_WithDebugMenu` di `lib/app.dart`), bukan bagian produk.
+pengembang (`_WithDebugMenu` di `lib/app/app.dart`), bukan bagian produk.
 Jangan dilaporkan sebagai temuan.
 
 ⚠ Data di emulator adalah data uji milik pemilik, disimpan di Hive lokal.

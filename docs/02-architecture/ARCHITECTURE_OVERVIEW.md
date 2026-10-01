@@ -283,7 +283,6 @@ dependencies:
   flutter:
     sdk: flutter
   go_router: ^17.3.0
-  google_fonts: ^8.1.0
   hive_storage:
     git:
       url: https://github.com/arkariz/advance-mobile-platform

@@ -173,10 +173,11 @@ gejala yang kelihatan**.
 | Potongan pajak freelance | 2,5%, ditulis `25` per mil |
 | Ikatan anggaran ke dompet | Wajib, dan menyaring pengeluaran mana yang terhitung |
 | Data historis Saldough 1.0 | Tidak diimpor sama sekali; aplikasi mulai dari saldo awal |
-| Aksen utama | `#3B3A8F` terang, `#8B8AF5` gelap |
+| Aksen utama | `#C2410C` terang, `#F46B1C` gelap (`AppColorsExtension.pixelLight`/`pixelDark`, ADR-016) |
 
 Nilai berikut **belum ada** dan harus diisi pemilik, bukan dikarang: daftar
-dompet beserta saldo awalnya, dan daftar kategori transaksi.
+dompet beserta saldo awalnya. Kategori transaksi sudah punya daftar bawaan
+yang bisa diubah pengguna (ADR-026, `built_in_categories.dart`).
 
 ## Kapan harus berhenti dan bertanya
 

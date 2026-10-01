@@ -13,9 +13,10 @@ Nama tampilan di toko adalah **Tanukonomy** (maskot tanuki juru catat, lihat
 Aplikasi ini **mencatat**, bukan **melakukan**: ia tidak memindahkan uang,
 tidak membayar, dan tidak terhubung ke bank mana pun.
 
-**Status (29 September 2026):** MVP selesai (Fase 0–7), onboarding dan tur
-selesai (Fase 9), Fase 8 (persiapan rilis) berjalan. Versi `0.2.0+3`, belum
-dirilis ke toko. Progres rinci dan antrean tugas ada di
+**Status (1 Oktober 2026):** MVP selesai (Fase 0–7), onboarding dan tur
+(Fase 9) serta perapian batas arsitektur (Fase 12) selesai; Fase 8 (persiapan
+rilis) dan Fase 11 (kategori dan suara) berjalan. Versi `0.3.0+4` (tag terbaru
+`0.3.0+4-patch-2`), belum dirilis publik. Progres rinci dan antrean tugas ada di
 [TASK_LIST.md](docs/04-planning/TASK_LIST.md).
 
 ## Yang sudah berjalan
@@ -31,6 +32,9 @@ dirilis ke toko. Progres rinci dan antrean tugas ada di
 | Onboarding | Pengenalan sekali, tur spotlight per layar, lapis info |
 | Akun (opsional) | Masuk dengan Google atau email; pencatatan inti tidak butuh akun atau koneksi |
 | Mata uang | Satu mata uang untuk seluruh aplikasi, bawaan IDR, dipilih saat onboarding |
+| Bahasa | Indonesia atau Inggris untuk tampilan dan ucapan, dipilih saat onboarding atau di Akun |
+| Kategori | Daftar bawaan pemasukan dan pengeluaran yang bisa diubah |
+| Catat pakai suara | Satu ucapan mengisi formulir CATAT untuk ditinjau sebelum disimpan |
 
 Sinkronisasi data keuangan ke server **belum ada**; data tinggal di perangkat.
 
@@ -48,14 +52,14 @@ Kalau akan langsung menulis kode, mulai dari
 | Bagian | Pilihan |
 |---|---|
 | Kerangka | Flutter 3.47.2, Dart 3.13.2, Android `minSdk` 23 |
-| Arsitektur | Tiga zona `core`/`shared`/`features`, mengikuti `flutter-architecture-studi-bank` |
+| Arsitektur | Tiga zona `core`/`shared`/`features` plus akar komposisi `lib/app/` (ADR-030), mengikuti `flutter-architecture-studi-bank` |
 | State | Bloc dengan efek terdaftar, dari `package:state_management` |
 | Navigasi | Registri rute bertipe dari `package:navigation`, di atas `go_router` |
 | Penyimpanan | Lokal-first, Hive lewat `package:api_storage` dan `package:hive_storage` |
 | Kesalahan | `Either<Failure, T>` via fpdart (`package:dependencies`) + `RepositoryGuard` |
 | Injeksi dependensi | `package:di`, GetIt dengan lingkup per fitur |
 | Terjemahan | slang, bahasa dasar Indonesia dan tambahan Inggris |
-| Tema | `PixelTheme`, bahasa visual pixel-art ([ADR-015](docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)) |
+| Tema | `PixelTheme` sebagai tema global, bahasa visual pixel-art ([ADR-015](docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md), [ADR-031](docs/02-architecture/adr/0031-pixeltheme-jadi-tema-global.md)) |
 | Akun dan analitik | Firebase Auth, Analytics, Crashlytics ([ADR-023](docs/02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)) |
 | Pembaruan kode | Shorebird (`shorebird.yaml`) |
 
@@ -98,7 +102,7 @@ Saldough/
 ├── android/, ios/    # proyek platform
 ├── assets/           # terjemahan (i18n), ikon, ilustrasi, font
 ├── docs/             # PRD, arsitektur, ADR, dan rencana
-├── lib/              # kode aplikasi: core/, shared/, features/
+├── lib/              # kode aplikasi: app/ (akar komposisi), core/, shared/, features/
 ├── test/             # cermin struktur lib/
 └── tool/             # skrip pengembang sekali pakai
 ```

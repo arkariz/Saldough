@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 1 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026. Versi `0.2.0+3`, belum dirilis ke toko.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-2`), belum dirilis publik.
 
 ## Apa ini
 
@@ -70,7 +70,7 @@ Nominal tetap `int` sen (seperseratus satuan utama). Tampilkan lewat
 atau simbol lain langsung di widget.
 
 **Rilis Android (T-8.7):** penandatanganan rilis lewat
-`android/key.properties` (gitignore, tidak ada di repo), versi `0.2.0+3`,
+`android/key.properties` (gitignore, tidak ada di repo), versi kini `0.3.0+4`,
 Shorebird (`shorebird.yaml`), `google-services.json` sudah di repo. Pemilik
 sudah membangun, mengunggah, dan mempublikasikan **closed testing** di Play
 Console (29 Sep 2026) dan mengisi formulir Keamanan Data serta listing.
@@ -89,7 +89,8 @@ berkas `.g.dart`), 33 berkas uji, 333 uji lulus. Baseline 29 Sep 2026:
 28.413 baris, 69 berkas uji, 609 uji lulus, `flutter analyze` tanpa error
 atau peringatan (11 info `unnecessary_unawaited` di uji, B-9). Baseline 1 Okt
 2026 (sesudah Fase 12): 34.516 baris, 88 berkas uji, 867 uji lulus,
-`flutter analyze` bersih.
+`flutter analyze` bersih; sesudah T-8.10–8.12 (1 Okt 2026): 847 uji lulus
+(uji palet 1.0 dan `AppChip` ikut dihapus).
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan
@@ -100,6 +101,10 @@ Beranda (Fase 6) juga sudah berjalan: total saldo, arus bulan berjalan,
 ringkasan anggaran dan freelance, transaksi terbaru, dan keadaan kosong.
 Fase 7 juga selesai: template anggaran (layar, gandakan, aktif/nonaktif,
 anggaran dari template), ikon SVG, bentuk ADR-015, dan poles state.
+Fase 11 (berjalan) menambah kategori bawaan yang bisa diubah (ADR-026),
+pilihan bahasa aplikasi (ADR-028), dan Catat pakai suara yang mengisi
+formulir CATAT (ADR-027/029); navigasi bawah kini 4 tab dengan dua FAB
+(suara dan CATAT) di kanan bawah.
 Seluruh tugas MVP di TASK_LIST sudah tercentang. Tugas baru (improvement
 atau fitur) ditambahkan mengikuti "Menambah tugas baru" di TASK_LIST; jangan
 membuat daftar tugas di dokumen lain. Keputusan yang menunggu

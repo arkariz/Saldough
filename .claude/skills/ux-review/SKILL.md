@@ -14,10 +14,9 @@ kemungkinan bug — cek dengan `code-review`". Jangan diam-diam menjadikannya
 temuan UX, dan jangan diperbaiki di sini. Review ini tidak pernah mengubah
 kode: laporkan, lalu tunggu pemilik setuju sebelum mengimplementasikan apa pun.
 
-Yang direview hanya layar yang **sudah ada kodenya**. Layar yang baru
-direncanakan (Anggaran Fase 4, Freelance Fase 5, Beranda Fase 6 — cek
-`docs/04-planning/TASK_LIST.md` untuk status terkini) bukan temuan "hilang";
-tab yang masih `_ComingSoonTab` di `AppShellPage` memang disengaja.
+Yang direview hanya layar yang **sudah ada kodenya**. Fitur yang masih
+direncanakan (cek `docs/04-planning/TASK_LIST.md` untuk status terkini, mis.
+jalur cloud Catat Cerdas T-11.7) bukan temuan "hilang".
 
 ## Alur kerja
 

@@ -10,13 +10,14 @@ dan arsitekturnya.
 Halaman ini adalah titik masuk. Ikuti jalur baca yang sesuai peran Anda di
 bawah.
 
-**Status proyek:** MVP selesai (Fase 0–7) dan onboarding selesai (Fase 9);
-Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan. Nama tampilan
+**Status proyek:** MVP selesai (Fase 0–7), onboarding (Fase 9) dan perapian
+batas arsitektur (Fase 12) selesai; Fase 8 (tindak lanjut pasca-MVP) dan
+Fase 11 (Catat Cerdas: kategori dan suara) berjalan. Nama tampilan
 aplikasi kini **Tanukonomy** ([ADR-022](02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md));
 dokumen ini masih memakai nama kode "Saldough" sampai prasyarat ganti nama
 terpenuhi.
 **Versi dokumentasi:** 2.1
-**Terakhir diperbarui:** 29 September 2026
+**Terakhir diperbarui:** 1 Oktober 2026
 
 ## Jalur baca
 
@@ -49,8 +50,9 @@ dikonfirmasi lewat eksplorasi kedua dan membalik keputusan pertama.
    [ADR-0004](02-architecture/adr/0004-typed-route-registry-navigation.md),
    [ADR-0005](02-architecture/adr/0005-either-failure-convention.md),
    [ADR-0009](02-architecture/adr/0009-core-shared-features-zone-layout.md),
-   dan
-   [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md)
+   [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md),
+   dan [ADR-030](02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)
+   (batas antarfitur, kunci rute, sinyal buku besar — dijaga uji batas impor)
 4. [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) — strategi
    pivot dan alasannya. Invarian "jangan sentuh fitur lama" sudah tidak
    berlaku sejak cutover Fase 3; kode 1.0 tinggal di riwayat git.
@@ -102,7 +104,9 @@ docs/
 │   ├── ONBOARDING_PLAN.md     # rencana onboarding dan tur (Fase 9)
 │   ├── ONBOARDING_ART_BRIEF.md
 │   ├── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
-│   └── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
+│   ├── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
+│   ├── VOICE_INPUT_RESEARCH.md        # riset dan rencana kategori + Catat lewat Suara (Fase 11)
+│   └── VERIFICATION_PLAN_FASE_11.md   # catatan verifikasi per milestone Fase 11
 ├── stitch_pixel_finance_tracker/  # rujukan visual dari pemilik — lihat ADR-015
 └── 99-archive/                 # rekaman Saldough 1.0, dibekukan
     ├── README.md

@@ -111,7 +111,7 @@ saldough/
 │   │   │   ├── navigation/               # AppRouteRegistry, RouteNodeGoRouterExt, pushRoute
 │   │   │   ├── analytics/                # Firebase Analytics, Crashlytics, App Check (ADR-023)
 │   │   │   └── repository_guard.dart     # mixin RepositoryGuard — ADR-0005
-│   │   ├── theme/                        # tema, token, AppColorsExtension, PixelTheme
+│   │   ├── theme/                        # tema global PixelTheme (ADR-031), token, AppColorsExtension
 │   │   ├── presentation/                 # widget bersama (AppCard, AppForm*, RunOnce), spotlight, motion
 │   │   ├── utils/formatters/             # uang (AppMoneyFormatter, money_input) dan tanggal
 │   │   ├── currency/  language/  tutorial/  config/
@@ -540,19 +540,17 @@ RouteNode.typed<WalletDetailInput>(
   key: WalletRouteKeys.detail,
   builder: (context, input) {
     final parentContainer = ScopeProvider.of(context);
-    return PixelTheme(
-      child: ScopeWidget<WalletScope>(
-        create: () => WalletScope(parentContainer: parentContainer),
-        builder: (context, scope) {
-          final bloc = scope.container<WalletBloc>();
-          return BlocProvider.value(
-            value: bloc,
-            child: EffectListener<WalletBloc, WalletState>(
-              child: RunOnce(action: () => bloc.add(const WalletStarted()), child: WalletDetailPage(wallet: input.wallet)),
-            ),
-          );
-        },
-      ),
+    return ScopeWidget<WalletScope>(
+      create: () => WalletScope(parentContainer: parentContainer),
+      builder: (context, scope) {
+        final bloc = scope.container<WalletBloc>();
+        return BlocProvider.value(
+          value: bloc,
+          child: EffectListener<WalletBloc, WalletState>(
+            child: RunOnce(action: () => bloc.add(const WalletStarted()), child: WalletDetailPage(wallet: input.wallet)),
+          ),
+        );
+      },
     );
   },
 ),

@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-015
 - **Tanggal:** 2026-09-17
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted (§Palet direvisi oleh [ADR-016](0016-revisi-palet-satu-peran-satu-warna.md))
+- **Status:** Accepted (§Palet direvisi oleh [ADR-016](0016-revisi-palet-satu-peran-satu-warna.md); pemasangan sebagai tema global oleh [ADR-031](0031-pixeltheme-jadi-tema-global.md))
 - **Cakupan:** Global
 
 ## 2. Konteks

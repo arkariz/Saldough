@@ -18,6 +18,10 @@
 > `#161310`, peran huruf Archivo Black dan Space Grotesk, token
 > `AppSpacing`/`AppRadius`/`AppDurations`, serta kewajiban tiap warna lolos
 > rasio kontras 4,5:1. Isi di bawah ini dibiarkan utuh sebagai rekaman.
+>
+> **Catatan 1 Oktober 2026:** sisa terakhir ADR ini di kode — `AppTheme`,
+> palet `AppColorsExtension.light`/`dark`, dan gaya `shout` (Bangers) —
+> dihapus oleh [ADR-031](0031-pixeltheme-jadi-tema-global.md).
 
 > **Catatan revisi (2026-09-10):** Versi pertama ADR ini memilih palet dan
 > tipografi "dark sports-tech" langsung dari `new-health-duel` (hijau neon,

@@ -70,7 +70,7 @@ Terakhir diperbarui: 1 Oktober 2026 (867 uji lulus, 88 berkas uji, 34.516 baris 
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 9 | 8 | Berjalan -- T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 10 | 8 | Berjalan -- T-8.10 (`PixelTheme` jadi tema global, ADR-031) berikutnya; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 15 | 11 | Berjalan -- T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
@@ -1465,6 +1465,23 @@ seluruh fitur di atasnya menghasilkan data.
       di peta konteks skill `ux-review` dan pohon ARCHITECTURE_OVERVIEW.md.
       Verifikasi: `flutter analyze` tanpa isu baru dan seluruh uji lulus
       (609 uji lulus; 3 uji `example_note` ikut dihapus dari 612). Di luar PRD (kebersihan).
+- [ ] **T-8.10** `PixelTheme` jadi tema global aplikasi (1 Okt 2026,
+      keputusan pemilik,
+      [ADR-031](../02-architecture/adr/0031-pixeltheme-jadi-tema-global.md)).
+      Alasan dua tema (layar 1.0 memakai `AppTheme`) hilang sejak cutover
+      Fase 3, tetapi `PixelTheme(child: …)` masih dipasang ulang di 12 tempat,
+      snackbar akar dan menu pengembang masih bergaya 1.0, dan `google_fonts`
+      mengunduh huruf yang tidak dipakai. Kerjakan: tema pixel jadi
+      `theme`/`darkTheme` `MaterialApp`, hapus 12 pembungkus, hapus
+      `AppTheme`, palet `AppColorsExtension.light`/`dark`, `AppChip`, dan
+      dependensi `google_fonts`; cadangan `context.appColors` jadi
+      `pixelLight`; ganti `pixel_theme_test`; perbarui komentar
+      `capturedThemes` di `route_navigation.dart`.
+      ⚠ Cari pemakaian `colorScheme.`/`Theme.of(context).` yang dulu jatuh ke
+      `AppTheme` (mis. `primary` hijau 1.0). Jangan mengubah palet pixel.
+      Verifikasi: `flutter analyze` bersih, seluruh uji lulus, tidak ada
+      `PixelTheme(`/`AppTheme`/`GoogleFonts` di `lib/`, cek di HP terang dan
+      gelap (daftar layar di ADR-031 §6). Di luar PRD (kebersihan arsitektur).
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

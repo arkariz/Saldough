@@ -8,6 +8,8 @@
 - **Status:** Accepted (diamandemen 2026-09-28, §7: mode gelap arang hangat)
 - **Cakupan:** Global untuk subtree `PixelTheme` (layar Saldough 2.0). Palet
   Saldough 1.0 (`AppColorsExtension.light`/`dark`, ADR-0006) TIDAK berubah.
+  *Sejak [ADR-031](0031-pixeltheme-jadi-tema-global.md) (1 Okt 2026) palet
+  ini menjadi tema `MaterialApp` dan palet 1.0 dihapus.*
 - **Merevisi:** tabel "Palet" dan "Rekonsiliasi nominal pengeluaran" di
   [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md). Bagian lain ADR-015
   (tipografi, elevasi, ikon, bentuk) tetap berlaku.

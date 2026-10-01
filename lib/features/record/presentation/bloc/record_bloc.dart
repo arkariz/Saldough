@@ -88,6 +88,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       note: event.note,
       categoryId: event.categoryId,
       walletId: event.walletId,
+      sourceIconId: event.sourceIconId,
     );
     await _save(transaction, emit, _effectSaved(t.record.incomeSavedMessage));
   }
@@ -101,6 +102,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       categoryId: event.categoryId,
       walletId: event.walletId,
       budgetItemId: event.budgetItemId,
+      sourceIconId: event.sourceIconId,
     );
     await _save(transaction, emit, _effectSaved(t.record.expenseSavedMessage));
   }
@@ -114,6 +116,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       fromWalletId: event.fromWalletId,
       toWalletId: event.toWalletId,
       budgetItemId: event.budgetItemId,
+      sourceIconId: event.sourceIconId,
     );
     await _save(transaction, emit, _effectSaved(t.record.transferSavedMessage));
   }

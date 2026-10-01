@@ -133,6 +133,9 @@ class _HeroCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         children: [
+          // Kategori + lencana notifikasi asal (ADR-032 §3.10).
+          TransactionIcon.of(transaction, size: 56),
+          const SizedBox(height: AppSpacing.md),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
             decoration: BoxDecoration(

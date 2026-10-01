@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -54,6 +55,7 @@ final class ProcessCapturedNotifications {
     required this.currencyCode,
     required this.languageCode,
     this.changes,
+    this.sourceIcons,
     DateTime Function()? clock,
     String Function()? newId,
   }) : _clock = clock ?? DateTime.now,
@@ -88,6 +90,9 @@ final class ProcessCapturedNotifications {
 
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
+
+  /// Penyimpanan ikon notifikasi asal (ADR-032 §3.10); `null` = tanpa ikon.
+  final SourceIconRepository? sourceIcons;
 
   final DateTime Function() _clock;
   final String Function() _newId;
@@ -174,7 +179,10 @@ final class ProcessCapturedNotifications {
         currencyCode: currencyCode(),
         languageCode: languageCode(),
       );
-      final draft = composed.draft;
+      // Ikon disimpan sekali per isi; id-nya ikut draf, item kotak masuk,
+      // dan transaksi (ADR-032 §3.10).
+      final iconId = await _saveIcon(notification.icon);
+      final draft = composed.draft.copyWith(sourceIconId: () => iconId);
       final date = draft.date ?? notification.postedAt;
       final ledger = ledgers[_monthKey(date)] ??= (await transactionRepository.listTransactionsInMonth(
         date,
@@ -201,7 +209,7 @@ final class ProcessCapturedNotifications {
         capturedAt: notification.postedAt,
         draft: draft,
         possibleDuplicate: duplicate,
-        icon: notification.icon,
+        iconId: iconId,
       );
       inbox.insert(0, entry);
       queued.add(entry);
@@ -210,6 +218,12 @@ final class ProcessCapturedNotifications {
 
     await gateway.acknowledge(handled);
     return CaptureProcessResult(recorded: recorded, queued: queued);
+  }
+
+  Future<String?> _saveIcon(Uint8List? png) async {
+    final repository = sourceIcons;
+    if (png == null || repository == null) return null;
+    return (await repository.save(png)).fold((_) => null, (id) => id);
   }
 
   Future<AutoRecordedEntry?> _record(
@@ -231,7 +245,8 @@ final class ProcessCapturedNotifications {
       appLabel: appLabel,
       recordedAt: now,
       note: transaction.note,
-      icon: notification.icon,
+      categoryId: transaction.categoryId,
+      iconId: draft.sourceIconId,
     );
   }
 
@@ -378,9 +393,9 @@ final class CaptureInboxActions {
       appLabel: entry.appLabel,
       text: entry.text,
       capturedAt: entry.capturedAt,
-      draft: composed.draft,
+      draft: composed.draft.copyWith(sourceIconId: () => entry.iconId),
       possibleDuplicate: entry.possibleDuplicate,
-      icon: entry.icon,
+      iconId: entry.iconId,
     );
     inbox[index] = updated;
     await store.saveInbox(inbox);

@@ -66,6 +66,7 @@ Future<Transaction?> openEditTransactionSheet(
     ) =>
       IncomeTransaction(
         id: transaction.id,
+        sourceIconId: transaction.sourceIconId,
         date: date,
         amount: amount,
         note: note,
@@ -85,6 +86,7 @@ Future<Transaction?> openEditTransactionSheet(
     ) =>
       ExpenseTransaction(
         id: transaction.id,
+        sourceIconId: transaction.sourceIconId,
         date: date,
         amount: amount,
         note: note,
@@ -105,6 +107,7 @@ Future<Transaction?> openEditTransactionSheet(
     ) =>
       TransferTransaction(
         id: transaction.id,
+        sourceIconId: transaction.sourceIconId,
         date: date,
         amount: amount,
         note: note,

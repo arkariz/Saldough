@@ -32,6 +32,7 @@ import 'package:saldough/features/wallet/presentation/navigation/wallet_route_mo
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/transaction/source_icons.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -89,6 +90,11 @@ abstract final class RootModule {
       // dan layar Kategori di Akun.
       ..registerLazySingleton<CategoryRepository>(
         () => CategoryRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Ikon notifikasi asal transaksi (ADR-032 §3.10); cache tampilannya
+      // memuat dari sini sesuai kebutuhan.
+      ..registerLazySingleton<SourceIconRepository>(
+        () => SourceIconRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).
@@ -160,6 +166,7 @@ abstract final class RootModule {
       // dibaca dari mana saja (ikon akun di Beranda) tanpa terikat satu
       // layar/scope.
       ..registerLazySingleton<AuthRepository>(FirebaseAuthRepositoryImpl.new);
+    SourceIcons.loader = (id) async => (await container<SourceIconRepository>().read(id)).getOrElse((_) => null);
     // Catat dari notifikasi (ADR-032): pemroses di akar, dipicu shell.
     NotificationCaptureModule.register(container);
   }

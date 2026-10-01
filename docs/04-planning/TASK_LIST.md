@@ -1894,6 +1894,11 @@ aplikasi hidup/dibuka; daftar "Tercatat otomatis" 7 hari. Android saja.
       **ikon notifikasi** (ikon besar atau ikon aplikasi, juga jadi ikon
       besar pengingat), nominal berwarna, "Buat pola" di menu ⋮; kosakata
       "cek" menggantikan "tinjau"; judul notifikasi tidak lagi masuk catatan.
+      Ikon di riwayat (ADR-032 §3.10, 1 Okt 2026): `Transaction.sourceIconId`
+      + penyimpanan ikon `source_icon/<id>` (dedup isi); `TransactionIcon`
+      (kategori dalam kotak berwarna jenis + lencana notifikasi) di Riwayat,
+      Beranda, rincian dompet/anggaran/transaksi, dan kotak masuk. Belum
+      dilihat di perangkat.
 - [ ] **T-11.21** Privasi dan verifikasi perangkat: Keamanan Data (isi
       notifikasi, bersama T-11.6), kebijakan privasi (B-20), uji di HP pemilik
       (tingkat 1/2/3, aplikasi tertutup, OTP, pola pengguna).

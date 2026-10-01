@@ -68,8 +68,8 @@ Setiap tangkapan yang lolos membawa **ikonnya** (permintaan pemilik 1 Okt
 2026): ikon besar notifikasi (sering logo bank atau merchant), atau ikon
 aplikasi pengirim bila tidak ada, dirender PNG 96 px. Ikon disimpan bersama
 item kotak masuk dan log *Tercatat otomatis* (ikut kedaluwarsa 7 hari) dan
-tampil di kartunya. Skema `Transaction` tidak berubah: riwayat transaksi tetap
-memakai ikon kategori. Sampel debug tidak menyimpan ikon.
+tampil di kartunya, lalu ikut ke transaksi yang tercatat (§3.10). Sampel
+debug tidak menyimpan ikon.
 
 Native tidak menafsirkan apa pun dan tidak menyentuh Hive. **Dart satu-satunya
 penulis** penyimpanan aplikasi: antrean dibaca, diproses, lalu di-*ack*.
@@ -199,6 +199,31 @@ tampil ke pengguna.
 - **Kotak masuk**: nominal berwarna sesuai jenis, catatan draf di atas teks
   notifikasi (redup, maks. 2 baris); aksi utama *Abaikan*/*Catat*, *Buat pola*
   di menu ⋮.
+
+### 3.10 Ikon di riwayat transaksi (keputusan pemilik 1 Okt 2026)
+
+Transaksi dari notifikasi menampilkan **dua ikon**: ikon kategori sebagai
+ikon utama dan ikon notifikasi sebagai lencana kecil di sudut kanan
+bawahnya (pemilik memilih susunan ini dari tiga opsi).
+
+- **Skema:** `Transaction.sourceIconId: String?` (field tambahan, opsional;
+  dokumen lama tanpa field ini tetap terbaca, tanpa migrasi). Isinya hash
+  isi PNG; PNG-nya disimpan **sekali per ikon** di `source_icon/<id>`, jadi
+  logo yang sama untuk ratusan transaksi hanya satu salinan. Item kotak
+  masuk dan log *Tercatat otomatis* menyimpan id yang sama, bukan bytes.
+- **Jalur:** pemroses menyimpan ikon saat tangkapan masuk; tingkat otomatis
+  menulis `sourceIconId` lewat `RecordTransaction`; *Catat* dari kotak masuk
+  membawa id lewat draf ke CATAT; menyunting transaksi mempertahankannya.
+- **Tampilan (`TransactionIcon`, dipakai Riwayat, Beranda, rincian dompet
+  dan anggaran, rincian transaksi, kotak masuk):** kotak 44 px berwarna
+  jenis (satu-satunya penanda warna per baris, ADR-020 §3.3) kini berisi
+  **ikon kategori** bila ada — ikon jenis hanya untuk transfer dan transaksi
+  tanpa kategori. Lencana sumber 22 px, sudut membulat, cincin warna kartu
+  2 px supaya logo berwarna apa pun terpisah dari kotak; lebar kolom ikon
+  tidak bertambah. Lencana diabaikan pembaca layar (judul dan dompet sudah
+  menjelaskan transaksi).
+- Ikon yatim (transaksinya dihapus) tidak dibersihkan dulu; ukurannya kecil
+  dan terdeduplikasi.
 
 ## 4. Opsi yang dipertimbangkan
 

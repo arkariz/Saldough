@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -171,6 +168,7 @@ Map<String, dynamic> _draftToJson(RecordDraft d) => {
   'date': d.date?.toIso8601String(),
   'issues': [for (final i in d.issues) i.name],
   'sourceText': d.sourceText,
+  'sourceIconId': ?d.sourceIconId,
 };
 
 RecordDraft _draftFromJson(Map<dynamic, dynamic> j) => RecordDraft(
@@ -190,6 +188,7 @@ RecordDraft _draftFromJson(Map<dynamic, dynamic> j) => RecordDraft(
         if (issue.name == name) issue,
   },
   sourceText: j['sourceText'] as String?,
+  sourceIconId: j['sourceIconId'] as String?,
 );
 
 Map<String, dynamic> _inboxToJson(CaptureInboxEntry e) => {
@@ -200,7 +199,7 @@ Map<String, dynamic> _inboxToJson(CaptureInboxEntry e) => {
   'capturedAt': e.capturedAt.toIso8601String(),
   'draft': _draftToJson(e.draft),
   'possibleDuplicate': e.possibleDuplicate,
-  if (e.icon case final icon?) 'icon': base64Encode(icon),
+  'iconId': ?e.iconId,
 };
 
 CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
@@ -211,7 +210,7 @@ CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
   capturedAt: DateTime.parse(j['capturedAt'] as String),
   draft: _draftFromJson(j['draft'] as Map),
   possibleDuplicate: j['possibleDuplicate'] as bool? ?? false,
-  icon: _iconFromJson(j['icon']),
+  iconId: j['iconId'] as String?,
 );
 
 Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {
@@ -223,7 +222,8 @@ Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {
   'appLabel': e.appLabel,
   'recordedAt': e.recordedAt.toIso8601String(),
   'note': e.note,
-  if (e.icon case final icon?) 'icon': base64Encode(icon),
+  'categoryId': ?e.categoryId,
+  'iconId': ?e.iconId,
 };
 
 AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
@@ -235,10 +235,6 @@ AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
   appLabel: j['appLabel'] as String? ?? '',
   recordedAt: DateTime.parse(j['recordedAt'] as String),
   note: j['note'] as String? ?? '',
-  icon: _iconFromJson(j['icon']),
+  categoryId: j['categoryId'] as String?,
+  iconId: j['iconId'] as String?,
 );
-
-Uint8List? _iconFromJson(Object? value) => switch (value) {
-  final String png when png.isNotEmpty => base64Decode(png),
-  _ => null,
-};

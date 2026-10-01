@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:saldough/features/record/domain/capture/notification/notificatio
 import 'package:saldough/features/record/domain/capture/notification/process_captured_notifications.dart';
 import 'package:saldough/features/record/presentation/capture/notification/sync_notification_capture.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Pemicu pemrosesan Catat dari notifikasi (ADR-032 §3.1), dipasang shell di
 /// atas tab: saat dibuka, saat kembali ke depan, saat layanan native memberi
@@ -115,7 +117,7 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
         captureId: entry.captureId,
         title: texts.reminderRecordedTitle(amount: AppMoneyFormatter.format(entry.amountSen), app: entry.appLabel),
         body: texts.reminderRecordedBody,
-        icon: entry.icon,
+        icon: await _iconBytes(entry.iconId),
       );
     }
     for (final entry in result.queued) {
@@ -127,9 +129,16 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
           app: entry.appLabel,
         ),
         body: texts.reminderReviewBody,
-        icon: entry.icon,
+        icon: await _iconBytes(entry.iconId),
       );
     }
+  }
+
+  /// PNG ikon tangkapan untuk ikon besar pengingat (ADR-032 §3.10).
+  Future<Uint8List?> _iconBytes(String? id) async {
+    final container = widget.container;
+    if (id == null || !container.isRegistered<SourceIconRepository>()) return null;
+    return (await container<SourceIconRepository>().read(id)).getOrElse((_) => null);
   }
 
   /// Ketukan pengingat: tangkapan yang menunggu langsung membuka CATAT

@@ -35,6 +35,20 @@ void main() {
       expect(txs.single, income);
     });
 
+    test('ikon notifikasi asal (sourceIconId) tersimpan dan terbaca kembali', () async {
+      final expense = ExpenseTransaction(
+        id: 'n1',
+        date: DateTime(2026, 9, 3),
+        amount: 2500000,
+        note: 'KOPI',
+        walletId: 'bri',
+        sourceIconId: 'ikon1',
+      );
+      await repository.saveTransaction(expense);
+      final result = await repository.listTransactionsInMonth(DateTime(2026, 9));
+      expect(result.getOrElse((_) => const []).single.sourceIconId, 'ikon1');
+    });
+
     test('transaksi bulan berbeda tidak saling bercampur', () async {
       final agustus = ExpenseTransaction(id: 't1', date: DateTime(2026, 8, 20), amount: 50000, note: 'kopi', walletId: 'w1');
       final september = ExpenseTransaction(id: 't2', date: DateTime(2026, 9, 2), amount: 75000, note: 'makan', walletId: 'w1');

@@ -183,6 +183,21 @@ void main() {
     );
 
     blocTest<RecordBloc, RecordState>(
+      'ikon notifikasi dari draf kotak masuk ikut tersimpan (ADR-032 §3.10)',
+      setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
+      build: buildBloc,
+      act: (bloc) => bloc.add(
+        withSourceIcon(ExpenseRecorded(walletId: 'bca', amount: 100, date: DateTime(2026, 9, 5), note: ''), 'ikon1'),
+      ),
+      verify: (_) {
+        final saved = verify(
+          () => transactionRepository.saveTransaction(captureAny(), previousDate: any(named: 'previousDate')),
+        ).captured.single;
+        expect((saved as ExpenseTransaction).sourceIconId, 'ikon1');
+      },
+    );
+
+    blocTest<RecordBloc, RecordState>(
       'TransferRecorded menyimpan budgetItemId pada transaksi (FR-BUD-003)',
       setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
       build: buildBloc,

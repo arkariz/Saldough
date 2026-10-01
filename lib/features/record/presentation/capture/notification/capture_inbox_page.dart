@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -14,6 +12,7 @@ import 'package:saldough/features/record/presentation/capture/notification/bloc/
 import 'package:saldough/features/record/presentation/capture/notification/notification_pattern_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 
 /// Kotak masuk Catat dari notifikasi (ADR-032 §3.6): tangkapan yang perlu
@@ -153,8 +152,11 @@ class _PendingCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: AppSpacing.xs),
                     child: _CaptureHeader(
-                      icon: entry.icon,
-                      appLabel: entry.appLabel,
+                      icon: TransactionIcon(
+                        kind: _transactionKind(entry.draft.kind),
+                        categoryId: entry.draft.categoryId,
+                        sourceIconId: entry.iconId,
+                      ),
                       amountSen: amount,
                       color: _kindColor(context, entry.draft.kind),
                       meta: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.capturedAt)}',
@@ -206,18 +208,12 @@ class _PendingCard extends StatelessWidget {
   }
 }
 
-/// Ikon tangkapan, nominal (berwarna sesuai jenis), dan baris sumber · tanggal.
+/// [TransactionIcon] (kategori + lencana notifikasi), nominal berwarna sesuai
+/// jenis, dan baris sumber · tanggal.
 class _CaptureHeader extends StatelessWidget {
-  const _CaptureHeader({
-    required this.icon,
-    required this.appLabel,
-    required this.amountSen,
-    required this.color,
-    required this.meta,
-  });
+  const _CaptureHeader({required this.icon, required this.amountSen, required this.color, required this.meta});
 
-  final Uint8List? icon;
-  final String appLabel;
+  final Widget icon;
   final int? amountSen;
   final Color? color;
   final String meta;
@@ -229,8 +225,8 @@ class _CaptureHeader extends StatelessWidget {
     final amount = amountSen;
     return Row(
       children: [
-        _CaptureIcon(icon: icon, appLabel: appLabel),
-        const SizedBox(width: AppSpacing.sm),
+        icon,
+        const SizedBox(width: AppSpacing.sm + TransactionIcon.badgeOverhang),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,46 +244,11 @@ class _CaptureHeader extends StatelessWidget {
   }
 }
 
-/// Ikon dari notifikasinya (logo bank/merchant); tanpa ikon, huruf awal
-/// nama aplikasi.
-class _CaptureIcon extends StatelessWidget {
-  const _CaptureIcon({required this.icon, required this.appLabel});
-
-  static const _size = 40.0;
-
-  final Uint8List? icon;
-  final String appLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final png = icon;
-    return ExcludeSemantics(
-      child: ClipRRect(
-        borderRadius: AppRadius.pixelSmAll,
-        child: SizedBox.square(
-          dimension: _size,
-          child: png == null
-              ? ColoredBox(
-                  color: colors.surfaceMid,
-                  child: Center(
-                    child: Text(
-                      appLabel.trim().isEmpty ? '?' : appLabel.trim().characters.first.toUpperCase(),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: colors.textMuted),
-                    ),
-                  ),
-                )
-              : Image.memory(
-                  png,
-                  fit: BoxFit.contain,
-                  gaplessPlayback: true,
-                  errorBuilder: (_, _, _) => ColoredBox(color: colors.surfaceMid),
-                ),
-        ),
-      ),
-    );
-  }
-}
+TransactionKind _transactionKind(DraftKind kind) => switch (kind) {
+  DraftKind.income => TransactionKind.income,
+  DraftKind.expense => TransactionKind.expense,
+  DraftKind.transfer => TransactionKind.transfer,
+};
 
 Color? _kindColor(BuildContext context, DraftKind? kind) => switch (kind) {
   DraftKind.income => context.appColors.income,
@@ -315,8 +276,11 @@ class _AutoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _CaptureHeader(
-              icon: entry.icon,
-              appLabel: entry.appLabel,
+              icon: TransactionIcon(
+                kind: _transactionKind(entry.kind),
+                categoryId: entry.categoryId,
+                sourceIconId: entry.iconId,
+              ),
               amountSen: entry.amountSen,
               color: _kindColor(context, entry.kind),
               meta: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',

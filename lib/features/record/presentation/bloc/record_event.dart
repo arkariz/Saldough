@@ -21,6 +21,7 @@ final class IncomeRecorded extends RecordEvent {
     required this.date,
     required this.note,
     this.categoryId,
+    this.sourceIconId,
   });
 
   /// Dompet tujuan.
@@ -37,6 +38,9 @@ final class IncomeRecorded extends RecordEvent {
 
   /// Kategori (ADR-026), boleh kosong.
   final String? categoryId;
+
+  /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
+  final String? sourceIconId;
 }
 
 /// Mencatat pengeluaran (FR-TXN-002).
@@ -49,6 +53,7 @@ final class ExpenseRecorded extends RecordEvent {
     required this.note,
     this.categoryId,
     this.budgetItemId,
+    this.sourceIconId,
   });
 
   /// Dompet asal.
@@ -68,6 +73,9 @@ final class ExpenseRecorded extends RecordEvent {
 
   /// Pos anggaran yang ditautkan (T-4.4), atau `null`.
   final String? budgetItemId;
+
+  /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
+  final String? sourceIconId;
 }
 
 /// Mencatat transfer antar dompet (FR-TXN-003).
@@ -80,6 +88,7 @@ final class TransferRecorded extends RecordEvent {
     required this.date,
     required this.note,
     this.budgetItemId,
+    this.sourceIconId,
   });
 
   /// Dompet asal.
@@ -101,6 +110,9 @@ final class TransferRecorded extends RecordEvent {
   /// Pos anggaran yang ditautkan (T-4.4), atau `null`. Hanya pos milik
   /// anggaran dompet ASAL yang sah — lihat `budgetItemChoicesFor`.
   final String? budgetItemId;
+
+  /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
+  final String? sourceIconId;
 }
 
 /// Menampilkan galat dari operasi di luar event (mis. "Tambah kategori",
@@ -112,3 +124,36 @@ final class RecordFailureOccurred extends RecordEvent {
   /// Kegagalan yang ditampilkan.
   final Failure failure;
 }
+
+/// Event pencatatan [event] dengan ikon notifikasi asal [sourceIconId]
+/// (draf dari kotak masuk, ADR-032 §3.10); event lain dikembalikan apa adanya.
+RecordEvent withSourceIcon(RecordEvent event, String? sourceIconId) => switch (event) {
+  _ when sourceIconId == null => event,
+  IncomeRecorded() => IncomeRecorded(
+    walletId: event.walletId,
+    amount: event.amount,
+    date: event.date,
+    note: event.note,
+    categoryId: event.categoryId,
+    sourceIconId: sourceIconId,
+  ),
+  ExpenseRecorded() => ExpenseRecorded(
+    walletId: event.walletId,
+    amount: event.amount,
+    date: event.date,
+    note: event.note,
+    categoryId: event.categoryId,
+    budgetItemId: event.budgetItemId,
+    sourceIconId: sourceIconId,
+  ),
+  TransferRecorded() => TransferRecorded(
+    fromWalletId: event.fromWalletId,
+    toWalletId: event.toWalletId,
+    amount: event.amount,
+    date: event.date,
+    note: event.note,
+    budgetItemId: event.budgetItemId,
+    sourceIconId: sourceIconId,
+  ),
+  _ => event,
+};

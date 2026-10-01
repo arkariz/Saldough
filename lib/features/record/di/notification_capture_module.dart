@@ -73,6 +73,7 @@ abstract final class NotificationCaptureModule {
           currencyCode: () => ActiveCurrency.value.code,
           languageCode: () => ActiveLanguage.value.languageCode,
           changes: c<CaptureInboxChanges>(),
+          sourceIcons: c.isRegistered<SourceIconRepository>() ? c<SourceIconRepository>() : null,
         ),
       )
       ..registerLazySingleton<CaptureInboxActions>(

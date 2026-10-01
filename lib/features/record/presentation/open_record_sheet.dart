@@ -165,7 +165,7 @@ Future<bool> openRecordSheet(
   }
   if (result is RecordEvent) {
     final savedBefore = bloc.state.saveCount;
-    bloc.add(result);
+    bloc.add(withSourceIcon(result, draft?.sourceIconId));
     if (!context.mounted) return false;
     await showDialog<void>(
       context: context,

@@ -21,6 +21,7 @@ final class TransactionModel {
     this.fromWalletId,
     this.toWalletId,
     this.freelancePaymentId,
+    this.sourceIconId,
   });
 
   /// Membaca [TransactionModel] dari JSON.
@@ -37,6 +38,7 @@ final class TransactionModel {
         fromWalletId: json['fromWalletId'] as String?,
         toWalletId: json['toWalletId'] as String?,
         freelancePaymentId: json['freelancePaymentId'] as String?,
+        sourceIconId: json['sourceIconId'] as String?,
       );
 
   /// Membuat [TransactionModel] dari entitas domain [Transaction].
@@ -47,6 +49,7 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
+            sourceIconId: transaction.sourceIconId,
             categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             freelancePaymentId: transaction.freelancePaymentId,
@@ -57,6 +60,7 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
+            sourceIconId: transaction.sourceIconId,
             categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             budgetItemId: transaction.budgetItemId,
@@ -67,6 +71,7 @@ final class TransactionModel {
             date: transaction.date,
             amount: transaction.amount,
             note: transaction.note,
+            sourceIconId: transaction.sourceIconId,
             fromWalletId: transaction.fromWalletId,
             toWalletId: transaction.toWalletId,
             budgetItemId: transaction.budgetItemId,
@@ -123,6 +128,9 @@ final class TransactionModel {
   /// berubah bentuk.
   final String? freelancePaymentId;
 
+  /// Ikon notifikasi asal (ADR-032 §3.10).
+  final String? sourceIconId;
+
   /// Salinan dengan kategori [categoryId] dan label lama dibuang — hasil
   /// migrasi ADR-026 §3.4.
   TransactionModel withMigratedCategory(String? categoryId) => TransactionModel(
@@ -137,6 +145,7 @@ final class TransactionModel {
         fromWalletId: fromWalletId,
         toWalletId: toWalletId,
         freelancePaymentId: freelancePaymentId,
+        sourceIconId: sourceIconId,
       );
 
   /// Salinan yang membawa [legacyCategoryKey] milik [previous] — dipakai saat
@@ -157,6 +166,7 @@ final class TransactionModel {
               fromWalletId: fromWalletId,
               toWalletId: toWalletId,
               freelancePaymentId: freelancePaymentId,
+              sourceIconId: sourceIconId,
             );
 
   /// `true` untuk transfer (tidak berkategori).
@@ -179,6 +189,7 @@ final class TransactionModel {
         'fromWalletId': fromWalletId,
         'toWalletId': toWalletId,
         if (freelancePaymentId != null) 'freelancePaymentId': freelancePaymentId,
+        if (sourceIconId != null) 'sourceIconId': sourceIconId,
       };
 
   /// Mengubah model jadi entitas domain [Transaction].
@@ -192,6 +203,7 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
+            sourceIconId: sourceIconId,
             categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel income tanpa walletId: $id')),
             freelancePaymentId: freelancePaymentId,
@@ -201,6 +213,7 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
+            sourceIconId: sourceIconId,
             categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel expense tanpa walletId: $id')),
             budgetItemId: budgetItemId,
@@ -210,6 +223,7 @@ final class TransactionModel {
             date: date,
             amount: amount,
             note: note,
+            sourceIconId: sourceIconId,
             fromWalletId: fromWalletId ?? (throw FormatException('TransactionModel transfer tanpa fromWalletId: $id')),
             toWalletId: toWalletId ?? (throw FormatException('TransactionModel transfer tanpa toWalletId: $id')),
             budgetItemId: budgetItemId,

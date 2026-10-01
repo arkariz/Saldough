@@ -33,6 +33,7 @@ void main() {
     categories: () => notificationCategories,
     currencyCode: () => 'IDR',
     languageCode: () => 'id',
+    sourceIcons: SourceIconRepositoryImpl(storage: storage),
     clock: () => now,
     newId: () => 'tx${nextId++}',
   );
@@ -110,7 +111,7 @@ void main() {
     expect((await store.loadAutoRecorded()).getOrElse((_) => []).single.transactionId, tx.id);
   });
 
-  test('ikon notifikasi ikut ke log otomatis dan kotak masuk, utuh sesudah disimpan', () async {
+  test('ikon notifikasi disimpan sekali; id-nya ikut transaksi, log otomatis, dan kotak masuk', () async {
     final icon = Uint8List.fromList([137, 80, 78, 71, 1, 2, 3]);
     await enable(AutoRecordLevel.whenComplete);
     gateway.queue = [
@@ -118,8 +119,14 @@ void main() {
       notif('b', 'Transaksi Rp50.000 berhasil', at: DateTime(2026, 10, 1, 15), icon: icon),
     ];
     await processor()();
-    expect((await store.loadAutoRecorded()).getOrElse((_) => []).single.icon, icon);
-    expect((await store.loadInbox()).getOrElse((_) => []).single.icon, icon);
+    final id = sourceIconIdOf(icon);
+    expect((await ledgerNow()).single.sourceIconId, id);
+    expect((await store.loadAutoRecorded()).getOrElse((_) => []).single.iconId, id);
+    final pending = (await store.loadInbox()).getOrElse((_) => []).single;
+    expect(pending.iconId, id);
+    // Dibawa draf ke CATAT (Catat dari kotak masuk).
+    expect(pending.draft.sourceIconId, id);
+    expect((await SourceIconRepositoryImpl(storage: storage).read(id)).getOrElse((_) => null), icon);
   });
 
   test('tingkat 2 tanpa kategori → kotak masuk; tingkat 3 → tercatat', () async {

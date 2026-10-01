@@ -127,9 +127,9 @@ class TransactionDateGroupCard extends StatelessWidget {
   }
 }
 
-/// Satu kartu transaksi: kotak ikon jenis berwarna, judul (kategori atau
-/// catatan), dompet + jam, nominal berwarna+bertanda per jenis, dan lencana
-/// jenis kecil.
+/// Satu kartu transaksi: [TransactionIcon] (kategori dalam kotak berwarna
+/// jenis + lencana notifikasi asal), judul (kategori atau catatan), dompet +
+/// jam, dan nominal berwarna+bertanda per jenis.
 ///
 /// Diketuk membuka layar rincian (T-2.11) lewat [onTap]. Tanpa riak sentuh
 /// (dimatikan global oleh `PixelTheme`); baris `null` [onTap] tidak
@@ -198,28 +198,17 @@ class TransactionRow extends StatelessWidget {
     // aksen, kotak ikon, nominal, lencana, nuansa latar) supaya terbedakan
     // sekilas saat menggulir: hijau = masuk, merah = keluar, biru = mutasi.
     // Lihat [TransactionKindPalette] untuk alasan pemilihan warnanya.
-    final (kind, icon, amountText) = switch (transaction) {
-      IncomeTransaction() => (
-        TransactionKind.income,
-        IconKey.income,
-        '+${AppMoneyFormatter.format(transaction.amount)}',
-      ),
-      ExpenseTransaction() => (
-        TransactionKind.expense,
-        IconKey.expense,
-        '−${AppMoneyFormatter.format(transaction.amount)}',
-      ),
-      TransferTransaction() => (
-        TransactionKind.transfer,
-        IconKey.transfer,
-        AppMoneyFormatter.format(transaction.amount),
-      ),
+    final (kind, amountText) = switch (transaction) {
+      IncomeTransaction() => (TransactionKind.income, '+${AppMoneyFormatter.format(transaction.amount)}'),
+      ExpenseTransaction() => (TransactionKind.expense, '−${AppMoneyFormatter.format(transaction.amount)}'),
+      TransferTransaction() => (TransactionKind.transfer, AppMoneyFormatter.format(transaction.amount)),
     };
     final tint = colors.kindFill(kind);
     final ink = colors.kindInk(kind);
 
+    final background = colors.tinted(tint, 0.07);
     final card = TransactionSlab(
-      color: colors.tinted(tint, 0.07),
+      color: background,
       padding: EdgeInsets.zero,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
@@ -232,20 +221,11 @@ class TransactionRow extends StatelessWidget {
                   padding: const EdgeInsets.all(AppSpacing.sm),
                   child: Row(
                     children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: colors.iconTile(tint),
-                          borderRadius: BorderRadius.circular(4),
-                          boxShadow: [
-                            BoxShadow(color: Color.lerp(ink, colors.edge, 0.4)!, offset: const Offset(0, 2)),
-                          ],
-                        ),
-                        child: AppIcon(icon, size: 30),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
+                      // Kategori + lencana notifikasi asal (ADR-032 §3.10).
+                      TransactionIcon.of(transaction, ringColor: background),
+                      // Celah tetap selebar tonjolan lencana: judul sejajar
+                      // di semua baris, berlencana atau tidak.
+                      const SizedBox(width: AppSpacing.sm + TransactionIcon.badgeOverhang),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

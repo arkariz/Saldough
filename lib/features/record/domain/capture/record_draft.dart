@@ -55,6 +55,7 @@ final class RecordDraft extends Equatable {
     this.date,
     this.issues = const {},
     this.sourceText,
+    this.sourceIconId,
   });
 
   /// Jenis transaksi.
@@ -85,6 +86,9 @@ final class RecordDraft extends Equatable {
   /// supaya pengguna bisa mencocokkan. Tidak disimpan.
   final String? sourceText;
 
+  /// Ikon notifikasi asal (ADR-032 §3.10), ikut ke transaksi yang dicatat.
+  final String? sourceIconId;
+
   /// Draf lengkap tanpa masalah: nominal terisi dan tidak ada [issues].
   bool get isConfident => amountSen != null && issues.isEmpty;
 
@@ -96,6 +100,7 @@ final class RecordDraft extends Equatable {
     String? Function()? toWalletId,
     String? Function()? categoryId,
     Set<DraftIssue>? issues,
+    String? Function()? sourceIconId,
   }) => RecordDraft(
     kind: kind ?? this.kind,
     amountSen: amountSen,
@@ -106,8 +111,20 @@ final class RecordDraft extends Equatable {
     date: date,
     issues: issues ?? this.issues,
     sourceText: sourceText,
+    sourceIconId: sourceIconId == null ? this.sourceIconId : sourceIconId(),
   );
 
   @override
-  List<Object?> get props => [kind, amountSen, walletId, toWalletId, categoryId, note, date, issues, sourceText];
+  List<Object?> get props => [
+    kind,
+    amountSen,
+    walletId,
+    toWalletId,
+    categoryId,
+    note,
+    date,
+    issues,
+    sourceText,
+    sourceIconId,
+  ];
 }

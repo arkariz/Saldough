@@ -119,6 +119,7 @@ Field yang dimiliki ketiganya:
 | `date` | `DateTime` | Kapan peristiwanya terjadi, bukan kapan dicatat. |
 | `amount` | `int` | Nominal dalam sen. Selalu positif; arahnya ditentukan jenisnya. |
 | `note` | `String` | Catatan bebas, boleh kosong. |
+| `sourceIconId` | `String?` | Ikon notifikasi asal transaksi (Catat dari notifikasi, [ADR-032](adr/0032-catat-dari-notifikasi.md) §3.10): hash isi PNG di penyimpanan ikon `source_icon/<id>`. Hanya tampilan; tidak memengaruhi perhitungan apa pun. Null untuk transaksi manual. |
 
 Pemasukan dan pengeluaran juga punya `categoryId: String?` (kategori, boleh
 kosong; lihat bagian Kategori di bawah). Transfer tidak berkategori

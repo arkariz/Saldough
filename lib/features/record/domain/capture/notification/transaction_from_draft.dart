@@ -18,6 +18,7 @@ Transaction? transactionFromDraft(RecordDraft draft, {required String id, requir
       note: draft.note,
       walletId: walletId,
       categoryId: draft.categoryId,
+      sourceIconId: draft.sourceIconId,
     ),
     DraftKind.income => IncomeTransaction(
       id: id,
@@ -26,6 +27,7 @@ Transaction? transactionFromDraft(RecordDraft draft, {required String id, requir
       note: draft.note,
       walletId: walletId,
       categoryId: draft.categoryId,
+      sourceIconId: draft.sourceIconId,
     ),
     DraftKind.transfer => switch (draft.toWalletId) {
       final to? => TransferTransaction(
@@ -35,6 +37,7 @@ Transaction? transactionFromDraft(RecordDraft draft, {required String id, requir
         note: draft.note,
         fromWalletId: walletId,
         toWalletId: to,
+        sourceIconId: draft.sourceIconId,
       ),
       null => null,
     },

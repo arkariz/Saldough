@@ -6,3 +6,4 @@ library;
 
 export 'presentation/transaction_date_group_card.dart';
 export 'presentation/transaction_display.dart';
+export 'presentation/transaction_icon.dart';

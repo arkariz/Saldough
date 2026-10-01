@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/record_draft.dart';
@@ -16,7 +14,7 @@ final class CaptureInboxEntry extends Equatable {
     required this.capturedAt,
     required this.draft,
     this.possibleDuplicate = false,
-    this.icon,
+    this.iconId,
   });
 
   /// Identitas tangkapan.
@@ -40,11 +38,11 @@ final class CaptureInboxEntry extends Equatable {
   /// Mungkin sama dengan transaksi atau tangkapan lain.
   final bool possibleDuplicate;
 
-  /// Ikon tangkapan, PNG ([CapturedNotification.icon]).
-  final Uint8List? icon;
+  /// Id ikon notifikasi di penyimpanan ikon sumber (ADR-032 §3.10).
+  final String? iconId;
 
   @override
-  List<Object?> get props => [id, packageName, appLabel, text, capturedAt, draft, possibleDuplicate, icon];
+  List<Object?> get props => [id, packageName, appLabel, text, capturedAt, draft, possibleDuplicate, iconId];
 }
 
 /// Transaksi yang tercatat otomatis dari notifikasi (ADR-032 §3.6).
@@ -59,7 +57,8 @@ final class AutoRecordedEntry extends Equatable {
     required this.appLabel,
     required this.recordedAt,
     this.note = '',
-    this.icon,
+    this.categoryId,
+    this.iconId,
   });
 
   /// Identitas tangkapan asalnya.
@@ -86,8 +85,11 @@ final class AutoRecordedEntry extends Equatable {
   /// Catatan transaksi.
   final String note;
 
-  /// Ikon tangkapan asalnya, PNG.
-  final Uint8List? icon;
+  /// Kategori transaksi saat dicatat (ikon utama kartunya).
+  final String? categoryId;
+
+  /// Id ikon notifikasi asalnya (ADR-032 §3.10).
+  final String? iconId;
 
   @override
   List<Object?> get props => [
@@ -99,7 +101,8 @@ final class AutoRecordedEntry extends Equatable {
     appLabel,
     recordedAt,
     note,
-    icon,
+    categoryId,
+    iconId,
   ];
 }
 

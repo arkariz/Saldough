@@ -697,6 +697,23 @@ Kesimpulan:
 5. "tiga juta setengah" salah di parser (T-11.24); slang "goceng"/"ceban"
    ternyata sudah terbaca.
 
+Putaran kedua, sesudah T-11.22–11.24 (gerbang "jenis tanpa kata arah",
+peringatan nominal dibawa, "juta setengah"):
+
+| Kumpulan | Aturan | Kaskade (Gemini terpanggil) | Gemini |
+|---|---|---|---|
+| Aturan id | 100% | 95% (16×) | 81%* |
+| Aturan en | 100% | 89% (1×) | 67% |
+| Sulit id | 73% | **90%** (12×) | 97% |
+| Sulit en | 40% | **80%** (2×) | 100% |
+
+Kaskade 95%/89% di kasus aturan sisanya kasus dua nominal: nominal pilihan
+Gemini terisi tetapi tetap disorot (disengaja, T-11.23). Latensi kaskade p50
+1,53 dtk, p95 2,0 dtk. \*3 panggilan kena kuota harian tier gratis (putaran
+kedua di hari yang sama) dan dihitung salah di kolom Gemini; satu panggilan
+langsung butuh 37 dtk (lewat batas 20 dtk benchmark; di aplikasi batasnya
+5 dtk dan draf aturan dipakai).
+
 ---
 
 ## 11. Cakupan MVP

@@ -4,7 +4,8 @@ import 'package:saldough/core/theme/theme.dart';
 
 /// Chip kecil pilihan cepat ("+10rb", "Bersihkan") di bawah kolom nominal.
 ///
-/// Lebarnya mengikuti isi, dan tinggi minimumnya 40px supaya nyaman diketuk.
+/// Lebarnya mengikuti isi; target sentuh minimal 44×44 (NFR aksesibilitas,
+/// checklist ux-review F) dan diumumkan sebagai tombol ke pembaca layar.
 /// `Center(widthFactor: 1)`, BUKAN `Container(alignment: center)`:
 /// `alignment` membuat Container mengisi seluruh lebar yang ditawarkan
 /// `Wrap`, sehingga tiap chip melebar penuh dan bertumpuk vertikal.
@@ -24,18 +25,21 @@ class AppQuickChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 44, minHeight: 40),
-        child: DecoratedBox(
-          decoration: BoxDecoration(color: color ?? colors.surfaceMid, borderRadius: BorderRadius.circular(8)),
-          child: Center(
-            widthFactor: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              child: Text(label, style: transactionLabelStyle(context, color: colors.textPrimary)),
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: color ?? colors.surfaceMid, borderRadius: BorderRadius.circular(8)),
+            child: Center(
+              widthFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: Text(label, style: transactionLabelStyle(context, color: colors.textPrimary)),
+              ),
             ),
           ),
         ),

@@ -166,7 +166,7 @@ singkat. Kalau beberapa fitur rilis bersamaan, prioritaskan yang punya kata
 kunci bervolume tinggi (*tabungan*/*savings*) atau yang menjawab keberatan
 terbesar (cadangan data).
 
-### Deskripsi lengkap `id-ID` (2316/4000)
+### Deskripsi lengkap `id-ID` (2532/4000)
 
 ```
 Tanukonomy adalah aplikasi catatan keuangan pribadi yang bekerja seperti buku kas. Lihat di mana uangmu berada, apa yang terjadi padanya, dan ke mana ia direncanakan pergi. Seekor tanuki juru catat menemanimu di setiap layar.
@@ -180,6 +180,7 @@ DOMPET
 
 CATAT
 • Satu tombol untuk mencatat pemasukan, pengeluaran, atau transfer
+• Catat pakai suara: ucapkan satu transaksi, periksa formulir yang sudah terisi, lalu simpan
 • Dompet dan kategori yang sering dipakai sudah siap dipilih
 • Tautkan pengeluaran ke pos anggaran supaya progres anggaran ikut bergerak
 • Salah catat? Hapus langsung dan urungkan kalau berubah pikiran
@@ -201,7 +202,8 @@ BERANDA
 • Transaksi terbaru dan riwayat lengkap dengan filter
 
 DATAMU DI PERANGKATMU
-• Semua catatan tersimpan di HP-mu dan tetap berjalan penuh tanpa internet
+• Semua catatan tersimpan di HP-mu; mencatat, dompet, dan anggaran berjalan penuh tanpa internet
+• Catat pakai suara memakai pengenal ucapan Google/Apple dan bisa butuh internet
 • Tidak terhubung ke rekening bank mana pun dan tidak memindahkan uang
 • Akun Google opsional, tidak dibutuhkan untuk mencatat
 • Statistik pemakaian dan laporan crash dikumpulkan secara anonim untuk memperbaiki aplikasi
@@ -215,7 +217,7 @@ TAMPILAN
 Tanukonomy mencatat, bukan melakukan: aplikasi ini membantumu memahami dan merencanakan uang, tanpa menyentuh rekeningmu.
 ```
 
-### Deskripsi lengkap `en-US` (2167/4000)
+### Deskripsi lengkap `en-US` (2349/4000)
 
 ```
 Tanukonomy is a personal expense tracker and budget planner that works like a cash book. See where your money is, what happens to it, and where you plan for it to go. A note-taking tanuki keeps you company on every screen.
@@ -229,6 +231,7 @@ WALLETS
 
 RECORD
 • One button to record income, expenses, or transfers
+• Record by voice: say one transaction, check the filled-in form, then save
 • Your usual wallets and favorite categories are ready to pick
 • Link an expense to a budget item and the budget updates instantly
 • Recorded something by mistake? Delete it right away, with undo
@@ -250,7 +253,8 @@ HOME
 • Recent transactions plus full history with filters
 
 YOUR DATA STAYS ON YOUR PHONE
-• Everything is stored on your device and works fully offline
+• Everything is stored on your device; recording, wallets, and budgets work fully offline
+• Record by voice uses Google/Apple speech recognition and may need internet
 • No bank connection, and it never moves money
 • Google account is optional and not needed to record anything
 • Anonymous usage statistics and crash reports help us improve the app
@@ -372,7 +376,9 @@ simpan PNG tanpa transparansi, lalu tempel `01-beranda` dan
 - Nama aplikasi pesaing, atau daftar kata kunci tanpa kalimat.
 - Klaim yang tidak didukung aplikasi: "100% privat", "tanpa pelacakan",
   "sinkronisasi"/"cadangan" (belum ada), "tanpa akun" atau "offline
-  sepenuhnya" (akun opsional dan analitik sudah ada, ADR-023), dan jumlah
+  sepenuhnya" (akun opsional dan analitik sudah ada, ADR-023; Catat pakai
+  suara bisa butuh internet, ADR-027 §3.5 butir 7 — klaim offline hanya
+  untuk pencatatan inti), dan jumlah
   mata uang yang tidak sesuai kenyataan (sekarang 14).
 - Testimoni atau rating buatan.
 

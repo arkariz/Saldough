@@ -56,7 +56,6 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.3.0
   go_router: ^17.3.0
-  google_fonts: ^8.1.0
   google_sign_in: ^7.2.0
   hive_storage:
     git:
@@ -145,8 +144,8 @@ flutter:
     - assets/illustration/
     - assets/fonts/licenses/
     - shorebird.yaml
-  # Font ADR-015 dibundel lokal, bukan diambil lewat `google_fonts` saat
-  # runtime -- render UI dasar tidak boleh bergantung koneksi first-run,
+  # Font ADR-015 dibundel lokal, tidak diunduh saat runtime (ADR-031 §3.3)
+  # -- render UI dasar tidak boleh bergantung koneksi first-run,
   # terlepas dari fitur online lain yang sedang direncanakan (CLAUDE.md
   # "Status"). Hanya bobot yang benar-benar dipakai `PixelTheme` yang
   # didaftarkan; lihat komentar di `pixel_theme.dart`.

@@ -10,6 +10,7 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
@@ -54,7 +55,7 @@ void main() {
   Widget pumpableShell() {
     return ScopeProvider(
       container: container,
-      child: const MaterialApp(home: AppShellPage()),
+      child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
     );
   }
 
@@ -353,7 +354,7 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: failingContainer,
-          child: const MaterialApp(home: AppShellPage()),
+          child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
         ),
       );
       await tester.pump();
@@ -378,7 +379,7 @@ void main() {
       await tester.pumpWidget(
         ScopeProvider(
           container: container,
-          child: const MaterialApp(home: AppShellPage(startAction: ShellStartAction.createWallet)),
+          child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage(startAction: ShellStartAction.createWallet)),
         ),
       );
       await tester.pumpAndSettle();
@@ -407,6 +408,7 @@ void main() {
         ScopeProvider(
           container: container,
           child: MaterialApp(
+            theme: PixelTheme.light,
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(disableAnimations: true),
               child: SpotlightHost(repository: tutorials, child: child!),

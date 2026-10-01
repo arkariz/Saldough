@@ -45,9 +45,6 @@ import 'package:state_management/state_management.dart';
 /// ditangkap SEKALI di awal `build`, bukan dari kontainer scope lain.
 /// `EffectListener` tiap bloc tab dipasang di sini supaya snackbar hasil
 /// formulir tetap tampil walau lembarnya sudah tertutup.
-///
-/// Seluruh shell dibungkus `PixelTheme` (bahasa visual ADR-015) sebagai
-/// pembungkus TERLUAR; rute fitur memasang `PixelTheme`-nya sendiri.
 class AppShellPage extends StatefulWidget {
   /// Membuat [AppShellPage].
   const AppShellPage({this.startAction, super.key});
@@ -125,69 +122,67 @@ class _AppShellPageState extends State<AppShellPage> {
       const TransactionListPage(),
       const WalletListPage(),
     ];
-    return PixelTheme(
-      child: ScopeWidget<TransactionScope>(
-        create: () => TransactionScope(parentContainer: parentContainer),
-        builder: (context, transactionScope) => BlocProvider.value(
-          value: transactionScope.container<TransactionBloc>(),
-          child: EffectListener<TransactionBloc, TransactionState>(
-            child: ScopeWidget<WalletScope>(
-              create: () => WalletScope(parentContainer: parentContainer),
-              builder: (context, walletScope) => BlocProvider.value(
-                value: walletScope.container<WalletBloc>(),
-                child: EffectListener<WalletBloc, WalletState>(
-                  child: ScopeWidget<BudgetScope>(
-                    create: () => BudgetScope(parentContainer: parentContainer),
-                    builder: (context, budgetScope) => BlocProvider.value(
-                      value: budgetScope.container<BudgetBloc>(),
-                      child: EffectListener<BudgetBloc, BudgetState>(
-                        child: ScopeWidget<HomeScope>(
-                          create: () => HomeScope(parentContainer: parentContainer),
-                          builder: (context, homeScope) => BlocProvider.value(
-                            value: homeScope.container<HomeBloc>(),
-                            child: EffectListener<HomeBloc, HomeState>(
-                              child: Builder(
-                                builder: (context) {
-                                  _maybeRunStartAction(context);
-                                  return Scaffold(
-                                    body: IndexedStack(
-                                      index: _activeTab,
-                                      // `IndexedStack` menjaga tab tersembunyi tetap hidup;
-                                      // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
-                                      children: [
-                                        for (final (i, tab) in tabsFor(context).indexed)
-                                          TourVisibility(visible: i == _activeTab, child: tab),
-                                      ],
-                                    ),
-                                    floatingActionButton: _RecordFabs(
-                                      onRecord: () => unawaited(_openRecord(context)),
-                                      onVoice: () => unawaited(_openRecord(context, voice: true)),
-                                    ),
-                                    bottomNavigationBar: NavigationBar(
-                                      selectedIndex: _activeTab,
-                                      onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
-                                      destinations: [
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.home),
-                                          label: t.appShell.homeTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.budget),
-                                          label: t.appShell.budgetTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.transactions),
-                                          label: t.appShell.transactionsTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.wallets),
-                                          label: t.appShell.walletsTabLabel,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
+    return ScopeWidget<TransactionScope>(
+      create: () => TransactionScope(parentContainer: parentContainer),
+      builder: (context, transactionScope) => BlocProvider.value(
+        value: transactionScope.container<TransactionBloc>(),
+        child: EffectListener<TransactionBloc, TransactionState>(
+          child: ScopeWidget<WalletScope>(
+            create: () => WalletScope(parentContainer: parentContainer),
+            builder: (context, walletScope) => BlocProvider.value(
+              value: walletScope.container<WalletBloc>(),
+              child: EffectListener<WalletBloc, WalletState>(
+                child: ScopeWidget<BudgetScope>(
+                  create: () => BudgetScope(parentContainer: parentContainer),
+                  builder: (context, budgetScope) => BlocProvider.value(
+                    value: budgetScope.container<BudgetBloc>(),
+                    child: EffectListener<BudgetBloc, BudgetState>(
+                      child: ScopeWidget<HomeScope>(
+                        create: () => HomeScope(parentContainer: parentContainer),
+                        builder: (context, homeScope) => BlocProvider.value(
+                          value: homeScope.container<HomeBloc>(),
+                          child: EffectListener<HomeBloc, HomeState>(
+                            child: Builder(
+                              builder: (context) {
+                                _maybeRunStartAction(context);
+                                return Scaffold(
+                                  body: IndexedStack(
+                                    index: _activeTab,
+                                    // `IndexedStack` menjaga tab tersembunyi tetap hidup;
+                                    // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
+                                    children: [
+                                      for (final (i, tab) in tabsFor(context).indexed)
+                                        TourVisibility(visible: i == _activeTab, child: tab),
+                                    ],
+                                  ),
+                                  floatingActionButton: _RecordFabs(
+                                    onRecord: () => unawaited(_openRecord(context)),
+                                    onVoice: () => unawaited(_openRecord(context, voice: true)),
+                                  ),
+                                  bottomNavigationBar: NavigationBar(
+                                    selectedIndex: _activeTab,
+                                    onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
+                                    destinations: [
+                                      NavigationDestination(
+                                        icon: const AppIcon(IconKey.home),
+                                        label: t.appShell.homeTabLabel,
+                                      ),
+                                      NavigationDestination(
+                                        icon: const AppIcon(IconKey.budget),
+                                        label: t.appShell.budgetTabLabel,
+                                      ),
+                                      NavigationDestination(
+                                        icon: const AppIcon(IconKey.transactions),
+                                        label: t.appShell.transactionsTabLabel,
+                                      ),
+                                      NavigationDestination(
+                                        icon: const AppIcon(IconKey.wallets),
+                                        label: t.appShell.walletsTabLabel,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),

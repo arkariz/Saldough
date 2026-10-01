@@ -1,6 +1,5 @@
 import 'package:di/di.dart';
 import 'package:navigation/navigation.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/di/account_scope.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/account_state.dart';
@@ -22,16 +21,14 @@ final class AccountRouteModule extends FeatureRouteModule {
       defaultInput: () => const EmptyInput(),
       builder: (context, _) {
         final parentContainer = ScopeProvider.of(context);
-        return PixelTheme(
-          child: ScopeWidget<AccountScope>(
-            create: () => AccountScope(parentContainer: parentContainer),
-            builder: (context, scope) => MultiBlocProvider(
-              providers: [
-                BlocProvider.value(value: scope.container<AccountBloc>()),
-                BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
-              ],
-              child: const EffectListener<AccountBloc, AccountState>(child: AccountPage()),
-            ),
+        return ScopeWidget<AccountScope>(
+          create: () => AccountScope(parentContainer: parentContainer),
+          builder: (context, scope) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: scope.container<AccountBloc>()),
+              BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
+            ],
+            child: const EffectListener<AccountBloc, AccountState>(child: AccountPage()),
           ),
         );
       },

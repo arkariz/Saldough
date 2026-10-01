@@ -36,7 +36,6 @@ enum OnboardingOutcome {
 /// (ADR-025 §3.7) — tanpa tombol lewati, tanpa pilihan otomatis, dan tombol
 /// lanjutnya menyebut mata uang yang dipilih.
 ///
-/// Berada di luar `AppShellPage`, jadi memasang [PixelTheme] sendiri.
 /// Halaman ini tidak menyimpan apa pun — [onFinished] yang memutuskan
 /// (lihat `buildOnboardingRoute`).
 class OnboardingPage extends StatefulWidget {
@@ -137,104 +136,102 @@ class _OnboardingPageState extends State<OnboardingPage> {
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _backToSlides();
       },
-      child: PixelTheme(
-        child: Builder(
-          builder: (context) {
-            final colors = context.appColors;
-            final review = widget.mode == OnboardingMode.review;
-            return Scaffold(
-              body: Stack(
-                children: [
-                  Positioned.fill(child: OnboardingBackdrop(controller: _controller)),
-                  SafeArea(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.sm, 0),
-                          child: SizedBox(
-                            height: 48,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    t.app.title.toUpperCase(),
-                                    style: transactionLabelStyle(context, color: colors.textMuted),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                if (_choosingCurrency)
-                                  AppButton.tertiary(
-                                    key: const ValueKey('onboarding-back'),
-                                    label: t.onboarding.backAction,
-                                    onPressed: _finishing ? null : _backToSlides,
-                                  )
-                                else if (_choosingLanguage)
-                                  const SizedBox.shrink()
-                                else if (!_isLast || review)
-                                  AppButton.tertiary(
-                                    label: review ? t.onboarding.closeAction : t.onboarding.skipAction,
-                                    onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Stack(
+      child: Builder(
+        builder: (context) {
+          final colors = context.appColors;
+          final review = widget.mode == OnboardingMode.review;
+          return Scaffold(
+            body: Stack(
+              children: [
+                Positioned.fill(child: OnboardingBackdrop(controller: _controller)),
+                SafeArea(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.sm, 0),
+                        child: SizedBox(
+                          height: 48,
+                          child: Row(
                             children: [
-                              // Tetap terpasang saat langkah mata uang tampil,
-                              // supaya "Kembali" mendarat di layar yang sama.
-                              Offstage(
-                                offstage: _onStep,
-                                child: PageView.builder(
-                                  controller: _controller,
-                                  itemCount: _count,
-                                  onPageChanged: (page) => setState(() => _page = page),
-                                  itemBuilder: (context, index) => OnboardingSlide(
-                                    index: index,
-                                    active: index == _page && !_onStep,
-                                    controller: _controller,
-                                  ),
+                              Expanded(
+                                child: Text(
+                                  t.app.title.toUpperCase(),
+                                  style: transactionLabelStyle(context, color: colors.textMuted),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              if (_choosingLanguage)
-                                OnboardingLanguageStep(selected: _language, onSelected: _selectLanguage),
                               if (_choosingCurrency)
-                                OnboardingCurrencyStep(
-                                  selected: _currency,
-                                  suggested: _suggested,
-                                  onSelected: (currency) => setState(() => _currency = currency),
+                                AppButton.tertiary(
+                                  key: const ValueKey('onboarding-back'),
+                                  label: t.onboarding.backAction,
+                                  onPressed: _finishing ? null : _backToSlides,
+                                )
+                              else if (_choosingLanguage)
+                                const SizedBox.shrink()
+                              else if (!_isLast || review)
+                                AppButton.tertiary(
+                                  label: review ? t.onboarding.closeAction : t.onboarding.skipAction,
+                                  onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
                                 ),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (!_onStep) ...[
-                                OnboardingPageIndicator(count: _count, current: _page),
-                                const SizedBox(height: AppSpacing.md),
-                              ],
-                              AnimatedSwitcher(
-                                duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
-                                switchInCurve: const SteppedCurve(4),
-                                switchOutCurve: const SteppedCurve(4),
-                                child: _actions(context, review),
+                      ),
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            // Tetap terpasang saat langkah mata uang tampil,
+                            // supaya "Kembali" mendarat di layar yang sama.
+                            Offstage(
+                              offstage: _onStep,
+                              child: PageView.builder(
+                                controller: _controller,
+                                itemCount: _count,
+                                onPageChanged: (page) => setState(() => _page = page),
+                                itemBuilder: (context, index) => OnboardingSlide(
+                                  index: index,
+                                  active: index == _page && !_onStep,
+                                  controller: _controller,
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                            if (_choosingLanguage)
+                              OnboardingLanguageStep(selected: _language, onSelected: _selectLanguage),
+                            if (_choosingCurrency)
+                              OnboardingCurrencyStep(
+                                selected: _currency,
+                                suggested: _suggested,
+                                onSelected: (currency) => setState(() => _currency = currency),
+                              ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (!_onStep) ...[
+                              OnboardingPageIndicator(count: _count, current: _page),
+                              const SizedBox(height: AppSpacing.md),
+                            ],
+                            AnimatedSwitcher(
+                              duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
+                              switchInCurve: const SteppedCurve(4),
+                              switchOutCurve: const SteppedCurve(4),
+                              child: _actions(context, review),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

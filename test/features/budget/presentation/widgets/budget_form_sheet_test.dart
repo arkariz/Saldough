@@ -18,10 +18,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        home: PixelTheme(
-          child: Scaffold(
-            body: BudgetFormSheet(wallets: const [bca], initial: initial),
-          ),
+        theme: PixelTheme.light,
+        home: Scaffold(
+          body: BudgetFormSheet(wallets: const [bca], initial: initial),
         ),
       ),
     );

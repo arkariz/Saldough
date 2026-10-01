@@ -1,7 +1,6 @@
 /// Barrel tema Saldough — satu-satunya jalur impor ke lapisan tema.
 library;
 
-export 'app_theme.dart';
 export 'extensions/app_colors_extension.dart';
 export 'pixel_theme.dart';
 export 'tokens/app_border.dart';

@@ -3,38 +3,23 @@ import 'package:saldough/core/theme/extensions/app_colors_extension.dart';
 import 'package:saldough/core/theme/tokens/app_border.dart';
 import 'package:saldough/core/theme/tokens/app_radius.dart';
 
-/// Membungkus `child` dengan [ThemeData] bahasa visual ADR-015 — palet
+/// Tema global aplikasi ([ADR-031](docs/02-architecture/adr/0031-pixeltheme-jadi-tema-global.md)):
+/// [ThemeData] bahasa visual ADR-015 — palet
 /// [AppColorsExtension.pixelLight]/[AppColorsExtension.pixelDark], tiga
-/// peran huruf (Space Grotesk judul/angka besar, Plus Jakarta Sans teks
-/// isi/label, lihat juga [PixelTypography.tabularMono] untuk nominal
-/// tabel), radius `4px`, dan garis tepi `2px` — dipasang sekali di
-/// `AppShellPage`, BUKAN tema aplikasi global.
+/// peran huruf bundel (Space Grotesk judul/angka besar, Plus Jakarta Sans
+/// teks isi/label, lihat juga [PixelTypography.tabularMono] untuk nominal
+/// tabel), radius `4px`, dan garis tepi `2px`.
 ///
-/// `AppTheme`/ADR-0006 tetap tema global (`MaterialApp.theme`) sampai
-/// T-3.4/T-3.5 cutover — layar lama (`cycle`/`card`/`investment`/`grocery`/
-/// `income`) terus memakainya tanpa perubahan apa pun. `PixelTheme` HANYA
-/// berlaku untuk subtree yang dibungkusnya (layar baru Fase 2+).
-///
-/// Widget [Theme] bawaan Flutter otomatis diteruskan ke rute yang dibuka
-/// dari dalam subtree ini (`showModalBottomSheet`, `showDialog`) lewat
-/// `InheritedTheme.capture` — beda dengan `Provider`/`BlocProvider`, yang
-/// TIDAK diteruskan otomatis ke rute baru (lihat catatan `Builder` di
-/// `AppShellPage._openRecordSheet` untuk kasus itu). Jadi lembar CATAT dkk.
-/// tetap memakai `PixelTheme` walau route-nya sendiri ditumpuk di
-/// `Navigator` yang sama dengan layar lama.
-class PixelTheme extends StatelessWidget {
-  /// Membuat [PixelTheme] membungkus [child].
-  const PixelTheme({required this.child, super.key});
+/// Dipasang sekali sebagai `theme`/`darkTheme` `MaterialApp`; layar dan rute
+/// tidak membungkus dirinya sendiri dengan tema.
+abstract final class PixelTheme {
+  PixelTheme._();
 
-  /// Subtree yang memakai tema ADR-015.
-  final Widget child;
+  /// Tema mode terang.
+  static ThemeData get light => _build(AppColorsExtension.pixelLight, Brightness.light);
 
-  @override
-  Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final colors = brightness == Brightness.dark ? AppColorsExtension.pixelDark : AppColorsExtension.pixelLight;
-    return Theme(data: _build(colors, brightness), child: child);
-  }
+  /// Tema mode gelap (arang hangat, ADR-016 §7).
+  static ThemeData get dark => _build(AppColorsExtension.pixelDark, Brightness.dark);
 
   static ThemeData _build(AppColorsExtension colors, Brightness brightness) {
     final base = brightness == Brightness.light ? ThemeData.light() : ThemeData.dark();
@@ -124,9 +109,8 @@ class PixelTheme extends StatelessWidget {
     );
   }
 
-  // Dibangun slot per slot, bukan `GoogleFonts.xxxTextTheme(base)` berantai
-  // -- alasan sama seperti `AppTheme._buildTextTheme` ADR-0006: helper itu
-  // menimpa seluruh slot termasuk yang sudah diisi huruf lain.
+  // Dibangun slot per slot supaya tiap peran huruf hanya mengisi slotnya
+  // sendiri, tidak menimpa slot yang sudah diisi huruf lain.
   static TextTheme _buildTextTheme(TextTheme base, AppColorsExtension colors) {
     TextStyle? display(TextStyle? base, Color color) =>
         base?.copyWith(fontFamily: 'SpaceGrotesk', color: color, fontWeight: FontWeight.w700);

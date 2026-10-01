@@ -84,7 +84,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: const MaterialApp(home: AppShellPage()),
+        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     // Tiga `pump()`: tiga ScopeWidget bersarang (Record, Transaction, Wallet).

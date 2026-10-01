@@ -122,6 +122,11 @@ transparan fitur `record`. Layar saldo/transaksi segar lewat `LedgerChanges`
 `shared/<modul>/presentation/` lewat `<modul>_presentation.dart`. Semua ini
 dijaga `test/architecture/import_boundaries_test.dart`.
 
+**Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
+`MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
+`AppTheme`, palet 1.0, dan `google_fonts` sudah dihapus. Uji widget yang
+warnanya penting memasang `MaterialApp(theme: PixelTheme.light, …)`.
+
 **Situs web:** landing Tanukonomy, halaman `/beta` untuk uji coba tertutup,
 kebijakan privasi, serta syarat dan ketentuan ada di repo terpisah
 `arkariz/tanukonomy-web` (Astro statis, id/en). Tangkapan layarnya dirender

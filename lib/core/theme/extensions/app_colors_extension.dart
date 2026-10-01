@@ -112,13 +112,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   /// alfa di titik pakainya. Sama di semua palet: tirai selalu gelap.
   final Color scrim;
 
-  /// Palet mode terang layar Saldough 2.0 (`PixelTheme`), BUKAN [light].
+  /// Palet mode terang aplikasi (`PixelTheme.light`, ADR-031).
   ///
-  /// Dibangun dengan konstruktor EKSPLISIT, bukan `light.copyWith(...)`:
-  /// dengan `copyWith`, tiap slot yang lupa diisi diwarisi diam-diam dari
-  /// palet lama (itulah yang membuat `AppMoneyText` sempat memakai
-  /// oranye-coklat untuk angka negatif). Kini slot baru wajib diisi di sini
-  /// saat kompilasi. Nilainya: tabel §"Palet" ADR-015 sebagaimana direvisi
+  /// Dibangun dengan konstruktor EKSPLISIT, bukan `copyWith(...)` dari palet
+  /// lain: dengan `copyWith`, tiap slot yang lupa diisi diwarisi diam-diam
+  /// (itulah yang dulu membuat `AppMoneyText` memakai oranye-coklat untuk
+  /// angka negatif). Kini slot baru wajib diisi di sini saat kompilasi. Nilainya: tabel §"Palet" ADR-015 sebagaimana direvisi
   /// ADR-016 (satu peran, satu warna).
   static const AppColorsExtension pixelLight = AppColorsExtension(
     income: Color(0xFF15803D),
@@ -177,54 +176,6 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     incomeFill: Color(0xFF22C55E),
     expenseFill: Color(0xFFF87171),
     transferFill: Color(0xFF60A5FA),
-    scrim: Color(0xFF120F0E),
-  );
-
-  /// Palet mode terang, nilai resmi dari ADR-0006.
-  static const light = AppColorsExtension(
-    income: Color(0xFF1E9E46),
-    expense: Color(0xFFE13553),
-    overBudget: Color(0xFFF07B12),
-    background: Color(0xFFF2E9D8),
-    cardBackground: Color(0xFFFFFFFF),
-    edge: Color(0xFF161310),
-    textPrimary: Color(0xFF161310),
-    textMuted: Color(0xFF5B5346),
-    divider: Color(0x24161310),
-    shimmerBase: Color(0xFFEFE6D2),
-    shimmerHighlight: Color(0xFFFFFFFF),
-    accent: Color(0xFFA73A00),
-    onAccent: Color(0xFFFFFFFF),
-    transfer: Color(0xFF3D4A42),
-    pending: Color(0xFF8D4B00),
-    // Palet lama tidak membedakan teks dan isian -- disetel sama.
-    incomeFill: Color(0xFF1E9E46),
-    expenseFill: Color(0xFFE13553),
-    transferFill: Color(0xFF3D4A42),
-    scrim: Color(0xFF120F0E),
-  );
-
-  /// Palet mode gelap, nilai resmi dari ADR-0006.
-  static const dark = AppColorsExtension(
-    income: Color(0xFF3DDC68),
-    expense: Color(0xFFFF4D6A),
-    overBudget: Color(0xFFFF8C3D),
-    background: Color(0xFF0E0D0B),
-    cardBackground: Color(0xFF1C1A17),
-    edge: Color(0xFFF2E9D8),
-    textPrimary: Color(0xFFF2E9D8),
-    textMuted: Color(0xFFB9AF9E),
-    divider: Color(0x2EF2E9D8),
-    shimmerBase: Color(0xFF1C1A17),
-    shimmerHighlight: Color(0xFF29271F),
-    accent: Color(0xFFE95100),
-    // Lihat dokumentasi field onAccent — pengisi celah, bukan nilai ADR-015.
-    onAccent: Color(0xFF14120F),
-    transfer: Color(0xFF708A7A),
-    pending: Color(0xFFCA6C00),
-    incomeFill: Color(0xFF3DDC68),
-    expenseFill: Color(0xFFFF4D6A),
-    transferFill: Color(0xFF708A7A),
     scrim: Color(0xFF120F0E),
   );
 
@@ -302,11 +253,11 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
 
 /// Akses singkat ke [AppColorsExtension] dari [BuildContext].
 ///
-/// Jatuh ke [AppColorsExtension.light] kalau ekstensi belum terpasang,
-/// sehingga tidak pernah melempar.
+/// Jatuh ke [AppColorsExtension.pixelLight] kalau ekstensi belum terpasang
+/// (mis. uji widget tanpa tema), sehingga tidak pernah melempar.
 extension AppColorsContext on BuildContext {
   /// Slot warna semantik tema aktif.
-  AppColorsExtension get appColors => Theme.of(this).extension<AppColorsExtension>() ?? AppColorsExtension.light;
+  AppColorsExtension get appColors => Theme.of(this).extension<AppColorsExtension>() ?? AppColorsExtension.pixelLight;
 }
 
 /// Tiga tingkat permukaan hangat di atas [AppColorsExtension.background]

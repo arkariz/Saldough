@@ -1,7 +1,6 @@
 import 'package:di/di.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
@@ -22,22 +21,20 @@ final class BudgetRouteModule extends FeatureRouteModule {
       key: BudgetRouteKeys.detail,
       builder: (context, input) {
         final parentContainer = ScopeProvider.of(context);
-        return PixelTheme(
-          child: ScopeWidget<BudgetScope>(
-            create: () => BudgetScope(parentContainer: parentContainer),
-            builder: (context, scope) {
-              final bloc = scope.container<BudgetBloc>();
-              return BlocProvider.value(
-                value: bloc,
-                child: EffectListener<BudgetBloc, BudgetState>(
-                  child: RunOnce(
-                    action: () => bloc.add(const BudgetStarted()),
-                    child: BudgetDetailPage(budgetId: input.budgetId),
-                  ),
+        return ScopeWidget<BudgetScope>(
+          create: () => BudgetScope(parentContainer: parentContainer),
+          builder: (context, scope) {
+            final bloc = scope.container<BudgetBloc>();
+            return BlocProvider.value(
+              value: bloc,
+              child: EffectListener<BudgetBloc, BudgetState>(
+                child: RunOnce(
+                  action: () => bloc.add(const BudgetStarted()),
+                  child: BudgetDetailPage(budgetId: input.budgetId),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     ),

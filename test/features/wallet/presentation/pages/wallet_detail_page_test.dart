@@ -7,6 +7,7 @@ import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
@@ -83,7 +84,7 @@ void main() {
     await tester.pumpWidget(
       ScopeProvider(
         container: container,
-        child: const MaterialApp(home: AppShellPage()),
+        child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage()),
       ),
     );
     // Tiga `pump()`: tiga ScopeWidget bersarang (Record, Transaction, Wallet).

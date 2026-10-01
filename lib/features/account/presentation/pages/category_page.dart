@@ -14,11 +14,9 @@ Future<void> openCategoryPage(BuildContext context, CategoryManagerBloc bloc) {
   bloc.add(const CategoryManagerStarted());
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: BlocProvider.value(
-          value: bloc,
-          child: const EffectListener<CategoryManagerBloc, CategoryManagerState>(child: CategoryPage()),
-        ),
+      builder: (_) => BlocProvider.value(
+        value: bloc,
+        child: const EffectListener<CategoryManagerBloc, CategoryManagerState>(child: CategoryPage()),
       ),
     ),
   );

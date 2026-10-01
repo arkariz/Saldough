@@ -1,7 +1,6 @@
 import 'package:di/di.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/wallet/di/wallet_scope.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_activity_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
@@ -24,29 +23,27 @@ final class WalletRouteModule extends FeatureRouteModule {
       key: WalletRouteKeys.detail,
       builder: (context, input) {
         final parentContainer = ScopeProvider.of(context);
-        return PixelTheme(
-          child: ScopeWidget<WalletScope>(
-            create: () => WalletScope(parentContainer: parentContainer),
-            builder: (context, scope) {
-              final wallets = scope.container<WalletBloc>();
-              final activity = scope.container<WalletActivityBloc>();
-              return MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(value: wallets),
-                  BlocProvider.value(value: activity),
-                ],
-                child: EffectListener<WalletBloc, WalletState>(
-                  child: RunOnce(
-                    action: () {
-                      wallets.add(const WalletStarted());
-                      activity.add(WalletActivityStarted(input.wallet.id));
-                    },
-                    child: WalletDetailPage(wallet: input.wallet),
-                  ),
+        return ScopeWidget<WalletScope>(
+          create: () => WalletScope(parentContainer: parentContainer),
+          builder: (context, scope) {
+            final wallets = scope.container<WalletBloc>();
+            final activity = scope.container<WalletActivityBloc>();
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: wallets),
+                BlocProvider.value(value: activity),
+              ],
+              child: EffectListener<WalletBloc, WalletState>(
+                child: RunOnce(
+                  action: () {
+                    wallets.add(const WalletStarted());
+                    activity.add(WalletActivityStarted(input.wallet.id));
+                  },
+                  child: WalletDetailPage(wallet: input.wallet),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     ),

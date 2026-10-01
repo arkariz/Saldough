@@ -1,7 +1,6 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/record/di/record_scope.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
@@ -72,15 +71,13 @@ class _RecordFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final parentContainer = ScopeProvider.of(context);
-    return PixelTheme(
-      child: ScopeWidget<RecordScope>(
-        create: () => RecordScope(parentContainer: parentContainer),
-        builder: (context, scope) => BlocProvider.value(
-          value: scope.container<RecordBloc>(),
-          // Snackbar galat/berhasil `RecordBloc`; tetap tampil sesudah rute
-          // ini tertutup karena `ScaffoldMessenger` milik aplikasi.
-          child: EffectListener<RecordBloc, RecordState>(child: _Runner(run: run)),
-        ),
+    return ScopeWidget<RecordScope>(
+      create: () => RecordScope(parentContainer: parentContainer),
+      builder: (context, scope) => BlocProvider.value(
+        value: scope.container<RecordBloc>(),
+        // Snackbar galat/berhasil `RecordBloc`; tetap tampil sesudah rute
+        // ini tertutup karena `ScaffoldMessenger` milik aplikasi.
+        child: EffectListener<RecordBloc, RecordState>(child: _Runner(run: run)),
       ),
     );
   }

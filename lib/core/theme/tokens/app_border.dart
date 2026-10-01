@@ -3,16 +3,11 @@
 /// ini, bukan angka harfiah, di setiap `Border.all`/`BorderSide` yang
 /// membentuk panel/tombol/chip komik.
 ///
-/// Sebelum token ini ada, nilainya ditulis harfiah di lima tempat dan sudah
-/// melenceng di satu (`AppChip` memakai `2`, yang lain `2.5`) — justru nilai
-/// yang paling mendefinisikan gaya ini yang tidak ikut berubah kalau token
-/// direvisi nanti (UX-29). Diselaraskan ke satu nilai: tidak ditemukan alasan
-/// `AppChip` sengaja dibuat lebih tipis dari panel/tombol lain.
+/// Sisa ADR-0006; tema aplikasi sendiri memakai [pixelThick] (ADR-031).
 abstract final class AppBorder {
   AppBorder._();
 
-  /// Lebar baku garis tepi komik — dipakai `AppCard`, `AppButton`,
-  /// `AppChip`, dan `ThemeData` (`cardTheme`/`elevatedButtonTheme`).
+  /// Lebar baku garis tepi komik ADR-0006.
   static const double thick = 2.5;
 
   /// Lebar garis tepi ADR-015 ("garis tepi 2px solid" di seluruh level

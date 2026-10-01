@@ -28,16 +28,14 @@ Future<void> openBudgetTemplates(BuildContext context) {
   final parentContainer = ScopeProvider.of(navigator.context);
   return navigator.push(
     MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: ScopeWidget<BudgetTemplateScope>(
-          create: () => BudgetTemplateScope(parentContainer: parentContainer),
-          builder: (context, scope) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: scope.container<BudgetTemplateBloc>()),
-              BlocProvider.value(value: budgetBloc),
-            ],
-            child: const EffectListener<BudgetTemplateBloc, BudgetTemplateState>(child: BudgetTemplatePage()),
-          ),
+      builder: (_) => ScopeWidget<BudgetTemplateScope>(
+        create: () => BudgetTemplateScope(parentContainer: parentContainer),
+        builder: (context, scope) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: scope.container<BudgetTemplateBloc>()),
+            BlocProvider.value(value: budgetBloc),
+          ],
+          child: const EffectListener<BudgetTemplateBloc, BudgetTemplateState>(child: BudgetTemplatePage()),
         ),
       ),
     ),

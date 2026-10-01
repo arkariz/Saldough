@@ -2,7 +2,6 @@ import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -47,19 +46,17 @@ class _TransactionRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final parentContainer = ScopeProvider.of(context);
-    return PixelTheme(
-      child: ScopeWidget<TransactionScope>(
-        create: () => TransactionScope(parentContainer: parentContainer),
-        builder: (context, scope) {
-          final bloc = scope.container<TransactionBloc>();
-          return BlocProvider.value(
-            value: bloc,
-            child: EffectListener<TransactionBloc, TransactionState>(
-              child: RunOnce(action: () => onStart(bloc), child: child),
-            ),
-          );
-        },
-      ),
+    return ScopeWidget<TransactionScope>(
+      create: () => TransactionScope(parentContainer: parentContainer),
+      builder: (context, scope) {
+        final bloc = scope.container<TransactionBloc>();
+        return BlocProvider.value(
+          value: bloc,
+          child: EffectListener<TransactionBloc, TransactionState>(
+            child: RunOnce(action: () => onStart(bloc), child: child),
+          ),
+        );
+      },
     );
   }
 }

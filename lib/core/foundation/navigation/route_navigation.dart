@@ -30,8 +30,9 @@ extension RouteNavigation on BuildContext {
 extension RouteNodeRouteExt on RouteNode {
   /// Membangun rute untuk [input]. [capturedThemes] (tema pemanggil) hanya
   /// dipakai lembar, sama seperti `showModalBottomSheet`: wadah lembar
-  /// dibangun di luar [RouteNode.buildWidget], jadi tanpanya ia memakai tema
-  /// global, bukan `PixelTheme`.
+  /// dibangun di luar [RouteNode.buildWidget], jadi tanpanya penimpaan tema
+  /// lokal di pemanggil tidak terbawa. Tema aplikasinya sendiri global
+  /// (ADR-031 §3.5).
   Route<T> toRoute<T>(RouteInput input, {required CapturedThemes capturedThemes}) {
     final settings = RouteSettings(name: keyId, arguments: input);
     Widget page(BuildContext context) => buildWidget(context, input);

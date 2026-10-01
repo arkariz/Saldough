@@ -7,19 +7,18 @@ import 'package:saldough/features/freelance/presentation/widgets/freelance_cards
 void main() {
   testWidgets('bilah porsi diterima/belum diterima benar-benar setinggi 8', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: PixelTheme(
-          child: Scaffold(
-            body: FreelanceSummaryCard(
-              summary: FreelanceSummary(totalHours: 39, earned: 300, paid: 200),
-              projectCount: 1,
-              payments: ProjectPaymentStats(
-                pendingCount: 0,
-                pendingNet: 0,
-                nextExpectedDate: null,
-                paidCount: 0,
-                paidNet: 0,
-              ),
+      MaterialApp(
+        theme: PixelTheme.light,
+        home: const Scaffold(
+          body: FreelanceSummaryCard(
+            summary: FreelanceSummary(totalHours: 39, earned: 300, paid: 200),
+            projectCount: 1,
+            payments: ProjectPaymentStats(
+              pendingCount: 0,
+              pendingNet: 0,
+              nextExpectedDate: null,
+              paidCount: 0,
+              paidNet: 0,
             ),
           ),
         ),

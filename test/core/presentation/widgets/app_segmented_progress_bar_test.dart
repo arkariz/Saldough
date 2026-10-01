@@ -7,9 +7,8 @@ void main() {
   Future<List<Container>> pumpAndGetSegments(WidgetTester tester, double value) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: PixelTheme(
-          child: Scaffold(body: AppSegmentedProgressBar(value: value)),
-        ),
+        theme: PixelTheme.light,
+        home: Scaffold(body: AppSegmentedProgressBar(value: value)),
       ),
     );
     return tester.widgetList<Container>(find.byType(Container)).toList();
@@ -18,7 +17,7 @@ void main() {
   group('AppSegmentedProgressBar', () {
     testWidgets('bawaan 10 segmen, 8px x 8px, jarak 2px', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 0.5)))),
+        MaterialApp(theme: PixelTheme.light, home: const Scaffold(body: AppSegmentedProgressBar(value: 0.5))),
       );
       expect(find.byType(Container), findsNWidgets(10));
       final row = tester.widget<Row>(find.byType(Row));
@@ -36,7 +35,7 @@ void main() {
 
     testWidgets('di bawah 70% memakai warna netral (ADR-020 -- bukan income lagi)', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 0.5)))),
+        MaterialApp(theme: PixelTheme.light, home: const Scaffold(body: AppSegmentedProgressBar(value: 0.5))),
       );
       final context = tester.element(find.byType(AppSegmentedProgressBar));
       expect(AppSegmentedProgressBar.colorFor(context, 0.5), context.appColors.textPrimary);
@@ -44,7 +43,7 @@ void main() {
 
     testWidgets('70%-99% memakai warna pending', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 0.8)))),
+        MaterialApp(theme: PixelTheme.light, home: const Scaffold(body: AppSegmentedProgressBar(value: 0.8))),
       );
       final context = tester.element(find.byType(AppSegmentedProgressBar));
       expect(AppSegmentedProgressBar.colorFor(context, 0.8), context.appColors.pending);
@@ -52,7 +51,7 @@ void main() {
 
     testWidgets('tepat 100% (pos selesai) memakai pending, bukan overBudget', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 1)))),
+        MaterialApp(theme: PixelTheme.light, home: const Scaffold(body: AppSegmentedProgressBar(value: 1))),
       );
       final context = tester.element(find.byType(AppSegmentedProgressBar));
       expect(AppSegmentedProgressBar.colorFor(context, 1), context.appColors.pending);
@@ -60,7 +59,7 @@ void main() {
 
     testWidgets('di atas 100% memakai warna overBudget', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: PixelTheme(child: Scaffold(body: AppSegmentedProgressBar(value: 1.2)))),
+        MaterialApp(theme: PixelTheme.light, home: const Scaffold(body: AppSegmentedProgressBar(value: 1.2))),
       );
       final context = tester.element(find.byType(AppSegmentedProgressBar));
       expect(AppSegmentedProgressBar.colorFor(context, 1.2), context.appColors.overBudget);

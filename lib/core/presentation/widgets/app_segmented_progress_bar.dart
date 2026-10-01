@@ -14,10 +14,6 @@ import 'package:saldough/core/theme/theme.dart';
 /// diperpanjang sampai tepat di bawah 100% (bukan berhenti di 90% seperti
 /// disebut ADR-015) supaya seluruh rentang 0–100% punya warna, dan
 /// `overBudget` hanya mulai persis saat lewat rencana.
-///
-/// Dipakai HANYA di dalam subtree `PixelTheme` — sama seperti
-/// [AppHardCard], warnanya baru bernilai ADR-015 kalau `PixelTheme`
-/// terpasang di atasnya.
 class AppSegmentedProgressBar extends StatelessWidget {
   /// Membuat [AppSegmentedProgressBar] untuk rasio [value] (0.0 = kosong,
   /// 1.0 = 100%, boleh lebih dari 1.0 untuk menyatakan lewat anggaran).

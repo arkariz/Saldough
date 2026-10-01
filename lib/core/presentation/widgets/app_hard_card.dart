@@ -21,11 +21,8 @@ enum AppHardElevation {
 /// Panel bergaris tepi 2px dengan bayangan keras offset — dasar visual
 /// ADR-015, padanan `AppCard` (ADR-0006) untuk layar Saldough 2.0.
 ///
-/// Dipakai HANYA di dalam subtree `PixelTheme` — warna dan radiusnya
-/// diambil dari `context.appColors`/token `pixelSm`, yang cuma bernilai
-/// ADR-015 kalau `PixelTheme` terpasang di atasnya. Di luar `PixelTheme`
-/// (mis. layar lama) tampilannya jatuh ke palet ADR-0006 seperti biasa —
-/// bukan galat, tapi juga bukan pemakaian yang dimaksud.
+/// Warna dan radiusnya diambil dari `context.appColors`/token `pixelSm`
+/// (tema global `PixelTheme`, ADR-031).
 class AppHardCard extends StatelessWidget {
   /// Membuat [AppHardCard] dengan [child].
   const AppHardCard({

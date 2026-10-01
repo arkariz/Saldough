@@ -1,6 +1,5 @@
 import 'package:di/di.dart';
 import 'package:navigation/navigation.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/freelance/di/freelance_scope.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_bloc.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
@@ -25,13 +24,11 @@ final class FreelanceRouteModule extends FeatureRouteModule {
       defaultInput: () => const EmptyInput(),
       builder: (context, _) {
         final parentContainer = ScopeProvider.of(context);
-        return PixelTheme(
-          child: ScopeWidget<FreelanceScope>(
-            create: () => FreelanceScope(parentContainer: parentContainer),
-            builder: (context, scope) => BlocProvider.value(
-              value: scope.container<FreelanceBloc>(),
-              child: const EffectListener<FreelanceBloc, FreelanceState>(child: FreelanceOverviewPage()),
-            ),
+        return ScopeWidget<FreelanceScope>(
+          create: () => FreelanceScope(parentContainer: parentContainer),
+          builder: (context, scope) => BlocProvider.value(
+            value: scope.container<FreelanceBloc>(),
+            child: const EffectListener<FreelanceBloc, FreelanceState>(child: FreelanceOverviewPage()),
           ),
         );
       },

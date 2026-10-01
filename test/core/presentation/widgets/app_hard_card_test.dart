@@ -11,13 +11,12 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: PixelTheme(
-          child: Scaffold(
-            body: AppHardCard(
-              elevation: elevation,
-              pressed: pressed,
-              child: const Text('isi'),
-            ),
+        theme: PixelTheme.light,
+        home: Scaffold(
+          body: AppHardCard(
+            elevation: elevation,
+            pressed: pressed,
+            child: const Text('isi'),
           ),
         ),
       ),

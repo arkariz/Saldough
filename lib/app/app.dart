@@ -47,8 +47,8 @@ class SaldoughApp extends StatelessWidget {
         container: getIt,
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
+          theme: PixelTheme.light,
+          darkTheme: PixelTheme.dark,
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
           localizationsDelegates: localizationsDelegates,

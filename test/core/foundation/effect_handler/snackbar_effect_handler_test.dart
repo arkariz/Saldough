@@ -15,7 +15,7 @@ void main() {
     late BuildContext captured;
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.lightTheme,
+        theme: PixelTheme.light,
         home: Scaffold(
           body: Builder(
             builder: (context) {

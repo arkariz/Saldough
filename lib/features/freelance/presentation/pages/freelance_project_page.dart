@@ -24,11 +24,9 @@ Future<void> openFreelanceProject(BuildContext context, FreelanceProject project
   final bloc = context.read<FreelanceBloc>();
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => PixelTheme(
-        child: BlocProvider.value(
-          value: bloc,
-          child: FreelanceProjectPage(projectId: project.id),
-        ),
+      builder: (_) => BlocProvider.value(
+        value: bloc,
+        child: FreelanceProjectPage(projectId: project.id),
       ),
     ),
   );

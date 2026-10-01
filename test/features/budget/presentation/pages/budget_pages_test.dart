@@ -7,6 +7,7 @@ import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
@@ -84,7 +85,7 @@ void main() {
   }
 
   Future<void> openBudgetTab(WidgetTester tester) async {
-    await tester.pumpWidget(ScopeProvider(container: container, child: const MaterialApp(home: AppShellPage())));
+    await tester.pumpWidget(ScopeProvider(container: container, child: MaterialApp(theme: PixelTheme.light, home: const AppShellPage())));
     // Empat ScopeWidget bersarang (Record, Transaction, Wallet, Budget).
     for (var i = 0; i < 5; i++) {
       await tester.pump();

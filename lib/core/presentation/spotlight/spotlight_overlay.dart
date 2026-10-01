@@ -158,63 +158,61 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
     final controller = widget.controller;
     final step = controller.currentStep;
     if (step == null) return const SizedBox.shrink();
-    return PixelTheme(
-      child: Builder(
-        builder: (context) {
-          final colors = context.appColors;
-          return FadeTransition(
-            opacity: _intro,
-            child: AnimatedBuilder(
-              animation: Listenable.merge([_move, _blink]),
-              builder: (context, _) {
-                WidgetsBinding.instance.addPostFrameCallback((_) => _remeasure());
-                final hole = _displayRect;
-                final bright = !_blink.isAnimating || _blink.value < 0.5;
-                final size = MediaQuery.sizeOf(context);
-                // Papan ketik (mis. bidang nominal CATAT yang langsung fokus)
-                // mengurangi ruang bawah; gelembung tidak boleh tertutup.
-                final keyboard = MediaQuery.viewInsetsOf(context).bottom;
-                final safe = MediaQuery.paddingOf(context);
-                final bottomLimit = size.height - math.max(keyboard, safe.bottom);
-                final below = hole == null || (bottomLimit - hole.bottom) >= hole.top;
-                return Material(
-                  type: MaterialType.transparency,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {},
-                          child: CustomPaint(
-                            painter: _ScrimPainter(
-                              hole: hole,
-                              below: below,
-                              scrim: colors.scrim.withValues(alpha: 0.74),
-                              border: colors.accent.withValues(alpha: bright ? 1 : 0.35),
-                              tail: colors.cardBackground,
-                              edge: colors.edge,
-                            ),
+    return Builder(
+      builder: (context) {
+        final colors = context.appColors;
+        return FadeTransition(
+          opacity: _intro,
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_move, _blink]),
+            builder: (context, _) {
+              WidgetsBinding.instance.addPostFrameCallback((_) => _remeasure());
+              final hole = _displayRect;
+              final bright = !_blink.isAnimating || _blink.value < 0.5;
+              final size = MediaQuery.sizeOf(context);
+              // Papan ketik (mis. bidang nominal CATAT yang langsung fokus)
+              // mengurangi ruang bawah; gelembung tidak boleh tertutup.
+              final keyboard = MediaQuery.viewInsetsOf(context).bottom;
+              final safe = MediaQuery.paddingOf(context);
+              final bottomLimit = size.height - math.max(keyboard, safe.bottom);
+              final below = hole == null || (bottomLimit - hole.bottom) >= hole.top;
+              return Material(
+                type: MaterialType.transparency,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {},
+                        child: CustomPaint(
+                          painter: _ScrimPainter(
+                            hole: hole,
+                            below: below,
+                            scrim: colors.scrim.withValues(alpha: 0.74),
+                            border: colors.accent.withValues(alpha: bright ? 1 : 0.35),
+                            tail: colors.cardBackground,
+                            edge: colors.edge,
                           ),
                         ),
                       ),
-                      CustomSingleChildLayout(
-                        delegate: _BubbleLayout(
-                          hole: hole,
-                          below: below,
-                          padding: safe.copyWith(bottom: math.max(keyboard, safe.bottom)),
-                        ),
-                        child: _completing
-                            ? _DoneBadge(animation: _done)
-                            : _Bubble(controller: controller, onNext: _onNext),
+                    ),
+                    CustomSingleChildLayout(
+                      delegate: _BubbleLayout(
+                        hole: hole,
+                        below: below,
+                        padding: safe.copyWith(bottom: math.max(keyboard, safe.bottom)),
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
+                      child: _completing
+                          ? _DoneBadge(animation: _done)
+                          : _Bubble(controller: controller, onNext: _onNext),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

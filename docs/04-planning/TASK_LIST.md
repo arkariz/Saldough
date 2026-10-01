@@ -1695,9 +1695,10 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       **Menunggu pemilik:** aktifkan Firebase AI Logic (Gemini Developer
       API) di Console, daftarkan App Check (Play Integrity + SHA-256 kunci
       rilis; token debug untuk build debug), biarkan penegakan App Check
-      mati sampai metrik menunjukkan permintaan sah. **Belum dicek di HP.**
-      Pemilik melaporkan Firebase AI Logic sudah aktif (1 Okt 2026); belum
-      dicek dari aplikasi bahwa panggilan cloud benar-benar berhasil.
+      mati sampai metrik menunjukkan permintaan sah.       Pemilik melaporkan Firebase AI Logic sudah aktif (1 Okt 2026).
+      Terverifikasi (1 Okt 2026, pemilik): token debug App Check terdaftar,
+      panggilan Gemini dari aplikasi berhasil dan tercatat di monitor AI
+      Logic Console.
       Sampai Console diaktifkan, panggilan cloud gagal dan draf aturan
       dipakai tanpa pesan galat (sesuai desain).
       ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis

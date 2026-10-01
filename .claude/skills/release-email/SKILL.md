@@ -82,8 +82,8 @@ Hapus bagian yang kosong (seluruh bloknya, termasuk judulnya). Bagian
 - Fitur yang menurut TASK_LIST belum teruji dengan pemakaian nyata tetap
   boleh diumumkan, tapi masukkan ke "Bantu kami mencoba" dan beri flag ke
   pemilik (langkah 6).
-- Hadiah penguji: biarkan `[durasi]` kecuali pemilik sudah menyebut
-  durasinya di percakapan.
+- Kotak "Untuk penguji awal" dan penutup email tetap seperti di template;
+  jangan menambah durasi hadiah, nama pengirim, atau tanda tangan.
 - Saluran masukan: "balas email ini" dan "Masukan pribadi untuk
   developer" di Play Store. Jangan menyebut `halo@tanukonomy.app` kecuali
   pemilik bilang email itu sudah bisa menerima pesan.
@@ -98,9 +98,8 @@ Salin `assets/email-template.html` ke scratchpad sebagai
 - Kartu fitur: ulangi blok di antara `<!-- ULANGI -->` dan
   `<!-- /ULANGI -->`; baris jarak 8px hanya di antara kartu.
 - `<li>` di bagian lain sesuai jumlah butir.
-- Hapus komentar `ULANGI` dan semua isian `[...]` yang sudah terjawab.
-  Isian yang memang harus diisi pemilik (`[durasi]`, `[Nama kamu]`) tetap
-  dalam kurung siku.
+- Hapus komentar `ULANGI` dan semua isian `[...]`. Email yang selesai
+  tidak boleh menyisakan kurung siku.
 
 Jangan mengubah warna, gaya inline, atau struktur tabel. Gmail membuang
 `<style>` dan kelas CSS, jadi semua gaya harus tetap inline.
@@ -121,6 +120,6 @@ Jangan mengubah warna, gaya inline, atau struktur tabel. Gmail membuang
        Keamanan Data di TASK_LIST sudah menyebutnya; kalau belum, beri draf
        paragraf pemberitahuan untuk "Perlu kamu ketahui";
      - migrasi data yang belum dicek dengan data lama sungguhan;
-     - isian yang masih tersisa (`[durasi]`, `[Nama kamu]`, nomor build).
+     - nomor versi di subjek cocok dengan Play Console.
 
 Jangan meng-commit berkas email. Itu hasil sekali pakai, bukan bagian repo.

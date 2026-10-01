@@ -211,6 +211,20 @@ void main() {
       expect(draft.walletId, 'bri');
       expect(draft.issues, isNot(contains(DraftIssue.walletUnknown)));
     });
+
+    test('cloud menerima teks tersamar (tanpa saldo/rekening); kutipan divalidasi ke teks asli', () async {
+      final cloud = _FakeCloud(
+        const InterpretedTransaction(kind: DraftKind.expense, amountText: 'Rp50.000'),
+      );
+      final draft = (await compose('Transaksi Rp50.000 dari rek ****1234 berhasil. Saldo Rp1.234.567', cloud: cloud))
+          .draft;
+      final sent = cloud.lastEvidence!.text;
+      expect(sent, contains('Rp50.000'));
+      expect(sent, isNot(contains('1.234.567')));
+      expect(sent, isNot(contains('1234')));
+      expect(draft.amountSen, 5000000);
+      expect(draft.sourceText, contains('Saldo Rp1.234.567'));
+    });
   });
 }
 

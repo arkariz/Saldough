@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Base64
 import com.arkarizdev.tanukonomy.MainActivity
 import com.arkarizdev.tanukonomy.R
 
@@ -34,9 +33,8 @@ object CaptureReminders {
     }
 
     /** Pengingat generik saat Dart tidak hidup; teksnya dari [CaptureConfig]. */
-    fun showGeneric(context: Context, config: CaptureConfig, item: CapturedItem, appLabel: String) {
+    fun showGeneric(context: Context, config: CaptureConfig, item: CapturedItem, appLabel: String, icon: ByteArray?) {
         val title = config.capturedTitle.replace("{app}", appLabel).ifBlank { appLabel }
-        val icon = item.icon?.let { Base64.decode(it, Base64.NO_WRAP) }
         show(context, item.id, title, config.capturedBody, config.channelName, icon)
     }
 

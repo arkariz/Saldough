@@ -6,21 +6,33 @@ import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import java.util.concurrent.Executors
 
 /**
  * Penangkap native Catat dari notifikasi (ADR-032 §3.1). Berjalan walau
  * aplikasi tertutup; hanya menampung notifikasi dari sumber yang dipilih
  * pengguna, tidak pernah OTP, lalu meneruskannya ke Dart bila hidup atau
  * memunculkan pengingat generik.
+ *
+ * Penanganan (baca setelan, render ikon, tulis antrean) berjalan di
+ * [worker], bukan thread utama layanan (ADR-032 §10).
  */
 class TransactionNotificationListener : NotificationListenerService() {
+    private val worker = Executors.newSingleThreadExecutor()
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
-        try {
-            handle(sbn)
-        } catch (e: Exception) {
-            // Satu notifikasi rusak tidak boleh menghentikan layanan.
+        worker.execute {
+            try {
+                handle(sbn)
+            } catch (e: Exception) {
+                // Satu notifikasi rusak tidak boleh menghentikan layanan.
+            }
         }
+    }
+
+    override fun onDestroy() {
+        worker.shutdown()
+        super.onDestroy()
     }
 
     private fun handle(sbn: StatusBarNotification) {
@@ -50,11 +62,11 @@ class TransactionNotificationListener : NotificationListenerService() {
             CaptureQueue.addDebugSample(this, item)
         }
         if (text.none { it.isDigit() } || looksLikeOtp(text) || !source.matchesKeywords(text)) return
-        val captured = item.copy(icon = NotificationIcons.forNotification(this, sbn))
-        if (!CaptureQueue.add(this, captured)) return
+        val icon = NotificationIcons.forNotification(this, sbn)
+        if (!CaptureQueue.add(this, item, sbn.key, notification.`when`, icon)) return
 
         if (!NotificationCapturePlugin.notifyCaptured() && config.remindWhenClosed) {
-            CaptureReminders.showGeneric(this, config, captured, source.label)
+            CaptureReminders.showGeneric(this, config, item, source.label, icon)
         }
     }
 
@@ -65,7 +77,10 @@ class TransactionNotificationListener : NotificationListenerService() {
     }
 
     companion object {
-        /** Sama dengan `NotificationText.otpWords` di Dart. */
+        /**
+         * Sama dengan `NotificationText.otpWords` di Dart; dijaga
+         * `test/.../notification_text_test.dart`.
+         */
         private val OTP_WORDS = listOf(
             "otp",
             "kode verifikasi",

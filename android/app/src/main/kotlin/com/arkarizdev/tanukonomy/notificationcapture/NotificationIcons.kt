@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.service.notification.StatusBarNotification
-import android.util.Base64
 import java.io.ByteArrayOutputStream
 
 /** Ikon PNG kecil untuk daftar aplikasi dan tangkapan (ADR-032 §3.1). */
@@ -13,11 +12,11 @@ object NotificationIcons {
     private const val SIZE_PX = 96
 
     /**
-     * Ikon tangkapan, Base64 PNG: ikon besar notifikasi (logo bank atau
-     * merchant), atau ikon aplikasi pengirim bila tidak ada. `null` bila
-     * keduanya gagal dibaca.
+     * Ikon tangkapan, PNG: ikon besar notifikasi (logo bank atau merchant),
+     * atau ikon aplikasi pengirim bila tidak ada. `null` bila keduanya gagal
+     * dibaca.
      */
-    fun forNotification(context: Context, sbn: StatusBarNotification): String? {
+    fun forNotification(context: Context, sbn: StatusBarNotification): ByteArray? {
         val drawable = try {
             sbn.notification?.getLargeIcon()?.loadDrawable(context)
         } catch (e: Exception) {
@@ -27,8 +26,7 @@ object NotificationIcons {
         } catch (e: Exception) {
             null
         } ?: return null
-        val png = render(drawable) ?: return null
-        return Base64.encodeToString(png, Base64.NO_WRAP)
+        return render(drawable)
     }
 
     /** [drawable] dirender persegi [SIZE_PX], tetap proporsional dan di tengah. */

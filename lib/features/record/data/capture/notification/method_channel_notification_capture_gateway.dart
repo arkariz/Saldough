@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -126,7 +125,7 @@ final class MethodChannelNotificationCaptureGateway with RepositoryGuard impleme
     body: item['body'] as String? ?? '',
     postedAt: DateTime.fromMillisecondsSinceEpoch((item['postedAt']! as num).toInt()),
     icon: switch (item['icon']) {
-      final String png when png.isNotEmpty => base64Decode(png),
+      final Uint8List png when png.isNotEmpty => png,
       _ => null,
     },
   );

@@ -59,6 +59,7 @@ final class AutoRecordedEntry extends Equatable {
     this.note = '',
     this.categoryId,
     this.iconId,
+    this.capturedAt,
   });
 
   /// Identitas tangkapan asalnya.
@@ -91,6 +92,10 @@ final class AutoRecordedEntry extends Equatable {
   /// Id ikon notifikasi asalnya (ADR-032 §3.10).
   final String? iconId;
 
+  /// Waktu notifikasi asalnya; `null` untuk log yang disimpan sebelum
+  /// ADR-032 §10.
+  final DateTime? capturedAt;
+
   @override
   List<Object?> get props => [
     captureId,
@@ -103,6 +108,7 @@ final class AutoRecordedEntry extends Equatable {
     note,
     categoryId,
     iconId,
+    capturedAt,
   ];
 }
 

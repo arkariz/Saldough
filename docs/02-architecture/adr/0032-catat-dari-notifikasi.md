@@ -60,7 +60,8 @@ berjalan walau aplikasi tertutup. Untuk setiap notifikasi:
 - **selalu dibuang bila tampak seperti OTP/kode verifikasi**, apa pun setelan
   pengguna — kode rahasia tidak pernah disimpan;
 - sisanya dimasukkan ke antrean serah-terima native (maks. 50, dedup kunci +
-  waktu notifikasi + isi dalam 1 jam, lihat §10), lalu diteruskan ke Dart lewat `EventChannel` bila mesin Flutter hidup,
+  isi untuk posting ulang saja, lihat §10), lalu diteruskan ke Dart lewat
+  `EventChannel` bila mesin Flutter hidup,
   atau — bila tidak hidup dan mode pengingat aktif — memunculkan pengingat
   generik ("Transaksi dari BRImo tertangkap — ketuk untuk mencatat").
 
@@ -300,11 +301,13 @@ Review kode penangkap sesudah T-11.21 menemukan empat hal yang diperbaiki:
 1. **Dedup native terlalu lebar.** Isi yang sama (paket + judul + isi) dalam
    2 hari dibuang, termasuk yang sudah di-ack: dua kali bayar parkir
    "Pembayaran Rp5.000 ke PARKIR berhasil" dalam dua hari, yang kedua hilang
-   diam-diam. Kini sidik jari = kunci notifikasi (`sbn.key`) + waktu
-   notifikasi (`Notification.when`) + judul + isi, jendela **1 jam**: hanya
-   notifikasi yang sama persis yang diposting ulang yang dibuang. Kemiripan
-   lain ditangani Dart (`possibleDuplicate`, §3.4), yang tidak pernah
-   membuang.
+   diam-diam. Kini yang dibuang hanya posting ulang: kunci notifikasi
+   (`sbn.key`) + waktu notifikasi (`Notification.when`) + judul + isi yang
+   sama dalam **1 jam**, atau kunci + judul + isi yang sama dalam **2 menit**
+   (notifikasi yang dibangun ulang aplikasinya mendapat `when` baru).
+   Kemiripan lain ditangani Dart (`possibleDuplicate`, §3.4), yang tidak
+   pernah membuang. Diuji di emulator: dua notifikasi "Pembayaran Rp5.000
+   ke PARKIR berhasil" (kunci berbeda) keduanya tertampung.
 2. **Ack tanpa memastikan simpanan.** Hasil simpan kotak masuk, log, dan id
    terproses diabaikan, lalu seluruh antrean di-ack. Kini kotak masuk dan log
    disimpan lebih dulu, id terproses sesudahnya, dan yang di-ack hanya

@@ -224,6 +224,7 @@ Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {
   'note': e.note,
   'categoryId': ?e.categoryId,
   'iconId': ?e.iconId,
+  'capturedAt': ?e.capturedAt?.toIso8601String(),
 };
 
 AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
@@ -237,4 +238,8 @@ AutoRecordedEntry _autoFromJson(Map<String, dynamic> j) => AutoRecordedEntry(
   note: j['note'] as String? ?? '',
   categoryId: j['categoryId'] as String?,
   iconId: j['iconId'] as String?,
+  capturedAt: switch (j['capturedAt']) {
+    final String at => DateTime.parse(at),
+    _ => null,
+  },
 );

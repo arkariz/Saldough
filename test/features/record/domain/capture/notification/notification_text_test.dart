@@ -1,9 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/features/record/domain/capture/language/indonesian.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_text.dart';
 
 void main() {
   final lexicon = indonesian.notification;
+
+  test('kata OTP sama dengan saringan native (TransactionNotificationListener.kt)', () {
+    final kotlin = File(
+      'android/app/src/main/kotlin/com/arkarizdev/tanukonomy/notificationcapture/TransactionNotificationListener.kt',
+    ).readAsStringSync();
+    final list = RegExp(r'OTP_WORDS = listOf\(([^)]*)\)').firstMatch(kotlin)!.group(1)!;
+    final words = [for (final m in RegExp('"([^"]+)"').allMatches(list)) m.group(1)!];
+    expect(words, NotificationText.otpWords);
+  });
 
   test('saldo, rekening tersamar, referensi, dan jam disamarkan; nominal transaksi tetap', () {
     const text = 'Pembayaran Rp25.000 dari rek ****1234 pukul 14.32 berhasil. Saldo Rp1.234.567. Ref 202610011432';

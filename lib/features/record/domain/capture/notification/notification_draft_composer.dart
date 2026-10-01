@@ -107,7 +107,14 @@ final class NotificationDraftComposer {
     // 2. Aturan notifikasi → Gemini bila ragu.
     final composed = _tidy(
       _withSourceWallet(
-        await composer.compose(evidence, wallets: otherWallets, categories: categories, currencyCode: currencyCode),
+        await composer.compose(
+          evidence,
+          wallets: otherWallets,
+          categories: categories,
+          currencyCode: currencyCode,
+          // Saldo, nomor rekening, dan nomor referensi tidak perlu ke cloud.
+          cloudText: masked,
+        ),
         source.walletId,
       ),
       source,

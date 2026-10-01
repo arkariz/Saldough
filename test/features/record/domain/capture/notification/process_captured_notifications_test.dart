@@ -1,10 +1,15 @@
 import 'dart:typed_data';
 
+import 'package:dependencies/dependencies.dart';
+import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/features/record/data/capture/notification/notification_capture_store_impl.dart';
+import 'package:saldough/features/record/domain/capture/notification/capture_inbox_entry.dart';
 import 'package:saldough/features/record/domain/capture/notification/captured_notification.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_capture_settings.dart';
+import 'package:saldough/features/record/domain/capture/notification/notification_capture_store.dart';
+import 'package:saldough/features/record/domain/capture/notification/notification_pattern.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_source.dart';
 import 'package:saldough/features/record/domain/capture/notification/process_captured_notifications.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -168,6 +173,33 @@ void main() {
     expect(await ledgerNow(), hasLength(1));
   });
 
+  test('simpan kotak masuk gagal → berhenti, tangkapan tidak di-ack (tidak hilang)', () async {
+    await enable(AutoRecordLevel.reviewAll);
+    gateway.queue = [notif('a', payment), notif('b', payment, at: DateTime(2026, 10, 1, 9))];
+    final failing = _FailingInboxStore(store);
+    ProcessCapturedNotifications withStore(NotificationCaptureStore s) => ProcessCapturedNotifications(
+      gateway: gateway,
+      store: s,
+      composer: notificationComposer(),
+      recordTransaction: recordTransaction,
+      walletRepository: wallets,
+      transactionRepository: ledger,
+      categories: () => notificationCategories,
+      currencyCode: () => 'IDR',
+      languageCode: () => 'id',
+      clock: () => now,
+    );
+    final result = await withStore(failing)();
+    expect(result.queued, isEmpty);
+    expect(gateway.acked, isEmpty);
+    expect((await store.loadProcessedIds()).getOrElse((_) => {}), isEmpty);
+
+    // Penyimpanan pulih: putaran berikutnya memproses keduanya.
+    failing.fail = false;
+    expect((await withStore(failing)()).queued, hasLength(2));
+    expect(gateway.acked, containsAll(['a', 'b']));
+  });
+
   test('OTP, sumber tidak terdaftar, dan kata kunci tidak cocok diabaikan tanpa disimpan', () async {
     await enable(
       AutoRecordLevel.whenComplete,
@@ -234,4 +266,43 @@ void main() {
     await processor()();
     expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
   });
+}
+
+/// [NotificationCaptureStore] yang gagal menyimpan kotak masuk selama [fail].
+final class _FailingInboxStore implements NotificationCaptureStore {
+  _FailingInboxStore(this._inner);
+
+  final NotificationCaptureStore _inner;
+  bool fail = true;
+
+  @override
+  Future<Either<Failure, Unit>> saveInbox(List<CaptureInboxEntry> entries) async =>
+      fail ? const Left(SystemFailure(code: FailureCode.unknown, message: 'disk penuh')) : _inner.saveInbox(entries);
+
+  @override
+  Future<Either<Failure, NotificationCaptureSettings>> loadSettings() => _inner.loadSettings();
+
+  @override
+  Future<Either<Failure, Unit>> saveSettings(NotificationCaptureSettings settings) => _inner.saveSettings(settings);
+
+  @override
+  Future<Either<Failure, List<NotificationPattern>>> loadPatterns() => _inner.loadPatterns();
+
+  @override
+  Future<Either<Failure, Unit>> savePatterns(List<NotificationPattern> patterns) => _inner.savePatterns(patterns);
+
+  @override
+  Future<Either<Failure, List<CaptureInboxEntry>>> loadInbox() => _inner.loadInbox();
+
+  @override
+  Future<Either<Failure, List<AutoRecordedEntry>>> loadAutoRecorded() => _inner.loadAutoRecorded();
+
+  @override
+  Future<Either<Failure, Unit>> saveAutoRecorded(List<AutoRecordedEntry> entries) => _inner.saveAutoRecorded(entries);
+
+  @override
+  Future<Either<Failure, Map<String, DateTime>>> loadProcessedIds() => _inner.loadProcessedIds();
+
+  @override
+  Future<Either<Failure, Unit>> saveProcessedIds(Map<String, DateTime> ids) => _inner.saveProcessedIds(ids);
 }

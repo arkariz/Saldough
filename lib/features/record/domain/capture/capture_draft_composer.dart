@@ -34,12 +34,15 @@ final class CaptureDraftComposer {
   final Duration cloudTimeout;
 
   /// Draf untuk [evidence] dengan [wallets] aktif, [categories], dan mata
-  /// uang [currencyCode].
+  /// uang [currencyCode]. [cloudText] menggantikan teks bukti yang dikirim ke
+  /// cloud (mis. notifikasi yang saldonya disamarkan, ADR-032 §10); kutipan
+  /// tetap divalidasi terhadap teks bukti asli.
   Future<RecordDraft> compose(
     CaptureEvidence evidence, {
     required List<Wallet> wallets,
     required List<Category> categories,
     required String currencyCode,
+    String? cloudText,
   }) async {
     final language = CaptureLanguages.of(evidence.languageCode);
     final resolver = CaptureDraftResolver(
@@ -71,7 +74,16 @@ final class CaptureDraftComposer {
 
     final cloud = cloudInterpreter;
     if (cloud != null) {
-      final interpreted = await _interpret(cloud, evidence, context, timeout: cloudTimeout);
+      final cloudEvidence = cloudText == null
+          ? evidence
+          : CaptureEvidence(
+              source: evidence.source,
+              text: cloudText,
+              capturedAt: evidence.capturedAt,
+              languageCode: evidence.languageCode,
+              origin: evidence.origin,
+            );
+      final interpreted = await _interpret(cloud, cloudEvidence, context, timeout: cloudTimeout);
       if (interpreted != null) return resolver.resolve(evidence, interpreted);
     }
 

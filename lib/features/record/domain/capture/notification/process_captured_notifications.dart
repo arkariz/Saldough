@@ -41,6 +41,9 @@ final class CaptureProcessResult {
 ///   putaran lagi, bukan putaran paralel.
 /// - Idempoten: id yang sudah diproses dicatat (7 hari) dan disimpan sesudah
 ///   setiap tangkapan, jadi crash sebelum *ack* tidak mencatat dua kali.
+/// - Tidak pernah kehilangan tangkapan: yang di-*ack* hanya tangkapan yang
+///   simpanannya berhasil; galat simpan menghentikan putaran dan sisanya
+///   tetap di antrean native (ADR-032 §10).
 /// - Satu jalur tulis: [RecordTransaction], sama dengan CATAT.
 final class ProcessCapturedNotifications {
   /// Membuat [ProcessCapturedNotifications].
@@ -160,13 +163,16 @@ final class ProcessCapturedNotifications {
     final handled = <String>[];
 
     for (final notification in [...pending]..sort((a, b) => a.postedAt.compareTo(b.postedAt))) {
-      handled.add(notification.id);
-      if (processed.containsKey(notification.id)) continue;
+      if (processed.containsKey(notification.id)) {
+        handled.add(notification.id);
+        continue;
+      }
       processed[notification.id] = now;
       final source = settings.activeSource(notification.packageName);
       final text = notification.text;
       if (source == null || NotificationText.looksLikeOtp(text) || !source.matchesKeywords(text)) {
-        await _save(processed, inbox, auto);
+        if (!await _save(processed, inbox, auto)) break;
+        handled.add(notification.id);
         continue;
       }
 
@@ -195,9 +201,11 @@ final class ProcessCapturedNotifications {
         final entry = await _record(draft, notification, source.appLabel, now);
         if (entry != null) {
           auto.insert(0, entry);
+          // Sudah di buku besar walau lognya gagal tersimpan.
           recorded.add(entry);
           ledgers.remove(_monthKey(date));
-          await _save(processed, inbox, auto);
+          if (!await _save(processed, inbox, auto)) break;
+          handled.add(notification.id);
           continue;
         }
       }
@@ -212,8 +220,9 @@ final class ProcessCapturedNotifications {
         iconId: iconId,
       );
       inbox.insert(0, entry);
+      if (!await _save(processed, inbox, auto)) break;
       queued.add(entry);
-      await _save(processed, inbox, auto);
+      handled.add(notification.id);
     }
 
     await gateway.acknowledge(handled);
@@ -247,6 +256,7 @@ final class ProcessCapturedNotifications {
       note: transaction.note,
       categoryId: transaction.categoryId,
       iconId: draft.sourceIconId,
+      capturedAt: notification.postedAt,
     );
   }
 
@@ -262,17 +272,21 @@ final class ProcessCapturedNotifications {
     if (amount == null) return false;
     bool near(DateTime at) => at.difference(notification.postedAt).abs() <= const Duration(minutes: 10);
     return inbox.any((e) => e.id != notification.id && e.draft.amountSen == amount && near(e.capturedAt)) ||
-        auto.any((e) => e.captureId != notification.id && e.amountSen == amount && near(e.transactionDate));
+        auto.any(
+          (e) => e.captureId != notification.id && e.amountSen == amount && near(e.capturedAt ?? e.transactionDate),
+        );
   }
 
-  Future<void> _save(
+  /// `true` bila ketiganya tersimpan. Kotak masuk dan log lebih dulu: id
+  /// terproses yang tersimpan tanpa itemnya berarti tangkapan hilang.
+  Future<bool> _save(
     Map<String, DateTime> processed,
     List<CaptureInboxEntry> inbox,
     List<AutoRecordedEntry> auto,
   ) async {
-    await store.saveProcessedIds(processed);
-    await store.saveInbox(inbox);
-    await store.saveAutoRecorded(auto);
+    if ((await store.saveInbox(inbox)).isLeft()) return false;
+    if ((await store.saveAutoRecorded(auto)).isLeft()) return false;
+    return (await store.saveProcessedIds(processed)).isRight();
   }
 
   static String _monthKey(DateTime d) => '${d.year}-${d.month}';

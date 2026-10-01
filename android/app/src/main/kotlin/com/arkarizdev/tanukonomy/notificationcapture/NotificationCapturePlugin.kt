@@ -55,7 +55,6 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
                 }
             })
         }
-        instance = this
     }
 
     fun detach() {
@@ -64,7 +63,6 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
         tapEvents?.setStreamHandler(null)
         capturedSink = null
         tapSink = null
-        if (instance === this) instance = null
         io.shutdown()
     }
 
@@ -94,7 +92,12 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
                 configure(call)
                 result.success(null)
             }
-            "pending" -> result.success(CaptureQueue.pending(context).map { it.toMap() })
+            "pending" -> io.execute {
+                val items = try { CaptureQueue.pendingMaps(context) } catch (e: Exception) { null }
+                main.post {
+                    if (items == null) result.error("pending", "Gagal membaca antrean", null) else result.success(items)
+                }
+            }
             "acknowledge" -> {
                 CaptureQueue.acknowledge(context, call.argument<List<String>>("ids").orEmpty())
                 result.success(null)
@@ -192,7 +195,6 @@ class NotificationCapturePlugin(private val activity: Activity) : MethodChannel.
         const val CHANNEL = "tanukonomy/notification_capture"
         const val PERMISSION_REQUEST = 4721
 
-        @Volatile private var instance: NotificationCapturePlugin? = null
         @Volatile private var capturedSink: EventChannel.EventSink? = null
         @Volatile private var tapSink: EventChannel.EventSink? = null
 

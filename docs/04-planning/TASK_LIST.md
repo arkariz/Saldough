@@ -2034,6 +2034,9 @@ Tabel ini memastikan tidak ada kebutuhan di
 | NFR-UX-003 | T-2.2, T-3.5 |
 | NFR-UX-004 | T-1.9, T-4.8, T-5.8 |
 | NFR-UX-005 | T-2.4, T-2.11, T-5.5 |
+| FR-CAT-001 | T-11.1 |
+| FR-LANG-001 | T-11.5 (pilihan bahasa), T-11.14, T-11.16 |
+| FR-VOI-001 | T-11.2–T-11.5, T-11.11–T-11.13; jalur cloud T-11.7 |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

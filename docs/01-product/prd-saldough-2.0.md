@@ -604,6 +604,47 @@ disimpan sebagai catatan sejarah saja.
 - [ ] Menyembunyikan kartu ringkasan yang belum punya isi, alih-alih
       menampilkan angka nol berderet.
 
+### 7.7 Kategori, bahasa, dan Catat pakai suara (sesudah MVP, ditambahkan 1 Okt 2026)
+
+Kebutuhan ini lahir di Fase 11. Keputusan rincinya di ADR-026 sampai ADR-029;
+FR di bawah merangkum perilaku yang dijanjikan ke pengguna.
+
+**FR-CAT-001 — Kategori bawaan yang bisa diubah**
+
+- [x] Menyediakan daftar kategori bawaan per jenis (pengeluaran, pemasukan);
+      transfer tidak berkategori (ADR-026 §3.2–3.3).
+- [x] Pengguna bisa menambah, mengganti nama, mengarsipkan, dan memulihkan
+      kategori dari layar Kategori di Akun, dan menambah kategori langsung dari
+      CATAT tanpa membuat transaksi.
+- [x] Kategori terarsip tidak ditawarkan di pemilih, tetapi namanya tetap
+      tampil pada transaksi lama.
+- [x] Label kategori lama dimigrasi tanpa kehilangan transaksi.
+
+**FR-LANG-001 — Bahasa aplikasi dipilih pengguna**
+
+- [x] Pengguna memilih Bahasa Indonesia atau Inggris di langkah pertama
+      onboarding, dan bisa menggantinya di Akun (ADR-028).
+- [x] Satu pilihan mengatur teks aplikasi dan bahasa pengenal ucapan.
+- [x] Nama kategori bawaan yang belum diganti pengguna ikut berganti bahasa;
+      nama yang sudah diganti pengguna tidak disentuh.
+
+**FR-VOI-001 — Catat pakai suara**
+
+- [ ] Menyediakan tombol suara yang selalu terlihat di samping CATAT; rekaman
+      baru dimulai setelah pengguna menekan tombol rekam, dengan tanda yang
+      jelas selama merekam.
+- [ ] Satu ucapan menghasilkan draf yang membuka formulir CATAT terisi;
+      suara **tidak pernah menyimpan transaksi sendiri** (aturan 8, ADR-027
+      §3.4).
+- [ ] Nominal hanya diambil dari angka yang benar-benar diucapkan; dompet dan
+      kategori hanya dipilih dari yang sudah ada. Bagian yang ragu dikosongkan
+      dan ditandai, bukan ditebak.
+- [ ] Bila pengenal ucapan gagal (izin ditolak, tidak tersedia, butuh
+      internet), pengguna diberi tahu alasannya dan selalu bisa beralih ke
+      "Ketik saja".
+- [ ] Pencatatan inti tetap penuh tanpa internet; hanya fitur suara yang boleh
+      bergantung pada koneksi (NFR-REL-001, ADR-027 §3.5 butir 7).
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

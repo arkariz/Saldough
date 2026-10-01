@@ -352,6 +352,15 @@ void main() {
       expect((await languageRepository.load()).getOrElse((_) => null), AppLocale.en);
     });
 
+    testWidgets('lanjut tanpa mengetuk pilihan tetap menyimpan bahasa bawaan (B-17)', (tester) async {
+      expect((await languageRepository.load()).getOrElse((_) => null), isNull);
+
+      await pumpRouter(tester);
+
+      expect((await languageRepository.load()).getOrElse((_) => null), AppLocale.id);
+      expect(find.text(t.onboarding.page1Title), findsOneWidget);
+    });
+
     Future<TutorialProgress> progress() async => (await repository.load()).getOrElse((_) => TutorialProgress.empty);
 
     testWidgets('Lewati, pilih mata uang, lalu tersimpan, aktif, dan onboarding selesai', (tester) async {

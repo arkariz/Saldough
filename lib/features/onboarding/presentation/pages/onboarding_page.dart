@@ -87,6 +87,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
     await widget.onLanguageSelected?.call(locale);
   }
 
+  /// Lanjut dari langkah bahasa. Pilihan disimpan lagi di sini: pengguna yang
+  /// langsung menekan lanjut tanpa mengetuk pilihan bawaan juga sudah memilih,
+  /// jadi lembar bahasa ucapan (ADR-028 §3.8) tidak bertanya lagi (B-17).
+  Future<void> _confirmLanguage() async {
+    await widget.onLanguageSelected?.call(_language);
+    if (mounted) setState(() => _choosingLanguage = false);
+  }
+
   static const int _count = onboardingSlideCount;
 
   bool get _isLast => _page == _count - 1;
@@ -244,7 +252,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         child: AppButton(
           key: const ValueKey('onboarding-language-confirm'),
           label: t.onboarding.languageConfirm,
-          onPressed: () => setState(() => _choosingLanguage = false),
+          onPressed: _confirmLanguage,
         ),
       );
     }

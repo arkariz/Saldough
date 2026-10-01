@@ -1,0 +1,110 @@
+# Filter RTK proyek Saldough (https://github.com/rtk-ai/rtk, src/filters/README.md).
+# Hook `rtk hook claude` menulis ulang perintah yang cocok `match_command` di sini
+# menjadi `rtk <perintah>`. Kepercayaan berbasis hash isi berkas: SETIAP kali
+# berkas ini diubah, jalankan `rtk trust -y` lalu `rtk verify` -- kalau tidak,
+# filter diam-diam diabaikan.
+schema_version = 1
+
+[filters.flutter-test]
+description = "flutter test: buang progres dan log pub get, simpan kegagalan dan ringkasan"
+match_command = "^flutter\\s+test\\b"
+strip_ansi = true
+filter_stderr = true
+replace = [
+  { pattern = "^\\d+:\\d+ (\\+\\d+[^:]*): (All tests passed!|Some tests failed\\.)$", replacement = "RESULT $1: $2" },
+  { pattern = "^\\d+:\\d+ \\+\\d+[^:]*: (.*\\[E\\])$", replacement = "FAIL $1" },
+]
+strip_lines_matching = [
+  "^\\d+:\\d+ \\+\\d+",
+  "^\\s*$",
+  "^Resolving dependencies",
+  "^Downloading packages",
+  "^Got dependencies",
+  "^\\s+\\S+ \\S+ \\(\\S+ available\\)$",
+  "packages have newer versions incompatible",
+  "^Try `flutter pub outdated`",
+]
+max_lines = 300
+on_empty = "flutter test: tidak ada keluaran"
+
+[[tests.flutter-test]]
+name = "lulus semua diringkas jadi satu baris"
+input = "Resolving dependencies...\nDownloading packages...\n  analyzer 12.1.0 (14.4.0 available)\nGot dependencies!\n39 packages have newer versions incompatible with dependency constraints.\nTry `flutter pub outdated` for more information.\n00:00 +0: loading /x/a_test.dart\n00:00 +0: tes satu\n00:01 +1: tes dua\n00:01 +2: All tests passed!"
+expected = "RESULT +2: All tests passed!"
+
+[[tests.flutter-test]]
+name = "kegagalan dan rinciannya tetap"
+input = "00:00 +0: loading /x/a_test.dart\n00:01 +3: grup tes gagal [E]\n  Expected: <1>\n    Actual: <2>\n\n00:01 +3 -1: tes berikut\n00:02 +5 -1: Some tests failed."
+expected = "FAIL grup tes gagal [E]\n  Expected: <1>\n    Actual: <2>\nRESULT +5 -1: Some tests failed."
+
+[filters.flutter-analyze]
+description = "flutter analyze: buang log pub get dan baris Analyzing"
+match_command = "^flutter\\s+analyze\\b"
+strip_ansi = true
+filter_stderr = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^Analyzing ",
+  "^Resolving dependencies",
+  "^Downloading packages",
+  "^Got dependencies",
+  "^\\s+\\S+ \\S+ \\(\\S+ available\\)$",
+  "packages have newer versions incompatible",
+  "^Try `flutter pub outdated`",
+]
+max_lines = 200
+on_empty = "flutter analyze: tidak ada keluaran"
+
+[[tests.flutter-analyze]]
+name = "bersih"
+input = "Resolving dependencies...\n  analyzer 12.1.0 (14.4.0 available)\nAnalyzing Saldough...      \nNo issues found! (ran in 24.5s)"
+expected = "No issues found! (ran in 24.5s)"
+
+[[tests.flutter-analyze]]
+name = "temuan tetap"
+input = "Analyzing Saldough...\n\n   info • Unnecessary unawaited • test/a_test.dart:27:5 • unnecessary_unawaited\n\n1 issue found. (ran in 5.0s)"
+expected = "   info • Unnecessary unawaited • test/a_test.dart:27:5 • unnecessary_unawaited\n1 issue found. (ran in 5.0s)"
+
+[filters.flutter-pub-get]
+description = "flutter/dart pub get: buang daftar versi yang lebih baru"
+match_command = "^(flutter|dart)\\s+pub\\s+(get|upgrade)\\b"
+strip_ansi = true
+filter_stderr = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^Resolving dependencies",
+  "^Downloading packages",
+  "^\\s+\\S+ \\S+ \\(\\S+ available\\)$",
+  "^Try `flutter pub outdated`",
+]
+max_lines = 80
+on_empty = "pub get: ok"
+
+[[tests.flutter-pub-get]]
+name = "hanya ringkasan"
+input = "Resolving dependencies...\nDownloading packages...\n  analyzer 12.1.0 (14.4.0 available)\nGot dependencies!\nTry `flutter pub outdated` for more information."
+expected = "Got dependencies!"
+
+[filters.flutter-build]
+description = "flutter build: buang log pub get dan tree-shaking font"
+match_command = "^flutter\\s+build\\b"
+strip_ansi = true
+filter_stderr = true
+strip_lines_matching = [
+  "^\\s*$",
+  "^Font asset .* was tree-shaken",
+  "^Tree-shaking can be disabled",
+  "^Resolving dependencies",
+  "^Downloading packages",
+  "^Got dependencies",
+  "^\\s+\\S+ \\S+ \\(\\S+ available\\)$",
+  "packages have newer versions incompatible",
+  "^Try `flutter pub outdated`",
+]
+max_lines = 120
+on_empty = "flutter build: tidak ada keluaran"
+
+[[tests.flutter-build]]
+name = "hasil build tetap"
+input = "Resolving dependencies...\nFont asset \"MaterialIcons-Regular.otf\" was tree-shaken, reducing it from 1645184 to 4952 bytes (99.7% reduction). Tree-shaking can be disabled by providing the --no-tree-shake-icons flag when building your app.\nRunning Gradle task 'bundleRelease'...                            42.1s\n✓ Built build/app/outputs/bundle/release/app-release.aab (45.2MB)"
+expected = "Running Gradle task 'bundleRelease'...                            42.1s\n✓ Built build/app/outputs/bundle/release/app-release.aab (45.2MB)"

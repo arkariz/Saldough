@@ -100,11 +100,13 @@ lib/features/notification_capture/
 │   ├── services/   notification_text, notification_template, auto_record_policy,
 │   │               built_in_notification_patterns, notification_draft_composer,
 │   │               transaction_from_draft, capture_inbox_changes
-│   ├── ports/      notification_capture_gateway, notification_capture_store
+│   ├── repositories/ notification_capture_gateway, notification_capture_store
+│   │               (port; nama folder mengikuti fitur lain)
 │   └── usecases/   process_captured_notifications, capture_inbox_actions
 ├── data/           method_channel_notification_capture_gateway,
 │                   notification_capture_store_impl, notification_rule_interpreter
-├── presentation/   bloc/, pages/, widgets/, host/, navigation/
+├── presentation/   bloc/, pages/, widgets/, navigation/,
+│                   host/ (host shell + sinkron setelan ke native)
 └── di/             notification_capture_module, notification_capture_scope
 ```
 

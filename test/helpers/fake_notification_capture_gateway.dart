@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:saldough/features/record/domain/capture/notification/captured_notification.dart';
-import 'package:saldough/features/record/domain/capture/notification/notification_capture_gateway.dart';
-import 'package:saldough/features/record/domain/capture/notification/notification_source.dart';
+import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
+import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 
 /// [NotificationCaptureGateway] palsu untuk uji Catat dari notifikasi.
 final class FakeNotificationCaptureGateway implements NotificationCaptureGateway {

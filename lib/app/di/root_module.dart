@@ -23,9 +23,10 @@ import 'package:saldough/features/freelance/domain/repositories/freelance_reposi
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_module.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
+import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
-import 'package:saldough/features/record/di/notification_capture_module.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_module.dart';
@@ -52,6 +53,7 @@ abstract final class RootModule {
     AccountRouteModule(),
     BudgetRouteModule(),
     FreelanceRouteModule(),
+    NotificationCaptureRouteModule(),
     RecordRouteModule(),
     TransactionRouteModule(),
     WalletRouteModule(),

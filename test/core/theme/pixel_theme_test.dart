@@ -20,6 +20,20 @@ void main() {
       );
     });
 
+    test('dialog dan pemilih tanggal berlatar hangat, bersudut pixelSm (B-18)', () {
+      for (final (theme, colors) in [
+        (PixelTheme.light, AppColorsExtension.pixelLight),
+        (PixelTheme.dark, AppColorsExtension.pixelDark),
+      ]) {
+        expect(theme.dialogTheme.backgroundColor, colors.background);
+        expect(theme.datePickerTheme.backgroundColor, colors.background);
+        final shape = theme.dialogTheme.shape! as RoundedRectangleBorder;
+        expect(shape.borderRadius, AppRadius.pixelSmAll);
+        expect(shape.side.color, colors.edge);
+        expect(theme.datePickerTheme.shape, shape);
+      }
+    });
+
     test(
       'dipasang sebagai theme/darkTheme MaterialApp, bukan pembungkus per layar',
       () {

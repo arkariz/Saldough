@@ -105,9 +105,31 @@ abstract final class PixelTheme {
         ),
       ),
       dividerTheme: DividerThemeData(color: colors.divider, thickness: 1, space: 1),
+      // Dialog dan pemilih tanggal: permukaan hangat `background`, sudut
+      // `pixelSm`, dan garis tepi -- tanpa ini keduanya memakai bentuk bulat
+      // besar Material dan, di mode gelap, hitam dingin bawaan (B-18).
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.background,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: _panelShape(colors),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: colors.background,
+        surfaceTintColor: Colors.transparent,
+        headerForegroundColor: colors.textPrimary,
+        elevation: 0,
+        shape: _panelShape(colors),
+        dividerColor: colors.divider,
+      ),
       extensions: [colors],
     );
   }
+
+  static ShapeBorder _panelShape(AppColorsExtension colors) => RoundedRectangleBorder(
+    borderRadius: AppRadius.pixelSmAll,
+    side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+  );
 
   // Dibangun slot per slot supaya tiap peran huruf hanya mengisi slotnya
   // sendiri, tidak menimpa slot yang sudah diisi huruf lain.

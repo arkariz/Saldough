@@ -29,6 +29,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
 | **Dokumen Saldough 1.0** | `docs/99-archive/` |
+| **Email rilis untuk penguji** | Skill `release-email` (`.claude/skills/release-email/`) |
 
 ## Status
 

@@ -72,7 +72,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 21 | 12 | Berjalan -- M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 12 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; temuan T-11.22–11.24), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
@@ -1735,6 +1735,50 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       `settings/language`).
 - [ ] **T-11.9** Benchmark lengkap: dataset §10 lewat aturan vs aturan+cloud,
       transkrip suara nyata di perangkat, laju panggilan cloud, latensi.
+      ⚠ Sebagian (1 Okt 2026): bagian teks selesai, transkrip suara nyata
+      belum. Dataset bersama `test/shared/capture/benchmark/` (52 kasus
+      aturan id/en yang sudah ada + 35 kasus sulit baru: slang, susunan
+      bebas, "narik tunai", "dibayarin klien"); benchmark perangkat
+      `integration_test/capture_cloud_benchmark_test.dart` (aturan, kaskade
+      seperti aplikasi, dan Gemini untuk semua kasus). Hasil di HP Xiaomi
+      22021211RG, `gemini-3.5-flash-lite`, ringkasannya di
+      VOICE_INPUT_RESEARCH §10.1: kasus aturan id 100% / kaskade 95% /
+      Gemini 86% benar semua; kasus sulit id 73% / 73% / 93%, en 40% / 60% /
+      100%. Kaskade hanya memanggil Gemini 14 dari 87 kasus dan **tidak
+      sekali pun** di 30 kasus sulit id, karena aturan yakin walau salah
+      jenis. Gemini: 87/87 berhasil, p50 1,56 dtk, p95 1,84 dtk, maks 2,1 dtk
+      (jauh di bawah batas 5 dtk). Temuan jadi T-11.22–11.24.
+      ⚠ `flutter test` di perangkat **meng-uninstall aplikasi** di akhir
+      putaran (data lokal hilang, token debug App Check berganti): pakai HP
+      uji atau emulator. Token debug harus didaftarkan untuk perangkat itu;
+      `firebase_ai` selalu mengirim token App Check bila pluginnya terpasang,
+      jadi token yang tidak sah ditolak walau penegakan mati.
+- [ ] **T-11.22** Gerbang kaskade: aturan yang yakin tetapi salah jenis
+      tidak pernah sampai ke Gemini (temuan T-11.9). "barusan dibayarin klien
+      … tiga juta setengah", "hadiah ulang tahun dari tante", "jual sepatu
+      bekas", "narik tunai dari BCA", "gopay aku isi … pakai BCA", "moved 1
+      million from BCA to GoPay" terbaca pengeluaran dengan yakin. Pilihan:
+      jenis yang hanya hasil bawaan (tanpa kata arah) dianggap ragu, atau
+      kategori kosong ikut membuat ragu. Butuh keputusan pemilik soal biaya
+      panggilan (KT baru bila perlu).
+      Verifikasi: benchmark T-11.9, kasus sulit kaskade mendekati Gemini;
+      kasus aturan tetap 100%.
+      Di luar PRD: ketepatan Catat Cerdas (ADR-027/029).
+- [ ] **T-11.23** Gemini tidak boleh menghapus masalah yang benar dari
+      aturan (temuan T-11.9): "kopi 25 ribu roti 15 ribu" dan "coffee 25
+      thousand and bread 15 thousand" punya `amountMultiple` di aturan, tetapi
+      kaskade mengganti draf dengan Rp25.000 tanpa peringatan; "dapat 10
+      dolar" mendapat kategori karangan. Masalah `amountMultiple`,
+      `amountAmbiguous`, dan `currencyUnsupported` dari aturan dibawa ke draf
+      cloud (atau cloud tidak dipanggil untuknya).
+      Verifikasi: uji penyusun draf dengan cloud palsu; benchmark kasus aturan
+      kaskade kembali 100%.
+      Di luar PRD: ketepatan Catat Cerdas.
+- [ ] **T-11.24** "tiga juta setengah" terbaca Rp3.000.000, bukan
+      Rp3.500.000, di aturan maupun lewat kutipan Gemini (`SpokenAmountParser`;
+      temuan T-11.9). "satu setengah juta" sudah benar.
+      Verifikasi: uji parser + kasus benchmark.
+      Di luar PRD: ketepatan Catat Cerdas.
 - [x] **T-11.11** Paket bahasa Catat Cerdas (30 Sep 2026, tinjauan pemilik;
       [ADR-029](../02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) §3.1).
       Kosakata Indonesia tertanam di interpreter, resolver, dan

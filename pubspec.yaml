@@ -90,6 +90,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   injectable_generator: any
+  integration_test:
+    sdk: flutter
   json_serializable: any
   linter:
     git:

@@ -663,6 +663,40 @@ Perangkat uji minimum: 1 Android menengah RAM 4–6 GB, 1 Android flagship,
 Ambang keputusan [E, usulan]: bila parser aturan ≥ 90% amount & type accuracy dan
 LLM menaikkan overall accuracy < 10 poin, **tunda LLM**.
 
+### 10.1 Hasil benchmark teks (T-11.9, 1 Okt 2026)
+
+HP Xiaomi 22021211RG, `gemini-3.5-flash-lite` lewat Firebase AI Logic,
+`integration_test/capture_cloud_benchmark_test.dart`. "Kaskade" = jalur
+aplikasi (aturan, Gemini hanya bila draf aturan ragu, batas 5 dtk);
+"Gemini" = Gemini untuk setiap kasus, tetap lewat resolver. Persentase =
+kasus yang semua field-nya benar (jenis, nominal, dompet, tujuan,
+kategori) tanpa edit.
+
+| Kumpulan | Kasus | Aturan | Kaskade (Gemini terpanggil) | Gemini |
+|---|---|---|---|---|
+| Aturan id (§10 + regresi) | 43 | 100% | 95% (12×) | 86% |
+| Aturan en | 9 | 100% | 89% (1×) | 67% |
+| Sulit id (slang, susunan bebas) | 30 | 73% | 73% (0×) | 93% |
+| Sulit en | 5 | 40% | 60% (1×) | 100% |
+
+Gemini: 87/87 panggilan berhasil; latensi p50 1,56 dtk, p95 1,84 dtk, maks
+2,1 dtk.
+
+Kesimpulan:
+
+1. Ambang §10 terpenuhi untuk aturan (≥ 90% nominal dan jenis pada dataset
+   dasar), tetapi Gemini menaikkan ketepatan kasus sulit 20–60 poin, jauh
+   di atas ambang 10 poin. **Gemini dipertahankan.**
+2. Keuntungan itu **belum sampai ke pengguna**: kaskade tidak memanggil
+   Gemini di kasus sulit karena aturan yakin walau salah jenis (T-11.22).
+3. Di kasus yang aturan benar, Gemini lebih lemah: dompet tujuan pemasukan
+   ("masuk ke GoPay") sering terlewat, dan kategori lebih bebas. Jalur
+   "aturan dulu" tetap benar.
+4. Kaskade menghapus peringatan aturan yang benar (dua nominal, mata uang
+   asing): T-11.23.
+5. "tiga juta setengah" salah di parser (T-11.24); slang "goceng"/"ceban"
+   ternyata sudah terbaca.
+
 ---
 
 ## 11. Cakupan MVP

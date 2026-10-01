@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 1 Oktober 2026 (901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -74,7 +74,7 @@ Terakhir diperbarui: 1 Oktober 2026 (901 uji lulus sesudah M4 berjalan; sebelumn
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 21 | 12 | Berjalan -- M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
-| 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 5 | Berjalan -- dimulai 1 Okt 2026 dari audit fitur `record`; T-13.1–13.5 selesai (perbaikan penangkap, `shared/capture`, fitur `notification_capture` dan `voice_capture`, perapian notifikasi); sisa penutup dokumen T-13.6 |
+| 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2151,9 +2151,18 @@ dan seluruh uji lulus.
       `loadActivePatterns`/`loadActiveWallets` di
       `services/active_capture_inputs.dart` dipakai pemroses dan tafsir
       ulang. 911 uji lulus.
-- [ ] **T-13.6** Penutup: ARCHITECTURE_OVERVIEW, AGENT_CONTEXT, CLAUDE.md,
+- [x] **T-13.6** Penutup: ARCHITECTURE_OVERVIEW, AGENT_CONTEXT, CLAUDE.md,
       rujukan kode di ADR-027/029/032; baseline baris dan uji.
       Di luar PRD: kualitas arsitektur.
+      Hasil (1 Okt 2026): ARCHITECTURE_OVERVIEW (pohon `lib/`, letak mesin
+      tafsir, alur transparan + `FlowRunner`, shell), glosarium
+      (`VoiceCaptureRouteKeys.capture`), rujukan kode ADR-027/029/032, dan
+      CLAUDE.md (status Fase 13, batas fitur Catat Cerdas, tag
+      `0.3.0+4-patch-3`). AGENT_CONTEXT tidak menyebut letak berkas `record`,
+      jadi tidak berubah. Riwayat lama (hasil tugas Fase 11/12, ADR-030 §2,
+      VOICE_INPUT_RESEARCH) sengaja dibiarkan sebagai catatan sejarah.
+      Baseline: 39.746 baris Dart di `lib/` tanpa `.g.dart`, 95 berkas uji,
+      911 uji lulus, `flutter analyze` tanpa error/peringatan.
 
 ## Antrean (belum dijadwalkan)
 

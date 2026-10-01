@@ -169,7 +169,8 @@ dirawat.
 - ADR-026
 
 ### Rujukan kode
-- `lib/features/record/domain/capture/`
+- `lib/shared/capture/` (dipindah dari `features/record/domain/capture/`,
+  ADR-033); transkriptor dan lembar suara di `lib/features/voice_capture/`
 - `lib/core/utils/formatters/spoken_amount_parser.dart`
 
 ---

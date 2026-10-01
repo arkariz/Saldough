@@ -66,7 +66,7 @@ Istilah di bagian ini menjelaskan alur pembuatan transaksi.
 | Nama Indonesia | Nama kode | Arti |
 |---|---|---|
 | CATAT | `RecordRouteKeys.sheet` | FAB utama di kanan bawah shell (bukan tab navigasi) yang membuka formulir pencatatan; jenisnya (keluar, masuk, transfer) dipilih lewat segmen di atas formulir. Satu-satunya jalur kanonik pembuatan transaksi manual. |
-| Catat pakai suara | `RecordRouteKeys.voice` | FAB kecil di atas CATAT. Satu ucapan menjadi draf yang membuka formulir CATAT terisi; tidak pernah menyimpan sendiri (ADR-027). |
+| Catat pakai suara | `VoiceCaptureRouteKeys.capture` | FAB kecil di atas CATAT. Satu ucapan menjadi draf yang membuka formulir CATAT terisi; tidak pernah menyimpan sendiri (ADR-027). |
 | Catat Pemasukan | `RecordChoice.income` | Membuat satu `IncomeTransaction`. |
 | Catat Pengeluaran | `RecordChoice.expense` | Membuat satu `ExpenseTransaction`. |
 | Catat Transfer | `RecordChoice.transfer` | Membuat satu `TransferTransaction`. |

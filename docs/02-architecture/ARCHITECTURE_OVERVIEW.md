@@ -121,11 +121,14 @@ saldough/
 │   │   ├── transaction/                  # + LedgerChanges, transaction_query, transaction_presentation.dart
 │   │   ├── category/                     # ADR-026; category_presentation.dart
 │   │   ├── budget_catalog/               # port baca BudgetItemCatalog (ADR-030 §3.5)
+│   │   ├── capture/                      # mesin tafsir Catat Cerdas: bukti, interpreter, draf (ADR-027/029/033)
 │   │   └── auth/                         # identitas opsional (ADR-023/024); auth_presentation.dart
 │   └── features/                         # graf milik satu fitur
 │       ├── home/                         # ringkasan; domain/ hanya berisi port
 │       ├── wallet/  transaction/  budget/  freelance/  account/  onboarding/
-│       └── record/                       # CATAT — satu-satunya penulis transaksi manual; capture/ (ADR-027/029)
+│       ├── record/                       # CATAT — satu-satunya formulir pencatatan transaksi
+│       ├── voice_capture/                # catat pakai suara → CATAT berisi draf (ADR-027, ADR-033)
+│       └── notification_capture/         # catat dari notifikasi, Android (ADR-032, ADR-033)
 └── test/                                 # cermin lib/, + architecture/ dan helpers/
 ```
 
@@ -158,8 +161,14 @@ miliknya (`BudgetOverviewSource`, `FreelanceOverviewSource`), yang
 implementasinya ada di `data/adapters/` fitur penyedia dan dikawat di
 `RootModule`. Port **baca** yang dipakai ≥2 fitur tinggal di `shared/`
 (`shared/budget_catalog/`, dipakai `record` dan `transaction`); port **tulis**
-tetap milik fitur konsumen. `record` punya `domain/capture/` dan
-`data/capture/` untuk Catat Cerdas (ADR-027, ADR-029).
+tetap milik fitur konsumen. Mesin tafsir Catat Cerdas (bukti teks,
+interpreter aturan dan Gemini, resolver, penyusun draf, paket bahasa) tinggal
+di `shared/capture/` karena dipakai `record` (`RecordDraft`), `voice_capture`,
+dan `notification_capture` (ADR-033). Kedua fitur penangkap membuka CATAT
+lewat `RecordRouteKeys.sheet` dengan draf; `notification_capture` juga
+mencatat langsung lewat `RecordTransaction` pada tingkat otomatis (ADR-032
+§3.5). `NotificationCaptureModule` sengaja didaftarkan di kontainer akar:
+pemrosesannya dipicu shell dan siklus hidup aplikasi, bukan satu layar.
 
 `shared/<module>/` disusun module-first — `domain/` + `data/` di balik barrel
 `<module>.dart` — dan diimpor dari luar hanya lewat barrel. Tampilan entitas
@@ -566,9 +575,12 @@ didaftarkan ke `go_router`, lalu mendorongnya ke Navigator akar. Di Saldough
 `RouteTransition.slideFromBottom` berarti **lembar modal** setinggi layar
 (tema pemanggil ikut), dan `RouteTransition.none` berarti **rute alur
 transparan**: tak terlihat, memegang scope fiturnya, membuka lembar/dialognya
-sendiri, lalu menutup diri dengan hasilnya. CATAT, sunting transaksi, dan catat
-pakai suara (`RecordRouteKeys.sheet/edit/voice`) adalah alur, supaya
-`RecordBloc` hidup sampai penyimpanan dan snackbarnya selesai.
+sendiri, lalu menutup diri dengan hasilnya (`FlowRunner`,
+`core/foundation/navigation/`). CATAT dan sunting transaksi
+(`RecordRouteKeys.sheet/edit`) adalah alur, supaya `RecordBloc` hidup sampai
+penyimpanan dan snackbarnya selesai; catat pakai suara
+(`VoiceCaptureRouteKeys.capture`) adalah alur yang berlanjut ke
+`RecordRouteKeys.sheet`.
 
 Rute yang menulis lalu menutup diri menunggu efek hasilnya dulu (blocnya ikut
 tertutup bersama rute). Layar anak di dalam satu alur fitur yang berbagi bloc
@@ -581,7 +593,9 @@ layar awal aplikasi. Satu `GoRoute` mentah didaftarkan langsung di
 `AppRouteRegistry.build`, karena bukan milik satu fitur. Tiap tab dipasang
 lewat `ScopeWidget` fiturnya di dalam `IndexedStack` (bukan
 `StatefulShellRoute` — catatan revisi ADR-0004 §8). Tombol mengambang membuka
-rute alur `record`; shell tidak memasang `RecordBloc`.
+rute alur `record` dan `voice_capture`; shell tidak memasang `RecordBloc`.
+Shell juga memasang host dan banner `notification_capture` (pemicu
+pemrosesan dan kartu kotak masuk).
 
 ### Sinkronisasi antarfitur
 

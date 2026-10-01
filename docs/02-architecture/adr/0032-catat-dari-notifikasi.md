@@ -6,7 +6,8 @@
 - **Tanggal:** 2026-10-01
 - **Fase roadmap:** Fase 11 (Catat Cerdas), milestone M4, T-11.17 s.d. T-11.21
 - **Status:** Accepted
-- **Cakupan:** `features/record` (`capture/notification/`), `features/home`
+- **Cakupan:** `features/notification_capture` (dulu
+  `features/record/.../capture/notification/`, dipindah ADR-033), `features/home`
   (port ringkasan), `features/account` (entri setelan), `lib/app/` (pemicu
   pemrosesan), `android/app/src/main/kotlin/.../notificationcapture/`
 - **Bergantung pada:** ADR-027 (bukti teks, interpreter, draf), ADR-029
@@ -289,9 +290,7 @@ generik + Gemini menangkap sisanya.
 - `docs/04-planning/PLAY_DATA_SAFETY.md`
 
 ### Rujukan kode
-- `lib/features/record/domain/capture/notification/`
-- `lib/features/record/data/capture/notification/`
-- `lib/features/record/presentation/capture/notification/`
+- `lib/features/notification_capture/` (ADR-033 §3.3)
 - `android/app/src/main/kotlin/com/arkarizdev/tanukonomy/notificationcapture/`
 
 ## 10. Revisi 1 Okt 2026 (audit fitur `record`, T-13.1)

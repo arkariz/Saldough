@@ -207,8 +207,9 @@ tidak muat (mis. bilangan Jepang) tetap bisa lewat jalur cloud.
 - ADR-025, ADR-027, ADR-028; TASK_LIST T-11.11 s.d. T-11.13
 
 ### Rujukan kode
-- `lib/features/record/domain/capture/language/`
-- `lib/features/record/domain/capture/capture_draft_composer.dart`
+- `lib/shared/capture/domain/language/` (dipindah dari `features/record`,
+  ADR-033)
+- `lib/shared/capture/domain/capture_draft_composer.dart`
 - `lib/core/utils/formatters/number_lexicon.dart`,
   `spoken_amount_parser.dart`, `spoken_date_parser.dart`
 

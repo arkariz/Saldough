@@ -141,7 +141,8 @@ menyusul sesudah berkas berada di tempatnya.
 
 - Uji batas impor otomatis menjaga ketiga fitur hanya bicara lewat kunci rute
   dan `shared/`.
-- `features/record` turun dari 11,2 rb ke ±2,9 rb baris.
+- `features/record` turun dari 11.249 ke 2.945 baris; `shared/capture` ±2,4 rb,
+  `voice_capture` 1.145, `notification_capture` ±4,9 rb.
 - Kunci rute lama berubah nama; tidak ada tautan dalam (*deep link*) atau data
   tersimpan yang memakai nama kunci, jadi tanpa migrasi.
 - Nama kunci penyimpanan (`settings/notification_capture`, `capture/*`)

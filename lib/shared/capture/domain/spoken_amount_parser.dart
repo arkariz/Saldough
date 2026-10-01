@@ -559,6 +559,12 @@ List<SpokenAmount> _evaluateRun(String text, List<_Token> run, NumberLexicon lex
       continue;
     }
     if (lexicon.half.contains(w)) {
+      // Tepat sesudah skala: "tiga juta setengah" = 3,5 juta (T-11.24).
+      if (lastScale != 0 && endIndex == scaleIndex && group.isZero && pending.isZero) {
+        total = total + _Rational(lastScale, 2);
+        mark(i);
+        continue;
+      }
       // "setengah juta" = 0,5 juta; "satu setengah juta" = 1,5 juta.
       pending = pending + const _Rational(1, 2);
       hasValue = true;

@@ -33,6 +33,9 @@ final class CaptureDraftComposer {
   /// Batas waktu jawaban cloud.
   final Duration cloudTimeout;
 
+  /// Masalah nominal dari aturan yang dibawa ke draf cloud (T-11.23).
+  static const Set<DraftIssue> _userDecides = {DraftIssue.amountMultiple, DraftIssue.amountAmbiguous, DraftIssue.currencyUnsupported};
+
   /// Draf untuk [evidence] dengan [wallets] aktif, [categories], dan mata
   /// uang [currencyCode]. [cloudText] menggantikan teks bukti yang dikirim ke
   /// cloud (mis. notifikasi yang saldonya disamarkan, ADR-032 §10); kutipan
@@ -84,7 +87,14 @@ final class CaptureDraftComposer {
               origin: evidence.origin,
             );
       final interpreted = await _interpret(cloud, cloudEvidence, context, timeout: cloudTimeout);
-      if (interpreted != null) return resolver.resolve(evidence, interpreted);
+      if (interpreted != null) {
+        final cloudDraft = resolver.resolve(evidence, interpreted);
+        // Nominal yang hanya bisa diputuskan pengguna tetap disorot walau
+        // cloud memilih satu (T-11.9: "kopi 25 ribu roti 15 ribu" tidak boleh
+        // diam-diam menjadi Rp25.000).
+        final kept = ruleDraft?.issues.intersection(_userDecides) ?? const <DraftIssue>{};
+        return kept.isEmpty ? cloudDraft : cloudDraft.copyWith(issues: {...cloudDraft.issues, ...kept});
+      }
     }
 
     return ruleDraft ?? resolver.resolve(evidence, const InterpretedTransaction());

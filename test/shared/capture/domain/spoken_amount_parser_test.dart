@@ -40,6 +40,8 @@ void main() {
       // Regresi verifikasi M1 (F2).
       'satu setengah juta': 1500000,
       'dua setengah juta': 2500000,
+      'tiga juta setengah': 3500000,
+      'dua ribu setengah': 2500,
       'satu koma lima juta': 1500000,
       'nol koma lima juta': 500000,
       'kopi 25 ribu 2 gelas': 25000,

@@ -75,7 +75,17 @@ void main() {
     final draft = await compose(composer(cloud: cloud), evidence('kopi 35 ribu tadi, roti 15 ribu itu salah'));
     expect(_calls(cloud), 1);
     expect(draft.amountSen, 3500000);
-    expect(draft.issues, isEmpty);
+    // Dua nominal tetap disorot untuk dicek pengguna (T-11.23).
+    expect(draft.issues, {DraftIssue.amountMultiple});
+  });
+
+  test('dua nominal: pilihan cloud dipakai, peringatan aturan tetap (T-11.23)', () async {
+    final cloud = answering(const InterpretedTransaction(kind: DraftKind.expense, amountText: '25 ribu'));
+    final draft = await compose(composer(cloud: cloud), evidence('kopi 25 ribu roti 15 ribu'));
+    expect(_calls(cloud), 1);
+    expect(draft.amountSen, 2500000);
+    expect(draft.issues, contains(DraftIssue.amountMultiple));
+    expect(draft.isConfident, isFalse);
   });
 
   test('cloud galat: draf aturan apa adanya', () async {

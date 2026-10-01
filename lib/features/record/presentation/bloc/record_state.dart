@@ -13,6 +13,7 @@ final class RecordState extends UiState<RecordState> {
     this.budgetItems = const [],
     this.defaults = const RecordDefaults(),
     this.loadFailed = false,
+    this.saveCount = 0,
     super.effect,
   });
 
@@ -44,6 +45,11 @@ final class RecordState extends UiState<RecordState> {
   /// sesungguhnya adalah pembacaan yang gagal (lihat `_onWalletsLoaded`).
   final bool loadFailed;
 
+  /// Jumlah transaksi yang berhasil disimpan bloc ini. Naik sesudah
+  /// penyimpanan berhasil, supaya pemanggil CATAT tahu transaksinya tersimpan
+  /// (kotak masuk Catat dari notifikasi, ADR-032 §3.6).
+  final int saveCount;
+
   @override
   RecordState copyWith({
     List<Wallet>? wallets,
@@ -52,6 +58,7 @@ final class RecordState extends UiState<RecordState> {
     bool? isLoading,
     bool? isSaving,
     bool? loadFailed,
+    int? saveCount,
     UiEffect? effect,
   }) {
     return RecordState(
@@ -61,10 +68,11 @@ final class RecordState extends UiState<RecordState> {
       isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
       loadFailed: loadFailed ?? this.loadFailed,
+      saveCount: saveCount ?? this.saveCount,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [wallets, budgetItems, defaults, isLoading, isSaving, loadFailed];
+  List<Object?> get props => [wallets, budgetItems, defaults, isLoading, isSaving, loadFailed, saveCount];
 }

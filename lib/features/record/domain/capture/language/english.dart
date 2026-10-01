@@ -75,4 +75,11 @@ const english = CaptureLanguage(
     'using',
     'via',
   },
+  notification: NotificationLexicon(
+    balanceWords: ['available balance', 'remaining balance', 'balance', 'limit'],
+    incomeCues: ['received', 'incoming', 'credited', 'refund', 'cashback', 'you got'],
+    expenseCues: ['payment', 'paid', 'purchase', 'debited', 'debit', 'transfer to', 'sent', 'withdrawal'],
+    transferCues: ['top up', 'topup', 'withdrawal', 'transfer'],
+    fillerWords: {'successful', 'successfully', 'transaction', 'your', 'you', 'has', 'been', 'of', 'on', 'at', 'ref', 'no', 'idr'},
+  ),
 );

@@ -57,4 +57,5 @@ String draftIssueMessage(DraftIssue issue) => switch (issue) {
   DraftIssue.transferTargetMissing => t.record.draftIssue.transferTargetMissing,
   DraftIssue.categoryUnknown => t.record.draftIssue.categoryUnknown,
   DraftIssue.dateUnclear => t.record.draftIssue.dateUnclear,
+  DraftIssue.kindUnclear => t.record.draftIssue.kindUnclear,
 };

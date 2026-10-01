@@ -7,6 +7,7 @@ import 'package:saldough/features/account/presentation/bloc/account_state.dart';
 import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/language_setting.dart';
+import 'package:saldough/features/account/presentation/widgets/notification_capture_setting.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/auth/auth_presentation.dart';
 import 'package:state_management/state_management.dart';
@@ -166,6 +167,7 @@ class _SignedOutState extends State<_SignedOut> {
         const LanguageSettingEntry(),
         const SizedBox(height: AppSpacing.sm),
         const CategorySettingEntry(),
+        const NotificationCaptureSettingEntry(),
       ],
     );
   }
@@ -239,6 +241,7 @@ class _SignedIn extends StatelessWidget {
         const LanguageSettingEntry(),
         const SizedBox(height: AppSpacing.sm),
         const CategorySettingEntry(),
+        const NotificationCaptureSettingEntry(),
         const SizedBox(height: AppSpacing.xl),
         Divider(color: colors.divider),
         const SizedBox(height: AppSpacing.md),

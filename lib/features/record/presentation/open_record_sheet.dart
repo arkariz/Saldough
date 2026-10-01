@@ -65,7 +65,10 @@ import 'package:state_management/state_management.dart';
 /// formulirnya, sama seperti [prefillFrom]: tetap mode CATAT, dan tidak ada
 /// yang tersimpan sebelum pengguna menekan Catat. Untuk transfer, dompet asal
 /// dan tujuan hanya diambil dari draf -- tanpa dompet bawaan.
-Future<void> openRecordSheet(
+///
+/// Mengembalikan `true` bila transaksi benar-benar tersimpan (kotak masuk
+/// Catat dari notifikasi menghapus itemnya hanya saat itu, ADR-032 §3.6).
+Future<bool> openRecordSheet(
   BuildContext context, {
   String? initialWalletId,
   RecordChoice? initialChoice,
@@ -77,12 +80,12 @@ Future<void> openRecordSheet(
 }) async {
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
-  if (!context.mounted) return;
+  if (!context.mounted) return false;
   // Kegagalan pemuatan sudah ditampilkan lewat efek galat `RecordBloc`
   // (snackbar dari `EffectListener`) -- jangan lanjut membuka lembar
   // pilihan, yang widget dompetnya akan salah menampilkan "belum ada
   // dompet" padahal masalahnya pembacaan yang gagal.
-  if (bloc.state.loadFailed) return;
+  if (bloc.state.loadFailed) return false;
 
   final initial =
       initialChoice ??
@@ -153,21 +156,23 @@ Future<void> openRecordSheet(
       },
     ),
   );
-  if (result == null || !context.mounted) return;
+  if (result == null || !context.mounted) return false;
   // CATAT → Pemasukan → Freelance (FR-FRL-005). Alur CATAT selesai;
   // pemanggil menyegarkan saldo sesudahnya seperti biasa.
   if (result is OpenFreelance) {
     await context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput());
-    return;
+    return false;
   }
   if (result is RecordEvent) {
+    final savedBefore = bloc.state.saveCount;
     bloc.add(result);
-    if (!context.mounted) return;
+    if (!context.mounted) return false;
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (_) => RecordSavingDialog(bloc: bloc),
     );
-    return;
+    return bloc.state.saveCount > savedBefore;
   }
+  return false;
 }

@@ -30,6 +30,7 @@ class HomePage extends StatefulWidget {
     required this.onShowBudgets,
     required this.onShowTransactions,
     required this.onShowWallets,
+    this.notice,
     super.key,
   });
 
@@ -44,6 +45,10 @@ class HomePage extends StatefulWidget {
 
   /// Pindah ke tab Dompet (membuat dompet pertama).
   final VoidCallback onShowWallets;
+
+  /// Kartu pemberitahuan di bawah total saldo, disisipkan akar komposisi
+  /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
+  final Widget? notice;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -109,6 +114,7 @@ class _HomePageState extends State<HomePage> {
               hasNoWallets: state.hasNoWallets,
             ),
           ),
+          ?widget.notice,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.md),

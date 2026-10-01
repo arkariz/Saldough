@@ -175,6 +175,14 @@ void main() {
     );
 
     blocTest<RecordBloc, RecordState>(
+      'penyimpanan berhasil menaikkan saveCount (kotak masuk notifikasi, ADR-032 §3.6)',
+      setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
+      build: buildBloc,
+      act: (bloc) => bloc.add(ExpenseRecorded(walletId: 'bca', amount: 100, date: DateTime(2026, 9, 5), note: '')),
+      verify: (bloc) => expect(bloc.state.saveCount, 1),
+    );
+
+    blocTest<RecordBloc, RecordState>(
       'TransferRecorded menyimpan budgetItemId pada transaksi (FR-BUD-003)',
       setUp: () => when(() => transactionRepository.listAllTransactions()).thenAnswer((_) async => const Right([])),
       build: buildBloc,

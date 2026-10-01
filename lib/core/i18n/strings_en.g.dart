@@ -55,6 +55,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
+	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 }
 
 // Path: app
@@ -880,6 +881,130 @@ class _Translations$language$en extends Translations$language$id {
 	@override String get hint => 'App text and voice recording';
 }
 
+// Path: notificationCapture
+class _Translations$notificationCapture$en extends Translations$notificationCapture$id {
+	_Translations$notificationCapture$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get accountEntryTitle => 'Record from notifications';
+	@override String get accountEntryBody => 'Record automatically from bank and e-wallet notifications.';
+	@override String get settingsTitle => 'Record from notifications';
+	@override String get enableLabel => 'Turn on';
+	@override String get accessMissingTitle => 'Permission needed to read notifications';
+	@override String get accessMissingBody => 'Without it, Tanukonomy can\'t see your bank notifications.';
+	@override String get accessAction => 'Grant permission';
+	@override String get accessGranted => 'Notification permission is on';
+	@override String get disclosureTitle => 'Before you grant permission';
+	@override String get disclosureBody => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.';
+	@override String get disclosureAccept => 'Continue';
+	@override String get reminderPermissionDenied => 'Notification permission was denied. Turn it on in Android settings to get notified.';
+	@override String get sourcesTitle => 'Apps';
+	@override String get sourcesEmpty => 'Pick the bank or e-wallet apps whose notifications you want recorded.';
+	@override String get addSource => 'Add app';
+	@override String get sourceNoWallet => 'No wallet chosen';
+	@override String get sourcePaused => 'Paused';
+	@override String get pickAppTitle => 'Pick an app';
+	@override String get searchApps => 'Search apps';
+	@override String get builtInPatternsBadge => 'Built-in patterns';
+	@override String get appsLoadFailed => 'Couldn\'t read the app list.';
+	@override String get appsEmpty => 'No matching apps.';
+	@override String get sourceEnabled => 'Listen to this app';
+	@override String get walletLabel => 'Wallet';
+	@override String get walletNone => 'Choose a wallet';
+	@override String get keywordsLabel => 'Filter';
+	@override String get keywordsHint => 'Only notifications containing one of these phrases are read.';
+	@override String get keywordField => 'Add a phrase';
+	@override String get addKeyword => 'Add';
+	@override String get patternsTitle => 'Patterns';
+	@override String get patternsHint => 'Teach Tanukonomy how to read this app\'s notification format.';
+	@override String get patternsEmpty => 'No patterns yet. Tanukonomy still reads with general rules.';
+	@override String get builtInUnverified => 'Built-in · you always check the result';
+	@override String get builtInVerified => 'Built-in';
+	@override String get newPattern => 'Make a pattern from an example';
+	@override String get removeSource => 'Remove this app';
+	@override String removeSourceConfirm({required Object app}) => 'Stop reading notifications from ${app}?';
+	@override String get save => 'Save';
+	@override String get patternTitle => 'Make a pattern';
+	@override String get patternSampleLabel => 'Example notification';
+	@override String get patternSampleHint => 'Paste the notification text here';
+	@override String get patternInstructions => 'Pick a marker, then tap the words. Tap again to clear a mark.';
+	@override String get roleAmount => 'Amount';
+	@override String get roleNote => 'Note';
+	@override String get roleIgnore => 'Ignore';
+	@override String get patternKindLabel => 'Type';
+	@override String get kindExpense => 'Out';
+	@override String get kindIncome => 'In';
+	@override String get kindTransferOut => 'Transfer out';
+	@override String get kindTransferIn => 'Transfer in';
+	@override String get patternCategory => 'Category';
+	@override String get patternNoCategory => 'No category';
+	@override String get patternTransferWallet => 'Other wallet';
+	@override String get patternLabelField => 'Pattern name (optional)';
+	@override String patternPreview({required Object amount}) => 'Reads as: ${amount}';
+	@override String get patternInvalid => 'Mark one amount. Note words must be next to each other.';
+	@override String get deletePattern => 'Delete pattern';
+	@override String get inboxTitle => 'Notification inbox';
+	@override String get inboxPendingTitle => 'To check';
+	@override String get inboxAutoTitle => 'Recorded automatically';
+	@override String get inboxEmpty => 'Nothing to check.';
+	@override String get inboxAutoEmpty => 'Nothing recorded automatically yet.';
+	@override String get inboxRetention => 'This list is kept for 7 days.';
+	@override String get amountUnknown => 'Amount not read yet';
+	@override String get possibleDuplicate => 'May already be recorded';
+	@override String get recordAction => 'Record';
+	@override String get dismissAction => 'Dismiss';
+	@override String get makePatternAction => 'Make a pattern from this text';
+	@override String get reviewAction => 'View';
+	@override String get undoAction => 'Undo';
+	@override String get undoConfirmTitle => 'Undo this transaction?';
+	@override String get undoConfirm => 'The transaction is deleted and the wallet balance goes back to what it was.';
+	@override String get undone => 'Automatic transaction undone.';
+	@override String get dismissed => 'Capture dismissed.';
+	@override String banner({required Object n}) => '${n} transactions from notifications to check';
+	@override String get bannerAction => 'Check';
+	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
+	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
+	@override String get reminderChannel => 'Record from notifications';
+	@override String get reminderCapturedTitle => 'Transaction from {app} captured';
+	@override String get reminderCapturedBody => 'Tap to record it.';
+	@override String reminderReviewTitle({required Object amount, required Object app}) => 'Check ${amount} from ${app}';
+	@override String get reminderReviewBody => 'Tap to record it.';
+	@override String reminderRecordedTitle({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}';
+	@override String get reminderRecordedBody => 'Tap to view.';
+	@override String get debugSamplesTitle => 'Captured text samples (debug)';
+	@override String get debugSamplesHint => 'Tap to copy. Anonymize before sharing.';
+	@override String get debugSamplesEmpty => 'No notifications from registered apps yet.';
+	@override String get debugShellSource => 'Add adb test source (com.android.shell)';
+	@override String get copied => 'Copied.';
+	@override String get keywordsEmptyWarning => 'Without a filter, no notifications are read.';
+	@override String get addDefaultKeywords => 'Use the built-in filter';
+	@override String get sourceKeywordsNone => 'Empty filter — nothing is read';
+	@override String get enableHint => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.';
+	@override String get inboxEntryTitle => 'Inbox';
+	@override String get inboxEntryBody => 'Check captures and undo automatic records.';
+	@override String get behaviorTitle => 'When a transaction is caught';
+	@override String get autoRecordLabel => 'Record automatically';
+	@override String get autoRecordOffHint => 'Everything waits for you to check in the inbox.';
+	@override String get autoRecordOnHint => 'Clear ones are saved right away. Unsure ones still wait for you.';
+	@override String get autoRecordAnyCategoryLabel => 'Even if the category isn\'t clear';
+	@override String get autoRecordAnyCategoryHint => 'You can fill in the category later.';
+	@override String get reminderLabel => 'Notify me';
+	@override String get reminderHint => 'Get a notification each time a transaction is caught.';
+	@override String sourceWallet({required Object name}) => '${name} wallet';
+	@override String get walletHelp => 'Transactions from this app are recorded in this wallet.';
+	@override String get advancedTitle => 'Filter and patterns';
+	@override String get advancedHint => 'Optional';
+	@override String get patternMarkLabel => 'Mark the parts';
+	@override String patternNotAmount({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.';
+	@override String get kindTransfer => 'Transfer';
+	@override String get transferDirectionLabel => 'Transfer direction';
+	@override String get patternTransferWalletNone => 'Not set';
+	@override String get patternTemplateToggle => 'Edit template';
+	@override String get moreActions => 'More';
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -897,6 +1022,7 @@ class _Translations$record$draftIssue$en extends Translations$record$draftIssue$
 	@override String get transferTargetMissing => 'The destination wallet is unclear. Pick where it went.';
 	@override String get categoryUnknown => 'The category mentioned doesn\'t exist. Pick a category.';
 	@override String get dateUnclear => 'The date mentioned can\'t be used. Pick the date.';
+	@override String get kindUnclear => 'The direction isn\'t clear. Choose Out or In.';
 }
 
 // Path: record.voice
@@ -1066,6 +1192,7 @@ extension on TranslationsEn {
 			'record.draftIssue.transferTargetMissing' => 'The destination wallet is unclear. Pick where it went.',
 			'record.draftIssue.categoryUnknown' => 'The category mentioned doesn\'t exist. Pick a category.',
 			'record.draftIssue.dateUnclear' => 'The date mentioned can\'t be used. Pick the date.',
+			'record.draftIssue.kindUnclear' => 'The direction isn\'t clear. Choose Out or In.',
 			'record.voice.title' => 'Record by voice',
 			'record.voice.micLabel' => 'Record by voice',
 			'record.voice.listening' => 'Go ahead, speak.',
@@ -1495,9 +1622,9 @@ extension on TranslationsEn {
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
-			'home.budgetTitle' => 'Active budgets',
 			_ => null,
 		} ?? switch (path) {
+			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View Budgets',
@@ -1709,6 +1836,121 @@ extension on TranslationsEn {
 			'language.label' => 'Language',
 			'language.pickerTitle' => 'Choose language',
 			'language.hint' => 'App text and voice recording',
+			'notificationCapture.accountEntryTitle' => 'Record from notifications',
+			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
+			'notificationCapture.settingsTitle' => 'Record from notifications',
+			'notificationCapture.enableLabel' => 'Turn on',
+			'notificationCapture.accessMissingTitle' => 'Permission needed to read notifications',
+			'notificationCapture.accessMissingBody' => 'Without it, Tanukonomy can\'t see your bank notifications.',
+			'notificationCapture.accessAction' => 'Grant permission',
+			'notificationCapture.accessGranted' => 'Notification permission is on',
+			'notificationCapture.disclosureTitle' => 'Before you grant permission',
+			'notificationCapture.disclosureBody' => 'Tanukonomy will be able to read notifications on your phone.\n\n• Only from apps you pick that match their filter.\n• OTP notifications are never stored.\n• Text that is hard to read may be sent to Gemini (Google).\n• Notification text stays on your phone for at most 7 days.',
+			'notificationCapture.disclosureAccept' => 'Continue',
+			'notificationCapture.reminderPermissionDenied' => 'Notification permission was denied. Turn it on in Android settings to get notified.',
+			'notificationCapture.sourcesTitle' => 'Apps',
+			'notificationCapture.sourcesEmpty' => 'Pick the bank or e-wallet apps whose notifications you want recorded.',
+			'notificationCapture.addSource' => 'Add app',
+			'notificationCapture.sourceNoWallet' => 'No wallet chosen',
+			'notificationCapture.sourcePaused' => 'Paused',
+			'notificationCapture.pickAppTitle' => 'Pick an app',
+			'notificationCapture.searchApps' => 'Search apps',
+			'notificationCapture.builtInPatternsBadge' => 'Built-in patterns',
+			'notificationCapture.appsLoadFailed' => 'Couldn\'t read the app list.',
+			'notificationCapture.appsEmpty' => 'No matching apps.',
+			'notificationCapture.sourceEnabled' => 'Listen to this app',
+			'notificationCapture.walletLabel' => 'Wallet',
+			'notificationCapture.walletNone' => 'Choose a wallet',
+			'notificationCapture.keywordsLabel' => 'Filter',
+			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
+			'notificationCapture.keywordField' => 'Add a phrase',
+			'notificationCapture.addKeyword' => 'Add',
+			'notificationCapture.patternsTitle' => 'Patterns',
+			'notificationCapture.patternsHint' => 'Teach Tanukonomy how to read this app\'s notification format.',
+			'notificationCapture.patternsEmpty' => 'No patterns yet. Tanukonomy still reads with general rules.',
+			'notificationCapture.builtInUnverified' => 'Built-in · you always check the result',
+			'notificationCapture.builtInVerified' => 'Built-in',
+			'notificationCapture.newPattern' => 'Make a pattern from an example',
+			'notificationCapture.removeSource' => 'Remove this app',
+			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Stop reading notifications from ${app}?',
+			'notificationCapture.save' => 'Save',
+			'notificationCapture.patternTitle' => 'Make a pattern',
+			'notificationCapture.patternSampleLabel' => 'Example notification',
+			'notificationCapture.patternSampleHint' => 'Paste the notification text here',
+			'notificationCapture.patternInstructions' => 'Pick a marker, then tap the words. Tap again to clear a mark.',
+			'notificationCapture.roleAmount' => 'Amount',
+			'notificationCapture.roleNote' => 'Note',
+			'notificationCapture.roleIgnore' => 'Ignore',
+			'notificationCapture.patternKindLabel' => 'Type',
+			'notificationCapture.kindExpense' => 'Out',
+			'notificationCapture.kindIncome' => 'In',
+			'notificationCapture.kindTransferOut' => 'Transfer out',
+			'notificationCapture.kindTransferIn' => 'Transfer in',
+			'notificationCapture.patternCategory' => 'Category',
+			'notificationCapture.patternNoCategory' => 'No category',
+			'notificationCapture.patternTransferWallet' => 'Other wallet',
+			'notificationCapture.patternLabelField' => 'Pattern name (optional)',
+			'notificationCapture.patternPreview' => ({required Object amount}) => 'Reads as: ${amount}',
+			'notificationCapture.patternInvalid' => 'Mark one amount. Note words must be next to each other.',
+			'notificationCapture.deletePattern' => 'Delete pattern',
+			'notificationCapture.inboxTitle' => 'Notification inbox',
+			'notificationCapture.inboxPendingTitle' => 'To check',
+			'notificationCapture.inboxAutoTitle' => 'Recorded automatically',
+			'notificationCapture.inboxEmpty' => 'Nothing to check.',
+			'notificationCapture.inboxAutoEmpty' => 'Nothing recorded automatically yet.',
+			'notificationCapture.inboxRetention' => 'This list is kept for 7 days.',
+			'notificationCapture.amountUnknown' => 'Amount not read yet',
+			'notificationCapture.possibleDuplicate' => 'May already be recorded',
+			'notificationCapture.recordAction' => 'Record',
+			'notificationCapture.dismissAction' => 'Dismiss',
+			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
+			'notificationCapture.reviewAction' => 'View',
+			'notificationCapture.undoAction' => 'Undo',
+			'notificationCapture.undoConfirmTitle' => 'Undo this transaction?',
+			'notificationCapture.undoConfirm' => 'The transaction is deleted and the wallet balance goes back to what it was.',
+			'notificationCapture.undone' => 'Automatic transaction undone.',
+			'notificationCapture.dismissed' => 'Capture dismissed.',
+			'notificationCapture.banner' => ({required Object n}) => '${n} transactions from notifications to check',
+			'notificationCapture.bannerAction' => 'Check',
+			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
+			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
+			'notificationCapture.reminderChannel' => 'Record from notifications',
+			'notificationCapture.reminderCapturedTitle' => 'Transaction from {app} captured',
+			'notificationCapture.reminderCapturedBody' => 'Tap to record it.',
+			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Check ${amount} from ${app}',
+			'notificationCapture.reminderReviewBody' => 'Tap to record it.',
+			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}',
+			'notificationCapture.reminderRecordedBody' => 'Tap to view.',
+			'notificationCapture.debugSamplesTitle' => 'Captured text samples (debug)',
+			'notificationCapture.debugSamplesHint' => 'Tap to copy. Anonymize before sharing.',
+			'notificationCapture.debugSamplesEmpty' => 'No notifications from registered apps yet.',
+			'notificationCapture.debugShellSource' => 'Add adb test source (com.android.shell)',
+			'notificationCapture.copied' => 'Copied.',
+			'notificationCapture.keywordsEmptyWarning' => 'Without a filter, no notifications are read.',
+			'notificationCapture.addDefaultKeywords' => 'Use the built-in filter',
+			'notificationCapture.sourceKeywordsNone' => 'Empty filter — nothing is read',
+			'notificationCapture.enableHint' => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.',
+			'notificationCapture.inboxEntryTitle' => 'Inbox',
+			'notificationCapture.inboxEntryBody' => 'Check captures and undo automatic records.',
+			'notificationCapture.behaviorTitle' => 'When a transaction is caught',
+			'notificationCapture.autoRecordLabel' => 'Record automatically',
+			'notificationCapture.autoRecordOffHint' => 'Everything waits for you to check in the inbox.',
+			'notificationCapture.autoRecordOnHint' => 'Clear ones are saved right away. Unsure ones still wait for you.',
+			'notificationCapture.autoRecordAnyCategoryLabel' => 'Even if the category isn\'t clear',
+			'notificationCapture.autoRecordAnyCategoryHint' => 'You can fill in the category later.',
+			'notificationCapture.reminderLabel' => 'Notify me',
+			'notificationCapture.reminderHint' => 'Get a notification each time a transaction is caught.',
+			'notificationCapture.sourceWallet' => ({required Object name}) => '${name} wallet',
+			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
+			'notificationCapture.advancedTitle' => 'Filter and patterns',
+			'notificationCapture.advancedHint' => 'Optional',
+			'notificationCapture.patternMarkLabel' => 'Mark the parts',
+			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.',
+			'notificationCapture.kindTransfer' => 'Transfer',
+			'notificationCapture.transferDirectionLabel' => 'Transfer direction',
+			'notificationCapture.patternTransferWalletNone' => 'Not set',
+			'notificationCapture.patternTemplateToggle' => 'Edit template',
+			'notificationCapture.moreActions' => 'More',
 			_ => null,
 		};
 	}

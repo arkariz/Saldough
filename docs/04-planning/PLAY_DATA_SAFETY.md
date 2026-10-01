@@ -101,6 +101,12 @@ lihat riwayat git dokumen ini).
   perlu dideklarasikan sebagai data yang "dikumpulkan aplikasi", karena
   diproses Google, bukan kode sendiri) — verifikasi ulang saat langganan
   digarap.
+- **Catat dari notifikasi** (ADR-032, T-11.21) — isi notifikasi aplikasi
+  bank/e-wallet yang dipilih pengguna dibaca di perangkat; teks yang ragu
+  dikirim ke Gemini (Firebase AI Logic) untuk ditafsirkan dan tidak disimpan
+  di server kami. Saat build berfitur ini diunggah: tambah baris "Info
+  finansial: Info finansial lainnya" (dikumpulkan, diproses sementara, opsional,
+  tujuan fungsi aplikasi), dan sebutkan akses notifikasi di pengungkapan jelas.
 - **Foto struk dan catatan suara** (item "Catat otomatis" di
   `docs/TASKS.md` W-10 repo `tanukonomy-web`) — kalau digarap, tambah baris
   "Foto dan video" serta "Berkas audio: rekaman suara/audio" di tabel jenis

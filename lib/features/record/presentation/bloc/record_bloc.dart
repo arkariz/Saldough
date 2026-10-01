@@ -125,7 +125,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       case Left(value: final failure):
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
-        emit(state.copyWith(isSaving: false, effect: onSaved));
+        emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: onSaved));
     }
   }
 

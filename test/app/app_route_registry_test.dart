@@ -15,6 +15,8 @@ void main() {
       'record.sheet',
       'record.edit',
       'record.voice',
+      'record.notificationSettings',
+      'record.captureInbox',
       'transaction.detail',
       'transaction.history',
       'wallet.detail',

@@ -25,6 +25,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/record/di/notification_capture_module.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_module.dart';
@@ -159,6 +160,8 @@ abstract final class RootModule {
       // dibaca dari mana saja (ikon akun di Beranda) tanpa terikat satu
       // layar/scope.
       ..registerLazySingleton<AuthRepository>(FirebaseAuthRepositoryImpl.new);
+    // Catat dari notifikasi (ADR-032): pemroses di akar, dipicu shell.
+    NotificationCaptureModule.register(container);
   }
 
   static RouteRegistry _registerRouteRegistry(GetIt container) {

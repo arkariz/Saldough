@@ -2,6 +2,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Catat Cerdas suara (ADR-027): mikrofon untuk pengenal ucapan sistem. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Catat dari notifikasi (ADR-032): pengingat Tanukonomy sendiri (Android 13+). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:label="Tanukonomy"
         android:name="${applicationName}"
@@ -28,6 +30,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Catat dari notifikasi (ADR-032 §3.1): akses diberikan pengguna di
+             setelan sistem; hanya notifikasi dari aplikasi yang dipilih yang
+             ditampung. -->
+        <service
+            android:name=".notificationcapture.TransactionNotificationListener"
+            android:label="@string/notification_capture_service_label"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -43,6 +57,12 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Daftar aplikasi peluncur untuk memilih sumber notifikasi (ADR-032
+             §3.2), tanpa QUERY_ALL_PACKAGES. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
         </intent>
         <!-- Pengenal ucapan sistem (speech_to_text, ADR-027). -->
         <intent>

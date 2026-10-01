@@ -23,6 +23,7 @@ final class CaptureLanguage {
     required this.cashMentions,
     required this.cashWords,
     required this.fillerWords,
+    this.notification = const NotificationLexicon(),
   });
 
   /// Kode bahasa aplikasi (`id`, `en`; ADR-028).
@@ -67,6 +68,39 @@ final class CaptureLanguage {
   final Set<String> cashWords;
 
   /// Kata yang dibuang dari catatan.
+  final Set<String> fillerWords;
+
+  /// Kosakata teks notifikasi bank/e-wallet (ADR-032 §3.3).
+  final NotificationLexicon notification;
+}
+
+/// Kosakata teks notifikasi bank/e-wallet (ADR-032 §3.3). Notifikasi bukan
+/// kalimat lisan: arahnya dinyatakan kata baku ("dana masuk", "debit"), dan
+/// sering memuat nominal lain (saldo, limit) yang bukan nominal transaksi.
+final class NotificationLexicon {
+  /// Membuat [NotificationLexicon].
+  const NotificationLexicon({
+    this.balanceWords = const [],
+    this.incomeCues = const [],
+    this.expenseCues = const [],
+    this.transferCues = const [],
+    this.fillerWords = const {},
+  });
+
+  /// Kata yang mendahului nominal bukan-transaksi ("saldo", "limit").
+  final List<String> balanceWords;
+
+  /// Kata arah masuk ("dana masuk", "diterima").
+  final List<String> incomeCues;
+
+  /// Kata arah keluar ("pembayaran", "debit").
+  final List<String> expenseCues;
+
+  /// Kata yang, bersama sebutan dompet pengguna lain, menandai transfer antar
+  /// dompet sendiri ("top up", "isi saldo").
+  final List<String> transferCues;
+
+  /// Kata baku notifikasi yang dibuang dari catatan ("berhasil").
   final Set<String> fillerWords;
 }
 

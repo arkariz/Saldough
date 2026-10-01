@@ -57,6 +57,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 	late final Translations$category$id category = Translations$category$id.internal(_root);
 	late final Translations$language$id language = Translations$language$id.internal(_root);
+	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 }
 
 // Path: app
@@ -2197,6 +2198,360 @@ class Translations$language$id {
 	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
 }
 
+// Path: notificationCapture
+class Translations$notificationCapture$id {
+	Translations$notificationCapture$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat dari notifikasi'
+	String get accountEntryTitle => 'Catat dari notifikasi';
+
+	/// id: 'Catat otomatis dari notifikasi bank dan e-wallet.'
+	String get accountEntryBody => 'Catat otomatis dari notifikasi bank dan e-wallet.';
+
+	/// id: 'Catat dari notifikasi'
+	String get settingsTitle => 'Catat dari notifikasi';
+
+	/// id: 'Aktifkan'
+	String get enableLabel => 'Aktifkan';
+
+	/// id: 'Butuh izin membaca notifikasi'
+	String get accessMissingTitle => 'Butuh izin membaca notifikasi';
+
+	/// id: 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.'
+	String get accessMissingBody => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.';
+
+	/// id: 'Beri izin'
+	String get accessAction => 'Beri izin';
+
+	/// id: 'Izin notifikasi aktif'
+	String get accessGranted => 'Izin notifikasi aktif';
+
+	/// id: 'Sebelum memberi izin'
+	String get disclosureTitle => 'Sebelum memberi izin';
+
+	/// id: 'Tanukonomy akan bisa membaca notifikasi di HP-mu. • Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya. • Notifikasi OTP tidak pernah disimpan. • Teks yang sulit dibaca bisa dikirim ke Gemini (Google). • Teks notifikasi disimpan di HP paling lama 7 hari.'
+	String get disclosureBody => 'Tanukonomy akan bisa membaca notifikasi di HP-mu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di HP paling lama 7 hari.';
+
+	/// id: 'Lanjut'
+	String get disclosureAccept => 'Lanjut';
+
+	/// id: 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima kabar.'
+	String get reminderPermissionDenied => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima kabar.';
+
+	/// id: 'Aplikasi'
+	String get sourcesTitle => 'Aplikasi';
+
+	/// id: 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.'
+	String get sourcesEmpty => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.';
+
+	/// id: 'Tambah aplikasi'
+	String get addSource => 'Tambah aplikasi';
+
+	/// id: 'Dompet belum dipilih'
+	String get sourceNoWallet => 'Dompet belum dipilih';
+
+	/// id: 'Dijeda'
+	String get sourcePaused => 'Dijeda';
+
+	/// id: 'Pilih aplikasi'
+	String get pickAppTitle => 'Pilih aplikasi';
+
+	/// id: 'Cari aplikasi'
+	String get searchApps => 'Cari aplikasi';
+
+	/// id: 'Pola bawaan'
+	String get builtInPatternsBadge => 'Pola bawaan';
+
+	/// id: 'Daftar aplikasi gagal dibaca.'
+	String get appsLoadFailed => 'Daftar aplikasi gagal dibaca.';
+
+	/// id: 'Tidak ada aplikasi yang cocok.'
+	String get appsEmpty => 'Tidak ada aplikasi yang cocok.';
+
+	/// id: 'Dengarkan aplikasi ini'
+	String get sourceEnabled => 'Dengarkan aplikasi ini';
+
+	/// id: 'Dompet'
+	String get walletLabel => 'Dompet';
+
+	/// id: 'Pilih dompet'
+	String get walletNone => 'Pilih dompet';
+
+	/// id: 'Filter'
+	String get keywordsLabel => 'Filter';
+
+	/// id: 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.'
+	String get keywordsHint => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.';
+
+	/// id: 'Tambah frasa'
+	String get keywordField => 'Tambah frasa';
+
+	/// id: 'Tambah'
+	String get addKeyword => 'Tambah';
+
+	/// id: 'Pola'
+	String get patternsTitle => 'Pola';
+
+	/// id: 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.'
+	String get patternsHint => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.';
+
+	/// id: 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.'
+	String get patternsEmpty => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.';
+
+	/// id: 'Bawaan · hasilnya selalu kamu cek'
+	String get builtInUnverified => 'Bawaan · hasilnya selalu kamu cek';
+
+	/// id: 'Bawaan'
+	String get builtInVerified => 'Bawaan';
+
+	/// id: 'Buat pola dari contoh'
+	String get newPattern => 'Buat pola dari contoh';
+
+	/// id: 'Hapus aplikasi ini'
+	String get removeSource => 'Hapus aplikasi ini';
+
+	/// id: 'Berhenti membaca notifikasi ${app}?'
+	String removeSourceConfirm({required Object app}) => 'Berhenti membaca notifikasi ${app}?';
+
+	/// id: 'Simpan'
+	String get save => 'Simpan';
+
+	/// id: 'Buat pola'
+	String get patternTitle => 'Buat pola';
+
+	/// id: 'Contoh notifikasi'
+	String get patternSampleLabel => 'Contoh notifikasi';
+
+	/// id: 'Tempel teks notifikasi di sini'
+	String get patternSampleHint => 'Tempel teks notifikasi di sini';
+
+	/// id: 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.'
+	String get patternInstructions => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.';
+
+	/// id: 'Nominal'
+	String get roleAmount => 'Nominal';
+
+	/// id: 'Catatan'
+	String get roleNote => 'Catatan';
+
+	/// id: 'Abaikan'
+	String get roleIgnore => 'Abaikan';
+
+	/// id: 'Jenis'
+	String get patternKindLabel => 'Jenis';
+
+	/// id: 'Keluar'
+	String get kindExpense => 'Keluar';
+
+	/// id: 'Masuk'
+	String get kindIncome => 'Masuk';
+
+	/// id: 'Transfer keluar'
+	String get kindTransferOut => 'Transfer keluar';
+
+	/// id: 'Transfer masuk'
+	String get kindTransferIn => 'Transfer masuk';
+
+	/// id: 'Kategori'
+	String get patternCategory => 'Kategori';
+
+	/// id: 'Tanpa kategori'
+	String get patternNoCategory => 'Tanpa kategori';
+
+	/// id: 'Dompet lawan'
+	String get patternTransferWallet => 'Dompet lawan';
+
+	/// id: 'Nama pola (opsional)'
+	String get patternLabelField => 'Nama pola (opsional)';
+
+	/// id: 'Terbaca: ${amount}'
+	String patternPreview({required Object amount}) => 'Terbaca: ${amount}';
+
+	/// id: 'Tandai satu nominal. Kata Catatan harus berurutan.'
+	String get patternInvalid => 'Tandai satu nominal. Kata Catatan harus berurutan.';
+
+	/// id: 'Hapus pola'
+	String get deletePattern => 'Hapus pola';
+
+	/// id: 'Kotak masuk notifikasi'
+	String get inboxTitle => 'Kotak masuk notifikasi';
+
+	/// id: 'Perlu dicek'
+	String get inboxPendingTitle => 'Perlu dicek';
+
+	/// id: 'Tercatat otomatis'
+	String get inboxAutoTitle => 'Tercatat otomatis';
+
+	/// id: 'Tidak ada yang perlu dicek.'
+	String get inboxEmpty => 'Tidak ada yang perlu dicek.';
+
+	/// id: 'Belum ada yang tercatat otomatis.'
+	String get inboxAutoEmpty => 'Belum ada yang tercatat otomatis.';
+
+	/// id: 'Daftar ini disimpan 7 hari.'
+	String get inboxRetention => 'Daftar ini disimpan 7 hari.';
+
+	/// id: 'Nominal belum terbaca'
+	String get amountUnknown => 'Nominal belum terbaca';
+
+	/// id: 'Mungkin sudah tercatat'
+	String get possibleDuplicate => 'Mungkin sudah tercatat';
+
+	/// id: 'Catat'
+	String get recordAction => 'Catat';
+
+	/// id: 'Abaikan'
+	String get dismissAction => 'Abaikan';
+
+	/// id: 'Buat pola dari teks ini'
+	String get makePatternAction => 'Buat pola dari teks ini';
+
+	/// id: 'Lihat'
+	String get reviewAction => 'Lihat';
+
+	/// id: 'Batalkan'
+	String get undoAction => 'Batalkan';
+
+	/// id: 'Batalkan transaksi?'
+	String get undoConfirmTitle => 'Batalkan transaksi?';
+
+	/// id: 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.'
+	String get undoConfirm => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.';
+
+	/// id: 'Transaksi otomatis dibatalkan.'
+	String get undone => 'Transaksi otomatis dibatalkan.';
+
+	/// id: 'Tangkapan diabaikan.'
+	String get dismissed => 'Tangkapan diabaikan.';
+
+	/// id: '${n} transaksi dari notifikasi menunggu dicek'
+	String banner({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek';
+
+	/// id: 'Cek'
+	String get bannerAction => 'Cek';
+
+	/// id: 'Tercatat otomatis: ${amount} · ${app}'
+	String autoRecordedSnack({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}';
+
+	/// id: '${n} transaksi tercatat otomatis dari notifikasi'
+	String autoRecordedSnackMany({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi';
+
+	/// id: 'Catat dari notifikasi'
+	String get reminderChannel => 'Catat dari notifikasi';
+
+	/// id: 'Transaksi dari {app} tertangkap'
+	String get reminderCapturedTitle => 'Transaksi dari {app} tertangkap';
+
+	/// id: 'Ketuk untuk mencatat.'
+	String get reminderCapturedBody => 'Ketuk untuk mencatat.';
+
+	/// id: 'Cek ${amount} dari ${app}'
+	String reminderReviewTitle({required Object amount, required Object app}) => 'Cek ${amount} dari ${app}';
+
+	/// id: 'Ketuk untuk mencatat.'
+	String get reminderReviewBody => 'Ketuk untuk mencatat.';
+
+	/// id: 'Tercatat ${amount} · ${app}'
+	String reminderRecordedTitle({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}';
+
+	/// id: 'Ketuk untuk melihat.'
+	String get reminderRecordedBody => 'Ketuk untuk melihat.';
+
+	/// id: 'Contoh teks tertangkap (debug)'
+	String get debugSamplesTitle => 'Contoh teks tertangkap (debug)';
+
+	/// id: 'Ketuk untuk menyalin. Samarkan sebelum dibagikan.'
+	String get debugSamplesHint => 'Ketuk untuk menyalin. Samarkan sebelum dibagikan.';
+
+	/// id: 'Belum ada notifikasi dari aplikasi terdaftar.'
+	String get debugSamplesEmpty => 'Belum ada notifikasi dari aplikasi terdaftar.';
+
+	/// id: 'Tambah sumber uji adb (com.android.shell)'
+	String get debugShellSource => 'Tambah sumber uji adb (com.android.shell)';
+
+	/// id: 'Disalin.'
+	String get copied => 'Disalin.';
+
+	/// id: 'Tanpa filter, tidak ada notifikasi yang dibaca.'
+	String get keywordsEmptyWarning => 'Tanpa filter, tidak ada notifikasi yang dibaca.';
+
+	/// id: 'Pakai filter bawaan'
+	String get addDefaultKeywords => 'Pakai filter bawaan';
+
+	/// id: 'Filter kosong — tidak ada yang dibaca'
+	String get sourceKeywordsNone => 'Filter kosong — tidak ada yang dibaca';
+
+	/// id: 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.'
+	String get enableHint => 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.';
+
+	/// id: 'Kotak masuk'
+	String get inboxEntryTitle => 'Kotak masuk';
+
+	/// id: 'Cek tangkapan dan batalkan yang tercatat otomatis.'
+	String get inboxEntryBody => 'Cek tangkapan dan batalkan yang tercatat otomatis.';
+
+	/// id: 'Saat transaksi tertangkap'
+	String get behaviorTitle => 'Saat transaksi tertangkap';
+
+	/// id: 'Catat otomatis'
+	String get autoRecordLabel => 'Catat otomatis';
+
+	/// id: 'Semua menunggu kamu cek di kotak masuk.'
+	String get autoRecordOffHint => 'Semua menunggu kamu cek di kotak masuk.';
+
+	/// id: 'Yang terbaca jelas langsung tersimpan. Yang ragu tetap menunggu dicek.'
+	String get autoRecordOnHint => 'Yang terbaca jelas langsung tersimpan. Yang ragu tetap menunggu dicek.';
+
+	/// id: 'Walau kategori belum terbaca'
+	String get autoRecordAnyCategoryLabel => 'Walau kategori belum terbaca';
+
+	/// id: 'Kategori bisa kamu isi belakangan.'
+	String get autoRecordAnyCategoryHint => 'Kategori bisa kamu isi belakangan.';
+
+	/// id: 'Kabari lewat notifikasi'
+	String get reminderLabel => 'Kabari lewat notifikasi';
+
+	/// id: 'Muncul notifikasi tiap ada transaksi tertangkap.'
+	String get reminderHint => 'Muncul notifikasi tiap ada transaksi tertangkap.';
+
+	/// id: 'Dompet ${name}'
+	String sourceWallet({required Object name}) => 'Dompet ${name}';
+
+	/// id: 'Transaksi dari aplikasi ini dicatat di dompet ini.'
+	String get walletHelp => 'Transaksi dari aplikasi ini dicatat di dompet ini.';
+
+	/// id: 'Filter dan pola'
+	String get advancedTitle => 'Filter dan pola';
+
+	/// id: 'Opsional'
+	String get advancedHint => 'Opsional';
+
+	/// id: 'Tandai bagiannya'
+	String get patternMarkLabel => 'Tandai bagiannya';
+
+	/// id: '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.'
+	String patternNotAmount({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.';
+
+	/// id: 'Transfer'
+	String get kindTransfer => 'Transfer';
+
+	/// id: 'Arah transfer'
+	String get transferDirectionLabel => 'Arah transfer';
+
+	/// id: 'Belum ditentukan'
+	String get patternTransferWalletNone => 'Belum ditentukan';
+
+	/// id: 'Sunting templat'
+	String get patternTemplateToggle => 'Sunting templat';
+
+	/// id: 'Lainnya'
+	String get moreActions => 'Lainnya';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -2234,6 +2589,9 @@ class Translations$record$draftIssue$id {
 
 	/// id: 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.'
 	String get dateUnclear => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.';
+
+	/// id: 'Arah transaksi tidak tertulis jelas. Pilih Keluar atau Masuk.'
+	String get kindUnclear => 'Arah transaksi tidak tertulis jelas. Pilih Keluar atau Masuk.';
 }
 
 // Path: record.voice
@@ -2484,6 +2842,7 @@ extension on Translations {
 			'record.draftIssue.transferTargetMissing' => 'Dompet tujuan belum jelas. Pilih dompet tujuan.',
 			'record.draftIssue.categoryUnknown' => 'Kategori yang disebut tidak ada. Pilih kategorinya.',
 			'record.draftIssue.dateUnclear' => 'Tanggal yang disebut tidak bisa dipakai. Pilih tanggalnya.',
+			'record.draftIssue.kindUnclear' => 'Arah transaksi tidak tertulis jelas. Pilih Keluar atau Masuk.',
 			'record.voice.title' => 'Catat pakai suara',
 			'record.voice.micLabel' => 'Catat pakai suara',
 			'record.voice.listening' => 'Silakan bicara.',
@@ -2913,9 +3272,9 @@ extension on Translations {
 			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
-			'home.budgetTitle' => 'Anggaran aktif',
 			_ => null,
 		} ?? switch (path) {
+			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat Anggaran',
@@ -3127,6 +3486,121 @@ extension on Translations {
 			'language.label' => 'Bahasa',
 			'language.pickerTitle' => 'Pilih bahasa',
 			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
+			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
+			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
+			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
+			'notificationCapture.enableLabel' => 'Aktifkan',
+			'notificationCapture.accessMissingTitle' => 'Butuh izin membaca notifikasi',
+			'notificationCapture.accessMissingBody' => 'Tanpa izin ini, Tanukonomy tidak bisa melihat notifikasi bank.',
+			'notificationCapture.accessAction' => 'Beri izin',
+			'notificationCapture.accessGranted' => 'Izin notifikasi aktif',
+			'notificationCapture.disclosureTitle' => 'Sebelum memberi izin',
+			'notificationCapture.disclosureBody' => 'Tanukonomy akan bisa membaca notifikasi di HP-mu.\n\n• Hanya dari aplikasi yang kamu pilih dan cocok dengan filternya.\n• Notifikasi OTP tidak pernah disimpan.\n• Teks yang sulit dibaca bisa dikirim ke Gemini (Google).\n• Teks notifikasi disimpan di HP paling lama 7 hari.',
+			'notificationCapture.disclosureAccept' => 'Lanjut',
+			'notificationCapture.reminderPermissionDenied' => 'Izin notifikasi ditolak. Nyalakan di setelan Android untuk menerima kabar.',
+			'notificationCapture.sourcesTitle' => 'Aplikasi',
+			'notificationCapture.sourcesEmpty' => 'Pilih aplikasi bank atau e-wallet yang notifikasinya mau dicatat.',
+			'notificationCapture.addSource' => 'Tambah aplikasi',
+			'notificationCapture.sourceNoWallet' => 'Dompet belum dipilih',
+			'notificationCapture.sourcePaused' => 'Dijeda',
+			'notificationCapture.pickAppTitle' => 'Pilih aplikasi',
+			'notificationCapture.searchApps' => 'Cari aplikasi',
+			'notificationCapture.builtInPatternsBadge' => 'Pola bawaan',
+			'notificationCapture.appsLoadFailed' => 'Daftar aplikasi gagal dibaca.',
+			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
+			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',
+			'notificationCapture.walletLabel' => 'Dompet',
+			'notificationCapture.walletNone' => 'Pilih dompet',
+			'notificationCapture.keywordsLabel' => 'Filter',
+			'notificationCapture.keywordsHint' => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.',
+			'notificationCapture.keywordField' => 'Tambah frasa',
+			'notificationCapture.addKeyword' => 'Tambah',
+			'notificationCapture.patternsTitle' => 'Pola',
+			'notificationCapture.patternsHint' => 'Ajari Tanukonomy membaca format notifikasi aplikasi ini.',
+			'notificationCapture.patternsEmpty' => 'Belum ada pola. Tanukonomy tetap membaca dengan aturan umum.',
+			'notificationCapture.builtInUnverified' => 'Bawaan · hasilnya selalu kamu cek',
+			'notificationCapture.builtInVerified' => 'Bawaan',
+			'notificationCapture.newPattern' => 'Buat pola dari contoh',
+			'notificationCapture.removeSource' => 'Hapus aplikasi ini',
+			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Berhenti membaca notifikasi ${app}?',
+			'notificationCapture.save' => 'Simpan',
+			'notificationCapture.patternTitle' => 'Buat pola',
+			'notificationCapture.patternSampleLabel' => 'Contoh notifikasi',
+			'notificationCapture.patternSampleHint' => 'Tempel teks notifikasi di sini',
+			'notificationCapture.patternInstructions' => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.',
+			'notificationCapture.roleAmount' => 'Nominal',
+			'notificationCapture.roleNote' => 'Catatan',
+			'notificationCapture.roleIgnore' => 'Abaikan',
+			'notificationCapture.patternKindLabel' => 'Jenis',
+			'notificationCapture.kindExpense' => 'Keluar',
+			'notificationCapture.kindIncome' => 'Masuk',
+			'notificationCapture.kindTransferOut' => 'Transfer keluar',
+			'notificationCapture.kindTransferIn' => 'Transfer masuk',
+			'notificationCapture.patternCategory' => 'Kategori',
+			'notificationCapture.patternNoCategory' => 'Tanpa kategori',
+			'notificationCapture.patternTransferWallet' => 'Dompet lawan',
+			'notificationCapture.patternLabelField' => 'Nama pola (opsional)',
+			'notificationCapture.patternPreview' => ({required Object amount}) => 'Terbaca: ${amount}',
+			'notificationCapture.patternInvalid' => 'Tandai satu nominal. Kata Catatan harus berurutan.',
+			'notificationCapture.deletePattern' => 'Hapus pola',
+			'notificationCapture.inboxTitle' => 'Kotak masuk notifikasi',
+			'notificationCapture.inboxPendingTitle' => 'Perlu dicek',
+			'notificationCapture.inboxAutoTitle' => 'Tercatat otomatis',
+			'notificationCapture.inboxEmpty' => 'Tidak ada yang perlu dicek.',
+			'notificationCapture.inboxAutoEmpty' => 'Belum ada yang tercatat otomatis.',
+			'notificationCapture.inboxRetention' => 'Daftar ini disimpan 7 hari.',
+			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
+			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
+			'notificationCapture.recordAction' => 'Catat',
+			'notificationCapture.dismissAction' => 'Abaikan',
+			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',
+			'notificationCapture.reviewAction' => 'Lihat',
+			'notificationCapture.undoAction' => 'Batalkan',
+			'notificationCapture.undoConfirmTitle' => 'Batalkan transaksi?',
+			'notificationCapture.undoConfirm' => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.',
+			'notificationCapture.undone' => 'Transaksi otomatis dibatalkan.',
+			'notificationCapture.dismissed' => 'Tangkapan diabaikan.',
+			'notificationCapture.banner' => ({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek',
+			'notificationCapture.bannerAction' => 'Cek',
+			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
+			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi',
+			'notificationCapture.reminderChannel' => 'Catat dari notifikasi',
+			'notificationCapture.reminderCapturedTitle' => 'Transaksi dari {app} tertangkap',
+			'notificationCapture.reminderCapturedBody' => 'Ketuk untuk mencatat.',
+			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Cek ${amount} dari ${app}',
+			'notificationCapture.reminderReviewBody' => 'Ketuk untuk mencatat.',
+			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}',
+			'notificationCapture.reminderRecordedBody' => 'Ketuk untuk melihat.',
+			'notificationCapture.debugSamplesTitle' => 'Contoh teks tertangkap (debug)',
+			'notificationCapture.debugSamplesHint' => 'Ketuk untuk menyalin. Samarkan sebelum dibagikan.',
+			'notificationCapture.debugSamplesEmpty' => 'Belum ada notifikasi dari aplikasi terdaftar.',
+			'notificationCapture.debugShellSource' => 'Tambah sumber uji adb (com.android.shell)',
+			'notificationCapture.copied' => 'Disalin.',
+			'notificationCapture.keywordsEmptyWarning' => 'Tanpa filter, tidak ada notifikasi yang dibaca.',
+			'notificationCapture.addDefaultKeywords' => 'Pakai filter bawaan',
+			'notificationCapture.sourceKeywordsNone' => 'Filter kosong — tidak ada yang dibaca',
+			'notificationCapture.enableHint' => 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.',
+			'notificationCapture.inboxEntryTitle' => 'Kotak masuk',
+			'notificationCapture.inboxEntryBody' => 'Cek tangkapan dan batalkan yang tercatat otomatis.',
+			'notificationCapture.behaviorTitle' => 'Saat transaksi tertangkap',
+			'notificationCapture.autoRecordLabel' => 'Catat otomatis',
+			'notificationCapture.autoRecordOffHint' => 'Semua menunggu kamu cek di kotak masuk.',
+			'notificationCapture.autoRecordOnHint' => 'Yang terbaca jelas langsung tersimpan. Yang ragu tetap menunggu dicek.',
+			'notificationCapture.autoRecordAnyCategoryLabel' => 'Walau kategori belum terbaca',
+			'notificationCapture.autoRecordAnyCategoryHint' => 'Kategori bisa kamu isi belakangan.',
+			'notificationCapture.reminderLabel' => 'Kabari lewat notifikasi',
+			'notificationCapture.reminderHint' => 'Muncul notifikasi tiap ada transaksi tertangkap.',
+			'notificationCapture.sourceWallet' => ({required Object name}) => 'Dompet ${name}',
+			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
+			'notificationCapture.advancedTitle' => 'Filter dan pola',
+			'notificationCapture.advancedHint' => 'Opsional',
+			'notificationCapture.patternMarkLabel' => 'Tandai bagiannya',
+			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.',
+			'notificationCapture.kindTransfer' => 'Transfer',
+			'notificationCapture.transferDirectionLabel' => 'Arah transfer',
+			'notificationCapture.patternTransferWalletNone' => 'Belum ditentukan',
+			'notificationCapture.patternTemplateToggle' => 'Sunting templat',
+			'notificationCapture.moreActions' => 'Lainnya',
 			_ => null,
 		};
 	}

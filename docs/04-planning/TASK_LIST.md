@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 1 Oktober 2026 (867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 1 Oktober 2026 (901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -72,7 +72,7 @@ Terakhir diperbarui: 1 Oktober 2026 (867 uji lulus, 88 berkas uji, 34.516 baris 
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 16 | 12 | Berjalan -- T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 21 | 12 | Berjalan -- M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -1695,6 +1695,8 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       API) di Console, daftarkan App Check (Play Integrity + SHA-256 kunci
       rilis; token debug untuk build debug), biarkan penegakan App Check
       mati sampai metrik menunjukkan permintaan sah. **Belum dicek di HP.**
+      Pemilik melaporkan Firebase AI Logic sudah aktif (1 Okt 2026); belum
+      dicek dari aplikasi bahwa panggilan cloud benar-benar berhasil.
       Sampai Console diaktifkan, panggilan cloud gagal dan draf aturan
       dipakai tanpa pesan galat (sesuai desain).
       ⚠ Jebakan: jangan kirim saldo/riwayat/id; offline dan kuota habis
@@ -1811,6 +1813,100 @@ T-11.5–11.6, M3: T-11.7–11.9) — lihat
       perbaikan); 845 uji lulus, analyze bersih; emulator Slim_Pixel,
       pemasangan bersih: lanjut tanpa mengganti bahasa → lembar suara
       langsung terbuka tanpa pertanyaan bahasa. Di luar PRD: perluasan ADR-028.
+
+### M4: Catat dari notifikasi ([ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md))
+
+Keputusan pemilik 1 Okt 2026: sumber, kata kunci, dan dompet dipilih
+pengguna; pola bawaan + pola pengguna; tiga tingkat otomatis; mode pengingat +
+kotak masuk atau kotak masuk saja; Gemini bila aturan ragu; diproses saat
+aplikasi hidup/dibuka; daftar "Tercatat otomatis" 7 hari. Android saja.
+
+- [ ] **T-11.17** Domain dan interpreter notifikasi: sumber, setelan, pola
+      (`{amount}`/`{note}`/`{*}`) + pencocok templat + katalog pola bawaan,
+      interpreter aturan notifikasi (saldo/referensi/jam bukan nominal, kata
+      arah), `DraftIssue.kindUnclear`, `NotificationDraftComposer` (pola →
+      aturan → Gemini, dompet sumber, arah transfer), `AutoRecordPolicy`
+      (3 tingkat + dugaan ganda), draf → `Transaction`.
+      ⚠ Jebakan: pola bawaan tanpa sampel asli harus ditandai di kode; ganti
+      contoh umum dengan sampel dari layar debug sebelum dicentang.
+      Verifikasi: uji pencocok, tiap pola bawaan, interpreter, kebijakan, mapper.
+      Memenuhi FR-NOT-001.
+      Progres (1 Okt 2026, belum dicentang): `lib/features/record/domain/capture/notification/`
+      (sumber, setelan, pola + `NotificationTemplate`, katalog pola bawaan
+      12 paket — semua `verified: false`, `NotificationText` masking/OTP/
+      (saringan promo dibuang 1 Okt 2026 — diganti filter whitelist sumber,
+      bawaan `defaultNotificationKeywords`), `NotificationDraftComposer` pola terverifikasi → aturan/Gemini →
+      pola belum terverifikasi, deteksi bahasa notifikasi dari teks,
+      `AutoRecordPolicy`, `transactionFromDraft`), `NotificationLexicon` di
+      paket id/en, `DraftIssue.kindUnclear`,
+      `data/capture/notification_rule_interpreter.dart`. 44+ uji domain
+      lulus. **Sisa:** contoh teks masih umum — ganti dengan sampel asli dari
+      layar debug, tandai pola bawaan yang cocok `verified: true`.
+- [ ] **T-11.18** Native Android: `NotificationListenerService`, antrean
+      serah-terima, filter sumber/kata kunci/OTP, pengingat, kanal Flutter,
+      ring buffer debug, manifest (`POST_NOTIFICATIONS`, kueri `LAUNCHER`).
+      ⚠ Jebakan: jangan `QUERY_ALL_PACKAGES`; OTP tidak pernah disimpan.
+      Verifikasi: `adb shell cmd notification post` dari `com.android.shell`.
+      Memenuhi FR-NOT-001.
+      Progres (1 Okt 2026, belum dicentang): Kotlin `notificationcapture/`
+      (`TransactionNotificationListener`, `CaptureQueue`, `CaptureConfig`,
+      `CaptureReminders`, `NotificationCapturePlugin`), `MainActivity`,
+      manifest. APK debug dan profile terbangun. Emulator: akses terdeteksi,
+      sumber tersimpan. **Belum teruji:** tangkapan sampai tercatat — uji
+      terputus karena emulator tertutup; ANR sekali saat pasang ulang build
+      debug (sistem mengikat layanan selagi mesin Flutter debug memulai di
+      thread utama, sama dengan catatan T-11.5), ulangi dengan build profile.
+- [ ] **T-11.19** Data dan pemrosesan: gateway kanal (Android/tidak didukung),
+      repository Hive (setelan, kotak masuk, log, id terproses, pola),
+      `ProcessCapturedNotifications` (single-flight, idempoten, kedaluwarsa
+      7 hari), port Beranda, DI.
+      Verifikasi: uji pemroses dengan fake (tiap tingkat, ragu, ganda, cloud
+      galat, crash sebelum ack, Batalkan memulihkan saldo).
+      Memenuhi FR-NOT-001.
+      Progres (1 Okt 2026, belum dicentang): `MethodChannelNotificationCaptureGateway`
+      + `UnsupportedNotificationCaptureGateway`, `NotificationCaptureStoreImpl`,
+      `ProcessCapturedNotifications` + `CaptureInboxActions` +
+      `CaptureInboxChanges`, `NotificationCaptureModule` di `RootModule`.
+      11 uji pemroses (repository asli di penyimpanan memori) lulus. Kartu
+      Beranda lewat slot `HomePage.notice` yang diisi shell, bukan port
+      `HomeBloc` (lebih kecil; uji Beranda tidak berubah).
+- [ ] **T-11.20** Tampilan: setelan (pengungkapan, akses, mode, tingkat,
+      sumber, pola), pembuat pola dari contoh, kotak masuk (Perlu ditinjau /
+      Tercatat otomatis), kartu Beranda, baris Akun, host pemroses di shell,
+      i18n id/en, layar sampel debug.
+      Verifikasi: uji widget setelan, kotak masuk, pembuat pola.
+      Memenuhi FR-NOT-001.
+      Progres (1 Okt 2026, belum dicentang): rute `notificationSettings` dan
+      `captureInbox`, `NotificationCaptureScope`, bloc setelan dan kotak masuk,
+      halaman setelan/sumber/pola/kotak masuk, pemilih aplikasi, kartu
+      Beranda, `NotificationCaptureHost` di shell, entri Akun (Android),
+      `RecordState.saveCount` (CATAT melaporkan "tersimpan"), i18n id/en.
+      6 uji widget + 1 uji bloc lulus. Temuan emulator: kartu pilihan
+      terpilih gelap (warna transparan di atas bayangan) — diperbaiki dengan
+      warna buram, belum dilihat ulang.
+      Review UX 1 Okt 2026 (ADR-032 §3.9), dilihat di Samsung: setelan
+      diurut ulang (aktif + izin → Kotak masuk → Aplikasi → satu kartu "Saat
+      transaksi tertangkap"); 5 kartu radio jadi 3 sakelar (Catat otomatis,
+      Walau kategori belum terbaca, Kabari lewat notifikasi); baris aplikasi
+      ringkas (dompet, peringatan filter/dompet kosong); halaman aplikasi
+      memakai `WalletSelectField`, filter dan pola terlipat; pembuat pola
+      pakai penanda + ketuk, jenis Keluar/Masuk/Transfer; kotak masuk dengan
+      **ikon notifikasi** (ikon besar atau ikon aplikasi, juga jadi ikon
+      besar pengingat), nominal berwarna, "Buat pola" di menu ⋮; kosakata
+      "cek" menggantikan "tinjau"; judul notifikasi tidak lagi masuk catatan.
+- [ ] **T-11.21** Privasi dan verifikasi perangkat: Keamanan Data (isi
+      notifikasi, bersama T-11.6), kebijakan privasi (B-20), uji di HP pemilik
+      (tingkat 1/2/3, aplikasi tertutup, OTP, pola pengguna).
+      Memenuhi FR-NOT-001.
+      *Progres 1 Okt 2026 (Samsung SM-M156B, Android 16, build profile, sumber
+      `adb shell`):* lolos — tingkat 2 mencatat otomatis Rp25.000 (bukan saldo)
+      dan Rp48.500, pemasukan tanpa kategori ke kotak masuk dan CATAT terisi
+      benar, OTP dan promo tidak tertangkap, activity tertutup → pengingat
+      generik → ketuk → diproses. Ditemukan dan diperbaiki: host dan kartu
+      Beranda mencari modul di `HomeScope` yang terisolasi sehingga tak pernah
+      memproses; kini container akar diberikan shell. Belum: tingkat 1/3,
+      pola pengguna di perangkat, panggilan Gemini dari aplikasi, catatan
+      draf masih diawali judul notifikasi bila judul ≠ nama aplikasi.
 
 ## Fase 12: Rapikan batas arsitektur
 
@@ -1982,6 +2078,7 @@ menambah dan memindahkannya ada di
 | B-19 | Terapkan `dismissKeyboardOnTapOutside` (T-8.12) ke kolom teks formulir lain yang bisa punya gejala fokus kembali sama: `AppFormTextField`/`AppFormMoneyField`/`AppFormQuantityField` (anggaran, freelance), formulir dompet, pencarian Riwayat, dialog nama kategori. | agen | T-8.12 |
 | B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
+| B-20 | Kebijakan privasi di repo `tanukonomy-web`: catat dari notifikasi (isi notifikasi aplikasi yang dipilih dibaca di perangkat, teks yang ragu dikirim ke Gemini, disimpan paling lama 7 hari, OTP tidak diproses). | agen | ADR-032, T-11.21 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
@@ -2037,6 +2134,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-CAT-001 | T-11.1 |
 | FR-LANG-001 | T-11.5 (pilihan bahasa), T-11.14, T-11.16 |
 | FR-VOI-001 | T-11.2–T-11.5, T-11.11–T-11.13; jalur cloud T-11.7 |
+| FR-NOT-001 | T-11.17–T-11.21 |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

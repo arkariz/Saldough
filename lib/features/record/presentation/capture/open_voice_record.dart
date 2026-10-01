@@ -15,7 +15,10 @@ import 'package:state_management/state_management.dart';
 Future<void> openVoiceRecord(BuildContext context) async {
   final bloc = context.read<RecordBloc>();
   final factory = bloc.voiceCaptureFactory;
-  if (factory == null) return openRecordSheet(context);
+  if (factory == null) {
+    await openRecordSheet(context);
+    return;
+  }
   bloc.add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
   if (!context.mounted || bloc.state.loadFailed) return;

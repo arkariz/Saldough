@@ -49,7 +49,11 @@ final class CaptureDraftResolver {
   /// Menyusun draf dari [interpreted] untuk [evidence].
   RecordDraft resolve(CaptureEvidence evidence, InterpretedTransaction interpreted) {
     final kind = interpreted.kind ?? DraftKind.expense;
-    final issues = <DraftIssue>{};
+    final issues = <DraftIssue>{
+      // Notifikasi menyatakan arah dengan kata baku; tanpa itu bawaan
+      // pengeluaran hanya tebakan (ADR-032 §3.3).
+      if (interpreted.kind == null && evidence.source == CaptureSource.notification) DraftIssue.kindUnclear,
+    };
 
     final amountSen = _resolveAmount(evidence.text, interpreted.amountText, issues);
 

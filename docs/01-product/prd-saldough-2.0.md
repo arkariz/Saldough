@@ -604,9 +604,9 @@ disimpan sebagai catatan sejarah saja.
 - [ ] Menyembunyikan kartu ringkasan yang belum punya isi, alih-alih
       menampilkan angka nol berderet.
 
-### 7.7 Kategori, bahasa, dan Catat pakai suara (sesudah MVP, ditambahkan 1 Okt 2026)
+### 7.7 Kategori, bahasa, Catat pakai suara, dan Catat dari notifikasi (sesudah MVP, ditambahkan 1 Okt 2026)
 
-Kebutuhan ini lahir di Fase 11. Keputusan rincinya di ADR-026 sampai ADR-029;
+Kebutuhan ini lahir di Fase 11. Keputusan rincinya di ADR-026 sampai ADR-029 dan ADR-032;
 FR di bawah merangkum perilaku yang dijanjikan ke pengguna.
 
 **FR-CAT-001 — Kategori bawaan yang bisa diubah**
@@ -644,6 +644,29 @@ FR di bawah merangkum perilaku yang dijanjikan ke pengguna.
       "Ketik saja".
 - [ ] Pencatatan inti tetap penuh tanpa internet; hanya fitur suara yang boleh
       bergantung pada koneksi (NFR-REL-001, ADR-027 §3.5 butir 7).
+
+**FR-NOT-001 — Catat dari notifikasi (Android)**
+
+Keputusan rinci di ADR-032.
+
+- [ ] Pengguna memilih sendiri aplikasi yang didengarkan, filter
+      notifikasinya, dan dompetnya. Filter adalah whitelist: hanya notifikasi
+      yang memuat frasa filter yang ditangkap; filter bawaan berisi frasa yang
+      pasti transaksi. Notifikasi lain diabaikan tanpa disimpan, dan
+      notifikasi OTP/kode verifikasi tidak pernah diproses.
+- [ ] Aplikasi bank/e-wallet umum punya pola bawaan; pengguna bisa membuat pola
+      sendiri dari contoh notifikasi tanpa menulis regex.
+- [ ] Pengguna memilih tingkat otomatis: tinjau semua (bawaan), otomatis bila
+      lengkap, atau otomatis bila nominal dan dompet yakin. Tangkapan yang
+      ragu atau mungkin ganda selalu menunggu tinjauan dan membuka formulir
+      CATAT terisi.
+- [ ] Pengguna memilih mode penyampaian: pengingat + kotak masuk, atau kotak
+      masuk saja.
+- [ ] Transaksi yang tercatat otomatis tampil di daftar "Tercatat otomatis"
+      selama 7 hari dan bisa ditinjau atau dibatalkan; teks notifikasi tidak
+      disimpan lebih dari 7 hari.
+- [ ] Nominal hanya diambil dari angka yang tertulis di notifikasi, bukan
+      saldo; pencatatan inti tetap penuh tanpa internet.
 
 ## 8. Kebutuhan non-fungsional
 

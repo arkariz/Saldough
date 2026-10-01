@@ -73,9 +73,9 @@ final class RecordEditInput extends RouteInput {
   final List<BudgetItemOption> budgetItems;
 }
 
-/// Kunci rute fitur `record`. Ketiganya alur transparan yang membuka
+/// Kunci rute fitur `record`. Tiga yang pertama alur transparan yang membuka
 /// lembarnya sendiri (ADR-030 §3.3), jadi tampilannya sama dengan lembar
-/// yang dibuka langsung.
+/// yang dibuka langsung; dua sisanya halaman biasa.
 abstract final class RecordRouteKeys {
   /// Alur CATAT: lembar formulir, lalu dialog menyimpan.
   static const sheet = RouteKey<RecordSheetInput>('record.sheet');
@@ -85,4 +85,10 @@ abstract final class RecordRouteKeys {
 
   /// Catat pakai suara (ADR-027), berlanjut ke CATAT dengan draf.
   static const voice = RouteKey<EmptyInput>('record.voice');
+
+  /// Setelan Catat dari notifikasi (ADR-032), dari layar Akun. Android saja.
+  static const notificationSettings = RouteKey<EmptyInput>('record.notificationSettings');
+
+  /// Kotak masuk Catat dari notifikasi (ADR-032 §3.6), dari kartu Beranda.
+  static const captureInbox = RouteKey<EmptyInput>('record.captureInbox');
 }

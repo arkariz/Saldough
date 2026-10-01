@@ -152,8 +152,9 @@ docs/
 | [0029](02-architecture/adr/0029-catat-cerdas-paket-bahasa-tanggal-dan-jalur-cloud.md) | Catat Cerdas per bahasa: paket bahasa, tanggal pasti, jalur langsung ke cloud | Accepted |
 | [0030](02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md) | Batas antarfitur: akar komposisi, rute bertipe, sinyal buku besar, presentasi di shared | Accepted |
 | [0031](02-architecture/adr/0031-pixeltheme-jadi-tema-global.md) | PixelTheme jadi tema global aplikasi | Accepted |
+| [0032](02-architecture/adr/0032-catat-dari-notifikasi.md) | Catat dari notifikasi: penangkap native, pola, tingkat otomatis, kotak masuk | Accepted |
 
-ADR berikutnya memakai nomor **0032**.
+ADR berikutnya memakai nomor **0033**.
 
 ## Pertanyaan yang sering muncul
 

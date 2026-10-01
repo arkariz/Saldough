@@ -70,6 +70,11 @@ Istilah di bagian ini menjelaskan alur pembuatan transaksi.
 | Catat Pemasukan | `RecordChoice.income` | Membuat satu `IncomeTransaction`. |
 | Catat Pengeluaran | `RecordChoice.expense` | Membuat satu `ExpenseTransaction`. |
 | Catat Transfer | `RecordChoice.transfer` | Membuat satu `TransferTransaction`. |
+| Catat dari notifikasi | `NotificationSource`, `ProcessCapturedNotifications` | Notifikasi aplikasi bank/e-wallet yang dipilih pengguna menjadi draf; tergantung tingkat otomatis, dicatat langsung lewat use case yang sama dengan CATAT atau menunggu di kotak masuk (ADR-032). Android saja. |
+| Sumber notifikasi | `NotificationSource` | Aplikasi yang didengarkan, beserta filter whitelist (frasa yang harus ada di notifikasi) dan dompetnya. |
+| Pola notifikasi | `NotificationPattern` | Templat teks notifikasi dengan penanda nominal, catatan, dan bagian yang berubah-ubah; bawaan atau buatan pengguna. |
+| Tingkat otomatis | `AutoRecordLevel` | Seberapa berani tangkapan notifikasi dicatat tanpa ditinjau: tinjau semua, otomatis bila lengkap, otomatis bila nominal dan dompet yakin. Di layar tampil sebagai sakelar *Catat otomatis* + *Walau kategori belum terbaca* (ADR-032 §3.9). |
+| Kotak masuk tangkapan | `RecordRouteKeys.captureInbox` | Daftar tangkapan yang perlu dicek dan yang tercatat otomatis (7 hari). Di layar: *Kotak masuk*. |
 | Pintasan kontekstual | — | Tombol di layar lain (misalnya rincian dompet) yang membuka CATAT dengan satu field sudah terisi. Bukan alur pencatatan tersendiri. |
 
 ## Anggaran

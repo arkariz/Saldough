@@ -17,6 +17,8 @@ import 'package:saldough/features/home/di/home_scope.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
+import 'package:saldough/features/record/presentation/capture/notification/capture_inbox_banner.dart';
+import 'package:saldough/features/record/presentation/capture/notification/notification_capture_host.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -117,6 +119,7 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowBudgets: () => _onDestinationSelected(context, _budgetTabIndex),
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
+        notice: CaptureInboxBanner(container: parentContainer),
       ),
       const BudgetListPage(),
       const TransactionListPage(),
@@ -145,41 +148,46 @@ class _AppShellPageState extends State<AppShellPage> {
                             child: Builder(
                               builder: (context) {
                                 _maybeRunStartAction(context);
-                                return Scaffold(
-                                  body: IndexedStack(
-                                    index: _activeTab,
-                                    // `IndexedStack` menjaga tab tersembunyi tetap hidup;
-                                    // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
-                                    children: [
-                                      for (final (i, tab) in tabsFor(context).indexed)
-                                        TourVisibility(visible: i == _activeTab, child: tab),
-                                    ],
-                                  ),
-                                  floatingActionButton: _RecordFabs(
-                                    onRecord: () => unawaited(_openRecord(context)),
-                                    onVoice: () => unawaited(_openRecord(context, voice: true)),
-                                  ),
-                                  bottomNavigationBar: NavigationBar(
-                                    selectedIndex: _activeTab,
-                                    onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
-                                    destinations: [
-                                      NavigationDestination(
-                                        icon: const AppIcon(IconKey.home),
-                                        label: t.appShell.homeTabLabel,
-                                      ),
-                                      NavigationDestination(
-                                        icon: const AppIcon(IconKey.budget),
-                                        label: t.appShell.budgetTabLabel,
-                                      ),
-                                      NavigationDestination(
-                                        icon: const AppIcon(IconKey.transactions),
-                                        label: t.appShell.transactionsTabLabel,
-                                      ),
-                                      NavigationDestination(
-                                        icon: const AppIcon(IconKey.wallets),
-                                        label: t.appShell.walletsTabLabel,
-                                      ),
-                                    ],
+                                // Catat dari notifikasi (ADR-032): proses saat dibuka,
+                                // resume, tangkapan baru, dan ketukan pengingat.
+                                return NotificationCaptureHost(
+                                  container: parentContainer,
+                                  child: Scaffold(
+                                    body: IndexedStack(
+                                      index: _activeTab,
+                                      // `IndexedStack` menjaga tab tersembunyi tetap hidup;
+                                      // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
+                                      children: [
+                                        for (final (i, tab) in tabsFor(context).indexed)
+                                          TourVisibility(visible: i == _activeTab, child: tab),
+                                      ],
+                                    ),
+                                    floatingActionButton: _RecordFabs(
+                                      onRecord: () => unawaited(_openRecord(context)),
+                                      onVoice: () => unawaited(_openRecord(context, voice: true)),
+                                    ),
+                                    bottomNavigationBar: NavigationBar(
+                                      selectedIndex: _activeTab,
+                                      onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
+                                      destinations: [
+                                        NavigationDestination(
+                                          icon: const AppIcon(IconKey.home),
+                                          label: t.appShell.homeTabLabel,
+                                        ),
+                                        NavigationDestination(
+                                          icon: const AppIcon(IconKey.budget),
+                                          label: t.appShell.budgetTabLabel,
+                                        ),
+                                        NavigationDestination(
+                                          icon: const AppIcon(IconKey.transactions),
+                                          label: t.appShell.transactionsTabLabel,
+                                        ),
+                                        NavigationDestination(
+                                          icon: const AppIcon(IconKey.wallets),
+                                          label: t.appShell.walletsTabLabel,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },

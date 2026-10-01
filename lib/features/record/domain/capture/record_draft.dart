@@ -34,6 +34,10 @@ enum DraftIssue {
   /// Tanggal disebut tetapi tidak bisa dipakai: tidak ada di kalender, di
   /// masa depan, atau kutipannya tidak ada di teks (ADR-029 §3.2).
   dateUnclear,
+
+  /// Arah transaksi (masuk/keluar) tidak tertulis jelas. Hanya untuk bukti
+  /// notifikasi (ADR-032 §3.3); suara tetap bawaan pengeluaran.
+  kindUnclear,
 }
 
 /// Draf transaksi yang mengisi formulir CATAT (ADR-027 §3.4). Bukan
@@ -83,6 +87,26 @@ final class RecordDraft extends Equatable {
 
   /// Draf lengkap tanpa masalah: nominal terisi dan tidak ada [issues].
   bool get isConfident => amountSen != null && issues.isEmpty;
+
+  /// Salinan dengan field yang diganti. [walletId], [toWalletId], dan
+  /// [categoryId] memakai fungsi supaya bisa dikosongkan.
+  RecordDraft copyWith({
+    DraftKind? kind,
+    String? Function()? walletId,
+    String? Function()? toWalletId,
+    String? Function()? categoryId,
+    Set<DraftIssue>? issues,
+  }) => RecordDraft(
+    kind: kind ?? this.kind,
+    amountSen: amountSen,
+    walletId: walletId == null ? this.walletId : walletId(),
+    toWalletId: toWalletId == null ? this.toWalletId : toWalletId(),
+    categoryId: categoryId == null ? this.categoryId : categoryId(),
+    note: note,
+    date: date,
+    issues: issues ?? this.issues,
+    sourceText: sourceText,
+  );
 
   @override
   List<Object?> get props => [kind, amountSen, walletId, toWalletId, categoryId, note, date, issues, sourceText];

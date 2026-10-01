@@ -128,6 +128,13 @@ transparan fitur `record`. Layar saldo/transaksi segar lewat `LedgerChanges`
 `shared/<modul>/presentation/` lewat `<modul>_presentation.dart`. Semua ini
 dijaga `test/architecture/import_boundaries_test.dart`.
 
+**Catat dari notifikasi (ADR-032, 1 Okt 2026, berjalan T-11.17–11.21):**
+Android saja. Layanan native hanya menampung notifikasi dari aplikasi yang
+dipilih pengguna yang lolos filter whitelist-nya (bawaan: frasa pasti transaksi; bukan OTP); Dart memprosesnya saat aplikasi
+hidup/dibuka: pola → aturan → Gemini, lalu tingkat otomatis menentukan
+dicatat langsung (`RecordTransaction`) atau masuk kotak masuk. Teks notifikasi
+paling lama 7 hari di perangkat.
+
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
 `AppTheme`, palet 1.0, dan `google_fonts` sudah dihapus. Uji widget yang
@@ -160,6 +167,9 @@ sejenisnya sudah dihapus 28 Sep 2026).
 - Penyimpanan lokal-first; fitur online sedang direncanakan, lihat "Status"
 - Terjemahan slang, bahasa dasar `id`, tambahan `en`
 - Keadaan sebelum pivot: commit `13c7939`
+- Filter RTK proyek di `.rtk/filters.toml` (`flutter test`/`analyze`/`build`,
+  `pub get`). Sesudah mengubahnya: `rtk trust -y` lalu `rtk verify` — kalau
+  tidak, filter diam-diam diabaikan.
 
 ## Repositori acuan
 
@@ -204,7 +214,10 @@ Empat aturan domain, baru di Saldough 2.0 dan paling sering salah:
 7. **Transfer tidak mengubah total uang**, hanya tempatnya — dan tidak pernah
    dihitung sebagai pemasukan maupun pengeluaran.
 8. **CATAT satu-satunya jalur pembuatan transaksi manual.** Jangan membuat
-   formulir pencatatan tersendiri di layar mana pun.
+   formulir pencatatan tersendiri di layar mana pun. Pencatatan otomatis dari
+   notifikasi (ADR-032, tingkat otomatis 2/3) memakai use case yang sama,
+   `RecordTransaction`, tanpa formulir; draf yang perlu ditinjau selalu
+   membuka CATAT.
 
 Aturan selengkapnya ada di `.claude/AGENT_CONTEXT.md`.
 

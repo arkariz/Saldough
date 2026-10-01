@@ -153,8 +153,9 @@ docs/
 | [0030](02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md) | Batas antarfitur: akar komposisi, rute bertipe, sinyal buku besar, presentasi di shared | Accepted |
 | [0031](02-architecture/adr/0031-pixeltheme-jadi-tema-global.md) | PixelTheme jadi tema global aplikasi | Accepted |
 | [0032](02-architecture/adr/0032-catat-dari-notifikasi.md) | Catat dari notifikasi: penangkap native, pola, tingkat otomatis, kotak masuk | Accepted |
+| [0033](02-architecture/adr/0033-pecah-fitur-record.md) | Pecah fitur `record`: mesin tafsir di `shared/capture`, suara dan notifikasi jadi fitur sendiri | Accepted |
 
-ADR berikutnya memakai nomor **0033**.
+ADR berikutnya memakai nomor **0034**.
 
 ## Pertanyaan yang sering muncul
 

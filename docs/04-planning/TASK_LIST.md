@@ -74,10 +74,11 @@ Terakhir diperbarui: 1 Oktober 2026 (901 uji lulus sesudah M4 berjalan; sebelumn
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 21 | 12 | Berjalan -- M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
+| 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 0 | Berjalan -- dimulai 1 Okt 2026 dari audit fitur `record` |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| Antrean (`B-n`, belum dijadwalkan) | 9 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| Antrean (`B-n`, belum dijadwalkan) | 10 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -2061,6 +2062,54 @@ seluruh uji lulus.
       navigasi, sinkronisasi, aturan), AGENT_CONTEXT, dan CLAUDE.md disapu.
       867 uji lulus, `flutter analyze` bersih.
 
+## Fase 13: Pecah fitur `record`
+
+Audit 1 Okt 2026: `features/record` berisi empat tanggung jawab (CATAT, mesin
+tafsir, suara, notifikasi; 11.249 baris) yang sudah terpisah secara alami di
+peta impor tetapi tidak dijaga uji batas. Keputusannya di
+[ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md); perbaikan
+penangkap notifikasi di
+[ADR-032 §10](../02-architecture/adr/0032-catat-dari-notifikasi.md).
+Satu commit per tugas. Setiap tugas ditutup dengan `flutter analyze` bersih
+dan seluruh uji lulus.
+
+- [ ] **T-13.1** Perbaikan penangkap notifikasi (audit 1 Okt 2026, ADR-032
+      §10): dedup native per kunci + waktu + isi dalam 1 jam (N1); ack hanya
+      tangkapan yang simpanannya berhasil (N2); penanganan native di thread
+      latar, ikon sebagai berkas (N3); Gemini menerima teks tersamar (N4);
+      `capturedAt` di log otomatis, uji kesamaan kata OTP Kotlin/Dart, hapus
+      `instance` plugin.
+      ⚠ Mengubah kode native; uji Dart tidak menjangkau Kotlin, jadi butuh
+      build Android dan tangkapan nyata di emulator atau HP.
+      Verifikasi: uji pemroses (simpan gagal → tidak di-ack; teks cloud
+      tersamar), uji kesamaan OTP, `flutter build apk --debug`.
+      Memenuhi FR-NOT-001.
+- [ ] **T-13.2** Mesin tafsir ke `shared/capture/` (ADR-033 §3.1), barrel
+      `capture.dart`.
+      ⚠ Hanya jalur impor yang berubah.
+      Verifikasi: uji batas impor, seluruh uji lulus tanpa perubahan isi.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-13.3** Fitur `notification_capture` (ADR-033 §3.3): pindah
+      domain/data/presentation/DI, kunci rute
+      `NotificationCaptureRouteKeys.settings`/`.inbox`, pemakai di Akun dan
+      shell.
+      ⚠ Nama kunci penyimpanan tidak berubah.
+      Verifikasi: uji batas impor, seluruh uji lulus.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-13.4** Fitur `voice_capture` (ADR-033 §3.2): kunci
+      `VoiceCaptureRouteKeys.capture`, scope sendiri, lalu
+      `RecordBloc` tanpa `voiceCaptureFactory`/`speechLanguagePrompt` (R1).
+      Verifikasi: uji suara dan shell lulus; alur suara → CATAT di emulator.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-13.5** Rapikan fitur notifikasi (ADR-033 §2 R2/R3): domain per
+      subfolder, `CaptureInboxActions` ke berkasnya sendiri, satu tempat untuk
+      "pola aktif" dan "dompet aktif".
+      Verifikasi: seluruh uji lulus.
+      Di luar PRD: kualitas arsitektur.
+- [ ] **T-13.6** Penutup: ARCHITECTURE_OVERVIEW, AGENT_CONTEXT, CLAUDE.md,
+      rujukan kode di ADR-027/029/032; baseline baris dan uji.
+      Di luar PRD: kualitas arsitektur.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -2084,6 +2133,7 @@ menambah dan memindahkannya ada di
 | B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-20 | Kebijakan privasi di repo `tanukonomy-web`: catat dari notifikasi (isi notifikasi aplikasi yang dipilih dibaca di perangkat, teks yang ragu dikirim ke Gemini, disimpan paling lama 7 hari, OTP tidak diproses). | agen | ADR-032, T-11.21 |
+| B-21 | Pemrosesan notifikasi memanggil Gemini satu per satu (maks. 5 dtk per item) dan setiap catatan otomatis memancarkan `LedgerChanges` sendiri (N tangkapan = N muat ulang tiap tab). Pertimbangkan satu sinyal per putaran; tunggu keluhan nyata. | agen | audit `record` 1 Okt 2026 (N6) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

@@ -50,12 +50,13 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 10 | (dicadangkan: sinkronisasi, B-7) | — |
 | 11 | Catat Cerdas: kategori dan suara | Transaksi berkategori tertutup; satu ucapan mengisi formulir CATAT |
 | 12 | Rapikan batas arsitektur | Fitur hanya saling kenal lewat kunci rute; uji batas impor menjaga |
+| 13 | Pecah fitur `record` | CATAT, suara, dan notifikasi fitur terpisah; mesin tafsir di `shared/capture` |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
 
-**Status per 1 Oktober 2026:** Fase 0–7, 9, dan 12 selesai; Fase 8 dan 11
-berjalan (sisa Fase 8: sapuan nama dan ikon iOS T-8.3; sisa Fase 11: ucapan
+**Status per 1 Oktober 2026:** Fase 0–7, 9, dan 12 selesai; Fase 8, 11, dan
+13 berjalan (sisa Fase 8: sapuan nama dan ikon iOS T-8.3; sisa Fase 11: ucapan
 nyata T-11.5, Keamanan Data T-11.6, Firebase AI T-11.7–11.9). Rincian dan
 antrean di [TASK_LIST.md](TASK_LIST.md).
 
@@ -268,6 +269,18 @@ Tanpa perubahan perilaku yang terlihat pengguna.
 **Selesai kalau:** tidak ada impor antarfitur selain `*_route_keys.dart`,
 `core/` tidak mengimpor `shared/`/`features/`, shell tidak memuat ulang bloc
 fitur lain, dan uji batas impor menjaga semuanya.
+
+## Fase 13: Pecah fitur `record`
+
+Audit 1 Okt 2026: `features/record` memegang CATAT, mesin tafsir Catat
+Cerdas, suara, dan catat dari notifikasi sekaligus (sepertiga `lib/`).
+Mesin tafsir pindah ke `shared/capture`, suara dan notifikasi jadi fitur
+sendiri yang membuka CATAT lewat kunci rute
+([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)). Didahului
+perbaikan penangkap notifikasi (ADR-032 §10).
+
+**Selesai kalau:** `features/record` hanya berisi CATAT, `RecordBloc` tidak
+memegang dependensi suara, dan uji batas impor menjaga ketiga fitur.
 
 ## Ketergantungan antar fase
 

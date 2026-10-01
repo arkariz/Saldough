@@ -60,7 +60,7 @@ berjalan walau aplikasi tertutup. Untuk setiap notifikasi:
 - **selalu dibuang bila tampak seperti OTP/kode verifikasi**, apa pun setelan
   pengguna — kode rahasia tidak pernah disimpan;
 - sisanya dimasukkan ke antrean serah-terima native (maks. 50, dedup kunci +
-  isi), lalu diteruskan ke Dart lewat `EventChannel` bila mesin Flutter hidup,
+  waktu notifikasi + isi dalam 1 jam, lihat §10), lalu diteruskan ke Dart lewat `EventChannel` bila mesin Flutter hidup,
   atau — bila tidak hidup dan mode pengingat aktif — memunculkan pengingat
   generik ("Transaksi dari BRImo tertangkap — ketuk untuk mencatat").
 
@@ -99,7 +99,8 @@ untuk transfer, notifikasi keluar = sumber → lawan, masuk = lawan → sumber.
    jenis dari kata arah notifikasi (masuk/keluar). Tanpa kata arah → issue
    `kindUnclear` (khusus notifikasi; suara tetap bawaan pengeluaran).
 3. Aturan ragu → Gemini, dengan data yang sama seperti ADR-027 §3.5 butir 4;
-   `origin` (nama paket) tidak dikirim.
+   `origin` (nama paket) tidak dikirim, dan teksnya **sudah disamarkan**
+   (saldo, nomor rekening, nomor referensi, jam; §10).
 
 Urutan nyata (temuan implementasi 1 Okt 2026): pola pengguna dan pola bawaan
 **terverifikasi** → aturan/Gemini → pola bawaan **belum terverifikasi** hanya
@@ -291,6 +292,38 @@ generik + Gemini menangkap sisanya.
 - `lib/features/record/data/capture/notification/`
 - `lib/features/record/presentation/capture/notification/`
 - `android/app/src/main/kotlin/com/arkarizdev/tanukonomy/notificationcapture/`
+
+## 10. Revisi 1 Okt 2026 (audit fitur `record`, T-13.1)
+
+Review kode penangkap sesudah T-11.21 menemukan empat hal yang diperbaiki:
+
+1. **Dedup native terlalu lebar.** Isi yang sama (paket + judul + isi) dalam
+   2 hari dibuang, termasuk yang sudah di-ack: dua kali bayar parkir
+   "Pembayaran Rp5.000 ke PARKIR berhasil" dalam dua hari, yang kedua hilang
+   diam-diam. Kini sidik jari = kunci notifikasi (`sbn.key`) + waktu
+   notifikasi (`Notification.when`) + judul + isi, jendela **1 jam**: hanya
+   notifikasi yang sama persis yang diposting ulang yang dibuang. Kemiripan
+   lain ditangani Dart (`possibleDuplicate`, §3.4), yang tidak pernah
+   membuang.
+2. **Ack tanpa memastikan simpanan.** Hasil simpan kotak masuk, log, dan id
+   terproses diabaikan, lalu seluruh antrean di-ack. Kini kotak masuk dan log
+   disimpan lebih dulu, id terproses sesudahnya, dan yang di-ack hanya
+   tangkapan yang simpanannya berhasil; galat simpan menghentikan putaran dan
+   sisanya tetap di antrean native.
+3. **Pekerjaan berat di thread utama layanan.** Render ikon dan tulis ulang
+   antrean JSON (dengan ikon Base64 di dalamnya) berjalan di
+   `onNotificationPosted`. Kini penanganan berjalan di executor latar satu
+   thread, dan ikon disimpan sebagai berkas PNG per tangkapan
+   (`files/notification_capture_icons/`), dihapus saat di-ack; antrean JSON
+   hanya berisi teks. Ikon dikirim ke Dart sebagai bytes.
+4. **Teks mentah ke Gemini.** Teks yang dikirim ke cloud kini teks yang sudah
+   disamarkan `NotificationText.maskNonTransactionNumbers`; resolver tetap
+   memvalidasi kutipan terhadap teks asli.
+
+Perbaikan kecil yang ikut: dugaan "tangkapan berdekatan" membandingkan waktu
+tangkapan (`AutoRecordedEntry.capturedAt`, field opsional baru; dokumen lama
+memakai tanggal transaksi), daftar kata OTP Kotlin dijaga uji kesamaan dengan
+Dart, dan `NotificationCapturePlugin.instance` yang tidak terpakai dihapus.
 
 ---
 

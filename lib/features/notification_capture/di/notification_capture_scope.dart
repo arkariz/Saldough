@@ -2,7 +2,7 @@ import 'package:di/di.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
-import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
+import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/shared/category/category.dart';

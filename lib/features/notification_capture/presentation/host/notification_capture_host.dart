@@ -11,6 +11,7 @@ import 'package:saldough/features/notification_capture/domain/entities/capture_i
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';

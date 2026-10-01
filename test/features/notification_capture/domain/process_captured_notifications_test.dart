@@ -11,6 +11,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_pattern.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';

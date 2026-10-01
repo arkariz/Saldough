@@ -134,9 +134,13 @@ jadi urutannya diatur di atas interpreter, bukan di dalamnya.
 `CaptureEvidence` membawa `languageCode` (bahasa aplikasi = bahasa ucapan,
 ADR-028). Alurnya:
 
-1. **Ada paket bahasa:** aturan dulu. Draf yakin → selesai.
-2. **Tidak yakin, atau tidak ada paket:** cloud, bila terpasang, dengan batas
-   waktu ±5 dtk. Jawaban sah → draf cloud.
+1. **Ada paket bahasa:** aturan dulu. Draf yakin **dan jenisnya dari kata
+   di teks** → selesai.
+2. **Tidak yakin, jenis hanya tebakan bawaan (tanpa kata arah apa pun;
+   revisi T-11.22, 1 Okt 2026), atau tidak ada paket:** cloud, bila
+   terpasang, dengan batas waktu ±5 dtk. Jawaban sah → draf cloud, dengan
+   masalah nominal aturan (`amountMultiple`, `amountAmbiguous`,
+   `currencyUnsupported`) tetap dibawa (T-11.23).
 3. **Cloud tidak ada, galat, atau lewat batas waktu:** draf aturan apa
    adanya. Tanpa paket bahasa, hasilnya draf kosong: formulir terbuka dengan
    transkrip terlihat dan nominal disorot. Tidak ada pesan galat (ADR-027
@@ -149,6 +153,15 @@ Resolver memakai `NumberLexicon` dan `cashWords` dari paket bahasa. Untuk
 bahasa tanpa paket, resolver memakai `NumberLexicon.neutral`: hanya digit,
 dan simbol serta kode mata uang. Pengenal ucapan umumnya menulis nominal
 sebagai digit, jadi kutipan cloud tetap bisa dihitung Dart.
+
+Revisi 1 Okt 2026 (benchmark T-11.9, VOICE_INPUT_RESEARCH §10.1): aturan
+sering **yakin tetapi salah jenis** ("hadiah ulang tahun dari tante seratus
+ribu" terbaca pengeluaran), sehingga Gemini tidak pernah dipanggil di 30 kasus
+sulit. Dari dua pilihan gerbang tambahan, pemilik memilih "jenis tanpa kata
+arah" (perkiraan: kasus sulit 71% → 89% benar, kasus aturan tetap 94%,
+Gemini terpanggil ±1 dari 3 ucapan). Gerbang "kategori kosong" ditolak: Gemini
+mengisi kategori pada kalimat yang sengaja dibiarkan tanpa kategori ("beli air
+mineral 5 ribu"), ketepatan kasus aturan turun ke 87%.
 
 ## 4. Opsi yang dipertimbangkan
 

@@ -28,6 +28,7 @@ final class InterpretedTransaction extends Equatable {
     this.note,
     this.dateText,
     this.date,
+    this.kindGuessed = false,
   });
 
   /// Jenis yang ditafsirkan, atau `null` kalau tidak jelas.
@@ -56,6 +57,12 @@ final class InterpretedTransaction extends Equatable {
   /// memakainya bila [dateText] benar-benar ada di teks bukti.
   final DateTime? date;
 
+  /// `true` bila [kind] hanya tebakan bawaan, bukan dari kata di teks (tidak
+  /// ada kata arah sama sekali). Penyusun draf lalu tetap bertanya ke cloud
+  /// walau drafnya yakin (T-11.22): aturan sering yakin tetapi salah jenis
+  /// pada kalimat seperti "hadiah ulang tahun dari tante seratus ribu".
+  final bool kindGuessed;
+
   @override
-  List<Object?> get props => [kind, amountText, walletText, toWalletText, categoryName, note, dateText, date];
+  List<Object?> get props => [kind, amountText, walletText, toWalletText, categoryName, note, dateText, date, kindGuessed];
 }

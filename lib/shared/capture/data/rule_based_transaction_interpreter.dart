@@ -75,6 +75,7 @@ final class RuleBasedTransactionInterpreter implements TransactionInterpreter {
       note: _noteOf(text, spans),
       dateText: dates.isEmpty ? null : dates.first.text,
       date: dates.isEmpty ? null : dates.first.date,
+      kindGuessed: !_hasKindCue(lower),
     );
   }
 
@@ -89,6 +90,15 @@ final class RuleBasedTransactionInterpreter implements TransactionInterpreter {
       null || SpokenAmountIssue.ambiguous || SpokenAmountIssue.withoutUnit => picked.amount!.text,
     };
   }
+
+  /// `true` bila teks memuat kata arah apa pun (transfer, pemasukan, atau
+  /// tanda pengeluaran); tanpanya [_kindOf] hanya menebak pengeluaran.
+  bool _hasKindCue(String lower) => [
+    ...language.transferWords,
+    ...language.incomeWords,
+    ...language.weakIncomeWords,
+    ...language.expenseCues,
+  ].any((w) => _hasWord(lower, w));
 
   /// Jenis dari kata kunci. Kata pemasukan yang juga lazim di kalimat
   /// pengeluaran ("masuk tol", "dapat diskon", "bonus kuota") hanya dihitung

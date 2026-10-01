@@ -88,6 +88,21 @@ void main() {
     expect(draft.isConfident, isFalse);
   });
 
+  test('jenis tanpa kata arah: draf yakin tetap ditanyakan ke cloud (T-11.22)', () async {
+    final cloud = answering(const InterpretedTransaction(kind: DraftKind.income, amountText: 'seratus ribu'));
+    final draft = await compose(composer(cloud: cloud), evidence('hadiah ulang tahun dari tante seratus ribu'));
+    expect(_calls(cloud), 1);
+    expect(draft.kind, DraftKind.income);
+    expect(draft.amountSen, 10000000);
+  });
+
+  test('jenis tanpa kata arah, cloud galat: draf aturan (pengeluaran) apa adanya', () async {
+    final cloud = _cloud(() async => left(const SystemFailure(code: FailureCode.unknown, message: 'offline')));
+    final draft = await compose(composer(cloud: cloud), evidence('parkir 5 ribu'));
+    expect(draft.kind, DraftKind.expense);
+    expect(draft.amountSen, 500000);
+  });
+
   test('cloud galat: draf aturan apa adanya', () async {
     final cloud = _cloud(() async => left(const SystemFailure(code: FailureCode.unknown, message: 'kuota habis')));
     final draft = await compose(composer(cloud: cloud), evidence('kopi 25 ribu roti 15 ribu'));

@@ -9,8 +9,8 @@ import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Menyusun [RecordDraft] dari bukti (ADR-029 §3.4): aturan dulu bila bahasa
-/// bukti punya paket, cloud bila draf aturan tidak yakin atau bahasanya tidak
-/// punya paket.
+/// bukti punya paket, cloud bila draf aturan tidak yakin, jenisnya hanya
+/// tebakan (T-11.22), atau bahasanya tidak punya paket.
 ///
 /// Tidak pernah gagal: cloud yang tidak terpasang, galat, atau lewat
 /// [cloudTimeout] jatuh ke draf aturan, atau ke draf kosong (transkrip
@@ -72,7 +72,8 @@ final class CaptureDraftComposer {
     if (language != null) {
       final interpreted = await _interpret(ruleInterpreterFor(language), evidence, context);
       if (interpreted != null) ruleDraft = resolver.resolve(evidence, interpreted);
-      if (ruleDraft != null && ruleDraft.isConfident) return ruleDraft;
+      // Jenis yang hanya tebakan tetap ditanyakan ke cloud (T-11.22).
+      if (ruleDraft != null && ruleDraft.isConfident && !interpreted!.kindGuessed) return ruleDraft;
     }
 
     final cloud = cloudInterpreter;

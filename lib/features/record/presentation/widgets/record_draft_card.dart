@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 /// Kartu di atas formulir CATAT yang terisi dari Catat Cerdas (ADR-027 §3.4):
 /// teks yang tertangkap, dan hal yang perlu diperiksa sebelum menekan Catat.

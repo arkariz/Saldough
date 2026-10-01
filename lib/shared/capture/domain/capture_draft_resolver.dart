@@ -1,9 +1,9 @@
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
-import 'package:saldough/features/record/domain/capture/spoken_amount_parser.dart';
-import 'package:saldough/features/record/domain/capture/spoken_date_parser.dart';
+import 'package:saldough/shared/capture/domain/capture_evidence.dart';
+import 'package:saldough/shared/capture/domain/interpreted_transaction.dart';
+import 'package:saldough/shared/capture/domain/language/capture_language.dart';
+import 'package:saldough/shared/capture/domain/record_draft.dart';
+import 'package:saldough/shared/capture/domain/spoken_amount_parser.dart';
+import 'package:saldough/shared/capture/domain/spoken_date_parser.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

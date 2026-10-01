@@ -5,13 +5,13 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/notification/capture_inbox_entry.dart';
 import 'package:saldough/features/record/presentation/capture/notification/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/record/presentation/capture/notification/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/record/presentation/capture/notification/notification_pattern_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 

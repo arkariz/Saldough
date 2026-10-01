@@ -1,4 +1,4 @@
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 /// Pengolahan teks notifikasi sebelum ditafsirkan (ADR-032 §3.1, §3.3).
 abstract final class NotificationText {

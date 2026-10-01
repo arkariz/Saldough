@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
 import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
 import 'package:saldough/features/record/presentation/capture/voice_capture_sheet.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:state_management/state_management.dart';
 
 /// Pengenal ucapan palsu: memutar ulang [updates] lalu selesai.

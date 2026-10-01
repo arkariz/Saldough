@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:saldough/core/currency/currency.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';

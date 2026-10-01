@@ -1,15 +1,9 @@
-import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_resolver.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
 import 'package:saldough/features/record/domain/capture/notification/captured_notification.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_pattern.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_source.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_template.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_text.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

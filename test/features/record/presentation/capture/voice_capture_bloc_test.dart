@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
 import 'package:saldough/features/record/presentation/capture/bloc/voice_capture_bloc.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

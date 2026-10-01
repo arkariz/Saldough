@@ -1,11 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/data/capture/firebase_ai_transaction_interpreter.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_resolver.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Interpreter Firebase AI (T-11.7) dengan model palsu.

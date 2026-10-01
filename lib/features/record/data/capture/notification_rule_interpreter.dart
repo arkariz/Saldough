@@ -1,11 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:saldough/features/record/data/capture/rule_based_transaction_interpreter.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_text.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 
 /// Interpreter aturan untuk teks notifikasi bank/e-wallet (ADR-032 §3.3).

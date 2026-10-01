@@ -1,6 +1,6 @@
 import 'package:navigation/navigation.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

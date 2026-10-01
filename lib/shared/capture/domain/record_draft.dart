@@ -1,5 +1,5 @@
 import 'package:dependencies/dependencies.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
+import 'package:saldough/shared/capture/domain/interpreted_transaction.dart';
 
 /// Hal yang perlu diperhatikan pengguna sebelum menyimpan draf (ADR-027
 /// §3.3). Formulir CATAT menyorot kolom yang bersangkutan.

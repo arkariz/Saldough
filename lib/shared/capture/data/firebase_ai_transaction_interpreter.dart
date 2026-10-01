@@ -5,9 +5,9 @@ import 'package:failures/failures.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/domain/capture_evidence.dart';
+import 'package:saldough/shared/capture/domain/interpreted_transaction.dart';
+import 'package:saldough/shared/capture/domain/transaction_interpreter.dart';
 
 /// Pemanggil model: prompt pengguna masuk, teks JSON keluar (atau `null`).
 typedef ExtractionModel = Future<String?> Function(String prompt);

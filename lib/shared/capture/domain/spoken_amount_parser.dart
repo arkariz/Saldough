@@ -16,9 +16,9 @@
 library;
 
 import 'package:saldough/core/currency/app_currency.dart';
-import 'package:saldough/features/record/domain/capture/number_lexicon.dart';
+import 'package:saldough/shared/capture/domain/number_lexicon.dart';
 
-export 'package:saldough/features/record/domain/capture/number_lexicon.dart';
+export 'package:saldough/shared/capture/domain/number_lexicon.dart';
 
 /// Masalah yang membuat nominal tidak bisa diisi dengan yakin.
 enum SpokenAmountIssue {

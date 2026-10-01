@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/notification/auto_record_policy.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_capture_settings.dart';
 import 'package:saldough/features/record/domain/capture/notification/transaction_from_draft.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 void main() {

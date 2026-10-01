@@ -15,7 +15,7 @@ import 'package:saldough/features/record/domain/capture/notification/notificatio
 import 'package:saldough/features/record/domain/capture/notification/notification_pattern.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_text.dart';
 import 'package:saldough/features/record/domain/capture/notification/transaction_from_draft.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';

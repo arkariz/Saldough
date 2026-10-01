@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/domain/capture/language/indonesian.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_text.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 void main() {
   final lexicon = indonesian.notification;

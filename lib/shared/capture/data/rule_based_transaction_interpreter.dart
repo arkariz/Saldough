@@ -1,11 +1,11 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
-import 'package:saldough/features/record/domain/capture/spoken_amount_parser.dart';
-import 'package:saldough/features/record/domain/capture/spoken_date_parser.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/domain/capture_evidence.dart';
+import 'package:saldough/shared/capture/domain/interpreted_transaction.dart';
+import 'package:saldough/shared/capture/domain/language/capture_language.dart';
+import 'package:saldough/shared/capture/domain/spoken_amount_parser.dart';
+import 'package:saldough/shared/capture/domain/spoken_date_parser.dart';
+import 'package:saldough/shared/capture/domain/transaction_interpreter.dart';
 import 'package:saldough/shared/category/category.dart';
 
 /// Interpreter tanpa model: kata kunci, [SpokenAmountParser],

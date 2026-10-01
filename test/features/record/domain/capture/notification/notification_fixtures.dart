@@ -1,9 +1,7 @@
 import 'package:saldough/features/record/data/capture/notification_rule_interpreter.dart';
-import 'package:saldough/features/record/domain/capture/capture_draft_composer.dart';
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_draft_composer.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_source.dart';
-import 'package:saldough/features/record/domain/capture/transaction_interpreter.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 

@@ -2,13 +2,12 @@ import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/notification/capture_inbox_entry.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_capture_settings.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_capture_store.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_pattern.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_source.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 const _settingsKey = StorageKey(namespace: 'settings', name: 'notification_capture');
 const _patternsKey = StorageKey(namespace: 'capture', name: 'notification_patterns');

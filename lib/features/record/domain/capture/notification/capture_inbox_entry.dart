@@ -1,6 +1,5 @@
 import 'package:dependencies/dependencies.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 
 /// Tangkapan yang menunggu ditinjau di kotak masuk (ADR-032 §3.6). Teksnya
 /// disimpan hanya selama menunggu, paling lama [CaptureRetention.days] hari.

@@ -1,6 +1,5 @@
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
 import 'package:saldough/features/record/domain/capture/notification/notification_capture_settings.dart';
-import 'package:saldough/features/record/domain/capture/record_draft.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Boleh-tidaknya draf notifikasi dicatat tanpa ditinjau (ADR-032 §3.4).

@@ -1,6 +1,6 @@
-import 'package:saldough/features/record/domain/capture/language/capture_language.dart';
-import 'package:saldough/features/record/domain/capture/number_lexicon.dart';
-import 'package:saldough/features/record/domain/capture/spoken_date_parser.dart';
+import 'package:saldough/shared/capture/domain/language/capture_language.dart';
+import 'package:saldough/shared/capture/domain/number_lexicon.dart';
+import 'package:saldough/shared/capture/domain/spoken_date_parser.dart';
 
 /// Paket bahasa Inggris.
 const english = CaptureLanguage(

@@ -7,7 +7,7 @@
 /// karena formulir CATAT tidak menerima tanggal masa depan.
 library;
 
-import 'package:saldough/features/record/domain/capture/number_lexicon.dart';
+import 'package:saldough/shared/capture/domain/number_lexicon.dart';
 
 /// Urutan tanggal yang ditulis dengan angka ("27/9" atau "9/27").
 enum NumericDateOrder {

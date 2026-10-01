@@ -1,7 +1,7 @@
-import 'package:saldough/features/record/domain/capture/language/english.dart';
-import 'package:saldough/features/record/domain/capture/language/indonesian.dart';
-import 'package:saldough/features/record/domain/capture/number_lexicon.dart';
-import 'package:saldough/features/record/domain/capture/spoken_date_parser.dart';
+import 'package:saldough/shared/capture/domain/language/english.dart';
+import 'package:saldough/shared/capture/domain/language/indonesian.dart';
+import 'package:saldough/shared/capture/domain/number_lexicon.dart';
+import 'package:saldough/shared/capture/domain/spoken_date_parser.dart';
 
 /// Kosakata satu bahasa untuk Catat Cerdas (ADR-029 §3.1). Interpreter
 /// aturan, resolver, dan pengurai hanya membaca peran kata dari sini;

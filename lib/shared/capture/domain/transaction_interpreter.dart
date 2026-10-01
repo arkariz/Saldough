@@ -3,8 +3,8 @@
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
-import 'package:saldough/features/record/domain/capture/capture_evidence.dart';
-import 'package:saldough/features/record/domain/capture/interpreted_transaction.dart';
+import 'package:saldough/shared/capture/domain/capture_evidence.dart';
+import 'package:saldough/shared/capture/domain/interpreted_transaction.dart';
 
 /// Konteks ringkas untuk interpreter (ADR-027, riset §7): hanya nama, tanpa
 /// saldo, riwayat, atau id internal.

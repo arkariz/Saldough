@@ -70,14 +70,14 @@ Terakhir diperbarui: 1 Oktober 2026 (867 uji lulus, 88 berkas uji, 34.516 baris 
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 11 | 10 | Berjalan -- T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori dan suara ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)) | 16 | 12 | Berjalan -- T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| Antrean (`B-n`, belum dijadwalkan) | 8 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| Antrean (`B-n`, belum dijadwalkan) | 9 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -1510,6 +1510,18 @@ seluruh fitur di atasnya menghasilkan data.
       analyze bersih; emulator Slim_Pixel: dialog "New category" (terang) dan
       pemilih tanggal CATAT (gelap). Di luar PRD (konsistensi ADR-015).
 
+- [x] **T-8.12** Fokus CATAT tidak melompat kembali ke nominal (1 Okt
+      2026, permintaan pemilik; teramati sejak verifikasi M1). Kolom nominal
+      `autofocus` tidak pernah kehilangan fokus saat pemilih tanggal, menu,
+      atau dialog dibuka, sehingga Flutter mengembalikan fokus ke nominal saat
+      ditutup dan papan ketik muncul lagi. Kini kolom nominal dan catatan
+      memakai `onTapOutside: dismissKeyboardOnTapOutside`
+      (`lib/core/presentation/widgets/dismiss_keyboard.dart`).
+      Verifikasi: uji `record_amount_field_test` (gagal tanpa perbaikan);
+      847 uji lulus, analyze bersih; emulator Slim_Pixel: CATAT → ketuk di
+      luar (papan ketik tertutup) → pemilih tanggal → Batal → papan ketik tetap
+      tertutup. Kolom di formulir lain menyusul (B-19). Di luar PRD (UX).
+
 ## Fase 9: Onboarding, info, dan tur spotlight
 
 Rincian, konten, dan key spotlight ada di
@@ -1967,6 +1979,7 @@ menambah dan memindahkannya ada di
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 | B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-19 | Terapkan `dismissKeyboardOnTapOutside` (T-8.12) ke kolom teks formulir lain yang bisa punya gejala fokus kembali sama: `AppFormTextField`/`AppFormMoneyField`/`AppFormQuantityField` (anggaran, freelance), formulir dompet, pencarian Riwayat, dialog nama kategori. | agen | T-8.12 |
 | B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

@@ -106,6 +106,7 @@ class RecordAmountField extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     autofocus: autofocus,
+                    onTapOutside: dismissKeyboardOnTapOutside,
                     keyboardType: moneyKeyboardType,
                     inputFormatters: [MoneyInputFormatter()],
                     cursorColor: ink,

@@ -33,6 +33,7 @@ class RecordNoteField extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: controller,
+                  onTapOutside: dismissKeyboardOnTapOutside,
                   textCapitalization: TextCapitalization.sentences,
                   cursorColor: colors.kindInk(kind),
                   decoration: InputDecoration(

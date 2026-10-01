@@ -91,4 +91,38 @@ void main() {
     }
     expect(find.textContaining('rb'), findsNothing);
   });
+
+  testWidgets('menutup dialog sesudah mengetuk di luar kolom tidak mengembalikan fokus ke nominal', (tester) async {
+    final controller = TextEditingController();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => Column(
+              children: [
+                RecordAmountField(controller: controller, label: 'Nominal', kind: TransactionKind.expense, autofocus: true),
+                TextButton(
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (context) => TextButton(onPressed: () => Navigator.pop(context), child: const Text('tutup')),
+                  ),
+                  child: const Text('pilih tanggal'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final field = tester.widget<EditableText>(find.byType(EditableText));
+    expect(field.focusNode.hasFocus, isTrue);
+
+    await tester.tap(find.text('pilih tanggal'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('tutup'));
+    await tester.pumpAndSettle();
+
+    expect(field.focusNode.hasFocus, isFalse);
+  });
 }

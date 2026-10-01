@@ -17,6 +17,7 @@ export 'app_skeleton.dart';
 export 'app_tappable.dart';
 export 'category_icon.dart';
 export 'confirm_delete_dialog.dart';
+export 'dismiss_keyboard.dart';
 export 'fit_start.dart';
 export 'full_screen_sheet.dart';
 export 'kind_surfaces.dart';

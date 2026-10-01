@@ -74,7 +74,7 @@ Terakhir diperbarui: 1 Oktober 2026 (901 uji lulus sesudah M4 berjalan; sebelumn
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 21 | 12 | Berjalan -- M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
-| 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 3 | Berjalan -- dimulai 1 Okt 2026 dari audit fitur `record`; T-13.1 (perbaikan penangkap notifikasi), T-13.2 (`shared/capture`), dan T-13.3 (fitur `notification_capture`) selesai |
+| 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 4 | Berjalan -- dimulai 1 Okt 2026 dari audit fitur `record`; T-13.1 (perbaikan penangkap notifikasi), T-13.2 (`shared/capture`), T-13.3 (fitur `notification_capture`), dan T-13.4 (fitur `voice_capture`) selesai |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2124,11 +2124,22 @@ dan seluruh uji lulus.
       `NotificationCaptureRouteKeys`. Fitur ini hanya mengimpor kunci rute
       `record` dan `transaction`. `record` kini 4.055 baris, fitur notifikasi
       4.863. 911 uji lulus.
-- [ ] **T-13.4** Fitur `voice_capture` (ADR-033 §3.2): kunci
+- [x] **T-13.4** Fitur `voice_capture` (ADR-033 §3.2): kunci
       `VoiceCaptureRouteKeys.capture`, scope sendiri, lalu
       `RecordBloc` tanpa `voiceCaptureFactory`/`speechLanguagePrompt` (R1).
       Verifikasi: uji suara dan shell lulus; alur suara → CATAT di emulator.
       Di luar PRD: kualitas arsitektur.
+      Hasil (1 Okt 2026): transkriptor, bloc, dua lembar, dan alur pindah ke
+      `features/voice_capture/` (8 berkas `lib/`, 4 berkas uji);
+      `VoiceCaptureScope` memasang transkriptor, penyusun draf, dan bloc
+      rekam (*factory*), lalu membuka CATAT lewat `RecordRouteKeys.sheet`.
+      `RecordScope` tidak lagi mendaftarkan transkriptor/penyusun draf, dan
+      `RecordBloc` tanpa `voiceCaptureFactory`/`speechLanguagePrompt`.
+      `FlowRunner` di `core/foundation/navigation/` menggantikan `_Runner`
+      privat. Dompet gagal dibaca → CATAT kosong yang menampilkan galatnya
+      (dulu galat `RecordBloc`). `record` kini 2.945 baris, `voice_capture` 1.145. 911 uji lulus.
+      Emulator: tombol mikrofon → lembar rekam → *Ketik saja* → CATAT →
+      tutup → Beranda, lalu CATAT biasa; tanpa galat di log aplikasi.
 - [ ] **T-13.5** Rapikan fitur notifikasi (ADR-033 §2 R2/R3): domain per
       subfolder, `CaptureInboxActions` ke berkasnya sendiri, satu tempat untuk
       "pola aktif" dan "dompet aktif".

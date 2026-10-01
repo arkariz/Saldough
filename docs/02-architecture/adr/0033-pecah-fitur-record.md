@@ -78,7 +78,7 @@ barrel ADR-030 §3.8).
 lib/features/voice_capture/
 ├── domain/speech_transcriber.dart
 ├── data/system_speech_transcriber.dart
-├── presentation/  bloc/, voice_capture_sheet, speech_language_sheet,
+├── presentation/  bloc/, widgets/ (voice_capture_sheet, speech_language_sheet),
 │                  open_voice_capture, navigation/ (kunci + modul rute)
 └── di/voice_capture_scope.dart
 ```
@@ -89,6 +89,9 @@ lib/features/voice_capture/
   `RecordRouteKeys.sheet` dengan draf.
 - `RecordBloc` tidak lagi punya `voiceCaptureFactory` maupun
   `speechLanguagePrompt` (R1).
+- Isi rute alur transparan (jalankan sekali sesudah frame pertama, lalu
+  `pop` dengan hasilnya) dipakai `record` dan `voice_capture`, jadi pindah ke
+  `core/foundation/navigation/flow_runner.dart` sebagai `FlowRunner`.
 
 ### 3.3 Fitur `notification_capture`
 

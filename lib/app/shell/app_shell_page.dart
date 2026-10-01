@@ -24,6 +24,7 @@ import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
+import 'package:saldough/features/voice_capture/presentation/navigation/voice_capture_route_keys.dart';
 import 'package:saldough/features/wallet/di/wallet_scope.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
@@ -73,7 +74,7 @@ class _AppShellPageState extends State<AppShellPage> {
 
   /// Membuka alur CATAT atau catat pakai suara (ADR-027).
   Future<void> _openRecord(BuildContext context, {bool voice = false}) => voice
-      ? context.pushRoute(RecordRouteKeys.voice, const EmptyInput())
+      ? context.pushRoute(VoiceCaptureRouteKeys.capture, const EmptyInput())
       : context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput());
 
   /// Menjalankan [AppShellPage.startAction] sekali, sesudah frame pertama

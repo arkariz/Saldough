@@ -14,11 +14,11 @@ void main() {
       'freelance.overview',
       'record.sheet',
       'record.edit',
-      'record.voice',
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'transaction.detail',
       'transaction.history',
+      'voiceCapture.capture',
       'wallet.detail',
     });
   });

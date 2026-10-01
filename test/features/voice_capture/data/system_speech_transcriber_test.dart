@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saldough/features/record/data/capture/system_speech_transcriber.dart';
-import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:saldough/features/voice_capture/data/system_speech_transcriber.dart';
+import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 /// Pengenal palsu yang meniru `SpeechToText`: singleton, dan `initialize`

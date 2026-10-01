@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
-import 'package:saldough/features/record/presentation/capture/speech_language_sheet.dart';
+import 'package:saldough/features/voice_capture/presentation/widgets/speech_language_sheet.dart';
 
 /// Lembar pilihan bahasa ucapan (ADR-028 §3.8).
 void main() {

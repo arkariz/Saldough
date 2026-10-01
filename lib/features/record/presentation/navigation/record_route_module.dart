@@ -1,10 +1,10 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/navigation/flow_runner.dart';
 import 'package:saldough/features/record/di/record_scope.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
-import 'package:saldough/features/record/presentation/capture/open_voice_record.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/record/presentation/open_edit_transaction_sheet.dart';
 import 'package:saldough/features/record/presentation/open_record_sheet.dart';
@@ -12,7 +12,7 @@ import 'package:state_management/state_management.dart';
 
 /// Modul rute fitur `record` (ADR-030 §3.3).
 ///
-/// Ketiga rutenya **alur transparan** (`RouteTransition.none`): rute tak
+/// Kedua rutenya **alur transparan** (`RouteTransition.none`): rute tak
 /// terlihat yang memegang `RecordScope`-nya sendiri, membuka lembar dan
 /// dialognya persis seperti sebelumnya, lalu menutup dirinya. Dengan begitu
 /// `RecordBloc` hidup sampai penyimpanan dan snackbar hasilnya selesai,
@@ -52,17 +52,10 @@ final class RecordRouteModule extends FeatureRouteModule {
         ),
       ),
     ),
-    RouteNode.typed<EmptyInput>(
-      key: RecordRouteKeys.voice,
-      transition: RouteTransition.none,
-      defaultInput: () => const EmptyInput(),
-      builder: (context, _) => const _RecordFlow(run: openVoiceRecord),
-    ),
   ];
 }
 
-/// Rute alur: memasang `RecordScope`, menjalankan [run] sekali sesudah frame
-/// pertama, lalu menutup rutenya dengan hasil [run].
+/// Rute alur: memasang `RecordScope`, lalu [FlowRunner] menjalankan [run].
 class _RecordFlow extends StatelessWidget {
   const _RecordFlow({required this.run});
 
@@ -77,34 +70,8 @@ class _RecordFlow extends StatelessWidget {
         value: scope.container<RecordBloc>(),
         // Snackbar galat/berhasil `RecordBloc`; tetap tampil sesudah rute
         // ini tertutup karena `ScaffoldMessenger` milik aplikasi.
-        child: EffectListener<RecordBloc, RecordState>(child: _Runner(run: run)),
+        child: EffectListener<RecordBloc, RecordState>(child: FlowRunner(run: run)),
       ),
     );
   }
-}
-
-class _Runner extends StatefulWidget {
-  const _Runner({required this.run});
-
-  final Future<Object?> Function(BuildContext context) run;
-
-  @override
-  State<_Runner> createState() => _RunnerState();
-}
-
-class _RunnerState extends State<_Runner> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) return;
-      final result = await widget.run(context);
-      if (mounted) Navigator.of(context).pop(result);
-    });
-  }
-
-  // Tak terlihat: lembar dan dialog alur ini tampil di atasnya, layar
-  // pemanggil tetap terlihat di belakangnya.
-  @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
 }

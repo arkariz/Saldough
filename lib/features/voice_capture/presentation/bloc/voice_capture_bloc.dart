@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:saldough/core/currency/currency.dart';
-import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';

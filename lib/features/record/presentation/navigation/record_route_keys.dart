@@ -81,7 +81,4 @@ abstract final class RecordRouteKeys {
 
   /// Sunting transaksi; hasil rutenya `Transaction?`.
   static const edit = RouteKey<RecordEditInput>('record.edit');
-
-  /// Catat pakai suara (ADR-027), berlanjut ke CATAT dengan draf.
-  static const voice = RouteKey<EmptyInput>('record.voice');
 }

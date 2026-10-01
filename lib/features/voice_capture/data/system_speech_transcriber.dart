@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
-import 'package:saldough/features/record/domain/capture/speech_transcriber.dart';
+import 'package:saldough/features/voice_capture/domain/speech_transcriber.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';

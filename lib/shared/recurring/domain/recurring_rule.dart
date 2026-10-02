@@ -152,6 +152,7 @@ final class RecurringRule extends Equatable {
     this.end = const RecurringNeverEnds(),
     this.paymentMode,
     this.remindDaysBefore = 1,
+    this.reminders = true,
     this.autoRecord = false,
     Set<DateTime> skippedDates = const {},
     this.isPaused = false,
@@ -204,6 +205,10 @@ final class RecurringRule extends Equatable {
   /// Pengingat H−n untuk cara bayar manual. Bawaan 1.
   final int remindDaysBefore;
 
+  /// Sakelar pengingat per rutin (ADR-034 §3.8). Pengingat juga butuh
+  /// sakelar global di Akun.
+  final bool reminders;
+
   /// Catat otomatis tanpa ketukan (R3). Hanya sah untuk nominal tetap.
   final bool autoRecord;
 
@@ -235,6 +240,7 @@ final class RecurringRule extends Equatable {
     RecurringEnd? end,
     RecurringPaymentMode? paymentMode,
     int? remindDaysBefore,
+    bool? reminders,
     bool? autoRecord,
     Set<DateTime>? skippedDates,
     bool? isPaused,
@@ -253,6 +259,7 @@ final class RecurringRule extends Equatable {
       end: end ?? this.end,
       paymentMode: paymentMode ?? this.paymentMode,
       remindDaysBefore: remindDaysBefore ?? this.remindDaysBefore,
+      reminders: reminders ?? this.reminders,
       autoRecord: autoRecord ?? this.autoRecord,
       skippedDates: skippedDates ?? this.skippedDates,
       isPaused: isPaused ?? this.isPaused,
@@ -274,6 +281,7 @@ final class RecurringRule extends Equatable {
     end,
     paymentMode,
     remindDaysBefore,
+    reminders,
     autoRecord,
     skippedDates,
     isPaused,

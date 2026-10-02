@@ -28,6 +28,10 @@ import 'package:saldough/features/notification_capture/presentation/navigation/n
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
+import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
+import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
+import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
+import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
 import 'package:saldough/features/voice_capture/presentation/navigation/voice_capture_route_module.dart';
@@ -112,6 +116,11 @@ abstract final class RootModule {
       // Log tautan otomatis rutin dari catat notifikasi (ADR-034 §3.4), 7 hari.
       ..registerLazySingleton<RecurrenceMatchLogRepository>(
         () => RecurrenceMatchLogRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Pengingat rutin (ADR-034 §3.8): notifikasi lokal dan sakelar global.
+      ..registerLazySingleton<ReminderScheduler>(LocalNotificationReminderScheduler.new)
+      ..registerLazySingleton<ReminderSettingsRepository>(
+        () => ReminderSettingsRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).

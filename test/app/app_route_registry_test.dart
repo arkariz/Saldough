@@ -15,6 +15,7 @@ void main() {
       'record.sheet',
       'record.edit',
       'recurring.detail',
+      'recurring.reminders',
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'transaction.detail',

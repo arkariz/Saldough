@@ -76,7 +76,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
-| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 14 | 7 | Berjalan sejak 2 Okt 2026 -- ADR-034 disetujui pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
+| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 14 | 8 | Berjalan sejak 2 Okt 2026 -- ADR-034 disetujui pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2452,7 +2452,7 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Daftar "Tercocok dengan rutin" + Lepaskan ada di kotak masuk
       notifikasi. "Sudah tercatat? Tautkan" untuk jalur lain = dialog E4
       di kartu Menunggu (T-14.6).
-- [ ] **T-14.8** Notifikasi lokal (ADR-034 §3.8): dependensi
+- [x] **T-14.8** Notifikasi lokal (ADR-034 §3.8): dependensi
       `flutter_local_notifications` + `timezone`; saluran `recurring_reminders`;
       jadwal disusun ulang saat aplikasi dibuka dan saat rutin berubah (35 hari
       ke depan, id dari `(ruleId, occurrenceDate)`); H−n untuk bayar sendiri
@@ -2464,6 +2464,12 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji unit penyusun jadwal (tanpa ganda saat disusun ulang),
       build Android dan iOS, notifikasi nyata muncul dan aksi Catat bekerja.
       Memenuhi FR-RUT-004.
+      Selesai 2 Okt 2026 (kode, uji unit, dan build APK debug): sakelar
+      global di Akun › Pengingat rutin (bawaan mati, izin diminta saat
+      dinyalakan), sakelar per rutin di rincian rutin. Jadwal = instan UTC
+      dari jam lokal 09.00, disusun ulang saat dibuka, kembali ke depan, dan
+      tiap rutin/buku besar berubah. **Belum diuji di perangkat** Android 13+
+      dan iOS: masuk T-14.9.
 - [ ] **T-14.9** Verifikasi milestone R1a di perangkat (pola
       VERIFICATION_PLAN_FASE_11): alur J1–J3, J7, J8 dokumen perilaku;
       pencocokan dengan notifikasi BRImo/BCA nyata; pengingat H−1.

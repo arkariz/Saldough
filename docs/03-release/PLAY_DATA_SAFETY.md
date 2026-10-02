@@ -107,6 +107,12 @@ lihat riwayat git dokumen ini).
   di server kami. Saat build berfitur ini diunggah: tambah baris "Info
   finansial: Info finansial lainnya" (dikumpulkan, diproses sementara, opsional,
   tujuan fungsi aplikasi), dan sebutkan akses notifikasi di pengungkapan jelas.
+- **Pengingat rutin** (ADR-034 §3.8, T-14.8) — notifikasi lokal lewat
+  `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
+  pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**
+  menambah baris di tabel jenis data. Izin baru di manifest:
+  `RECEIVE_BOOT_COMPLETED` (memulihkan jadwal sesudah perangkat dinyalakan
+  ulang); tanpa izin exact alarm. Dicek ulang 2 Okt 2026.
 - **Foto struk dan catatan suara** (item "Catat otomatis" di
   `docs/TASKS.md` W-10 repo `tanukonomy-web`) — kalau digarap, tambah baris
   "Foto dan video" serta "Berkas audio: rekaman suara/audio" di tabel jenis

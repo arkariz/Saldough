@@ -16,4 +16,7 @@ final class RecurringDetailInput extends RouteInput {
 abstract final class RecurringRouteKeys {
   /// Rincian satu rutin (PLAN_TAB_LAYOUT §6.5).
   static const detail = RouteKey<RecurringDetailInput>('recurring.detail');
+
+  /// Sakelar global pengingat rutin (dibuka dari Akun, ADR-034 §3.8).
+  static const reminders = RouteKey<EmptyInput>('recurring.reminders');
 }

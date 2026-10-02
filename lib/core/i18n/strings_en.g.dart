@@ -1096,6 +1096,17 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get linkedTitle => 'Matched to recurring';
 	@override String get unlinkAction => 'Unlink';
 	@override String get unlinkedMessage => 'Unlinked. The occurrence is waiting again.';
+	@override String get reminderChannelName => 'Recurring reminders';
+	@override String get reminderChannelDescription => 'Recurring bills and income that are due.';
+	@override String reminderSoonTitle({required Object n}) => 'In ${n} day(s)';
+	@override String get reminderTodayTitle => 'Due today';
+	@override String reminderTodayManyTitle({required Object n}) => '${n} recurring due today';
+	@override String alreadyRecordedMessage({required Object name}) => '${name} is already recorded.';
+	@override String get remindersTitle => 'Recurring reminders';
+	@override String get remindersBody => 'Reminded a day before bills you pay yourself, and on the due day.';
+	@override String get remindersDenied => 'Notification permission was not granted. Turn it on in system settings.';
+	@override String get ruleRemindersLabel => 'Remind me';
+	@override String get remindersOffHint => 'Recurring reminders are off. Turn them on in Account.';
 }
 
 // Path: plan
@@ -2240,6 +2251,17 @@ extension on TranslationsEn {
 			'recurring.linkedTitle' => 'Matched to recurring',
 			'recurring.unlinkAction' => 'Unlink',
 			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
+			'recurring.reminderChannelName' => 'Recurring reminders',
+			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
+			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
+			'recurring.reminderTodayTitle' => 'Due today',
+			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
+			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
+			'recurring.remindersTitle' => 'Recurring reminders',
+			'recurring.remindersBody' => 'Reminded a day before bills you pay yourself, and on the due day.',
+			'recurring.remindersDenied' => 'Notification permission was not granted. Turn it on in system settings.',
+			'recurring.ruleRemindersLabel' => 'Remind me',
+			'recurring.remindersOffHint' => 'Recurring reminders are off. Turn them on in Account.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		};

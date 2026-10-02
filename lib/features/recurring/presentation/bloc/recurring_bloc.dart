@@ -50,6 +50,10 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     on<RecurringOccurrenceRecorded>(_onRecorded);
     on<RecurringPendingRecordedAll>(_onRecordedAll);
     on<RecurringOccurrenceLinked>(_onLinked);
+    on<RecurringRemindersToggled>((event, emit) async {
+      final rule = state.ruleOf(event.ruleId);
+      if (rule != null) await _write(rule.copyWith(reminders: event.enabled), emit, null);
+    });
     _subscriptions = [
       ledgerChanges.from(this).listen((_) => add(const RecurringRefreshed())),
       _recurringChanges.from(this).listen((_) => add(const RecurringRefreshed())),

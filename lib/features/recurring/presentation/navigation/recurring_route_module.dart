@@ -6,6 +6,7 @@ import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dar
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
+import 'package:saldough/features/recurring/presentation/pages/recurring_reminder_settings_page.dart';
 import 'package:state_management/state_management.dart';
 
 /// Modul rute fitur `recurring` (ADR-030 §3.3). Rincian rutin memasang
@@ -37,6 +38,10 @@ final class RecurringRouteModule extends FeatureRouteModule {
           },
         );
       },
+    ),
+    RouteNode.typed<EmptyInput>(
+      key: RecurringRouteKeys.reminders,
+      builder: (context, _) => const RecurringReminderSettingsPage(),
     ),
   ];
 }

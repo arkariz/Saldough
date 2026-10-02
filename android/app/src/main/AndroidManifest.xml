@@ -4,6 +4,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Catat dari notifikasi (ADR-032): pengingat Tanukonomy sendiri (Android 13+). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Pengingat rutin (ADR-034 §3.8): jadwal dipulihkan sesudah perangkat
+         dinyalakan ulang. Penjadwalan tidak presisi, jadi tanpa izin exact
+         alarm. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:label="Tanukonomy"
         android:name="${applicationName}"
@@ -30,6 +34,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Pengingat rutin (ADR-034 §3.8): penerima flutter_local_notifications
+             untuk notifikasi terjadwal, pemulihan sesudah boot, dan aksi Catat. -->
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <!-- Catat dari notifikasi (ADR-032 §3.1): akses diberikan pengguna di
              setelan sistem; hanya notifikasi dari aplikasi yang dipilih yang
              ditampung. -->

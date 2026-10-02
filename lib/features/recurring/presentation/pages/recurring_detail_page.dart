@@ -161,6 +161,13 @@ class RecurringDetailPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: AppSpacing.sm),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(t.recurring.ruleRemindersLabel),
+                  value: rule.reminders,
+                  onChanged: (value) => bloc.add(RecurringRemindersToggled(ruleId: rule.id, enabled: value)),
+                ),
                 if (priceUp) ...[
                   const SizedBox(height: AppSpacing.sm),
                   Text(

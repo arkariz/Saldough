@@ -2803,6 +2803,39 @@ class Translations$recurring$id {
 
 	/// id: 'Tautan dilepas. Kemunculannya kembali menunggu.'
 	String get unlinkedMessage => 'Tautan dilepas. Kemunculannya kembali menunggu.';
+
+	/// id: 'Pengingat rutin'
+	String get reminderChannelName => 'Pengingat rutin';
+
+	/// id: 'Tagihan dan pemasukan rutin yang jatuh tempo.'
+	String get reminderChannelDescription => 'Tagihan dan pemasukan rutin yang jatuh tempo.';
+
+	/// id: '$n hari lagi'
+	String reminderSoonTitle({required Object n}) => '${n} hari lagi';
+
+	/// id: 'Jatuh tempo hari ini'
+	String get reminderTodayTitle => 'Jatuh tempo hari ini';
+
+	/// id: '$n rutin jatuh tempo hari ini'
+	String reminderTodayManyTitle({required Object n}) => '${n} rutin jatuh tempo hari ini';
+
+	/// id: '$name sudah tercatat.'
+	String alreadyRecordedMessage({required Object name}) => '${name} sudah tercatat.';
+
+	/// id: 'Pengingat rutin'
+	String get remindersTitle => 'Pengingat rutin';
+
+	/// id: 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.'
+	String get remindersBody => 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.';
+
+	/// id: 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.'
+	String get remindersDenied => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.';
+
+	/// id: 'Ingatkan'
+	String get ruleRemindersLabel => 'Ingatkan';
+
+	/// id: 'Pengingat rutin mati. Nyalakan di Akun.'
+	String get remindersOffHint => 'Pengingat rutin mati. Nyalakan di Akun.';
 }
 
 // Path: plan
@@ -4140,6 +4173,17 @@ extension on Translations {
 			'recurring.linkedTitle' => 'Tercocok dengan rutin',
 			'recurring.unlinkAction' => 'Lepaskan',
 			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
+			'recurring.reminderChannelName' => 'Pengingat rutin',
+			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
+			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
+			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
+			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
+			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
+			'recurring.remindersTitle' => 'Pengingat rutin',
+			'recurring.remindersBody' => 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.',
+			'recurring.remindersDenied' => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.',
+			'recurring.ruleRemindersLabel' => 'Ingatkan',
+			'recurring.remindersOffHint' => 'Pengingat rutin mati. Nyalakan di Akun.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		};

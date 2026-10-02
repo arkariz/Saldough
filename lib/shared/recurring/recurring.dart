@@ -4,6 +4,7 @@
 library;
 
 export 'data/recurrence_match_log_repository_impl.dart';
+export 'data/recurring_rule_model.dart';
 export 'data/recurring_rule_repository_impl.dart';
 export 'domain/occurrence_matching.dart';
 export 'domain/occurrence_recording.dart';

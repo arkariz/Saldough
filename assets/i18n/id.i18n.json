@@ -1012,7 +1012,18 @@
     "matchLabel": "Cocok dengan rutin $name · $date",
     "linkedTitle": "Tercocok dengan rutin",
     "unlinkAction": "Lepaskan",
-    "unlinkedMessage": "Tautan dilepas. Kemunculannya kembali menunggu."
+    "unlinkedMessage": "Tautan dilepas. Kemunculannya kembali menunggu.",
+    "reminderChannelName": "Pengingat rutin",
+    "reminderChannelDescription": "Tagihan dan pemasukan rutin yang jatuh tempo.",
+    "reminderSoonTitle": "$n hari lagi",
+    "reminderTodayTitle": "Jatuh tempo hari ini",
+    "reminderTodayManyTitle": "$n rutin jatuh tempo hari ini",
+    "alreadyRecordedMessage": "$name sudah tercatat.",
+    "remindersTitle": "Pengingat rutin",
+    "remindersBody": "Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.",
+    "remindersDenied": "Izin notifikasi belum diberikan. Nyalakan di setelan sistem.",
+    "ruleRemindersLabel": "Ingatkan",
+    "remindersOffHint": "Pengingat rutin mati. Nyalakan di Akun."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin"

@@ -125,3 +125,15 @@ final class RecurringOccurrenceLinked extends RecurringEvent {
   /// Transaksi yang ditautkan.
   final String transactionId;
 }
+
+/// Nyalakan atau matikan pengingat satu rutin.
+final class RecurringRemindersToggled extends RecurringEvent {
+  /// Membuat [RecurringRemindersToggled].
+  const RecurringRemindersToggled({required this.ruleId, required this.enabled});
+
+  /// Rutinnya.
+  final String ruleId;
+
+  /// Nyala atau mati.
+  final bool enabled;
+}

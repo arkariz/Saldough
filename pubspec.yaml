@@ -52,6 +52,7 @@ dependencies:
   firebase_crashlytics: ^5.4.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^22.3.1
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^2.3.0
@@ -81,6 +82,7 @@ dependencies:
       url: https://github.com/arkariz/advance-mobile-platform
       path: fondation/state_management
       ref: 275181ec7d43d423d5293ab676445a4e43a736ee  # state_management-v2.2.0 + fix URL
+  timezone: ^0.11.1
 
 dev_dependencies:
   bloc_test: ^10.0.0

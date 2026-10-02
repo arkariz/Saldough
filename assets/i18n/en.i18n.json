@@ -1012,7 +1012,18 @@
     "matchLabel": "Matches recurring $name · $date",
     "linkedTitle": "Matched to recurring",
     "unlinkAction": "Unlink",
-    "unlinkedMessage": "Unlinked. The occurrence is waiting again."
+    "unlinkedMessage": "Unlinked. The occurrence is waiting again.",
+    "reminderChannelName": "Recurring reminders",
+    "reminderChannelDescription": "Recurring bills and income that are due.",
+    "reminderSoonTitle": "In $n day(s)",
+    "reminderTodayTitle": "Due today",
+    "reminderTodayManyTitle": "$n recurring due today",
+    "alreadyRecordedMessage": "$name is already recorded.",
+    "remindersTitle": "Recurring reminders",
+    "remindersBody": "Reminded a day before bills you pay yourself, and on the due day.",
+    "remindersDenied": "Notification permission was not granted. Turn it on in system settings.",
+    "ruleRemindersLabel": "Remind me",
+    "remindersOffHint": "Recurring reminders are off. Turn them on in Account."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring"

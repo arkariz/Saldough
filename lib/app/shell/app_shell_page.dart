@@ -21,6 +21,7 @@ import 'package:saldough/features/notification_capture/presentation/host/notific
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/recurring/presentation/host/recurring_reminder_host.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
@@ -179,41 +180,46 @@ class _AppShellPageState extends State<AppShellPage> {
                                 // resume, tangkapan baru, dan ketukan pengingat.
                                 return NotificationCaptureHost(
                                   container: parentContainer,
-                                  child: Scaffold(
-                                    body: IndexedStack(
-                                      index: _activeTab,
-                                      // `IndexedStack` menjaga tab tersembunyi tetap hidup;
-                                      // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
-                                      children: [
-                                        for (final (i, tab) in tabsFor(context).indexed)
-                                          TourVisibility(visible: i == _activeTab, child: tab),
-                                      ],
-                                    ),
-                                    floatingActionButton: _RecordFabs(
-                                      onRecord: () => unawaited(_openRecord(context)),
-                                      onVoice: () => unawaited(_openRecord(context, voice: true)),
-                                    ),
-                                    bottomNavigationBar: NavigationBar(
-                                      selectedIndex: _activeTab,
-                                      onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
-                                      destinations: [
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.home),
-                                          label: t.appShell.homeTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.budget),
-                                          label: t.appShell.planTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.transactions),
-                                          label: t.appShell.transactionsTabLabel,
-                                        ),
-                                        NavigationDestination(
-                                          icon: const AppIcon(IconKey.wallets),
-                                          label: t.appShell.walletsTabLabel,
-                                        ),
-                                      ],
+                                  // Pengingat rutin (ADR-034 §3.8): jadwal dan ketukan notifikasi.
+                                  child: RecurringReminderHost(
+                                    container: parentContainer,
+                                    onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
+                                    child: Scaffold(
+                                      body: IndexedStack(
+                                        index: _activeTab,
+                                        // `IndexedStack` menjaga tab tersembunyi tetap hidup;
+                                        // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
+                                        children: [
+                                          for (final (i, tab) in tabsFor(context).indexed)
+                                            TourVisibility(visible: i == _activeTab, child: tab),
+                                        ],
+                                      ),
+                                      floatingActionButton: _RecordFabs(
+                                        onRecord: () => unawaited(_openRecord(context)),
+                                        onVoice: () => unawaited(_openRecord(context, voice: true)),
+                                      ),
+                                      bottomNavigationBar: NavigationBar(
+                                        selectedIndex: _activeTab,
+                                        onDestinationSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
+                                        destinations: [
+                                          NavigationDestination(
+                                            icon: const AppIcon(IconKey.home),
+                                            label: t.appShell.homeTabLabel,
+                                          ),
+                                          NavigationDestination(
+                                            icon: const AppIcon(IconKey.budget),
+                                            label: t.appShell.planTabLabel,
+                                          ),
+                                          NavigationDestination(
+                                            icon: const AppIcon(IconKey.transactions),
+                                            label: t.appShell.transactionsTabLabel,
+                                          ),
+                                          NavigationDestination(
+                                            icon: const AppIcon(IconKey.wallets),
+                                            label: t.appShell.walletsTabLabel,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

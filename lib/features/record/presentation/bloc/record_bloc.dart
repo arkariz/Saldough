@@ -226,6 +226,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       end: fresh.end,
       paymentMode: fresh.paymentMode,
       remindDaysBefore: old.remindDaysBefore,
+      reminders: old.reminders,
       skippedDates: old.skippedDates,
       isPaused: old.isPaused,
       budgetItemKey: old.budgetItemKey,

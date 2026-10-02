@@ -1026,6 +1026,9 @@
     "remindersOffHint": "Pengingat rutin mati. Nyalakan di Akun."
   },
   "plan": {
-    "recurringSegmentLabel": "Rutin"
+    "recurringSegmentLabel": "Rutin",
+    "financialMonthTitle": "Awal bulan keuangan",
+    "financialMonthPickerTitle": "Bulan keuangan dimulai",
+    "financialMonthDay": "Tanggal $day"
   }
 }

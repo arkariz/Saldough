@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:saldough/app/app.dart';
 import 'package:saldough/app/di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -51,6 +52,10 @@ Future<void> main() async {
   // memformat nominal. Gagal dibaca berarti bawaan (IDR).
   ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
     (_) => AppCurrency.idr,
+  );
+  // KT-R2: tanggal awal bulan keuangan tab Rencana; gagal dibaca = tanggal 1.
+  ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
+    (_) => 1,
   );
 
   // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama

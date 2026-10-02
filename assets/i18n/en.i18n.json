@@ -1026,6 +1026,9 @@
     "remindersOffHint": "Recurring reminders are off. Turn them on in Account."
   },
   "plan": {
-    "recurringSegmentLabel": "Recurring"
+    "recurringSegmentLabel": "Recurring",
+    "financialMonthTitle": "Financial month start",
+    "financialMonthPickerTitle": "Financial month starts on",
+    "financialMonthDay": "Day $day"
   }
 }

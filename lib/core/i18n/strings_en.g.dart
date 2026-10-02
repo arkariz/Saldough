@@ -1117,6 +1117,9 @@ class _Translations$plan$en extends Translations$plan$id {
 
 	// Translations
 	@override String get recurringSegmentLabel => 'Recurring';
+	@override String get financialMonthTitle => 'Financial month start';
+	@override String get financialMonthPickerTitle => 'Financial month starts on';
+	@override String financialMonthDay({required Object day}) => 'Day ${day}';
 }
 
 // Path: record.draftIssue
@@ -2263,6 +2266,9 @@ extension on TranslationsEn {
 			'recurring.ruleRemindersLabel' => 'Remind me',
 			'recurring.remindersOffHint' => 'Recurring reminders are off. Turn them on in Account.',
 			'plan.recurringSegmentLabel' => 'Recurring',
+			'plan.financialMonthTitle' => 'Financial month start',
+			'plan.financialMonthPickerTitle' => 'Financial month starts on',
+			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
 			_ => null,
 		};
 	}

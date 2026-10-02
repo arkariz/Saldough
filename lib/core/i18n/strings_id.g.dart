@@ -2848,6 +2848,15 @@ class Translations$plan$id {
 
 	/// id: 'Rutin'
 	String get recurringSegmentLabel => 'Rutin';
+
+	/// id: 'Awal bulan keuangan'
+	String get financialMonthTitle => 'Awal bulan keuangan';
+
+	/// id: 'Bulan keuangan dimulai'
+	String get financialMonthPickerTitle => 'Bulan keuangan dimulai';
+
+	/// id: 'Tanggal $day'
+	String financialMonthDay({required Object day}) => 'Tanggal ${day}';
 }
 
 // Path: record.draftIssue
@@ -4185,6 +4194,9 @@ extension on Translations {
 			'recurring.ruleRemindersLabel' => 'Ingatkan',
 			'recurring.remindersOffHint' => 'Pengingat rutin mati. Nyalakan di Akun.',
 			'plan.recurringSegmentLabel' => 'Rutin',
+			'plan.financialMonthTitle' => 'Awal bulan keuangan',
+			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
+			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
 			_ => null,
 		};
 	}

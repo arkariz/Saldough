@@ -5,6 +5,7 @@ import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/language/language.dart';
@@ -187,6 +188,9 @@ abstract final class RootModule {
       // Pilihan mata uang (ADR-025 §3.5), kunci `settings/currency`.
       ..registerLazySingleton<CurrencyPreferenceRepository>(
         () => CurrencyPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<FinancialMonthPreferenceRepository>(
+        () => FinancialMonthPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Identitas opsional (ADR-023). Singleton akar karena status masuk
       // dibaca dari mana saja (ikon akun di Beranda) tanpa terikat satu

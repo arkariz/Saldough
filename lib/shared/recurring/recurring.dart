@@ -6,5 +6,7 @@ library;
 export 'data/recurring_rule_repository_impl.dart';
 export 'domain/occurrence_status.dart';
 export 'domain/occurrences.dart';
+export 'domain/recurring_changes.dart';
+export 'domain/recurring_pattern.dart';
 export 'domain/recurring_rule.dart';
 export 'domain/recurring_rule_repository.dart';

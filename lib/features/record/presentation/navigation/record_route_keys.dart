@@ -1,6 +1,7 @@
 import 'package:navigation/navigation.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -32,6 +33,8 @@ final class RecordSheetInput extends RouteInput {
     this.initialToWalletId,
     this.prefillFrom,
     this.draft,
+    this.repeat,
+    this.makeRecurringFrom,
   });
 
   /// Dompet awal (pintasan rincian dompet, FR-REC-002).
@@ -52,8 +55,16 @@ final class RecordSheetInput extends RouteInput {
   /// "Catat lagi" (UX-4): isian dari transaksi ini, tetap transaksi BARU.
   final Transaction? prefillFrom;
 
-  /// Draf Catat Cerdas (ADR-027 §3.4).
+  /// Draf Catat Cerdas (ADR-027 §3.4). Chip pembuka rutin juga memakainya
+  /// untuk mengisi jenis, kategori, catatan, dan tanggal (T-14.3).
   final RecordDraft? draft;
+
+  /// Ulangi awal (T-14.3): CATAT dibuka dalam mode jadwal.
+  final RecurringPattern? repeat;
+
+  /// **Jadikan Rutin** (J2): CATAT mode jadwal terisi dari transaksi ini,
+  /// yang lalu ditautkan sebagai kemunculan pertama, bukan dicatat ulang.
+  final Transaction? makeRecurringFrom;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

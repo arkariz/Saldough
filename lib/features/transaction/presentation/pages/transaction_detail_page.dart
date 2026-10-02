@@ -85,6 +85,18 @@ class TransactionDetailPage extends StatelessWidget {
   Future<void> _recordAgain(BuildContext context) =>
       context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(prefillFrom: transaction));
 
+  /// **Jadikan Rutin** (T-14.3, J2): CATAT mode jadwal terisi dari
+  /// transaksi ini, yang lalu ditautkan sebagai kemunculan pertama. Rincian
+  /// ini ditutup sesudahnya karena transaksinya sudah berubah (bertaut).
+  Future<void> _makeRecurring(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final saved = await context.pushRoute<RecordSheetInput, bool>(
+      RecordRouteKeys.sheet,
+      RecordSheetInput(makeRecurringFrom: transaction),
+    );
+    if (saved ?? false) navigator.pop();
+  }
+
   /// UX-8: hapus LANGSUNG tanpa dialog konfirmasi -- pemakai bisa
   /// mengurungkannya lewat aksi "Urungkan" pada snackbar yang tampil
   /// sesudahnya (`TransactionBloc._effectDeletedWithUndo`). Konfirmasi
@@ -148,6 +160,13 @@ class TransactionDetailPage extends StatelessWidget {
                     label: t.transaction.recordAgainAction,
                     onPressed: () => _recordAgain(context),
                   ),
+                  if (transaction.recurrence == null) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    AppButton.secondary(
+                      label: t.transaction.makeRecurringAction,
+                      onPressed: () => _makeRecurring(context),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.sm),
                   _DeleteLink(onPressed: () => _delete(context)),
                 ],

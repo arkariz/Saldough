@@ -58,6 +58,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$category$id category = Translations$category$id.internal(_root);
 	late final Translations$language$id language = Translations$language$id.internal(_root);
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
+	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 }
 
 // Path: app
@@ -313,6 +314,7 @@ class Translations$record$id {
 
 	late final Translations$record$draftIssue$id draftIssue = Translations$record$draftIssue$id.internal(_root);
 	late final Translations$record$voice$id voice = Translations$record$voice$id.internal(_root);
+	late final Translations$record$repeat$id repeat = Translations$record$repeat$id.internal(_root);
 }
 
 // Path: transaction
@@ -538,6 +540,9 @@ class Translations$transaction$id {
 
 	/// id: 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.'
 	String get detailFreelanceNote => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.';
+
+	/// id: 'Jadikan Rutin'
+	String get makeRecurringAction => 'Jadikan Rutin';
 }
 
 // Path: wallet
@@ -2552,6 +2557,16 @@ class Translations$notificationCapture$id {
 	String get moreActions => 'Lainnya';
 }
 
+// Path: recurring
+class Translations$recurring$id {
+	Translations$recurring$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$recurring$starters$id starters = Translations$recurring$starters$id.internal(_root);
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -2650,6 +2665,111 @@ class Translations$record$voice$id {
 	String get languageContinue => 'Lanjut';
 }
 
+// Path: record.repeat
+class Translations$record$repeat$id {
+	Translations$record$repeat$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Ulangi'
+	String get label => 'Ulangi';
+
+	/// id: 'Tidak'
+	String get off => 'Tidak';
+
+	/// id: 'Tiap minggu'
+	String get weekly => 'Tiap minggu';
+
+	/// id: 'Tiap bulan'
+	String get monthly => 'Tiap bulan';
+
+	/// id: 'Tiap tahun'
+	String get yearly => 'Tiap tahun';
+
+	/// id: 'Tiap $day'
+	String everyWeekday({required Object day}) => 'Tiap ${day}';
+
+	/// id: 'Tiap tanggal $day'
+	String everyMonthDay({required Object day}) => 'Tiap tanggal ${day}';
+
+	/// id: 'Tiap $date'
+	String everyYearDate({required Object date}) => 'Tiap ${date}';
+
+	/// id: 'Tiap $n minggu'
+	String everyNWeeks({required Object n}) => 'Tiap ${n} minggu';
+
+	/// id: 'Tiap $n bulan'
+	String everyNMonths({required Object n}) => 'Tiap ${n} bulan';
+
+	/// id: 'Tiap $n tahun'
+	String everyNYears({required Object n}) => 'Tiap ${n} tahun';
+
+	/// id: 'Atur lebih lanjut'
+	String get moreAction => 'Atur lebih lanjut';
+
+	/// id: 'Kurangi'
+	String get lessAction => 'Kurangi';
+
+	/// id: 'Tambah'
+	String get moreCountAction => 'Tambah';
+
+	/// id: 'Berakhir'
+	String get endLabel => 'Berakhir';
+
+	/// id: 'Tidak pernah'
+	String get endNever => 'Tidak pernah';
+
+	/// id: 'Setelah N kali'
+	String get endAfter => 'Setelah N kali';
+
+	/// id: 'Sampai tanggal'
+	String get endOn => 'Sampai tanggal';
+
+	/// id: '$n kali'
+	String endsAfterSummary({required Object n}) => '${n} kali';
+
+	/// id: 'sampai $date'
+	String endsOnSummary({required Object date}) => 'sampai ${date}';
+
+	/// id: 'Nominal'
+	String get amountLabel => 'Nominal';
+
+	/// id: 'Tetap'
+	String get amountFixed => 'Tetap';
+
+	/// id: 'Kira-kira'
+	String get amountEstimated => 'Kira-kira';
+
+	/// id: 'Cara bayar'
+	String get paymentLabel => 'Cara bayar';
+
+	/// id: 'Bayar sendiri'
+	String get paymentManual => 'Bayar sendiri';
+
+	/// id: 'Autodebet'
+	String get paymentAutoDebit => 'Autodebet';
+
+	/// id: 'Catat & Jadwalkan'
+	String get recordAndScheduleAction => 'Catat & Jadwalkan';
+
+	/// id: 'Simpan Jadwal'
+	String get saveScheduleAction => 'Simpan Jadwal';
+
+	/// id: '$name dijadwalkan. Pertama $date.'
+	String scheduledMessage({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.';
+
+	/// id: '$name tercatat dan dijadwalkan.'
+	String recordedMessage({required Object name}) => '${name} tercatat dan dijadwalkan.';
+
+	/// id: '$name tercatat. Berikutnya $date.'
+	String recordedNextMessage({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.';
+
+	/// id: 'Rutin'
+	String get fallbackName => 'Rutin';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -2723,6 +2843,48 @@ class Translations$currency$names$id {
 
 	/// id: 'Dolar Australia'
 	String get aud => 'Dolar Australia';
+}
+
+// Path: recurring.starters
+class Translations$recurring$starters$id {
+	Translations$recurring$starters$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Gaji'
+	String get salary => 'Gaji';
+
+	/// id: 'Kos/Sewa'
+	String get rent => 'Kos/Sewa';
+
+	/// id: 'Listrik'
+	String get electricity => 'Listrik';
+
+	/// id: 'Internet'
+	String get internet => 'Internet';
+
+	/// id: 'BPJS'
+	String get bpjs => 'BPJS';
+
+	/// id: 'Cicilan'
+	String get installment => 'Cicilan';
+
+	/// id: 'Paylater'
+	String get paylater => 'Paylater';
+
+	/// id: 'Langganan'
+	String get subscription => 'Langganan';
+
+	/// id: 'Kirim ke orang tua'
+	String get parents => 'Kirim ke orang tua';
+
+	/// id: 'Arisan'
+	String get arisan => 'Arisan';
+
+	/// id: 'Tabungan'
+	String get savings => 'Tabungan';
 }
 
 // Path: record.voice.failure
@@ -2864,6 +3026,38 @@ extension on Translations {
 			'record.voice.languageTitle' => 'Kamu bicara dalam bahasa apa?',
 			'record.voice.languageBody' => 'Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.',
 			'record.voice.languageContinue' => 'Lanjut',
+			'record.repeat.label' => 'Ulangi',
+			'record.repeat.off' => 'Tidak',
+			'record.repeat.weekly' => 'Tiap minggu',
+			'record.repeat.monthly' => 'Tiap bulan',
+			'record.repeat.yearly' => 'Tiap tahun',
+			'record.repeat.everyWeekday' => ({required Object day}) => 'Tiap ${day}',
+			'record.repeat.everyMonthDay' => ({required Object day}) => 'Tiap tanggal ${day}',
+			'record.repeat.everyYearDate' => ({required Object date}) => 'Tiap ${date}',
+			'record.repeat.everyNWeeks' => ({required Object n}) => 'Tiap ${n} minggu',
+			'record.repeat.everyNMonths' => ({required Object n}) => 'Tiap ${n} bulan',
+			'record.repeat.everyNYears' => ({required Object n}) => 'Tiap ${n} tahun',
+			'record.repeat.moreAction' => 'Atur lebih lanjut',
+			'record.repeat.lessAction' => 'Kurangi',
+			'record.repeat.moreCountAction' => 'Tambah',
+			'record.repeat.endLabel' => 'Berakhir',
+			'record.repeat.endNever' => 'Tidak pernah',
+			'record.repeat.endAfter' => 'Setelah N kali',
+			'record.repeat.endOn' => 'Sampai tanggal',
+			'record.repeat.endsAfterSummary' => ({required Object n}) => '${n} kali',
+			'record.repeat.endsOnSummary' => ({required Object date}) => 'sampai ${date}',
+			'record.repeat.amountLabel' => 'Nominal',
+			'record.repeat.amountFixed' => 'Tetap',
+			'record.repeat.amountEstimated' => 'Kira-kira',
+			'record.repeat.paymentLabel' => 'Cara bayar',
+			'record.repeat.paymentManual' => 'Bayar sendiri',
+			'record.repeat.paymentAutoDebit' => 'Autodebet',
+			'record.repeat.recordAndScheduleAction' => 'Catat & Jadwalkan',
+			'record.repeat.saveScheduleAction' => 'Simpan Jadwal',
+			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.',
+			'record.repeat.recordedMessage' => ({required Object name}) => '${name} tercatat dan dijadwalkan.',
+			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.',
+			'record.repeat.fallbackName' => 'Rutin',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -2936,6 +3130,7 @@ extension on Translations {
 			'transaction.budgetLabel' => 'Anggaran',
 			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
+			'transaction.makeRecurringAction' => 'Jadikan Rutin',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
 			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
 			'wallet.totalLabel' => 'Total saldo semua dompet',
@@ -3239,6 +3434,8 @@ extension on Translations {
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
@@ -3272,8 +3469,6 @@ extension on Translations {
 			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
 			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
@@ -3601,6 +3796,17 @@ extension on Translations {
 			'notificationCapture.patternTransferWalletNone' => 'Belum ditentukan',
 			'notificationCapture.patternTemplateToggle' => 'Sunting templat',
 			'notificationCapture.moreActions' => 'Lainnya',
+			'recurring.starters.salary' => 'Gaji',
+			'recurring.starters.rent' => 'Kos/Sewa',
+			'recurring.starters.electricity' => 'Listrik',
+			'recurring.starters.internet' => 'Internet',
+			'recurring.starters.bpjs' => 'BPJS',
+			'recurring.starters.installment' => 'Cicilan',
+			'recurring.starters.paylater' => 'Paylater',
+			'recurring.starters.subscription' => 'Langganan',
+			'recurring.starters.parents' => 'Kirim ke orang tua',
+			'recurring.starters.arisan' => 'Arisan',
+			'recurring.starters.savings' => 'Tabungan',
 			_ => null,
 		};
 	}

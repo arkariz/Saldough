@@ -13,6 +13,7 @@ import 'package:saldough/features/record/presentation/widgets/record_saving_dial
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
@@ -65,6 +66,12 @@ import 'package:state_management/state_management.dart';
 /// yang tersimpan sebelum pengguna menekan Catat. Untuk transfer, dompet asal
 /// dan tujuan hanya diambil dari draf -- tanpa dompet bawaan.
 ///
+/// [initialRepeat] membuka CATAT dalam mode jadwal (T-14.3, chip pembuka).
+/// [makeRecurringFrom] (**Jadikan Rutin**, J2) mengisi formulir dari
+/// transaksi itu, termasuk tanggalnya, mengunci Ulangi dan jenisnya, lalu
+/// menautkan transaksi itu sebagai kemunculan pertama rutin baru -- tidak
+/// ada transaksi baru yang tercatat.
+///
 /// Mengembalikan `true` bila transaksi benar-benar tersimpan (kotak masuk
 /// Catat dari notifikasi menghapus itemnya hanya saat itu, ADR-032 §3.6).
 Future<bool> openRecordSheet(
@@ -76,7 +83,12 @@ Future<bool> openRecordSheet(
   String? initialToWalletId,
   Transaction? prefillFrom,
   RecordDraft? draft,
+  RecurringPattern? initialRepeat,
+  Transaction? makeRecurringFrom,
 }) async {
+  final recordDraft = makeRecurringFrom != null ? draftFromTransaction(makeRecurringFrom) : draft;
+  final repeat = initialRepeat ?? (makeRecurringFrom != null ? const RecurringPattern() : null);
+  final repeatLocked = makeRecurringFrom != null;
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
   if (!context.mounted) return false;
@@ -88,7 +100,7 @@ Future<bool> openRecordSheet(
 
   final initial =
       initialChoice ??
-      switch (draft?.kind) {
+      switch (recordDraft?.kind) {
         DraftKind.income => RecordChoice.income,
         DraftKind.expense => RecordChoice.expense,
         DraftKind.transfer => RecordChoice.transfer,
@@ -119,39 +131,49 @@ Future<bool> openRecordSheet(
     context,
     builder: (_) => RecordFormHost(
       initialChoice: initial,
-      formFor: (choice, kindSwitcher) => switch (choice) {
-        RecordChoice.income => IncomeFormSheet(
-          wallets: wallets,
-          prefill: incomePrefill,
-          draft: draft?.kind == DraftKind.income ? draft : null,
-          initialWalletId: walletFor(defaults.incomeWalletId),
-          frequentCategoryIds: defaults.incomeCategoryIds,
-          onCreateCategory: (name) => bloc.createCategory(CategoryKind.income, name),
-          kindSwitcher: kindSwitcher,
-        ),
-        RecordChoice.expense => ExpenseFormSheet(
-          wallets: wallets,
-          prefill: expensePrefill,
-          draft: draft?.kind == DraftKind.expense ? draft : null,
-          initialWalletId: walletFor(defaults.expenseWalletId),
-          frequentCategoryIds: defaults.expenseCategoryIds,
-          onCreateCategory: (name) => bloc.createCategory(CategoryKind.expense, name),
-          budgetItems: budgetItems,
-          initialBudgetItemId: initialBudgetItemId,
-          initialAmountSen: initialAmountSen,
-          kindSwitcher: kindSwitcher,
-        ),
-        RecordChoice.transfer => TransferFormSheet(
-          wallets: wallets,
-          prefill: transferPrefill,
-          draft: draft?.kind == DraftKind.transfer ? draft : null,
-          initialWalletId: transferFrom,
-          budgetItems: budgetItems,
-          initialBudgetItemId: initialBudgetItemId,
-          initialAmountSen: initialAmountSen,
-          initialToWalletId: transferTo,
-          kindSwitcher: kindSwitcher,
-        ),
+      formFor: (choice, switcher) {
+        // Jadikan Rutin: jenisnya mengikuti transaksi asal, tidak bisa diganti.
+        final kindSwitcher = repeatLocked ? null : switcher;
+        return switch (choice) {
+          RecordChoice.income => IncomeFormSheet(
+            wallets: wallets,
+            prefill: incomePrefill,
+            draft: recordDraft?.kind == DraftKind.income ? recordDraft : null,
+            initialWalletId: walletFor(defaults.incomeWalletId),
+            frequentCategoryIds: defaults.incomeCategoryIds,
+            onCreateCategory: (name) => bloc.createCategory(CategoryKind.income, name),
+            kindSwitcher: kindSwitcher,
+            initialRepeat: repeat,
+            repeatLocked: repeatLocked,
+          ),
+          RecordChoice.expense => ExpenseFormSheet(
+            wallets: wallets,
+            prefill: expensePrefill,
+            draft: recordDraft?.kind == DraftKind.expense ? recordDraft : null,
+            initialWalletId: walletFor(defaults.expenseWalletId),
+            frequentCategoryIds: defaults.expenseCategoryIds,
+            onCreateCategory: (name) => bloc.createCategory(CategoryKind.expense, name),
+            budgetItems: budgetItems,
+            initialBudgetItemId: initialBudgetItemId,
+            initialAmountSen: initialAmountSen,
+            kindSwitcher: kindSwitcher,
+            initialRepeat: repeat,
+            repeatLocked: repeatLocked,
+          ),
+          RecordChoice.transfer => TransferFormSheet(
+            wallets: wallets,
+            prefill: transferPrefill,
+            draft: recordDraft?.kind == DraftKind.transfer ? recordDraft : null,
+            initialWalletId: transferFrom,
+            budgetItems: budgetItems,
+            initialBudgetItemId: initialBudgetItemId,
+            initialAmountSen: initialAmountSen,
+            initialToWalletId: transferTo,
+            kindSwitcher: kindSwitcher,
+            initialRepeat: repeat,
+            repeatLocked: repeatLocked,
+          ),
+        };
       },
     ),
   );
@@ -164,7 +186,11 @@ Future<bool> openRecordSheet(
   }
   if (result is RecordEvent) {
     final savedBefore = bloc.state.saveCount;
-    bloc.add(withSourceIcon(result, draft?.sourceIconId));
+    bloc.add(
+      makeRecurringFrom != null
+          ? RecordMadeRecurring(source: makeRecurringFrom, recorded: result)
+          : withSourceIcon(result, recordDraft?.sourceIconId),
+    );
     if (!context.mounted) return false;
     await showDialog<void>(
       context: context,
@@ -175,3 +201,32 @@ Future<bool> openRecordSheet(
   }
   return false;
 }
+
+/// Draf CATAT dari [transaction] (Jadikan Rutin): seluruh isiannya, termasuk
+/// tanggal, tanpa isu sehingga kartu draf tidak tampil.
+RecordDraft draftFromTransaction(Transaction transaction) => switch (transaction) {
+  IncomeTransaction(:final walletId, :final categoryId) => RecordDraft(
+    kind: DraftKind.income,
+    amountSen: transaction.amount,
+    walletId: walletId,
+    categoryId: categoryId,
+    note: transaction.note,
+    date: transaction.date,
+  ),
+  ExpenseTransaction(:final walletId, :final categoryId) => RecordDraft(
+    kind: DraftKind.expense,
+    amountSen: transaction.amount,
+    walletId: walletId,
+    categoryId: categoryId,
+    note: transaction.note,
+    date: transaction.date,
+  ),
+  TransferTransaction(:final fromWalletId, :final toWalletId) => RecordDraft(
+    kind: DraftKind.transfer,
+    amountSen: transaction.amount,
+    walletId: fromWalletId,
+    toWalletId: toWalletId,
+    note: transaction.note,
+    date: transaction.date,
+  ),
+};

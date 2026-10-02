@@ -115,6 +115,40 @@
       "languageTitle": "Kamu bicara dalam bahasa apa?",
       "languageBody": "Dipakai untuk mengenali ucapan dan untuk tampilan aplikasi. Bisa diubah di Akun.",
       "languageContinue": "Lanjut"
+    },
+    "repeat": {
+      "label": "Ulangi",
+      "off": "Tidak",
+      "weekly": "Tiap minggu",
+      "monthly": "Tiap bulan",
+      "yearly": "Tiap tahun",
+      "everyWeekday": "Tiap $day",
+      "everyMonthDay": "Tiap tanggal $day",
+      "everyYearDate": "Tiap $date",
+      "everyNWeeks": "Tiap $n minggu",
+      "everyNMonths": "Tiap $n bulan",
+      "everyNYears": "Tiap $n tahun",
+      "moreAction": "Atur lebih lanjut",
+      "lessAction": "Kurangi",
+      "moreCountAction": "Tambah",
+      "endLabel": "Berakhir",
+      "endNever": "Tidak pernah",
+      "endAfter": "Setelah N kali",
+      "endOn": "Sampai tanggal",
+      "endsAfterSummary": "$n kali",
+      "endsOnSummary": "sampai $date",
+      "amountLabel": "Nominal",
+      "amountFixed": "Tetap",
+      "amountEstimated": "Kira-kira",
+      "paymentLabel": "Cara bayar",
+      "paymentManual": "Bayar sendiri",
+      "paymentAutoDebit": "Autodebet",
+      "recordAndScheduleAction": "Catat & Jadwalkan",
+      "saveScheduleAction": "Simpan Jadwal",
+      "scheduledMessage": "$name dijadwalkan. Pertama $date.",
+      "recordedMessage": "$name tercatat dan dijadwalkan.",
+      "recordedNextMessage": "$name tercatat. Berikutnya $date.",
+      "fallbackName": "Rutin"
     }
   },
   "transaction": {
@@ -189,7 +223,8 @@
     "restoredMessage": "Catatan dikembalikan.",
     "budgetLabel": "Anggaran",
     "openBudgetAction": "Lihat anggaran",
-    "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance."
+    "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.",
+    "makeRecurringAction": "Jadikan Rutin"
   },
   "wallet": {
     "subtitle": "Posisi saldo kas saat ini",
@@ -883,5 +918,20 @@
     "patternTransferWalletNone": "Belum ditentukan",
     "patternTemplateToggle": "Sunting templat",
     "moreActions": "Lainnya"
+  },
+  "recurring": {
+    "starters": {
+      "salary": "Gaji",
+      "rent": "Kos/Sewa",
+      "electricity": "Listrik",
+      "internet": "Internet",
+      "bpjs": "BPJS",
+      "installment": "Cicilan",
+      "paylater": "Paylater",
+      "subscription": "Langganan",
+      "parents": "Kirim ke orang tua",
+      "arisan": "Arisan",
+      "savings": "Tabungan"
+    }
   }
 }

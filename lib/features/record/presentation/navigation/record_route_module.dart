@@ -36,6 +36,8 @@ final class RecordRouteModule extends FeatureRouteModule {
           initialToWalletId: input.initialToWalletId,
           prefillFrom: input.prefillFrom,
           draft: input.draft,
+          initialRepeat: input.repeat,
+          makeRecurringFrom: input.makeRecurringFrom,
         ),
       ),
     ),

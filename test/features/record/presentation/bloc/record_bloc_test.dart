@@ -9,6 +9,7 @@ import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -75,6 +76,8 @@ void main() {
   RecordBloc buildBloc() => RecordBloc(
     budgetItemCatalog: stubBudgetItemCatalog(),
     createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
+    recurringRepository: RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+    recurringChanges: RecurringChanges(),
     walletRepository: walletRepository,
     transactionRepository: transactionRepository,
     recordTransaction: RecordTransaction(
@@ -132,6 +135,8 @@ void main() {
       'RecordWalletsLoaded ikut memuat pos anggaran untuk pemilih (T-4.4)',
       build: () => RecordBloc(
         createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: InMemoryKeyValueStorage())),
+    recurringRepository: RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+    recurringChanges: RecurringChanges(),
         walletRepository: walletRepository,
         transactionRepository: transactionRepository,
         budgetItemCatalog: stubBudgetItemCatalog([

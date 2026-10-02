@@ -13,9 +13,11 @@ import 'package:saldough/features/record/presentation/widgets/record_date_field.
 import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
@@ -44,6 +46,8 @@ class ExpenseFormSheet extends StatefulWidget {
     this.initialBudgetItemId,
     this.initialAmountSen,
     this.kindSwitcher,
+    this.initialRepeat,
+    this.repeatLocked = false,
     super.key,
   });
 
@@ -67,6 +71,13 @@ class ExpenseFormSheet extends StatefulWidget {
   /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
   /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
   final Widget? kindSwitcher;
+
+  /// Ulangi awal (chip pembuka atau Jadikan Rutin, T-14.3); `null` = tidak
+  /// diulang. Diabaikan saat menyunting.
+  final RecurringPattern? initialRepeat;
+
+  /// Jadikan Rutin: Ulangi wajib nyala.
+  final bool repeatLocked;
 
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -111,6 +122,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   String? _walletId;
   String? _budgetItemId;
   DateTime _date = DateTime.now();
+  late RecurringPattern? _repeat = widget.initial == null ? widget.initialRepeat : null;
 
   @override
   void initState() {
@@ -186,6 +198,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         walletId: walletId,
         amount: amount,
         date: _date,
+        repeat: _repeat,
         note: _noteController.text.trim(),
         categoryId: _categoryId,
         budgetItemId: _validBudgetItemId,
@@ -211,7 +224,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
       ),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : t.record.expenseAction,
+          : repeatSubmitLabel(repeat: _repeat, date: _date, plain: t.record.expenseAction),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)
@@ -257,8 +270,20 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         RecordDateField(
           date: _date,
           kind: TransactionKind.expense,
+          allowFuture: _repeat != null,
           onChanged: (date) => setState(() => _date = date),
         ),
+        if (!editing)
+          RecordRepeatField(
+            value: _repeat,
+            date: _date,
+            kind: TransactionKind.expense,
+            locked: widget.repeatLocked,
+            onChanged: (repeat) => setState(() {
+              _repeat = repeat;
+              if (repeat == null) _date = dateWithoutRepeat(_date);
+            }),
+          ),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         RecordNoteField(

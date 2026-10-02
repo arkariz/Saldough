@@ -246,3 +246,45 @@ final class RecurrenceLink extends Equatable {
   @override
   List<Object?> get props => [ruleId, occurrenceDate, linkedBy];
 }
+
+/// Salinan transaksi dengan tautan rutin [link] (atau tanpa tautan bila
+/// `null`); field lain tetap. Dipakai Jadikan Rutin dan pencocokan
+/// (ADR-034 §3.2–3.4), yang hanya menautkan dan tidak mengubah saldo.
+extension TransactionRecurrence on Transaction {
+  /// Lihat [TransactionRecurrence].
+  Transaction withRecurrence(RecurrenceLink? link) => switch (this) {
+    final IncomeTransaction t => IncomeTransaction(
+      id: t.id,
+      date: t.date,
+      amount: t.amount,
+      note: t.note,
+      walletId: t.walletId,
+      categoryId: t.categoryId,
+      freelancePaymentId: t.freelancePaymentId,
+      sourceIconId: t.sourceIconId,
+      recurrence: link,
+    ),
+    final ExpenseTransaction t => ExpenseTransaction(
+      id: t.id,
+      date: t.date,
+      amount: t.amount,
+      note: t.note,
+      walletId: t.walletId,
+      categoryId: t.categoryId,
+      budgetItemId: t.budgetItemId,
+      sourceIconId: t.sourceIconId,
+      recurrence: link,
+    ),
+    final TransferTransaction t => TransferTransaction(
+      id: t.id,
+      date: t.date,
+      amount: t.amount,
+      note: t.note,
+      fromWalletId: t.fromWalletId,
+      toWalletId: t.toWalletId,
+      budgetItemId: t.budgetItemId,
+      sourceIconId: t.sourceIconId,
+      recurrence: link,
+    ),
+  };
+}

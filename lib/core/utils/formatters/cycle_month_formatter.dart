@@ -58,6 +58,19 @@ abstract final class CycleMonthFormatter {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  /// Tanggal dan bulan singkat [date] — mis. `1 Nov` — untuk kemunculan
+  /// rutin ("Berikutnya 1 Nov") yang selalu dekat dengan hari ini.
+  static String formatDayMonth(DateTime date) {
+    final months = LocaleSettings.currentLocale == AppLocale.en ? _enShortMonths : _idShortMonths;
+    return '${date.day} ${months[date.month - 1]}';
+  }
+
+  /// Nama hari [date] — mis. `Kamis` — untuk jadwal mingguan.
+  static String formatWeekday(DateTime date) {
+    final weekdays = LocaleSettings.currentLocale == AppLocale.en ? _enWeekdays : _idWeekdays;
+    return weekdays[date.weekday - 1];
+  }
+
   /// Nama bulan singkat [date] saja — mis. `Sep` — untuk label sempit
   /// seperti "Pemasukan Sep" di Beranda.
   static String formatMonthShort(DateTime date) {

@@ -56,6 +56,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
+	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 }
 
 // Path: app
@@ -166,6 +167,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get draftCheckTitle => 'Check before recording';
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
 	@override late final _Translations$record$voice$en voice = _Translations$record$voice$en._(_root);
+	@override late final _Translations$record$repeat$en repeat = _Translations$record$repeat$en._(_root);
 }
 
 // Path: transaction
@@ -247,6 +249,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get budgetLabel => 'Budget';
 	@override String get openBudgetAction => 'View budget';
 	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
+	@override String get makeRecurringAction => 'Make Recurring';
 }
 
 // Path: wallet
@@ -1005,6 +1008,16 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get moreActions => 'More';
 }
 
+// Path: recurring
+class _Translations$recurring$en extends Translations$recurring$id {
+	_Translations$recurring$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$recurring$starters$en starters = _Translations$recurring$starters$en._(_root);
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1050,6 +1063,47 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	@override String get languageContinue => 'Continue';
 }
 
+// Path: record.repeat
+class _Translations$record$repeat$en extends Translations$record$repeat$id {
+	_Translations$record$repeat$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get label => 'Repeat';
+	@override String get off => 'No';
+	@override String get weekly => 'Weekly';
+	@override String get monthly => 'Monthly';
+	@override String get yearly => 'Yearly';
+	@override String everyWeekday({required Object day}) => 'Every ${day}';
+	@override String everyMonthDay({required Object day}) => 'Every month on day ${day}';
+	@override String everyYearDate({required Object date}) => 'Every ${date}';
+	@override String everyNWeeks({required Object n}) => 'Every ${n} weeks';
+	@override String everyNMonths({required Object n}) => 'Every ${n} months';
+	@override String everyNYears({required Object n}) => 'Every ${n} years';
+	@override String get moreAction => 'More options';
+	@override String get lessAction => 'Decrease';
+	@override String get moreCountAction => 'Increase';
+	@override String get endLabel => 'Ends';
+	@override String get endNever => 'Never';
+	@override String get endAfter => 'After N times';
+	@override String get endOn => 'On a date';
+	@override String endsAfterSummary({required Object n}) => '${n} times';
+	@override String endsOnSummary({required Object date}) => 'until ${date}';
+	@override String get amountLabel => 'Amount';
+	@override String get amountFixed => 'Fixed';
+	@override String get amountEstimated => 'Varies';
+	@override String get paymentLabel => 'Payment';
+	@override String get paymentManual => 'I pay it';
+	@override String get paymentAutoDebit => 'Auto-debit';
+	@override String get recordAndScheduleAction => 'Record & Schedule';
+	@override String get saveScheduleAction => 'Save Schedule';
+	@override String scheduledMessage({required Object name, required Object date}) => '${name} scheduled. First on ${date}.';
+	@override String recordedMessage({required Object name}) => '${name} recorded and scheduled.';
+	@override String recordedNextMessage({required Object name, required Object date}) => '${name} recorded. Next on ${date}.';
+	@override String get fallbackName => 'Recurring';
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1085,6 +1139,26 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: recurring.starters
+class _Translations$recurring$starters$en extends Translations$recurring$starters$id {
+	_Translations$recurring$starters$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get salary => 'Salary';
+	@override String get rent => 'Rent';
+	@override String get electricity => 'Electricity';
+	@override String get internet => 'Internet';
+	@override String get bpjs => 'BPJS';
+	@override String get installment => 'Installment';
+	@override String get paylater => 'Paylater';
+	@override String get subscription => 'Subscription';
+	@override String get parents => 'Send to parents';
+	@override String get arisan => 'Arisan';
+	@override String get savings => 'Savings';
 }
 
 // Path: record.voice.failure
@@ -1214,6 +1288,38 @@ extension on TranslationsEn {
 			'record.voice.languageTitle' => 'Which language will you speak?',
 			'record.voice.languageBody' => 'Used to recognize your speech and for the app display. You can change it in Account.',
 			'record.voice.languageContinue' => 'Continue',
+			'record.repeat.label' => 'Repeat',
+			'record.repeat.off' => 'No',
+			'record.repeat.weekly' => 'Weekly',
+			'record.repeat.monthly' => 'Monthly',
+			'record.repeat.yearly' => 'Yearly',
+			'record.repeat.everyWeekday' => ({required Object day}) => 'Every ${day}',
+			'record.repeat.everyMonthDay' => ({required Object day}) => 'Every month on day ${day}',
+			'record.repeat.everyYearDate' => ({required Object date}) => 'Every ${date}',
+			'record.repeat.everyNWeeks' => ({required Object n}) => 'Every ${n} weeks',
+			'record.repeat.everyNMonths' => ({required Object n}) => 'Every ${n} months',
+			'record.repeat.everyNYears' => ({required Object n}) => 'Every ${n} years',
+			'record.repeat.moreAction' => 'More options',
+			'record.repeat.lessAction' => 'Decrease',
+			'record.repeat.moreCountAction' => 'Increase',
+			'record.repeat.endLabel' => 'Ends',
+			'record.repeat.endNever' => 'Never',
+			'record.repeat.endAfter' => 'After N times',
+			'record.repeat.endOn' => 'On a date',
+			'record.repeat.endsAfterSummary' => ({required Object n}) => '${n} times',
+			'record.repeat.endsOnSummary' => ({required Object date}) => 'until ${date}',
+			'record.repeat.amountLabel' => 'Amount',
+			'record.repeat.amountFixed' => 'Fixed',
+			'record.repeat.amountEstimated' => 'Varies',
+			'record.repeat.paymentLabel' => 'Payment',
+			'record.repeat.paymentManual' => 'I pay it',
+			'record.repeat.paymentAutoDebit' => 'Auto-debit',
+			'record.repeat.recordAndScheduleAction' => 'Record & Schedule',
+			'record.repeat.saveScheduleAction' => 'Save Schedule',
+			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} scheduled. First on ${date}.',
+			'record.repeat.recordedMessage' => ({required Object name}) => '${name} recorded and scheduled.',
+			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} recorded. Next on ${date}.',
+			'record.repeat.fallbackName' => 'Recurring',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1286,6 +1392,7 @@ extension on TranslationsEn {
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
 			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
+			'transaction.makeRecurringAction' => 'Make Recurring',
 			'wallet.subtitle' => 'Where your cash stands right now',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active',
 			'wallet.totalLabel' => 'Total balance of all wallets',
@@ -1589,6 +1696,8 @@ extension on TranslationsEn {
 			'freelance.receiptCancelAction' => 'Cancel receipt',
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
 			'freelance.changeAction' => 'Change',
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
@@ -1622,8 +1731,6 @@ extension on TranslationsEn {
 			'home.noWalletsBody' => 'No wallet balance recorded yet.',
 			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
 			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
@@ -1951,6 +2058,17 @@ extension on TranslationsEn {
 			'notificationCapture.patternTransferWalletNone' => 'Not set',
 			'notificationCapture.patternTemplateToggle' => 'Edit template',
 			'notificationCapture.moreActions' => 'More',
+			'recurring.starters.salary' => 'Salary',
+			'recurring.starters.rent' => 'Rent',
+			'recurring.starters.electricity' => 'Electricity',
+			'recurring.starters.internet' => 'Internet',
+			'recurring.starters.bpjs' => 'BPJS',
+			'recurring.starters.installment' => 'Installment',
+			'recurring.starters.paylater' => 'Paylater',
+			'recurring.starters.subscription' => 'Subscription',
+			'recurring.starters.parents' => 'Send to parents',
+			'recurring.starters.arisan' => 'Arisan',
+			'recurring.starters.savings' => 'Savings',
 			_ => null,
 		};
 	}

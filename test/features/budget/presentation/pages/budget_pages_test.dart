@@ -26,6 +26,7 @@ import 'package:saldough/features/transaction/presentation/pages/transaction_det
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -71,6 +72,10 @@ void main() {
       ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
+      ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
+      ..registerLazySingleton<RecurringRuleRepository>(
+        () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)

@@ -22,6 +22,7 @@ final class IncomeRecorded extends RecordEvent {
     required this.note,
     this.categoryId,
     this.sourceIconId,
+    this.repeat,
   });
 
   /// Dompet tujuan.
@@ -41,6 +42,11 @@ final class IncomeRecorded extends RecordEvent {
 
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
+
+  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
+  /// tanggal masa depan → hanya rutinnya yang tersimpan.
+  final RecurringPattern? repeat;
 }
 
 /// Mencatat pengeluaran (FR-TXN-002).
@@ -54,6 +60,7 @@ final class ExpenseRecorded extends RecordEvent {
     this.categoryId,
     this.budgetItemId,
     this.sourceIconId,
+    this.repeat,
   });
 
   /// Dompet asal.
@@ -76,6 +83,11 @@ final class ExpenseRecorded extends RecordEvent {
 
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
+
+  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
+  /// tanggal masa depan → hanya rutinnya yang tersimpan.
+  final RecurringPattern? repeat;
 }
 
 /// Mencatat transfer antar dompet (FR-TXN-003).
@@ -89,6 +101,7 @@ final class TransferRecorded extends RecordEvent {
     required this.note,
     this.budgetItemId,
     this.sourceIconId,
+    this.repeat,
   });
 
   /// Dompet asal.
@@ -113,6 +126,25 @@ final class TransferRecorded extends RecordEvent {
 
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
+
+  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
+  /// tanggal masa depan → hanya rutinnya yang tersimpan.
+  final RecurringPattern? repeat;
+}
+
+/// **Jadikan Rutin** (T-14.3, J2): rutin baru dari isian [recorded] yang
+/// menautkan [source] sebagai kemunculan pertamanya. Tidak ada transaksi
+/// baru, sehingga tidak ada yang tercatat dua kali.
+final class RecordMadeRecurring extends RecordEvent {
+  /// Membuat [RecordMadeRecurring].
+  const RecordMadeRecurring({required this.source, required this.recorded});
+
+  /// Transaksi asal yang ditautkan.
+  final Transaction source;
+
+  /// Isian formulir CATAT mode jadwal; `repeat`-nya wajib terisi.
+  final RecordEvent recorded;
 }
 
 /// Menampilkan galat dari operasi di luar event (mis. "Tambah kategori",
@@ -136,6 +168,7 @@ RecordEvent withSourceIcon(RecordEvent event, String? sourceIconId) => switch (e
     note: event.note,
     categoryId: event.categoryId,
     sourceIconId: sourceIconId,
+    repeat: event.repeat,
   ),
   ExpenseRecorded() => ExpenseRecorded(
     walletId: event.walletId,
@@ -145,6 +178,7 @@ RecordEvent withSourceIcon(RecordEvent event, String? sourceIconId) => switch (e
     categoryId: event.categoryId,
     budgetItemId: event.budgetItemId,
     sourceIconId: sourceIconId,
+    repeat: event.repeat,
   ),
   TransferRecorded() => TransferRecorded(
     fromWalletId: event.fromWalletId,
@@ -154,6 +188,7 @@ RecordEvent withSourceIcon(RecordEvent event, String? sourceIconId) => switch (e
     note: event.note,
     budgetItemId: event.budgetItemId,
     sourceIconId: sourceIconId,
+    repeat: event.repeat,
   ),
   _ => event,
 };

@@ -14,8 +14,10 @@ import 'package:saldough/features/record/presentation/widgets/record_date_field.
 import 'package:saldough/features/record/presentation/widgets/record_draft_card.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_frame.dart';
 import 'package:saldough/features/record/presentation/widgets/record_note_field.dart';
+import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
@@ -37,6 +39,8 @@ class IncomeFormSheet extends StatefulWidget {
     this.frequentCategoryIds = const [],
     this.onCreateCategory,
     this.kindSwitcher,
+    this.initialRepeat,
+    this.repeatLocked = false,
     super.key,
   });
 
@@ -60,6 +64,13 @@ class IncomeFormSheet extends StatefulWidget {
   /// Pengalih jenis CATAT (Keluar/Masuk/Transfer, UX-1) di bawah kop —
   /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
   final Widget? kindSwitcher;
+
+  /// Ulangi awal (chip pembuka atau Jadikan Rutin, T-14.3); `null` = tidak
+  /// diulang. Diabaikan saat menyunting.
+  final RecurringPattern? initialRepeat;
+
+  /// Jadikan Rutin: Ulangi wajib nyala.
+  final bool repeatLocked;
 
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -91,6 +102,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   final _noteController = TextEditingController();
   String? _walletId;
   DateTime _date = DateTime.now();
+  late RecurringPattern? _repeat = widget.initial == null ? widget.initialRepeat : null;
 
   @override
   void initState() {
@@ -147,6 +159,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         walletId: walletId,
         amount: amount,
         date: _date,
+        repeat: _repeat,
         note: _noteController.text.trim(),
         categoryId: _categoryId,
       ),
@@ -166,7 +179,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       onBack: () => Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : t.record.incomeAction,
+          : repeatSubmitLabel(repeat: _repeat, date: _date, plain: t.record.incomeAction),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (!editing && widget.prefill == null && widget.draft != null) RecordDraftCard(draft: widget.draft!),
@@ -209,8 +222,20 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         RecordDateField(
           date: _date,
           kind: TransactionKind.income,
+          allowFuture: _repeat != null,
           onChanged: (date) => setState(() => _date = date),
         ),
+        if (!editing)
+          RecordRepeatField(
+            value: _repeat,
+            date: _date,
+            kind: TransactionKind.income,
+            locked: widget.repeatLocked,
+            onChanged: (repeat) => setState(() {
+              _repeat = repeat;
+              if (repeat == null) _date = dateWithoutRepeat(_date);
+            }),
+          ),
         RecordNoteField(
           controller: _noteController,
           kind: TransactionKind.income,

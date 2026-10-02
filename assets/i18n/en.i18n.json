@@ -115,6 +115,40 @@
       "languageTitle": "Which language will you speak?",
       "languageBody": "Used to recognize your speech and for the app display. You can change it in Account.",
       "languageContinue": "Continue"
+    },
+    "repeat": {
+      "label": "Repeat",
+      "off": "No",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "everyWeekday": "Every $day",
+      "everyMonthDay": "Every month on day $day",
+      "everyYearDate": "Every $date",
+      "everyNWeeks": "Every $n weeks",
+      "everyNMonths": "Every $n months",
+      "everyNYears": "Every $n years",
+      "moreAction": "More options",
+      "lessAction": "Decrease",
+      "moreCountAction": "Increase",
+      "endLabel": "Ends",
+      "endNever": "Never",
+      "endAfter": "After N times",
+      "endOn": "On a date",
+      "endsAfterSummary": "$n times",
+      "endsOnSummary": "until $date",
+      "amountLabel": "Amount",
+      "amountFixed": "Fixed",
+      "amountEstimated": "Varies",
+      "paymentLabel": "Payment",
+      "paymentManual": "I pay it",
+      "paymentAutoDebit": "Auto-debit",
+      "recordAndScheduleAction": "Record & Schedule",
+      "saveScheduleAction": "Save Schedule",
+      "scheduledMessage": "$name scheduled. First on $date.",
+      "recordedMessage": "$name recorded and scheduled.",
+      "recordedNextMessage": "$name recorded. Next on $date.",
+      "fallbackName": "Recurring"
     }
   },
   "transaction": {
@@ -189,7 +223,8 @@
     "restoredMessage": "Entry restored.",
     "budgetLabel": "Budget",
     "openBudgetAction": "View budget",
-    "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance."
+    "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.",
+    "makeRecurringAction": "Make Recurring"
   },
   "wallet": {
     "subtitle": "Where your cash stands right now",
@@ -883,5 +918,20 @@
     "patternTransferWalletNone": "Not set",
     "patternTemplateToggle": "Edit template",
     "moreActions": "More"
+  },
+  "recurring": {
+    "starters": {
+      "salary": "Salary",
+      "rent": "Rent",
+      "electricity": "Electricity",
+      "internet": "Internet",
+      "bpjs": "BPJS",
+      "installment": "Installment",
+      "paylater": "Paylater",
+      "subscription": "Subscription",
+      "parents": "Send to parents",
+      "arisan": "Arisan",
+      "savings": "Savings"
+    }
   }
 }

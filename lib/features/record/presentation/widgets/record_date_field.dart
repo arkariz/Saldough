@@ -13,7 +13,13 @@ import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 /// pukul 14:20 tidak boleh berubah jadi 00:00 hanya karena harinya digeser.
 class RecordDateField extends StatelessWidget {
   /// Membuat [RecordDateField].
-  const RecordDateField({required this.date, required this.onChanged, required this.kind, super.key});
+  const RecordDateField({
+    required this.date,
+    required this.onChanged,
+    required this.kind,
+    this.allowFuture = false,
+    super.key,
+  });
 
   /// Tanggal peristiwa yang sedang dipilih.
   final DateTime date;
@@ -24,6 +30,11 @@ class RecordDateField extends StatelessWidget {
   /// Jenis transaksi: mewarnai pintasan yang sedang aktif.
   final TransactionKind kind;
 
+  /// Mode jadwal (T-14.3): tanggal sampai setahun ke depan boleh dipilih,
+  /// karena rutin boleh dimulai nanti ("Simpan Jadwal"). Tanpa jadwal,
+  /// transaksi tidak boleh bertanggal masa depan.
+  final bool allowFuture;
+
   static DateTime _dayOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
   DateTime _withTimeOf(DateTime day) => DateTime(day.year, day.month, day.day, date.hour, date.minute);
@@ -33,7 +44,7 @@ class RecordDateField extends StatelessWidget {
       context: context,
       initialDate: date,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: allowFuture ? DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day) : DateTime.now(),
     );
     if (picked != null) onChanged(_withTimeOf(picked));
   }

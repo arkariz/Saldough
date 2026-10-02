@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -22,7 +23,9 @@ final class RecordScope extends IsolatedScope {
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>())
-      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>());
+      ..registerSingleton<CategoryRepository>(parent<CategoryRepository>())
+      ..registerSingleton<RecurringRuleRepository>(parent<RecurringRuleRepository>())
+      ..registerSingleton<RecurringChanges>(parent<RecurringChanges>());
   }
 
   @override
@@ -33,6 +36,8 @@ final class RecordScope extends IsolatedScope {
           transactionRepository: c<TransactionRepository>(),
           budgetItemCatalog: c<BudgetItemCatalog>(),
           createCategory: CreateCategory(repository: c<CategoryRepository>()),
+          recurringRepository: c<RecurringRuleRepository>(),
+          recurringChanges: c<RecurringChanges>(),
           recordTransaction: RecordTransaction(
             ledgerChanges: c<LedgerChanges>(),
             transactionRepository: c<TransactionRepository>(),

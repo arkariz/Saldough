@@ -4,6 +4,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -282,5 +283,47 @@ void main() {
         expect(name.overflow, isNot(TextOverflow.ellipsis));
       },
     );
+  });
+
+  testWidgets('Ulangi: Tiap bulan mengganti tombol jadi Catat & Jadwalkan dan ikut terkirim (T-14.3)', (tester) async {
+    ExpenseRecorded? result;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () async {
+                result = await showModalBottomSheet<ExpenseRecorded>(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => const ExpenseFormSheet(wallets: wallets, initialWalletId: 'bca'),
+                );
+              },
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).first, '65000');
+    await tester.pump();
+
+    await tester.ensureVisible(find.text(t.record.repeat.off));
+    await tester.tap(find.text(t.record.repeat.off));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(t.record.repeat.monthly));
+    await tester.tap(find.text(t.record.repeat.monthly));
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.record.repeat.everyMonthDay(day: DateTime.now().day)), findsOneWidget);
+    final button = tester.widget<AppButton>(find.byType(AppButton));
+    expect(button.label, t.record.repeat.recordAndScheduleAction);
+
+    await tester.ensureVisible(find.byType(AppButton));
+    await tester.tap(find.byType(AppButton));
+    await tester.pumpAndSettle();
+    expect(result?.repeat?.frequency, RecurringFrequency.monthly);
   });
 }

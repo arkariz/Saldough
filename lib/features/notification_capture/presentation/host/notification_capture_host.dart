@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -102,7 +103,8 @@ class _NotificationCaptureHostState extends State<NotificationCaptureHost> with 
             )
           : texts.autoRecordedSnackMany(n: result.recorded.length);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        actionSnackBar(
+          context,
           content: Text(message),
           action: SnackBarAction(
             label: texts.reviewAction,

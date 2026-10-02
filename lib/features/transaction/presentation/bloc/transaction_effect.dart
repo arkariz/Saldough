@@ -27,10 +27,10 @@ extension on TransactionBloc {
       final messenger = ScaffoldMessenger.of(context);
       final restore = _recordTransaction;
       messenger.showSnackBar(
-        SnackBar(
+        actionSnackBar(
+          context,
           content: Text(t.transaction.deletedMessage, style: TextStyle(color: colors.background)),
           backgroundColor: colors.textPrimary,
-          duration: const Duration(seconds: 5),
           action: SnackBarAction(
             label: t.transaction.undoDeleteAction,
             textColor: colors.accent,

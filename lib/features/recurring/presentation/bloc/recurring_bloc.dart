@@ -5,6 +5,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -333,10 +334,10 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       final colors = context.appColors;
       final messenger = ScaffoldMessenger.of(context);
       messenger.showSnackBar(
-        SnackBar(
+        actionSnackBar(
+          context,
           content: Text(message, style: TextStyle(color: colors.background)),
           backgroundColor: colors.textPrimary,
-          duration: const Duration(seconds: 5),
           action: SnackBarAction(
             label: t.recurring.undoAction,
             textColor: colors.accent,

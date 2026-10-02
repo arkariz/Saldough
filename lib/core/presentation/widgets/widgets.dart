@@ -1,6 +1,7 @@
 /// Barrel widget bersama Saldough.
 library;
 
+export 'app_action_snack_bar.dart';
 export 'app_button.dart';
 export 'app_card.dart';
 export 'app_choice_chip.dart';

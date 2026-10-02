@@ -5,6 +5,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/domain/reminder_plan.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
@@ -133,9 +134,9 @@ class _RecurringReminderHostState extends State<RecurringReminderHost> with Widg
     messenger.showSnackBar(
       switch (result) {
         Left() => SnackBar(content: Text(t.recurring.alreadyRecordedMessage(name: rule.note))),
-        Right() => SnackBar(
+        Right() => actionSnackBar(
+          context,
           content: Text(t.recurring.recordedMessage(name: rule.note)),
-          duration: const Duration(seconds: 5),
           action: SnackBarAction(
             label: t.recurring.undoAction,
             onPressed: () => unawaited(record.delete(transaction)),

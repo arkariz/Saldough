@@ -116,6 +116,8 @@ class _AppShellPageState extends State<AppShellPage> {
     if (tabIndex == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
     if (tabIndex == _planTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
     if (tabIndex == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
+    // Snackbar (mis. Urungkan) milik tab sebelumnya kehilangan konteksnya.
+    if (tabIndex != _activeTab) ScaffoldMessenger.of(context).hideCurrentSnackBar();
     setState(() => _activeTab = tabIndex);
   }
 

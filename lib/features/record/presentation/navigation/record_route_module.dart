@@ -38,6 +38,7 @@ final class RecordRouteModule extends FeatureRouteModule {
           draft: input.draft,
           initialRepeat: input.repeat,
           makeRecurringFrom: input.makeRecurringFrom,
+          editRule: input.editRule,
         ),
       ),
     ),

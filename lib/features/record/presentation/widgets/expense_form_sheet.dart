@@ -48,6 +48,7 @@ class ExpenseFormSheet extends StatefulWidget {
     this.kindSwitcher,
     this.initialRepeat,
     this.repeatLocked = false,
+    this.scheduleOnly = false,
     super.key,
   });
 
@@ -78,6 +79,10 @@ class ExpenseFormSheet extends StatefulWidget {
 
   /// Jadikan Rutin: Ulangi wajib nyala.
   final bool repeatLocked;
+
+  /// Ubah rutin: tombol selalu "Simpan Jadwal", karena tidak ada transaksi
+  /// yang dicatat.
+  final bool scheduleOnly;
 
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -224,7 +229,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
       ),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, plain: t.record.expenseAction),
+          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.expenseAction),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)

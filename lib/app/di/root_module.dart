@@ -28,6 +28,7 @@ import 'package:saldough/features/notification_capture/presentation/navigation/n
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
+import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
 import 'package:saldough/features/voice_capture/presentation/navigation/voice_capture_route_module.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_module.dart';
@@ -57,6 +58,7 @@ abstract final class RootModule {
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),
     RecordRouteModule(),
+    RecurringRouteModule(),
     TransactionRouteModule(),
     VoiceCaptureRouteModule(),
     WalletRouteModule(),

@@ -14,6 +14,7 @@ void main() {
       'freelance.overview',
       'record.sheet',
       'record.edit',
+      'recurring.detail',
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'transaction.detail',

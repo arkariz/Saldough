@@ -364,8 +364,14 @@ class _OptionChip extends StatelessWidget {
 /// Label tombol simpan CATAT (J2): tanpa Ulangi → [plain]; dengan Ulangi,
 /// tanggal hari ini atau lampau → "Catat & Jadwalkan", tanggal masa depan
 /// → "Simpan Jadwal" (tidak ada transaksi yang dibuat).
-String repeatSubmitLabel({required RecurringPattern? repeat, required DateTime date, required String plain}) {
+String repeatSubmitLabel({
+  required RecurringPattern? repeat,
+  required DateTime date,
+  required String plain,
+  bool scheduleOnly = false,
+}) {
   if (repeat == null) return plain;
+  if (scheduleOnly) return t.record.repeat.saveScheduleAction;
   final now = DateTime.now();
   final day = DateTime(date.year, date.month, date.day);
   return day.isAfter(DateTime(now.year, now.month, now.day))

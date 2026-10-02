@@ -41,6 +41,7 @@ class IncomeFormSheet extends StatefulWidget {
     this.kindSwitcher,
     this.initialRepeat,
     this.repeatLocked = false,
+    this.scheduleOnly = false,
     super.key,
   });
 
@@ -71,6 +72,10 @@ class IncomeFormSheet extends StatefulWidget {
 
   /// Jadikan Rutin: Ulangi wajib nyala.
   final bool repeatLocked;
+
+  /// Ubah rutin: tombol selalu "Simpan Jadwal", karena tidak ada transaksi
+  /// yang dicatat.
+  final bool scheduleOnly;
 
   /// Dompet tujuan pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -179,7 +184,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       onBack: () => Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, plain: t.record.incomeAction),
+          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.incomeAction),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (!editing && widget.prefill == null && widget.draft != null) RecordDraftCard(draft: widget.draft!),

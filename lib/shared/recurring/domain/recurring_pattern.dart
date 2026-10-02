@@ -15,6 +15,15 @@ final class RecurringPattern extends Equatable {
     this.paymentMode,
   }) : assert(interval >= 1, 'Selang jadwal minimal 1.');
 
+  /// Pola [rule], untuk membuka CATAT saat mengubah rutin.
+  factory RecurringPattern.of(RecurringRule rule) => RecurringPattern(
+    frequency: rule.schedule.frequency,
+    interval: rule.schedule.interval,
+    end: rule.end,
+    amountMode: rule.amountMode,
+    paymentMode: rule.paymentMode,
+  );
+
   /// Satuan selang.
   final RecurringFrequency frequency;
 

@@ -147,6 +147,19 @@ final class RecordMadeRecurring extends RecordEvent {
   final RecordEvent recorded;
 }
 
+/// **Ubah rutin**: [rule] diganti isian [recorded] (berlaku ke depan). Tidak
+/// ada transaksi yang dicatat atau diubah.
+final class RecordRuleEdited extends RecordEvent {
+  /// Membuat [RecordRuleEdited].
+  const RecordRuleEdited({required this.rule, required this.recorded});
+
+  /// Rutin sebelum diubah.
+  final RecurringRule rule;
+
+  /// Isian formulir CATAT mode jadwal; `repeat`-nya wajib terisi.
+  final RecordEvent recorded;
+}
+
 /// Menampilkan galat dari operasi di luar event (mis. "Tambah kategori",
 /// `RecordBloc.createCategory`) lewat efek galat biasa.
 final class RecordFailureOccurred extends RecordEvent {

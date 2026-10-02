@@ -36,6 +36,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     on<ExpenseRecorded>(_onExpenseRecorded);
     on<TransferRecorded>(_onTransferRecorded);
     on<RecordMadeRecurring>(_onMadeRecurring);
+    on<RecordRuleEdited>(_onRuleEdited);
     on<RecordFailureOccurred>((event, emit) => emit(state.copyWith(effect: _effectError(event.failure))));
   }
 
@@ -188,6 +189,59 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       case Right():
         _recurringChanges.notifyChanged(source: this);
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: _effectRecordedAndScheduled(rule)));
+    }
+  }
+
+  /// Ubah rutin: hanya dokumen rutin yang ditulis. Jadwalnya dipertahankan
+  /// bila tanggal formulir masih kemunculan jadwal lama dengan frekuensi
+  /// yang sama, supaya riwayat dan hitungan k/N tidak bergeser; selain itu
+  /// tanggal formulir menjadi patokan baru.
+  Future<void> _onRuleEdited(RecordRuleEdited event, Emitter<RecordState> emit) async {
+    final recorded = event.recorded;
+    final (Transaction? transaction, RecurringPattern? repeat) = switch (recorded) {
+      IncomeRecorded(:final repeat?) => (_incomeFrom(recorded), repeat),
+      ExpenseRecorded(:final repeat?) => (_expenseFrom(recorded), repeat),
+      TransferRecorded(:final repeat?) => (_transferFrom(recorded), repeat),
+      _ => (null, null),
+    };
+    if (transaction == null || repeat == null) return;
+    final old = event.rule;
+    final fresh = ruleFrom(transaction, repeat, id: old.id);
+    final day = DateTime(transaction.date.year, transaction.date.month, transaction.date.day);
+    final sameSchedule =
+        fresh.schedule.frequency == old.schedule.frequency &&
+        fresh.schedule.interval == old.schedule.interval &&
+        occurrencesOf(old, from: day, until: DateTime(day.year, day.month, day.day + 1)).isNotEmpty;
+    final updated = RecurringRule(
+      id: old.id,
+      kind: fresh.kind,
+      amount: fresh.amount,
+      amountMode: fresh.amountMode,
+      walletId: fresh.walletId,
+      toWalletId: fresh.toWalletId,
+      categoryId: fresh.categoryId,
+      note: fresh.note,
+      schedule: sameSchedule ? old.schedule : fresh.schedule,
+      end: fresh.end,
+      paymentMode: fresh.paymentMode,
+      remindDaysBefore: old.remindDaysBefore,
+      skippedDates: old.skippedDates,
+      isPaused: old.isPaused,
+      budgetItemKey: old.budgetItemKey,
+    );
+    emit(state.copyWith(isSaving: true));
+    switch (await _recurringRepository.saveRule(updated)) {
+      case Left(value: final failure):
+        emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
+      case Right():
+        _recurringChanges.notifyChanged(source: this);
+        emit(
+          state.copyWith(
+            isSaving: false,
+            saveCount: state.saveCount + 1,
+            effect: _effectSaved(t.record.repeat.updatedMessage(name: _nameOf(updated))),
+          ),
+        );
     }
   }
 

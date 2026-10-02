@@ -1020,6 +1020,62 @@ class _Translations$recurring$en extends Translations$recurring$id {
 
 	// Translations
 	@override late final _Translations$recurring$starters$en starters = _Translations$recurring$starters$en._(_root);
+	@override String summaryTitle({required Object month}) => 'Recurring ${month}';
+	@override String get remainingOutLabel => 'Still to go out';
+	@override String recordedOfTotal({required Object recorded, required Object total}) => '${recorded} of ${total} recorded';
+	@override String get scheduledInLabel => 'Scheduled income';
+	@override String subscriptionsLine({required Object perMonth, required Object perYear}) => 'Subscriptions ${perMonth}/mo · ${perYear}/yr';
+	@override String approxSemantics({required Object amount}) => 'about ${amount}';
+	@override String filterAll({required Object n}) => 'All (${n})';
+	@override String filterIncome({required Object n}) => 'In (${n})';
+	@override String filterExpense({required Object n}) => 'Out (${n})';
+	@override String filterTransfer({required Object n}) => 'Transfer (${n})';
+	@override String get groupPending => 'Waiting to record';
+	@override String get groupThisMonth => 'This month';
+	@override String get groupLater => 'Later';
+	@override String get groupPaused => 'Paused';
+	@override String get groupEnded => 'Ended';
+	@override String get recordedMeta => 'recorded';
+	@override String get pendingMeta => 'waiting';
+	@override String missedMeta({required Object n}) => '${n} missed';
+	@override String get skippedMeta => 'skipped';
+	@override String get paymentAutoDebit => 'auto-debit';
+	@override String get paymentManual => 'I pay it';
+	@override String get yearlyMeta => 'yearly';
+	@override String priceUp({required Object amount, required Object usual}) => '${amount}, usually ${usual}';
+	@override String get emptyTitle => 'No recurring yet';
+	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
+	@override String get filteredEmpty => 'Nothing here yet.';
+	@override String get showAllAction => 'Show all';
+	@override String get addAction => 'Add recurring';
+	@override String get loadError => 'Could not load recurring.';
+	@override String get retryAction => 'Try again';
+	@override String get nextTitle => 'Next';
+	@override String get recordedTitle => 'Recorded';
+	@override String get skipAction => 'Skip';
+	@override String get unskipAction => 'Undo skip';
+	@override String get editAction => 'Edit';
+	@override String get pauseAction => 'Pause';
+	@override String get resumeAction => 'Resume';
+	@override String get endAction => 'End';
+	@override String get deleteAction => 'Delete';
+	@override String get moreActions => 'More actions';
+	@override String get deleteTitle => 'Delete recurring?';
+	@override String get deleteBody => 'Recorded transactions are kept.';
+	@override String progressLine({required Object k, required Object n}) => '${k} of ${n} recorded';
+	@override String endsOnLine({required Object date}) => 'ends ${date}';
+	@override String countLine({required Object n}) => '${n} times';
+	@override String get pausedLine => 'Paused';
+	@override String reminderLine({required Object n}) => 'I pay it · reminded ${n} day(s) before';
+	@override String get autoDebitLine => 'Auto-debit';
+	@override String pausedMessage({required Object name}) => '${name} paused.';
+	@override String resumedMessage({required Object name}) => '${name} resumed.';
+	@override String endedMessage({required Object name}) => '${name} ended.';
+	@override String deletedMessage({required Object name}) => '${name} deleted.';
+	@override String skippedMessage({required Object date}) => '${date} skipped.';
+	@override String priceUpdateAction({required Object amount}) => 'Update to ${amount}';
+	@override String get notFound => 'This recurring no longer exists.';
+	@override String get noRecorded => 'Nothing recorded yet.';
 }
 
 // Path: plan
@@ -1116,6 +1172,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String recordedMessage({required Object name}) => '${name} recorded and scheduled.';
 	@override String recordedNextMessage({required Object name, required Object date}) => '${name} recorded. Next on ${date}.';
 	@override String get fallbackName => 'Recurring';
+	@override String updatedMessage({required Object name}) => '${name} updated.';
 }
 
 // Path: account.errors
@@ -1335,6 +1392,7 @@ extension on TranslationsEn {
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} recorded and scheduled.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} recorded. Next on ${date}.',
 			'record.repeat.fallbackName' => 'Recurring',
+			'record.repeat.updatedMessage' => ({required Object name}) => '${name} updated.',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1709,9 +1767,9 @@ extension on TranslationsEn {
 			'freelance.receiveAction' => 'Record Received',
 			'freelance.paymentReceivedMessage' => 'Payment recorded as received. Wallet balance increased.',
 			'freelance.receiptCancelAction' => 'Cancel receipt',
-			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
 			'freelance.changeAction' => 'Change',
@@ -2086,6 +2144,62 @@ extension on TranslationsEn {
 			'recurring.starters.parents' => 'Send to parents',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Savings',
+			'recurring.summaryTitle' => ({required Object month}) => 'Recurring ${month}',
+			'recurring.remainingOutLabel' => 'Still to go out',
+			'recurring.recordedOfTotal' => ({required Object recorded, required Object total}) => '${recorded} of ${total} recorded',
+			'recurring.scheduledInLabel' => 'Scheduled income',
+			'recurring.subscriptionsLine' => ({required Object perMonth, required Object perYear}) => 'Subscriptions ${perMonth}/mo · ${perYear}/yr',
+			'recurring.approxSemantics' => ({required Object amount}) => 'about ${amount}',
+			'recurring.filterAll' => ({required Object n}) => 'All (${n})',
+			'recurring.filterIncome' => ({required Object n}) => 'In (${n})',
+			'recurring.filterExpense' => ({required Object n}) => 'Out (${n})',
+			'recurring.filterTransfer' => ({required Object n}) => 'Transfer (${n})',
+			'recurring.groupPending' => 'Waiting to record',
+			'recurring.groupThisMonth' => 'This month',
+			'recurring.groupLater' => 'Later',
+			'recurring.groupPaused' => 'Paused',
+			'recurring.groupEnded' => 'Ended',
+			'recurring.recordedMeta' => 'recorded',
+			'recurring.pendingMeta' => 'waiting',
+			'recurring.missedMeta' => ({required Object n}) => '${n} missed',
+			'recurring.skippedMeta' => 'skipped',
+			'recurring.paymentAutoDebit' => 'auto-debit',
+			'recurring.paymentManual' => 'I pay it',
+			'recurring.yearlyMeta' => 'yearly',
+			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, usually ${usual}',
+			'recurring.emptyTitle' => 'No recurring yet',
+			'recurring.emptyBody' => 'Add what comes every month, then see what is truly free.',
+			'recurring.filteredEmpty' => 'Nothing here yet.',
+			'recurring.showAllAction' => 'Show all',
+			'recurring.addAction' => 'Add recurring',
+			'recurring.loadError' => 'Could not load recurring.',
+			'recurring.retryAction' => 'Try again',
+			'recurring.nextTitle' => 'Next',
+			'recurring.recordedTitle' => 'Recorded',
+			'recurring.skipAction' => 'Skip',
+			'recurring.unskipAction' => 'Undo skip',
+			'recurring.editAction' => 'Edit',
+			'recurring.pauseAction' => 'Pause',
+			'recurring.resumeAction' => 'Resume',
+			'recurring.endAction' => 'End',
+			'recurring.deleteAction' => 'Delete',
+			'recurring.moreActions' => 'More actions',
+			'recurring.deleteTitle' => 'Delete recurring?',
+			'recurring.deleteBody' => 'Recorded transactions are kept.',
+			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
+			'recurring.endsOnLine' => ({required Object date}) => 'ends ${date}',
+			'recurring.countLine' => ({required Object n}) => '${n} times',
+			'recurring.pausedLine' => 'Paused',
+			'recurring.reminderLine' => ({required Object n}) => 'I pay it · reminded ${n} day(s) before',
+			'recurring.autoDebitLine' => 'Auto-debit',
+			'recurring.pausedMessage' => ({required Object name}) => '${name} paused.',
+			'recurring.resumedMessage' => ({required Object name}) => '${name} resumed.',
+			'recurring.endedMessage' => ({required Object name}) => '${name} ended.',
+			'recurring.deletedMessage' => ({required Object name}) => '${name} deleted.',
+			'recurring.skippedMessage' => ({required Object date}) => '${date} skipped.',
+			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
+			'recurring.notFound' => 'This recurring no longer exists.',
+			'recurring.noRecorded' => 'Nothing recorded yet.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		};

@@ -51,6 +51,7 @@ class TransferFormSheet extends StatefulWidget {
     this.kindSwitcher,
     this.initialRepeat,
     this.repeatLocked = false,
+    this.scheduleOnly = false,
     super.key,
   });
 
@@ -79,6 +80,10 @@ class TransferFormSheet extends StatefulWidget {
 
   /// Jadikan Rutin: Ulangi wajib nyala.
   final bool repeatLocked;
+
+  /// Ubah rutin: tombol selalu "Simpan Jadwal", karena tidak ada transaksi
+  /// yang dicatat.
+  final bool scheduleOnly;
 
   /// Dompet ASAL pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet) -- pintasan dari satu dompet paling wajar berarti "dari dompet
@@ -232,7 +237,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       ),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, plain: t.record.transferAction),
+          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.transferAction),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)

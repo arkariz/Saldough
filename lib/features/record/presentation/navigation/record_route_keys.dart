@@ -35,6 +35,7 @@ final class RecordSheetInput extends RouteInput {
     this.draft,
     this.repeat,
     this.makeRecurringFrom,
+    this.editRule,
   });
 
   /// Dompet awal (pintasan rincian dompet, FR-REC-002).
@@ -65,6 +66,11 @@ final class RecordSheetInput extends RouteInput {
   /// **Jadikan Rutin** (J2): CATAT mode jadwal terisi dari transaksi ini,
   /// yang lalu ditautkan sebagai kemunculan pertama, bukan dicatat ulang.
   final Transaction? makeRecurringFrom;
+
+  /// **Ubah rutin** (PLAN_TAB_LAYOUT §6.5): CATAT mode jadwal terisi dari
+  /// rutin ini; menyimpan hanya mengubah rutinnya, tidak pernah mencatat
+  /// transaksi, dan transaksi yang sudah tercatat tidak berubah (FR-RUT-005).
+  final RecurringRule? editRule;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

@@ -139,9 +139,9 @@ class _AppShellPageState extends State<AppShellPage> {
       PlanPage(
         selected: _planSegment,
         onChanged: (segment) => setState(() => _planSegment = segment),
-        segments: const {
-          PlanSegment.budget: BudgetListPage(embedded: true),
-          PlanSegment.recurring: RecurringPage(),
+        segments: {
+          PlanSegment.budget: const BudgetListPage(embedded: true),
+          PlanSegment.recurring: RecurringPage(container: parentContainer),
         },
       ),
       const TransactionListPage(),

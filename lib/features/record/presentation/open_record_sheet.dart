@@ -85,10 +85,18 @@ Future<bool> openRecordSheet(
   RecordDraft? draft,
   RecurringPattern? initialRepeat,
   Transaction? makeRecurringFrom,
+  RecurringRule? editRule,
 }) async {
-  final recordDraft = makeRecurringFrom != null ? draftFromTransaction(makeRecurringFrom) : draft;
-  final repeat = initialRepeat ?? (makeRecurringFrom != null ? const RecurringPattern() : null);
-  final repeatLocked = makeRecurringFrom != null;
+  final recordDraft = switch ((makeRecurringFrom, editRule)) {
+    (final Transaction source, _) => draftFromTransaction(source),
+    (_, final RecurringRule rule) => draftFromRule(rule),
+    _ => draft,
+  };
+  final repeat =
+      initialRepeat ??
+      (editRule != null ? RecurringPattern.of(editRule) : (makeRecurringFrom != null ? const RecurringPattern() : null));
+  final repeatLocked = makeRecurringFrom != null || editRule != null;
+  final scheduleOnly = editRule != null;
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
   await bloc.stream.firstWhere((s) => !s.isLoading);
   if (!context.mounted) return false;
@@ -145,6 +153,7 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
+          scheduleOnly: scheduleOnly,
           ),
           RecordChoice.expense => ExpenseFormSheet(
             wallets: wallets,
@@ -159,6 +168,7 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
+          scheduleOnly: scheduleOnly,
           ),
           RecordChoice.transfer => TransferFormSheet(
             wallets: wallets,
@@ -172,6 +182,7 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
+          scheduleOnly: scheduleOnly,
           ),
         };
       },
@@ -187,9 +198,11 @@ Future<bool> openRecordSheet(
   if (result is RecordEvent) {
     final savedBefore = bloc.state.saveCount;
     bloc.add(
-      makeRecurringFrom != null
-          ? RecordMadeRecurring(source: makeRecurringFrom, recorded: result)
-          : withSourceIcon(result, recordDraft?.sourceIconId),
+      switch ((makeRecurringFrom, editRule)) {
+        (final Transaction source, _) => RecordMadeRecurring(source: source, recorded: result),
+        (_, final RecurringRule rule) => RecordRuleEdited(rule: rule, recorded: result),
+        _ => withSourceIcon(result, recordDraft?.sourceIconId),
+      },
     );
     if (!context.mounted) return false;
     await showDialog<void>(
@@ -230,3 +243,23 @@ RecordDraft draftFromTransaction(Transaction transaction) => switch (transaction
     date: transaction.date,
   ),
 };
+
+/// Draf CATAT dari [rule] (Ubah rutin): tanggalnya kemunculan berikutnya
+/// sejak hari ini, atau patokannya bila belum mulai.
+RecordDraft draftFromRule(RecurringRule rule) {
+  final now = DateTime.now();
+  final date = nextOccurrence(rule, now) ?? rule.schedule.anchorDate;
+  return RecordDraft(
+    kind: switch (rule.kind) {
+      RecurringKind.income => DraftKind.income,
+      RecurringKind.expense => DraftKind.expense,
+      RecurringKind.transfer => DraftKind.transfer,
+    },
+    amountSen: rule.amount,
+    walletId: rule.walletId,
+    toWalletId: rule.toWalletId,
+    categoryId: rule.categoryId,
+    note: rule.note,
+    date: date,
+  );
+}

@@ -2575,6 +2575,174 @@ class Translations$recurring$id {
 
 	// Translations
 	late final Translations$recurring$starters$id starters = Translations$recurring$starters$id.internal(_root);
+
+	/// id: 'Rutin $month'
+	String summaryTitle({required Object month}) => 'Rutin ${month}';
+
+	/// id: 'Masih akan keluar'
+	String get remainingOutLabel => 'Masih akan keluar';
+
+	/// id: '$recorded dari $total tercatat'
+	String recordedOfTotal({required Object recorded, required Object total}) => '${recorded} dari ${total} tercatat';
+
+	/// id: 'Masuk terjadwal'
+	String get scheduledInLabel => 'Masuk terjadwal';
+
+	/// id: 'Langganan $perMonth/bln · $perYear/thn'
+	String subscriptionsLine({required Object perMonth, required Object perYear}) => 'Langganan ${perMonth}/bln · ${perYear}/thn';
+
+	/// id: 'kira-kira $amount'
+	String approxSemantics({required Object amount}) => 'kira-kira ${amount}';
+
+	/// id: 'Semua ($n)'
+	String filterAll({required Object n}) => 'Semua (${n})';
+
+	/// id: 'Masuk ($n)'
+	String filterIncome({required Object n}) => 'Masuk (${n})';
+
+	/// id: 'Keluar ($n)'
+	String filterExpense({required Object n}) => 'Keluar (${n})';
+
+	/// id: 'Transfer ($n)'
+	String filterTransfer({required Object n}) => 'Transfer (${n})';
+
+	/// id: 'Menunggu dicatat'
+	String get groupPending => 'Menunggu dicatat';
+
+	/// id: 'Bulan ini'
+	String get groupThisMonth => 'Bulan ini';
+
+	/// id: 'Nanti'
+	String get groupLater => 'Nanti';
+
+	/// id: 'Dijeda'
+	String get groupPaused => 'Dijeda';
+
+	/// id: 'Selesai'
+	String get groupEnded => 'Selesai';
+
+	/// id: 'tercatat'
+	String get recordedMeta => 'tercatat';
+
+	/// id: 'menunggu'
+	String get pendingMeta => 'menunggu';
+
+	/// id: '$n terlewat'
+	String missedMeta({required Object n}) => '${n} terlewat';
+
+	/// id: 'dilewati'
+	String get skippedMeta => 'dilewati';
+
+	/// id: 'autodebet'
+	String get paymentAutoDebit => 'autodebet';
+
+	/// id: 'bayar sendiri'
+	String get paymentManual => 'bayar sendiri';
+
+	/// id: 'tahunan'
+	String get yearlyMeta => 'tahunan';
+
+	/// id: '$amount, biasanya $usual'
+	String priceUp({required Object amount, required Object usual}) => '${amount}, biasanya ${usual}';
+
+	/// id: 'Belum ada rutin'
+	String get emptyTitle => 'Belum ada rutin';
+
+	/// id: 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.'
+	String get emptyBody => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.';
+
+	/// id: 'Belum ada rutin di sini.'
+	String get filteredEmpty => 'Belum ada rutin di sini.';
+
+	/// id: 'Tampilkan semua'
+	String get showAllAction => 'Tampilkan semua';
+
+	/// id: 'Tambah rutin'
+	String get addAction => 'Tambah rutin';
+
+	/// id: 'Rutin gagal dimuat.'
+	String get loadError => 'Rutin gagal dimuat.';
+
+	/// id: 'Coba lagi'
+	String get retryAction => 'Coba lagi';
+
+	/// id: 'Berikutnya'
+	String get nextTitle => 'Berikutnya';
+
+	/// id: 'Tercatat'
+	String get recordedTitle => 'Tercatat';
+
+	/// id: 'Lewati'
+	String get skipAction => 'Lewati';
+
+	/// id: 'Batal lewati'
+	String get unskipAction => 'Batal lewati';
+
+	/// id: 'Ubah'
+	String get editAction => 'Ubah';
+
+	/// id: 'Jeda'
+	String get pauseAction => 'Jeda';
+
+	/// id: 'Lanjutkan'
+	String get resumeAction => 'Lanjutkan';
+
+	/// id: 'Akhiri'
+	String get endAction => 'Akhiri';
+
+	/// id: 'Hapus'
+	String get deleteAction => 'Hapus';
+
+	/// id: 'Aksi lain'
+	String get moreActions => 'Aksi lain';
+
+	/// id: 'Hapus rutin?'
+	String get deleteTitle => 'Hapus rutin?';
+
+	/// id: 'Transaksi yang sudah tercatat tidak ikut terhapus.'
+	String get deleteBody => 'Transaksi yang sudah tercatat tidak ikut terhapus.';
+
+	/// id: '$k dari $n tercatat'
+	String progressLine({required Object k, required Object n}) => '${k} dari ${n} tercatat';
+
+	/// id: 'berakhir $date'
+	String endsOnLine({required Object date}) => 'berakhir ${date}';
+
+	/// id: '$n kali'
+	String countLine({required Object n}) => '${n} kali';
+
+	/// id: 'Dijeda'
+	String get pausedLine => 'Dijeda';
+
+	/// id: 'Bayar sendiri · diingatkan H−$n'
+	String reminderLine({required Object n}) => 'Bayar sendiri · diingatkan H−${n}';
+
+	/// id: 'Autodebet'
+	String get autoDebitLine => 'Autodebet';
+
+	/// id: '$name dijeda.'
+	String pausedMessage({required Object name}) => '${name} dijeda.';
+
+	/// id: '$name dilanjutkan.'
+	String resumedMessage({required Object name}) => '${name} dilanjutkan.';
+
+	/// id: '$name diakhiri.'
+	String endedMessage({required Object name}) => '${name} diakhiri.';
+
+	/// id: '$name dihapus.'
+	String deletedMessage({required Object name}) => '${name} dihapus.';
+
+	/// id: '$date dilewati.'
+	String skippedMessage({required Object date}) => '${date} dilewati.';
+
+	/// id: 'Perbarui ke $amount'
+	String priceUpdateAction({required Object amount}) => 'Perbarui ke ${amount}';
+
+	/// id: 'Rutin ini sudah tidak ada.'
+	String get notFound => 'Rutin ini sudah tidak ada.';
+
+	/// id: 'Belum ada yang tercatat.'
+	String get noRecorded => 'Belum ada yang tercatat.';
 }
 
 // Path: plan
@@ -2790,6 +2958,9 @@ class Translations$record$repeat$id {
 
 	/// id: 'Rutin'
 	String get fallbackName => 'Rutin';
+
+	/// id: '$name diperbarui.'
+	String updatedMessage({required Object name}) => '${name} diperbarui.';
 }
 
 // Path: account.errors
@@ -3081,6 +3252,7 @@ extension on Translations {
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} tercatat dan dijadwalkan.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.',
 			'record.repeat.fallbackName' => 'Rutin',
+			'record.repeat.updatedMessage' => ({required Object name}) => '${name} diperbarui.',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -3455,9 +3627,9 @@ extension on Translations {
 			'freelance.receiveAction' => 'Catat Diterima',
 			'freelance.paymentReceivedMessage' => 'Pembayaran dicatat diterima. Saldo dompet bertambah.',
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
-			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
@@ -3832,6 +4004,62 @@ extension on Translations {
 			'recurring.starters.parents' => 'Kirim ke orang tua',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Tabungan',
+			'recurring.summaryTitle' => ({required Object month}) => 'Rutin ${month}',
+			'recurring.remainingOutLabel' => 'Masih akan keluar',
+			'recurring.recordedOfTotal' => ({required Object recorded, required Object total}) => '${recorded} dari ${total} tercatat',
+			'recurring.scheduledInLabel' => 'Masuk terjadwal',
+			'recurring.subscriptionsLine' => ({required Object perMonth, required Object perYear}) => 'Langganan ${perMonth}/bln · ${perYear}/thn',
+			'recurring.approxSemantics' => ({required Object amount}) => 'kira-kira ${amount}',
+			'recurring.filterAll' => ({required Object n}) => 'Semua (${n})',
+			'recurring.filterIncome' => ({required Object n}) => 'Masuk (${n})',
+			'recurring.filterExpense' => ({required Object n}) => 'Keluar (${n})',
+			'recurring.filterTransfer' => ({required Object n}) => 'Transfer (${n})',
+			'recurring.groupPending' => 'Menunggu dicatat',
+			'recurring.groupThisMonth' => 'Bulan ini',
+			'recurring.groupLater' => 'Nanti',
+			'recurring.groupPaused' => 'Dijeda',
+			'recurring.groupEnded' => 'Selesai',
+			'recurring.recordedMeta' => 'tercatat',
+			'recurring.pendingMeta' => 'menunggu',
+			'recurring.missedMeta' => ({required Object n}) => '${n} terlewat',
+			'recurring.skippedMeta' => 'dilewati',
+			'recurring.paymentAutoDebit' => 'autodebet',
+			'recurring.paymentManual' => 'bayar sendiri',
+			'recurring.yearlyMeta' => 'tahunan',
+			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, biasanya ${usual}',
+			'recurring.emptyTitle' => 'Belum ada rutin',
+			'recurring.emptyBody' => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.',
+			'recurring.filteredEmpty' => 'Belum ada rutin di sini.',
+			'recurring.showAllAction' => 'Tampilkan semua',
+			'recurring.addAction' => 'Tambah rutin',
+			'recurring.loadError' => 'Rutin gagal dimuat.',
+			'recurring.retryAction' => 'Coba lagi',
+			'recurring.nextTitle' => 'Berikutnya',
+			'recurring.recordedTitle' => 'Tercatat',
+			'recurring.skipAction' => 'Lewati',
+			'recurring.unskipAction' => 'Batal lewati',
+			'recurring.editAction' => 'Ubah',
+			'recurring.pauseAction' => 'Jeda',
+			'recurring.resumeAction' => 'Lanjutkan',
+			'recurring.endAction' => 'Akhiri',
+			'recurring.deleteAction' => 'Hapus',
+			'recurring.moreActions' => 'Aksi lain',
+			'recurring.deleteTitle' => 'Hapus rutin?',
+			'recurring.deleteBody' => 'Transaksi yang sudah tercatat tidak ikut terhapus.',
+			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
+			'recurring.endsOnLine' => ({required Object date}) => 'berakhir ${date}',
+			'recurring.countLine' => ({required Object n}) => '${n} kali',
+			'recurring.pausedLine' => 'Dijeda',
+			'recurring.reminderLine' => ({required Object n}) => 'Bayar sendiri · diingatkan H−${n}',
+			'recurring.autoDebitLine' => 'Autodebet',
+			'recurring.pausedMessage' => ({required Object name}) => '${name} dijeda.',
+			'recurring.resumedMessage' => ({required Object name}) => '${name} dilanjutkan.',
+			'recurring.endedMessage' => ({required Object name}) => '${name} diakhiri.',
+			'recurring.deletedMessage' => ({required Object name}) => '${name} dihapus.',
+			'recurring.skippedMessage' => ({required Object date}) => '${date} dilewati.',
+			'recurring.priceUpdateAction' => ({required Object amount}) => 'Perbarui ke ${amount}',
+			'recurring.notFound' => 'Rutin ini sudah tidak ada.',
+			'recurring.noRecorded' => 'Belum ada yang tercatat.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		};

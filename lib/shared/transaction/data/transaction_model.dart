@@ -22,6 +22,7 @@ final class TransactionModel {
     this.toWalletId,
     this.freelancePaymentId,
     this.sourceIconId,
+    this.recurrence,
   });
 
   /// Membaca [TransactionModel] dari JSON.
@@ -39,6 +40,7 @@ final class TransactionModel {
         toWalletId: json['toWalletId'] as String?,
         freelancePaymentId: json['freelancePaymentId'] as String?,
         sourceIconId: json['sourceIconId'] as String?,
+        recurrence: _recurrenceFromJson(json['recurrence'] as Map<String, dynamic>?),
       );
 
   /// Membuat [TransactionModel] dari entitas domain [Transaction].
@@ -50,6 +52,7 @@ final class TransactionModel {
             amount: transaction.amount,
             note: transaction.note,
             sourceIconId: transaction.sourceIconId,
+            recurrence: transaction.recurrence,
             categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             freelancePaymentId: transaction.freelancePaymentId,
@@ -61,6 +64,7 @@ final class TransactionModel {
             amount: transaction.amount,
             note: transaction.note,
             sourceIconId: transaction.sourceIconId,
+            recurrence: transaction.recurrence,
             categoryId: transaction.categoryId,
             walletId: transaction.walletId,
             budgetItemId: transaction.budgetItemId,
@@ -72,6 +76,7 @@ final class TransactionModel {
             amount: transaction.amount,
             note: transaction.note,
             sourceIconId: transaction.sourceIconId,
+            recurrence: transaction.recurrence,
             fromWalletId: transaction.fromWalletId,
             toWalletId: transaction.toWalletId,
             budgetItemId: transaction.budgetItemId,
@@ -131,6 +136,18 @@ final class TransactionModel {
   /// Ikon notifikasi asal (ADR-032 §3.10).
   final String? sourceIconId;
 
+  /// Tautan ke kemunculan rutin (ADR-034 §3.2). Kunci ini baru ditulis
+  /// kalau terisi, jadi dokumen lama tidak berubah bentuk.
+  final RecurrenceLink? recurrence;
+
+  static RecurrenceLink? _recurrenceFromJson(Map<String, dynamic>? json) => json == null
+      ? null
+      : RecurrenceLink(
+          ruleId: json['ruleId'] as String,
+          occurrenceDate: DateTime.parse(json['occurrenceDate'] as String),
+          linkedBy: RecurrenceLinkedBy.values.byName(json['linkedBy'] as String),
+        );
+
   /// Salinan dengan kategori [categoryId] dan label lama dibuang — hasil
   /// migrasi ADR-026 §3.4.
   TransactionModel withMigratedCategory(String? categoryId) => TransactionModel(
@@ -146,6 +163,7 @@ final class TransactionModel {
         toWalletId: toWalletId,
         freelancePaymentId: freelancePaymentId,
         sourceIconId: sourceIconId,
+        recurrence: recurrence,
       );
 
   /// Salinan yang membawa [legacyCategoryKey] milik [previous] — dipakai saat
@@ -167,6 +185,7 @@ final class TransactionModel {
               toWalletId: toWalletId,
               freelancePaymentId: freelancePaymentId,
               sourceIconId: sourceIconId,
+              recurrence: recurrence,
             );
 
   /// `true` untuk transfer (tidak berkategori).
@@ -190,6 +209,12 @@ final class TransactionModel {
         'toWalletId': toWalletId,
         if (freelancePaymentId != null) 'freelancePaymentId': freelancePaymentId,
         if (sourceIconId != null) 'sourceIconId': sourceIconId,
+        if (recurrence case final link?)
+          'recurrence': {
+            'ruleId': link.ruleId,
+            'occurrenceDate': link.occurrenceDate.toIso8601String(),
+            'linkedBy': link.linkedBy.name,
+          },
       };
 
   /// Mengubah model jadi entitas domain [Transaction].
@@ -204,6 +229,7 @@ final class TransactionModel {
             amount: amount,
             note: note,
             sourceIconId: sourceIconId,
+            recurrence: recurrence,
             categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel income tanpa walletId: $id')),
             freelancePaymentId: freelancePaymentId,
@@ -214,6 +240,7 @@ final class TransactionModel {
             amount: amount,
             note: note,
             sourceIconId: sourceIconId,
+            recurrence: recurrence,
             categoryId: categoryId,
             walletId: walletId ?? (throw FormatException('TransactionModel expense tanpa walletId: $id')),
             budgetItemId: budgetItemId,
@@ -224,6 +251,7 @@ final class TransactionModel {
             amount: amount,
             note: note,
             sourceIconId: sourceIconId,
+            recurrence: recurrence,
             fromWalletId: fromWalletId ?? (throw FormatException('TransactionModel transfer tanpa fromWalletId: $id')),
             toWalletId: toWalletId ?? (throw FormatException('TransactionModel transfer tanpa toWalletId: $id')),
             budgetItemId: budgetItemId,

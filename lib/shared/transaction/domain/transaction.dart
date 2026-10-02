@@ -12,6 +12,7 @@ sealed class Transaction extends Equatable {
     required this.amount,
     required this.note,
     this.sourceIconId,
+    this.recurrence,
   }) : assert(amount > 0, 'Nominal transaksi harus positif; arah uang ditentukan jenisnya, bukan tandanya.');
 
   /// Identitas transaksi.
@@ -30,6 +31,11 @@ sealed class Transaction extends Equatable {
   /// sumber, `null` untuk transaksi manual. Hanya tampilan.
   final String? sourceIconId;
 
+  /// Kemunculan transaksi rutin yang dicatat transaksi ini (ADR-034 §3.2),
+  /// `null` bila bukan dari rutin. Satu kemunculan paling banyak dicatat
+  /// satu transaksi (invarian 15).
+  final RecurrenceLink? recurrence;
+
   /// Kategori (ADR-026), boleh kosong. Hanya pemasukan dan pengeluaran yang
   /// berkategori; transfer selalu `null`.
   String? get categoryId => null;
@@ -47,6 +53,7 @@ final class IncomeTransaction extends Transaction {
     this.categoryId,
     this.freelancePaymentId,
     super.sourceIconId,
+    super.recurrence,
   });
 
   /// Dompet yang bertambah.
@@ -77,6 +84,7 @@ final class IncomeTransaction extends Transaction {
       amount: amount ?? this.amount,
       note: note ?? this.note,
       sourceIconId: sourceIconId,
+      recurrence: recurrence,
       categoryId: categoryId ?? this.categoryId,
       walletId: walletId ?? this.walletId,
       freelancePaymentId: freelancePaymentId,
@@ -84,7 +92,7 @@ final class IncomeTransaction extends Transaction {
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryId, walletId, freelancePaymentId, sourceIconId];
+  List<Object?> get props => [id, date, amount, note, categoryId, walletId, freelancePaymentId, sourceIconId, recurrence];
 }
 
 /// Mengurangi saldo satu dompet, dan boleh ditautkan ke satu pos anggaran.
@@ -99,6 +107,7 @@ final class ExpenseTransaction extends Transaction {
     this.categoryId,
     this.budgetItemId,
     super.sourceIconId,
+    super.recurrence,
   });
 
   /// Dompet yang berkurang.
@@ -133,6 +142,7 @@ final class ExpenseTransaction extends Transaction {
       amount: amount ?? this.amount,
       note: note ?? this.note,
       sourceIconId: sourceIconId,
+      recurrence: recurrence,
       categoryId: categoryId ?? this.categoryId,
       walletId: walletId ?? this.walletId,
       budgetItemId: budgetItemId ?? this.budgetItemId,
@@ -140,7 +150,7 @@ final class ExpenseTransaction extends Transaction {
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, categoryId, walletId, budgetItemId, sourceIconId];
+  List<Object?> get props => [id, date, amount, note, categoryId, walletId, budgetItemId, sourceIconId, recurrence];
 }
 
 /// Memindahkan catatan uang antar dompet. Tidak mengubah total uang
@@ -157,6 +167,7 @@ final class TransferTransaction extends Transaction {
     required this.toWalletId,
     this.budgetItemId,
     super.sourceIconId,
+    super.recurrence,
   }) : assert(fromWalletId != toWalletId, 'Transfer butuh dua dompet berbeda.');
 
   /// Dompet yang berkurang.
@@ -192,6 +203,7 @@ final class TransferTransaction extends Transaction {
       amount: amount ?? this.amount,
       note: note ?? this.note,
       sourceIconId: sourceIconId,
+      recurrence: recurrence,
       fromWalletId: fromWalletId ?? this.fromWalletId,
       toWalletId: toWalletId ?? this.toWalletId,
       budgetItemId: budgetItemId ?? this.budgetItemId,
@@ -199,5 +211,38 @@ final class TransferTransaction extends Transaction {
   }
 
   @override
-  List<Object?> get props => [id, date, amount, note, fromWalletId, toWalletId, budgetItemId, sourceIconId];
+  List<Object?> get props => [id, date, amount, note, fromWalletId, toWalletId, budgetItemId, sourceIconId, recurrence];
+}
+
+/// Siapa yang menautkan transaksi ke kemunculan rutin.
+enum RecurrenceLinkedBy {
+  /// Dicatat dari rutin, atau ditautkan pemilik.
+  user,
+
+  /// Ditautkan otomatis oleh pencocokan persis (ADR-034 §3.4).
+  auto,
+}
+
+/// Tautan transaksi ke satu kemunculan rutin: pasangan [ruleId] dan
+/// [occurrenceDate]. Menautkan tidak pernah mengubah saldo.
+final class RecurrenceLink extends Equatable {
+  /// Membuat [RecurrenceLink]. Jam pada [occurrenceDate] dibuang.
+  RecurrenceLink({required this.ruleId, required DateTime occurrenceDate, this.linkedBy = RecurrenceLinkedBy.user})
+    : occurrenceDate = DateTime(occurrenceDate.year, occurrenceDate.month, occurrenceDate.day);
+
+  /// Rutin yang dicatat.
+  final String ruleId;
+
+  /// Tanggal kemunculan menurut jadwal, bukan tanggal transaksi.
+  final DateTime occurrenceDate;
+
+  /// Pemilik atau pencocokan otomatis.
+  final RecurrenceLinkedBy linkedBy;
+
+  /// Apakah tautan ini menunjuk kemunculan yang sama dengan [other],
+  /// apa pun penautnya.
+  bool sameOccurrence(RecurrenceLink other) => ruleId == other.ruleId && occurrenceDate == other.occurrenceDate;
+
+  @override
+  List<Object?> get props => [ruleId, occurrenceDate, linkedBy];
 }

@@ -35,6 +35,37 @@ void main() {
       expect(txs.single, income);
     });
 
+    test('tautan rutin (recurrence) tersimpan di ketiga jenis; dokumen lama tanpa kunci tetap terbaca', () async {
+      final link = RecurrenceLink(ruleId: 'netflix', occurrenceDate: DateTime(2026, 10, 1, 8));
+      final auto = RecurrenceLink(
+        ruleId: 'gaji',
+        occurrenceDate: DateTime(2026, 10, 25),
+        linkedBy: RecurrenceLinkedBy.auto,
+      );
+      final txs = <Transaction>[
+        IncomeTransaction(id: 'i', date: DateTime(2026, 10, 25), amount: 1, note: '', walletId: 'w1', recurrence: auto),
+        ExpenseTransaction(id: 'e', date: DateTime(2026, 10, 3), amount: 1, note: '', walletId: 'w1', recurrence: link),
+        TransferTransaction(
+          id: 't',
+          date: DateTime(2026, 10, 5),
+          amount: 1,
+          note: '',
+          fromWalletId: 'w1',
+          toWalletId: 'w2',
+          recurrence: RecurrenceLink(ruleId: 'tabungan', occurrenceDate: DateTime(2026, 10, 5)),
+        ),
+        ExpenseTransaction(id: 'lama', date: DateTime(2026, 10, 6), amount: 1, note: '', walletId: 'w1'),
+      ];
+      for (final t in txs) {
+        await repository.saveTransaction(t);
+      }
+
+      final read = (await repository.listTransactionsInMonth(DateTime(2026, 10))).getOrElse((_) => throw StateError('expected Right'));
+      expect(read, containsAll(txs));
+      expect(read.firstWhere((t) => t.id == 'e').recurrence?.occurrenceDate, DateTime(2026, 10));
+      expect(read.firstWhere((t) => t.id == 'lama').recurrence, isNull);
+    });
+
     test('ikon notifikasi asal (sourceIconId) tersimpan dan terbaca kembali', () async {
       final expense = ExpenseTransaction(
         id: 'n1',

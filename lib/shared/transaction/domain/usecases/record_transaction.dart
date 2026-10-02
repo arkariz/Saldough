@@ -41,7 +41,20 @@ final class RecordTransaction {
   /// ulang juga kalau berbeda dari versi baru, supaya tidak ada dompet yang
   /// saldonya jadi basi setelah, misalnya, dompet asal sebuah pengeluaran
   /// diganti. Biarkan `null` untuk transaksi baru.
+  ///
+  /// Ditolak dengan [ValidationFailure] ber-`code` [occurrenceTakenCode]
+  /// kalau `transaction.recurrence` menunjuk kemunculan yang sudah dicatat
+  /// transaksi lain (invarian 15, ADR-034 §3.2).
   Future<Either<Failure, Unit>> call(Transaction transaction, {Transaction? previousTransaction, Object? source}) async {
+    if (transaction.recurrence case final link?) {
+      final taken = await _occurrenceTaken(transaction, link);
+      if (taken case Left(value: final failure)) return left(failure);
+      if (taken case Right(value: true)) {
+        return left(
+          const ValidationFailure(code: occurrenceTakenCode, message: 'Kemunculan rutin ini sudah tercatat.'),
+        );
+      }
+    }
     final saveResult = await transactionRepository.saveTransaction(
       transaction,
       previousDate: previousTransaction?.date,
@@ -63,6 +76,36 @@ final class RecordTransaction {
       Left(value: final failure) => left<Failure, Unit>(failure),
       Right() => await recomputeWalletBalances.forWallets(walletIdsOf(transaction)),
     }, source);
+  }
+
+  /// Kode [ValidationFailure] saat kemunculan rutin sudah dicatat transaksi
+  /// lain.
+  static const occurrenceTakenCode = FailureCode('RECURRENCE_OCCURRENCE_TAKEN');
+
+  /// Apakah transaksi lain (id berbeda) sudah menautkan kemunculan [link].
+  ///
+  /// Membaca dokumen bulan kemunculan beserta bulan sebelum dan sesudahnya,
+  /// ditambah bulan transaksinya (ADR-012): transaksi yang mencatat
+  /// kemunculan selalu bertanggal dekat kemunculannya.
+  Future<Either<Failure, bool>> _occurrenceTaken(Transaction transaction, RecurrenceLink link) async {
+    final day = link.occurrenceDate;
+    final months = {
+      for (final offset in const [-1, 0, 1]) DateTime(day.year, day.month + offset),
+      DateTime(transaction.date.year, transaction.date.month),
+    };
+    for (final month in months) {
+      final result = await transactionRepository.listTransactionsInMonth(month);
+      switch (result) {
+        case Left(value: final failure):
+          return left(failure);
+        case Right(value: final transactions):
+          final clash = transactions.any(
+            (t) => t.id != transaction.id && (t.recurrence?.sameOccurrence(link) ?? false),
+          );
+          if (clash) return right(true);
+      }
+    }
+    return right(false);
   }
 
   Either<Failure, Unit> _announced(Either<Failure, Unit> result, Object? source) {

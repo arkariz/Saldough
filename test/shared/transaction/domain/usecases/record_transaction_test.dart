@@ -176,4 +176,35 @@ void main() {
       expect(signals, 0);
     });
   });
+
+  group('invarian 15: satu kemunculan rutin paling banyak satu transaksi', () {
+    ExpenseTransaction netflix(String id, DateTime date) => ExpenseTransaction(
+      id: id,
+      date: date,
+      amount: 6500000,
+      note: 'Netflix',
+      walletId: 'bca',
+      recurrence: RecurrenceLink(ruleId: 'netflix', occurrenceDate: DateTime(2026, 9, 30)),
+    );
+
+    test('transaksi kedua untuk kemunculan yang sama ditolak, lintas bulan, tanpa mengubah saldo', () async {
+      expect((await record(netflix('a', DateTime(2026, 9, 30)))).isRight(), isTrue);
+      final second = await record(netflix('b', DateTime(2026, 10, 2)));
+      expect(
+        second.fold((f) => f is ValidationFailure ? f.code : null, (_) => null),
+        RecordTransaction.occurrenceTakenCode,
+      );
+      expect(await balanceOf('bca'), 500000000 - 6500000);
+    });
+
+    test('menyunting transaksi yang sama, atau menghapus lalu mencatat ulang, tetap boleh', () async {
+      final first = netflix('a', DateTime(2026, 9, 30));
+      await record(first);
+      expect((await record(first.copyWith(amount: 7900000), previousTransaction: first)).isRight(), isTrue);
+
+      await record.delete(first);
+      expect((await record(netflix('b', DateTime(2026, 10)))).isRight(), isTrue);
+      expect(await balanceOf('bca'), 500000000 - 6500000);
+    });
+  });
 }

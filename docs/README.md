@@ -93,7 +93,10 @@ docs/
 │   └── features/              # desain dan riset per fitur
 │       ├── ONBOARDING_PLAN.md         # onboarding dan tur (Fase 9)
 │       ├── ONBOARDING_ART_BRIEF.md    # brief ilustrasi onboarding
-│       └── VOICE_INPUT_RESEARCH.md    # kategori + Catat lewat Suara (Fase 11)
+│       ├── VOICE_INPUT_RESEARCH.md    # kategori + Catat lewat Suara (Fase 11)
+│       ├── RECURRING_AND_FORECAST.md  # transaksi/anggaran rutin dan perkiraan (draf)
+│       ├── RECURRING_COMPETITIVE_ANALYSIS.md  # analisis pesaing untuk fitur rutin dan perkiraan
+│       └── PLAN_TAB_LAYOUT.md         # tata letak tab Rencana: Bulan ini, Anggaran, Rutin
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md
@@ -158,6 +161,7 @@ docs/
 | [0032](02-architecture/adr/0032-catat-dari-notifikasi.md) | Catat dari notifikasi: penangkap native, pola, tingkat otomatis, kotak masuk | Accepted |
 | [0033](02-architecture/adr/0033-pecah-fitur-record.md) | Pecah fitur `record`: mesin tafsir di `shared/capture`, suara dan notifikasi jadi fitur sendiri | Accepted |
 | [0034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) | Bahasa visual baru: buku catatan dengan aksen piksel | Accepted |
+| [0034](02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) | Transaksi rutin, tab Rencana, uang nganggur, dan perkiraan arus kas | Proposed |
 
 ADR berikutnya memakai nomor **0035**.
 

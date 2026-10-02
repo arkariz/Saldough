@@ -3,9 +3,11 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
+import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -34,6 +36,8 @@ void main() {
         isPaused: paused,
       );
 
+  setUpAll(registerEffectHandlers);
+
   setUp(() async {
     storage = InMemoryKeyValueStorage();
     rules = RecurringRuleRepositoryImpl(storage: storage);
@@ -54,13 +58,24 @@ void main() {
       wallets: WalletRepositoryImpl(storage: storage),
       ledgerChanges: LedgerChanges(),
       recurringChanges: changes,
+      recordTransaction: RecordTransaction(
+        ledgerChanges: LedgerChanges(),
+        transactionRepository: transactions,
+        recomputeWalletBalances: RecomputeWalletBalances(
+          walletRepository: WalletRepositoryImpl(storage: storage),
+          transactionRepository: transactions,
+        ),
+      ),
       now: () => today,
     )..add(const RecurringStarted());
     addTearDown(bloc.close);
     await tester.pumpWidget(
       MaterialApp(
         theme: PixelTheme.light,
-        home: BlocProvider.value(value: bloc, child: Scaffold(body: child)),
+        home: BlocProvider.value(
+          value: bloc,
+          child: EffectListener<RecurringBloc, RecurringState>(child: Scaffold(body: child)),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -127,5 +142,77 @@ void main() {
     await tester.tap(find.text(t.recurring.pauseAction));
     await tester.pumpAndSettle();
     expect(read(await rules.listRules()).single.isPaused, isTrue);
+  });
+
+  group('Menunggu dicatat (T-14.6)', () {
+    Future<List<Transaction>> october() async => read(await transactions.listTransactionsInMonth(DateTime(2026, 10)));
+
+    testWidgets('Catat satu ketuk: transaksi bertanggal kemunculan, tertaut; Batalkan menghapusnya', (tester) async {
+      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+      await pump(tester, const RecurringSegmentView());
+
+      await tester.tap(find.text(t.recurring.recordAction));
+      await tester.pumpAndSettle();
+      final recorded = (await october()).single;
+      expect(recorded.recurrence, RecurrenceLink(ruleId: 'Netflix', occurrenceDate: DateTime(2026, 10)));
+      expect(recorded.date, DateTime(2026, 10, 1, 9));
+      expect(recorded.amount, 6500000);
+      expect(find.text('Netflix ✓'), findsOneWidget);
+
+      await tester.tap(find.text(t.recurring.undoAction));
+      await tester.pumpAndSettle();
+      expect(await october(), isEmpty);
+    });
+
+    testWidgets('transaksi mirip yang belum tertaut: ditanya dulu, Tautkan tidak menambah transaksi (E4)', (
+      tester,
+    ) async {
+      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+      await transactions.saveTransaction(
+        ExpenseTransaction(id: 'dari-notif', date: DateTime(2026, 10, 2), amount: 6500000, note: '', walletId: 'bca'),
+      );
+      await pump(tester, const RecurringSegmentView());
+
+      await tester.tap(find.text(t.recurring.recordAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.recurring.similarTitle), findsOneWidget);
+      await tester.tap(find.text(t.recurring.linkAction));
+      await tester.pumpAndSettle();
+
+      final all = await october();
+      expect(all, hasLength(1));
+      expect(all.single.id, 'dari-notif');
+      expect(all.single.recurrence?.ruleId, 'Netflix');
+    });
+
+    testWidgets('Lewati menulis tanggal dilewati; Catat semua hanya rutin bernominal tetap', (tester) async {
+      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+      await rules.saveRule(rule('Spotify', 5499000, DateTime(2026, 9, 30)));
+      await rules.saveRule(
+        RecurringRule(
+          id: 'Listrik',
+          kind: RecurringKind.expense,
+          amount: 20000000,
+          amountMode: RecurringAmountMode.estimated,
+          walletId: 'bca',
+          note: 'Listrik',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 10)),
+        ),
+      );
+      await rules.saveRule(rule('Gym', 30000000, DateTime(2026, 10, 2)));
+      await pump(tester, const RecurringSegmentView());
+
+      await tester.tap(find.text(t.recurring.skipAction).last);
+      await tester.pumpAndSettle();
+      expect(read(await rules.listRules()).firstWhere((r) => r.id == 'Gym').skippedDates, {DateTime(2026, 10, 2)});
+
+      await tester.tap(find.text(t.recurring.recordAllAction));
+      await tester.pumpAndSettle();
+      final recorded = [
+        ...read(await transactions.listTransactionsInMonth(DateTime(2026, 9))),
+        ...await october(),
+      ];
+      expect(recorded.map((t) => t.recurrence?.ruleId).toSet(), {'Netflix', 'Spotify'});
+    });
   });
 }

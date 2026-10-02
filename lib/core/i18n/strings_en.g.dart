@@ -1076,6 +1076,22 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String priceUpdateAction({required Object amount}) => 'Update to ${amount}';
 	@override String get notFound => 'This recurring no longer exists.';
 	@override String get noRecorded => 'Nothing recorded yet.';
+	@override String recordedMessage({required Object name}) => '${name} recorded.';
+	@override String recordedAllMessage({required Object n}) => '${n} recurring recorded.';
+	@override String linkedMessage({required Object name}) => '${name} linked.';
+	@override String get undoAction => 'Undo';
+	@override String get similarTitle => 'Already recorded?';
+	@override String similarBody({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.';
+	@override String get linkAction => 'Link';
+	@override String get recordNewAction => 'Record new';
+	@override String get recordAction => 'Record';
+	@override String get editFirstAction => 'Edit first';
+	@override String get recordAllAction => 'Record all';
+	@override String get seeAllAction => 'See all';
+	@override String get pendingCardTitle => 'Waiting to record';
+	@override String unusualAmountNotice({required Object usual}) => 'Usually ${usual}. Check the amount again.';
+	@override String farDateNotice({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.';
+	@override String occurrenceNotice({required Object name, required Object date}) => 'Recording ${name} · ${date}';
 }
 
 // Path: plan
@@ -2200,6 +2216,22 @@ extension on TranslationsEn {
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
 			'recurring.notFound' => 'This recurring no longer exists.',
 			'recurring.noRecorded' => 'Nothing recorded yet.',
+			'recurring.recordedMessage' => ({required Object name}) => '${name} recorded.',
+			'recurring.recordedAllMessage' => ({required Object n}) => '${n} recurring recorded.',
+			'recurring.linkedMessage' => ({required Object name}) => '${name} linked.',
+			'recurring.undoAction' => 'Undo',
+			'recurring.similarTitle' => 'Already recorded?',
+			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.',
+			'recurring.linkAction' => 'Link',
+			'recurring.recordNewAction' => 'Record new',
+			'recurring.recordAction' => 'Record',
+			'recurring.editFirstAction' => 'Edit first',
+			'recurring.recordAllAction' => 'Record all',
+			'recurring.seeAllAction' => 'See all',
+			'recurring.pendingCardTitle' => 'Waiting to record',
+			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
+			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
+			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		};

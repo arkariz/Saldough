@@ -49,6 +49,7 @@ class ExpenseFormSheet extends StatefulWidget {
     this.initialRepeat,
     this.repeatLocked = false,
     this.scheduleOnly = false,
+    this.occurrence,
     super.key,
   });
 
@@ -83,6 +84,10 @@ class ExpenseFormSheet extends StatefulWidget {
   /// Ubah rutin: tombol selalu "Simpan Jadwal", karena tidak ada transaksi
   /// yang dicatat.
   final bool scheduleOnly;
+
+  /// Kemunculan rutin yang dicatat ("Ubah dulu", T-14.6): menampilkan
+  /// pemberitahuan E5/E11 dan menyembunyikan Ulangi.
+  final RecordOccurrence? occurrence;
 
   /// Dompet asal pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet, atau dompet bawaan CATAT, UX-2). Diabaikan kalau [initial]
@@ -278,7 +283,9 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           allowFuture: _repeat != null,
           onChanged: (date) => setState(() => _date = date),
         ),
-        if (!editing)
+        if (widget.occurrence case final occurrence?)
+          RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
+        if (!editing && widget.occurrence == null)
           RecordRepeatField(
             value: _repeat,
             date: _date,

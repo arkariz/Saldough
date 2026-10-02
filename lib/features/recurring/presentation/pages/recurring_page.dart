@@ -9,6 +9,7 @@ import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_keys.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_row.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_summary_card.dart';
@@ -162,14 +163,18 @@ class RecurringSegmentView extends StatelessWidget {
                 if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.sm),
                   AppSectionLabel('${_groupLabel(group)} (${rows.length})'),
-                  for (final entry in rows)
-                    RecurringRow(
-                      entry: entry,
-                      walletName: state.walletName(entry.rule.walletId),
-                      toWalletName: state.walletName(entry.rule.toWalletId),
-                      today: state.today,
-                      onTap: () => _open(context, entry.rule.id),
-                    ),
+                  if (group == RecurringGroup.pending) ...[
+                    for (final entry in rows) RecurringPendingTile(entry: entry, state: state),
+                    ?recordAllButton(context, rows),
+                  ] else
+                    for (final entry in rows)
+                      RecurringRow(
+                        entry: entry,
+                        walletName: state.walletName(entry.rule.walletId),
+                        toWalletName: state.walletName(entry.rule.toWalletId),
+                        today: state.today,
+                        onTap: () => _open(context, entry.rule.id),
+                      ),
                 ],
             const SizedBox(height: AppSpacing.md),
             AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),

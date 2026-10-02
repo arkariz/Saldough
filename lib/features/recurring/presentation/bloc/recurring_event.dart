@@ -89,3 +89,39 @@ final class RecurringDeleted extends RecurringEvent {
   /// Rutinnya.
   final String ruleId;
 }
+
+/// Catat satu ketuk kemunculan menunggu (rutin bernominal tetap).
+final class RecurringOccurrenceRecorded extends RecurringEvent {
+  /// Membuat [RecurringOccurrenceRecorded].
+  const RecurringOccurrenceRecorded({required this.ruleId, required this.date, this.force = false});
+
+  /// Rutinnya.
+  final String ruleId;
+
+  /// Tanggal kemunculan.
+  final DateTime date;
+
+  /// Catat walau ada transaksi mirip (pengguna sudah memilih "Catat baru").
+  final bool force;
+}
+
+/// Catat semua kemunculan menunggu yang bisa dicatat satu ketuk.
+final class RecurringPendingRecordedAll extends RecurringEvent {
+  /// Membuat [RecurringPendingRecordedAll].
+  const RecurringPendingRecordedAll();
+}
+
+/// Tautkan transaksi yang sudah ada ke kemunculan.
+final class RecurringOccurrenceLinked extends RecurringEvent {
+  /// Membuat [RecurringOccurrenceLinked].
+  const RecurringOccurrenceLinked({required this.ruleId, required this.date, required this.transactionId});
+
+  /// Rutinnya.
+  final String ruleId;
+
+  /// Tanggal kemunculan.
+  final DateTime date;
+
+  /// Transaksi yang ditautkan.
+  final String transactionId;
+}

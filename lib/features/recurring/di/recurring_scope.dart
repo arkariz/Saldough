@@ -34,6 +34,14 @@ final class RecurringScope extends IsolatedScope {
         wallets: c<WalletRepository>(),
         ledgerChanges: c<LedgerChanges>(),
         recurringChanges: c<RecurringChanges>(),
+        recordTransaction: RecordTransaction(
+          ledgerChanges: c<LedgerChanges>(),
+          transactionRepository: c<TransactionRepository>(),
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: c<WalletRepository>(),
+            transactionRepository: c<TransactionRepository>(),
+          ),
+        ),
         monthsBack: monthsBack,
       ),
       dispose: (bloc) => bloc.close(),

@@ -36,6 +36,8 @@ final class RecordSheetInput extends RouteInput {
     this.repeat,
     this.makeRecurringFrom,
     this.editRule,
+    this.occurrenceRule,
+    this.occurrenceDate,
   });
 
   /// Dompet awal (pintasan rincian dompet, FR-REC-002).
@@ -71,6 +73,14 @@ final class RecordSheetInput extends RouteInput {
   /// rutin ini; menyimpan hanya mengubah rutinnya, tidak pernah mencatat
   /// transaksi, dan transaksi yang sudah tercatat tidak berubah (FR-RUT-005).
   final RecurringRule? editRule;
+
+  /// **Ubah dulu** (T-14.6): CATAT terisi dari rutin ini untuk kemunculan
+  /// [occurrenceDate]; transaksi yang tersimpan tertaut ke kemunculan itu.
+  /// Nominal kira-kira selalu lewat jalan ini (ADR-034 §3.3).
+  final RecurringRule? occurrenceRule;
+
+  /// Tanggal kemunculan untuk [occurrenceRule].
+  final DateTime? occurrenceDate;
 }
 
 /// Input sunting transaksi (FR-TXN-005). Rutenya selesai dengan transaksi

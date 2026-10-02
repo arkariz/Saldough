@@ -22,6 +22,7 @@ import 'package:saldough/features/notification_capture/presentation/widgets/capt
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -135,6 +136,10 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
         notice: CaptureInboxBanner(container: parentContainer),
+        pendingRecurring: RecurringPendingCard(
+          container: parentContainer,
+          onShowAll: () => _showPlan(context, PlanSegment.recurring),
+        ),
       ),
       PlanPage(
         selected: _planSegment,

@@ -992,7 +992,23 @@
     "skippedMessage": "$date dilewati.",
     "priceUpdateAction": "Perbarui ke $amount",
     "notFound": "Rutin ini sudah tidak ada.",
-    "noRecorded": "Belum ada yang tercatat."
+    "noRecorded": "Belum ada yang tercatat.",
+    "recordedMessage": "$name tercatat.",
+    "recordedAllMessage": "$n rutin tercatat.",
+    "linkedMessage": "$name ditautkan.",
+    "undoAction": "Batalkan",
+    "similarTitle": "Sudah tercatat?",
+    "similarBody": "Mirip $name $amount · $date yang sudah tercatat.",
+    "linkAction": "Tautkan",
+    "recordNewAction": "Catat baru",
+    "recordAction": "Catat",
+    "editFirstAction": "Ubah dulu",
+    "recordAllAction": "Catat semua",
+    "seeAllAction": "Lihat semua",
+    "pendingCardTitle": "Menunggu dicatat",
+    "unusualAmountNotice": "Biasanya $usual. Periksa lagi nominalnya.",
+    "farDateNotice": "Jadwalnya $date. Pastikan tanggalnya benar.",
+    "occurrenceNotice": "Mencatat $name · $date"
   },
   "plan": {
     "recurringSegmentLabel": "Rutin"

@@ -52,6 +52,7 @@ class TransferFormSheet extends StatefulWidget {
     this.initialRepeat,
     this.repeatLocked = false,
     this.scheduleOnly = false,
+    this.occurrence,
     super.key,
   });
 
@@ -84,6 +85,10 @@ class TransferFormSheet extends StatefulWidget {
   /// Ubah rutin: tombol selalu "Simpan Jadwal", karena tidak ada transaksi
   /// yang dicatat.
   final bool scheduleOnly;
+
+  /// Kemunculan rutin yang dicatat ("Ubah dulu", T-14.6): menampilkan
+  /// pemberitahuan E5/E11 dan menyembunyikan Ulangi.
+  final RecordOccurrence? occurrence;
 
   /// Dompet ASAL pra-terpilih (FR-REC-002, pintasan dari layar rincian
   /// dompet) -- pintasan dari satu dompet paling wajar berarti "dari dompet
@@ -305,7 +310,9 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           allowFuture: _repeat != null,
           onChanged: (date) => setState(() => _date = date),
         ),
-        if (!editing)
+        if (widget.occurrence case final occurrence?)
+          RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
+        if (!editing && widget.occurrence == null)
           RecordRepeatField(
             value: _repeat,
             date: _date,

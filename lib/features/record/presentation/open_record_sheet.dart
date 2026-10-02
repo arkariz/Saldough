@@ -86,12 +86,18 @@ Future<bool> openRecordSheet(
   RecurringPattern? initialRepeat,
   Transaction? makeRecurringFrom,
   RecurringRule? editRule,
+  RecurringRule? occurrenceRule,
+  DateTime? occurrenceDate,
 }) async {
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
     (final Transaction source, _) => draftFromTransaction(source),
     (_, final RecurringRule rule) => draftFromRule(rule),
+    _ when occurrenceRule != null && occurrenceDate != null => draftFromRule(occurrenceRule, date: occurrenceDate),
     _ => draft,
   };
+  final occurrence = occurrenceRule != null && occurrenceDate != null
+      ? (rule: occurrenceRule, date: occurrenceDate)
+      : null;
   final repeat =
       initialRepeat ??
       (editRule != null ? RecurringPattern.of(editRule) : (makeRecurringFrom != null ? const RecurringPattern() : null));
@@ -154,6 +160,7 @@ Future<bool> openRecordSheet(
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
           scheduleOnly: scheduleOnly,
+          occurrence: occurrence,
           ),
           RecordChoice.expense => ExpenseFormSheet(
             wallets: wallets,
@@ -169,6 +176,7 @@ Future<bool> openRecordSheet(
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
           scheduleOnly: scheduleOnly,
+          occurrence: occurrence,
           ),
           RecordChoice.transfer => TransferFormSheet(
             wallets: wallets,
@@ -183,6 +191,7 @@ Future<bool> openRecordSheet(
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
           scheduleOnly: scheduleOnly,
+          occurrence: occurrence,
           ),
         };
       },
@@ -201,6 +210,11 @@ Future<bool> openRecordSheet(
       switch ((makeRecurringFrom, editRule)) {
         (final Transaction source, _) => RecordMadeRecurring(source: source, recorded: result),
         (_, final RecurringRule rule) => RecordRuleEdited(rule: rule, recorded: result),
+        _ when occurrence != null => RecordOccurrenceRecorded(
+          rule: occurrence.rule,
+          occurrenceDate: occurrence.date,
+          recorded: result,
+        ),
         _ => withSourceIcon(result, recordDraft?.sourceIconId),
       },
     );
@@ -244,11 +258,13 @@ RecordDraft draftFromTransaction(Transaction transaction) => switch (transaction
   ),
 };
 
-/// Draf CATAT dari [rule] (Ubah rutin): tanggalnya kemunculan berikutnya
-/// sejak hari ini, atau patokannya bila belum mulai.
-RecordDraft draftFromRule(RecurringRule rule) {
+/// Draf CATAT dari [rule]. Tanpa [date] (Ubah rutin): kemunculan berikutnya
+/// sejak hari ini, atau patokannya bila sudah berakhir. Dengan [date] (Ubah
+/// dulu): tanggal kemunculan itu, dengan jam sekarang.
+RecordDraft draftFromRule(RecurringRule rule, {DateTime? date}) {
   final now = DateTime.now();
-  final date = nextOccurrence(rule, now) ?? rule.schedule.anchorDate;
+  final day = date ?? nextOccurrence(rule, now) ?? rule.schedule.anchorDate;
+  final when = DateTime(day.year, day.month, day.day, now.hour, now.minute);
   return RecordDraft(
     kind: switch (rule.kind) {
       RecurringKind.income => DraftKind.income,
@@ -260,6 +276,6 @@ RecordDraft draftFromRule(RecurringRule rule) {
     toWalletId: rule.toWalletId,
     categoryId: rule.categoryId,
     note: rule.note,
-    date: date,
+    date: when,
   );
 }

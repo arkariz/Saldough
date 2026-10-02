@@ -2743,6 +2743,54 @@ class Translations$recurring$id {
 
 	/// id: 'Belum ada yang tercatat.'
 	String get noRecorded => 'Belum ada yang tercatat.';
+
+	/// id: '$name tercatat.'
+	String recordedMessage({required Object name}) => '${name} tercatat.';
+
+	/// id: '$n rutin tercatat.'
+	String recordedAllMessage({required Object n}) => '${n} rutin tercatat.';
+
+	/// id: '$name ditautkan.'
+	String linkedMessage({required Object name}) => '${name} ditautkan.';
+
+	/// id: 'Batalkan'
+	String get undoAction => 'Batalkan';
+
+	/// id: 'Sudah tercatat?'
+	String get similarTitle => 'Sudah tercatat?';
+
+	/// id: 'Mirip $name $amount · $date yang sudah tercatat.'
+	String similarBody({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.';
+
+	/// id: 'Tautkan'
+	String get linkAction => 'Tautkan';
+
+	/// id: 'Catat baru'
+	String get recordNewAction => 'Catat baru';
+
+	/// id: 'Catat'
+	String get recordAction => 'Catat';
+
+	/// id: 'Ubah dulu'
+	String get editFirstAction => 'Ubah dulu';
+
+	/// id: 'Catat semua'
+	String get recordAllAction => 'Catat semua';
+
+	/// id: 'Lihat semua'
+	String get seeAllAction => 'Lihat semua';
+
+	/// id: 'Menunggu dicatat'
+	String get pendingCardTitle => 'Menunggu dicatat';
+
+	/// id: 'Biasanya $usual. Periksa lagi nominalnya.'
+	String unusualAmountNotice({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.';
+
+	/// id: 'Jadwalnya $date. Pastikan tanggalnya benar.'
+	String farDateNotice({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.';
+
+	/// id: 'Mencatat $name · $date'
+	String occurrenceNotice({required Object name, required Object date}) => 'Mencatat ${name} · ${date}';
 }
 
 // Path: plan
@@ -4060,6 +4108,22 @@ extension on Translations {
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Perbarui ke ${amount}',
 			'recurring.notFound' => 'Rutin ini sudah tidak ada.',
 			'recurring.noRecorded' => 'Belum ada yang tercatat.',
+			'recurring.recordedMessage' => ({required Object name}) => '${name} tercatat.',
+			'recurring.recordedAllMessage' => ({required Object n}) => '${n} rutin tercatat.',
+			'recurring.linkedMessage' => ({required Object name}) => '${name} ditautkan.',
+			'recurring.undoAction' => 'Batalkan',
+			'recurring.similarTitle' => 'Sudah tercatat?',
+			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.',
+			'recurring.linkAction' => 'Tautkan',
+			'recurring.recordNewAction' => 'Catat baru',
+			'recurring.recordAction' => 'Catat',
+			'recurring.editFirstAction' => 'Ubah dulu',
+			'recurring.recordAllAction' => 'Catat semua',
+			'recurring.seeAllAction' => 'Lihat semua',
+			'recurring.pendingCardTitle' => 'Menunggu dicatat',
+			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
+			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
+			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Mencatat ${name} · ${date}',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		};

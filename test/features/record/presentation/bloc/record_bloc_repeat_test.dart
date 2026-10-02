@@ -149,6 +149,61 @@ void main() {
     expect(statuses.map((o) => o.status), [OccurrenceStatus.recorded, OccurrenceStatus.pending]);
   });
 
+  test('Ubah dulu: isian CATAT tersimpan tertaut ke kemunculannya, dengan nominal yang diubah', () async {
+    final rule = RecurringRule(
+      id: 'listrik',
+      kind: RecurringKind.expense,
+      amount: 20000000,
+      amountMode: RecurringAmountMode.estimated,
+      walletId: 'bca',
+      note: 'Listrik',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 5)),
+    );
+    bloc.add(
+      RecordOccurrenceRecorded(
+        rule: rule,
+        occurrenceDate: DateTime(2026, 9, 5),
+        recorded: ExpenseRecorded(walletId: 'bca', amount: 23450000, date: DateTime(2026, 9, 6, 19), note: 'Listrik'),
+      ),
+    );
+    await settle(0);
+
+    final recorded = read(await transactions.listTransactionsInMonth(DateTime(2026, 9))).single;
+    expect(recorded.amount, 23450000);
+    expect(recorded.recurrence, RecurrenceLink(ruleId: 'listrik', occurrenceDate: DateTime(2026, 9, 5)));
+    expect(read(await rules.listRules()), isEmpty, reason: 'Ubah dulu tidak mengubah rutin');
+  });
+
+  test('Ubah rutin: hanya rutin yang berubah; jadwal lama dipertahankan bila tanggalnya kemunculan', () async {
+    final rule = RecurringRule(
+      id: 'kos',
+      kind: RecurringKind.expense,
+      amount: 150000000,
+      walletId: 'bca',
+      note: 'Kos',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 7)),
+    );
+    await rules.saveRule(rule);
+    bloc.add(
+      RecordRuleEdited(
+        rule: rule,
+        recorded: ExpenseRecorded(
+          walletId: 'bca',
+          amount: 160000000,
+          date: DateTime(2026, 11, 1, 9),
+          note: 'Kos',
+          repeat: const RecurringPattern(),
+        ),
+      ),
+    );
+    await settle(0);
+
+    final updated = read(await rules.listRules()).single;
+    expect(updated.amount, 160000000);
+    expect(updated.schedule.anchorDate, DateTime(2026, 7));
+    expect(read(await transactions.listAllTransactions()), isEmpty);
+  });
+
   group('repeatSubmitLabel', () {
     test('tanpa Ulangi: label biasa; lampau: Catat & Jadwalkan; masa depan: Simpan Jadwal', () {
       final now = DateTime.now();

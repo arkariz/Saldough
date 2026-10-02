@@ -3,6 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
 /// Baris **Ulangi** di CATAT (T-14.3, J2): tertutup "Ulangi: Tidak"; diketuk
@@ -384,4 +385,44 @@ String repeatSubmitLabel({
 DateTime dateWithoutRepeat(DateTime date) {
   final now = DateTime.now();
   return date.isAfter(now) ? now : date;
+}
+
+/// Kemunculan rutin yang sedang dicatat lewat CATAT ("Ubah dulu").
+typedef RecordOccurrence = ({RecurringRule rule, DateTime date});
+
+/// Pemberitahuan ringan saat mencatat kemunculan rutin (T-14.6): E5 bila
+/// nominal ≥5× atau ≤⅕ dari biasanya, E11 bila tanggalnya lebih dari 7 hari
+/// dari jadwal. Tidak menahan simpan.
+class RecordOccurrenceNotice extends StatelessWidget {
+  /// Membuat [RecordOccurrenceNotice].
+  const RecordOccurrenceNotice({required this.occurrence, required this.amount, required this.date, super.key});
+
+  /// Kemunculannya.
+  final RecordOccurrence occurrence;
+
+  /// Nominal di formulir, atau `null`.
+  final int? amount;
+
+  /// Tanggal di formulir.
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final rule = occurrence.rule;
+    final lines = [
+      t.recurring.occurrenceNotice(
+        name: rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note,
+        date: CycleMonthFormatter.formatDayMonth(occurrence.date),
+      ),
+      if (amount case final typed? when isUnusualAmount(usual: rule.amount, typed: typed))
+        t.recurring.unusualAmountNotice(usual: AppMoneyFormatter.format(rule.amount)),
+      if (isFarFromOccurrence(date, occurrence.date))
+        t.recurring.farDateNotice(date: CycleMonthFormatter.formatDayMonth(occurrence.date)),
+    ];
+    return Text(
+      lines.join('\n'),
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.pending : colors.textMuted),
+    );
+  }
 }

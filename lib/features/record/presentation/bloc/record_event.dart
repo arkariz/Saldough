@@ -160,6 +160,22 @@ final class RecordRuleEdited extends RecordEvent {
   final RecordEvent recorded;
 }
 
+/// **Ubah dulu** (T-14.6): isian [recorded] dicatat sebagai kemunculan
+/// [occurrenceDate] dari [rule].
+final class RecordOccurrenceRecorded extends RecordEvent {
+  /// Membuat [RecordOccurrenceRecorded].
+  const RecordOccurrenceRecorded({required this.rule, required this.occurrenceDate, required this.recorded});
+
+  /// Rutinnya.
+  final RecurringRule rule;
+
+  /// Tanggal kemunculan.
+  final DateTime occurrenceDate;
+
+  /// Isian formulir CATAT.
+  final RecordEvent recorded;
+}
+
 /// Menampilkan galat dari operasi di luar event (mis. "Tambah kategori",
 /// `RecordBloc.createCategory`) lewat efek galat biasa.
 final class RecordFailureOccurred extends RecordEvent {

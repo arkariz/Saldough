@@ -31,6 +31,7 @@ class HomePage extends StatefulWidget {
     required this.onShowTransactions,
     required this.onShowWallets,
     this.notice,
+    this.pendingRecurring,
     super.key,
   });
 
@@ -49,6 +50,10 @@ class HomePage extends StatefulWidget {
   /// Kartu pemberitahuan di bawah total saldo, disisipkan akar komposisi
   /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
   final Widget? notice;
+
+  /// Kartu Menunggu dicatat (T-14.6), disisipkan akar komposisi supaya
+  /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
+  final Widget? pendingRecurring;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -115,6 +120,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ?widget.notice,
+          ?widget.pendingRecurring,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.md),

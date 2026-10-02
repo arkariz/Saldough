@@ -992,7 +992,23 @@
     "skippedMessage": "$date skipped.",
     "priceUpdateAction": "Update to $amount",
     "notFound": "This recurring no longer exists.",
-    "noRecorded": "Nothing recorded yet."
+    "noRecorded": "Nothing recorded yet.",
+    "recordedMessage": "$name recorded.",
+    "recordedAllMessage": "$n recurring recorded.",
+    "linkedMessage": "$name linked.",
+    "undoAction": "Undo",
+    "similarTitle": "Already recorded?",
+    "similarBody": "Looks like $name $amount · $date, already recorded.",
+    "linkAction": "Link",
+    "recordNewAction": "Record new",
+    "recordAction": "Record",
+    "editFirstAction": "Edit first",
+    "recordAllAction": "Record all",
+    "seeAllAction": "See all",
+    "pendingCardTitle": "Waiting to record",
+    "unusualAmountNotice": "Usually $usual. Check the amount again.",
+    "farDateNotice": "Scheduled for $date. Make sure the date is right.",
+    "occurrenceNotice": "Recording $name · $date"
   },
   "plan": {
     "recurringSegmentLabel": "Recurring"

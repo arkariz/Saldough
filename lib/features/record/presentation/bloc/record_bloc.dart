@@ -37,6 +37,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     on<TransferRecorded>(_onTransferRecorded);
     on<RecordMadeRecurring>(_onMadeRecurring);
     on<RecordRuleEdited>(_onRuleEdited);
+    on<RecordOccurrenceRecorded>(_onOccurrenceRecorded);
     on<RecordFailureOccurred>((event, emit) => emit(state.copyWith(effect: _effectError(event.failure))));
   }
 
@@ -243,6 +244,46 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
           ),
         );
     }
+  }
+
+  /// Ubah dulu: transaksi dari isian formulir, tertaut ke kemunculannya.
+  /// Isian CATAT dipakai apa adanya (termasuk pos anggaran).
+  Future<void> _onOccurrenceRecorded(RecordOccurrenceRecorded event, Emitter<RecordState> emit) async {
+    final link = RecurrenceLink(ruleId: event.rule.id, occurrenceDate: event.occurrenceDate);
+    final transaction = switch (event.recorded) {
+      final IncomeRecorded e => IncomeTransaction(
+        id: _newId(),
+        date: e.date,
+        amount: e.amount,
+        note: e.note,
+        categoryId: e.categoryId,
+        walletId: e.walletId,
+        recurrence: link,
+      ),
+      final ExpenseRecorded e => ExpenseTransaction(
+        id: _newId(),
+        date: e.date,
+        amount: e.amount,
+        note: e.note,
+        categoryId: e.categoryId,
+        walletId: e.walletId,
+        budgetItemId: e.budgetItemId,
+        recurrence: link,
+      ),
+      final TransferRecorded e => TransferTransaction(
+        id: _newId(),
+        date: e.date,
+        amount: e.amount,
+        note: e.note,
+        fromWalletId: e.fromWalletId,
+        toWalletId: e.toWalletId,
+        budgetItemId: e.budgetItemId,
+        recurrence: link,
+      ),
+      _ => null,
+    };
+    if (transaction == null) return;
+    await _save(transaction, emit, _effectSaved(t.recurring.recordedMessage(name: _nameOf(event.rule))));
   }
 
   UiEffect _effectRecordedAndScheduled(RecurringRule rule) {

@@ -237,6 +237,28 @@ void main() {
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
     });
 
+    testWidgets('Beranda menampilkan kartu Menunggu dicatat bila ada kemunculan menunggu (T-14.6)', (tester) async {
+      final now = DateTime.now();
+      await container<RecurringRuleRepository>().saveRule(
+        RecurringRule(
+          id: 'netflix',
+          kind: RecurringKind.expense,
+          amount: 6500000,
+          walletId: 'w1',
+          note: 'Netflix',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(now.year, now.month)),
+        ),
+      );
+      await tester.pumpWidget(pumpableShell());
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+
+      expect(find.text('${t.recurring.pendingCardTitle.toUpperCase()} (1)'), findsOneWidget);
+      expect(find.text('Netflix ●'), findsOneWidget);
+    });
+
     testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-14.4)', (tester) async {
       await tester.pumpWidget(pumpableShell());
       for (var i = 0; i < 5; i++) {

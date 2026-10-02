@@ -114,16 +114,18 @@ void main() {
     );
     await pump(tester, const RecurringSegmentView());
 
-    expect(find.text('${t.recurring.groupPending.toUpperCase()} (1)'), findsOneWidget);
-    expect(find.text('${t.recurring.groupThisMonth.toUpperCase()} (1)'), findsOneWidget);
-    expect(find.text('${t.recurring.groupLater.toUpperCase()} (1)'), findsOneWidget);
-    expect(find.text('${t.recurring.groupPaused.toUpperCase()} (1)'), findsOneWidget);
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupThisMonth.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupLater.toUpperCase()), findsOneWidget);
+    // Dijeda terlipat jadi satu baris (PLAN_TAB_LAYOUT §4.9).
+    expect(find.text('${t.recurring.groupPaused} (1) ›'), findsOneWidget);
+    expect(find.text('Gym'), findsNothing);
     expect(find.text('Kos ✓'), findsOneWidget);
     expect(find.text('Netflix ●'), findsOneWidget);
-    // Masih akan keluar Okt: Netflix 65.000 (Kos sudah tercatat, Gym dijeda).
+    // Sisa rutin keluar Okt: Netflix 65.000 (Kos sudah keluar, Gym dijeda).
     expect(find.text('Rp65.000'), findsOneWidget);
 
-    await tester.tap(find.text(t.recurring.filterIncome(n: 0)));
+    await tester.tap(find.text(t.recurring.chipIncome));
     await tester.pumpAndSettle();
     expect(find.text(t.recurring.filteredEmpty), findsOneWidget);
   });

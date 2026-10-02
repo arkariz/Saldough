@@ -28,6 +28,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
+import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -38,6 +39,7 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji Beranda (Fase 6, FR-HOME-001..005) lewat shell sungguhan dengan
@@ -68,6 +70,8 @@ void main() {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
+      ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
+      ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
@@ -409,13 +413,19 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    Future<void> openBudgetSegment(WidgetTester tester) async {
+      await tester.tap(find.text(t.appShell.budgetTabLabel.toUpperCase()));
+      await tester.pumpAndSettle();
+    }
+
     Finder step(int current, int total, String title, String body) =>
         find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
 
     Future<void> walkThrough(WidgetTester tester, List<(String, String)> steps) async {
       for (final (i, (title, body)) in steps.indexed) {
         expect(step(i + 1, steps.length, title, body), findsOneWidget);
-        await tester.tap(find.text(i == steps.length - 1 ? t.tour.doneAction : t.tour.nextAction));
+        // `.last`: lapisan tur di atas layar, dan chip penyaring bisa berteks sama ("Selesai").
+        await tester.tap(find.text(i == steps.length - 1 ? t.tour.doneAction : t.tour.nextAction).last);
         await tester.pumpAndSettle();
       }
     }
@@ -465,7 +475,9 @@ void main() {
       tallViewport(tester);
       await seedWallet();
       await openShellWithTours(tester);
+      // Bulan ini kosong (belum ada rencana): tanpa tur; tur Anggaran di segmennya.
       await openTab(tester, t.appShell.planTabLabel);
+      await openBudgetSegment(tester);
       await walkThrough(tester, [
         (t.tour.planTabsTitle, t.tour.planTabsBody),
         (t.tour.budgetTemplatesTitle, t.tour.budgetTemplatesBody),
@@ -473,8 +485,10 @@ void main() {
 
       await tester.pumpWidget(const SizedBox());
       await seedFull();
+      await tutorials.markStepsSeen(tourSteps[TourId.planMonth]!);
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.planTabLabel);
+      await openBudgetSegment(tester);
       await walkThrough(tester, [
         (t.tour.budgetSummaryTitle, t.tour.budgetSummaryBody),
         (t.tour.budgetFilterTitle, t.tour.budgetFilterBody),
@@ -484,9 +498,10 @@ void main() {
     testWidgets('Rincian anggaran: pos pertama lalu tombol catatnya (TR-BUDGET-DETAIL, T-9.8)', (tester) async {
       tallViewport(tester);
       await seedFull();
-      await tutorials.markStepsSeen(tourSteps[TourId.budget]!);
+      await tutorials.markStepsSeen([...tourSteps[TourId.budget]!, ...tourSteps[TourId.planMonth]!]);
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.planTabLabel);
+      await openBudgetSegment(tester);
       await tester.tap(find.text('Rumah tangga').first);
       await tester.pumpAndSettle();
 

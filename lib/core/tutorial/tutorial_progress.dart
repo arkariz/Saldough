@@ -16,6 +16,9 @@ enum TourId {
   /// Tab Transaksi.
   transaction,
 
+  /// Segmen Bulan ini tab Rencana.
+  planMonth,
+
   /// Segmen Anggaran tab Rencana.
   budget,
 
@@ -53,6 +56,7 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   TourId.transaction: [SpotlightKey.txnMonth, SpotlightKey.txnFilter, SpotlightKey.txnRow],
   // Sub-tab Rencana disorot lebih dulu: segmen Anggaran adalah segmen
   // pertama yang dibuka tab Rencana (R1a), dan satu tur per layar.
+  TourId.planMonth: [SpotlightKey.planTabs, SpotlightKey.planUnplanned, SpotlightKey.planForecast],
   TourId.budget: [SpotlightKey.planTabs, SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates],
   TourId.budgetDetail: [SpotlightKey.budgetDetailItem, SpotlightKey.budgetDetailRecord],
   TourId.freelance: [SpotlightKey.freelanceProject],

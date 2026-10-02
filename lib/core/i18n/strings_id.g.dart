@@ -1966,6 +1966,18 @@ class Translations$tour$id {
 
 	/// id: 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.'
 	String get planTabsBody => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.';
+
+	/// id: 'Uang nganggur'
+	String get planUnplannedTitle => 'Uang nganggur';
+
+	/// id: 'Pemasukan bulan ini dikurangi semua yang sudah terikat.'
+	String get planUnplannedBody => 'Pemasukan bulan ini dikurangi semua yang sudah terikat.';
+
+	/// id: 'Saldo dompet ≈'
+	String get planForecastTitle => 'Saldo dompet ≈';
+
+	/// id: 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.'
+	String get planForecastBody => 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.';
 }
 
 // Path: info
@@ -2836,6 +2848,33 @@ class Translations$recurring$id {
 
 	/// id: 'Pengingat rutin mati. Nyalakan di Akun.'
 	String get remindersOffHint => 'Pengingat rutin mati. Nyalakan di Akun.';
+
+	/// id: '$k dari $n'
+	String positionMeta({required Object k, required Object n}) => '${k} dari ${n}';
+
+	/// id: 'ke $wallet'
+	String toWalletMeta({required Object wallet}) => 'ke ${wallet}';
+
+	/// id: 'Sisa rutin keluar · $month'
+	String remainingTitle({required Object month}) => 'Sisa rutin keluar · ${month}';
+
+	/// id: 'Rencana'
+	String get plannedLabel => 'Rencana';
+
+	/// id: 'Sudah keluar'
+	String get outLabel => 'Sudah keluar';
+
+	/// id: 'Semua'
+	String get chipAll => 'Semua';
+
+	/// id: 'Masuk'
+	String get chipIncome => 'Masuk';
+
+	/// id: 'Keluar'
+	String get chipExpense => 'Keluar';
+
+	/// id: 'Transfer'
+	String get chipTransfer => 'Transfer';
 }
 
 // Path: plan
@@ -2857,6 +2896,126 @@ class Translations$plan$id {
 
 	/// id: 'Tanggal $day'
 	String financialMonthDay({required Object day}) => 'Tanggal ${day}';
+
+	/// id: 'Bulan ini'
+	String get thisMonthSegmentLabel => 'Bulan ini';
+
+	/// id: 'Uang nganggur · $month'
+	String unplannedTitle({required Object month}) => 'Uang nganggur · ${month}';
+
+	/// id: 'Pemasukan'
+	String get incomeRow => 'Pemasukan';
+
+	/// id: 'Tagihan rutin'
+	String get billsRow => 'Tagihan rutin';
+
+	/// id: 'Anggaran'
+	String get budgetRow => 'Anggaran';
+
+	/// id: 'Di luar rencana'
+	String get offPlanRow => 'Di luar rencana';
+
+	/// id: 'Penjelasan'
+	String get infoAction => 'Penjelasan';
+
+	/// id: 'Uang nganggur'
+	String get infoTitle => 'Uang nganggur';
+
+	/// id: '+ Pemasukan terencana'
+	String get infoIncome => '+ Pemasukan terencana';
+
+	/// id: '− Tagihan rutin'
+	String get infoBills => '− Tagihan rutin';
+
+	/// id: '− Anggaran'
+	String get infoBudget => '− Anggaran';
+
+	/// id: '± Di luar rencana (sudah tercatat)'
+	String get infoOffPlan => '± Di luar rencana (sudah tercatat)';
+
+	/// id: '= Uang nganggur'
+	String get infoResult => '= Uang nganggur';
+
+	/// id: 'Bukan saldo dompet.'
+	String get infoNotBalance => 'Bukan saldo dompet.';
+
+	/// id: 'Saldo dompet ≈'
+	String get balanceTitle => 'Saldo dompet ≈';
+
+	/// id: 'Semua'
+	String get allWallets => 'Semua';
+
+	/// id: 'Akhir $date'
+	String endOf({required Object date}) => 'Akhir ${date}';
+
+	/// id: 'Paling tipis · $date'
+	String lowestOn({required Object date}) => 'Paling tipis · ${date}';
+
+	/// id: 'Rincian'
+	String get detailsAction => 'Rincian';
+
+	/// id: 'hari ini'
+	String get todayLabel => 'hari ini';
+
+	/// id: 'kira-kira $amount'
+	String approx({required Object amount}) => 'kira-kira ${amount}';
+
+	/// id: 'Perkiraan saldo'
+	String get detailsTitle => 'Perkiraan saldo';
+
+	/// id: 'Saldo sekarang'
+	String get detailsNow => 'Saldo sekarang';
+
+	/// id: 'Pemasukan rutin'
+	String get detailsIncome => 'Pemasukan rutin';
+
+	/// id: 'Tagihan rutin'
+	String get detailsBills => 'Tagihan rutin';
+
+	/// id: 'Sisa anggaran'
+	String get detailsBudget => 'Sisa anggaran';
+
+	/// id: 'Di luar rencana · $perDay/hari'
+	String detailsUnplanned({required Object perDay}) => 'Di luar rencana · ${perDay}/hari';
+
+	/// id: 'Freelance belum dibayar (belum pasti)'
+	String get detailsUncertain => 'Freelance belum dibayar (belum pasti)';
+
+	/// id: 'Transfer rutin'
+	String get detailsTransfers => 'Transfer rutin';
+
+	/// id: 'Akhir $date'
+	String detailsEnd({required Object date}) => 'Akhir ${date}';
+
+	/// id: 'Hitung jajan harian'
+	String get unplannedToggle => 'Hitung jajan harian';
+
+	/// id: 'Butuh riwayat sebulan penuh.'
+	String get unplannedUnavailable => 'Butuh riwayat sebulan penuh.';
+
+	/// id: 'Berikutnya'
+	String get nextTitle => 'Berikutnya';
+
+	/// id: 'Semua di Rutin'
+	String get seeAllRecurring => 'Semua di Rutin';
+
+	/// id: 'Rencanakan bulan ini'
+	String get emptyTitle => 'Rencanakan bulan ini';
+
+	/// id: 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.'
+	String get emptyBody => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.';
+
+	/// id: 'Perkiraan saldo, paling tipis $low pada $date, akhir bulan $end'
+	String chartSemantics({required Object low, required Object date, required Object end}) => 'Perkiraan saldo, paling tipis ${low} pada ${date}, akhir bulan ${end}';
+
+	/// id: '$date · $amount'
+	String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
+
+	/// id: 'Akhir $date ≈$amount · paling tipis ≈$low ($lowDate)'
+	String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})';
+
+	/// id: 'Rencana bulan ini gagal dimuat.'
+	String get loadError => 'Rencana bulan ini gagal dimuat.';
 }
 
 // Path: record.draftIssue
@@ -3885,6 +4044,10 @@ extension on Translations {
 			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
 			'tour.planTabsBody' => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.',
+			'tour.planUnplannedTitle' => 'Uang nganggur',
+			'tour.planUnplannedBody' => 'Pemasukan bulan ini dikurangi semua yang sudah terikat.',
+			'tour.planForecastTitle' => 'Saldo dompet ≈',
+			'tour.planForecastBody' => 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4193,10 +4356,61 @@ extension on Translations {
 			'recurring.remindersDenied' => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.',
 			'recurring.ruleRemindersLabel' => 'Ingatkan',
 			'recurring.remindersOffHint' => 'Pengingat rutin mati. Nyalakan di Akun.',
+			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} dari ${n}',
+			'recurring.toWalletMeta' => ({required Object wallet}) => 'ke ${wallet}',
+			'recurring.remainingTitle' => ({required Object month}) => 'Sisa rutin keluar · ${month}',
+			'recurring.plannedLabel' => 'Rencana',
+			'recurring.outLabel' => 'Sudah keluar',
+			'recurring.chipAll' => 'Semua',
+			'recurring.chipIncome' => 'Masuk',
+			'recurring.chipExpense' => 'Keluar',
+			'recurring.chipTransfer' => 'Transfer',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
+			'plan.thisMonthSegmentLabel' => 'Bulan ini',
+			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
+			'plan.incomeRow' => 'Pemasukan',
+			'plan.billsRow' => 'Tagihan rutin',
+			'plan.budgetRow' => 'Anggaran',
+			'plan.offPlanRow' => 'Di luar rencana',
+			'plan.infoAction' => 'Penjelasan',
+			'plan.infoTitle' => 'Uang nganggur',
+			'plan.infoIncome' => '+ Pemasukan terencana',
+			'plan.infoBills' => '− Tagihan rutin',
+			'plan.infoBudget' => '− Anggaran',
+			'plan.infoOffPlan' => '± Di luar rencana (sudah tercatat)',
+			'plan.infoResult' => '= Uang nganggur',
+			'plan.infoNotBalance' => 'Bukan saldo dompet.',
+			'plan.balanceTitle' => 'Saldo dompet ≈',
+			'plan.allWallets' => 'Semua',
+			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
+			'plan.lowestOn' => ({required Object date}) => 'Paling tipis · ${date}',
+			'plan.detailsAction' => 'Rincian',
+			'plan.todayLabel' => 'hari ini',
+			'plan.approx' => ({required Object amount}) => 'kira-kira ${amount}',
+			'plan.detailsTitle' => 'Perkiraan saldo',
+			'plan.detailsNow' => 'Saldo sekarang',
+			'plan.detailsIncome' => 'Pemasukan rutin',
+			'plan.detailsBills' => 'Tagihan rutin',
+			'plan.detailsBudget' => 'Sisa anggaran',
+			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
+			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
+			'plan.detailsTransfers' => 'Transfer rutin',
+			'plan.detailsEnd' => ({required Object date}) => 'Akhir ${date}',
+			'plan.unplannedToggle' => 'Hitung jajan harian',
+			'plan.unplannedUnavailable' => 'Butuh riwayat sebulan penuh.',
+			'plan.nextTitle' => 'Berikutnya',
+			_ => null,
+		} ?? switch (path) {
+			'plan.seeAllRecurring' => 'Semua di Rutin',
+			'plan.emptyTitle' => 'Rencanakan bulan ini',
+			'plan.emptyBody' => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.',
+			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Perkiraan saldo, paling tipis ${low} pada ${date}, akhir bulan ${end}',
+			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
+			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})',
+			'plan.loadError' => 'Rencana bulan ini gagal dimuat.',
 			_ => null,
 		};
 	}

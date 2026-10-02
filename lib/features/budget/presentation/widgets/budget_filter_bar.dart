@@ -38,6 +38,8 @@ class BudgetFilterBar extends StatelessWidget {
   /// Dipanggil dengan dompet baru, atau `null` untuk semua dompet.
   final ValueChanged<String?> onWalletChanged;
 
+  static const List<BudgetStatusFilter> _shown = [BudgetStatusFilter.active, BudgetStatusFilter.finished, BudgetStatusFilter.all];
+
   String _label(BudgetStatusFilter filter) {
     final label = switch (filter) {
       BudgetStatusFilter.all => t.budget.filterAll,
@@ -45,7 +47,7 @@ class BudgetFilterBar extends StatelessWidget {
       BudgetStatusFilter.finished => t.budget.filterFinished,
       BudgetStatusFilter.archived => t.budget.filterArchived,
     };
-    return '$label (${statusCounts[filter] ?? 0})';
+    return label;
   }
 
   @override
@@ -63,8 +65,10 @@ class BudgetFilterBar extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (final filter in BudgetStatusFilter.values) ...[
-                if (filter != BudgetStatusFilter.values.first) const SizedBox(width: AppSpacing.xs),
+              // Aktif · Selesai · Semua, tanpa angka (PLAN_TAB_LAYOUT §4.9);
+              // anggaran nonaktif tetap terlihat di Semua.
+              for (final filter in _shown) ...[
+                if (filter != _shown.first) const SizedBox(width: AppSpacing.xs),
                 AppChoiceChip(
                   label: _label(filter),
                   selected: statusFilter == filter,
@@ -74,17 +78,19 @@ class BudgetFilterBar extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
-        AppMenuSelectButton<String>(
-          icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
-          label: selected?.name ?? t.budget.filterWalletAll,
-          options: [
-            for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
-          ],
-          allLabel: t.budget.filterWalletAll,
-          allIcon: IconKey.wallets,
-          onSelected: onWalletChanged,
-        ),
+        if (wallets.length > 1) ...[
+          const SizedBox(height: AppSpacing.sm),
+          AppMenuSelectButton<String>(
+            icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
+            label: selected?.name ?? t.budget.filterWalletAll,
+            options: [
+              for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+            ],
+            allLabel: t.budget.filterWalletAll,
+            allIcon: IconKey.wallets,
+            onSelected: onWalletChanged,
+          ),
+        ],
       ],
     );
   }

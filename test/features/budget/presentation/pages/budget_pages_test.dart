@@ -20,6 +20,7 @@ import 'package:saldough/features/budget/presentation/pages/budget_detail_page.d
 import 'package:saldough/features/budget/presentation/widgets/budget_card.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
@@ -32,6 +33,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
+import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji alur layar Anggaran lewat shell sungguhan dengan penyimpanan di
@@ -76,6 +78,8 @@ void main() {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
+      ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
+      ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(() => transactionRepository)
       ..registerLazySingleton<BudgetRepository>(() => budgetRepository)
@@ -96,6 +100,9 @@ void main() {
       await tester.pump();
     }
     await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.planTabLabel));
+    await tester.pumpAndSettle();
+    // Awal sesi membuka Bulan ini (KT-L4).
+    await tester.tap(find.text(t.appShell.budgetTabLabel.toUpperCase()));
     await tester.pumpAndSettle();
   }
 

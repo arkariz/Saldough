@@ -32,6 +32,7 @@ class HomePage extends StatefulWidget {
     required this.onShowWallets,
     this.notice,
     this.pendingRecurring,
+    this.forecast,
     super.key,
   });
 
@@ -54,6 +55,9 @@ class HomePage extends StatefulWidget {
   /// Kartu Menunggu dicatat (T-14.6), disisipkan akar komposisi supaya
   /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
   final Widget? pendingRecurring;
+
+  /// Baris perkiraan saldo akhir bulan (T-14.13), disisipkan akar komposisi.
+  final Widget? forecast;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -120,6 +124,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ?widget.notice,
+          ?widget.forecast,
           ?widget.pendingRecurring,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[

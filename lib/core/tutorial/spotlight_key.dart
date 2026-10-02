@@ -60,6 +60,12 @@ enum SpotlightKey {
   /// Sub-tab Rencana (Anggaran / Rutin), T-14.4.
   planTabs,
 
+  /// Kartu Uang nganggur di segmen Bulan ini (T-14.13).
+  planUnplanned,
+
+  /// Kartu Saldo dompet ≈ di segmen Bulan ini (T-14.13).
+  planForecast,
+
   /// Kartu ringkasan tab Anggaran.
   budgetSummary,
 

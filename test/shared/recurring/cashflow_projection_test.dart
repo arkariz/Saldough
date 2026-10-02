@@ -55,6 +55,19 @@ void main() {
     expect(result.days, hasLength(30));
     expect(result.lowest, (date: DateTime(2026, 10, 24), balance: 56100000));
     expect(result.endBalance, 1092100000);
+    final b = result.breakdown;
+    expect(b, (
+      income: 1200000000,
+      recurringOut: 397900000,
+      budget: 270000000,
+      unplanned: 90000000,
+      uncertain: 0,
+      transfers: 0,
+    ));
+    expect(
+      result.startBalance + b.income - b.recurringOut - b.budget - b.unplanned + b.uncertain + b.transfers,
+      result.endBalance,
+    );
   });
 
   test('§7.2a: akhir bulan = saldo awal bulan + sisa uang nganggur − di luar rencana sisa bulan', () {

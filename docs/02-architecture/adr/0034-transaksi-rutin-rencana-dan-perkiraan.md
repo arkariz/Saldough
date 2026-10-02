@@ -425,4 +425,4 @@ didaftarkan di muka. Kelemahannya:
 **Penulis keputusan:** agen (Claude), atas permintaan pemilik
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-10-02
-**Status implementasi:** berjalan (Fase 14, mulai T-14.1)
+**Status implementasi:** kode R1a dan R1b selesai 2 Okt 2026 (T-14.1–14.8, T-14.10–14.13); menunggu verifikasi perangkat T-14.9 dan T-14.14

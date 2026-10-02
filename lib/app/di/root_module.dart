@@ -13,12 +13,14 @@ import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
+import 'package:saldough/features/budget/data/adapters/plan_budget_source_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_module.dart';
 import 'package:saldough/features/freelance/data/adapters/freelance_overview_source_impl.dart';
+import 'package:saldough/features/freelance/data/adapters/plan_freelance_source_impl.dart';
 import 'package:saldough/features/freelance/data/repositories/freelance_repository_impl.dart';
 import 'package:saldough/features/freelance/domain/repositories/freelance_repository.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_module.dart';
@@ -28,6 +30,7 @@ import 'package:saldough/features/notification_capture/di/notification_capture_m
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
 import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
@@ -137,6 +140,17 @@ abstract final class RootModule {
       // diimplementasikan `budget` — pola port kecil ADR-0009.
       ..registerLazySingleton<BudgetItemCatalog>(
         () => BudgetItemCatalogImpl(repository: container<BudgetRepository>()),
+      )
+      // Port milik `plan` (Bulan ini, T-14.13), diimplementasikan `budget`
+      // dan `freelance` — pola port kecil ADR-0009.
+      ..registerLazySingleton<PlanBudgetSource>(
+        () => PlanBudgetSourceImpl(
+          budgetRepository: container<BudgetRepository>(),
+          transactionRepository: container<TransactionRepository>(),
+        ),
+      )
+      ..registerLazySingleton<PlanFreelanceSource>(
+        () => PlanFreelanceSourceImpl(repository: container<FreelanceRepository>()),
       )
       // Port milik `home` (ringkasan anggaran Beranda, T-6.2),
       // diimplementasikan `budget` — pola port kecil ADR-0009.

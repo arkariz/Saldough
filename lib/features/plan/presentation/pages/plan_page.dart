@@ -3,9 +3,11 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 
-/// Segmen tab Rencana (ADR-034 §3.7, PLAN_TAB_LAYOUT §3). Bulan ini hadir
-/// di R1b; di R1a tab Rencana berisi Anggaran dan Rutin.
+/// Segmen tab Rencana (ADR-034 §3.7, PLAN_TAB_LAYOUT §3).
 enum PlanSegment {
+  /// Bulan ini: uang nganggur dan perkiraan saldo (R1b).
+  thisMonth,
+
   /// Anggaran: isi layar Anggaran yang lama (`BudgetListPage`).
   budget,
 
@@ -38,6 +40,7 @@ class PlanPage extends StatelessWidget {
   /// Label sub-tab [segment]. Anggaran memakai kunci lama
   /// `appShell.budgetTabLabel` (kebiasaan T-8.8: kunci tidak diganti nama).
   static String labelOf(PlanSegment segment) => switch (segment) {
+    PlanSegment.thisMonth => t.plan.thisMonthSegmentLabel,
     PlanSegment.budget => t.appShell.budgetTabLabel,
     PlanSegment.recurring => t.plan.recurringSegmentLabel,
   };

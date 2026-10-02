@@ -4,6 +4,7 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
@@ -114,8 +115,6 @@ class RecurringSegmentView extends StatelessWidget {
           today: state.today,
           transactions: state.transactions,
         );
-        int count(RecurringKind? kind) =>
-            kind == null ? state.rules.length : state.rules.where((r) => r.kind == kind).length;
         final filter = state.kindFilter;
         final visible = [
           for (final e in entries)
@@ -127,7 +126,7 @@ class RecurringSegmentView extends StatelessWidget {
           children: [
             RecurringSummaryCard(
               summary: summary,
-              month: state.monthStart,
+              monthLabel: CycleMonthFormatter.formatMonthShort(state.monthStart),
               subscriptions: subscriptionTotals(state.rules),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -135,11 +134,12 @@ class RecurringSegmentView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
+                  // Tanpa angka hitungan (PLAN_TAB_LAYOUT §4.9).
                   for (final (kind, label) in [
-                    (null, t.recurring.filterAll(n: count(null))),
-                    (RecurringKind.income, t.recurring.filterIncome(n: count(RecurringKind.income))),
-                    (RecurringKind.expense, t.recurring.filterExpense(n: count(RecurringKind.expense))),
-                    (RecurringKind.transfer, t.recurring.filterTransfer(n: count(RecurringKind.transfer))),
+                    (null, t.recurring.chipAll),
+                    (RecurringKind.income, t.recurring.chipIncome),
+                    (RecurringKind.expense, t.recurring.chipExpense),
+                    (RecurringKind.transfer, t.recurring.chipTransfer),
                   ]) ...[
                     AppChoiceChip(
                       label: label,
@@ -162,19 +162,19 @@ class RecurringSegmentView extends StatelessWidget {
               for (final group in RecurringGroup.values)
                 if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.sm),
-                  AppSectionLabel('${_groupLabel(group)} (${rows.length})'),
-                  if (group == RecurringGroup.pending) ...[
-                    for (final entry in rows) RecurringPendingTile(entry: entry, state: state),
-                    ?recordAllButton(context, rows),
-                  ] else
-                    for (final entry in rows)
-                      RecurringRow(
-                        entry: entry,
-                        walletName: state.walletName(entry.rule.walletId),
-                        toWalletName: state.walletName(entry.rule.toWalletId),
-                        today: state.today,
-                        onTap: () => _open(context, entry.rule.id),
-                      ),
+                  if (group == RecurringGroup.paused || group == RecurringGroup.ended)
+                    _FoldedGroup(
+                      label: '${_groupLabel(group)} (${rows.length})',
+                      children: [for (final entry in rows) _row(context, state, entry)],
+                    )
+                  else ...[
+                    AppSectionLabel(_groupLabel(group)),
+                    if (group == RecurringGroup.pending) ...[
+                      for (final entry in rows) RecurringPendingTile(entry: entry, state: state),
+                      ?recordAllButton(context, rows),
+                    ] else
+                      for (final entry in rows) _row(context, state, entry),
+                  ],
                 ],
             const SizedBox(height: AppSpacing.md),
             AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),
@@ -184,6 +184,13 @@ class RecurringSegmentView extends StatelessWidget {
     );
   }
 
+  static Widget _row(BuildContext context, RecurringState state, RecurringEntry entry) => RecurringRow(
+    entry: entry,
+    toWalletName: state.walletName(entry.rule.toWalletId),
+    today: state.today,
+    onTap: () => _open(context, entry.rule.id),
+  );
+
   static String _groupLabel(RecurringGroup group) => switch (group) {
     RecurringGroup.pending => t.recurring.groupPending,
     RecurringGroup.thisMonth => t.recurring.groupThisMonth,
@@ -191,4 +198,36 @@ class RecurringSegmentView extends StatelessWidget {
     RecurringGroup.paused => t.recurring.groupPaused,
     RecurringGroup.ended => t.recurring.groupEnded,
   };
+}
+
+/// Kelompok Dijeda/Selesai: terlipat, cukup satu baris "Selesai (1) ›".
+class _FoldedGroup extends StatefulWidget {
+  const _FoldedGroup({required this.label, required this.children});
+
+  final String label;
+  final List<Widget> children;
+
+  @override
+  State<_FoldedGroup> createState() => _FoldedGroupState();
+}
+
+class _FoldedGroupState extends State<_FoldedGroup> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: () => setState(() => _open = !_open),
+            child: Text('${widget.label} ${_open ? '⌄' : '›'}'),
+          ),
+        ),
+        if (_open) ...widget.children,
+      ],
+    );
+  }
 }

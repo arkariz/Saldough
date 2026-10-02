@@ -12,6 +12,7 @@ import 'package:saldough/features/budget/data/repositories/budget_repository_imp
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
@@ -26,6 +27,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/mocks.dart';
+import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
 
 /// Uji T-2.8 (FR-WAL-004, FR-REC-002): layar rincian dompet -- info dompet,
@@ -57,6 +59,8 @@ void main() {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
+      ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
+      ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
       ..registerLazySingleton<TransactionRepository>(
         () => transactionRepository,

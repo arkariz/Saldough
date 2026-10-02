@@ -14,6 +14,18 @@ typedef UncertainIncome = ({String? walletId, int amount, DateTime date});
 /// Saldo perkiraan di akhir satu hari.
 typedef ProjectedDay = ({DateTime date, int balance});
 
+/// Rincian perkiraan per komponen untuk lembar "Rincian" (§7.3). Semua
+/// positif kecuali [transfers]; akhir = saldo nyata + [income] − [recurringOut]
+/// − [budget] − [unplanned] + [uncertain] + [transfers].
+typedef ProjectionBreakdown = ({
+  int income,
+  int recurringOut,
+  int budget,
+  int unplanned,
+  int uncertain,
+  int transfers,
+});
+
 /// Hasil perkiraan saldo (§7.3). Semua `int` sen; ini **perkiraan**, selalu
 /// tampil berawalan `≈`.
 final class CashflowProjection extends Equatable {
@@ -23,7 +35,11 @@ final class CashflowProjection extends Equatable {
     required this.days,
     required this.uncertain,
     required this.unplannedPerDay,
+    required this.breakdown,
   });
+
+  /// Rincian per komponen; jumlahnya sama dengan [endBalance] − [startBalance].
+  final ProjectionBreakdown breakdown;
 
   /// Saldo nyata saat ini.
   final int startBalance;
@@ -50,7 +66,7 @@ final class CashflowProjection extends Equatable {
   }
 
   @override
-  List<Object?> get props => [startBalance, days, uncertain, unplannedPerDay];
+  List<Object?> get props => [startBalance, days, uncertain, unplannedPerDay, breakdown];
 }
 
 /// Perkiraan saldo dari [today] sampai sebelum [until] (§7.3–7.5).
@@ -80,10 +96,15 @@ CashflowProjection projectCashflow(
 }) {
   final start = DateTime(today.year, today.month, today.day);
   final changes = <DateTime, int>{};
-  void add(DateTime date, int amount) {
+  var income = 0;
+  var recurringOut = 0;
+  var budget = 0;
+  var transfers = 0;
+  bool add(DateTime date, int amount) {
     final day = date.isBefore(start) ? start : DateTime(date.year, date.month, date.day);
-    if (!day.isBefore(until)) return;
+    if (!day.isBefore(until)) return false;
     changes[day] = (changes[day] ?? 0) + amount;
+    return true;
   }
 
   for (final rule in rules) {
@@ -102,13 +123,28 @@ CashflowProjection projectCashflow(
         OccurrenceStatus.pending || OccurrenceStatus.missed || OccurrenceStatus.upcoming => true,
         OccurrenceStatus.recorded || OccurrenceStatus.skipped || OccurrenceStatus.paused => false,
       };
-      if (happens) add(o.date, effect * rule.amount);
+      if (!happens || !add(o.date, effect * rule.amount)) continue;
+      switch (rule.kind) {
+        case RecurringKind.income:
+          income += rule.amount;
+        case RecurringKind.expense:
+          recurringOut += rule.amount;
+        case RecurringKind.transfer:
+          transfers += effect * rule.amount;
+      }
     }
   }
 
   for (final line in budgets) {
     if (walletId != null && line.walletId != walletId) continue;
-    _spread(line.remaining, from: start, until: line.periodEnd, add: (day, amount) => add(day, -amount));
+    _spread(
+      line.remaining,
+      from: start,
+      until: line.periodEnd,
+      add: (day, amount) {
+        if (add(day, -amount)) budget += amount;
+      },
+    );
   }
 
   var uncertain = 0;
@@ -132,6 +168,14 @@ CashflowProjection projectCashflow(
     days: days,
     uncertain: uncertain,
     unplannedPerDay: unplannedPerDay,
+    breakdown: (
+      income: income,
+      recurringOut: recurringOut,
+      budget: budget,
+      unplanned: (unplannedPerDay ?? 0) * days.length,
+      uncertain: uncertain,
+      transfers: transfers,
+    ),
   );
 }
 

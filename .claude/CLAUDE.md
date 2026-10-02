@@ -158,13 +158,19 @@ tombol Catat di tengah. Setiap pekerjaan UI memakai skill `tanukonomy-ui`
 dan merujuk artefak design system dan prototipe (tabel Pencarian cepat).
 Sampai Fase 14 selesai, kode masih memakai bahasa visual lama.
 **Rencana dan rutin (Fase 14, ADR-034 Accepted, 2 Okt 2026):** tab Anggaran
-akan menjadi **Rencana** (segmen Bulan ini, Anggaran, Rutin). Transaksi rutin
+kini **Rencana** (segmen Bulan ini, Anggaran, Rutin). Transaksi rutin
 (`RecurringRule`, `shared/recurring/`) adalah **rencana**, bukan transaksi:
 kemunculan dihitung, ditinjau, lalu dicatat lewat `RecordTransaction` atau
 ditautkan ke transaksi dari catat notifikasi (`Transaction.recurrence`).
 **Uang nganggur bukan saldo**: kata "saldo" hanya untuk isi dompet. Desain
-di `docs/01-product/features/`. Penjepitan tanggal bersama di
-`core/utils/clamped_date.dart`.
+di `docs/01-product/features/`. Kode R1a+R1b selesai 2 Okt 2026:
+`shared/recurring/` (rutin, kemunculan, pencocokan, `monthPlan`,
+`projectCashflow`), `features/recurring/` (segmen Rutin, rincian, kartu
+Menunggu, pengingat lokal `flutter_local_notifications`), `features/plan/`
+(tab Rencana, segmen Bulan ini, port anggaran/freelance), bulan keuangan di
+`core/financial_month/`. Pengecualian kedua aturan 8: kemunculan rutin
+bernominal tetap boleh dicatat satu ketuk lewat `RecordTransaction`.
+Verifikasi perangkat T-14.9/T-14.14 belum.
 
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
@@ -249,7 +255,9 @@ Empat aturan domain, baru di Saldough 2.0 dan paling sering salah:
    formulir pencatatan tersendiri di layar mana pun. Pencatatan otomatis dari
    notifikasi (ADR-032, tingkat otomatis 2/3) memakai use case yang sama,
    `RecordTransaction`, tanpa formulir; draf yang perlu ditinjau selalu
-   membuka CATAT.
+   membuka CATAT. Pengecualian kedua (ADR-034 §3.3): kemunculan rutin
+   bernominal **tetap** yang dikonfirmasi pengguna satu ketuk; nominal
+   kira-kira selalu membuka CATAT.
 
 Aturan selengkapnya ada di `.claude/AGENT_CONTEXT.md`.
 

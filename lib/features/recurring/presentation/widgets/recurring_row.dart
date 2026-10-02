@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/recurring/presentation/recurring_display.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
-import 'package:saldough/shared/transaction/transaction_presentation.dart';
 
-/// Satu baris segmen Rutin (PLAN_TAB_LAYOUT §6.3): kotak ikon kategori
-/// (satu-satunya penanda warna), nama + glyph status, nominal bertanda, dan
-/// meta paling banyak empat butir.
+/// Satu baris segmen Rutin (PLAN_TAB_LAYOUT §4.9, menggantikan §6.3): kolom
+/// tanggal di kiri seperti jadwal, nama + glyph status, nominal bertanda.
+/// Meta hanya bila bermakna ("4 dari 12", "ke Tabungan", kenaikan harga);
+/// dompet dan cara bayar ada di rincian rutin.
 class RecurringRow extends StatelessWidget {
   /// Membuat [RecurringRow].
   const RecurringRow({
     required this.entry,
-    required this.walletName,
     required this.toWalletName,
     required this.today,
     required this.onTap,
@@ -24,16 +24,13 @@ class RecurringRow extends StatelessWidget {
   /// Barisnya.
   final RecurringEntry entry;
 
-  /// Nama dompet rutin.
-  final String? walletName;
-
   /// Nama dompet tujuan (transfer).
   final String? toWalletName;
 
   /// Hari ini.
   final DateTime today;
 
-  /// Membuka rincian rutin.
+  /// Ketukan baris.
   final VoidCallback onTap;
 
   @override
@@ -44,7 +41,6 @@ class RecurringRow extends StatelessWidget {
     final occurrence = entry.occurrence;
     final recorded = occurrence?.transaction;
     final status = occurrence?.status;
-    final isRecorded = status == OccurrenceStatus.recorded;
     final priceUp =
         recorded != null &&
         rule.amountMode == RecurringAmountMode.fixed &&
@@ -57,27 +53,23 @@ class RecurringRow extends StatelessWidget {
       OccurrenceStatus.pending || OccurrenceStatus.missed => ' ●',
       _ => '',
     };
-    final wallet = rule.kind == RecurringKind.transfer ? '${walletName ?? '?'} → ${toWalletName ?? '?'}' : walletName;
+    final end = rule.end;
     final meta = <String>[
-      ?wallet,
-      if (occurrence != null) occurrenceDateText(occurrence.date, today),
       if (priceUp)
         t.recurring.priceUp(
           amount: AppMoneyFormatter.format(recorded.amount),
           usual: AppMoneyFormatter.format(rule.amount),
-        )
-      else if (isRecorded)
-        t.recurring.recordedMeta
-      else if (entry.missedCount > 0)
-        t.recurring.missedMeta(n: entry.missedCount)
-      else if (rule.paymentMode != null)
-        rule.paymentMode == RecurringPaymentMode.autoDebit ? t.recurring.paymentAutoDebit : t.recurring.paymentManual,
-      if (entry.position case final k? when rule.end is RecurringEndsAfter)
-        '$k/${(rule.end as RecurringEndsAfter).count}'
-      else if (rule.schedule.frequency == RecurringFrequency.yearly)
-        t.recurring.yearlyMeta,
-    ].take(4);
-    final muted = isRecorded || entry.group == RecurringGroup.paused || entry.group == RecurringGroup.ended;
+        ),
+      if (entry.missedCount > 0) t.recurring.missedMeta(n: entry.missedCount),
+      if ((entry.position, end) case (final k?, RecurringEndsAfter(:final count)))
+        t.recurring.positionMeta(k: k, n: count),
+      if (rule.kind == RecurringKind.transfer && toWalletName != null) t.recurring.toWalletMeta(wallet: toWalletName!),
+    ];
+    final muted =
+        status == OccurrenceStatus.recorded ||
+        entry.group == RecurringGroup.paused ||
+        entry.group == RecurringGroup.ended;
+    final date = occurrence?.date;
     return AppTappable(
       label: rule.note,
       onTap: onTap,
@@ -87,8 +79,17 @@ class RecurringRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
           child: Row(
             children: [
-              TransactionIcon(kind: transactionKindOf(rule.kind), categoryId: rule.categoryId),
-              const SizedBox(width: AppSpacing.sm),
+              SizedBox(
+                width: 56,
+                child: Text(
+                  date == null
+                      ? ''
+                      : date.year == today.year
+                      ? CycleMonthFormatter.formatDayMonth(date)
+                      : "${CycleMonthFormatter.formatMonthShort(date)} '${date.year % 100}",
+                  style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                ),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,12 +103,13 @@ class RecurringRow extends StatelessWidget {
                         color: muted ? colors.textMuted : (priceUp ? colors.pending : null),
                       ),
                     ),
-                    Text(
-                      meta.join(' · '),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
-                    ),
+                    if (meta.isNotEmpty)
+                      Text(
+                        meta.join(' · '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      ),
                   ],
                 ),
               ),

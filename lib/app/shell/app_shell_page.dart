@@ -19,11 +19,14 @@ import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
+import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
+import 'package:saldough/features/plan/presentation/widgets/plan_forecast_row.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/host/recurring_reminder_host.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -71,10 +74,9 @@ class _AppShellPageState extends State<AppShellPage> {
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
 
-  /// Segmen tab Rencana yang tampil (T-14.4). Awal sesi Anggaran (R1a;
-  /// Bulan ini menyusul di R1b), sesudah itu segmen terakhir selama shell
-  /// hidup (KT-L4). Tidak disimpan.
-  PlanSegment _planSegment = PlanSegment.budget;
+  /// Segmen tab Rencana yang tampil (T-14.4). Awal sesi Bulan ini, sesudah
+  /// itu segmen terakhir selama shell hidup (KT-L4). Tidak disimpan.
+  PlanSegment _planSegment = PlanSegment.thisMonth;
 
   static const _homeTabIndex = 0;
   static const _planTabIndex = 1;
@@ -141,11 +143,25 @@ class _AppShellPageState extends State<AppShellPage> {
           container: parentContainer,
           onShowAll: () => _showPlan(context, PlanSegment.recurring),
         ),
+        forecast: PlanForecastRow(
+          container: parentContainer,
+          onTap: () => _showPlan(context, PlanSegment.thisMonth),
+        ),
       ),
       PlanPage(
         selected: _planSegment,
         onChanged: (segment) => setState(() => _planSegment = segment),
         segments: {
+          PlanSegment.thisMonth: PlanMonthPage(
+            container: parentContainer,
+            onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
+            onShowBudget: () => _showPlan(context, PlanSegment.budget),
+            pending: RecurringPendingCard(
+              container: parentContainer,
+              onShowAll: () => _showPlan(context, PlanSegment.recurring),
+            ),
+            starters: const RecurringStarterChips(),
+          ),
           PlanSegment.budget: const BudgetListPage(embedded: true),
           PlanSegment.recurring: RecurringPage(container: parentContainer),
         },

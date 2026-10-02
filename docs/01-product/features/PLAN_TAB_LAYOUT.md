@@ -685,7 +685,9 @@ Diputuskan pemilik 2 Okt 2026, semuanya sesuai rekomendasi.
 | KT-L7 | Komponen sub-tab baru `AppSubTabs` |
 
 Catatan R1a: segmen Bulan ini baru hadir di R1b, jadi di R1a tab Rencana
-berisi dua segmen (Anggaran, Rutin) dan awal sesi membuka Anggaran.
+berisi dua segmen (Anggaran, Rutin) dan awal sesi membuka Anggaran. Sejak
+R1b (T-14.13, 2 Okt 2026) tiga segmen lengkap dan awal sesi membuka Bulan
+ini.
 
 ## 12. Sumber
 

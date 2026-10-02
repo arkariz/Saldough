@@ -8,14 +8,14 @@ import 'package:saldough/features/record/presentation/navigation/record_route_ke
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
-import 'package:saldough/features/recurring/presentation/navigation/recurring_route_keys.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_row.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
 
-/// Baris kemunculan menunggu beserta aksinya (PLAN_TAB_LAYOUT §6.3): Lewati
-/// dan Ubah dulu tersier, Catat sekunder. Rutin bernominal kira-kira tidak
-/// bisa dicatat satu ketuk: Catat membuka CATAT (ADR-034 §3.3).
+/// Baris kemunculan menunggu beserta aksinya (PLAN_TAB_LAYOUT §4.9):
+/// **Lewati** dan **Catat**; ketuk barisnya = Ubah dulu (CATAT terisi).
+/// Rutin bernominal kira-kira tidak bisa dicatat satu ketuk: Catat membuka
+/// CATAT (ADR-034 §3.3).
 class RecurringPendingTile extends StatelessWidget {
   /// Membuat [RecurringPendingTile].
   const RecurringPendingTile({required this.entry, required this.state, super.key});
@@ -40,12 +40,12 @@ class RecurringPendingTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Ketuk baris = Ubah dulu (PLAN_TAB_LAYOUT §4.9).
         RecurringRow(
           entry: entry,
-          walletName: state.walletName(rule.walletId),
           toWalletName: state.walletName(rule.toWalletId),
           today: state.today,
-          onTap: () => context.pushRoute(RecurringRouteKeys.detail, RecurringDetailInput(ruleId: rule.id)),
+          onTap: () => _editFirst(context, date),
         ),
         Wrap(
           alignment: WrapAlignment.end,

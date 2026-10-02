@@ -761,6 +761,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeVoiceBody => 'Tap, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
 	@override String get planTabsBody => 'Budgets and recurring transactions live here. Tap to switch.';
+	@override String get planUnplannedTitle => 'Unplanned money';
+	@override String get planUnplannedBody => 'This month’s income minus everything already committed.';
+	@override String get planForecastTitle => 'Wallet balance ≈';
+	@override String get planForecastBody => 'Forecast balance to month end, including its lowest point.';
 }
 
 // Path: info
@@ -1107,6 +1111,15 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get remindersDenied => 'Notification permission was not granted. Turn it on in system settings.';
 	@override String get ruleRemindersLabel => 'Remind me';
 	@override String get remindersOffHint => 'Recurring reminders are off. Turn them on in Account.';
+	@override String positionMeta({required Object k, required Object n}) => '${k} of ${n}';
+	@override String toWalletMeta({required Object wallet}) => 'to ${wallet}';
+	@override String remainingTitle({required Object month}) => 'Recurring still to go out · ${month}';
+	@override String get plannedLabel => 'Planned';
+	@override String get outLabel => 'Already out';
+	@override String get chipAll => 'All';
+	@override String get chipIncome => 'In';
+	@override String get chipExpense => 'Out';
+	@override String get chipTransfer => 'Transfer';
 }
 
 // Path: plan
@@ -1120,6 +1133,46 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthTitle => 'Financial month start';
 	@override String get financialMonthPickerTitle => 'Financial month starts on';
 	@override String financialMonthDay({required Object day}) => 'Day ${day}';
+	@override String get thisMonthSegmentLabel => 'This month';
+	@override String unplannedTitle({required Object month}) => 'Unplanned money · ${month}';
+	@override String get incomeRow => 'Income';
+	@override String get billsRow => 'Recurring bills';
+	@override String get budgetRow => 'Budgets';
+	@override String get offPlanRow => 'Off plan';
+	@override String get infoAction => 'Explanation';
+	@override String get infoTitle => 'Unplanned money';
+	@override String get infoIncome => '+ Planned income';
+	@override String get infoBills => '− Recurring bills';
+	@override String get infoBudget => '− Budgets';
+	@override String get infoOffPlan => '± Off plan (already recorded)';
+	@override String get infoResult => '= Unplanned money';
+	@override String get infoNotBalance => 'Not your wallet balance.';
+	@override String get balanceTitle => 'Wallet balance ≈';
+	@override String get allWallets => 'All';
+	@override String endOf({required Object date}) => 'End of ${date}';
+	@override String lowestOn({required Object date}) => 'Lowest · ${date}';
+	@override String get detailsAction => 'Details';
+	@override String get todayLabel => 'today';
+	@override String approx({required Object amount}) => 'about ${amount}';
+	@override String get detailsTitle => 'Balance forecast';
+	@override String get detailsNow => 'Balance now';
+	@override String get detailsIncome => 'Recurring income';
+	@override String get detailsBills => 'Recurring bills';
+	@override String get detailsBudget => 'Budget left';
+	@override String detailsUnplanned({required Object perDay}) => 'Off plan · ${perDay}/day';
+	@override String get detailsUncertain => 'Unpaid freelance (not certain)';
+	@override String get detailsTransfers => 'Recurring transfers';
+	@override String detailsEnd({required Object date}) => 'End of ${date}';
+	@override String get unplannedToggle => 'Count daily spending';
+	@override String get unplannedUnavailable => 'Needs a full month of history.';
+	@override String get nextTitle => 'Next';
+	@override String get seeAllRecurring => 'All in Recurring';
+	@override String get emptyTitle => 'Plan this month';
+	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
+	@override String chartSemantics({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}';
+	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
+	@override String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})';
+	@override String get loadError => 'Could not load this month.';
 }
 
 // Path: record.draftIssue
@@ -1957,6 +2010,10 @@ extension on TranslationsEn {
 			'tour.homeVoiceBody' => 'Tap, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
 			'tour.planTabsBody' => 'Budgets and recurring transactions live here. Tap to switch.',
+			'tour.planUnplannedTitle' => 'Unplanned money',
+			'tour.planUnplannedBody' => 'This month’s income minus everything already committed.',
+			'tour.planForecastTitle' => 'Wallet balance ≈',
+			'tour.planForecastBody' => 'Forecast balance to month end, including its lowest point.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2265,10 +2322,61 @@ extension on TranslationsEn {
 			'recurring.remindersDenied' => 'Notification permission was not granted. Turn it on in system settings.',
 			'recurring.ruleRemindersLabel' => 'Remind me',
 			'recurring.remindersOffHint' => 'Recurring reminders are off. Turn them on in Account.',
+			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} of ${n}',
+			'recurring.toWalletMeta' => ({required Object wallet}) => 'to ${wallet}',
+			'recurring.remainingTitle' => ({required Object month}) => 'Recurring still to go out · ${month}',
+			'recurring.plannedLabel' => 'Planned',
+			'recurring.outLabel' => 'Already out',
+			'recurring.chipAll' => 'All',
+			'recurring.chipIncome' => 'In',
+			'recurring.chipExpense' => 'Out',
+			'recurring.chipTransfer' => 'Transfer',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
+			'plan.thisMonthSegmentLabel' => 'This month',
+			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
+			'plan.incomeRow' => 'Income',
+			'plan.billsRow' => 'Recurring bills',
+			'plan.budgetRow' => 'Budgets',
+			'plan.offPlanRow' => 'Off plan',
+			'plan.infoAction' => 'Explanation',
+			'plan.infoTitle' => 'Unplanned money',
+			'plan.infoIncome' => '+ Planned income',
+			'plan.infoBills' => '− Recurring bills',
+			'plan.infoBudget' => '− Budgets',
+			'plan.infoOffPlan' => '± Off plan (already recorded)',
+			'plan.infoResult' => '= Unplanned money',
+			'plan.infoNotBalance' => 'Not your wallet balance.',
+			'plan.balanceTitle' => 'Wallet balance ≈',
+			'plan.allWallets' => 'All',
+			'plan.endOf' => ({required Object date}) => 'End of ${date}',
+			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
+			'plan.detailsAction' => 'Details',
+			'plan.todayLabel' => 'today',
+			'plan.approx' => ({required Object amount}) => 'about ${amount}',
+			'plan.detailsTitle' => 'Balance forecast',
+			'plan.detailsNow' => 'Balance now',
+			'plan.detailsIncome' => 'Recurring income',
+			'plan.detailsBills' => 'Recurring bills',
+			'plan.detailsBudget' => 'Budget left',
+			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
+			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
+			'plan.detailsTransfers' => 'Recurring transfers',
+			'plan.detailsEnd' => ({required Object date}) => 'End of ${date}',
+			'plan.unplannedToggle' => 'Count daily spending',
+			'plan.unplannedUnavailable' => 'Needs a full month of history.',
+			'plan.nextTitle' => 'Next',
+			_ => null,
+		} ?? switch (path) {
+			'plan.seeAllRecurring' => 'All in Recurring',
+			'plan.emptyTitle' => 'Plan this month',
+			'plan.emptyBody' => 'Add what comes every month, then see what is truly free.',
+			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}',
+			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
+			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})',
+			'plan.loadError' => 'Could not load this month.',
 			_ => null,
 		};
 	}

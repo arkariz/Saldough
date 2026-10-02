@@ -32,7 +32,7 @@ melacak pekerjaan freelance yang sudah dikerjakan tetapi belum dibayar lewat
 | **Terakhir diperbarui** | 17 September 2026 |
 
 > **Catatan versi (17 September 2026):** Dokumen ini menggantikan
-> [PRD 1.0](prd-saldough-1.0.md), bukan memperbaruinya. Saldough 1.0 adalah
+> [PRD 1.0](../99-archive/prd-saldough-1.0.md), bukan memperbaruinya. Saldough 1.0 adalah
 > pengganti digital sistem empat Google Spreadsheet milik pemilik: produknya
 > berporos pada siklus bulanan, rollover antar bulan, dan baris roll-up. Produk
 > itu tidak dilanjutkan. PRD 1.0 tetap ada di tempatnya sebagai rekaman
@@ -877,4 +877,4 @@ maupun warnanya sekaligus — bukan warna saja.
   invarian.
 - [User stories](user-stories.md) — kebutuhan di atas dari sudut pandang
   pemilik.
-- [PRD 1.0](prd-saldough-1.0.md) — produk pendahulu, sebagai rekaman sejarah.
+- [PRD 1.0](../99-archive/prd-saldough-1.0.md) — produk pendahulu, sebagai rekaman sejarah.

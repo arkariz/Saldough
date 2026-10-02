@@ -1,7 +1,7 @@
 # Perbaikan hasil review UX — Saldough 2.0
 
 Dokumen ini adalah daftar kerja untuk menindaklanjuti review produk/UX yang
-dijalankan skill [`ux-review`](../../.claude/skills/ux-review/SKILL.md) pada
+dijalankan skill [`ux-review`](../../../.claude/skills/ux-review/SKILL.md) pada
 **27 September 2026**, terhadap commit `c44106b` (`main` sesudah Fase 6).
 Review itu dilengkapi riset pola aplikasi keuangan yang sukses (Money
 Manager, Copilot, Monarch, YNAB) dan pedoman umum NN/g. Sumbernya ada di
@@ -12,7 +12,7 @@ penekanan) terhadap commit `185455f`, dengan tujuh layar dirender di Flutter
 Web 390×844, termasuk mode gelap. Temuannya jadi UX-14 s.d. UX-22 di bagian
 [UI: penekanan, warna, tipografi, tata letak](#ui-penekanan-warna-tipografi-tata-letak),
 dan keputusan desainnya diusulkan di
-[ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
+[ADR-020](../../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
 (Proposed).
 
 Review tidak mengubah kode. Dokumen inilah jembatan dari temuan ke pekerjaan.
@@ -21,7 +21,7 @@ perbaikan, dan cara memverifikasinya, supaya bisa dikerjakan tanpa menjalankan
 ulang review.
 
 Daftar ini **terpisah dari MVP**: item-item di sini tidak dihitung di total
-MVP [TASK_LIST.md](TASK_LIST.md), tetapi progresnya tampil di tabel ringkasan
+MVP [TASK_LIST.md](../TASK_LIST.md), tetapi progresnya tampil di tabel ringkasan
 TASK_LIST sebagai baris sendiri. Perbarui keduanya setiap kali sebuah item
 selesai.
 
@@ -123,7 +123,7 @@ mencatat. Urutannya dari dampak terbesar.
       **Diputuskan 27 Sep 2026 (KO-5):** CATAT langsung ke formulir
       Pengeluaran dengan pengalih tiga segmen; lembar pilihan dihapus;
       edukasinya pindah ke onboarding dan tur CATAT. Dikerjakan bersama T-9.6
-      ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)).
+      ([ONBOARDING_PLAN.md](../../01-product/features/ONBOARDING_PLAN.md)).
       ✅ Selesai (28 Sep 2026, T-9.6): `openRecordSheet` membuka satu
       `RecordFormHost` yang langsung berisi formulir Pengeluaran, dengan
       `RecordKindSwitcher` (Keluar | Masuk | Transfer, `AppSegmented` yang
@@ -338,7 +338,7 @@ tugas, tetapi murah dan menaikkan kualitas terasa.
 
 Sembilan item dari review UI, semuanya selesai. Enam (UX-14, UX-15, UX-16,
 UX-18, UX-20, UX-21) menunggu persetujuan
-[ADR-020](../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
+[ADR-020](../../02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md)
 karena mengubah cara komponen ADR-015 dipakai -- disetujui dan dikerjakan
 28 Sep 2026. Tiga lainnya (UX-13, UX-17, UX-19) menegakkan aturan yang
 sudah berlaku dan sudah selesai lebih dulu.

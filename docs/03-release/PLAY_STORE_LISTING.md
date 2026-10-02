@@ -2,7 +2,7 @@
 
 **Tanggal:** 29 September 2026
 **Status:** Sudah diisi pemilik di Play Console (dilaporkan 29 Sep 2026, closed testing terbit); dokumen ini kini rujukan untuk perubahan berikutnya
-**Rujukan:** [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md) §2
+**Rujukan:** [ASO_NAME_RESEARCH.md](ASO_NAME_RESEARCH.md) §2
 dan §5a (kata kunci), [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan
 Data, App access), [ADR-022](../02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md),
 [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)

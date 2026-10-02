@@ -315,7 +315,7 @@ dengan hilangnya satu kelas kesalahan — memakai varian yang keliru sebagai tek
   digantikan ADR ini.
 - [PRD 2.0](../../01-product/prd-saldough-2.0.md) — bagian 10, prinsip
   antarmuka.
-- [UI_UX_DESIGN_TASKS.md](../../04-planning/UI_UX_DESIGN_TASKS.md) — tugas
+- [UI_UX_DESIGN_TASKS.md](../../04-planning/done/UI_UX_DESIGN_TASKS.md) — tugas
   desain yang menurunkan keputusan ini jadi layar.
 
 ### Rujukan kode

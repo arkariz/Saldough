@@ -39,7 +39,7 @@ jalur cloud Catat Cerdas T-11.7) bukan temuan "hilang".
    ternyata meregresi salah satunya, sebut eksplisit sebagai **regresi atas
    T-x.y**.
    Temuan review sebelumnya beserta statusnya tercatat di
-   `docs/04-planning/UX_REVIEW_FIXES.md`. Jangan laporkan ulang item yang
+   `docs/04-planning/done/UX_REVIEW_FIXES.md`. Jangan laporkan ulang item yang
    sudah ada di sana — sebut nomor UX-nya, dan laporkan hanya kalau statusnya
    berubah (mis. item dicentang tetapi kodenya meregresi).
 

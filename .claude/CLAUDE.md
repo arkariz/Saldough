@@ -23,7 +23,9 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Struktur kode** | `docs/02-architecture/ARCHITECTURE_OVERVIEW.md` |
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
-| **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"), plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `docs/04-planning/PLAY_DATA_SAFETY.md` (draf formulir Keamanan Data Play Console untuk akun/sinkronisasi/analitik), `docs/04-planning/PLAY_STORE_LISTING.md` (setelan toko dan listing Play, ASO), `docs/04-planning/VOICE_INPUT_RESEARCH.md` (riset dan rencana Catat lewat Suara serta sistem kategori) |
+| **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"); pelacak yang sudah ditutup di `docs/04-planning/done/` (mis. `UX_REVIEW_FIXES.md`) |
+| **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori) |
+| **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
 | **Desain UI (wajib sebelum membuat atau mengubah tampilan)** | Skill `tanukonomy-ui`. Sumbernya artefak pemilik: [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) dan [prototipe 12 layar](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ), baca dengan alat Artifact (`action: "read"`, `path: "project/README.md"`); salinannya di `docs/03-design/`. Keputusannya [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
@@ -38,7 +40,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 tanuki juru catat) sudah dipakai di aplikasi dan toko; prasyarat merek
 dagang/domain/nama toko dilaporkan pemilik selesai 29 Sep 2026. Sisa T-8.3:
 sapuan nama di dokumen (B-1) dan ikon iOS (B-12). Riset di
-`docs/01-product/ASO_NAME_RESEARCH.md`.
+`docs/03-release/ASO_NAME_RESEARCH.md`.
 
 **Fitur online (T-8.4):** invarian lama "tanpa panggilan jaringan sama
 sekali" **tidak lagi mutlak**. NFR-SEC-001/NFR-REL-001 di
@@ -53,7 +55,7 @@ peninjau Play), `lib/core/foundation/analytics/` (Firebase Analytics,
 Crashlytics), `lib/features/account/` (layar Akun, ikon di app bar
 Beranda). Ini pertama kalinya aplikasi memanggil jaringan; setelan Firebase
 Console dan formulir Keamanan Data sudah dikerjakan pemilik (29 Sep 2026);
-catatannya ada di `docs/04-planning/PLAY_DATA_SAFETY.md`.
+catatannya ada di `docs/03-release/PLAY_DATA_SAFETY.md`.
 **Akun tetap opsional** (tanpa gerbang login) dan data lokal milik
 perangkat, bukan akun —
 [ADR-024](../docs/02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
@@ -118,7 +120,7 @@ periodenya mencakup tanggalnya, sehingga anggaran cukup membaca dokumen bulan
 periodenya.
 
 **Jalur UX/UI di luar MVP:** 22 perbaikan hasil review UX dan UI 27 Sep
-2026 ada di `docs/04-planning/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
+2026 ada di `docs/04-planning/done/UX_REVIEW_FIXES.md` (UX-1 s.d. UX-22). Saat
 mengecek progres, baca dokumen itu bersama TASK_LIST. Seluruh 22 item selesai
 28 Sep 2026 (ADR-020 Accepted; UX-1 dikerjakan bersama T-9.6).
 

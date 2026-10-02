@@ -8,7 +8,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// kartu, sumber pemasukan, pinjaman, langganan, bahan belanja, baris
 /// pemasukan/anggaran, siklus) — dibuat supaya polanya tidak diulang manual
 /// di tiap layar, sama seperti alasan `AppCard` dibuat sejak fase fondasi
-/// (lihat `app_card.dart:7-10`). Lihat `docs/04-planning/UX_REVIEW_FIXES.md`
+/// (lihat `app_card.dart:7-10`). Lihat `docs/04-planning/done/UX_REVIEW_FIXES.md`
 /// item UX-01.
 ///
 /// Mengembalikan `true` hanya kalau pemilik menekan tombol hapus, `false`

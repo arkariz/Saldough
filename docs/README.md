@@ -63,7 +63,7 @@ dikonfirmasi lewat eksplorasi kedua dan membalik keputusan pertama.
 1. [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru"
    (langkah dan templat), lalu tabel "Antrean" untuk melihat apa yang sudah
    menunggu.
-2. [Perbaikan hasil review UX](04-planning/UX_REVIEW_FIXES.md) kalau
+2. [Perbaikan hasil review UX](04-planning/done/UX_REVIEW_FIXES.md) kalau
    temuannya soal UX atau tampilan; daftar itu punya nomor `UX-n` sendiri.
 3. Keputusan yang mengubah arsitektur atau perilaku produk: tulis ADR baru
    (nomor berikutnya di tabel di bawah) dan tautkan dari tugasnya.
@@ -73,7 +73,7 @@ dikonfirmasi lewat eksplorasi kedua dan membalik keputusan pertama.
 ### Meninjau keputusan arsitektur
 
 1. [Roadmap](04-planning/ROADMAP.md) untuk urutan dan alasannya.
-2. Seluruh [ADR](02-architecture/adr/) secara berurutan.
+2. Seluruh [ADR](02-architecture/adr) secara berurutan.
 3. [Gambaran arsitektur](02-architecture/ARCHITECTURE_OVERVIEW.md) untuk
    melihat penerapannya.
 
@@ -88,28 +88,31 @@ docs/
 │   ├── MANUAL_PROCESS_ANALYSIS.md
 │   └── PROJECT_GLOSSARY.md
 ├── 01-product/                # apa yang dibangun
-│   ├── prd-saldough-1.0.md
 │   ├── prd-saldough-2.0.md
 │   ├── user-stories.md
-│   └── ASO_NAME_RESEARCH.md       # riset nama Tanukonomy dan kata kunci toko
+│   └── features/              # desain dan riset per fitur
+│       ├── ONBOARDING_PLAN.md         # onboarding dan tur (Fase 9)
+│       ├── ONBOARDING_ART_BRIEF.md    # brief ilustrasi onboarding
+│       └── VOICE_INPUT_RESEARCH.md    # kategori + Catat lewat Suara (Fase 11)
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md
 │   └── adr/
-├── 04-planning/                # urutan dan progres
+├── 03-release/                # toko dan rilis
+│   ├── ASO_NAME_RESEARCH.md   # riset nama Tanukonomy dan kata kunci toko
+│   ├── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
+│   └── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
+├── 04-planning/               # urutan dan progres yang masih berjalan
 │   ├── ROADMAP.md
 │   ├── TASK_LIST.md           # tugas, progres, antrean B-n; mulai dari sini
-│   ├── UI_UX_DESIGN_TASKS.md  # rencana desain awal (tidak dipakai, lihat bannernya)
-│   ├── UX_REVIEW_FIXES.md     # perbaikan hasil review UX 2.0 (UX-1..UX-22)
-│   ├── ONBOARDING_PLAN.md     # rencana onboarding dan tur (Fase 9)
-│   ├── ONBOARDING_ART_BRIEF.md
-│   ├── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
-│   ├── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
-│   ├── VOICE_INPUT_RESEARCH.md        # riset dan rencana kategori + Catat lewat Suara (Fase 11)
-│   └── VERIFICATION_PLAN_FASE_11.md   # catatan verifikasi per milestone Fase 11
+│   ├── VERIFICATION_PLAN_FASE_11.md   # catatan verifikasi per milestone Fase 11
+│   └── done/                  # pelacak 2.0 yang sudah ditutup, rekaman saja
+│       ├── UX_REVIEW_FIXES.md     # perbaikan hasil review UX 2.0 (UX-1..UX-22, selesai)
+│       └── UI_UX_DESIGN_TASKS.md  # rencana desain awal (tidak dipakai, lihat bannernya)
 ├── stitch_pixel_finance_tracker/  # rujukan visual dari pemilik — lihat ADR-015
 └── 99-archive/                 # rekaman Saldough 1.0, dibekukan
     ├── README.md
+    ├── prd-saldough-1.0.md
     ├── ROADMAP-1.0.md
     ├── TASK_LIST-1.0.md
     ├── UI_UX_DESIGN_TASKS-1.0.md
@@ -172,12 +175,12 @@ ADR berikutnya memakai nomor **0035**.
 | Mengapa membuat anggaran tidak mengubah saldo dompet? | [Model domain](02-architecture/DOMAIN_MODEL.md) dan [ADR-011](02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md) |
 | Ke mana fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) pergi? (dihapus di cutover Fase 3) | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
 | Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
-| Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
+| Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/done/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
 | Kenapa tampilannya sudut piksel, ikon piksel, dan satu huruf? | [ADR-034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), desainnya di [03-design](03-design/README.md) |
 | Bagaimana menambah tugas baru? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru" |
 | Apa yang menunggu di antrean? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Antrean" |
-| Apa yang harus diisi sebelum submit ke Play Store? | [PLAY_DATA_SAFETY.md](04-planning/PLAY_DATA_SAFETY.md) dan [PLAY_STORE_LISTING.md](04-planning/PLAY_STORE_LISTING.md) |
-| Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) dan [perbaikan hasil review UX](04-planning/UX_REVIEW_FIXES.md) |
+| Apa yang harus diisi sebelum submit ke Play Store? | [PLAY_DATA_SAFETY.md](03-release/PLAY_DATA_SAFETY.md) dan [PLAY_STORE_LISTING.md](03-release/PLAY_STORE_LISTING.md) |
+| Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) dan [perbaikan hasil review UX](04-planning/done/UX_REVIEW_FIXES.md) |
 
 ## Konvensi penulisan
 

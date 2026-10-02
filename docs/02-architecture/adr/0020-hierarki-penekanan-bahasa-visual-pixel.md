@@ -16,7 +16,7 @@
 ## 2. Konteks
 
 Review UI 27 September 2026 (lihat
-[UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md), UX-14 s.d.
+[UX_REVIEW_FIXES.md](../../04-planning/done/UX_REVIEW_FIXES.md), UX-14 s.d.
 UX-22) mengukur kode `main` `185455f` dan merender tujuh layar. Bahasa visual
 ADR-015 konsisten, tetapi hampir setiap elemen memakai penekanan yang sama
 kuatnya, sehingga mata tidak punya titik mulai. Angka yang terukur:
@@ -117,7 +117,7 @@ beberapa layar tidak lagi identik piksel demi piksel dengan rujukan visual
 ## 7. Catatan implementasi
 
 - Kerjakan lewat item UX-13 s.d. UX-22 di
-  [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md), satu item per
+  [UX_REVIEW_FIXES.md](../../04-planning/done/UX_REVIEW_FIXES.md), satu item per
   commit, dengan uji widget untuk varian tombol dan snackbar.
 - Varian ditambahkan sebagai parameter enum di `AppButton`, bawaan `primary`
   supaya pemanggil lama tidak berubah tampilan sebelum disunting.
@@ -137,7 +137,7 @@ beberapa layar tidak lagi identik piksel demi piksel dengan rujukan visual
 
 - [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md),
   [ADR-016](0016-revisi-palet-satu-peran-satu-warna.md)
-- [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)
+- [UX_REVIEW_FIXES.md](../../04-planning/done/UX_REVIEW_FIXES.md)
 - [Visual Hierarchy in UX — NN/g](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/)
 - [Buttons — Material Design 3](https://m3.material.io/components/buttons/guidelines)
 - [Typography for Glanceable Reading — NN/g](https://www.nngroup.com/articles/glanceable-fonts/)
@@ -157,4 +157,4 @@ beberapa layar tidak lagi identik piksel demi piksel dengan rujukan visual
 **Ditinjau oleh:** Pemilik
 **Tanggal disetujui:** 2026-09-28
 **Status implementasi:** Berjalan — lihat UX-14, UX-15, UX-16, UX-18, UX-20,
-UX-21 di [UX_REVIEW_FIXES.md](../../04-planning/UX_REVIEW_FIXES.md)
+UX-21 di [UX_REVIEW_FIXES.md](../../04-planning/done/UX_REVIEW_FIXES.md)

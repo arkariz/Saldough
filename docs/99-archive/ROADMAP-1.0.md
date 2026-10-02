@@ -193,7 +193,7 @@ pun setelah Fase 2 selesai.
 ## Yang bisa dikerjakan lebih awal
 
 Tiga pertanyaan terbuka di
-[PRD bagian 13](../01-product/prd-saldough-1.0.md) sebaiknya dijawab pemilik
+[PRD bagian 13](prd-saldough-1.0.md) sebaiknya dijawab pemilik
 sebelum fase yang membutuhkannya dimulai, supaya tidak menjadi penghambat.
 
 | Pertanyaan | Dibutuhkan pada |

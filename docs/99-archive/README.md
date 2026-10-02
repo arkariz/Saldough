@@ -15,16 +15,14 @@ lamanya tetap bisa dibaca lewat riwayat git.
 
 | Berkas | Isi |
 |---|---|
+| [prd-saldough-1.0.md](prd-saldough-1.0.md) | PRD 1.0; dipindahkan dari `01-product/` pada 2 Oktober 2026 |
 | [ROADMAP-1.0.md](ROADMAP-1.0.md) | Urutan Fase 0–7 lama dan alasannya |
 | [TASK_LIST-1.0.md](TASK_LIST-1.0.md) | 68 tugas MVP lama beserta catatan pengerjaannya |
 | [UI_UX_DESIGN_TASKS-1.0.md](UI_UX_DESIGN_TASKS-1.0.md) | Tugas desain D-x.x dan riwayat pergantian gaya visual |
 | [UX_REVIEW_FIXES-1.0.md](UX_REVIEW_FIXES-1.0.md) | Temuan review UX 11 September 2026 dan status perbaikannya |
 
-Dua dokumen 1.0 lain sengaja **tidak** dipindahkan ke sini:
+Satu dokumen 1.0 lain sengaja **tidak** dipindahkan ke sini:
 
-- [`prd-saldough-1.0.md`](../01-product/prd-saldough-1.0.md) tetap di tempatnya
-  karena namanya sudah berversi — PRD 2.0 hadir sebagai berkas baru di
-  sebelahnya, dan seluruh tautan yang menunjuk ke 1.0 tetap hidup.
 - [`MANUAL_PROCESS_ANALYSIS.md`](../00-foundation/MANUAL_PROCESS_ANALYSIS.md)
   tidak diarsipkan sama sekali. Isinya rekaman cara pemilik mengelola uangnya
   di spreadsheet, dan fakta itu tidak berubah karena aplikasinya berganti

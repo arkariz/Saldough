@@ -1,11 +1,11 @@
 # Rencana onboarding, info, dan tutorial spotlight — Saldough 2.0
 
 **Dibuat:** 27 September 2026
-**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md)); ilustrasi diserahkan dan desain teknis diusulkan di [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) 28 Sep 2026. Teks final ada di slang (`onboarding`, `tour`, `info`); tabel §4.3 tetap draf asal, dan ADR-021 §3.4 mencatat penyesuaiannya.
-**Berkaitan:** [UX-1](UX_REVIEW_FIXES.md) (CATAT selalu melewati lembar
-pilihan), [PRD §5 dan §10](../01-product/prd-saldough-2.0.md),
-[ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),
-[ADR-016](../02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md)
+**Status:** Keputusan KO-1..KO-7 dijawab 27 Sep 2026 (bagian 7); maskot tanuki dipilih, gambar dibuat pemilik ([brief](ONBOARDING_ART_BRIEF.md)); ilustrasi diserahkan dan desain teknis diusulkan di [ADR-021](../../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) 28 Sep 2026. Teks final ada di slang (`onboarding`, `tour`, `info`); tabel §4.3 tetap draf asal, dan ADR-021 §3.4 mencatat penyesuaiannya.
+**Berkaitan:** [UX-1](../../04-planning/done/UX_REVIEW_FIXES.md) (CATAT selalu melewati lembar
+pilihan), [PRD §5 dan §10](../prd-saldough-2.0.md),
+[ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),
+[ADR-016](../../02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md)
 
 ## 1. Tujuan
 
@@ -92,7 +92,7 @@ Maskot dan ilustrasi dibuat baru oleh pemilik.
 Maskot dan spesifikasi konten tiap layar (pesan, informasi, teks, isi visual) ada di
 [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md). Diputuskan: maskot
 **tanuki juru catat**, mengikuti nama aplikasi baru **Tanukonomy**
-([ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md)). Draf SVG
+([ASO_NAME_RESEARCH.md](../../03-release/ASO_NAME_RESEARCH.md)). Draf SVG
 buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
 
 ## 4. Spotlight: tur dan key spotlight
@@ -111,7 +111,7 @@ buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
 - **Langkah bersyarat:** langkah yang targetnya tidak ada dilewati diam-diam
   (mis. kartu anggaran Beranda saat belum ada anggaran aktif), lalu disorot
   sendiri saat targetnya pertama kali tampil. Progres dicatat per langkah
-  ([ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) §3.1).
+  ([ADR-021](../../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) §3.1).
 - **Pembaca layar:** gelembung diumumkan sebagai dialog dengan label
   "Langkah 1 dari 3: <judul>. <isi>"; fokus pindah ke gelembung.
 
@@ -236,7 +236,7 @@ diputuskan berbeda (tertulis di barisnya).
 
 ## 8. Pecahan tugas (usulan Fase 9)
 
-Dicatat juga di [TASK_LIST](TASK_LIST.md) bagian Fase 9. Urutan =
+Dicatat juga di [TASK_LIST](../../04-planning/TASK_LIST.md) bagian Fase 9. Urutan =
 urutan kerja; T-9.1 dikerjakan sesudah KO-1..KO-7 dijawab.
 
 | Tugas | Isi | Bergantung | Verifikasi |

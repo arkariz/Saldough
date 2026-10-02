@@ -15,7 +15,7 @@
 
 Pemilik ingin mencatat transaksi dari **suara** lebih dulu, lalu dari
 **notifikasi** (bank/e-wallet) dan **foto** (struk). Riset lengkap ada di
-`docs/04-planning/VOICE_INPUT_RESEARCH.md`. Temuan yang mengikat desain:
+`docs/01-product/features/VOICE_INPUT_RESEARCH.md`. Temuan yang mengikat desain:
 
 - Model bahasa (lokal maupun cloud) bisa mengarang nominal, dompet, dan
   kategori; skor keyakinan model tidak terkalibrasi.
@@ -165,7 +165,7 @@ dirawat.
 ## 9. Artefak terkait
 
 ### Dokumentasi
-- `docs/04-planning/VOICE_INPUT_RESEARCH.md`
+- `docs/01-product/features/VOICE_INPUT_RESEARCH.md`
 - ADR-026
 
 ### Rujukan kode

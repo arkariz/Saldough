@@ -11,7 +11,7 @@
 
 | `.claude/AGENT_CONTEXT.md` — "Tampilan" dan "Nilai yang sudah terkonfirmasi" | Aturan tampilan yang mengikat, dan nilai yang SUDAH dikonfirmasi pemilik (jangan tanya ulang). |
 | `docs/04-planning/TASK_LIST.md` — Fase 2 (T-2.1 s.d. T-2.12) | Catatan `⚠` = keputusan UI yang sudah diambil bersama pemilik. Jangan dilaporkan ulang sebagai temuan baru. |
-| `docs/04-planning/UI_UX_DESIGN_TASKS.md` | Status desain per layar dan catatan terbuka. |
+| `docs/04-planning/done/UI_UX_DESIGN_TASKS.md` | Status desain per layar dan catatan terbuka. |
 | `docs/03-design/prototype/*.dc.html` (atau artefak prototipe) | Layar acuan baru yang disetujui pemilik 3 Okt 2026. |
 
 ## Kode — zona `core` (dipakai semua layar)

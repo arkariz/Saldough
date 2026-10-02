@@ -9,7 +9,7 @@
   §4 "Status eksekusi"
 - **Cakupan:** Global — nama tampilan aplikasi, teks i18n yang menyebut nama
   produk, dan dokumen.
-- **Rujukan:** [ASO_NAME_RESEARCH.md](../../01-product/ASO_NAME_RESEARCH.md)
+- **Rujukan:** [ASO_NAME_RESEARCH.md](../../03-release/ASO_NAME_RESEARCH.md)
 
 ## 2. Konteks
 

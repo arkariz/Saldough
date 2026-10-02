@@ -1,13 +1,13 @@
 # Tugas desain UI/UX
 
 Dokumen ini melacak pekerjaan desain visual Saldough 2.0, terpisah dari
-[TASK_LIST.md](TASK_LIST.md) yang melacak pekerjaan kode. Keduanya memetakan
-ke requirement [PRD 2.0](../01-product/prd-saldough-2.0.md) yang sama, tapi
+[TASK_LIST.md](../TASK_LIST.md) yang melacak pekerjaan kode. Keduanya memetakan
+ke requirement [PRD 2.0](../../01-product/prd-saldough-2.0.md) yang sama, tapi
 desain selesai lebih dulu — sejalan dengan preferensi pemilik "dokumentasi
 dan desain lebih dulu, kode menyusul".
 
 Setiap tugas desain diberi identitas `D-<fase>.<nomor>`, memakai nomor fase
-yang sama dengan [ROADMAP.md](ROADMAP.md), supaya satu layar mudah dilacak
+yang sama dengan [ROADMAP.md](../ROADMAP.md), supaya satu layar mudah dilacak
 dari desain sampai kode. Desain tidak punya Fase 0 (dokumen) atau Fase 3
 (cutover) sendiri — keduanya tidak punya permukaan visual baru, sama seperti
 dokumen 1.0 melewati fase gerbang dan fase sinkronisasinya.
@@ -16,13 +16,13 @@ dokumen 1.0 melewati fase gerbang dan fase sinkronisasinya.
 > ditulis.** Design Canvas D-2.1 tidak pernah dibuat, sehingga seluruh kotak
 > `D-*` di bawah tetap kosong. Sebagai gantinya pemilik menyerahkan paket
 > rujukan visual (`docs/stitch_pixel_finance_tracker/`, diadopsi di
-> [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)
+> [ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)
 > dan direvisi di ADR-016 dan ADR-020), dan layar dirancang langsung di kode,
 > lalu ditinjau lewat [UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md). Ikon SVG
 > (D-7.1) dan bentuk ADR-015 sudah terpasang di kode (T-7.4, T-7.5) beserta
 > poles state (T-7.6).
 > Jangan menambah tugas desain baru di sini: tugas UX/UI baru masuk
-> [TASK_LIST.md](TASK_LIST.md) (Antrean) atau UX_REVIEW_FIXES.md. Dokumen ini
+> [TASK_LIST.md](../TASK_LIST.md) (Antrean) atau UX_REVIEW_FIXES.md. Dokumen ini
 > dipertahankan sebagai rekaman rencana awal.
 
 ## Tautan Design Canvas
@@ -49,7 +49,7 @@ diterbitkan, bukan baru direncanakan.
 | `- [x]` | Selesai, ada di Design Canvas yang sudah diterbitkan |
 
 Setiap tugas diakhiri baris `Memenuhi FR-xxx.` yang menautkannya ke
-[PRD 2.0](../01-product/prd-saldough-2.0.md), dan tanda `⚠` menandai jebakan
+[PRD 2.0](../../01-product/prd-saldough-2.0.md), dan tanda `⚠` menandai jebakan
 yang sudah diketahui — baca sebelum mengerjakan, bukan sesudah.
 
 ## Ringkasan progres
@@ -74,7 +74,7 @@ sama berkali-kali.
 
 Pemilik sudah mengirim rujukan visual lengkap di
 `docs/stitch_pixel_finance_tracker/` (lihat
-[ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)) —
+[ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)) —
 26 layar dan 67 ikon. Tiap tugas D-x.x di bawah menautkan folder rujukannya.
 Kanvas tetap dibangun dengan ikon Material sebagai isian sementara sampai
 T-7.4 mengonversi asetnya jadi berkas Flutter; rujukan aset SVG-nya sudah
@@ -88,7 +88,7 @@ ada, hanya konversinya yang belum.
       bergaris tepi 2px dengan bayangan keras beroffset, dan bilah progres
       tersegmentasi.
       ⚠ Seluruh nilai warna dan tipografi diambil dari
-      [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)
+      [ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md)
       apa adanya. Jangan mengarang hex atau pasangan huruf baru. `overBudget`
       dan `transfer` sengaja berbagi hex dengan `expense`/`textMuted`.
       Rujukan: seluruh folder `pixel_kas_*` di
@@ -248,7 +248,7 @@ ada, hanya konversinya yang belum.
 - [ ] **D-7.1** Penerapan 67 ikon SVG dari `docs/stitch_pixel_finance_tracker/
       icon_*/` ke peta `AppIcon`, menggantikan ikon Material sementara di
       seluruh layar yang sudah ada. Padanan kuncinya sudah ditetapkan di
-      [ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
+      [ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
       ⚠ Asetnya sudah tersedia sejak sebelum Fase 1 — bukan lagi menunggu.
       Kanvas layar tidak digambar ulang untuk perubahan ini, hanya peta
       ikonnya yang berubah.

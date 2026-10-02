@@ -160,7 +160,7 @@ Alasan tiap pilihan:
   baru.
 
 ➜ Isian Play Console final (setelan toko, listing id/en, grafis) ada di
-[PLAY_STORE_LISTING.md](../04-planning/PLAY_STORE_LISTING.md). Deskripsi
+[PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md). Deskripsi
 singkat di sana **mengganti** draf di atas: "tanpa akun" dan "Private" tidak
 lagi tepat sejak ADR-023 (akun opsional, Analytics, Crashlytics).
 
@@ -186,7 +186,7 @@ dipilih bebas:
 - **Penguin juru catat** — "jas" hitam-putih = pencatat rapi; tenang dan
   mudah dikenali global.
 
-Brief konten onboarding ([ONBOARDING_ART_BRIEF.md](../04-planning/ONBOARDING_ART_BRIEF.md))
+Brief konten onboarding ([ONBOARDING_ART_BRIEF.md](../01-product/features/ONBOARDING_ART_BRIEF.md))
 diperbarui setelah nama dan maskot dipilih.
 
 ## 7. Langkah berikutnya

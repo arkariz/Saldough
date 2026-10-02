@@ -12,7 +12,7 @@ membuka spreadsheet.
 
 > **Catatan:** Dokumen ini mendeskripsikan proses **yang sedang berjalan**,
 > bukan rancangan aplikasi. Jangan menambahkan ide fitur di sini. Ide fitur
-> masuk ke [PRD](../01-product/prd-saldough-1.0.md).
+> masuk ke [PRD](../99-archive/prd-saldough-1.0.md).
 
 **Sumber data:** empat spreadsheet milik `muhammadrisky1401@gmail.com`, dibaca
 pada 9 September 2026.
@@ -333,7 +333,7 @@ dicocokkan dengan template langganan.
 
 Tabel ini menghubungkan setiap kerja manual yang berulang dengan kemampuan yang
 harus disediakan aplikasi. Setiap baris di sini wajib punya minimal satu
-requirement di [PRD](../01-product/prd-saldough-1.0.md).
+requirement di [PRD](../99-archive/prd-saldough-1.0.md).
 
 | Nyeri proses manual | Yang harus dilakukan aplikasi |
 |---|---|
@@ -374,4 +374,4 @@ bukan konstanta kode — tetap bisa disunting pemilik kapan saja.
 Setelah membaca dokumen ini, lanjutkan ke
 [DOMAIN_MODEL.md](../02-architecture/DOMAIN_MODEL.md) untuk melihat bagaimana
 struktur di atas diterjemahkan menjadi entitas dan rumus, atau ke
-[PRD](../01-product/prd-saldough-1.0.md) untuk melihat kebutuhan produknya.
+[PRD](../99-archive/prd-saldough-1.0.md) untuk melihat kebutuhan produknya.

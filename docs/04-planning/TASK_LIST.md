@@ -5,9 +5,9 @@ Perbarui kotak centang di sini setiap kali sebuah tugas selesai.
 
 Untuk alasan di balik urutan fase, lihat [ROADMAP.md](ROADMAP.md). Untuk
 pekerjaan desain visual, lihat
-[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md). Perbaikan hasil review UX
+[UI_UX_DESIGN_TASKS.md](done/UI_UX_DESIGN_TASKS.md). Perbaikan hasil review UX
 27 Sep 2026 (UX dan UI) punya daftar kerja sendiri di
-[UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md) — **baca juga saat mengecek
+[UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md) — **baca juga saat mengecek
 progres**; ringkasannya ada di tabel di bawah. Daftar kerja Saldough 1.0
 beserta seluruh catatan pengerjaannya diarsipkan di
 [TASK_LIST-1.0.md](../99-archive/TASK_LIST-1.0.md).
@@ -71,14 +71,14 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
 | 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
-| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
-| 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
+| 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
+| 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
-| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
+| UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
-| Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
+| Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | Antrean (`B-n`, belum dijadwalkan) | 15 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -1303,7 +1303,7 @@ seluruh fitur di atasnya menghasilkan data.
       toko, setelan Firebase — sudah selesai; sisanya kode/dokumen: sapuan
       nama di dokumen (B-1) dan ikon iOS (B-12).)* (dipilih pemilik
       27 Sep 2026, riset di
-      [ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md)).
+      [ASO_NAME_RESEARCH.md](../03-release/ASO_NAME_RESEARCH.md)).
       Prasyarat: cek merek dagang resmi (DJKI, USPTO, EUIPO, WIPO; kelas 9
       dan 36), amankan domain dan nama di Play Console/App Store Connect.
       Lalu ADR penggantian nama; nama tampilan, ID aplikasi (sebelum rilis
@@ -1364,7 +1364,7 @@ seluruh fitur di atasnya menghasilkan data.
       dan Email/Password di Firebase Console, isi
       `FirebaseConfig.googleServerClientId`, daftarkan SHA-1/SHA-256 upload
       key DAN Play App Signing key ke Firebase — daftar lengkap di
-      [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) "Sebelum submit ke Play
+      [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) "Sebelum submit ke Play
       Console".
       **Belum ada uji otomatis** untuk `FirebaseAuthRepositoryImpl`/
       `AccountBloc` (butuh mock `firebase_auth`/`google_sign_in`) — susulan,
@@ -1429,7 +1429,7 @@ seluruh fitur di atasnya menghasilkan data.
       - `05c6e21` versi `0.1.0+1` → **`0.2.0+3`**, dan `shorebird.yaml`
         (`app_id`, bukan rahasia) didaftarkan sebagai aset di `pubspec.yaml`
         untuk pembaruan kode lewat Shorebird.
-      - `7ed1a93` [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (draf listing)
+      - `7ed1a93` [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (draf listing)
         dan tambahan di ASO_NAME_RESEARCH.md.
       ⚠ Tiap `flutter build`/`flutter run` menulis ulang `minSdk` di
       `android/app/build.gradle.kts` menjadi `flutter.minSdkVersion`;
@@ -1527,7 +1527,7 @@ seluruh fitur di atasnya menghasilkan data.
 ## Fase 9: Onboarding, info, dan tur spotlight
 
 Rincian, konten, dan key spotlight ada di
-[ONBOARDING_PLAN.md](ONBOARDING_PLAN.md). T-9.1 menunggu keputusan pemilik
+[ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md). T-9.1 menunggu keputusan pemilik
 KO-1..KO-7 di dokumen itu (dijawab 27 Sep 2026). Berkaitan dengan UX-1: edukasi CATAT pindah dari
 lembar pilihan ke onboarding dan tur CATAT.
 
@@ -1537,7 +1537,7 @@ lembar pilihan ke onboarding dan tur CATAT.
       `info`, plus label pengalih CATAT.
 - [x] **T-9.1a** Maskot dan ilustrasi onboarding: maskot tanuki juru catat
       dipilih; pemilik membuat gambar dari brief konten
-      [ONBOARDING_ART_BRIEF.md](ONBOARDING_ART_BRIEF.md). Lima PNG
+      [ONBOARDING_ART_BRIEF.md](../01-product/features/ONBOARDING_ART_BRIEF.md). Lima PNG
       (`assets/illustration/onboarding_{1..5}.png`, latar transparan)
       diserahkan 28 Sep 2026; dipasang di T-9.3.
 - [x] **T-9.2** Repositori progres onboarding/tur di atas `KeyValueStorage`
@@ -1573,7 +1573,7 @@ lembar pilihan ke onboarding dan tur CATAT.
 ## Fase 11: Catat Cerdas — kategori dan suara
 
 Riset, keputusan pemilik, dan rencana rinci di
-[VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md);
+[VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md);
 keputusan arsitektur di [ADR-026](../02-architecture/adr/0026-sistem-kategori.md)
 (kategori) dan [ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)
 (bukti teks suara/notifikasi/foto, interpreter yang bisa diganti, draf CATAT).
@@ -2364,7 +2364,7 @@ menambah dan memindahkannya ada di
 | B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
-| B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
+| B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
 | B-19 | Terapkan `dismissKeyboardOnTapOutside` (T-8.12) ke kolom teks formulir lain yang bisa punya gejala fokus kembali sama: `AppFormTextField`/`AppFormMoneyField`/`AppFormQuantityField` (anggaran, freelance), formulir dompet, pencarian Riwayat, dialog nama kategori. | agen | T-8.12 |
 | B-16 | Temuan kecil verifikasi M1 ([VERIFICATION_PLAN_FASE_11.md](VERIFICATION_PLAN_FASE_11.md)): F7 label skema 1 hilang bila transaksi dipindah bulan sebelum migrasi berhasil; F8 `ActiveCategories` memberi tahu di setiap baca (bangun ulang seluruh aplikasi); F9 ganti nama boleh kembar, "Catat lagi" bisa ke kategori terarsip; F10 `RecordBloc.createCategory` metode publik. | agen | verifikasi M1 |
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
@@ -2372,7 +2372,7 @@ menambah dan memindahkannya ada di
 | B-21 | Pemrosesan notifikasi memanggil Gemini satu per satu (maks. 5 dtk per item) dan setiap catatan otomatis memancarkan `LedgerChanges` sendiri (N tangkapan = N muat ulang tiap tab). Pertimbangkan satu sinyal per putaran; tunggu keluhan nyata. | agen | audit `record` 1 Okt 2026 (N6) |
 | B-22 | Ikon piksel 32×32 untuk kategori Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan untuk akun (menggantikan B-8). Sampai ada, design system memakai Material Symbols di tile berwarna. Butuh artwork pemilik; jangan merancang sendiri. | pemilik | ADR-034 §4 |
 | B-23 | Varian ikon piksel untuk mode gelap: garis tepi `#1E1B19` menyatu dengan tile gelap. Butuh artwork pemilik atau aturan pewarnaan ulang yang disetujui. | pemilik | ADR-034 §4 |
-| B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
+| B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
 

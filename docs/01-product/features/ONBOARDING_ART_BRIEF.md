@@ -4,9 +4,9 @@
 Gemini dihapus, diganti spesifikasi konten)
 **Status:** Siap dipakai sebagai acuan membuat ilustrasi
 **Berkaitan:** [ONBOARDING_PLAN.md](ONBOARDING_PLAN.md) bagian 3,
-[ASO_NAME_RESEARCH.md](../01-product/ASO_NAME_RESEARCH.md),
-[ADR-015](../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),
-[ADR-016](../02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md)
+[ASO_NAME_RESEARCH.md](../../03-release/ASO_NAME_RESEARCH.md),
+[ADR-015](../../02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md),
+[ADR-016](../../02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md)
 
 Dokumen ini menjelaskan **apa yang harus disampaikan** tiap layar
 onboarding — pesan, informasi, teks, dan isi visual — supaya ilustrasi bisa
@@ -55,7 +55,7 @@ Dipakai di setiap ilustrasi, dengan tampilan yang sama di semua layar.
 
 ## 3. Konten per layar
 
-Istilah mengikuti [glosarium](../00-foundation/PROJECT_GLOSSARY.md)
+Istilah mengikuti [glosarium](../../00-foundation/PROJECT_GLOSSARY.md)
 (NFR-UX-002). Teks adalah draf `id`; terjemahan `en` ditulis di T-9.1.
 
 ### OB-1 — Semua uangmu, satu buku

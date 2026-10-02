@@ -22,7 +22,7 @@ sekaligus (29 September 2026):
 3. Masuk memakai akun Google/Apple.
 4. Cara menghapus akun, dari dalam aplikasi maupun halaman web (untuk kolom
    "URL hapus akun" di Play Console — lihat
-   `docs/04-planning/PLAY_DATA_SAFETY.md`).
+   `docs/03-release/PLAY_DATA_SAFETY.md`).
 
 Tiga keputusan pemilik yang membingkai cakupan ADR ini:
 
@@ -194,7 +194,7 @@ Bukan port per fitur (bukan keputusan domain, cross-cutting seperti
 
 ## 6. Catatan implementasi
 
-- Perbarui `docs/04-planning/PLAY_DATA_SAFETY.md`: ganti "penyedia belum
+- Perbarui `docs/03-release/PLAY_DATA_SAFETY.md`: ganti "penyedia belum
   dipilih" dengan Firebase/Google, tambah baris "App info dan performa:
   Log error" untuk Crashlytics.
 - Perbarui `tanukonomy-web`: `privasi.astro`/`en/privacy.astro` §6–§7 sebut
@@ -223,7 +223,7 @@ Bukan port per fitur (bukan keputusan domain, cross-cutting seperti
 
 ### Dokumentasi
 
-- `docs/04-planning/PLAY_DATA_SAFETY.md`
+- `docs/03-release/PLAY_DATA_SAFETY.md`
 - `docs/01-product/prd-saldough-2.0.md` §8.5, §13
 - `docs/04-planning/TASK_LIST.md` T-8.4 / Fase 10
 

@@ -8,13 +8,13 @@
 - **Status:** Accepted (28 September 2026, disetujui pemilik)
 - **Cakupan:** Global — gerbang saat aplikasi dibuka, penyimpanan progres
   tutorial, komponen spotlight, bahasa gerak (motion), alur CATAT (UX-1).
-- **Berkaitan:** [ONBOARDING_PLAN.md](../../04-planning/ONBOARDING_PLAN.md)
+- **Berkaitan:** [ONBOARDING_PLAN.md](../../01-product/features/ONBOARDING_PLAN.md)
   (konten, key spotlight, keputusan KO-1..KO-7),
-  [ONBOARDING_ART_BRIEF.md](../../04-planning/ONBOARDING_ART_BRIEF.md),
+  [ONBOARDING_ART_BRIEF.md](../../01-product/features/ONBOARDING_ART_BRIEF.md),
   [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md),
   [ADR-016](0016-revisi-palet-satu-peran-satu-warna.md),
   [ADR-020](0020-hierarki-penekanan-bahasa-visual-pixel.md),
-  [UX-1](../../04-planning/UX_REVIEW_FIXES.md).
+  [UX-1](../../04-planning/done/UX_REVIEW_FIXES.md).
 
 ## 2. Konteks
 

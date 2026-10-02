@@ -308,7 +308,7 @@ keterbacaan.** Dua opsi lain yang ditolak: menggelapkan hex terang yang ada
 (membuat isian chip/badge lebih kalem), dan menerima kontrasnya apa adanya.
 
 Catatan kontras lama di
-[UI_UX_DESIGN_TASKS.md](../../04-planning/UI_UX_DESIGN_TASKS.md) (11 September
+[UI_UX_DESIGN_TASKS.md](../../04-planning/done/UI_UX_DESIGN_TASKS.md) (11 September
 2026) menyatakan masalah kuning sudah "closed" lewat penambahan
 `onNeedsReview`. Penutupan itu benar, tapi hanya untuk kasus **teks di atas
 isian kuning** (12.93:1, aman). Kasus kuning sebagai **ikon atau teks di atas
@@ -336,7 +336,7 @@ diselaraskan. Tidak ada perubahan kode maupun nilai token.
 - PRD bagian 10 untuk prinsip antarmuka.
 - [ARCHITECTURE_OVERVIEW.md](../ARCHITECTURE_OVERVIEW.md) bagian struktur
   core.
-- [UI_UX_DESIGN_TASKS.md](../../04-planning/UI_UX_DESIGN_TASKS.md) untuk
+- [UI_UX_DESIGN_TASKS.md](../../04-planning/done/UI_UX_DESIGN_TASKS.md) untuk
   riwayat pivot gaya komik dan canvas percobaan yang memverifikasinya.
 
 ### Rujukan kode

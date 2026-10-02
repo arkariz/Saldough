@@ -287,7 +287,7 @@ generik + Gemini menangkap sisanya.
 ### Dokumentasi
 - ADR-027, ADR-029, ADR-030
 - `docs/01-product/prd-saldough-2.0.md` FR-NOT-001
-- `docs/04-planning/PLAY_DATA_SAFETY.md`
+- `docs/03-release/PLAY_DATA_SAFETY.md`
 
 ### Rujukan kode
 - `lib/features/notification_capture/` (ADR-033 §3.3)

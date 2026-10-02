@@ -388,7 +388,7 @@ konvensi `docs/README.md` lebih tepat daripada menyunting ADR-013 di tempat.
   digantikan ADR ini.
 - [PRD 2.0 §10](../../01-product/prd-saldough-2.0.md#10-prinsip-antarmuka) —
   prinsip antarmuka.
-- [UI_UX_DESIGN_TASKS.md](../../04-planning/UI_UX_DESIGN_TASKS.md) — tugas
+- [UI_UX_DESIGN_TASKS.md](../../04-planning/done/UI_UX_DESIGN_TASKS.md) — tugas
   desain yang memakai paket ini sebagai rujukan per layar.
 
 ### Aset

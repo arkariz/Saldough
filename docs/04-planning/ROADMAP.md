@@ -4,7 +4,7 @@ Dokumen ini menjelaskan urutan pengerjaan Saldough 2.0 dan alasan di balik
 urutannya. Untuk daftar tugas yang bisa langsung dikerjakan beserta
 progresnya, lihat [TASK_LIST.md](TASK_LIST.md). Untuk pekerjaan desain
 visual yang menurunkan fase-fase ini jadi layar, lihat
-[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
+[UI_UX_DESIGN_TASKS.md](done/UI_UX_DESIGN_TASKS.md).
 
 ## Prinsip penyusunan fase
 
@@ -110,7 +110,7 @@ alat pencatatan di tengah pivot.
 
 Satu kanvas desain tunggal untuk seluruh layar inti dikerjakan di awal
 fase ini, bukan satu kanvas per fase. Rinciannya ada di
-[UI_UX_DESIGN_TASKS.md](UI_UX_DESIGN_TASKS.md).
+[UI_UX_DESIGN_TASKS.md](done/UI_UX_DESIGN_TASKS.md).
 
 **Selesai kalau:** pemilik bisa membuat dompet, mencatat pemasukan,
 pengeluaran, dan transfer, lalu melihat saldo bergerak persis seperti
@@ -236,7 +236,7 @@ terpisah yang butuh ADR sendiri (B-7 di antrean TASK_LIST).
 Pengenalan sekali di pembukaan pertama, tur spotlight per layar, dan lapis
 info untuk memutar ulang keduanya. Dikerjakan setelah tab-tabnya stabil
 karena tur menyorot elemen nyata. Desainnya di
-[ONBOARDING_PLAN.md](ONBOARDING_PLAN.md) dan
+[ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md) dan
 [ADR-021](../02-architecture/adr/0021-onboarding-dan-tur-spotlight.md);
 langkah mata uang ditambahkan sebagai gerbang di
 [ADR-025](../02-architecture/adr/0025-satu-mata-uang-per-aplikasi.md) §3.7.
@@ -251,7 +251,7 @@ Sistem kategori bawaan yang bisa diubah
 ([ADR-026](../02-architecture/adr/0026-sistem-kategori.md)), lalu pencatatan
 dari suara yang mengisi formulir CATAT; notifikasi dan foto menyusul lewat
 kontrak yang sama ([ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)).
-Rincian di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md).
+Rincian di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md).
 
 **Selesai kalau:** transaksi berkategori tertutup, dan pengguna bisa
 mengucapkan satu transaksi lalu meninjaunya di formulir CATAT yang sudah

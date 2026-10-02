@@ -3,7 +3,7 @@
 **Dibuat:** 30 September 2026 · **Branch:** `claude/kategori-dan-suara`
 **Rujukan:** [ADR-026](../02-architecture/adr/0026-sistem-kategori.md),
 [ADR-027](../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md),
-[VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), TASK_LIST Fase 11.
+[VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), TASK_LIST Fase 11.
 
 Verifikasi dilakukan **per milestone**, bukan per task dan bukan di akhir:
 per task terlalu mahal dan temuannya sering berubah lagi, di akhir diffnya

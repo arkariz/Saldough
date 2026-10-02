@@ -167,7 +167,7 @@ manfaat yang belum diminta.
 ## 9. Artefak terkait
 
 ### Dokumentasi
-- `docs/04-planning/VOICE_INPUT_RESEARCH.md` §3A
+- `docs/01-product/features/VOICE_INPUT_RESEARCH.md` §3A
 - `docs/02-architecture/DOMAIN_MODEL.md` bagian Transaksi dan Kategori
 
 ### Rujukan kode

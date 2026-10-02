@@ -501,5 +501,5 @@ dengan daftar yang terbuka). Tidak ada pertanyaan terbuka lagi pada MVP.
 - [Glosarium proyek](../00-foundation/PROJECT_GLOSSARY.md)
 - [Model domain](../02-architecture/DOMAIN_MODEL.md)
 - [Gambaran arsitektur](../02-architecture/ARCHITECTURE_OVERVIEW.md)
-- [User stories](user-stories.md)
+- [User stories](../01-product/user-stories.md)
 - [Daftar tugas](../04-planning/TASK_LIST.md)

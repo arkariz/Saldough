@@ -76,6 +76,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
+| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Proposed) | 14 | 0 | Direncanakan 2 Okt 2026 -- desain dikunci, ADR-034 menunggu tinjauan pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2346,6 +2347,141 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji i18n (kunci lengkap id/en), pencarian kata terlarang
       di `assets/i18n/` kosong.
       Di luar PRD: perombakan tampilan (ADR-034).
+## Fase 14: Rencana dan rutin (R1)
+
+Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan
+arus kas, dengan tab Anggaran menjadi **Rencana**. Keputusannya di
+[ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) (**Proposed: tinjauan pemilik dulu sebelum T-14.1**);
+perilaku dan rumus di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md); tata letak di
+[PLAN_TAB_LAYOUT.md](../01-product/features/PLAN_TAB_LAYOUT.md). R1 dibagi dua rilis yang masing-masing bisa
+dirilis sendiri: **R1a (rutin)** T-14.1–14.9 dan **R1b (Bulan ini)**
+T-14.10–14.14. R2 dan R3 ada di antrean (B-25, B-26). Satu commit per tugas;
+setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
+
+### R1a: rutin
+
+- [ ] **T-14.1** Domain `RecurringRule` di `shared/recurring/`: entitas,
+      jadwal (mingguan/bulanan/tahunan, selang, patokan), berakhir (tidak
+      pernah/tanggal/N kali), `occurrencesOf`, repository `recurring` / `all`
+      (ADR-034 §3.1).
+      ⚠ Hari patokan disimpan terpisah: patokan 31 → 28 Feb → 31 Mar, jangan
+      bergeser permanen. Penjepitan sama dengan `BudgetPeriod.endFrom`.
+      Verifikasi: uji unit kasus wajib RECURRING_AND_FORECAST §7.7 (patokan 31,
+      berakhir setelah 12 kali), uji repository, uji batas impor.
+      Memenuhi FR-RUT-001, FR-RUT-005.
+- [ ] **T-14.2** Tautan kemunculan: `Transaction.recurrence`
+      (`ruleId`, `occurrenceDate`, `linkedBy`) di ketiga jenis transaksi dan
+      modelnya; status kemunculan turunan (tercatat/dilewati/menunggu/
+      terlewat); invarian 14–15 (ADR-034 §3.2).
+      ⚠ Field opsional, jadi data lama harus tetap terbaca. Hapus transaksi →
+      kemunculan kembali menunggu.
+      Verifikasi: uji serialisasi tiga jenis dengan dan tanpa `recurrence`, uji
+      status turunan, uji invarian 15 (pasangan unik).
+      Memenuhi FR-RUT-002.
+- [ ] **T-14.3** CATAT mode jadwal: baris **Ulangi** (tertutup), Atur lebih
+      lanjut (berakhir, nominal kira-kira, cara bayar), tombol "Catat &
+      Jadwalkan"/"Simpan Jadwal"; **Jadikan Rutin** di rincian transaksi
+      (transaksi asal = kemunculan pertama); chip pembuka lokal.
+      ⚠ Aturan 8: tidak ada formulir rutin terpisah. Tanggal masa depan tidak
+      boleh membuat transaksi.
+      Verifikasi: uji bloc/widget CATAT (tanggal lampau → transaksi + rutin;
+      masa depan → rutin saja), uji Jadikan Rutin tidak menggandakan.
+      Memenuhi FR-RUT-001.
+- [ ] **T-14.4** Tab Rencana: `AppSubTabs` (`core/presentation/widgets/`),
+      label `appShell.planTabLabel` (Rencana/Plan), `PlanPage` dengan segmen
+      Anggaran (`BudgetListPage` tanpa app bar; penyaring status jadi chip,
+      KT-L2) dan Rutin; shell bisa dibuka ke tab + segmen; tur `planTabs`.
+      ⚠ Tanpa geser antarsegmen. Kunci i18n `budgetTabLabel` tetap dipakai
+      untuk label segmen (kebiasaan T-8.8). Uji label en di 360dp, skala teks
+      1,3.
+      Verifikasi: uji `app_shell_page_test.dart` dan uji tur diperbarui, uji
+      widget sub-tab 360dp, uji batas impor.
+      Memenuhi FR-PLN-001.
+- [ ] **T-14.5** Segmen Rutin dan rincian rutin: kartu utama "Sisa rutin
+      keluar", chip jenis, kelompok Menunggu/Bulan ini/Nanti/Dijeda/Selesai,
+      baris dengan kolom tanggal; rincian (riwayat tercatat, berikutnya +
+      Lewati, Ubah/Jeda/Akhiri/Hapus); total langganan (W5); kenaikan harga
+      dari nominal tercatat (W3).
+      ⚠ Aturan PLAN_TAB_LAYOUT §4.9: angka dan label pendek saja.
+      Verifikasi: uji widget per kelompok dan keadaan kosong; uji ambang W3
+      (≥5% dan ≥Rp5.000).
+      Memenuhi FR-PLN-001, FR-RUT-005.
+- [ ] **T-14.6** Kartu **Menunggu dicatat** di Beranda dan segmen Rutin: catat
+      satu ketuk lewat `RecordTransaction` + Batalkan, ubah dulu (CATAT terisi),
+      lewati + Batalkan, catat semua; tanggal bawaan = tanggal kemunculan;
+      penjagaan E4 (mirip transaksi yang sudah ada), E5 (nominal tidak wajar
+      untuk rutin), E11 (tanggal jauh dari kemunculan).
+      ⚠ Pengecualian kedua aturan 8 (ADR-034 §3.3) hanya untuk nominal tetap;
+      nominal kira-kira selalu membuka CATAT.
+      Verifikasi: uji bloc (satu ketuk → satu transaksi bertautan; batalkan →
+      dihapus; lewati → `skippedDates`), uji widget Beranda.
+      Memenuhi FR-RUT-002.
+- [ ] **T-14.7** Pencocokan dengan catat dari notifikasi: `matchOccurrences`
+      (ADR-034 §3.4); tautan otomatis untuk kecocokan persis satu kandidat,
+      log `recurring` / `match_log` 7 hari + Lepaskan; label "Cocok dengan
+      rutin" dan isian dari rutin pada draf kotak masuk; saran "Sudah
+      tercatat? Tautkan".
+      ⚠ Penangkap notifikasi hanya mengimpor `shared/recurring`, tidak fitur
+      `recurring`. Dua kandidat, nominal beda, dompet beda → ditanyakan.
+      Verifikasi: uji unit pencocokan (kasus §7.7: persis, ditolak, dua
+      kandidat), uji pemroses notifikasi menautkan.
+      Memenuhi FR-RUT-003.
+- [ ] **T-14.8** Notifikasi lokal (ADR-034 §3.8): dependensi
+      `flutter_local_notifications` + `timezone`; saluran `recurring_reminders`;
+      jadwal disusun ulang saat aplikasi dibuka dan saat rutin berubah (35 hari
+      ke depan, id dari `(ruleId, occurrenceDate)`); H−n untuk bayar sendiri
+      dan ringkasan hari jatuh tempo; aksi Catat membuka aplikasi lalu catat
+      satu ketuk; sakelar per rutin dan global di Akun; izin diminta saat
+      pertama dinyalakan.
+      ⚠ Dependensi baru: cek ulang formulir Keamanan Data (tidak ada data
+      keluar perangkat). Butuh pengujian Android 13+ dan iOS di perangkat.
+      Verifikasi: uji unit penyusun jadwal (tanpa ganda saat disusun ulang),
+      build Android dan iOS, notifikasi nyata muncul dan aksi Catat bekerja.
+      Memenuhi FR-RUT-004.
+- [ ] **T-14.9** Verifikasi milestone R1a di perangkat (pola
+      VERIFICATION_PLAN_FASE_11): alur J1–J3, J7, J8 dokumen perilaku;
+      pencocokan dengan notifikasi BRImo/BCA nyata; pengingat H−1.
+      Verifikasi: temuan dicatat di tugas ini, perbaikan sebagai tugas baru.
+      Memenuhi FR-RUT-001..005, FR-PLN-001.
+
+### R1b: Bulan ini
+
+- [ ] **T-14.10** Bulan keuangan bisa diatur: preferensi `settings` /
+      `financial_month_start` (1–28, bawaan 1) dengan pola
+      `CurrencyPreferenceRepository`; pengaturan di Akun; fungsi rentang bulan
+      keuangan.
+      ⚠ Tidak mengubah arus bulan berjalan di Beranda (FR-HOME-001). Rentang
+      yang tidak mulai tanggal 1 selalu ditulis ("25 Okt – 24 Nov").
+      Verifikasi: uji rentang (mulai 25, mulai 1, Februari), uji repository.
+      Memenuhi FR-PLN-004.
+- [ ] **T-14.11** `monthPlan`: uang nganggur rencana dan sisa
+      (RECURRING_AND_FORECAST §7.2, §7.2a; KT-R14 transfer tidak dihitung;
+      invarian 17).
+      Verifikasi: uji contoh §7.2a (3.052.500 → sisa 2.995.500), uji pos
+      tertaut tidak ganda, uji transfer Tabungan tidak mengurangi.
+      Memenuhi FR-PLN-002.
+- [ ] **T-14.12** `projectCashflow`: saldo harian, akhir bulan, paling tipis
+      (§7.3–7.5), per dompet dan total, di luar rencana (nyala bila riwayat ≥1
+      bulan penuh, KT-R3), freelance belum dibayar sebagai "belum pasti"
+      (KT-R6); invarian 16.
+      ⚠ Pembagian harian: sisa pembagian di hari terakhir; semua `int` sen.
+      Verifikasi: uji kasus wajib §7.7 (pembagian 100.000.001 sen, transfer
+      tidak mengubah total) dan contoh §7.6 (paling tipis 561.000 pada 24 Okt,
+      akhir Okt 10.921.000).
+      Memenuhi FR-PLN-003.
+- [ ] **T-14.13** Segmen **Bulan ini** (PLAN_TAB_LAYOUT §4 dan §4.9): pemilih
+      bulan, kartu Uang nganggur + lembar ⓘ, kartu Saldo dompet ≈ + grafik
+      yang bisa digeser + lembar Rincian, Menunggu + 3 berikutnya, keadaan
+      kosong; baris perkiraan di Beranda; tur `planUnplanned`, `planForecast`;
+      awal sesi membuka Bulan ini (KT-L4).
+      ⚠ Kata "saldo" hanya untuk isi dompet. Garis grafik tinta netral,
+      bukan hijau/merah.
+      Verifikasi: uji widget kartu (angka besar = jumlah baris), uji
+      semantik grafik, uji 360dp.
+      Memenuhi FR-PLN-001, FR-PLN-002, FR-PLN-003.
+- [ ] **T-14.14** Verifikasi milestone R1b di perangkat: angka Bulan ini cocok
+      dengan perhitungan manual satu bulan nyata; bulan keuangan mulai 25.
+      Memenuhi FR-PLN-001..004.
 
 ## Antrean (belum dijadwalkan)
 
@@ -2373,6 +2509,10 @@ menambah dan memindahkannya ada di
 | B-22 | Ikon piksel 32×32 untuk kategori Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan untuk akun (menggantikan B-8). Sampai ada, design system memakai Material Symbols di tile berwarna. Butuh artwork pemilik; jangan merancang sendiri. | pemilik | ADR-034 §4 |
 | B-23 | Varian ikon piksel untuk mode gelap: garis tepi `#1E1B19` menyatu dengan tile gelap. Butuh artwork pemilik atau aturan pewarnaan ulang yang disetujui. | pemilik | ADR-034 §4 |
 | B-22 | **Transaksi rutin, anggaran rutin, dan perkiraan arus kas**: desain produk di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) (draf 2 Okt 2026), dasar pembedanya di [RECURRING_COMPETITIVE_ANALYSIS.md](../01-product/features/RECURRING_COMPETITIVE_ANALYSIS.md). Tata letak tab Rencana di [PLAN_TAB_LAYOUT.md](../01-product/features/PLAN_TAB_LAYOUT.md). KT-R1 diputuskan 2 Okt 2026 (tab Rencana); pemilik menjawab KT-R2–KT-R13 dan KT-L1–KT-L7 di §14, lalu agen menulis ADR-034 dan membuka fase baru (rilis R1–R3, §12). | pemilik memutuskan, lalu agen | permintaan pemilik 2 Okt 2026 |
+| B-23 | Peringatan nominal tidak wajar di **seluruh CATAT** (KT-R12): bandingkan dengan nominal biasa untuk kategori/catatan yang sama, misalnya ≥5× atau ≤⅕. Fase 14 hanya menerapkannya untuk rutin (T-14.6). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E5 |
+| B-24 | Kartu lembut "Ada yang belum dicatat sejak …?" sesudah 3 hari tanpa catatan apa pun, **tanpa streak** dan tanpa hitungan hari terputus (KT-R13). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E12 |
+| B-25 | **R2 Rencana**: anggaran rutin (FR-BUD-008), bulan depan dan horizon (FR-PLN-005), perkiraan per dompet + "siapkan dana" (W1, termasuk notifikasinya), tinjau awal bulan (J4), W7–W10. Fase baru sesudah R1 dirilis. | agen | ADR-034 §3.9, RECURRING_AND_FORECAST §12 |
+| B-26 | **R3 Otomasi**: catat otomatis per rutin (nominal tetap), "belum terlihat" H+2, kenaikan harga dari notifikasi, rutin menganggur (W6), saran pola rutin dari riwayat/notifikasi, rutin lewat suara, gabung kartu menunggu (KT-R7). | agen | RECURRING_AND_FORECAST §12 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
@@ -2429,6 +2569,17 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-LANG-001 | T-11.5 (pilihan bahasa), T-11.14, T-11.16 |
 | FR-VOI-001 | T-11.2–T-11.5, T-11.11–T-11.13; jalur cloud T-11.7 |
 | FR-NOT-001 | T-11.17–T-11.21 |
+| FR-RUT-001 | T-14.1, T-14.3 |
+| FR-RUT-002 | T-14.2, T-14.6 |
+| FR-RUT-003 | T-14.7 |
+| FR-RUT-004 | T-14.8 |
+| FR-RUT-005 | T-14.1, T-14.5 |
+| FR-PLN-001 | T-14.4, T-14.5, T-14.13 |
+| FR-PLN-002 | T-14.11, T-14.13 |
+| FR-PLN-003 | T-14.12, T-14.13 |
+| FR-PLN-004 | T-14.10 |
+| FR-PLN-005 | B-25 (R2) |
+| FR-BUD-008 | B-25 (R2) |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

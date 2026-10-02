@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 3 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026; Fase 14 (Rencana dan rutin, ADR-034 Proposed) direncanakan 2 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026; Fase 14 (Rencana dan rutin, ADR-034) berjalan sejak 2 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
 
 ## Apa ini
 
@@ -157,14 +157,14 @@ ikon piksel untuk kategori/dompet, Material Symbols untuk navigasi, 4 tab +
 tombol Catat di tengah. Setiap pekerjaan UI memakai skill `tanukonomy-ui`
 dan merujuk artefak design system dan prototipe (tabel Pencarian cepat).
 Sampai Fase 14 selesai, kode masih memakai bahasa visual lama.
-**Rencana dan rutin (Fase 14, ADR-034 Proposed, 2 Okt 2026):** tab Anggaran
+**Rencana dan rutin (Fase 14, ADR-034 Accepted, 2 Okt 2026):** tab Anggaran
 akan menjadi **Rencana** (segmen Bulan ini, Anggaran, Rutin). Transaksi rutin
 (`RecurringRule`, `shared/recurring/`) adalah **rencana**, bukan transaksi:
 kemunculan dihitung, ditinjau, lalu dicatat lewat `RecordTransaction` atau
 ditautkan ke transaksi dari catat notifikasi (`Transaction.recurrence`).
 **Uang nganggur bukan saldo**: kata "saldo" hanya untuk isi dompet. Desain
-di `docs/01-product/features/`; jangan menulis kode sebelum pemilik
-menyetujui ADR-034.
+di `docs/01-product/features/`. Penjepitan tanggal bersama di
+`core/utils/clamped_date.dart`.
 
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.

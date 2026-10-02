@@ -161,7 +161,7 @@ docs/
 | [0032](02-architecture/adr/0032-catat-dari-notifikasi.md) | Catat dari notifikasi: penangkap native, pola, tingkat otomatis, kotak masuk | Accepted |
 | [0033](02-architecture/adr/0033-pecah-fitur-record.md) | Pecah fitur `record`: mesin tafsir di `shared/capture`, suara dan notifikasi jadi fitur sendiri | Accepted |
 | [0034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) | Bahasa visual baru: buku catatan dengan aksen piksel | Accepted |
-| [0034](02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) | Transaksi rutin, tab Rencana, uang nganggur, dan perkiraan arus kas | Proposed |
+| [0034](02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) | Transaksi rutin, tab Rencana, uang nganggur, dan perkiraan arus kas | Accepted |
 
 ADR berikutnya memakai nomor **0035**.
 

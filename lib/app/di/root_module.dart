@@ -34,6 +34,7 @@ import 'package:saldough/features/wallet/presentation/navigation/wallet_route_mo
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -99,6 +100,11 @@ abstract final class RootModule {
       // memuat dari sini sesuai kebutuhan.
       ..registerLazySingleton<SourceIconRepository>(
         () => SourceIconRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Transaksi rutin (ADR-034 §3.1), kunci `recurring/all`; dibaca
+      // Beranda, Rencana, CATAT, dan penangkap notifikasi.
+      ..registerLazySingleton<RecurringRuleRepository>(
+        () => RecurringRuleRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).

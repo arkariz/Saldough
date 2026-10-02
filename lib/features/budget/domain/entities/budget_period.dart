@@ -1,3 +1,5 @@
+import 'package:saldough/core/utils/clamped_date.dart';
+
 /// Rentang berlakunya sebuah `Budget`. Lihat DOMAIN_MODEL.md bagian
 /// "Anggaran".
 enum BudgetPeriod {
@@ -19,9 +21,7 @@ enum BudgetPeriod {
       case BudgetPeriod.weekly:
         return DateTime(day.year, day.month, day.day + 7);
       case BudgetPeriod.monthly:
-        final lastDayOfNextMonth = DateTime(day.year, day.month + 2, 0).day;
-        final clamped = day.day > lastDayOfNextMonth ? lastDayOfNextMonth : day.day;
-        return DateTime(day.year, day.month + 1, clamped);
+        return clampedDate(day.year, day.month + 1, day.day);
     }
   }
 }

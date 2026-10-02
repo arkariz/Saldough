@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-034
 - **Tanggal:** 2026-10-02
 - **Fase roadmap:** Fase 14 (Rencana dan rutin, R1a + R1b); R2/R3 di antrean
-- **Status:** Proposed (menunggu tinjauan pemilik sebelum kode)
+- **Status:** Accepted (disetujui pemilik 2 Okt 2026)
 - **Cakupan:** entitas baru `RecurringRule` (`lib/shared/recurring/`),
   `Transaction` (`lib/shared/transaction/`), fitur baru
   `lib/features/recurring/` dan `lib/features/plan/`, `lib/features/budget/`
@@ -423,6 +423,6 @@ didaftarkan di muka. Kelemahannya:
 ---
 
 **Penulis keputusan:** agen (Claude), atas permintaan pemilik
-**Ditinjau oleh:** —
-**Tanggal disetujui:** —
-**Status implementasi:** belum dimulai (Fase 14)
+**Ditinjau oleh:** pemilik
+**Tanggal disetujui:** 2026-10-02
+**Status implementasi:** berjalan (Fase 14, mulai T-14.1)

@@ -76,7 +76,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
-| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Proposed) | 14 | 0 | Direncanakan 2 Okt 2026 -- desain dikunci, ADR-034 menunggu tinjauan pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
+| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 14 | 1 | Berjalan sejak 2 Okt 2026 -- ADR-034 disetujui pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2351,7 +2351,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
 
 Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan
 arus kas, dengan tab Anggaran menjadi **Rencana**. Keputusannya di
-[ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) (**Proposed: tinjauan pemilik dulu sebelum T-14.1**);
+[ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) (Accepted 2 Okt 2026);
 perilaku dan rumus di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md); tata letak di
 [PLAN_TAB_LAYOUT.md](../01-product/features/PLAN_TAB_LAYOUT.md). R1 dibagi dua rilis yang masing-masing bisa
 dirilis sendiri: **R1a (rutin)** T-14.1–14.9 dan **R1b (Bulan ini)**
@@ -2360,7 +2360,7 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
 
 ### R1a: rutin
 
-- [ ] **T-14.1** Domain `RecurringRule` di `shared/recurring/`: entitas,
+- [x] **T-14.1** Domain `RecurringRule` di `shared/recurring/`: entitas,
       jadwal (mingguan/bulanan/tahunan, selang, patokan), berakhir (tidak
       pernah/tanggal/N kali), `occurrencesOf`, repository `recurring` / `all`
       (ADR-034 §3.1).

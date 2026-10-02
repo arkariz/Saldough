@@ -2,7 +2,7 @@
 
 **Status:** Diputuskan pemilik 2 Oktober 2026 (§14). Keputusan domain dan
 arsitekturnya di [ADR-034](../../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)
-(Proposed, menunggu tinjauan pemilik). Dikerjakan di Fase 14 (TASK_LIST).
+(Accepted 2 Okt 2026). Dikerjakan di Fase 14 (TASK_LIST).
 **Mengubah cakupan:** PRD 2.0 §6 "Di luar MVP" menyebut "Transaksi berulang
 otomatis", dan §12 menyebut "Transaksi berulang untuk langganan bulanan".
 Dokumen ini mengambil yang kedua tanpa yang pertama: rutin **dijadwalkan**,

@@ -59,6 +59,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$language$id language = Translations$language$id.internal(_root);
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
+	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
 }
 
 // Path: app
@@ -137,6 +138,9 @@ class Translations$appShell$id {
 
 	/// id: 'Dompet'
 	String get walletsTabLabel => 'Dompet';
+
+	/// id: 'Rencana'
+	String get planTabLabel => 'Rencana';
 }
 
 // Path: record
@@ -1956,6 +1960,12 @@ class Translations$tour$id {
 
 	/// id: 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.'
 	String get homeVoiceBody => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.';
+
+	/// id: 'Rencana'
+	String get planTabsTitle => 'Rencana';
+
+	/// id: 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.'
+	String get planTabsBody => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.';
 }
 
 // Path: info
@@ -2567,6 +2577,18 @@ class Translations$recurring$id {
 	late final Translations$recurring$starters$id starters = Translations$recurring$starters$id.internal(_root);
 }
 
+// Path: plan
+class Translations$plan$id {
+	Translations$plan$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Rutin'
+	String get recurringSegmentLabel => 'Rutin';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -2939,6 +2961,7 @@ extension on Translations {
 			'appShell.recordAction' => 'Catat',
 			'appShell.transactionsTabLabel' => 'Riwayat',
 			'appShell.walletsTabLabel' => 'Dompet',
+			'appShell.planTabLabel' => 'Rencana',
 			'record.incomeAction' => 'Catat Pemasukan',
 			'record.expenseAction' => 'Catat Pengeluaran',
 			'record.transferAction' => 'Catat Transfer',
@@ -3433,9 +3456,9 @@ extension on Translations {
 			'freelance.paymentReceivedMessage' => 'Pembayaran dicatat diterima. Saldo dompet bertambah.',
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
-			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
@@ -3586,6 +3609,8 @@ extension on Translations {
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
 			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
+			'tour.planTabsTitle' => 'Rencana',
+			'tour.planTabsBody' => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -3807,6 +3832,7 @@ extension on Translations {
 			'recurring.starters.parents' => 'Kirim ke orang tua',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Tabungan',
+			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		};
 	}

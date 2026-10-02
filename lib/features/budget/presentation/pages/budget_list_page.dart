@@ -27,7 +27,11 @@ import 'package:state_management/state_management.dart';
 /// dan sesudah alur CATAT (lihat `AppShellPage`).
 class BudgetListPage extends StatefulWidget {
   /// Membuat [BudgetListPage].
-  const BudgetListPage({super.key});
+  const BudgetListPage({this.embedded = false, super.key});
+
+  /// Segmen Anggaran di tab Rencana (T-14.4): tanpa app bar sendiri, karena
+  /// judulnya mengikuti app bar Rencana (PLAN_TAB_LAYOUT §5).
+  final bool embedded;
 
   @override
   State<BudgetListPage> createState() => _BudgetListPageState();
@@ -52,8 +56,9 @@ class _BudgetListPageState extends State<BudgetListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.appShell.budgetTabLabel)),
+      appBar: widget.embedded ? null : AppBar(title: Text(t.appShell.budgetTabLabel)),
       body: SafeArea(
+        top: !widget.embedded,
         child: BlocBuilder<BudgetBloc, BudgetState>(
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();

@@ -20,7 +20,8 @@
     "budgetTabLabel": "Anggaran",
     "recordAction": "Catat",
     "transactionsTabLabel": "Riwayat",
-    "walletsTabLabel": "Dompet"
+    "walletsTabLabel": "Dompet",
+    "planTabLabel": "Rencana"
   },
   "record": {
     "incomeAction": "Catat Pemasukan",
@@ -689,7 +690,9 @@
     "freelanceReceiveTitle": "Uang benar-benar masuk",
     "freelanceReceiveBody": "Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.",
     "homeVoiceTitle": "Catat pakai suara",
-    "homeVoiceBody": "Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat."
+    "homeVoiceBody": "Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.",
+    "planTabsTitle": "Rencana",
+    "planTabsBody": "Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah."
   },
   "info": {
     "menuTooltip": "Info dan tur",
@@ -933,5 +936,8 @@
       "arisan": "Arisan",
       "savings": "Tabungan"
     }
+  },
+  "plan": {
+    "recurringSegmentLabel": "Rutin"
   }
 }

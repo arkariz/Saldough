@@ -16,7 +16,7 @@ enum TourId {
   /// Tab Transaksi.
   transaction,
 
-  /// Tab Anggaran.
+  /// Segmen Anggaran tab Rencana.
   budget,
 
   /// Rincian anggaran.
@@ -51,7 +51,9 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   ],
   TourId.wallet: [SpotlightKey.walletSummary, SpotlightKey.walletCard, SpotlightKey.walletAdd],
   TourId.transaction: [SpotlightKey.txnMonth, SpotlightKey.txnFilter, SpotlightKey.txnRow],
-  TourId.budget: [SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates],
+  // Sub-tab Rencana disorot lebih dulu: segmen Anggaran adalah segmen
+  // pertama yang dibuka tab Rencana (R1a), dan satu tur per layar.
+  TourId.budget: [SpotlightKey.planTabs, SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates],
   TourId.budgetDetail: [SpotlightKey.budgetDetailItem, SpotlightKey.budgetDetailRecord],
   TourId.freelance: [SpotlightKey.freelanceProject],
   TourId.freelanceProject: [SpotlightKey.freelanceWorklog, SpotlightKey.freelanceReceive],

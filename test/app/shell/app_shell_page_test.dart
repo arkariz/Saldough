@@ -84,7 +84,7 @@ void main() {
         labels,
         [
           t.appShell.homeTabLabel,
-          t.appShell.budgetTabLabel,
+          t.appShell.planTabLabel,
           t.appShell.transactionsTabLabel,
           t.appShell.walletsTabLabel,
         ],
@@ -237,6 +237,23 @@ void main() {
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
     });
 
+    testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-14.4)', (tester) async {
+      await tester.pumpWidget(pumpableShell());
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.planTabLabel));
+      await tester.pumpAndSettle();
+
+      expect(find.widgetWithText(AppBar, t.appShell.planTabLabel), findsOneWidget);
+      expect(find.widgetWithText(AppBar, t.appShell.budgetTabLabel), findsNothing);
+      expect(find.text(t.appShell.budgetTabLabel.toUpperCase()), findsOneWidget);
+
+      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.pumpAndSettle();
+      expect(find.text(t.recurring.starters.salary), findsOneWidget);
+    });
+
     testWidgets('menutup lembar pilihan CATAT tanpa memilih kembali ke tab sebelumnya', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();
@@ -250,7 +267,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
 
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.budgetTabLabel));
+      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.planTabLabel));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
@@ -260,7 +277,7 @@ void main() {
       await tester.tapAt(const Offset(20, 20));
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(AppBar, t.appShell.budgetTabLabel), findsOneWidget);
+      expect(find.widgetWithText(AppBar, t.appShell.planTabLabel), findsOneWidget);
     });
 
     testWidgets(

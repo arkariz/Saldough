@@ -57,6 +57,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
+	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
 }
 
 // Path: app
@@ -101,6 +102,7 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get recordAction => 'Record';
 	@override String get transactionsTabLabel => 'History';
 	@override String get walletsTabLabel => 'Wallets';
+	@override String get planTabLabel => 'Plan';
 }
 
 // Path: record
@@ -757,6 +759,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Tap, say one transaction, then check the form before recording it.';
+	@override String get planTabsTitle => 'Plan';
+	@override String get planTabsBody => 'Budgets and recurring transactions live here. Tap to switch.';
 }
 
 // Path: info
@@ -1018,6 +1022,16 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override late final _Translations$recurring$starters$en starters = _Translations$recurring$starters$en._(_root);
 }
 
+// Path: plan
+class _Translations$plan$en extends Translations$plan$id {
+	_Translations$plan$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get recurringSegmentLabel => 'Recurring';
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1201,6 +1215,7 @@ extension on TranslationsEn {
 			'appShell.recordAction' => 'Record',
 			'appShell.transactionsTabLabel' => 'History',
 			'appShell.walletsTabLabel' => 'Wallets',
+			'appShell.planTabLabel' => 'Plan',
 			'record.incomeAction' => 'Record Income',
 			'record.expenseAction' => 'Record Expense',
 			'record.transferAction' => 'Record Transfer',
@@ -1695,9 +1710,9 @@ extension on TranslationsEn {
 			'freelance.paymentReceivedMessage' => 'Payment recorded as received. Wallet balance increased.',
 			'freelance.receiptCancelAction' => 'Cancel receipt',
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
-			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
 			'freelance.changeAction' => 'Change',
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
@@ -1848,6 +1863,8 @@ extension on TranslationsEn {
 			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Tap, say one transaction, then check the form before recording it.',
+			'tour.planTabsTitle' => 'Plan',
+			'tour.planTabsBody' => 'Budgets and recurring transactions live here. Tap to switch.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2069,6 +2086,7 @@ extension on TranslationsEn {
 			'recurring.starters.parents' => 'Send to parents',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Savings',
+			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		};
 	}

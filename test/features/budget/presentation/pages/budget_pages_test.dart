@@ -95,7 +95,7 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await tester.pump();
     }
-    await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.budgetTabLabel));
+    await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.planTabLabel));
     await tester.pumpAndSettle();
   }
 

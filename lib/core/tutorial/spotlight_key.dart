@@ -57,6 +57,9 @@ enum SpotlightKey {
   /// Baris transaksi pertama.
   txnRow,
 
+  /// Sub-tab Rencana (Anggaran / Rutin), T-14.4.
+  planTabs,
+
   /// Kartu ringkasan tab Anggaran.
   budgetSummary,
 

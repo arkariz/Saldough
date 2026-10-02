@@ -465,13 +465,16 @@ void main() {
       tallViewport(tester);
       await seedWallet();
       await openShellWithTours(tester);
-      await openTab(tester, t.appShell.budgetTabLabel);
-      await walkThrough(tester, [(t.tour.budgetTemplatesTitle, t.tour.budgetTemplatesBody)]);
+      await openTab(tester, t.appShell.planTabLabel);
+      await walkThrough(tester, [
+        (t.tour.planTabsTitle, t.tour.planTabsBody),
+        (t.tour.budgetTemplatesTitle, t.tour.budgetTemplatesBody),
+      ]);
 
       await tester.pumpWidget(const SizedBox());
       await seedFull();
       await openShellWithTours(tester);
-      await openTab(tester, t.appShell.budgetTabLabel);
+      await openTab(tester, t.appShell.planTabLabel);
       await walkThrough(tester, [
         (t.tour.budgetSummaryTitle, t.tour.budgetSummaryBody),
         (t.tour.budgetFilterTitle, t.tour.budgetFilterBody),
@@ -483,7 +486,7 @@ void main() {
       await seedFull();
       await tutorials.markStepsSeen(tourSteps[TourId.budget]!);
       await openShellWithTours(tester);
-      await openTab(tester, t.appShell.budgetTabLabel);
+      await openTab(tester, t.appShell.planTabLabel);
       await tester.tap(find.text('Rumah tangga').first);
       await tester.pumpAndSettle();
 

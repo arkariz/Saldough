@@ -5,8 +5,8 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Penyaring layar Anggaran (FR-BUD-006): empat status dalam satu baris tab,
-/// lalu satu pilihan dompet. Sengaja sederhana — daftar dan pilihan, bukan
+/// Penyaring layar Anggaran (FR-BUD-006): empat chip status, lalu satu
+/// pilihan dompet. Sengaja sederhana — daftar dan pilihan, bukan
 /// antarmuka akuntansi.
 class BudgetFilterBar extends StatelessWidget {
   /// Membuat [BudgetFilterBar].
@@ -50,7 +50,6 @@ class BudgetFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     Wallet? selected;
     for (final wallet in wallets) {
       if (wallet.id == walletFilter) selected = wallet;
@@ -58,20 +57,18 @@ class BudgetFilterBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TransactionSlab(
-          color: colors.surfaceMid,
-          padding: const EdgeInsets.all(AppSpacing.xs),
-          shadow: 2,
+        // Chip, bukan baris tab: segmen Rencana sudah bertab di atasnya
+        // (PLAN_TAB_LAYOUT §3.2, KT-L2). Bergulir horizontal di layar sempit.
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Row(
             children: [
               for (final filter in BudgetStatusFilter.values) ...[
                 if (filter != BudgetStatusFilter.values.first) const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: _StatusTab(
-                    label: _label(filter),
-                    selected: statusFilter == filter,
-                    onTap: () => onStatusChanged(filter),
-                  ),
+                AppChoiceChip(
+                  label: _label(filter),
+                  selected: statusFilter == filter,
+                  onTap: () => onStatusChanged(filter),
                 ),
               ],
             ],
@@ -89,45 +86,6 @@ class BudgetFilterBar extends StatelessWidget {
           onSelected: onWalletChanged,
         ),
       ],
-    );
-  }
-}
-
-class _StatusTab extends StatelessWidget {
-  const _StatusTab({required this.label, required this.selected, required this.onTap});
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Semantics(
-      button: true,
-      selected: selected,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 44),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-          decoration: BoxDecoration(
-            color: selected ? colors.cardBackground : Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: selected ? [BoxShadow(color: colors.edge, offset: const Offset(0, 2))] : null,
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              maxLines: 1,
-              style: transactionLabelStyle(context, color: selected ? colors.textPrimary : colors.textMuted),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

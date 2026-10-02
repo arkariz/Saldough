@@ -44,6 +44,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.txnMonth => (tr.txnMonthTitle, tr.txnMonthBody),
     SpotlightKey.txnFilter => (tr.txnFilterTitle, tr.txnFilterBody),
     SpotlightKey.txnRow => (tr.txnRowTitle, tr.txnRowBody),
+    SpotlightKey.planTabs => (tr.planTabsTitle, tr.planTabsBody),
     SpotlightKey.budgetSummary => (tr.budgetSummaryTitle, tr.budgetSummaryBody),
     SpotlightKey.budgetFilter => (tr.budgetFilterTitle, tr.budgetFilterBody),
     SpotlightKey.budgetTemplates => (tr.budgetTemplatesTitle, tr.budgetTemplatesBody),

@@ -3,6 +3,7 @@ library;
 
 export 'app_button.dart';
 export 'app_card.dart';
+export 'app_choice_chip.dart';
 export 'app_form_fields.dart';
 export 'app_hard_card.dart';
 export 'app_hero_card.dart';
@@ -14,6 +15,7 @@ export 'app_section_label.dart';
 export 'app_segmented.dart';
 export 'app_segmented_progress_bar.dart';
 export 'app_skeleton.dart';
+export 'app_sub_tabs.dart';
 export 'app_tappable.dart';
 export 'category_icon.dart';
 export 'confirm_delete_dialog.dart';

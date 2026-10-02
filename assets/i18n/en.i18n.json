@@ -20,7 +20,8 @@
     "budgetTabLabel": "Budget",
     "recordAction": "Record",
     "transactionsTabLabel": "History",
-    "walletsTabLabel": "Wallets"
+    "walletsTabLabel": "Wallets",
+    "planTabLabel": "Plan"
   },
   "record": {
     "incomeAction": "Record Income",
@@ -689,7 +690,9 @@
     "freelanceReceiveTitle": "Money actually arrives",
     "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled.",
     "homeVoiceTitle": "Record by voice",
-    "homeVoiceBody": "Tap, say one transaction, then check the form before recording it."
+    "homeVoiceBody": "Tap, say one transaction, then check the form before recording it.",
+    "planTabsTitle": "Plan",
+    "planTabsBody": "Budgets and recurring transactions live here. Tap to switch."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -933,5 +936,8 @@
       "arisan": "Arisan",
       "savings": "Savings"
     }
+  },
+  "plan": {
+    "recurringSegmentLabel": "Recurring"
   }
 }

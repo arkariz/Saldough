@@ -76,7 +76,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
-| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 14 | 3 | Berjalan sejak 2 Okt 2026 -- ADR-034 disetujui pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
+| 14 — Rencana dan rutin, R1 ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 14 | 4 | Berjalan sejak 2 Okt 2026 -- ADR-034 disetujui pemilik; R1a T-14.1–14.9, R1b T-14.10–14.14 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2391,7 +2391,7 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       = kemunculan berikutnya yang belum lewat) dipasang di keadaan kosong
       segmen Rutin pada T-14.5. Belum: chip mengisi dari transaksi riwayat
       yang mirip (J1 langkah 2), menunggu pencocokan T-14.7.
-- [ ] **T-14.4** Tab Rencana: `AppSubTabs` (`core/presentation/widgets/`),
+- [x] **T-14.4** Tab Rencana: `AppSubTabs` (`core/presentation/widgets/`),
       label `appShell.planTabLabel` (Rencana/Plan), `PlanPage` dengan segmen
       Anggaran (`BudgetListPage` tanpa app bar; penyaring status jadi chip,
       KT-L2) dan Rutin; shell bisa dibuka ke tab + segmen; tur `planTabs`.
@@ -2401,6 +2401,11 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji `app_shell_page_test.dart` dan uji tur diperbarui, uji
       widget sub-tab 360dp, uji batas impor.
       Memenuhi FR-PLN-001.
+      Selesai 2 Okt 2026: `PlanPage` menerima isi segmen dari shell (fitur
+      `plan` tidak mengimpor `budget`/`recurring`); langkah tur `planTabs`
+      jadi langkah pertama tur Anggaran supaya dua tur tidak berebut;
+      penyaring status jadi `AppChoiceChip`. Membuka tab + segmen dari luar
+      shell (notifikasi) menyusul di T-14.8.
 - [ ] **T-14.5** Segmen Rutin dan rincian rutin: kartu utama "Sisa rutin
       keluar", chip jenis, kelompok Menunggu/Bulan ini/Nanti/Dijeda/Selesai,
       baris dengan kolom tanggal; rincian (riwayat tercatat, berikutnya +

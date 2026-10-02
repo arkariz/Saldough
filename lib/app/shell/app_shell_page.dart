@@ -19,7 +19,9 @@ import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
+import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
@@ -31,7 +33,7 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:state_management/state_management.dart';
 
-/// Shell navigasi Saldough 2.0 — empat tab (Beranda, Anggaran, Transaksi,
+/// Shell navigasi Saldough 2.0 — empat tab (Beranda, Rencana, Transaksi,
 /// Dompet) di navigasi bawah, dan dua tombol mengambang bertumpuk di kanan
 /// bawah: CATAT (besar) dan catat pakai suara (kecil, di atasnya). Dipasang
 /// di rute `/home` (T-2.3, cutover T-3.4).
@@ -67,8 +69,13 @@ class _AppShellPageState extends State<AppShellPage> {
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
 
+  /// Segmen tab Rencana yang tampil (T-14.4). Awal sesi Anggaran (R1a;
+  /// Bulan ini menyusul di R1b), sesudah itu segmen terakhir selama shell
+  /// hidup (KT-L4). Tidak disimpan.
+  PlanSegment _planSegment = PlanSegment.budget;
+
   static const _homeTabIndex = 0;
-  static const _budgetTabIndex = 1;
+  static const _planTabIndex = 1;
   static const _transactionsTabIndex = 2;
   static const _walletsTabIndex = 3;
 
@@ -102,27 +109,41 @@ class _AppShellPageState extends State<AppShellPage> {
     // tanpa sinyal (anggaran, ringkasan freelance) dan penulis di luar
     // aplikasi ini.
     if (tabIndex == _walletsTabIndex) context.read<WalletBloc>().add(const WalletRefreshed());
-    if (tabIndex == _budgetTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
+    if (tabIndex == _planTabIndex) context.read<BudgetBloc>().add(const BudgetRefreshed());
     if (tabIndex == _homeTabIndex) context.read<HomeBloc>().add(const HomeRefreshed());
     setState(() => _activeTab = tabIndex);
+  }
+
+  /// Membuka tab Rencana pada [segment] (PLAN_TAB_LAYOUT §3.3: tautan dari
+  /// tempat lain membuka segmen yang tepat).
+  void _showPlan(BuildContext context, PlanSegment segment) {
+    setState(() => _planSegment = segment);
+    _onDestinationSelected(context, _planTabIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     final parentContainer = ScopeProvider.of(context);
-    // Empat tujuan nyata di `IndexedStack`, urutan Beranda, Anggaran,
+    // Empat tujuan nyata di `IndexedStack`, urutan Beranda, Rencana,
     // Transaksi, Dompet. Dibangun dengan context DI BAWAH seluruh
     // `BlocProvider` (lihat `Builder` di bawah), karena callback Beranda dan
     // `_onDestinationSelected` membaca bloc-bloc itu.
     List<Widget> tabsFor(BuildContext context) => [
       HomePage(
         onRecord: () => _openRecord(context),
-        onShowBudgets: () => _onDestinationSelected(context, _budgetTabIndex),
+        onShowBudgets: () => _showPlan(context, PlanSegment.budget),
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
         notice: CaptureInboxBanner(container: parentContainer),
       ),
-      const BudgetListPage(),
+      PlanPage(
+        selected: _planSegment,
+        onChanged: (segment) => setState(() => _planSegment = segment),
+        segments: const {
+          PlanSegment.budget: BudgetListPage(embedded: true),
+          PlanSegment.recurring: RecurringPage(),
+        },
+      ),
       const TransactionListPage(),
       const WalletListPage(),
     ];
@@ -177,7 +198,7 @@ class _AppShellPageState extends State<AppShellPage> {
                                         ),
                                         NavigationDestination(
                                           icon: const AppIcon(IconKey.budget),
-                                          label: t.appShell.budgetTabLabel,
+                                          label: t.appShell.planTabLabel,
                                         ),
                                         NavigationDestination(
                                           icon: const AppIcon(IconKey.transactions),

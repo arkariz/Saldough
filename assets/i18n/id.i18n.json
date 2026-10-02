@@ -701,7 +701,7 @@
     "homeForecastTitle": "Perkiraan saldo",
     "homeForecastBody": "Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.",
     "homePendingTitle": "Menunggu dicatat",
-    "homePendingBody": "Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.",
+    "homePendingBody": "Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.",
     "recordRepeatTitle": "Ulangi",
     "recordRepeatBody": "Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.",
     "recurringStartersTitle": "Mulai cepat",
@@ -709,7 +709,7 @@
     "recurringSummaryTitle": "Sisa rutin keluar",
     "recurringSummaryBody": "Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya.",
     "recurringPendingTitle": "Menunggu dicatat",
-    "recurringPendingBody": "Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.",
+    "recurringPendingBody": "Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.",
     "recurringAddTitle": "Tambah rutin",
     "recurringAddBody": "Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi."
   },

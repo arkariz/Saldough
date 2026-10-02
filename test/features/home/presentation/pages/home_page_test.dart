@@ -498,6 +498,8 @@ void main() {
     testWidgets('Rutin kosong: sub-tab, chip pembuka, lalu tambah; tidak diulang', (tester) async {
       tallViewport(tester);
       await seedWallet();
+      // Tur Anggaran (segmen yang dilewati) tidak menghalangi.
+      await tutorials.markStepsSeen([SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates]);
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.planTabLabel);
       await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
@@ -512,9 +514,25 @@ void main() {
       await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
       await tester.pumpAndSettle();
       expect(find.text(t.tour.recurringStartersTitle), findsNothing);
-      // Ringkasan dan baris menunggu menyusul begitu ada rutin.
-      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
-      expect(progress.hasCompleted(TourId.recurring), isFalse);
+
+      // Ringkasan menyusul begitu ada rutin.
+      final now = DateTime.now();
+      await container<RecurringRuleRepository>().saveRule(
+        RecurringRule(
+          id: 'listrik',
+          kind: RecurringKind.expense,
+          amount: 15000000,
+          walletId: 'bca',
+          note: 'Listrik',
+          schedule: RecurringSchedule(
+            frequency: RecurringFrequency.monthly,
+            anchorDate: DateTime(now.year, now.month - 1, now.day),
+          ),
+        ),
+      );
+      container<RecurringChanges>().notifyChanged();
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.recurringSummaryTitle), findsOneWidget);
     });
 
     testWidgets('Rincian anggaran: pos pertama lalu tombol catatnya (TR-BUDGET-DETAIL, T-9.8)', (tester) async {

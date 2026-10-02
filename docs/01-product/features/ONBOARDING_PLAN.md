@@ -144,7 +144,7 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 | `home.budget` | `HomeBudgetCard` | Sisa anggaran aktif | Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya. | Ada anggaran aktif |
 | `home.freelance` | `HomeFreelanceCard` | Ringkasan freelance | Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima. | Ada data freelance *(ditambah 28 Sep 2026)* |
 | `home.forecast` | Baris perkiraan saldo (`PlanForecastRow`) | Perkiraan saldo | Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana. | Ada rutin *(2 Okt 2026)* |
-| `home.pending` | Kartu Menunggu dicatat (`RecurringPendingCard`) | Menunggu dicatat | Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati. | Ada kemunculan menunggu *(2 Okt 2026)* |
+| `home.pending` | Kartu Menunggu dicatat (`RecurringPendingCard`) | Menunggu dicatat | Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati. | Ada kemunculan menunggu *(2 Okt 2026)* |
 | `home.recent` | Kepala "Transaksi terbaru" | Transaksi terbaru | Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan. | Ada transaksi *(ditambah 28 Sep 2026)* |
 
 **TR-CATAT — Alur CATAT** *(bergantung bentuk UX-1, KO-5)*
@@ -176,7 +176,9 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 
 Kartu Beranda yang dimuat sendiri (`home.forecast`, `home.pending`) memasang
 `TourTrigger` TR-HOME-nya sendiri, supaya disorot saat pertama tampil tanpa
-menunggu Beranda dibangun ulang.
+menunggu Beranda dibangun ulang. `RecurringPendingCard` juga dipakai di
+Rencana › Bulan ini, jadi sorotannya opsional (`spotlight:`) dan hanya diisi di
+slot Beranda: satu kunci spotlight hanya boleh punya satu target.
 
 **TR-PLAN-MONTH — Rencana › Bulan ini** dan **TR-RECURRING — Rencana › Rutin**
 *(ditambah 2 Okt 2026, Fase 14)*
@@ -191,7 +193,7 @@ per langkah, ia hanya disorot di segmen yang pertama dibuka.
 | `plan.forecast` | `BalanceForecastCard` | Saldo dompet ≈ | Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya. | Ada rencana |
 | `recurring.starters` | `RecurringStarterChips` | Mulai cepat | Pilih yang paling sering, mis. gaji atau listrik. Formulirnya terisi, tinggal sesuaikan. | Belum ada rutin |
 | `recurring.summary` | `RecurringSummaryCard` | Sisa rutin keluar | Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya. | Ada rutin |
-| `recurring.pending` | `RecurringPendingTile` pertama | Menunggu dicatat | Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini. | Ada kemunculan menunggu |
+| `recurring.pending` | `RecurringPendingTile` pertama | Menunggu dicatat | Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini. | Ada kemunculan menunggu |
 | `recurring.add` | Tombol Tambah rutin | Tambah rutin | Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi. | Selalu |
 
 **TR-BUDGET — Anggaran**

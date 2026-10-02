@@ -768,7 +768,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeForecastTitle => 'Balance forecast';
 	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
 	@override String get homePendingTitle => 'Waiting to record';
-	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, tap the row to edit first, or Skip.';
+	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
 	@override String get recordRepeatTitle => 'Repeat';
 	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.';
 	@override String get recurringStartersTitle => 'Quick start';
@@ -776,7 +776,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get recurringSummaryTitle => 'Recurring still to go out';
 	@override String get recurringSummaryBody => 'Recurring bills not yet recorded this month — money that already has somewhere to go.';
 	@override String get recurringPendingTitle => 'Waiting to record';
-	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, tap the row to edit first, or Skip this one.';
+	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.';
 	@override String get recurringAddTitle => 'Add recurring';
 	@override String get recurringAddBody => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.';
 }
@@ -2031,7 +2031,7 @@ extension on TranslationsEn {
 			'tour.homeForecastTitle' => 'Balance forecast',
 			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
 			'tour.homePendingTitle' => 'Waiting to record',
-			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, tap the row to edit first, or Skip.',
+			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
 			'tour.recordRepeatTitle' => 'Repeat',
 			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.',
 			'tour.recurringStartersTitle' => 'Quick start',
@@ -2039,7 +2039,7 @@ extension on TranslationsEn {
 			'tour.recurringSummaryTitle' => 'Recurring still to go out',
 			'tour.recurringSummaryBody' => 'Recurring bills not yet recorded this month — money that already has somewhere to go.',
 			'tour.recurringPendingTitle' => 'Waiting to record',
-			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, tap the row to edit first, or Skip this one.',
+			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.',
 			'tour.recurringAddTitle' => 'Add recurring',
 			'tour.recurringAddBody' => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.',
 			'info.menuTooltip' => 'Info and tours',

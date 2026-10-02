@@ -103,13 +103,17 @@ Widget? recordAllButton(BuildContext context, List<RecurringEntry> pending) {
 /// [container] akar (pola `CaptureInboxBanner`).
 class RecurringPendingCard extends StatelessWidget {
   /// Membuat [RecurringPendingCard].
-  const RecurringPendingCard({required this.container, required this.onShowAll, super.key});
+  const RecurringPendingCard({required this.container, required this.onShowAll, this.spotlight, super.key});
 
   /// Kontainer akar.
   final GetIt container;
 
   /// Membuka segmen Rutin.
   final VoidCallback onShowAll;
+
+  /// Tur dan langkah yang menyorot kartu ini, atau `null`. Hanya untuk satu
+  /// tempat pemakaian (Beranda): kunci spotlight hanya boleh satu target.
+  final ({TourId tour, SpotlightKey key})? spotlight;
 
   static const _maxShown = 3;
 
@@ -130,33 +134,33 @@ class RecurringPendingCard extends StatelessWidget {
                   final pending = pendingEntries(state);
                   if (pending.isEmpty) return const SizedBox.shrink();
                   final recordAll = recordAllButton(context, pending);
-                  // Muncul belakangan dari Beranda: picu tur Beranda lagi agar
-                  // kartu ini disorot sekali saat pertama tampil.
-                  return TourTrigger(
-                    tour: TourId.home,
-                    ready: true,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.md),
-                      child: SpotlightTarget(
-                        spotlightKey: SpotlightKey.homePending,
-                        child: AppHardCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              AppSectionLabel('${t.recurring.pendingCardTitle} (${pending.length})'),
-                              for (final entry in pending.take(_maxShown))
-                                RecurringPendingTile(entry: entry, state: state),
-                              ?recordAll,
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(onPressed: onShowAll, child: Text(t.recurring.seeAllAction)),
-                              ),
-                            ],
-                          ),
+                  final card = Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.md),
+                    child: SpotlightTarget(
+                      spotlightKey: spotlight?.key,
+                      child: AppHardCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AppSectionLabel('${t.recurring.pendingCardTitle} (${pending.length})'),
+                            for (final entry in pending.take(_maxShown))
+                              RecurringPendingTile(entry: entry, state: state),
+                            ?recordAll,
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(onPressed: onShowAll, child: Text(t.recurring.seeAllAction)),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   );
+                  // Kartu ini dimuat sesudah layarnya: picu turnya sendiri
+                  // agar disorot sekali saat pertama tampil.
+                  return switch (spotlight) {
+                    final spotlight? => TourTrigger(tour: spotlight.tour, ready: true, child: card),
+                    null => card,
+                  };
                 },
               ),
             ),

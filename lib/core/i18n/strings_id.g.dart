@@ -1988,8 +1988,8 @@ class Translations$tour$id {
 	/// id: 'Menunggu dicatat'
 	String get homePendingTitle => 'Menunggu dicatat';
 
-	/// id: 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.'
-	String get homePendingBody => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.';
+	/// id: 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.'
+	String get homePendingBody => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.';
 
 	/// id: 'Ulangi'
 	String get recordRepeatTitle => 'Ulangi';
@@ -2012,8 +2012,8 @@ class Translations$tour$id {
 	/// id: 'Menunggu dicatat'
 	String get recurringPendingTitle => 'Menunggu dicatat';
 
-	/// id: 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.'
-	String get recurringPendingBody => 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.';
+	/// id: 'Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.'
+	String get recurringPendingBody => 'Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.';
 
 	/// id: 'Tambah rutin'
 	String get recurringAddTitle => 'Tambah rutin';
@@ -4093,7 +4093,7 @@ extension on Translations {
 			'tour.homeForecastTitle' => 'Perkiraan saldo',
 			'tour.homeForecastBody' => 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.',
 			'tour.homePendingTitle' => 'Menunggu dicatat',
-			'tour.homePendingBody' => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.',
+			'tour.homePendingBody' => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.',
 			'tour.recordRepeatTitle' => 'Ulangi',
 			'tour.recordRepeatBody' => 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.',
 			'tour.recurringStartersTitle' => 'Mulai cepat',
@@ -4101,7 +4101,7 @@ extension on Translations {
 			'tour.recurringSummaryTitle' => 'Sisa rutin keluar',
 			'tour.recurringSummaryBody' => 'Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya.',
 			'tour.recurringPendingTitle' => 'Menunggu dicatat',
-			'tour.recurringPendingBody' => 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.',
+			'tour.recurringPendingBody' => 'Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.',
 			'tour.recurringAddTitle' => 'Tambah rutin',
 			'tour.recurringAddBody' => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.',
 			'info.menuTooltip' => 'Info dan tur',

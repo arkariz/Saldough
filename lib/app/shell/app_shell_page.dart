@@ -8,6 +8,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
@@ -140,6 +141,7 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
         notice: CaptureInboxBanner(container: parentContainer),
         pendingRecurring: RecurringPendingCard(
+          spotlight: (tour: TourId.home, key: SpotlightKey.homePending),
           container: parentContainer,
           onShowAll: () => _showPlan(context, PlanSegment.recurring),
         ),

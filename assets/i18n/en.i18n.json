@@ -701,7 +701,7 @@
     "homeForecastTitle": "Balance forecast",
     "homeForecastBody": "Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.",
     "homePendingTitle": "Waiting to record",
-    "homePendingBody": "Recurring bills and income that are due. Record in one tap, tap the row to edit first, or Skip.",
+    "homePendingBody": "Recurring bills and income that are due. Record in one tap, edit first, or Skip.",
     "recordRepeatTitle": "Repeat",
     "recordRepeatBody": "For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.",
     "recurringStartersTitle": "Quick start",
@@ -709,7 +709,7 @@
     "recurringSummaryTitle": "Recurring still to go out",
     "recurringSummaryBody": "Recurring bills not yet recorded this month — money that already has somewhere to go.",
     "recurringPendingTitle": "Waiting to record",
-    "recurringPendingBody": "Occurrences that are due. Record in one tap, tap the row to edit first, or Skip this one.",
+    "recurringPendingBody": "Occurrences that are due. Record in one tap, edit first, or Skip this one.",
     "recurringAddTitle": "Add recurring",
     "recurringAddBody": "You can also use Repeat in RECORD, or Make Recurring in a transaction's details."
   },

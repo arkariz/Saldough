@@ -254,7 +254,9 @@ terhadapnya.
 - Investasi, pelacakan utang, laporan tahunan, analitik lanjutan, dan
   akuntansi.
 - Multi-mata-uang, akun bersama, sinkronisasi antar perangkat.
-- Transaksi berulang otomatis.
+- Transaksi berulang yang **dicatat otomatis tanpa ditinjau**. Transaksi
+  rutin yang dijadwalkan dan ditinjau masuk cakupan sesudah MVP lewat
+  Fase 14 (§7.8, [ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)).
 - Pemindaian struk, ekspor-impor data, dan asisten keuangan berbasis AI.
 
 **Template freelance** ([FR-FRL-006](#75-freelance)) **deprecated** sejak 26 Sep
@@ -668,6 +670,122 @@ Keputusan rinci di ADR-032.
 - [ ] Nominal hanya diambil dari angka yang tertulis di notifikasi, bukan
       saldo; pencatatan inti tetap penuh tanpa internet.
 
+### 7.8 Rutin dan Rencana (sesudah MVP, ditambahkan 2 Okt 2026)
+
+Kebutuhan ini lahir dari permintaan pemilik 2 Okt 2026. Keputusannya di
+[ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md); perilaku dan rumusnya di
+[RECURRING_AND_FORECAST.md](features/RECURRING_AND_FORECAST.md), tata letaknya
+di [PLAN_TAB_LAYOUT.md](features/PLAN_TAB_LAYOUT.md). Prefiks `FR-RUT-`
+dipakai karena `FR-REC-` sudah berarti alur CATAT. Rilis R1a dan R1b ada di
+Fase 14; R2 dan R3 di antrean.
+
+**FR-RUT-001 — Membuat transaksi rutin (R1a)**
+
+- [ ] Pemasukan, pengeluaran, dan transfer bisa dijadikan rutin dari baris
+      **Ulangi** di formulir CATAT, atau dari **Jadikan Rutin** di rincian
+      transaksi. Tidak ada formulir rutin terpisah (aturan 8).
+- [ ] Jadwal: tiap minggu, bulan, atau tahun dengan selang N. Berakhir: tidak
+      pernah, sampai tanggal, atau setelah N kali (cicilan menampilkan k/N).
+- [ ] Nominal tetap atau kira-kira. Cara bayar (autodebet atau bayar sendiri)
+      ditanyakan untuk pengeluaran dan transfer, boleh dikosongkan.
+- [ ] Tanggal hari ini atau lampau → "Catat & Jadwalkan" (transaksi ini menjadi
+      kemunculan pertama). Tanggal masa depan → "Simpan Jadwal" (tidak ada
+      transaksi yang dibuat).
+- [ ] Chip pembuka lokal (Gaji, Kos/Sewa, Listrik, Internet, BPJS, Cicilan,
+      Paylater, Langganan, Kirim ke orang tua, Arisan, Tabungan) membuka
+      CATAT mode jadwal yang terisi.
+- [ ] Membuat atau mengubah rutin tidak pernah mengubah saldo dompet mana pun.
+
+**FR-RUT-002 — Kemunculan yang menunggu dicatat (R1a)**
+
+- [ ] Kemunculan yang sudah tiba tampil di kartu **Menunggu dicatat** di
+      Beranda dan di segmen Rutin, dengan tanggal transaksi bawaan = tanggal
+      kemunculan.
+- [ ] Nominal tetap: **Catat** satu ketuk dengan snackbar Batalkan; nominal
+      kira-kira: Catat membuka CATAT dengan nominal terfokus.
+- [ ] **Lewati** satu kemunculan tanpa mengubah rutinnya; **Catat semua** untuk
+      beberapa kemunculan bernominal tetap.
+- [ ] Satu kemunculan menghasilkan paling banyak satu transaksi. Kemunculan
+      lama yang belum diurus dikelompokkan sebagai terlewat, bukan ditumpuk.
+
+**FR-RUT-003 — Pencocokan dengan transaksi dari jalur lain (R1a)**
+
+- [ ] Transaksi dari catat dari notifikasi yang cocok persis dengan satu
+      kemunculan (jenis, dompet, nominal, tanggal ±3 hari, satu kandidat)
+      ditautkan otomatis, tampil di log "Tercocok otomatis" 7 hari, dan bisa
+      dilepas.
+- [ ] Draf kotak masuk notifikasi yang cocok diberi label rutinnya dan
+      dilengkapi kategori dan catatannya.
+- [ ] Kecocokan yang ragu (dua kandidat, nominal atau dompet beda) selalu
+      ditanyakan, tidak ditautkan otomatis.
+
+**FR-RUT-004 — Pengingat (R1a)**
+
+- [ ] Notifikasi lokal H−1 (bisa diatur) untuk rutin yang dibayar sendiri, dan
+      satu notifikasi pada hari jatuh tempo untuk yang menunggu.
+- [ ] Notifikasi rutin bernominal tetap punya aksi **Catat** yang membuka
+      aplikasi lalu mencatat satu ketuk dengan Batalkan.
+- [ ] Pengingat bisa dimatikan per rutin dan untuk seluruh aplikasi; izin
+      notifikasi diminta saat pengingat pertama kali dinyalakan.
+- [ ] Teks memakai kosakata mencatat ("jatuh tempo", "Catat"), bukan "Bayar".
+
+**FR-RUT-005 — Mengubah, menjeda, mengakhiri, menghapus (R1a)**
+
+- [ ] Perubahan nominal, dompet, atau jadwal berlaku ke kemunculan berikutnya;
+      transaksi yang sudah tercatat tidak berubah.
+- [ ] Rutin bisa dijeda dan dilanjutkan; rutin N kali berakhir sendiri dan
+      pindah ke kelompok Selesai.
+- [ ] Menghapus rutin tidak menghapus transaksinya.
+
+**FR-PLN-001 — Tab Rencana (R1a: Anggaran + Rutin; R1b: + Bulan ini)**
+
+- [ ] Tab Anggaran menjadi **Rencana** (en: Plan) dengan sub-tab yang hanya
+      berpindah lewat ketukan: Bulan ini, Anggaran, Rutin.
+- [ ] Segmen Anggaran berisi layar Anggaran sebelumnya; penyaring statusnya
+      berupa chip.
+- [ ] Segmen Rutin mengelompokkan Menunggu, Bulan ini, Nanti, Dijeda/Selesai,
+      dengan chip jenis dan total langganan per bulan dan per tahun.
+- [ ] Beranda dan notifikasi bisa membuka tab Rencana langsung ke segmen yang
+      tepat.
+
+**FR-PLN-002 — Uang nganggur bulan ini (R1b)**
+
+- [ ] Menampilkan uang nganggur: pemasukan terencana dikurangi tagihan rutin
+      dan anggaran, lalu dikurangi belanja di luar rencana yang sudah tercatat.
+      Angka besar sama dengan jumlah baris di bawahnya.
+- [ ] Transfer, termasuk ke Tabungan, tidak mengurangi uang nganggur.
+- [ ] Uang nganggur tidak pernah disebut saldo, dan tampil di kartu yang
+      terpisah dari saldo dompet.
+
+**FR-PLN-003 — Perkiraan saldo bulan berjalan (R1b)**
+
+- [ ] Menampilkan perkiraan saldo akhir bulan dan saldo **paling tipis**
+      beserta tanggalnya, sebagai angka tertulis, bukan hanya di grafik.
+- [ ] Perkiraan memasukkan rutin, sisa anggaran (dibagi rata ke sisa hari), dan
+      rata-rata belanja di luar rencana bila riwayat sudah sebulan penuh
+      (bisa dimatikan); pos dengan rutin tertaut tidak dihitung ganda.
+- [ ] Semua angka perkiraan berawalan `≈` dan bisa dibuka rinciannya.
+
+**FR-PLN-004 — Bulan keuangan bisa diatur (R1b)**
+
+- [ ] Pengguna memilih tanggal awal bulan keuangan 1–28 (bawaan 1), misalnya
+      tanggal gajian.
+- [ ] Berlaku untuk Rencana dan kartu bulan baru; arus bulan berjalan di
+      Beranda tetap bulan kalender (FR-HOME-001).
+
+**FR-PLN-005 — Perkiraan bulan ke depan (R2)**
+
+- [ ] Bulan berjalan + 2 bulan secara bawaan (maksimum 12), per dompet atau
+      seluruh dompet, dengan peringatan "siapkan dana" bila dompet diperkirakan
+      kurang sebelum autodebet.
+
+**FR-BUD-008 — Anggaran rutin (R2)**
+
+- [ ] Sakelar **Ulangi tiap periode** di formulir anggaran; periode baru lahir
+      sendiri dengan pos yang sama (template berjadwal, ADR-034 §3.9).
+- [ ] Mengubah anggaran rutin menawarkan "hanya periode ini" atau "periode ini
+      dan berikutnya"; pos baru bawaannya hanya periode ini.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan
@@ -767,9 +885,15 @@ bawah, dengan FAB kecil "Catat pakai suara" di atasnya (revisi 30 Sep 2026,
 T-11.5; sebelumnya CATAT adalah slot tengah dari lima):
 
 ```
-Beranda | Anggaran | Riwayat | Dompet          [suara]
+Beranda | Rencana | Riwayat | Dompet           [suara]
                                                 [CATAT]
 ```
+
+Tab ke-2 bernama **Rencana** (id) / **Plan** (en) sejak keputusan 2 Okt 2026
+(ADR-034, mulai Fase 14), menggantikan tab Anggaran. Isinya tiga segmen:
+Bulan ini, Anggaran, dan Rutin. Di sana berlaku satu aturan bahasa tambahan:
+**kata "saldo" hanya untuk isi dompet.** Uang nganggur adalah arus satu
+bulan, bukan saldo, dan tidak pernah tampil di kartu yang sama dengan saldo.
 
 Tab riwayat transaksi bernama **Riwayat** (id) / **History** (en) sejak 29
 September 2026, karena "Transactions" terbungkus di layar 360dp. Kata
@@ -829,7 +953,8 @@ maupun warnanya sekaligus — bukan warna saja.
 
 - Kartu kredit sebagai dompet bersaldo negatif, beserta pencatatan pembayaran
   tagihannya sebagai transfer.
-- Transaksi berulang untuk langganan bulanan.
+- ~~Transaksi berulang untuk langganan bulanan.~~ Dijadwalkan di Fase 14
+  sebagai transaksi rutin, tab Rencana, uang nganggur, dan perkiraan (§7.8).
 - Laporan bulanan dan tahunan beserta grafiknya.
 - Sinkronisasi antar perangkat.
 - Impor mutasi rekening.

@@ -32,6 +32,9 @@ bank mana pun. Kosakata antarmuka harus mencerminkan itu.
 | Catat Pengeluaran | Kirim Uang | Aplikasi tidak punya kemampuan mengirim apa pun |
 | Pengeluaran tercatat | Pembayaran terkirim | Yang tersimpan adalah catatan, bukan perintah bayar |
 | Transfer tercatat — Dari, Ke, Jumlah | Transfer Successful | Judul rincian transfer menyatakan rekaman, bukan hasil operasi |
+| Kos jatuh tempo besok · Catat | Bayar kos sekarang | Pengingat rutin menyebut kejadiannya; pembayarannya terjadi di luar aplikasi |
+| Tercatat sesuai jadwal | Dibayar otomatis, Auto-debit berhasil | Rutin hanya mencatat; autodebet dijalankan bank, bukan aplikasi |
+| Uang nganggur | Saldo bebas, Sisa saldo | Kata "saldo" khusus untuk isi dompet; uang nganggur adalah arus satu bulan |
 
 ## Dompet dan transaksi
 
@@ -113,6 +116,38 @@ Sebuah anggaran terikat pada **satu** dompet, dan hanya transaksi yang keluar
 dari dompet itu yang menambah `spent` — pengeluaran dicocokkan lewat `walletId`,
 transfer lewat `fromWalletId`. Konsekuensinya dicatat terbuka sebagai risiko di
 [ADR-011](../02-architecture/adr/0011-model-domain-dompet-transaksi-anggaran.md).
+
+## Rencana dan rutin
+
+Istilah di bagian ini ditambahkan 2 Okt 2026 bersama tab Rencana
+([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)). Seluruhnya rencana atau hitungan: tidak ada yang
+mengubah saldo kecuali transaksi yang benar-benar dicatat.
+
+| Nama Indonesia | Nama kode | Arti |
+|---|---|---|
+| Rencana | `PlanPage`, tab ke-2 | Tab berisi tiga segmen: Bulan ini, Anggaran, Rutin. Menggantikan tab Anggaran. |
+| Transaksi rutin, rutin | `RecurringRule` | Rencana pemasukan, pengeluaran, atau transfer yang berulang menurut jadwal. Bukan transaksi. |
+| Jadwal | `RecurrenceSchedule` | Tiap minggu, bulan, atau tahun dengan selang N dan tanggal patokan. |
+| Kemunculan | `occurrence` (turunan) | Satu tanggal dari jadwal, misalnya "Kos, 1 Nov". Dihitung, tidak disimpan. |
+| Menunggu dicatat | status turunan | Kemunculan yang sudah tiba dan belum dicatat atau dilewati. |
+| Tercatat | `recurrence` pada transaksi | Kemunculan yang sudah punya transaksi tertaut. |
+| Tercocok | `linkedBy: auto` | Kemunculan yang ditautkan otomatis ke transaksi dari jalur lain, misalnya catat dari notifikasi. |
+| Dilewati | `skippedDates` | Kemunculan yang sengaja ditandai tidak terjadi. |
+| Terlewat | status turunan | Kemunculan lama yang belum diurus, sementara kemunculan sesudahnya sudah tiba. |
+| Nominal tetap / kira-kira | `amountMode` | Kira-kira berarti nominal dikonfirmasi tiap kali dicatat. |
+| Cara bayar | `paymentMode` | Autodebet (terjadi sendiri di bank) atau bayar sendiri. Menentukan jenis pengingat. |
+| Pengingat | notifikasi lokal | Notifikasi H−n dan hari jatuh tempo; aksi Catat membuka aplikasi. |
+| Bulan keuangan | preferensi `financial_month_start` | Bulan yang dimulai pada tanggal pilihan pengguna (1–28), misalnya tanggal gajian. Hanya untuk Rencana. |
+| Uang nganggur | `monthPlan` (turunan) | Pemasukan terencana bulan itu dikurangi tagihan rutin dan anggaran, lalu dikurangi belanja di luar rencana yang sudah tercatat. **Bukan saldo.** |
+| Di luar rencana | turunan | Pengeluaran yang tidak tertaut pos anggaran dan bukan dari rutin. |
+| Saldo dompet (perkiraan) | `projectCashflow` (turunan) | Perkiraan isi dompet per hari sampai akhir bulan, selalu ditulis dengan `≈`. |
+| Paling tipis | turunan | Perkiraan saldo terkecil dalam rentang yang dilihat, beserta tanggalnya. |
+| Anggaran rutin | `BudgetTemplate.schedule` | Template anggaran yang punya jadwal, sehingga anggaran periode baru lahir sendiri (R2). |
+
+**Selesai** kini punya arti ketiga: rutin yang sudah berakhir, misalnya
+cicilan 12 dari 12 tercatat. Di antarmuka ia hanya dipakai sebagai nama
+kelompok di segmen Rutin ("Selesai (1)"), tidak pernah sebagai status
+tunggal tanpa konteks, supaya tidak tertukar dengan status pos atau anggaran.
 
 ## Freelance
 

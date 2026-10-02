@@ -1,8 +1,10 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/plan/di/plan_scope.dart';
@@ -40,28 +42,36 @@ class PlanForecastRow extends StatelessWidget {
                 final low = projection.lowest;
                 if (low == null) return const SizedBox.shrink();
                 final colors = context.appColors;
-                return Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.md),
-                  child: AppTappable(
-                    label: t.plan.balanceTitle,
-                    onTap: onTap,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            t.plan.forecastRow(
-                              date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
-                              amount: AppMoneyFormatter.format(projection.endBalance),
-                              low: AppMoneyFormatter.format(low.balance),
-                              lowDate: CycleMonthFormatter.formatDayMonth(low.date),
+                // Muncul belakangan dari Beranda: picu tur Beranda lagi.
+                return TourTrigger(
+                  tour: TourId.home,
+                  ready: true,
+                  child: SpotlightTarget(
+                    spotlightKey: SpotlightKey.homeForecast,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
+                      child: AppTappable(
+                        label: t.plan.balanceTitle,
+                        onTap: onTap,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                t.plan.forecastRow(
+                                  date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
+                                  amount: AppMoneyFormatter.format(projection.endBalance),
+                                  low: AppMoneyFormatter.format(low.balance),
+                                  lowDate: CycleMonthFormatter.formatDayMonth(low.date),
+                                ),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: low.balance < 0 ? colors.overBudget : colors.textMuted,
+                                ),
+                              ),
                             ),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: low.balance < 0 ? colors.overBudget : colors.textMuted,
-                            ),
-                          ),
+                            const AppIcon(IconKey.chevronRight, size: 18),
+                          ],
                         ),
-                        const AppIcon(IconKey.chevronRight, size: 18),
-                      ],
+                      ),
                     ),
                   ),
                 );

@@ -189,7 +189,12 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       onBack: () => Navigator.of(context).pop(),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.incomeAction),
+          : repeatSubmitLabel(
+              repeat: _repeat,
+              date: _date,
+              scheduleOnly: widget.scheduleOnly,
+              plain: t.record.incomeAction,
+            ),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (!editing && widget.prefill == null && widget.draft != null) RecordDraftCard(draft: widget.draft!),
@@ -238,15 +243,18 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         if (!editing && widget.occurrence == null)
-          RecordRepeatField(
-            value: _repeat,
-            date: _date,
-            kind: TransactionKind.income,
-            locked: widget.repeatLocked,
-            onChanged: (repeat) => setState(() {
-              _repeat = repeat;
-              if (repeat == null) _date = dateWithoutRepeat(_date);
-            }),
+          SpotlightTarget(
+            spotlightKey: SpotlightKey.recordRepeat,
+            child: RecordRepeatField(
+              value: _repeat,
+              date: _date,
+              kind: TransactionKind.income,
+              locked: widget.repeatLocked,
+              onChanged: (repeat) => setState(() {
+                _repeat = repeat;
+                if (repeat == null) _date = dateWithoutRepeat(_date);
+              }),
+            ),
           ),
         RecordNoteField(
           controller: _noteController,

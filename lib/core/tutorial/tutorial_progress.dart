@@ -19,6 +19,9 @@ enum TourId {
   /// Segmen Bulan ini tab Rencana.
   planMonth,
 
+  /// Segmen Rutin tab Rencana.
+  recurring,
+
   /// Segmen Anggaran tab Rencana.
   budget,
 
@@ -38,6 +41,10 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     SpotlightKey.homeBalance,
     SpotlightKey.homeRecord,
     SpotlightKey.homeVoice,
+    // Kartu di Beranda dari Rencana; muncul belakangan (sesudah rutin
+    // pertama), jadi disorot sendiri saat pertama tampil.
+    SpotlightKey.homeForecast,
+    SpotlightKey.homePending,
     SpotlightKey.homeCashFlow,
     SpotlightKey.homeBudget,
     SpotlightKey.homeFreelance,
@@ -51,13 +58,26 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     SpotlightKey.recordAmount,
     SpotlightKey.recordWallet,
     SpotlightKey.recordBudgetItem,
+    SpotlightKey.recordRepeat,
   ],
   TourId.wallet: [SpotlightKey.walletSummary, SpotlightKey.walletCard, SpotlightKey.walletAdd],
   TourId.transaction: [SpotlightKey.txnMonth, SpotlightKey.txnFilter, SpotlightKey.txnRow],
-  // Sub-tab Rencana disorot lebih dulu: segmen Anggaran adalah segmen
-  // pertama yang dibuka tab Rencana (R1a), dan satu tur per layar.
+  // Sub-tab Rencana ikut di tiap segmen: segmen mana pun yang dibuka lebih
+  // dulu, sub-tab disorot sekali (progres per langkah).
   TourId.planMonth: [SpotlightKey.planTabs, SpotlightKey.planUnplanned, SpotlightKey.planForecast],
-  TourId.budget: [SpotlightKey.planTabs, SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates],
+  TourId.recurring: [
+    SpotlightKey.planTabs,
+    SpotlightKey.recurringStarters,
+    SpotlightKey.recurringSummary,
+    SpotlightKey.recurringPending,
+    SpotlightKey.recurringAdd,
+  ],
+  TourId.budget: [
+    SpotlightKey.planTabs,
+    SpotlightKey.budgetSummary,
+    SpotlightKey.budgetFilter,
+    SpotlightKey.budgetTemplates,
+  ],
   TourId.budgetDetail: [SpotlightKey.budgetDetailItem, SpotlightKey.budgetDetailRecord],
   TourId.freelance: [SpotlightKey.freelanceProject],
   TourId.freelanceProject: [SpotlightKey.freelanceWorklog, SpotlightKey.freelanceReceive],

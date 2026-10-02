@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
@@ -36,6 +37,7 @@ class RecurringSummaryCard extends StatelessWidget {
       ],
     );
     return AppHeroCard(
+      tour: TourId.recurring,
       icon: IconKey.budget,
       label: t.recurring.remainingTitle(month: monthLabel),
       child: Column(

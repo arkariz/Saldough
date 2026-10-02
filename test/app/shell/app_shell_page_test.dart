@@ -480,20 +480,23 @@ void main() {
     Finder step(int current, int total, String title, String body) =>
         find.bySemanticsLabel(t.tour.stepSemantics(current: current, total: total, title: title, body: body));
 
-    testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dan dompet; berikutnya tidak', (tester) async {
+    testWidgets('pembukaan CATAT pertama menyorot pengalih, nominal, dompet, dan Ulangi; berikutnya tidak', (tester) async {
       await openShellWithTours(tester);
 
       await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
       // Tanpa pos anggaran yang ditawarkan, langkah pos dilewati.
-      expect(step(1, 3, t.tour.recordKindTitle, t.tour.recordKindBody), findsOneWidget);
+      expect(step(1, 4, t.tour.recordKindTitle, t.tour.recordKindBody), findsOneWidget);
       await tester.tap(find.text(t.tour.nextAction));
       await tester.pumpAndSettle();
-      expect(step(2, 3, t.tour.recordAmountTitle, t.tour.recordAmountBody), findsOneWidget);
+      expect(step(2, 4, t.tour.recordAmountTitle, t.tour.recordAmountBody), findsOneWidget);
       await tester.tap(find.text(t.tour.nextAction));
       await tester.pumpAndSettle();
-      expect(step(3, 3, t.tour.recordWalletTitle, t.tour.recordWalletBody), findsOneWidget);
+      expect(step(3, 4, t.tour.recordWalletTitle, t.tour.recordWalletBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(step(4, 4, t.tour.recordRepeatTitle, t.tour.recordRepeatBody), findsOneWidget);
       await tester.tap(find.text(t.tour.doneAction));
       await tester.pumpAndSettle();
 
@@ -512,7 +515,12 @@ void main() {
     });
 
     testWidgets('memilih Masuk pertama kali menyorot jalur Freelance di atas nominal', (tester) async {
-      await tutorials.markStepsSeen([SpotlightKey.recordKind, SpotlightKey.recordAmount, SpotlightKey.recordWallet]);
+      await tutorials.markStepsSeen([
+        SpotlightKey.recordKind,
+        SpotlightKey.recordAmount,
+        SpotlightKey.recordWallet,
+        SpotlightKey.recordRepeat,
+      ]);
       await openShellWithTours(tester);
       await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();

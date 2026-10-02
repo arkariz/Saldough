@@ -12,6 +12,12 @@ enum SpotlightKey {
   /// Tombol catat pakai suara (FAB di atas CATAT, ADR-027).
   homeVoice,
 
+  /// Baris perkiraan saldo di Beranda (T-14.13).
+  homeForecast,
+
+  /// Kartu Menunggu dicatat di Beranda (T-14.6).
+  homePending,
+
   /// Arus bulan ini di Beranda.
   homeCashFlow,
 
@@ -39,6 +45,9 @@ enum SpotlightKey {
   /// Pemilih pos anggaran CATAT.
   recordBudgetItem,
 
+  /// Bidang Ulangi CATAT (T-14.3).
+  recordRepeat,
+
   /// Kartu ringkasan tab Dompet.
   walletSummary,
 
@@ -65,6 +74,18 @@ enum SpotlightKey {
 
   /// Kartu Saldo dompet ≈ di segmen Bulan ini (T-14.13).
   planForecast,
+
+  /// Chip pembuka di keadaan kosong segmen Rutin.
+  recurringStarters,
+
+  /// Kartu "Sisa rutin keluar" segmen Rutin.
+  recurringSummary,
+
+  /// Baris menunggu dicatat pertama di segmen Rutin.
+  recurringPending,
+
+  /// Tombol tambah rutin.
+  recurringAdd,
 
   /// Kartu ringkasan tab Anggaran.
   budgetSummary,

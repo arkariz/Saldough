@@ -189,8 +189,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
-  String? get _validBudgetItemId =>
-      _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
+  String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
   Wallet? get _wallet {
     for (final wallet in widget.wallets) {
@@ -226,15 +225,19 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
       kind: TransactionKind.expense,
       title: editing ? t.transaction.editSheetTitle : t.record.expenseAction,
       isEditing: editing,
-      onBack: () =>
-          Navigator.of(context).pop(),
+      onBack: () => Navigator.of(context).pop(),
       notice: RecordNotice(
         title: t.record.expenseRuleTitle,
         body: t.record.expenseRuleBody,
       ),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.expenseAction),
+          : repeatSubmitLabel(
+              repeat: _repeat,
+              date: _date,
+              scheduleOnly: widget.scheduleOnly,
+              plain: t.record.expenseAction,
+            ),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)
@@ -286,15 +289,18 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         if (!editing && widget.occurrence == null)
-          RecordRepeatField(
-            value: _repeat,
-            date: _date,
-            kind: TransactionKind.expense,
-            locked: widget.repeatLocked,
-            onChanged: (repeat) => setState(() {
-              _repeat = repeat;
-              if (repeat == null) _date = dateWithoutRepeat(_date);
-            }),
+          SpotlightTarget(
+            spotlightKey: SpotlightKey.recordRepeat,
+            child: RecordRepeatField(
+              value: _repeat,
+              date: _date,
+              kind: TransactionKind.expense,
+              locked: widget.repeatLocked,
+              onChanged: (repeat) => setState(() {
+                _repeat = repeat;
+                if (repeat == null) _date = dateWithoutRepeat(_date);
+              }),
+            ),
           ),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),

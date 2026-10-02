@@ -2,8 +2,10 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
@@ -128,20 +130,30 @@ class RecurringPendingCard extends StatelessWidget {
                   final pending = pendingEntries(state);
                   if (pending.isEmpty) return const SizedBox.shrink();
                   final recordAll = recordAllButton(context, pending);
-                  return Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.md),
-                    child: AppHardCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          AppSectionLabel('${t.recurring.pendingCardTitle} (${pending.length})'),
-                          for (final entry in pending.take(_maxShown)) RecurringPendingTile(entry: entry, state: state),
-                          ?recordAll,
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(onPressed: onShowAll, child: Text(t.recurring.seeAllAction)),
+                  // Muncul belakangan dari Beranda: picu tur Beranda lagi agar
+                  // kartu ini disorot sekali saat pertama tampil.
+                  return TourTrigger(
+                    tour: TourId.home,
+                    ready: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
+                      child: SpotlightTarget(
+                        spotlightKey: SpotlightKey.homePending,
+                        child: AppHardCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              AppSectionLabel('${t.recurring.pendingCardTitle} (${pending.length})'),
+                              for (final entry in pending.take(_maxShown))
+                                RecurringPendingTile(entry: entry, state: state),
+                              ?recordAll,
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(onPressed: onShowAll, child: Text(t.recurring.seeAllAction)),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   );

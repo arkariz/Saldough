@@ -2,8 +2,10 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
@@ -79,24 +81,34 @@ class RecurringSegmentView extends StatelessWidget {
         }
         const padding = EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.fabClearance);
         if (state.rules.isEmpty) {
-          return ListView(
-            padding: padding,
-            children: [
-              AppHardCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(t.recurring.emptyTitle, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(t.recurring.emptyBody, style: Theme.of(context).textTheme.bodySmall),
-                    const SizedBox(height: AppSpacing.md),
-                    const RecurringStarterChips(),
-                  ],
+          return TourTrigger(
+            tour: TourId.recurring,
+            ready: true,
+            child: ListView(
+              padding: padding,
+              children: [
+                AppHardCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(t.recurring.emptyTitle, style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(t.recurring.emptyBody, style: Theme.of(context).textTheme.bodySmall),
+                      const SizedBox(height: AppSpacing.md),
+                      const SpotlightTarget(
+                        spotlightKey: SpotlightKey.recurringStarters,
+                        child: RecurringStarterChips(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AppButton(label: t.recurring.addAction, onPressed: () => _add(context)),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.recurringAdd,
+                  child: AppButton(label: t.recurring.addAction, onPressed: () => _add(context)),
+                ),
+              ],
+            ),
           );
         }
 
@@ -121,64 +133,79 @@ class RecurringSegmentView extends StatelessWidget {
             if (filter == null || e.rule.kind == filter) e,
         ];
         final bloc = context.read<RecurringBloc>();
-        return ListView(
-          padding: padding,
-          children: [
-            RecurringSummaryCard(
-              summary: summary,
-              monthLabel: CycleMonthFormatter.formatMonthShort(state.monthStart),
-              subscriptions: subscriptionTotals(state.rules),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  // Tanpa angka hitungan (PLAN_TAB_LAYOUT §4.9).
-                  for (final (kind, label) in [
-                    (null, t.recurring.chipAll),
-                    (RecurringKind.income, t.recurring.chipIncome),
-                    (RecurringKind.expense, t.recurring.chipExpense),
-                    (RecurringKind.transfer, t.recurring.chipTransfer),
-                  ]) ...[
-                    AppChoiceChip(
-                      label: label,
-                      selected: filter == kind,
-                      onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                  ],
-                ],
+        return TourTrigger(
+          tour: TourId.recurring,
+          ready: true,
+          child: ListView(
+            padding: padding,
+            children: [
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recurringSummary,
+                child: RecurringSummaryCard(
+                  summary: summary,
+                  monthLabel: CycleMonthFormatter.formatMonthShort(state.monthStart),
+                  subscriptions: subscriptionTotals(state.rules),
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            if (visible.isEmpty) ...[
-              Text(t.recurring.filteredEmpty),
-              TextButton(
-                onPressed: () => bloc.add(const RecurringKindFilterChanged(null)),
-                child: Text(t.recurring.showAllAction),
-              ),
-            ] else
-              for (final group in RecurringGroup.values)
-                if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.sm),
-                  if (group == RecurringGroup.paused || group == RecurringGroup.ended)
-                    _FoldedGroup(
-                      label: '${_groupLabel(group)} (${rows.length})',
-                      children: [for (final entry in rows) _row(context, state, entry)],
-                    )
-                  else ...[
-                    AppSectionLabel(_groupLabel(group)),
-                    if (group == RecurringGroup.pending) ...[
-                      for (final entry in rows) RecurringPendingTile(entry: entry, state: state),
-                      ?recordAllButton(context, rows),
-                    ] else
-                      for (final entry in rows) _row(context, state, entry),
+              const SizedBox(height: AppSpacing.md),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    // Tanpa angka hitungan (PLAN_TAB_LAYOUT §4.9).
+                    for (final (kind, label) in [
+                      (null, t.recurring.chipAll),
+                      (RecurringKind.income, t.recurring.chipIncome),
+                      (RecurringKind.expense, t.recurring.chipExpense),
+                      (RecurringKind.transfer, t.recurring.chipTransfer),
+                    ]) ...[
+                      AppChoiceChip(
+                        label: label,
+                        selected: filter == kind,
+                        onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                    ],
                   ],
-                ],
-            const SizedBox(height: AppSpacing.md),
-            AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),
-          ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              if (visible.isEmpty) ...[
+                Text(t.recurring.filteredEmpty),
+                TextButton(
+                  onPressed: () => bloc.add(const RecurringKindFilterChanged(null)),
+                  child: Text(t.recurring.showAllAction),
+                ),
+              ] else
+                for (final group in RecurringGroup.values)
+                  if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    if (group == RecurringGroup.paused || group == RecurringGroup.ended)
+                      _FoldedGroup(
+                        label: '${_groupLabel(group)} (${rows.length})',
+                        children: [for (final entry in rows) _row(context, state, entry)],
+                      )
+                    else ...[
+                      AppSectionLabel(_groupLabel(group)),
+                      if (group == RecurringGroup.pending) ...[
+                        // Hanya baris pertama yang disorot.
+                        for (final (i, entry) in rows.indexed)
+                          SpotlightTarget(
+                            spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
+                            child: RecurringPendingTile(entry: entry, state: state),
+                          ),
+                        ?recordAllButton(context, rows),
+                      ] else
+                        for (final entry in rows) _row(context, state, entry),
+                    ],
+                  ],
+              const SizedBox(height: AppSpacing.md),
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recurringAdd,
+                child: AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),
+              ),
+            ],
+          ),
         );
       },
     );

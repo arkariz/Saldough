@@ -760,11 +760,25 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Tap, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
-	@override String get planTabsBody => 'Budgets and recurring transactions live here. Tap to switch.';
+	@override String get planTabsBody => 'This month, budgets, and recurring transactions live here. Tap to switch.';
 	@override String get planUnplannedTitle => 'Unplanned money';
 	@override String get planUnplannedBody => 'This month’s income minus everything already committed.';
 	@override String get planForecastTitle => 'Wallet balance ≈';
 	@override String get planForecastBody => 'Forecast balance to month end, including its lowest point.';
+	@override String get homeForecastTitle => 'Balance forecast';
+	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
+	@override String get homePendingTitle => 'Waiting to record';
+	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, tap the row to edit first, or Skip.';
+	@override String get recordRepeatTitle => 'Repeat';
+	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.';
+	@override String get recurringStartersTitle => 'Quick start';
+	@override String get recurringStartersBody => 'Pick a common one, like salary or electricity. The form is filled in; just adjust it.';
+	@override String get recurringSummaryTitle => 'Recurring still to go out';
+	@override String get recurringSummaryBody => 'Recurring bills not yet recorded this month — money that already has somewhere to go.';
+	@override String get recurringPendingTitle => 'Waiting to record';
+	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, tap the row to edit first, or Skip this one.';
+	@override String get recurringAddTitle => 'Add recurring';
+	@override String get recurringAddBody => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.';
 }
 
 // Path: info
@@ -2009,11 +2023,25 @@ extension on TranslationsEn {
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Tap, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
-			'tour.planTabsBody' => 'Budgets and recurring transactions live here. Tap to switch.',
+			'tour.planTabsBody' => 'This month, budgets, and recurring transactions live here. Tap to switch.',
 			'tour.planUnplannedTitle' => 'Unplanned money',
 			'tour.planUnplannedBody' => 'This month’s income minus everything already committed.',
 			'tour.planForecastTitle' => 'Wallet balance ≈',
 			'tour.planForecastBody' => 'Forecast balance to month end, including its lowest point.',
+			'tour.homeForecastTitle' => 'Balance forecast',
+			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
+			'tour.homePendingTitle' => 'Waiting to record',
+			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, tap the row to edit first, or Skip.',
+			'tour.recordRepeatTitle' => 'Repeat',
+			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.',
+			'tour.recurringStartersTitle' => 'Quick start',
+			'tour.recurringStartersBody' => 'Pick a common one, like salary or electricity. The form is filled in; just adjust it.',
+			'tour.recurringSummaryTitle' => 'Recurring still to go out',
+			'tour.recurringSummaryBody' => 'Recurring bills not yet recorded this month — money that already has somewhere to go.',
+			'tour.recurringPendingTitle' => 'Waiting to record',
+			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, tap the row to edit first, or Skip this one.',
+			'tour.recurringAddTitle' => 'Add recurring',
+			'tour.recurringAddBody' => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2354,6 +2382,8 @@ extension on TranslationsEn {
 			'plan.endOf' => ({required Object date}) => 'End of ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
 			'plan.detailsAction' => 'Details',
+			_ => null,
+		} ?? switch (path) {
 			'plan.todayLabel' => 'today',
 			'plan.approx' => ({required Object amount}) => 'about ${amount}',
 			'plan.detailsTitle' => 'Balance forecast',
@@ -2368,8 +2398,6 @@ extension on TranslationsEn {
 			'plan.unplannedToggle' => 'Count daily spending',
 			'plan.unplannedUnavailable' => 'Needs a full month of history.',
 			'plan.nextTitle' => 'Next',
-			_ => null,
-		} ?? switch (path) {
 			'plan.seeAllRecurring' => 'All in Recurring',
 			'plan.emptyTitle' => 'Plan this month',
 			'plan.emptyBody' => 'Add what comes every month, then see what is truly free.',

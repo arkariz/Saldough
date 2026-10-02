@@ -495,6 +495,28 @@ void main() {
       ]);
     });
 
+    testWidgets('Rutin kosong: sub-tab, chip pembuka, lalu tambah; tidak diulang', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.planTabLabel);
+      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.pumpAndSettle();
+      await walkThrough(tester, [
+        (t.tour.planTabsTitle, t.tour.planTabsBody),
+        (t.tour.recurringStartersTitle, t.tour.recurringStartersBody),
+        (t.tour.recurringAddTitle, t.tour.recurringAddBody),
+      ]);
+
+      await openBudgetSegment(tester);
+      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.recurringStartersTitle), findsNothing);
+      // Ringkasan dan baris menunggu menyusul begitu ada rutin.
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.hasCompleted(TourId.recurring), isFalse);
+    });
+
     testWidgets('Rincian anggaran: pos pertama lalu tombol catatnya (TR-BUDGET-DETAIL, T-9.8)', (tester) async {
       tallViewport(tester);
       await seedFull();

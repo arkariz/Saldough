@@ -182,19 +182,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   /// domain yang tidak berjalan di rilis production.
   bool get _sameWallet => _fromWalletId != null && _fromWalletId == _toWalletId;
 
-  bool get _canSubmit =>
-      _amountSen != null &&
-      _fromWalletId != null &&
-      _toWalletId != null &&
-      !_sameWallet;
+  bool get _canSubmit => _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
 
   List<BudgetItemOption> get _budgetChoices =>
       transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId, _date);
 
   /// Pos terpilih kalau masih sah untuk pasangan dompet asal/tujuan saat
   /// ini, selain itu `null`.
-  String? get _validBudgetItemId =>
-      _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
+  String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
   Wallet? _find(String? id) {
     for (final wallet in widget.wallets) {
@@ -234,15 +229,19 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
       kind: TransactionKind.transfer,
       title: editing ? t.transaction.editSheetTitle : t.record.transferAction,
       isEditing: editing,
-      onBack: () =>
-          Navigator.of(context).pop(),
+      onBack: () => Navigator.of(context).pop(),
       notice: RecordNotice(
         title: t.record.transferNoticeTitle,
         body: t.record.transferNoticeBody,
       ),
       submitLabel: editing
           ? t.transaction.saveChangesAction
-          : repeatSubmitLabel(repeat: _repeat, date: _date, scheduleOnly: widget.scheduleOnly, plain: t.record.transferAction),
+          : repeatSubmitLabel(
+              repeat: _repeat,
+              date: _date,
+              scheduleOnly: widget.scheduleOnly,
+              plain: t.record.transferAction,
+            ),
       onSubmit: _canSubmit ? _submit : null,
       children: [
         if (widget.initial == null && widget.prefill == null && widget.draft != null)
@@ -313,15 +312,18 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         if (!editing && widget.occurrence == null)
-          RecordRepeatField(
-            value: _repeat,
-            date: _date,
-            kind: TransactionKind.transfer,
-            locked: widget.repeatLocked,
-            onChanged: (repeat) => setState(() {
-              _repeat = repeat;
-              if (repeat == null) _date = dateWithoutRepeat(_date);
-            }),
+          SpotlightTarget(
+            spotlightKey: SpotlightKey.recordRepeat,
+            child: RecordRepeatField(
+              value: _repeat,
+              date: _date,
+              kind: TransactionKind.transfer,
+              locked: widget.repeatLocked,
+              onChanged: (repeat) => setState(() {
+                _repeat = repeat;
+                if (repeat == null) _date = dateWithoutRepeat(_date);
+              }),
+            ),
           ),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),

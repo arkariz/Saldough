@@ -1964,8 +1964,8 @@ class Translations$tour$id {
 	/// id: 'Rencana'
 	String get planTabsTitle => 'Rencana';
 
-	/// id: 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.'
-	String get planTabsBody => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.';
+	/// id: 'Bulan ini, anggaran, dan transaksi rutin ada di sini. Ketuk untuk berpindah.'
+	String get planTabsBody => 'Bulan ini, anggaran, dan transaksi rutin ada di sini. Ketuk untuk berpindah.';
 
 	/// id: 'Uang nganggur'
 	String get planUnplannedTitle => 'Uang nganggur';
@@ -1978,6 +1978,48 @@ class Translations$tour$id {
 
 	/// id: 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.'
 	String get planForecastBody => 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.';
+
+	/// id: 'Perkiraan saldo'
+	String get homeForecastTitle => 'Perkiraan saldo';
+
+	/// id: 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.'
+	String get homeForecastBody => 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.';
+
+	/// id: 'Menunggu dicatat'
+	String get homePendingTitle => 'Menunggu dicatat';
+
+	/// id: 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.'
+	String get homePendingBody => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.';
+
+	/// id: 'Ulangi'
+	String get recordRepeatTitle => 'Ulangi';
+
+	/// id: 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.'
+	String get recordRepeatBody => 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.';
+
+	/// id: 'Mulai cepat'
+	String get recurringStartersTitle => 'Mulai cepat';
+
+	/// id: 'Pilih yang paling sering, mis. gaji atau listrik. Formulirnya terisi, tinggal sesuaikan.'
+	String get recurringStartersBody => 'Pilih yang paling sering, mis. gaji atau listrik. Formulirnya terisi, tinggal sesuaikan.';
+
+	/// id: 'Sisa rutin keluar'
+	String get recurringSummaryTitle => 'Sisa rutin keluar';
+
+	/// id: 'Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya.'
+	String get recurringSummaryBody => 'Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya.';
+
+	/// id: 'Menunggu dicatat'
+	String get recurringPendingTitle => 'Menunggu dicatat';
+
+	/// id: 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.'
+	String get recurringPendingBody => 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.';
+
+	/// id: 'Tambah rutin'
+	String get recurringAddTitle => 'Tambah rutin';
+
+	/// id: 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.'
+	String get recurringAddBody => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.';
 }
 
 // Path: info
@@ -4043,11 +4085,25 @@ extension on Translations {
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
 			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
-			'tour.planTabsBody' => 'Anggaran dan transaksi rutin ada di sini. Ketuk untuk berpindah.',
+			'tour.planTabsBody' => 'Bulan ini, anggaran, dan transaksi rutin ada di sini. Ketuk untuk berpindah.',
 			'tour.planUnplannedTitle' => 'Uang nganggur',
 			'tour.planUnplannedBody' => 'Pemasukan bulan ini dikurangi semua yang sudah terikat.',
 			'tour.planForecastTitle' => 'Saldo dompet ≈',
 			'tour.planForecastBody' => 'Perkiraan saldo sampai akhir bulan, termasuk titik paling tipisnya.',
+			'tour.homeForecastTitle' => 'Perkiraan saldo',
+			'tour.homeForecastBody' => 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.',
+			'tour.homePendingTitle' => 'Menunggu dicatat',
+			'tour.homePendingBody' => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati.',
+			'tour.recordRepeatTitle' => 'Ulangi',
+			'tour.recordRepeatBody' => 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.',
+			'tour.recurringStartersTitle' => 'Mulai cepat',
+			'tour.recurringStartersBody' => 'Pilih yang paling sering, mis. gaji atau listrik. Formulirnya terisi, tinggal sesuaikan.',
+			'tour.recurringSummaryTitle' => 'Sisa rutin keluar',
+			'tour.recurringSummaryBody' => 'Tagihan rutin yang belum tercatat bulan ini — uang yang sudah ada tujuannya.',
+			'tour.recurringPendingTitle' => 'Menunggu dicatat',
+			'tour.recurringPendingBody' => 'Kemunculan yang sudah tiba. Catat satu ketuk, ketuk barisnya untuk ubah dulu, atau Lewati bulan ini.',
+			'tour.recurringAddTitle' => 'Tambah rutin',
+			'tour.recurringAddBody' => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4388,6 +4444,8 @@ extension on Translations {
 			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Paling tipis · ${date}',
 			'plan.detailsAction' => 'Rincian',
+			_ => null,
+		} ?? switch (path) {
 			'plan.todayLabel' => 'hari ini',
 			'plan.approx' => ({required Object amount}) => 'kira-kira ${amount}',
 			'plan.detailsTitle' => 'Perkiraan saldo',
@@ -4402,8 +4460,6 @@ extension on Translations {
 			'plan.unplannedToggle' => 'Hitung jajan harian',
 			'plan.unplannedUnavailable' => 'Butuh riwayat sebulan penuh.',
 			'plan.nextTitle' => 'Berikutnya',
-			_ => null,
-		} ?? switch (path) {
 			'plan.seeAllRecurring' => 'Semua di Rutin',
 			'plan.emptyTitle' => 'Rencanakan bulan ini',
 			'plan.emptyBody' => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.',

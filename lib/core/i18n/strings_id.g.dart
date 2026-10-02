@@ -2791,6 +2791,18 @@ class Translations$recurring$id {
 
 	/// id: 'Mencatat $name · $date'
 	String occurrenceNotice({required Object name, required Object date}) => 'Mencatat ${name} · ${date}';
+
+	/// id: 'Cocok dengan rutin $name · $date'
+	String matchLabel({required Object name, required Object date}) => 'Cocok dengan rutin ${name} · ${date}';
+
+	/// id: 'Tercocok dengan rutin'
+	String get linkedTitle => 'Tercocok dengan rutin';
+
+	/// id: 'Lepaskan'
+	String get unlinkAction => 'Lepaskan';
+
+	/// id: 'Tautan dilepas. Kemunculannya kembali menunggu.'
+	String get unlinkedMessage => 'Tautan dilepas. Kemunculannya kembali menunggu.';
 }
 
 // Path: plan
@@ -4124,6 +4136,10 @@ extension on Translations {
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Mencatat ${name} · ${date}',
+			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Cocok dengan rutin ${name} · ${date}',
+			'recurring.linkedTitle' => 'Tercocok dengan rutin',
+			'recurring.unlinkAction' => 'Lepaskan',
+			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		};

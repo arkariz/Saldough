@@ -109,6 +109,10 @@ abstract final class RootModule {
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: container<KeyValueStorage>()),
       )
+      // Log tautan otomatis rutin dari catat notifikasi (ADR-034 §3.4), 7 hari.
+      ..registerLazySingleton<RecurrenceMatchLogRepository>(
+        () => RecurrenceMatchLogRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
       // Milik fitur `budget`, tetapi dibaca juga oleh CATAT dan rincian
       // transaksi lewat port — satu instans di akar (lihat `BudgetScope`).
       ..registerLazySingleton<BudgetRepository>(

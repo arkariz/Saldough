@@ -7,7 +7,9 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/active_capture_inputs.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/services/notification_draft_composer.dart';
+import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -24,10 +26,22 @@ final class CaptureInboxActions {
     required this.currencyCode,
     required this.languageCode,
     this.changes,
+    this.recurringRules,
+    this.matchLog,
+    this.recurringChanges,
   });
 
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
+
+  /// Rutin untuk label "Cocok dengan rutin" (ADR-034 §3.4); `null` = tanpa.
+  final RecurringRuleRepository? recurringRules;
+
+  /// Log tautan otomatis (Lepaskan).
+  final RecurrenceMatchLogRepository? matchLog;
+
+  /// Sinyal rutin berubah.
+  final RecurringChanges? recurringChanges;
 
   /// Penyimpanan.
   final NotificationCaptureStore store;
@@ -87,6 +101,67 @@ final class CaptureInboxActions {
     ]);
     changes?.notify();
     return saved;
+  }
+
+  /// Kemunculan rutin yang cocok dengan draf tiap item [entries] (satu
+  /// kandidat saja), per id item. Nominal kira-kira dan dompet lain tidak
+  /// pernah dicocokkan otomatis; ini hanya saran untuk ditinjau di CATAT.
+  Future<Map<String, OccurrenceMatch>> matchesFor(List<CaptureInboxEntry> entries) async {
+    final repository = recurringRules;
+    if (repository == null || entries.isEmpty) return const {};
+    final rules = (await repository.listRules()).getOrElse((_) => const []);
+    if (rules.isEmpty) return const {};
+    final ledgers = <DateTime, List<Transaction>>{};
+    Future<List<Transaction>> around(DateTime date) async => [
+      for (final offset in const [-1, 0, 1])
+        ...ledgers[DateTime(date.year, date.month + offset)] ??= (await transactionRepository.listTransactionsInMonth(
+          DateTime(date.year, date.month + offset),
+        )).getOrElse((_) => const []),
+    ];
+    final result = <String, OccurrenceMatch>{};
+    for (final entry in entries) {
+      final draft = entry.draft;
+      final amount = draft.amountSen;
+      final walletId = draft.walletId;
+      if (amount == null || walletId == null) continue;
+      final date = draft.date ?? entry.capturedAt;
+      final candidates = occurrenceCandidates(
+        kind: switch (draft.kind) {
+          DraftKind.income => RecurringKind.income,
+          DraftKind.expense => RecurringKind.expense,
+          DraftKind.transfer => RecurringKind.transfer,
+        },
+        walletId: walletId,
+        toWalletId: draft.toWalletId,
+        amount: amount,
+        date: date,
+        rules: rules,
+        transactions: await around(date),
+      );
+      if (candidates.length == 1) result[entry.id] = candidates.single;
+    }
+    return result;
+  }
+
+  /// **Lepaskan** tautan otomatis [entry]: transaksinya tetap, hanya
+  /// `recurrence`-nya dikosongkan (saldo tidak berubah), lalu entri log
+  /// dihapus. Kemunculannya kembali menunggu.
+  Future<Either<Failure, Unit>> unlink(RecurrenceMatchEntry entry) async {
+    final ledger = await transactionRepository.listTransactionsInMonth(entry.transactionDate);
+    switch (ledger) {
+      case Left(:final value):
+        return left(value);
+      case Right(:final value):
+        final transaction = value.where((t) => t.id == entry.transactionId).firstOrNull;
+        if (transaction != null && transaction.recurrence != null) {
+          final saved = await recordTransaction(transaction.withRecurrence(null), previousTransaction: transaction);
+          if (saved.isLeft()) return saved;
+        }
+    }
+    final removed = await matchLog?.remove(entry.transactionId) ?? right(unit);
+    recurringChanges?.notifyChanged();
+    changes?.notify();
+    return removed;
   }
 
   /// Menafsirkan ulang item [id] sesudah pola baru disimpan; drafnya

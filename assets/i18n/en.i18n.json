@@ -1008,7 +1008,11 @@
     "pendingCardTitle": "Waiting to record",
     "unusualAmountNotice": "Usually $usual. Check the amount again.",
     "farDateNotice": "Scheduled for $date. Make sure the date is right.",
-    "occurrenceNotice": "Recording $name · $date"
+    "occurrenceNotice": "Recording $name · $date",
+    "matchLabel": "Matches recurring $name · $date",
+    "linkedTitle": "Matched to recurring",
+    "unlinkAction": "Unlink",
+    "unlinkedMessage": "Unlinked. The occurrence is waiting again."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring"

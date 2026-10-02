@@ -13,6 +13,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -266,6 +267,123 @@ void main() {
     gateway.queue = [];
     await processor()();
     expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
+  });
+
+  group('pencocokan rutin (T-14.7, ADR-034 §3.4)', () {
+    RecurringRule kopi({
+      int amount = 2500000,
+      RecurringAmountMode mode = RecurringAmountMode.fixed,
+      String id = 'kopi',
+    }) => RecurringRule(
+      id: id,
+      kind: RecurringKind.expense,
+      amount: amount,
+      amountMode: mode,
+      walletId: 'bri',
+      note: 'Kopi langganan',
+      categoryId: 'builtin.food',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 29)),
+    );
+
+    ProcessCapturedNotifications matching(RecurringRuleRepository rules, RecurrenceMatchLogRepository log) =>
+        ProcessCapturedNotifications(
+          gateway: gateway,
+          store: store,
+          composer: notificationComposer(),
+          recordTransaction: recordTransaction,
+          walletRepository: wallets,
+          transactionRepository: ledger,
+          categories: () => notificationCategories,
+          currencyCode: () => 'IDR',
+          languageCode: () => 'id',
+          recurringRules: rules,
+          matchLog: log,
+          clock: () => now,
+          newId: () => 'tx${nextId++}',
+        );
+
+    test('cocok persis satu kandidat: tercatat otomatis langsung tertaut dan masuk log; Lepaskan melepasnya', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+      await rules.saveRule(kopi());
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', payment)];
+      await matching(rules, log)();
+
+      final tx = (await ledgerNow()).single;
+      expect(
+        tx.recurrence,
+        RecurrenceLink(ruleId: 'kopi', occurrenceDate: DateTime(2026, 9, 29), linkedBy: RecurrenceLinkedBy.auto),
+      );
+      final entry = (await log.list(now)).getOrElse((_) => []).single;
+      expect(entry.transactionId, tx.id);
+
+      final unlink = CaptureInboxActions(
+        store: store,
+        recordTransaction: recordTransaction,
+        transactionRepository: ledger,
+        composer: notificationComposer(),
+        walletRepository: wallets,
+        categories: () => notificationCategories,
+        currencyCode: () => 'IDR',
+        languageCode: () => 'id',
+        matchLog: log,
+      );
+      await unlink.unlink(entry);
+      expect((await ledgerNow()).single.recurrence, isNull);
+      expect((await log.list(now)).getOrElse((_) => []), isEmpty);
+    });
+
+    test('nominal beda atau rutin kira-kira: tercatat tanpa tautan', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      final log = RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now);
+      await rules.saveRule(kopi(amount: 2000000));
+      await rules.saveRule(kopi(id: 'kira', mode: RecurringAmountMode.estimated, amount: 2400000));
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', payment)];
+      await matching(rules, log)();
+      expect((await ledgerNow()).single.recurrence, isNull);
+      expect((await log.list(now)).getOrElse((_) => []), isEmpty);
+    });
+
+    test('sudah ada transaksi lain yang cocok (dua kandidat): tidak ditautkan otomatis', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi());
+      await recordTransaction(
+        ExpenseTransaction(id: 'manual', date: DateTime(2026, 9, 30), amount: 2500000, note: 'kopi', walletId: 'bri'),
+      );
+      await enable(AutoRecordLevel.whenComplete);
+      gateway.queue = [notif('a', payment)];
+      await matching(rules, RecurrenceMatchLogRepositoryImpl(storage: storage, clock: () => now))();
+      final all = [
+        ...(await ledger.listTransactionsInMonth(DateTime(2026, 9))).getOrElse((_) => []),
+        ...await ledgerNow(),
+      ];
+      expect(all.where((t) => t.recurrence != null), isEmpty);
+    });
+
+    test('draf kotak masuk mendapat saran rutin bila satu kandidat', () async {
+      final rules = RecurringRuleRepositoryImpl(storage: storage);
+      await rules.saveRule(kopi());
+      await enable(AutoRecordLevel.reviewAll);
+      gateway.queue = [notif('a', payment)];
+      await matching(rules, RecurrenceMatchLogRepositoryImpl(storage: storage))();
+      final inbox = (await store.loadInbox()).getOrElse((_) => []);
+      final suggest = CaptureInboxActions(
+        store: store,
+        recordTransaction: recordTransaction,
+        transactionRepository: ledger,
+        composer: notificationComposer(),
+        walletRepository: wallets,
+        categories: () => notificationCategories,
+        currencyCode: () => 'IDR',
+        languageCode: () => 'id',
+        recurringRules: rules,
+      );
+      final matches = await suggest.matchesFor(inbox);
+      expect(matches['a']?.rule.id, 'kopi');
+      expect(matches['a']?.date, DateTime(2026, 9, 29));
+    });
   });
 }
 

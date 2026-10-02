@@ -15,6 +15,7 @@ import 'package:saldough/features/notification_capture/domain/usecases/capture_i
 import 'package:saldough/features/notification_capture/domain/usecases/process_captured_notifications.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -73,6 +74,9 @@ abstract final class NotificationCaptureModule {
           languageCode: () => ActiveLanguage.value.languageCode,
           changes: c<CaptureInboxChanges>(),
           sourceIcons: c.isRegistered<SourceIconRepository>() ? c<SourceIconRepository>() : null,
+          recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
+          matchLog: c.isRegistered<RecurrenceMatchLogRepository>() ? c<RecurrenceMatchLogRepository>() : null,
+          recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
         ),
       )
       ..registerLazySingleton<CaptureInboxActions>(
@@ -86,6 +90,9 @@ abstract final class NotificationCaptureModule {
           currencyCode: () => ActiveCurrency.value.code,
           languageCode: () => ActiveLanguage.value.languageCode,
           changes: c<CaptureInboxChanges>(),
+          recurringRules: c.isRegistered<RecurringRuleRepository>() ? c<RecurringRuleRepository>() : null,
+          matchLog: c.isRegistered<RecurrenceMatchLogRepository>() ? c<RecurrenceMatchLogRepository>() : null,
+          recurringChanges: c.isRegistered<RecurringChanges>() ? c<RecurringChanges>() : null,
         ),
       );
   }

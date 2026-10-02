@@ -12,6 +12,7 @@ import 'package:saldough/features/notification_capture/presentation/pages/notifi
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:state_management/state_management.dart';
 
@@ -22,11 +23,24 @@ class CaptureInboxPage extends StatelessWidget {
   /// Membuat [CaptureInboxPage].
   const CaptureInboxPage({super.key});
 
-  Future<void> _record(BuildContext context, CaptureInboxEntry entry) async {
+  /// Catat lewat CATAT. Bila draf cocok dengan satu kemunculan rutin,
+  /// CATAT terisi kategori dan catatan dari rutin (yang kosong saja) dan
+  /// transaksinya tertaut ke kemunculan itu (ADR-034 §3.4).
+  Future<void> _record(BuildContext context, CaptureInboxEntry entry, OccurrenceMatch? match) async {
     final bloc = context.read<CaptureInboxBloc>();
+    final draft = entry.draft;
     final saved = await context.pushRoute<RecordSheetInput, bool>(
       RecordRouteKeys.sheet,
-      RecordSheetInput(draft: entry.draft),
+      match == null
+          ? RecordSheetInput(draft: draft)
+          : RecordSheetInput(
+              draft: draft.copyWith(
+                categoryId: draft.categoryId == null ? () => match.rule.categoryId : null,
+                note: draft.note.trim().isEmpty ? match.rule.note : null,
+              ),
+              occurrenceRule: match.rule,
+              occurrenceDate: match.date,
+            ),
     );
     if (saved ?? false) bloc.add(CaptureInboxRecorded(entry.id));
   }
@@ -90,7 +104,8 @@ class CaptureInboxPage extends StatelessWidget {
                 for (final entry in state.pending)
                   _PendingCard(
                     entry: entry,
-                    onRecord: () => _record(context, entry),
+                    match: state.matches[entry.id],
+                    onRecord: () => _record(context, entry, state.matches[entry.id]),
                     onDismiss: () => context.read<CaptureInboxBloc>().add(CaptureInboxDismissed(entry.id)),
                     onMakePattern: () => _makePattern(context, entry),
                   ),
@@ -104,6 +119,23 @@ class CaptureInboxPage extends StatelessWidget {
                   ),
                 for (final entry in state.auto)
                   _AutoCard(entry: entry, onReview: () => _review(context, entry), onUndo: () => _undo(context, entry)),
+                if (state.linked.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  AppSectionLabel(t.recurring.linkedTitle, hint: '${state.linked.length}'),
+                  for (final linked in state.linked)
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                      title: Text(linked.ruleName),
+                      subtitle: Text(
+                        '${AppMoneyFormatter.format(linked.amount)} · '
+                        '${CycleMonthFormatter.formatDayMonth(linked.occurrenceDate)}',
+                      ),
+                      trailing: TextButton(
+                        onPressed: () => context.read<CaptureInboxBloc>().add(CaptureInboxUnlinked(linked)),
+                        child: Text(t.recurring.unlinkAction),
+                      ),
+                    ),
+                ],
                 const SizedBox(height: AppSpacing.md),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
@@ -121,12 +153,14 @@ class CaptureInboxPage extends StatelessWidget {
 class _PendingCard extends StatelessWidget {
   const _PendingCard({
     required this.entry,
+    required this.match,
     required this.onRecord,
     required this.onDismiss,
     required this.onMakePattern,
   });
 
   final CaptureInboxEntry entry;
+  final OccurrenceMatch? match;
   final VoidCallback onRecord;
   final VoidCallback onDismiss;
   final VoidCallback onMakePattern;
@@ -177,6 +211,14 @@ class _PendingCard extends StatelessWidget {
                 children: [
                   if (entry.possibleDuplicate)
                     Text(texts.possibleDuplicate, style: textTheme.bodySmall?.copyWith(color: colors.overBudget)),
+                  if (match case final m?)
+                    Text(
+                      t.recurring.matchLabel(
+                        name: m.rule.note,
+                        date: CycleMonthFormatter.formatDayMonth(m.date),
+                      ),
+                      style: textTheme.bodySmall?.copyWith(color: colors.income),
+                    ),
                   if (note.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xs),
                     Text(note, style: textTheme.bodyMedium),

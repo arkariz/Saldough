@@ -14,6 +14,7 @@ import 'package:saldough/features/notification_capture/domain/services/notificat
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
@@ -56,6 +57,9 @@ final class ProcessCapturedNotifications {
     required this.languageCode,
     this.changes,
     this.sourceIcons,
+    this.recurringRules,
+    this.matchLog,
+    this.recurringChanges,
     DateTime Function()? clock,
     String Function()? newId,
   }) : _clock = clock ?? DateTime.now,
@@ -93,6 +97,15 @@ final class ProcessCapturedNotifications {
 
   /// Penyimpanan ikon notifikasi asal (ADR-032 §3.10); `null` = tanpa ikon.
   final SourceIconRepository? sourceIcons;
+
+  /// Rutin untuk tautan otomatis (ADR-034 §3.4); `null` = tanpa pencocokan.
+  final RecurringRuleRepository? recurringRules;
+
+  /// Log tautan otomatis (7 hari, Lepaskan).
+  final RecurrenceMatchLogRepository? matchLog;
+
+  /// Sinyal rutin berubah, sesudah ada yang tertaut.
+  final RecurringChanges? recurringChanges;
 
   final DateTime Function() _clock;
   final String Function() _newId;
@@ -150,6 +163,8 @@ final class ProcessCapturedNotifications {
     final wallets = await loadActiveWallets(walletRepository);
     final patterns = await loadActivePatterns(store, settings);
     final policy = AutoRecordPolicy(settings.autoRecordLevel);
+    final rules = (await recurringRules?.listRules())?.getOrElse((_) => const []) ?? const <RecurringRule>[];
+    var linkedAny = false;
     final ledgers = <String, List<Transaction>>{};
     final recorded = <AutoRecordedEntry>[];
     final queued = <CaptureInboxEntry>[];
@@ -191,7 +206,15 @@ final class ProcessCapturedNotifications {
           _nearbyCapture(draft, notification, inbox: inbox, auto: auto);
 
       if (composed.autoEligible && !duplicate && policy.allows(draft)) {
-        final entry = await _record(draft, notification, source.appLabel, now);
+        final (entry, linked) = await _record(
+          draft,
+          notification,
+          source.appLabel,
+          now,
+          rules: rules,
+          ledger: await _ledgerAround(date, ledgers),
+        );
+        linkedAny |= linked;
         if (entry != null) {
           auto.insert(0, entry);
           // Sudah di buku besar walau lognya gagal tersimpan.
@@ -219,7 +242,23 @@ final class ProcessCapturedNotifications {
     }
 
     await gateway.acknowledge(handled);
+    if (linkedAny) recurringChanges?.notifyChanged(source: this);
     return CaptureProcessResult(recorded: recorded, queued: queued);
+  }
+
+  /// Transaksi bulan [date] serta bulan sebelum dan sesudahnya, untuk
+  /// pencocokan rutin (jendela ±3 hari bisa melintasi bulan).
+  Future<List<Transaction>> _ledgerAround(DateTime date, Map<String, List<Transaction>> ledgers) async {
+    final result = <Transaction>[];
+    for (final offset in const [-1, 0, 1]) {
+      final month = DateTime(date.year, date.month + offset);
+      result.addAll(
+        ledgers[_monthKey(month)] ??= (await transactionRepository.listTransactionsInMonth(
+          month,
+        )).getOrElse((_) => const []),
+      );
+    }
+    return result;
   }
 
   Future<String?> _saveIcon(Uint8List? png) async {
@@ -228,16 +267,48 @@ final class ProcessCapturedNotifications {
     return (await repository.save(png)).fold((_) => null, (id) => id);
   }
 
-  Future<AutoRecordedEntry?> _record(
+  /// Mencatat draf; bila cocok persis dengan tepat satu kemunculan rutin
+  /// dan tidak ada transaksi lain yang juga cocok, transaksinya langsung
+  /// tertaut (`linkedBy: auto`, KT-R11) dan masuk log tautan. Mengembalikan
+  /// entri log otomatis dan apakah ada yang tertaut.
+  Future<(AutoRecordedEntry?, bool)> _record(
+    RecordDraft draft,
+    CapturedNotification notification,
+    String appLabel,
+    DateTime now, {
+    required List<RecurringRule> rules,
+    required List<Transaction> ledger,
+  }) async {
+    var transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
+    if (transaction == null) return (null, false);
+    final match = rules.isEmpty ? null : matchOccurrences(transaction, rules: rules, transactions: ledger);
+    final autoLink = match != null && match.exact && matchCandidates(match.rule, match.date, ledger).isEmpty;
+    if (autoLink) transaction = transaction.withRecurrence(match.link(linkedBy: RecurrenceLinkedBy.auto));
+    final result = await recordTransaction(transaction, source: this);
+    if (result.isLeft()) return (null, false);
+    if (autoLink) {
+      await matchLog?.add(
+        RecurrenceMatchEntry(
+          transactionId: transaction.id,
+          transactionDate: transaction.date,
+          ruleId: match.rule.id,
+          ruleName: match.rule.note,
+          occurrenceDate: match.date,
+          amount: transaction.amount,
+          matchedAt: now,
+        ),
+      );
+    }
+    return (_autoEntry(transaction, draft, notification, appLabel, now), autoLink);
+  }
+
+  AutoRecordedEntry _autoEntry(
+    Transaction transaction,
     RecordDraft draft,
     CapturedNotification notification,
     String appLabel,
     DateTime now,
-  ) async {
-    final transaction = transactionFromDraft(draft, id: _newId(), fallbackDate: notification.postedAt);
-    if (transaction == null) return null;
-    final result = await recordTransaction(transaction, source: this);
-    if (result.isLeft()) return null;
+  ) {
     return AutoRecordedEntry(
       captureId: notification.id,
       transactionId: transaction.id,

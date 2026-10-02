@@ -258,6 +258,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         note: e.note,
         categoryId: e.categoryId,
         walletId: e.walletId,
+        sourceIconId: e.sourceIconId,
         recurrence: link,
       ),
       final ExpenseRecorded e => ExpenseTransaction(
@@ -268,6 +269,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         categoryId: e.categoryId,
         walletId: e.walletId,
         budgetItemId: e.budgetItemId,
+        sourceIconId: e.sourceIconId,
         recurrence: link,
       ),
       final TransferRecorded e => TransferTransaction(
@@ -278,6 +280,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         fromWalletId: e.fromWalletId,
         toWalletId: e.toWalletId,
         budgetItemId: e.budgetItemId,
+        sourceIconId: e.sourceIconId,
         recurrence: link,
       ),
       _ => null,

@@ -3,10 +3,13 @@
 /// CATAT, dan penangkap notifikasi (ADR-034 §3.1).
 library;
 
+export 'data/recurrence_match_log_repository_impl.dart';
 export 'data/recurring_rule_repository_impl.dart';
+export 'domain/occurrence_matching.dart';
 export 'domain/occurrence_recording.dart';
 export 'domain/occurrence_status.dart';
 export 'domain/occurrences.dart';
+export 'domain/recurrence_match_log.dart';
 export 'domain/recurring_changes.dart';
 export 'domain/recurring_overview.dart';
 export 'domain/recurring_pattern.dart';

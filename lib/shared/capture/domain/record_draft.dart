@@ -99,6 +99,7 @@ final class RecordDraft extends Equatable {
     String? Function()? walletId,
     String? Function()? toWalletId,
     String? Function()? categoryId,
+    String? note,
     Set<DraftIssue>? issues,
     String? Function()? sourceIconId,
   }) => RecordDraft(
@@ -107,7 +108,7 @@ final class RecordDraft extends Equatable {
     walletId: walletId == null ? this.walletId : walletId(),
     toWalletId: toWalletId == null ? this.toWalletId : toWalletId(),
     categoryId: categoryId == null ? this.categoryId : categoryId(),
-    note: note,
+    note: note ?? this.note,
     date: date,
     issues: issues ?? this.issues,
     sourceText: sourceText,

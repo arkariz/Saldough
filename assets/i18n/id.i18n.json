@@ -1008,7 +1008,11 @@
     "pendingCardTitle": "Menunggu dicatat",
     "unusualAmountNotice": "Biasanya $usual. Periksa lagi nominalnya.",
     "farDateNotice": "Jadwalnya $date. Pastikan tanggalnya benar.",
-    "occurrenceNotice": "Mencatat $name · $date"
+    "occurrenceNotice": "Mencatat $name · $date",
+    "matchLabel": "Cocok dengan rutin $name · $date",
+    "linkedTitle": "Tercocok dengan rutin",
+    "unlinkAction": "Lepaskan",
+    "unlinkedMessage": "Tautan dilepas. Kemunculannya kembali menunggu."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin"

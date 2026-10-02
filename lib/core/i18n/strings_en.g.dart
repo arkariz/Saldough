@@ -1092,6 +1092,10 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String unusualAmountNotice({required Object usual}) => 'Usually ${usual}. Check the amount again.';
 	@override String farDateNotice({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.';
 	@override String occurrenceNotice({required Object name, required Object date}) => 'Recording ${name} · ${date}';
+	@override String matchLabel({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}';
+	@override String get linkedTitle => 'Matched to recurring';
+	@override String get unlinkAction => 'Unlink';
+	@override String get unlinkedMessage => 'Unlinked. The occurrence is waiting again.';
 }
 
 // Path: plan
@@ -2232,6 +2236,10 @@ extension on TranslationsEn {
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',
+			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}',
+			'recurring.linkedTitle' => 'Matched to recurring',
+			'recurring.unlinkAction' => 'Unlink',
+			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		};

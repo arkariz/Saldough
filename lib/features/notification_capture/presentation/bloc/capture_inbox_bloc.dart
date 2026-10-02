@@ -5,13 +5,21 @@ import 'package:saldough/features/notification_capture/domain/entities/capture_i
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/domain/usecases/capture_inbox_actions.dart';
+import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
 /// State kotak masuk Catat dari notifikasi.
 final class CaptureInboxState extends UiState<CaptureInboxState> {
   /// Membuat [CaptureInboxState].
-  const CaptureInboxState({this.isLoading = true, this.pending = const [], this.auto = const [], super.effect});
+  const CaptureInboxState({
+    this.isLoading = true,
+    this.pending = const [],
+    this.auto = const [],
+    this.matches = const {},
+    this.linked = const [],
+    super.effect,
+  });
 
   /// Sedang memuat.
   final bool isLoading;
@@ -22,21 +30,31 @@ final class CaptureInboxState extends UiState<CaptureInboxState> {
   /// Tercatat otomatis, terbaru dulu.
   final List<AutoRecordedEntry> auto;
 
+  /// Kemunculan rutin yang cocok dengan item [pending], per id item.
+  final Map<String, OccurrenceMatch> matches;
+
+  /// Tautan otomatis ke rutin (7 hari), terbaru dulu.
+  final List<RecurrenceMatchEntry> linked;
+
   @override
   CaptureInboxState copyWith({
     bool? isLoading,
     List<CaptureInboxEntry>? pending,
     List<AutoRecordedEntry>? auto,
+    Map<String, OccurrenceMatch>? matches,
+    List<RecurrenceMatchEntry>? linked,
     UiEffect? effect,
   }) => CaptureInboxState(
     isLoading: isLoading ?? this.isLoading,
     pending: pending ?? this.pending,
     auto: auto ?? this.auto,
+    matches: matches ?? this.matches,
+    linked: linked ?? this.linked,
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [isLoading, pending, auto];
+  List<Object?> get props => [isLoading, pending, auto, matches, linked];
 }
 
 /// Event [CaptureInboxBloc].
@@ -84,6 +102,15 @@ final class CaptureInboxUndone extends CaptureInboxEvent {
   final AutoRecordedEntry entry;
 }
 
+/// Lepaskan tautan otomatis ke rutin.
+final class CaptureInboxUnlinked extends CaptureInboxEvent {
+  /// Membuat [CaptureInboxUnlinked].
+  const CaptureInboxUnlinked(this.entry);
+
+  /// Entri log tautan.
+  final RecurrenceMatchEntry entry;
+}
+
 /// Bloc kotak masuk (ADR-032 §3.6).
 final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> {
   /// Membuat [CaptureInboxBloc].
@@ -98,6 +125,7 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
     on<CaptureInboxDismissed>(_onDismissed);
     on<CaptureInboxRecorded>(_onRecorded);
     on<CaptureInboxUndone>(_onUndone);
+    on<CaptureInboxUnlinked>(_onUnlinked);
     _changes = changes.stream.listen((_) => add(const CaptureInboxRefreshed()));
   }
 
@@ -109,7 +137,11 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   Future<void> _reload(Emitter<CaptureInboxState> emit, {UiEffect? effect}) async {
     final pending = (await _store.loadInbox()).getOrElse((_) => const []);
     final auto = (await _store.loadAutoRecorded()).getOrElse((_) => const []);
-    emit(state.copyWith(isLoading: false, pending: pending, auto: auto, effect: effect));
+    final matches = await _actions.matchesFor(pending);
+    final linked = (await _actions.matchLog?.list(DateTime.now()))?.getOrElse((_) => const []) ?? const [];
+    emit(
+      state.copyWith(isLoading: false, pending: pending, auto: auto, matches: matches, linked: linked, effect: effect),
+    );
   }
 
   Future<void> _onDismissed(CaptureInboxDismissed event, Emitter<CaptureInboxState> emit) async {
@@ -128,6 +160,16 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
       emit,
       effect: result.isRight()
           ? ShowSnackBarEffect(message: t.notificationCapture.undone, severity: .success)
+          : ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error),
+    );
+  }
+
+  Future<void> _onUnlinked(CaptureInboxUnlinked event, Emitter<CaptureInboxState> emit) async {
+    final result = await _actions.unlink(event.entry);
+    await _reload(
+      emit,
+      effect: result.isRight()
+          ? ShowSnackBarEffect(message: t.recurring.unlinkedMessage, severity: .success)
           : ShowSnackBarEffect(message: t.common.genericErrorMessage, severity: .error),
     );
   }

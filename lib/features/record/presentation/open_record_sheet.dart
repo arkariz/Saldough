@@ -92,7 +92,9 @@ Future<bool> openRecordSheet(
   final recordDraft = switch ((makeRecurringFrom, editRule)) {
     (final Transaction source, _) => draftFromTransaction(source),
     (_, final RecurringRule rule) => draftFromRule(rule),
-    _ when occurrenceRule != null && occurrenceDate != null => draftFromRule(occurrenceRule, date: occurrenceDate),
+    // Kotak masuk notifikasi membawa drafnya sendiri; kartu Menunggu tidak.
+    _ when occurrenceRule != null && occurrenceDate != null =>
+      draft ?? draftFromRule(occurrenceRule, date: occurrenceDate),
     _ => draft,
   };
   final occurrence = occurrenceRule != null && occurrenceDate != null
@@ -213,7 +215,7 @@ Future<bool> openRecordSheet(
         _ when occurrence != null => RecordOccurrenceRecorded(
           rule: occurrence.rule,
           occurrenceDate: occurrence.date,
-          recorded: result,
+          recorded: withSourceIcon(result, recordDraft?.sourceIconId),
         ),
         _ => withSourceIcon(result, recordDraft?.sourceIconId),
       },

@@ -282,6 +282,19 @@ perbaikan penangkap notifikasi (ADR-032 §10).
 **Selesai kalau:** `features/record` hanya berisi CATAT, `RecordBloc` tidak
 memegang dependensi suara, dan uji batas impor menjaga ketiga fitur.
 
+## Fase 14: Bahasa visual baru
+
+Pemilik menilai tampilan berantakan dan sulit dibaca (3 Okt 2026). Bahasa
+visual "buku catatan dengan aksen piksel" menggantikan ADR-015/016/020
+([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md));
+desainnya di artefak design system dan prototipe, salinannya di
+`docs/03-design/`. Urutan: token dan tema → komponen → navigasi dan Catat →
+layar → teks.
+
+**Selesai kalau:** setiap layar cocok dengan prototipe padanannya, tidak ada
+lagi bingkai tebal, monospace, atau Space Grotesk/Space Mono, kontras teks
+lolos di kedua tema, dan seluruh uji lulus.
+
 ## Ketergantungan antar fase
 
 ```

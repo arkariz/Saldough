@@ -75,10 +75,11 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
+| 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| Antrean (`B-n`, belum dijadwalkan) | 10 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| Antrean (`B-n`, belum dijadwalkan) | 15 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -2238,6 +2239,114 @@ dan seluruh uji lulus.
       Baseline: 39.746 baris Dart di `lib/` tanpa `.g.dart`, 95 berkas uji,
       911 uji lulus, `flutter analyze` tanpa error/peringatan.
 
+## Fase 14: Bahasa visual baru
+
+Pemilik menilai tampilan berantakan, sulit dibaca, dan tata letaknya jelek
+(3 Okt 2026). Desain baru disetujui lewat sampel bertahap:
+[ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md).
+**Setiap tugas fase ini memakai skill `tanukonomy-ui`**: baca
+[design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) (README,
+`flutter.md`, komponen terkait) dan layar padanannya di
+[prototipe](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ) sebelum
+menulis widget; tanpa alat Artifact, pakai salinan di `docs/03-design/`.
+Perilaku, rute, dan bloc tidak berubah kecuali disebut. Satu commit per
+tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
+
+- [ ] **T-14.1** Token dan tema (3 Okt 2026, ADR-034 §3.3).
+      `AppColors` dengan nama dan nilai token design system (terang dan
+      gelap, termasuk `cat-*`, `brand-deep`), `ColorScheme`, `TextTheme`
+      Plus Jakarta Sans, `AppNumberStyles` (angka tabular), `AppSpacing`/
+      `AppRadius`/`AppSize`/`pixel-step`. Hapus Space Grotesk dan Space Mono
+      dari aset dan `pubspec.yaml`. `PixelTheme` tetap tema global
+      (ADR-031), isinya diganti.
+      ⚠ Uji kontras `test/core/theme/app_colors_extension_test.dart` ikut
+      diganti ke pasangan baru; jangan longgarkan ambangnya.
+      Verifikasi: uji kontras 4,5:1 semua pasangan teks di kedua tema, uji
+      tema memakai Plus Jakarta Sans, `flutter analyze` dan seluruh uji.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.2** Ikon (ADR-034 §3.3). Tambah `material_symbols_icons`;
+      `AppIconTile` dua varian (ikon piksel 32px di tile `surface-2`,
+      Material Symbols di tile `cat-*`); pemetaan kategori dan dompet persis
+      README design system bagian Ikon; `IconKey` disesuaikan.
+      ⚠ Ikon piksel hanya 32px atau 64px dengan `FilterQuality.none`;
+      kategori tanpa ikon piksel memakai cadangan (B-22), jangan menggambar.
+      Verifikasi: uji widget pemetaan kategori/dompet ke ikon.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.3** Komponen dasar (design system bagian Komponen).
+      `PixelCornerBorder`, `AppCard`, `AppButton` (primary, secondary, text,
+      danger, kecil), `AppChip`, `AppSegmentedControl`, `AppBadge`,
+      `AppProgressBar` (kotak 6px + penanda waktu), `AppListRow`,
+      `AppSectionHeader`, `AppBanner`, tema snackbar, dialog, sheet,
+      skeleton, `AppHeroCard`, `AppMoneyText` sesuai aturan tanda dan warna.
+      Hapus `AppHardCard`, `kind_surfaces`, animasi piksel antarmuka
+      (pemetaan di `flutter.md`).
+      Verifikasi: uji widget tiap komponen (varian, keadaan nonaktif,
+      semantik), uji golden opsional.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.4** Navigasi bawah: 4 tab + tombol Catat di tengah (kotak
+      bersudut piksel, bayangan piksel); tekan lama membuka Catat pakai
+      suara; FAB suara dihapus, mikrofon pindah ke bar atas sheet Catat.
+      ⚠ Tur spotlight (ADR-021) menyorot FAB lama: pindahkan
+      `SpotlightTarget` ke tombol baru.
+      Verifikasi: uji widget navigasi (pindah tab, ketuk dan tekan lama
+      Catat), uji tur.
+      Memenuhi FR-REC-001.
+- [ ] **T-14.5** Sheet Catat sesuai prototipe `Catat.dc.html`: kontrol
+      segmen jenis, keypad, pemilih kategori petak ikon, baris Dompet/
+      Tanggal/Catatan/Anggaran, "Saldo jadi …" di baris dompet, tombol
+      Simpan menyebut jenisnya. Banner "Aturan Kas" dan ringkasan ganda
+      dihapus.
+      ⚠ Jangan mengubah `RecordBloc` selain yang dibutuhkan tampilan;
+      validasi (dompet sama, periode anggaran) tetap.
+      Verifikasi: uji widget alur pengeluaran, pemasukan, transfer; uji
+      bloc lama tetap lulus.
+      Memenuhi FR-REC-001, FR-REC-002.
+- [ ] **T-14.6** Beranda sesuai `Main.dc.html`: kartu saldo terakota
+      dengan tanuki, banner kotak masuk, kartu bulan berjalan (pemasukan,
+      pengeluaran, selisih), kartu anggaran dengan penanda waktu, transaksi
+      terbaru, kartu Freelance sebagai pintu masuk Freelance, tombol
+      sembunyikan nominal (usulan baru yang disetujui bersama desain).
+      ⚠ Sembunyikan nominal perlu setelan tersimpan (Akun) dan berlaku di
+      semua nominal; tanyakan pemilik bila cakupannya ragu.
+      Verifikasi: uji widget isi dan keadaan tersembunyi.
+      Di luar PRD: sembunyikan nominal dan pintu Freelance (ADR-034 §4).
+- [ ] **T-14.7** Riwayat sesuai `Riwayat.dc.html`: pemilih bulan,
+      ringkasan, chip jenis, banner kotak masuk, grup per hari dengan
+      selisih harian, baris dengan ikon piksel.
+      Verifikasi: uji widget penyaring dan pengelompokan.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.8** Anggaran dan rincian anggaran sesuai `Anggaran.dc.html`
+      dan `RincianAnggaran.dc.html`: kontrol segmen status, sisa total,
+      kartu dengan status Aman/Hampir habis/Lewat, daftar pos dengan bar
+      tipis, sheet tindakan pos, tombol Catat pengeluaran menempel di bawah.
+      Verifikasi: uji widget status bar dan sheet pos.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.9** Dompet sesuai `Dompet.dc.html`: total, bar sebaran saldo
+      per dompet (usulan baru), daftar dengan ikon dompet piksel dan persen,
+      dompet nonaktif.
+      Verifikasi: uji widget sebaran (persen dibulatkan, jumlah 100).
+      Di luar PRD: bar sebaran (ADR-034 §4).
+- [ ] **T-14.10** Halaman turunan: Freelance, Kotak masuk notifikasi,
+      Catat pakai suara, Akun, formulir dompet/anggaran/pos/proyek, rincian
+      transaksi dan dompet, kategori, template anggaran — semua memakai
+      komponen T-14.3. Layar tanpa padanan di prototipe disusun dari
+      komponen yang ada dan dilaporkan.
+      Verifikasi: uji widget yang ada tetap lulus setelah disesuaikan.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.11** Keadaan kosong, memuat, dan galat di semua layar
+      (komponen EmptyState, Skeleton, Banner); Beranda pertama kali
+      sesuai `BerandaKosong.dc.html` (daftar tiga langkah).
+      Verifikasi: uji widget keadaan per layar.
+      Di luar PRD: perombakan tampilan (ADR-034).
+- [ ] **T-14.12** Sapuan teks i18n id/en mengikuti glosarium `writing.md`
+      (dompet, transaksi, transfer, selisih; hapus kas, log, mutasi, netto,
+      inventaris, label langkah "Catat // Transaksi", kapital semua), lalu
+      render ulang tangkapan situs (B-4) dan perbarui tur.
+      ⚠ Kunci i18n tetap; yang berubah teksnya. `slang` dijalankan ulang.
+      Verifikasi: uji i18n (kunci lengkap id/en), pencarian kata terlarang
+      di `assets/i18n/` kosong.
+      Di luar PRD: perombakan tampilan (ADR-034).
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -2252,7 +2361,6 @@ menambah dan memindahkannya ada di
 | B-4 | Selaraskan klaim situs `tanukonomy-web` (repo terpisah, `docs/TASKS.md` di sana) dengan aplikasi: **akun opsional dan analitik/Crashlytics sudah ada** (ADR-023, dikonfirmasi pemilik 29 Sep 2026), jadi klaim lama "tanpa akun, tanpa analitik" harus diganti; tambahkan pilihan mata uang (ADR-025). Cocokkan dengan kebijakan privasi dan formulir Keamanan Data yang sudah diisi di Play Console. Render ulang tangkapan layar (label Riwayat/History). | agen | T-8.4, T-8.6, T-8.8 |
 | B-5 | Verifikasi di perangkat/emulator yang belum tercatat: keyboard desimal untuk mata uang berdesimal, layar Akun, langkah mata uang di onboarding, masuk Google/email sungguhan, hapus akun. Catat hasilnya di T-8.5/T-8.6. | pemilik | T-8.5, T-8.6 |
 | B-7 | Rancang **sinkronisasi data keuangan** ke server (ADR baru, `## Fase 10`). Wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti dengan peringatan, tanpa penggabungan) dan menjawab KT-2. Proyek besar: skema, aturan keamanan, resolusi konflik. | pemilik memutuskan, lalu agen | T-8.4, ADR-024 |
-| B-8 | Ikon pixel-art untuk `IconKey.account` (kini `Icons.person_outline` di `_materialFallback`). Butuh artwork pemilik; jangan merancang sendiri (ADR-015). | pemilik | T-8.4 |
 | B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
@@ -2262,6 +2370,8 @@ menambah dan memindahkannya ada di
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-20 | Kebijakan privasi di repo `tanukonomy-web`: catat dari notifikasi (isi notifikasi aplikasi yang dipilih dibaca di perangkat, teks yang ragu dikirim ke Gemini, disimpan paling lama 7 hari, OTP tidak diproses). | agen | ADR-032, T-11.21 |
 | B-21 | Pemrosesan notifikasi memanggil Gemini satu per satu (maks. 5 dtk per item) dan setiap catatan otomatis memancarkan `LedgerChanges` sendiri (N tangkapan = N muat ulang tiap tab). Pertimbangkan satu sinyal per putaran; tunggu keluhan nyata. | agen | audit `record` 1 Okt 2026 (N6) |
+| B-22 | Ikon piksel 32×32 untuk kategori Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan untuk akun (menggantikan B-8). Sampai ada, design system memakai Material Symbols di tile berwarna. Butuh artwork pemilik; jangan merancang sendiri. | pemilik | ADR-034 §4 |
+| B-23 | Varian ikon piksel untuk mode gelap: garis tepi `#1E1B19` menyatu dengan tile gelap. Butuh artwork pemilik atau aturan pewarnaan ulang yang disetujui. | pemilik | ADR-034 §4 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

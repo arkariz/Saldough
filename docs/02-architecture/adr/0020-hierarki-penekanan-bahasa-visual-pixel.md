@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-020
 - **Tanggal:** 2026-09-27
 - **Fase roadmap:** Fase 7 (poles), jalur UX di luar MVP
-- **Status:** Accepted (28 September 2026, disetujui apa adanya)
+- **Status:** Superseded by [ADR-034](0034-bahasa-visual-buku-catatan-piksel.md) (3 Okt 2026). Sebelumnya Accepted 28 September 2026
 - **Cakupan:** Global — `AppButton`, `transactionLabelStyle`, baris
   transaksi, snackbar, `AppSegmentedProgressBar`, navigasi bawah.
 - **Merevisi:** [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md) §3

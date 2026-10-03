@@ -95,7 +95,7 @@ lewati kategori seluruhnya tanpa alasan.
 
 ## E. Konsistensi bahasa visual (bisa dijawab dari kode saja)
 
-- **Satu peran, satu warna (ADR-016).** Hijau/merah (`income`/`expense`)
+- **Satu peran, satu warna (ADR-016; digantikan ADR-034: pengeluaran kini `ink`, bukan merah).** Hijau/merah (`income`/`expense`)
   tidak pernah menandai pilihan atau tab aktif; terracotta (`accent`) tidak
   pernah menandai nominal; biru (`transfer`) hanya untuk transfer; amber
   (`pending`) untuk status, bukan jenis transaksi.

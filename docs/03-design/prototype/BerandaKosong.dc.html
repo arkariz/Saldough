@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Beranda pertama kali</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Beranda</h1>
+    <a class="tk-iconbtn" href="Akun.dc.html" aria-label="Akun"><span class="tk-icon">account_circle</span></a>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 20px; padding: 0 16px 32px">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding-top: 4px">
+      <img src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" width="148" height="210" style="image-rendering: pixelated">
+      <h2 class="tk-t-title" style="margin: 8px 0 0">Mulai dari dompetmu</h2>
+      <p class="tk-t-body-sm tk-ink-2" style="max-width: 280px">Catat di mana uangmu berada sekarang. Setiap transaksi akan memperbarui saldonya.</p>
+    </div>
+
+    <div class="tk-list">
+      <div class="tk-row" style="align-items: flex-start">
+        <span class="tk-tile tk-tile--brand tk-t-body-strong" style="font-size: 16px">1</span>
+        <span class="tk-row__main"><span class="tk-row__title">Tambah dompet pertama</span><span class="tk-row__sub" style="white-space: normal">Rekening bank, dompet digital, atau uang tunai beserta saldonya.</span></span>
+      </div>
+      <div class="tk-row" style="align-items: flex-start">
+        <span class="tk-tile tk-tile--slate" style="font-size: 16px">2</span>
+        <span class="tk-row__main"><span class="tk-row__title tk-ink-2">Catat transaksi pertama</span><span class="tk-row__sub" style="white-space: normal">Pengeluaran, pemasukan, atau transfer. Bisa diketik atau diucapkan.</span></span>
+      </div>
+      <div class="tk-row" style="align-items: flex-start">
+        <span class="tk-tile tk-tile--slate" style="font-size: 16px">3</span>
+        <span class="tk-row__main"><span class="tk-row__title tk-ink-2">Buat anggaran</span><span class="tk-row__sub" style="white-space: normal">Opsional. Rencanakan batas belanja dan lihat sisanya.</span></span>
+      </div>
+    </div>
+
+    <a class="tk-btn tk-btn--primary tk-btn--block" href="Dompet.dc.html"><span class="tk-icon">add</span>Tambah dompet</a>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item is-active" href="BerandaKosong.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="Riwayat.dc.html"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</a>
+    <a class="tk-nav__catat" href="Catat.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Anggaran</a>
+    <a class="tk-nav__item" href="Dompet.dc.html"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.dark ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

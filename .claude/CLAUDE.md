@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 1 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
+**Terakhir diperbarui:** 3 Oktober 2026
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
 
 ## Apa ini
 
@@ -26,7 +26,8 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"), plus `docs/04-planning/UX_REVIEW_FIXES.md` (perbaikan hasil review UX), `docs/04-planning/ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `docs/04-planning/PLAY_DATA_SAFETY.md` (draf formulir Keamanan Data Play Console untuk akun/sinkronisasi/analitik), `docs/04-planning/PLAY_STORE_LISTING.md` (setelan toko dan listing Play, ASO), `docs/04-planning/VOICE_INPUT_RESEARCH.md` (riset dan rencana Catat lewat Suara serta sistem kategori) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
-| **Rujukan visual (layar dan ikon dari pemilik)** | `docs/stitch_pixel_finance_tracker/`, dijelaskan di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
+| **Desain UI (wajib sebelum membuat atau mengubah tampilan)** | Skill `tanukonomy-ui`. Sumbernya artefak pemilik: [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) dan [prototipe 12 layar](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ), baca dengan alat Artifact (`action: "read"`, `path: "project/README.md"`); salinannya di `docs/03-design/`. Keputusannya [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
+| **Rujukan visual lama (arsip, digantikan ADR-034)** | `docs/stitch_pixel_finance_tracker/` |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
 | **Dokumen Saldough 1.0** | `docs/99-archive/` |
 | **Email rilis untuk penguji** | Skill `release-email` (`.claude/skills/release-email/`) |
@@ -147,8 +148,17 @@ paling lama 7 hari di perangkat. Native hanya membuang posting ulang (bukan
 isi kembar), antrean hanya di-ack bila simpanan Dart berhasil, dan Gemini
 menerima teks yang saldonya/rekeningnya disamarkan.
 
+**Bahasa visual baru (ADR-034, 3 Okt 2026, Fase 14 belum dikerjakan):**
+"buku catatan dengan aksen piksel" menggantikan ADR-015/016/020. Satu huruf
+(Plus Jakarta Sans, tanpa huruf piksel), warna lewat token, sudut piksel,
+ikon piksel untuk kategori/dompet, Material Symbols untuk navigasi, 4 tab +
+tombol Catat di tengah. Setiap pekerjaan UI memakai skill `tanukonomy-ui`
+dan merujuk artefak design system dan prototipe (tabel Pencarian cepat).
+Sampai Fase 14 selesai, kode masih memakai bahasa visual lama.
+
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
+Mekanisme ini tetap di ADR-034; isinya diganti di T-14.1.
 `AppTheme`, palet 1.0, dan `google_fonts` sudah dihapus. Uji widget yang
 warnanya penting memasang `MaterialApp(theme: PixelTheme.light, …)`.
 
@@ -189,7 +199,7 @@ sejenisnya sudah dihapus 28 Sep 2026).
 |---|---|---|
 | `arkariz/advance-mobile-platform` | Paket internal: state, navigasi, failure, storage, DI | Dipakai sebagai git dependency, sebagian dipin ke SHA mentah — lihat komentar di `pubspec.yaml` |
 | `arkariz/flutter-architecture-studi-bank` | **Acuan struktur arsitektur** | Branch `refactor/platform-migration`, folder `lib/v2`. Hanya dibaca. Jangan salin bagian legacy GetX/`mobile_dsl`-nya |
-| `arkariz/new-health-duel` | **Acuan pola teknis theming saja** (struktur `ThemeExtension`) | Hanya dibaca. Bukan acuan visual — bahasa visual Saldough 2.0 ada di [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
+| `arkariz/new-health-duel` | **Acuan pola teknis theming saja** (struktur `ThemeExtension`) | Hanya dibaca. Bukan acuan visual — bahasa visual ada di [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
 | `arkariz/flutter-architecture-studi` (tanpa `-bank`) | **Tidak dipakai** | `lib/v2` tidak ada di repo ini; `lib/app` memakai Riverpod yang bertentangan |
 
 ## Preferensi pemilik

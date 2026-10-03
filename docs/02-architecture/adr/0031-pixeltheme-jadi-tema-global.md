@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-031
 - **Tanggal:** 2026-10-01
 - **Fase roadmap:** Fase 8 (tindak lanjut pasca-MVP), T-8.10
-- **Status:** Accepted (keputusan pemilik 1 Okt 2026)
+- **Status:** Accepted (keputusan pemilik 1 Okt 2026); isi temanya diganti [ADR-034](0034-bahasa-visual-buku-catatan-piksel.md), mekanisme tema global tetap
 - **Cakupan:** Global — `lib/app/app.dart`, `lib/core/theme/`, setiap titik
   yang sekarang memasang `PixelTheme(child: …)`
 - **Mengubah:** cakupan [ADR-015](0015-adopsi-bahasa-visual-pixel-kas.md) dan

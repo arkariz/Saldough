@@ -135,12 +135,12 @@ docs/
 | [0012](02-architecture/adr/0012-tata-letak-penyimpanan-buku-besar.md) | Tata letak penyimpanan buku besar transaksi | Accepted |
 | [0013](02-architecture/adr/0013-bahasa-visual-dan-sistem-ikon.md) | Bahasa visual v2 dan sistem ikon | Superseded by ADR-015 |
 | [0014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) | Strategi pivot ke Saldough 2.0 | Accepted |
-| [0015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) | Adopsi bahasa visual dari paket desain pemilik | Accepted |
-| [0016](02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md) | Revisi palet ADR-015: satu peran, satu warna | Accepted |
+| [0015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) | Adopsi bahasa visual dari paket desain pemilik | Superseded by ADR-034 |
+| [0016](02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md) | Revisi palet ADR-015: satu peran, satu warna | Superseded by ADR-034 |
 | [0017](02-architecture/adr/0017-rencana-anggaran-adalah-jumlah-pos.md) | Rencana anggaran adalah jumlah posnya | Accepted |
 | [0018](02-architecture/adr/0018-jenis-pos-anggaran.md) | Pos anggaran punya jenis: pengeluaran atau transfer | Accepted |
 | [0019](02-architecture/adr/0019-tarif-di-entri-dan-transaksi-milik-pembayaran.md) | Tarif di entri worklog, transaksi milik pembayaran freelance | Accepted |
-| [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Accepted |
+| [0020](02-architecture/adr/0020-hierarki-penekanan-bahasa-visual-pixel.md) | Hierarki penekanan di dalam bahasa visual pixel | Superseded by ADR-034 |
 | [0021](02-architecture/adr/0021-onboarding-dan-tur-spotlight.md) | Onboarding dan tur spotlight | Accepted |
 | [0022](02-architecture/adr/0022-ganti-nama-aplikasi-menjadi-tanukonomy.md) | Ganti nama aplikasi menjadi Tanukonomy | Accepted (sebagian dilaksanakan) |
 | [0023](02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md) | Identitas opsional: Firebase Auth, Analytics, Crashlytics | Accepted |
@@ -154,8 +154,9 @@ docs/
 | [0031](02-architecture/adr/0031-pixeltheme-jadi-tema-global.md) | PixelTheme jadi tema global aplikasi | Accepted |
 | [0032](02-architecture/adr/0032-catat-dari-notifikasi.md) | Catat dari notifikasi: penangkap native, pola, tingkat otomatis, kotak masuk | Accepted |
 | [0033](02-architecture/adr/0033-pecah-fitur-record.md) | Pecah fitur `record`: mesin tafsir di `shared/capture`, suara dan notifikasi jadi fitur sendiri | Accepted |
+| [0034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) | Bahasa visual baru: buku catatan dengan aksen piksel | Accepted |
 
-ADR berikutnya memakai nomor **0034**.
+ADR berikutnya memakai nomor **0035**.
 
 ## Pertanyaan yang sering muncul
 
@@ -172,7 +173,7 @@ ADR berikutnya memakai nomor **0034**.
 | Ke mana fitur lama (`cycle`, `card`, `investment`, `grocery`, `income`) pergi? (dihapus di cutover Fase 3) | [ADR-014](02-architecture/adr/0014-strategi-pivot-saldough-2.md) |
 | Bagaimana cara memulihkan kode Saldough 1.0? | [Indeks arsip](99-archive/README.md) |
 | Di mana desain visual layarnya? | [Tugas desain UI/UX](04-planning/UI_UX_DESIGN_TASKS.md), rujukannya di `docs/stitch_pixel_finance_tracker/` |
-| Kenapa ada bayangan keras beroffset di tiap kartu? | [ADR-015](02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md) |
+| Kenapa tampilannya sudut piksel, ikon piksel, dan satu huruf? | [ADR-034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), desainnya di [03-design](03-design/README.md) |
 | Bagaimana menambah tugas baru? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru" |
 | Apa yang menunggu di antrean? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Antrean" |
 | Apa yang harus diisi sebelum submit ke Play Store? | [PLAY_DATA_SAFETY.md](04-planning/PLAY_DATA_SAFETY.md) dan [PLAY_STORE_LISTING.md](04-planning/PLAY_STORE_LISTING.md) |

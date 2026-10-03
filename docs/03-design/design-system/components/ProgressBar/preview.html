@@ -1,0 +1,24 @@
+<!-- @dsCard group="Data" height=400 -->
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><title>ProgressBar</title></head>
+<body>
+<div class="tk tk-demo tk-demo--col" style="max-width:392px;gap:12px">
+  <div class="tk-card" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="tk-t-body-strong">Makan</span><span class="tk-badge tk-badge--positive">Aman</span></div>
+    <div class="tk-bar " role="progressbar" aria-valuenow="59" aria-valuemin="0" aria-valuemax="100" aria-label="Makan"><span class="tk-bar__fill" style="width:59%"></span><span class="tk-bar__pace" style="left:93%"></span></div>
+    <div style="display:flex;justify-content:space-between;gap:8px" class="tk-t-body-sm tk-ink-2"><span class="tk-amt">Rp1.170.000 dari Rp2.000.000</span><span>Sisa <b class="tk-amt" style="color:var(--ink)">Rp830.000</b></span></div>
+  </div>
+  <div class="tk-card" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="tk-t-body-strong">Belanja bulanan</span><span class="tk-badge tk-badge--warning">Hampir habis</span></div>
+    <div class="tk-bar is-warning" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" aria-label="Belanja bulanan"><span class="tk-bar__fill" style="width:94%"></span><span class="tk-bar__pace" style="left:93%"></span></div>
+    <div style="display:flex;justify-content:space-between;gap:8px" class="tk-t-body-sm tk-ink-2"><span class="tk-amt">Rp1.412.500 dari Rp1.500.000</span><span>Sisa <b class="tk-amt" style="color:var(--ink)">Rp87.500</b></span></div>
+  </div>
+  <div class="tk-card" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="tk-t-body-strong">Jajan mingguan</span><span class="tk-badge tk-badge--danger"><span class="tk-icon">error</span>Lewat Rp36.000</span></div>
+    <div class="tk-bar is-over" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Jajan mingguan"><span class="tk-bar__fill" style="width:100%"></span><span class="tk-bar__pace" style="left:100%"></span></div>
+    <div style="display:flex;justify-content:space-between;gap:8px" class="tk-t-body-sm tk-ink-2"><span class="tk-amt">Rp336.000 dari Rp300.000</span><span>Sisa <b class="tk-amt" style="color:var(--ink)">−Rp36.000</b></span></div>
+  </div>
+</div>
+</body>
+</html>

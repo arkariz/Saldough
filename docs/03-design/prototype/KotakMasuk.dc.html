@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Kotak masuk notifikasi</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub">
+    <a class="tk-iconbtn" href="Main.dc.html" aria-label="Kembali"><span class="tk-icon">arrow_back</span></a>
+    <h1 class="tk-topbar__title">Kotak masuk notifikasi</h1>
+    <a class="tk-iconbtn" href="Akun.dc.html" aria-label="Setelan catat dari notifikasi"><span class="tk-icon">tune</span></a>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 32px">
+    <div class="tk-seg" role="radiogroup" aria-label="Kotak masuk notifikasi">
+      <button class="tk-seg__opt {{tP.cls}}" type="button" role="radio" aria-checked="{{tP.checked}}" onClick="{{tP.pick}}">Perlu dicek <span class="tk-seg__count">{{pendingCount}}</span></button>
+      <button class="tk-seg__opt {{tA.cls}}" type="button" role="radio" aria-checked="{{tA.checked}}" onClick="{{tA.pick}}">Tercatat otomatis <span class="tk-seg__count">5</span></button>
+    </div>
+
+    <sc-if value="{{showPending}}" hint-placeholder-val="{{true}}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <sc-for list="{{pending}}" as="p" hint-placeholder-count="3">
+          <article class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span class="tk-tile tk-tile--app tk-tile--sm">{{p.app}}</span>
+              <span class="tk-t-body-sm tk-ink-2" style="flex: 1; min-width: 0">{{p.appName}} · {{p.time}}</span>
+              <sc-if value="{{p.hasFlag}}" hint-placeholder-val="{{false}}"><span class="tk-badge tk-badge--warning">{{p.flag}}</span></sc-if>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <span class="{{p.amtCls}}">{{p.amount}}</span>
+              <span class="tk-t-body-strong">{{p.title}}</span>
+            </div>
+            <div class="tk-chips" style="flex-wrap: wrap">
+              <button class="tk-chip" type="button"><span class="tk-icon">{{p.catIcon}}</span>{{p.catLabel}}</button>
+              <button class="tk-chip" type="button"><span class="tk-icon">account_balance_wallet</span>{{p.wallet}}</button>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px">
+              <button class="tk-btn tk-btn--text tk-btn--sm" type="button" onClick="{{p.dismiss}}">Abaikan</button>
+              <sc-if value="{{p.canRecord}}" hint-placeholder-val="{{true}}"><button class="tk-btn tk-btn--primary tk-btn--sm" type="button" onClick="{{p.record}}">Catat</button></sc-if>
+              <sc-if value="{{p.needsAmount}}" hint-placeholder-val="{{false}}"><a class="tk-btn tk-btn--primary tk-btn--sm" href="Catat.dc.html">Isi nominal</a></sc-if>
+            </div>
+          </article>
+        </sc-for>
+        <sc-if value="{{allClear}}" hint-placeholder-val="{{false}}">
+          <div class="tk-empty">
+            <span class="tk-tile tk-tile--lg tk-tile--green"><span class="tk-icon">task_alt</span></span>
+            <h2 class="tk-empty__title">Tidak ada yang perlu dicek</h2>
+            <p class="tk-empty__body">Transaksi baru dari notifikasi bank dan e-wallet muncul di sini.</p>
+          </div>
+        </sc-if>
+        <p class="tk-t-caption tk-ink-3" style="text-align: center">Daftar ini disimpan 7 hari.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{showAuto}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div class="tk-list">
+          <div class="tk-row"><span class="tk-tile tk-tile--app">BCA</span><span class="tk-row__main"><span class="tk-row__title">Makan siang</span><span class="tk-row__sub">BCA · Kemarin, 12.00</span></span><span class="tk-row__end"><span class="tk-amt tk-t-amount">−Rp45.000</span><button class="tk-link" type="button" style="margin: -14px -4px -14px 0">Batalkan</button></span></div>
+          <div class="tk-row"><span class="tk-tile tk-tile--app">GP</span><span class="tk-row__main"><span class="tk-row__title">Bensin</span><span class="tk-row__sub">GoPay · Sab, 18.00</span></span><span class="tk-row__end"><span class="tk-amt tk-t-amount">−Rp47.000</span><button class="tk-link" type="button" style="margin: -14px -4px -14px 0">Batalkan</button></span></div>
+          <div class="tk-row"><span class="tk-tile tk-tile--app">BCA</span><span class="tk-row__main"><span class="tk-row__title">Belanja bulanan</span><span class="tk-row__sub">BCA · Sab, 10.15</span></span><span class="tk-row__end"><span class="tk-amt tk-t-amount">−Rp412.500</span><button class="tk-link" type="button" style="margin: -14px -4px -14px 0">Batalkan</button></span></div>
+          <div class="tk-row"><span class="tk-tile tk-tile--app">BCA</span><span class="tk-row__main"><span class="tk-row__title">Token listrik</span><span class="tk-row__sub">BCA · Jum, 19.40</span></span><span class="tk-row__end"><span class="tk-amt tk-t-amount">−Rp200.000</span><button class="tk-link" type="button" style="margin: -14px -4px -14px 0">Batalkan</button></span></div>
+          <div class="tk-row"><span class="tk-tile tk-tile--app">BCA</span><span class="tk-row__main"><span class="tk-row__title">Gaji September</span><span class="tk-row__sub">BCA · Jum, 09.00</span></span><span class="tk-row__end"><span class="tk-amt tk-t-amount tk-amt--pos">+Rp8.500.000</span><button class="tk-link" type="button" style="margin: -14px -4px -14px 0">Batalkan</button></span></div>
+        </div>
+        <p class="tk-t-caption tk-ink-3" style="text-align: center">Batalkan menghapus transaksinya dan mengembalikan saldo.</p>
+      </div>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{hasSnack}}" hint-placeholder-val="{{false}}">
+    <div class="tk-snack" role="status" style="position: absolute; left: 16px; right: 16px; bottom: 16px">
+      <span class="tk-snack__text">{{snackText}}</span>
+      <button class="tk-snack__action" type="button" onClick="{{undo}}">Urungkan</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const tab = s.tab || 'pending';
+    const removed = s.removed || [];
+    const snack = s.snack || null;
+    const items = [
+      { id: 'a', app: 'BCA', appName: 'BCA mobile', time: '10.42', amount: '−Rp125.000', amtCls: 'tk-amt tk-t-amount-lg', title: 'QRIS Toko Sinar Jaya', catIcon: 'shopping_cart', catLabel: 'Belanja Harian', wallet: 'BCA', flag: '' },
+      { id: 'b', app: 'GP', appName: 'GoPay', time: '09.15', amount: '−Rp32.000', amtCls: 'tk-amt tk-t-amount-lg', title: 'GoFood · Warung Bu Sri', catIcon: 'restaurant', catLabel: 'Makan & Minum', wallet: 'GoPay', flag: 'Mungkin sudah tercatat' },
+      { id: 'c', app: 'BCA', appName: 'BCA mobile', time: 'Kemarin, 20.03', amount: 'Nominal belum terbaca', amtCls: 'tk-t-body-strong tk-c-warning', title: 'Transfer masuk dari ANDI PRATAMA', catIcon: 'more_horiz', catLabel: 'Pilih kategori', wallet: 'BCA', flag: '' }
+    ];
+    const act = (it, text) => () => this.setState({ removed: removed.concat([it.id]), snack: { id: it.id, text: text } });
+    const pending = items.filter((it) => removed.indexOf(it.id) < 0).map((it) => Object.assign({}, it, {
+      hasFlag: !!it.flag,
+      canRecord: it.id !== 'c',
+      needsAmount: it.id === 'c',
+      record: act(it, 'Tercatat: ' + it.amount.replace('−', '') + ' · ' + it.wallet),
+      dismiss: act(it, 'Tangkapan diabaikan.')
+    }));
+    const opt = (key) => ({
+      cls: tab === key ? 'is-selected' : '',
+      checked: tab === key ? 'true' : 'false',
+      pick: () => this.setState({ tab: key })
+    });
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      tP: opt('pending'),
+      tA: opt('auto'),
+      showPending: tab === 'pending',
+      showAuto: tab === 'auto',
+      pending: pending,
+      pendingCount: pending.length,
+      allClear: pending.length === 0,
+      hasSnack: !!snack,
+      snackText: snack ? snack.text : '',
+      undo: () => this.setState({ removed: removed.filter((x) => !snack || x !== snack.id), snack: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

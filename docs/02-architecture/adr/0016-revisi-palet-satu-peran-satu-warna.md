@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-016
 - **Tanggal:** 2026-09-19
 - **Fase roadmap:** Fase 2
-- **Status:** Accepted (diamandemen 2026-09-28, §7: mode gelap arang hangat)
+- **Status:** Superseded by [ADR-034](0034-bahasa-visual-buku-catatan-piksel.md) (3 Okt 2026). Sebelumnya Accepted, diamandemen 2026-09-28 (§7)
 - **Cakupan:** Global untuk subtree `PixelTheme` (layar Saldough 2.0). Palet
   Saldough 1.0 (`AppColorsExtension.light`/`dark`, ADR-0006) TIDAK berubah.
   *Sejak [ADR-031](0031-pixeltheme-jadi-tema-global.md) (1 Okt 2026) palet

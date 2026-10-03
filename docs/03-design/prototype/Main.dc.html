@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Beranda</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Beranda</h1>
+    <button class="tk-iconbtn" type="button" aria-label="{{eyeLabel}}" onClick="{{toggleHide}}"><span class="tk-icon">{{eyeIcon}}</span></button>
+    <a class="tk-iconbtn" href="Akun.dc.html" aria-label="Akun"><span class="tk-icon">account_circle</span></a>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 24px; padding: 0 16px 32px">
+    <section class="tk-hero">
+      <div class="tk-hero__text">
+        <p class="tk-hero__label">Total saldo</p>
+        <p class="tk-amt tk-t-amount-hero"><span class="tk-amt__cur">Rp</span>{{m.total}}</p>
+        <a class="tk-link" href="Dompet.dc.html" style="align-self: flex-start; margin-top: -8px">Di 4 dompet<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+      </div>
+      <img class="tk-hero__mascot" src="/_blob/f544a8e4c6b6329a9497cbf4860ef099" alt="" width="96" height="75">
+    </section>
+
+    <div class="tk-banner" role="status">
+      <span class="tk-icon">inbox</span>
+      <span class="tk-banner__text">3 transaksi dari notifikasi menunggu dicek.</span>
+      <a class="tk-btn tk-btn--sm tk-btn--on-soft" href="KotakMasuk.dc.html">Cek</a>
+    </div>
+
+    <section class="tk-section">
+      <div class="tk-section__head">
+        <h2 class="tk-section__title">September</h2>
+        <a class="tk-link" href="Riwayat.dc.html">Riwayat<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+      </div>
+      <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+          <div class="tk-stat"><span class="tk-stat__label">Pemasukan</span><span class="tk-amt tk-t-amount tk-amt--pos">{{m.income}}</span></div>
+          <div class="tk-stat"><span class="tk-stat__label">Pengeluaran</span><span class="tk-amt tk-t-amount">{{m.expense}}</span></div>
+        </div>
+        <hr class="tk-divider">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span class="tk-t-body-sm tk-ink-2" style="flex: 1">Selisih bulan ini</span>
+          <span class="tk-amt tk-t-amount-sm">{{m.net}}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head">
+        <h2 class="tk-section__title">Anggaran</h2>
+        <a class="tk-link" href="Anggaran.dc.html">Semua<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+      </div>
+      <a class="tk-card" href="RincianAnggaran.dc.html" style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <span class="tk-t-body-strong">Belanja September</span>
+          <span class="tk-badge tk-badge--positive">Aman</span>
+        </div>
+        <div class="tk-stat"><span class="tk-stat__label">Sisa</span><span class="tk-amt tk-t-amount-lg">{{m.budgetLeft}}</span></div>
+        <div class="tk-bar" role="progressbar" aria-label="Terpakai 64 persen" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span class="tk-bar__fill" style="width: 64%"></span><span class="tk-bar__pace" style="left: 93%"></span></div>
+        <div class="tk-t-body-sm tk-ink-2" style="display: flex; justify-content: space-between; gap: 8px">
+          <span class="tk-amt">{{m.budgetSpent}}</span>
+          <span>Hari ke-28 dari 30</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head">
+        <h2 class="tk-section__title">Transaksi terbaru</h2>
+        <a class="tk-link" href="Riwayat.dc.html">Lihat semua<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+      </div>
+      <div class="tk-list">
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/5230a938ba88d34885eb8ce4aa7fd201" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Kopi susu</span><span class="tk-row__sub">Tunai · Hari ini, 08.00</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">{{m.r1}}</span></span>
+        </div>
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/713cb080cbbfcd6a289509dcd33f9d1f" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Tarik tunai</span><span class="tk-row__sub">BCA → Tunai · Kemarin, 17.30</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount tk-amt--muted">{{m.r2}}</span></span>
+        </div>
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/f1ae8d6356f45cec2038768261cba47e" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Makan siang</span><span class="tk-row__sub">BCA · Kemarin, 12.00</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">{{m.r3}}</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">Freelance</h2></div>
+      <a class="tk-list" href="Freelance.dc.html">
+        <span class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/7b29d1c27de82a7878980c9785ed0d08" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Belum diterima</span><span class="tk-row__sub">1 tagihan, perkiraan 5 Okt</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">{{m.freelance}}</span></span>
+          <span class="tk-icon tk-row__chev">chevron_right</span>
+        </span>
+      </a>
+    </section>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item is-active" href="Main.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="Riwayat.dc.html"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</a>
+    <a class="tk-nav__catat" href="Catat.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Anggaran</a>
+    <a class="tk-nav__item" href="Dompet.dc.html"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const hidden = !!(this.state && this.state.hidden);
+    const dots = 'Rp•••••';
+    const m = hidden
+      ? { total: '•••••••', income: dots, expense: dots, net: dots, budgetLeft: dots, budgetSpent: dots + ' dari ' + dots, freelance: dots, r1: dots, r2: dots, r3: dots }
+      : { total: '27.522.000', income: '+Rp11.750.000', expense: '−Rp2.778.000', net: '+Rp8.972.000', budgetLeft: 'Rp1.930.000', budgetSpent: 'Rp3.420.000 dari Rp5.350.000', freelance: 'Rp3.600.000', r1: '−Rp28.000', r2: 'Rp300.000', r3: '−Rp45.000' };
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      m: m,
+      eyeIcon: hidden ? 'visibility' : 'visibility_off',
+      eyeLabel: hidden ? 'Tampilkan nominal' : 'Sembunyikan nominal',
+      toggleHide: () => this.setState({ hidden: !hidden })
+    };
+  }
+}
+</script>
+</body>
+</html>

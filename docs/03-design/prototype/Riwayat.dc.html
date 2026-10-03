@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Riwayat</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Riwayat</h1>
+    <button class="tk-iconbtn" type="button" aria-label="Cari"><span class="tk-icon">search</span></button>
+    <button class="tk-iconbtn" type="button" aria-label="Filter dompet dan kategori"><span class="tk-icon">tune</span></button>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 32px">
+    <div style="display: flex; align-items: center; gap: 4px; margin: -8px -8px 0">
+      <button class="tk-iconbtn" type="button" aria-label="Bulan sebelumnya"><span class="tk-icon">chevron_left</span></button>
+      <p class="tk-t-body-strong" style="flex: 1; text-align: center">September 2026</p>
+      <button class="tk-iconbtn" type="button" aria-label="Bulan berikutnya"><span class="tk-icon">chevron_right</span></button>
+    </div>
+
+    <div class="tk-card" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px 16px">
+      <div class="tk-stat"><span class="tk-stat__label">Pemasukan</span><span class="tk-amt tk-t-amount tk-amt--pos">+Rp11.750.000</span></div>
+      <div class="tk-stat"><span class="tk-stat__label">Pengeluaran</span><span class="tk-amt tk-t-amount">−Rp2.778.000</span></div>
+    </div>
+
+    <div class="tk-chips tk-scroll" role="group" aria-label="Jenis transaksi" style="overflow-x: auto; margin: 0 -16px; padding: 0 16px">
+      <button class="tk-chip tk-chip--on-bg {{c0.cls}}" type="button" aria-pressed="{{c0.pressed}}" onClick="{{c0.pick}}">Semua 28</button>
+      <button class="tk-chip tk-chip--on-bg {{c1.cls}}" type="button" aria-pressed="{{c1.pressed}}" onClick="{{c1.pick}}">Pengeluaran 24</button>
+      <button class="tk-chip tk-chip--on-bg {{c2.cls}}" type="button" aria-pressed="{{c2.pressed}}" onClick="{{c2.pick}}">Pemasukan 2</button>
+      <button class="tk-chip tk-chip--on-bg {{c3.cls}}" type="button" aria-pressed="{{c3.pressed}}" onClick="{{c3.pick}}">Transfer 2</button>
+    </div>
+
+    <div class="tk-banner" role="status">
+      <span class="tk-icon">inbox</span>
+      <span class="tk-banner__text">3 transaksi dari notifikasi menunggu dicek.</span>
+      <a class="tk-btn tk-btn--sm tk-btn--on-soft" href="KotakMasuk.dc.html">Cek</a>
+    </div>
+
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+      <section class="tk-section">
+        <div class="tk-section__head">
+          <h2 class="tk-t-label tk-ink-2" style="margin: 0">{{g.label}}</h2>
+          <span class="tk-amt tk-t-amount-sm tk-ink-2">{{g.total}}</span>
+        </div>
+        <div class="tk-list">
+          <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+            <div class="tk-row">
+              <span class="tk-tile tk-tile--px"><img src="{{r.px}}" alt="" width="32" height="32"></span>
+              <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><span class="tk-row__sub">{{r.sub}}</span></span>
+              <span class="tk-row__end"><span class="{{r.amtCls}}">{{r.amtText}}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item" href="Main.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item is-active" href="Riwayat.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</a>
+    <a class="tk-nav__catat" href="Catat.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Anggaran</a>
+    <a class="tk-nav__item" href="Dompet.dc.html"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const filter = (this.state && this.state.filter) || 'all';
+    const fmt = (n) => 'Rp' + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const rows = [
+      { d: 0, title: 'Kopi susu', sub: 'Tunai · 08.00', amt: -28000, kind: 'expense', color: 'orange', icon: 'restaurant' },
+      { d: 1, title: 'Tarik tunai', sub: 'BCA → Tunai · 17.30', amt: 300000, kind: 'transfer', color: 'info', icon: 'swap_horiz' },
+      { d: 1, title: 'Makan siang', sub: 'BCA · 12.00', amt: -45000, kind: 'expense', color: 'orange', icon: 'restaurant' },
+      { d: 2, title: 'Bensin', sub: 'GoPay · 18.00', amt: -47000, kind: 'expense', color: 'blue', icon: 'two_wheeler' },
+      { d: 2, title: 'Belanja bulanan', sub: 'BCA · 10.15', amt: -412500, kind: 'expense', color: 'green', icon: 'shopping_cart' },
+      { d: 3, title: 'Token listrik', sub: 'BCA · 19.40', amt: -200000, kind: 'expense', color: 'purple', icon: 'bolt' },
+      { d: 3, title: 'Gaji September', sub: 'BCA · 09.00', amt: 8500000, kind: 'income', color: 'green', icon: 'payments' }
+    ];
+    const PX = {"restaurant": "/_blob/f1ae8d6356f45cec2038768261cba47e", "swap_horiz": "/_blob/713cb080cbbfcd6a289509dcd33f9d1f", "two_wheeler": "/_blob/eff7e72da8655d2f31d39fc508e98b7a", "shopping_cart": "/_blob/807cc382e258bd1f8a94ba4795471b4d", "bolt": "/_blob/73796fb4a84837b6efa626a8f86986c4", "payments": "/_blob/6472b514c73603db38d0e194adeb08cd"};
+    const days = ['Hari ini · Senin, 28 Sep', 'Kemarin · Minggu, 27 Sep', 'Sabtu, 26 Sep', 'Jumat, 25 Sep'];
+    const visible = rows.filter((r) => filter === 'all' || r.kind === filter);
+    const groups = days.map((label, i) => {
+      const rs = visible.filter((r) => r.d === i);
+      const money = rs.filter((r) => r.kind !== 'transfer');
+      const net = money.reduce((s, r) => s + r.amt, 0);
+      return {
+        label: label,
+        total: money.length ? (net < 0 ? '−' : '+') + fmt(net) : '',
+        rows: rs.map((r) => ({
+          title: r.title,
+          sub: r.sub,
+          icon: r.icon,
+          px: r.title.indexOf('Kopi') === 0 ? '/_blob/5230a938ba88d34885eb8ce4aa7fd201' : PX[r.icon],
+          color: r.color,
+          amtText: r.kind === 'transfer' ? fmt(r.amt) : (r.amt < 0 ? '−' : '+') + fmt(r.amt),
+          amtCls: 'tk-amt tk-t-amount' + (r.kind === 'income' ? ' tk-amt--pos' : r.kind === 'transfer' ? ' tk-amt--muted' : '')
+        }))
+      };
+    }).filter((g) => g.rows.length > 0);
+    const chip = (key) => ({
+      cls: filter === key ? 'is-selected' : '',
+      pressed: filter === key ? 'true' : 'false',
+      pick: () => this.setState({ filter: key })
+    });
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      groups: groups,
+      c0: chip('all'),
+      c1: chip('expense'),
+      c2: chip('income'),
+      c3: chip('transfer')
+    };
+  }
+}
+</script>
+</body>
+</html>

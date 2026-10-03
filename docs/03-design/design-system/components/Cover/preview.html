@@ -1,0 +1,45 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Tanukonomy</title>
+<style>
+  body { margin: 0; background: var(--bg); }
+  .cover { position: relative; width: 960px; height: 288px; background: var(--bg); overflow: hidden; font-family: var(--font-sans, "Plus Jakarta Sans", Roboto, sans-serif); }
+  .cover svg { position: absolute; left: 0; top: 0; }
+  .b-brand { fill: var(--brand); }
+  .b-ink { fill: var(--ink); }
+  .b-straw { fill: var(--straw); }
+  .b-pos { fill: var(--positive); }
+  .cut { fill: var(--bg); }
+  .text { position: absolute; left: 40px; bottom: 40px; max-width: 440px; }
+  .name { margin: 0; font-size: 72px; line-height: 0.95; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+  .tag { margin: 12px 0 0; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <svg viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+    <!-- blocks: brand 208x208 at radius-xl 28 (the app icon), ink pill 176x96 (rx 48), straw disc 96, positive disc 48 (space-12) -->
+    <!-- arrangement: one tall slab like the app icon with satellites to its right, 16px gutters (space-4), all right of x=480 -->
+    <!-- pattern: soft friendly radii give discs; a 3x4 grid of discs cut from the brand slab at a 32px pitch (space-8) echoes the Catat keypad -->
+    <!-- scales: space-4 gutters, space-8 pitch, space-12 small disc, radius-xl slab, radius-full pill and discs -->
+    <rect class="b-brand" x="520" y="40" width="208" height="208" rx="28"></rect>
+    <rect class="b-ink" x="744" y="40" width="176" height="96" rx="48"></rect>
+    <rect class="b-straw" x="744" y="152" width="96" height="96" rx="48"></rect>
+    <rect class="b-pos" x="856" y="200" width="48" height="48" rx="24"></rect>
+    <g class="cut">
+      <circle cx="592" cy="96" r="8"></circle><circle cx="624" cy="96" r="8"></circle><circle cx="656" cy="96" r="8"></circle>
+      <circle cx="592" cy="128" r="8"></circle><circle cx="624" cy="128" r="8"></circle><circle cx="656" cy="128" r="8"></circle>
+      <circle cx="592" cy="160" r="8"></circle><circle cx="624" cy="160" r="8"></circle><circle cx="656" cy="160" r="8"></circle>
+      <circle cx="592" cy="192" r="8"></circle><circle cx="624" cy="192" r="8"></circle><circle cx="656" cy="192" r="8"></circle>
+    </g>
+  </svg>
+  <div class="text">
+    <h1 class="name">Tanukonomy</h1>
+    <p class="tag">Buku catatan yang rapi untuk uangmu.</p>
+  </div>
+</div>
+</body>
+</html>

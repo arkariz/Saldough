@@ -7,12 +7,12 @@
 | `docs/01-product/prd-saldough-2.0.md` — §5 "Prinsip produk", §7 FR, §8.4 NFR-UX | Tujuan produk dan FR — acuan "apakah ini sesuai kebutuhan" sebelum menilai "apakah ini enak dipakai". NFR-UX-001 (catat dalam satu layar) dan NFR-UX-005 (kosakata pencatatan) paling sering relevan. `prd-saldough-1.0.md` hanya arsip — jangan jadikan acuan. |
 | `docs/00-foundation/PROJECT_GLOSSARY.md` | Istilah resmi (`Dompet`, `Saldo tercatat`, `Pos anggaran`, `Worklog`, dst) dan tabel "Bahasa yang dipakai aplikasi" (Pakai / Jangan pakai). Acuan checklist kategori D. |
 | `docs/02-architecture/DOMAIN_MODEL.md` | Entitas dan rumus. Beberapa hal yang kelihatan aneh di UI adalah invarian domain yang disengaja: transfer tidak dihitung sebagai masuk/keluar, saldo boleh negatif, anggaran tidak mengubah saldo, worklog tidak menyentuh saldo. |
-| `docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md` — §3 dan §7 | Bahasa visual pixel (palet, tipografi, bayangan keras, garis tepi 2px, sistem ikon) beserta batasan dan antipolanya. Keputusan pemilik — bukan hal yang perlu dipertanyakan lagi. |
-| `docs/02-architecture/adr/0016-revisi-palet-satu-peran-satu-warna.md` — §3 | "Satu peran, satu warna": terracotta = aksi, hijau = uang masuk, merah = uang keluar, biru = transfer, amber = status. Kontrak slot teks-aman vs `…Fill`. Acuan checklist kategori E. |
+| `docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md` dan `docs/03-design/design-system/README.md` (atau artefak design system) | Bahasa visual yang berlaku: token, sudut piksel, ikon piksel vs Material Symbols, aturan warna (pengeluaran `ink`, status selalu dengan teks). ADR-015/016 sudah digantikan; selama Fase 14 belum selesai, kode masih bergaya lama dan itu bukan temuan baru. |
+
 | `.claude/AGENT_CONTEXT.md` — "Tampilan" dan "Nilai yang sudah terkonfirmasi" | Aturan tampilan yang mengikat, dan nilai yang SUDAH dikonfirmasi pemilik (jangan tanya ulang). |
 | `docs/04-planning/TASK_LIST.md` — Fase 2 (T-2.1 s.d. T-2.12) | Catatan `⚠` = keputusan UI yang sudah diambil bersama pemilik. Jangan dilaporkan ulang sebagai temuan baru. |
 | `docs/04-planning/UI_UX_DESIGN_TASKS.md` | Status desain per layar dan catatan terbuka. |
-| `docs/stitch_pixel_finance_tracker/pixel_kas_*/` | Rujukan visual layar dari pemilik (`screen.png` + `code.html`), mis. `pixel_kas_catat_pengeluaran`, `pixel_kas_daftar_dompet`, `pixel_kas_riwayat_transaksi_kosong`. Rujukan, bukan spesifikasi piksel — ADR-015 §7 melarang menyalin CSS-nya. |
+| `docs/03-design/prototype/*.dc.html` (atau artefak prototipe) | Layar acuan baru yang disetujui pemilik 3 Okt 2026. |
 
 ## Kode — zona `core` (dipakai semua layar)
 

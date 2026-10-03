@@ -1,6 +1,6 @@
 ---
 name: ux-review
-description: Review Saldough 2.0 (aplikasi Flutter pencatatan keuangan pribadi — Dompet, Transaksi, Anggaran, Freelance) dari sudut pandang product/UX designer — information architecture, alur CATAT, copy (kosakata "mencatat, bukan melakukan"), state (memuat/kosong/gagal/konfirmasi), dan konsistensi bahasa visual pixel (ADR-015/016). Metode utama membaca kode (page, bloc, widget, i18n) terhadap PRD 2.0/DOMAIN_MODEL/glosarium/ADR; TIDAK menjalankan aplikasi kecuali ada pertanyaan yang memang butuh dilihat render-nya (kontras sungguhan, teks terpotong di lebar sempit, kecocokan dengan rujukan visual pemilik). Gunakan saat diminta "review sebagai UX/product designer", "nilai desain/UX aplikasi ini", "cek alur [fitur]", atau evaluasi usability — BUKAN untuk audit bug/korektnes kode (itu skill `code-review`).
+description: Review Saldough 2.0 (aplikasi Flutter pencatatan keuangan pribadi — Dompet, Transaksi, Anggaran, Freelance) dari sudut pandang product/UX designer — information architecture, alur CATAT, copy (kosakata "mencatat, bukan melakukan"), state (memuat/kosong/gagal/konfirmasi), dan konsistensi bahasa visual (ADR-034, design system dan prototipe di artefak pemilik / docs/03-design). Metode utama membaca kode (page, bloc, widget, i18n) terhadap PRD 2.0/DOMAIN_MODEL/glosarium/ADR; TIDAK menjalankan aplikasi kecuali ada pertanyaan yang memang butuh dilihat render-nya (kontras sungguhan, teks terpotong di lebar sempit, kecocokan dengan rujukan visual pemilik). Gunakan saat diminta "review sebagai UX/product designer", "nilai desain/UX aplikasi ini", "cek alur [fitur]", atau evaluasi usability — BUKAN untuk audit bug/korektnes kode (itu skill `code-review`).
 ---
 
 # Review UX/produk Saldough 2.0
@@ -28,7 +28,7 @@ jalur cloud Catat Cerdas T-11.7) bukan temuan "hilang".
    `graphify update .` — AST saja, tanpa biaya API.
 2. **Baca konteks** — `references/context-map.md` berisi dokumen dan berkas
    kode yang wajib dibaca, beserta alasannya. Tanpa PRD 2.0/glosarium/
-   ADR-015/016, temuan gampang salah pijak: menilai "aneh" sesuatu yang
+   ADR-034 dan design system, temuan gampang salah pijak: menilai "aneh" sesuatu yang
    sebenarnya keputusan sadar pemilik, atau memakai istilah yang bukan
    istilah proyek.
 3. **Cocokkan dengan keputusan yang sudah tercatat.** Catatan `⚠` di tiap
@@ -52,7 +52,7 @@ jalur cloud Catat Cerdas T-11.7) bukan temuan "hilang".
    `references/render-method.md` HANYA kalau langkah 4 menyisakan
    pertanyaan yang kode tidak bisa jawab — teks yang mungkin terpotong di
    lebar sempit, perbandingan dengan layar rujukan pemilik di
-   `docs/stitch_pixel_finance_tracker/`, atau pemilik eksplisit minta
+   prototipe `docs/03-design/prototype/` (atau artefaknya), atau pemilik eksplisit minta
    "lihat tampilannya". Kontras warna TIDAK termasuk: sudah diuji otomatis
    di `test/core/theme/app_colors_extension_test.dart`.
 6. **Laporkan** dengan format di bawah.

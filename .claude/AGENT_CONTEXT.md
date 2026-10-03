@@ -165,6 +165,20 @@ gejala yang kelihatan**.
 - Centang hanya kalau benar-benar selesai dan terverifikasi. Pekerjaan sebagian
   tetap kosong disertai catatan `⚠ Sebagian`.
 
+## Membuat atau mengubah tampilan
+
+- Pakai skill `tanukonomy-ui` sebelum menyentuh layar, widget, tema, ikon,
+  atau teks antarmuka.
+- Sumber kebenaran desain adalah artefak pemilik:
+  [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) dan
+  [prototipe](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ). Baca dengan
+  alat Artifact; tanpa alat itu, baca salinannya di `docs/03-design/`.
+- Bandingkan hasil dengan layar prototipe padanannya dan sebut selisih yang
+  disengaja di laporan.
+- Spawn agen untuk pekerjaan UI? Sertakan baris ini di prompt-nya: "Baca
+  `.claude/skills/tanukonomy-ui/SKILL.md` dan ikuti langkah 1 sebelum menulis
+  widget."
+
 ## Nilai yang sudah terkonfirmasi (jangan tanya ulang)
 
 | Nilai | Angka |
@@ -173,7 +187,7 @@ gejala yang kelihatan**.
 | Potongan pajak freelance | 2,5%, ditulis `25` per mil |
 | Ikatan anggaran ke dompet | Wajib, dan menyaring pengeluaran mana yang terhitung |
 | Data historis Saldough 1.0 | Tidak diimpor sama sekali; aplikasi mulai dari saldo awal |
-| Aksen utama | `#C2410C` terang, `#F46B1C` gelap (`AppColorsExtension.pixelLight`/`pixelDark`, ADR-016) |
+| Aksen utama | `brand` `#A94F33` terang, `#EE8A63` gelap (ADR-034; sampai T-14.1 kode masih `#C2410C`/`#F46B1C` dari ADR-016) |
 
 Nilai berikut **belum ada** dan harus diisi pemilik, bukan dikarang: daftar
 dompet beserta saldo awalnya. Kategori transaksi sudah punya daftar bawaan
@@ -190,10 +204,12 @@ Berhenti dan laporkan ke pemilik kalau menemui hal berikut. Jangan menebak.
 - Sebuah uji lama gagal oleh perubahan yang seharusnya tidak menyentuhnya.
   Itu bukti perubahan itu mengubah perilaku lain — cari tahu apa, jangan
   menyunting uji lamanya supaya lulus.
-- `IconKey` butuh kunci yang belum ada padanan asetnya di
-  `docs/stitch_pixel_finance_tracker/icon_*/`. Pakai isian Material sementara,
-  jangan merancang ikon sendiri — lihat daftar padanan di
-  [ADR-015](../docs/02-architecture/adr/0015-adopsi-bahasa-visual-pixel-kas.md).
+- Kategori, dompet, atau benda lain butuh ikon piksel yang belum ada di
+  `assets/icons/`. Pakai Material Symbols di tile berwarna (design system,
+  komponen IconTile), jangan merancang ikon piksel sendiri, dan catat di B-22.
+- Tampilan yang dibutuhkan tidak ada di design system maupun prototipe
+  ([ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md)).
+  Susun dari komponen yang ada, lalu laporkan supaya artefaknya diperbarui.
 - Muncul kebutuhan yang tidak disebut PRD 2.0. Pakai implementasi paling
   sederhana yang masuk akal, lalu laporkan sebagai keputusan terbuka.
 

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Catat</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--surface)">
+  <div class="tk-sheet__head" style="margin: 0; padding: 8px 4px 0">
+    <a class="tk-iconbtn" href="Main.dc.html" aria-label="Tutup"><span class="tk-icon">close</span></a>
+    <h1 class="tk-sheet__title">Catat</h1>
+    <a class="tk-iconbtn tk-iconbtn--tonal" href="CatatSuara.dc.html" aria-label="Catat pakai suara"><span class="tk-icon">mic</span></a>
+  </div>
+
+  <div style="padding: 4px 16px 0">
+    <div class="tk-seg" role="radiogroup" aria-label="Jenis transaksi">
+      <button class="tk-seg__opt {{kE.cls}}" type="button" role="radio" aria-checked="{{kE.checked}}" onClick="{{kE.pick}}">Pengeluaran</button>
+      <button class="tk-seg__opt {{kI.cls}}" type="button" role="radio" aria-checked="{{kI.checked}}" onClick="{{kI.pick}}">Pemasukan</button>
+      <button class="tk-seg__opt {{kT.cls}}" type="button" role="radio" aria-checked="{{kT.checked}}" onClick="{{kT.pick}}">Transfer</button>
+    </div>
+  </div>
+
+  <div style="padding: 8px 16px 4px; text-align: center" aria-live="polite">
+    <p class="tk-amt tk-t-amount-display"><span class="tk-amt__cur">Rp</span>{{amountText}}</p>
+  </div>
+
+  <sc-if value="{{isExpense}}" hint-placeholder-val="{{true}}">
+    <div class="cat-pick" role="group" aria-label="Kategori" style="padding-bottom: 8px">
+      <button class="cat-pick__opt {{c0.cls}}" type="button" aria-pressed="{{c0.pressed}}" onClick="{{c0.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/f1ae8d6356f45cec2038768261cba47e" alt="" width="32" height="32"></span><span class="cat-pick__name">Makan &amp; Minum</span></button>
+      <button class="cat-pick__opt {{c1.cls}}" type="button" aria-pressed="{{c1.pressed}}" onClick="{{c1.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/be1d988f965774850a0d78479d429106" alt="" width="32" height="32"></span><span class="cat-pick__name">Transportasi</span></button>
+      <button class="cat-pick__opt {{c2.cls}}" type="button" aria-pressed="{{c2.pressed}}" onClick="{{c2.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/807cc382e258bd1f8a94ba4795471b4d" alt="" width="32" height="32"></span><span class="cat-pick__name">Belanja Harian</span></button>
+      <button class="cat-pick__opt {{c3.cls}}" type="button" aria-pressed="{{c3.pressed}}" onClick="{{c3.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/73796fb4a84837b6efa626a8f86986c4" alt="" width="32" height="32"></span><span class="cat-pick__name">Tagihan</span></button>
+      <button class="cat-pick__opt" type="button"><span class="tk-tile tk-tile--slate"><span class="tk-icon">more_horiz</span></span><span class="cat-pick__name">Semua kategori</span></button>
+    </div>
+  </sc-if>
+  <sc-if value="{{isIncome}}" hint-placeholder-val="{{false}}">
+    <div class="cat-pick" role="group" aria-label="Kategori" style="padding-bottom: 8px">
+      <button class="cat-pick__opt {{c0.cls}}" type="button" aria-pressed="{{c0.pressed}}" onClick="{{c0.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/6472b514c73603db38d0e194adeb08cd" alt="" width="32" height="32"></span><span class="cat-pick__name">Gaji</span></button>
+      <button class="cat-pick__opt {{c1.cls}}" type="button" aria-pressed="{{c1.pressed}}" onClick="{{c1.pick}}"><span class="tk-tile tk-tile--px"><img src="/_blob/7b29d1c27de82a7878980c9785ed0d08" alt="" width="32" height="32"></span><span class="cat-pick__name">Freelance</span></button>
+      <button class="cat-pick__opt {{c2.cls}}" type="button" aria-pressed="{{c2.pressed}}" onClick="{{c2.pick}}"><span class="tk-tile tk-tile--slate"><span class="tk-icon">stars</span></span><span class="cat-pick__name">Bonus</span></button>
+      <button class="cat-pick__opt {{c3.cls}}" type="button" aria-pressed="{{c3.pressed}}" onClick="{{c3.pick}}"><span class="tk-tile tk-tile--slate"><span class="tk-icon">redeem</span></span><span class="cat-pick__name">Hadiah</span></button>
+      <button class="cat-pick__opt" type="button"><span class="tk-tile tk-tile--slate"><span class="tk-icon">more_horiz</span></span><span class="cat-pick__name">Semua kategori</span></button>
+    </div>
+  </sc-if>
+
+  <div class="tk-list tk-list--icon" style="border-radius: 0; clip-path: none">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <button class="tk-row tk-row--compact" type="button">
+        <span class="tk-icon tk-ink-2">{{r.icon}}</span>
+        <span class="tk-row__main"><span class="tk-row__label">{{r.label}}</span><span class="{{r.valueCls}}">{{r.value}}</span></span>
+        <span class="tk-t-caption {{r.subCls}}" style="text-align: right; max-width: 132px">{{r.sub}}</span>
+        <span class="tk-icon tk-row__chev">chevron_right</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 8px 16px 16px">
+    <div class="tk-keypad">
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p1}}">1</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p2}}">2</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p3}}">3</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p4}}">4</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p5}}">5</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p6}}">6</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p7}}">7</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p8}}">8</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p9}}">9</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p000}}">000</button>
+      <button class="tk-key" type="button" style="height: 46px" onClick="{{p0}}">0</button>
+      <button class="tk-key tk-key--fn" type="button" style="height: 46px" aria-label="Hapus satu digit" onClick="{{del}}"><span class="tk-icon">backspace</span></button>
+    </div>
+    <span class="tk-pixel-shadow"><a class="tk-btn tk-btn--primary tk-btn--block {{saveCls}}" href="Main.dc.html" style="--u: 4px">{{saveLabel}}</a></span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const kind = s.kind || 'expense';
+    const digits = s.digits !== undefined ? s.digits : '45000';
+    const cat = s.cat || 0;
+    const amt = parseInt(digits || '0', 10);
+    const num = (n) => String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const rp = (n) => (n < 0 ? '−' : '') + 'Rp' + num(n);
+    const press = (k) => () => {
+      const next = k === 'del' ? digits.slice(0, -1) : (digits + k).replace(/^0+/, '');
+      if (next.length > 12) return;
+      this.setState({ digits: next });
+    };
+    const kindOpt = (key) => ({
+      cls: kind === key ? 'is-selected' : '',
+      checked: kind === key ? 'true' : 'false',
+      pick: () => this.setState({ kind: key, cat: 0 })
+    });
+    const chip = (i) => ({
+      cls: cat === i ? 'is-selected' : '',
+      pressed: cat === i ? 'true' : 'false',
+      pick: () => this.setState({ cat: i })
+    });
+    const after = (base, delta) => {
+      const v = base + delta;
+      return { sub: 'Saldo jadi ' + rp(v), subCls: v < 0 ? 'tk-c-danger' : 'tk-ink-2' };
+    };
+    const note = { icon: 'sticky_note_2', label: 'Catatan', value: 'Tulis catatan singkat', valueCls: 'tk-t-body tk-ink-3', sub: '', subCls: '' };
+    const date = { icon: 'calendar_today', label: 'Tanggal', value: 'Hari ini, 12.25', valueCls: 'tk-row__title', sub: '', subCls: '' };
+    const rowsBy = {
+      expense: [
+        Object.assign({ icon: 'account_balance_wallet', label: 'Dompet', value: 'Tunai', valueCls: 'tk-row__title' }, after(376000, -amt)),
+        date,
+        note,
+        { icon: 'donut_small', label: 'Anggaran (opsional)', value: 'Belanja September · Makan', valueCls: 'tk-row__title', sub: '', subCls: '' }
+      ],
+      income: [
+        Object.assign({ icon: 'account_balance_wallet', label: 'Masuk ke', value: 'BCA', valueCls: 'tk-row__title' }, after(14810000, amt)),
+        date,
+        note
+      ],
+      transfer: [
+        Object.assign({ icon: 'account_balance', label: 'Dari', value: 'BCA', valueCls: 'tk-row__title' }, after(14810000, -amt)),
+        Object.assign({ icon: 'payments', label: 'Ke', value: 'Tunai', valueCls: 'tk-row__title' }, after(376000, amt)),
+        date,
+        note
+      ]
+    };
+    const labels = { expense: 'Simpan pengeluaran', income: 'Simpan pemasukan', transfer: 'Simpan transfer' };
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      amountText: num(amt),
+      kE: kindOpt('expense'),
+      kI: kindOpt('income'),
+      kT: kindOpt('transfer'),
+      isExpense: kind === 'expense',
+      isIncome: kind === 'income',
+      c0: chip(0),
+      c1: chip(1),
+      c2: chip(2),
+      c3: chip(3),
+      rows: rowsBy[kind],
+      p1: press('1'), p2: press('2'), p3: press('3'), p4: press('4'), p5: press('5'),
+      p6: press('6'), p7: press('7'), p8: press('8'), p9: press('9'), p0: press('0'), p000: press('000'),
+      del: press('del'),
+      saveLabel: labels[kind],
+      saveCls: amt > 0 ? '' : 'is-disabled'
+    };
+  }
+}
+</script>
+</body>
+</html>

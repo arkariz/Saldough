@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Dompet</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Dompet</h1>
+    <button class="tk-iconbtn" type="button" aria-label="Tambah dompet"><span class="tk-icon">add</span></button>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 24px; padding: 0 16px 32px">
+    <section style="display: flex; flex-direction: column; gap: 12px; padding: 4px 4px 0">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <p class="tk-t-body-sm tk-ink-2">Total saldo</p>
+        <p class="tk-amt tk-t-amount-hero"><span class="tk-amt__cur">Rp</span>27.522.000</p>
+        <p class="tk-t-body-sm tk-ink-2">4 dompet aktif</p>
+      </div>
+      <div role="img" aria-label="Sebaran saldo: BCA 54 persen, Tabungan 44 persen, Tunai 1 persen, GoPay 1 persen" style="display: flex; gap: 2px; height: 12px; border-radius: 999px; overflow: hidden">
+        <span style="width: 53.8%; background: var(--cat-blue)"></span>
+        <span style="width: 43.6%; background: var(--cat-amber)"></span>
+        <span style="width: 1.4%; background: var(--cat-green)"></span>
+        <span style="width: 1.2%; background: var(--cat-teal)"></span>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">Dompet aktif</h2></div>
+      <div class="tk-list">
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/217eb2f48cad6b961b3185249370f3c9" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">BCA</span><span class="tk-row__sub">Bank · 54%</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">Rp14.810.000</span></span>
+        </div>
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/691ca2ad7e1ed879117fb2ac4ca15945" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Tabungan</span><span class="tk-row__sub">Tabungan · 44%</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">Rp12.000.000</span></span>
+        </div>
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/ea1420161b242fab71bcc8a63b1fc1a7" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">Tunai</span><span class="tk-row__sub">Uang tunai · 1%</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">Rp376.000</span></span>
+        </div>
+        <div class="tk-row">
+          <span class="tk-tile tk-tile--px"><img src="/_blob/cba0eebb79b34aefa3656aa67db49493" alt="" width="32" height="32"></span>
+          <span class="tk-row__main"><span class="tk-row__title">GoPay</span><span class="tk-row__sub">Dompet digital · 1%</span></span>
+          <span class="tk-row__end"><span class="tk-amt tk-t-amount">Rp336.000</span></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="tk-list tk-list--plain">
+      <button class="tk-row tk-row--compact" type="button">
+        <span class="tk-row__main"><span class="tk-row__title">Dompet nonaktif</span><span class="tk-row__sub">1 dompet · tidak muncul di Catat</span></span>
+        <span class="tk-icon tk-row__chev">chevron_right</span>
+      </button>
+    </div>
+
+    <button class="tk-btn tk-btn--secondary tk-btn--block" type="button"><span class="tk-icon">add</span>Tambah dompet</button>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item" href="Main.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="Riwayat.dc.html"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</a>
+    <a class="tk-nav__catat" href="Catat.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Anggaran</a>
+    <a class="tk-nav__item is-active" href="Dompet.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.dark ? 'dark' : 'light' };
+  }
+}
+</script>
+</body>
+</html>

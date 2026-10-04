@@ -70,14 +70,15 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 16 | 15 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
-| 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 12 | 11 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
+| 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 15 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
+| 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Proposed) | 9 | 0 | Direncanakan 4 Okt 2026 -- menunggu jawaban pemilik atas ADR-037 §6; mulai dari T-17.1 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2743,6 +2744,87 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       Verifikasi: uji widget per butir.
       Memenuhi FR-BUD-008, FR-PLN-003.
 
+## Fase 17: Rencana R3 (otomasi rutin)
+
+Permintaan pemilik 4 Okt 2026, sebelum R1 dan R2 dirilis. Usulan keputusan di
+[ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md) (**Proposed**);
+perilaku di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md)
+§7A E1/E3/E8, §7B W3/W6, §12 R3. Branch `claude/rencana-r3-fase-17`, dibuat
+dari `claude/rencana-r2-fase-16` (belum di-merge ke `main`).
+
+**Gerbang:** jangan menulis kode sebelum pemilik menjawab ADR-037 §6 dan
+statusnya Accepted. Milestone urut dari risiko terendah, masing-masing bisa
+dirilis sendiri: **R3a deteksi** T-17.1–17.3, **R3b catat otomatis**
+T-17.4–17.5, **R3c saran** T-17.6–17.7, analitik T-17.8, verifikasi T-17.9.
+R3d (rutin lewat suara, KT-R7) ditunda ke B-32.
+
+**Hemat kuota:** tiap tugas dirancang muat satu sesi. Baris "Buka" menyebut
+berkas yang cukup dibaca; mulai dari situ, jangan menyapu folder. Satu commit
+per tugas; tutup dengan `flutter analyze` tanpa error dan seluruh uji lulus,
+lalu centang di sini dan naikkan hitungan di tabel progres.
+
+### R3a: deteksi tanpa menulis
+
+- [ ] **T-17.1** Status turunan `unseen` (E3, ADR-037 §3.1): kemunculan
+      autodebet H+2 belum tercatat/tertaut; field `snoozedUntil?` di
+      `RecurringRule` (skema naik, dokumen lama terbaca).
+      Buka: `shared/recurring/domain/occurrence_status.dart`,
+      `recurring_rule.dart`, `data/recurring_rule_model.dart`.
+      Verifikasi: uji status (H+1 menunggu, H+2 unseen, bayar sendiri tidak,
+      ditunda), uji model lama/baru.
+- [ ] **T-17.2** Kartu Menunggu: label "Belum terlihat di notifikasi" dan aksi
+      Catat / Belum terjadi / Lewati.
+      Buka: kartu Menunggu di `features/recurring/presentation/widgets/`,
+      `recurring_bloc.dart`, i18n `recurring.*`.
+      Verifikasi: uji widget label dan tiga aksi; 360dp tanpa luapan.
+- [ ] **T-17.3** W6 rutin menganggur: `idleRules()` (2 kemunculan terakhir
+      dilewati/unseen), kartu Akhiri / Jeda / Biarkan di segmen Rutin,
+      `idleDismissedAt?`.
+      Buka: `shared/recurring/domain/recurring_overview.dart`,
+      `features/recurring/presentation/pages/recurring_page.dart`.
+      Verifikasi: uji fungsi (dilewati 2×, selang-seling tidak), uji widget.
+
+### R3b: catat otomatis
+
+- [ ] **T-17.4** Sakelar Catat otomatis di "Atur lebih lanjut" (nominal
+      tetap saja), field `autoRecord`, baris status di rincian rutin.
+      Buka: bagian Ulangi di formulir CATAT (`features/record/`),
+      `recurring_detail_page.dart`.
+      Verifikasi: uji sakelar hilang untuk kira-kira; uji simpan.
+- [ ] **T-17.5** `AutoRecordDue` + host saat dibuka/`ActiveDay` (pola
+      `RecurringBudgetHost`): catat lewat `RecordTransaction`, ragu = tidak
+      dicatat, autodebet H+1, log `recurring/auto_record_log` + Batalkan.
+      Buka: `features/budget/presentation/host/recurring_budget_host.dart`,
+      `shared/recurring/domain/occurrence_matching.dart`, `occurrence_recording.dart`.
+      Verifikasi: uji use case (tetap ya, kira-kira tidak, sudah tertaut
+      tidak, kandidat notifikasi tidak, idempoten saat dibuka 2×), uji
+      Batalkan.
+
+### R3c: saran
+
+- [ ] **T-17.6** Kenaikan harga dari notifikasi (W3): hampir cocok + naik
+      ≥5% dan ≥Rp5.000 → tidak tertaut otomatis, kartu Perbarui rutin /
+      Biarkan.
+      Buka: `shared/recurring/domain/occurrence_matching.dart`,
+      `features/notification_capture/` (titik pencocokan).
+      Verifikasi: uji pencocokan (naik 4% tetap cocok, naik 10% jadi saran).
+- [ ] **T-17.7** "Sepertinya rutin" dari riwayat: 3 bulan berturut-turut,
+      dompet/nominal/catatan sama, tanggal ±3 hari; Jadikan rutin / Bukan
+      rutin (`recurring/suggestion_dismissed`), maks 3 saran.
+      Buka: `shared/recurring/domain/recurring_pattern.dart`,
+      `recurring_page.dart`.
+      Verifikasi: uji deteksi (2 bulan tidak, 3 ya, sudah tertaut tidak),
+      uji widget.
+
+### Penutup
+
+- [ ] **T-17.8** Analitik R3 (ADR-037 §3.5) dan peristiwa R1 yang tertinggal
+      (B-31), lewat `AppAnalytics`.
+      Buka: `core/foundation/analytics/app_analytics.dart`.
+      Verifikasi: uji nama dan parameter tanpa nominal.
+- [ ] **T-17.9** Verifikasi R3 di emulator (pola
+      VERIFICATION_PLAN_FASE_16), temuan jadi tugas baru.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -2773,7 +2855,8 @@ menambah dan memindahkannya ada di
 | B-28 | **R3 Otomasi**: catat otomatis per rutin (nominal tetap), "belum terlihat" H+2, kenaikan harga dari notifikasi, rutin menganggur (W6), saran pola rutin dari riwayat/notifikasi, rutin lewat suara, gabung kartu menunggu (KT-R7). | agen | RECURRING_AND_FORECAST §12 |
 | B-29 | Penyamaran notifikasi Android 15 (temuan K8 T-15.9): listener menerima "Sensitive notification content hidden" untuk notifikasi yang dianggap berisi kode. Cek di perangkat Android 15 dengan notifikasi BRImo/BCA nyata; bila terjadi, tampilkan penjelasan di layar Catat dari notifikasi dan jangan menyimpan teks tersamar sebagai tangkapan. | pemilik + agen | [VERIFICATION_PLAN_FASE_15](VERIFICATION_PLAN_FASE_15.md) R1a |
 | B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
-| B-31 | Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
+| B-31 | (Dijadwalkan di T-17.8) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
+| B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

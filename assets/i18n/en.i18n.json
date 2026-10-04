@@ -1094,7 +1094,8 @@
     "suggestTitle": "Looks repeating",
     "suggestLine": "$name $amount, around day $day for the last three months.",
     "suggestAccept": "Make repeating",
-    "suggestDismiss": "Not repeating"
+    "suggestDismiss": "Not repeating",
+    "autoRecordedTitle": "Recorded automatically"
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

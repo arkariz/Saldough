@@ -180,6 +180,15 @@ final class RecurringSuggestionDismissed extends RecurringEvent {
   final String key;
 }
 
+/// Batalkan satu catatan otomatis dari daftar Tercatat otomatis.
+final class RecurringAutoRecordUndone extends RecurringEvent {
+  /// Membuat [RecurringAutoRecordUndone].
+  const RecurringAutoRecordUndone(this.entry);
+
+  /// Entri log.
+  final AutoRecordEntry entry;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

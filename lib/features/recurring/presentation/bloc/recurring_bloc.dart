@@ -41,6 +41,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     this._monthsBack = 1,
     this._budgetItemCatalog,
     this._suggestionDismissals,
+    this._autoRecordLog,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(RecurringState.initial(DateTime.now())) {
@@ -69,6 +70,18 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             ? t.recurring.budgetUnlinkedMessage(name: rule.note)
             : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
       );
+    });
+    on<RecurringAutoRecordUndone>((event, emit) async {
+      final transaction = state.transactions.where((t) => t.id == event.entry.transactionId).firstOrNull;
+      if (transaction != null) {
+        if (await _recordTransaction.delete(transaction, source: this) case Left(value: final failure)) {
+          emit(state.copyWith(effect: _effectError(failure)));
+          return;
+        }
+      }
+      await _autoRecordLog?.markUndone(event.entry.transactionId);
+      AppAnalytics.log(PlanEvents.autoRecordUndone);
+      await _load(emit, showSkeleton: false);
     });
     on<RecurringSuggestionDismissed>((event, emit) async {
       emit(state.copyWith(dismissedSuggestions: {...state.dismissedSuggestions, event.key}));
@@ -125,6 +138,9 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
   /// Saran "Sepertinya rutin" yang ditolak; `null` = tanpa (sebagian uji).
   final RecurringSuggestionDismissals? _suggestionDismissals;
+
+  /// Log catat otomatis (ADR-037 §3.2); `null` = tanpa daftar.
+  final AutoRecordLogRepository? _autoRecordLog;
   final DateTime Function() _now;
   late final List<StreamSubscription<void>> _subscriptions;
 
@@ -157,12 +173,17 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     }
     final options = await _budgetItemCatalog?.listOptions();
     final dismissed = await _suggestionDismissals?.load();
+    final logged = await _autoRecordLog?.list(_now());
     emit(
       state.copyWith(
         rules: rules.getOrElse((_) => const []),
         wallets: wallets.getOrElse((_) => const []),
         budgetOptions: options?.getOrElse((_) => const []) ?? const [],
         dismissedSuggestions: dismissed?.getOrElse((_) => const {}) ?? const {},
+        autoRecorded: [
+          for (final e in logged?.getOrElse((_) => const []) ?? const <AutoRecordEntry>[])
+            if (!e.undone && _now().difference(e.recordedAt) < const Duration(days: 7)) e,
+        ],
         transactions: transactions,
         today: today,
         isLoading: false,

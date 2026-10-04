@@ -28,6 +28,10 @@ final class RecurringScope extends IsolatedScope {
     if (parent.isRegistered<BudgetItemCatalog>()) {
       c.registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
     }
+    // Daftar Tercatat otomatis (ADR-037 §3.2).
+    if (parent.isRegistered<AutoRecordLogRepository>()) {
+      c.registerSingleton<AutoRecordLogRepository>(parent<AutoRecordLogRepository>());
+    }
     // Saran Sepertinya rutin (ADR-037 §3.3).
     if (parent.isRegistered<RecurringSuggestionDismissals>()) {
       c.registerSingleton<RecurringSuggestionDismissals>(parent<RecurringSuggestionDismissals>());
@@ -44,6 +48,7 @@ final class RecurringScope extends IsolatedScope {
         ledgerChanges: c<LedgerChanges>(),
         recurringChanges: c<RecurringChanges>(),
         budgetItemCatalog: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null,
+        autoRecordLog: c.isRegistered<AutoRecordLogRepository>() ? c<AutoRecordLogRepository>() : null,
         suggestionDismissals: c.isRegistered<RecurringSuggestionDismissals>()
             ? c<RecurringSuggestionDismissals>()
             : null,

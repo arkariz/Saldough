@@ -52,7 +52,12 @@ void main() {
     );
   });
 
-  Future<void> pump(WidgetTester tester, Widget child, {int monthsBack = 1}) async {
+  Future<void> pump(
+    WidgetTester tester,
+    Widget child, {
+    int monthsBack = 1,
+    AutoRecordLogRepository? autoRecordLog,
+  }) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -71,6 +76,7 @@ void main() {
         ),
       ),
       monthsBack: monthsBack,
+      autoRecordLog: autoRecordLog,
       now: () => clock,
     )..add(const RecurringStarted());
     addTearDown(bloc.close);
@@ -330,6 +336,40 @@ void main() {
       await tester.tap(find.text(t.recurring.skipAction));
       await tester.pumpAndSettle();
       expect(events, contains(RecurringEvents.occurrenceSkipped));
+    });
+
+    testWidgets('Tercatat otomatis: daftar 7 hari dengan Batalkan menghapus transaksi dan menandai log (T-17.11)', (
+      tester,
+    ) async {
+      final log = AutoRecordLogRepositoryImpl(storage: storage, clock: () => clock);
+      await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)).copyWith(autoRecord: true));
+      await transactions.saveTransaction(
+        ExpenseTransaction(
+          id: 'auto-1',
+          date: DateTime(2026, 10, 1, 9),
+          amount: 6500000,
+          note: 'Netflix',
+          walletId: 'bca',
+          recurrence: RecurrenceLink(ruleId: 'Netflix', occurrenceDate: DateTime(2026, 10)),
+        ),
+      );
+      await log.add([
+        AutoRecordEntry(
+          transactionId: 'auto-1',
+          ruleId: 'Netflix',
+          ruleName: 'Netflix',
+          occurrenceDate: DateTime(2026, 10),
+          recordedAt: DateTime(2026, 10, 1, 9),
+        ),
+      ]);
+      await pump(tester, const RecurringSegmentView(), autoRecordLog: log);
+      final card = find.byKey(const ValueKey('recurring-auto-recorded'));
+      expect(card, findsOneWidget);
+      await tester.tap(find.descendant(of: card, matching: find.text(t.recurring.undoAction)));
+      await tester.pumpAndSettle();
+      expect(card, findsNothing);
+      expect(read(await transactions.listTransactionsInMonth(DateTime(2026, 10))), isEmpty);
+      expect(read(await log.list(clock)).single.undone, isTrue);
     });
   });
 }

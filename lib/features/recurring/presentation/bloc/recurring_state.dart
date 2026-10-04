@@ -19,6 +19,7 @@ final class RecurringState extends UiState<RecurringState> {
     this.kindFilter,
     this.budgetOptions = const [],
     this.dismissedSuggestions = const {},
+    this.autoRecorded = const [],
     super.effect,
   });
 
@@ -52,6 +53,9 @@ final class RecurringState extends UiState<RecurringState> {
 
   /// Kunci saran "Sepertinya rutin" yang ditolak (ADR-037 §3.3).
   final Set<String> dismissedSuggestions;
+
+  /// Catatan otomatis 7 hari terakhir yang belum dibatalkan (ADR-037 §3.2).
+  final List<AutoRecordEntry> autoRecorded;
 
   /// Awal bulan berjalan.
   DateTime get monthStart => DateTime(today.year, today.month);
@@ -92,6 +96,7 @@ final class RecurringState extends UiState<RecurringState> {
     RecurringKind? Function()? kindFilter,
     List<BudgetItemOption>? budgetOptions,
     Set<String>? dismissedSuggestions,
+    List<AutoRecordEntry>? autoRecorded,
     UiEffect? effect,
   }) {
     return RecurringState(
@@ -104,6 +109,7 @@ final class RecurringState extends UiState<RecurringState> {
       kindFilter: kindFilter == null ? this.kindFilter : kindFilter(),
       budgetOptions: budgetOptions ?? this.budgetOptions,
       dismissedSuggestions: dismissedSuggestions ?? this.dismissedSuggestions,
+      autoRecorded: autoRecorded ?? this.autoRecorded,
       effect: effect,
     );
   }
@@ -119,5 +125,6 @@ final class RecurringState extends UiState<RecurringState> {
     kindFilter,
     budgetOptions,
     dismissedSuggestions,
+    autoRecorded,
   ];
 }

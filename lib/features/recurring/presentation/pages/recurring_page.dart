@@ -175,6 +175,10 @@ class RecurringSegmentView extends StatelessWidget {
                 _IdleCard(rule: idle),
                 const SizedBox(height: AppSpacing.md),
               ],
+              if (state.autoRecorded.isNotEmpty) ...[
+                _AutoRecordedCard(entries: state.autoRecorded),
+                const SizedBox(height: AppSpacing.md),
+              ],
               if (suggestions.isNotEmpty) ...[
                 _SuggestionCard(suggestions: suggestions),
                 const SizedBox(height: AppSpacing.md),
@@ -391,6 +395,45 @@ class _SuggestionCard extends StatelessWidget {
               ],
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Daftar **Tercatat otomatis** 7 hari terakhir dengan Batalkan per baris
+/// (ADR-037 §3.2).
+class _AutoRecordedCard extends StatelessWidget {
+  const _AutoRecordedCard({required this.entries});
+
+  final List<AutoRecordEntry> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<RecurringBloc>();
+    final textTheme = Theme.of(context).textTheme;
+    return AppHardCard(
+      key: const ValueKey('recurring-auto-recorded'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.recurring.autoRecordedTitle, style: textTheme.titleSmall),
+          for (final e in entries)
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${e.ruleName.isEmpty ? t.record.repeat.fallbackName : e.ruleName} · '
+                    '${CycleMonthFormatter.formatDayMonth(e.occurrenceDate)}',
+                    style: textTheme.bodyMedium,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => bloc.add(RecurringAutoRecordUndone(e)),
+                  child: Text(t.recurring.undoAction),
+                ),
+              ],
+            ),
         ],
       ),
     );

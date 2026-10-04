@@ -3040,6 +3040,9 @@ class Translations$recurring$id {
 
 	/// id: 'Bukan rutin'
 	String get suggestDismiss => 'Bukan rutin';
+
+	/// id: 'Tercatat otomatis'
+	String get autoRecordedTitle => 'Tercatat otomatis';
 }
 
 // Path: plan
@@ -4704,6 +4707,7 @@ extension on Translations {
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, sekitar tanggal ${day} tiga bulan terakhir.',
 			'recurring.suggestAccept' => 'Jadikan rutin',
 			'recurring.suggestDismiss' => 'Bukan rutin',
+			'recurring.autoRecordedTitle' => 'Tercatat otomatis',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

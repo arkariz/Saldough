@@ -1175,6 +1175,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String suggestLine({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.';
 	@override String get suggestAccept => 'Make repeating';
 	@override String get suggestDismiss => 'Not repeating';
+	@override String get autoRecordedTitle => 'Recorded automatically';
 }
 
 // Path: plan
@@ -2484,6 +2485,7 @@ extension on TranslationsEn {
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.',
 			'recurring.suggestAccept' => 'Make repeating',
 			'recurring.suggestDismiss' => 'Not repeating',
+			'recurring.autoRecordedTitle' => 'Recorded automatically',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

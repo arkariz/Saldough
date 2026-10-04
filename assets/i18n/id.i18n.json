@@ -1094,7 +1094,8 @@
     "suggestTitle": "Sepertinya rutin",
     "suggestLine": "$name $amount, sekitar tanggal $day tiga bulan terakhir.",
     "suggestAccept": "Jadikan rutin",
-    "suggestDismiss": "Bukan rutin"
+    "suggestDismiss": "Bukan rutin",
+    "autoRecordedTitle": "Tercatat otomatis"
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

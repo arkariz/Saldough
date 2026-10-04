@@ -138,5 +138,12 @@ E1–E6 sesuai, selisih nol rupiah pada E2 dan E5.
     lagi menyumbang. Contoh: Netflix Rp65.000 (rutin dihapus) tidak masuk
     tagihan rutin maupun di luar rencana; keluar Okt 912.500, terhitung
     847.500. T-15.18.
+  - Sesudah T-15.16–15.18 (build ulang, emulator): E1 lulus (dialog
+    terbuka, label "25 Sep – 24 Okt", Beranda tetap bulan kalender); E2
+    lulus untuk data uji (Uang nganggur −912.500 = seluruh pengeluaran
+    Okt; di luar rencana −52.500 = Netflix −65.000 + selisih Listrik
+    +12.500); E5 lulus (akhir dan paling tipis 137.500, tanpa kemunculan
+    tersisa). E2/E5 dengan satu bulan data nyata tetap di perangkat
+    pemilik.
   - Lulus: angka Rencana di segmen Rutin (847.500 = 350.000 + 150.000 +
     287.500 + 60.000), baris perkiraan Beranda (1.375.000 − 350.000).

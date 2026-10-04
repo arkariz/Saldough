@@ -69,8 +69,8 @@ class PlanForecastRow extends StatelessWidget {
                                     child: Text(
                                       t.plan.forecastRow(
                                         date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
-                                        amount: AppMoneyFormatter.format(projection.endBalance),
-                                        low: AppMoneyFormatter.format(low.balance),
+                                        amount: AppMoneyFormatter.formatApprox(projection.endBalance),
+                                        low: AppMoneyFormatter.formatApprox(low.balance),
                                         lowDate: CycleMonthFormatter.formatDayMonth(low.date),
                                       ),
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(

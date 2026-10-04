@@ -182,7 +182,10 @@ class PlanMonthView extends StatelessWidget {
                         if (k > 0) const SizedBox(width: AppSpacing.xs),
                         AppChoiceChip(
                           key: ValueKey('plan-month-$k'),
-                          label: '${labelOf(m)} ${compactApprox(state.projectionFor(k).endBalance)}',
+                          // Bulan keuangan 25 Okt–24 Nov disebut "Nov" (T-16.16 K8).
+                          label:
+                              '${CycleMonthFormatter.formatMonthShort(m.lastDay)} '
+                              '${compactApprox(state.projectionFor(k).endBalance)}',
                           selected: state.selected == k,
                           onTap: () => bloc.add(PlanMonthSelected(k)),
                         ),

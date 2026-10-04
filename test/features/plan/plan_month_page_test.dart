@@ -6,6 +6,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -295,7 +296,11 @@ void main() {
     testWidgets('W9: snapshot bulan ini sekali; selisih perkiraan bulan lalu vs saldo nyata', (tester) async {
       // Saldo nyata akhir Sep = Rp6.500.000 + Kos Rp1.900.000 + jajan Rp57.000.
       await reviews.saveSnapshots([
-        ForecastSnapshot(monthStart: DateTime(2026, 9), endBalance: 845700000 + 31200000),
+        ForecastSnapshot(
+          monthStart: DateTime(2026, 9),
+          endBalance: 845700000 + 31200000,
+          takenOn: DateTime(2026, 9, 2),
+        ),
         ForecastSnapshot(monthStart: DateTime(2026, 10), endBalance: 1),
       ]);
       await pump(tester, reviews: reviews);
@@ -311,6 +316,20 @@ void main() {
       expect(find.textContaining('Rp312.000'), findsNothing);
       final stored = (await reviews.loadSnapshots()).getOrElse((_) => const []);
       expect(stored.single.monthStart, DateTime(2026, 10));
+    });
+
+    testWidgets('W9 tidak tampil bila snapshot bulan lalu dibuat sesudah hari ke-7 (T-16.16 K9)', (tester) async {
+      await reviews.saveSnapshots([
+        ForecastSnapshot(monthStart: DateTime(2026, 9), endBalance: 876900000, takenOn: DateTime(2026, 9, 15)),
+      ]);
+      await pump(tester, reviews: reviews);
+      expect(find.textContaining('Rp312.000'), findsNothing);
+    });
+
+    test('formatApprox membulatkan ≥10.000 ke ribuan (T-16.16 K5)', () {
+      expect(AppMoneyFormatter.formatApprox(8721200), 'Rp87.000');
+      expect(AppMoneyFormatter.formatApprox(-285553300), '−Rp2.856.000');
+      expect(AppMoneyFormatter.formatApprox(950000), 'Rp9.500');
     });
 
     test('withSnapshot: yang pertama menang, hanya tiga bulan terakhir', () {

@@ -271,13 +271,17 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     final current = ForecastSnapshot(
       monthStart: state.range.start,
       endBalance: state.copyWith(walletId: () => null).projectionFor(0).endBalance,
+      takenOn: state.today,
     );
     final updated = withSnapshot(stored, current);
     if (!identical(updated, stored)) await reviews.saveSnapshots(updated);
     final previous = state.previousRange.start;
     emit(
       state.copyWith(
-        previousForecast: () => updated.where((s) => s.monthStart == previous).firstOrNull?.endBalance,
+        previousForecast: () => updated
+            .where((s) => s.monthStart == previous && s.isEarly(days: PlanMonthState.reviewDays))
+            .firstOrNull
+            ?.endBalance,
       ),
     );
   }

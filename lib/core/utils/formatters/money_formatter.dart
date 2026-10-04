@@ -56,7 +56,18 @@ abstract final class AppMoneyFormatter {
   ///
   /// [currency] menimpa mata uang aktif; hanya untuk pratinjau, mis. contoh
   /// "sebelum → sesudah" di dialog ganti mata uang.
-  static String format(int sen, {AppCurrency? currency}) {
+  static String format(int sen, {AppCurrency? currency}) => _format(sen, currency: currency);
+
+  /// Nominal **perkiraan** (diawali `≈` oleh pemanggil): 10.000 satuan atau
+  /// lebih dibulatkan ke ribuan terdekat (Rp87.212 → Rp87.000), supaya
+  /// perkiraan tidak tampak sepasti saldo nyata (T-16.16 K5).
+  static String formatApprox(int sen, {AppCurrency? currency}) {
+    const thousand = 100000;
+    if (sen.abs() < 10 * thousand) return _format(sen, currency: currency);
+    return _format(_floorDiv(sen + thousand ~/ 2, thousand) * thousand, currency: currency);
+  }
+
+  static String _format(int sen, {AppCurrency? currency}) {
     final active = currency ?? ActiveCurrency.value;
     final bool isNegative;
     final String body;

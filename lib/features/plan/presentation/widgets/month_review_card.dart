@@ -50,9 +50,12 @@ class MonthReviewCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                t.plan.reviewCollapsed(month: monthLabel, done: state.reviewDoneCount, total: steps.length),
-                style: textTheme.bodyMedium,
+              // Labelnya sudah dibacakan `AppTappable` (T-16.16 K7).
+              child: ExcludeSemantics(
+                child: Text(
+                  t.plan.reviewCollapsed(month: monthLabel, done: state.reviewDoneCount, total: steps.length),
+                  style: textTheme.bodyMedium,
+                ),
               ),
             ),
             const AppIcon(IconKey.chevronRight, size: 18),

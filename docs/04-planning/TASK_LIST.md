@@ -2743,6 +2743,11 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       kali, chip bulan ringkas, W9 hanya bila snapshot dibuat ≤ hari ke-7.
       Verifikasi: uji widget per butir.
       Memenuhi FR-BUD-008, FR-PLN-003.
+      Bagian 1 selesai 4 Okt 2026: K5 `AppMoneyFormatter.formatApprox`
+      (≥10.000 dibulatkan ke ribuan) di kartu saldo, baris Beranda, banner
+      dan notifikasi siapkan dana; K7 `ExcludeSemantics` di baris lipat; K8
+      chip bulan memakai bulan hari terakhir ("Nov"); K9
+      `ForecastSnapshot.takenOn` + `isEarly(days: 7)`. Sisa: K4, K6.
 
 ## Fase 17: Rencana R3 (otomasi rutin)
 

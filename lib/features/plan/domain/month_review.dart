@@ -54,7 +54,7 @@ final class MonthReview extends Equatable {
 /// saat itu. Hanya di perangkat.
 final class ForecastSnapshot extends Equatable {
   /// Membuat [ForecastSnapshot].
-  const ForecastSnapshot({required this.monthStart, required this.endBalance});
+  const ForecastSnapshot({required this.monthStart, required this.endBalance, this.takenOn});
 
   /// Awal bulan keuangan yang diperkirakan.
   final DateTime monthStart;
@@ -62,11 +62,19 @@ final class ForecastSnapshot extends Equatable {
   /// Perkiraan saldo akhir bulan, sen.
   final int endBalance;
 
+  /// Kapan dibuat; `null` = dokumen lama (dianggap tidak layak untuk W9).
+  final DateTime? takenOn;
+
+  /// Layak untuk W9: dibuat dalam [days] hari pertama bulan keuangan,
+  /// supaya bulan yang dibuka terlambat tidak tampak "tepat" (T-16.16 K9).
+  bool isEarly({required int days}) =>
+      takenOn != null && takenOn!.isBefore(DateTime(monthStart.year, monthStart.month, monthStart.day + days));
+
   /// Berapa bulan terakhir yang disimpan.
   static const keep = 3;
 
   @override
-  List<Object?> get props => [monthStart, endBalance];
+  List<Object?> get props => [monthStart, endBalance, takenOn];
 }
 
 /// [snapshots] dengan [snapshot] bila bulannya belum ada (snapshot pertama

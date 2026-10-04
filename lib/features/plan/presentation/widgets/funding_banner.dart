@@ -68,7 +68,7 @@ class _FundingBannerState extends State<FundingBanner> {
           Text(
             t.plan.fundingBody(
               wallet: first.walletName,
-              shortfall: AppMoneyFormatter.format(first.shortfall),
+              shortfall: AppMoneyFormatter.formatApprox(first.shortfall),
               name: name,
               date: CycleMonthFormatter.formatDayMonth(first.date),
             ),

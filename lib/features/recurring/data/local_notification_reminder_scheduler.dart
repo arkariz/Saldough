@@ -136,7 +136,7 @@ final class LocalNotificationReminderScheduler implements ReminderScheduler {
           name: items.single.rule.note.isEmpty ? t.record.repeat.fallbackName : items.single.rule.note,
           amount: AppMoneyFormatter.format(items.single.rule.amount),
           date: CycleMonthFormatter.formatDayMonth(items.single.date),
-          shortfall: AppMoneyFormatter.format(reminder.funding!.shortfall),
+          shortfall: AppMoneyFormatter.formatApprox(reminder.funding!.shortfall),
         ),
       ),
       ReminderKind.dueSoon => (

@@ -52,12 +52,21 @@ final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthRevie
         ForecastSnapshot(
           monthStart: DateTime.parse(item['monthStart'] as String),
           endBalance: item['endBalance'] as int,
+          takenOn: switch (item['takenOn']) {
+            final String date => DateTime.parse(date),
+            _ => null,
+          },
         ),
     ],
     toJson: (snapshots) => {
       'schemaVersion': 1,
       'items': [
-        for (final s in snapshots) {'monthStart': s.monthStart.toIso8601String(), 'endBalance': s.endBalance},
+        for (final s in snapshots)
+          {
+            'monthStart': s.monthStart.toIso8601String(),
+            'endBalance': s.endBalance,
+            'takenOn': ?s.takenOn?.toIso8601String(),
+          },
       ],
     },
     storage: _storage,

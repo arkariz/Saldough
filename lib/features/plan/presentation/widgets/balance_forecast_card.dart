@@ -59,7 +59,7 @@ class BalanceForecastCard extends StatefulWidget {
 class _BalanceForecastCardState extends State<BalanceForecastCard> {
   int? _selected;
 
-  static String _approx(int sen) => '≈${AppMoneyFormatter.format(sen)}';
+  static String _approx(int sen) => '≈${AppMoneyFormatter.formatApprox(sen)}';
 
   void _showDetails(BuildContext context) => showModalBottomSheet<void>(
     context: context,
@@ -273,7 +273,7 @@ class _Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final formatted = AppMoneyFormatter.format(amount);
+    final formatted = AppMoneyFormatter.formatApprox(amount);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

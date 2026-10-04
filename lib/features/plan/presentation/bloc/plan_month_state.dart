@@ -96,6 +96,14 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     walletIds: {for (final w in wallets) w.id},
   );
 
+  /// W8: porsi pemasukan terencana bulan ke-[k] yang sudah terikat, dan
+  /// bulan sebelumnya untuk pembanding; `null` tanpa pemasukan terencana.
+  ({int share, int? previous})? committedShareFor(int k) {
+    final share = committedShare(planFor(k));
+    if (share == null) return null;
+    return (share: share, previous: committedShare(k == 0 ? previousPlan : planFor(k - 1)));
+  }
+
   /// Selisih perkiraan − nyata akhir bulan lalu (W9), atau `null`.
   int? get forecastMiss => previousForecast == null ? null : previousForecast! - previousActualEnd;
 

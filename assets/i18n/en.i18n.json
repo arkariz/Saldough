@@ -1076,7 +1076,8 @@
     "budgetLinkedMessage": "$name is linked to $item.",
     "budgetUnlinkedMessage": "$name is no longer linked to a budget item.",
     "fundingTitle": "Prepare funds in $wallet",
-    "fundingBody": "$name $amount on $date. Expected short ≈$shortfall."
+    "fundingBody": "$name $amount on $date. Expected short ≈$shortfall.",
+    "installmentFreeLine": "From $month you free up +$amount/mo."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",
@@ -1154,6 +1155,9 @@
     "lookbackBiggest": "Biggest difference: $line.",
     "accuracyExact": "The $month forecast was spot on.",
     "accuracyMissed": "The $month forecast was off by $amount.",
-    "accuracyMissedBy": "The $month forecast was off by $amount, mostly from $line."
+    "accuracyMissedBy": "The $month forecast was off by $amount, mostly from $line.",
+    "committedShare": "${percent}% of $month income is already committed (repeating + budgets).",
+    "committedShareVs": "${percent}% of $month income is already committed (repeating + budgets); the month before, ${previous}%.",
+    "installmentFree": "After $name ends, from $month you free up +$amount/mo."
   }
 }

@@ -77,7 +77,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
-| 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 12 | 9 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
+| 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 12 | 10 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2689,10 +2689,15 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       besar); snapshot disimpan lewat `MonthReviewRepository` di
       `plan/forecast_snapshots`. Teks W9 menggantikan langkah kilas balik dan
       tampil di lembar W10.
-- [ ] **T-16.10** W7 bebas cicilan dan W8 porsi terikat: teks rincian rutin
+- [x] **T-16.10** W7 bebas cicilan dan W8 porsi terikat: teks rincian rutin
       dan Bulan ini.
       Verifikasi: uji W8 §7B (74,56% → 75%), uji W7 hanya dalam 12 bulan.
       Memenuhi FR-PLN-002.
+      Selesai 4 Okt 2026: `shared/recurring/domain/insights.dart`
+      (`perYearOf`, `installmentFreeOf`, `nearestInstallmentFree`,
+      `committedShare`); dua baris teks netral di bawah Uang nganggur
+      (W8 dibandingkan bulan sebelumnya, W7 yang paling dekat) dan satu baris
+      W7 di rincian rutin. `subscriptionTotals` kini memakai `perYearOf`.
 - [ ] **T-16.11** Analitik R2 (ADR-036 §3.8) tanpa nominal.
       Verifikasi: uji peristiwa terkirim dengan parameter yang benar.
       Di luar PRD: analitik (ADR-023).

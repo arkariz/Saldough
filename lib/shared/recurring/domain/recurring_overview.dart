@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/shared/recurring/domain/insights.dart';
 import 'package:saldough/shared/recurring/domain/occurrence_status.dart';
 import 'package:saldough/shared/recurring/domain/occurrences.dart';
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
@@ -243,14 +244,6 @@ const subscriptionCategoryIds = {'builtin.entertainment'};
         rule,
   ];
   if (subscriptions.length < 2) return null;
-  var perYear = 0;
-  for (final rule in subscriptions) {
-    final timesPerYear = switch (rule.schedule.frequency) {
-      RecurringFrequency.weekly => 52,
-      RecurringFrequency.monthly => 12,
-      RecurringFrequency.yearly => 1,
-    };
-    perYear += rule.amount * timesPerYear ~/ rule.schedule.interval;
-  }
+  final perYear = subscriptions.fold(0, (sum, rule) => sum + perYearOf(rule));
   return (perMonth: perYear ~/ 12, perYear: perYear);
 }

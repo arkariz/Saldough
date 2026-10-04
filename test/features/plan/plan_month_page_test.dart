@@ -185,6 +185,15 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('W8: 75% pemasukan Okt terikat, bulan sebelumnya 49% (T-16.10)', (tester) async {
+    await pump(tester);
+    expect(
+      find.text(t.plan.committedShareVs(percent: 75, month: 'Okt', previous: 49)),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('plan-installment-free')), findsNothing);
+  });
+
   group('tinjau awal bulan (T-16.8, J4)', () {
     late MonthReviewRepositoryImpl reviews;
     setUp(() => reviews = MonthReviewRepositoryImpl(storage: storage));

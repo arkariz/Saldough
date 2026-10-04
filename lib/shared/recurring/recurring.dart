@@ -9,6 +9,7 @@ export 'data/recurring_rule_repository_impl.dart';
 export 'domain/budget_link.dart';
 export 'domain/cashflow_projection.dart';
 export 'domain/funding.dart';
+export 'domain/insights.dart';
 export 'domain/month_plan.dart';
 export 'domain/occurrence_matching.dart';
 export 'domain/occurrence_recording.dart';

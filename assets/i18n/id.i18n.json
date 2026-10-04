@@ -1076,7 +1076,8 @@
     "budgetLinkedMessage": "$name tertaut ke pos $item.",
     "budgetUnlinkedMessage": "Tautan pos $name dilepas.",
     "fundingTitle": "Siapkan dana di $wallet",
-    "fundingBody": "$name $amount, $date. Perkiraan kurang ≈$shortfall."
+    "fundingBody": "$name $amount, $date. Perkiraan kurang ≈$shortfall.",
+    "installmentFreeLine": "Mulai $month ruang bebas +$amount/bln."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",
@@ -1154,6 +1155,9 @@
     "lookbackBiggest": "Selisih terbesar: $line.",
     "accuracyExact": "Perkiraan $month tepat.",
     "accuracyMissed": "Perkiraan $month meleset $amount.",
-    "accuracyMissedBy": "Perkiraan $month meleset $amount, terbesar dari $line."
+    "accuracyMissedBy": "Perkiraan $month meleset $amount, terbesar dari $line.",
+    "committedShare": "${percent}% pemasukan $month sudah terikat (rutin + anggaran).",
+    "committedShareVs": "${percent}% pemasukan $month sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.",
+    "installmentFree": "Sesudah $name selesai, mulai $month ruang bebas +$amount/bln."
   }
 }

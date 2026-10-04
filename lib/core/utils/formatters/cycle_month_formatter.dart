@@ -78,6 +78,9 @@ abstract final class CycleMonthFormatter {
     return months[date.month - 1];
   }
 
+  /// Bulan singkat dan tahun: `Jul 2027`.
+  static String formatMonthYearShort(DateTime date) => '${formatMonthShort(date)} ${date.year}';
+
   /// Memformat [date] lengkap dengan nama hari -- mis. `Sabtu, 26 Oktober
   /// 2024` -- untuk layar rincian transaksi.
   static String formatDateWithWeekday(DateTime date) {

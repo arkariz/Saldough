@@ -200,6 +200,16 @@ class RecurringDetailPage extends StatelessWidget {
                           style: textTheme.bodySmall,
                         ),
                       ],
+                      // W7 bebas cicilan (ADR-036 §3.7).
+                      if (installmentFreeOf(rule, today: today) case final free?)
+                        Text(
+                          t.recurring.installmentFreeLine(
+                            month: CycleMonthFormatter.formatMonthYearShort(free.from),
+                            amount: AppMoneyFormatter.format(free.perMonth),
+                          ),
+                          key: const ValueKey('recurring-installment-free'),
+                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                        ),
                     ],
                   ),
                 ),

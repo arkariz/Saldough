@@ -1159,6 +1159,7 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String budgetUnlinkedMessage({required Object name}) => '${name} is no longer linked to a budget item.';
 	@override String fundingTitle({required Object wallet}) => 'Prepare funds in ${wallet}';
 	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.';
+	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.';
 }
 
 // Path: plan
@@ -1244,6 +1245,9 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String accuracyExact({required Object month}) => 'The ${month} forecast was spot on.';
 	@override String accuracyMissed({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.';
 	@override String accuracyMissedBy({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.';
+	@override String committedShare({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).';
+	@override String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.';
+	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
 }
 
 // Path: record.draftIssue
@@ -2445,6 +2449,7 @@ extension on TranslationsEn {
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
+			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
@@ -2521,6 +2526,9 @@ extension on TranslationsEn {
 			'plan.accuracyExact' => ({required Object month}) => 'The ${month} forecast was spot on.',
 			'plan.accuracyMissed' => ({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.',
 			'plan.accuracyMissedBy' => ({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.',
+			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
+			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
+			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
 			_ => null,
 		};
 	}

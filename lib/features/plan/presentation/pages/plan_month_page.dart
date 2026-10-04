@@ -141,6 +141,9 @@ class PlanMonthView extends StatelessWidget {
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
         final funding = state.fundingWarnings;
+        final committed = state.committedShareFor(state.selected);
+        final installmentFree = nearestInstallmentFree(state.rules, today: state.today);
+        final mutedSmall = textTheme.bodySmall?.copyWith(color: context.appColors.textMuted);
         return TourTrigger(
           tour: TourId.planMonth,
           ready: true,
@@ -199,6 +202,37 @@ class PlanMonthView extends StatelessWidget {
                   onShowBudget: onShowBudget,
                 ),
               ),
+              // Wawasan teks netral (W8, W7, ADR-036 §3.7).
+              if (committed != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Text(
+                    committed.previous == null
+                        ? t.plan.committedShare(percent: committed.share, month: monthLabel)
+                        : t.plan.committedShareVs(
+                            percent: committed.share,
+                            month: monthLabel,
+                            previous: committed.previous!,
+                          ),
+                    key: const ValueKey('plan-committed-share'),
+                    style: mutedSmall,
+                  ),
+                ),
+              if (installmentFree != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  child: Text(
+                    t.plan.installmentFree(
+                      name: installmentFree.rule.note.isEmpty
+                          ? t.record.repeat.fallbackName
+                          : installmentFree.rule.note,
+                      month: CycleMonthFormatter.formatMonthYearShort(installmentFree.from),
+                      amount: AppMoneyFormatter.format(installmentFree.perMonth),
+                    ),
+                    key: const ValueKey('plan-installment-free'),
+                    style: mutedSmall,
+                  ),
+                ),
               const SizedBox(height: AppSpacing.md),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planForecast,

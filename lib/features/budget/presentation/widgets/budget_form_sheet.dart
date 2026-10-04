@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -268,6 +269,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
         final chosen = await _askScope(defaultEditScope(before, after));
         if (chosen == null || !mounted) return;
         scope = chosen;
+        AppAnalytics.log(PlanEvents.budgetEditScope(chosen.name));
       }
     }
     if (!mounted) return;
@@ -439,7 +441,10 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                               date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
                             ),
                           },
-                    onChanged: (value) => setState(() => _repeat = value),
+                    onChanged: (value) {
+                      AppAnalytics.log(PlanEvents.budgetRepeatToggled(on: value));
+                      setState(() => _repeat = value);
+                    },
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),

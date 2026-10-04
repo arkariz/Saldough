@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart' show Right;
 import 'package:di/di.dart';
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/domain/usecases/birth_recurring_budgets.dart';
@@ -54,7 +55,10 @@ class _RecurringBudgetHostState extends State<RecurringBudgetHost> {
     if (_running || _birth == null) return;
     _running = true;
     try {
-      if (await _birth!(DateTime.now()) case Right(value: > 0)) _ledger.notifyChanged(source: this);
+      if (await _birth!(DateTime.now()) case Right(value: final born) when born > 0) {
+        AppAnalytics.log(PlanEvents.budgetPeriodBorn(count: born));
+        _ledger.notifyChanged(source: this);
+      }
     } finally {
       _running = false;
     }

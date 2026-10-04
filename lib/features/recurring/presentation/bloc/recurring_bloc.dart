@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
@@ -59,6 +60,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       if (rule == null) return;
       final linked = rule.withBudgetItemKey(event.key);
       final item = linkedBudgetItem(linked, state.budgetOptions);
+      if (item != null) AppAnalytics.log(PlanEvents.recurringBudgetLinked('detail'));
       await _write(
         linked,
         emit,

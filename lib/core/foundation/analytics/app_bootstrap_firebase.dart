@@ -22,8 +22,8 @@ import 'package:saldough/core/config/firebase_config.dart';
 abstract final class AppBootstrap {
   AppBootstrap._();
 
-  /// `FirebaseAnalytics` akar, dipakai [analyticsObserver] dan tempat
-  /// menambah event kustom nanti (belum ada — lihat ADR-023 §3).
+  /// `FirebaseAnalytics` akar, dipakai [analyticsObserver] dan
+  /// `AppAnalytics` untuk event kustom (ADR-036 §3.8).
   static FirebaseAnalytics get analytics => FirebaseAnalytics.instance;
 
   /// Observer `GoRouter` untuk `screen_view` otomatis. Didaftarkan di

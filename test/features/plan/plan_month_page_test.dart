@@ -3,6 +3,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
@@ -192,6 +193,49 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('plan-installment-free')), findsNothing);
+  });
+
+  testWidgets(
+    'analitik R2 tanpa nominal: plan_viewed sekali saat dimuat dan per bulan, month_review_completed (T-16.11)',
+    (
+      tester,
+    ) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await pump(tester, width: 360);
+      expect(events, [PlanEvents.planViewed(0)]);
+      await tester.tap(find.byKey(const ValueKey('plan-month-1')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('plan-month-0')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.plan.reviewOk));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.plan.reviewDone));
+      await tester.pumpAndSettle();
+      expect(events, [
+        PlanEvents.planViewed(0),
+        PlanEvents.planViewed(1),
+        PlanEvents.planViewed(0),
+        PlanEvents.monthReviewCompleted(1),
+      ]);
+      expect(events.last.parameters, {'steps_done': 1});
+    },
+  );
+
+  test('nama dan parameter peristiwa R2 (ADR-036 §3.8)', () {
+    expect(PlanEvents.budgetRepeatToggled(on: true), const AnalyticsEvent('budget_repeat_toggled', {'on': 'true'}));
+    expect(PlanEvents.budgetPeriodBorn(count: 2), const AnalyticsEvent('budget_period_born', {'count': 2}));
+    expect(
+      PlanEvents.budgetEditScope('thisAndNext'),
+      const AnalyticsEvent('budget_edit_scope', {'scope': 'thisAndNext'}),
+    );
+    expect(
+      PlanEvents.recurringBudgetLinked('suggestion'),
+      const AnalyticsEvent('recurring_budget_linked', {'source': 'suggestion'}),
+    );
+    expect(PlanEvents.planViewed(2), const AnalyticsEvent('plan_viewed', {'month_offset': 2}));
+    expect(PlanEvents.fundingWarningShown, const AnalyticsEvent('funding_warning_shown'));
   });
 
   group('tinjau awal bulan (T-16.8, J4)', () {

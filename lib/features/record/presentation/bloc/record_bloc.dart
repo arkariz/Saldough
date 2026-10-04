@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -330,7 +331,10 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
               textColor: colors.accent,
               onPressed: () async {
                 final result = await repository.saveRule(rule.withBudgetItemKey(suggestion.templateItemId));
-                if (result.isRight()) changes.notifyChanged();
+                if (result.isRight()) {
+                  changes.notifyChanged();
+                  AppAnalytics.log(PlanEvents.recurringBudgetLinked('suggestion'));
+                }
                 messenger.showSnackBar(
                   SnackBar(
                     content: Text(

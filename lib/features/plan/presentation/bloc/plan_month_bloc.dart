@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -97,12 +98,16 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     on<PlanMonthLoaded>(_onLoaded);
     on<PlanMonthWalletChanged>((event, emit) => emit(state.copyWith(walletId: () => event.walletId)));
     on<PlanMonthUnplannedToggled>((event, emit) => emit(state.copyWith(includeUnplanned: event.enabled)));
-    on<PlanMonthSelected>((event, emit) => emit(state.copyWith(selected: event.index)));
+    on<PlanMonthSelected>((event, emit) {
+      if (event.index != state.selected) AppAnalytics.log(PlanEvents.planViewed(event.index));
+      emit(state.copyWith(selected: event.index));
+    });
     on<PlanReviewStepDone>(
       (event, emit) => _saveReview(state.review.copyWith(doneSteps: {...state.review.doneSteps, event.step}), emit),
     );
     on<PlanReviewDismissed>((event, emit) => _saveReview(state.review.copyWith(dismissed: event.dismissed), emit));
     on<PlanReviewCompleted>((event, emit) async {
+      AppAnalytics.log(PlanEvents.monthReviewCompleted(state.reviewDoneCount));
       await _saveReview(state.review.copyWith(completed: true), emit);
       emit(
         state.copyWith(
@@ -232,8 +237,15 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
         historyStart: historyStart,
       ),
     );
+    if (!_viewed) {
+      _viewed = true;
+      AppAnalytics.log(PlanEvents.planViewed(state.selected));
+    }
     await _snapshot(emit);
   }
+
+  /// `plan_viewed` dikirim sekali saat pertama dimuat, bukan tiap segar.
+  bool _viewed = false;
 
   /// W9: simpan perkiraan akhir bulan ini sekali (semua dompet aktif), lalu
   /// baca snapshot bulan lalu.

@@ -231,6 +231,60 @@ void main() {
       expect(card(), findsNothing);
     });
 
+    testWidgets('W9: snapshot bulan ini sekali; selisih perkiraan bulan lalu vs saldo nyata', (tester) async {
+      // Saldo nyata akhir Sep = Rp6.500.000 + Kos Rp1.900.000 + jajan Rp57.000.
+      await reviews.saveSnapshots([
+        ForecastSnapshot(monthStart: DateTime(2026, 9), endBalance: 845700000 + 31200000),
+        ForecastSnapshot(monthStart: DateTime(2026, 10), endBalance: 1),
+      ]);
+      await pump(tester, reviews: reviews);
+      expect(find.textContaining('Rp312.000'), findsOneWidget);
+      // Snapshot Okt yang sudah ada tidak ditimpa.
+      final stored = (await reviews.loadSnapshots()).getOrElse((_) => const []);
+      expect(stored.last, ForecastSnapshot(monthStart: DateTime(2026, 10), endBalance: 1));
+    });
+
+    testWidgets('tanpa snapshot bulan lalu: W9 tidak tampil, snapshot Okt dibuat', (tester) async {
+      await pump(tester, reviews: reviews);
+      expect(find.textContaining(t.plan.reviewLookback(month: '').trim()), findsOneWidget);
+      expect(find.textContaining('Rp312.000'), findsNothing);
+      final stored = (await reviews.loadSnapshots()).getOrElse((_) => const []);
+      expect(stored.single.monthStart, DateTime(2026, 10));
+    });
+
+    test('withSnapshot: yang pertama menang, hanya tiga bulan terakhir', () {
+      ForecastSnapshot s(int month, [int end = 0]) =>
+          ForecastSnapshot(monthStart: DateTime(2026, month), endBalance: end);
+      final list = [s(7), s(8), s(9)];
+      expect(withSnapshot(list, s(9, 5)), same(list));
+      expect(withSnapshot(list, s(10)), [s(8), s(9), s(10)]);
+    });
+
+    test('balanceBefore: transfer antardompet tidak mengubah jumlah', () {
+      final txs = <Transaction>[
+        IncomeTransaction(id: 'a', date: DateTime(2026, 10, 3), amount: 100, note: '', walletId: 'x'),
+        ExpenseTransaction(id: 'b', date: DateTime(2026, 10, 4), amount: 30, note: '', walletId: 'y'),
+        TransferTransaction(
+          id: 'c',
+          date: DateTime(2026, 10, 5),
+          amount: 50,
+          note: '',
+          fromWalletId: 'x',
+          toWalletId: 'y',
+        ),
+        TransferTransaction(
+          id: 'd',
+          date: DateTime(2026, 10, 5),
+          amount: 20,
+          note: '',
+          fromWalletId: 'x',
+          toWalletId: 'z',
+        ),
+        ExpenseTransaction(id: 'e', date: DateTime(2026, 9, 30), amount: 999, note: '', walletId: 'x'),
+      ];
+      expect(balanceBefore(DateTime(2026, 10), currentBalance: 1000, transactions: txs, walletIds: {'x', 'y'}), 950);
+    });
+
     test('repositori menyimpan dan memuat ulang', () async {
       final review = MonthReview(
         monthStart: DateTime(2026, 10),

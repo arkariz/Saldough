@@ -128,15 +128,19 @@ class MonthReviewCard extends StatelessWidget {
               ],
             ),
           if (steps.contains(MonthReviewStep.lookback))
-            step(MonthReviewStep.lookback, t.plan.reviewLookback(month: state.previousRange.label), [
-              TextButton(
-                onPressed: () async {
-                  await showLookbackSheet(context, state);
-                  mark(MonthReviewStep.lookback);
-                },
-                child: Text(t.plan.reviewSee),
-              ),
-            ]),
+            step(
+              MonthReviewStep.lookback,
+              accuracyText(state) ?? t.plan.reviewLookback(month: state.previousRange.label),
+              [
+                TextButton(
+                  onPressed: () async {
+                    await showLookbackSheet(context, state);
+                    mark(MonthReviewStep.lookback);
+                  },
+                  child: Text(t.plan.reviewSee),
+                ),
+              ],
+            ),
           const SizedBox(height: AppSpacing.md),
           AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),
           TextButton(onPressed: () => bloc.add(const PlanReviewDismissed()), child: Text(t.plan.reviewLater)),
@@ -146,17 +150,40 @@ class MonthReviewCard extends StatelessWidget {
   }
 }
 
-/// Lembar **kilas balik** bulan lalu (W10, ADR-036 §3.7): rencana vs nyata
-/// per baris, dihitung ulang dari buku besar.
-Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
+/// Baris kilas balik (label, rencana, nyata) bulan lalu (W10).
+List<(String, int, int)> lookbackRows(PlanMonthState state) {
   final plan = state.previousPlan;
-  final rows = <(String, int, int)>[
+  return [
     (t.plan.incomeRow, plan.plannedIncome, plan.recordedIncome + plan.unplannedIn),
     (t.plan.billsRow, plan.plannedRecurringOut, plan.recordedRecurringOut),
     (t.plan.budgetRow, plan.budgetPlanned, plan.budgetSpent),
     (t.plan.offPlanRow, 0, plan.unplannedOut),
   ];
-  final biggest = rows.reduce((a, b) => (a.$3 - a.$2).abs() >= (b.$3 - b.$2).abs() ? a : b);
+}
+
+/// Baris kilas balik dengan selisih rencana vs nyata terbesar.
+(String, int, int) _biggest(List<(String, int, int)> rows) =>
+    rows.reduce((a, b) => (a.$3 - a.$2).abs() >= (b.$3 - b.$2).abs() ? a : b);
+
+/// Teks akurasi perkiraan bulan lalu (W9), atau `null` tanpa snapshot.
+String? accuracyText(PlanMonthState state) {
+  final miss = state.forecastMiss;
+  if (miss == null) return null;
+  final month = state.previousRange.label;
+  if (miss == 0) return t.plan.accuracyExact(month: month);
+  final biggest = _biggest(lookbackRows(state));
+  return biggest.$3 == biggest.$2
+      ? t.plan.accuracyMissed(month: month, amount: AppMoneyFormatter.format(miss.abs()))
+      : t.plan.accuracyMissedBy(month: month, amount: AppMoneyFormatter.format(miss.abs()), line: biggest.$1);
+}
+
+/// Lembar **kilas balik** bulan lalu (W10, ADR-036 §3.7): rencana vs nyata
+/// per baris, dihitung ulang dari buku besar, plus akurasi perkiraan (W9).
+Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
+  final plan = state.previousPlan;
+  final rows = lookbackRows(state);
+  final biggest = _biggest(rows);
+  final accuracy = accuracyText(state);
   return showModalBottomSheet<void>(
     context: context,
     builder: (sheetContext) {
@@ -200,7 +227,10 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
                 AppMoneyFormatter.format(plan.remaining),
                 bold: true,
               ),
-              if (biggest.$3 != biggest.$2) ...[
+              if (accuracy != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(accuracy, key: const ValueKey('lookback-accuracy'), style: textTheme.bodySmall),
+              ] else if (biggest.$3 != biggest.$2) ...[
                 const SizedBox(height: AppSpacing.sm),
                 Text(t.plan.lookbackBiggest(line: biggest.$1), style: textTheme.bodySmall),
               ],

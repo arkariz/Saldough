@@ -1241,6 +1241,9 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get lookbackActual => 'Actual';
 	@override String get lookbackFree => 'Free money';
 	@override String lookbackBiggest({required Object line}) => 'Biggest difference: ${line}.';
+	@override String accuracyExact({required Object month}) => 'The ${month} forecast was spot on.';
+	@override String accuracyMissed({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.';
+	@override String accuracyMissedBy({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.';
 }
 
 // Path: record.draftIssue
@@ -2515,6 +2518,9 @@ extension on TranslationsEn {
 			'plan.lookbackActual' => 'Actual',
 			'plan.lookbackFree' => 'Free money',
 			'plan.lookbackBiggest' => ({required Object line}) => 'Biggest difference: ${line}.',
+			'plan.accuracyExact' => ({required Object month}) => 'The ${month} forecast was spot on.',
+			'plan.accuracyMissed' => ({required Object month, required Object amount}) => 'The ${month} forecast was off by ${amount}.',
+			'plan.accuracyMissedBy' => ({required Object month, required Object amount, required Object line}) => 'The ${month} forecast was off by ${amount}, mostly from ${line}.',
 			_ => null,
 		};
 	}

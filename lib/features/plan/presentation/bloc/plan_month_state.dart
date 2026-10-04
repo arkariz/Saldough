@@ -28,6 +28,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     this.selected = 0,
     this.previousBudgets = const [],
     this._review,
+    this.previousForecast,
     super.effect,
   });
 
@@ -81,6 +82,22 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   final List<PlanBudget> previousBudgets;
 
   final MonthReview? _review;
+
+  /// Perkiraan akhir bulan lalu yang dibuat saat bulan itu pertama kali
+  /// dibuka (W9), atau `null` bila tidak ada snapshot.
+  final int? previousForecast;
+
+  /// Saldo nyata seluruh dompet aktif di akhir bulan lalu, dihitung dari
+  /// buku besar.
+  int get previousActualEnd => balanceBefore(
+    range.start,
+    currentBalance: wallets.fold(0, (sum, w) => sum + w.currentBalance),
+    transactions: transactions,
+    walletIds: {for (final w in wallets) w.id},
+  );
+
+  /// Selisih perkiraan − nyata akhir bulan lalu (W9), atau `null`.
+  int? get forecastMiss => previousForecast == null ? null : previousForecast! - previousActualEnd;
 
   /// Status tinjau awal bulan berjalan (J4, ADR-036 §3.7).
   MonthReview get review => _review ?? MonthReview(monthStart: range.start);
@@ -280,6 +297,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     int? selected,
     List<PlanBudget>? previousBudgets,
     MonthReview? review,
+    int? Function()? previousForecast,
     UiEffect? effect,
   }) => PlanMonthState(
     today: today ?? this.today,
@@ -298,6 +316,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     selected: selected ?? this.selected,
     previousBudgets: previousBudgets ?? this.previousBudgets,
     review: review ?? _review,
+    previousForecast: previousForecast == null ? this.previousForecast : previousForecast(),
     effect: effect,
   );
 
@@ -319,6 +338,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     selected,
     previousBudgets,
     _review,
+    previousForecast,
   ];
 }
 

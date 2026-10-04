@@ -232,6 +232,27 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
         historyStart: historyStart,
       ),
     );
+    await _snapshot(emit);
+  }
+
+  /// W9: simpan perkiraan akhir bulan ini sekali (semua dompet aktif), lalu
+  /// baca snapshot bulan lalu.
+  Future<void> _snapshot(Emitter<PlanMonthState> emit) async {
+    final reviews = _reviews;
+    if (reviews == null) return;
+    final stored = (await reviews.loadSnapshots()).getOrElse((_) => const []);
+    final current = ForecastSnapshot(
+      monthStart: state.range.start,
+      endBalance: state.copyWith(walletId: () => null).projectionFor(0).endBalance,
+    );
+    final updated = withSnapshot(stored, current);
+    if (!identical(updated, stored)) await reviews.saveSnapshots(updated);
+    final previous = state.previousRange.start;
+    emit(
+      state.copyWith(
+        previousForecast: () => updated.where((s) => s.monthStart == previous).firstOrNull?.endBalance,
+      ),
+    );
   }
 
   @override

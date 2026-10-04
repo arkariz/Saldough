@@ -1151,6 +1151,9 @@
     "lookbackPlanned": "Rencana",
     "lookbackActual": "Nyata",
     "lookbackFree": "Uang nganggur",
-    "lookbackBiggest": "Selisih terbesar: $line."
+    "lookbackBiggest": "Selisih terbesar: $line.",
+    "accuracyExact": "Perkiraan $month tepat.",
+    "accuracyMissed": "Perkiraan $month meleset $amount.",
+    "accuracyMissedBy": "Perkiraan $month meleset $amount, terbesar dari $line."
   }
 }

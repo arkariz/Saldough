@@ -1151,6 +1151,9 @@
     "lookbackPlanned": "Plan",
     "lookbackActual": "Actual",
     "lookbackFree": "Free money",
-    "lookbackBiggest": "Biggest difference: $line."
+    "lookbackBiggest": "Biggest difference: $line.",
+    "accuracyExact": "The $month forecast was spot on.",
+    "accuracyMissed": "The $month forecast was off by $amount.",
+    "accuracyMissedBy": "The $month forecast was off by $amount, mostly from $line."
   }
 }

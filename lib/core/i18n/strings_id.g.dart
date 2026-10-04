@@ -3220,6 +3220,15 @@ class Translations$plan$id {
 
 	/// id: 'Selisih terbesar: $line.'
 	String lookbackBiggest({required Object line}) => 'Selisih terbesar: ${line}.';
+
+	/// id: 'Perkiraan $month tepat.'
+	String accuracyExact({required Object month}) => 'Perkiraan ${month} tepat.';
+
+	/// id: 'Perkiraan $month meleset $amount.'
+	String accuracyMissed({required Object month, required Object amount}) => 'Perkiraan ${month} meleset ${amount}.';
+
+	/// id: 'Perkiraan $month meleset $amount, terbesar dari $line.'
+	String accuracyMissedBy({required Object month, required Object amount, required Object line}) => 'Perkiraan ${month} meleset ${amount}, terbesar dari ${line}.';
 }
 
 // Path: record.draftIssue
@@ -4687,6 +4696,9 @@ extension on Translations {
 			'plan.lookbackActual' => 'Nyata',
 			'plan.lookbackFree' => 'Uang nganggur',
 			'plan.lookbackBiggest' => ({required Object line}) => 'Selisih terbesar: ${line}.',
+			'plan.accuracyExact' => ({required Object month}) => 'Perkiraan ${month} tepat.',
+			'plan.accuracyMissed' => ({required Object month, required Object amount}) => 'Perkiraan ${month} meleset ${amount}.',
+			'plan.accuracyMissedBy' => ({required Object month, required Object amount, required Object line}) => 'Perkiraan ${month} meleset ${amount}, terbesar dari ${line}.',
 			_ => null,
 		};
 	}

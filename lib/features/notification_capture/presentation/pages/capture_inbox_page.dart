@@ -25,7 +25,7 @@ class CaptureInboxPage extends StatelessWidget {
 
   /// Catat lewat CATAT. Bila draf cocok dengan satu kemunculan rutin,
   /// CATAT terisi kategori dan catatan dari rutin (yang kosong saja) dan
-  /// transaksinya tertaut ke kemunculan itu (ADR-034 §3.4).
+  /// transaksinya tertaut ke kemunculan itu (ADR-035 §3.4).
   Future<void> _record(BuildContext context, CaptureInboxEntry entry, OccurrenceMatch? match) async {
     final bloc = context.read<CaptureInboxBloc>();
     final draft = entry.draft;

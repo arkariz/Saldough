@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 
-/// Sakelar global pengingat rutin (ADR-034 §3.8). Bawaannya mati: izin
+/// Sakelar global pengingat rutin (ADR-035 §3.8). Bawaannya mati: izin
 /// notifikasi baru diminta saat pengguna pertama menyalakannya.
 abstract interface class ReminderSettingsRepository {
   /// Apakah pengingat rutin nyala.

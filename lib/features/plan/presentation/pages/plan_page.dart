@@ -3,7 +3,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 
-/// Segmen tab Rencana (ADR-034 §3.7, PLAN_TAB_LAYOUT §3).
+/// Segmen tab Rencana (ADR-035 §3.7, PLAN_TAB_LAYOUT §3).
 enum PlanSegment {
   /// Bulan ini: uang nganggur dan perkiraan saldo (R1b).
   thisMonth,
@@ -15,7 +15,7 @@ enum PlanSegment {
   recurring,
 }
 
-/// Tab **Rencana** (T-14.4): satu app bar, [AppSubTabs] di bawahnya, dan
+/// Tab **Rencana** (T-15.4): satu app bar, [AppSubTabs] di bawahnya, dan
 /// isi segmen dalam `IndexedStack` supaya tiap segmen menjaga posisi
 /// gulirnya.
 ///

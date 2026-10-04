@@ -66,7 +66,7 @@ import 'package:state_management/state_management.dart';
 /// yang tersimpan sebelum pengguna menekan Catat. Untuk transfer, dompet asal
 /// dan tujuan hanya diambil dari draf -- tanpa dompet bawaan.
 ///
-/// [initialRepeat] membuka CATAT dalam mode jadwal (T-14.3, chip pembuka).
+/// [initialRepeat] membuka CATAT dalam mode jadwal (T-15.3, chip pembuka).
 /// [makeRecurringFrom] (**Jadikan Rutin**, J2) mengisi formulir dari
 /// transaksi itu, termasuk tanggalnya, mengunci Ulangi dan jenisnya, lalu
 /// menautkan transaksi itu sebagai kemunculan pertama rutin baru -- tidak

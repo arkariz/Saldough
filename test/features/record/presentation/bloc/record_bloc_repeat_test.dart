@@ -11,7 +11,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/mocks.dart';
 
-/// Mode jadwal CATAT (T-14.3, ADR-034 §3.3, J2) di atas penyimpanan
+/// Mode jadwal CATAT (T-15.3, ADR-035 §3.3, J2) di atas penyimpanan
 /// sungguhan: rutin dan transaksi ditulis bersama, tanpa ganda.
 void main() {
   late InMemoryKeyValueStorage storage;

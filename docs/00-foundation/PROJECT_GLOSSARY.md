@@ -120,7 +120,7 @@ transfer lewat `fromWalletId`. Konsekuensinya dicatat terbuka sebagai risiko di
 ## Rencana dan rutin
 
 Istilah di bagian ini ditambahkan 2 Okt 2026 bersama tab Rencana
-([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)). Seluruhnya rencana atau hitungan: tidak ada yang
+([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)). Seluruhnya rencana atau hitungan: tidak ada yang
 mengubah saldo kecuali transaksi yang benar-benar dicatat.
 
 | Nama Indonesia | Nama kode | Arti |

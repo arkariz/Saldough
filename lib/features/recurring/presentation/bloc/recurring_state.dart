@@ -5,7 +5,7 @@ import 'package:state_management/state_management.dart';
 
 /// State `RecurringBloc`: rutin, transaksi bulan-bulan yang dibaca, dan
 /// dompet untuk nama. Kemunculan dan kelompok dihitung dari sini, tidak
-/// disimpan (ADR-034 §3.2).
+/// disimpan (ADR-035 §3.2).
 final class RecurringState extends UiState<RecurringState> {
   /// Membuat [RecurringState].
   const RecurringState({

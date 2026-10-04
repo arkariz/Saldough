@@ -30,7 +30,7 @@ class RecordDateField extends StatelessWidget {
   /// Jenis transaksi: mewarnai pintasan yang sedang aktif.
   final TransactionKind kind;
 
-  /// Mode jadwal (T-14.3): tanggal sampai setahun ke depan boleh dipilih,
+  /// Mode jadwal (T-15.3): tanggal sampai setahun ke depan boleh dipilih,
   /// karena rutin boleh dimulai nanti ("Simpan Jadwal"). Tanpa jadwal,
   /// transaksi tidak boleh bertanggal masa depan.
   final bool allowFuture;

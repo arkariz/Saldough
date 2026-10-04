@@ -15,7 +15,7 @@ import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Pengingat rutin di shell (ADR-034 §3.8, T-14.8): menyusun ulang jadwal
+/// Pengingat rutin di shell (ADR-035 §3.8, T-15.8): menyusun ulang jadwal
 /// saat aplikasi dibuka, kembali ke depan, dan tiap rutin atau buku besar
 /// berubah; menangani ketukan notifikasi.
 ///

@@ -29,7 +29,7 @@ class BudgetListPage extends StatefulWidget {
   /// Membuat [BudgetListPage].
   const BudgetListPage({this.embedded = false, super.key});
 
-  /// Segmen Anggaran di tab Rencana (T-14.4): tanpa app bar sendiri, karena
+  /// Segmen Anggaran di tab Rencana (T-15.4): tanpa app bar sendiri, karena
   /// judulnya mengikuti app bar Rencana (PLAN_TAB_LAYOUT §5).
   final bool embedded;
 

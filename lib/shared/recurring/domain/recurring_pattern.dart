@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 
-/// Pilihan **Ulangi** di CATAT (ADR-034 §3.3, T-14.3): bagian rutin yang
+/// Pilihan **Ulangi** di CATAT (ADR-035 §3.3, T-15.3): bagian rutin yang
 /// bukan isi transaksi. Digabung dengan isian formulir dan tanggalnya
 /// (patokan) menjadi [RecurringRule] lewat [toRule].
 final class RecurringPattern extends Equatable {

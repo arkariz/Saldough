@@ -75,7 +75,7 @@ class _AppShellPageState extends State<AppShellPage> {
   /// [AppShellPage.startAction] sudah dijalankan -- hanya sekali per shell.
   bool _startActionDone = false;
 
-  /// Segmen tab Rencana yang tampil (T-14.4). Awal sesi Bulan ini, sesudah
+  /// Segmen tab Rencana yang tampil (T-15.4). Awal sesi Bulan ini, sesudah
   /// itu segmen terakhir selama shell hidup (KT-L4). Tidak disimpan.
   PlanSegment _planSegment = PlanSegment.thisMonth;
 
@@ -200,7 +200,7 @@ class _AppShellPageState extends State<AppShellPage> {
                                 // resume, tangkapan baru, dan ketukan pengingat.
                                 return NotificationCaptureHost(
                                   container: parentContainer,
-                                  // Pengingat rutin (ADR-034 §3.8): jadwal dan ketukan notifikasi.
+                                  // Pengingat rutin (ADR-035 §3.8): jadwal dan ketukan notifikasi.
                                   child: RecurringReminderHost(
                                     container: parentContainer,
                                     onShowRecurring: () => _showPlan(context, PlanSegment.recurring),

@@ -51,15 +51,15 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 11 | Catat Cerdas: kategori dan suara | Transaksi berkategori tertutup; satu ucapan mengisi formulir CATAT |
 | 12 | Rapikan batas arsitektur | Fitur hanya saling kenal lewat kunci rute; uji batas impor menjaga |
 | 13 | Pecah fitur `record` | CATAT, suara, dan notifikasi fitur terpisah; mesin tafsir di `shared/capture` |
-| 14 | Rencana dan rutin (R1) | Rutin tercatat satu ketuk atau tercocok sendiri; uang nganggur dan perkiraan bulan ini terlihat di tab Rencana |
+| 15 | Rencana dan rutin (R1) | Rutin tercatat satu ketuk atau tercocok sendiri; uang nganggur dan perkiraan bulan ini terlihat di tab Rencana |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
 
 **Status per 2 Oktober 2026:** Fase 0–7, 9, 12, dan 13 selesai; Fase 8 dan 11
 berjalan (sisa Fase 8: sapuan nama dan ikon iOS T-8.3; sisa Fase 11: ucapan
-nyata T-11.5, Keamanan Data T-11.6, Firebase AI T-11.7–11.9); Fase 14
-direncanakan, menunggu tinjauan ADR-034. Rincian dan antrean di
+nyata T-11.5, Keamanan Data T-11.6, Firebase AI T-11.7–11.9); Fase 15
+direncanakan, menunggu tinjauan ADR-035. Rincian dan antrean di
 [TASK_LIST.md](TASK_LIST.md).
 
 ## Fase 0: Dokumen Saldough 2.0
@@ -296,11 +296,11 @@ layar → teks.
 **Selesai kalau:** setiap layar cocok dengan prototipe padanannya, tidak ada
 lagi bingkai tebal, monospace, atau Space Grotesk/Space Mono, kontras teks
 lolos di kedua tema, dan seluruh uji lulus.
-## Fase 14: Rencana dan rutin (R1)
+## Fase 15: Rencana dan rutin (R1)
 
 Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan
 arus kas. Tab Anggaran menjadi **Rencana** dengan segmen Bulan ini, Anggaran,
-dan Rutin ([ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md);
+dan Rutin ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md);
 desain di [docs/01-product/features/](../01-product/features/RECURRING_AND_FORECAST.md)).
 Dibagi dua rilis yang berdiri sendiri: **R1a** (rutin: CATAT Ulangi, segmen
 Rutin, kartu Menunggu, pencocokan dengan catat dari notifikasi, pengingat)

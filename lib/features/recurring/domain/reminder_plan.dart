@@ -2,7 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Jenis pengingat rutin (ADR-034 §3.8, J3).
+/// Jenis pengingat rutin (ADR-035 §3.8, J3).
 enum ReminderKind {
   /// H−n sebelum jatuh tempo, untuk rutin yang dibayar sendiri.
   dueSoon,
@@ -45,7 +45,7 @@ final class PlannedReminder extends Equatable {
   ];
 }
 
-/// Rentang penjadwalan: kemunculan sampai 35 hari ke depan (ADR-034 §3.8).
+/// Rentang penjadwalan: kemunculan sampai 35 hari ke depan (ADR-035 §3.8).
 const reminderWindowDays = 35;
 
 /// Jam pengingat.

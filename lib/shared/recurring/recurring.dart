@@ -1,6 +1,6 @@
 /// Barrel modul `shared/recurring` — satu-satunya jalur impor ke modul ini
 /// dari fitur lain (ADR-0009). Transaksi rutin dipakai Beranda, Rencana,
-/// CATAT, dan penangkap notifikasi (ADR-034 §3.1).
+/// CATAT, dan penangkap notifikasi (ADR-035 §3.1).
 library;
 
 export 'data/recurrence_match_log_repository_impl.dart';

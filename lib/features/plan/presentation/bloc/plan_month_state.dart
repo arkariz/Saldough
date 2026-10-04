@@ -7,7 +7,7 @@ import 'package:state_management/state_management.dart';
 
 /// State `PlanMonthBloc`: data mentah satu bulan keuangan. Uang nganggur dan
 /// perkiraan dihitung dari sini lewat fungsi murni `shared/recurring`, tidak
-/// disimpan (ADR-034 §3.5).
+/// disimpan (ADR-035 §3.5).
 final class PlanMonthState extends UiState<PlanMonthState> {
   /// Membuat [PlanMonthState].
   const PlanMonthState({

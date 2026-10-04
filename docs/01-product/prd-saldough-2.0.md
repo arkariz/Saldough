@@ -256,7 +256,7 @@ terhadapnya.
 - Multi-mata-uang, akun bersama, sinkronisasi antar perangkat.
 - Transaksi berulang yang **dicatat otomatis tanpa ditinjau**. Transaksi
   rutin yang dijadwalkan dan ditinjau masuk cakupan sesudah MVP lewat
-  Fase 14 (§7.8, [ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)).
+  Fase 15 (§7.8, [ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)).
 - Pemindaian struk, ekspor-impor data, dan asisten keuangan berbasis AI.
 
 **Template freelance** ([FR-FRL-006](#75-freelance)) **deprecated** sejak 26 Sep
@@ -673,11 +673,11 @@ Keputusan rinci di ADR-032.
 ### 7.8 Rutin dan Rencana (sesudah MVP, ditambahkan 2 Okt 2026)
 
 Kebutuhan ini lahir dari permintaan pemilik 2 Okt 2026. Keputusannya di
-[ADR-034](../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md); perilaku dan rumusnya di
+[ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md); perilaku dan rumusnya di
 [RECURRING_AND_FORECAST.md](features/RECURRING_AND_FORECAST.md), tata letaknya
 di [PLAN_TAB_LAYOUT.md](features/PLAN_TAB_LAYOUT.md). Prefiks `FR-RUT-`
 dipakai karena `FR-REC-` sudah berarti alur CATAT. Rilis R1a dan R1b ada di
-Fase 14; R2 dan R3 di antrean.
+Fase 15; R2 dan R3 di antrean.
 
 **FR-RUT-001 — Membuat transaksi rutin (R1a)**
 
@@ -782,7 +782,7 @@ Fase 14; R2 dan R3 di antrean.
 **FR-BUD-008 — Anggaran rutin (R2)**
 
 - [ ] Sakelar **Ulangi tiap periode** di formulir anggaran; periode baru lahir
-      sendiri dengan pos yang sama (template berjadwal, ADR-034 §3.9).
+      sendiri dengan pos yang sama (template berjadwal, ADR-035 §3.9).
 - [ ] Mengubah anggaran rutin menawarkan "hanya periode ini" atau "periode ini
       dan berikutnya"; pos baru bawaannya hanya periode ini.
 
@@ -890,7 +890,7 @@ Beranda | Rencana | Riwayat | Dompet           [suara]
 ```
 
 Tab ke-2 bernama **Rencana** (id) / **Plan** (en) sejak keputusan 2 Okt 2026
-(ADR-034, mulai Fase 14), menggantikan tab Anggaran. Isinya tiga segmen:
+(ADR-035, mulai Fase 15), menggantikan tab Anggaran. Isinya tiga segmen:
 Bulan ini, Anggaran, dan Rutin. Di sana berlaku satu aturan bahasa tambahan:
 **kata "saldo" hanya untuk isi dompet.** Uang nganggur adalah arus satu
 bulan, bukan saldo, dan tidak pernah tampil di kartu yang sama dengan saldo.
@@ -953,7 +953,7 @@ maupun warnanya sekaligus — bukan warna saja.
 
 - Kartu kredit sebagai dompet bersaldo negatif, beserta pencatatan pembayaran
   tagihannya sebagai transfer.
-- ~~Transaksi berulang untuk langganan bulanan.~~ Dijadwalkan di Fase 14
+- ~~Transaksi berulang untuk langganan bulanan.~~ Dijadwalkan di Fase 15
   sebagai transaksi rutin, tab Rencana, uang nganggur, dan perkiraan (§7.8).
 - Laporan bulanan dan tahunan beserta grafiknya.
 - Sinkronisasi antar perangkat.

@@ -3,7 +3,7 @@ import 'package:saldough/shared/recurring/domain/occurrences.dart';
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Status satu kemunculan rutin, **diturunkan**, tidak disimpan (ADR-034
+/// Status satu kemunculan rutin, **diturunkan**, tidak disimpan (ADR-035
 /// §3.2).
 enum OccurrenceStatus {
   /// Ada transaksi yang menautkan `(ruleId, tanggal)`.

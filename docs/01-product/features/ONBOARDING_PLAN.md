@@ -123,7 +123,7 @@ buatan tangan 27 Sep 2026 ditolak dan sudah dihapus.
 | TR-CATAT | Alur CATAT | Pertama kali CATAT dibuka | 3–4 (bergantung UX-1) | Wajib |
 | TR-WALLET | Dompet | Pertama dibuka | 3 | Wajib |
 | TR-TXN | Transaksi | Pertama dibuka dengan ≥1 transaksi | 3 | Wajib |
-| TR-PLAN-MONTH | Rencana › Bulan ini | Pertama dibuka dengan rencana berisi *(T-14.13)* | 3 | Wajib |
+| TR-PLAN-MONTH | Rencana › Bulan ini | Pertama dibuka dengan rencana berisi *(T-15.13)* | 3 | Wajib |
 | TR-RECURRING | Rencana › Rutin | Pertama dibuka *(2 Okt 2026)* | 2–5 | Wajib |
 | TR-BUDGET | Rencana › Anggaran | Pertama dibuka | 3–4 | Wajib |
 | TR-BUDGET-DETAIL | Rincian anggaran | Pertama dibuka | 2 | Sebaiknya |
@@ -181,7 +181,7 @@ Rencana › Bulan ini, jadi sorotannya opsional (`spotlight:`) dan hanya diisi d
 slot Beranda: satu kunci spotlight hanya boleh punya satu target.
 
 **TR-PLAN-MONTH — Rencana › Bulan ini** dan **TR-RECURRING — Rencana › Rutin**
-*(ditambah 2 Okt 2026, Fase 14)*
+*(ditambah 2 Okt 2026, Fase 15)*
 
 Langkah `plan.tabs` (sub-tab Rencana) ada di ketiga tur segmen; karena progres
 per langkah, ia hanya disorot di segmen yang pertama dibuka.

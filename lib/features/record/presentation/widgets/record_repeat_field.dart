@@ -6,7 +6,7 @@ import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
-/// Baris **Ulangi** di CATAT (T-14.3, J2): tertutup "Ulangi: Tidak"; diketuk
+/// Baris **Ulangi** di CATAT (T-15.3, J2): tertutup "Ulangi: Tidak"; diketuk
 /// → pilihan frekuensi, kalimat jadwal dari tanggal formulir, dan **Atur
 /// lebih lanjut** (selang, berakhir, nominal kira-kira, cara bayar).
 ///
@@ -390,7 +390,7 @@ DateTime dateWithoutRepeat(DateTime date) {
 /// Kemunculan rutin yang sedang dicatat lewat CATAT ("Ubah dulu").
 typedef RecordOccurrence = ({RecurringRule rule, DateTime date});
 
-/// Pemberitahuan ringan saat mencatat kemunculan rutin (T-14.6): E5 bila
+/// Pemberitahuan ringan saat mencatat kemunculan rutin (T-15.6): E5 bila
 /// nominal ≥5× atau ≤⅕ dari biasanya, E11 bila tanggalnya lebih dari 7 hari
 /// dari jadwal. Tidak menahan simpan.
 class RecordOccurrenceNotice extends StatelessWidget {

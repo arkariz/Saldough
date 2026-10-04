@@ -1,7 +1,7 @@
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 
 /// Tanggal-tanggal kemunculan [rule] di rentang `from <= d < until`, urut
-/// naik, mengikuti jadwal dan akhir rutinnya (ADR-034 §3.1).
+/// naik, mengikuti jadwal dan akhir rutinnya (ADR-035 §3.1).
 ///
 /// Murni jadwal: tidak memperhatikan `isPaused` maupun `skippedDates`, yang
 /// dibaca saat menurunkan status kemunculan.

@@ -19,7 +19,7 @@ import 'package:saldough/features/recurring/presentation/widgets/recurring_summa
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
 
-/// Segmen **Rutin** tab Rencana (T-14.5, PLAN_TAB_LAYOUT §6). Memasang
+/// Segmen **Rutin** tab Rencana (T-15.5, PLAN_TAB_LAYOUT §6). Memasang
 /// `RecurringScope`-nya sendiri, jadi shell cukup menaruh widget ini di
 /// segmennya.
 ///

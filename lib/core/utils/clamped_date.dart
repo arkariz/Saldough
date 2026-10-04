@@ -4,7 +4,7 @@
 ///
 /// [month] boleh di luar 1–12 dan dinormalkan seperti `DateTime`
 /// (`month: 13` = Januari tahun berikutnya). Dipakai `BudgetPeriod.endFrom`
-/// dan jadwal transaksi rutin (ADR-034 §3.1), supaya keduanya menjepit
+/// dan jadwal transaksi rutin (ADR-035 §3.1), supaya keduanya menjepit
 /// dengan cara yang sama.
 DateTime clampedDate(int year, int month, int day) {
   final lastDay = DateTime(year, month + 1, 0).day;

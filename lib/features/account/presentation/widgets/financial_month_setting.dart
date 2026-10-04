@@ -7,7 +7,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Awal bulan keuangan di layar Akun (KT-R2, ADR-034 §3.6): tanggal 1–28.
+/// Awal bulan keuangan di layar Akun (KT-R2, ADR-035 §3.6): tanggal 1–28.
 /// Hanya tab Rencana yang memakainya; Beranda tetap bulan kalender.
 class FinancialMonthSettingEntry extends StatelessWidget {
   /// Membuat [FinancialMonthSettingEntry].

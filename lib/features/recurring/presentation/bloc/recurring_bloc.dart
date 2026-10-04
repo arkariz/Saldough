@@ -17,11 +17,11 @@ import 'package:state_management/state_management.dart';
 
 part 'recurring_event.dart';
 
-/// Bloc segmen Rutin dan rincian rutin (T-14.5, PLAN_TAB_LAYOUT §6).
+/// Bloc segmen Rutin dan rincian rutin (T-15.5, PLAN_TAB_LAYOUT §6).
 ///
 /// Membaca rutin, dompet, dan dokumen bulan transaksi dari [_monthsBack]
 /// bulan lalu sampai bulan berjalan (ADR-012): segmen cukup bulan
-/// sebelumnya (ADR-034 §3.2), rincian membaca setahun untuk riwayat.
+/// sebelumnya (ADR-035 §3.2), rincian membaca setahun untuk riwayat.
 ///
 /// ⚠ Tidak pernah menulis transaksi atau saldo: rutin adalah rencana
 /// (invarian 14). Lewati, jeda, akhiri, ubah nominal, dan hapus hanya
@@ -186,7 +186,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     }
   }
 
-  /// Kemunculan menunggu [ruleId] pada [date] dicatat satu ketuk (ADR-034
+  /// Kemunculan menunggu [ruleId] pada [date] dicatat satu ketuk (ADR-035
   /// §3.3, pengecualian kedua aturan 8): hanya rutin bernominal tetap; yang
   /// kira-kira selalu lewat CATAT. Bila ada transaksi mirip yang belum
   /// tertaut (E4), aplikasi bertanya dulu, kecuali [event.force].

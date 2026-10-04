@@ -55,7 +55,7 @@ pendukung.
 | `Budget` | Rencana | Rencana pengeluaran satu periode |
 | `BudgetItem` | Rencana | Satu baris di dalam rencana itu |
 | `BudgetTemplate` | Rencana | Definisi yang bisa dipakai ulang |
-| `RecurringRule` | Rencana | Transaksi yang dijadwalkan berulang ([ADR-034](adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)) |
+| `RecurringRule` | Rencana | Transaksi yang dijadwalkan berulang ([ADR-035](adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)) |
 | `FreelanceProject` | Pendukung | Klien beserta tarif dan potongannya |
 | `WorklogEntry` | Pendukung | Kerja yang sudah selesai |
 | `FreelancePayment` | Pendukung | Tagihan yang menunggu dibayar |
@@ -121,7 +121,7 @@ Field yang dimiliki ketiganya:
 | `date` | `DateTime` | Kapan peristiwanya terjadi, bukan kapan dicatat. |
 | `amount` | `int` | Nominal dalam sen. Selalu positif; arahnya ditentukan jenisnya. |
 | `note` | `String` | Catatan bebas, boleh kosong. |
-| `recurrence` | `RecurrenceLink?` | Kemunculan rutin yang dipenuhi transaksi ini: `ruleId`, `occurrenceDate`, `linkedBy` (`user`/`auto`). Unik per pasangan `ruleId` + `occurrenceDate` ([ADR-034](adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) §3.2). Null untuk transaksi biasa. |
+| `recurrence` | `RecurrenceLink?` | Kemunculan rutin yang dipenuhi transaksi ini: `ruleId`, `occurrenceDate`, `linkedBy` (`user`/`auto`). Unik per pasangan `ruleId` + `occurrenceDate` ([ADR-035](adr/0035-transaksi-rutin-rencana-dan-perkiraan.md) §3.2). Null untuk transaksi biasa. |
 | `sourceIconId` | `String?` | Ikon notifikasi asal transaksi (Catat dari notifikasi, [ADR-032](adr/0032-catat-dari-notifikasi.md) §3.10): hash isi PNG di penyimpanan ikon `source_icon/<id>`. Hanya tampilan; tidak memengaruhi perhitungan apa pun. Null untuk transaksi manual. |
 
 Pemasukan dan pengeluaran juga punya `categoryId: String?` (kategori, boleh
@@ -304,7 +304,7 @@ anggaran dibuat.
 
 `RecurringRule` adalah **rencana** transaksi yang berulang, bukan transaksi.
 Membuat, mengubah, menjeda, atau menghapusnya tidak pernah mengubah saldo.
-Keputusannya di [ADR-034](adr/0034-transaksi-rutin-rencana-dan-perkiraan.md), perilakunya di
+Keputusannya di [ADR-035](adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), perilakunya di
 [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md).
 
 | Field | Tipe | Keterangan |
@@ -344,7 +344,7 @@ satu bulan keuangan, **bukan saldo**.
 
 **Anggaran rutin (R2)** adalah `BudgetTemplate` yang punya `schedule?`
 (`walletId`, `period`, `anchorDate`, `isActive`). Anggaran yang lahir darinya
-membawa `templateId`, dan posnya membawa `templateItemId` (ADR-034 §3.9).
+membawa `templateId`, dan posnya membawa `templateItemId` (ADR-035 §3.9).
 
 ## Freelance
 

@@ -31,7 +31,7 @@ sealed class Transaction extends Equatable {
   /// sumber, `null` untuk transaksi manual. Hanya tampilan.
   final String? sourceIconId;
 
-  /// Kemunculan transaksi rutin yang dicatat transaksi ini (ADR-034 §3.2),
+  /// Kemunculan transaksi rutin yang dicatat transaksi ini (ADR-035 §3.2),
   /// `null` bila bukan dari rutin. Satu kemunculan paling banyak dicatat
   /// satu transaksi (invarian 15).
   final RecurrenceLink? recurrence;
@@ -219,7 +219,7 @@ enum RecurrenceLinkedBy {
   /// Dicatat dari rutin, atau ditautkan pemilik.
   user,
 
-  /// Ditautkan otomatis oleh pencocokan persis (ADR-034 §3.4).
+  /// Ditautkan otomatis oleh pencocokan persis (ADR-035 §3.4).
   auto,
 }
 
@@ -249,7 +249,7 @@ final class RecurrenceLink extends Equatable {
 
 /// Salinan transaksi dengan tautan rutin [link] (atau tanpa tautan bila
 /// `null`); field lain tetap. Dipakai Jadikan Rutin dan pencocokan
-/// (ADR-034 §3.2–3.4), yang hanya menautkan dan tidak mengubah saldo.
+/// (ADR-035 §3.2–3.4), yang hanya menautkan dan tidak mengubah saldo.
 extension TransactionRecurrence on Transaction {
   /// Lihat [TransactionRecurrence].
   Transaction withRecurrence(RecurrenceLink? link) => switch (this) {

@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 3 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026; Fase 14 (Rencana dan rutin, ADR-034) berjalan sejak 2 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026; Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
 
 ## Apa ini
 
@@ -157,7 +157,7 @@ ikon piksel untuk kategori/dompet, Material Symbols untuk navigasi, 4 tab +
 tombol Catat di tengah. Setiap pekerjaan UI memakai skill `tanukonomy-ui`
 dan merujuk artefak design system dan prototipe (tabel Pencarian cepat).
 Sampai Fase 14 selesai, kode masih memakai bahasa visual lama.
-**Rencana dan rutin (Fase 14, ADR-034 Accepted, 2 Okt 2026):** tab Anggaran
+**Rencana dan rutin (Fase 15, ADR-035 Accepted, 2 Okt 2026):** tab Anggaran
 kini **Rencana** (segmen Bulan ini, Anggaran, Rutin). Transaksi rutin
 (`RecurringRule`, `shared/recurring/`) adalah **rencana**, bukan transaksi:
 kemunculan dihitung, ditinjau, lalu dicatat lewat `RecordTransaction` atau
@@ -170,7 +170,7 @@ Menunggu, pengingat lokal `flutter_local_notifications`), `features/plan/`
 (tab Rencana, segmen Bulan ini, port anggaran/freelance), bulan keuangan di
 `core/financial_month/`. Pengecualian kedua aturan 8: kemunculan rutin
 bernominal tetap boleh dicatat satu ketuk lewat `RecordTransaction`.
-Verifikasi perangkat T-14.9/T-14.14 belum.
+Verifikasi perangkat T-15.9/T-15.14 belum.
 
 **Tema (ADR-031, 1 Okt 2026):** `PixelTheme.light`/`.dark` adalah tema
 `MaterialApp`; jangan membungkus layar atau rute dengan `PixelTheme`/`Theme`.
@@ -255,7 +255,7 @@ Empat aturan domain, baru di Saldough 2.0 dan paling sering salah:
    formulir pencatatan tersendiri di layar mana pun. Pencatatan otomatis dari
    notifikasi (ADR-032, tingkat otomatis 2/3) memakai use case yang sama,
    `RecordTransaction`, tanpa formulir; draf yang perlu ditinjau selalu
-   membuka CATAT. Pengecualian kedua (ADR-034 §3.3): kemunculan rutin
+   membuka CATAT. Pengecualian kedua (ADR-035 §3.3): kemunculan rutin
    bernominal **tetap** yang dikonfirmasi pengguna satu ketuk; nominal
    kira-kira selalu membuka CATAT.
 

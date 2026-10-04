@@ -2,7 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:flutter/foundation.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 
-/// Rentang satu bulan keuangan: `start <= d < end` (KT-R2, ADR-034 §3.6).
+/// Rentang satu bulan keuangan: `start <= d < end` (KT-R2, ADR-035 §3.6).
 final class FinancialMonthRange extends Equatable {
   /// Membuat [FinancialMonthRange].
   const FinancialMonthRange({required this.start, required this.end});

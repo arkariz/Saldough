@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Kasus wajib pencocokan RECURRING_AND_FORECAST §7.7 (ADR-034 §3.4).
+/// Kasus wajib pencocokan RECURRING_AND_FORECAST §7.7 (ADR-035 §3.4).
 void main() {
   RecurringRule netflix({RecurringAmountMode mode = RecurringAmountMode.fixed, String id = 'netflix'}) => RecurringRule(
     id: id,

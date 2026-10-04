@@ -20,7 +20,7 @@ const _iosCategory = 'recurring_record';
 /// Id aksi Catat.
 const _recordActionId = 'record';
 
-/// [ReminderScheduler] di atas `flutter_local_notifications` (ADR-034
+/// [ReminderScheduler] di atas `flutter_local_notifications` (ADR-035
 /// §3.8): penjadwalan tidak presisi (`inexactAllowWhileIdle`, tanpa izin
 /// exact alarm), seluruh jadwal diganti tiap disusun ulang, dan aksi Catat
 /// selalu membuka aplikasi (tanpa isolate latar).

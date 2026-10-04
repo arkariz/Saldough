@@ -4,7 +4,7 @@
 **Status:** Diputuskan pemilik 2 Okt 2026 (§11), direvisi sesudah uji
 prototipe (§4.9). Tab Anggaran menjadi **Rencana** (en: **Plan**) dengan
 tiga segmen (KT-R1). Segmen Anggaran dan Rutin masuk R1a, Bulan ini R1b
-([ADR-034](../../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)).
+([ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)).
 **Berkaitan:** [RECURRING_AND_FORECAST.md](RECURRING_AND_FORECAST.md)
 (perilaku dan rumus; dokumen ini menggantikan wireframe §8.2 dan §8.5 di
 sana), [RECURRING_COMPETITIVE_ANALYSIS.md](RECURRING_COMPETITIVE_ANALYSIS.md),
@@ -128,7 +128,7 @@ ADR-015.
   | Kartu Bulan baru dimulai › Tinjau rencana | Rencana › Bulan ini, mode tinjau |
 
   Secara teknis ini butuh cara bagi shell untuk menerima "tab + segmen"
-  (perluasan pola kunci rute ADR-030). Detailnya masuk ADR-034.
+  (perluasan pola kunci rute ADR-030). Detailnya masuk ADR-035.
 - **FAB tidak berubah per segmen.** CATAT dan suara tetap global (ADR-020
   §6). Menambah rutin dari mana saja cukup lewat CATAT › Ulangi, jadi FAB
   kontekstual tidak dibutuhkan.
@@ -655,7 +655,7 @@ Tur Anggaran yang sudah ada tetap (§5).
 
 ## 10. Dampak ke dokumen dan kode lain
 
-Dikerjakan bersama ADR-034, bukan sekarang:
+Dikerjakan bersama ADR-035, bukan sekarang:
 
 - PRD 2.0 §10: diagram navigasi `Beranda | Rencana | Riwayat | Dompet`.
 - i18n: label tab baru (`appShell.planTabLabel`). Kunci lama
@@ -686,7 +686,7 @@ Diputuskan pemilik 2 Okt 2026, semuanya sesuai rekomendasi.
 
 Catatan R1a: segmen Bulan ini baru hadir di R1b, jadi di R1a tab Rencana
 berisi dua segmen (Anggaran, Rutin) dan awal sesi membuka Anggaran. Sejak
-R1b (T-14.13, 2 Okt 2026) tiga segmen lengkap dan awal sesi membuka Bulan
+R1b (T-15.13, 2 Okt 2026) tiga segmen lengkap dan awal sesi membuka Bulan
 ini.
 
 ## 12. Sumber

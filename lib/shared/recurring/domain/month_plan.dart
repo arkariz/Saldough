@@ -8,7 +8,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// mengurangi uang nganggur (KT-R14, aturan 7).
 typedef BudgetPlanLine = ({String itemId, int planned, int spent});
 
-/// Rencana satu bulan keuangan (RECURRING_AND_FORECAST §7.2, §7.2a; ADR-034
+/// Rencana satu bulan keuangan (RECURRING_AND_FORECAST §7.2, §7.2a; ADR-035
 /// §3.5). **Uang nganggur bukan saldo**: ini aliran rencana bulan itu, bukan
 /// isi dompet.
 final class MonthPlan extends Equatable {

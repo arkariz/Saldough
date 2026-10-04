@@ -107,7 +107,7 @@ lihat riwayat git dokumen ini).
   di server kami. Saat build berfitur ini diunggah: tambah baris "Info
   finansial: Info finansial lainnya" (dikumpulkan, diproses sementara, opsional,
   tujuan fungsi aplikasi), dan sebutkan akses notifikasi di pengungkapan jelas.
-- **Pengingat rutin** (ADR-034 §3.8, T-14.8) — notifikasi lokal lewat
+- **Pengingat rutin** (ADR-035 §3.8, T-15.8) — notifikasi lokal lewat
   `flutter_local_notifications`; jadwal disusun di perangkat dari rutin
   pengguna dan tidak ada data yang keluar dari perangkat, jadi **tidak**
   menambah baris di tabel jenis data. Izin baru di manifest:

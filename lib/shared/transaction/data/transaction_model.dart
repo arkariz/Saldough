@@ -136,7 +136,7 @@ final class TransactionModel {
   /// Ikon notifikasi asal (ADR-032 §3.10).
   final String? sourceIconId;
 
-  /// Tautan ke kemunculan rutin (ADR-034 §3.2). Kunci ini baru ditulis
+  /// Tautan ke kemunculan rutin (ADR-035 §3.2). Kunci ini baru ditulis
   /// kalau terisi, jadi dokumen lama tidak berubah bentuk.
   final RecurrenceLink? recurrence;
 

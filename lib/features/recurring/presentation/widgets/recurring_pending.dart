@@ -17,7 +17,7 @@ import 'package:state_management/state_management.dart';
 /// Baris kemunculan menunggu beserta aksinya (PLAN_TAB_LAYOUT §4.9):
 /// **Lewati** dan **Catat**; ketuk barisnya = Ubah dulu (CATAT terisi).
 /// Rutin bernominal kira-kira tidak bisa dicatat satu ketuk: Catat membuka
-/// CATAT (ADR-034 §3.3).
+/// CATAT (ADR-035 §3.3).
 class RecurringPendingTile extends StatelessWidget {
   /// Membuat [RecurringPendingTile].
   const RecurringPendingTile({required this.entry, required this.state, super.key});
@@ -97,7 +97,7 @@ Widget? recordAllButton(BuildContext context, List<RecurringEntry> pending) {
   );
 }
 
-/// Kartu **Menunggu dicatat** di Beranda (T-14.6, J3): paling banyak tiga
+/// Kartu **Menunggu dicatat** di Beranda (T-15.6, J3): paling banyak tiga
 /// kemunculan, Catat semua, dan Lihat semua ke segmen Rutin. Tidak tampil
 /// bila tidak ada yang menunggu. Memasang `RecurringScope`-nya sendiri dari
 /// [container] akar (pola `CaptureInboxBanner`).

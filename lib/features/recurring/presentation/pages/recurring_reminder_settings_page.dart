@@ -11,7 +11,7 @@ import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Sakelar global pengingat rutin (ADR-034 §3.8). Izin notifikasi diminta
+/// Sakelar global pengingat rutin (ADR-035 §3.8). Izin notifikasi diminta
 /// saat pertama dinyalakan; bila ditolak, sakelar tetap mati. Jadwal
 /// langsung disusun ulang sesudah sakelar berubah.
 class RecurringReminderSettingsPage extends StatefulWidget {

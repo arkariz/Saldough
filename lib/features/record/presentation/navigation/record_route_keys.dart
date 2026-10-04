@@ -59,10 +59,10 @@ final class RecordSheetInput extends RouteInput {
   final Transaction? prefillFrom;
 
   /// Draf Catat Cerdas (ADR-027 §3.4). Chip pembuka rutin juga memakainya
-  /// untuk mengisi jenis, kategori, catatan, dan tanggal (T-14.3).
+  /// untuk mengisi jenis, kategori, catatan, dan tanggal (T-15.3).
   final RecordDraft? draft;
 
-  /// Ulangi awal (T-14.3): CATAT dibuka dalam mode jadwal.
+  /// Ulangi awal (T-15.3): CATAT dibuka dalam mode jadwal.
   final RecurringPattern? repeat;
 
   /// **Jadikan Rutin** (J2): CATAT mode jadwal terisi dari transaksi ini,
@@ -74,9 +74,9 @@ final class RecordSheetInput extends RouteInput {
   /// transaksi, dan transaksi yang sudah tercatat tidak berubah (FR-RUT-005).
   final RecurringRule? editRule;
 
-  /// **Ubah dulu** (T-14.6): CATAT terisi dari rutin ini untuk kemunculan
+  /// **Ubah dulu** (T-15.6): CATAT terisi dari rutin ini untuk kemunculan
   /// [occurrenceDate]; transaksi yang tersimpan tertaut ke kemunculan itu.
-  /// Nominal kira-kira selalu lewat jalan ini (ADR-034 §3.3).
+  /// Nominal kira-kira selalu lewat jalan ini (ADR-035 §3.3).
   final RecurringRule? occurrenceRule;
 
   /// Tanggal kemunculan untuk [occurrenceRule].

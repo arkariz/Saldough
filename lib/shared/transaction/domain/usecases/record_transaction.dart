@@ -44,7 +44,7 @@ final class RecordTransaction {
   ///
   /// Ditolak dengan [ValidationFailure] ber-`code` [occurrenceTakenCode]
   /// kalau `transaction.recurrence` menunjuk kemunculan yang sudah dicatat
-  /// transaksi lain (invarian 15, ADR-034 §3.2).
+  /// transaksi lain (invarian 15, ADR-035 §3.2).
   Future<Either<Failure, Unit>> call(Transaction transaction, {Transaction? previousTransaction, Object? source}) async {
     if (transaction.recurrence case final link?) {
       final taken = await _occurrenceTaken(transaction, link);

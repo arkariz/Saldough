@@ -269,7 +269,7 @@ void main() {
     expect((await store.loadInbox()).getOrElse((_) => []), isEmpty);
   });
 
-  group('pencocokan rutin (T-14.7, ADR-034 §3.4)', () {
+  group('pencocokan rutin (T-15.7, ADR-035 §3.4)', () {
     RecurringRule kopi({
       int amount = 2500000,
       RecurringAmountMode mode = RecurringAmountMode.fixed,

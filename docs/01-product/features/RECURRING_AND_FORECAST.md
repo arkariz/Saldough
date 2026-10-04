@@ -1,8 +1,8 @@
 # Transaksi rutin, anggaran rutin, dan perkiraan arus kas
 
 **Status:** Diputuskan pemilik 2 Oktober 2026 (§14). Keputusan domain dan
-arsitekturnya di [ADR-034](../../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md)
-(Accepted 2 Okt 2026). Dikerjakan di Fase 14 (TASK_LIST).
+arsitekturnya di [ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)
+(Accepted 2 Okt 2026). Dikerjakan di Fase 15 (TASK_LIST).
 **Mengubah cakupan:** PRD 2.0 §6 "Di luar MVP" menyebut "Transaksi berulang
 otomatis", dan §12 menyebut "Transaksi berulang untuk langganan bulanan".
 Dokumen ini mengambil yang kedua tanpa yang pertama: rutin **dijadwalkan**,
@@ -291,7 +291,7 @@ nominal persis untuk rutin tetap atau ±10% untuk rutin kira-kira, tanggal
   Pada hari jatuh tempo menyusul satu notifikasi lagi untuk semua rutin yang
   menunggu. Untuk nominal tetap, notifikasi punya aksi **Catat**. Aksi itu
   membuka aplikasi lalu mencatat satu ketuk dengan snackbar Batalkan; tidak
-  ada pencatatan di latar belakang ([ADR-034](../../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md) §3.8).
+  ada pencatatan di latar belakang ([ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md) §3.8).
 - **Autodebet** (cicilan, langganan kartu): tidak ada pengingat rutin,
   karena pengguna tidak perlu berbuat apa-apa. Pengingat hanya muncul bila
   perkiraan saldo dompetnya **kurang** pada tanggal itu ("Saldo BCA
@@ -911,10 +911,10 @@ Kalimat utama (id / en):
 | Kenaikan harga | Netflix tercatat Rp79.000, biasanya Rp65.000. Perbarui rutin? | Netflix was recorded at Rp79,000, usually Rp65,000. Update recurring? |
 | Tercocok | Netflix tercocok dari notifikasi BCA · Lepaskan | Netflix matched from a BCA notification · Unlink |
 
-## 11. Dampak domain (bahan ADR-034)
+## 11. Dampak domain (bahan ADR-035)
 
 Bahan asal. Keputusan yang mengikat ada di
-[ADR-034](../../02-architecture/adr/0034-transaksi-rutin-rencana-dan-perkiraan.md);
+[ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md);
 bila berbeda, ADR yang berlaku.
 
 - **Entitas baru `RecurringRule`** (lingkaran Rencana): `id`, `kind`
@@ -1025,8 +1025,8 @@ kecuali KT-R2 dan KT-R9**.
 | KT-R9 | Notifikasi lokal | **Masuk R1a.** *Berbeda dari rekomendasi (R3).* "Siapkan dana" tetap R2 karena butuh perkiraan per dompet |
 | KT-R10 | Cara bayar | Ditanyakan lewat chip `Autodebet` / `Bayar sendiri`, boleh kosong |
 | KT-R11 | Tautan otomatis untuk cocok persis | Ya sejak R1a, dengan log dan Lepaskan |
-| KT-R12 | Peringatan nominal tidak wajar di seluruh CATAT | Ya, tugas terpisah (B-23) |
-| KT-R13 | Kartu "belum ada catatan 3 hari" | Ya, tugas terpisah tanpa streak (B-24) |
+| KT-R12 | Peringatan nominal tidak wajar di seluruh CATAT | Ya, tugas terpisah (B-25) |
+| KT-R13 | Kartu "belum ada catatan 3 hari" | Ya, tugas terpisah tanpa streak (B-26) |
 | KT-R14 | Transfer ke Tabungan dan uang nganggur | Tidak mengurangi; tampil sebagai keterangan |
 
 ## 15. Yang sengaja tidak dikerjakan

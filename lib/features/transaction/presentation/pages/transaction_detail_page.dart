@@ -85,7 +85,7 @@ class TransactionDetailPage extends StatelessWidget {
   Future<void> _recordAgain(BuildContext context) =>
       context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(prefillFrom: transaction));
 
-  /// **Jadikan Rutin** (T-14.3, J2): CATAT mode jadwal terisi dari
+  /// **Jadikan Rutin** (T-15.3, J2): CATAT mode jadwal terisi dari
   /// transaksi ini, yang lalu ditautkan sebagai kemunculan pertama. Rincian
   /// ini ditutup sesudahnya karena transaksinya sudah berubah (bertaut).
   Future<void> _makeRecurring(BuildContext context) async {

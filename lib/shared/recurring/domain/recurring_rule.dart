@@ -28,7 +28,7 @@ enum RecurringFrequency {
 
 /// Apakah nominal rutin pasti atau perkiraan.
 enum RecurringAmountMode {
-  /// Nominal sama tiap kali; boleh dicatat satu ketuk (ADR-034 §3.3).
+  /// Nominal sama tiap kali; boleh dicatat satu ketuk (ADR-035 §3.3).
   fixed,
 
   /// Nominal berubah (listrik, kos); dikonfirmasi lewat CATAT tiap kali.
@@ -36,7 +36,7 @@ enum RecurringAmountMode {
 }
 
 /// Cara uangnya benar-benar keluar. Aplikasi tidak membayar apa pun; ini
-/// hanya menentukan pengingat (ADR-034 §3.8).
+/// hanya menentukan pengingat (ADR-035 §3.8).
 enum RecurringPaymentMode {
   /// Ditarik otomatis oleh bank atau penyedia; tanpa pengingat H−n.
   autoDebit,
@@ -127,7 +127,7 @@ final class RecurringEndsAfter extends RecurringEnd {
 
 /// Transaksi rutin: **rencana** yang dijadwalkan, bukan transaksi. Membuat,
 /// menyunting, menjeda, atau menghapusnya tidak pernah mengubah saldo dompet
-/// (invarian 14). Lihat ADR-034 §3.1 dan DOMAIN_MODEL.md bagian "Transaksi
+/// (invarian 14). Lihat ADR-035 §3.1 dan DOMAIN_MODEL.md bagian "Transaksi
 /// rutin".
 ///
 /// Kemunculan dihitung dari [schedule] (`occurrencesOf`), tidak disimpan.
@@ -205,7 +205,7 @@ final class RecurringRule extends Equatable {
   /// Pengingat H−n untuk cara bayar manual. Bawaan 1.
   final int remindDaysBefore;
 
-  /// Sakelar pengingat per rutin (ADR-034 §3.8). Pengingat juga butuh
+  /// Sakelar pengingat per rutin (ADR-035 §3.8). Pengingat juga butuh
   /// sakelar global di Akun.
   final bool reminders;
 

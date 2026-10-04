@@ -4,7 +4,7 @@ import 'package:failures/failures.dart';
 import 'package:saldough/core/financial_month/financial_month_range.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
 
-/// Preferensi tanggal awal bulan keuangan (KT-R2, ADR-034 §3.6).
+/// Preferensi tanggal awal bulan keuangan (KT-R2, ADR-035 §3.6).
 abstract interface class FinancialMonthPreferenceRepository {
   /// Tanggal awal (1–28); bawaan 1.
   Future<Either<Failure, int>> load();

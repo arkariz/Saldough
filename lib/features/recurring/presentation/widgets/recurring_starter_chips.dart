@@ -8,7 +8,7 @@ import 'package:saldough/features/recurring/domain/recurring_starters.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
-/// Chip pembuka rutin (J1, T-14.3). Ketuk → CATAT mode jadwal dengan jenis,
+/// Chip pembuka rutin (J1, T-15.3). Ketuk → CATAT mode jadwal dengan jenis,
 /// kategori, catatan, tanggal lazim, dan Ulangi sudah terisi; pengguna cukup
 /// mengisi nominal dan dompet. Chip yang sudah punya rutin bernama sama
 /// bertanda centang.

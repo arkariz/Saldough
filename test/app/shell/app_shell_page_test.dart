@@ -241,7 +241,7 @@ void main() {
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
     });
 
-    testWidgets('Beranda menampilkan kartu Menunggu dicatat bila ada kemunculan menunggu (T-14.6)', (tester) async {
+    testWidgets('Beranda menampilkan kartu Menunggu dicatat bila ada kemunculan menunggu (T-15.6)', (tester) async {
       final now = DateTime.now();
       await container<RecurringRuleRepository>().saveRule(
         RecurringRule(
@@ -263,7 +263,7 @@ void main() {
       expect(find.text('Netflix ●'), findsOneWidget);
     });
 
-    testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-14.4)', (tester) async {
+    testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-15.4)', (tester) async {
       await tester.pumpWidget(pumpableShell());
       for (var i = 0; i < 5; i++) {
         await tester.pump();

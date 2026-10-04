@@ -44,7 +44,7 @@ final class PlanMonthUnplannedToggled extends PlanMonthEvent {
   final bool enabled;
 }
 
-/// Bloc segmen **Bulan ini** dan baris perkiraan di Beranda (T-14.13).
+/// Bloc segmen **Bulan ini** dan baris perkiraan di Beranda (T-15.13).
 /// Hanya membaca; tidak ada yang ditulis dari sini.
 final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
   /// Membuat [PlanMonthBloc]. [now] bisa diganti di uji.

@@ -1,7 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 
-/// Satu tautan otomatis (ADR-034 §3.4, §7A): transaksi dari catat
+/// Satu tautan otomatis (ADR-035 §3.4, §7A): transaksi dari catat
 /// notifikasi yang ditautkan ke kemunculan rutin tanpa ketukan. Disimpan
 /// 7 hari supaya pengguna bisa melihat dan **Lepaskan**.
 final class RecurrenceMatchEntry extends Equatable {

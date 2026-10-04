@@ -4,7 +4,7 @@ import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Menyusun ulang seluruh pengingat rutin (ADR-034 §3.8): saat aplikasi
+/// Menyusun ulang seluruh pengingat rutin (ADR-035 §3.8): saat aplikasi
 /// dibuka atau kembali ke depan, dan tiap rutin atau buku besar berubah.
 /// Sakelar global mati → semua pengingat dibatalkan.
 ///

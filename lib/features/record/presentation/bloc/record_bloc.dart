@@ -121,7 +121,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   }
 
   /// Mencatat [transaction]; dengan [repeat], juga menyimpan rutinnya
-  /// (ADR-034 §3.3, J2). Tanggal masa depan tidak pernah membuat transaksi:
+  /// (ADR-035 §3.3, J2). Tanggal masa depan tidak pernah membuat transaksi:
   /// hanya rutinnya yang tersimpan ("Simpan Jadwal"). Rutin ditulis lebih
   /// dulu; kalau transaksinya gagal dicatat, rutin itu dihapus lagi supaya
   /// tidak ada rutin setengah jadi.

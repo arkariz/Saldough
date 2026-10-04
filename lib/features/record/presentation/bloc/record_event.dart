@@ -43,7 +43,7 @@ final class IncomeRecorded extends RecordEvent {
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
 
-  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// **Ulangi** (T-15.3): bila terisi, transaksi ini juga menjadi rutin.
   /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
   /// tanggal masa depan → hanya rutinnya yang tersimpan.
   final RecurringPattern? repeat;
@@ -84,7 +84,7 @@ final class ExpenseRecorded extends RecordEvent {
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
 
-  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// **Ulangi** (T-15.3): bila terisi, transaksi ini juga menjadi rutin.
   /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
   /// tanggal masa depan → hanya rutinnya yang tersimpan.
   final RecurringPattern? repeat;
@@ -127,13 +127,13 @@ final class TransferRecorded extends RecordEvent {
   /// Ikon notifikasi asal (ADR-032 §3.10), dari draf kotak masuk.
   final String? sourceIconId;
 
-  /// **Ulangi** (T-14.3): bila terisi, transaksi ini juga menjadi rutin.
+  /// **Ulangi** (T-15.3): bila terisi, transaksi ini juga menjadi rutin.
   /// Tanggal hari ini atau lampau → dicatat sebagai kemunculan pertama;
   /// tanggal masa depan → hanya rutinnya yang tersimpan.
   final RecurringPattern? repeat;
 }
 
-/// **Jadikan Rutin** (T-14.3, J2): rutin baru dari isian [recorded] yang
+/// **Jadikan Rutin** (T-15.3, J2): rutin baru dari isian [recorded] yang
 /// menautkan [source] sebagai kemunculan pertamanya. Tidak ada transaksi
 /// baru, sehingga tidak ada yang tercatat dua kali.
 final class RecordMadeRecurring extends RecordEvent {
@@ -160,7 +160,7 @@ final class RecordRuleEdited extends RecordEvent {
   final RecordEvent recorded;
 }
 
-/// **Ubah dulu** (T-14.6): isian [recorded] dicatat sebagai kemunculan
+/// **Ubah dulu** (T-15.6): isian [recorded] dicatat sebagai kemunculan
 /// [occurrenceDate] dari [rule].
 final class RecordOccurrenceRecorded extends RecordEvent {
   /// Membuat [RecordOccurrenceRecorded].

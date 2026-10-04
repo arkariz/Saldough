@@ -146,7 +146,7 @@ void main() {
     expect(read(await rules.listRules()).single.isPaused, isTrue);
   });
 
-  group('Menunggu dicatat (T-14.6)', () {
+  group('Menunggu dicatat (T-15.6)', () {
     Future<List<Transaction>> october() async => read(await transactions.listTransactionsInMonth(DateTime(2026, 10)));
 
     testWidgets('Catat satu ketuk: transaksi bertanggal kemunculan, tertaut; Batalkan menghapusnya', (tester) async {

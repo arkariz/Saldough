@@ -52,11 +52,11 @@ class HomePage extends StatefulWidget {
   /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
   final Widget? notice;
 
-  /// Kartu Menunggu dicatat (T-14.6), disisipkan akar komposisi supaya
+  /// Kartu Menunggu dicatat (T-15.6), disisipkan akar komposisi supaya
   /// `home` tidak mengimpor fitur `recurring`; tampil hanya bila ada isinya.
   final Widget? pendingRecurring;
 
-  /// Baris perkiraan saldo akhir bulan (T-14.13), disisipkan akar komposisi.
+  /// Baris perkiraan saldo akhir bulan (T-15.13), disisipkan akar komposisi.
   final Widget? forecast;
 
   @override

@@ -1,7 +1,7 @@
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Transaksi yang mencatat kemunculan [occurrence] dari [rule] (ADR-034
+/// Transaksi yang mencatat kemunculan [occurrence] dari [rule] (ADR-035
 /// §3.3): isiannya dari rutin, tanggalnya **tanggal kemunculan** (E11, bukan
 /// hari ini) dengan jam dari [now], dan tertaut ke kemunculan itu.
 /// [amount] menggantikan nominal rutin bila diisi.
@@ -47,11 +47,11 @@ Transaction transactionForOccurrence(
 }
 
 /// Selisih hari terjauh antara transaksi dan kemunculan yang dianggap cocok
-/// (ADR-034 §3.4).
+/// (ADR-035 §3.4).
 const matchWindowDays = 3;
 
 /// Transaksi di [transactions] yang mungkin sudah mencatat kemunculan
-/// [occurrence] dari [rule] (ADR-034 §3.4, E4): jenis dan dompetnya sama,
+/// [occurrence] dari [rule] (ADR-035 §3.4, E4): jenis dan dompetnya sama,
 /// nominalnya persis (rutin tetap) atau dalam ±10% (rutin kira-kira),
 /// tanggalnya dalam ±3 hari, dan belum tertaut ke rutin mana pun.
 List<Transaction> matchCandidates(RecurringRule rule, DateTime occurrence, Iterable<Transaction> transactions) {

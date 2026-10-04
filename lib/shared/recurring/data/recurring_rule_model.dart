@@ -35,7 +35,7 @@ abstract final class RecurringRuleModel {
       },
       paymentMode: paymentMode == null ? null : RecurringPaymentMode.values.byName(paymentMode),
       remindDaysBefore: json['remindDaysBefore'] as int,
-      // Ditambahkan T-14.8; dokumen sebelumnya tanpa kunci ini = nyala.
+      // Ditambahkan T-15.8; dokumen sebelumnya tanpa kunci ini = nyala.
       reminders: json['reminders'] as bool? ?? true,
       autoRecord: json['autoRecord'] as bool,
       skippedDates: {for (final d in json['skippedDates'] as List<dynamic>) DateTime.parse(d as String)},

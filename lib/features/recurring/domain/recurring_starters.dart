@@ -1,7 +1,7 @@
 import 'package:saldough/core/utils/clamped_date.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
-/// Chip pembuka rutin (J1, T-14.3): kebutuhan rutin orang Indonesia, bukan
+/// Chip pembuka rutin (J1, T-15.3): kebutuhan rutin orang Indonesia, bukan
 /// template gaji dua mingguan dan tagihan kartu ala pesaing AS.
 enum RecurringStarter {
   /// Gaji, tanggal 25.

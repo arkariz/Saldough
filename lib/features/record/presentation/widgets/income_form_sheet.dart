@@ -67,7 +67,7 @@ class IncomeFormSheet extends StatefulWidget {
   /// dipasang `RecordFormHost`; tidak tampil saat menyunting.
   final Widget? kindSwitcher;
 
-  /// Ulangi awal (chip pembuka atau Jadikan Rutin, T-14.3); `null` = tidak
+  /// Ulangi awal (chip pembuka atau Jadikan Rutin, T-15.3); `null` = tidak
   /// diulang. Diabaikan saat menyunting.
   final RecurringPattern? initialRepeat;
 
@@ -78,7 +78,7 @@ class IncomeFormSheet extends StatefulWidget {
   /// yang dicatat.
   final bool scheduleOnly;
 
-  /// Kemunculan rutin yang dicatat ("Ubah dulu", T-14.6): menampilkan
+  /// Kemunculan rutin yang dicatat ("Ubah dulu", T-15.6): menampilkan
   /// pemberitahuan E5/E11 dan menyembunyikan Ulangi.
   final RecordOccurrence? occurrence;
 

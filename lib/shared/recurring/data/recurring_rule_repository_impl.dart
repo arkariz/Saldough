@@ -11,7 +11,7 @@ const _rulesKey = StorageKey(namespace: 'recurring', name: 'all');
 /// Implementasi [RecurringRuleRepository] di atas [KeyValueStorage].
 ///
 /// Seluruh rutin disimpan sebagai satu dokumen JSON di kunci `recurring/all`
-/// (ADR-012, ADR-034 §3.1): jumlahnya puluhan, bukan ribuan.
+/// (ADR-012, ADR-035 §3.1): jumlahnya puluhan, bukan ribuan.
 final class RecurringRuleRepositoryImpl with RepositoryGuard implements RecurringRuleRepository {
   /// Membuat [RecurringRuleRepositoryImpl] di atas [_storage].
   const RecurringRuleRepositoryImpl({required this._storage});

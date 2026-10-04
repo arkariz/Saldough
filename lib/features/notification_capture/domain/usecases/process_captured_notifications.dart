@@ -98,7 +98,7 @@ final class ProcessCapturedNotifications {
   /// Penyimpanan ikon notifikasi asal (ADR-032 §3.10); `null` = tanpa ikon.
   final SourceIconRepository? sourceIcons;
 
-  /// Rutin untuk tautan otomatis (ADR-034 §3.4); `null` = tanpa pencocokan.
+  /// Rutin untuk tautan otomatis (ADR-035 §3.4); `null` = tanpa pencocokan.
   final RecurringRuleRepository? recurringRules;
 
   /// Log tautan otomatis (7 hari, Lepaskan).

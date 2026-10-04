@@ -1,4 +1,4 @@
-/// Port notifikasi lokal pengingat rutin (ADR-034 §3.8). Implementasinya di
+/// Port notifikasi lokal pengingat rutin (ADR-035 §3.8). Implementasinya di
 /// atas `flutter_local_notifications`; uji memakai tiruan.
 library;
 

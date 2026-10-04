@@ -29,7 +29,7 @@ final class OccurrenceMatch extends Equatable {
 
 /// Kemunculan yang cocok dengan transaksi berjenis [kind] di dompet
 /// [walletId] (ke [toWalletId] untuk transfer), bernominal [amount], pada
-/// [date] (ADR-034 §3.4): rutin tidak dijeda, jenis dan dompet sama,
+/// [date] (ADR-035 §3.4): rutin tidak dijeda, jenis dan dompet sama,
 /// nominal persis (tetap) atau ±10% (kira-kira), tanggal dalam ±3 hari, dan
 /// kemunculannya belum tercatat atau dilewati. [transactions] memuat bulan
 /// di sekitar [date] untuk membaca yang sudah tercatat.
@@ -62,7 +62,7 @@ List<OccurrenceMatch> occurrenceCandidates({
 
 /// Kecocokan tunggal untuk [transaction], atau `null` bila tidak ada, ada
 /// lebih dari satu kandidat, atau transaksinya sudah tertaut. Dua kandidat
-/// selalu ditanyakan, tidak ditebak (ADR-034 §3.4).
+/// selalu ditanyakan, tidak ditebak (ADR-035 §3.4).
 OccurrenceMatch? matchOccurrences(
   Transaction transaction, {
   required Iterable<RecurringRule> rules,

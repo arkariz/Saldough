@@ -112,16 +112,16 @@ abstract final class RootModule {
       ..registerLazySingleton<SourceIconRepository>(
         () => SourceIconRepositoryImpl(storage: container<KeyValueStorage>()),
       )
-      // Transaksi rutin (ADR-034 §3.1), kunci `recurring/all`; dibaca
+      // Transaksi rutin (ADR-035 §3.1), kunci `recurring/all`; dibaca
       // Beranda, Rencana, CATAT, dan penangkap notifikasi.
       ..registerLazySingleton<RecurringRuleRepository>(
         () => RecurringRuleRepositoryImpl(storage: container<KeyValueStorage>()),
       )
-      // Log tautan otomatis rutin dari catat notifikasi (ADR-034 §3.4), 7 hari.
+      // Log tautan otomatis rutin dari catat notifikasi (ADR-035 §3.4), 7 hari.
       ..registerLazySingleton<RecurrenceMatchLogRepository>(
         () => RecurrenceMatchLogRepositoryImpl(storage: container<KeyValueStorage>()),
       )
-      // Pengingat rutin (ADR-034 §3.8): notifikasi lokal dan sakelar global.
+      // Pengingat rutin (ADR-035 §3.8): notifikasi lokal dan sakelar global.
       ..registerLazySingleton<ReminderScheduler>(LocalNotificationReminderScheduler.new)
       ..registerLazySingleton<ReminderSettingsRepository>(
         () => ReminderSettingsRepositoryImpl(storage: container<KeyValueStorage>()),
@@ -141,7 +141,7 @@ abstract final class RootModule {
       ..registerLazySingleton<BudgetItemCatalog>(
         () => BudgetItemCatalogImpl(repository: container<BudgetRepository>()),
       )
-      // Port milik `plan` (Bulan ini, T-14.13), diimplementasikan `budget`
+      // Port milik `plan` (Bulan ini, T-15.13), diimplementasikan `budget`
       // dan `freelance` — pola port kecil ADR-0009.
       ..registerLazySingleton<PlanBudgetSource>(
         () => PlanBudgetSourceImpl(

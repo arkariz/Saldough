@@ -15,7 +15,7 @@ import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart'
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
 
-/// Segmen **Bulan ini** tab Rencana (T-14.13, PLAN_TAB_LAYOUT §4, §4.9):
+/// Segmen **Bulan ini** tab Rencana (T-15.13, PLAN_TAB_LAYOUT §4, §4.9):
 /// kartu Uang nganggur, kartu Saldo dompet ≈, Menunggu + tiga berikutnya,
 /// atau keadaan kosong. Isi dari fitur lain (kartu Menunggu, chip pembuka)
 /// disisipkan akar komposisi lewat [pending] dan [starters], jadi `plan`

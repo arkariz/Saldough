@@ -129,7 +129,7 @@ final class RecurringEntry extends Equatable {
 /// Baris segmen Rutin untuk bulan `monthStart <= d < monthEnd`.
 ///
 /// Menunggu dan terlewat hanya dicari sejak [windowStart] (bulan
-/// sebelumnya, ADR-034 §3.2), karena [transactions] hanya memuat bulan-bulan
+/// sebelumnya, ADR-035 §3.2), karena [transactions] hanya memuat bulan-bulan
 /// itu; kemunculan yang lebih lama tidak dianggap terlewat.
 List<RecurringEntry> recurringEntries(
   Iterable<RecurringRule> rules, {

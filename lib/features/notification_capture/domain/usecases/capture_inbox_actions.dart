@@ -34,7 +34,7 @@ final class CaptureInboxActions {
   /// Sinyal perubahan kotak masuk, atau `null`.
   final CaptureInboxChanges? changes;
 
-  /// Rutin untuk label "Cocok dengan rutin" (ADR-034 §3.4); `null` = tanpa.
+  /// Rutin untuk label "Cocok dengan rutin" (ADR-035 §3.4); `null` = tanpa.
   final RecurringRuleRepository? recurringRules;
 
   /// Log tautan otomatis (Lepaskan).

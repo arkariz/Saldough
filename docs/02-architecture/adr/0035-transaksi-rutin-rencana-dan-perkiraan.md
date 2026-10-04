@@ -2,9 +2,9 @@
 
 ## 1. Metadata
 
-- **Decision ID:** ADR-034
+- **Decision ID:** ADR-035
 - **Tanggal:** 2026-10-02
-- **Fase roadmap:** Fase 14 (Rencana dan rutin, R1a + R1b); R2/R3 di antrean
+- **Fase roadmap:** Fase 15 (Rencana dan rutin, R1a + R1b); R2/R3 di antrean
 - **Status:** Accepted (disetujui pemilik 2 Okt 2026)
 - **Cakupan:** entitas baru `RecurringRule` (`lib/shared/recurring/`),
   `Transaction` (`lib/shared/transaction/`), fitur baru
@@ -403,7 +403,7 @@ didaftarkan di muka. Kelemahannya:
 - [RECURRING_COMPETITIVE_ANALYSIS.md](../../01-product/features/RECURRING_COMPETITIVE_ANALYSIS.md)
 - [PRD 2.0](../../01-product/prd-saldough-2.0.md) §7.8 (FR-RUT, FR-PLN,
   FR-BUD-008), [DOMAIN_MODEL.md](../DOMAIN_MODEL.md) bagian "Transaksi
-  rutin", [TASK_LIST.md](../../04-planning/TASK_LIST.md) Fase 14
+  rutin", [TASK_LIST.md](../../04-planning/TASK_LIST.md) Fase 15
 - Prototipe interaktif tab Rencana (artifact pemilik, 2 Okt 2026)
 
 ### Rujukan kode
@@ -425,4 +425,4 @@ didaftarkan di muka. Kelemahannya:
 **Penulis keputusan:** agen (Claude), atas permintaan pemilik
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-10-02
-**Status implementasi:** kode R1a dan R1b selesai 2 Okt 2026 (T-14.1–14.8, T-14.10–14.13); menunggu verifikasi perangkat T-14.9 dan T-14.14
+**Status implementasi:** kode R1a dan R1b selesai 2 Okt 2026 (T-15.1–15.8, T-15.10–15.13); menunggu verifikasi perangkat T-15.9 dan T-15.14

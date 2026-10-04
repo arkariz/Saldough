@@ -12,7 +12,7 @@ import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
 import 'package:state_management/state_management.dart';
 
-/// Baris perkiraan di Beranda (T-14.13): "Akhir Okt ≈… · paling tipis ≈…".
+/// Baris perkiraan di Beranda (T-15.13): "Akhir Okt ≈… · paling tipis ≈…".
 /// Disisipkan akar komposisi; tampil hanya bila sudah ada rutin. Ketuk →
 /// Rencana › Bulan ini.
 class PlanForecastRow extends StatelessWidget {

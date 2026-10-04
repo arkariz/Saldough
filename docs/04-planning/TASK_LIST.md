@@ -2886,10 +2886,15 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
       muncul, Batalkan mengembalikan saldo dan kemunculan ke Menunggu, dan
       buka ulang tidak mencatatnya lagi; pengeluaran BCA Rp200.000 hari itu
       memunculkan "BPJS tercatat Rp200.000, naik dari rutin" tanpa Catat,
-      Biarkan menautkannya tanpa transaksi baru. **Belum diverifikasi di
-      perangkat** (ada uji widget): label belum terlihat H+2 (data emulator
-      tanpa rutin autodebet) dan kartu Sepertinya rutin (butuh 3 bulan
-      transaksi sama).
+      Biarkan menautkannya tanpa transaksi baru. Lanjutan ketiga: rutin
+      autodebet Asuransi 5 Okt, jam 7 Okt → "Belum terlihat di notifikasi"
+      + Belum terjadi di Beranda, mengetuknya menyembunyikan label; Gym
+      Rp30.000 dicatat 7 Okt/7 Nov/7 Des → kartu "Sepertinya rutin" di
+      segmen Rutin, Jadikan rutin membuka CATAT terisi (30.000, 7 Des, Tiap
+      bulan, Gym). **Seluruh fitur R3 terverifikasi di emulator.** Temuan
+      kecil (belum dikerjakan): di mode Jadikan rutin, CATAT tetap menulis
+      "Saldo BCA akan berkurang … saat dicatat" padahal tidak ada transaksi
+      baru (sudah ada sejak R1).
 - [x] **T-17.10** Catat otomatis menggandakan bila notifikasi sudah mencatat
       rutin dengan harga naik: `dueAutoRecords` hanya memeriksa nominal
       persis (temuan T-17.9). Kini kandidat `priceIncreaseCandidate` juga

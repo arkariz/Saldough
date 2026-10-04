@@ -2877,11 +2877,14 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
       sakelar Catat otomatis di rincian Internet menyala; jam dimajukan ke
       6 Nov 10:00 lalu aplikasi dibuka ulang → Internet Rp350.000 tercatat
       sendiri (saldo BCA Rp137.500 → −Rp212.500, tidak lagi di Menunggu).
-      Snackbar Batalkan tidak sempat terlihat di dump. **Belum diverifikasi
-      di perangkat** (lanjutkan sebagai T-17.10 bila perlu): label belum
-      terlihat H+2, kartu menganggur, kartu kenaikan harga, kartu
-      Sepertinya rutin, dan Batalkan catat otomatis — semuanya punya uji
-      widget.
+      Snackbar Batalkan tidak sempat terlihat di dump. Lanjutan: jam 6 Nov,
+      BPJS 6 Nov dilewati → tidak ada kartu (6 Okt tercatat, benar); jam
+      6 Des, BPJS 6 Des dilewati → kartu "Masih memakai BPJS?" muncul,
+      Biarkan menyembunyikannya; Internet 6 Des juga tercatat otomatis.
+      Temuan: catat otomatis bisa menggandakan saat harga naik → T-17.10.
+      **Belum diverifikasi di perangkat** (ada uji widget): label belum
+      terlihat H+2, kartu kenaikan harga, kartu Sepertinya rutin, dan
+      Batalkan catat otomatis.
 - [x] **T-17.10** Catat otomatis menggandakan bila notifikasi sudah mencatat
       rutin dengan harga naik: `dueAutoRecords` hanya memeriksa nominal
       persis (temuan T-17.9). Kini kandidat `priceIncreaseCandidate` juga

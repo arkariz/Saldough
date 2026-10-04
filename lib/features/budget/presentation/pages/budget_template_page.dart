@@ -139,10 +139,7 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                     for (final template in state.templates) ...[
                       _TemplateCard(
                         template: template,
-                        walletName: state.wallets
-                            .where((w) => w.id == template.schedule?.walletId)
-                            .firstOrNull
-                            ?.name,
+                        walletName: state.wallets.where((w) => w.id == template.schedule?.walletId).firstOrNull?.name,
                         canUse: canUse,
                         onUse: () => _use(template),
                         onEdit: () => _edit(template),

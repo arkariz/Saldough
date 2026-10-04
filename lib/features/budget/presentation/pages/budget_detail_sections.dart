@@ -234,78 +234,78 @@ class _ItemCard extends StatelessWidget {
     return SpotlightTarget(
       spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
       child: TransactionSlab(
-      color: overspent ? colors.tinted(colors.expenseFill, 0.08) : null,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.name, style: textTheme.titleMedium),
-                    const SizedBox(height: 2),
-                    BudgetBadge(
-                      label: item.isTransfer
-                          ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
-                          : t.budget.itemKindExpense,
-                      color: item.isTransfer ? colors.transfer : colors.textMuted,
-                    ),
-                    if (item.isItemized)
-                      Text(
-                        t.budget.itemItemizedDetail(
-                          quantity: item.quantity!,
-                          price: AppMoneyFormatter.format(item.unitPrice!),
-                        ),
-                        style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+        color: overspent ? colors.tinted(colors.expenseFill, 0.08) : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.name, style: textTheme.titleMedium),
+                      const SizedBox(height: 2),
+                      BudgetBadge(
+                        label: item.isTransfer
+                            ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
+                            : t.budget.itemKindExpense,
+                        color: item.isTransfer ? colors.transfer : colors.textMuted,
                       ),
-                  ],
+                      if (item.isItemized)
+                        Text(
+                          t.budget.itemItemizedDetail(
+                            quantity: item.quantity!,
+                            price: AppMoneyFormatter.format(item.unitPrice!),
+                          ),
+                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                BudgetBadge(label: budgetItemStatusLabel(progress.status), color: statusColor),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            BudgetProgressBar(value: progress.progress),
+            const SizedBox(height: AppSpacing.xs),
+            Wrap(
+              spacing: AppSpacing.md,
+              runSpacing: 2,
+              children: [
+                _Figure(label: t.budget.plannedLabel, sen: item.plannedAmount, color: colors.textPrimary),
+                _Figure(
+                  label: t.budget.spentLabel,
+                  sen: progress.spent,
+                  color: overspent ? colors.overBudget : colors.textPrimary,
+                ),
+                _Figure(
+                  label: t.budget.remainingLabel,
+                  sen: progress.remaining,
+                  color: progress.remaining < 0 ? colors.overBudget : colors.income,
+                ),
+              ],
+            ),
+            if (onRecord case final record?) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: SpotlightTarget(
+                  spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
+                  child: item.isTransfer
+                      ? AppQuickChip(
+                          label: t.budget.detailRecordTransferAction,
+                          color: colors.tinted(colors.transferFill, 0.2),
+                          onTap: record,
+                        )
+                      : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
                 ),
               ),
-              const SizedBox(width: AppSpacing.xs),
-              BudgetBadge(label: budgetItemStatusLabel(progress.status), color: statusColor),
             ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          BudgetProgressBar(value: progress.progress),
-          const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: 2,
-            children: [
-              _Figure(label: t.budget.plannedLabel, sen: item.plannedAmount, color: colors.textPrimary),
-              _Figure(
-                label: t.budget.spentLabel,
-                sen: progress.spent,
-                color: overspent ? colors.overBudget : colors.textPrimary,
-              ),
-              _Figure(
-                label: t.budget.remainingLabel,
-                sen: progress.remaining,
-                color: progress.remaining < 0 ? colors.overBudget : colors.income,
-              ),
-            ],
-          ),
-          if (onRecord case final record?) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: SpotlightTarget(
-                spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
-                child: item.isTransfer
-                  ? AppQuickChip(
-                      label: t.budget.detailRecordTransferAction,
-                      color: colors.tinted(colors.transferFill, 0.2),
-                      onTap: record,
-                    )
-                  : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
-              ),
-            ),
           ],
-        ],
-      ),
+        ),
       ),
     );
   }

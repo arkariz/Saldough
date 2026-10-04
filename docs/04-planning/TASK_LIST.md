@@ -2747,7 +2747,9 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       (≥10.000 dibulatkan ke ribuan) di kartu saldo, baris Beranda, banner
       dan notifikasi siapkan dana; K7 `ExcludeSemantics` di baris lipat; K8
       chip bulan memakai bulan hari terakhir ("Nov"); K9
-      `ForecastSnapshot.takenOn` + `isEarly(days: 7)`. Sisa: K4, K6.
+      `ForecastSnapshot.takenOn` + `isEarly(days: 7)`. Bagian 2: K6 lencana
+      Rutin di kartu daftar anggaran (`BudgetCard.isRecurring`; rincian
+      belum menyebut rutin tertaut). Sisa: K4.
 
 ## Fase 17: Rencana R3 (otomasi rutin)
 

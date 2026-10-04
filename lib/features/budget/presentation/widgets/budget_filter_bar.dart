@@ -38,7 +38,11 @@ class BudgetFilterBar extends StatelessWidget {
   /// Dipanggil dengan dompet baru, atau `null` untuk semua dompet.
   final ValueChanged<String?> onWalletChanged;
 
-  static const List<BudgetStatusFilter> _shown = [BudgetStatusFilter.active, BudgetStatusFilter.finished, BudgetStatusFilter.all];
+  static const List<BudgetStatusFilter> _shown = [
+    BudgetStatusFilter.active,
+    BudgetStatusFilter.finished,
+    BudgetStatusFilter.all,
+  ];
 
   String _label(BudgetStatusFilter filter) {
     final label = switch (filter) {

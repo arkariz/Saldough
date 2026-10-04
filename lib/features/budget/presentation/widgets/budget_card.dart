@@ -22,6 +22,7 @@ class BudgetCard extends StatelessWidget {
     required this.progress,
     required this.walletName,
     required this.onTap,
+    this.isRecurring = false,
     super.key,
   });
 
@@ -36,6 +37,9 @@ class BudgetCard extends StatelessWidget {
 
   /// Dipanggil saat kartu diketuk.
   final VoidCallback onTap;
+
+  /// Anggaran rutin (Ulangi tiap periode, ADR-036; T-16.16 K6).
+  final bool isRecurring;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +76,8 @@ class BudgetCard extends StatelessWidget {
                   children: [
                     BudgetBadge(label: walletName, color: colors.textPrimary),
                     BudgetBadge(label: '${budgetPeriodLabel(budget.period)} · ${budgetRangeLabel(budget)}'),
+                    if (isRecurring)
+                      BudgetBadge(key: const ValueKey('budget-recurring-badge'), label: t.budget.recurringBadge),
                     BudgetBadge(
                       label: budgetStatusLabel(progress.status),
                       color: progress.status == BudgetStatus.active ? colors.income : colors.textMuted,

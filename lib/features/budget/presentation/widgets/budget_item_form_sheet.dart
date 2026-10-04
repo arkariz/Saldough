@@ -188,7 +188,8 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 else
                   AppMenuSelectButton<String>(
                     icon: IconKey.transfer,
-                    label: widget.targetWallets.where((w) => w.id == _targetWalletId).firstOrNull?.name ??
+                    label:
+                        widget.targetWallets.where((w) => w.id == _targetWalletId).firstOrNull?.name ??
                         t.budget.itemTargetWalletLabel,
                     isPlaceholder: !widget.targetWallets.any((w) => w.id == _targetWalletId),
                     wrapLabel: true,

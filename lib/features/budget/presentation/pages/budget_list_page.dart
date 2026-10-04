@@ -94,53 +94,59 @@ class _BudgetListPageState extends State<BudgetListPage> {
               tour: TourId.budget,
               ready: true,
               child: ListView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.fabClearance),
-              children: [
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.budgetSummary,
-                  child: BudgetSummaryCard(
-                    planned: state.activePlanned,
-                    spent: state.activeSpent,
-                    activeCount: state.activeProgress.length,
-                  ),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  AppSpacing.fabClearance,
                 ),
-                const SizedBox(height: AppSpacing.md),
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.budgetFilter,
-                  child: BudgetFilterBar(
-                    statusFilter: state.statusFilter,
-                    statusCounts: state.statusCounts,
-                    wallets: filterWallets,
-                    walletFilter: state.walletFilter,
-                    onStatusChanged: (filter) => bloc.add(BudgetStatusFilterChanged(filter)),
-                    onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                if (visible.isEmpty)
-                  BudgetFilteredEmptyState(
-                    onReset: () => bloc
-                      ..add(const BudgetStatusFilterChanged(BudgetStatusFilter.all))
-                      ..add(const BudgetWalletFilterChanged(null)),
-                  )
-                else
-                  for (final budget in visible) ...[
-                    BudgetCard(
-                      budget: budget,
-                      progress: state.progress[budget.id]!,
-                      walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
-                      onTap: () => _openDetail(context, budget.id),
+                children: [
+                  SpotlightTarget(
+                    spotlightKey: SpotlightKey.budgetSummary,
+                    child: BudgetSummaryCard(
+                      planned: state.activePlanned,
+                      spent: state.activeSpent,
+                      activeCount: state.activeProgress.length,
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                  ],
-                const SizedBox(height: AppSpacing.xs),
-                if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
-                const SizedBox(height: AppSpacing.sm),
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.budgetTemplates,
-                  child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
-                ),
-              ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  SpotlightTarget(
+                    spotlightKey: SpotlightKey.budgetFilter,
+                    child: BudgetFilterBar(
+                      statusFilter: state.statusFilter,
+                      statusCounts: state.statusCounts,
+                      wallets: filterWallets,
+                      walletFilter: state.walletFilter,
+                      onStatusChanged: (filter) => bloc.add(BudgetStatusFilterChanged(filter)),
+                      onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  if (visible.isEmpty)
+                    BudgetFilteredEmptyState(
+                      onReset: () => bloc
+                        ..add(const BudgetStatusFilterChanged(BudgetStatusFilter.all))
+                        ..add(const BudgetWalletFilterChanged(null)),
+                    )
+                  else
+                    for (final budget in visible) ...[
+                      BudgetCard(
+                        budget: budget,
+                        progress: state.progress[budget.id]!,
+                        walletName: state.walletOf(budget.walletId)?.name ?? t.budget.unknownWallet,
+                        onTap: () => _openDetail(context, budget.id),
+                        isRecurring: state.isRecurring(budget),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                  const SizedBox(height: AppSpacing.xs),
+                  if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
+                  const SizedBox(height: AppSpacing.sm),
+                  SpotlightTarget(
+                    spotlightKey: SpotlightKey.budgetTemplates,
+                    child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
+                  ),
+                ],
               ),
             );
           },

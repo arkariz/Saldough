@@ -237,7 +237,11 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
               ),
               if (_editing) ...[
                 const SizedBox(height: AppSpacing.md),
-                AppButton.secondary(label: t.budget.templateDeleteAction, textColor: colors.expense, onPressed: _delete),
+                AppButton.secondary(
+                  label: t.budget.templateDeleteAction,
+                  textColor: colors.expense,
+                  onPressed: _delete,
+                ),
               ],
             ],
           ),

@@ -153,6 +153,14 @@ void main() {
         budgetItemId: 'x',
       ),
       kosRecorded,
+      ExpenseTransaction(
+        id: 'kos-sep',
+        date: DateTime(2026, 9, 1, 8),
+        amount: 190000000,
+        note: 'Kos',
+        walletId: 'bca',
+        recurrence: RecurrenceLink(ruleId: 'Kos', occurrenceDate: DateTime(2026, 9)),
+      ),
     ];
     final months = [
       (start: DateTime(2026, 9), end: DateTime(2026, 10)),
@@ -161,9 +169,17 @@ void main() {
     ];
     // Riwayat mulai 1 Agu: Agu dan Sep penuh, Jul tidak (61 hari).
     expect(
-      unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 8)),
+      unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 8), ruleIds: {'Kos'}),
       (60000000 + 33000000) ~/ 61,
     );
-    expect(unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 9, 3)), isNull);
+    expect(
+      unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 9, 3), ruleIds: {'Kos'}),
+      isNull,
+    );
+    // Rutin Kos dihapus: transaksinya kini di luar rencana (T-15.18).
+    expect(
+      unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 8), ruleIds: const {}),
+      (60000000 + 33000000 + 190000000) ~/ 61,
+    );
   });
 }

@@ -145,10 +145,13 @@ MonthPlan monthPlan(
 
   final lines = budgetLines.toList();
   final budgetItems = {for (final line in lines) line.itemId};
+  // Transaksi yang rutinnya sudah dihapus tidak lagi disumbang rutin mana
+  // pun, jadi dihitung di luar rencana (T-15.18).
+  final ruleIds = {for (final rule in rules) rule.id};
   var unplannedOut = 0;
   var unplannedIn = 0;
   for (final t in transactions) {
-    if (t.recurrence != null || t.date.isBefore(from) || !t.date.isBefore(until)) continue;
+    if (ruleIds.contains(t.recurrence?.ruleId) || t.date.isBefore(from) || !t.date.isBefore(until)) continue;
     switch (t) {
       case ExpenseTransaction(:final budgetItemId) when budgetItemId == null || !budgetItems.contains(budgetItemId):
         unplannedOut += t.amount;

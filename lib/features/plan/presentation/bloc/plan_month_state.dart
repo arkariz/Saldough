@@ -96,6 +96,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     transactions,
     months: _previousMonths,
     historyStart: historyStart,
+    ruleIds: {for (final rule in rules) rule.id},
     walletId: walletId,
   );
 

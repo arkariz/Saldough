@@ -2545,11 +2545,13 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji widget/bloc; D10 sesudah jam dimajukan tanpa
       mematikan proses.
       Memenuhi FR-RUT-002.
-- [ ] **T-15.18** Transaksi yang rutinnya dihapus dihitung di luar rencana
+- [x] **T-15.18** Transaksi yang rutinnya dihapus dihitung di luar rencana
       (temuan K6): `monthPlan` hanya melewati transaksi bertautan ke rutin
       yang masih ada.
       Verifikasi: uji `monthPlan` rutin terhapus; E2.
       Memenuhi FR-PLN-002.
+      Selesai 4 Okt 2026: juga rata-rata harian di luar rencana
+      (`unplannedDailyAverage`, kini menerima `ruleIds`).
 - [ ] **T-15.19** Poles teks rutin (temuan K5 dan catatan kecil T-15.9):
       Jadikan Rutin tanpa pratinjau saldo dan dengan tombol "Jadwalkan";
       chip pembuka tetap tampil dengan centang; nominal nol tanpa tanda;

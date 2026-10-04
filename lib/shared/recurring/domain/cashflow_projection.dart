@@ -218,7 +218,8 @@ List<int> dailyPortions(int amount, int days) {
 }
 
 /// Rata-rata harian pengeluaran "di luar rencana" (§7.5): pengeluaran yang
-/// tidak tertaut pos dan tidak berasal dari rutin, di bulan-bulan penuh
+/// tidak tertaut pos dan tidak berasal dari rutin yang masih ada
+/// ([ruleIds]; transaksi rutin terhapus ikut dihitung, T-15.18), di bulan-bulan penuh
 /// [months] (paling banyak tiga, terbaru dulu) yang seluruhnya tercakup
 /// riwayat ([historyStart] = tanggal transaksi pertama). `null` bila belum
 /// ada satu bulan penuh (KT-R3), atau bila [walletId] diisi, hanya
@@ -227,6 +228,7 @@ int? unplannedDailyAverage(
   Iterable<Transaction> transactions, {
   required List<({DateTime start, DateTime end})> months,
   required DateTime? historyStart,
+  required Set<String> ruleIds,
   String? walletId,
 }) {
   if (historyStart == null) return null;
@@ -246,7 +248,7 @@ int? unplannedDailyAverage(
       m.end.day,
     ).difference(DateTime.utc(m.start.year, m.start.month, m.start.day)).inDays;
     for (final t in transactions) {
-      if (t is! ExpenseTransaction || t.recurrence != null || t.budgetItemId != null) continue;
+      if (t is! ExpenseTransaction || ruleIds.contains(t.recurrence?.ruleId) || t.budgetItemId != null) continue;
       if (walletId != null && t.walletId != walletId) continue;
       if (t.date.isBefore(m.start) || !t.date.isBefore(m.end)) continue;
       total += t.amount;

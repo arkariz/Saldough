@@ -125,4 +125,10 @@ void main() {
     expect(result.unplannedIn, 50000000);
     expect(result.remaining, 305250000 - 5000000 - 10000000 + 50000000);
   });
+
+  test('transaksi yang rutinnya dihapus dihitung di luar rencana (T-15.18)', () {
+    final result = plan([kos(190000000)], with_: [...rules.where((r) => r.id != 'Kos')]);
+    expect(result.plannedRecurringOut, 587900000 - 190000000);
+    expect(result.unplannedOut, 190000000);
+  });
 }

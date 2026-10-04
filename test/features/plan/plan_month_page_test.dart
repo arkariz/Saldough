@@ -273,6 +273,14 @@ void main() {
       expect((await reviews.load()).getOrElse((_) => null)!.completed, isTrue);
     });
 
+    testWidgets('tinjau yang diselesaikan di bloc lain (Beranda) ikut tertutup di sini (T-16.14)', (tester) async {
+      await pump(tester, reviews: reviews);
+      expect(card(), findsOneWidget);
+      await tester.runAsync(() => reviews.save(MonthReview(monthStart: DateTime(2026, 10), completed: true)));
+      await tester.pumpAndSettle();
+      expect(card(), findsNothing);
+    });
+
     testWidgets('status bulan lalu tidak terbawa ke bulan baru', (tester) async {
       await reviews.save(MonthReview(monthStart: DateTime(2026, 9), completed: true));
       await pump(tester, reviews: reviews);

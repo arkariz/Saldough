@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_storage/api_storage.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
@@ -13,9 +15,14 @@ const _snapshotsKey = StorageKey(namespace: 'plan', name: 'forecast_snapshots');
 /// `plan/forecast_snapshots`.
 final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthReviewRepository {
   /// Membuat [MonthReviewRepositoryImpl].
-  const MonthReviewRepositoryImpl({required this._storage});
+  MonthReviewRepositoryImpl({required this._storage});
 
   final KeyValueStorage _storage;
+
+  final _changes = StreamController<MonthReview>.broadcast();
+
+  @override
+  Stream<MonthReview> get changes => _changes.stream;
 
   StoredValue<MonthReview> get _store => StoredValue<MonthReview>.json(
     key: _key,
@@ -68,5 +75,9 @@ final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthRevie
   Future<Either<Failure, MonthReview?>> load() => guard(_store.read);
 
   @override
-  Future<Either<Failure, Unit>> save(MonthReview review) => guardVoid(() => _store.write(review));
+  Future<Either<Failure, Unit>> save(MonthReview review) async {
+    final result = await guardVoid(() => _store.write(review));
+    if (result.isRight()) _changes.add(review);
+    return result;
+  }
 }

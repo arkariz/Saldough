@@ -64,6 +64,15 @@ final class PlanReviewDismissed extends PlanMonthEvent {
   final bool dismissed;
 }
 
+/// Tinjau disimpan di tempat lain (bloc Beranda atau Bulan ini).
+final class PlanReviewSynced extends PlanMonthEvent {
+  /// Membuat [PlanReviewSynced].
+  const PlanReviewSynced(this.review);
+
+  /// Tinjau terbaru.
+  final MonthReview review;
+}
+
 /// "Selesai meninjau".
 final class PlanReviewCompleted extends PlanMonthEvent {
   /// Membuat [PlanReviewCompleted].
@@ -106,6 +115,11 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
       (event, emit) => _saveReview(state.review.copyWith(doneSteps: {...state.review.doneSteps, event.step}), emit),
     );
     on<PlanReviewDismissed>((event, emit) => _saveReview(state.review.copyWith(dismissed: event.dismissed), emit));
+    on<PlanReviewSynced>((event, emit) {
+      if (event.review.monthStart == state.range.start && event.review != state.review) {
+        emit(state.copyWith(review: event.review));
+      }
+    });
     on<PlanReviewCompleted>((event, emit) async {
       AppAnalytics.log(PlanEvents.monthReviewCompleted(state.reviewDoneCount));
       await _saveReview(state.review.copyWith(completed: true), emit);
@@ -122,6 +136,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     _subscriptions = [
       ledgerChanges.changes.listen((_) => refresh()),
       recurringChanges.changes.listen((_) => refresh()),
+      ?_reviews?.changes.listen((review) => add(PlanReviewSynced(review))),
     ];
     ActiveFinancialMonth.notifier.addListener(refresh);
     // Tanggal berganti saat aplikasi hidup di latar (T-15.17).

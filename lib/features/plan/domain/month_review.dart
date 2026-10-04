@@ -108,6 +108,10 @@ abstract interface class MonthReviewRepository {
   /// Menyimpan [review], menimpa bulan sebelumnya.
   Future<Either<Failure, Unit>> save(MonthReview review);
 
+  /// Tinjau yang baru disimpan, supaya Beranda dan Bulan ini (bloc
+  /// terpisah) sama-sama tahu (T-16.14).
+  Stream<MonthReview> get changes;
+
   /// Snapshot perkiraan tersimpan, urut naik.
   Future<Either<Failure, List<ForecastSnapshot>>> loadSnapshots();
 

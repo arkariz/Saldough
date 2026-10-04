@@ -72,7 +72,31 @@ bawah, perbaikan sebagai tugas baru.
 
 ### Hasil
 
-- 4 Okt 2026: tinjauan kode, temuan K1 (T-15.15). Perangkat: belum.
+- 4 Okt 2026: tinjauan kode, temuan K1 (T-15.15).
+- 4 Okt 2026, emulator Pixel 7a API 35 (jam dimajukan dengan
+  `adb shell cmd alarm set-time`; notifikasi bank lewat SMS emulator):
+  - Lulus: D1 (Kos: Tagihan, tanggal 1, Simpan Jadwal), D2, D3, D4 (tidak
+    ganda), D5 (+ Batalkan), D6 (CATAT terisi ≈, tertaut nominal nyata),
+    D7, D8 lewat jalur manual (dialog "Sudah tercatat? Tautkan", tanpa
+    transaksi baru), D9 (ubah, jeda, hapus; transaksi tetap di Riwayat),
+    D10 ("1 terlewat"), D11 (dialog izin Android 13+), D12 (H−1 "1 hari
+    lagi" dan "Jatuh tempo hari ini" pukul 09.00 dengan aksi Catat), D13.
+  - **K2:** tanggal berganti saat aplikasi hidup di latar → kartu Menunggu
+    dan status kemunculan tidak diperbarui sampai proses dimatikan
+    (pengingat tetap benar karena memakai `DateTime.now()`). T-15.17.
+  - **K5:** CATAT dari **Jadikan Rutin** menampilkan "Saldo BCA akan
+    berkurang …" dan tombol "Catat & Jadwalkan", padahal transaksinya sudah
+    ada dan tidak dibuat ulang. T-15.19.
+  - Catatan kecil (T-15.19): chip pembuka hilang sesudah rutin pertama,
+    bukan jadi centang (J1 langkah 3); nominal nol bertanda ("+Rp0",
+    "−Rp0"); kalimat "Berlaku mulai kemunculan berikutnya, 1 Nov." tidak
+    ada sesudah ubah nominal (J7); snackbar catat satu ketuk tanpa nominal
+    ("BPJS tercatat." vs "Netflix Rp65.000 tercatat").
+  - **K8:** di Android 15 emulator, isi notifikasi SMS sampai ke listener
+    sebagai "Sensitive notification content hidden" (penyamaran OTP
+    sistem), walau app-op `RECEIVE_SENSITIVE_NOTIFICATIONS` diizinkan.
+    Pencocokan otomatis dari notifikasi (D8 jalur notifikasi) belum teruji;
+    perlu dicek di perangkat Android 15 dengan aplikasi bank. B-29.
 
 ---
 
@@ -105,4 +129,14 @@ E1–E6 sesuai, selisih nol rupiah pada E2 dan E5.
 
 ### Hasil
 
-- Belum.
+- 4 Okt 2026, emulator:
+  - **K7:** ketuk Akun › Awal bulan keuangan melempar
+    `FinancialMonthPreferenceRepository is not registered` (tidak dibawa ke
+    `AccountScope`); pengaturan tidak bisa diubah. E1 terhalang. T-15.16.
+  - **K6:** transaksi yang rutinnya **dihapus** hilang dari Uang nganggur:
+    `monthPlan` melewati semua transaksi bertautan, padahal rutinnya tidak
+    lagi menyumbang. Contoh: Netflix Rp65.000 (rutin dihapus) tidak masuk
+    tagihan rutin maupun di luar rencana; keluar Okt 912.500, terhitung
+    847.500. T-15.18.
+  - Lulus: angka Rencana di segmen Rutin (847.500 = 350.000 + 150.000 +
+    287.500 + 60.000), baris perkiraan Beranda (1.375.000 − 350.000).

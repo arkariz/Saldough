@@ -76,11 +76,11 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
-| 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 15 | 13 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; R1a T-15.1–15.9, R1b T-15.10–15.14, perbaikan T-15.15 |
+| 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 13 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; R1a T-15.1–15.9, R1b T-15.10–15.14, perbaikan T-15.15–15.19 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| Antrean (`B-n`, belum dijadwalkan) | 20 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| Antrean (`B-n`, belum dijadwalkan) | 21 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -2534,6 +2534,28 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: VERIFICATION_PLAN_FASE_15 D13.
       Memenuhi FR-RUT-004.
       Selesai 4 Okt 2026 (kode); D13 di perangkat ikut T-15.9.
+- [ ] **T-15.16** Awal bulan keuangan bisa diubah dari Akun (temuan K7):
+      `AccountScope` membawa `FinancialMonthPreferenceRepository` dari root.
+      Verifikasi: uji scope Akun mendaftarkannya; E1 di perangkat.
+      Memenuhi FR-PLN-004.
+- [ ] **T-15.17** Ganti hari saat aplikasi hidup (temuan K2): saat kembali
+      ke depan pada tanggal lain, Beranda dan Rencana memuat ulang status
+      kemunculan dan rencana bulan.
+      Verifikasi: uji widget/bloc; D10 sesudah jam dimajukan tanpa
+      mematikan proses.
+      Memenuhi FR-RUT-002.
+- [ ] **T-15.18** Transaksi yang rutinnya dihapus dihitung di luar rencana
+      (temuan K6): `monthPlan` hanya melewati transaksi bertautan ke rutin
+      yang masih ada.
+      Verifikasi: uji `monthPlan` rutin terhapus; E2.
+      Memenuhi FR-PLN-002.
+- [ ] **T-15.19** Poles teks rutin (temuan K5 dan catatan kecil T-15.9):
+      Jadikan Rutin tanpa pratinjau saldo dan dengan tombol "Jadwalkan";
+      chip pembuka tetap tampil dengan centang; nominal nol tanpa tanda;
+      kalimat "Berlaku mulai kemunculan berikutnya" sesudah ubah; snackbar
+      catat satu ketuk menyebut nominal.
+      Verifikasi: uji widget teks.
+      Memenuhi FR-RUT-001, FR-RUT-002.
 
 ## Antrean (belum dijadwalkan)
 
@@ -2564,6 +2586,7 @@ menambah dan memindahkannya ada di
 | B-26 | Kartu lembut "Ada yang belum dicatat sejak …?" sesudah 3 hari tanpa catatan apa pun, **tanpa streak** dan tanpa hitungan hari terputus (KT-R13). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E12 |
 | B-27 | **R2 Rencana**: anggaran rutin (FR-BUD-008), bulan depan dan horizon (FR-PLN-005), perkiraan per dompet + "siapkan dana" (W1, termasuk notifikasinya), tinjau awal bulan (J4), W7–W10. Fase baru sesudah R1 dirilis. | agen | ADR-035 §3.9, RECURRING_AND_FORECAST §12 |
 | B-28 | **R3 Otomasi**: catat otomatis per rutin (nominal tetap), "belum terlihat" H+2, kenaikan harga dari notifikasi, rutin menganggur (W6), saran pola rutin dari riwayat/notifikasi, rutin lewat suara, gabung kartu menunggu (KT-R7). | agen | RECURRING_AND_FORECAST §12 |
+| B-29 | Penyamaran notifikasi Android 15 (temuan K8 T-15.9): listener menerima "Sensitive notification content hidden" untuk notifikasi yang dianggap berisi kode. Cek di perangkat Android 15 dengan notifikasi BRImo/BCA nyata; bila terjadi, tampilkan penjelasan di layar Catat dari notifikasi dan jangan menyimpan teks tersamar sebagai tangkapan. | pemilik + agen | [VERIFICATION_PLAN_FASE_15](VERIFICATION_PLAN_FASE_15.md) R1a |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

@@ -102,7 +102,9 @@ Future<bool> openRecordSheet(
       : null;
   final repeat =
       initialRepeat ??
-      (editRule != null ? RecurringPattern.of(editRule) : (makeRecurringFrom != null ? const RecurringPattern() : null));
+      (editRule != null
+          ? RecurringPattern.of(editRule)
+          : (makeRecurringFrom != null ? const RecurringPattern() : null));
   final repeatLocked = makeRecurringFrom != null || editRule != null;
   final scheduleOnly = editRule != null;
   final bloc = context.read<RecordBloc>()..add(const RecordWalletsLoaded());
@@ -161,8 +163,8 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
-          scheduleOnly: scheduleOnly,
-          occurrence: occurrence,
+            scheduleOnly: scheduleOnly,
+            occurrence: occurrence,
           ),
           RecordChoice.expense => ExpenseFormSheet(
             wallets: wallets,
@@ -177,8 +179,8 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
-          scheduleOnly: scheduleOnly,
-          occurrence: occurrence,
+            scheduleOnly: scheduleOnly,
+            occurrence: occurrence,
           ),
           RecordChoice.transfer => TransferFormSheet(
             wallets: wallets,
@@ -192,8 +194,8 @@ Future<bool> openRecordSheet(
             kindSwitcher: kindSwitcher,
             initialRepeat: repeat,
             repeatLocked: repeatLocked,
-          scheduleOnly: scheduleOnly,
-          occurrence: occurrence,
+            scheduleOnly: scheduleOnly,
+            occurrence: occurrence,
           ),
         };
       },

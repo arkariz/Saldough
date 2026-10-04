@@ -31,23 +31,23 @@ final class RecordScope extends IsolatedScope {
   @override
   void register(GetIt c) {
     c.registerLazySingleton<RecordBloc>(
-        () => RecordBloc(
-          walletRepository: c<WalletRepository>(),
+      () => RecordBloc(
+        walletRepository: c<WalletRepository>(),
+        transactionRepository: c<TransactionRepository>(),
+        budgetItemCatalog: c<BudgetItemCatalog>(),
+        createCategory: CreateCategory(repository: c<CategoryRepository>()),
+        recurringRepository: c<RecurringRuleRepository>(),
+        recurringChanges: c<RecurringChanges>(),
+        recordTransaction: RecordTransaction(
+          ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),
-          budgetItemCatalog: c<BudgetItemCatalog>(),
-          createCategory: CreateCategory(repository: c<CategoryRepository>()),
-          recurringRepository: c<RecurringRuleRepository>(),
-          recurringChanges: c<RecurringChanges>(),
-          recordTransaction: RecordTransaction(
-            ledgerChanges: c<LedgerChanges>(),
+          recomputeWalletBalances: RecomputeWalletBalances(
+            walletRepository: c<WalletRepository>(),
             transactionRepository: c<TransactionRepository>(),
-            recomputeWalletBalances: RecomputeWalletBalances(
-              walletRepository: c<WalletRepository>(),
-              transactionRepository: c<TransactionRepository>(),
-            ),
           ),
         ),
-        dispose: (bloc) => bloc.close(),
-      );
+      ),
+      dispose: (bloc) => bloc.close(),
+    );
   }
 }

@@ -88,6 +88,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       final rule = state.ruleOf(event.ruleId);
       if (rule == null) return;
       final today = state.today;
+      AppAnalytics.log(RecurringEvents.unseenNotYet);
       await _write(
         rule.copyWith(snoozedUntil: DateTime(today.year, today.month, today.day + unseenAfterDays)),
         emit,
@@ -97,6 +98,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     on<RecurringAutoRecordToggled>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
       if (rule == null || rule.amountMode != RecurringAmountMode.fixed) return;
+      AppAnalytics.log(RecurringEvents.autoRecordToggled(on: event.enabled, where: 'detail'));
       await _write(rule.copyWith(autoRecord: event.enabled), emit, null);
     });
     on<RecurringRemindersToggled>((event, emit) async {
@@ -173,6 +175,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     final rule = state.ruleOf(event.ruleId);
     if (rule == null) return;
     final skipped = rule.copyWith(skippedDates: {...rule.skippedDates, event.date});
+    AppAnalytics.log(RecurringEvents.occurrenceSkipped);
     final day = DateTime(event.date.year, event.date.month, event.date.day);
     await _write(skipped, emit, null);
     if (state.ruleOf(rule.id) != skipped) return;
@@ -271,6 +274,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
+        AppAnalytics.log(RecurringEvents.occurrenceRecorded('one_tap'));
         emit(
           state.copyWith(
             transactions: [...state.transactions, transaction],
@@ -319,6 +323,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       }
     }
     if (recorded.isEmpty) return;
+    AppAnalytics.log(RecurringEvents.occurrenceRecorded('record_all', count: recorded.length));
     emit(
       state.copyWith(
         transactions: [...state.transactions, ...recorded],
@@ -342,6 +347,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
+        AppAnalytics.log(RecurringEvents.occurrenceLinked);
         emit(
           state.copyWith(
             transactions: [for (final t in state.transactions) t.id == source.id ? linked : t],

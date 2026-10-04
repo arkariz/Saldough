@@ -44,7 +44,9 @@ class RecordDateField extends StatelessWidget {
       context: context,
       initialDate: date,
       firstDate: DateTime(2000),
-      lastDate: allowFuture ? DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day) : DateTime.now(),
+      lastDate: allowFuture
+          ? DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day)
+          : DateTime.now(),
     );
     if (picked != null) onChanged(_withTimeOf(picked));
   }

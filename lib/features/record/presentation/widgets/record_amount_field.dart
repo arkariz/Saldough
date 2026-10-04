@@ -100,7 +100,10 @@ class RecordAmountField extends StatelessWidget {
             decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: ink)),
+                Text(
+                  ActiveCurrency.value.symbol,
+                  style: PixelTypography.tabularMono(context, fontSize: 16, color: ink),
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: TextField(

@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -80,17 +81,21 @@ class RecurringPendingTile extends StatelessWidget {
             ),
             if (raised != null) ...[
               TextButton(
-                onPressed: () => bloc.add(
-                  RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id),
-                ),
+                onPressed: () {
+                  AppAnalytics.log(RecurringEvents.priceIncreaseAction('keep'));
+                  bloc.add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id));
+                },
                 child: Text(t.recurring.priceUpKeep),
               ),
               AppQuickChip(
                 label: t.recurring.priceUpUpdate,
                 color: context.appColors.surfaceHigh,
-                onTap: () => bloc
-                  ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
-                  ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount)),
+                onTap: () {
+                  AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
+                  bloc
+                    ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
+                    ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount));
+                },
               ),
             ] else if (unseen)
               TextButton(

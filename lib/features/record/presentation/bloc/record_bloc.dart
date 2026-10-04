@@ -142,6 +142,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       return;
     }
+    AppAnalytics.log(RecurringEvents.created('record'));
     final anchor = rule.schedule.anchorDate;
     if (anchor.isAfter(_today)) {
       _recurringChanges.notifyChanged(source: this);
@@ -182,6 +183,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       return;
     }
+    AppAnalytics.log(RecurringEvents.created('make_recurring'));
     final linked = event.source.withRecurrence(
       RecurrenceLink(ruleId: rule.id, occurrenceDate: rule.schedule.anchorDate),
     );

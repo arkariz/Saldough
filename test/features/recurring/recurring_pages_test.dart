@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -318,6 +319,17 @@ void main() {
       await tester.tap(find.text(t.recurring.suggestDismiss));
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
+    });
+
+    testWidgets('analitik: Lewati mengirim occurrence_skipped tanpa nominal (T-17.8)', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await rules.saveRule(rule('Gym', 30000000, DateTime(2026, 10, 2)));
+      await pump(tester, const RecurringSegmentView());
+      await tester.tap(find.text(t.recurring.skipAction));
+      await tester.pumpAndSettle();
+      expect(events, contains(RecurringEvents.occurrenceSkipped));
     });
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -241,7 +242,10 @@ class _Advanced extends StatelessWidget {
             title: Text(t.record.repeat.autoRecordLabel),
             subtitle: Text(t.record.repeat.autoRecordHint),
             value: value.autoRecord,
-            onChanged: (on) => onChanged(value.copyWith(autoRecord: on)),
+            onChanged: (on) {
+              AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
+              onChanged(value.copyWith(autoRecord: on));
+            },
           ),
         if (kind != TransactionKind.income) ...[
           const SizedBox(height: AppSpacing.sm),

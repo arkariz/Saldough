@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -310,12 +313,27 @@ class _IdleCard extends StatelessWidget {
             alignment: WrapAlignment.end,
             spacing: AppSpacing.xs,
             children: [
-              TextButton(onPressed: () => bloc.add(RecurringIdleDismissed(rule.id)), child: Text(t.recurring.idleKeep)),
               TextButton(
-                onPressed: () => bloc.add(RecurringPauseToggled(rule.id)),
+                onPressed: () {
+                  AppAnalytics.log(RecurringEvents.idleAction('keep'));
+                  bloc.add(RecurringIdleDismissed(rule.id));
+                },
+                child: Text(t.recurring.idleKeep),
+              ),
+              TextButton(
+                onPressed: () {
+                  AppAnalytics.log(RecurringEvents.idleAction('pause'));
+                  bloc.add(RecurringPauseToggled(rule.id));
+                },
                 child: Text(t.recurring.pauseAction),
               ),
-              TextButton(onPressed: () => bloc.add(RecurringEnded(rule.id)), child: Text(t.recurring.endAction)),
+              TextButton(
+                onPressed: () {
+                  AppAnalytics.log(RecurringEvents.idleAction('end'));
+                  bloc.add(RecurringEnded(rule.id));
+                },
+                child: Text(t.recurring.endAction),
+              ),
             ],
           ),
         ],
@@ -356,15 +374,18 @@ class _SuggestionCard extends StatelessWidget {
               spacing: AppSpacing.xs,
               children: [
                 TextButton(
-                  onPressed: () => bloc.add(RecurringSuggestionDismissed(s.key)),
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.suggestionAction('dismiss'));
+                    bloc.add(RecurringSuggestionDismissed(s.key));
+                  },
                   child: Text(t.recurring.suggestDismiss),
                 ),
                 TextButton(
                   key: ValueKey('recurring-suggest-${s.key}'),
-                  onPressed: () => context.pushRoute(
-                    RecordRouteKeys.sheet,
-                    RecordSheetInput(makeRecurringFrom: s.latest),
-                  ),
+                  onPressed: () {
+                    AppAnalytics.log(RecurringEvents.suggestionAction('accept'));
+                    unawaited(context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(makeRecurringFrom: s.latest)));
+                  },
                   child: Text(t.recurring.suggestAccept),
                 ),
               ],

@@ -47,6 +47,42 @@ abstract final class AppAnalytics {
   }
 }
 
+/// Peristiwa rutin R1 (ADR-035 §7) dan R3 (ADR-037 §3.5), tanpa nominal.
+abstract final class RecurringEvents {
+  RecurringEvents._();
+
+  /// Rutin dibuat: `record` (Ulangi di CATAT) atau `make_recurring`.
+  static AnalyticsEvent created(String source) => AnalyticsEvent('recurring_created', {'source': source});
+
+  /// Kemunculan dicatat: `one_tap` atau `record_all`.
+  static AnalyticsEvent occurrenceRecorded(String method, {int count = 1}) =>
+      AnalyticsEvent('occurrence_recorded', {'method': method, 'count': count});
+
+  /// Kemunculan dilewati.
+  static const occurrenceSkipped = AnalyticsEvent('occurrence_skipped');
+
+  /// Kemunculan ditautkan ke transaksi yang ada, oleh pengguna.
+  static const occurrenceLinked = AnalyticsEvent('occurrence_linked', {'by': 'user'});
+
+  /// "Belum terjadi" pada autodebet belum terlihat (E3).
+  static const unseenNotYet = AnalyticsEvent('occurrence_unseen_action', {'action': 'not_yet'});
+
+  /// Kartu rutin menganggur (W6): `keep`, `pause`, `end`.
+  static AnalyticsEvent idleAction(String action) => AnalyticsEvent('recurring_idle_action', {'action': action});
+
+  /// Sakelar catat otomatis: `form` atau `detail`.
+  static AnalyticsEvent autoRecordToggled({required bool on, required String where}) =>
+      AnalyticsEvent('auto_record_toggled', {'on': on ? 'true' : 'false', 'where': where});
+
+  /// Kenaikan harga dari notifikasi (W3): `update` atau `keep`.
+  static AnalyticsEvent priceIncreaseAction(String action) =>
+      AnalyticsEvent('price_increase_action', {'action': action});
+
+  /// Saran Sepertinya rutin: `accept` atau `dismiss`.
+  static AnalyticsEvent suggestionAction(String action) =>
+      AnalyticsEvent('recurring_suggestion_action', {'action': action});
+}
+
 /// Peristiwa Rencana R2 (ADR-036 §3.8), tanpa nominal.
 abstract final class PlanEvents {
   PlanEvents._();

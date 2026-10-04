@@ -153,7 +153,8 @@
       "updatedMessage": "$name diperbarui.",
       "linkSuggestionAction": "Tautkan ke pos $item",
       "autoRecordLabel": "Catat otomatis",
-      "autoRecordHint": "Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan."
+      "autoRecordHint": "Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.",
+      "noBalanceChange": "Tidak ada transaksi baru; saldo tidak berubah."
     }
   },
   "transaction": {

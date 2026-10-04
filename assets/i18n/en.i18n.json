@@ -153,7 +153,8 @@
       "updatedMessage": "$name updated.",
       "linkSuggestionAction": "Link to $item",
       "autoRecordLabel": "Record automatically",
-      "autoRecordHint": "Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it."
+      "autoRecordHint": "Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.",
+      "noBalanceChange": "No new transaction; balances stay the same."
     }
   },
   "transaction": {

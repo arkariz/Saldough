@@ -331,7 +331,8 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           controller: _noteController,
           kind: TransactionKind.transfer,
         ),
-        if (_canSubmit && from != null && to != null && money != null)
+        // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
+        if (_canSubmit && from != null && to != null && money != null && !widget.repeatLocked)
           RecordSummaryCard(
             kind: TransactionKind.transfer,
             title: t.record.transferSummaryTitle,

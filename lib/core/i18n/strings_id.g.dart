@@ -3504,6 +3504,9 @@ class Translations$record$repeat$id {
 
 	/// id: 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.'
 	String get autoRecordHint => 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.';
+
+	/// id: 'Tidak ada transaksi baru; saldo tidak berubah.'
+	String get noBalanceChange => 'Tidak ada transaksi baru; saldo tidak berubah.';
 }
 
 // Path: account.errors
@@ -3799,6 +3802,7 @@ extension on Translations {
 			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Tautkan ke pos ${item}',
 			'record.repeat.autoRecordLabel' => 'Catat otomatis',
 			'record.repeat.autoRecordHint' => 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.',
+			'record.repeat.noBalanceChange' => 'Tidak ada transaksi baru; saldo tidak berubah.',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -4169,9 +4173,9 @@ extension on Translations {
 			'freelance.paymentDeleteConfirmTitle' => 'Hapus pembayaran?',
 			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
 			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
-			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
 			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
 			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
 			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
@@ -4683,9 +4687,9 @@ extension on Translations {
 			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
-			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',

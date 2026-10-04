@@ -265,10 +265,13 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
             kind: TransactionKind.income,
             children: [
               Text(
-                t.record.incomeSummary(
-                  wallet: wallet.name,
-                  amount: AppMoneyFormatter.format(amount),
-                ),
+                // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
+                widget.repeatLocked
+                    ? t.record.repeat.noBalanceChange
+                    : t.record.incomeSummary(
+                        wallet: wallet.name,
+                        amount: AppMoneyFormatter.format(amount),
+                      ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

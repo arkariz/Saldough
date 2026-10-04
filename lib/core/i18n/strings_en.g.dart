@@ -1354,6 +1354,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String linkSuggestionAction({required Object item}) => 'Link to ${item}';
 	@override String get autoRecordLabel => 'Record automatically';
 	@override String get autoRecordHint => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.';
+	@override String get noBalanceChange => 'No new transaction; balances stay the same.';
 }
 
 // Path: account.errors
@@ -1577,6 +1578,7 @@ extension on TranslationsEn {
 			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Link to ${item}',
 			'record.repeat.autoRecordLabel' => 'Record automatically',
 			'record.repeat.autoRecordHint' => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.',
+			'record.repeat.noBalanceChange' => 'No new transaction; balances stay the same.',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1947,9 +1949,9 @@ extension on TranslationsEn {
 			'freelance.paymentDeleteConfirmTitle' => 'Delete payment?',
 			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
 			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
-			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
 			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
 			'freelance.paymentCreatedMessage' => 'Payment created.',
 			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
@@ -2461,9 +2463,9 @@ extension on TranslationsEn {
 			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
-			'recurring.budgetLinkRemove' => 'Unlink',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkRemove' => 'Unlink',
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',

@@ -326,4 +326,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(result?.repeat?.frequency, RecurringFrequency.monthly);
   });
+
+  testWidgets('Jadikan Rutin (Ulangi terkunci): ringkasan tidak menjanjikan saldo berkurang (T-17.12)', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => const ExpenseFormSheet(
+                  wallets: wallets,
+                  initialWalletId: 'bca',
+                  initialAmountSen: 3000000,
+                  initialRepeat: RecurringPattern(),
+                  repeatLocked: true,
+                ),
+              ),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    expect(find.text(t.record.repeat.noBalanceChange), findsOneWidget);
+    expect(find.textContaining('akan berkurang'), findsNothing);
+  });
 }

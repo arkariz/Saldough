@@ -313,10 +313,13 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
             kind: TransactionKind.expense,
             children: [
               Text(
-                t.record.expenseSummary(
-                  wallet: wallet.name,
-                  amount: AppMoneyFormatter.format(amount),
-                ),
+                // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
+                widget.repeatLocked
+                    ? t.record.repeat.noBalanceChange
+                    : t.record.expenseSummary(
+                        wallet: wallet.name,
+                        amount: AppMoneyFormatter.format(amount),
+                      ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

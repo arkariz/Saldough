@@ -2882,9 +2882,14 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
       6 Des, BPJS 6 Des dilewati → kartu "Masih memakai BPJS?" muncul,
       Biarkan menyembunyikannya; Internet 6 Des juga tercatat otomatis.
       Temuan: catat otomatis bisa menggandakan saat harga naik → T-17.10.
-      **Belum diverifikasi di perangkat** (ada uji widget): label belum
-      terlihat H+2, kartu kenaikan harga, kartu Sepertinya rutin, dan
-      Batalkan catat otomatis.
+      Lanjutan kedua: jam 6 Feb 2027, snackbar "Internet dicatat otomatis."
+      muncul, Batalkan mengembalikan saldo dan kemunculan ke Menunggu, dan
+      buka ulang tidak mencatatnya lagi; pengeluaran BCA Rp200.000 hari itu
+      memunculkan "BPJS tercatat Rp200.000, naik dari rutin" tanpa Catat,
+      Biarkan menautkannya tanpa transaksi baru. **Belum diverifikasi di
+      perangkat** (ada uji widget): label belum terlihat H+2 (data emulator
+      tanpa rutin autodebet) dan kartu Sepertinya rutin (butuh 3 bulan
+      transaksi sama).
 - [x] **T-17.10** Catat otomatis menggandakan bila notifikasi sudah mencatat
       rutin dengan harga naik: `dueAutoRecords` hanya memeriksa nominal
       persis (temuan T-17.9). Kini kandidat `priceIncreaseCandidate` juga

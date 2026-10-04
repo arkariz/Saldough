@@ -3,6 +3,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -22,6 +23,7 @@ void main() {
   late RecurringChanges changes;
   late RecurringBloc bloc;
   final today = DateTime(2026, 10, 2, 9);
+  var clock = today;
 
   T read<T>(Either<Failure, T> result) => result.getOrElse((_) => throw StateError('expected Right'));
 
@@ -39,6 +41,7 @@ void main() {
   setUpAll(registerEffectHandlers);
 
   setUp(() async {
+    clock = today;
     storage = InMemoryKeyValueStorage();
     rules = RecurringRuleRepositoryImpl(storage: storage);
     transactions = TransactionRepositoryImpl(storage: storage);
@@ -66,7 +69,7 @@ void main() {
           transactionRepository: transactions,
         ),
       ),
-      now: () => today,
+      now: () => clock,
     )..add(const RecurringStarted());
     addTearDown(bloc.close);
     await tester.pumpWidget(
@@ -80,6 +83,18 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('tanggal berganti saat aplikasi hidup: kemunculan hari itu jadi menunggu (T-15.17)', (tester) async {
+    ActiveDay.sync(today);
+    await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));
+    await pump(tester, const RecurringSegmentView());
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsNothing);
+
+    clock = DateTime(2026, 10, 3, 10);
+    ActiveDay.sync(clock);
+    await tester.pumpAndSettle();
+    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
+  });
 
   testWidgets('kosong: penjelasan satu kalimat dan chip pembuka', (tester) async {
     await pump(tester, const RecurringSegmentView());

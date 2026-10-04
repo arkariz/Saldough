@@ -2539,12 +2539,15 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji scope Akun mendaftarkannya; E1 di perangkat.
       Memenuhi FR-PLN-004.
       Selesai 4 Okt 2026 (`account_scope_test.dart`).
-- [ ] **T-15.17** Ganti hari saat aplikasi hidup (temuan K2): saat kembali
+- [x] **T-15.17** Ganti hari saat aplikasi hidup (temuan K2): saat kembali
       ke depan pada tanggal lain, Beranda dan Rencana memuat ulang status
       kemunculan dan rencana bulan.
       Verifikasi: uji widget/bloc; D10 sesudah jam dimajukan tanpa
       mematikan proses.
       Memenuhi FR-RUT-002.
+      Selesai 4 Okt 2026: `ActiveDay` (`core/financial_month/`) diperbarui
+      pengamat siklus hidup di `main.dart`; `RecurringBloc` dan
+      `PlanMonthBloc` memuat ulang saat tanggalnya berganti.
 - [x] **T-15.18** Transaksi yang rutinnya dihapus dihitung di luar rencana
       (temuan K6): `monthPlan` hanya melewati transaksi bertautan ke rutin
       yang masih ada.

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
@@ -59,6 +60,8 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       ledgerChanges.from(this).listen((_) => add(const RecurringRefreshed())),
       _recurringChanges.from(this).listen((_) => add(const RecurringRefreshed())),
     ];
+    // Tanggal berganti saat aplikasi hidup di latar (T-15.17).
+    ActiveDay.notifier.addListener(_onDayChanged);
   }
 
   final RecurringRuleRepository _rules;
@@ -378,8 +381,11 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
   UiEffect _effectDone(String message) => ShowSnackBarEffect(message: message, severity: .success);
 
+  void _onDayChanged() => add(const RecurringRefreshed());
+
   @override
   Future<void> close() async {
+    ActiveDay.notifier.removeListener(_onDayChanged);
     for (final subscription in _subscriptions) {
       await subscription.cancel();
     }

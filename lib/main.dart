@@ -20,6 +20,7 @@ final GetIt rootGetIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding.instance.addObserver(ActiveDay.observer);
 
   // Urutan ini dipertahankan dari flutter-architecture-studi-bank (minus
   // jembatan legacy GetX mereka): pasang Bloc.observer -> Firebase ->

@@ -68,7 +68,12 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
       recurringChanges.changes.listen((_) => refresh()),
     ];
     ActiveFinancialMonth.notifier.addListener(refresh);
-    _removeMonthListener = () => ActiveFinancialMonth.notifier.removeListener(refresh);
+    // Tanggal berganti saat aplikasi hidup di latar (T-15.17).
+    ActiveDay.notifier.addListener(refresh);
+    _removeMonthListener = () {
+      ActiveFinancialMonth.notifier.removeListener(refresh);
+      ActiveDay.notifier.removeListener(refresh);
+    };
   }
 
   final WalletRepository _wallets;

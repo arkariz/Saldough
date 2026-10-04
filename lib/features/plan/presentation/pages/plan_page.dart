@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -58,7 +59,10 @@ class PlanPage extends StatelessWidget {
             child: AppSubTabs<PlanSegment>(
               options: [for (final segment in PlanSegment.values) (segment, labelOf(segment))],
               selected: selected,
-              onChanged: onChanged,
+              onChanged: (segment) {
+                if (segment != selected) AppAnalytics.log(PlanEvents.planSegmentViewed(segment.name));
+                onChanged(segment);
+              },
             ),
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -287,6 +288,7 @@ final class ProcessCapturedNotifications {
     final result = await recordTransaction(transaction, source: this);
     if (result.isLeft()) return (null, false);
     if (autoLink) {
+      AppAnalytics.log(RecurringEvents.occurrenceLinkedAuto);
       await matchLog?.add(
         RecurrenceMatchEntry(
           transactionId: transaction.id,

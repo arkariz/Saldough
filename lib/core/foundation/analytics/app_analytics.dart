@@ -64,6 +64,12 @@ abstract final class RecurringEvents {
   /// Kemunculan ditautkan ke transaksi yang ada, oleh pengguna.
   static const occurrenceLinked = AnalyticsEvent('occurrence_linked', {'by': 'user'});
 
+  /// Kemunculan ditautkan otomatis dari catat notifikasi.
+  static const occurrenceLinkedAuto = AnalyticsEvent('occurrence_linked', {'by': 'auto'});
+
+  /// Tautan otomatis dilepas pengguna.
+  static const occurrenceUnlinked = AnalyticsEvent('occurrence_unlinked');
+
   /// "Belum terjadi" pada autodebet belum terlihat (E3).
   static const unseenNotYet = AnalyticsEvent('occurrence_unseen_action', {'action': 'not_yet'});
 
@@ -101,6 +107,9 @@ abstract final class PlanEvents {
   /// Rutin ditautkan ke pos anggaran: `suggestion` (saran E9) atau `detail`.
   static AnalyticsEvent recurringBudgetLinked(String source) =>
       AnalyticsEvent('recurring_budget_linked', {'source': source});
+
+  /// Segmen Rencana dibuka: `thisMonth`, `budget`, `recurring`.
+  static AnalyticsEvent planSegmentViewed(String segment) => AnalyticsEvent('plan_viewed', {'segment': segment});
 
   /// Bulan ini dilihat: 0 = bulan berjalan, 1–2 = ke depan.
   static AnalyticsEvent planViewed(int monthOffset) => AnalyticsEvent('plan_viewed', {'month_offset': monthOffset});

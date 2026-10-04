@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -156,6 +157,7 @@ final class CaptureInboxActions {
         if (transaction != null && transaction.recurrence != null) {
           final saved = await recordTransaction(transaction.withRecurrence(null), previousTransaction: transaction);
           if (saved.isLeft()) return saved;
+          AppAnalytics.log(RecurringEvents.occurrenceUnlinked);
         }
     }
     final removed = await matchLog?.remove(entry.transactionId) ?? right(unit);

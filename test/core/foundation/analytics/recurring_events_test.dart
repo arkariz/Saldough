@@ -20,6 +20,9 @@ void main() {
     expect(RecurringEvents.priceIncreaseAction('update').name, 'price_increase_action');
     expect(RecurringEvents.suggestionAction('dismiss').name, 'recurring_suggestion_action');
     expect(PlanEvents.autoRecorded(2).parameters, {'count': 2});
+    expect(RecurringEvents.occurrenceLinkedAuto.parameters, {'by': 'auto'});
+    expect(RecurringEvents.occurrenceUnlinked.name, 'occurrence_unlinked');
+    expect(PlanEvents.planSegmentViewed('recurring'), const AnalyticsEvent('plan_viewed', {'segment': 'recurring'}));
   });
 
   test('tidak ada parameter bernominal', () {

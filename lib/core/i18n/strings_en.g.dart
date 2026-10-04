@@ -1166,6 +1166,8 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String idleTitle({required Object name}) => 'Still using ${name}?';
 	@override String get idleBody => 'The last two were skipped or not seen.';
 	@override String get idleKeep => 'Keep';
+	@override String autoRecordedOne({required Object name}) => '${name} recorded automatically.';
+	@override String autoRecordedMany({required Object n}) => '${n} repeating items recorded automatically.';
 }
 
 // Path: plan
@@ -2466,6 +2468,8 @@ extension on TranslationsEn {
 			'recurring.idleTitle' => ({required Object name}) => 'Still using ${name}?',
 			'recurring.idleBody' => 'The last two were skipped or not seen.',
 			'recurring.idleKeep' => 'Keep',
+			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
+			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

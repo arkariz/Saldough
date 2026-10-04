@@ -72,6 +72,12 @@ abstract final class PlanEvents {
   /// Banner siapkan dana tampil.
   static const fundingWarningShown = AnalyticsEvent('funding_warning_shown');
 
+  /// Catat otomatis rutin (ADR-037 §3.5): jumlahnya saja.
+  static AnalyticsEvent autoRecorded(int count) => AnalyticsEvent('auto_recorded', {'count': count});
+
+  /// Catat otomatis dibatalkan.
+  static const autoRecordUndone = AnalyticsEvent('auto_record_undone');
+
   /// "Selesai meninjau" dengan jumlah langkah tercentang.
   static AnalyticsEvent monthReviewCompleted(int stepsDone) =>
       AnalyticsEvent('month_review_completed', {'steps_done': stepsDone});

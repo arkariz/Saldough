@@ -3,9 +3,11 @@
 /// CATAT, dan penangkap notifikasi (ADR-035 §3.1).
 library;
 
+export 'data/auto_record_log_repository_impl.dart';
 export 'data/recurrence_match_log_repository_impl.dart';
 export 'data/recurring_rule_model.dart';
 export 'data/recurring_rule_repository_impl.dart';
+export 'domain/auto_record.dart';
 export 'domain/budget_link.dart';
 export 'domain/cashflow_projection.dart';
 export 'domain/funding.dart';

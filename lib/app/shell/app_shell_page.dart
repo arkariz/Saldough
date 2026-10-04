@@ -26,6 +26,7 @@ import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/plan/presentation/widgets/plan_forecast_row.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/recurring/presentation/host/auto_record_host.dart';
 import 'package:saldough/features/recurring/presentation/host/recurring_reminder_host.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
@@ -201,52 +202,56 @@ class _AppShellPageState extends State<AppShellPage> {
                                 // Catat dari notifikasi (ADR-032): proses saat dibuka,
                                 // resume, tangkapan baru, dan ketukan pengingat.
                                 // Anggaran rutin (ADR-036 §3.2): lahir saat dibuka dan saat tanggal berganti.
-                                return RecurringBudgetHost(
+                                return AutoRecordHost(
                                   container: parentContainer,
-                                  child: NotificationCaptureHost(
+                                  // Catat otomatis rutin (ADR-037 §3.2).
+                                  child: RecurringBudgetHost(
                                     container: parentContainer,
-                                    // Pengingat rutin (ADR-035 §3.8): jadwal dan ketukan notifikasi.
-                                    child: RecurringReminderHost(
+                                    child: NotificationCaptureHost(
                                       container: parentContainer,
-                                      onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
-                                      // Siapkan dana (ADR-036 §3.6): hitungan fitur `plan`.
-                                      fundingWarnings: () => loadFundingWarnings(parentContainer),
-                                      child: Scaffold(
-                                        body: IndexedStack(
-                                          index: _activeTab,
-                                          // `IndexedStack` menjaga tab tersembunyi tetap hidup;
-                                          // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
-                                          children: [
-                                            for (final (i, tab) in tabsFor(context).indexed)
-                                              TourVisibility(visible: i == _activeTab, child: tab),
-                                          ],
-                                        ),
-                                        floatingActionButton: _RecordFabs(
-                                          onRecord: () => unawaited(_openRecord(context)),
-                                          onVoice: () => unawaited(_openRecord(context, voice: true)),
-                                        ),
-                                        bottomNavigationBar: NavigationBar(
-                                          selectedIndex: _activeTab,
-                                          onDestinationSelected: (tabIndex) =>
-                                              _onDestinationSelected(context, tabIndex),
-                                          destinations: [
-                                            NavigationDestination(
-                                              icon: const AppIcon(IconKey.home),
-                                              label: t.appShell.homeTabLabel,
-                                            ),
-                                            NavigationDestination(
-                                              icon: const AppIcon(IconKey.budget),
-                                              label: t.appShell.planTabLabel,
-                                            ),
-                                            NavigationDestination(
-                                              icon: const AppIcon(IconKey.transactions),
-                                              label: t.appShell.transactionsTabLabel,
-                                            ),
-                                            NavigationDestination(
-                                              icon: const AppIcon(IconKey.wallets),
-                                              label: t.appShell.walletsTabLabel,
-                                            ),
-                                          ],
+                                      // Pengingat rutin (ADR-035 §3.8): jadwal dan ketukan notifikasi.
+                                      child: RecurringReminderHost(
+                                        container: parentContainer,
+                                        onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
+                                        // Siapkan dana (ADR-036 §3.6): hitungan fitur `plan`.
+                                        fundingWarnings: () => loadFundingWarnings(parentContainer),
+                                        child: Scaffold(
+                                          body: IndexedStack(
+                                            index: _activeTab,
+                                            // `IndexedStack` menjaga tab tersembunyi tetap hidup;
+                                            // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
+                                            children: [
+                                              for (final (i, tab) in tabsFor(context).indexed)
+                                                TourVisibility(visible: i == _activeTab, child: tab),
+                                            ],
+                                          ),
+                                          floatingActionButton: _RecordFabs(
+                                            onRecord: () => unawaited(_openRecord(context)),
+                                            onVoice: () => unawaited(_openRecord(context, voice: true)),
+                                          ),
+                                          bottomNavigationBar: NavigationBar(
+                                            selectedIndex: _activeTab,
+                                            onDestinationSelected: (tabIndex) =>
+                                                _onDestinationSelected(context, tabIndex),
+                                            destinations: [
+                                              NavigationDestination(
+                                                icon: const AppIcon(IconKey.home),
+                                                label: t.appShell.homeTabLabel,
+                                              ),
+                                              NavigationDestination(
+                                                icon: const AppIcon(IconKey.budget),
+                                                label: t.appShell.planTabLabel,
+                                              ),
+                                              NavigationDestination(
+                                                icon: const AppIcon(IconKey.transactions),
+                                                label: t.appShell.transactionsTabLabel,
+                                              ),
+                                              NavigationDestination(
+                                                icon: const AppIcon(IconKey.wallets),
+                                                label: t.appShell.walletsTabLabel,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

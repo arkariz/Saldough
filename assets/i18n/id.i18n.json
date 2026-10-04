@@ -1085,7 +1085,9 @@
     "snoozedMessage": "$name ditanyakan lagi 2 hari lagi.",
     "idleTitle": "Masih memakai $name?",
     "idleBody": "Dua kemunculan terakhir dilewati atau belum terlihat.",
-    "idleKeep": "Biarkan"
+    "idleKeep": "Biarkan",
+    "autoRecordedOne": "$name dicatat otomatis.",
+    "autoRecordedMany": "$n rutin dicatat otomatis."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

@@ -1085,7 +1085,9 @@
     "snoozedMessage": "We'll ask about $name again in 2 days.",
     "idleTitle": "Still using $name?",
     "idleBody": "The last two were skipped or not seen.",
-    "idleKeep": "Keep"
+    "idleKeep": "Keep",
+    "autoRecordedOne": "$name recorded automatically.",
+    "autoRecordedMany": "$n repeating items recorded automatically."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

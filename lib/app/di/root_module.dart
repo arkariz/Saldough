@@ -120,6 +120,10 @@ abstract final class RootModule {
         () => RecurringRuleRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Log tautan otomatis rutin dari catat notifikasi (ADR-035 §3.4), 7 hari.
+      // Log catat otomatis rutin (ADR-037 §3.2).
+      ..registerLazySingleton<AutoRecordLogRepository>(
+        () => AutoRecordLogRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
       ..registerLazySingleton<RecurrenceMatchLogRepository>(
         () => RecurrenceMatchLogRepositoryImpl(storage: container<KeyValueStorage>()),
       )

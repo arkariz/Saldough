@@ -3013,6 +3013,12 @@ class Translations$recurring$id {
 
 	/// id: 'Biarkan'
 	String get idleKeep => 'Biarkan';
+
+	/// id: '$name dicatat otomatis.'
+	String autoRecordedOne({required Object name}) => '${name} dicatat otomatis.';
+
+	/// id: '$n rutin dicatat otomatis.'
+	String autoRecordedMany({required Object n}) => '${n} rutin dicatat otomatis.';
 }
 
 // Path: plan
@@ -4668,6 +4674,8 @@ extension on Translations {
 			'recurring.idleTitle' => ({required Object name}) => 'Masih memakai ${name}?',
 			'recurring.idleBody' => 'Dua kemunculan terakhir dilewati atau belum terlihat.',
 			'recurring.idleKeep' => 'Biarkan',
+			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
+			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

@@ -112,7 +112,16 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     until: range.end,
     pendingFrom: range.start,
     transactions: transactions,
-    budgets: [for (final b in budgets) (walletId: b.walletId, remaining: b.remaining, periodEnd: b.periodEnd)],
+    budgets: [
+      for (final b in budgets)
+        for (final line in b.lines)
+          (
+            walletId: b.walletId,
+            key: line.key,
+            remaining: line.planned > line.spent ? line.planned - line.spent : 0,
+            periodEnd: b.periodEnd,
+          ),
+    ],
     unplannedPerDay: includeUnplanned ? unplannedAverage : null,
     uncertainIncome: uncertain,
     walletId: walletId,

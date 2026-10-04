@@ -126,6 +126,19 @@ final class RecurringOccurrenceLinked extends RecurringEvent {
   final String transactionId;
 }
 
+/// Tautkan rutin ke pos anggaran rutin [key], atau lepas (`null`)
+/// (ADR-036 §3.4).
+final class RecurringBudgetLinkChanged extends RecurringEvent {
+  /// Membuat [RecurringBudgetLinkChanged].
+  const RecurringBudgetLinkChanged({required this.ruleId, required this.key});
+
+  /// Rutinnya.
+  final String ruleId;
+
+  /// Kunci pos template, atau `null` untuk melepas.
+  final String? key;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

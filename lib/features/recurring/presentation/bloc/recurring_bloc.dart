@@ -11,6 +11,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -37,6 +38,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     required this._recurringChanges,
     required this._recordTransaction,
     this._monthsBack = 1,
+    this._budgetItemCatalog,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(RecurringState.initial(DateTime.now())) {
@@ -52,6 +54,19 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     on<RecurringOccurrenceRecorded>(_onRecorded);
     on<RecurringPendingRecordedAll>(_onRecordedAll);
     on<RecurringOccurrenceLinked>(_onLinked);
+    on<RecurringBudgetLinkChanged>((event, emit) async {
+      final rule = state.ruleOf(event.ruleId);
+      if (rule == null) return;
+      final linked = rule.withBudgetItemKey(event.key);
+      final item = linkedBudgetItem(linked, state.budgetOptions);
+      await _write(
+        linked,
+        emit,
+        item == null
+            ? t.recurring.budgetUnlinkedMessage(name: rule.note)
+            : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
+      );
+    });
     on<RecurringRemindersToggled>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
       if (rule != null) await _write(rule.copyWith(reminders: event.enabled), emit, null);
@@ -70,6 +85,9 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
   final RecurringChanges _recurringChanges;
   final RecordTransaction _recordTransaction;
   final int _monthsBack;
+
+  /// Pos anggaran untuk tautan rutin ke pos (ADR-036 §3.4); `null` = tanpa.
+  final BudgetItemCatalog? _budgetItemCatalog;
   final DateTime Function() _now;
   late final List<StreamSubscription<void>> _subscriptions;
 
@@ -100,10 +118,12 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       return;
     }
+    final options = await _budgetItemCatalog?.listOptions();
     emit(
       state.copyWith(
         rules: rules.getOrElse((_) => const []),
         wallets: wallets.getOrElse((_) => const []),
+        budgetOptions: options?.getOrElse((_) => const []) ?? const [],
         transactions: transactions,
         today: today,
         isLoading: false,
@@ -203,7 +223,13 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         return;
       }
     }
-    final transaction = transactionForOccurrence(rule, event.date, id: _newId(), now: _now());
+    final transaction = transactionForOccurrence(
+      rule,
+      event.date,
+      id: _newId(),
+      now: _now(),
+      budgetItemId: budgetItemForOccurrence(rule, event.date, state.budgetOptions),
+    );
     switch (await _recordTransaction(transaction, source: this)) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _effectError(failure)));
@@ -234,7 +260,13 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       ).where((o) => o.status == OccurrenceStatus.pending || o.status == OccurrenceStatus.missed);
       for (final o in waiting) {
         if (matchCandidates(rule, o.date, [...state.transactions, ...recorded]).isNotEmpty) continue;
-        final transaction = transactionForOccurrence(rule, o.date, id: _newId(), now: _now());
+        final transaction = transactionForOccurrence(
+          rule,
+          o.date,
+          id: _newId(),
+          now: _now(),
+          budgetItemId: budgetItemForOccurrence(rule, o.date, state.budgetOptions),
+        );
         switch (await _recordTransaction(transaction, source: this)) {
           case Left(value: final failure):
             emit(

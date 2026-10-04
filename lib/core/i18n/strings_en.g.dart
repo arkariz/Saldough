@@ -1147,6 +1147,14 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get chipIncome => 'In';
 	@override String get chipExpense => 'Out';
 	@override String get chipTransfer => 'Transfer';
+	@override String get budgetLinkLabel => 'Budget item';
+	@override String get budgetLinkNone => 'Not linked. Link it so it isn\'t counted twice with a budget.';
+	@override String budgetLinkValue({required Object item, required Object budget}) => '${item} · ${budget}';
+	@override String get budgetLinkPickerTitle => 'Link to a repeating budget item';
+	@override String get budgetLinkRemove => 'Unlink';
+	@override String get budgetLinkEmpty => 'No repeating budget items in this wallet yet.';
+	@override String budgetLinkedMessage({required Object name, required Object item}) => '${name} is linked to ${item}.';
+	@override String budgetUnlinkedMessage({required Object name}) => '${name} is no longer linked to a budget item.';
 }
 
 // Path: plan
@@ -1287,6 +1295,7 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String recordedNextMessage({required Object name, required Object date}) => '${name} recorded. Next on ${date}.';
 	@override String get fallbackName => 'Recurring';
 	@override String updatedMessage({required Object name}) => '${name} updated.';
+	@override String linkSuggestionAction({required Object item}) => 'Link to ${item}';
 }
 
 // Path: account.errors
@@ -1507,6 +1516,7 @@ extension on TranslationsEn {
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} recorded. Next on ${date}.',
 			'record.repeat.fallbackName' => 'Recurring',
 			'record.repeat.updatedMessage' => ({required Object name}) => '${name} updated.',
+			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Link to ${item}',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1880,9 +1890,9 @@ extension on TranslationsEn {
 			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
 			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
 			'freelance.paymentCreatedMessage' => 'Payment created.',
-			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
 			'freelance.paymentDeletedMessage' => 'Payment deleted.',
 			'freelance.receiveTitle' => 'Record Payment Received',
 			'freelance.receiveRuleTitle' => 'Payment received',
@@ -2385,7 +2395,17 @@ extension on TranslationsEn {
 			'recurring.chipIncome' => 'In',
 			'recurring.chipExpense' => 'Out',
 			'recurring.chipTransfer' => 'Transfer',
+			'recurring.budgetLinkLabel' => 'Budget item',
+			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
+			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
+			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
+			'recurring.budgetLinkRemove' => 'Unlink',
+			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
+			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
+			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
 			'plan.recurringSegmentLabel' => 'Recurring',
+			_ => null,
+		} ?? switch (path) {
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
@@ -2395,8 +2415,6 @@ extension on TranslationsEn {
 			'plan.billsRow' => 'Recurring bills',
 			'plan.budgetRow' => 'Budgets',
 			'plan.offPlanRow' => 'Off plan',
-			_ => null,
-		} ?? switch (path) {
 			'plan.infoAction' => 'Explanation',
 			'plan.infoTitle' => 'Unplanned money',
 			'plan.infoIncome' => '+ Planned income',

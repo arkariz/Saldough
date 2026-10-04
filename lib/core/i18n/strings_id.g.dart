@@ -2956,6 +2956,30 @@ class Translations$recurring$id {
 
 	/// id: 'Transfer'
 	String get chipTransfer => 'Transfer';
+
+	/// id: 'Pos anggaran'
+	String get budgetLinkLabel => 'Pos anggaran';
+
+	/// id: 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.'
+	String get budgetLinkNone => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.';
+
+	/// id: '$item · $budget'
+	String budgetLinkValue({required Object item, required Object budget}) => '${item} · ${budget}';
+
+	/// id: 'Tautkan ke pos anggaran rutin'
+	String get budgetLinkPickerTitle => 'Tautkan ke pos anggaran rutin';
+
+	/// id: 'Lepas tautan'
+	String get budgetLinkRemove => 'Lepas tautan';
+
+	/// id: 'Belum ada pos anggaran rutin di dompet ini.'
+	String get budgetLinkEmpty => 'Belum ada pos anggaran rutin di dompet ini.';
+
+	/// id: '$name tertaut ke pos $item.'
+	String budgetLinkedMessage({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.';
+
+	/// id: 'Tautan pos $name dilepas.'
+	String budgetUnlinkedMessage({required Object name}) => 'Tautan pos ${name} dilepas.';
 }
 
 // Path: plan
@@ -3303,6 +3327,9 @@ class Translations$record$repeat$id {
 
 	/// id: '$name diperbarui.'
 	String updatedMessage({required Object name}) => '${name} diperbarui.';
+
+	/// id: 'Tautkan ke pos $item'
+	String linkSuggestionAction({required Object item}) => 'Tautkan ke pos ${item}';
 }
 
 // Path: account.errors
@@ -3595,6 +3622,7 @@ extension on Translations {
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.',
 			'record.repeat.fallbackName' => 'Rutin',
 			'record.repeat.updatedMessage' => ({required Object name}) => '${name} diperbarui.',
+			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Tautkan ke pos ${item}',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -3968,9 +3996,9 @@ extension on Translations {
 			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
 			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
 			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
-			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
 			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
 			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
 			'freelance.receiveRuleTitle' => 'Honor sudah masuk',
@@ -4473,7 +4501,17 @@ extension on Translations {
 			'recurring.chipIncome' => 'Masuk',
 			'recurring.chipExpense' => 'Keluar',
 			'recurring.chipTransfer' => 'Transfer',
+			'recurring.budgetLinkLabel' => 'Pos anggaran',
+			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
+			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
+			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
+			'recurring.budgetLinkRemove' => 'Lepas tautan',
+			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
+			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
+			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
 			'plan.recurringSegmentLabel' => 'Rutin',
+			_ => null,
+		} ?? switch (path) {
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
@@ -4483,8 +4521,6 @@ extension on Translations {
 			'plan.billsRow' => 'Tagihan rutin',
 			'plan.budgetRow' => 'Anggaran',
 			'plan.offPlanRow' => 'Di luar rencana',
-			_ => null,
-		} ?? switch (path) {
 			'plan.infoAction' => 'Penjelasan',
 			'plan.infoTitle' => 'Uang nganggur',
 			'plan.infoIncome' => '+ Pemasukan terencana',

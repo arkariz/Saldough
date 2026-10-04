@@ -150,7 +150,8 @@
       "recordedMessage": "$name tercatat dan dijadwalkan.",
       "recordedNextMessage": "$name tercatat. Berikutnya $date.",
       "fallbackName": "Rutin",
-      "updatedMessage": "$name diperbarui."
+      "updatedMessage": "$name diperbarui.",
+      "linkSuggestionAction": "Tautkan ke pos $item"
     }
   },
   "transaction": {
@@ -1063,7 +1064,15 @@
     "chipAll": "Semua",
     "chipIncome": "Masuk",
     "chipExpense": "Keluar",
-    "chipTransfer": "Transfer"
+    "chipTransfer": "Transfer",
+    "budgetLinkLabel": "Pos anggaran",
+    "budgetLinkNone": "Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.",
+    "budgetLinkValue": "$item · $budget",
+    "budgetLinkPickerTitle": "Tautkan ke pos anggaran rutin",
+    "budgetLinkRemove": "Lepas tautan",
+    "budgetLinkEmpty": "Belum ada pos anggaran rutin di dompet ini.",
+    "budgetLinkedMessage": "$name tertaut ke pos $item.",
+    "budgetUnlinkedMessage": "Tautan pos $name dilepas."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

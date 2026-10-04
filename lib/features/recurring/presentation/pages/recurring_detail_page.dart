@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -49,6 +51,46 @@ class RecurringDetailPage extends StatelessWidget {
         bloc.add(RecurringDeleted(rule.id));
         navigator.pop();
     }
+  }
+
+  /// Pemilih pos anggaran rutin untuk tautan (ADR-036 §3.4): hanya pos
+  /// bertemplate berdompet sama; "Lepas tautan" bila sudah tertaut.
+  Future<void> _pickBudgetItem(BuildContext context, RecurringRule rule, RecurringState state) async {
+    final bloc = context.read<RecurringBloc>();
+    final options = linkableBudgetItems(rule, state.budgetOptions);
+    const unlink = '';
+    final picked = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        title: Text(t.recurring.budgetLinkPickerTitle),
+        children: [
+          if (options.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+              child: Text(t.recurring.budgetLinkEmpty),
+            ),
+          for (final option in options)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(dialogContext).pop(option.templateItemId),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(t.recurring.budgetLinkValue(item: option.itemName, budget: option.budgetName)),
+                  ),
+                  if (option.templateItemId == rule.budgetItemKey) const AppIcon(IconKey.check),
+                ],
+              ),
+            ),
+          if (rule.budgetItemKey != null)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(dialogContext).pop(unlink),
+              child: Text(t.recurring.budgetLinkRemove),
+            ),
+        ],
+      ),
+    );
+    if (picked == null || picked == rule.budgetItemKey) return;
+    bloc.add(RecurringBudgetLinkChanged(ruleId: rule.id, key: picked == unlink ? null : picked));
   }
 
   @override
@@ -168,6 +210,18 @@ class RecurringDetailPage extends StatelessWidget {
                   value: rule.reminders,
                   onChanged: (value) => bloc.add(RecurringRemindersToggled(ruleId: rule.id, enabled: value)),
                 ),
+                if (rule.kind == RecurringKind.expense)
+                  ListTile(
+                    key: const ValueKey('recurring-budget-link'),
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(t.recurring.budgetLinkLabel),
+                    subtitle: Text(switch (linkedBudgetItem(rule, state.budgetOptions)) {
+                      final item? => t.recurring.budgetLinkValue(item: item.itemName, budget: item.budgetName),
+                      null => t.recurring.budgetLinkNone,
+                    }),
+                    trailing: const AppIcon(IconKey.chevronRight),
+                    onTap: () => unawaited(_pickBudgetItem(context, rule, state)),
+                  ),
                 if (priceUp) ...[
                   const SizedBox(height: AppSpacing.sm),
                   Text(

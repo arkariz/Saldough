@@ -2620,7 +2620,7 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       berikutnya" bila nama, dompet, atau pos bertemplate berubah, selain itu
       "hanya periode ini". "Berikutnya" = template disamakan dengan anggaran
       ini. Hapus template berjadwal memakai hapus template yang ada.
-- [ ] **T-16.5** Tautan rutin ke pos (§3.4): `budgetItemKey` diselesaikan
+- [x] **T-16.5** Tautan rutin ke pos (§3.4): `budgetItemKey` diselesaikan
       ke pos periode; catat kemunculan tertaut mengisi `budgetItemId`;
       saran E9 sesudah simpan rutin; pasang/lepas di rincian rutin;
       `monthPlan` dan `projectCashflow` memakai `max` (§7.4, invarian 21).
@@ -2628,6 +2628,12 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       2.000.000), uji dompet beda tidak ditawarkan, uji catat satu ketuk
       mengisi pos.
       Memenuhi FR-BUD-008, FR-PLN-003.
+      Selesai 4 Okt 2026: `budget_link.dart` (`linkableBudgetItems`,
+      `budgetItemForOccurrence`, `suggestBudgetLink`), `BudgetItemOption`
+      membawa `templateItemId` dan `plannedAmount`; rutin yang posnya tidak
+      ada di periode itu tetap tagihan rutin. Sisa: CATAT "Ubah dulu" belum
+      menampilkan pos terpilih (pos diisi saat disimpan), dan tanda
+      peringatan pos yang tertautnya melebihi sisa belum tampil.
 
 ### R2b: ke depan
 

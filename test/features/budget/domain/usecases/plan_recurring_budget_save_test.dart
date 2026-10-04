@@ -3,7 +3,6 @@ import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_schedule.dart';
-import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/domain/usecases/birth_recurring_budgets.dart';
 import 'package:saldough/features/budget/domain/usecases/plan_recurring_budget_save.dart';
 

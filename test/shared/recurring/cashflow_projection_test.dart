@@ -44,7 +44,7 @@ void main() {
     until: until,
     pendingFrom: from,
     transactions: [kosRecorded],
-    budgets: [(walletId: 'bca', remaining: 270000000, periodEnd: until)],
+    budgets: [(walletId: 'bca', key: null, remaining: 270000000, periodEnd: until)],
     unplannedPerDay: walletId == null ? 3000000 : null,
     walletId: walletId,
   );
@@ -121,7 +121,7 @@ void main() {
       until: until,
       pendingFrom: from,
       transactions: const [],
-      budgets: [(walletId: 'bca', remaining: 100000001, periodEnd: until)],
+      budgets: [(walletId: 'bca', key: null, remaining: 100000001, periodEnd: until)],
     );
     expect(result.days.map((d) => d.balance), [66666668, 33333335, 0]);
   });
@@ -181,5 +181,29 @@ void main() {
       unplannedDailyAverage(history, months: months, historyStart: DateTime(2026, 8), ruleIds: const {}),
       (60000000 + 33000000 + 190000000) ~/ 61,
     );
+  });
+
+  test('§7.4: pos Kos sisa 2.000.000 dengan rutin tertaut 1.900.000 → keluar 2.000.000, bukan 3.900.000 (T-16.5)', () {
+    RecurringRule kos({String? key}) => RecurringRule(
+      id: 'kos-rutin',
+      kind: RecurringKind.expense,
+      amount: 190000000,
+      walletId: 'bca',
+      note: 'Kos',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 15)),
+      budgetItemKey: key,
+    );
+    CashflowProjection run(String? key) => projectCashflow(
+      [kos(key: key)],
+      startBalance: 0,
+      today: today,
+      until: until,
+      pendingFrom: from,
+      transactions: const [],
+      budgets: [(walletId: 'bca', key: 'kos', remaining: 200000000, periodEnd: until)],
+    );
+    expect(run('kos').endBalance, -200000000);
+    expect(run('kos').days.firstWhere((d) => d.date == DateTime(2026, 10, 15)).balance, lessThan(-190000000));
+    expect(run(null).endBalance, -390000000);
   });
 }

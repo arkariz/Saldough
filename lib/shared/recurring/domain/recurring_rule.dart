@@ -267,6 +267,27 @@ final class RecurringRule extends Equatable {
     );
   }
 
+  /// Salinan dengan tautan pos [key] (ADR-036 §3.4); `null` melepasnya.
+  RecurringRule withBudgetItemKey(String? key) => RecurringRule(
+    id: id,
+    kind: kind,
+    amount: amount,
+    amountMode: amountMode,
+    walletId: walletId,
+    toWalletId: toWalletId,
+    categoryId: categoryId,
+    note: note,
+    schedule: schedule,
+    end: end,
+    paymentMode: paymentMode,
+    remindDaysBefore: remindDaysBefore,
+    reminders: reminders,
+    autoRecord: autoRecord,
+    skippedDates: skippedDates,
+    isPaused: isPaused,
+    budgetItemKey: key,
+  );
+
   @override
   List<Object?> get props => [
     id,

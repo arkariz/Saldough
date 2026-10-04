@@ -96,7 +96,7 @@ void main() {
         PlanBudget(
           walletId: 'bca',
           periodEnd: DateTime(2026, 11),
-          lines: const [(itemId: 'bulanan', planned: 306850000, spent: 36850000)],
+          lines: const [(key: null, itemId: 'bulanan', planned: 306850000, spent: 36850000)],
         ),
       ]),
       freelance: const _NoFreelance(),

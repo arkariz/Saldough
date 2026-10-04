@@ -150,7 +150,8 @@
       "recordedMessage": "$name recorded and scheduled.",
       "recordedNextMessage": "$name recorded. Next on $date.",
       "fallbackName": "Recurring",
-      "updatedMessage": "$name updated."
+      "updatedMessage": "$name updated.",
+      "linkSuggestionAction": "Link to $item"
     }
   },
   "transaction": {
@@ -1063,7 +1064,15 @@
     "chipAll": "All",
     "chipIncome": "In",
     "chipExpense": "Out",
-    "chipTransfer": "Transfer"
+    "chipTransfer": "Transfer",
+    "budgetLinkLabel": "Budget item",
+    "budgetLinkNone": "Not linked. Link it so it isn't counted twice with a budget.",
+    "budgetLinkValue": "$item · $budget",
+    "budgetLinkPickerTitle": "Link to a repeating budget item",
+    "budgetLinkRemove": "Unlink",
+    "budgetLinkEmpty": "No repeating budget items in this wallet yet.",
+    "budgetLinkedMessage": "$name is linked to $item.",
+    "budgetUnlinkedMessage": "$name is no longer linked to a budget item."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

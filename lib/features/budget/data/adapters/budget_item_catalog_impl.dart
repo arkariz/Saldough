@@ -28,6 +28,8 @@ final class BudgetItemCatalogImpl implements BudgetItemCatalog {
               endDate: budget.endDate,
               isArchived: budget.isArchived,
               transferToWalletId: item.targetWalletId,
+              templateItemId: item.templateItemId,
+              plannedAmount: item.plannedAmount,
             ),
       ],
     );

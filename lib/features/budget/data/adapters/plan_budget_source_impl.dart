@@ -47,7 +47,12 @@ final class PlanBudgetSourceImpl implements PlanBudgetSource {
             lines: [
               for (final item in calculate(budget, all, now: _now()).items)
                 if (item.item.kind == BudgetItemKind.expense)
-                  (itemId: item.item.id, planned: item.item.plannedAmount, spent: item.spent),
+                  (
+                    itemId: item.item.id,
+                    key: item.item.templateItemId,
+                    planned: item.item.plannedAmount,
+                    spent: item.spent,
+                  ),
             ],
           ),
       ];

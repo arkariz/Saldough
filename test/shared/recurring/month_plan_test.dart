@@ -62,7 +62,7 @@ void main() {
     note: '',
     walletId: 'bca',
   );
-  const budget = (itemId: 'bulanan', planned: 306850000, spent: 36850000);
+  const budget = (key: null, itemId: 'bulanan', planned: 306850000, spent: 36850000);
 
   MonthPlan plan(
     List<Transaction> transactions, {
@@ -103,7 +103,11 @@ void main() {
 
   test('rutin tertaut pos anggaran tidak dihitung dua kali (invarian 17)', () {
     final withKos = [...rules.where((r) => r.id != 'Kos'), rule('Kos', 190000000, 1, budgetItemKey: 'kos')];
-    final result = plan(const [], with_: withKos, lines: [budget, (itemId: 'kos', planned: 200000000, spent: 0)]);
+    final result = plan(
+      const [],
+      with_: withKos,
+      lines: [budget, (key: 'kos', itemId: 'kos-okt', planned: 200000000, spent: 0)],
+    );
     expect(result.plannedRecurringOut, 587900000 - 190000000);
     expect(result.budgetPlanned, 306850000 + 200000000);
   });
@@ -118,7 +122,7 @@ void main() {
     );
     final result = plan(
       [kos(195000000), bonus],
-      lines: [(itemId: 'bulanan', planned: 306850000, spent: 316850000)],
+      lines: [(key: null, itemId: 'bulanan', planned: 306850000, spent: 316850000)],
     );
     expect(result.recurringDifference, -5000000);
     expect(result.budgetOverrun, 10000000);
@@ -130,5 +134,17 @@ void main() {
     final result = plan([kos(190000000)], with_: [...rules.where((r) => r.id != 'Kos')]);
     expect(result.plannedRecurringOut, 587900000 - 190000000);
     expect(result.unplannedOut, 190000000);
+  });
+
+  test('pos tertaut: rencana pos = max(rencana, rutin tertaut); tanpa pos bulan ini tetap tagihan rutin (T-16.5)', () {
+    final withKos = [...rules.where((r) => r.id != 'Kos'), rule('Kos', 210000000, 1, budgetItemKey: 'kos')];
+    final over = plan(
+      const [],
+      with_: withKos,
+      lines: [budget, (key: 'kos', itemId: 'kos-okt', planned: 200000000, spent: 0)],
+    );
+    expect(over.budgetPlanned, 306850000 + 210000000);
+    final noBudget = plan(const [], with_: withKos);
+    expect(noBudget.plannedRecurringOut, 587900000 - 190000000 + 210000000);
   });
 }

@@ -6,7 +6,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// Satu pos anggaran **pengeluaran** yang terhitung di bulan itu, dalam sen.
 /// Pos transfer (setoran tabungan) tidak diberikan: transfer tidak
 /// mengurangi uang nganggur (KT-R14, aturan 7).
-typedef BudgetPlanLine = ({String itemId, int planned, int spent});
+typedef BudgetPlanLine = ({String itemId, String? key, int planned, int spent});
 
 /// Rencana satu bulan keuangan (RECURRING_AND_FORECAST §7.2, §7.2a; ADR-035
 /// §3.5). **Uang nganggur bukan saldo**: ini aliran rencana bulan itu, bukan
@@ -110,9 +110,18 @@ MonthPlan monthPlan(
   var difference = 0;
   var moved = 0;
   var hasEstimate = false;
+  final lines = budgetLines.toList();
+  final lineKeys = {
+    for (final line in lines)
+      if (line.key case final key?) key,
+  };
+  // Kemunculan rutin tertaut pos per kunci pos (ADR-036 §3.4).
+  final linked = <String, int>{};
   for (final rule in rules) {
-    // Invarian 17: pengeluaran yang tertaut pos sudah terhitung di anggaran.
-    if (rule.kind == RecurringKind.expense && rule.budgetItemKey != null) continue;
+    // Invarian 17/21: rutin tertaut pos yang ada di bulan ini terhitung di
+    // pos itu, dengan rencana pos = max(rencana, Σ kemunculan tertaut).
+    final key = rule.budgetItemKey;
+    final inBudget = rule.kind == RecurringKind.expense && key != null && lineKeys.contains(key);
     final occurrences = occurrenceStatusesOf(
       rule,
       from: from,
@@ -123,6 +132,10 @@ MonthPlan monthPlan(
     for (final o in occurrences) {
       if (o.status == OccurrenceStatus.skipped || o.status == OccurrenceStatus.paused) continue;
       final recorded = o.transaction;
+      if (inBudget) {
+        linked[key] = (linked[key] ?? 0) + (recorded?.amount ?? rule.amount);
+        continue;
+      }
       if (recorded == null && rule.amountMode == RecurringAmountMode.estimated) hasEstimate = true;
       switch (rule.kind) {
         case RecurringKind.income:
@@ -143,7 +156,11 @@ MonthPlan monthPlan(
     }
   }
 
-  final lines = budgetLines.toList();
+  int plannedOf(BudgetPlanLine line) {
+    final fromRules = line.key == null ? 0 : linked[line.key] ?? 0;
+    return line.planned > fromRules ? line.planned : fromRules;
+  }
+
   final budgetItems = {for (final line in lines) line.itemId};
   // Transaksi yang rutinnya sudah dihapus tidak lagi disumbang rutin mana
   // pun, jadi dihitung di luar rencana (T-15.18).
@@ -167,11 +184,14 @@ MonthPlan monthPlan(
     recordedIncome: recordedIncome,
     plannedRecurringOut: plannedOut,
     recordedRecurringOut: recordedOut,
-    budgetPlanned: lines.fold(0, (sum, line) => sum + line.planned),
+    budgetPlanned: lines.fold(0, (sum, line) => sum + plannedOf(line)),
     budgetSpent: lines.fold(0, (sum, line) => sum + line.spent),
     unplannedOut: unplannedOut,
     unplannedIn: unplannedIn,
-    budgetOverrun: lines.fold(0, (sum, line) => sum + (line.spent > line.planned ? line.spent - line.planned : 0)),
+    budgetOverrun: lines.fold(
+      0,
+      (sum, line) => sum + (line.spent > plannedOf(line) ? line.spent - plannedOf(line) : 0),
+    ),
     recurringDifference: difference,
     moved: moved,
     hasEstimate: hasEstimate,

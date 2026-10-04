@@ -11,6 +11,7 @@ import 'package:saldough/features/recurring/domain/reminder_plan.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -121,11 +122,17 @@ class _RecurringReminderHostState extends State<RecurringReminderHost> with Widg
       );
       return;
     }
+    final c = widget.container;
+    final options = c.isRegistered<BudgetItemCatalog>()
+        ? (await c<BudgetItemCatalog>().listOptions()).getOrElse((_) => const [])
+        : const <BudgetItemOption>[];
+    if (!mounted) return;
     final transaction = transactionForOccurrence(
       rule,
       target.date,
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       now: DateTime.now(),
+      budgetItemId: budgetItemForOccurrence(rule, target.date, options),
     );
     final result = await _record(transaction);
     if (!mounted) return;

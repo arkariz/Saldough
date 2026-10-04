@@ -1,3 +1,4 @@
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -16,6 +17,7 @@ final class RecurringState extends UiState<RecurringState> {
     this.isLoading = true,
     this.loadFailed = false,
     this.kindFilter,
+    this.budgetOptions = const [],
     super.effect,
   });
 
@@ -43,6 +45,9 @@ final class RecurringState extends UiState<RecurringState> {
 
   /// Chip jenis terpilih; `null` = semua.
   final RecurringKind? kindFilter;
+
+  /// Pos anggaran untuk tautan rutin ke pos (ADR-036 §3.4).
+  final List<BudgetItemOption> budgetOptions;
 
   /// Awal bulan berjalan.
   DateTime get monthStart => DateTime(today.year, today.month);
@@ -81,6 +86,7 @@ final class RecurringState extends UiState<RecurringState> {
     bool? isLoading,
     bool? loadFailed,
     RecurringKind? Function()? kindFilter,
+    List<BudgetItemOption>? budgetOptions,
     UiEffect? effect,
   }) {
     return RecurringState(
@@ -91,10 +97,11 @@ final class RecurringState extends UiState<RecurringState> {
       isLoading: isLoading ?? this.isLoading,
       loadFailed: loadFailed ?? this.loadFailed,
       kindFilter: kindFilter == null ? this.kindFilter : kindFilter(),
+      budgetOptions: budgetOptions ?? this.budgetOptions,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [rules, transactions, wallets, today, isLoading, loadFailed, kindFilter];
+  List<Object?> get props => [rules, transactions, wallets, today, isLoading, loadFailed, kindFilter, budgetOptions];
 }

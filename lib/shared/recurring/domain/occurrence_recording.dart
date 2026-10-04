@@ -4,13 +4,15 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// Transaksi yang mencatat kemunculan [occurrence] dari [rule] (ADR-035
 /// §3.3): isiannya dari rutin, tanggalnya **tanggal kemunculan** (E11, bukan
 /// hari ini) dengan jam dari [now], dan tertaut ke kemunculan itu.
-/// [amount] menggantikan nominal rutin bila diisi.
+/// [amount] menggantikan nominal rutin bila diisi. [budgetItemId] = pos
+/// periode untuk rutin tertaut (ADR-036 §3.4, `budgetItemForOccurrence`).
 Transaction transactionForOccurrence(
   RecurringRule rule,
   DateTime occurrence, {
   required String id,
   required DateTime now,
   int? amount,
+  String? budgetItemId,
 }) {
   final date = DateTime(occurrence.year, occurrence.month, occurrence.day, now.hour, now.minute);
   final link = RecurrenceLink(ruleId: rule.id, occurrenceDate: occurrence);
@@ -32,6 +34,7 @@ Transaction transactionForOccurrence(
       note: rule.note,
       walletId: rule.walletId,
       categoryId: rule.categoryId,
+      budgetItemId: budgetItemId,
       recurrence: link,
     ),
     RecurringKind.transfer => TransferTransaction(

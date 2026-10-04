@@ -1,6 +1,9 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
@@ -141,15 +144,11 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     final anchor = rule.schedule.anchorDate;
     if (anchor.isAfter(_today)) {
       _recurringChanges.notifyChanged(source: this);
-      emit(
-        state.copyWith(
-          isSaving: false,
-          saveCount: state.saveCount + 1,
-          effect: _effectSaved(
-            t.record.repeat.scheduledMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(anchor)),
-          ),
-        ),
+      final effect = await _effectWithLinkSuggestion(
+        rule,
+        t.record.repeat.scheduledMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(anchor)),
       );
+      emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
       return;
     }
     final linked = transaction.withRecurrence(RecurrenceLink(ruleId: rule.id, occurrenceDate: anchor));
@@ -160,7 +159,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         _recurringChanges.notifyChanged(source: this);
-        emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: _effectRecordedAndScheduled(rule)));
+        final effect = await _effectWithLinkSuggestion(rule, _recordedAndScheduledMessage(rule));
+        emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
     }
   }
 
@@ -181,7 +181,9 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       return;
     }
-    final linked = event.source.withRecurrence(RecurrenceLink(ruleId: rule.id, occurrenceDate: rule.schedule.anchorDate));
+    final linked = event.source.withRecurrence(
+      RecurrenceLink(ruleId: rule.id, occurrenceDate: rule.schedule.anchorDate),
+    );
     final result = await _recordTransaction(linked, previousTransaction: event.source);
     switch (result) {
       case Left(value: final failure):
@@ -189,7 +191,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         _recurringChanges.notifyChanged(source: this);
-        emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: _effectRecordedAndScheduled(rule)));
+        final effect = await _effectWithLinkSuggestion(rule, _recordedAndScheduledMessage(rule));
+        emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
     }
   }
 
@@ -251,6 +254,12 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// Isian CATAT dipakai apa adanya (termasuk pos anggaran).
   Future<void> _onOccurrenceRecorded(RecordOccurrenceRecorded event, Emitter<RecordState> emit) async {
     final link = RecurrenceLink(ruleId: event.rule.id, occurrenceDate: event.occurrenceDate);
+    // Rutin tertaut pos: transaksinya masuk pos periode itu (ADR-036 §3.4).
+    String? linkedItem;
+    if (event.recorded case ExpenseRecorded(budgetItemId: null) when event.rule.budgetItemKey != null) {
+      final options = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
+      linkedItem = budgetItemForOccurrence(event.rule, event.occurrenceDate, options);
+    }
     final transaction = switch (event.recorded) {
       final IncomeRecorded e => IncomeTransaction(
         id: _newId(),
@@ -269,7 +278,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         note: e.note,
         categoryId: e.categoryId,
         walletId: e.walletId,
-        budgetItemId: e.budgetItemId,
+        budgetItemId: e.budgetItemId ?? linkedItem,
         sourceIconId: e.sourceIconId,
         recurrence: link,
       ),
@@ -290,13 +299,52 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     await _save(transaction, emit, _effectSaved(t.recurring.recordedMessage(name: _nameOf(event.rule))));
   }
 
-  UiEffect _effectRecordedAndScheduled(RecurringRule rule) {
+  String _recordedAndScheduledMessage(RecurringRule rule) {
     final anchor = rule.schedule.anchorDate;
     final next = nextOccurrence(rule, DateTime(anchor.year, anchor.month, anchor.day + 1));
-    return _effectSaved(
-      next == null
-          ? t.record.repeat.recordedMessage(name: _nameOf(rule))
-          : t.record.repeat.recordedNextMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(next)),
+    return next == null
+        ? t.record.repeat.recordedMessage(name: _nameOf(rule))
+        : t.record.repeat.recordedNextMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(next));
+  }
+
+  /// Pesan berhasil untuk rutin baru, dengan aksi **Tautkan ke pos …** bila
+  /// ada satu pos anggaran rutin yang cocok (E9, ADR-036 §3.4). Tidak pernah
+  /// menautkan sendiri.
+  Future<UiEffect> _effectWithLinkSuggestion(RecurringRule rule, String message) async {
+    final options = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
+    final suggestion = suggestBudgetLink(rule, options);
+    if (suggestion == null) return _effectSaved(message);
+    final repository = _recurringRepository;
+    final changes = _recurringChanges;
+    return CallbackEffect(
+      callback: (context) {
+        final colors = context.appColors;
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.showSnackBar(
+          actionSnackBar(
+            context,
+            content: Text(message, style: TextStyle(color: colors.background)),
+            backgroundColor: colors.textPrimary,
+            action: SnackBarAction(
+              label: t.record.repeat.linkSuggestionAction(item: suggestion.itemName),
+              textColor: colors.accent,
+              onPressed: () async {
+                final result = await repository.saveRule(rule.withBudgetItemKey(suggestion.templateItemId));
+                if (result.isRight()) changes.notifyChanged();
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      result.isRight()
+                          ? t.recurring.budgetLinkedMessage(name: _nameOf(rule), item: suggestion.itemName)
+                          : t.common.genericErrorMessage,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 

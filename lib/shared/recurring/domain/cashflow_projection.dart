@@ -4,8 +4,9 @@ import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Sisa satu pos anggaran pengeluaran yang dibagi rata ke hari tersisa
-/// periodenya (§7.4). Sen; [remaining] tidak negatif.
-typedef BudgetSpendLine = ({String walletId, int remaining, DateTime periodEnd});
+/// periodenya (§7.4). Sen; `remaining` tidak negatif. `key` = kunci pos
+/// template anggaran rutin (ADR-036 §3.4), untuk rutin yang tertaut.
+typedef BudgetSpendLine = ({String walletId, String? key, int remaining, DateTime periodEnd});
 
 /// Pemasukan yang belum pasti, mis. pembayaran freelance belum dibayar
 /// (KT-R6). Dihitung di perkiraan dan ditandai "belum pasti".
@@ -96,6 +97,8 @@ CashflowProjection projectCashflow(
 }) {
   final start = DateTime(today.year, today.month, today.day);
   final changes = <DateTime, int>{};
+  // Kemunculan rutin tertaut pos yang diletakkan di tanggalnya (§7.4).
+  final linked = <String, List<(DateTime, int)>>{};
   var income = 0;
   var recurringOut = 0;
   var budget = 0;
@@ -124,6 +127,9 @@ CashflowProjection projectCashflow(
         OccurrenceStatus.recorded || OccurrenceStatus.skipped || OccurrenceStatus.paused => false,
       };
       if (!happens || !add(o.date, effect * rule.amount)) continue;
+      if (rule.kind == RecurringKind.expense && rule.budgetItemKey != null) {
+        (linked[rule.budgetItemKey!] ??= []).add((o.date, rule.amount));
+      }
       switch (rule.kind) {
         case RecurringKind.income:
           income += rule.amount;
@@ -137,8 +143,14 @@ CashflowProjection projectCashflow(
 
   for (final line in budgets) {
     if (walletId != null && line.walletId != walletId) continue;
+    // keluar_pos = max(sisa_pos, tertaut belum tercatat): yang tertaut sudah
+    // ada di tanggalnya, porsi harian hanya selisihnya (invarian 17/21).
+    final fromRules = [
+      for (final (date, amount) in linked[line.key] ?? const <(DateTime, int)>[])
+        if (date.isBefore(line.periodEnd)) amount,
+    ].fold(0, (sum, amount) => sum + amount);
     _spread(
-      line.remaining,
+      line.remaining > fromRules ? line.remaining - fromRules : 0,
       from: start,
       until: line.periodEnd,
       add: (day, amount) {

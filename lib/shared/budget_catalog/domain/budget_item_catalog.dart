@@ -21,6 +21,8 @@ final class BudgetItemOption extends Equatable {
     required this.endDate,
     this.isArchived = false,
     this.transferToWalletId,
+    this.templateItemId,
+    this.plannedAmount = 0,
   });
 
   /// Anggaran pemilik pos.
@@ -46,6 +48,13 @@ final class BudgetItemOption extends Equatable {
 
   /// Apakah pos ini rencana transfer.
   bool get isTransfer => transferToWalletId != null;
+
+  /// Kunci pos template anggaran rutin (ADR-036 §3.4); `null` untuk pos
+  /// anggaran biasa, yang tidak bisa ditautkan ke rutin.
+  final String? templateItemId;
+
+  /// Nominal rencana pos, dalam sen (untuk saran tautan E9).
+  final int plannedAmount;
 
   /// Awal periode anggaran; hanya tanggalnya yang dipakai.
   final DateTime startDate;
@@ -74,6 +83,8 @@ final class BudgetItemOption extends Equatable {
     endDate,
     isArchived,
     transferToWalletId,
+    templateItemId,
+    plannedAmount,
   ];
 }
 

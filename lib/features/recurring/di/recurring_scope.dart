@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -23,6 +24,10 @@ final class RecurringScope extends IsolatedScope {
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
+    // Tautan rutin ke pos (ADR-036 §3.4); sebagian uji tidak menyediakannya.
+    if (parent.isRegistered<BudgetItemCatalog>()) {
+      c.registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
+    }
   }
 
   @override
@@ -34,6 +39,7 @@ final class RecurringScope extends IsolatedScope {
         wallets: c<WalletRepository>(),
         ledgerChanges: c<LedgerChanges>(),
         recurringChanges: c<RecurringChanges>(),
+        budgetItemCatalog: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null,
         recordTransaction: RecordTransaction(
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),

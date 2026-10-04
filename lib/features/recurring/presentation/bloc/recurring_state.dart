@@ -18,6 +18,7 @@ final class RecurringState extends UiState<RecurringState> {
     this.loadFailed = false,
     this.kindFilter,
     this.budgetOptions = const [],
+    this.dismissedSuggestions = const {},
     super.effect,
   });
 
@@ -48,6 +49,9 @@ final class RecurringState extends UiState<RecurringState> {
 
   /// Pos anggaran untuk tautan rutin ke pos (ADR-036 §3.4).
   final List<BudgetItemOption> budgetOptions;
+
+  /// Kunci saran "Sepertinya rutin" yang ditolak (ADR-037 §3.3).
+  final Set<String> dismissedSuggestions;
 
   /// Awal bulan berjalan.
   DateTime get monthStart => DateTime(today.year, today.month);
@@ -87,6 +91,7 @@ final class RecurringState extends UiState<RecurringState> {
     bool? loadFailed,
     RecurringKind? Function()? kindFilter,
     List<BudgetItemOption>? budgetOptions,
+    Set<String>? dismissedSuggestions,
     UiEffect? effect,
   }) {
     return RecurringState(
@@ -98,10 +103,21 @@ final class RecurringState extends UiState<RecurringState> {
       loadFailed: loadFailed ?? this.loadFailed,
       kindFilter: kindFilter == null ? this.kindFilter : kindFilter(),
       budgetOptions: budgetOptions ?? this.budgetOptions,
+      dismissedSuggestions: dismissedSuggestions ?? this.dismissedSuggestions,
       effect: effect,
     );
   }
 
   @override
-  List<Object?> get props => [rules, transactions, wallets, today, isLoading, loadFailed, kindFilter, budgetOptions];
+  List<Object?> get props => [
+    rules,
+    transactions,
+    wallets,
+    today,
+    isLoading,
+    loadFailed,
+    kindFilter,
+    budgetOptions,
+    dismissedSuggestions,
+  ];
 }

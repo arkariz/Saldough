@@ -3028,6 +3028,18 @@ class Translations$recurring$id {
 
 	/// id: 'Biarkan'
 	String get priceUpKeep => 'Biarkan';
+
+	/// id: 'Sepertinya rutin'
+	String get suggestTitle => 'Sepertinya rutin';
+
+	/// id: '$name $amount, sekitar tanggal $day tiga bulan terakhir.'
+	String suggestLine({required Object name, required Object amount, required Object day}) => '${name} ${amount}, sekitar tanggal ${day} tiga bulan terakhir.';
+
+	/// id: 'Jadikan rutin'
+	String get suggestAccept => 'Jadikan rutin';
+
+	/// id: 'Bukan rutin'
+	String get suggestDismiss => 'Bukan rutin';
 }
 
 // Path: plan
@@ -4688,6 +4700,10 @@ extension on Translations {
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
 			'recurring.priceUpKeep' => 'Biarkan',
+			'recurring.suggestTitle' => 'Sepertinya rutin',
+			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, sekitar tanggal ${day} tiga bulan terakhir.',
+			'recurring.suggestAccept' => 'Jadikan rutin',
+			'recurring.suggestDismiss' => 'Bukan rutin',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

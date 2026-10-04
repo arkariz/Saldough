@@ -1171,6 +1171,10 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String priceUpFound({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?';
 	@override String get priceUpUpdate => 'Update item';
 	@override String get priceUpKeep => 'Keep amount';
+	@override String get suggestTitle => 'Looks repeating';
+	@override String suggestLine({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.';
+	@override String get suggestAccept => 'Make repeating';
+	@override String get suggestDismiss => 'Not repeating';
 }
 
 // Path: plan
@@ -2476,6 +2480,10 @@ extension on TranslationsEn {
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			'recurring.priceUpUpdate' => 'Update item',
 			'recurring.priceUpKeep' => 'Keep amount',
+			'recurring.suggestTitle' => 'Looks repeating',
+			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.',
+			'recurring.suggestAccept' => 'Make repeating',
+			'recurring.suggestDismiss' => 'Not repeating',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

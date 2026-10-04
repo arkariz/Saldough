@@ -171,6 +171,15 @@ final class RecurringAutoRecordToggled extends RecurringEvent {
   final bool enabled;
 }
 
+/// "Bukan rutin" pada saran Sepertinya rutin (ADR-037 §3.3).
+final class RecurringSuggestionDismissed extends RecurringEvent {
+  /// Membuat [RecurringSuggestionDismissed].
+  const RecurringSuggestionDismissed(this.key);
+
+  /// Kunci saran.
+  final String key;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

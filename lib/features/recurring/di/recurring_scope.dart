@@ -28,6 +28,10 @@ final class RecurringScope extends IsolatedScope {
     if (parent.isRegistered<BudgetItemCatalog>()) {
       c.registerSingleton<BudgetItemCatalog>(parent<BudgetItemCatalog>());
     }
+    // Saran Sepertinya rutin (ADR-037 §3.3).
+    if (parent.isRegistered<RecurringSuggestionDismissals>()) {
+      c.registerSingleton<RecurringSuggestionDismissals>(parent<RecurringSuggestionDismissals>());
+    }
   }
 
   @override
@@ -40,6 +44,9 @@ final class RecurringScope extends IsolatedScope {
         ledgerChanges: c<LedgerChanges>(),
         recurringChanges: c<RecurringChanges>(),
         budgetItemCatalog: c.isRegistered<BudgetItemCatalog>() ? c<BudgetItemCatalog>() : null,
+        suggestionDismissals: c.isRegistered<RecurringSuggestionDismissals>()
+            ? c<RecurringSuggestionDismissals>()
+            : null,
         recordTransaction: RecordTransaction(
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),

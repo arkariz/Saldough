@@ -1090,7 +1090,11 @@
     "autoRecordedMany": "$n repeating items recorded automatically.",
     "priceUpFound": "$name came in at $amount, higher than planned. Link it?",
     "priceUpUpdate": "Update item",
-    "priceUpKeep": "Keep amount"
+    "priceUpKeep": "Keep amount",
+    "suggestTitle": "Looks repeating",
+    "suggestLine": "$name $amount, around day $day for the last three months.",
+    "suggestAccept": "Make repeating",
+    "suggestDismiss": "Not repeating"
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

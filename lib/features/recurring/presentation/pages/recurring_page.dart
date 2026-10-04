@@ -7,6 +7,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
@@ -36,7 +37,8 @@ class RecurringPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final parentContainer = container ?? ScopeProvider.of(context);
     return ScopeWidget<RecurringScope>(
-      create: () => RecurringScope(parentContainer: parentContainer),
+      // Tiga bulan untuk saran Sepertinya rutin (ADR-037 §3.3).
+      create: () => RecurringScope(parentContainer: parentContainer, monthsBack: suggestionMonths),
       builder: (context, scope) {
         final bloc = scope.container<RecurringBloc>();
         return BlocProvider.value(
@@ -80,6 +82,13 @@ class RecurringSegmentView extends StatelessWidget {
           );
         }
         const padding = EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.fabClearance);
+        // Sepertinya rutin (ADR-037 §3.3), juga saat belum ada rutin.
+        final suggestions = suggestRecurring(
+          state.transactions,
+          today: state.today,
+          rules: state.rules,
+          dismissed: state.dismissedSuggestions,
+        );
         if (state.rules.isEmpty) {
           return TourTrigger(
             tour: TourId.recurring,
@@ -103,6 +112,10 @@ class RecurringSegmentView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
+                if (suggestions.isNotEmpty) ...[
+                  _SuggestionCard(suggestions: suggestions),
+                  const SizedBox(height: AppSpacing.md),
+                ],
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.recurringAdd,
                   child: AppButton(label: t.recurring.addAction, onPressed: () => _add(context)),
@@ -157,6 +170,10 @@ class RecurringSegmentView extends StatelessWidget {
                   ).firstOrNull
                   case final idle?) ...[
                 _IdleCard(rule: idle),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              if (suggestions.isNotEmpty) ...[
+                _SuggestionCard(suggestions: suggestions),
                 const SizedBox(height: AppSpacing.md),
               ],
               SingleChildScrollView(
@@ -301,6 +318,58 @@ class _IdleCard extends StatelessWidget {
               TextButton(onPressed: () => bloc.add(RecurringEnded(rule.id)), child: Text(t.recurring.endAction)),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Kartu **Sepertinya rutin** (ADR-037 §3.3): Jadikan rutin membuka CATAT
+/// lewat Jadikan Rutin (transaksi terbaru jadi kemunculan pertama).
+class _SuggestionCard extends StatelessWidget {
+  const _SuggestionCard({required this.suggestions});
+
+  final List<RecurringSuggestion> suggestions;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<RecurringBloc>();
+    final textTheme = Theme.of(context).textTheme;
+    return AppHardCard(
+      key: const ValueKey('recurring-suggestions'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.recurring.suggestTitle, style: textTheme.titleSmall),
+          for (final s in suggestions) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              t.recurring.suggestLine(
+                name: s.latest.note,
+                amount: AppMoneyFormatter.format(s.latest.amount),
+                day: s.latest.date.day,
+              ),
+              style: textTheme.bodyMedium,
+            ),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: AppSpacing.xs,
+              children: [
+                TextButton(
+                  onPressed: () => bloc.add(RecurringSuggestionDismissed(s.key)),
+                  child: Text(t.recurring.suggestDismiss),
+                ),
+                TextButton(
+                  key: ValueKey('recurring-suggest-${s.key}'),
+                  onPressed: () => context.pushRoute(
+                    RecordRouteKeys.sheet,
+                    RecordSheetInput(makeRecurringFrom: s.latest),
+                  ),
+                  child: Text(t.recurring.suggestAccept),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

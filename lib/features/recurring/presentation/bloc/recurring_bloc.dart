@@ -40,6 +40,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     required this._recordTransaction,
     this._monthsBack = 1,
     this._budgetItemCatalog,
+    this._suggestionDismissals,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(RecurringState.initial(DateTime.now())) {
@@ -68,6 +69,10 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             ? t.recurring.budgetUnlinkedMessage(name: rule.note)
             : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
       );
+    });
+    on<RecurringSuggestionDismissed>((event, emit) async {
+      emit(state.copyWith(dismissedSuggestions: {...state.dismissedSuggestions, event.key}));
+      await _suggestionDismissals?.add(event.key);
     });
     on<RecurringIdleDismissed>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
@@ -115,6 +120,9 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
   /// Pos anggaran untuk tautan rutin ke pos (ADR-036 §3.4); `null` = tanpa.
   final BudgetItemCatalog? _budgetItemCatalog;
+
+  /// Saran "Sepertinya rutin" yang ditolak; `null` = tanpa (sebagian uji).
+  final RecurringSuggestionDismissals? _suggestionDismissals;
   final DateTime Function() _now;
   late final List<StreamSubscription<void>> _subscriptions;
 
@@ -146,11 +154,13 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       return;
     }
     final options = await _budgetItemCatalog?.listOptions();
+    final dismissed = await _suggestionDismissals?.load();
     emit(
       state.copyWith(
         rules: rules.getOrElse((_) => const []),
         wallets: wallets.getOrElse((_) => const []),
         budgetOptions: options?.getOrElse((_) => const []) ?? const [],
+        dismissedSuggestions: dismissed?.getOrElse((_) => const {}) ?? const {},
         transactions: transactions,
         today: today,
         isLoading: false,

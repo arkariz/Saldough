@@ -1090,7 +1090,11 @@
     "autoRecordedMany": "$n rutin dicatat otomatis.",
     "priceUpFound": "$name tercatat $amount, naik dari rutin. Tautkan?",
     "priceUpUpdate": "Perbarui rutin",
-    "priceUpKeep": "Biarkan"
+    "priceUpKeep": "Biarkan",
+    "suggestTitle": "Sepertinya rutin",
+    "suggestLine": "$name $amount, sekitar tanggal $day tiga bulan terakhir.",
+    "suggestAccept": "Jadikan rutin",
+    "suggestDismiss": "Bukan rutin"
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

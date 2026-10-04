@@ -51,7 +51,7 @@ void main() {
     );
   });
 
-  Future<void> pump(WidgetTester tester, Widget child) async {
+  Future<void> pump(WidgetTester tester, Widget child, {int monthsBack = 1}) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -69,6 +69,7 @@ void main() {
           transactionRepository: transactions,
         ),
       ),
+      monthsBack: monthsBack,
       now: () => clock,
     )..add(const RecurringStarted());
     addTearDown(bloc.close);
@@ -297,5 +298,26 @@ void main() {
         expect(read(await rules.listRules()).single.amount, 7900000);
       },
     );
+
+    testWidgets('Sepertinya rutin: tiga bulan Gym memunculkan saran; Bukan rutin menyembunyikannya (T-17.7)', (
+      tester,
+    ) async {
+      for (final month in [8, 9, 10]) {
+        await transactions.saveTransaction(
+          ExpenseTransaction(
+            id: 'gym-$month',
+            date: DateTime(2026, month),
+            amount: 30000000,
+            note: 'Gym',
+            walletId: 'bca',
+          ),
+        );
+      }
+      await pump(tester, const RecurringSegmentView(), monthsBack: suggestionMonths);
+      expect(find.byKey(const ValueKey('recurring-suggestions')), findsOneWidget);
+      await tester.tap(find.text(t.recurring.suggestDismiss));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('recurring-suggestions')), findsNothing);
+    });
   });
 }

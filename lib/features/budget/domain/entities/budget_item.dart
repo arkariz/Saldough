@@ -23,6 +23,7 @@ final class BudgetItem extends Equatable {
     this.unitPrice,
     this.kind = BudgetItemKind.expense,
     this.targetWalletId,
+    this.templateItemId,
   }) : assert(
          enteredAmount != null || (quantity != null && unitPrice != null),
          'Pos anggaran butuh nominal yang diketik, atau jumlah beserta harga satuan.',
@@ -55,6 +56,11 @@ final class BudgetItem extends Equatable {
   /// pengeluaran. Selalu berbeda dari dompet anggarannya.
   final String? targetWalletId;
 
+  /// Kunci pos yang stabil antarperiode anggaran rutin (ADR-036 §3.1): id
+  /// pos template yang melahirkannya, atau id pos template itu sendiri.
+  /// `null` untuk pos insidental.
+  final String? templateItemId;
+
   /// Apakah pos ini rencana transfer.
   bool get isTransfer => kind == BudgetItemKind.transfer;
 
@@ -65,6 +71,32 @@ final class BudgetItem extends Equatable {
   /// selain itu [enteredAmount].
   int get plannedAmount => isItemized ? quantity! * unitPrice! : enteredAmount!;
 
+  /// Salinan dengan [id], [name], atau [templateItemId] diganti. Nominal
+  /// diganti lewat [withAmountOf].
+  BudgetItem copyWith({String? id, String? name, String? Function()? templateItemId}) => BudgetItem(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    enteredAmount: enteredAmount,
+    quantity: quantity,
+    unitPrice: unitPrice,
+    kind: kind,
+    targetWalletId: targetWalletId,
+    templateItemId: templateItemId == null ? this.templateItemId : templateItemId(),
+  );
+
+  /// Salinan dengan nominal rencana yang sama dengan [other] (diketik atau
+  /// dirinci), field lain tetap.
+  BudgetItem withAmountOf(BudgetItem other) => BudgetItem(
+    id: id,
+    name: name,
+    enteredAmount: other.enteredAmount,
+    quantity: other.quantity,
+    unitPrice: other.unitPrice,
+    kind: kind,
+    targetWalletId: targetWalletId,
+    templateItemId: templateItemId,
+  );
+
   @override
-  List<Object?> get props => [id, name, enteredAmount, quantity, unitPrice, kind, targetWalletId];
+  List<Object?> get props => [id, name, enteredAmount, quantity, unitPrice, kind, targetWalletId, templateItemId];
 }

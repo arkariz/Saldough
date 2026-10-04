@@ -46,7 +46,7 @@ Tetap satu konsep template (KT-R4):
 
 | Entitas | Field baru | Keterangan |
 |---|---|---|
-| `BudgetTemplate` | `schedule?: BudgetSchedule` | `walletId`, `period` (`weekly`/`monthly`), `anchorDate`, `anchorDay`, `isActive` |
+| `BudgetTemplate` | `schedule?: BudgetSchedule` | `walletId`, `period` (`weekly`/`monthly`), `anchorDate`, `isActive` |
 | `Budget` | `templateId?` | Template yang melahirkannya |
 | `BudgetItem` | `templateItemId?` | Kunci pos yang stabil antarperiode |
 
@@ -63,8 +63,11 @@ tampil di layar Template dengan keterangan "Ulangi tiap bulan · BCA".
 Template tanpa `schedule` berperilaku persis seperti sekarang.
 
 **Awal periode berikutnya mengikuti tanggal awal anggarannya**
-(keputusan pemilik). Bulanan memakai `anchorDay` dan penjepitan yang sama
-dengan `BudgetPeriod.endFrom` (31 → 28/29 Feb → 31 Mar). Formulir anggaran
+(keputusan pemilik). Anggaran bulanan hanya bisa diulang bila mulai
+tanggal 1–28 (seperti bulan keuangan, ADR-035 §3.6), sehingga periode ke-n
+selalu `anchorDate + n bulan` dan akhir periode (`BudgetPeriod.endFrom`) tepat
+di awal periode berikutnya, tanpa penjepitan. Untuk tanggal 29–31 sakelar
+Ulangi dimatikan dengan penjelasan. Formulir anggaran
 bulanan baru mengisi tanggal awal bawaan dengan awal bulan keuangan
 (ADR-035 §3.6), sehingga pengguna yang gajian tanggal 25 mendapat 25 tanpa
 aturan tambahan.

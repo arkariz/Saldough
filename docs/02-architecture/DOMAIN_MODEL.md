@@ -290,6 +290,7 @@ overspent       : spent > plannedAmount
 | `name` | `String` | Nama template. |
 | `items` | `List<BudgetItem>` | Pos bawaan beserta nominal rencananya. |
 | `isEnabled` | `bool` | Template nonaktif tidak ditawarkan saat membuat anggaran. |
+| `schedule` | `BudgetSchedule?` | Anggaran rutin ([ADR-036](adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md)): `walletId`, `period`, `anchorDate` (bulanan tanggal 1–28), `isActive`. Template berjadwal melahirkan anggaran tiap periode. |
 
 Membuat anggaran dari template menghasilkan `Budget` mandiri: menyuntingnya
 tidak mengubah templatenya, dan menyunting template tidak mengubah anggaran yang
@@ -299,6 +300,10 @@ yang tertaut ke pos satu anggaran tidak ikut terhitung di anggaran lain dari
 template yang sama. Kalau dompet tujuan sebuah pos transfer sama dengan dompet
 anggaran yang dipilih, pemilik diminta menyesuaikan dompet tujuannya sebelum
 anggaran dibuat.
+
+Anggaran yang lahir dari template berjadwal membawa `Budget.templateId`, dan
+setiap posnya `BudgetItem.templateItemId` (id pos template), kunci yang stabil
+antarperiode untuk dialog lingkup dan tautan rutin ke pos (ADR-036 §3.3–3.4).
 
 ## Transaksi rutin
 

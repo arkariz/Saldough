@@ -2578,14 +2578,16 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
 
 ### R2a: anggaran rutin
 
-- [ ] **T-16.1** Domain template berjadwal (ADR-036 §3.1): `BudgetSchedule`
-      (`walletId`, `period`, `anchorDate`, `anchorDay`, `isActive`) di
+- [x] **T-16.1** Domain template berjadwal (ADR-036 §3.1): `BudgetSchedule`
+      (`walletId`, `period`, `anchorDate`, `isActive`) di
       `BudgetTemplate.schedule?`, `Budget.templateId?`,
       `BudgetItem.templateItemId?`; model dan `schemaVersion` naik, dokumen
-      lama terbaca; awal periode ke-n dari jadwal (penjepitan 31).
-      Verifikasi: uji model (lama/baru), uji jadwal (31 Jan → 28 Feb → 31
-      Mar, mingguan).
+      lama terbaca; awal periode ke-n dari jadwal.
+      Verifikasi: uji model (lama/baru), uji jadwal (bulanan, Februari,
+      mingguan).
       Memenuhi FR-BUD-008.
+      Selesai 4 Okt 2026: bulanan hanya tanggal 1–28 (`canRepeat`), jadi tanpa
+      `anchorDay` dan tanpa penjepitan; skema anggaran 3, template 2.
 - [ ] **T-16.2** Kelahiran periode (§3.2): `dueBirths` murni + use case
       yang menyimpan; host di shell menjalankannya saat dibuka dan saat
       `ActiveDay` berganti; daftar anggaran segar.

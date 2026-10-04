@@ -24,6 +24,7 @@ final class Budget extends Equatable {
     required this.startDate,
     this.items = const [],
     this.isArchived = false,
+    this.templateId,
   });
 
   /// Identitas anggaran.
@@ -52,6 +53,10 @@ final class Budget extends Equatable {
 
   /// Satu-satunya bagian siklus hidup yang disimpan. Lihat [statusAt].
   final bool isArchived;
+
+  /// Template berjadwal yang melahirkan atau menjadikan anggaran ini rutin
+  /// (ADR-036 §3.1); `null` untuk anggaran biasa.
+  final String? templateId;
 
   /// Batas akhir periode, eksklusif. Lihat [BudgetPeriod.endFrom].
   DateTime get endDate => period.endFrom(startDate);
@@ -108,6 +113,7 @@ final class Budget extends Equatable {
     DateTime? startDate,
     List<BudgetItem>? items,
     bool? isArchived,
+    String? Function()? templateId,
   }) {
     return Budget(
       id: id,
@@ -117,9 +123,10 @@ final class Budget extends Equatable {
       startDate: startDate ?? this.startDate,
       items: items ?? this.items,
       isArchived: isArchived ?? this.isArchived,
+      templateId: templateId == null ? this.templateId : templateId(),
     );
   }
 
   @override
-  List<Object?> get props => [id, name, walletId, period, startDate, items, isArchived];
+  List<Object?> get props => [id, name, walletId, period, startDate, items, isArchived, templateId];
 }

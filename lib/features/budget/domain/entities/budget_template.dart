@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
+import 'package:saldough/features/budget/domain/entities/budget_schedule.dart';
 
 /// Definisi anggaran yang bisa dipakai ulang — nama beserta pos bawaannya —
 /// bukan anggaran aktif. Lihat DOMAIN_MODEL.md bagian "Template anggaran".
@@ -16,6 +17,7 @@ final class BudgetTemplate extends Equatable {
     required this.name,
     this.items = const [],
     this.isEnabled = true,
+    this.schedule,
   });
 
   /// Identitas template.
@@ -30,6 +32,13 @@ final class BudgetTemplate extends Equatable {
   /// Template nonaktif tidak ditawarkan saat membuat anggaran.
   final bool isEnabled;
 
+  /// Jadwal anggaran rutin (ADR-036 §3.1). `null`: template biasa yang hanya
+  /// dipakai saat membuat anggaran.
+  final BudgetSchedule? schedule;
+
+  /// Apakah template ini melahirkan anggaran tiap periode.
+  bool get isScheduled => schedule?.isActive ?? false;
+
   /// Nominal rencana dalam sen: `Σ item.plannedAmount`. Turunan, tidak
   /// pernah disimpan — sama dengan `Budget.plannedAmount` (ADR-017).
   int get plannedAmount => items.fold(0, (sum, item) => sum + item.plannedAmount);
@@ -39,15 +48,17 @@ final class BudgetTemplate extends Equatable {
     String? name,
     List<BudgetItem>? items,
     bool? isEnabled,
+    BudgetSchedule? Function()? schedule,
   }) {
     return BudgetTemplate(
       id: id,
       name: name ?? this.name,
       items: items ?? this.items,
       isEnabled: isEnabled ?? this.isEnabled,
+      schedule: schedule == null ? this.schedule : schedule(),
     );
   }
 
   @override
-  List<Object?> get props => [id, name, items, isEnabled];
+  List<Object?> get props => [id, name, items, isEnabled, schedule];
 }

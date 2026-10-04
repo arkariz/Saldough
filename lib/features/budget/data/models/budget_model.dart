@@ -11,7 +11,9 @@ import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 /// pernah disimpan — semuanya turunan.
 ///
 /// Skema 1 masih menulis `plannedAmount` tingkat anggaran; sejak ADR-017
-/// (skema 2) kunci itu diabaikan saat dibaca dan tidak ditulis lagi.
+/// (skema 2) kunci itu diabaikan saat dibaca dan tidak ditulis lagi. Skema 3
+/// (ADR-036) menambah `templateId` dan `templateItemId` pos, keduanya
+/// opsional, jadi dokumen lama terbaca apa adanya.
 final class BudgetModel {
   /// Membuat [BudgetModel].
   const BudgetModel({
@@ -22,6 +24,7 @@ final class BudgetModel {
     required this.startDate,
     required this.items,
     required this.isArchived,
+    this.templateId,
   });
 
   /// Membaca [BudgetModel] dari JSON.
@@ -33,6 +36,7 @@ final class BudgetModel {
     startDate: DateTime.parse(json['startDate'] as String),
     items: (json['items'] as List<dynamic>).map((e) => BudgetItemModel.fromJson(e as Map<String, dynamic>)).toList(),
     isArchived: json['isArchived'] as bool,
+    templateId: json['templateId'] as String?,
   );
 
   /// Membuat [BudgetModel] dari entitas domain [Budget].
@@ -44,10 +48,11 @@ final class BudgetModel {
     startDate: budget.startDate,
     items: budget.items.map(BudgetItemModel.fromEntity).toList(),
     isArchived: budget.isArchived,
+    templateId: budget.templateId,
   );
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
 
   /// Identitas anggaran.
   final String id;
@@ -70,6 +75,9 @@ final class BudgetModel {
   /// Diarsipkan atau tidak.
   final bool isArchived;
 
+  /// Template berjadwal asalnya.
+  final String? templateId;
+
   /// Menulis [BudgetModel] ke JSON.
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -79,6 +87,7 @@ final class BudgetModel {
     'startDate': startDate.toIso8601String(),
     'items': items.map((i) => i.toJson()).toList(),
     'isArchived': isArchived,
+    if (templateId != null) 'templateId': templateId,
   };
 
   /// Mengubah model ini jadi entitas domain [Budget].
@@ -90,6 +99,7 @@ final class BudgetModel {
     startDate: startDate,
     items: items.map((i) => i.toEntity()).toList(),
     isArchived: isArchived,
+    templateId: templateId,
   );
 }
 
@@ -107,6 +117,7 @@ final class BudgetItemModel {
     this.unitPrice,
     this.kind = 'expense',
     this.targetWalletId,
+    this.templateItemId,
   });
 
   /// Membaca [BudgetItemModel] dari JSON.
@@ -118,6 +129,7 @@ final class BudgetItemModel {
     unitPrice: json['unitPrice'] as int?,
     kind: json['kind'] as String? ?? 'expense',
     targetWalletId: json['targetWalletId'] as String?,
+    templateItemId: json['templateItemId'] as String?,
   );
 
   /// Membuat [BudgetItemModel] dari entitas domain [BudgetItem].
@@ -129,6 +141,7 @@ final class BudgetItemModel {
     unitPrice: item.unitPrice,
     kind: item.kind.name,
     targetWalletId: item.targetWalletId,
+    templateItemId: item.templateItemId,
   );
 
   /// Identitas pos.
@@ -152,6 +165,9 @@ final class BudgetItemModel {
   /// Dompet tujuan pos transfer.
   final String? targetWalletId;
 
+  /// Kunci pos template (ADR-036).
+  final String? templateItemId;
+
   /// Menulis [BudgetItemModel] ke JSON.
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -161,6 +177,7 @@ final class BudgetItemModel {
     'unitPrice': unitPrice,
     'kind': kind,
     'targetWalletId': targetWalletId,
+    if (templateItemId != null) 'templateItemId': templateItemId,
   };
 
   /// Mengubah model ini jadi entitas domain [BudgetItem].
@@ -172,5 +189,6 @@ final class BudgetItemModel {
     unitPrice: unitPrice,
     kind: BudgetItemKind.values.byName(kind),
     targetWalletId: targetWalletId,
+    templateItemId: templateItemId,
   );
 }

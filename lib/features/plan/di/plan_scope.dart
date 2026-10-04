@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -21,6 +22,10 @@ final class PlanScope extends IsolatedScope {
       ..registerSingleton<PlanFreelanceSource>(parent<PlanFreelanceSource>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>())
       ..registerSingleton<RecurringChanges>(parent<RecurringChanges>());
+    // Tinjau awal bulan (ADR-036 §3.7); sebagian uji tidak menyediakannya.
+    if (parent.isRegistered<MonthReviewRepository>()) {
+      c.registerSingleton<MonthReviewRepository>(parent<MonthReviewRepository>());
+    }
   }
 
   @override
@@ -34,6 +39,7 @@ final class PlanScope extends IsolatedScope {
         freelance: c<PlanFreelanceSource>(),
         ledgerChanges: c<LedgerChanges>(),
         recurringChanges: c<RecurringChanges>(),
+        reviews: c.isRegistered<MonthReviewRepository>() ? c<MonthReviewRepository>() : null,
       ),
       dispose: (bloc) => bloc.close(),
     );

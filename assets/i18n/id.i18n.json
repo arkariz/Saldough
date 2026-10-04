@@ -1130,6 +1130,27 @@
     "fundingTitle": "SIAPKAN DANA",
     "fundingBody": "Saldo $wallet diperkirakan kurang ≈$shortfall saat $name, $date. Siapkan dana di $wallet sebelum tanggal itu.",
     "fundingAction": "Lihat perkiraan $wallet",
-    "fundingMore": "+$n lainnya"
+    "fundingMore": "+$n lainnya",
+    "reviewTitle": "$month dimulai",
+    "reviewProgress": "$done/$total",
+    "reviewBudgets": "Anggaran rutin bulan ini $amount, lahir sendiri.",
+    "reviewEstimate": "$name ≈$amount, sesuai?",
+    "reviewLookback": "Kilas balik $month",
+    "reviewOk": "Sesuai",
+    "reviewEdit": "Ubah",
+    "reviewEditEstimate": "Ubah perkiraan",
+    "reviewSee": "Lihat",
+    "reviewDone": "Selesai meninjau",
+    "reviewLater": "Nanti",
+    "reviewCollapsed": "Tinjau rencana $month ($done/$total)",
+    "reviewDoneMessage": "Rencana $month siap.",
+    "homeReviewBody": "Pemasukan terjadwal $income, terikat $committed, nganggur $free.",
+    "homeReviewEstimates": "Ada rutin bernominal kira-kira yang perlu dicek.",
+    "homeReviewAction": "Tinjau rencana",
+    "lookbackTitle": "Kilas balik $month",
+    "lookbackPlanned": "Rencana",
+    "lookbackActual": "Nyata",
+    "lookbackFree": "Uang nganggur",
+    "lookbackBiggest": "Selisih terbesar: $line."
   }
 }

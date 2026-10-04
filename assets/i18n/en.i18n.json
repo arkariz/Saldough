@@ -1130,6 +1130,27 @@
     "fundingTitle": "PREPARE FUNDS",
     "fundingBody": "$wallet is expected to be short by ≈$shortfall for $name on $date. Add funds to $wallet before then.",
     "fundingAction": "See $wallet forecast",
-    "fundingMore": "+$n more"
+    "fundingMore": "+$n more",
+    "reviewTitle": "$month has started",
+    "reviewProgress": "$done/$total",
+    "reviewBudgets": "This month's repeating budgets: $amount, started automatically.",
+    "reviewEstimate": "$name ≈$amount, still right?",
+    "reviewLookback": "Look back at $month",
+    "reviewOk": "Looks right",
+    "reviewEdit": "Edit",
+    "reviewEditEstimate": "Edit estimate",
+    "reviewSee": "See",
+    "reviewDone": "Done reviewing",
+    "reviewLater": "Later",
+    "reviewCollapsed": "Review $month plan ($done/$total)",
+    "reviewDoneMessage": "$month plan is ready.",
+    "homeReviewBody": "Scheduled income $income, committed $committed, free $free.",
+    "homeReviewEstimates": "Some repeating amounts are estimates worth checking.",
+    "homeReviewAction": "Review plan",
+    "lookbackTitle": "$month look back",
+    "lookbackPlanned": "Plan",
+    "lookbackActual": "Actual",
+    "lookbackFree": "Free money",
+    "lookbackBiggest": "Biggest difference: $line."
   }
 }

@@ -30,6 +30,8 @@ import 'package:saldough/features/notification_capture/di/notification_capture_m
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_module.dart';
 import 'package:saldough/features/onboarding/presentation/onboarding_route.dart';
 import 'package:saldough/features/onboarding/presentation/pages/onboarding_page.dart' show OnboardingOutcome;
+import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
+import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
@@ -143,6 +145,10 @@ abstract final class RootModule {
       )
       // Port milik `plan` (Bulan ini, T-15.13), diimplementasikan `budget`
       // dan `freelance` — pola port kecil ADR-0009.
+      // Tinjau awal bulan (ADR-036 §3.7).
+      ..registerLazySingleton<MonthReviewRepository>(
+        () => MonthReviewRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
       ..registerLazySingleton<PlanBudgetSource>(
         () => PlanBudgetSourceImpl(
           budgetRepository: container<BudgetRepository>(),

@@ -1,4 +1,5 @@
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -25,6 +26,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     this.includeUnplanned = true,
     this.laterBudgets = const [],
     this.selected = 0,
+    this.previousBudgets = const [],
+    this._review,
     super.effect,
   });
 
@@ -73,6 +76,70 @@ final class PlanMonthState extends UiState<PlanMonthState> {
 
   /// Bulan terpilih di pemilih bulan: 0 = bulan berjalan.
   final int selected;
+
+  /// Anggaran bulan keuangan lalu, untuk kilas balik (W10).
+  final List<PlanBudget> previousBudgets;
+
+  final MonthReview? _review;
+
+  /// Status tinjau awal bulan berjalan (J4, ADR-036 §3.7).
+  MonthReview get review => _review ?? MonthReview(monthStart: range.start);
+
+  /// Hari terakhir kartu tinjau tampil: hari ke-7 bulan keuangan.
+  static const reviewDays = 7;
+
+  /// Bulan keuangan lalu.
+  FinancialMonthRange get previousRange =>
+      financialMonthOf(DateTime(range.start.year, range.start.month - 1, range.start.day), range.start.day);
+
+  /// Jumlah rencana anggaran rutin bulan ini (langkah 1).
+  int get recurringBudgetTotal => [
+    for (final b in budgets)
+      for (final line in b.lines)
+        if (line.key != null) line.planned,
+  ].fold(0, (sum, amount) => sum + amount);
+
+  /// Rutin bernominal kira-kira yang muncul bulan ini (langkah 2).
+  List<RecurringRule> get estimatedRules => [
+    for (final rule in rules)
+      if (!rule.isPaused &&
+          rule.amountMode == RecurringAmountMode.estimated &&
+          occurrencesOf(rule, from: range.start, until: range.end).isNotEmpty)
+        rule,
+  ];
+
+  /// Langkah tinjau yang relevan bulan ini.
+  List<MonthReviewStep> get reviewSteps => [
+    if (recurringBudgetTotal > 0) MonthReviewStep.budgets,
+    if (estimatedRules.isNotEmpty) MonthReviewStep.estimates,
+    if (historyStart != null && historyStart!.isBefore(range.start)) MonthReviewStep.lookback,
+  ];
+
+  /// Langkah yang sudah dicentang di antara [reviewSteps].
+  int get reviewDoneCount => reviewSteps.where(review.doneSteps.contains).length;
+
+  /// Kartu tinjau tampil: tujuh hari pertama bulan keuangan, belum selesai,
+  /// dan ada yang perlu ditinjau.
+  bool get showReview =>
+      !review.completed &&
+      reviewSteps.isNotEmpty &&
+      today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays));
+
+  /// Rencana vs nyata bulan lalu (W10), dihitung ulang dari buku besar.
+  MonthPlan get previousPlan {
+    final m = previousRange;
+    return monthPlan(
+      rules,
+      from: m.start,
+      until: m.end,
+      today: DateTime(m.end.year, m.end.month, m.end.day - 1),
+      transactions: [
+        for (final t in transactions)
+          if (m.contains(t.date)) t,
+      ],
+      budgetLines: [for (final b in previousBudgets) ...b.lines],
+    );
+  }
 
   /// Bulan berjalan dan [horizon] bulan sesudahnya.
   List<FinancialMonthRange> get months => [
@@ -211,6 +278,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     bool? includeUnplanned,
     List<List<PlanBudget>>? laterBudgets,
     int? selected,
+    List<PlanBudget>? previousBudgets,
+    MonthReview? review,
     UiEffect? effect,
   }) => PlanMonthState(
     today: today ?? this.today,
@@ -227,6 +296,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     includeUnplanned: includeUnplanned ?? this.includeUnplanned,
     laterBudgets: laterBudgets ?? this.laterBudgets,
     selected: selected ?? this.selected,
+    previousBudgets: previousBudgets ?? this.previousBudgets,
+    review: review ?? _review,
     effect: effect,
   );
 
@@ -246,6 +317,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     includeUnplanned,
     laterBudgets,
     selected,
+    previousBudgets,
+    _review,
   ];
 }
 

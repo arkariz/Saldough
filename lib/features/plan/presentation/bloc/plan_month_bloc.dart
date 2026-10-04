@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -44,6 +45,30 @@ final class PlanMonthUnplannedToggled extends PlanMonthEvent {
   final bool enabled;
 }
 
+/// Centang satu langkah tinjau awal bulan (J4, ADR-036 §3.7).
+final class PlanReviewStepDone extends PlanMonthEvent {
+  /// Membuat [PlanReviewStepDone].
+  const PlanReviewStepDone(this.step);
+
+  /// Langkahnya.
+  final MonthReviewStep step;
+}
+
+/// "Nanti": kartu tinjau dilipat (`true`) atau dibuka lagi (`false`).
+final class PlanReviewDismissed extends PlanMonthEvent {
+  /// Membuat [PlanReviewDismissed].
+  const PlanReviewDismissed({this.dismissed = true});
+
+  /// Dilipat atau dibuka.
+  final bool dismissed;
+}
+
+/// "Selesai meninjau".
+final class PlanReviewCompleted extends PlanMonthEvent {
+  /// Membuat [PlanReviewCompleted].
+  const PlanReviewCompleted();
+}
+
 /// Pilih bulan di pemilih bulan (ADR-036 §3.5): 0 = bulan berjalan.
 final class PlanMonthSelected extends PlanMonthEvent {
   /// Membuat [PlanMonthSelected].
@@ -65,6 +90,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     required this._freelance,
     required LedgerChanges ledgerChanges,
     required RecurringChanges recurringChanges,
+    this._reviews,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        super(PlanMonthState(today: DateTime.now(), range: financialMonthOf(DateTime.now(), 1))) {
@@ -72,6 +98,21 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     on<PlanMonthWalletChanged>((event, emit) => emit(state.copyWith(walletId: () => event.walletId)));
     on<PlanMonthUnplannedToggled>((event, emit) => emit(state.copyWith(includeUnplanned: event.enabled)));
     on<PlanMonthSelected>((event, emit) => emit(state.copyWith(selected: event.index)));
+    on<PlanReviewStepDone>(
+      (event, emit) => _saveReview(state.review.copyWith(doneSteps: {...state.review.doneSteps, event.step}), emit),
+    );
+    on<PlanReviewDismissed>((event, emit) => _saveReview(state.review.copyWith(dismissed: event.dismissed), emit));
+    on<PlanReviewCompleted>((event, emit) async {
+      await _saveReview(state.review.copyWith(completed: true), emit);
+      emit(
+        state.copyWith(
+          effect: ShowSnackBarEffect(
+            message: t.plan.reviewDoneMessage(month: state.range.label),
+            severity: .success,
+          ),
+        ),
+      );
+    });
     void refresh() => add(const PlanMonthLoaded(showSkeleton: false));
     _subscriptions = [
       ledgerChanges.changes.listen((_) => refresh()),
@@ -91,6 +132,15 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
   final RecurringRuleRepository _rules;
   final PlanBudgetSource _budgets;
   final PlanFreelanceSource _freelance;
+
+  /// Status tinjau awal bulan (ADR-036 §3.7); `null` = tanpa (sebagian uji).
+  final MonthReviewRepository? _reviews;
+
+  Future<void> _saveReview(MonthReview review, Emitter<PlanMonthState> emit) async {
+    emit(state.copyWith(review: review));
+    await _reviews?.save(review);
+  }
+
   final DateTime Function() _now;
   late final List<StreamSubscription<void>> _subscriptions;
   late final void Function() _removeMonthListener;
@@ -117,6 +167,16 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     }
 
     final budgets = await budgetsIn(range);
+    // Bulan lalu untuk kilas balik (W10).
+    final previousRange = financialMonthOf(
+      DateTime(range.start.year, range.start.month - 1, range.start.day),
+      range.start.day,
+    );
+    final previousBudgets = (await _budgets.budgetsStartingIn(previousRange.start, previousRange.end)).getOrElse(
+      (_) => const [],
+    );
+    final stored = (await _reviews?.load())?.getOrElse((_) => null);
+    final review = stored != null && stored.monthStart == range.start ? stored : MonthReview(monthStart: range.start);
     final later = <List<PlanBudget>>[];
     for (var k = 1; k <= PlanMonthState.horizon; k++) {
       final m = financialMonthOf(DateTime(range.start.year, range.start.month + k, range.start.day), range.start.day);
@@ -165,6 +225,8 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
         rules: rules,
         budgets: budgets,
         laterBudgets: later,
+        previousBudgets: previousBudgets,
+        review: review,
         uncertain: uncertain,
         transactions: transactions,
         historyStart: historyStart,

@@ -38,14 +38,19 @@ class PlanForecastRow extends StatelessWidget {
             action: () => bloc.add(const PlanMonthLoaded()),
             child: BlocBuilder<PlanMonthBloc, PlanMonthState>(
               builder: (context, state) {
-                if (state.isLoading || state.loadFailed || state.rules.isEmpty) return const SizedBox.shrink();
+                if (state.isLoading || state.loadFailed) return const SizedBox.shrink();
+                // Kartu sekali tampil "Oktober dimulai" (J4, ADR-036 §3.7).
+                final review = state.showReview && !state.review.dismissed
+                    ? _MonthStartCard(state: state, onReview: onTap)
+                    : null;
+                if (state.rules.isEmpty) return review ?? const SizedBox.shrink();
                 final projection = state.projection;
                 final low = projection.lowest;
                 if (low == null) return const SizedBox.shrink();
                 final colors = context.appColors;
                 final funding = state.fundingWarnings;
                 // Muncul belakangan dari Beranda: picu tur Beranda lagi.
-                return TourTrigger(
+                final row = TourTrigger(
                   tour: TourId.home,
                   ready: true,
                   child: SpotlightTarget(
@@ -80,11 +85,66 @@ class PlanForecastRow extends StatelessWidget {
                     ),
                   ),
                 );
+                return review == null ? row : Column(children: [review, row]);
               },
             ),
           ),
         );
       },
+    );
+  }
+}
+
+/// Kartu Beranda "Oktober dimulai" (J4): pemasukan terjadwal, yang terikat,
+/// dan uang nganggur, plus satu baris bila ada rutin kira-kira.
+class _MonthStartCard extends StatelessWidget {
+  const _MonthStartCard({required this.state, required this.onReview});
+
+  final PlanMonthState state;
+  final VoidCallback onReview;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    final plan = state.planFor(0);
+    final month = state.range.start.day == 1
+        ? CycleMonthFormatter.formatMonthShort(state.range.start)
+        : state.range.label;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: AppHardCard(
+        key: const ValueKey('home-month-start'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              t.plan.reviewTitle(month: month).toUpperCase(),
+              style: transactionLabelStyle(context, color: colors.textMuted),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              t.plan.homeReviewBody(
+                income: AppMoneyFormatter.format(plan.plannedIncome),
+                committed: AppMoneyFormatter.format(plan.plannedRecurringOut + plan.budgetPlanned),
+                free: AppMoneyFormatter.format(plan.planned),
+              ),
+              style: textTheme.bodyMedium,
+            ),
+            if (state.estimatedRules.isNotEmpty)
+              Text(t.plan.homeReviewEstimates, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+            Wrap(
+              children: [
+                TextButton(onPressed: onReview, child: Text(t.plan.homeReviewAction)),
+                TextButton(
+                  onPressed: () => context.read<PlanMonthBloc>().add(const PlanReviewDismissed()),
+                  child: Text(t.plan.reviewLater),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

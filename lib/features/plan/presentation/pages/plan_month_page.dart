@@ -13,6 +13,7 @@ import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
 import 'package:saldough/features/plan/presentation/widgets/balance_forecast_card.dart';
 import 'package:saldough/features/plan/presentation/widgets/funding_banner.dart';
+import 'package:saldough/features/plan/presentation/widgets/month_review_card.dart';
 import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -146,6 +147,16 @@ class PlanMonthView extends StatelessWidget {
           child: ListView(
             padding: padding,
             children: [
+              // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
+              if (state.showReview && !state.isFuture) ...[
+                MonthReviewCard(
+                  state: state,
+                  monthLabel: labelOf(state.range),
+                  onShowBudget: onShowBudget,
+                  onShowRecurring: onShowRecurring,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               // Blok 0: siapkan dana (W1, ADR-036 §3.6).
               if (funding.isNotEmpty) ...[
                 FundingBanner(

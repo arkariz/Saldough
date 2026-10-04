@@ -1220,6 +1220,27 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.';
 	@override String fundingAction({required Object wallet}) => 'See ${wallet} forecast';
 	@override String fundingMore({required Object n}) => '+${n} more';
+	@override String reviewTitle({required Object month}) => '${month} has started';
+	@override String reviewProgress({required Object done, required Object total}) => '${done}/${total}';
+	@override String reviewBudgets({required Object amount}) => 'This month\'s repeating budgets: ${amount}, started automatically.';
+	@override String reviewEstimate({required Object name, required Object amount}) => '${name} ≈${amount}, still right?';
+	@override String reviewLookback({required Object month}) => 'Look back at ${month}';
+	@override String get reviewOk => 'Looks right';
+	@override String get reviewEdit => 'Edit';
+	@override String get reviewEditEstimate => 'Edit estimate';
+	@override String get reviewSee => 'See';
+	@override String get reviewDone => 'Done reviewing';
+	@override String get reviewLater => 'Later';
+	@override String reviewCollapsed({required Object month, required Object done, required Object total}) => 'Review ${month} plan (${done}/${total})';
+	@override String reviewDoneMessage({required Object month}) => '${month} plan is ready.';
+	@override String homeReviewBody({required Object income, required Object committed, required Object free}) => 'Scheduled income ${income}, committed ${committed}, free ${free}.';
+	@override String get homeReviewEstimates => 'Some repeating amounts are estimates worth checking.';
+	@override String get homeReviewAction => 'Review plan';
+	@override String lookbackTitle({required Object month}) => '${month} look back';
+	@override String get lookbackPlanned => 'Plan';
+	@override String get lookbackActual => 'Actual';
+	@override String get lookbackFree => 'Free money';
+	@override String lookbackBiggest({required Object line}) => 'Biggest difference: ${line}.';
 }
 
 // Path: record.draftIssue
@@ -2473,6 +2494,27 @@ extension on TranslationsEn {
 			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.',
 			'plan.fundingAction' => ({required Object wallet}) => 'See ${wallet} forecast',
 			'plan.fundingMore' => ({required Object n}) => '+${n} more',
+			'plan.reviewTitle' => ({required Object month}) => '${month} has started',
+			'plan.reviewProgress' => ({required Object done, required Object total}) => '${done}/${total}',
+			'plan.reviewBudgets' => ({required Object amount}) => 'This month\'s repeating budgets: ${amount}, started automatically.',
+			'plan.reviewEstimate' => ({required Object name, required Object amount}) => '${name} ≈${amount}, still right?',
+			'plan.reviewLookback' => ({required Object month}) => 'Look back at ${month}',
+			'plan.reviewOk' => 'Looks right',
+			'plan.reviewEdit' => 'Edit',
+			'plan.reviewEditEstimate' => 'Edit estimate',
+			'plan.reviewSee' => 'See',
+			'plan.reviewDone' => 'Done reviewing',
+			'plan.reviewLater' => 'Later',
+			'plan.reviewCollapsed' => ({required Object month, required Object done, required Object total}) => 'Review ${month} plan (${done}/${total})',
+			'plan.reviewDoneMessage' => ({required Object month}) => '${month} plan is ready.',
+			'plan.homeReviewBody' => ({required Object income, required Object committed, required Object free}) => 'Scheduled income ${income}, committed ${committed}, free ${free}.',
+			'plan.homeReviewEstimates' => 'Some repeating amounts are estimates worth checking.',
+			'plan.homeReviewAction' => 'Review plan',
+			'plan.lookbackTitle' => ({required Object month}) => '${month} look back',
+			'plan.lookbackPlanned' => 'Plan',
+			'plan.lookbackActual' => 'Actual',
+			'plan.lookbackFree' => 'Free money',
+			'plan.lookbackBiggest' => ({required Object line}) => 'Biggest difference: ${line}.',
 			_ => null,
 		};
 	}

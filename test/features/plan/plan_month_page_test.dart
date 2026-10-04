@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
+import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
@@ -93,7 +95,12 @@ void main() {
     }
   });
 
-  Future<void> pump(WidgetTester tester, {double width = 400}) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    double width = 400,
+    MonthReviewRepository? reviews,
+    DateTime? today,
+  }) async {
     tester.view.physicalSize = Size(width, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -111,7 +118,8 @@ void main() {
       freelance: const _NoFreelance(),
       ledgerChanges: LedgerChanges(),
       recurringChanges: RecurringChanges(),
-      now: () => DateTime(2026, 10, 2, 9),
+      reviews: reviews,
+      now: () => today ?? DateTime(2026, 10, 2, 9),
     )..add(const PlanMonthLoaded());
     addTearDown(bloc.close);
     await tester.pumpWidget(
@@ -175,6 +183,63 @@ void main() {
     expect(find.text(t.plan.startOf(date: '1 Nov')), findsOneWidget);
     expect(find.text('≈Rp10.921.000'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  group('tinjau awal bulan (T-16.8, J4)', () {
+    late MonthReviewRepositoryImpl reviews;
+    setUp(() => reviews = MonthReviewRepositoryImpl(storage: storage));
+
+    Finder card() => find.byKey(const ValueKey('month-review-card'));
+
+    testWidgets('langkah perkiraan + kilas balik; Sesuai mencentang dan tersimpan', (tester) async {
+      await pump(tester, width: 360, reviews: reviews);
+      expect(card(), findsOneWidget);
+      expect(find.text('0/2'), findsOneWidget);
+      expect(find.text(t.plan.reviewEstimate(name: 'Listrik', amount: 'Rp200.000')), findsOneWidget);
+      await tester.tap(find.text(t.plan.reviewOk));
+      await tester.pumpAndSettle();
+      expect(find.text('1/2'), findsOneWidget);
+      final stored = (await reviews.load()).getOrElse((_) => null)!;
+      expect(stored.monthStart, DateTime(2026, 10));
+      expect(stored.doneSteps, {MonthReviewStep.estimates});
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('Nanti melipat jadi satu baris; Selesai meninjau menyembunyikan kartu', (tester) async {
+      await pump(tester, reviews: reviews);
+      await tester.tap(find.text(t.plan.reviewLater));
+      await tester.pumpAndSettle();
+      expect(card(), findsNothing);
+      expect(find.byKey(const ValueKey('month-review-collapsed')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('month-review-collapsed')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.plan.reviewDone));
+      await tester.pumpAndSettle();
+      expect(card(), findsNothing);
+      expect(find.byKey(const ValueKey('month-review-collapsed')), findsNothing);
+      expect((await reviews.load()).getOrElse((_) => null)!.completed, isTrue);
+    });
+
+    testWidgets('status bulan lalu tidak terbawa ke bulan baru', (tester) async {
+      await reviews.save(MonthReview(monthStart: DateTime(2026, 9), completed: true));
+      await pump(tester, reviews: reviews);
+      expect(card(), findsOneWidget);
+    });
+
+    testWidgets('lewat hari ke-7 kartu tidak tampil', (tester) async {
+      await pump(tester, reviews: reviews, today: DateTime(2026, 10, 8, 9));
+      expect(card(), findsNothing);
+    });
+
+    test('repositori menyimpan dan memuat ulang', () async {
+      final review = MonthReview(
+        monthStart: DateTime(2026, 10),
+        doneSteps: const {MonthReviewStep.budgets, MonthReviewStep.lookback},
+        dismissed: true,
+      );
+      await reviews.save(review);
+      expect((await MonthReviewRepositoryImpl(storage: storage).load()).getOrElse((_) => null), review);
+    });
   });
 
   test('nominal ringkas chip bulan', () {

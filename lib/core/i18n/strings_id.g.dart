@@ -3157,6 +3157,69 @@ class Translations$plan$id {
 
 	/// id: '+$n lainnya'
 	String fundingMore({required Object n}) => '+${n} lainnya';
+
+	/// id: '$month dimulai'
+	String reviewTitle({required Object month}) => '${month} dimulai';
+
+	/// id: '$done/$total'
+	String reviewProgress({required Object done, required Object total}) => '${done}/${total}';
+
+	/// id: 'Anggaran rutin bulan ini $amount, lahir sendiri.'
+	String reviewBudgets({required Object amount}) => 'Anggaran rutin bulan ini ${amount}, lahir sendiri.';
+
+	/// id: '$name ≈$amount, sesuai?'
+	String reviewEstimate({required Object name, required Object amount}) => '${name} ≈${amount}, sesuai?';
+
+	/// id: 'Kilas balik $month'
+	String reviewLookback({required Object month}) => 'Kilas balik ${month}';
+
+	/// id: 'Sesuai'
+	String get reviewOk => 'Sesuai';
+
+	/// id: 'Ubah'
+	String get reviewEdit => 'Ubah';
+
+	/// id: 'Ubah perkiraan'
+	String get reviewEditEstimate => 'Ubah perkiraan';
+
+	/// id: 'Lihat'
+	String get reviewSee => 'Lihat';
+
+	/// id: 'Selesai meninjau'
+	String get reviewDone => 'Selesai meninjau';
+
+	/// id: 'Nanti'
+	String get reviewLater => 'Nanti';
+
+	/// id: 'Tinjau rencana $month ($done/$total)'
+	String reviewCollapsed({required Object month, required Object done, required Object total}) => 'Tinjau rencana ${month} (${done}/${total})';
+
+	/// id: 'Rencana $month siap.'
+	String reviewDoneMessage({required Object month}) => 'Rencana ${month} siap.';
+
+	/// id: 'Pemasukan terjadwal $income, terikat $committed, nganggur $free.'
+	String homeReviewBody({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, terikat ${committed}, nganggur ${free}.';
+
+	/// id: 'Ada rutin bernominal kira-kira yang perlu dicek.'
+	String get homeReviewEstimates => 'Ada rutin bernominal kira-kira yang perlu dicek.';
+
+	/// id: 'Tinjau rencana'
+	String get homeReviewAction => 'Tinjau rencana';
+
+	/// id: 'Kilas balik $month'
+	String lookbackTitle({required Object month}) => 'Kilas balik ${month}';
+
+	/// id: 'Rencana'
+	String get lookbackPlanned => 'Rencana';
+
+	/// id: 'Nyata'
+	String get lookbackActual => 'Nyata';
+
+	/// id: 'Uang nganggur'
+	String get lookbackFree => 'Uang nganggur';
+
+	/// id: 'Selisih terbesar: $line.'
+	String lookbackBiggest({required Object line}) => 'Selisih terbesar: ${line}.';
 }
 
 // Path: record.draftIssue
@@ -4603,6 +4666,27 @@ extension on Translations {
 			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => 'Saldo ${wallet} diperkirakan kurang ≈${shortfall} saat ${name}, ${date}. Siapkan dana di ${wallet} sebelum tanggal itu.',
 			'plan.fundingAction' => ({required Object wallet}) => 'Lihat perkiraan ${wallet}',
 			'plan.fundingMore' => ({required Object n}) => '+${n} lainnya',
+			'plan.reviewTitle' => ({required Object month}) => '${month} dimulai',
+			'plan.reviewProgress' => ({required Object done, required Object total}) => '${done}/${total}',
+			'plan.reviewBudgets' => ({required Object amount}) => 'Anggaran rutin bulan ini ${amount}, lahir sendiri.',
+			'plan.reviewEstimate' => ({required Object name, required Object amount}) => '${name} ≈${amount}, sesuai?',
+			'plan.reviewLookback' => ({required Object month}) => 'Kilas balik ${month}',
+			'plan.reviewOk' => 'Sesuai',
+			'plan.reviewEdit' => 'Ubah',
+			'plan.reviewEditEstimate' => 'Ubah perkiraan',
+			'plan.reviewSee' => 'Lihat',
+			'plan.reviewDone' => 'Selesai meninjau',
+			'plan.reviewLater' => 'Nanti',
+			'plan.reviewCollapsed' => ({required Object month, required Object done, required Object total}) => 'Tinjau rencana ${month} (${done}/${total})',
+			'plan.reviewDoneMessage' => ({required Object month}) => 'Rencana ${month} siap.',
+			'plan.homeReviewBody' => ({required Object income, required Object committed, required Object free}) => 'Pemasukan terjadwal ${income}, terikat ${committed}, nganggur ${free}.',
+			'plan.homeReviewEstimates' => 'Ada rutin bernominal kira-kira yang perlu dicek.',
+			'plan.homeReviewAction' => 'Tinjau rencana',
+			'plan.lookbackTitle' => ({required Object month}) => 'Kilas balik ${month}',
+			'plan.lookbackPlanned' => 'Rencana',
+			'plan.lookbackActual' => 'Nyata',
+			'plan.lookbackFree' => 'Uang nganggur',
+			'plan.lookbackBiggest' => ({required Object line}) => 'Selisih terbesar: ${line}.',
 			_ => null,
 		};
 	}

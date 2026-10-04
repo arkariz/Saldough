@@ -89,6 +89,8 @@ List<(RecurringRule, DateTime)> dueAutoRecords(
       if (autoDebit && !o.date.isBefore(day)) continue;
       if (logged.contains((rule.id, o.date))) continue;
       if (matchCandidates(rule, o.date, transactions).isNotEmpty) continue;
+      // Harga naik dari notifikasi (W3) juga ragu: jangan menggandakan.
+      if (priceIncreaseCandidate(rule, o.date, transactions) != null) continue;
       due.add((rule, o.date));
     }
   }

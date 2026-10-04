@@ -64,6 +64,14 @@ void main() {
     );
     expect(due(kos(), transactions: [linked]), isEmpty);
     expect(due(kos(), logged: {('kos', DateTime(2026, 10, 5))}), isEmpty);
+    final raised = ExpenseTransaction(
+      id: 'r',
+      date: DateTime(2026, 10, 5),
+      amount: 210000000,
+      note: '',
+      walletId: 'bca',
+    );
+    expect(due(kos(), transactions: [raised]), isEmpty);
   });
 
   test('log: tambah, tandai dibatalkan, tetap ada supaya tidak dicatat lagi', () async {

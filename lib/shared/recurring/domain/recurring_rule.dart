@@ -158,6 +158,7 @@ final class RecurringRule extends Equatable {
     this.isPaused = false,
     this.budgetItemKey,
     this.snoozedUntil,
+    this.idleDismissedAt,
   }) : skippedDates = Set.unmodifiable(skippedDates.map(_dateOnly)),
        assert(amount > 0, 'Nominal rutin harus positif.'),
        assert(
@@ -226,6 +227,10 @@ final class RecurringRule extends Equatable {
   /// tanggal ini. Tanggal lampau tidak berpengaruh.
   final DateTime? snoozedUntil;
 
+  /// R3 (ADR-037 §3.1): "Biarkan" pada kartu rutin menganggur; kemunculan
+  /// sampai tanggal ini tidak dihitung lagi untuk W6.
+  final DateTime? idleDismissedAt;
+
   /// Cara bayar efektif; `null` dibaca manual.
   RecurringPaymentMode get effectivePaymentMode => paymentMode ?? RecurringPaymentMode.manual;
 
@@ -251,6 +256,7 @@ final class RecurringRule extends Equatable {
     bool? isPaused,
     String? budgetItemKey,
     DateTime? snoozedUntil,
+    DateTime? idleDismissedAt,
   }) {
     return RecurringRule(
       id: id,
@@ -271,6 +277,7 @@ final class RecurringRule extends Equatable {
       isPaused: isPaused ?? this.isPaused,
       budgetItemKey: budgetItemKey ?? this.budgetItemKey,
       snoozedUntil: snoozedUntil ?? this.snoozedUntil,
+      idleDismissedAt: idleDismissedAt ?? this.idleDismissedAt,
     );
   }
 
@@ -294,6 +301,7 @@ final class RecurringRule extends Equatable {
     isPaused: isPaused,
     budgetItemKey: key,
     snoozedUntil: snoozedUntil,
+    idleDismissedAt: idleDismissedAt,
   );
 
   @override
@@ -316,6 +324,7 @@ final class RecurringRule extends Equatable {
     isPaused,
     budgetItemKey,
     snoozedUntil,
+    idleDismissedAt,
   ];
 }
 

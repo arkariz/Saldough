@@ -1080,7 +1080,10 @@
     "installmentFreeLine": "From $month you free up +$amount/mo.",
     "unseenLabel": "Not seen in notifications yet",
     "notYetAction": "Not yet",
-    "snoozedMessage": "We'll ask about $name again in 2 days."
+    "snoozedMessage": "We'll ask about $name again in 2 days.",
+    "idleTitle": "Still using $name?",
+    "idleBody": "The last two were skipped or not seen.",
+    "idleKeep": "Keep"
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

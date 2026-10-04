@@ -247,3 +247,43 @@ const subscriptionCategoryIds = {'builtin.entertainment'};
   final perYear = subscriptions.fold(0, (sum, rule) => sum + perYearOf(rule));
   return (perMonth: perYear ~/ 12, perYear: perYear);
 }
+
+/// W6 rutin menganggur (ADR-037 §3.1): rutin aktif yang dua kemunculan
+/// terakhirnya yang sudah tiba (sejak [windowStart], dan sesudah
+/// `idleDismissedAt`) sama-sama dilewati atau belum terlihat (E3).
+List<RecurringRule> idleRules(
+  Iterable<RecurringRule> rules, {
+  required DateTime windowStart,
+  required DateTime today,
+  required Iterable<Transaction> transactions,
+}) {
+  final day = DateTime(today.year, today.month, today.day);
+  return [
+    for (final rule in rules)
+      if (!rule.isPaused && !(lastOccurrence(rule)?.isBefore(day) ?? false))
+        if (_isIdle(rule, windowStart: windowStart, today: day, transactions: transactions)) rule,
+  ];
+}
+
+bool _isIdle(
+  RecurringRule rule, {
+  required DateTime windowStart,
+  required DateTime today,
+  required Iterable<Transaction> transactions,
+}) {
+  final dismissed = rule.idleDismissedAt;
+  final from = dismissed != null && !dismissed.isBefore(windowStart)
+      ? DateTime(dismissed.year, dismissed.month, dismissed.day + 1)
+      : windowStart;
+  final arrived = occurrenceStatusesOf(
+    rule,
+    from: from,
+    until: DateTime(today.year, today.month, today.day + 1),
+    today: today,
+    transactions: transactions,
+  );
+  if (arrived.length < 2) return false;
+  return arrived
+      .skip(arrived.length - 2)
+      .every((o) => o.status == OccurrenceStatus.skipped || isUnseen(o, today: today));
+}

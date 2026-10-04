@@ -148,6 +148,17 @@ class RecurringSegmentView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
+              // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
+              if (idleRules(
+                    state.rules,
+                    windowStart: DateTime(state.today.year, state.today.month - 1),
+                    today: state.today,
+                    transactions: state.transactions,
+                  ).firstOrNull
+                  case final idle?) ...[
+                _IdleCard(rule: idle),
+                const SizedBox(height: AppSpacing.md),
+              ],
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -255,6 +266,43 @@ class _FoldedGroupState extends State<_FoldedGroup> {
         ),
         if (_open) ...widget.children,
       ],
+    );
+  }
+}
+
+/// Kartu "Masih memakai Spotify?" (W6): Biarkan / Jeda / Akhiri.
+class _IdleCard extends StatelessWidget {
+  const _IdleCard({required this.rule});
+
+  final RecurringRule rule;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<RecurringBloc>();
+    final textTheme = Theme.of(context).textTheme;
+    final name = rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note;
+    return AppHardCard(
+      key: ValueKey('recurring-idle-${rule.id}'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.recurring.idleTitle(name: name), style: textTheme.titleSmall),
+          const SizedBox(height: AppSpacing.xs),
+          Text(t.recurring.idleBody, style: textTheme.bodySmall?.copyWith(color: context.appColors.textMuted)),
+          Wrap(
+            alignment: WrapAlignment.end,
+            spacing: AppSpacing.xs,
+            children: [
+              TextButton(onPressed: () => bloc.add(RecurringIdleDismissed(rule.id)), child: Text(t.recurring.idleKeep)),
+              TextButton(
+                onPressed: () => bloc.add(RecurringPauseToggled(rule.id)),
+                child: Text(t.recurring.pauseAction),
+              ),
+              TextButton(onPressed: () => bloc.add(RecurringEnded(rule.id)), child: Text(t.recurring.endAction)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

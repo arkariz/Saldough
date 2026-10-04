@@ -149,6 +149,15 @@ final class RecurringOccurrenceSnoozed extends RecurringEvent {
   final String ruleId;
 }
 
+/// "Biarkan" pada kartu rutin menganggur (W6, ADR-037 §3.1).
+final class RecurringIdleDismissed extends RecurringEvent {
+  /// Membuat [RecurringIdleDismissed].
+  const RecurringIdleDismissed(this.ruleId);
+
+  /// Rutinnya.
+  final String ruleId;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

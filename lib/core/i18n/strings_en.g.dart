@@ -1163,6 +1163,9 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get unseenLabel => 'Not seen in notifications yet';
 	@override String get notYetAction => 'Not yet';
 	@override String snoozedMessage({required Object name}) => 'We\'ll ask about ${name} again in 2 days.';
+	@override String idleTitle({required Object name}) => 'Still using ${name}?';
+	@override String get idleBody => 'The last two were skipped or not seen.';
+	@override String get idleKeep => 'Keep';
 }
 
 // Path: plan
@@ -2456,6 +2459,9 @@ extension on TranslationsEn {
 			'recurring.unseenLabel' => 'Not seen in notifications yet',
 			'recurring.notYetAction' => 'Not yet',
 			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
+			'recurring.idleTitle' => ({required Object name}) => 'Still using ${name}?',
+			'recurring.idleBody' => 'The last two were skipped or not seen.',
+			'recurring.idleKeep' => 'Keep',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

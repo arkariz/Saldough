@@ -69,6 +69,16 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
       );
     });
+    on<RecurringIdleDismissed>((event, emit) async {
+      final rule = state.ruleOf(event.ruleId);
+      if (rule == null) return;
+      final today = state.today;
+      await _write(
+        rule.copyWith(idleDismissedAt: DateTime(today.year, today.month, today.day)),
+        emit,
+        null,
+      );
+    });
     on<RecurringOccurrenceSnoozed>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
       if (rule == null) return;

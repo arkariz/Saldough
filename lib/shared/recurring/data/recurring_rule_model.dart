@@ -46,6 +46,10 @@ abstract final class RecurringRuleModel {
         final String date => DateTime.parse(date),
         _ => null,
       },
+      idleDismissedAt: switch (json['idleDismissedAt']) {
+        final String date => DateTime.parse(date),
+        _ => null,
+      },
     );
   }
 
@@ -78,6 +82,10 @@ abstract final class RecurringRuleModel {
     'isPaused': rule.isPaused,
     'budgetItemKey': rule.budgetItemKey,
     'snoozedUntil': switch (rule.snoozedUntil) {
+      final date? => _day(date),
+      null => null,
+    },
+    'idleDismissedAt': switch (rule.idleDismissedAt) {
       final date? => _day(date),
       null => null,
     },

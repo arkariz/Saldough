@@ -254,5 +254,27 @@ void main() {
       expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsNothing);
       expect(find.text(t.recurring.editFirstAction), findsOneWidget);
     });
+
+    testWidgets('W6: dua kali dilewati memunculkan kartu Masih memakai; Biarkan menyembunyikannya (T-17.3)', (
+      tester,
+    ) async {
+      await rules.saveRule(
+        RecurringRule(
+          id: 'Spotify',
+          kind: RecurringKind.expense,
+          amount: 5499000,
+          walletId: 'bca',
+          note: 'Spotify',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9)),
+          skippedDates: {DateTime(2026, 9), DateTime(2026, 10)},
+        ),
+      );
+      await pump(tester, const RecurringSegmentView());
+      expect(find.byKey(const ValueKey('recurring-idle-Spotify')), findsOneWidget);
+      await tester.tap(find.text(t.recurring.idleKeep));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('recurring-idle-Spotify')), findsNothing);
+      expect(read(await rules.listRules()).single.idleDismissedAt, DateTime(2026, 10, 2));
+    });
   });
 }

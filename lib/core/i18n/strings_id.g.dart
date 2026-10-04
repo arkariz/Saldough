@@ -3004,6 +3004,15 @@ class Translations$recurring$id {
 
 	/// id: '$name ditanyakan lagi 2 hari lagi.'
 	String snoozedMessage({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.';
+
+	/// id: 'Masih memakai $name?'
+	String idleTitle({required Object name}) => 'Masih memakai ${name}?';
+
+	/// id: 'Dua kemunculan terakhir dilewati atau belum terlihat.'
+	String get idleBody => 'Dua kemunculan terakhir dilewati atau belum terlihat.';
+
+	/// id: 'Biarkan'
+	String get idleKeep => 'Biarkan';
 }
 
 // Path: plan
@@ -4648,6 +4657,9 @@ extension on Translations {
 			'recurring.unseenLabel' => 'Belum terlihat di notifikasi',
 			'recurring.notYetAction' => 'Belum terjadi',
 			'recurring.snoozedMessage' => ({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.',
+			'recurring.idleTitle' => ({required Object name}) => 'Masih memakai ${name}?',
+			'recurring.idleBody' => 'Dua kemunculan terakhir dilewati atau belum terlihat.',
+			'recurring.idleKeep' => 'Biarkan',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

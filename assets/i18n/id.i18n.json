@@ -1080,7 +1080,10 @@
     "installmentFreeLine": "Mulai $month ruang bebas +$amount/bln.",
     "unseenLabel": "Belum terlihat di notifikasi",
     "notYetAction": "Belum terjadi",
-    "snoozedMessage": "$name ditanyakan lagi 2 hari lagi."
+    "snoozedMessage": "$name ditanyakan lagi 2 hari lagi.",
+    "idleTitle": "Masih memakai $name?",
+    "idleBody": "Dua kemunculan terakhir dilewati atau belum terlihat.",
+    "idleKeep": "Biarkan"
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

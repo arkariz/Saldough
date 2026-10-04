@@ -149,4 +149,41 @@ void main() {
     expect(totals?.perYear, 6500000 * 12 + 5499000 * 12 + 15900000);
     expect(totals?.perMonth, (6500000 * 12 + 5499000 * 12 + 15900000) ~/ 12);
   });
+
+  group('W6 idleRules (T-17.3)', () {
+    final now = DateTime(2026, 10, 5);
+    RecurringRule spotify({Set<DateTime> skipped = const {}, DateTime? dismissed, bool paused = false}) =>
+        RecurringRule(
+          id: 'spotify',
+          kind: RecurringKind.expense,
+          amount: 5499000,
+          walletId: 'bca',
+          note: 'Spotify',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 7)),
+          skippedDates: skipped,
+          idleDismissedAt: dismissed,
+          isPaused: paused,
+        );
+    List<RecurringRule> idle(RecurringRule rule) =>
+        idleRules([rule], windowStart: DateTime(2026, 9), today: now, transactions: const []);
+
+    test('dua kemunculan terakhir dilewati: menganggur', () {
+      expect(idle(spotify(skipped: {DateTime(2026, 9), DateTime(2026, 10)})), hasLength(1));
+    });
+
+    test('hanya satu dilewati, dijeda, atau sudah Biarkan: tidak', () {
+      expect(idle(spotify(skipped: {DateTime(2026, 10)})), isEmpty);
+      expect(idle(spotify(skipped: {DateTime(2026, 9), DateTime(2026, 10)}, paused: true)), isEmpty);
+      expect(
+        idle(spotify(skipped: {DateTime(2026, 9), DateTime(2026, 10)}, dismissed: DateTime(2026, 10, 2))),
+        isEmpty,
+      );
+    });
+
+    test('autodebet belum terlihat dua kali: menganggur', () {
+      final debit = spotify().copyWith(paymentMode: RecurringPaymentMode.autoDebit);
+      expect(idle(debit), hasLength(1));
+      expect(idle(spotify()), isEmpty);
+    });
+  });
 }

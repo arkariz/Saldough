@@ -4,8 +4,8 @@ import 'dart:async';
 /// baru saja ditulis, jadi layar yang menampilkannya perlu memuat ulang.
 ///
 /// Dipancarkan **sekali per unit kerja, sesudah semua dokumennya tertulis**
-/// -- oleh `RecordTransaction` dan `WalletBloc`, tidak pernah oleh
-/// repository. Transaksi ditulis lebih dulu dan saldo dompet menyusul
+/// -- oleh `RecordTransaction`, `WalletBloc`, dan kelahiran anggaran rutin
+/// (`RecurringBudgetHost`, ADR-036 §3.2), tidak pernah oleh repository. Transaksi ditulis lebih dulu dan saldo dompet menyusul
 /// (ADR-012); memancar di antaranya membuat pelanggan memuat saldo lama.
 ///
 /// Tiap kejadian membawa **sumbernya** (`null` kalau tidak disebut). Bloc

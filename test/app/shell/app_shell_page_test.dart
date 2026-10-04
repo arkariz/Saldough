@@ -13,7 +13,9 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/budget/data/repositories/budget_repository_impl.dart';
+import 'package:saldough/features/budget/data/repositories/budget_template_repository_impl.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -47,6 +49,7 @@ void main() {
       ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
       ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
       ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerLazySingleton<BudgetTemplateRepository>(() => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
       ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
       ..registerLazySingleton<WalletRepository>(() => walletRepository)
@@ -392,6 +395,7 @@ void main() {
         ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
         ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
         ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
+        ..registerLazySingleton<BudgetTemplateRepository>(() => BudgetTemplateRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
         ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
         ..registerLazySingleton<WalletRepository>(failingWalletRepository)

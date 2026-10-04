@@ -52,10 +52,13 @@ final class BudgetSchedule extends Equatable {
     final day = DateTime(date.year, date.month, date.day);
     if (day.isBefore(_anchor)) return null;
     var n = switch (period) {
-      BudgetPeriod.weekly => DateTime.utc(day.year, day.month, day.day)
-              .difference(DateTime.utc(_anchor.year, _anchor.month, _anchor.day))
-              .inDays ~/
-          7,
+      BudgetPeriod.weekly =>
+        DateTime.utc(
+              day.year,
+              day.month,
+              day.day,
+            ).difference(DateTime.utc(_anchor.year, _anchor.month, _anchor.day)).inDays ~/
+            7,
       BudgetPeriod.monthly => (day.year - _anchor.year) * 12 + day.month - _anchor.month,
     };
     if (startOf(n).isAfter(day)) n--;

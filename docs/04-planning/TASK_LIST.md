@@ -2588,7 +2588,7 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       Memenuhi FR-BUD-008.
       Selesai 4 Okt 2026: bulanan hanya tanggal 1–28 (`canRepeat`), jadi tanpa
       `anchorDay` dan tanpa penjepitan; skema anggaran 3, template 2.
-- [ ] **T-16.2** Kelahiran periode (§3.2): `dueBirths` murni + use case
+- [x] **T-16.2** Kelahiran periode (§3.2): `dueBirths` murni + use case
       yang menyimpan; host di shell menjalankannya saat dibuka dan saat
       `ActiveDay` berganti; daftar anggaran segar.
       ⚠ Hanya periode berjalan, tanpa periode terlewat; tidak menyentuh
@@ -2596,6 +2596,9 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       Verifikasi: uji idempoten (invarian 18), lewat dua periode tanpa
       dibuka → hanya yang berjalan, sebelum `anchorDate` → tidak lahir.
       Memenuhi FR-BUD-008.
+      Selesai 4 Okt 2026: `dueBirths` dan `BirthRecurringBudgets`;
+      `RecurringBudgetHost` di shell memancarkan `LedgerChanges` bila ada
+      yang lahir.
 - [ ] **T-16.3** Sakelar **Ulangi tiap periode** di formulir anggaran
       (RECURRING_AND_FORECAST §8.6): menyalakan membuat template berjadwal
       dan mengisi `templateId`/`templateItemId`; kalimat "Lahir lagi tiap

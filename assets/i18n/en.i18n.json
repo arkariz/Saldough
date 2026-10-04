@@ -420,7 +420,18 @@
     "templateDuplicatedMessage": "Template duplicated.",
     "templateCopyName": "$name (copy)",
     "fromTemplateStepLabel": "From template $name",
-    "templateNameLabel": "Template name"
+    "templateNameLabel": "Template name",
+    "repeatLabel": "Repeat every period",
+    "repeatHelpMonthly": "Starts again every month from $date with the same items.",
+    "repeatHelpWeekly": "Starts again every week from $date with the same items.",
+    "repeatUnavailable": "Monthly budgets can repeat when they start on the 1st–28th.",
+    "repeatPastNote": "This period has ended. Changes here don't affect later periods.",
+    "scopeTitle": "Apply to",
+    "scopeThisPeriod": "This period only",
+    "scopeThisAndNext": "This and later periods",
+    "recurringBadge": "Repeats",
+    "templateScheduledMonthly": "Repeats monthly · $wallet",
+    "templateScheduledWeekly": "Repeats weekly · $wallet"
   },
   "freelance": {
     "title": "Freelance",
@@ -711,7 +722,9 @@
     "recurringPendingTitle": "Waiting to record",
     "recurringPendingBody": "Occurrences that are due. Record in one tap, edit first, or Skip this one.",
     "recurringAddTitle": "Add recurring",
-    "recurringAddBody": "You can also use Repeat in RECORD, or Make Recurring in a transaction's details."
+    "recurringAddBody": "You can also use Repeat in RECORD, or Make Recurring in a transaction's details.",
+    "budgetRepeatTitle": "Repeat every period",
+    "budgetRepeatBody": "Turn on to start this budget again every month with the same items. No money is moved."
   },
   "info": {
     "menuTooltip": "Info and tours",

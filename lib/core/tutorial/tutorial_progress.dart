@@ -28,6 +28,9 @@ enum TourId {
   /// Rincian anggaran.
   budgetDetail,
 
+  /// Formulir anggaran (ADR-036).
+  budgetForm,
+
   /// Ikhtisar Freelance.
   freelance,
 
@@ -79,6 +82,7 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     SpotlightKey.budgetTemplates,
   ],
   TourId.budgetDetail: [SpotlightKey.budgetDetailItem, SpotlightKey.budgetDetailRecord],
+  TourId.budgetForm: [SpotlightKey.budgetRepeat],
   TourId.freelance: [SpotlightKey.freelanceProject],
   TourId.freelanceProject: [SpotlightKey.freelanceWorklog, SpotlightKey.freelanceReceive],
 };

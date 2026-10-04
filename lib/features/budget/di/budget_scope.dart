@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -20,6 +21,10 @@ final class BudgetScope extends IsolatedScope {
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
+    // Anggaran rutin (ADR-036); sebagian uji tidak menyediakan template.
+    if (parent.isRegistered<BudgetTemplateRepository>()) {
+      c.registerSingleton<BudgetTemplateRepository>(parent<BudgetTemplateRepository>());
+    }
   }
 
   @override
@@ -28,6 +33,7 @@ final class BudgetScope extends IsolatedScope {
       () => BudgetBloc(
         ledgerChanges: c<LedgerChanges>(),
         budgetRepository: c<BudgetRepository>(),
+        templateRepository: c.isRegistered<BudgetTemplateRepository>() ? c<BudgetTemplateRepository>() : null,
         walletRepository: c<WalletRepository>(),
         transactionRepository: c<TransactionRepository>(),
       ),

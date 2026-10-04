@@ -21,6 +21,7 @@ Future<void> addBudget(BuildContext context) async {
     :final period,
     :final startDate,
     :final items,
+    :final repeat,
   )) {
     bloc.add(
       BudgetAdded(
@@ -29,6 +30,7 @@ Future<void> addBudget(BuildContext context) async {
         period: period,
         startDate: startDate,
         items: items,
+        repeat: repeat ?? false,
       ),
     );
   }
@@ -62,8 +64,18 @@ Future<bool> useBudgetTemplate(BuildContext context, BudgetTemplate template) as
     :final period,
     :final startDate,
     :final items,
+    :final repeat,
   )) {
-    bloc.add(BudgetAdded(name: name, walletId: walletId, period: period, startDate: startDate, items: items));
+    bloc.add(
+      BudgetAdded(
+        name: name,
+        walletId: walletId,
+        period: period,
+        startDate: startDate,
+        items: items,
+        repeat: repeat ?? false,
+      ),
+    );
     return true;
   }
   return false;
@@ -86,6 +98,7 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
       initial: budget,
       allWallets: bloc.state.wallets,
       lockedItemIds: bloc.state.lockedItemIds(budget),
+      repeatInitially: bloc.state.isRecurring(budget),
     ),
   );
   switch (result) {
@@ -94,17 +107,15 @@ Future<BudgetFormResult?> editBudget(BuildContext context, Budget budget) async 
       :final walletId,
       :final period,
       :final startDate,
-        :final items,
+      :final items,
+      :final repeat,
+      :final scope,
     ):
       bloc.add(
         BudgetEdited(
-          budget.copyWith(
-            name: name,
-            walletId: walletId,
-            period: period,
-            startDate: startDate,
-                items: items,
-          ),
+          budget.copyWith(name: name, walletId: walletId, period: period, startDate: startDate, items: items),
+          repeat: repeat,
+          scope: scope,
         ),
       );
     case BudgetFormArchiveToggled():

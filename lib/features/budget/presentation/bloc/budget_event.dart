@@ -30,6 +30,7 @@ final class BudgetAdded extends BudgetEvent {
     required this.period,
     required this.startDate,
     required this.items,
+    this.repeat = false,
   });
 
   /// Nama anggaran.
@@ -46,15 +47,25 @@ final class BudgetAdded extends BudgetEvent {
 
   /// Pos-pos; nominal rencana anggaran adalah jumlahnya (ADR-017).
   final List<BudgetItem> items;
+
+  /// Sakelar **Ulangi tiap periode** (ADR-036 §3.1).
+  final bool repeat;
 }
 
 /// Menimpa anggaran yang sudah ada dengan [budget] (FR-BUD-001/002).
 final class BudgetEdited extends BudgetEvent {
   /// Membuat [BudgetEdited].
-  const BudgetEdited(this.budget);
+  const BudgetEdited(this.budget, {this.repeat, this.scope = BudgetEditScope.thisPeriod});
 
   /// Anggaran hasil sunting, `id` sama dengan aslinya.
   final Budget budget;
+
+  /// Sakelar Ulangi sesudah disunting; `null` = tidak disentuh (anggaran
+  /// periode lalu, ADR-036 §3.3).
+  final bool? repeat;
+
+  /// Lingkup perubahan anggaran rutin (ADR-036 §3.3).
+  final BudgetEditScope scope;
 }
 
 /// Mengarsipkan atau mengaktifkan kembali [budget] (FR-BUD-001). Transaksi

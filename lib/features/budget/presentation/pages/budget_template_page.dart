@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/di/budget_template_scope.dart';
+import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_template_bloc.dart';
@@ -138,6 +139,10 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                     for (final template in state.templates) ...[
                       _TemplateCard(
                         template: template,
+                        walletName: state.wallets
+                            .where((w) => w.id == template.schedule?.walletId)
+                            .firstOrNull
+                            ?.name,
                         canUse: canUse,
                         onUse: () => _use(template),
                         onEdit: () => _edit(template),
@@ -176,6 +181,7 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
 class _TemplateCard extends StatelessWidget {
   const _TemplateCard({
     required this.template,
+    required this.walletName,
     required this.canUse,
     required this.onUse,
     required this.onEdit,
@@ -183,6 +189,9 @@ class _TemplateCard extends StatelessWidget {
   });
 
   final BudgetTemplate template;
+
+  /// Dompet jadwal anggaran rutin (ADR-036), bila berjadwal.
+  final String? walletName;
   final bool canUse;
   final VoidCallback onUse;
   final VoidCallback onEdit;
@@ -207,6 +216,14 @@ class _TemplateCard extends StatelessWidget {
               children: [
                 BudgetBadge(label: t.budget.templateItemCount(count: template.items.length)),
                 if (!enabled) BudgetBadge(label: t.budget.templateInactiveBadge, color: colors.pending),
+                if (template.schedule case final schedule? when schedule.isActive)
+                  BudgetBadge(
+                    label: switch (schedule.period) {
+                      BudgetPeriod.monthly => t.budget.templateScheduledMonthly(wallet: walletName ?? '—'),
+                      BudgetPeriod.weekly => t.budget.templateScheduledWeekly(wallet: walletName ?? '—'),
+                    },
+                    color: colors.accent,
+                  ),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),

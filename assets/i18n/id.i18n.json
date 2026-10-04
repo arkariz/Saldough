@@ -420,7 +420,18 @@
     "templateDuplicatedMessage": "Template digandakan.",
     "templateCopyName": "$name (salinan)",
     "fromTemplateStepLabel": "Dari template $name",
-    "templateNameLabel": "Nama template"
+    "templateNameLabel": "Nama template",
+    "repeatLabel": "Ulangi tiap periode",
+    "repeatHelpMonthly": "Lahir lagi tiap bulan mulai $date dengan pos yang sama.",
+    "repeatHelpWeekly": "Lahir lagi tiap minggu mulai $date dengan pos yang sama.",
+    "repeatUnavailable": "Anggaran bulanan bisa diulang bila mulai tanggal 1–28.",
+    "repeatPastNote": "Periode ini sudah lewat. Perubahannya tidak memengaruhi periode berikutnya.",
+    "scopeTitle": "Berlaku untuk",
+    "scopeThisPeriod": "Hanya periode ini",
+    "scopeThisAndNext": "Periode ini dan berikutnya",
+    "recurringBadge": "Rutin",
+    "templateScheduledMonthly": "Ulangi tiap bulan · $wallet",
+    "templateScheduledWeekly": "Ulangi tiap minggu · $wallet"
   },
   "freelance": {
     "title": "Freelance",
@@ -711,7 +722,9 @@
     "recurringPendingTitle": "Menunggu dicatat",
     "recurringPendingBody": "Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.",
     "recurringAddTitle": "Tambah rutin",
-    "recurringAddBody": "Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi."
+    "recurringAddBody": "Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.",
+    "budgetRepeatTitle": "Ulangi tiap periode",
+    "budgetRepeatBody": "Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan."
   },
   "info": {
     "menuTooltip": "Info dan tur",

@@ -1135,6 +1135,39 @@ class Translations$budget$id {
 
 	/// id: 'Nama template'
 	String get templateNameLabel => 'Nama template';
+
+	/// id: 'Ulangi tiap periode'
+	String get repeatLabel => 'Ulangi tiap periode';
+
+	/// id: 'Lahir lagi tiap bulan mulai $date dengan pos yang sama.'
+	String repeatHelpMonthly({required Object date}) => 'Lahir lagi tiap bulan mulai ${date} dengan pos yang sama.';
+
+	/// id: 'Lahir lagi tiap minggu mulai $date dengan pos yang sama.'
+	String repeatHelpWeekly({required Object date}) => 'Lahir lagi tiap minggu mulai ${date} dengan pos yang sama.';
+
+	/// id: 'Anggaran bulanan bisa diulang bila mulai tanggal 1–28.'
+	String get repeatUnavailable => 'Anggaran bulanan bisa diulang bila mulai tanggal 1–28.';
+
+	/// id: 'Periode ini sudah lewat. Perubahannya tidak memengaruhi periode berikutnya.'
+	String get repeatPastNote => 'Periode ini sudah lewat. Perubahannya tidak memengaruhi periode berikutnya.';
+
+	/// id: 'Berlaku untuk'
+	String get scopeTitle => 'Berlaku untuk';
+
+	/// id: 'Hanya periode ini'
+	String get scopeThisPeriod => 'Hanya periode ini';
+
+	/// id: 'Periode ini dan berikutnya'
+	String get scopeThisAndNext => 'Periode ini dan berikutnya';
+
+	/// id: 'Rutin'
+	String get recurringBadge => 'Rutin';
+
+	/// id: 'Ulangi tiap bulan · $wallet'
+	String templateScheduledMonthly({required Object wallet}) => 'Ulangi tiap bulan · ${wallet}';
+
+	/// id: 'Ulangi tiap minggu · $wallet'
+	String templateScheduledWeekly({required Object wallet}) => 'Ulangi tiap minggu · ${wallet}';
 }
 
 // Path: freelance
@@ -2020,6 +2053,12 @@ class Translations$tour$id {
 
 	/// id: 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.'
 	String get recurringAddBody => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.';
+
+	/// id: 'Ulangi tiap periode'
+	String get budgetRepeatTitle => 'Ulangi tiap periode';
+
+	/// id: 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.'
+	String get budgetRepeatBody => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.';
 }
 
 // Path: info
@@ -3819,6 +3858,17 @@ extension on Translations {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
 			'budget.fromTemplateStepLabel' => ({required Object name}) => 'Dari template ${name}',
 			'budget.templateNameLabel' => 'Nama template',
+			'budget.repeatLabel' => 'Ulangi tiap periode',
+			'budget.repeatHelpMonthly' => ({required Object date}) => 'Lahir lagi tiap bulan mulai ${date} dengan pos yang sama.',
+			'budget.repeatHelpWeekly' => ({required Object date}) => 'Lahir lagi tiap minggu mulai ${date} dengan pos yang sama.',
+			'budget.repeatUnavailable' => 'Anggaran bulanan bisa diulang bila mulai tanggal 1–28.',
+			'budget.repeatPastNote' => 'Periode ini sudah lewat. Perubahannya tidak memengaruhi periode berikutnya.',
+			'budget.scopeTitle' => 'Berlaku untuk',
+			'budget.scopeThisPeriod' => 'Hanya periode ini',
+			'budget.scopeThisAndNext' => 'Periode ini dan berikutnya',
+			'budget.recurringBadge' => 'Rutin',
+			'budget.templateScheduledMonthly' => ({required Object wallet}) => 'Ulangi tiap bulan · ${wallet}',
+			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Ulangi tiap minggu · ${wallet}',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Pembayaran (${count})',
@@ -3919,6 +3969,8 @@ extension on Translations {
 			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
 			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
 			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
 			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
 			'freelance.receiveRuleTitle' => 'Honor sudah masuk',
@@ -3930,8 +3982,6 @@ extension on Translations {
 			'freelance.receiveAction' => 'Catat Diterima',
 			'freelance.paymentReceivedMessage' => 'Pembayaran dicatat diterima. Saldo dompet bertambah.',
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
 			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
@@ -4104,6 +4154,8 @@ extension on Translations {
 			'tour.recurringPendingBody' => 'Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.',
 			'tour.recurringAddTitle' => 'Tambah rutin',
 			'tour.recurringAddBody' => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.',
+			'tour.budgetRepeatTitle' => 'Ulangi tiap periode',
+			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4431,6 +4483,8 @@ extension on Translations {
 			'plan.billsRow' => 'Tagihan rutin',
 			'plan.budgetRow' => 'Anggaran',
 			'plan.offPlanRow' => 'Di luar rencana',
+			_ => null,
+		} ?? switch (path) {
 			'plan.infoAction' => 'Penjelasan',
 			'plan.infoTitle' => 'Uang nganggur',
 			'plan.infoIncome' => '+ Pemasukan terencana',
@@ -4444,8 +4498,6 @@ extension on Translations {
 			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Paling tipis · ${date}',
 			'plan.detailsAction' => 'Rincian',
-			_ => null,
-		} ?? switch (path) {
 			'plan.todayLabel' => 'hari ini',
 			'plan.approx' => ({required Object amount}) => 'kira-kira ${amount}',
 			'plan.detailsTitle' => 'Perkiraan saldo',

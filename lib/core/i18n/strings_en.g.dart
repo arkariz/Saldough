@@ -460,6 +460,17 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String templateCopyName({required Object name}) => '${name} (copy)';
 	@override String fromTemplateStepLabel({required Object name}) => 'From template ${name}';
 	@override String get templateNameLabel => 'Template name';
+	@override String get repeatLabel => 'Repeat every period';
+	@override String repeatHelpMonthly({required Object date}) => 'Starts again every month from ${date} with the same items.';
+	@override String repeatHelpWeekly({required Object date}) => 'Starts again every week from ${date} with the same items.';
+	@override String get repeatUnavailable => 'Monthly budgets can repeat when they start on the 1st–28th.';
+	@override String get repeatPastNote => 'This period has ended. Changes here don\'t affect later periods.';
+	@override String get scopeTitle => 'Apply to';
+	@override String get scopeThisPeriod => 'This period only';
+	@override String get scopeThisAndNext => 'This and later periods';
+	@override String get recurringBadge => 'Repeats';
+	@override String templateScheduledMonthly({required Object wallet}) => 'Repeats monthly · ${wallet}';
+	@override String templateScheduledWeekly({required Object wallet}) => 'Repeats weekly · ${wallet}';
 }
 
 // Path: freelance
@@ -779,6 +790,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.';
 	@override String get recurringAddTitle => 'Add recurring';
 	@override String get recurringAddBody => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.';
+	@override String get budgetRepeatTitle => 'Repeat every period';
+	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
 }
 
 // Path: info
@@ -1757,6 +1770,17 @@ extension on TranslationsEn {
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
 			'budget.fromTemplateStepLabel' => ({required Object name}) => 'From template ${name}',
 			'budget.templateNameLabel' => 'Template name',
+			'budget.repeatLabel' => 'Repeat every period',
+			'budget.repeatHelpMonthly' => ({required Object date}) => 'Starts again every month from ${date} with the same items.',
+			'budget.repeatHelpWeekly' => ({required Object date}) => 'Starts again every week from ${date} with the same items.',
+			'budget.repeatUnavailable' => 'Monthly budgets can repeat when they start on the 1st–28th.',
+			'budget.repeatPastNote' => 'This period has ended. Changes here don\'t affect later periods.',
+			'budget.scopeTitle' => 'Apply to',
+			'budget.scopeThisPeriod' => 'This period only',
+			'budget.scopeThisAndNext' => 'This and later periods',
+			'budget.recurringBadge' => 'Repeats',
+			'budget.templateScheduledMonthly' => ({required Object wallet}) => 'Repeats monthly · ${wallet}',
+			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Repeats weekly · ${wallet}',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Payments (${count})',
@@ -1857,6 +1881,8 @@ extension on TranslationsEn {
 			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
 			'freelance.paymentCreatedMessage' => 'Payment created.',
 			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentDeletedMessage' => 'Payment deleted.',
 			'freelance.receiveTitle' => 'Record Payment Received',
 			'freelance.receiveRuleTitle' => 'Payment received',
@@ -1868,8 +1894,6 @@ extension on TranslationsEn {
 			'freelance.receiveAction' => 'Record Received',
 			'freelance.paymentReceivedMessage' => 'Payment recorded as received. Wallet balance increased.',
 			'freelance.receiptCancelAction' => 'Cancel receipt',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
 			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
 			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
@@ -2042,6 +2066,8 @@ extension on TranslationsEn {
 			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.',
 			'tour.recurringAddTitle' => 'Add recurring',
 			'tour.recurringAddBody' => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.',
+			'tour.budgetRepeatTitle' => 'Repeat every period',
+			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2369,6 +2395,8 @@ extension on TranslationsEn {
 			'plan.billsRow' => 'Recurring bills',
 			'plan.budgetRow' => 'Budgets',
 			'plan.offPlanRow' => 'Off plan',
+			_ => null,
+		} ?? switch (path) {
 			'plan.infoAction' => 'Explanation',
 			'plan.infoTitle' => 'Unplanned money',
 			'plan.infoIncome' => '+ Planned income',
@@ -2382,8 +2410,6 @@ extension on TranslationsEn {
 			'plan.endOf' => ({required Object date}) => 'End of ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
 			'plan.detailsAction' => 'Details',
-			_ => null,
-		} ?? switch (path) {
 			'plan.todayLabel' => 'today',
 			'plan.approx' => ({required Object amount}) => 'about ${amount}',
 			'plan.detailsTitle' => 'Balance forecast',

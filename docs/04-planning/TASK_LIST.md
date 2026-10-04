@@ -2599,7 +2599,7 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       Selesai 4 Okt 2026: `dueBirths` dan `BirthRecurringBudgets`;
       `RecurringBudgetHost` di shell memancarkan `LedgerChanges` bila ada
       yang lahir.
-- [ ] **T-16.3** Sakelar **Ulangi tiap periode** di formulir anggaran
+- [x] **T-16.3** Sakelar **Ulangi tiap periode** di formulir anggaran
       (RECURRING_AND_FORECAST §8.6): menyalakan membuat template berjadwal
       dan mengisi `templateId`/`templateItemId`; kalimat "Lahir lagi tiap
       bulan mulai 1 Nov dengan pos yang sama"; tanggal awal bawaan bulanan
@@ -2608,11 +2608,18 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       Verifikasi: uji bloc formulir (nyala → template + tautan), uji widget
       kalimat dan 360dp.
       Memenuhi FR-BUD-008.
-- [ ] **T-16.4** Dialog lingkup saat menyunting anggaran rutin (§3.3): tabel
+      Selesai 4 Okt 2026 bersama T-16.4 (satu jalur simpan,
+      `planRecurringBudgetSave`). Sekalian: baris tanggal awal formulir
+      meluap 45 px di 360dp sejak sebelum R2, kini membungkus.
+- [x] **T-16.4** Dialog lingkup saat menyunting anggaran rutin (§3.3): tabel
       bawaan per perubahan, periode lalu tanpa dialog, matikan Ulangi,
       hapus template berjadwal.
       Verifikasi: uji use case per baris tabel, uji invarian 19.
       Memenuhi FR-BUD-008.
+      Selesai 4 Okt 2026: satu dialog per simpan; bawaannya "periode ini dan
+      berikutnya" bila nama, dompet, atau pos bertemplate berubah, selain itu
+      "hanya periode ini". "Berikutnya" = template disamakan dengan anggaran
+      ini. Hapus template berjadwal memakai hapus template yang ada.
 - [ ] **T-16.5** Tautan rutin ke pos (§3.4): `budgetItemKey` diselesaikan
       ke pos periode; catat kemunculan tertaut mengisi `budgetItemId`;
       saran E9 sesudah simpan rutin; pasang/lepas di rincian rutin;

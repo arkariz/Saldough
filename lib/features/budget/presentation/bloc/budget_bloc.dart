@@ -7,8 +7,11 @@ import 'package:saldough/features/budget/domain/entities/budget.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
+import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
+import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/domain/usecases/calculate_budget_progress.dart';
+import 'package:saldough/features/budget/domain/usecases/plan_recurring_budget_save.dart';
 import 'package:saldough/features/budget/domain/usecases/read_transactions_in_months.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -38,6 +41,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     required this._walletRepository,
     required this._transactionRepository,
     required LedgerChanges ledgerChanges,
+    this._templateRepository,
     this._calculateProgress = const CalculateBudgetProgress(),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
@@ -61,6 +65,10 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   final BudgetRepository _budgetRepository;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
+
+  /// Template berjadwal untuk anggaran rutin (ADR-036); `null` = tanpa fitur
+  /// rutin (sebagian uji).
+  final BudgetTemplateRepository? _templateRepository;
   final CalculateBudgetProgress _calculateProgress;
   final DateTime Function() _now;
   late final _readMonths = ReadTransactionsInMonths(_transactionRepository);
@@ -95,18 +103,57 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
 
   Future<void> _onAdded(BudgetAdded event, Emitter<BudgetState> emit) async {
     final budget = Budget(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: _newId(),
       name: event.name.trim(),
       walletId: event.walletId,
       period: event.period,
       startDate: event.startDate,
       items: event.items,
     );
-    await _afterWrite(await _budgetRepository.saveBudget(budget), t.budget.savedMessage, emit);
+    await _afterWrite(
+      await _save(budget, repeat: event.repeat, scope: BudgetEditScope.thisAndNext),
+      t.budget.savedMessage,
+      emit,
+    );
   }
 
   Future<void> _onEdited(BudgetEdited event, Emitter<BudgetState> emit) async {
-    await _afterWrite(await _budgetRepository.saveBudget(event.budget), t.budget.updatedMessage, emit);
+    final result = switch (event.repeat) {
+      null => await _budgetRepository.saveBudget(event.budget),
+      final repeat => await _save(event.budget, repeat: repeat, scope: event.scope),
+    };
+    await _afterWrite(result, t.budget.updatedMessage, emit);
+  }
+
+  var _sequence = 0;
+  String _newId() => '${DateTime.now().microsecondsSinceEpoch}-${_sequence++}';
+
+  /// Menyimpan [budget] beserta template berjadwalnya (ADR-036 §3.1, §3.3):
+  /// template lebih dulu, supaya anggaran tidak pernah menunjuk template
+  /// yang belum ada.
+  Future<Either<Failure, Unit>> _save(Budget budget, {required bool repeat, required BudgetEditScope scope}) async {
+    final templates = _templateRepository;
+    if (templates == null) return _budgetRepository.saveBudget(budget);
+    BudgetTemplate? template;
+    if (budget.templateId case final id?) {
+      switch (await templates.listTemplates()) {
+        case Left(:final value):
+          return Left(value);
+        case Right(:final value):
+          template = value.where((t) => t.id == id).firstOrNull;
+      }
+    }
+    final plan = planRecurringBudgetSave(
+      budget: budget,
+      repeat: repeat,
+      scope: scope,
+      template: template,
+      newId: _newId,
+    );
+    if (plan.template case final next?) {
+      if (await templates.saveTemplate(next) case Left(:final value)) return Left(value);
+    }
+    return _budgetRepository.saveBudget(plan.budget);
   }
 
   Future<void> _onArchiveToggled(BudgetArchiveToggled event, Emitter<BudgetState> emit) async {
@@ -132,6 +179,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   }) => _serial(() async {
     final budgets = await _budgetRepository.listBudgets();
     final wallets = await _walletRepository.listWallets();
+    final templates = await _templateRepository?.listTemplates();
     switch ((budgets, wallets)) {
       case (Right(value: final budgets), Right(value: final wallets)):
         final now = _now();
@@ -139,6 +187,10 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         final next = state.copyWith(
           budgets: budgets,
           wallets: wallets,
+          scheduledTemplateIds: {
+            for (final template in templates?.getOrElse((_) => const []) ?? const <BudgetTemplate>[])
+              if (template.isScheduled) template.id,
+          },
           statuses: {for (final budget in budgets) budget.id: budget.statusAt(now)},
           transactions: const [],
         );

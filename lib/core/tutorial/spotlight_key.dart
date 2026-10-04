@@ -75,6 +75,9 @@ enum SpotlightKey {
   /// Kartu Saldo dompet ≈ di segmen Bulan ini (T-15.13).
   planForecast,
 
+  /// Sakelar Ulangi tiap periode di formulir anggaran (ADR-036, T-16.3).
+  budgetRepeat,
+
   /// Chip pembuka di keadaan kosong segmen Rutin.
   recurringStarters,
 

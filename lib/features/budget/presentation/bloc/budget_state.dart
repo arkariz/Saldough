@@ -46,6 +46,7 @@ final class BudgetState extends UiState<BudgetState> {
     this.loadFailed = false,
     this.statusFilter = BudgetStatusFilter.active,
     this.walletFilter,
+    this.scheduledTemplateIds = const {},
     super.effect,
   });
 
@@ -60,6 +61,13 @@ final class BudgetState extends UiState<BudgetState> {
 
   /// Seluruh anggaran, termasuk yang diarsipkan, urut penyimpanan.
   final List<Budget> budgets;
+
+  /// Id template yang jadwalnya aktif (ADR-036): anggaran dengan
+  /// `templateId` di sini adalah anggaran rutin.
+  final Set<String> scheduledTemplateIds;
+
+  /// Apakah [budget] anggaran rutin yang jadwalnya aktif.
+  bool isRecurring(Budget budget) => scheduledTemplateIds.contains(budget.templateId);
 
   /// Seluruh dompet, aktif maupun tidak — nama dompet anggaran harus tetap
   /// terbaca walau dompetnya sudah dinonaktifkan.
@@ -167,6 +175,7 @@ final class BudgetState extends UiState<BudgetState> {
     bool? loadFailed,
     BudgetStatusFilter? statusFilter,
     String? Function()? walletFilter,
+    Set<String>? scheduledTemplateIds,
     UiEffect? effect,
   }) {
     return BudgetState(
@@ -179,6 +188,7 @@ final class BudgetState extends UiState<BudgetState> {
       loadFailed: loadFailed ?? this.loadFailed,
       statusFilter: statusFilter ?? this.statusFilter,
       walletFilter: walletFilter != null ? walletFilter() : this.walletFilter,
+      scheduledTemplateIds: scheduledTemplateIds ?? this.scheduledTemplateIds,
       effect: effect,
     );
   }
@@ -194,5 +204,6 @@ final class BudgetState extends UiState<BudgetState> {
     loadFailed,
     statusFilter,
     walletFilter,
+    scheduledTemplateIds,
   ];
 }

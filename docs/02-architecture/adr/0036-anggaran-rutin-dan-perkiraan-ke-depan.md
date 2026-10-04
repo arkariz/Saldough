@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-036
 - **Tanggal:** 2026-10-04
 - **Fase roadmap:** Fase 16 (Rencana R2)
-- **Status:** Proposed
+- **Status:** Accepted (disetujui pemilik 4 Okt 2026)
 - **Cakupan:** `lib/features/budget/` (template berjadwal, kelahiran
   periode, dialog lingkup), `lib/shared/recurring/` (tautan rutin ke pos,
   perkiraan multi-bulan, wawasan), `lib/features/plan/` (pemilih bulan,

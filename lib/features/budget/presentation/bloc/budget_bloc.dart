@@ -40,7 +40,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     required this._budgetRepository,
     required this._walletRepository,
     required this._transactionRepository,
-    required LedgerChanges ledgerChanges,
+    required this._ledgerChanges,
     this._templateRepository,
     this._calculateProgress = const CalculateBudgetProgress(),
     DateTime Function()? now,
@@ -50,7 +50,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<BudgetRefreshed>(_onRefreshed);
     // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
     // tanpa kerangka.
-    _ledgerSubscription = ledgerChanges.from(this).listen((_) => add(const BudgetRefreshed()));
+    _ledgerSubscription = _ledgerChanges.from(this).listen((_) => add(const BudgetRefreshed()));
     on<BudgetAdded>(_onAdded);
     on<BudgetEdited>(_onEdited);
     on<BudgetArchiveToggled>(_onArchiveToggled);
@@ -62,6 +62,10 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   }
 
   late final StreamSubscription<void> _ledgerSubscription;
+
+  /// Rencana (Bulan ini, Beranda) membaca anggaran, jadi tiap tulisan
+  /// anggaran memancarkan perubahan (T-16.15).
+  final LedgerChanges _ledgerChanges;
   final BudgetRepository _budgetRepository;
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
@@ -258,6 +262,7 @@ final class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
           onFailure: (failure) => state.copyWith(effect: _effectError(failure)),
           onSuccess: _effectSaved(successMessage),
         );
+        _ledgerChanges.notifyChanged(source: this);
     }
   }
 

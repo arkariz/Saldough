@@ -235,6 +235,32 @@ void main() {
       },
     );
 
+    test('tulisan anggaran memancarkan LedgerChanges supaya Rencana segar (T-16.15)', () async {
+      final ledger = LedgerChanges();
+      final events = <Object?>[];
+      final sub = ledger.changes.listen(events.add);
+      final bloc =
+          BudgetBloc(
+            ledgerChanges: ledger,
+            budgetRepository: budgetRepository,
+            walletRepository: walletRepository,
+            transactionRepository: transactionRepository,
+            now: () => now,
+          )..add(
+            BudgetAdded(
+              name: 'Belanja',
+              walletId: 'bca',
+              period: BudgetPeriod.weekly,
+              startDate: DateTime(2026, 9, 14),
+              items: const [],
+            ),
+          );
+      await Future<void>.delayed(Duration.zero);
+      await bloc.close();
+      await sub.cancel();
+      expect(events, [same(bloc)]);
+    });
+
     blocTest<BudgetBloc, BudgetState>(
       'BudgetArchiveToggled membalik isArchived tanpa menyentuh saldo atau transaksi',
       build: buildBloc,

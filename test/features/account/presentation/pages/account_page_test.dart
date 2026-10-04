@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -31,6 +32,9 @@ void main() {
         CurrencyPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
       )
       ..registerSingleton<CategoryRepository>(CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerSingleton<FinancialMonthPreferenceRepository>(
+        FinancialMonthPreferenceRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
       ..registerSingleton<ChangeAppLanguage>(
         ChangeAppLanguage(repository: LanguagePreferenceRepositoryImpl(storage: InMemoryKeyValueStorage())),
       );

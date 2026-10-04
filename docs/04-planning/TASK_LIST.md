@@ -77,6 +77,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 13 — Pecah fitur `record` ([ADR-033](../02-architecture/adr/0033-pecah-fitur-record.md)) | 6 | 6 | Selesai 1 Okt 2026 -- perbaikan penangkap notifikasi, `shared/capture`, fitur `notification_capture` dan `voice_capture`; `record` 11.249 → 2.945 baris |
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
+| 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Proposed) | 12 | 0 | Direncanakan 4 Okt 2026 dari B-27 -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2355,7 +2356,7 @@ arus kas, dengan tab Anggaran menjadi **Rencana**. Keputusannya di
 perilaku dan rumus di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md); tata letak di
 [PLAN_TAB_LAYOUT.md](../01-product/features/PLAN_TAB_LAYOUT.md). R1 dibagi dua rilis yang masing-masing bisa
 dirilis sendiri: **R1a (rutin)** T-15.1–15.9 dan **R1b (Bulan ini)**
-T-15.10–15.14. R2 dan R3 ada di antrean (B-27, B-28). Satu commit per tugas;
+T-15.10–15.14. R2 dijadwalkan di Fase 16; R3 di antrean (B-28). Satu commit per tugas;
 setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
 
 ### R1a: rutin
@@ -2563,6 +2564,106 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji widget teks.
       Memenuhi FR-RUT-001, FR-RUT-002.
 
+## Fase 16: Rencana R2 (anggaran rutin dan ke depan)
+
+Permintaan pemilik 4 Okt 2026, dari B-27, sebelum R1 dirilis. Keputusannya di
+[ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md) (Proposed); perilaku di
+[RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) J4–J6, §7.4, §7B
+dan [PLAN_TAB_LAYOUT.md](../01-product/features/PLAN_TAB_LAYOUT.md) §4.1–4.4. Layar memakai bahasa visual
+yang ada (keputusan pemilik) dan ikut disapu Fase 14. Tiga milestone yang
+masing-masing bisa dirilis sendiri: **R2a anggaran rutin** T-16.1–16.5,
+**R2b ke depan** T-16.6–16.7, **R2c awal bulan dan wawasan** T-16.8–16.11;
+verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
+`flutter analyze` tanpa error dan seluruh uji lulus.
+
+### R2a: anggaran rutin
+
+- [ ] **T-16.1** Domain template berjadwal (ADR-036 §3.1): `BudgetSchedule`
+      (`walletId`, `period`, `anchorDate`, `anchorDay`, `isActive`) di
+      `BudgetTemplate.schedule?`, `Budget.templateId?`,
+      `BudgetItem.templateItemId?`; model dan `schemaVersion` naik, dokumen
+      lama terbaca; awal periode ke-n dari jadwal (penjepitan 31).
+      Verifikasi: uji model (lama/baru), uji jadwal (31 Jan → 28 Feb → 31
+      Mar, mingguan).
+      Memenuhi FR-BUD-008.
+- [ ] **T-16.2** Kelahiran periode (§3.2): `dueBirths` murni + use case
+      yang menyimpan; host di shell menjalankannya saat dibuka dan saat
+      `ActiveDay` berganti; daftar anggaran segar.
+      ⚠ Hanya periode berjalan, tanpa periode terlewat; tidak menyentuh
+      saldo.
+      Verifikasi: uji idempoten (invarian 18), lewat dua periode tanpa
+      dibuka → hanya yang berjalan, sebelum `anchorDate` → tidak lahir.
+      Memenuhi FR-BUD-008.
+- [ ] **T-16.3** Sakelar **Ulangi tiap periode** di formulir anggaran
+      (RECURRING_AND_FORECAST §8.6): menyalakan membuat template berjadwal
+      dan mengisi `templateId`/`templateItemId`; kalimat "Lahir lagi tiap
+      bulan mulai 1 Nov dengan pos yang sama"; tanggal awal bawaan bulanan
+      = awal bulan keuangan; layar Template menandai yang berjadwal; tur
+      `budgetRepeat`.
+      Verifikasi: uji bloc formulir (nyala → template + tautan), uji widget
+      kalimat dan 360dp.
+      Memenuhi FR-BUD-008.
+- [ ] **T-16.4** Dialog lingkup saat menyunting anggaran rutin (§3.3): tabel
+      bawaan per perubahan, periode lalu tanpa dialog, matikan Ulangi,
+      hapus template berjadwal.
+      Verifikasi: uji use case per baris tabel, uji invarian 19.
+      Memenuhi FR-BUD-008.
+- [ ] **T-16.5** Tautan rutin ke pos (§3.4): `budgetItemKey` diselesaikan
+      ke pos periode; catat kemunculan tertaut mengisi `budgetItemId`;
+      saran E9 sesudah simpan rutin; pasang/lepas di rincian rutin;
+      `monthPlan` dan `projectCashflow` memakai `max` (§7.4, invarian 21).
+      Verifikasi: uji contoh §7.4 (Kos sisa 2.000.000 + rutin 1.900.000 →
+      2.000.000), uji dompet beda tidak ditawarkan, uji catat satu ketuk
+      mengisi pos.
+      Memenuhi FR-BUD-008, FR-PLN-003.
+
+### R2b: ke depan
+
+- [ ] **T-16.6** Perkiraan bulan depan (§3.5): `projectCashflow` dan
+      `monthPlan` per rentang dengan periode virtual anggaran rutin; saldo
+      awal berantai; `PlanBudgetSource` per rentang; pemilih bulan (chip
+      berjalan + 2, akhir ringkas, putus-putus, ikon negatif); tata letak
+      bulan depan (PERKIRAAN, tanpa bilah dan garis hari ini, semua `≈`);
+      tur `planMonthPicker`.
+      Verifikasi: uji berantai (invarian 20), uji anggaran tanpa template
+      berhenti di periodenya, uji widget pemilih 360dp.
+      Memenuhi FR-PLN-005.
+- [ ] **T-16.7** Siapkan dana (§3.6, W1/E3): `fundingWarnings` murni,
+      banner Bulan ini (satu, "+n lainnya"), wawasan Beranda prioritas 1,
+      notifikasi H−1 09.00 lewat penjadwal pengingat.
+      ⚠ Kalimat tidak pernah menawarkan transfer; hanya autodebet.
+      Verifikasi: uji contoh PLAN_TAB_LAYOUT (BCA ≈1.200.000, cicilan
+      2.914.000 → kurang 1.714.000), uji H−4 tidak muncul, uji penjadwal
+      tanpa ganda.
+      Memenuhi FR-PLN-005.
+
+### R2c: awal bulan dan wawasan
+
+- [ ] **T-16.8** Tinjau awal bulan (§3.7, J4): kartu Beranda dan Bulan ini,
+      tiga langkah yang bisa dilewati, lipat "Nanti" sampai hari ke-7,
+      `plan/month_review`.
+      Verifikasi: uji bloc (selesai, nanti, bulan baru menimpa), uji widget
+      langkah, uji tidak tampil sesudah hari ke-7.
+      Memenuhi FR-PLN-001, FR-BUD-008.
+- [ ] **T-16.9** Kilas balik W10 dan akurasi W9: `monthPlan` bulan lalu
+      rencana vs nyata, snapshot `plan/forecast_snapshots` saat bulan
+      pertama dibuka, selisih dan baris penyumbang terbesar.
+      Verifikasi: uji snapshot sekali per bulan, uji selisih dari buku
+      besar, uji tanpa snapshot → W9 tidak tampil.
+      Memenuhi FR-PLN-003.
+- [ ] **T-16.10** W7 bebas cicilan dan W8 porsi terikat: teks rincian rutin
+      dan Bulan ini.
+      Verifikasi: uji W8 §7B (74,56% → 75%), uji W7 hanya dalam 12 bulan.
+      Memenuhi FR-PLN-002.
+- [ ] **T-16.11** Analitik R2 (ADR-036 §3.8) tanpa nominal.
+      Verifikasi: uji peristiwa terkirim dengan parameter yang benar.
+      Di luar PRD: analitik (ADR-023).
+- [ ] **T-16.12** Verifikasi milestone R2 di perangkat (pola
+      VERIFICATION_PLAN_FASE_15): kelahiran saat bulan berganti, dialog
+      lingkup, tautan pos, bulan depan, siapkan dana, tinjau awal bulan.
+      Verifikasi: temuan dicatat di tugas ini, perbaikan sebagai tugas baru.
+      Memenuhi FR-BUD-008, FR-PLN-005.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -2590,9 +2691,9 @@ menambah dan memindahkannya ada di
 | B-23 | Varian ikon piksel untuk mode gelap: garis tepi `#1E1B19` menyatu dengan tile gelap. Butuh artwork pemilik atau aturan pewarnaan ulang yang disetujui. | pemilik | ADR-034 §4 |
 | B-25 | Peringatan nominal tidak wajar di **seluruh CATAT** (KT-R12): bandingkan dengan nominal biasa untuk kategori/catatan yang sama, misalnya ≥5× atau ≤⅕. Fase 15 hanya menerapkannya untuk rutin (T-15.6). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E5 |
 | B-26 | Kartu lembut "Ada yang belum dicatat sejak …?" sesudah 3 hari tanpa catatan apa pun, **tanpa streak** dan tanpa hitungan hari terputus (KT-R13). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E12 |
-| B-27 | **R2 Rencana**: anggaran rutin (FR-BUD-008), bulan depan dan horizon (FR-PLN-005), perkiraan per dompet + "siapkan dana" (W1, termasuk notifikasinya), tinjau awal bulan (J4), W7–W10. Fase baru sesudah R1 dirilis. | agen | ADR-035 §3.9, RECURRING_AND_FORECAST §12 |
 | B-28 | **R3 Otomasi**: catat otomatis per rutin (nominal tetap), "belum terlihat" H+2, kenaikan harga dari notifikasi, rutin menganggur (W6), saran pola rutin dari riwayat/notifikasi, rutin lewat suara, gabung kartu menunggu (KT-R7). | agen | RECURRING_AND_FORECAST §12 |
 | B-29 | Penyamaran notifikasi Android 15 (temuan K8 T-15.9): listener menerima "Sensitive notification content hidden" untuk notifikasi yang dianggap berisi kode. Cek di perangkat Android 15 dengan notifikasi BRImo/BCA nyata; bila terjadi, tampilkan penjelasan di layar Catat dari notifikasi dan jangan menyimpan teks tersamar sebagai tangkapan. | pemilik + agen | [VERIFICATION_PLAN_FASE_15](VERIFICATION_PLAN_FASE_15.md) R1a |
+| B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement
@@ -2658,8 +2759,8 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-002 | T-15.11, T-15.13 |
 | FR-PLN-003 | T-15.12, T-15.13 |
 | FR-PLN-004 | T-15.10 |
-| FR-PLN-005 | B-27 (R2) |
-| FR-BUD-008 | B-27 (R2) |
+| FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
+| FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

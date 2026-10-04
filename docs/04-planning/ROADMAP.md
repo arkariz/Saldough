@@ -314,6 +314,21 @@ di Android dan iOS; segmen Bulan ini menampilkan uang nganggur dan perkiraan
 saldo yang angkanya cocok dengan kasus uji wajib; tidak ada jalur rutin yang
 mengubah saldo selain `RecordTransaction`.
 
+## Fase 16: Rencana R2 (anggaran rutin dan ke depan)
+
+Permintaan pemilik 4 Okt 2026, sebelum R1 dirilis. Anggaran rutin lahir
+sendiri tiap periode (template berjadwal), rutin bisa ditautkan ke pos
+tanpa hitung ganda, perkiraan menjangkau dua bulan ke depan dengan
+peringatan "siapkan dana", dan awal bulan punya tinjau rencana dengan kilas
+balik ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md)). Layar memakai bahasa visual
+yang ada dan ikut disapu Fase 14.
+
+**Selesai kalau:** anggaran rutin lahir sekali per periode tanpa periode
+terlewat; menyunting anggaran periode lalu tidak mengubah template;
+perkiraan bulan depan berantai persis dalam sen; siapkan dana muncul untuk
+autodebet yang kurang; tinjau awal bulan bisa diselesaikan di bawah satu
+menit tanpa memblokir pencatatan.
+
 ## Ketergantungan antar fase
 
 ```

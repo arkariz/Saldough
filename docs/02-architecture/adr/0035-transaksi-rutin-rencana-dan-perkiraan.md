@@ -4,7 +4,7 @@
 
 - **Decision ID:** ADR-035
 - **Tanggal:** 2026-10-02
-- **Fase roadmap:** Fase 15 (Rencana dan rutin, R1a + R1b); R2/R3 di antrean
+- **Fase roadmap:** Fase 15 (Rencana dan rutin, R1a + R1b); R2 dirinci di [ADR-036](0036-anggaran-rutin-dan-perkiraan-ke-depan.md) (Fase 16); R3 di antrean
 - **Status:** Accepted (disetujui pemilik 2 Okt 2026)
 - **Cakupan:** entitas baru `RecurringRule` (`lib/shared/recurring/`),
   `Transaction` (`lib/shared/transaction/`), fitur baru

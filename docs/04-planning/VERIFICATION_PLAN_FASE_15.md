@@ -34,7 +34,7 @@ per milestone, terhadap rentang commit-nya. Perangkat utama: Xiaomi
       ditolak invarian 15 (snackbar "sudah tercatat").
 - [x] Penjadwalan `inexactAllowWhileIdle`, tanpa izin exact alarm; boot
       receiver terdaftar di manifest.
-- [ ] **Temuan K1:** `LocalNotificationReminderScheduler.replaceAll` memakai
+- [x] **Temuan K1** (diperbaiki T-15.15): `LocalNotificationReminderScheduler.replaceAll` memakai
       `cancelAll()`, yang di Android memanggil
       `NotificationManager.cancelAll()`: semua notifikasi aplikasi yang
       **sedang tampil** ikut hilang, termasuk pengingat rutin pagi itu dan

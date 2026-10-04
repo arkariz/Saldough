@@ -90,7 +90,9 @@ final class LocalNotificationReminderScheduler implements ReminderScheduler {
   @override
   Future<void> replaceAll(List<PlannedReminder> reminders) async {
     await initialize();
-    await _plugin.cancelAll();
+    // Hanya jadwal: `cancelAll` juga menghapus notifikasi yang sedang
+    // tampil, termasuk pengingat catat notifikasi (T-15.15).
+    await _plugin.cancelAllPendingNotifications();
     for (final reminder in reminders) {
       final (title, body) = _texts(reminder);
       await _plugin.zonedSchedule(

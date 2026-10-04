@@ -114,6 +114,9 @@ MonthPlan monthPlan(
   final lineKeys = {for (final line in lines) ?line.key};
   // Kemunculan rutin tertaut pos per kunci pos (ADR-036 §3.4).
   final linked = <String, int>{};
+  // Kemunculan tertaut yang tercatat tanpa pos (mis. dicatat sebelum
+  // ditautkan): terpakai di pos itu, bukan hilang dari hitungan (T-16.13).
+  final unchargedSpent = <String, int>{};
   for (final rule in rules) {
     // Invarian 17/21: rutin tertaut pos yang ada di bulan ini terhitung di
     // pos itu, dengan rencana pos = max(rencana, Σ kemunculan tertaut).
@@ -131,6 +134,9 @@ MonthPlan monthPlan(
       final recorded = o.transaction;
       if (inBudget) {
         linked[key] = (linked[key] ?? 0) + (recorded?.amount ?? rule.amount);
+        if (recorded case ExpenseTransaction(budgetItemId: null, :final amount)) {
+          unchargedSpent[key] = (unchargedSpent[key] ?? 0) + amount;
+        }
         continue;
       }
       if (recorded == null && rule.amountMode == RecurringAmountMode.estimated) hasEstimate = true;
@@ -158,6 +164,8 @@ MonthPlan monthPlan(
     return line.planned > fromRules ? line.planned : fromRules;
   }
 
+  int spentOf(BudgetPlanLine line) => line.spent + (line.key == null ? 0 : unchargedSpent[line.key] ?? 0);
+
   final budgetItems = {for (final line in lines) line.itemId};
   // Transaksi yang rutinnya sudah dihapus tidak lagi disumbang rutin mana
   // pun, jadi dihitung di luar rencana (T-15.18).
@@ -182,12 +190,12 @@ MonthPlan monthPlan(
     plannedRecurringOut: plannedOut,
     recordedRecurringOut: recordedOut,
     budgetPlanned: lines.fold(0, (sum, line) => sum + plannedOf(line)),
-    budgetSpent: lines.fold(0, (sum, line) => sum + line.spent),
+    budgetSpent: lines.fold(0, (sum, line) => sum + spentOf(line)),
     unplannedOut: unplannedOut,
     unplannedIn: unplannedIn,
     budgetOverrun: lines.fold(
       0,
-      (sum, line) => sum + (line.spent > plannedOf(line) ? line.spent - plannedOf(line) : 0),
+      (sum, line) => sum + (spentOf(line) > plannedOf(line) ? spentOf(line) - plannedOf(line) : 0),
     ),
     recurringDifference: difference,
     moved: moved,

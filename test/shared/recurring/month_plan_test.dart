@@ -147,4 +147,16 @@ void main() {
     final noBudget = plan(const [], with_: withKos);
     expect(noBudget.plannedRecurringOut, 587900000 - 190000000 + 210000000);
   });
+
+  test('rutin tertaut yang tercatat tanpa pos terhitung terpakai di pos itu (T-16.13)', () {
+    final withKos = [...rules.where((r) => r.id != 'Kos'), rule('Kos', 190000000, 1, budgetItemKey: 'kos')];
+    final result = plan(
+      [kos(185000000)],
+      with_: withKos,
+      lines: [(key: 'kos', itemId: 'kos-okt', planned: 200000000, spent: 0)],
+    );
+    expect(result.budgetSpent, 185000000);
+    expect(result.budgetOverrun, 0);
+    expect(result.unplannedOut, 0);
+  });
 }

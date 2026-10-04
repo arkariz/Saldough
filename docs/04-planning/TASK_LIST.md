@@ -70,7 +70,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 13 | 12 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
@@ -2707,6 +2707,13 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
       di formulir anggaran, host kelahiran, rincian rutin, saran E9 CATAT,
       Bulan ini, dan banner siapkan dana. Peristiwa R1 (ADR-035 §7) ternyata
       belum pernah dipasang: B-31.
+- [x] **T-16.13** Rutin tertaut yang kemunculannya sudah tercatat tanpa pos
+      (dicatat sebelum ditautkan) hilang dari hitungan pos: perkiraan
+      menyebar sisa pos penuh padahal uangnya sudah keluar (temuan V4
+      T-16.12, perkiraan akhir bulan turun Rp300.000).
+      Verifikasi: uji `monthPlan` (terpakai di pos) dan `projectCashflow`
+      (sisa dikurangi yang sudah tercatat).
+      Selesai 4 Okt 2026; di emulator perkiraan kembali ≈Rp125.000.
 - [ ] **T-16.12** Verifikasi milestone R2 di perangkat (pola
       VERIFICATION_PLAN_FASE_15): kelahiran saat bulan berganti, dialog
       lingkup, tautan pos, bulan depan, siapkan dana, tinjau awal bulan.

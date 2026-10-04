@@ -108,10 +108,14 @@ CashflowProjection projectCashflow(
   final changes = <DateTime, int>{};
   // Kemunculan rutin tertaut pos yang diletakkan di tanggalnya (§7.4).
   final linked = <String, List<(DateTime, int)>>{};
+  // Kemunculan tertaut yang sudah tercatat tanpa pos: sudah ada di saldo
+  // nyata, jadi mengurangi sisa pos yang disebar (T-16.13).
+  final uncharged = <String, List<(DateTime, int)>>{};
   var income = 0;
   var recurringOut = 0;
   var budget = 0;
   var transfers = 0;
+
   /// Menambah perubahan di hari [date]; `true` bila hari itu dilaporkan
   /// (masuk rincian).
   bool add(DateTime date, int amount) {
@@ -137,6 +141,12 @@ CashflowProjection projectCashflow(
         OccurrenceStatus.pending || OccurrenceStatus.missed || OccurrenceStatus.upcoming => true,
         OccurrenceStatus.recorded || OccurrenceStatus.skipped || OccurrenceStatus.paused => false,
       };
+      if (o.transaction case ExpenseTransaction(
+        budgetItemId: null,
+        :final amount,
+      ) when rule.kind == RecurringKind.expense && rule.budgetItemKey != null) {
+        (uncharged[rule.budgetItemKey!] ??= []).add((o.date, amount));
+      }
       if (!happens || !o.date.isBefore(until)) continue;
       if (rule.kind == RecurringKind.expense && rule.budgetItemKey != null) {
         (linked[rule.budgetItemKey!] ??= []).add((o.date, rule.amount));
@@ -161,8 +171,13 @@ CashflowProjection projectCashflow(
       for (final (date, amount) in linked[line.key] ?? const <(DateTime, int)>[])
         if (date.isBefore(line.periodEnd)) amount,
     ].fold(0, (sum, amount) => sum + amount);
+    final recorded = [
+      for (final (date, amount) in uncharged[line.key] ?? const <(DateTime, int)>[])
+        if (date.isBefore(line.periodEnd)) amount,
+    ].fold(0, (sum, amount) => sum + amount);
+    final remaining = line.remaining - recorded;
     _spread(
-      line.remaining > fromRules ? line.remaining - fromRules : 0,
+      remaining > fromRules ? remaining - fromRules : 0,
       from: start,
       until: line.periodEnd,
       add: (day, amount) {

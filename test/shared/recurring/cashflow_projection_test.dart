@@ -207,6 +207,36 @@ void main() {
     expect(run(null).endBalance, -390000000);
   });
 
+  test('pos tertaut yang kemunculannya sudah tercatat tanpa pos tidak disebar lagi (T-16.13)', () {
+    final kos = RecurringRule(
+      id: 'kos-rutin',
+      kind: RecurringKind.expense,
+      amount: 190000000,
+      walletId: 'bca',
+      note: 'Kos',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9)),
+      budgetItemKey: 'kos',
+    );
+    final paid = ExpenseTransaction(
+      id: 'kos-okt',
+      date: DateTime(2026, 10, 1, 8),
+      amount: 185000000,
+      note: 'Kos',
+      walletId: 'bca',
+      recurrence: RecurrenceLink(ruleId: 'kos-rutin', occurrenceDate: DateTime(2026, 10)),
+    );
+    final result = projectCashflow(
+      [kos],
+      startBalance: 0,
+      today: today,
+      until: until,
+      pendingFrom: from,
+      transactions: [paid],
+      budgets: [(walletId: 'bca', key: 'kos', remaining: 200000000, periodEnd: until)],
+    );
+    expect(result.endBalance, -15000000);
+  });
+
   test('bulan depan berantai: saldo awal Nov = perkiraan akhir Okt, persis dalam sen (invarian 20)', () {
     final october = project();
     final november = projectCashflow(

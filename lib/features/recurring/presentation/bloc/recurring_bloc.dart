@@ -70,6 +70,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             ? t.recurring.budgetUnlinkedMessage(name: rule.note)
             : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
       );
+      if (item != null) await _chargeRecorded(linked);
     });
     on<RecurringAutoRecordUndone>((event, emit) async {
       final transaction = state.transactions.where((t) => t.id == event.entry.transactionId).firstOrNull;
@@ -190,6 +191,23 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         loadFailed: false,
       ),
     );
+  }
+
+  /// Kemunculan [rule] yang sudah tercatat tanpa pos (mis. sebelum
+  /// ditautkan) dibebankan ke pos periodenya, supaya rincian anggaran sama
+  /// dengan Rencana (T-16.16 K4). Saldo tidak berubah.
+  Future<void> _chargeRecorded(RecurringRule rule) async {
+    for (final t in state.transactions) {
+      if (t case ExpenseTransaction(budgetItemId: null, recurrence: final link?) when link.ruleId == rule.id) {
+        final itemId = budgetItemForOccurrence(rule, link.occurrenceDate, state.budgetOptions);
+        if (itemId == null) continue;
+        await _recordTransaction(
+          t.copyWith(budgetItemId: itemId),
+          previousTransaction: t,
+          source: this,
+        );
+      }
+    }
   }
 
   Future<void> _onSkipped(RecurringOccurrenceSkipped event, Emitter<RecurringState> emit) async {

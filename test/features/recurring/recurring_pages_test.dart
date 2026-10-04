@@ -12,6 +12,7 @@ import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dar
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -57,6 +58,7 @@ void main() {
     Widget child, {
     int monthsBack = 1,
     AutoRecordLogRepository? autoRecordLog,
+    BudgetItemCatalog? catalog,
   }) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
@@ -77,6 +79,7 @@ void main() {
       ),
       monthsBack: monthsBack,
       autoRecordLog: autoRecordLog,
+      budgetItemCatalog: catalog,
       now: () => clock,
     )..add(const RecurringStarted());
     addTearDown(bloc.close);
@@ -371,5 +374,44 @@ void main() {
       expect(read(await transactions.listTransactionsInMonth(DateTime(2026, 10))), isEmpty);
       expect(read(await log.list(clock)).single.undone, isTrue);
     });
+
+    testWidgets('menautkan rutin ke pos membebankan kemunculan yang sudah tercatat tanpa pos (T-16.16 K4)', (
+      tester,
+    ) async {
+      await rules.saveRule(rule('Listrik', 30000000, DateTime(2026, 10)));
+      final paid = ExpenseTransaction(
+        id: 'listrik-okt',
+        date: DateTime(2026, 10, 1, 9),
+        amount: 28750000,
+        note: 'Listrik',
+        walletId: 'bca',
+        recurrence: RecurrenceLink(ruleId: 'Listrik', occurrenceDate: DateTime(2026, 10)),
+      );
+      await transactions.saveTransaction(paid);
+      await pump(tester, const RecurringSegmentView(), catalog: const _Catalog());
+      bloc.add(const RecurringBudgetLinkChanged(ruleId: 'Listrik', key: 'tpl-listrik'));
+      await tester.pumpAndSettle();
+      final october = read(await transactions.listTransactionsInMonth(DateTime(2026, 10)));
+      expect((october.single as ExpenseTransaction).budgetItemId, 'item-listrik-okt');
+    });
   });
+}
+
+final class _Catalog implements BudgetItemCatalog {
+  const _Catalog();
+
+  @override
+  Future<Either<Failure, List<BudgetItemOption>>> listOptions() async => right([
+    BudgetItemOption(
+      budgetId: 'harian',
+      budgetName: 'Harian',
+      itemId: 'item-listrik-okt',
+      itemName: 'Listrik',
+      walletId: 'bca',
+      startDate: DateTime(2026, 10),
+      endDate: DateTime(2026, 10, 31),
+      templateItemId: 'tpl-listrik',
+      plannedAmount: 30000000,
+    ),
+  ]);
 }

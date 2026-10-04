@@ -147,6 +147,7 @@ abstract final class RootModule {
         () => PlanBudgetSourceImpl(
           budgetRepository: container<BudgetRepository>(),
           transactionRepository: container<TransactionRepository>(),
+          templateRepository: container<BudgetTemplateRepository>(),
         ),
       )
       ..registerLazySingleton<PlanFreelanceSource>(

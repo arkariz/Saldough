@@ -78,6 +78,9 @@ enum SpotlightKey {
   /// Sakelar Ulangi tiap periode di formulir anggaran (ADR-036, T-16.3).
   budgetRepeat,
 
+  /// Pemilih bulan di segmen Bulan ini (ADR-036, T-16.6).
+  planMonthPicker,
+
   /// Chip pembuka di keadaan kosong segmen Rutin.
   recurringStarters,
 

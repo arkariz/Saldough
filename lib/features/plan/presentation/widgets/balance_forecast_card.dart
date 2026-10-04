@@ -21,8 +21,12 @@ class BalanceForecastCard extends StatefulWidget {
     required this.unplannedAvailable,
     required this.includeUnplanned,
     required this.onUnplannedToggled,
+    this.isFuture = false,
     super.key,
   });
+
+  /// Bulan depan (ADR-036 §3.5): ubin Awal ≈ dan tanpa label "hari ini".
+  final bool isFuture;
 
   /// Perkiraan sampai akhir bulan.
   final CashflowProjection projection;
@@ -160,6 +164,11 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
               ),
             ],
             const SizedBox(height: AppSpacing.sm),
+            if (widget.isFuture && days.isNotEmpty)
+              _Tile(
+                label: t.plan.startOf(date: CycleMonthFormatter.formatDayMonth(days.first.date)),
+                amount: projection.startBalance,
+              ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -230,7 +239,10 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
               ),
               Row(
                 children: [
-                  Text(t.plan.todayLabel, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                  Text(
+                    widget.isFuture ? CycleMonthFormatter.formatDayMonth(days.first.date) : t.plan.todayLabel,
+                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  ),
                   const Spacer(),
                   Text(
                     CycleMonthFormatter.formatDayMonth(widget.lastDay),

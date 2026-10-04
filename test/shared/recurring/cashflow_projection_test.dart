@@ -206,4 +206,27 @@ void main() {
     expect(run('kos').days.firstWhere((d) => d.date == DateTime(2026, 10, 15)).balance, lessThan(-190000000));
     expect(run(null).endBalance, -390000000);
   });
+
+  test('bulan depan berantai: saldo awal Nov = perkiraan akhir Okt, persis dalam sen (invarian 20)', () {
+    final october = project();
+    final november = projectCashflow(
+      rules,
+      startBalance: 650000000,
+      today: today,
+      until: DateTime(2026, 12),
+      pendingFrom: from,
+      transactions: [kosRecorded],
+      budgets: [(walletId: 'bca', key: null, remaining: 270000000, periodEnd: until)],
+      unplannedPerDay: 3000000,
+      reportFrom: DateTime(2026, 11),
+    );
+    expect(november.startBalance, october.endBalance);
+    expect(november.days.first.date, DateTime(2026, 11));
+    expect(november.days, hasLength(30));
+    final b = november.breakdown;
+    expect(
+      november.startBalance + b.income - b.recurringOut - b.budget - b.unplanned + b.uncertain + b.transfers,
+      november.endBalance,
+    );
+  });
 }

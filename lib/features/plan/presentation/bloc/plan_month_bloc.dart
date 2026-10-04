@@ -44,6 +44,15 @@ final class PlanMonthUnplannedToggled extends PlanMonthEvent {
   final bool enabled;
 }
 
+/// Pilih bulan di pemilih bulan (ADR-036 §3.5): 0 = bulan berjalan.
+final class PlanMonthSelected extends PlanMonthEvent {
+  /// Membuat [PlanMonthSelected].
+  const PlanMonthSelected(this.index);
+
+  /// Indeks bulan.
+  final int index;
+}
+
 /// Bloc segmen **Bulan ini** dan baris perkiraan di Beranda (T-15.13).
 /// Hanya membaca; tidak ada yang ditulis dari sini.
 final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
@@ -62,6 +71,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     on<PlanMonthLoaded>(_onLoaded);
     on<PlanMonthWalletChanged>((event, emit) => emit(state.copyWith(walletId: () => event.walletId)));
     on<PlanMonthUnplannedToggled>((event, emit) => emit(state.copyWith(includeUnplanned: event.enabled)));
+    on<PlanMonthSelected>((event, emit) => emit(state.copyWith(selected: event.index)));
     void refresh() => add(const PlanMonthLoaded(showSkeleton: false));
     _subscriptions = [
       ledgerChanges.changes.listen((_) => refresh()),
@@ -98,7 +108,20 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
 
     final wallets = read(await _wallets.listWallets());
     final rules = read(await _rules.listRules());
-    final budgets = read(await _budgets.budgetsStartingIn(range.start, range.end));
+    // Anggaran yang sudah ada + periode virtual anggaran rutin yang belum
+    // lahir, untuk bulan berjalan dan dua bulan sesudahnya (ADR-036 §3.5).
+    Future<List<PlanBudget>?> budgetsIn(FinancialMonthRange m) async {
+      final existing = read(await _budgets.budgetsStartingIn(m.start, m.end));
+      final scheduled = read(await _budgets.scheduledBudgetsStartingIn(m.start, m.end));
+      return existing == null ? null : [...existing, ...?scheduled];
+    }
+
+    final budgets = await budgetsIn(range);
+    final later = <List<PlanBudget>>[];
+    for (var k = 1; k <= PlanMonthState.horizon; k++) {
+      final m = financialMonthOf(DateTime(range.start.year, range.start.month + k, range.start.day), range.start.day);
+      later.add(await budgetsIn(m) ?? const []);
+    }
     // Freelance adalah data sekunder: gagal dibaca berarti tanpa "belum pasti".
     final uncertain = (await _freelance.unpaid()).getOrElse((_) => const []);
     final months = read(await _transactions.listAvailableMonths()) ?? const <DateTime>[];
@@ -141,6 +164,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
         ],
         rules: rules,
         budgets: budgets,
+        laterBudgets: later,
         uncertain: uncertain,
         transactions: transactions,
         historyStart: historyStart,

@@ -2059,6 +2059,12 @@ class Translations$tour$id {
 
 	/// id: 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.'
 	String get budgetRepeatBody => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.';
+
+	/// id: 'Bulan depan'
+	String get planMonthPickerTitle => 'Bulan depan';
+
+	/// id: 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.'
+	String get planMonthPickerBody => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.';
 }
 
 // Path: info
@@ -3121,6 +3127,18 @@ class Translations$plan$id {
 
 	/// id: 'Rencana bulan ini gagal dimuat.'
 	String get loadError => 'Rencana bulan ini gagal dimuat.';
+
+	/// id: 'PERKIRAAN'
+	String get forecastBadge => 'PERKIRAAN';
+
+	/// id: 'Awal $date'
+	String startOf({required Object date}) => 'Awal ${date}';
+
+	/// id: '$value jt'
+	String compactMillion({required Object value}) => '${value} jt';
+
+	/// id: '$value rb'
+	String compactThousand({required Object value}) => '${value} rb';
 }
 
 // Path: record.draftIssue
@@ -4184,6 +4202,8 @@ extension on Translations {
 			'tour.recurringAddBody' => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.',
 			'tour.budgetRepeatTitle' => 'Ulangi tiap periode',
 			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
+			'tour.planMonthPickerTitle' => 'Bulan depan',
+			'tour.planMonthPickerBody' => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4508,10 +4528,10 @@ extension on Translations {
 			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
-			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
-			'plan.recurringSegmentLabel' => 'Rutin',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
+			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
@@ -4555,6 +4575,10 @@ extension on Translations {
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})',
 			'plan.loadError' => 'Rencana bulan ini gagal dimuat.',
+			'plan.forecastBadge' => 'PERKIRAAN',
+			'plan.startOf' => ({required Object date}) => 'Awal ${date}',
+			'plan.compactMillion' => ({required Object value}) => '${value} jt',
+			'plan.compactThousand' => ({required Object value}) => '${value} rb',
 			_ => null,
 		};
 	}

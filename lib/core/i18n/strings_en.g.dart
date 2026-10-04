@@ -792,6 +792,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get recurringAddBody => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.';
 	@override String get budgetRepeatTitle => 'Repeat every period';
 	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
+	@override String get planMonthPickerTitle => 'Next months';
+	@override String get planMonthPickerBody => 'See the forecast for the next two months. Each month shows its estimated month-end figure.';
 }
 
 // Path: info
@@ -1208,6 +1210,10 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
 	@override String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})';
 	@override String get loadError => 'Could not load this month.';
+	@override String get forecastBadge => 'FORECAST';
+	@override String startOf({required Object date}) => 'Start ${date}';
+	@override String compactMillion({required Object value}) => '${value}M';
+	@override String compactThousand({required Object value}) => '${value}K';
 }
 
 // Path: record.draftIssue
@@ -2078,6 +2084,8 @@ extension on TranslationsEn {
 			'tour.recurringAddBody' => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.',
 			'tour.budgetRepeatTitle' => 'Repeat every period',
 			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
+			'tour.planMonthPickerTitle' => 'Next months',
+			'tour.planMonthPickerBody' => 'See the forecast for the next two months. Each month shows its estimated month-end figure.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2402,10 +2410,10 @@ extension on TranslationsEn {
 			'recurring.budgetLinkRemove' => 'Unlink',
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
-			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
-			'plan.recurringSegmentLabel' => 'Recurring',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
+			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
@@ -2449,6 +2457,10 @@ extension on TranslationsEn {
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})',
 			'plan.loadError' => 'Could not load this month.',
+			'plan.forecastBadge' => 'FORECAST',
+			'plan.startOf' => ({required Object date}) => 'Start ${date}',
+			'plan.compactMillion' => ({required Object value}) => '${value}M',
+			'plan.compactThousand' => ({required Object value}) => '${value}K',
 			_ => null,
 		};
 	}

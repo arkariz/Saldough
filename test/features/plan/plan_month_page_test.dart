@@ -13,12 +13,21 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
+/// Anggaran hanya untuk rentang pertama yang diminta (bulan berjalan).
 final class _Budgets implements PlanBudgetSource {
-  const _Budgets(this.budgets);
+  _Budgets(this.budgets);
   final List<PlanBudget> budgets;
+  DateTime? _first;
 
   @override
-  Future<Either<Failure, List<PlanBudget>>> budgetsStartingIn(DateTime from, DateTime until) async => right(budgets);
+  Future<Either<Failure, List<PlanBudget>>> budgetsStartingIn(DateTime from, DateTime until) async {
+    _first ??= from;
+    return right(from == _first ? budgets : const []);
+  }
+
+  @override
+  Future<Either<Failure, List<PlanBudget>>> scheduledBudgetsStartingIn(DateTime from, DateTime until) async =>
+      right(const []);
 }
 
 final class _NoFreelance implements PlanFreelanceSource {
@@ -153,5 +162,25 @@ void main() {
     expect(find.text('5 Okt'), findsOneWidget);
     expect(find.text('10 Okt'), findsOneWidget);
     expect(find.text('25 Okt'), findsOneWidget);
+  });
+
+  testWidgets('pemilih bulan: Nov berawal dari akhir Okt dan berlencana PERKIRAAN (T-16.6, invarian 20)', (
+    tester,
+  ) async {
+    await pump(tester, width: 360);
+    expect(find.text('Okt ≈10,9 jt'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('plan-month-1')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining(t.plan.forecastBadge), findsOneWidget);
+    expect(find.text(t.plan.startOf(date: '1 Nov')), findsOneWidget);
+    expect(find.text('≈Rp10.921.000'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  test('nominal ringkas chip bulan', () {
+    expect(compactApprox(1092100000), '≈10,9 jt');
+    expect(compactApprox(1100000000), '≈11 jt');
+    expect(compactApprox(85000000), '≈850 rb');
+    expect(compactApprox(-171400000), '≈−1,7 jt');
   });
 }

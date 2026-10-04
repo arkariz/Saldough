@@ -14,6 +14,7 @@ class UnplannedCard extends StatelessWidget {
     required this.plan,
     required this.monthLabel,
     required this.onShowRecurring,
+    this.isForecast = false,
     required this.onShowBudget,
     super.key,
   });
@@ -29,6 +30,9 @@ class UnplannedCard extends StatelessWidget {
 
   /// Baris Anggaran → segmen Anggaran.
   final VoidCallback onShowBudget;
+
+  /// Bulan depan (ADR-036 §3.5): kepala berlencana PERKIRAAN.
+  final bool isForecast;
 
   /// Baris "Di luar rencana": selisih sisa dari rencana, supaya angka besar
   /// tetap sama dengan jumlah baris.
@@ -70,7 +74,9 @@ class UnplannedCard extends StatelessWidget {
     final remaining = plan.remaining;
     return AppHeroCard(
       icon: IconKey.budget,
-      label: t.plan.unplannedTitle(month: monthLabel),
+      label: isForecast
+          ? '${t.plan.unplannedTitle(month: monthLabel)} · ${t.plan.forecastBadge}'
+          : t.plan.unplannedTitle(month: monthLabel),
       trailing: IconButton(
         tooltip: t.plan.infoAction,
         onPressed: () => _showInfo(context),

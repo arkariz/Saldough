@@ -83,6 +83,11 @@ final class CashflowProjection extends Equatable {
 ///
 /// Pembagian harian memakai `int`: sisa pembagian jatuh di hari terakhir
 /// periode, jadi jumlahnya selalu persis.
+///
+/// [reportFrom] (bulan depan, ADR-036 §3.5): hitungan tetap berjalan sejak
+/// [today], tetapi hanya hari mulai [reportFrom] yang dilaporkan; saldo awal
+/// hasilnya = perkiraan akhir hari sebelumnya, jadi bulan-bulan berantai
+/// persis dalam sen (invarian 20).
 CashflowProjection projectCashflow(
   Iterable<RecurringRule> rules, {
   required int startBalance,
@@ -94,8 +99,12 @@ CashflowProjection projectCashflow(
   int? unplannedPerDay,
   Iterable<UncertainIncome> uncertainIncome = const [],
   String? walletId,
+  DateTime? reportFrom,
 }) {
   final start = DateTime(today.year, today.month, today.day);
+  final reported = reportFrom == null || !reportFrom.isAfter(start)
+      ? start
+      : DateTime(reportFrom.year, reportFrom.month, reportFrom.day);
   final changes = <DateTime, int>{};
   // Kemunculan rutin tertaut pos yang diletakkan di tanggalnya (§7.4).
   final linked = <String, List<(DateTime, int)>>{};
@@ -103,11 +112,13 @@ CashflowProjection projectCashflow(
   var recurringOut = 0;
   var budget = 0;
   var transfers = 0;
+  /// Menambah perubahan di hari [date]; `true` bila hari itu dilaporkan
+  /// (masuk rincian).
   bool add(DateTime date, int amount) {
     final day = date.isBefore(start) ? start : DateTime(date.year, date.month, date.day);
     if (!day.isBefore(until)) return false;
     changes[day] = (changes[day] ?? 0) + amount;
-    return true;
+    return !day.isBefore(reported);
   }
 
   for (final rule in rules) {
@@ -126,10 +137,11 @@ CashflowProjection projectCashflow(
         OccurrenceStatus.pending || OccurrenceStatus.missed || OccurrenceStatus.upcoming => true,
         OccurrenceStatus.recorded || OccurrenceStatus.skipped || OccurrenceStatus.paused => false,
       };
-      if (!happens || !add(o.date, effect * rule.amount)) continue;
+      if (!happens || !o.date.isBefore(until)) continue;
       if (rule.kind == RecurringKind.expense && rule.budgetItemKey != null) {
         (linked[rule.budgetItemKey!] ??= []).add((o.date, rule.amount));
       }
+      if (!add(o.date, effect * rule.amount)) continue;
       switch (rule.kind) {
         case RecurringKind.income:
           income += rule.amount;
@@ -163,20 +175,20 @@ CashflowProjection projectCashflow(
   for (final income in uncertainIncome) {
     if (walletId != null && income.walletId != walletId) continue;
     final day = income.date.isBefore(start) ? start : income.date;
-    if (!day.isBefore(until)) continue;
-    uncertain += income.amount;
-    add(day, income.amount);
+    if (add(day, income.amount)) uncertain += income.amount;
   }
 
   final days = <ProjectedDay>[];
   var balance = startBalance;
+  var reportedStart = startBalance;
   for (var day = start; day.isBefore(until); day = DateTime(day.year, day.month, day.day + 1)) {
+    if (day == reported) reportedStart = balance;
     balance += changes[day] ?? 0;
     if (unplannedPerDay != null) balance -= unplannedPerDay;
-    days.add((date: day, balance: balance));
+    if (!day.isBefore(reported)) days.add((date: day, balance: balance));
   }
   return CashflowProjection(
-    startBalance: startBalance,
+    startBalance: reportedStart,
     days: days,
     uncertain: uncertain,
     unplannedPerDay: unplannedPerDay,

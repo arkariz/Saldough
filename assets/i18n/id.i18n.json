@@ -725,7 +725,9 @@
     "recurringAddTitle": "Tambah rutin",
     "recurringAddBody": "Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.",
     "budgetRepeatTitle": "Ulangi tiap periode",
-    "budgetRepeatBody": "Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan."
+    "budgetRepeatBody": "Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.",
+    "planMonthPickerTitle": "Bulan depan",
+    "planMonthPickerBody": "Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya."
   },
   "info": {
     "menuTooltip": "Info dan tur",
@@ -1118,6 +1120,10 @@
     "chartSemantics": "Perkiraan saldo, paling tipis $low pada $date, akhir bulan $end",
     "chartPoint": "$date · $amount",
     "forecastRow": "Akhir $date ≈$amount · paling tipis ≈$low ($lowDate)",
-    "loadError": "Rencana bulan ini gagal dimuat."
+    "loadError": "Rencana bulan ini gagal dimuat.",
+    "forecastBadge": "PERKIRAAN",
+    "startOf": "Awal $date",
+    "compactMillion": "$value jt",
+    "compactThousand": "$value rb"
   }
 }

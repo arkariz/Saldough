@@ -67,7 +67,12 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   TourId.transaction: [SpotlightKey.txnMonth, SpotlightKey.txnFilter, SpotlightKey.txnRow],
   // Sub-tab Rencana ikut di tiap segmen: segmen mana pun yang dibuka lebih
   // dulu, sub-tab disorot sekali (progres per langkah).
-  TourId.planMonth: [SpotlightKey.planTabs, SpotlightKey.planUnplanned, SpotlightKey.planForecast],
+  TourId.planMonth: [
+    SpotlightKey.planTabs,
+    SpotlightKey.planUnplanned,
+    SpotlightKey.planForecast,
+    SpotlightKey.planMonthPicker,
+  ],
   TourId.recurring: [
     SpotlightKey.planTabs,
     SpotlightKey.recurringStarters,

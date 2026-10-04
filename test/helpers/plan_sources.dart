@@ -10,6 +10,10 @@ final class EmptyPlanBudgetSource implements PlanBudgetSource {
 
   @override
   Future<Either<Failure, List<PlanBudget>>> budgetsStartingIn(DateTime from, DateTime until) async => right(const []);
+
+  @override
+  Future<Either<Failure, List<PlanBudget>>> scheduledBudgetsStartingIn(DateTime from, DateTime until) async =>
+      right(const []);
 }
 
 /// [PlanFreelanceSource] tanpa pembayaran, untuk kontainer uji shell.

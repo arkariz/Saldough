@@ -33,6 +33,11 @@ final class PlanBudget extends Equatable {
 abstract interface class PlanBudgetSource {
   /// Lihat [PlanBudgetSource].
   Future<Either<Failure, List<PlanBudget>>> budgetsStartingIn(DateTime from, DateTime until);
+
+  /// Periode **virtual** anggaran rutin yang mulai di `from <= d < until`
+  /// tetapi belum lahir (ADR-036 §3.5): rencana penuh, terpakai nol. Tidak
+  /// disimpan; untuk perkiraan bulan depan.
+  Future<Either<Failure, List<PlanBudget>>> scheduledBudgetsStartingIn(DateTime from, DateTime until);
 }
 
 /// Pembayaran freelance yang belum dibayar, sebagai pemasukan belum pasti

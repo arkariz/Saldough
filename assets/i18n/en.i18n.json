@@ -725,7 +725,9 @@
     "recurringAddTitle": "Add recurring",
     "recurringAddBody": "You can also use Repeat in RECORD, or Make Recurring in a transaction's details.",
     "budgetRepeatTitle": "Repeat every period",
-    "budgetRepeatBody": "Turn on to start this budget again every month with the same items. No money is moved."
+    "budgetRepeatBody": "Turn on to start this budget again every month with the same items. No money is moved.",
+    "planMonthPickerTitle": "Next months",
+    "planMonthPickerBody": "See the forecast for the next two months. Each month shows its estimated month-end figure."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -1118,6 +1120,10 @@
     "chartSemantics": "Balance forecast, lowest $low on $date, month end $end",
     "chartPoint": "$date · $amount",
     "forecastRow": "End $date ≈$amount · lowest ≈$low ($lowDate)",
-    "loadError": "Could not load this month."
+    "loadError": "Could not load this month.",
+    "forecastBadge": "FORECAST",
+    "startOf": "Start $date",
+    "compactMillion": "${value}M",
+    "compactThousand": "${value}K"
   }
 }

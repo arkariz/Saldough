@@ -51,6 +51,7 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.planUnplanned => (tr.planUnplannedTitle, tr.planUnplannedBody),
     SpotlightKey.planForecast => (tr.planForecastTitle, tr.planForecastBody),
     SpotlightKey.budgetRepeat => (tr.budgetRepeatTitle, tr.budgetRepeatBody),
+    SpotlightKey.planMonthPicker => (tr.planMonthPickerTitle, tr.planMonthPickerBody),
     SpotlightKey.recurringStarters => (tr.recurringStartersTitle, tr.recurringStartersBody),
     SpotlightKey.recurringSummary => (tr.recurringSummaryTitle, tr.recurringSummaryBody),
     SpotlightKey.recurringPending => (tr.recurringPendingTitle, tr.recurringPendingBody),

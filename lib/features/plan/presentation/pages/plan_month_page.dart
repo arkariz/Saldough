@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -132,8 +133,10 @@ class PlanMonthView extends StatelessWidget {
           );
         }
         final bloc = context.read<PlanMonthBloc>();
-        final range = state.range;
-        final monthLabel = range.start.day == 1 ? CycleMonthFormatter.formatMonthShort(range.start) : range.label;
+        final range = state.selectedRange;
+        String labelOf(FinancialMonthRange m) =>
+            m.start.day == 1 ? CycleMonthFormatter.formatMonthShort(m.start) : m.label;
+        final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
         return TourTrigger(
           tour: TourId.planMonth,
@@ -141,10 +144,33 @@ class PlanMonthView extends StatelessWidget {
           child: ListView(
             padding: padding,
             children: [
+              // Pemilih bulan (PLAN_TAB_LAYOUT §4.3): bulan berjalan + 2,
+              // tiap chip membawa perkiraan akhir bulannya.
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.planMonthPicker,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (final (k, m) in state.months.indexed) ...[
+                        if (k > 0) const SizedBox(width: AppSpacing.xs),
+                        AppChoiceChip(
+                          key: ValueKey('plan-month-$k'),
+                          label: '${labelOf(m)} ${compactApprox(state.projectionFor(k).endBalance)}',
+                          selected: state.selected == k,
+                          onTap: () => bloc.add(PlanMonthSelected(k)),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planUnplanned,
                 child: UnplannedCard(
                   plan: state.plan,
+                  isForecast: state.isFuture,
                   monthLabel: monthLabel,
                   onShowRecurring: onShowRecurring,
                   onShowBudget: onShowBudget,
@@ -162,9 +188,10 @@ class PlanMonthView extends StatelessWidget {
                   unplannedAvailable: state.unplannedAverage != null,
                   includeUnplanned: state.includeUnplanned,
                   onUnplannedToggled: (value) => bloc.add(PlanMonthUnplannedToggled(enabled: value)),
+                  isFuture: state.isFuture,
                 ),
               ),
-              ?pending,
+              if (!state.isFuture) ?pending,
               if (next.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.md),
                 AppSectionLabel(t.plan.nextTitle),
@@ -180,6 +207,19 @@ class PlanMonthView extends StatelessWidget {
       },
     );
   }
+}
+
+/// Nominal ringkas berawalan `≈` untuk chip bulan: "≈10,9 jt", "≈850 rb".
+/// Pembulatan hanya untuk tampilan.
+String compactApprox(int sen) {
+  final units = (sen.abs() + 50) ~/ 100;
+  final sign = sen < 0 ? '−' : '';
+  if (units >= 1000000) {
+    final tenths = (units + 50000) ~/ 100000;
+    final value = tenths % 10 == 0 ? '${tenths ~/ 10}' : '${tenths ~/ 10}${MoneySeparators.decimal}${tenths % 10}';
+    return '≈$sign${t.plan.compactMillion(value: value)}';
+  }
+  return '≈$sign${t.plan.compactThousand(value: (units + 500) ~/ 1000)}';
 }
 
 class _NextRow extends StatelessWidget {

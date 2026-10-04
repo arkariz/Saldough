@@ -78,7 +78,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 15 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
-| 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Proposed) | 9 | 0 | Direncanakan 4 Okt 2026 -- menunggu jawaban pemilik atas ADR-037 §6; mulai dari T-17.1 |
+| 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 9 | 1 | Berjalan sejak 4 Okt 2026 -- lanjut T-17.2 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2747,13 +2747,12 @@ verifikasi T-16.12. Satu commit per tugas; setiap tugas ditutup dengan
 ## Fase 17: Rencana R3 (otomasi rutin)
 
 Permintaan pemilik 4 Okt 2026, sebelum R1 dan R2 dirilis. Usulan keputusan di
-[ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md) (**Proposed**);
+[ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md) (Accepted 4 Okt 2026, pemilik: "lanjut" atas usulan §6);
 perilaku di [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md)
 §7A E1/E3/E8, §7B W3/W6, §12 R3. Branch `claude/rencana-r3-fase-17`, dibuat
 dari `claude/rencana-r2-fase-16` (belum di-merge ke `main`).
 
-**Gerbang:** jangan menulis kode sebelum pemilik menjawab ADR-037 §6 dan
-statusnya Accepted. Milestone urut dari risiko terendah, masing-masing bisa
+Milestone urut dari risiko terendah, masing-masing bisa
 dirilis sendiri: **R3a deteksi** T-17.1–17.3, **R3b catat otomatis**
 T-17.4–17.5, **R3c saran** T-17.6–17.7, analitik T-17.8, verifikasi T-17.9.
 R3d (rutin lewat suara, KT-R7) ditunda ke B-32.
@@ -2765,13 +2764,17 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
 
 ### R3a: deteksi tanpa menulis
 
-- [ ] **T-17.1** Status turunan `unseen` (E3, ADR-037 §3.1): kemunculan
+- [x] **T-17.1** Status turunan `unseen` (E3, ADR-037 §3.1): kemunculan
       autodebet H+2 belum tercatat/tertaut; field `snoozedUntil?` di
       `RecurringRule` (skema naik, dokumen lama terbaca).
       Buka: `shared/recurring/domain/occurrence_status.dart`,
       `recurring_rule.dart`, `data/recurring_rule_model.dart`.
       Verifikasi: uji status (H+1 menunggu, H+2 unseen, bayar sendiri tidak,
       ditunda), uji model lama/baru.
+      Selesai 4 Okt 2026: `isUnseen()` + `unseenAfterDays` di
+      `occurrence_status.dart` (fungsi turunan, enum tidak berubah);
+      `snoozedUntil` kunci opsional, skema tetap 1. Catatan untuk T-17.4:
+      `autoRecord` sudah ada di entitas dan model sejak R1.
 - [ ] **T-17.2** Kartu Menunggu: label "Belum terlihat di notifikasi" dan aksi
       Catat / Belum terjadi / Lewati.
       Buka: kartu Menunggu di `features/recurring/presentation/widgets/`,

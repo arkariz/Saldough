@@ -41,6 +41,11 @@ abstract final class RecurringRuleModel {
       skippedDates: {for (final d in json['skippedDates'] as List<dynamic>) DateTime.parse(d as String)},
       isPaused: json['isPaused'] as bool,
       budgetItemKey: json['budgetItemKey'] as String?,
+      // Ditambahkan T-17.1; dokumen lama tanpa kunci ini = tidak ditunda.
+      snoozedUntil: switch (json['snoozedUntil']) {
+        final String date => DateTime.parse(date),
+        _ => null,
+      },
     );
   }
 
@@ -72,6 +77,10 @@ abstract final class RecurringRuleModel {
     'skippedDates': (rule.skippedDates.toList()..sort()).map(_day).toList(),
     'isPaused': rule.isPaused,
     'budgetItemKey': rule.budgetItemKey,
+    'snoozedUntil': switch (rule.snoozedUntil) {
+      final date? => _day(date),
+      null => null,
+    },
   };
 
   static String _day(DateTime d) =>

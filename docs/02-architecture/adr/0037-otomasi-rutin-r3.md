@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-037
 - **Tanggal:** 2026-10-04
 - **Fase roadmap:** Fase 17 (Rencana R3)
-- **Status:** Proposed (menunggu pemilik, lihat §6)
+- **Status:** Accepted (pemilik menjawab "lanjut" atas usulan §6, 4 Okt 2026)
 - **Cakupan:** `lib/shared/recurring/` (status kemunculan, deteksi, saran),
   `lib/features/recurring/` (kartu Menunggu, rincian, pengaturan rutin),
   `lib/features/notification_capture/` (kenaikan harga dari notifikasi),
@@ -33,12 +33,13 @@ ke tertinggi (menulis transaksi tanpa ketukan).
 ### 3.1 R3a: deteksi tanpa menulis
 
 - **E3 belum terlihat (H+2).** Kemunculan rutin **autodebet** yang dua hari
-  sesudah tanggalnya belum tercatat atau tertaut berstatus turunan
-  `unseen` (tidak disimpan, diturunkan dari `occurrenceStatusesOf` seperti
-  status lain). Kartu Menunggu memberi label "Belum terlihat di notifikasi"
+  sesudah tanggalnya belum tercatat, tertaut, atau dilewati dianggap
+  **belum terlihat**: fungsi turunan `isUnseen(occurrence, today)` di atas
+  status `pending`/`missed`, bukan nilai enum baru (supaya `switch` status
+  yang ada tidak berubah). Kartu Menunggu memberi label "Belum terlihat di notifikasi"
   dengan aksi **Catat / Belum terjadi / Lewati**. "Belum terjadi" menunda
-  label 2 hari lagi (disimpan di `RecurringRule.snoozedUntil?` per
-  kemunculan, satu tanggal). Rutin bayar sendiri tidak terkena: H+0 sudah
+  label 2 hari lagi (disimpan di `RecurringRule.snoozedUntil?`, satu
+  tanggal; tanggal lampau tidak berpengaruh). Rutin bayar sendiri tidak terkena: H+0 sudah
   muncul di Menunggu.
 - **W6 rutin menganggur.** Rutin yang dua kemunculan terakhirnya
   berturut-turut dilewati atau `unseen` mendapat kartu "Masih berlangganan
@@ -98,15 +99,16 @@ Tanpa nominal: `occurrence_unseen_shown`, `recurring_idle_action{action}`,
 
 ## 5. Konsekuensi
 
-- Skema `RecurringRule` naik sekali (field `autoRecord`, `snoozedUntil?`,
-  `idleDismissedAt?`); dokumen lama terbaca dengan bawaan.
+- `RecurringRule` mendapat `snoozedUntil?` dan `idleDismissedAt?` sebagai
+  kunci opsional (dokumen lama terbaca, skema tetap 1). `autoRecord` sudah
+  ada sejak R1 (assert nominal tetap), tinggal dipakai.
 - Penyimpanan baru: `recurring/auto_record_log`,
   `recurring/suggestion_dismissed`.
 - Invarian baru: catat otomatis tidak pernah mencatat kemunculan yang sudah
   tercatat/tertaut (invarian 15 tetap), dan tidak pernah untuk nominal
   kira-kira.
 
-## 6. Yang perlu diputuskan pemilik
+## 6. Yang perlu diputuskan pemilik (dijawab: usulan diterima)
 
 1. Urutan dan cakupan milestone (R3a → R3b → R3c, R3d ditunda)?
 2. Catat otomatis: bawaan mati, autodebet menunggu H+1 — setuju?

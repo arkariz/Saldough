@@ -90,3 +90,21 @@ List<Occurrence> occurrenceStatusesOf(
       ),
   ];
 }
+
+/// Berapa hari sesudah tanggalnya autodebet yang belum tercatat atau tertaut
+/// dianggap belum terlihat (E3, ADR-037 §3.1).
+const unseenAfterDays = 2;
+
+/// [occurrence] adalah autodebet yang sudah [unseenAfterDays] hari lewat
+/// tanpa tercatat, tertaut, atau dilewati, dan tidak sedang ditunda lewat
+/// "Belum terjadi". Turunan, tidak disimpan; bayar sendiri tidak pernah.
+bool isUnseen(Occurrence occurrence, {required DateTime today}) {
+  final rule = occurrence.rule;
+  if (occurrence.status != OccurrenceStatus.pending && occurrence.status != OccurrenceStatus.missed) return false;
+  if (rule.effectivePaymentMode != RecurringPaymentMode.autoDebit) return false;
+  final day = DateTime(today.year, today.month, today.day);
+  final date = occurrence.date;
+  if (day.isBefore(DateTime(date.year, date.month, date.day + unseenAfterDays))) return false;
+  final snoozed = rule.snoozedUntil;
+  return snoozed == null || !day.isBefore(DateTime(snoozed.year, snoozed.month, snoozed.day));
+}

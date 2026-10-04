@@ -78,4 +78,48 @@ void main() {
     ).single;
     expect(first.transaction, tx);
   });
+
+  group('belum terlihat H+2 (E3, T-17.1)', () {
+    final debit = netflix().copyWith(paymentMode: RecurringPaymentMode.autoDebit);
+    Occurrence october(RecurringRule rule, DateTime today) => occurrenceStatusesOf(
+      rule,
+      from: DateTime(2026, 10),
+      until: DateTime(2026, 10, 2),
+      today: today,
+      transactions: const [],
+    ).single;
+
+    test('autodebet: H+1 masih menunggu biasa, H+2 belum terlihat', () {
+      expect(isUnseen(october(debit, DateTime(2026, 10, 2, 23)), today: DateTime(2026, 10, 2, 23)), isFalse);
+      expect(isUnseen(october(debit, DateTime(2026, 10, 3)), today: DateTime(2026, 10, 3)), isTrue);
+    });
+
+    test('bayar sendiri, tercatat, dan dilewati tidak pernah belum terlihat', () {
+      final today = DateTime(2026, 10, 9);
+      expect(isUnseen(october(netflix(), today), today: today), isFalse);
+      final recordedOne = occurrenceStatusesOf(
+        debit,
+        from: DateTime(2026, 10),
+        until: DateTime(2026, 10, 2),
+        today: today,
+        transactions: [recorded('netflix', DateTime(2026, 10))],
+      ).single;
+      expect(isUnseen(recordedOne, today: today), isFalse);
+      final skipped = debit.copyWith(skippedDates: {DateTime(2026, 10)});
+      expect(isUnseen(october(skipped, today), today: today), isFalse);
+    });
+
+    test('"Belum terjadi" menunda sampai snoozedUntil', () {
+      final snoozed = debit.copyWith(snoozedUntil: DateTime(2026, 10, 5));
+      expect(isUnseen(october(snoozed, DateTime(2026, 10, 4)), today: DateTime(2026, 10, 4)), isFalse);
+      expect(isUnseen(october(snoozed, DateTime(2026, 10, 5)), today: DateTime(2026, 10, 5)), isTrue);
+    });
+
+    test('model menyimpan dan membaca snoozedUntil; dokumen lama tanpa kunci terbaca', () {
+      final snoozed = debit.copyWith(snoozedUntil: DateTime(2026, 10, 5));
+      expect(RecurringRuleModel.fromJson(RecurringRuleModel.toJson(snoozed)), snoozed);
+      final old = RecurringRuleModel.toJson(debit)..remove('snoozedUntil');
+      expect(RecurringRuleModel.fromJson(old).snoozedUntil, isNull);
+    });
+  });
 }

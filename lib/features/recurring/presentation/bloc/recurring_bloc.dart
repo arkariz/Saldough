@@ -89,6 +89,11 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         t.recurring.snoozedMessage(name: rule.note),
       );
     });
+    on<RecurringAutoRecordToggled>((event, emit) async {
+      final rule = state.ruleOf(event.ruleId);
+      if (rule == null || rule.amountMode != RecurringAmountMode.fixed) return;
+      await _write(rule.copyWith(autoRecord: event.enabled), emit, null);
+    });
     on<RecurringRemindersToggled>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
       if (rule != null) await _write(rule.copyWith(reminders: event.enabled), emit, null);

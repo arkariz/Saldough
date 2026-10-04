@@ -151,7 +151,9 @@
       "recordedNextMessage": "$name tercatat. Berikutnya $date.",
       "fallbackName": "Rutin",
       "updatedMessage": "$name diperbarui.",
-      "linkSuggestionAction": "Tautkan ke pos $item"
+      "linkSuggestionAction": "Tautkan ke pos $item",
+      "autoRecordLabel": "Catat otomatis",
+      "autoRecordHint": "Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan."
     }
   },
   "transaction": {

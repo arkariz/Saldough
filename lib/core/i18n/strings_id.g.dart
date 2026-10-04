@@ -3468,6 +3468,12 @@ class Translations$record$repeat$id {
 
 	/// id: 'Tautkan ke pos $item'
 	String linkSuggestionAction({required Object item}) => 'Tautkan ke pos ${item}';
+
+	/// id: 'Catat otomatis'
+	String get autoRecordLabel => 'Catat otomatis';
+
+	/// id: 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.'
+	String get autoRecordHint => 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.';
 }
 
 // Path: account.errors
@@ -3761,6 +3767,8 @@ extension on Translations {
 			'record.repeat.fallbackName' => 'Rutin',
 			'record.repeat.updatedMessage' => ({required Object name}) => '${name} diperbarui.',
 			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Tautkan ke pos ${item}',
+			'record.repeat.autoRecordLabel' => 'Catat otomatis',
+			'record.repeat.autoRecordHint' => 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -4132,10 +4140,10 @@ extension on Translations {
 			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
 			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
 			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
-			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
-			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
+			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
 			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
 			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
 			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
@@ -4646,10 +4654,10 @@ extension on Translations {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			'recurring.budgetLinkRemove' => 'Lepas tautan',
-			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
-			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
+			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',

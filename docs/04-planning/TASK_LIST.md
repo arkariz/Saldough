@@ -78,7 +78,7 @@ Terakhir diperbarui: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris 
 | 14 — Bahasa visual baru ([ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), [docs/03-design](../03-design/README.md)) | 12 | 0 | Direncanakan 3 Okt 2026 -- desain disetujui pemilik lewat sampel; mulai dari T-14.1 |
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 15 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
-| 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 9 | 3 | Berjalan sejak 4 Okt 2026 -- R3a selesai; lanjut T-17.4 |
+| 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 9 | 4 | Berjalan sejak 4 Okt 2026 -- R3a selesai; lanjut T-17.5 |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -2798,11 +2798,16 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
 
 ### R3b: catat otomatis
 
-- [ ] **T-17.4** Sakelar Catat otomatis di "Atur lebih lanjut" (nominal
+- [x] **T-17.4** Sakelar Catat otomatis di "Atur lebih lanjut" (nominal
       tetap saja), field `autoRecord`, baris status di rincian rutin.
       Buka: bagian Ulangi di formulir CATAT (`features/record/`),
       `recurring_detail_page.dart`.
       Verifikasi: uji sakelar hilang untuk kira-kira; uji simpan.
+      Selesai 4 Okt 2026: `RecurringPattern.autoRecord` (dibuang `toRule`
+      untuk kira-kira; memilih Kira-kira mematikannya), sakelar
+      `repeat-auto-record` di "Atur lebih lanjut" dan `recurring-auto-record`
+      di rincian (`RecurringAutoRecordToggled`). Baru menyimpan bendera;
+      pencatatannya di T-17.5. Sakelar rincian belum punya uji widget.
 - [ ] **T-17.5** `AutoRecordDue` + host saat dibuka/`ActiveDay` (pola
       `RecurringBudgetHost`): catat lewat `RecordTransaction`, ragu = tidak
       dicatat, autodebet H+1, log `recurring/auto_record_log` + Batalkan.

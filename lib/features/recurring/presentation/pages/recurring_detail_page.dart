@@ -220,6 +220,15 @@ class RecurringDetailPage extends StatelessWidget {
                   value: rule.reminders,
                   onChanged: (value) => bloc.add(RecurringRemindersToggled(ruleId: rule.id, enabled: value)),
                 ),
+                if (rule.amountMode == RecurringAmountMode.fixed)
+                  SwitchListTile(
+                    key: const ValueKey('recurring-auto-record'),
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(t.record.repeat.autoRecordLabel),
+                    subtitle: Text(t.record.repeat.autoRecordHint),
+                    value: rule.autoRecord,
+                    onChanged: (value) => bloc.add(RecurringAutoRecordToggled(ruleId: rule.id, enabled: value)),
+                  ),
                 if (rule.kind == RecurringKind.expense)
                   ListTile(
                     key: const ValueKey('recurring-budget-link'),

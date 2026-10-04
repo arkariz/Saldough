@@ -158,6 +158,19 @@ final class RecurringIdleDismissed extends RecurringEvent {
   final String ruleId;
 }
 
+/// Nyalakan atau matikan catat otomatis satu rutin bernominal tetap
+/// (ADR-037 §3.2).
+final class RecurringAutoRecordToggled extends RecurringEvent {
+  /// Membuat [RecurringAutoRecordToggled].
+  const RecurringAutoRecordToggled({required this.ruleId, required this.enabled});
+
+  /// Rutinnya.
+  final String ruleId;
+
+  /// Nyala atau mati.
+  final bool enabled;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

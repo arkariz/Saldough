@@ -1342,6 +1342,8 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String get fallbackName => 'Recurring';
 	@override String updatedMessage({required Object name}) => '${name} updated.';
 	@override String linkSuggestionAction({required Object item}) => 'Link to ${item}';
+	@override String get autoRecordLabel => 'Record automatically';
+	@override String get autoRecordHint => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.';
 }
 
 // Path: account.errors
@@ -1563,6 +1565,8 @@ extension on TranslationsEn {
 			'record.repeat.fallbackName' => 'Recurring',
 			'record.repeat.updatedMessage' => ({required Object name}) => '${name} updated.',
 			'record.repeat.linkSuggestionAction' => ({required Object item}) => 'Link to ${item}',
+			'record.repeat.autoRecordLabel' => 'Record automatically',
+			'record.repeat.autoRecordHint' => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1934,10 +1938,10 @@ extension on TranslationsEn {
 			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
 			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
 			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
-			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
-			'freelance.paymentCreatedMessage' => 'Payment created.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
+			'freelance.paymentCreatedMessage' => 'Payment created.',
 			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
 			'freelance.paymentDeletedMessage' => 'Payment deleted.',
 			'freelance.receiveTitle' => 'Record Payment Received',
@@ -2448,10 +2452,10 @@ extension on TranslationsEn {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			'recurring.budgetLinkRemove' => 'Unlink',
-			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
-			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
+			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',

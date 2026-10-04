@@ -227,10 +227,22 @@ class _Advanced extends StatelessWidget {
                 label: label,
                 kind: kind,
                 selected: value.amountMode == mode,
-                onTap: () => onChanged(value.copyWith(amountMode: mode)),
+                onTap: () => onChanged(
+                  value.copyWith(amountMode: mode, autoRecord: mode == RecurringAmountMode.fixed && value.autoRecord),
+                ),
               ),
           ],
         ),
+        // Catat otomatis hanya untuk nominal tetap (ADR-037 §3.2).
+        if (value.amountMode == RecurringAmountMode.fixed)
+          SwitchListTile(
+            key: const ValueKey('repeat-auto-record'),
+            contentPadding: EdgeInsets.zero,
+            title: Text(t.record.repeat.autoRecordLabel),
+            subtitle: Text(t.record.repeat.autoRecordHint),
+            value: value.autoRecord,
+            onChanged: (on) => onChanged(value.copyWith(autoRecord: on)),
+          ),
         if (kind != TransactionKind.income) ...[
           const SizedBox(height: AppSpacing.sm),
           AppSectionLabel(t.record.repeat.paymentLabel),
@@ -422,7 +434,9 @@ class RecordOccurrenceNotice extends StatelessWidget {
     ];
     return Text(
       lines.join('\n'),
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.pending : colors.textMuted),
+      style: Theme.of(
+        context,
+      ).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.pending : colors.textMuted),
     );
   }
 }

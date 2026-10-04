@@ -13,6 +13,7 @@ final class RecurringPattern extends Equatable {
     this.end = const RecurringNeverEnds(),
     this.amountMode = RecurringAmountMode.fixed,
     this.paymentMode,
+    this.autoRecord = false,
   }) : assert(interval >= 1, 'Selang jadwal minimal 1.');
 
   /// Pola [rule], untuk membuka CATAT saat mengubah rutin.
@@ -22,6 +23,7 @@ final class RecurringPattern extends Equatable {
     end: rule.end,
     amountMode: rule.amountMode,
     paymentMode: rule.paymentMode,
+    autoRecord: rule.autoRecord,
   );
 
   /// Satuan selang.
@@ -38,6 +40,9 @@ final class RecurringPattern extends Equatable {
 
   /// Cara bayar; diabaikan untuk pemasukan.
   final RecurringPaymentMode? paymentMode;
+
+  /// Catat otomatis (ADR-037 §3.2); hanya berlaku untuk nominal tetap.
+  final bool autoRecord;
 
   /// Rutin dari pola ini dengan isian transaksi dan [anchorDate] sebagai
   /// kemunculan pertama.
@@ -63,6 +68,7 @@ final class RecurringPattern extends Equatable {
       schedule: RecurringSchedule(frequency: frequency, interval: interval, anchorDate: anchorDate),
       end: end,
       paymentMode: kind == RecurringKind.income ? null : paymentMode,
+      autoRecord: autoRecord && amountMode == RecurringAmountMode.fixed,
     );
   }
 
@@ -74,6 +80,7 @@ final class RecurringPattern extends Equatable {
     RecurringEnd? end,
     RecurringAmountMode? amountMode,
     RecurringPaymentMode? paymentMode,
+    bool? autoRecord,
   }) {
     return RecurringPattern(
       frequency: frequency ?? this.frequency,
@@ -81,9 +88,10 @@ final class RecurringPattern extends Equatable {
       end: end ?? this.end,
       amountMode: amountMode ?? this.amountMode,
       paymentMode: paymentMode ?? this.paymentMode,
+      autoRecord: autoRecord ?? this.autoRecord,
     );
   }
 
   @override
-  List<Object?> get props => [frequency, interval, end, amountMode, paymentMode];
+  List<Object?> get props => [frequency, interval, end, amountMode, paymentMode, autoRecord];
 }

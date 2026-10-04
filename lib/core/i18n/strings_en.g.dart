@@ -1160,6 +1160,9 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String fundingTitle({required Object wallet}) => 'Prepare funds in ${wallet}';
 	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.';
 	@override String installmentFreeLine({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.';
+	@override String get unseenLabel => 'Not seen in notifications yet';
+	@override String get notYetAction => 'Not yet';
+	@override String snoozedMessage({required Object name}) => 'We\'ll ask about ${name} again in 2 days.';
 }
 
 // Path: plan
@@ -2450,6 +2453,9 @@ extension on TranslationsEn {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',
+			'recurring.unseenLabel' => 'Not seen in notifications yet',
+			'recurring.notYetAction' => 'Not yet',
+			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

@@ -1077,7 +1077,10 @@
     "budgetUnlinkedMessage": "Tautan pos $name dilepas.",
     "fundingTitle": "Siapkan dana di $wallet",
     "fundingBody": "$name $amount, $date. Perkiraan kurang ≈$shortfall.",
-    "installmentFreeLine": "Mulai $month ruang bebas +$amount/bln."
+    "installmentFreeLine": "Mulai $month ruang bebas +$amount/bln.",
+    "unseenLabel": "Belum terlihat di notifikasi",
+    "notYetAction": "Belum terjadi",
+    "snoozedMessage": "$name ditanyakan lagi 2 hari lagi."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

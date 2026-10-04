@@ -39,6 +39,8 @@ class RecurringPendingTile extends StatelessWidget {
     final rule = entry.rule;
     final date = entry.occurrence!.date;
     final fixed = rule.amountMode == RecurringAmountMode.fixed;
+    // E3 (ADR-037 §3.1): autodebet H+2 yang belum terlihat.
+    final unseen = isUnseen(entry.occurrence!, today: state.today);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -49,6 +51,13 @@ class RecurringPendingTile extends StatelessWidget {
           today: state.today,
           onTap: () => _editFirst(context, date),
         ),
+        if (unseen)
+          Text(
+            t.recurring.unseenLabel,
+            key: ValueKey('recurring-unseen-${rule.id}'),
+            textAlign: TextAlign.end,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+          ),
         Wrap(
           alignment: WrapAlignment.end,
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -58,7 +67,13 @@ class RecurringPendingTile extends StatelessWidget {
               onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
               child: Text(t.recurring.skipAction),
             ),
-            if (fixed) TextButton(onPressed: () => _editFirst(context, date), child: Text(t.recurring.editFirstAction)),
+            if (unseen)
+              TextButton(
+                onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
+                child: Text(t.recurring.notYetAction),
+              )
+            else if (fixed)
+              TextButton(onPressed: () => _editFirst(context, date), child: Text(t.recurring.editFirstAction)),
             AppQuickChip(
               label: t.recurring.recordAction,
               color: context.appColors.surfaceHigh,

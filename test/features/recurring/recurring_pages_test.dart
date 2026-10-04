@@ -231,5 +231,28 @@ void main() {
       ];
       expect(recorded.map((t) => t.recurrence?.ruleId).toSet(), {'Netflix', 'Spotify'});
     });
+
+    testWidgets('autodebet H+2: label belum terlihat; Belum terjadi menunda 2 hari, Lewati dan Catat tetap (T-17.2)', (
+      tester,
+    ) async {
+      await rules.saveRule(
+        rule('Asuransi', 20000000, DateTime(2026, 9, 30)).copyWith(paymentMode: RecurringPaymentMode.autoDebit),
+      );
+      await pump(tester, const RecurringSegmentView());
+      tester.view.physicalSize = const Size(360, 1600);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsOneWidget);
+      expect(find.text(t.recurring.skipAction), findsOneWidget);
+      expect(find.text(t.recurring.recordAction), findsOneWidget);
+      expect(find.text(t.recurring.editFirstAction), findsNothing);
+      expect(tester.takeException(), isNull);
+
+      await tester.tap(find.text(t.recurring.notYetAction));
+      await tester.pumpAndSettle();
+      expect(read(await rules.listRules()).single.snoozedUntil, DateTime(2026, 10, 4));
+      expect(find.byKey(const ValueKey('recurring-unseen-Asuransi')), findsNothing);
+      expect(find.text(t.recurring.editFirstAction), findsOneWidget);
+    });
   });
 }

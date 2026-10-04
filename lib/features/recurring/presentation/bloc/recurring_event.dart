@@ -139,6 +139,16 @@ final class RecurringBudgetLinkChanged extends RecurringEvent {
   final String? key;
 }
 
+/// "Belum terjadi" pada autodebet yang belum terlihat (E3, ADR-037 §3.1):
+/// label ditunda [unseenAfterDays] hari dari hari ini.
+final class RecurringOccurrenceSnoozed extends RecurringEvent {
+  /// Membuat [RecurringOccurrenceSnoozed].
+  const RecurringOccurrenceSnoozed({required this.ruleId});
+
+  /// Rutinnya.
+  final String ruleId;
+}
+
 /// Nyalakan atau matikan pengingat satu rutin.
 final class RecurringRemindersToggled extends RecurringEvent {
   /// Membuat [RecurringRemindersToggled].

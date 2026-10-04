@@ -69,6 +69,16 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             : t.recurring.budgetLinkedMessage(name: rule.note, item: item.itemName),
       );
     });
+    on<RecurringOccurrenceSnoozed>((event, emit) async {
+      final rule = state.ruleOf(event.ruleId);
+      if (rule == null) return;
+      final today = state.today;
+      await _write(
+        rule.copyWith(snoozedUntil: DateTime(today.year, today.month, today.day + unseenAfterDays)),
+        emit,
+        t.recurring.snoozedMessage(name: rule.note),
+      );
+    });
     on<RecurringRemindersToggled>((event, emit) async {
       final rule = state.ruleOf(event.ruleId);
       if (rule != null) await _write(rule.copyWith(reminders: event.enabled), emit, null);

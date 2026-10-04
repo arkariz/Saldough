@@ -2995,6 +2995,15 @@ class Translations$recurring$id {
 
 	/// id: 'Mulai $month ruang bebas +$amount/bln.'
 	String installmentFreeLine({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.';
+
+	/// id: 'Belum terlihat di notifikasi'
+	String get unseenLabel => 'Belum terlihat di notifikasi';
+
+	/// id: 'Belum terjadi'
+	String get notYetAction => 'Belum terjadi';
+
+	/// id: '$name ditanyakan lagi 2 hari lagi.'
+	String snoozedMessage({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.';
 }
 
 // Path: plan
@@ -4636,6 +4645,9 @@ extension on Translations {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.',
+			'recurring.unseenLabel' => 'Belum terlihat di notifikasi',
+			'recurring.notYetAction' => 'Belum terjadi',
+			'recurring.snoozedMessage' => ({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

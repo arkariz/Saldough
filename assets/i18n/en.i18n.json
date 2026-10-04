@@ -1077,7 +1077,10 @@
     "budgetUnlinkedMessage": "$name is no longer linked to a budget item.",
     "fundingTitle": "Prepare funds in $wallet",
     "fundingBody": "$name $amount on $date. Expected short ≈$shortfall.",
-    "installmentFreeLine": "From $month you free up +$amount/mo."
+    "installmentFreeLine": "From $month you free up +$amount/mo.",
+    "unseenLabel": "Not seen in notifications yet",
+    "notYetAction": "Not yet",
+    "snoozedMessage": "We'll ask about $name again in 2 days."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

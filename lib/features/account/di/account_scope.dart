@@ -1,5 +1,6 @@
 import 'package:di/di.dart';
 import 'package:saldough/core/currency/currency.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
 import 'package:saldough/features/account/presentation/bloc/category_manager_bloc.dart';
@@ -11,7 +12,8 @@ import 'package:saldough/shared/category/category.dart';
 /// Dibuat saat layar Akun dibuka dan dibuang saat ditutup, seperti
 /// `FreelanceScope` — bukan tujuan navigasi bawah. `AuthRepository` dan
 /// `CurrencyPreferenceRepository` didaftarkan di `RootModule` dan dibawa
-/// lewat [bridge].
+/// lewat [bridge], begitu juga `FinancialMonthPreferenceRepository` untuk
+/// entri Awal bulan keuangan (T-15.16).
 final class AccountScope extends IsolatedScope {
   /// Membuat [AccountScope] dengan kontainer induk [parentContainer].
   AccountScope({required super.parentContainer});
@@ -22,6 +24,7 @@ final class AccountScope extends IsolatedScope {
       ..registerSingleton<AuthRepository>(parent<AuthRepository>())
       ..registerSingleton<CurrencyPreferenceRepository>(parent<CurrencyPreferenceRepository>())
       ..registerSingleton<CategoryRepository>(parent<CategoryRepository>())
+      ..registerSingleton<FinancialMonthPreferenceRepository>(parent<FinancialMonthPreferenceRepository>())
       ..registerSingleton<ChangeAppLanguage>(parent<ChangeAppLanguage>());
   }
 

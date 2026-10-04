@@ -2534,10 +2534,11 @@ setiap tugas ditutup dengan `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: VERIFICATION_PLAN_FASE_15 D13.
       Memenuhi FR-RUT-004.
       Selesai 4 Okt 2026 (kode); D13 di perangkat ikut T-15.9.
-- [ ] **T-15.16** Awal bulan keuangan bisa diubah dari Akun (temuan K7):
+- [x] **T-15.16** Awal bulan keuangan bisa diubah dari Akun (temuan K7):
       `AccountScope` membawa `FinancialMonthPreferenceRepository` dari root.
       Verifikasi: uji scope Akun mendaftarkannya; E1 di perangkat.
       Memenuhi FR-PLN-004.
+      Selesai 4 Okt 2026 (`account_scope_test.dart`).
 - [ ] **T-15.17** Ganti hari saat aplikasi hidup (temuan K2): saat kembali
       ke depan pada tanggal lain, Beranda dan Rencana memuat ulang status
       kemunculan dan rencana bulan.

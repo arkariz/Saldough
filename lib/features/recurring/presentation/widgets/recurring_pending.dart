@@ -6,6 +6,7 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/recurring/di/recurring_scope.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
@@ -41,6 +42,9 @@ class RecurringPendingTile extends StatelessWidget {
     final fixed = rule.amountMode == RecurringAmountMode.fixed;
     // E3 (ADR-037 §3.1): autodebet H+2 yang belum terlihat.
     final unseen = isUnseen(entry.occurrence!, today: state.today);
+    // W3 dari notifikasi (ADR-037 §3.3): transaksinya ada tapi nominalnya
+    // naik; Catat di sini akan menggandakannya, jadi tawarkan tautan.
+    final raised = priceIncreaseCandidate(rule, date, state.transactions);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -51,7 +55,14 @@ class RecurringPendingTile extends StatelessWidget {
           today: state.today,
           onTap: () => _editFirst(context, date),
         ),
-        if (unseen)
+        if (raised != null)
+          Text(
+            t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
+            key: ValueKey('recurring-price-up-${rule.id}'),
+            textAlign: TextAlign.end,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+          )
+        else if (unseen)
           Text(
             t.recurring.unseenLabel,
             key: ValueKey('recurring-unseen-${rule.id}'),
@@ -67,20 +78,35 @@ class RecurringPendingTile extends StatelessWidget {
               onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
               child: Text(t.recurring.skipAction),
             ),
-            if (unseen)
+            if (raised != null) ...[
+              TextButton(
+                onPressed: () => bloc.add(
+                  RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id),
+                ),
+                child: Text(t.recurring.priceUpKeep),
+              ),
+              AppQuickChip(
+                label: t.recurring.priceUpUpdate,
+                color: context.appColors.surfaceHigh,
+                onTap: () => bloc
+                  ..add(RecurringOccurrenceLinked(ruleId: rule.id, date: date, transactionId: raised.id))
+                  ..add(RecurringAmountUpdated(ruleId: rule.id, amount: raised.amount)),
+              ),
+            ] else if (unseen)
               TextButton(
                 onPressed: () => bloc.add(RecurringOccurrenceSnoozed(ruleId: rule.id)),
                 child: Text(t.recurring.notYetAction),
               )
             else if (fixed)
               TextButton(onPressed: () => _editFirst(context, date), child: Text(t.recurring.editFirstAction)),
-            AppQuickChip(
-              label: t.recurring.recordAction,
-              color: context.appColors.surfaceHigh,
-              onTap: fixed
-                  ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
-                  : () => _editFirst(context, date),
-            ),
+            if (raised == null)
+              AppQuickChip(
+                label: t.recurring.recordAction,
+                color: context.appColors.surfaceHigh,
+                onTap: fixed
+                    ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
+                    : () => _editFirst(context, date),
+              ),
           ],
         ),
       ],

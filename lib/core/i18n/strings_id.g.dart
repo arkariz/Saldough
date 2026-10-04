@@ -3019,6 +3019,15 @@ class Translations$recurring$id {
 
 	/// id: '$n rutin dicatat otomatis.'
 	String autoRecordedMany({required Object n}) => '${n} rutin dicatat otomatis.';
+
+	/// id: '$name tercatat $amount, naik dari rutin. Tautkan?'
+	String priceUpFound({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?';
+
+	/// id: 'Perbarui rutin'
+	String get priceUpUpdate => 'Perbarui rutin';
+
+	/// id: 'Biarkan'
+	String get priceUpKeep => 'Biarkan';
 }
 
 // Path: plan
@@ -4676,6 +4685,9 @@ extension on Translations {
 			'recurring.idleKeep' => 'Biarkan',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
+			'recurring.priceUpUpdate' => 'Perbarui rutin',
+			'recurring.priceUpKeep' => 'Biarkan',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',

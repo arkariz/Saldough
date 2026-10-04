@@ -1,3 +1,4 @@
+import 'package:saldough/shared/recurring/domain/recurring_overview.dart';
 import 'package:saldough/shared/recurring/domain/recurring_rule.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
@@ -62,21 +63,39 @@ List<Transaction> matchCandidates(RecurringRule rule, DateTime occurrence, Itera
   bool amountMatches(int amount) => rule.amountMode == RecurringAmountMode.fixed
       ? amount == rule.amount
       : (amount - rule.amount).abs() * 10 <= rule.amount;
-  bool walletMatches(Transaction t) => switch ((rule.kind, t)) {
+  return [
+    for (final t in transactions)
+      if (_sameSlot(rule, day, t) && amountMatches(t.amount)) t,
+  ];
+}
+
+/// Belum tertaut, jenis dan dompet sama dengan [rule], tanggal dalam
+/// ±[matchWindowDays] hari dari [day].
+bool _sameSlot(RecurringRule rule, DateTime day, Transaction t) {
+  final walletMatches = switch ((rule.kind, t)) {
     (RecurringKind.income, IncomeTransaction(:final walletId)) => walletId == rule.walletId,
     (RecurringKind.expense, ExpenseTransaction(:final walletId)) => walletId == rule.walletId,
     (RecurringKind.transfer, TransferTransaction(:final fromWalletId, :final toWalletId)) =>
       fromWalletId == rule.walletId && toWalletId == rule.toWalletId,
     _ => false,
   };
-  return [
+  return t.recurrence == null &&
+      walletMatches &&
+      DateTime(t.date.year, t.date.month, t.date.day).difference(day).inDays.abs() <= matchWindowDays;
+}
+
+/// W3 dari notifikasi (ADR-037 §3.3): transaksi belum tertaut yang hampir
+/// cocok dengan kemunculan [occurrence] rutin **tetap** (jenis, dompet,
+/// ±3 hari) tetapi nominalnya naik ≥5% dan ≥Rp5.000. `null` bila tidak ada
+/// atau lebih dari satu (ragu).
+Transaction? priceIncreaseCandidate(RecurringRule rule, DateTime occurrence, Iterable<Transaction> transactions) {
+  if (rule.amountMode != RecurringAmountMode.fixed) return null;
+  final day = DateTime(occurrence.year, occurrence.month, occurrence.day);
+  final found = [
     for (final t in transactions)
-      if (t.recurrence == null &&
-          walletMatches(t) &&
-          amountMatches(t.amount) &&
-          DateTime(t.date.year, t.date.month, t.date.day).difference(day).inDays.abs() <= matchWindowDays)
-        t,
+      if (_sameSlot(rule, day, t) && isPriceIncrease(planned: rule.amount, recorded: t.amount)) t,
   ];
+  return found.length == 1 ? found.single : null;
 }
 
 /// E5 (KT-R12, untuk rutin): nominal [typed] ≥5× atau ≤⅕ dari [usual]. Sen.

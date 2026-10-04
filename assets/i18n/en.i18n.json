@@ -1087,7 +1087,10 @@
     "idleBody": "The last two were skipped or not seen.",
     "idleKeep": "Keep",
     "autoRecordedOne": "$name recorded automatically.",
-    "autoRecordedMany": "$n repeating items recorded automatically."
+    "autoRecordedMany": "$n repeating items recorded automatically.",
+    "priceUpFound": "$name came in at $amount, higher than planned. Link it?",
+    "priceUpUpdate": "Update item",
+    "priceUpKeep": "Keep amount"
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",

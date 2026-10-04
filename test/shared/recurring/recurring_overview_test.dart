@@ -186,4 +186,30 @@ void main() {
       expect(idle(spotify()), isEmpty);
     });
   });
+
+  group('W3 dari notifikasi: priceIncreaseCandidate (T-17.6)', () {
+    final netflix = RecurringRule(
+      id: 'netflix',
+      kind: RecurringKind.expense,
+      amount: 6500000,
+      walletId: 'bca',
+      note: 'Netflix',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 10)),
+    );
+    ExpenseTransaction paid(String id, int amount, {String wallet = 'bca', int day = 2}) =>
+        ExpenseTransaction(id: id, date: DateTime(2026, 10, day), amount: amount, note: '', walletId: wallet);
+    Transaction? candidate(List<Transaction> txs) => priceIncreaseCandidate(netflix, DateTime(2026, 10), txs);
+
+    test('naik ≥5% dan ≥Rp5.000 dalam ±3 hari: kandidat', () {
+      expect(candidate([paid('a', 7900000)])?.id, 'a');
+    });
+
+    test('naik kecil, sama persis, dompet lain, terlalu jauh, atau dua kandidat: tidak', () {
+      expect(candidate([paid('a', 6600000)]), isNull);
+      expect(candidate([paid('a', 6500000)]), isNull);
+      expect(candidate([paid('a', 7900000, wallet: 'jago')]), isNull);
+      expect(candidate([paid('a', 7900000, day: 8)]), isNull);
+      expect(candidate([paid('a', 7900000), paid('b', 8000000)]), isNull);
+    });
+  });
 }

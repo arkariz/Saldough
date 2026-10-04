@@ -276,5 +276,26 @@ void main() {
       expect(find.byKey(const ValueKey('recurring-idle-Spotify')), findsNothing);
       expect(read(await rules.listRules()).single.idleDismissedAt, DateTime(2026, 10, 2));
     });
+
+    testWidgets(
+      'W3 dari notifikasi: nominal naik tidak bisa Catat ganda; Perbarui rutin menautkan dan mengubah nominal (T-17.6)',
+      (
+        tester,
+      ) async {
+        await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+        await transactions.saveTransaction(
+          ExpenseTransaction(id: 'notif', date: DateTime(2026, 10, 2), amount: 7900000, note: '', walletId: 'bca'),
+        );
+        await pump(tester, const RecurringSegmentView());
+        expect(find.byKey(const ValueKey('recurring-price-up-Netflix')), findsOneWidget);
+        expect(find.text(t.recurring.recordAction), findsNothing);
+
+        await tester.tap(find.text(t.recurring.priceUpUpdate));
+        await tester.pumpAndSettle();
+        final october = read(await transactions.listTransactionsInMonth(DateTime(2026, 10)));
+        expect(october.single.recurrence?.ruleId, 'Netflix');
+        expect(read(await rules.listRules()).single.amount, 7900000);
+      },
+    );
   });
 }

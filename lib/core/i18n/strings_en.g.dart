@@ -1168,6 +1168,9 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get idleKeep => 'Keep';
 	@override String autoRecordedOne({required Object name}) => '${name} recorded automatically.';
 	@override String autoRecordedMany({required Object n}) => '${n} repeating items recorded automatically.';
+	@override String priceUpFound({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?';
+	@override String get priceUpUpdate => 'Update item';
+	@override String get priceUpKeep => 'Keep amount';
 }
 
 // Path: plan
@@ -2470,6 +2473,9 @@ extension on TranslationsEn {
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
+			'recurring.priceUpUpdate' => 'Update item',
+			'recurring.priceUpKeep' => 'Keep amount',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',

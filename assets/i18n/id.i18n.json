@@ -1087,7 +1087,10 @@
     "idleBody": "Dua kemunculan terakhir dilewati atau belum terlihat.",
     "idleKeep": "Biarkan",
     "autoRecordedOne": "$name dicatat otomatis.",
-    "autoRecordedMany": "$n rutin dicatat otomatis."
+    "autoRecordedMany": "$n rutin dicatat otomatis.",
+    "priceUpFound": "$name tercatat $amount, naik dari rutin. Tautkan?",
+    "priceUpUpdate": "Perbarui rutin",
+    "priceUpKeep": "Biarkan"
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",

@@ -111,10 +111,7 @@ MonthPlan monthPlan(
   var moved = 0;
   var hasEstimate = false;
   final lines = budgetLines.toList();
-  final lineKeys = {
-    for (final line in lines)
-      if (line.key case final key?) key,
-  };
+  final lineKeys = {for (final line in lines) ?line.key};
   // Kemunculan rutin tertaut pos per kunci pos (ADR-036 §3.4).
   final linked = <String, int>{};
   for (final rule in rules) {

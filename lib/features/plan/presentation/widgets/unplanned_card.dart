@@ -14,8 +14,8 @@ class UnplannedCard extends StatelessWidget {
     required this.plan,
     required this.monthLabel,
     required this.onShowRecurring,
-    this.isForecast = false,
     required this.onShowBudget,
+    this.isForecast = false,
     super.key,
   });
 

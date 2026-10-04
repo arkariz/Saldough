@@ -2986,6 +2986,12 @@ class Translations$recurring$id {
 
 	/// id: 'Tautan pos $name dilepas.'
 	String budgetUnlinkedMessage({required Object name}) => 'Tautan pos ${name} dilepas.';
+
+	/// id: 'Siapkan dana di $wallet'
+	String fundingTitle({required Object wallet}) => 'Siapkan dana di ${wallet}';
+
+	/// id: '$name $amount, $date. Perkiraan kurang ≈$shortfall.'
+	String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.';
 }
 
 // Path: plan
@@ -3139,6 +3145,18 @@ class Translations$plan$id {
 
 	/// id: '$value rb'
 	String compactThousand({required Object value}) => '${value} rb';
+
+	/// id: 'SIAPKAN DANA'
+	String get fundingTitle => 'SIAPKAN DANA';
+
+	/// id: 'Saldo $wallet diperkirakan kurang ≈$shortfall saat $name, $date. Siapkan dana di $wallet sebelum tanggal itu.'
+	String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => 'Saldo ${wallet} diperkirakan kurang ≈${shortfall} saat ${name}, ${date}. Siapkan dana di ${wallet} sebelum tanggal itu.';
+
+	/// id: 'Lihat perkiraan $wallet'
+	String fundingAction({required Object wallet}) => 'Lihat perkiraan ${wallet}';
+
+	/// id: '+$n lainnya'
+	String fundingMore({required Object n}) => '+${n} lainnya';
 }
 
 // Path: record.draftIssue
@@ -4531,6 +4549,8 @@ extension on Translations {
 			_ => null,
 		} ?? switch (path) {
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
+			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
+			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'plan.recurringSegmentLabel' => 'Rutin',
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
@@ -4579,6 +4599,10 @@ extension on Translations {
 			'plan.startOf' => ({required Object date}) => 'Awal ${date}',
 			'plan.compactMillion' => ({required Object value}) => '${value} jt',
 			'plan.compactThousand' => ({required Object value}) => '${value} rb',
+			'plan.fundingTitle' => 'SIAPKAN DANA',
+			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => 'Saldo ${wallet} diperkirakan kurang ≈${shortfall} saat ${name}, ${date}. Siapkan dana di ${wallet} sebelum tanggal itu.',
+			'plan.fundingAction' => ({required Object wallet}) => 'Lihat perkiraan ${wallet}',
+			'plan.fundingMore' => ({required Object n}) => '+${n} lainnya',
 			_ => null,
 		};
 	}

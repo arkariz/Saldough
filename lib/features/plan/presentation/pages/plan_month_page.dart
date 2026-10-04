@@ -12,6 +12,7 @@ import 'package:saldough/features/plan/di/plan_scope.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
 import 'package:saldough/features/plan/presentation/widgets/balance_forecast_card.dart';
+import 'package:saldough/features/plan/presentation/widgets/funding_banner.dart';
 import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -138,12 +139,23 @@ class PlanMonthView extends StatelessWidget {
             m.start.day == 1 ? CycleMonthFormatter.formatMonthShort(m.start) : m.label;
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
+        final funding = state.fundingWarnings;
         return TourTrigger(
           tour: TourId.planMonth,
           ready: true,
           child: ListView(
             padding: padding,
             children: [
+              // Blok 0: siapkan dana (W1, ADR-036 §3.6).
+              if (funding.isNotEmpty) ...[
+                FundingBanner(
+                  warnings: funding,
+                  onShowWallet: (walletId) => bloc
+                    ..add(const PlanMonthSelected(0))
+                    ..add(PlanMonthWalletChanged(walletId)),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               // Pemilih bulan (PLAN_TAB_LAYOUT §4.3): bulan berjalan + 2,
               // tiap chip membawa perkiraan akhir bulannya.
               SpotlightTarget(

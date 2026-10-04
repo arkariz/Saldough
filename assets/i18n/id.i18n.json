@@ -1074,7 +1074,9 @@
     "budgetLinkRemove": "Lepas tautan",
     "budgetLinkEmpty": "Belum ada pos anggaran rutin di dompet ini.",
     "budgetLinkedMessage": "$name tertaut ke pos $item.",
-    "budgetUnlinkedMessage": "Tautan pos $name dilepas."
+    "budgetUnlinkedMessage": "Tautan pos $name dilepas.",
+    "fundingTitle": "Siapkan dana di $wallet",
+    "fundingBody": "$name $amount, $date. Perkiraan kurang ≈$shortfall."
   },
   "plan": {
     "recurringSegmentLabel": "Rutin",
@@ -1124,6 +1126,10 @@
     "forecastBadge": "PERKIRAAN",
     "startOf": "Awal $date",
     "compactMillion": "$value jt",
-    "compactThousand": "$value rb"
+    "compactThousand": "$value rb",
+    "fundingTitle": "SIAPKAN DANA",
+    "fundingBody": "Saldo $wallet diperkirakan kurang ≈$shortfall saat $name, $date. Siapkan dana di $wallet sebelum tanggal itu.",
+    "fundingAction": "Lihat perkiraan $wallet",
+    "fundingMore": "+$n lainnya"
   }
 }

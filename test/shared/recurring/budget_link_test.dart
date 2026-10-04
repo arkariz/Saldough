@@ -37,10 +37,10 @@ void main() {
 
   test('kemunculan tertaut masuk pos periode yang mencakup tanggalnya', () {
     final rule = kos(key: 'k-kos');
-    expect(budgetItemForOccurrence(rule, DateTime(2026, 10, 1), options), 'kos-okt');
-    expect(budgetItemForOccurrence(rule, DateTime(2026, 11, 1), options), 'kos-nov');
-    expect(budgetItemForOccurrence(rule, DateTime(2026, 12, 1), options), isNull);
-    expect(budgetItemForOccurrence(kos(), DateTime(2026, 10, 1), options), isNull);
+    expect(budgetItemForOccurrence(rule, DateTime(2026, 10), options), 'kos-okt');
+    expect(budgetItemForOccurrence(rule, DateTime(2026, 11), options), 'kos-nov');
+    expect(budgetItemForOccurrence(rule, DateTime(2026, 12), options), isNull);
+    expect(budgetItemForOccurrence(kos(), DateTime(2026, 10), options), isNull);
     final transaction = transactionForOccurrence(
       rule,
       DateTime(2026, 10),

@@ -172,6 +172,10 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     reportFrom: k == 0 ? null : months[k].start,
   );
 
+  /// Peringatan siapkan dana (W1, ADR-036 §3.6) dari perkiraan per dompet,
+  /// tidak tergantung dompet atau bulan yang sedang dipilih.
+  List<FundingWarning> get fundingWarnings => planFundingWarnings(this);
+
   /// Tiga kemunculan berikutnya di bulan terpilih (bulan berjalan: sesudah
   /// hari ini).
   List<Occurrence> get nextOccurrences {
@@ -243,4 +247,55 @@ final class PlanMonthState extends UiState<PlanMonthState> {
     laterBudgets,
     selected,
   ];
+}
+
+/// Perkiraan satu dompet sampai akhir bulan depan (cukup untuk H−3), dengan
+/// rata-rata di luar rencana dompet itu (ADR-036 §3.6).
+List<FundingWarning> planFundingWarnings(PlanMonthState state) {
+  final months = state.months;
+  return fundingWarnings(
+    state.rules,
+    today: state.today,
+    transactions: state.transactions,
+    walletName: (id) => state.wallets.where((w) => w.id == id).firstOrNull?.name ?? '',
+    projectionOf: (walletId) => projectCashflow(
+      state.rules,
+      startBalance: state.wallets.where((w) => w.id == walletId).fold(0, (sum, w) => sum + w.currentBalance),
+      today: state.today,
+      until: months[1].end,
+      pendingFrom: state.range.start,
+      transactions: state.transactions,
+      budgets: [
+        for (var i = 0; i <= 1; i++)
+          for (final b in state.budgetsFor(i))
+            for (final line in b.lines)
+              (
+                walletId: b.walletId,
+                key: line.key,
+                remaining: line.planned > line.spent ? line.planned - line.spent : 0,
+                periodEnd: b.periodEnd,
+              ),
+      ],
+      unplannedPerDay: state.includeUnplanned
+          ? unplannedDailyAverage(
+              state.transactions,
+              months: [
+                for (var back = 1; back <= 3; back++)
+                  () {
+                    final r = financialMonthOf(
+                      DateTime(state.range.start.year, state.range.start.month - back, state.range.start.day),
+                      state.range.start.day,
+                    );
+                    return (start: r.start, end: r.end);
+                  }(),
+              ],
+              historyStart: state.historyStart,
+              ruleIds: {for (final rule in state.rules) rule.id},
+              walletId: walletId,
+            )
+          : null,
+      uncertainIncome: state.uncertain,
+      walletId: walletId,
+    ),
+  );
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/recurring/domain/reminder_plan.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
@@ -129,6 +130,15 @@ final class LocalNotificationReminderScheduler implements ReminderScheduler {
     }
 
     return switch (reminder.kind) {
+      ReminderKind.funding => (
+        t.recurring.fundingTitle(wallet: reminder.funding!.walletName),
+        t.recurring.fundingBody(
+          name: items.single.rule.note.isEmpty ? t.record.repeat.fallbackName : items.single.rule.note,
+          amount: AppMoneyFormatter.format(items.single.rule.amount),
+          date: CycleMonthFormatter.formatDayMonth(items.single.date),
+          shortfall: AppMoneyFormatter.format(reminder.funding!.shortfall),
+        ),
+      ),
       ReminderKind.dueSoon => (
         t.recurring.reminderSoonTitle(n: items.single.rule.remindDaysBefore),
         line(items.single),

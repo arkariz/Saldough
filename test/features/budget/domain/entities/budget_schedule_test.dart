@@ -32,7 +32,7 @@ void main() {
       final weekly = BudgetSchedule(walletId: 'bca', period: BudgetPeriod.weekly, anchorDate: DateTime(2026, 10, 5));
       expect(weekly.startAt(DateTime(2026, 10, 11)), DateTime(2026, 10, 5));
       expect(weekly.startAt(DateTime(2026, 10, 12)), DateTime(2026, 10, 12));
-      expect(weekly.startAt(DateTime(2027, 1, 1)), DateTime(2026, 12, 28));
+      expect(weekly.startAt(DateTime(2027)), DateTime(2026, 12, 28));
     });
 
     test('periode yang beririsan dengan sebuah rentang', () {

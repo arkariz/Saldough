@@ -9,12 +9,16 @@ enum ReminderKind {
 
   /// Ringkasan pada hari jatuh tempo.
   dueToday,
+
+  /// Siapkan dana: autodebet yang perkiraan saldo dompetnya kurang
+  /// (ADR-036 §3.6), H−1.
+  funding,
 }
 
 /// Satu notifikasi terjadwal.
 final class PlannedReminder extends Equatable {
   /// Membuat [PlannedReminder].
-  const PlannedReminder({required this.id, required this.at, required this.kind, required this.items});
+  const PlannedReminder({required this.id, required this.at, required this.kind, required this.items, this.funding});
 
   /// Id notifikasi, stabil dari isinya supaya penyusunan ulang tidak
   /// menggandakan.
@@ -29,12 +33,16 @@ final class PlannedReminder extends Equatable {
   /// Kemunculan yang diingatkan.
   final List<({RecurringRule rule, DateTime date})> items;
 
+  /// Peringatan siapkan dana untuk [ReminderKind.funding].
+  final FundingWarning? funding;
+
   /// Payload ketukan: `record|<ruleId>|<yyyy-mm-dd>` bila satu kemunculan,
   /// selain itu `open`.
   String get payload => items.length == 1 ? reminderPayload(items.single.rule.id, items.single.date) : 'open';
 
-  /// Aksi **Catat** hanya untuk satu kemunculan.
-  bool get canRecord => items.length == 1;
+  /// Aksi **Catat** hanya untuk satu kemunculan yang memang dicatat
+  /// pengguna (bukan peringatan siapkan dana).
+  bool get canRecord => items.length == 1 && kind != ReminderKind.funding;
 
   @override
   List<Object?> get props => [
@@ -42,6 +50,7 @@ final class PlannedReminder extends Equatable {
     at,
     kind,
     [for (final i in items) (i.rule.id, i.date)],
+    funding,
   ];
 }
 
@@ -59,11 +68,14 @@ const reminderHour = 9;
 ///
 /// Rutin dijeda, rutin dengan pengingat mati, kemunculan yang sudah
 /// tercatat atau dilewati, dan waktu yang sudah lewat tidak dijadwalkan.
-/// [transactions] memuat bulan berjalan dan bulan depan.
+/// [transactions] memuat bulan berjalan dan bulan depan. [funding]
+/// menambah satu pengingat siapkan dana H−1 per kemunculan autodebet yang
+/// diperkirakan kurang (ADR-036 §3.6).
 List<PlannedReminder> planReminders(
   Iterable<RecurringRule> rules, {
   required DateTime now,
   required Iterable<Transaction> transactions,
+  Iterable<FundingWarning> funding = const [],
 }) {
   final today = DateTime(now.year, now.month, now.day);
   final until = DateTime(today.year, today.month, today.day + reminderWindowDays + 1);
@@ -101,7 +113,19 @@ List<PlannedReminder> planReminders(
           items: items..sort((a, b) => a.rule.note.compareTo(b.rule.note)),
         ),
   ];
-  return [...soon, ...today9]..sort((a, b) => a.at.compareTo(b.at));
+  final fund = [
+    for (final warning in funding)
+      if (DateTime(warning.date.year, warning.date.month, warning.date.day - 1, reminderHour) case final at
+          when at.isAfter(now))
+        PlannedReminder(
+          id: reminderId('fund|${reminderPayload(warning.rule.id, warning.date)}'),
+          at: at,
+          kind: ReminderKind.funding,
+          items: [(rule: warning.rule, date: warning.date)],
+          funding: warning,
+        ),
+  ];
+  return [...soon, ...today9, ...fund]..sort((a, b) => a.at.compareTo(b.at));
 }
 
 /// Payload satu kemunculan.

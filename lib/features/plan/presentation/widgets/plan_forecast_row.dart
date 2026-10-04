@@ -10,6 +10,7 @@ import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/plan/di/plan_scope.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
+import 'package:saldough/features/plan/presentation/widgets/funding_banner.dart';
 import 'package:state_management/state_management.dart';
 
 /// Baris perkiraan di Beranda (T-15.13): "Akhir Okt ≈… · paling tipis ≈…".
@@ -42,6 +43,7 @@ class PlanForecastRow extends StatelessWidget {
                 final low = projection.lowest;
                 if (low == null) return const SizedBox.shrink();
                 final colors = context.appColors;
+                final funding = state.fundingWarnings;
                 // Muncul belakangan dari Beranda: picu tur Beranda lagi.
                 return TourTrigger(
                   tour: TourId.home,
@@ -50,28 +52,31 @@ class PlanForecastRow extends StatelessWidget {
                     spotlightKey: SpotlightKey.homeForecast,
                     child: Padding(
                       padding: const EdgeInsets.only(top: AppSpacing.md),
-                      child: AppTappable(
-                        label: t.plan.balanceTitle,
-                        onTap: onTap,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                t.plan.forecastRow(
-                                  date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
-                                  amount: AppMoneyFormatter.format(projection.endBalance),
-                                  low: AppMoneyFormatter.format(low.balance),
-                                  lowDate: CycleMonthFormatter.formatDayMonth(low.date),
-                                ),
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: low.balance < 0 ? colors.overBudget : colors.textMuted,
-                                ),
+                      // Wawasan prioritas 1 di Beranda (§7B W1): siapkan dana.
+                      child: funding.isNotEmpty
+                          ? FundingBanner(warnings: funding, onShowWallet: (_) => onTap())
+                          : AppTappable(
+                              label: t.plan.balanceTitle,
+                              onTap: onTap,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      t.plan.forecastRow(
+                                        date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
+                                        amount: AppMoneyFormatter.format(projection.endBalance),
+                                        low: AppMoneyFormatter.format(low.balance),
+                                        lowDate: CycleMonthFormatter.formatDayMonth(low.date),
+                                      ),
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: low.balance < 0 ? colors.overBudget : colors.textMuted,
+                                      ),
+                                    ),
+                                  ),
+                                  const AppIcon(IconKey.chevronRight, size: 18),
+                                ],
                               ),
                             ),
-                            const AppIcon(IconKey.chevronRight, size: 18),
-                          ],
-                        ),
-                      ),
                     ),
                   ),
                 );

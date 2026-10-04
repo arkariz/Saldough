@@ -1074,7 +1074,9 @@
     "budgetLinkRemove": "Unlink",
     "budgetLinkEmpty": "No repeating budget items in this wallet yet.",
     "budgetLinkedMessage": "$name is linked to $item.",
-    "budgetUnlinkedMessage": "$name is no longer linked to a budget item."
+    "budgetUnlinkedMessage": "$name is no longer linked to a budget item.",
+    "fundingTitle": "Prepare funds in $wallet",
+    "fundingBody": "$name $amount on $date. Expected short ≈$shortfall."
   },
   "plan": {
     "recurringSegmentLabel": "Recurring",
@@ -1124,6 +1126,10 @@
     "forecastBadge": "FORECAST",
     "startOf": "Start $date",
     "compactMillion": "${value}M",
-    "compactThousand": "${value}K"
+    "compactThousand": "${value}K",
+    "fundingTitle": "PREPARE FUNDS",
+    "fundingBody": "$wallet is expected to be short by ≈$shortfall for $name on $date. Add funds to $wallet before then.",
+    "fundingAction": "See $wallet forecast",
+    "fundingMore": "+$n more"
   }
 }

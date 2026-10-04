@@ -31,8 +31,13 @@ class RecurringReminderHost extends StatefulWidget {
     required this.container,
     required this.onShowRecurring,
     required this.child,
+    this.fundingWarnings,
     super.key,
   });
+
+  /// Peringatan siapkan dana untuk notifikasi (ADR-036 §3.6), disambungkan
+  /// akar komposisi dari fitur `plan`.
+  final Future<List<FundingWarning>> Function()? fundingWarnings;
 
   /// Kontainer akar.
   final GetIt container;
@@ -74,6 +79,7 @@ class _RecurringReminderHostState extends State<RecurringReminderHost> with Widg
       settings: c<ReminderSettingsRepository>(),
       rules: _rules,
       transactions: c<TransactionRepository>(),
+      fundingWarnings: widget.fundingWarnings,
     );
     _record = RecordTransaction(
       ledgerChanges: c<LedgerChanges>(),

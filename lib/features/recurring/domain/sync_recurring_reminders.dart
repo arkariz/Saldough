@@ -17,6 +17,7 @@ final class SyncRecurringReminders {
     required this.settings,
     required this.rules,
     required this.transactions,
+    this.fundingWarnings,
     this.clock = DateTime.now,
   });
 
@@ -31,6 +32,10 @@ final class SyncRecurringReminders {
 
   /// Buku besar, untuk kemunculan yang sudah tercatat.
   final TransactionRepository transactions;
+
+  /// Peringatan siapkan dana (ADR-036 §3.6), dari perkiraan fitur `plan`
+  /// yang disambungkan akar komposisi; `null` = tanpa.
+  final Future<List<FundingWarning>> Function()? fundingWarnings;
 
   /// Jam.
   final DateTime Function() clock;
@@ -55,7 +60,8 @@ final class SyncRecurringReminders {
       if (month == null) return null;
       ledger.addAll(month);
     }
-    final planned = planReminders(allRules, now: now, transactions: ledger);
+    final funding = await fundingWarnings?.call() ?? const <FundingWarning>[];
+    final planned = planReminders(allRules, now: now, transactions: ledger, funding: funding);
     await scheduler.replaceAll(planned);
     return planned.length;
   }

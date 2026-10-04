@@ -1157,6 +1157,8 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get budgetLinkEmpty => 'No repeating budget items in this wallet yet.';
 	@override String budgetLinkedMessage({required Object name, required Object item}) => '${name} is linked to ${item}.';
 	@override String budgetUnlinkedMessage({required Object name}) => '${name} is no longer linked to a budget item.';
+	@override String fundingTitle({required Object wallet}) => 'Prepare funds in ${wallet}';
+	@override String fundingBody({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.';
 }
 
 // Path: plan
@@ -1214,6 +1216,10 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String startOf({required Object date}) => 'Start ${date}';
 	@override String compactMillion({required Object value}) => '${value}M';
 	@override String compactThousand({required Object value}) => '${value}K';
+	@override String get fundingTitle => 'PREPARE FUNDS';
+	@override String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.';
+	@override String fundingAction({required Object wallet}) => 'See ${wallet} forecast';
+	@override String fundingMore({required Object n}) => '+${n} more';
 }
 
 // Path: record.draftIssue
@@ -2413,6 +2419,8 @@ extension on TranslationsEn {
 			_ => null,
 		} ?? switch (path) {
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
+			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
+			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
@@ -2461,6 +2469,10 @@ extension on TranslationsEn {
 			'plan.startOf' => ({required Object date}) => 'Start ${date}',
 			'plan.compactMillion' => ({required Object value}) => '${value}M',
 			'plan.compactThousand' => ({required Object value}) => '${value}K',
+			'plan.fundingTitle' => 'PREPARE FUNDS',
+			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.',
+			'plan.fundingAction' => ({required Object wallet}) => 'See ${wallet} forecast',
+			'plan.fundingMore' => ({required Object n}) => '+${n} more',
 			_ => null,
 		};
 	}

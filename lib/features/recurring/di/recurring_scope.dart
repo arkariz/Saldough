@@ -1,6 +1,6 @@
 import 'package:di/di.dart';
-import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';

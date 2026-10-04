@@ -13,6 +13,7 @@ import 'package:saldough/features/account/presentation/navigation/account_route_
 import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
+import 'package:saldough/features/budget/presentation/host/recurring_budget_host.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_list_page.dart';
 import 'package:saldough/features/home/di/home_scope.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
@@ -20,11 +21,11 @@ import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/notification_capture/presentation/host/notification_capture_host.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
+import 'package:saldough/features/plan/presentation/funding_loader.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_page.dart';
 import 'package:saldough/features/plan/presentation/widgets/plan_forecast_row.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
-import 'package:saldough/features/budget/presentation/host/recurring_budget_host.dart';
 import 'package:saldough/features/recurring/presentation/host/recurring_reminder_host.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
@@ -208,6 +209,8 @@ class _AppShellPageState extends State<AppShellPage> {
                                     child: RecurringReminderHost(
                                       container: parentContainer,
                                       onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
+                                      // Siapkan dana (ADR-036 §3.6): hitungan fitur `plan`.
+                                      fundingWarnings: () => loadFundingWarnings(parentContainer),
                                       child: Scaffold(
                                         body: IndexedStack(
                                           index: _activeTab,

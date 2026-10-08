@@ -27,7 +27,7 @@ class WalletEmptyState extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
-              t.wallet.emptyBadge.toUpperCase(),
+              t.wallet.emptyBadge,
               style: labelSmStyle(context, color: colors.warning),
             ),
           ),

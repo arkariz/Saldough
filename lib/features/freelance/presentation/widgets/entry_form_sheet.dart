@@ -190,7 +190,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.freelance.earnedLabel.toUpperCase(),
+                      t.freelance.earnedLabel,
                       style: labelSmStyle(context, color: colors.ink2),
                     ),
                     const SizedBox(height: 2),

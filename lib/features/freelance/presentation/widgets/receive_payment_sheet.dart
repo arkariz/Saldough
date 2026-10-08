@@ -97,7 +97,7 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
                 child: Column(
                   children: [
                     Text(
-                      t.freelance.receiveAmountLabel.toUpperCase(),
+                      t.freelance.receiveAmountLabel,
                       style: labelSmStyle(context, color: colors.surface),
                     ),
                     const SizedBox(height: 4),

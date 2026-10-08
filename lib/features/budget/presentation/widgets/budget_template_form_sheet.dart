@@ -182,7 +182,7 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      t.budget.templateTotalLabel.toUpperCase(),
+                      t.budget.templateTotalLabel,
                       style: labelSmStyle(context, color: colors.ink2),
                     ),
                     FitStart(

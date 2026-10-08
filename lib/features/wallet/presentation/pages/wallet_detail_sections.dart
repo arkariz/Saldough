@@ -26,7 +26,7 @@ class _TopBar extends StatelessWidget {
                   AppIcon(IconKey.chevronLeft, color: colors.ink),
                   const SizedBox(width: AppSpacing.space1),
                   Text(
-                    t.wallet.detailBackLabel.toUpperCase(),
+                    t.wallet.detailBackLabel,
                     style: labelSmStyle(
                       context,
                       color: colors.ink,
@@ -115,7 +115,7 @@ class _HeroCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.space4),
             Text(
-              t.wallet.currentBalanceLabel.toUpperCase(),
+              t.wallet.currentBalanceLabel,
               style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: 4),
@@ -280,7 +280,7 @@ class _SummaryStat extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label.toUpperCase(),
+          label,
           style: labelSmStyle(
             context,
             color: context.appColors.ink2,
@@ -354,7 +354,7 @@ class _Badge extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        label.toUpperCase(),
+        label,
         style: labelSmStyle(
           context,
           size: 9,

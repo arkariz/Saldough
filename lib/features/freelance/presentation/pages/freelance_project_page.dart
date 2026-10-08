@@ -629,7 +629,7 @@ class _StatTile extends StatelessWidget {
               AppIcon(icon, size: 16),
               const SizedBox(width: 4),
               Expanded(
-                child: Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: color)),
+                child: Text(label, style: labelSmStyle(context, size: 9, color: color)),
               ),
             ],
           ),
@@ -763,7 +763,7 @@ class _FilterTileState extends State<_FilterTile> {
               ),
               const SizedBox(height: 2),
               Text(
-                widget.label.toUpperCase(),
+                widget.label,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 style: labelSmStyle(context, size: 9, color: ink),

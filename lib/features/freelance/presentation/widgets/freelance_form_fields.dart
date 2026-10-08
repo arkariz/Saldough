@@ -47,12 +47,12 @@ class FreelanceDateButton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
+                    Text(label, style: labelSmStyle(context, color: colors.ink2)),
                     Text(CycleMonthFormatter.formatDate(date), style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
               ),
-              Text(t.freelance.changeAction.toUpperCase(), style: labelSmStyle(context, color: colors.brand)),
+              Text(t.freelance.changeAction, style: labelSmStyle(context, color: colors.brand)),
             ],
           ),
         ),

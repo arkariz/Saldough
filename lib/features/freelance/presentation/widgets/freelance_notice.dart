@@ -33,7 +33,7 @@ class FreelanceNotice extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title.toUpperCase(), style: labelSmStyle(context, color: ink)),
+                Text(title, style: labelSmStyle(context, color: ink)),
                 const SizedBox(height: 2),
                 Text(body, style: Theme.of(context).textTheme.bodyMedium),
               ],

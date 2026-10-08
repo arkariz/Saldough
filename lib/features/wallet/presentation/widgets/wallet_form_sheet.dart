@@ -367,7 +367,7 @@ class _Header extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  (editing ? t.wallet.editStepLabel : t.wallet.addStepLabel).toUpperCase(),
+                  (editing ? t.wallet.editStepLabel : t.wallet.addStepLabel),
                   textAlign: TextAlign.center,
                   style: labelSmStyle(context, color: colors.brand),
                 ),
@@ -420,7 +420,7 @@ class _IconChoice extends StatelessWidget {
             AppIcon(iconKey, size: 36),
             const SizedBox(height: 4),
             Text(
-              (walletTypeLabel(iconKey.name) ?? '').toUpperCase(),
+              walletTypeLabel(iconKey.name) ?? '',
               textAlign: TextAlign.center,
               style: labelSmStyle(
                 context,
@@ -450,7 +450,7 @@ class _CurrentBalanceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            t.wallet.currentBalanceLabel.toUpperCase(),
+            t.wallet.currentBalanceLabel,
             style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),

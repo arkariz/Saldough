@@ -29,7 +29,11 @@ import 'package:state_management/state_management.dart';
 /// tempat sunting dan hapus (T-2.6).
 class TransactionListPage extends StatefulWidget {
   /// Membuat [TransactionListPage].
-  const TransactionListPage({super.key});
+  const TransactionListPage({this.notice, super.key});
+
+  /// Banner kotak masuk notifikasi, disisipkan akar komposisi (prototipe
+  /// `Riwayat.dc.html`); `null` = tidak ada.
+  final Widget? notice;
 
   @override
   State<TransactionListPage> createState() => _TransactionListPageState();
@@ -53,7 +57,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.transaction.pageTitle)),
+      appBar: AppBar(
+        title: Text(t.transaction.pageTitle, style: Theme.of(context).textTheme.headlineSmall),
+        centerTitle: false,
+        actions: const [TutorialInfoButton(tour: TourId.transaction)],
+      ),
       body: SafeArea(
         child: BlocBuilder<TransactionBloc, TransactionState>(
           builder: (context, state) {
@@ -148,6 +156,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           typeCounts: state.typeCounts,
                           onChanged: (filter) => bloc.add(TransactionTypeFilterChanged(filter)),
                         ),
+                        ?widget.notice,
                         const SizedBox(height: AppSpacing.space4),
                       ],
                     ),

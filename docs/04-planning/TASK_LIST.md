@@ -2435,11 +2435,27 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       kartu Menunggu sampai T-14.8. Uji: formatter/rebuild/repository
       sembunyikan nominal, tombol mata di Beranda, isi Beranda dan 360dp teks
       2×. `flutter analyze` bersih, 1.154 uji lulus.
-- [ ] **T-14.7** Riwayat sesuai `Riwayat.dc.html`: pemilih bulan,
+- [x] **T-14.7** Riwayat sesuai `Riwayat.dc.html`: pemilih bulan,
       ringkasan, chip jenis, banner kotak masuk, grup per hari dengan
       selisih harian, baris dengan ikon piksel.
       Verifikasi: uji widget penyaring dan pengelompokan.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (8 Okt 2026): pemilih bulan (panah + "September 2026") dan kartu
+      pemasukan/pengeluaran bulan itu; chip jenis `AppChip` di atas `bg`
+      dengan jumlah (teks "Pengeluaran/Pemasukan/Transfer", bukan
+      Keluar/Masuk/Mutasi); kolom cari pil `surface2`; banner kotak masuk
+      disisipkan shell seperti di Beranda; kelompok per hari: kepala "Hari
+      ini · Senin, 28 Sep" + selisih hari itu, satu `AppListCard` per hari.
+      `TransactionRow` jadi baris `AppListRow`: judul = catatan (kategori bila
+      kosong), subjudul "Dompet · 08.00" / "BCA → Tunai · 08.00", nominal
+      `AppMoneyText` bertanda; pemakai lain (Beranda, rincian dompet dan
+      anggaran) membungkusnya dengan `AppListCard`. Jam di seluruh aplikasi
+      bertitik (`transactionTime`). Menu tur pindah ke bar atas. Selisih
+      disengaja: cari dan filter tetap di badan halaman (prototipe menaruh
+      keduanya sebagai ikon di bar atas) supaya tidak menambah alur
+      pencarian baru. Uji: baris/kelompok (judul, subjudul, tanda, ikon kopi,
+      pemisah), uji Riwayat lama disesuaikan ke judul catatan. `flutter
+      analyze` bersih, 1.156 uji lulus.
 - [ ] **T-14.8** Anggaran dan rincian anggaran sesuai `Anggaran.dc.html`
       dan `RincianAnggaran.dc.html`: kontrol segmen status, sisa total,
       kartu dengan status Aman/Hampir habis/Lewat, daftar pos dengan bar

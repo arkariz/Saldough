@@ -277,7 +277,7 @@ void main() {
       await seedExpense();
       await openTransactionsTab(tester);
 
-      await tester.tap(find.text('Makan Siang'));
+      await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
       expect(find.byType(TransactionDetailPage), findsOneWidget);
@@ -407,7 +407,7 @@ void main() {
         );
         await recompute({'bca'});
         await openTransactionsTab(tester);
-        await tester.tap(find.text(category));
+        await tester.tap(find.text(note)); // judul baris = catatan (ADR-034)
         await tester.pumpAndSettle();
 
         tester.platformDispatcher.textScaleFactorTestValue = 2;
@@ -428,7 +428,7 @@ void main() {
       await seedExpense();
       expect(await balanceOf('bca'), 92500000);
       await openTransactionsTab(tester);
-      await tester.tap(find.text('Makan Siang'));
+      await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
       await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
@@ -437,7 +437,7 @@ void main() {
       // Tidak ada dialog konfirmasi -- rincian sudah tertutup dan
       // transaksinya sudah hilang seketika.
       expect(find.byType(TransactionDetailPage), findsNothing);
-      expect(find.text('Makan Siang'), findsNothing);
+      expect(find.text('nasi padang'), findsNothing);
       expect(find.text(t.transaction.deletedMessage), findsOneWidget);
       expect(find.text(t.transaction.undoDeleteAction), findsOneWidget, reason: 'snackbar menawarkan Urungkan');
       expect(await balanceOf('bca'), 100000000, reason: 'saldo kembali ke keadaan sebelum transaksi ada');
@@ -447,18 +447,18 @@ void main() {
       useTallViewport(tester);
       await seedExpense();
       await openTransactionsTab(tester);
-      await tester.tap(find.text('Makan Siang'));
+      await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
       await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
       await tester.pumpAndSettle();
-      expect(find.text('Makan Siang'), findsNothing);
+      expect(find.text('nasi padang'), findsNothing);
       expect(await balanceOf('bca'), 100000000);
 
       await tester.tap(find.text(t.transaction.undoDeleteAction));
       await tester.pumpAndSettle();
 
-      expect(find.text('Makan Siang'), findsOneWidget);
+      expect(find.text('nasi padang'), findsOneWidget);
       expect(find.text(t.transaction.restoredMessage), findsOneWidget);
       expect(await balanceOf('bca'), 92500000, reason: 'saldo persis seperti sebelum dihapus');
       final all = (await transactionRepository.listAllTransactions()).fold<List<Transaction>>((_) => [], (r) => r);
@@ -471,7 +471,7 @@ void main() {
       useTallViewport(tester);
       await seedExpense();
       await openTransactionsTab(tester);
-      await tester.tap(find.text('Makan Siang'));
+      await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
       await tester.tap(find.widgetWithText(AppButton, t.transaction.editAction));
@@ -505,7 +505,7 @@ void main() {
       useTallViewport(tester);
       await seedExpense();
       await openTransactionsTab(tester);
-      await tester.tap(find.text('Makan Siang'));
+      await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.recordAgainAction));

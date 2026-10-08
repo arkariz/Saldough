@@ -172,9 +172,9 @@
     "flowIncomeLabel": "Masuk",
     "flowExpenseLabel": "Keluar",
     "allFilterLabel": "Semua $count",
-    "incomeFilterLabel": "Masuk $count",
-    "expenseFilterLabel": "Keluar $count",
-    "transferFilterLabel": "Mutasi $count",
+    "incomeFilterLabel": "Pemasukan $count",
+    "expenseFilterLabel": "Pengeluaran $count",
+    "transferFilterLabel": "Transfer $count",
     "walletFilterAllLabel": "Semua Dompet",
     "walletFilterLabel": "Dompet",
     "categoryFilterAllLabel": "Semua Kategori",
@@ -236,7 +236,9 @@
     "budgetLabel": "Anggaran",
     "openBudgetAction": "Lihat anggaran",
     "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.",
-    "makeRecurringAction": "Jadikan Rutin"
+    "makeRecurringAction": "Jadikan Rutin",
+    "previousMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya"
   },
   "wallet": {
     "subtitle": "Posisi saldo kas saat ini",

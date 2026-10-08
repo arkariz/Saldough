@@ -194,7 +194,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get flowExpenseLabel => 'Out';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
-	@override String expenseFilterLabel({required Object count}) => 'Expense ${count}';
+	@override String expenseFilterLabel({required Object count}) => 'Expenses ${count}';
 	@override String transferFilterLabel({required Object count}) => 'Transfer ${count}';
 	@override String get walletFilterAllLabel => 'All Wallets';
 	@override String get walletFilterLabel => 'Wallet';
@@ -258,6 +258,8 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get openBudgetAction => 'View budget';
 	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
 	@override String get makeRecurringAction => 'Make Recurring';
+	@override String get previousMonth => 'Previous month';
+	@override String get nextMonth => 'Next month';
 }
 
 // Path: wallet
@@ -1612,7 +1614,7 @@ extension on TranslationsEn {
 			'transaction.flowExpenseLabel' => 'Out',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
-			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expense ${count}',
+			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expenses ${count}',
 			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
 			'transaction.walletFilterAllLabel' => 'All Wallets',
 			'transaction.walletFilterLabel' => 'Wallet',
@@ -1676,6 +1678,8 @@ extension on TranslationsEn {
 			'transaction.openBudgetAction' => 'View budget',
 			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
 			'transaction.makeRecurringAction' => 'Make Recurring',
+			'transaction.previousMonth' => 'Previous month',
+			'transaction.nextMonth' => 'Next month',
 			'wallet.subtitle' => 'Where your cash stands right now',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active',
 			'wallet.totalLabel' => 'Total balance of all wallets',
@@ -1965,10 +1969,10 @@ extension on TranslationsEn {
 			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h',
 			'freelance.expectedDateLabel' => 'Expected date received',
 			'freelance.grossPayLabel' => 'Gross pay',
-			'freelance.netPayLabel' => 'Net pay',
-			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.netPayLabel' => 'Net pay',
+			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
 			'freelance.paymentCreateAction' => 'Create Payment',
 			'freelance.paymentChangeDateAction' => 'Change date',
 			'freelance.paymentDeleteAction' => 'Delete',
@@ -2479,10 +2483,10 @@ extension on TranslationsEn {
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
 			'recurring.reminderTodayTitle' => 'Due today',
-			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
-			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
+			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
 			'recurring.remindersTitle' => 'Recurring reminders',
 			'recurring.remindersBody' => 'Reminded a day before bills you pay yourself, and on the due day.',
 			'recurring.remindersDenied' => 'Notification permission was not granted. Turn it on in system settings.',

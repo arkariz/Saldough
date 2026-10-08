@@ -371,14 +371,14 @@ class Translations$transaction$id {
 	/// id: 'Semua $count'
 	String allFilterLabel({required Object count}) => 'Semua ${count}';
 
-	/// id: 'Masuk $count'
-	String incomeFilterLabel({required Object count}) => 'Masuk ${count}';
+	/// id: 'Pemasukan $count'
+	String incomeFilterLabel({required Object count}) => 'Pemasukan ${count}';
 
-	/// id: 'Keluar $count'
-	String expenseFilterLabel({required Object count}) => 'Keluar ${count}';
+	/// id: 'Pengeluaran $count'
+	String expenseFilterLabel({required Object count}) => 'Pengeluaran ${count}';
 
-	/// id: 'Mutasi $count'
-	String transferFilterLabel({required Object count}) => 'Mutasi ${count}';
+	/// id: 'Transfer $count'
+	String transferFilterLabel({required Object count}) => 'Transfer ${count}';
 
 	/// id: 'Semua Dompet'
 	String get walletFilterAllLabel => 'Semua Dompet';
@@ -565,6 +565,12 @@ class Translations$transaction$id {
 
 	/// id: 'Jadikan Rutin'
 	String get makeRecurringAction => 'Jadikan Rutin';
+
+	/// id: 'Bulan sebelumnya'
+	String get previousMonth => 'Bulan sebelumnya';
+
+	/// id: 'Bulan berikutnya'
+	String get nextMonth => 'Bulan berikutnya';
 }
 
 // Path: wallet
@@ -3871,9 +3877,9 @@ extension on Translations {
 			'transaction.flowIncomeLabel' => 'Masuk',
 			'transaction.flowExpenseLabel' => 'Keluar',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
-			'transaction.incomeFilterLabel' => ({required Object count}) => 'Masuk ${count}',
-			'transaction.expenseFilterLabel' => ({required Object count}) => 'Keluar ${count}',
-			'transaction.transferFilterLabel' => ({required Object count}) => 'Mutasi ${count}',
+			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
+			'transaction.expenseFilterLabel' => ({required Object count}) => 'Pengeluaran ${count}',
+			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
 			'transaction.walletFilterAllLabel' => 'Semua Dompet',
 			'transaction.walletFilterLabel' => 'Dompet',
 			'transaction.categoryFilterAllLabel' => 'Semua Kategori',
@@ -3936,6 +3942,8 @@ extension on Translations {
 			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
 			'transaction.makeRecurringAction' => 'Jadikan Rutin',
+			'transaction.previousMonth' => 'Bulan sebelumnya',
+			'transaction.nextMonth' => 'Bulan berikutnya',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
 			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
 			'wallet.totalLabel' => 'Total saldo semua dompet',
@@ -4225,10 +4233,10 @@ extension on Translations {
 			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entri · ${hours} jam',
 			'freelance.expectedDateLabel' => 'Perkiraan tanggal diterima',
 			'freelance.grossPayLabel' => 'Gaji kotor',
-			'freelance.netPayLabel' => 'Gaji bersih',
-			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.netPayLabel' => 'Gaji bersih',
+			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
 			'freelance.paymentCreateAction' => 'Buat Pembayaran',
 			'freelance.paymentChangeDateAction' => 'Ubah tanggal',
 			'freelance.paymentDeleteAction' => 'Hapus',
@@ -4739,10 +4747,10 @@ extension on Translations {
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
-			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
-			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
+			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
 			'recurring.remindersTitle' => 'Pengingat rutin',
 			'recurring.remindersBody' => 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.',
 			'recurring.remindersDenied' => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.',

@@ -126,14 +126,16 @@ class BudgetDetailPage extends StatelessWidget {
                   if (linked.isEmpty)
                     Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.ink2))
                   else
-                    for (var i = 0; i < linked.length; i++) ...[
-                      if (i > 0) const SizedBox(height: AppSpacing.space2),
-                      TransactionRow(
-                        transaction: linked[i],
-                        walletsById: walletsById,
-                        onTap: () => _openTransaction(context, linked[i]),
-                      ),
-                    ],
+                    AppListCard(
+                      children: [
+                        for (final transaction in linked)
+                          TransactionRow(
+                            transaction: transaction,
+                            walletsById: walletsById,
+                            onTap: () => _openTransaction(context, transaction),
+                          ),
+                      ],
+                    ),
                   const SizedBox(height: AppSpacing.space6),
                   _HowItWorks(walletName: wallet?.name ?? t.budget.unknownWallet),
                 ],

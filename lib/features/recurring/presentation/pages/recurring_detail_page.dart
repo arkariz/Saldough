@@ -158,7 +158,7 @@ class RecurringDetailPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
-                AppHardCard(
+                AppCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -193,7 +193,7 @@ class RecurringDetailPage extends StatelessWidget {
                         ),
                       if (total != null && done != null) ...[
                         const SizedBox(height: AppSpacing.space2),
-                        AppSegmentedProgressBar(value: (done / total).clamp(0, 1).toDouble()),
+                        AppProgressBar(value: (done / total).clamp(0, 1).toDouble()),
                         const SizedBox(height: AppSpacing.space1),
                         Text(
                           t.recurring.progressLine(k: done, n: total),

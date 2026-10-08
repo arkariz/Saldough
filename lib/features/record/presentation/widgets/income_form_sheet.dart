@@ -298,9 +298,8 @@ class _FreelanceCallout extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.of(context).pop(const OpenFreelance()),
         behavior: HitTestBehavior.opaque,
-        child: TransactionSlab(
+        child: AppCard(
           color: colors.tinted(colors.warning, 0.1),
-          shadowColor: colors.warning,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.space2 + AppSpacing.space1,
             vertical: AppSpacing.space2,

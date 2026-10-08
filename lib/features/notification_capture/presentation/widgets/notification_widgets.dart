@@ -82,7 +82,7 @@ class NotificationSwitchCard extends StatelessWidget {
   final Widget? footer;
 
   @override
-  Widget build(BuildContext context) => AppHardCard(
+  Widget build(BuildContext context) => AppCard(
     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -129,7 +129,7 @@ class NotificationNavCard extends StatelessWidget {
       child: AppTappable(
         label: title,
         onTap: onTap,
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               Expanded(

@@ -50,10 +50,10 @@ class BudgetSummaryCard extends StatelessWidget {
             spacing: AppSpacing.space2,
             runSpacing: 4,
             children: [
-              Text(t.budget.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+              Text(t.budget.summaryTitle.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
               Text(
                 t.budget.summaryPercent(percent: budgetPercent(spent, planned)).toUpperCase(),
-                style: transactionLabelStyle(context, color: AppSegmentedProgressBar.colorFor(context, ratio)),
+                style: labelSmStyle(context, color: AppProgressBar.colorFor(context, ratio)),
               ),
             ],
           ),
@@ -92,7 +92,7 @@ class _Stat extends StatelessWidget {
     return Column(
       crossAxisAlignment: alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text(label.toUpperCase(), style: transactionLabelStyle(context, color: context.appColors.ink2)),
+        Text(label.toUpperCase(), style: labelSmStyle(context, color: context.appColors.ink2)),
         const SizedBox(height: 2),
         FittedBox(
           fit: BoxFit.scaleDown,

@@ -137,7 +137,7 @@ void main() {
   Future<void> openFreelanceThroughRecord(WidgetTester tester) async {
     await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+    await tester.tap(find.text(t.record.kindIncome));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.textContaining(t.record.freelanceCalloutTitle));
     await tester.tap(find.textContaining(t.record.freelanceCalloutTitle));

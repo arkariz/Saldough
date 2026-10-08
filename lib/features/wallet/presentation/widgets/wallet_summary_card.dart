@@ -34,11 +34,11 @@ class WalletSummaryCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
         decoration: BoxDecoration(
           color: colors.tinted(colors.positive, 0.2),
-          borderRadius: AppRadius.pixelSmAll,
+          borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
         ),
         child: Text(
           t.wallet.activeBadge(count: activeCount).toUpperCase(),
-          style: transactionLabelStyle(context, color: colors.positive),
+          style: labelSmStyle(context, color: colors.positive),
         ),
       ),
       child: Column(

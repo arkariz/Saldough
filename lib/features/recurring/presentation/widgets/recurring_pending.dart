@@ -87,9 +87,8 @@ class RecurringPendingTile extends StatelessWidget {
                 },
                 child: Text(t.recurring.priceUpKeep),
               ),
-              AppQuickChip(
+              AppChip(
                 label: t.recurring.priceUpUpdate,
-                color: context.appColors.surface3,
                 onTap: () {
                   AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
                   bloc
@@ -105,9 +104,8 @@ class RecurringPendingTile extends StatelessWidget {
             else if (fixed)
               TextButton(onPressed: () => _editFirst(context, date), child: Text(t.recurring.editFirstAction)),
             if (raised == null)
-              AppQuickChip(
+              AppChip(
                 label: t.recurring.recordAction,
-                color: context.appColors.surface3,
                 onTap: fixed
                     ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
                     : () => _editFirst(context, date),
@@ -184,7 +182,7 @@ class RecurringPendingCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: AppSpacing.space4),
                     child: SpotlightTarget(
                       spotlightKey: spotlight?.key,
-                      child: AppHardCard(
+                      child: AppCard(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [

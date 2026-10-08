@@ -351,7 +351,6 @@ class _PixelFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return AppTappable(
       label: label,
       onTap: onTap,
@@ -361,9 +360,7 @@ class _PixelFab extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: background,
-          borderRadius: AppRadius.pixelSmAll,
-          border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-          boxShadow: AppElevation.hardShadow(colors.lineStrong),
+          borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
         ),
         child: AppIcon(icon, size: size * 0.45, color: foreground),
       ),

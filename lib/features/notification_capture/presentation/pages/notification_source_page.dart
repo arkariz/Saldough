@@ -302,7 +302,7 @@ class _PatternRow extends StatelessWidget {
       child: AppTappable(
         label: pattern.label,
         onTap: onTap,
-        child: AppHardCard(
+        child: AppCard(
           padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
           child: Row(
             children: [

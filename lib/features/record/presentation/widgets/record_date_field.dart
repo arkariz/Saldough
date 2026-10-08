@@ -104,7 +104,7 @@ class RecordDateField extends StatelessWidget {
                         child: FitStart(
                           child: Text(
                             '${CycleMonthFormatter.formatDateShort(date)}, ${_two(date.hour)}:${_two(date.minute)}',
-                            style: transactionLabelStyle(context, color: colors.ink),
+                            style: labelSmStyle(context, color: colors.ink),
                           ),
                         ),
                       ),
@@ -149,7 +149,7 @@ class _DayChip extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
               child: Text(
                 label,
-                style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
+                style: labelSmStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
               ),
             ),
           ),

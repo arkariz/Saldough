@@ -65,7 +65,7 @@ class RecordKindSwitcher extends StatelessWidget {
       child: Semantics(
         container: true,
         label: t.record.kindSwitcherLabel,
-        child: AppSegmented<RecordChoice>(
+        child: AppSegmentedControl<RecordChoice>(
           options: [
             (RecordChoice.expense, t.record.kindExpense),
             (RecordChoice.income, t.record.kindIncome),

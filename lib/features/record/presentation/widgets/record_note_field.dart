@@ -24,7 +24,7 @@ class RecordNoteField extends StatelessWidget {
       children: [
         AppSectionLabel(t.record.noteSectionLabel, hint: t.record.optionalHint),
         const SizedBox(height: AppSpacing.space1),
-        TransactionSlab(
+        AppCard(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
           child: Row(
             children: [

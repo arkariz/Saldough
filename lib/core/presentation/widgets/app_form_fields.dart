@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_card.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
+import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
@@ -40,9 +41,7 @@ class AppFormTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
-      radius: 4,
-      shadow: 2,
+    return AppCard(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
       child: TextField(
         controller: controller,
@@ -93,9 +92,7 @@ class AppFormMoneyField extends StatelessWidget {
     final style = large
         ? textTheme.headlineMedium?.copyWith(fontSize: 26, fontWeight: FontWeight.w700)
         : textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700);
-    return TransactionSlab(
-      radius: 4,
-      shadow: 2,
+    return AppCard(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       child: Row(
         children: [
@@ -146,9 +143,7 @@ class AppFormQuantityField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
-      radius: 4,
-      shadow: 2,
+    return AppCard(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       child: TextField(
         controller: controller,
@@ -210,7 +205,7 @@ class AppFormHeader extends StatelessWidget {
                 Text(
                   stepLabel.toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.brand),
+                  style: labelSmStyle(context, color: colors.brand),
                 ),
                 Text(
                   title,

@@ -53,10 +53,7 @@ class TutorialInfoButton extends StatelessWidget {
       tooltip: t.info.menuTooltip,
       padding: EdgeInsets.zero,
       color: colors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: AppRadius.pixelSmAll,
-        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
-      ),
+      shape: const PixelCornerBorder(),
       onSelected: (action) => unawaited(_onSelected(context, action)),
       itemBuilder: (_) => [
         PopupMenuItem(value: _InfoAction.replayTour, child: Text(t.info.replayTourAction)),

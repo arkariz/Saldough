@@ -513,7 +513,7 @@ class _ProjectHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return TransactionSlab(
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -632,7 +632,7 @@ class _StatTile extends StatelessWidget {
               AppIcon(icon, size: 16),
               const SizedBox(width: 4),
               Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: color)),
+                child: Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: color)),
               ),
             ],
           ),
@@ -741,7 +741,7 @@ class _FilterTileState extends State<_FilterTile> {
           decoration: BoxDecoration(
             color: selected ? colors.tinted(widget.color, 0.14) : colors.surface2,
             borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: selected ? widget.color : Colors.transparent, width: AppBorder.thick),
+            border: Border.all(color: selected ? widget.color : Colors.transparent, width: 2),
             boxShadow: [
               if (lift > 0) BoxShadow(color: widget.color, offset: Offset(0, lift)),
             ],
@@ -769,7 +769,7 @@ class _FilterTileState extends State<_FilterTile> {
                 widget.label.toUpperCase(),
                 textAlign: TextAlign.center,
                 maxLines: 2,
-                style: transactionLabelStyle(context, size: 9, color: ink),
+                style: labelSmStyle(context, size: 9, color: ink),
               ),
             ],
           ),

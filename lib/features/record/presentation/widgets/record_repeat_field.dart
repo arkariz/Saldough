@@ -296,7 +296,7 @@ class _CollapsedRow extends StatelessWidget {
               const AppIcon(IconKey.calendar, size: 18),
               const SizedBox(width: 6),
               Expanded(
-                child: Text(text, style: transactionLabelStyle(context, color: colors.ink)),
+                child: Text(text, style: labelSmStyle(context, color: colors.ink)),
               ),
               const AppIcon(IconKey.chevronRight, size: 18),
             ],
@@ -322,7 +322,7 @@ class _Stepper extends StatelessWidget {
       excludeSemantics: true,
       child: Opacity(
         opacity: onTap == null ? 0.4 : 1,
-        child: AppQuickChip(label: text, onTap: onTap ?? () {}),
+        child: AppChip(label: text, onTap: onTap ?? () {}),
       ),
     );
     return Row(
@@ -367,7 +367,7 @@ class _OptionChip extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
                 child: Text(
                   label,
-                  style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
+                  style: labelSmStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
                 ),
               ),
             ),

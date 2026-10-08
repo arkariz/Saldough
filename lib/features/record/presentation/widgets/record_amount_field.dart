@@ -68,7 +68,7 @@ class RecordAmountField extends StatelessWidget {
     final colors = context.appColors;
     final ink = colors.kindInk(kind);
     final bigStyle = Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700);
-    return TransactionSlab(
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -79,7 +79,7 @@ class RecordAmountField extends StatelessWidget {
             spacing: AppSpacing.space2,
             runSpacing: 2,
             children: [
-              Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+              Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -89,7 +89,7 @@ class RecordAmountField extends StatelessWidget {
                     decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
                   ),
                   const SizedBox(width: 6),
-                  Text(_pill.toUpperCase(), style: transactionLabelStyle(context, color: ink)),
+                  Text(_pill.toUpperCase(), style: labelSmStyle(context, color: ink)),
                 ],
               ),
             ],
@@ -135,10 +135,9 @@ class RecordAmountField extends StatelessWidget {
             runSpacing: AppSpacing.space1,
             children: [
               for (final amount in quickAmounts)
-                AppQuickChip(label: formatQuickAmount(amount), onTap: () => _addQuickAmount(amount)),
-              AppQuickChip(
+                AppChip(label: formatQuickAmount(amount), onTap: () => _addQuickAmount(amount)),
+              AppChip(
                 label: t.record.clearAmountAction,
-                color: colors.tinted(colors.warning, 0.22),
                 onTap: () => _setText(''),
               ),
             ],

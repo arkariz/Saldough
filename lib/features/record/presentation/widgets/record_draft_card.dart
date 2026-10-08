@@ -17,7 +17,7 @@ class RecordDraftCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     if (draft.issues.isNotEmpty) {
-      return AppHardCard(
+      return AppCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

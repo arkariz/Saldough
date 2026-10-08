@@ -19,7 +19,7 @@ class CategorySettingEntry extends StatelessWidget {
       key: const ValueKey('category-setting'),
       label: t.category.accountEntryTitle,
       onTap: () => openCategoryPage(context, context.read<CategoryManagerBloc>()),
-      child: AppHardCard(
+      child: AppCard(
         child: Row(
           children: [
             Expanded(

@@ -20,7 +20,7 @@ class BudgetEmptyState extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final hasWallet = onAdd != null;
-    return TransactionSlab(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
@@ -32,7 +32,7 @@ class BudgetEmptyState extends StatelessWidget {
             ),
             child: Text(
               t.budget.emptyBadge.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.warning),
+              style: labelSmStyle(context, color: colors.warning),
             ),
           ),
           const SizedBox(height: AppSpacing.space6),

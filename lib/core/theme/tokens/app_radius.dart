@@ -25,13 +25,6 @@ abstract final class AppRadius {
   /// `radius-full`: bentuk pil.
   static const double full = 999;
 
-  /// Sudut kartu dan tombol bahasa visual lama. Diganti `PixelCornerBorder`
-  /// di T-14.3.
-  static const double pixelSm = 4;
-
-  /// [BorderRadius] seragam dari [pixelSm].
-  static BorderRadius get pixelSmAll => BorderRadius.circular(pixelSm);
-
   /// [BorderRadius] seragam dari [sm].
   static BorderRadius get smAll => BorderRadius.circular(sm);
 

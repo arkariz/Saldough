@@ -163,7 +163,7 @@ void main() {
     expect(find.textContaining('beras 5kg'), findsOneWidget);
 
     // Pintasan di kartu pos: pengeluaran, dompet BCA dan pos Beras terpilih.
-    await tester.tap(find.widgetWithText(AppQuickChip, t.budget.detailRecordExpenseAction));
+    await tester.tap(find.widgetWithText(AppChip, t.budget.detailRecordExpenseAction));
     await tester.pumpAndSettle();
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
@@ -228,10 +228,10 @@ void main() {
 
     // Tidak ada pintasan di tingkat anggaran; pos transfer hanya punya tombol transfer.
     expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
-    expect(find.widgetWithText(AppQuickChip, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.widgetWithText(AppChip, t.budget.detailRecordExpenseAction), findsNothing);
     expect(find.textContaining(t.budget.itemTransferTo(wallet: 'Tabungan').toUpperCase()), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(AppQuickChip, t.budget.detailRecordTransferAction));
+    await tester.tap(find.widgetWithText(AppChip, t.budget.detailRecordTransferAction));
     await tester.pumpAndSettle();
     expect(find.byType(TransferFormSheet), findsOneWidget);
     // Pos transfer hanya ditawarkan kalau asal BCA DAN tujuan Tabungan — jadi

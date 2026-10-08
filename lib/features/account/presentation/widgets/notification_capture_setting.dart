@@ -23,7 +23,7 @@ class NotificationCaptureSettingEntry extends StatelessWidget {
         key: const ValueKey('notification-capture-setting'),
         label: t.notificationCapture.accountEntryTitle,
         onTap: () => context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()),
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               Expanded(

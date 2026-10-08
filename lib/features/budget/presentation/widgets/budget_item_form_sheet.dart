@@ -153,7 +153,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 ignoring: widget.kindLocked,
                 child: Opacity(
                   opacity: widget.kindLocked ? 0.6 : 1,
-                  child: AppSegmented<BudgetItemKind>(
+                  child: AppSegmentedControl<BudgetItemKind>(
                     options: [
                       (BudgetItemKind.expense, t.budget.itemKindExpense),
                       (BudgetItemKind.transfer, t.budget.itemKindTransfer),
@@ -201,7 +201,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                   ),
                 const SizedBox(height: AppSpacing.space4),
               ] else ...[
-                AppSegmented<bool>(
+                AppSegmentedControl<bool>(
                   options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
                   selected: _itemized,
                   onChanged: (value) => setState(() => _itemized = value),
@@ -238,14 +238,14 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.space2),
-                TransactionSlab(
+                AppCard(
                   color: colors.surface2,
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           t.budget.itemTotalLabel.toUpperCase(),
-                          style: transactionLabelStyle(context, color: colors.ink2),
+                          style: labelSmStyle(context, color: colors.ink2),
                         ),
                       ),
                       Text(

@@ -121,7 +121,7 @@ class _Header extends StatelessWidget {
                 Text(
                   (isEditing ? t.record.editStepLabel : t.record.stepLabel).toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.brand),
+                  style: labelSmStyle(context, color: colors.brand),
                 ),
                 Text(
                   title,
@@ -172,10 +172,9 @@ class RecordNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       color: colors.tinted(colors.warning, 0.14),
       padding: const EdgeInsets.all(AppSpacing.space2),
-      shadow: flat ? 0 : 3,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -240,7 +239,7 @@ class RecordSummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (title != null)
-                  Text(title!.toUpperCase(), style: transactionLabelStyle(context, color: colors.kindInk(kind))),
+                  Text(title!.toUpperCase(), style: labelSmStyle(context, color: colors.kindInk(kind))),
                 ...children,
               ],
             ),

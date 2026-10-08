@@ -38,9 +38,7 @@ class FreelanceDateButton extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _pick(context),
         behavior: HitTestBehavior.opaque,
-        child: TransactionSlab(
-          radius: 4,
-          shadow: 2,
+        child: AppCard(
           child: Row(
             children: [
               const AppIcon(IconKey.calendar),
@@ -49,12 +47,12 @@ class FreelanceDateButton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+                    Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
                     Text(CycleMonthFormatter.formatDate(date), style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
               ),
-              Text(t.freelance.changeAction.toUpperCase(), style: transactionLabelStyle(context, color: colors.brand)),
+              Text(t.freelance.changeAction.toUpperCase(), style: labelSmStyle(context, color: colors.brand)),
             ],
           ),
         ),
@@ -89,7 +87,7 @@ class FreelanceHoursField extends StatelessWidget {
           runSpacing: AppSpacing.space1,
           children: [
             for (final hours in _quickHours)
-              AppQuickChip(
+              AppChip(
                 label: t.freelance.hoursValue(hours: hours),
                 onTap: () {
                   controller.text = '$hours';

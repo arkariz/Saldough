@@ -73,7 +73,7 @@ class HomeBalanceCard extends StatelessWidget {
           ] else ...[
             Text(
               t.home.walletCount(count: activeWallets.length).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: AppSpacing.space1),
             Row(
@@ -95,7 +95,7 @@ class HomeBalanceCard extends StatelessWidget {
                   HeroInset(
                     child: Text(
                       t.home.moreWallets(count: activeWallets.length - _stripCount),
-                      style: transactionLabelStyle(context, color: colors.ink2),
+                      style: labelSmStyle(context, color: colors.ink2),
                     ),
                   ),
                 ],
@@ -184,7 +184,7 @@ class _FlowTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+                child: Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
               ),
               const SizedBox(width: AppSpacing.space1),
               _IconBox(icon, color: stripe),
@@ -221,7 +221,7 @@ class HomeBudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final ratio = overview.plannedAmount <= 0 ? 0.0 : overview.spent / overview.plannedAmount;
-    final status = AppSegmentedProgressBar.colorFor(context, ratio);
+    final status = AppProgressBar.colorFor(context, ratio);
     final over = overview.remaining < 0;
     return _TappableCard(
       semanticsLabel: t.home.budgetAction,
@@ -242,7 +242,7 @@ class HomeBudgetCard extends StatelessWidget {
                     children: [
                       Text(
                         (over ? t.home.budgetOver : t.home.budgetRemaining).toUpperCase(),
-                        style: transactionLabelStyle(context, color: colors.ink2),
+                        style: labelSmStyle(context, color: colors.ink2),
                       ),
                       FitStart(
                         child: Text(
@@ -265,7 +265,7 @@ class HomeBudgetCard extends StatelessWidget {
                 spent: AppMoneyFormatter.format(overview.spent),
                 planned: AppMoneyFormatter.format(overview.plannedAmount),
               ),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
           ],
         ),
@@ -315,7 +315,7 @@ class HomeFreelanceCard extends StatelessWidget {
                       children: [
                         Text(
                           t.home.freelanceUnpaidTitle.toUpperCase(),
-                          style: transactionLabelStyle(context, color: colors.ink2),
+                          style: labelSmStyle(context, color: colors.ink2),
                         ),
                         FitStart(
                           child: Text(
@@ -344,7 +344,7 @@ class HomeFreelanceCard extends StatelessWidget {
                           Text(
                             t.home.freelanceDueLabel.toUpperCase(),
                             textAlign: TextAlign.center,
-                            style: transactionLabelStyle(context, color: colors.ink2),
+                            style: labelSmStyle(context, color: colors.ink2),
                           ),
                           const SizedBox(height: 2),
                           FitStart(
@@ -366,14 +366,14 @@ class HomeFreelanceCard extends StatelessWidget {
                 hours: t.freelance.hoursValue(hours: overview.totalHours),
                 earned: AppMoneyFormatter.format(overview.earned),
               ),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: 4),
             _SplitGauge(paid: overview.paid, unpaid: overview.unpaid),
             const SizedBox(height: 4),
             Text(
               t.home.freelancePaid(amount: AppMoneyFormatter.format(overview.paid)),
-              style: transactionLabelStyle(context, color: colors.positive),
+              style: labelSmStyle(context, color: colors.positive),
             ),
           ],
         ),
@@ -460,7 +460,7 @@ class HomeEmptyTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return AppHardCard(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
@@ -468,7 +468,7 @@ class HomeEmptyTransactions extends StatelessWidget {
             width: 112,
             height: 112,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surface3, borderRadius: AppRadius.pixelSmAll),
+            decoration: ShapeDecoration(color: colors.surface3, shape: const PixelCornerBorder.small()),
             // Peti kosong, sama dengan ilustrasi "Inventaris kosong" rujukan.
             child: const AppIcon(IconKey.empty, size: 80),
           ),
@@ -533,12 +533,12 @@ class HomeGuide extends StatelessWidget {
             t.home.guideCount.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: transactionLabelStyle(context, color: colors.ink2),
+            style: labelSmStyle(context, color: colors.ink2),
           ),
         ),
         for (final (index, (icon, title, tag, body, color)) in rules.indexed) ...[
           const SizedBox(height: AppSpacing.space2),
-          TransactionSlab(
+          AppCard(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -587,10 +587,10 @@ class _StripeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppHardCard(
+    return AppCard(
       padding: EdgeInsets.zero,
       child: ClipRRect(
-        borderRadius: AppRadius.pixelSmAll,
+        borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
         child: Stack(
           children: [
             Padding(
@@ -667,7 +667,7 @@ class _Badge extends StatelessWidget {
         color: colors.tinted(color, 0.22),
         border: Border.all(color: colors.lineStrong),
       ),
-      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink)),
+      child: Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink)),
     );
   }
 }
@@ -710,7 +710,7 @@ class _InsetPanel extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.space2),
       decoration: BoxDecoration(
         color: color ?? context.appColors.surface2,
-        borderRadius: AppRadius.pixelSmAll,
+        borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
       ),
       child: child,
     );
@@ -735,7 +735,7 @@ class _StatText extends StatelessWidget {
           uppercase ? label.toUpperCase() : label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: transactionLabelStyle(context, color: colors.ink2),
+          style: labelSmStyle(context, color: colors.ink2),
         ),
         FitStart(
           child: Text(
@@ -767,7 +767,6 @@ class _SegmentBar extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: colors.surface3,
-        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

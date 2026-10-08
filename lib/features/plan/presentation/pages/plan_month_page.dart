@@ -120,7 +120,7 @@ class PlanMonthView extends StatelessWidget {
           return ListView(
             padding: padding,
             children: [
-              AppHardCard(
+              AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -180,7 +180,7 @@ class PlanMonthView extends StatelessWidget {
                     children: [
                       for (final (k, m) in state.months.indexed) ...[
                         if (k > 0) const SizedBox(width: AppSpacing.space1),
-                        AppChoiceChip(
+                        AppChip(
                           key: ValueKey('plan-month-$k'),
                           // Bulan keuangan 25 Okt–24 Nov disebut "Nov" (T-16.16 K8).
                           label:

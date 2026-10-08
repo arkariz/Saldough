@@ -75,7 +75,7 @@ class TransactionMonthHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TransactionSlab(
+        AppCard(
           color: colors.surface2,
           padding: const EdgeInsets.all(AppSpacing.space1),
           child: Row(
@@ -86,9 +86,7 @@ class TransactionMonthHeader extends StatelessWidget {
               ),
               Expanded(
                 child: Center(
-                  child: TransactionSlab(
-                    shadow: 0,
-                    radius: 4,
+                  child: AppCard(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.space2,
                       vertical: AppSpacing.space1,
@@ -124,10 +122,10 @@ class TransactionMonthHeader extends StatelessWidget {
           label: t.transaction.monthStatusLabel,
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1 + 2, vertical: 2),
-            decoration: BoxDecoration(color: colors.surface, borderRadius: AppRadius.pixelSmAll),
+            decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
             child: Text(
               t.transaction.logCountBadge(count: rawTransactions.length).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
           ),
           child: Column(
@@ -135,7 +133,7 @@ class TransactionMonthHeader extends StatelessWidget {
             children: [
               Text(
                 t.transaction.netFlowLabel,
-                style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 2),
               HeroAmount(netText, color: netColor),
@@ -220,7 +218,7 @@ class _FlowNumber extends StatelessWidget {
       children: [
         Text(
           '${label.toUpperCase()} ',
-          style: transactionLabelStyle(context, color: colors.ink2),
+          style: labelSmStyle(context, color: colors.ink2),
         ),
         Flexible(
           child: Text(

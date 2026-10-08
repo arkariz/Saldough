@@ -162,9 +162,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.wallet.nameLabel, hint: t.wallet.nameRequiredHint),
               const SizedBox(height: AppSpacing.space1),
-              TransactionSlab(
-                radius: 4,
-                shadow: 2,
+              AppCard(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                 child: TextField(
                   controller: _nameController,
@@ -188,7 +186,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 child: Text(
                   '${_nameController.text.characters.length}/$walletNameMaxLength · ${t.wallet.nameMaxHint}',
                   textAlign: TextAlign.end,
-                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
               ),
               const SizedBox(height: AppSpacing.space4),
@@ -220,7 +218,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.wallet.initialBalanceLabel),
               const SizedBox(height: AppSpacing.space1),
-              TransactionSlab(
+              AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -267,13 +265,12 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 runSpacing: AppSpacing.space1,
                 children: [
                   for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
-                    AppQuickChip(
+                    AppChip(
                       label: formatQuickAmount(amount),
                       onTap: () => _setBalance((parseMoneyInput(_balanceController.text) ?? 0) + amount),
                     ),
-                  AppQuickChip(
+                  AppChip(
                     label: t.record.clearAmountAction,
-                    color: colors.tinted(colors.warning, 0.22),
                     onTap: () => _setBalance(0),
                   ),
                 ],
@@ -282,9 +279,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                 const SizedBox(height: AppSpacing.space4),
                 _CurrentBalanceCard(wallet: wallet),
                 const SizedBox(height: AppSpacing.space4),
-                TransactionSlab(
-                  radius: 4,
-                  shadow: 2,
+                AppCard(
                   child: Row(
                     children: [
                       Expanded(
@@ -332,7 +327,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               Text(
                 t.wallet.privacyNote,
                 textAlign: TextAlign.center,
-                style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
               ),
             ],
           ),
@@ -372,7 +367,7 @@ class _Header extends StatelessWidget {
                 Text(
                   (editing ? t.wallet.editStepLabel : t.wallet.addStepLabel).toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.brand),
+                  style: labelSmStyle(context, color: colors.brand),
                 ),
                 Text(
                   editing ? t.wallet.editTitle : t.wallet.addTitle,
@@ -425,7 +420,7 @@ class _IconChoice extends StatelessWidget {
             Text(
               (walletTypeLabel(iconKey.name) ?? '').toUpperCase(),
               textAlign: TextAlign.center,
-              style: transactionLabelStyle(
+              style: labelSmStyle(
                 context,
                 size: 9,
                 color: selected ? colors.brand : colors.ink2,
@@ -448,13 +443,13 @@ class _CurrentBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             t.wallet.currentBalanceLabel.toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.ink2),
+            style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),
           FitStart(

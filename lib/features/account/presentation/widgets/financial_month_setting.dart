@@ -50,7 +50,7 @@ class FinancialMonthSettingEntry extends StatelessWidget {
           key: const ValueKey('financial-month-setting'),
           label: t.plan.financialMonthTitle,
           onTap: () => unawaited(_choose(context)),
-          child: AppHardCard(
+          child: AppCard(
             child: Row(
               children: [
                 Expanded(

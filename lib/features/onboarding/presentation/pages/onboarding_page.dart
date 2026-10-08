@@ -129,7 +129,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       unawaited(
         _controller.nextPage(
           duration: duration,
-          curve: const SteppedCurve(8, curve: Curves.easeInOut),
+          curve: Curves.easeInOut,
         ),
       );
     }
@@ -164,7 +164,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               Expanded(
                                 child: Text(
                                   t.app.title.toUpperCase(),
-                                  style: transactionLabelStyle(context, color: colors.ink2),
+                                  style: labelSmStyle(context, color: colors.ink2),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -226,8 +226,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ],
                             AnimatedSwitcher(
                               duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
-                              switchInCurve: const SteppedCurve(4),
-                              switchOutCurve: const SteppedCurve(4),
+                              switchInCurve: Curves.easeOut,
+                              switchOutCurve: Curves.easeIn,
                               child: _actions(context, review),
                             ),
                           ],
@@ -292,7 +292,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Satu denyut saat layar akhir tiba (ADR-021 §3.7).
-        PixelPop(
+        AppFadeIn(
           delay: const Duration(milliseconds: 200),
           child: AppButton(
             label: t.onboarding.createWalletAction,

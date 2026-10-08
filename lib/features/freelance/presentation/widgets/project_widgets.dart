@@ -121,7 +121,7 @@ class FreelanceAmountLine extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color ?? colors.ink2)),
+                Text(label.toUpperCase(), style: labelSmStyle(context, color: color ?? colors.ink2)),
                 Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
@@ -185,8 +185,7 @@ class ProjectCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: TransactionSlab(
-          shadowColor: paymentStats.pendingCount > 0 ? colors.warning : null,
+        child: AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -264,7 +263,7 @@ class ProjectCard extends StatelessWidget {
                   ),
                   Text(
                     t.freelance.entryCountLabel(count: stats.entryCount),
-                    style: transactionLabelStyle(context, color: colors.ink2),
+                    style: labelSmStyle(context, color: colors.ink2),
                   ),
                 ],
               ),
@@ -307,7 +306,7 @@ class AddProjectCard extends StatelessWidget {
                   child: Text(
                     t.freelance.projectAddTitle.toUpperCase(),
                     textAlign: TextAlign.center,
-                    style: transactionLabelStyle(context, color: colors.brand),
+                    style: labelSmStyle(context, color: colors.brand),
                   ),
                 ),
               ],
@@ -389,7 +388,7 @@ class FreelanceEmptyState extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final [main, ...sides] = icons;
-    return TransactionSlab(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
@@ -399,7 +398,7 @@ class FreelanceEmptyState extends StatelessWidget {
               color: colors.tinted(colors.warning, 0.15),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, color: colors.warning)),
+            child: Text(badge.toUpperCase(), style: labelSmStyle(context, color: colors.warning)),
           ),
           const SizedBox(height: AppSpacing.space6),
           Row(
@@ -499,7 +498,7 @@ class WorklogMonthHeader extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
-                style: transactionLabelStyle(context, color: colors.ink2),
+                style: labelSmStyle(context, color: colors.ink2),
               ),
             ),
           ),

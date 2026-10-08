@@ -71,7 +71,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
-                  AppHardCard(
+                  AppCard(
                     child: SwitchListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(t.recurring.remindersTitle),

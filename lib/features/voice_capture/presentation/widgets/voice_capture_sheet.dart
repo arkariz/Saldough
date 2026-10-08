@@ -293,8 +293,6 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _dimmed ? colors.surface2 : color,
-                      border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-                      boxShadow: AppElevation.hardShadow(colors.lineStrong),
                     ),
                     child: AppIcon(
                       IconKey.microphone,
@@ -353,7 +351,7 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       decoration: BoxDecoration(
         color: colors.tinted(colors.ink, 0.15),
-        borderRadius: AppRadius.pixelSmAll,
+        borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
         border: Border.all(color: colors.ink),
       ),
       child: Row(

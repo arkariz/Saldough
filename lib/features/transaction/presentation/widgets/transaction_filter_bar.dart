@@ -50,10 +50,9 @@ class TransactionTypeFilterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       padding: const EdgeInsets.all(AppSpacing.space1),
-      shadow: 2,
       child: Row(
         children: [
           for (final filter in TransactionTypeFilter.values) ...[
@@ -105,7 +104,7 @@ class _TypeTab extends StatelessWidget {
               child: Text(
                 label,
                 maxLines: 1,
-                style: transactionLabelStyle(context, color: selected ? colors.ink : colors.ink2),
+                style: labelSmStyle(context, color: selected ? colors.ink : colors.ink2),
               ),
             ),
           ],
@@ -150,10 +149,8 @@ class _TransactionSearchFieldState extends State<TransactionSearchField> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       padding: EdgeInsets.zero,
-      radius: 4,
-      shadow: 2,
       child: TextField(
         controller: _controller,
         onChanged: widget.onQueryChanged,
@@ -236,10 +233,8 @@ class TransactionFilterButton extends StatelessWidget {
     return AppTappable(
       onTap: () => _openSheet(context),
       label: activeCount > 0 ? '${t.transaction.filterButtonLabel} ($activeCount)' : t.transaction.filterButtonLabel,
-      child: TransactionSlab(
+      child: AppCard(
         padding: EdgeInsets.zero,
-        radius: 4,
-        shadow: 2,
         child: SizedBox(
           width: 44,
           height: 44,
@@ -256,7 +251,7 @@ class TransactionFilterButton extends StatelessWidget {
                     decoration: BoxDecoration(color: colors.brand, borderRadius: BorderRadius.circular(999)),
                     child: Text(
                       '$activeCount',
-                      style: transactionLabelStyle(context, color: colors.onBrand),
+                      style: labelSmStyle(context, color: colors.onBrand),
                     ),
                   ),
                 ),

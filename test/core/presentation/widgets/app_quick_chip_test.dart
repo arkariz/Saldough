@@ -11,18 +11,18 @@ void main() {
         theme: PixelTheme.light,
         home: Scaffold(
           body: Center(
-            child: AppQuickChip(label: '+1', onTap: () => taps++),
+            child: AppChip(label: '+1', onTap: () => taps++),
           ),
         ),
       ),
     );
 
-    final size = tester.getSize(find.byType(AppQuickChip));
+    final size = tester.getSize(find.byType(AppChip));
     expect(size.width, greaterThanOrEqualTo(44));
     expect(size.height, greaterThanOrEqualTo(44));
-    expect(tester.getSemantics(find.byType(AppQuickChip)), isSemantics(isButton: true, label: '+1'));
+    expect(tester.getSemantics(find.byType(AppChip)), isSemantics(isButton: true, label: '+1'));
 
-    await tester.tap(find.byType(AppQuickChip));
+    await tester.tap(find.byType(AppChip));
     expect(taps, 1);
   });
 }

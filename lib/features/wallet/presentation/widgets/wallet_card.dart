@@ -32,7 +32,7 @@ class WalletCard extends StatelessWidget {
       onTap: onTap,
       child: Opacity(
         opacity: wallet.isActive ? 1 : 0.6,
-        child: TransactionSlab(
+        child: AppCard(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space2),
           // `IntrinsicHeight` -- sama seperti `TransactionRow` -- memberi
           // tinggi silang yang TERBATAS ke `Row`, supaya `FittedBox` nominal
@@ -70,12 +70,12 @@ class WalletCard extends StatelessWidget {
                             if (typeLabel != null)
                               Text(
                                 typeLabel.toUpperCase(),
-                                style: transactionLabelStyle(context, color: colors.ink2),
+                                style: labelSmStyle(context, color: colors.ink2),
                               ),
                             if (!wallet.isActive)
                               Text(
                                 t.wallet.inactiveBadge.toUpperCase(),
-                                style: transactionLabelStyle(context, color: colors.warning),
+                                style: labelSmStyle(context, color: colors.warning),
                               ),
                           ],
                         ),

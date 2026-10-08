@@ -127,7 +127,7 @@ class _WalletListPageState extends State<WalletListPage> {
                 Text(
                   t.wallet.privacyNote,
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(
+                  style: labelSmStyle(
                     context,
                     color: colors.ink2,
                   ).copyWith(fontWeight: FontWeight.w400),

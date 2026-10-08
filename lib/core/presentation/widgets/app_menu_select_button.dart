@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/app_card.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
+import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Satu pilihan di [AppMenuSelectButton]: nilai, label, dan ikon.
@@ -73,7 +74,6 @@ class AppMenuSelectButton<T> extends StatelessWidget {
       color: colors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
-        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       itemBuilder: (_) => [
         if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel, context: context),
@@ -86,9 +86,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
             context: context,
           ),
       ],
-      child: TransactionSlab(
-        radius: 4,
-        shadow: 2,
+      child: AppCard(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 10),
         child: Row(
           children: [
@@ -99,7 +97,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
                 label,
                 maxLines: wrapLabel ? null : 1,
                 overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
-                style: transactionLabelStyle(context, color: isPlaceholder ? colors.ink2 : colors.ink),
+                style: labelSmStyle(context, color: isPlaceholder ? colors.ink2 : colors.ink),
               ),
             ),
             AppIcon(IconKey.dropdown, size: 18, color: colors.ink2),

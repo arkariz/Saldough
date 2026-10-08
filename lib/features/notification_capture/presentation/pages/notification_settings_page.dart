@@ -279,7 +279,7 @@ class _SourceRow extends StatelessWidget {
     final noFilter = source.keywords.every((k) => k.trim().isEmpty);
     final (subtitle, color) = switch ((source.enabled, noFilter, walletName)) {
       (false, _, _) => (texts.sourcePaused, null),
-      (true, true, _) => (texts.sourceKeywordsNone, colors.ink),
+      (true, true, _) => (texts.sourceKeywordsNone, colors.danger),
       (true, false, null) => (texts.sourceNoWallet, colors.danger),
       (true, false, final String name) => (texts.sourceWallet(name: name), null),
     };
@@ -339,7 +339,7 @@ class _DebugSamples extends StatelessWidget {
               ),
             ),
           ),
-        AppButton.tertiary(label: texts.debugShellSource, onPressed: onAddShellSource),
+        AppButton.text(label: texts.debugShellSource, onPressed: onAddShellSource),
       ],
     );
   }

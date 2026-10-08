@@ -1,50 +1,105 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Panel bergaris tepi tebal dengan bayangan keras offset — dasar seluruh
-/// panel komik Saldough. Lihat ADR-0006.
+/// Permukaan `surface` rata untuk satu kelompok isi (komponen Card,
+/// ADR-034): sudut piksel (`pixel-step`), padding `space-4`, tanpa bingkai
+/// dan bayangan. Judul bagian duduk di luar kartu ([AppSectionHeader]).
 ///
-/// Dibuat sejak fase fondasi supaya dekorasi panel ini tidak diulang manual
-/// di tiap layar (lihat catatan ADR-0006 soal `new-health-duel` yang
-/// mengulang dekorasi serupa di sekitar delapan berkas karena tidak pernah
-/// dibuat jadi widget bersama).
+/// Jangan menaruh kartu di dalam kartu; kelompokkan isinya dengan jarak dan
+/// `Divider`. Dengan [onTap], seluruh kartu jadi satu target sentuh (tekan:
+/// `surface2`).
 class AppCard extends StatelessWidget {
-  /// Membuat [AppCard] dengan [child] dan padding/sudut opsional.
+  /// Membuat [AppCard].
   const AppCard({
     required this.child,
     this.padding = const EdgeInsets.all(AppSpacing.space4),
-    this.borderRadius,
-    this.elevation = AppElevation.md,
+    this.color,
+    this.onTap,
+    this.semanticsLabel,
     super.key,
   });
 
-  /// Isi panel.
+  /// Isi kartu.
   final Widget child;
 
-  /// Padding di dalam panel.
+  /// Padding di dalam kartu.
   final EdgeInsetsGeometry padding;
 
-  /// Sudut panel. Bawaan [AppRadius.mdAll]; pakai [AppRadius.comicCut] untuk
-  /// panel hero/banner.
-  final BorderRadius? borderRadius;
+  /// Warna permukaan. Bawaan `surface`.
+  final Color? color;
 
-  /// Jarak bayangan keras offset, dari [AppElevation].
-  final double elevation;
+  /// Membuat seluruh kartu dapat diketuk.
+  final VoidCallback? onTap;
+
+  /// Label pembaca layar saat kartu dapat diketuk.
+  final String? semanticsLabel;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    // ADR-015: radius pixel 4 dan tepi 2px (T-7.5).
-    final radius = borderRadius ?? AppRadius.pixelSmAll;
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: radius,
-        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-        boxShadow: elevation > 0 ? AppElevation.hardShadow(colors.lineStrong, offset: elevation) : null,
+    final body = Padding(padding: padding, child: child);
+    return Material(
+      color: color ?? colors.surface,
+      shape: const PixelCornerBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: onTap == null
+          ? body
+          : Semantics(
+              button: true,
+              label: semanticsLabel,
+              child: InkWell(
+                onTap: onTap,
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? colors.surface2
+                      : Colors.transparent,
+                ),
+                child: body,
+              ),
+            ),
+    );
+  }
+}
+
+/// Kartu daftar (`tk-list`): kartu tanpa padding berisi baris yang
+/// dipisahkan garis `line` menjorok sejajar awal teks baris.
+class AppListCard extends StatelessWidget {
+  /// Membuat [AppListCard] dari [children] (biasanya `AppListRow`).
+  const AppListCard({
+    required this.children,
+    this.dividerIndent = AppListCard.tileIndent,
+    super.key,
+  });
+
+  /// Jorok garis pemisah untuk baris bertile ikon 40px (16 + 40 + 12).
+  static const tileIndent = 68.0;
+
+  /// Jorok garis pemisah untuk baris berikon 24px.
+  static const iconIndent = 52.0;
+
+  /// Jorok garis pemisah untuk baris tanpa ikon.
+  static const plainIndent = 16.0;
+
+  /// Baris-baris kartu.
+  final List<Widget> children;
+
+  /// Jarak garis pemisah dari tepi kiri.
+  final double dividerIndent;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) Divider(indent: dividerIndent),
+            children[i],
+          ],
+        ],
       ),
-      child: child,
     );
   }
 }

@@ -99,12 +99,12 @@ void main() {
     ActiveDay.sync(today);
     await rules.saveRule(rule('Internet', 35000000, DateTime(2026, 10, 3)));
     await pump(tester, const RecurringSegmentView());
-    expect(find.text(t.recurring.groupPending.toUpperCase()), findsNothing);
+    expect(find.text(t.recurring.groupPending), findsNothing);
 
     clock = DateTime(2026, 10, 3, 10);
     ActiveDay.sync(clock);
     await tester.pumpAndSettle();
-    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupPending), findsOneWidget);
   });
 
   testWidgets('kosong: penjelasan satu kalimat dan chip pembuka', (tester) async {
@@ -140,9 +140,9 @@ void main() {
     );
     await pump(tester, const RecurringSegmentView());
 
-    expect(find.text(t.recurring.groupPending.toUpperCase()), findsOneWidget);
-    expect(find.text(t.recurring.groupThisMonth.toUpperCase()), findsOneWidget);
-    expect(find.text(t.recurring.groupLater.toUpperCase()), findsOneWidget);
+    expect(find.text(t.recurring.groupPending), findsOneWidget);
+    expect(find.text(t.recurring.groupThisMonth), findsOneWidget);
+    expect(find.text(t.recurring.groupLater), findsOneWidget);
     // Dijeda terlipat jadi satu baris (PLAN_TAB_LAYOUT §4.9).
     expect(find.text('${t.recurring.groupPaused} (1) ›'), findsOneWidget);
     expect(find.text('Gym'), findsNothing);

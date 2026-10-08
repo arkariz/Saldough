@@ -36,7 +36,7 @@ class RecurringSummaryCard extends StatelessWidget {
         ),
       ],
     );
-    return AppHeroCard(
+    return AppSummaryCard(
       tour: TourId.recurring,
       icon: IconKey.budget,
       label: t.recurring.remainingTitle(month: monthLabel),

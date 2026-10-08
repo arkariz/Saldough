@@ -492,7 +492,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                     style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                   const SizedBox(height: AppSpacing.space4),
-                  AppButton.secondary(label: t.budget.deleteAction, textColor: colors.danger, onPressed: _delete),
+                  AppButton.danger(label: t.budget.deleteAction, onPressed: _delete),
                 ],
               ],
             ),
@@ -636,7 +636,7 @@ class BudgetItemRow extends StatelessWidget {
                       label: item.isTransfer
                           ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
                           : t.budget.itemKindExpense,
-                      color: item.isTransfer ? colors.ink2 : colors.ink2,
+                      color: item.isTransfer ? colors.ink2 : colors.ink,
                     ),
                     if (item.isItemized)
                       Text(

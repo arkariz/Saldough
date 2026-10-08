@@ -118,7 +118,7 @@ class TransactionMonthHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.space2),
-        AppHeroCard(
+        AppSummaryCard(
           tour: TourId.transaction,
           icon: IconKey.transactions,
           label: t.transaction.monthStatusLabel,

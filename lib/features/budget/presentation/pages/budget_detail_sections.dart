@@ -251,7 +251,7 @@ class _ItemCard extends StatelessWidget {
                         label: item.isTransfer
                             ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
                             : t.budget.itemKindExpense,
-                        color: item.isTransfer ? colors.ink2 : colors.ink2,
+                        color: item.isTransfer ? colors.ink2 : colors.ink,
                       ),
                       if (item.isItemized)
                         Text(

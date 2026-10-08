@@ -2,51 +2,106 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 
-/// Menampilkan nominal (sen) lewat [AppMoneyFormatter], dengan angka tabular dan warna otomatis berdasarkan tanda nilainya.
+/// Arti sebuah nominal, menentukan tanda dan warnanya (komponen Amount).
+enum MoneyKind {
+  /// Pengeluaran: `−Rp45.000`, `ink`.
+  expense,
+
+  /// Pemasukan: `+Rp8.500.000`, `positive`.
+  income,
+
+  /// Transfer: `Rp300.000` tanpa tanda, `ink2`.
+  transfer,
+
+  /// Saldo dan sisa: tanpa tanda; negatif `−Rp36.000` berwarna `danger`
+  /// (pemakai menambah badge, bukan hanya warna).
+  balance,
+}
+
+/// Ukuran nominal (skala Angka, [AppNumberStyles]).
+enum MoneySize {
+  /// `amount-display`: nominal yang sedang diketik di Catat.
+  display,
+
+  /// `amount-hero`: satu angka utama layar.
+  hero,
+
+  /// `amount-lg`: angka utama kartu ringkasan.
+  large,
+
+  /// `amount`: nominal baris daftar.
+  regular,
+
+  /// `amount-sm`: angka pendukung.
+  small,
+}
+
+/// Nominal uang dengan aturan tanda, warna, dan ukuran yang sama di seluruh
+/// aplikasi (komponen Amount, ADR-034). [sen] selalu `int` satuan sen;
+/// format mata uang dari [AppMoneyFormatter]. Angka tabular.
 ///
-/// Bawaan: positif → [AppColors.positive], negatif →
-/// [AppColors.danger] (sisa negatif), nol → warna teks biasa.
-/// Pakai [color] untuk menimpa pemilihan otomatis ini pada konteks yang
-/// warnanya ditentukan oleh makna baris, bukan tandanya (misalnya baris
-/// anggaran yang nominalnya selalu disimpan positif tapi semantiknya
-/// pengeluaran).
+/// Untuk [MoneyKind.expense], [MoneyKind.income], dan [MoneyKind.transfer]
+/// tanda [sen] diabaikan: yang menentukan adalah jenisnya.
 class AppMoneyText extends StatelessWidget {
   /// Membuat [AppMoneyText] untuk [sen].
-  const AppMoneyText({
-    required this.sen,
-    this.style,
+  const AppMoneyText(
+    this.sen, {
+    this.kind = MoneyKind.balance,
+    this.size = MoneySize.regular,
     this.color,
+    this.textAlign,
     super.key,
   });
 
   /// Nominal dalam satuan sen.
   final int sen;
 
-  /// Gaya teks dasar. Bawaan `textTheme.headlineSmall`.
-  final TextStyle? style;
+  /// Arti nominal.
+  final MoneyKind kind;
 
-  /// Menimpa warna otomatis berdasarkan tanda [sen].
+  /// Ukuran angka.
+  final MoneySize size;
+
+  /// Menimpa warna bawaan [kind].
   final Color? color;
+
+  /// Perataan teks.
+  final TextAlign? textAlign;
+
+  /// Teks nominal bertanda sesuai [kind], tanpa widget.
+  static String format(int sen, MoneyKind kind) => switch (kind) {
+    MoneyKind.expense => '−${AppMoneyFormatter.format(sen.abs())}',
+    MoneyKind.income => '+${AppMoneyFormatter.format(sen.abs())}',
+    MoneyKind.transfer => AppMoneyFormatter.format(sen.abs()),
+    MoneyKind.balance => AppMoneyFormatter.format(sen),
+  };
+
+  /// Warna bawaan [kind] untuk [sen].
+  static Color colorOf(AppColors colors, int sen, MoneyKind kind) =>
+      switch (kind) {
+        MoneyKind.expense => colors.ink,
+        MoneyKind.income => colors.positive,
+        MoneyKind.transfer => colors.ink2,
+        MoneyKind.balance => sen < 0 ? colors.danger : colors.ink,
+      };
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    // `income`/`overBudget` di palet pixel sudah teks-aman (>= 4,5:1,
-    // ADR-016), jadi varian `…OnLight` ADR-0006 tidak dibutuhkan lagi dan
-    // dihapus saat cutover T-3.5.
-    final autoColor = sen > 0
-        ? colors.positive
-        : sen < 0
-            ? colors.danger
-            : colors.ink;
-
-    final base = style ?? Theme.of(context).textTheme.headlineSmall;
-
+    final numbers = context.numberStyles;
+    final style = switch (size) {
+      MoneySize.display => numbers.amountDisplay,
+      MoneySize.hero => numbers.amountHero,
+      MoneySize.large => numbers.amountLg,
+      MoneySize.regular => numbers.amount,
+      MoneySize.small => numbers.amountSm,
+    };
     return Text(
-      AppMoneyFormatter.format(sen),
-      style: base?.copyWith(
-        color: color ?? autoColor,
-        fontFeatures: const [FontFeature.tabularFigures()],
+      format(sen, kind),
+      maxLines: 1,
+      softWrap: false,
+      textAlign: textAlign,
+      style: style.copyWith(
+        color: color ?? colorOf(context.appColors, sen, kind),
       ),
     );
   }

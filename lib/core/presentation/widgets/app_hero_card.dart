@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/active_currency.dart';
 import 'package:saldough/core/presentation/spotlight/tutorial_info_button.dart';
+import 'package:saldough/core/presentation/widgets/app_card.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
-import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
+import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 
-/// Kartu utama di puncak tiap tab navigasi bawah (Beranda, Anggaran,
-/// Transaksi, Dompet): SATU angka yang menjawab pertanyaan utama layar itu,
-/// dan titik mulai mata sebelum kartu-kartu rincian di bawahnya.
+/// Kartu ringkasan di puncak tab yang belum dirombak ke pola layar baru
+/// (peralihan Fase 14): satu angka utama dan rinciannya di kartu `surface`
+/// bersudut piksel, kepala label huruf biasa.
 ///
-/// Dibedakan dari kartu biasa tanpa meminjam warna makna uang (ADR-016):
-/// latar krem hangat [AppColorsSurfaces.surfaceMid] (`surfaceHigh` di mode
-/// gelap; keduanya turunan warna latar,
-/// jadi tetap satu keluarga dengan tema di kedua mode), garis tepi 2px, dan
-/// bayangan keras lebih tebal ([AppElevation.pixelInteractive]) dari kartu
-/// biasa ([AppElevation.pixelCard]). Kepalanya seragam di semua layar: kotak
-/// ikon tab, label kapital, dan [trailing] (biasanya lencana).
-///
-/// Bidang di dalam kartu ini sebaiknya memakai [HeroInset], yang berlatar
-/// kartu putih supaya terbaca di atas krem.
-class AppHeroCard extends StatelessWidget {
-  /// Membuat [AppHeroCard].
-  const AppHeroCard({
+/// Layar yang sudah memakai pola baru menaruh angka utamanya di atas `bg`
+/// tanpa kartu (design system bagian Pola layar) atau, khusus Beranda, di
+/// [AppHeroCard]. Hapus begitu tidak ada pemakainya (T-14.6–T-14.9).
+class AppSummaryCard extends StatelessWidget {
+  /// Membuat [AppSummaryCard].
+  const AppSummaryCard({
     required this.icon,
     required this.label,
     required this.child,
@@ -32,17 +26,17 @@ class AppHeroCard extends StatelessWidget {
     super.key,
   });
 
-  /// Ikon tab layar ini, sama dengan ikon di navigasi bawah.
+  /// Ikon tab layar ini.
   final IconKey icon;
 
-  /// Label kepala kartu, ditampilkan kapital.
+  /// Label kepala kartu.
   final String label;
 
   /// Isi kanan kepala, mis. lencana jumlah.
   final Widget? trailing;
 
-  /// Tur layar ini; kalau diisi, ikon info (putar ulang tur, pengenalan,
-  /// setel ulang) tampil di ujung kanan kepala (KO-4, ADR-021 §3.5).
+  /// Tur layar ini; kalau diisi, ikon info (putar ulang tur) tampil di ujung
+  /// kanan kepala (KO-4, ADR-021 §3.5).
   final TourId? tour;
 
   /// Isi kartu; biasanya [HeroAmount] lalu rinciannya.
@@ -51,34 +45,12 @@ class AppHeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space4),
-      decoration: BoxDecoration(
-        // Mode gelap: `surfaceMid` hampir sama dengan `cardBackground`, jadi
-        // kartu utama tak lagi menonjol dan `HeroInset` di dalamnya hilang.
-        // Satu tingkat lebih terang di sana (T-7.6).
-        color: Theme.of(context).brightness == Brightness.dark ? colors.surface3 : colors.surface2,
-        borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-        // Bawaan `hardShadow` = 4px, lebih tebal dari kartu biasa (3px).
-        boxShadow: AppElevation.hardShadow(colors.lineStrong),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Container(
-                width: 32,
-                height: 32,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: colors.surface,
-                  border: Border.all(color: colors.lineStrong),
-                ),
-                child: AppIcon(icon),
-              ),
-              const SizedBox(width: AppSpacing.space2),
               // `Wrap`: lencana turun baris, bukan meluap, di layar sempit
               // atau teks diperbesar.
               Expanded(
@@ -88,10 +60,7 @@ class AppHeroCard extends StatelessWidget {
                   spacing: AppSpacing.space1,
                   runSpacing: 4,
                   children: [
-                    Text(
-                      label.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.ink2),
-                    ),
+                    Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2)),
                     ?trailing,
                   ],
                 ),
@@ -99,7 +68,7 @@ class AppHeroCard extends StatelessWidget {
               if (tour case final tour?) TutorialInfoButton(tour: tour),
             ],
           ),
-          const SizedBox(height: AppSpacing.space2),
+          const SizedBox(height: AppSpacing.space1),
           child,
         ],
       ),
@@ -107,8 +76,99 @@ class AppHeroCard extends StatelessWidget {
   }
 }
 
-/// Angka utama [AppHeroCard]: awalan simbol mata uang kecil redup dan angka besar,
-/// mengecil sendiri kalau tidak muat. [color] mewarnai angkanya (mis. merah
+/// Kartu saldo terakota dengan kepala tanuki mengintip dari tepi bawah
+/// (komponen HeroCard, ADR-034). Satu per layar, hanya di Beranda dan
+/// halaman ringkasan.
+///
+/// Latar `brand`, semua teks `onBrand`: label `body-sm`, angka
+/// `amount-hero` dengan simbol mata uang diperkecil, lalu tautan ke
+/// rinciannya ([linkLabel]). Kepala tanuki 96px di kanan bawah, skala
+/// sepertiga gambar aslinya supaya pikselnya tetap tajam.
+class AppHeroCard extends StatelessWidget {
+  /// Membuat [AppHeroCard].
+  const AppHeroCard({
+    required this.label,
+    required this.amount,
+    this.linkLabel,
+    this.onLinkTap,
+    super.key,
+  });
+
+  /// Label di atas angka ("Total saldo").
+  final String label;
+
+  /// Angka utama; biasanya [HeroAmount] dengan `onBrand`, atau `AppMoneyText`
+  /// tersembunyi.
+  final Widget amount;
+
+  /// Tautan ke rincian ("Di 4 dompet").
+  final String? linkLabel;
+
+  /// Dipanggil saat tautan diketuk.
+  final VoidCallback? onLinkTap;
+
+  /// Lebar tampil kepala tanuki (gambar asli 288×226, skala 1/3).
+  static const mascotWidth = 96.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space2, 0),
+      decoration: ShapeDecoration(color: colors.brand, shape: const PixelCornerBorder()),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.space4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.onBrand)),
+                  const SizedBox(height: 2),
+                  DefaultTextStyle.merge(style: TextStyle(color: colors.onBrand), child: amount),
+                  if (linkLabel case final link?)
+                    Semantics(
+                      button: true,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: onLinkTap,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: AppSize.touch),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(link, style: textTheme.labelLarge?.copyWith(color: colors.onBrand)),
+                              ),
+                              AppIcon(IconKey.chevronRight, size: AppSize.iconSm, color: colors.onBrand),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.space2),
+          ExcludeSemantics(
+            child: Image.asset(
+              'assets/illustration/mascot_head.png',
+              width: mascotWidth,
+              filterQuality: FilterQuality.none,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Angka utama `amount-hero`: simbol mata uang diperkecil di depan angka
+/// besar (`.tk-amt__cur`), mengecil sendiri kalau tidak muat. [color] mewarnai angkanya (mis. merah
 /// untuk saldo negatif); bawaan warna teks utama.
 class HeroAmount extends StatelessWidget {
   /// Membuat [HeroAmount] dari teks nominal yang sudah diformat, mis.
@@ -128,7 +188,13 @@ class HeroAmount extends StatelessWidget {
     final match = RegExp('^([+−-]?)${RegExp.escape(symbol)}(.*)\$').firstMatch(formatted);
     final prefix = match == null ? '' : '${match[1]}$symbol';
     final number = match == null ? formatted : match[2]!;
-    final prefixStyle = context.numberStyles.amount.copyWith(color: color ?? colors.ink2);
+    final heroStyle = context.numberStyles.amountHero;
+    final prefixStyle = heroStyle.copyWith(
+      fontSize: heroStyle.fontSize! * 0.56,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0,
+      color: color ?? colors.ink2,
+    );
     // Satu `Text.rich`: tetap terbaca sebagai satu nominal utuh (pembaca
     // layar, pencarian teks di uji) walau awalannya diperkecil.
     return FitStart(
@@ -152,7 +218,7 @@ class HeroAmount extends StatelessWidget {
   }
 }
 
-/// Bidang berlatar kartu di dalam [AppHeroCard], tanpa garis tepi.
+/// Bidang cekung `surface2` di dalam [AppSummaryCard].
 class HeroInset extends StatelessWidget {
   /// Membuat [HeroInset].
   const HeroInset({required this.child, super.key});
@@ -164,7 +230,7 @@ class HeroInset extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: BoxDecoration(color: context.appColors.surface, borderRadius: AppRadius.pixelSmAll),
+      decoration: ShapeDecoration(color: context.appColors.surface2, shape: const PixelCornerBorder.small()),
       child: child,
     );
   }

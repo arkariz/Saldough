@@ -123,7 +123,7 @@ class _SignedOutState extends State<_SignedOut> {
         ),
         const SizedBox(height: AppSpacing.space6),
         Center(
-          child: AppButton.tertiary(
+          child: AppButton.text(
             key: const ValueKey('account-email-toggle'),
             label: t.account.emailSignInToggle,
             onPressed: () => setState(() => _showEmailForm = !_showEmailForm),
@@ -255,10 +255,9 @@ class _SignedIn extends StatelessWidget {
         const SizedBox(height: AppSpacing.space1),
         Text(t.account.dangerBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
         const SizedBox(height: AppSpacing.space4),
-        AppButton.secondary(
+        AppButton.danger(
           key: const ValueKey('account-delete'),
           label: _busyLabel(t.account.deleteAction, state, AccountAction.delete),
-          textColor: colors.ink,
           onPressed: state.isBusy ? null : () => _confirmDelete(context),
         ),
       ],
@@ -303,12 +302,8 @@ class _PasswordDialogState extends State<_PasswordDialog> {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel)),
-        TextButton(
-          onPressed: () => Navigator.pop(context, _controller.text),
-          style: TextButton.styleFrom(foregroundColor: context.appColors.ink),
-          child: Text(t.account.deleteAction),
-        ),
+        AppButton.text(label: t.common.cancel, onPressed: () => Navigator.pop(context)),
+        AppButton.danger(label: t.account.deleteAction, onPressed: () => Navigator.pop(context, _controller.text)),
       ],
     );
   }

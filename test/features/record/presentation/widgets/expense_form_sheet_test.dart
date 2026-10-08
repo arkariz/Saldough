@@ -139,19 +139,19 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.text(t.record.categorySectionLabel.toUpperCase()),
+          find.text(t.record.categorySectionLabel),
           findsOneWidget,
         );
         expect(
-          find.text(t.record.expenseWalletSectionLabel.toUpperCase()),
+          find.text(t.record.expenseWalletSectionLabel),
           findsOneWidget,
         );
         expect(
-          find.text(t.record.dateFieldLabel.toUpperCase()),
+          find.text(t.record.dateFieldLabel),
           findsOneWidget,
         );
         expect(
-          find.text(t.record.noteSectionLabel.toUpperCase()),
+          find.text(t.record.noteSectionLabel),
           findsOneWidget,
         );
         // Penafian tidak diulang di tiap formulir (UX-9).

@@ -187,7 +187,6 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                       ),
                       AppButton(
                         label: t.freelance.billAction(count: stats.unbilledCount),
-                        color: context.appColors.warning,
                         onPressed: stats.unbilledCount == 0
                             ? null
                             : () => createPayment(context, projectId: project.id),
@@ -381,7 +380,6 @@ class _PaymentCard extends StatelessWidget {
                 spotlightKey: spotlightReceive ? SpotlightKey.freelanceReceive : null,
                 child: AppButton(
                   label: t.freelance.receiveAction,
-                  color: colors.positive,
                   onPressed: () => receivePayment(context, payment),
                 ),
               ),

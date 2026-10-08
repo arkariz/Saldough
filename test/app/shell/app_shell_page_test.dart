@@ -240,7 +240,7 @@ void main() {
       await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.record.toWalletFieldLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.record.toWalletFieldLabel), findsOneWidget);
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
     });
 
@@ -262,7 +262,7 @@ void main() {
       }
       await tester.pumpAndSettle();
 
-      expect(find.text('${t.recurring.pendingCardTitle.toUpperCase()} (1)'), findsOneWidget);
+      expect(find.text('${t.recurring.pendingCardTitle} (1)'), findsOneWidget);
       expect(find.text('Netflix ●'), findsOneWidget);
     });
 

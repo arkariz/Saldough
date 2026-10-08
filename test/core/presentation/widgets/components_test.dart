@@ -1,0 +1,367 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
+
+/// Komponen dasar design system (T-14.3, ADR-034): varian, keadaan nonaktif,
+/// dan semantik.
+void main() {
+  const c = AppColors.light;
+
+  Future<void> pump(WidgetTester tester, Widget child, {double width = 360}) {
+    tester.view
+      ..physicalSize = Size(width, 800)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    return tester.pumpWidget(
+      MaterialApp(
+        theme: PixelTheme.light,
+        home: Scaffold(
+          body: Padding(padding: const EdgeInsets.all(16), child: child),
+        ),
+      ),
+    );
+  }
+
+  ShapeDecoration shapeOf(WidgetTester tester, Finder within) => tester
+      .widgetList<Container>(
+        find.descendant(of: within, matching: find.byType(Container)),
+      )
+      .map((w) => w.decoration)
+      .whereType<ShapeDecoration>()
+      .first;
+
+  group('AppButton', () {
+    testWidgets(
+      'primary brand, secondary surface2, text tanpa isian, danger teks danger',
+      (tester) async {
+        await pump(
+          tester,
+          Column(
+            children: [
+              AppButton(label: 'Simpan', onPressed: () {}),
+              AppButton.secondary(label: 'Tambah', onPressed: () {}),
+              AppButton.text(label: 'Batal', onPressed: () {}),
+              AppButton.danger(label: 'Hapus dompet', onPressed: () {}),
+            ],
+          ),
+        );
+        Color? fillOf(String label) =>
+            (tester
+                        .widget<AnimatedContainer>(
+                          find
+                              .ancestor(
+                                of: find.text(label),
+                                matching: find.byType(AnimatedContainer),
+                              )
+                              .first,
+                        )
+                        .decoration!
+                    as ShapeDecoration)
+                .color;
+        expect(fillOf('Simpan'), c.brand);
+        expect(fillOf('Tambah'), c.surface2);
+        expect(fillOf('Batal'), Colors.transparent);
+        expect(
+          tester.widget<Text>(find.text('Hapus dompet')).style!.color,
+          c.danger,
+        );
+        expect(
+          tester.widget<Text>(find.text('Simpan')).style!.color,
+          c.onBrand,
+        );
+      },
+    );
+
+    testWidgets('nonaktif: opacity-disabled dan tidak memanggil handler', (
+      tester,
+    ) async {
+      await pump(tester, const AppButton(label: 'Simpan', onPressed: null));
+      expect(
+        tester.widget<Opacity>(find.byType(Opacity).first).opacity,
+        AppSize.disabledOpacity,
+      );
+      expect(
+        tester.getSemantics(find.byType(AppButton)),
+        isSemantics(isButton: true, isEnabled: false),
+      );
+    });
+
+    testWidgets('memuat: pemutar menggantikan teks dan ketukan diabaikan', (
+      tester,
+    ) async {
+      var taps = 0;
+      await pump(
+        tester,
+        AppButton(label: 'Simpan', loading: true, onPressed: () => taps++),
+      );
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text('Simpan'), findsNothing);
+      await tester.tap(find.byType(AppButton));
+      expect(taps, 0);
+    });
+
+    testWidgets(
+      'kecil 36px tetap punya area sentuh 48px; expand selebar induk',
+      (tester) async {
+        await pump(
+          tester,
+          Column(
+            children: [
+              AppButton(label: 'Cek', small: true, onPressed: () {}),
+              AppButton(label: 'Simpan', expand: true, onPressed: () {}),
+            ],
+          ),
+        );
+        expect(
+          tester.getSize(find.byType(AppButton).first).height,
+          greaterThanOrEqualTo(48),
+        );
+        expect(tester.getSize(find.byType(AnimatedContainer).first).height, 36);
+        expect(tester.getSize(find.byType(AnimatedContainer).last).width, 328);
+      },
+    );
+  });
+
+  group('AppChip', () {
+    testWidgets(
+      'terpilih: brandSoft dengan ikon centang; jumlah setelah label',
+      (tester) async {
+        await pump(
+          tester,
+          AppChip(
+            label: 'Pengeluaran',
+            count: 24,
+            selected: true,
+            onTap: () {},
+          ),
+        );
+        expect(shapeOf(tester, find.byType(AppChip)).color, c.brandSoft);
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is AppIcon && w.iconKey == IconKey.check,
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('24'), findsOneWidget);
+        expect(
+          tester.getSemantics(find.byType(AppChip)),
+          isSemantics(isSelected: true),
+        );
+      },
+    );
+
+    testWidgets('tidak terpilih surface2, di atas bg surface; area sentuh 48', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        AppChip(label: 'Makan', icon: IconKey.categoryFood, onTap: () {}),
+      );
+      expect(shapeOf(tester, find.byType(AppChip)).color, c.surface2);
+      expect(tester.getSize(find.byType(AppChip)).height, 48);
+      await pump(tester, AppChip(label: 'Makan', onBg: true, onTap: () {}));
+      expect(shapeOf(tester, find.byType(AppChip)).color, c.surface);
+    });
+  });
+
+  group('AppSegmentedControl', () {
+    testWidgets(
+      'memanggil onChanged; tiga segmen "Pengeluaran" muat di 360dp',
+      (tester) async {
+        String? picked;
+        await pump(
+          tester,
+          AppSegmentedControl<String>(
+            options: const [
+              ('e', 'Pengeluaran'),
+              ('i', 'Pemasukan'),
+              ('t', 'Transfer'),
+            ],
+            selected: 'e',
+            counts: const {'e': 3},
+            onChanged: (v) => picked = v,
+          ),
+        );
+        expect(tester.takeException(), isNull);
+        await tester.tap(find.text('Transfer'));
+        expect(picked, 't');
+        expect(
+          tester.getSemantics(find.text('Pengeluaran 3')),
+          isSemantics(isChecked: true, isInMutuallyExclusiveGroup: true),
+        );
+      },
+    );
+  });
+
+  group('AppProgressBar', () {
+    test('status: aman < 85%, hampir habis 85–100%, lewat > 100%', () {
+      expect(AppProgressBar.statusFor(0.5), AppBarStatus.safe);
+      expect(AppProgressBar.statusFor(0.85), AppBarStatus.nearlyOut);
+      expect(AppProgressBar.statusFor(1), AppBarStatus.nearlyOut);
+      expect(AppProgressBar.statusFor(1.01), AppBarStatus.over);
+    });
+
+    testWidgets('tinggi 10px, tipis 6px; dibaca sebagai persen', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const Column(
+          children: [
+            AppProgressBar(value: 0.64, pace: 0.5),
+            AppProgressBar(value: 0.2, thin: true),
+          ],
+        ),
+      );
+      expect(tester.getSize(find.byType(AppProgressBar).first).height, 10);
+      expect(tester.getSize(find.byType(AppProgressBar).last).height, 6);
+      expect(
+        tester.getSemantics(find.byType(AppProgressBar).first).value,
+        '64%',
+      );
+    });
+  });
+
+  group('AppMoneyText', () {
+    testWidgets('tanda dan warna per jenis', (tester) async {
+      await pump(
+        tester,
+        const Column(
+          children: [
+            AppMoneyText(4500000, kind: MoneyKind.expense),
+            AppMoneyText(850000000, kind: MoneyKind.income),
+            AppMoneyText(30000000, kind: MoneyKind.transfer),
+            AppMoneyText(-3600000),
+          ],
+        ),
+      );
+      Color? colorOf(String text) =>
+          tester.widget<Text>(find.text(text)).style!.color;
+      expect(colorOf('−Rp45.000'), c.ink);
+      expect(colorOf('+Rp8.500.000'), c.positive);
+      expect(colorOf('Rp300.000'), c.ink2);
+      expect(colorOf('−Rp36.000'), c.danger);
+      final style = tester.widget<Text>(find.text('−Rp45.000')).style!;
+      expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
+    });
+  });
+
+  group('AppBadge dan AppBanner', () {
+    testWidgets('badge nada warning: warningSoft + teks warning, huruf biasa', (
+      tester,
+    ) async {
+      await pump(tester, const AppBadge('Perlu dicek', tone: AppTone.warning));
+      expect(shapeOf(tester, find.byType(AppBadge)).color, c.warningSoft);
+      expect(
+        tester.widget<Text>(find.text('Perlu dicek')).style!.color,
+        c.warning,
+      );
+    });
+
+    testWidgets('banner: satu kalimat dan satu tindakan', (tester) async {
+      var taps = 0;
+      await pump(
+        tester,
+        AppBanner(
+          message: '3 transaksi menunggu dicek.',
+          actionLabel: 'Cek',
+          onAction: () => taps++,
+        ),
+      );
+      await tester.tap(find.text('Cek'));
+      expect(taps, 1);
+      expect(shapeOf(tester, find.byType(AppBanner)).color, c.warningSoft);
+    });
+  });
+
+  group('AppCard, AppListCard, AppListRow, AppSectionHeader', () {
+    testWidgets('kartu surface bersudut piksel; dapat diketuk', (tester) async {
+      var taps = 0;
+      await pump(
+        tester,
+        AppCard(
+          onTap: () => taps++,
+          semanticsLabel: 'Buka',
+          child: const Text('isi'),
+        ),
+      );
+      final material = tester.widget<Material>(
+        find
+            .descendant(
+              of: find.byType(AppCard),
+              matching: find.byType(Material),
+            )
+            .first,
+      );
+      expect(material.color, c.surface);
+      expect(material.shape, const PixelCornerBorder());
+      await tester.tap(find.text('isi'));
+      expect(taps, 1);
+    });
+
+    testWidgets(
+      'baris: tinggi minimal 64, judul satu baris, pemisah menjorok',
+      (tester) async {
+        await pump(
+          tester,
+          const AppListCard(
+            children: [
+              AppListRow(
+                title: 'Makan siang dengan judul yang sangat panjang sekali',
+                subtitle: 'BCA · 12.00',
+              ),
+              AppListRow(title: 'Kopi', subtitle: 'Tunai · 08.00'),
+            ],
+          ),
+        );
+        expect(
+          tester.getSize(find.byType(AppListRow).first).height,
+          greaterThanOrEqualTo(64),
+        );
+        expect(
+          tester.widget<Divider>(find.byType(Divider)).indent,
+          AppListCard.tileIndent,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets('judul bagian adalah header dengan tautan', (tester) async {
+      var taps = 0;
+      await pump(
+        tester,
+        AppSectionHeader(
+          'Transaksi terbaru',
+          actionLabel: 'Lihat semua',
+          onAction: () => taps++,
+        ),
+      );
+      await tester.tap(find.text('Lihat semua'));
+      expect(taps, 1);
+      expect(
+        tester.getSemantics(find.text('Transaksi terbaru')),
+        isSemantics(isHeader: true),
+      );
+    });
+  });
+
+  testWidgets('AppHeroCard: latar brand, teks onBrand, tanuki tajam', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const AppHeroCard(
+        label: 'Total saldo',
+        amount: HeroAmount('Rp27.522.000'),
+        linkLabel: 'Di 4 dompet',
+      ),
+    );
+    final image = tester.widget<Image>(find.byType(Image));
+    expect(image.filterQuality, FilterQuality.none);
+    expect(
+      tester.widget<Text>(find.text('Total saldo')).style!.color,
+      c.onBrand,
+    );
+  });
+}

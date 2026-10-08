@@ -5,13 +5,14 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_keys.dart';
+import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
-import 'package:saldough/features/wallet/presentation/widgets/wallet_summary_card.dart';
 import 'package:state_management/state_management.dart';
 
 /// Layar Dompet (T-2.7; FR-WAL-001..003): total saldo dompet aktif, daftar
@@ -49,7 +50,14 @@ class _WalletListPageState extends State<WalletListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(t.appShell.walletsTabLabel)),
+      appBar: AppBar(
+        title: Text(t.appShell.walletsTabLabel, style: Theme.of(context).textTheme.headlineSmall),
+        centerTitle: false,
+        actions: [
+          const TutorialInfoButton(tour: TourId.wallet),
+          AppIconButton(icon: IconKey.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
+        ],
+      ),
       body: SafeArea(
         child: BlocBuilder<WalletBloc, WalletState>(
           builder: (context, state) {
@@ -70,6 +78,8 @@ class _WalletListPageState extends State<WalletListPage> {
             final active = state.activeWallets;
             final inactive = state.inactiveWallets;
             final colors = context.appColors;
+            final textTheme = Theme.of(context).textTheme;
+            final shares = walletShares(active);
             // TR-WALLET (ADR-021 §3.4): ringkasan, dompet pertama, tambah.
             return TourTrigger(
               tour: TourId.wallet,
@@ -82,55 +92,67 @@ class _WalletListPageState extends State<WalletListPage> {
                 AppSpacing.space12,
               ),
               children: [
+                // Prototipe `Dompet.dc.html`: angka utama di atas `bg` tanpa
+                // kartu, lalu bar sebaran saldo per dompet.
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.walletSummary,
-                  child: WalletSummaryCard(
-                    activeCount: active.length,
-                    totalBalance: state.totalBalance,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionLabel(t.wallet.listHeading),
-                const SizedBox(height: AppSpacing.space1),
-                for (final (i, wallet) in active.indexed) ...[
-                  SpotlightTarget(
-                    // Hanya dompet pertama yang disorot.
-                    spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
-                    child: WalletCard(
-                      wallet: wallet,
-                      onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space1, AppSpacing.space1, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(t.home.balanceLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                        HeroAmount(AppMoneyFormatter.format(state.totalBalance)),
+                        Text(
+                          t.wallet.activeBadge(count: active.length),
+                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                        ),
+                        const SizedBox(height: AppSpacing.space3),
+                        WalletSpreadBar(wallets: active, shares: shares),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.space2),
-                ],
-                const SizedBox(height: AppSpacing.space1),
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.walletAdd,
-                  child: AppButton(
-                    label: t.wallet.addAction,
-                    onPressed: () => _addWallet(context),
-                  ),
+                ),
+                const SizedBox(height: AppSpacing.space6),
+                AppSectionHeader(t.wallet.listHeading),
+                const SizedBox(height: AppSpacing.space2),
+                AppListCard(
+                  children: [
+                    for (final (i, wallet) in active.indexed)
+                      SpotlightTarget(
+                        // Hanya dompet pertama yang disorot.
+                        spotlightKey: i == 0 ? SpotlightKey.walletCard : null,
+                        child: WalletCard(
+                          wallet: wallet,
+                          sharePercent: shares[wallet.id],
+                          onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
+                        ),
+                      ),
+                  ],
                 ),
                 if (inactive.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.space6),
-                  AppSectionLabel(t.wallet.inactiveHeading),
-                  const SizedBox(height: AppSpacing.space1),
-                  for (final wallet in inactive) ...[
-                    WalletCard(
-                      wallet: wallet,
-                      onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
-                    ),
-                    const SizedBox(height: AppSpacing.space2),
-                  ],
+                  AppSectionHeader(t.wallet.inactiveHeading),
+                  const SizedBox(height: AppSpacing.space2),
+                  AppListCard(
+                    children: [
+                      for (final wallet in inactive)
+                        WalletCard(
+                          wallet: wallet,
+                          onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
+                        ),
+                    ],
+                  ),
                 ],
-                const SizedBox(height: AppSpacing.space2),
-                Text(
-                  t.wallet.privacyNote,
-                  textAlign: TextAlign.center,
-                  style: labelSmStyle(
-                    context,
-                    color: colors.ink2,
-                  ).copyWith(fontWeight: FontWeight.w400),
+                const SizedBox(height: AppSpacing.space6),
+                SpotlightTarget(
+                  spotlightKey: SpotlightKey.walletAdd,
+                  child: AppButton.secondary(
+                    label: t.wallet.addAction,
+                    icon: IconKey.add,
+                    expand: true,
+                    onPressed: () => _addWallet(context),
+                  ),
                 ),
               ],
               ),

@@ -584,32 +584,32 @@ class Translations$wallet$id {
 	/// id: 'Posisi saldo kas saat ini'
 	String get subtitle => 'Posisi saldo kas saat ini';
 
-	/// id: '$count kantong aktif'
-	String activeBadge({required Object count}) => '${count} kantong aktif';
+	/// id: '$count dompet aktif'
+	String activeBadge({required Object count}) => '${count} dompet aktif';
 
 	/// id: 'Total saldo semua dompet'
 	String get totalLabel => 'Total saldo semua dompet';
 
-	/// id: 'Daftar Dompet'
-	String get listHeading => 'Daftar Dompet';
+	/// id: 'Dompet aktif'
+	String get listHeading => 'Dompet aktif';
 
-	/// id: 'Tambah Dompet Baru'
-	String get addAction => 'Tambah Dompet Baru';
+	/// id: 'Tambah dompet'
+	String get addAction => 'Tambah dompet';
 
-	/// id: 'Dompet Nonaktif'
-	String get inactiveHeading => 'Dompet Nonaktif';
+	/// id: 'Dompet nonaktif'
+	String get inactiveHeading => 'Dompet nonaktif';
 
 	/// id: 'Nonaktif'
 	String get inactiveBadge => 'Nonaktif';
 
-	/// id: 'Bank / Rekening'
-	String get typeBank => 'Bank / Rekening';
+	/// id: 'Bank'
+	String get typeBank => 'Bank';
 
-	/// id: 'Uang Tunai'
-	String get typeCash => 'Uang Tunai';
+	/// id: 'Uang tunai'
+	String get typeCash => 'Uang tunai';
 
-	/// id: 'Dompet Digital'
-	String get typeEwallet => 'Dompet Digital';
+	/// id: 'Dompet digital'
+	String get typeEwallet => 'Dompet digital';
 
 	/// id: 'Tabungan'
 	String get typeSavings => 'Tabungan';
@@ -3948,15 +3948,15 @@ extension on Translations {
 			'transaction.previousMonth' => 'Bulan sebelumnya',
 			'transaction.nextMonth' => 'Bulan berikutnya',
 			'wallet.subtitle' => 'Posisi saldo kas saat ini',
-			'wallet.activeBadge' => ({required Object count}) => '${count} kantong aktif',
+			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
 			'wallet.totalLabel' => 'Total saldo semua dompet',
-			'wallet.listHeading' => 'Daftar Dompet',
-			'wallet.addAction' => 'Tambah Dompet Baru',
-			'wallet.inactiveHeading' => 'Dompet Nonaktif',
+			'wallet.listHeading' => 'Dompet aktif',
+			'wallet.addAction' => 'Tambah dompet',
+			'wallet.inactiveHeading' => 'Dompet nonaktif',
 			'wallet.inactiveBadge' => 'Nonaktif',
-			'wallet.typeBank' => 'Bank / Rekening',
-			'wallet.typeCash' => 'Uang Tunai',
-			'wallet.typeEwallet' => 'Dompet Digital',
+			'wallet.typeBank' => 'Bank',
+			'wallet.typeCash' => 'Uang tunai',
+			'wallet.typeEwallet' => 'Dompet digital',
 			'wallet.typeSavings' => 'Tabungan',
 			'wallet.typeCard' => 'Kartu',
 			'wallet.emptyBadge' => 'Belum ada dompet',

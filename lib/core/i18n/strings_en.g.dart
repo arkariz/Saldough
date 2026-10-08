@@ -270,11 +270,11 @@ class _Translations$wallet$en extends Translations$wallet$id {
 
 	// Translations
 	@override String get subtitle => 'Where your cash stands right now';
-	@override String activeBadge({required Object count}) => '${count} active';
+	@override String activeBadge({required Object count}) => '${count} active wallets';
 	@override String get totalLabel => 'Total balance of all wallets';
-	@override String get listHeading => 'Wallets';
-	@override String get addAction => 'Add New Wallet';
-	@override String get inactiveHeading => 'Inactive Wallets';
+	@override String get listHeading => 'Active wallets';
+	@override String get addAction => 'Add wallet';
+	@override String get inactiveHeading => 'Inactive wallets';
 	@override String get inactiveBadge => 'Inactive';
 	@override String get typeBank => 'Bank account';
 	@override String get typeCash => 'Cash';
@@ -1682,11 +1682,11 @@ extension on TranslationsEn {
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
 			'wallet.subtitle' => 'Where your cash stands right now',
-			'wallet.activeBadge' => ({required Object count}) => '${count} active',
+			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
 			'wallet.totalLabel' => 'Total balance of all wallets',
-			'wallet.listHeading' => 'Wallets',
-			'wallet.addAction' => 'Add New Wallet',
-			'wallet.inactiveHeading' => 'Inactive Wallets',
+			'wallet.listHeading' => 'Active wallets',
+			'wallet.addAction' => 'Add wallet',
+			'wallet.inactiveHeading' => 'Inactive wallets',
 			'wallet.inactiveBadge' => 'Inactive',
 			'wallet.typeBank' => 'Bank account',
 			'wallet.typeCash' => 'Cash',

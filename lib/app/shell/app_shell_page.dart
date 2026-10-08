@@ -156,7 +156,7 @@ class _AppShellPageState extends State<AppShellPage> {
           onTap: () => _showPlan(context, PlanSegment.thisMonth),
         ),
       ),
-      const TransactionListPage(),
+      TransactionListPage(notice: CaptureInboxBanner(container: parentContainer)),
       PlanPage(
         selected: _planSegment,
         onChanged: (segment) => setState(() => _planSegment = segment),

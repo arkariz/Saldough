@@ -191,16 +191,19 @@ class _HomePageState extends State<HomePage> {
                 onAction: widget.onShowTransactions,
               ),
             ),
-            for (final transaction in state.recentTransactions) ...[
-              const SizedBox(height: AppSpacing.space2),
-              TransactionRow(
-                transaction: transaction,
-                walletsById: state.walletsById,
-                onTap: () => _thenRefresh(
-                  () => context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
-                ),
-              ),
-            ],
+            const SizedBox(height: AppSpacing.space2),
+            AppListCard(
+              children: [
+                for (final transaction in state.recentTransactions)
+                  TransactionRow(
+                    transaction: transaction,
+                    walletsById: state.walletsById,
+                    onTap: () => _thenRefresh(
+                      () => context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
+                    ),
+                  ),
+              ],
+            ),
           ] else ...[
             HomeEmptyTransactions(
               hasNoWallets: state.hasNoWallets,

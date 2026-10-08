@@ -146,17 +146,19 @@ class WalletDetailPage extends StatelessWidget {
                         if (recent.isEmpty)
                           const _EmptyRecentTransactions()
                         else
-                          for (var i = 0; i < recent.length && i < 5; i++) ...[
-                            if (i > 0) const SizedBox(height: AppSpacing.space2),
-                            TransactionRow(
-                              transaction: recent[i],
-                              walletsById: walletsById,
-                              onTap: () => context.pushRoute(
-                                TransactionRouteKeys.detail,
-                                TransactionDetailInput(recent[i]),
-                              ),
-                            ),
-                          ],
+                          AppListCard(
+                            children: [
+                              for (final transaction in recent.take(5))
+                                TransactionRow(
+                                  transaction: transaction,
+                                  walletsById: walletsById,
+                                  onTap: () => context.pushRoute(
+                                    TransactionRouteKeys.detail,
+                                    TransactionDetailInput(transaction),
+                                  ),
+                                ),
+                            ],
+                          ),
                       ],
                     );
                   },

@@ -40,75 +40,27 @@ class TransactionTypeFilterRow extends StatelessWidget {
     };
   }
 
-  IconKey _icon(TransactionTypeFilter filter) => switch (filter) {
-    TransactionTypeFilter.all => IconKey.transactions,
-    TransactionTypeFilter.income => IconKey.income,
-    TransactionTypeFilter.expense => IconKey.expense,
-    TransactionTypeFilter.transfer => IconKey.transfer,
-  };
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.surface2,
-      padding: const EdgeInsets.all(AppSpacing.space1),
+    // Chip penyaring di atas `bg` (design system Chip, varian filter): satu
+    // baris yang bisa digeser, label + jumlah.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      clipBehavior: Clip.none,
       child: Row(
         children: [
           for (final filter in TransactionTypeFilter.values) ...[
-            if (filter != TransactionTypeFilter.values.first) const SizedBox(width: AppSpacing.space1),
-            Expanded(
-              child: _TypeTab(
-                icon: _icon(filter),
-                label: _label(filter),
-                selected: typeFilter == filter,
-                onTap: () => onChanged(filter),
-              ),
+            if (filter != TransactionTypeFilter.values.first) const SizedBox(width: AppSpacing.space2),
+            AppChip(
+              key: ValueKey('type-filter-${filter.name}'),
+              label: _label(filter),
+              selected: typeFilter == filter,
+              onBg: true,
+              onTap: () => onChanged(filter),
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _TypeTab extends StatelessWidget {
-  const _TypeTab({required this.icon, required this.label, required this.selected, required this.onTap});
-
-  final IconKey icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: 6),
-        decoration: BoxDecoration(
-          color: selected ? colors.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: selected ? [BoxShadow(color: colors.lineStrong, offset: const Offset(0, 2))] : null,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Opacity(opacity: selected ? 1 : 0.55, child: AppIcon(icon)),
-            const SizedBox(height: 2),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                maxLines: 1,
-                style: labelSmStyle(context, color: selected ? colors.ink : colors.ink2),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -149,22 +101,23 @@ class _TransactionSearchFieldState extends State<TransactionSearchField> {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppCard(
-      padding: EdgeInsets.zero,
+    // Kolom cari design system: pil `surface2` setinggi 48 dengan ikon cari.
+    return Container(
+      decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
       child: TextField(
         controller: _controller,
         onChanged: widget.onQueryChanged,
         textInputAction: TextInputAction.search,
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
           isDense: true,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: t.transaction.searchHint,
-          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
-          prefixIcon: const Padding(padding: EdgeInsets.all(10), child: AppIcon(IconKey.search, size: 22)),
-          prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: colors.ink3),
+          prefixIcon: Padding(padding: const EdgeInsets.all(12), child: AppIcon(IconKey.search, color: colors.ink2)),
+          prefixIconConstraints: const BoxConstraints(minWidth: AppSize.touch, minHeight: AppSize.touch),
           contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: AppSpacing.space2),
         ),
       ),
@@ -234,6 +187,7 @@ class TransactionFilterButton extends StatelessWidget {
       onTap: () => _openSheet(context),
       label: activeCount > 0 ? '${t.transaction.filterButtonLabel} ($activeCount)' : t.transaction.filterButtonLabel,
       child: AppCard(
+        color: context.appColors.surface2,
         padding: EdgeInsets.zero,
         child: SizedBox(
           width: 44,

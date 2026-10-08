@@ -173,7 +173,7 @@
     "flowExpenseLabel": "Out",
     "allFilterLabel": "All $count",
     "incomeFilterLabel": "Income $count",
-    "expenseFilterLabel": "Expense $count",
+    "expenseFilterLabel": "Expenses $count",
     "transferFilterLabel": "Transfer $count",
     "walletFilterAllLabel": "All Wallets",
     "walletFilterLabel": "Wallet",
@@ -236,7 +236,9 @@
     "budgetLabel": "Budget",
     "openBudgetAction": "View budget",
     "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.",
-    "makeRecurringAction": "Make Recurring"
+    "makeRecurringAction": "Make Recurring",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
   },
   "wallet": {
     "subtitle": "Where your cash stands right now",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/app_card.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
 import 'package:saldough/core/theme/theme.dart';
 
@@ -32,6 +33,9 @@ class AppMenuSelectButton<T> extends StatelessWidget {
     this.wrapLabel = false,
     this.isPlaceholder = false,
     this.detailFor,
+    this.fieldLabel,
+    this.rowIcon,
+    this.trailing,
     super.key,
   });
 
@@ -59,6 +63,17 @@ class AppMenuSelectButton<T> extends StatelessWidget {
   /// Meredupkan label (keadaan "belum dipilih").
   final bool isPlaceholder;
 
+  /// Mengubah tombol jadi baris form (`tk-row--compact`, design system
+  /// ListRow): [fieldLabel] kecil di atas nilai, ikon 24px `ink2`, [trailing]
+  /// di kanan, dan chevron. Dipakai baris Dompet dan Anggaran di Catat.
+  final String? fieldLabel;
+
+  /// Ikon baris form (Material Symbols); bawaan [icon].
+  final IconKey? rowIcon;
+
+  /// Isi kanan baris form, mis. "Saldo jadi Rp331.000".
+  final Widget? trailing;
+
   /// Teks kecil rata kanan di tiap item menu, mis. saldo dompet (UX-11);
   /// `null` = tanpa teks itu.
   final String? Function(T value)? detailFor;
@@ -70,13 +85,13 @@ class AppMenuSelectButton<T> extends StatelessWidget {
     return PopupMenuButton<int>(
       // Indeks, bukan nilai: `PopupMenuButton` tidak memanggil `onSelected`
       // untuk nilai `null`, padahal "Semua" justru diwakili `null`.
-      onSelected: (index) => onSelected(index < 0 ? null : options[index].value),
+      onSelected: (index) =>
+          onSelected(index < 0 ? null : options[index].value),
       color: colors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
+      shape: const PixelCornerBorder(),
       itemBuilder: (_) => [
-        if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel, context: context),
+        if (allLabel != null)
+          _item(value: -1, icon: allIcon, label: allLabel, context: context),
         for (var i = 0; i < options.length; i++)
           _item(
             value: i,
@@ -86,21 +101,83 @@ class AppMenuSelectButton<T> extends StatelessWidget {
             context: context,
           ),
       ],
-      child: AppCard(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 10),
-        child: Row(
-          children: [
-            AppIcon(icon, size: 22),
-            const SizedBox(width: AppSpacing.space2),
-            Expanded(
-              child: Text(
-                label,
-                maxLines: wrapLabel ? null : 1,
-                overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
-                style: labelSmStyle(context, color: isPlaceholder ? colors.ink2 : colors.ink),
+      child: fieldLabel != null
+          ? _row(context)
+          : AppCard(
+              color: colors.surface2,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.space3,
+                vertical: 10,
+              ),
+              child: Row(
+                children: [
+                  AppIcon(icon, size: 22),
+                  const SizedBox(width: AppSpacing.space2),
+                  Expanded(
+                    child: Text(
+                      label,
+                      maxLines: wrapLabel ? null : 1,
+                      overflow: wrapLabel
+                          ? TextOverflow.visible
+                          : TextOverflow.ellipsis,
+                      style: labelSmStyle(
+                        context,
+                        color: isPlaceholder ? colors.ink2 : colors.ink,
+                      ),
+                    ),
+                  ),
+                  AppIcon(IconKey.dropdown, size: 18, color: colors.ink2),
+                ],
               ),
             ),
-            AppIcon(IconKey.dropdown, size: 18, color: colors.ink2),
+    );
+  }
+
+  Widget _row(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 56),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.space4,
+          vertical: AppSpacing.space2,
+        ),
+        child: Row(
+          children: [
+            AppIcon(rowIcon ?? icon, color: colors.ink2),
+            const SizedBox(width: AppSpacing.space3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    fieldLabel!,
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                  ),
+                  Text(
+                    label,
+                    maxLines: wrapLabel ? null : 1,
+                    overflow: wrapLabel
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
+                    style: isPlaceholder
+                        ? textTheme.bodyLarge?.copyWith(color: colors.ink3)
+                        : textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            if (trailing != null) ...[
+              const SizedBox(width: AppSpacing.space2),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 140),
+                child: trailing,
+              ),
+            ],
+            const SizedBox(width: AppSpacing.space1),
+            AppIcon(IconKey.chevronRight, color: colors.ink3),
           ],
         ),
       ),
@@ -127,11 +204,18 @@ class AppMenuSelectButton<T> extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(label, overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis),
+                Text(
+                  label,
+                  overflow: wrapLabel
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis,
+                ),
                 if (detail != null)
                   Text(
                     detail,
-                    style: context.numberStyles.amountSm.copyWith(color: context.appColors.ink2),
+                    style: context.numberStyles.amountSm.copyWith(
+                      color: context.appColors.ink2,
+                    ),
                   ),
               ],
             ),

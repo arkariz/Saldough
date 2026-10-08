@@ -13,7 +13,9 @@
     "retry": "Coba lagi",
     "loading": "Memuat...",
     "genericErrorMessage": "Ada yang salah. Coba lagi.",
-    "confirmDeleteTitle": "Hapus?"
+    "confirmDeleteTitle": "Hapus?",
+    "keypadBackspace": "Hapus satu digit",
+    "close": "Tutup"
   },
   "appShell": {
     "homeTabLabel": "Beranda",
@@ -156,7 +158,10 @@
       "autoRecordLabel": "Catat otomatis",
       "autoRecordHint": "Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.",
       "noBalanceChange": "Tidak ada transaksi baru; saldo tidak berubah."
-    }
+    },
+    "balanceAfter": "Saldo jadi $amount",
+    "allCategories": "Semua kategori",
+    "amountSemantics": "Nominal $amount"
   },
   "transaction": {
     "pageTitle": "Riwayat",

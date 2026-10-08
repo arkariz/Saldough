@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -191,12 +189,6 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
   String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
-  Wallet? get _wallet {
-    for (final wallet in widget.wallets) {
-      if (wallet.id == _walletId) return wallet;
-    }
-    return null;
-  }
 
   void _submit() {
     final amount = _amountSen;
@@ -218,18 +210,15 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   @override
   Widget build(BuildContext context) {
     final editing = widget.initial != null;
-    final wallet = _wallet;
     final amount = _amountSen;
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.expense,
-      title: editing ? t.transaction.editSheetTitle : t.record.expenseAction,
+      title: editing ? t.transaction.editSheetTitle : t.appShell.recordAction,
       isEditing: editing,
       onBack: () => Navigator.of(context).pop(),
-      notice: RecordNotice(
-        title: t.record.expenseRuleTitle,
-        body: t.record.expenseRuleBody,
-      ),
+      amountController: _amountController,
+      onAmountChanged: () => setState(() {}),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : repeatSubmitLabel(
@@ -244,14 +233,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(
-            controller: _amountController,
-            label: t.record.amountLabelExpense,
-            kind: TransactionKind.expense,
-            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.expense),
-            autofocus: true,
-            onChanged: () => setState(() {}),
-          ),
+          child: RecordAmountField(controller: _amountController, kind: TransactionKind.expense),
         ),
         RecordCategoryField(
           value: _categoryId,
@@ -259,33 +241,46 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
           categoryKind: CategoryKind.expense,
           frequentIds: widget.frequentCategoryIds,
           onCreate: widget.onCreateCategory,
+          title: _noteController.text,
         ),
-        SpotlightTarget(
-          spotlightKey: SpotlightKey.recordWallet,
-          child: WalletSelectField(
-            label: t.record.expenseWalletSectionLabel,
-            wallets: widget.wallets,
-            selectedId: _walletId,
-            onSelected: (id) => setState(() => _walletId = id),
-            previewAmountSen: amount,
-            previewIsCredit: false,
-          ),
-        ),
-        if (_budgetChoices.isNotEmpty)
-          SpotlightTarget(
-            spotlightKey: SpotlightKey.recordBudgetItem,
-            child: RecordBudgetItemField(
-              choices: _budgetChoices,
-              selectedId: _validBudgetItemId,
-              onSelected: (id) => setState(() => _budgetItemId = id),
+        AppListCard(
+          dividerIndent: AppListCard.iconIndent,
+          children: [
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.recordWallet,
+              child: WalletSelectField(
+                label: t.record.expenseWalletSectionLabel,
+                wallets: widget.wallets,
+                selectedId: _walletId,
+                onSelected: (id) => setState(() => _walletId = id),
+                previewAmountSen: widget.repeatLocked ? null : amount,
+                previewIsCredit: false,
+              ),
             ),
-          ),
-        RecordDateField(
-          date: _date,
-          kind: TransactionKind.expense,
-          allowFuture: _repeat != null,
-          onChanged: (date) => setState(() => _date = date),
+            RecordDateField(
+              date: _date,
+              kind: TransactionKind.expense,
+              allowFuture: _repeat != null,
+              onChanged: (date) => setState(() => _date = date),
+            ),
+            RecordNoteField(
+              controller: _noteController,
+              kind: TransactionKind.expense,
+              onChanged: (_) => setState(() {}),
+            ),
+            if (_budgetChoices.isNotEmpty)
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recordBudgetItem,
+                child: RecordBudgetItemField(
+                  choices: _budgetChoices,
+                  selectedId: _validBudgetItemId,
+                  onSelected: (id) => setState(() => _budgetItemId = id),
+                ),
+              ),
+          ],
         ),
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+          RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         if (!editing && widget.occurrence == null)
@@ -302,28 +297,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               }),
             ),
           ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
-          RecordBudgetItemOutOfPeriodNotice(option: dropped),
-        RecordNoteField(
-          controller: _noteController,
-          kind: TransactionKind.expense,
-        ),
-        if (_canSubmit && wallet != null && amount != null)
-          RecordSummaryCard(
-            kind: TransactionKind.expense,
-            children: [
-              Text(
-                // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
-                widget.repeatLocked
-                    ? t.record.repeat.noBalanceChange
-                    : t.record.expenseSummary(
-                        wallet: wallet.name,
-                        amount: AppMoneyFormatter.format(amount),
-                      ),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
-          ),
+        // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
+        if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],
     );
   }

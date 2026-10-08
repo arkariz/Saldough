@@ -43,112 +43,108 @@ void main() {
     );
   }
 
-  Future<void> openMenu(WidgetTester tester) async {
-    await tester.tap(find.byType(AppMenuSelectButton<String>));
+  Future<void> openAll(WidgetTester tester) async {
+    await tester.tap(find.byKey(const ValueKey('category-all')));
     await tester.pumpAndSettle();
   }
 
-  group('RecordCategoryField (ADR-026)', () {
-    testWidgets('menu menawarkan kategori aktif sejenis dan "Tanpa kategori" -- bukan pemasukan, bukan terarsip', (
+  group('RecordCategoryField (ADR-026, T-14.5)', () {
+    testWidgets('petak menampilkan kategori aktif sejenis dan "Semua kategori" -- bukan pemasukan, bukan terarsip', (
       tester,
     ) async {
       await tester.pumpWidget(pumpable());
-      expect(find.text(t.record.categoryPlaceholder), findsOneWidget);
-
-      await openMenu(tester);
 
       expect(find.text('Makan'), findsOneWidget);
       expect(find.text('Transport'), findsOneWidget);
       expect(find.text('Gaji'), findsNothing);
       expect(find.text('Arisan lama'), findsNothing);
-      expect(find.text(t.record.categoryNoneLabel), findsOneWidget);
-      expect(find.text(t.record.categoryAddLabel), findsNothing, reason: 'tanpa onCreate');
+      expect(find.text(t.record.allCategories), findsOneWidget);
+      expect(find.byType(AppIconTile), findsNWidgets(3));
     });
 
-    testWidgets('kategori yang sering dipakai tampil paling atas', (tester) async {
+    testWidgets('kategori yang sering dipakai tampil paling depan', (tester) async {
       await tester.pumpWidget(pumpable(frequentIds: const ['transport']));
-      await openMenu(tester);
 
-      final transportY = tester.getTopLeft(find.text('Transport')).dy;
-      final foodY = tester.getTopLeft(find.text('Makan')).dy;
-      expect(transportY, lessThan(foodY));
+      expect(tester.getTopLeft(find.text('Transport')).dx, lessThan(tester.getTopLeft(find.text('Makan')).dx));
     });
 
-    testWidgets('memilih kategori mengirim id-nya; tombol menampilkan nama dan ikonnya', (tester) async {
-      String? picked;
-      await tester.pumpWidget(pumpable(onChanged: (id) => picked = id));
-      await openMenu(tester);
+    testWidgets('mengetuk kategori mengirim id-nya; yang terpilih ditandai, ketuk lagi melepasnya', (tester) async {
+      final picked = <String?>[];
+      await tester.pumpWidget(pumpable(onChanged: picked.add));
       await tester.tap(find.text('Makan'));
-      await tester.pumpAndSettle();
-      expect(picked, 'food');
+      expect(picked, ['food']);
 
-      await tester.pumpWidget(pumpable(value: 'food'));
-      expect(
-        find.descendant(
-          of: find.byType(AppMenuSelectButton<String>),
-          matching: find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.categoryFood),
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('Makan'), findsOneWidget);
+      await tester.pumpWidget(pumpable(value: 'food', onChanged: picked.add));
+      expect(tester.widget<AppIconTile>(find.byType(AppIconTile).first).selected, isTrue);
+      expect(tester.getSemantics(find.byKey(const ValueKey('category-food'))), isSemantics(isSelected: true));
+      await tester.tap(find.text('Makan'));
+      expect(picked.last, isNull);
     });
 
-    testWidgets('"Tanpa kategori" mengirim null', (tester) async {
-      String? picked = 'food';
-      await tester.pumpWidget(pumpable(value: 'food', onChanged: (id) => picked = id));
-      await openMenu(tester);
-      await tester.tap(find.text(t.record.categoryNoneLabel));
-      await tester.pumpAndSettle();
-      expect(picked, isNull);
-    });
-
-    testWidgets('kategori terarsip yang sedang terpilih (mode sunting) tetap tampil namanya', (tester) async {
+    testWidgets('kategori terpilih yang terarsip tetap tampil di petak', (tester) async {
       await tester.pumpWidget(pumpable(value: 'old'));
       expect(find.text('Arisan lama'), findsOneWidget);
     });
 
+    testWidgets('"Semua kategori" membuka sheet: memilih kategori dan "Tanpa kategori"', (tester) async {
+      final picked = <String?>[];
+      await tester.pumpWidget(pumpable(value: 'food', onChanged: picked.add));
+      await openAll(tester);
+
+      expect(find.text(t.record.categoryNoneLabel), findsOneWidget);
+      expect(find.byKey(const ValueKey('category-sheet-transport')), findsOneWidget);
+      expect(find.byKey(const ValueKey('category-sheet-old')), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('category-sheet-transport')));
+      await tester.pumpAndSettle();
+      expect(picked, ['transport']);
+
+      await openAll(tester);
+      await tester.tap(find.text(t.record.categoryNoneLabel));
+      await tester.pumpAndSettle();
+      expect(picked.last, isNull);
+    });
+
     testWidgets('"Tambah kategori" menanyakan nama, membuatnya, lalu memilihnya', (tester) async {
-      String? picked;
-      String? createdName;
+      const created = Category(id: 'new', kind: CategoryKind.expense, name: 'Arisan');
+      final names = <String>[];
+      final picked = <String?>[];
       await tester.pumpWidget(
         pumpable(
-          onChanged: (id) => picked = id,
+          onChanged: picked.add,
           onCreate: (name) async {
-            createdName = name;
-            return Category(id: 'new', kind: CategoryKind.expense, name: name);
+            names.add(name);
+            return created;
           },
         ),
       );
-      await openMenu(tester);
+      await openAll(tester);
       await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
-
-      await tester.enterText(find.byType(TextField), '  Oleh-oleh  ');
-      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Arisan');
       await tester.tap(find.text(t.common.save));
       await tester.pumpAndSettle();
 
-      expect(createdName, 'Oleh-oleh');
-      expect(picked, 'new');
+      expect(names, ['Arisan']);
+      expect(picked, ['new']);
     });
 
     testWidgets('membatalkan dialog nama tidak membuat apa pun', (tester) async {
-      var created = false;
+      var calls = 0;
       await tester.pumpWidget(
         pumpable(
           onCreate: (name) async {
-            created = true;
+            calls++;
             return null;
           },
         ),
       );
-      await openMenu(tester);
+      await openAll(tester);
       await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
       await tester.tap(find.text(t.common.cancel));
       await tester.pumpAndSettle();
 
-      expect(created, isFalse);
+      expect(calls, 0);
     });
   });
 }

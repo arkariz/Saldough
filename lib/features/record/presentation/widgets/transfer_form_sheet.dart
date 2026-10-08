@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -191,12 +188,6 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   /// ini, selain itu `null`.
   String? get _validBudgetItemId => _budgetChoices.any((o) => o.itemId == _budgetItemId) ? _budgetItemId : null;
 
-  Wallet? _find(String? id) {
-    for (final wallet in widget.wallets) {
-      if (wallet.id == id) return wallet;
-    }
-    return null;
-  }
 
   void _submit() {
     final amount = _amountSen;
@@ -218,22 +209,16 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final editing = widget.initial != null;
-    final from = _find(_fromWalletId);
-    final to = _find(_toWalletId);
     final amount = _amountSen;
-    final money = amount == null ? null : AppMoneyFormatter.format(amount);
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.transfer,
-      title: editing ? t.transaction.editSheetTitle : t.record.transferAction,
+      title: editing ? t.transaction.editSheetTitle : t.appShell.recordAction,
       isEditing: editing,
       onBack: () => Navigator.of(context).pop(),
-      notice: RecordNotice(
-        title: t.record.transferNoticeTitle,
-        body: t.record.transferNoticeBody,
-      ),
+      amountController: _amountController,
+      onAmountChanged: () => setState(() {}),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : repeatSubmitLabel(
@@ -248,43 +233,37 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           RecordDraftCard(draft: widget.draft!),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(
-            controller: _amountController,
-            label: t.record.amountLabelTransfer,
-            kind: TransactionKind.transfer,
-            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.incomeOrTransfer),
-            autofocus: true,
-            onChanged: () => setState(() {}),
-          ),
+          child: RecordAmountField(controller: _amountController, kind: TransactionKind.transfer),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        AppListCard(
+          dividerIndent: AppListCard.iconIndent,
           children: [
             SpotlightTarget(
               spotlightKey: SpotlightKey.recordWallet,
               child: WalletSelectField(
                 label: t.record.fromWalletFieldLabel,
-                caption: t.record.balanceDecreasesCaption,
-                showDelta: true,
                 wallets: widget.wallets,
                 selectedId: _fromWalletId,
                 onSelected: (id) => setState(() => _fromWalletId = id),
-                previewAmountSen: amount,
+                previewAmountSen: widget.repeatLocked ? null : amount,
                 previewIsCredit: false,
               ),
             ),
-            const SizedBox(height: AppSpacing.space4),
             WalletSelectField(
               label: t.record.destinationWalletFieldLabel,
-              caption: t.record.balanceIncreasesCaption,
-              showDelta: true,
               wallets: widget.wallets,
               selectedId: _toWalletId,
               onSelected: (id) => setState(() => _toWalletId = id),
-              previewAmountSen: amount,
+              previewAmountSen: widget.repeatLocked ? null : amount,
             ),
-            if (_budgetChoices.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.space4),
+            RecordDateField(
+              date: _date,
+              kind: TransactionKind.transfer,
+              allowFuture: _repeat != null,
+              onChanged: (date) => setState(() => _date = date),
+            ),
+            RecordNoteField(controller: _noteController, kind: TransactionKind.transfer),
+            if (_budgetChoices.isNotEmpty)
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recordBudgetItem,
                 child: RecordBudgetItemField(
@@ -293,22 +272,12 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                   onSelected: (id) => setState(() => _budgetItemId = id),
                 ),
               ),
-            ],
-            if (_sameWallet) ...[
-              const SizedBox(height: AppSpacing.space1),
-              Text(
-                t.record.sameWalletWarning,
-                style: TextStyle(color: colors.ink),
-              ),
-            ],
           ],
         ),
-        RecordDateField(
-          date: _date,
-          kind: TransactionKind.transfer,
-          allowFuture: _repeat != null,
-          onChanged: (date) => setState(() => _date = date),
-        ),
+        if (_sameWallet)
+          AppBanner(message: t.record.sameWalletWarning, tone: AppTone.danger),
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+          RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
         if (!editing && widget.occurrence == null)
@@ -325,40 +294,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               }),
             ),
           ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
-          RecordBudgetItemOutOfPeriodNotice(option: dropped),
-        RecordNoteField(
-          controller: _noteController,
-          kind: TransactionKind.transfer,
-        ),
-        // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
-        if (_canSubmit && from != null && to != null && money != null && !widget.repeatLocked)
-          RecordSummaryCard(
-            kind: TransactionKind.transfer,
-            title: t.record.transferSummaryTitle,
-            children: [
-              Text(
-                t.record.transferSummaryFrom(wallet: from.name, amount: money),
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(
-                      color: colors.ink,
-                      fontWeight: FontWeight.w700,
-                    ),
-              ),
-              Text(
-                t.record.transferSummaryTo(wallet: to.name, amount: money),
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(
-                      color: colors.positive,
-                      fontWeight: FontWeight.w700,
-                    ),
-              ),
-            ],
-          ),
+        if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],
     );
   }

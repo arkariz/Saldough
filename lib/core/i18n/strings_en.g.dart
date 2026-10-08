@@ -88,6 +88,8 @@ class _Translations$common$en extends Translations$common$id {
 	@override String get loading => 'Loading...';
 	@override String get genericErrorMessage => 'Something went wrong. Please try again.';
 	@override String get confirmDeleteTitle => 'Delete?';
+	@override String get keypadBackspace => 'Delete one digit';
+	@override String get close => 'Close';
 }
 
 // Path: appShell
@@ -171,6 +173,9 @@ class _Translations$record$en extends Translations$record$id {
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
 	@override late final _Translations$record$voice$en voice = _Translations$record$voice$en._(_root);
 	@override late final _Translations$record$repeat$en repeat = _Translations$record$repeat$en._(_root);
+	@override String balanceAfter({required Object amount}) => 'Balance becomes ${amount}';
+	@override String get allCategories => 'All categories';
+	@override String amountSemantics({required Object amount}) => 'Amount ${amount}';
 }
 
 // Path: transaction
@@ -1450,6 +1455,8 @@ extension on TranslationsEn {
 			'common.loading' => 'Loading...',
 			'common.genericErrorMessage' => 'Something went wrong. Please try again.',
 			'common.confirmDeleteTitle' => 'Delete?',
+			'common.keypadBackspace' => 'Delete one digit',
+			'common.close' => 'Close',
 			'appShell.homeTabLabel' => 'Home',
 			'appShell.budgetTabLabel' => 'Budget',
 			'appShell.recordAction' => 'Record',
@@ -1581,6 +1588,9 @@ extension on TranslationsEn {
 			'record.repeat.autoRecordLabel' => 'Record automatically',
 			'record.repeat.autoRecordHint' => 'Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.',
 			'record.repeat.noBalanceChange' => 'No new transaction; balances stay the same.',
+			'record.balanceAfter' => ({required Object amount}) => 'Balance becomes ${amount}',
+			'record.allCategories' => 'All categories',
+			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
 			'transaction.monthStatusLabel' => 'This month\'s log status',
@@ -1945,13 +1955,13 @@ extension on TranslationsEn {
 			'freelance.grossPayLabel' => 'Gross pay',
 			'freelance.netPayLabel' => 'Net pay',
 			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentCreateAction' => 'Create Payment',
 			'freelance.paymentChangeDateAction' => 'Change date',
 			'freelance.paymentDeleteAction' => 'Delete',
 			'freelance.paymentDeleteConfirmTitle' => 'Delete payment?',
 			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
 			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
 			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
@@ -2459,13 +2469,13 @@ extension on TranslationsEn {
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',
 			'recurring.chipIncome' => 'In',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.chipExpense' => 'Out',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Budget item',
 			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			'recurring.budgetLinkRemove' => 'Unlink',
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',

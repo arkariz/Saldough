@@ -4,9 +4,9 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 
-/// Bagian waktu formulir CATAT: pintasan "Hari Ini" / "Kemarin" dan kotak
-/// tanggal yang membuka [showDatePicker] (rujukan visual
-/// `pixel_kas_catat_pengeluaran`, bagian "Waktu Transaksi").
+/// Baris Tanggal di Catat (prototipe `Catat.dc.html`): label kecil di atas
+/// "Hari ini, 12.25" / "Kemarin, 08.00" / "Sabtu, 26 Sep, 08.00", diketuk
+/// membuka [showDatePicker].
 ///
 /// Jam dari [date] dipertahankan saat tanggal diganti -- [showDatePicker]
 /// hanya mengembalikan tanggal (tengah malam), dan transaksi yang dicatat
@@ -27,7 +27,7 @@ class RecordDateField extends StatelessWidget {
   /// Dipanggil dengan tanggal baru.
   final ValueChanged<DateTime> onChanged;
 
-  /// Jenis transaksi: mewarnai pintasan yang sedang aktif.
+  /// Jenis transaksi.
   final TransactionKind kind;
 
   /// Mode jadwal (T-15.3): tanggal sampai setahun ke depan boleh dipilih,
@@ -53,108 +53,29 @@ class RecordDateField extends StatelessWidget {
 
   String _two(int n) => n.toString().padLeft(2, '0');
 
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final now = DateTime.now();
-    final today = _dayOnly(now);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final current = _dayOnly(date);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        AppSectionLabel(t.record.dateFieldLabel),
-        const SizedBox(height: AppSpacing.space1),
-        // `Wrap`: pintasan dan kotak tanggal tidak muat sebaris pada layar
-        // sempit atau teks besar; kotak turun baris alih-alih meluap.
-        Wrap(
-          spacing: AppSpacing.space1,
-          runSpacing: AppSpacing.space1,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _DayChip(
-              label: t.transaction.todayLabel,
-              kind: kind,
-              selected: current == today,
-              onTap: () => onChanged(_withTimeOf(today)),
-            ),
-            _DayChip(
-              label: t.transaction.yesterdayLabel,
-              kind: kind,
-              selected: current == yesterday,
-              onTap: () => onChanged(_withTimeOf(yesterday)),
-            ),
-            GestureDetector(
-              onTap: () => _pick(context),
-              behavior: HitTestBehavior.opaque,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 40),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
-                  decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const AppIcon(IconKey.calendar, size: 18),
-                      const SizedBox(width: 6),
-                      // Memperkecil, bukan meluap, kalau tanggal + jam lebih lebar
-                      // dari layar (teks besar).
-                      Flexible(
-                        child: FitStart(
-                          child: Text(
-                            '${CycleMonthFormatter.formatDateShort(date)}, ${_two(date.hour)}:${_two(date.minute)}',
-                            style: labelSmStyle(context, color: colors.ink),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+  /// "Hari ini", "Kemarin", atau tanggal singkat; lalu jam bertitik.
+  String _label() {
+    final today = _dayOnly(DateTime.now());
+    final day = _dayOnly(date);
+    final dayText = day == today
+        ? t.transaction.todayLabel
+        : day == today.subtract(const Duration(days: 1))
+            ? t.transaction.yesterdayLabel
+            : CycleMonthFormatter.formatDateShort(date);
+    return '$dayText, ${_two(date.hour)}.${_two(date.minute)}';
   }
-}
-
-class _DayChip extends StatelessWidget {
-  const _DayChip({required this.label, required this.kind, required this.selected, required this.onTap});
-
-  final String label;
-  final TransactionKind kind;
-  final bool selected;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 40),
-        // `Center(widthFactor: 1)`, bukan `Container(alignment: center)`: yang
-        // terakhir mengisi seluruh lebar `Wrap` dan chip bertumpuk vertikal.
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surface2,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            widthFactor: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
-              child: Text(
-                label,
-                style: labelSmStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return AppListRow(
+      key: const ValueKey('record-date'),
+      compact: true,
+      leading: AppIcon(IconKey.calendar, color: colors.ink2),
+      label: t.record.dateFieldLabel,
+      title: _label(),
+      chevron: true,
+      onTap: () => _pick(context),
     );
   }
 }

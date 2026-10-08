@@ -92,3 +92,48 @@ String formatQuickAmount(int sen) {
   if (whole >= 1000 && whole % 1000 == 0) return t.common.quickAmountThousands(amount: whole ~/ 1000);
   return '+${formatMoneyInput(sen)}';
 }
+
+/// Tombol hapus satu digit [AppKeypad]-nya CATAT.
+const String moneyKeyBackspace = 'backspace';
+
+/// Tombol pemisah desimal (mata uang berdesimal, ADR-025 §3.4).
+const String moneyKeyDecimal = 'decimal';
+
+/// Batas digit bagian bulat nominal dari papan angka.
+const int moneyKeyMaxWholeDigits = 12;
+
+/// Teks kolom nominal sesudah tombol papan angka [key] ditekan pada [text]:
+/// digit atau `000` ditambahkan di akhir, [moneyKeyDecimal] memulai desimal,
+/// [moneyKeyBackspace] menghapus satu karakter. Hasilnya diformat ulang lewat
+/// [MoneyInputFormatter], jadi pemisah ribuan selalu benar. Digit yang
+/// melewati [moneyKeyMaxWholeDigits] ditolak (teks tidak berubah).
+String applyMoneyKey(String text, String key) {
+  final decimal = MoneySeparators.decimal;
+  final hasFraction = ActiveCurrency.value.fractionDigits > 0;
+  final decimalIndex = hasFraction ? text.indexOf(decimal) : -1;
+  var whole = (decimalIndex < 0 ? text : text.substring(0, decimalIndex)).replaceAll(_nonDigits, '');
+  var fraction = decimalIndex < 0 ? null : text.substring(decimalIndex + 1).replaceAll(_nonDigits, '');
+  switch (key) {
+    case moneyKeyBackspace:
+      if (fraction != null) {
+        fraction = fraction.isEmpty ? null : fraction.substring(0, fraction.length - 1);
+      } else if (whole.isNotEmpty) {
+        whole = whole.substring(0, whole.length - 1);
+      }
+    case moneyKeyDecimal:
+      if (!hasFraction || fraction != null) return text;
+      fraction = '';
+    default:
+      if (fraction != null) {
+        final next = '$fraction$key';
+        fraction = next.length > 2 ? next.substring(0, 2) : next;
+      } else {
+        final next = '$whole$key'.replaceFirst(RegExp('^0+'), '');
+        if (next.length > moneyKeyMaxWholeDigits) return text;
+        whole = next;
+      }
+  }
+  whole = whole.replaceFirst(RegExp('^0+'), '');
+  if (fraction == null) return whole.isEmpty ? '' : MoneySeparators.groupThousands(int.parse(whole));
+  return '${MoneySeparators.groupThousands(whole.isEmpty ? 0 : int.parse(whole))}$decimal$fraction';
+}

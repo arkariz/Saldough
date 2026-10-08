@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
@@ -153,12 +151,6 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
-  Wallet? get _wallet {
-    for (final wallet in widget.wallets) {
-      if (wallet.id == _walletId) return wallet;
-    }
-    return null;
-  }
 
   void _submit() {
     final amount = _amountSen;
@@ -179,14 +171,15 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
   @override
   Widget build(BuildContext context) {
     final editing = widget.initial != null;
-    final wallet = _wallet;
     final amount = _amountSen;
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.income,
-      title: editing ? t.transaction.editSheetTitle : t.record.incomeAction,
+      title: editing ? t.transaction.editSheetTitle : t.appShell.recordAction,
       isEditing: editing,
       onBack: () => Navigator.of(context).pop(),
+      amountController: _amountController,
+      onAmountChanged: () => setState(() {}),
       submitLabel: editing
           ? t.transaction.saveChangesAction
           : repeatSubmitLabel(
@@ -199,8 +192,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
       children: [
         if (!editing && widget.prefill == null && widget.draft != null) RecordDraftCard(draft: widget.draft!),
         // Di atas nominal: keputusan "honor freelance atau pemasukan biasa"
-        // diambil sebelum mengisi apa pun (dulu di dasar formulir, mudah
-        // terlewat).
+        // diambil sebelum mengisi apa pun.
         if (!editing)
           const SpotlightTarget(
             spotlightKey: SpotlightKey.recordFreelance,
@@ -208,14 +200,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           ),
         SpotlightTarget(
           spotlightKey: SpotlightKey.recordAmount,
-          child: RecordAmountField(
-            controller: _amountController,
-            label: t.record.amountLabelIncome,
-            kind: TransactionKind.income,
-            quickAmounts: ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.incomeOrTransfer),
-            autofocus: true,
-            onChanged: () => setState(() {}),
-          ),
+          child: RecordAmountField(controller: _amountController, kind: TransactionKind.income),
         ),
         RecordCategoryField(
           value: _categoryId,
@@ -223,22 +208,33 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
           categoryKind: CategoryKind.income,
           frequentIds: widget.frequentCategoryIds,
           onCreate: widget.onCreateCategory,
+          title: _noteController.text,
         ),
-        SpotlightTarget(
-          spotlightKey: SpotlightKey.recordWallet,
-          child: WalletSelectField(
-            label: t.record.toWalletFieldLabel,
-            wallets: widget.wallets,
-            selectedId: _walletId,
-            onSelected: (id) => setState(() => _walletId = id),
-            previewAmountSen: amount,
-          ),
-        ),
-        RecordDateField(
-          date: _date,
-          kind: TransactionKind.income,
-          allowFuture: _repeat != null,
-          onChanged: (date) => setState(() => _date = date),
+        AppListCard(
+          dividerIndent: AppListCard.iconIndent,
+          children: [
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.recordWallet,
+              child: WalletSelectField(
+                label: t.record.toWalletFieldLabel,
+                wallets: widget.wallets,
+                selectedId: _walletId,
+                onSelected: (id) => setState(() => _walletId = id),
+                previewAmountSen: widget.repeatLocked ? null : amount,
+              ),
+            ),
+            RecordDateField(
+              date: _date,
+              kind: TransactionKind.income,
+              allowFuture: _repeat != null,
+              onChanged: (date) => setState(() => _date = date),
+            ),
+            RecordNoteField(
+              controller: _noteController,
+              kind: TransactionKind.income,
+              onChanged: (_) => setState(() {}),
+            ),
+          ],
         ),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
@@ -256,26 +252,7 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
               }),
             ),
           ),
-        RecordNoteField(
-          controller: _noteController,
-          kind: TransactionKind.income,
-        ),
-        if (_canSubmit && wallet != null && amount != null)
-          RecordSummaryCard(
-            kind: TransactionKind.income,
-            children: [
-              Text(
-                // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
-                widget.repeatLocked
-                    ? t.record.repeat.noBalanceChange
-                    : t.record.incomeSummary(
-                        wallet: wallet.name,
-                        amount: AppMoneyFormatter.format(amount),
-                      ),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
-          ),
+        if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],
     );
   }

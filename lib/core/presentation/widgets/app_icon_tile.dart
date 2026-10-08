@@ -81,12 +81,7 @@ const Map<IconKey, TileTint> _symbolTints = {
 /// 32 di chip dan baris padat, 48 di kepala rincian.
 class AppIconTile extends StatelessWidget {
   /// Membuat [AppIconTile] untuk [icon].
-  const AppIconTile(
-    this.icon, {
-    this.size = AppSize.tile,
-    this.tint,
-    super.key,
-  });
+  const AppIconTile(this.icon, {this.size = AppSize.tile, this.tint, this.selected = false, super.key});
 
   /// Ikon yang dibawa tile.
   final IconKey icon;
@@ -96,6 +91,10 @@ class AppIconTile extends StatelessWidget {
 
   /// Warna tile varian Material Symbols; diabaikan untuk ikon piksel.
   final TileTint? tint;
+
+  /// Terpilih (pemilih kategori Catat): latar `brandSoft` dengan garis
+  /// dalam `brand` 2px.
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {

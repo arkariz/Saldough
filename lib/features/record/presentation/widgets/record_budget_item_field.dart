@@ -91,32 +91,24 @@ class RecordBudgetItemField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     BudgetItemOption? selected;
     for (final option in choices) {
       if (option.itemId == selectedId) selected = option;
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        AppSectionLabel(t.record.budgetItemLabel, hint: t.record.optionalHint),
-        const SizedBox(height: AppSpacing.space1),
-        AppMenuSelectButton<String>(
-          icon: IconKey.budget,
-          label: selected == null ? t.record.budgetItemNone : '${selected.itemName} · ${selected.budgetName}',
-          isPlaceholder: selected == null,
-          wrapLabel: true,
-          allLabel: t.record.budgetItemNone,
-          allIcon: IconKey.close,
-          options: [
-            for (final option in choices)
-              (value: option.itemId, label: '${option.itemName} · ${option.budgetName}', icon: IconKey.budget),
-          ],
-          onSelected: onSelected,
-        ),
-        const SizedBox(height: 4),
-        Text(t.record.budgetItemHelp, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
+    return AppMenuSelectButton<String>(
+      fieldLabel: '${t.record.budgetItemLabel} (${t.record.optionalHint.toLowerCase()})',
+      rowIcon: IconKey.budget,
+      icon: IconKey.budget,
+      label: selected == null ? t.record.budgetItemNone : '${selected.budgetName} · ${selected.itemName}',
+      isPlaceholder: selected == null,
+      wrapLabel: true,
+      allLabel: t.record.budgetItemNone,
+      allIcon: IconKey.close,
+      options: [
+        for (final option in choices)
+          (value: option.itemId, label: '${option.itemName} · ${option.budgetName}', icon: IconKey.budget),
       ],
+      onSelected: onSelected,
     );
   }
 }

@@ -114,6 +114,12 @@ class Translations$common$id {
 
 	/// id: 'Hapus?'
 	String get confirmDeleteTitle => 'Hapus?';
+
+	/// id: 'Hapus satu digit'
+	String get keypadBackspace => 'Hapus satu digit';
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
 }
 
 // Path: appShell
@@ -322,6 +328,15 @@ class Translations$record$id {
 	late final Translations$record$draftIssue$id draftIssue = Translations$record$draftIssue$id.internal(_root);
 	late final Translations$record$voice$id voice = Translations$record$voice$id.internal(_root);
 	late final Translations$record$repeat$id repeat = Translations$record$repeat$id.internal(_root);
+
+	/// id: 'Saldo jadi $amount'
+	String balanceAfter({required Object amount}) => 'Saldo jadi ${amount}';
+
+	/// id: 'Semua kategori'
+	String get allCategories => 'Semua kategori';
+
+	/// id: 'Nominal $amount'
+	String amountSemantics({required Object amount}) => 'Nominal ${amount}';
 }
 
 // Path: transaction
@@ -3676,6 +3691,8 @@ extension on Translations {
 			'common.loading' => 'Memuat...',
 			'common.genericErrorMessage' => 'Ada yang salah. Coba lagi.',
 			'common.confirmDeleteTitle' => 'Hapus?',
+			'common.keypadBackspace' => 'Hapus satu digit',
+			'common.close' => 'Tutup',
 			'appShell.homeTabLabel' => 'Beranda',
 			'appShell.budgetTabLabel' => 'Anggaran',
 			'appShell.recordAction' => 'Catat',
@@ -3807,6 +3824,9 @@ extension on Translations {
 			'record.repeat.autoRecordLabel' => 'Catat otomatis',
 			'record.repeat.autoRecordHint' => 'Dicatat sendiri saat aplikasi dibuka pada tanggalnya; autodebet menunggu sehari. Bisa dibatalkan.',
 			'record.repeat.noBalanceChange' => 'Tidak ada transaksi baru; saldo tidak berubah.',
+			'record.balanceAfter' => ({required Object amount}) => 'Saldo jadi ${amount}',
+			'record.allCategories' => 'Semua kategori',
+			'record.amountSemantics' => ({required Object amount}) => 'Nominal ${amount}',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
 			'transaction.monthStatusLabel' => 'Status log bulan ini',
@@ -4171,13 +4191,13 @@ extension on Translations {
 			'freelance.grossPayLabel' => 'Gaji kotor',
 			'freelance.netPayLabel' => 'Gaji bersih',
 			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentCreateAction' => 'Buat Pembayaran',
 			'freelance.paymentChangeDateAction' => 'Ubah tanggal',
 			'freelance.paymentDeleteAction' => 'Hapus',
 			'freelance.paymentDeleteConfirmTitle' => 'Hapus pembayaran?',
 			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
 			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
 			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
@@ -4685,13 +4705,13 @@ extension on Translations {
 			'recurring.outLabel' => 'Sudah keluar',
 			'recurring.chipAll' => 'Semua',
 			'recurring.chipIncome' => 'Masuk',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.chipExpense' => 'Keluar',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Pos anggaran',
 			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',

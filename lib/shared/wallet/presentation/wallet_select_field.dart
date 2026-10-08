@@ -4,21 +4,16 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
-import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
-/// Pemilih satu dompet dari [wallets] lewat dropdown [AppMenuSelectButton] --
-/// tombol dan menu yang sama dengan penyaring dompet di layar Transaksi --
-/// dengan pratinjau saldo `lama → baru` di bawahnya kalau [previewAmountSen]
-/// sudah nominal yang valid.
+/// Baris form pemilih satu dompet dari [wallets] (design system ListRow,
+/// baris form): label kecil di atas nama dompet, menu bergambar saat
+/// diketuk, dan di kanan akibatnya ke saldo, ditulis satu kali: "Saldo jadi
+/// Rp331.000" kalau [previewAmountSen] sudah nominal yang valid, selain itu
+/// saldo saat ini. Saldo yang jadi negatif ditulis `danger`.
 ///
-/// Dipakai ketiga formulir CATAT: pemasukan ("Masuk ke Dompet"), pengeluaran
-/// ("Dompet Sumber Dana"), dan dua kali di transfer ("Dari"/"Ke"). Bila
-/// [caption] diisi, kop berupa titik arah saldo (merah turun, hijau naik) +
-/// label + keterangan, dan [showDelta] menambah lencana selisih
-/// (`−Rp500.000`) -- gaya kartu Dari/Ke rujukan visual transfer; tanpa
-/// [caption], kop berupa judul bagian biasa.
-///
-/// Nama dompet membungkus ke banyak baris pada tombolnya, tidak dipotong.
+/// Dipakai ketiga formulir CATAT: pemasukan ("Masuk ke"), pengeluaran
+/// ("Dompet"), dan dua kali di transfer ("Dari"/"Ke"), serta pembayaran
+/// freelance dan pola notifikasi.
 class WalletSelectField extends StatelessWidget {
   /// Membuat [WalletSelectField].
   const WalletSelectField({
@@ -26,22 +21,13 @@ class WalletSelectField extends StatelessWidget {
     required this.wallets,
     required this.selectedId,
     required this.onSelected,
-    this.caption,
-    this.showDelta = false,
     this.previewAmountSen,
     this.previewIsCredit = true,
     super.key,
   });
 
-  /// Label field, mis. "Masuk ke Dompet" atau "Dari Dompet".
+  /// Label baris, mis. "Masuk ke" atau "Dari".
   final String label;
-
-  /// Keterangan kecil sesudah [label], mis. "Saldo berkurang". Mengubah kop
-  /// jadi gaya titik berwarna.
-  final String? caption;
-
-  /// Menampilkan lencana selisih saldo di bawah pratinjau.
-  final bool showDelta;
 
   /// Dompet yang ditawarkan.
   final List<Wallet> wallets;
@@ -74,100 +60,49 @@ class WalletSelectField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final selected = _findSelected();
-    final accent = previewIsCredit ? colors.positive : colors.ink;
-    final amount = previewAmountSen;
-    final hasDelta = showDelta && selected != null && amount != null && amount > 0;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (caption == null)
-          AppSectionLabel(label)
-        else
-          // Titik arah saldo + label + keterangan. `Wrap` supaya keterangan
-          // turun baris, bukan meluap, pada teks besar. Label ditampilkan
-          // apa adanya (bukan `.toUpperCase()`).
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 6,
-              runSpacing: 2,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
-                ),
-                Text(label, style: labelSmStyle(context, color: accent)),
-                Text(
-                  '($caption)',
-                  style: labelSmStyle(context, color: accent).copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        const SizedBox(height: AppSpacing.space1),
-        if (wallets.isEmpty)
-          Text(t.record.noWalletsMessage, style: TextStyle(color: colors.ink2))
-        else
-          AppMenuSelectButton<String>(
-            icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
-            label: selected?.name ?? t.record.walletNotSelectedPrompt,
-            isPlaceholder: selected == null,
-            wrapLabel: true,
-            options: [
-              for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
-            ],
-            // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
-            // isinya (UX-11).
-            detailFor: (id) => AppMoneyFormatter.format(wallets.firstWhere((w) => w.id == id).currentBalance),
-            onSelected: (id) {
-              if (id != null) onSelected(id);
-            },
-          ),
-        if (selected != null) ...[
-          const SizedBox(height: AppSpacing.space1),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: AppSpacing.space1,
-              runSpacing: AppSpacing.space1,
-              children: [
-                Text(
-                  t.record.balanceLabel,
-                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
-                ),
-                WalletBalancePreview(
-                  wallet: selected,
-                  previewAmountSen: previewAmountSen,
-                  previewIsCredit: previewIsCredit,
-                ),
-              ],
-            ),
-          ),
-        ],
-        if (hasDelta) ...[
-          const SizedBox(height: AppSpacing.space1),
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
-              decoration: BoxDecoration(
-                color: colors.tinted(previewIsCredit ? colors.positive : colors.ink2, 0.22),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: FitStart(
-                child: Text(
-                  '${previewIsCredit ? '+' : '−'}${AppMoneyFormatter.format(amount)}',
-                  style: labelSmStyle(context, color: accent),
-                ),
-              ),
-            ),
-          ),
-        ],
+    if (wallets.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(AppSpacing.space4),
+        child: Text(t.record.noWalletsMessage, style: TextStyle(color: colors.ink2)),
+      );
+    }
+    Widget? trailing;
+    if (selected != null) {
+      final amount = previewAmountSen;
+      final hasPreview = amount != null && amount > 0;
+      final after = !hasPreview
+          ? selected.currentBalance
+          : (previewIsCredit ? selected.currentBalance + amount : selected.currentBalance - amount);
+      final text = hasPreview
+          ? t.record.balanceAfter(amount: AppMoneyFormatter.format(after))
+          : AppMoneyFormatter.format(after);
+      trailing = Text(
+        text,
+        key: const ValueKey('wallet-balance-after'),
+        textAlign: TextAlign.end,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: hasPreview && after < 0 ? colors.danger : colors.ink2,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+      );
+    }
+    return AppMenuSelectButton<String>(
+      fieldLabel: label,
+      rowIcon: IconKey.wallets,
+      icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
+      label: selected?.name ?? t.record.walletNotSelectedPrompt,
+      isPlaceholder: selected == null,
+      wrapLabel: true,
+      trailing: trailing,
+      options: [
+        for (final wallet in wallets) (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
       ],
+      // Saldo di tiap baris, supaya dompet bisa dipilih tanpa menebak
+      // isinya (UX-11).
+      detailFor: (id) => AppMoneyFormatter.format(wallets.firstWhere((w) => w.id == id).currentBalance),
+      onSelected: (id) {
+        if (id != null) onSelected(id);
+      },
     );
   }
 }

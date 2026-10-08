@@ -58,8 +58,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(wallets.first.name).last);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byType(AppButton));
-      await tester.tap(find.byType(AppButton));
+      await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+      await tester.tap(find.byKey(const ValueKey('record-submit')));
       await tester.pumpAndSettle();
 
       expect(result, isNotNull);
@@ -105,8 +105,8 @@ void main() {
 
       await enterAmount(tester, '75000');
       await tester.pump();
-      await tester.ensureVisible(find.byType(AppButton));
-      await tester.tap(find.byType(AppButton));
+      await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+      await tester.tap(find.byKey(const ValueKey('record-submit')));
       await tester.pumpAndSettle();
 
       expect(result?.walletId, 'bca');
@@ -311,11 +311,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.record.repeat.everyMonthDay(day: DateTime.now().day)), findsOneWidget);
-    final button = tester.widget<AppButton>(find.byType(AppButton));
-    expect(button.label, t.record.repeat.recordAndScheduleAction);
+    final submit = find.byKey(const ValueKey('record-submit'));
+    expect(tester.widget<AppButton>(submit).label, t.record.repeat.recordAndScheduleAction);
 
-    await tester.ensureVisible(find.byType(AppButton));
-    await tester.tap(find.byType(AppButton));
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
     await tester.pumpAndSettle();
     expect(result?.repeat?.frequency, RecurringFrequency.monthly);
   });

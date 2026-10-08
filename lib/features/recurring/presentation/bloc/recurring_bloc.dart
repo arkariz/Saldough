@@ -7,7 +7,7 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -415,12 +415,9 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(t.common.cancel)),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(t.recurring.recordNewAction),
-            ),
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(t.recurring.linkAction)),
+            AppButton.text(small: true, label: t.common.cancel, onPressed: () => Navigator.of(dialogContext).pop()),
+            AppButton.text(small: true, label: t.recurring.recordNewAction, onPressed: () => Navigator.of(dialogContext).pop(false)),
+            AppButton.text(small: true, label: t.recurring.linkAction, onPressed: () => Navigator.of(dialogContext).pop(true)),
           ],
         ),
       );

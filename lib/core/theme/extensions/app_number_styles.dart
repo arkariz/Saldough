@@ -96,6 +96,5 @@ class AppNumberStyles extends ThemeExtension<AppNumberStyles> {
 extension AppNumberStylesContext on BuildContext {
   /// Skala Angka tema aktif; jatuh ke versi terang kalau tema belum terpasang.
   AppNumberStyles get numberStyles =>
-      Theme.of(this).extension<AppNumberStyles>() ??
-      AppNumberStyles.from(AppColors.light);
+      Theme.of(this).extension<AppNumberStyles>() ?? AppNumberStyles.from(AppColors.light);
 }

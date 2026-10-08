@@ -145,8 +145,5 @@ class _BarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BarPainter old) =>
-      old.value != value ||
-      old.pace != pace ||
-      old.fill != fill ||
-      old.track != track;
+      old.value != value || old.pace != pace || old.fill != fill || old.track != track;
 }

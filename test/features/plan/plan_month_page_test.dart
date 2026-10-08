@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
@@ -169,9 +170,11 @@ void main() {
     await pump(tester, width: 360);
     expect(tester.takeException(), isNull);
     expect(find.text(t.plan.nextTitle), findsOneWidget);
-    expect(find.text('5 Okt'), findsOneWidget);
-    expect(find.text('10 Okt'), findsOneWidget);
-    expect(find.text('25 Okt'), findsOneWidget);
+    // Baris jadwal: kolom tanggal berisi hari, urut tanggal (ADR-034).
+    final next = find.byType(AppListCard).last;
+    double top(String day) => tester.getTopLeft(find.descendant(of: next, matching: find.text(day))).dy;
+    expect(top('5'), lessThan(top('10')));
+    expect(top('10'), lessThan(top('25')));
   });
 
   testWidgets('pemilih bulan: Nov berawal dari akhir Okt dan berlencana PERKIRAAN (T-16.6, invarian 20)', (

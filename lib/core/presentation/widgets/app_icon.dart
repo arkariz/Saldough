@@ -237,6 +237,9 @@ enum IconKey {
 
   /// Jadwal/rutin.
   schedule,
+
+  /// Peringatan.
+  warning,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -321,6 +324,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.visibilityOff: Symbols.visibility_off_rounded,
   IconKey.inbox: Symbols.inbox_rounded,
   IconKey.schedule: Symbols.schedule_rounded,
+  IconKey.warning: Symbols.warning_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).
@@ -335,7 +339,13 @@ bool isPixelIcon(IconKey key) => _pixelAssets.containsKey(key);
 /// baris, pakai `AppIconTile`.
 class AppIcon extends StatelessWidget {
   /// Membuat [AppIcon] untuk [iconKey], dirender pada [size] logical pixel.
-  const AppIcon(this.iconKey, {this.size = AppSize.icon, this.color, this.fill = false, super.key});
+  const AppIcon(
+    this.iconKey, {
+    this.size = AppSize.icon,
+    this.color,
+    this.fill = false,
+    super.key,
+  });
 
   /// Kunci semantik ikon yang dirender.
   final IconKey iconKey;
@@ -358,7 +368,14 @@ class AppIcon extends StatelessWidget {
 
     final symbol = _symbols[iconKey];
     assert(symbol != null, 'IconKey.$iconKey belum dipetakan di AppIcon.');
-    return Icon(symbol, size: size, color: color, fill: fill ? 1 : 0, weight: 400, opticalSize: size.clamp(20, 48));
+    return Icon(
+      symbol,
+      size: size,
+      color: color,
+      fill: fill ? 1 : 0,
+      weight: 400,
+      opticalSize: size.clamp(20, 48),
+    );
   }
 }
 

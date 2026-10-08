@@ -99,8 +99,7 @@ class RecordFormFrame extends StatelessWidget {
                   children: [
                     ?kindSwitcher,
                     for (final (i, child) in children.indexed) ...[
-                      if (i > 0 || kindSwitcher != null)
-                        const SizedBox(height: AppSpacing.space3),
+                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space3),
                       child,
                     ],
                   ],

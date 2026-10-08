@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 
 /// Menanyakan nama kategori — untuk "Tambah kategori" di CATAT dan tambah/ganti
 /// nama di layar Kategori (ADR-026 §3.6). Mengembalikan nama yang sudah
@@ -50,11 +51,8 @@ class _CategoryNameDialogState extends State<_CategoryNameDialog> {
         decoration: InputDecoration(hintText: t.category.nameHint),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel)),
-        TextButton(
-          onPressed: _controller.text.trim().isEmpty ? null : _submit,
-          child: Text(t.common.save),
-        ),
+        AppButton.text(small: true, label: t.common.cancel, onPressed: () => Navigator.pop(context)),
+        AppButton.text(small: true, label: t.common.save, onPressed: _controller.text.trim().isEmpty ? null : _submit),
       ],
     );
   }

@@ -117,10 +117,7 @@ class _CategoryRow extends StatelessWidget {
                   style: TextStyle(color: category.isArchived ? colors.ink2 : colors.ink),
                 ),
               ),
-              TextButton(
-                onPressed: () => context.read<CategoryManagerBloc>().add(CategoryManagerArchiveToggled(category)),
-                child: Text(category.isArchived ? t.category.restoreAction : t.category.archiveAction),
-              ),
+              AppButton.text(small: true, label: category.isArchived ? t.category.restoreAction : t.category.archiveAction, onPressed: () => context.read<CategoryManagerBloc>().add(CategoryManagerArchiveToggled(category))),
             ],
           ),
         ),

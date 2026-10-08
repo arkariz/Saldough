@@ -241,10 +241,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             if (!_showTemplate)
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () => setState(() => _showTemplate = true),
-                  child: Text(texts.patternTemplateToggle),
-                ),
+                child: AppButton.text(small: true, label: texts.patternTemplateToggle, onPressed: () => setState(() => _showTemplate = true)),
               )
             else ...[
               const SizedBox(height: AppSpacing.space4),

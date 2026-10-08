@@ -130,10 +130,7 @@ class CaptureInboxPage extends StatelessWidget {
                         '${AppMoneyFormatter.format(linked.amount)} · '
                         '${CycleMonthFormatter.formatDayMonth(linked.occurrenceDate)}',
                       ),
-                      trailing: TextButton(
-                        onPressed: () => context.read<CaptureInboxBloc>().add(CaptureInboxUnlinked(linked)),
-                        child: Text(t.recurring.unlinkAction),
-                      ),
+                      trailing: AppButton.text(small: true, label: t.recurring.unlinkAction, onPressed: () => context.read<CaptureInboxBloc>().add(CaptureInboxUnlinked(linked))),
                     ),
                 ],
                 const SizedBox(height: AppSpacing.space4),
@@ -237,7 +234,7 @@ class _PendingCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: onDismiss, child: Text(texts.dismissAction)),
+                AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
                 const SizedBox(width: AppSpacing.space1),
                 FilledButton(onPressed: onRecord, child: Text(texts.recordAction)),
                 const SizedBox(width: AppSpacing.space2),
@@ -334,8 +331,8 @@ class _AutoCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: onUndo, child: Text(texts.undoAction)),
-                TextButton(onPressed: onReview, child: Text(texts.reviewAction)),
+                AppButton.text(small: true, label: texts.undoAction, onPressed: onUndo),
+                AppButton.text(small: true, label: texts.reviewAction, onPressed: onReview),
               ],
             ),
           ],

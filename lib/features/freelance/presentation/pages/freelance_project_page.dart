@@ -374,7 +374,7 @@ class _PaymentCard extends StatelessWidget {
         null => null,
       },
       actions: payment.isPaid
-          ? [TextButton(onPressed: () => cancelReceipt(context, payment), child: Text(t.freelance.receiptCancelAction))]
+          ? [AppButton.text(small: true, label: t.freelance.receiptCancelAction, onPressed: () => cancelReceipt(context, payment))]
           : [
               SpotlightTarget(
                 spotlightKey: spotlightReceive ? SpotlightKey.freelanceReceive : null,
@@ -383,10 +383,7 @@ class _PaymentCard extends StatelessWidget {
                   onPressed: () => receivePayment(context, payment),
                 ),
               ),
-              TextButton(
-                onPressed: () => changePaymentDate(context, payment),
-                child: Text(t.freelance.paymentChangeDateAction),
-              ),
+              AppButton.text(small: true, label: t.freelance.paymentChangeDateAction, onPressed: () => changePaymentDate(context, payment)),
               TextButton(
                 onPressed: () => deletePayment(context, payment),
                 child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: colors.danger)),

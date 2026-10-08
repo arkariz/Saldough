@@ -60,7 +60,12 @@ class UnplannedCard extends StatelessWidget {
               ])
                 Text(line, style: textTheme.bodyMedium),
               const SizedBox(height: AppSpacing.space2),
-              Text(t.plan.infoNotBalance, style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+              Text(
+                t.plan.infoNotBalance,
+                style: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
         ),
@@ -72,25 +77,61 @@ class UnplannedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final remaining = plan.remaining;
-    return AppSummaryCard(
-      icon: IconKey.budget,
-      label: isForecast
-          ? '${t.plan.unplannedTitle(month: monthLabel)} · ${t.plan.forecastBadge}'
-          : t.plan.unplannedTitle(month: monthLabel),
-      trailing: IconButton(
-        tooltip: t.plan.infoAction,
-        onPressed: () => _showInfo(context),
-        icon: const AppIcon(IconKey.info, size: 20),
-      ),
+    final textTheme = Theme.of(context).textTheme;
+    // Prototipe `RencanaBulanIni.dc.html`: label + info di atas angka utama,
+    // rincian di bidang cekung `surface2`.
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.danger : null),
-          const SizedBox(height: AppSpacing.space2),
-          _Row(label: t.plan.incomeRow, amount: plan.plannedIncome, onTap: onShowRecurring),
-          _Row(label: t.plan.billsRow, amount: -plan.plannedRecurringOut, onTap: onShowRecurring),
-          _Row(label: t.plan.budgetRow, amount: -plan.budgetPlanned, onTap: onShowBudget),
-          if (offPlan != 0) _Row(label: t.plan.offPlanRow, amount: offPlan),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  t.plan.unplannedTitle(month: monthLabel),
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                ),
+              ),
+              if (isForecast) AppBadge(t.plan.forecastBadge),
+              AppIconButton(
+                icon: IconKey.info,
+                label: t.plan.infoAction,
+                onPressed: () => _showInfo(context),
+              ),
+            ],
+          ),
+          HeroAmount(
+            AppMoneyFormatter.format(remaining),
+            color: remaining < 0 ? colors.danger : null,
+          ),
+          const SizedBox(height: AppSpacing.space3),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.space3,
+              vertical: AppSpacing.space1,
+            ),
+            color: colors.surface2,
+            child: Column(
+              children: [
+                _Row(
+                  label: t.plan.incomeRow,
+                  amount: plan.plannedIncome,
+                  onTap: onShowRecurring,
+                ),
+                _Row(
+                  label: t.plan.billsRow,
+                  amount: -plan.plannedRecurringOut,
+                  onTap: onShowRecurring,
+                ),
+                _Row(
+                  label: t.plan.budgetRow,
+                  amount: -plan.budgetPlanned,
+                  onTap: onShowBudget,
+                ),
+                if (offPlan != 0) _Row(label: t.plan.offPlanRow, amount: offPlan),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -112,10 +153,19 @@ class _Row extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 40),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: textTheme.bodyMedium)),
+          Expanded(
+            child: Text(
+              label,
+              style: textTheme.bodyMedium?.copyWith(
+                color: context.appColors.ink2,
+              ),
+            ),
+          ),
           Text(
             '$sign${AppMoneyFormatter.format(amount.abs())}',
-            style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+            style: context.numberStyles.amountSm.copyWith(
+              color: amount > 0 ? context.appColors.positive : context.appColors.ink,
+            ),
           ),
         ],
       ),

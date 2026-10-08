@@ -336,27 +336,18 @@ class _IdleCard extends StatelessWidget {
             alignment: WrapAlignment.end,
             spacing: AppSpacing.space1,
             children: [
-              TextButton(
-                onPressed: () {
+              AppButton.text(small: true, label: t.recurring.idleKeep, onPressed: () {
                   AppAnalytics.log(RecurringEvents.idleAction('keep'));
                   bloc.add(RecurringIdleDismissed(rule.id));
-                },
-                child: Text(t.recurring.idleKeep),
-              ),
-              TextButton(
-                onPressed: () {
+                }),
+              AppButton.text(small: true, label: t.recurring.pauseAction, onPressed: () {
                   AppAnalytics.log(RecurringEvents.idleAction('pause'));
                   bloc.add(RecurringPauseToggled(rule.id));
-                },
-                child: Text(t.recurring.pauseAction),
-              ),
-              TextButton(
-                onPressed: () {
+                }),
+              AppButton.text(small: true, label: t.recurring.endAction, onPressed: () {
                   AppAnalytics.log(RecurringEvents.idleAction('end'));
                   bloc.add(RecurringEnded(rule.id));
-                },
-                child: Text(t.recurring.endAction),
-              ),
+                }),
             ],
           ),
         ],
@@ -396,21 +387,14 @@ class _SuggestionCard extends StatelessWidget {
               alignment: WrapAlignment.end,
               spacing: AppSpacing.space1,
               children: [
-                TextButton(
-                  onPressed: () {
+                AppButton.text(small: true, label: t.recurring.suggestDismiss, onPressed: () {
                     AppAnalytics.log(RecurringEvents.suggestionAction('dismiss'));
                     bloc.add(RecurringSuggestionDismissed(s.key));
-                  },
-                  child: Text(t.recurring.suggestDismiss),
-                ),
-                TextButton(
-                  key: ValueKey('recurring-suggest-${s.key}'),
-                  onPressed: () {
+                  }),
+                AppButton.text(key: ValueKey('recurring-suggest-${s.key}'), small: true, label: t.recurring.suggestAccept, onPressed: () {
                     AppAnalytics.log(RecurringEvents.suggestionAction('accept'));
                     unawaited(context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(makeRecurringFrom: s.latest)));
-                  },
-                  child: Text(t.recurring.suggestAccept),
-                ),
+                  }),
               ],
             ),
           ],
@@ -447,10 +431,7 @@ class _AutoRecordedCard extends StatelessWidget {
                     style: textTheme.bodyMedium,
                   ),
                 ),
-                TextButton(
-                  onPressed: () => bloc.add(RecurringAutoRecordUndone(e)),
-                  child: Text(t.recurring.undoAction),
-                ),
+                AppButton.text(small: true, label: t.recurring.undoAction, onPressed: () => bloc.add(RecurringAutoRecordUndone(e))),
               ],
             ),
         ],

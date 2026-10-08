@@ -92,11 +92,9 @@ class AppNavBar extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final i in [0, 1])
-                        Expanded(child: _item(context, i)),
+                      for (final i in [0, 1]) Expanded(child: _item(context, i)),
                       const Spacer(),
-                      for (final i in [2, 3])
-                        Expanded(child: _item(context, i)),
+                      for (final i in [2, 3]) Expanded(child: _item(context, i)),
                     ],
                   ),
                 ),
@@ -139,9 +137,7 @@ class AppNavBar extends StatelessWidget {
                 width: 56,
                 height: 32,
                 decoration: ShapeDecoration(
-                  color: selected
-                      ? colors.brandSoft
-                      : colors.surface.withValues(alpha: 0),
+                  color: selected ? colors.brandSoft : colors.surface.withValues(alpha: 0),
                   shape: const PixelCornerBorder.small(),
                 ),
                 child: Center(

@@ -127,9 +127,7 @@ class AppListRow extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed)
-              ? colors.surface2
-              : Colors.transparent,
+          (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
         ),
         child: row,
       ),

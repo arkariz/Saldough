@@ -179,9 +179,10 @@ class PlanMonthView extends StatelessWidget {
                   child: Row(
                     children: [
                       for (final (k, m) in state.months.indexed) ...[
-                        if (k > 0) const SizedBox(width: AppSpacing.space1),
+                        if (k > 0) const SizedBox(width: AppSpacing.space2),
                         AppChip(
                           key: ValueKey('plan-month-$k'),
+                          onBg: true,
                           // Bulan keuangan 25 Okt–24 Nov disebut "Nov" (T-16.16 K8).
                           label:
                               '${CycleMonthFormatter.formatMonthShort(m.lastDay)} '
@@ -252,15 +253,14 @@ class PlanMonthView extends StatelessWidget {
                 ),
               ),
               if (!state.isFuture) ?pending,
+              const SizedBox(height: AppSpacing.space6),
+              AppSectionHeader(t.plan.nextTitle, actionLabel: t.plan.seeAllRecurring, onAction: onShowRecurring),
               if (next.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionLabel(t.plan.nextTitle),
-                for (final o in next) _NextRow(occurrence: o),
+                const SizedBox(height: AppSpacing.space2),
+                AppListCard(
+                  children: [for (final o in next) _NextRow(occurrence: o)],
+                ),
               ],
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(onPressed: onShowRecurring, child: Text('${t.plan.seeAllRecurring} ›')),
-              ),
             ],
           ),
         );
@@ -289,27 +289,51 @@ class _NextRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final rule = occurrence.rule;
     final sign = switch (rule.kind) {
       RecurringKind.income => '+',
       RecurringKind.expense => '−',
-      RecurringKind.transfer => '⇄',
+      RecurringKind.transfer => '',
     };
     final approx = rule.amountMode == RecurringAmountMode.estimated ? '≈' : '';
+    final date = occurrence.date;
+    // Baris jadwal (`rencana.css` `.sched`): kolom tanggal, nama, nominal.
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 40),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 64,
-            child: Text(CycleMonthFormatter.formatDayMonth(occurrence.date), style: textTheme.bodySmall),
-          ),
-          Expanded(
-            child: Text(rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note, style: textTheme.bodyMedium),
-          ),
-          Text('$approx$sign${AppMoneyFormatter.format(rule.amount)}', style: textTheme.bodyMedium),
-        ],
+      constraints: const BoxConstraints(minHeight: 56),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
+        child: Row(
+          children: [
+            SizedBox(
+              width: AppSize.tile,
+              child: Column(
+                children: [
+                  Text('${date.day}', style: context.numberStyles.amountLg.copyWith(fontSize: 18, height: 22 / 18)),
+                  Text(
+                    CycleMonthFormatter.formatWeekday(date).substring(0, 3),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.space3),
+            Expanded(
+              child: Text(rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note, style: textTheme.titleMedium),
+            ),
+            Text(
+              '$approx$sign${AppMoneyFormatter.format(rule.amount)}',
+              style: context.numberStyles.amount.copyWith(
+                color: switch (rule.kind) {
+                  RecurringKind.income => colors.positive,
+                  RecurringKind.expense => colors.ink,
+                  RecurringKind.transfer => colors.ink2,
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

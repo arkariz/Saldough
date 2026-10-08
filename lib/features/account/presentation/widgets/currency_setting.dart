@@ -29,7 +29,9 @@ class CurrencySettingSection extends StatelessWidget {
               onPressed: () => Navigator.of(dialogContext).pop(currency),
               child: Row(
                 children: [
-                  Expanded(child: Text('${currency.code} · ${currencyName(currency)}')),
+                  Expanded(
+                    child: Text('${currency.code} · ${currencyName(currency)}'),
+                  ),
                   if (currency == current) const AppIcon(IconKey.check),
                 ],
               ),
@@ -50,11 +52,16 @@ class CurrencySettingSection extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(t.common.cancel)),
-          TextButton(
+          AppButton.text(
+            small: true,
+            label: t.common.cancel,
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+          ),
+          AppButton.text(
             key: const ValueKey('currency-change-confirm'),
+            small: true,
+            label: t.currency.changeAction,
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(t.currency.changeAction),
           ),
         ],
       ),
@@ -88,7 +95,9 @@ class CurrencySettingSection extends StatelessWidget {
                         Text(t.currency.label, style: textTheme.titleSmall),
                         Text(
                           '${currency.code} · ${currencyName(currency)}',
-                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colors.ink2,
+                          ),
                         ),
                       ],
                     ),

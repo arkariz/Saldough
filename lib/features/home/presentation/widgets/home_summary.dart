@@ -40,9 +40,7 @@ class HomeBalanceCard extends StatelessWidget {
         color: colors.onBrand,
         symbolColor: colors.onBrand,
       ),
-      linkLabel: walletCount == 0
-          ? null
-          : t.home.walletLink(count: walletCount),
+      linkLabel: walletCount == 0 ? null : t.home.walletLink(count: walletCount),
       onLinkTap: onShowWallets,
     );
   }
@@ -152,9 +150,7 @@ class HomeBudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final ratio = overview.plannedAmount <= 0
-        ? 0.0
-        : overview.spent / overview.plannedAmount;
+    final ratio = overview.plannedAmount <= 0 ? 0.0 : overview.spent / overview.plannedAmount;
     final (badge, tone) = switch (AppProgressBar.statusFor(ratio)) {
       AppBarStatus.safe => (t.home.budgetSafe, AppTone.positive),
       AppBarStatus.nearlyOut => (t.home.budgetNearlyOut, AppTone.warning),

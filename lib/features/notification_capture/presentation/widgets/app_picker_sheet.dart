@@ -44,7 +44,7 @@ class _AppPickerState extends State<_AppPicker> {
               padding: const EdgeInsets.all(AppSpacing.space4),
               child: TextField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: texts.searchApps, prefixIcon: const Icon(Icons.search)),
+                decoration: InputDecoration(hintText: texts.searchApps, prefixIcon: const AppIcon(IconKey.search)),
                 onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
               ),
             ),

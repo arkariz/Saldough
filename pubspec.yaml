@@ -64,6 +64,7 @@ dependencies:
       path: infrastructure/storage/hive_storage
       ref: 9b96fb4353f913270f72518198e598e900d6646c  # hive_storage-v1.1.1 + fix URL + fix ref api_storage
   intl: ^0.20.2
+  material_symbols_icons: ^4.2960.0
   models:
     git:
       url: https://github.com/arkariz/advance-mobile-platform

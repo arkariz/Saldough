@@ -311,7 +311,7 @@ class _DebugSamples extends StatelessWidget {
         Row(
           children: [
             Expanded(child: AppSectionLabel(texts.debugSamplesTitle)),
-            IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh)),
+            IconButton(onPressed: onRefresh, icon: const AppIcon(IconKey.refresh)),
           ],
         ),
         Text(texts.debugSamplesHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),

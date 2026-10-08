@@ -2283,7 +2283,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       `app_colors_test.dart`: 72 pasangan (teks 4,5:1, grafis 3:1) lolos di
       kedua tema; garis ikon piksel di tile gelap tidak diuji (B-23).
       `flutter analyze` bersih, 1.126 uji lulus.
-- [ ] **T-14.2** Ikon (ADR-034 §3.3). Tambah `material_symbols_icons`;
+- [x] **T-14.2** Ikon (ADR-034 §3.3). Tambah `material_symbols_icons`;
       `AppIconTile` dua varian (ikon piksel 32px di tile `surface-2`,
       Material Symbols di tile `cat-*`); pemetaan kategori dan dompet persis
       README design system bagian Ikon; `IconKey` disesuaikan.
@@ -2291,6 +2291,23 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       kategori tanpa ikon piksel memakai cadangan (B-22), jangan menggambar.
       Verifikasi: uji widget pemetaan kategori/dompet ke ikon.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (8 Okt 2026): `material_symbols_icons` (Rounded, bobot 400,
+      `fill` untuk tab aktif). `AppIcon` membagi dua peta: ikon piksel untuk
+      benda (dompet, kategori, jenis transaksi, freelance, status bayar) dan
+      Material Symbols untuk tindakan/navigasi (nama simbol dari prototipe:
+      `home`, `receipt_long`, `donut_small`, `account_balance_wallet`, `tune`,
+      …). `IconKey` baru: `categoryFamily/Donation/Bonus/Gift` (Symbols di
+      tile `cat-*`, B-22), `refresh`, `expandMore/Less`, `moreVert`, `back`;
+      4 `Icons.*` liar di notification_capture masuk peta. `AppIconTile`
+      (piksel 32px di `surface2`; Symbols di `cat-*-bg`, `TileTint`) dengan
+      `PixelCornerBorder` (dibuat di sini lebih awal dari T-14.3 karena tile
+      membutuhkannya). `categoryIcon` memetakan kategori bawaan per
+      `builtInKey` persis README (menang atas `iconKey` lama tersimpan),
+      varian judul "kopi"/"bensin". `TransactionIcon` memakai `AppIconTile`;
+      pengeluaran tanpa kategori memakai ikon Lainnya. ⚠ Ukuran unduhan:
+      paket membundel tiga berkas huruf variabel (±33 MB sebelum tree
+      shaking ikon); periksa ukuran APK rilis sebelum rilis berikutnya.
+      `flutter analyze` bersih, 1.143 uji lulus.
 - [ ] **T-14.3** Komponen dasar (design system bagian Komponen).
       `PixelCornerBorder`, `AppCard`, `AppButton` (primary, secondary, text,
       danger, kecil), `AppChip`, `AppSegmentedControl`, `AppBadge`,

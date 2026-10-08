@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import '../../../../helpers/keypad.dart';
 
 void main() {
   const wallets = [
@@ -31,6 +32,7 @@ void main() {
               onPressed: () async {
                 result = await showModalBottomSheet<IncomeRecorded>(
                   context: context,
+                  isScrollControlled: true,
                   builder: (_) => const IncomeFormSheet(wallets: wallets),
                 );
               },
@@ -43,7 +45,7 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField).first, amount);
+    await enterAmount(tester, amount);
     await tester.pump();
     if (selectWallet) {
       // Daftar dompet terbuka (bukan lembar pemilih): ketuk barisnya langsung.
@@ -96,6 +98,7 @@ void main() {
                   onPressed: () async {
                     result = await showModalBottomSheet<IncomeRecorded>(
                       context: context,
+                      isScrollControlled: true,
                       builder: (_) => const IncomeFormSheet(
                         wallets: wallets,
                         initialWalletId: 'bca',
@@ -118,7 +121,7 @@ void main() {
         );
         expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);
 
-        await tester.enterText(find.byType(TextField).first, '50000');
+        await enterAmount(tester, '50000');
         await tester.pump();
         await tester.ensureVisible(find.byType(AppButton));
         await tester.tap(find.byType(AppButton));

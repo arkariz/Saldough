@@ -3,147 +3,64 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
-/// Kartu nominal berpemisah ribuan, dengan pilihan cepat nominal umum
-/// (rujukan visual: `pixel_kas_catat_pengeluaran` bagian "Nominal").
-///
-/// Dipakai ketiga formulir CATAT. Kop kartu memuat label dan penanda jenis
-/// berwarna ("Uang Keluar"); di bawahnya kotak angka besar dengan awalan
-/// simbol mata uang aktif (ADR-025); isinya dibaca lewat `parseMoneyInput`;
-/// lalu chip `+10rb` dst. dan "Bersihkan".
+/// Nominal yang sedang diisi di Catat (prototipe `Catat.dc.html`):
+/// `amount-display` di tengah dengan simbol mata uang diperkecil di depannya
+/// (`.tk-amt__cur`). Diisi lewat [AppKeypad] di bawah lembar
+/// (`RecordFormFrame.amountController`), bukan keyboard sistem; isinya
+/// dibaca lewat `parseMoneyInput`.
 class RecordAmountField extends StatelessWidget {
   /// Membuat [RecordAmountField].
-  const RecordAmountField({
-    required this.controller,
-    required this.label,
-    required this.kind,
-    this.quickAmounts = const [],
-    this.autofocus = false,
-    this.onChanged,
-    super.key,
-  });
+  const RecordAmountField({required this.controller, required this.kind, super.key});
 
   /// Pengendali teks, berisi angka berpemisah ribuan.
   final TextEditingController controller;
 
-  /// Judul kartu, mis. "Nominal Pengeluaran".
-  final String label;
-
-  /// Jenis transaksi: mewarnai penanda, awalan simbol, dan kursor.
+  /// Jenis transaksi.
   final TransactionKind kind;
-
-  /// Nominal (sen) yang ditawarkan sebagai pilihan cepat.
-  final List<int> quickAmounts;
-
-  /// Fokus otomatis saat formulir dibuka.
-  final bool autofocus;
-
-  /// Dipanggil setiap teks berubah (ketikan maupun tap pilihan cepat) --
-  /// pemanggil dapat memakainya untuk memicu `setState` yang menghitung
-  /// ulang validitas formulir, mengikuti pola field lain di formulir ini.
-  final VoidCallback? onChanged;
-
-  void _setText(String formatted) {
-    controller.value = TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-    onChanged?.call();
-  }
-
-  void _addQuickAmount(int amount) {
-    final current = parseMoneyInput(controller.text) ?? 0;
-    _setText(formatMoneyInput(current + amount));
-  }
-
-  String get _pill => switch (kind) {
-    TransactionKind.income => t.record.incomeBadge,
-    TransactionKind.expense => t.record.expenseBadge,
-    TransactionKind.transfer => t.record.transferBadge,
-  };
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final ink = colors.kindInk(kind);
-    final bigStyle = Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // `Wrap`: label dan penanda jenis turun baris pada teks besar.
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.space2,
-            runSpacing: 2,
-            children: [
-              Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(_pill.toUpperCase(), style: labelSmStyle(context, color: ink)),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
-            decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              children: [
-                Text(
-                  ActiveCurrency.value.symbol,
-                  style: context.numberStyles.amount.copyWith(color: ink),
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(
-                  child: TextField(
-                    controller: controller,
-                    autofocus: autofocus,
-                    onTapOutside: dismissKeyboardOnTapOutside,
-                    keyboardType: moneyKeyboardType,
-                    inputFormatters: [MoneyInputFormatter()],
-                    cursorColor: ink,
-                    style: bigStyle,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
-                      hintText: '0',
-                      hintStyle: bigStyle?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
+    final display = context.numberStyles.amountDisplay;
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, _) {
+        final text = value.text;
+        final sen = parseMoneyInput(text) ?? 0;
+        return Semantics(
+          liveRegion: true,
+          label: t.record.amountSemantics(amount: AppMoneyFormatter.format(sen)),
+          excludeSemantics: true,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text.rich(
+                key: const ValueKey('record-amount'),
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: ActiveCurrency.value.symbol,
+                      style: display.copyWith(
+                        fontSize: display.fontSize! * 0.56,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0,
+                        color: colors.ink2,
+                      ),
                     ),
-                    onChanged: (_) => onChanged?.call(),
-                  ),
+                    TextSpan(text: text.isEmpty ? '0' : text, style: TextStyle(color: text.isEmpty ? colors.ink3 : colors.ink)),
+                  ],
                 ),
-              ],
+                textAlign: TextAlign.center,
+                style: display,
+              ),
             ),
           ),
-          const SizedBox(height: AppSpacing.space2),
-          Wrap(
-            spacing: AppSpacing.space1,
-            runSpacing: AppSpacing.space1,
-            children: [
-              for (final amount in quickAmounts)
-                AppChip(label: formatQuickAmount(amount), onTap: () => _addQuickAmount(amount)),
-              AppChip(
-                label: t.record.clearAmountAction,
-                onTap: () => _setText(''),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

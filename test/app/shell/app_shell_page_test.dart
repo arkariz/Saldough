@@ -30,6 +30,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../helpers/fake_auth_repository.dart';
+import '../../helpers/keypad.dart';
 import '../../helpers/mocks.dart';
 import '../../helpers/plan_sources.dart';
 import '../../helpers/routes.dart';
@@ -335,7 +336,7 @@ void main() {
         await tester.tap(find.text(t.record.kindIncome));
         await tester.pumpAndSettle();
 
-        await tester.enterText(find.byType(TextField).first, '75000');
+        await enterAmount(tester, '75000');
         await tester.pump();
         // Satu-satunya dompet aktif sudah terpilih tanpa membuka menu (UX-2).
         expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);

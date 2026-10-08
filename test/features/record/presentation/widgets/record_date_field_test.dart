@@ -4,6 +4,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
 
+/// Baris Tanggal Catat (T-14.5): "Hari ini, 14.20", diketuk membuka pemilih.
 void main() {
   // 14:20 hari ini: jamnya tetap sama saat harinya digeser.
   final now = DateTime.now();
@@ -22,60 +23,34 @@ void main() {
   }
 
   group('RecordDateField', () {
-    testWidgets('menampilkan pintasan Hari Ini / Kemarin dan tanggal beserta jamnya', (tester) async {
+    testWidgets('label Tanggal di atas "Hari ini, 14.20" (jam bertitik)', (tester) async {
       await pump(tester);
 
-      expect(find.text(t.transaction.todayLabel), findsOneWidget);
-      expect(find.text(t.transaction.yesterdayLabel), findsOneWidget);
-      expect(find.textContaining('14:20'), findsOneWidget);
+      expect(find.text(t.record.dateFieldLabel), findsOneWidget);
+      expect(find.text('${t.transaction.todayLabel}, 14.20'), findsOneWidget);
     });
 
-    testWidgets('pintasan Hari Ini dan Kemarin sebaris, tidak bertumpuk vertikal', (tester) async {
-      await pump(tester);
+    testWidgets('kemarin ditulis "Kemarin", hari lain tanggal singkat', (tester) async {
+      await pump(tester, date: today.subtract(const Duration(days: 1)));
+      expect(find.text('${t.transaction.yesterdayLabel}, 14.20'), findsOneWidget);
 
-      final today = tester.getTopLeft(find.text(t.transaction.todayLabel)).dy;
-      final yesterday = tester.getTopLeft(find.text(t.transaction.yesterdayLabel)).dy;
-      expect(today, yesterday);
+      await pump(tester, date: today.subtract(const Duration(days: 9)));
+      expect(find.textContaining(t.transaction.todayLabel), findsNothing);
+      expect(find.textContaining('14.20'), findsOneWidget);
     });
 
-    testWidgets('"Kemarin" menggeser hari ke kemarin dan mempertahankan jam', (tester) async {
+    testWidgets('mengetuk baris membuka pemilih tanggal; jam dipertahankan', (tester) async {
       final changes = await pump(tester);
 
-      await tester.tap(find.text(t.transaction.yesterdayLabel));
-
-      final yesterday = DateTime(today.year, today.month, today.day - 1, 14, 20);
-      expect(changes, [yesterday]);
-    });
-
-    testWidgets('"Hari Ini" dari tanggal lampau kembali ke hari ini dengan jam yang sama', (tester) async {
-      final past = DateTime(2024, 10, 26, 9, 5);
-      final changes = await pump(tester, date: past);
-
-      await tester.tap(find.text(t.transaction.todayLabel));
-
-      expect(changes, [DateTime(today.year, today.month, today.day, 9, 5)]);
-    });
-
-    testWidgets('mengetuk kotak tanggal membuka pemilih tanggal', (tester) async {
-      await pump(tester);
-
-      await tester.tap(find.textContaining('14:20'));
+      await tester.tap(find.byKey(const ValueKey('record-date')));
       await tester.pumpAndSettle();
-
       expect(find.byType(DatePickerDialog), findsOneWidget);
-    });
 
-    testWidgets('layar 360px + teks 2x: pintasan dan kotak tanggal tidak overflow', (tester) async {
-      tester.view.physicalSize = const Size(360, 800);
-      tester.view.devicePixelRatio = 1;
-      tester.platformDispatcher.textScaleFactorTestValue = 2;
-      addTearDown(() {
-        tester.view.reset();
-        tester.platformDispatcher.clearTextScaleFactorTestValue();
-      });
-      await pump(tester);
-
-      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('1'));
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(changes.single.day, 1);
+      expect((changes.single.hour, changes.single.minute), (14, 20));
     });
   });
 }

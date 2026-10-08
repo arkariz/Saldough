@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import '../../../../helpers/keypad.dart';
 
 void main() {
   const wallets = [
@@ -35,6 +36,7 @@ void main() {
             onPressed: () async {
               final result = await showModalBottomSheet<TransferRecorded>(
                 context: context,
+                isScrollControlled: true,
                 builder: (_) => const TransferFormSheet(wallets: wallets),
               );
               onResult(result);
@@ -57,7 +59,7 @@ void main() {
         TransferRecorded? result;
         await openSheet(tester, (r) => result = r);
 
-        await tester.enterText(find.byType(TextField).first, '100000');
+        await enterAmount(tester, '100000');
         await tester.pump();
         // Kedua `WalletPickerField` (asal/tujuan) sama-sama menampilkan
         // "belum dipilih" mula-mula -- ketuk yang pertama (asal), pilih BCA di
@@ -96,7 +98,7 @@ void main() {
         TransferRecorded? result;
         await openSheet(tester, (r) => result = r);
 
-        await tester.enterText(find.byType(TextField).first, '100000');
+        await enterAmount(tester, '100000');
         await tester.pump();
         // Field pertama (asal) -> BCA, field kedua (tujuan) -> GoPay.
         await tester.ensureVisible(
@@ -135,6 +137,7 @@ void main() {
                   onPressed: () async {
                     result = await showModalBottomSheet<TransferRecorded>(
                       context: context,
+                      isScrollControlled: true,
                       builder: (_) => const TransferFormSheet(
                         wallets: wallets,
                         initialWalletId: 'bca',
@@ -161,7 +164,7 @@ void main() {
           reason: 'dompet TUJUAN masih kosong',
         );
 
-        await tester.enterText(find.byType(TextField).first, '100000');
+        await enterAmount(tester, '100000');
         await tester.pump();
         await tester.ensureVisible(find.text(t.record.walletNotSelectedPrompt));
         await tester.tap(find.text(t.record.walletNotSelectedPrompt));

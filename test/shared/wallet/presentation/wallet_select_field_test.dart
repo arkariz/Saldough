@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
@@ -36,16 +37,12 @@ void main() {
     ValueChanged<String>? onSelected,
     int? previewAmountSen,
     bool previewIsCredit = true,
-    String? caption,
-    bool showDelta = false,
   }) {
     return MaterialApp(
       home: Scaffold(
         body: SingleChildScrollView(
           child: WalletSelectField(
             label: 'Dari Dompet',
-            caption: caption,
-            showDelta: showDelta,
             wallets: wallets,
             selectedId: selectedId,
             onSelected: onSelected ?? (_) {},
@@ -76,7 +73,7 @@ void main() {
 
       expect(find.text(t.record.walletNotSelectedPrompt), findsOneWidget);
       expect(find.text('BCA'), findsNothing);
-      expect(find.text(t.record.balanceLabel), findsNothing);
+      expect(find.byKey(const ValueKey('wallet-balance-after')), findsNothing);
     });
 
     testWidgets('menampilkan nama dompet terpilih di tombol beserta saldonya', (tester) async {
@@ -110,25 +107,26 @@ void main() {
       expect(selected, 'gopay');
     });
 
-    testWidgets('pratinjau sebelum->sesudah benar untuk previewIsCredit true', (tester) async {
+    testWidgets('akibat ke saldo ditulis sekali: "Saldo jadi" bertambah untuk previewIsCredit true', (tester) async {
       await tester.pumpWidget(pumpable(selectedId: 'bca', previewAmountSen: 10000000));
 
-      expect(find.text(AppMoneyFormatter.format(500000000)), findsOneWidget);
-      expect(find.text(AppMoneyFormatter.format(510000000)), findsOneWidget);
+      expect(find.text(t.record.balanceAfter(amount: AppMoneyFormatter.format(510000000))), findsOneWidget);
     });
 
-    testWidgets('pratinjau sebelum->sesudah benar untuk previewIsCredit false (mengurangi saldo)', (tester) async {
+    testWidgets('"Saldo jadi" berkurang untuk previewIsCredit false; negatif ditulis danger', (tester) async {
       await tester.pumpWidget(pumpable(selectedId: 'bca', previewAmountSen: 10000000, previewIsCredit: false));
+      expect(find.text(t.record.balanceAfter(amount: AppMoneyFormatter.format(490000000))), findsOneWidget);
 
-      expect(find.text(AppMoneyFormatter.format(500000000)), findsOneWidget);
-      expect(find.text(AppMoneyFormatter.format(490000000)), findsOneWidget);
+      await tester.pumpWidget(pumpable(selectedId: 'gopay', previewAmountSen: 200000, previewIsCredit: false));
+      final after = tester.widget<Text>(find.byKey(const ValueKey('wallet-balance-after')));
+      expect(after.data, t.record.balanceAfter(amount: AppMoneyFormatter.format(-100000)));
+      expect(after.style!.color, AppColors.light.danger);
     });
 
-    testWidgets('tidak menampilkan pratinjau kalau nominal belum valid (null/nol)', (tester) async {
+    testWidgets('tanpa nominal valid: saldo saat ini, tanpa "Saldo jadi"', (tester) async {
       await tester.pumpWidget(pumpable(selectedId: 'bca'));
 
       expect(find.text(AppMoneyFormatter.format(500000000)), findsOneWidget);
-      expect(find.text('→'), findsNothing);
     });
 
     testWidgets('menampilkan noWalletsMessage kalau daftar dompet kosong', (tester) async {
@@ -137,24 +135,6 @@ void main() {
       expect(find.text(t.record.noWalletsMessage), findsOneWidget);
     });
 
-    testWidgets('gaya transfer: kop titik + keterangan, dan lencana selisih hanya kalau showDelta', (tester) async {
-      await tester.pumpWidget(
-        pumpable(
-          selectedId: 'bca',
-          previewAmountSen: 10000000,
-          previewIsCredit: false,
-          caption: 'Saldo berkurang',
-          showDelta: true,
-        ),
-      );
-
-      expect(find.text('Dari Dompet'), findsOneWidget);
-      expect(find.text('(Saldo berkurang)'), findsOneWidget);
-      expect(find.text('−${AppMoneyFormatter.format(10000000)}'), findsOneWidget);
-
-      await tester.pumpWidget(pumpable(selectedId: 'bca', previewAmountSen: 10000000, previewIsCredit: false));
-      expect(find.text('−${AppMoneyFormatter.format(10000000)}'), findsNothing);
-    });
   });
 
   group('WalletSelectField layout ekstrem (nama panjang, layar sempit, teks 2x)', () {
@@ -176,8 +156,6 @@ void main() {
           selectedId: 'bca',
           previewAmountSen: 99999999999,
           previewIsCredit: false,
-          caption: 'Saldo berkurang',
-          showDelta: true,
         ),
       );
 
@@ -195,7 +173,7 @@ void main() {
       expect(find.text(t.record.walletNotSelectedPrompt), findsOneWidget);
     });
 
-    testWidgets('tombol memakai ikon sesuai jenis dompet, bukan ikon generik', (tester) async {
+    testWidgets('baris memakai ikon dompet umum; menu memakai ikon jenis dompet', (tester) async {
       bool hasIcon(IconKey key) => find
           .descendant(
             of: find.byType(AppMenuSelectButton<String>),
@@ -205,11 +183,10 @@ void main() {
           .isNotEmpty;
 
       await tester.pumpWidget(pumpable(wallets: const [_bank, _ewallet], selectedId: 'bca'));
-      expect(hasIcon(IconKey.walletBank), isTrue);
-      expect(hasIcon(IconKey.wallets), isFalse);
+      expect(hasIcon(IconKey.wallets), isTrue);
 
-      await tester.pumpWidget(pumpable(wallets: const [_bank, _ewallet], selectedId: 'gopay'));
-      expect(hasIcon(IconKey.walletEwallet), isTrue);
+      await openMenu(tester);
+      expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.walletEwallet), findsOneWidget);
     });
 
     testWidgets('menu: nama panjang utuh, memilih memanggil onSelected, tidak overflow', (tester) async {

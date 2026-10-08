@@ -2,24 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 
-/// Ikon jenis transaksi untuk [kind] -- dipakai kotak jenis di kop layar dan
-/// kartu pilihan CATAT.
-IconKey recordKindIcon(TransactionKind kind) => switch (kind) {
-  TransactionKind.income => IconKey.income,
-  TransactionKind.expense => IconKey.expense,
-  TransactionKind.transfer => IconKey.transfer,
-};
-
-/// Kerangka layar formulir CATAT (rujukan visual `pixel_kas_catat_pemasukan`,
-/// `..._pengeluaran`, `..._transfer_antar_dompet`): kop (tombol kembali,
-/// "Langkah 2 // Transaksi" + judul, kotak jenis), [notice] opsional, isi
-/// formulir berjarak seragam, tombol simpan berwarna jenis, dan catatan kaki
-/// bahwa aplikasi hanya mencatat.
+/// Kerangka lembar Catat (prototipe `Catat.dc.html`, ADR-034): bar atas
+/// (tutup, judul di tengah, mikrofon), pengalih jenis, isi formulir yang
+/// bisa digulir, lalu di bawah papan angka dan tombol simpan yang menyebut
+/// jenisnya.
 ///
-/// Mengisi tinggi penuh lembar (`SizedBox.expand`) supaya lembar terasa
-/// sebagai satu layar; isinya bisa digulir dan naik mengikuti papan ketik.
+/// [amountController] menyalakan [AppKeypad] di bawah; papan angka
+/// disembunyikan selama keyboard sistem terbuka (mis. mengetik catatan).
+/// Tombol simpan nonaktif selama [onSubmit] `null` (nominal atau dompet
+/// belum terisi).
 class RecordFormFrame extends StatelessWidget {
   /// Membuat [RecordFormFrame].
   const RecordFormFrame({
@@ -30,81 +24,105 @@ class RecordFormFrame extends StatelessWidget {
     required this.submitLabel,
     required this.onSubmit,
     required this.children,
-    this.notice,
     this.kindSwitcher,
+    this.amountController,
+    this.onAmountChanged,
     super.key,
   });
 
-  /// Jenis transaksi; menentukan warna tombol simpan dan kotak jenis.
+  /// Jenis transaksi.
   final TransactionKind kind;
 
-  /// Judul layar, mis. "Catat Pengeluaran".
+  /// Judul bar atas ("Catat", atau judul sunting).
   final String title;
 
-  /// `true` saat menyunting: label langkah berganti jadi "Sunting".
+  /// `true` saat menyunting: tanpa mikrofon.
   final bool isEditing;
 
-  /// Dipanggil saat tombol kembali diketuk.
+  /// Dipanggil saat tombol tutup diketuk.
   final VoidCallback onBack;
 
-  /// Teks tombol simpan.
+  /// Teks tombol simpan, menyebut jenisnya.
   final String submitLabel;
 
   /// Dipanggil saat tombol simpan ditekan; `null` menonaktifkannya.
   final VoidCallback? onSubmit;
 
-  /// Kartu bantuan tepat di bawah kop (opsional).
-  final Widget? notice;
-
-  /// Pengalih jenis CATAT di antara kop dan [notice] (UX-1, opsional).
+  /// Pengalih jenis CATAT di bawah bar atas (opsional).
   final Widget? kindSwitcher;
 
-  /// Bagian-bagian formulir, dari atas ke bawah.
+  /// Pengendali nominal yang diisi lewat papan angka.
+  final TextEditingController? amountController;
+
+  /// Dipanggil sesudah papan angka mengubah nominal.
+  final VoidCallback? onAmountChanged;
+
+  /// Isi formulir, dari atas ke bawah.
   final List<Widget> children;
+
+  void _onKey(String key) {
+    final controller = amountController!;
+    final next = applyMoneyKey(controller.text, key);
+    if (next == controller.text) return;
+    controller.text = next;
+    onAmountChanged?.call();
+  }
+
+  void _onClear() {
+    amountController!.clear();
+    onAmountChanged?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return SizedBox.expand(
       child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.space4,
-            AppSpacing.space4,
-            AppSpacing.space4,
-            AppSpacing.space6,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Header(
-                kind: kind,
-                title: title,
-                isEditing: isEditing,
-                onBack: onBack,
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Header(title: title, isEditing: isEditing, onBack: onBack),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space1, AppSpacing.space4, AppSpacing.space4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ?kindSwitcher,
+                    for (final (i, child) in children.indexed) ...[
+                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space3),
+                      child,
+                    ],
+                  ],
+                ),
               ),
-              if (kindSwitcher != null) ...[
-                const SizedBox(height: AppSpacing.space4),
-                kindSwitcher!,
-              ],
-              if (notice != null) ...[
-                const SizedBox(height: AppSpacing.space4),
-                notice!,
-              ],
-              for (final child in children) ...[
-                const SizedBox(height: AppSpacing.space4),
-                child,
-              ],
-              const SizedBox(height: AppSpacing.space6),
-              // Tanpa catatan kaki "tidak mendebit uang" di tiap formulir:
-              // penafian itu cukup sekali per alur (onboarding dan tur CATAT,
-              // rincian transaksi, rincian dompet), dan label tombol "Catat…"
-              // sudah membawa maknanya (NFR-UX-005, UX-9).
-              AppButton(label: submitLabel, onPressed: onSubmit),
-            ],
-          ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: colors.surface,
+                border: Border(top: BorderSide(color: colors.line)),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (amountController != null && !keyboardOpen) ...[
+                        AppKeypad(onKey: _onKey, onClear: _onClear),
+                        const SizedBox(height: AppSpacing.space3),
+                      ],
+                      AppButton(key: const ValueKey('record-submit'), label: submitLabel, expand: true, onPressed: onSubmit),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -112,214 +130,54 @@ class RecordFormFrame extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({
-    required this.kind,
-    required this.title,
-    required this.isEditing,
-    required this.onBack,
-  });
+  const _Header({required this.title, required this.isEditing, required this.onBack});
 
-  final TransactionKind kind;
   final String title;
   final bool isEditing;
   final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final onVoice = isEditing ? null : RecordVoiceAction.maybeOf(context);
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: onBack,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            width: 44,
-            height: 44,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors.surface3,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const AppIcon(IconKey.chevronLeft, size: 28),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
-            child: Column(
-              children: [
-                Text(
-                  (isEditing ? t.record.editStepLabel : t.record.stepLabel)
-                      .toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: labelSmStyle(context, color: colors.brand),
-                ),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontSize: 22,
-                    height: 1.2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (onVoice != null)
-          AppIconButton(
-            key: const ValueKey('record-voice'),
-            icon: IconKey.microphone,
-            label: t.record.voice.micLabel,
-            tonal: true,
-            onPressed: onVoice,
-          )
-        else
-          Container(
-            width: 44,
-            height: 44,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors.iconTile(colors.kindFill(kind)),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Color.lerp(
-                    colors.kindInk(kind),
-                    colors.lineStrong,
-                    0.4,
-                  )!,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: AppIcon(recordKindIcon(kind), size: 28),
-          ),
-      ],
-    );
-  }
-}
-
-/// Kartu bantuan berlatar hangat: kotak ikon, judul tebal, dan isi.
-///
-/// Dipakai pemilih jenis CATAT ("Info Pencatatan"), formulir pengeluaran
-/// ("Aturan Kas") dan transfer ("Penting").
-class RecordNotice extends StatelessWidget {
-  /// Membuat [RecordNotice].
-  const RecordNotice({
-    required this.title,
-    required this.body,
-    this.flat = false,
-    super.key,
-  });
-
-  /// Judul tebal.
-  final String title;
-
-  /// Isi penjelasan.
-  final String body;
-
-  /// Pita datar tanpa bayangan bawah -- untuk layar yang kartu-kartu di
-  /// dekatnya sudah berbayangan, supaya kartu info tidak terbaca sebagai
-  /// salah satunya.
-  final bool flat;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.tinted(colors.warning, 0.14),
-      padding: const EdgeInsets.all(AppSpacing.space2),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space2, AppSpacing.space1, 0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 28,
-            height: 28,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors.tinted(colors.warning, 0.3),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const AppIcon(IconKey.overBudget, size: 20),
-          ),
-          const SizedBox(width: AppSpacing.space2),
+          AppIconButton(icon: IconKey.close, label: t.common.close, onPressed: onBack),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  body,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: colors.ink2),
-                ),
-              ],
+            child: Semantics(
+              header: true,
+              child: Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
             ),
           ),
+          if (onVoice != null)
+            AppIconButton(
+              key: const ValueKey('record-voice'),
+              icon: IconKey.microphone,
+              label: t.record.voice.micLabel,
+              tonal: true,
+              onPressed: onVoice,
+            )
+          else
+            const SizedBox(width: AppSize.touch),
         ],
       ),
     );
   }
 }
 
-/// Ringkasan konsekuensi catatan (mis. "Saldo BCA akan bertambah ..."):
-/// kartu bernuansa jenis dengan tanda centang. Isinya [children] (biasanya
-/// satu atau dua `Text`).
-class RecordSummaryCard extends StatelessWidget {
-  /// Membuat [RecordSummaryCard].
-  const RecordSummaryCard({
-    required this.kind,
-    required this.children,
-    this.title,
-    super.key,
-  });
-
-  /// Jenis transaksi; menentukan nuansa warna.
-  final TransactionKind kind;
-
-  /// Judul kecil huruf besar di atas isi (opsional).
-  final String? title;
-
-  /// Isi ringkasan.
-  final List<Widget> children;
+/// Keterangan satu kalimat di Jadikan Rutin / ubah rutin: menyimpan jadwal
+/// tidak mengubah saldo, karena tidak ada transaksi baru yang dicatat.
+class RecordNoBalanceChange extends StatelessWidget {
+  /// Membuat [RecordNoBalanceChange].
+  const RecordNoBalanceChange({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: BoxDecoration(
-        color: colors.tinted(colors.kindFill(kind), 0.16),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AppIcon(IconKey.check, size: 20),
-          const SizedBox(width: AppSpacing.space2),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null)
-                  Text(
-                    title!.toUpperCase(),
-                    style: labelSmStyle(context, color: colors.kindInk(kind)),
-                  ),
-                ...children,
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Text(
+      t.record.repeat.noBalanceChange,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
     );
   }
 }

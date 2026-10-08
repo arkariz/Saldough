@@ -13,7 +13,9 @@
     "retry": "Retry",
     "loading": "Loading...",
     "genericErrorMessage": "Something went wrong. Please try again.",
-    "confirmDeleteTitle": "Delete?"
+    "confirmDeleteTitle": "Delete?",
+    "keypadBackspace": "Delete one digit",
+    "close": "Close"
   },
   "appShell": {
     "homeTabLabel": "Home",
@@ -156,7 +158,10 @@
       "autoRecordLabel": "Record automatically",
       "autoRecordHint": "Recorded for you when you open the app on the date; auto-debit waits a day. You can undo it.",
       "noBalanceChange": "No new transaction; balances stay the same."
-    }
+    },
+    "balanceAfter": "Balance becomes $amount",
+    "allCategories": "All categories",
+    "amountSemantics": "Amount $amount"
   },
   "transaction": {
     "pageTitle": "History",

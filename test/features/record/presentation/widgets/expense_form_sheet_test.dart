@@ -9,6 +9,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/categories.dart';
+import '../../../../helpers/keypad.dart';
 
 void main() {
   setUp(() => useCategories(['Makan']));
@@ -35,6 +36,7 @@ void main() {
                 onPressed: () async {
                   result = await showModalBottomSheet<ExpenseRecorded>(
                     context: context,
+                    isScrollControlled: true,
                     builder: (_) => const ExpenseFormSheet(wallets: wallets),
                   );
                 },
@@ -47,7 +49,7 @@ void main() {
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).first, '75000');
+      await enterAmount(tester, '75000');
       await tester.pump();
       // Daftar dompet terbuka (bukan lembar pemilih): ketuk barisnya langsung.
       // Dropdown dompet: buka lewat tombol "belum dipilih", ketuk itemnya.
@@ -78,6 +80,7 @@ void main() {
                 onPressed: () async {
                   result = await showModalBottomSheet<ExpenseRecorded>(
                     context: context,
+                    isScrollControlled: true,
                     builder: (_) => const ExpenseFormSheet(
                       wallets: wallets,
                       initialWalletId: 'bca',
@@ -100,7 +103,7 @@ void main() {
       );
       expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);
 
-      await tester.enterText(find.byType(TextField).first, '75000');
+      await enterAmount(tester, '75000');
       await tester.pump();
       await tester.ensureVisible(find.byType(AppButton));
       await tester.tap(find.byType(AppButton));
@@ -203,7 +206,7 @@ void main() {
         await pumpForm(tester);
         expect(find.textContaining('akan berkurang'), findsNothing);
 
-        await tester.enterText(find.byType(TextField).first, '75000');
+        await enterAmount(tester, '75000');
         await tester.pump();
         await tester.tap(find.text(t.record.walletNotSelectedPrompt));
         await tester.pumpAndSettle();
@@ -271,7 +274,7 @@ void main() {
           ],
         );
 
-        await tester.enterText(find.byType(TextField).first, '99999999999');
+        await enterAmount(tester, '99999999999');
         await tester.pump();
         await tester.tap(find.text(t.record.walletNotSelectedPrompt));
         await tester.pumpAndSettle();
@@ -307,7 +310,7 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField).first, '65000');
+    await enterAmount(tester, '65000');
     await tester.pump();
 
     await tester.ensureVisible(find.text(t.record.repeat.off));

@@ -25,6 +25,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/categories.dart';
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/keypad.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
@@ -484,7 +485,7 @@ void main() {
       expect(find.text('Rp925.000'), findsOneWidget);
       expect(find.text('Rp850.000'), findsNothing);
 
-      await tester.enterText(find.byType(TextField).first, '90000');
+      await enterAmount(tester, '90000');
       await tester.pump();
       await tester.ensureVisible(find.widgetWithText(AppButton, t.transaction.saveChangesAction));
       await tester.tap(find.widgetWithText(AppButton, t.transaction.saveChangesAction));

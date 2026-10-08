@@ -49,7 +49,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read<NotificationSettingsBloc>().add(const NotificationSettingsResumed());
+      context.read<NotificationSettingsBloc>().add(
+        const NotificationSettingsResumed(),
+      );
     }
   }
 
@@ -62,8 +64,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
         title: Text(texts.disclosureTitle),
         content: SingleChildScrollView(child: Text(texts.disclosureBody)),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(t.common.cancel)),
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(texts.disclosureAccept)),
+          AppButton.text(
+            small: true,
+            label: t.common.cancel,
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+          ),
+          AppButton.text(
+            small: true,
+            label: texts.disclosureAccept,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+          ),
         ],
       ),
     );
@@ -80,7 +90,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
       bloc: bloc,
       source:
           existing ??
-          NotificationSource(packageName: app.packageName, appLabel: app.label, keywords: defaultNotificationKeywords),
+          NotificationSource(
+            packageName: app.packageName,
+            appLabel: app.label,
+            keywords: defaultNotificationKeywords,
+          ),
       isNew: existing == null,
     );
   }
@@ -113,12 +127,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                   onChanged: (value) => bloc.add(NotificationCaptureToggled(enabled: value)),
                   footer: settings.enabled && state.accessGranted
                       ? Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.space1),
+                          padding: const EdgeInsets.only(
+                            bottom: AppSpacing.space1,
+                          ),
                           child: Row(
                             children: [
-                              AppIcon(IconKey.check, color: colors.positive, size: 16),
+                              AppIcon(
+                                IconKey.check,
+                                color: colors.positive,
+                                size: 16,
+                              ),
                               const SizedBox(width: AppSpacing.space1),
-                              Text(texts.accessGranted, style: textTheme.bodySmall),
+                              Text(
+                                texts.accessGranted,
+                                style: textTheme.bodySmall,
+                              ),
                             ],
                           ),
                         )
@@ -134,7 +157,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                     key: const ValueKey('notification-capture-inbox'),
                     title: texts.inboxEntryTitle,
                     subtitle: texts.inboxEntryBody,
-                    onTap: () => unawaited(context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput())),
+                    onTap: () => unawaited(
+                      context.pushRoute(
+                        NotificationCaptureRouteKeys.inbox,
+                        const EmptyInput(),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.space4),
                   AppSectionLabel(texts.sourcesTitle),
@@ -142,23 +170,39 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                   if (settings.sources.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-                      child: Text(texts.sourcesEmpty, style: textTheme.bodyMedium),
+                      child: Text(
+                        texts.sourcesEmpty,
+                        style: textTheme.bodyMedium,
+                      ),
                     ),
                   for (final source in settings.sources)
                     _SourceRow(
                       source: source,
                       walletName: state.wallets.where((w) => w.id == source.walletId).firstOrNull?.name,
-                      onTap: () => openNotificationSourcePage(context, bloc: bloc, source: source),
+                      onTap: () => openNotificationSourcePage(
+                        context,
+                        bloc: bloc,
+                        source: source,
+                      ),
                     ),
                   if (settings.sources.isEmpty)
-                    AppButton(label: texts.addSource, onPressed: () => _addSource(context))
+                    AppButton(
+                      label: texts.addSource,
+                      onPressed: () => _addSource(context),
+                    )
                   else
-                    AppButton.secondary(label: texts.addSource, onPressed: () => _addSource(context)),
+                    AppButton.secondary(
+                      label: texts.addSource,
+                      onPressed: () => _addSource(context),
+                    ),
                   const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(texts.behaviorTitle),
                   const SizedBox(height: AppSpacing.space1),
                   AppCard(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.space4,
+                      vertical: AppSpacing.space2,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -169,12 +213,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                           hint: autoRecord ? texts.autoRecordOnHint : texts.autoRecordOffHint,
                           value: autoRecord,
                           onChanged: (on) => bloc.add(
-                            AutoRecordLevelChanged(on ? AutoRecordLevel.whenComplete : AutoRecordLevel.reviewAll),
+                            AutoRecordLevelChanged(
+                              on ? AutoRecordLevel.whenComplete : AutoRecordLevel.reviewAll,
+                            ),
                           ),
                         ),
                         if (autoRecord)
                           NotificationSwitchRow(
-                            key: const ValueKey('notification-auto-record-any-category'),
+                            key: const ValueKey(
+                              'notification-auto-record-any-category',
+                            ),
                             indent: true,
                             label: texts.autoRecordAnyCategoryLabel,
                             hint: texts.autoRecordAnyCategoryHint,
@@ -199,10 +247,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                         ),
                         if (reminder && !state.canPostReminders)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.space1),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.space1,
+                            ),
                             child: Text(
                               texts.reminderPermissionDenied,
-                              style: textTheme.bodySmall?.copyWith(color: colors.ink),
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colors.ink,
+                              ),
                             ),
                           ),
                       ],
@@ -248,7 +300,10 @@ class _AccessWarning extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
     return AppCard(
-      color: Color.alphaBlend(colors.brand.withValues(alpha: 0.12), colors.surface),
+      color: Color.alphaBlend(
+        colors.brand.withValues(alpha: 0.12),
+        colors.surface,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -266,7 +321,11 @@ class _AccessWarning extends StatelessWidget {
 /// Satu aplikasi yang didengarkan: nama dan dompetnya; peringatan bila
 /// dompet atau filter kosong.
 class _SourceRow extends StatelessWidget {
-  const _SourceRow({required this.source, required this.walletName, required this.onTap});
+  const _SourceRow({
+    required this.source,
+    required this.walletName,
+    required this.onTap,
+  });
 
   final NotificationSource source;
   final String? walletName;
@@ -281,7 +340,10 @@ class _SourceRow extends StatelessWidget {
       (false, _, _) => (texts.sourcePaused, null),
       (true, true, _) => (texts.sourceKeywordsNone, colors.danger),
       (true, false, null) => (texts.sourceNoWallet, colors.danger),
-      (true, false, final String name) => (texts.sourceWallet(name: name), null),
+      (true, false, final String name) => (
+        texts.sourceWallet(name: name),
+        null,
+      ),
     };
     return NotificationNavCard(
       title: source.appLabel,
@@ -294,7 +356,11 @@ class _SourceRow extends StatelessWidget {
 }
 
 class _DebugSamples extends StatelessWidget {
-  const _DebugSamples({required this.samples, required this.onAddShellSource, required this.onRefresh});
+  const _DebugSamples({
+    required this.samples,
+    required this.onAddShellSource,
+    required this.onRefresh,
+  });
 
   final List<CapturedNotification> samples;
   final VoidCallback onAddShellSource;
@@ -311,10 +377,16 @@ class _DebugSamples extends StatelessWidget {
         Row(
           children: [
             Expanded(child: AppSectionLabel(texts.debugSamplesTitle)),
-            IconButton(onPressed: onRefresh, icon: const AppIcon(IconKey.refresh)),
+            IconButton(
+              onPressed: onRefresh,
+              icon: const AppIcon(IconKey.refresh),
+            ),
           ],
         ),
-        Text(texts.debugSamplesHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+        Text(
+          texts.debugSamplesHint,
+          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+        ),
         const SizedBox(height: AppSpacing.space2),
         if (samples.isEmpty) Text(texts.debugSamplesEmpty, style: textTheme.bodyMedium),
         for (final sample in samples)
@@ -323,23 +395,33 @@ class _DebugSamples extends StatelessWidget {
             child: AppTappable(
               label: sample.packageName,
               onTap: () async {
-                await Clipboard.setData(ClipboardData(text: '${sample.packageName}\n${sample.text}'));
+                await Clipboard.setData(
+                  ClipboardData(text: '${sample.packageName}\n${sample.text}'),
+                );
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(texts.copied)));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(texts.copied)));
                 }
               },
               child: AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sample.packageName, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                    Text(
+                      sample.packageName,
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                    ),
                     Text(sample.text, style: textTheme.bodyMedium),
                   ],
                 ),
               ),
             ),
           ),
-        AppButton.text(label: texts.debugShellSource, onPressed: onAddShellSource),
+        AppButton.text(
+          label: texts.debugShellSource,
+          onPressed: onAddShellSource,
+        ),
       ],
     );
   }

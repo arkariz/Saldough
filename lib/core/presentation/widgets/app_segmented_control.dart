@@ -61,9 +61,7 @@ class AppSegmentedControl<T> extends StatelessWidget {
                       vertical: AppSpacing.space1,
                     ),
                     decoration: ShapeDecoration(
-                      color: value == selected
-                          ? colors.surfaceRaised
-                          : colors.surface2.withValues(alpha: 0),
+                      color: value == selected ? colors.surfaceRaised : colors.surface2.withValues(alpha: 0),
                       shape: const PixelCornerBorder.small(),
                       shadows: value == selected
                           ? [
@@ -85,9 +83,7 @@ class AppSegmentedControl<T> extends StatelessWidget {
                               TextSpan(
                                 text: ' $count',
                                 style: TextStyle(
-                                  color: value == selected
-                                      ? colors.ink2
-                                      : colors.ink3,
+                                  color: value == selected ? colors.ink2 : colors.ink3,
                                 ),
                               ),
                           ],

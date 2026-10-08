@@ -34,8 +34,7 @@ class AppFadeIn extends StatefulWidget {
   State<AppFadeIn> createState() => _AppFadeInState();
 }
 
-class _AppFadeInState extends State<AppFadeIn>
-    with SingleTickerProviderStateMixin {
+class _AppFadeInState extends State<AppFadeIn> with SingleTickerProviderStateMixin {
   // Jeda dimasukkan ke durasi controller (lewat `Interval`), bukan
   // `Future.delayed`, supaya tidak ada timer yang menggantung di uji.
   late final AnimationController _controller = AnimationController(
@@ -75,9 +74,7 @@ class _AppFadeInState extends State<AppFadeIn>
   @override
   Widget build(BuildContext context) {
     final total = widget.delay + widget.duration;
-    final start = total == Duration.zero
-        ? 0.0
-        : widget.delay.inMicroseconds / total.inMicroseconds;
+    final start = total == Duration.zero ? 0.0 : widget.delay.inMicroseconds / total.inMicroseconds;
     return FadeTransition(
       opacity: CurvedAnimation(
         parent: _controller,

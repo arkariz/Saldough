@@ -253,7 +253,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
             ],
             Align(
               alignment: Alignment.centerLeft,
-              child: TextButton(onPressed: () => _showDetails(context), child: Text('${t.plan.detailsAction} ›')),
+              child: AppButton.text(small: true, label: '${t.plan.detailsAction} ›', onPressed: () => _showDetails(context)),
             ),
           ],
         ),

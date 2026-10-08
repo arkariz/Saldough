@@ -192,19 +192,16 @@ class _SourcePageState extends State<_SourcePage> {
               onSubmitted: (_) => _addKeyword(),
             ),
           ),
-          TextButton(onPressed: _addKeyword, child: Text(texts.addKeyword)),
+          AppButton.text(small: true, label: texts.addKeyword, onPressed: _addKeyword),
         ],
       ),
       if (missingDefaults)
         Align(
           alignment: Alignment.centerLeft,
-          child: TextButton(
-            onPressed: () => setState(
+          child: AppButton.text(small: true, label: texts.addDefaultKeywords, onPressed: () => setState(
               () =>
                   _source = _source.copyWith(keywords: {..._source.keywords, ...defaultNotificationKeywords}.toList()),
-            ),
-            child: Text(texts.addDefaultKeywords),
-          ),
+            )),
         ),
       const SizedBox(height: AppSpacing.space6),
       AppSectionLabel(texts.patternsTitle),

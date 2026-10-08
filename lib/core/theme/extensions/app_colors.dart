@@ -514,8 +514,7 @@ class AppColors extends ThemeExtension<AppColors> {
 /// tanpa tema), sehingga tidak pernah melempar.
 extension AppColorsContext on BuildContext {
   /// Token warna tema aktif.
-  AppColors get appColors =>
-      Theme.of(this).extension<AppColors>() ?? AppColors.light;
+  AppColors get appColors => Theme.of(this).extension<AppColors>() ?? AppColors.light;
 }
 
 /// Pembantu peralihan Fase 14: latar pucat berwarna yang dipakai layar lama.
@@ -523,8 +522,7 @@ extension AppColorsContext on BuildContext {
 /// atau `cat*Bg` langsung; hapus ekstensi ini begitu tidak ada pemakainya.
 extension AppColorsTints on AppColors {
   /// [fill] dilarutkan ke [surface] sebesar [strength] (0..1).
-  Color tinted(Color fill, double strength) =>
-      Color.alphaBlend(fill.withValues(alpha: strength), surface);
+  Color tinted(Color fill, double strength) => Color.alphaBlend(fill.withValues(alpha: strength), surface);
 
   /// Latar tile ikon. Ikon piksel selalu di tile netral [surface2]
   /// (design system bagian Ikon); [fill] diabaikan.

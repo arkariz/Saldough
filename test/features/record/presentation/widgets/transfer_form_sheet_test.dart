@@ -81,12 +81,12 @@ void main() {
         await tester.tap(find.text('BCA').last);
         await tester.pumpAndSettle();
 
-        expect(find.byType(AppButton), findsOneWidget);
-        final button = tester.widget<AppButton>(find.byType(AppButton));
+        expect(find.byKey(const ValueKey('record-submit')), findsOneWidget);
+        final button = tester.widget<AppButton>(find.byKey(const ValueKey('record-submit')));
         expect(button.onPressed, isNull);
 
-        await tester.ensureVisible(find.byType(AppButton));
-        await tester.tap(find.byType(AppButton));
+        await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+        await tester.tap(find.byKey(const ValueKey('record-submit')));
         await tester.pumpAndSettle();
         expect(result, isNull);
       },
@@ -114,8 +114,8 @@ void main() {
         await tester.tap(find.text('GoPay').last);
         await tester.pumpAndSettle();
 
-        await tester.ensureVisible(find.byType(AppButton));
-        await tester.tap(find.byType(AppButton));
+        await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+        await tester.tap(find.byKey(const ValueKey('record-submit')));
         await tester.pumpAndSettle();
 
         expect(result, isNotNull);
@@ -171,8 +171,8 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('GoPay').last);
         await tester.pumpAndSettle();
-        await tester.ensureVisible(find.byType(AppButton));
-        await tester.tap(find.byType(AppButton));
+        await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+        await tester.tap(find.byKey(const ValueKey('record-submit')));
         await tester.pumpAndSettle();
 
         expect(result?.fromWalletId, 'bca');

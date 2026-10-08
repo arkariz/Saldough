@@ -13,8 +13,7 @@ class PixelCornerBorder extends OutlinedBorder {
   const PixelCornerBorder({this.step = AppSize.pixelStep, super.side});
 
   /// Langkah tangga sudut kecil (`pixel-step-sm`).
-  const PixelCornerBorder.small({BorderSide side = BorderSide.none})
-    : this(step: AppSize.pixelStepSm, side: side);
+  const PixelCornerBorder.small({BorderSide side = BorderSide.none}) : this(step: AppSize.pixelStepSm, side: side);
 
   /// Lebar satu langkah tangga.
   final double step;
@@ -53,12 +52,10 @@ class PixelCornerBorder extends OutlinedBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.strokeInset);
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
-      pathFor(rect, step);
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => pathFor(rect, step);
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
-      pathFor(rect.deflate(side.strokeInset), step);
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) => pathFor(rect.deflate(side.strokeInset), step);
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
@@ -72,8 +69,7 @@ class PixelCornerBorder extends OutlinedBorder {
       PixelCornerBorder(step: step ?? this.step, side: side ?? this.side);
 
   @override
-  ShapeBorder scale(double t) =>
-      PixelCornerBorder(step: step * t, side: side.scale(t));
+  ShapeBorder scale(double t) => PixelCornerBorder(step: step * t, side: side.scale(t));
 
   @override
   ShapeBorder? lerpFrom(ShapeBorder? a, double t) {
@@ -98,8 +94,7 @@ class PixelCornerBorder extends OutlinedBorder {
   }
 
   @override
-  bool operator ==(Object other) =>
-      other is PixelCornerBorder && other.step == step && other.side == side;
+  bool operator ==(Object other) => other is PixelCornerBorder && other.step == step && other.side == side;
 
   @override
   int get hashCode => Object.hash(step, side);

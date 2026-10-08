@@ -114,8 +114,8 @@ class MonthReviewCard extends StatelessWidget {
               MonthReviewStep.budgets,
               t.plan.reviewBudgets(amount: AppMoneyFormatter.format(state.recurringBudgetTotal)),
               [
-                TextButton(onPressed: () => mark(MonthReviewStep.budgets), child: Text(t.plan.reviewOk)),
-                TextButton(onPressed: onShowBudget, child: Text(t.plan.reviewEdit)),
+                AppButton.text(small: true, label: t.plan.reviewOk, onPressed: () => mark(MonthReviewStep.budgets)),
+                AppButton.text(small: true, label: t.plan.reviewEdit, onPressed: onShowBudget),
               ],
             ),
           if (estimate != null && steps.contains(MonthReviewStep.estimates))
@@ -126,8 +126,8 @@ class MonthReviewCard extends StatelessWidget {
                 amount: AppMoneyFormatter.format(estimate.amount),
               ),
               [
-                TextButton(onPressed: () => mark(MonthReviewStep.estimates), child: Text(t.plan.reviewOk)),
-                TextButton(onPressed: onShowRecurring, child: Text(t.plan.reviewEditEstimate)),
+                AppButton.text(small: true, label: t.plan.reviewOk, onPressed: () => mark(MonthReviewStep.estimates)),
+                AppButton.text(small: true, label: t.plan.reviewEditEstimate, onPressed: onShowRecurring),
               ],
             ),
           if (steps.contains(MonthReviewStep.lookback))
@@ -135,18 +135,15 @@ class MonthReviewCard extends StatelessWidget {
               MonthReviewStep.lookback,
               accuracyText(state) ?? t.plan.reviewLookback(month: state.previousRange.label),
               [
-                TextButton(
-                  onPressed: () async {
+                AppButton.text(small: true, label: t.plan.reviewSee, onPressed: () async {
                     await showLookbackSheet(context, state);
                     mark(MonthReviewStep.lookback);
-                  },
-                  child: Text(t.plan.reviewSee),
-                ),
+                  }),
               ],
             ),
           const SizedBox(height: AppSpacing.space4),
           AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),
-          TextButton(onPressed: () => bloc.add(const PlanReviewDismissed()), child: Text(t.plan.reviewLater)),
+          AppButton.text(small: true, label: t.plan.reviewLater, onPressed: () => bloc.add(const PlanReviewDismissed())),
         ],
       ),
     );

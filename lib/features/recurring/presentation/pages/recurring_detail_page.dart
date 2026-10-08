@@ -321,7 +321,7 @@ class _OccurrenceLine extends StatelessWidget {
         children: [
           SizedBox(width: 96, child: Text(date, style: style)),
           Expanded(child: Text(amount, style: style)),
-          if (action case (final label, final onPressed)) TextButton(onPressed: onPressed, child: Text(label)),
+          if (action case (final label, final onPressed)) AppButton.text(small: true, label: label, onPressed: onPressed),
           if (onTap != null) const AppIcon(IconKey.chevronRight, size: 18),
         ],
       ),

@@ -16,9 +16,7 @@ const _hiddenKey = StorageKey(namespace: 'settings', name: 'hideAmounts');
 
 /// [AmountVisibilityRepository] di atas [KeyValueStorage]: satu dokumen
 /// `{schemaVersion, hidden}`.
-final class AmountVisibilityRepositoryImpl
-    with RepositoryGuard
-    implements AmountVisibilityRepository {
+final class AmountVisibilityRepositoryImpl with RepositoryGuard implements AmountVisibilityRepository {
   /// Membuat [AmountVisibilityRepositoryImpl] di atas [_storage].
   const AmountVisibilityRepositoryImpl({required this._storage});
 
@@ -35,10 +33,8 @@ final class AmountVisibilityRepositoryImpl
   );
 
   @override
-  Future<Either<Failure, bool>> load() =>
-      guard(() async => await _store.read() ?? false);
+  Future<Either<Failure, bool>> load() => guard(() async => await _store.read() ?? false);
 
   @override
-  Future<Either<Failure, Unit>> save({required bool hidden}) =>
-      guardVoid(() => _store.write(hidden));
+  Future<Either<Failure, Unit>> save({required bool hidden}) => guardVoid(() => _store.write(hidden));
 }

@@ -236,8 +236,7 @@ void main() {
           ],
         ),
       );
-      Color? colorOf(String text) =>
-          tester.widget<Text>(find.text(text)).style!.color;
+      Color? colorOf(String text) => tester.widget<Text>(find.text(text)).style!.color;
       expect(colorOf('−Rp45.000'), c.ink);
       expect(colorOf('+Rp8.500.000'), c.positive);
       expect(colorOf('Rp300.000'), c.ink2);

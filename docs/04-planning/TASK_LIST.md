@@ -2456,12 +2456,36 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       pencarian baru. Uji: baris/kelompok (judul, subjudul, tanda, ikon kopi,
       pemisah), uji Riwayat lama disesuaikan ke judul catatan. `flutter
       analyze` bersih, 1.156 uji lulus.
-- [ ] **T-14.8** Anggaran dan rincian anggaran sesuai `Anggaran.dc.html`
+- [x] **T-14.8** Anggaran dan rincian anggaran sesuai `Anggaran.dc.html`
       dan `RincianAnggaran.dc.html`: kontrol segmen status, sisa total,
       kartu dengan status Aman/Hampir habis/Lewat, daftar pos dengan bar
       tipis, sheet tindakan pos, tombol Catat pengeluaran menempel di bawah.
       Verifikasi: uji widget status bar dan sheet pos.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (8 Okt 2026, empat commit; acuan juga prototipe Rencana dan
+      Rutin karena tab ini kini **Rencana**, Fase 15): sub-tab huruf biasa
+      dengan penanda `brand` 40px dan menu tur segmen di bar atas; segmen
+      Anggaran: kartu sisa dengan rencana/terpakai di bidang cekung, chip
+      status di atas `bg` (prototipe memakai chip, bukan kontrol segmen),
+      kartu anggaran dengan satu badge (Lewat menyebut selisih, Rutin, atau
+      status), bar kotak + penanda waktu (`Budget.elapsedRatio`), "terpakai
+      dari rencana" dan Sisa. Rincian anggaran: bar atas halaman turunan,
+      kartu sisa berbadge, "Hari ke-n dari m", badge periode/rentang/dompet,
+      pos sebagai daftar polos berbar tipis; ketuk pos membuka sheet
+      tindakan (catat untuk pos ini, ubah anggaran). Selisih disengaja:
+      **tidak ada tombol "Catat pengeluaran" menempel di bawah** karena
+      ADR-018 melarang mencatat dari tingkat anggaran (transaksi tanpa pos
+      tidak terhitung); pintasan catat tetap per pos (tombol kecil di baris
+      dan di sheet). Kartu "Cara kerja" dihapus (bukan tempat penjelasan).
+      Ikut dikerjakan: segmen Rutin (baris jadwal dengan kolom tanggal,
+      kelompok berlabel dan titik `brand`, kartu daftar), kartu Menunggu
+      dicatat di Beranda, segmen Bulan ini (banner siapkan dana jadi
+      `AppBanner`, kartu uang nganggur, baris Berikutnya), dan `TextButton`
+      sederhana di seluruh aplikasi jadi `AppButton.text`. Belum: rincian
+      rutin (`RincianRutin.dc.html`) dan gaya kartu perkiraan bergaris putus
+      / grafik saldo tangga → T-14.10. Uji: kartu anggaran, sheet pos, urutan
+      Berikutnya, sub-tab; uji lama disesuaikan. `flutter analyze` bersih,
+      1.157 uji lulus.
 - [ ] **T-14.9** Dompet sesuai `Dompet.dc.html`: total, bar sebaran saldo
       per dompet (usulan baru), daftar dengan ikon dompet piksel dan persen,
       dompet nonaktif.

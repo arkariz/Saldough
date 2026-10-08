@@ -64,9 +64,7 @@ class AppChip extends StatelessWidget {
               height: height,
               padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: ShapeDecoration(
-                color: selected
-                    ? colors.brandSoft
-                    : (onBg ? colors.surface : colors.surface2),
+                color: selected ? colors.brandSoft : (onBg ? colors.surface : colors.surface2),
                 shape: const PixelCornerBorder.small(),
               ),
               child: Row(
@@ -76,9 +74,7 @@ class AppChip extends StatelessWidget {
                     ExcludeSemantics(
                       child: AppIcon(
                         leading,
-                        size: isPixelIcon(leading)
-                            ? AppSize.pixelIcon * 0.75
-                            : 18,
+                        size: isPixelIcon(leading) ? AppSize.pixelIcon * 0.75 : 18,
                         color: ink,
                       ),
                     ),

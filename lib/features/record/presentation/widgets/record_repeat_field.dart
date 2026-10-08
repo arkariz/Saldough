@@ -94,10 +94,7 @@ class _RecordRepeatFieldState extends State<RecordRepeatField> {
             if (!_advanced)
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () => setState(() => _advanced = true),
-                  child: Text(t.record.repeat.moreAction),
-                ),
+                child: AppButton.text(small: true, label: t.record.repeat.moreAction, onPressed: () => setState(() => _advanced = true)),
               )
             else
               _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),

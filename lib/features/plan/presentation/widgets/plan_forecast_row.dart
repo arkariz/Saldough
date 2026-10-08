@@ -18,7 +18,11 @@ import 'package:state_management/state_management.dart';
 /// Rencana › Bulan ini.
 class PlanForecastRow extends StatelessWidget {
   /// Membuat [PlanForecastRow].
-  const PlanForecastRow({required this.container, required this.onTap, super.key});
+  const PlanForecastRow({
+    required this.container,
+    required this.onTap,
+    super.key,
+  });
 
   /// Kontainer akar.
   final GetIt container;
@@ -59,7 +63,10 @@ class PlanForecastRow extends StatelessWidget {
                       padding: const EdgeInsets.only(top: AppSpacing.space4),
                       // Wawasan prioritas 1 di Beranda (§7B W1): siapkan dana.
                       child: funding.isNotEmpty
-                          ? FundingBanner(warnings: funding, onShowWallet: (_) => onTap())
+                          ? FundingBanner(
+                              warnings: funding,
+                              onShowWallet: (_) => onTap(),
+                            )
                           : AppTappable(
                               label: t.plan.balanceTitle,
                               onTap: onTap,
@@ -68,10 +75,18 @@ class PlanForecastRow extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       t.plan.forecastRow(
-                                        date: CycleMonthFormatter.formatDayMonth(state.range.lastDay),
-                                        amount: AppMoneyFormatter.formatApprox(projection.endBalance),
-                                        low: AppMoneyFormatter.formatApprox(low.balance),
-                                        lowDate: CycleMonthFormatter.formatDayMonth(low.date),
+                                        date: CycleMonthFormatter.formatDayMonth(
+                                          state.range.lastDay,
+                                        ),
+                                        amount: AppMoneyFormatter.formatApprox(
+                                          projection.endBalance,
+                                        ),
+                                        low: AppMoneyFormatter.formatApprox(
+                                          low.balance,
+                                        ),
+                                        lowDate: CycleMonthFormatter.formatDayMonth(
+                                          low.date,
+                                        ),
                                       ),
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                         color: low.balance < 0 ? colors.danger : colors.ink2,
@@ -126,19 +141,31 @@ class _MonthStartCard extends StatelessWidget {
             Text(
               t.plan.homeReviewBody(
                 income: AppMoneyFormatter.format(plan.plannedIncome),
-                committed: AppMoneyFormatter.format(plan.plannedRecurringOut + plan.budgetPlanned),
+                committed: AppMoneyFormatter.format(
+                  plan.plannedRecurringOut + plan.budgetPlanned,
+                ),
                 free: AppMoneyFormatter.format(plan.planned),
               ),
               style: textTheme.bodyMedium,
             ),
             if (state.estimatedRules.isNotEmpty)
-              Text(t.plan.homeReviewEstimates, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+              Text(
+                t.plan.homeReviewEstimates,
+                style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              ),
             Wrap(
               children: [
-                TextButton(onPressed: onReview, child: Text(t.plan.homeReviewAction)),
-                TextButton(
-                  onPressed: () => context.read<PlanMonthBloc>().add(const PlanReviewDismissed()),
-                  child: Text(t.plan.reviewLater),
+                AppButton.text(
+                  small: true,
+                  label: t.plan.homeReviewAction,
+                  onPressed: onReview,
+                ),
+                AppButton.text(
+                  small: true,
+                  label: t.plan.reviewLater,
+                  onPressed: () => context.read<PlanMonthBloc>().add(
+                    const PlanReviewDismissed(),
+                  ),
                 ),
               ],
             ),

@@ -85,13 +85,11 @@ class AppMenuSelectButton<T> extends StatelessWidget {
     return PopupMenuButton<int>(
       // Indeks, bukan nilai: `PopupMenuButton` tidak memanggil `onSelected`
       // untuk nilai `null`, padahal "Semua" justru diwakili `null`.
-      onSelected: (index) =>
-          onSelected(index < 0 ? null : options[index].value),
+      onSelected: (index) => onSelected(index < 0 ? null : options[index].value),
       color: colors.surface,
       shape: const PixelCornerBorder(),
       itemBuilder: (_) => [
-        if (allLabel != null)
-          _item(value: -1, icon: allIcon, label: allLabel, context: context),
+        if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel, context: context),
         for (var i = 0; i < options.length; i++)
           _item(
             value: i,
@@ -117,9 +115,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
                     child: Text(
                       label,
                       maxLines: wrapLabel ? null : 1,
-                      overflow: wrapLabel
-                          ? TextOverflow.visible
-                          : TextOverflow.ellipsis,
+                      overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
                       style: labelSmStyle(
                         context,
                         color: isPlaceholder ? colors.ink2 : colors.ink,
@@ -159,12 +155,8 @@ class AppMenuSelectButton<T> extends StatelessWidget {
                   Text(
                     label,
                     maxLines: wrapLabel ? null : 1,
-                    overflow: wrapLabel
-                        ? TextOverflow.visible
-                        : TextOverflow.ellipsis,
-                    style: isPlaceholder
-                        ? textTheme.bodyLarge?.copyWith(color: colors.ink3)
-                        : textTheme.titleMedium,
+                    overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
+                    style: isPlaceholder ? textTheme.bodyLarge?.copyWith(color: colors.ink3) : textTheme.titleMedium,
                   ),
                 ],
               ),
@@ -206,9 +198,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  overflow: wrapLabel
-                      ? TextOverflow.visible
-                      : TextOverflow.ellipsis,
+                  overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
                 ),
                 if (detail != null)
                   Text(

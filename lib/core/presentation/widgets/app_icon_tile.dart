@@ -103,9 +103,7 @@ class AppIconTile extends StatelessWidget {
     final (background, ink) = pixel
         ? (colors.surface2, colors.ink)
         : colors.tile(tint ?? _symbolTints[icon] ?? TileTint.slate);
-    final glyph = pixel
-        ? (size >= 80 ? 64.0 : AppSize.pixelIcon)
-        : (size >= 40 ? AppSize.icon : AppSize.iconSm);
+    final glyph = pixel ? (size >= 80 ? 64.0 : AppSize.pixelIcon) : (size >= 40 ? AppSize.icon : AppSize.iconSm);
     return ExcludeSemantics(
       child: Container(
         width: size,

@@ -7,12 +7,9 @@ import 'package:saldough/core/theme/theme.dart';
 /// Luminansi relatif WCAG (rekomendasi ITU-R BT.709). Dihitung langsung dari
 /// channel [Color] (0.0–1.0 sejak API `Color` versi baru).
 double _relativeLuminance(Color color) {
-  double linearize(double channel) => channel <= 0.04045
-      ? channel / 12.92
-      : math.pow((channel + 0.055) / 1.055, 2.4).toDouble();
-  return 0.2126 * linearize(color.r) +
-      0.7152 * linearize(color.g) +
-      0.0722 * linearize(color.b);
+  double linearize(double channel) =>
+      channel <= 0.04045 ? channel / 12.92 : math.pow((channel + 0.055) / 1.055, 2.4).toDouble();
+  return 0.2126 * linearize(color.r) + 0.7152 * linearize(color.g) + 0.0722 * linearize(color.b);
 }
 
 /// Rasio kontras WCAG antara dua warna — selalu >=1, simetris.

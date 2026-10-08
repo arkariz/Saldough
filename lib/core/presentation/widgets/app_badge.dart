@@ -91,3 +91,15 @@ class AppBadge extends StatelessWidget {
     );
   }
 }
+
+/// Nada [AppBadge] dari warna lama [color] (peralihan Fase 14): warna status
+/// jadi nadanya, warna lain netral.
+AppTone toneFromColor(AppColors colors, Color? color) {
+  if (color == null) return AppTone.neutral;
+  if (color == colors.positive) return AppTone.positive;
+  if (color == colors.warning || color == colors.warningFill) return AppTone.warning;
+  if (color == colors.danger) return AppTone.danger;
+  if (color == colors.brand) return AppTone.brand;
+  if (color == colors.info) return AppTone.info;
+  return AppTone.neutral;
+}

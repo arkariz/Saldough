@@ -12,7 +12,7 @@ import 'package:saldough/features/freelance/presentation/freelance_format.dart';
 import 'package:saldough/features/freelance/presentation/widgets/net_pay_breakdown_card.dart';
 import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
 
-/// Lencana kecil berwarna.
+/// Lencana status Freelance, diteruskan ke [AppBadge] (nada dari [color]).
 class FreelanceBadge extends StatelessWidget {
   /// Membuat [FreelanceBadge].
   const FreelanceBadge({required this.label, required this.color, super.key});
@@ -24,14 +24,7 @@ class FreelanceBadge extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: colors.tinted(color, 0.18), borderRadius: BorderRadius.circular(4)),
-      child: Text(label, style: labelSmStyle(context, color: color)),
-    );
-  }
+  Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
 }
 
 /// Ringkasan Freelance (prototipe `Freelance.dc.html`): "Belum diterima"

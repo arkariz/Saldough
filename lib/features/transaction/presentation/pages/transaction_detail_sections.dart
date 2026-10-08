@@ -13,87 +13,23 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.surface2,
-      padding: const EdgeInsets.all(AppSpacing.space1),
+    // Bar atas halaman turunan (design system TopBar `--sub`): kembali di
+    // kiri, ikon ubah dan hapus di kanan.
+    return SizedBox(
+      height: AppSize.topbar,
       child: Row(
         children: [
-          Expanded(
-            child: AppTappable(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Row(
-                children: [
-                  const SizedBox(width: AppSpacing.space1),
-                  AppIcon(IconKey.chevronLeft, color: colors.ink),
-                  const SizedBox(width: AppSpacing.space1),
-                  Text(
-                    t.transaction.detailBackLabel,
-                    style: labelSmStyle(context, color: colors.ink),
-                  ),
-                ],
-              ),
-            ),
+          AppIconButton(
+            icon: IconKey.back,
+            label: t.transaction.detailBackLabel,
+            onPressed: () => Navigator.of(context).maybePop(),
           ),
+          const Spacer(),
           if (onEdit case final onEdit?)
-            _SquareAction(
-              icon: IconKey.edit,
-              color: colors.surface,
-              iconColor: colors.ink,
-              semanticLabel: t.transaction.editAction,
-              onTap: onEdit,
-            ),
-          if (onDelete case final onDelete?) ...[
-            const SizedBox(width: AppSpacing.space1),
-            _SquareAction(
-              icon: IconKey.delete,
-              color: colors.tinted(colors.ink2, 0.16),
-              iconColor: colors.ink,
-              semanticLabel: t.transaction.deleteAction,
-              onTap: onDelete,
-            ),
-          ],
+            AppIconButton(icon: IconKey.edit, label: t.transaction.editAction, onPressed: onEdit),
+          if (onDelete case final onDelete?)
+            AppIconButton(icon: IconKey.delete, label: t.transaction.deleteAction, onPressed: onDelete),
         ],
-      ),
-    );
-  }
-}
-
-class _SquareAction extends StatelessWidget {
-  const _SquareAction({
-    required this.icon,
-    required this.color,
-    required this.iconColor,
-    required this.semanticLabel,
-    required this.onTap,
-  });
-
-  final IconKey icon;
-  final Color color;
-  final Color iconColor;
-  final String semanticLabel;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: semanticLabel,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: SizedBox(
-          width: 44,
-          height: 44,
-          child: Center(
-            child: Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-              child: AppIcon(icon, size: 20, color: iconColor),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -129,46 +65,35 @@ class _HeroCard extends StatelessWidget {
     final ink = colors.kindInk(kind);
     final textTheme = Theme.of(context).textTheme;
 
+    // Angka utama halaman: tile kategori, badge jenis, nominal bertanda
+    // `amount-hero`, judul, tanggal dan jam.
     return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
           // Kategori + lencana notifikasi asal (ADR-032 §3.10).
-          TransactionIcon.of(transaction, size: 56),
-          const SizedBox(height: AppSpacing.space4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.tinted(colors.kindFill(kind), 0.16),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(badge, style: labelSmStyle(context, color: ink)),
+          TransactionIcon.of(transaction, size: 48),
+          const SizedBox(height: AppSpacing.space3),
+          AppBadge(
+            badge,
+            tone: switch (kind) {
+              TransactionKind.income => AppTone.positive,
+              TransactionKind.expense => AppTone.neutral,
+              TransactionKind.transfer => AppTone.info,
+            },
           ),
-          const SizedBox(height: AppSpacing.space4),
+          const SizedBox(height: AppSpacing.space3),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(amountText, style: textTheme.headlineMedium?.copyWith(color: ink)),
+            child: Text(amountText, style: context.numberStyles.amountHero.copyWith(color: ink)),
           ),
           const SizedBox(height: AppSpacing.space1),
+          Text(transactionTitle(transaction), textAlign: TextAlign.center, style: textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.space1),
           Text(
-            transactionTitle(transaction),
+            '${CycleMonthFormatter.formatDateWithWeekday(transaction.date)} · ${transactionTime(transaction.date)}',
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
             textAlign: TextAlign.center,
-            style: textTheme.titleLarge?.copyWith(fontSize: 20),
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const AppIcon(IconKey.calendar, size: 16),
-              const SizedBox(width: AppSpacing.space1),
-              Flexible(
-                child: Text(
-                  '${CycleMonthFormatter.formatDateWithWeekday(transaction.date)} • ${transactionTime(transaction.date)}',
-                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
           ),
         ],
       ),

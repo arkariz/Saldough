@@ -68,21 +68,11 @@ class BudgetBadge extends StatelessWidget {
   /// Warna teks; bawaan `textMuted`.
   final Color? color;
 
-  /// Warna latar; bawaan `surfaceMid`.
+  /// Tidak dipakai lagi: latar mengikuti nada [AppBadge].
   final Color? background;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: background ?? colors.surface2, borderRadius: BorderRadius.circular(4)),
-      child: Text(
-        label,
-        style: labelSmStyle(context, size: 9, color: color ?? colors.ink2),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
 }
 
 /// [AppProgressBar] anggaran selebar induknya; [height] 6 atau kurang memakai

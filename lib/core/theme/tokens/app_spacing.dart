@@ -1,35 +1,41 @@
-/// Skala jarak berbasis 4 piksel. Pakai ini, bukan angka harfiah, di mana pun
-/// widget butuh padding, margin, atau gap.
+/// Skala jarak design system (`tokens.json` grup spacing), grid 4px. Pakai
+/// ini, bukan angka harfiah, di mana pun widget butuh padding, margin, atau
+/// gap.
+///
+/// Aturan pakai (README design system bagian Ruang): margin samping layar dan
+/// padding kartu [space4], jarak antarkartu dalam satu bagian [space3], jarak
+/// antarbagian [space6], ruang bawah halaman tab [space12].
 abstract final class AppSpacing {
   AppSpacing._();
 
-  /// Jarak terkecil — antar elemen yang sangat rapat, misalnya ikon dan label
-  /// di dalam satu baris chip.
-  static const double xs = 4;
+  /// `space-1` (4px).
+  static const double space1 = 4;
 
-  /// Jarak antar elemen kecil yang masih dalam satu kelompok, misalnya judul
-  /// dan subjudul sebuah kartu.
-  static const double sm = 8;
+  /// `space-2` (8px).
+  static const double space2 = 8;
 
-  /// Jarak bawaan antar elemen dalam satu panel — nilai paling sering dipakai.
-  static const double md = 16;
+  /// `space-3` (12px).
+  static const double space3 = 12;
 
-  /// Jarak antar kelompok elemen di dalam satu layar, misalnya antar baris
-  /// daftar.
-  static const double lg = 24;
+  /// `space-4` (16px).
+  static const double space4 = 16;
 
-  /// Jarak antar bagian/panel yang berbeda dalam satu layar.
-  static const double xl = 32;
+  /// `space-5` (20px).
+  static const double space5 = 20;
 
-  /// Jarak besar untuk memisahkan blok konten utama, misalnya padding atas
-  /// layar di bawah app bar.
-  static const double xxl = 48;
+  /// `space-6` (24px).
+  static const double space6 = 24;
 
-  /// Jarak terbesar, dipakai untuk spasi vertikal besar seperti state kosong.
-  static const double xxxl = 64;
+  /// `space-8` (32px).
+  static const double space8 = 32;
+
+  /// `space-10` (40px).
+  static const double space10 = 40;
+
+  /// `space-12` (48px).
+  static const double space12 = 48;
 
   /// Padding bawah daftar di tab shell, supaya baris terakhir bisa digulir
-  /// keluar dari bawah dua FAB bertumpuk (suara 48 + jarak 8 + CATAT 60,
-  /// bayangan keras, dan margin FAB 16).
+  /// keluar dari bawah dua FAB bertumpuk. Dihapus bersama FAB di T-14.4.
   static const double fabClearance = 144;
 }

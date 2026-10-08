@@ -73,10 +73,10 @@ class RecurringSegmentView extends StatelessWidget {
         if (state.isLoading) return const AppSkeletonPage();
         if (state.loadFailed) {
           return ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.space4),
             children: [
               Text(t.recurring.loadError),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               AppButton(
                 label: t.recurring.retryAction,
                 onPressed: () => context.read<RecurringBloc>().add(const RecurringStarted()),
@@ -84,7 +84,7 @@ class RecurringSegmentView extends StatelessWidget {
             ],
           );
         }
-        const padding = EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.fabClearance);
+        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.fabClearance);
         // Sepertinya rutin (ADR-037 §3.3), juga saat belum ada rutin.
         final suggestions = suggestRecurring(
           state.transactions,
@@ -104,9 +104,9 @@ class RecurringSegmentView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(t.recurring.emptyTitle, style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: AppSpacing.xs),
+                      const SizedBox(height: AppSpacing.space1),
                       Text(t.recurring.emptyBody, style: Theme.of(context).textTheme.bodySmall),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.space4),
                       const SpotlightTarget(
                         spotlightKey: SpotlightKey.recurringStarters,
                         child: RecurringStarterChips(),
@@ -114,10 +114,10 @@ class RecurringSegmentView extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 if (suggestions.isNotEmpty) ...[
                   _SuggestionCard(suggestions: suggestions),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                 ],
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.recurringAdd,
@@ -163,7 +163,7 @@ class RecurringSegmentView extends StatelessWidget {
                   subscriptions: subscriptionTotals(state.rules),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               // W6 rutin menganggur: satu kartu, yang pertama (ADR-037 §3.1).
               if (idleRules(
                     state.rules,
@@ -173,15 +173,15 @@ class RecurringSegmentView extends StatelessWidget {
                   ).firstOrNull
                   case final idle?) ...[
                 _IdleCard(rule: idle),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               if (state.autoRecorded.isNotEmpty) ...[
                 _AutoRecordedCard(entries: state.autoRecorded),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               if (suggestions.isNotEmpty) ...[
                 _SuggestionCard(suggestions: suggestions),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -199,12 +199,12 @@ class RecurringSegmentView extends StatelessWidget {
                         selected: filter == kind,
                         onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
                       ),
-                      const SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.space1),
                     ],
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               if (visible.isEmpty) ...[
                 Text(t.recurring.filteredEmpty),
                 TextButton(
@@ -214,7 +214,7 @@ class RecurringSegmentView extends StatelessWidget {
               ] else
                 for (final group in RecurringGroup.values)
                   if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                     if (group == RecurringGroup.paused || group == RecurringGroup.ended)
                       _FoldedGroup(
                         label: '${_groupLabel(group)} (${rows.length})',
@@ -234,7 +234,7 @@ class RecurringSegmentView extends StatelessWidget {
                         for (final entry in rows) _row(context, state, entry),
                     ],
                   ],
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recurringAdd,
                 child: AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),
@@ -311,11 +311,11 @@ class _IdleCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(t.recurring.idleTitle(name: name), style: textTheme.titleSmall),
-          const SizedBox(height: AppSpacing.xs),
-          Text(t.recurring.idleBody, style: textTheme.bodySmall?.copyWith(color: context.appColors.textMuted)),
+          const SizedBox(height: AppSpacing.space1),
+          Text(t.recurring.idleBody, style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2)),
           Wrap(
             alignment: WrapAlignment.end,
-            spacing: AppSpacing.xs,
+            spacing: AppSpacing.space1,
             children: [
               TextButton(
                 onPressed: () {
@@ -364,7 +364,7 @@ class _SuggestionCard extends StatelessWidget {
         children: [
           Text(t.recurring.suggestTitle, style: textTheme.titleSmall),
           for (final s in suggestions) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Text(
               t.recurring.suggestLine(
                 name: s.latest.note,
@@ -375,7 +375,7 @@ class _SuggestionCard extends StatelessWidget {
             ),
             Wrap(
               alignment: WrapAlignment.end,
-              spacing: AppSpacing.xs,
+              spacing: AppSpacing.space1,
               children: [
                 TextButton(
                   onPressed: () {

@@ -60,22 +60,22 @@ class HomeBalanceCard extends StatelessWidget {
       tour: TourId.home,
       icon: IconKey.home,
       label: t.home.balanceLabel,
-      trailing: hasNoWallets ? _Badge(t.home.startBadge, color: colors.accent) : null,
+      trailing: hasNoWallets ? _Badge(t.home.startBadge, color: colors.brand) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(total), color: total < 0 ? colors.expense : null),
-          const SizedBox(height: AppSpacing.sm),
+          HeroAmount(AppMoneyFormatter.format(total), color: total < 0 ? colors.ink : null),
+          const SizedBox(height: AppSpacing.space2),
           // Tanpa dompet, satu-satunya ajakan membuat dompet ada di kartu
           // kosong di bawah (UX-7) — tidak ada tombol kedua di sini.
           if (hasNoWallets) ...[
-            Text(t.home.noWalletsBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+            Text(t.home.noWalletsBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
           ] else ...[
             Text(
               t.home.walletCount(count: activeWallets.length).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Row(
               children: [
                 for (final (index, wallet) in activeWallets.take(_stripCount).indexed) ...[
@@ -95,7 +95,7 @@ class HomeBalanceCard extends StatelessWidget {
                   HeroInset(
                     child: Text(
                       t.home.moreWallets(count: activeWallets.length - _stripCount),
-                      style: transactionLabelStyle(context, color: colors.textMuted),
+                      style: transactionLabelStyle(context, color: colors.ink2),
                     ),
                   ),
                 ],
@@ -132,19 +132,19 @@ class HomeCashFlowRow extends StatelessWidget {
             sign: '+',
             amount: cashFlow.income,
             icon: IconKey.income,
-            color: colors.income,
-            stripe: colors.incomeFill,
+            color: colors.positive,
+            stripe: colors.positive,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.space2),
         Expanded(
           child: _FlowTile(
             label: t.home.expenseLabel(month: monthLabel),
             sign: '−',
             amount: cashFlow.expense,
             icon: IconKey.expense,
-            color: colors.expense,
-            stripe: colors.expenseFill,
+            color: colors.ink,
+            stripe: colors.ink2,
           ),
         ),
       ],
@@ -176,7 +176,7 @@ class _FlowTile extends StatelessWidget {
     final colors = context.appColors;
     return _StripeCard(
       stripe: stripe,
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -184,17 +184,17 @@ class _FlowTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
               ),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               _IconBox(icon, color: stripe),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           FitStart(
             child: Text(
               '$sign${AppMoneyFormatter.format(amount)}',
-              style: PixelTypography.tabularMono(context, fontSize: 18, color: color),
+              style: context.numberStyles.amountLg.copyWith(color: color),
             ),
           ),
         ],
@@ -232,7 +232,7 @@ class HomeBudgetCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _FeatureHeader(icon: IconKey.budget, title: t.home.budgetTitle),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -242,34 +242,30 @@ class HomeBudgetCard extends StatelessWidget {
                     children: [
                       Text(
                         (over ? t.home.budgetOver : t.home.budgetRemaining).toUpperCase(),
-                        style: transactionLabelStyle(context, color: colors.textMuted),
+                        style: transactionLabelStyle(context, color: colors.ink2),
                       ),
                       FitStart(
                         child: Text(
                           AppMoneyFormatter.format(overview.remaining),
-                          style: PixelTypography.tabularMono(
-                            context,
-                            fontSize: 26,
-                            color: over ? colors.overBudget : colors.textPrimary,
-                          ),
+                          style: context.numberStyles.amountHero.copyWith(color: over ? colors.danger : colors.ink),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                _Badge(t.home.budgetUsedBadge(percent: (ratio * 100).round()), color: status),
+                const SizedBox(width: AppSpacing.space2),
+                Flexible(child: _Badge(t.home.budgetUsedBadge(percent: (ratio * 100).round()), color: status)),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             _SegmentBar(ratio: ratio, color: status),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.home.budgetSpentOf(
                 spent: AppMoneyFormatter.format(overview.spent),
                 planned: AppMoneyFormatter.format(overview.plannedAmount),
               ),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
           ],
         ),
@@ -301,12 +297,12 @@ class HomeFreelanceCard extends StatelessWidget {
       semanticsLabel: t.home.freelanceAction,
       onTap: onOpen,
       child: _StripeCard(
-        stripe: colors.pending,
+        stripe: colors.warning,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _FeatureHeader(icon: IconKey.freelance, title: t.home.freelanceTitle),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -319,42 +315,42 @@ class HomeFreelanceCard extends StatelessWidget {
                       children: [
                         Text(
                           t.home.freelanceUnpaidTitle.toUpperCase(),
-                          style: transactionLabelStyle(context, color: colors.textMuted),
+                          style: transactionLabelStyle(context, color: colors.ink2),
                         ),
                         FitStart(
                           child: Text(
                             AppMoneyFormatter.format(overview.unpaid),
-                            style: PixelTypography.tabularMono(context, fontSize: 24, color: colors.pending),
+                            style: context.numberStyles.amountLg.copyWith(color: colors.warning),
                           ),
                         ),
                         Text(
                           t.home.freelancePendingInvoices(count: overview.pendingCount),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                         ),
                       ],
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                     child: _VerticalTear(),
                   ),
                   Expanded(
                     flex: 2,
                     child: _InsetPanel(
-                      color: colors.tinted(colors.pending, 0.12),
+                      color: colors.tinted(colors.warning, 0.12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             t.home.freelanceDueLabel.toUpperCase(),
                             textAlign: TextAlign.center,
-                            style: transactionLabelStyle(context, color: colors.textMuted),
+                            style: transactionLabelStyle(context, color: colors.ink2),
                           ),
                           const SizedBox(height: 2),
                           FitStart(
                             child: Text(
                               CycleMonthFormatter.formatDateShort(overview.nextExpectedDate),
-                              style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                              style: context.numberStyles.amount.copyWith(color: colors.ink),
                             ),
                           ),
                         ],
@@ -370,14 +366,14 @@ class HomeFreelanceCard extends StatelessWidget {
                 hours: t.freelance.hoursValue(hours: overview.totalHours),
                 earned: AppMoneyFormatter.format(overview.earned),
               ),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: 4),
             _SplitGauge(paid: overview.paid, unpaid: overview.unpaid),
             const SizedBox(height: 4),
             Text(
               t.home.freelancePaid(amount: AppMoneyFormatter.format(overview.paid)),
-              style: transactionLabelStyle(context, color: colors.income),
+              style: transactionLabelStyle(context, color: colors.positive),
             ),
           ],
         ),
@@ -406,7 +402,7 @@ class HomeSectionHeader extends StatelessWidget {
     return Row(
       children: [
         AppIcon(icon, size: 22),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: AppSpacing.space1),
         Expanded(
           child: Text(title, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.titleMedium),
         ),
@@ -465,28 +461,28 @@ class HomeEmptyTransactions extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return AppHardCard(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
           Container(
             width: 112,
             height: 112,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: AppRadius.pixelSmAll),
+            decoration: BoxDecoration(color: colors.surface3, borderRadius: AppRadius.pixelSmAll),
             // Peti kosong, sama dengan ilustrasi "Inventaris kosong" rujukan.
             child: const AppIcon(IconKey.empty, size: 80),
           ),
-          const SizedBox(height: AppSpacing.md),
-          _Badge(t.home.emptyBadge, color: colors.textMuted),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space4),
+          _Badge(t.home.emptyBadge, color: colors.ink2),
+          const SizedBox(height: AppSpacing.space1),
           Text(t.home.emptyTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             hasNoWallets ? t.home.emptyNoWalletBody : t.home.emptyBody,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           SizedBox(
             width: double.infinity,
             child: hasNoWallets
@@ -496,7 +492,7 @@ class HomeEmptyTransactions extends StatelessWidget {
           // Anggaran butuh dompet; tanpa dompet tautan ini buntu di layar
           // Anggaran "Buat dompet dulu" (UX-7).
           if (!hasNoWallets) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             _TextLink(label: t.home.budgetLink, onTap: onBudget),
           ],
         ],
@@ -517,14 +513,14 @@ class HomeGuide extends StatelessWidget {
     // anggaran hanya rencana (netral), freelance berisi status tertunda
     // (amber).
     final rules = <(IconKey, String, String, String, Color?)>[
-      (IconKey.wallets, t.home.guideWalletTitle, t.home.guideWalletTag, t.home.guideWalletBody, colors.incomeFill),
+      (IconKey.wallets, t.home.guideWalletTitle, t.home.guideWalletTag, t.home.guideWalletBody, colors.positive),
       (IconKey.budget, t.home.guideBudgetTitle, t.home.guideBudgetTag, t.home.guideBudgetBody, null),
       (
         IconKey.freelance,
         t.home.guideFreelanceTitle,
         t.home.guideFreelanceTag,
         t.home.guideFreelanceBody,
-        colors.pending,
+        colors.warning,
       ),
     ];
     return Column(
@@ -537,31 +533,31 @@ class HomeGuide extends StatelessWidget {
             t.home.guideCount.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: transactionLabelStyle(context, color: colors.textMuted),
+            style: transactionLabelStyle(context, color: colors.ink2),
           ),
         ),
         for (final (index, (icon, title, tag, body, color)) in rules.indexed) ...[
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           TransactionSlab(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _IconBox(icon, color: color, size: 40),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Wrap(
-                        spacing: AppSpacing.xs,
+                        spacing: AppSpacing.space1,
                         runSpacing: 2,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             '${(index + 1).toString().padLeft(2, '0')}. $title',
-                            style: PixelTypography.tabularMono(context, fontSize: 13, color: colors.textPrimary),
+                            style: context.numberStyles.amountSm.copyWith(color: colors.ink),
                           ),
-                          _Badge(tag, color: colors.textMuted),
+                          _Badge(tag, color: colors.ink2),
                         ],
                       ),
                       const SizedBox(height: 2),
@@ -581,7 +577,7 @@ class HomeGuide extends StatelessWidget {
 /// Kartu keras dengan garis aksen tebal di sisi kiri berwarna [stripe] —
 /// penanda fitur sekilas pandang, warnanya selalu warna MAKNA ADR-016.
 class _StripeCard extends StatelessWidget {
-  const _StripeCard({required this.stripe, required this.child, this.padding = const EdgeInsets.all(AppSpacing.md)});
+  const _StripeCard({required this.stripe, required this.child, this.padding = const EdgeInsets.all(AppSpacing.space4)});
 
   final Color stripe;
   final Widget child;
@@ -647,9 +643,9 @@ class _FeatureHeader extends StatelessWidget {
     return Row(
       children: [
         _IconBox(icon, size: 40),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.space2),
         Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
-        AppIcon(IconKey.chevronRight, color: colors.textMuted),
+        AppIcon(IconKey.chevronRight, color: colors.ink2),
       ],
     );
   }
@@ -666,12 +662,12 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1 + 2, vertical: 2),
       decoration: BoxDecoration(
         color: colors.tinted(color, 0.22),
-        border: Border.all(color: colors.edge),
+        border: Border.all(color: colors.lineStrong),
       ),
-      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textPrimary)),
+      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink)),
     );
   }
 }
@@ -693,7 +689,7 @@ class _IconBox extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: colors.iconTile(color),
-        border: Border.all(color: colors.edge),
+        border: Border.all(color: colors.lineStrong),
       ),
       child: AppIcon(icon, size: size * 0.72),
     );
@@ -711,9 +707,9 @@ class _InsetPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       decoration: BoxDecoration(
-        color: color ?? context.appColors.surfaceLow,
+        color: color ?? context.appColors.surface2,
         borderRadius: AppRadius.pixelSmAll,
       ),
       child: child,
@@ -739,12 +735,12 @@ class _StatText extends StatelessWidget {
           uppercase ? label.toUpperCase() : label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: transactionLabelStyle(context, color: colors.textMuted),
+          style: transactionLabelStyle(context, color: colors.ink2),
         ),
         FitStart(
           child: Text(
             value,
-            style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textPrimary),
+            style: context.numberStyles.amountSm.copyWith(color: colors.ink),
           ),
         ),
       ],
@@ -770,15 +766,15 @@ class _SegmentBar extends StatelessWidget {
       height: 20,
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: colors.surfaceHigh,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+        color: colors.surface3,
+        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (var i = 0; i < _segments; i++) ...[
             if (i > 0) const SizedBox(width: 3),
-            Expanded(child: ColoredBox(color: i < filled ? color : colors.surfaceMid)),
+            Expanded(child: ColoredBox(color: i < filled ? color : colors.surface2)),
           ],
         ],
       ),
@@ -799,8 +795,8 @@ class _SplitGauge extends StatelessWidget {
     return Container(
       height: 10,
       decoration: BoxDecoration(
-        color: colors.surfaceHigh,
-        border: Border.all(color: colors.edge),
+        color: colors.surface3,
+        border: Border.all(color: colors.lineStrong),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -808,12 +804,12 @@ class _SplitGauge extends StatelessWidget {
           if (paid > 0)
             Expanded(
               flex: paid,
-              child: ColoredBox(color: colors.incomeFill),
+              child: ColoredBox(color: colors.positive),
             ),
           if (unpaid > 0)
             Expanded(
               flex: unpaid,
-              child: ColoredBox(color: colors.tinted(colors.pending, 0.6)),
+              child: ColoredBox(color: colors.tinted(colors.warning, 0.6)),
             ),
         ],
       ),
@@ -828,11 +824,11 @@ class _DashedDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
       child: SizedBox(
         height: 2,
         width: double.infinity,
-        child: CustomPaint(painter: _DashPainter(color: context.appColors.divider, vertical: false)),
+        child: CustomPaint(painter: _DashPainter(color: context.appColors.line, vertical: false)),
       ),
     );
   }
@@ -846,7 +842,7 @@ class _VerticalTear extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 2,
-      child: CustomPaint(painter: _DashPainter(color: context.appColors.divider, vertical: true)),
+      child: CustomPaint(painter: _DashPainter(color: context.appColors.line, vertical: true)),
     );
   }
 }
@@ -886,7 +882,7 @@ class _TextLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ink = context.appColors.accent;
+    final ink = context.appColors.brand;
     // Simpul semantik sendiri: tanpa `container`, tautan di kartu kosong
     // tergabung ke label kartu dan tidak bisa diaktifkan tersendiri (UX-12).
     return Semantics(
@@ -901,7 +897,7 @@ class _TextLink extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
-                child: Text(label, style: PixelTypography.tabularMono(context, fontSize: 12, color: ink)),
+                child: Text(label, style: context.numberStyles.amountSm.copyWith(color: ink)),
               ),
               if (chevron) AppIcon(IconKey.chevronRight, size: 16, color: ink),
             ],

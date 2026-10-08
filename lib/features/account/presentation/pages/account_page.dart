@@ -51,7 +51,7 @@ class _AccountPageState extends State<AccountPage> {
             builder: (context, state) {
               final user = state.user;
               return ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
                   if (user == null) _SignedOut(state: state) else _SignedIn(state: state, user: user),
                 ],
@@ -107,11 +107,11 @@ class _SignedOutState extends State<_SignedOut> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Center(child: AccountAvatar(user: null, size: 64)),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               Text(t.account.signedOutTitle, style: textTheme.titleMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Text(t.account.signedOutBody, style: textTheme.bodyMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(
                 label: _busyLabel(t.account.googleSignInAction, state, AccountAction.googleSignIn),
                 onPressed: state.isBusy
@@ -121,7 +121,7 @@ class _SignedOutState extends State<_SignedOut> {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.space6),
         Center(
           child: AppButton.tertiary(
             key: const ValueKey('account-email-toggle'),
@@ -130,9 +130,9 @@ class _SignedOutState extends State<_SignedOut> {
           ),
         ),
         if (_showEmailForm) ...[
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Text(t.account.emailFormHint, style: textTheme.bodySmall, textAlign: TextAlign.center),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AutofillGroup(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -145,7 +145,7 @@ class _SignedOutState extends State<_SignedOut> {
                   autocorrect: false,
                   decoration: InputDecoration(labelText: t.account.emailLabel),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
@@ -157,17 +157,17 @@ class _SignedOutState extends State<_SignedOut> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AppButton.secondary(
             label: _busyLabel(t.account.emailSignInAction, state, AccountAction.emailSignIn),
             onPressed: state.isBusy ? null : _submitEmail,
           ),
         ],
-        const SizedBox(height: AppSpacing.xl),
+        const SizedBox(height: AppSpacing.space8),
         const CurrencySettingSection(),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         const LanguageSettingEntry(),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         const CategorySettingEntry(),
         const NotificationCaptureSettingEntry(),
         const RecurringReminderSettingEntry(),
@@ -211,7 +211,7 @@ class _SignedIn extends StatelessWidget {
           child: Row(
             children: [
               AccountAvatar(user: user, size: 56),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: AppSpacing.space4),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,8 +221,8 @@ class _SignedIn extends StatelessWidget {
                     if (user.email != null)
                       Text(user.email!, style: textTheme.bodyMedium, overflow: TextOverflow.ellipsis),
                     if (method != null) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(method, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                      const SizedBox(height: AppSpacing.space1),
+                      Text(method, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                     ],
                   ],
                 ),
@@ -230,35 +230,35 @@ class _SignedIn extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.space6),
         AppSectionLabel(t.account.dataTitle),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         Text(t.account.dataBody, style: textTheme.bodyMedium),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.space6),
         AppButton.secondary(
           label: _busyLabel(t.account.signOutAction, state, AccountAction.signOut),
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.space6),
         const CurrencySettingSection(),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         const LanguageSettingEntry(),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         const CategorySettingEntry(),
         const NotificationCaptureSettingEntry(),
         const RecurringReminderSettingEntry(),
         const FinancialMonthSettingEntry(),
-        const SizedBox(height: AppSpacing.xl),
-        Divider(color: colors.divider),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space8),
+        Divider(color: colors.line),
+        const SizedBox(height: AppSpacing.space4),
         AppSectionLabel(t.account.dangerTitle),
-        const SizedBox(height: AppSpacing.xs),
-        Text(t.account.dangerBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space1),
+        Text(t.account.dangerBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+        const SizedBox(height: AppSpacing.space4),
         AppButton.secondary(
           key: const ValueKey('account-delete'),
           label: _busyLabel(t.account.deleteAction, state, AccountAction.delete),
-          textColor: colors.expense,
+          textColor: colors.ink,
           onPressed: state.isBusy ? null : () => _confirmDelete(context),
         ),
       ],
@@ -291,7 +291,7 @@ class _PasswordDialogState extends State<_PasswordDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(t.account.deletePasswordBody),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           TextField(
             controller: _controller,
             obscureText: true,
@@ -306,7 +306,7 @@ class _PasswordDialogState extends State<_PasswordDialog> {
         TextButton(onPressed: () => Navigator.pop(context), child: Text(t.common.cancel)),
         TextButton(
           onPressed: () => Navigator.pop(context, _controller.text),
-          style: TextButton.styleFrom(foregroundColor: context.appColors.expense),
+          style: TextButton.styleFrom(foregroundColor: context.appColors.ink),
           child: Text(t.account.deleteAction),
         ),
       ],

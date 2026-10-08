@@ -337,7 +337,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
         child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -350,38 +350,38 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                         },
                   title: _editing ? t.budget.editTitle : t.budget.addTitle,
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 TransactionSlab(
-                  color: colors.surfaceLow,
+                  color: colors.surface2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(t.budget.ruleTitle, style: textTheme.titleMedium),
                       const SizedBox(height: 2),
-                      Text(t.budget.ruleBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                      Text(t.budget.ruleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 AppFormTextField(controller: _name, hint: t.budget.nameHint, autofocus: !_editing, onChanged: refresh),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.budget.walletLabel, hint: t.budget.requiredHint),
                 const SizedBox(height: 2),
-                Text(t.budget.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-                const SizedBox(height: AppSpacing.xs),
+                Text(t.budget.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                const SizedBox(height: AppSpacing.space1),
                 for (final wallet in widget.wallets) ...[
                   _WalletChoice(
                     wallet: wallet,
                     selected: wallet.id == _walletId,
                     onTap: () => setState(() => _walletId = wallet.id),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                 ],
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 AppSectionLabel(t.budget.periodLabel),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 AppSegmented<BudgetPeriod>(
                   options: [
                     (BudgetPeriod.monthly, t.budget.periodMonthly),
@@ -390,7 +390,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                   selected: _period,
                   onChanged: (value) => setState(() => _period = value),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 Semantics(
                   button: true,
                   label: t.budget.startDateLabel,
@@ -403,14 +403,14 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                       child: Row(
                         children: [
                           const AppIcon(IconKey.calendar),
-                          const SizedBox(width: AppSpacing.sm),
+                          const SizedBox(width: AppSpacing.space2),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   t.budget.startDateLabel.toUpperCase(),
-                                  style: transactionLabelStyle(context, color: colors.textMuted),
+                                  style: transactionLabelStyle(context, color: colors.ink2),
                                 ),
                                 Text(CycleMonthFormatter.formatDate(_startDate), style: textTheme.titleMedium),
                               ],
@@ -423,7 +423,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.budgetRepeat,
                   child: _RepeatSwitch(
@@ -447,52 +447,52 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                     },
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
                 const SizedBox(height: 2),
-                Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-                const SizedBox(height: AppSpacing.xs),
+                Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                const SizedBox(height: AppSpacing.space1),
                 for (var i = 0; i < _items.length; i++) ...[
                   BudgetItemRow(
                     item: _items[i],
                     targetWalletName: _walletName(_items[i].targetWalletId),
                     onTap: () => _editItem(i),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                 ],
                 AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 if (_conflictingItem case final item?) ...[
                   Text(
                     t.budget.itemTargetConflict(name: item.name),
-                    style: textTheme.bodySmall?.copyWith(color: colors.overBudget),
+                    style: textTheme.bodySmall?.copyWith(color: colors.danger),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                 ],
                 _PlannedTotalCard(
                   total: _itemsTotal,
                   itemCount: _items.length,
                   walletName: _selectedWalletName,
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 AppButton(
                   label: _editing ? t.transaction.saveChangesAction : t.budget.saveAddAction,
                   onPressed: _canSave ? () => unawaited(_save()) : null,
                 ),
                 if (budget != null) ...[
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppButton.secondary(
                     label: budget.isArchived ? t.budget.unarchiveAction : t.budget.archiveAction,
                     onPressed: () => Navigator.of(context).pop(const BudgetFormArchiveToggled()),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Text(
                     t.budget.archiveHelp,
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppButton.secondary(label: t.budget.deleteAction, textColor: colors.expense, onPressed: _delete),
+                  const SizedBox(height: AppSpacing.space4),
+                  AppButton.secondary(label: t.budget.deleteAction, textColor: colors.danger, onPressed: _delete),
                 ],
               ],
             ),
@@ -523,22 +523,22 @@ class _RepeatSwitch extends StatelessWidget {
       child: Row(
         children: [
           const AppIcon(IconKey.calendar),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(t.budget.repeatLabel, style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-                Text(help, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                Text(help, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Switch(
             key: const ValueKey('budget-repeat-switch'),
             value: value,
-            activeThumbColor: colors.onAccent,
-            activeTrackColor: colors.accent,
+            activeThumbColor: colors.onBrand,
+            activeTrackColor: colors.brand,
             onChanged: enabled ? onChanged : null,
           ),
         ],
@@ -564,16 +564,16 @@ class _WalletChoice extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
+          padding: const EdgeInsets.all(AppSpacing.space2),
           decoration: BoxDecoration(
-            color: selected ? colors.tinted(colors.accent, 0.12) : colors.surfaceLow,
+            color: selected ? colors.tinted(colors.brand, 0.12) : colors.surface2,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: selected ? colors.accent : Colors.transparent, width: 2),
+            border: Border.all(color: selected ? colors.brand : Colors.transparent, width: 2),
           ),
           child: Row(
             children: [
               AppIcon(walletIconKey(wallet.iconKey), size: 32),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -583,13 +583,13 @@ class _WalletChoice extends StatelessWidget {
                       t.budget.walletBalance(amount: AppMoneyFormatter.format(wallet.currentBalance)),
                       style: transactionLabelStyle(
                         context,
-                        color: colors.textMuted,
+                        color: colors.ink2,
                       ).copyWith(fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
               ),
-              if (selected) AppIcon(IconKey.check, color: colors.accent),
+              if (selected) AppIcon(IconKey.check, color: colors.brand),
             ],
           ),
         ),
@@ -636,7 +636,7 @@ class BudgetItemRow extends StatelessWidget {
                       label: item.isTransfer
                           ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
                           : t.budget.itemKindExpense,
-                      color: item.isTransfer ? colors.transfer : colors.textMuted,
+                      color: item.isTransfer ? colors.ink2 : colors.ink2,
                     ),
                     if (item.isItemized)
                       Text(
@@ -646,18 +646,18 @@ class BudgetItemRow extends StatelessWidget {
                         ),
                         style: transactionLabelStyle(
                           context,
-                          color: colors.textMuted,
+                          color: colors.ink2,
                         ).copyWith(fontWeight: FontWeight.w400),
                       ),
                   ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Text(
                 AppMoneyFormatter.format(item.plannedAmount),
-                style: PixelTypography.tabularMono(context, color: colors.textPrimary),
+                style: context.numberStyles.amountSm.copyWith(color: colors.ink),
               ),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               const AppIcon(IconKey.edit, size: 18),
             ],
           ),
@@ -682,13 +682,13 @@ class _PlannedTotalCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return TransactionSlab(
-      color: colors.surfaceLow,
+      color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             t.budget.totalPlannedLabel.toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.textMuted),
+            style: transactionLabelStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),
           FitStart(
@@ -699,23 +699,23 @@ class _PlannedTotalCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           if (itemCount == 0)
-            Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.pending))
+            Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning))
           else
             Wrap(
               alignment: WrapAlignment.spaceBetween,
-              spacing: AppSpacing.sm,
+              spacing: AppSpacing.space2,
               runSpacing: 2,
               children: [
                 Text(
                   t.budget.itemCount(count: itemCount),
-                  style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
                 if (walletName != null)
                   Text(
                     t.budget.walletUnchangedNote(wallet: walletName!),
                     style: transactionLabelStyle(
                       context,
-                      color: colors.textMuted,
+                      color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),
                   ),
               ],

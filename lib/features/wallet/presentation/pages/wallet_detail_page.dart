@@ -103,19 +103,19 @@ class WalletDetailPage extends StatelessWidget {
               orElse: () => wallet,
             );
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 _TopBar(onEdit: () => _edit(context, current)),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 _HeroCard(wallet: current),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppButton(
                   label: t.wallet.detailRecordAction,
                   onPressed: () => _record(context),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 AppSectionLabel(t.wallet.detailRecentHeading),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 BlocBuilder<WalletActivityBloc, WalletActivityState>(
                   builder: (context, activity) {
                     // Kerangka, bukan ruang kosong: kosong terbaca seperti
@@ -124,7 +124,7 @@ class WalletDetailPage extends StatelessWidget {
                       return Column(
                         children: [
                           for (var i = 0; i < 3; i++) ...[
-                            if (i > 0) const SizedBox(height: AppSpacing.sm),
+                            if (i > 0) const SizedBox(height: AppSpacing.space2),
                             const AppSkeleton(height: 64),
                           ],
                         ],
@@ -142,12 +142,12 @@ class WalletDetailPage extends StatelessWidget {
                           transactions: touched,
                           walletId: current.id,
                         ),
-                        const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: AppSpacing.space4),
                         if (recent.isEmpty)
                           const _EmptyRecentTransactions()
                         else
                           for (var i = 0; i < recent.length && i < 5; i++) ...[
-                            if (i > 0) const SizedBox(height: AppSpacing.sm),
+                            if (i > 0) const SizedBox(height: AppSpacing.space2),
                             TransactionRow(
                               transaction: recent[i],
                               walletsById: walletsById,
@@ -161,7 +161,7 @@ class WalletDetailPage extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppButton.secondary(
                   label: t.wallet.detailViewAllAction,
                   onPressed: () => _viewAllTransactions(context, current.id),

@@ -76,7 +76,7 @@ class RecurringRow extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 48),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
           child: Row(
             children: [
               SizedBox(
@@ -87,7 +87,7 @@ class RecurringRow extends StatelessWidget {
                       : date.year == today.year
                       ? CycleMonthFormatter.formatDayMonth(date)
                       : "${CycleMonthFormatter.formatMonthShort(date)} '${date.year % 100}",
-                  style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
               ),
               Expanded(
@@ -100,7 +100,7 @@ class RecurringRow extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: muted ? colors.textMuted : (priceUp ? colors.pending : null),
+                        color: muted ? colors.ink2 : (priceUp ? colors.warning : null),
                       ),
                     ),
                     if (meta.isNotEmpty)
@@ -108,22 +108,22 @@ class RecurringRow extends StatelessWidget {
                         meta.join(' · '),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                        style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                       ),
                   ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Text(
                 signedAmount(rule.kind, amount, approximate: approximate),
                 style: textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: muted
-                      ? colors.textMuted
+                      ? colors.ink2
                       : switch (rule.kind) {
-                          RecurringKind.income => colors.income,
-                          RecurringKind.expense => colors.expense,
-                          RecurringKind.transfer => colors.textPrimary,
+                          RecurringKind.income => colors.positive,
+                          RecurringKind.expense => colors.ink,
+                          RecurringKind.transfer => colors.ink,
                         },
                 ),
               ),

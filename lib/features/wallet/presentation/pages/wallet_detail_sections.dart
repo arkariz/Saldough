@@ -13,8 +13,8 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
         children: [
           Expanded(
@@ -22,15 +22,14 @@ class _TopBar extends StatelessWidget {
               onTap: () => Navigator.of(context).maybePop(),
               child: Row(
                 children: [
-                  const SizedBox(width: AppSpacing.xs),
-                  AppIcon(IconKey.chevronLeft, color: colors.textPrimary),
-                  const SizedBox(width: AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.space1),
+                  AppIcon(IconKey.chevronLeft, color: colors.ink),
+                  const SizedBox(width: AppSpacing.space1),
                   Text(
                     t.wallet.detailBackLabel.toUpperCase(),
                     style: transactionLabelStyle(
                       context,
-                      size: 12,
-                      color: colors.textPrimary,
+                      color: colors.ink,
                     ),
                   ),
                 ],
@@ -51,13 +50,13 @@ class _TopBar extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: colors.cardBackground,
+                      color: colors.surface,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: AppIcon(
                       IconKey.edit,
                       size: 20,
-                      color: colors.textPrimary,
+                      color: colors.ink,
                     ),
                   ),
                 ),
@@ -85,7 +84,7 @@ class _HeroCard extends StatelessWidget {
     return Opacity(
       opacity: wallet.isActive ? 1 : 0.6,
       child: TransactionSlab(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           children: [
             Container(
@@ -93,12 +92,12 @@ class _HeroCard extends StatelessWidget {
               height: 64,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: colors.surfaceMid,
+                color: colors.surface2,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: AppIcon(walletIconKey(wallet.iconKey), size: 44),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Text(
               wallet.name,
               textAlign: TextAlign.center,
@@ -107,18 +106,18 @@ class _HeroCard extends StatelessWidget {
             const SizedBox(height: 4),
             Wrap(
               alignment: WrapAlignment.center,
-              spacing: AppSpacing.xs,
+              spacing: AppSpacing.space1,
               runSpacing: 4,
               children: [
                 if (typeLabel != null) _Badge(label: typeLabel),
                 if (!wallet.isActive)
-                  _Badge(label: t.wallet.inactiveBadge, color: colors.pending),
+                  _Badge(label: t.wallet.inactiveBadge, color: colors.warning),
               ],
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             Text(
               t.wallet.currentBalanceLabel.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: 4),
             FittedBox(
@@ -129,7 +128,7 @@ class _HeroCard extends StatelessWidget {
                     Theme.of(
                       context,
                     ).textTheme.headlineMedium?.copyWith(
-                      color: negative ? colors.expense : colors.textPrimary,
+                      color: negative ? colors.ink : colors.ink,
                     ),
               ),
             ),
@@ -203,12 +202,12 @@ class _MonthSummaryRow extends StatelessWidget {
         totals.transferIn -
         totals.transferOut;
     final changeColor = change > 0
-        ? colors.income
+        ? colors.positive
         : change < 0
-        ? colors.expense
-        : colors.textPrimary;
+        ? colors.ink
+        : colors.ink;
     return TransactionSlab(
-      color: colors.surfaceLow,
+      color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -218,42 +217,42 @@ class _MonthSummaryRow extends StatelessWidget {
                 child: _SummaryStat(
                   label: t.wallet.detailIncomeLabel,
                   amount: AppMoneyFormatter.format(totals.income),
-                  color: colors.income,
+                  color: colors.positive,
                 ),
               ),
               Expanded(
                 child: _SummaryStat(
                   label: t.wallet.detailExpenseLabel,
                   amount: AppMoneyFormatter.format(totals.expense),
-                  color: colors.expense,
+                  color: colors.ink,
                 ),
               ),
             ],
           ),
           if (hasTransfers) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Row(
               children: [
                 Expanded(
                   child: _SummaryStat(
                     label: t.wallet.detailTransferInLabel,
                     amount: _signed(totals.transferIn),
-                    color: colors.transfer,
+                    color: colors.ink2,
                   ),
                 ),
                 Expanded(
                   child: _SummaryStat(
                     label: t.wallet.detailTransferOutLabel,
                     amount: _signed(-totals.transferOut),
-                    color: colors.transfer,
+                    color: colors.ink2,
                   ),
                 ),
               ],
             ),
           ],
-          const SizedBox(height: AppSpacing.sm),
-          Divider(color: colors.divider, height: 1),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
+          Divider(color: colors.line, height: 1),
+          const SizedBox(height: AppSpacing.space2),
           _SummaryStat(
             label: t.wallet.detailBalanceChangeLabel,
             amount: _signed(change),
@@ -285,7 +284,7 @@ class _SummaryStat extends StatelessWidget {
           label.toUpperCase(),
           style: transactionLabelStyle(
             context,
-            color: context.appColors.textMuted,
+            color: context.appColors.ink2,
           ),
         ),
         const SizedBox(height: 2),
@@ -315,12 +314,12 @@ class _EmptyRecentTransactions extends StatelessWidget {
     final colors = context.appColors;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.space4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppIcon(IconKey.transactions, size: 48, color: colors.textMuted),
-            const SizedBox(height: AppSpacing.sm),
+            AppIcon(IconKey.transactions, size: 48, color: colors.ink2),
+            const SizedBox(height: AppSpacing.space2),
             Text(
               t.wallet.detailRecentEmptyTitle,
               style: Theme.of(context).textTheme.titleMedium,
@@ -331,7 +330,7 @@ class _EmptyRecentTransactions extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+              ).textTheme.bodyMedium?.copyWith(color: colors.ink2),
             ),
           ],
         ),
@@ -352,7 +351,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: colors.surfaceMid,
+        color: colors.surface2,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
@@ -360,7 +359,7 @@ class _Badge extends StatelessWidget {
         style: transactionLabelStyle(
           context,
           size: 9,
-          color: color ?? colors.textMuted,
+          color: color ?? colors.ink2,
         ),
       ),
     );

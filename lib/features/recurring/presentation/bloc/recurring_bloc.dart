@@ -453,11 +453,11 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       messenger.showSnackBar(
         actionSnackBar(
           context,
-          content: Text(message, style: TextStyle(color: colors.background)),
-          backgroundColor: colors.textPrimary,
+          content: Text(message, style: TextStyle(color: colors.bg)),
+          backgroundColor: colors.ink,
           action: SnackBarAction(
             label: t.recurring.undoAction,
-            textColor: colors.accent,
+            textColor: colors.brand,
             onPressed: () async {
               final result = await undo();
               if (result case Left(value: final failure)) {

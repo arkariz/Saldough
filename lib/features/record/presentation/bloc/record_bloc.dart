@@ -326,11 +326,11 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         messenger.showSnackBar(
           actionSnackBar(
             context,
-            content: Text(message, style: TextStyle(color: colors.background)),
-            backgroundColor: colors.textPrimary,
+            content: Text(message, style: TextStyle(color: colors.bg)),
+            backgroundColor: colors.ink,
             action: SnackBarAction(
               label: t.record.repeat.linkSuggestionAction(item: suggestion.itemName),
-              textColor: colors.accent,
+              textColor: colors.brand,
               onPressed: () async {
                 final result = await repository.saveRule(rule.withBudgetItemKey(suggestion.templateItemId));
                 if (result.isRight()) {

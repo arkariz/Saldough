@@ -36,42 +36,42 @@ class BudgetSummaryCard extends StatelessWidget {
       label: t.budget.remainingLabel,
       trailing: BudgetBadge(
         label: t.budget.activeBadge(count: activeCount),
-        color: colors.income,
-        background: colors.tinted(colors.incomeFill, 0.2),
+        color: colors.positive,
+        background: colors.tinted(colors.positive, 0.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.overBudget : null),
-          const SizedBox(height: AppSpacing.sm),
+          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.danger : null),
+          const SizedBox(height: AppSpacing.space2),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.sm,
+            spacing: AppSpacing.space2,
             runSpacing: 4,
             children: [
-              Text(t.budget.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+              Text(t.budget.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
               Text(
                 t.budget.summaryPercent(percent: budgetPercent(spent, planned)).toUpperCase(),
                 style: transactionLabelStyle(context, color: AppSegmentedProgressBar.colorFor(context, ratio)),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           BudgetProgressBar(value: ratio, height: 14),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _Stat(label: t.budget.plannedLabel, sen: planned, color: colors.textPrimary),
+                child: _Stat(label: t.budget.plannedLabel, sen: planned, color: colors.ink),
               ),
               Expanded(
-                child: _Stat(label: t.budget.spentLabel, sen: spent, color: colors.expense, alignEnd: true),
+                child: _Stat(label: t.budget.spentLabel, sen: spent, color: colors.ink, alignEnd: true),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           HeroInset(child: Text(t.budget.summaryNote, style: textTheme.bodySmall)),
         ],
       ),
@@ -92,12 +92,12 @@ class _Stat extends StatelessWidget {
     return Column(
       crossAxisAlignment: alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text(label.toUpperCase(), style: transactionLabelStyle(context, color: context.appColors.textMuted)),
+        Text(label.toUpperCase(), style: transactionLabelStyle(context, color: context.appColors.ink2)),
         const SizedBox(height: 2),
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: alignEnd ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-          child: Text(AppMoneyFormatter.format(sen), style: PixelTypography.tabularMono(context, color: color)),
+          child: Text(AppMoneyFormatter.format(sen), style: context.numberStyles.amountSm.copyWith(color: color)),
         ),
       ],
     );

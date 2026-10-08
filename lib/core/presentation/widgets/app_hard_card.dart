@@ -29,7 +29,7 @@ class AppHardCard extends StatelessWidget {
     required this.child,
     this.elevation = AppHardElevation.card,
     this.pressed = false,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding = const EdgeInsets.all(AppSpacing.space4),
     this.borderRadius,
     this.color,
     super.key,
@@ -73,17 +73,17 @@ class AppHardCard extends StatelessWidget {
 
     final border = elevation == AppHardElevation.bottomSheet
         ? Border(
-            top: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
-            left: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
-            right: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+            top: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
+            left: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
+            right: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
           )
-        : Border.all(color: colors.edge, width: AppBorder.pixelThick);
+        : Border.all(color: colors.lineStrong, width: AppBorder.pixelThick);
 
     final shadow = switch (elevation) {
       AppHardElevation.flat => const <BoxShadow>[],
-      AppHardElevation.bottomSheet => AppElevation.pixelBottomSheetShadow(colors.edge),
+      AppHardElevation.bottomSheet => AppElevation.pixelBottomSheetShadow(colors.lineStrong),
       AppHardElevation.card || AppHardElevation.interactive =>
-        AppElevation.hardShadow(colors.edge, offset: shadowOffset),
+        AppElevation.hardShadow(colors.lineStrong, offset: shadowOffset),
     };
 
     return AnimatedContainer(
@@ -91,7 +91,7 @@ class AppHardCard extends StatelessWidget {
       transform: Matrix4.translationValues(isPressed ? _offset : 0, isPressed ? _offset : 0, 0),
       padding: padding,
       decoration: BoxDecoration(
-        color: color ?? colors.cardBackground,
+        color: color ?? colors.surface,
         borderRadius: radius,
         border: border,
         boxShadow: shadow,

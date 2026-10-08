@@ -133,44 +133,44 @@ class TransactionDetailPage extends StatelessWidget {
               _ => false,
             };
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 if (ownedByFreelance)
                   const _TopBar()
                 else
                   _TopBar(onEdit: () => _edit(context, state), onDelete: () => _delete(context)),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 _HeroCard(transaction: transaction),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 _DetailsCard(
                   transaction: transaction,
                   walletsById: walletsById,
                   budgetItem: budgetItem,
                   onOpenBudget: budgetItem == null ? null : _budgetOpener(context, budgetItem),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 if (ownedByFreelance)
                   _ManualNote(text: t.transaction.detailFreelanceNote)
                 else ...[
                   _ManualNote(text: t.transaction.detailManualNote),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   AppButton(label: t.transaction.editAction, onPressed: () => _edit(context, state)),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   AppButton.secondary(
                     label: t.transaction.recordAgainAction,
                     onPressed: () => _recordAgain(context),
                   ),
                   if (transaction.recurrence == null) ...[
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                     AppButton.secondary(
                       label: t.transaction.makeRecurringAction,
                       onPressed: () => _makeRecurring(context),
                     ),
                   ],
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   _DeleteLink(onPressed: () => _delete(context)),
                 ],
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
             );
           },

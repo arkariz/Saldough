@@ -156,7 +156,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.sm, 0),
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space2, 0),
                         child: SizedBox(
                           height: 48,
                           child: Row(
@@ -164,7 +164,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               Expanded(
                                 child: Text(
                                   t.app.title.toUpperCase(),
-                                  style: transactionLabelStyle(context, color: colors.textMuted),
+                                  style: transactionLabelStyle(context, color: colors.ink2),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -215,14 +215,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             if (!_onStep) ...[
                               OnboardingPageIndicator(count: _count, current: _page),
-                              const SizedBox(height: AppSpacing.md),
+                              const SizedBox(height: AppSpacing.space4),
                             ],
                             AnimatedSwitcher(
                               duration: MotionPolicy.duration(context, const Duration(milliseconds: 240)),
@@ -299,7 +299,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             onPressed: _finishing ? null : () => _leave(OnboardingOutcome.createWallet),
           ),
         ),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         Center(
           child: AppButton.tertiary(
             label: t.onboarding.laterAction,

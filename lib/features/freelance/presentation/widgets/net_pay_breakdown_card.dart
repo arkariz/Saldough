@@ -24,7 +24,7 @@ class NetPayBreakdownCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(label, style: strong ? textTheme.titleSmall : textTheme.bodyMedium)),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           // Nominal mengecil di layar sempit atau teks diperbesar.
           Flexible(
             child: FittedBox(
@@ -32,10 +32,8 @@ class NetPayBreakdownCard extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 value,
-                style: PixelTypography.tabularMono(
-                  context,
-                  fontSize: strong ? 16 : 14,
-                  color: color ?? colors.textPrimary,
+                style: (strong ? context.numberStyles.amount : context.numberStyles.amountSm).copyWith(
+                  color: color ?? colors.ink,
                 ),
               ),
             ),
@@ -44,7 +42,7 @@ class NetPayBreakdownCard extends StatelessWidget {
       ),
     );
     return TransactionSlab(
-      color: colors.surfaceLow,
+      color: colors.surface2,
       shadow: 2,
       child: Column(
         children: [
@@ -53,13 +51,13 @@ class NetPayBreakdownCard extends StatelessWidget {
             row(
               describeDeduction(deduction.rule),
               '−${AppMoneyFormatter.format(deduction.amount)}',
-              color: colors.expense,
+              color: colors.ink,
             ),
-          const Divider(height: AppSpacing.md),
+          const Divider(height: AppSpacing.space4),
           row(
             t.freelance.netPayLabel,
             AppMoneyFormatter.format(breakdown.netPay),
-            color: colors.income,
+            color: colors.positive,
             strong: true,
           ),
         ],

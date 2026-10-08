@@ -33,12 +33,12 @@ class AppQuickChip extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           child: DecoratedBox(
-            decoration: BoxDecoration(color: color ?? colors.surfaceMid, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: color ?? colors.surface2, borderRadius: BorderRadius.circular(8)),
             child: Center(
               widthFactor: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                child: Text(label, style: transactionLabelStyle(context, color: colors.textPrimary)),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+                child: Text(label, style: transactionLabelStyle(context, color: colors.ink)),
               ),
             ),
           ),

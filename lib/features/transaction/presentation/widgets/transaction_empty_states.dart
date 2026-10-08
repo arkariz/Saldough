@@ -31,16 +31,16 @@ class TransactionEmptyMonthState extends StatelessWidget {
     return Column(
       children: [
         TransactionSlab(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: const EdgeInsets.all(AppSpacing.space6),
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
+                  horizontal: AppSpacing.space4,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: colors.tinted(colors.pending, 0.15),
+                  color: colors.tinted(colors.warning, 0.15),
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
@@ -50,25 +50,24 @@ class TransactionEmptyMonthState extends StatelessWidget {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: colors.pending,
+                        color: colors.warning,
                         shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.space2),
                     Flexible(
                       child: Text(
                         t.transaction.emptyMonthBadge.toUpperCase(),
                         style: transactionLabelStyle(
                           context,
-                          size: 12,
-                          color: colors.pending,
+                          color: colors.warning,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               Container(
                 width: 160,
                 height: 160,
@@ -77,26 +76,26 @@ class TransactionEmptyMonthState extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      colors.accent.withValues(alpha: 0.16),
-                      colors.accent.withValues(alpha: 0),
+                      colors.brand.withValues(alpha: 0.16),
+                      colors.brand.withValues(alpha: 0),
                     ],
                   ),
                 ),
                 child: const AppIcon(IconKey.transactions, size: 96),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               Text(
                 t.transaction.emptyMonthTitle,
                 style: textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Text(
                 t.transaction.emptyMonthSubtitle,
                 textAlign: TextAlign.center,
-                style: textTheme.bodyLarge?.copyWith(color: colors.textMuted),
+                style: textTheme.bodyLarge?.copyWith(color: colors.ink2),
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               SizedBox(
                 width: double.infinity,
                 child: AppButton(
@@ -107,9 +106,9 @@ class TransactionEmptyMonthState extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space4),
         TransactionSlab(
-          color: colors.surfaceMid,
+          color: colors.surface2,
           shadow: 0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,7 +116,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
               Row(
                 children: [
                   const AppIcon(IconKey.transactions, size: 22),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.space2),
                   Expanded(
                     child: Text(
                       t.transaction.emptyGuideTitle,
@@ -126,21 +125,21 @@ class TransactionEmptyMonthState extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               _GuideRow(
                 icon: IconKey.income,
                 color: colors.kindInk(TransactionKind.income),
                 title: t.transaction.emptyGuideIncomeTitle,
                 description: t.transaction.emptyGuideIncomeDescription,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               _GuideRow(
                 icon: IconKey.expense,
                 color: colors.kindInk(TransactionKind.expense),
                 title: t.transaction.emptyGuideExpenseTitle,
                 description: t.transaction.emptyGuideExpenseDescription,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               _GuideRow(
                 icon: IconKey.transfer,
                 color: colors.kindInk(TransactionKind.transfer),
@@ -150,16 +149,16 @@ class TransactionEmptyMonthState extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space4),
         Row(
           children: [
-            AppIcon(IconKey.locked, size: 18, color: colors.textMuted),
-            const SizedBox(width: AppSpacing.sm),
+            AppIcon(IconKey.locked, size: 18, color: colors.ink2),
+            const SizedBox(width: AppSpacing.space2),
             Expanded(
               child: Text(
                 t.transaction.trustFooterMessage,
                 textAlign: TextAlign.center,
-                style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
               ),
             ),
           ],
@@ -190,26 +189,26 @@ class _GuideRow extends StatelessWidget {
     return TransactionSlab(
       radius: 4,
       shadow: 0,
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppIcon(icon, size: 32, color: color),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title.toUpperCase(),
-                  style: transactionLabelStyle(context, size: 12, color: color),
+                  style: transactionLabelStyle(context, color: color),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   description,
                   style: Theme.of(
                     context,
-                  ).textTheme.bodyMedium?.copyWith(color: colors.textPrimary),
+                  ).textTheme.bodyMedium?.copyWith(color: colors.ink),
                 ),
               ],
             ),
@@ -236,7 +235,7 @@ class TransactionEmptyFilterState extends StatelessWidget {
     final colors = context.appColors;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -245,13 +244,13 @@ class TransactionEmptyFilterState extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.transaction.emptyFilterSubtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.textMuted),
+              style: TextStyle(color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(
               label: t.transaction.clearFiltersButton,
               onPressed: onClearFilters,
@@ -313,13 +312,13 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
 
     if (isSearching) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.md),
+        padding: const EdgeInsets.only(top: AppSpacing.space4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-            const SizedBox(width: AppSpacing.sm),
-            Text(t.transaction.crossMonthSearchingLabel, style: TextStyle(color: colors.textMuted)),
+            const SizedBox(width: AppSpacing.space2),
+            Text(t.transaction.crossMonthSearchingLabel, style: TextStyle(color: colors.ink2)),
           ],
         ),
       );
@@ -327,7 +326,7 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
 
     if (!hasScanned) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.md),
+        padding: const EdgeInsets.only(top: AppSpacing.space4),
         child: Center(
           child: AppButton.secondary(label: t.transaction.crossMonthSearchButton, onPressed: onSearch),
         ),
@@ -336,16 +335,16 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
 
     if (groups.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.md),
+        padding: const EdgeInsets.only(top: AppSpacing.space4),
         child: Column(
           children: [
             Text(
               t.transaction.crossMonthNoMoreResults,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.textMuted),
+              style: TextStyle(color: colors.ink2),
             ),
             if (!exhausted) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               AppButton.secondary(label: t.transaction.crossMonthLoadMoreButton, onPressed: onSearch),
             ],
           ],
@@ -354,18 +353,18 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
+      padding: const EdgeInsets.only(top: AppSpacing.space4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             t.transaction.crossMonthResultsHeader.toUpperCase(),
-            style: transactionLabelStyle(context, size: 12, color: colors.textMuted),
+            style: transactionLabelStyle(context, color: colors.ink2),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[
             TransactionDateGroupCard(group: group, walletsById: walletsById, onTransactionTap: onTransactionTap),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
           ],
           if (!exhausted)
             Center(
@@ -392,23 +391,23 @@ class TransactionLoadErrorState extends StatelessWidget {
     final colors = context.appColors;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppIcon(IconKey.overBudget, size: 48, color: colors.overBudget),
-            const SizedBox(height: AppSpacing.md),
+            AppIcon(IconKey.overBudget, size: 48, color: colors.danger),
+            const SizedBox(height: AppSpacing.space4),
             Text(
               t.transaction.loadErrorTitle,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.transaction.loadErrorSubtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.textMuted),
+              style: TextStyle(color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.common.retry, onPressed: onRetry),
           ],
         ),

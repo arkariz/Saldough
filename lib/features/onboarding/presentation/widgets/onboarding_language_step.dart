@@ -24,19 +24,19 @@ class OnboardingLanguageStep extends StatelessWidget {
     final colors = context.appColors;
     return ListView(
       key: const ValueKey('onboarding-language-list'),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       children: [
         AppHardCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Semantics(header: true, child: Text(t.onboarding.languageTitle, style: textTheme.headlineSmall)),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Text(t.onboarding.languageBody, style: textTheme.bodyMedium),
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space4),
         for (final locale in AppLocale.values) ...[
           Semantics(
             selected: locale == selected,
@@ -47,8 +47,8 @@ class OnboardingLanguageStep extends StatelessWidget {
               onTap: () => onSelected(locale),
               child: AppHardCard(
                 pressed: locale == selected,
-                color: locale == selected ? colors.tinted(colors.accent, 0.18) : null,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                color: locale == selected ? colors.tinted(colors.brand, 0.18) : null,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                 child: Row(
                   children: [
                     Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
@@ -58,7 +58,7 @@ class OnboardingLanguageStep extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
         ],
       ],
     );

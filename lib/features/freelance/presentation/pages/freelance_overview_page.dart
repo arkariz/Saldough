@@ -62,12 +62,12 @@ class _LoadError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(t.freelance.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.common.retry, onPressed: onRetry),
           ],
         ),
@@ -88,10 +88,10 @@ class _Overview extends StatelessWidget {
       tour: TourId.freelance,
       ready: state.projects.isNotEmpty,
       child: ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
       children: [
         FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.ruleBody),
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.space4),
         if (state.projects.isEmpty)
           FreelanceEmptyState(
             badge: t.freelance.projectsEmptyBadge,
@@ -107,11 +107,11 @@ class _Overview extends StatelessWidget {
             projectCount: state.projects.length,
             payments: state.paymentTotals,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AppSectionLabel(t.freelance.projectsLabel),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           AddProjectCard(onTap: () => addProject(context)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           for (final (i, project) in state.projectsByNextPayment.indexed) ...[
             SpotlightTarget(
               spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
@@ -122,7 +122,7 @@ class _Overview extends StatelessWidget {
                 onTap: () => openFreelanceProject(context, project),
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
           ],
         ],
       ],

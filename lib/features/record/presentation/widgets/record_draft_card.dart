@@ -22,16 +22,16 @@ class RecordDraftCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(t.record.draftCheckTitle, style: textTheme.titleSmall),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             for (final issue in DraftIssue.values)
               if (draft.issues.contains(issue))
                 Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.space1),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const AppIcon(IconKey.info, size: 18),
-                      const SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.space1),
                       Expanded(child: Text(draftIssueMessage(issue), style: textTheme.bodyMedium)),
                     ],
                   ),

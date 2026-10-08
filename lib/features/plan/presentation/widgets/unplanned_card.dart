@@ -44,13 +44,13 @@ class UnplannedCard extends StatelessWidget {
       final textTheme = Theme.of(sheetContext).textTheme;
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.all(AppSpacing.space4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(t.plan.infoTitle, style: textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               for (final line in [
                 t.plan.infoIncome,
                 t.plan.infoBills,
@@ -59,7 +59,7 @@ class UnplannedCard extends StatelessWidget {
                 t.plan.infoResult,
               ])
                 Text(line, style: textTheme.bodyMedium),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Text(t.plan.infoNotBalance, style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
             ],
           ),
@@ -85,8 +85,8 @@ class UnplannedCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.overBudget : null),
-          const SizedBox(height: AppSpacing.sm),
+          HeroAmount(AppMoneyFormatter.format(remaining), color: remaining < 0 ? colors.danger : null),
+          const SizedBox(height: AppSpacing.space2),
           _Row(label: t.plan.incomeRow, amount: plan.plannedIncome, onTap: onShowRecurring),
           _Row(label: t.plan.billsRow, amount: -plan.plannedRecurringOut, onTap: onShowRecurring),
           _Row(label: t.plan.budgetRow, amount: -plan.budgetPlanned, onTap: onShowBudget),

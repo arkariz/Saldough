@@ -76,10 +76,10 @@ class RecordAmountField extends StatelessWidget {
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.sm,
+            spacing: AppSpacing.space2,
             runSpacing: 2,
             children: [
-              Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+              Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -94,17 +94,17 @@ class RecordAmountField extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-            decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+            decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
                 Text(
                   ActiveCurrency.value.symbol,
-                  style: PixelTypography.tabularMono(context, fontSize: 16, color: ink),
+                  style: context.numberStyles.amount.copyWith(color: ink),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: TextField(
                     controller: controller,
@@ -119,9 +119,9 @@ class RecordAmountField extends StatelessWidget {
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                      contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
                       hintText: '0',
-                      hintStyle: bigStyle?.copyWith(color: colors.textMuted.withValues(alpha: 0.5)),
+                      hintStyle: bigStyle?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
                     ),
                     onChanged: (_) => onChanged?.call(),
                   ),
@@ -129,16 +129,16 @@ class RecordAmountField extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
+            spacing: AppSpacing.space1,
+            runSpacing: AppSpacing.space1,
             children: [
               for (final amount in quickAmounts)
                 AppQuickChip(label: formatQuickAmount(amount), onTap: () => _addQuickAmount(amount)),
               AppQuickChip(
                 label: t.record.clearAmountAction,
-                color: colors.tinted(colors.pending, 0.22),
+                color: colors.tinted(colors.warning, 0.22),
                 onTap: () => _setText(''),
               ),
             ],

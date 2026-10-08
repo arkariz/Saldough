@@ -12,7 +12,7 @@ class AppCard extends StatelessWidget {
   /// Membuat [AppCard] dengan [child] dan padding/sudut opsional.
   const AppCard({
     required this.child,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding = const EdgeInsets.all(AppSpacing.space4),
     this.borderRadius,
     this.elevation = AppElevation.md,
     super.key,
@@ -39,10 +39,10 @@ class AppCard extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: colors.cardBackground,
+        color: colors.surface,
         borderRadius: radius,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-        boxShadow: elevation > 0 ? AppElevation.hardShadow(colors.edge, offset: elevation) : null,
+        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+        boxShadow: elevation > 0 ? AppElevation.hardShadow(colors.lineStrong, offset: elevation) : null,
       ),
       child: child,
     );

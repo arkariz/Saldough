@@ -171,16 +171,16 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
       appBar: AppBar(title: Text(texts.patternTitle)),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
           child: AppButton(label: texts.save, onPressed: _canSave ? _save : null),
         ),
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.all(AppSpacing.space4),
           children: [
             AppSectionLabel(texts.patternSampleLabel),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             TextField(
               key: const ValueKey('pattern-sample'),
               controller: _sample,
@@ -194,9 +194,9 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               }),
             ),
             if (words.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppSectionLabel(texts.patternMarkLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppSegmented<TemplateWordRole>(
                 key: const ValueKey('pattern-brush'),
                 options: [
@@ -207,30 +207,30 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 selected: _brush,
                 onChanged: (brush) => setState(() => _brush = brush),
               ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(texts.patternInstructions, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space1),
+              Text(texts.patternInstructions, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+              const SizedBox(height: AppSpacing.space2),
               Wrap(
-                spacing: AppSpacing.xs,
-                runSpacing: AppSpacing.xs,
+                spacing: AppSpacing.space1,
+                runSpacing: AppSpacing.space1,
                 children: [
                   for (final (i, word) in words.indexed)
                     _WordChip(word: word.text, role: _roles[i], onTap: () => _mark(i, word.text)),
                 ],
               ),
               if (_markError != null) ...[
-                const SizedBox(height: AppSpacing.xs),
-                Text(_markError!, style: textTheme.bodySmall?.copyWith(color: colors.expense)),
+                const SizedBox(height: AppSpacing.space1),
+                Text(_markError!, style: textTheme.bodySmall?.copyWith(color: colors.danger)),
               ],
             ],
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             if (_template.text.trim().isNotEmpty && !_canSave)
-              Text(texts.patternInvalid, style: textTheme.bodySmall?.copyWith(color: colors.expense))
+              Text(texts.patternInvalid, style: textTheme.bodySmall?.copyWith(color: colors.danger))
             else if (preview != null)
               AppHardCard(
                 key: const ValueKey('pattern-preview'),
                 elevation: AppHardElevation.flat,
-                color: Color.alphaBlend(colors.income.withValues(alpha: 0.12), colors.cardBackground),
+                color: Color.alphaBlend(colors.positive.withValues(alpha: 0.12), colors.surface),
                 child: Text(
                   [
                     texts.patternPreview(amount: preview.amountText),
@@ -248,21 +248,21 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 ),
               )
             else ...[
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(texts.patternsTitle),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               TextField(
                 key: const ValueKey('pattern-template'),
                 controller: _template,
                 minLines: 1,
                 maxLines: 4,
-                style: textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+                style: textTheme.bodyMedium,
                 onChanged: (_) => setState(() {}),
               ),
             ],
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.space6),
             AppSectionLabel(texts.patternKindLabel),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             AppSegmented<_KindChoice>(
               key: const ValueKey('pattern-kind'),
               options: [
@@ -273,10 +273,10 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               selected: kindChoice,
               onChanged: _setKind,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             if (_isTransfer) ...[
               AppSectionLabel(texts.transferDirectionLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppSegmented<NotificationPatternKind>(
                 options: [
                   (NotificationPatternKind.transferOut, texts.kindExpense),
@@ -285,9 +285,9 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 selected: _kind,
                 onChanged: (kind) => setState(() => _kind = kind),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(texts.patternTransferWallet, hint: texts.advancedHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppMenuSelectButton<String>(
                 icon: transferWallet == null ? IconKey.wallets : walletIconKey(transferWallet.iconKey),
                 label: transferWallet?.name ?? texts.patternTransferWalletNone,
@@ -302,7 +302,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               ),
             ] else ...[
               AppSectionLabel(texts.patternCategory, hint: texts.advancedHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppMenuSelectButton<String>(
                 icon: selectedCategory == null ? IconKey.categoryOther : categoryIcon(selectedCategory),
                 label: selectedCategory?.name ?? texts.patternNoCategory,
@@ -314,7 +314,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 onSelected: (id) => setState(() => _categoryId = id),
               ),
             ],
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.space6),
             TextField(
               controller: _label,
               maxLength: 40,
@@ -341,9 +341,9 @@ class _WordChip extends StatelessWidget {
     final colors = context.appColors;
     final texts = t.notificationCapture;
     final (color, tag) = switch (role) {
-      TemplateWordRole.amount => (colors.income, texts.roleAmount),
-      TemplateWordRole.note => (colors.transfer, texts.roleNote),
-      TemplateWordRole.ignore => (colors.textMuted, texts.roleIgnore),
+      TemplateWordRole.amount => (colors.positive, texts.roleAmount),
+      TemplateWordRole.note => (colors.ink2, texts.roleNote),
+      TemplateWordRole.ignore => (colors.ink2, texts.roleIgnore),
       TemplateWordRole.literal || null => (null, null),
     };
     return ActionChip(

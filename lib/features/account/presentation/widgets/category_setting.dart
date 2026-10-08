@@ -29,7 +29,7 @@ class CategorySettingEntry extends StatelessWidget {
                   Text(t.category.accountEntryTitle, style: textTheme.titleSmall),
                   Text(
                     t.category.accountEntryBody,
-                    style: textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+                    style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
                   ),
                 ],
               ),

@@ -43,13 +43,13 @@ class AppFormTextField extends StatelessWidget {
     return TransactionSlab(
       radius: 4,
       shadow: 2,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
       child: TextField(
         controller: controller,
         autofocus: autofocus,
         maxLength: maxLength,
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: colors.accent,
+        cursorColor: colors.brand,
         onChanged: onChanged,
         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
         decoration: InputDecoration(
@@ -57,7 +57,7 @@ class AppFormTextField extends StatelessWidget {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: hint,
-          hintStyle: TextStyle(color: colors.textMuted),
+          hintStyle: TextStyle(color: colors.ink2),
         ),
       ),
     );
@@ -96,17 +96,17 @@ class AppFormMoneyField extends StatelessWidget {
     return TransactionSlab(
       radius: 4,
       shadow: 2,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       child: Row(
         children: [
-          Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
-          const SizedBox(width: AppSpacing.sm),
+          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: TextField(
               controller: controller,
               keyboardType: moneyKeyboardType,
               inputFormatters: [MoneyInputFormatter()],
-              cursorColor: colors.accent,
+              cursorColor: colors.brand,
               style: style,
               onChanged: onChanged,
               decoration: InputDecoration(
@@ -114,9 +114,9 @@ class AppFormMoneyField extends StatelessWidget {
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
                 hintText: '0',
-                hintStyle: style?.copyWith(color: colors.textMuted.withValues(alpha: 0.5)),
+                hintStyle: style?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
               ),
             ),
           ),
@@ -149,12 +149,12 @@ class AppFormQuantityField extends StatelessWidget {
     return TransactionSlab(
       radius: 4,
       shadow: 2,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
-        cursorColor: colors.accent,
+        cursorColor: colors.brand,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
         onChanged: onChanged,
         decoration: InputDecoration(
@@ -162,9 +162,9 @@ class AppFormQuantityField extends StatelessWidget {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
           hintText: '1',
-          hintStyle: TextStyle(color: colors.textMuted.withValues(alpha: 0.5)),
+          hintStyle: TextStyle(color: colors.ink2.withValues(alpha: 0.5)),
         ),
       ),
     );
@@ -197,20 +197,20 @@ class AppFormHeader extends StatelessWidget {
               width: 44,
               height: 44,
               alignment: Alignment.center,
-              decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
               child: const AppIcon(IconKey.chevronLeft, size: 28),
             ),
           ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
             child: Column(
               children: [
                 Text(
                   stepLabel.toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.accent),
+                  style: transactionLabelStyle(context, color: colors.brand),
                 ),
                 Text(
                   title,

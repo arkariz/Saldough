@@ -9,7 +9,7 @@ enum AppButtonVariant {
 
   /// Latar kartu, garis tepi 2px, TANPA bayangan (elevasi tingkat 0
   /// ADR-015). Aksi pendamping, termasuk aksi destruktif di luar dialog
-  /// konfirmasi (teks [AppColorsExtension.expense], bukan isian merah).
+  /// konfirmasi (teks [AppColors.expense], bukan isian merah).
   secondary,
 
   /// Tautan teks beraksen tanpa bingkai maupun bayangan (pola
@@ -23,7 +23,7 @@ enum AppButtonVariant {
 ///
 /// Bawaan [AppButtonVariant.primary] memakai `colorScheme.primary`. Pakai
 /// [color] untuk varian primary lain, misalnya
-/// [AppColorsExtension.expense] untuk aksi destruktif **di dalam dialog
+/// [AppColors.expense] untuk aksi destruktif **di dalam dialog
 /// konfirmasi** -- di luar dialog, aksi destruktif memakai
 /// [AppButton.secondary] dengan [textColor] `expense` (ADR-020 §3.1).
 ///
@@ -110,7 +110,7 @@ class _AppButtonState extends State<AppButton> {
 
     final colors = context.appColors;
     final isSecondary = widget.variant == AppButtonVariant.secondary;
-    final fill = isSecondary ? colors.surfaceMid : widget.color ?? Theme.of(context).colorScheme.primary;
+    final fill = isSecondary ? colors.surface2 : widget.color ?? Theme.of(context).colorScheme.primary;
     final isDisabled = widget.onPressed == null;
     final leadingIcon = widget.icon;
     // Hanya primary punya bayangan untuk ditarik saat ditekan (ADR-020 §3.1
@@ -118,12 +118,12 @@ class _AppButtonState extends State<AppButton> {
     final hasElevation = widget.variant == AppButtonVariant.primary;
     final pressed = hasElevation && _pressed && !isDisabled;
     final style = ElevatedButton.styleFrom(
-      backgroundColor: isDisabled ? colors.textMuted.withValues(alpha: 0.3) : fill,
-      foregroundColor: isSecondary ? widget.textColor ?? colors.textPrimary : null,
+      backgroundColor: isDisabled ? colors.ink2.withValues(alpha: 0.3) : fill,
+      foregroundColor: isSecondary ? widget.textColor ?? colors.ink : null,
       // Bentuk ADR-015: radius pixel 4 dan garis tepi 2px (T-7.5).
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.pixelSmAll,
-        side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
     );
 
@@ -142,7 +142,7 @@ class _AppButtonState extends State<AppButton> {
           borderRadius: AppRadius.pixelSmAll,
           boxShadow: !hasElevation || isDisabled
               ? null
-              : AppElevation.hardShadow(colors.edge, offset: pressed ? 0 : AppElevation.sm),
+              : AppElevation.hardShadow(colors.lineStrong, offset: pressed ? 0 : AppElevation.sm),
         ),
         child: leadingIcon != null
             ? ElevatedButton.icon(
@@ -163,7 +163,7 @@ class _AppButtonState extends State<AppButton> {
   Widget _buildTertiary(BuildContext context) {
     final colors = context.appColors;
     final isDisabled = widget.onPressed == null;
-    final ink = isDisabled ? colors.textMuted : colors.accent;
+    final ink = isDisabled ? colors.ink2 : colors.brand;
     return Semantics(
       button: true,
       enabled: !isDisabled,

@@ -32,7 +32,7 @@ Future<bool> showConfirmDelete(
         ),
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(true),
-          style: TextButton.styleFrom(foregroundColor: dialogContext.appColors.expense),
+          style: TextButton.styleFrom(foregroundColor: dialogContext.appColors.ink),
           child: Text(confirmLabel ?? t.common.delete),
         ),
       ],

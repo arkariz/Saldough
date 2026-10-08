@@ -58,7 +58,7 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
     if (_pending == 0) return const SizedBox.shrink();
     final texts = t.notificationCapture;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
+      padding: const EdgeInsets.only(top: AppSpacing.space4),
       child: AppTappable(
         key: const ValueKey('capture-inbox-banner'),
         label: texts.banner(n: _pending),
@@ -67,11 +67,11 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
           child: Row(
             children: [
               const AppIcon(IconKey.pending),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Text(texts.banner(n: _pending), style: Theme.of(context).textTheme.titleSmall),
               ),
-              Text(texts.bannerAction, style: TextStyle(color: context.appColors.accent)),
+              Text(texts.bannerAction, style: TextStyle(color: context.appColors.brand)),
               const AppIcon(IconKey.chevronRight),
             ],
           ),

@@ -18,7 +18,7 @@ class NotificationCaptureSettingEntry extends StatelessWidget {
     if (defaultTargetPlatform != TargetPlatform.android) return const SizedBox.shrink();
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      padding: const EdgeInsets.only(top: AppSpacing.space2),
       child: AppTappable(
         key: const ValueKey('notification-capture-setting'),
         label: t.notificationCapture.accountEntryTitle,
@@ -33,7 +33,7 @@ class NotificationCaptureSettingEntry extends StatelessWidget {
                     Text(t.notificationCapture.accountEntryTitle, style: textTheme.titleSmall),
                     Text(
                       t.notificationCapture.accountEntryBody,
-                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
                     ),
                   ],
                 ),

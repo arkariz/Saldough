@@ -82,13 +82,13 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
         final perDay = widget.projection.unplannedPerDay;
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.space4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(t.plan.detailsTitle, style: textTheme.titleMedium),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 line(t.plan.detailsNow, widget.projection.startBalance),
                 line(t.plan.detailsIncome, b.income),
                 line(t.plan.detailsBills, -b.recurringOut),
@@ -103,7 +103,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                   widget.projection.endBalance,
                   bold: true,
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(t.plan.unplannedToggle),
@@ -133,15 +133,15 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
     final days = projection.days;
     final selected = _selected == null || _selected! >= days.length ? null : days[_selected!];
     return CustomPaint(
-      painter: _DashedBorderPainter(color: colors.edge),
+      painter: _DashedBorderPainter(color: colors.lineStrong),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.space4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.plan.balanceTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+            Text(t.plan.balanceTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
             if (widget.wallets.length > 1) ...[
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -152,7 +152,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                       onTap: () => widget.onWalletChanged(null),
                     ),
                     for (final wallet in widget.wallets) ...[
-                      const SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.space1),
                       AppChoiceChip(
                         label: wallet.name,
                         selected: widget.walletId == wallet.id,
@@ -163,7 +163,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                 ),
               ),
             ],
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             if (widget.isFuture && days.isNotEmpty)
               _Tile(
                 label: t.plan.startOf(date: CycleMonthFormatter.formatDayMonth(days.first.date)),
@@ -189,7 +189,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
               ],
             ),
             if (days.length > 1) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               SizedBox(
                 height: 18,
                 child: selected == null
@@ -226,9 +226,9 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                         size: Size(constraints.maxWidth, 72),
                         painter: _ChartPainter(
                           balances: [for (final d in days) d.balance],
-                          line: colors.textPrimary,
-                          zero: colors.overBudget,
-                          marker: colors.accent,
+                          line: colors.ink,
+                          zero: colors.danger,
+                          marker: colors.brand,
                           lowIndex: low == null ? null : days.indexOf(low),
                           selectedIndex: _selected,
                         ),
@@ -241,12 +241,12 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                 children: [
                   Text(
                     widget.isFuture ? CycleMonthFormatter.formatDayMonth(days.first.date) : t.plan.todayLabel,
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                   const Spacer(),
                   Text(
                     CycleMonthFormatter.formatDayMonth(widget.lastDay),
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                 ],
               ),
@@ -277,7 +277,7 @@ class _Tile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+        Text(label, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
         Semantics(
           label: t.plan.approx(amount: formatted),
           excludeSemantics: true,
@@ -286,7 +286,7 @@ class _Tile extends StatelessWidget {
               '≈$formatted',
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: warn ? colors.overBudget : null,
+                color: warn ? colors.danger : null,
               ),
             ),
           ),

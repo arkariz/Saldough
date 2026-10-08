@@ -53,7 +53,7 @@ class RecordSavingDialog extends StatelessWidget {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Text(t.record.savingMessage),
               ],
             ),

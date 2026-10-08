@@ -15,8 +15,8 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
         children: [
           Expanded(
@@ -24,12 +24,12 @@ class _TopBar extends StatelessWidget {
               onTap: () => Navigator.of(context).maybePop(),
               child: Row(
                 children: [
-                  const SizedBox(width: AppSpacing.xs),
-                  AppIcon(IconKey.chevronLeft, color: colors.textPrimary),
-                  const SizedBox(width: AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.space1),
+                  AppIcon(IconKey.chevronLeft, color: colors.ink),
+                  const SizedBox(width: AppSpacing.space1),
                   Text(
                     t.transaction.detailBackLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, size: 12, color: colors.textPrimary),
+                    style: transactionLabelStyle(context, color: colors.ink),
                   ),
                 ],
               ),
@@ -38,17 +38,17 @@ class _TopBar extends StatelessWidget {
           if (onEdit case final onEdit?)
             _SquareAction(
               icon: IconKey.edit,
-              color: colors.cardBackground,
-              iconColor: colors.textPrimary,
+              color: colors.surface,
+              iconColor: colors.ink,
               semanticLabel: t.transaction.editAction,
               onTap: onEdit,
             ),
           if (onDelete case final onDelete?) ...[
-            const SizedBox(width: AppSpacing.xs),
+            const SizedBox(width: AppSpacing.space1),
             _SquareAction(
               icon: IconKey.delete,
-              color: colors.tinted(colors.expenseFill, 0.16),
-              iconColor: colors.expense,
+              color: colors.tinted(colors.ink2, 0.16),
+              iconColor: colors.ink,
               semanticLabel: t.transaction.deleteAction,
               onTap: onDelete,
             ),
@@ -130,41 +130,41 @@ class _HeroCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return TransactionSlab(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
           // Kategori + lencana notifikasi asal (ADR-032 §3.10).
           TransactionIcon.of(transaction, size: 56),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
             decoration: BoxDecoration(
               color: colors.tinted(colors.kindFill(kind), 0.16),
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, color: ink)),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(amountText, style: textTheme.headlineMedium?.copyWith(color: ink)),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             transactionTitle(transaction),
             textAlign: TextAlign.center,
             style: textTheme.titleLarge?.copyWith(fontSize: 20),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const AppIcon(IconKey.calendar, size: 16),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               Flexible(
                 child: Text(
                   '${CycleMonthFormatter.formatDateWithWeekday(transaction.date)} • ${transactionTime(transaction.date)}',
-                  style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -208,7 +208,7 @@ class _DetailsCard extends StatelessWidget {
 
     return TransactionSlab(
       shadow: 0,
-      color: colors.surfaceLow,
+      color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -247,12 +247,12 @@ class _DetailsCard extends StatelessWidget {
             const _Gap(),
             Text(
               t.transaction.detailNoteLabel.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Container(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+              padding: const EdgeInsets.all(AppSpacing.space2),
+              decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
               child: Text(
                 '“${tx.note}”',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
@@ -291,13 +291,13 @@ class _BudgetRow extends StatelessWidget {
                 children: [
                   Text(
                     t.transaction.budgetLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.textMuted),
+                    style: transactionLabelStyle(context, color: colors.ink2),
                   ),
                   const SizedBox(height: 2),
                   Row(
                     children: [
                       const AppIcon(IconKey.budget, size: 20),
-                      const SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.space1),
                       Expanded(child: Text('${item.itemName} · ${item.budgetName}', style: _valueStyle(context))),
                     ],
                   ),
@@ -305,7 +305,7 @@ class _BudgetRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       t.transaction.openBudgetAction.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.accent),
+                      style: transactionLabelStyle(context, color: colors.brand),
                     ),
                   ],
                 ],
@@ -326,7 +326,7 @@ class _Gap extends StatelessWidget {
   const _Gap();
 
   @override
-  Widget build(BuildContext context) => const SizedBox(height: AppSpacing.md);
+  Widget build(BuildContext context) => const SizedBox(height: AppSpacing.space4);
 }
 
 /// Satu baris "label ........ nilai": label di kiri, nilai di kanan kalau
@@ -347,10 +347,10 @@ class _Row extends StatelessWidget {
       width: double.infinity,
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
-        spacing: AppSpacing.md,
-        runSpacing: AppSpacing.xs,
+        spacing: AppSpacing.space4,
+        runSpacing: AppSpacing.space1,
         children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted)),
+          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2)),
           value,
         ],
       ),
@@ -367,15 +367,15 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-      decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           AppIcon(categoryIcon(category), size: 18),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           Flexible(
-            child: Text(category.name, style: transactionLabelStyle(context, size: 12, color: colors.textPrimary)),
+            child: Text(category.name, style: transactionLabelStyle(context, color: colors.ink)),
           ),
         ],
       ),
@@ -403,7 +403,7 @@ class _WalletRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey), size: 22),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               Flexible(
                 child: Text(wallet?.name ?? '—', style: _valueStyle(context), textAlign: TextAlign.end),
               ),
@@ -412,7 +412,7 @@ class _WalletRow extends StatelessWidget {
           if (wallet != null)
             Text(
               '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
-              style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+              style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
             ),
         ],
       ),
@@ -442,16 +442,16 @@ class _TransferPair extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _PairCard(label: t.transaction.detailFromLabel, wallet: from, delta: '−$money', deltaColor: colors.expense),
+        _PairCard(label: t.transaction.detailFromLabel, wallet: from, delta: '−$money', deltaColor: colors.ink),
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.space1),
           child: Center(child: AppIcon(IconKey.transfer, size: 28)),
         ),
-        _PairCard(label: t.transaction.detailToLabel, wallet: to, delta: '+$money', deltaColor: colors.income),
-        const SizedBox(height: AppSpacing.md),
+        _PairCard(label: t.transaction.detailToLabel, wallet: to, delta: '+$money', deltaColor: colors.positive),
+        const SizedBox(height: AppSpacing.space4),
         _Row(
           label: t.transaction.detailAmountLabel,
-          value: Text(money, style: PixelTypography.tabularMono(context, color: colors.transfer)),
+          value: Text(money, style: context.numberStyles.amountSm.copyWith(color: colors.ink2)),
         ),
       ],
     );
@@ -474,28 +474,28 @@ class _PairCard extends StatelessWidget {
     final colors = context.appColors;
     final wallet = this.wallet;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.all(AppSpacing.space2),
+      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet.iconKey), size: 32),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.textMuted)),
+                Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.ink2)),
                 Text(wallet?.name ?? '—', style: _valueStyle(context)),
                 if (wallet != null)
                   Text(
                     '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
                     style: transactionLabelStyle(
                       context,
-                      color: colors.textMuted,
+                      color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),
                   ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 // Nominal besar tidak boleh terpotong: kecilkan, bukan elipsis.
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -523,17 +523,17 @@ class _ManualNote extends StatelessWidget {
     final colors = context.appColors;
     return TransactionSlab(
       shadow: 0,
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppIcon(IconKey.locked, size: 20, color: colors.textMuted),
-          const SizedBox(width: AppSpacing.sm),
+          AppIcon(IconKey.locked, size: 20, color: colors.ink2),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
             ),
           ),
         ],
@@ -558,13 +558,13 @@ class _DeleteLink extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppIcon(IconKey.delete, size: 18, color: colors.expense),
-            const SizedBox(width: AppSpacing.xs),
+            AppIcon(IconKey.delete, size: 18, color: colors.danger),
+            const SizedBox(width: AppSpacing.space1),
             Flexible(
               child: Text(
                 t.transaction.deleteAction.toUpperCase(),
                 textAlign: TextAlign.center,
-                style: transactionLabelStyle(context, size: 12, color: colors.expense),
+                style: transactionLabelStyle(context, color: colors.ink),
               ),
             ),
           ],

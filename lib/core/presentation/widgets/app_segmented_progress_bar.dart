@@ -49,9 +49,9 @@ class AppSegmentedProgressBar extends StatelessWidget {
     final colors = context.appColors;
     // `>` bukan `>=`: tepat 100% adalah pos "selesai" (terpakai sama dengan
     // rencana), bukan "lewat anggaran" -- lihat `BudgetItemStatus`.
-    if (value > 1.0) return colors.overBudget;
-    if (value >= 0.7) return colors.pending;
-    return colors.textPrimary;
+    if (value > 1.0) return colors.danger;
+    if (value >= 0.7) return colors.warning;
+    return colors.ink;
   }
 
   @override
@@ -69,7 +69,7 @@ class AppSegmentedProgressBar extends StatelessWidget {
             width: segmentWidth,
             height: segmentHeight,
             decoration: BoxDecoration(
-              color: i < filledSegments ? fillColor : colors.textMuted.withValues(alpha: 0.2),
+              color: i < filledSegments ? fillColor : colors.ink2.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(1),
             ),
           ),

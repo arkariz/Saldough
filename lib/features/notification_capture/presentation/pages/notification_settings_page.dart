@@ -103,7 +103,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
             // Urut dari yang wajib (nyala, izin, aplikasi) ke yang opsional
             // (perilaku), ADR-032 §3.9.
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 NotificationSwitchCard(
                   key: const ValueKey('notification-capture-enabled'),
@@ -113,11 +113,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                   onChanged: (value) => bloc.add(NotificationCaptureToggled(enabled: value)),
                   footer: settings.enabled && state.accessGranted
                       ? Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.space1),
                           child: Row(
                             children: [
-                              AppIcon(IconKey.check, color: colors.income, size: 16),
-                              const SizedBox(width: AppSpacing.xs),
+                              AppIcon(IconKey.check, color: colors.positive, size: 16),
+                              const SizedBox(width: AppSpacing.space1),
                               Text(texts.accessGranted, style: textTheme.bodySmall),
                             ],
                           ),
@@ -126,22 +126,22 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                 ),
                 if (settings.enabled) ...[
                   if (!state.accessGranted) ...[
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                     _AccessWarning(onGrant: () => _requestAccess(context)),
                   ],
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   NotificationNavCard(
                     key: const ValueKey('notification-capture-inbox'),
                     title: texts.inboxEntryTitle,
                     subtitle: texts.inboxEntryBody,
                     onTap: () => unawaited(context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput())),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   AppSectionLabel(texts.sourcesTitle),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   if (settings.sources.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
                       child: Text(texts.sourcesEmpty, style: textTheme.bodyMedium),
                     ),
                   for (final source in settings.sources)
@@ -154,11 +154,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                     AppButton(label: texts.addSource, onPressed: () => _addSource(context))
                   else
                     AppButton.secondary(label: texts.addSource, onPressed: () => _addSource(context)),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(texts.behaviorTitle),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   AppHardCard(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -185,7 +185,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                               ),
                             ),
                           ),
-                        Divider(color: colors.divider, height: AppSpacing.md),
+                        Divider(color: colors.line, height: AppSpacing.space4),
                         NotificationSwitchRow(
                           key: const ValueKey('notification-reminder'),
                           label: texts.reminderLabel,
@@ -199,17 +199,17 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                         ),
                         if (reminder && !state.canPostReminders)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                            padding: const EdgeInsets.only(bottom: AppSpacing.space1),
                             child: Text(
                               texts.reminderPermissionDenied,
-                              style: textTheme.bodySmall?.copyWith(color: colors.expense),
+                              style: textTheme.bodySmall?.copyWith(color: colors.ink),
                             ),
                           ),
                       ],
                     ),
                   ),
                   if (!kReleaseMode) ...[
-                    const SizedBox(height: AppSpacing.xl),
+                    const SizedBox(height: AppSpacing.space8),
                     _DebugSamples(
                       samples: state.debugSamples,
                       onAddShellSource: () => openNotificationSourcePage(
@@ -248,14 +248,14 @@ class _AccessWarning extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
     return AppHardCard(
-      color: Color.alphaBlend(colors.accent.withValues(alpha: 0.12), colors.cardBackground),
+      color: Color.alphaBlend(colors.brand.withValues(alpha: 0.12), colors.surface),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(texts.accessMissingTitle, style: textTheme.titleSmall),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(texts.accessMissingBody, style: textTheme.bodyMedium),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           AppButton(label: texts.accessAction, onPressed: onGrant),
         ],
       ),
@@ -279,13 +279,13 @@ class _SourceRow extends StatelessWidget {
     final noFilter = source.keywords.every((k) => k.trim().isEmpty);
     final (subtitle, color) = switch ((source.enabled, noFilter, walletName)) {
       (false, _, _) => (texts.sourcePaused, null),
-      (true, true, _) => (texts.sourceKeywordsNone, colors.expense),
-      (true, false, null) => (texts.sourceNoWallet, colors.overBudget),
+      (true, true, _) => (texts.sourceKeywordsNone, colors.ink),
+      (true, false, null) => (texts.sourceNoWallet, colors.danger),
       (true, false, final String name) => (texts.sourceWallet(name: name), null),
     };
     return NotificationNavCard(
       title: source.appLabel,
-      titleColor: source.enabled ? null : colors.textMuted,
+      titleColor: source.enabled ? null : colors.ink2,
       subtitle: subtitle,
       subtitleColor: color,
       onTap: onTap,
@@ -314,12 +314,12 @@ class _DebugSamples extends StatelessWidget {
             IconButton(onPressed: onRefresh, icon: const Icon(Icons.refresh)),
           ],
         ),
-        Text(texts.debugSamplesHint, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-        const SizedBox(height: AppSpacing.sm),
+        Text(texts.debugSamplesHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+        const SizedBox(height: AppSpacing.space2),
         if (samples.isEmpty) Text(texts.debugSamplesEmpty, style: textTheme.bodyMedium),
         for (final sample in samples)
           Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            padding: const EdgeInsets.only(bottom: AppSpacing.space2),
             child: AppTappable(
               label: sample.packageName,
               onTap: () async {
@@ -332,7 +332,7 @@ class _DebugSamples extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sample.packageName, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                    Text(sample.packageName, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                     Text(sample.text, style: textTheme.bodyMedium),
                   ],
                 ),

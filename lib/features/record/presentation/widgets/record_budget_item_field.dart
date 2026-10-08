@@ -67,7 +67,7 @@ class RecordBudgetItemOutOfPeriodNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       t.record.budgetItemOutOfPeriod(name: option.budgetName),
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.pending),
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.warning),
     );
   }
 }
@@ -100,7 +100,7 @@ class RecordBudgetItemField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.budgetItemLabel, hint: t.record.optionalHint),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         AppMenuSelectButton<String>(
           icon: IconKey.budget,
           label: selected == null ? t.record.budgetItemNone : '${selected.itemName} · ${selected.budgetName}',
@@ -115,7 +115,7 @@ class RecordBudgetItemField extends StatelessWidget {
           onSelected: onSelected,
         ),
         const SizedBox(height: 4),
-        Text(t.record.budgetItemHelp, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+        Text(t.record.budgetItemHelp, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
       ],
     );
   }

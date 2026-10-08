@@ -68,15 +68,15 @@ class RecordFormFrame extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Header(kind: kind, title: title, isEditing: isEditing, onBack: onBack),
-              if (kindSwitcher != null) ...[const SizedBox(height: AppSpacing.md), kindSwitcher!],
-              if (notice != null) ...[const SizedBox(height: AppSpacing.md), notice!],
-              for (final child in children) ...[const SizedBox(height: AppSpacing.md), child],
-              const SizedBox(height: AppSpacing.lg),
+              if (kindSwitcher != null) ...[const SizedBox(height: AppSpacing.space4), kindSwitcher!],
+              if (notice != null) ...[const SizedBox(height: AppSpacing.space4), notice!],
+              for (final child in children) ...[const SizedBox(height: AppSpacing.space4), child],
+              const SizedBox(height: AppSpacing.space6),
               // Tanpa catatan kaki "tidak mendebit uang" di tiap formulir:
               // penafian itu cukup sekali per alur (onboarding dan tur CATAT,
               // rincian transaksi, rincian dompet), dan label tombol "Catat…"
@@ -110,19 +110,19 @@ class _Header extends StatelessWidget {
             width: 44,
             height: 44,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
             child: const AppIcon(IconKey.chevronLeft, size: 28),
           ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
             child: Column(
               children: [
                 Text(
                   (isEditing ? t.record.editStepLabel : t.record.stepLabel).toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.accent),
+                  style: transactionLabelStyle(context, color: colors.brand),
                 ),
                 Text(
                   title,
@@ -141,7 +141,7 @@ class _Header extends StatelessWidget {
             color: colors.iconTile(colors.kindFill(kind)),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
-              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.edge, 0.4)!, offset: const Offset(0, 2)),
+              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.lineStrong, 0.4)!, offset: const Offset(0, 2)),
             ],
           ),
           child: AppIcon(recordKindIcon(kind), size: 28),
@@ -174,8 +174,8 @@ class RecordNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.tinted(colors.pending, 0.14),
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      color: colors.tinted(colors.warning, 0.14),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       shadow: flat ? 0 : 3,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,18 +185,18 @@ class RecordNotice extends StatelessWidget {
             height: 28,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: colors.tinted(colors.pending, 0.3),
+              color: colors.tinted(colors.warning, 0.3),
               borderRadius: BorderRadius.circular(4),
             ),
             child: const AppIcon(IconKey.overBudget, size: 20),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
-                Text(body, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                Text(body, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
           ),
@@ -226,7 +226,7 @@ class RecordSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       decoration: BoxDecoration(
         color: colors.tinted(colors.kindFill(kind), 0.16),
         borderRadius: BorderRadius.circular(8),
@@ -235,7 +235,7 @@ class RecordSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const AppIcon(IconKey.check, size: 20),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

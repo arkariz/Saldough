@@ -90,14 +90,14 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
         children: [
           Positioned.fill(
             child: PixelSparkle(
-              color: colors.pending.withValues(alpha: 0.7),
+              color: colors.warning.withValues(alpha: 0.7),
               count: widget.index == 4 ? 12 : 6,
               seed: 11 + widget.index,
               enabled: moving,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space12, vertical: AppSpacing.space2),
             child: PixelBob(
               enabled: moving,
               child: Image.asset(
@@ -143,7 +143,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
               loop: _loop,
               from: const Alignment(0.95, 0.7),
               to: const Alignment(0.95, -0.7),
-              color: colors.textPrimary,
+              color: colors.ink,
             ),
           ),
           pop(const Alignment(0.95, -0.72), const _Tile(IconKey.wallets, size: 48), 900),
@@ -165,7 +165,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
               loop: _loop,
               from: const Alignment(-0.95, -0.95),
               to: const Alignment(-0.95, -0.45),
-              child: _Token(colors.income),
+              child: _Token(colors.positive),
             ),
           ),
           const Align(alignment: Alignment(-0.95, -0.4), child: _Tile(IconKey.income)),
@@ -175,7 +175,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
               loop: _loop,
               from: const Alignment(-0.95, 0.3),
               to: const Alignment(-0.95, 0.85),
-              child: _Token(colors.expense),
+              child: _Token(colors.ink),
             ),
           ),
           const Align(alignment: Alignment(0.95, -0.3), child: _Tile(IconKey.walletBank)),
@@ -186,7 +186,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
               from: const Alignment(0.95, -0.1),
               to: const Alignment(0.95, 0.3),
               pingPong: true,
-              child: _Token(colors.transfer),
+              child: _Token(colors.ink2),
             ),
           ),
         ];
@@ -196,7 +196,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
           for (final (i, x) in [-0.6, 0.0, 0.6].indexed)
             pop(
               Alignment(x, -0.95),
-              _Tile(IconKey.check, size: 36, tint: colors.textPrimary),
+              _Tile(IconKey.check, size: 36, tint: colors.ink),
               300 + i * 250,
               phase: i / 3,
             ),
@@ -233,9 +233,9 @@ class _Tile extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: colors.cardBackground,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-        boxShadow: AppElevation.hardShadow(colors.edge, offset: AppElevation.pixelCard),
+        color: colors.surface,
+        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+        boxShadow: AppElevation.hardShadow(colors.lineStrong, offset: AppElevation.pixelCard),
       ),
       child: tint == null
           ? AppIcon(icon, size: size * 0.55)
@@ -260,7 +260,7 @@ class _Token extends StatelessWidget {
       height: 12,
       decoration: BoxDecoration(
         color: color,
-        border: Border.all(color: context.appColors.edge, width: AppBorder.pixelThick),
+        border: Border.all(color: context.appColors.lineStrong, width: AppBorder.pixelThick),
       ),
     );
   }
@@ -430,9 +430,9 @@ class _SegmentFill extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-            color: colors.cardBackground,
-            border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.edge, offset: AppElevation.pixelCard),
+            color: colors.surface,
+            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+            boxShadow: AppElevation.hardShadow(colors.lineStrong, offset: AppElevation.pixelCard),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -442,7 +442,7 @@ class _SegmentFill extends StatelessWidget {
                   width: 22,
                   height: 12,
                   margin: EdgeInsets.only(left: i == 0 ? 0 : 3),
-                  color: i < filled ? colors.textPrimary : colors.divider,
+                  color: i < filled ? colors.ink : colors.line,
                 ),
             ],
           ),

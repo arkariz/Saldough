@@ -122,7 +122,7 @@ class VoiceCaptureSheet extends StatelessWidget {
         final tappable = state.phase == VoiceCapturePhase.idle || state.phase == VoiceCapturePhase.failed;
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.space6),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -134,7 +134,7 @@ class VoiceCaptureSheet extends StatelessWidget {
                       _RecordingBadge(key: const ValueKey('voice-recording-badge'), phase: state.phase),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 Center(
                   child: _RecordButton(
                     phase: state.phase,
@@ -142,30 +142,30 @@ class VoiceCaptureSheet extends StatelessWidget {
                     onPressed: tappable ? () => _onMainButton(context, state) : null,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 Semantics(
                   liveRegion: true,
                   child: Text(
                     primary,
                     key: const ValueKey('voice-primary-text'),
                     textAlign: TextAlign.center,
-                    style: primaryStyle?.copyWith(color: colors.textPrimary),
+                    style: primaryStyle?.copyWith(color: colors.ink),
                   ),
                 ),
                 if (secondary != null) ...[
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Text(
                     secondary,
                     key: const ValueKey('voice-secondary-text'),
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                 ],
                 if (busy) ...[
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   const LinearProgressIndicator(),
                 ],
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 // Tanpa internet (atau tanpa pengenal), merekam ulang belum
                 // tentu berhasil -- mengetik jadi jalan utama. Pencatatan
                 // sendiri tetap penuh tanpa internet (NFR-REL-001).
@@ -246,7 +246,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
   Widget build(BuildContext context) {
     final colors = context.appColors;
     const size = 88.0;
-    final color = _recording ? colors.expense : colors.accent;
+    final color = _recording ? colors.danger : colors.brand;
     final label = switch (widget.phase) {
       VoiceCapturePhase.idle => t.record.voice.startAction,
       VoiceCapturePhase.starting || VoiceCapturePhase.listening => t.record.voice.listeningButtonLabel,
@@ -292,14 +292,14 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _dimmed ? colors.surfaceMid : color,
-                      border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-                      boxShadow: AppElevation.hardShadow(colors.edge),
+                      color: _dimmed ? colors.surface2 : color,
+                      border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+                      boxShadow: AppElevation.hardShadow(colors.lineStrong),
                     ),
                     child: AppIcon(
                       IconKey.microphone,
                       size: 40,
-                      color: _dimmed ? colors.textMuted : colors.onAccent,
+                      color: _dimmed ? colors.ink2 : colors.onBrand,
                     ),
                   ),
                 ),
@@ -310,7 +310,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
         // Label hanya saat gagal: aksi "Rekam ulang" tidak terbaca dari ikon
         // saja. Di tahap lain pesan utama sudah menjelaskan.
         if (widget.phase == VoiceCapturePhase.failed) ...[
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(label, style: Theme.of(context).textTheme.labelLarge),
         ],
       ],
@@ -350,11 +350,11 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
     final seconds = _stopwatch.elapsed.inSeconds;
     final blinkOn = (_stopwatch.elapsed.inMilliseconds ~/ 500).isEven;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
       decoration: BoxDecoration(
-        color: colors.tinted(colors.expense, 0.15),
+        color: colors.tinted(colors.ink, 0.15),
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.expense),
+        border: Border.all(color: colors.ink),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -364,13 +364,13 @@ class _RecordingBadgeState extends State<_RecordingBadge> {
             height: 10,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: blinkOn ? colors.expense : colors.tinted(colors.expense, 0.3),
+              color: blinkOn ? colors.danger : colors.tinted(colors.danger, 0.3),
             ),
           ),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           Text(
             '${t.record.voice.recordingBadge} ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
-            style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.expense),
+            style: context.numberStyles.amountSm.copyWith(color: colors.ink),
           ),
         ],
       ),

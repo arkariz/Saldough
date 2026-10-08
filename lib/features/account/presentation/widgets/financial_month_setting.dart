@@ -45,7 +45,7 @@ class FinancialMonthSettingEntry extends StatelessWidget {
     return ValueListenableBuilder<int>(
       valueListenable: ActiveFinancialMonth.notifier,
       builder: (context, startDay, _) => Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.sm),
+        padding: const EdgeInsets.only(top: AppSpacing.space2),
         child: AppTappable(
           key: const ValueKey('financial-month-setting'),
           label: t.plan.financialMonthTitle,
@@ -61,7 +61,7 @@ class FinancialMonthSettingEntry extends StatelessWidget {
                       Text(
                         '${t.plan.financialMonthDay(day: startDay)} · '
                         '${financialMonthOf(DateTime.now(), startDay).label}',
-                        style: textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+                        style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
                       ),
                     ],
                   ),

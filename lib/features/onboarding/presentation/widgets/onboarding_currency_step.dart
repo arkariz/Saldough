@@ -31,9 +31,9 @@ class OnboardingCurrencyStep extends StatelessWidget {
     // saja bisa setinggi layar.
     return ListView.separated(
       key: const ValueKey('onboarding-currency-list'),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       itemCount: options.length + 1,
-      separatorBuilder: (_, index) => SizedBox(height: index == 0 ? AppSpacing.md : AppSpacing.xs),
+      separatorBuilder: (_, index) => SizedBox(height: index == 0 ? AppSpacing.space4 : AppSpacing.space1),
       itemBuilder: (context, index) {
         if (index == 0) {
           return AppHardCard(
@@ -41,7 +41,7 @@ class OnboardingCurrencyStep extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Semantics(header: true, child: Text(t.onboarding.currencyTitle, style: textTheme.headlineSmall)),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Text(t.onboarding.currencyBody, style: textTheme.bodyMedium),
               ],
             ),
@@ -81,13 +81,13 @@ class _CurrencyOption extends StatelessWidget {
         onTap: onTap,
         child: AppHardCard(
           pressed: selected,
-          color: selected ? colors.tinted(colors.accent, 0.18) : null,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+          color: selected ? colors.tinted(colors.brand, 0.18) : null,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
           child: Row(
             children: [
               SizedBox(
                 width: 44,
-                child: Text(currency.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
+                child: Text(currency.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
               ),
               Expanded(
                 child: Column(
@@ -95,7 +95,7 @@ class _CurrencyOption extends StatelessWidget {
                   children: [
                     Text(name, style: textTheme.titleSmall),
                     if (suggested)
-                      Text(t.onboarding.currencySuggested, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                      Text(t.onboarding.currencySuggested, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                   ],
                 ),
               ),

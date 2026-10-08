@@ -9,7 +9,7 @@ class TransactionSlab extends StatelessWidget {
   const TransactionSlab({
     required this.child,
     this.color,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding = const EdgeInsets.all(AppSpacing.space4),
     this.radius = 8,
     this.shadow = 3,
     this.shadowColor,
@@ -40,11 +40,11 @@ class TransactionSlab extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color ?? colors.cardBackground,
+        color: color ?? colors.surface,
         borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
-            color: shadowColor ?? colors.edge,
+            color: shadowColor ?? colors.lineStrong,
             offset: Offset(0, shadow),
           ),
         ],
@@ -54,22 +54,19 @@ class TransactionSlab extends StatelessWidget {
   }
 }
 
-/// Teks kecil Space Mono tebal berhuruf-besar-gaya "label" rujukan visual.
+/// Teks label kecil (`label-sm`, angka tabular).
 ///
-/// [size] dijepit ke minimum [kMinLabelSize] (ADR-020 §3.2) -- pemanggil
-/// boleh minta lebih kecil untuk kompatibilitas rujukan visual lama, tapi
-/// hasilnya tidak akan pernah lebih kecil dari itu.
+/// [size] dijepit ke minimum [kMinLabelSize] -- pemanggil boleh minta lebih
+/// kecil untuk kompatibilitas layar lama, tapi hasilnya tidak akan pernah
+/// lebih kecil dari itu.
 TextStyle transactionLabelStyle(
   BuildContext context, {
   double size = kMinLabelSize,
   Color? color,
 }) {
   final clamped = size < kMinLabelSize ? kMinLabelSize : size;
-  return PixelTypography.tabularMono(
-    context,
-    fontSize: clamped,
-    color: color,
-  ).copyWith(letterSpacing: clamped * 0.08);
+  final colors = context.appColors;
+  return appTextStyle(clamped, clamped * 4 / 3, FontWeight.w600, color ?? colors.ink2, tabular: true);
 }
 
 /// Jenis transaksi untuk pewarnaan -- lihat [TransactionKindPalette].
@@ -88,18 +85,18 @@ enum TransactionKind {
 /// hex harfiah di sini. [kindFill] untuk bidang besar (garis aksen, kotak
 /// ikon, nuansa latar); [kindInk] untuk teks dan isian lencana bertulisan
 /// putih, dijaga >= 4,5:1.
-extension TransactionKindPalette on AppColorsExtension {
+extension TransactionKindPalette on AppColors {
   /// Warna isian bidang besar untuk [kind].
   Color kindFill(TransactionKind kind) => switch (kind) {
-    TransactionKind.income => incomeFill,
-    TransactionKind.expense => expenseFill,
-    TransactionKind.transfer => transferFill,
+    TransactionKind.income => positive,
+    TransactionKind.expense => ink2,
+    TransactionKind.transfer => info,
   };
 
   /// Warna teks/lencana untuk [kind], kontras aman di atas putih.
   Color kindInk(TransactionKind kind) => switch (kind) {
-    TransactionKind.income => income,
-    TransactionKind.expense => expense,
-    TransactionKind.transfer => transfer,
+    TransactionKind.income => positive,
+    TransactionKind.expense => ink,
+    TransactionKind.transfer => ink2,
   };
 }

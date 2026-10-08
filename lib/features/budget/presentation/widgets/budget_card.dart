@@ -54,7 +54,7 @@ class BudgetCard extends StatelessWidget {
         child: Opacity(
           opacity: dimmed ? 0.7 : 1,
           child: TransactionSlab(
-            color: overspent ? colors.tinted(colors.expenseFill, 0.08) : null,
+            color: overspent ? colors.tinted(colors.danger, 0.08) : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -64,29 +64,29 @@ class BudgetCard extends StatelessWidget {
                     Expanded(
                       child: Text(budget.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18)),
                     ),
-                    const SizedBox(width: AppSpacing.xs),
+                    const SizedBox(width: AppSpacing.space1),
                     const AppIcon(IconKey.chevronRight),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Wrap(
-                  spacing: AppSpacing.xs,
+                  spacing: AppSpacing.space1,
                   runSpacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    BudgetBadge(label: walletName, color: colors.textPrimary),
+                    BudgetBadge(label: walletName, color: colors.ink),
                     BudgetBadge(label: '${budgetPeriodLabel(budget.period)} · ${budgetRangeLabel(budget)}'),
                     if (isRecurring)
                       BudgetBadge(key: const ValueKey('budget-recurring-badge'), label: t.budget.recurringBadge),
                     BudgetBadge(
                       label: budgetStatusLabel(progress.status),
-                      color: progress.status == BudgetStatus.active ? colors.income : colors.textMuted,
+                      color: progress.status == BudgetStatus.active ? colors.positive : colors.ink2,
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 BudgetProgressBar(value: progress.progress),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -98,22 +98,18 @@ class BudgetCard extends StatelessWidget {
                             t.budget
                                 .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
                                 .toUpperCase(),
-                            style: transactionLabelStyle(context, color: colors.textMuted),
+                            style: transactionLabelStyle(context, color: colors.ink2),
                           ),
                           FitStart(
                             child: Text(
                               AppMoneyFormatter.format(progress.spent),
-                              style: PixelTypography.tabularMono(
-                                context,
-                                fontSize: 16,
-                                color: overspent ? colors.overBudget : colors.textPrimary,
-                              ),
+                              style: context.numberStyles.amount.copyWith(color: overspent ? colors.danger : colors.ink),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.space2),
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -121,7 +117,7 @@ class BudgetCard extends StatelessWidget {
                           Text(
                             '${t.budget.remainingLabel} / ${t.budget.plannedLabel}'.toUpperCase(),
                             textAlign: TextAlign.end,
-                            style: transactionLabelStyle(context, color: colors.textMuted),
+                            style: transactionLabelStyle(context, color: colors.ink2),
                           ),
                           FittedBox(
                             fit: BoxFit.scaleDown,
@@ -131,12 +127,12 @@ class BudgetCard extends StatelessWidget {
                                 children: [
                                   TextSpan(
                                     text: AppMoneyFormatter.format(progress.remaining),
-                                    style: TextStyle(color: progress.remaining < 0 ? colors.overBudget : colors.income),
+                                    style: TextStyle(color: progress.remaining < 0 ? colors.danger : colors.positive),
                                   ),
                                   TextSpan(text: ' / ${AppMoneyFormatter.format(progress.plannedAmount)}'),
                                 ],
                               ),
-                              style: PixelTypography.tabularMono(context, color: colors.textMuted),
+                              style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
                             ),
                           ),
                         ],
@@ -145,19 +141,19 @@ class BudgetCard extends StatelessWidget {
                   ],
                 ),
                 if (overspent) ...[
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Text(
                     budgetItemStatusLabel(BudgetItemStatus.overspent).toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.overBudget),
+                    style: transactionLabelStyle(context, color: colors.danger),
                   ),
                 ],
                 if (budget.items.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Text(
                     t.budget.itemCount(count: budget.items.length),
                     style: transactionLabelStyle(
                       context,
-                      color: colors.textMuted,
+                      color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),
                   ),
                 ],

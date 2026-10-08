@@ -3,12 +3,11 @@ import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:state_management/state_management.dart';
 
-/// Mendaftarkan penangan [ShowSnackBarEffect], memetakan [FeedbackSeverity]
-/// ke slot warna semantik Saldough.
+/// Mendaftarkan penangan [ShowSnackBarEffect].
 ///
-/// Sukses berlatar netral dengan ikon centang, BUKAN hijau: hijau berarti
-/// "uang masuk" (ADR-016, UX-17), sedangkan "Pengeluaran tercatat." juga
-/// sebuah keberhasilan.
+/// Semua tingkat memakai snackbar design system: latar `inverse-surface`,
+/// teks `on-inverse` (ADR-034). Tingkat dibedakan lewat ikon, bukan warna
+/// latar: centang untuk sukses, info untuk peringatan dan galat.
 ///
 /// ⚠ `actionLabel`/`actionIntentId` belum terhubung ke bloc — belum ada
 /// fitur yang butuh aksi pada snackbar, dan paket `state_management` tidak
@@ -26,26 +25,25 @@ void registerSnackBarEffectHandler(EffectRegistry registry) {
 /// penangan efek, mis. hasil "Urungkan" yang diketuk sesudah rute
 /// pemilik blocnya tertutup (ADR-030 §3.3) -- warnanya diambil saat rute
 /// itu masih hidup.
-SnackBar feedbackSnackBar(AppColorsExtension colors, ShowSnackBarEffect effect) {
-  final background = switch (effect.severity) {
-    FeedbackSeverity.warning => colors.overBudget,
-    FeedbackSeverity.error => colors.expense,
-    // Netral, padanan `inverseSurface` Material: gelap di mode terang,
-    // terang di mode gelap. Slot `rollUp` yang dulu dipakai dihapus T-3.5.
-    FeedbackSeverity.success || FeedbackSeverity.info => colors.textPrimary,
+SnackBar feedbackSnackBar(AppColors colors, ShowSnackBarEffect effect) {
+  final icon = switch (effect.severity) {
+    FeedbackSeverity.success => IconKey.check,
+    FeedbackSeverity.warning || FeedbackSeverity.error => IconKey.info,
+    FeedbackSeverity.info => null,
   };
-  final isSuccess = effect.severity == FeedbackSeverity.success;
   return SnackBar(
     content: Row(
       children: [
-        if (isSuccess) ...[
-          AppIcon(IconKey.check, size: 20, color: colors.background),
-          const SizedBox(width: AppSpacing.sm),
+        if (icon != null) ...[
+          AppIcon(icon, size: 20, color: colors.onInverse),
+          const SizedBox(width: AppSpacing.space2),
         ],
-        Expanded(child: Text(effect.message)),
+        Expanded(
+          child: Text(effect.message, style: TextStyle(color: colors.onInverse)),
+        ),
       ],
     ),
-    backgroundColor: background,
+    backgroundColor: colors.inverseSurface,
     duration: effect.autoDismissDuration,
   );
 }

@@ -80,9 +80,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
               slivers: [
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.md,
-                    AppSpacing.md,
-                    AppSpacing.md,
+                    AppSpacing.space4,
+                    AppSpacing.space4,
+                    AppSpacing.space4,
                     0,
                   ),
                   sliver: SliverToBoxAdapter(
@@ -113,7 +113,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         // menampilkannya). Baris filter jenis tetap tampil
                         // dengan angka nol ("Semua 0").
                         if (state.rawTransactions.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.md),
+                          const SizedBox(height: AppSpacing.space4),
                           // UX-21: dompet dan kategori digabung ke SATU
                           // tombol "Filter" di samping kolom cari (dulu
                           // baris dropdown terpisah di bawahnya) supaya kop
@@ -129,7 +129,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                   onQueryChanged: (query) => bloc.add(TransactionSearchChanged(query)),
                                 ),
                               ),
-                              const SizedBox(width: AppSpacing.xs),
+                              const SizedBox(width: AppSpacing.space1),
                               TransactionFilterButton(
                                 wallets: state.wallets,
                                 walletFilter: state.walletFilter,
@@ -142,13 +142,13 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           ),
                           ),
                         ],
-                        const SizedBox(height: AppSpacing.sm),
+                        const SizedBox(height: AppSpacing.space2),
                         TransactionTypeFilterRow(
                           typeFilter: state.typeFilter,
                           typeCounts: state.typeCounts,
                           onChanged: (filter) => bloc.add(TransactionTypeFilterChanged(filter)),
                         ),
-                        const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: AppSpacing.space4),
                       ],
                     ),
                   ),
@@ -184,9 +184,9 @@ class _Body extends StatelessWidget {
     if (state.rawTransactions.isEmpty) {
       return SliverPadding(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
+          AppSpacing.space4,
           0,
-          AppSpacing.md,
+          AppSpacing.space4,
           AppSpacing.fabClearance,
         ),
         sliver: SliverToBoxAdapter(
@@ -202,7 +202,7 @@ class _Body extends StatelessWidget {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.fabClearance),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.fabClearance),
           child: Column(
             children: [
               TransactionEmptyFilterState(onClearFilters: onClearFilters),
@@ -224,14 +224,14 @@ class _Body extends StatelessWidget {
     }
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
+        AppSpacing.space4,
         0,
-        AppSpacing.md,
+        AppSpacing.space4,
         AppSpacing.fabClearance,
       ),
       sliver: SliverList.separated(
         itemCount: state.groups.length,
-        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
+        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.space6),
         itemBuilder: (context, index) => TransactionDateGroupCard(
           group: state.groups[index],
           walletsById: walletsById,

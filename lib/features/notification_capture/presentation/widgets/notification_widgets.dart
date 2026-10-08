@@ -34,7 +34,7 @@ class NotificationSwitchRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: EdgeInsets.only(left: indent ? AppSpacing.lg : 0, top: AppSpacing.xs, bottom: AppSpacing.xs),
+      padding: EdgeInsets.only(left: indent ? AppSpacing.space6 : 0, top: AppSpacing.space1, bottom: AppSpacing.space1),
       child: Row(
         children: [
           Expanded(
@@ -42,11 +42,11 @@ class NotificationSwitchRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label, style: textTheme.titleSmall),
-                if (hint != null) Text(hint!, style: textTheme.bodySmall?.copyWith(color: context.appColors.textMuted)),
+                if (hint != null) Text(hint!, style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2)),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Switch(value: value, onChanged: onChanged),
         ],
       ),
@@ -83,7 +83,7 @@ class NotificationSwitchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppHardCard(
-    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -125,7 +125,7 @@ class NotificationNavCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppTappable(
         label: title,
         onTap: onTap,
@@ -140,7 +140,7 @@ class NotificationNavCard extends StatelessWidget {
                     if (subtitle != null)
                       Text(
                         subtitle!,
-                        style: textTheme.bodySmall?.copyWith(color: subtitleColor ?? context.appColors.textMuted),
+                        style: textTheme.bodySmall?.copyWith(color: subtitleColor ?? context.appColors.ink2),
                       ),
                   ],
                 ),

@@ -66,8 +66,8 @@ class FreelanceSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(t.freelance.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
-          const SizedBox(height: AppSpacing.sm),
+          Text(t.freelance.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+          const SizedBox(height: AppSpacing.space2),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -80,7 +80,7 @@ class FreelanceSummaryCard extends StatelessWidget {
                     caption: t.freelance.projectCount(count: projectCount),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: _Tile(
                     icon: IconKey.hourlyRate,
@@ -92,7 +92,7 @@ class FreelanceSummaryCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,33 +103,33 @@ class FreelanceSummaryCard extends StatelessWidget {
                     label: t.freelance.paidLabel,
                     value: AppMoneyFormatter.format(summary.paid),
                     caption: t.freelance.paidCaption,
-                    color: colors.income,
+                    color: colors.positive,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: _Tile(
                     icon: IconKey.pending,
                     label: t.freelance.unpaidLabel,
                     value: AppMoneyFormatter.format(summary.unpaid),
                     caption: t.freelance.unpaidCaption,
-                    color: colors.pending,
+                    color: colors.warning,
                   ),
                 ),
               ],
             ),
           ),
           if (summary.earned > 0) ...[
-            const SizedBox(height: AppSpacing.sm),
-            FreelanceShareBar(parts: [(summary.paid, colors.income), (summary.unpaid, colors.pending)]),
+            const SizedBox(height: AppSpacing.space2),
+            FreelanceShareBar(parts: [(summary.paid, colors.positive), (summary.unpaid, colors.warning)]),
             const SizedBox(height: 4),
             Text(
               t.freelance.paidRatio(percent: (ratio * 100).round()),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
           ],
           if (payments.pendingCount > 0) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             FreelanceAmountLine(
               icon: IconKey.pending,
               label: t.freelance.pendingTotalLabel,
@@ -138,17 +138,17 @@ class FreelanceSummaryCard extends StatelessWidget {
                 date: CycleMonthFormatter.formatDateShort(payments.nextExpectedDate!),
               ),
               amount: payments.pendingNet,
-              color: colors.pending,
+              color: colors.warning,
             ),
           ],
           if (payments.paidCount > 0) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             FreelanceAmountLine(
               icon: IconKey.paid,
               label: t.freelance.paidTotalLabel,
               caption: t.freelance.paymentCount(count: payments.paidCount),
               amount: payments.paidNet,
-              color: colors.income,
+              color: colors.positive,
             ),
           ],
         ],
@@ -169,11 +169,11 @@ class _Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final ink = color ?? colors.textPrimary;
+    final ink = color ?? colors.ink;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceLow : colors.tinted(ink, 0.12),
+        color: color == null ? colors.surface2 : colors.tinted(ink, 0.12),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -184,15 +184,15 @@ class _Tile extends StatelessWidget {
               AppIcon(icon, size: 18),
               const SizedBox(width: 4),
               Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
               ),
             ],
           ),
           const SizedBox(height: 2),
           FitStart(
-            child: Text(value, style: PixelTypography.tabularMono(context, fontSize: 17, color: ink)),
+            child: Text(value, style: context.numberStyles.amount.copyWith(color: ink)),
           ),
-          Text(caption, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+          Text(caption, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
         ],
       ),
     );
@@ -230,17 +230,17 @@ class WorklogEntryCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final payment = this.payment;
     final (statusIcon, statusLabel, statusColor, statusDetail) = switch (payment) {
-      null => (IconKey.worklog, t.freelance.statusUnbilled, colors.textMuted, null),
+      null => (IconKey.worklog, t.freelance.statusUnbilled, colors.ink2, null),
       FreelancePayment(isPaid: false) => (
         IconKey.pending,
         t.freelance.statusPending,
-        colors.pending,
+        colors.warning,
         t.freelance.expectedOn(date: CycleMonthFormatter.formatDateShort(payment.expectedDate)),
       ),
       FreelancePayment() => (
         IconKey.paid,
         t.freelance.statusPaid,
-        colors.income,
+        colors.positive,
         t.freelance.receivedOn(
           date: CycleMonthFormatter.formatDateShort(payment.receivedDate!),
           wallet: walletName ?? t.freelance.unknownWallet,
@@ -250,7 +250,7 @@ class WorklogEntryCard extends StatelessWidget {
     return AppTappable(
       onTap: onTap,
       child: TransactionSlab(
-        padding: const EdgeInsets.all(AppSpacing.sm),
+        padding: const EdgeInsets.all(AppSpacing.space2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -258,7 +258,7 @@ class WorklogEntryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FreelanceIconBox(statusIcon, color: payment == null ? null : statusColor, size: 40),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,19 +271,19 @@ class WorklogEntryCard extends StatelessWidget {
                 FreelanceBadge(label: statusLabel, color: statusColor),
               ],
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-              decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(4)),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+              decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       formatHoursTimesRate(entry.hours, entry.hourlyRate),
-                      style: PixelTypography.tabularMono(context, fontSize: 12, color: colors.textMuted),
+                      style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.space1),
                   // Nominal mengecil di layar sempit atau teks diperbesar.
                   Flexible(
                     child: FittedBox(
@@ -291,7 +291,7 @@ class WorklogEntryCard extends StatelessWidget {
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(
                         AppMoneyFormatter.format(entry.earnedAmount),
-                        style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                        style: context.numberStyles.amount.copyWith(color: colors.ink),
                       ),
                     ),
                   ),
@@ -302,7 +302,7 @@ class WorklogEntryCard extends StatelessWidget {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  AppIcon(IconKey.locked, size: 14, color: colors.textMuted),
+                  AppIcon(IconKey.locked, size: 14, color: colors.ink2),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(statusDetail, style: textTheme.bodySmall?.copyWith(color: statusColor)),
@@ -359,7 +359,7 @@ class FreelancePaymentCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final paid = payment.isPaid;
     return TransactionSlab(
-      shadowColor: paid ? colors.income : colors.pending,
+      shadowColor: paid ? colors.positive : colors.warning,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -367,7 +367,7 @@ class FreelancePaymentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const FreelanceIconBox(IconKey.invoice, size: 40),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,20 +375,20 @@ class FreelancePaymentCard extends StatelessWidget {
                     Text(title, style: textTheme.titleMedium),
                     Text(
                       t.freelance.paymentEntriesSummary(count: entryCount, hours: hours),
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                   ],
                 ),
               ),
               FreelanceBadge(
                 label: paid ? t.freelance.statusPaid : t.freelance.statusPending,
-                color: paid ? colors.income : colors.pending,
+                color: paid ? colors.positive : colors.warning,
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           NetPayBreakdownCard(breakdown: breakdown),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Text(
             paid
                 ? t.freelance.receivedOn(
@@ -396,11 +396,11 @@ class FreelancePaymentCard extends StatelessWidget {
                     wallet: walletName ?? t.freelance.unknownWallet,
                   )
                 : t.freelance.expectedOn(date: CycleMonthFormatter.formatDate(payment.expectedDate)),
-            style: textTheme.bodyMedium?.copyWith(color: paid ? colors.income : colors.pending),
+            style: textTheme.bodyMedium?.copyWith(color: paid ? colors.positive : colors.warning),
           ),
           if (actions.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(spacing: AppSpacing.sm, runSpacing: AppSpacing.sm, children: actions),
+            const SizedBox(height: AppSpacing.space2),
+            Wrap(spacing: AppSpacing.space2, runSpacing: AppSpacing.space2, children: actions),
           ],
         ],
       ),

@@ -11,8 +11,8 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
         children: [
           Expanded(
@@ -22,12 +22,12 @@ class _TopBar extends StatelessWidget {
                 height: 44,
                 child: Row(
                   children: [
-                    const SizedBox(width: AppSpacing.xs),
-                    AppIcon(IconKey.chevronLeft, color: colors.textPrimary),
-                    const SizedBox(width: AppSpacing.xs),
+                    const SizedBox(width: AppSpacing.space1),
+                    AppIcon(IconKey.chevronLeft, color: colors.ink),
+                    const SizedBox(width: AppSpacing.space1),
                     Text(
                       t.budget.detailBackLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, size: 12, color: colors.textPrimary),
+                      style: transactionLabelStyle(context, color: colors.ink),
                     ),
                   ],
                 ),
@@ -47,8 +47,8 @@ class _TopBar extends StatelessWidget {
                   child: Container(
                     width: 36,
                     height: 36,
-                    decoration: BoxDecoration(color: colors.cardBackground, borderRadius: BorderRadius.circular(4)),
-                    child: AppIcon(IconKey.edit, size: 20, color: colors.textPrimary),
+                    decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(4)),
+                    child: AppIcon(IconKey.edit, size: 20, color: colors.ink),
                   ),
                 ),
               ),
@@ -81,68 +81,68 @@ class _HeroCard extends StatelessWidget {
           Text(budget.name, style: textTheme.headlineSmall),
           const SizedBox(height: 4),
           Wrap(
-            spacing: AppSpacing.xs,
+            spacing: AppSpacing.space1,
             runSpacing: 4,
             children: [
               BudgetBadge(label: budgetPeriodLabel(budget.period)),
               BudgetBadge(
                 label: budgetStatusLabel(progress.status),
-                color: progress.status == BudgetStatus.active ? colors.income : colors.textMuted,
+                color: progress.status == BudgetStatus.active ? colors.positive : colors.ink2,
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Row(
             children: [
-              AppIcon(IconKey.calendar, size: 16, color: colors.textMuted),
+              AppIcon(IconKey.calendar, size: 16, color: colors.ink2),
               const SizedBox(width: 4),
               Expanded(
-                child: Text(budgetRangeLabel(budget), style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                child: Text(budgetRangeLabel(budget), style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Container(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.all(AppSpacing.space2),
+            decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
                 AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet!.iconKey), size: 28),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(child: Text(wallet?.name ?? t.budget.unknownWallet, style: textTheme.titleMedium)),
                 if (wallet != null)
                   Text(
                     AppMoneyFormatter.format(wallet!.currentBalance),
-                    style: PixelTypography.tabularMono(context, color: colors.textMuted),
+                    style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
                   ),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Row(
             children: [
               Expanded(
-                child: _Stat(label: t.budget.plannedLabel, sen: progress.plannedAmount, color: colors.textPrimary),
+                child: _Stat(label: t.budget.plannedLabel, sen: progress.plannedAmount, color: colors.ink),
               ),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               Expanded(
                 child: _Stat(
                   label: t.budget.spentLabel,
                   sen: progress.spent,
-                  color: overspent ? colors.overBudget : colors.expense,
+                  color: overspent ? colors.danger : colors.ink,
                 ),
               ),
-              const SizedBox(width: AppSpacing.xs),
+              const SizedBox(width: AppSpacing.space1),
               Expanded(
                 child: _Stat(
                   label: t.budget.remainingLabel,
                   sen: progress.remaining,
-                  color: progress.remaining < 0 ? colors.overBudget : colors.income,
+                  color: progress.remaining < 0 ? colors.danger : colors.positive,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           Row(
             children: [
               Expanded(
@@ -150,7 +150,7 @@ class _HeroCard extends StatelessWidget {
                   t.budget
                       .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
                       .toUpperCase(),
-                  style: transactionLabelStyle(context, color: colors.textMuted),
+                  style: transactionLabelStyle(context, color: colors.ink2),
                 ),
               ),
               Text(
@@ -167,7 +167,7 @@ class _HeroCard extends StatelessWidget {
           // dengan fraksi periode yang sudah berlalu.
           Text(
             t.budget.paceLabel(percent: (budget.elapsedRatio(DateTime.now()) * 100).round()).toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.textMuted),
+            style: transactionLabelStyle(context, color: colors.ink2),
           ),
         ],
       ),
@@ -186,15 +186,15 @@ class _Stat extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.all(AppSpacing.space1),
+      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Column(
         children: [
-          Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.textMuted)),
+          Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.ink2)),
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(AppMoneyFormatter.format(sen), style: PixelTypography.tabularMono(context, color: color)),
+            child: Text(AppMoneyFormatter.format(sen), style: context.numberStyles.amountSm.copyWith(color: color)),
           ),
         ],
       ),
@@ -234,7 +234,7 @@ class _ItemCard extends StatelessWidget {
     return SpotlightTarget(
       spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
       child: TransactionSlab(
-        color: overspent ? colors.tinted(colors.expenseFill, 0.08) : null,
+        color: overspent ? colors.tinted(colors.danger, 0.08) : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -251,7 +251,7 @@ class _ItemCard extends StatelessWidget {
                         label: item.isTransfer
                             ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
                             : t.budget.itemKindExpense,
-                        color: item.isTransfer ? colors.transfer : colors.textMuted,
+                        color: item.isTransfer ? colors.ink2 : colors.ink2,
                       ),
                       if (item.isItemized)
                         Text(
@@ -259,37 +259,37 @@ class _ItemCard extends StatelessWidget {
                             quantity: item.quantity!,
                             price: AppMoneyFormatter.format(item.unitPrice!),
                           ),
-                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                         ),
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.space1),
                 BudgetBadge(label: budgetItemStatusLabel(progress.status), color: statusColor),
               ],
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             BudgetProgressBar(value: progress.progress),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Wrap(
-              spacing: AppSpacing.md,
+              spacing: AppSpacing.space4,
               runSpacing: 2,
               children: [
-                _Figure(label: t.budget.plannedLabel, sen: item.plannedAmount, color: colors.textPrimary),
+                _Figure(label: t.budget.plannedLabel, sen: item.plannedAmount, color: colors.ink),
                 _Figure(
                   label: t.budget.spentLabel,
                   sen: progress.spent,
-                  color: overspent ? colors.overBudget : colors.textPrimary,
+                  color: overspent ? colors.danger : colors.ink,
                 ),
                 _Figure(
                   label: t.budget.remainingLabel,
                   sen: progress.remaining,
-                  color: progress.remaining < 0 ? colors.overBudget : colors.income,
+                  color: progress.remaining < 0 ? colors.danger : colors.positive,
                 ),
               ],
             ),
             if (onRecord case final record?) ...[
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: SpotlightTarget(
@@ -297,7 +297,7 @@ class _ItemCard extends StatelessWidget {
                   child: item.isTransfer
                       ? AppQuickChip(
                           label: t.budget.detailRecordTransferAction,
-                          color: colors.tinted(colors.transferFill, 0.2),
+                          color: colors.tinted(colors.info, 0.2),
                           onTap: record,
                         )
                       : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
@@ -325,7 +325,7 @@ class _Figure extends StatelessWidget {
         children: [
           TextSpan(
             text: '$label: ',
-            style: TextStyle(color: context.appColors.textMuted),
+            style: TextStyle(color: context.appColors.ink2),
           ),
           TextSpan(
             text: AppMoneyFormatter.format(sen),
@@ -333,7 +333,7 @@ class _Figure extends StatelessWidget {
           ),
         ],
       ),
-      style: PixelTypography.tabularMono(context, fontSize: 12),
+      style: context.numberStyles.amountSm,
     );
   }
 }
@@ -348,7 +348,7 @@ class _HowItWorks extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return TransactionSlab(
-      color: colors.surfaceLow,
+      color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

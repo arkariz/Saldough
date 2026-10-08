@@ -193,7 +193,7 @@ void main() {
         final texts = tester.widgetList<Text>(find.text('−Rp123.000'));
         expect(texts, isNotEmpty);
         for (final text in texts) {
-          expect(text.style?.color, AppColorsExtension.pixelLight.expense);
+          expect(text.style?.color, AppColors.light.ink);
         }
       },
     );

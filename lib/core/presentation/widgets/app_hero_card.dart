@@ -52,16 +52,16 @@ class AppHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.space4),
       decoration: BoxDecoration(
         // Mode gelap: `surfaceMid` hampir sama dengan `cardBackground`, jadi
         // kartu utama tak lagi menonjol dan `HeroInset` di dalamnya hilang.
         // Satu tingkat lebih terang di sana (T-7.6).
-        color: Theme.of(context).brightness == Brightness.dark ? colors.surfaceHigh : colors.surfaceMid,
+        color: Theme.of(context).brightness == Brightness.dark ? colors.surface3 : colors.surface2,
         borderRadius: AppRadius.pixelSmAll,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
         // Bawaan `hardShadow` = 4px, lebih tebal dari kartu biasa (3px).
-        boxShadow: AppElevation.hardShadow(colors.edge),
+        boxShadow: AppElevation.hardShadow(colors.lineStrong),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,24 +73,24 @@ class AppHeroCard extends StatelessWidget {
                 height: 32,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: colors.cardBackground,
-                  border: Border.all(color: colors.edge),
+                  color: colors.surface,
+                  border: Border.all(color: colors.lineStrong),
                 ),
                 child: AppIcon(icon),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               // `Wrap`: lencana turun baris, bukan meluap, di layar sempit
               // atau teks diperbesar.
               Expanded(
                 child: Wrap(
                   alignment: WrapAlignment.spaceBetween,
                   crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: AppSpacing.xs,
+                  spacing: AppSpacing.space1,
                   runSpacing: 4,
                   children: [
                     Text(
                       label.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.textMuted),
+                      style: transactionLabelStyle(context, color: colors.ink2),
                     ),
                     ?trailing,
                   ],
@@ -99,7 +99,7 @@ class AppHeroCard extends StatelessWidget {
               if (tour case final tour?) TutorialInfoButton(tour: tour),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           child,
         ],
       ),
@@ -128,7 +128,7 @@ class HeroAmount extends StatelessWidget {
     final match = RegExp('^([+−-]?)${RegExp.escape(symbol)}(.*)\$').firstMatch(formatted);
     final prefix = match == null ? '' : '${match[1]}$symbol';
     final number = match == null ? formatted : match[2]!;
-    final prefixStyle = PixelTypography.tabularMono(context, fontSize: 16, color: color ?? colors.textMuted);
+    final prefixStyle = context.numberStyles.amount.copyWith(color: color ?? colors.ink2);
     // Satu `Text.rich`: tetap terbaca sebagai satu nominal utuh (pembaca
     // layar, pencarian teks di uji) walau awalannya diperkecil.
     return FitStart(
@@ -146,7 +146,7 @@ class HeroAmount extends StatelessWidget {
         ),
         // Gaya angka utama di `Text.style`, supaya warna nominalnya (mis.
         // merah untuk saldo negatif) terbaca dari widget ini sendiri.
-        style: PixelTypography.tabularMono(context, fontSize: 32, color: color ?? colors.textPrimary),
+        style: context.numberStyles.amountHero.copyWith(color: color ?? colors.ink),
       ),
     );
   }
@@ -163,8 +163,8 @@ class HeroInset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(color: context.appColors.cardBackground, borderRadius: AppRadius.pixelSmAll),
+      padding: const EdgeInsets.all(AppSpacing.space2),
+      decoration: BoxDecoration(color: context.appColors.surface, borderRadius: AppRadius.pixelSmAll),
       child: child,
     );
   }

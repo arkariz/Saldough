@@ -60,8 +60,27 @@ class AppListRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final row = LayoutBuilder(
+      builder: (context, constraints) => _row(context, constraints.maxWidth / 2),
+    );
+    if (onTap == null) return Semantics(label: semanticsLabel, child: row);
+    return Semantics(
+      button: true,
+      label: semanticsLabel,
+      child: InkWell(
+        onTap: onTap,
+        overlayColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
+        ),
+        child: row,
+      ),
+    );
+  }
+
+  Widget _row(BuildContext context, double maxTrailing) {
+    final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final row = ConstrainedBox(
+    return ConstrainedBox(
       constraints: BoxConstraints(minHeight: compact ? 56 : AppSize.row),
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -107,9 +126,11 @@ class AppListRow extends StatelessWidget {
             ),
             if (trailing != null) ...[
               const SizedBox(width: AppSpacing.space3),
-              // Nominal tidak pernah terpotong: diperkecil bila judul dan
-              // nominal tidak muat sebaris (layar sempit, teks 200%).
-              Flexible(
+              // Nominal rata kanan dan tidak pernah terpotong: paling lebar
+              // separuh baris, diperkecil bila tetap tidak muat (layar
+              // sempit, teks 200%).
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxTrailing),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerEnd,
@@ -123,18 +144,6 @@ class AppListRow extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-    if (onTap == null) return Semantics(label: semanticsLabel, child: row);
-    return Semantics(
-      button: true,
-      label: semanticsLabel,
-      child: InkWell(
-        onTap: onTap,
-        overlayColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
-        ),
-        child: row,
       ),
     );
   }

@@ -584,7 +584,8 @@
     "paymentsEmptyBody": "Tap Bill below to group unbilled work hours into one payment.",
     "paymentsFilteredEmpty": "No payments with this status.",
     "nextExpected": "Invoices: $count · next $date",
-    "paymentWorkRange": "Work $range"
+    "paymentWorkRange": "Work $range",
+    "paidOffBadge": "Paid off"
   },
   "home": {
     "loadErrorTitle": "Home failed to load",

@@ -159,7 +159,9 @@ void main() {
     expect(find.byType(FreelanceOverviewPage), findsOneWidget);
     expect(find.byType(TabBar), findsNothing);
     expect(find.text(t.freelance.projectsEmpty), findsOneWidget);
-    expect(find.text(t.freelance.ruleBody), findsOneWidget);
+    // Aturan "kerja selesai bukan uang diterima" dijelaskan tur, bukan
+    // kartu aturan di layar (design system bagian Konten).
+    expect(find.text(t.freelance.ruleBody), findsNothing);
   });
 
   testWidgets('Catat Diterima menambah saldo sebesar gaji bersih tepat satu kali (FR-FRL-004)', (tester) async {
@@ -168,11 +170,10 @@ void main() {
     await openShell(tester);
     await openFreelanceThroughRecord(tester);
 
-    // Ikhtisar satu layar: tertunda bersih tampil di ringkasan dan di kartu
-    // proyek, berlabel "(bersih)".
+    // Ikhtisar satu layar: tertunda bersih tampil di baris ringkasan.
     expect(find.byType(ProjectCard), findsOneWidget);
-    expect(find.text(t.freelance.pendingTotalLabel.toUpperCase()), findsNWidgets(2));
-    expect(find.text(AppMoneyFormatter.format(261543750)), findsNWidgets(2));
+    expect(find.text(t.freelance.pendingTotalLabel), findsOneWidget);
+    expect(find.text(AppMoneyFormatter.format(261543750)), findsOneWidget);
     await tester.tap(find.byType(ProjectCard));
     await tester.pumpAndSettle();
     expect(find.byType(FreelanceProjectPage), findsOneWidget);

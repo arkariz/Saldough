@@ -627,6 +627,7 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get paymentsFilteredEmpty => 'No payments with this status.';
 	@override String nextExpected({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}';
 	@override String paymentWorkRange({required Object range}) => 'Work ${range}';
+	@override String get paidOffBadge => 'Paid off';
 }
 
 // Path: home
@@ -2023,6 +2024,7 @@ extension on TranslationsEn {
 			'freelance.paymentsFilteredEmpty' => 'No payments with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
+			'freelance.paidOffBadge' => 'Paid off',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
@@ -2483,9 +2485,9 @@ extension on TranslationsEn {
 			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
-			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',

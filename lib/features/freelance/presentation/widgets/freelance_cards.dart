@@ -34,18 +34,19 @@ class FreelanceBadge extends StatelessWidget {
   }
 }
 
-/// Ringkasan upah dan jam (FR-FRL-005, rujukan
-/// `pixel_kas_freelance_overview_worklog`): waktu kerja, total diperoleh,
-/// sudah diterima, belum diterima, dan bilah porsinya — semuanya gaji kotor.
-/// Kalau sudah ada pembayaran, di bawahnya menyusul baris tertunda dan
-/// diterima versi gaji BERSIH, dengan label "(bersih)" supaya tidak tertukar
-/// dengan ubin kotor (T-5.9).
+/// Ringkasan Freelance (prototipe `Freelance.dc.html`): "Belum diterima"
+/// (gaji kotor) sebagai angka utama di atas `bg`, yang sudah diterima di
+/// bawahnya, lalu satu kartu daftar: tagihan tertunda (bersih) dan jam yang
+/// belum ditagih (kotor). Kerja selesai bukan uang diterima: angka utama tidak
+/// pernah dijumlahkan ke saldo (aturan 6).
 class FreelanceSummaryCard extends StatelessWidget {
   /// Membuat [FreelanceSummaryCard].
   const FreelanceSummaryCard({
     required this.summary,
     required this.projectCount,
     required this.payments,
+    this.unbilledHours = 0,
+    this.unbilledAmount = 0,
     super.key,
   });
 
@@ -58,143 +59,70 @@ class FreelanceSummaryCard extends StatelessWidget {
   /// Jumlah proyek.
   final int projectCount;
 
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final ratio = summary.earned == 0 ? 0.0 : summary.paid / summary.earned;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(t.freelance.summaryTitle.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
-          const SizedBox(height: AppSpacing.space2),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: _Tile(
-                    icon: IconKey.workCompleted,
-                    label: t.freelance.totalHoursLabel,
-                    value: t.freelance.hoursValue(hours: summary.totalHours),
-                    caption: t.freelance.projectCount(count: projectCount),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(
-                  child: _Tile(
-                    icon: IconKey.hourlyRate,
-                    label: t.freelance.earnedLabel,
-                    value: AppMoneyFormatter.format(summary.earned),
-                    caption: t.freelance.earnedCaption,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: _Tile(
-                    icon: IconKey.paid,
-                    label: t.freelance.paidLabel,
-                    value: AppMoneyFormatter.format(summary.paid),
-                    caption: t.freelance.paidCaption,
-                    color: colors.positive,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(
-                  child: _Tile(
-                    icon: IconKey.pending,
-                    label: t.freelance.unpaidLabel,
-                    value: AppMoneyFormatter.format(summary.unpaid),
-                    caption: t.freelance.unpaidCaption,
-                    color: colors.warning,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (summary.earned > 0) ...[
-            const SizedBox(height: AppSpacing.space2),
-            FreelanceShareBar(parts: [(summary.paid, colors.positive), (summary.unpaid, colors.warning)]),
-            const SizedBox(height: 4),
-            Text(
-              t.freelance.paidRatio(percent: (ratio * 100).round()),
-              style: labelSmStyle(context, color: colors.ink2),
-            ),
-          ],
-          if (payments.pendingCount > 0) ...[
-            const SizedBox(height: AppSpacing.space2),
-            FreelanceAmountLine(
-              icon: IconKey.pending,
-              label: t.freelance.pendingTotalLabel,
-              caption: t.freelance.nextExpected(
-                count: payments.pendingCount,
-                date: CycleMonthFormatter.formatDateShort(payments.nextExpectedDate!),
-              ),
-              amount: payments.pendingNet,
-              color: colors.warning,
-            ),
-          ],
-          if (payments.paidCount > 0) ...[
-            const SizedBox(height: AppSpacing.space1),
-            FreelanceAmountLine(
-              icon: IconKey.paid,
-              label: t.freelance.paidTotalLabel,
-              caption: t.freelance.paymentCount(count: payments.paidCount),
-              amount: payments.paidNet,
-              color: colors.positive,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
+  /// Jam kerja yang belum masuk tagihan, seluruh proyek.
+  final int unbilledHours;
 
-class _Tile extends StatelessWidget {
-  const _Tile({required this.icon, required this.label, required this.value, required this.caption, this.color});
-
-  final IconKey icon;
-  final String label;
-  final String value;
-  final String caption;
-  final Color? color;
+  /// Gaji kotor jam yang belum ditagih, sen.
+  final int unbilledAmount;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final ink = color ?? colors.ink;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: BoxDecoration(
-        color: color == null ? colors.surface2 : colors.tinted(ink, 0.12),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppIcon(icon, size: 18),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
+              Text(t.freelance.unpaidLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+              HeroAmount(AppMoneyFormatter.format(summary.unpaid)),
+              Text.rich(
+                TextSpan(
+                  text: '${t.freelance.paidLabel} ',
+                  children: [
+                    TextSpan(
+                      text: AppMoneyFormatter.format(summary.paid),
+                      style: context.numberStyles.amountSm.copyWith(color: colors.positive),
+                    ),
+                  ],
+                ),
+                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
               ),
+              if (summary.earned > 0) ...[
+                const SizedBox(height: AppSpacing.space3),
+                FreelanceShareBar(parts: [(summary.paid, colors.positive), (summary.unpaid, colors.warningFill)]),
+              ],
             ],
           ),
-          const SizedBox(height: 2),
-          FitStart(
-            child: Text(value, style: context.numberStyles.amount.copyWith(color: ink)),
+        ),
+        if (payments.pendingCount > 0 || unbilledHours > 0) ...[
+          const SizedBox(height: AppSpacing.space4),
+          AppListCard(
+            children: [
+              if (payments.pendingCount > 0)
+                AppListRow(
+                  leading: const AppIconTile(IconKey.pending),
+                  title: t.freelance.pendingTotalLabel,
+                  subtitle: t.freelance.nextExpected(
+                    count: payments.pendingCount,
+                    date: CycleMonthFormatter.formatDayMonth(payments.nextExpectedDate!),
+                  ),
+                  trailing: AppMoneyText(payments.pendingNet),
+                ),
+              if (unbilledHours > 0)
+                AppListRow(
+                  leading: const AppIconTile(IconKey.schedule, tint: TileTint.slate),
+                  title: t.freelance.unbilledLabel,
+                  subtitle: t.freelance.hoursValue(hours: unbilledHours),
+                  trailing: AppMoneyText(unbilledAmount),
+                ),
+            ],
           ),
-          Text(caption, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
         ],
-      ),
+      ],
     );
   }
 }

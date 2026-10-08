@@ -6,7 +6,6 @@ import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/freelance/domain/entities/freelance_project.dart';
 import 'package:saldough/features/freelance/presentation/bloc/freelance_state.dart';
-import 'package:saldough/features/freelance/presentation/freelance_format.dart';
 
 /// Kotak ikon pixel berlatar tipis, dipakai di kartu dan judul freelance.
 class FreelanceIconBox extends StatelessWidget {
@@ -174,103 +173,23 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
     final terms = [
       '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
-      for (final rule in project.deductionRules) describeDeduction(rule),
+      t.freelance.hoursValue(hours: stats.totalHours),
     ].join(' · ');
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  const FreelanceIconBox(IconKey.freelance, size: 48),
-                  const SizedBox(width: AppSpacing.space2),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(project.name, style: textTheme.titleMedium),
-                        Text(terms, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                      ],
-                    ),
-                  ),
-                  AppIcon(IconKey.chevronRight, color: colors.ink2),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.space2),
-              FreelanceAmountLine(
-                icon: IconKey.workCompleted,
-                label: t.freelance.unbilledLabel,
-                caption: stats.unbilledCount == 0
-                    ? t.freelance.unbilledNone
-                    : t.freelance.hoursValue(hours: stats.unbilledHours),
-                amount: stats.unbilledAmount,
-              ),
-              if (paymentStats.pendingCount > 0) ...[
-                const SizedBox(height: AppSpacing.space1),
-                FreelanceAmountLine(
-                  icon: IconKey.pending,
-                  label: t.freelance.pendingTotalLabel,
-                  caption: t.freelance.nextExpected(
-                    count: paymentStats.pendingCount,
-                    date: CycleMonthFormatter.formatDateShort(paymentStats.nextExpectedDate!),
-                  ),
-                  amount: paymentStats.pendingNet,
-                  color: colors.warning,
-                ),
-              ],
-              if (paymentStats.paidCount > 0) ...[
-                const SizedBox(height: AppSpacing.space1),
-                FreelanceAmountLine(
-                  icon: IconKey.paid,
-                  label: t.freelance.paidTotalLabel,
-                  caption: t.freelance.paymentCount(count: paymentStats.paidCount),
-                  amount: paymentStats.paidNet,
-                  color: colors.positive,
-                ),
-              ],
-              if (stats.earned > 0) ...[
-                const SizedBox(height: AppSpacing.space2),
-                FreelanceShareBar(
-                  parts: [
-                    (stats.paidAmount, colors.positive),
-                    (stats.pendingAmount, colors.warning),
-                    (stats.unbilledAmount, colors.ink2.withValues(alpha: 0.35)),
-                  ],
-                ),
-              ],
-              const SizedBox(height: AppSpacing.space1),
-              Row(
-                children: [
-                  AppIcon(IconKey.calendar, size: 16, color: colors.ink2),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      switch (stats.lastEntryDate) {
-                        final date? => t.freelance.lastEntryOn(date: CycleMonthFormatter.formatDateShort(date)),
-                        null => t.freelance.noEntriesYet,
-                      },
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                    ),
-                  ),
-                  Text(
-                    t.freelance.entryCountLabel(count: stats.entryCount),
-                    style: labelSmStyle(context, color: colors.ink2),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+    final unpaid = stats.earned - stats.paidAmount;
+    // Baris proyek (prototipe `Freelance.dc.html`): belum diterima di kanan,
+    // atau badge Lunas bila seluruh kerjanya sudah dibayar.
+    return AppListRow(
+      leading: const AppIconTile(IconKey.freelance),
+      title: project.name,
+      subtitle: terms,
+      onTap: onTap,
+      trailing: unpaid > 0
+          ? AppMoneyText(unpaid)
+          : stats.earned > 0
+          ? AppBadge(t.freelance.paidOffBadge, tone: AppTone.positive, icon: IconKey.check)
+          : null,
     );
   }
 }
@@ -286,69 +205,8 @@ class AddProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: CustomPaint(
-          painter: _DashedBorderPainter(color: colors.ink2),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.space4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppIcon(IconKey.add, color: colors.brand),
-                const SizedBox(width: AppSpacing.space1),
-                // Teks diperbesar membungkus ke baris berikutnya, bukan meluber.
-                Flexible(
-                  child: Text(
-                    t.freelance.projectAddTitle.toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: labelSmStyle(context, color: colors.brand),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return AppButton.secondary(label: t.freelance.projectAddTitle, icon: IconKey.add, expand: true, onPressed: onTap);
   }
-}
-
-class _DashedBorderPainter extends CustomPainter {
-  _DashedBorderPainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-    const dash = 6.0;
-    const gap = 4.0;
-    void line(Offset from, Offset to) {
-      final length = (to - from).distance;
-      final direction = (to - from) / length;
-      for (var d = 0.0; d < length; d += dash + gap) {
-        final end = d + dash > length ? length : d + dash;
-        canvas.drawLine(from + direction * d, from + direction * end, paint);
-      }
-    }
-
-    final r = Offset.zero & size;
-    line(r.topLeft, r.topRight);
-    line(r.topRight, r.bottomRight);
-    line(r.bottomRight, r.bottomLeft);
-    line(r.bottomLeft, r.topLeft);
-  }
-
-  @override
-  bool shouldRepaint(_DashedBorderPainter oldDelegate) => oldDelegate.color != color;
 }
 
 /// Ilustrasi keadaan kosong freelance: susunan ikon pixel besar dengan

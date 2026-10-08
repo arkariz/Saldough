@@ -1618,6 +1618,9 @@ class Translations$freelance$id {
 
 	/// id: 'Kerja $range'
 	String paymentWorkRange({required Object range}) => 'Kerja ${range}';
+
+	/// id: 'Lunas'
+	String get paidOffBadge => 'Lunas';
 }
 
 // Path: home
@@ -4289,6 +4292,7 @@ extension on Translations {
 			'freelance.paymentsFilteredEmpty' => 'Tidak ada pembayaran dengan status ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
+			'freelance.paidOffBadge' => 'Lunas',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
 			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
@@ -4749,9 +4753,9 @@ extension on Translations {
 			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
-			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',

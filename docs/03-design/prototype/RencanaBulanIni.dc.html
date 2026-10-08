@@ -22,9 +22,9 @@ body{margin:0}
     <h1 class="tk-topbar__title">Rencana</h1>
   </header>
   <nav class="tk-subtabs" aria-label="Bagian Rencana">
-    <a class="tk-subtab is-active" href="Main.dc.html" aria-current="page">Bulan ini</a>
-    <a class="tk-subtab" href="Anggaran.dc.html">Anggaran</a>
-    <a class="tk-subtab" href="Rutin.dc.html">Rutin</a>
+    <a class="tk-subtab is-active" href="RencanaBulanIni.dc.html" aria-current="page">Bulan ini</a>
+    <a class="tk-subtab" href="RencanaAnggaran.dc.html">Anggaran</a>
+    <a class="tk-subtab" href="RencanaRutin.dc.html">Rutin</a>
   </nav>
 
   <main class="tk-body tk-scroll" style="gap: 16px; padding: 16px 16px 32px">
@@ -47,9 +47,9 @@ body{margin:0}
       </div>
       <p class="tk-amt tk-t-amount-hero" style="margin-top: -8px">{{p.total}}</p>
       <div class="inset">
-        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
-        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
-        <a class="inset__row" href="Anggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
+        <a class="inset__row" href="RencanaAnggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
         <sc-if value="{{p.hasOutside}}" hint-placeholder-val="{{true}}"><div class="inset__row"><span class="tk-ink-2">Di luar rencana</span><span class="tk-amt tk-t-amount-sm">−Rp57.000</span></div></sc-if>
       </div>
     </section>
@@ -132,7 +132,7 @@ body{margin:0}
         </div>
       </section>
       <section class="tk-section">
-        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="Rutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="RencanaRutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
         <div class="tk-list">
           <div class="today-rule">hari ini, 2 Okt</div>
           <div class="sched">
@@ -159,10 +159,10 @@ body{margin:0}
   </main>
 
   <nav class="tk-nav" aria-label="Navigasi utama">
-    <a class="tk-nav__item" href="Beranda.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="BerandaRutin.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</button>
     <a class="tk-nav__catat" href="CatatUlangi.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
-    <a class="tk-nav__item is-active" href="Main.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
+    <a class="tk-nav__item is-active" href="RencanaBulanIni.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</button>
   </nav>
 

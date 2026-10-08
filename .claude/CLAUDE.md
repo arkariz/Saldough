@@ -28,7 +28,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |
-| **Desain UI (wajib sebelum membuat atau mengubah tampilan)** | Skill `tanukonomy-ui`. Sumbernya artefak pemilik: [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) dan [prototipe 12 layar](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ), baca dengan alat Artifact (`action: "read"`, `path: "project/README.md"`); salinannya di `docs/03-design/`. Keputusannya [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
+| **Desain UI (wajib sebelum membuat atau mengubah tampilan)** | Skill `tanukonomy-ui`. Sumbernya artefak pemilik: [design system](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) [prototipe 12 layar](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ), dan [prototipe Rencana dan Rutin](https://claude.ai/artifact/PzQEmLqRBQM72YM6HhU7pS), baca dengan alat Artifact (`action: "read"`, `path: "project/README.md"`); salinannya di `docs/03-design/`. Keputusannya [ADR-034](../docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md) |
 | **Rujukan visual lama (arsip, digantikan ADR-034)** | `docs/stitch_pixel_finance_tracker/` |
 | **Kebiasaan keuangan pemilik** | `docs/00-foundation/MANUAL_PROCESS_ANALYSIS.md` |
 | **Dokumen Saldough 1.0** | `docs/99-archive/` |

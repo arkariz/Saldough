@@ -8,6 +8,7 @@ Sumber kebenarannya dua artefak di akun pemilik; folder ini salinannya.
 |---|---|
 | [Tanukonomy Design System](https://claude.ai/artifact/HHq7YfEY5Wtc1JXtBhzBQS) | [`design-system/`](design-system/README.md) |
 | [Tanukonomy Halaman Baru](https://claude.ai/artifact/L4176HPgR9gCXACe3gyRbZ) (prototipe 12 layar) | [`prototype/`](prototype/) |
+| [Prototipe Rencana dan Rutin](https://claude.ai/artifact/PzQEmLqRBQM72YM6HhU7pS) (6 layar, fitur rutin dan perkiraan) | [`prototype/`](prototype/), nama berkas di bawah |
 | [Sampel Beranda](https://claude.ai/artifact/UHo61QLURngZRqFLPNd7Ko) (riwayat review) | tidak disalin |
 
 ## Untuk agen yang membuat atau mengubah UI
@@ -36,6 +37,28 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
 - `prototype/*.dc.html` — layar prototipe (format kanvas Design; markup
   HTML biasa dengan kelas `tk-*` dari `bundle.css` dan variabel di
   `tokens.css`). `Main.dc.html` adalah Beranda.
+- Layar tab Rencana dan rutin di `prototype/`
+  ([RECURRING_AND_FORECAST](../01-product/features/RECURRING_AND_FORECAST.md),
+  [PLAN_TAB_LAYOUT](../01-product/features/PLAN_TAB_LAYOUT.md)), dari
+  artefak Prototipe Rencana dan Rutin. Namanya diganti di salinan supaya
+  tidak bertabrakan dengan layar prototipe utama:
+
+  | Salinan | Di artefak | Isi |
+  |---|---|---|
+  | `RencanaBulanIni.dc.html` | `Main.dc.html` | Segmen Bulan ini, grafik saldo tangga |
+  | `RencanaRutin.dc.html` | `Rutin.dc.html` | Segmen Rutin |
+  | `RencanaAnggaran.dc.html` | `Anggaran.dc.html` | Segmen Anggaran |
+  | `RincianRutin.dc.html` | sama | Rincian rutin (Cicilan iPhone) |
+  | `BerandaRutin.dc.html` | `Beranda.dc.html` | Beranda dengan kartu Menunggu dicatat |
+  | `CatatUlangi.dc.html` | sama | Bagian Ulangi di Catat |
+
+  Komponen yang belum masuk design system (sub-tab, kartu perkiraan
+  bergaris putus, baris jadwal, grafik saldo tangga `fc-*`, bagian Ulangi)
+  ada di `prototype/rencana.css`. Grafik Bulan ini menghitung saldo per
+  hari di `renderVals()` dari jadwal rutin dan sebaran harian anggaran;
+  angkanya contoh spec (hari ini 2 Okt 2026), saldo BCA hari ini
+  Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
+  anggapan prototipe.
 
 ## Menjaga salinan
 

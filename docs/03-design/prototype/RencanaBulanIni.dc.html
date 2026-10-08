@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Rencana, Bulan ini</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="rencana.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Rencana</h1>
+  </header>
+  <nav class="tk-subtabs" aria-label="Bagian Rencana">
+    <a class="tk-subtab is-active" href="RencanaBulanIni.dc.html" aria-current="page">Bulan ini</a>
+    <a class="tk-subtab" href="RencanaAnggaran.dc.html">Anggaran</a>
+    <a class="tk-subtab" href="RencanaRutin.dc.html">Rutin</a>
+  </nav>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 16px 16px 32px">
+    <div class="tk-banner" role="status">
+      <span class="tk-icon">warning</span>
+      <span class="tk-banner__text">Saldo BCA diperkirakan kurang untuk Cicilan iPhone 10 Okt. Siapkan dana di BCA.</span>
+    </div>
+
+    <div class="mchips" role="group" aria-label="Pilih bulan">
+      <button class="mchip {{mOkt.cls}}" type="button" aria-pressed="{{mOkt.pressed}}" onClick="{{mOkt.pick}}">Okt</button>
+      <button class="mchip is-est {{mNov.cls}}" type="button" aria-pressed="{{mNov.pressed}}" onClick="{{mNov.pick}}">Nov</button>
+      <button class="mchip is-est {{mDes.cls}}" type="button" aria-pressed="{{mDes.pressed}}" onClick="{{mDes.pick}}">Des</button>
+    </div>
+
+    <section class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 4px; margin: -8px -8px 0 0">
+        <span class="tk-t-body-sm tk-ink-2" style="flex: 1">Uang nganggur · {{p.short}}</span>
+        <sc-if value="{{p.est}}" hint-placeholder-val="{{false}}"><span class="tk-badge">Perkiraan</span></sc-if>
+        <button class="tk-iconbtn" type="button" aria-label="Apa itu uang nganggur" onClick="{{openInfo}}"><span class="tk-icon tk-icon--sm">info</span></button>
+      </div>
+      <p class="tk-amt tk-t-amount-hero" style="margin-top: -8px">{{p.total}}</p>
+      <div class="inset">
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
+        <a class="inset__row" href="RencanaAnggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
+        <sc-if value="{{p.hasOutside}}" hint-placeholder-val="{{true}}"><div class="inset__row"><span class="tk-ink-2">Di luar rencana</span><span class="tk-amt tk-t-amount-sm">−Rp57.000</span></div></sc-if>
+      </div>
+    </section>
+
+    <section class="est-card" aria-label="Perkiraan saldo dompet">
+      <div class="est-card__head">
+        <span class="tk-t-body-strong">Saldo dompet ≈</span>
+        <div class="tk-chips">
+          <button class="tk-chip {{wAll.cls}}" type="button" aria-pressed="{{wAll.pressed}}" onClick="{{wAll.pick}}" style="height: 32px">Semua</button>
+          <button class="tk-chip {{wBca.cls}}" type="button" aria-pressed="{{wBca.pressed}}" onClick="{{wBca.pick}}" style="height: 32px">BCA</button>
+        </div>
+      </div>
+      <div class="est-tiles">
+        <div class="tk-stat"><span class="tk-stat__label">Akhir {{p.short}}</span><span class="tk-amt tk-t-amount">{{g.end}}</span></div>
+        <div class="tk-stat"><span class="tk-stat__label">Paling tipis · {{g.lowDate}}</span><span class="tk-amt tk-t-amount {{g.lowCls}}">{{g.low}}</span></div>
+      </div>
+
+      <div class="fc-legend" aria-hidden="true">
+        <sc-if value="{{isOkt}}" hint-placeholder-val="{{true}}"><span><i class="fc-key"></i>Tercatat</span></sc-if>
+        <span><i class="fc-key fc-key--est"></i>Perkiraan</span>
+        <span><i class="fc-key-sq"></i>Rutin</span>
+        <span><i class="fc-key-sq fc-key-sq--in"></i>Masuk</span>
+      </div>
+
+      <div class="fc">
+        <svg width="296" height="180" viewBox="0 0 296 180" aria-hidden="true">
+          <path class="fc-grid" d="{{g.grid}}"></path>
+          <path class="fc-area" d="{{g.pos}}"></path>
+          <path class="fc-area-neg" d="{{g.neg}}"></path>
+          <path class="fc-zero" d="{{g.zero}}"></path>
+          <path class="fc-today" d="{{g.today}}"></path>
+          <path class="fc-line" d="{{g.actual}}"></path>
+          <path class="fc-line fc-line--est" d="{{g.est}}"></path>
+          <path class="fc-ev" d="{{g.evOut}}"></path>
+          <path class="fc-ev fc-ev--in" d="{{g.evIn}}"></path>
+          <path class="fc-ev fc-ev--tr" d="{{g.evTr}}"></path>
+          <path class="fc-cross" d="{{g.cross}}"></path>
+          <rect class="fc-dot {{g.lowMark.cls}}" x="{{g.lowMark.x}}" y="{{g.lowMark.y}}" width="8" height="8"></rect>
+          <rect class="fc-dot fc-dot--sel {{g.selMark.cls}}" x="{{g.selMark.x}}" y="{{g.selMark.y}}" width="10" height="10"></rect>
+        </svg>
+        <sc-for list="{{g.yLabels}}" as="t" hint-placeholder-count="4">
+          <span class="fc-y" style="top: {{t.top}}px">{{t.text}}</span>
+        </sc-for>
+        <sc-for list="{{g.xLabels}}" as="t" hint-placeholder-count="4">
+          <span class="fc-x {{t.cls}}" style="left: {{t.left}}px">{{t.text}}</span>
+        </sc-for>
+        <sc-if value="{{isOkt}}" hint-placeholder-val="{{true}}">
+          <span class="fc-now" style="left: {{g.todayLeft}}px">Hari ini</span>
+        </sc-if>
+        <div class="fc-hit" role="group" aria-label="{{g.summary}}" style="grid-template-columns: repeat({{g.n}}, minmax(0, 1fr))">
+          <sc-for list="{{g.days}}" as="d" hint-placeholder-count="31">
+            <button class="fc-hit__day" type="button" aria-label="{{d.aria}}" onClick="{{d.pick}}" onMouseEnter="{{d.pick}}"></button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="fc-read" aria-live="polite">
+        <div class="fc-read__head">
+          <span class="tk-t-body-strong">{{r.date}}</span>
+          <sc-if value="{{r.hasBadge}}" hint-placeholder-val="{{true}}"><span class="tk-badge">{{r.badge}}</span></sc-if>
+          <span class="tk-amt tk-t-amount-sm {{r.cls}}">{{r.val}}</span>
+        </div>
+        <sc-for list="{{r.items}}" as="it" hint-placeholder-count="2">
+          <div class="fc-read__row"><span class="tk-ink-2">{{it.name}}</span><span class="tk-amt {{it.cls}}">{{it.amt}}</span></div>
+        </sc-for>
+      </div>
+      <button class="tk-link" type="button" style="align-self: flex-start" onClick="{{openRincian}}">Rincian<span class="tk-icon tk-icon--sm">chevron_right</span></button>
+    </section>
+
+    <sc-if value="{{isOkt}}" hint-placeholder-val="{{true}}">
+      <section class="tk-section">
+        <div class="group-label"><span class="dot"></span>Menunggu dicatat</div>
+        <div class="tk-list">
+          <div class="sched">
+            <span class="sched__date"><span class="sched__day">1</span><span class="sched__dow">Kam</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/cc1e488ee5f43c050d4c6558ebd58a86" alt="" width="32" height="32"></span>
+            <span class="tk-row__main"><span class="tk-row__title">Netflix</span><span class="tk-row__sub">BCA</span></span>
+            <span class="tk-row__end"><span class="tk-amt tk-t-amount">−Rp65.000</span><button class="tk-btn tk-btn--secondary tk-btn--sm" type="button">Catat</button></span>
+          </div>
+        </div>
+      </section>
+      <section class="tk-section">
+        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="RencanaRutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+        <div class="tk-list">
+          <div class="today-rule">hari ini, 2 Okt</div>
+          <div class="sched">
+            <span class="sched__date"><span class="sched__day">5</span><span class="sched__dow">Sen</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/b6f5395e69800807a8c9ae3ba446d7ee" alt="" width="32" height="32"></span>
+            <span class="tk-row__main"><span class="tk-row__title">Listrik</span></span>
+            <span class="tk-amt tk-t-amount">≈−Rp200.000</span>
+          </div>
+          <div class="sched">
+            <span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Sab</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/3a857ac526ad1b82c14ca6648e20568b" alt="" width="32" height="32"></span>
+            <span class="tk-row__main"><span class="tk-row__title">Cicilan iPhone</span><span class="tk-row__sub">4 dari 12</span></span>
+            <span class="tk-amt tk-t-amount">−Rp2.914.000</span>
+          </div>
+          <div class="sched">
+            <span class="sched__date"><span class="sched__day">25</span><span class="sched__dow">Min</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/8820c66926bffb77a5ecac199e22b3bd" alt="" width="32" height="32"></span>
+            <span class="tk-row__main"><span class="tk-row__title">Gaji</span></span>
+            <span class="tk-amt tk-t-amount tk-amt--pos">+Rp12.000.000</span>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item" href="BerandaRutin.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</button>
+    <a class="tk-nav__catat" href="CatatUlangi.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item is-active" href="RencanaBulanIni.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
+    <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</button>
+  </nav>
+
+  <sc-if value="{{showInfo}}" hint-placeholder-val="{{false}}">
+    <button class="tk-scrim" type="button" aria-label="Tutup" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet" role="dialog" aria-label="Uang nganggur" style="position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 24px">
+      <div class="tk-sheet__handle"></div>
+      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Uang nganggur · Okt</h2><span style="width: 48px; flex: none"></span></div>
+      <div class="formula">
+        <div class="formula__row"><span>Pemasukan terencana</span><span class="tk-amt">+Rp12.000.000</span></div>
+        <div class="formula__row"><span>Tagihan rutin</span><span class="tk-amt">−Rp5.879.000</span></div>
+        <div class="formula__row"><span>Anggaran</span><span class="tk-amt">−Rp3.068.500</span></div>
+        <div class="formula__row"><span>Di luar rencana (tercatat)</span><span class="tk-amt">−Rp57.000</span></div>
+        <div class="formula__row formula__total"><span>Uang nganggur</span><span class="tk-amt">Rp2.995.500</span></div>
+      </div>
+      <p class="tk-t-body-sm tk-ink-2">Bukan saldo dompet.</p>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{showRincian}}" hint-placeholder-val="{{false}}">
+    <button class="tk-scrim" type="button" aria-label="Tutup" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet" role="dialog" aria-label="Rincian saldo dompet" style="position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 24px">
+      <div class="tk-sheet__handle"></div>
+      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Saldo dompet akhir Okt ≈</h2><span style="width: 48px; flex: none"></span></div>
+      <div class="formula">
+        <div class="formula__row"><span>Saldo dompet hari ini</span><span class="tk-amt">Rp6.500.000</span></div>
+        <div class="formula__row"><span>Masuk terjadwal</span><span class="tk-amt">+Rp12.000.000</span></div>
+        <div class="formula__row"><span>Sisa tagihan rutin</span><span class="tk-amt">−Rp3.979.000</span></div>
+        <div class="formula__row"><span>Sisa anggaran</span><span class="tk-amt">−Rp2.700.000</span></div>
+        <sc-if value="{{jajan}}" hint-placeholder-val="{{true}}"><div class="formula__row"><span>Jajan harian, ≈Rp30.000 × 30 hari</span><span class="tk-amt">−Rp900.000</span></div></sc-if>
+        <div class="formula__row formula__total"><span>Akhir Oktober</span><span class="tk-amt">{{rincianEnd}}</span></div>
+      </div>
+      <label class="tk-row tk-row--compact" style="padding: 8px 0"><span class="tk-row__main"><span class="tk-row__title">Hitung jajan harian</span><span class="tk-row__sub">Belanja kecil di luar rencana</span></span><span class="tk-switch"><input type="checkbox" checked="{{jajan}}" onChange="{{toggleJajan}}" aria-label="Hitung jajan harian"><span class="tk-switch__track"></span></span></label>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const month = s.month || 'okt';
+    const wallet = s.wallet || 'all';
+    const sheet = s.sheet || '';
+    const jajan = s.jajan !== false;
+    const plans = {
+      okt: { short: 'Okt', est: false, total: 'Rp2.995.500', income: '+Rp12.000.000', bills: '−Rp5.879.000', budget: '−Rp3.068.500', hasOutside: true },
+      nov: { short: 'Nov', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false },
+      des: { short: 'Des', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false }
+    };
+    const g = this.forecast(month, wallet, jajan, s.sel);
+    const pick = (key, cur, field) => ({
+      cls: cur === key ? 'is-selected' : '',
+      pressed: cur === key ? 'true' : 'false',
+      pick: () => this.setState({ [field]: key, sel: null })
+    });
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      p: plans[month],
+      g: g,
+      r: g.read,
+      mOkt: pick('okt', month, 'month'),
+      mNov: pick('nov', month, 'month'),
+      mDes: pick('des', month, 'month'),
+      wAll: pick('all', wallet, 'wallet'),
+      wBca: pick('bca', wallet, 'wallet'),
+      isOkt: month === 'okt',
+      showInfo: sheet === 'info',
+      showRincian: sheet === 'rincian',
+      jajan: jajan,
+      rincianEnd: this.forecast('okt', 'all', jajan, null).end,
+      toggleJajan: () => this.setState({ jajan: !jajan, sel: null }),
+      openInfo: () => this.setState({ sheet: 'info' }),
+      openRincian: () => this.setState({ sheet: 'rincian' }),
+      close: () => this.setState({ sheet: '' })
+    };
+  }
+
+  // Daily end-of-day balance projection. Okt day 1 is recorded; everything after is an estimate.
+  series(mk, w, jajan) {
+    const M = { okt: { n: 31 }, nov: { n: 30 }, des: { n: 31 } };
+    const n = M[mk].n;
+    const rutin = [
+      { d: 1, name: 'Kos', amt: -1900000 },
+      { d: 1, name: 'Netflix', amt: -65000 },
+      { d: 5, name: 'Listrik', amt: -200000, approx: true },
+      { d: 10, name: 'Cicilan iPhone', amt: -2914000 },
+      { d: 25, name: 'Gaji', amt: 12000000 },
+      { d: 26, name: 'Ke Tabungan', amt: -1000000, transfer: true },
+      { d: 28, name: 'Sabil', amt: -800000 }
+    ];
+    let ev, start, spendTotal, spendFrom;
+    if (mk === 'okt') {
+      ev = rutin.filter((e) => e.name !== 'Kos').map((e) => e.name === 'Netflix' ? Object.assign({}, e, { d: 2, name: 'Netflix, menunggu' }) : e);
+      start = w === 'all' ? 6500000 : 2820000;
+      spendTotal = w === 'all' ? 2700000 + (jajan ? 900000 : 0) : 1950000;
+      spendFrom = 2;
+    } else {
+      const prev = this.series(mk === 'nov' ? 'okt' : 'nov', w, jajan);
+      ev = rutin;
+      start = prev.v[prev.n];
+      spendTotal = w === 'all' ? 3068500 + (jajan ? 30000 * n : 0) : 2268500;
+      spendFrom = 1;
+    }
+    const k = n - spendFrom + 1;
+    const per = Math.round(spendTotal / k);
+    const spend = (d) => d < spendFrom ? 0 : (d === n ? spendTotal - per * (k - 1) : per);
+    const eff = (e) => e.transfer && w === 'all' ? 0 : e.amt;
+    const v = [];
+    let cur = start;
+    for (let d = 1; d <= n; d++) {
+      if (mk === 'okt' && d === 1) { v[1] = start; continue; }
+      cur = cur - spend(d) + ev.filter((e) => e.d === d).reduce((a, e) => a + eff(e), 0);
+      v[d] = cur;
+    }
+    return { n: n, v: v, ev: ev, per: per, spendFrom: spendFrom, eff: eff };
+  }
+
+  forecast(mk, w, jajan, selState) {
+    const LAB = { okt: 'Okt', nov: 'Nov', des: 'Des' };
+    const MI = { okt: 9, nov: 10, des: 11 };
+    const DOW = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    const dots = (x) => String(x).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const r1k = (x) => Math.round(Math.abs(x) / 1000) * 1000;
+    const mag0 = (x, est) => dots(est ? r1k(x) : Math.abs(x));
+    const rp = (x, est) => (est ? '≈' : '') + (x < 0 ? '−' : '') + 'Rp' + mag0(x, est);
+    const signed = (x, est) => (est ? '≈' : '') + (x < 0 ? '−' : '+') + 'Rp' + mag0(x, est);
+    const jt = (x) => x === 0 ? '0' : (x < 0 ? '−' : '') + String(Math.abs(x) / 1e6).replace('.', ',') + 'jt';
+    const f1 = (x) => Math.round(x * 10) / 10;
+
+    const S = this.series(mk, w, jajan);
+    const n = S.n, v = S.v, okt = mk === 'okt';
+    const W = 256, TOP = 18, BOT = 144, LANE = 147;
+    const cw = W / n;
+    const xl = (d) => (d - 1) * cw, xr = (d) => d * cw, xc = (d) => (d - 0.5) * cw;
+
+    let lo = 0, hi = 0, low = 1;
+    for (let d = 1; d <= n; d++) { lo = Math.min(lo, v[d]); hi = Math.max(hi, v[d]); if (v[d] < v[low]) low = d; }
+    // Ticks on clean multiples; a dip below zero gets just enough room, not a whole extra tick.
+    const raw = (hi - lo) / 3, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 5, 10].map((m) => m * mag).find((c) => c >= raw);
+    const yMax = Math.ceil(hi / step) * step;
+    const yMin = lo < 0 ? lo - 0.1 * (yMax - lo) : 0;
+    const Y = (x) => f1(TOP + (yMax - x) / (yMax - yMin) * (BOT - TOP));
+    const Y0 = Y(0);
+
+    const ticks = [];
+    for (let t = Math.ceil(yMin / step) * step; t <= yMax + 1; t += step) ticks.push(t);
+    const grid = ticks.filter((t) => t !== 0 || yMin === 0).map((t) => 'M0 ' + (Math.round(Y(t)) + 0.5) + 'H' + W).join('');
+    const zero = yMin < 0 ? 'M0 ' + (Math.round(Y0) + 0.5) + 'H' + W : '';
+
+    const stairs = (from, to) => {
+      let p = from > 1 ? 'M' + f1(xl(from)) + ' ' + Y(v[from - 1]) + 'V' + Y(v[from]) : 'M0 ' + Y(v[1]);
+      for (let d = from; d <= to; d++) { p += 'H' + f1(xr(d)); if (d < to) p += 'V' + Y(v[d + 1]); }
+      return p;
+    };
+    let pos = '', neg = '';
+    for (let d = 1; d <= n; d++) {
+      const y = Y(v[d]);
+      const col = 'M' + f1(xl(d)) + ' ' + Math.min(y, Y0) + 'H' + f1(xr(d)) + 'V' + Math.max(y, Y0) + 'H' + f1(xl(d)) + 'Z';
+      if (v[d] >= 0) pos += col; else neg += col;
+    }
+
+    let evOut = '', evIn = '', evTr = '';
+    const sq = (d) => 'M' + f1(xc(d) - 3) + ' ' + LANE + 'h6v6h-6Z';
+    for (let d = 1; d <= n; d++) {
+      const es = S.ev.filter((e) => e.d === d);
+      if (okt && d === 1) { evOut += sq(d); continue; }
+      if (!es.length) continue;
+      if (es.some((e) => S.eff(e) > 0)) evIn += sq(d);
+      else if (es.every((e) => e.transfer)) evTr += 'M' + f1(xc(d) - 2.25) + ' ' + (LANE + 0.75) + 'h4.5v4.5h-4.5Z';
+      else evOut += sq(d);
+    }
+
+    const sel = selState && selState.key === mk + w ? selState.day : low;
+    const mark = (d, size, hide) => ({
+      x: f1(xc(d) - size / 2), y: f1(Y(v[d]) - size / 2),
+      cls: (hide ? 'is-hidden ' : '') + (v[d] < 0 ? 'is-neg' : '')
+    });
+
+    const date = (d) => DOW[new Date(2026, MI[mk], d).getDay()] + ', ' + d + ' ' + LAB[mk];
+    const items = [];
+    if (okt && sel === 1) {
+      const rec = [{ name: 'Kos', amt: -1900000, bca: true }, { name: 'Belanja bulanan', amt: -318500, bca: true }, { name: 'Jajan', amt: -50000, bca: false }];
+      rec.filter((e) => w === 'all' || e.bca).forEach((e) => items.push({ name: e.name, amt: signed(e.amt, false), cls: '' }));
+    } else {
+      S.ev.filter((e) => e.d === sel).forEach((e) => {
+        const x = S.eff(e);
+        items.push({ name: e.name, amt: x === 0 ? 'Rp' + dots(Math.abs(e.amt)) : signed(x, e.approx), cls: x > 0 ? 'tk-amt--pos' : x === 0 ? 'tk-amt--muted' : '' });
+      });
+      if (sel >= S.spendFrom) items.push({ name: w === 'all' ? 'Anggaran dan jajan' : 'Anggaran Belanja', amt: signed(-S.per, true), cls: 'tk-amt--muted' });
+    }
+    const isActual = okt && sel === 1;
+    const badge = isActual ? 'Tercatat' : sel === low ? 'Paling tipis' : (okt && sel === 2) ? 'Hari ini' : '';
+
+    const xs = [1, 10, 20, n].map((d) => ({
+      text: String(d),
+      left: d === 1 ? 0 : d === n ? W : f1(xc(d)),
+      cls: d === 1 ? 'fc-x--start' : d === n ? 'fc-x--end' : ''
+    }));
+
+    return {
+      n: n,
+      end: rp(v[n], true),
+      low: rp(v[low], true),
+      lowDate: low + ' ' + LAB[mk],
+      lowCls: v[low] < 0 ? 'tk-c-danger' : '',
+      grid: grid, zero: zero, pos: pos, neg: neg,
+      actual: okt ? stairs(1, 1) : '',
+      est: okt ? stairs(2, n) : stairs(1, n),
+      today: okt ? 'M' + (Math.round(xl(2)) + 0.5) + ' ' + TOP + 'V' + (LANE + 6) : '',
+      todayLeft: f1(xl(2) + 3),
+      evOut: evOut, evIn: evIn, evTr: evTr,
+      cross: 'M' + (Math.round(xc(sel)) + 0.5) + ' ' + TOP + 'V' + (LANE - 2),
+      lowMark: mark(low, 8, sel === low),
+      selMark: mark(sel, 10, false),
+      yLabels: ticks.map((t) => ({ top: Y(t), text: jt(t) })),
+      xLabels: xs,
+      summary: 'Perkiraan saldo ' + (w === 'all' ? 'semua dompet' : 'BCA') + ', akhir ' + LAB[mk] + ' ' + rp(v[n], true) + ', paling tipis ' + rp(v[low], true) + ' pada ' + low + ' ' + LAB[mk] + '. Pilih tanggal untuk rinciannya.',
+      days: Array.from({ length: n }, (_, i) => ({
+        aria: (i + 1) + ' ' + LAB[mk] + ', ' + rp(v[i + 1], !(okt && i === 0)),
+        pick: () => this.setState({ sel: { key: mk + w, day: i + 1 } })
+      })),
+      read: {
+        date: date(sel),
+        val: rp(v[sel], !isActual),
+        cls: v[sel] < 0 ? 'tk-c-danger' : '',
+        hasBadge: !!badge, badge: badge,
+        items: items
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

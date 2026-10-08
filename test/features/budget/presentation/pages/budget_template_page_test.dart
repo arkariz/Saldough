@@ -167,7 +167,7 @@ void main() {
     await templateRepository.saveTemplate(template.copyWith(isEnabled: false));
     await openTemplates(tester);
 
-    expect(find.text(t.budget.templateInactiveBadge.toUpperCase()), findsOneWidget);
+    expect(find.text(t.budget.templateInactiveBadge), findsOneWidget);
     final use = tester.widget<AppButton>(find.widgetWithText(AppButton, t.budget.templateUseAction));
     expect(use.onPressed, isNull);
   });

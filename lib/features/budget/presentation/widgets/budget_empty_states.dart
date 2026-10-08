@@ -31,7 +31,7 @@ class BudgetEmptyState extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
-              t.budget.emptyBadge.toUpperCase(),
+              t.budget.emptyBadge,
               style: labelSmStyle(context, color: colors.warning),
             ),
           ),

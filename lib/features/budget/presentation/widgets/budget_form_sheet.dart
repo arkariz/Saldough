@@ -401,7 +401,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  t.budget.startDateLabel.toUpperCase(),
+                                  t.budget.startDateLabel,
                                   style: labelSmStyle(context, color: colors.ink2),
                                 ),
                                 Text(CycleMonthFormatter.formatDate(_startDate), style: textTheme.titleMedium),
@@ -675,7 +675,7 @@ class _PlannedTotalCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            t.budget.totalPlannedLabel.toUpperCase(),
+            t.budget.totalPlannedLabel,
             style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),

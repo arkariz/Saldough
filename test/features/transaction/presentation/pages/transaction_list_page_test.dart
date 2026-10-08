@@ -99,9 +99,9 @@ void main() {
       // sempat hilang total di versi sebelumnya.
       expect(find.text(t.transaction.allFilterLabel(count: 0)), findsOneWidget);
       expect(find.text(t.transaction.emptyGuideTitle), findsOneWidget);
-      expect(find.text(t.transaction.emptyGuideIncomeTitle.toUpperCase()), findsOneWidget);
-      expect(find.text(t.transaction.emptyGuideExpenseTitle.toUpperCase()), findsOneWidget);
-      expect(find.text(t.transaction.emptyGuideTransferTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.emptyGuideIncomeTitle), findsWidgets);
+      expect(find.text(t.transaction.emptyGuideExpenseTitle), findsWidgets);
+      expect(find.text(t.transaction.emptyGuideTransferTitle), findsWidgets);
       expect(find.text(t.transaction.trustFooterMessage), findsOneWidget);
     });
 
@@ -281,7 +281,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TransactionDetailPage), findsOneWidget);
-      expect(find.text(t.transaction.detailExpenseTitle.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.detailExpenseTitle), findsOneWidget);
       expect(find.text('−Rp75.000'), findsWidgets);
       expect(find.text(t.transaction.detailExpenseWalletLabel), findsOneWidget);
       expect(find.text('BCA'), findsOneWidget);
@@ -313,9 +313,9 @@ void main() {
       await tester.tap(find.text('top-up'));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.transaction.detailTransferTitle.toUpperCase()), findsOneWidget);
-      expect(find.text(t.transaction.detailFromLabel.toUpperCase()), findsOneWidget);
-      expect(find.text(t.transaction.detailToLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.transaction.detailTransferTitle), findsOneWidget);
+      expect(find.text(t.transaction.detailFromLabel), findsOneWidget);
+      expect(find.text(t.transaction.detailToLabel), findsOneWidget);
       expect(find.text(t.transaction.detailAmountLabel), findsOneWidget);
       expect(find.text('−Rp50.000'), findsOneWidget);
       expect(find.text('+Rp50.000'), findsOneWidget);
@@ -431,7 +431,7 @@ void main() {
       await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
+      await tester.tap(find.text(t.transaction.deleteAction));
       await tester.pumpAndSettle();
 
       // Tidak ada dialog konfirmasi -- rincian sudah tertutup dan
@@ -450,7 +450,7 @@ void main() {
       await tester.tap(find.text('nasi padang')); // judul baris = catatan (ADR-034)
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(t.transaction.deleteAction.toUpperCase()));
+      await tester.tap(find.text(t.transaction.deleteAction));
       await tester.pumpAndSettle();
       expect(find.text('nasi padang'), findsNothing);
       expect(await balanceOf('bca'), 100000000);

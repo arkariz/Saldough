@@ -72,7 +72,7 @@ void main() {
       final results = await open(tester);
 
       await tester.enterText(field(0), '  Dompet Saku  ');
-      await tester.tap(find.text(t.wallet.typeCash.toUpperCase()));
+      await tester.tap(find.text(t.wallet.typeCash));
       await tester.pump();
       await tester.tap(find.text('+500rb'));
       await tester.tap(find.text('+1jt'));
@@ -122,7 +122,7 @@ void main() {
     testWidgets('mode tambah tidak menampilkan saldo tercatat, sakelar aktif, maupun hapus', (tester) async {
       await open(tester);
 
-      expect(find.text(t.wallet.currentBalanceLabel.toUpperCase()), findsNothing);
+      expect(find.text(t.wallet.currentBalanceLabel), findsNothing);
       expect(find.byType(Switch), findsNothing);
       expect(find.text(t.wallet.deleteAction), findsNothing);
     });

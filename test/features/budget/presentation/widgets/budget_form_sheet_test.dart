@@ -36,7 +36,7 @@ void main() {
       await tester.enterText(find.byType(TextField).first, 'Rumah tangga');
       await tester.pump();
 
-      expect(find.text(t.budget.totalPlannedLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.budget.totalPlannedLabel), findsOneWidget);
       expect(find.text('Rp0'), findsOneWidget);
       expect(find.text(t.budget.itemsRequiredHint), findsOneWidget);
       expect(saveButton(tester, t.budget.saveAddAction).onPressed, isNull);

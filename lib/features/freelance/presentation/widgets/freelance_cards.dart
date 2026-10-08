@@ -29,7 +29,7 @@ class FreelanceBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(color: colors.tinted(color, 0.18), borderRadius: BorderRadius.circular(4)),
-      child: Text(label.toUpperCase(), style: labelSmStyle(context, color: color)),
+      child: Text(label, style: labelSmStyle(context, color: color)),
     );
   }
 }

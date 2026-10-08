@@ -180,7 +180,7 @@ void main() {
     // Tak ada entri belum ditagih, jadi penyaring bawaan jatuh ke "Semua";
     // entri yang sudah masuk pembayaran tampil tertunda dan terkunci.
     expect(
-      find.descendant(of: find.byType(WorklogEntryCard), matching: find.text(t.freelance.statusPending.toUpperCase())),
+      find.descendant(of: find.byType(WorklogEntryCard), matching: find.text(t.freelance.statusPending)),
       findsOneWidget,
     );
 

@@ -231,7 +231,7 @@ class _TemplateCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    t.budget.templateItemsLabel.toUpperCase(),
+                    t.budget.templateItemsLabel,
                     style: labelSmStyle(context, color: colors.ink2),
                   ),
                   const SizedBox(height: AppSpacing.space1),

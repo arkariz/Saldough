@@ -120,7 +120,7 @@ void main() {
 
       expect(find.byType(WalletDetailPage), findsOneWidget);
       expect(find.text('BCA'), findsWidgets);
-      expect(find.text(t.wallet.typeBank.toUpperCase()), findsOneWidget);
+      expect(find.text(t.wallet.typeBank), findsOneWidget);
       expect(find.text('Rp1.300.000'), findsWidgets);
     });
 
@@ -236,7 +236,7 @@ void main() {
           reason: 'pengeluaran: hanya pengeluaran, transfer tidak ikut',
         );
         expect(
-          find.text(t.wallet.detailTransferOutLabel.toUpperCase()),
+          find.text(t.wallet.detailTransferOutLabel),
           findsOneWidget,
         );
         expect(find.text('−Rp200.000'), findsOneWidget);
@@ -245,7 +245,7 @@ void main() {
           findsOneWidget,
           reason: 'perubahan saldo = 5.000.000 - 75.000 - 200.000',
         );
-        expect(find.text(t.wallet.detailBalanceChangeLabel.toUpperCase()), findsOneWidget);
+        expect(find.text(t.wallet.detailBalanceChangeLabel), findsOneWidget);
       },
     );
 
@@ -257,7 +257,7 @@ void main() {
         await openDetail(tester, 'GoPay');
 
         expect(
-          find.text(t.wallet.detailTransferInLabel.toUpperCase()),
+          find.text(t.wallet.detailTransferInLabel),
           findsOneWidget,
         );
         expect(
@@ -284,7 +284,7 @@ void main() {
         await openDetail(tester, 'BCA');
 
         expect(
-          find.text(t.wallet.detailTransferInLabel.toUpperCase()),
+          find.text(t.wallet.detailTransferInLabel),
           findsNothing,
         );
         // Perubahan saldo di ringkasan, dan baris transaksinya di daftar.

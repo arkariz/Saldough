@@ -57,7 +57,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
                     const SizedBox(width: AppSpacing.space2),
                     Flexible(
                       child: Text(
-                        t.transaction.emptyMonthBadge.toUpperCase(),
+                        t.transaction.emptyMonthBadge,
                         style: labelSmStyle(
                           context,
                           color: colors.warning,
@@ -197,7 +197,7 @@ class _GuideRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title.toUpperCase(),
+                  title,
                   style: labelSmStyle(context, color: color),
                 ),
                 const SizedBox(height: 2),
@@ -355,7 +355,7 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            t.transaction.crossMonthResultsHeader.toUpperCase(),
+            t.transaction.crossMonthResultsHeader,
             style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: AppSpacing.space2),

@@ -243,7 +243,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                     children: [
                       Expanded(
                         child: Text(
-                          t.budget.itemTotalLabel.toUpperCase(),
+                          t.budget.itemTotalLabel,
                           style: labelSmStyle(context, color: colors.ink2),
                         ),
                       ),

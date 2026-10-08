@@ -155,7 +155,7 @@ class HomeGuide extends StatelessWidget {
           icon: IconKey.worklog,
           title: t.home.guideTitle,
           trailing: Text(
-            t.home.guideCount.toUpperCase(),
+            t.home.guideCount,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: labelSmStyle(context, color: colors.ink2),
@@ -215,7 +215,7 @@ class _Badge extends StatelessWidget {
         color: colors.tinted(color, 0.22),
         border: Border.all(color: colors.lineStrong),
       ),
-      child: Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink)),
+      child: Text(label, style: labelSmStyle(context, color: colors.ink)),
     );
   }
 }

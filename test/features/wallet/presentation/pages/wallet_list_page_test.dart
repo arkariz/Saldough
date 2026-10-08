@@ -203,7 +203,7 @@ void main() {
 
         await openForm(tester);
         await tester.enterText(find.byType(TextField).first, 'Dompet Saku');
-        await tester.tap(find.text(t.wallet.typeCash.toUpperCase()));
+        await tester.tap(find.text(t.wallet.typeCash));
         await tester.tap(find.text('+500rb'));
         await tester.pump();
         await tester.tap(

@@ -28,7 +28,7 @@ class _TopBar extends StatelessWidget {
                   AppIcon(IconKey.chevronLeft, color: colors.ink),
                   const SizedBox(width: AppSpacing.space1),
                   Text(
-                    t.transaction.detailBackLabel.toUpperCase(),
+                    t.transaction.detailBackLabel,
                     style: labelSmStyle(context, color: colors.ink),
                   ),
                 ],
@@ -142,7 +142,7 @@ class _HeroCard extends StatelessWidget {
               color: colors.tinted(colors.kindFill(kind), 0.16),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: labelSmStyle(context, color: ink)),
+            child: Text(badge, style: labelSmStyle(context, color: ink)),
           ),
           const SizedBox(height: AppSpacing.space4),
           FittedBox(
@@ -245,7 +245,7 @@ class _DetailsCard extends StatelessWidget {
           if (tx.note.isNotEmpty) ...[
             const _Gap(),
             Text(
-              t.transaction.detailNoteLabel.toUpperCase(),
+              t.transaction.detailNoteLabel,
               style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: AppSpacing.space1),
@@ -289,7 +289,7 @@ class _BudgetRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    t.transaction.budgetLabel.toUpperCase(),
+                    t.transaction.budgetLabel,
                     style: labelSmStyle(context, color: colors.ink2),
                   ),
                   const SizedBox(height: 2),
@@ -303,7 +303,7 @@ class _BudgetRow extends StatelessWidget {
                   if (open != null) ...[
                     const SizedBox(height: 2),
                     Text(
-                      t.transaction.openBudgetAction.toUpperCase(),
+                      t.transaction.openBudgetAction,
                       style: labelSmStyle(context, color: colors.brand),
                     ),
                   ],
@@ -484,7 +484,7 @@ class _PairCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: colors.ink2)),
+                Text(label, style: labelSmStyle(context, size: 9, color: colors.ink2)),
                 Text(wallet?.name ?? '—', style: _valueStyle(context)),
                 if (wallet != null)
                   Text(
@@ -560,7 +560,7 @@ class _DeleteLink extends StatelessWidget {
             const SizedBox(width: AppSpacing.space1),
             Flexible(
               child: Text(
-                t.transaction.deleteAction.toUpperCase(),
+                t.transaction.deleteAction,
                 textAlign: TextAlign.center,
                 style: labelSmStyle(context, color: colors.ink),
               ),

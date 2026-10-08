@@ -120,7 +120,7 @@ class FreelanceAmountLine extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: labelSmStyle(context, color: color ?? colors.ink2)),
+                Text(label, style: labelSmStyle(context, color: color ?? colors.ink2)),
                 Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
@@ -256,7 +256,7 @@ class FreelanceEmptyState extends StatelessWidget {
               color: colors.tinted(colors.warning, 0.15),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: labelSmStyle(context, color: colors.warning)),
+            child: Text(badge, style: labelSmStyle(context, color: colors.warning)),
           ),
           const SizedBox(height: AppSpacing.space6),
           Row(

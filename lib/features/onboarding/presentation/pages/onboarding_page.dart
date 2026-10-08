@@ -163,7 +163,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  t.app.title.toUpperCase(),
+                                  t.app.title,
                                   style: labelSmStyle(context, color: colors.ink2),
                                   overflow: TextOverflow.ellipsis,
                                 ),

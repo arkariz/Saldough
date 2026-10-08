@@ -139,7 +139,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.plan.balanceTitle.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
+            Text(t.plan.balanceTitle, style: labelSmStyle(context, color: colors.ink2)),
             if (widget.wallets.length > 1) ...[
               const SizedBox(height: AppSpacing.space1),
               SingleChildScrollView(

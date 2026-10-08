@@ -134,7 +134,7 @@ class _MonthStartCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              t.plan.reviewTitle(month: month).toUpperCase(),
+              t.plan.reviewTitle(month: month),
               style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: AppSpacing.space1),

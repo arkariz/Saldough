@@ -190,11 +190,11 @@ void main() {
     await tester.tap(find.textContaining('beras 5kg'));
     await tester.pumpAndSettle();
 
-    expect(find.text(t.transaction.budgetLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(t.transaction.budgetLabel), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
-    expect(find.text(t.transaction.openBudgetAction.toUpperCase()), findsOneWidget);
+    expect(find.text(t.transaction.openBudgetAction), findsOneWidget);
 
-    await tester.tap(find.text(t.transaction.openBudgetAction.toUpperCase()));
+    await tester.tap(find.text(t.transaction.openBudgetAction));
     await tester.pumpAndSettle();
     // Layar teratas kini rincian anggaran (rute lain tertutup/offstage).
     expect(find.byType(TransactionDetailPage), findsNothing);

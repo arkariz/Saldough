@@ -102,7 +102,7 @@ class MonthReviewCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  t.plan.reviewTitle(month: monthLabel).toUpperCase(),
+                  t.plan.reviewTitle(month: monthLabel),
                   style: labelSmStyle(context, color: colors.ink2),
                 ),
               ),

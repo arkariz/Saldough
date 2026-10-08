@@ -78,7 +78,7 @@ class BudgetBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(color: background ?? colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Text(
-        label.toUpperCase(),
+        label,
         style: labelSmStyle(context, size: 9, color: color ?? colors.ink2),
       ),
     );

@@ -153,7 +153,7 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
                 NetPayBreakdownCard(breakdown: breakdown),
                 if (breakdown.netPay <= 0) ...[
                   const SizedBox(height: AppSpacing.space1),
-                  Text(t.freelance.netPayNotPositive, style: textTheme.bodySmall?.copyWith(color: colors.ink)),
+                  Text(t.freelance.netPayNotPositive, style: textTheme.bodySmall?.copyWith(color: colors.danger)),
                 ],
               ],
             ],

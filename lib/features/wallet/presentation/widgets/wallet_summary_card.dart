@@ -5,7 +5,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 
-/// Kartu utama layar Dompet ([AppHeroCard], rujukan visual
+/// Kartu utama layar Dompet ([AppSummaryCard], rujukan visual
 /// `pixel_kas_daftar_dompet`): total saldo seluruh dompet aktif sebagai angka
 /// utama, lencana jumlah dompet aktif, dan catatan bahwa saldo dihitung dari
 /// catatan manual.
@@ -26,7 +26,7 @@ class WalletSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return AppHeroCard(
+    return AppSummaryCard(
       tour: TourId.wallet,
       icon: IconKey.wallets,
       label: t.wallet.totalLabel,
@@ -44,7 +44,7 @@ class WalletSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(totalBalance), color: totalBalance < 0 ? colors.ink : null),
+          HeroAmount(AppMoneyFormatter.format(totalBalance)),
           Text(t.wallet.subtitle, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
         ],
       ),

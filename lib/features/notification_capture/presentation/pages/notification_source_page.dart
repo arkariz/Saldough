@@ -138,7 +138,7 @@ class _SourcePageState extends State<_SourcePage> {
                 if (_advanced || noFilter) ..._advancedSection(context, state),
                 if (!widget.isNew) ...[
                   const SizedBox(height: AppSpacing.space8),
-                  AppButton.tertiary(label: texts.removeSource, onPressed: _remove),
+                  AppButton.text(label: texts.removeSource, onPressed: _remove),
                 ],
               ],
             );

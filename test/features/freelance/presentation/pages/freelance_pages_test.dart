@@ -272,7 +272,7 @@ void main() {
     await tester.tap(find.text(t.freelance.billAction(count: 3)));
     await tester.pumpAndSettle();
     expect(find.text(t.freelance.paymentAddTitle), findsWidgets);
-    expect(find.text(t.freelance.paymentEntriesLabel(count: 3, hours: 14).toUpperCase()), findsOneWidget);
+    expect(find.text(t.freelance.paymentEntriesLabel(count: 3, hours: 14)), findsOneWidget);
   });
 
   testWidgets('Freelance di layar 360px + teks 2x: ikhtisar, rincian proyek, dan tab pembayaran tidak overflow', (

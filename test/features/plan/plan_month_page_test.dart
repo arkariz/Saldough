@@ -140,7 +140,7 @@ void main() {
 
   testWidgets('Uang nganggur Rp2.995.500 = jumlah baris di bawahnya (§4.9)', (tester) async {
     await pump(tester);
-    expect(find.text(t.plan.unplannedTitle(month: 'Okt').toUpperCase()), findsOneWidget);
+    expect(find.text(t.plan.unplannedTitle(month: 'Okt')), findsOneWidget);
     expect(find.text('Rp2.995.500'), findsOneWidget);
     // Juga baris Gaji 25 Okt di Berikutnya.
     expect(find.text('+Rp12.000.000'), findsNWidgets(2));
@@ -168,7 +168,7 @@ void main() {
   testWidgets('360dp tanpa luapan; tiga berikutnya urut tanggal', (tester) async {
     await pump(tester, width: 360);
     expect(tester.takeException(), isNull);
-    expect(find.text(t.plan.nextTitle.toUpperCase()), findsOneWidget);
+    expect(find.text(t.plan.nextTitle), findsOneWidget);
     expect(find.text('5 Okt'), findsOneWidget);
     expect(find.text('10 Okt'), findsOneWidget);
     expect(find.text('25 Okt'), findsOneWidget);

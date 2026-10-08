@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Judul bagian formulir: label di kiri, [hint] kecil di
-/// kanan. `Wrap` supaya [hint] turun baris, bukan meluap, pada teks besar.
+/// Label kolom formulir (`tk-field__label`, design system TextField):
+/// `label` 14/600 `ink` di kiri, [hint] `body-sm` `ink2` di kanan. `Wrap`
+/// supaya [hint] turun baris, bukan meluap, pada teks besar.
 ///
-/// Dipakai formulir CATAT dan formulir dompet, supaya judul bagian di seluruh
-/// formulir tampil seragam.
+/// Judul bagian di atas kartu memakai `AppSectionHeader`.
 class AppSectionLabel extends StatelessWidget {
   /// Membuat [AppSectionLabel].
   const AppSectionLabel(this.label, {this.hint, super.key});
 
-  /// Judul bagian.
+  /// Label kolom.
   final String label;
 
   /// Keterangan kecil di ujung kanan.
@@ -20,24 +19,18 @@ class AppSectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-      child: SizedBox(
-        width: double.infinity,
-        child: Wrap(
-          alignment: WrapAlignment.spaceBetween,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: AppSpacing.space2,
-          runSpacing: 2,
-          children: [
-            Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink)),
-            if (hint != null)
-              Text(
-                hint!,
-                style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
-              ),
-          ],
-        ),
+    final textTheme = Theme.of(context).textTheme;
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: AppSpacing.space2,
+        runSpacing: 2,
+        children: [
+          Text(label, style: textTheme.labelLarge),
+          if (hint != null) Text(hint!, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+        ],
       ),
     );
   }

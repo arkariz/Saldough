@@ -28,7 +28,6 @@ class WalletCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final typeLabel = walletTypeLabel(wallet.iconKey);
-    final negative = wallet.currentBalance < 0;
     return AppTappable(
       onTap: onTap,
       child: Opacity(
@@ -96,7 +95,7 @@ class WalletCard extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       AppMoneyFormatter.format(wallet.currentBalance),
-                      style: context.numberStyles.amount.copyWith(color: negative ? colors.ink : colors.ink),
+                      style: context.numberStyles.amount.copyWith(color: colors.ink),
                     ),
                   ),
                 ),

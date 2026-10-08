@@ -11,6 +11,7 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -77,7 +78,7 @@ void main() {
     expect(find.text('Tanu Ki'), findsOneWidget);
     expect(find.text('tanu@example.com'), findsOneWidget);
     expect(find.text(t.account.methodGoogle), findsOneWidget);
-    expect(find.text(t.account.dataTitle.toUpperCase()), findsOneWidget);
+    expect(find.text(t.account.dataTitle), findsOneWidget);
     expect(find.byKey(const ValueKey('account-delete')), findsOneWidget);
   });
 
@@ -94,12 +95,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('account-delete')));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(TextButton, t.account.deleteAction));
+    await tester.tap(find.widgetWithText(AppButton, t.account.deleteAction).last);
     await tester.pumpAndSettle();
 
     expect(find.text(t.account.deletePasswordTitle), findsOneWidget);
     await tester.enterText(find.byType(TextField), 'rahasia');
-    await tester.tap(find.widgetWithText(TextButton, t.account.deleteAction));
+    await tester.tap(find.widgetWithText(AppButton, t.account.deleteAction).last);
     await tester.pumpAndSettle();
 
     expect(repository.deletePasswords, [null, 'rahasia']);
@@ -155,12 +156,12 @@ void main() {
 
     await tester.tap(find.text(t.category.archiveAction));
     await tester.pumpAndSettle();
-    expect(find.text(t.category.archivedSection.toUpperCase()), findsOneWidget);
+    expect(find.text(t.category.archivedSection), findsOneWidget);
     expect(ActiveCategories.notifier.value.single.isArchived, isTrue);
 
     await tester.tap(find.text(t.category.restoreAction));
     await tester.pumpAndSettle();
-    expect(find.text(t.category.archivedSection.toUpperCase()), findsNothing);
+    expect(find.text(t.category.archivedSection), findsNothing);
     expect(ActiveCategories.notifier.value.single.isArchived, isFalse);
   });
 }

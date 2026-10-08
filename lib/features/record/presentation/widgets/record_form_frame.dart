@@ -63,7 +63,6 @@ class RecordFormFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return SizedBox.expand(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -81,7 +80,7 @@ class RecordFormFrame extends StatelessWidget {
               // penafian itu cukup sekali per alur (onboarding dan tur CATAT,
               // rincian transaksi, rincian dompet), dan label tombol "Catat…"
               // sudah membawa maknanya (NFR-UX-005, UX-9).
-              AppButton(label: submitLabel, color: colors.kindInk(kind), onPressed: onSubmit),
+              AppButton(label: submitLabel, onPressed: onSubmit),
             ],
           ),
         ),

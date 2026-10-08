@@ -169,7 +169,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 ),
                               ),
                               if (_choosingCurrency)
-                                AppButton.tertiary(
+                                AppButton.text(
                                   key: const ValueKey('onboarding-back'),
                                   label: t.onboarding.backAction,
                                   onPressed: _finishing ? null : _backToSlides,
@@ -177,7 +177,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               else if (_choosingLanguage)
                                 const SizedBox.shrink()
                               else if (!_isLast || review)
-                                AppButton.tertiary(
+                                AppButton.text(
                                   label: review ? t.onboarding.closeAction : t.onboarding.skipAction,
                                   onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
                                 ),
@@ -301,7 +301,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
         const SizedBox(height: AppSpacing.space1),
         Center(
-          child: AppButton.tertiary(
+          child: AppButton.text(
             label: t.onboarding.laterAction,
             onPressed: _finishing ? null : () => _leave(OnboardingOutcome.dismissed),
           ),
@@ -309,7 +309,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         Center(
           child: FittedBox(
             fit: BoxFit.scaleDown,
-            child: AppButton.tertiary(
+            child: AppButton.text(
               label: t.onboarding.signInAction,
               onPressed: _finishing ? null : () => _leave(OnboardingOutcome.signIn),
             ),

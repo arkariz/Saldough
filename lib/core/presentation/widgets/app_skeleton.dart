@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/theme/theme.dart';
 
@@ -35,7 +37,8 @@ class _AppSkeletonState extends State<AppSkeleton>
     with SingleTickerProviderStateMixin {
   late final _controller = AnimationController(
     vsync: this,
-    duration: AppDurations.slow * 3,
+    // Denyut pelan 1,4 detik per siklus (design system Skeleton).
+    duration: const Duration(milliseconds: 700),
   )..repeat(reverse: true);
 
   @override
@@ -47,18 +50,23 @@ class _AppSkeletonState extends State<AppSkeleton>
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    // Kurangi gerakan: tanpa denyut.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      if (_controller.isAnimating) _controller.stop();
+      return _box(colors.surface2);
+    }
+    if (!_controller.isAnimating) unawaited(_controller.repeat(reverse: true));
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, _) => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Color.lerp(colors.surface2, colors.surface3, _controller.value),
-          borderRadius: widget.borderRadius ?? AppRadius.smAll,
-        ),
-      ),
+      builder: (context, _) => _box(Color.lerp(colors.surface2, colors.surface3, _controller.value)!),
     );
   }
+
+  Widget _box(Color color) => Container(
+    width: widget.width,
+    height: widget.height,
+    decoration: BoxDecoration(color: color, borderRadius: widget.borderRadius ?? AppRadius.smAll),
+  );
 }
 
 /// Susunan [AppSkeleton] meniru bentuk kasar layar berisi kartu (hero +

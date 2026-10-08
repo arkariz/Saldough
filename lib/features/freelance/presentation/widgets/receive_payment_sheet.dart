@@ -133,7 +133,6 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
               const SizedBox(height: AppSpacing.space6),
               AppButton(
                 label: t.freelance.receiveAction,
-                color: colors.positive,
                 onPressed: _walletId == null
                     ? null
                     : () => Navigator.of(context).pop(

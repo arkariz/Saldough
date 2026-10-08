@@ -80,7 +80,6 @@ class _HeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final typeLabel = walletTypeLabel(wallet.iconKey);
-    final negative = wallet.currentBalance < 0;
     return Opacity(
       opacity: wallet.isActive ? 1 : 0.6,
       child: TransactionSlab(
@@ -128,7 +127,7 @@ class _HeroCard extends StatelessWidget {
                     Theme.of(
                       context,
                     ).textTheme.headlineMedium?.copyWith(
-                      color: negative ? colors.ink : colors.ink,
+                      color: colors.ink,
                     ),
               ),
             ),

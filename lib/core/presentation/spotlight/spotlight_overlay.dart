@@ -289,7 +289,7 @@ class _Bubble extends StatelessWidget {
                 spacing: AppSpacing.space2,
                 runSpacing: AppSpacing.space1,
                 children: [
-                  AppButton.tertiary(label: t.tour.skipAction, onPressed: controller.finish),
+                  AppButton.text(label: t.tour.skipAction, onPressed: controller.finish),
                   AppButton(
                     label: controller.isLastStep ? t.tour.doneAction : t.tour.nextAction,
                     onPressed: onNext,

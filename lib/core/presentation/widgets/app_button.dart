@@ -1,76 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Tingkat penekanan sebuah [AppButton] (ADR-020 §3.1).
+/// Varian [AppButton] (komponen Button design system, ADR-034).
 enum AppButtonVariant {
-  /// Isian penuh, garis tepi 2px, bayangan keras interaktif. Aksi utama
-  /// layar/lembar -- paling banyak SATU per layar.
+  /// Isian `brand`: tindakan yang menjadi tujuan layar. Paling banyak satu
+  /// per layar.
   primary,
 
-  /// Latar kartu, garis tepi 2px, TANPA bayangan (elevasi tingkat 0
-  /// ADR-015). Aksi pendamping, termasuk aksi destruktif di luar dialog
-  /// konfirmasi (teks [AppColors.expense], bukan isian merah).
+  /// Isian `surface2`: tindakan pendamping.
   secondary,
 
-  /// Tautan teks beraksen tanpa bingkai maupun bayangan (pola
-  /// `HomeTextLink`). Aksi paling ringan, mis. "Lihat semua".
-  tertiary,
+  /// Teks `brand` tanpa isian: tindakan ringan atau navigasi ("Lihat
+  /// semua", "Batal").
+  text,
+
+  /// Teks `danger` tanpa isian: tindakan permanen ("Hapus dompet").
+  danger,
 }
 
-/// Tombol dengan tiga tingkat penekanan (ADR-020) di atas bahasa visual
-/// ADR-015 (bayangan keras offset, garis tepi tebal untuk [AppButtonVariant.primary]
-/// dan [AppButtonVariant.secondary]).
+/// Tombol design system: satu tindakan yang jelas, teks kata kerja + benda.
 ///
-/// Bawaan [AppButtonVariant.primary] memakai `colorScheme.primary`. Pakai
-/// [color] untuk varian primary lain, misalnya
-/// [AppColors.expense] untuk aksi destruktif **di dalam dialog
-/// konfirmasi** -- di luar dialog, aksi destruktif memakai
-/// [AppButton.secondary] dengan [textColor] `expense` (ADR-020 §3.1).
+/// Tinggi `size-button` (48), atau `size-button-sm` (36) dengan [small] —
+/// area sentuhnya tetap 48. [expand] melebarkan tombol penuh (tombol yang
+/// menempel di bawah layar). [loading] mengganti teks dengan pemutar dan
+/// mengunci tombol. `onPressed` `null` menonaktifkan tombol
+/// (`opacity-disabled`); sertakan alasannya di dekat tombol.
 ///
-/// Saat ditekan, [AppButtonVariant.primary] menarik bayangannya ke 0 dan
-/// bergeser sejauh offset bayangan ke kanan-bawah -- efek "ditekan" komik,
-/// pengganti splash Material yang sengaja dimatikan secara global (ADR-0006,
-/// UX-32). [AppButtonVariant.secondary] dan [AppButtonVariant.tertiary]
-/// tidak punya bayangan sejak awal, jadi tidak ada apa pun untuk ditarik.
-/// Dipakai [Listener] (bukan [GestureDetector]) supaya hanya mengamati
-/// status tekan tanpa ikut merebut gestur dari [ElevatedButton] di
-/// dalamnya.
+/// Sudut piksel kecil (`pixel-step-sm`), tanpa bingkai dan bayangan. Ikon
+/// hanya bila menambah makna (+ untuk tambah).
 class AppButton extends StatefulWidget {
-  /// Membuat [AppButton] varian [AppButtonVariant.primary].
+  /// Tombol utama ([AppButtonVariant.primary]).
   const AppButton({
     required this.label,
     required this.onPressed,
-    this.color,
     this.icon,
+    this.small = false,
+    this.expand = false,
+    this.loading = false,
     super.key,
-  }) : variant = AppButtonVariant.primary,
-       textColor = null;
+  }) : variant = AppButtonVariant.primary;
 
-  /// Tombol SEKUNDER (ADR-020 §3.1): isian krem terang dan teks gelap
-  /// dengan garis tepi yang sama, TANPA bayangan -- untuk aksi pendamping
-  /// (Ubah, Duplikat, Tambah pos, Arsipkan) supaya tidak bersaing dengan
-  /// tombol utama, dan untuk aksi destruktif di luar dialog konfirmasi
-  /// (beri [textColor] `context.appColors.expense`).
+  /// Tombol pendamping ([AppButtonVariant.secondary]).
   const AppButton.secondary({
     required this.label,
     required this.onPressed,
     this.icon,
-    this.textColor,
+    this.small = false,
+    this.expand = false,
+    this.loading = false,
     super.key,
-  }) : color = null,
-       variant = AppButtonVariant.secondary;
+  }) : variant = AppButtonVariant.secondary;
 
-  /// Tombol TERSIER (ADR-020 §3.1): tautan teks beraksen tanpa bingkai
-  /// maupun bayangan, pola `HomeTextLink` -- untuk aksi paling ringan di
-  /// sebuah layar/kartu.
-  const AppButton.tertiary({
+  /// Tombol teks ([AppButtonVariant.text]).
+  const AppButton.text({
     required this.label,
     required this.onPressed,
     this.icon,
+    this.small = false,
+    this.expand = false,
+    this.loading = false,
     super.key,
-  }) : color = null,
-       textColor = null,
-       variant = AppButtonVariant.tertiary;
+  }) : variant = AppButtonVariant.text;
+
+  /// Tombol tindakan permanen ([AppButtonVariant.danger]).
+  const AppButton.danger({
+    required this.label,
+    required this.onPressed,
+    this.icon,
+    this.small = false,
+    this.expand = false,
+    this.loading = false,
+    super.key,
+  }) : variant = AppButtonVariant.danger;
 
   /// Teks tombol.
   final String label;
@@ -78,18 +81,19 @@ class AppButton extends StatefulWidget {
   /// Dipanggil saat tombol ditekan. `null` menonaktifkan tombol.
   final VoidCallback? onPressed;
 
-  /// Warna isian tombol PRIMARY. Bawaan `colorScheme.primary`. Tidak
-  /// berlaku untuk [AppButtonVariant.secondary]/[AppButtonVariant.tertiary].
-  final Color? color;
-
-  /// Warna teks tombol SECONDARY. Bawaan `colors.textPrimary`. Pakai
-  /// `colors.expense` untuk aksi destruktif di luar dialog konfirmasi.
-  final Color? textColor;
-
   /// Ikon opsional di depan [label].
-  final IconData? icon;
+  final IconKey? icon;
 
-  /// Tingkat penekanan, lihat [AppButtonVariant].
+  /// Ukuran kecil (36px), untuk tombol di dalam kartu dan banner.
+  final bool small;
+
+  /// Lebar penuh.
+  final bool expand;
+
+  /// Sedang menyimpan: pemutar menggantikan teks dan tombol terkunci.
+  final bool loading;
+
+  /// Varian, lihat [AppButtonVariant].
   final AppButtonVariant variant;
 
   @override
@@ -99,88 +103,135 @@ class AppButton extends StatefulWidget {
 class _AppButtonState extends State<AppButton> {
   bool _pressed = false;
 
+  bool get _enabled => widget.onPressed != null && !widget.loading;
+
   void _setPressed(bool value) {
-    if (widget.onPressed == null) return;
+    if (!_enabled || _pressed == value) return;
     setState(() => _pressed = value);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.variant == AppButtonVariant.tertiary) return _buildTertiary(context);
-
     final colors = context.appColors;
-    final isSecondary = widget.variant == AppButtonVariant.secondary;
-    final fill = isSecondary ? colors.surface2 : widget.color ?? Theme.of(context).colorScheme.primary;
-    final isDisabled = widget.onPressed == null;
-    final leadingIcon = widget.icon;
-    // Hanya primary punya bayangan untuk ditarik saat ditekan (ADR-020 §3.1
-    // -- secondary "TANPA bayangan", jadi tidak ada apa pun untuk dianimasikan).
-    final hasElevation = widget.variant == AppButtonVariant.primary;
-    final pressed = hasElevation && _pressed && !isDisabled;
-    final style = ElevatedButton.styleFrom(
-      backgroundColor: isDisabled ? colors.ink2.withValues(alpha: 0.3) : fill,
-      foregroundColor: isSecondary ? widget.textColor ?? colors.ink : null,
-      // Bentuk ADR-015: radius pixel 4 dan garis tepi 2px (T-7.5).
-      shape: RoundedRectangleBorder(
-        borderRadius: AppRadius.pixelSmAll,
-        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
-      ),
-    );
+    final textTheme = Theme.of(context).textTheme;
+    final (Color fill, Color pressedFill, Color ink) = switch (widget.variant) {
+      AppButtonVariant.primary => (colors.brand, colors.brandPressed, colors.onBrand),
+      AppButtonVariant.secondary => (colors.surface2, colors.surface3, colors.ink),
+      AppButtonVariant.text => (Colors.transparent, colors.surface2, colors.brand),
+      AppButtonVariant.danger => (Colors.transparent, colors.dangerSoft, colors.danger),
+    };
+    final filled = widget.variant == AppButtonVariant.primary || widget.variant == AppButtonVariant.secondary;
+    final height = widget.small ? AppSize.buttonSm : AppSize.button;
+    final horizontal = !filled ? AppSpacing.space3 : (widget.small ? 14.0 : AppSpacing.space5);
+    final labelStyle = (widget.small ? textTheme.labelLarge : textTheme.titleMedium)?.copyWith(color: ink);
 
-    return Listener(
-      onPointerDown: (_) => _setPressed(true),
-      onPointerUp: (_) => _setPressed(false),
-      onPointerCancel: (_) => _setPressed(false),
-      child: AnimatedContainer(
-        duration: AppDurations.fast,
-        transform: Matrix4.translationValues(
-          pressed ? AppElevation.sm : 0,
-          pressed ? AppElevation.sm : 0,
-          0,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: AppRadius.pixelSmAll,
-          boxShadow: !hasElevation || isDisabled
-              ? null
-              : AppElevation.hardShadow(colors.lineStrong, offset: pressed ? 0 : AppElevation.sm),
-        ),
-        child: leadingIcon != null
-            ? ElevatedButton.icon(
-                onPressed: widget.onPressed,
-                icon: Icon(leadingIcon, size: 18),
-                label: Text(widget.label),
-                style: style,
-              )
-            : ElevatedButton(
-                onPressed: widget.onPressed,
-                style: style,
-                child: Text(widget.label),
-              ),
-      ),
-    );
-  }
-
-  Widget _buildTertiary(BuildContext context) {
-    final colors = context.appColors;
-    final isDisabled = widget.onPressed == null;
-    final ink = isDisabled ? colors.ink2 : colors.brand;
-    return Semantics(
-      button: true,
-      enabled: !isDisabled,
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44),
-          child: Row(
+    final Widget content = widget.loading
+        ? SizedBox.square(
+            dimension: AppSize.iconSm,
+            child: CircularProgressIndicator(strokeWidth: 2, color: ink),
+          )
+        : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.icon != null) ...[
-                Icon(widget.icon, size: 16, color: ink),
-                const SizedBox(width: 4),
+                AppIcon(widget.icon!, size: AppSize.iconSm, color: ink),
+                const SizedBox(width: AppSpacing.space2),
               ],
-              Text(widget.label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: ink)),
+              Flexible(
+                child: Text(widget.label, style: labelStyle, textAlign: TextAlign.center),
+              ),
             ],
+          );
+
+    final button = AnimatedContainer(
+      duration: AppDurations.fast,
+      constraints: BoxConstraints(minHeight: height, minWidth: widget.expand ? double.infinity : height),
+      padding: EdgeInsets.symmetric(horizontal: horizontal),
+      decoration: ShapeDecoration(
+        color: _pressed ? pressedFill : fill,
+        shape: const PixelCornerBorder.small(),
+      ),
+      // `Center` berfaktor 1, bukan `alignment`: `alignment` membuat tombol
+      // memenuhi tinggi yang ditawarkan (mis. setinggi layar di
+      // `bottomNavigationBar`).
+      child: Center(widthFactor: 1, heightFactor: 1, child: content),
+    );
+
+    return Semantics(
+      button: true,
+      enabled: _enabled,
+      label: widget.loading ? widget.label : null,
+      child: Opacity(
+        opacity: widget.onPressed == null ? AppSize.disabledOpacity : 1,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _enabled ? widget.onPressed : null,
+          onTapDown: (_) => _setPressed(true),
+          onTapUp: (_) => _setPressed(false),
+          onTapCancel: () => _setPressed(false),
+          child: ConstrainedBox(
+            // Area sentuh 48 walau tombol kecil 36 (design system Button).
+            constraints: BoxConstraints(minHeight: AppSize.touch, minWidth: widget.expand ? double.infinity : 0),
+            child: Align(widthFactor: widget.expand ? null : 1, heightFactor: 1, child: button),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tombol ikon saja (`iconbtn`, 48px) dengan label aksesibilitas wajib.
+class AppIconButton extends StatelessWidget {
+  /// Membuat [AppIconButton].
+  const AppIconButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.tonal = false,
+    this.color,
+    super.key,
+  });
+
+  /// Ikon tombol.
+  final IconKey icon;
+
+  /// Label pembaca layar dan tooltip ("Cari", "Kembali").
+  final String label;
+
+  /// Dipanggil saat ditekan; `null` menonaktifkan.
+  final VoidCallback? onPressed;
+
+  /// Latar `surface2` (varian `--tonal`).
+  final bool tonal;
+
+  /// Warna ikon. Bawaan `ink`.
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Tooltip(
+      message: label,
+      child: Semantics(
+        button: true,
+        enabled: onPressed != null,
+        label: label,
+        excludeSemantics: true,
+        child: Opacity(
+          opacity: onPressed == null ? AppSize.disabledOpacity : 1,
+          child: Material(
+            type: tonal ? MaterialType.canvas : MaterialType.transparency,
+            color: tonal ? colors.surface2 : null,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onPressed,
+              overlayColor: WidgetStatePropertyAll(colors.surface2),
+              child: SizedBox.square(
+                dimension: AppSize.touch,
+                child: Center(child: AppIcon(icon, color: color ?? colors.ink)),
+              ),
+            ),
           ),
         ),
       ),

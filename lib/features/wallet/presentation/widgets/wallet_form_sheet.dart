@@ -320,7 +320,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
               ),
               if (wallet != null) ...[
                 const SizedBox(height: AppSpacing.space6),
-                AppButton.secondary(label: t.wallet.deleteAction, textColor: colors.danger, onPressed: _delete),
+                AppButton.danger(label: t.wallet.deleteAction, onPressed: _delete),
                 const SizedBox(height: AppSpacing.space1),
                 Text(
                   t.wallet.deleteHelp,
@@ -462,7 +462,7 @@ class _CurrentBalanceCard extends StatelessWidget {
               AppMoneyFormatter.format(wallet.currentBalance),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: wallet.currentBalance < 0 ? colors.ink : colors.ink,
+                color: colors.ink,
               ),
             ),
           ),

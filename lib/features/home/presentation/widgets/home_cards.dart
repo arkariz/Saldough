@@ -15,7 +15,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 //
 // Pembeda antarkartu (review UX Fase 6) tidak memakai warna per fitur —
 // ADR-016 "satu peran, satu warna" melarangnya. Pembedanya:
-// 1. Hierarki: kartu saldo memakai `AppHeroCard`, kartu utama yang sama
+// 1. Hierarki: kartu saldo memakai `AppSummaryCard`, kartu utama yang sama
 //    dengan puncak tab Anggaran, Transaksi, dan Dompet.
 // 2. Bentuk isi sesuai sifat fiturnya: anggaran = meteran (Sisa jadi angka
 //    utama), freelance = tagihan (belum diterima + potongan jatuh tempo).
@@ -27,7 +27,7 @@ import 'package:saldough/shared/wallet/wallet.dart';
 // (Saldough tidak terhubung ke mana pun), "Estimasi total" (saldo tercatat
 // pasti), tombol "Intip", dan level/quest.
 
-/// Kartu utama Beranda ([AppHeroCard]): total saldo dompet aktif
+/// Kartu utama Beranda ([AppSummaryCard]): total saldo dompet aktif
 /// (FR-HOME-001) beserta strip dompetnya. Tanpa dompet sama sekali, kartu ini
 /// hanya menjelaskan; ajakan membuat dompet pertama ada di
 /// [HomeEmptyTransactions] (FR-HOME-005, UX-7).
@@ -56,7 +56,7 @@ class HomeBalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return AppHeroCard(
+    return AppSummaryCard(
       tour: TourId.home,
       icon: IconKey.home,
       label: t.home.balanceLabel,
@@ -64,7 +64,7 @@ class HomeBalanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(total), color: total < 0 ? colors.ink : null),
+          HeroAmount(AppMoneyFormatter.format(total)),
           const SizedBox(height: AppSpacing.space2),
           // Tanpa dompet, satu-satunya ajakan membuat dompet ada di kartu
           // kosong di bawah (UX-7) — tidak ada tombol kedua di sini.

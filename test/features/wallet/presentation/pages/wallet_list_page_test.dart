@@ -174,7 +174,7 @@ void main() {
         );
         expect(find.text(t.wallet.typeEwallet.toUpperCase()), findsOneWidget);
         expect(
-          find.text(t.wallet.inactiveHeading.toUpperCase()),
+          find.text(t.wallet.inactiveHeading),
           findsOneWidget,
         );
         expect(find.text('Lama'), findsOneWidget);
@@ -306,7 +306,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.text(t.wallet.inactiveHeading.toUpperCase()),
+          find.text(t.wallet.inactiveHeading),
           findsOneWidget,
         );
         expect(
@@ -334,7 +334,7 @@ void main() {
         );
         await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(TextButton, t.common.delete));
+        await tester.tap(find.widgetWithText(AppButton, t.common.delete));
         await tester.pumpAndSettle();
 
         expect(await stored(), isEmpty);
@@ -365,7 +365,7 @@ void main() {
         );
         await tester.tap(find.widgetWithText(AppButton, t.wallet.deleteAction));
         await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(TextButton, t.common.delete));
+        await tester.tap(find.widgetWithText(AppButton, t.common.delete));
         await tester.pumpAndSettle();
 
         expect((await stored()).map((w) => w.id), ['a']);

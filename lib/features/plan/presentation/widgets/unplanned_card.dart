@@ -72,7 +72,7 @@ class UnplannedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final remaining = plan.remaining;
-    return AppHeroCard(
+    return AppSummaryCard(
       icon: IconKey.budget,
       label: isForecast
           ? '${t.plan.unplannedTitle(month: monthLabel)} · ${t.plan.forecastBadge}'

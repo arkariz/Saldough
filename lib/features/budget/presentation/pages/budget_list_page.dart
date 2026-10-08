@@ -130,6 +130,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                     )
                   else
                     for (final budget in visible) ...[
+                      const SizedBox(height: AppSpacing.space1),
                       BudgetCard(
                         budget: budget,
                         progress: state.progress[budget.id]!,
@@ -139,9 +140,14 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       ),
                       const SizedBox(height: AppSpacing.space2),
                     ],
-                  const SizedBox(height: AppSpacing.space1),
-                  if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
                   const SizedBox(height: AppSpacing.space2),
+                  if (canAdd)
+                    AppButton.secondary(
+                      label: t.budget.addAction,
+                      icon: IconKey.add,
+                      expand: true,
+                      onPressed: () => addBudget(context),
+                    ),
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetTemplates,
                     child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
@@ -156,8 +162,8 @@ class _BudgetListPageState extends State<BudgetListPage> {
   }
 }
 
-/// Jalan ke layar Template Anggaran (T-7.2) — tombol sekunder di bawah
-/// "Buat anggaran".
+/// Jalan ke layar Template Anggaran (T-7.2) — tombol teks di bawah "Buat
+/// anggaran" (prototipe `RencanaAnggaran.dc.html`).
 class _TemplatesButton extends StatelessWidget {
   const _TemplatesButton({required this.onTap});
 
@@ -165,6 +171,6 @@ class _TemplatesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppButton.secondary(label: t.budget.templatesAction, onPressed: onTap);
+    return Center(child: AppButton.text(label: t.budget.templatesAction, onPressed: onTap));
   }
 }

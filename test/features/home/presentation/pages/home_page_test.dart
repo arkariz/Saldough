@@ -411,7 +411,7 @@ void main() {
     }
 
     Future<void> openBudgetSegment(WidgetTester tester) async {
-      await tester.tap(find.text(t.appShell.budgetTabLabel.toUpperCase()));
+      await tester.tap(find.text(t.appShell.budgetTabLabel));
       await tester.pumpAndSettle();
     }
 
@@ -499,7 +499,7 @@ void main() {
       await tutorials.markStepsSeen([SpotlightKey.budgetSummary, SpotlightKey.budgetFilter, SpotlightKey.budgetTemplates]);
       await openShellWithTours(tester);
       await openTab(tester, t.appShell.planTabLabel);
-      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.tap(find.text(t.plan.recurringSegmentLabel));
       await tester.pumpAndSettle();
       await walkThrough(tester, [
         (t.tour.planTabsTitle, t.tour.planTabsBody),
@@ -508,7 +508,7 @@ void main() {
       ]);
 
       await openBudgetSegment(tester);
-      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.tap(find.text(t.plan.recurringSegmentLabel));
       await tester.pumpAndSettle();
       expect(find.text(t.tour.recurringStartersTitle), findsNothing);
 

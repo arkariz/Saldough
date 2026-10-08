@@ -280,10 +280,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(AppBar, t.appShell.planTabLabel), findsOneWidget);
-      expect(find.widgetWithText(AppBar, t.appShell.budgetTabLabel), findsNothing);
-      expect(find.text(t.appShell.budgetTabLabel.toUpperCase()), findsOneWidget);
+      expect(find.text(t.appShell.budgetTabLabel), findsOneWidget);
 
-      await tester.tap(find.text(t.plan.recurringSegmentLabel.toUpperCase()));
+      await tester.tap(find.text(t.plan.recurringSegmentLabel));
       await tester.pumpAndSettle();
       expect(find.text(t.recurring.starters.salary), findsOneWidget);
     });

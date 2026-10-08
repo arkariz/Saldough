@@ -102,7 +102,7 @@ void main() {
     await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.planTabLabel)));
     await tester.pumpAndSettle();
     // Awal sesi membuka Bulan ini (KT-L4).
-    await tester.tap(find.text(t.appShell.budgetTabLabel.toUpperCase()));
+    await tester.tap(find.text(t.appShell.budgetTabLabel));
     await tester.pumpAndSettle();
   }
 
@@ -140,11 +140,17 @@ void main() {
     final card = find.byType(BudgetCard);
     expect(card, findsOneWidget);
     expect(find.descendant(of: card, matching: find.text('Rumah tangga')), findsOneWidget);
-    expect(find.descendant(of: card, matching: find.text('BCA')), findsOneWidget);
+    expect(find.descendant(of: card, matching: find.textContaining('BCA · ')), findsOneWidget);
     // Rencana = pos Beras 2 × Rp75.000 = Rp150.000 (ADR-017); terpakai
     // Rp75.000, sisa Rp75.000.
-    expect(find.descendant(of: card, matching: find.text('Rp75.000')), findsOneWidget);
-    expect(find.descendant(of: card, matching: find.textContaining('Rp75.000 / Rp150.000')), findsOneWidget);
+    expect(
+      find.descendant(of: card, matching: find.text(t.home.budgetSpentOf(spent: 'Rp75.000', planned: 'Rp150.000'))),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: card, matching: find.text('${t.budget.remainingLabel} Rp75.000', findRichText: true)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('rincian anggaran menampilkan pos dan transaksi tertaut, lalu pintasan pos membuka CATAT terisi dompet, pos, dan sisa nominal (T-4.10)', (

@@ -3,6 +3,7 @@ import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 
 /// Segmen tab Rencana (ADR-035 §3.7, PLAN_TAB_LAYOUT §3).
 enum PlanSegment {
@@ -51,7 +52,20 @@ class PlanPage extends StatelessWidget {
     final visible = TourVisibility.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.appShell.planTabLabel),
+        title: Text(t.appShell.planTabLabel, style: Theme.of(context).textTheme.headlineSmall),
+        centerTitle: false,
+        // Menu tur segmen yang tampil (KO-4); dulu di kartu ringkasan tiap
+        // segmen, kini kartu ringkasan tanpa tombol (ADR-034).
+        actions: [
+          TutorialInfoButton(
+            key: ValueKey('plan-info-${selected.name}'),
+            tour: switch (selected) {
+              PlanSegment.thisMonth => TourId.planMonth,
+              PlanSegment.budget => TourId.budget,
+              PlanSegment.recurring => TourId.recurring,
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: SpotlightTarget(

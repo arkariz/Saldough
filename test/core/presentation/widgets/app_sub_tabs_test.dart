@@ -36,16 +36,16 @@ void main() {
     await pump(tester, onChanged: (value) => chosen = value);
 
     expect(tester.takeException(), isNull);
-    expect(find.text('BUDGET'), findsOneWidget);
-    expect(find.text('RECURRING'), findsOneWidget);
-    await tester.tap(find.text('RECURRING'));
+    expect(find.text('Budget'), findsOneWidget);
+    expect(find.text('Recurring'), findsOneWidget);
+    await tester.tap(find.text('Recurring'));
     expect(chosen, 1);
   });
 
   testWidgets('segmen aktif diumumkan terpilih ke pembaca layar', (tester) async {
     await pump(tester, onChanged: (_) {}, selected: 1);
     expect(
-      tester.getSemantics(find.text(t.plan.recurringSegmentLabel.toUpperCase())),
+      tester.getSemantics(find.text(t.plan.recurringSegmentLabel)),
       isSemantics(isSelected: true, isButton: true),
     );
   });

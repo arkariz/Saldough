@@ -13,8 +13,8 @@ import 'package:saldough/features/budget/presentation/budget_display.dart';
 ///
 /// ⚠ Delapan isian wajib: nama, dompet, periode, nominal rencana, terpakai,
 /// sisa, progres, dan status. Nama dompet selalu terbaca tanpa membuka
-/// anggarannya. Lewat anggaran diwarnai `overBudget` — keadaan nyata, bukan
-/// kesalahan (FR-BUD-004).
+/// anggarannya. Lewat anggaran ditandai badge yang menyebut selisihnya
+/// (FR-BUD-004, design system ProgressBar).
 class BudgetCard extends StatelessWidget {
   /// Membuat [BudgetCard].
   const BudgetCard({
@@ -44,122 +44,83 @@ class BudgetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
     final overspent = progress.spendingStatus == BudgetItemStatus.overspent;
-    final dimmed = progress.status != BudgetStatus.active;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
+    final active = progress.status == BudgetStatus.active;
+    // Satu badge per kartu: Lewat (masalah) > Rutin > status bila bukan aktif.
+    final Widget? badge = overspent
+        ? AppBadge(
+            t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)),
+            tone: AppTone.danger,
+          )
+        : isRecurring
+        ? AppBadge(
+            t.budget.recurringBadge,
+            key: const ValueKey('budget-recurring-badge'),
+            tone: AppTone.brand,
+            icon: IconKey.schedule,
+          )
+        : !active
+        ? AppBadge(budgetStatusLabel(progress.status))
+        : null;
+    return Opacity(
+      opacity: active ? 1 : 0.7,
+      child: AppCard(
         onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Opacity(
-          opacity: dimmed ? 0.7 : 1,
-          child: AppCard(
-            color: overspent ? colors.tinted(colors.danger, 0.08) : null,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+        semanticsLabel: budget.name,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(budget.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18)),
-                    ),
-                    const SizedBox(width: AppSpacing.space1),
-                    const AppIcon(IconKey.chevronRight),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: AppSpacing.space1,
-                  runSpacing: 4,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    BudgetBadge(label: walletName, color: colors.ink),
-                    BudgetBadge(label: '${budgetPeriodLabel(budget.period)} · ${budgetRangeLabel(budget)}'),
-                    if (isRecurring)
-                      BudgetBadge(key: const ValueKey('budget-recurring-badge'), label: t.budget.recurringBadge),
-                    BudgetBadge(
-                      label: budgetStatusLabel(progress.status),
-                      color: progress.status == BudgetStatus.active ? colors.positive : colors.ink2,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.space2),
-                BudgetProgressBar(value: progress.progress),
-                const SizedBox(height: AppSpacing.space2),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.budget
-                                .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
-                                .toUpperCase(),
-                            style: labelSmStyle(context, color: colors.ink2),
-                          ),
-                          FitStart(
-                            child: Text(
-                              AppMoneyFormatter.format(progress.spent),
-                              style: context.numberStyles.amount.copyWith(color: overspent ? colors.danger : colors.ink),
-                            ),
-                          ),
-                        ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(budget.name, style: textTheme.titleMedium),
+                      Text(
+                        '$walletName · ${budgetRangeLabel(budget)}',
+                        style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.space2),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '${t.budget.remainingLabel} / ${t.budget.plannedLabel}'.toUpperCase(),
-                            textAlign: TextAlign.end,
-                            style: labelSmStyle(context, color: colors.ink2),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: AppMoneyFormatter.format(progress.remaining),
-                                    style: TextStyle(color: progress.remaining < 0 ? colors.danger : colors.positive),
-                                  ),
-                                  TextSpan(text: ' / ${AppMoneyFormatter.format(progress.plannedAmount)}'),
-                                ],
-                              ),
-                              style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                if (overspent) ...[
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(
-                    budgetItemStatusLabel(BudgetItemStatus.overspent).toUpperCase(),
-                    style: labelSmStyle(context, color: colors.danger),
-                  ),
-                ],
-                if (budget.items.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(
-                    t.budget.itemCount(count: budget.items.length),
-                    style: labelSmStyle(
-                      context,
-                      color: colors.ink2,
-                    ).copyWith(fontWeight: FontWeight.w400),
-                  ),
-                ],
+                if (badge != null) ...[const SizedBox(width: AppSpacing.space2), Flexible(child: badge)],
               ],
             ),
-          ),
+            const SizedBox(height: AppSpacing.space3),
+            // Penanda waktu hanya untuk anggaran yang sedang berjalan.
+            AppProgressBar(value: progress.progress, pace: active ? budget.elapsedRatio(DateTime.now()) : null),
+            const SizedBox(height: AppSpacing.space2),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: AppSpacing.space2,
+              children: [
+                Text(
+                  t.home.budgetSpentOf(
+                    spent: AppMoneyFormatter.format(progress.spent),
+                    planned: AppMoneyFormatter.format(progress.plannedAmount),
+                  ),
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2, fontFeatures: const [FontFeature.tabularFigures()]),
+                ),
+                Text.rich(
+                  TextSpan(
+                    text: '${t.budget.remainingLabel} ',
+                    children: [
+                      TextSpan(
+                        text: AppMoneyFormatter.format(progress.remaining),
+                        style: context.numberStyles.amountSm.copyWith(
+                          color: progress.remaining < 0 ? colors.danger : colors.ink,
+                        ),
+                      ),
+                    ],
+                  ),
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

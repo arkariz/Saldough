@@ -145,7 +145,6 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(
-                stepLabel: t.budget.templateStepLabel,
                 title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
               ),
               const SizedBox(height: AppSpacing.space4),

@@ -84,7 +84,7 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.receiveTitle),
+              AppFormHeader(title: t.freelance.receiveTitle),
               const SizedBox(height: AppSpacing.space4),
               FreelanceNotice(
                 title: t.freelance.receiveRuleTitle,

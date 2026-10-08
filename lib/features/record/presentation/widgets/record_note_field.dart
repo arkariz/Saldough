@@ -47,6 +47,7 @@ class RecordNoteField extends StatelessWidget {
                     style: textTheme.bodyLarge,
                     decoration: InputDecoration(
                       border: InputBorder.none,
+                      filled: false,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,

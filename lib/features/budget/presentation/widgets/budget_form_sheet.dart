@@ -342,12 +342,6 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppFormHeader(
-                  stepLabel: _editing
-                      ? t.budget.editStepLabel
-                      : switch (widget.templateName) {
-                          final name? => t.budget.fromTemplateStepLabel(name: name),
-                          null => t.budget.addStepLabel,
-                        },
                   title: _editing ? t.budget.editTitle : t.budget.addTitle,
                 ),
                 const SizedBox(height: AppSpacing.space4),

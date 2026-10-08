@@ -123,7 +123,6 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(
-                stepLabel: t.freelance.projectStepLabel,
                 title: editing ? t.freelance.projectEditTitle : t.freelance.projectAddTitle,
               ),
               const SizedBox(height: AppSpacing.space4),
@@ -266,7 +265,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppFormHeader(stepLabel: t.freelance.deductionsLabel, title: t.freelance.deductionTitle),
+              AppFormHeader(title: t.freelance.deductionTitle),
               const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.deductionLabelLabel, hint: t.freelance.requiredHint),
               const SizedBox(height: AppSpacing.space1),
@@ -302,6 +301,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                           decoration: InputDecoration(
                             border: InputBorder.none,
+                            filled: false,
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: formatPerMilAsPercent(25),

@@ -2,16 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
-import 'package:saldough/core/presentation/widgets/app_card.dart';
+import 'package:saldough/core/presentation/widgets/app_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
-import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
+import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
 // Bidang formulir bersama lembar Anggaran dan Freelance (ADR-030 §3.5);
 // semula `budget_form_fields.dart` di fitur `budget`.
 
-/// Kolom teks polos di dalam slab — nama anggaran dan nama pos.
+/// Bingkai kolom isian design system (komponen TextField): `surface`, tinggi
+/// minimal `size-field` (52), garis `lineStrong` 1px, berganti `brand` 2px
+/// saat fokus, sudut piksel kecil.
+class AppFieldBox extends StatefulWidget {
+  /// Membuat [AppFieldBox] di sekitar [child] (biasanya `TextField` tanpa
+  /// bingkai).
+  const AppFieldBox({required this.child, super.key});
+
+  /// Isi kolom.
+  final Widget child;
+
+  @override
+  State<AppFieldBox> createState() => _AppFieldBoxState();
+}
+
+class _AppFieldBoxState extends State<AppFieldBox> {
+  bool _focused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      onFocusChange: (focused) => setState(() => _focused = focused),
+      child: AnimatedContainer(
+        duration: AppDurations.fast,
+        constraints: const BoxConstraints(minHeight: AppSize.field),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space3),
+        alignment: Alignment.centerLeft,
+        decoration: ShapeDecoration(
+          color: colors.surface,
+          shape: PixelCornerBorder.small(
+            side: BorderSide(color: _focused ? colors.brand : colors.lineStrong, width: _focused ? 2 : 1),
+          ),
+        ),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+/// Kolom teks polos — nama anggaran dan nama pos.
 class AppFormTextField extends StatelessWidget {
   /// Membuat [AppFormTextField].
   const AppFormTextField({
@@ -41,8 +83,7 @@ class AppFormTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+    return AppFieldBox(
       child: TextField(
         controller: controller,
         autofocus: autofocus,
@@ -53,10 +94,11 @@ class AppFormTextField extends StatelessWidget {
         buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
         decoration: InputDecoration(
           border: InputBorder.none,
+          filled: false,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: hint,
-          hintStyle: TextStyle(color: colors.ink2),
+          hintStyle: TextStyle(color: colors.ink3),
         ),
       ),
     );
@@ -88,15 +130,11 @@ class AppFormMoneyField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final style = large
-        ? textTheme.headlineMedium?.copyWith(fontSize: 26, fontWeight: FontWeight.w700)
-        : textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700);
-    return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+    final style = large ? context.numberStyles.amountLg : context.numberStyles.amount;
+    return AppFieldBox(
       child: Row(
         children: [
-          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
+          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amountSm.copyWith(color: colors.ink2)),
           const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: TextField(
@@ -108,12 +146,13 @@ class AppFormMoneyField extends StatelessWidget {
               onChanged: onChanged,
               decoration: InputDecoration(
                 border: InputBorder.none,
+                filled: false,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
                 hintText: '0',
-                hintStyle: style?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
+                hintStyle: style.copyWith(color: colors.ink3),
               ),
             ),
           ),
@@ -143,80 +182,50 @@ class AppFormQuantityField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+    return AppFieldBox(
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
         cursorColor: colors.brand,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        style: context.numberStyles.amount,
         onChanged: onChanged,
         decoration: InputDecoration(
           border: InputBorder.none,
+          filled: false,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
           hintText: '1',
-          hintStyle: TextStyle(color: colors.ink2.withValues(alpha: 0.5)),
+          hintStyle: TextStyle(color: colors.ink3),
         ),
       ),
     );
   }
 }
 
-/// Bilah atas formulir: tombol kembali, judul bertingkat dua.
+/// Bar atas sheet formulir (design system Sheet): tombol tutup di kiri,
+/// judul `title` di tengah.
 class AppFormHeader extends StatelessWidget {
   /// Membuat [AppFormHeader].
-  const AppFormHeader({required this.stepLabel, required this.title, super.key});
-
-  /// Label kecil di atas judul.
-  final String stepLabel;
+  const AppFormHeader({required this.title, super.key});
 
   /// Judul.
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return Row(
       children: [
-        Semantics(
-          button: true,
-          label: t.common.cancel,
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 44,
-              height: 44,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
-              child: const AppIcon(IconKey.chevronLeft, size: 28),
-            ),
-          ),
-        ),
+        AppIconButton(icon: IconKey.close, label: t.common.close, onPressed: () => Navigator.of(context).pop()),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
-            child: Column(
-              children: [
-                Text(
-                  stepLabel.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: labelSmStyle(context, color: colors.brand),
-                ),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 22, height: 1.2),
-                ),
-              ],
-            ),
+          child: Semantics(
+            header: true,
+            child: Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
           ),
         ),
-        const SizedBox(width: 44),
+        const SizedBox(width: AppSize.touch),
       ],
     );
   }

@@ -174,6 +174,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                   buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                   decoration: InputDecoration(
                     border: InputBorder.none,
+                    filled: false,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: t.wallet.nameHint,
@@ -239,6 +240,7 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                               onChanged: (_) => setState(() => _balanceTouched = true),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
+                                filled: false,
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 isDense: true,

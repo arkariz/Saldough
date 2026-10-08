@@ -112,6 +112,7 @@ class _TransactionSearchFieldState extends State<TransactionSearchField> {
         decoration: InputDecoration(
           isDense: true,
           border: InputBorder.none,
+          filled: false,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: t.transaction.searchHint,

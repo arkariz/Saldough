@@ -23,13 +23,13 @@ class RecordNoteField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.noteSectionLabel, hint: t.record.optionalHint),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         TransactionSlab(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
           child: Row(
             children: [
               const AppIcon(IconKey.edit, size: 20),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: TextField(
                   controller: controller,
@@ -41,7 +41,7 @@ class RecordNoteField extends StatelessWidget {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: t.record.noteFieldHint,
-                    hintStyle: TextStyle(color: colors.textMuted),
+                    hintStyle: TextStyle(color: colors.ink2),
                   ),
                 ),
               ),

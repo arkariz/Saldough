@@ -48,7 +48,7 @@ class _CategoryPageState extends State<CategoryPage> {
       appBar: AppBar(title: Text(t.category.title)),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
           child: AppButton(label: t.category.addAction, onPressed: () => _add(context)),
         ),
       ),
@@ -57,7 +57,7 @@ class _CategoryPageState extends State<CategoryPage> {
           builder: (context, state) {
             final lists = state.ofKind(_kind);
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 AppSegmented<CategoryKind>(
                   options: [
@@ -67,15 +67,15 @@ class _CategoryPageState extends State<CategoryPage> {
                   selected: _kind,
                   onChanged: (kind) => setState(() => _kind = kind),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 if (!state.isLoading && lists.active.isEmpty) Text(t.category.emptyActive),
                 for (final category in lists.active) _CategoryRow(category: category),
                 if (lists.archived.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(t.category.archivedSection),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(t.category.archivedHint, style: TextStyle(color: context.appColors.textMuted)),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
+                  Text(t.category.archivedHint, style: TextStyle(color: context.appColors.ink2)),
+                  const SizedBox(height: AppSpacing.space1),
                   for (final category in lists.archived) _CategoryRow(category: category),
                 ],
               ],
@@ -102,7 +102,7 @@ class _CategoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppTappable(
         label: category.name,
         onTap: () => _rename(context),
@@ -110,11 +110,11 @@ class _CategoryRow extends StatelessWidget {
           child: Row(
             children: [
               AppIcon(categoryIcon(category)),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Text(
                   category.name,
-                  style: TextStyle(color: category.isArchived ? colors.textMuted : colors.textPrimary),
+                  style: TextStyle(color: category.isArchived ? colors.ink2 : colors.ink),
                 ),
               ),
               TextButton(

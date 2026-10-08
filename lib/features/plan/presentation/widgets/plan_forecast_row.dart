@@ -56,7 +56,7 @@ class PlanForecastRow extends StatelessWidget {
                   child: SpotlightTarget(
                     spotlightKey: SpotlightKey.homeForecast,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.md),
+                      padding: const EdgeInsets.only(top: AppSpacing.space4),
                       // Wawasan prioritas 1 di Beranda (§7B W1): siapkan dana.
                       child: funding.isNotEmpty
                           ? FundingBanner(warnings: funding, onShowWallet: (_) => onTap())
@@ -74,7 +74,7 @@ class PlanForecastRow extends StatelessWidget {
                                         lowDate: CycleMonthFormatter.formatDayMonth(low.date),
                                       ),
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: low.balance < 0 ? colors.overBudget : colors.textMuted,
+                                        color: low.balance < 0 ? colors.danger : colors.ink2,
                                       ),
                                     ),
                                   ),
@@ -112,7 +112,7 @@ class _MonthStartCard extends StatelessWidget {
         ? CycleMonthFormatter.formatMonthShort(state.range.start)
         : state.range.label;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
+      padding: const EdgeInsets.only(top: AppSpacing.space4),
       child: AppHardCard(
         key: const ValueKey('home-month-start'),
         child: Column(
@@ -120,9 +120,9 @@ class _MonthStartCard extends StatelessWidget {
           children: [
             Text(
               t.plan.reviewTitle(month: month).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.plan.homeReviewBody(
                 income: AppMoneyFormatter.format(plan.plannedIncome),
@@ -132,7 +132,7 @@ class _MonthStartCard extends StatelessWidget {
               style: textTheme.bodyMedium,
             ),
             if (state.estimatedRules.isNotEmpty)
-              Text(t.plan.homeReviewEstimates, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+              Text(t.plan.homeReviewEstimates, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
             Wrap(
               children: [
                 TextButton(onPressed: onReview, child: Text(t.plan.homeReviewAction)),

@@ -111,15 +111,15 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                 onRetry: () => context.read<BudgetTemplateBloc>().add(const BudgetTemplatesStarted()),
               ),
               _ => ListView(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.xl),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space8),
                 children: [
                   TransactionSlab(
-                    color: colors.surfaceLow,
+                    color: colors.surface2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Wrap(
-                          spacing: AppSpacing.sm,
+                          spacing: AppSpacing.space2,
                           runSpacing: 4,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
@@ -128,11 +128,11 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(t.budget.templatesInfoBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                        Text(t.budget.templatesInfoBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   if (state.templates.isEmpty)
                     _EmptyTemplates(onAdd: _add)
                   else
@@ -145,23 +145,23 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
                         onEdit: () => _edit(template),
                         onDuplicate: () => context.read<BudgetTemplateBloc>().add(BudgetTemplateDuplicated(template)),
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.space4),
                     ],
                   if (!canUse) ...[
                     Text(
                       t.budget.templateNeedsWallet,
                       textAlign: TextAlign.center,
-                      style: textTheme.bodySmall?.copyWith(color: colors.pending),
+                      style: textTheme.bodySmall?.copyWith(color: colors.warning),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                   ],
                   if (state.templates.isNotEmpty)
                     AppButton.secondary(label: t.budget.templateAddAction, onPressed: _add),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   Text(
                     t.budget.templatesFooter,
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                 ],
               ),
@@ -208,43 +208,43 @@ class _TemplateCard extends StatelessWidget {
             Text(template.name, style: textTheme.titleLarge),
             const SizedBox(height: 4),
             Wrap(
-              spacing: AppSpacing.xs,
+              spacing: AppSpacing.space1,
               runSpacing: 4,
               children: [
                 BudgetBadge(label: t.budget.templateItemCount(count: template.items.length)),
-                if (!enabled) BudgetBadge(label: t.budget.templateInactiveBadge, color: colors.pending),
+                if (!enabled) BudgetBadge(label: t.budget.templateInactiveBadge, color: colors.warning),
                 if (template.schedule case final schedule? when schedule.isActive)
                   BudgetBadge(
                     label: switch (schedule.period) {
                       BudgetPeriod.monthly => t.budget.templateScheduledMonthly(wallet: walletName ?? '—'),
                       BudgetPeriod.weekly => t.budget.templateScheduledWeekly(wallet: walletName ?? '—'),
                     },
-                    color: colors.accent,
+                    color: colors.brand,
                   ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Container(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: AppRadius.pixelSmAll),
+              padding: const EdgeInsets.all(AppSpacing.space2),
+              decoration: BoxDecoration(color: colors.surface2, borderRadius: AppRadius.pixelSmAll),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     t.budget.templateItemsLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.textMuted),
+                    style: transactionLabelStyle(context, color: colors.ink2),
                   ),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Wrap(
-                    spacing: AppSpacing.xs,
-                    runSpacing: AppSpacing.xs,
+                    spacing: AppSpacing.space1,
+                    runSpacing: AppSpacing.space1,
                     children: [
                       for (final item in template.items)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 4),
                           decoration: BoxDecoration(
-                            color: colors.cardBackground,
-                            border: Border.all(color: colors.divider),
+                            color: colors.surface,
+                            border: Border.all(color: colors.line),
                           ),
                           child: Text(item.name, style: textTheme.bodySmall),
                         ),
@@ -253,11 +253,11 @@ class _TemplateCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Row(
               children: [
-                Text(t.budget.templateTotalLabel, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted)),
-                const SizedBox(width: AppSpacing.sm),
+                Text(t.budget.templateTotalLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                const SizedBox(width: AppSpacing.space2),
                 // `Expanded` + rata kanan: nominal menempel ke tepi kanan dan
                 // mengecil kalau tidak muat, bukan berhenti di tengah.
                 Expanded(
@@ -266,21 +266,21 @@ class _TemplateCard extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       AppMoneyFormatter.format(template.plannedAmount),
-                      style: PixelTypography.tabularMono(context, fontSize: 18, color: colors.textPrimary),
+                      style: context.numberStyles.amountLg.copyWith(color: colors.ink),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.budget.templateUseAction, onPressed: enabled && canUse ? onUse : null),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             Row(
               children: [
                 Expanded(
                   child: AppButton.secondary(label: t.budget.templateEditAction, onPressed: onEdit),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: AppButton.secondary(
                     label: t.budget.templateDuplicateAction,
@@ -306,21 +306,21 @@ class _EmptyTemplates extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return AppHardCard(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
-          BudgetBadge(label: t.budget.templatesEmptyBadge, color: colors.pending),
-          const SizedBox(height: AppSpacing.md),
+          BudgetBadge(label: t.budget.templatesEmptyBadge, color: colors.warning),
+          const SizedBox(height: AppSpacing.space4),
           const AppIcon(IconKey.budget, size: 72),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           Text(t.budget.templatesEmptyTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             t.budget.templatesEmptyBody,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           SizedBox(
             width: double.infinity,
             child: AppButton(label: t.budget.templateAddAction, onPressed: onAdd),
@@ -340,12 +340,12 @@ class _LoadError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(t.budget.templatesLoadError, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.common.retry, onPressed: onRetry),
           ],
         ),

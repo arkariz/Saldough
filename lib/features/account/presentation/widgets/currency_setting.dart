@@ -73,7 +73,7 @@ class CurrencySettingSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppSectionLabel(t.currency.settingsTitle),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           AppTappable(
             key: const ValueKey('currency-setting'),
             label: t.currency.label,
@@ -88,7 +88,7 @@ class CurrencySettingSection extends StatelessWidget {
                         Text(t.currency.label, style: textTheme.titleSmall),
                         Text(
                           '${currency.code} · ${currencyName(currency)}',
-                          style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                         ),
                       ],
                     ),

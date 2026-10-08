@@ -61,7 +61,7 @@ class _RecordRepeatFieldState extends State<RecordRepeatField> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.repeat.label),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         if (!_expanded)
           _CollapsedRow(
             text: value == null ? t.record.repeat.off : _summary(value),
@@ -69,8 +69,8 @@ class _RecordRepeatFieldState extends State<RecordRepeatField> {
           )
         else ...[
           Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
+            spacing: AppSpacing.space1,
+            runSpacing: AppSpacing.space1,
             children: [
               if (!widget.locked)
                 _OptionChip(
@@ -89,7 +89,7 @@ class _RecordRepeatFieldState extends State<RecordRepeatField> {
             ],
           ),
           if (value != null) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(_summary(value), style: Theme.of(context).textTheme.bodySmall),
             if (!_advanced)
               Align(
@@ -168,18 +168,18 @@ class _Advanced extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         _Stepper(
           label: _intervalLabel(value),
           onMinus: value.interval > 1 ? () => onChanged(value.copyWith(interval: value.interval - 1)) : null,
           onPlus: value.interval < 52 ? () => onChanged(value.copyWith(interval: value.interval + 1)) : null,
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         AppSectionLabel(t.record.repeat.endLabel),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: AppSpacing.space1,
+          runSpacing: AppSpacing.space1,
           children: [
             _OptionChip(
               label: t.record.repeat.endNever,
@@ -206,19 +206,19 @@ class _Advanced extends StatelessWidget {
           ],
         ),
         if (count != null) ...[
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           _Stepper(
             label: t.record.repeat.endsAfterSummary(n: count),
             onMinus: count > 1 ? () => onChanged(value.copyWith(end: RecurringEndsAfter(count - 1))) : null,
             onPlus: count < 360 ? () => onChanged(value.copyWith(end: RecurringEndsAfter(count + 1))) : null,
           ),
         ],
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         AppSectionLabel(t.record.repeat.amountLabel),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: AppSpacing.space1,
+          runSpacing: AppSpacing.space1,
           children: [
             for (final (mode, label) in [
               (RecurringAmountMode.fixed, t.record.repeat.amountFixed),
@@ -248,12 +248,12 @@ class _Advanced extends StatelessWidget {
             },
           ),
         if (kind != TransactionKind.income) ...[
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           AppSectionLabel(t.record.repeat.paymentLabel),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
+            spacing: AppSpacing.space1,
+            runSpacing: AppSpacing.space1,
             children: [
               for (final (mode, label) in [
                 (RecurringPaymentMode.manual, t.record.repeat.paymentManual),
@@ -289,14 +289,14 @@ class _CollapsedRow extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         child: Container(
           constraints: const BoxConstraints(minHeight: 44),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-          decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+          decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
           child: Row(
             children: [
               const AppIcon(IconKey.calendar, size: 18),
               const SizedBox(width: 6),
               Expanded(
-                child: Text(text, style: transactionLabelStyle(context, color: colors.textPrimary)),
+                child: Text(text, style: transactionLabelStyle(context, color: colors.ink)),
               ),
               const AppIcon(IconKey.chevronRight, size: 18),
             ],
@@ -358,16 +358,16 @@ class _OptionChip extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surfaceMid,
+              color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surface2,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               widthFactor: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
                 child: Text(
                   label,
-                  style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.textMuted),
+                  style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
                 ),
               ),
             ),
@@ -440,7 +440,7 @@ class RecordOccurrenceNotice extends StatelessWidget {
       lines.join('\n'),
       style: Theme.of(
         context,
-      ).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.pending : colors.textMuted),
+      ).textTheme.bodySmall?.copyWith(color: lines.length > 1 ? colors.warning : colors.ink2),
     );
   }
 }

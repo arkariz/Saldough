@@ -559,7 +559,7 @@ void main() {
     // Font asli dimuat supaya lebar label terukur seperti di perangkat (bawaan
     // uji memakai Ahem, yang tiap glifnya selebar ukuran font).
     setUpAll(() async {
-      final loader = FontLoader('SpaceMono')..addFont(rootBundle.load('assets/fonts/SpaceMono-Bold.ttf'));
+      final loader = FontLoader('PlusJakartaSans')..addFont(rootBundle.load('assets/fonts/PlusJakartaSans-Variable.ttf'));
       await loader.load();
     });
 

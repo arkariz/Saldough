@@ -74,7 +74,7 @@ class WalletSelectField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final selected = _findSelected();
-    final accent = previewIsCredit ? colors.income : colors.expense;
+    final accent = previewIsCredit ? colors.positive : colors.ink;
     final amount = previewAmountSen;
     final hasDelta = showDelta && selected != null && amount != null && amount > 0;
 
@@ -88,7 +88,7 @@ class WalletSelectField extends StatelessWidget {
           // turun baris, bukan meluap, pada teks besar. Label ditampilkan
           // apa adanya (bukan `.toUpperCase()`).
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 6,
@@ -107,9 +107,9 @@ class WalletSelectField extends StatelessWidget {
               ],
             ),
           ),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         if (wallets.isEmpty)
-          Text(t.record.noWalletsMessage, style: TextStyle(color: colors.textMuted))
+          Text(t.record.noWalletsMessage, style: TextStyle(color: colors.ink2))
         else
           AppMenuSelectButton<String>(
             icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
@@ -127,17 +127,17 @@ class WalletSelectField extends StatelessWidget {
             },
           ),
         if (selected != null) ...[
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
+              spacing: AppSpacing.space1,
+              runSpacing: AppSpacing.space1,
               children: [
                 Text(
                   t.record.balanceLabel,
-                  style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
                 WalletBalancePreview(
                   wallet: selected,
@@ -149,19 +149,19 @@ class WalletSelectField extends StatelessWidget {
           ),
         ],
         if (hasDelta) ...[
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
               decoration: BoxDecoration(
-                color: colors.tinted(previewIsCredit ? colors.incomeFill : colors.expenseFill, 0.22),
+                color: colors.tinted(previewIsCredit ? colors.positive : colors.ink2, 0.22),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: FitStart(
                 child: Text(
                   '${previewIsCredit ? '+' : '−'}${AppMoneyFormatter.format(amount)}',
-                  style: transactionLabelStyle(context, size: 12, color: accent),
+                  style: transactionLabelStyle(context, color: accent),
                 ),
               ),
             ),

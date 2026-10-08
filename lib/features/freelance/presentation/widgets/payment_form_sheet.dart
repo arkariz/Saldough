@@ -99,16 +99,16 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
     final canSave = project != null && chosen.isNotEmpty && breakdown!.netPay > 0;
     return SizedBox.expand(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.paymentAddTitle),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.paymentCreateRuleBody),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppSectionLabel(t.freelance.projectLabel, hint: t.freelance.requiredHint),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             AppMenuSelectButton<String>(
               icon: IconKey.freelance,
               label: project?.name ?? t.freelance.projectPick,
@@ -120,44 +120,44 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
               onSelected: (id) => setState(() => id == null ? null : _selectProject(id)),
             ),
             if (project != null) ...[
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.paymentEntriesLabel(count: chosen.length, hours: hours)),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               for (final entry in _entries)
                 CheckboxListTile(
                   value: _selected.contains(entry.id),
                   contentPadding: EdgeInsets.zero,
                   controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: colors.accent,
+                  activeColor: colors.brand,
                   onChanged: (checked) => setState(() {
                     _selected = checked ?? false ? {..._selected, entry.id} : ({..._selected}..remove(entry.id));
                   }),
                   title: Text(CycleMonthFormatter.formatDateShort(entry.date), style: textTheme.titleSmall),
                   subtitle: Text(
                     [formatHoursTimesRate(entry.hours, entry.hourlyRate), ?entry.note].join(' · '),
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                   secondary: Text(
                     AppMoneyFormatter.format(entry.earnedAmount),
-                    style: PixelTypography.tabularMono(context, fontSize: 13, color: colors.textPrimary),
+                    style: context.numberStyles.amountSm.copyWith(color: colors.ink),
                   ),
                 ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               FreelanceDateButton(
                 label: t.freelance.expectedDateLabel,
                 date: _expectedDate,
                 onChanged: (date) => setState(() => _expectedDate = date),
               ),
               if (breakdown != null) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 NetPayBreakdownCard(breakdown: breakdown),
                 if (breakdown.netPay <= 0) ...[
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(t.freelance.netPayNotPositive, style: textTheme.bodySmall?.copyWith(color: colors.expense)),
+                  const SizedBox(height: AppSpacing.space1),
+                  Text(t.freelance.netPayNotPositive, style: textTheme.bodySmall?.copyWith(color: colors.ink)),
                 ],
               ],
             ],
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.space6),
             AppButton(
               label: t.freelance.paymentCreateAction,
               onPressed: canSave

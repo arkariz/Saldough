@@ -34,7 +34,7 @@ class WalletCard extends StatelessWidget {
       child: Opacity(
         opacity: wallet.isActive ? 1 : 0.6,
         child: TransactionSlab(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space2),
           // `IntrinsicHeight` -- sama seperti `TransactionRow` -- memberi
           // tinggi silang yang TERBATAS ke `Row`, supaya `FittedBox` nominal
           // di bawah tidak menerima constraint tinggi tak terhingga (yang
@@ -48,10 +48,10 @@ class WalletCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
                   child: AppIcon(walletIconKey(wallet.iconKey), size: 26),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -65,18 +65,18 @@ class WalletCard extends StatelessWidget {
                         // sebelahnya), dan label jenis dompet ID ("Bank /
                         // Rekening") tidak selalu muat sebaris pada 2x teks.
                         Wrap(
-                          spacing: AppSpacing.xs,
+                          spacing: AppSpacing.space1,
                           runSpacing: 2,
                           children: [
                             if (typeLabel != null)
                               Text(
                                 typeLabel.toUpperCase(),
-                                style: transactionLabelStyle(context, color: colors.textMuted),
+                                style: transactionLabelStyle(context, color: colors.ink2),
                               ),
                             if (!wallet.isActive)
                               Text(
                                 t.wallet.inactiveBadge.toUpperCase(),
-                                style: transactionLabelStyle(context, color: colors.pending),
+                                style: transactionLabelStyle(context, color: colors.warning),
                               ),
                           ],
                         ),
@@ -84,7 +84,7 @@ class WalletCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
                 // Lebar dijepit tetap, bukan `Flexible`/`Expanded` -- pola
                 // yang sama dengan kolom nominal `TransactionRow` (T-2.11):
                 // nominal mengecil di layar sempit/teks besar, bukan
@@ -96,16 +96,12 @@ class WalletCard extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       AppMoneyFormatter.format(wallet.currentBalance),
-                      style: PixelTypography.tabularMono(
-                        context,
-                        fontSize: 16,
-                        color: negative ? colors.expense : colors.textPrimary,
-                      ),
+                      style: context.numberStyles.amount.copyWith(color: negative ? colors.ink : colors.ink),
                     ),
                   ),
                 ),
                 const SizedBox(width: 4),
-                AppIcon(IconKey.chevronRight, size: 20, color: colors.textMuted),
+                AppIcon(IconKey.chevronRight, size: 20, color: colors.ink2),
               ],
             ),
           ),

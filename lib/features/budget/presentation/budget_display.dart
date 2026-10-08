@@ -46,10 +46,10 @@ String budgetItemStatusLabel(BudgetItemStatus status) => switch (status) {
 Color budgetItemStatusColor(BuildContext context, BudgetItemStatus status) {
   final colors = context.appColors;
   return switch (status) {
-    BudgetItemStatus.planned => colors.textMuted,
-    BudgetItemStatus.partiallySpent => colors.textPrimary,
-    BudgetItemStatus.completed => colors.pending,
-    BudgetItemStatus.overspent => colors.overBudget,
+    BudgetItemStatus.planned => colors.ink2,
+    BudgetItemStatus.partiallySpent => colors.ink,
+    BudgetItemStatus.completed => colors.warning,
+    BudgetItemStatus.overspent => colors.danger,
   };
 }
 
@@ -76,10 +76,10 @@ class BudgetBadge extends StatelessWidget {
     final colors = context.appColors;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(color: background ?? colors.surfaceMid, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: background ?? colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Text(
         label.toUpperCase(),
-        style: transactionLabelStyle(context, size: 9, color: color ?? colors.textMuted),
+        style: transactionLabelStyle(context, size: 9, color: color ?? colors.ink2),
       ),
     );
   }

@@ -73,10 +73,10 @@ class _BudgetListPageState extends State<BudgetListPage> {
                 tour: TourId.budget,
                 ready: true,
                 child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.md),
+                  padding: const EdgeInsets.all(AppSpacing.space4),
                   children: [
                     BudgetEmptyState(onAdd: canAdd ? () => addBudget(context) : null),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.space4),
                     SpotlightTarget(
                       spotlightKey: SpotlightKey.budgetTemplates,
                       child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),
@@ -95,9 +95,9 @@ class _BudgetListPageState extends State<BudgetListPage> {
               ready: true,
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.md,
-                  AppSpacing.sm,
-                  AppSpacing.md,
+                  AppSpacing.space4,
+                  AppSpacing.space2,
+                  AppSpacing.space4,
                   AppSpacing.fabClearance,
                 ),
                 children: [
@@ -109,7 +109,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       activeCount: state.activeProgress.length,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetFilter,
                     child: BudgetFilterBar(
@@ -121,7 +121,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                       onWalletChanged: (walletId) => bloc.add(BudgetWalletFilterChanged(walletId)),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   if (visible.isEmpty)
                     BudgetFilteredEmptyState(
                       onReset: () => bloc
@@ -137,11 +137,11 @@ class _BudgetListPageState extends State<BudgetListPage> {
                         onTap: () => _openDetail(context, budget.id),
                         isRecurring: state.isRecurring(budget),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.space2),
                     ],
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   if (canAdd) AppButton(label: t.budget.addAction, onPressed: () => addBudget(context)),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   SpotlightTarget(
                     spotlightKey: SpotlightKey.budgetTemplates,
                     child: _TemplatesButton(onTap: () => openBudgetTemplates(context)),

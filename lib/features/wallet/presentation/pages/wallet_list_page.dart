@@ -62,7 +62,7 @@ class _WalletListPageState extends State<WalletListPage> {
             }
             if (state.wallets.isEmpty) {
               return ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [WalletEmptyState(onAdd: () => _addWallet(context))],
               );
             }
@@ -76,9 +76,9 @@ class _WalletListPageState extends State<WalletListPage> {
               ready: true,
               child: ListView(
               padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                AppSpacing.sm,
-                AppSpacing.md,
+                AppSpacing.space4,
+                AppSpacing.space2,
+                AppSpacing.space4,
                 AppSpacing.fabClearance,
               ),
               children: [
@@ -89,9 +89,9 @@ class _WalletListPageState extends State<WalletListPage> {
                     totalBalance: state.totalBalance,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.wallet.listHeading),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 for (final (i, wallet) in active.indexed) ...[
                   SpotlightTarget(
                     // Hanya dompet pertama yang disorot.
@@ -101,9 +101,9 @@ class _WalletListPageState extends State<WalletListPage> {
                       onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                 ],
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 SpotlightTarget(
                   spotlightKey: SpotlightKey.walletAdd,
                   child: AppButton(
@@ -112,24 +112,24 @@ class _WalletListPageState extends State<WalletListPage> {
                   ),
                 ),
                 if (inactive.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(t.wallet.inactiveHeading),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   for (final wallet in inactive) ...[
                     WalletCard(
                       wallet: wallet,
                       onTap: () => context.pushRoute(WalletRouteKeys.detail, WalletDetailInput(wallet)),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                   ],
                 ],
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Text(
                   t.wallet.privacyNote,
                   textAlign: TextAlign.center,
                   style: transactionLabelStyle(
                     context,
-                    color: colors.textMuted,
+                    color: colors.ink2,
                   ).copyWith(fontWeight: FontWeight.w400),
                 ),
               ],

@@ -273,7 +273,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                 previewIsCredit: false,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             WalletSelectField(
               label: t.record.destinationWalletFieldLabel,
               caption: t.record.balanceIncreasesCaption,
@@ -284,7 +284,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               previewAmountSen: amount,
             ),
             if (_budgetChoices.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recordBudgetItem,
                 child: RecordBudgetItemField(
@@ -295,10 +295,10 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               ),
             ],
             if (_sameWallet) ...[
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               Text(
                 t.record.sameWalletWarning,
-                style: TextStyle(color: colors.expense),
+                style: TextStyle(color: colors.ink),
               ),
             ],
           ],
@@ -343,7 +343,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                     Theme.of(
                       context,
                     ).textTheme.bodySmall?.copyWith(
-                      color: colors.expense,
+                      color: colors.ink,
                       fontWeight: FontWeight.w700,
                     ),
               ),
@@ -353,7 +353,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                     Theme.of(
                       context,
                     ).textTheme.bodySmall?.copyWith(
-                      color: colors.income,
+                      color: colors.positive,
                       fontWeight: FontWeight.w700,
                     ),
               ),

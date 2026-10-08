@@ -100,16 +100,16 @@ class BudgetDetailPage extends StatelessWidget {
               tour: TourId.budgetDetail,
               ready: true,
               child: ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
                   _TopBar(onEdit: () => _edit(context, current)),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   _HeroCard(budget: current, progress: progress, wallet: wallet),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(t.budget.detailItemsHeading, hint: t.budget.itemCount(count: current.items.length)),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   if (current.items.isEmpty)
-                    Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.textMuted))
+                    Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.ink2))
                   else
                     for (final (i, itemProgress) in progress.items.indexed) ...[
                       _ItemCard(
@@ -118,23 +118,23 @@ class BudgetDetailPage extends StatelessWidget {
                         targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
                         onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.space2),
                     ],
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   AppSectionLabel(t.budget.detailLinkedHeading),
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   if (linked.isEmpty)
-                    Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.textMuted))
+                    Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.ink2))
                   else
                     for (var i = 0; i < linked.length; i++) ...[
-                      if (i > 0) const SizedBox(height: AppSpacing.sm),
+                      if (i > 0) const SizedBox(height: AppSpacing.space2),
                       TransactionRow(
                         transaction: linked[i],
                         walletsById: walletsById,
                         onTap: () => _openTransaction(context, linked[i]),
                       ),
                     ],
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   _HowItWorks(walletName: wallet?.name ?? t.budget.unknownWallet),
                 ],
               ),

@@ -32,17 +32,17 @@ class AppChoiceChip extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: selected ? colors.accent : colors.surfaceMid,
+              color: selected ? colors.brand : colors.surface2,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               widthFactor: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                 child: Text(
                   label,
                   maxLines: 1,
-                  style: transactionLabelStyle(context, color: selected ? colors.onAccent : colors.textPrimary),
+                  style: transactionLabelStyle(context, color: selected ? colors.onBrand : colors.ink),
                 ),
               ),
             ),

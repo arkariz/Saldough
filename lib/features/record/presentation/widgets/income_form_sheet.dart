@@ -299,16 +299,16 @@ class _FreelanceCallout extends StatelessWidget {
         onTap: () => Navigator.of(context).pop(const OpenFreelance()),
         behavior: HitTestBehavior.opaque,
         child: TransactionSlab(
-          color: colors.tinted(colors.pending, 0.1),
-          shadowColor: colors.pending,
+          color: colors.tinted(colors.warning, 0.1),
+          shadowColor: colors.warning,
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm + AppSpacing.xs,
-            vertical: AppSpacing.sm,
+            horizontal: AppSpacing.space2 + AppSpacing.space1,
+            vertical: AppSpacing.space2,
           ),
           child: Row(
             children: [
               const AppIcon(IconKey.worklog),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Text.rich(
                   TextSpan(
@@ -320,14 +320,14 @@ class _FreelanceCallout extends StatelessWidget {
                       TextSpan(
                         text: t.record.freelanceCalloutAction,
                         style: textTheme.bodySmall?.copyWith(
-                          color: colors.textMuted,
+                          color: colors.ink2,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              AppIcon(IconKey.chevronRight, color: colors.pending),
+              AppIcon(IconKey.chevronRight, color: colors.warning),
             ],
           ),
         ),

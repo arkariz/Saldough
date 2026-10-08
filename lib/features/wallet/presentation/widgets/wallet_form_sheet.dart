@@ -154,24 +154,24 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Header(editing: _editing, iconKey: _iconKey),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.wallet.nameLabel, hint: t.wallet.nameRequiredHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               TransactionSlab(
                 radius: 4,
                 shadow: 2,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                 child: TextField(
                   controller: _nameController,
                   autofocus: !_editing,
                   maxLength: walletNameMaxLength,
                   textCapitalization: TextCapitalization.words,
-                  cursorColor: colors.accent,
+                  cursorColor: colors.brand,
                   onChanged: (_) => setState(() {}),
                   buildCounter: (_, {required currentLength, required isFocused, maxLength}) => null,
                   decoration: InputDecoration(
@@ -179,26 +179,26 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     hintText: t.wallet.nameHint,
-                    hintStyle: TextStyle(color: colors.textMuted),
+                    hintStyle: TextStyle(color: colors.ink2),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 2, right: AppSpacing.xs),
+                padding: const EdgeInsets.only(top: 2, right: AppSpacing.space1),
                 child: Text(
                   '${_nameController.text.characters.length}/$walletNameMaxLength · ${t.wallet.nameMaxHint}',
                   textAlign: TextAlign.end,
-                  style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.wallet.iconLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               // Tiga kolom sama lebar (ubin ke-4 dan ke-5 di baris kedua), bukan
               // ubin berlebar tetap yang menyisakan ruang kosong di kanan.
               LayoutBuilder(
                 builder: (context, constraints) {
-                  const gap = AppSpacing.xs;
+                  const gap = AppSpacing.space1;
                   final tileWidth = (constraints.maxWidth - 2 * gap) / 3;
                   return Wrap(
                     spacing: gap,
@@ -217,26 +217,26 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                   );
                 },
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.wallet.initialBalanceLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               TransactionSlab(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-                      decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space1),
+                      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
                       child: Row(
                         children: [
-                          Text(ActiveCurrency.value.symbol, style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
-                          const SizedBox(width: AppSpacing.sm),
+                          Text(ActiveCurrency.value.symbol, style: context.numberStyles.amount.copyWith(color: colors.brand)),
+                          const SizedBox(width: AppSpacing.space2),
                           Expanded(
                             child: TextField(
                               controller: _balanceController,
                               keyboardType: moneyKeyboardType,
                               inputFormatters: [MoneyInputFormatter()],
-                              cursorColor: colors.accent,
+                              cursorColor: colors.brand,
                               style: bigStyle,
                               onChanged: (_) => setState(() => _balanceTouched = true),
                               decoration: InputDecoration(
@@ -244,27 +244,27 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 isDense: true,
-                                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
                                 hintText: '0',
-                                hintStyle: bigStyle?.copyWith(color: colors.textMuted.withValues(alpha: 0.5)),
+                                hintStyle: bigStyle?.copyWith(color: colors.ink2.withValues(alpha: 0.5)),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.space2),
                     Text(
                       t.wallet.initialBalanceHelp,
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               Wrap(
-                spacing: AppSpacing.xs,
-                runSpacing: AppSpacing.xs,
+                spacing: AppSpacing.space1,
+                runSpacing: AppSpacing.space1,
                 children: [
                   for (final amount in ActiveCurrency.value.quickAmounts(QuickAmountMultipliers.walletBalance))
                     AppQuickChip(
@@ -273,15 +273,15 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                     ),
                   AppQuickChip(
                     label: t.record.clearAmountAction,
-                    color: colors.tinted(colors.pending, 0.22),
+                    color: colors.tinted(colors.warning, 0.22),
                     onTap: () => _setBalance(0),
                   ),
                 ],
               ),
               if (wallet != null) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 _CurrentBalanceCard(wallet: wallet),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 TransactionSlab(
                   radius: 4,
                   shadow: 2,
@@ -297,42 +297,42 @@ class _WalletFormSheetState extends State<WalletFormSheet> {
                             ),
                             Text(
                               t.wallet.activeSwitchHelp,
-                              style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.space2),
                       Switch(
                         value: _isActive,
-                        activeThumbColor: colors.onAccent,
-                        activeTrackColor: colors.accent,
+                        activeThumbColor: colors.onBrand,
+                        activeTrackColor: colors.brand,
                         onChanged: (value) => setState(() => _isActive = value),
                       ),
                     ],
                   ),
                 ),
               ],
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(
                 label: _editing ? t.transaction.saveChangesAction : t.wallet.saveAddAction,
                 onPressed: _canSave ? _save : null,
               ),
               if (wallet != null) ...[
-                const SizedBox(height: AppSpacing.lg),
-                AppButton.secondary(label: t.wallet.deleteAction, textColor: colors.expense, onPressed: _delete),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space6),
+                AppButton.secondary(label: t.wallet.deleteAction, textColor: colors.danger, onPressed: _delete),
+                const SizedBox(height: AppSpacing.space1),
                 Text(
                   t.wallet.deleteHelp,
                   textAlign: TextAlign.center,
-                  style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
               ],
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Text(
                 t.wallet.privacyNote,
                 textAlign: TextAlign.center,
-                style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
               ),
             ],
           ),
@@ -360,19 +360,19 @@ class _Header extends StatelessWidget {
             width: 44,
             height: 44,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surfaceHigh, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
             child: const AppIcon(IconKey.chevronLeft, size: 28),
           ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
             child: Column(
               children: [
                 Text(
                   (editing ? t.wallet.editStepLabel : t.wallet.addStepLabel).toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: transactionLabelStyle(context, color: colors.accent),
+                  style: transactionLabelStyle(context, color: colors.brand),
                 ),
                 Text(
                   editing ? t.wallet.editTitle : t.wallet.addTitle,
@@ -387,7 +387,7 @@ class _Header extends StatelessWidget {
           width: 44,
           height: 44,
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: colors.surfaceMid, borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
           child: AppIcon(walletIconKey(iconKey), size: 28),
         ),
       ],
@@ -411,11 +411,11 @@ class _IconChoice extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         constraints: const BoxConstraints(minHeight: 96),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
         decoration: BoxDecoration(
-          color: selected ? colors.tinted(colors.accent, 0.16) : colors.surfaceLow,
+          color: selected ? colors.tinted(colors.brand, 0.16) : colors.surface2,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: selected ? colors.accent : Colors.transparent, width: 2),
+          border: Border.all(color: selected ? colors.brand : Colors.transparent, width: 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -428,7 +428,7 @@ class _IconChoice extends StatelessWidget {
               style: transactionLabelStyle(
                 context,
                 size: 9,
-                color: selected ? colors.accent : colors.textMuted,
+                color: selected ? colors.brand : colors.ink2,
               ),
             ),
           ],
@@ -454,7 +454,7 @@ class _CurrentBalanceCard extends StatelessWidget {
         children: [
           Text(
             t.wallet.currentBalanceLabel.toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.textMuted),
+            style: transactionLabelStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),
           FitStart(
@@ -462,14 +462,14 @@ class _CurrentBalanceCard extends StatelessWidget {
               AppMoneyFormatter.format(wallet.currentBalance),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: wallet.currentBalance < 0 ? colors.expense : colors.textPrimary,
+                color: wallet.currentBalance < 0 ? colors.ink : colors.ink,
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             t.wallet.editBalanceNote,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
           ),
         ],
       ),

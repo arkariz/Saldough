@@ -95,7 +95,7 @@ class _SourcePageState extends State<_SourcePage> {
       appBar: AppBar(title: Text(_source.appLabel)),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
           child: AppButton(label: texts.save, onPressed: _save),
         ),
       ),
@@ -105,14 +105,14 @@ class _SourcePageState extends State<_SourcePage> {
             final wallets = state.wallets;
             final walletId = wallets.any((w) => w.id == _source.walletId) ? _source.walletId : null;
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 NotificationSwitchCard(
                   label: texts.sourceEnabled,
                   value: _source.enabled,
                   onChanged: (value) => setState(() => _source = _source.copyWith(enabled: value)),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 KeyedSubtree(
                   key: const ValueKey('notification-source-wallet'),
                   child: WalletSelectField(
@@ -122,12 +122,12 @@ class _SourcePageState extends State<_SourcePage> {
                     onSelected: (id) => setState(() => _source = _source.copyWith(walletId: () => id)),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                  child: Text(texts.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                  child: Text(texts.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 // Filter dan pola jarang disentuh: terlipat, kecuali filter
                 // kosong (tidak ada yang dibaca) supaya peringatannya terlihat.
                 _AdvancedToggle(
@@ -137,7 +137,7 @@ class _SourcePageState extends State<_SourcePage> {
                 ),
                 if (_advanced || noFilter) ..._advancedSection(context, state),
                 if (!widget.isNew) ...[
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.space8),
                   AppButton.tertiary(label: texts.removeSource, onPressed: _remove),
                 ],
               ],
@@ -162,17 +162,17 @@ class _SourcePageState extends State<_SourcePage> {
         if (p.packageName == _source.packageName) p,
     ];
     return [
-      const SizedBox(height: AppSpacing.md),
+      const SizedBox(height: AppSpacing.space4),
       AppSectionLabel(texts.keywordsLabel),
-      const SizedBox(height: AppSpacing.xs),
+      const SizedBox(height: AppSpacing.space1),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-        child: Text(texts.keywordsHint, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+        child: Text(texts.keywordsHint, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
       ),
-      const SizedBox(height: AppSpacing.sm),
+      const SizedBox(height: AppSpacing.space2),
       Wrap(
-        spacing: AppSpacing.xs,
-        runSpacing: AppSpacing.xs,
+        spacing: AppSpacing.space1,
+        runSpacing: AppSpacing.space1,
         children: [
           for (final word in _source.keywords)
             InputChip(
@@ -206,17 +206,17 @@ class _SourcePageState extends State<_SourcePage> {
             child: Text(texts.addDefaultKeywords),
           ),
         ),
-      const SizedBox(height: AppSpacing.lg),
+      const SizedBox(height: AppSpacing.space6),
       AppSectionLabel(texts.patternsTitle),
-      const SizedBox(height: AppSpacing.xs),
+      const SizedBox(height: AppSpacing.space1),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
         child: Text(
           userPatterns.isEmpty && builtIns.isEmpty ? texts.patternsEmpty : texts.patternsHint,
-          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
         ),
       ),
-      const SizedBox(height: AppSpacing.sm),
+      const SizedBox(height: AppSpacing.space2),
       for (final pattern in userPatterns)
         _PatternRow(
           pattern: pattern,
@@ -263,7 +263,7 @@ class _AdvancedToggle extends StatelessWidget {
       label: texts.advancedTitle,
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space1),
         child: Row(
           children: [
             Expanded(
@@ -273,12 +273,12 @@ class _AdvancedToggle extends StatelessWidget {
                   Text(texts.advancedTitle, style: textTheme.titleSmall),
                   Text(
                     warning ?? texts.advancedHint,
-                    style: textTheme.bodySmall?.copyWith(color: warning == null ? colors.textMuted : colors.expense),
+                    style: textTheme.bodySmall?.copyWith(color: warning == null ? colors.ink2 : colors.danger),
                   ),
                 ],
               ),
             ),
-            Icon(expanded ? Icons.expand_less : Icons.expand_more, color: colors.textMuted),
+            Icon(expanded ? Icons.expand_less : Icons.expand_more, color: colors.ink2),
           ],
         ),
       ),
@@ -298,12 +298,12 @@ class _PatternRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppTappable(
         label: pattern.label,
         onTap: onTap,
         child: AppHardCard(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.xs, AppSpacing.sm),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
           child: Row(
             children: [
               Expanded(
@@ -315,7 +315,7 @@ class _PatternRow extends StatelessWidget {
                       subtitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
                     ),
                   ],
                 ),

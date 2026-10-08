@@ -108,25 +108,25 @@ class FreelanceAmountLine extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.space2),
       decoration: BoxDecoration(
-        color: color == null ? colors.surfaceLow : colors.tinted(color!, 0.1),
+        color: color == null ? colors.surface2 : colors.tinted(color!, 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
         children: [
           AppIcon(icon, size: 28),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color ?? colors.textMuted)),
-                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color ?? colors.ink2)),
+                Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           // Nominal besar di layar sempit atau teks diperbesar mengecil,
           // bukan meluber ke kanan.
           Flexible(
@@ -135,7 +135,7 @@ class FreelanceAmountLine extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 AppMoneyFormatter.format(amount),
-                style: PixelTypography.tabularMono(context, fontSize: 15, color: colors.textPrimary),
+                style: context.numberStyles.amount.copyWith(color: colors.ink),
               ),
             ),
           ),
@@ -186,27 +186,27 @@ class ProjectCard extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: TransactionSlab(
-          shadowColor: paymentStats.pendingCount > 0 ? colors.pending : null,
+          shadowColor: paymentStats.pendingCount > 0 ? colors.warning : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
                 children: [
                   const FreelanceIconBox(IconKey.freelance, size: 48),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.space2),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(project.name, style: textTheme.titleMedium),
-                        Text(terms, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                        Text(terms, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                       ],
                     ),
                   ),
-                  AppIcon(IconKey.chevronRight, color: colors.textMuted),
+                  AppIcon(IconKey.chevronRight, color: colors.ink2),
                 ],
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               FreelanceAmountLine(
                 icon: IconKey.workCompleted,
                 label: t.freelance.unbilledLabel,
@@ -216,7 +216,7 @@ class ProjectCard extends StatelessWidget {
                 amount: stats.unbilledAmount,
               ),
               if (paymentStats.pendingCount > 0) ...[
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 FreelanceAmountLine(
                   icon: IconKey.pending,
                   label: t.freelance.pendingTotalLabel,
@@ -225,33 +225,33 @@ class ProjectCard extends StatelessWidget {
                     date: CycleMonthFormatter.formatDateShort(paymentStats.nextExpectedDate!),
                   ),
                   amount: paymentStats.pendingNet,
-                  color: colors.pending,
+                  color: colors.warning,
                 ),
               ],
               if (paymentStats.paidCount > 0) ...[
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 FreelanceAmountLine(
                   icon: IconKey.paid,
                   label: t.freelance.paidTotalLabel,
                   caption: t.freelance.paymentCount(count: paymentStats.paidCount),
                   amount: paymentStats.paidNet,
-                  color: colors.income,
+                  color: colors.positive,
                 ),
               ],
               if (stats.earned > 0) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 FreelanceShareBar(
                   parts: [
-                    (stats.paidAmount, colors.income),
-                    (stats.pendingAmount, colors.pending),
-                    (stats.unbilledAmount, colors.textMuted.withValues(alpha: 0.35)),
+                    (stats.paidAmount, colors.positive),
+                    (stats.pendingAmount, colors.warning),
+                    (stats.unbilledAmount, colors.ink2.withValues(alpha: 0.35)),
                   ],
                 ),
               ],
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               Row(
                 children: [
-                  AppIcon(IconKey.calendar, size: 16, color: colors.textMuted),
+                  AppIcon(IconKey.calendar, size: 16, color: colors.ink2),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -259,12 +259,12 @@ class ProjectCard extends StatelessWidget {
                         final date? => t.freelance.lastEntryOn(date: CycleMonthFormatter.formatDateShort(date)),
                         null => t.freelance.noEntriesYet,
                       },
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                   ),
                   Text(
                     t.freelance.entryCountLabel(count: stats.entryCount),
-                    style: transactionLabelStyle(context, color: colors.textMuted),
+                    style: transactionLabelStyle(context, color: colors.ink2),
                   ),
                 ],
               ),
@@ -294,20 +294,20 @@ class AddProjectCard extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: CustomPaint(
-          painter: _DashedBorderPainter(color: colors.textMuted),
+          painter: _DashedBorderPainter(color: colors.ink2),
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.space4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppIcon(IconKey.add, color: colors.accent),
-                const SizedBox(width: AppSpacing.xs),
+                AppIcon(IconKey.add, color: colors.brand),
+                const SizedBox(width: AppSpacing.space1),
                 // Teks diperbesar membungkus ke baris berikutnya, bukan meluber.
                 Flexible(
                   child: Text(
                     t.freelance.projectAddTitle.toUpperCase(),
                     textAlign: TextAlign.center,
-                    style: transactionLabelStyle(context, size: 12, color: colors.accent),
+                    style: transactionLabelStyle(context, color: colors.brand),
                   ),
                 ),
               ],
@@ -390,39 +390,39 @@ class FreelanceEmptyState extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final [main, ...sides] = icons;
     return TransactionSlab(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.tinted(colors.pending, 0.15),
+              color: colors.tinted(colors.warning, 0.15),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, size: 12, color: colors.pending)),
+            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, color: colors.warning)),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (sides.isNotEmpty) Opacity(opacity: 0.7, child: AppIcon(sides.first, size: 48)),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               AppIcon(main, size: 88),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               if (sides.length > 1) Opacity(opacity: 0.7, child: AppIcon(sides[1], size: 48)),
             ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           Text(title, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             body,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
           if (actionLabel != null) ...[
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.space6),
             SizedBox(
               width: double.infinity,
               child: AppButton(label: actionLabel!, onPressed: onAction),
@@ -447,15 +447,15 @@ class FreelanceBottomBar extends StatelessWidget {
     final colors = context.appColors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colors.cardBackground,
-        border: Border(top: BorderSide(color: colors.edge, width: 2)),
+        color: colors.surface,
+        border: Border(top: BorderSide(color: colors.lineStrong, width: 2)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.sm),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space2),
         child: Row(
           children: [
             for (final (index, child) in children.indexed) ...[
-              if (index > 0) const SizedBox(width: AppSpacing.sm),
+              if (index > 0) const SizedBox(width: AppSpacing.space2),
               Expanded(child: child),
             ],
           ],
@@ -485,13 +485,13 @@ class WorklogMonthHeader extends StatelessWidget {
     final colors = context.appColors;
     final key = '${month.year}-${month.month.toString().padLeft(2, '0')}';
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
+      padding: const EdgeInsets.only(top: AppSpacing.space4, bottom: AppSpacing.space1),
       child: Row(
         children: [
           const AppIcon(IconKey.calendar, size: 20),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           Expanded(child: Text(CycleMonthFormatter.format(key), style: Theme.of(context).textTheme.titleSmall)),
-          const SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.space1),
           // Subtotal mengecil di layar sempit atau teks diperbesar.
           Flexible(
             child: FittedBox(
@@ -499,7 +499,7 @@ class WorklogMonthHeader extends StatelessWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
                 '${t.freelance.hoursValue(hours: hours)} · ${AppMoneyFormatter.format(amount)}',
-                style: transactionLabelStyle(context, color: colors.textMuted),
+                style: transactionLabelStyle(context, color: colors.ink2),
               ),
             ),
           ),

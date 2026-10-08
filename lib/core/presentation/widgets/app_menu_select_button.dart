@@ -70,10 +70,10 @@ class AppMenuSelectButton<T> extends StatelessWidget {
       // Indeks, bukan nilai: `PopupMenuButton` tidak memanggil `onSelected`
       // untuk nilai `null`, padahal "Semua" justru diwakili `null`.
       onSelected: (index) => onSelected(index < 0 ? null : options[index].value),
-      color: colors.cardBackground,
+      color: colors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
-        side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       itemBuilder: (_) => [
         if (allLabel != null) _item(value: -1, icon: allIcon, label: allLabel, context: context),
@@ -89,20 +89,20 @@ class AppMenuSelectButton<T> extends StatelessWidget {
       child: TransactionSlab(
         radius: 4,
         shadow: 2,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 10),
         child: Row(
           children: [
             AppIcon(icon, size: 22),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.space2),
             Expanded(
               child: Text(
                 label,
                 maxLines: wrapLabel ? null : 1,
                 overflow: wrapLabel ? TextOverflow.visible : TextOverflow.ellipsis,
-                style: transactionLabelStyle(context, color: isPlaceholder ? colors.textMuted : colors.textPrimary),
+                style: transactionLabelStyle(context, color: isPlaceholder ? colors.ink2 : colors.ink),
               ),
             ),
-            AppIcon(IconKey.dropdown, size: 18, color: colors.textMuted),
+            AppIcon(IconKey.dropdown, size: 18, color: colors.ink2),
           ],
         ),
       ),
@@ -121,7 +121,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
       child: Row(
         children: [
           AppIcon(icon),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           // [detail] di bawah label, bukan rata kanan: nominal panjang di
           // layar sempit atau teks diperbesar tidak mendesak labelnya.
           Flexible(
@@ -133,7 +133,7 @@ class AppMenuSelectButton<T> extends StatelessWidget {
                 if (detail != null)
                   Text(
                     detail,
-                    style: PixelTypography.tabularMono(context, fontSize: 12, color: context.appColors.textMuted),
+                    style: context.numberStyles.amountSm.copyWith(color: context.appColors.ink2),
                   ),
               ],
             ),

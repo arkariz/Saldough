@@ -5,8 +5,8 @@ import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:state_management/state_management.dart';
 
-/// Warna snackbar per [FeedbackSeverity] (UX-17, ADR-016): sukses netral,
-/// bukan hijau "uang masuk".
+/// Snackbar per [FeedbackSeverity] (ADR-034): satu latar `inverse-surface`,
+/// tingkat dibedakan lewat ikon, sukses bukan hijau "uang masuk".
 void main() {
   final registry = EffectRegistry();
   registerSnackBarEffectHandler(registry);
@@ -31,25 +31,27 @@ void main() {
     return tester.widget<SnackBar>(find.byType(SnackBar));
   }
 
-  AppColorsExtension colorsOf(WidgetTester tester) =>
-      Theme.of(tester.element(find.byType(Scaffold))).extension<AppColorsExtension>()!;
+  AppColors colorsOf(WidgetTester tester) =>
+      Theme.of(tester.element(find.byType(Scaffold))).extension<AppColors>()!;
 
-  testWidgets('sukses: latar netral dengan ikon centang, bukan hijau pemasukan', (tester) async {
+  testWidgets('sukses: latar inverse-surface dengan ikon centang, bukan hijau pemasukan', (tester) async {
     final snackBar = await show(tester, FeedbackSeverity.success);
     final colors = colorsOf(tester);
-    expect(snackBar.backgroundColor, colors.textPrimary);
-    expect(snackBar.backgroundColor, isNot(colors.income));
+    expect(snackBar.backgroundColor, colors.inverseSurface);
+    expect(snackBar.backgroundColor, isNot(colors.positive));
     expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.check), findsOneWidget);
   });
 
-  testWidgets('galat tetap merah pengeluaran, tanpa ikon centang', (tester) async {
+  testWidgets('galat: latar sama, dibedakan ikon info, tanpa ikon centang', (tester) async {
     final snackBar = await show(tester, FeedbackSeverity.error);
-    expect(snackBar.backgroundColor, colorsOf(tester).expense);
-    expect(find.byType(AppIcon), findsNothing);
+    expect(snackBar.backgroundColor, colorsOf(tester).inverseSurface);
+    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.info), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.check), findsNothing);
   });
 
-  testWidgets('info netral', (tester) async {
+  testWidgets('info: latar inverse-surface tanpa ikon', (tester) async {
     final snackBar = await show(tester, FeedbackSeverity.info);
-    expect(snackBar.backgroundColor, colorsOf(tester).textPrimary);
+    expect(snackBar.backgroundColor, colorsOf(tester).inverseSurface);
+    expect(find.byType(AppIcon), findsNothing);
   });
 }

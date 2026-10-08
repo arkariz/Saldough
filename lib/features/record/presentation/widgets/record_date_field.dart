@@ -65,12 +65,12 @@ class RecordDateField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.dateFieldLabel),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         // `Wrap`: pintasan dan kotak tanggal tidak muat sebaris pada layar
         // sempit atau teks besar; kotak turun baris alih-alih meluap.
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: AppSpacing.space1,
+          runSpacing: AppSpacing.space1,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             _DayChip(
@@ -91,8 +91,8 @@ class RecordDateField extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 40),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                  decoration: BoxDecoration(color: colors.surfaceLow, borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
+                  decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -104,7 +104,7 @@ class RecordDateField extends StatelessWidget {
                         child: FitStart(
                           child: Text(
                             '${CycleMonthFormatter.formatDateShort(date)}, ${_two(date.hour)}:${_two(date.minute)}',
-                            style: transactionLabelStyle(context, color: colors.textPrimary),
+                            style: transactionLabelStyle(context, color: colors.ink),
                           ),
                         ),
                       ),
@@ -140,16 +140,16 @@ class _DayChip extends StatelessWidget {
         // terakhir mengisi seluruh lebar `Wrap` dan chip bertumpuk vertikal.
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surfaceMid,
+            color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surface2,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             widthFactor: 1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
               child: Text(
                 label,
-                style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.textMuted),
+                style: transactionLabelStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
               ),
             ),
           ),

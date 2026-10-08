@@ -148,7 +148,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                     child: NestedScrollView(
                       headerSliverBuilder: (context, _) => [
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+                          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, 0),
                           sliver: SliverToBoxAdapter(
                             child: _ProjectHeader(project: project, stats: stats),
                           ),
@@ -187,7 +187,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
                       ),
                       AppButton(
                         label: t.freelance.billAction(count: stats.unbilledCount),
-                        color: context.appColors.pending,
+                        color: context.appColors.warning,
                         onPressed: stats.unbilledCount == 0
                             ? null
                             : () => createPayment(context, projectId: project.id),
@@ -211,10 +211,10 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     final rows = _entryRows(entries.where((e) => _entryFilter.matches(state.statusOf(e))).toList());
     final colors = context.appColors;
     _FilterOption<EntryFilter> option(EntryFilter filter) => switch (filter) {
-      EntryFilter.all => (filter, t.freelance.filterAll, IconKey.worklog, colors.accent),
-      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled, IconKey.workCompleted, colors.textPrimary),
-      EntryFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
-      EntryFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
+      EntryFilter.all => (filter, t.freelance.filterAll, IconKey.worklog, colors.brand),
+      EntryFilter.unbilled => (filter, t.freelance.statusUnbilled, IconKey.workCompleted, colors.ink),
+      EntryFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.warning),
+      EntryFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.positive),
     };
     return _SectionList(
       storageKey: 'worklog',
@@ -240,7 +240,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
           amount: amount,
         ),
         _EntryRow(:final entry) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          padding: const EdgeInsets.only(bottom: AppSpacing.space2),
           child: WorklogEntryCard(
             entry: entry,
             payment: state.paymentOf(entry),
@@ -261,9 +261,9 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
     final rows = _paymentRows(state, payments.where(_paymentFilter.matches).toList());
     final colors = context.appColors;
     _FilterOption<PaymentFilter> option(PaymentFilter filter) => switch (filter) {
-      PaymentFilter.all => (filter, t.freelance.filterAll, IconKey.invoice, colors.accent),
-      PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.pending),
-      PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.income),
+      PaymentFilter.all => (filter, t.freelance.filterAll, IconKey.invoice, colors.brand),
+      PaymentFilter.pending => (filter, t.freelance.statusPending, IconKey.pending, colors.warning),
+      PaymentFilter.paid => (filter, t.freelance.statusPaid, IconKey.paid, colors.positive),
     };
     // Pembayaran tertunda pertama: aksi "catat diterima"-nya jadi target tur.
     final firstPendingId = payments.where((p) => !p.isPaid).firstOrNull?.id;
@@ -294,7 +294,7 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
           amount: amount,
         ),
         _PaymentRow(:final payment) => Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          padding: const EdgeInsets.only(bottom: AppSpacing.space2),
           child: _PaymentCard(
             state: state,
             payment: payment,
@@ -381,7 +381,7 @@ class _PaymentCard extends StatelessWidget {
                 spotlightKey: spotlightReceive ? SpotlightKey.freelanceReceive : null,
                 child: AppButton(
                   label: t.freelance.receiveAction,
-                  color: colors.income,
+                  color: colors.positive,
                   onPressed: () => receivePayment(context, payment),
                 ),
               ),
@@ -391,7 +391,7 @@ class _PaymentCard extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () => deletePayment(context, payment),
-                child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: colors.expense)),
+                child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: colors.danger)),
               ),
             ],
     );
@@ -425,7 +425,7 @@ class _SectionList extends StatelessWidget {
       slivers: [
         SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space6),
           sliver: SliverList.builder(
             itemCount: 1 + (rows.isEmpty ? 1 : rows.length),
             itemBuilder: (context, index) => switch (index) {
@@ -469,11 +469,11 @@ class _FilteredEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space6),
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
       ),
     );
   }
@@ -522,7 +522,7 @@ class _ProjectHeader extends StatelessWidget {
           Row(
             children: [
               const FreelanceIconBox(IconKey.freelance, size: 56),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,7 +538,7 @@ class _ProjectHeader extends StatelessWidget {
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
                               '${AppMoneyFormatter.format(project.hourlyRate)}/${t.freelance.hourShort}',
-                              style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                              style: context.numberStyles.amount.copyWith(color: colors.ink),
                             ),
                           ),
                         ),
@@ -548,21 +548,21 @@ class _ProjectHeader extends StatelessWidget {
                       project.deductionRules.isEmpty
                           ? t.freelance.noDeductions
                           : project.deductionRules.map(describeDeduction).join(' · '),
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                     Text(
                       t.freelance.projectTotals(
                         hours: stats.totalHours,
                         amount: AppMoneyFormatter.format(stats.earned),
                       ),
-                      style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -572,37 +572,37 @@ class _ProjectHeader extends StatelessWidget {
                     icon: IconKey.worklog,
                     label: t.freelance.statusUnbilled,
                     amount: stats.unbilledAmount,
-                    color: colors.textMuted,
+                    color: colors.ink2,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.space1),
                 Expanded(
                   child: _StatTile(
                     icon: IconKey.pending,
                     label: t.freelance.statusPending,
                     amount: stats.pendingAmount,
-                    color: colors.pending,
+                    color: colors.warning,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.space1),
                 Expanded(
                   child: _StatTile(
                     icon: IconKey.paid,
                     label: t.freelance.statusPaid,
                     amount: stats.paidAmount,
-                    color: colors.income,
+                    color: colors.positive,
                   ),
                 ),
               ],
             ),
           ),
           if (stats.earned > 0) ...[
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.space2),
             FreelanceShareBar(
               parts: [
-                (stats.paidAmount, colors.income),
-                (stats.pendingAmount, colors.pending),
-                (stats.unbilledAmount, colors.textMuted.withValues(alpha: 0.35)),
+                (stats.paidAmount, colors.positive),
+                (stats.pendingAmount, colors.warning),
+                (stats.unbilledAmount, colors.ink2.withValues(alpha: 0.35)),
               ],
             ),
           ],
@@ -624,7 +624,7 @@ class _StatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: const EdgeInsets.all(AppSpacing.space1),
       decoration: BoxDecoration(color: colors.tinted(color, 0.12), borderRadius: BorderRadius.circular(4)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -642,7 +642,7 @@ class _StatTile extends StatelessWidget {
           FitStart(
             child: Text(
               AppMoneyFormatter.format(amount),
-              style: PixelTypography.tabularMono(context, fontSize: 13, color: colors.textPrimary),
+              style: context.numberStyles.amountSm.copyWith(color: colors.ink),
             ),
           ),
         ],
@@ -670,13 +670,13 @@ class _FilterRow<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xs, bottom: AppSpacing.xs),
+      padding: const EdgeInsets.only(top: AppSpacing.space1, bottom: AppSpacing.space1),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (final (index, (value, label, icon, color)) in options.indexed) ...[
-              if (index > 0) const SizedBox(width: AppSpacing.xs),
+              if (index > 0) const SizedBox(width: AppSpacing.space1),
               Expanded(
                 child: _FilterTile(
                   label: label,
@@ -725,7 +725,7 @@ class _FilterTileState extends State<_FilterTile> {
     final selected = widget.selected;
     // Terpilih: terangkat 3px di atas bayangan keras; ditekan: turun rata.
     final lift = selected && !_pressed ? 3.0 : 0.0;
-    final ink = selected ? widget.color : colors.textMuted;
+    final ink = selected ? widget.color : colors.ink2;
     return Semantics(
       button: true,
       selected: selected,
@@ -739,9 +739,9 @@ class _FilterTileState extends State<_FilterTile> {
         child: AnimatedContainer(
           duration: AppDurations.fast,
           margin: EdgeInsets.only(top: 3 - lift, bottom: lift),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.xs, AppSpacing.sm, AppSpacing.xs, AppSpacing.sm),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
           decoration: BoxDecoration(
-            color: selected ? colors.tinted(widget.color, 0.14) : colors.surfaceLow,
+            color: selected ? colors.tinted(widget.color, 0.14) : colors.surface2,
             borderRadius: BorderRadius.circular(4),
             border: Border.all(color: selected ? widget.color : Colors.transparent, width: AppBorder.thick),
             boxShadow: [
@@ -760,11 +760,7 @@ class _FilterTileState extends State<_FilterTile> {
                     child: FitStart(
                       child: Text(
                         '${widget.count}',
-                        style: PixelTypography.tabularMono(
-                          context,
-                          fontSize: 18,
-                          color: selected ? colors.textPrimary : colors.textMuted,
-                        ),
+                        style: context.numberStyles.amountLg.copyWith(color: selected ? colors.ink : colors.ink2),
                       ),
                     ),
                   ),

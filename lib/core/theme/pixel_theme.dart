@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/theme/extensions/app_colors_extension.dart';
-import 'package:saldough/core/theme/tokens/app_border.dart';
+import 'package:saldough/core/theme/extensions/app_colors.dart';
+import 'package:saldough/core/theme/extensions/app_number_styles.dart';
 import 'package:saldough/core/theme/tokens/app_radius.dart';
+import 'package:saldough/core/theme/tokens/app_size.dart';
 
-/// Tema global aplikasi ([ADR-031](docs/02-architecture/adr/0031-pixeltheme-jadi-tema-global.md)):
-/// [ThemeData] bahasa visual ADR-015 — palet
-/// [AppColorsExtension.pixelLight]/[AppColorsExtension.pixelDark], tiga
-/// peran huruf bundel (Space Grotesk judul/angka besar, Plus Jakarta Sans
-/// teks isi/label, lihat juga [PixelTypography.tabularMono] untuk nominal
-/// tabel), radius `4px`, dan garis tepi `2px`.
+/// Tema global aplikasi ([ADR-031](docs/02-architecture/adr/0031-pixeltheme-jadi-tema-global.md),
+/// isinya [ADR-034](docs/02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md)):
+/// token [AppColors.light]/[AppColors.dark], satu huruf Plus Jakarta Sans
+/// (skala Teks design system), dan angka tabular di [AppNumberStyles].
 ///
 /// Dipasang sekali sebagai `theme`/`darkTheme` `MaterialApp`; layar dan rute
 /// tidak membungkus dirinya sendiri dengan tema.
@@ -16,167 +15,183 @@ abstract final class PixelTheme {
   PixelTheme._();
 
   /// Tema mode terang.
-  static ThemeData get light => _build(AppColorsExtension.pixelLight, Brightness.light);
+  static ThemeData get light => _build(AppColors.light, Brightness.light);
 
-  /// Tema mode gelap (arang hangat, ADR-016 §7).
-  static ThemeData get dark => _build(AppColorsExtension.pixelDark, Brightness.dark);
+  /// Tema mode gelap.
+  static ThemeData get dark => _build(AppColors.dark, Brightness.dark);
 
-  static ThemeData _build(AppColorsExtension colors, Brightness brightness) {
+  static ThemeData _build(AppColors colors, Brightness brightness) {
     final base = brightness == Brightness.light ? ThemeData.light() : ThemeData.dark();
+    // Pemetaan `flutter.md` design system.
     final colorScheme = (brightness == Brightness.light ? const ColorScheme.light() : const ColorScheme.dark()).copyWith(
       brightness: brightness,
-      surface: colors.cardBackground,
-      onSurface: colors.textPrimary,
-      primary: colors.accent,
-      onPrimary: colors.onAccent,
-      error: colors.expense,
-      onError: Colors.white,
-      outline: colors.edge,
+      surface: colors.surface,
+      onSurface: colors.ink,
+      onSurfaceVariant: colors.ink2,
+      surfaceContainerHighest: colors.surface2,
+      primary: colors.brand,
+      onPrimary: colors.onBrand,
+      error: colors.danger,
+      onError: colors.surface,
+      outline: colors.lineStrong,
+      outlineVariant: colors.line,
+      inverseSurface: colors.inverseSurface,
+      onInverseSurface: colors.onInverse,
+      inversePrimary: colors.inverseBrand,
+      scrim: colors.scrim,
     );
+    final textTheme = buildTextTheme(colors);
 
     return base.copyWith(
       brightness: brightness,
-      scaffoldBackgroundColor: colors.background,
+      scaffoldBackgroundColor: colors.bg,
       colorScheme: colorScheme,
-      textTheme: _buildTextTheme(base.textTheme, colors),
-      dividerColor: colors.divider,
+      textTheme: textTheme,
+      dividerColor: colors.line,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
-      // `showModalBottomSheet` mengambil warna dari sini, bukan dari
-      // `colorScheme.surface` -- tanpa ini lembar CATAT dkk. terlihat putih
-      // polos (warna kartu), bukan krem hangat `colors.background` yang
-      // dimaksud ADR-015.
+      focusColor: colors.focus,
+      disabledColor: colors.ink3,
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: colors.background,
-        modalBackgroundColor: colors.background,
-      ),
-      // AppHardCard adalah cara utama menampilkan kartu ADR-015 (bayangan
-      // keras offset, bukan elevasi Material) -- cardTheme di sini hanya
-      // jaring pengaman untuk widget Material bawaan (`Card`) kalau
-      // terpakai tidak sengaja di subtree ini.
-      cardTheme: CardThemeData(
-        color: colors.cardBackground,
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.pixelSmAll,
-          side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+        backgroundColor: colors.surface,
+        modalBackgroundColor: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        modalBarrierColor: colors.scrim,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
       ),
+      // Kartu rata tanpa bingkai dan bayangan (design system bagian Bentuk).
+      cardTheme: CardThemeData(
+        color: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStep)),
+      ),
       appBarTheme: AppBarTheme(
-        backgroundColor: colors.background,
-        foregroundColor: colors.textPrimary,
+        backgroundColor: colors.bg,
+        foregroundColor: colors.ink,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle: const TextStyle(
-          fontFamily: 'SpaceGrotesk',
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-        ).copyWith(color: colors.textPrimary),
+        toolbarHeight: AppSize.topbar,
+        titleTextStyle: textTheme.titleLarge,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: colors.accent,
-          foregroundColor: colors.onAccent,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.pixelSmAll,
-            side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
-          ),
+          backgroundColor: colors.brand,
+          foregroundColor: colors.onBrand,
+          minimumSize: const Size(AppSize.touch, AppSize.button),
+          textStyle: textTheme.titleMedium,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStepSm)),
         ),
       ),
-      // Bilah bawah ADR-015: latar hangat sedikit di atas `background`, TANPA
-      // pil indikator Material (bawaannya teal, tidak ada di palet) -- tab
-      // aktif dibedakan lewat warna label saja, seperti rujukan visual.
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Color.alphaBlend(colors.textPrimary.withValues(alpha: 0.025), colors.background),
+        backgroundColor: colors.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        height: 64,
+        height: AppSize.navbar,
         indicatorColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith(
-          (states) => TextStyle(
-            fontFamily: 'SpaceMono',
-            // Minimum 11px (ADR-020 §3.2) -- sebelumnya 10px.
-            fontSize: kMinLabelSize,
-            fontWeight: FontWeight.w700,
-            color: states.contains(WidgetState.selected) ? colors.accent : colors.textMuted,
+          (states) => textTheme.labelMedium?.copyWith(
+            color: states.contains(WidgetState.selected) ? colors.brand : colors.ink2,
           ),
         ),
       ),
-      dividerTheme: DividerThemeData(color: colors.divider, thickness: 1, space: 1),
-      // Dialog dan pemilih tanggal: permukaan hangat `background`, sudut
-      // `pixelSm`, dan garis tepi -- tanpa ini keduanya memakai bentuk bulat
-      // besar Material dan, di mode gelap, hitam dingin bawaan (B-18).
-      dialogTheme: DialogThemeData(
-        backgroundColor: colors.background,
-        surfaceTintColor: Colors.transparent,
+      dividerTheme: DividerThemeData(color: colors.line, thickness: 1, space: 1),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: colors.inverseSurface,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(color: colors.onInverse),
+        actionTextColor: colors.inverseBrand,
+        behavior: SnackBarBehavior.floating,
         elevation: 0,
-        shape: _panelShape(colors),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStep)),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        barrierColor: colors.scrim,
+        elevation: 0,
+        titleTextStyle: textTheme.titleLarge,
+        contentTextStyle: textTheme.bodyLarge?.copyWith(color: colors.ink2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStep)),
       ),
       datePickerTheme: DatePickerThemeData(
-        backgroundColor: colors.background,
+        backgroundColor: colors.surface,
         surfaceTintColor: Colors.transparent,
-        headerForegroundColor: colors.textPrimary,
+        headerForegroundColor: colors.ink,
         elevation: 0,
-        shape: _panelShape(colors),
-        dividerColor: colors.divider,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStep)),
+        dividerColor: colors.line,
       ),
-      extensions: [colors],
+      extensions: [colors, AppNumberStyles.from(colors)],
     );
   }
 
-  static ShapeBorder _panelShape(AppColorsExtension colors) => RoundedRectangleBorder(
-    borderRadius: AppRadius.pixelSmAll,
-    side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
-  );
+  /// Skala Teks design system (`tokens.json` grup Teks) dipetakan ke slot
+  /// [TextTheme] sesuai `flutter.md`. Slot yang tidak punya padanan diisi
+  /// gaya terdekat supaya widget Material bawaan tidak jatuh ke huruf lain.
+  static TextTheme buildTextTheme(AppColors colors) {
+    final headline = appTextStyle(24, 32, FontWeight.w700, colors.ink, letterSpacing: -0.24);
+    final title = appTextStyle(18, 26, FontWeight.w700, colors.ink);
+    final bodyStrong = appTextStyle(16, 24, FontWeight.w600, colors.ink);
+    final body = appTextStyle(16, 24, FontWeight.w400, colors.ink);
+    final bodySm = appTextStyle(14, 20, FontWeight.w400, colors.ink2);
+    final label = appTextStyle(14, 20, FontWeight.w600, colors.ink);
+    final labelSm = appTextStyle(12, 16, FontWeight.w600, colors.ink2, letterSpacing: 0.12);
+    final caption = appTextStyle(12, 16, FontWeight.w500, colors.ink2);
 
-  // Dibangun slot per slot supaya tiap peran huruf hanya mengisi slotnya
-  // sendiri, tidak menimpa slot yang sudah diisi huruf lain.
-  static TextTheme _buildTextTheme(TextTheme base, AppColorsExtension colors) {
-    TextStyle? display(TextStyle? base, Color color) =>
-        base?.copyWith(fontFamily: 'SpaceGrotesk', color: color, fontWeight: FontWeight.w700);
-    TextStyle? body(TextStyle? base, Color color) => base?.copyWith(fontFamily: 'PlusJakartaSans', color: color);
-
-    return base.copyWith(
-      displayLarge: display(base.displayLarge, colors.textPrimary),
-      displayMedium: display(base.displayMedium, colors.textPrimary),
-      displaySmall: display(base.displaySmall, colors.textPrimary),
-      headlineLarge: display(base.headlineLarge, colors.textPrimary),
-      headlineMedium: display(base.headlineMedium, colors.textPrimary),
-      headlineSmall: display(base.headlineSmall, colors.textPrimary),
-      titleLarge: display(base.titleLarge, colors.textPrimary),
-      titleMedium: body(base.titleMedium, colors.textPrimary),
-      titleSmall: body(base.titleSmall, colors.textPrimary),
-      bodyLarge: body(base.bodyLarge, colors.textPrimary),
-      bodyMedium: body(base.bodyMedium, colors.textPrimary),
-      bodySmall: body(base.bodySmall, colors.textMuted),
-      labelLarge: body(base.labelLarge, colors.textPrimary),
-      labelMedium: body(base.labelMedium, colors.textMuted),
-      labelSmall: body(base.labelSmall, colors.textMuted),
+    return TextTheme(
+      displayLarge: headline,
+      displayMedium: headline,
+      displaySmall: headline,
+      headlineLarge: headline,
+      headlineMedium: headline,
+      headlineSmall: headline,
+      titleLarge: title,
+      titleMedium: bodyStrong,
+      titleSmall: label,
+      bodyLarge: body,
+      bodyMedium: bodySm,
+      bodySmall: caption,
+      labelLarge: label,
+      labelMedium: labelSm,
+      labelSmall: labelSm,
     );
   }
 }
 
-/// Ukuran minimum label mikro (ADR-020 §3.2) -- tidak ada label lebih kecil
-/// dari ini di seluruh aplikasi.
-const double kMinLabelSize = 11;
+/// Nama keluarga huruf satu-satunya aplikasi (didaftarkan di `pubspec.yaml`).
+const String kAppFontFamily = 'PlusJakartaSans';
 
-/// Gaya huruf ADR-015 yang tidak punya slot [TextTheme] baku.
-abstract final class PixelTypography {
-  PixelTypography._();
+/// Ukuran teks terkecil di aplikasi (`caption`/`label-sm`, design system
+/// bagian Tipografi).
+const double kMinLabelSize = 12;
 
-  /// Space Mono 700, berjarak huruf — dipakai untuk nominal Rupiah di
-  /// kolom/daftar (bukan saldo utama, yang tetap Space Grotesk lewat
-  /// [TextTheme.headlineSmall]) dan lencana status pendek. Lihat ADR-015
-  /// §Tipografi: "monospace menjaga digitnya rata".
-  static TextStyle tabularMono(BuildContext context, {double fontSize = 14, Color? color}) {
-    return TextStyle(
-      fontFamily: 'SpaceMono',
-      fontSize: fontSize,
-      fontWeight: FontWeight.w700,
-      letterSpacing: 0.6,
-      color: color ?? Theme.of(context).extension<AppColorsExtension>()?.textPrimary,
-    );
-  }
+/// Gaya Plus Jakarta Sans dengan tinggi baris [lineHeight] dalam piksel.
+///
+/// Berkas hurufnya variabel, jadi bobot juga dikirim sebagai sumbu `wght`
+/// lewat [TextStyle.fontVariations]; tanpa itu sebagian mesin render memakai
+/// bobot bawaan berkas.
+TextStyle appTextStyle(
+  double fontSize,
+  double lineHeight,
+  FontWeight weight,
+  Color color, {
+  double? letterSpacing,
+  bool tabular = false,
+}) {
+  return TextStyle(
+    fontFamily: kAppFontFamily,
+    fontFamilyFallback: const ['Roboto'],
+    fontSize: fontSize,
+    height: lineHeight / fontSize,
+    fontWeight: weight,
+    fontVariations: [FontVariation.weight(weight.value.toDouble())],
+    letterSpacing: letterSpacing,
+    color: color,
+    fontFeatures: tabular ? const [FontFeature.tabularFigures()] : null,
+  );
 }

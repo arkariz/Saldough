@@ -118,7 +118,7 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -126,51 +126,51 @@ class _ProjectFormSheetState extends State<ProjectFormSheet> {
                 stepLabel: t.freelance.projectStepLabel,
                 title: editing ? t.freelance.projectEditTitle : t.freelance.projectAddTitle,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.projectNameLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppFormTextField(
                 controller: _name,
                 hint: t.freelance.projectNameHint,
                 autofocus: !editing,
                 onChanged: refresh,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.hourlyRateLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppFormMoneyField(controller: _rate, onChanged: refresh, large: true),
               const SizedBox(height: 4),
               Text(
                 t.freelance.hourlyRateHelp,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.deductionsLabel),
               const SizedBox(height: 2),
               Text(
                 t.freelance.deductionsHelp,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               for (final (index, rule) in _deductions.indexed) ...[
                 _DeductionRow(rule: rule, onTap: () => _editDeduction(index)),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
               ],
               AppButton.secondary(label: t.freelance.deductionAddAction, onPressed: _editDeduction),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(label: t.freelance.projectSaveAction, onPressed: _canSave ? _save : null),
               if (editing && widget.canDelete) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppButton.secondary(
                   label: t.freelance.projectDeleteAction,
-                  textColor: colors.expense,
+                  textColor: colors.ink,
                   onPressed: () => Navigator.of(context).pop(const ProjectFormDeleted()),
                 ),
               ] else if (editing) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Text(
                   t.freelance.projectDeleteLockedHint,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
               ],
             ],
@@ -199,7 +199,7 @@ class _DeductionRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(child: Text(describeDeduction(rule), style: Theme.of(context).textTheme.bodyLarge)),
-            AppIcon(IconKey.edit, size: 18, color: colors.textMuted),
+            AppIcon(IconKey.edit, size: 18, color: colors.ink2),
           ],
         ),
       ),
@@ -265,21 +265,21 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(stepLabel: t.freelance.deductionsLabel, title: t.freelance.deductionTitle),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.deductionLabelLabel, hint: t.freelance.requiredHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppFormTextField(
                 controller: _label,
                 hint: t.freelance.deductionLabelHint,
                 autofocus: !editing,
                 onChanged: refresh,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSegmented<DeductionKind>(
                 options: [
                   (DeductionKind.percentage, t.freelance.deductionKindPercentage),
@@ -288,21 +288,21 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                 selected: _kind,
                 onChanged: (kind) => setState(() => _kind = kind),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               if (_kind == DeductionKind.percentage) ...[
                 AppSectionLabel(t.freelance.deductionPercentLabel),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 TransactionSlab(
                   radius: 4,
                   shadow: 2,
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                   child: Row(
                     children: [
                       Expanded(
                         child: TextField(
                           controller: _percent,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          cursorColor: colors.accent,
+                          cursorColor: colors.brand,
                           onChanged: refresh,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                           decoration: InputDecoration(
@@ -310,25 +310,25 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: formatPerMilAsPercent(25),
-                            hintStyle: TextStyle(color: colors.textMuted.withValues(alpha: 0.5)),
+                            hintStyle: TextStyle(color: colors.ink2.withValues(alpha: 0.5)),
                           ),
                         ),
                       ),
-                      Text('%', style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.accent)),
+                      Text('%', style: context.numberStyles.amount.copyWith(color: colors.brand)),
                     ],
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   t.freelance.deductionPercentHelp,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
               ] else ...[
                 AppSectionLabel(t.freelance.deductionAmountLabel),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 AppFormMoneyField(controller: _amount, onChanged: refresh),
               ],
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(
                 label: t.freelance.deductionSaveAction,
                 onPressed: _canSave
@@ -343,10 +343,10 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                     : null,
               ),
               if (editing) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppButton.secondary(
                   label: t.freelance.deductionRemoveAction,
-                  textColor: colors.expense,
+                  textColor: colors.ink,
                   onPressed: () => Navigator.of(context).pop(const _DeductionRemoved()),
                 ),
               ],

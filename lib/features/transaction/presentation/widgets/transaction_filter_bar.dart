@@ -51,13 +51,13 @@ class TransactionTypeFilterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space1),
       shadow: 2,
       child: Row(
         children: [
           for (final filter in TransactionTypeFilter.values) ...[
-            if (filter != TransactionTypeFilter.values.first) const SizedBox(width: AppSpacing.xs),
+            if (filter != TransactionTypeFilter.values.first) const SizedBox(width: AppSpacing.space1),
             Expanded(
               child: _TypeTab(
                 icon: _icon(filter),
@@ -89,11 +89,11 @@ class _TypeTab extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: 6),
         decoration: BoxDecoration(
-          color: selected ? colors.cardBackground : Colors.transparent,
+          color: selected ? colors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(4),
-          boxShadow: selected ? [BoxShadow(color: colors.edge, offset: const Offset(0, 2))] : null,
+          boxShadow: selected ? [BoxShadow(color: colors.lineStrong, offset: const Offset(0, 2))] : null,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -105,7 +105,7 @@ class _TypeTab extends StatelessWidget {
               child: Text(
                 label,
                 maxLines: 1,
-                style: transactionLabelStyle(context, color: selected ? colors.textPrimary : colors.textMuted),
+                style: transactionLabelStyle(context, color: selected ? colors.ink : colors.ink2),
               ),
             ),
           ],
@@ -165,10 +165,10 @@ class _TransactionSearchFieldState extends State<TransactionSearchField> {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: t.transaction.searchHint,
-          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
           prefixIcon: const Padding(padding: EdgeInsets.all(10), child: AppIcon(IconKey.search, size: 22)),
           prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: AppSpacing.sm),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: AppSpacing.space2),
         ),
       ),
     );
@@ -246,17 +246,17 @@ class TransactionFilterButton extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Center(child: AppIcon(IconKey.filter, size: 22, color: activeCount > 0 ? colors.accent : null)),
+              Center(child: AppIcon(IconKey.filter, size: 22, color: activeCount > 0 ? colors.brand : null)),
               if (activeCount > 0)
                 Positioned(
                   right: 2,
                   top: 2,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                    decoration: BoxDecoration(color: colors.accent, borderRadius: BorderRadius.circular(999)),
+                    decoration: BoxDecoration(color: colors.brand, borderRadius: BorderRadius.circular(999)),
                     child: Text(
                       '$activeCount',
-                      style: transactionLabelStyle(context, color: colors.onAccent),
+                      style: transactionLabelStyle(context, color: colors.onBrand),
                     ),
                   ),
                 ),
@@ -291,17 +291,17 @@ class _TransactionFilterSheet extends StatelessWidget {
     final selectedCategory = ActiveCategories.byId(categoryFilter);
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md + MediaQuery.of(context).viewPadding.bottom,
+        AppSpacing.space4,
+        AppSpacing.space4,
+        AppSpacing.space4,
+        AppSpacing.space4 + MediaQuery.of(context).viewPadding.bottom,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(t.transaction.filterSheetTitle, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AppMenuSelectButton<String>(
             icon: selectedWallet == null ? IconKey.wallets : walletIconKey(selectedWallet.iconKey),
             label: selectedWallet?.name ?? t.transaction.walletFilterLabel,
@@ -313,7 +313,7 @@ class _TransactionFilterSheet extends StatelessWidget {
             wrapLabel: true,
             onSelected: onWalletChanged,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           AppMenuSelectButton<String>(
             icon: selectedCategory == null ? IconKey.filter : categoryIcon(selectedCategory),
             label: selectedCategory?.name ?? t.transaction.categoryFilterLabel,
@@ -326,7 +326,7 @@ class _TransactionFilterSheet extends StatelessWidget {
             wrapLabel: true,
             onSelected: onCategoryChanged,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AppButton(label: t.transaction.filterSheetDoneAction, onPressed: () => Navigator.of(context).pop()),
         ],
       ),

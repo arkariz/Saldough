@@ -69,7 +69,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
         child: enabled == null
             ? const AppSkeletonPage()
             : ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
                   AppHardCard(
                     child: SwitchListTile(
@@ -77,7 +77,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
                       title: Text(t.recurring.remindersTitle),
                       subtitle: Text(
                         t.recurring.remindersBody,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
                       ),
                       value: enabled,
                       onChanged: (value) => unawaited(_toggle(value)),

@@ -102,7 +102,7 @@ class PlanMonthView extends StatelessWidget {
     return BlocBuilder<PlanMonthBloc, PlanMonthState>(
       builder: (context, state) {
         if (state.isLoading) return const AppSkeletonPage();
-        const padding = EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.fabClearance);
+        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.fabClearance);
         if (state.loadFailed) {
           return ListView(
             padding: padding,
@@ -125,9 +125,9 @@ class PlanMonthView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(t.plan.emptyTitle, style: textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: AppSpacing.space1),
                     Text(t.plan.emptyBody, style: textTheme.bodySmall),
-                    if (starters != null) ...[const SizedBox(height: AppSpacing.md), starters!],
+                    if (starters != null) ...[const SizedBox(height: AppSpacing.space4), starters!],
                   ],
                 ),
               ),
@@ -143,7 +143,7 @@ class PlanMonthView extends StatelessWidget {
         final funding = state.fundingWarnings;
         final committed = state.committedShareFor(state.selected);
         final installmentFree = nearestInstallmentFree(state.rules, today: state.today);
-        final mutedSmall = textTheme.bodySmall?.copyWith(color: context.appColors.textMuted);
+        final mutedSmall = textTheme.bodySmall?.copyWith(color: context.appColors.ink2);
         return TourTrigger(
           tour: TourId.planMonth,
           ready: true,
@@ -158,7 +158,7 @@ class PlanMonthView extends StatelessWidget {
                   onShowBudget: onShowBudget,
                   onShowRecurring: onShowRecurring,
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               // Blok 0: siapkan dana (W1, ADR-036 §3.6).
               if (funding.isNotEmpty) ...[
@@ -168,7 +168,7 @@ class PlanMonthView extends StatelessWidget {
                     ..add(const PlanMonthSelected(0))
                     ..add(PlanMonthWalletChanged(walletId)),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               // Pemilih bulan (PLAN_TAB_LAYOUT §4.3): bulan berjalan + 2,
               // tiap chip membawa perkiraan akhir bulannya.
@@ -179,7 +179,7 @@ class PlanMonthView extends StatelessWidget {
                   child: Row(
                     children: [
                       for (final (k, m) in state.months.indexed) ...[
-                        if (k > 0) const SizedBox(width: AppSpacing.xs),
+                        if (k > 0) const SizedBox(width: AppSpacing.space1),
                         AppChoiceChip(
                           key: ValueKey('plan-month-$k'),
                           // Bulan keuangan 25 Okt–24 Nov disebut "Nov" (T-16.16 K8).
@@ -194,7 +194,7 @@ class PlanMonthView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planUnplanned,
                 child: UnplannedCard(
@@ -208,7 +208,7 @@ class PlanMonthView extends StatelessWidget {
               // Wawasan teks netral (W8, W7, ADR-036 §3.7).
               if (committed != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  padding: const EdgeInsets.only(top: AppSpacing.space2),
                   child: Text(
                     committed.previous == null
                         ? t.plan.committedShare(percent: committed.share, month: monthLabel)
@@ -223,7 +223,7 @@ class PlanMonthView extends StatelessWidget {
                 ),
               if (installmentFree != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  padding: const EdgeInsets.only(top: AppSpacing.space1),
                   child: Text(
                     t.plan.installmentFree(
                       name: installmentFree.rule.note.isEmpty
@@ -236,7 +236,7 @@ class PlanMonthView extends StatelessWidget {
                     style: mutedSmall,
                   ),
                 ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.planForecast,
                 child: BalanceForecastCard(
@@ -253,7 +253,7 @@ class PlanMonthView extends StatelessWidget {
               ),
               if (!state.isFuture) ?pending,
               if (next.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.plan.nextTitle),
                 for (final o in next) _NextRow(occurrence: o),
               ],

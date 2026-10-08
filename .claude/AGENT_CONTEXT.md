@@ -187,7 +187,7 @@ gejala yang kelihatan**.
 | Potongan pajak freelance | 2,5%, ditulis `25` per mil |
 | Ikatan anggaran ke dompet | Wajib, dan menyaring pengeluaran mana yang terhitung |
 | Data historis Saldough 1.0 | Tidak diimpor sama sekali; aplikasi mulai dari saldo awal |
-| Aksen utama | `brand` `#A94F33` terang, `#EE8A63` gelap (ADR-034; sampai T-14.1 kode masih `#C2410C`/`#F46B1C` dari ADR-016) |
+| Aksen utama | `brand` `#A94F33` terang, `#EE8A63` gelap (ADR-034, `AppColors.brand`) |
 
 Nilai berikut **belum ada** dan harus diisi pemilik, bukan dikarang: daftar
 dompet beserta saldo awalnya. Kategori transaksi sudah punya daftar bawaan

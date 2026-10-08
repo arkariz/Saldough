@@ -80,39 +80,39 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.receiveTitle),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               FreelanceNotice(
                 title: t.freelance.receiveRuleTitle,
                 body: t.freelance.receiveRuleBody,
-                color: colors.income,
+                color: colors.positive,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               TransactionSlab(
-                color: colors.income,
+                color: colors.positive,
                 child: Column(
                   children: [
                     Text(
                       t.freelance.receiveAmountLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.cardBackground),
+                      style: transactionLabelStyle(context, color: colors.surface),
                     ),
                     const SizedBox(height: 4),
                     FitStart(
                       child: Text(
                         AppMoneyFormatter.format(netPay),
-                        style: PixelTypography.tabularMono(context, fontSize: 30, color: colors.cardBackground),
+                        style: context.numberStyles.amountHero.copyWith(color: colors.surface),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               NetPayBreakdownCard(breakdown: widget.breakdown),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               WalletSelectField(
                 label: t.freelance.receiveWalletLabel,
                 wallets: widget.wallets,
@@ -120,20 +120,20 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
                 onSelected: (id) => setState(() => _walletId = id),
                 previewAmountSen: netPay,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               FreelanceDateButton(
                 label: t.freelance.receiveDateLabel,
                 date: _date,
                 onChanged: (date) => setState(() => _date = date),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.freelance.noteLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppFormTextField(controller: _note, hint: t.freelance.noteHint, maxLength: 120, onChanged: (_) {}),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(
                 label: t.freelance.receiveAction,
-                color: colors.income,
+                color: colors.positive,
                 onPressed: _walletId == null
                     ? null
                     : () => Navigator.of(context).pop(

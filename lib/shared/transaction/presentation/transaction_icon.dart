@@ -80,7 +80,7 @@ class TransactionIcon extends StatelessWidget {
             Positioned(
               right: -badgeOverhang,
               bottom: -badgeOverhang,
-              child: _SourceBadge(png: png, size: size / 2, ringColor: ringColor ?? context.appColors.cardBackground),
+              child: _SourceBadge(png: png, size: size / 2, ringColor: ringColor ?? context.appColors.surface),
             ),
           ],
         );
@@ -116,7 +116,7 @@ class _Tile extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.iconTile(tint),
         borderRadius: BorderRadius.circular(4),
-        boxShadow: [BoxShadow(color: Color.lerp(ink, colors.edge, 0.4)!, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Color.lerp(ink, colors.lineStrong, 0.4)!, offset: const Offset(0, 2))],
       ),
       child: AppIcon(icon, size: size * 0.68),
     );
@@ -148,12 +148,12 @@ class _SourceBadge extends StatelessWidget {
           position: DecorationPosition.foreground,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size * 0.3),
-            border: Border.all(color: colors.edge.withValues(alpha: 0.18)),
+            border: Border.all(color: colors.lineStrong.withValues(alpha: 0.18)),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(size * 0.3),
             child: ColoredBox(
-              color: colors.cardBackground,
+              color: colors.surface,
               child: Image.memory(png, fit: BoxFit.cover, gaplessPlayback: true),
             ),
           ),

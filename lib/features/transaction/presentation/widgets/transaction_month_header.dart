@@ -66,18 +66,18 @@ class TransactionMonthHeader extends StatelessWidget {
     final net = totals.income - totals.expense;
     final netText = net > 0 ? '+${AppMoneyFormatter.format(net)}' : AppMoneyFormatter.format(net);
     final netColor = net > 0
-        ? colors.income
+        ? colors.positive
         : net < 0
-        ? colors.expense
-        : colors.textPrimary;
+        ? colors.ink
+        : colors.ink;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TransactionSlab(
-          color: colors.surfaceMid,
-          padding: const EdgeInsets.all(AppSpacing.xs),
+          color: colors.surface2,
+          padding: const EdgeInsets.all(AppSpacing.space1),
           child: Row(
             children: [
               _StepperButton(
@@ -90,14 +90,14 @@ class TransactionMonthHeader extends StatelessWidget {
                     shadow: 0,
                     radius: 4,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: AppSpacing.xs,
+                      horizontal: AppSpacing.space2,
+                      vertical: AppSpacing.space1,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const AppIcon(IconKey.calendar, size: 18),
-                        const SizedBox(width: AppSpacing.xs),
+                        const SizedBox(width: AppSpacing.space1),
                         Flexible(
                           child: Text(
                             _monthLabel,
@@ -117,17 +117,17 @@ class TransactionMonthHeader extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.space2),
         AppHeroCard(
           tour: TourId.transaction,
           icon: IconKey.transactions,
           label: t.transaction.monthStatusLabel,
           trailing: Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs + 2, vertical: 2),
-            decoration: BoxDecoration(color: colors.cardBackground, borderRadius: AppRadius.pixelSmAll),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1 + 2, vertical: 2),
+            decoration: BoxDecoration(color: colors.surface, borderRadius: AppRadius.pixelSmAll),
             child: Text(
               t.transaction.logCountBadge(count: rawTransactions.length).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.textMuted),
+              style: transactionLabelStyle(context, color: colors.ink2),
             ),
           ),
           child: Column(
@@ -135,12 +135,12 @@ class TransactionMonthHeader extends StatelessWidget {
             children: [
               Text(
                 t.transaction.netFlowLabel,
-                style: transactionLabelStyle(context, color: colors.textMuted).copyWith(fontWeight: FontWeight.w400),
+                style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 2),
               HeroAmount(netText, color: netColor),
               if (totals.income + totals.expense > 0) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 _FlowNumbers(income: totals.income, expense: totals.expense),
               ],
             ],
@@ -171,10 +171,10 @@ class _StepperButton extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: colors.cardBackground,
+              color: colors.surface,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: AppIcon(icon, size: 20, color: colors.textPrimary),
+            child: AppIcon(icon, size: 20, color: colors.ink),
           ),
         ),
       ),
@@ -197,9 +197,9 @@ class _FlowNumbers extends StatelessWidget {
     final colors = context.appColors;
     return Row(
       children: [
-        Expanded(child: _FlowNumber(label: t.transaction.flowIncomeLabel, amount: income, color: colors.income)),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(child: _FlowNumber(label: t.transaction.flowExpenseLabel, amount: expense, color: colors.expense)),
+        Expanded(child: _FlowNumber(label: t.transaction.flowIncomeLabel, amount: income, color: colors.positive)),
+        const SizedBox(width: AppSpacing.space4),
+        Expanded(child: _FlowNumber(label: t.transaction.flowExpenseLabel, amount: expense, color: colors.ink)),
       ],
     );
   }
@@ -220,13 +220,13 @@ class _FlowNumber extends StatelessWidget {
       children: [
         Text(
           '${label.toUpperCase()} ',
-          style: transactionLabelStyle(context, color: colors.textMuted),
+          style: transactionLabelStyle(context, color: colors.ink2),
         ),
         Flexible(
           child: Text(
             AppMoneyFormatter.format(amount),
             overflow: TextOverflow.ellipsis,
-            style: PixelTypography.tabularMono(context, fontSize: 13, color: color),
+            style: context.numberStyles.amountSm.copyWith(color: color),
           ),
         ),
       ],

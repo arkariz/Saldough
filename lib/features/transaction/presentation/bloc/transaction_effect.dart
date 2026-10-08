@@ -29,11 +29,11 @@ extension on TransactionBloc {
       messenger.showSnackBar(
         actionSnackBar(
           context,
-          content: Text(t.transaction.deletedMessage, style: TextStyle(color: colors.background)),
-          backgroundColor: colors.textPrimary,
+          content: Text(t.transaction.deletedMessage, style: TextStyle(color: colors.bg)),
+          backgroundColor: colors.ink,
           action: SnackBarAction(
             label: t.transaction.undoDeleteAction,
-            textColor: colors.accent,
+            textColor: colors.brand,
             onPressed: () async {
               final result = await restore(transaction);
               messenger.showSnackBar(

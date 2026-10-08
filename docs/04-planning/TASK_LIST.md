@@ -2255,7 +2255,7 @@ menulis widget; tanpa alat Artifact, pakai salinan di `docs/03-design/`.
 Perilaku, rute, dan bloc tidak berubah kecuali disebut. Satu commit per
 tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
 
-- [ ] **T-14.1** Token dan tema (3 Okt 2026, ADR-034 §3.3).
+- [x] **T-14.1** Token dan tema (3 Okt 2026, ADR-034 §3.3).
       `AppColors` dengan nama dan nilai token design system (terang dan
       gelap, termasuk `cat-*`, `brand-deep`), `ColorScheme`, `TextTheme`
       Plus Jakarta Sans, `AppNumberStyles` (angka tabular), `AppSpacing`/
@@ -2267,6 +2267,22 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji kontras 4,5:1 semua pasangan teks di kedua tema, uji
       tema memakai Plus Jakarta Sans, `flutter analyze` dan seluruh uji.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (8 Okt 2026): `AppColors` (52 token `tokens.json`, dibangkitkan
+      dari berkasnya) menggantikan `AppColorsExtension`; 19 slot lama
+      dipetakan per peran di ±800 titik pakai (posisi dari galat analyzer,
+      bukan sed buta): `expense`→`ink` (→`danger` di galat/hapus),
+      `income`→`positive`, `accent`→`brand`, `pending`→`warning`,
+      `overBudget`→`danger`, `transfer`→`ink2`, `edge`→`lineStrong`,
+      `surfaceLow/Mid`→`surface2`. `AppNumberStyles` (skala Angka, tabular)
+      menggantikan `PixelTypography.tabularMono` (45 titik, ukuran dipetakan
+      ke skala terdekat). `AppSpacing.space1…space12`, `AppRadius`
+      `radius-*`, `AppSize` baru. Snackbar semua tingkat `inverse-surface`,
+      tingkat dibedakan ikon. SpaceGrotesk/SpaceMono dan lisensinya
+      dihapus; `kMinLabelSize` 12. Pembantu peralihan `AppColorsTints`
+      (`tinted`, `iconTile`) tetap sampai layar lama diganti. Uji
+      `app_colors_test.dart`: 72 pasangan (teks 4,5:1, grafis 3:1) lolos di
+      kedua tema; garis ikon piksel di tile gelap tidak diuji (B-23).
+      `flutter analyze` bersih, 1.126 uji lulus.
 - [ ] **T-14.2** Ikon (ADR-034 §3.3). Tambah `material_symbols_icons`;
       `AppIconTile` dua varian (ikon piksel 32px di tile `surface-2`,
       Material Symbols di tile `cat-*`); pemetaan kategori dan dompet persis

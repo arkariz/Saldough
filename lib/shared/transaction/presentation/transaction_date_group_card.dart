@@ -57,7 +57,7 @@ class TransactionDateGroupCard extends StatelessWidget {
         ? (colors.tinted(colors.kindFill(TransactionKind.income), 0.18), colors.kindInk(TransactionKind.income))
         : net < 0
         ? (colors.tinted(colors.kindFill(TransactionKind.expense), 0.16), colors.kindInk(TransactionKind.expense))
-        : (colors.surfaceHigh, colors.textMuted);
+        : (colors.surface3, colors.ink2);
     final netText = net > 0 ? '+${AppMoneyFormatter.format(net)}' : AppMoneyFormatter.format(net);
 
     return Column(
@@ -65,8 +65,8 @@ class TransactionDateGroupCard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.xs,
-            vertical: AppSpacing.xs,
+            horizontal: AppSpacing.space1,
+            vertical: AppSpacing.space1,
           ),
           // `Wrap`, bukan `Row`: pada teks besar (aksesibilitas) atau layar
           // sempit, judul + tanggal dan chip jumlah bersih tidak muat sebaris;
@@ -76,8 +76,8 @@ class TransactionDateGroupCard extends StatelessWidget {
             child: Wrap(
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.xs,
+              spacing: AppSpacing.space2,
+              runSpacing: AppSpacing.space1,
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -94,7 +94,7 @@ class TransactionDateGroupCard extends StatelessWidget {
                           date,
                           style: transactionLabelStyle(
                             context,
-                            color: colors.textMuted,
+                            color: colors.ink2,
                           ).copyWith(fontWeight: FontWeight.w400),
                         ),
                       ),
@@ -102,7 +102,7 @@ class TransactionDateGroupCard extends StatelessWidget {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
                   decoration: BoxDecoration(color: chipFill, borderRadius: BorderRadius.circular(4)),
                   child: Text(netText, style: transactionLabelStyle(context, color: chipText)),
                 ),
@@ -110,9 +110,9 @@ class TransactionDateGroupCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         for (var i = 0; i < group.transactions.length; i++) ...[
-          if (i > 0) const SizedBox(height: AppSpacing.sm),
+          if (i > 0) const SizedBox(height: AppSpacing.space2),
           SpotlightTarget(
             spotlightKey: i == 0 ? firstRowSpotlightKey : null,
             child: TransactionRow(
@@ -164,7 +164,7 @@ class TransactionRow extends StatelessWidget {
   Widget _subtitle(BuildContext context) {
     final muted = Theme.of(context).textTheme.bodySmall;
     final strong = muted?.copyWith(
-      color: context.appColors.textPrimary,
+      color: context.appColors.ink,
       fontWeight: FontWeight.w700,
     );
     final time = ' • ${transactionTime(transaction.date)}';
@@ -218,14 +218,14 @@ class TransactionRow extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  padding: const EdgeInsets.all(AppSpacing.space2),
                   child: Row(
                     children: [
                       // Kategori + lencana notifikasi asal (ADR-032 §3.10).
                       TransactionIcon.of(transaction, ringColor: background),
                       // Celah tetap selebar tonjolan lencana: judul sejajar
                       // di semua baris, berlencana atau tidak.
-                      const SizedBox(width: AppSpacing.sm + TransactionIcon.badgeOverhang),
+                      const SizedBox(width: AppSpacing.space2 + TransactionIcon.badgeOverhang),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,7 +240,7 @@ class TransactionRow extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.space2),
                       // Lebar kolom nominal dibatasi: nominal mengecil di
                       // layar sempit atau teks diperbesar, bukan meluber
                       // (ketahuan uji Beranda 360px + teks 2x). Tidak memakai
@@ -256,7 +256,7 @@ class TransactionRow extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           alignment: AlignmentDirectional.centerEnd,
-                          child: Text(amountText, style: PixelTypography.tabularMono(context, color: ink)),
+                          child: Text(amountText, style: context.numberStyles.amountSm.copyWith(color: ink)),
                         ),
                       ),
                     ],

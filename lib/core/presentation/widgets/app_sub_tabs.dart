@@ -48,7 +48,7 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.sm),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
@@ -56,12 +56,12 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
                             maxLines: 1,
                             style: transactionLabelStyle(
                               context,
-                              color: value == selected ? colors.textPrimary : colors.textMuted,
+                              color: value == selected ? colors.ink : colors.ink2,
                             ).copyWith(fontSize: 12),
                           ),
                         ),
                       ),
-                      Container(height: 4, color: value == selected ? colors.accent : Colors.transparent),
+                      Container(height: 4, color: value == selected ? colors.brand : Colors.transparent),
                     ],
                   ),
                 ),

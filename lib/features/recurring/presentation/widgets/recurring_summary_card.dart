@@ -48,17 +48,17 @@ class RecurringSummaryCard extends StatelessWidget {
             excludeSemantics: true,
             child: HeroAmount(summary.hasEstimate ? '≈$remaining' : remaining),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.space2),
           row(t.recurring.plannedLabel, summary.totalOut),
           row(t.recurring.outLabel, summary.recordedOut, minus: true),
           if (subscriptions case final totals?) ...[
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.recurring.subscriptionsLine(
                 perMonth: AppMoneyFormatter.format(totals.perMonth),
                 perYear: AppMoneyFormatter.format(totals.perYear),
               ),
-              style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
             ),
           ],
         ],

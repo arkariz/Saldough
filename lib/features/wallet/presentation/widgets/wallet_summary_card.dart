@@ -31,21 +31,21 @@ class WalletSummaryCard extends StatelessWidget {
       icon: IconKey.wallets,
       label: t.wallet.totalLabel,
       trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
         decoration: BoxDecoration(
-          color: colors.tinted(colors.incomeFill, 0.2),
+          color: colors.tinted(colors.positive, 0.2),
           borderRadius: AppRadius.pixelSmAll,
         ),
         child: Text(
           t.wallet.activeBadge(count: activeCount).toUpperCase(),
-          style: transactionLabelStyle(context, color: colors.income),
+          style: transactionLabelStyle(context, color: colors.positive),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeroAmount(AppMoneyFormatter.format(totalBalance), color: totalBalance < 0 ? colors.expense : null),
-          Text(t.wallet.subtitle, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+          HeroAmount(AppMoneyFormatter.format(totalBalance), color: totalBalance < 0 ? colors.ink : null),
+          Text(t.wallet.subtitle, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
         ],
       ),
     );

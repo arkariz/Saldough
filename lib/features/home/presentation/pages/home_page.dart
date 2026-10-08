@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       tour: TourId.home,
       ready: !state.hasNoWallets,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.fabClearance),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.fabClearance),
         children: [
           SpotlightTarget(
             spotlightKey: SpotlightKey.homeBalance,
@@ -128,21 +128,21 @@ class _HomePageState extends State<HomePage> {
           ?widget.pendingRecurring,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeCashFlow,
               child: HomeCashFlowRow(cashFlow: state.cashFlow, month: state.month),
             ),
           ],
           if (budget != null) ...[
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeBudget,
               child: HomeBudgetCard(overview: budget, onOpen: widget.onShowBudgets),
             ),
           ],
           if (freelance != null) ...[
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeFreelance,
               child: HomeFreelanceCard(
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           if (state.hasTransactions) ...[
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeRecent,
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             for (final transaction in state.recentTransactions) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               TransactionRow(
                 transaction: transaction,
                 walletsById: state.walletsById,
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
               onAddWallet: widget.onShowWallets,
               onBudget: widget.onShowBudgets,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.space6),
             const HomeGuide(),
           ],
         ],
@@ -196,12 +196,12 @@ class _LoadError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(t.home.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.common.retry, onPressed: onRetry),
           ],
         ),

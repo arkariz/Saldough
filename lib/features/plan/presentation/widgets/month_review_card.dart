@@ -67,22 +67,22 @@ class MonthReviewCard extends StatelessWidget {
     Widget step(MonthReviewStep step, String text, List<Widget> actions) {
       final checked = done.contains(step);
       return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.sm),
+        padding: const EdgeInsets.only(top: AppSpacing.space2),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppIcon(
               checked ? IconKey.check : IconKey.info,
               size: 18,
-              color: checked ? colors.accent : colors.textMuted,
+              color: checked ? colors.brand : colors.ink2,
             ),
-            const SizedBox(width: AppSpacing.xs),
+            const SizedBox(width: AppSpacing.space1),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(text, style: textTheme.bodyMedium),
-                  if (!checked) Wrap(spacing: AppSpacing.xs, children: actions),
+                  if (!checked) Wrap(spacing: AppSpacing.space1, children: actions),
                 ],
               ),
             ),
@@ -103,7 +103,7 @@ class MonthReviewCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   t.plan.reviewTitle(month: monthLabel).toUpperCase(),
-                  style: transactionLabelStyle(context, color: colors.textMuted),
+                  style: transactionLabelStyle(context, color: colors.ink2),
                 ),
               ),
               Text(progress, style: textTheme.bodySmall),
@@ -144,7 +144,7 @@ class MonthReviewCard extends StatelessWidget {
                 ),
               ],
             ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),
           TextButton(onPressed: () => bloc.add(const PlanReviewDismissed()), child: Text(t.plan.reviewLater)),
         ],
@@ -213,13 +213,13 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
 
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.all(AppSpacing.space4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(t.plan.lookbackTitle(month: state.previousRange.label), style: textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               line('', t.plan.lookbackPlanned, t.plan.lookbackActual, bold: true),
               for (final (label, planned, actual) in rows)
                 line(label, AppMoneyFormatter.format(planned), AppMoneyFormatter.format(actual)),
@@ -231,10 +231,10 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
                 bold: true,
               ),
               if (accuracy != null) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Text(accuracy, key: const ValueKey('lookback-accuracy'), style: textTheme.bodySmall),
               ] else if (biggest.$3 != biggest.$2) ...[
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 Text(t.plan.lookbackBiggest(line: biggest.$1), style: textTheme.bodySmall),
               ],
             ],

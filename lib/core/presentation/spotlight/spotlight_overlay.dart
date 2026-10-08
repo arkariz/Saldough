@@ -189,9 +189,9 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
                             hole: hole,
                             below: below,
                             scrim: colors.scrim.withValues(alpha: 0.74),
-                            border: colors.accent.withValues(alpha: bright ? 1 : 0.35),
-                            tail: colors.cardBackground,
-                            edge: colors.edge,
+                            border: colors.brand.withValues(alpha: bright ? 1 : 0.35),
+                            tail: colors.surface,
+                            edge: colors.lineStrong,
                           ),
                         ),
                       ),
@@ -241,12 +241,12 @@ class _Bubble extends StatelessWidget {
         explicitChildNodes: true,
         label: t.tour.stepSemantics(current: current, total: total, title: step.title, body: step.body),
         child: Container(
-          padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
+          padding: const EdgeInsets.all(AppSpacing.space2 + AppSpacing.space1),
           decoration: BoxDecoration(
-            color: colors.cardBackground,
+            color: colors.surface,
             borderRadius: AppRadius.pixelSmAll,
-            border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.edge),
+            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+            boxShadow: AppElevation.hardShadow(colors.lineStrong),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -256,7 +256,7 @@ class _Bubble extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const _MascotAvatar(),
-                  const SizedBox(width: AppSpacing.sm + AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.space2 + AppSpacing.space1),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,14 +264,11 @@ class _Bubble extends StatelessWidget {
                         ExcludeSemantics(
                           child: _StepBlocks(current: current, total: total),
                         ),
-                        const SizedBox(height: AppSpacing.xs),
+                        const SizedBox(height: AppSpacing.space1),
                         ExcludeSemantics(
                           child: Text(
                             step.title,
-                            style: textTheme.titleMedium?.copyWith(
-                              fontFamily: 'SpaceGrotesk',
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: textTheme.titleMedium,
                           ),
                         ),
                       ],
@@ -279,18 +276,18 @@ class _Bubble extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.space2),
               Flexible(
                 child: SingleChildScrollView(
                   child: ExcludeSemantics(child: Text(step.body, style: textTheme.bodyMedium)),
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space2 + AppSpacing.space1),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.xs,
+                spacing: AppSpacing.space2,
+                runSpacing: AppSpacing.space1,
                 children: [
                   AppButton.tertiary(label: t.tour.skipAction, onPressed: controller.finish),
                   AppButton(
@@ -318,8 +315,8 @@ class _MascotAvatar extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: colors.surfaceMid,
-        border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+        color: colors.surface2,
+        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       child: ClipRect(
         child: PixelBob(
@@ -357,14 +354,14 @@ class _StepBlocks extends StatelessWidget {
             height: 8,
             margin: const EdgeInsets.only(right: 3),
             decoration: BoxDecoration(
-              color: i <= current ? colors.accent : colors.cardBackground,
-              border: Border.all(color: colors.edge),
+              color: i <= current ? colors.brand : colors.surface,
+              border: Border.all(color: colors.lineStrong),
             ),
           ),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: AppSpacing.space1),
         Text(
           t.tour.stepCounter(current: current, total: total),
-          style: transactionLabelStyle(context, color: colors.textMuted),
+          style: transactionLabelStyle(context, color: colors.ink2),
         ),
       ],
     );
@@ -387,13 +384,13 @@ class _DoneBadge extends StatelessWidget {
           height: 72,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: colors.cardBackground,
-            border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.edge),
+            color: colors.surface,
+            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
+            boxShadow: AppElevation.hardShadow(colors.lineStrong),
           ),
           // Aksen, bukan hijau bawaan ikonnya: hijau milik uang masuk (ADR-016).
           child: ColorFiltered(
-            colorFilter: ColorFilter.mode(colors.accent, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(colors.brand, BlendMode.srcIn),
             child: const AppIcon(IconKey.check, size: 40),
           ),
         ),

@@ -26,7 +26,7 @@ class OnboardingSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     final (title, body) = onboardingText(index);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       child: Column(
         children: [
           Expanded(
@@ -48,7 +48,7 @@ class OnboardingSlide extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.space4),
           Flexible(
             flex: 2,
             child: SingleChildScrollView(
@@ -61,7 +61,7 @@ class OnboardingSlide extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Semantics(header: true, child: Text(title, style: Theme.of(context).textTheme.headlineSmall)),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.space2),
                       Text(body, style: Theme.of(context).textTheme.bodyMedium),
                     ],
                   ),
@@ -104,8 +104,8 @@ class OnboardingPageIndicator extends StatelessWidget {
                 width: i == current ? 28 : 10,
                 height: 10,
                 decoration: BoxDecoration(
-                  color: i == current ? colors.accent : colors.cardBackground,
-                  border: Border.all(color: colors.edge, width: AppBorder.pixelThick),
+                  color: i == current ? colors.brand : colors.surface,
+                  border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
                 ),
               ),
           ],
@@ -150,7 +150,7 @@ class _OnboardingBackdropState extends State<OnboardingBackdrop> with SingleTick
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final tones = [colors.background, colors.surfaceMid, colors.surfaceLow, colors.surfaceMid, colors.surfaceHigh];
+    final tones = [colors.bg, colors.surface2, colors.surface2, colors.surface2, colors.surface3];
     return RepaintBoundary(
       child: AnimatedBuilder(
         animation: Listenable.merge([widget.controller, _drift]),
@@ -163,7 +163,7 @@ class _OnboardingBackdropState extends State<OnboardingBackdrop> with SingleTick
           return CustomPaint(
             painter: _DotGridPainter(
               background: tone,
-              dot: colors.textPrimary.withValues(alpha: 0.07),
+              dot: colors.ink.withValues(alpha: 0.07),
               shift: snapToPixelGrid(_drift.value * _DotGridPainter.spacing),
             ),
           );

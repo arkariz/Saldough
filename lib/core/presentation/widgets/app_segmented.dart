@@ -22,13 +22,13 @@ class AppSegmented<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return TransactionSlab(
-      color: colors.surfaceMid,
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      color: colors.surface2,
+      padding: const EdgeInsets.all(AppSpacing.space1),
       shadow: 2,
       child: Row(
         children: [
           for (final (value, label) in options) ...[
-            if (value != options.first.$1) const SizedBox(width: AppSpacing.xs),
+            if (value != options.first.$1) const SizedBox(width: AppSpacing.space1),
             Expanded(
               child: Semantics(
                 button: true,
@@ -40,7 +40,7 @@ class AppSegmented<T> extends StatelessWidget {
                     constraints: const BoxConstraints(minHeight: 44),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: value == selected ? colors.accent : Colors.transparent,
+                      color: value == selected ? colors.brand : Colors.transparent,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -48,8 +48,7 @@ class AppSegmented<T> extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: transactionLabelStyle(
                         context,
-                        size: 12,
-                        color: value == selected ? colors.onAccent : colors.textMuted,
+                        color: value == selected ? colors.onBrand : colors.ink2,
                       ),
                     ),
                   ),

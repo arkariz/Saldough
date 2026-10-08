@@ -44,17 +44,17 @@ class FreelanceDateButton extends StatelessWidget {
           child: Row(
             children: [
               const AppIcon(IconKey.calendar),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.textMuted)),
+                    Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
                     Text(CycleMonthFormatter.formatDate(date), style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
               ),
-              Text(t.freelance.changeAction.toUpperCase(), style: transactionLabelStyle(context, color: colors.accent)),
+              Text(t.freelance.changeAction.toUpperCase(), style: transactionLabelStyle(context, color: colors.brand)),
             ],
           ),
         ),
@@ -83,10 +83,10 @@ class FreelanceHoursField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppFormQuantityField(controller: controller, onChanged: (_) => onChanged()),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: AppSpacing.space1,
+          runSpacing: AppSpacing.space1,
           children: [
             for (final hours in _quickHours)
               AppQuickChip(

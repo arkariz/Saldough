@@ -42,10 +42,10 @@ class _FundingBannerState extends State<FundingBanner> {
     final name = first.rule.note.isEmpty ? t.record.repeat.fallbackName : first.rule.note;
     return Container(
       key: const ValueKey('funding-banner'),
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.space4),
       decoration: BoxDecoration(
-        color: colors.tinted(colors.overBudget, 0.08),
-        border: Border.all(color: colors.overBudget, width: 2),
+        color: colors.tinted(colors.danger, 0.08),
+        border: Border.all(color: colors.danger, width: 2),
         borderRadius: AppRadius.pixelSmAll,
       ),
       child: Column(
@@ -53,18 +53,18 @@ class _FundingBannerState extends State<FundingBanner> {
         children: [
           Row(
             children: [
-              AppIcon(IconKey.info, size: 20, color: colors.overBudget),
-              const SizedBox(width: AppSpacing.xs),
+              AppIcon(IconKey.info, size: 20, color: colors.danger),
+              const SizedBox(width: AppSpacing.space1),
               Expanded(
                 child: Text(
                   t.plan.fundingTitle,
-                  style: transactionLabelStyle(context, color: colors.overBudget),
+                  style: transactionLabelStyle(context, color: colors.danger),
                 ),
               ),
               if (warnings.length > 1) Text(t.plan.fundingMore(n: warnings.length - 1), style: textTheme.bodySmall),
             ],
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             t.plan.fundingBody(
               wallet: first.walletName,

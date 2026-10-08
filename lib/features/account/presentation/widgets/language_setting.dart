@@ -56,7 +56,7 @@ class LanguageSettingEntry extends StatelessWidget {
                     Text(t.language.label, style: textTheme.titleSmall),
                     Text(
                       '${languageName(locale)} · ${t.language.hint}',
-                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
                     ),
                   ],
                 ),

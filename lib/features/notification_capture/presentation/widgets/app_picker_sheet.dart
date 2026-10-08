@@ -41,7 +41,7 @@ class _AppPickerState extends State<_AppPicker> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               child: TextField(
                 autofocus: true,
                 decoration: InputDecoration(hintText: texts.searchApps, prefixIcon: const Icon(Icons.search)),
@@ -67,7 +67,7 @@ class _AppPickerState extends State<_AppPicker> {
     );
   }
 
-  Widget _list(BuildContext context, List<InstalledApp> apps, TextTheme textTheme, AppColorsExtension colors) {
+  Widget _list(BuildContext context, List<InstalledApp> apps, TextTheme textTheme, AppColors colors) {
     final filtered =
         [
           for (final app in apps)
@@ -82,7 +82,7 @@ class _AppPickerState extends State<_AppPicker> {
         });
     if (filtered.isEmpty) return Center(child: Text(t.notificationCapture.appsEmpty));
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final app = filtered[index];
@@ -97,7 +97,7 @@ class _AppPickerState extends State<_AppPicker> {
             builtInNotificationApps.containsKey(app.packageName)
                 ? '${t.notificationCapture.builtInPatternsBadge} · ${app.packageName}'
                 : app.packageName,
-            style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+            style: textTheme.bodySmall?.copyWith(color: colors.ink2),
           ),
           onTap: () => Navigator.of(context).pop(app),
         );

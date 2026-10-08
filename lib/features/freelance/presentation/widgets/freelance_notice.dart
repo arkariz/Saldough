@@ -21,7 +21,7 @@ class FreelanceNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final ink = color ?? colors.pending;
+    final ink = color ?? colors.warning;
     return TransactionSlab(
       color: colors.tinted(ink, 0.1),
       shadow: 0,
@@ -29,7 +29,7 @@ class FreelanceNotice extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(width: 6, height: 40, color: ink),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

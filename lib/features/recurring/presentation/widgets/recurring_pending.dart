@@ -61,19 +61,19 @@ class RecurringPendingTile extends StatelessWidget {
             t.recurring.priceUpFound(name: rule.note, amount: AppMoneyFormatter.format(raised.amount)),
             key: ValueKey('recurring-price-up-${rule.id}'),
             textAlign: TextAlign.end,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
           )
         else if (unseen)
           Text(
             t.recurring.unseenLabel,
             key: ValueKey('recurring-unseen-${rule.id}'),
             textAlign: TextAlign.end,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.textMuted),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
           ),
         Wrap(
           alignment: WrapAlignment.end,
           crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: AppSpacing.xs,
+          spacing: AppSpacing.space1,
           children: [
             TextButton(
               onPressed: () => bloc.add(RecurringOccurrenceSkipped(ruleId: rule.id, date: date)),
@@ -89,7 +89,7 @@ class RecurringPendingTile extends StatelessWidget {
               ),
               AppQuickChip(
                 label: t.recurring.priceUpUpdate,
-                color: context.appColors.surfaceHigh,
+                color: context.appColors.surface3,
                 onTap: () {
                   AppAnalytics.log(RecurringEvents.priceIncreaseAction('update'));
                   bloc
@@ -107,7 +107,7 @@ class RecurringPendingTile extends StatelessWidget {
             if (raised == null)
               AppQuickChip(
                 label: t.recurring.recordAction,
-                color: context.appColors.surfaceHigh,
+                color: context.appColors.surface3,
                 onTap: fixed
                     ? () => bloc.add(RecurringOccurrenceRecorded(ruleId: rule.id, date: date))
                     : () => _editFirst(context, date),
@@ -181,7 +181,7 @@ class RecurringPendingCard extends StatelessWidget {
                   if (pending.isEmpty) return const SizedBox.shrink();
                   final recordAll = recordAllButton(context, pending);
                   final card = Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.md),
+                    padding: const EdgeInsets.only(top: AppSpacing.space4),
                     child: SpotlightTarget(
                       spotlightKey: spotlight?.key,
                       child: AppHardCard(

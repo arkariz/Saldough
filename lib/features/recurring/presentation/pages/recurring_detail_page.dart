@@ -66,7 +66,7 @@ class RecurringDetailPage extends StatelessWidget {
         children: [
           if (options.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space6, vertical: AppSpacing.space2),
               child: Text(t.recurring.budgetLinkEmpty),
             ),
           for (final option in options)
@@ -156,7 +156,7 @@ class RecurringDetailPage extends StatelessWidget {
           ),
           body: SafeArea(
             child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 AppHardCard(
                   child: Column(
@@ -170,7 +170,7 @@ class RecurringDetailPage extends StatelessWidget {
                         ),
                         style: textTheme.headlineSmall,
                       ),
-                      const SizedBox(height: AppSpacing.xs),
+                      const SizedBox(height: AppSpacing.space1),
                       Text(
                         [scheduleText(rule), ?wallet, ?category].join(' · '),
                         style: textTheme.bodyMedium,
@@ -181,7 +181,7 @@ class RecurringDetailPage extends StatelessWidget {
                           rule.effectivePaymentMode == RecurringPaymentMode.autoDebit
                               ? t.recurring.autoDebitLine
                               : t.recurring.reminderLine(n: rule.remindDaysBefore),
-                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                         ),
                       if (lastOccurrence(rule) case final lastDate?)
                         Text(
@@ -189,12 +189,12 @@ class RecurringDetailPage extends StatelessWidget {
                             if (total != null) t.recurring.countLine(n: total),
                             t.recurring.endsOnLine(date: CycleMonthFormatter.formatDateShort(lastDate)),
                           ].join(', '),
-                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                         ),
                       if (total != null && done != null) ...[
-                        const SizedBox(height: AppSpacing.sm),
+                        const SizedBox(height: AppSpacing.space2),
                         AppSegmentedProgressBar(value: (done / total).clamp(0, 1).toDouble()),
-                        const SizedBox(height: AppSpacing.xs),
+                        const SizedBox(height: AppSpacing.space1),
                         Text(
                           t.recurring.progressLine(k: done, n: total),
                           style: textTheme.bodySmall,
@@ -208,12 +208,12 @@ class RecurringDetailPage extends StatelessWidget {
                             amount: AppMoneyFormatter.format(free.perMonth),
                           ),
                           key: const ValueKey('recurring-installment-free'),
-                          style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                         ),
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(t.recurring.ruleRemindersLabel),
@@ -242,13 +242,13 @@ class RecurringDetailPage extends StatelessWidget {
                     onTap: () => unawaited(_pickBudgetItem(context, rule, state)),
                   ),
                 if (priceUp) ...[
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.space2),
                   Text(
                     t.recurring.priceUp(
                       amount: AppMoneyFormatter.format(last.amount),
                       usual: AppMoneyFormatter.format(rule.amount),
                     ),
-                    style: textTheme.bodyMedium?.copyWith(color: colors.pending),
+                    style: textTheme.bodyMedium?.copyWith(color: colors.warning),
                   ),
                   AppButton.secondary(
                     label: t.recurring.priceUpdateAction(amount: AppMoneyFormatter.format(last.amount)),
@@ -256,7 +256,7 @@ class RecurringDetailPage extends StatelessWidget {
                   ),
                 ],
                 if (next.isNotEmpty && !rule.isPaused) ...[
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.space4),
                   AppSectionLabel(t.recurring.nextTitle),
                   for (final o in next)
                     _OccurrenceLine(
@@ -274,7 +274,7 @@ class RecurringDetailPage extends StatelessWidget {
                             ),
                     ),
                 ],
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppSectionLabel(t.recurring.recordedTitle),
                 if (recorded.isEmpty)
                   Text(t.recurring.noRecorded, style: textTheme.bodySmall)
@@ -285,7 +285,7 @@ class RecurringDetailPage extends StatelessWidget {
                       amount: AppMoneyFormatter.format(transaction.amount),
                       onTap: () => context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
                     ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 AppButton(
                   label: t.recurring.editAction,
                   onPressed: () => context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(editRule: rule)),
@@ -312,7 +312,7 @@ class _OccurrenceLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: skipped ? colors.textMuted : null,
+      color: skipped ? colors.ink2 : null,
       decoration: skipped ? TextDecoration.lineThrough : null,
     );
     final row = ConstrainedBox(

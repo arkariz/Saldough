@@ -65,7 +65,7 @@ class RecordCategoryField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppSectionLabel(t.record.categorySectionLabel, hint: t.record.optionalHint),
-        const SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.space1),
         AppMenuSelectButton<String>(
           icon: selected != null ? categoryIcon(selected) : IconKey.categoryOther,
           label: selected?.name ?? t.record.categoryPlaceholder,

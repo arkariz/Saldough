@@ -23,10 +23,10 @@ class AccountAvatar extends StatelessWidget {
     final user = this.user;
     final initial = (user?.displayName ?? user?.email ?? '').trim();
     final fallback = user == null || initial.isEmpty
-        ? AppIcon(IconKey.account, size: size * 0.55, color: colors.textMuted)
+        ? AppIcon(IconKey.account, size: size * 0.55, color: colors.ink2)
         : Text(
             initial.characters.first.toUpperCase(),
-            style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: colors.onAccent),
+            style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: colors.onBrand),
           );
     final photoUrl = user?.photoUrl;
     return Container(
@@ -34,8 +34,8 @@ class AccountAvatar extends StatelessWidget {
       height: size,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: user == null ? colors.cardBackground : colors.accent,
-        border: Border.all(color: colors.edge, width: 2),
+        color: user == null ? colors.surface : colors.brand,
+        border: Border.all(color: colors.lineStrong, width: 2),
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       alignment: Alignment.center,

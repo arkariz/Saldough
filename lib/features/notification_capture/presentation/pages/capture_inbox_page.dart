@@ -89,17 +89,17 @@ class CaptureInboxPage extends StatelessWidget {
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
                 AppSectionLabel(
                   texts.inboxPendingTitle,
                   hint: state.pending.isEmpty ? null : '${state.pending.length}',
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 if (state.pending.isEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                    child: Text(texts.inboxEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted)),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                    child: Text(texts.inboxEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
                   ),
                 for (final entry in state.pending)
                   _PendingCard(
@@ -109,22 +109,22 @@ class CaptureInboxPage extends StatelessWidget {
                     onDismiss: () => context.read<CaptureInboxBloc>().add(CaptureInboxDismissed(entry.id)),
                     onMakePattern: () => _makePattern(context, entry),
                   ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.space6),
                 AppSectionLabel(texts.inboxAutoTitle, hint: state.auto.isEmpty ? null : '${state.auto.length}'),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 if (state.auto.isEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                    child: Text(texts.inboxAutoEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.textMuted)),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                    child: Text(texts.inboxAutoEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
                   ),
                 for (final entry in state.auto)
                   _AutoCard(entry: entry, onReview: () => _review(context, entry), onUndo: () => _undo(context, entry)),
                 if (state.linked.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(t.recurring.linkedTitle, hint: '${state.linked.length}'),
                   for (final linked in state.linked)
                     ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
                       title: Text(linked.ruleName),
                       subtitle: Text(
                         '${AppMoneyFormatter.format(linked.amount)} · '
@@ -136,10 +136,10 @@ class CaptureInboxPage extends StatelessWidget {
                       ),
                     ),
                 ],
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                  child: Text(texts.inboxRetention, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                  child: Text(texts.inboxRetention, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                 ),
               ],
             );
@@ -173,9 +173,9 @@ class _PendingCard extends StatelessWidget {
     final amount = entry.draft.amountSen;
     final note = entry.draft.note.trim();
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppHardCard(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.xs, AppSpacing.sm),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -184,7 +184,7 @@ class _PendingCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                    padding: const EdgeInsets.only(top: AppSpacing.space1),
                     child: _CaptureHeader(
                       icon: TransactionIcon(
                         kind: _transactionKind(entry.draft.kind),
@@ -199,48 +199,48 @@ class _PendingCard extends StatelessWidget {
                 ),
                 PopupMenuButton<void>(
                   tooltip: texts.moreActions,
-                  icon: Icon(Icons.more_vert, color: colors.textMuted),
+                  icon: Icon(Icons.more_vert, color: colors.ink2),
                   itemBuilder: (_) => [PopupMenuItem<void>(onTap: onMakePattern, child: Text(texts.makePatternAction))],
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              padding: const EdgeInsets.only(right: AppSpacing.space2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (entry.possibleDuplicate)
-                    Text(texts.possibleDuplicate, style: textTheme.bodySmall?.copyWith(color: colors.overBudget)),
+                    Text(texts.possibleDuplicate, style: textTheme.bodySmall?.copyWith(color: colors.danger)),
                   if (match case final m?)
                     Text(
                       t.recurring.matchLabel(
                         name: m.rule.note,
                         date: CycleMonthFormatter.formatDayMonth(m.date),
                       ),
-                      style: textTheme.bodySmall?.copyWith(color: colors.income),
+                      style: textTheme.bodySmall?.copyWith(color: colors.positive),
                     ),
                   if (note.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: AppSpacing.space1),
                     Text(note, style: textTheme.bodyMedium),
                   ],
-                  const SizedBox(height: AppSpacing.xs),
+                  const SizedBox(height: AppSpacing.space1),
                   Text(
                     entry.text,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(onPressed: onDismiss, child: Text(texts.dismissAction)),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.space1),
                 FilledButton(onPressed: onRecord, child: Text(texts.recordAction)),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.space2),
               ],
             ),
           ],
@@ -268,16 +268,16 @@ class _CaptureHeader extends StatelessWidget {
     return Row(
       children: [
         icon,
-        const SizedBox(width: AppSpacing.sm + TransactionIcon.badgeOverhang),
+        const SizedBox(width: AppSpacing.space2 + TransactionIcon.badgeOverhang),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 amount == null ? t.notificationCapture.amountUnknown : AppMoneyFormatter.format(amount),
-                style: textTheme.titleMedium?.copyWith(color: amount == null ? colors.textMuted : color),
+                style: textTheme.titleMedium?.copyWith(color: amount == null ? colors.ink2 : color),
               ),
-              Text(meta, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
+              Text(meta, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
             ],
           ),
         ),
@@ -293,9 +293,9 @@ TransactionKind _transactionKind(DraftKind kind) => switch (kind) {
 };
 
 Color? _kindColor(BuildContext context, DraftKind? kind) => switch (kind) {
-  DraftKind.income => context.appColors.income,
-  DraftKind.expense => context.appColors.expense,
-  DraftKind.transfer => context.appColors.transfer,
+  DraftKind.income => context.appColors.positive,
+  DraftKind.expense => context.appColors.ink,
+  DraftKind.transfer => context.appColors.ink2,
   null => null,
 };
 
@@ -311,9 +311,9 @@ class _AutoCard extends StatelessWidget {
     final texts = t.notificationCapture;
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppHardCard(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.xs),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -328,7 +328,7 @@ class _AutoCard extends StatelessWidget {
               meta: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
             ),
             if (entry.note.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               Text(entry.note, style: textTheme.bodyMedium),
             ],
             Row(

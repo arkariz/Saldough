@@ -5,7 +5,7 @@ import 'package:saldough/core/theme/theme.dart';
 ///
 /// Bukan untuk pemuatan ulang (data sudah ada) — itu memakai indikator halus
 /// yang tidak membuang konten (lihat UX-17). Memakai `shimmerBase`/
-/// `shimmerHighlight` dari [AppColorsExtension], yang sebelumnya tidak
+/// `shimmerHighlight` dari [AppColors], yang sebelumnya tidak
 /// pernah dipakai satu widget pun sejak ADR-0006 menyiapkan slotnya.
 class AppSkeleton extends StatefulWidget {
   /// Membuat satu blok [AppSkeleton] selebar [width] (`null` = mengisi induk)
@@ -53,7 +53,7 @@ class _AppSkeletonState extends State<AppSkeleton>
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          color: Color.lerp(colors.shimmerBase, colors.shimmerHighlight, _controller.value),
+          color: Color.lerp(colors.surface2, colors.surface3, _controller.value),
           borderRadius: widget.borderRadius ?? AppRadius.smAll,
         ),
       ),
@@ -74,15 +74,15 @@ class AppSkeletonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.space4),
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
           AppSkeleton(height: 88, borderRadius: AppRadius.mdAll),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           for (var i = 0; i < rowCount; i++)
             Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              padding: const EdgeInsets.only(bottom: AppSpacing.space2),
               child: AppSkeleton(height: 56, borderRadius: AppRadius.mdAll),
             ),
         ],

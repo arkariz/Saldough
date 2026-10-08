@@ -25,7 +25,7 @@ void registerDialogEffectHandler(EffectRegistry registry) {
                   Navigator.of(dialogContext).pop();
                 },
                 style: action.action == DialogAction.destructive
-                    ? TextButton.styleFrom(foregroundColor: dialogContext.appColors.expense)
+                    ? TextButton.styleFrom(foregroundColor: dialogContext.appColors.ink)
                     : null,
                 child: Text(action.effectiveLabel),
               ),

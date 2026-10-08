@@ -52,10 +52,10 @@ class TutorialInfoButton extends StatelessWidget {
     return PopupMenuButton<_InfoAction>(
       tooltip: t.info.menuTooltip,
       padding: EdgeInsets.zero,
-      color: colors.cardBackground,
+      color: colors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.pixelSmAll,
-        side: BorderSide(color: colors.edge, width: AppBorder.pixelThick),
+        side: BorderSide(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       onSelected: (action) => unawaited(_onSelected(context, action)),
       itemBuilder: (_) => [
@@ -67,7 +67,7 @@ class TutorialInfoButton extends StatelessWidget {
       child: SizedBox(
         width: 44,
         height: 44,
-        child: Center(child: AppIcon(IconKey.info, size: 20, color: colors.textMuted)),
+        child: Center(child: AppIcon(IconKey.info, size: 20, color: colors.ink2)),
       ),
     );
   }

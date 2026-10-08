@@ -31,15 +31,15 @@ class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
     final colors = context.appColors;
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Semantics(header: true, child: Text(t.record.voice.languageTitle, style: textTheme.titleLarge)),
-            const SizedBox(height: AppSpacing.xs),
-            Text(t.record.voice.languageBody, style: textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space1),
+            Text(t.record.voice.languageBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+            const SizedBox(height: AppSpacing.space4),
             for (final locale in AppLocale.values) ...[
               Semantics(
                 selected: locale == _selected,
@@ -50,8 +50,8 @@ class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
                   onTap: () => setState(() => _selected = locale),
                   child: AppHardCard(
                     pressed: locale == _selected,
-                    color: locale == _selected ? colors.tinted(colors.accent, 0.18) : null,
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                    color: locale == _selected ? colors.tinted(colors.brand, 0.18) : null,
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                     child: Row(
                       children: [
                         Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
@@ -61,9 +61,9 @@ class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
             ],
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(
               key: const ValueKey('speech-language-continue'),
               label: t.record.voice.languageContinue,

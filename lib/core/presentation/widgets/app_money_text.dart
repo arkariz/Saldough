@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 
-/// Menampilkan nominal (sen) lewat [AppMoneyFormatter], dengan huruf Archivo
-/// Black tabular dan warna otomatis berdasarkan tanda nilainya.
+/// Menampilkan nominal (sen) lewat [AppMoneyFormatter], dengan angka tabular dan warna otomatis berdasarkan tanda nilainya.
 ///
-/// Bawaan: positif → [AppColorsExtension.income], negatif →
-/// [AppColorsExtension.overBudget] (bukan `expense` — lihat antipola
-/// ADR-0006: sisa negatif selalu `overBudget`), nol → warna teks biasa.
+/// Bawaan: positif → [AppColors.positive], negatif →
+/// [AppColors.danger] (sisa negatif), nol → warna teks biasa.
 /// Pakai [color] untuk menimpa pemilihan otomatis ini pada konteks yang
 /// warnanya ditentukan oleh makna baris, bukan tandanya (misalnya baris
 /// anggaran yang nominalnya selalu disimpan positif tapi semantiknya
@@ -37,10 +35,10 @@ class AppMoneyText extends StatelessWidget {
     // ADR-016), jadi varian `…OnLight` ADR-0006 tidak dibutuhkan lagi dan
     // dihapus saat cutover T-3.5.
     final autoColor = sen > 0
-        ? colors.income
+        ? colors.positive
         : sen < 0
-            ? colors.overBudget
-            : colors.textPrimary;
+            ? colors.danger
+            : colors.ink;
 
     final base = style ?? Theme.of(context).textTheme.headlineSmall;
 

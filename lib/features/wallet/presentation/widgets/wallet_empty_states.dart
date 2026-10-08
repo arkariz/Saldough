@@ -17,31 +17,31 @@ class WalletEmptyState extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return TransactionSlab(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
             decoration: BoxDecoration(
-              color: colors.tinted(colors.pending, 0.15),
+              color: colors.tinted(colors.warning, 0.15),
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
               t.wallet.emptyBadge.toUpperCase(),
-              style: transactionLabelStyle(context, size: 12, color: colors.pending),
+              style: transactionLabelStyle(context, color: colors.warning),
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           const AppIcon(IconKey.wallets, size: 96),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           Text(t.wallet.emptyTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.space1),
           Text(
             t.wallet.emptyBody,
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.textMuted),
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.space6),
           SizedBox(
             width: double.infinity,
             child: AppButton(label: t.wallet.addAction, onPressed: onAdd),
@@ -67,20 +67,20 @@ class WalletLoadErrorState extends StatelessWidget {
     final colors = context.appColors;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppIcon(IconKey.overBudget, size: 48, color: colors.overBudget),
-            const SizedBox(height: AppSpacing.md),
+            AppIcon(IconKey.overBudget, size: 48, color: colors.danger),
+            const SizedBox(height: AppSpacing.space4),
             Text(t.wallet.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.space1),
             Text(
               t.wallet.loadErrorSubtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(color: colors.textMuted),
+              style: TextStyle(color: colors.ink2),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.space4),
             AppButton(label: t.common.retry, onPressed: onRetry),
           ],
         ),

@@ -1,30 +1,32 @@
 import 'package:flutter/widgets.dart';
 
-/// Skala sudut dua tingkat: nilai mentah (`double`) untuk dipakai di tempat
-/// yang butuh satu sisi saja, dan getter [BorderRadius] siap pakai untuk
-/// `decoration.borderRadius`.
+/// Skala sudut lengkung design system (`tokens.json` grup radius).
+///
+/// Permukaan memakai sudut piksel (`AppSize.pixelStep`/`pixelStepSm`), bukan
+/// lengkung; token ini hanya untuk sudut atas sheet dan bentuk pil.
 abstract final class AppRadius {
   AppRadius._();
 
-  /// Tanpa sudut membulat — dipakai pada elemen yang sengaja tajam.
+  /// Tanpa sudut membulat.
   static const double none = 0;
 
-  /// Sudut kecil, dipakai pada tombol ikon dan chip.
+  /// `radius-sm` (8px).
   static const double sm = 8;
 
-  /// Sudut bawaan kartu dan panel.
-  static const double md = 16;
+  /// `radius-md` (12px).
+  static const double md = 12;
 
-  /// Sudut besar, dipakai pada bottom sheet dan modal penuh.
-  static const double lg = 24;
+  /// `radius-lg` (20px).
+  static const double lg = 20;
 
-  /// Sudut sangat besar, cukup untuk bentuk pil pada tombol/badge bulat.
+  /// `radius-xl` (28px): sudut atas sheet.
+  static const double xl = 28;
+
+  /// `radius-full`: bentuk pil.
   static const double full = 999;
 
-  /// Sudut kartu dan tombol ADR-015 (`0.25rem`) — nilai berbeda dari [sm]
-  /// ADR-0006 (8px); jangan disamakan, keduanya milik bahasa visual yang
-  /// berbeda (lihat `PixelTheme`). Lencana status dan pil kategori ADR-015
-  /// memakai [none] (sudut tegas), bukan token ini.
+  /// Sudut kartu dan tombol bahasa visual lama. Diganti `PixelCornerBorder`
+  /// di T-14.3.
   static const double pixelSm = 4;
 
   /// [BorderRadius] seragam dari [pixelSm].
@@ -41,15 +43,4 @@ abstract final class AppRadius {
 
   /// [BorderRadius] seragam dari [full], cukup besar untuk bentuk pil.
   static BorderRadius get fullAll => BorderRadius.circular(full);
-
-  /// Sudut "comic cut" khas panel hero: dua sudut tajam berselang-seling
-  /// dengan dua sudut sangat membulat, meniru potongan panel komik. Lihat
-  /// ADR-0006 dan Design Canvas — motif ini khusus untuk panel hero/banner,
-  /// bukan kartu biasa.
-  static const comicCut = BorderRadius.only(
-    topLeft: Radius.circular(sm / 2),
-    topRight: Radius.circular(lg - 2),
-    bottomLeft: Radius.circular(sm / 2),
-    bottomRight: Radius.circular(lg - 2),
-  );
 }

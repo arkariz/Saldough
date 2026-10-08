@@ -34,32 +34,32 @@ class WalletBalancePreview extends StatelessWidget {
   /// Arah perubahan saldo.
   final bool previewIsCredit;
 
-  /// Gaya dasar nominal. Bawaan `bodySmall` Space Mono.
+  /// Gaya dasar nominal. Bawaan `amountSm` (angka tabular).
   final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final base = style ?? PixelTypography.tabularMono(context, fontSize: 12);
+    final base = style ?? context.numberStyles.amountSm;
     final amount = previewAmountSen;
     final hasPreview = amount != null && amount > 0;
     if (!hasPreview) {
       return FitStart(
-        child: Text(AppMoneyFormatter.format(wallet.currentBalance), style: base.copyWith(color: colors.textMuted)),
+        child: Text(AppMoneyFormatter.format(wallet.currentBalance), style: base.copyWith(color: colors.ink2)),
       );
     }
 
     final after = previewIsCredit ? wallet.currentBalance + amount : wallet.currentBalance - amount;
-    final afterColor = previewIsCredit ? colors.income : colors.expense;
+    final afterColor = previewIsCredit ? colors.positive : colors.ink;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: AppSpacing.xs,
-      runSpacing: AppSpacing.xs,
+      spacing: AppSpacing.space1,
+      runSpacing: AppSpacing.space1,
       children: [
         FitStart(
           child: Text(
             AppMoneyFormatter.format(wallet.currentBalance),
-            style: base.copyWith(color: colors.textMuted, decoration: TextDecoration.lineThrough),
+            style: base.copyWith(color: colors.ink2, decoration: TextDecoration.lineThrough),
           ),
         ),
         // Panah dan nominal sesudah SATU anak `Wrap`: keduanya turun baris
@@ -67,8 +67,8 @@ class WalletBalancePreview extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('→', style: base.copyWith(color: colors.textMuted)),
-            const SizedBox(width: AppSpacing.xs),
+            Text('→', style: base.copyWith(color: colors.ink2)),
+            const SizedBox(width: AppSpacing.space1),
             Flexible(
               child: FitStart(
                 child: Text(

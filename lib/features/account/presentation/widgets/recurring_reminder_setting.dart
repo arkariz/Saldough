@@ -15,7 +15,7 @@ class RecurringReminderSettingEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      padding: const EdgeInsets.only(top: AppSpacing.space2),
       child: AppTappable(
         key: const ValueKey('recurring-reminder-setting'),
         label: t.recurring.remindersTitle,
@@ -30,7 +30,7 @@ class RecurringReminderSettingEntry extends StatelessWidget {
                     Text(t.recurring.remindersTitle, style: textTheme.titleSmall),
                     Text(
                       t.recurring.remindersBody,
-                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.textMuted),
+                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
                     ),
                   ],
                 ),

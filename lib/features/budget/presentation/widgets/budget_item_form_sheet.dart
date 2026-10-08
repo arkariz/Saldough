@@ -138,7 +138,7 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -146,9 +146,9 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 stepLabel: t.budget.itemsLabel,
                 title: editing ? t.budget.itemEditTitle : t.budget.itemAddTitle,
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.budget.itemKindLabel),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               IgnorePointer(
                 ignoring: widget.kindLocked,
                 child: Opacity(
@@ -167,24 +167,24 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                 const SizedBox(height: 4),
                 Text(
                   t.budget.itemKindLockedHint,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
               ],
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               AppSectionLabel(t.budget.itemNameLabel, hint: t.budget.requiredHint),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.space1),
               AppFormTextField(controller: _name, hint: t.budget.itemNameHint, autofocus: !editing, onChanged: refresh),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.space4),
               if (_isTransfer) ...[
                 AppSectionLabel(t.budget.itemTargetWalletLabel, hint: t.budget.requiredHint),
                 const SizedBox(height: 2),
                 Text(
                   t.budget.itemTargetWalletHelp,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 if (widget.targetWallets.isEmpty)
-                  Text(t.budget.itemNoTargetWallet, style: TextStyle(color: colors.pending))
+                  Text(t.budget.itemNoTargetWallet, style: TextStyle(color: colors.warning))
                 else
                   AppMenuSelectButton<String>(
                     icon: IconKey.transfer,
@@ -199,14 +199,14 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                     ],
                     onSelected: (id) => setState(() => _targetWalletId = id),
                   ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ] else ...[
                 AppSegmented<bool>(
                   options: [(false, t.budget.itemModeAmount), (true, t.budget.itemModeItemized)],
                   selected: _itemized,
                   onChanged: (value) => setState(() => _itemized = value),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
               ],
               if (!_isTransfer && _itemized) ...[
                 Row(
@@ -218,55 +218,55 @@ class _BudgetItemFormSheetState extends State<BudgetItemFormSheet> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           AppSectionLabel(t.budget.itemQuantityLabel),
-                          const SizedBox(height: AppSpacing.xs),
+                          const SizedBox(height: AppSpacing.space1),
                           AppFormQuantityField(controller: _quantity, onChanged: refresh),
                         ],
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.space2),
                     Expanded(
                       flex: 5,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           AppSectionLabel(t.budget.itemUnitPriceLabel),
-                          const SizedBox(height: AppSpacing.xs),
+                          const SizedBox(height: AppSpacing.space1),
                           AppFormMoneyField(controller: _unitPrice, onChanged: refresh),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.space2),
                 TransactionSlab(
-                  color: colors.surfaceLow,
+                  color: colors.surface2,
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           t.budget.itemTotalLabel.toUpperCase(),
-                          style: transactionLabelStyle(context, color: colors.textMuted),
+                          style: transactionLabelStyle(context, color: colors.ink2),
                         ),
                       ),
                       Text(
                         total == null ? '—' : AppMoneyFormatter.format(total),
-                        style: PixelTypography.tabularMono(context, fontSize: 16, color: colors.textPrimary),
+                        style: context.numberStyles.amount.copyWith(color: colors.ink),
                       ),
                     ],
                   ),
                 ),
               ] else ...[
                 AppSectionLabel(t.budget.itemAmountLabel),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.space1),
                 AppFormMoneyField(controller: _amount, onChanged: refresh, large: true),
               ],
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.space6),
               AppButton(label: t.budget.itemSaveAction, onPressed: _canSave ? _save : null),
               if (editing) ...[
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.space4),
                 AppButton.secondary(
                   label: t.budget.itemDeleteAction,
-                  textColor: colors.expense,
+                  textColor: colors.ink,
                   onPressed: () => Navigator.of(context).pop(const BudgetItemFormDeleted()),
                 ),
               ],

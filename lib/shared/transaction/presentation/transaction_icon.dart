@@ -8,10 +8,10 @@ import 'package:saldough/shared/category/category_presentation.dart';
 import 'package:saldough/shared/transaction/source_icons.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Ikon transaksi (ADR-032 §3.10): kotak berwarna jenis -- satu-satunya
-/// penanda warna per baris (ADR-020 §3.3) -- berisi ikon kategori bila ada
-/// (ikon jenis untuk transfer dan transaksi tanpa kategori), plus lencana
-/// ikon notifikasi asal di sudut kanan bawah bila transaksinya dari
+/// Ikon transaksi (ADR-032 §3.10, ADR-034): `AppIconTile` berisi ikon
+/// kategori bila ada (ikon jenis untuk transfer dan pemasukan tanpa
+/// kategori, "Tanpa kategori" untuk pengeluaran tanpa kategori), plus
+/// lencana ikon notifikasi asal di sudut kanan bawah bila transaksinya dari
 /// notifikasi.
 ///
 /// Lencana keluar sedikit dari kotak ([badgeOverhang]) tanpa menambah lebar
@@ -24,13 +24,14 @@ class TransactionIcon extends StatelessWidget {
     required this.kind,
     this.categoryId,
     this.sourceIconId,
-    this.size = 44,
+    this.title,
+    this.size = AppSize.tile,
     this.ringColor,
     super.key,
   });
 
   /// [TransactionIcon] untuk [transaction].
-  TransactionIcon.of(Transaction transaction, {double size = 44, Color? ringColor, Key? key})
+  TransactionIcon.of(Transaction transaction, {double size = AppSize.tile, Color? ringColor, Key? key})
     : this(
         kind: switch (transaction) {
           IncomeTransaction() => TransactionKind.income,
@@ -39,6 +40,7 @@ class TransactionIcon extends StatelessWidget {
         },
         categoryId: transaction.categoryId,
         sourceIconId: transaction.sourceIconId,
+        title: transaction.note,
         size: size,
         ringColor: ringColor,
         key: key,
@@ -53,6 +55,10 @@ class TransactionIcon extends StatelessWidget {
   /// Ikon notifikasi asal (lencana), atau `null`.
   final String? sourceIconId;
 
+  /// Judul transaksi (catatan), memilih varian ikon kategori ("kopi",
+  /// "bensin").
+  final String? title;
+
   /// Sisi kotak utama.
   final double size;
 
@@ -63,9 +69,19 @@ class TransactionIcon extends StatelessWidget {
   /// Seberapa jauh lencana keluar dari tepi kotak.
   static const badgeOverhang = 4.0;
 
+  IconKey _icon() {
+    final category = kind == TransactionKind.transfer ? null : ActiveCategories.byId(categoryId);
+    if (category != null) return categoryIcon(category, title: title);
+    return switch (kind) {
+      TransactionKind.income => IconKey.income,
+      TransactionKind.expense => IconKey.categoryOther,
+      TransactionKind.transfer => IconKey.transfer,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final tile = _Tile(kind: kind, categoryId: categoryId, size: size);
+    final tile = AppIconTile(_icon(), size: size);
     final id = sourceIconId;
     if (id == null) return tile;
     return ValueListenableBuilder<Map<String, Uint8List>>(
@@ -85,40 +101,6 @@ class TransactionIcon extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class _Tile extends StatelessWidget {
-  const _Tile({required this.kind, required this.categoryId, required this.size});
-
-  final TransactionKind kind;
-  final String? categoryId;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final tint = colors.kindFill(kind);
-    final ink = colors.kindInk(kind);
-    final category = kind == TransactionKind.transfer ? null : ActiveCategories.byId(categoryId);
-    final icon =
-        category.let(categoryIcon) ??
-        switch (kind) {
-          TransactionKind.income => IconKey.income,
-          TransactionKind.expense => IconKey.expense,
-          TransactionKind.transfer => IconKey.transfer,
-        };
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: colors.iconTile(tint),
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [BoxShadow(color: Color.lerp(ink, colors.lineStrong, 0.4)!, offset: const Offset(0, 2))],
-      ),
-      child: AppIcon(icon, size: size * 0.68),
     );
   }
 }
@@ -160,12 +142,5 @@ class _SourceBadge extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-extension on Category? {
-  T? let<T>(T Function(Category) f) {
-    final self = this;
-    return self == null ? null : f(self);
   }
 }

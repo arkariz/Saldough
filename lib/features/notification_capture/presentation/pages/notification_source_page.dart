@@ -278,7 +278,7 @@ class _AdvancedToggle extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(expanded ? Icons.expand_less : Icons.expand_more, color: colors.ink2),
+            AppIcon(expanded ? IconKey.expandLess : IconKey.expandMore, color: colors.ink2),
           ],
         ),
       ),

@@ -9,12 +9,8 @@ void main() {
   }
 
   group('AppIcon', () {
-    const mappedKeys = [
-      IconKey.home,
-      IconKey.budget,
-      IconKey.record,
-      IconKey.transactions,
-      IconKey.wallets,
+    // Benda: ikon piksel (design system bagian Ikon).
+    const pixelKeys = [
       IconKey.walletBank,
       IconKey.walletCash,
       IconKey.walletEwallet,
@@ -31,11 +27,8 @@ void main() {
       IconKey.pending,
       IconKey.paid,
       IconKey.overBudget,
-      IconKey.check,
-      IconKey.calendar,
       IconKey.categoryHousehold,
       IconKey.categoryBills,
-      IconKey.categoryOther,
       IconKey.categoryCoffee,
       IconKey.categoryEducation,
       IconKey.categoryElectricity,
@@ -47,13 +40,26 @@ void main() {
       IconKey.categoryInvestment,
       IconKey.categoryPets,
       IconKey.categoryShopping,
-      IconKey.search,
-      IconKey.filter,
-      IconKey.locked,
       IconKey.empty,
     ];
 
-    const fallbackKeys = [
+    // Tindakan, navigasi, dan kategori tanpa ikon piksel: Material Symbols.
+    const symbolKeys = [
+      IconKey.home,
+      IconKey.budget,
+      IconKey.record,
+      IconKey.transactions,
+      IconKey.wallets,
+      IconKey.check,
+      IconKey.calendar,
+      IconKey.search,
+      IconKey.filter,
+      IconKey.locked,
+      IconKey.categoryOther,
+      IconKey.categoryFamily,
+      IconKey.categoryDonation,
+      IconKey.categoryBonus,
+      IconKey.categoryGift,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,
@@ -62,21 +68,29 @@ void main() {
       IconKey.dropdown,
     ];
 
-    for (final key in mappedKeys) {
-      testWidgets('$key merender SvgPicture dari aset pixel-art', (tester) async {
+    for (final key in pixelKeys) {
+      testWidgets('$key merender SvgPicture dari aset piksel', (tester) async {
         await pumpIcon(tester, key);
         expect(find.byType(SvgPicture), findsOneWidget);
         expect(find.byType(Icon), findsNothing);
+        expect(isPixelIcon(key), isTrue);
       });
     }
 
-    for (final key in fallbackKeys) {
-      testWidgets('$key merender Icon Material sebagai isian sementara', (tester) async {
+    for (final key in symbolKeys) {
+      testWidgets('$key merender Material Symbols Rounded', (tester) async {
         await pumpIcon(tester, key);
-        expect(find.byType(Icon), findsOneWidget);
+        final icon = tester.widget<Icon>(find.byType(Icon));
+        expect(icon.icon!.fontFamily, 'MaterialSymbolsRounded');
         expect(find.byType(SvgPicture), findsNothing);
+        expect(isPixelIcon(key), isFalse);
       });
     }
+
+    testWidgets('fill menyalakan varian berisi (tab aktif)', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: AppIcon(IconKey.home, fill: true)));
+      expect(tester.widget<Icon>(find.byType(Icon)).fill, 1);
+    });
 
     testWidgets('seluruh IconKey terpetakan (tidak ada yang gagal assert)', (tester) async {
       for (final key in IconKey.values) {

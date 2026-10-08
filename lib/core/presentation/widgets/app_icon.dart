@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:saldough/core/theme/theme.dart';
 
 /// Kunci semantik untuk setiap ikon yang dipakai aplikasi.
 ///
 /// `enum` supaya kunci yang belum dipetakan di [AppIcon] gagal saat
 /// kompilasi, bukan saat dijalankan. Berkas ini satu-satunya tempat
-/// `Icons.*` boleh muncul — lihat ADR-0009 dan ADR-015.
+/// `Symbols.*`/`Icons.*` boleh muncul (ADR-0009, ADR-034).
+///
+/// Dua set dengan pembagian tegas (design system bagian Ikon): ikon piksel
+/// Tanukonomy untuk *benda* (kategori, dompet, jenis transaksi, freelance,
+/// status pembayaran) dan Material Symbols Rounded untuk *tindakan dan
+/// navigasi*.
 enum IconKey {
   // Navigasi
 
   /// Tab Beranda.
   home,
 
-  /// Tab Anggaran.
+  /// Tab Rencana (anggaran dan rutin).
   budget,
 
   /// Tombol aksi CATAT.
   record,
 
-  /// Tab Transaksi.
+  /// Tab Riwayat.
   transactions,
 
   /// Tab Dompet.
@@ -105,6 +112,18 @@ enum IconKey {
   /// Kategori belanja/berbelanja.
   categoryShopping,
 
+  /// Kategori keluarga (belum ada ikon piksel, B-22).
+  categoryFamily,
+
+  /// Kategori donasi (belum ada ikon piksel, B-22).
+  categoryDonation,
+
+  /// Kategori bonus (belum ada ikon piksel, B-22).
+  categoryBonus,
+
+  /// Kategori hadiah (belum ada ikon piksel, B-22).
+  categoryGift,
+
   // Freelance
 
   /// Proyek freelance.
@@ -188,17 +207,27 @@ enum IconKey {
 
   /// Tombol menu pengembang (hanya build debug, ADR-0004).
   debugMenu,
+
+  /// Muat ulang/segarkan.
+  refresh,
+
+  /// Buka/tutup bagian yang bisa dilipat.
+  expandMore,
+
+  /// Tutup bagian yang terbuka.
+  expandLess,
+
+  /// Menu tindakan lainnya.
+  moreVert,
+
+  /// Kembali ke layar sebelumnya.
+  back,
 }
 
-/// Aset SVG pixel-art dari `docs/stitch_pixel_finance_tracker/icon_*/`,
-/// dikonversi ke `assets/icons/` per ADR-015. Kunci yang tidak terdaftar di
-/// sini belum ada padanan asetnya dan jatuh ke [_materialFallback].
-const Map<IconKey, String> _assetPaths = {
-  IconKey.home: 'assets/icons/home.svg',
-  IconKey.budget: 'assets/icons/budget.svg',
-  IconKey.record: 'assets/icons/record.svg',
-  IconKey.transactions: 'assets/icons/transactions.svg',
-  IconKey.wallets: 'assets/icons/wallets.svg',
+/// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
+/// Ditampilkan 32px atau 64px saja (design system bagian Ikon); di tile
+/// lewat `AppIconTile`.
+const Map<IconKey, String> _pixelAssets = {
   IconKey.walletBank: 'assets/icons/wallet_bank.svg',
   IconKey.walletCash: 'assets/icons/wallet_cash.svg',
   IconKey.walletEwallet: 'assets/icons/wallet_ewallet.svg',
@@ -207,29 +236,24 @@ const Map<IconKey, String> _assetPaths = {
   IconKey.income: 'assets/icons/income.svg',
   IconKey.expense: 'assets/icons/expense.svg',
   IconKey.transfer: 'assets/icons/transfer.svg',
-  IconKey.categoryTransport: 'assets/icons/category_transport.svg',
-  IconKey.categoryEntertainment: 'assets/icons/category_entertainment.svg',
-  // Sementara memakai ikon "restoran" sampai daftar kategori final
-  // diputuskan pemilik — lihat catatan kategori di ADR-015.
   IconKey.categoryFood: 'assets/icons/category_food.svg',
   IconKey.categoryCoffee: 'assets/icons/category_coffee.svg',
-  IconKey.categoryEducation: 'assets/icons/category_education.svg',
-  IconKey.categoryElectricity: 'assets/icons/category_electricity.svg',
-  IconKey.categoryEmergencyFund: 'assets/icons/category_emergency_fund.svg',
-  IconKey.categoryFuel: 'assets/icons/category_fuel.svg',
   IconKey.categoryGroceries: 'assets/icons/category_groceries.svg',
-  IconKey.categoryHealth: 'assets/icons/category_health.svg',
+  IconKey.categoryTransport: 'assets/icons/category_transport.svg',
+  IconKey.categoryFuel: 'assets/icons/category_fuel.svg',
+  IconKey.categoryElectricity: 'assets/icons/category_electricity.svg',
+  // Tagihan memakai ikon listrik (design system bagian Ikon).
+  IconKey.categoryBills: 'assets/icons/category_electricity.svg',
   IconKey.categoryInternet: 'assets/icons/category_internet.svg',
+  IconKey.categoryHealth: 'assets/icons/category_health.svg',
+  IconKey.categoryEntertainment: 'assets/icons/category_entertainment.svg',
+  IconKey.categoryShopping: 'assets/icons/category_shopping.svg',
+  IconKey.categoryEducation: 'assets/icons/category_education.svg',
+  IconKey.categoryEmergencyFund: 'assets/icons/category_emergency_fund.svg',
   IconKey.categoryInvestment: 'assets/icons/category_investment.svg',
   IconKey.categoryPets: 'assets/icons/category_pets.svg',
-  IconKey.categoryShopping: 'assets/icons/category_shopping.svg',
-  // Padanan terdekat untuk kunci lama yang belum punya ikon sendiri di paket
-  // desain: Belanja -> keranjang, Tagihan -> lampu listrik, Lainnya -> struk.
+  // Kunci lama kategori rumah tangga: keranjang belanja harian.
   IconKey.categoryHousehold: 'assets/icons/category_groceries.svg',
-  IconKey.categoryBills: 'assets/icons/category_electricity.svg',
-  IconKey.categoryOther: 'assets/icons/transactions.svg',
-  IconKey.search: 'assets/icons/search.svg',
-  IconKey.filter: 'assets/icons/filter.svg',
   IconKey.freelance: 'assets/icons/freelance.svg',
   IconKey.worklog: 'assets/icons/worklog.svg',
   IconKey.hourlyRate: 'assets/icons/hourly_rate.svg',
@@ -238,67 +262,83 @@ const Map<IconKey, String> _assetPaths = {
   IconKey.pending: 'assets/icons/pending.svg',
   IconKey.paid: 'assets/icons/paid.svg',
   IconKey.overBudget: 'assets/icons/over_budget.svg',
-  IconKey.check: 'assets/icons/check.svg',
-  IconKey.calendar: 'assets/icons/calendar.svg',
-  // T-7.4: `icon_status_locked` dan `icon_storage_chest_peti_simpanan` —
-  // peti simpanan dipakai untuk keadaan kosong, sama dengan ilustrasi
-  // "Inventaris kosong" di rujukan `pixel_kas_beranda_belum_ada_data`.
-  IconKey.locked: 'assets/icons/locked.svg',
   IconKey.empty: 'assets/icons/empty.svg',
 };
 
-/// Isian Material untuk kunci yang TIDAK punya padanan di paket desain
-/// pemilik (ADR-015 §7 "Aset cadangan"): aksi generik tambah, sunting,
-/// hapus, panah, dan tutup. Sisa kunci sudah memakai SVG sejak T-7.4.
-const Map<IconKey, IconData> _materialFallback = {
-  IconKey.add: Icons.add,
-  IconKey.edit: Icons.edit_outlined,
-  IconKey.delete: Icons.delete_outline,
-  IconKey.chevronLeft: Icons.chevron_left,
-  IconKey.chevronRight: Icons.chevron_right,
-  IconKey.dropdown: Icons.arrow_drop_down,
-  IconKey.close: Icons.close,
-  IconKey.info: Icons.info_outline,
-  // Belum ada padanan pixel-art; lihat ADR-023 §7.
-  IconKey.account: Icons.person_outline,
-  // Belum ada padanan pixel-art (ADR-027).
-  IconKey.microphone: Icons.mic_none,
-  IconKey.stop: Icons.stop_rounded,
-  IconKey.debugMenu: Icons.bug_report,
+/// Material Symbols Rounded (bobot 400) untuk tindakan, navigasi, dan
+/// kategori yang belum punya ikon piksel (B-22). Nama simbol mengikuti
+/// prototipe.
+const Map<IconKey, IconData> _symbols = {
+  IconKey.home: Symbols.home_rounded,
+  IconKey.budget: Symbols.donut_small_rounded,
+  IconKey.record: Symbols.add_rounded,
+  IconKey.transactions: Symbols.receipt_long_rounded,
+  IconKey.wallets: Symbols.account_balance_wallet_rounded,
+  IconKey.categoryOther: Symbols.more_horiz_rounded,
+  IconKey.categoryFamily: Symbols.family_restroom_rounded,
+  IconKey.categoryDonation: Symbols.volunteer_activism_rounded,
+  IconKey.categoryBonus: Symbols.stars_rounded,
+  IconKey.categoryGift: Symbols.redeem_rounded,
+  IconKey.add: Symbols.add_rounded,
+  IconKey.edit: Symbols.edit_rounded,
+  IconKey.delete: Symbols.delete_rounded,
+  IconKey.calendar: Symbols.calendar_today_rounded,
+  IconKey.check: Symbols.check_rounded,
+  IconKey.chevronLeft: Symbols.chevron_left_rounded,
+  IconKey.chevronRight: Symbols.chevron_right_rounded,
+  IconKey.search: Symbols.search_rounded,
+  IconKey.filter: Symbols.tune_rounded,
+  IconKey.dropdown: Symbols.expand_more_rounded,
+  IconKey.locked: Symbols.lock_rounded,
+  IconKey.close: Symbols.close_rounded,
+  IconKey.info: Symbols.info_rounded,
+  IconKey.account: Symbols.account_circle_rounded,
+  IconKey.microphone: Symbols.mic_rounded,
+  IconKey.stop: Symbols.stop_rounded,
+  IconKey.debugMenu: Symbols.bug_report_rounded,
+  IconKey.refresh: Symbols.refresh_rounded,
+  IconKey.expandMore: Symbols.expand_more_rounded,
+  IconKey.expandLess: Symbols.expand_less_rounded,
+  IconKey.moreVert: Symbols.more_vert_rounded,
+  IconKey.back: Symbols.arrow_back_rounded,
 };
 
+/// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).
+bool isPixelIcon(IconKey key) => _pixelAssets.containsKey(key);
+
 /// Lapisan pemisah antara halaman dan aset ikon (ADR-013, dipertahankan
-/// ADR-015). Halaman merujuk [IconKey], tidak pernah nama berkas aset atau
-/// `Icons.*` secara langsung — penggantian set ikon jadi satu berkas ini.
+/// ADR-034). Halaman merujuk [IconKey], tidak pernah nama berkas aset,
+/// `Symbols.*`, atau `Icons.*` secara langsung.
 ///
-/// Ikon pixel-art dari [_assetPaths] dirender apa adanya (warnanya sudah
-/// dipatok di dalam SVG, bukan monokrom untuk ditintai). [color] hanya
-/// berlaku untuk kunci yang masih memakai isian [_materialFallback].
+/// Ikon piksel dirender apa adanya (warnanya dipatok di SVG); [color] dan
+/// [fill] hanya berlaku untuk Material Symbols. Untuk kategori dan dompet di
+/// baris, pakai `AppIconTile`.
 class AppIcon extends StatelessWidget {
   /// Membuat [AppIcon] untuk [iconKey], dirender pada [size] logical pixel.
-  const AppIcon(this.iconKey, {this.size = 24, this.color, super.key});
+  const AppIcon(this.iconKey, {this.size = AppSize.icon, this.color, this.fill = false, super.key});
 
   /// Kunci semantik ikon yang dirender.
   final IconKey iconKey;
 
-  /// Sisi persegi ikon dalam logical pixel. Bawaan 24, mengikuti ukuran
-  /// ikon Material standar.
+  /// Sisi persegi ikon dalam logical pixel. Bawaan `size-icon` (24).
   final double size;
 
-  /// Warna isian. Hanya berlaku untuk isian [_materialFallback] Material;
-  /// SVG pixel-art membawa warnanya sendiri.
+  /// Warna Material Symbols; ikon piksel membawa warnanya sendiri.
   final Color? color;
+
+  /// Varian berisi Material Symbols (tab aktif).
+  final bool fill;
 
   @override
   Widget build(BuildContext context) {
-    final assetPath = _assetPaths[iconKey];
+    final assetPath = _pixelAssets[iconKey];
     if (assetPath != null) {
       return SvgPicture.asset(assetPath, width: size, height: size);
     }
 
-    final fallback = _materialFallback[iconKey];
-    assert(fallback != null, 'IconKey.$iconKey belum dipetakan di AppIcon.');
-    return Icon(fallback, size: size, color: color);
+    final symbol = _symbols[iconKey];
+    assert(symbol != null, 'IconKey.$iconKey belum dipetakan di AppIcon.');
+    return Icon(symbol, size: size, color: color, fill: fill ? 1 : 0, weight: 400, opticalSize: size.clamp(20, 48));
   }
 }
 

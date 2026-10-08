@@ -199,7 +199,7 @@ class _PendingCard extends StatelessWidget {
                 ),
                 PopupMenuButton<void>(
                   tooltip: texts.moreActions,
-                  icon: Icon(Icons.more_vert, color: colors.ink2),
+                  icon: AppIcon(IconKey.moreVert, color: colors.ink2),
                   itemBuilder: (_) => [PopupMenuItem<void>(onTap: onMakePattern, child: Text(texts.makePatternAction))],
                 ),
               ],

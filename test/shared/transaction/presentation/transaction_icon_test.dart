@@ -41,12 +41,13 @@ void main() {
     sourceIconId: sourceIconId,
   );
 
-  testWidgets('kategori jadi ikon utama; tanpa kategori, ikon jenis', (tester) async {
+  testWidgets('kategori jadi ikon utama; pengeluaran tanpa kategori, ikon Lainnya', (tester) async {
     await pump(tester, expense(categoryId: 'health'));
-    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.expense), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.categoryOther), findsNothing);
+    expect(find.byType(AppIconTile), findsOneWidget);
 
     await pump(tester, expense());
-    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.expense), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.categoryOther), findsOneWidget);
   });
 
   testWidgets('lencana notifikasi muncul begitu ikonnya termuat, tanpa melebarkan ikon', (tester) async {

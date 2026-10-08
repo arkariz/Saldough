@@ -82,6 +82,27 @@ class BudgetDetailPage extends StatelessWidget {
     navigator.pop();
   }
 
+  /// Sheet tindakan pos (ketuk baris pos).
+  Future<void> _openItem(
+    BuildContext context,
+    Budget current,
+    BudgetItemProgress progress, {
+    required bool canRecord,
+  }) async {
+    final action = await showModalBottomSheet<_ItemAction>(
+      context: context,
+      showDragHandle: true,
+      builder: (_) => _ItemActionsSheet(progress: progress, canRecord: canRecord),
+    );
+    if (action == null || !context.mounted) return;
+    switch (action) {
+      case _ItemAction.record:
+        await _record(context, current, progress);
+      case _ItemAction.edit:
+        await _edit(context, current);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,45 +120,60 @@ class BudgetDetailPage extends StatelessWidget {
             return TourTrigger(
               tour: TourId.budgetDetail,
               ready: true,
-              child: ListView(
-                padding: const EdgeInsets.all(AppSpacing.space4),
+              child: Column(
                 children: [
-                  _TopBar(onEdit: () => _edit(context, current)),
-                  const SizedBox(height: AppSpacing.space4),
-                  _HeroCard(budget: current, progress: progress, wallet: wallet),
-                  const SizedBox(height: AppSpacing.space6),
-                  AppSectionLabel(t.budget.detailItemsHeading, hint: t.budget.itemCount(count: current.items.length)),
-                  const SizedBox(height: AppSpacing.space1),
-                  if (current.items.isEmpty)
-                    Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.ink2))
-                  else
-                    for (final (i, itemProgress) in progress.items.indexed) ...[
-                      _ItemCard(
-                        spotlighted: i == 0,
-                        progress: itemProgress,
-                        targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
-                        onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
+                  _TopBar(title: current.name, onEdit: () => _edit(context, current)),
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.space4,
+                        AppSpacing.space2,
+                        AppSpacing.space4,
+                        AppSpacing.space12,
                       ),
-                      const SizedBox(height: AppSpacing.space2),
-                    ],
-                  const SizedBox(height: AppSpacing.space4),
-                  AppSectionLabel(t.budget.detailLinkedHeading),
-                  const SizedBox(height: AppSpacing.space1),
-                  if (linked.isEmpty)
-                    Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.ink2))
-                  else
-                    AppListCard(
                       children: [
-                        for (final transaction in linked)
-                          TransactionRow(
-                            transaction: transaction,
-                            walletsById: walletsById,
-                            onTap: () => _openTransaction(context, transaction),
+                        _HeroCard(budget: current, progress: progress, wallet: wallet),
+                        const SizedBox(height: AppSpacing.space6),
+                        AppSectionHeader(
+                          t.budget.detailItemsHeading,
+                          hint: t.budget.itemCount(count: current.items.length),
+                        ),
+                        const SizedBox(height: AppSpacing.space2),
+                        if (current.items.isEmpty)
+                          Text(t.budget.detailNoItems, style: TextStyle(color: context.appColors.ink2))
+                        else
+                          AppListCard(
+                            dividerIndent: AppListCard.plainIndent,
+                            children: [
+                              for (final (i, itemProgress) in progress.items.indexed)
+                                _ItemRow(
+                                  spotlighted: i == 0,
+                                  progress: itemProgress,
+                                  targetWalletName: state.walletOf(itemProgress.item.targetWalletId ?? '')?.name,
+                                  onRecord: canRecord ? () => _record(context, current, itemProgress) : null,
+                                  onOpen: () => _openItem(context, current, itemProgress, canRecord: canRecord),
+                                ),
+                            ],
+                          ),
+                        const SizedBox(height: AppSpacing.space6),
+                        AppSectionHeader(t.budget.detailLinkedHeading),
+                        const SizedBox(height: AppSpacing.space2),
+                        if (linked.isEmpty)
+                          Text(t.budget.detailLinkedEmpty, style: TextStyle(color: context.appColors.ink2))
+                        else
+                          AppListCard(
+                            children: [
+                              for (final transaction in linked)
+                                TransactionRow(
+                                  transaction: transaction,
+                                  walletsById: walletsById,
+                                  onTap: () => _openTransaction(context, transaction),
+                                ),
+                            ],
                           ),
                       ],
                     ),
-                  const SizedBox(height: AppSpacing.space6),
-                  _HowItWorks(walletName: wallet?.name ?? t.budget.unknownWallet),
+                  ),
                 ],
               ),
             );

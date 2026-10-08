@@ -164,12 +164,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(BudgetDetailPage), findsOneWidget);
     expect(find.text('Beras'), findsOneWidget);
-    // Dua kali: status tingkat anggaran di kartu utama, dan lencana pos Beras.
-    expect(find.text(t.budget.itemStatusPartiallySpent.toUpperCase()), findsNWidgets(2));
+    // Status pos Beras di barisnya; kartu ringkasan memakai badge Aman.
+    expect(find.text(t.budget.itemStatusPartiallySpent), findsOneWidget);
+    expect(find.text(t.home.budgetSafe), findsOneWidget);
     expect(find.textContaining('beras 5kg'), findsOneWidget);
 
     // Pintasan di kartu pos: pengeluaran, dompet BCA dan pos Beras terpilih.
-    await tester.tap(find.widgetWithText(AppChip, t.budget.detailRecordExpenseAction));
+    await tester.tap(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction));
     await tester.pumpAndSettle();
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
@@ -233,14 +234,36 @@ void main() {
 
     // Tidak ada pintasan di tingkat anggaran; pos transfer hanya punya tombol transfer.
     expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
-    expect(find.widgetWithText(AppChip, t.budget.detailRecordExpenseAction), findsNothing);
-    expect(find.textContaining(t.budget.itemTransferTo(wallet: 'Tabungan').toUpperCase()), findsOneWidget);
+    expect(find.widgetWithText(AppButton, t.budget.detailRecordExpenseAction), findsNothing);
+    expect(find.textContaining(t.budget.itemTransferTo(wallet: 'Tabungan')), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(AppChip, t.budget.detailRecordTransferAction));
+    await tester.tap(find.widgetWithText(AppButton, t.budget.detailRecordTransferAction));
     await tester.pumpAndSettle();
     expect(find.byType(TransferFormSheet), findsOneWidget);
     // Pos transfer hanya ditawarkan kalau asal BCA DAN tujuan Tabungan — jadi
     // label terpilih ini membuktikan dompet tujuan sudah terisi.
     expect(find.text('Setoran · Rumah tangga'), findsOneWidget);
+  });
+
+  testWidgets('rincian anggaran (T-14.8): ketuk pos membuka sheet tindakan; catat dari sheet membuka CATAT terisi pos', (
+    tester,
+  ) async {
+    tallViewport(tester);
+    await seedWalletAndBudget();
+    await openBudgetTab(tester);
+    await tester.tap(find.byType(BudgetCard));
+    await tester.pumpAndSettle();
+
+    // Tanpa tombol catat tingkat anggaran (ADR-018), tanpa kartu penjelasan.
+    expect(find.text(t.budget.detailHowTitle), findsNothing);
+    await tester.tap(find.text('Beras'));
+    await tester.pumpAndSettle();
+    expect(find.widgetWithText(AppListRow, t.budget.detailRecordExpenseAction), findsOneWidget);
+    expect(find.widgetWithText(AppListRow, t.budget.detailEditAction), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(AppListRow, t.budget.detailRecordExpenseAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(ExpenseFormSheet), findsOneWidget);
+    expect(find.text('Beras · Rumah tangga'), findsOneWidget);
   });
 }

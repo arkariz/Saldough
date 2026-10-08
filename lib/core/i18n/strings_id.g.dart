@@ -1192,6 +1192,9 @@ class Translations$budget$id {
 
 	/// id: 'Ulangi tiap minggu · $wallet'
 	String templateScheduledWeekly({required Object wallet}) => 'Ulangi tiap minggu · ${wallet}';
+
+	/// id: 'Hari ke-$day dari $total'
+	String dayOfPeriod({required Object day, required Object total}) => 'Hari ke-${day} dari ${total}';
 }
 
 // Path: freelance
@@ -4145,6 +4148,7 @@ extension on Translations {
 			'budget.recurringBadge' => 'Rutin',
 			'budget.templateScheduledMonthly' => ({required Object wallet}) => 'Ulangi tiap bulan · ${wallet}',
 			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Ulangi tiap minggu · ${wallet}',
+			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Hari ke-${day} dari ${total}',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Pembayaran (${count})',
@@ -4232,9 +4236,9 @@ extension on Translations {
 			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Entri ditagih: ${count} (${hours} jam)',
 			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entri · ${hours} jam',
 			'freelance.expectedDateLabel' => 'Perkiraan tanggal diterima',
-			'freelance.grossPayLabel' => 'Gaji kotor',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.grossPayLabel' => 'Gaji kotor',
 			'freelance.netPayLabel' => 'Gaji bersih',
 			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
 			'freelance.paymentCreateAction' => 'Buat Pembayaran',
@@ -4746,9 +4750,9 @@ extension on Translations {
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
-			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
 			'recurring.remindersTitle' => 'Pengingat rutin',

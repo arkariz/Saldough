@@ -443,7 +443,8 @@
     "scopeThisAndNext": "This and later periods",
     "recurringBadge": "Repeats",
     "templateScheduledMonthly": "Repeats monthly · $wallet",
-    "templateScheduledWeekly": "Repeats weekly · $wallet"
+    "templateScheduledWeekly": "Repeats weekly · $wallet",
+    "dayOfPeriod": "Day $day of $total"
   },
   "freelance": {
     "title": "Freelance",

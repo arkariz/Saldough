@@ -103,7 +103,7 @@ class _PaymentFormSheetState extends State<PaymentFormSheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppFormHeader(stepLabel: t.freelance.paymentStepLabel, title: t.freelance.paymentAddTitle),
+            AppFormHeader(title: t.freelance.paymentAddTitle),
             const SizedBox(height: AppSpacing.space4),
             FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.paymentCreateRuleBody),
             const SizedBox(height: AppSpacing.space4),

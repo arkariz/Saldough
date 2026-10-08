@@ -149,7 +149,6 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppFormHeader(
-                stepLabel: t.freelance.entryStepLabel,
                 title: editing ? t.freelance.entryEditTitle : t.freelance.entryAddTitle,
               ),
               const SizedBox(height: AppSpacing.space4),

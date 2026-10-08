@@ -101,6 +101,46 @@ abstract final class PixelTheme {
         ),
       ),
       dividerTheme: DividerThemeData(color: colors.line, thickness: 1, space: 1),
+      // Kolom isian (design system TextField): garis `lineStrong` 1px,
+      // fokus `brand` 2px, galat `danger` 2px, isi `body`.
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colors.surface,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        hintStyle: textTheme.bodyLarge?.copyWith(color: colors.ink3),
+        labelStyle: textTheme.bodyLarge?.copyWith(color: colors.ink2),
+        floatingLabelStyle: textTheme.labelLarge?.copyWith(color: colors.brand),
+        helperStyle: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+        errorStyle: textTheme.bodyMedium?.copyWith(color: colors.danger),
+        border: _fieldBorder(colors.lineStrong, 1),
+        enabledBorder: _fieldBorder(colors.lineStrong, 1),
+        focusedBorder: _fieldBorder(colors.brand, 2),
+        errorBorder: _fieldBorder(colors.danger, 2),
+        focusedErrorBorder: _fieldBorder(colors.danger, 2),
+        disabledBorder: _fieldBorder(colors.line, 1),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: colors.brand,
+        selectionHandleColor: colors.brand,
+        selectionColor: colors.brandSoft,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected) ? colors.onBrand : colors.ink2,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected) ? colors.brand : colors.surface2,
+        ),
+        trackOutlineColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected) ? colors.brand : colors.lineStrong,
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        textStyle: textTheme.bodyLarge,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSize.pixelStep)),
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: colors.inverseSurface,
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: colors.onInverse),
@@ -129,6 +169,11 @@ abstract final class PixelTheme {
       extensions: [colors, AppNumberStyles.from(colors)],
     );
   }
+
+  static OutlineInputBorder _fieldBorder(Color color, double width) => OutlineInputBorder(
+    borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
+    borderSide: BorderSide(color: color, width: width),
+  );
 
   /// Skala Teks design system (`tokens.json` grup Teks) dipetakan ke slot
   /// [TextTheme] sesuai `flutter.md`. Slot yang tidak punya padanan diisi

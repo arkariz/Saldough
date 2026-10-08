@@ -479,6 +479,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get recurringBadge => 'Repeats';
 	@override String templateScheduledMonthly({required Object wallet}) => 'Repeats monthly · ${wallet}';
 	@override String templateScheduledWeekly({required Object wallet}) => 'Repeats weekly · ${wallet}';
+	@override String dayOfPeriod({required Object day, required Object total}) => 'Day ${day} of ${total}';
 }
 
 // Path: freelance
@@ -1881,6 +1882,7 @@ extension on TranslationsEn {
 			'budget.recurringBadge' => 'Repeats',
 			'budget.templateScheduledMonthly' => ({required Object wallet}) => 'Repeats monthly · ${wallet}',
 			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Repeats weekly · ${wallet}',
+			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Day ${day} of ${total}',
 			'freelance.title' => 'Freelance',
 			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
 			'freelance.paymentsTab' => ({required Object count}) => 'Payments (${count})',
@@ -1968,9 +1970,9 @@ extension on TranslationsEn {
 			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)',
 			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h',
 			'freelance.expectedDateLabel' => 'Expected date received',
-			'freelance.grossPayLabel' => 'Gross pay',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.grossPayLabel' => 'Gross pay',
 			'freelance.netPayLabel' => 'Net pay',
 			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
 			'freelance.paymentCreateAction' => 'Create Payment',
@@ -2482,9 +2484,9 @@ extension on TranslationsEn {
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
-			'recurring.reminderTodayTitle' => 'Due today',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
 			'recurring.remindersTitle' => 'Recurring reminders',

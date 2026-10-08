@@ -1,58 +1,42 @@
 part of 'budget_detail_page.dart';
 
 // Bagian layar rincian anggaran (dipecah dari `budget_detail_page.dart`, ADR-030 A9).
+// Prototipe `RincianAnggaran.dc.html` (ADR-034).
 
+/// Bar atas halaman turunan: kembali, nama anggaran, tombol ubah.
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.onEdit});
+  const _TopBar({required this.title, required this.onEdit});
 
+  final String title;
   final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.surface2,
-      padding: const EdgeInsets.all(AppSpacing.space1),
+    return SizedBox(
+      height: AppSize.topbar,
       child: Row(
         children: [
+          AppIconButton(
+            icon: IconKey.back,
+            label: t.budget.detailBackLabel,
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
           Expanded(
-            child: AppTappable(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: SizedBox(
-                height: 44,
-                child: Row(
-                  children: [
-                    const SizedBox(width: AppSpacing.space1),
-                    AppIcon(IconKey.chevronLeft, color: colors.ink),
-                    const SizedBox(width: AppSpacing.space1),
-                    Text(
-                      t.budget.detailBackLabel.toUpperCase(),
-                      style: labelSmStyle(context, color: colors.ink),
-                    ),
-                  ],
-                ),
+            child: Semantics(
+              header: true,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
-          Semantics(
-            button: true,
+          AppIconButton(
+            key: const ValueKey('budget-detail-edit'),
+            icon: IconKey.edit,
             label: t.budget.detailEditAction,
-            child: GestureDetector(
-              onTap: onEdit,
-              behavior: HitTestBehavior.opaque,
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: Center(
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(4)),
-                    child: AppIcon(IconKey.edit, size: 20, color: colors.ink),
-                  ),
-                ),
-              ),
-            ),
+            onPressed: onEdit,
           ),
         ],
       ),
@@ -60,8 +44,9 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-/// Kartu utama: nama, periode + status, rentang tanggal, dompet beserta
-/// saldonya, lalu rencana/terpakai/sisa dan bilah progres.
+/// Ringkasan anggaran: sisa (angka utama) dengan badge status, bar kotak
+/// dengan penanda waktu, terpakai dari rencana dan hari ke-berapa periode,
+/// lalu badge periode, rentang, dan dompet.
 class _HeroCard extends StatelessWidget {
   const _HeroCard({required this.budget, required this.progress, required this.wallet});
 
@@ -73,101 +58,61 @@ class _HeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final overspent = progress.spendingStatus == BudgetItemStatus.overspent;
+    final active = progress.status == BudgetStatus.active;
+    final ratio = progress.progress;
+    final (badge, tone) = switch (AppProgressBar.statusFor(ratio)) {
+      AppBarStatus.safe => (t.home.budgetSafe, AppTone.positive),
+      AppBarStatus.nearlyOut => (t.home.budgetNearlyOut, AppTone.warning),
+      AppBarStatus.over => (t.home.budgetOverBy(amount: AppMoneyFormatter.format(-progress.remaining)), AppTone.danger),
+    };
+    final totalDays = budget.endDate.difference(budget.startDate).inDays;
+    final today = DateTime.now();
+    final day = DateTime(today.year, today.month, today.day).difference(budget.startDate).inDays + 1;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(budget.name, style: textTheme.headlineSmall),
-          const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(
+                child: Text(t.budget.remainingLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+              ),
+              Flexible(child: AppBadge(active ? badge : budgetStatusLabel(progress.status), tone: active ? tone : AppTone.neutral)),
+            ],
+          ),
+          HeroAmount(AppMoneyFormatter.format(progress.remaining), color: progress.remaining < 0 ? colors.danger : null),
+          const SizedBox(height: AppSpacing.space3),
+          AppProgressBar(value: ratio, pace: active ? budget.elapsedRatio(today) : null),
+          const SizedBox(height: AppSpacing.space2),
           Wrap(
-            spacing: AppSpacing.space1,
-            runSpacing: 4,
+            alignment: WrapAlignment.spaceBetween,
+            spacing: AppSpacing.space2,
             children: [
-              BudgetBadge(label: budgetPeriodLabel(budget.period)),
-              BudgetBadge(
-                label: budgetStatusLabel(progress.status),
-                color: progress.status == BudgetStatus.active ? colors.positive : colors.ink2,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space1),
-          Row(
-            children: [
-              AppIcon(IconKey.calendar, size: 16, color: colors.ink2),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(budgetRangeLabel(budget), style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.space2),
-            decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              children: [
-                AppIcon(wallet == null ? IconKey.wallets : walletIconKey(wallet!.iconKey), size: 28),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(child: Text(wallet?.name ?? t.budget.unknownWallet, style: textTheme.titleMedium)),
-                if (wallet != null)
-                  Text(
-                    AppMoneyFormatter.format(wallet!.currentBalance),
-                    style: context.numberStyles.amountSm.copyWith(color: colors.ink2),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          Row(
-            children: [
-              Expanded(
-                child: _Stat(label: t.budget.plannedLabel, sen: progress.plannedAmount, color: colors.ink),
-              ),
-              const SizedBox(width: AppSpacing.space1),
-              Expanded(
-                child: _Stat(
-                  label: t.budget.spentLabel,
-                  sen: progress.spent,
-                  color: overspent ? colors.danger : colors.ink,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.space1),
-              Expanded(
-                child: _Stat(
-                  label: t.budget.remainingLabel,
-                  sen: progress.remaining,
-                  color: progress.remaining < 0 ? colors.danger : colors.positive,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space2),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t.budget
-                      .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
-                      .toUpperCase(),
-                  style: labelSmStyle(context, color: colors.ink2),
-                ),
-              ),
               Text(
-                budgetItemStatusLabel(progress.spendingStatus).toUpperCase(),
-                style: labelSmStyle(context, color: budgetItemStatusColor(context, progress.spendingStatus)),
+                t.home.budgetSpentOf(
+                  spent: AppMoneyFormatter.format(progress.spent),
+                  planned: AppMoneyFormatter.format(progress.plannedAmount),
+                ),
+                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
               ),
+              if (active && day >= 1 && day <= totalDays)
+                Text(
+                  t.budget.dayOfPeriod(day: day, total: totalDays),
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                ),
             ],
           ),
-          const SizedBox(height: 4),
-          BudgetProgressBar(value: progress.progress, height: 14),
-          const SizedBox(height: 4),
-          // Penanda laju waktu (ADR-020 §3.5/UX-10): "terpakai X%" sendirian
-          // tidak menjawab "apakah aku masih di jalur" -- dibandingkan
-          // dengan fraksi periode yang sudah berlalu.
-          Text(
-            t.budget.paceLabel(percent: (budget.elapsedRatio(DateTime.now()) * 100).round()).toUpperCase(),
-            style: labelSmStyle(context, color: colors.ink2),
+          const SizedBox(height: AppSpacing.space3),
+          const Divider(),
+          const SizedBox(height: AppSpacing.space3),
+          Wrap(
+            spacing: AppSpacing.space2,
+            runSpacing: AppSpacing.space2,
+            children: [
+              AppBadge(budgetPeriodLabel(budget.period)),
+              AppBadge(budgetRangeLabel(budget)),
+              AppBadge(wallet?.name ?? t.budget.unknownWallet, icon: IconKey.wallets),
+            ],
           ),
         ],
       ),
@@ -175,45 +120,20 @@ class _HeroCard extends StatelessWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.label, required this.sen, required this.color});
-
-  final String label;
-  final int sen;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space1),
-      decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
-      child: Column(
-        children: [
-          Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: colors.ink2)),
-          const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(AppMoneyFormatter.format(sen), style: context.numberStyles.amountSm.copyWith(color: color)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Kartu satu pos: nama, status (empat kondisi), bilah progres,
-/// rencana/terpakai/sisa, dan pintasan CATAT dengan pos ini terpilih.
-/// Lewat anggaran memakai `overBudget`, bukan gaya kesalahan (FR-BUD-007).
-class _ItemCard extends StatelessWidget {
-  const _ItemCard({
+/// Satu pos di daftar pos (`tk-list--plain`): nama, bar tipis, keterangan
+/// jenis/rencana di kiri; sisa dan statusnya di kanan. Diketuk membuka sheet
+/// tindakan pos. Pintasan CATAT tetap terlihat di baris (ADR-018: mencatat
+/// dari rincian anggaran hanya lewat pos).
+class _ItemRow extends StatelessWidget {
+  const _ItemRow({
     required this.progress,
     required this.targetWalletName,
     required this.onRecord,
+    required this.onOpen,
     this.spotlighted = false,
   });
 
-  /// True untuk pos pertama: kartunya dan tombol catatnya jadi target tur.
+  /// True untuk pos pertama: baris dan tombol catatnya jadi target tur.
   final bool spotlighted;
 
   final BudgetItemProgress progress;
@@ -224,138 +144,130 @@ class _ItemCard extends StatelessWidget {
   /// Membuka CATAT untuk pos ini, atau `null` (anggaran nonaktif).
   final VoidCallback? onRecord;
 
+  /// Membuka sheet tindakan pos.
+  final VoidCallback onOpen;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final item = progress.item;
-    final statusColor = budgetItemStatusColor(context, progress.status);
     final overspent = progress.status == BudgetItemStatus.overspent;
+    final caption = [
+      if (item.isTransfer)
+        '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}',
+      if (item.isItemized)
+        t.budget.itemItemizedDetail(quantity: item.quantity!, price: AppMoneyFormatter.format(item.unitPrice!))
+      else
+        t.home.budgetSpentOf(
+          spent: AppMoneyFormatter.format(progress.spent),
+          planned: AppMoneyFormatter.format(item.plannedAmount),
+        ),
+    ].join(' · ');
     return SpotlightTarget(
       spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
-      child: AppCard(
-        color: overspent ? colors.tinted(colors.danger, 0.08) : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
+      child: Semantics(
+        button: true,
+        label: item.name,
+        child: InkWell(
+          onTap: onOpen,
+          overlayColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(item.name, style: textTheme.titleMedium),
-                      const SizedBox(height: 2),
-                      BudgetBadge(
-                        label: item.isTransfer
-                            ? '${t.budget.itemKindTransfer} · ${t.budget.itemTransferTo(wallet: targetWalletName ?? t.budget.unknownWallet)}'
-                            : t.budget.itemKindExpense,
-                        color: item.isTransfer ? colors.ink2 : colors.ink,
-                      ),
-                      if (item.isItemized)
-                        Text(
-                          t.budget.itemItemizedDetail(
-                            quantity: item.quantity!,
-                            price: AppMoneyFormatter.format(item.unitPrice!),
-                          ),
-                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                        ),
+                      const SizedBox(height: AppSpacing.space2),
+                      AppProgressBar(value: progress.progress, thin: true),
+                      const SizedBox(height: AppSpacing.space2),
+                      Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.space1),
-                BudgetBadge(label: budgetItemStatusLabel(progress.status), color: statusColor),
+                const SizedBox(width: AppSpacing.space3),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    AppMoneyText(progress.remaining, kind: MoneyKind.remaining),
+                    Text(
+                      budgetItemStatusLabel(progress.status),
+                      style: textTheme.bodySmall?.copyWith(color: overspent ? colors.danger : colors.ink2),
+                    ),
+                    if (onRecord case final record?) ...[
+                      const SizedBox(height: AppSpacing.space1),
+                      SpotlightTarget(
+                        spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
+                        child: AppButton.secondary(
+                          small: true,
+                          label: item.isTransfer
+                              ? t.budget.detailRecordTransferAction
+                              : t.budget.detailRecordExpenseAction,
+                          onPressed: record,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ],
             ),
-            const SizedBox(height: AppSpacing.space1),
-            BudgetProgressBar(value: progress.progress),
-            const SizedBox(height: AppSpacing.space1),
-            Wrap(
-              spacing: AppSpacing.space4,
-              runSpacing: 2,
-              children: [
-                _Figure(label: t.budget.plannedLabel, sen: item.plannedAmount, color: colors.ink),
-                _Figure(
-                  label: t.budget.spentLabel,
-                  sen: progress.spent,
-                  color: overspent ? colors.danger : colors.ink,
-                ),
-                _Figure(
-                  label: t.budget.remainingLabel,
-                  sen: progress.remaining,
-                  color: progress.remaining < 0 ? colors.danger : colors.positive,
-                ),
-              ],
-            ),
-            if (onRecord case final record?) ...[
-              const SizedBox(height: AppSpacing.space1),
-              Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: SpotlightTarget(
-                  spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
-                  child: item.isTransfer
-                      ? AppChip(
-                          label: t.budget.detailRecordTransferAction,
-                          onTap: record,
-                        )
-                      : AppChip(label: t.budget.detailRecordExpenseAction, onTap: record),
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _Figure extends StatelessWidget {
-  const _Figure({required this.label, required this.sen, required this.color});
+/// Tindakan sheet pos.
+enum _ItemAction { record, edit }
 
-  final String label;
-  final int sen;
-  final Color color;
+/// Sheet tindakan pos (prototipe: ketuk pos): catat untuk pos ini dan ubah
+/// anggaran (pos diubah di formulir anggaran).
+class _ItemActionsSheet extends StatelessWidget {
+  const _ItemActionsSheet({required this.progress, required this.canRecord});
 
-  @override
-  Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: '$label: ',
-            style: TextStyle(color: context.appColors.ink2),
-          ),
-          TextSpan(
-            text: AppMoneyFormatter.format(sen),
-            style: TextStyle(color: color),
-          ),
-        ],
-      ),
-      style: context.numberStyles.amountSm,
-    );
-  }
-}
-
-class _HowItWorks extends StatelessWidget {
-  const _HowItWorks({required this.walletName});
-
-  final String walletName;
+  final BudgetItemProgress progress;
+  final bool canRecord;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      color: colors.surface2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(t.budget.detailHowTitle, style: textTheme.titleMedium),
-          const SizedBox(height: 4),
-          Text(t.budget.detailHowBody(wallet: walletName), style: textTheme.bodySmall),
-        ],
-      ),
+    final item = progress.item;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(item.name, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          t.home.budgetSpentOf(
+            spent: AppMoneyFormatter.format(progress.spent),
+            planned: AppMoneyFormatter.format(item.plannedAmount),
+          ),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+        ),
+        const SizedBox(height: AppSpacing.space3),
+        if (canRecord)
+          AppListRow(
+            compact: true,
+            leading: AppIcon(IconKey.add, color: colors.ink2),
+            title: item.isTransfer ? t.budget.detailRecordTransferAction : t.budget.detailRecordExpenseAction,
+            onTap: () => Navigator.of(context).pop(_ItemAction.record),
+          ),
+        AppListRow(
+          compact: true,
+          leading: AppIcon(IconKey.edit, color: colors.ink2),
+          title: t.budget.detailEditAction,
+          onTap: () => Navigator.of(context).pop(_ItemAction.edit),
+        ),
+        const SizedBox(height: AppSpacing.space4),
+      ],
     );
   }
 }

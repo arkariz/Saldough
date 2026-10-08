@@ -443,7 +443,8 @@
     "scopeThisAndNext": "Periode ini dan berikutnya",
     "recurringBadge": "Rutin",
     "templateScheduledMonthly": "Ulangi tiap bulan · $wallet",
-    "templateScheduledWeekly": "Ulangi tiap minggu · $wallet"
+    "templateScheduledWeekly": "Ulangi tiap minggu · $wallet",
+    "dayOfPeriod": "Hari ke-$day dari $total"
   },
   "freelance": {
     "title": "Freelance",

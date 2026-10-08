@@ -11,58 +11,18 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      color: colors.surface2,
-      padding: const EdgeInsets.all(AppSpacing.space1),
+    // Bar atas halaman turunan (design system TopBar `--sub`).
+    return SizedBox(
+      height: AppSize.topbar,
       child: Row(
         children: [
-          Expanded(
-            child: AppTappable(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Row(
-                children: [
-                  const SizedBox(width: AppSpacing.space1),
-                  AppIcon(IconKey.chevronLeft, color: colors.ink),
-                  const SizedBox(width: AppSpacing.space1),
-                  Text(
-                    t.wallet.detailBackLabel,
-                    style: labelSmStyle(
-                      context,
-                      color: colors.ink,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          AppIconButton(
+            icon: IconKey.back,
+            label: t.wallet.detailBackLabel,
+            onPressed: () => Navigator.of(context).maybePop(),
           ),
-          Semantics(
-            button: true,
-            label: t.wallet.detailEditAction,
-            child: GestureDetector(
-              onTap: onEdit,
-              behavior: HitTestBehavior.opaque,
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: Center(
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: colors.surface,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: AppIcon(
-                      IconKey.edit,
-                      size: 20,
-                      color: colors.ink,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          const Spacer(),
+          AppIconButton(icon: IconKey.edit, label: t.wallet.detailEditAction, onPressed: onEdit),
         ],
       ),
     );
@@ -86,16 +46,7 @@ class _HeroCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           children: [
-            Container(
-              width: 64,
-              height: 64,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: colors.surface2,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: AppIcon(walletIconKey(wallet.iconKey), size: 44),
-            ),
+            AppIconTile(walletIconKey(wallet.iconKey), size: 48),
             const SizedBox(height: AppSpacing.space2),
             Text(
               wallet.name,
@@ -116,21 +67,9 @@ class _HeroCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.space4),
             Text(
               t.wallet.currentBalanceLabel,
-              style: labelSmStyle(context, color: colors.ink2),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
             ),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                AppMoneyFormatter.format(wallet.currentBalance),
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.headlineMedium?.copyWith(
-                      color: colors.ink,
-                    ),
-              ),
-            ),
+            HeroAmount(AppMoneyFormatter.format(wallet.currentBalance)),
           ],
         ),
       ),
@@ -345,22 +284,5 @@ class _Badge extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: colors.surface2,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: labelSmStyle(
-          context,
-          size: 9,
-          color: color ?? colors.ink2,
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppBadge(label, tone: toneFromColor(context.appColors, color));
 }

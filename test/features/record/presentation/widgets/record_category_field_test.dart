@@ -121,6 +121,7 @@ void main() {
       await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'Arisan');
+      await tester.pump();
       await tester.tap(find.text(t.common.save));
       await tester.pumpAndSettle();
 

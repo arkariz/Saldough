@@ -61,11 +61,11 @@ void main() {
     // Draf tanpa masalah: kartu tidak tampil sama sekali (transkrip juga tidak).
     expect(find.text('“Tadi makan siang 35 ribu pakai BCA”'), findsNothing);
     expect(find.text(t.record.draftCheckTitle), findsNothing);
-    expect(find.text('35.000'), findsOneWidget);
+    expect(find.text('Rp35.000', findRichText: true), findsOneWidget);
     expect(find.text('makan siang'), findsOneWidget);
 
-    await tester.ensureVisible(find.byType(AppButton));
-    await tester.tap(find.byType(AppButton));
+    await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+    await tester.tap(find.byKey(const ValueKey('record-submit')));
     await tester.pumpAndSettle();
 
     expect(result?.amount, 3500000);

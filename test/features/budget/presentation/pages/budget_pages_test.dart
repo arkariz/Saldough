@@ -168,8 +168,7 @@ void main() {
     expect(find.byType(ExpenseFormSheet), findsOneWidget);
     expect(find.text('Beras · Rumah tangga'), findsOneWidget);
     // Nominal terisi SISA pos: rencana 2 × Rp75.000 − terpakai Rp75.000.
-    final amountField = find.descendant(of: find.byType(ExpenseFormSheet), matching: find.byType(TextField)).first;
-    expect(tester.widget<TextField>(amountField).controller!.text, '75.000');
+    expect(find.descendant(of: find.byType(ExpenseFormSheet), matching: find.text('Rp75.000', findRichText: true)), findsOneWidget);
   });
 
   testWidgets('rincian transaksi tertaut menampilkan baris Anggaran beserta jalan ke anggarannya (T-4.11)', (

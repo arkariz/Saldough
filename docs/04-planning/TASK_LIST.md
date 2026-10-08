@@ -2370,7 +2370,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       tekan lama, tab aktif), mikrofon CATAT. `flutter analyze` bersih,
       1.150 uji lulus. ⚠ Belum dicoba di perangkat: getar/umpan balik tekan
       lama dan rasa naiknya tombol Catat.
-- [ ] **T-14.5** Sheet Catat sesuai prototipe `Catat.dc.html`: kontrol
+- [x] **T-14.5** Sheet Catat sesuai prototipe `Catat.dc.html`: kontrol
       segmen jenis, keypad, pemilih kategori petak ikon, baris Dompet/
       Tanggal/Catatan/Anggaran, "Saldo jadi …" di baris dompet, tombol
       Simpan menyebut jenisnya. Banner "Aturan Kas" dan ringkasan ganda
@@ -2380,6 +2380,29 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji widget alur pengeluaran, pemasukan, transfer; uji
       bloc lama tetap lulus.
       Memenuhi FR-REC-001, FR-REC-002.
+      Hasil (8 Okt 2026): `RecordFormFrame` baru — bar atas (tutup, "Catat"
+      di tengah, mikrofon), pengalih jenis, isi bergulir, lalu `AppKeypad`
+      (1–9, `000` atau pemisah desimal, hapus; tekan lama mengosongkan) dan
+      tombol simpan lebar penuh menempel di bawah; papan angka menyingkir
+      selama keyboard sistem terbuka (catatan). Nominal `amount-display`
+      dibaca dari `applyMoneyKey` (core, batas 12 digit, uji unit).
+      Kategori jadi petak lima kolom (empat teratas + "Semua kategori" yang
+      membuka sheet pemilih dengan "Tanpa kategori" dan "Tambah kategori").
+      Dompet/Tanggal/Catatan/Anggaran jadi baris form dalam satu
+      `AppListCard`; baris dompet menulis akibatnya sekali: "Saldo jadi
+      Rp…" (`danger` bila negatif). Banner "Aturan Kas"/"Penting" dan
+      `RecordSummaryCard` dihapus; Jadikan Rutin menampilkan satu kalimat
+      "tidak mengubah saldo". `RecordBloc` tidak diubah. Selisih disengaja:
+      chip nominal cepat (+10rb dst.) dan chip Hari ini/Kemarin hilang
+      (prototipe memakai `000` dan baris Tanggal); label tombol simpan dan
+      label baris masih teks lama ("Catat Pengeluaran", "Keterangan /
+      Catatan") sampai sapuan i18n T-14.12; bagian Ulangi
+      (`RecordRepeatField`) baru ikut warna/komponen baru, tata letak
+      `CatatUlangi.dc.html` menyusul di T-14.8/T-14.10. Uji: keypad
+      (IDR/USD), komponen, kategori, tanggal, mikrofon; uji alur yang dulu
+      mengetik ke kolom nominal kini lewat `test/helpers/keypad.dart`.
+      `flutter analyze` bersih, 1.150 uji lulus. ⚠ Belum dicoba di
+      perangkat: getar papan angka, tinggi sheet di layar pendek.
 - [ ] **T-14.6** Beranda sesuai `Main.dc.html`: kartu saldo terakota
       dengan tanuki, banner kotak masuk, kartu bulan berjalan (pemasukan,
       pengeluaran, selisih), kartu anggaran dengan penanda waktu, transaksi

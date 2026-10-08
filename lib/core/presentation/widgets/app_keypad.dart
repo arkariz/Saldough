@@ -20,7 +20,12 @@ import 'package:saldough/core/utils/formatters/money_input.dart';
 /// atau [moneyKeyBackspace]; teksnya dihitung lewat [applyMoneyKey].
 class AppKeypad extends StatelessWidget {
   /// Membuat [AppKeypad].
-  const AppKeypad({required this.onKey, required this.onClear, this.keyHeight = 46, super.key});
+  const AppKeypad({
+    required this.onKey,
+    required this.onClear,
+    this.keyHeight = 46,
+    super.key,
+  });
 
   /// Dipanggil dengan tombol yang ditekan.
   final ValueChanged<String> onKey;
@@ -49,7 +54,14 @@ class AppKeypad extends StatelessWidget {
             children: [
               for (final (j, key) in row.indexed) ...[
                 if (j > 0) const SizedBox(width: AppSpacing.space2),
-                Expanded(child: _Key(keyValue: key, height: keyHeight, onKey: onKey, onClear: onClear)),
+                Expanded(
+                  child: _Key(
+                    keyValue: key,
+                    height: keyHeight,
+                    onKey: onKey,
+                    onClear: onClear,
+                  ),
+                ),
               ],
             ],
           ),
@@ -60,7 +72,12 @@ class AppKeypad extends StatelessWidget {
 }
 
 class _Key extends StatefulWidget {
-  const _Key({required this.keyValue, required this.height, required this.onKey, required this.onClear});
+  const _Key({
+    required this.keyValue,
+    required this.height,
+    required this.onKey,
+    required this.onClear,
+  });
 
   final String keyValue;
   final double height;
@@ -114,7 +131,12 @@ class _KeyState extends State<_Key> {
           child: Center(
             child: backspace
                 ? AppIcon(IconKey.backspace, color: colors.ink)
-                : Text(label, style: context.numberStyles.amountLg.copyWith(fontWeight: FontWeight.w600)),
+                : Text(
+                    label,
+                    style: context.numberStyles.amountLg.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
         ),
       ),

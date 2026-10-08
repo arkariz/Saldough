@@ -13,7 +13,11 @@ import 'package:saldough/core/utils/formatters/money_input.dart';
 /// dibaca lewat `parseMoneyInput`.
 class RecordAmountField extends StatelessWidget {
   /// Membuat [RecordAmountField].
-  const RecordAmountField({required this.controller, required this.kind, super.key});
+  const RecordAmountField({
+    required this.controller,
+    required this.kind,
+    super.key,
+  });
 
   /// Pengendali teks, berisi angka berpemisah ribuan.
   final TextEditingController controller;
@@ -32,7 +36,9 @@ class RecordAmountField extends StatelessWidget {
         final sen = parseMoneyInput(text) ?? 0;
         return Semantics(
           liveRegion: true,
-          label: t.record.amountSemantics(amount: AppMoneyFormatter.format(sen)),
+          label: t.record.amountSemantics(
+            amount: AppMoneyFormatter.format(sen),
+          ),
           excludeSemantics: true,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
@@ -51,7 +57,12 @@ class RecordAmountField extends StatelessWidget {
                         color: colors.ink2,
                       ),
                     ),
-                    TextSpan(text: text.isEmpty ? '0' : text, style: TextStyle(color: text.isEmpty ? colors.ink3 : colors.ink)),
+                    TextSpan(
+                      text: text.isEmpty ? '0' : text,
+                      style: TextStyle(
+                        color: text.isEmpty ? colors.ink3 : colors.ink,
+                      ),
+                    ),
                   ],
                 ),
                 textAlign: TextAlign.center,

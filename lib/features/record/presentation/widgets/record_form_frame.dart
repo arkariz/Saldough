@@ -79,20 +79,28 @@ class RecordFormFrame extends StatelessWidget {
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return SizedBox.expand(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _Header(title: title, isEditing: isEditing, onBack: onBack),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space1, AppSpacing.space4, AppSpacing.space4),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.space4,
+                  AppSpacing.space1,
+                  AppSpacing.space4,
+                  AppSpacing.space4,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ?kindSwitcher,
                     for (final (i, child) in children.indexed) ...[
-                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space3),
+                      if (i > 0 || kindSwitcher != null)
+                        const SizedBox(height: AppSpacing.space3),
                       child,
                     ],
                   ],
@@ -107,7 +115,12 @@ class RecordFormFrame extends StatelessWidget {
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.space4,
+                    AppSpacing.space2,
+                    AppSpacing.space4,
+                    AppSpacing.space4,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,7 +129,12 @@ class RecordFormFrame extends StatelessWidget {
                         AppKeypad(onKey: _onKey, onClear: _onClear),
                         const SizedBox(height: AppSpacing.space3),
                       ],
-                      AppButton(key: const ValueKey('record-submit'), label: submitLabel, expand: true, onPressed: onSubmit),
+                      AppButton(
+                        key: const ValueKey('record-submit'),
+                        label: submitLabel,
+                        expand: true,
+                        onPressed: onSubmit,
+                      ),
                     ],
                   ),
                 ),
@@ -130,7 +148,11 @@ class RecordFormFrame extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.title, required this.isEditing, required this.onBack});
+  const _Header({
+    required this.title,
+    required this.isEditing,
+    required this.onBack,
+  });
 
   final String title;
   final bool isEditing;
@@ -140,14 +162,27 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final onVoice = isEditing ? null : RecordVoiceAction.maybeOf(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space2, AppSpacing.space1, 0),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.space1,
+        AppSpacing.space2,
+        AppSpacing.space1,
+        0,
+      ),
       child: Row(
         children: [
-          AppIconButton(icon: IconKey.close, label: t.common.close, onPressed: onBack),
+          AppIconButton(
+            icon: IconKey.close,
+            label: t.common.close,
+            onPressed: onBack,
+          ),
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
           ),
           if (onVoice != null)
@@ -177,7 +212,9 @@ class RecordNoBalanceChange extends StatelessWidget {
     return Text(
       t.record.repeat.noBalanceChange,
       textAlign: TextAlign.center,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
     );
   }
 }

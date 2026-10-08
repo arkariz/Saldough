@@ -3,7 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Mengetik [digits] (mis. `'75000'`) lewat papan angka CATAT (T-14.5).
 /// Mengosongkan nominal dulu lewat tekan lama tombol hapus kalau [clear].
-Future<void> enterAmount(WidgetTester tester, String digits, {bool clear = true}) async {
+Future<void> enterAmount(
+  WidgetTester tester,
+  String digits, {
+  bool clear = true,
+}) async {
   if (clear) {
     final backspace = find.byKey(const ValueKey('keypad-backspace'));
     await tester.ensureVisible(backspace);

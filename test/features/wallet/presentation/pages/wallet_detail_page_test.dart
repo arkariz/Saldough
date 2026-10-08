@@ -26,6 +26,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../../../helpers/fake_auth_repository.dart';
+import '../../../../helpers/keypad.dart';
 import '../../../../helpers/mocks.dart';
 import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
@@ -385,7 +386,7 @@ void main() {
       expect(find.text(t.record.walletNotSelectedPrompt), findsNothing);
       expect(find.text('BCA'), findsWidgets);
 
-      await tester.enterText(find.byType(TextField).first, '25000');
+      await enterAmount(tester, '25000');
       await tester.pump();
       await tester.ensureVisible(
         find.widgetWithText(AppButton, t.record.expenseAction).last,

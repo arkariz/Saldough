@@ -19,6 +19,8 @@ import 'package:saldough/features/budget/domain/repositories/budget_template_rep
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
@@ -244,7 +246,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(t.record.toWalletFieldLabel), findsOneWidget);
-      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
+      expect(find.byType(IncomeFormSheet), findsOneWidget);
     });
 
     testWidgets('Beranda menampilkan kartu Menunggu dicatat bila ada kemunculan menunggu (T-15.6)', (tester) async {
@@ -373,18 +375,18 @@ void main() {
 
       // Satu ketukan: formulir Pengeluaran, bukan lembar pilihan.
       expect(find.byType(RecordFormHost), findsOneWidget);
-      expect(find.text(t.record.amountLabelExpense.toUpperCase()), findsOneWidget);
+      expect(find.byType(ExpenseFormSheet), findsOneWidget);
 
       await tester.tap(find.text(t.record.kindIncome));
       await tester.pumpAndSettle();
-      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
+      expect(find.byType(IncomeFormSheet), findsOneWidget);
 
       await tester.tap(find.text(t.record.kindTransfer));
       await tester.pumpAndSettle();
-      expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsNothing);
+      expect(find.byType(IncomeFormSheet), findsNothing);
       expect(find.text(t.record.transferAction), findsWidgets);
 
-      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft));
+      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close));
       await tester.pumpAndSettle();
 
       expect(find.byType(RecordFormHost), findsNothing);
@@ -509,7 +511,7 @@ void main() {
 
       // Tur tidak menutup lembar CATAT di baliknya.
       expect(find.byType(RecordFormHost), findsOneWidget);
-      final back = find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.chevronLeft);
+      final back = find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close);
       await tester.ensureVisible(back);
       await tester.pumpAndSettle();
       await tester.tap(back);
@@ -540,7 +542,7 @@ void main() {
       expect(step(1, 1, t.tour.recordFreelanceTitle, t.tour.recordFreelanceBody), findsOneWidget);
       // Kartu Freelance ada di atas bidang nominal.
       final callout = tester.getRect(find.textContaining(t.record.freelanceCalloutTitle));
-      final amount = tester.getRect(find.text(t.record.amountLabelIncome.toUpperCase()));
+      final amount = tester.getRect(find.byKey(const ValueKey('record-amount')));
       expect(callout.bottom, lessThan(amount.top));
     });
 

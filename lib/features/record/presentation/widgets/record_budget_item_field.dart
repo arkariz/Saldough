@@ -99,7 +99,7 @@ class RecordBudgetItemField extends StatelessWidget {
       fieldLabel: '${t.record.budgetItemLabel} (${t.record.optionalHint.toLowerCase()})',
       rowIcon: IconKey.budget,
       icon: IconKey.budget,
-      label: selected == null ? t.record.budgetItemNone : '${selected.budgetName} · ${selected.itemName}',
+      label: selected == null ? t.record.budgetItemNone : '${selected.itemName} · ${selected.budgetName}',
       isPlaceholder: selected == null,
       wrapLabel: true,
       allLabel: t.record.budgetItemNone,

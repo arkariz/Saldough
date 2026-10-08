@@ -132,17 +132,15 @@ void main() {
 
   group('ExpenseFormSheet -- tata letak rujukan visual', () {
     testWidgets(
-      'semua bagian rujukan tampil: aturan kas, nominal, kategori, dompet, waktu, catatan',
+      'bagian prototipe Catat tampil: nominal, petak kategori, dompet, tanggal, catatan, keypad; tanpa Aturan Kas',
       (tester) async {
         await pumpForm(tester);
 
-        expect(find.text(t.record.expenseRuleTitle), findsOneWidget);
+        expect(find.text(t.record.expenseRuleTitle), findsNothing);
+        expect(find.text('Rp0', findRichText: true), findsOneWidget);
+        expect(find.byType(AppKeypad), findsOneWidget);
         expect(
-          find.text(t.record.amountLabelExpense.toUpperCase()),
-          findsOneWidget,
-        );
-        expect(
-          find.text(t.record.categorySectionLabel),
+          find.text(t.record.allCategories),
           findsOneWidget,
         );
         expect(
@@ -201,10 +199,9 @@ void main() {
     );
 
     testWidgets(
-      'ringkasan + pratinjau saldo muncul setelah nominal dan dompet terisi',
+      'akibat ke saldo ditulis sekali di baris dompet ("Saldo jadi"), tanpa ringkasan ganda',
       (tester) async {
         await pumpForm(tester);
-        expect(find.textContaining('akan berkurang'), findsNothing);
 
         await enterAmount(tester, '75000');
         await tester.pump();
@@ -214,16 +211,8 @@ void main() {
         await tester.pumpAndSettle();
         await tester.pump();
 
-        expect(
-          find.text('Rp5.000.000'),
-          findsOneWidget,
-          reason: 'saldo lama (dicoret)',
-        );
-        expect(find.text('Rp4.925.000'), findsOneWidget, reason: 'saldo baru');
-        expect(
-          find.text(t.record.expenseSummary(wallet: 'BCA', amount: 'Rp75.000')),
-          findsOneWidget,
-        );
+        expect(find.text(t.record.balanceAfter(amount: 'Rp4.925.000')), findsOneWidget);
+        expect(find.textContaining('akan berkurang'), findsNothing);
       },
     );
 
@@ -243,14 +232,15 @@ void main() {
       );
 
       expect(find.text(t.transaction.editSheetTitle), findsOneWidget);
-      expect(find.text(t.record.editStepLabel.toUpperCase()), findsOneWidget);
+      // Sunting: tanpa mikrofon.
+      expect(find.byKey(const ValueKey('record-voice')), findsNothing);
       expect(
         find.widgetWithText(AppButton, t.transaction.saveChangesAction),
         findsOneWidget,
       );
-      expect(find.text('75.000'), findsOneWidget);
+      expect(find.text('Rp75.000', findRichText: true), findsOneWidget);
       expect(find.text('nasi padang'), findsOneWidget);
-      expect(find.textContaining('08:30'), findsOneWidget);
+      expect(find.textContaining('08.30'), findsOneWidget);
     });
 
     testWidgets(

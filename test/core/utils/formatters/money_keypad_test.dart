@@ -4,7 +4,8 @@ import 'package:saldough/core/utils/formatters/money_input.dart';
 
 /// Papan angka CATAT (T-14.5): teks nominal sesudah tiap tombol.
 void main() {
-  String type(List<String> keys, {String from = ''}) => keys.fold(from, applyMoneyKey);
+  String type(List<String> keys, {String from = ''}) =>
+      keys.fold(from, applyMoneyKey);
 
   group('IDR (tanpa desimal)', () {
     setUp(() => ActiveCurrency.notifier.value = AppCurrency.idr);
@@ -47,7 +48,14 @@ void main() {
     test('desimal paling banyak dua angka; hapus menelusuri balik', () {
       final typed = type(['1', '2', moneyKeyDecimal, '5', '0', '9']);
       expect(parseMoneyInput(typed), 1250);
-      expect(type([moneyKeyBackspace, moneyKeyBackspace, moneyKeyBackspace], from: typed), '12');
+      expect(
+        type([
+          moneyKeyBackspace,
+          moneyKeyBackspace,
+          moneyKeyBackspace,
+        ], from: typed),
+        '12',
+      );
     });
 
     test('desimal di awal menjadi 0', () {

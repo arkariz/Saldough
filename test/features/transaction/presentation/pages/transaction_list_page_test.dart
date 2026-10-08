@@ -13,6 +13,7 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
@@ -225,7 +226,7 @@ void main() {
 
         // CATAT langsung ke formulir Pengeluaran (UX-1).
         expect(find.byType(RecordFormHost), findsOneWidget);
-        expect(find.text(t.record.amountLabelExpense.toUpperCase()), findsOneWidget);
+        expect(find.byType(ExpenseFormSheet), findsOneWidget);
       },
     );
   });
@@ -477,13 +478,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(t.transaction.editSheetTitle), findsOneWidget);
-      expect(find.text('75.000'), findsOneWidget, reason: 'nominal terisi awal, berpemisah ribuan');
+      expect(find.text('Rp75.000', findRichText: true), findsOneWidget, reason: 'nominal terisi awal, berpemisah ribuan');
       // Pratinjau saldo memakai saldo SEBELUM transaksi ini (Rp1.000.000), bukan
       // saldo sekarang yang sudah dikurangi -- kalau tidak, 75.000 dipotong dua
       // kali (925.000 -> 850.000).
-      expect(find.text('Rp1.000.000'), findsOneWidget);
-      expect(find.text('Rp925.000'), findsOneWidget);
-      expect(find.text('Rp850.000'), findsNothing);
+      expect(find.text(t.record.balanceAfter(amount: 'Rp925.000')), findsOneWidget);
+      expect(find.textContaining('Rp850.000'), findsNothing);
 
       await enterAmount(tester, '90000');
       await tester.pump();
@@ -516,7 +516,7 @@ void main() {
       // bukan lembar sunting: judulnya formulir CATAT biasa.
       expect(find.text(t.transaction.editSheetTitle), findsNothing);
       expect(find.text(t.record.expenseAction), findsWidgets);
-      expect(find.text('75.000'), findsOneWidget, reason: 'nominal terisi dari transaksi sumber');
+      expect(find.text('Rp75.000', findRichText: true), findsOneWidget, reason: 'nominal terisi dari transaksi sumber');
       expect(find.text('Makan Siang'), findsWidgets, reason: 'kategori terisi dari transaksi sumber');
 
       await tester.tap(find.widgetWithText(AppButton, t.record.expenseAction));

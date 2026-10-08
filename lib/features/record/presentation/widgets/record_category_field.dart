@@ -50,7 +50,10 @@ class RecordCategoryField extends StatelessWidget {
   Future<void> _create(BuildContext context) async {
     final create = onCreate;
     if (create == null) return;
-    final name = await showCategoryNameDialog(context, title: t.category.addTitle);
+    final name = await showCategoryNameDialog(
+      context,
+      title: t.category.addTitle,
+    );
     if (name == null) return;
     final created = await create(name);
     if (created != null) onChanged(created.id);
@@ -62,7 +65,11 @@ class RecordCategoryField extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,
-      builder: (sheetContext) => _CategorySheet(options: options, selectedId: value, canCreate: onCreate != null),
+      builder: (sheetContext) => _CategorySheet(
+        options: options,
+        selectedId: value,
+        canCreate: onCreate != null,
+      ),
     );
     if (picked == null || !context.mounted) return;
     switch (picked) {
@@ -76,48 +83,59 @@ class RecordCategoryField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selected = ActiveCategories.byId(value);
-    final options = ActiveCategories.selectable(categoryKind, frequentIds: frequentIds);
+    final options = ActiveCategories.selectable(
+      categoryKind,
+      frequentIds: frequentIds,
+    );
     final visible = options.take(visibleCount).toList();
     if (selected != null && !visible.any((c) => c.id == selected.id)) {
       if (visible.length == visibleCount) visible.removeLast();
       visible.insert(0, selected);
     }
     return Semantics(
-        container: true,
-        label: t.record.categorySectionLabel,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var i = 0; i < visibleCount; i++)
-              Expanded(
-                child: i < visible.length
-                    ? _Option(
-                        key: ValueKey('category-${visible[i].id}'),
-                        icon: categoryIcon(visible[i], title: title),
-                        label: visible[i].name,
-                        selected: visible[i].id == value,
-                        // Ketuk lagi yang terpilih: kembali tanpa kategori.
-                        onTap: () => onChanged(visible[i].id == value ? null : visible[i].id),
-                      )
-                    : const SizedBox.shrink(),
-              ),
+      container: true,
+      label: t.record.categorySectionLabel,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < visibleCount; i++)
             Expanded(
-              child: _Option(
-                key: const ValueKey('category-all'),
-                icon: IconKey.categoryOther,
-                label: t.record.allCategories,
-                selected: false,
-                onTap: () => _openAll(context, options),
-              ),
+              child: i < visible.length
+                  ? _Option(
+                      key: ValueKey('category-${visible[i].id}'),
+                      icon: categoryIcon(visible[i], title: title),
+                      label: visible[i].name,
+                      selected: visible[i].id == value,
+                      // Ketuk lagi yang terpilih: kembali tanpa kategori.
+                      onTap: () => onChanged(
+                        visible[i].id == value ? null : visible[i].id,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
-          ],
-        ),
+          Expanded(
+            child: _Option(
+              key: const ValueKey('category-all'),
+              icon: IconKey.categoryOther,
+              label: t.record.allCategories,
+              selected: false,
+              onTap: () => _openAll(context, options),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _Option extends StatelessWidget {
-  const _Option({required this.icon, required this.label, required this.selected, required this.onTap, super.key});
+  const _Option({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
 
   final IconKey icon;
   final String label;
@@ -136,7 +154,10 @@ class _Option extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1, horizontal: 2),
+          padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.space1,
+            horizontal: 2,
+          ),
           child: Column(
             children: [
               AppIconTile(icon, size: 44, selected: selected),
@@ -146,7 +167,9 @@ class _Option extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(color: selected ? colors.ink : colors.ink2),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: selected ? colors.ink : colors.ink2,
+                ),
               ),
             ],
           ),
@@ -173,7 +196,11 @@ final class _PickCreate extends _Pick {
 /// Sheet pemilih kategori (design system Sheet, varian pemilih): judul di
 /// tengah, daftar baris dengan centang pada yang terpilih.
 class _CategorySheet extends StatelessWidget {
-  const _CategorySheet({required this.options, required this.selectedId, required this.canCreate});
+  const _CategorySheet({
+    required this.options,
+    required this.selectedId,
+    required this.canCreate,
+  });
 
   final List<Category> options;
   final String? selectedId;
@@ -182,12 +209,18 @@ class _CategorySheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    Widget check({required bool on}) => on ? AppIcon(IconKey.check, color: colors.brand) : const SizedBox(width: AppSize.icon);
+    Widget check({required bool on}) => on
+        ? AppIcon(IconKey.check, color: colors.brand)
+        : const SizedBox(width: AppSize.icon);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(t.record.allCategories, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          t.record.allCategories,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: AppSpacing.space2),
         Flexible(
           child: ListView(
@@ -197,7 +230,8 @@ class _CategorySheet extends StatelessWidget {
                 title: t.record.categoryNoneLabel,
                 leading: const AppIconTile(IconKey.categoryOther),
                 trailing: check(on: selectedId == null),
-                onTap: () => Navigator.of(context).pop(const _PickCategory(null)),
+                onTap: () =>
+                    Navigator.of(context).pop(const _PickCategory(null)),
               ),
               for (final category in options)
                 AppListRow(
@@ -205,7 +239,8 @@ class _CategorySheet extends StatelessWidget {
                   title: category.name,
                   leading: AppIconTile(categoryIcon(category)),
                   trailing: check(on: category.id == selectedId),
-                  onTap: () => Navigator.of(context).pop(_PickCategory(category.id)),
+                  onTap: () =>
+                      Navigator.of(context).pop(_PickCategory(category.id)),
                 ),
               if (canCreate)
                 AppListRow(

@@ -133,6 +133,9 @@ class Translations$appShell$id {
 	/// id: 'Catat'
 	String get recordAction => 'Catat';
 
+	/// id: 'Tekan lama untuk catat pakai suara'
+	String get recordVoiceHint => 'Tekan lama untuk catat pakai suara';
+
 	/// id: 'Riwayat'
 	String get transactionsTabLabel => 'Riwayat';
 
@@ -1991,8 +1994,8 @@ class Translations$tour$id {
 	/// id: 'Catat pakai suara'
 	String get homeVoiceTitle => 'Catat pakai suara';
 
-	/// id: 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.'
-	String get homeVoiceBody => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.';
+	/// id: 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.'
+	String get homeVoiceBody => 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.';
 
 	/// id: 'Rencana'
 	String get planTabsTitle => 'Rencana';
@@ -3676,6 +3679,7 @@ extension on Translations {
 			'appShell.homeTabLabel' => 'Beranda',
 			'appShell.budgetTabLabel' => 'Anggaran',
 			'appShell.recordAction' => 'Catat',
+			'appShell.recordVoiceHint' => 'Tekan lama untuk catat pakai suara',
 			'appShell.transactionsTabLabel' => 'Riwayat',
 			'appShell.walletsTabLabel' => 'Dompet',
 			'appShell.planTabLabel' => 'Rencana',
@@ -4172,9 +4176,9 @@ extension on Translations {
 			'freelance.paymentDeleteAction' => 'Hapus',
 			'freelance.paymentDeleteConfirmTitle' => 'Hapus pembayaran?',
 			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
-			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
 			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
 			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
 			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
@@ -4341,7 +4345,7 @@ extension on Translations {
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
-			'tour.homeVoiceBody' => 'Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
+			'tour.homeVoiceBody' => 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
 			'tour.planTabsBody' => 'Bulan ini, anggaran, dan transaksi rutin ada di sini. Ketuk untuk berpindah.',
 			'tour.planUnplannedTitle' => 'Uang nganggur',
@@ -4686,9 +4690,9 @@ extension on Translations {
 			'recurring.budgetLinkLabel' => 'Pos anggaran',
 			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
-			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',

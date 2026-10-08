@@ -34,8 +34,4 @@ abstract final class AppSpacing {
 
   /// `space-12` (48px).
   static const double space12 = 48;
-
-  /// Padding bawah daftar di tab shell, supaya baris terakhir bisa digulir
-  /// keluar dari bawah dua FAB bertumpuk. Dihapus bersama FAB di T-14.4.
-  static const double fabClearance = 144;
 }

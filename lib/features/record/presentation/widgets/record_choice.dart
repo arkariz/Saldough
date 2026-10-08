@@ -10,3 +10,12 @@ final class OpenFreelance {
   /// Membuat [OpenFreelance].
   const OpenFreelance();
 }
+
+/// Nilai sentinel dikembalikan lembar CATAT saat pemakai mengetuk mikrofon di
+/// bar atasnya (ADR-034 §3.3: suara di dalam Catat). `openRecordSheet`
+/// menutup lembar lalu membuka Catat pakai suara, yang kembali ke CATAT
+/// dengan drafnya.
+final class OpenVoiceCapture {
+  /// Membuat [OpenVoiceCapture].
+  const OpenVoiceCapture();
+}

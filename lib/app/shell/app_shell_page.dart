@@ -7,7 +7,6 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
@@ -42,13 +41,13 @@ import 'package:saldough/features/wallet/presentation/bloc/wallet_state.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:state_management/state_management.dart';
 
-/// Shell navigasi Saldough 2.0 — empat tab (Beranda, Rencana, Transaksi,
-/// Dompet) di navigasi bawah, dan dua tombol mengambang bertumpuk di kanan
-/// bawah: CATAT (besar) dan catat pakai suara (kecil, di atasnya). Dipasang
-/// di rute `/home` (T-2.3, cutover T-3.4).
+/// Shell navigasi — empat tab (Beranda, Riwayat, Rencana, Dompet) dan tombol
+/// Catat di tengah navigasi bawah (`AppNavBar`, ADR-034 §3.3). Ketuk Catat
+/// membuka CATAT; tekan lama membuka Catat pakai suara. Dipasang di rute
+/// `/home` (T-2.3, cutover T-3.4).
 ///
-/// Kedua tombol mengambang membuka rute alur fitur `record`
-/// (`RecordRouteKeys.sheet` dan `.voice`, ADR-030 §3.3), bukan tab. Alur itu
+/// Tombol Catat membuka rute alur fitur `record` (`RecordRouteKeys.sheet`)
+/// atau `voice_capture`, bukan tab (ADR-030 §3.3). Alur itu
 /// memegang `RecordScope`-nya sendiri, jadi shell tidak lagi memasang
 /// `RecordBloc`; tab lain segar sesudah CATAT lewat `LedgerChanges`
 /// (ADR-030 §3.4), bukan dimuat ulang dari sini.
@@ -82,9 +81,11 @@ class _AppShellPageState extends State<AppShellPage> {
   /// itu segmen terakhir selama shell hidup (KT-L4). Tidak disimpan.
   PlanSegment _planSegment = PlanSegment.thisMonth;
 
+  // Urutan navigasi bawah design system: Beranda, Riwayat, [Catat],
+  // Rencana, Dompet.
   static const _homeTabIndex = 0;
-  static const _planTabIndex = 1;
-  static const _transactionsTabIndex = 2;
+  static const _transactionsTabIndex = 1;
+  static const _planTabIndex = 2;
   static const _walletsTabIndex = 3;
 
   /// Membuka alur CATAT atau catat pakai suara (ADR-027).
@@ -134,8 +135,8 @@ class _AppShellPageState extends State<AppShellPage> {
   @override
   Widget build(BuildContext context) {
     final parentContainer = ScopeProvider.of(context);
-    // Empat tujuan nyata di `IndexedStack`, urutan Beranda, Rencana,
-    // Transaksi, Dompet. Dibangun dengan context DI BAWAH seluruh
+    // Empat tujuan nyata di `IndexedStack`, urutan Beranda, Riwayat,
+    // Rencana, Dompet. Dibangun dengan context DI BAWAH seluruh
     // `BlocProvider` (lihat `Builder` di bawah), karena callback Beranda dan
     // `_onDestinationSelected` membaca bloc-bloc itu.
     List<Widget> tabsFor(BuildContext context) => [
@@ -155,6 +156,7 @@ class _AppShellPageState extends State<AppShellPage> {
           onTap: () => _showPlan(context, PlanSegment.thisMonth),
         ),
       ),
+      const TransactionListPage(),
       PlanPage(
         selected: _planSegment,
         onChanged: (segment) => setState(() => _planSegment = segment),
@@ -173,7 +175,6 @@ class _AppShellPageState extends State<AppShellPage> {
           PlanSegment.recurring: RecurringPage(container: parentContainer),
         },
       ),
-      const TransactionListPage(),
       const WalletListPage(),
     ];
     return ScopeWidget<TransactionScope>(
@@ -225,32 +226,25 @@ class _AppShellPageState extends State<AppShellPage> {
                                                 TourVisibility(visible: i == _activeTab, child: tab),
                                             ],
                                           ),
-                                          floatingActionButton: _RecordFabs(
-                                            onRecord: () => unawaited(_openRecord(context)),
-                                            onVoice: () => unawaited(_openRecord(context, voice: true)),
-                                          ),
-                                          bottomNavigationBar: NavigationBar(
+                                          bottomNavigationBar: AppNavBar(
                                             selectedIndex: _activeTab,
-                                            onDestinationSelected: (tabIndex) =>
-                                                _onDestinationSelected(context, tabIndex),
+                                            onSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
                                             destinations: [
-                                              NavigationDestination(
-                                                icon: const AppIcon(IconKey.home),
-                                                label: t.appShell.homeTabLabel,
-                                              ),
-                                              NavigationDestination(
-                                                icon: const AppIcon(IconKey.budget),
-                                                label: t.appShell.planTabLabel,
-                                              ),
-                                              NavigationDestination(
-                                                icon: const AppIcon(IconKey.transactions),
-                                                label: t.appShell.transactionsTabLabel,
-                                              ),
-                                              NavigationDestination(
-                                                icon: const AppIcon(IconKey.wallets),
-                                                label: t.appShell.walletsTabLabel,
-                                              ),
+                                              (icon: IconKey.home, label: t.appShell.homeTabLabel),
+                                              (icon: IconKey.transactions, label: t.appShell.transactionsTabLabel),
+                                              (icon: IconKey.budget, label: t.appShell.planTabLabel),
+                                              (icon: IconKey.wallets, label: t.appShell.walletsTabLabel),
                                             ],
+                                            recordLabel: t.appShell.recordAction,
+                                            recordHint: t.appShell.recordVoiceHint,
+                                            onRecord: () => unawaited(_openRecord(context)),
+                                            onRecordLongPress: () => unawaited(_openRecord(context, voice: true)),
+                                            // Satu tombol, dua langkah tur: Catat lalu tekan lama
+                                            // untuk suara (ADR-021, ADR-034 §3.3).
+                                            recordWrapper: (button) => SpotlightTarget(
+                                              spotlightKey: SpotlightKey.homeVoice,
+                                              child: SpotlightTarget(spotlightKey: SpotlightKey.homeRecord, child: button),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -282,88 +276,4 @@ enum ShellStartAction {
 
   /// Membuka layar Akun — "Sudah punya akun? Masuk" onboarding (ADR-024).
   openAccount,
-}
-
-/// Dua tombol mengambang bertumpuk di kanan bawah: catat pakai suara (kecil,
-/// atas) dan CATAT (besar, bawah). Gaya "Interaktif" ADR-015 -- kotak aksen
-/// bergaris tepi dan bayangan keras -- supaya tindakan utama aplikasi tidak
-/// tampil setara tab (prinsip produk #5, UX-13).
-class _RecordFabs extends StatelessWidget {
-  const _RecordFabs({required this.onRecord, required this.onVoice});
-
-  final VoidCallback onRecord;
-  final VoidCallback onVoice;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        SpotlightTarget(
-          spotlightKey: SpotlightKey.homeVoice,
-          child: _PixelFab(
-            key: const ValueKey('shell-voice-fab'),
-            icon: IconKey.microphone,
-            label: t.record.voice.micLabel,
-            size: 60,
-            background: colors.surface,
-            foreground: colors.ink,
-            onTap: onVoice,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.space2),
-        SpotlightTarget(
-          spotlightKey: SpotlightKey.homeRecord,
-          child: _PixelFab(
-            key: const ValueKey('shell-record-fab'),
-            icon: IconKey.record,
-            label: t.appShell.recordAction,
-            size: 60,
-            background: colors.brand,
-            foreground: colors.onBrand,
-            onTap: onRecord,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PixelFab extends StatelessWidget {
-  const _PixelFab({
-    required this.icon,
-    required this.label,
-    required this.size,
-    required this.background,
-    required this.foreground,
-    required this.onTap,
-    super.key,
-  });
-
-  final IconKey icon;
-  final String label;
-  final double size;
-  final Color background;
-  final Color foreground;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppTappable(
-      label: label,
-      onTap: onTap,
-      child: Container(
-        width: size,
-        height: size,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
-        ),
-        child: AppIcon(icon, size: size * 0.45, color: foreground),
-      ),
-    );
-  }
 }

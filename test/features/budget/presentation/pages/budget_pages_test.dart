@@ -99,7 +99,7 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await tester.pump();
     }
-    await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.planTabLabel));
+    await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.planTabLabel)));
     await tester.pumpAndSettle();
     // Awal sesi membuka Bulan ini (KT-L4).
     await tester.tap(find.text(t.appShell.budgetTabLabel.toUpperCase()));

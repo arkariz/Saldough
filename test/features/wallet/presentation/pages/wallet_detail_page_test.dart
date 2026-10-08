@@ -103,7 +103,7 @@ void main() {
     await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
     await tester.tap(
-      find.widgetWithText(NavigationDestination, t.appShell.walletsTabLabel),
+      find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.walletsTabLabel)),
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text(walletName));

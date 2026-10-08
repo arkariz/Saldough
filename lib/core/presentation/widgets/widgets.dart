@@ -14,6 +14,7 @@ export 'app_icon_tile.dart';
 export 'app_list_row.dart';
 export 'app_menu_select_button.dart';
 export 'app_money_text.dart';
+export 'app_nav_bar.dart';
 export 'app_progress_bar.dart';
 export 'app_section_header.dart';
 export 'app_section_label.dart';

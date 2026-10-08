@@ -79,7 +79,7 @@ class _WalletListPageState extends State<WalletListPage> {
                 AppSpacing.space4,
                 AppSpacing.space2,
                 AppSpacing.space4,
-                AppSpacing.fabClearance,
+                AppSpacing.space12,
               ),
               children: [
                 SpotlightTarget(

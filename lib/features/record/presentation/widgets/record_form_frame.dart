@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 
 /// Ikon jenis transaksi untuk [kind] -- dipakai kotak jenis di kop layar dan
 /// kartu pilihan CATAT.
@@ -65,16 +66,37 @@ class RecordFormFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.space4,
+            AppSpacing.space4,
+            AppSpacing.space4,
+            AppSpacing.space6,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _Header(kind: kind, title: title, isEditing: isEditing, onBack: onBack),
-              if (kindSwitcher != null) ...[const SizedBox(height: AppSpacing.space4), kindSwitcher!],
-              if (notice != null) ...[const SizedBox(height: AppSpacing.space4), notice!],
-              for (final child in children) ...[const SizedBox(height: AppSpacing.space4), child],
+              _Header(
+                kind: kind,
+                title: title,
+                isEditing: isEditing,
+                onBack: onBack,
+              ),
+              if (kindSwitcher != null) ...[
+                const SizedBox(height: AppSpacing.space4),
+                kindSwitcher!,
+              ],
+              if (notice != null) ...[
+                const SizedBox(height: AppSpacing.space4),
+                notice!,
+              ],
+              for (final child in children) ...[
+                const SizedBox(height: AppSpacing.space4),
+                child,
+              ],
               const SizedBox(height: AppSpacing.space6),
               // Tanpa catatan kaki "tidak mendebit uang" di tiap formulir:
               // penafian itu cukup sekali per alur (onboarding dan tur CATAT,
@@ -90,7 +112,12 @@ class RecordFormFrame extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.kind, required this.title, required this.isEditing, required this.onBack});
+  const _Header({
+    required this.kind,
+    required this.title,
+    required this.isEditing,
+    required this.onBack,
+  });
 
   final TransactionKind kind;
   final String title;
@@ -100,6 +127,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final onVoice = isEditing ? null : RecordVoiceAction.maybeOf(context);
     return Row(
       children: [
         GestureDetector(
@@ -109,7 +137,10 @@ class _Header extends StatelessWidget {
             width: 44,
             height: 44,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: colors.surface3, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+              color: colors.surface3,
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: const AppIcon(IconKey.chevronLeft, size: 28),
           ),
         ),
@@ -119,32 +150,52 @@ class _Header extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  (isEditing ? t.record.editStepLabel : t.record.stepLabel).toUpperCase(),
+                  (isEditing ? t.record.editStepLabel : t.record.stepLabel)
+                      .toUpperCase(),
                   textAlign: TextAlign.center,
                   style: labelSmStyle(context, color: colors.brand),
                 ),
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: 22, height: 1.2),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontSize: 22,
+                    height: 1.2,
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        Container(
-          width: 44,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: colors.iconTile(colors.kindFill(kind)),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(color: Color.lerp(colors.kindInk(kind), colors.lineStrong, 0.4)!, offset: const Offset(0, 2)),
-            ],
+        if (onVoice != null)
+          AppIconButton(
+            key: const ValueKey('record-voice'),
+            icon: IconKey.microphone,
+            label: t.record.voice.micLabel,
+            tonal: true,
+            onPressed: onVoice,
+          )
+        else
+          Container(
+            width: 44,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: colors.iconTile(colors.kindFill(kind)),
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.lerp(
+                    colors.kindInk(kind),
+                    colors.lineStrong,
+                    0.4,
+                  )!,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: AppIcon(recordKindIcon(kind), size: 28),
           ),
-          child: AppIcon(recordKindIcon(kind), size: 28),
-        ),
       ],
     );
   }
@@ -156,7 +207,12 @@ class _Header extends StatelessWidget {
 /// ("Aturan Kas") dan transfer ("Penting").
 class RecordNotice extends StatelessWidget {
   /// Membuat [RecordNotice].
-  const RecordNotice({required this.title, required this.body, this.flat = false, super.key});
+  const RecordNotice({
+    required this.title,
+    required this.body,
+    this.flat = false,
+    super.key,
+  });
 
   /// Judul tebal.
   final String title;
@@ -193,8 +249,18 @@ class RecordNotice extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
-                Text(body, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  body,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: colors.ink2),
+                ),
               ],
             ),
           ),
@@ -209,7 +275,12 @@ class RecordNotice extends StatelessWidget {
 /// satu atau dua `Text`).
 class RecordSummaryCard extends StatelessWidget {
   /// Membuat [RecordSummaryCard].
-  const RecordSummaryCard({required this.kind, required this.children, this.title, super.key});
+  const RecordSummaryCard({
+    required this.kind,
+    required this.children,
+    this.title,
+    super.key,
+  });
 
   /// Jenis transaksi; menentukan nuansa warna.
   final TransactionKind kind;
@@ -239,7 +310,10 @@ class RecordSummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (title != null)
-                  Text(title!.toUpperCase(), style: labelSmStyle(context, color: colors.kindInk(kind))),
+                  Text(
+                    title!.toUpperCase(),
+                    style: labelSmStyle(context, color: colors.kindInk(kind)),
+                  ),
                 ...children,
               ],
             ),

@@ -34,12 +34,15 @@ class _RecordFormHostState extends State<RecordFormHost> {
     return TourTrigger(
       tour: TourId.record,
       ready: true,
-      // Kunci per jenis: formulir baru dibangun bersih saat jenis diganti.
-      child: KeyedSubtree(
-        key: ValueKey(_choice),
-        child: widget.formFor(
-          _choice,
-          RecordKindSwitcher(selected: _choice, onChanged: (choice) => setState(() => _choice = choice)),
+      child: RecordVoiceAction(
+        onVoice: () => Navigator.of(context).pop(const OpenVoiceCapture()),
+        // Kunci per jenis: formulir baru dibangun bersih saat jenis diganti.
+        child: KeyedSubtree(
+          key: ValueKey(_choice),
+          child: widget.formFor(
+            _choice,
+            RecordKindSwitcher(selected: _choice, onChanged: (choice) => setState(() => _choice = choice)),
+          ),
         ),
       ),
     );
@@ -77,4 +80,22 @@ class RecordKindSwitcher extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Membagikan tindakan "Catat pakai suara" ke bar atas lembar CATAT
+/// ([RecordFormFrame]) tanpa meneruskannya lewat tiap formulir. Tidak ada di
+/// lembar sunting transaksi, jadi mikrofon hanya tampil saat mencatat baru.
+class RecordVoiceAction extends InheritedWidget {
+  /// Membuat [RecordVoiceAction].
+  const RecordVoiceAction({required this.onVoice, required super.child, super.key});
+
+  /// Menutup lembar dan membuka Catat pakai suara.
+  final VoidCallback onVoice;
+
+  /// Tindakan suara terdekat, atau `null`.
+  static VoidCallback? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<RecordVoiceAction>()?.onVoice;
+
+  @override
+  bool updateShouldNotify(RecordVoiceAction oldWidget) => false;
 }

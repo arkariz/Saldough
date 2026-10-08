@@ -364,4 +364,107 @@ void main() {
       c.onBrand,
     );
   });
+
+  group('AppNavBar', () {
+    Widget bar({
+      required ValueChanged<int> onSelected,
+      required VoidCallback onRecord,
+      VoidCallback? onLong,
+      int selected = 0,
+    }) => AppNavBar(
+      destinations: const [
+        (icon: IconKey.home, label: 'Beranda'),
+        (icon: IconKey.transactions, label: 'Riwayat'),
+        (icon: IconKey.budget, label: 'Rencana'),
+        (icon: IconKey.wallets, label: 'Dompet'),
+      ],
+      selectedIndex: selected,
+      onSelected: onSelected,
+      recordLabel: 'Catat',
+      onRecord: onRecord,
+      onRecordLongPress: onLong,
+    );
+
+    testWidgets('ketuk tujuan, ketuk Catat, dan tekan lama Catat (suara)', (
+      tester,
+    ) async {
+      int? picked;
+      var records = 0;
+      var voices = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: PixelTheme.light,
+          home: Scaffold(
+            bottomNavigationBar: bar(
+              onSelected: (i) => picked = i,
+              onRecord: () => records++,
+              onLong: () => voices++,
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Rencana'));
+      expect(picked, 2);
+      await tester.tap(find.byKey(const ValueKey('nav-catat')));
+      expect(records, 1);
+      await tester.longPress(find.byKey(const ValueKey('nav-catat')));
+      expect(voices, 1);
+      expect(records, 1);
+    });
+
+    testWidgets(
+      'tujuan aktif: pil brandSoft dan ikon terisi; Catat brand bersudut piksel',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: PixelTheme.light,
+            home: Scaffold(
+              bottomNavigationBar: bar(
+                onSelected: (_) {},
+                onRecord: () {},
+                selected: 1,
+              ),
+            ),
+          ),
+        );
+        final pill = tester.widget<AnimatedContainer>(
+          find.ancestor(
+            of: find.byWidgetPredicate(
+              (w) => w is AppIcon && w.iconKey == IconKey.transactions,
+            ),
+            matching: find.byType(AnimatedContainer),
+          ),
+        );
+        expect((pill.decoration! as ShapeDecoration).color, c.brandSoft);
+        expect(
+          tester
+              .widget<AppIcon>(
+                find.byWidgetPredicate(
+                  (w) => w is AppIcon && w.iconKey == IconKey.transactions,
+                ),
+              )
+              .fill,
+          isTrue,
+        );
+        expect(
+          tester
+              .widget<AppIcon>(
+                find.byWidgetPredicate(
+                  (w) => w is AppIcon && w.iconKey == IconKey.home,
+                ),
+              )
+              .fill,
+          isFalse,
+        );
+        expect(
+          tester.getSemantics(find.text('Riwayat')),
+          isSemantics(isSelected: true, isButton: true),
+        );
+        expect(
+          tester.getSize(find.byKey(const ValueKey('nav-catat'))).height,
+          greaterThanOrEqualTo(AppSize.catat),
+        );
+      },
+    );
+  });
 }

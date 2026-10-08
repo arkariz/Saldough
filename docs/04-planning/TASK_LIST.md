@@ -2344,7 +2344,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       `radius`, `color` tombol dibuang); tombol hapus memakai
       `AppButton.danger`. Uji lama yang mencari teks kapital label/segmen
       disesuaikan. `flutter analyze` bersih, 1.146 uji lulus.
-- [ ] **T-14.4** Navigasi bawah: 4 tab + tombol Catat di tengah (kotak
+- [x] **T-14.4** Navigasi bawah: 4 tab + tombol Catat di tengah (kotak
       bersudut piksel, bayangan piksel); tekan lama membuka Catat pakai
       suara; FAB suara dihapus, mikrofon pindah ke bar atas sheet Catat.
       ⚠ Tur spotlight (ADR-021) menyorot FAB lama: pindahkan
@@ -2352,6 +2352,24 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji widget navigasi (pindah tab, ketuk dan tekan lama
       Catat), uji tur.
       Memenuhi FR-REC-001.
+      Hasil (8 Okt 2026): `AppNavBar` (core) — Beranda, Riwayat, [Catat],
+      Rencana, Dompet; pil `brandSoft` 56×32 dengan ikon terisi untuk tab
+      aktif; tombol Catat 56px `brand` bersudut piksel dengan bayangan piksel
+      `brandDeep`, naik di atas bar (bar setinggi bagian yang naik supaya
+      tetap bisa diketuk), label dibatasi 1,3× teks sistem. Tekan lama Catat
+      membuka Catat pakai suara (petunjuk `appShell.recordVoiceHint`). Dua
+      FAB dan `AppSpacing.fabClearance` dihapus; ruang bawah tab jadi
+      `space12`. Urutan tab di shell ikut berubah (Riwayat indeks 1, Rencana
+      2). Mikrofon di bar atas lembar CATAT lewat `RecordVoiceAction`
+      (hanya mencatat baru, bukan sunting): menutup lembar dengan
+      `OpenVoiceCapture`, lalu `openRecordSheet` membuka rute suara. Tur
+      Beranda: `homeRecord` dan `homeVoice` menyorot tombol Catat yang sama;
+      teks `tour.homeVoiceBody` menyebut tekan lama. Label tab tetap
+      **Rencana** (Fase 15), bukan "Anggaran" seperti di prototipe 12 layar.
+      Uji: shell (urutan, posisi tengah, 360dp id/en), `AppNavBar` (ketuk,
+      tekan lama, tab aktif), mikrofon CATAT. `flutter analyze` bersih,
+      1.150 uji lulus. ⚠ Belum dicoba di perangkat: getar/umpan balik tekan
+      lama dan rasa naiknya tombol Catat.
 - [ ] **T-14.5** Sheet Catat sesuai prototipe `Catat.dc.html`: kontrol
       segmen jenis, keypad, pemilih kategori petak ikon, baris Dompet/
       Tanggal/Catatan/Anggaran, "Saldo jadi …" di baris dompet, tombol

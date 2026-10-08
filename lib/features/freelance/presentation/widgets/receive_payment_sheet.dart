@@ -92,13 +92,13 @@ class _ReceivePaymentSheetState extends State<ReceivePaymentSheet> {
                 color: colors.positive,
               ),
               const SizedBox(height: AppSpacing.space4),
-              TransactionSlab(
+              AppCard(
                 color: colors.positive,
                 child: Column(
                   children: [
                     Text(
                       t.freelance.receiveAmountLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.surface),
+                      style: labelSmStyle(context, color: colors.surface),
                     ),
                     const SizedBox(height: 4),
                     FitStart(

@@ -192,9 +192,7 @@ class _DeductionRow extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: TransactionSlab(
-        radius: 4,
-        shadow: 2,
+      child: AppCard(
         child: Row(
           children: [
             Expanded(child: Text(describeDeduction(rule), style: Theme.of(context).textTheme.bodyLarge)),
@@ -279,7 +277,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
                 onChanged: refresh,
               ),
               const SizedBox(height: AppSpacing.space4),
-              AppSegmented<DeductionKind>(
+              AppSegmentedControl<DeductionKind>(
                 options: [
                   (DeductionKind.percentage, t.freelance.deductionKindPercentage),
                   (DeductionKind.fixedAmount, t.freelance.deductionKindFixed),
@@ -291,9 +289,7 @@ class _DeductionFormSheetState extends State<_DeductionFormSheet> {
               if (_kind == DeductionKind.percentage) ...[
                 AppSectionLabel(t.freelance.deductionPercentLabel),
                 const SizedBox(height: AppSpacing.space1),
-                TransactionSlab(
-                  radius: 4,
-                  shadow: 2,
+                AppCard(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
                   child: Row(
                     children: [

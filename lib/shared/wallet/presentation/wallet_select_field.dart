@@ -99,10 +99,10 @@ class WalletSelectField extends StatelessWidget {
                   height: 8,
                   decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
                 ),
-                Text(label, style: transactionLabelStyle(context, color: accent)),
+                Text(label, style: labelSmStyle(context, color: accent)),
                 Text(
                   '($caption)',
-                  style: transactionLabelStyle(context, color: accent).copyWith(fontWeight: FontWeight.w400),
+                  style: labelSmStyle(context, color: accent).copyWith(fontWeight: FontWeight.w400),
                 ),
               ],
             ),
@@ -137,7 +137,7 @@ class WalletSelectField extends StatelessWidget {
               children: [
                 Text(
                   t.record.balanceLabel,
-                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
                 WalletBalancePreview(
                   wallet: selected,
@@ -161,7 +161,7 @@ class WalletSelectField extends StatelessWidget {
               child: FitStart(
                 child: Text(
                   '${previewIsCredit ? '+' : '−'}${AppMoneyFormatter.format(amount)}',
-                  style: transactionLabelStyle(context, color: accent),
+                  style: labelSmStyle(context, color: accent),
                 ),
               ),
             ),

@@ -46,7 +46,7 @@ class LanguageSettingEntry extends StatelessWidget {
         key: const ValueKey('language-setting'),
         label: t.language.label,
         onTap: () => _choose(context),
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               Expanded(

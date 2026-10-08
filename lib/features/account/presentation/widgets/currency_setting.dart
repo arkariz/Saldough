@@ -78,7 +78,7 @@ class CurrencySettingSection extends StatelessWidget {
             key: const ValueKey('currency-setting'),
             label: t.currency.label,
             onTap: () => _choose(context),
-            child: AppHardCard(
+            child: AppCard(
               child: Row(
                 children: [
                   Expanded(

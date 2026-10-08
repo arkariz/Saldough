@@ -99,7 +99,7 @@ class RecurringSegmentView extends StatelessWidget {
             child: ListView(
               padding: padding,
               children: [
-                AppHardCard(
+                AppCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -194,7 +194,7 @@ class RecurringSegmentView extends StatelessWidget {
                       (RecurringKind.expense, t.recurring.chipExpense),
                       (RecurringKind.transfer, t.recurring.chipTransfer),
                     ]) ...[
-                      AppChoiceChip(
+                      AppChip(
                         label: label,
                         selected: filter == kind,
                         onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
@@ -305,7 +305,7 @@ class _IdleCard extends StatelessWidget {
     final bloc = context.read<RecurringBloc>();
     final textTheme = Theme.of(context).textTheme;
     final name = rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note;
-    return AppHardCard(
+    return AppCard(
       key: ValueKey('recurring-idle-${rule.id}'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -357,7 +357,7 @@ class _SuggestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<RecurringBloc>();
     final textTheme = Theme.of(context).textTheme;
-    return AppHardCard(
+    return AppCard(
       key: const ValueKey('recurring-suggestions'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -412,7 +412,7 @@ class _AutoRecordedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<RecurringBloc>();
     final textTheme = Theme.of(context).textTheme;
-    return AppHardCard(
+    return AppCard(
       key: const ValueKey('recurring-auto-recorded'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

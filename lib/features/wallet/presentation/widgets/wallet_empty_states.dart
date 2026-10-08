@@ -16,7 +16,7 @@ class WalletEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return TransactionSlab(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
@@ -28,7 +28,7 @@ class WalletEmptyState extends StatelessWidget {
             ),
             child: Text(
               t.wallet.emptyBadge.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.warning),
+              style: labelSmStyle(context, color: colors.warning),
             ),
           ),
           const SizedBox(height: AppSpacing.space6),

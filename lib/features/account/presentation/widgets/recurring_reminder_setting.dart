@@ -20,7 +20,7 @@ class RecurringReminderSettingEntry extends StatelessWidget {
         key: const ValueKey('recurring-reminder-setting'),
         label: t.recurring.remindersTitle,
         onTap: () => context.pushRoute(RecurringRouteKeys.reminders, const EmptyInput()),
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               Expanded(

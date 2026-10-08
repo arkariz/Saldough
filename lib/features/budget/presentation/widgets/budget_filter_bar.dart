@@ -73,7 +73,7 @@ class BudgetFilterBar extends StatelessWidget {
               // anggaran nonaktif tetap terlihat di Semua.
               for (final filter in _shown) ...[
                 if (filter != _shown.first) const SizedBox(width: AppSpacing.space1),
-                AppChoiceChip(
+                AppChip(
                   label: _label(filter),
                   selected: statusFilter == filter,
                   onTap: () => onStatusChanged(filter),

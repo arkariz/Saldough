@@ -113,14 +113,14 @@ class _MonthStartCard extends StatelessWidget {
         : state.range.label;
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.space4),
-      child: AppHardCard(
+      child: AppCard(
         key: const ValueKey('home-month-start'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               t.plan.reviewTitle(month: month).toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: AppSpacing.space1),
             Text(

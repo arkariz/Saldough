@@ -52,11 +52,10 @@ class OnboardingSlide extends StatelessWidget {
           Flexible(
             flex: 2,
             child: SingleChildScrollView(
-              child: PixelPop(
+              child: AppFadeIn(
                 play: active,
                 delay: const Duration(milliseconds: 120),
-                alignment: Alignment.bottomCenter,
-                child: AppHardCard(
+                child: AppCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -99,13 +98,12 @@ class OnboardingPageIndicator extends StatelessWidget {
             for (var i = 0; i < count; i++)
               AnimatedContainer(
                 duration: duration,
-                curve: const SteppedCurve(4),
+                curve: Curves.easeOut,
                 margin: const EdgeInsets.symmetric(horizontal: 3),
                 width: i == current ? 28 : 10,
                 height: 10,
                 decoration: BoxDecoration(
                   color: i == current ? colors.brand : colors.surface,
-                  border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
                 ),
               ),
           ],

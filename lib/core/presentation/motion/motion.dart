@@ -2,6 +2,7 @@
 /// meluncur mulus, dan selalu tunduk pada "kurangi gerakan" sistem.
 library;
 
+export 'app_fade_in.dart';
 export 'motion_policy.dart';
 export 'pixel_bob.dart';
 export 'pixel_pop.dart';

@@ -79,15 +79,14 @@ class BudgetBadge extends StatelessWidget {
       decoration: BoxDecoration(color: background ?? colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Text(
         label.toUpperCase(),
-        style: transactionLabelStyle(context, size: 9, color: color ?? colors.ink2),
+        style: labelSmStyle(context, size: 9, color: color ?? colors.ink2),
       ),
     );
   }
 }
 
-/// [AppSegmentedProgressBar] selebar induknya: lebar segmen dihitung dari
-/// ruang yang tersedia, bukan tetap 8px, supaya bilah mengisi kartu seperti
-/// rujukan visual.
+/// [AppProgressBar] anggaran selebar induknya; [height] 6 atau kurang memakai
+/// varian tipis (baris pos).
 class BudgetProgressBar extends StatelessWidget {
   /// Membuat [BudgetProgressBar] untuk rasio [value].
   const BudgetProgressBar({required this.value, this.height = 10, super.key});
@@ -100,18 +99,6 @@ class BudgetProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const count = 10;
-        const gap = 3.0;
-        final width = (constraints.maxWidth - gap * (count - 1)) / count;
-        return AppSegmentedProgressBar(
-          value: value,
-          segmentWidth: width,
-          segmentHeight: height,
-          gap: gap,
-        );
-      },
-    );
+    return AppProgressBar(value: value, thin: height <= 6);
   }
 }

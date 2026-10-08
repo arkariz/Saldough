@@ -197,7 +197,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               const SizedBox(height: AppSpacing.space6),
               AppSectionLabel(texts.patternMarkLabel),
               const SizedBox(height: AppSpacing.space1),
-              AppSegmented<TemplateWordRole>(
+              AppSegmentedControl<TemplateWordRole>(
                 key: const ValueKey('pattern-brush'),
                 options: [
                   (TemplateWordRole.amount, texts.roleAmount),
@@ -227,9 +227,8 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             if (_template.text.trim().isNotEmpty && !_canSave)
               Text(texts.patternInvalid, style: textTheme.bodySmall?.copyWith(color: colors.danger))
             else if (preview != null)
-              AppHardCard(
+              AppCard(
                 key: const ValueKey('pattern-preview'),
-                elevation: AppHardElevation.flat,
                 color: Color.alphaBlend(colors.positive.withValues(alpha: 0.12), colors.surface),
                 child: Text(
                   [
@@ -263,7 +262,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             const SizedBox(height: AppSpacing.space6),
             AppSectionLabel(texts.patternKindLabel),
             const SizedBox(height: AppSpacing.space1),
-            AppSegmented<_KindChoice>(
+            AppSegmentedControl<_KindChoice>(
               key: const ValueKey('pattern-kind'),
               options: [
                 (_KindChoice.expense, texts.kindExpense),
@@ -277,7 +276,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
             if (_isTransfer) ...[
               AppSectionLabel(texts.transferDirectionLabel),
               const SizedBox(height: AppSpacing.space1),
-              AppSegmented<NotificationPatternKind>(
+              AppSegmentedControl<NotificationPatternKind>(
                 options: [
                   (NotificationPatternKind.transferOut, texts.kindExpense),
                   (NotificationPatternKind.transferIn, texts.kindIncome),

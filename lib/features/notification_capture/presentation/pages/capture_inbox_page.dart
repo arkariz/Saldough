@@ -174,7 +174,7 @@ class _PendingCard extends StatelessWidget {
     final note = entry.draft.note.trim();
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-      child: AppHardCard(
+      child: AppCard(
         padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -312,7 +312,7 @@ class _AutoCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-      child: AppHardCard(
+      child: AppCard(
         padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

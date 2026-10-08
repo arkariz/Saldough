@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/kind_surfaces.dart';
+import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Sub-tab navigasi di bawah app bar (PLAN_TAB_LAYOUT §3.2, KT-L7): lebar
@@ -7,7 +7,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// `accent` 4px di bawahnya, label lain `textMuted`, tanpa slab dan tanpa
 /// bayangan.
 ///
-/// Rupa ini sengaja berbeda dari `AppSegmented` (pilih nilai di formulir)
+/// Rupa ini sengaja berbeda dari `AppSegmentedControl` (pilih nilai di formulir)
 /// dan chip penyaring, supaya "pindah tempat" tidak tertukar dengan "pilih"
 /// atau "saring". Pindah hanya lewat ketukan; tidak ada geser (§3.3).
 class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
@@ -54,7 +54,7 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
                           child: Text(
                             label.toUpperCase(),
                             maxLines: 1,
-                            style: transactionLabelStyle(
+                            style: labelSmStyle(
                               context,
                               color: value == selected ? colors.ink : colors.ink2,
                             ).copyWith(fontSize: 12),

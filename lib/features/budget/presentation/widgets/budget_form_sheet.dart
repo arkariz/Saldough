@@ -351,7 +351,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                   title: _editing ? t.budget.editTitle : t.budget.addTitle,
                 ),
                 const SizedBox(height: AppSpacing.space4),
-                TransactionSlab(
+                AppCard(
                   color: colors.surface2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,7 +382,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                 const SizedBox(height: AppSpacing.space2),
                 AppSectionLabel(t.budget.periodLabel),
                 const SizedBox(height: AppSpacing.space1),
-                AppSegmented<BudgetPeriod>(
+                AppSegmentedControl<BudgetPeriod>(
                   options: [
                     (BudgetPeriod.monthly, t.budget.periodMonthly),
                     (BudgetPeriod.weekly, t.budget.periodWeekly),
@@ -397,9 +397,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                   child: GestureDetector(
                     onTap: _pickStartDate,
                     behavior: HitTestBehavior.opaque,
-                    child: TransactionSlab(
-                      radius: 4,
-                      shadow: 2,
+                    child: AppCard(
                       child: Row(
                         children: [
                           const AppIcon(IconKey.calendar),
@@ -410,7 +408,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
                               children: [
                                 Text(
                                   t.budget.startDateLabel.toUpperCase(),
-                                  style: transactionLabelStyle(context, color: colors.ink2),
+                                  style: labelSmStyle(context, color: colors.ink2),
                                 ),
                                 Text(CycleMonthFormatter.formatDate(_startDate), style: textTheme.titleMedium),
                               ],
@@ -517,9 +515,7 @@ class _RepeatSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return TransactionSlab(
-      radius: 4,
-      shadow: 2,
+    return AppCard(
       child: Row(
         children: [
           const AppIcon(IconKey.calendar),
@@ -581,7 +577,7 @@ class _WalletChoice extends StatelessWidget {
                     Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
                     Text(
                       t.budget.walletBalance(amount: AppMoneyFormatter.format(wallet.currentBalance)),
-                      style: transactionLabelStyle(
+                      style: labelSmStyle(
                         context,
                         color: colors.ink2,
                       ).copyWith(fontWeight: FontWeight.w400),
@@ -621,9 +617,7 @@ class BudgetItemRow extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: TransactionSlab(
-          radius: 4,
-          shadow: 2,
+        child: AppCard(
           child: Row(
             children: [
               Expanded(
@@ -644,7 +638,7 @@ class BudgetItemRow extends StatelessWidget {
                           quantity: item.quantity!,
                           price: AppMoneyFormatter.format(item.unitPrice!),
                         ),
-                        style: transactionLabelStyle(
+                        style: labelSmStyle(
                           context,
                           color: colors.ink2,
                         ).copyWith(fontWeight: FontWeight.w400),
@@ -681,14 +675,14 @@ class _PlannedTotalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             t.budget.totalPlannedLabel.toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.ink2),
+            style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: 2),
           FitStart(
@@ -708,12 +702,12 @@ class _PlannedTotalCard extends StatelessWidget {
               children: [
                 Text(
                   t.budget.itemCount(count: itemCount),
-                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                 ),
                 if (walletName != null)
                   Text(
                     t.budget.walletUnchangedNote(wallet: walletName!),
-                    style: transactionLabelStyle(
+                    style: labelSmStyle(
                       context,
                       color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),

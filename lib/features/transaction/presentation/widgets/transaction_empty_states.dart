@@ -30,7 +30,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        TransactionSlab(
+        AppCard(
           padding: const EdgeInsets.all(AppSpacing.space6),
           child: Column(
             children: [
@@ -58,7 +58,7 @@ class TransactionEmptyMonthState extends StatelessWidget {
                     Flexible(
                       child: Text(
                         t.transaction.emptyMonthBadge.toUpperCase(),
-                        style: transactionLabelStyle(
+                        style: labelSmStyle(
                           context,
                           color: colors.warning,
                         ),
@@ -107,9 +107,8 @@ class TransactionEmptyMonthState extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.space4),
-        TransactionSlab(
+        AppCard(
           color: colors.surface2,
-          shadow: 0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -186,9 +185,7 @@ class _GuideRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
-      radius: 4,
-      shadow: 0,
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +198,7 @@ class _GuideRow extends StatelessWidget {
               children: [
                 Text(
                   title.toUpperCase(),
-                  style: transactionLabelStyle(context, color: color),
+                  style: labelSmStyle(context, color: color),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -359,7 +356,7 @@ class TransactionCrossMonthSearchSection extends StatelessWidget {
         children: [
           Text(
             t.transaction.crossMonthResultsHeader.toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.ink2),
+            style: labelSmStyle(context, color: colors.ink2),
           ),
           const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[

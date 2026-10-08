@@ -29,7 +29,7 @@ class FreelanceBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(color: colors.tinted(color, 0.18), borderRadius: BorderRadius.circular(4)),
-      child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: color)),
+      child: Text(label.toUpperCase(), style: labelSmStyle(context, color: color)),
     );
   }
 }
@@ -62,11 +62,11 @@ class FreelanceSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final ratio = summary.earned == 0 ? 0.0 : summary.paid / summary.earned;
-    return TransactionSlab(
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(t.freelance.summaryTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+          Text(t.freelance.summaryTitle.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
           const SizedBox(height: AppSpacing.space2),
           IntrinsicHeight(
             child: Row(
@@ -125,7 +125,7 @@ class FreelanceSummaryCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               t.freelance.paidRatio(percent: (ratio * 100).round()),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
           ],
           if (payments.pendingCount > 0) ...[
@@ -184,7 +184,7 @@ class _Tile extends StatelessWidget {
               AppIcon(icon, size: 18),
               const SizedBox(width: 4),
               Expanded(
-                child: Text(label.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+                child: Text(label.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
               ),
             ],
           ),
@@ -249,7 +249,7 @@ class WorklogEntryCard extends StatelessWidget {
     };
     return AppTappable(
       onTap: onTap,
-      child: TransactionSlab(
+      child: AppCard(
         padding: const EdgeInsets.all(AppSpacing.space2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -358,8 +358,7 @@ class FreelancePaymentCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final paid = payment.isPaid;
-    return TransactionSlab(
-      shadowColor: paid ? colors.positive : colors.warning,
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -208,9 +208,9 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.record.kindExpense.toUpperCase()), findsOneWidget);
-      expect(find.text(t.record.kindIncome.toUpperCase()), findsOneWidget);
-      expect(find.text(t.record.kindTransfer.toUpperCase()), findsOneWidget);
+      expect(find.text(t.record.kindExpense), findsOneWidget);
+      expect(find.text(t.record.kindIncome), findsOneWidget);
+      expect(find.text(t.record.kindTransfer), findsOneWidget);
 
       // Tab yang aktif di baliknya tetap Beranda (tab awal), bukan CATAT --
       // CATAT tidak pernah jadi tab "terpilih" yang persisten.
@@ -237,7 +237,7 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+      await tester.tap(find.text(t.record.kindIncome));
       await tester.pumpAndSettle();
 
       expect(find.text(t.record.toWalletFieldLabel), findsOneWidget);
@@ -330,7 +330,7 @@ void main() {
 
         await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
         await tester.pumpAndSettle();
-        await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+        await tester.tap(find.text(t.record.kindIncome));
         await tester.pumpAndSettle();
 
         await tester.enterText(find.byType(TextField).first, '75000');
@@ -372,11 +372,11 @@ void main() {
       expect(find.byType(RecordFormHost), findsOneWidget);
       expect(find.text(t.record.amountLabelExpense.toUpperCase()), findsOneWidget);
 
-      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+      await tester.tap(find.text(t.record.kindIncome));
       await tester.pumpAndSettle();
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsOneWidget);
 
-      await tester.tap(find.text(t.record.kindTransfer.toUpperCase()));
+      await tester.tap(find.text(t.record.kindTransfer));
       await tester.pumpAndSettle();
       expect(find.text(t.record.amountLabelIncome.toUpperCase()), findsNothing);
       expect(find.text(t.record.transferAction), findsWidgets);
@@ -531,7 +531,7 @@ void main() {
       // Pengeluaran sudah dikenal: tidak ada tur.
       expect(find.text(t.tour.recordKindTitle), findsNothing);
 
-      await tester.tap(find.text(t.record.kindIncome.toUpperCase()));
+      await tester.tap(find.text(t.record.kindIncome));
       await tester.pumpAndSettle();
 
       expect(step(1, 1, t.tour.recordFreelanceTitle, t.tour.recordFreelanceBody), findsOneWidget);

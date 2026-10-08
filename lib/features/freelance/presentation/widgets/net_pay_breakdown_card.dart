@@ -41,9 +41,8 @@ class NetPayBreakdownCard extends StatelessWidget {
         ],
       ),
     );
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
-      shadow: 2,
       child: Column(
         children: [
           row(t.freelance.grossPayLabel, AppMoneyFormatter.format(breakdown.grossPay)),

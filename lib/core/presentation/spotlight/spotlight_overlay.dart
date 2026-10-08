@@ -53,7 +53,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
   int _shownIndex = -1;
   bool _completing = false;
 
-  static const _moveCurve = SteppedCurve(6, curve: Curves.easeInOut);
+  static const Curve _moveCurve = Curves.easeInOut;
 
   @override
   void initState() {
@@ -118,7 +118,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
           targetContext,
           alignment: 0.3,
           duration: reduced ? Duration.zero : const Duration(milliseconds: 240),
-          curve: const SteppedCurve(6),
+          curve: Curves.easeOut,
         ).then((_) => _remeasure()),
       );
     }
@@ -231,9 +231,8 @@ class _Bubble extends StatelessWidget {
     final current = controller.index + 1;
     final total = controller.steps.length;
     final textTheme = Theme.of(context).textTheme;
-    return PixelPop(
+    return AppFadeIn(
       key: ValueKey(controller.index),
-      duration: const Duration(milliseconds: 280),
       child: Semantics(
         container: true,
         scopesRoute: true,
@@ -242,12 +241,7 @@ class _Bubble extends StatelessWidget {
         label: t.tour.stepSemantics(current: current, total: total, title: step.title, body: step.body),
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.space2 + AppSpacing.space1),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: AppRadius.pixelSmAll,
-            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.lineStrong),
-          ),
+          decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder()),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -316,7 +310,6 @@ class _MascotAvatar extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         color: colors.surface2,
-        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
       ),
       child: ClipRect(
         child: PixelBob(
@@ -361,7 +354,7 @@ class _StepBlocks extends StatelessWidget {
         const SizedBox(width: AppSpacing.space1),
         Text(
           t.tour.stepCounter(current: current, total: total),
-          style: transactionLabelStyle(context, color: colors.ink2),
+          style: labelSmStyle(context, color: colors.ink2),
         ),
       ],
     );
@@ -378,15 +371,13 @@ class _DoneBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Center(
-      child: PixelPop(
+      child: AppFadeIn(
         child: Container(
           width: 72,
           height: 72,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: colors.surface,
-            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.lineStrong),
           ),
           // Aksen, bukan hijau bawaan ikonnya: hijau milik uang masuk (ADR-016).
           child: ColorFiltered(
@@ -478,7 +469,7 @@ class _ScrimPainter extends CustomPainter {
       canvas.drawRect(screen, Paint()..color = scrim);
       return;
     }
-    final rrect = RRect.fromRectAndRadius(hole.inflate(_inflate), const Radius.circular(AppRadius.pixelSm));
+    final rrect = RRect.fromRectAndRadius(hole.inflate(_inflate), const Radius.circular(AppSize.pixelStep));
     final path = Path()
       ..fillType = PathFillType.evenOdd
       ..addRect(screen)
@@ -490,7 +481,7 @@ class _ScrimPainter extends CustomPainter {
         Paint()
           ..color = border
           ..style = PaintingStyle.stroke
-          ..strokeWidth = AppBorder.pixelThick * 1.5,
+          ..strokeWidth = 3,
       );
 
     // Ekor tiga anak tangga dari bingkai ke arah gelembung.
@@ -499,7 +490,7 @@ class _ScrimPainter extends CustomPainter {
     final outline = Paint()
       ..color = edge
       ..style = PaintingStyle.stroke
-      ..strokeWidth = AppBorder.pixelThick;
+      ..strokeWidth = 2;
     for (var i = 0; i < 3; i++) {
       final width = 6.0 + i * 6;
       final y = below ? rrect.bottom + 2 + i * 4 : rrect.top - 6 - i * 4;

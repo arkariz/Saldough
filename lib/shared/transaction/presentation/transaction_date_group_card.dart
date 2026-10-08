@@ -92,7 +92,7 @@ class TransactionDateGroupCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           date,
-                          style: transactionLabelStyle(
+                          style: labelSmStyle(
                             context,
                             color: colors.ink2,
                           ).copyWith(fontWeight: FontWeight.w400),
@@ -104,7 +104,7 @@ class TransactionDateGroupCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
                   decoration: BoxDecoration(color: chipFill, borderRadius: BorderRadius.circular(4)),
-                  child: Text(netText, style: transactionLabelStyle(context, color: chipText)),
+                  child: Text(netText, style: labelSmStyle(context, color: chipText)),
                 ),
               ],
             ),
@@ -207,7 +207,7 @@ class TransactionRow extends StatelessWidget {
     final ink = colors.kindInk(kind);
 
     final background = colors.tinted(tint, 0.07);
-    final card = TransactionSlab(
+    final card = AppCard(
       color: background,
       padding: EdgeInsets.zero,
       child: ClipRRect(

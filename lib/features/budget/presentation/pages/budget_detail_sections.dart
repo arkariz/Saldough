@@ -10,7 +10,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
@@ -27,7 +27,7 @@ class _TopBar extends StatelessWidget {
                     const SizedBox(width: AppSpacing.space1),
                     Text(
                       t.budget.detailBackLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.ink),
+                      style: labelSmStyle(context, color: colors.ink),
                     ),
                   ],
                 ),
@@ -74,7 +74,7 @@ class _HeroCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final overspent = progress.spendingStatus == BudgetItemStatus.overspent;
-    return TransactionSlab(
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -150,12 +150,12 @@ class _HeroCard extends StatelessWidget {
                   t.budget
                       .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
                       .toUpperCase(),
-                  style: transactionLabelStyle(context, color: colors.ink2),
+                  style: labelSmStyle(context, color: colors.ink2),
                 ),
               ),
               Text(
                 budgetItemStatusLabel(progress.spendingStatus).toUpperCase(),
-                style: transactionLabelStyle(context, color: budgetItemStatusColor(context, progress.spendingStatus)),
+                style: labelSmStyle(context, color: budgetItemStatusColor(context, progress.spendingStatus)),
               ),
             ],
           ),
@@ -167,7 +167,7 @@ class _HeroCard extends StatelessWidget {
           // dengan fraksi periode yang sudah berlalu.
           Text(
             t.budget.paceLabel(percent: (budget.elapsedRatio(DateTime.now()) * 100).round()).toUpperCase(),
-            style: transactionLabelStyle(context, color: colors.ink2),
+            style: labelSmStyle(context, color: colors.ink2),
           ),
         ],
       ),
@@ -190,7 +190,7 @@ class _Stat extends StatelessWidget {
       decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
       child: Column(
         children: [
-          Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.ink2)),
+          Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: colors.ink2)),
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -233,7 +233,7 @@ class _ItemCard extends StatelessWidget {
     final overspent = progress.status == BudgetItemStatus.overspent;
     return SpotlightTarget(
       spotlightKey: spotlighted ? SpotlightKey.budgetDetailItem : null,
-      child: TransactionSlab(
+      child: AppCard(
         color: overspent ? colors.tinted(colors.danger, 0.08) : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,12 +295,11 @@ class _ItemCard extends StatelessWidget {
                 child: SpotlightTarget(
                   spotlightKey: spotlighted ? SpotlightKey.budgetDetailRecord : null,
                   child: item.isTransfer
-                      ? AppQuickChip(
+                      ? AppChip(
                           label: t.budget.detailRecordTransferAction,
-                          color: colors.tinted(colors.info, 0.2),
                           onTap: record,
                         )
-                      : AppQuickChip(label: t.budget.detailRecordExpenseAction, onTap: record),
+                      : AppChip(label: t.budget.detailRecordExpenseAction, onTap: record),
                 ),
               ),
             ],
@@ -347,7 +346,7 @@ class _HowItWorks extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

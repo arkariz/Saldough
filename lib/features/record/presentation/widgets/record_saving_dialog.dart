@@ -44,7 +44,7 @@ class RecordSavingDialog extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          child: AppHardCard(
+          child: AppCard(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

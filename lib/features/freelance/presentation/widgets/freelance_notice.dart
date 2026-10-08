@@ -22,9 +22,8 @@ class FreelanceNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final ink = color ?? colors.warning;
-    return TransactionSlab(
+    return AppCard(
       color: colors.tinted(ink, 0.1),
-      shadow: 0,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,7 +33,7 @@ class FreelanceNotice extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title.toUpperCase(), style: transactionLabelStyle(context, color: ink)),
+                Text(title.toUpperCase(), style: labelSmStyle(context, color: ink)),
                 const SizedBox(height: 2),
                 Text(body, style: Theme.of(context).textTheme.bodyMedium),
               ],

@@ -234,8 +234,6 @@ class _Tile extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: colors.surface,
-        border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-        boxShadow: AppElevation.hardShadow(colors.lineStrong, offset: AppElevation.pixelCard),
       ),
       child: tint == null
           ? AppIcon(icon, size: size * 0.55)
@@ -260,7 +258,6 @@ class _Token extends StatelessWidget {
       height: 12,
       decoration: BoxDecoration(
         color: color,
-        border: Border.all(color: context.appColors.lineStrong, width: AppBorder.pixelThick),
       ),
     );
   }
@@ -431,8 +428,6 @@ class _SegmentFill extends StatelessWidget {
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             color: colors.surface,
-            border: Border.all(color: colors.lineStrong, width: AppBorder.pixelThick),
-            boxShadow: AppElevation.hardShadow(colors.lineStrong, offset: AppElevation.pixelCard),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

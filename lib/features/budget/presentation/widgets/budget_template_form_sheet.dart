@@ -149,7 +149,7 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
                 title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
               ),
               const SizedBox(height: AppSpacing.space4),
-              TransactionSlab(
+              AppCard(
                 color: colors.surface2,
                 child: Text(t.budget.templateRuleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ),
@@ -177,14 +177,14 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
               ],
               AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
               const SizedBox(height: AppSpacing.space4),
-              TransactionSlab(
+              AppCard(
                 color: colors.surface2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       t.budget.templateTotalLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.ink2),
+                      style: labelSmStyle(context, color: colors.ink2),
                     ),
                     FitStart(
                       child: Text(
@@ -199,9 +199,7 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
               ),
               if (_editing) ...[
                 const SizedBox(height: AppSpacing.space4),
-                TransactionSlab(
-                  radius: 4,
-                  shadow: 2,
+                AppCard(
                   child: Row(
                     children: [
                       Expanded(

@@ -59,20 +59,18 @@ class RecurringStarterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     return Wrap(
       spacing: AppSpacing.space1,
       runSpacing: AppSpacing.space1,
       children: [
         for (final starter in RecurringStarter.values)
           if (existingNames.contains(labelOf(starter).toLowerCase()))
-            AppQuickChip(
+            AppChip(
               label: '✓ ${labelOf(starter)}',
-              color: colors.tinted(colors.positive, 0.2),
               onTap: () => context.pushRoute(RecordRouteKeys.sheet, inputFor(starter, now())),
             )
           else
-            AppQuickChip(
+            AppChip(
               label: labelOf(starter),
               onTap: () => context.pushRoute(RecordRouteKeys.sheet, inputFor(starter, now())),
             ),

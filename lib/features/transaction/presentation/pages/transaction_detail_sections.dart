@@ -14,7 +14,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
@@ -29,7 +29,7 @@ class _TopBar extends StatelessWidget {
                   const SizedBox(width: AppSpacing.space1),
                   Text(
                     t.transaction.detailBackLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.ink),
+                    style: labelSmStyle(context, color: colors.ink),
                   ),
                 ],
               ),
@@ -129,7 +129,7 @@ class _HeroCard extends StatelessWidget {
     final ink = colors.kindInk(kind);
     final textTheme = Theme.of(context).textTheme;
 
-    return TransactionSlab(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
@@ -142,7 +142,7 @@ class _HeroCard extends StatelessWidget {
               color: colors.tinted(colors.kindFill(kind), 0.16),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(badge.toUpperCase(), style: transactionLabelStyle(context, color: ink)),
+            child: Text(badge.toUpperCase(), style: labelSmStyle(context, color: ink)),
           ),
           const SizedBox(height: AppSpacing.space4),
           FittedBox(
@@ -164,7 +164,7 @@ class _HeroCard extends StatelessWidget {
               Flexible(
                 child: Text(
                   '${CycleMonthFormatter.formatDateWithWeekday(transaction.date)} • ${transactionTime(transaction.date)}',
-                  style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -206,8 +206,7 @@ class _DetailsCard extends StatelessWidget {
     };
     final category = ActiveCategories.byId(tx.categoryId);
 
-    return TransactionSlab(
-      shadow: 0,
+    return AppCard(
       color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -247,7 +246,7 @@ class _DetailsCard extends StatelessWidget {
             const _Gap(),
             Text(
               t.transaction.detailNoteLabel.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: AppSpacing.space1),
             Container(
@@ -291,7 +290,7 @@ class _BudgetRow extends StatelessWidget {
                 children: [
                   Text(
                     t.transaction.budgetLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.ink2),
+                    style: labelSmStyle(context, color: colors.ink2),
                   ),
                   const SizedBox(height: 2),
                   Row(
@@ -305,7 +304,7 @@ class _BudgetRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       t.transaction.openBudgetAction.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.brand),
+                      style: labelSmStyle(context, color: colors.brand),
                     ),
                   ],
                 ],
@@ -375,7 +374,7 @@ class _CategoryChip extends StatelessWidget {
           AppIcon(categoryIcon(category), size: 18),
           const SizedBox(width: AppSpacing.space1),
           Flexible(
-            child: Text(category.name, style: transactionLabelStyle(context, color: colors.ink)),
+            child: Text(category.name, style: labelSmStyle(context, color: colors.ink)),
           ),
         ],
       ),
@@ -412,7 +411,7 @@ class _WalletRow extends StatelessWidget {
           if (wallet != null)
             Text(
               '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
-              style: transactionLabelStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
+              style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
             ),
         ],
       ),
@@ -485,12 +484,12 @@ class _PairCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: transactionLabelStyle(context, size: 9, color: colors.ink2)),
+                Text(label.toUpperCase(), style: labelSmStyle(context, size: 9, color: colors.ink2)),
                 Text(wallet?.name ?? '—', style: _valueStyle(context)),
                 if (wallet != null)
                   Text(
                     '${t.transaction.detailCurrentBalance}: ${AppMoneyFormatter.format(wallet.currentBalance)}',
-                    style: transactionLabelStyle(
+                    style: labelSmStyle(
                       context,
                       color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),
@@ -500,7 +499,7 @@ class _PairCard extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
-                  child: Text(delta, style: transactionLabelStyle(context, size: 13, color: deltaColor)),
+                  child: Text(delta, style: labelSmStyle(context, size: 13, color: deltaColor)),
                 ),
               ],
             ),
@@ -521,8 +520,7 @@ class _ManualNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
-      shadow: 0,
+    return AppCard(
       color: colors.surface2,
       padding: const EdgeInsets.all(AppSpacing.space2),
       child: Row(
@@ -564,7 +562,7 @@ class _DeleteLink extends StatelessWidget {
               child: Text(
                 t.transaction.deleteAction.toUpperCase(),
                 textAlign: TextAlign.center,
-                style: transactionLabelStyle(context, color: colors.ink),
+                style: labelSmStyle(context, color: colors.ink),
               ),
             ),
           ],

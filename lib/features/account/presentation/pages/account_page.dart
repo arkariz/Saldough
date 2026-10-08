@@ -102,7 +102,7 @@ class _SignedOutState extends State<_SignedOut> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppHardCard(
+        AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -207,7 +207,7 @@ class _SignedIn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppHardCard(
+        AppCard(
           child: Row(
             children: [
               AccountAvatar(user: user, size: 56),

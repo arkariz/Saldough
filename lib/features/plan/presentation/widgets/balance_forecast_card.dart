@@ -139,21 +139,21 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.plan.balanceTitle.toUpperCase(), style: transactionLabelStyle(context, color: colors.ink2)),
+            Text(t.plan.balanceTitle.toUpperCase(), style: labelSmStyle(context, color: colors.ink2)),
             if (widget.wallets.length > 1) ...[
               const SizedBox(height: AppSpacing.space1),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    AppChoiceChip(
+                    AppChip(
                       label: t.plan.allWallets,
                       selected: widget.walletId == null,
                       onTap: () => widget.onWalletChanged(null),
                     ),
                     for (final wallet in widget.wallets) ...[
                       const SizedBox(width: AppSpacing.space1),
-                      AppChoiceChip(
+                      AppChip(
                         label: wallet.name,
                         selected: widget.walletId == wallet.id,
                         onTap: () => widget.onWalletChanged(wallet.id),

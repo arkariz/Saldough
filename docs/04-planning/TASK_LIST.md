@@ -2308,7 +2308,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       paket membundel tiga berkas huruf variabel (±33 MB sebelum tree
       shaking ikon); periksa ukuran APK rilis sebelum rilis berikutnya.
       `flutter analyze` bersih, 1.143 uji lulus.
-- [ ] **T-14.3** Komponen dasar (design system bagian Komponen).
+- [x] **T-14.3** Komponen dasar (design system bagian Komponen).
       `PixelCornerBorder`, `AppCard`, `AppButton` (primary, secondary, text,
       danger, kecil), `AppChip`, `AppSegmentedControl`, `AppBadge`,
       `AppProgressBar` (kotak 6px + penanda waktu), `AppListRow`,
@@ -2319,6 +2319,31 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji widget tiap komponen (varian, keadaan nonaktif,
       semantik), uji golden opsional.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (8 Okt 2026, dua commit): komponen baru di
+      `lib/core/presentation/widgets/` — `AppCard`/`AppListCard`,
+      `AppButton` (primary, secondary, text, danger; kecil 36 dengan area
+      sentuh 48, `expand`, `loading`) + `AppIconButton`, `AppChip`,
+      `AppSegmentedControl`, `AppBadge`/`AppTone`, `AppBanner`,
+      `AppProgressBar` (kotak 6px berjarak 2px, penanda waktu, ambang
+      Hampir habis 85%), `AppListRow`, `AppSectionHeader`, `AppMoneyText`
+      (`MoneyKind`/`MoneySize`, minus U+2212), `AppHeroCard` terakota dengan
+      tanuki 96px. Tema snackbar/dialog/sheet di T-14.1; sheet `radius-xl`,
+      dialog hapus Batal + danger, skeleton 1,4 detik dan hormat kurangi
+      gerakan. Dihapus: `AppHardCard`, `AppQuickChip`, `AppChoiceChip`,
+      `AppSegmented`, `AppSegmentedProgressBar`, `TransactionSlab`
+      (`kind_surfaces` → `transaction_kind.dart` berisi `TransactionKind`
+      dan `labelSmStyle`), `AppBorder`, `AppElevation`, bingkai dan bayangan
+      keras di seluruh layar, `SteppedCurve`/`PixelPop` di antarmuka
+      (`AppFadeIn` gantinya). Selisih yang disengaja: `AppSectionLabel`
+      tetap, sebagai label kolom formulir (`tk-field__label`) karena memang
+      itu pemakaiannya, bukan judul bagian; animasi maskot di orientasi dan
+      tur (`PixelBob`, `PixelSparkle`, `PixelPop` adegan onboarding)
+      dipertahankan sesuai design system bagian Gerak; kartu ringkasan tab
+      lama jadi `AppSummaryCard` peralihan sampai T-14.6–T-14.9. Pemakai
+      dipindah lewat posisi galat analyzer (argumen `elevation`, `shadow`,
+      `radius`, `color` tombol dibuang); tombol hapus memakai
+      `AppButton.danger`. Uji lama yang mencari teks kapital label/segmen
+      disesuaikan. `flutter analyze` bersih, 1.146 uji lulus.
 - [ ] **T-14.4** Navigasi bawah: 4 tab + tombol Catat di tengah (kotak
       bersudut piksel, bayangan piksel); tekan lama membuka Catat pakai
       suara; FAB suara dihapus, mikrofon pindah ke bar atas sheet Catat.

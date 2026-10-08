@@ -26,7 +26,7 @@ class OnboardingLanguageStep extends StatelessWidget {
       key: const ValueKey('onboarding-language-list'),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       children: [
-        AppHardCard(
+        AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -45,8 +45,7 @@ class OnboardingLanguageStep extends StatelessWidget {
               key: ValueKey('onboarding-language-${locale.languageCode}'),
               label: languageName(locale),
               onTap: () => onSelected(locale),
-              child: AppHardCard(
-                pressed: locale == selected,
+              child: AppCard(
                 color: locale == selected ? colors.tinted(colors.brand, 0.18) : null,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                 child: Row(

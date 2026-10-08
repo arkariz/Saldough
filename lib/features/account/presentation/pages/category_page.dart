@@ -59,7 +59,7 @@ class _CategoryPageState extends State<CategoryPage> {
             return ListView(
               padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
-                AppSegmented<CategoryKind>(
+                AppSegmentedControl<CategoryKind>(
                   options: [
                     (CategoryKind.expense, t.category.expenseTab),
                     (CategoryKind.income, t.category.incomeTab),
@@ -106,7 +106,7 @@ class _CategoryRow extends StatelessWidget {
       child: AppTappable(
         label: category.name,
         onTap: () => _rename(context),
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               AppIcon(categoryIcon(category)),

@@ -12,7 +12,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       padding: const EdgeInsets.all(AppSpacing.space1),
       child: Row(
@@ -27,7 +27,7 @@ class _TopBar extends StatelessWidget {
                   const SizedBox(width: AppSpacing.space1),
                   Text(
                     t.wallet.detailBackLabel.toUpperCase(),
-                    style: transactionLabelStyle(
+                    style: labelSmStyle(
                       context,
                       color: colors.ink,
                     ),
@@ -82,7 +82,7 @@ class _HeroCard extends StatelessWidget {
     final typeLabel = walletTypeLabel(wallet.iconKey);
     return Opacity(
       opacity: wallet.isActive ? 1 : 0.6,
-      child: TransactionSlab(
+      child: AppCard(
         padding: const EdgeInsets.all(AppSpacing.space6),
         child: Column(
           children: [
@@ -116,7 +116,7 @@ class _HeroCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.space4),
             Text(
               t.wallet.currentBalanceLabel.toUpperCase(),
-              style: transactionLabelStyle(context, color: colors.ink2),
+              style: labelSmStyle(context, color: colors.ink2),
             ),
             const SizedBox(height: 4),
             FittedBox(
@@ -205,7 +205,7 @@ class _MonthSummaryRow extends StatelessWidget {
         : change < 0
         ? colors.ink
         : colors.ink;
-    return TransactionSlab(
+    return AppCard(
       color: colors.surface2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -281,7 +281,7 @@ class _SummaryStat extends StatelessWidget {
       children: [
         Text(
           label.toUpperCase(),
-          style: transactionLabelStyle(
+          style: labelSmStyle(
             context,
             color: context.appColors.ink2,
           ),
@@ -292,7 +292,7 @@ class _SummaryStat extends StatelessWidget {
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             amount,
-            style: transactionLabelStyle(context, size: 14, color: color),
+            style: labelSmStyle(context, size: 14, color: color),
           ),
         ),
       ],
@@ -355,7 +355,7 @@ class _Badge extends StatelessWidget {
       ),
       child: Text(
         label.toUpperCase(),
-        style: transactionLabelStyle(
+        style: labelSmStyle(
           context,
           size: 9,
           color: color ?? colors.ink2,

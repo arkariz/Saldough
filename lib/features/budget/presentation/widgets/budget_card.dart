@@ -53,7 +53,7 @@ class BudgetCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         child: Opacity(
           opacity: dimmed ? 0.7 : 1,
-          child: TransactionSlab(
+          child: AppCard(
             color: overspent ? colors.tinted(colors.danger, 0.08) : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,7 +98,7 @@ class BudgetCard extends StatelessWidget {
                             t.budget
                                 .spentPercentLabel(percent: budgetPercent(progress.spent, progress.plannedAmount))
                                 .toUpperCase(),
-                            style: transactionLabelStyle(context, color: colors.ink2),
+                            style: labelSmStyle(context, color: colors.ink2),
                           ),
                           FitStart(
                             child: Text(
@@ -117,7 +117,7 @@ class BudgetCard extends StatelessWidget {
                           Text(
                             '${t.budget.remainingLabel} / ${t.budget.plannedLabel}'.toUpperCase(),
                             textAlign: TextAlign.end,
-                            style: transactionLabelStyle(context, color: colors.ink2),
+                            style: labelSmStyle(context, color: colors.ink2),
                           ),
                           FittedBox(
                             fit: BoxFit.scaleDown,
@@ -144,14 +144,14 @@ class BudgetCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.space1),
                   Text(
                     budgetItemStatusLabel(BudgetItemStatus.overspent).toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.danger),
+                    style: labelSmStyle(context, color: colors.danger),
                   ),
                 ],
                 if (budget.items.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.space1),
                   Text(
                     t.budget.itemCount(count: budget.items.length),
-                    style: transactionLabelStyle(
+                    style: labelSmStyle(
                       context,
                       color: colors.ink2,
                     ).copyWith(fontWeight: FontWeight.w400),

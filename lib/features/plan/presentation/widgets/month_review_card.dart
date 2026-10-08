@@ -93,7 +93,7 @@ class MonthReviewCard extends StatelessWidget {
 
     void mark(MonthReviewStep s) => bloc.add(PlanReviewStepDone(s));
     final estimate = state.estimatedRules.firstOrNull;
-    return AppHardCard(
+    return AppCard(
       key: const ValueKey('month-review-card'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,7 +103,7 @@ class MonthReviewCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   t.plan.reviewTitle(month: monthLabel).toUpperCase(),
-                  style: transactionLabelStyle(context, color: colors.ink2),
+                  style: labelSmStyle(context, color: colors.ink2),
                 ),
               ),
               Text(progress, style: textTheme.bodySmall),

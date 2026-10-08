@@ -185,14 +185,14 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               const SizedBox(height: 4),
               Text(t.freelance.entryRateHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               const SizedBox(height: AppSpacing.space4),
-              TransactionSlab(
+              AppCard(
                 color: colors.tinted(colors.positive, 0.12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       t.freelance.earnedLabel.toUpperCase(),
-                      style: transactionLabelStyle(context, color: colors.ink2),
+                      style: labelSmStyle(context, color: colors.ink2),
                     ),
                     const SizedBox(height: 2),
                     Text(

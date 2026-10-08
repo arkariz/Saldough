@@ -63,7 +63,7 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
         key: const ValueKey('capture-inbox-banner'),
         label: texts.banner(n: _pending),
         onTap: () => context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput()),
-        child: AppHardCard(
+        child: AppCard(
           child: Row(
             children: [
               const AppIcon(IconKey.pending),

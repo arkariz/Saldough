@@ -46,7 +46,7 @@ class _FundingBannerState extends State<FundingBanner> {
       decoration: BoxDecoration(
         color: colors.tinted(colors.danger, 0.08),
         border: Border.all(color: colors.danger, width: 2),
-        borderRadius: AppRadius.pixelSmAll,
+        borderRadius: BorderRadius.circular(AppSize.pixelStepSm),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,7 @@ class _FundingBannerState extends State<FundingBanner> {
               Expanded(
                 child: Text(
                   t.plan.fundingTitle,
-                  style: transactionLabelStyle(context, color: colors.danger),
+                  style: labelSmStyle(context, color: colors.danger),
                 ),
               ),
               if (warnings.length > 1) Text(t.plan.fundingMore(n: warnings.length - 1), style: textTheme.bodySmall),

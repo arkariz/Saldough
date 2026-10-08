@@ -48,8 +48,7 @@ class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
                   key: ValueKey('speech-language-${locale.languageCode}'),
                   label: languageName(locale),
                   onTap: () => setState(() => _selected = locale),
-                  child: AppHardCard(
-                    pressed: locale == _selected,
+                  child: AppCard(
                     color: locale == _selected ? colors.tinted(colors.brand, 0.18) : null,
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                     child: Row(

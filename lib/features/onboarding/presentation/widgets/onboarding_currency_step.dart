@@ -36,7 +36,7 @@ class OnboardingCurrencyStep extends StatelessWidget {
       separatorBuilder: (_, index) => SizedBox(height: index == 0 ? AppSpacing.space4 : AppSpacing.space1),
       itemBuilder: (context, index) {
         if (index == 0) {
-          return AppHardCard(
+          return AppCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -79,8 +79,7 @@ class _CurrencyOption extends StatelessWidget {
         key: ValueKey('onboarding-currency-${currency.code}'),
         label: name,
         onTap: onTap,
-        child: AppHardCard(
-          pressed: selected,
+        child: AppCard(
           color: selected ? colors.tinted(colors.brand, 0.18) : null,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
           child: Row(

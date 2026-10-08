@@ -157,7 +157,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                   const SizedBox(height: AppSpacing.space6),
                   AppSectionLabel(texts.behaviorTitle),
                   const SizedBox(height: AppSpacing.space1),
-                  AppHardCard(
+                  AppCard(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -247,7 +247,7 @@ class _AccessWarning extends StatelessWidget {
     final texts = t.notificationCapture;
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
-    return AppHardCard(
+    return AppCard(
       color: Color.alphaBlend(colors.brand.withValues(alpha: 0.12), colors.surface),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -328,7 +328,7 @@ class _DebugSamples extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(texts.copied)));
                 }
               },
-              child: AppHardCard(
+              child: AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

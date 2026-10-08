@@ -113,7 +113,7 @@ class _BudgetTemplatePageState extends State<BudgetTemplatePage> {
               _ => ListView(
                 padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space8),
                 children: [
-                  TransactionSlab(
+                  AppCard(
                     color: colors.surface2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +201,7 @@ class _TemplateCard extends StatelessWidget {
     final enabled = template.isEnabled;
     return Opacity(
       opacity: enabled ? 1 : 0.7,
-      child: AppHardCard(
+      child: AppCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -226,13 +226,13 @@ class _TemplateCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.space2),
             Container(
               padding: const EdgeInsets.all(AppSpacing.space2),
-              decoration: BoxDecoration(color: colors.surface2, borderRadius: AppRadius.pixelSmAll),
+              decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     t.budget.templateItemsLabel.toUpperCase(),
-                    style: transactionLabelStyle(context, color: colors.ink2),
+                    style: labelSmStyle(context, color: colors.ink2),
                   ),
                   const SizedBox(height: AppSpacing.space1),
                   Wrap(
@@ -305,7 +305,7 @@ class _EmptyTemplates extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return AppHardCard(
+    return AppCard(
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [

@@ -234,6 +234,9 @@ enum IconKey {
 
   /// Kotak masuk notifikasi.
   inbox,
+
+  /// Jadwal/rutin.
+  schedule,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -317,6 +320,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.visibility: Symbols.visibility_rounded,
   IconKey.visibilityOff: Symbols.visibility_off_rounded,
   IconKey.inbox: Symbols.inbox_rounded,
+  IconKey.schedule: Symbols.schedule_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).

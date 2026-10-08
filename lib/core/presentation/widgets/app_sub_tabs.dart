@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/presentation/widgets/transaction_kind.dart';
 import 'package:saldough/core/theme/theme.dart';
 
 /// Sub-tab navigasi di bawah app bar (PLAN_TAB_LAYOUT §3.2, KT-L7): lebar
-/// penuh, label kapital, label aktif bertinta `textPrimary` dengan blok
-/// `accent` 4px di bawahnya, label lain `textMuted`, tanpa slab dan tanpa
-/// bayangan.
+/// penuh, label huruf biasa, label aktif `ink` dengan penanda `brand` 40×4
+/// di bawahnya, label lain `ink2`.
 ///
 /// Rupa ini sengaja berbeda dari `AppSegmentedControl` (pilih nilai di formulir)
 /// dan chip penyaring, supaya "pindah tempat" tidak tertukar dengan "pilih"
@@ -31,43 +29,49 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
     final colors = context.appColors;
     // Tinggi tetap: `AppBar.bottom` tidak membatasi tinggi, dan label yang
     // membesar (skala teks) dikecilkan `FittedBox`, bukan menambah tinggi.
-    return SizedBox(
-      height: preferredSize.height,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (final (value, label) in options)
-            Expanded(
-              child: Semantics(
-                button: true,
-                selected: value == selected,
-                child: GestureDetector(
-                  onTap: () => onChanged(value),
-                  behavior: HitTestBehavior.opaque,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            label.toUpperCase(),
-                            maxLines: 1,
-                            style: labelSmStyle(
-                              context,
-                              color: value == selected ? colors.ink : colors.ink2,
-                            ).copyWith(fontSize: 12),
+    // Sub-tab prototipe Rencana (`rencana.css` `.tk-subtabs`): label `label`
+    // huruf biasa, aktif `ink` dengan penanda `brand` 40×4 di tengah bawah,
+    // garis `line` di bawah seluruh baris.
+    return DecoratedBox(
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colors.line))),
+      child: SizedBox(
+        height: preferredSize.height,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final (value, label) in options)
+              Expanded(
+                child: Semantics(
+                  button: true,
+                  selected: value == selected,
+                  child: GestureDetector(
+                    onTap: () => onChanged(value),
+                    behavior: HitTestBehavior.opaque,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              label,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                color: value == selected ? colors.ink : colors.ink2,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(height: 4, color: value == selected ? colors.brand : Colors.transparent),
-                    ],
+                        if (value == selected)
+                          Positioned(bottom: 0, child: Container(width: 40, height: 4, color: colors.brand)),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

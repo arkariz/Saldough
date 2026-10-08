@@ -1,106 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_type.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Satu baris ringkas dompet di daftar (UX-20 -- menggantikan kartu besar
-/// ~130px lama yang mengulang "SALDO AKTIF" di tiap baris): ikon jenis,
-/// nama (membungkus, tidak pernah dipotong) beserta jenis dan status di
-/// bawahnya, dan saldo tercatat rata kanan. Saldo negatif tampil dengan
-/// warna `expense` dan tanda minus (FR-WAL-003). Dompet nonaktif
-/// diredupkan; kartu besar dengan label saldo tetap dipakai di layar
-/// rincian dompet (`WalletDetailPage`), yang tidak diulang per baris di
-/// sini.
+/// Satu baris dompet di tab Dompet (prototipe `Dompet.dc.html`): tile ikon
+/// piksel jenis dompet, nama, "Bank · 54%", dan saldo di kanan. Saldo
+/// negatif ditulis bertanda minus tetap `ink` (FR-WAL-003). Diletakkan di
+/// dalam `AppListCard` oleh pemanggil.
 class WalletCard extends StatelessWidget {
   /// Membuat [WalletCard].
-  const WalletCard({required this.wallet, required this.onTap, super.key});
+  const WalletCard({required this.wallet, required this.onTap, this.sharePercent, super.key});
 
   /// Dompet yang ditampilkan.
   final Wallet wallet;
 
-  /// Dipanggil saat kartu diketuk.
+  /// Dipanggil saat baris diketuk.
   final VoidCallback onTap;
+
+  /// Bagian saldo dompet ini terhadap total saldo aktif, atau `null`.
+  final int? sharePercent;
+
+  @override
+  Widget build(BuildContext context) {
+    final type = walletTypeLabel(wallet.iconKey);
+    final subtitle = [?type, if (sharePercent != null) '$sharePercent%'].join(' · ');
+    return Opacity(
+      opacity: wallet.isActive ? 1 : AppSize.disabledOpacity + 0.3,
+      child: AppListRow(
+        leading: AppIconTile(walletIconKey(wallet.iconKey)),
+        title: wallet.name,
+        wrapTitle: true,
+        subtitle: subtitle.isEmpty ? null : subtitle,
+        trailing: AppMoneyText(wallet.currentBalance),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+/// Warna segmen bar sebaran per jenis dompet (tabel warna `cat-*` design
+/// system: Bank biru, Tabungan amber, Tunai hijau, digital teal, Kartu
+/// cokelat).
+Color walletSpreadColor(AppColors colors, String iconKey) => switch (walletIconKey(iconKey)) {
+  IconKey.walletBank => colors.catBlue,
+  IconKey.walletSavings => colors.catAmber,
+  IconKey.walletCash => colors.catGreen,
+  IconKey.walletEwallet => colors.catTeal,
+  IconKey.walletCard => colors.catBrown,
+  _ => colors.catSlate,
+};
+
+/// Bar sebaran saldo per dompet (ADR-034 §4): satu segmen per dompet
+/// bersaldo positif, lebar sebanding persennya, berjarak 2px, tinggi 12px.
+/// Dibaca pembaca layar sebagai daftar "BCA 54 persen, …".
+class WalletSpreadBar extends StatelessWidget {
+  /// Membuat [WalletSpreadBar].
+  const WalletSpreadBar({required this.wallets, required this.shares, super.key});
+
+  /// Dompet aktif, urutan tampil.
+  final List<Wallet> wallets;
+
+  /// Persen per `id` dompet dari `walletShares`.
+  final Map<String, int> shares;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final typeLabel = walletTypeLabel(wallet.iconKey);
-    return AppTappable(
-      onTap: onTap,
-      child: Opacity(
-        opacity: wallet.isActive ? 1 : 0.6,
-        child: AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: AppSpacing.space2),
-          // `IntrinsicHeight` -- sama seperti `TransactionRow` -- memberi
-          // tinggi silang yang TERBATAS ke `Row`, supaya `FittedBox` nominal
-          // di bawah tidak menerima constraint tinggi tak terhingga (yang
-          // membuatnya meluap horizontal secara tidak kentara, ketahuan uji
-          // 360px + teks 2x + nama panjang).
-          child: IntrinsicHeight(
+    final shown = [
+      for (final w in wallets)
+        if ((shares[w.id] ?? 0) > 0) w,
+    ];
+    if (shown.isEmpty) return const SizedBox.shrink();
+    return Semantics(
+      label: [for (final w in shown) '${w.name} ${shares[w.id]}%'].join(', '),
+      child: ExcludeSemantics(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.full),
+          child: SizedBox(
+            height: 12,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(4)),
-                  child: AppIcon(walletIconKey(wallet.iconKey), size: 26),
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
-                      if (typeLabel != null || !wallet.isActive) ...[
-                        const SizedBox(height: 2),
-                        // `Wrap`, bukan `Row` -- nama panjang menyempitkan
-                        // kolom ini (lebar dibagi dengan kolom nominal di
-                        // sebelahnya), dan label jenis dompet ID ("Bank /
-                        // Rekening") tidak selalu muat sebaris pada 2x teks.
-                        Wrap(
-                          spacing: AppSpacing.space1,
-                          runSpacing: 2,
-                          children: [
-                            if (typeLabel != null)
-                              Text(
-                                typeLabel.toUpperCase(),
-                                style: labelSmStyle(context, color: colors.ink2),
-                              ),
-                            if (!wallet.isActive)
-                              Text(
-                                t.wallet.inactiveBadge.toUpperCase(),
-                                style: labelSmStyle(context, color: colors.warning),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ],
+                for (final (i, w) in shown.indexed) ...[
+                  if (i > 0) const SizedBox(width: 2),
+                  Expanded(
+                    flex: shares[w.id]!,
+                    child: ColoredBox(color: walletSpreadColor(colors, w.iconKey)),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.space2),
-                // Lebar dijepit tetap, bukan `Flexible`/`Expanded` -- pola
-                // yang sama dengan kolom nominal `TransactionRow` (T-2.11):
-                // nominal mengecil di layar sempit/teks besar, bukan
-                // berbagi ruang secara proporsional dengan kolom nama.
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 130),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      AppMoneyFormatter.format(wallet.currentBalance),
-                      style: context.numberStyles.amount.copyWith(color: colors.ink),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                AppIcon(IconKey.chevronRight, size: 20, color: colors.ink2),
+                ],
               ],
             ),
           ),

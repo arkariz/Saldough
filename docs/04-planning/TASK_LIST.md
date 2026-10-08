@@ -2486,11 +2486,25 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       / grafik saldo tangga → T-14.10. Uji: kartu anggaran, sheet pos, urutan
       Berikutnya, sub-tab; uji lama disesuaikan. `flutter analyze` bersih,
       1.157 uji lulus.
-- [ ] **T-14.9** Dompet sesuai `Dompet.dc.html`: total, bar sebaran saldo
+- [x] **T-14.9** Dompet sesuai `Dompet.dc.html`: total, bar sebaran saldo
       per dompet (usulan baru), daftar dengan ikon dompet piksel dan persen,
       dompet nonaktif.
       Verifikasi: uji widget sebaran (persen dibulatkan, jumlah 100).
       Di luar PRD: bar sebaran (ADR-034 §4).
+      Hasil (8 Okt 2026): total saldo sebagai angka utama di atas `bg` (tanpa
+      kartu), "N dompet aktif", `WalletSpreadBar` (segmen warna `cat-*` per
+      jenis dompet, berjarak 2px, dibaca "BCA 54%, …"); persen dari
+      `walletShares` (bilangan bulat, sisa terbesar, jumlah tepat 100,
+      saldo ≤ 0 tidak ikut; uji contoh prototipe 54/44/1/1). Daftar dompet
+      aktif dan nonaktif sebagai `AppListCard` baris tile piksel + "Bank ·
+      54%" + saldo (negatif tetap `ink`, nama membungkus, tidak dielipsis);
+      tombol tambah di bar atas dan "Tambah dompet" sekunder di bawah; menu
+      tur di bar atas. Teks dompet mengikuti glosarium (dompet, bukan
+      kantong). `AppSummaryCard`/`HeroInset` peralihan dihapus (tidak ada
+      pemakai lagi). Selisih disengaja: dompet nonaktif tetap terdaftar di
+      halaman ini, bukan dilipat jadi satu baris seperti prototipe, supaya
+      bisa dibuka tanpa layar tambahan. `flutter analyze` bersih, 1.160 uji
+      lulus.
 - [ ] **T-14.10** Halaman turunan: Freelance, Kotak masuk notifikasi,
       Catat pakai suara, Akun, formulir dompet/anggaran/pos/proyek, rincian
       transaksi dan dompet, kategori, template anggaran — semua memakai

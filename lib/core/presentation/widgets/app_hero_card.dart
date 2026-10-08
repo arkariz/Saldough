@@ -1,80 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/active_currency.dart';
-import 'package:saldough/core/presentation/spotlight/tutorial_info_button.dart';
-import 'package:saldough/core/presentation/widgets/app_card.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/fit_start.dart';
 import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/tutorial/tutorial.dart';
-
-/// Kartu ringkasan di puncak tab yang belum dirombak ke pola layar baru
-/// (peralihan Fase 14): satu angka utama dan rinciannya di kartu `surface`
-/// bersudut piksel, kepala label huruf biasa.
-///
-/// Layar yang sudah memakai pola baru menaruh angka utamanya di atas `bg`
-/// tanpa kartu (design system bagian Pola layar) atau, khusus Beranda, di
-/// [AppHeroCard]. Hapus begitu tidak ada pemakainya (T-14.6–T-14.9).
-class AppSummaryCard extends StatelessWidget {
-  /// Membuat [AppSummaryCard].
-  const AppSummaryCard({
-    required this.icon,
-    required this.label,
-    required this.child,
-    this.trailing,
-    this.tour,
-    super.key,
-  });
-
-  /// Ikon tab layar ini.
-  final IconKey icon;
-
-  /// Label kepala kartu.
-  final String label;
-
-  /// Isi kanan kepala, mis. lencana jumlah.
-  final Widget? trailing;
-
-  /// Tur layar ini; kalau diisi, ikon info (putar ulang tur) tampil di ujung
-  /// kanan kepala (KO-4, ADR-021 §3.5).
-  final TourId? tour;
-
-  /// Isi kartu; biasanya [HeroAmount] lalu rinciannya.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              // `Wrap`: lencana turun baris, bukan meluap, di layar sempit
-              // atau teks diperbesar.
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: AppSpacing.space1,
-                  runSpacing: 4,
-                  children: [
-                    Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                    ?trailing,
-                  ],
-                ),
-              ),
-              if (tour case final tour?) TutorialInfoButton(tour: tour),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space1),
-          child,
-        ],
-      ),
-    );
-  }
-}
 
 /// Kartu saldo terakota dengan kepala tanuki mengintip dari tepi bawah
 /// (komponen HeroCard, ADR-034). Satu per layar, hanya di Beranda dan
@@ -217,24 +146,6 @@ class HeroAmount extends StatelessWidget {
         // merah untuk saldo negatif) terbaca dari widget ini sendiri.
         style: context.numberStyles.amountHero.copyWith(color: color ?? colors.ink),
       ),
-    );
-  }
-}
-
-/// Bidang cekung `surface2` di dalam [AppSummaryCard].
-class HeroInset extends StatelessWidget {
-  /// Membuat [HeroInset].
-  const HeroInset({required this.child, super.key});
-
-  /// Isi.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: ShapeDecoration(color: context.appColors.surface2, shape: const PixelCornerBorder.small()),
-      child: child,
     );
   }
 }

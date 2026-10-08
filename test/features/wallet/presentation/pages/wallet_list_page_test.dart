@@ -161,18 +161,15 @@ void main() {
           findsWidgets,
           reason: 'total = 8.500.000 + 2.450.000, dompet nonaktif tidak ikut',
         );
-        expect(
-          find.text(t.wallet.activeBadge(count: 2).toUpperCase()),
-          findsOneWidget,
-        );
+        expect(find.text(t.wallet.activeBadge(count: 2)), findsOneWidget);
         expect(find.text('BCA'), findsOneWidget);
         expect(find.text('GoPay'), findsOneWidget);
-        expect(
-          find.text(t.wallet.typeBank.toUpperCase()),
-          findsNWidgets(2),
-          reason: 'BCA dan Lama sama-sama bank',
-        );
-        expect(find.text(t.wallet.typeEwallet.toUpperCase()), findsOneWidget);
+        // Subjudul "Jenis · persen" (prototipe `Dompet.dc.html`): 8.500.000
+        // dari 10.950.000 = 78%, sisanya 22%; dompet nonaktif tanpa persen.
+        expect(find.text('${t.wallet.typeBank} · 78%'), findsOneWidget);
+        expect(find.text('${t.wallet.typeEwallet} · 22%'), findsOneWidget);
+        expect(find.text(t.wallet.typeBank), findsOneWidget, reason: 'Lama: nonaktif');
+        expect(find.byType(WalletSpreadBar), findsOneWidget);
         expect(
           find.text(t.wallet.inactiveHeading),
           findsOneWidget,
@@ -310,7 +307,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.text(t.wallet.activeBadge(count: 1).toUpperCase()),
+          find.text(t.wallet.activeBadge(count: 1)),
           findsOneWidget,
         );
         expect(

@@ -22,6 +22,7 @@ class AppListRow extends StatelessWidget {
     this.chevron = false,
     this.compact = false,
     this.semanticsLabel,
+    this.wrapTitle = false,
     super.key,
   });
 
@@ -52,6 +53,10 @@ class AppListRow extends StatelessWidget {
   /// Label pembaca layar pengganti gabungan teks baris.
   final String? semanticsLabel;
 
+  /// Judul membungkus ke banyak baris alih-alih elipsis (nama dompet tidak
+  /// boleh terpotong, UX-20).
+  final bool wrapTitle;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -81,8 +86,8 @@ class AppListRow extends StatelessWidget {
                     ),
                   Text(
                     title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: wrapTitle ? null : 1,
+                    overflow: wrapTitle ? null : TextOverflow.ellipsis,
                     style: textTheme.titleMedium,
                   ),
                   if (subtitle != null)

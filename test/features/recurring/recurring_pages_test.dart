@@ -144,7 +144,7 @@ void main() {
     expect(find.text(t.recurring.groupThisMonth), findsOneWidget);
     expect(find.text(t.recurring.groupLater), findsOneWidget);
     // Dijeda terlipat jadi satu baris (PLAN_TAB_LAYOUT §4.9).
-    expect(find.text('${t.recurring.groupPaused} (1) ›'), findsOneWidget);
+    expect(find.text('${t.recurring.groupPaused} (1)'), findsOneWidget);
     expect(find.text('Gym'), findsNothing);
     expect(find.text('Kos ✓'), findsOneWidget);
     expect(find.text('Netflix ●'), findsOneWidget);

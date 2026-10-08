@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
@@ -27,38 +26,44 @@ class RecurringSummaryCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final remaining = AppMoneyFormatter.format(summary.remainingOut);
-    Widget row(String label, int sen, {bool minus = false}) => Row(
+    Widget row(String label, Widget amount) => Row(
       children: [
-        Expanded(child: Text(label, style: textTheme.bodyMedium)),
-        Text(
-          '${minus ? '−' : ''}${AppMoneyFormatter.format(sen)}',
-          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
+        Expanded(child: Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.ink2))),
+        Flexible(child: FitStart(child: amount)),
       ],
     );
-    return AppSummaryCard(
-      tour: TourId.recurring,
-      icon: IconKey.budget,
-      label: t.recurring.remainingTitle(month: monthLabel),
+    // Prototipe `RencanaRutin.dc.html`: angka utama di kartu, rencana dan
+    // sudah keluar di bidang cekung `surface2`.
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Text(t.recurring.remainingTitle(month: monthLabel), style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
           Semantics(
             label: summary.hasEstimate ? t.recurring.approxSemantics(amount: remaining) : remaining,
             excludeSemantics: true,
             child: HeroAmount(summary.hasEstimate ? '≈$remaining' : remaining),
           ),
-          const SizedBox(height: AppSpacing.space2),
-          row(t.recurring.plannedLabel, summary.totalOut),
-          row(t.recurring.outLabel, summary.recordedOut, minus: true),
+          const SizedBox(height: AppSpacing.space3),
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.space3),
+            color: colors.surface2,
+            child: Column(
+              children: [
+                row(t.recurring.plannedLabel, AppMoneyText(summary.totalOut, size: MoneySize.small)),
+                const SizedBox(height: AppSpacing.space2),
+                row(t.recurring.outLabel, AppMoneyText(summary.recordedOut, kind: MoneyKind.expense, size: MoneySize.small)),
+              ],
+            ),
+          ),
           if (subscriptions case final totals?) ...[
-            const SizedBox(height: AppSpacing.space1),
+            const SizedBox(height: AppSpacing.space2),
             Text(
               t.recurring.subscriptionsLine(
                 perMonth: AppMoneyFormatter.format(totals.perMonth),
                 perYear: AppMoneyFormatter.format(totals.perYear),
               ),
-              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
             ),
           ],
         ],

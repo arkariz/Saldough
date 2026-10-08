@@ -5,6 +5,8 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/recurring/presentation/recurring_display.dart';
+import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/category/category_presentation.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
 /// Satu baris segmen Rutin (PLAN_TAB_LAYOUT §4.9, menggantikan §6.3): kolom
@@ -70,64 +72,96 @@ class RecurringRow extends StatelessWidget {
         entry.group == RecurringGroup.paused ||
         entry.group == RecurringGroup.ended;
     final date = occurrence?.date;
-    return AppTappable(
+    final category = ActiveCategories.byId(rule.categoryId);
+    final icon = category != null
+        ? categoryIcon(category, title: rule.note)
+        : switch (rule.kind) {
+            RecurringKind.income => IconKey.income,
+            RecurringKind.expense => IconKey.categoryOther,
+            RecurringKind.transfer => IconKey.transfer,
+          };
+    final ink = muted ? colors.ink3 : colors.ink;
+    // Baris jadwal (`rencana.css` `.sched`): kolom tanggal 40px, tile,
+    // judul + meta, nominal bertanda; yang sudah tercatat diredupkan `ink3`.
+    return Semantics(
+      button: true,
       label: rule.note,
-      onTap: onTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 56,
-                child: Text(
-                  date == null
-                      ? ''
-                      : date.year == today.year
-                      ? CycleMonthFormatter.formatDayMonth(date)
-                      : "${CycleMonthFormatter.formatMonthShort(date)} '${date.year % 100}",
-                  style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+      child: InkWell(
+        onTap: onTap,
+        overlayColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.pressed) ? colors.surface2 : Colors.transparent,
+        ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: AppSize.row),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 10),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: AppSize.tile,
+                  child: date == null
+                      ? null
+                      : Column(
+                          children: [
+                            Text(
+                              date.year == today.year ? '${date.day}' : CycleMonthFormatter.formatMonthShort(date),
+                              style: context.numberStyles.amountLg.copyWith(fontSize: 18, height: 22 / 18, color: ink),
+                            ),
+                            Text(
+                              date.year == today.year
+                                  ? CycleMonthFormatter.formatWeekday(date).substring(0, 3)
+                                  : "'${date.year % 100}",
+                              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                            ),
+                          ],
+                        ),
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note}$glyph',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: muted ? colors.ink2 : (priceUp ? colors.warning : null),
-                      ),
-                    ),
-                    if (meta.isNotEmpty)
+                const SizedBox(width: AppSpacing.space3),
+                AppIconTile(icon),
+                const SizedBox(width: AppSpacing.space3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        meta.join(' · '),
+                        '${rule.note.isEmpty ? t.record.repeat.fallbackName : rule.note}$glyph',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                        style: textTheme.titleMedium?.copyWith(
+                          color: muted ? colors.ink3 : (priceUp ? colors.warning : colors.ink),
+                        ),
                       ),
-                  ],
+                      if (meta.isNotEmpty)
+                        Text(
+                          meta.join(' · '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.space2),
-              Text(
-                signedAmount(rule.kind, amount, approximate: approximate),
-                style: textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: muted
-                      ? colors.ink2
-                      : switch (rule.kind) {
-                          RecurringKind.income => colors.positive,
-                          RecurringKind.expense => colors.ink,
-                          RecurringKind.transfer => colors.ink,
-                        },
+                const SizedBox(width: AppSpacing.space2),
+                Flexible(
+                  flex: 0,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      signedAmount(rule.kind, amount, approximate: approximate),
+                      style: context.numberStyles.amount.copyWith(
+                        color: muted
+                            ? colors.ink3
+                            : switch (rule.kind) {
+                                RecurringKind.income => colors.positive,
+                                RecurringKind.expense => colors.ink,
+                                RecurringKind.transfer => colors.ink2,
+                              },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

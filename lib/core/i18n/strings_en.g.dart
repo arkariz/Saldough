@@ -634,7 +634,7 @@ class _Translations$home$en extends Translations$home$id {
 
 	// Translations
 	@override String get loadErrorTitle => 'Home failed to load';
-	@override String get balanceLabel => 'Total active cash';
+	@override String get balanceLabel => 'Total balance';
 	@override String walletCount({required Object count}) => 'Active wallets: ${count}';
 	@override String moreWallets({required Object count}) => '+${count} more';
 	@override String get startBadge => 'Start recording';
@@ -675,6 +675,17 @@ class _Translations$home$en extends Translations$home$id {
 	@override String freelanceSummaryLine({required Object hours, required Object earned}) => '${hours} · earned ${earned}';
 	@override String openCard({required Object name}) => 'Open ${name}';
 	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
+	@override String walletLink({required Object count}) => 'In ${count} wallets';
+	@override String get netLabel => 'Net this month';
+	@override String get hideAmounts => 'Hide amounts';
+	@override String get showAmounts => 'Show amounts';
+	@override String get budgetSafe => 'On track';
+	@override String get budgetNearlyOut => 'Almost used up';
+	@override String budgetOverBy({required Object amount}) => 'Over by ${amount}';
+	@override String get freelanceRowTitle => 'Not yet received';
+	@override String freelanceRowSub({required Object count, required Object date}) => '${count} invoices, expected ${date}';
+	@override String get incomeStat => 'Income';
+	@override String get expenseStat => 'Expenses';
 }
 
 // Path: onboarding
@@ -852,6 +863,7 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get deletePasswordBody => 'For your security, enter your password again to delete your account.';
 	@override String get deletedMessage => 'Account deleted.';
 	@override late final _Translations$account$errors$en errors = _Translations$account$errors$en._(_root);
+	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, e.g. when opening the app around others.';
 }
 
 // Path: currency
@@ -2006,7 +2018,7 @@ extension on TranslationsEn {
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			'home.loadErrorTitle' => 'Home failed to load',
-			'home.balanceLabel' => 'Total active cash',
+			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.moreWallets' => ({required Object count}) => '+${count} more',
 			'home.startBadge' => 'Start recording',
@@ -2047,6 +2059,17 @@ extension on TranslationsEn {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
 			'home.openCard' => ({required Object name}) => 'Open ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
+			'home.walletLink' => ({required Object count}) => 'In ${count} wallets',
+			'home.netLabel' => 'Net this month',
+			'home.hideAmounts' => 'Hide amounts',
+			'home.showAmounts' => 'Show amounts',
+			'home.budgetSafe' => 'On track',
+			'home.budgetNearlyOut' => 'Almost used up',
+			'home.budgetOverBy' => ({required Object amount}) => 'Over by ${amount}',
+			'home.freelanceRowTitle' => 'Not yet received',
+			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} invoices, expected ${date}',
+			'home.incomeStat' => 'Income',
+			'home.expenseStat' => 'Expenses',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -2192,6 +2215,7 @@ extension on TranslationsEn {
 			'account.errors.tooManyRequests' => 'Too many attempts. Wait a moment, then try again.',
 			'account.errors.userDisabled' => 'This account has been disabled.',
 			'account.errors.other' => 'Couldn\'t sign in. Try again.',
+			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, e.g. when opening the app around others.',
 			'currency.settingsTitle' => 'Settings',
 			'currency.label' => 'Currency',
 			'currency.pickerTitle' => 'Choose currency',
@@ -2457,6 +2481,8 @@ extension on TranslationsEn {
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.remindersTitle' => 'Recurring reminders',
 			'recurring.remindersBody' => 'Reminded a day before bills you pay yourself, and on the due day.',
 			'recurring.remindersDenied' => 'Notification permission was not granted. Turn it on in system settings.',
@@ -2469,8 +2495,6 @@ extension on TranslationsEn {
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',
 			'recurring.chipIncome' => 'In',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.chipExpense' => 'Out',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Budget item',

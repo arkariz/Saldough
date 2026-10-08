@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -28,6 +29,7 @@ import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/home/presentation/pages/home_page.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
+import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -196,7 +198,7 @@ void main() {
     expect(find.text(t.home.recordAction), findsNothing);
     expect(find.byType(HomeGuide), findsOneWidget);
     // Kartu tanpa isi disembunyikan, bukan diisi Rp0 berderet.
-    expect(find.byType(HomeCashFlowRow), findsNothing);
+    expect(find.byType(HomeMonthCard), findsNothing);
     expect(find.byType(HomeBudgetCard), findsNothing);
     expect(find.byType(HomeFreelanceCard), findsNothing);
 
@@ -230,15 +232,9 @@ void main() {
     // Total saldo dompet aktif: Rp5.250.000 + Rp0.
     expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
     // Transfer Rp1.000.000 tidak dihitung; pengeluaran tahun lalu juga tidak.
-    final month = CycleMonthFormatter.formatMonthShort(now);
-    final flow = find.byType(HomeCashFlowRow);
-    expect(
-      find.descendant(
-        of: flow,
-        matching: find.text(t.home.incomeLabel(month: month).toUpperCase()),
-      ),
-      findsOne,
-    );
+    expect(find.text(CycleMonthFormatter.formatMonthName(now)), findsOneWidget);
+    final flow = find.byType(HomeMonthCard);
+    expect(find.descendant(of: flow, matching: find.text(t.home.incomeStat)), findsOne);
     expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);
     expect(find.descendant(of: flow, matching: find.text('−Rp750.000')), findsOneWidget);
     // Anggaran aktif: rencana 2 × Rp75.000.
@@ -247,13 +243,14 @@ void main() {
     // Freelance sebagai tagihan: belum diterima (kotor) 10 jam × Rp72.500,
     // satu tagihan tertunda.
     expect(find.byType(HomeFreelanceCard), findsOneWidget);
-    expect(find.text(t.home.freelancePendingInvoices(count: 1)), findsOneWidget);
+    expect(find.textContaining(t.home.freelanceRowSub(count: 1, date: '').trim()), findsOneWidget);
     expect(find.text('Rp725.000'), findsOneWidget);
     // Terbaru di atas, termasuk transfer (tetap tercatat, hanya tidak dihitung arus).
     final rows = tester.widgetList<TransactionRow>(find.byType(TransactionRow)).map((r) => r.transaction.id);
     expect(rows, ['topup', 'makan', 'gaji', 'lama']);
 
-    await tester.tap(find.text(t.home.seeAll));
+    // "Lihat semua" terakhir milik Transaksi terbaru.
+    await tester.tap(find.text(t.home.seeAll).last);
     await tester.pumpAndSettle();
     expect(navIndex(tester), 1); // Riwayat (urutan ADR-034).
   });
@@ -584,5 +581,37 @@ void main() {
       expect(find.text(t.info.resetDoneMessage), findsOneWidget);
       expect((await tutorials.load()).getOrElse((_) => TutorialProgress.empty), TutorialProgress.empty);
     });
+  });
+
+  testWidgets('tombol mata menyembunyikan semua nominal Beranda dan menampilkannya lagi (T-14.6)', (tester) async {
+    addTearDown(() => AmountVisibility.notifier.value = false);
+    tallViewport(tester);
+    await seedFull();
+    // Akar aplikasi memasang `ActiveCurrencyRebuilder` (app.dart).
+    await tester.pumpWidget(
+      ScopeProvider(
+        container: container,
+        child: MaterialApp(
+          theme: PixelTheme.light,
+          builder: (context, child) => ActiveCurrencyRebuilder(child: child!),
+          home: const AppShellPage(),
+        ),
+      ),
+    );
+    for (var i = 0; i < 5; i++) {
+      await tester.pump();
+    }
+    await tester.pumpAndSettle();
+    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
+    await tester.pumpAndSettle();
+    expect(AmountVisibility.hidden, isTrue);
+    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp•••••')), findsOneWidget);
+    expect(find.text('+Rp5.000.000'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('home-hide-amounts')));
+    await tester.pumpAndSettle();
+    expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
   });
 }

@@ -57,24 +57,20 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
   Widget build(BuildContext context) {
     if (_pending == 0) return const SizedBox.shrink();
     final texts = t.notificationCapture;
+    void open() => unawaited(context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput()));
+    // Banner perhatian design system: satu kalimat + satu tindakan, nada
+    // warning, di bawah angka utama Beranda (prototipe `Main.dc.html`).
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.space4),
+      padding: const EdgeInsets.only(top: AppSpacing.space6),
       child: AppTappable(
         key: const ValueKey('capture-inbox-banner'),
         label: texts.banner(n: _pending),
-        onTap: () => context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput()),
-        child: AppCard(
-          child: Row(
-            children: [
-              const AppIcon(IconKey.pending),
-              const SizedBox(width: AppSpacing.space2),
-              Expanded(
-                child: Text(texts.banner(n: _pending), style: Theme.of(context).textTheme.titleSmall),
-              ),
-              Text(texts.bannerAction, style: TextStyle(color: context.appColors.brand)),
-              const AppIcon(IconKey.chevronRight),
-            ],
-          ),
+        onTap: open,
+        child: AppBanner(
+          message: texts.banner(n: _pending),
+          icon: IconKey.inbox,
+          actionLabel: texts.bannerAction,
+          onAction: open,
         ),
       ),
     );

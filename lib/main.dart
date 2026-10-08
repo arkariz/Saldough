@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:dependencies/dependencies.dart';
@@ -54,6 +55,14 @@ Future<void> main() async {
   ActiveCurrency.notifier.value = (await rootGetIt<CurrencyPreferenceRepository>().load()).getOrElse(
     (_) => AppCurrency.idr,
   );
+  // Sembunyikan nominal (ADR-034): dibaca sebelum layar pertama, setiap
+  // perubahan disimpan. Gagal dibaca = tampil.
+  final amountVisibility = rootGetIt<AmountVisibilityRepository>();
+  AmountVisibility.notifier.value = (await amountVisibility.load()).getOrElse((_) => false);
+  AmountVisibility.notifier.addListener(
+    () => unawaited(amountVisibility.save(hidden: AmountVisibility.hidden)),
+  );
+
   // KT-R2: tanggal awal bulan keuangan tab Rencana; gagal dibaca = tanggal 1.
   ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
     (_) => 1,

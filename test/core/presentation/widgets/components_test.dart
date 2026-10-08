@@ -232,7 +232,7 @@ void main() {
             AppMoneyText(4500000, kind: MoneyKind.expense),
             AppMoneyText(850000000, kind: MoneyKind.income),
             AppMoneyText(30000000, kind: MoneyKind.transfer),
-            AppMoneyText(-3600000),
+            AppMoneyText(-3600000, kind: MoneyKind.remaining),
           ],
         ),
       );

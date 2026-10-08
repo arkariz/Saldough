@@ -30,6 +30,10 @@ abstract final class CycleMonthFormatter {
     'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
+  /// Nama bulan [date] lengkap, mis. `September` (judul bagian Beranda).
+  static String formatMonthName(DateTime date) =>
+      (LocaleSettings.currentLocale == AppLocale.en ? _enMonths : _idMonths)[date.month - 1];
+
   /// Memformat [cycleId]. Mengembalikan [cycleId] apa adanya kalau
   /// formatnya tidak sesuai `"YYYY-MM"` — seharusnya tidak pernah terjadi
   /// untuk `MonthlyCycle.id` yang valid, tapi lebih aman daripada melempar.

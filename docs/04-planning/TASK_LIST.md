@@ -2403,7 +2403,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       mengetik ke kolom nominal kini lewat `test/helpers/keypad.dart`.
       `flutter analyze` bersih, 1.150 uji lulus. ⚠ Belum dicoba di
       perangkat: getar papan angka, tinggi sheet di layar pendek.
-- [ ] **T-14.6** Beranda sesuai `Main.dc.html`: kartu saldo terakota
+- [x] **T-14.6** Beranda sesuai `Main.dc.html`: kartu saldo terakota
       dengan tanuki, banner kotak masuk, kartu bulan berjalan (pemasukan,
       pengeluaran, selisih), kartu anggaran dengan penanda waktu, transaksi
       terbaru, kartu Freelance sebagai pintu masuk Freelance, tombol
@@ -2412,6 +2412,29 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       semua nominal; tanyakan pemilik bila cakupannya ragu.
       Verifikasi: uji widget isi dan keadaan tersembunyi.
       Di luar PRD: sembunyikan nominal dan pintu Freelance (ADR-034 §4).
+      Hasil (8 Okt 2026): cakupan sembunyikan nominal diputuskan pemilik 8 Okt
+      2026: **semua nominal**. `AmountVisibility` (core) + setelan tersimpan
+      `AmountVisibilityRepository` (`settings/hideAmounts`, dibaca di
+      `main.dart`, perubahan disimpan pendengar); selama aktif
+      `AppMoneyFormatter.format` menulis `Rp•••••` (tanda tetap) dan
+      `ActiveCurrencyRebuilder` membangun ulang layar terbuka. Isian nominal
+      Catat tetap terlihat (tidak lewat formatter). Tombol mata di bar atas
+      Beranda dan sakelar di Akun. Beranda baru (`home_summary.dart`): kartu
+      saldo terakota dengan tanuki dan "Di N dompet", banner kotak masuk
+      (`AppBanner`), kartu Menunggu dicatat (komponen fitur rutin, belum
+      dirombak), bagian bulan berjalan (pemasukan, pengeluaran, selisih;
+      perkiraan saldo akhir bulan di bawahnya), kartu anggaran (badge Aman/
+      Hampir habis/Lewat, sisa, bar kotak), baris Freelance "Belum
+      diterima", transaksi terbaru. `MoneyKind.remaining` untuk sisa
+      (negatif `danger`); saldo dompet negatif tetap `ink`. Selisih
+      disengaja: tombol menu tur pindah ke bar atas (tiga tombol ikon, design
+      system bilang paling banyak dua) karena kartu terakota tidak boleh
+      memuat tombol; bar anggaran Beranda tanpa penanda waktu karena
+      `BudgetOverview` gabungan beberapa anggaran tidak punya satu periode;
+      baris transaksi terbaru masih `TransactionRow` lama sampai T-14.7;
+      kartu Menunggu sampai T-14.8. Uji: formatter/rebuild/repository
+      sembunyikan nominal, tombol mata di Beranda, isi Beranda dan 360dp teks
+      2×. `flutter analyze` bersih, 1.154 uji lulus.
 - [ ] **T-14.7** Riwayat sesuai `Riwayat.dc.html`: pemilih bulan,
       ringkasan, chip jenis, banner kotak masuk, grup per hari dengan
       selisih harian, baris dengan ikon piksel.

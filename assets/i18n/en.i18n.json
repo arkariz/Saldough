@@ -585,7 +585,7 @@
   },
   "home": {
     "loadErrorTitle": "Home failed to load",
-    "balanceLabel": "Total active cash",
+    "balanceLabel": "Total balance",
     "walletCount": "Active wallets: $count",
     "moreWallets": "+$count more",
     "startBadge": "Start recording",
@@ -625,7 +625,18 @@
     "freelancePendingInvoices": "Pending invoices: $count",
     "freelanceSummaryLine": "$hours · earned $earned",
     "openCard": "Open $name",
-    "budgetUsedBadge": "$percent% used"
+    "budgetUsedBadge": "$percent% used",
+    "walletLink": "In $count wallets",
+    "netLabel": "Net this month",
+    "hideAmounts": "Hide amounts",
+    "showAmounts": "Show amounts",
+    "budgetSafe": "On track",
+    "budgetNearlyOut": "Almost used up",
+    "budgetOverBy": "Over by $amount",
+    "freelanceRowTitle": "Not yet received",
+    "freelanceRowSub": "$count invoices, expected $date",
+    "incomeStat": "Income",
+    "expenseStat": "Expenses"
   },
   "onboarding": {
     "skipAction": "Skip",
@@ -780,7 +791,8 @@
       "tooManyRequests": "Too many attempts. Wait a moment, then try again.",
       "userDisabled": "This account has been disabled.",
       "other": "Couldn't sign in. Try again."
-    }
+    },
+    "hideAmountsBody": "Replace numbers with dots on every screen, e.g. when opening the app around others."
   },
   "currency": {
     "settingsTitle": "Settings",

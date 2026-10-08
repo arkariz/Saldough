@@ -7,6 +7,7 @@ import 'package:saldough/features/account/presentation/bloc/account_state.dart';
 import 'package:saldough/features/account/presentation/widgets/category_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/currency_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/financial_month_setting.dart';
+import 'package:saldough/features/account/presentation/widgets/hide_amounts_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/language_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/notification_capture_setting.dart';
 import 'package:saldough/features/account/presentation/widgets/recurring_reminder_setting.dart';
@@ -172,6 +173,7 @@ class _SignedOutState extends State<_SignedOut> {
         const NotificationCaptureSettingEntry(),
         const RecurringReminderSettingEntry(),
         const FinancialMonthSettingEntry(),
+        const HideAmountsSettingEntry(),
       ],
     );
   }
@@ -248,6 +250,7 @@ class _SignedIn extends StatelessWidget {
         const NotificationCaptureSettingEntry(),
         const RecurringReminderSettingEntry(),
         const FinancialMonthSettingEntry(),
+        const HideAmountsSettingEntry(),
         const SizedBox(height: AppSpacing.space8),
         Divider(color: colors.line),
         const SizedBox(height: AppSpacing.space4),

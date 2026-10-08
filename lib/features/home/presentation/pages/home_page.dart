@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
+import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
 import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
+import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/auth/auth_presentation.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
@@ -82,8 +85,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.appShell.homeTabLabel),
+        title: Text(t.appShell.homeTabLabel, style: Theme.of(context).textTheme.headlineSmall),
+        centerTitle: false,
         actions: [
+          // Menu tur (KO-4, ADR-021 §3.5) dulu ada di kartu saldo; kartu
+          // terakota tidak memuat tombol lain (design system HeroCard).
+          const TutorialInfoButton(tour: TourId.home),
+          // Sembunyikan nominal (ADR-034 §4): berlaku di semua nominal
+          // aplikasi, tersimpan di setelan.
+          AppIconButton(
+            key: const ValueKey('home-hide-amounts'),
+            icon: AmountVisibility.hidden ? IconKey.visibilityOff : IconKey.visibility,
+            label: AmountVisibility.hidden ? t.home.showAmounts : t.home.hideAmounts,
+            onPressed: AmountVisibility.toggle,
+          ),
           // Titik masuk layar Akun (ADR-023/024) -- identitas opsional, bukan
           // navigasi bawah karena bukan aktivitas harian.
           AccountAvatarButton(onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput())),
@@ -115,34 +130,49 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space12),
         children: [
+          // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
+          // ini → anggaran → freelance → transaksi terbaru.
           SpotlightTarget(
             spotlightKey: SpotlightKey.homeBalance,
             child: HomeBalanceCard(
               total: state.totalBalance,
-              activeWallets: state.activeWallets,
-              hasNoWallets: state.hasNoWallets,
+              walletCount: state.activeWallets.length,
+              onShowWallets: widget.onShowWallets,
             ),
           ),
+          // Banner kotak masuk membawa jarak atasnya sendiri (kosong = tidak ada).
           ?widget.notice,
-          ?widget.forecast,
           ?widget.pendingRecurring,
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: AppSpacing.space6),
+            AppSectionHeader(
+              CycleMonthFormatter.formatMonthName(state.month),
+              actionLabel: t.appShell.transactionsTabLabel,
+              onAction: widget.onShowTransactions,
+            ),
+            const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeCashFlow,
-              child: HomeCashFlowRow(cashFlow: state.cashFlow, month: state.month),
+              child: HomeMonthCard(cashFlow: state.cashFlow, footer: widget.forecast),
             ),
+          ] else if (widget.forecast case final forecast?) ...[
+            const SizedBox(height: AppSpacing.space6),
+            forecast,
           ],
           if (budget != null) ...[
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: AppSpacing.space6),
+            AppSectionHeader(t.appShell.budgetTabLabel, actionLabel: t.home.seeAll, onAction: widget.onShowBudgets),
+            const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeBudget,
               child: HomeBudgetCard(overview: budget, onOpen: widget.onShowBudgets),
             ),
           ],
           if (freelance != null) ...[
-            const SizedBox(height: AppSpacing.space4),
+            const SizedBox(height: AppSpacing.space6),
+            AppSectionHeader(t.home.freelanceTitle),
+            const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeFreelance,
               child: HomeFreelanceCard(
@@ -155,10 +185,10 @@ class _HomePageState extends State<HomePage> {
           if (state.hasTransactions) ...[
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeRecent,
-              child: HomeSectionHeader(
-                icon: IconKey.transactions,
-                title: t.home.recentTitle,
-                trailing: HomeTextLink(label: t.home.seeAll, onTap: widget.onShowTransactions),
+              child: AppSectionHeader(
+                t.home.recentTitle,
+                actionLabel: t.home.seeAll,
+                onAction: widget.onShowTransactions,
               ),
             ),
             for (final transaction in state.recentTransactions) ...[

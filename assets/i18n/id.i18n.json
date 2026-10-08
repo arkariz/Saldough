@@ -584,7 +584,8 @@
     "paymentsEmptyBody": "Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.",
     "paymentsFilteredEmpty": "Tidak ada pembayaran dengan status ini.",
     "nextExpected": "$count tagihan · terdekat $date",
-    "paymentWorkRange": "Kerja $range"
+    "paymentWorkRange": "Kerja $range",
+    "paidOffBadge": "Lunas"
   },
   "home": {
     "loadErrorTitle": "Beranda gagal dimuat",

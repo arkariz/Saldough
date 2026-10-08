@@ -9,7 +9,6 @@ import 'package:saldough/features/freelance/presentation/bloc/freelance_state.da
 import 'package:saldough/features/freelance/presentation/freelance_actions.dart';
 import 'package:saldough/features/freelance/presentation/pages/freelance_project_page.dart';
 import 'package:saldough/features/freelance/presentation/widgets/freelance_cards.dart';
-import 'package:saldough/features/freelance/presentation/widgets/freelance_notice.dart';
 import 'package:saldough/features/freelance/presentation/widgets/project_widgets.dart';
 import 'package:state_management/state_management.dart';
 
@@ -36,7 +35,13 @@ class _FreelanceOverviewPageState extends State<FreelanceOverviewPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.freelance.title),
-        actions: const [TutorialInfoButton(tour: TourId.freelance)],
+        actions: [
+          const TutorialInfoButton(tour: TourId.freelance),
+          Builder(
+            builder: (context) =>
+                AppIconButton(icon: IconKey.add, label: t.freelance.projectAddTitle, onPressed: () => addProject(context)),
+          ),
+        ],
       ),
       body: SafeArea(
         child: BlocBuilder<FreelanceBloc, FreelanceState>(
@@ -90,8 +95,6 @@ class _Overview extends StatelessWidget {
       child: ListView(
       padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
       children: [
-        FreelanceNotice(title: t.freelance.ruleTitle, body: t.freelance.ruleBody),
-        const SizedBox(height: AppSpacing.space4),
         if (state.projects.isEmpty)
           FreelanceEmptyState(
             badge: t.freelance.projectsEmptyBadge,
@@ -106,24 +109,28 @@ class _Overview extends StatelessWidget {
             summary: state.summary,
             projectCount: state.projects.length,
             payments: state.paymentTotals,
+            unbilledHours: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledHours),
+            unbilledAmount: state.projects.fold(0, (sum, p) => sum + state.statsOf(p.id).unbilledAmount),
           ),
-          const SizedBox(height: AppSpacing.space4),
-          AppSectionLabel(t.freelance.projectsLabel),
-          const SizedBox(height: AppSpacing.space1),
-          AddProjectCard(onTap: () => addProject(context)),
+          const SizedBox(height: AppSpacing.space6),
+          AppSectionHeader(t.freelance.projectsLabel, hint: t.freelance.projectCount(count: state.projects.length)),
           const SizedBox(height: AppSpacing.space2),
-          for (final (i, project) in state.projectsByNextPayment.indexed) ...[
-            SpotlightTarget(
-              spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
-              child: ProjectCard(
-                project: project,
-                stats: state.statsOf(project.id),
-                paymentStats: state.paymentStatsOf(project.id),
-                onTap: () => openFreelanceProject(context, project),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.space2),
-          ],
+          AppListCard(
+            children: [
+              for (final (i, project) in state.projectsByNextPayment.indexed)
+                SpotlightTarget(
+                  spotlightKey: i == 0 ? SpotlightKey.freelanceProject : null,
+                  child: ProjectCard(
+                    project: project,
+                    stats: state.statsOf(project.id),
+                    paymentStats: state.paymentStatsOf(project.id),
+                    onTap: () => openFreelanceProject(context, project),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.space6),
+          AddProjectCard(onTap: () => addProject(context)),
         ],
       ],
       ),

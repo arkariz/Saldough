@@ -1,0 +1,86 @@
+/* Rencana and recurring prototype: components not yet in the design system. */
+
+/* Sub-tabs under the top bar (navigation between segments) */
+.tk-subtabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); flex: none; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
+.tk-subtab { position: relative; height: 48px; border: 0; background: none; color: var(--ink-2); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; text-decoration: none; display: grid; place-items: center; }
+.tk-subtab.is-active { color: var(--ink); }
+.tk-subtab.is-active::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 40px; height: 4px; margin-left: -20px; background: var(--brand); }
+
+/* Estimate card: dashed frame, no fill, square corners. Solid card = certain, dashed = estimate. */
+.est-card { border: 2px dashed var(--line-strong); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.est-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.est-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+/* Month chips: the current month solid, later months dashed (estimate) */
+.mchips { display: flex; gap: 8px; }
+.mchip { height: 36px; padding: 0 16px; border: 2px solid transparent; background: var(--surface-2); color: var(--ink); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; }
+.mchip.is-est { background: transparent; border-color: var(--line-strong); border-style: dashed; }
+.mchip.is-selected { background: var(--brand-soft); color: var(--brand-ink); border-color: var(--brand); border-style: solid; }
+
+/* Waterfall inset inside the main card */
+.inset { background: var(--surface-2); padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.inset__row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 14px; line-height: 20px; }
+
+/* Schedule row: date column on the left */
+.sched { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 16px; position: relative; }
+.sched + .sched::before { content: ""; position: absolute; top: 0; left: 68px; right: 0; height: 1px; background: var(--line); }
+.sched__date { width: 40px; flex: none; text-align: center; display: flex; flex-direction: column; }
+.sched__day { font-size: 18px; line-height: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sched__dow { font-size: 12px; line-height: 16px; color: var(--ink-2); }
+.sched.is-done .sched__day, .sched.is-done .tk-row__title, .sched.is-done .tk-amt { color: var(--ink-3); }
+.today-rule { display: flex; align-items: center; gap: 8px; color: var(--brand-ink); font-size: 12px; line-height: 16px; font-weight: 600; padding: 4px 16px; }
+.today-rule::before, .today-rule::after { content: ""; flex: 1; height: 2px; background: var(--brand); }
+
+/* Group label inside lists */
+.group-label { display: flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); padding: 0 4px; }
+.dot { width: 8px; height: 8px; background: var(--brand); flex: none; }
+
+/* Forecast chart: daily balance as stairs. Solid = recorded, dashed = estimate.
+   SVG draws marks only; all text is HTML so it uses the app font. */
+.fc { position: relative; width: 296px; height: 180px; flex: none; }
+.fc svg { position: absolute; inset: 0; display: block; overflow: visible; }
+.fc-grid { fill: none; stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; }
+.fc-zero { fill: none; stroke: var(--ink-3); stroke-width: 1; shape-rendering: crispEdges; }
+.fc-area { fill: var(--brand); fill-opacity: 0.1; shape-rendering: crispEdges; }
+.fc-area-neg { fill: var(--danger); fill-opacity: 0.18; shape-rendering: crispEdges; }
+.fc-line { fill: none; stroke: var(--brand); stroke-width: 2; stroke-linejoin: miter; shape-rendering: crispEdges; }
+.fc-line--est { stroke-dasharray: 4 3; }
+.fc-today { fill: none; stroke: var(--ink-3); stroke-width: 1; shape-rendering: crispEdges; }
+.fc-cross { fill: none; stroke: var(--ink); stroke-width: 1; shape-rendering: crispEdges; }
+.fc-ev { fill: var(--ink-2); shape-rendering: crispEdges; }
+.fc-ev--in { fill: var(--positive); }
+.fc-ev--tr { fill: none; stroke: var(--ink-3); stroke-width: 1.5; }
+.fc-dot { fill: var(--ink); stroke: var(--bg); stroke-width: 2; shape-rendering: crispEdges; }
+.fc-dot--sel { fill: var(--brand); }
+.fc-dot.is-neg { fill: var(--danger); }
+.fc .is-hidden { display: none; }
+.fc-y { position: absolute; right: 0; transform: translateY(-50%); font-size: 11px; line-height: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; pointer-events: none; }
+.fc-x { position: absolute; top: 160px; transform: translateX(-50%); font-size: 11px; line-height: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; pointer-events: none; }
+.fc-x--start { transform: none; }
+.fc-x--end { transform: translateX(-100%); }
+.fc-now { position: absolute; top: 0; font-size: 11px; line-height: 14px; font-weight: 700; color: var(--ink); pointer-events: none; }
+.fc-hit { position: absolute; left: 0; top: 0; width: 256px; height: 158px; display: grid; }
+.fc-hit__day { border: 0; padding: 0; margin: 0; background: transparent; cursor: pointer; }
+.fc-hit__day:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.fc-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; line-height: 16px; color: var(--ink-2); }
+.fc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.fc-key { display: inline-block; width: 16px; border-top: 2px solid var(--brand); }
+.fc-key--est { border-top-style: dashed; }
+.fc-key-sq { display: inline-block; width: 6px; height: 6px; background: var(--ink-2); }
+.fc-key-sq--in { background: var(--positive); }
+.fc-read { background: var(--surface-2); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.fc-read__head { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+.fc-read__head .tk-amt { margin-left: auto; }
+.fc-read__row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; }
+
+/* Repeat section in Catat */
+.repeat { background: var(--surface-2); padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+.repeat .tk-chip { background: var(--surface); }
+.repeat .tk-chip.is-selected { background: var(--brand-soft); }
+
+/* Sheet body rows (formula) */
+.formula { display: flex; flex-direction: column; gap: 10px; padding: 4px 0 8px; }
+.formula__row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; }
+.formula__total { border-top: 2px solid var(--ink); padding-top: 10px; font-weight: 700; font-size: 16px; }
+
+.tk-screen .is-hidden { display: none; }

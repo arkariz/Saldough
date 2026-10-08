@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Rincian rutin</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="rencana.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub">
+    <a class="tk-iconbtn" href="Rutin.dc.html" aria-label="Kembali"><span class="tk-icon">arrow_back</span></a>
+    <h1 class="tk-topbar__title">Cicilan iPhone</h1>
+    <button class="tk-iconbtn" type="button" aria-label="Lainnya: jeda, akhiri, hapus"><span class="tk-icon">more_vert</span></button>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 24px; padding: 0 16px 96px">
+    <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <span class="tk-tile tk-tile--px"><img src="/_blob/3a857ac526ad1b82c14ca6648e20568b" alt="" width="32" height="32"></span>
+        <div class="tk-stat"><span class="tk-t-body-sm tk-ink-2">Pengeluaran · Tagihan</span><span class="tk-amt tk-t-amount-lg">−Rp2.914.000</span></div>
+      </div>
+      <hr class="tk-divider">
+      <div class="inset__row"><span class="tk-ink-2">Jadwal</span><span>Tiap tanggal 10</span></div>
+      <div class="inset__row"><span class="tk-ink-2">Dompet</span><span style="display: inline-flex; align-items: center; gap: 6px"><img src="/_blob/111194542e6d27a54d91cb9dbe6cc4a4" alt="" width="20" height="20" style="image-rendering: pixelated">BCA</span></div>
+      <div class="inset__row"><span class="tk-ink-2">Berakhir</span><span>12 kali, 10 Jun 2027</span></div>
+      <div class="inset__row"><span class="tk-ink-2">Cara bayar</span><span>Autodebet</span></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px">
+        <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px" role="img" aria-label="3 dari 12 sudah tercatat">
+          <span style="height: 10px; background: var(--brand)"></span><span style="height: 10px; background: var(--brand)"></span><span style="height: 10px; background: var(--brand)"></span>
+          <span style="height: 10px; background: var(--surface-2); outline: 1px dashed var(--line-strong); outline-offset: -1px"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span><span style="height: 10px; background: var(--surface-2)"></span>
+        </div>
+        <div class="tk-t-body-sm tk-ink-2" style="display: flex; justify-content: space-between"><span>3 dari 12 tercatat</span><span>Lunas Jun 2027</span></div>
+      </div>
+      <div class="inset">
+        <div class="inset__row"><span class="tk-ink-2">Sesudah lunas, ruang bebas</span><span class="tk-amt tk-amt--pos" style="font-weight: 700">+Rp2.914.000/bln</span></div>
+      </div>
+    </div>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2></div>
+      <div class="tk-list">
+        <sc-for list="{{next}}" as="r" hint-placeholder-count="3">
+          <div class="sched {{r.cls}}">
+            <span class="sched__date"><span class="sched__day">{{r.day}}</span><span class="sched__dow">{{r.mon}}</span></span>
+            <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><span class="tk-row__sub">{{r.sub}}</span></span>
+            <span class="tk-amt tk-t-amount">{{r.amt}}</span>
+            <button class="tk-btn tk-btn--text tk-btn--sm" type="button" onClick="{{r.act}}">{{r.actLabel}}</button>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">Tercatat</h2></div>
+      <div class="tk-list">
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Sep</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-3</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Agu</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-2</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Jul</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-1</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="tk-sticky-action">
+    <a class="tk-btn tk-btn--primary tk-btn--block" href="CatatUlangi.dc.html"><span class="tk-icon">edit</span>Ubah</a>
+  </div>
+
+  <sc-if value="{{hasSnack}}" hint-placeholder-val="{{false}}">
+    <div class="tk-snack" role="status" style="position: absolute; left: 16px; right: 16px; bottom: 88px">
+      <span class="tk-snack__text">{{snackText}}</span>
+      <button class="tk-snack__action" type="button" onClick="{{undo}}">Urungkan</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const skipped = s.skipped || {};
+    const items = [
+      { id: 'okt', day: '10', mon: 'Okt', n: 4, label: '10 Okt' },
+      { id: 'nov', day: '10', mon: 'Nov', n: 5, label: '10 Nov' },
+      { id: 'des', day: '10', mon: 'Des', n: 6, label: '10 Des' }
+    ];
+    const next = items.map((it) => {
+      const off = !!skipped[it.id];
+      return {
+        day: it.day, mon: it.mon,
+        cls: off ? 'is-done' : '',
+        title: 'Ke-' + it.n,
+        sub: off ? 'dilewati' : (it.id === 'okt' ? 'saldo BCA diperkirakan kurang' : ''),
+        amt: '−Rp2.914.000',
+        actLabel: off ? 'Batalkan' : 'Lewati',
+        act: () => {
+          const nx = Object.assign({}, skipped);
+          if (off) { delete nx[it.id]; this.setState({ skipped: nx, snack: '' }); }
+          else { nx[it.id] = true; this.setState({ skipped: nx, snack: 'Cicilan iPhone ' + it.label + ' dilewati.', last: it.id }); }
+        }
+      };
+    });
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      next: next,
+      hasSnack: !!s.snack,
+      snackText: s.snack || '',
+      undo: () => { const nx = Object.assign({}, skipped); delete nx[s.last]; this.setState({ skipped: nx, snack: '' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

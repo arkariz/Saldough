@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Rencana, Rutin</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="rencana.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">Rencana</h1>
+  </header>
+  <nav class="tk-subtabs" aria-label="Bagian Rencana">
+    <a class="tk-subtab" href="Main.dc.html">Bulan ini</a>
+    <a class="tk-subtab" href="Anggaran.dc.html">Anggaran</a>
+    <a class="tk-subtab is-active" href="Rutin.dc.html" aria-current="page">Rutin</a>
+  </nav>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 16px 16px 32px">
+    <section class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+      <span class="tk-t-body-sm tk-ink-2">Sisa tagihan rutin · Okt</span>
+      <p class="tk-amt tk-t-amount-hero" style="margin-top: -8px">{{hero.left}}</p>
+      <div class="inset">
+        <div class="inset__row"><span class="tk-ink-2">Rencana</span><span class="tk-amt tk-t-amount-sm">Rp5.879.000</span></div>
+        <div class="inset__row"><span class="tk-ink-2">Sudah keluar</span><span class="tk-amt tk-t-amount-sm">{{hero.out}}</span></div>
+      </div>
+    </section>
+
+    <div class="tk-chips" role="group" aria-label="Jenis rutin">
+      <button class="tk-chip tk-chip--on-bg {{f0.cls}}" type="button" aria-pressed="{{f0.pressed}}" onClick="{{f0.pick}}">Semua</button>
+      <button class="tk-chip tk-chip--on-bg {{f1.cls}}" type="button" aria-pressed="{{f1.pressed}}" onClick="{{f1.pick}}">Masuk</button>
+      <button class="tk-chip tk-chip--on-bg {{f2.cls}}" type="button" aria-pressed="{{f2.pressed}}" onClick="{{f2.pick}}">Keluar</button>
+      <button class="tk-chip tk-chip--on-bg {{f3.cls}}" type="button" aria-pressed="{{f3.pressed}}" onClick="{{f3.pick}}">Transfer</button>
+    </div>
+
+    <sc-if value="{{showWaiting}}" hint-placeholder-val="{{true}}">
+      <section class="tk-section">
+        <div class="group-label"><span class="dot"></span>Menunggu dicatat</div>
+        <div class="tk-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px 16px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span class="sched__date"><span class="sched__day">1</span><span class="sched__dow">Kam</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/cc1e488ee5f43c050d4c6558ebd58a86" alt="" width="32" height="32"></span>
+            <a class="tk-row__main" href="RincianRutin.dc.html"><span class="tk-row__title">Netflix</span><span class="tk-row__sub">kemarin</span></a>
+            <span class="tk-amt tk-t-amount">−Rp65.000</span>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 8px">
+            <button class="tk-btn tk-btn--text tk-btn--sm" type="button" onClick="{{skip}}">Lewati</button>
+            <button class="tk-btn tk-btn--secondary tk-btn--sm" type="button" onClick="{{record}}">Catat</button>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <section class="tk-section">
+      <div class="group-label">Bulan ini</div>
+      <div class="tk-list">
+        <sc-for list="{{month}}" as="r" hint-placeholder-count="5">
+          <a class="sched {{r.cls}}" href="RincianRutin.dc.html">
+            <span class="sched__date"><span class="sched__day">{{r.day}}</span><span class="sched__dow">{{r.dow}}</span></span>
+            <sc-if value="{{r.px}}" hint-placeholder-val="{{true}}"><span class="tk-tile tk-tile--px"><img src="{{r.icon}}" alt="" width="32" height="32"></span></sc-if>
+            <sc-if value="{{r.line}}" hint-placeholder-val="{{false}}"><span class="tk-tile tk-tile--brown"><span class="tk-icon">volunteer_activism</span></span></sc-if>
+            <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><span class="tk-row__sub">{{r.meta}}</span></span>
+            <span class="tk-row__end"><span class="{{r.amtCls}}">{{r.amt}}</span></span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-if value="{{showLater}}" hint-placeholder-val="{{true}}">
+      <section class="tk-section">
+        <div class="group-label">Nanti</div>
+        <div class="tk-list">
+          <a class="sched" href="RincianRutin.dc.html">
+            <span class="sched__date"><span class="sched__day">12</span><span class="sched__dow">Mar</span></span>
+            <span class="tk-tile tk-tile--px"><img src="/_blob/052610a5f3f22715a5513fc3bded3820" alt="" width="32" height="32"></span>
+            <span class="tk-row__main"><span class="tk-row__title">Asuransi motor</span><span class="tk-row__sub">tiap tahun</span></span>
+            <span class="tk-amt tk-t-amount">−Rp1.250.000</span>
+          </a>
+        </div>
+      </section>
+    </sc-if>
+
+    <button class="tk-link" type="button" style="align-self: flex-start">Selesai (1)<span class="tk-icon tk-icon--sm">chevron_right</span></button>
+    <a class="tk-btn tk-btn--secondary tk-btn--block" href="CatatUlangi.dc.html"><span class="tk-icon">add</span>Tambah rutin</a>
+  </main>
+
+  <nav class="tk-nav" aria-label="Navigasi utama">
+    <a class="tk-nav__item" href="Beranda.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</button>
+    <a class="tk-nav__catat" href="CatatUlangi.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
+    <a class="tk-nav__item is-active" href="Main.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
+    <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</button>
+  </nav>
+
+  <sc-if value="{{hasSnack}}" hint-placeholder-val="{{false}}">
+    <div class="tk-snack" role="status" style="position: absolute; left: 16px; right: 16px; bottom: 88px">
+      <span class="tk-snack__text">{{snackText}}</span>
+      <button class="tk-snack__action" type="button" onClick="{{undo}}">Urungkan</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const filter = s.filter || 'all';
+    const netflix = s.netflix || 'waiting';
+    const B = (id) => '/_blob/' + id;
+    const rows = [
+      { kind: 'expense', day: '1', dow: 'Kam', icon: B('697d3c98cc0fffb7ebfebb045ce495dc'), title: 'Kos', meta: '✓', amt: '−Rp1.900.000', done: true },
+      { kind: 'expense', day: '1', dow: 'Kam', icon: B('cc1e488ee5f43c050d4c6558ebd58a86'), title: 'Netflix', meta: '✓', amt: '−Rp65.000', done: true, netflix: true },
+      { kind: 'expense', day: '5', dow: 'Sen', icon: B('b6f5395e69800807a8c9ae3ba446d7ee'), title: 'Listrik', meta: '', amt: '≈−Rp200.000' },
+      { kind: 'expense', day: '10', dow: 'Sab', icon: B('3a857ac526ad1b82c14ca6648e20568b'), title: 'Cicilan iPhone', meta: '4 dari 12', amt: '−Rp2.914.000' },
+      { kind: 'income', day: '25', dow: 'Min', icon: B('8820c66926bffb77a5ecac199e22b3bd'), title: 'Gaji', meta: '', amt: '+Rp12.000.000' },
+      { kind: 'transfer', day: '26', dow: 'Sen', icon: B('c3d76be2acc728420ea397f6268b89d0'), title: 'Tabungan', meta: 'ke Tabungan', amt: 'Rp1.000.000' },
+      { kind: 'expense', day: '28', dow: 'Rab', icon: '', title: 'Sabil', meta: '', amt: '−Rp800.000' }
+    ];
+    const month = rows
+      .filter((r) => !r.netflix || netflix === 'recorded')
+      .filter((r) => filter === 'all' || r.kind === filter)
+      .map((r) => Object.assign({}, r, {
+        cls: r.done ? 'is-done' : '',
+        px: !!r.icon,
+        line: !r.icon,
+        amtCls: 'tk-amt tk-t-amount' + (r.kind === 'income' ? ' tk-amt--pos' : r.kind === 'transfer' ? ' tk-amt--muted' : '')
+      }));
+    const chip = (key) => ({ cls: filter === key ? 'is-selected' : '', pressed: filter === key ? 'true' : 'false', pick: () => this.setState({ filter: key }) });
+    const recorded = netflix === 'recorded';
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      hero: recorded ? { left: '≈Rp3.914.000', out: '−Rp1.965.000' } : { left: '≈Rp3.979.000', out: '−Rp1.900.000' },
+      f0: chip('all'), f1: chip('income'), f2: chip('expense'), f3: chip('transfer'),
+      showWaiting: netflix === 'waiting' && (filter === 'all' || filter === 'expense'),
+      showLater: filter === 'all' || filter === 'expense',
+      month: month,
+      record: () => this.setState({ netflix: 'recorded', snack: 'Netflix tercatat. Berikutnya 1 Nov.' }),
+      skip: () => this.setState({ netflix: 'skipped', snack: 'Netflix 1 Okt dilewati.' }),
+      hasSnack: !!s.snack,
+      snackText: s.snack || '',
+      undo: () => this.setState({ netflix: 'waiting', snack: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

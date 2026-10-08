@@ -19,6 +19,7 @@
     "homeTabLabel": "Home",
     "budgetTabLabel": "Budget",
     "recordAction": "Record",
+    "recordVoiceHint": "Long-press to record by voice",
     "transactionsTabLabel": "History",
     "walletsTabLabel": "Wallets",
     "planTabLabel": "Plan"
@@ -706,7 +707,7 @@
     "freelanceReceiveTitle": "Money actually arrives",
     "freelanceReceiveBody": "Record it when the pay arrives: your wallet balance grows and the invoice is settled.",
     "homeVoiceTitle": "Record by voice",
-    "homeVoiceBody": "Tap, say one transaction, then check the form before recording it.",
+    "homeVoiceBody": "Long-press the Record button, say one transaction, then check the form before recording it.",
     "planTabsTitle": "Plan",
     "planTabsBody": "This month, budgets, and recurring transactions live here. Tap to switch.",
     "planUnplannedTitle": "Unplanned money",

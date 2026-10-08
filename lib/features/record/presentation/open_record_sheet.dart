@@ -11,6 +11,7 @@ import 'package:saldough/features/record/presentation/widgets/record_choice.dart
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 import 'package:saldough/features/record/presentation/widgets/record_saving_dialog.dart';
 import 'package:saldough/features/record/presentation/widgets/transfer_form_sheet.dart';
+import 'package:saldough/features/voice_capture/presentation/navigation/voice_capture_route_keys.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -206,6 +207,11 @@ Future<bool> openRecordSheet(
   // pemanggil menyegarkan saldo sesudahnya seperti biasa.
   if (result is OpenFreelance) {
     await context.pushRoute(FreelanceRouteKeys.overview, const EmptyInput());
+    return false;
+  }
+  // Mikrofon di bar atas CATAT: suara mengisi draf lalu membuka CATAT lagi.
+  if (result is OpenVoiceCapture) {
+    await context.pushRoute(VoiceCaptureRouteKeys.capture, const EmptyInput());
     return false;
   }
   if (result is RecordEvent) {

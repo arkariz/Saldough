@@ -81,7 +81,7 @@ void main() {
     await tester.pump();
     await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
     await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
-    await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
+    await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
     await tester.pumpAndSettle();
   }
 
@@ -201,7 +201,7 @@ void main() {
       await tester.pump(); // + ScopeWidget<BudgetScope> (T-4.5)
       await tester.pump(); // + ScopeWidget<HomeScope> (Fase 6)
       await tester.pump(); // WalletScope (T-2.7), bersarang setelah TransactionScope.
-      await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
+      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
       await tester.pumpAndSettle();
 
       expect(find.text(t.transaction.loadErrorTitle), findsOneWidget);

@@ -19,6 +19,7 @@
     "homeTabLabel": "Beranda",
     "budgetTabLabel": "Anggaran",
     "recordAction": "Catat",
+    "recordVoiceHint": "Tekan lama untuk catat pakai suara",
     "transactionsTabLabel": "Riwayat",
     "walletsTabLabel": "Dompet",
     "planTabLabel": "Rencana"
@@ -706,7 +707,7 @@
     "freelanceReceiveTitle": "Uang benar-benar masuk",
     "freelanceReceiveBody": "Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.",
     "homeVoiceTitle": "Catat pakai suara",
-    "homeVoiceBody": "Ketuk, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.",
+    "homeVoiceBody": "Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.",
     "planTabsTitle": "Rencana",
     "planTabsBody": "Bulan ini, anggaran, dan transaksi rutin ada di sini. Ketuk untuk berpindah.",
     "planUnplannedTitle": "Uang nganggur",

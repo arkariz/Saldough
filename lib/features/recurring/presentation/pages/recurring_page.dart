@@ -84,7 +84,7 @@ class RecurringSegmentView extends StatelessWidget {
             ],
           );
         }
-        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.fabClearance);
+        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
         // Sepertinya rutin (ADR-037 §3.3), juga saat belum ada rutin.
         final suggestions = suggestRecurring(
           state.transactions,

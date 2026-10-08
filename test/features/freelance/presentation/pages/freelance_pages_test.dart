@@ -9,6 +9,7 @@ import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
@@ -135,7 +136,7 @@ void main() {
   }
 
   Future<void> openFreelanceThroughRecord(WidgetTester tester) async {
-    await tester.tap(find.byKey(const ValueKey('shell-record-fab')));
+    await tester.tap(find.byKey(const ValueKey('nav-catat')));
     await tester.pumpAndSettle();
     await tester.tap(find.text(t.record.kindIncome));
     await tester.pumpAndSettle();
@@ -223,7 +224,7 @@ void main() {
       ),
     );
     await openShell(tester);
-    await tester.tap(find.widgetWithText(NavigationDestination, t.appShell.transactionsTabLabel));
+    await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Honor Studio Koding'));
     await tester.pumpAndSettle();

@@ -102,7 +102,7 @@ class PlanMonthView extends StatelessWidget {
     return BlocBuilder<PlanMonthBloc, PlanMonthState>(
       builder: (context, state) {
         if (state.isLoading) return const AppSkeletonPage();
-        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.fabClearance);
+        const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
         if (state.loadFailed) {
           return ListView(
             padding: padding,

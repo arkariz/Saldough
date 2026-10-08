@@ -98,7 +98,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                   AppSpacing.space4,
                   AppSpacing.space2,
                   AppSpacing.space4,
-                  AppSpacing.fabClearance,
+                  AppSpacing.space12,
                 ),
                 children: [
                   SpotlightTarget(

@@ -187,7 +187,7 @@ class _Body extends StatelessWidget {
           AppSpacing.space4,
           0,
           AppSpacing.space4,
-          AppSpacing.fabClearance,
+          AppSpacing.space12,
         ),
         sliver: SliverToBoxAdapter(
           child: TransactionEmptyMonthState(
@@ -202,7 +202,7 @@ class _Body extends StatelessWidget {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.fabClearance),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space12),
           child: Column(
             children: [
               TransactionEmptyFilterState(onClearFilters: onClearFilters),
@@ -227,7 +227,7 @@ class _Body extends StatelessWidget {
         AppSpacing.space4,
         0,
         AppSpacing.space4,
-        AppSpacing.fabClearance,
+        AppSpacing.space12,
       ),
       sliver: SliverList.separated(
         itemCount: state.groups.length,

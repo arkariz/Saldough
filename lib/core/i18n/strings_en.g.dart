@@ -100,6 +100,7 @@ class _Translations$appShell$en extends Translations$appShell$id {
 	@override String get homeTabLabel => 'Home';
 	@override String get budgetTabLabel => 'Budget';
 	@override String get recordAction => 'Record';
+	@override String get recordVoiceHint => 'Long-press to record by voice';
 	@override String get transactionsTabLabel => 'History';
 	@override String get walletsTabLabel => 'Wallets';
 	@override String get planTabLabel => 'Plan';
@@ -769,7 +770,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get freelanceReceiveTitle => 'Money actually arrives';
 	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
 	@override String get homeVoiceTitle => 'Record by voice';
-	@override String get homeVoiceBody => 'Tap, say one transaction, then check the form before recording it.';
+	@override String get homeVoiceBody => 'Long-press the Record button, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
 	@override String get planTabsBody => 'This month, budgets, and recurring transactions live here. Tap to switch.';
 	@override String get planUnplannedTitle => 'Unplanned money';
@@ -1452,6 +1453,7 @@ extension on TranslationsEn {
 			'appShell.homeTabLabel' => 'Home',
 			'appShell.budgetTabLabel' => 'Budget',
 			'appShell.recordAction' => 'Record',
+			'appShell.recordVoiceHint' => 'Long-press to record by voice',
 			'appShell.transactionsTabLabel' => 'History',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'appShell.planTabLabel' => 'Plan',
@@ -1948,9 +1950,9 @@ extension on TranslationsEn {
 			'freelance.paymentDeleteAction' => 'Delete',
 			'freelance.paymentDeleteConfirmTitle' => 'Delete payment?',
 			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
-			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
 			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
 			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
 			'freelance.paymentCreatedMessage' => 'Payment created.',
@@ -2117,7 +2119,7 @@ extension on TranslationsEn {
 			'tour.freelanceReceiveTitle' => 'Money actually arrives',
 			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
 			'tour.homeVoiceTitle' => 'Record by voice',
-			'tour.homeVoiceBody' => 'Tap, say one transaction, then check the form before recording it.',
+			'tour.homeVoiceBody' => 'Long-press the Record button, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
 			'tour.planTabsBody' => 'This month, budgets, and recurring transactions live here. Tap to switch.',
 			'tour.planUnplannedTitle' => 'Unplanned money',
@@ -2462,9 +2464,9 @@ extension on TranslationsEn {
 			'recurring.budgetLinkLabel' => 'Budget item',
 			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
-			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			'recurring.budgetLinkRemove' => 'Unlink',
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',

@@ -183,7 +183,7 @@ void main() {
     );
   }
 
-  int navIndex(WidgetTester tester) => tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex;
+  int navIndex(WidgetTester tester) => tester.widget<AppNavBar>(find.byType(AppNavBar)).selectedIndex;
 
   testWidgets('tanpa dompet: ajakan membuat dompet pertama, panduan, dan tanpa kartu berangka nol (FR-HOME-005)', (
     tester,
@@ -255,7 +255,7 @@ void main() {
 
     await tester.tap(find.text(t.home.seeAll));
     await tester.pumpAndSettle();
-    expect(navIndex(tester), 2);
+    expect(navIndex(tester), 1); // Riwayat (urutan ADR-034).
   });
 
   testWidgets('seluruh kartu anggaran bisa diketuk dan membuka tab Anggaran', (tester) async {
@@ -265,7 +265,7 @@ void main() {
 
     await tester.tap(find.byType(HomeBudgetCard));
     await tester.pumpAndSettle();
-    expect(navIndex(tester), 1);
+    expect(navIndex(tester), 2); // Rencana (urutan ADR-034).
   });
 
   testWidgets('Beranda di layar 360px + teks 2x tidak overflow', (tester) async {
@@ -409,7 +409,7 @@ void main() {
     }
 
     Future<void> openTab(WidgetTester tester, String label) async {
-      await tester.tap(find.widgetWithText(NavigationDestination, label));
+      await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(label)));
       await tester.pumpAndSettle();
     }
 

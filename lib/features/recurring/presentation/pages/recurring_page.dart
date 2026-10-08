@@ -197,19 +197,20 @@ class RecurringSegmentView extends StatelessWidget {
                       AppChip(
                         label: label,
                         selected: filter == kind,
+                        onBg: true,
                         onTap: () => bloc.add(RecurringKindFilterChanged(kind)),
                       ),
-                      const SizedBox(width: AppSpacing.space1),
+                      const SizedBox(width: AppSpacing.space2),
                     ],
                   ],
                 ),
               ),
               const SizedBox(height: AppSpacing.space2),
               if (visible.isEmpty) ...[
-                Text(t.recurring.filteredEmpty),
-                TextButton(
+                Text(t.recurring.filteredEmpty, textAlign: TextAlign.center),
+                AppButton.text(
+                  label: t.recurring.showAllAction,
                   onPressed: () => bloc.add(const RecurringKindFilterChanged(null)),
-                  child: Text(t.recurring.showAllAction),
                 ),
               ] else
                 for (final group in RecurringGroup.values)
@@ -221,23 +222,40 @@ class RecurringSegmentView extends StatelessWidget {
                         children: [for (final entry in rows) _row(context, state, entry)],
                       )
                     else ...[
-                      AppSectionLabel(_groupLabel(group)),
+                      _GroupLabel(_groupLabel(group), dot: group == RecurringGroup.pending),
+                      const SizedBox(height: AppSpacing.space2),
                       if (group == RecurringGroup.pending) ...[
-                        // Hanya baris pertama yang disorot.
-                        for (final (i, entry) in rows.indexed)
-                          SpotlightTarget(
-                            spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
-                            child: RecurringPendingTile(entry: entry, state: state),
-                          ),
-                        ?recordAllButton(context, rows),
+                        AppListCard(
+                          dividerIndent: AppListCard.tileIndent + AppSize.tile + AppSpacing.space3,
+                          children: [
+                            // Hanya baris pertama yang disorot.
+                            for (final (i, entry) in rows.indexed)
+                              SpotlightTarget(
+                                spotlightKey: i == 0 ? SpotlightKey.recurringPending : null,
+                                child: RecurringPendingTile(entry: entry, state: state),
+                              ),
+                          ],
+                        ),
+                        if (recordAllButton(context, rows) case final recordAll?) ...[
+                          const SizedBox(height: AppSpacing.space2),
+                          recordAll,
+                        ],
                       ] else
-                        for (final entry in rows) _row(context, state, entry),
+                        AppListCard(
+                          dividerIndent: AppListCard.tileIndent + AppSize.tile + AppSpacing.space3,
+                          children: [for (final entry in rows) _row(context, state, entry)],
+                        ),
                     ],
                   ],
               const SizedBox(height: AppSpacing.space4),
               SpotlightTarget(
                 spotlightKey: SpotlightKey.recurringAdd,
-                child: AppButton.secondary(label: t.recurring.addAction, onPressed: () => _add(context)),
+                child: AppButton.secondary(
+                  label: t.recurring.addAction,
+                  icon: IconKey.add,
+                  expand: true,
+                  onPressed: () => _add(context),
+                ),
               ),
             ],
           ),
@@ -283,12 +301,13 @@ class _FoldedGroupState extends State<_FoldedGroup> {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: TextButton(
+          child: AppButton.text(
+            label: widget.label,
+            icon: _open ? IconKey.expandLess : IconKey.chevronRight,
             onPressed: () => setState(() => _open = !_open),
-            child: Text('${widget.label} ${_open ? '⌄' : '›'}'),
           ),
         ),
-        if (_open) ...widget.children,
+        if (_open) AppListCard(children: widget.children),
       ],
     );
   }
@@ -434,6 +453,34 @@ class _AutoRecordedCard extends StatelessWidget {
                 ),
               ],
             ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Label kelompok di daftar Rutin (`rencana.css` `.group-label`): `label`
+/// `ink2`, titik `brand` untuk Menunggu dicatat.
+class _GroupLabel extends StatelessWidget {
+  const _GroupLabel(this.label, {this.dot = false});
+
+  final String label;
+  final bool dot;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+      child: Row(
+        children: [
+          if (dot) ...[Container(width: 8, height: 8, color: colors.brand), const SizedBox(width: 6)],
+          Flexible(
+            child: Semantics(
+              header: true,
+              child: Text(label, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: colors.ink2)),
+            ),
+          ),
         ],
       ),
     );

@@ -108,12 +108,10 @@ class HomeMonthCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.space2),
               Flexible(
-                child: FitStart(
-                  child: AppMoneyText(
-                    net,
-                    size: MoneySize.small,
-                    color: colors.ink,
-                  ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: AppMoneyText(net, size: MoneySize.small, color: colors.ink),
                 ),
               ),
             ],

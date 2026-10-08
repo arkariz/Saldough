@@ -80,6 +80,7 @@ class WalletSpreadBar extends StatelessWidget {
           child: SizedBox(
             height: 12,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (final (i, w) in shown.indexed) ...[
                   if (i > 0) const SizedBox(width: 2),

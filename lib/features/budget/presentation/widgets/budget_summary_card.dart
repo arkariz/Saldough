@@ -28,7 +28,9 @@ class BudgetSummaryCard extends StatelessWidget {
     Widget row(String label, Widget amount) => Row(
       children: [
         Expanded(child: Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.ink2))),
-        Flexible(child: FitStart(child: amount)),
+        Flexible(
+          child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerEnd, child: amount),
+        ),
       ],
     );
     return AppCard(

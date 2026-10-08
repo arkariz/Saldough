@@ -102,7 +102,15 @@ class AppListRow extends StatelessWidget {
             ),
             if (trailing != null) ...[
               const SizedBox(width: AppSpacing.space3),
-              trailing!,
+              // Nominal tidak pernah terpotong: diperkecil bila judul dan
+              // nominal tidak muat sebaris (layar sempit, teks 200%).
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: trailing,
+                ),
+              ),
             ],
             if (chevron) ...[
               const SizedBox(width: AppSpacing.space1),

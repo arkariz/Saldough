@@ -1,4 +1,5 @@
 import 'package:saldough/core/currency/active_currency.dart';
+import 'package:saldough/core/currency/amount_visibility.dart';
 import 'package:saldough/core/currency/app_currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 
@@ -81,6 +82,8 @@ abstract final class AppMoneyFormatter {
       final cents = (abs % 100).toString().padLeft(2, '0');
       body = '${MoneySeparators.groupThousands(abs ~/ 100)}${MoneySeparators.decimal}$cents';
     }
+    // Sembunyikan nominal (ADR-034): tanda tetap, angkanya tidak.
+    if (AmountVisibility.hidden) return '${isNegative ? '−' : ''}${active.symbol}${AmountVisibility.mask}';
     return '${isNegative ? '−' : ''}${active.symbol}$body';
   }
 

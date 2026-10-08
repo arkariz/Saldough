@@ -1622,8 +1622,8 @@ class Translations$home$id {
 	/// id: 'Beranda gagal dimuat'
 	String get loadErrorTitle => 'Beranda gagal dimuat';
 
-	/// id: 'Total kas aktif'
-	String get balanceLabel => 'Total kas aktif';
+	/// id: 'Total saldo'
+	String get balanceLabel => 'Total saldo';
 
 	/// id: '$count dompet aktif'
 	String walletCount({required Object count}) => '${count} dompet aktif';
@@ -1744,6 +1744,39 @@ class Translations$home$id {
 
 	/// id: '$percent% terpakai'
 	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
+
+	/// id: 'Di $count dompet'
+	String walletLink({required Object count}) => 'Di ${count} dompet';
+
+	/// id: 'Selisih bulan ini'
+	String get netLabel => 'Selisih bulan ini';
+
+	/// id: 'Sembunyikan nominal'
+	String get hideAmounts => 'Sembunyikan nominal';
+
+	/// id: 'Tampilkan nominal'
+	String get showAmounts => 'Tampilkan nominal';
+
+	/// id: 'Aman'
+	String get budgetSafe => 'Aman';
+
+	/// id: 'Hampir habis'
+	String get budgetNearlyOut => 'Hampir habis';
+
+	/// id: 'Lewat $amount'
+	String budgetOverBy({required Object amount}) => 'Lewat ${amount}';
+
+	/// id: 'Belum diterima'
+	String get freelanceRowTitle => 'Belum diterima';
+
+	/// id: '$count tagihan, perkiraan $date'
+	String freelanceRowSub({required Object count, required Object date}) => '${count} tagihan, perkiraan ${date}';
+
+	/// id: 'Pemasukan'
+	String get incomeStat => 'Pemasukan';
+
+	/// id: 'Pengeluaran'
+	String get expenseStat => 'Pengeluaran';
 }
 
 // Path: onboarding
@@ -2202,6 +2235,9 @@ class Translations$account$id {
 	String get deletedMessage => 'Akun dihapus.';
 
 	late final Translations$account$errors$id errors = Translations$account$errors$id.internal(_root);
+
+	/// id: 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.'
+	String get hideAmountsBody => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.';
 }
 
 // Path: currency
@@ -4242,7 +4278,7 @@ extension on Translations {
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
-			'home.balanceLabel' => 'Total kas aktif',
+			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
 			'home.moreWallets' => ({required Object count}) => '+${count} lainnya',
 			'home.startBadge' => 'Mulai catat',
@@ -4283,6 +4319,17 @@ extension on Translations {
 			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
 			'home.openCard' => ({required Object name}) => 'Buka ${name}',
 			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
+			'home.walletLink' => ({required Object count}) => 'Di ${count} dompet',
+			'home.netLabel' => 'Selisih bulan ini',
+			'home.hideAmounts' => 'Sembunyikan nominal',
+			'home.showAmounts' => 'Tampilkan nominal',
+			'home.budgetSafe' => 'Aman',
+			'home.budgetNearlyOut' => 'Hampir habis',
+			'home.budgetOverBy' => ({required Object amount}) => 'Lewat ${amount}',
+			'home.freelanceRowTitle' => 'Belum diterima',
+			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} tagihan, perkiraan ${date}',
+			'home.incomeStat' => 'Pemasukan',
+			'home.expenseStat' => 'Pengeluaran',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -4428,6 +4475,7 @@ extension on Translations {
 			'account.errors.tooManyRequests' => 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.',
 			'account.errors.userDisabled' => 'Akun ini dinonaktifkan.',
 			'account.errors.other' => 'Gagal masuk. Coba lagi.',
+			'account.hideAmountsBody' => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.',
 			'currency.settingsTitle' => 'Pengaturan',
 			'currency.label' => 'Mata uang',
 			'currency.pickerTitle' => 'Pilih mata uang',
@@ -4693,6 +4741,8 @@ extension on Translations {
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.remindersTitle' => 'Pengingat rutin',
 			'recurring.remindersBody' => 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.',
 			'recurring.remindersDenied' => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.',
@@ -4705,8 +4755,6 @@ extension on Translations {
 			'recurring.outLabel' => 'Sudah keluar',
 			'recurring.chipAll' => 'Semua',
 			'recurring.chipIncome' => 'Masuk',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.chipExpense' => 'Keluar',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Pos anggaran',

@@ -218,6 +218,9 @@ abstract final class RootModule {
       ..registerLazySingleton<CurrencyPreferenceRepository>(
         () => CurrencyPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
       )
+      ..registerLazySingleton<AmountVisibilityRepository>(
+        () => AmountVisibilityRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
       ..registerLazySingleton<FinancialMonthPreferenceRepository>(
         () => FinancialMonthPreferenceRepositoryImpl(storage: container<KeyValueStorage>()),
       )

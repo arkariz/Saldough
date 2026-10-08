@@ -225,6 +225,15 @@ enum IconKey {
 
   /// Hapus satu digit di papan angka.
   backspace,
+
+  /// Nominal tampil (tombol sembunyikan nominal).
+  visibility,
+
+  /// Nominal disembunyikan.
+  visibilityOff,
+
+  /// Kotak masuk notifikasi.
+  inbox,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -305,6 +314,9 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.moreVert: Symbols.more_vert_rounded,
   IconKey.back: Symbols.arrow_back_rounded,
   IconKey.backspace: Symbols.backspace_rounded,
+  IconKey.visibility: Symbols.visibility_rounded,
+  IconKey.visibilityOff: Symbols.visibility_off_rounded,
+  IconKey.inbox: Symbols.inbox_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).

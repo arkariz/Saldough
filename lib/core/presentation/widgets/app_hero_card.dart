@@ -173,13 +173,16 @@ class AppHeroCard extends StatelessWidget {
 class HeroAmount extends StatelessWidget {
   /// Membuat [HeroAmount] dari teks nominal yang sudah diformat, mis.
   /// `Rp848.250`, `−Rp1.000` atau `+Rp5.000`.
-  const HeroAmount(this.formatted, {this.color, super.key});
+  const HeroAmount(this.formatted, {this.color, this.symbolColor, super.key});
 
   /// Nominal terformat lewat `AppMoneyFormatter`.
   final String formatted;
 
   /// Warna angka.
   final Color? color;
+
+  /// Warna simbol mata uang; bawaan `ink2`.
+  final Color? symbolColor;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +196,7 @@ class HeroAmount extends StatelessWidget {
       fontSize: heroStyle.fontSize! * 0.56,
       fontWeight: FontWeight.w600,
       letterSpacing: 0,
-      color: color ?? colors.ink2,
+      color: symbolColor ?? colors.ink2,
     );
     // Satu `Text.rich`: tetap terbaca sebagai satu nominal utuh (pembaca
     // layar, pencarian teks di uji) walau awalannya diperkecil.

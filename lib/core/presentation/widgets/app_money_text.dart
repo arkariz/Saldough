@@ -13,9 +13,13 @@ enum MoneyKind {
   /// Transfer: `Rp300.000` tanpa tanda, `ink2`.
   transfer,
 
-  /// Saldo dan sisa: tanpa tanda; negatif `−Rp36.000` berwarna `danger`
-  /// (pemakai menambah badge, bukan hanya warna).
+  /// Saldo dompet: tanpa tanda; negatif ditulis `−Rp36.000` tetap `ink`
+  /// (saldo negatif bukan kesalahan, FR-WAL-003).
   balance,
+
+  /// Sisa anggaran: tanpa tanda; negatif (lewat) `danger`, selalu disertai
+  /// badge yang menyebut selisihnya.
+  remaining,
 }
 
 /// Ukuran nominal (skala Angka, [AppNumberStyles]).
@@ -73,7 +77,7 @@ class AppMoneyText extends StatelessWidget {
     MoneyKind.expense => '−${AppMoneyFormatter.format(sen.abs())}',
     MoneyKind.income => '+${AppMoneyFormatter.format(sen.abs())}',
     MoneyKind.transfer => AppMoneyFormatter.format(sen.abs()),
-    MoneyKind.balance => AppMoneyFormatter.format(sen),
+    MoneyKind.balance || MoneyKind.remaining => AppMoneyFormatter.format(sen),
   };
 
   /// Warna bawaan [kind] untuk [sen].
@@ -82,7 +86,8 @@ class AppMoneyText extends StatelessWidget {
         MoneyKind.expense => colors.ink,
         MoneyKind.income => colors.positive,
         MoneyKind.transfer => colors.ink2,
-        MoneyKind.balance => sen < 0 ? colors.danger : colors.ink,
+        MoneyKind.balance => colors.ink,
+    MoneyKind.remaining => sen < 0 ? colors.danger : colors.ink,
       };
 
   @override

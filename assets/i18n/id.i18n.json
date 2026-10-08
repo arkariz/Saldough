@@ -585,7 +585,7 @@
   },
   "home": {
     "loadErrorTitle": "Beranda gagal dimuat",
-    "balanceLabel": "Total kas aktif",
+    "balanceLabel": "Total saldo",
     "walletCount": "$count dompet aktif",
     "moreWallets": "+$count lainnya",
     "startBadge": "Mulai catat",
@@ -625,7 +625,18 @@
     "freelancePendingInvoices": "$count tagihan tertunda",
     "freelanceSummaryLine": "$hours · diperoleh $earned",
     "openCard": "Buka $name",
-    "budgetUsedBadge": "$percent% terpakai"
+    "budgetUsedBadge": "$percent% terpakai",
+    "walletLink": "Di $count dompet",
+    "netLabel": "Selisih bulan ini",
+    "hideAmounts": "Sembunyikan nominal",
+    "showAmounts": "Tampilkan nominal",
+    "budgetSafe": "Aman",
+    "budgetNearlyOut": "Hampir habis",
+    "budgetOverBy": "Lewat $amount",
+    "freelanceRowTitle": "Belum diterima",
+    "freelanceRowSub": "$count tagihan, perkiraan $date",
+    "incomeStat": "Pemasukan",
+    "expenseStat": "Pengeluaran"
   },
   "onboarding": {
     "skipAction": "Lewati",
@@ -780,7 +791,8 @@
       "tooManyRequests": "Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.",
       "userDisabled": "Akun ini dinonaktifkan.",
       "other": "Gagal masuk. Coba lagi."
-    }
+    },
+    "hideAmountsBody": "Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain."
   },
   "currency": {
     "settingsTitle": "Pengaturan",

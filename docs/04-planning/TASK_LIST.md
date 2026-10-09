@@ -2538,11 +2538,30 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       tak ada di prototipe; legenda dan penanda kejadian grafik perkiraan
       belum dibuat. Sisa gaya lama hanya di keadaan kosong (T-14.11).
       `flutter analyze` bersih, 1.161 uji lulus.
-- [ ] **T-14.11** Keadaan kosong, memuat, dan galat di semua layar
+- [x] **T-14.11** Keadaan kosong, memuat, dan galat di semua layar
       (komponen EmptyState, Skeleton, Banner); Beranda pertama kali
       sesuai `BerandaKosong.dc.html` (daftar tiga langkah).
       Verifikasi: uji widget keadaan per layar.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (9 Okt 2026): komponen `AppEmptyState` (ilustrasi tanuki per
+      layar sesuai design system, judul, satu kalimat manfaat, satu tombol
+      primer; varian penyaring tanpa ilustrasi dengan tombol teks) dan
+      `AppErrorState` (tile peringatan, "Coba lagi" sekunder) dipakai di
+      Dompet, Anggaran, Riwayat (panduan tiga jenis jadi daftar bertile),
+      Freelance (ikhtisar, entri, pembayaran, penyaring), Rutin, Rencana
+      Bulan ini, rincian dompet, dan Beranda. Beranda pertama kali sesuai
+      `BerandaKosong.dc.html`: tanpa dompet kartu saldo Rp0 disembunyikan,
+      ilustrasi + "Mulai dari dompetmu", daftar tiga langkah (yang berjalan
+      tile `brand`, yang selesai centang hijau), tombol "Tambah dompet"; ada
+      dompet tanpa transaksi → langkah 2 berjalan, "Catat transaksi" (alur
+      CATAT yang sama) dan tautan anggaran. `AppSkeletonPage` meniru baris
+      (tile, dua garis, nominal) dan baru tampil sesudah 300ms; tanpa denyut
+      saat kurangi gerakan. `AppStickyBar` (surface + garis atas) untuk
+      tombol menempel; `AppListRow.wrapSubtitle` untuk keterangan
+      penjelasan. Dicek lewat render. Uji: skeleton (jeda, baris, kurangi
+      gerakan), Beranda langkah awal, rincian dompet kosong. Lencana
+      "Inventaris kosong" dan kunci teksnya tidak dipakai lagi (dibersihkan
+      di T-14.12). `flutter analyze` bersih, 1.163 uji lulus.
 - [ ] **T-14.12** Sapuan teks i18n id/en mengikuti glosarium `writing.md`
       (dompet, transaksi, transfer, selisih; hapus kas, log, mutasi, netto,
       inventaris, label langkah "Catat // Transaksi", kapital semua), lalu

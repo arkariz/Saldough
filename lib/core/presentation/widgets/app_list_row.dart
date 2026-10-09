@@ -23,6 +23,7 @@ class AppListRow extends StatelessWidget {
     this.compact = false,
     this.semanticsLabel,
     this.wrapTitle = false,
+    this.wrapSubtitle = false,
     super.key,
   });
 
@@ -56,6 +57,9 @@ class AppListRow extends StatelessWidget {
   /// Judul membungkus ke banyak baris alih-alih elipsis (nama dompet tidak
   /// boleh terpotong, UX-20).
   final bool wrapTitle;
+
+  /// Keterangan membungkus ke banyak baris (penjelasan, bukan meta).
+  final bool wrapSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +118,8 @@ class AppListRow extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 2),
                       child: Text(
                         subtitle!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        maxLines: wrapSubtitle ? null : 1,
+                        overflow: wrapSubtitle ? null : TextOverflow.ellipsis,
                         style: textTheme.bodyMedium?.copyWith(
                           color: colors.ink2,
                         ),

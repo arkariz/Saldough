@@ -37,6 +37,7 @@ class SettingRow extends StatelessWidget {
     leading: AppIcon(icon, color: context.appColors.ink2),
     title: title,
     subtitle: subtitle,
+    wrapSubtitle: true,
     trailing: trailing,
     chevron: trailing == null,
     onTap: onTap,

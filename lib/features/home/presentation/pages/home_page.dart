@@ -132,14 +132,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
           // ini → anggaran → freelance → transaksi terbaru.
-          SpotlightTarget(
-            spotlightKey: SpotlightKey.homeBalance,
-            child: HomeBalanceCard(
-              total: state.totalBalance,
-              walletCount: state.activeWallets.length,
-              onShowWallets: widget.onShowWallets,
+          // Tanpa dompet, Beranda langsung ke langkah awal (`BerandaKosong`):
+          // total Rp0 tidak memberi informasi (FR-HOME-005).
+          if (!state.hasNoWallets)
+            SpotlightTarget(
+              spotlightKey: SpotlightKey.homeBalance,
+              child: HomeBalanceCard(
+                total: state.totalBalance,
+                walletCount: state.activeWallets.length,
+                onShowWallets: widget.onShowWallets,
+              ),
             ),
-          ),
           // Banner kotak masuk membawa jarak atasnya sendiri (kosong = tidak ada).
           ?widget.notice,
           ?widget.pendingRecurring,
@@ -205,14 +208,12 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ] else ...[
-            HomeEmptyTransactions(
+            HomeFirstSteps(
               hasNoWallets: state.hasNoWallets,
               onRecord: () => _thenRefresh(widget.onRecord),
               onAddWallet: widget.onShowWallets,
               onBudget: widget.onShowBudgets,
             ),
-            const SizedBox(height: AppSpacing.space6),
-            const HomeGuide(),
           ],
         ],
       ),
@@ -226,19 +227,6 @@ class _LoadError extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(t.home.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppErrorState(title: t.home.loadErrorTitle, retryLabel: t.common.retry, onRetry: onRetry);
 }

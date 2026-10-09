@@ -1685,6 +1685,36 @@ class Translations$home$id {
 	/// id: 'Inventaris kosong'
 	String get emptyBadge => 'Inventaris kosong';
 
+	/// id: 'Mulai dari dompetmu'
+	String get firstTitle => 'Mulai dari dompetmu';
+
+	/// id: 'Catat di mana uangmu berada sekarang. Setiap transaksi akan memperbarui saldonya.'
+	String get firstBody => 'Catat di mana uangmu berada sekarang. Setiap transaksi akan memperbarui saldonya.';
+
+	/// id: 'Tambah dompet pertama'
+	String get stepWalletTitle => 'Tambah dompet pertama';
+
+	/// id: 'Rekening bank, dompet digital, atau uang tunai beserta saldonya.'
+	String get stepWalletBody => 'Rekening bank, dompet digital, atau uang tunai beserta saldonya.';
+
+	/// id: 'Catat transaksi pertama'
+	String get stepRecordTitle => 'Catat transaksi pertama';
+
+	/// id: 'Pengeluaran, pemasukan, atau transfer. Bisa diketik atau diucapkan.'
+	String get stepRecordBody => 'Pengeluaran, pemasukan, atau transfer. Bisa diketik atau diucapkan.';
+
+	/// id: 'Buat anggaran'
+	String get stepBudgetTitle => 'Buat anggaran';
+
+	/// id: 'Opsional. Rencanakan batas belanja dan lihat sisanya.'
+	String get stepBudgetBody => 'Opsional. Rencanakan batas belanja dan lihat sisanya.';
+
+	/// id: 'Selesai'
+	String get stepDone => 'Selesai';
+
+	/// id: 'Langkah awal'
+	String get stepsTitle => 'Langkah awal';
+
 	/// id: 'Belum ada transaksi'
 	String get emptyTitle => 'Belum ada transaksi';
 
@@ -1694,11 +1724,11 @@ class Translations$home$id {
 	/// id: 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.'
 	String get emptyNoWalletBody => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.';
 
-	/// id: 'Catat Transaksi'
-	String get recordAction => 'Catat Transaksi';
+	/// id: 'Catat transaksi'
+	String get recordAction => 'Catat transaksi';
 
-	/// id: 'Buat Dompet Pertama'
-	String get createWalletAction => 'Buat Dompet Pertama';
+	/// id: 'Tambah dompet'
+	String get createWalletAction => 'Tambah dompet';
 
 	/// id: 'Atau buat anggaran pengeluaran'
 	String get budgetLink => 'Atau buat anggaran pengeluaran';
@@ -4335,11 +4365,21 @@ extension on Translations {
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
 			'home.emptyBadge' => 'Inventaris kosong',
+			'home.firstTitle' => 'Mulai dari dompetmu',
+			'home.firstBody' => 'Catat di mana uangmu berada sekarang. Setiap transaksi akan memperbarui saldonya.',
+			'home.stepWalletTitle' => 'Tambah dompet pertama',
+			'home.stepWalletBody' => 'Rekening bank, dompet digital, atau uang tunai beserta saldonya.',
+			'home.stepRecordTitle' => 'Catat transaksi pertama',
+			'home.stepRecordBody' => 'Pengeluaran, pemasukan, atau transfer. Bisa diketik atau diucapkan.',
+			'home.stepBudgetTitle' => 'Buat anggaran',
+			'home.stepBudgetBody' => 'Opsional. Rencanakan batas belanja dan lihat sisanya.',
+			'home.stepDone' => 'Selesai',
+			'home.stepsTitle' => 'Langkah awal',
 			'home.emptyTitle' => 'Belum ada transaksi',
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
 			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
-			'home.recordAction' => 'Catat Transaksi',
-			'home.createWalletAction' => 'Buat Dompet Pertama',
+			'home.recordAction' => 'Catat transaksi',
+			'home.createWalletAction' => 'Tambah dompet',
 			'home.budgetLink' => 'Atau buat anggaran pengeluaran',
 			'home.guideTitle' => 'Panduan singkat',
 			'home.guideCount' => '3 aturan utama',
@@ -4767,6 +4807,8 @@ extension on Translations {
 			'recurring.recordedAllMessage' => ({required Object n}) => '${n} rutin tercatat.',
 			'recurring.linkedMessage' => ({required Object name}) => '${name} ditautkan.',
 			'recurring.undoAction' => 'Batalkan',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.similarTitle' => 'Sudah tercatat?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.',
 			'recurring.linkAction' => 'Tautkan',
@@ -4777,8 +4819,6 @@ extension on Translations {
 			'recurring.seeAllAction' => 'Lihat semua',
 			'recurring.pendingCardTitle' => 'Menunggu dicatat',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Mencatat ${name} · ${date}',
 			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Cocok dengan rutin ${name} · ${date}',

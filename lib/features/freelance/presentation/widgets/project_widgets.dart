@@ -214,26 +214,18 @@ class AddProjectCard extends StatelessWidget {
 class FreelanceEmptyState extends StatelessWidget {
   /// Membuat [FreelanceEmptyState].
   const FreelanceEmptyState({
-    required this.badge,
     required this.title,
     required this.body,
-    required this.icons,
     this.actionLabel,
     this.onAction,
     super.key,
   });
-
-  /// Teks lencana di atas ilustrasi.
-  final String badge;
 
   /// Judul.
   final String title;
 
   /// Penjelasan.
   final String body;
-
-  /// Ikon ilustrasi: yang pertama besar di tengah, sisanya mengapit kecil.
-  final List<IconKey> icons;
 
   /// Label tombol; tanpa tombol kalau `null`.
   final String? actionLabel;
@@ -242,46 +234,14 @@ class FreelanceEmptyState extends StatelessWidget {
   final VoidCallback? onAction;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final [main, ...sides] = icons;
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space6),
-      child: Column(
-        children: [
-          AppBadge(badge, tone: AppTone.warning),
-          const SizedBox(height: AppSpacing.space6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (sides.isNotEmpty) Opacity(opacity: 0.7, child: AppIcon(sides.first, size: 48)),
-              const SizedBox(width: AppSpacing.space2),
-              AppIcon(main, size: 88),
-              const SizedBox(width: AppSpacing.space2),
-              if (sides.length > 1) Opacity(opacity: 0.7, child: AppIcon(sides[1], size: 48)),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          Text(title, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.space1),
-          Text(
-            body,
-            textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-          ),
-          if (actionLabel != null) ...[
-            const SizedBox(height: AppSpacing.space6),
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(label: actionLabel!, onPressed: onAction),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppEmptyState(
+    art: EmptyArt.freelance,
+    title: title,
+    body: body,
+    actionLabel: actionLabel,
+    actionIcon: IconKey.add,
+    onAction: onAction,
+  );
 }
 
 /// Bilah aksi yang menempel di dasar layar freelance, tidak ikut digulir.
@@ -293,26 +253,16 @@ class FreelanceBottomBar extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(top: BorderSide(color: colors.lineStrong, width: 2)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space2),
-        child: Row(
-          children: [
-            for (final (index, child) in children.indexed) ...[
-              if (index > 0) const SizedBox(width: AppSpacing.space2),
-              Expanded(child: child),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppStickyBar(
+    child: Row(
+      children: [
+        for (final (index, child) in children.indexed) ...[
+          if (index > 0) const SizedBox(width: AppSpacing.space2),
+          Expanded(child: child),
+        ],
+      ],
+    ),
+  );
 }
 
 /// Judul kelompok bulan di daftar entri: ikon kalender, nama bulan, dan

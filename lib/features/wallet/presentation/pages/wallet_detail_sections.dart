@@ -239,42 +239,15 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-/// Keadaan kosong "belum ada transaksi bulan ini untuk dompet ini" -- ikon +
-/// judul + deskripsi, bahasa visual yang sama dengan `TransactionEmptyMonthState`
-/// dan `WalletEmptyState` (hanya diperkecil skalanya karena ini bagian dari
-/// halaman, bukan seluruh layar; CTA "Catat" sudah ada di atas, tidak
-/// diulang di sini).
+/// Keadaan kosong "belum ada transaksi bulan ini untuk dompet ini": design
+/// system EmptyState tanpa ilustrasi dan tanpa tombol, karena ini bagian
+/// halaman dan tombol Catat sudah ada di atas.
 class _EmptyRecentTransactions extends StatelessWidget {
   const _EmptyRecentTransactions();
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.space4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(IconKey.transactions, size: 48, color: colors.ink2),
-            const SizedBox(height: AppSpacing.space2),
-            Text(
-              t.wallet.detailRecentEmptyTitle,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              t.wallet.detailRecentEmpty,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: colors.ink2),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      AppEmptyState(title: t.wallet.detailRecentEmptyTitle, body: t.wallet.detailRecentEmpty);
 }
 
 class _Badge extends StatelessWidget {

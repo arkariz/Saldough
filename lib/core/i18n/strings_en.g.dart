@@ -655,11 +655,21 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get recentTitle => 'Recent transactions';
 	@override String get seeAll => 'See all';
 	@override String get emptyBadge => 'Empty inventory';
+	@override String get firstTitle => 'Start with your wallets';
+	@override String get firstBody => 'Record where your money is right now. Every transaction updates its balance.';
+	@override String get stepWalletTitle => 'Add your first wallet';
+	@override String get stepWalletBody => 'A bank account, e-wallet, or cash, with its balance.';
+	@override String get stepRecordTitle => 'Record your first transaction';
+	@override String get stepRecordBody => 'An expense, income, or transfer. Type it or say it.';
+	@override String get stepBudgetTitle => 'Create a budget';
+	@override String get stepBudgetBody => 'Optional. Plan a spending limit and see what is left.';
+	@override String get stepDone => 'Done';
+	@override String get stepsTitle => 'First steps';
 	@override String get emptyTitle => 'No transactions yet';
 	@override String get emptyBody => 'Start by recording your first income, expense, or transfer.';
 	@override String get emptyNoWalletBody => 'Create your first wallet with its starting balance, then record your first transaction.';
-	@override String get recordAction => 'Record Transaction';
-	@override String get createWalletAction => 'Create First Wallet';
+	@override String get recordAction => 'Record transaction';
+	@override String get createWalletAction => 'Add wallet';
 	@override String get budgetLink => 'Or create a spending budget';
 	@override String get guideTitle => 'Quick guide';
 	@override String get guideCount => '3 core rules';
@@ -2051,11 +2061,21 @@ extension on TranslationsEn {
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
 			'home.emptyBadge' => 'Empty inventory',
+			'home.firstTitle' => 'Start with your wallets',
+			'home.firstBody' => 'Record where your money is right now. Every transaction updates its balance.',
+			'home.stepWalletTitle' => 'Add your first wallet',
+			'home.stepWalletBody' => 'A bank account, e-wallet, or cash, with its balance.',
+			'home.stepRecordTitle' => 'Record your first transaction',
+			'home.stepRecordBody' => 'An expense, income, or transfer. Type it or say it.',
+			'home.stepBudgetTitle' => 'Create a budget',
+			'home.stepBudgetBody' => 'Optional. Plan a spending limit and see what is left.',
+			'home.stepDone' => 'Done',
+			'home.stepsTitle' => 'First steps',
 			'home.emptyTitle' => 'No transactions yet',
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
 			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
-			'home.recordAction' => 'Record Transaction',
-			'home.createWalletAction' => 'Create First Wallet',
+			'home.recordAction' => 'Record transaction',
+			'home.createWalletAction' => 'Add wallet',
 			'home.budgetLink' => 'Or create a spending budget',
 			'home.guideTitle' => 'Quick guide',
 			'home.guideCount' => '3 core rules',
@@ -2483,6 +2503,8 @@ extension on TranslationsEn {
 			'recurring.recordedAllMessage' => ({required Object n}) => '${n} recurring recorded.',
 			'recurring.linkedMessage' => ({required Object name}) => '${name} linked.',
 			'recurring.undoAction' => 'Undo',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.similarTitle' => 'Already recorded?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.',
 			'recurring.linkAction' => 'Link',
@@ -2493,8 +2515,6 @@ extension on TranslationsEn {
 			'recurring.seeAllAction' => 'See all',
 			'recurring.pendingCardTitle' => 'Waiting to record',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',
 			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}',

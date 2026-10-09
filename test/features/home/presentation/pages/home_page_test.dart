@@ -196,7 +196,7 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.text(t.home.createWalletAction), findsOneWidget);
     expect(find.text(t.home.recordAction), findsNothing);
-    expect(find.byType(HomeGuide), findsOneWidget);
+    expect(find.byType(HomeFirstSteps), findsOneWidget);
     // Kartu tanpa isi disembunyikan, bukan diisi Rp0 berderet.
     expect(find.byType(HomeMonthCard), findsNothing);
     expect(find.byType(HomeBudgetCard), findsNothing);

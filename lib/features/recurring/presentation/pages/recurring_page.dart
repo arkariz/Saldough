@@ -72,16 +72,10 @@ class RecurringSegmentView extends StatelessWidget {
       builder: (context, state) {
         if (state.isLoading) return const AppSkeletonPage();
         if (state.loadFailed) {
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.space4),
-            children: [
-              Text(t.recurring.loadError),
-              const SizedBox(height: AppSpacing.space2),
-              AppButton(
-                label: t.recurring.retryAction,
-                onPressed: () => context.read<RecurringBloc>().add(const RecurringStarted()),
-              ),
-            ],
+          return AppErrorState(
+            title: t.recurring.loadError,
+            retryLabel: t.recurring.retryAction,
+            onRetry: () => context.read<RecurringBloc>().add(const RecurringStarted()),
           );
         }
         const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
@@ -99,20 +93,12 @@ class RecurringSegmentView extends StatelessWidget {
             child: ListView(
               padding: padding,
               children: [
-                AppCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(t.recurring.emptyTitle, style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: AppSpacing.space1),
-                      Text(t.recurring.emptyBody, style: Theme.of(context).textTheme.bodySmall),
-                      const SizedBox(height: AppSpacing.space4),
-                      const SpotlightTarget(
-                        spotlightKey: SpotlightKey.recurringStarters,
-                        child: RecurringStarterChips(),
-                      ),
-                    ],
-                  ),
+                // EmptyState (ilustrasi Anggaran/Rencana); pemula rutin sebagai
+                // chip di bawahnya, tombol tambah di akhir daftar.
+                AppEmptyState(art: EmptyArt.budget, title: t.recurring.emptyTitle, body: t.recurring.emptyBody),
+                const SpotlightTarget(
+                  spotlightKey: SpotlightKey.recurringStarters,
+                  child: RecurringStarterChips(),
                 ),
                 const SizedBox(height: AppSpacing.space4),
                 if (suggestions.isNotEmpty) ...[
@@ -206,13 +192,14 @@ class RecurringSegmentView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.space2),
-              if (visible.isEmpty) ...[
-                Text(t.recurring.filteredEmpty, textAlign: TextAlign.center),
-                AppButton.text(
-                  label: t.recurring.showAllAction,
-                  onPressed: () => bloc.add(const RecurringKindFilterChanged(null)),
-                ),
-              ] else
+              if (visible.isEmpty)
+                AppEmptyState(
+                  title: t.recurring.filteredEmpty,
+                  actionLabel: t.recurring.showAllAction,
+                  onAction: () => bloc.add(const RecurringKindFilterChanged(null)),
+                  textAction: true,
+                )
+              else
                 for (final group in RecurringGroup.values)
                   if (visible.where((e) => e.group == group).toList() case final rows when rows.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.space2),

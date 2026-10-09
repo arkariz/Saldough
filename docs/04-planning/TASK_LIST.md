@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 9 Oktober 2026 (1.166 uji lulus, 134 berkas uji, 51.797 baris Dart di `lib/` tanpa `.g.dart` sesudah Fase 14). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 9 Oktober 2026 (1.208 uji lulus, 140 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -95,6 +95,12 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
+
+- **KT-4** Nominal di Catat kembali ke Rp0 saat jenis diganti
+  (Pengeluaran → Pemasukan → Transfer): `RecordFormHost` membangun formulir
+  baru per jenis (`KeyedSubtree`). Disengaja sejak sebelum Fase 14, tetapi
+  lebih terasa karena papan angka kini di atas (QA PR #43, catatan F1).
+  Bawa nominal ke jenis baru, atau tetap kosong?
 
 KT-3 (cara migrasi label kategori lama, temuan F1 verifikasi M1) diputuskan
 30 Sep 2026: dibiarkan apa adanya karena belum ada pengguna dengan data
@@ -2587,6 +2593,55 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       istilah terlarang, tanpa "//", "!", "CATAT"). Render ulang tangkapan
       situs (B-4) ada di repo `arkariz/tanukonomy-web`, belum dikerjakan
       dari sini. `flutter analyze` bersih, 1.166 uji lulus.
+
+**Perbaikan QA PR #43 (9 Okt 2026).** Laporan QA (artefak pemilik, diuji di
+Samsung M15 384dp) berisi F1–F20; F10 (jam bertitik di en) diputuskan
+pemilik tetap. Semua F lain dikerjakan di branch fase ini, masing-masing
+dengan uji yang gagal sebelum perbaikan; label diuji di 360dp id/en dengan
+font asli. Per tugas:
+- T-14.3: `AppMoneyText` nol tanpa tanda ("Rp0", F5); `AppIconButton` dan
+  tombol papan angka memasang aksi ketuk semantik (F7).
+- T-14.5 (Catat): papan angka tampak 40px dengan area sentuh tetap 48 dan
+  bingkai bawah lebih tipis, jadi di 360×800 nominal sampai Catatan terlihat
+  tanpa menggulir dan di 384×832 Pos anggaran juga (F1). Petak kategori 4
+  kolom di layar 360–430dp (5 di layar lebar), label dibungkus di antara
+  kata dan kata yang tetap tak muat diberi elipsis, tidak pernah dipecah;
+  en "Entertainment" → "Leisure" (F3). Label semantik nominal tidak
+  disamarkan (F4). Transfer ke dompet sama tanpa pratinjau saldo, galat di
+  atas daftar (F6). "Ke dompet / To wallet" (F9). **Ulangi** tetap baris
+  form ("Ulangi · Tidak ›") di dalam daftar isian; frekuensi dan opsi lanjut
+  di sheet pemilih (F11). ⚠ Selisih dari prototipe: tombol papan angka 40px
+  (prototipe 46), petak kategori 4 kolom (prototipe 5), dan Ulangi berupa
+  baris + sheet, bukan sakelar yang membuka chip (`CatatUlangi.dc.html`) —
+  atas permintaan pemilik di laporan QA. Pertanyaan nominal kembali ke Rp0
+  saat jenis diganti: KT-4.
+- T-14.6 (Beranda): perkiraan saldo di kartu bulan berpola label–nilai,
+  "Terendah ≈… pada 24 Okt" hanya bila lebih rendah dari akhir bulan
+  (`PlanForecastSummary`, F13).
+- T-14.7/14.10 (Riwayat, rincian): transaksi tanpa catatan dan kategori
+  berjudul jenisnya, bukan "Tanpa judul" (F2); pengeluaran dan rutin tanpa
+  kategori memakai ikon piksel `expense`, bukan "•••" (F8); tombol rincian
+  transaksi selebar layar (F9).
+- T-14.8 (Rencana): sheet Buat anggaran dan template — dompet satu baris
+  pemilih, periode chip + satu baris "Mulai 1 Okt · 1–31 Okt", total dan
+  Simpan di `BudgetTotalBar` (`AppStickyBar`) di atas navigasi sistem (F14).
+  Tanpa prototipe; disusun dari komponen yang ada.
+- T-14.10 (Akun › Kategori): formulir kategori jadi sheet nama + pemilih
+  ikon (ikon piksel kategori yang ada + Material Symbols di tile berwarna,
+  tanpa ikon baru); keputusan pemilik 9 Okt 2026: kategori bawaan juga
+  boleh diganti ikonnya (F12). Catat dari notifikasi: `AppSwitchRow`
+  menggantikan `NotificationSwitchRow` (F15); badge alasan perlu dicek dari
+  `CaptureInboxEntry.reviewReason` (field baru, nullable; keputusan pemilik
+  dikerjakan di PR ini, F16); pengingat generik "Ketuk untuk melihat" dan
+  kotak masuk terbuka di segmen yang berisi item (F17); Abaikan punya
+  Urungkan (F18); segmen "Otomatis/Automatic" (F19); menyalakan ulang Catat
+  otomatis memulihkan tingkat terakhir selama halaman terbuka, tanpa
+  penyimpanan baru (keputusan pemilik, F20).
+- T-14.12: jamak slang untuk hari pengingat dan banner kotak masuk (en,
+  F9/F19); uji teks en tanpa "(s)".
+Di luar PR ini, ke antrean: B-33 (Kembali di tab menutup aplikasi), B-34
+(urutan dompet), B-35 (yang belum diuji QA di perangkat). `flutter analyze`
+bersih (17 info lama), 1.208 uji lulus.
 ## Fase 15: Rencana dan rutin (R1)
 
 Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan
@@ -3195,6 +3250,9 @@ menambah dan memindahkannya ada di
 | B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
+| B-33 | Tombol Kembali sistem di tab Riwayat, Rencana, atau Dompet langsung menutup aplikasi; shell belum punya `PopScope` (juga di `main`). Kembali ke Beranda dulu, baru keluar. | agen | QA PR #43 (di luar PR) |
+| B-34 | Urutan dompet berubah setelah dompet dipakai: daftar mengikuti urutan penyimpanan, tidak diurutkan. Tetapkan urutan stabil (mis. urutan buat atau urutan pilihan pengguna) di semua daftar dan pemilih dompet. | agen | QA PR #43 (di luar PR) |
+| B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
 ## Cakupan requirement

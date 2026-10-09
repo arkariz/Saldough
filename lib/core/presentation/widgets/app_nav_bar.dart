@@ -112,6 +112,12 @@ class AppNavBar extends StatelessWidget {
     );
   }
 
+  /// Tinggi pil tujuan: muat ikon piksel 32px dengan sisa 2px.
+  static const double _pillHeight = 36;
+
+  /// Opasitas ikon piksel tujuan yang tidak aktif.
+  static const double _inactivePixelOpacity = 0.6;
+
   /// Bagian tombol Catat yang berada di atas bar.
   static const double _rise = catatRise - AppSpacing.space2;
 
@@ -135,17 +141,25 @@ class AppNavBar extends StatelessWidget {
               AnimatedContainer(
                 duration: AppDurations.fast,
                 width: 56,
-                height: 32,
+                height: _pillHeight,
                 decoration: ShapeDecoration(
                   color: selected ? colors.brandSoft : colors.surface.withValues(alpha: 0),
                   shape: const PixelCornerBorder.small(),
                 ),
                 child: Center(
-                  child: AppIcon(
-                    destination.icon,
-                    fill: selected,
-                    color: selected ? colors.brandInk : colors.ink2,
-                  ),
+                  // Ikon piksel digambar 32px utuh (design system: hanya 32
+                  // atau 64), berwarna sendiri; tujuan tak aktif diredupkan
+                  // supaya yang aktif tetap paling menonjol.
+                  child: isPixelIcon(destination.icon)
+                      ? Opacity(
+                          opacity: selected ? 1 : _inactivePixelOpacity,
+                          child: AppIcon(destination.icon, size: AppSize.pixelIcon),
+                        )
+                      : AppIcon(
+                          destination.icon,
+                          fill: selected,
+                          color: selected ? colors.brandInk : colors.ink2,
+                        ),
                 ),
               ),
               const SizedBox(height: AppSpacing.space1),

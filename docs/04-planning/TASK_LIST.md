@@ -2646,6 +2646,12 @@ membungkus isinya dengan `SheetSafeArea` (dijaga
 `test/architecture/sheet_safe_area_test.dart`); (2) "Tambah kategori" di
 Catat memakai sheet nama + ikon yang sama dengan layar Kategori (dialog nama
 saja dihapus).
+Permintaan pemilik (9 Okt 2026): ikon empat tab navigasi bawah memakai ikon
+piksel yang sudah ada (`home`, `transactions`, `budget`, `wallets`.svg)
+lewat kunci `IconKey.navHome/navHistory/navPlan/navWallets`, 32px utuh di pil
+36px, tujuan tak aktif diredupkan 60%. ⚠ Selisih dari design system
+(navigasi = Material Symbols, ADR-034): artefak perlu diperbarui. Tombol
+Catat di tengah tetap "+" (tindakan). Ikon piksel gelap belum ada (B-23).
 Di luar PR ini, ke antrean: B-33 (Kembali di tab menutup aplikasi), B-34
 (urutan dompet), B-35 (yang belum diuji QA di perangkat). `flutter analyze`
 bersih (17 info lama), 1.213 uji lulus.

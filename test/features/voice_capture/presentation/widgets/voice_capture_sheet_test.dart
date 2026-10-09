@@ -53,14 +53,14 @@ void main() {
 
   String textOf(WidgetTester tester, String key) => tester.widget<Text>(find.byKey(ValueKey(key))).data!;
 
-  testWidgets('lembar dibuka siap; "Ketik saja" tombol sekunder', (tester) async {
+  testWidgets('lembar dibuka siap; "Ketik saja" tombol teks', (tester) async {
     await pumpSheet(tester, const []);
 
     expect(textOf(tester, 'voice-primary-text'), t.record.voice.idleHint);
     expect(textOf(tester, 'voice-secondary-text'), t.record.voice.example);
     // Label tombol tidak diulang sebagai teks; petunjuk utama sudah cukup.
     expect(find.text(t.record.voice.startAction), findsNothing);
-    expect(typeInsteadVariant(tester), AppButtonVariant.secondary);
+    expect(typeInsteadVariant(tester), AppButtonVariant.text);
   });
 
   testWidgets('teks berjenjang: yang tertangkap jadi pesan utama, petunjuk jadi keterangan kecil', (tester) async {
@@ -118,6 +118,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text(t.record.voice.failure.noMatch), findsOneWidget);
-    expect(typeInsteadVariant(tester), AppButtonVariant.secondary);
+    expect(typeInsteadVariant(tester), AppButtonVariant.text);
   });
 }

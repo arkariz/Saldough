@@ -28,10 +28,8 @@ class FreelanceIconBox extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: colors.iconTile(color),
-        borderRadius: BorderRadius.circular(4),
-      ),
+      // Ikon piksel selalu di tile netral `surface2` (design system Ikon).
+      decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
       child: AppIcon(icon, size: size * 0.7),
     );
   }

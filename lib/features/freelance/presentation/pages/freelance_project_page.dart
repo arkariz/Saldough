@@ -226,10 +226,8 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       rows: rows,
       empty: entries.isEmpty
           ? FreelanceEmptyState(
-              badge: t.freelance.entriesEmptyBadge,
               title: t.freelance.entriesEmptyTitle,
               body: t.freelance.entriesEmptyBody,
-              icons: const [IconKey.worklog, IconKey.calendar, IconKey.workCompleted],
             )
           : _FilteredEmpty(t.freelance.entriesFilteredEmpty),
       buildRow: (context, row) => switch (row) {
@@ -280,10 +278,8 @@ class _FreelanceProjectPageState extends State<FreelanceProjectPage> {
       rows: rows,
       empty: payments.isEmpty
           ? FreelanceEmptyState(
-              badge: t.freelance.paymentsEmptyBadge,
               title: t.freelance.paymentsEmptyTitle,
               body: t.freelance.paymentsEmptyBody,
-              icons: const [IconKey.invoice, IconKey.pending, IconKey.paid],
             )
           : _FilteredEmpty(t.freelance.paymentsFilteredEmpty),
       buildRow: (context, row) => switch (row) {
@@ -462,16 +458,7 @@ class _FilteredEmpty extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space6),
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppEmptyState(title: message);
 }
 
 sealed class _Row {

@@ -175,15 +175,12 @@ class RecurringDetailPage extends StatelessWidget {
             ],
           ),
           // Satu tombol primer menempel di bawah (prototipe `RincianRutin.dc.html`).
-          bottomNavigationBar: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
-              child: AppButton(
-                expand: true,
-                icon: IconKey.edit,
-                label: t.recurring.editAction,
-                onPressed: () => context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(editRule: rule)),
-              ),
+          bottomNavigationBar: AppStickyBar(
+            child: AppButton(
+              expand: true,
+              icon: IconKey.edit,
+              label: t.recurring.editAction,
+              onPressed: () => context.pushRoute(RecordRouteKeys.sheet, RecordSheetInput(editRule: rule)),
             ),
           ),
           body: SafeArea(
@@ -304,6 +301,7 @@ class RecurringDetailPage extends StatelessWidget {
                         child: AppListRow(
                           compact: true,
                           wrapTitle: true,
+                          wrapSubtitle: true,
                           title: t.record.repeat.autoRecordLabel,
                           subtitle: t.record.repeat.autoRecordHint,
                           trailing: Switch(
@@ -318,6 +316,7 @@ class RecurringDetailPage extends StatelessWidget {
                       AppListRow(
                         key: const ValueKey('recurring-budget-link'),
                         compact: true,
+                        wrapSubtitle: true,
                         chevron: true,
                         title: t.recurring.budgetLinkLabel,
                         subtitle: switch (linkedBudgetItem(rule, state.budgetOptions)) {

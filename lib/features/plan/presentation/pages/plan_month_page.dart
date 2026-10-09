@@ -104,15 +104,10 @@ class PlanMonthView extends StatelessWidget {
         if (state.isLoading) return const AppSkeletonPage();
         const padding = EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space12);
         if (state.loadFailed) {
-          return ListView(
-            padding: padding,
-            children: [
-              Text(t.plan.loadError),
-              AppButton(
-                label: t.recurring.retryAction,
-                onPressed: () => context.read<PlanMonthBloc>().add(const PlanMonthLoaded()),
-              ),
-            ],
+          return AppErrorState(
+            title: t.plan.loadError,
+            retryLabel: t.recurring.retryAction,
+            onRetry: () => context.read<PlanMonthBloc>().add(const PlanMonthLoaded()),
           );
         }
         final textTheme = Theme.of(context).textTheme;
@@ -120,17 +115,8 @@ class PlanMonthView extends StatelessWidget {
           return ListView(
             padding: padding,
             children: [
-              AppCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(t.plan.emptyTitle, style: textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.space1),
-                    Text(t.plan.emptyBody, style: textTheme.bodySmall),
-                    if (starters != null) ...[const SizedBox(height: AppSpacing.space4), starters!],
-                  ],
-                ),
-              ),
+              AppEmptyState(art: EmptyArt.budget, title: t.plan.emptyTitle, body: t.plan.emptyBody),
+              ?starters,
             ],
           );
         }

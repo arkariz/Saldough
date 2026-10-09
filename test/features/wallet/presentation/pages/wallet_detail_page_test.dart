@@ -165,22 +165,13 @@ void main() {
     );
 
     testWidgets(
-      'belum ada transaksi bulan ini untuk dompet ini: ikon, judul, dan deskripsi',
+      'belum ada transaksi bulan ini untuk dompet ini: judul dan deskripsi (EmptyState tanpa ilustrasi)',
       (tester) async {
         await seedWallet('a', 'BCA');
         await openDetail(tester, 'BCA');
 
         expect(find.text(t.wallet.detailRecentEmptyTitle), findsOneWidget);
         expect(find.text(t.wallet.detailRecentEmpty), findsOneWidget);
-        expect(
-          find.descendant(
-            of: find.byType(WalletDetailPage),
-            matching: find.byWidgetPredicate(
-              (w) => w is AppIcon && w.iconKey == IconKey.transactions,
-            ),
-          ),
-          findsOneWidget,
-        );
       },
     );
 

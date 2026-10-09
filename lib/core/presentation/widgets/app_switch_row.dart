@@ -37,6 +37,7 @@ class AppSwitchRow extends StatelessWidget {
       child: AppListRow(
         compact: true,
         wrapTitle: true,
+        wrapSubtitle: true,
         leading: leading,
         title: title,
         subtitle: subtitle,

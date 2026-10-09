@@ -7,16 +7,14 @@ import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 /// Keadaan kosong saat bulan berjalan GENUINELY belum punya transaksi sama
-/// sekali (`rawTransactions` kosong, bukan gagal dibaca) -- rujukan visual
-/// `pixel_kas_riwayat_transaksi_kosong`. CTA-nya membuka alur CATAT
-/// sungguhan lewat [onRecord] (dipasang pemanggil ke `openRecordSheet`,
-/// CLAUDE.md aturan 8 -- bukan formulir pencatatan tersendiri).
+/// sekali (`rawTransactions` kosong, bukan gagal dibaca). CTA-nya membuka
+/// alur CATAT sungguhan lewat [onRecord] (dipasang pemanggil ke
+/// `openRecordSheet`, CLAUDE.md aturan 8 -- bukan formulir tersendiri).
 ///
-/// Dua kartu terpisah, PERSIS urutan rujukan visual: kartu utama (lencana
-/// "Inventaris Kosong", ilustrasi, judul, subjudul, tombol CATAT), lalu di
-/// bawahnya kartu "Panduan Catatan Kas" yang menjelaskan tiga jenis
-/// transaksi, dan catatan privasi. TIDAK menggulir sendiri -- pemanggil
-/// (`TransactionListPage`) menaruhnya di dalam `CustomScrollView`.
+/// Design system EmptyState (ilustrasi Riwayat), lalu panduan tiga jenis
+/// transaksi sebagai daftar bertile dan catatan privasi. TIDAK menggulir
+/// sendiri -- pemanggil (`TransactionListPage`) menaruhnya di dalam
+/// `CustomScrollView`.
 class TransactionEmptyMonthState extends StatelessWidget {
   /// Membuat [TransactionEmptyMonthState].
   const TransactionEmptyMonthState({required this.onRecord, super.key});
@@ -29,135 +27,59 @@ class TransactionEmptyMonthState extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppCard(
-          padding: const EdgeInsets.all(AppSpacing.space6),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.space4,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.tinted(colors.warning, 0.15),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: colors.warning,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.space2),
-                    Flexible(
-                      child: Text(
-                        t.transaction.emptyMonthBadge,
-                        style: labelSmStyle(
-                          context,
-                          color: colors.warning,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.space6),
-              Container(
-                width: 160,
-                height: 160,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      colors.brand.withValues(alpha: 0.16),
-                      colors.brand.withValues(alpha: 0),
-                    ],
-                  ),
-                ),
-                child: const AppIcon(IconKey.transactions, size: 96),
-              ),
-              const SizedBox(height: AppSpacing.space4),
-              Text(
-                t.transaction.emptyMonthTitle,
-                style: textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSpacing.space2),
-              Text(
-                t.transaction.emptyMonthSubtitle,
-                textAlign: TextAlign.center,
-                style: textTheme.bodyLarge?.copyWith(color: colors.ink2),
-              ),
-              const SizedBox(height: AppSpacing.space6),
-              SizedBox(
-                width: double.infinity,
-                child: AppButton(
-                  label: t.transaction.emptyMonthCta,
-                  onPressed: onRecord,
-                ),
-              ),
-            ],
-          ),
+        AppEmptyState(
+          art: EmptyArt.history,
+          title: t.transaction.emptyMonthTitle,
+          body: t.transaction.emptyMonthSubtitle,
+          actionLabel: t.transaction.emptyMonthCta,
+          actionIcon: IconKey.add,
+          onAction: onRecord,
         ),
-        const SizedBox(height: AppSpacing.space4),
-        AppCard(
-          color: colors.surface2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  const AppIcon(IconKey.transactions, size: 22),
-                  const SizedBox(width: AppSpacing.space2),
-                  Expanded(
-                    child: Text(
-                      t.transaction.emptyGuideTitle,
-                      style: textTheme.titleLarge?.copyWith(fontSize: 18),
-                    ),
-                  ),
-                ],
+        AppSectionHeader(t.transaction.emptyGuideTitle),
+        AppListCard(
+          children: [
+            for (final (kind, icon, title, description) in [
+              (
+                TransactionKind.income,
+                IconKey.income,
+                t.transaction.emptyGuideIncomeTitle,
+                t.transaction.emptyGuideIncomeDescription,
               ),
-              const SizedBox(height: AppSpacing.space2),
-              _GuideRow(
-                icon: IconKey.income,
-                color: colors.kindInk(TransactionKind.income),
-                title: t.transaction.emptyGuideIncomeTitle,
-                description: t.transaction.emptyGuideIncomeDescription,
+              (
+                TransactionKind.expense,
+                IconKey.expense,
+                t.transaction.emptyGuideExpenseTitle,
+                t.transaction.emptyGuideExpenseDescription,
               ),
-              const SizedBox(height: AppSpacing.space2),
-              _GuideRow(
-                icon: IconKey.expense,
-                color: colors.kindInk(TransactionKind.expense),
-                title: t.transaction.emptyGuideExpenseTitle,
-                description: t.transaction.emptyGuideExpenseDescription,
+              (
+                TransactionKind.transfer,
+                IconKey.transfer,
+                t.transaction.emptyGuideTransferTitle,
+                t.transaction.emptyGuideTransferDescription,
               ),
-              const SizedBox(height: AppSpacing.space2),
-              _GuideRow(
-                icon: IconKey.transfer,
-                color: colors.kindInk(TransactionKind.transfer),
-                title: t.transaction.emptyGuideTransferTitle,
-                description: t.transaction.emptyGuideTransferDescription,
+            ])
+              AppListRow(
+                leading: AppIconTile(icon, tint: _guideTint[kind]),
+                title: title,
+                subtitle: description,
+                wrapTitle: true,
+                wrapSubtitle: true,
               ),
-            ],
-          ),
+          ],
         ),
         const SizedBox(height: AppSpacing.space4),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppIcon(IconKey.locked, size: 18, color: colors.ink2),
+            AppIcon(IconKey.locked, size: 18, color: colors.ink3),
             const SizedBox(width: AppSpacing.space2),
-            Expanded(
+            Flexible(
               child: Text(
                 t.transaction.trustFooterMessage,
                 textAlign: TextAlign.center,
-                style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                style: textTheme.bodySmall?.copyWith(color: colors.ink3),
               ),
             ),
           ],
@@ -167,54 +89,11 @@ class TransactionEmptyMonthState extends StatelessWidget {
   }
 }
 
-/// Satu baris "Panduan Catatan Kas" -- kartu putih berisi ikon jenis
-/// transaksi, judul berwarna sesuai token semantiknya, dan penjelasan.
-class _GuideRow extends StatelessWidget {
-  const _GuideRow({
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.description,
-  });
-
-  final IconKey icon;
-  final Color color;
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppIcon(icon, size: 32, color: color),
-          const SizedBox(width: AppSpacing.space2),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: labelSmStyle(context, color: color),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  description,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: colors.ink),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+const Map<TransactionKind, TileTint> _guideTint = {
+  TransactionKind.income: TileTint.green,
+  TransactionKind.expense: TileTint.rose,
+  TransactionKind.transfer: TileTint.slate,
+};
 
 /// Keadaan kosong saat bulan berjalan PUNYA transaksi, tapi filter aktif
 /// mengecualikan semuanya -- pesan yang lebih singkat, TANPA ilustrasi
@@ -228,35 +107,15 @@ class TransactionEmptyFilterState extends StatelessWidget {
   final VoidCallback onClearFilters;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              t.transaction.emptyFilterTitle,
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: AppSpacing.space1),
-            Text(
-              t.transaction.emptyFilterSubtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: colors.ink2),
-            ),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(
-              label: t.transaction.clearFiltersButton,
-              onPressed: onClearFilters,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Center(
+    child: AppEmptyState(
+      title: t.transaction.emptyFilterTitle,
+      body: t.transaction.emptyFilterSubtitle,
+      actionLabel: t.transaction.clearFiltersButton,
+      onAction: onClearFilters,
+      textAction: true,
+    ),
+  );
 }
 
 /// Bagian pencarian lintas bulan (T-8.2, UX-6 langkah 2) -- tampil di bawah
@@ -384,31 +243,10 @@ class TransactionLoadErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(IconKey.overBudget, size: 48, color: colors.danger),
-            const SizedBox(height: AppSpacing.space4),
-            Text(
-              t.transaction.loadErrorTitle,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppSpacing.space1),
-            Text(
-              t.transaction.loadErrorSubtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: colors.ink2),
-            ),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppErrorState(
+    title: t.transaction.loadErrorTitle,
+    body: t.transaction.loadErrorSubtitle,
+    retryLabel: t.common.retry,
+    onRetry: onRetry,
+  );
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
-/// Keadaan kosong layar Dompet: belum ada dompet sama sekali (rujukan visual
-/// `pixel_kas_dompet_belum_ada_data`), dengan ajakan menambah dompet pertama.
+/// Keadaan kosong layar Dompet: belum ada dompet sama sekali, dengan ajakan
+/// menambah dompet pertama (design system EmptyState, ilustrasi Dompet).
 class WalletEmptyState extends StatelessWidget {
   /// Membuat [WalletEmptyState].
   const WalletEmptyState({required this.onAdd, super.key});
@@ -13,43 +12,14 @@ class WalletEmptyState extends StatelessWidget {
   final VoidCallback onAdd;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space6),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.tinted(colors.warning, 0.15),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              t.wallet.emptyBadge,
-              style: labelSmStyle(context, color: colors.warning),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          const AppIcon(IconKey.wallets, size: 96),
-          const SizedBox(height: AppSpacing.space6),
-          Text(t.wallet.emptyTitle, textAlign: TextAlign.center, style: textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.space1),
-          Text(
-            t.wallet.emptyBody,
-            textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(label: t.wallet.addAction, onPressed: onAdd),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppEmptyState(
+    art: EmptyArt.wallets,
+    title: t.wallet.emptyTitle,
+    body: t.wallet.emptyBody,
+    actionLabel: t.wallet.addAction,
+    actionIcon: IconKey.add,
+    onAction: onAdd,
+  );
 }
 
 /// Keadaan galat layar Dompet: pembacaan gagal, dengan tombol coba lagi.
@@ -63,28 +33,10 @@ class WalletLoadErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(IconKey.overBudget, size: 48, color: colors.danger),
-            const SizedBox(height: AppSpacing.space4),
-            Text(t.wallet.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space1),
-            Text(
-              t.wallet.loadErrorSubtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: colors.ink2),
-            ),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppErrorState(
+    title: t.wallet.loadErrorTitle,
+    body: t.wallet.loadErrorSubtitle,
+    retryLabel: t.common.retry,
+    onRetry: onRetry,
+  );
 }

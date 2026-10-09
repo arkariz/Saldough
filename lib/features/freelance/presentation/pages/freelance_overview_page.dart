@@ -97,10 +97,8 @@ class _Overview extends StatelessWidget {
       children: [
         if (state.projects.isEmpty)
           FreelanceEmptyState(
-            badge: t.freelance.projectsEmptyBadge,
             title: t.freelance.projectsEmptyTitle,
             body: t.freelance.projectsEmpty,
-            icons: const [IconKey.freelance, IconKey.worklog, IconKey.hourlyRate],
             actionLabel: t.freelance.projectAddTitle,
             onAction: () => addProject(context),
           )

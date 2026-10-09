@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 
-/// Keadaan kosong layar Anggaran (rujukan `pixel_kas_anggaran_belum_ada_data`).
+/// Keadaan kosong layar Anggaran (design system EmptyState, ilustrasi
+/// Anggaran).
 ///
 /// Tanpa [onAdd] berarti pemilik belum punya dompet aktif — anggaran wajib
 /// terikat ke satu dompet, jadi yang ditawarkan penjelasan, bukan tombol
@@ -17,53 +17,20 @@ class BudgetEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
     final hasWallet = onAdd != null;
-    return AppCard(
-      padding: const EdgeInsets.all(AppSpacing.space6),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.tinted(colors.warning, 0.15),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              t.budget.emptyBadge,
-              style: labelSmStyle(context, color: colors.warning),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.space6),
-          const AppIcon(IconKey.budget, size: 96),
-          const SizedBox(height: AppSpacing.space6),
-          Text(
-            hasWallet ? t.budget.emptyTitle : t.budget.noWalletTitle,
-            textAlign: TextAlign.center,
-            style: textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppSpacing.space1),
-          Text(
-            hasWallet ? t.budget.emptyBody : t.budget.noWalletBody,
-            textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
-          ),
-          if (hasWallet) ...[
-            const SizedBox(height: AppSpacing.space6),
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(label: t.budget.addAction, onPressed: onAdd),
-            ),
-          ],
-        ],
-      ),
+    return AppEmptyState(
+      art: EmptyArt.budget,
+      title: hasWallet ? t.budget.emptyTitle : t.budget.noWalletTitle,
+      body: hasWallet ? t.budget.emptyBody : t.budget.noWalletBody,
+      actionLabel: t.budget.addAction,
+      actionIcon: IconKey.add,
+      onAction: onAdd,
     );
   }
 }
 
-/// Tidak ada anggaran yang lolos penyaring — dibedakan dari "belum ada
-/// anggaran sama sekali", dengan jalan mengatur ulang penyaring.
+/// Kosong karena penyaring: tanpa ilustrasi, tombol teks mengembalikan
+/// penyaring (design system EmptyState, varian penyaring).
 class BudgetFilteredEmptyState extends StatelessWidget {
   /// Membuat [BudgetFilteredEmptyState].
   const BudgetFilteredEmptyState({required this.onReset, super.key});
@@ -72,30 +39,16 @@ class BudgetFilteredEmptyState extends StatelessWidget {
   final VoidCallback onReset;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space6),
-      child: Column(
-        children: [
-          AppIcon(IconKey.filter, size: 48, color: colors.ink2),
-          const SizedBox(height: AppSpacing.space2),
-          Text(t.budget.emptyFilteredTitle, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 4),
-          Text(
-            t.budget.emptyFilteredBody,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: colors.ink2),
-          ),
-          const SizedBox(height: AppSpacing.space4),
-          AppButton.secondary(label: t.budget.resetFilterAction, onPressed: onReset),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppEmptyState(
+    title: t.budget.emptyFilteredTitle,
+    body: t.budget.emptyFilteredBody,
+    actionLabel: t.budget.resetFilterAction,
+    onAction: onReset,
+    textAction: true,
+  );
 }
 
-/// Pembacaan gagal, dengan tombol coba lagi — dibedakan dari daftar kosong.
+/// Keadaan galat layar Anggaran: pembacaan gagal, dengan tombol coba lagi.
 class BudgetLoadErrorState extends StatelessWidget {
   /// Membuat [BudgetLoadErrorState].
   const BudgetLoadErrorState({required this.onRetry, super.key});
@@ -104,28 +57,10 @@ class BudgetLoadErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.space6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcon(IconKey.overBudget, size: 48, color: colors.danger),
-            const SizedBox(height: AppSpacing.space4),
-            Text(t.budget.loadErrorTitle, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.space1),
-            Text(
-              t.budget.loadErrorSubtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: colors.ink2),
-            ),
-            const SizedBox(height: AppSpacing.space4),
-            AppButton(label: t.common.retry, onPressed: onRetry),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppErrorState(
+    title: t.budget.loadErrorTitle,
+    body: t.budget.loadErrorSubtitle,
+    retryLabel: t.common.retry,
+    onRetry: onRetry,
+  );
 }

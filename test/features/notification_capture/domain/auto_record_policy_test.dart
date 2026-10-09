@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/features/notification_capture/domain/services/auto_record_policy.dart';
 import 'package:saldough/features/notification_capture/domain/services/transaction_from_draft.dart';
@@ -68,5 +69,29 @@ void main() {
     expect((expense as ExpenseTransaction).categoryId, 'food');
     expect(transactionFromDraft(transfer, id: 'y', fallbackDate: at), isA<TransferTransaction>());
     expect(transactionFromDraft(noWallet, id: 'z', fallbackDate: at), isNull);
+  });
+
+  test('alasan ditinjau (QA PR #43 F16)', () {
+    const level2 = AutoRecordPolicy(AutoRecordLevel.whenComplete);
+    expect(
+      const AutoRecordPolicy(AutoRecordLevel.reviewAll).reviewReason(complete, autoEligible: true),
+      CaptureReviewReason.autoRecordOff,
+    );
+    expect(level2.reviewReason(unsure, autoEligible: true), CaptureReviewReason.kindUnclear);
+    expect(level2.reviewReason(noWallet, autoEligible: true), CaptureReviewReason.walletUnknown);
+    expect(level2.reviewReason(noCategory, autoEligible: true), CaptureReviewReason.categoryUnclear);
+    expect(level2.reviewReason(complete, autoEligible: false), CaptureReviewReason.newPattern);
+    expect(level2.reviewReason(complete, autoEligible: true), isNull);
+    expect(
+      level2.reviewReason(const RecordDraft(kind: DraftKind.expense, walletId: 'bri'), autoEligible: true),
+      CaptureReviewReason.amountUnclear,
+    );
+    expect(
+      level2.reviewReason(
+        const RecordDraft(kind: DraftKind.transfer, amountSen: 100, walletId: 'bri'),
+        autoEligible: true,
+      ),
+      CaptureReviewReason.kindUnclear,
+    );
   });
 }

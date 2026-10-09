@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
+import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -145,9 +148,37 @@ final class CaptureInboxBloc extends Bloc<CaptureInboxEvent, CaptureInboxState> 
   }
 
   Future<void> _onDismissed(CaptureInboxDismissed event, Emitter<CaptureInboxState> emit) async {
+    final entry = state.pending.where((e) => e.id == event.id).firstOrNull;
     await _actions.remove(event.id);
-    await _reload(emit, effect: ShowSnackBarEffect(message: t.notificationCapture.dismissed));
+    await _reload(
+      emit,
+      effect: entry == null ? ShowSnackBarEffect(message: t.notificationCapture.dismissed) : _dismissedWithUndo(entry),
+    );
   }
+
+  /// "Notifikasi diabaikan." dengan Urungkan yang mengembalikan [entry] ke
+  /// Perlu dicek (QA PR #43 F18), pola yang sama dengan hapus transaksi
+  /// (`TransactionBloc`). Urungkan memanggil [CaptureInboxActions.restore]
+  /// langsung; `CaptureInboxChanges` memuat ulang kotak masuk yang tampil.
+  UiEffect _dismissedWithUndo(CaptureInboxEntry entry) => CallbackEffect(
+    callback: (context) {
+      final colors = context.appColors;
+      final restore = _actions.restore;
+      ScaffoldMessenger.of(context).showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(t.notificationCapture.dismissed, style: TextStyle(color: colors.bg)),
+          backgroundColor: colors.ink,
+          action: SnackBarAction(
+            key: const ValueKey('inbox-dismiss-undo'),
+            label: t.transaction.undoDeleteAction,
+            textColor: colors.brand,
+            onPressed: () => unawaited(restore(entry)),
+          ),
+        ),
+      );
+    },
+  );
 
   Future<void> _onRecorded(CaptureInboxRecorded event, Emitter<CaptureInboxState> emit) async {
     await _actions.remove(event.id);

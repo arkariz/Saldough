@@ -199,45 +199,43 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                   AppSectionLabel(texts.behaviorTitle),
                   const SizedBox(height: AppSpacing.space1),
                   AppCard(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.space4,
-                      vertical: AppSpacing.space2,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Tiga tingkat otomatis sebagai dua sakelar (ADR-032 §3.4).
-                        NotificationSwitchRow(
+                        // Baris sakelar berlabel yang bisa diketuk utuh (QA PR #43
+                        // F15); mematikan lalu menyalakan lagi memulihkan tingkat
+                        // terakhir selama halaman terbuka (F20).
+                        AppSwitchRow(
                           key: const ValueKey('notification-auto-record'),
-                          label: texts.autoRecordLabel,
-                          hint: autoRecord ? texts.autoRecordOnHint : texts.autoRecordOffHint,
+                          title: texts.autoRecordLabel,
+                          subtitle: autoRecord ? texts.autoRecordOnHint : texts.autoRecordOffHint,
                           value: autoRecord,
-                          onChanged: (on) => bloc.add(
-                            AutoRecordLevelChanged(
-                              on ? AutoRecordLevel.whenComplete : AutoRecordLevel.reviewAll,
-                            ),
-                          ),
+                          onChanged: (on) => bloc.add(AutoRecordToggled(on: on)),
                         ),
                         if (autoRecord)
-                          NotificationSwitchRow(
-                            key: const ValueKey(
-                              'notification-auto-record-any-category',
-                            ),
-                            indent: true,
-                            label: texts.autoRecordAnyCategoryLabel,
-                            hint: texts.autoRecordAnyCategoryHint,
-                            value: settings.autoRecordLevel == AutoRecordLevel.whenAmountAndWallet,
-                            onChanged: (on) => bloc.add(
-                              AutoRecordLevelChanged(
-                                on ? AutoRecordLevel.whenAmountAndWallet : AutoRecordLevel.whenComplete,
+                          Padding(
+                            padding: const EdgeInsets.only(left: AppSpacing.space6),
+                            child: AppSwitchRow(
+                              key: const ValueKey(
+                                'notification-auto-record-any-category',
+                              ),
+                              title: texts.autoRecordAnyCategoryLabel,
+                              subtitle: texts.autoRecordAnyCategoryHint,
+                              value: settings.autoRecordLevel == AutoRecordLevel.whenAmountAndWallet,
+                              onChanged: (on) => bloc.add(
+                                AutoRecordLevelChanged(
+                                  on ? AutoRecordLevel.whenAmountAndWallet : AutoRecordLevel.whenComplete,
+                                ),
                               ),
                             ),
                           ),
-                        Divider(color: colors.line, height: AppSpacing.space4),
-                        NotificationSwitchRow(
+                        Divider(color: colors.line, height: AppSpacing.space2),
+                        AppSwitchRow(
                           key: const ValueKey('notification-reminder'),
-                          label: texts.reminderLabel,
-                          hint: texts.reminderHint,
+                          title: texts.reminderLabel,
+                          subtitle: texts.reminderHint,
                           value: reminder,
                           onChanged: (on) => bloc.add(
                             NotificationDeliveryChanged(
@@ -247,8 +245,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
                         ),
                         if (reminder && !state.canPostReminders)
                           Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: AppSpacing.space1,
+                            padding: const EdgeInsets.fromLTRB(
+                              AppSpacing.space4,
+                              0,
+                              AppSpacing.space4,
+                              AppSpacing.space1,
                             ),
                             child: Text(
                               texts.reminderPermissionDenied,

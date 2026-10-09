@@ -45,6 +45,17 @@ final class AutoRecordLevelChanged extends NotificationSettingsEvent {
   final AutoRecordLevel level;
 }
 
+/// Sakelar Catat otomatis diganti: mati = tinjau semua; nyala = tingkat
+/// otomatis terakhir sebelum dimatikan (selama bloc ini hidup), bawaan
+/// [AutoRecordLevel.whenComplete] (QA PR #43 F20).
+final class AutoRecordToggled extends NotificationSettingsEvent {
+  /// Membuat [AutoRecordToggled].
+  const AutoRecordToggled({required this.on});
+
+  /// Nyala atau mati.
+  final bool on;
+}
+
 /// Sumber ditambah atau diubah.
 final class NotificationSourceSaved extends NotificationSettingsEvent {
   /// Membuat [NotificationSourceSaved].

@@ -92,12 +92,25 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     on<NotificationCaptureToggled>((e, emit) => _saveSettings(state.settings.copyWith(enabled: e.enabled), emit));
     on<NotificationDeliveryChanged>(_onDeliveryChanged);
     on<AutoRecordLevelChanged>((e, emit) => _saveSettings(state.settings.copyWith(autoRecordLevel: e.level), emit));
+    on<AutoRecordToggled>(_onAutoRecordToggled);
     on<NotificationSourceSaved>(_onSourceSaved);
     on<NotificationSourceRemoved>(_onSourceRemoved);
     on<BuiltInPatternToggled>(_onBuiltInToggled);
     on<NotificationPatternSaved>(_onPatternSaved);
     on<NotificationPatternDeleted>(_onPatternDeleted);
     on<DebugSamplesRequested>(_onDebugSamples);
+  }
+
+  /// Tingkat otomatis terakhir sebelum Catat otomatis dimatikan. Hanya di
+  /// memori: setelan tetap satu tingkat tersimpan (keputusan pemilik 9 Okt
+  /// 2026, QA PR #43 F20).
+  AutoRecordLevel _lastAutoLevel = AutoRecordLevel.whenComplete;
+
+  Future<void> _onAutoRecordToggled(AutoRecordToggled event, Emitter<NotificationSettingsState> emit) {
+    final current = state.settings.autoRecordLevel;
+    if (!event.on && current != AutoRecordLevel.reviewAll) _lastAutoLevel = current;
+    final level = event.on ? _lastAutoLevel : AutoRecordLevel.reviewAll;
+    return _saveSettings(state.settings.copyWith(autoRecordLevel: level), emit);
   }
 
   final NotificationCaptureGateway _gateway;

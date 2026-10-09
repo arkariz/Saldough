@@ -80,6 +80,18 @@ final class CaptureInboxActions {
     return saved;
   }
 
+  /// Mengembalikan item [entry] yang baru diabaikan ke kotak masuk
+  /// (Urungkan, QA PR #43 F18), urut menurut waktu notifikasi.
+  Future<Either<Failure, Unit>> restore(CaptureInboxEntry entry) async {
+    final inbox = (await store.loadInbox()).getOrElse((_) => const []);
+    if (inbox.any((e) => e.id == entry.id)) return right(unit);
+    final saved = await store.saveInbox(
+      [...inbox, entry]..sort((a, b) => b.capturedAt.compareTo(a.capturedAt)),
+    );
+    changes?.notify();
+    return saved;
+  }
+
   /// Membatalkan transaksi otomatis [entry]: menghapusnya dari buku besar
   /// lewat [RecordTransaction.delete], lalu dari log. Transaksi yang sudah
   /// dihapus pengguna cukup dihapus dari log.
@@ -202,6 +214,7 @@ final class CaptureInboxActions {
       draft: composed.draft.copyWith(sourceIconId: () => entry.iconId),
       possibleDuplicate: entry.possibleDuplicate,
       iconId: entry.iconId,
+      reviewReason: entry.reviewReason,
     );
     inbox[index] = updated;
     await store.saveInbox(inbox);

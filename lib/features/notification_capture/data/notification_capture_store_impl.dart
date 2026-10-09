@@ -199,6 +199,7 @@ Map<String, dynamic> _inboxToJson(CaptureInboxEntry e) => {
   'draft': _draftToJson(e.draft),
   'possibleDuplicate': e.possibleDuplicate,
   'iconId': ?e.iconId,
+  'reviewReason': ?e.reviewReason?.name,
 };
 
 CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
@@ -210,6 +211,7 @@ CaptureInboxEntry _inboxFromJson(Map<String, dynamic> j) => CaptureInboxEntry(
   draft: _draftFromJson(j['draft'] as Map),
   possibleDuplicate: j['possibleDuplicate'] as bool? ?? false,
   iconId: j['iconId'] as String?,
+  reviewReason: CaptureReviewReason.values.where((r) => r.name == j['reviewReason']).firstOrNull,
 );
 
 Map<String, dynamic> _autoToJson(AutoRecordedEntry e) => {

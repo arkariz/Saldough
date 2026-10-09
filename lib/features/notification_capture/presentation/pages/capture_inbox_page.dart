@@ -95,7 +95,13 @@ class _InboxBody extends StatefulWidget {
 }
 
 class _InboxBodyState extends State<_InboxBody> {
-  _InboxTab _tab = _InboxTab.pending;
+  /// `null` sampai isi pertama termuat: dibuka di segmen yang berisi item
+  /// (Perlu dicek bila ada yang menunggu, kalau tidak Otomatis; QA PR #43
+  /// F17), sesudah itu pilihan pengguna.
+  _InboxTab? _picked;
+
+  _InboxTab _tabFor(CaptureInboxState state) =>
+      _picked ??= state.pending.isEmpty && state.auto.isNotEmpty ? _InboxTab.auto : _InboxTab.pending;
 
   @override
   Widget build(BuildContext context) {
@@ -119,17 +125,18 @@ class _InboxBodyState extends State<_InboxBody> {
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();
             final inbox = context.read<CaptureInboxBloc>();
+            final tab = _tabFor(state);
             return ListView(
               padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space8),
               children: [
                 AppSegmentedControl<_InboxTab>(
                   options: [(_InboxTab.pending, texts.inboxPendingTitle), (_InboxTab.auto, texts.inboxAutoTitle)],
-                  selected: _tab,
+                  selected: tab,
                   counts: {_InboxTab.pending: state.pending.length, _InboxTab.auto: state.auto.length},
-                  onChanged: (tab) => setState(() => _tab = tab),
+                  onChanged: (tab) => setState(() => _picked = tab),
                 ),
                 const SizedBox(height: AppSpacing.space4),
-                if (_tab == _InboxTab.pending) ...[
+                if (tab == _InboxTab.pending) ...[
                   if (state.pending.isEmpty)
                     _InboxEmpty(text: texts.inboxEmpty)
                   else
@@ -269,13 +276,20 @@ class _PendingCard extends StatelessWidget {
                 ),
               ],
             ),
-            if (entry.possibleDuplicate || match != null) ...[
+            if (entry.possibleDuplicate || match != null || entry.reviewReason != null) ...[
               const SizedBox(height: AppSpacing.space2),
               Wrap(
                 spacing: AppSpacing.space2,
                 runSpacing: AppSpacing.space1,
                 children: [
                   if (entry.possibleDuplicate) AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
+                  // Kenapa perlu dicek (QA PR #43 F16).
+                  if (entry.reviewReason case final reason?)
+                    AppBadge(
+                      key: const ValueKey('inbox-review-reason'),
+                      _reasonLabel(reason),
+                      tone: AppTone.info,
+                    ),
                   if (match case final m?)
                     AppBadge(
                       t.recurring.matchLabel(name: m.rule.note, date: CycleMonthFormatter.formatDayMonth(m.date)),
@@ -311,6 +325,20 @@ class _PendingCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _reasonLabel(CaptureReviewReason reason) {
+  final texts = t.notificationCapture.reviewReason;
+  return switch (reason) {
+    CaptureReviewReason.autoRecordOff => texts.autoRecordOff,
+    CaptureReviewReason.newPattern => texts.newPattern,
+    CaptureReviewReason.amountUnclear => texts.amountUnclear,
+    CaptureReviewReason.otherCurrency => texts.otherCurrency,
+    CaptureReviewReason.kindUnclear => texts.kindUnclear,
+    CaptureReviewReason.walletUnknown => texts.walletUnknown,
+    CaptureReviewReason.categoryUnclear => texts.categoryUnclear,
+    CaptureReviewReason.dateUnclear => texts.dateUnclear,
+  };
 }
 
 TransactionKind _transactionKind(DraftKind kind) => switch (kind) {

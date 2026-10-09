@@ -2562,7 +2562,7 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       gerakan), Beranda langkah awal, rincian dompet kosong. Lencana
       "Inventaris kosong" dan kunci teksnya tidak dipakai lagi (dibersihkan
       di T-14.12). `flutter analyze` bersih, 1.163 uji lulus.
-- [ ] **T-14.12** Sapuan teks i18n id/en mengikuti glosarium `writing.md`
+- [x] **T-14.12** Sapuan teks i18n id/en mengikuti glosarium `writing.md`
       (dompet, transaksi, transfer, selisih; hapus kas, log, mutasi, netto,
       inventaris, label langkah "Catat // Transaksi", kapital semua), lalu
       render ulang tangkapan situs (B-4) dan perbarui tur.
@@ -2570,6 +2570,23 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       Verifikasi: uji i18n (kunci lengkap id/en), pencarian kata terlarang
       di `assets/i18n/` kosong.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (9 Okt 2026): kunci yang dipakai tidak diganti namanya; 95 kunci
+      yang sudah tidak dirujuk kode mana pun (lencana "Inventaris kosong",
+      label langkah, panduan Beranda lama, ringkasan lama) dihapus dari id
+      dan en. Teks: kas/log/mutasi/netto/inventaris/entri/tangkapan diganti
+      istilah glosarium; label dan tombol kapital kalimat ("Catat
+      pengeluaran", "Simpan dompet", "Hari ini"); "CATAT" → "Catat"; segmen
+      Catat "Pengeluaran / Pemasukan / Transfer" sesuai `Catat.dc.html`
+      ("Masuk/Keluar" pendek tetap di lencana kategori); Freelance memakai
+      "jam kerja" (bukan worklog/entri, sesuai `Freelance.dc.html`) dan
+      "tagihan" untuk pembayaran yang belum diterima (en: work hours,
+      invoice); tombol ubah di rincian transaksi "Ubah" supaya tidak kembar
+      dengan judul sheet "Ubah transaksi". Tur: teks yang merujuk tombol
+      cepat nominal (sudah dihapus) dan "pembayaran" diperbarui. Uji baru
+      `test/core/i18n/translations_test.dart` (kunci id/en sama, tanpa
+      istilah terlarang, tanpa "//", "!", "CATAT"). Render ulang tangkapan
+      situs (B-4) ada di repo `arkariz/tanukonomy-web`, belum dikerjakan
+      dari sini. `flutter analyze` bersih, 1.166 uji lulus.
 ## Fase 15: Rencana dan rutin (R1)
 
 Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan

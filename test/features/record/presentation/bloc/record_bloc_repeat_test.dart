@@ -205,13 +205,13 @@ void main() {
   });
 
   group('repeatSubmitLabel', () {
-    test('tanpa Ulangi: label biasa; lampau: Catat & Jadwalkan; masa depan: Simpan Jadwal', () {
+    test('tanpa Ulangi: label biasa; lampau: Catat dan jadwalkan; masa depan: Simpan jadwal', () {
       final now = DateTime.now();
       expect(repeatSubmitLabel(repeat: null, date: now, plain: 'Catat'), 'Catat');
-      expect(repeatSubmitLabel(repeat: const RecurringPattern(), date: now, plain: 'Catat'), 'Catat & Jadwalkan');
+      expect(repeatSubmitLabel(repeat: const RecurringPattern(), date: now, plain: 'Catat'), 'Catat dan jadwalkan');
       expect(
         repeatSubmitLabel(repeat: const RecurringPattern(), date: now.add(const Duration(days: 2)), plain: 'Catat'),
-        'Simpan Jadwal',
+        'Simpan jadwal',
       );
     });
   });

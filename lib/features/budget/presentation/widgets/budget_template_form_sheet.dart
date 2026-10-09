@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_form_sheet.dart';
@@ -136,111 +135,109 @@ class _BudgetTemplateFormSheetState extends State<BudgetTemplateFormSheet> {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final total = _items.fold(0, (sum, item) => sum + item.plannedAmount);
+    // Total + Simpan menempel di bawah, sama dengan formulir anggaran (QA PR #43
+    // F14).
     return SizedBox.expand(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppFormHeader(
-                title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
-              ),
-              const SizedBox(height: AppSpacing.space4),
-              AppCard(
-                color: colors.surface2,
-                child: Text(t.budget.templateRuleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              ),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.budget.templateNameLabel, hint: t.budget.requiredHint),
-              const SizedBox(height: AppSpacing.space1),
-              AppFormTextField(
-                controller: _name,
-                hint: t.budget.templateNameHint,
-                autofocus: !_editing,
-                onChanged: (_) => setState(() {}),
-              ),
-              const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
-              const SizedBox(height: 2),
-              Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-              const SizedBox(height: AppSpacing.space1),
-              for (var i = 0; i < _items.length; i++) ...[
-                BudgetItemRow(
-                  item: _items[i],
-                  targetWalletName: _walletName(_items[i].targetWalletId),
-                  onTap: () => _editItem(i),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.space4,
+                  AppSpacing.space4,
+                  AppSpacing.space4,
+                  AppSpacing.space6,
                 ),
-                const SizedBox(height: AppSpacing.space1),
-              ],
-              AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
-              const SizedBox(height: AppSpacing.space4),
-              AppCard(
-                color: colors.surface2,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      t.budget.templateTotalLabel,
-                      style: labelSmStyle(context, color: colors.ink2),
+                    AppFormHeader(
+                      title: _editing ? t.budget.templateEditTitle : t.budget.templateAddTitle,
                     ),
-                    FitStart(
-                      child: Text(
-                        AppMoneyFormatter.format(total),
-                        style: context.numberStyles.amountHero.copyWith(color: colors.ink),
+                    const SizedBox(height: AppSpacing.space4),
+                    AppCard(
+                      color: colors.surface2,
+                      child: Text(t.budget.templateRuleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                    ),
+                    const SizedBox(height: AppSpacing.space4),
+                    AppSectionLabel(t.budget.templateNameLabel, hint: t.budget.requiredHint),
+                    const SizedBox(height: AppSpacing.space1),
+                    AppFormTextField(
+                      controller: _name,
+                      hint: t.budget.templateNameHint,
+                      autofocus: !_editing,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    const SizedBox(height: AppSpacing.space4),
+                    AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
+                    const SizedBox(height: 2),
+                    Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                    const SizedBox(height: AppSpacing.space1),
+                    for (var i = 0; i < _items.length; i++) ...[
+                      BudgetItemRow(
+                        item: _items[i],
+                        targetWalletName: _walletName(_items[i].targetWalletId),
+                        onTap: () => _editItem(i),
                       ),
-                    ),
-                    if (_items.isEmpty)
+                      const SizedBox(height: AppSpacing.space1),
+                    ],
+                    AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
+                    if (_items.isEmpty) ...[
+                      const SizedBox(height: AppSpacing.space2),
                       Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning)),
-                  ],
-                ),
-              ),
-              if (_editing) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppCard(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                    if (_editing) ...[
+                      const SizedBox(height: AppSpacing.space4),
+                      AppCard(
+                        child: Row(
                           children: [
-                            Text(
-                              t.budget.templateEnabledLabel,
-                              style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    t.budget.templateEnabledLabel,
+                                    style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    t.budget.templateEnabledHelp,
+                                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(
-                              t.budget.templateEnabledHelp,
-                              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                            const SizedBox(width: AppSpacing.space2),
+                            Switch(
+                              value: _isEnabled,
+                              activeThumbColor: colors.onBrand,
+                              activeTrackColor: colors.brand,
+                              onChanged: (value) => setState(() => _isEnabled = value),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.space2),
-                      Switch(
-                        value: _isEnabled,
-                        activeThumbColor: colors.onBrand,
-                        activeTrackColor: colors.brand,
-                        onChanged: (value) => setState(() => _isEnabled = value),
+                    ],
+                    if (_editing) ...[
+                      const SizedBox(height: AppSpacing.space6),
+                      AppButton.danger(
+                        label: t.budget.templateDeleteAction,
+                        onPressed: _delete,
                       ),
                     ],
-                  ),
+                  ],
                 ),
-              ],
-              const SizedBox(height: AppSpacing.space6),
-              AppButton(
-                label: _editing ? t.transaction.saveChangesAction : t.budget.templateSaveAction,
-                onPressed: _canSave ? _save : null,
               ),
-              if (_editing) ...[
-                const SizedBox(height: AppSpacing.space4),
-                AppButton.danger(
-                  label: t.budget.templateDeleteAction,
-                  onPressed: _delete,
-                ),
-              ],
-            ],
-          ),
+            ),
+            BudgetTotalBar(
+              total: total,
+              label: t.budget.templateTotalLabel,
+              saveLabel: _editing ? t.transaction.saveChangesAction : t.budget.templateSaveAction,
+              onSave: _canSave ? _save : null,
+            ),
+          ],
         ),
       ),
     );

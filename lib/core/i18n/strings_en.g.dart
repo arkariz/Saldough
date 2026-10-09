@@ -345,11 +345,13 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get nameHint => 'Example: Household Needs';
 	@override String get requiredHint => 'Required';
 	@override String get walletLabel => 'Linked wallet';
-	@override String get walletHelp => 'Only expenses and outgoing transfers from this wallet count toward the budget.';
+	@override String get walletHelp => 'Only expenses and transfers out of this wallet count.';
 	@override String walletBalance({required Object amount}) => 'Balance: ${amount}';
 	@override String get periodLabel => 'Period';
 	@override String get startDateLabel => 'Starts';
 	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
+	@override String periodRangeShort({required Object start, required Object end}) => '${start}–${end}';
+	@override String periodStartRow({required Object date, required Object range}) => 'Starts ${date} · ${range}';
 	@override String get itemsLabel => 'Budget items';
 	@override String get itemsHelp => 'Planned purchases or planned transfers. The budget total is the sum of all items.';
 	@override String get addItemAction => 'Add item';
@@ -383,7 +385,7 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get detailLinkedEmpty => 'No transactions are linked to this budget yet.';
 	@override String get detailHowTitle => 'How budget items work';
 	@override String get unknownWallet => 'Wallet not found';
-	@override String get totalPlannedLabel => 'Total planned budget';
+	@override String get totalPlannedLabel => 'Planned total';
 	@override String get itemsRequiredHint => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.';
 	@override String walletUnchangedNote({required Object wallet}) => '${wallet} balance unchanged';
 	@override String get itemKindLabel => 'Item type';
@@ -1682,11 +1684,13 @@ extension on TranslationsEn {
 			'budget.nameHint' => 'Example: Household Needs',
 			'budget.requiredHint' => 'Required',
 			'budget.walletLabel' => 'Linked wallet',
-			'budget.walletHelp' => 'Only expenses and outgoing transfers from this wallet count toward the budget.',
+			'budget.walletHelp' => 'Only expenses and transfers out of this wallet count.',
 			'budget.walletBalance' => ({required Object amount}) => 'Balance: ${amount}',
 			'budget.periodLabel' => 'Period',
 			'budget.startDateLabel' => 'Starts',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'budget.periodRangeShort' => ({required Object start, required Object end}) => '${start}–${end}',
+			'budget.periodStartRow' => ({required Object date, required Object range}) => 'Starts ${date} · ${range}',
 			'budget.itemsLabel' => 'Budget items',
 			'budget.itemsHelp' => 'Planned purchases or planned transfers. The budget total is the sum of all items.',
 			'budget.addItemAction' => 'Add item',
@@ -1720,7 +1724,7 @@ extension on TranslationsEn {
 			'budget.detailLinkedEmpty' => 'No transactions are linked to this budget yet.',
 			'budget.detailHowTitle' => 'How budget items work',
 			'budget.unknownWallet' => 'Wallet not found',
-			'budget.totalPlannedLabel' => 'Total planned budget',
+			'budget.totalPlannedLabel' => 'Planned total',
 			'budget.itemsRequiredHint' => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => '${wallet} balance unchanged',
 			'budget.itemKindLabel' => 'Item type',
@@ -1902,10 +1906,10 @@ extension on TranslationsEn {
 			'freelance.paidOffBadge' => 'Paid off',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total balance',
-			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
-			'home.budgetTitle' => 'Active budgets',
 			_ => null,
 		} ?? switch (path) {
+			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
+			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View budgets',
@@ -2416,10 +2420,10 @@ extension on TranslationsEn {
 			'plan.detailsTitle' => 'Balance forecast',
 			'plan.detailsNow' => 'Balance now',
 			'plan.detailsIncome' => 'Recurring income',
-			'plan.detailsBills' => 'Recurring bills',
-			'plan.detailsBudget' => 'Budget left',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsBills' => 'Recurring bills',
+			'plan.detailsBudget' => 'Budget left',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
 			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
 			'plan.detailsTransfers' => 'Recurring transfers',

@@ -18,6 +18,7 @@ import 'package:saldough/features/budget/domain/usecases/plan_recurring_budget_s
 import 'package:saldough/features/budget/presentation/budget_display.dart';
 import 'package:saldough/features/budget/presentation/widgets/budget_item_form_sheet.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+import 'package:saldough/shared/wallet/wallet_presentation.dart';
 
 /// Hasil [BudgetFormSheet]; `null` berarti dibatalkan.
 sealed class BudgetFormResult {
@@ -330,166 +331,241 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
     final textTheme = Theme.of(context).textTheme;
     final budget = widget.initial;
     void refresh(String _) => setState(() {});
+    final walletName = _selectedWalletName;
+    // QA PR #43 F14: dompet satu baris pemilih, periode satu baris ringkas,
+    // dan total + Simpan di bilah bawah yang menempel (AppStickyBar).
     return TourTrigger(
       tour: TourId.budgetForm,
       ready: true,
       child: SizedBox.expand(
         child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, AppSpacing.space6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppFormHeader(
-                  title: _editing ? t.budget.editTitle : t.budget.addTitle,
-                ),
-                const SizedBox(height: AppSpacing.space4),
-                AppCard(
-                  color: colors.surface2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.space4,
+                    AppSpacing.space4,
+                    AppSpacing.space4,
+                    AppSpacing.space6,
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(t.budget.ruleTitle, style: textTheme.titleMedium),
+                      AppFormHeader(
+                        title: _editing ? t.budget.editTitle : t.budget.addTitle,
+                      ),
+                      const SizedBox(height: AppSpacing.space4),
+                      AppCard(
+                        color: colors.surface2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(t.budget.ruleTitle, style: textTheme.titleMedium),
+                            const SizedBox(height: 2),
+                            Text(t.budget.ruleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.space4),
+                      AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
+                      const SizedBox(height: AppSpacing.space1),
+                      AppFormTextField(
+                        controller: _name,
+                        hint: t.budget.nameHint,
+                        autofocus: !_editing,
+                        onChanged: refresh,
+                      ),
+                      const SizedBox(height: AppSpacing.space4),
+                      AppListCard(
+                        dividerIndent: AppListCard.iconIndent,
+                        children: [
+                          WalletSelectField(
+                            key: const ValueKey('budget-wallet'),
+                            label: t.budget.walletLabel,
+                            wallets: widget.wallets,
+                            selectedId: _walletId,
+                            onSelected: (id) => setState(() => _walletId = id),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.space1),
+                      Text(t.budget.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                      const SizedBox(height: AppSpacing.space4),
+                      AppSectionLabel(t.budget.periodLabel),
+                      const SizedBox(height: AppSpacing.space1),
+                      Wrap(
+                        spacing: AppSpacing.space1,
+                        children: [
+                          for (final (period, label) in [
+                            (BudgetPeriod.monthly, t.budget.periodMonthly),
+                            (BudgetPeriod.weekly, t.budget.periodWeekly),
+                          ])
+                            AppChip(
+                              key: ValueKey('budget-period-${period.name}'),
+                              label: label,
+                              selected: _period == period,
+                              onTap: () => setState(() => _period = period),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.space1),
+                      AppListCard(
+                        dividerIndent: AppListCard.iconIndent,
+                        children: [
+                          AppListRow(
+                            key: const ValueKey('budget-start'),
+                            compact: true,
+                            leading: AppIcon(IconKey.calendar, color: colors.ink2),
+                            title: t.budget.periodStartRow(
+                              date: CycleMonthFormatter.formatDayMonth(_startDate),
+                              range: budgetRangeShortLabel(_draft),
+                            ),
+                            chevron: true,
+                            onTap: _pickStartDate,
+                          ),
+                          SpotlightTarget(
+                            spotlightKey: SpotlightKey.budgetRepeat,
+                            child: _RepeatSwitch(
+                              value: _repeat && _canRepeat,
+                              enabled: _canRepeat && !_isPast,
+                              help: _isPast
+                                  ? t.budget.repeatPastNote
+                                  : !_canRepeat
+                                  ? t.budget.repeatUnavailable
+                                  : switch (_period) {
+                                      BudgetPeriod.monthly => t.budget.repeatHelpMonthly(
+                                        date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
+                                      ),
+                                      BudgetPeriod.weekly => t.budget.repeatHelpWeekly(
+                                        date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
+                                      ),
+                                    },
+                              onChanged: (value) {
+                                AppAnalytics.log(PlanEvents.budgetRepeatToggled(on: value));
+                                setState(() => _repeat = value);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.space4),
+                      AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
                       const SizedBox(height: 2),
-                      Text(t.budget.ruleBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                      Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+                      const SizedBox(height: AppSpacing.space1),
+                      for (var i = 0; i < _items.length; i++) ...[
+                        BudgetItemRow(
+                          item: _items[i],
+                          targetWalletName: _walletName(_items[i].targetWalletId),
+                          onTap: () => _editItem(i),
+                        ),
+                        const SizedBox(height: AppSpacing.space1),
+                      ],
+                      AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
+                      const SizedBox(height: AppSpacing.space2),
+                      if (_conflictingItem case final item?) ...[
+                        Text(
+                          t.budget.itemTargetConflict(name: item.name),
+                          style: textTheme.bodySmall?.copyWith(color: colors.danger),
+                        ),
+                        const SizedBox(height: AppSpacing.space1),
+                      ],
+                      if (_items.isEmpty)
+                        Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning))
+                      else if (walletName != null)
+                        Text(
+                          '${t.budget.itemCount(count: _items.length)} · '
+                          '${t.budget.walletUnchangedNote(wallet: walletName)}',
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                        ),
+                      if (budget != null) ...[
+                        const SizedBox(height: AppSpacing.space6),
+                        AppButton.secondary(
+                          label: budget.isArchived ? t.budget.unarchiveAction : t.budget.archiveAction,
+                          onPressed: () => Navigator.of(context).pop(const BudgetFormArchiveToggled()),
+                        ),
+                        const SizedBox(height: AppSpacing.space1),
+                        Text(
+                          t.budget.archiveHelp,
+                          textAlign: TextAlign.center,
+                          style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                        ),
+                        const SizedBox(height: AppSpacing.space4),
+                        AppButton.danger(label: t.budget.deleteAction, onPressed: _delete),
+                      ],
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionLabel(t.budget.nameLabel, hint: t.budget.requiredHint),
-                const SizedBox(height: AppSpacing.space1),
-                AppFormTextField(controller: _name, hint: t.budget.nameHint, autofocus: !_editing, onChanged: refresh),
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionLabel(t.budget.walletLabel, hint: t.budget.requiredHint),
-                const SizedBox(height: 2),
-                Text(t.budget.walletHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                const SizedBox(height: AppSpacing.space1),
-                for (final wallet in widget.wallets) ...[
-                  _WalletChoice(
-                    wallet: wallet,
-                    selected: wallet.id == _walletId,
-                    onTap: () => setState(() => _walletId = wallet.id),
-                  ),
-                  const SizedBox(height: AppSpacing.space1),
-                ],
-                const SizedBox(height: AppSpacing.space2),
-                AppSectionLabel(t.budget.periodLabel),
-                const SizedBox(height: AppSpacing.space1),
-                AppSegmentedControl<BudgetPeriod>(
-                  options: [
-                    (BudgetPeriod.monthly, t.budget.periodMonthly),
-                    (BudgetPeriod.weekly, t.budget.periodWeekly),
-                  ],
-                  selected: _period,
-                  onChanged: (value) => setState(() => _period = value),
+              ),
+              BudgetTotalBar(
+                total: _itemsTotal,
+                saveLabel: _editing ? t.transaction.saveChangesAction : t.budget.saveAddAction,
+                onSave: _canSave ? () => unawaited(_save()) : null,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Bilah bawah formulir anggaran dan template (QA PR #43 F14): total rencana
+/// (jumlah pos, ADR-017) di kiri, tombol simpan di kanan, menempel di atas
+/// navigasi sistem dan keyboard ([AppStickyBar]).
+class BudgetTotalBar extends StatelessWidget {
+  /// Membuat [BudgetTotalBar].
+  const BudgetTotalBar({
+    required this.total,
+    required this.saveLabel,
+    required this.onSave,
+    this.label,
+    super.key,
+  });
+
+  /// Total rencana (sen).
+  final int total;
+
+  /// Label total; bawaan "Total rencana anggaran".
+  final String? label;
+
+  /// Teks tombol simpan.
+  final String saveLabel;
+
+  /// Simpan; `null` menonaktifkan.
+  final VoidCallback? onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return AppStickyBar(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label ?? t.budget.totalPlannedLabel,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
                 ),
-                const SizedBox(height: AppSpacing.space1),
-                Semantics(
-                  button: true,
-                  label: t.budget.startDateLabel,
-                  child: GestureDetector(
-                    onTap: _pickStartDate,
-                    behavior: HitTestBehavior.opaque,
-                    child: AppCard(
-                      child: Row(
-                        children: [
-                          const AppIcon(IconKey.calendar),
-                          const SizedBox(width: AppSpacing.space2),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  t.budget.startDateLabel,
-                                  style: labelSmStyle(context, color: colors.ink2),
-                                ),
-                                Text(CycleMonthFormatter.formatDate(_startDate), style: textTheme.titleMedium),
-                              ],
-                            ),
-                          ),
-                          // Rentang panjang boleh membungkus di 360dp.
-                          Flexible(child: BudgetBadge(label: budgetRangeLabel(_draft))),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.space1),
-                SpotlightTarget(
-                  spotlightKey: SpotlightKey.budgetRepeat,
-                  child: _RepeatSwitch(
-                    value: _repeat && _canRepeat,
-                    enabled: _canRepeat && !_isPast,
-                    help: _isPast
-                        ? t.budget.repeatPastNote
-                        : !_canRepeat
-                        ? t.budget.repeatUnavailable
-                        : switch (_period) {
-                            BudgetPeriod.monthly => t.budget.repeatHelpMonthly(
-                              date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
-                            ),
-                            BudgetPeriod.weekly => t.budget.repeatHelpWeekly(
-                              date: CycleMonthFormatter.formatDate(_period.endFrom(_startDate)),
-                            ),
-                          },
-                    onChanged: (value) {
-                      AppAnalytics.log(PlanEvents.budgetRepeatToggled(on: value));
-                      setState(() => _repeat = value);
-                    },
+                FitStart(
+                  child: Text(
+                    AppMoneyFormatter.format(total),
+                    key: const ValueKey('budget-total'),
+                    style: context.numberStyles.amountLg.copyWith(color: colors.ink),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.space4),
-                AppSectionLabel(t.budget.itemsLabel, hint: t.budget.requiredHint),
-                const SizedBox(height: 2),
-                Text(t.budget.itemsHelp, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                const SizedBox(height: AppSpacing.space1),
-                for (var i = 0; i < _items.length; i++) ...[
-                  BudgetItemRow(
-                    item: _items[i],
-                    targetWalletName: _walletName(_items[i].targetWalletId),
-                    onTap: () => _editItem(i),
-                  ),
-                  const SizedBox(height: AppSpacing.space1),
-                ],
-                AppButton.secondary(label: t.budget.addItemAction, onPressed: _editItem),
-                const SizedBox(height: AppSpacing.space2),
-                if (_conflictingItem case final item?) ...[
-                  Text(
-                    t.budget.itemTargetConflict(name: item.name),
-                    style: textTheme.bodySmall?.copyWith(color: colors.danger),
-                  ),
-                  const SizedBox(height: AppSpacing.space1),
-                ],
-                _PlannedTotalCard(
-                  total: _itemsTotal,
-                  itemCount: _items.length,
-                  walletName: _selectedWalletName,
-                ),
-                const SizedBox(height: AppSpacing.space6),
-                AppButton(
-                  label: _editing ? t.transaction.saveChangesAction : t.budget.saveAddAction,
-                  onPressed: _canSave ? () => unawaited(_save()) : null,
-                ),
-                if (budget != null) ...[
-                  const SizedBox(height: AppSpacing.space6),
-                  AppButton.secondary(
-                    label: budget.isArchived ? t.budget.unarchiveAction : t.budget.archiveAction,
-                    onPressed: () => Navigator.of(context).pop(const BudgetFormArchiveToggled()),
-                  ),
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(
-                    t.budget.archiveHelp,
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                  ),
-                  const SizedBox(height: AppSpacing.space4),
-                  AppButton.danger(label: t.budget.deleteAction, onPressed: _delete),
-                ],
               ],
             ),
           ),
-        ),
+          const SizedBox(width: AppSpacing.space3),
+          AppButton(key: const ValueKey('budget-save'), label: saveLabel, onPressed: onSave),
+        ],
       ),
     );
   }
@@ -509,11 +585,12 @@ class _RepeatSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    return AppCard(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
       child: Row(
         children: [
-          const AppIcon(IconKey.calendar),
-          const SizedBox(width: AppSpacing.space2),
+          AppIcon(IconKey.schedule, color: colors.ink2),
+          const SizedBox(width: AppSpacing.space3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,42 +608,6 @@ class _RepeatSwitch extends StatelessWidget {
             activeTrackColor: colors.brand,
             onChanged: enabled ? onChanged : null,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _WalletChoice extends StatelessWidget {
-  const _WalletChoice({required this.wallet, required this.selected, required this.onTap});
-
-  final Wallet wallet;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return AppChoiceBox(
-      selected: selected,
-      onTap: onTap,
-      child: Row(
-        children: [
-          AppIconTile(walletIconKey(wallet.iconKey)),
-          const SizedBox(width: AppSpacing.space2),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
-                Text(
-                  t.budget.walletBalance(amount: AppMoneyFormatter.format(wallet.currentBalance)),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
-                ),
-              ],
-            ),
-          ),
-          if (selected) AppIcon(IconKey.check, color: colors.brand),
         ],
       ),
     );
@@ -635,65 +676,6 @@ class BudgetItemRow extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Total rencana anggaran = jumlah pos (ADR-017), rujukan
-/// `pixel_kas_tambah_anggaran` bagian "Total Rencana Anggaran". Tanpa pos,
-/// kartu ini menjelaskan bahwa minimal satu pos dibutuhkan.
-class _PlannedTotalCard extends StatelessWidget {
-  const _PlannedTotalCard({required this.total, required this.itemCount, required this.walletName});
-
-  final int total;
-  final int itemCount;
-  final String? walletName;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    return AppCard(
-      color: colors.surface2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            t.budget.totalPlannedLabel,
-            style: labelSmStyle(context, color: colors.ink2),
-          ),
-          const SizedBox(height: 2),
-          FitStart(
-            child: Text(
-              AppMoneyFormatter.format(total),
-              style: textTheme.headlineMedium?.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
-            ),
-          ),
-          const SizedBox(height: 4),
-          if (itemCount == 0)
-            Text(t.budget.itemsRequiredHint, style: textTheme.bodySmall?.copyWith(color: colors.warning))
-          else
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              spacing: AppSpacing.space2,
-              runSpacing: 2,
-              children: [
-                Text(
-                  t.budget.itemCount(count: itemCount),
-                  style: labelSmStyle(context, color: colors.ink2).copyWith(fontWeight: FontWeight.w400),
-                ),
-                if (walletName != null)
-                  Text(
-                    t.budget.walletUnchangedNote(wallet: walletName!),
-                    style: labelSmStyle(
-                      context,
-                      color: colors.ink2,
-                    ).copyWith(fontWeight: FontWeight.w400),
-                  ),
-              ],
-            ),
-        ],
       ),
     );
   }

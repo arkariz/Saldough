@@ -138,9 +138,11 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t.plan.balanceTitle, style: labelSmStyle(context, color: colors.ink2)),
+            // Kepala `est-card__head`. Chip dompet di baris sendiri: di 360dp
+            // judul dan lebih dari dua chip tidak muat sebaris.
+            Text(t.plan.balanceTitle, style: textTheme.titleMedium),
             if (widget.wallets.length > 1) ...[
-              const SizedBox(height: AppSpacing.space1),
+              const SizedBox(height: AppSpacing.space2),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -151,7 +153,7 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                       onTap: () => widget.onWalletChanged(null),
                     ),
                     for (final wallet in widget.wallets) ...[
-                      const SizedBox(width: AppSpacing.space1),
+                      const SizedBox(width: AppSpacing.space2),
                       AppChip(
                         label: wallet.name,
                         selected: widget.walletId == wallet.id,
@@ -222,12 +224,14 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                       onHorizontalDragUpdate: (d) => select(d.localPosition.dx),
                       onTapDown: (d) => select(d.localPosition.dx),
                       child: CustomPaint(
-                        size: Size(constraints.maxWidth, 72),
+                        size: Size(constraints.maxWidth, 120),
                         painter: _ChartPainter(
                           balances: [for (final d in days) d.balance],
-                          line: colors.ink,
-                          zero: colors.danger,
-                          marker: colors.brand,
+                          line: colors.brand,
+                          zero: colors.ink3,
+                          negative: colors.danger,
+                          marker: colors.ink,
+                          ring: colors.surface,
                           lowIndex: low == null ? null : days.indexOf(low),
                           selectedIndex: _selected,
                         ),
@@ -283,10 +287,7 @@ class _Tile extends StatelessWidget {
           child: FitStart(
             child: Text(
               '≈$formatted',
-              style: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: warn ? colors.danger : null,
-              ),
+              style: context.numberStyles.amount.copyWith(color: warn ? colors.danger : colors.ink),
             ),
           ),
         ),
@@ -295,14 +296,18 @@ class _Tile extends StatelessWidget {
   }
 }
 
-/// Garis saldo per hari, tinta netral (bukan hijau/merah); garis nol bila
-/// ada saldo di bawah nol, penanda titik terendah dan titik terpilih.
+/// Saldo per hari sebagai anak tangga (`rencana.css` `.fc`): garis `brand`
+/// putus-putus karena perkiraan, area tipis `brand` di atas nol dan
+/// `danger` di bawahnya, garis nol `ink3`, penanda kotak untuk titik
+/// terendah (`ink`, merah bila negatif) dan titik terpilih (`brand`).
 class _ChartPainter extends CustomPainter {
   _ChartPainter({
     required this.balances,
     required this.line,
     required this.zero,
+    required this.negative,
     required this.marker,
+    required this.ring,
     required this.lowIndex,
     required this.selectedIndex,
   });
@@ -310,7 +315,9 @@ class _ChartPainter extends CustomPainter {
   final List<int> balances;
   final Color line;
   final Color zero;
+  final Color negative;
   final Color marker;
+  final Color ring;
   final int? lowIndex;
   final int? selectedIndex;
 
@@ -318,38 +325,65 @@ class _ChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (balances.length < 2) return;
     final minValue = [...balances, 0].reduce((a, b) => a < b ? a : b).toDouble();
-    final maxValue = balances.reduce((a, b) => a > b ? a : b).toDouble();
+    final maxValue = [...balances, 0].reduce((a, b) => a > b ? a : b).toDouble();
     final span = (maxValue - minValue).abs() < 1 ? 1.0 : maxValue - minValue;
-    Offset at(int i) => Offset(
-      i / (balances.length - 1) * size.width,
-      size.height - 4 - (balances[i] - minValue) / span * (size.height - 8),
-    );
-    if (minValue < 0) {
-      final y = at(0).dy + (balances[0] - 0) / span * (size.height - 8);
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), Paint()..color = zero.withValues(alpha: 0.5));
-    }
-    final path = Path()..moveTo(at(0).dx, at(0).dy);
+    double x(int i) => i / (balances.length - 1) * size.width;
+    double y(num value) => size.height - 6 - (value - minValue) / span * (size.height - 12);
+    final zeroY = y(0);
+
+    // Anak tangga: datar sepanjang hari, lalu turun/naik tegak.
+    final steps = Path()..moveTo(x(0), y(balances[0]));
     for (var i = 1; i < balances.length; i++) {
-      path.lineTo(at(i).dx, at(i).dy);
+      steps
+        ..lineTo(x(i), y(balances[i - 1]))
+        ..lineTo(x(i), y(balances[i]));
     }
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = line
-        ..strokeWidth = 2
-        ..style = PaintingStyle.stroke,
-    );
-    if (lowIndex case final i? when i >= 0) canvas.drawCircle(at(i), 4, Paint()..color = marker);
-    if (selectedIndex case final i? when i < balances.length) {
+    final area = Path.from(steps)
+      ..lineTo(x(balances.length - 1), zeroY)
+      ..lineTo(x(0), zeroY)
+      ..close();
+    canvas
+      ..save()
+      ..clipRect(Rect.fromLTRB(0, 0, size.width, zeroY))
+      ..drawPath(area, Paint()..color = line.withValues(alpha: 0.1))
+      ..restore()
+      ..save()
+      ..clipRect(Rect.fromLTRB(0, zeroY, size.width, size.height))
+      ..drawPath(area, Paint()..color = negative.withValues(alpha: 0.18))
+      ..restore();
+    if (minValue < 0) {
+      canvas.drawLine(Offset(0, zeroY), Offset(size.width, zeroY), Paint()..color = zero);
+    }
+
+    final stroke = Paint()
+      ..color = line
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    for (final metric in steps.computeMetrics()) {
+      for (var d = 0.0; d < metric.length; d += 7) {
+        canvas.drawPath(metric.extractPath(d, (d + 4).clamp(0, metric.length)), stroke);
+      }
+    }
+
+    void square(int i, double side, Color fill) {
+      final rect = Rect.fromCenter(center: Offset(x(i), y(balances[i])), width: side, height: side);
       canvas
-        ..drawLine(Offset(at(i).dx, 0), Offset(at(i).dx, size.height), Paint()..color = line.withValues(alpha: 0.3))
-        ..drawCircle(at(i), 4, Paint()..color = line);
+        ..drawRect(rect.inflate(2), Paint()..color = ring)
+        ..drawRect(rect, Paint()..color = fill);
+    }
+
+    if (lowIndex case final i? when i >= 0 && i < balances.length) {
+      square(i, 8, balances[i] < 0 ? negative : marker);
+    }
+    if (selectedIndex case final i? when i < balances.length) {
+      canvas.drawLine(Offset(x(i), 0), Offset(x(i), size.height), Paint()..color = zero);
+      square(i, 10, line);
     }
   }
 
   @override
   bool shouldRepaint(_ChartPainter old) =>
-      old.balances != balances || old.selectedIndex != selectedIndex || old.line != line;
+      old.balances != balances || old.selectedIndex != selectedIndex || old.line != line || old.ring != ring;
 }
 
 /// Bingkai putus-putus untuk angka perkiraan (PLAN_TAB_LAYOUT §7.2).

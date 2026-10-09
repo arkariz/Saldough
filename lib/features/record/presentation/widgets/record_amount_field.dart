@@ -41,7 +41,7 @@ class RecordAmountField extends StatelessWidget {
           ),
           excludeSemantics: true,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text.rich(

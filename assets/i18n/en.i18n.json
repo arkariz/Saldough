@@ -15,7 +15,8 @@
     "genericErrorMessage": "Something went wrong. Please try again.",
     "confirmDeleteTitle": "Delete?",
     "keypadBackspace": "Delete one digit",
-    "close": "Close"
+    "close": "Close",
+    "done": "Done"
   },
   "appShell": {
     "homeTabLabel": "Home",
@@ -30,7 +31,7 @@
     "incomeAction": "Record income",
     "expenseAction": "Record expense",
     "transferAction": "Record transfer",
-    "toWalletFieldLabel": "Into Wallet",
+    "toWalletFieldLabel": "To wallet",
     "fromWalletFieldLabel": "From wallet",
     "destinationWalletFieldLabel": "To wallet",
     "dateFieldLabel": "Date",
@@ -761,7 +762,7 @@
       "bills": "Bills",
       "internet": "Phone & Internet",
       "health": "Health",
-      "entertainment": "Entertainment",
+      "entertainment": "Leisure",
       "shopping": "Shopping",
       "education": "Education",
       "family": "Family",
@@ -965,7 +966,10 @@
     "progressLine": "$k of $n recorded",
     "countLine": "$n times",
     "pausedLine": "Paused",
-    "reminderLine": "I pay it · reminded $n day(s) before",
+    "reminderLine": {
+      "one": "I pay it · reminded $n day before",
+      "other": "I pay it · reminded $n days before"
+    },
     "autoDebitLine": "Auto-debit",
     "pausedMessage": "$name paused.",
     "resumedMessage": "$name resumed.",
@@ -997,7 +1001,10 @@
     "unlinkedMessage": "Unlinked. The occurrence is waiting again.",
     "reminderChannelName": "Recurring reminders",
     "reminderChannelDescription": "Recurring bills and income that are due.",
-    "reminderSoonTitle": "In $n day(s)",
+    "reminderSoonTitle": {
+      "one": "In $n day",
+      "other": "In $n days"
+    },
     "reminderTodayTitle": "Due today",
     "reminderTodayManyTitle": "$n recurring due today",
     "alreadyRecordedMessage": "$name is already recorded.",

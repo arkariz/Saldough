@@ -120,6 +120,9 @@ class Translations$common$id {
 
 	/// id: 'Tutup'
 	String get close => 'Tutup';
+
+	/// id: 'Selesai'
+	String get done => 'Selesai';
 }
 
 // Path: appShell
@@ -169,8 +172,8 @@ class Translations$record$id {
 	/// id: 'Catat transfer'
 	String get transferAction => 'Catat transfer';
 
-	/// id: 'Masuk ke Dompet'
-	String get toWalletFieldLabel => 'Masuk ke Dompet';
+	/// id: 'Ke dompet'
+	String get toWalletFieldLabel => 'Ke dompet';
 
 	/// id: 'Dari dompet'
 	String get fromWalletFieldLabel => 'Dari dompet';
@@ -2648,8 +2651,10 @@ class Translations$recurring$id {
 	/// id: 'Dijeda'
 	String get pausedLine => 'Dijeda';
 
-	/// id: 'Bayar sendiri · diingatkan H−$n'
-	String reminderLine({required Object n}) => 'Bayar sendiri · diingatkan H−${n}';
+	/// id: '(other) {Bayar sendiri · diingatkan H−$n}'
+	String reminderLine({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		other: 'Bayar sendiri · diingatkan H−${n}',
+	);
 
 	/// id: 'Autodebet'
 	String get autoDebitLine => 'Autodebet';
@@ -2744,8 +2749,10 @@ class Translations$recurring$id {
 	/// id: 'Tagihan dan pemasukan rutin yang jatuh tempo.'
 	String get reminderChannelDescription => 'Tagihan dan pemasukan rutin yang jatuh tempo.';
 
-	/// id: '$n hari lagi'
-	String reminderSoonTitle({required Object n}) => '${n} hari lagi';
+	/// id: '(other) {$n hari lagi}'
+	String reminderSoonTitle({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		other: '${n} hari lagi',
+	);
 
 	/// id: 'Jatuh tempo hari ini'
 	String get reminderTodayTitle => 'Jatuh tempo hari ini';
@@ -3507,6 +3514,7 @@ extension on Translations {
 			'common.confirmDeleteTitle' => 'Hapus?',
 			'common.keypadBackspace' => 'Hapus satu digit',
 			'common.close' => 'Tutup',
+			'common.done' => 'Selesai',
 			'appShell.homeTabLabel' => 'Beranda',
 			'appShell.budgetTabLabel' => 'Anggaran',
 			'appShell.recordAction' => 'Catat',
@@ -3517,7 +3525,7 @@ extension on Translations {
 			'record.incomeAction' => 'Catat pemasukan',
 			'record.expenseAction' => 'Catat pengeluaran',
 			'record.transferAction' => 'Catat transfer',
-			'record.toWalletFieldLabel' => 'Masuk ke Dompet',
+			'record.toWalletFieldLabel' => 'Ke dompet',
 			'record.fromWalletFieldLabel' => 'Dari dompet',
 			'record.destinationWalletFieldLabel' => 'Ke dompet',
 			'record.dateFieldLabel' => 'Tanggal',
@@ -4004,9 +4012,9 @@ extension on Translations {
 			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
 			'home.budgetTitle' => 'Anggaran aktif',
-			'home.budgetRemaining' => 'Sisa',
 			_ => null,
 		} ?? switch (path) {
+			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat anggaran',
 			'home.freelanceTitle' => 'Freelance',
@@ -4410,7 +4418,7 @@ extension on Translations {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
 			'recurring.countLine' => ({required Object n}) => '${n} kali',
 			'recurring.pausedLine' => 'Dijeda',
-			'recurring.reminderLine' => ({required Object n}) => 'Bayar sendiri · diingatkan H−${n}',
+			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: 'Bayar sendiri · diingatkan H−${n}', ), 
 			'recurring.autoDebitLine' => 'Autodebet',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} dijeda.',
 			'recurring.resumedMessage' => ({required Object name}) => '${name} dilanjutkan.',
@@ -4442,7 +4450,7 @@ extension on Translations {
 			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
-			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
+			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} hari lagi', ), 
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
@@ -4518,9 +4526,9 @@ extension on Translations {
 			'plan.detailsBudget' => 'Sisa anggaran',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
 			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
-			'plan.detailsTransfers' => 'Transfer rutin',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsTransfers' => 'Transfer rutin',
 			'plan.detailsEnd' => ({required Object date}) => 'Akhir ${date}',
 			'plan.unplannedToggle' => 'Hitung jajan harian',
 			'plan.unplannedUnavailable' => 'Butuh riwayat sebulan penuh.',

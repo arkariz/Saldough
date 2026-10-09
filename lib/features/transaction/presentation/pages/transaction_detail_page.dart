@@ -154,16 +154,18 @@ class TransactionDetailPage extends StatelessWidget {
                 else ...[
                   _ManualNote(text: t.transaction.detailManualNote),
                   const SizedBox(height: AppSpacing.space4),
-                  AppButton(label: t.transaction.editAction, onPressed: () => _edit(context, state)),
+                  AppButton(label: t.transaction.editAction, expand: true, onPressed: () => _edit(context, state)),
                   const SizedBox(height: AppSpacing.space2),
                   AppButton.secondary(
                     label: t.transaction.recordAgainAction,
+                    expand: true,
                     onPressed: () => _recordAgain(context),
                   ),
                   if (transaction.recurrence == null) ...[
                     const SizedBox(height: AppSpacing.space2),
                     AppButton.secondary(
                       label: t.transaction.makeRecurringAction,
+                      expand: true,
                       onPressed: () => _makeRecurring(context),
                     ),
                   ],

@@ -90,6 +90,7 @@ class _Translations$common$en extends Translations$common$id {
 	@override String get confirmDeleteTitle => 'Delete?';
 	@override String get keypadBackspace => 'Delete one digit';
 	@override String get close => 'Close';
+	@override String get done => 'Done';
 }
 
 // Path: appShell
@@ -118,7 +119,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get incomeAction => 'Record income';
 	@override String get expenseAction => 'Record expense';
 	@override String get transferAction => 'Record transfer';
-	@override String get toWalletFieldLabel => 'Into Wallet';
+	@override String get toWalletFieldLabel => 'To wallet';
 	@override String get fromWalletFieldLabel => 'From wallet';
 	@override String get destinationWalletFieldLabel => 'To wallet';
 	@override String get dateFieldLabel => 'Date';
@@ -831,7 +832,7 @@ class _Translations$category$en extends Translations$category$id {
 		'bills': 'Bills',
 		'internet': 'Phone & Internet',
 		'health': 'Health',
-		'entertainment': 'Entertainment',
+		'entertainment': 'Leisure',
 		'shopping': 'Shopping',
 		'education': 'Education',
 		'family': 'Family',
@@ -1044,7 +1045,10 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String progressLine({required Object k, required Object n}) => '${k} of ${n} recorded';
 	@override String countLine({required Object n}) => '${n} times';
 	@override String get pausedLine => 'Paused';
-	@override String reminderLine({required Object n}) => 'I pay it · reminded ${n} day(s) before';
+	@override String reminderLine({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'I pay it · reminded ${n} day before',
+		other: 'I pay it · reminded ${n} days before',
+	);
 	@override String get autoDebitLine => 'Auto-debit';
 	@override String pausedMessage({required Object name}) => '${name} paused.';
 	@override String resumedMessage({required Object name}) => '${name} resumed.';
@@ -1076,7 +1080,10 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get unlinkedMessage => 'Unlinked. The occurrence is waiting again.';
 	@override String get reminderChannelName => 'Recurring reminders';
 	@override String get reminderChannelDescription => 'Recurring bills and income that are due.';
-	@override String reminderSoonTitle({required Object n}) => 'In ${n} day(s)';
+	@override String reminderSoonTitle({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'In ${n} day',
+		other: 'In ${n} days',
+	);
 	@override String get reminderTodayTitle => 'Due today';
 	@override String reminderTodayManyTitle({required Object n}) => '${n} recurring due today';
 	@override String alreadyRecordedMessage({required Object name}) => '${name} is already recorded.';
@@ -1395,6 +1402,7 @@ extension on TranslationsEn {
 			'common.confirmDeleteTitle' => 'Delete?',
 			'common.keypadBackspace' => 'Delete one digit',
 			'common.close' => 'Close',
+			'common.done' => 'Done',
 			'appShell.homeTabLabel' => 'Home',
 			'appShell.budgetTabLabel' => 'Budget',
 			'appShell.recordAction' => 'Record',
@@ -1405,7 +1413,7 @@ extension on TranslationsEn {
 			'record.incomeAction' => 'Record income',
 			'record.expenseAction' => 'Record expense',
 			'record.transferAction' => 'Record transfer',
-			'record.toWalletFieldLabel' => 'Into Wallet',
+			'record.toWalletFieldLabel' => 'To wallet',
 			'record.fromWalletFieldLabel' => 'From wallet',
 			'record.destinationWalletFieldLabel' => 'To wallet',
 			'record.dateFieldLabel' => 'Date',
@@ -1892,9 +1900,9 @@ extension on TranslationsEn {
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.budgetTitle' => 'Active budgets',
-			'home.budgetRemaining' => 'Remaining',
 			_ => null,
 		} ?? switch (path) {
+			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View budgets',
 			'home.freelanceTitle' => 'Freelance',
@@ -2103,7 +2111,7 @@ extension on TranslationsEn {
 			'category.builtIn.bills' => 'Bills',
 			'category.builtIn.internet' => 'Phone & Internet',
 			'category.builtIn.health' => 'Health',
-			'category.builtIn.entertainment' => 'Entertainment',
+			'category.builtIn.entertainment' => 'Leisure',
 			'category.builtIn.shopping' => 'Shopping',
 			'category.builtIn.education' => 'Education',
 			'category.builtIn.family' => 'Family',
@@ -2298,7 +2306,7 @@ extension on TranslationsEn {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
 			'recurring.pausedLine' => 'Paused',
-			'recurring.reminderLine' => ({required Object n}) => 'I pay it · reminded ${n} day(s) before',
+			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'I pay it · reminded ${n} day before', other: 'I pay it · reminded ${n} days before', ), 
 			'recurring.autoDebitLine' => 'Auto-debit',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} paused.',
 			'recurring.resumedMessage' => ({required Object name}) => '${name} resumed.',
@@ -2330,7 +2338,7 @@ extension on TranslationsEn {
 			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
-			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
+			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'In ${n} day', other: 'In ${n} days', ), 
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
@@ -2406,9 +2414,9 @@ extension on TranslationsEn {
 			'plan.detailsBudget' => 'Budget left',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
 			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
-			'plan.detailsTransfers' => 'Recurring transfers',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsTransfers' => 'Recurring transfers',
 			'plan.detailsEnd' => ({required Object date}) => 'End of ${date}',
 			'plan.unplannedToggle' => 'Count daily spending',
 			'plan.unplannedUnavailable' => 'Needs a full month of history.',

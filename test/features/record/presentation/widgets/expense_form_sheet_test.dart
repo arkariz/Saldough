@@ -306,8 +306,9 @@ void main() {
     await tester.ensureVisible(find.text(t.record.repeat.off));
     await tester.tap(find.text(t.record.repeat.off));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text(t.record.repeat.monthly));
     await tester.tap(find.text(t.record.repeat.monthly));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('repeat-done')));
     await tester.pumpAndSettle();
 
     expect(find.text(t.record.repeat.everyMonthDay(day: DateTime.now().day)), findsOneWidget);

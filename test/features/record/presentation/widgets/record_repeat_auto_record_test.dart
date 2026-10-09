@@ -30,16 +30,20 @@ void main() {
         ),
       ),
     );
+    await tester.tap(find.byKey(const ValueKey('record-repeat')));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(t.record.repeat.moreAction));
     await tester.pumpAndSettle();
 
     final toggle = find.byKey(const ValueKey('repeat-auto-record'));
     await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(latest?.autoRecord, isTrue);
 
     await tester.ensureVisible(find.text(t.record.repeat.amountEstimated));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(t.record.repeat.amountEstimated));
     await tester.pumpAndSettle();
     expect(latest?.autoRecord, isFalse);

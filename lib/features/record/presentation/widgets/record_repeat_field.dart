@@ -7,13 +7,15 @@ import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 
-/// Baris **Ulangi** di CATAT (T-15.3, J2): tertutup "Ulangi: Tidak"; diketuk
-/// → pilihan frekuensi, kalimat jadwal dari tanggal formulir, dan **Atur
-/// lebih lanjut** (selang, berakhir, nominal kira-kira, cara bayar).
+/// Baris **Ulangi** di CATAT (T-15.3, J2; QA PR #43 F11): baris form seperti
+/// Dompet dan Tanggal ("Ulangi · Tidak ›"). Diketuk → sheet pemilih berisi
+/// frekuensi, kalimat jadwal dari tanggal formulir, dan **Atur lebih
+/// lanjut** (selang, berakhir, nominal kira-kira, cara bayar). Baris tidak
+/// pernah berubah bentuk; judulnya ringkasan pola ("Tiap tanggal 9").
 ///
 /// Bukan formulir rutin tersendiri (aturan 8): rutin selalu lahir dari isian
 /// CATAT yang sama.
-class RecordRepeatField extends StatefulWidget {
+class RecordRepeatField extends StatelessWidget {
   /// Membuat [RecordRepeatField].
   const RecordRepeatField({
     required this.value,
@@ -30,100 +32,155 @@ class RecordRepeatField extends StatefulWidget {
   /// Tanggal formulir: patokan jadwal.
   final DateTime date;
 
-  /// Jenis transaksi: mewarnai pilihan aktif; cara bayar hanya untuk
-  /// pengeluaran dan transfer.
+  /// Jenis transaksi: cara bayar hanya untuk pengeluaran dan transfer.
   final TransactionKind kind;
 
   /// Dipanggil dengan pola baru, atau `null` saat "Tidak".
   final ValueChanged<RecurringPattern?> onChanged;
 
-  /// Jadikan Rutin: pilihan "Tidak" tidak ditawarkan dan bagian ini terbuka.
+  /// Jadikan Rutin: pilihan "Tidak" tidak ditawarkan.
   final bool locked;
 
+  Future<void> _open(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    builder: (_) => _RepeatSheet(initial: value, date: date, kind: kind, locked: locked, onChanged: onChanged),
+  );
+
   @override
-  State<RecordRepeatField> createState() => _RecordRepeatFieldState();
+  Widget build(BuildContext context) {
+    final value = this.value;
+    return AppListRow(
+      key: const ValueKey('record-repeat'),
+      compact: true,
+      leading: AppIcon(IconKey.schedule, color: context.appColors.ink2),
+      label: t.record.repeat.label,
+      title: value == null ? t.record.repeat.off : repeatSummary(value, date),
+      chevron: true,
+      onTap: () => _open(context),
+    );
+  }
 }
 
-class _RecordRepeatFieldState extends State<RecordRepeatField> {
-  late bool _expanded = widget.locked || widget.value != null;
+/// Kalimat jadwal [value] dari tanggal [date]: "Tiap tanggal 9 · 12 kali".
+String repeatSummary(RecurringPattern value, DateTime date) {
+  final when = switch (value.frequency) {
+    RecurringFrequency.weekly => t.record.repeat.everyWeekday(day: CycleMonthFormatter.formatWeekday(date)),
+    RecurringFrequency.monthly => t.record.repeat.everyMonthDay(day: date.day),
+    RecurringFrequency.yearly => t.record.repeat.everyYearDate(date: CycleMonthFormatter.formatDayMonth(date)),
+  };
+  final interval = value.interval == 1 ? '' : ' · ${_intervalLabel(value)}';
+  final end = switch (value.end) {
+    RecurringNeverEnds() => '',
+    RecurringEndsAfter(:final count) => ' · ${t.record.repeat.endsAfterSummary(n: count)}',
+    RecurringEndsOn(date: final until) =>
+      ' · ${t.record.repeat.endsOnSummary(date: CycleMonthFormatter.formatDateShort(until))}',
+  };
+  return '$when$interval$end';
+}
+
+String _frequencyLabel(RecurringFrequency frequency) => switch (frequency) {
+  RecurringFrequency.weekly => t.record.repeat.weekly,
+  RecurringFrequency.monthly => t.record.repeat.monthly,
+  RecurringFrequency.yearly => t.record.repeat.yearly,
+};
+
+/// Sheet pemilih Ulangi (design system Sheet, varian pemilih): judul di
+/// tengah, baris frekuensi dengan centang, kalimat jadwal, lalu opsi lanjut.
+/// Tiap pilihan langsung diteruskan ke formulir lewat [onChanged].
+class _RepeatSheet extends StatefulWidget {
+  const _RepeatSheet({
+    required this.initial,
+    required this.date,
+    required this.kind,
+    required this.locked,
+    required this.onChanged,
+  });
+
+  final RecurringPattern? initial;
+  final DateTime date;
+  final TransactionKind kind;
+  final bool locked;
+  final ValueChanged<RecurringPattern?> onChanged;
+
+  @override
+  State<_RepeatSheet> createState() => _RepeatSheetState();
+}
+
+class _RepeatSheetState extends State<_RepeatSheet> {
+  late RecurringPattern? _value = widget.initial;
   bool _advanced = false;
 
   static const _defaultCount = 12;
 
-  RecurringPattern? get _value => widget.value;
-
-  void _set(RecurringPattern? value) => widget.onChanged(value);
+  void _set(RecurringPattern? value) {
+    setState(() => _value = value);
+    widget.onChanged(value);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final value = _value;
+    Widget check({required bool on}) =>
+        on ? AppIcon(IconKey.check, color: colors.brand) : const SizedBox(width: AppSize.icon);
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppSectionLabel(t.record.repeat.label),
-        const SizedBox(height: AppSpacing.space1),
-        if (!_expanded)
-          _CollapsedRow(
-            text: value == null ? t.record.repeat.off : _summary(value),
-            onTap: () => setState(() => _expanded = true),
-          )
-        else ...[
-          Wrap(
-            spacing: AppSpacing.space1,
-            runSpacing: AppSpacing.space1,
+        Text(t.record.repeat.label, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: AppSpacing.space2),
+        Flexible(
+          child: ListView(
+            shrinkWrap: true,
             children: [
               if (!widget.locked)
-                _OptionChip(
-                  label: t.record.repeat.off,
-                  selected: value == null,
+                AppListRow(
+                  key: const ValueKey('repeat-option-off'),
+                  title: t.record.repeat.off,
+                  trailing: check(on: value == null),
                   onTap: () => _set(null),
                 ),
               for (final frequency in RecurringFrequency.values)
-                _OptionChip(
-                  label: _frequencyLabel(frequency),
-                  selected: value?.frequency == frequency,
+                AppListRow(
+                  key: ValueKey('repeat-option-${frequency.name}'),
+                  title: _frequencyLabel(frequency),
+                  subtitle: value?.frequency == frequency ? repeatSummary(value!, widget.date) : null,
+                  wrapSubtitle: true,
+                  trailing: check(on: value?.frequency == frequency),
                   onTap: () => _set((value ?? const RecurringPattern()).copyWith(frequency: frequency)),
+                ),
+              if (value != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
+                  child: !_advanced
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: AppButton.text(
+                            small: true,
+                            label: t.record.repeat.moreAction,
+                            onPressed: () => setState(() => _advanced = true),
+                          ),
+                        )
+                      : _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),
                 ),
             ],
           ),
-          if (value != null) ...[
-            const SizedBox(height: AppSpacing.space1),
-            Text(_summary(value), style: Theme.of(context).textTheme.bodySmall),
-            if (!_advanced)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AppButton.text(small: true, label: t.record.repeat.moreAction, onPressed: () => setState(() => _advanced = true)),
-              )
-            else
-              _Advanced(value: value, kind: widget.kind, date: widget.date, onChanged: _set),
-          ],
-        ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.space4),
+          child: AppButton(
+            key: const ValueKey('repeat-done'),
+            label: t.common.done,
+            expand: true,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
       ],
     );
   }
-
-  String _summary(RecurringPattern value) {
-    final date = widget.date;
-    final when = switch (value.frequency) {
-      RecurringFrequency.weekly => t.record.repeat.everyWeekday(day: CycleMonthFormatter.formatWeekday(date)),
-      RecurringFrequency.monthly => t.record.repeat.everyMonthDay(day: date.day),
-      RecurringFrequency.yearly => t.record.repeat.everyYearDate(date: CycleMonthFormatter.formatDayMonth(date)),
-    };
-    final interval = value.interval == 1 ? '' : ' · ${_intervalLabel(value)}';
-    final end = switch (value.end) {
-      RecurringNeverEnds() => '',
-      RecurringEndsAfter(:final count) => ' · ${t.record.repeat.endsAfterSummary(n: count)}',
-      RecurringEndsOn(date: final until) =>
-        ' · ${t.record.repeat.endsOnSummary(date: CycleMonthFormatter.formatDateShort(until))}',
-    };
-    return '$when$interval$end';
-  }
-
-  static String _frequencyLabel(RecurringFrequency frequency) => switch (frequency) {
-    RecurringFrequency.weekly => t.record.repeat.weekly,
-    RecurringFrequency.monthly => t.record.repeat.monthly,
-    RecurringFrequency.yearly => t.record.repeat.yearly,
-  };
 }
 
 String _intervalLabel(RecurringPattern value) => switch (value.frequency) {
@@ -184,8 +241,7 @@ class _Advanced extends StatelessWidget {
             _OptionChip(
               label: t.record.repeat.endAfter,
               selected: count != null,
-              onTap: () =>
-                  onChanged(value.copyWith(end: const RecurringEndsAfter(_RecordRepeatFieldState._defaultCount))),
+              onTap: () => onChanged(value.copyWith(end: const RecurringEndsAfter(_RepeatSheetState._defaultCount))),
             ),
             _OptionChip(
               label: switch (value.end) {
@@ -258,40 +314,6 @@ class _Advanced extends StatelessWidget {
           ),
         ],
       ],
-    );
-  }
-}
-
-class _CollapsedRow extends StatelessWidget {
-  const _CollapsedRow({required this.text, required this.onTap});
-
-  final String text;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 44),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2),
-          decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
-          child: Row(
-            children: [
-              const AppIcon(IconKey.calendar, size: 18),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(text, style: labelSmStyle(context, color: colors.ink)),
-              ),
-              const AppIcon(IconKey.chevronRight, size: 18),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

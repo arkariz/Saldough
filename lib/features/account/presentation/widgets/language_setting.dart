@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
+import 'package:saldough/features/account/presentation/widgets/setting_row.dart';
 import 'package:state_management/state_management.dart';
 
 /// Pilihan bahasa di bagian "Pengaturan" layar Akun (ADR-028 §3.5): satu
@@ -39,32 +39,14 @@ class LanguageSettingEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return ValueListenableBuilder<AppLocale>(
       valueListenable: ActiveLanguage.notifier,
-      builder: (context, locale, _) => AppTappable(
+      builder: (context, locale, _) => SettingRow(
         key: const ValueKey('language-setting'),
-        label: t.language.label,
+        icon: IconKey.translate,
+        title: t.language.label,
+        subtitle: '${languageName(locale)} · ${t.language.hint}',
         onTap: () => _choose(context),
-        child: AppCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(t.language.label, style: textTheme.titleSmall),
-                    Text(
-                      '${languageName(locale)} · ${t.language.hint}',
-                      style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
-                    ),
-                  ],
-                ),
-              ),
-              const AppIcon(IconKey.chevronRight),
-            ],
-          ),
-        ),
       ),
     );
   }

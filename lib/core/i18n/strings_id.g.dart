@@ -2248,6 +2248,12 @@ class Translations$account$id {
 
 	late final Translations$account$errors$id errors = Translations$account$errors$id.internal(_root);
 
+	/// id: 'Pencatatan'
+	String get recordingSection => 'Pencatatan';
+
+	/// id: 'Tampilan'
+	String get displaySection => 'Tampilan';
+
 	/// id: 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.'
 	String get hideAmountsBody => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.';
 }
@@ -4491,6 +4497,8 @@ extension on Translations {
 			'account.errors.tooManyRequests' => 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.',
 			'account.errors.userDisabled' => 'Akun ini dinonaktifkan.',
 			'account.errors.other' => 'Gagal masuk. Coba lagi.',
+			'account.recordingSection' => 'Pencatatan',
+			'account.displaySection' => 'Tampilan',
 			'account.hideAmountsBody' => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.',
 			'currency.settingsTitle' => 'Pengaturan',
 			'currency.label' => 'Mata uang',
@@ -4751,10 +4759,10 @@ extension on Translations {
 			'recurring.linkedTitle' => 'Tercocok dengan rutin',
 			'recurring.unlinkAction' => 'Lepaskan',
 			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
-			'recurring.reminderChannelName' => 'Pengingat rutin',
-			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderChannelName' => 'Pengingat rutin',
+			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',

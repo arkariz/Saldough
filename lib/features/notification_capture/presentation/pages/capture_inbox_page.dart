@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
-import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/capture_inbox_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
+import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
@@ -78,70 +79,142 @@ class CaptureInboxPage extends StatelessWidget {
   }
 
   @override
+  Widget build(BuildContext context) => const _InboxBody();
+}
+
+enum _InboxTab { pending, auto }
+
+/// Isi kotak masuk (prototipe `KotakMasuk.dc.html`): segmen "Perlu dicek" /
+/// "Tercatat otomatis" dengan hitungan, kartu tangkapan, dan daftar yang
+/// tercatat otomatis.
+class _InboxBody extends StatefulWidget {
+  const _InboxBody();
+
+  @override
+  State<_InboxBody> createState() => _InboxBodyState();
+}
+
+class _InboxBodyState extends State<_InboxBody> {
+  _InboxTab _tab = _InboxTab.pending;
+
+  @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
     final textTheme = Theme.of(context).textTheme;
     final colors = context.appColors;
+    const page = CaptureInboxPage();
     return Scaffold(
-      appBar: AppBar(title: Text(texts.inboxTitle)),
+      appBar: AppBar(
+        title: Text(texts.inboxTitle),
+        actions: [
+          AppIconButton(
+            icon: IconKey.filter,
+            label: texts.settingsTitle,
+            onPressed: () => context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: BlocBuilder<CaptureInboxBloc, CaptureInboxState>(
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();
+            final inbox = context.read<CaptureInboxBloc>();
             return ListView(
-              padding: const EdgeInsets.all(AppSpacing.space4),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space8),
               children: [
-                AppSectionLabel(
-                  texts.inboxPendingTitle,
-                  hint: state.pending.isEmpty ? null : '${state.pending.length}',
+                AppSegmentedControl<_InboxTab>(
+                  options: [(_InboxTab.pending, texts.inboxPendingTitle), (_InboxTab.auto, texts.inboxAutoTitle)],
+                  selected: _tab,
+                  counts: {_InboxTab.pending: state.pending.length, _InboxTab.auto: state.auto.length},
+                  onChanged: (tab) => setState(() => _tab = tab),
                 ),
-                const SizedBox(height: AppSpacing.space1),
-                if (state.pending.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                    child: Text(texts.inboxEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                  ),
-                for (final entry in state.pending)
-                  _PendingCard(
-                    entry: entry,
-                    match: state.matches[entry.id],
-                    onRecord: () => _record(context, entry, state.matches[entry.id]),
-                    onDismiss: () => context.read<CaptureInboxBloc>().add(CaptureInboxDismissed(entry.id)),
-                    onMakePattern: () => _makePattern(context, entry),
-                  ),
-                const SizedBox(height: AppSpacing.space6),
-                AppSectionLabel(texts.inboxAutoTitle, hint: state.auto.isEmpty ? null : '${state.auto.length}'),
-                const SizedBox(height: AppSpacing.space1),
-                if (state.auto.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                    child: Text(texts.inboxAutoEmpty, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                  ),
-                for (final entry in state.auto)
-                  _AutoCard(entry: entry, onReview: () => _review(context, entry), onUndo: () => _undo(context, entry)),
-                if (state.linked.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.space6),
-                  AppSectionLabel(t.recurring.linkedTitle, hint: '${state.linked.length}'),
-                  for (final linked in state.linked)
-                    ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                      title: Text(linked.ruleName),
-                      subtitle: Text(
-                        '${AppMoneyFormatter.format(linked.amount)} · '
-                        '${CycleMonthFormatter.formatDayMonth(linked.occurrenceDate)}',
-                      ),
-                      trailing: AppButton.text(small: true, label: t.recurring.unlinkAction, onPressed: () => context.read<CaptureInboxBloc>().add(CaptureInboxUnlinked(linked))),
-                    ),
-                ],
                 const SizedBox(height: AppSpacing.space4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                  child: Text(texts.inboxRetention, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-                ),
+                if (_tab == _InboxTab.pending) ...[
+                  if (state.pending.isEmpty)
+                    _InboxEmpty(text: texts.inboxEmpty)
+                  else
+                    for (final entry in state.pending)
+                      _PendingCard(
+                        entry: entry,
+                        match: state.matches[entry.id],
+                        onRecord: () => page._record(context, entry, state.matches[entry.id]),
+                        onDismiss: () => inbox.add(CaptureInboxDismissed(entry.id)),
+                        onMakePattern: () => page._makePattern(context, entry),
+                      ),
+                  const SizedBox(height: AppSpacing.space1),
+                  Text(
+                    texts.inboxRetention,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall?.copyWith(color: colors.ink3),
+                  ),
+                ] else ...[
+                  if (state.auto.isEmpty)
+                    _InboxEmpty(text: texts.inboxAutoEmpty)
+                  else
+                    AppListCard(
+                      children: [
+                        for (final entry in state.auto)
+                          _AutoRow(
+                            entry: entry,
+                            onReview: () => page._review(context, entry),
+                            onUndo: () => page._undo(context, entry),
+                          ),
+                      ],
+                    ),
+                  if (state.linked.isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.space6),
+                    AppSectionHeader(t.recurring.linkedTitle),
+                    AppListCard(
+                      children: [
+                        for (final linked in state.linked)
+                          AppListRow(
+                            title: linked.ruleName,
+                            subtitle: CycleMonthFormatter.formatDayMonth(linked.occurrenceDate),
+                            trailing: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                AppMoneyText(linked.amount),
+                                AppButton.text(
+                                  small: true,
+                                  label: t.recurring.unlinkAction,
+                                  onPressed: () => inbox.add(CaptureInboxUnlinked(linked)),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ],
               ],
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _InboxEmpty extends StatelessWidget {
+  const _InboxEmpty({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space8),
+      child: Column(
+        children: [
+          const AppIconTile(IconKey.taskAlt, tint: TileTint.green, size: 56),
+          const SizedBox(height: AppSpacing.space4),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+          ),
+        ],
       ),
     );
   }
@@ -170,28 +243,23 @@ class _PendingCard extends StatelessWidget {
     final amount = entry.draft.amountSen;
     final note = entry.draft.note.trim();
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space3),
       child: AppCard(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TransactionIcon(
+                  kind: _transactionKind(entry.draft.kind),
+                  categoryId: entry.draft.categoryId,
+                  sourceIconId: entry.iconId,
+                ),
+                const SizedBox(width: AppSpacing.space2 + TransactionIcon.badgeOverhang),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.space1),
-                    child: _CaptureHeader(
-                      icon: TransactionIcon(
-                        kind: _transactionKind(entry.draft.kind),
-                        categoryId: entry.draft.categoryId,
-                        sourceIconId: entry.iconId,
-                      ),
-                      amountSen: amount,
-                      color: _kindColor(context, entry.draft.kind),
-                      meta: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.capturedAt)}',
-                    ),
+                  child: Text(
+                    '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.capturedAt)}',
+                    style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                   ),
                 ),
                 PopupMenuButton<void>(
@@ -201,84 +269,46 @@ class _PendingCard extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.space2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+            if (entry.possibleDuplicate || match != null) ...[
+              const SizedBox(height: AppSpacing.space2),
+              Wrap(
+                spacing: AppSpacing.space2,
+                runSpacing: AppSpacing.space1,
                 children: [
-                  if (entry.possibleDuplicate)
-                    Text(texts.possibleDuplicate, style: textTheme.bodySmall?.copyWith(color: colors.danger)),
+                  if (entry.possibleDuplicate) AppBadge(texts.possibleDuplicate, tone: AppTone.warning),
                   if (match case final m?)
-                    Text(
-                      t.recurring.matchLabel(
-                        name: m.rule.note,
-                        date: CycleMonthFormatter.formatDayMonth(m.date),
-                      ),
-                      style: textTheme.bodySmall?.copyWith(color: colors.positive),
+                    AppBadge(
+                      t.recurring.matchLabel(name: m.rule.note, date: CycleMonthFormatter.formatDayMonth(m.date)),
+                      tone: AppTone.positive,
                     ),
-                  if (note.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.space1),
-                    Text(note, style: textTheme.bodyMedium),
-                  ],
-                  const SizedBox(height: AppSpacing.space1),
-                  Text(
-                    entry.text,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                  ),
                 ],
               ),
-            ),
+            ],
+            const SizedBox(height: AppSpacing.space3),
+            if (amount == null)
+              Text(texts.amountUnknown, style: textTheme.titleMedium?.copyWith(color: colors.warning))
+            else
+              AppMoneyText(amount, kind: _moneyKind(entry.draft.kind), size: MoneySize.large),
+            if (note.isNotEmpty) Text(note, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.space1),
+            Text(
+              entry.text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+            ),
+            const SizedBox(height: AppSpacing.space3),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 AppButton.text(small: true, label: texts.dismissAction, onPressed: onDismiss),
-                const SizedBox(width: AppSpacing.space1),
-                FilledButton(onPressed: onRecord, child: Text(texts.recordAction)),
                 const SizedBox(width: AppSpacing.space2),
+                AppButton(small: true, label: texts.recordAction, onPressed: onRecord),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-/// [TransactionIcon] (kategori + lencana notifikasi), nominal berwarna sesuai
-/// jenis, dan baris sumber · tanggal.
-class _CaptureHeader extends StatelessWidget {
-  const _CaptureHeader({required this.icon, required this.amountSen, required this.color, required this.meta});
-
-  final Widget icon;
-  final int? amountSen;
-  final Color? color;
-  final String meta;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
-    final amount = amountSen;
-    return Row(
-      children: [
-        icon,
-        const SizedBox(width: AppSpacing.space2 + TransactionIcon.badgeOverhang),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                amount == null ? t.notificationCapture.amountUnknown : AppMoneyFormatter.format(amount),
-                style: textTheme.titleMedium?.copyWith(color: amount == null ? colors.ink2 : color),
-              ),
-              Text(meta, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
@@ -289,15 +319,17 @@ TransactionKind _transactionKind(DraftKind kind) => switch (kind) {
   DraftKind.transfer => TransactionKind.transfer,
 };
 
-Color? _kindColor(BuildContext context, DraftKind? kind) => switch (kind) {
-  DraftKind.income => context.appColors.positive,
-  DraftKind.expense => context.appColors.ink,
-  DraftKind.transfer => context.appColors.ink2,
-  null => null,
+MoneyKind _moneyKind(DraftKind? kind) => switch (kind) {
+  DraftKind.income => MoneyKind.income,
+  DraftKind.expense => MoneyKind.expense,
+  DraftKind.transfer => MoneyKind.transfer,
+  null => MoneyKind.balance,
 };
 
-class _AutoCard extends StatelessWidget {
-  const _AutoCard({required this.entry, required this.onReview, required this.onUndo});
+/// Satu transaksi yang tercatat otomatis: ketuk untuk meninjau, "Batalkan"
+/// menghapusnya (dengan konfirmasi).
+class _AutoRow extends StatelessWidget {
+  const _AutoRow({required this.entry, required this.onReview, required this.onUndo});
 
   final AutoRecordedEntry entry;
   final VoidCallback onReview;
@@ -306,37 +338,19 @@ class _AutoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.notificationCapture;
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.space2),
-      child: AppCard(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _CaptureHeader(
-              icon: TransactionIcon(
-                kind: _transactionKind(entry.kind),
-                categoryId: entry.categoryId,
-                sourceIconId: entry.iconId,
-              ),
-              amountSen: entry.amountSen,
-              color: _kindColor(context, entry.kind),
-              meta: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
-            ),
-            if (entry.note.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.space1),
-              Text(entry.note, style: textTheme.bodyMedium),
-            ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppButton.text(small: true, label: texts.undoAction, onPressed: onUndo),
-                AppButton.text(small: true, label: texts.reviewAction, onPressed: onReview),
-              ],
-            ),
-          ],
-        ),
+    final amount = entry.amountSen;
+    return AppListRow(
+      onTap: onReview,
+      leading: TransactionIcon(kind: _transactionKind(entry.kind), categoryId: entry.categoryId, sourceIconId: entry.iconId),
+      title: entry.note.isEmpty ? entry.appLabel : entry.note,
+      subtitle: '${entry.appLabel} · ${CycleMonthFormatter.formatDateShort(entry.transactionDate)}',
+      trailing: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          AppMoneyText(amount, kind: _moneyKind(entry.kind)),
+          AppButton.text(small: true, label: texts.undoAction, onPressed: onUndo),
+        ],
       ),
     );
   }

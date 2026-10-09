@@ -113,6 +113,7 @@ void main() {
 
     final setting = find.byKey(const ValueKey('currency-setting'));
     await tester.ensureVisible(setting);
+    await tester.pumpAndSettle();
     expect(find.text('IDR · ${t.currency.names.idr}'), findsOneWidget);
 
     await tester.tap(setting);

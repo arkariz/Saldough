@@ -851,7 +851,9 @@ class _Translations$category$en extends Translations$category$id {
 	@override String get incomeTab => 'Income';
 	@override String get addAction => 'Add category';
 	@override String get addTitle => 'New category';
-	@override String get renameTitle => 'Rename category';
+	@override String get renameTitle => 'Edit category';
+	@override String get iconLabel => 'Icon';
+	@override String iconOption({required Object n}) => 'Icon ${n}';
 	@override String get nameHint => 'Category name';
 	@override String get archiveAction => 'Archive';
 	@override String get restoreAction => 'Restore';
@@ -2129,7 +2131,9 @@ extension on TranslationsEn {
 			'category.incomeTab' => 'Income',
 			'category.addAction' => 'Add category',
 			'category.addTitle' => 'New category',
-			'category.renameTitle' => 'Rename category',
+			'category.renameTitle' => 'Edit category',
+			'category.iconLabel' => 'Icon',
+			'category.iconOption' => ({required Object n}) => 'Icon ${n}',
 			'category.nameHint' => 'Category name',
 			'category.archiveAction' => 'Archive',
 			'category.restoreAction' => 'Restore',
@@ -2412,10 +2416,10 @@ extension on TranslationsEn {
 			'plan.detailsIncome' => 'Recurring income',
 			'plan.detailsBills' => 'Recurring bills',
 			'plan.detailsBudget' => 'Budget left',
-			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
-			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
+			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
 			'plan.detailsTransfers' => 'Recurring transfers',
 			'plan.detailsEnd' => ({required Object date}) => 'End of ${date}',
 			'plan.unplannedToggle' => 'Count daily spending',

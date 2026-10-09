@@ -59,6 +59,11 @@ abstract final class AppMoneyFormatter {
   /// "sebelum → sesudah" di dialog ganti mata uang.
   static String format(int sen, {AppCurrency? currency}) => _format(sen, currency: currency);
 
+  /// Seperti [format], tetapi tidak pernah disamarkan [AmountVisibility]:
+  /// untuk nominal yang sedang diketik pengguna, yang memang tampil di layar
+  /// (label pembaca layar input Catat, QA PR #43 F4).
+  static String formatRevealed(int sen) => _format(sen, reveal: true);
+
   /// Nominal **perkiraan** (diawali `≈` oleh pemanggil): 10.000 satuan atau
   /// lebih dibulatkan ke ribuan terdekat (Rp87.212 → Rp87.000), supaya
   /// perkiraan tidak tampak sepasti saldo nyata (T-16.16 K5).
@@ -68,7 +73,7 @@ abstract final class AppMoneyFormatter {
     return _format(_floorDiv(sen + thousand ~/ 2, thousand) * thousand, currency: currency);
   }
 
-  static String _format(int sen, {AppCurrency? currency}) {
+  static String _format(int sen, {AppCurrency? currency, bool reveal = false}) {
     final active = currency ?? ActiveCurrency.value;
     final bool isNegative;
     final String body;
@@ -83,7 +88,7 @@ abstract final class AppMoneyFormatter {
       body = '${MoneySeparators.groupThousands(abs ~/ 100)}${MoneySeparators.decimal}$cents';
     }
     // Sembunyikan nominal (ADR-034): tanda tetap, angkanya tidak.
-    if (AmountVisibility.hidden) return '${isNegative ? '−' : ''}${active.symbol}${AmountVisibility.mask}';
+    if (AmountVisibility.hidden && !reveal) return '${isNegative ? '−' : ''}${active.symbol}${AmountVisibility.mask}';
     return '${isNegative ? '−' : ''}${active.symbol}$body';
   }
 

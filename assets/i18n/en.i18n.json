@@ -159,7 +159,6 @@
     "filterSheetDoneAction": "Done",
     "todayLabel": "Today",
     "yesterdayLabel": "Yesterday",
-    "untitledTransaction": "Untitled",
     "emptyMonthTitle": "No transactions yet",
     "emptyMonthSubtitle": "Every transaction you record shows up here, grouped by day.",
     "emptyMonthCta": "Record transaction",

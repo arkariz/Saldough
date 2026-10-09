@@ -72,8 +72,10 @@ class AppMoneyText extends StatelessWidget {
   /// Perataan teks.
   final TextAlign? textAlign;
 
-  /// Teks nominal bertanda sesuai [kind], tanpa widget.
+  /// Teks nominal bertanda sesuai [kind], tanpa widget. Nol tidak diberi
+  /// tanda ("Rp0", bukan "−Rp0").
   static String format(int sen, MoneyKind kind) => switch (kind) {
+    MoneyKind.expense || MoneyKind.income when sen == 0 => AppMoneyFormatter.format(0),
     MoneyKind.expense => '−${AppMoneyFormatter.format(sen.abs())}',
     MoneyKind.income => '+${AppMoneyFormatter.format(sen.abs())}',
     MoneyKind.transfer => AppMoneyFormatter.format(sen.abs()),

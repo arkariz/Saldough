@@ -118,7 +118,7 @@ void main() {
       // punya varian bertepi terang: B-23 (ADR-034 §4), bukan diuji di sini.
       const iconOutline = Color(0xFF1E1B19);
       expect(
-        _contrastRatio(iconOutline, AppColors.light.iconTile(null)),
+        _contrastRatio(iconOutline, AppColors.light.surface2),
         greaterThanOrEqualTo(graphicRatio),
       );
     },

@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 4 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) direncanakan 3 Okt 2026; Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
+**Terakhir diperbarui:** 9 Oktober 2026
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
 
 ## Apa ini
 
@@ -150,13 +150,21 @@ paling lama 7 hari di perangkat. Native hanya membuang posting ulang (bukan
 isi kembar), antrean hanya di-ack bila simpanan Dart berhasil, dan Gemini
 menerima teks yang saldonya/rekeningnya disamarkan.
 
-**Bahasa visual baru (ADR-034, 3 Okt 2026, Fase 14 belum dikerjakan):**
+**Bahasa visual baru (ADR-034, kode Fase 14 selesai 9 Okt 2026):**
 "buku catatan dengan aksen piksel" menggantikan ADR-015/016/020. Satu huruf
-(Plus Jakarta Sans, tanpa huruf piksel), warna lewat token, sudut piksel,
-ikon piksel untuk kategori/dompet, Material Symbols untuk navigasi, 4 tab +
-tombol Catat di tengah. Setiap pekerjaan UI memakai skill `tanukonomy-ui`
-dan merujuk artefak design system dan prototipe (tabel Pencarian cepat).
-Sampai Fase 14 selesai, kode masih memakai bahasa visual lama.
+(Plus Jakarta Sans), warna lewat token `context.appColors` (52 token
+`tokens.json`, tanpa `tinted()`), sudut piksel (`PixelCornerBorder`), ikon
+piksel untuk kategori/dompet dan Material Symbols untuk tindakan
+(`AppIconTile`), 4 tab + tombol Catat di tengah (tekan lama = suara).
+Komponen di `core/presentation/widgets/`: `AppCard`/`AppListCard`,
+`AppListRow`, `AppButton`, `AppChip`, `AppSegmentedControl`, `AppBadge`,
+`AppBanner`, `AppProgressBar`, `AppMoneyText` (sembunyikan nominal lewat
+`AmountVisibility`), `AppEmptyState`/`AppErrorState`, `AppSkeletonPage`,
+`AppSwitchRow`, `AppChoiceBox`, `AppStickyBar`. Teks mengikuti glosarium
+`docs/03-design/design-system/writing.md` (dijaga
+`test/core/i18n/translations_test.dart`). Setiap pekerjaan UI memakai skill
+`tanukonomy-ui` dan merujuk design system dan prototipe (tabel Pencarian
+cepat); selisih disengaja dicatat di entri T-14.x TASK_LIST.
 **Rencana dan rutin (Fase 15, ADR-035 Accepted, 2 Okt 2026):** tab Anggaran
 kini **Rencana** (segmen Bulan ini, Anggaran, Rutin). Transaksi rutin
 (`RecurringRule`, `shared/recurring/`) adalah **rencana**, bukan transaksi:

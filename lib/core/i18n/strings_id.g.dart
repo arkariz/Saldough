@@ -791,8 +791,8 @@ class Translations$budget$id {
 	/// id: 'Dompet terkait'
 	String get walletLabel => 'Dompet terkait';
 
-	/// id: 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.'
-	String get walletHelp => 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.';
+	/// id: 'Hanya pengeluaran dan transfer keluar dompet ini yang dihitung.'
+	String get walletHelp => 'Hanya pengeluaran dan transfer keluar dompet ini yang dihitung.';
 
 	/// id: 'Saldo: $amount'
 	String walletBalance({required Object amount}) => 'Saldo: ${amount}';
@@ -805,6 +805,12 @@ class Translations$budget$id {
 
 	/// id: '$start – $end'
 	String periodRange({required Object start, required Object end}) => '${start} – ${end}';
+
+	/// id: '$start–$end'
+	String periodRangeShort({required Object start, required Object end}) => '${start}–${end}';
+
+	/// id: 'Mulai $date · $range'
+	String periodStartRow({required Object date, required Object range}) => 'Mulai ${date} · ${range}';
 
 	/// id: 'Pos anggaran'
 	String get itemsLabel => 'Pos anggaran';
@@ -905,8 +911,8 @@ class Translations$budget$id {
 	/// id: 'Dompet tidak ditemukan'
 	String get unknownWallet => 'Dompet tidak ditemukan';
 
-	/// id: 'Total rencana anggaran'
-	String get totalPlannedLabel => 'Total rencana anggaran';
+	/// id: 'Total rencana'
+	String get totalPlannedLabel => 'Total rencana';
 
 	/// id: 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.'
 	String get itemsRequiredHint => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.';
@@ -3802,11 +3808,13 @@ extension on Translations {
 			'budget.nameHint' => 'Contoh: Kebutuhan Rumah Tangga',
 			'budget.requiredHint' => 'Wajib',
 			'budget.walletLabel' => 'Dompet terkait',
-			'budget.walletHelp' => 'Hanya pengeluaran dan transfer keluar dari dompet ini yang terhitung ke anggaran.',
+			'budget.walletHelp' => 'Hanya pengeluaran dan transfer keluar dompet ini yang dihitung.',
 			'budget.walletBalance' => ({required Object amount}) => 'Saldo: ${amount}',
 			'budget.periodLabel' => 'Periode',
 			'budget.startDateLabel' => 'Mulai',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
+			'budget.periodRangeShort' => ({required Object start, required Object end}) => '${start}–${end}',
+			'budget.periodStartRow' => ({required Object date, required Object range}) => 'Mulai ${date} · ${range}',
 			'budget.itemsLabel' => 'Pos anggaran',
 			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.',
 			'budget.addItemAction' => 'Tambah pos',
@@ -3840,7 +3848,7 @@ extension on Translations {
 			'budget.detailLinkedEmpty' => 'Belum ada transaksi yang tertaut ke anggaran ini.',
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
-			'budget.totalPlannedLabel' => 'Total rencana anggaran',
+			'budget.totalPlannedLabel' => 'Total rencana',
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.',
 			'budget.walletUnchangedNote' => ({required Object wallet}) => 'Saldo ${wallet} tetap',
 			'budget.itemKindLabel' => 'Jenis pos',
@@ -4022,10 +4030,10 @@ extension on Translations {
 			'freelance.paidOffBadge' => 'Lunas',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
 			'home.balanceLabel' => 'Total saldo',
-			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
-			'home.budgetTitle' => 'Anggaran aktif',
 			_ => null,
 		} ?? switch (path) {
+			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
+			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat anggaran',
@@ -4536,10 +4544,10 @@ extension on Translations {
 			'plan.detailsTitle' => 'Perkiraan saldo',
 			'plan.detailsNow' => 'Saldo sekarang',
 			'plan.detailsIncome' => 'Pemasukan rutin',
-			'plan.detailsBills' => 'Tagihan rutin',
-			'plan.detailsBudget' => 'Sisa anggaran',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsBills' => 'Tagihan rutin',
+			'plan.detailsBudget' => 'Sisa anggaran',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
 			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
 			'plan.detailsTransfers' => 'Transfer rutin',

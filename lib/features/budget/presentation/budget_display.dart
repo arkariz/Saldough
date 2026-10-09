@@ -25,6 +25,20 @@ String budgetRangeLabel(Budget budget) {
   );
 }
 
+/// Rentang [budget] ringkas: "1–31 Okt" dalam satu bulan, "28 Sep – 4 Okt"
+/// lintas bulan (QA PR #43 F14).
+String budgetRangeShortLabel(Budget budget) {
+  final first = budget.startDate;
+  final last = budget.endDate.subtract(const Duration(days: 1));
+  if (first.year == last.year && first.month == last.month) {
+    return t.budget.periodRangeShort(start: '${first.day}', end: CycleMonthFormatter.formatDayMonth(last));
+  }
+  return t.budget.periodRange(
+    start: CycleMonthFormatter.formatDayMonth(first),
+    end: CycleMonthFormatter.formatDayMonth(last),
+  );
+}
+
 /// Label status siklus hidup: Aktif / Selesai / Nonaktif.
 String budgetStatusLabel(BudgetStatus status) => switch (status) {
   BudgetStatus.active => t.budget.filterActive,

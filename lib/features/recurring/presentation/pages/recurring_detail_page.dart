@@ -140,7 +140,7 @@ class RecurringDetailPage extends StatelessWidget {
             ? categoryIcon(category, title: rule.note)
             : switch (rule.kind) {
                 RecurringKind.income => IconKey.income,
-                RecurringKind.expense => IconKey.categoryOther,
+                RecurringKind.expense => IconKey.expense,
                 RecurringKind.transfer => IconKey.transfer,
               };
         final kindLabel = switch (rule.kind) {

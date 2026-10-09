@@ -111,6 +111,21 @@ void main() {
     },
   );
 
+  testWidgets('tanpa catatan dan kategori: judul jenis transaksi (QA F2)', (tester) async {
+    final group = TransactionDateGroup(
+      date: today,
+      netSen: -100,
+      transactions: [
+        ExpenseTransaction(id: 'a', date: today, amount: 100, note: '', walletId: 'cash'),
+        TransferTransaction(id: 'b', date: today, amount: 100, note: '', fromWalletId: 'bca', toWalletId: 'cash'),
+      ],
+    );
+    await pump(tester, TransactionDateGroupCard(group: group, walletsById: wallets));
+    expect(find.text(t.record.kindExpense), findsOneWidget);
+    expect(find.text(t.record.kindTransfer), findsOneWidget);
+    expect(find.text('Tanpa judul'), findsNothing);
+  });
+
   test('label hari: Kemarin dan hari lain bernama hari', () {
     final yesterday = today.subtract(const Duration(days: 1));
     expect(

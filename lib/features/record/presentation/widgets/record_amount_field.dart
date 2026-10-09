@@ -37,7 +37,7 @@ class RecordAmountField extends StatelessWidget {
         return Semantics(
           liveRegion: true,
           label: t.record.amountSemantics(
-            amount: AppMoneyFormatter.format(sen),
+            amount: AppMoneyFormatter.formatRevealed(sen),
           ),
           excludeSemantics: true,
           child: Padding(

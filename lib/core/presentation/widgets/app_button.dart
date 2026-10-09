@@ -216,6 +216,9 @@ class AppIconButton extends StatelessWidget {
         button: true,
         enabled: onPressed != null,
         label: label,
+        // `excludeSemantics` membuang aksi ketuk `InkWell`, jadi aksinya
+        // dipasang di sini (QA PR #43 F7).
+        onTap: onPressed,
         excludeSemantics: true,
         child: Opacity(
           opacity: onPressed == null ? AppSize.disabledOpacity : 1,

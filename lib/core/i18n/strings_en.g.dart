@@ -180,7 +180,6 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get filterSheetDoneAction => 'Done';
 	@override String get todayLabel => 'Today';
 	@override String get yesterdayLabel => 'Yesterday';
-	@override String get untitledTransaction => 'Untitled';
 	@override String get emptyMonthTitle => 'No transactions yet';
 	@override String get emptyMonthSubtitle => 'Every transaction you record shows up here, grouped by day.';
 	@override String get emptyMonthCta => 'Record transaction';
@@ -1525,7 +1524,6 @@ extension on TranslationsEn {
 			'transaction.filterSheetDoneAction' => 'Done',
 			'transaction.todayLabel' => 'Today',
 			'transaction.yesterdayLabel' => 'Yesterday',
-			'transaction.untitledTransaction' => 'Untitled',
 			'transaction.emptyMonthTitle' => 'No transactions yet',
 			'transaction.emptyMonthSubtitle' => 'Every transaction you record shows up here, grouped by day.',
 			'transaction.emptyMonthCta' => 'Record transaction',
@@ -1894,9 +1892,9 @@ extension on TranslationsEn {
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.budgetTitle' => 'Active budgets',
+			'home.budgetRemaining' => 'Remaining',
 			_ => null,
 		} ?? switch (path) {
-			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
 			'home.budgetAction' => 'View budgets',
 			'home.freelanceTitle' => 'Freelance',
@@ -2408,9 +2406,9 @@ extension on TranslationsEn {
 			'plan.detailsBudget' => 'Budget left',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
 			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
+			'plan.detailsTransfers' => 'Recurring transfers',
 			_ => null,
 		} ?? switch (path) {
-			'plan.detailsTransfers' => 'Recurring transfers',
 			'plan.detailsEnd' => ({required Object date}) => 'End of ${date}',
 			'plan.unplannedToggle' => 'Count daily spending',
 			'plan.unplannedUnavailable' => 'Needs a full month of history.',

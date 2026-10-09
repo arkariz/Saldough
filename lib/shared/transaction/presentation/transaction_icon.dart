@@ -9,8 +9,8 @@ import 'package:saldough/shared/transaction/source_icons.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Ikon transaksi (ADR-032 §3.10, ADR-034): `AppIconTile` berisi ikon
-/// kategori bila ada (ikon jenis untuk transfer dan pemasukan tanpa
-/// kategori, "Tanpa kategori" untuk pengeluaran tanpa kategori), plus
+/// kategori bila ada (ikon jenis untuk transfer dan transaksi tanpa
+/// kategori, bukan "•••" tombol Semua kategori), plus
 /// lencana ikon notifikasi asal di sudut kanan bawah bila transaksinya dari
 /// notifikasi.
 ///
@@ -74,7 +74,7 @@ class TransactionIcon extends StatelessWidget {
     if (category != null) return categoryIcon(category, title: title);
     return switch (kind) {
       TransactionKind.income => IconKey.income,
-      TransactionKind.expense => IconKey.categoryOther,
+      TransactionKind.expense => IconKey.expense,
       TransactionKind.transfer => IconKey.transfer,
     };
   }

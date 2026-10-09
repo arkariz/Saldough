@@ -332,9 +332,6 @@ class Translations$transaction$id {
 	/// id: 'Kemarin'
 	String get yesterdayLabel => 'Kemarin';
 
-	/// id: 'Tanpa judul'
-	String get untitledTransaction => 'Tanpa judul';
-
 	/// id: 'Belum ada transaksi'
 	String get emptyMonthTitle => 'Belum ada transaksi';
 
@@ -3639,7 +3636,6 @@ extension on Translations {
 			'transaction.filterSheetDoneAction' => 'Selesai',
 			'transaction.todayLabel' => 'Hari ini',
 			'transaction.yesterdayLabel' => 'Kemarin',
-			'transaction.untitledTransaction' => 'Tanpa judul',
 			'transaction.emptyMonthTitle' => 'Belum ada transaksi',
 			'transaction.emptyMonthSubtitle' => 'Setiap transaksi yang kamu catat muncul di sini, dikelompokkan per hari.',
 			'transaction.emptyMonthCta' => 'Catat transaksi',
@@ -4008,9 +4004,9 @@ extension on Translations {
 			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
 			'home.budgetTitle' => 'Anggaran aktif',
+			'home.budgetRemaining' => 'Sisa',
 			_ => null,
 		} ?? switch (path) {
-			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
 			'home.budgetAction' => 'Lihat anggaran',
 			'home.freelanceTitle' => 'Freelance',
@@ -4522,9 +4518,9 @@ extension on Translations {
 			'plan.detailsBudget' => 'Sisa anggaran',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
 			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
+			'plan.detailsTransfers' => 'Transfer rutin',
 			_ => null,
 		} ?? switch (path) {
-			'plan.detailsTransfers' => 'Transfer rutin',
 			'plan.detailsEnd' => ({required Object date}) => 'Akhir ${date}',
 			'plan.unplannedToggle' => 'Hitung jajan harian',
 			'plan.unplannedUnavailable' => 'Butuh riwayat sebulan penuh.',

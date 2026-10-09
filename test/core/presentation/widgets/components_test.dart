@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -244,6 +245,23 @@ void main() {
       final style = tester.widget<Text>(find.text('−Rp45.000')).style!;
       expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
     });
+
+    test('nol tanpa tanda: Rp0, bukan −Rp0 atau +Rp0 (QA F5)', () {
+      expect(AppMoneyText.format(0, MoneyKind.expense), 'Rp0');
+      expect(AppMoneyText.format(0, MoneyKind.income), 'Rp0');
+      expect(AppMoneyText.format(100, MoneyKind.expense), '−Rp1');
+    });
+  });
+
+  testWidgets('AppIconButton punya aksi ketuk untuk pembaca layar (QA F7)', (tester) async {
+    final handle = tester.ensureSemantics();
+    var taps = 0;
+    await pump(tester, AppIconButton(icon: IconKey.add, label: 'Tambah', onPressed: () => taps++));
+    final node = tester.getSemantics(find.bySemanticsLabel('Tambah'));
+    expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    tester.semantics.tap(find.semantics.byLabel('Tambah'));
+    expect(taps, 1);
+    handle.dispose();
   });
 
   group('AppBadge dan AppBanner', () {

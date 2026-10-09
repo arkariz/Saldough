@@ -91,6 +91,15 @@ void main() {
   );
 
   group('RecordBloc', () {
+    test('createCategory dari Catat menyimpan ikon pilihan', () async {
+      final bloc = buildBloc();
+      addTearDown(bloc.close);
+      addTearDown(() => ActiveCategories.notifier.value = const []);
+      final created = await bloc.createCategory(CategoryKind.expense, 'Arisan', iconKey: 'categoryGift');
+      expect(created?.iconKey, 'categoryGift');
+      expect(ActiveCategories.byId(created?.id)?.iconKey, 'categoryGift');
+    });
+
     blocTest<RecordBloc, RecordState>(
       'RecordWalletsLoaded menurunkan isian bawaan dari transaksi terbaru, hanya dompet aktif (UX-2, UX-3)',
       setUp: () => when(() => transactionRepository.listRecentTransactions(any())).thenAnswer(

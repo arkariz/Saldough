@@ -167,8 +167,8 @@ class TransactionFilterButton extends StatelessWidget {
 
   int get _activeCount => (walletFilter != null ? 1 : 0) + (categoryFilter != null ? 1 : 0);
 
-  Future<void> _openSheet(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
+  Future<void> _openSheet(BuildContext context) => showAppSheet<void>(
+    context,
     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.sm))),
     builder: (sheetContext) => _TransactionFilterSheet(
       wallets: wallets,

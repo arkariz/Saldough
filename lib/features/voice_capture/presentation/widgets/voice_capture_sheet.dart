@@ -50,8 +50,8 @@ Future<VoiceCaptureResult?> showVoiceCaptureSheet(
     categories: ActiveCategories.notifier.value,
   );
   try {
-    return await showModalBottomSheet<VoiceCaptureResult>(
-      context: context,
+    return await showAppSheet<VoiceCaptureResult>(
+      context,
       isScrollControlled: true,
       builder: (_) => BlocProvider.value(
         value: bloc,

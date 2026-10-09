@@ -84,7 +84,7 @@ final class _ModalSheetPage<T> extends Page<T> {
   @override
   Route<T> createRoute(BuildContext context) => ModalBottomSheetRoute<T>(
     settings: this,
-    builder: (_) => child,
+    builder: (_) => SheetSafeArea(child: child),
     isScrollControlled: true,
     useSafeArea: true,
     shape: fullScreenSheetShape,

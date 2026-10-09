@@ -18,8 +18,8 @@ Future<CategoryFormResult?> showCategoryFormSheet(
   String initialName = '',
   IconKey? icon,
 }) {
-  return showModalBottomSheet<CategoryFormResult>(
-    context: context,
+  return showAppSheet<CategoryFormResult>(
+    context,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,

@@ -6,8 +6,8 @@ import 'package:saldough/core/theme/theme.dart';
 
 /// Menanyakan bahasa ucapan sekali sebelum lembar rekam pertama (ADR-028
 /// §3.8). Mengembalikan bahasa terpilih, atau `null` kalau ditutup.
-Future<AppLocale?> showSpeechLanguageSheet(BuildContext context) => showModalBottomSheet<AppLocale>(
-  context: context,
+Future<AppLocale?> showSpeechLanguageSheet(BuildContext context) => showAppSheet<AppLocale>(
+  context,
   isScrollControlled: true,
   builder: (_) => const SpeechLanguageSheet(),
 );

@@ -41,8 +41,8 @@ class RecordRepeatField extends StatelessWidget {
   /// Jadikan Rutin: pilihan "Tidak" tidak ditawarkan.
   final bool locked;
 
-  Future<void> _open(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
+  Future<void> _open(BuildContext context) => showAppSheet<void>(
+    context,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,

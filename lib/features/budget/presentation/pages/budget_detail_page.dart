@@ -89,8 +89,8 @@ class BudgetDetailPage extends StatelessWidget {
     BudgetItemProgress progress, {
     required bool canRecord,
   }) async {
-    final action = await showModalBottomSheet<_ItemAction>(
-      context: context,
+    final action = await showAppSheet<_ItemAction>(
+      context,
       showDragHandle: true,
       builder: (_) => _ItemActionsSheet(progress: progress, canRecord: canRecord),
     );

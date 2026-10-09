@@ -184,8 +184,8 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
   final rows = lookbackRows(state);
   final biggest = _biggest(rows);
   final accuracy = accuracyText(state);
-  return showModalBottomSheet<void>(
-    context: context,
+  return showAppSheet<void>(
+    context,
     builder: (sheetContext) {
       final textTheme = Theme.of(sheetContext).textTheme;
       Widget line(String label, String planned, String actual, {bool bold = false}) {

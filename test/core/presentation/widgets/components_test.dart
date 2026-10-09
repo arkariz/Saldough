@@ -402,6 +402,36 @@ void main() {
       onRecordLongPress: onLong,
     );
 
+    testWidgets('ikon piksel tab: 32px utuh, tujuan tak aktif diredupkan', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: PixelTheme.light,
+          home: Scaffold(
+            bottomNavigationBar: AppNavBar(
+              destinations: const [
+                (icon: IconKey.navHome, label: 'Beranda'),
+                (icon: IconKey.navHistory, label: 'Riwayat'),
+                (icon: IconKey.navPlan, label: 'Rencana'),
+                (icon: IconKey.navWallets, label: 'Dompet'),
+              ],
+              selectedIndex: 1,
+              onSelected: (_) {},
+              recordLabel: 'Catat',
+              onRecord: () {},
+            ),
+          ),
+        ),
+      );
+      for (final key in [IconKey.navHome, IconKey.navHistory, IconKey.navPlan, IconKey.navWallets]) {
+        expect(isPixelIcon(key), isTrue, reason: key.name);
+        final icon = find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == key);
+        expect(tester.getSize(icon), const Size.square(AppSize.pixelIcon));
+        final opacity = tester.widget<Opacity>(find.ancestor(of: icon, matching: find.byType(Opacity)).first);
+        expect(opacity.opacity, key == IconKey.navHistory ? 1 : lessThan(1));
+      }
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('ketuk tujuan, ketuk Catat, dan tekan lama Catat (suara)', (
       tester,
     ) async {

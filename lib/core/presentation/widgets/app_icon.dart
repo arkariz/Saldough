@@ -31,6 +31,19 @@ enum IconKey {
   /// Tab Dompet.
   wallets,
 
+  /// Ikon piksel tab Beranda di navigasi bawah (permintaan pemilik 9 Okt
+  /// 2026; [home] tetap Material Symbols untuk tempat lain).
+  navHome,
+
+  /// Ikon piksel tab Riwayat di navigasi bawah.
+  navHistory,
+
+  /// Ikon piksel tab Rencana di navigasi bawah.
+  navPlan,
+
+  /// Ikon piksel tab Dompet di navigasi bawah.
+  navWallets,
+
   // Jenis dompet
 
   /// Dompet jenis rekening bank.
@@ -261,6 +274,10 @@ enum IconKey {
 /// Ditampilkan 32px atau 64px saja (design system bagian Ikon); di tile
 /// lewat `AppIconTile`.
 const Map<IconKey, String> _pixelAssets = {
+  IconKey.navHome: 'assets/icons/home.svg',
+  IconKey.navHistory: 'assets/icons/transactions.svg',
+  IconKey.navPlan: 'assets/icons/budget.svg',
+  IconKey.navWallets: 'assets/icons/wallets.svg',
   IconKey.walletBank: 'assets/icons/wallet_bank.svg',
   IconKey.walletCash: 'assets/icons/wallet_cash.svg',
   IconKey.walletEwallet: 'assets/icons/wallet_ewallet.svg',

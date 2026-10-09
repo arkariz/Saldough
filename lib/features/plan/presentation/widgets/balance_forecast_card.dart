@@ -61,8 +61,8 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
 
   static String _approx(int sen) => '≈${AppMoneyFormatter.formatApprox(sen)}';
 
-  void _showDetails(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
+  void _showDetails(BuildContext context) => showAppSheet<void>(
+    context,
     builder: (_) => StatefulBuilder(
       builder: (sheetContext, setSheetState) {
         final b = widget.projection.breakdown;

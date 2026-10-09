@@ -41,8 +41,9 @@ class RecordCategoryField extends StatelessWidget {
   /// Id kategori yang paling sering dipakai, ditawarkan paling depan (UX-3).
   final List<String> frequentIds;
 
-  /// Membuat kategori bernama tertentu; `null` berarti tanpa "Tambah kategori".
-  final Future<Category?> Function(String name)? onCreate;
+  /// Membuat kategori bernama tertentu dengan ikon pilihan (`null` = ditebak
+  /// dari nama); `null` berarti tanpa "Tambah kategori".
+  final Future<Category?> Function(String name, String? iconKey)? onCreate;
 
   /// Judul transaksi (catatan), memilih varian ikon ("kopi").
   final String? title;
@@ -56,18 +57,16 @@ class RecordCategoryField extends StatelessWidget {
   Future<void> _create(BuildContext context) async {
     final create = onCreate;
     if (create == null) return;
-    final name = await showCategoryNameDialog(
-      context,
-      title: t.category.addTitle,
-    );
-    if (name == null) return;
-    final created = await create(name);
+    // Formulir yang sama dengan layar Kategori: nama dan ikon.
+    final result = await showCategoryFormSheet(context, title: t.category.addTitle);
+    if (result == null) return;
+    final created = await create(result.name, result.icon?.name);
     if (created != null) onChanged(created.id);
   }
 
   Future<void> _openAll(BuildContext context, List<Category> options) async {
-    final picked = await showModalBottomSheet<_Pick>(
-      context: context,
+    final picked = await showAppSheet<_Pick>(
+      context,
       isScrollControlled: true,
       useSafeArea: true,
       showDragHandle: true,

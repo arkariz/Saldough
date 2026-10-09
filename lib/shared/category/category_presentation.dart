@@ -5,4 +5,3 @@ library;
 
 export 'presentation/category_display.dart';
 export 'presentation/category_form_sheet.dart';
-export 'presentation/category_name_dialog.dart';

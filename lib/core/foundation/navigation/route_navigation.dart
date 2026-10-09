@@ -42,7 +42,7 @@ extension RouteNodeRouteExt on RouteNode {
       // (ADR-030 §3.3 butir 4), bukan halaman yang meluncur dari bawah.
       RouteTransition.slideFromBottom => ModalBottomSheetRoute<T>(
         settings: settings,
-        builder: page,
+        builder: (context) => SheetSafeArea(child: page(context)),
         capturedThemes: capturedThemes,
         isScrollControlled: true,
         useSafeArea: true,

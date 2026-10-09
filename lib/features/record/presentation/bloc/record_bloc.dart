@@ -406,8 +406,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// kategori dibaca dari `ActiveCategories`, yang diperbarui repository).
   /// Gagal menyimpan ditampilkan lewat efek galat biasa dan mengembalikan
   /// `null`.
-  Future<Category?> createCategory(CategoryKind kind, String name) async {
-    final result = await _createCategory(kind, name);
+  Future<Category?> createCategory(CategoryKind kind, String name, {String? iconKey}) async {
+    final result = await _createCategory(kind, name, iconKey: iconKey);
     switch (result) {
       case Left(value: final failure):
         if (!isClosed) add(RecordFailureOccurred(failure));

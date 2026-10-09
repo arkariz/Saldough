@@ -92,7 +92,7 @@ class IncomeFormSheet extends StatefulWidget {
 
   /// Membuat kategori baru dari "Tambah kategori" (ADR-026 §3.6); `null`
   /// berarti pilihan itu tidak ditawarkan.
-  final Future<Category?> Function(String name)? onCreateCategory;
+  final Future<Category?> Function(String name, String? iconKey)? onCreateCategory;
 
   /// Draf Catat Cerdas (ADR-027 §3.4): mengisi formulir seperti [prefill]
   /// (mode CATAT, transaksi baru) dan menampilkan teks yang tertangkap serta

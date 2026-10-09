@@ -38,8 +38,8 @@ class UnplannedCard extends StatelessWidget {
   /// tetap sama dengan jumlah baris.
   int get offPlan => plan.remaining - plan.planned;
 
-  static void _showInfo(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
+  static void _showInfo(BuildContext context) => showAppSheet<void>(
+    context,
     builder: (sheetContext) {
       final textTheme = Theme.of(sheetContext).textTheme;
       return SafeArea(

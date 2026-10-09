@@ -38,7 +38,7 @@ Future<Transaction?> openEditTransactionSheet(
   required Transaction transaction,
   required List<Wallet> wallets,
   List<BudgetItemOption> budgetItems = const [],
-  Future<Category?> Function(CategoryKind kind, String name)? onCreateCategory,
+  Future<Category?> Function(CategoryKind kind, String name, {String? iconKey})? onCreateCategory,
 }) async {
   final baseWallets = _withoutEffectOf(transaction, wallets);
   final result = await showFullScreenSheet<Object>(
@@ -47,13 +47,17 @@ Future<Transaction?> openEditTransactionSheet(
       IncomeTransaction() => IncomeFormSheet(
         wallets: baseWallets,
         initial: transaction,
-        onCreateCategory: onCreateCategory == null ? null : (name) => onCreateCategory(CategoryKind.income, name),
+        onCreateCategory: onCreateCategory == null
+            ? null
+            : (name, iconKey) => onCreateCategory(CategoryKind.income, name, iconKey: iconKey),
       ),
       ExpenseTransaction() => ExpenseFormSheet(
         wallets: baseWallets,
         initial: transaction,
         budgetItems: budgetItems,
-        onCreateCategory: onCreateCategory == null ? null : (name) => onCreateCategory(CategoryKind.expense, name),
+        onCreateCategory: onCreateCategory == null
+            ? null
+            : (name, iconKey) => onCreateCategory(CategoryKind.expense, name, iconKey: iconKey),
       ),
       TransferTransaction() => TransferFormSheet(wallets: baseWallets, initial: transaction, budgetItems: budgetItems),
     },

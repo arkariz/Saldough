@@ -99,7 +99,7 @@ class ExpenseFormSheet extends StatefulWidget {
 
   /// Membuat kategori baru dari "Tambah kategori" (ADR-026 §3.6); `null`
   /// berarti pilihan itu tidak ditawarkan.
-  final Future<Category?> Function(String name)? onCreateCategory;
+  final Future<Category?> Function(String name, String? iconKey)? onCreateCategory;
 
   /// Seluruh pos anggaran; formulir menyaringnya per dompet asal.
   final List<BudgetItemOption> budgetItems;

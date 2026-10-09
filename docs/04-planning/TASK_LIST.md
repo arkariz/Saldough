@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 9 Oktober 2026 (1.208 uji lulus, 140 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -2639,9 +2639,16 @@ font asli. Per tugas:
   penyimpanan baru (keputusan pemilik, F20).
 - T-14.12: jamak slang untuk hari pengingat dan banner kotak masuk (en,
   F9/F19); uji teks en tanpa "(s)".
+Tindak lanjut pemilik (9 Okt 2026): (1) isi lembar tertutup bilah navigasi
+sistem — `useSafeArea` lembar modal Flutter tidak menjaga sisi bawah; kini
+semua lembar lewat `showAppSheet`/`showFullScreenSheet` atau rute lembar yang
+membungkus isinya dengan `SheetSafeArea` (dijaga
+`test/architecture/sheet_safe_area_test.dart`); (2) "Tambah kategori" di
+Catat memakai sheet nama + ikon yang sama dengan layar Kategori (dialog nama
+saja dihapus).
 Di luar PR ini, ke antrean: B-33 (Kembali di tab menutup aplikasi), B-34
 (urutan dompet), B-35 (yang belum diuji QA di perangkat). `flutter analyze`
-bersih (17 info lama), 1.208 uji lulus.
+bersih (17 info lama), 1.213 uji lulus.
 ## Fase 15: Rencana dan rutin (R1)
 
 Permintaan pemilik 2 Okt 2026: transaksi rutin, uang nganggur, dan perkiraan

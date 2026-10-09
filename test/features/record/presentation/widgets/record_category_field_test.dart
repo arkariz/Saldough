@@ -26,7 +26,7 @@ void main() {
     String? value,
     ValueChanged<String?>? onChanged,
     List<String> frequentIds = const [],
-    Future<Category?> Function(String name)? onCreate,
+    Future<Category?> Function(String name, String? iconKey)? onCreate,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -104,15 +104,15 @@ void main() {
       expect(picked.last, isNull);
     });
 
-    testWidgets('"Tambah kategori" menanyakan nama, membuatnya, lalu memilihnya', (tester) async {
-      const created = Category(id: 'new', kind: CategoryKind.expense, name: 'Arisan');
-      final names = <String>[];
+    testWidgets('"Tambah kategori" menanyakan nama dan ikon, membuatnya, lalu memilihnya', (tester) async {
+      const created = Category(id: 'new', kind: CategoryKind.expense, name: 'Arisan', iconKey: 'categoryGift');
+      final calls = <(String, String?)>[];
       final picked = <String?>[];
       await tester.pumpWidget(
         pumpable(
           onChanged: picked.add,
-          onCreate: (name) async {
-            names.add(name);
+          onCreate: (name, iconKey) async {
+            calls.add((name, iconKey));
             return created;
           },
         ),
@@ -120,20 +120,25 @@ void main() {
       await openAll(tester);
       await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), 'Arisan');
+      await tester.enterText(find.byKey(const ValueKey('category-form-name')), 'Arisan');
       await tester.pump();
-      await tester.tap(find.text(t.common.save));
+      final gift = find.byKey(const ValueKey('category-icon-categoryGift'));
+      await tester.ensureVisible(gift);
+      await tester.pumpAndSettle();
+      await tester.tap(gift);
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('category-form-save')));
       await tester.pumpAndSettle();
 
-      expect(names, ['Arisan']);
+      expect(calls, [('Arisan', 'categoryGift')]);
       expect(picked, ['new']);
     });
 
-    testWidgets('membatalkan dialog nama tidak membuat apa pun', (tester) async {
+    testWidgets('menutup formulir kategori tanpa menyimpan tidak membuat apa pun', (tester) async {
       var calls = 0;
       await tester.pumpWidget(
         pumpable(
-          onCreate: (name) async {
+          onCreate: (name, iconKey) async {
             calls++;
             return null;
           },
@@ -142,7 +147,8 @@ void main() {
       await openAll(tester);
       await tester.tap(find.text(t.record.categoryAddLabel));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(t.common.cancel));
+      // Sheet ditutup tanpa Simpan.
+      await tester.tapAt(const Offset(10, 10));
       await tester.pumpAndSettle();
 
       expect(calls, 0);

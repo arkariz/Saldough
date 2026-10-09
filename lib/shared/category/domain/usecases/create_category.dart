@@ -17,7 +17,8 @@ final class CreateCategory {
 
   /// Membuat (atau memakai ulang) kategori [name] berjenis [kind]. [name]
   /// wajib berisi selain spasi — ditegakkan formulir sebelum memanggil ini.
-  Future<Either<Failure, Category>> call(CategoryKind kind, String name) async {
+  /// [iconKey] ikon pilihan pengguna; `null` = ditebak dari nama (ADR-026).
+  Future<Either<Failure, Category>> call(CategoryKind kind, String name, {String? iconKey}) async {
     assert(name.trim().isNotEmpty, 'Nama kategori tidak boleh kosong.');
     final List<Category> categories;
     switch (await _repository.listCategories()) {
@@ -31,7 +32,7 @@ final class CreateCategory {
     for (final category in categories) {
       if (category.kind == kind && normalizeCategoryText(category.name) == needle) {
         if (!category.isArchived) return right(category);
-        final restored = category.copyWith(isArchived: false);
+        final restored = category.copyWith(isArchived: false, iconKey: iconKey);
         return (await _repository.saveCategory(restored)).map((_) => restored);
       }
     }
@@ -41,6 +42,7 @@ final class CreateCategory {
       id: 'user.${(_clock ?? DateTime.now)().microsecondsSinceEpoch}',
       kind: kind,
       name: name.trim(),
+      iconKey: iconKey,
       sortOrder: lastOrder + 1,
     );
     return (await _repository.saveCategory(created)).map((_) => created);

@@ -23,7 +23,7 @@ Future<void> openCategoryPage(BuildContext context, CategoryManagerBloc bloc) {
 }
 
 /// Layar Kategori (ADR-026 §3.6): kategori pengeluaran dan pemasukan, tambah,
-/// ganti nama (ketuk), arsipkan dan pulihkan. Tidak ada hapus — transaksi lama
+/// ubah nama dan ikon (ketuk, QA PR #43 F12), arsipkan dan pulihkan. Tidak ada hapus — transaksi lama
 /// tetap menunjuk kategorinya.
 class CategoryPage extends StatefulWidget {
   /// Membuat [CategoryPage].
@@ -38,8 +38,8 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Future<void> _add(BuildContext context) async {
     final bloc = context.read<CategoryManagerBloc>();
-    final name = await showCategoryNameDialog(context, title: t.category.addTitle);
-    if (name != null) bloc.add(CategoryManagerAdded(kind: _kind, name: name));
+    final result = await showCategoryFormSheet(context, title: t.category.addTitle);
+    if (result != null) bloc.add(CategoryManagerAdded(kind: _kind, name: result.name, iconKey: result.icon?.name));
   }
 
   @override
@@ -92,10 +92,26 @@ class _CategoryRow extends StatelessWidget {
 
   final Category category;
 
-  Future<void> _rename(BuildContext context) async {
+  Future<void> _edit(BuildContext context) async {
     final bloc = context.read<CategoryManagerBloc>();
-    final name = await showCategoryNameDialog(context, title: t.category.renameTitle, initial: category.name);
-    if (name != null && name != category.name) bloc.add(CategoryManagerRenamed(category: category, name: name));
+    final current = categoryIcon(category);
+    final result = await showCategoryFormSheet(
+      context,
+      title: t.category.renameTitle,
+      initialName: category.name,
+      icon: current,
+    );
+    if (result == null) return;
+    final icon = result.icon;
+    final iconChanged = icon != null && icon != current;
+    if (result.name == category.name && !iconChanged) return;
+    bloc.add(
+      CategoryManagerRenamed(
+        category: category,
+        name: result.name,
+        iconKey: iconChanged ? categoryIconKeyFor(category, icon) : null,
+      ),
+    );
   }
 
   @override
@@ -105,12 +121,12 @@ class _CategoryRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.space2),
       child: AppTappable(
         label: category.name,
-        onTap: () => _rename(context),
+        onTap: () => _edit(context),
         child: AppCard(
           child: Row(
             children: [
-              AppIcon(categoryIcon(category)),
-              const SizedBox(width: AppSpacing.space2),
+              AppIconTile(categoryIcon(category)),
+              const SizedBox(width: AppSpacing.space3),
               Expanded(
                 child: Text(
                   category.name,

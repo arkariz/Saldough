@@ -7,8 +7,8 @@ import 'package:state_management/state_management.dart';
 
 part 'category_manager_event.dart';
 
-/// Bloc layar Kategori (ADR-026 §3.6): daftar per jenis, tambah, ganti nama,
-/// arsipkan dan pulihkan. Kategori tidak pernah dihapus.
+/// Bloc layar Kategori (ADR-026 §3.6): daftar per jenis, tambah, ubah nama
+/// dan ikon, arsipkan dan pulihkan. Kategori tidak pernah dihapus.
 final class CategoryManagerBloc extends Bloc<CategoryManagerEvent, CategoryManagerState> {
   /// Membuat [CategoryManagerBloc].
   CategoryManagerBloc({required this._repository, required this._createCategory})
@@ -27,7 +27,7 @@ final class CategoryManagerBloc extends Bloc<CategoryManagerEvent, CategoryManag
   }
 
   Future<void> _onAdded(CategoryManagerAdded event, Emitter<CategoryManagerState> emit) async {
-    switch (await _createCategory(event.kind, event.name)) {
+    switch (await _createCategory(event.kind, event.name, iconKey: event.iconKey)) {
       case Left(value: final failure):
         emit(state.copyWith(effect: _error(failure)));
       case Right():
@@ -36,7 +36,7 @@ final class CategoryManagerBloc extends Bloc<CategoryManagerEvent, CategoryManag
   }
 
   Future<void> _onRenamed(CategoryManagerRenamed event, Emitter<CategoryManagerState> emit) async {
-    await _save(event.category.copyWith(name: event.name.trim()), emit);
+    await _save(event.category.copyWith(name: event.name.trim(), iconKey: event.iconKey), emit);
   }
 
   Future<void> _onArchiveToggled(CategoryManagerArchiveToggled event, Emitter<CategoryManagerState> emit) async {

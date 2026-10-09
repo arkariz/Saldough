@@ -115,4 +115,26 @@ void main() {
       expect(categoryIcon(unknown), IconKey.categoryOther);
     },
   );
+
+  test('ikon pilihan pengguna untuk kategori bawaan menang; kembali ke bawaan menyimpan kunci bawaan (QA PR #43 F12)', () {
+    final food = builtIn('food', iconKey: 'categoryFood');
+    expect(categoryIcon(food), IconKey.categoryFood);
+    final chosen = food.copyWith(iconKey: categoryIconKeyFor(food, IconKey.categoryPets));
+    expect(chosen.iconKey, 'categoryPets');
+    expect(categoryIcon(chosen), IconKey.categoryPets);
+    // Varian judul hanya untuk ikon bawaan Makan & Minum.
+    expect(categoryIcon(chosen, title: 'kopi'), IconKey.categoryPets);
+
+    // Keluarga disimpan dengan kunci lama; memilih ikon bawaannya lagi
+    // menyimpan kunci lama itu, bukan nama ikonnya.
+    final family = builtIn('family', iconKey: 'categoryHousehold');
+    expect(categoryIconKeyFor(family, IconKey.categoryFamily), 'categoryHousehold');
+    expect(categoryIconKeyFor(family, IconKey.categoryGift), 'categoryGift');
+    expect(categoryIcon(family.copyWith(iconKey: 'categoryGift')), IconKey.categoryGift);
+  });
+
+  test('pilihan ikon: tanpa duplikat, semuanya punya gambar', () {
+    expect(categoryIconChoices.toSet(), hasLength(categoryIconChoices.length));
+    expect(categoryIconChoices, contains(IconKey.categoryOther));
+  });
 }

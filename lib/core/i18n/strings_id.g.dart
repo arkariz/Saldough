@@ -2125,8 +2125,14 @@ class Translations$category$id {
 	/// id: 'Kategori baru'
 	String get addTitle => 'Kategori baru';
 
-	/// id: 'Ganti nama kategori'
-	String get renameTitle => 'Ganti nama kategori';
+	/// id: 'Ubah kategori'
+	String get renameTitle => 'Ubah kategori';
+
+	/// id: 'Ikon'
+	String get iconLabel => 'Ikon';
+
+	/// id: 'Ikon $n'
+	String iconOption({required Object n}) => 'Ikon ${n}';
 
 	/// id: 'Nama kategori'
 	String get nameHint => 'Nama kategori';
@@ -4241,7 +4247,9 @@ extension on Translations {
 			'category.incomeTab' => 'Pemasukan',
 			'category.addAction' => 'Tambah kategori',
 			'category.addTitle' => 'Kategori baru',
-			'category.renameTitle' => 'Ganti nama kategori',
+			'category.renameTitle' => 'Ubah kategori',
+			'category.iconLabel' => 'Ikon',
+			'category.iconOption' => ({required Object n}) => 'Ikon ${n}',
 			'category.nameHint' => 'Nama kategori',
 			'category.archiveAction' => 'Arsipkan',
 			'category.restoreAction' => 'Pulihkan',
@@ -4524,10 +4532,10 @@ extension on Translations {
 			'plan.detailsIncome' => 'Pemasukan rutin',
 			'plan.detailsBills' => 'Tagihan rutin',
 			'plan.detailsBudget' => 'Sisa anggaran',
-			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
-			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
 			_ => null,
 		} ?? switch (path) {
+			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
+			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
 			'plan.detailsTransfers' => 'Transfer rutin',
 			'plan.detailsEnd' => ({required Object date}) => 'Akhir ${date}',
 			'plan.unplannedToggle' => 'Hitung jajan harian',

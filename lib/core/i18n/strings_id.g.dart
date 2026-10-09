@@ -160,23 +160,23 @@ class Translations$record$id {
 
 	// Translations
 
-	/// id: 'Catat Pemasukan'
-	String get incomeAction => 'Catat Pemasukan';
+	/// id: 'Catat pemasukan'
+	String get incomeAction => 'Catat pemasukan';
 
-	/// id: 'Catat Pengeluaran'
-	String get expenseAction => 'Catat Pengeluaran';
+	/// id: 'Catat pengeluaran'
+	String get expenseAction => 'Catat pengeluaran';
 
-	/// id: 'Catat Transfer'
-	String get transferAction => 'Catat Transfer';
+	/// id: 'Catat transfer'
+	String get transferAction => 'Catat transfer';
 
 	/// id: 'Masuk ke Dompet'
 	String get toWalletFieldLabel => 'Masuk ke Dompet';
 
-	/// id: 'Dari Dompet'
-	String get fromWalletFieldLabel => 'Dari Dompet';
+	/// id: 'Dari dompet'
+	String get fromWalletFieldLabel => 'Dari dompet';
 
-	/// id: 'Ke Dompet'
-	String get destinationWalletFieldLabel => 'Ke Dompet';
+	/// id: 'Ke dompet'
+	String get destinationWalletFieldLabel => 'Ke dompet';
 
 	/// id: 'Tanggal'
 	String get dateFieldLabel => 'Tanggal';
@@ -205,41 +205,11 @@ class Translations$record$id {
 	/// id: 'Menyimpan...'
 	String get savingMessage => 'Menyimpan...';
 
-	/// id: 'Uang Masuk'
-	String get incomeBadge => 'Uang Masuk';
+	/// id: 'Ubah transaksi'
+	String get editStepLabel => 'Ubah transaksi';
 
-	/// id: 'Uang Keluar'
-	String get expenseBadge => 'Uang Keluar';
-
-	/// id: 'Mutasi Internal'
-	String get transferBadge => 'Mutasi Internal';
-
-	/// id: 'Catat // Transaksi'
-	String get stepLabel => 'Catat // Transaksi';
-
-	/// id: 'Sunting // Transaksi'
-	String get editStepLabel => 'Sunting // Transaksi';
-
-	/// id: 'Aturan Kas: Saldo Terpotong'
-	String get expenseRuleTitle => 'Aturan Kas: Saldo Terpotong';
-
-	/// id: 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.'
-	String get expenseRuleBody => 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.';
-
-	/// id: 'Pindah antar dompet'
-	String get transferNoticeTitle => 'Pindah antar dompet';
-
-	/// id: 'Catat uang yang berpindah di antara dompetmu, misalnya tarik tunai atau isi e-wallet. Total saldomu tetap sama.'
-	String get transferNoticeBody => 'Catat uang yang berpindah di antara dompetmu, misalnya tarik tunai atau isi e-wallet. Total saldomu tetap sama.';
-
-	/// id: 'Nominal Masuk'
-	String get amountLabelIncome => 'Nominal Masuk';
-
-	/// id: 'Nominal Pengeluaran'
-	String get amountLabelExpense => 'Nominal Pengeluaran';
-
-	/// id: 'Nominal Transfer'
-	String get amountLabelTransfer => 'Nominal Transfer';
+	/// id: 'Saldo dompet berkurang'
+	String get expenseRuleTitle => 'Saldo dompet berkurang';
 
 	/// id: 'Bersihkan'
 	String get clearAmountAction => 'Bersihkan';
@@ -250,38 +220,14 @@ class Translations$record$id {
 	/// id: 'Opsional'
 	String get optionalHint => 'Opsional';
 
-	/// id: 'Dompet Sumber Dana'
-	String get expenseWalletSectionLabel => 'Dompet Sumber Dana';
+	/// id: 'Dari dompet'
+	String get expenseWalletSectionLabel => 'Dari dompet';
 
-	/// id: 'Keterangan / Catatan'
-	String get noteSectionLabel => 'Keterangan / Catatan';
-
-	/// id: 'Saldo berkurang'
-	String get balanceDecreasesCaption => 'Saldo berkurang';
-
-	/// id: 'Saldo bertambah'
-	String get balanceIncreasesCaption => 'Saldo bertambah';
-
-	/// id: 'Saldo $wallet akan bertambah $amount saat dicatat.'
-	String incomeSummary({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan bertambah ${amount} saat dicatat.';
-
-	/// id: 'Saldo $wallet akan berkurang $amount saat dicatat.'
-	String expenseSummary({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan berkurang ${amount} saat dicatat.';
-
-	/// id: 'Ringkasan Catatan Mutasi'
-	String get transferSummaryTitle => 'Ringkasan Catatan Mutasi';
-
-	/// id: 'Dompet $wallet berkurang $amount'
-	String transferSummaryFrom({required Object wallet, required Object amount}) => 'Dompet ${wallet} berkurang ${amount}';
-
-	/// id: 'Dompet $wallet bertambah $amount'
-	String transferSummaryTo({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}';
+	/// id: 'Catatan'
+	String get noteSectionLabel => 'Catatan';
 
 	/// id: 'Saldo'
 	String get balanceLabel => 'Saldo';
-
-	/// id: 'Pilih kategori'
-	String get categoryPlaceholder => 'Pilih kategori';
 
 	/// id: 'Tanpa kategori'
 	String get categoryNoneLabel => 'Tanpa kategori';
@@ -291,9 +237,6 @@ class Translations$record$id {
 
 	/// id: 'Tanpa anggaran'
 	String get budgetItemNone => 'Tanpa anggaran';
-
-	/// id: 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.'
-	String get budgetItemHelp => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.';
 
 	/// id: 'Tanggal ini di luar periode anggaran "$name", jadi transaksi ini tidak lagi masuk anggaran itu.'
 	String budgetItemOutOfPeriod({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.';
@@ -307,20 +250,17 @@ class Translations$record$id {
 	/// id: 'Jenis transaksi'
 	String get kindSwitcherLabel => 'Jenis transaksi';
 
-	/// id: 'Keluar'
-	String get kindExpense => 'Keluar';
+	/// id: 'Pengeluaran'
+	String get kindExpense => 'Pengeluaran';
 
-	/// id: 'Masuk'
-	String get kindIncome => 'Masuk';
+	/// id: 'Pemasukan'
+	String get kindIncome => 'Pemasukan';
 
 	/// id: 'Transfer'
 	String get kindTransfer => 'Transfer';
 
 	/// id: 'Tambah kategori'
 	String get categoryAddLabel => 'Tambah kategori';
-
-	/// id: 'Tertangkap'
-	String get draftHeardLabel => 'Tertangkap';
 
 	/// id: 'Periksa sebelum mencatat'
 	String get draftCheckTitle => 'Periksa sebelum mencatat';
@@ -353,21 +293,6 @@ class Translations$transaction$id {
 	/// id: 'Cari di bulan ini: catatan / kategori...'
 	String get searchHint => 'Cari di bulan ini: catatan / kategori...';
 
-	/// id: 'Status log bulan ini'
-	String get monthStatusLabel => 'Status log bulan ini';
-
-	/// id: '$count log aktif'
-	String logCountBadge({required Object count}) => '${count} log aktif';
-
-	/// id: 'Arus Bersih (Netto)'
-	String get netFlowLabel => 'Arus Bersih (Netto)';
-
-	/// id: 'Masuk'
-	String get flowIncomeLabel => 'Masuk';
-
-	/// id: 'Keluar'
-	String get flowExpenseLabel => 'Keluar';
-
 	/// id: 'Semua $count'
 	String allFilterLabel({required Object count}) => 'Semua ${count}';
 
@@ -380,14 +305,14 @@ class Translations$transaction$id {
 	/// id: 'Transfer $count'
 	String transferFilterLabel({required Object count}) => 'Transfer ${count}';
 
-	/// id: 'Semua Dompet'
-	String get walletFilterAllLabel => 'Semua Dompet';
+	/// id: 'Semua dompet'
+	String get walletFilterAllLabel => 'Semua dompet';
 
 	/// id: 'Dompet'
 	String get walletFilterLabel => 'Dompet';
 
-	/// id: 'Semua Kategori'
-	String get categoryFilterAllLabel => 'Semua Kategori';
+	/// id: 'Semua kategori'
+	String get categoryFilterAllLabel => 'Semua kategori';
 
 	/// id: 'Kategori'
 	String get categoryFilterLabel => 'Kategori';
@@ -395,14 +320,14 @@ class Translations$transaction$id {
 	/// id: 'Filter'
 	String get filterButtonLabel => 'Filter';
 
-	/// id: 'Filter Transaksi'
-	String get filterSheetTitle => 'Filter Transaksi';
+	/// id: 'Filter transaksi'
+	String get filterSheetTitle => 'Filter transaksi';
 
 	/// id: 'Selesai'
 	String get filterSheetDoneAction => 'Selesai';
 
-	/// id: 'Hari Ini'
-	String get todayLabel => 'Hari Ini';
+	/// id: 'Hari ini'
+	String get todayLabel => 'Hari ini';
 
 	/// id: 'Kemarin'
 	String get yesterdayLabel => 'Kemarin';
@@ -410,35 +335,32 @@ class Translations$transaction$id {
 	/// id: 'Tanpa judul'
 	String get untitledTransaction => 'Tanpa judul';
 
-	/// id: 'Inventaris Kosong'
-	String get emptyMonthBadge => 'Inventaris Kosong';
-
 	/// id: 'Belum ada transaksi'
 	String get emptyMonthTitle => 'Belum ada transaksi';
 
-	/// id: 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.'
-	String get emptyMonthSubtitle => 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.';
+	/// id: 'Setiap transaksi yang kamu catat muncul di sini, dikelompokkan per hari.'
+	String get emptyMonthSubtitle => 'Setiap transaksi yang kamu catat muncul di sini, dikelompokkan per hari.';
 
-	/// id: 'Catat Transaksi Sekarang'
-	String get emptyMonthCta => 'Catat Transaksi Sekarang';
+	/// id: 'Catat transaksi'
+	String get emptyMonthCta => 'Catat transaksi';
 
-	/// id: 'Panduan Catatan Kas'
-	String get emptyGuideTitle => 'Panduan Catatan Kas';
+	/// id: 'Tiga jenis transaksi'
+	String get emptyGuideTitle => 'Tiga jenis transaksi';
 
 	/// id: 'Pemasukan'
 	String get emptyGuideIncomeTitle => 'Pemasukan';
 
-	/// id: 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.'
-	String get emptyGuideIncomeDescription => 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.';
+	/// id: 'Menambah saldo dompet yang kamu pilih.'
+	String get emptyGuideIncomeDescription => 'Menambah saldo dompet yang kamu pilih.';
 
 	/// id: 'Pengeluaran'
 	String get emptyGuideExpenseTitle => 'Pengeluaran';
 
-	/// id: 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.'
-	String get emptyGuideExpenseDescription => 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.';
+	/// id: 'Mengurangi saldo dompet dan mengisi pos anggaran yang tertaut.'
+	String get emptyGuideExpenseDescription => 'Mengurangi saldo dompet dan mengisi pos anggaran yang tertaut.';
 
-	/// id: 'Transfer Antar Dompet'
-	String get emptyGuideTransferTitle => 'Transfer Antar Dompet';
+	/// id: 'Transfer antardompet'
+	String get emptyGuideTransferTitle => 'Transfer antardompet';
 
 	/// id: 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.'
 	String get emptyGuideTransferDescription => 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.';
@@ -488,8 +410,8 @@ class Translations$transaction$id {
 	/// id: 'Transfer tercatat'
 	String get detailTransferTitle => 'Transfer tercatat';
 
-	/// id: 'Jenis Entri'
-	String get detailTypeLabel => 'Jenis Entri';
+	/// id: 'Jenis transaksi'
+	String get detailTypeLabel => 'Jenis transaksi';
 
 	/// id: 'Pemasukan'
 	String get detailIncomeType => 'Pemasukan';
@@ -503,11 +425,11 @@ class Translations$transaction$id {
 	/// id: 'Kategori'
 	String get detailCategoryLabel => 'Kategori';
 
-	/// id: 'Dompet Tujuan'
-	String get detailIncomeWalletLabel => 'Dompet Tujuan';
+	/// id: 'Dompet tujuan'
+	String get detailIncomeWalletLabel => 'Dompet tujuan';
 
-	/// id: 'Dompet Sumber'
-	String get detailExpenseWalletLabel => 'Dompet Sumber';
+	/// id: 'Dompet sumber'
+	String get detailExpenseWalletLabel => 'Dompet sumber';
 
 	/// id: 'Saldo saat ini'
 	String get detailCurrentBalance => 'Saldo saat ini';
@@ -527,32 +449,32 @@ class Translations$transaction$id {
 	/// id: 'Tersimpan aman di perangkatmu. Saldo dompet mengikuti setiap catatan, jadi saat kamu menyunting atau menghapusnya, saldonya ikut menyesuaikan.'
 	String get detailManualNote => 'Tersimpan aman di perangkatmu. Saldo dompet mengikuti setiap catatan, jadi saat kamu menyunting atau menghapusnya, saldonya ikut menyesuaikan.';
 
-	/// id: 'Ubah Catatan Ini'
-	String get editAction => 'Ubah Catatan Ini';
+	/// id: 'Ubah'
+	String get editAction => 'Ubah';
 
-	/// id: 'Catat Lagi'
-	String get recordAgainAction => 'Catat Lagi';
+	/// id: 'Catat lagi'
+	String get recordAgainAction => 'Catat lagi';
 
-	/// id: 'Hapus Catatan dari Riwayat'
-	String get deleteAction => 'Hapus Catatan dari Riwayat';
+	/// id: 'Hapus transaksi'
+	String get deleteAction => 'Hapus transaksi';
 
-	/// id: 'Ubah Catatan'
-	String get editSheetTitle => 'Ubah Catatan';
+	/// id: 'Ubah transaksi'
+	String get editSheetTitle => 'Ubah transaksi';
 
-	/// id: 'Simpan Perubahan'
-	String get saveChangesAction => 'Simpan Perubahan';
+	/// id: 'Simpan perubahan'
+	String get saveChangesAction => 'Simpan perubahan';
 
 	/// id: 'Perubahan tersimpan.'
 	String get updatedMessage => 'Perubahan tersimpan.';
 
-	/// id: 'Catatan dihapus.'
-	String get deletedMessage => 'Catatan dihapus.';
+	/// id: 'Transaksi dihapus.'
+	String get deletedMessage => 'Transaksi dihapus.';
 
 	/// id: 'Urungkan'
 	String get undoDeleteAction => 'Urungkan';
 
-	/// id: 'Catatan dikembalikan.'
-	String get restoredMessage => 'Catatan dikembalikan.';
+	/// id: 'Transaksi dikembalikan.'
+	String get restoredMessage => 'Transaksi dikembalikan.';
 
 	/// id: 'Anggaran'
 	String get budgetLabel => 'Anggaran';
@@ -563,8 +485,8 @@ class Translations$transaction$id {
 	/// id: 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.'
 	String get detailFreelanceNote => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.';
 
-	/// id: 'Jadikan Rutin'
-	String get makeRecurringAction => 'Jadikan Rutin';
+	/// id: 'Jadikan rutin'
+	String get makeRecurringAction => 'Jadikan rutin';
 
 	/// id: 'Bulan sebelumnya'
 	String get previousMonth => 'Bulan sebelumnya';
@@ -581,14 +503,11 @@ class Translations$wallet$id {
 
 	// Translations
 
-	/// id: 'Posisi saldo kas saat ini'
-	String get subtitle => 'Posisi saldo kas saat ini';
+	/// id: 'Total saldo semua dompet aktif'
+	String get subtitle => 'Total saldo semua dompet aktif';
 
 	/// id: '$count dompet aktif'
 	String activeBadge({required Object count}) => '${count} dompet aktif';
-
-	/// id: 'Total saldo semua dompet'
-	String get totalLabel => 'Total saldo semua dompet';
 
 	/// id: 'Dompet aktif'
 	String get listHeading => 'Dompet aktif';
@@ -617,9 +536,6 @@ class Translations$wallet$id {
 	/// id: 'Kartu'
 	String get typeCard => 'Kartu';
 
-	/// id: 'Belum ada dompet'
-	String get emptyBadge => 'Belum ada dompet';
-
 	/// id: 'Belum ada dompet tercatat'
 	String get emptyTitle => 'Belum ada dompet tercatat';
 
@@ -632,20 +548,20 @@ class Translations$wallet$id {
 	/// id: 'Data dompet tidak terbaca. Coba lagi.'
 	String get loadErrorSubtitle => 'Data dompet tidak terbaca. Coba lagi.';
 
-	/// id: 'Tambah Dompet Baru'
-	String get addTitle => 'Tambah Dompet Baru';
+	/// id: 'Tambah dompet'
+	String get addTitle => 'Tambah dompet';
 
-	/// id: 'Ubah Dompet'
-	String get editTitle => 'Ubah Dompet';
+	/// id: 'Ubah dompet'
+	String get editTitle => 'Ubah dompet';
 
-	/// id: 'Dompet // Baru'
-	String get addStepLabel => 'Dompet // Baru';
+	/// id: 'Dompet baru'
+	String get addStepLabel => 'Dompet baru';
 
-	/// id: 'Dompet // Ubah'
-	String get editStepLabel => 'Dompet // Ubah';
+	/// id: 'Ubah dompet'
+	String get editStepLabel => 'Ubah dompet';
 
-	/// id: 'Nama Dompet'
-	String get nameLabel => 'Nama Dompet';
+	/// id: 'Nama dompet'
+	String get nameLabel => 'Nama dompet';
 
 	/// id: 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai'
 	String get nameHint => 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai';
@@ -656,20 +572,20 @@ class Translations$wallet$id {
 	/// id: 'Maks. 24 karakter'
 	String get nameMaxHint => 'Maks. 24 karakter';
 
-	/// id: 'Pilih Ikon'
-	String get iconLabel => 'Pilih Ikon';
+	/// id: 'Pilih ikon'
+	String get iconLabel => 'Pilih ikon';
 
-	/// id: 'Saldo Awal Saat Ini'
-	String get initialBalanceLabel => 'Saldo Awal Saat Ini';
+	/// id: 'Saldo awal saat ini'
+	String get initialBalanceLabel => 'Saldo awal saat ini';
 
 	/// id: 'Saldo awal adalah uang di dompet ini sekarang, titik mulai pencatatanmu. Setiap transaksi berikutnya dihitung dari sini.'
 	String get initialBalanceHelp => 'Saldo awal adalah uang di dompet ini sekarang, titik mulai pencatatanmu. Setiap transaksi berikutnya dihitung dari sini.';
 
-	/// id: 'Saldo Tercatat Saat Ini'
-	String get currentBalanceLabel => 'Saldo Tercatat Saat Ini';
+	/// id: 'Saldo tercatat saat ini'
+	String get currentBalanceLabel => 'Saldo tercatat saat ini';
 
-	/// id: 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.'
-	String get editBalanceNote => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.';
+	/// id: 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat Catat.'
+	String get editBalanceNote => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat Catat.';
 
 	/// id: 'Dompet aktif'
 	String get activeSwitchLabel => 'Dompet aktif';
@@ -677,11 +593,11 @@ class Translations$wallet$id {
 	/// id: 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.'
 	String get activeSwitchHelp => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.';
 
-	/// id: 'Simpan Dompet'
-	String get saveAddAction => 'Simpan Dompet';
+	/// id: 'Simpan dompet'
+	String get saveAddAction => 'Simpan dompet';
 
-	/// id: 'Hapus Dompet'
-	String get deleteAction => 'Hapus Dompet';
+	/// id: 'Hapus dompet'
+	String get deleteAction => 'Hapus dompet';
 
 	/// id: 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.'
 	String get deleteHelp => 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.';
@@ -713,8 +629,8 @@ class Translations$wallet$id {
 	/// id: 'Sunting'
 	String get detailEditAction => 'Sunting';
 
-	/// id: 'Transaksi Bulan Ini'
-	String get detailRecentHeading => 'Transaksi Bulan Ini';
+	/// id: 'Transaksi bulan ini'
+	String get detailRecentHeading => 'Transaksi bulan ini';
 
 	/// id: 'Pemasukan'
 	String get detailIncomeLabel => 'Pemasukan';
@@ -728,11 +644,11 @@ class Translations$wallet$id {
 	/// id: 'Belum ada transaksi bulan ini untuk dompet ini.'
 	String get detailRecentEmpty => 'Belum ada transaksi bulan ini untuk dompet ini.';
 
-	/// id: 'Lihat Semua Transaksi'
-	String get detailViewAllAction => 'Lihat Semua Transaksi';
+	/// id: 'Lihat semua transaksi'
+	String get detailViewAllAction => 'Lihat semua transaksi';
 
-	/// id: 'Catat Transaksi Dompet Ini'
-	String get detailRecordAction => 'Catat Transaksi Dompet Ini';
+	/// id: 'Catat transaksi'
+	String get detailRecordAction => 'Catat transaksi';
 
 	/// id: 'Transfer masuk'
 	String get detailTransferInLabel => 'Transfer masuk';
@@ -755,12 +671,6 @@ class Translations$budget$id {
 	/// id: '$count aktif'
 	String activeBadge({required Object count}) => '${count} aktif';
 
-	/// id: 'Total rencana anggaran aktif'
-	String get summaryTitle => 'Total rencana anggaran aktif';
-
-	/// id: '$percent% terpakai'
-	String summaryPercent({required Object percent}) => '${percent}% terpakai';
-
 	/// id: 'Rencana'
 	String get plannedLabel => 'Rencana';
 
@@ -769,15 +679,6 @@ class Translations$budget$id {
 
 	/// id: 'Sisa'
 	String get remainingLabel => 'Sisa';
-
-	/// id: 'Terpakai ($percent%)'
-	String spentPercentLabel({required Object percent}) => 'Terpakai (${percent}%)';
-
-	/// id: 'Periode berjalan ($percent%)'
-	String paceLabel({required Object percent}) => 'Periode berjalan (${percent}%)';
-
-	/// id: 'Anggaran adalah rencana belanjamu. Angka terpakai naik setiap kali pengeluaran atau transfer yang ditautkan dicatat.'
-	String get summaryNote => 'Anggaran adalah rencana belanjamu. Angka terpakai naik setiap kali pengeluaran atau transfer yang ditautkan dicatat.';
 
 	/// id: 'Semua'
 	String get filterAll => 'Semua';
@@ -791,14 +692,11 @@ class Translations$budget$id {
 	/// id: 'Nonaktif'
 	String get filterArchived => 'Nonaktif';
 
-	/// id: 'Dompet'
-	String get filterWalletLabel => 'Dompet';
-
 	/// id: 'Semua dompet'
 	String get filterWalletAll => 'Semua dompet';
 
-	/// id: 'Buat Anggaran Baru'
-	String get addAction => 'Buat Anggaran Baru';
+	/// id: 'Buat anggaran'
+	String get addAction => 'Buat anggaran';
 
 	/// id: 'Mingguan'
 	String get periodWeekly => 'Mingguan';
@@ -820,9 +718,6 @@ class Translations$budget$id {
 
 	/// id: '$count pos'
 	String itemCount({required Object count}) => '${count} pos';
-
-	/// id: 'Slot rencana kosong'
-	String get emptyBadge => 'Slot rencana kosong';
 
 	/// id: 'Belum ada anggaran'
 	String get emptyTitle => 'Belum ada anggaran';
@@ -872,14 +767,14 @@ class Translations$budget$id {
 	/// id: 'Sunting anggaran'
 	String get editStepLabel => 'Sunting anggaran';
 
-	/// id: 'Buat Anggaran'
-	String get addTitle => 'Buat Anggaran';
+	/// id: 'Buat anggaran'
+	String get addTitle => 'Buat anggaran';
 
-	/// id: 'Ubah Anggaran'
-	String get editTitle => 'Ubah Anggaran';
+	/// id: 'Ubah anggaran'
+	String get editTitle => 'Ubah anggaran';
 
-	/// id: 'Aturan Anggaran'
-	String get ruleTitle => 'Aturan Anggaran';
+	/// id: 'Aturan anggaran'
+	String get ruleTitle => 'Aturan anggaran';
 
 	/// id: 'Rencana ini jadi patokan belanjamu. Saldo dompet bergerak dari transaksi yang kamu catat.'
 	String get ruleBody => 'Rencana ini jadi patokan belanjamu. Saldo dompet bergerak dari transaksi yang kamu catat.';
@@ -917,23 +812,23 @@ class Translations$budget$id {
 	/// id: 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.'
 	String get itemsHelp => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.';
 
-	/// id: 'Tambah Pos'
-	String get addItemAction => 'Tambah Pos';
+	/// id: 'Tambah pos'
+	String get addItemAction => 'Tambah pos';
 
-	/// id: 'Simpan Anggaran'
-	String get saveAddAction => 'Simpan Anggaran';
+	/// id: 'Simpan anggaran'
+	String get saveAddAction => 'Simpan anggaran';
 
-	/// id: 'Arsipkan Anggaran'
-	String get archiveAction => 'Arsipkan Anggaran';
+	/// id: 'Arsipkan anggaran'
+	String get archiveAction => 'Arsipkan anggaran';
 
-	/// id: 'Aktifkan Kembali'
-	String get unarchiveAction => 'Aktifkan Kembali';
+	/// id: 'Aktifkan kembali'
+	String get unarchiveAction => 'Aktifkan kembali';
 
 	/// id: 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.'
 	String get archiveHelp => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.';
 
-	/// id: 'Hapus Anggaran'
-	String get deleteAction => 'Hapus Anggaran';
+	/// id: 'Hapus anggaran'
+	String get deleteAction => 'Hapus anggaran';
 
 	/// id: 'Hapus anggaran?'
 	String get deleteConfirmTitle => 'Hapus anggaran?';
@@ -941,11 +836,11 @@ class Translations$budget$id {
 	/// id: 'Anggaran "$name" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.'
 	String deleteConfirmMessage({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.';
 
-	/// id: 'Tambah Pos'
-	String get itemAddTitle => 'Tambah Pos';
+	/// id: 'Tambah pos'
+	String get itemAddTitle => 'Tambah pos';
 
-	/// id: 'Ubah Pos'
-	String get itemEditTitle => 'Ubah Pos';
+	/// id: 'Ubah pos'
+	String get itemEditTitle => 'Ubah pos';
 
 	/// id: 'Nama pos'
 	String get itemNameLabel => 'Nama pos';
@@ -974,41 +869,38 @@ class Translations$budget$id {
 	/// id: '$quantity × $price'
 	String itemItemizedDetail({required Object quantity, required Object price}) => '${quantity} × ${price}';
 
-	/// id: 'Simpan Pos'
-	String get itemSaveAction => 'Simpan Pos';
+	/// id: 'Simpan pos'
+	String get itemSaveAction => 'Simpan pos';
 
-	/// id: 'Hapus Pos'
-	String get itemDeleteAction => 'Hapus Pos';
+	/// id: 'Hapus pos'
+	String get itemDeleteAction => 'Hapus pos';
 
-	/// id: 'Daftar Anggaran'
-	String get detailBackLabel => 'Daftar Anggaran';
+	/// id: 'Daftar anggaran'
+	String get detailBackLabel => 'Daftar anggaran';
 
 	/// id: 'Sunting anggaran'
 	String get detailEditAction => 'Sunting anggaran';
 
-	/// id: 'Catat Pengeluaran'
-	String get detailRecordExpenseAction => 'Catat Pengeluaran';
+	/// id: 'Catat pengeluaran'
+	String get detailRecordExpenseAction => 'Catat pengeluaran';
 
-	/// id: 'Catat Transfer'
-	String get detailRecordTransferAction => 'Catat Transfer';
+	/// id: 'Catat transfer'
+	String get detailRecordTransferAction => 'Catat transfer';
 
-	/// id: 'Pos Anggaran'
-	String get detailItemsHeading => 'Pos Anggaran';
+	/// id: 'Pos anggaran'
+	String get detailItemsHeading => 'Pos anggaran';
 
 	/// id: 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.'
 	String get detailNoItems => 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.';
 
-	/// id: 'Transaksi Tertaut'
-	String get detailLinkedHeading => 'Transaksi Tertaut';
+	/// id: 'Transaksi tertaut'
+	String get detailLinkedHeading => 'Transaksi tertaut';
 
 	/// id: 'Belum ada transaksi yang tertaut ke anggaran ini.'
 	String get detailLinkedEmpty => 'Belum ada transaksi yang tertaut ke anggaran ini.';
 
 	/// id: 'Cara kerja pos anggaran'
 	String get detailHowTitle => 'Cara kerja pos anggaran';
-
-	/// id: 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari $wallet; pos transfer menghitung transfer dari $wallet ke dompet tujuannya.'
-	String detailHowBody({required Object wallet}) => 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari ${wallet}; pos transfer menghitung transfer dari ${wallet} ke dompet tujuannya.';
 
 	/// id: 'Dompet tidak ditemukan'
 	String get unknownWallet => 'Dompet tidak ditemukan';
@@ -1049,11 +941,11 @@ class Translations$budget$id {
 	/// id: 'Pos transfer "$name" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.'
 	String itemTargetConflict({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.';
 
-	/// id: 'Template Anggaran'
-	String get templatesAction => 'Template Anggaran';
+	/// id: 'Template anggaran'
+	String get templatesAction => 'Template anggaran';
 
-	/// id: 'Template Anggaran'
-	String get templatesTitle => 'Template Anggaran';
+	/// id: 'Template anggaran'
+	String get templatesTitle => 'Template anggaran';
 
 	/// id: '$count tersimpan'
 	String templatesSavedBadge({required Object count}) => '${count} tersimpan';
@@ -1073,8 +965,8 @@ class Translations$budget$id {
 	/// id: 'Total rencana'
 	String get templateTotalLabel => 'Total rencana';
 
-	/// id: 'Gunakan Template Ini'
-	String get templateUseAction => 'Gunakan Template Ini';
+	/// id: 'Gunakan template ini'
+	String get templateUseAction => 'Gunakan template ini';
 
 	/// id: 'Ubah'
 	String get templateEditAction => 'Ubah';
@@ -1085,8 +977,8 @@ class Translations$budget$id {
 	/// id: 'Nonaktif'
 	String get templateInactiveBadge => 'Nonaktif';
 
-	/// id: 'Buat Template Baru'
-	String get templateAddAction => 'Buat Template Baru';
+	/// id: 'Buat template'
+	String get templateAddAction => 'Buat template';
 
 	/// id: 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.'
 	String get templatesFooter => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.';
@@ -1106,14 +998,11 @@ class Translations$budget$id {
 	/// id: 'Template gagal dimuat'
 	String get templatesLoadError => 'Template gagal dimuat';
 
-	/// id: 'Template anggaran'
-	String get templateStepLabel => 'Template anggaran';
+	/// id: 'Buat template'
+	String get templateAddTitle => 'Buat template';
 
-	/// id: 'Buat Template'
-	String get templateAddTitle => 'Buat Template';
-
-	/// id: 'Ubah Template'
-	String get templateEditTitle => 'Ubah Template';
+	/// id: 'Ubah template'
+	String get templateEditTitle => 'Ubah template';
 
 	/// id: 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.'
 	String get templateRuleBody => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.';
@@ -1127,11 +1016,11 @@ class Translations$budget$id {
 	/// id: 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.'
 	String get templateEnabledHelp => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.';
 
-	/// id: 'Simpan Template'
-	String get templateSaveAction => 'Simpan Template';
+	/// id: 'Simpan template'
+	String get templateSaveAction => 'Simpan template';
 
-	/// id: 'Hapus Template'
-	String get templateDeleteAction => 'Hapus Template';
+	/// id: 'Hapus template'
+	String get templateDeleteAction => 'Hapus template';
 
 	/// id: 'Hapus template?'
 	String get templateDeleteConfirmTitle => 'Hapus template?';
@@ -1153,9 +1042,6 @@ class Translations$budget$id {
 
 	/// id: '$name (salinan)'
 	String templateCopyName({required Object name}) => '${name} (salinan)';
-
-	/// id: 'Dari template $name'
-	String fromTemplateStepLabel({required Object name}) => 'Dari template ${name}';
 
 	/// id: 'Nama template'
 	String get templateNameLabel => 'Nama template';
@@ -1208,26 +1094,20 @@ class Translations$freelance$id {
 	/// id: 'Freelance'
 	String get title => 'Freelance';
 
-	/// id: 'Worklog ($count)'
-	String worklogTab({required Object count}) => 'Worklog (${count})';
+	/// id: 'Jam kerja ($count)'
+	String worklogTab({required Object count}) => 'Jam kerja (${count})';
 
-	/// id: 'Pembayaran ($count)'
-	String paymentsTab({required Object count}) => 'Pembayaran (${count})';
+	/// id: 'Tagihan ($count)'
+	String paymentsTab({required Object count}) => 'Tagihan (${count})';
 
 	/// id: 'Data freelance gagal dimuat'
 	String get loadErrorTitle => 'Data freelance gagal dimuat';
 
-	/// id: 'Aturan kas freelance'
-	String get ruleTitle => 'Aturan kas freelance';
+	/// id: 'Cara Freelance mencatat'
+	String get ruleTitle => 'Cara Freelance mencatat';
 
-	/// id: 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat pembayarannya dicatat diterima.'
-	String get ruleBody => 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat pembayarannya dicatat diterima.';
-
-	/// id: 'Ringkasan upah & jam'
-	String get summaryTitle => 'Ringkasan upah & jam';
-
-	/// id: 'Waktu kerja'
-	String get totalHoursLabel => 'Waktu kerja';
+	/// id: 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat tagihannya dicatat diterima.'
+	String get ruleBody => 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat tagihannya dicatat diterima.';
 
 	/// id: '$hours jam'
 	String hoursValue({required Object hours}) => '${hours} jam';
@@ -1241,23 +1121,11 @@ class Translations$freelance$id {
 	/// id: 'Total diperoleh'
 	String get earnedLabel => 'Total diperoleh';
 
-	/// id: 'Jam × tarif, sebelum potongan'
-	String get earnedCaption => 'Jam × tarif, sebelum potongan';
-
 	/// id: 'Sudah diterima'
 	String get paidLabel => 'Sudah diterima';
 
-	/// id: 'Gaji kotor · pembayarannya sudah dicatat'
-	String get paidCaption => 'Gaji kotor · pembayarannya sudah dicatat';
-
 	/// id: 'Belum diterima'
 	String get unpaidLabel => 'Belum diterima';
-
-	/// id: 'Gaji kotor · belum ditagih atau tertunda'
-	String get unpaidCaption => 'Gaji kotor · belum ditagih atau tertunda';
-
-	/// id: '$percent% sudah diterima'
-	String paidRatio({required Object percent}) => '${percent}% sudah diterima';
 
 	/// id: 'Proyek'
 	String get projectsLabel => 'Proyek';
@@ -1265,14 +1133,11 @@ class Translations$freelance$id {
 	/// id: 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.'
 	String get projectsEmpty => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.';
 
-	/// id: 'Proyek freelance'
-	String get projectStepLabel => 'Proyek freelance';
+	/// id: 'Tambah proyek'
+	String get projectAddTitle => 'Tambah proyek';
 
-	/// id: 'Tambah Proyek'
-	String get projectAddTitle => 'Tambah Proyek';
-
-	/// id: 'Ubah Proyek'
-	String get projectEditTitle => 'Ubah Proyek';
+	/// id: 'Ubah proyek'
+	String get projectEditTitle => 'Ubah proyek';
 
 	/// id: 'Nama klien atau proyek'
 	String get projectNameLabel => 'Nama klien atau proyek';
@@ -1286,14 +1151,14 @@ class Translations$freelance$id {
 	/// id: 'Tarif per jam'
 	String get hourlyRateLabel => 'Tarif per jam';
 
-	/// id: 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.'
-	String get hourlyRateHelp => 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.';
+	/// id: 'Tarif bawaan untuk jam kerja baru. Mengubahnya tidak mengubah jam kerja yang sudah dicatat.'
+	String get hourlyRateHelp => 'Tarif bawaan untuk jam kerja baru. Mengubahnya tidak mengubah jam kerja yang sudah dicatat.';
 
 	/// id: 'Potongan'
 	String get deductionsLabel => 'Potongan';
 
-	/// id: 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.'
-	String get deductionsHelp => 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.';
+	/// id: 'Dipotong dari gaji kotor setiap tagihan, misalnya pajak. Mengubahnya tidak mengubah tagihan yang sudah dibuat.'
+	String get deductionsHelp => 'Dipotong dari gaji kotor setiap tagihan, misalnya pajak. Mengubahnya tidak mengubah tagihan yang sudah dibuat.';
 
 	/// id: 'Tambah potongan'
 	String get deductionAddAction => 'Tambah potongan';
@@ -1319,8 +1184,8 @@ class Translations$freelance$id {
 	/// id: 'Paling banyak satu angka di belakang koma, misalnya 2,5.'
 	String get deductionPercentHelp => 'Paling banyak satu angka di belakang koma, misalnya 2,5.';
 
-	/// id: 'Nominal per pembayaran'
-	String get deductionAmountLabel => 'Nominal per pembayaran';
+	/// id: 'Nominal per tagihan'
+	String get deductionAmountLabel => 'Nominal per tagihan';
 
 	/// id: 'Simpan potongan'
 	String get deductionSaveAction => 'Simpan potongan';
@@ -1334,8 +1199,8 @@ class Translations$freelance$id {
 	/// id: 'Hapus proyek'
 	String get projectDeleteAction => 'Hapus proyek';
 
-	/// id: 'Proyek yang sudah punya entri worklog tidak bisa dihapus.'
-	String get projectDeleteLockedHint => 'Proyek yang sudah punya entri worklog tidak bisa dihapus.';
+	/// id: 'Proyek yang sudah punya jam kerja tidak bisa dihapus.'
+	String get projectDeleteLockedHint => 'Proyek yang sudah punya jam kerja tidak bisa dihapus.';
 
 	/// id: 'Hapus proyek?'
 	String get projectDeleteConfirmTitle => 'Hapus proyek?';
@@ -1343,8 +1208,8 @@ class Translations$freelance$id {
 	/// id: 'Proyek "$name" akan dihapus.'
 	String projectDeleteConfirmMessage({required Object name}) => 'Proyek "${name}" akan dihapus.';
 
-	/// id: 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.'
-	String get projectDeleteRefused => 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.';
+	/// id: 'Proyek ini sudah punya jam kerja, jadi tidak bisa dihapus.'
+	String get projectDeleteRefused => 'Proyek ini sudah punya jam kerja, jadi tidak bisa dihapus.';
 
 	/// id: 'Proyek tersimpan.'
 	String get projectSavedMessage => 'Proyek tersimpan.';
@@ -1361,17 +1226,14 @@ class Translations$freelance$id {
 	/// id: 'Pilih proyek'
 	String get projectPick => 'Pilih proyek';
 
-	/// id: 'Log pekerjaan'
-	String get entryStepLabel => 'Log pekerjaan';
+	/// id: 'Catat jam kerja'
+	String get entryAddTitle => 'Catat jam kerja';
 
-	/// id: 'Tambah Worklog'
-	String get entryAddTitle => 'Tambah Worklog';
+	/// id: 'Ubah jam kerja'
+	String get entryEditTitle => 'Ubah jam kerja';
 
-	/// id: 'Ubah Worklog'
-	String get entryEditTitle => 'Ubah Worklog';
-
-	/// id: 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat pembayarannya dicatat diterima.'
-	String get entryRuleBody => 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat pembayarannya dicatat diterima.';
+	/// id: 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat tagihannya dicatat diterima.'
+	String get entryRuleBody => 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat tagihannya dicatat diterima.';
 
 	/// id: 'Tanggal kerja'
 	String get workDateLabel => 'Tanggal kerja';
@@ -1379,8 +1241,8 @@ class Translations$freelance$id {
 	/// id: 'Durasi pengerjaan'
 	String get hoursLabel => 'Durasi pengerjaan';
 
-	/// id: 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.'
-	String get entryRateHelp => 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.';
+	/// id: 'Terisi dari tarif proyek. Ubah kalau tarif kali ini berbeda.'
+	String get entryRateHelp => 'Terisi dari tarif proyek. Ubah kalau tarif kali ini berbeda.';
 
 	/// id: 'Catatan'
 	String get noteLabel => 'Catatan';
@@ -1388,32 +1250,32 @@ class Translations$freelance$id {
 	/// id: 'Apa yang dikerjakan (opsional)'
 	String get noteHint => 'Apa yang dikerjakan (opsional)';
 
-	/// id: 'Simpan Worklog'
-	String get entrySaveAction => 'Simpan Worklog';
+	/// id: 'Simpan jam kerja'
+	String get entrySaveAction => 'Simpan jam kerja';
 
 	/// id: 'Nominal ini tercatat sebagai diperoleh, belum diterima.'
 	String get entrySaveHint => 'Nominal ini tercatat sebagai diperoleh, belum diterima.';
 
-	/// id: 'Hapus entri'
-	String get entryDeleteAction => 'Hapus entri';
+	/// id: 'Hapus jam kerja'
+	String get entryDeleteAction => 'Hapus jam kerja';
 
-	/// id: 'Hapus entri worklog?'
-	String get entryDeleteConfirmTitle => 'Hapus entri worklog?';
+	/// id: 'Hapus jam kerja ini?'
+	String get entryDeleteConfirmTitle => 'Hapus jam kerja ini?';
 
-	/// id: 'Entri ini akan dihapus. Saldo dompet tidak berubah.'
-	String get entryDeleteConfirmMessage => 'Entri ini akan dihapus. Saldo dompet tidak berubah.';
+	/// id: 'Jam kerja ini dihapus. Saldo dompet tidak berubah.'
+	String get entryDeleteConfirmMessage => 'Jam kerja ini dihapus. Saldo dompet tidak berubah.';
 
-	/// id: 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.'
-	String get entryLockedMessage => 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.';
+	/// id: 'Jam kerja yang sudah masuk tagihan tidak bisa diubah atau dihapus.'
+	String get entryLockedMessage => 'Jam kerja yang sudah masuk tagihan tidak bisa diubah atau dihapus.';
 
-	/// id: 'Worklog tersimpan.'
-	String get entrySavedMessage => 'Worklog tersimpan.';
+	/// id: 'Jam kerja tercatat.'
+	String get entrySavedMessage => 'Jam kerja tercatat.';
 
-	/// id: 'Perubahan worklog tersimpan.'
-	String get entryUpdatedMessage => 'Perubahan worklog tersimpan.';
+	/// id: 'Perubahan jam kerja tersimpan.'
+	String get entryUpdatedMessage => 'Perubahan jam kerja tersimpan.';
 
-	/// id: 'Worklog dihapus.'
-	String get entryDeletedMessage => 'Worklog dihapus.';
+	/// id: 'Jam kerja dihapus.'
+	String get entryDeletedMessage => 'Jam kerja dihapus.';
 
 	/// id: '$hours jam × $rate'
 	String hoursTimesRate({required Object hours, required Object rate}) => '${hours} jam × ${rate}';
@@ -1442,26 +1304,17 @@ class Translations$freelance$id {
 	/// id: 'Tertunda (bersih)'
 	String get pendingTotalLabel => 'Tertunda (bersih)';
 
-	/// id: 'Diterima (bersih)'
-	String get paidTotalLabel => 'Diterima (bersih)';
+	/// id: 'Buat tagihan'
+	String get paymentAddTitle => 'Buat tagihan';
 
-	/// id: '$count pembayaran'
-	String paymentCount({required Object count}) => '${count} pembayaran';
+	/// id: 'Tagihan mengelompokkan jam kerja yang belum ditagih. Saat dicatat diterima, saldo dompet bertambah.'
+	String get paymentCreateRuleBody => 'Tagihan mengelompokkan jam kerja yang belum ditagih. Saat dicatat diterima, saldo dompet bertambah.';
 
-	/// id: 'Pembayaran freelance'
-	String get paymentStepLabel => 'Pembayaran freelance';
+	/// id: 'Ditagih: $count catatan, $hours jam'
+	String paymentEntriesLabel({required Object count, required Object hours}) => 'Ditagih: ${count} catatan, ${hours} jam';
 
-	/// id: 'Buat Pembayaran'
-	String get paymentAddTitle => 'Buat Pembayaran';
-
-	/// id: 'Pembayaran mengelompokkan jam kerja jadi satu tagihan. Saat dicatat diterima, saldo dompet bertambah.'
-	String get paymentCreateRuleBody => 'Pembayaran mengelompokkan jam kerja jadi satu tagihan. Saat dicatat diterima, saldo dompet bertambah.';
-
-	/// id: 'Entri ditagih: $count ($hours jam)'
-	String paymentEntriesLabel({required Object count, required Object hours}) => 'Entri ditagih: ${count} (${hours} jam)';
-
-	/// id: '$count entri · $hours jam'
-	String paymentEntriesSummary({required Object count, required Object hours}) => '${count} entri · ${hours} jam';
+	/// id: '$count catatan · $hours jam'
+	String paymentEntriesSummary({required Object count, required Object hours}) => '${count} catatan · ${hours} jam';
 
 	/// id: 'Perkiraan tanggal diterima'
 	String get expectedDateLabel => 'Perkiraan tanggal diterima';
@@ -1475,8 +1328,8 @@ class Translations$freelance$id {
 	/// id: 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.'
 	String get netPayNotPositive => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.';
 
-	/// id: 'Buat Pembayaran'
-	String get paymentCreateAction => 'Buat Pembayaran';
+	/// id: 'Buat tagihan'
+	String get paymentCreateAction => 'Buat tagihan';
 
 	/// id: 'Ubah tanggal'
 	String get paymentChangeDateAction => 'Ubah tanggal';
@@ -1484,32 +1337,32 @@ class Translations$freelance$id {
 	/// id: 'Hapus'
 	String get paymentDeleteAction => 'Hapus';
 
-	/// id: 'Hapus pembayaran?'
-	String get paymentDeleteConfirmTitle => 'Hapus pembayaran?';
+	/// id: 'Hapus tagihan?'
+	String get paymentDeleteConfirmTitle => 'Hapus tagihan?';
 
-	/// id: 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.'
-	String get paymentDeleteConfirmMessage => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.';
+	/// id: 'Tagihan tertunda ini dihapus dan jam kerjanya kembali belum ditagih. Saldo dompet tidak berubah.'
+	String get paymentDeleteConfirmMessage => 'Tagihan tertunda ini dihapus dan jam kerjanya kembali belum ditagih. Saldo dompet tidak berubah.';
 
-	/// id: 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.'
-	String get paymentEntriesInvalid => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.';
+	/// id: 'Jam kerja yang dipilih sudah ditagih atau bukan milik proyek ini.'
+	String get paymentEntriesInvalid => 'Jam kerja yang dipilih sudah ditagih atau bukan milik proyek ini.';
 
-	/// id: 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.'
-	String get paymentPaidLocked => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.';
+	/// id: 'Tagihan yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.'
+	String get paymentPaidLocked => 'Tagihan yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.';
 
-	/// id: 'Pembayaran ini sudah dicatat diterima.'
-	String get paymentAlreadyPaid => 'Pembayaran ini sudah dicatat diterima.';
+	/// id: 'Tagihan ini sudah dicatat diterima.'
+	String get paymentAlreadyPaid => 'Tagihan ini sudah dicatat diterima.';
 
-	/// id: 'Pembayaran dibuat.'
-	String get paymentCreatedMessage => 'Pembayaran dibuat.';
+	/// id: 'Tagihan dibuat.'
+	String get paymentCreatedMessage => 'Tagihan dibuat.';
 
-	/// id: 'Tanggal pembayaran diperbarui.'
-	String get paymentUpdatedMessage => 'Tanggal pembayaran diperbarui.';
+	/// id: 'Tanggal tagihan diperbarui.'
+	String get paymentUpdatedMessage => 'Tanggal tagihan diperbarui.';
 
-	/// id: 'Pembayaran dihapus.'
-	String get paymentDeletedMessage => 'Pembayaran dihapus.';
+	/// id: 'Tagihan dihapus.'
+	String get paymentDeletedMessage => 'Tagihan dihapus.';
 
-	/// id: 'Catat Pembayaran Diterima'
-	String get receiveTitle => 'Catat Pembayaran Diterima';
+	/// id: 'Catat tagihan diterima'
+	String get receiveTitle => 'Catat tagihan diterima';
 
 	/// id: 'Honor sudah masuk'
 	String get receiveRuleTitle => 'Honor sudah masuk';
@@ -1526,14 +1379,14 @@ class Translations$freelance$id {
 	/// id: 'Tanggal diterima'
 	String get receiveDateLabel => 'Tanggal diterima';
 
-	/// id: 'Pembayaran freelance $project'
-	String receiveNoteDefault({required Object project}) => 'Pembayaran freelance ${project}';
+	/// id: 'Tagihan freelance $project'
+	String receiveNoteDefault({required Object project}) => 'Tagihan freelance ${project}';
 
-	/// id: 'Catat Diterima'
-	String get receiveAction => 'Catat Diterima';
+	/// id: 'Catat diterima'
+	String get receiveAction => 'Catat diterima';
 
-	/// id: 'Pembayaran dicatat diterima. Saldo dompet bertambah.'
-	String get paymentReceivedMessage => 'Pembayaran dicatat diterima. Saldo dompet bertambah.';
+	/// id: 'Tagihan dicatat diterima. Saldo dompet bertambah.'
+	String get paymentReceivedMessage => 'Tagihan dicatat diterima. Saldo dompet bertambah.';
 
 	/// id: 'Batalkan penerimaan'
 	String get receiptCancelAction => 'Batalkan penerimaan';
@@ -1541,11 +1394,11 @@ class Translations$freelance$id {
 	/// id: 'Batalkan penerimaan?'
 	String get receiptCancelConfirmTitle => 'Batalkan penerimaan?';
 
-	/// id: 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.'
-	String get receiptCancelConfirmMessage => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.';
+	/// id: 'Pemasukannya dihapus dan saldo dompet berkurang kembali. Tagihan kembali tertunda.'
+	String get receiptCancelConfirmMessage => 'Pemasukannya dihapus dan saldo dompet berkurang kembali. Tagihan kembali tertunda.';
 
-	/// id: 'Penerimaan dibatalkan. Pembayaran kembali tertunda.'
-	String get receiptCancelledMessage => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.';
+	/// id: 'Penerimaan dibatalkan. Tagihan kembali tertunda.'
+	String get receiptCancelledMessage => 'Penerimaan dibatalkan. Tagihan kembali tertunda.';
 
 	/// id: 'Ubah'
 	String get changeAction => 'Ubah';
@@ -1557,40 +1410,25 @@ class Translations$freelance$id {
 	String billAction({required Object count}) => 'Tagih (${count})';
 
 	/// id: 'Belum ada jam kerja'
-	String get entriesEmptyBadge => 'Belum ada jam kerja';
+	String get entriesEmptyTitle => 'Belum ada jam kerja';
 
-	/// id: 'Belum ada worklog'
-	String get entriesEmptyTitle => 'Belum ada worklog';
+	/// id: 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.'
+	String get entriesEmptyBody => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.';
 
-	/// id: 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah.'
-	String get entriesEmptyBody => 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah.';
+	/// id: 'Tidak ada jam kerja dengan status ini.'
+	String get entriesFilteredEmpty => 'Tidak ada jam kerja dengan status ini.';
 
-	/// id: 'Tidak ada entri dengan status ini.'
-	String get entriesFilteredEmpty => 'Tidak ada entri dengan status ini.';
-
-	/// id: '+ Worklog'
-	String get entryAddShortAction => '+ Worklog';
-
-	/// id: '$count entri'
-	String entryCountLabel({required Object count}) => '${count} entri';
+	/// id: 'Catat jam kerja'
+	String get entryAddShortAction => 'Catat jam kerja';
 
 	/// id: 'Semua'
 	String get filterAll => 'Semua';
 
-	/// id: 'Terakhir $date'
-	String lastEntryOn({required Object date}) => 'Terakhir ${date}';
-
 	/// id: 'Tanpa potongan'
 	String get noDeductions => 'Tanpa potongan';
 
-	/// id: 'Belum ada entri'
-	String get noEntriesYet => 'Belum ada entri';
-
 	/// id: 'Total $hours jam · $amount'
 	String projectTotals({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}';
-
-	/// id: 'Slot proyek kosong'
-	String get projectsEmptyBadge => 'Slot proyek kosong';
 
 	/// id: 'Belum ada proyek'
 	String get projectsEmptyTitle => 'Belum ada proyek';
@@ -1598,20 +1436,14 @@ class Translations$freelance$id {
 	/// id: 'Belum ditagih'
 	String get unbilledLabel => 'Belum ditagih';
 
-	/// id: 'Semua sudah ditagih'
-	String get unbilledNone => 'Semua sudah ditagih';
-
 	/// id: 'Belum ada tagihan'
-	String get paymentsEmptyBadge => 'Belum ada tagihan';
+	String get paymentsEmptyTitle => 'Belum ada tagihan';
 
-	/// id: 'Belum ada pembayaran'
-	String get paymentsEmptyTitle => 'Belum ada pembayaran';
+	/// id: 'Kumpulkan jam kerja yang belum ditagih jadi satu tagihan, lalu catat saat dibayar.'
+	String get paymentsEmptyBody => 'Kumpulkan jam kerja yang belum ditagih jadi satu tagihan, lalu catat saat dibayar.';
 
-	/// id: 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.'
-	String get paymentsEmptyBody => 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.';
-
-	/// id: 'Tidak ada pembayaran dengan status ini.'
-	String get paymentsFilteredEmpty => 'Tidak ada pembayaran dengan status ini.';
+	/// id: 'Tidak ada tagihan dengan status ini.'
+	String get paymentsFilteredEmpty => 'Tidak ada tagihan dengan status ini.';
 
 	/// id: '$count tagihan · terdekat $date'
 	String nextExpected({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}';
@@ -1640,21 +1472,6 @@ class Translations$home$id {
 	/// id: '$count dompet aktif'
 	String walletCount({required Object count}) => '${count} dompet aktif';
 
-	/// id: '+$count lainnya'
-	String moreWallets({required Object count}) => '+${count} lainnya';
-
-	/// id: 'Mulai catat'
-	String get startBadge => 'Mulai catat';
-
-	/// id: 'Belum ada saldo dompet yang tercatat.'
-	String get noWalletsBody => 'Belum ada saldo dompet yang tercatat.';
-
-	/// id: 'Pemasukan $month'
-	String incomeLabel({required Object month}) => 'Pemasukan ${month}';
-
-	/// id: 'Pengeluaran $month'
-	String expenseLabel({required Object month}) => 'Pengeluaran ${month}';
-
 	/// id: 'Anggaran aktif'
 	String get budgetTitle => 'Anggaran aktif';
 
@@ -1664,14 +1481,11 @@ class Translations$home$id {
 	/// id: 'Lewat rencana'
 	String get budgetOver => 'Lewat rencana';
 
-	/// id: 'Lihat Anggaran'
-	String get budgetAction => 'Lihat Anggaran';
+	/// id: 'Lihat anggaran'
+	String get budgetAction => 'Lihat anggaran';
 
 	/// id: 'Freelance'
 	String get freelanceTitle => 'Freelance';
-
-	/// id: 'Diterima: $amount'
-	String freelancePaid({required Object amount}) => 'Diterima: ${amount}';
 
 	/// id: 'Lihat Freelance'
 	String get freelanceAction => 'Lihat Freelance';
@@ -1681,9 +1495,6 @@ class Translations$home$id {
 
 	/// id: 'Lihat semua'
 	String get seeAll => 'Lihat semua';
-
-	/// id: 'Inventaris kosong'
-	String get emptyBadge => 'Inventaris kosong';
 
 	/// id: 'Mulai dari dompetmu'
 	String get firstTitle => 'Mulai dari dompetmu';
@@ -1721,9 +1532,6 @@ class Translations$home$id {
 	/// id: 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.'
 	String get emptyBody => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.';
 
-	/// id: 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.'
-	String get emptyNoWalletBody => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.';
-
 	/// id: 'Catat transaksi'
 	String get recordAction => 'Catat transaksi';
 
@@ -1733,59 +1541,8 @@ class Translations$home$id {
 	/// id: 'Atau buat anggaran pengeluaran'
 	String get budgetLink => 'Atau buat anggaran pengeluaran';
 
-	/// id: 'Panduan singkat'
-	String get guideTitle => 'Panduan singkat';
-
-	/// id: '3 aturan utama'
-	String get guideCount => '3 aturan utama';
-
-	/// id: 'Dompet'
-	String get guideWalletTitle => 'Dompet';
-
-	/// id: 'Aset nyata'
-	String get guideWalletTag => 'Aset nyata';
-
-	/// id: 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.'
-	String get guideWalletBody => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.';
-
-	/// id: 'Anggaran'
-	String get guideBudgetTitle => 'Anggaran';
-
-	/// id: 'Rencana'
-	String get guideBudgetTag => 'Rencana';
-
-	/// id: 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.'
-	String get guideBudgetBody => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.';
-
-	/// id: 'Freelance'
-	String get guideFreelanceTitle => 'Freelance';
-
-	/// id: 'Piutang'
-	String get guideFreelanceTag => 'Piutang';
-
-	/// id: 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.'
-	String get guideFreelanceBody => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.';
-
 	/// id: '$spent terpakai dari $planned'
 	String budgetSpentOf({required Object spent, required Object planned}) => '${spent} terpakai dari ${planned}';
-
-	/// id: 'Belum diterima (kotor)'
-	String get freelanceUnpaidTitle => 'Belum diterima (kotor)';
-
-	/// id: 'Jatuh tempo'
-	String get freelanceDueLabel => 'Jatuh tempo';
-
-	/// id: '$count tagihan tertunda'
-	String freelancePendingInvoices({required Object count}) => '${count} tagihan tertunda';
-
-	/// id: '$hours · diperoleh $earned'
-	String freelanceSummaryLine({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}';
-
-	/// id: 'Buka $name'
-	String openCard({required Object name}) => 'Buka ${name}';
-
-	/// id: '$percent% terpakai'
-	String budgetUsedBadge({required Object percent}) => '${percent}% terpakai';
 
 	/// id: 'Di $count dompet'
 	String walletLink({required Object count}) => 'Di ${count} dompet';
@@ -1844,8 +1601,8 @@ class Translations$onboarding$id {
 	/// id: 'Semua uangmu, satu buku'
 	String get page1Title => 'Semua uangmu, satu buku';
 
-	/// id: 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.'
-	String get page1Body => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.';
+	/// id: 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.'
+	String get page1Body => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.';
 
 	/// id: 'Tahu di mana uangmu'
 	String get page2Title => 'Tahu di mana uangmu';
@@ -1856,8 +1613,8 @@ class Translations$onboarding$id {
 	/// id: 'Catat dalam hitungan detik'
 	String get page3Title => 'Catat dalam hitungan detik';
 
-	/// id: 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.'
-	String get page3Body => 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.';
+	/// id: 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.'
+	String get page3Body => 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.';
 
 	/// id: 'Rencanakan, lalu pantau'
 	String get page4Title => 'Rencanakan, lalu pantau';
@@ -1871,8 +1628,8 @@ class Translations$onboarding$id {
 	/// id: 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.'
 	String get finalBody => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.';
 
-	/// id: 'Buat Dompet Pertama'
-	String get createWalletAction => 'Buat Dompet Pertama';
+	/// id: 'Tambah dompet'
+	String get createWalletAction => 'Tambah dompet';
 
 	/// id: 'Nanti saja'
 	String get laterAction => 'Nanti saja';
@@ -1940,8 +1697,8 @@ class Translations$tour$id {
 	/// id: 'Satu pintu mencatat'
 	String get homeRecordTitle => 'Satu pintu mencatat';
 
-	/// id: 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.'
-	String get homeRecordBody => 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.';
+	/// id: 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.'
+	String get homeRecordBody => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.';
 
 	/// id: 'Arus bulan ini'
 	String get homeCashFlowTitle => 'Arus bulan ini';
@@ -1958,8 +1715,8 @@ class Translations$tour$id {
 	/// id: 'Ringkasan freelance'
 	String get homeFreelanceTitle => 'Ringkasan freelance';
 
-	/// id: 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.'
-	String get homeFreelanceBody => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.';
+	/// id: 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat tagihan dicatat diterima.'
+	String get homeFreelanceBody => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat tagihan dicatat diterima.';
 
 	/// id: 'Transaksi terbaru'
 	String get homeRecentTitle => 'Transaksi terbaru';
@@ -1970,20 +1727,20 @@ class Translations$tour$id {
 	/// id: 'Pilih jenisnya'
 	String get recordKindTitle => 'Pilih jenisnya';
 
-	/// id: 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.'
-	String get recordKindBody => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.';
+	/// id: 'Pengeluaran mengurangi saldo, pemasukan menambah, dan transfer hanya memindahkan antardompet — totalmu tetap.'
+	String get recordKindBody => 'Pengeluaran mengurangi saldo, pemasukan menambah, dan transfer hanya memindahkan antardompet — totalmu tetap.';
 
 	/// id: 'Honor freelance lewat jalur sendiri'
 	String get recordFreelanceTitle => 'Honor freelance lewat jalur sendiri';
 
-	/// id: 'Honor proyek dicatat sebagai pembayaran diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.'
-	String get recordFreelanceBody => 'Honor proyek dicatat sebagai pembayaran diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.';
+	/// id: 'Honor proyek dicatat sebagai tagihan diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.'
+	String get recordFreelanceBody => 'Honor proyek dicatat sebagai tagihan diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.';
 
 	/// id: 'Nominal'
 	String get recordAmountTitle => 'Nominal';
 
-	/// id: 'Ketik nominalnya, atau pakai tombol cepat.'
-	String get recordAmountBody => 'Ketik nominalnya, atau pakai tombol cepat.';
+	/// id: 'Ketik nominalnya dengan papan angka.'
+	String get recordAmountBody => 'Ketik nominalnya dengan papan angka.';
 
 	/// id: 'Dompet terisi otomatis'
 	String get recordWalletTitle => 'Dompet terisi otomatis';
@@ -2018,8 +1775,8 @@ class Translations$tour$id {
 	/// id: 'Satu bulan per tampilan'
 	String get txnMonthTitle => 'Satu bulan per tampilan';
 
-	/// id: 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.'
-	String get txnMonthBody => 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.';
+	/// id: 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.'
+	String get txnMonthBody => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.';
 
 	/// id: 'Cari dan saring'
 	String get txnFilterTitle => 'Cari dan saring';
@@ -2027,11 +1784,11 @@ class Translations$tour$id {
 	/// id: 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.'
 	String get txnFilterBody => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.';
 
-	/// id: 'Sunting atau hapus'
-	String get txnRowTitle => 'Sunting atau hapus';
+	/// id: 'Ubah atau hapus'
+	String get txnRowTitle => 'Ubah atau hapus';
 
-	/// id: 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.'
-	String get txnRowBody => 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.';
+	/// id: 'Ketuk transaksi untuk rinciannya; dari sana bisa diubah, dicatat lagi, atau dihapus, dan saldo dihitung ulang.'
+	String get txnRowBody => 'Ketuk transaksi untuk rinciannya; dari sana bisa diubah, dicatat lagi, atau dihapus, dan saldo dihitung ulang.';
 
 	/// id: 'Sisa semua anggaran aktif'
 	String get budgetSummaryTitle => 'Sisa semua anggaran aktif';
@@ -2060,14 +1817,14 @@ class Translations$tour$id {
 	/// id: 'Catat dari pos'
 	String get budgetDetailRecordTitle => 'Catat dari pos';
 
-	/// id: 'Membuka CATAT dengan pos ini sudah terpilih.'
-	String get budgetDetailRecordBody => 'Membuka CATAT dengan pos ini sudah terpilih.';
+	/// id: 'Membuka Catat dengan pos ini sudah terpilih.'
+	String get budgetDetailRecordBody => 'Membuka Catat dengan pos ini sudah terpilih.';
 
 	/// id: 'Proyek dan tarif'
 	String get freelanceProjectTitle => 'Proyek dan tarif';
 
-	/// id: 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.'
-	String get freelanceProjectBody => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.';
+	/// id: 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan tagihannya.'
+	String get freelanceProjectBody => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan tagihannya.';
 
 	/// id: 'Jam kerja'
 	String get freelanceWorklogTitle => 'Jam kerja';
@@ -2144,8 +1901,8 @@ class Translations$tour$id {
 	/// id: 'Tambah rutin'
 	String get recurringAddTitle => 'Tambah rutin';
 
-	/// id: 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.'
-	String get recurringAddBody => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.';
+	/// id: 'Bisa juga dari Catat lewat Ulangi, atau Jadikan rutin di rincian transaksi.'
+	String get recurringAddBody => 'Bisa juga dari Catat lewat Ulangi, atau Jadikan rutin di rincian transaksi.';
 
 	/// id: 'Ulangi tiap periode'
 	String get budgetRepeatTitle => 'Ulangi tiap periode';
@@ -2186,8 +1943,8 @@ class Translations$info$id {
 	/// id: 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.'
 	String get resetConfirmMessage => 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.';
 
-	/// id: 'Setel Ulang'
-	String get resetConfirmAction => 'Setel Ulang';
+	/// id: 'Setel ulang'
+	String get resetConfirmAction => 'Setel ulang';
 
 	/// id: 'Tutorial disetel ulang.'
 	String get resetDoneMessage => 'Tutorial disetel ulang.';
@@ -2258,8 +2015,8 @@ class Translations$account$id {
 	/// id: 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.'
 	String get dangerBody => 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.';
 
-	/// id: 'Hapus Akun'
-	String get deleteAction => 'Hapus Akun';
+	/// id: 'Hapus akun'
+	String get deleteAction => 'Hapus akun';
 
 	/// id: 'Hapus akun?'
 	String get deleteConfirmTitle => 'Hapus akun?';
@@ -2383,8 +2140,8 @@ class Translations$category$id {
 	/// id: 'Terarsip'
 	String get archivedSection => 'Terarsip';
 
-	/// id: 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.'
-	String get archivedHint => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.';
+	/// id: 'Tidak ditawarkan di Catat, tetapi transaksi lama tetap memakainya.'
+	String get archivedHint => 'Tidak ditawarkan di Catat, tetapi transaksi lama tetap memakainya.';
 
 	/// id: 'Belum ada kategori aktif.'
 	String get emptyActive => 'Belum ada kategori aktif.';
@@ -2493,9 +2250,6 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Dompet'
 	String get walletLabel => 'Dompet';
-
-	/// id: 'Pilih dompet'
-	String get walletNone => 'Pilih dompet';
 
 	/// id: 'Filter'
 	String get keywordsLabel => 'Filter';
@@ -2641,8 +2395,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Transaksi otomatis dibatalkan.'
 	String get undone => 'Transaksi otomatis dibatalkan.';
 
-	/// id: 'Tangkapan diabaikan.'
-	String get dismissed => 'Tangkapan diabaikan.';
+	/// id: 'Notifikasi diabaikan.'
+	String get dismissed => 'Notifikasi diabaikan.';
 
 	/// id: '${n} transaksi dari notifikasi menunggu dicek'
 	String banner({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek';
@@ -2707,8 +2461,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Kotak masuk'
 	String get inboxEntryTitle => 'Kotak masuk';
 
-	/// id: 'Cek tangkapan dan batalkan yang tercatat otomatis.'
-	String get inboxEntryBody => 'Cek tangkapan dan batalkan yang tercatat otomatis.';
+	/// id: 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.'
+	String get inboxEntryBody => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.';
 
 	/// id: 'Saat transaksi tertangkap'
 	String get behaviorTitle => 'Saat transaksi tertangkap';
@@ -2777,18 +2531,6 @@ class Translations$recurring$id {
 	// Translations
 	late final Translations$recurring$starters$id starters = Translations$recurring$starters$id.internal(_root);
 
-	/// id: 'Rutin $month'
-	String summaryTitle({required Object month}) => 'Rutin ${month}';
-
-	/// id: 'Masih akan keluar'
-	String get remainingOutLabel => 'Masih akan keluar';
-
-	/// id: '$recorded dari $total tercatat'
-	String recordedOfTotal({required Object recorded, required Object total}) => '${recorded} dari ${total} tercatat';
-
-	/// id: 'Masuk terjadwal'
-	String get scheduledInLabel => 'Masuk terjadwal';
-
 	/// id: 'Langganan $perMonth/bln · $perYear/thn'
 	String subscriptionsLine({required Object perMonth, required Object perYear}) => 'Langganan ${perMonth}/bln · ${perYear}/thn';
 
@@ -2797,15 +2539,6 @@ class Translations$recurring$id {
 
 	/// id: 'Semua ($n)'
 	String filterAll({required Object n}) => 'Semua (${n})';
-
-	/// id: 'Masuk ($n)'
-	String filterIncome({required Object n}) => 'Masuk (${n})';
-
-	/// id: 'Keluar ($n)'
-	String filterExpense({required Object n}) => 'Keluar (${n})';
-
-	/// id: 'Transfer ($n)'
-	String filterTransfer({required Object n}) => 'Transfer (${n})';
 
 	/// id: 'Menunggu dicatat'
 	String get groupPending => 'Menunggu dicatat';
@@ -2822,26 +2555,14 @@ class Translations$recurring$id {
 	/// id: 'Selesai'
 	String get groupEnded => 'Selesai';
 
-	/// id: 'tercatat'
-	String get recordedMeta => 'tercatat';
-
-	/// id: 'menunggu'
-	String get pendingMeta => 'menunggu';
-
 	/// id: '$n terlewat'
 	String missedMeta({required Object n}) => '${n} terlewat';
-
-	/// id: 'dilewati'
-	String get skippedMeta => 'dilewati';
 
 	/// id: 'autodebet'
 	String get paymentAutoDebit => 'autodebet';
 
 	/// id: 'bayar sendiri'
 	String get paymentManual => 'bayar sendiri';
-
-	/// id: 'tahunan'
-	String get yearlyMeta => 'tahunan';
 
 	/// id: '$amount, biasanya $usual'
 	String priceUp({required Object amount, required Object usual}) => '${amount}, biasanya ${usual}';
@@ -2923,9 +2644,6 @@ class Translations$recurring$id {
 
 	/// id: '$k dari $n tercatat'
 	String progressLine({required Object k, required Object n}) => '${k} dari ${n} tercatat';
-
-	/// id: 'berakhir $date'
-	String endsOnLine({required Object date}) => 'berakhir ${date}';
 
 	/// id: '$n kali'
 	String countLine({required Object n}) => '${n} kali';
@@ -3052,9 +2770,6 @@ class Translations$recurring$id {
 
 	/// id: 'Ingatkan'
 	String get ruleRemindersLabel => 'Ingatkan';
-
-	/// id: 'Pengingat rutin mati. Nyalakan di Akun.'
-	String get remindersOffHint => 'Pengingat rutin mati. Nyalakan di Akun.';
 
 	/// id: '$k dari $n'
 	String positionMeta({required Object k, required Object n}) => '${k} dari ${n}';
@@ -3305,8 +3020,8 @@ class Translations$plan$id {
 	/// id: 'Rencana bulan ini gagal dimuat.'
 	String get loadError => 'Rencana bulan ini gagal dimuat.';
 
-	/// id: 'PERKIRAAN'
-	String get forecastBadge => 'PERKIRAAN';
+	/// id: 'Perkiraan'
+	String get forecastBadge => 'Perkiraan';
 
 	/// id: 'Awal $date'
 	String startOf({required Object date}) => 'Awal ${date}';
@@ -3317,8 +3032,8 @@ class Translations$plan$id {
 	/// id: '$value rb'
 	String compactThousand({required Object value}) => '${value} rb';
 
-	/// id: 'SIAPKAN DANA'
-	String get fundingTitle => 'SIAPKAN DANA';
+	/// id: 'Siapkan dana'
+	String get fundingTitle => 'Siapkan dana';
 
 	/// id: 'Saldo $wallet diperkirakan kurang ≈$shortfall saat $name, $date. Siapkan dana di $wallet sebelum tanggal itu.'
 	String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => 'Saldo ${wallet} diperkirakan kurang ≈${shortfall} saat ${name}, ${date}. Siapkan dana di ${wallet} sebelum tanggal itu.';
@@ -3487,8 +3202,8 @@ class Translations$record$voice$id {
 	/// id: 'Ketuk mikrofon, lalu ucapkan satu transaksi.'
 	String get idleHint => 'Ketuk mikrofon, lalu ucapkan satu transaksi.';
 
-	/// id: 'REKAM'
-	String get recordingBadge => 'REKAM';
+	/// id: 'Rekam'
+	String get recordingBadge => 'Rekam';
 
 	/// id: 'Mulai merekam'
 	String get startAction => 'Mulai merekam';
@@ -3595,11 +3310,11 @@ class Translations$record$repeat$id {
 	/// id: 'Autodebet'
 	String get paymentAutoDebit => 'Autodebet';
 
-	/// id: 'Catat & Jadwalkan'
-	String get recordAndScheduleAction => 'Catat & Jadwalkan';
+	/// id: 'Catat dan jadwalkan'
+	String get recordAndScheduleAction => 'Catat dan jadwalkan';
 
-	/// id: 'Simpan Jadwal'
-	String get saveScheduleAction => 'Simpan Jadwal';
+	/// id: 'Simpan jadwal'
+	String get saveScheduleAction => 'Simpan jadwal';
 
 	/// id: '$name dijadwalkan. Pertama $date.'
 	String scheduledMessage({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.';
@@ -3802,12 +3517,12 @@ extension on Translations {
 			'appShell.transactionsTabLabel' => 'Riwayat',
 			'appShell.walletsTabLabel' => 'Dompet',
 			'appShell.planTabLabel' => 'Rencana',
-			'record.incomeAction' => 'Catat Pemasukan',
-			'record.expenseAction' => 'Catat Pengeluaran',
-			'record.transferAction' => 'Catat Transfer',
+			'record.incomeAction' => 'Catat pemasukan',
+			'record.expenseAction' => 'Catat pengeluaran',
+			'record.transferAction' => 'Catat transfer',
 			'record.toWalletFieldLabel' => 'Masuk ke Dompet',
-			'record.fromWalletFieldLabel' => 'Dari Dompet',
-			'record.destinationWalletFieldLabel' => 'Ke Dompet',
+			'record.fromWalletFieldLabel' => 'Dari dompet',
+			'record.destinationWalletFieldLabel' => 'Ke dompet',
 			'record.dateFieldLabel' => 'Tanggal',
 			'record.noteFieldHint' => 'Tulis catatan singkat',
 			'record.noWalletsMessage' => 'Belum ada dompet. Buat dompet dulu di tab Dompet.',
@@ -3817,45 +3532,25 @@ extension on Translations {
 			'record.transferSavedMessage' => 'Transfer tercatat.',
 			'record.walletNotSelectedPrompt' => 'Belum dipilih',
 			'record.savingMessage' => 'Menyimpan...',
-			'record.incomeBadge' => 'Uang Masuk',
-			'record.expenseBadge' => 'Uang Keluar',
-			'record.transferBadge' => 'Mutasi Internal',
-			'record.stepLabel' => 'Catat // Transaksi',
-			'record.editStepLabel' => 'Sunting // Transaksi',
-			'record.expenseRuleTitle' => 'Aturan Kas: Saldo Terpotong',
-			'record.expenseRuleBody' => 'Pengeluaran langsung memotong saldo dompet yang kamu pilih di bawah ini.',
-			'record.transferNoticeTitle' => 'Pindah antar dompet',
-			'record.transferNoticeBody' => 'Catat uang yang berpindah di antara dompetmu, misalnya tarik tunai atau isi e-wallet. Total saldomu tetap sama.',
-			'record.amountLabelIncome' => 'Nominal Masuk',
-			'record.amountLabelExpense' => 'Nominal Pengeluaran',
-			'record.amountLabelTransfer' => 'Nominal Transfer',
+			'record.editStepLabel' => 'Ubah transaksi',
+			'record.expenseRuleTitle' => 'Saldo dompet berkurang',
 			'record.clearAmountAction' => 'Bersihkan',
 			'record.categorySectionLabel' => 'Kategori',
 			'record.optionalHint' => 'Opsional',
-			'record.expenseWalletSectionLabel' => 'Dompet Sumber Dana',
-			'record.noteSectionLabel' => 'Keterangan / Catatan',
-			'record.balanceDecreasesCaption' => 'Saldo berkurang',
-			'record.balanceIncreasesCaption' => 'Saldo bertambah',
-			'record.incomeSummary' => ({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan bertambah ${amount} saat dicatat.',
-			'record.expenseSummary' => ({required Object wallet, required Object amount}) => 'Saldo ${wallet} akan berkurang ${amount} saat dicatat.',
-			'record.transferSummaryTitle' => 'Ringkasan Catatan Mutasi',
-			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} berkurang ${amount}',
-			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Dompet ${wallet} bertambah ${amount}',
+			'record.expenseWalletSectionLabel' => 'Dari dompet',
+			'record.noteSectionLabel' => 'Catatan',
 			'record.balanceLabel' => 'Saldo',
-			'record.categoryPlaceholder' => 'Pilih kategori',
 			'record.categoryNoneLabel' => 'Tanpa kategori',
 			'record.budgetItemLabel' => 'Pos anggaran',
 			'record.budgetItemNone' => 'Tanpa anggaran',
-			'record.budgetItemHelp' => 'Opsional. Hanya pos anggaran yang cocok dengan dompet di atas dan periodenya mencakup tanggal transaksi yang ditawarkan.',
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'Tanggal ini di luar periode anggaran "${name}", jadi transaksi ini tidak lagi masuk anggaran itu.',
 			'record.freelanceCalloutTitle' => 'Honor freelance?',
 			'record.freelanceCalloutAction' => 'Catat lewat Freelance',
 			'record.kindSwitcherLabel' => 'Jenis transaksi',
-			'record.kindExpense' => 'Keluar',
-			'record.kindIncome' => 'Masuk',
+			'record.kindExpense' => 'Pengeluaran',
+			'record.kindIncome' => 'Pemasukan',
 			'record.kindTransfer' => 'Transfer',
 			'record.categoryAddLabel' => 'Tambah kategori',
-			'record.draftHeardLabel' => 'Tertangkap',
 			'record.draftCheckTitle' => 'Periksa sebelum mencatat',
 			'record.draftIssue.amountMissing' => 'Nominal belum terbaca. Isi sendiri.',
 			'record.draftIssue.amountMultiple' => 'Ada lebih dari satu nominal. Isi yang benar.',
@@ -3882,7 +3577,7 @@ extension on Translations {
 			'record.voice.failure.network' => 'Mengenali suara butuh internet di perangkat ini. Sambungkan internet lalu rekam ulang, atau ketik saja.',
 			'record.voice.failure.other' => 'Ada yang salah. Coba lagi.',
 			'record.voice.idleHint' => 'Ketuk mikrofon, lalu ucapkan satu transaksi.',
-			'record.voice.recordingBadge' => 'REKAM',
+			'record.voice.recordingBadge' => 'Rekam',
 			'record.voice.startAction' => 'Mulai merekam',
 			'record.voice.listeningButtonLabel' => 'Mendengarkan',
 			'record.voice.retryAction' => 'Rekam ulang',
@@ -3915,8 +3610,8 @@ extension on Translations {
 			'record.repeat.paymentLabel' => 'Cara bayar',
 			'record.repeat.paymentManual' => 'Bayar sendiri',
 			'record.repeat.paymentAutoDebit' => 'Autodebet',
-			'record.repeat.recordAndScheduleAction' => 'Catat & Jadwalkan',
-			'record.repeat.saveScheduleAction' => 'Simpan Jadwal',
+			'record.repeat.recordAndScheduleAction' => 'Catat dan jadwalkan',
+			'record.repeat.saveScheduleAction' => 'Simpan jadwal',
 			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} dijadwalkan. Pertama ${date}.',
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} tercatat dan dijadwalkan.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} tercatat. Berikutnya ${date}.',
@@ -3931,35 +3626,29 @@ extension on Translations {
 			'record.amountSemantics' => ({required Object amount}) => 'Nominal ${amount}',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
-			'transaction.monthStatusLabel' => 'Status log bulan ini',
-			'transaction.logCountBadge' => ({required Object count}) => '${count} log aktif',
-			'transaction.netFlowLabel' => 'Arus Bersih (Netto)',
-			'transaction.flowIncomeLabel' => 'Masuk',
-			'transaction.flowExpenseLabel' => 'Keluar',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Pengeluaran ${count}',
 			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
-			'transaction.walletFilterAllLabel' => 'Semua Dompet',
+			'transaction.walletFilterAllLabel' => 'Semua dompet',
 			'transaction.walletFilterLabel' => 'Dompet',
-			'transaction.categoryFilterAllLabel' => 'Semua Kategori',
+			'transaction.categoryFilterAllLabel' => 'Semua kategori',
 			'transaction.categoryFilterLabel' => 'Kategori',
 			'transaction.filterButtonLabel' => 'Filter',
-			'transaction.filterSheetTitle' => 'Filter Transaksi',
+			'transaction.filterSheetTitle' => 'Filter transaksi',
 			'transaction.filterSheetDoneAction' => 'Selesai',
-			'transaction.todayLabel' => 'Hari Ini',
+			'transaction.todayLabel' => 'Hari ini',
 			'transaction.yesterdayLabel' => 'Kemarin',
 			'transaction.untitledTransaction' => 'Tanpa judul',
-			'transaction.emptyMonthBadge' => 'Inventaris Kosong',
 			'transaction.emptyMonthTitle' => 'Belum ada transaksi',
-			'transaction.emptyMonthSubtitle' => 'Catat pemasukan, pengeluaran, atau transfer untuk mulai melihat riwayat buku kas harianmu.',
-			'transaction.emptyMonthCta' => 'Catat Transaksi Sekarang',
-			'transaction.emptyGuideTitle' => 'Panduan Catatan Kas',
+			'transaction.emptyMonthSubtitle' => 'Setiap transaksi yang kamu catat muncul di sini, dikelompokkan per hari.',
+			'transaction.emptyMonthCta' => 'Catat transaksi',
+			'transaction.emptyGuideTitle' => 'Tiga jenis transaksi',
 			'transaction.emptyGuideIncomeTitle' => 'Pemasukan',
-			'transaction.emptyGuideIncomeDescription' => 'Menambah saldo dompet pilihan secara riil dan tercatat di kas.',
+			'transaction.emptyGuideIncomeDescription' => 'Menambah saldo dompet yang kamu pilih.',
 			'transaction.emptyGuideExpenseTitle' => 'Pengeluaran',
-			'transaction.emptyGuideExpenseDescription' => 'Memotong saldo dompet dan menghitung kuota batas anggaran bulanan.',
-			'transaction.emptyGuideTransferTitle' => 'Transfer Antar Dompet',
+			'transaction.emptyGuideExpenseDescription' => 'Mengurangi saldo dompet dan mengisi pos anggaran yang tertaut.',
+			'transaction.emptyGuideTransferTitle' => 'Transfer antardompet',
 			'transaction.emptyGuideTransferDescription' => 'Memindahkan catatan saldo antar dompet tanpa mengubah total kekayaan.',
 			'transaction.trustFooterMessage' => 'Riwayat lengkapmu, tersimpan aman di perangkatmu',
 			'transaction.emptyFilterTitle' => 'Tidak ada transaksi bulan ini yang cocok dengan filter',
@@ -3976,37 +3665,36 @@ extension on Translations {
 			'transaction.detailIncomeTitle' => 'Pemasukan tercatat',
 			'transaction.detailExpenseTitle' => 'Pengeluaran tercatat',
 			'transaction.detailTransferTitle' => 'Transfer tercatat',
-			'transaction.detailTypeLabel' => 'Jenis Entri',
+			'transaction.detailTypeLabel' => 'Jenis transaksi',
 			'transaction.detailIncomeType' => 'Pemasukan',
 			'transaction.detailExpenseType' => 'Pengeluaran',
 			'transaction.detailTransferType' => 'Transfer antar dompet',
 			'transaction.detailCategoryLabel' => 'Kategori',
-			'transaction.detailIncomeWalletLabel' => 'Dompet Tujuan',
-			'transaction.detailExpenseWalletLabel' => 'Dompet Sumber',
+			'transaction.detailIncomeWalletLabel' => 'Dompet tujuan',
+			'transaction.detailExpenseWalletLabel' => 'Dompet sumber',
 			'transaction.detailCurrentBalance' => 'Saldo saat ini',
 			'transaction.detailNoteLabel' => 'Catatan',
 			'transaction.detailFromLabel' => 'Dari',
 			'transaction.detailToLabel' => 'Ke',
 			'transaction.detailAmountLabel' => 'Jumlah',
 			'transaction.detailManualNote' => 'Tersimpan aman di perangkatmu. Saldo dompet mengikuti setiap catatan, jadi saat kamu menyunting atau menghapusnya, saldonya ikut menyesuaikan.',
-			'transaction.editAction' => 'Ubah Catatan Ini',
-			'transaction.recordAgainAction' => 'Catat Lagi',
-			'transaction.deleteAction' => 'Hapus Catatan dari Riwayat',
-			'transaction.editSheetTitle' => 'Ubah Catatan',
-			'transaction.saveChangesAction' => 'Simpan Perubahan',
+			'transaction.editAction' => 'Ubah',
+			'transaction.recordAgainAction' => 'Catat lagi',
+			'transaction.deleteAction' => 'Hapus transaksi',
+			'transaction.editSheetTitle' => 'Ubah transaksi',
+			'transaction.saveChangesAction' => 'Simpan perubahan',
 			'transaction.updatedMessage' => 'Perubahan tersimpan.',
-			'transaction.deletedMessage' => 'Catatan dihapus.',
+			'transaction.deletedMessage' => 'Transaksi dihapus.',
 			'transaction.undoDeleteAction' => 'Urungkan',
-			'transaction.restoredMessage' => 'Catatan dikembalikan.',
+			'transaction.restoredMessage' => 'Transaksi dikembalikan.',
 			'transaction.budgetLabel' => 'Anggaran',
 			'transaction.openBudgetAction' => 'Lihat anggaran',
 			'transaction.detailFreelanceNote' => 'Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.',
-			'transaction.makeRecurringAction' => 'Jadikan Rutin',
+			'transaction.makeRecurringAction' => 'Jadikan rutin',
 			'transaction.previousMonth' => 'Bulan sebelumnya',
 			'transaction.nextMonth' => 'Bulan berikutnya',
-			'wallet.subtitle' => 'Posisi saldo kas saat ini',
+			'wallet.subtitle' => 'Total saldo semua dompet aktif',
 			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
-			'wallet.totalLabel' => 'Total saldo semua dompet',
 			'wallet.listHeading' => 'Dompet aktif',
 			'wallet.addAction' => 'Tambah dompet',
 			'wallet.inactiveHeading' => 'Dompet nonaktif',
@@ -4016,28 +3704,27 @@ extension on Translations {
 			'wallet.typeEwallet' => 'Dompet digital',
 			'wallet.typeSavings' => 'Tabungan',
 			'wallet.typeCard' => 'Kartu',
-			'wallet.emptyBadge' => 'Belum ada dompet',
 			'wallet.emptyTitle' => 'Belum ada dompet tercatat',
 			'wallet.emptyBody' => 'Tambahkan dompet pertama untuk mulai mencatat posisi uangmu. Bisa berupa rekening bank, e-wallet, atau uang tunai di saku.',
 			'wallet.loadErrorTitle' => 'Dompet gagal dimuat',
 			'wallet.loadErrorSubtitle' => 'Data dompet tidak terbaca. Coba lagi.',
-			'wallet.addTitle' => 'Tambah Dompet Baru',
-			'wallet.editTitle' => 'Ubah Dompet',
-			'wallet.addStepLabel' => 'Dompet // Baru',
-			'wallet.editStepLabel' => 'Dompet // Ubah',
-			'wallet.nameLabel' => 'Nama Dompet',
+			'wallet.addTitle' => 'Tambah dompet',
+			'wallet.editTitle' => 'Ubah dompet',
+			'wallet.addStepLabel' => 'Dompet baru',
+			'wallet.editStepLabel' => 'Ubah dompet',
+			'wallet.nameLabel' => 'Nama dompet',
 			'wallet.nameHint' => 'Contoh: Tabungan Mandiri, OVO, Brankas Tunai',
 			'wallet.nameRequiredHint' => 'Wajib',
 			'wallet.nameMaxHint' => 'Maks. 24 karakter',
-			'wallet.iconLabel' => 'Pilih Ikon',
-			'wallet.initialBalanceLabel' => 'Saldo Awal Saat Ini',
+			'wallet.iconLabel' => 'Pilih ikon',
+			'wallet.initialBalanceLabel' => 'Saldo awal saat ini',
 			'wallet.initialBalanceHelp' => 'Saldo awal adalah uang di dompet ini sekarang, titik mulai pencatatanmu. Setiap transaksi berikutnya dihitung dari sini.',
-			'wallet.currentBalanceLabel' => 'Saldo Tercatat Saat Ini',
-			'wallet.editBalanceNote' => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat CATAT.',
+			'wallet.currentBalanceLabel' => 'Saldo tercatat saat ini',
+			'wallet.editBalanceNote' => 'Mengubah saldo awal menghitung ulang saldo tercatat. Untuk selisih dengan uang nyata, catat pemasukan atau pengeluaran lewat Catat.',
 			'wallet.activeSwitchLabel' => 'Dompet aktif',
 			'wallet.activeSwitchHelp' => 'Dompet nonaktif tidak muncul di pemilih dompet. Transaksinya tetap tersimpan dan dihitung.',
-			'wallet.saveAddAction' => 'Simpan Dompet',
-			'wallet.deleteAction' => 'Hapus Dompet',
+			'wallet.saveAddAction' => 'Simpan dompet',
+			'wallet.deleteAction' => 'Hapus dompet',
 			'wallet.deleteHelp' => 'Hanya bisa dihapus kalau belum punya transaksi sama sekali. Kalau sudah, nonaktifkan saja.',
 			'wallet.deleteConfirmTitle' => 'Hapus dompet?',
 			'wallet.deleteConfirmMessage' => ({required Object name}) => 'Dompet ${name} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.',
@@ -4048,32 +3735,26 @@ extension on Translations {
 			'wallet.privacyNote' => 'Data tersimpan lokal dan privat di perangkatmu.',
 			'wallet.detailBackLabel' => 'Kembali',
 			'wallet.detailEditAction' => 'Sunting',
-			'wallet.detailRecentHeading' => 'Transaksi Bulan Ini',
+			'wallet.detailRecentHeading' => 'Transaksi bulan ini',
 			'wallet.detailIncomeLabel' => 'Pemasukan',
 			'wallet.detailExpenseLabel' => 'Pengeluaran',
 			'wallet.detailRecentEmptyTitle' => 'Belum ada transaksi',
 			'wallet.detailRecentEmpty' => 'Belum ada transaksi bulan ini untuk dompet ini.',
-			'wallet.detailViewAllAction' => 'Lihat Semua Transaksi',
-			'wallet.detailRecordAction' => 'Catat Transaksi Dompet Ini',
+			'wallet.detailViewAllAction' => 'Lihat semua transaksi',
+			'wallet.detailRecordAction' => 'Catat transaksi',
 			'wallet.detailTransferInLabel' => 'Transfer masuk',
 			'wallet.detailTransferOutLabel' => 'Transfer keluar',
 			'wallet.detailBalanceChangeLabel' => 'Perubahan saldo',
 			'budget.activeBadge' => ({required Object count}) => '${count} aktif',
-			'budget.summaryTitle' => 'Total rencana anggaran aktif',
-			'budget.summaryPercent' => ({required Object percent}) => '${percent}% terpakai',
 			'budget.plannedLabel' => 'Rencana',
 			'budget.spentLabel' => 'Terpakai',
 			'budget.remainingLabel' => 'Sisa',
-			'budget.spentPercentLabel' => ({required Object percent}) => 'Terpakai (${percent}%)',
-			'budget.paceLabel' => ({required Object percent}) => 'Periode berjalan (${percent}%)',
-			'budget.summaryNote' => 'Anggaran adalah rencana belanjamu. Angka terpakai naik setiap kali pengeluaran atau transfer yang ditautkan dicatat.',
 			'budget.filterAll' => 'Semua',
 			'budget.filterActive' => 'Aktif',
 			'budget.filterFinished' => 'Selesai',
 			'budget.filterArchived' => 'Nonaktif',
-			'budget.filterWalletLabel' => 'Dompet',
 			'budget.filterWalletAll' => 'Semua dompet',
-			'budget.addAction' => 'Buat Anggaran Baru',
+			'budget.addAction' => 'Buat anggaran',
 			'budget.periodWeekly' => 'Mingguan',
 			'budget.periodMonthly' => 'Bulanan',
 			'budget.itemStatusPlanned' => 'Belum terpakai',
@@ -4081,7 +3762,6 @@ extension on Translations {
 			'budget.itemStatusCompleted' => 'Selesai',
 			'budget.itemStatusOverspent' => 'Lewat anggaran',
 			'budget.itemCount' => ({required Object count}) => '${count} pos',
-			'budget.emptyBadge' => 'Slot rencana kosong',
 			'budget.emptyTitle' => 'Belum ada anggaran',
 			'budget.emptyBody' => 'Rencanakan batas belanja mingguan atau bulanan untuk satu dompet, lalu pantau berapa yang sudah terpakai.',
 			'budget.emptyFilteredTitle' => 'Tidak ada anggaran yang cocok',
@@ -4098,9 +3778,9 @@ extension on Translations {
 			'budget.unarchivedMessage' => 'Anggaran diaktifkan kembali.',
 			'budget.addStepLabel' => 'Anggaran baru',
 			'budget.editStepLabel' => 'Sunting anggaran',
-			'budget.addTitle' => 'Buat Anggaran',
-			'budget.editTitle' => 'Ubah Anggaran',
-			'budget.ruleTitle' => 'Aturan Anggaran',
+			'budget.addTitle' => 'Buat anggaran',
+			'budget.editTitle' => 'Ubah anggaran',
+			'budget.ruleTitle' => 'Aturan anggaran',
 			'budget.ruleBody' => 'Rencana ini jadi patokan belanjamu. Saldo dompet bergerak dari transaksi yang kamu catat.',
 			'budget.nameLabel' => 'Nama anggaran',
 			'budget.nameHint' => 'Contoh: Kebutuhan Rumah Tangga',
@@ -4113,16 +3793,16 @@ extension on Translations {
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
 			'budget.itemsLabel' => 'Pos anggaran',
 			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.',
-			'budget.addItemAction' => 'Tambah Pos',
-			'budget.saveAddAction' => 'Simpan Anggaran',
-			'budget.archiveAction' => 'Arsipkan Anggaran',
-			'budget.unarchiveAction' => 'Aktifkan Kembali',
+			'budget.addItemAction' => 'Tambah pos',
+			'budget.saveAddAction' => 'Simpan anggaran',
+			'budget.archiveAction' => 'Arsipkan anggaran',
+			'budget.unarchiveAction' => 'Aktifkan kembali',
 			'budget.archiveHelp' => 'Anggaran nonaktif disembunyikan dari daftar aktif. Transaksi yang tertaut tetap tercatat.',
-			'budget.deleteAction' => 'Hapus Anggaran',
+			'budget.deleteAction' => 'Hapus anggaran',
 			'budget.deleteConfirmTitle' => 'Hapus anggaran?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Anggaran "${name}" beserta posnya akan dihapus. Transaksi yang tertaut tetap tercatat dan saldo dompet tidak berubah.',
-			'budget.itemAddTitle' => 'Tambah Pos',
-			'budget.itemEditTitle' => 'Ubah Pos',
+			'budget.itemAddTitle' => 'Tambah pos',
+			'budget.itemEditTitle' => 'Ubah pos',
 			'budget.itemNameLabel' => 'Nama pos',
 			'budget.itemNameHint' => 'Contoh: Beras',
 			'budget.itemModeAmount' => 'Nominal',
@@ -4132,18 +3812,17 @@ extension on Translations {
 			'budget.itemUnitPriceLabel' => 'Harga satuan',
 			'budget.itemTotalLabel' => 'Total pos',
 			'budget.itemItemizedDetail' => ({required Object quantity, required Object price}) => '${quantity} × ${price}',
-			'budget.itemSaveAction' => 'Simpan Pos',
-			'budget.itemDeleteAction' => 'Hapus Pos',
-			'budget.detailBackLabel' => 'Daftar Anggaran',
+			'budget.itemSaveAction' => 'Simpan pos',
+			'budget.itemDeleteAction' => 'Hapus pos',
+			'budget.detailBackLabel' => 'Daftar anggaran',
 			'budget.detailEditAction' => 'Sunting anggaran',
-			'budget.detailRecordExpenseAction' => 'Catat Pengeluaran',
-			'budget.detailRecordTransferAction' => 'Catat Transfer',
-			'budget.detailItemsHeading' => 'Pos Anggaran',
+			'budget.detailRecordExpenseAction' => 'Catat pengeluaran',
+			'budget.detailRecordTransferAction' => 'Catat transfer',
+			'budget.detailItemsHeading' => 'Pos anggaran',
 			'budget.detailNoItems' => 'Anggaran ini belum punya pos. Tambahkan pos lewat Sunting supaya pengeluaran bisa ditautkan.',
-			'budget.detailLinkedHeading' => 'Transaksi Tertaut',
+			'budget.detailLinkedHeading' => 'Transaksi tertaut',
 			'budget.detailLinkedEmpty' => 'Belum ada transaksi yang tertaut ke anggaran ini.',
 			'budget.detailHowTitle' => 'Cara kerja pos anggaran',
-			'budget.detailHowBody' => ({required Object wallet}) => 'Catat lewat tombol di tiap pos. Pos pengeluaran menghitung pengeluaran dari ${wallet}; pos transfer menghitung transfer dari ${wallet} ke dompet tujuannya.',
 			'budget.unknownWallet' => 'Dompet tidak ditemukan',
 			'budget.totalPlannedLabel' => 'Total rencana anggaran',
 			'budget.itemsRequiredHint' => 'Tambahkan minimal satu pos. Transaksi dicatat ke pos, jadi anggaran tanpa pos tidak bisa melacak pengeluaran.',
@@ -4157,34 +3836,33 @@ extension on Translations {
 			'budget.itemNoTargetWallet' => 'Butuh dompet aktif lain sebagai tujuan transfer.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'Ke ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Pos transfer "${name}" menuju dompet anggaran itu sendiri. Ganti dompet tujuan posnya atau dompet anggarannya.',
-			'budget.templatesAction' => 'Template Anggaran',
-			'budget.templatesTitle' => 'Template Anggaran',
+			'budget.templatesAction' => 'Template anggaran',
+			'budget.templatesTitle' => 'Template anggaran',
 			'budget.templatesSavedBadge' => ({required Object count}) => '${count} tersimpan',
 			'budget.templatesInfoTitle' => 'Apa itu template anggaran?',
 			'budget.templatesInfoBody' => 'Susunan pos rencana yang bisa dipakai ulang tanpa mengetik dari nol. Setiap pemakaian membuat anggaran baru yang berdiri sendiri.',
 			'budget.templateItemCount' => ({required Object count}) => '${count} pos',
 			'budget.templateItemsLabel' => 'Daftar pos rencana',
 			'budget.templateTotalLabel' => 'Total rencana',
-			'budget.templateUseAction' => 'Gunakan Template Ini',
+			'budget.templateUseAction' => 'Gunakan template ini',
 			'budget.templateEditAction' => 'Ubah',
 			'budget.templateDuplicateAction' => 'Duplikat',
 			'budget.templateInactiveBadge' => 'Nonaktif',
-			'budget.templateAddAction' => 'Buat Template Baru',
+			'budget.templateAddAction' => 'Buat template',
 			'budget.templatesFooter' => 'Template bisa disunting kapan saja tanpa mengubah anggaran yang sudah dibuat darinya.',
 			'budget.templatesEmptyBadge' => 'Belum ada template',
 			'budget.templatesEmptyTitle' => 'Belum ada template',
 			'budget.templatesEmptyBody' => 'Simpan susunan pos yang sering dipakai, misalnya belanja bulanan, supaya anggaran berikutnya tinggal dipakai.',
 			'budget.templateNeedsWallet' => 'Buat dompet aktif dulu untuk memakai template.',
 			'budget.templatesLoadError' => 'Template gagal dimuat',
-			'budget.templateStepLabel' => 'Template anggaran',
-			'budget.templateAddTitle' => 'Buat Template',
-			'budget.templateEditTitle' => 'Ubah Template',
+			'budget.templateAddTitle' => 'Buat template',
+			'budget.templateEditTitle' => 'Ubah template',
 			'budget.templateRuleBody' => 'Template menyimpan susunan pos rencanamu. Dompet dan periodenya dipilih saat template dipakai.',
 			'budget.templateNameHint' => 'Contoh: Belanja bulanan',
 			'budget.templateEnabledLabel' => 'Tawarkan template ini',
 			'budget.templateEnabledHelp' => 'Template nonaktif tetap tersimpan, tapi tidak bisa dipakai membuat anggaran.',
-			'budget.templateSaveAction' => 'Simpan Template',
-			'budget.templateDeleteAction' => 'Hapus Template',
+			'budget.templateSaveAction' => 'Simpan template',
+			'budget.templateDeleteAction' => 'Hapus template',
 			'budget.templateDeleteConfirmTitle' => 'Hapus template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" akan dihapus. Anggaran yang pernah dibuat darinya tidak ikut terhapus.',
 			'budget.templateSavedMessage' => 'Template tersimpan.',
@@ -4192,7 +3870,6 @@ extension on Translations {
 			'budget.templateDeletedMessage' => 'Template dihapus.',
 			'budget.templateDuplicatedMessage' => 'Template digandakan.',
 			'budget.templateCopyName' => ({required Object name}) => '${name} (salinan)',
-			'budget.fromTemplateStepLabel' => ({required Object name}) => 'Dari template ${name}',
 			'budget.templateNameLabel' => 'Nama template',
 			'budget.repeatLabel' => 'Ulangi tiap periode',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Lahir lagi tiap bulan mulai ${date} dengan pos yang sama.',
@@ -4207,35 +3884,28 @@ extension on Translations {
 			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Ulangi tiap minggu · ${wallet}',
 			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Hari ke-${day} dari ${total}',
 			'freelance.title' => 'Freelance',
-			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
-			'freelance.paymentsTab' => ({required Object count}) => 'Pembayaran (${count})',
+			'freelance.worklogTab' => ({required Object count}) => 'Jam kerja (${count})',
+			'freelance.paymentsTab' => ({required Object count}) => 'Tagihan (${count})',
 			'freelance.loadErrorTitle' => 'Data freelance gagal dimuat',
-			'freelance.ruleTitle' => 'Aturan kas freelance',
-			'freelance.ruleBody' => 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat pembayarannya dicatat diterima.',
-			'freelance.summaryTitle' => 'Ringkasan upah & jam',
-			'freelance.totalHoursLabel' => 'Waktu kerja',
+			'freelance.ruleTitle' => 'Cara Freelance mencatat',
+			'freelance.ruleBody' => 'Jam kerja terkumpul jadi tagihan, dan saldo dompet bertambah saat tagihannya dicatat diterima.',
 			'freelance.hoursValue' => ({required Object hours}) => '${hours} jam',
 			'freelance.hourShort' => 'jam',
 			'freelance.projectCount' => ({required Object count}) => '${count} proyek',
 			'freelance.earnedLabel' => 'Total diperoleh',
-			'freelance.earnedCaption' => 'Jam × tarif, sebelum potongan',
 			'freelance.paidLabel' => 'Sudah diterima',
-			'freelance.paidCaption' => 'Gaji kotor · pembayarannya sudah dicatat',
 			'freelance.unpaidLabel' => 'Belum diterima',
-			'freelance.unpaidCaption' => 'Gaji kotor · belum ditagih atau tertunda',
-			'freelance.paidRatio' => ({required Object percent}) => '${percent}% sudah diterima',
 			'freelance.projectsLabel' => 'Proyek',
 			'freelance.projectsEmpty' => 'Belum ada proyek. Tambahkan klien atau proyek beserta tarif per jamnya dulu.',
-			'freelance.projectStepLabel' => 'Proyek freelance',
-			'freelance.projectAddTitle' => 'Tambah Proyek',
-			'freelance.projectEditTitle' => 'Ubah Proyek',
+			'freelance.projectAddTitle' => 'Tambah proyek',
+			'freelance.projectEditTitle' => 'Ubah proyek',
 			'freelance.projectNameLabel' => 'Nama klien atau proyek',
 			'freelance.projectNameHint' => 'Contoh: Studio Koding',
 			'freelance.requiredHint' => 'Wajib',
 			'freelance.hourlyRateLabel' => 'Tarif per jam',
-			'freelance.hourlyRateHelp' => 'Tarif bawaan untuk entri baru. Mengubahnya tidak mengubah entri yang sudah dicatat.',
+			'freelance.hourlyRateHelp' => 'Tarif bawaan untuk jam kerja baru. Mengubahnya tidak mengubah jam kerja yang sudah dicatat.',
 			'freelance.deductionsLabel' => 'Potongan',
-			'freelance.deductionsHelp' => 'Dipotong dari gaji kotor setiap pembayaran, misalnya pajak. Mengubahnya tidak mengubah pembayaran yang sudah dibuat.',
+			'freelance.deductionsHelp' => 'Dipotong dari gaji kotor setiap tagihan, misalnya pajak. Mengubahnya tidak mengubah tagihan yang sudah dibuat.',
 			'freelance.deductionAddAction' => 'Tambah potongan',
 			'freelance.deductionTitle' => 'Potongan',
 			'freelance.deductionLabelLabel' => 'Nama potongan',
@@ -4244,38 +3914,37 @@ extension on Translations {
 			'freelance.deductionKindFixed' => 'Nominal tetap',
 			'freelance.deductionPercentLabel' => 'Persen dari gaji kotor',
 			'freelance.deductionPercentHelp' => 'Paling banyak satu angka di belakang koma, misalnya 2,5.',
-			'freelance.deductionAmountLabel' => 'Nominal per pembayaran',
+			'freelance.deductionAmountLabel' => 'Nominal per tagihan',
 			'freelance.deductionSaveAction' => 'Simpan potongan',
 			'freelance.deductionRemoveAction' => 'Hapus potongan',
 			'freelance.projectSaveAction' => 'Simpan proyek',
 			'freelance.projectDeleteAction' => 'Hapus proyek',
-			'freelance.projectDeleteLockedHint' => 'Proyek yang sudah punya entri worklog tidak bisa dihapus.',
+			'freelance.projectDeleteLockedHint' => 'Proyek yang sudah punya jam kerja tidak bisa dihapus.',
 			'freelance.projectDeleteConfirmTitle' => 'Hapus proyek?',
 			'freelance.projectDeleteConfirmMessage' => ({required Object name}) => 'Proyek "${name}" akan dihapus.',
-			'freelance.projectDeleteRefused' => 'Proyek ini sudah punya entri worklog, jadi tidak bisa dihapus.',
+			'freelance.projectDeleteRefused' => 'Proyek ini sudah punya jam kerja, jadi tidak bisa dihapus.',
 			'freelance.projectSavedMessage' => 'Proyek tersimpan.',
 			'freelance.projectUpdatedMessage' => 'Perubahan proyek tersimpan.',
 			'freelance.projectDeletedMessage' => 'Proyek dihapus.',
 			'freelance.projectLabel' => 'Proyek',
 			'freelance.projectPick' => 'Pilih proyek',
-			'freelance.entryStepLabel' => 'Log pekerjaan',
-			'freelance.entryAddTitle' => 'Tambah Worklog',
-			'freelance.entryEditTitle' => 'Ubah Worklog',
-			'freelance.entryRuleBody' => 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat pembayarannya dicatat diterima.',
+			'freelance.entryAddTitle' => 'Catat jam kerja',
+			'freelance.entryEditTitle' => 'Ubah jam kerja',
+			'freelance.entryRuleBody' => 'Jam kerja terkumpul jadi tagihan. Uangnya masuk ke saldo saat tagihannya dicatat diterima.',
 			'freelance.workDateLabel' => 'Tanggal kerja',
 			'freelance.hoursLabel' => 'Durasi pengerjaan',
-			'freelance.entryRateHelp' => 'Terisi dari tarif proyek. Ubah kalau tarif entri ini berbeda.',
+			'freelance.entryRateHelp' => 'Terisi dari tarif proyek. Ubah kalau tarif kali ini berbeda.',
 			'freelance.noteLabel' => 'Catatan',
 			'freelance.noteHint' => 'Apa yang dikerjakan (opsional)',
-			'freelance.entrySaveAction' => 'Simpan Worklog',
+			'freelance.entrySaveAction' => 'Simpan jam kerja',
 			'freelance.entrySaveHint' => 'Nominal ini tercatat sebagai diperoleh, belum diterima.',
-			'freelance.entryDeleteAction' => 'Hapus entri',
-			'freelance.entryDeleteConfirmTitle' => 'Hapus entri worklog?',
-			'freelance.entryDeleteConfirmMessage' => 'Entri ini akan dihapus. Saldo dompet tidak berubah.',
-			'freelance.entryLockedMessage' => 'Entri yang sudah masuk pembayaran tidak bisa diubah atau dihapus.',
-			'freelance.entrySavedMessage' => 'Worklog tersimpan.',
-			'freelance.entryUpdatedMessage' => 'Perubahan worklog tersimpan.',
-			'freelance.entryDeletedMessage' => 'Worklog dihapus.',
+			'freelance.entryDeleteAction' => 'Hapus jam kerja',
+			'freelance.entryDeleteConfirmTitle' => 'Hapus jam kerja ini?',
+			'freelance.entryDeleteConfirmMessage' => 'Jam kerja ini dihapus. Saldo dompet tidak berubah.',
+			'freelance.entryLockedMessage' => 'Jam kerja yang sudah masuk tagihan tidak bisa diubah atau dihapus.',
+			'freelance.entrySavedMessage' => 'Jam kerja tercatat.',
+			'freelance.entryUpdatedMessage' => 'Perubahan jam kerja tersimpan.',
+			'freelance.entryDeletedMessage' => 'Jam kerja dihapus.',
 			'freelance.hoursTimesRate' => ({required Object hours, required Object rate}) => '${hours} jam × ${rate}',
 			'freelance.statusUnbilled' => 'Belum ditagih',
 			'freelance.statusPending' => 'Tertunda',
@@ -4285,86 +3954,69 @@ extension on Translations {
 			'freelance.unknownProject' => 'Proyek terhapus',
 			'freelance.unknownWallet' => 'dompet terhapus',
 			'freelance.pendingTotalLabel' => 'Tertunda (bersih)',
-			'freelance.paidTotalLabel' => 'Diterima (bersih)',
-			'freelance.paymentCount' => ({required Object count}) => '${count} pembayaran',
-			'freelance.paymentStepLabel' => 'Pembayaran freelance',
-			'freelance.paymentAddTitle' => 'Buat Pembayaran',
-			'freelance.paymentCreateRuleBody' => 'Pembayaran mengelompokkan jam kerja jadi satu tagihan. Saat dicatat diterima, saldo dompet bertambah.',
-			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Entri ditagih: ${count} (${hours} jam)',
-			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} entri · ${hours} jam',
+			'freelance.paymentAddTitle' => 'Buat tagihan',
+			'freelance.paymentCreateRuleBody' => 'Tagihan mengelompokkan jam kerja yang belum ditagih. Saat dicatat diterima, saldo dompet bertambah.',
+			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Ditagih: ${count} catatan, ${hours} jam',
+			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} catatan · ${hours} jam',
 			'freelance.expectedDateLabel' => 'Perkiraan tanggal diterima',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.grossPayLabel' => 'Gaji kotor',
 			'freelance.netPayLabel' => 'Gaji bersih',
 			'freelance.netPayNotPositive' => 'Potongan tidak boleh sama dengan atau melebihi gaji kotor.',
-			'freelance.paymentCreateAction' => 'Buat Pembayaran',
+			'freelance.paymentCreateAction' => 'Buat tagihan',
 			'freelance.paymentChangeDateAction' => 'Ubah tanggal',
 			'freelance.paymentDeleteAction' => 'Hapus',
-			'freelance.paymentDeleteConfirmTitle' => 'Hapus pembayaran?',
-			'freelance.paymentDeleteConfirmMessage' => 'Pembayaran tertunda ini dihapus dan entrinya kembali belum ditagih. Saldo dompet tidak berubah.',
-			'freelance.paymentEntriesInvalid' => 'Entri yang dipilih sudah ditagih atau bukan milik proyek ini.',
-			'freelance.paymentPaidLocked' => 'Pembayaran yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
-			'freelance.paymentAlreadyPaid' => 'Pembayaran ini sudah dicatat diterima.',
-			'freelance.paymentCreatedMessage' => 'Pembayaran dibuat.',
-			'freelance.paymentUpdatedMessage' => 'Tanggal pembayaran diperbarui.',
-			'freelance.paymentDeletedMessage' => 'Pembayaran dihapus.',
-			'freelance.receiveTitle' => 'Catat Pembayaran Diterima',
+			'freelance.paymentDeleteConfirmTitle' => 'Hapus tagihan?',
+			'freelance.paymentDeleteConfirmMessage' => 'Tagihan tertunda ini dihapus dan jam kerjanya kembali belum ditagih. Saldo dompet tidak berubah.',
+			'freelance.paymentEntriesInvalid' => 'Jam kerja yang dipilih sudah ditagih atau bukan milik proyek ini.',
+			'freelance.paymentPaidLocked' => 'Tagihan yang sudah diterima tidak bisa dihapus. Batalkan penerimaannya dulu.',
+			'freelance.paymentAlreadyPaid' => 'Tagihan ini sudah dicatat diterima.',
+			'freelance.paymentCreatedMessage' => 'Tagihan dibuat.',
+			'freelance.paymentUpdatedMessage' => 'Tanggal tagihan diperbarui.',
+			'freelance.paymentDeletedMessage' => 'Tagihan dihapus.',
+			'freelance.receiveTitle' => 'Catat tagihan diterima',
 			'freelance.receiveRuleTitle' => 'Honor sudah masuk',
 			'freelance.receiveRuleBody' => 'Catat saat uangnya sudah kamu terima. Saldo dompet pilihan bertambah sebesar gaji bersih, dan tagihan ini tercatat lunas.',
 			'freelance.receiveAmountLabel' => 'Nominal diterima',
 			'freelance.receiveWalletLabel' => 'Dompet penerima',
 			'freelance.receiveDateLabel' => 'Tanggal diterima',
-			'freelance.receiveNoteDefault' => ({required Object project}) => 'Pembayaran freelance ${project}',
-			'freelance.receiveAction' => 'Catat Diterima',
-			'freelance.paymentReceivedMessage' => 'Pembayaran dicatat diterima. Saldo dompet bertambah.',
+			'freelance.receiveNoteDefault' => ({required Object project}) => 'Tagihan freelance ${project}',
+			'freelance.receiveAction' => 'Catat diterima',
+			'freelance.paymentReceivedMessage' => 'Tagihan dicatat diterima. Saldo dompet bertambah.',
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
-			'freelance.receiptCancelConfirmMessage' => 'Catatan pemasukannya dihapus dan saldo dompet berkurang kembali. Pembayaran kembali tertunda.',
-			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Pembayaran kembali tertunda.',
+			'freelance.receiptCancelConfirmMessage' => 'Pemasukannya dihapus dan saldo dompet berkurang kembali. Tagihan kembali tertunda.',
+			'freelance.receiptCancelledMessage' => 'Penerimaan dibatalkan. Tagihan kembali tertunda.',
 			'freelance.changeAction' => 'Ubah',
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
 			'freelance.billAction' => ({required Object count}) => 'Tagih (${count})',
-			'freelance.entriesEmptyBadge' => 'Belum ada jam kerja',
-			'freelance.entriesEmptyTitle' => 'Belum ada worklog',
-			'freelance.entriesEmptyBody' => 'Catat jam kerja proyek ini lewat tombol + Worklog di bawah.',
-			'freelance.entriesFilteredEmpty' => 'Tidak ada entri dengan status ini.',
-			'freelance.entryAddShortAction' => '+ Worklog',
-			'freelance.entryCountLabel' => ({required Object count}) => '${count} entri',
+			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
+			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
+			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
+			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			'freelance.filterAll' => 'Semua',
-			'freelance.lastEntryOn' => ({required Object date}) => 'Terakhir ${date}',
 			'freelance.noDeductions' => 'Tanpa potongan',
-			'freelance.noEntriesYet' => 'Belum ada entri',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}',
-			'freelance.projectsEmptyBadge' => 'Slot proyek kosong',
 			'freelance.projectsEmptyTitle' => 'Belum ada proyek',
 			'freelance.unbilledLabel' => 'Belum ditagih',
-			'freelance.unbilledNone' => 'Semua sudah ditagih',
-			'freelance.paymentsEmptyBadge' => 'Belum ada tagihan',
-			'freelance.paymentsEmptyTitle' => 'Belum ada pembayaran',
-			'freelance.paymentsEmptyBody' => 'Tekan Tagih di bawah untuk mengelompokkan jam kerja yang belum ditagih jadi satu pembayaran.',
-			'freelance.paymentsFilteredEmpty' => 'Tidak ada pembayaran dengan status ini.',
+			'freelance.paymentsEmptyTitle' => 'Belum ada tagihan',
+			'freelance.paymentsEmptyBody' => 'Kumpulkan jam kerja yang belum ditagih jadi satu tagihan, lalu catat saat dibayar.',
+			'freelance.paymentsFilteredEmpty' => 'Tidak ada tagihan dengan status ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
 			'freelance.paidOffBadge' => 'Lunas',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
 			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
-			'home.moreWallets' => ({required Object count}) => '+${count} lainnya',
-			'home.startBadge' => 'Mulai catat',
-			'home.noWalletsBody' => 'Belum ada saldo dompet yang tercatat.',
-			'home.incomeLabel' => ({required Object month}) => 'Pemasukan ${month}',
-			'home.expenseLabel' => ({required Object month}) => 'Pengeluaran ${month}',
 			'home.budgetTitle' => 'Anggaran aktif',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetRemaining' => 'Sisa',
 			'home.budgetOver' => 'Lewat rencana',
-			'home.budgetAction' => 'Lihat Anggaran',
+			'home.budgetAction' => 'Lihat anggaran',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePaid' => ({required Object amount}) => 'Diterima: ${amount}',
 			'home.freelanceAction' => 'Lihat Freelance',
 			'home.recentTitle' => 'Transaksi terbaru',
 			'home.seeAll' => 'Lihat semua',
-			'home.emptyBadge' => 'Inventaris kosong',
 			'home.firstTitle' => 'Mulai dari dompetmu',
 			'home.firstBody' => 'Catat di mana uangmu berada sekarang. Setiap transaksi akan memperbarui saldonya.',
 			'home.stepWalletTitle' => 'Tambah dompet pertama',
@@ -4377,28 +4029,10 @@ extension on Translations {
 			'home.stepsTitle' => 'Langkah awal',
 			'home.emptyTitle' => 'Belum ada transaksi',
 			'home.emptyBody' => 'Mulai dengan mencatat pemasukan, pengeluaran, atau transfer pertamamu.',
-			'home.emptyNoWalletBody' => 'Buat dompet pertamamu beserta saldo awalnya dulu, lalu catat transaksi pertama.',
 			'home.recordAction' => 'Catat transaksi',
 			'home.createWalletAction' => 'Tambah dompet',
 			'home.budgetLink' => 'Atau buat anggaran pengeluaran',
-			'home.guideTitle' => 'Panduan singkat',
-			'home.guideCount' => '3 aturan utama',
-			'home.guideWalletTitle' => 'Dompet',
-			'home.guideWalletTag' => 'Aset nyata',
-			'home.guideWalletBody' => 'Catat rekening bank, dompet digital, atau uang tunai beserta saldonya saat ini.',
-			'home.guideBudgetTitle' => 'Anggaran',
-			'home.guideBudgetTag' => 'Rencana',
-			'home.guideBudgetBody' => 'Rencanakan batas belanja dan pantau berapa yang sudah terpakai.',
-			'home.guideFreelanceTitle' => 'Freelance',
-			'home.guideFreelanceTag' => 'Piutang',
-			'home.guideFreelanceBody' => 'Pantau jam kerja dan tagihan. Uang baru masuk ke dompet saat pembayarannya dicatat diterima.',
 			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} terpakai dari ${planned}',
-			'home.freelanceUnpaidTitle' => 'Belum diterima (kotor)',
-			'home.freelanceDueLabel' => 'Jatuh tempo',
-			'home.freelancePendingInvoices' => ({required Object count}) => '${count} tagihan tertunda',
-			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · diperoleh ${earned}',
-			'home.openCard' => ({required Object name}) => 'Buka ${name}',
-			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% terpakai',
 			'home.walletLink' => ({required Object count}) => 'Di ${count} dompet',
 			'home.netLabel' => 'Selisih bulan ini',
 			'home.hideAmounts' => 'Sembunyikan nominal',
@@ -4415,16 +4049,16 @@ extension on Translations {
 			'onboarding.closeAction' => 'Tutup',
 			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Halaman ${current} dari ${total}',
 			'onboarding.page1Title' => 'Semua uangmu, satu buku',
-			'onboarding.page1Body' => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di buku kas pribadimu.',
+			'onboarding.page1Body' => 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.',
 			'onboarding.page2Title' => 'Tahu di mana uangmu',
 			'onboarding.page2Body' => 'Rekening bank, e-wallet, dan uang tunai jadi dompet. Saldo tiap dompet dan totalnya selalu terlihat.',
 			'onboarding.page3Title' => 'Catat dalam hitungan detik',
-			'onboarding.page3Body' => 'Uang masuk, keluar, atau pindah dompet — ketuk CATAT. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.',
+			'onboarding.page3Body' => 'Pemasukan, pengeluaran, atau pindah dompet — ketuk Catat. Dompet yang biasa kamu pakai dan kategori favoritmu sudah menunggu.',
 			'onboarding.page4Title' => 'Rencanakan, lalu pantau',
 			'onboarding.page4Body' => 'Susun anggaran per minggu atau bulan dengan pos-pos belanjamu. Saldo tetap utuh, dan kamu melihat berapa yang sudah terpakai dari rencana.',
 			'onboarding.finalTitle' => 'Mulai dari dompet pertamamu',
 			'onboarding.finalBody' => 'Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.',
-			'onboarding.createWalletAction' => 'Buat Dompet Pertama',
+			'onboarding.createWalletAction' => 'Tambah dompet',
 			'onboarding.laterAction' => 'Nanti saja',
 			'onboarding.signInAction' => 'Sudah punya akun? Masuk',
 			'onboarding.backAction' => 'Kembali',
@@ -4444,21 +4078,21 @@ extension on Translations {
 			'tour.homeBalanceTitle' => 'Total saldo tercatat',
 			'tour.homeBalanceBody' => 'Jumlah saldo semua dompet aktif — posisi uangmu dalam sekali lihat.',
 			'tour.homeRecordTitle' => 'Satu pintu mencatat',
-			'tour.homeRecordBody' => 'Semua uang masuk, keluar, dan pindah dompet dicatat dari sini.',
+			'tour.homeRecordBody' => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.',
 			'tour.homeCashFlowTitle' => 'Arus bulan ini',
 			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar bulan ini.',
 			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
 			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
 			'tour.homeFreelanceTitle' => 'Ringkasan freelance',
-			'tour.homeFreelanceBody' => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat pembayaran dicatat diterima.',
+			'tour.homeFreelanceBody' => 'Penghasilan yang sudah dikerjakan dan yang masih tertunda. Saldo dompet baru bertambah saat tagihan dicatat diterima.',
 			'tour.homeRecentTitle' => 'Transaksi terbaru',
 			'tour.homeRecentBody' => 'Catatan terakhirmu. Ketuk salah satunya untuk rincian, atau Lihat semua untuk riwayat per bulan.',
 			'tour.recordKindTitle' => 'Pilih jenisnya',
-			'tour.recordKindBody' => 'Keluar mengurangi saldo, Masuk menambah, dan Transfer hanya memindahkan antar dompetmu — totalmu tetap.',
+			'tour.recordKindBody' => 'Pengeluaran mengurangi saldo, pemasukan menambah, dan transfer hanya memindahkan antardompet — totalmu tetap.',
 			'tour.recordFreelanceTitle' => 'Honor freelance lewat jalur sendiri',
-			'tour.recordFreelanceBody' => 'Honor proyek dicatat sebagai pembayaran diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.',
+			'tour.recordFreelanceBody' => 'Honor proyek dicatat sebagai tagihan diterima di Freelance, jadi jam kerja dan tagihannya ikut lunas.',
 			'tour.recordAmountTitle' => 'Nominal',
-			'tour.recordAmountBody' => 'Ketik nominalnya, atau pakai tombol cepat.',
+			'tour.recordAmountBody' => 'Ketik nominalnya dengan papan angka.',
 			'tour.recordWalletTitle' => 'Dompet terisi otomatis',
 			'tour.recordWalletBody' => 'Dompet terakhir yang kamu pakai sudah terpilih. Ganti kalau perlu.',
 			'tour.recordBudgetItemTitle' => 'Tautkan ke anggaran',
@@ -4470,11 +4104,11 @@ extension on Translations {
 			'tour.walletAddTitle' => 'Tambah dompet',
 			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.',
 			'tour.txnMonthTitle' => 'Satu bulan per tampilan',
-			'tour.txnMonthBody' => 'Geser bulan untuk melihat riwayat lain. Arus masuk dan keluar di sini hanya untuk bulan yang tampil.',
+			'tour.txnMonthBody' => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.',
 			'tour.txnFilterTitle' => 'Cari dan saring',
 			'tour.txnFilterBody' => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.',
-			'tour.txnRowTitle' => 'Sunting atau hapus',
-			'tour.txnRowBody' => 'Ketuk transaksi untuk rinciannya; dari sana bisa disunting, dicatat lagi, atau dihapus, dan saldo dihitung ulang.',
+			'tour.txnRowTitle' => 'Ubah atau hapus',
+			'tour.txnRowBody' => 'Ketuk transaksi untuk rinciannya; dari sana bisa diubah, dicatat lagi, atau dihapus, dan saldo dihitung ulang.',
 			'tour.budgetSummaryTitle' => 'Sisa semua anggaran aktif',
 			'tour.budgetSummaryBody' => 'Rencana dikurangi terpakai — sisa ruang belanjamu di semua anggaran aktif.',
 			'tour.budgetFilterTitle' => 'Aktif lebih dulu',
@@ -4484,9 +4118,9 @@ extension on Translations {
 			'tour.budgetDetailItemTitle' => 'Pos anggaran',
 			'tour.budgetDetailItemBody' => 'Terpakai naik dari transaksi yang ditautkan ke pos ini dalam periode anggaran.',
 			'tour.budgetDetailRecordTitle' => 'Catat dari pos',
-			'tour.budgetDetailRecordBody' => 'Membuka CATAT dengan pos ini sudah terpilih.',
+			'tour.budgetDetailRecordBody' => 'Membuka Catat dengan pos ini sudah terpilih.',
 			'tour.freelanceProjectTitle' => 'Proyek dan tarif',
-			'tour.freelanceProjectBody' => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan pembayarannya.',
+			'tour.freelanceProjectBody' => 'Setiap proyek punya tarif per jam dan potongan. Ketuk proyek untuk mencatat jam kerja dan tagihannya.',
 			'tour.freelanceWorklogTitle' => 'Jam kerja',
 			'tour.freelanceWorklogBody' => 'Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.',
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
@@ -4512,7 +4146,7 @@ extension on Translations {
 			'tour.recurringPendingTitle' => 'Menunggu dicatat',
 			'tour.recurringPendingBody' => 'Kemunculan yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati yang ini.',
 			'tour.recurringAddTitle' => 'Tambah rutin',
-			'tour.recurringAddBody' => 'Bisa juga dari CATAT lewat Ulangi, atau Jadikan Rutin di rincian transaksi.',
+			'tour.recurringAddBody' => 'Bisa juga dari Catat lewat Ulangi, atau Jadikan rutin di rincian transaksi.',
 			'tour.budgetRepeatTitle' => 'Ulangi tiap periode',
 			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
 			'tour.planMonthPickerTitle' => 'Bulan depan',
@@ -4523,7 +4157,7 @@ extension on Translations {
 			'info.resetAllAction' => 'Setel ulang semua tutorial',
 			'info.resetConfirmTitle' => 'Setel ulang tutorial?',
 			'info.resetConfirmMessage' => 'Pengenalan dan semua tur akan tampil lagi seperti pertama kali. Data keuanganmu tidak tersentuh.',
-			'info.resetConfirmAction' => 'Setel Ulang',
+			'info.resetConfirmAction' => 'Setel ulang',
 			'info.resetDoneMessage' => 'Tutorial disetel ulang.',
 			'account.title' => 'Akun',
 			'account.signedOutTitle' => 'Siapkan akunmu',
@@ -4544,7 +4178,7 @@ extension on Translations {
 			'account.signOutAction' => 'Keluar',
 			'account.dangerTitle' => 'Zona bahaya',
 			'account.dangerBody' => 'Menghapus akun bersifat permanen dan tidak bisa dibatalkan.',
-			'account.deleteAction' => 'Hapus Akun',
+			'account.deleteAction' => 'Hapus akun',
 			'account.deleteConfirmTitle' => 'Hapus akun?',
 			'account.deleteConfirmBody' => 'Akunmu dihapus permanen. Dompet, transaksi, dan anggaran di perangkat ini tetap ada.',
 			'account.deletePasswordTitle' => 'Masukkan kata sandi',
@@ -4608,7 +4242,7 @@ extension on Translations {
 			'category.archiveAction' => 'Arsipkan',
 			'category.restoreAction' => 'Pulihkan',
 			'category.archivedSection' => 'Terarsip',
-			'category.archivedHint' => 'Tidak ditawarkan di CATAT, tetapi transaksi lama tetap memakainya.',
+			'category.archivedHint' => 'Tidak ditawarkan di Catat, tetapi transaksi lama tetap memakainya.',
 			'category.emptyActive' => 'Belum ada kategori aktif.',
 			'category.archivedMessage' => ({required Object name}) => 'Kategori "${name}" diarsipkan.',
 			'category.restoredMessage' => ({required Object name}) => 'Kategori "${name}" dipulihkan.',
@@ -4639,7 +4273,6 @@ extension on Translations {
 			'notificationCapture.appsEmpty' => 'Tidak ada aplikasi yang cocok.',
 			'notificationCapture.sourceEnabled' => 'Dengarkan aplikasi ini',
 			'notificationCapture.walletLabel' => 'Dompet',
-			'notificationCapture.walletNone' => 'Pilih dompet',
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Hanya notifikasi yang memuat salah satu frasa ini yang dibaca.',
 			'notificationCapture.keywordField' => 'Tambah frasa',
@@ -4688,7 +4321,7 @@ extension on Translations {
 			'notificationCapture.undoConfirmTitle' => 'Batalkan transaksi?',
 			'notificationCapture.undoConfirm' => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.',
 			'notificationCapture.undone' => 'Transaksi otomatis dibatalkan.',
-			'notificationCapture.dismissed' => 'Tangkapan diabaikan.',
+			'notificationCapture.dismissed' => 'Notifikasi diabaikan.',
 			'notificationCapture.banner' => ({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek',
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
@@ -4710,7 +4343,7 @@ extension on Translations {
 			'notificationCapture.sourceKeywordsNone' => 'Filter kosong — tidak ada yang dibaca',
 			'notificationCapture.enableHint' => 'Transaksi dari notifikasi bank dan e-wallet yang kamu pilih dicatat untukmu.',
 			'notificationCapture.inboxEntryTitle' => 'Kotak masuk',
-			'notificationCapture.inboxEntryBody' => 'Cek tangkapan dan batalkan yang tercatat otomatis.',
+			'notificationCapture.inboxEntryBody' => 'Cek transaksi dari notifikasi dan batalkan yang tercatat otomatis.',
 			'notificationCapture.behaviorTitle' => 'Saat transaksi tertangkap',
 			'notificationCapture.autoRecordLabel' => 'Catat otomatis',
 			'notificationCapture.autoRecordOffHint' => 'Semua menunggu kamu cek di kotak masuk.',
@@ -4741,28 +4374,17 @@ extension on Translations {
 			'recurring.starters.parents' => 'Kirim ke orang tua',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Tabungan',
-			'recurring.summaryTitle' => ({required Object month}) => 'Rutin ${month}',
-			'recurring.remainingOutLabel' => 'Masih akan keluar',
-			'recurring.recordedOfTotal' => ({required Object recorded, required Object total}) => '${recorded} dari ${total} tercatat',
-			'recurring.scheduledInLabel' => 'Masuk terjadwal',
 			'recurring.subscriptionsLine' => ({required Object perMonth, required Object perYear}) => 'Langganan ${perMonth}/bln · ${perYear}/thn',
 			'recurring.approxSemantics' => ({required Object amount}) => 'kira-kira ${amount}',
 			'recurring.filterAll' => ({required Object n}) => 'Semua (${n})',
-			'recurring.filterIncome' => ({required Object n}) => 'Masuk (${n})',
-			'recurring.filterExpense' => ({required Object n}) => 'Keluar (${n})',
-			'recurring.filterTransfer' => ({required Object n}) => 'Transfer (${n})',
 			'recurring.groupPending' => 'Menunggu dicatat',
 			'recurring.groupThisMonth' => 'Bulan ini',
 			'recurring.groupLater' => 'Nanti',
 			'recurring.groupPaused' => 'Dijeda',
 			'recurring.groupEnded' => 'Selesai',
-			'recurring.recordedMeta' => 'tercatat',
-			'recurring.pendingMeta' => 'menunggu',
 			'recurring.missedMeta' => ({required Object n}) => '${n} terlewat',
-			'recurring.skippedMeta' => 'dilewati',
 			'recurring.paymentAutoDebit' => 'autodebet',
 			'recurring.paymentManual' => 'bayar sendiri',
-			'recurring.yearlyMeta' => 'tahunan',
 			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, biasanya ${usual}',
 			'recurring.emptyTitle' => 'Belum ada rutin',
 			'recurring.emptyBody' => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.',
@@ -4790,7 +4412,6 @@ extension on Translations {
 			'recurring.detailStatus' => 'Status',
 			'recurring.settingsTitle' => 'Pengaturan',
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
-			'recurring.endsOnLine' => ({required Object date}) => 'berakhir ${date}',
 			'recurring.countLine' => ({required Object n}) => '${n} kali',
 			'recurring.pausedLine' => 'Dijeda',
 			'recurring.reminderLine' => ({required Object n}) => 'Bayar sendiri · diingatkan H−${n}',
@@ -4807,8 +4428,6 @@ extension on Translations {
 			'recurring.recordedAllMessage' => ({required Object n}) => '${n} rutin tercatat.',
 			'recurring.linkedMessage' => ({required Object name}) => '${name} ditautkan.',
 			'recurring.undoAction' => 'Batalkan',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.similarTitle' => 'Sudah tercatat?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.',
 			'recurring.linkAction' => 'Tautkan',
@@ -4835,7 +4454,6 @@ extension on Translations {
 			'recurring.remindersBody' => 'Diingatkan sehari sebelum tagihan yang dibayar sendiri, dan pada hari jatuh tempo.',
 			'recurring.remindersDenied' => 'Izin notifikasi belum diberikan. Nyalakan di setelan sistem.',
 			'recurring.ruleRemindersLabel' => 'Ingatkan',
-			'recurring.remindersOffHint' => 'Pengingat rutin mati. Nyalakan di Akun.',
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} dari ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'ke ${wallet}',
 			'recurring.remainingTitle' => ({required Object month}) => 'Sisa rutin keluar · ${month}',
@@ -4904,6 +4522,8 @@ extension on Translations {
 			'plan.detailsBudget' => 'Sisa anggaran',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',
 			'plan.detailsUncertain' => 'Freelance belum dibayar (belum pasti)',
+			_ => null,
+		} ?? switch (path) {
 			'plan.detailsTransfers' => 'Transfer rutin',
 			'plan.detailsEnd' => ({required Object date}) => 'Akhir ${date}',
 			'plan.unplannedToggle' => 'Hitung jajan harian',
@@ -4916,11 +4536,11 @@ extension on Translations {
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})',
 			'plan.loadError' => 'Rencana bulan ini gagal dimuat.',
-			'plan.forecastBadge' => 'PERKIRAAN',
+			'plan.forecastBadge' => 'Perkiraan',
 			'plan.startOf' => ({required Object date}) => 'Awal ${date}',
 			'plan.compactMillion' => ({required Object value}) => '${value} jt',
 			'plan.compactThousand' => ({required Object value}) => '${value} rb',
-			'plan.fundingTitle' => 'SIAPKAN DANA',
+			'plan.fundingTitle' => 'Siapkan dana',
 			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => 'Saldo ${wallet} diperkirakan kurang ≈${shortfall} saat ${name}, ${date}. Siapkan dana di ${wallet} sebelum tanggal itu.',
 			'plan.fundingAction' => ({required Object wallet}) => 'Lihat perkiraan ${wallet}',
 			'plan.fundingMore' => ({required Object n}) => '+${n} lainnya',

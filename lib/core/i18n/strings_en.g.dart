@@ -115,12 +115,12 @@ class _Translations$record$en extends Translations$record$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get incomeAction => 'Record Income';
-	@override String get expenseAction => 'Record Expense';
-	@override String get transferAction => 'Record Transfer';
+	@override String get incomeAction => 'Record income';
+	@override String get expenseAction => 'Record expense';
+	@override String get transferAction => 'Record transfer';
 	@override String get toWalletFieldLabel => 'Into Wallet';
-	@override String get fromWalletFieldLabel => 'From Wallet';
-	@override String get destinationWalletFieldLabel => 'To Wallet';
+	@override String get fromWalletFieldLabel => 'From wallet';
+	@override String get destinationWalletFieldLabel => 'To wallet';
 	@override String get dateFieldLabel => 'Date';
 	@override String get noteFieldHint => 'Write a short note';
 	@override String get noWalletsMessage => 'No wallets yet. Create one in the Wallets tab first.';
@@ -130,45 +130,25 @@ class _Translations$record$en extends Translations$record$id {
 	@override String get transferSavedMessage => 'Transfer recorded.';
 	@override String get walletNotSelectedPrompt => 'Not selected yet';
 	@override String get savingMessage => 'Saving...';
-	@override String get incomeBadge => 'Money in';
-	@override String get expenseBadge => 'Money out';
-	@override String get transferBadge => 'Internal move';
-	@override String get stepLabel => 'Record // Transaction';
-	@override String get editStepLabel => 'Edit // Transaction';
-	@override String get expenseRuleTitle => 'Cash rule: balance is reduced';
-	@override String get expenseRuleBody => 'An expense immediately reduces the balance of the wallet you pick below.';
-	@override String get transferNoticeTitle => 'Moving between wallets';
-	@override String get transferNoticeBody => 'Record money moving between your wallets, like a cash withdrawal or an e-wallet top-up. Your total stays the same.';
-	@override String get amountLabelIncome => 'Income amount';
-	@override String get amountLabelExpense => 'Expense amount';
-	@override String get amountLabelTransfer => 'Transfer amount';
+	@override String get editStepLabel => 'Edit transaction';
+	@override String get expenseRuleTitle => 'Wallet balance goes down';
 	@override String get clearAmountAction => 'Clear';
 	@override String get categorySectionLabel => 'Category';
 	@override String get optionalHint => 'Optional';
-	@override String get expenseWalletSectionLabel => 'Source wallet';
+	@override String get expenseWalletSectionLabel => 'From wallet';
 	@override String get noteSectionLabel => 'Note';
-	@override String get balanceDecreasesCaption => 'Balance goes down';
-	@override String get balanceIncreasesCaption => 'Balance goes up';
-	@override String incomeSummary({required Object wallet, required Object amount}) => '${wallet} will go up by ${amount} once recorded.';
-	@override String expenseSummary({required Object wallet, required Object amount}) => '${wallet} will go down by ${amount} once recorded.';
-	@override String get transferSummaryTitle => 'Move summary';
-	@override String transferSummaryFrom({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}';
-	@override String transferSummaryTo({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}';
 	@override String get balanceLabel => 'Balance';
-	@override String get categoryPlaceholder => 'Pick a category';
 	@override String get categoryNoneLabel => 'No category';
 	@override String get budgetItemLabel => 'Budget item';
 	@override String get budgetItemNone => 'No budget';
-	@override String get budgetItemHelp => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.';
 	@override String budgetItemOutOfPeriod({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.';
 	@override String get freelanceCalloutTitle => 'Freelance pay?';
 	@override String get freelanceCalloutAction => 'Record it in Freelance';
 	@override String get kindSwitcherLabel => 'Transaction kind';
-	@override String get kindExpense => 'Out';
-	@override String get kindIncome => 'In';
+	@override String get kindExpense => 'Expense';
+	@override String get kindIncome => 'Income';
 	@override String get kindTransfer => 'Transfer';
 	@override String get categoryAddLabel => 'Add category';
-	@override String get draftHeardLabel => 'Heard';
 	@override String get draftCheckTitle => 'Check before recording';
 	@override late final _Translations$record$draftIssue$en draftIssue = _Translations$record$draftIssue$en._(_root);
 	@override late final _Translations$record$voice$en voice = _Translations$record$voice$en._(_root);
@@ -187,35 +167,29 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	// Translations
 	@override String get pageTitle => 'History';
 	@override String get searchHint => 'Search this month: notes / categories...';
-	@override String get monthStatusLabel => 'This month\'s log status';
-	@override String logCountBadge({required Object count}) => '${count} active logs';
-	@override String get netFlowLabel => 'Net flow';
-	@override String get flowIncomeLabel => 'In';
-	@override String get flowExpenseLabel => 'Out';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
 	@override String expenseFilterLabel({required Object count}) => 'Expenses ${count}';
 	@override String transferFilterLabel({required Object count}) => 'Transfer ${count}';
-	@override String get walletFilterAllLabel => 'All Wallets';
+	@override String get walletFilterAllLabel => 'All wallets';
 	@override String get walletFilterLabel => 'Wallet';
-	@override String get categoryFilterAllLabel => 'All Categories';
+	@override String get categoryFilterAllLabel => 'All categories';
 	@override String get categoryFilterLabel => 'Category';
 	@override String get filterButtonLabel => 'Filter';
-	@override String get filterSheetTitle => 'Filter Transactions';
+	@override String get filterSheetTitle => 'Filter transactions';
 	@override String get filterSheetDoneAction => 'Done';
 	@override String get todayLabel => 'Today';
 	@override String get yesterdayLabel => 'Yesterday';
 	@override String get untitledTransaction => 'Untitled';
-	@override String get emptyMonthBadge => 'Empty Ledger';
 	@override String get emptyMonthTitle => 'No transactions yet';
-	@override String get emptyMonthSubtitle => 'Record an income, expense, or transfer to start seeing your daily cash history here.';
-	@override String get emptyMonthCta => 'Record a Transaction Now';
-	@override String get emptyGuideTitle => 'Recording guide';
+	@override String get emptyMonthSubtitle => 'Every transaction you record shows up here, grouped by day.';
+	@override String get emptyMonthCta => 'Record transaction';
+	@override String get emptyGuideTitle => 'Three kinds of transactions';
 	@override String get emptyGuideIncomeTitle => 'Income';
-	@override String get emptyGuideIncomeDescription => 'Adds to your chosen wallet\'s balance, recorded for real in your ledger.';
+	@override String get emptyGuideIncomeDescription => 'Adds to the balance of the wallet you choose.';
 	@override String get emptyGuideExpenseTitle => 'Expense';
-	@override String get emptyGuideExpenseDescription => 'Reduces the wallet\'s balance and counts toward its monthly budget quota.';
-	@override String get emptyGuideTransferTitle => 'Transfer Between Wallets';
+	@override String get emptyGuideExpenseDescription => 'Lowers the wallet balance and fills the linked budget item.';
+	@override String get emptyGuideTransferTitle => 'Transfer between wallets';
 	@override String get emptyGuideTransferDescription => 'Moves the recorded balance between wallets without changing your total net worth.';
 	@override String get trustFooterMessage => 'Your complete history, kept safe on your device';
 	@override String get emptyFilterTitle => 'No transactions this month match the filter';
@@ -232,32 +206,32 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get detailIncomeTitle => 'Income recorded';
 	@override String get detailExpenseTitle => 'Expense recorded';
 	@override String get detailTransferTitle => 'Transfer recorded';
-	@override String get detailTypeLabel => 'Entry type';
+	@override String get detailTypeLabel => 'Transaction type';
 	@override String get detailIncomeType => 'Income';
 	@override String get detailExpenseType => 'Expense';
 	@override String get detailTransferType => 'Transfer between wallets';
 	@override String get detailCategoryLabel => 'Category';
-	@override String get detailIncomeWalletLabel => 'Destination Wallet';
-	@override String get detailExpenseWalletLabel => 'Source Wallet';
+	@override String get detailIncomeWalletLabel => 'Destination wallet';
+	@override String get detailExpenseWalletLabel => 'Source wallet';
 	@override String get detailCurrentBalance => 'Current balance';
 	@override String get detailNoteLabel => 'Note';
 	@override String get detailFromLabel => 'From';
 	@override String get detailToLabel => 'To';
 	@override String get detailAmountLabel => 'Amount';
 	@override String get detailManualNote => 'Kept safe on your device. Wallet balances follow every record, so when you edit or delete it, balances adjust with it.';
-	@override String get editAction => 'Edit This Entry';
-	@override String get recordAgainAction => 'Record Again';
-	@override String get deleteAction => 'Delete Entry from History';
-	@override String get editSheetTitle => 'Edit Entry';
-	@override String get saveChangesAction => 'Save Changes';
+	@override String get editAction => 'Edit';
+	@override String get recordAgainAction => 'Record again';
+	@override String get deleteAction => 'Delete transaction';
+	@override String get editSheetTitle => 'Edit transaction';
+	@override String get saveChangesAction => 'Save changes';
 	@override String get updatedMessage => 'Changes saved.';
-	@override String get deletedMessage => 'Entry deleted.';
+	@override String get deletedMessage => 'Transaction deleted.';
 	@override String get undoDeleteAction => 'Undo';
-	@override String get restoredMessage => 'Entry restored.';
+	@override String get restoredMessage => 'Transaction restored.';
 	@override String get budgetLabel => 'Budget';
 	@override String get openBudgetAction => 'View budget';
 	@override String get detailFreelanceNote => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.';
-	@override String get makeRecurringAction => 'Make Recurring';
+	@override String get makeRecurringAction => 'Make recurring';
 	@override String get previousMonth => 'Previous month';
 	@override String get nextMonth => 'Next month';
 }
@@ -269,9 +243,8 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get subtitle => 'Where your cash stands right now';
+	@override String get subtitle => 'Total balance of all active wallets';
 	@override String activeBadge({required Object count}) => '${count} active wallets';
-	@override String get totalLabel => 'Total balance of all wallets';
 	@override String get listHeading => 'Active wallets';
 	@override String get addAction => 'Add wallet';
 	@override String get inactiveHeading => 'Inactive wallets';
@@ -281,15 +254,14 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get typeEwallet => 'Digital wallet';
 	@override String get typeSavings => 'Savings';
 	@override String get typeCard => 'Card';
-	@override String get emptyBadge => 'No wallets yet';
 	@override String get emptyTitle => 'No wallets recorded yet';
 	@override String get emptyBody => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.';
 	@override String get loadErrorTitle => 'Couldn\'t load wallets';
 	@override String get loadErrorSubtitle => 'Wallet data couldn\'t be read. Try again.';
-	@override String get addTitle => 'Add New Wallet';
-	@override String get editTitle => 'Edit Wallet';
-	@override String get addStepLabel => 'Wallet // New';
-	@override String get editStepLabel => 'Wallet // Edit';
+	@override String get addTitle => 'Add wallet';
+	@override String get editTitle => 'Edit wallet';
+	@override String get addStepLabel => 'New wallet';
+	@override String get editStepLabel => 'Edit wallet';
 	@override String get nameLabel => 'Wallet name';
 	@override String get nameHint => 'E.g. Mandiri Savings, OVO, Cash Box';
 	@override String get nameRequiredHint => 'Required';
@@ -298,11 +270,11 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get initialBalanceLabel => 'Starting balance right now';
 	@override String get initialBalanceHelp => 'The starting balance is the money in this wallet right now, the starting point of your records. Every transaction after it counts from here.';
 	@override String get currentBalanceLabel => 'Recorded balance right now';
-	@override String get editBalanceNote => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via RECORD.';
+	@override String get editBalanceNote => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via Record.';
 	@override String get activeSwitchLabel => 'Wallet is active';
 	@override String get activeSwitchHelp => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.';
-	@override String get saveAddAction => 'Save Wallet';
-	@override String get deleteAction => 'Delete Wallet';
+	@override String get saveAddAction => 'Save wallet';
+	@override String get deleteAction => 'Delete wallet';
 	@override String get deleteHelp => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.';
 	@override String get deleteConfirmTitle => 'Delete wallet?';
 	@override String deleteConfirmMessage({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.';
@@ -313,13 +285,13 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get privacyNote => 'Data is stored locally and privately on your device.';
 	@override String get detailBackLabel => 'Back';
 	@override String get detailEditAction => 'Edit';
-	@override String get detailRecentHeading => 'This Month\'s Transactions';
+	@override String get detailRecentHeading => 'This month\'s transactions';
 	@override String get detailIncomeLabel => 'Income';
 	@override String get detailExpenseLabel => 'Expenses';
 	@override String get detailRecentEmptyTitle => 'No transactions yet';
 	@override String get detailRecentEmpty => 'No transactions this month for this wallet yet.';
-	@override String get detailViewAllAction => 'View All Transactions';
-	@override String get detailRecordAction => 'Record a Transaction for This Wallet';
+	@override String get detailViewAllAction => 'View all transactions';
+	@override String get detailRecordAction => 'Record transaction';
 	@override String get detailTransferInLabel => 'Transfers in';
 	@override String get detailTransferOutLabel => 'Transfers out';
 	@override String get detailBalanceChangeLabel => 'Balance change';
@@ -333,21 +305,15 @@ class _Translations$budget$en extends Translations$budget$id {
 
 	// Translations
 	@override String activeBadge({required Object count}) => '${count} active';
-	@override String get summaryTitle => 'Total of active budgets';
-	@override String summaryPercent({required Object percent}) => '${percent}% spent';
 	@override String get plannedLabel => 'Planned';
 	@override String get spentLabel => 'Spent';
 	@override String get remainingLabel => 'Remaining';
-	@override String spentPercentLabel({required Object percent}) => 'Spent (${percent}%)';
-	@override String paceLabel({required Object percent}) => 'Period elapsed (${percent}%)';
-	@override String get summaryNote => 'A budget is your spending plan. The used amount grows each time a linked expense or transfer is recorded.';
 	@override String get filterAll => 'All';
 	@override String get filterActive => 'Active';
 	@override String get filterFinished => 'Finished';
 	@override String get filterArchived => 'Inactive';
-	@override String get filterWalletLabel => 'Wallet';
 	@override String get filterWalletAll => 'All wallets';
-	@override String get addAction => 'Create New Budget';
+	@override String get addAction => 'Create budget';
 	@override String get periodWeekly => 'Weekly';
 	@override String get periodMonthly => 'Monthly';
 	@override String get itemStatusPlanned => 'Not yet spent';
@@ -355,7 +321,6 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemStatusCompleted => 'Completed';
 	@override String get itemStatusOverspent => 'Over budget';
 	@override String itemCount({required Object count}) => 'Items: ${count}';
-	@override String get emptyBadge => 'No plans yet';
 	@override String get emptyTitle => 'No budgets yet';
 	@override String get emptyBody => 'Plan a weekly or monthly spending limit for one wallet, then keep an eye on how much is used.';
 	@override String get emptyFilteredTitle => 'No matching budgets';
@@ -372,8 +337,8 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get unarchivedMessage => 'Budget reactivated.';
 	@override String get addStepLabel => 'New budget';
 	@override String get editStepLabel => 'Edit budget';
-	@override String get addTitle => 'Create Budget';
-	@override String get editTitle => 'Edit Budget';
+	@override String get addTitle => 'Create budget';
+	@override String get editTitle => 'Edit budget';
 	@override String get ruleTitle => 'Budget rule';
 	@override String get ruleBody => 'This plan is your spending guide. Wallet balances move with the transactions you record.';
 	@override String get nameLabel => 'Budget name';
@@ -387,16 +352,16 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
 	@override String get itemsLabel => 'Budget items';
 	@override String get itemsHelp => 'Planned purchases or planned transfers. The budget total is the sum of all items.';
-	@override String get addItemAction => 'Add Item';
-	@override String get saveAddAction => 'Save Budget';
-	@override String get archiveAction => 'Archive Budget';
+	@override String get addItemAction => 'Add item';
+	@override String get saveAddAction => 'Save budget';
+	@override String get archiveAction => 'Archive budget';
 	@override String get unarchiveAction => 'Reactivate';
 	@override String get archiveHelp => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.';
-	@override String get deleteAction => 'Delete Budget';
+	@override String get deleteAction => 'Delete budget';
 	@override String get deleteConfirmTitle => 'Delete budget?';
 	@override String deleteConfirmMessage({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.';
-	@override String get itemAddTitle => 'Add Item';
-	@override String get itemEditTitle => 'Edit Item';
+	@override String get itemAddTitle => 'Add item';
+	@override String get itemEditTitle => 'Edit item';
 	@override String get itemNameLabel => 'Item name';
 	@override String get itemNameHint => 'Example: Rice';
 	@override String get itemModeAmount => 'Amount';
@@ -406,18 +371,17 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemUnitPriceLabel => 'Unit price';
 	@override String get itemTotalLabel => 'Item total';
 	@override String itemItemizedDetail({required Object quantity, required Object price}) => '${quantity} × ${price}';
-	@override String get itemSaveAction => 'Save Item';
-	@override String get itemDeleteAction => 'Delete Item';
-	@override String get detailBackLabel => 'Budget List';
+	@override String get itemSaveAction => 'Save item';
+	@override String get itemDeleteAction => 'Delete item';
+	@override String get detailBackLabel => 'Budget list';
 	@override String get detailEditAction => 'Edit budget';
-	@override String get detailRecordExpenseAction => 'Record Expense';
-	@override String get detailRecordTransferAction => 'Record Transfer';
-	@override String get detailItemsHeading => 'Budget Items';
+	@override String get detailRecordExpenseAction => 'Record expense';
+	@override String get detailRecordTransferAction => 'Record transfer';
+	@override String get detailItemsHeading => 'Budget items';
 	@override String get detailNoItems => 'This budget has no items yet. Add items via Edit so expenses can be linked.';
-	@override String get detailLinkedHeading => 'Linked Transactions';
+	@override String get detailLinkedHeading => 'Linked transactions';
 	@override String get detailLinkedEmpty => 'No transactions are linked to this budget yet.';
 	@override String get detailHowTitle => 'How budget items work';
-	@override String detailHowBody({required Object wallet}) => 'Record with the button on each item. Expense items count expenses from ${wallet}; transfer items count transfers from ${wallet} to their destination wallet.';
 	@override String get unknownWallet => 'Wallet not found';
 	@override String get totalPlannedLabel => 'Total planned budget';
 	@override String get itemsRequiredHint => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.';
@@ -431,34 +395,33 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get itemNoTargetWallet => 'You need another active wallet as the transfer destination.';
 	@override String itemTransferTo({required Object wallet}) => 'To ${wallet}';
 	@override String itemTargetConflict({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.';
-	@override String get templatesAction => 'Budget Templates';
-	@override String get templatesTitle => 'Budget Templates';
+	@override String get templatesAction => 'Budget templates';
+	@override String get templatesTitle => 'Budget templates';
 	@override String templatesSavedBadge({required Object count}) => 'Saved: ${count}';
 	@override String get templatesInfoTitle => 'What is a budget template?';
 	@override String get templatesInfoBody => 'A reusable set of plan items, so you never start from scratch. Each use creates a new, independent budget.';
 	@override String templateItemCount({required Object count}) => 'Items: ${count}';
 	@override String get templateItemsLabel => 'Planned items';
 	@override String get templateTotalLabel => 'Planned total';
-	@override String get templateUseAction => 'Use This Template';
+	@override String get templateUseAction => 'Use this template';
 	@override String get templateEditAction => 'Edit';
 	@override String get templateDuplicateAction => 'Duplicate';
 	@override String get templateInactiveBadge => 'Inactive';
-	@override String get templateAddAction => 'Create New Template';
+	@override String get templateAddAction => 'Create template';
 	@override String get templatesFooter => 'Templates can be edited any time without changing budgets already created from them.';
 	@override String get templatesEmptyBadge => 'No templates yet';
 	@override String get templatesEmptyTitle => 'No templates yet';
 	@override String get templatesEmptyBody => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.';
 	@override String get templateNeedsWallet => 'Create an active wallet first to use a template.';
 	@override String get templatesLoadError => 'Templates failed to load';
-	@override String get templateStepLabel => 'Budget template';
-	@override String get templateAddTitle => 'Create Template';
-	@override String get templateEditTitle => 'Edit Template';
+	@override String get templateAddTitle => 'Create template';
+	@override String get templateEditTitle => 'Edit template';
 	@override String get templateRuleBody => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.';
 	@override String get templateNameHint => 'Example: Monthly groceries';
 	@override String get templateEnabledLabel => 'Offer this template';
 	@override String get templateEnabledHelp => 'Inactive templates stay saved but cannot be used to create a budget.';
-	@override String get templateSaveAction => 'Save Template';
-	@override String get templateDeleteAction => 'Delete Template';
+	@override String get templateSaveAction => 'Save template';
+	@override String get templateDeleteAction => 'Delete template';
 	@override String get templateDeleteConfirmTitle => 'Delete template?';
 	@override String templateDeleteConfirmMessage({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.';
 	@override String get templateSavedMessage => 'Template saved.';
@@ -466,7 +429,6 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get templateDeletedMessage => 'Template deleted.';
 	@override String get templateDuplicatedMessage => 'Template duplicated.';
 	@override String templateCopyName({required Object name}) => '${name} (copy)';
-	@override String fromTemplateStepLabel({required Object name}) => 'From template ${name}';
 	@override String get templateNameLabel => 'Template name';
 	@override String get repeatLabel => 'Repeat every period';
 	@override String repeatHelpMonthly({required Object date}) => 'Starts again every month from ${date} with the same items.';
@@ -490,35 +452,28 @@ class _Translations$freelance$en extends Translations$freelance$id {
 
 	// Translations
 	@override String get title => 'Freelance';
-	@override String worklogTab({required Object count}) => 'Worklog (${count})';
-	@override String paymentsTab({required Object count}) => 'Payments (${count})';
+	@override String worklogTab({required Object count}) => 'Work hours (${count})';
+	@override String paymentsTab({required Object count}) => 'Invoices (${count})';
 	@override String get loadErrorTitle => 'Freelance data failed to load';
-	@override String get ruleTitle => 'Freelance cash rule';
-	@override String get ruleBody => 'Work hours add up to an invoice, and your wallet balance grows when its payment is recorded as received.';
-	@override String get summaryTitle => 'Pay & hours summary';
-	@override String get totalHoursLabel => 'Hours worked';
+	@override String get ruleTitle => 'How Freelance records';
+	@override String get ruleBody => 'Work hours add up to an invoice, and your wallet balance grows when the invoice is recorded as received.';
 	@override String hoursValue({required Object hours}) => '${hours} h';
 	@override String get hourShort => 'h';
 	@override String projectCount({required Object count}) => 'Projects: ${count}';
 	@override String get earnedLabel => 'Total earned';
-	@override String get earnedCaption => 'Hours × rate, before deductions';
 	@override String get paidLabel => 'Received';
-	@override String get paidCaption => 'Gross pay · payment already recorded';
 	@override String get unpaidLabel => 'Not received';
-	@override String get unpaidCaption => 'Gross pay · unbilled or pending';
-	@override String paidRatio({required Object percent}) => '${percent}% received';
 	@override String get projectsLabel => 'Projects';
 	@override String get projectsEmpty => 'No projects yet. Add a client or project with its hourly rate first.';
-	@override String get projectStepLabel => 'Freelance project';
-	@override String get projectAddTitle => 'Add Project';
-	@override String get projectEditTitle => 'Edit Project';
+	@override String get projectAddTitle => 'Add project';
+	@override String get projectEditTitle => 'Edit project';
 	@override String get projectNameLabel => 'Client or project name';
 	@override String get projectNameHint => 'Example: Studio Koding';
 	@override String get requiredHint => 'Required';
 	@override String get hourlyRateLabel => 'Hourly rate';
-	@override String get hourlyRateHelp => 'Default rate for new entries. Changing it does not change entries already recorded.';
+	@override String get hourlyRateHelp => 'Default rate for new work hours. Changing it does not change hours already recorded.';
 	@override String get deductionsLabel => 'Deductions';
-	@override String get deductionsHelp => 'Taken from the gross pay of each payment, such as tax. Changing them does not change payments already created.';
+	@override String get deductionsHelp => 'Taken from the gross pay of each invoice, such as tax. Changing them does not change invoices already created.';
 	@override String get deductionAddAction => 'Add deduction';
 	@override String get deductionTitle => 'Deduction';
 	@override String get deductionLabelLabel => 'Deduction name';
@@ -527,38 +482,37 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get deductionKindFixed => 'Fixed amount';
 	@override String get deductionPercentLabel => 'Percent of gross pay';
 	@override String get deductionPercentHelp => 'At most one decimal place, for example 2.5.';
-	@override String get deductionAmountLabel => 'Amount per payment';
+	@override String get deductionAmountLabel => 'Amount per invoice';
 	@override String get deductionSaveAction => 'Save deduction';
 	@override String get deductionRemoveAction => 'Remove deduction';
 	@override String get projectSaveAction => 'Save project';
 	@override String get projectDeleteAction => 'Delete project';
-	@override String get projectDeleteLockedHint => 'A project that already has worklog entries cannot be deleted.';
+	@override String get projectDeleteLockedHint => 'A project with recorded work hours cannot be deleted.';
 	@override String get projectDeleteConfirmTitle => 'Delete project?';
 	@override String projectDeleteConfirmMessage({required Object name}) => 'Project "${name}" will be deleted.';
-	@override String get projectDeleteRefused => 'This project already has worklog entries, so it cannot be deleted.';
+	@override String get projectDeleteRefused => 'This project has recorded work hours, so it cannot be deleted.';
 	@override String get projectSavedMessage => 'Project saved.';
 	@override String get projectUpdatedMessage => 'Project changes saved.';
 	@override String get projectDeletedMessage => 'Project deleted.';
 	@override String get projectLabel => 'Project';
 	@override String get projectPick => 'Choose a project';
-	@override String get entryStepLabel => 'Work log';
-	@override String get entryAddTitle => 'Add Worklog';
-	@override String get entryEditTitle => 'Edit Worklog';
-	@override String get entryRuleBody => 'Work hours add up to an invoice. The money reaches your balance when its payment is recorded as received.';
+	@override String get entryAddTitle => 'Record work hours';
+	@override String get entryEditTitle => 'Edit work hours';
+	@override String get entryRuleBody => 'Work hours add up to an invoice. The money reaches your balance when the invoice is recorded as received.';
 	@override String get workDateLabel => 'Work date';
 	@override String get hoursLabel => 'Duration';
-	@override String get entryRateHelp => 'Filled from the project rate. Change it if this entry\'s rate differs.';
+	@override String get entryRateHelp => 'Filled from the project rate. Change it if this rate is different.';
 	@override String get noteLabel => 'Note';
 	@override String get noteHint => 'What was done (optional)';
-	@override String get entrySaveAction => 'Save Worklog';
+	@override String get entrySaveAction => 'Save work hours';
 	@override String get entrySaveHint => 'This amount is recorded as earned, not yet received.';
-	@override String get entryDeleteAction => 'Delete entry';
-	@override String get entryDeleteConfirmTitle => 'Delete worklog entry?';
-	@override String get entryDeleteConfirmMessage => 'This entry will be deleted. Wallet balances do not change.';
-	@override String get entryLockedMessage => 'Entries already in a payment cannot be edited or deleted.';
-	@override String get entrySavedMessage => 'Worklog saved.';
-	@override String get entryUpdatedMessage => 'Worklog changes saved.';
-	@override String get entryDeletedMessage => 'Worklog deleted.';
+	@override String get entryDeleteAction => 'Delete work hours';
+	@override String get entryDeleteConfirmTitle => 'Delete these work hours?';
+	@override String get entryDeleteConfirmMessage => 'These work hours are deleted. Wallet balances do not change.';
+	@override String get entryLockedMessage => 'Work hours already on an invoice cannot be edited or deleted.';
+	@override String get entrySavedMessage => 'Work hours recorded.';
+	@override String get entryUpdatedMessage => 'Work hours changes saved.';
+	@override String get entryDeletedMessage => 'Work hours deleted.';
 	@override String hoursTimesRate({required Object hours, required Object rate}) => '${hours} h × ${rate}';
 	@override String get statusUnbilled => 'Unbilled';
 	@override String get statusPending => 'Pending';
@@ -568,63 +522,53 @@ class _Translations$freelance$en extends Translations$freelance$id {
 	@override String get unknownProject => 'Deleted project';
 	@override String get unknownWallet => 'deleted wallet';
 	@override String get pendingTotalLabel => 'Pending (net)';
-	@override String get paidTotalLabel => 'Received (net)';
-	@override String paymentCount({required Object count}) => 'Payments: ${count}';
-	@override String get paymentStepLabel => 'Freelance payment';
-	@override String get paymentAddTitle => 'Create Payment';
-	@override String get paymentCreateRuleBody => 'A payment groups work hours into one invoice. Once it\'s recorded as received, your wallet balance grows.';
-	@override String paymentEntriesLabel({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)';
-	@override String paymentEntriesSummary({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h';
+	@override String get paymentAddTitle => 'Create invoice';
+	@override String get paymentCreateRuleBody => 'An invoice groups unbilled work hours. Once it is recorded as received, your wallet balance grows.';
+	@override String paymentEntriesLabel({required Object count, required Object hours}) => 'Invoiced: ${count} records, ${hours} h';
+	@override String paymentEntriesSummary({required Object count, required Object hours}) => '${count} records · ${hours} h';
 	@override String get expectedDateLabel => 'Expected date received';
 	@override String get grossPayLabel => 'Gross pay';
 	@override String get netPayLabel => 'Net pay';
 	@override String get netPayNotPositive => 'Deductions cannot equal or exceed gross pay.';
-	@override String get paymentCreateAction => 'Create Payment';
+	@override String get paymentCreateAction => 'Create invoice';
 	@override String get paymentChangeDateAction => 'Change date';
 	@override String get paymentDeleteAction => 'Delete';
-	@override String get paymentDeleteConfirmTitle => 'Delete payment?';
-	@override String get paymentDeleteConfirmMessage => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.';
-	@override String get paymentEntriesInvalid => 'The chosen entries are already billed or belong to another project.';
-	@override String get paymentPaidLocked => 'A received payment cannot be deleted. Cancel its receipt first.';
-	@override String get paymentAlreadyPaid => 'This payment is already recorded as received.';
-	@override String get paymentCreatedMessage => 'Payment created.';
-	@override String get paymentUpdatedMessage => 'Payment date updated.';
-	@override String get paymentDeletedMessage => 'Payment deleted.';
-	@override String get receiveTitle => 'Record Payment Received';
+	@override String get paymentDeleteConfirmTitle => 'Delete invoice?';
+	@override String get paymentDeleteConfirmMessage => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.';
+	@override String get paymentEntriesInvalid => 'The selected work hours are already invoiced or belong to another project.';
+	@override String get paymentPaidLocked => 'A received invoice cannot be deleted. Cancel its receipt first.';
+	@override String get paymentAlreadyPaid => 'This invoice is already recorded as received.';
+	@override String get paymentCreatedMessage => 'Invoice created.';
+	@override String get paymentUpdatedMessage => 'Invoice date updated.';
+	@override String get paymentDeletedMessage => 'Invoice deleted.';
+	@override String get receiveTitle => 'Record invoice received';
 	@override String get receiveRuleTitle => 'Payment received';
 	@override String get receiveRuleBody => 'Record it once the money has reached you. The chosen wallet grows by the net pay, and this invoice is marked paid.';
 	@override String get receiveAmountLabel => 'Amount received';
 	@override String get receiveWalletLabel => 'Receiving wallet';
 	@override String get receiveDateLabel => 'Date received';
-	@override String receiveNoteDefault({required Object project}) => 'Freelance payment ${project}';
-	@override String get receiveAction => 'Record Received';
-	@override String get paymentReceivedMessage => 'Payment recorded as received. Wallet balance increased.';
+	@override String receiveNoteDefault({required Object project}) => 'Freelance invoice ${project}';
+	@override String get receiveAction => 'Record received';
+	@override String get paymentReceivedMessage => 'Invoice recorded as received. Wallet balance increased.';
 	@override String get receiptCancelAction => 'Cancel receipt';
 	@override String get receiptCancelConfirmTitle => 'Cancel receipt?';
-	@override String get receiptCancelConfirmMessage => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.';
-	@override String get receiptCancelledMessage => 'Receipt cancelled. The payment is pending again.';
+	@override String get receiptCancelConfirmMessage => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.';
+	@override String get receiptCancelledMessage => 'Receipt cancelled. The invoice is pending again.';
 	@override String get changeAction => 'Change';
 	@override String get receiptCancelConfirmAction => 'Delete income';
 	@override String billAction({required Object count}) => 'Bill (${count})';
-	@override String get entriesEmptyBadge => 'No work hours yet';
-	@override String get entriesEmptyTitle => 'No worklog yet';
-	@override String get entriesEmptyBody => 'Log this project\'s work hours with the + Worklog button below.';
-	@override String get entriesFilteredEmpty => 'No entries with this status.';
-	@override String get entryAddShortAction => '+ Worklog';
-	@override String entryCountLabel({required Object count}) => 'Entries: ${count}';
+	@override String get entriesEmptyTitle => 'No work hours yet';
+	@override String get entriesEmptyBody => 'The work hours you record become this project\'s invoices.';
+	@override String get entriesFilteredEmpty => 'No work hours with this status.';
+	@override String get entryAddShortAction => 'Record work hours';
 	@override String get filterAll => 'All';
-	@override String lastEntryOn({required Object date}) => 'Last ${date}';
 	@override String get noDeductions => 'No deductions';
-	@override String get noEntriesYet => 'No entries yet';
 	@override String projectTotals({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}';
-	@override String get projectsEmptyBadge => 'No projects yet';
 	@override String get projectsEmptyTitle => 'No projects yet';
 	@override String get unbilledLabel => 'Unbilled';
-	@override String get unbilledNone => 'Everything is billed';
-	@override String get paymentsEmptyBadge => 'No invoices yet';
-	@override String get paymentsEmptyTitle => 'No payments yet';
-	@override String get paymentsEmptyBody => 'Tap Bill below to group unbilled work hours into one payment.';
-	@override String get paymentsFilteredEmpty => 'No payments with this status.';
+	@override String get paymentsEmptyTitle => 'No invoices yet';
+	@override String get paymentsEmptyBody => 'Group unbilled work hours into one invoice, then record it when you are paid.';
+	@override String get paymentsFilteredEmpty => 'No invoices with this status.';
 	@override String nextExpected({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}';
 	@override String paymentWorkRange({required Object range}) => 'Work ${range}';
 	@override String get paidOffBadge => 'Paid off';
@@ -640,21 +584,14 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get loadErrorTitle => 'Home failed to load';
 	@override String get balanceLabel => 'Total balance';
 	@override String walletCount({required Object count}) => 'Active wallets: ${count}';
-	@override String moreWallets({required Object count}) => '+${count} more';
-	@override String get startBadge => 'Start recording';
-	@override String get noWalletsBody => 'No wallet balance recorded yet.';
-	@override String incomeLabel({required Object month}) => 'Income ${month}';
-	@override String expenseLabel({required Object month}) => 'Expenses ${month}';
 	@override String get budgetTitle => 'Active budgets';
 	@override String get budgetRemaining => 'Remaining';
 	@override String get budgetOver => 'Over plan';
-	@override String get budgetAction => 'View Budgets';
+	@override String get budgetAction => 'View budgets';
 	@override String get freelanceTitle => 'Freelance';
-	@override String freelancePaid({required Object amount}) => 'Received: ${amount}';
 	@override String get freelanceAction => 'View Freelance';
 	@override String get recentTitle => 'Recent transactions';
 	@override String get seeAll => 'See all';
-	@override String get emptyBadge => 'Empty inventory';
 	@override String get firstTitle => 'Start with your wallets';
 	@override String get firstBody => 'Record where your money is right now. Every transaction updates its balance.';
 	@override String get stepWalletTitle => 'Add your first wallet';
@@ -667,28 +604,10 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get stepsTitle => 'First steps';
 	@override String get emptyTitle => 'No transactions yet';
 	@override String get emptyBody => 'Start by recording your first income, expense, or transfer.';
-	@override String get emptyNoWalletBody => 'Create your first wallet with its starting balance, then record your first transaction.';
 	@override String get recordAction => 'Record transaction';
 	@override String get createWalletAction => 'Add wallet';
 	@override String get budgetLink => 'Or create a spending budget';
-	@override String get guideTitle => 'Quick guide';
-	@override String get guideCount => '3 core rules';
-	@override String get guideWalletTitle => 'Wallets';
-	@override String get guideWalletTag => 'Real assets';
-	@override String get guideWalletBody => 'Record bank accounts, digital wallets, or cash with their current balance.';
-	@override String get guideBudgetTitle => 'Budgets';
-	@override String get guideBudgetTag => 'Plans';
-	@override String get guideBudgetBody => 'Plan spending limits and track how much is used.';
-	@override String get guideFreelanceTitle => 'Freelance';
-	@override String get guideFreelanceTag => 'Receivables';
-	@override String get guideFreelanceBody => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.';
 	@override String budgetSpentOf({required Object spent, required Object planned}) => '${spent} used of ${planned}';
-	@override String get freelanceUnpaidTitle => 'Not received (gross)';
-	@override String get freelanceDueLabel => 'Due';
-	@override String freelancePendingInvoices({required Object count}) => 'Pending invoices: ${count}';
-	@override String freelanceSummaryLine({required Object hours, required Object earned}) => '${hours} · earned ${earned}';
-	@override String openCard({required Object name}) => 'Open ${name}';
-	@override String budgetUsedBadge({required Object percent}) => '${percent}% used';
 	@override String walletLink({required Object count}) => 'In ${count} wallets';
 	@override String get netLabel => 'Net this month';
 	@override String get hideAmounts => 'Hide amounts';
@@ -714,16 +633,16 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get closeAction => 'Close';
 	@override String pageIndicatorLabel({required Object current, required Object total}) => 'Page ${current} of ${total}';
 	@override String get page1Title => 'All your money, one book';
-	@override String get page1Body => 'See where your money is, what happens to it, and where you plan for it to go — all in your personal cash book.';
+	@override String get page1Body => 'See where your money is, what happens to it, and where you plan for it to go — all in one notebook.';
 	@override String get page2Title => 'Know where your money is';
 	@override String get page2Body => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.';
 	@override String get page3Title => 'Record in seconds';
-	@override String get page3Body => 'Money in, money out, or moved between wallets — tap RECORD. Your usual wallet and favorite categories are already waiting.';
+	@override String get page3Body => 'Income, expense, or moving between wallets — tap Record. Your usual wallets and favorite categories are ready.';
 	@override String get page4Title => 'Plan, then track';
 	@override String get page4Body => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.';
 	@override String get finalTitle => 'Start with your first wallet';
 	@override String get finalBody => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.';
-	@override String get createWalletAction => 'Create First Wallet';
+	@override String get createWalletAction => 'Add wallet';
 	@override String get laterAction => 'Maybe later';
 	@override String get signInAction => 'Have an account? Sign in';
 	@override String get backAction => 'Back';
@@ -752,21 +671,21 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeBalanceTitle => 'Total recorded balance';
 	@override String get homeBalanceBody => 'The sum of all active wallets — where your money stands at a glance.';
 	@override String get homeRecordTitle => 'One door for recording';
-	@override String get homeRecordBody => 'Every bit of money in, out, and between wallets is recorded from here.';
+	@override String get homeRecordBody => 'Every income, expense, and transfer is recorded from here.';
 	@override String get homeCashFlowTitle => 'This month\'s flow';
 	@override String get homeCashFlowBody => 'The money that actually came in and went out this month.';
 	@override String get homeBudgetTitle => 'Active budget left';
 	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
 	@override String get homeFreelanceTitle => 'Freelance summary';
-	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when a payment is recorded as received.';
+	@override String get homeFreelanceBody => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when an invoice is recorded as received.';
 	@override String get homeRecentTitle => 'Recent transactions';
 	@override String get homeRecentBody => 'Your latest records. Tap one for details, or See all for the month-by-month history.';
 	@override String get recordKindTitle => 'Pick the kind';
-	@override String get recordKindBody => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.';
+	@override String get recordKindBody => 'An expense lowers a balance, income raises it, and a transfer only moves money between your wallets — your total stays the same.';
 	@override String get recordFreelanceTitle => 'Freelance pay has its own path';
-	@override String get recordFreelanceBody => 'Project pay is recorded as a received payment in Freelance, so its work hours and invoice are settled too.';
+	@override String get recordFreelanceBody => 'Project pay is recorded as a received invoice in Freelance, so its work hours and invoice are settled too.';
 	@override String get recordAmountTitle => 'Amount';
-	@override String get recordAmountBody => 'Type the amount, or use the quick buttons.';
+	@override String get recordAmountBody => 'Type the amount on the keypad.';
 	@override String get recordWalletTitle => 'Wallet filled in for you';
 	@override String get recordWalletBody => 'The wallet you used last is already selected. Change it if needed.';
 	@override String get recordBudgetItemTitle => 'Link to a budget';
@@ -778,7 +697,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get walletAddTitle => 'Add a wallet';
 	@override String get walletAddBody => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.';
 	@override String get txnMonthTitle => 'One month per view';
-	@override String get txnMonthBody => 'Switch months to see other history. The in and out totals here cover only the month shown.';
+	@override String get txnMonthBody => 'Switch months to see other history. The income and expense totals here cover only the month shown.';
 	@override String get txnFilterTitle => 'Search and filter';
 	@override String get txnFilterBody => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.';
 	@override String get txnRowTitle => 'Edit or delete';
@@ -792,9 +711,9 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get budgetDetailItemTitle => 'Budget item';
 	@override String get budgetDetailItemBody => 'Used goes up from transactions linked to this item within the budget period.';
 	@override String get budgetDetailRecordTitle => 'Record from an item';
-	@override String get budgetDetailRecordBody => 'Opens RECORD with this item already selected.';
+	@override String get budgetDetailRecordBody => 'Opens Record with this item already selected.';
 	@override String get freelanceProjectTitle => 'Projects and rates';
-	@override String get freelanceProjectBody => 'Each project has an hourly rate and deductions. Tap a project to log hours and payments.';
+	@override String get freelanceProjectBody => 'Each project has an hourly rate and deductions. Tap a project to record hours and invoices.';
 	@override String get freelanceWorklogTitle => 'Hours worked';
 	@override String get freelanceWorklogBody => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.';
 	@override String get freelanceReceiveTitle => 'Money actually arrives';
@@ -820,7 +739,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get recurringPendingTitle => 'Waiting to record';
 	@override String get recurringPendingBody => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.';
 	@override String get recurringAddTitle => 'Add recurring';
-	@override String get recurringAddBody => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.';
+	@override String get recurringAddBody => 'You can also use Repeat in Record, or Make recurring in a transaction\'s details.';
 	@override String get budgetRepeatTitle => 'Repeat every period';
 	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
 	@override String get planMonthPickerTitle => 'Next months';
@@ -870,7 +789,7 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get signOutAction => 'Sign out';
 	@override String get dangerTitle => 'Danger zone';
 	@override String get dangerBody => 'Deleting your account is permanent and can\'t be undone.';
-	@override String get deleteAction => 'Delete Account';
+	@override String get deleteAction => 'Delete account';
 	@override String get deleteConfirmTitle => 'Delete account?';
 	@override String get deleteConfirmBody => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.';
 	@override String get deletePasswordTitle => 'Enter your password';
@@ -986,7 +905,6 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get appsEmpty => 'No matching apps.';
 	@override String get sourceEnabled => 'Listen to this app';
 	@override String get walletLabel => 'Wallet';
-	@override String get walletNone => 'Choose a wallet';
 	@override String get keywordsLabel => 'Filter';
 	@override String get keywordsHint => 'Only notifications containing one of these phrases are read.';
 	@override String get keywordField => 'Add a phrase';
@@ -1035,7 +953,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get undoConfirmTitle => 'Undo this transaction?';
 	@override String get undoConfirm => 'The transaction is deleted and the wallet balance goes back to what it was.';
 	@override String get undone => 'Automatic transaction undone.';
-	@override String get dismissed => 'Capture dismissed.';
+	@override String get dismissed => 'Notification dismissed.';
 	@override String banner({required Object n}) => '${n} transactions from notifications to check';
 	@override String get bannerAction => 'Check';
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
@@ -1057,7 +975,7 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get sourceKeywordsNone => 'Empty filter — nothing is read';
 	@override String get enableHint => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.';
 	@override String get inboxEntryTitle => 'Inbox';
-	@override String get inboxEntryBody => 'Check captures and undo automatic records.';
+	@override String get inboxEntryBody => 'Check transactions from notifications and undo automatic ones.';
 	@override String get behaviorTitle => 'When a transaction is caught';
 	@override String get autoRecordLabel => 'Record automatically';
 	@override String get autoRecordOffHint => 'Everything waits for you to check in the inbox.';
@@ -1087,28 +1005,17 @@ class _Translations$recurring$en extends Translations$recurring$id {
 
 	// Translations
 	@override late final _Translations$recurring$starters$en starters = _Translations$recurring$starters$en._(_root);
-	@override String summaryTitle({required Object month}) => 'Recurring ${month}';
-	@override String get remainingOutLabel => 'Still to go out';
-	@override String recordedOfTotal({required Object recorded, required Object total}) => '${recorded} of ${total} recorded';
-	@override String get scheduledInLabel => 'Scheduled income';
 	@override String subscriptionsLine({required Object perMonth, required Object perYear}) => 'Subscriptions ${perMonth}/mo · ${perYear}/yr';
 	@override String approxSemantics({required Object amount}) => 'about ${amount}';
 	@override String filterAll({required Object n}) => 'All (${n})';
-	@override String filterIncome({required Object n}) => 'In (${n})';
-	@override String filterExpense({required Object n}) => 'Out (${n})';
-	@override String filterTransfer({required Object n}) => 'Transfer (${n})';
 	@override String get groupPending => 'Waiting to record';
 	@override String get groupThisMonth => 'This month';
 	@override String get groupLater => 'Later';
 	@override String get groupPaused => 'Paused';
 	@override String get groupEnded => 'Ended';
-	@override String get recordedMeta => 'recorded';
-	@override String get pendingMeta => 'waiting';
 	@override String missedMeta({required Object n}) => '${n} missed';
-	@override String get skippedMeta => 'skipped';
 	@override String get paymentAutoDebit => 'auto-debit';
 	@override String get paymentManual => 'I pay it';
-	@override String get yearlyMeta => 'yearly';
 	@override String priceUp({required Object amount, required Object usual}) => '${amount}, usually ${usual}';
 	@override String get emptyTitle => 'No recurring yet';
 	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
@@ -1136,7 +1043,6 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get detailStatus => 'Status';
 	@override String get settingsTitle => 'Settings';
 	@override String progressLine({required Object k, required Object n}) => '${k} of ${n} recorded';
-	@override String endsOnLine({required Object date}) => 'ends ${date}';
 	@override String countLine({required Object n}) => '${n} times';
 	@override String get pausedLine => 'Paused';
 	@override String reminderLine({required Object n}) => 'I pay it · reminded ${n} day(s) before';
@@ -1179,7 +1085,6 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get remindersBody => 'Reminded a day before bills you pay yourself, and on the due day.';
 	@override String get remindersDenied => 'Notification permission was not granted. Turn it on in system settings.';
 	@override String get ruleRemindersLabel => 'Remind me';
-	@override String get remindersOffHint => 'Recurring reminders are off. Turn them on in Account.';
 	@override String positionMeta({required Object k, required Object n}) => '${k} of ${n}';
 	@override String toWalletMeta({required Object wallet}) => 'to ${wallet}';
 	@override String remainingTitle({required Object month}) => 'Recurring still to go out · ${month}';
@@ -1269,11 +1174,11 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
 	@override String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})';
 	@override String get loadError => 'Could not load this month.';
-	@override String get forecastBadge => 'FORECAST';
+	@override String get forecastBadge => 'Estimate';
 	@override String startOf({required Object date}) => 'Start ${date}';
 	@override String compactMillion({required Object value}) => '${value}M';
 	@override String compactThousand({required Object value}) => '${value}K';
-	@override String get fundingTitle => 'PREPARE FUNDS';
+	@override String get fundingTitle => 'Prepare funds';
 	@override String fundingBody({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.';
 	@override String fundingAction({required Object wallet}) => 'See ${wallet} forecast';
 	@override String fundingMore({required Object n}) => '+${n} more';
@@ -1342,7 +1247,7 @@ class _Translations$record$voice$en extends Translations$record$voice$id {
 	@override String get typeInstead => 'Type instead';
 	@override late final _Translations$record$voice$failure$en failure = _Translations$record$voice$failure$en._(_root);
 	@override String get idleHint => 'Tap the microphone, then say one transaction.';
-	@override String get recordingBadge => 'REC';
+	@override String get recordingBadge => 'Rec';
 	@override String get startAction => 'Start recording';
 	@override String get listeningButtonLabel => 'Listening';
 	@override String get retryAction => 'Record again';
@@ -1384,8 +1289,8 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String get paymentLabel => 'Payment';
 	@override String get paymentManual => 'I pay it';
 	@override String get paymentAutoDebit => 'Auto-debit';
-	@override String get recordAndScheduleAction => 'Record & Schedule';
-	@override String get saveScheduleAction => 'Save Schedule';
+	@override String get recordAndScheduleAction => 'Record and schedule';
+	@override String get saveScheduleAction => 'Save schedule';
 	@override String scheduledMessage({required Object name, required Object date}) => '${name} scheduled. First on ${date}.';
 	@override String recordedMessage({required Object name}) => '${name} recorded and scheduled.';
 	@override String recordedNextMessage({required Object name, required Object date}) => '${name} recorded. Next on ${date}.';
@@ -1498,12 +1403,12 @@ extension on TranslationsEn {
 			'appShell.transactionsTabLabel' => 'History',
 			'appShell.walletsTabLabel' => 'Wallets',
 			'appShell.planTabLabel' => 'Plan',
-			'record.incomeAction' => 'Record Income',
-			'record.expenseAction' => 'Record Expense',
-			'record.transferAction' => 'Record Transfer',
+			'record.incomeAction' => 'Record income',
+			'record.expenseAction' => 'Record expense',
+			'record.transferAction' => 'Record transfer',
 			'record.toWalletFieldLabel' => 'Into Wallet',
-			'record.fromWalletFieldLabel' => 'From Wallet',
-			'record.destinationWalletFieldLabel' => 'To Wallet',
+			'record.fromWalletFieldLabel' => 'From wallet',
+			'record.destinationWalletFieldLabel' => 'To wallet',
 			'record.dateFieldLabel' => 'Date',
 			'record.noteFieldHint' => 'Write a short note',
 			'record.noWalletsMessage' => 'No wallets yet. Create one in the Wallets tab first.',
@@ -1513,45 +1418,25 @@ extension on TranslationsEn {
 			'record.transferSavedMessage' => 'Transfer recorded.',
 			'record.walletNotSelectedPrompt' => 'Not selected yet',
 			'record.savingMessage' => 'Saving...',
-			'record.incomeBadge' => 'Money in',
-			'record.expenseBadge' => 'Money out',
-			'record.transferBadge' => 'Internal move',
-			'record.stepLabel' => 'Record // Transaction',
-			'record.editStepLabel' => 'Edit // Transaction',
-			'record.expenseRuleTitle' => 'Cash rule: balance is reduced',
-			'record.expenseRuleBody' => 'An expense immediately reduces the balance of the wallet you pick below.',
-			'record.transferNoticeTitle' => 'Moving between wallets',
-			'record.transferNoticeBody' => 'Record money moving between your wallets, like a cash withdrawal or an e-wallet top-up. Your total stays the same.',
-			'record.amountLabelIncome' => 'Income amount',
-			'record.amountLabelExpense' => 'Expense amount',
-			'record.amountLabelTransfer' => 'Transfer amount',
+			'record.editStepLabel' => 'Edit transaction',
+			'record.expenseRuleTitle' => 'Wallet balance goes down',
 			'record.clearAmountAction' => 'Clear',
 			'record.categorySectionLabel' => 'Category',
 			'record.optionalHint' => 'Optional',
-			'record.expenseWalletSectionLabel' => 'Source wallet',
+			'record.expenseWalletSectionLabel' => 'From wallet',
 			'record.noteSectionLabel' => 'Note',
-			'record.balanceDecreasesCaption' => 'Balance goes down',
-			'record.balanceIncreasesCaption' => 'Balance goes up',
-			'record.incomeSummary' => ({required Object wallet, required Object amount}) => '${wallet} will go up by ${amount} once recorded.',
-			'record.expenseSummary' => ({required Object wallet, required Object amount}) => '${wallet} will go down by ${amount} once recorded.',
-			'record.transferSummaryTitle' => 'Move summary',
-			'record.transferSummaryFrom' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes down ${amount}',
-			'record.transferSummaryTo' => ({required Object wallet, required Object amount}) => 'Wallet ${wallet} goes up ${amount}',
 			'record.balanceLabel' => 'Balance',
-			'record.categoryPlaceholder' => 'Pick a category',
 			'record.categoryNoneLabel' => 'No category',
 			'record.budgetItemLabel' => 'Budget item',
 			'record.budgetItemNone' => 'No budget',
-			'record.budgetItemHelp' => 'Optional. Only budget items matching the wallets above whose period covers the transaction date are offered.',
 			'record.budgetItemOutOfPeriod' => ({required Object name}) => 'This date is outside the "${name}" budget period, so this transaction no longer counts toward it.',
 			'record.freelanceCalloutTitle' => 'Freelance pay?',
 			'record.freelanceCalloutAction' => 'Record it in Freelance',
 			'record.kindSwitcherLabel' => 'Transaction kind',
-			'record.kindExpense' => 'Out',
-			'record.kindIncome' => 'In',
+			'record.kindExpense' => 'Expense',
+			'record.kindIncome' => 'Income',
 			'record.kindTransfer' => 'Transfer',
 			'record.categoryAddLabel' => 'Add category',
-			'record.draftHeardLabel' => 'Heard',
 			'record.draftCheckTitle' => 'Check before recording',
 			'record.draftIssue.amountMissing' => 'Couldn\'t catch the amount. Enter it yourself.',
 			'record.draftIssue.amountMultiple' => 'More than one amount was mentioned. Enter the right one.',
@@ -1578,7 +1463,7 @@ extension on TranslationsEn {
 			'record.voice.failure.network' => 'Recognizing speech needs internet on this device. Connect and record again, or type instead.',
 			'record.voice.failure.other' => 'Something went wrong. Try again.',
 			'record.voice.idleHint' => 'Tap the microphone, then say one transaction.',
-			'record.voice.recordingBadge' => 'REC',
+			'record.voice.recordingBadge' => 'Rec',
 			'record.voice.startAction' => 'Start recording',
 			'record.voice.listeningButtonLabel' => 'Listening',
 			'record.voice.retryAction' => 'Record again',
@@ -1611,8 +1496,8 @@ extension on TranslationsEn {
 			'record.repeat.paymentLabel' => 'Payment',
 			'record.repeat.paymentManual' => 'I pay it',
 			'record.repeat.paymentAutoDebit' => 'Auto-debit',
-			'record.repeat.recordAndScheduleAction' => 'Record & Schedule',
-			'record.repeat.saveScheduleAction' => 'Save Schedule',
+			'record.repeat.recordAndScheduleAction' => 'Record and schedule',
+			'record.repeat.saveScheduleAction' => 'Save schedule',
 			'record.repeat.scheduledMessage' => ({required Object name, required Object date}) => '${name} scheduled. First on ${date}.',
 			'record.repeat.recordedMessage' => ({required Object name}) => '${name} recorded and scheduled.',
 			'record.repeat.recordedNextMessage' => ({required Object name, required Object date}) => '${name} recorded. Next on ${date}.',
@@ -1627,35 +1512,29 @@ extension on TranslationsEn {
 			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
-			'transaction.monthStatusLabel' => 'This month\'s log status',
-			'transaction.logCountBadge' => ({required Object count}) => '${count} active logs',
-			'transaction.netFlowLabel' => 'Net flow',
-			'transaction.flowIncomeLabel' => 'In',
-			'transaction.flowExpenseLabel' => 'Out',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expenses ${count}',
 			'transaction.transferFilterLabel' => ({required Object count}) => 'Transfer ${count}',
-			'transaction.walletFilterAllLabel' => 'All Wallets',
+			'transaction.walletFilterAllLabel' => 'All wallets',
 			'transaction.walletFilterLabel' => 'Wallet',
-			'transaction.categoryFilterAllLabel' => 'All Categories',
+			'transaction.categoryFilterAllLabel' => 'All categories',
 			'transaction.categoryFilterLabel' => 'Category',
 			'transaction.filterButtonLabel' => 'Filter',
-			'transaction.filterSheetTitle' => 'Filter Transactions',
+			'transaction.filterSheetTitle' => 'Filter transactions',
 			'transaction.filterSheetDoneAction' => 'Done',
 			'transaction.todayLabel' => 'Today',
 			'transaction.yesterdayLabel' => 'Yesterday',
 			'transaction.untitledTransaction' => 'Untitled',
-			'transaction.emptyMonthBadge' => 'Empty Ledger',
 			'transaction.emptyMonthTitle' => 'No transactions yet',
-			'transaction.emptyMonthSubtitle' => 'Record an income, expense, or transfer to start seeing your daily cash history here.',
-			'transaction.emptyMonthCta' => 'Record a Transaction Now',
-			'transaction.emptyGuideTitle' => 'Recording guide',
+			'transaction.emptyMonthSubtitle' => 'Every transaction you record shows up here, grouped by day.',
+			'transaction.emptyMonthCta' => 'Record transaction',
+			'transaction.emptyGuideTitle' => 'Three kinds of transactions',
 			'transaction.emptyGuideIncomeTitle' => 'Income',
-			'transaction.emptyGuideIncomeDescription' => 'Adds to your chosen wallet\'s balance, recorded for real in your ledger.',
+			'transaction.emptyGuideIncomeDescription' => 'Adds to the balance of the wallet you choose.',
 			'transaction.emptyGuideExpenseTitle' => 'Expense',
-			'transaction.emptyGuideExpenseDescription' => 'Reduces the wallet\'s balance and counts toward its monthly budget quota.',
-			'transaction.emptyGuideTransferTitle' => 'Transfer Between Wallets',
+			'transaction.emptyGuideExpenseDescription' => 'Lowers the wallet balance and fills the linked budget item.',
+			'transaction.emptyGuideTransferTitle' => 'Transfer between wallets',
 			'transaction.emptyGuideTransferDescription' => 'Moves the recorded balance between wallets without changing your total net worth.',
 			'transaction.trustFooterMessage' => 'Your complete history, kept safe on your device',
 			'transaction.emptyFilterTitle' => 'No transactions this month match the filter',
@@ -1672,37 +1551,36 @@ extension on TranslationsEn {
 			'transaction.detailIncomeTitle' => 'Income recorded',
 			'transaction.detailExpenseTitle' => 'Expense recorded',
 			'transaction.detailTransferTitle' => 'Transfer recorded',
-			'transaction.detailTypeLabel' => 'Entry type',
+			'transaction.detailTypeLabel' => 'Transaction type',
 			'transaction.detailIncomeType' => 'Income',
 			'transaction.detailExpenseType' => 'Expense',
 			'transaction.detailTransferType' => 'Transfer between wallets',
 			'transaction.detailCategoryLabel' => 'Category',
-			'transaction.detailIncomeWalletLabel' => 'Destination Wallet',
-			'transaction.detailExpenseWalletLabel' => 'Source Wallet',
+			'transaction.detailIncomeWalletLabel' => 'Destination wallet',
+			'transaction.detailExpenseWalletLabel' => 'Source wallet',
 			'transaction.detailCurrentBalance' => 'Current balance',
 			'transaction.detailNoteLabel' => 'Note',
 			'transaction.detailFromLabel' => 'From',
 			'transaction.detailToLabel' => 'To',
 			'transaction.detailAmountLabel' => 'Amount',
 			'transaction.detailManualNote' => 'Kept safe on your device. Wallet balances follow every record, so when you edit or delete it, balances adjust with it.',
-			'transaction.editAction' => 'Edit This Entry',
-			'transaction.recordAgainAction' => 'Record Again',
-			'transaction.deleteAction' => 'Delete Entry from History',
-			'transaction.editSheetTitle' => 'Edit Entry',
-			'transaction.saveChangesAction' => 'Save Changes',
+			'transaction.editAction' => 'Edit',
+			'transaction.recordAgainAction' => 'Record again',
+			'transaction.deleteAction' => 'Delete transaction',
+			'transaction.editSheetTitle' => 'Edit transaction',
+			'transaction.saveChangesAction' => 'Save changes',
 			'transaction.updatedMessage' => 'Changes saved.',
-			'transaction.deletedMessage' => 'Entry deleted.',
+			'transaction.deletedMessage' => 'Transaction deleted.',
 			'transaction.undoDeleteAction' => 'Undo',
-			'transaction.restoredMessage' => 'Entry restored.',
+			'transaction.restoredMessage' => 'Transaction restored.',
 			'transaction.budgetLabel' => 'Budget',
 			'transaction.openBudgetAction' => 'View budget',
 			'transaction.detailFreelanceNote' => 'This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.',
-			'transaction.makeRecurringAction' => 'Make Recurring',
+			'transaction.makeRecurringAction' => 'Make recurring',
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
-			'wallet.subtitle' => 'Where your cash stands right now',
+			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
-			'wallet.totalLabel' => 'Total balance of all wallets',
 			'wallet.listHeading' => 'Active wallets',
 			'wallet.addAction' => 'Add wallet',
 			'wallet.inactiveHeading' => 'Inactive wallets',
@@ -1712,15 +1590,14 @@ extension on TranslationsEn {
 			'wallet.typeEwallet' => 'Digital wallet',
 			'wallet.typeSavings' => 'Savings',
 			'wallet.typeCard' => 'Card',
-			'wallet.emptyBadge' => 'No wallets yet',
 			'wallet.emptyTitle' => 'No wallets recorded yet',
 			'wallet.emptyBody' => 'Add your first wallet to start recording where your money is. It can be a bank account, an e-wallet, or cash in your pocket.',
 			'wallet.loadErrorTitle' => 'Couldn\'t load wallets',
 			'wallet.loadErrorSubtitle' => 'Wallet data couldn\'t be read. Try again.',
-			'wallet.addTitle' => 'Add New Wallet',
-			'wallet.editTitle' => 'Edit Wallet',
-			'wallet.addStepLabel' => 'Wallet // New',
-			'wallet.editStepLabel' => 'Wallet // Edit',
+			'wallet.addTitle' => 'Add wallet',
+			'wallet.editTitle' => 'Edit wallet',
+			'wallet.addStepLabel' => 'New wallet',
+			'wallet.editStepLabel' => 'Edit wallet',
 			'wallet.nameLabel' => 'Wallet name',
 			'wallet.nameHint' => 'E.g. Mandiri Savings, OVO, Cash Box',
 			'wallet.nameRequiredHint' => 'Required',
@@ -1729,11 +1606,11 @@ extension on TranslationsEn {
 			'wallet.initialBalanceLabel' => 'Starting balance right now',
 			'wallet.initialBalanceHelp' => 'The starting balance is the money in this wallet right now, the starting point of your records. Every transaction after it counts from here.',
 			'wallet.currentBalanceLabel' => 'Recorded balance right now',
-			'wallet.editBalanceNote' => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via RECORD.',
+			'wallet.editBalanceNote' => 'Changing the starting balance recomputes the recorded balance. For a gap with real money, record an income or expense via Record.',
 			'wallet.activeSwitchLabel' => 'Wallet is active',
 			'wallet.activeSwitchHelp' => 'Inactive wallets don\'t appear in wallet pickers. Their transactions stay saved and counted.',
-			'wallet.saveAddAction' => 'Save Wallet',
-			'wallet.deleteAction' => 'Delete Wallet',
+			'wallet.saveAddAction' => 'Save wallet',
+			'wallet.deleteAction' => 'Delete wallet',
 			'wallet.deleteHelp' => 'Can only be deleted if it has no transactions at all. Otherwise, deactivate it.',
 			'wallet.deleteConfirmTitle' => 'Delete wallet?',
 			'wallet.deleteConfirmMessage' => ({required Object name}) => 'Wallet ${name} will be deleted permanently. This can\'t be undone.',
@@ -1744,32 +1621,26 @@ extension on TranslationsEn {
 			'wallet.privacyNote' => 'Data is stored locally and privately on your device.',
 			'wallet.detailBackLabel' => 'Back',
 			'wallet.detailEditAction' => 'Edit',
-			'wallet.detailRecentHeading' => 'This Month\'s Transactions',
+			'wallet.detailRecentHeading' => 'This month\'s transactions',
 			'wallet.detailIncomeLabel' => 'Income',
 			'wallet.detailExpenseLabel' => 'Expenses',
 			'wallet.detailRecentEmptyTitle' => 'No transactions yet',
 			'wallet.detailRecentEmpty' => 'No transactions this month for this wallet yet.',
-			'wallet.detailViewAllAction' => 'View All Transactions',
-			'wallet.detailRecordAction' => 'Record a Transaction for This Wallet',
+			'wallet.detailViewAllAction' => 'View all transactions',
+			'wallet.detailRecordAction' => 'Record transaction',
 			'wallet.detailTransferInLabel' => 'Transfers in',
 			'wallet.detailTransferOutLabel' => 'Transfers out',
 			'wallet.detailBalanceChangeLabel' => 'Balance change',
 			'budget.activeBadge' => ({required Object count}) => '${count} active',
-			'budget.summaryTitle' => 'Total of active budgets',
-			'budget.summaryPercent' => ({required Object percent}) => '${percent}% spent',
 			'budget.plannedLabel' => 'Planned',
 			'budget.spentLabel' => 'Spent',
 			'budget.remainingLabel' => 'Remaining',
-			'budget.spentPercentLabel' => ({required Object percent}) => 'Spent (${percent}%)',
-			'budget.paceLabel' => ({required Object percent}) => 'Period elapsed (${percent}%)',
-			'budget.summaryNote' => 'A budget is your spending plan. The used amount grows each time a linked expense or transfer is recorded.',
 			'budget.filterAll' => 'All',
 			'budget.filterActive' => 'Active',
 			'budget.filterFinished' => 'Finished',
 			'budget.filterArchived' => 'Inactive',
-			'budget.filterWalletLabel' => 'Wallet',
 			'budget.filterWalletAll' => 'All wallets',
-			'budget.addAction' => 'Create New Budget',
+			'budget.addAction' => 'Create budget',
 			'budget.periodWeekly' => 'Weekly',
 			'budget.periodMonthly' => 'Monthly',
 			'budget.itemStatusPlanned' => 'Not yet spent',
@@ -1777,7 +1648,6 @@ extension on TranslationsEn {
 			'budget.itemStatusCompleted' => 'Completed',
 			'budget.itemStatusOverspent' => 'Over budget',
 			'budget.itemCount' => ({required Object count}) => 'Items: ${count}',
-			'budget.emptyBadge' => 'No plans yet',
 			'budget.emptyTitle' => 'No budgets yet',
 			'budget.emptyBody' => 'Plan a weekly or monthly spending limit for one wallet, then keep an eye on how much is used.',
 			'budget.emptyFilteredTitle' => 'No matching budgets',
@@ -1794,8 +1664,8 @@ extension on TranslationsEn {
 			'budget.unarchivedMessage' => 'Budget reactivated.',
 			'budget.addStepLabel' => 'New budget',
 			'budget.editStepLabel' => 'Edit budget',
-			'budget.addTitle' => 'Create Budget',
-			'budget.editTitle' => 'Edit Budget',
+			'budget.addTitle' => 'Create budget',
+			'budget.editTitle' => 'Edit budget',
 			'budget.ruleTitle' => 'Budget rule',
 			'budget.ruleBody' => 'This plan is your spending guide. Wallet balances move with the transactions you record.',
 			'budget.nameLabel' => 'Budget name',
@@ -1809,16 +1679,16 @@ extension on TranslationsEn {
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
 			'budget.itemsLabel' => 'Budget items',
 			'budget.itemsHelp' => 'Planned purchases or planned transfers. The budget total is the sum of all items.',
-			'budget.addItemAction' => 'Add Item',
-			'budget.saveAddAction' => 'Save Budget',
-			'budget.archiveAction' => 'Archive Budget',
+			'budget.addItemAction' => 'Add item',
+			'budget.saveAddAction' => 'Save budget',
+			'budget.archiveAction' => 'Archive budget',
 			'budget.unarchiveAction' => 'Reactivate',
 			'budget.archiveHelp' => 'Inactive budgets are hidden from the active list. Linked transactions stay recorded.',
-			'budget.deleteAction' => 'Delete Budget',
+			'budget.deleteAction' => 'Delete budget',
 			'budget.deleteConfirmTitle' => 'Delete budget?',
 			'budget.deleteConfirmMessage' => ({required Object name}) => 'Budget "${name}" and its items will be deleted. Linked transactions stay recorded and wallet balances do not change.',
-			'budget.itemAddTitle' => 'Add Item',
-			'budget.itemEditTitle' => 'Edit Item',
+			'budget.itemAddTitle' => 'Add item',
+			'budget.itemEditTitle' => 'Edit item',
 			'budget.itemNameLabel' => 'Item name',
 			'budget.itemNameHint' => 'Example: Rice',
 			'budget.itemModeAmount' => 'Amount',
@@ -1828,18 +1698,17 @@ extension on TranslationsEn {
 			'budget.itemUnitPriceLabel' => 'Unit price',
 			'budget.itemTotalLabel' => 'Item total',
 			'budget.itemItemizedDetail' => ({required Object quantity, required Object price}) => '${quantity} × ${price}',
-			'budget.itemSaveAction' => 'Save Item',
-			'budget.itemDeleteAction' => 'Delete Item',
-			'budget.detailBackLabel' => 'Budget List',
+			'budget.itemSaveAction' => 'Save item',
+			'budget.itemDeleteAction' => 'Delete item',
+			'budget.detailBackLabel' => 'Budget list',
 			'budget.detailEditAction' => 'Edit budget',
-			'budget.detailRecordExpenseAction' => 'Record Expense',
-			'budget.detailRecordTransferAction' => 'Record Transfer',
-			'budget.detailItemsHeading' => 'Budget Items',
+			'budget.detailRecordExpenseAction' => 'Record expense',
+			'budget.detailRecordTransferAction' => 'Record transfer',
+			'budget.detailItemsHeading' => 'Budget items',
 			'budget.detailNoItems' => 'This budget has no items yet. Add items via Edit so expenses can be linked.',
-			'budget.detailLinkedHeading' => 'Linked Transactions',
+			'budget.detailLinkedHeading' => 'Linked transactions',
 			'budget.detailLinkedEmpty' => 'No transactions are linked to this budget yet.',
 			'budget.detailHowTitle' => 'How budget items work',
-			'budget.detailHowBody' => ({required Object wallet}) => 'Record with the button on each item. Expense items count expenses from ${wallet}; transfer items count transfers from ${wallet} to their destination wallet.',
 			'budget.unknownWallet' => 'Wallet not found',
 			'budget.totalPlannedLabel' => 'Total planned budget',
 			'budget.itemsRequiredHint' => 'Add at least one item. Transactions are recorded against items, so a budget without items cannot track spending.',
@@ -1853,34 +1722,33 @@ extension on TranslationsEn {
 			'budget.itemNoTargetWallet' => 'You need another active wallet as the transfer destination.',
 			'budget.itemTransferTo' => ({required Object wallet}) => 'To ${wallet}',
 			'budget.itemTargetConflict' => ({required Object name}) => 'Transfer item "${name}" points to the budget\'s own wallet. Change the item\'s destination or the budget wallet.',
-			'budget.templatesAction' => 'Budget Templates',
-			'budget.templatesTitle' => 'Budget Templates',
+			'budget.templatesAction' => 'Budget templates',
+			'budget.templatesTitle' => 'Budget templates',
 			'budget.templatesSavedBadge' => ({required Object count}) => 'Saved: ${count}',
 			'budget.templatesInfoTitle' => 'What is a budget template?',
 			'budget.templatesInfoBody' => 'A reusable set of plan items, so you never start from scratch. Each use creates a new, independent budget.',
 			'budget.templateItemCount' => ({required Object count}) => 'Items: ${count}',
 			'budget.templateItemsLabel' => 'Planned items',
 			'budget.templateTotalLabel' => 'Planned total',
-			'budget.templateUseAction' => 'Use This Template',
+			'budget.templateUseAction' => 'Use this template',
 			'budget.templateEditAction' => 'Edit',
 			'budget.templateDuplicateAction' => 'Duplicate',
 			'budget.templateInactiveBadge' => 'Inactive',
-			'budget.templateAddAction' => 'Create New Template',
+			'budget.templateAddAction' => 'Create template',
 			'budget.templatesFooter' => 'Templates can be edited any time without changing budgets already created from them.',
 			'budget.templatesEmptyBadge' => 'No templates yet',
 			'budget.templatesEmptyTitle' => 'No templates yet',
 			'budget.templatesEmptyBody' => 'Save item sets you use often, such as monthly groceries, so your next budget is one tap away.',
 			'budget.templateNeedsWallet' => 'Create an active wallet first to use a template.',
 			'budget.templatesLoadError' => 'Templates failed to load',
-			'budget.templateStepLabel' => 'Budget template',
-			'budget.templateAddTitle' => 'Create Template',
-			'budget.templateEditTitle' => 'Edit Template',
+			'budget.templateAddTitle' => 'Create template',
+			'budget.templateEditTitle' => 'Edit template',
 			'budget.templateRuleBody' => 'A template keeps your set of plan items. The wallet and period are chosen when you use it.',
 			'budget.templateNameHint' => 'Example: Monthly groceries',
 			'budget.templateEnabledLabel' => 'Offer this template',
 			'budget.templateEnabledHelp' => 'Inactive templates stay saved but cannot be used to create a budget.',
-			'budget.templateSaveAction' => 'Save Template',
-			'budget.templateDeleteAction' => 'Delete Template',
+			'budget.templateSaveAction' => 'Save template',
+			'budget.templateDeleteAction' => 'Delete template',
 			'budget.templateDeleteConfirmTitle' => 'Delete template?',
 			'budget.templateDeleteConfirmMessage' => ({required Object name}) => 'Template "${name}" will be deleted. Budgets created from it are not deleted.',
 			'budget.templateSavedMessage' => 'Template saved.',
@@ -1888,7 +1756,6 @@ extension on TranslationsEn {
 			'budget.templateDeletedMessage' => 'Template deleted.',
 			'budget.templateDuplicatedMessage' => 'Template duplicated.',
 			'budget.templateCopyName' => ({required Object name}) => '${name} (copy)',
-			'budget.fromTemplateStepLabel' => ({required Object name}) => 'From template ${name}',
 			'budget.templateNameLabel' => 'Template name',
 			'budget.repeatLabel' => 'Repeat every period',
 			'budget.repeatHelpMonthly' => ({required Object date}) => 'Starts again every month from ${date} with the same items.',
@@ -1903,35 +1770,28 @@ extension on TranslationsEn {
 			'budget.templateScheduledWeekly' => ({required Object wallet}) => 'Repeats weekly · ${wallet}',
 			'budget.dayOfPeriod' => ({required Object day, required Object total}) => 'Day ${day} of ${total}',
 			'freelance.title' => 'Freelance',
-			'freelance.worklogTab' => ({required Object count}) => 'Worklog (${count})',
-			'freelance.paymentsTab' => ({required Object count}) => 'Payments (${count})',
+			'freelance.worklogTab' => ({required Object count}) => 'Work hours (${count})',
+			'freelance.paymentsTab' => ({required Object count}) => 'Invoices (${count})',
 			'freelance.loadErrorTitle' => 'Freelance data failed to load',
-			'freelance.ruleTitle' => 'Freelance cash rule',
-			'freelance.ruleBody' => 'Work hours add up to an invoice, and your wallet balance grows when its payment is recorded as received.',
-			'freelance.summaryTitle' => 'Pay & hours summary',
-			'freelance.totalHoursLabel' => 'Hours worked',
+			'freelance.ruleTitle' => 'How Freelance records',
+			'freelance.ruleBody' => 'Work hours add up to an invoice, and your wallet balance grows when the invoice is recorded as received.',
 			'freelance.hoursValue' => ({required Object hours}) => '${hours} h',
 			'freelance.hourShort' => 'h',
 			'freelance.projectCount' => ({required Object count}) => 'Projects: ${count}',
 			'freelance.earnedLabel' => 'Total earned',
-			'freelance.earnedCaption' => 'Hours × rate, before deductions',
 			'freelance.paidLabel' => 'Received',
-			'freelance.paidCaption' => 'Gross pay · payment already recorded',
 			'freelance.unpaidLabel' => 'Not received',
-			'freelance.unpaidCaption' => 'Gross pay · unbilled or pending',
-			'freelance.paidRatio' => ({required Object percent}) => '${percent}% received',
 			'freelance.projectsLabel' => 'Projects',
 			'freelance.projectsEmpty' => 'No projects yet. Add a client or project with its hourly rate first.',
-			'freelance.projectStepLabel' => 'Freelance project',
-			'freelance.projectAddTitle' => 'Add Project',
-			'freelance.projectEditTitle' => 'Edit Project',
+			'freelance.projectAddTitle' => 'Add project',
+			'freelance.projectEditTitle' => 'Edit project',
 			'freelance.projectNameLabel' => 'Client or project name',
 			'freelance.projectNameHint' => 'Example: Studio Koding',
 			'freelance.requiredHint' => 'Required',
 			'freelance.hourlyRateLabel' => 'Hourly rate',
-			'freelance.hourlyRateHelp' => 'Default rate for new entries. Changing it does not change entries already recorded.',
+			'freelance.hourlyRateHelp' => 'Default rate for new work hours. Changing it does not change hours already recorded.',
 			'freelance.deductionsLabel' => 'Deductions',
-			'freelance.deductionsHelp' => 'Taken from the gross pay of each payment, such as tax. Changing them does not change payments already created.',
+			'freelance.deductionsHelp' => 'Taken from the gross pay of each invoice, such as tax. Changing them does not change invoices already created.',
 			'freelance.deductionAddAction' => 'Add deduction',
 			'freelance.deductionTitle' => 'Deduction',
 			'freelance.deductionLabelLabel' => 'Deduction name',
@@ -1940,38 +1800,37 @@ extension on TranslationsEn {
 			'freelance.deductionKindFixed' => 'Fixed amount',
 			'freelance.deductionPercentLabel' => 'Percent of gross pay',
 			'freelance.deductionPercentHelp' => 'At most one decimal place, for example 2.5.',
-			'freelance.deductionAmountLabel' => 'Amount per payment',
+			'freelance.deductionAmountLabel' => 'Amount per invoice',
 			'freelance.deductionSaveAction' => 'Save deduction',
 			'freelance.deductionRemoveAction' => 'Remove deduction',
 			'freelance.projectSaveAction' => 'Save project',
 			'freelance.projectDeleteAction' => 'Delete project',
-			'freelance.projectDeleteLockedHint' => 'A project that already has worklog entries cannot be deleted.',
+			'freelance.projectDeleteLockedHint' => 'A project with recorded work hours cannot be deleted.',
 			'freelance.projectDeleteConfirmTitle' => 'Delete project?',
 			'freelance.projectDeleteConfirmMessage' => ({required Object name}) => 'Project "${name}" will be deleted.',
-			'freelance.projectDeleteRefused' => 'This project already has worklog entries, so it cannot be deleted.',
+			'freelance.projectDeleteRefused' => 'This project has recorded work hours, so it cannot be deleted.',
 			'freelance.projectSavedMessage' => 'Project saved.',
 			'freelance.projectUpdatedMessage' => 'Project changes saved.',
 			'freelance.projectDeletedMessage' => 'Project deleted.',
 			'freelance.projectLabel' => 'Project',
 			'freelance.projectPick' => 'Choose a project',
-			'freelance.entryStepLabel' => 'Work log',
-			'freelance.entryAddTitle' => 'Add Worklog',
-			'freelance.entryEditTitle' => 'Edit Worklog',
-			'freelance.entryRuleBody' => 'Work hours add up to an invoice. The money reaches your balance when its payment is recorded as received.',
+			'freelance.entryAddTitle' => 'Record work hours',
+			'freelance.entryEditTitle' => 'Edit work hours',
+			'freelance.entryRuleBody' => 'Work hours add up to an invoice. The money reaches your balance when the invoice is recorded as received.',
 			'freelance.workDateLabel' => 'Work date',
 			'freelance.hoursLabel' => 'Duration',
-			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this entry\'s rate differs.',
+			'freelance.entryRateHelp' => 'Filled from the project rate. Change it if this rate is different.',
 			'freelance.noteLabel' => 'Note',
 			'freelance.noteHint' => 'What was done (optional)',
-			'freelance.entrySaveAction' => 'Save Worklog',
+			'freelance.entrySaveAction' => 'Save work hours',
 			'freelance.entrySaveHint' => 'This amount is recorded as earned, not yet received.',
-			'freelance.entryDeleteAction' => 'Delete entry',
-			'freelance.entryDeleteConfirmTitle' => 'Delete worklog entry?',
-			'freelance.entryDeleteConfirmMessage' => 'This entry will be deleted. Wallet balances do not change.',
-			'freelance.entryLockedMessage' => 'Entries already in a payment cannot be edited or deleted.',
-			'freelance.entrySavedMessage' => 'Worklog saved.',
-			'freelance.entryUpdatedMessage' => 'Worklog changes saved.',
-			'freelance.entryDeletedMessage' => 'Worklog deleted.',
+			'freelance.entryDeleteAction' => 'Delete work hours',
+			'freelance.entryDeleteConfirmTitle' => 'Delete these work hours?',
+			'freelance.entryDeleteConfirmMessage' => 'These work hours are deleted. Wallet balances do not change.',
+			'freelance.entryLockedMessage' => 'Work hours already on an invoice cannot be edited or deleted.',
+			'freelance.entrySavedMessage' => 'Work hours recorded.',
+			'freelance.entryUpdatedMessage' => 'Work hours changes saved.',
+			'freelance.entryDeletedMessage' => 'Work hours deleted.',
 			'freelance.hoursTimesRate' => ({required Object hours, required Object rate}) => '${hours} h × ${rate}',
 			'freelance.statusUnbilled' => 'Unbilled',
 			'freelance.statusPending' => 'Pending',
@@ -1981,86 +1840,69 @@ extension on TranslationsEn {
 			'freelance.unknownProject' => 'Deleted project',
 			'freelance.unknownWallet' => 'deleted wallet',
 			'freelance.pendingTotalLabel' => 'Pending (net)',
-			'freelance.paidTotalLabel' => 'Received (net)',
-			'freelance.paymentCount' => ({required Object count}) => 'Payments: ${count}',
-			'freelance.paymentStepLabel' => 'Freelance payment',
-			'freelance.paymentAddTitle' => 'Create Payment',
-			'freelance.paymentCreateRuleBody' => 'A payment groups work hours into one invoice. Once it\'s recorded as received, your wallet balance grows.',
-			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Billed entries: ${count} (${hours} h)',
-			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => 'Entries: ${count} · ${hours} h',
+			'freelance.paymentAddTitle' => 'Create invoice',
+			'freelance.paymentCreateRuleBody' => 'An invoice groups unbilled work hours. Once it is recorded as received, your wallet balance grows.',
+			'freelance.paymentEntriesLabel' => ({required Object count, required Object hours}) => 'Invoiced: ${count} records, ${hours} h',
+			'freelance.paymentEntriesSummary' => ({required Object count, required Object hours}) => '${count} records · ${hours} h',
 			'freelance.expectedDateLabel' => 'Expected date received',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.grossPayLabel' => 'Gross pay',
 			'freelance.netPayLabel' => 'Net pay',
 			'freelance.netPayNotPositive' => 'Deductions cannot equal or exceed gross pay.',
-			'freelance.paymentCreateAction' => 'Create Payment',
+			'freelance.paymentCreateAction' => 'Create invoice',
 			'freelance.paymentChangeDateAction' => 'Change date',
 			'freelance.paymentDeleteAction' => 'Delete',
-			'freelance.paymentDeleteConfirmTitle' => 'Delete payment?',
-			'freelance.paymentDeleteConfirmMessage' => 'This pending payment is deleted and its entries become unbilled again. Wallet balances do not change.',
-			'freelance.paymentEntriesInvalid' => 'The chosen entries are already billed or belong to another project.',
-			'freelance.paymentPaidLocked' => 'A received payment cannot be deleted. Cancel its receipt first.',
-			'freelance.paymentAlreadyPaid' => 'This payment is already recorded as received.',
-			'freelance.paymentCreatedMessage' => 'Payment created.',
-			'freelance.paymentUpdatedMessage' => 'Payment date updated.',
-			'freelance.paymentDeletedMessage' => 'Payment deleted.',
-			'freelance.receiveTitle' => 'Record Payment Received',
+			'freelance.paymentDeleteConfirmTitle' => 'Delete invoice?',
+			'freelance.paymentDeleteConfirmMessage' => 'This pending invoice is deleted and its work hours become unbilled again. Wallet balances do not change.',
+			'freelance.paymentEntriesInvalid' => 'The selected work hours are already invoiced or belong to another project.',
+			'freelance.paymentPaidLocked' => 'A received invoice cannot be deleted. Cancel its receipt first.',
+			'freelance.paymentAlreadyPaid' => 'This invoice is already recorded as received.',
+			'freelance.paymentCreatedMessage' => 'Invoice created.',
+			'freelance.paymentUpdatedMessage' => 'Invoice date updated.',
+			'freelance.paymentDeletedMessage' => 'Invoice deleted.',
+			'freelance.receiveTitle' => 'Record invoice received',
 			'freelance.receiveRuleTitle' => 'Payment received',
 			'freelance.receiveRuleBody' => 'Record it once the money has reached you. The chosen wallet grows by the net pay, and this invoice is marked paid.',
 			'freelance.receiveAmountLabel' => 'Amount received',
 			'freelance.receiveWalletLabel' => 'Receiving wallet',
 			'freelance.receiveDateLabel' => 'Date received',
-			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance payment ${project}',
-			'freelance.receiveAction' => 'Record Received',
-			'freelance.paymentReceivedMessage' => 'Payment recorded as received. Wallet balance increased.',
+			'freelance.receiveNoteDefault' => ({required Object project}) => 'Freelance invoice ${project}',
+			'freelance.receiveAction' => 'Record received',
+			'freelance.paymentReceivedMessage' => 'Invoice recorded as received. Wallet balance increased.',
 			'freelance.receiptCancelAction' => 'Cancel receipt',
 			'freelance.receiptCancelConfirmTitle' => 'Cancel receipt?',
-			'freelance.receiptCancelConfirmMessage' => 'Its income record is deleted and the wallet balance goes back down. The payment becomes pending again.',
-			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The payment is pending again.',
+			'freelance.receiptCancelConfirmMessage' => 'Its income is deleted and the wallet balance goes back down. The invoice is pending again.',
+			'freelance.receiptCancelledMessage' => 'Receipt cancelled. The invoice is pending again.',
 			'freelance.changeAction' => 'Change',
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
 			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
-			'freelance.entriesEmptyBadge' => 'No work hours yet',
-			'freelance.entriesEmptyTitle' => 'No worklog yet',
-			'freelance.entriesEmptyBody' => 'Log this project\'s work hours with the + Worklog button below.',
-			'freelance.entriesFilteredEmpty' => 'No entries with this status.',
-			'freelance.entryAddShortAction' => '+ Worklog',
-			'freelance.entryCountLabel' => ({required Object count}) => 'Entries: ${count}',
+			'freelance.entriesEmptyTitle' => 'No work hours yet',
+			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
+			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
+			'freelance.entryAddShortAction' => 'Record work hours',
 			'freelance.filterAll' => 'All',
-			'freelance.lastEntryOn' => ({required Object date}) => 'Last ${date}',
 			'freelance.noDeductions' => 'No deductions',
-			'freelance.noEntriesYet' => 'No entries yet',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}',
-			'freelance.projectsEmptyBadge' => 'No projects yet',
 			'freelance.projectsEmptyTitle' => 'No projects yet',
 			'freelance.unbilledLabel' => 'Unbilled',
-			'freelance.unbilledNone' => 'Everything is billed',
-			'freelance.paymentsEmptyBadge' => 'No invoices yet',
-			'freelance.paymentsEmptyTitle' => 'No payments yet',
-			'freelance.paymentsEmptyBody' => 'Tap Bill below to group unbilled work hours into one payment.',
-			'freelance.paymentsFilteredEmpty' => 'No payments with this status.',
+			'freelance.paymentsEmptyTitle' => 'No invoices yet',
+			'freelance.paymentsEmptyBody' => 'Group unbilled work hours into one invoice, then record it when you are paid.',
+			'freelance.paymentsFilteredEmpty' => 'No invoices with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			'freelance.paidOffBadge' => 'Paid off',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
-			'home.moreWallets' => ({required Object count}) => '+${count} more',
-			'home.startBadge' => 'Start recording',
-			'home.noWalletsBody' => 'No wallet balance recorded yet.',
-			'home.incomeLabel' => ({required Object month}) => 'Income ${month}',
-			'home.expenseLabel' => ({required Object month}) => 'Expenses ${month}',
 			'home.budgetTitle' => 'Active budgets',
+			_ => null,
+		} ?? switch (path) {
 			'home.budgetRemaining' => 'Remaining',
 			'home.budgetOver' => 'Over plan',
-			'home.budgetAction' => 'View Budgets',
+			'home.budgetAction' => 'View budgets',
 			'home.freelanceTitle' => 'Freelance',
-			'home.freelancePaid' => ({required Object amount}) => 'Received: ${amount}',
 			'home.freelanceAction' => 'View Freelance',
 			'home.recentTitle' => 'Recent transactions',
 			'home.seeAll' => 'See all',
-			'home.emptyBadge' => 'Empty inventory',
 			'home.firstTitle' => 'Start with your wallets',
 			'home.firstBody' => 'Record where your money is right now. Every transaction updates its balance.',
 			'home.stepWalletTitle' => 'Add your first wallet',
@@ -2073,28 +1915,10 @@ extension on TranslationsEn {
 			'home.stepsTitle' => 'First steps',
 			'home.emptyTitle' => 'No transactions yet',
 			'home.emptyBody' => 'Start by recording your first income, expense, or transfer.',
-			'home.emptyNoWalletBody' => 'Create your first wallet with its starting balance, then record your first transaction.',
 			'home.recordAction' => 'Record transaction',
 			'home.createWalletAction' => 'Add wallet',
 			'home.budgetLink' => 'Or create a spending budget',
-			'home.guideTitle' => 'Quick guide',
-			'home.guideCount' => '3 core rules',
-			'home.guideWalletTitle' => 'Wallets',
-			'home.guideWalletTag' => 'Real assets',
-			'home.guideWalletBody' => 'Record bank accounts, digital wallets, or cash with their current balance.',
-			'home.guideBudgetTitle' => 'Budgets',
-			'home.guideBudgetTag' => 'Plans',
-			'home.guideBudgetBody' => 'Plan spending limits and track how much is used.',
-			'home.guideFreelanceTitle' => 'Freelance',
-			'home.guideFreelanceTag' => 'Receivables',
-			'home.guideFreelanceBody' => 'Track work hours and invoices. Money reaches a wallet only when its payment is recorded as received.',
 			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} used of ${planned}',
-			'home.freelanceUnpaidTitle' => 'Not received (gross)',
-			'home.freelanceDueLabel' => 'Due',
-			'home.freelancePendingInvoices' => ({required Object count}) => 'Pending invoices: ${count}',
-			'home.freelanceSummaryLine' => ({required Object hours, required Object earned}) => '${hours} · earned ${earned}',
-			'home.openCard' => ({required Object name}) => 'Open ${name}',
-			'home.budgetUsedBadge' => ({required Object percent}) => '${percent}% used',
 			'home.walletLink' => ({required Object count}) => 'In ${count} wallets',
 			'home.netLabel' => 'Net this month',
 			'home.hideAmounts' => 'Hide amounts',
@@ -2111,16 +1935,16 @@ extension on TranslationsEn {
 			'onboarding.closeAction' => 'Close',
 			'onboarding.pageIndicatorLabel' => ({required Object current, required Object total}) => 'Page ${current} of ${total}',
 			'onboarding.page1Title' => 'All your money, one book',
-			'onboarding.page1Body' => 'See where your money is, what happens to it, and where you plan for it to go — all in your personal cash book.',
+			'onboarding.page1Body' => 'See where your money is, what happens to it, and where you plan for it to go — all in one notebook.',
 			'onboarding.page2Title' => 'Know where your money is',
 			'onboarding.page2Body' => 'Bank accounts, e-wallets, and cash become wallets. Each wallet\'s balance and the total are always in view.',
 			'onboarding.page3Title' => 'Record in seconds',
-			'onboarding.page3Body' => 'Money in, money out, or moved between wallets — tap RECORD. Your usual wallet and favorite categories are already waiting.',
+			'onboarding.page3Body' => 'Income, expense, or moving between wallets — tap Record. Your usual wallets and favorite categories are ready.',
 			'onboarding.page4Title' => 'Plan, then track',
 			'onboarding.page4Body' => 'Set weekly or monthly budgets with your spending items. Your balance stays intact, and you see how much of the plan is used.',
 			'onboarding.finalTitle' => 'Start with your first wallet',
 			'onboarding.finalBody' => 'Add one wallet, then record your first transaction. On every screen, the tanuki will show you the way.',
-			'onboarding.createWalletAction' => 'Create First Wallet',
+			'onboarding.createWalletAction' => 'Add wallet',
 			'onboarding.laterAction' => 'Maybe later',
 			'onboarding.signInAction' => 'Have an account? Sign in',
 			'onboarding.backAction' => 'Back',
@@ -2140,21 +1964,21 @@ extension on TranslationsEn {
 			'tour.homeBalanceTitle' => 'Total recorded balance',
 			'tour.homeBalanceBody' => 'The sum of all active wallets — where your money stands at a glance.',
 			'tour.homeRecordTitle' => 'One door for recording',
-			'tour.homeRecordBody' => 'Every bit of money in, out, and between wallets is recorded from here.',
+			'tour.homeRecordBody' => 'Every income, expense, and transfer is recorded from here.',
 			'tour.homeCashFlowTitle' => 'This month\'s flow',
 			'tour.homeCashFlowBody' => 'The money that actually came in and went out this month.',
 			'tour.homeBudgetTitle' => 'Active budget left',
 			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
 			'tour.homeFreelanceTitle' => 'Freelance summary',
-			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when a payment is recorded as received.',
+			'tour.homeFreelanceBody' => 'Income you\'ve earned and what\'s still pending. A wallet balance only goes up when an invoice is recorded as received.',
 			'tour.homeRecentTitle' => 'Recent transactions',
 			'tour.homeRecentBody' => 'Your latest records. Tap one for details, or See all for the month-by-month history.',
 			'tour.recordKindTitle' => 'Pick the kind',
-			'tour.recordKindBody' => 'Out lowers a balance, In raises it, and Transfer only moves money between your wallets — your total stays the same.',
+			'tour.recordKindBody' => 'An expense lowers a balance, income raises it, and a transfer only moves money between your wallets — your total stays the same.',
 			'tour.recordFreelanceTitle' => 'Freelance pay has its own path',
-			'tour.recordFreelanceBody' => 'Project pay is recorded as a received payment in Freelance, so its work hours and invoice are settled too.',
+			'tour.recordFreelanceBody' => 'Project pay is recorded as a received invoice in Freelance, so its work hours and invoice are settled too.',
 			'tour.recordAmountTitle' => 'Amount',
-			'tour.recordAmountBody' => 'Type the amount, or use the quick buttons.',
+			'tour.recordAmountBody' => 'Type the amount on the keypad.',
 			'tour.recordWalletTitle' => 'Wallet filled in for you',
 			'tour.recordWalletBody' => 'The wallet you used last is already selected. Change it if needed.',
 			'tour.recordBudgetItemTitle' => 'Link to a budget',
@@ -2166,7 +1990,7 @@ extension on TranslationsEn {
 			'tour.walletAddTitle' => 'Add a wallet',
 			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.',
 			'tour.txnMonthTitle' => 'One month per view',
-			'tour.txnMonthBody' => 'Switch months to see other history. The in and out totals here cover only the month shown.',
+			'tour.txnMonthBody' => 'Switch months to see other history. The income and expense totals here cover only the month shown.',
 			'tour.txnFilterTitle' => 'Search and filter',
 			'tour.txnFilterBody' => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.',
 			'tour.txnRowTitle' => 'Edit or delete',
@@ -2180,9 +2004,9 @@ extension on TranslationsEn {
 			'tour.budgetDetailItemTitle' => 'Budget item',
 			'tour.budgetDetailItemBody' => 'Used goes up from transactions linked to this item within the budget period.',
 			'tour.budgetDetailRecordTitle' => 'Record from an item',
-			'tour.budgetDetailRecordBody' => 'Opens RECORD with this item already selected.',
+			'tour.budgetDetailRecordBody' => 'Opens Record with this item already selected.',
 			'tour.freelanceProjectTitle' => 'Projects and rates',
-			'tour.freelanceProjectBody' => 'Each project has an hourly rate and deductions. Tap a project to log hours and payments.',
+			'tour.freelanceProjectBody' => 'Each project has an hourly rate and deductions. Tap a project to record hours and invoices.',
 			'tour.freelanceWorklogTitle' => 'Hours worked',
 			'tour.freelanceWorklogBody' => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.',
 			'tour.freelanceReceiveTitle' => 'Money actually arrives',
@@ -2208,7 +2032,7 @@ extension on TranslationsEn {
 			'tour.recurringPendingTitle' => 'Waiting to record',
 			'tour.recurringPendingBody' => 'Occurrences that are due. Record in one tap, edit first, or Skip this one.',
 			'tour.recurringAddTitle' => 'Add recurring',
-			'tour.recurringAddBody' => 'You can also use Repeat in RECORD, or Make Recurring in a transaction\'s details.',
+			'tour.recurringAddBody' => 'You can also use Repeat in Record, or Make recurring in a transaction\'s details.',
 			'tour.budgetRepeatTitle' => 'Repeat every period',
 			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
 			'tour.planMonthPickerTitle' => 'Next months',
@@ -2240,7 +2064,7 @@ extension on TranslationsEn {
 			'account.signOutAction' => 'Sign out',
 			'account.dangerTitle' => 'Danger zone',
 			'account.dangerBody' => 'Deleting your account is permanent and can\'t be undone.',
-			'account.deleteAction' => 'Delete Account',
+			'account.deleteAction' => 'Delete account',
 			'account.deleteConfirmTitle' => 'Delete account?',
 			'account.deleteConfirmBody' => 'Your account is permanently deleted. Wallets, transactions, and budgets on this device stay.',
 			'account.deletePasswordTitle' => 'Enter your password',
@@ -2335,7 +2159,6 @@ extension on TranslationsEn {
 			'notificationCapture.appsEmpty' => 'No matching apps.',
 			'notificationCapture.sourceEnabled' => 'Listen to this app',
 			'notificationCapture.walletLabel' => 'Wallet',
-			'notificationCapture.walletNone' => 'Choose a wallet',
 			'notificationCapture.keywordsLabel' => 'Filter',
 			'notificationCapture.keywordsHint' => 'Only notifications containing one of these phrases are read.',
 			'notificationCapture.keywordField' => 'Add a phrase',
@@ -2384,7 +2207,7 @@ extension on TranslationsEn {
 			'notificationCapture.undoConfirmTitle' => 'Undo this transaction?',
 			'notificationCapture.undoConfirm' => 'The transaction is deleted and the wallet balance goes back to what it was.',
 			'notificationCapture.undone' => 'Automatic transaction undone.',
-			'notificationCapture.dismissed' => 'Capture dismissed.',
+			'notificationCapture.dismissed' => 'Notification dismissed.',
 			'notificationCapture.banner' => ({required Object n}) => '${n} transactions from notifications to check',
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
@@ -2406,7 +2229,7 @@ extension on TranslationsEn {
 			'notificationCapture.sourceKeywordsNone' => 'Empty filter — nothing is read',
 			'notificationCapture.enableHint' => 'Transactions from the bank and e-wallet notifications you pick are recorded for you.',
 			'notificationCapture.inboxEntryTitle' => 'Inbox',
-			'notificationCapture.inboxEntryBody' => 'Check captures and undo automatic records.',
+			'notificationCapture.inboxEntryBody' => 'Check transactions from notifications and undo automatic ones.',
 			'notificationCapture.behaviorTitle' => 'When a transaction is caught',
 			'notificationCapture.autoRecordLabel' => 'Record automatically',
 			'notificationCapture.autoRecordOffHint' => 'Everything waits for you to check in the inbox.',
@@ -2437,28 +2260,17 @@ extension on TranslationsEn {
 			'recurring.starters.parents' => 'Send to parents',
 			'recurring.starters.arisan' => 'Arisan',
 			'recurring.starters.savings' => 'Savings',
-			'recurring.summaryTitle' => ({required Object month}) => 'Recurring ${month}',
-			'recurring.remainingOutLabel' => 'Still to go out',
-			'recurring.recordedOfTotal' => ({required Object recorded, required Object total}) => '${recorded} of ${total} recorded',
-			'recurring.scheduledInLabel' => 'Scheduled income',
 			'recurring.subscriptionsLine' => ({required Object perMonth, required Object perYear}) => 'Subscriptions ${perMonth}/mo · ${perYear}/yr',
 			'recurring.approxSemantics' => ({required Object amount}) => 'about ${amount}',
 			'recurring.filterAll' => ({required Object n}) => 'All (${n})',
-			'recurring.filterIncome' => ({required Object n}) => 'In (${n})',
-			'recurring.filterExpense' => ({required Object n}) => 'Out (${n})',
-			'recurring.filterTransfer' => ({required Object n}) => 'Transfer (${n})',
 			'recurring.groupPending' => 'Waiting to record',
 			'recurring.groupThisMonth' => 'This month',
 			'recurring.groupLater' => 'Later',
 			'recurring.groupPaused' => 'Paused',
 			'recurring.groupEnded' => 'Ended',
-			'recurring.recordedMeta' => 'recorded',
-			'recurring.pendingMeta' => 'waiting',
 			'recurring.missedMeta' => ({required Object n}) => '${n} missed',
-			'recurring.skippedMeta' => 'skipped',
 			'recurring.paymentAutoDebit' => 'auto-debit',
 			'recurring.paymentManual' => 'I pay it',
-			'recurring.yearlyMeta' => 'yearly',
 			'recurring.priceUp' => ({required Object amount, required Object usual}) => '${amount}, usually ${usual}',
 			'recurring.emptyTitle' => 'No recurring yet',
 			'recurring.emptyBody' => 'Add what comes every month, then see what is truly free.',
@@ -2486,7 +2298,6 @@ extension on TranslationsEn {
 			'recurring.detailStatus' => 'Status',
 			'recurring.settingsTitle' => 'Settings',
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
-			'recurring.endsOnLine' => ({required Object date}) => 'ends ${date}',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
 			'recurring.pausedLine' => 'Paused',
 			'recurring.reminderLine' => ({required Object n}) => 'I pay it · reminded ${n} day(s) before',
@@ -2503,8 +2314,6 @@ extension on TranslationsEn {
 			'recurring.recordedAllMessage' => ({required Object n}) => '${n} recurring recorded.',
 			'recurring.linkedMessage' => ({required Object name}) => '${name} linked.',
 			'recurring.undoAction' => 'Undo',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.similarTitle' => 'Already recorded?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.',
 			'recurring.linkAction' => 'Link',
@@ -2531,7 +2340,6 @@ extension on TranslationsEn {
 			'recurring.remindersBody' => 'Reminded a day before bills you pay yourself, and on the due day.',
 			'recurring.remindersDenied' => 'Notification permission was not granted. Turn it on in system settings.',
 			'recurring.ruleRemindersLabel' => 'Remind me',
-			'recurring.remindersOffHint' => 'Recurring reminders are off. Turn them on in Account.',
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} of ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'to ${wallet}',
 			'recurring.remainingTitle' => ({required Object month}) => 'Recurring still to go out · ${month}',
@@ -2600,6 +2408,8 @@ extension on TranslationsEn {
 			'plan.detailsBudget' => 'Budget left',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',
 			'plan.detailsUncertain' => 'Unpaid freelance (not certain)',
+			_ => null,
+		} ?? switch (path) {
 			'plan.detailsTransfers' => 'Recurring transfers',
 			'plan.detailsEnd' => ({required Object date}) => 'End of ${date}',
 			'plan.unplannedToggle' => 'Count daily spending',
@@ -2612,11 +2422,11 @@ extension on TranslationsEn {
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
 			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})',
 			'plan.loadError' => 'Could not load this month.',
-			'plan.forecastBadge' => 'FORECAST',
+			'plan.forecastBadge' => 'Estimate',
 			'plan.startOf' => ({required Object date}) => 'Start ${date}',
 			'plan.compactMillion' => ({required Object value}) => '${value}M',
 			'plan.compactThousand' => ({required Object value}) => '${value}K',
-			'plan.fundingTitle' => 'PREPARE FUNDS',
+			'plan.fundingTitle' => 'Prepare funds',
 			'plan.fundingBody' => ({required Object wallet, required Object shortfall, required Object name, required Object date}) => '${wallet} is expected to be short by ≈${shortfall} for ${name} on ${date}. Add funds to ${wallet} before then.',
 			'plan.fundingAction' => ({required Object wallet}) => 'See ${wallet} forecast',
 			'plan.fundingMore' => ({required Object n}) => '+${n} more',

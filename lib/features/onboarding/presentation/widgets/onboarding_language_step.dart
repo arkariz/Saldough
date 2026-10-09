@@ -46,12 +46,12 @@ class OnboardingLanguageStep extends StatelessWidget {
               label: languageName(locale),
               onTap: () => onSelected(locale),
               child: AppCard(
-                color: locale == selected ? colors.tinted(colors.brand, 0.18) : null,
+                color: locale == selected ? colors.brandSoft : null,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                 child: Row(
                   children: [
                     Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
-                    if (locale == selected) const AppIcon(IconKey.check),
+                    if (locale == selected) AppIcon(IconKey.check, color: colors.brand),
                   ],
                 ),
               ),

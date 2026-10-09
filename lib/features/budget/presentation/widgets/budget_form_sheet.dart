@@ -547,42 +547,27 @@ class _WalletChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return Semantics(
-      button: true,
+    return AppChoiceBox(
       selected: selected,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.space2),
-          decoration: BoxDecoration(
-            color: selected ? colors.tinted(colors.brand, 0.12) : colors.surface2,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: selected ? colors.brand : Colors.transparent, width: 2),
-          ),
-          child: Row(
-            children: [
-              AppIcon(walletIconKey(wallet.iconKey), size: 32),
-              const SizedBox(width: AppSpacing.space2),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
-                    Text(
-                      t.budget.walletBalance(amount: AppMoneyFormatter.format(wallet.currentBalance)),
-                      style: labelSmStyle(
-                        context,
-                        color: colors.ink2,
-                      ).copyWith(fontWeight: FontWeight.w400),
-                    ),
-                  ],
+      onTap: onTap,
+      child: Row(
+        children: [
+          AppIconTile(walletIconKey(wallet.iconKey)),
+          const SizedBox(width: AppSpacing.space2),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(wallet.name, style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  t.budget.walletBalance(amount: AppMoneyFormatter.format(wallet.currentBalance)),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
                 ),
-              ),
-              if (selected) AppIcon(IconKey.check, color: colors.brand),
-            ],
+              ],
+            ),
           ),
-        ),
+          if (selected) AppIcon(IconKey.check, color: colors.brand),
+        ],
       ),
     );
   }

@@ -89,4 +89,14 @@ void main() {
     expect(path.contains(const Offset(20, 0.5)), isTrue);
     expect(path.contains(const Offset(39.5, 39.5)), isFalse);
   });
+
+  testWidgets('terpilih: latar brandSoft dengan garis brand 2px', (tester) async {
+    await pump(tester, const AppIconTile(IconKey.categoryFood, selected: true));
+    final decoration = decorationOf(tester);
+    expect(decoration.color, AppColors.light.brandSoft);
+    expect(
+      decoration.shape,
+      PixelCornerBorder.small(side: BorderSide(color: AppColors.light.brand, width: 2)),
+    );
+  });
 }

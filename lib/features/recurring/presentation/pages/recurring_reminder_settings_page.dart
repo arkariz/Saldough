@@ -71,17 +71,15 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
             : ListView(
                 padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
-                  AppCard(
-                    child: SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(t.recurring.remindersTitle),
-                      subtitle: Text(
-                        t.recurring.remindersBody,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.appColors.ink2),
+                  AppListCard(
+                    children: [
+                      AppSwitchRow(
+                        title: t.recurring.remindersTitle,
+                        subtitle: t.recurring.remindersBody,
+                        value: enabled,
+                        onChanged: (value) => unawaited(_toggle(value)),
                       ),
-                      value: enabled,
-                      onChanged: (value) => unawaited(_toggle(value)),
-                    ),
+                    ],
                   ),
                 ],
               ),

@@ -230,26 +230,9 @@ class _TemplateCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    t.budget.templateItemsLabel,
-                    style: labelSmStyle(context, color: colors.ink2),
-                  ),
+                  Text(t.budget.templateItemsLabel, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
                   const SizedBox(height: AppSpacing.space1),
-                  Wrap(
-                    spacing: AppSpacing.space1,
-                    runSpacing: AppSpacing.space1,
-                    children: [
-                      for (final item in template.items)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: colors.surface,
-                            border: Border.all(color: colors.line),
-                          ),
-                          child: Text(item.name, style: textTheme.bodySmall),
-                        ),
-                    ],
-                  ),
+                  Text(template.items.map((item) => item.name).join(' · '), style: textTheme.bodyMedium),
                 ],
               ),
             ),

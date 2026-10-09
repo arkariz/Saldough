@@ -355,7 +355,6 @@ class _PaymentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.appColors;
     final entries = state.entriesOf(payment);
     final range = switch (entries) {
       [] => '',
@@ -384,9 +383,10 @@ class _PaymentCard extends StatelessWidget {
                 ),
               ),
               AppButton.text(small: true, label: t.freelance.paymentChangeDateAction, onPressed: () => changePaymentDate(context, payment)),
-              TextButton(
+              AppButton.danger(
+                small: true,
+                label: t.freelance.paymentDeleteAction,
                 onPressed: () => deletePayment(context, payment),
-                child: Text(t.freelance.paymentDeleteAction, style: TextStyle(color: colors.danger)),
               ),
             ],
     );
@@ -618,28 +618,29 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    // Kotak angka `surface2` (design system Stat); warna status hanya di
+    // ikon supaya nominal tetap terbaca `ink`.
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.space1),
-      decoration: BoxDecoration(color: colors.tinted(color, 0.12), borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.all(AppSpacing.space2),
+      decoration: ShapeDecoration(color: colors.surface2, shape: const PixelCornerBorder.small()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              AppIcon(icon, size: 16),
-              const SizedBox(width: 4),
+              AppIcon(icon, size: 16, color: color),
+              const SizedBox(width: AppSpacing.space1),
               Expanded(
-                child: Text(label, style: labelSmStyle(context, size: 9, color: color)),
+                child: Text(
+                  label,
+                  maxLines: 2,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.ink2),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 2),
-          FitStart(
-            child: Text(
-              AppMoneyFormatter.format(amount),
-              style: context.numberStyles.amountSm.copyWith(color: colors.ink),
-            ),
-          ),
+          FitStart(child: AppMoneyText(amount, size: MoneySize.small)),
         ],
       ),
     );
@@ -654,6 +655,8 @@ typedef _FilterOption<T> = (T value, String label, IconKey icon, Color color);
 /// memuat ikon status, jumlahnya dalam angka besar, dan labelnya — jadi
 /// sekaligus ringkasan per status. Ubin terpilih diwarnai sesuai statusnya
 /// dan terangkat di atas bayangan keras; sisanya datar dan redup.
+/// Penyaring tab sebagai chip berhitungan (design system Chip). Label
+/// pembaca layar "Label (n)".
 class _FilterRow<T> extends StatelessWidget {
   const _FilterRow({required this.options, required this.counts, required this.selected, required this.onChanged});
 
@@ -665,112 +668,27 @@ class _FilterRow<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.space1, bottom: AppSpacing.space1),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            for (final (index, (value, label, icon, color)) in options.indexed) ...[
-              if (index > 0) const SizedBox(width: AppSpacing.space1),
-              Expanded(
-                child: _FilterTile(
-                  label: label,
-                  count: counts[value] ?? 0,
-                  icon: icon,
-                  color: color,
-                  selected: value == selected,
-                  onTap: () => onChanged(value),
-                ),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
+      child: Wrap(
+        spacing: AppSpacing.space2,
+        runSpacing: AppSpacing.space2,
+        children: [
+          for (final (value, label, icon, _) in options)
+            Semantics(
+              button: true,
+              selected: value == selected,
+              label: '$label (${counts[value] ?? 0})',
+              excludeSemantics: true,
+              child: AppChip(
+                label: label,
+                icon: icon,
+                count: counts[value] ?? 0,
+                selected: value == selected,
+                onBg: true,
+                onTap: () => onChanged(value),
               ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FilterTile extends StatefulWidget {
-  const _FilterTile({
-    required this.label,
-    required this.count,
-    required this.icon,
-    required this.color,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final int count;
-  final IconKey icon;
-  final Color color;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  State<_FilterTile> createState() => _FilterTileState();
-}
-
-class _FilterTileState extends State<_FilterTile> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final selected = widget.selected;
-    // Terpilih: terangkat 3px di atas bayangan keras; ditekan: turun rata.
-    final lift = selected && !_pressed ? 3.0 : 0.0;
-    final ink = selected ? widget.color : colors.ink2;
-    return Semantics(
-      button: true,
-      selected: selected,
-      label: '${widget.label} (${widget.count})',
-      excludeSemantics: true,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapUp: (_) => setState(() => _pressed = false),
-        onTapCancel: () => setState(() => _pressed = false),
-        child: AnimatedContainer(
-          duration: AppDurations.fast,
-          margin: EdgeInsets.only(top: 3 - lift, bottom: lift),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space1, AppSpacing.space2, AppSpacing.space1, AppSpacing.space2),
-          decoration: BoxDecoration(
-            color: selected ? colors.tinted(widget.color, 0.14) : colors.surface2,
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: selected ? widget.color : Colors.transparent, width: 2),
-            boxShadow: [
-              if (lift > 0) BoxShadow(color: widget.color, offset: Offset(0, lift)),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Opacity(opacity: selected ? 1 : 0.55, child: AppIcon(widget.icon, size: 20)),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: FitStart(
-                      child: Text(
-                        '${widget.count}',
-                        style: context.numberStyles.amountLg.copyWith(color: selected ? colors.ink : colors.ink2),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                widget.label,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: labelSmStyle(context, size: 9, color: ink),
-              ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }

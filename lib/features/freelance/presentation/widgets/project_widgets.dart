@@ -108,9 +108,9 @@ class FreelanceAmountLine extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.space2),
-      decoration: BoxDecoration(
-        color: color == null ? colors.surface2 : colors.tinted(color!, 0.1),
-        borderRadius: BorderRadius.circular(4),
+      decoration: ShapeDecoration(
+        color: colors.toneColors(toneFromColor(colors, color)).$1,
+        shape: const PixelCornerBorder.small(),
       ),
       child: Row(
         children: [
@@ -120,7 +120,7 @@ class FreelanceAmountLine extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: labelSmStyle(context, color: color ?? colors.ink2)),
+                Text(label, style: textTheme.labelLarge?.copyWith(color: color ?? colors.ink2)),
                 Text(caption, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               ],
             ),
@@ -250,14 +250,7 @@ class FreelanceEmptyState extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.space6),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.tinted(colors.warning, 0.15),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(badge, style: labelSmStyle(context, color: colors.warning)),
-          ),
+          AppBadge(badge, tone: AppTone.warning),
           const SizedBox(height: AppSpacing.space6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

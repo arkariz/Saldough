@@ -75,14 +75,12 @@ class _RecordRepeatFieldState extends State<RecordRepeatField> {
               if (!widget.locked)
                 _OptionChip(
                   label: t.record.repeat.off,
-                  kind: widget.kind,
                   selected: value == null,
                   onTap: () => _set(null),
                 ),
               for (final frequency in RecurringFrequency.values)
                 _OptionChip(
                   label: _frequencyLabel(frequency),
-                  kind: widget.kind,
                   selected: value?.frequency == frequency,
                   onTap: () => _set((value ?? const RecurringPattern()).copyWith(frequency: frequency)),
                 ),
@@ -180,13 +178,11 @@ class _Advanced extends StatelessWidget {
           children: [
             _OptionChip(
               label: t.record.repeat.endNever,
-              kind: kind,
               selected: value.end is RecurringNeverEnds,
               onTap: () => onChanged(value.copyWith(end: const RecurringNeverEnds())),
             ),
             _OptionChip(
               label: t.record.repeat.endAfter,
-              kind: kind,
               selected: count != null,
               onTap: () =>
                   onChanged(value.copyWith(end: const RecurringEndsAfter(_RecordRepeatFieldState._defaultCount))),
@@ -196,7 +192,6 @@ class _Advanced extends StatelessWidget {
                 RecurringEndsOn(date: final until) => CycleMonthFormatter.formatDateShort(until),
                 _ => t.record.repeat.endOn,
               },
-              kind: kind,
               selected: value.end is RecurringEndsOn,
               onTap: () => _pickEnd(context),
             ),
@@ -223,7 +218,6 @@ class _Advanced extends StatelessWidget {
             ])
               _OptionChip(
                 label: label,
-                kind: kind,
                 selected: value.amountMode == mode,
                 onTap: () => onChanged(
                   value.copyWith(amountMode: mode, autoRecord: mode == RecurringAmountMode.fixed && value.autoRecord),
@@ -233,11 +227,10 @@ class _Advanced extends StatelessWidget {
         ),
         // Catat otomatis hanya untuk nominal tetap (ADR-037 §3.2).
         if (value.amountMode == RecurringAmountMode.fixed)
-          SwitchListTile(
+          AppSwitchRow(
             key: const ValueKey('repeat-auto-record'),
-            contentPadding: EdgeInsets.zero,
-            title: Text(t.record.repeat.autoRecordLabel),
-            subtitle: Text(t.record.repeat.autoRecordHint),
+            title: t.record.repeat.autoRecordLabel,
+            subtitle: t.record.repeat.autoRecordHint,
             value: value.autoRecord,
             onChanged: (on) {
               AppAnalytics.log(RecurringEvents.autoRecordToggled(on: on, where: 'form'));
@@ -258,7 +251,6 @@ class _Advanced extends StatelessWidget {
               ])
                 _OptionChip(
                   label: label,
-                  kind: kind,
                   selected: value.paymentMode == mode,
                   onTap: () => onChanged(value.copyWith(paymentMode: mode)),
                 ),
@@ -334,45 +326,16 @@ class _Stepper extends StatelessWidget {
   }
 }
 
+/// Pilihan frekuensi/akhir Ulangi sebagai chip (design system Chip).
 class _OptionChip extends StatelessWidget {
-  const _OptionChip({required this.label, required this.kind, required this.selected, required this.onTap});
+  const _OptionChip({required this.label, required this.selected, required this.onTap});
 
   final String label;
-  final TransactionKind kind;
   final bool selected;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Semantics(
-      button: true,
-      selected: selected,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: selected ? colors.tinted(colors.kindFill(kind), 0.28) : colors.surface2,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              widthFactor: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
-                child: Text(
-                  label,
-                  style: labelSmStyle(context, color: selected ? colors.kindInk(kind) : colors.ink2),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppChip(label: label, selected: selected, onTap: onTap);
 }
 
 /// Label tombol simpan CATAT (J2): tanpa Ulangi → [plain]; dengan Ulangi,

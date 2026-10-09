@@ -80,7 +80,7 @@ class _CurrencyOption extends StatelessWidget {
         label: name,
         onTap: onTap,
         child: AppCard(
-          color: selected ? colors.tinted(colors.brand, 0.18) : null,
+          color: selected ? colors.brandSoft : null,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
           child: Row(
             children: [
@@ -98,7 +98,7 @@ class _CurrencyOption extends StatelessWidget {
                   ],
                 ),
               ),
-              if (selected) const AppIcon(IconKey.check),
+              if (selected) AppIcon(IconKey.check, color: colors.brand),
             ],
           ),
         ),

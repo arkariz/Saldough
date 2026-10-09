@@ -2505,13 +2505,39 @@ tugas, ditutup `flutter analyze` bersih dan seluruh uji lulus.
       halaman ini, bukan dilipat jadi satu baris seperti prototipe, supaya
       bisa dibuka tanpa layar tambahan. `flutter analyze` bersih, 1.160 uji
       lulus.
-- [ ] **T-14.10** Halaman turunan: Freelance, Kotak masuk notifikasi,
+- [x] **T-14.10** Halaman turunan: Freelance, Kotak masuk notifikasi,
       Catat pakai suara, Akun, formulir dompet/anggaran/pos/proyek, rincian
       transaksi dan dompet, kategori, template anggaran — semua memakai
       komponen T-14.3. Layar tanpa padanan di prototipe disusun dari
       komponen yang ada dan dilaporkan.
       Verifikasi: uji widget yang ada tetap lulus setelah disesuaikan.
       Di luar PRD: perombakan tampilan (ADR-034).
+      Hasil (9 Okt 2026, bagian 1–7): dengan prototipe — ikhtisar Freelance
+      (`Freelance.dc.html`), lembar suara (`CatatSuara.dc.html`: kepala
+      tutup/judul, ucapan di kotak `surface2`, mikrofon brand 96px bercincin,
+      "Ketik saja" tombol teks kecuali tanpa internet), kotak masuk
+      (`KotakMasuk.dc.html`: segmen Perlu dicek/Tercatat otomatis berhitungan,
+      kartu tangkapan dengan lencana, baris otomatis + Batalkan), Akun
+      (`Akun.dc.html`: kartu masuk bermaskot, setelan jadi baris ikon dalam
+      kelompok Pencatatan dan Tampilan), rincian rutin (`RincianRutin.dc.html`:
+      kepala label–nilai, progres kotak per kemunculan, baris jadwal, Ubah
+      menempel), kartu Saldo dompet ≈ (`RencanaBulanIni.dc.html`: anak tangga
+      `brand` putus-putus, area tipis, penanda kotak). Tanpa prototipe
+      (disusun dari komponen, dilaporkan): rincian transaksi dan dompet,
+      formulir dompet/anggaran/pos/proyek/entri/pembayaran, rincian proyek
+      Freelance (penyaring jadi chip berhitungan), template anggaran,
+      kategori, setelan/pola/sumber notifikasi, pengingat rutin, pemilih
+      bahasa/mata uang. Komponen baru: `AppChoiceBox` (pemilih formulir),
+      `AppSwitchRow` (ganti `SwitchListTile`); `AppIconTile.selected` kini
+      dirender (sebelumnya diabaikan, kategori terpilih di Catat tidak
+      tersorot); `AppChip` memendekkan label di ruang sempit; label 9px
+      dinaikkan ke 12px. Selisih disengaja: Akun belum memuat baris Kotak
+      masuk, Template anggaran, Tema, Data kamu, dan Kebijakan privasi dari
+      prototipe (butuh fitur atau penghitung baru); pengaturan rutin
+      (Ingatkan, catat otomatis, pos anggaran) tetap di rincian rutin walau
+      tak ada di prototipe; legenda dan penanda kejadian grafik perkiraan
+      belum dibuat. Sisa gaya lama hanya di keadaan kosong (T-14.11).
+      `flutter analyze` bersih, 1.161 uji lulus.
 - [ ] **T-14.11** Keadaan kosong, memuat, dan galat di semua layar
       (komponen EmptyState, Skeleton, Banner); Beranda pertama kali
       sesuai `BerandaKosong.dc.html` (daftar tiga langkah).

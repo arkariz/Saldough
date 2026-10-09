@@ -1180,7 +1180,9 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get emptyBody => 'Add what comes every month, then see what is truly free.';
 	@override String chartSemantics({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}';
 	@override String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
-	@override String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})';
+	@override String forecastEndLabel({required Object date}) => 'Balance forecast ${date}';
+	@override String forecastLowest({required Object amount, required Object date}) => 'Lowest ${amount} on ${date}';
+	@override String approxAmount({required Object amount}) => '≈${amount}';
 	@override String get loadError => 'Could not load this month.';
 	@override String get forecastBadge => 'Estimate';
 	@override String startOf({required Object date}) => 'Start ${date}';
@@ -2430,7 +2432,9 @@ extension on TranslationsEn {
 			'plan.emptyBody' => 'Add what comes every month, then see what is truly free.',
 			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Balance forecast, lowest ${low} on ${date}, month end ${end}',
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
-			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'End ${date} ≈${amount} · lowest ≈${low} (${lowDate})',
+			'plan.forecastEndLabel' => ({required Object date}) => 'Balance forecast ${date}',
+			'plan.forecastLowest' => ({required Object amount, required Object date}) => 'Lowest ${amount} on ${date}',
+			'plan.approxAmount' => ({required Object amount}) => '≈${amount}',
 			'plan.loadError' => 'Could not load this month.',
 			'plan.forecastBadge' => 'Estimate',
 			'plan.startOf' => ({required Object date}) => 'Start ${date}',

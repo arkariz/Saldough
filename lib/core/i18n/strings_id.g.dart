@@ -3024,8 +3024,14 @@ class Translations$plan$id {
 	/// id: '$date · $amount'
 	String chartPoint({required Object date, required Object amount}) => '${date} · ${amount}';
 
-	/// id: 'Akhir $date ≈$amount · paling tipis ≈$low ($lowDate)'
-	String forecastRow({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})';
+	/// id: 'Perkiraan saldo $date'
+	String forecastEndLabel({required Object date}) => 'Perkiraan saldo ${date}';
+
+	/// id: 'Terendah $amount pada $date'
+	String forecastLowest({required Object amount, required Object date}) => 'Terendah ${amount} pada ${date}';
+
+	/// id: '≈$amount'
+	String approxAmount({required Object amount}) => '≈${amount}';
 
 	/// id: 'Rencana bulan ini gagal dimuat.'
 	String get loadError => 'Rencana bulan ini gagal dimuat.';
@@ -4546,7 +4552,9 @@ extension on Translations {
 			'plan.emptyBody' => 'Tambahkan yang pasti datang tiap bulan, lalu lihat berapa yang benar-benar bebas.',
 			'plan.chartSemantics' => ({required Object low, required Object date, required Object end}) => 'Perkiraan saldo, paling tipis ${low} pada ${date}, akhir bulan ${end}',
 			'plan.chartPoint' => ({required Object date, required Object amount}) => '${date} · ${amount}',
-			'plan.forecastRow' => ({required Object date, required Object amount, required Object low, required Object lowDate}) => 'Akhir ${date} ≈${amount} · paling tipis ≈${low} (${lowDate})',
+			'plan.forecastEndLabel' => ({required Object date}) => 'Perkiraan saldo ${date}',
+			'plan.forecastLowest' => ({required Object amount, required Object date}) => 'Terendah ${amount} pada ${date}',
+			'plan.approxAmount' => ({required Object amount}) => '≈${amount}',
 			'plan.loadError' => 'Rencana bulan ini gagal dimuat.',
 			'plan.forecastBadge' => 'Perkiraan',
 			'plan.startOf' => ({required Object date}) => 'Awal ${date}',

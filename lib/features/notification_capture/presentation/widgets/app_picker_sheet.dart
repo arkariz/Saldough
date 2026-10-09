@@ -82,23 +82,18 @@ class _AppPickerState extends State<_AppPicker> {
         });
     if (filtered.isEmpty) return Center(child: Text(t.notificationCapture.appsEmpty));
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4),
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final app = filtered[index];
         final icon = app.icon;
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
+        return AppListRow(
           leading: icon == null
-              ? const AppIcon(IconKey.walletEwallet)
-              : Image.memory(Uint8List.fromList(icon), width: 36, height: 36),
-          title: Text(app.label),
-          subtitle: Text(
-            builtInNotificationApps.containsKey(app.packageName)
-                ? '${t.notificationCapture.builtInPatternsBadge} · ${app.packageName}'
-                : app.packageName,
-            style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-          ),
+              ? const AppIconTile(IconKey.walletEwallet)
+              : Image.memory(Uint8List.fromList(icon), width: AppSize.tile, height: AppSize.tile),
+          title: app.label,
+          subtitle: builtInNotificationApps.containsKey(app.packageName)
+              ? '${t.notificationCapture.builtInPatternsBadge} · ${app.packageName}'
+              : app.packageName,
           onTap: () => Navigator.of(context).pop(app),
         );
       },

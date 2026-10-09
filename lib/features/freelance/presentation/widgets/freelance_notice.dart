@@ -21,21 +21,25 @@ class FreelanceNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final ink = color ?? colors.warning;
-    return AppCard(
-      color: colors.tinted(ink, 0.1),
+    // Banner nada lembut (design system Banner): latar `*-soft`, ikon dan
+    // judul berwarna status, isi `ink`.
+    final (background, ink) = colors.toneColors(color == null ? AppTone.warning : toneFromColor(colors, color));
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.space3),
+      decoration: ShapeDecoration(color: background, shape: const PixelCornerBorder()),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(width: 6, height: 40, color: ink),
+          AppIcon(IconKey.info, size: 20, color: ink),
           const SizedBox(width: AppSpacing.space2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: labelSmStyle(context, color: ink)),
+                Text(title, style: textTheme.labelLarge?.copyWith(color: ink)),
                 const SizedBox(height: 2),
-                Text(body, style: Theme.of(context).textTheme.bodyMedium),
+                Text(body, style: textTheme.bodyMedium?.copyWith(color: colors.ink)),
               ],
             ),
           ),

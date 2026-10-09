@@ -111,8 +111,10 @@ class AppIconTile extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
-          color: background,
-          shape: const PixelCornerBorder.small(),
+          color: selected ? colors.brandSoft : background,
+          shape: PixelCornerBorder.small(
+            side: selected ? BorderSide(color: colors.brand, width: 2) : BorderSide.none,
+          ),
         ),
         child: AppIcon(icon, size: glyph, color: ink),
       ),

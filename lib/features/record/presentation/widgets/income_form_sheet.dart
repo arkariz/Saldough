@@ -276,14 +276,14 @@ class _FreelanceCallout extends StatelessWidget {
         onTap: () => Navigator.of(context).pop(const OpenFreelance()),
         behavior: HitTestBehavior.opaque,
         child: AppCard(
-          color: colors.tinted(colors.warning, 0.1),
+          color: colors.surface2,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.space2 + AppSpacing.space1,
             vertical: AppSpacing.space2,
           ),
           child: Row(
             children: [
-              const AppIcon(IconKey.worklog),
+              const AppIconTile(IconKey.worklog, size: 32),
               const SizedBox(width: AppSpacing.space2),
               Expanded(
                 child: Text.rich(

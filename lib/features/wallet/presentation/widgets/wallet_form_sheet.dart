@@ -380,13 +380,7 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: 44,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: colors.surface2, borderRadius: BorderRadius.circular(8)),
-          child: AppIcon(walletIconKey(iconKey), size: 28),
-        ),
+        AppIconTile(walletIconKey(iconKey), size: 44),
       ],
     );
   }
@@ -403,33 +397,24 @@ class _IconChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return GestureDetector(
+    return AppChoiceBox(
+      selected: selected,
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 96),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
-        decoration: BoxDecoration(
-          color: selected ? colors.tinted(colors.brand, 0.16) : colors.surface2,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: selected ? colors.brand : Colors.transparent, width: 2),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppIcon(iconKey, size: 36),
-            const SizedBox(height: 4),
-            Text(
-              walletTypeLabel(iconKey.name) ?? '',
-              textAlign: TextAlign.center,
-              style: labelSmStyle(
-                context,
-                size: 9,
-                color: selected ? colors.brand : colors.ink2,
-              ),
-            ),
-          ],
-        ),
+      constraints: const BoxConstraints(minHeight: 96),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1, vertical: AppSpacing.space2),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppIcon(iconKey, size: AppSize.pixelIcon),
+          const SizedBox(height: AppSpacing.space1),
+          Text(
+            walletTypeLabel(iconKey.name) ?? '',
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: selected ? colors.brandInk : colors.ink2),
+          ),
+        ],
       ),
     );
   }

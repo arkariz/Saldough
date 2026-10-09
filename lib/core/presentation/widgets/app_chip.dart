@@ -80,7 +80,8 @@ class AppChip extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                   ],
-                  Text(label, style: style),
+                  // Label memendek (elipsis) bila chip lebih lebar dari ruang yang ada.
+                  Flexible(child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: style)),
                   if (count != null) ...[
                     const SizedBox(width: AppSpacing.space1),
                     Text(

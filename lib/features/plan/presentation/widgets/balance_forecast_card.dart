@@ -104,10 +104,9 @@ class _BalanceForecastCardState extends State<BalanceForecastCard> {
                   bold: true,
                 ),
                 const SizedBox(height: AppSpacing.space2),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(t.plan.unplannedToggle),
-                  subtitle: widget.unplannedAvailable ? null : Text(t.plan.unplannedUnavailable),
+                AppSwitchRow(
+                  title: t.plan.unplannedToggle,
+                  subtitle: widget.unplannedAvailable ? null : t.plan.unplannedUnavailable,
                   value: widget.unplannedAvailable && widget.includeUnplanned,
                   onChanged: widget.unplannedAvailable
                       ? (value) {

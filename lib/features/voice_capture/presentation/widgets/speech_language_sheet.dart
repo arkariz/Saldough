@@ -49,12 +49,12 @@ class _SpeechLanguageSheetState extends State<SpeechLanguageSheet> {
                   label: languageName(locale),
                   onTap: () => setState(() => _selected = locale),
                   child: AppCard(
-                    color: locale == _selected ? colors.tinted(colors.brand, 0.18) : null,
+                    color: locale == _selected ? colors.brandSoft : null,
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
                     child: Row(
                       children: [
                         Expanded(child: Text(languageName(locale), style: textTheme.titleSmall)),
-                        if (locale == _selected) const AppIcon(IconKey.check),
+                        if (locale == _selected) AppIcon(IconKey.check, color: colors.brand),
                       ],
                     ),
                   ),

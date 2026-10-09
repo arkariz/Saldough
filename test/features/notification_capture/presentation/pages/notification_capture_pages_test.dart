@@ -1,6 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:api_storage/api_storage.dart';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
@@ -141,6 +145,76 @@ void main() {
     });
   });
 
+  group('sakelar setelan (QA PR #43 F15, F20)', () {
+    testWidgets('tiap sakelar berlabel, bisa diketuk utuh, dan membawa status', (tester) async {
+      await store.saveSettings(
+        const NotificationCaptureSettings(enabled: true, autoRecordLevel: AutoRecordLevel.whenAmountAndWallet),
+      );
+      final handle = tester.ensureSemantics();
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      for (final label in [
+        t.notificationCapture.autoRecordLabel,
+        t.notificationCapture.autoRecordAnyCategoryLabel,
+        t.notificationCapture.reminderLabel,
+      ]) {
+        final node = find.bySemanticsLabel(RegExp('^${RegExp.escape(label)}'));
+        await tester.scrollUntilVisible(node, 200);
+        final data = tester.getSemantics(node).getSemanticsData();
+        expect(data.hasAction(SemanticsAction.tap), isTrue, reason: label);
+        expect(data.flagsCollection.isToggled, isNot(ui.Tristate.none), reason: label);
+      }
+      handle.dispose();
+    });
+
+    testWidgets('mematikan lalu menyalakan Catat otomatis memulihkan "walau kategori belum jelas"', (tester) async {
+      await store.saveSettings(
+        const NotificationCaptureSettings(enabled: true, autoRecordLevel: AutoRecordLevel.whenAmountAndWallet),
+      );
+      await open(tester, NotificationCaptureRouteKeys.settings);
+      final autoRecord = find.byKey(const ValueKey('notification-auto-record'));
+      await tester.scrollUntilVisible(autoRecord, 200);
+      await tester.pumpAndSettle();
+      Future<AutoRecordLevel> level() async =>
+          (await store.loadSettings()).getOrElse((_) => throw StateError('')).autoRecordLevel;
+
+      await tester.tap(autoRecord);
+      await tester.pumpAndSettle();
+      expect(await level(), AutoRecordLevel.reviewAll);
+      await tester.tap(autoRecord);
+      await tester.pumpAndSettle();
+      expect(await level(), AutoRecordLevel.whenAmountAndWallet);
+    });
+  });
+
+  group('segmen kotak masuk di 360dp (QA PR #43 F19)', () {
+    setUpAll(() async {
+      final loader = FontLoader('PlusJakartaSans')
+        ..addFont(rootBundle.load('assets/fonts/PlusJakartaSans-Variable.ttf'));
+      await loader.load();
+    });
+
+    for (final locale in [AppLocale.id, AppLocale.en]) {
+      testWidgets('${locale.languageCode}: label segmen dan hitungannya sebaris', (tester) async {
+        await tester.runAsync(() => LocaleSettings.setLocale(locale));
+        addTearDown(() => LocaleSettings.setLocaleSync(AppLocale.id));
+        tester.view
+          ..physicalSize = const Size(360, 720)
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await open(tester, NotificationCaptureRouteKeys.inbox);
+        for (final label in [t.notificationCapture.inboxPendingTitle, t.notificationCapture.inboxAutoTitle]) {
+          final text = find.textContaining(label, findRichText: true);
+          final paragraph = tester.renderObject<RenderParagraph>(text.first);
+          expect(
+            paragraph.getMaxIntrinsicWidth(double.infinity),
+            lessThanOrEqualTo(paragraph.size.width + 0.5),
+            reason: '"$label" terbungkus',
+          );
+        }
+      });
+    }
+  });
+
   group('kotak masuk', () {
     final at = DateTime(2026, 10, 1, 14);
 
@@ -153,15 +227,43 @@ void main() {
           text: 'Transaksi Rp50.000 berhasil',
           capturedAt: at,
           draft: const RecordDraft(kind: DraftKind.expense, amountSen: 5000000, issues: {DraftIssue.kindUnclear}),
+          reviewReason: CaptureReviewReason.kindUnclear,
         ),
       ]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
       expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
 
+      // Alasan perlu dicek tersimpan dan tampil sebagai badge (QA PR #43 F16).
+      expect(find.text(t.notificationCapture.reviewReason.kindUnclear), findsOneWidget);
+
       await tester.tap(find.text(t.notificationCapture.dismissAction));
       await tester.pumpAndSettle();
       expect((await store.loadInbox()).getOrElse((_) => throw StateError('')), isEmpty);
       expect(find.text(t.notificationCapture.inboxEmpty), findsOneWidget);
+
+      // Urungkan mengembalikannya ke Perlu dicek (QA PR #43 F18).
+      await tester.tap(find.byKey(const ValueKey('inbox-dismiss-undo')));
+      await tester.pumpAndSettle();
+      expect((await store.loadInbox()).getOrElse((_) => throw StateError('')).single.id, 'a');
+      expect(find.text('Transaksi Rp50.000 berhasil'), findsOneWidget);
+    });
+
+    testWidgets('tanpa yang menunggu, kotak masuk terbuka di segmen Otomatis (QA PR #43 F17)', (tester) async {
+      await store.saveAutoRecorded([
+        AutoRecordedEntry(
+          captureId: 'a',
+          transactionId: 't1',
+          transactionDate: at,
+          kind: DraftKind.expense,
+          amountSen: 4250000,
+          appLabel: 'BRImo',
+          recordedAt: at,
+          note: 'INDOMARET',
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+      expect(find.text(t.notificationCapture.inboxEmpty), findsNothing);
+      expect(find.text('INDOMARET'), findsOneWidget);
     });
 
     testWidgets('Batalkan transaksi otomatis menghapusnya dari buku besar', (tester) async {

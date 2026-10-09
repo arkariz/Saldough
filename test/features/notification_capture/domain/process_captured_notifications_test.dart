@@ -102,7 +102,9 @@ void main() {
     expect(result.queued.single.draft.amountSen, 2500000);
     expect(await ledgerNow(), isEmpty);
     expect(gateway.acked, ['a']);
-    expect((await store.loadInbox()).getOrElse((_) => []).single.id, 'a');
+    final pending = (await store.loadInbox()).getOrElse((_) => []).single;
+    expect(pending.id, 'a');
+    expect(pending.reviewReason, CaptureReviewReason.autoRecordOff);
   });
 
   test('tingkat 2: draf lengkap tercatat lewat RecordTransaction, saldo dompet ikut', () async {
@@ -140,7 +142,7 @@ void main() {
     const noCategory = 'Pembayaran Rp40.000 ke PT ABC berhasil';
     await enable(AutoRecordLevel.whenComplete);
     gateway.queue = [notif('a', noCategory)];
-    expect((await processor()()).queued, hasLength(1));
+    expect((await processor()()).queued.single.reviewReason, CaptureReviewReason.categoryUnclear);
     await enable(AutoRecordLevel.whenAmountAndWallet);
     gateway.queue = [notif('b', noCategory, at: DateTime(2026, 10, 1, 9))];
     expect((await processor()()).recorded, hasLength(1));
@@ -151,7 +153,9 @@ void main() {
     gateway.queue = [notif('a', 'Transaksi Rp50.000 berhasil')];
     final result = await processor()();
     expect(result.recorded, isEmpty);
-    expect(result.queued, hasLength(1));
+    expect(result.queued.single.reviewReason, CaptureReviewReason.kindUnclear);
+    // Alasannya ikut tersimpan.
+    expect((await store.loadInbox()).getOrElse((_) => []).single.reviewReason, CaptureReviewReason.kindUnclear);
   });
 
   test('dugaan ganda dengan buku besar → kotak masuk bertanda', () async {

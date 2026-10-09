@@ -943,12 +943,13 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get deletePattern => 'Delete pattern';
 	@override String get inboxTitle => 'Notification inbox';
 	@override String get inboxPendingTitle => 'To check';
-	@override String get inboxAutoTitle => 'Recorded automatically';
+	@override String get inboxAutoTitle => 'Automatic';
 	@override String get inboxEmpty => 'Nothing to check.';
 	@override String get inboxAutoEmpty => 'Nothing recorded automatically yet.';
 	@override String get inboxRetention => 'This list is kept for 7 days.';
 	@override String get amountUnknown => 'Amount not read yet';
 	@override String get possibleDuplicate => 'May already be recorded';
+	@override late final _Translations$notificationCapture$reviewReason$en reviewReason = _Translations$notificationCapture$reviewReason$en._(_root);
 	@override String get recordAction => 'Record';
 	@override String get dismissAction => 'Dismiss';
 	@override String get makePatternAction => 'Make a pattern from this text';
@@ -958,13 +959,16 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get undoConfirm => 'The transaction is deleted and the wallet balance goes back to what it was.';
 	@override String get undone => 'Automatic transaction undone.';
 	@override String get dismissed => 'Notification dismissed.';
-	@override String banner({required Object n}) => '${n} transactions from notifications to check';
+	@override String banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${n} transaction from notifications to check',
+		other: '${n} transactions from notifications to check',
+	);
 	@override String get bannerAction => 'Check';
 	@override String autoRecordedSnack({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}';
 	@override String autoRecordedSnackMany({required Object n}) => '${n} transactions recorded automatically from notifications';
 	@override String get reminderChannel => 'Record from notifications';
 	@override String get reminderCapturedTitle => 'Transaction from {app} captured';
-	@override String get reminderCapturedBody => 'Tap to record it.';
+	@override String get reminderCapturedBody => 'Tap to view.';
 	@override String reminderReviewTitle({required Object amount, required Object app}) => 'Check ${amount} from ${app}';
 	@override String get reminderReviewBody => 'Tap to record it.';
 	@override String reminderRecordedTitle({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}';
@@ -1349,6 +1353,23 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: notificationCapture.reviewReason
+class _Translations$notificationCapture$reviewReason$en extends Translations$notificationCapture$reviewReason$id {
+	_Translations$notificationCapture$reviewReason$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get autoRecordOff => 'Auto-record is off';
+	@override String get newPattern => 'New pattern, check it';
+	@override String get amountUnclear => 'Amount unclear';
+	@override String get otherCurrency => 'Other currency';
+	@override String get kindUnclear => 'Type unclear';
+	@override String get walletUnknown => 'Wallet not recognized';
+	@override String get categoryUnclear => 'Category unclear';
+	@override String get dateUnclear => 'Date unclear';
 }
 
 // Path: recurring.starters
@@ -2209,12 +2230,20 @@ extension on TranslationsEn {
 			'notificationCapture.deletePattern' => 'Delete pattern',
 			'notificationCapture.inboxTitle' => 'Notification inbox',
 			'notificationCapture.inboxPendingTitle' => 'To check',
-			'notificationCapture.inboxAutoTitle' => 'Recorded automatically',
+			'notificationCapture.inboxAutoTitle' => 'Automatic',
 			'notificationCapture.inboxEmpty' => 'Nothing to check.',
 			'notificationCapture.inboxAutoEmpty' => 'Nothing recorded automatically yet.',
 			'notificationCapture.inboxRetention' => 'This list is kept for 7 days.',
 			'notificationCapture.amountUnknown' => 'Amount not read yet',
 			'notificationCapture.possibleDuplicate' => 'May already be recorded',
+			'notificationCapture.reviewReason.autoRecordOff' => 'Auto-record is off',
+			'notificationCapture.reviewReason.newPattern' => 'New pattern, check it',
+			'notificationCapture.reviewReason.amountUnclear' => 'Amount unclear',
+			'notificationCapture.reviewReason.otherCurrency' => 'Other currency',
+			'notificationCapture.reviewReason.kindUnclear' => 'Type unclear',
+			'notificationCapture.reviewReason.walletUnknown' => 'Wallet not recognized',
+			'notificationCapture.reviewReason.categoryUnclear' => 'Category unclear',
+			'notificationCapture.reviewReason.dateUnclear' => 'Date unclear',
 			'notificationCapture.recordAction' => 'Record',
 			'notificationCapture.dismissAction' => 'Dismiss',
 			'notificationCapture.makePatternAction' => 'Make a pattern from this text',
@@ -2224,13 +2253,13 @@ extension on TranslationsEn {
 			'notificationCapture.undoConfirm' => 'The transaction is deleted and the wallet balance goes back to what it was.',
 			'notificationCapture.undone' => 'Automatic transaction undone.',
 			'notificationCapture.dismissed' => 'Notification dismissed.',
-			'notificationCapture.banner' => ({required Object n}) => '${n} transactions from notifications to check',
+			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} transaction from notifications to check', other: '${n} transactions from notifications to check', ), 
 			'notificationCapture.bannerAction' => 'Check',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Recorded automatically: ${amount} · ${app}',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transactions recorded automatically from notifications',
 			'notificationCapture.reminderChannel' => 'Record from notifications',
 			'notificationCapture.reminderCapturedTitle' => 'Transaction from {app} captured',
-			'notificationCapture.reminderCapturedBody' => 'Tap to record it.',
+			'notificationCapture.reminderCapturedBody' => 'Tap to view.',
 			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Check ${amount} from ${app}',
 			'notificationCapture.reminderReviewBody' => 'Tap to record it.',
 			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Recorded ${amount} · ${app}',
@@ -2412,6 +2441,8 @@ extension on TranslationsEn {
 			'plan.infoNotBalance' => 'Not your wallet balance.',
 			'plan.balanceTitle' => 'Wallet balance ≈',
 			'plan.allWallets' => 'All',
+			_ => null,
+		} ?? switch (path) {
 			'plan.endOf' => ({required Object date}) => 'End of ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
 			'plan.detailsAction' => 'Details',
@@ -2420,8 +2451,6 @@ extension on TranslationsEn {
 			'plan.detailsTitle' => 'Balance forecast',
 			'plan.detailsNow' => 'Balance now',
 			'plan.detailsIncome' => 'Recurring income',
-			_ => null,
-		} ?? switch (path) {
 			'plan.detailsBills' => 'Recurring bills',
 			'plan.detailsBudget' => 'Budget left',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Off plan · ${perDay}/day',

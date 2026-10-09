@@ -64,5 +64,14 @@ void main() {
     expect(t.recurring.reminderSoonTitle(n: 1), 'In 1 day');
     expect(t.recurring.reminderSoonTitle(n: 3), 'In 3 days');
     expect(t.recurring.reminderLine(n: 1), endsWith('1 day before'));
+    expect(t.notificationCapture.banner(n: 1), startsWith('1 transaction '));
+    expect(t.notificationCapture.banner(n: 2), startsWith('2 transactions '));
+  });
+
+  test('pengingat generik tidak menjanjikan pencatatan (QA PR #43 F17)', () {
+    // Saat aplikasi tertutup, hasilnya bisa tercatat otomatis atau menunggu
+    // dicek: teksnya harus benar untuk keduanya.
+    expect(id['notificationCapture.reminderCapturedBody'], isNot(contains('catat')));
+    expect(en['notificationCapture.reminderCapturedBody'], isNot(contains('record')));
   });
 }

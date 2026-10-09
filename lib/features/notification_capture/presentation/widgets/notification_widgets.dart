@@ -2,59 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Baris sakelar: label, keterangan opsional, dan [Switch]. Dipakai di dalam
-/// kartu kelompok setelan; [indent] menggeser baris turunan ke kanan.
-class NotificationSwitchRow extends StatelessWidget {
-  /// Membuat [NotificationSwitchRow].
-  const NotificationSwitchRow({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-    this.hint,
-    this.indent = false,
-    super.key,
-  });
-
-  /// Label.
-  final String label;
-
-  /// Keterangan singkat di bawah label.
-  final String? hint;
-
-  /// Nilai.
-  final bool value;
-
-  /// Diubah.
-  final ValueChanged<bool> onChanged;
-
-  /// Baris turunan dari baris di atasnya.
-  final bool indent;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.only(left: indent ? AppSpacing.space6 : 0, top: AppSpacing.space1, bottom: AppSpacing.space1),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: textTheme.titleSmall),
-                if (hint != null) Text(hint!, style: textTheme.bodySmall?.copyWith(color: context.appColors.ink2)),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSpacing.space2),
-          Switch(value: value, onChanged: onChanged),
-        ],
-      ),
-    );
-  }
-}
-
-/// [NotificationSwitchRow] tunggal dalam kartu.
+/// [AppSwitchRow] tunggal dalam kartu: seluruh baris bisa diketuk dan
+/// dibacakan sebagai satu sakelar berlabel (QA PR #43 F15).
 class NotificationSwitchCard extends StatelessWidget {
   /// Membuat [NotificationSwitchCard].
   const NotificationSwitchCard({
@@ -83,12 +32,13 @@ class NotificationSwitchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppCard(
-    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.space1),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        NotificationSwitchRow(label: label, hint: hint, value: value, onChanged: onChanged),
-        ?footer,
+        AppSwitchRow(title: label, subtitle: hint, value: value, onChanged: onChanged),
+        if (footer case final footer?)
+          Padding(padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4), child: footer),
       ],
     ),
   );

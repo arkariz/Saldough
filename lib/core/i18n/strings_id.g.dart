@@ -2365,8 +2365,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Perlu dicek'
 	String get inboxPendingTitle => 'Perlu dicek';
 
-	/// id: 'Tercatat otomatis'
-	String get inboxAutoTitle => 'Tercatat otomatis';
+	/// id: 'Otomatis'
+	String get inboxAutoTitle => 'Otomatis';
 
 	/// id: 'Tidak ada yang perlu dicek.'
 	String get inboxEmpty => 'Tidak ada yang perlu dicek.';
@@ -2382,6 +2382,8 @@ class Translations$notificationCapture$id {
 
 	/// id: 'Mungkin sudah tercatat'
 	String get possibleDuplicate => 'Mungkin sudah tercatat';
+
+	late final Translations$notificationCapture$reviewReason$id reviewReason = Translations$notificationCapture$reviewReason$id.internal(_root);
 
 	/// id: 'Catat'
 	String get recordAction => 'Catat';
@@ -2410,8 +2412,10 @@ class Translations$notificationCapture$id {
 	/// id: 'Notifikasi diabaikan.'
 	String get dismissed => 'Notifikasi diabaikan.';
 
-	/// id: '${n} transaksi dari notifikasi menunggu dicek'
-	String banner({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek';
+	/// id: '(other) {${n} transaksi dari notifikasi menunggu dicek}'
+	String banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		other: '${n} transaksi dari notifikasi menunggu dicek',
+	);
 
 	/// id: 'Cek'
 	String get bannerAction => 'Cek';
@@ -2428,8 +2432,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Transaksi dari {app} tertangkap'
 	String get reminderCapturedTitle => 'Transaksi dari {app} tertangkap';
 
-	/// id: 'Ketuk untuk mencatat.'
-	String get reminderCapturedBody => 'Ketuk untuk mencatat.';
+	/// id: 'Ketuk untuk melihat.'
+	String get reminderCapturedBody => 'Ketuk untuk melihat.';
 
 	/// id: 'Cek ${amount} dari ${app}'
 	String reminderReviewTitle({required Object amount, required Object app}) => 'Cek ${amount} dari ${app}';
@@ -3441,6 +3445,39 @@ class Translations$currency$names$id {
 	String get aud => 'Dolar Australia';
 }
 
+// Path: notificationCapture.reviewReason
+class Translations$notificationCapture$reviewReason$id {
+	Translations$notificationCapture$reviewReason$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Catat otomatis mati'
+	String get autoRecordOff => 'Catat otomatis mati';
+
+	/// id: 'Pola baru, cek dulu'
+	String get newPattern => 'Pola baru, cek dulu';
+
+	/// id: 'Nominal belum pasti'
+	String get amountUnclear => 'Nominal belum pasti';
+
+	/// id: 'Mata uang lain'
+	String get otherCurrency => 'Mata uang lain';
+
+	/// id: 'Jenis belum pasti'
+	String get kindUnclear => 'Jenis belum pasti';
+
+	/// id: 'Dompet tidak dikenali'
+	String get walletUnknown => 'Dompet tidak dikenali';
+
+	/// id: 'Kategori belum jelas'
+	String get categoryUnclear => 'Kategori belum jelas';
+
+	/// id: 'Tanggal belum pasti'
+	String get dateUnclear => 'Tanggal belum pasti';
+}
+
 // Path: recurring.starters
 class Translations$recurring$starters$id {
 	Translations$recurring$starters$id.internal(this._root);
@@ -4333,12 +4370,20 @@ extension on Translations {
 			'notificationCapture.deletePattern' => 'Hapus pola',
 			'notificationCapture.inboxTitle' => 'Kotak masuk notifikasi',
 			'notificationCapture.inboxPendingTitle' => 'Perlu dicek',
-			'notificationCapture.inboxAutoTitle' => 'Tercatat otomatis',
+			'notificationCapture.inboxAutoTitle' => 'Otomatis',
 			'notificationCapture.inboxEmpty' => 'Tidak ada yang perlu dicek.',
 			'notificationCapture.inboxAutoEmpty' => 'Belum ada yang tercatat otomatis.',
 			'notificationCapture.inboxRetention' => 'Daftar ini disimpan 7 hari.',
 			'notificationCapture.amountUnknown' => 'Nominal belum terbaca',
 			'notificationCapture.possibleDuplicate' => 'Mungkin sudah tercatat',
+			'notificationCapture.reviewReason.autoRecordOff' => 'Catat otomatis mati',
+			'notificationCapture.reviewReason.newPattern' => 'Pola baru, cek dulu',
+			'notificationCapture.reviewReason.amountUnclear' => 'Nominal belum pasti',
+			'notificationCapture.reviewReason.otherCurrency' => 'Mata uang lain',
+			'notificationCapture.reviewReason.kindUnclear' => 'Jenis belum pasti',
+			'notificationCapture.reviewReason.walletUnknown' => 'Dompet tidak dikenali',
+			'notificationCapture.reviewReason.categoryUnclear' => 'Kategori belum jelas',
+			'notificationCapture.reviewReason.dateUnclear' => 'Tanggal belum pasti',
 			'notificationCapture.recordAction' => 'Catat',
 			'notificationCapture.dismissAction' => 'Abaikan',
 			'notificationCapture.makePatternAction' => 'Buat pola dari teks ini',
@@ -4348,13 +4393,13 @@ extension on Translations {
 			'notificationCapture.undoConfirm' => 'Transaksinya dihapus dan saldo dompet kembali seperti sebelumnya.',
 			'notificationCapture.undone' => 'Transaksi otomatis dibatalkan.',
 			'notificationCapture.dismissed' => 'Notifikasi diabaikan.',
-			'notificationCapture.banner' => ({required Object n}) => '${n} transaksi dari notifikasi menunggu dicek',
+			'notificationCapture.banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} transaksi dari notifikasi menunggu dicek', ), 
 			'notificationCapture.bannerAction' => 'Cek',
 			'notificationCapture.autoRecordedSnack' => ({required Object amount, required Object app}) => 'Tercatat otomatis: ${amount} · ${app}',
 			'notificationCapture.autoRecordedSnackMany' => ({required Object n}) => '${n} transaksi tercatat otomatis dari notifikasi',
 			'notificationCapture.reminderChannel' => 'Catat dari notifikasi',
 			'notificationCapture.reminderCapturedTitle' => 'Transaksi dari {app} tertangkap',
-			'notificationCapture.reminderCapturedBody' => 'Ketuk untuk mencatat.',
+			'notificationCapture.reminderCapturedBody' => 'Ketuk untuk melihat.',
 			'notificationCapture.reminderReviewTitle' => ({required Object amount, required Object app}) => 'Cek ${amount} dari ${app}',
 			'notificationCapture.reminderReviewBody' => 'Ketuk untuk mencatat.',
 			'notificationCapture.reminderRecordedTitle' => ({required Object amount, required Object app}) => 'Tercatat ${amount} · ${app}',
@@ -4536,6 +4581,8 @@ extension on Translations {
 			'plan.infoNotBalance' => 'Bukan saldo dompet.',
 			'plan.balanceTitle' => 'Saldo dompet ≈',
 			'plan.allWallets' => 'Semua',
+			_ => null,
+		} ?? switch (path) {
 			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Paling tipis · ${date}',
 			'plan.detailsAction' => 'Rincian',
@@ -4544,8 +4591,6 @@ extension on Translations {
 			'plan.detailsTitle' => 'Perkiraan saldo',
 			'plan.detailsNow' => 'Saldo sekarang',
 			'plan.detailsIncome' => 'Pemasukan rutin',
-			_ => null,
-		} ?? switch (path) {
 			'plan.detailsBills' => 'Tagihan rutin',
 			'plan.detailsBudget' => 'Sisa anggaran',
 			'plan.detailsUnplanned' => ({required Object perDay}) => 'Di luar rencana · ${perDay}/hari',

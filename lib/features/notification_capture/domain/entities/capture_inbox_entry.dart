@@ -1,6 +1,35 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:saldough/shared/capture/capture.dart';
 
+/// Alasan tangkapan masuk kotak masuk alih-alih dicatat otomatis (QA PR #43
+/// F16), ditampilkan sebagai badge di kartunya. Kemungkinan kembar sudah
+/// punya badge sendiri (`possibleDuplicate`).
+enum CaptureReviewReason {
+  /// Catat otomatis dimatikan pengguna.
+  autoRecordOff,
+
+  /// Dari pola bawaan yang belum terverifikasi: selalu ditinjau.
+  newPattern,
+
+  /// Nominal tidak ditemukan, ganda, atau bisa dibaca dua cara.
+  amountUnclear,
+
+  /// Menyebut mata uang lain.
+  otherCurrency,
+
+  /// Jenis belum pasti: pengeluaran atau pindah dompet.
+  kindUnclear,
+
+  /// Dompet tidak dikenali.
+  walletUnknown,
+
+  /// Kategori belum jelas.
+  categoryUnclear,
+
+  /// Tanggal tidak bisa dipakai.
+  dateUnclear,
+}
+
 /// Tangkapan yang menunggu ditinjau di kotak masuk (ADR-032 §3.6). Teksnya
 /// disimpan hanya selama menunggu, paling lama [CaptureRetention.days] hari.
 final class CaptureInboxEntry extends Equatable {
@@ -14,6 +43,7 @@ final class CaptureInboxEntry extends Equatable {
     required this.draft,
     this.possibleDuplicate = false,
     this.iconId,
+    this.reviewReason,
   });
 
   /// Identitas tangkapan.
@@ -40,8 +70,21 @@ final class CaptureInboxEntry extends Equatable {
   /// Id ikon notifikasi di penyimpanan ikon sumber (ADR-032 §3.10).
   final String? iconId;
 
+  /// Kenapa tidak dicatat otomatis; `null` untuk item lama atau kembar.
+  final CaptureReviewReason? reviewReason;
+
   @override
-  List<Object?> get props => [id, packageName, appLabel, text, capturedAt, draft, possibleDuplicate, iconId];
+  List<Object?> get props => [
+    id,
+    packageName,
+    appLabel,
+    text,
+    capturedAt,
+    draft,
+    possibleDuplicate,
+    iconId,
+    reviewReason,
+  ];
 }
 
 /// Transaksi yang tercatat otomatis dari notifikasi (ADR-032 §3.6).

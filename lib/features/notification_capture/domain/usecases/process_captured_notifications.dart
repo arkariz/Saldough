@@ -235,6 +235,7 @@ final class ProcessCapturedNotifications {
         draft: draft,
         possibleDuplicate: duplicate,
         iconId: iconId,
+        reviewReason: duplicate ? null : policy.reviewReason(draft, autoEligible: composed.autoEligible),
       );
       inbox.insert(0, entry);
       if (!await _save(processed, inbox, auto)) break;

@@ -1,3 +1,4 @@
+import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
 import 'package:saldough/shared/capture/capture.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -21,6 +22,39 @@ final class AutoRecordPolicy {
       AutoRecordLevel.whenComplete => draft.kind == DraftKind.transfer || draft.categoryId != null,
       AutoRecordLevel.whenAmountAndWallet => true,
     };
+  }
+
+  /// Alasan [draft] ditinjau alih-alih dicatat otomatis (QA PR #43 F16), atau
+  /// `null` bila [allows] dan pola layak. [autoEligible] `false` = dari pola
+  /// yang belum terverifikasi.
+  CaptureReviewReason? reviewReason(RecordDraft draft, {required bool autoEligible}) {
+    if (level == AutoRecordLevel.reviewAll) return CaptureReviewReason.autoRecordOff;
+    final issues = draft.issues;
+    if (draft.amountSen == null ||
+        issues.any(
+          (i) => const {
+            DraftIssue.amountMissing,
+            DraftIssue.amountMultiple,
+            DraftIssue.amountWithoutUnit,
+            DraftIssue.amountAmbiguous,
+          }.contains(i),
+        )) {
+      return CaptureReviewReason.amountUnclear;
+    }
+    if (issues.contains(DraftIssue.currencyUnsupported)) return CaptureReviewReason.otherCurrency;
+    if (issues.contains(DraftIssue.kindUnclear) ||
+        issues.contains(DraftIssue.transferSourceMissing) ||
+        issues.contains(DraftIssue.transferTargetMissing)) {
+      return CaptureReviewReason.kindUnclear;
+    }
+    if (issues.contains(DraftIssue.walletUnknown)) return CaptureReviewReason.walletUnknown;
+    if (issues.contains(DraftIssue.categoryUnknown)) return CaptureReviewReason.categoryUnclear;
+    if (issues.contains(DraftIssue.dateUnclear)) return CaptureReviewReason.dateUnclear;
+    if (draft.walletId == null) return CaptureReviewReason.walletUnknown;
+    if (draft.kind == DraftKind.transfer && draft.toWalletId == null) return CaptureReviewReason.kindUnclear;
+    if (!autoEligible) return CaptureReviewReason.newPattern;
+    if (!allows(draft)) return CaptureReviewReason.categoryUnclear;
+    return null;
   }
 
   /// `true` bila [draft] mungkin sudah tercatat: transaksi berjenis, dompet,

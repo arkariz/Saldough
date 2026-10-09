@@ -234,24 +234,24 @@ class _IncomeFormSheetState extends State<IncomeFormSheet> {
               kind: TransactionKind.income,
               onChanged: (_) => setState(() {}),
             ),
+            if (!editing && widget.occurrence == null)
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recordRepeat,
+                child: RecordRepeatField(
+                  value: _repeat,
+                  date: _date,
+                  kind: TransactionKind.income,
+                  locked: widget.repeatLocked,
+                  onChanged: (repeat) => setState(() {
+                    _repeat = repeat;
+                    if (repeat == null) _date = dateWithoutRepeat(_date);
+                  }),
+                ),
+              ),
           ],
         ),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
-        if (!editing && widget.occurrence == null)
-          SpotlightTarget(
-            spotlightKey: SpotlightKey.recordRepeat,
-            child: RecordRepeatField(
-              value: _repeat,
-              date: _date,
-              kind: TransactionKind.income,
-              locked: widget.repeatLocked,
-              onChanged: (repeat) => setState(() {
-                _repeat = repeat;
-                if (repeat == null) _date = dateWithoutRepeat(_date);
-              }),
-            ),
-          ),
         if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],
     );

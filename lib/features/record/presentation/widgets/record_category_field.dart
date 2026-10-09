@@ -6,14 +6,17 @@ import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/category/category_presentation.dart';
 
 /// Pemilih kategori Catat (prototipe `Catat.dc.html`, `cat-pick`): petak
-/// lima kolom berisi empat kategori teratas ([frequentIds] di depan) dengan
-/// tile ikonnya, dan "Semua kategori" yang membuka sheet daftar lengkap
+/// berisi kategori teratas ([frequentIds] di depan) dengan tile ikonnya, dan
+/// "Semua kategori" yang membuka sheet daftar lengkap
 /// (design system Sheet pemilih) berisi "Tanpa kategori" dan -- kalau
 /// [onCreate] diberikan -- "Tambah kategori".
 ///
-/// Kategori terpilih yang tidak termasuk empat teratas ikut tampil di petak,
-/// menggantikan yang keempat. Kategori terarsip yang terpilih (menyunting
-/// transaksi lama) tetap tampil, tetapi tidak ditawarkan di sheet.
+/// Jumlah kolom mengikuti lebar ([columnsFor]): empat di layar 360–430dp,
+/// lima di layar lebar, supaya label seperti "Transportasi" tidak pernah
+/// dipotong di tengah kata (QA PR #43 F3). Kategori terpilih yang tidak
+/// termasuk yang teratas ikut tampil, menggantikan yang terakhir. Kategori
+/// terarsip yang terpilih (menyunting transaksi lama) tetap tampil, tetapi
+/// tidak ditawarkan di sheet.
 class RecordCategoryField extends StatelessWidget {
   /// Membuat [RecordCategoryField].
   const RecordCategoryField({
@@ -44,8 +47,11 @@ class RecordCategoryField extends StatelessWidget {
   /// Judul transaksi (catatan), memilih varian ikon ("kopi").
   final String? title;
 
-  /// Jumlah kategori di petak sebelum "Semua kategori".
-  static const visibleCount = 4;
+  /// Lebar minimum satu kolom petak.
+  static const minColumnWidth = 80.0;
+
+  /// Jumlah kolom petak (termasuk "Semua kategori") untuk lebar [width].
+  static int columnsFor(double width) => (width / minColumnWidth).floor().clamp(4, 5);
 
   Future<void> _create(BuildContext context) async {
     final create = onCreate;
@@ -87,43 +93,48 @@ class RecordCategoryField extends StatelessWidget {
       categoryKind,
       frequentIds: frequentIds,
     );
+    return Semantics(
+      container: true,
+      label: t.record.categorySectionLabel,
+      child: LayoutBuilder(builder: (context, constraints) => _grid(context, options, selected, constraints.maxWidth)),
+    );
+  }
+
+  Widget _grid(BuildContext context, List<Category> options, Category? selected, double width) {
+    final visibleCount = columnsFor(width) - 1;
     final visible = options.take(visibleCount).toList();
     if (selected != null && !visible.any((c) => c.id == selected.id)) {
       if (visible.length == visibleCount) visible.removeLast();
       visible.insert(0, selected);
     }
-    return Semantics(
-      container: true,
-      label: t.record.categorySectionLabel,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < visibleCount; i++)
-            Expanded(
-              child: i < visible.length
-                  ? _Option(
-                      key: ValueKey('category-${visible[i].id}'),
-                      icon: categoryIcon(visible[i], title: title),
-                      label: visible[i].name,
-                      selected: visible[i].id == value,
-                      // Ketuk lagi yang terpilih: kembali tanpa kategori.
-                      onTap: () => onChanged(
-                        visible[i].id == value ? null : visible[i].id,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < visibleCount; i++)
           Expanded(
-            child: _Option(
-              key: const ValueKey('category-all'),
-              icon: IconKey.categoryOther,
-              label: t.record.allCategories,
-              selected: false,
-              onTap: () => _openAll(context, options),
-            ),
+            child: i < visible.length
+                ? _Option(
+                    key: ValueKey('category-${visible[i].id}'),
+                    icon: categoryIcon(visible[i], title: title),
+                    label: visible[i].name,
+                    selected: visible[i].id == value,
+                    // Ketuk lagi yang terpilih: kembali tanpa kategori.
+                    onTap: () => onChanged(
+                      visible[i].id == value ? null : visible[i].id,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
-        ],
-      ),
+        Expanded(
+          child: _Option(
+            key: const ValueKey('category-all'),
+            icon: IconKey.categoryOther,
+            label: t.record.allCategories,
+            selected: false,
+            onTap: () => _openAll(context, options),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -162,11 +173,8 @@ class _Option extends StatelessWidget {
             children: [
               AppIconTile(icon, size: 44, selected: selected),
               const SizedBox(height: AppSpacing.space1),
-              Text(
+              _OptionLabel(
                 label,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: selected ? colors.ink : colors.ink2,
                 ),
@@ -175,6 +183,44 @@ class _Option extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Label petak: paling banyak dua baris, dibungkus di antara kata. Kata yang
+/// lebih lebar dari petak (nama buatan pengguna, teks diperbesar) tidak
+/// dipecah di tengah: labelnya satu baris berelipsis.
+class _OptionLabel extends StatelessWidget {
+  const _OptionLabel(this.label, {required this.style});
+
+  final String label;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final scaler = MediaQuery.textScalerOf(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wordTooWide = label.split(RegExp(r'\s+')).any((word) {
+          final painter = TextPainter(
+            text: TextSpan(text: word, style: style),
+            textDirection: Directionality.of(context),
+            textScaler: scaler,
+            maxLines: 1,
+          )..layout();
+          final tooWide = painter.width > constraints.maxWidth;
+          painter.dispose();
+          return tooWide;
+        });
+        return Text(
+          label,
+          maxLines: wordTooWide ? 1 : 2,
+          softWrap: !wordTooWide,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: style,
+        );
+      },
     );
   }
 }
@@ -209,9 +255,8 @@ class _CategorySheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    Widget check({required bool on}) => on
-        ? AppIcon(IconKey.check, color: colors.brand)
-        : const SizedBox(width: AppSize.icon);
+    Widget check({required bool on}) =>
+        on ? AppIcon(IconKey.check, color: colors.brand) : const SizedBox(width: AppSize.icon);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -230,8 +275,7 @@ class _CategorySheet extends StatelessWidget {
                 title: t.record.categoryNoneLabel,
                 leading: const AppIconTile(IconKey.categoryOther),
                 trailing: check(on: selectedId == null),
-                onTap: () =>
-                    Navigator.of(context).pop(const _PickCategory(null)),
+                onTap: () => Navigator.of(context).pop(const _PickCategory(null)),
               ),
               for (final category in options)
                 AppListRow(
@@ -239,8 +283,7 @@ class _CategorySheet extends StatelessWidget {
                   title: category.name,
                   leading: AppIconTile(categoryIcon(category)),
                   trailing: check(on: category.id == selectedId),
-                  onTap: () =>
-                      Navigator.of(context).pop(_PickCategory(category.id)),
+                  onTap: () => Navigator.of(context).pop(_PickCategory(category.id)),
                 ),
               if (canCreate)
                 AppListRow(

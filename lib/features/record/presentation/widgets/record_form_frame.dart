@@ -99,7 +99,7 @@ class RecordFormFrame extends StatelessWidget {
                   children: [
                     ?kindSwitcher,
                     for (final (i, child) in children.indexed) ...[
-                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space3),
+                      if (i > 0 || kindSwitcher != null) const SizedBox(height: AppSpacing.space2),
                       child,
                     ],
                   ],
@@ -114,11 +114,14 @@ class RecordFormFrame extends StatelessWidget {
               child: SafeArea(
                 top: false,
                 child: Padding(
+                  // Papan angka membawa jarak 4px di atas dan bawahnya (area
+                  // sentuh), jadi bingkai ini lebih tipis dari prototipe
+                  // (QA PR #43 F1: isian form terlihat tanpa menggulir).
                   padding: const EdgeInsets.fromLTRB(
                     AppSpacing.space4,
+                    AppSpacing.space1,
+                    AppSpacing.space4,
                     AppSpacing.space2,
-                    AppSpacing.space4,
-                    AppSpacing.space4,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -126,7 +129,7 @@ class RecordFormFrame extends StatelessWidget {
                     children: [
                       if (amountController != null && !keyboardOpen) ...[
                         AppKeypad(onKey: _onKey, onClear: _onClear),
-                        const SizedBox(height: AppSpacing.space3),
+                        const SizedBox(height: AppSpacing.space1),
                       ],
                       AppButton(
                         key: const ValueKey('record-submit'),
@@ -163,7 +166,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.space1,
-        AppSpacing.space2,
+        AppSpacing.space1,
         AppSpacing.space1,
         0,
       ),

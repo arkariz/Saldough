@@ -277,26 +277,26 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
                   onSelected: (id) => setState(() => _budgetItemId = id),
                 ),
               ),
+            if (!editing && widget.occurrence == null)
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recordRepeat,
+                child: RecordRepeatField(
+                  value: _repeat,
+                  date: _date,
+                  kind: TransactionKind.expense,
+                  locked: widget.repeatLocked,
+                  onChanged: (repeat) => setState(() {
+                    _repeat = repeat;
+                    if (repeat == null) _date = dateWithoutRepeat(_date);
+                  }),
+                ),
+              ),
           ],
         ),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
-        if (!editing && widget.occurrence == null)
-          SpotlightTarget(
-            spotlightKey: SpotlightKey.recordRepeat,
-            child: RecordRepeatField(
-              value: _repeat,
-              date: _date,
-              kind: TransactionKind.expense,
-              locked: widget.repeatLocked,
-              onChanged: (repeat) => setState(() {
-                _repeat = repeat;
-                if (repeat == null) _date = dateWithoutRepeat(_date);
-              }),
-            ),
-          ),
         // Jadikan Rutin / ubah rutin tidak mencatat transaksi baru.
         if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],

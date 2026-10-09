@@ -291,6 +291,25 @@ void main() {
       expect(find.textContaining('Anggaran'), findsNothing);
     });
 
+    testWidgets('tombol Ubah, Catat lagi, Jadikan rutin selebar layar (QA PR #43 F9)', (tester) async {
+      useTallViewport(tester);
+      await seedExpense();
+      await openTransactionsTab(tester);
+      await tester.tap(find.text('nasi padang'));
+      await tester.pumpAndSettle();
+
+      final widths = [
+        for (final label in [
+          t.transaction.editAction,
+          t.transaction.recordAgainAction,
+          t.transaction.makeRecurringAction,
+        ])
+          tester.getSize(find.widgetWithText(AppButton, label)).width,
+      ];
+      expect(widths.toSet(), hasLength(1));
+      expect(widths.first, 800 - 2 * AppSpacing.space4);
+    });
+
     testWidgets('transfer memakai judul "Transfer tercatat" dan Dari / Ke / Jumlah, tanpa kosakata terlarang', (
       tester,
     ) async {

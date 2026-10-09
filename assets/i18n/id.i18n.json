@@ -15,7 +15,8 @@
     "genericErrorMessage": "Ada yang salah. Coba lagi.",
     "confirmDeleteTitle": "Hapus?",
     "keypadBackspace": "Hapus satu digit",
-    "close": "Tutup"
+    "close": "Tutup",
+    "done": "Selesai"
   },
   "appShell": {
     "homeTabLabel": "Beranda",
@@ -30,7 +31,7 @@
     "incomeAction": "Catat pemasukan",
     "expenseAction": "Catat pengeluaran",
     "transferAction": "Catat transfer",
-    "toWalletFieldLabel": "Masuk ke Dompet",
+    "toWalletFieldLabel": "Ke dompet",
     "fromWalletFieldLabel": "Dari dompet",
     "destinationWalletFieldLabel": "Ke dompet",
     "dateFieldLabel": "Tanggal",
@@ -965,7 +966,9 @@
     "progressLine": "$k dari $n tercatat",
     "countLine": "$n kali",
     "pausedLine": "Dijeda",
-    "reminderLine": "Bayar sendiri · diingatkan H−$n",
+    "reminderLine": {
+      "other": "Bayar sendiri · diingatkan H−$n"
+    },
     "autoDebitLine": "Autodebet",
     "pausedMessage": "$name dijeda.",
     "resumedMessage": "$name dilanjutkan.",
@@ -997,7 +1000,9 @@
     "unlinkedMessage": "Tautan dilepas. Kemunculannya kembali menunggu.",
     "reminderChannelName": "Pengingat rutin",
     "reminderChannelDescription": "Tagihan dan pemasukan rutin yang jatuh tempo.",
-    "reminderSoonTitle": "$n hari lagi",
+    "reminderSoonTitle": {
+      "other": "$n hari lagi"
+    },
     "reminderTodayTitle": "Jatuh tempo hari ini",
     "reminderTodayManyTitle": "$n rutin jatuh tempo hari ini",
     "alreadyRecordedMessage": "$name sudah tercatat.",

@@ -16,14 +16,17 @@ import 'package:saldough/core/utils/formatters/money_input.dart';
 /// Empat baris tiga kolom: 1–9, lalu `000` (mata uang tanpa desimal) atau
 /// pemisah desimal, `0`, dan hapus. Tekan lama hapus mengosongkan nominal.
 /// Tombol `surface2` bersudut piksel kecil, jarak 8px, angka tabular, getar
-/// ringan saat ditekan. [onKey] menerima digit, `000`, [moneyKeyDecimal],
+/// ringan saat ditekan. Tombol tampak setinggi [keyHeight] (40), tetapi area
+/// sentuhnya ikut mengisi jarak antarbaris sehingga tetap 48 (`AppSize.touch`,
+/// QA PR #43 F1): papan angka lebih pendek tanpa target sentuh yang lebih
+/// kecil. [onKey] menerima digit, `000`, [moneyKeyDecimal],
 /// atau [moneyKeyBackspace]; teksnya dihitung lewat [applyMoneyKey].
 class AppKeypad extends StatelessWidget {
   /// Membuat [AppKeypad].
   const AppKeypad({
     required this.onKey,
     required this.onClear,
-    this.keyHeight = 46,
+    this.keyHeight = 40,
     super.key,
   });
 
@@ -33,7 +36,8 @@ class AppKeypad extends StatelessWidget {
   /// Tekan lama tombol hapus.
   final VoidCallback onClear;
 
-  /// Tinggi tiap tombol.
+  /// Tinggi tampak tiap tombol; area sentuhnya paling sedikit
+  /// `AppSize.touch`.
   final double keyHeight;
 
   @override
@@ -48,8 +52,7 @@ class AppKeypad extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final (i, row) in rows.indexed) ...[
-          if (i > 0) const SizedBox(height: AppSpacing.space2),
+        for (final row in rows)
           Row(
             children: [
               for (final (j, key) in row.indexed) ...[
@@ -65,7 +68,6 @@ class AppKeypad extends StatelessWidget {
               ],
             ],
           ),
-        ],
       ],
     );
   }
@@ -101,9 +103,19 @@ class _KeyState extends State<_Key> {
     final key = widget.keyValue;
     final backspace = key == moneyKeyBackspace;
     final label = key == moneyKeyDecimal ? MoneySeparators.decimal : key;
+    void tap() {
+      unawaited(HapticFeedback.selectionClick());
+      widget.onKey(key);
+    }
+
+    // Jarak antarbaris (8px) masuk ke area sentuh: tombol 40 + 2×4 = 48.
+    final gap = ((AppSize.touch - widget.height) / 2).clamp(0.0, double.infinity);
     return Semantics(
       button: true,
       label: backspace ? t.common.keypadBackspace : label,
+      // `excludeSemantics` membuang aksi ketuk `GestureDetector`, jadi
+      // aksinya dipasang di sini (QA PR #43 F7).
+      onTap: tap,
       excludeSemantics: true,
       child: GestureDetector(
         key: ValueKey('keypad-$key'),
@@ -111,32 +123,32 @@ class _KeyState extends State<_Key> {
         onTapDown: (_) => _setPressed(true),
         onTapUp: (_) => _setPressed(false),
         onTapCancel: () => _setPressed(false),
-        onTap: () {
-          unawaited(HapticFeedback.selectionClick());
-          widget.onKey(key);
-        },
+        onTap: tap,
         onLongPress: backspace
             ? () {
                 unawaited(HapticFeedback.mediumImpact());
                 widget.onClear();
               }
             : null,
-        child: AnimatedContainer(
-          duration: AppDurations.fast,
-          height: widget.height,
-          decoration: ShapeDecoration(
-            color: _pressed ? colors.surface3 : colors.surface2,
-            shape: const PixelCornerBorder.small(),
-          ),
-          child: Center(
-            child: backspace
-                ? AppIcon(IconKey.backspace, color: colors.ink)
-                : Text(
-                    label,
-                    style: context.numberStyles.amountLg.copyWith(
-                      fontWeight: FontWeight.w600,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: gap),
+          child: AnimatedContainer(
+            duration: AppDurations.fast,
+            height: widget.height,
+            decoration: ShapeDecoration(
+              color: _pressed ? colors.surface3 : colors.surface2,
+              shape: const PixelCornerBorder.small(),
+            ),
+            child: Center(
+              child: backspace
+                  ? AppIcon(IconKey.backspace, color: colors.ink)
+                  : Text(
+                      label,
+                      style: context.numberStyles.amountLg.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
+            ),
           ),
         ),
       ),

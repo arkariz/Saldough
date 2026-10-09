@@ -179,6 +179,11 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   /// domain yang tidak berjalan di rilis production.
   bool get _sameWallet => _fromWalletId != null && _fromWalletId == _toWalletId;
 
+  /// Nominal untuk pratinjau "Saldo jadi": tidak ada saat Jadikan Rutin
+  /// (tidak ada transaksi baru) dan saat dompet asal = tujuan, karena dua
+  /// pratinjau untuk dompet yang sama saling bertentangan (QA PR #43 F6).
+  int? get _preview => widget.repeatLocked || _sameWallet ? null : _amountSen;
+
   bool get _canSubmit => _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
 
   List<BudgetItemOption> get _budgetChoices =>
@@ -210,7 +215,6 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
   @override
   Widget build(BuildContext context) {
     final editing = widget.initial != null;
-    final amount = _amountSen;
     return RecordFormFrame(
       kindSwitcher: editing ? null : widget.kindSwitcher,
       kind: TransactionKind.transfer,
@@ -235,6 +239,9 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
           spotlightKey: SpotlightKey.recordAmount,
           child: RecordAmountField(controller: _amountController, kind: TransactionKind.transfer),
         ),
+        // Galat dompet sama di atas daftar, supaya terlihat tanpa menggulir
+        // (QA PR #43 F6).
+        if (_sameWallet) AppBanner(message: t.record.sameWalletWarning, tone: AppTone.danger),
         AppListCard(
           dividerIndent: AppListCard.iconIndent,
           children: [
@@ -245,7 +252,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                 wallets: widget.wallets,
                 selectedId: _fromWalletId,
                 onSelected: (id) => setState(() => _fromWalletId = id),
-                previewAmountSen: widget.repeatLocked ? null : amount,
+                previewAmountSen: _preview,
                 previewIsCredit: false,
               ),
             ),
@@ -254,7 +261,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               wallets: widget.wallets,
               selectedId: _toWalletId,
               onSelected: (id) => setState(() => _toWalletId = id),
-              previewAmountSen: widget.repeatLocked ? null : amount,
+              previewAmountSen: _preview,
             ),
             RecordDateField(
               date: _date,
@@ -272,28 +279,26 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
                   onSelected: (id) => setState(() => _budgetItemId = id),
                 ),
               ),
+            if (!editing && widget.occurrence == null)
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.recordRepeat,
+                child: RecordRepeatField(
+                  value: _repeat,
+                  date: _date,
+                  kind: TransactionKind.transfer,
+                  locked: widget.repeatLocked,
+                  onChanged: (repeat) => setState(() {
+                    _repeat = repeat;
+                    if (repeat == null) _date = dateWithoutRepeat(_date);
+                  }),
+                ),
+              ),
           ],
         ),
-        if (_sameWallet)
-          AppBanner(message: t.record.sameWalletWarning, tone: AppTone.danger),
         if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),
-        if (!editing && widget.occurrence == null)
-          SpotlightTarget(
-            spotlightKey: SpotlightKey.recordRepeat,
-            child: RecordRepeatField(
-              value: _repeat,
-              date: _date,
-              kind: TransactionKind.transfer,
-              locked: widget.repeatLocked,
-              onChanged: (repeat) => setState(() {
-                _repeat = repeat;
-                if (repeat == null) _date = dateWithoutRepeat(_date);
-              }),
-            ),
-          ),
         if (widget.repeatLocked) const RecordNoBalanceChange(),
       ],
     );

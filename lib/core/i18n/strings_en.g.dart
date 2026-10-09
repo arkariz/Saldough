@@ -1119,6 +1119,12 @@ class _Translations$recurring$en extends Translations$recurring$id {
 	@override String get moreActions => 'More actions';
 	@override String get deleteTitle => 'Delete recurring?';
 	@override String get deleteBody => 'Recorded transactions are kept.';
+	@override String get detailSchedule => 'Schedule';
+	@override String get detailWallet => 'Wallet';
+	@override String get detailEnds => 'Ends';
+	@override String get detailPayment => 'Payment';
+	@override String get detailStatus => 'Status';
+	@override String get settingsTitle => 'Settings';
 	@override String progressLine({required Object k, required Object n}) => '${k} of ${n} recorded';
 	@override String endsOnLine({required Object date}) => 'ends ${date}';
 	@override String countLine({required Object n}) => '${n} times';
@@ -2453,6 +2459,12 @@ extension on TranslationsEn {
 			'recurring.moreActions' => 'More actions',
 			'recurring.deleteTitle' => 'Delete recurring?',
 			'recurring.deleteBody' => 'Recorded transactions are kept.',
+			'recurring.detailSchedule' => 'Schedule',
+			'recurring.detailWallet' => 'Wallet',
+			'recurring.detailEnds' => 'Ends',
+			'recurring.detailPayment' => 'Payment',
+			'recurring.detailStatus' => 'Status',
+			'recurring.settingsTitle' => 'Settings',
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} of ${n} recorded',
 			'recurring.endsOnLine' => ({required Object date}) => 'ends ${date}',
 			'recurring.countLine' => ({required Object n}) => '${n} times',
@@ -2481,14 +2493,14 @@ extension on TranslationsEn {
 			'recurring.seeAllAction' => 'See all',
 			'recurring.pendingCardTitle' => 'Waiting to record',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Recording ${name} · ${date}',
 			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Matches recurring ${name} · ${date}',
 			'recurring.linkedTitle' => 'Matched to recurring',
 			'recurring.unlinkAction' => 'Unlink',
 			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',

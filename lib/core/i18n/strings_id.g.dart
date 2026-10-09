@@ -2873,6 +2873,24 @@ class Translations$recurring$id {
 	/// id: 'Transaksi yang sudah tercatat tidak ikut terhapus.'
 	String get deleteBody => 'Transaksi yang sudah tercatat tidak ikut terhapus.';
 
+	/// id: 'Jadwal'
+	String get detailSchedule => 'Jadwal';
+
+	/// id: 'Dompet'
+	String get detailWallet => 'Dompet';
+
+	/// id: 'Berakhir'
+	String get detailEnds => 'Berakhir';
+
+	/// id: 'Cara bayar'
+	String get detailPayment => 'Cara bayar';
+
+	/// id: 'Status'
+	String get detailStatus => 'Status';
+
+	/// id: 'Pengaturan'
+	String get settingsTitle => 'Pengaturan';
+
 	/// id: '$k dari $n tercatat'
 	String progressLine({required Object k, required Object n}) => '${k} dari ${n} tercatat';
 
@@ -4725,6 +4743,12 @@ extension on Translations {
 			'recurring.moreActions' => 'Aksi lain',
 			'recurring.deleteTitle' => 'Hapus rutin?',
 			'recurring.deleteBody' => 'Transaksi yang sudah tercatat tidak ikut terhapus.',
+			'recurring.detailSchedule' => 'Jadwal',
+			'recurring.detailWallet' => 'Dompet',
+			'recurring.detailEnds' => 'Berakhir',
+			'recurring.detailPayment' => 'Cara bayar',
+			'recurring.detailStatus' => 'Status',
+			'recurring.settingsTitle' => 'Pengaturan',
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
 			'recurring.endsOnLine' => ({required Object date}) => 'berakhir ${date}',
 			'recurring.countLine' => ({required Object n}) => '${n} kali',
@@ -4753,14 +4777,14 @@ extension on Translations {
 			'recurring.seeAllAction' => 'Lihat semua',
 			'recurring.pendingCardTitle' => 'Menunggu dicatat',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
 			'recurring.occurrenceNotice' => ({required Object name, required Object date}) => 'Mencatat ${name} · ${date}',
 			'recurring.matchLabel' => ({required Object name, required Object date}) => 'Cocok dengan rutin ${name} · ${date}',
 			'recurring.linkedTitle' => 'Tercocok dengan rutin',
 			'recurring.unlinkAction' => 'Lepaskan',
 			'recurring.unlinkedMessage' => 'Tautan dilepas. Kemunculannya kembali menunggu.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => '${n} hari lagi',

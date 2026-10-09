@@ -120,3 +120,4 @@ app.*.symbols
 .fvm/
 # graphify — graph pengetahuan lokal, dibangun ulang lewat `graphify update .`
 graphify-out/
+promo/

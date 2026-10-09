@@ -181,6 +181,9 @@ void main() {
       ]);
       await open(tester, NotificationCaptureRouteKeys.inbox);
 
+      // Yang tercatat otomatis ada di segmen kedua.
+      await tester.tap(find.textContaining(t.notificationCapture.inboxAutoTitle, findRichText: true));
+      await tester.pumpAndSettle();
       await tester.tap(find.text(t.notificationCapture.undoAction));
       await tester.pumpAndSettle();
       await tester.tap(find.text(t.notificationCapture.undoAction).last);

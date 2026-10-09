@@ -867,6 +867,8 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get deletePasswordBody => 'For your security, enter your password again to delete your account.';
 	@override String get deletedMessage => 'Account deleted.';
 	@override late final _Translations$account$errors$en errors = _Translations$account$errors$en._(_root);
+	@override String get recordingSection => 'Recording';
+	@override String get displaySection => 'Display';
 	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, e.g. when opening the app around others.';
 }
 
@@ -2223,6 +2225,8 @@ extension on TranslationsEn {
 			'account.errors.tooManyRequests' => 'Too many attempts. Wait a moment, then try again.',
 			'account.errors.userDisabled' => 'This account has been disabled.',
 			'account.errors.other' => 'Couldn\'t sign in. Try again.',
+			'account.recordingSection' => 'Recording',
+			'account.displaySection' => 'Display',
 			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, e.g. when opening the app around others.',
 			'currency.settingsTitle' => 'Settings',
 			'currency.label' => 'Currency',
@@ -2483,10 +2487,10 @@ extension on TranslationsEn {
 			'recurring.linkedTitle' => 'Matched to recurring',
 			'recurring.unlinkAction' => 'Unlink',
 			'recurring.unlinkedMessage' => 'Unlinked. The occurrence is waiting again.',
-			'recurring.reminderChannelName' => 'Recurring reminders',
-			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.reminderChannelName' => 'Recurring reminders',
+			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required Object n}) => 'In ${n} day(s)',
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',

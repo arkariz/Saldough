@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -103,31 +104,43 @@ class _SignedOutState extends State<_SignedOut> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Kartu masuk (prototipe `Akun.dc.html`): maskot di samping teks,
+        // Google sebagai tombol sekunder, email di bawahnya.
         AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Center(child: AccountAvatar(user: null, size: 64)),
+              Row(
+                children: [
+                  const AccountAvatar(user: null, size: 56),
+                  const SizedBox(width: AppSpacing.space4),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(t.account.signedOutTitle, style: textTheme.titleMedium),
+                        Text(t.account.signedOutBody, style: textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: AppSpacing.space4),
-              Text(t.account.signedOutTitle, style: textTheme.titleMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.space2),
-              Text(t.account.signedOutBody, style: textTheme.bodyMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.space6),
-              AppButton(
+              AppButton.secondary(
+                expand: true,
                 label: _busyLabel(t.account.googleSignInAction, state, AccountAction.googleSignIn),
                 onPressed: state.isBusy
                     ? null
                     : () => context.read<AccountBloc>().add(const AccountGoogleSignInRequested()),
               ),
+              const SizedBox(height: AppSpacing.space1),
+              AppButton.text(
+                key: const ValueKey('account-email-toggle'),
+                expand: true,
+                label: t.account.emailSignInToggle,
+                onPressed: () => setState(() => _showEmailForm = !_showEmailForm),
+              ),
             ],
-          ),
-        ),
-        const SizedBox(height: AppSpacing.space6),
-        Center(
-          child: AppButton.text(
-            key: const ValueKey('account-email-toggle'),
-            label: t.account.emailSignInToggle,
-            onPressed: () => setState(() => _showEmailForm = !_showEmailForm),
           ),
         ),
         if (_showEmailForm) ...[
@@ -159,21 +172,45 @@ class _SignedOutState extends State<_SignedOut> {
             ),
           ),
           const SizedBox(height: AppSpacing.space4),
-          AppButton.secondary(
+          AppButton(
             label: _busyLabel(t.account.emailSignInAction, state, AccountAction.emailSignIn),
             onPressed: state.isBusy ? null : _submitEmail,
           ),
         ],
-        const SizedBox(height: AppSpacing.space8),
-        const CurrencySettingSection(),
-        const SizedBox(height: AppSpacing.space2),
-        const LanguageSettingEntry(),
-        const SizedBox(height: AppSpacing.space2),
-        const CategorySettingEntry(),
-        const NotificationCaptureSettingEntry(),
-        const RecurringReminderSettingEntry(),
-        const FinancialMonthSettingEntry(),
-        const HideAmountsSettingEntry(),
+        const SizedBox(height: AppSpacing.space6),
+        const _Settings(),
+      ],
+    );
+  }
+}
+
+/// Setelan dalam dua kelompok baris (prototipe `Akun.dc.html`): Pencatatan
+/// dan Tampilan. Sama untuk sudah dan belum masuk -- setelan tidak butuh
+/// akun.
+class _Settings extends StatelessWidget {
+  const _Settings();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppSectionHeader(t.account.recordingSection),
+        AppListCard(
+          dividerIndent: AppListCard.iconIndent,
+          children: [
+            const CategorySettingEntry(),
+            if (defaultTargetPlatform == TargetPlatform.android) const NotificationCaptureSettingEntry(),
+            const RecurringReminderSettingEntry(),
+            const FinancialMonthSettingEntry(),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.space6),
+        AppSectionHeader(t.account.displaySection),
+        const AppListCard(
+          dividerIndent: AppListCard.iconIndent,
+          children: [LanguageSettingEntry(), CurrencySettingSection(), HideAmountsSettingEntry()],
+        ),
       ],
     );
   }
@@ -233,8 +270,7 @@ class _SignedIn extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.space6),
-        AppSectionLabel(t.account.dataTitle),
-        const SizedBox(height: AppSpacing.space1),
+        AppSectionHeader(t.account.dataTitle),
         Text(t.account.dataBody, style: textTheme.bodyMedium),
         const SizedBox(height: AppSpacing.space6),
         AppButton.secondary(
@@ -242,20 +278,11 @@ class _SignedIn extends StatelessWidget {
           onPressed: state.isBusy ? null : () => context.read<AccountBloc>().add(const AccountSignOutRequested()),
         ),
         const SizedBox(height: AppSpacing.space6),
-        const CurrencySettingSection(),
-        const SizedBox(height: AppSpacing.space2),
-        const LanguageSettingEntry(),
-        const SizedBox(height: AppSpacing.space2),
-        const CategorySettingEntry(),
-        const NotificationCaptureSettingEntry(),
-        const RecurringReminderSettingEntry(),
-        const FinancialMonthSettingEntry(),
-        const HideAmountsSettingEntry(),
+        const _Settings(),
         const SizedBox(height: AppSpacing.space8),
         Divider(color: colors.line),
         const SizedBox(height: AppSpacing.space4),
-        AppSectionLabel(t.account.dangerTitle),
-        const SizedBox(height: AppSpacing.space1),
+        AppSectionHeader(t.account.dangerTitle),
         Text(t.account.dangerBody, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
         const SizedBox(height: AppSpacing.space4),
         AppButton.danger(

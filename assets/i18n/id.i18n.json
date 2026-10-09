@@ -796,6 +796,8 @@
       "userDisabled": "Akun ini dinonaktifkan.",
       "other": "Gagal masuk. Coba lagi."
     },
+    "recordingSection": "Pencatatan",
+    "displaySection": "Tampilan",
     "hideAmountsBody": "Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain."
   },
   "currency": {

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
-import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
+import 'package:saldough/features/account/presentation/widgets/setting_row.dart';
 import 'package:state_management/state_management.dart';
 
 /// Contoh nominal di dialog konfirmasi: 50.000 satuan utama.
@@ -72,42 +72,14 @@ class CurrencySettingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colors = context.appColors;
     return ValueListenableBuilder<AppCurrency>(
       valueListenable: ActiveCurrency.notifier,
-      builder: (context, currency, _) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppSectionLabel(t.currency.settingsTitle),
-          const SizedBox(height: AppSpacing.space1),
-          AppTappable(
-            key: const ValueKey('currency-setting'),
-            label: t.currency.label,
-            onTap: () => _choose(context),
-            child: AppCard(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(t.currency.label, style: textTheme.titleSmall),
-                        Text(
-                          '${currency.code} · ${currencyName(currency)}',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colors.ink2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const AppIcon(IconKey.chevronRight),
-                ],
-              ),
-            ),
-          ),
-        ],
+      builder: (context, currency, _) => SettingRow(
+        key: const ValueKey('currency-setting'),
+        icon: IconKey.payments,
+        title: t.currency.label,
+        subtitle: '${currency.code} · ${currencyName(currency)}',
+        onTap: () => _choose(context),
       ),
     );
   }

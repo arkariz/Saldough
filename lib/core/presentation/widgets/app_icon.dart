@@ -240,6 +240,21 @@ enum IconKey {
 
   /// Peringatan.
   warning,
+
+  /// Selesai, tidak ada yang tersisa (keadaan kosong kotak masuk).
+  taskAlt,
+
+  /// Baris setelan Kategori.
+  label,
+
+  /// Baris setelan notifikasi (Catat dari notifikasi, pengingat).
+  notifications,
+
+  /// Baris setelan Bahasa.
+  translate,
+
+  /// Baris setelan Mata uang.
+  payments,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -325,6 +340,11 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.inbox: Symbols.inbox_rounded,
   IconKey.schedule: Symbols.schedule_rounded,
   IconKey.warning: Symbols.warning_rounded,
+  IconKey.taskAlt: Symbols.task_alt_rounded,
+  IconKey.label: Symbols.label_rounded,
+  IconKey.notifications: Symbols.notifications_rounded,
+  IconKey.translate: Symbols.translate_rounded,
+  IconKey.payments: Symbols.payments_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).

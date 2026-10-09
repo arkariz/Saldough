@@ -796,6 +796,8 @@
       "userDisabled": "This account has been disabled.",
       "other": "Couldn't sign in. Try again."
     },
+    "recordingSection": "Recording",
+    "displaySection": "Display",
     "hideAmountsBody": "Replace numbers with dots on every screen, e.g. when opening the app around others."
   },
   "currency": {

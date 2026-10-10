@@ -2,7 +2,10 @@
 
 Bahasa visual aplikasi diputuskan di
 [ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md).
-Sumber kebenarannya dua artefak di akun pemilik; folder ini salinannya.
+Sumber kebenarannya artefak di akun pemilik; folder ini salinannya. Agen
+`ui-ux-designer` (`.claude/agents/ui-ux-designer.md`) boleh menyunting
+artefak design system dan prototipe langsung (izin pemilik 10 Okt 2026),
+selalu bersama salinannya di sini.
 
 | Artefak | Salinan |
 |---|---|

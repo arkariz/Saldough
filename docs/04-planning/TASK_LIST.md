@@ -82,7 +82,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| Antrean (`B-n`, belum dijadwalkan) | 21 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
+| Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
 
@@ -3332,6 +3332,7 @@ menambah dan memindahkannya ada di
 | B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
+| B-36 | **Analisis keuangan**: segmen Analisis di Riwayat (pengeluaran/pemasukan per kategori, pembanding rata-rata, sorotan netral, tren 6 bulan, rincian kategori, Tanpa kategori + Beri kategori); R2 tahun dan tren total saldo. Draf desain menunggu KT-A1–A5, sesudahnya FR-ANL di PRD dan tugas fase. | pemilik memutuskan, lalu agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), PRD §12 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 

@@ -24,7 +24,7 @@ antarmuka harus mencerminkannya: "Catat Transfer", bukan "Transfer Sekarang".
 | **Istilah** | `docs/00-foundation/PROJECT_GLOSSARY.md` |
 | **Kebutuhan produk** | `docs/01-product/prd-saldough-2.0.md` |
 | **Tugas, progres, antrean, dan cara menambah tugas baru** | `docs/04-planning/TASK_LIST.md` (bagian "Menambah tugas baru" dan "Antrean"); pelacak yang sudah ditutup di `docs/04-planning/done/` (mis. `UX_REVIEW_FIXES.md`) |
-| **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori), `RECURRING_AND_FORECAST.md` (transaksi rutin, uang nganggur, perkiraan), `PLAN_TAB_LAYOUT.md` (tata letak tab Rencana), `RECURRING_COMPETITIVE_ANALYSIS.md` |
+| **Desain dan riset per fitur** | `docs/01-product/features/` — `ONBOARDING_PLAN.md` (onboarding dan tur spotlight), `VOICE_INPUT_RESEARCH.md` (Catat lewat Suara dan sistem kategori), `RECURRING_AND_FORECAST.md` (transaksi rutin, uang nganggur, perkiraan), `PLAN_TAB_LAYOUT.md` (tata letak tab Rencana), `RECURRING_COMPETITIVE_ANALYSIS.md`, `FINANCIAL_ANALYSIS.md` (analisis keuangan, draf) |
 | **Toko dan rilis** | `docs/03-release/` — `PLAY_DATA_SAFETY.md` (formulir Keamanan Data), `PLAY_STORE_LISTING.md` (setelan toko dan listing, ASO), `ASO_NAME_RESEARCH.md` (riset nama) |
 | **Keputusan arsitektur** | `docs/02-architecture/adr/` |
 | **Situs web (landing, kebijakan privasi, uji coba)** | Repo `arkariz/tanukonomy-web`, progres di `docs/TASKS.md` repo itu |

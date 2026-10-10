@@ -3329,6 +3329,33 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji yang memotret perilaku sekarang; temuan ditulis di
       tugas ini dan mengoreksi FINANCIAL_PERIOD P-4 bila perlu.
       Memenuhi FR-PLN-007.
+      **Temuan 10 Okt 2026 (belum dicentang: menunggu keputusan pemilik/PO,
+      bertentangan dengan P-4).** Uji karakterisasi
+      `test/features/plan/period_attribution_characterization_test.dart`
+      (8 uji), awal bulan 25, hari ini 26 Okt:
+      1. Tautan pos memang menurut tanggal kemunculan: cicilan 24 Okt untuk
+         kemunculan 25 Okt mendapat pos periode 25 Okt – 24 Nov
+         (`budgetItemForOccurrence`).
+      2. **KT-1 menolaknya di hitungan:** `countsTowardBudgetItem` memakai
+         `budget.covers(date)`, jadi terpakai pos itu 0. CATAT juga tidak
+         menawarkan pos itu untuk 24 Okt dan menganggap tautannya lepas
+         (`budgetItemOutsidePeriod`).
+      3. Rencana (`PlanMonthState.planFor`/`previousPlan`) menyaring
+         transaksi menurut `date` sebelum `monthPlan`. Akibatnya Gaji 23 Okt
+         dan Cicilan 24 Okt **tidak terhitung di periode mana pun**: di
+         periode 25 Okt kemunculannya tampak belum tercatat (Gaji berstatus
+         menunggu, sisa uang nganggur Rp9.086.000), di periode 25 Sep –
+         24 Okt keduanya dilewati karena milik rutin yang ada.
+         `monthPlan` sendiri sudah mencocokkan menurut tanggal kemunculan
+         bila transaksinya diberikan.
+      4. Kartu Arus Beranda memakai bulan kalender menurut `date`: keduanya
+         di Oktober.
+      Jadi kalimat P-4 "selaras dengan ADR-036 §3.4" tidak benar untuk pos
+      anggaran: sesudah T-18.3 (`periodDateOf` di `monthPlan`) cicilan masuk
+      periode 25 Okt tetapi posnya tetap terpakai 0 selama KT-1 memakai
+      `date`, sehingga hilang dari sisa uang nganggur. Perlu diputuskan
+      sebelum T-18.3/T-18.5: KT-1 untuk transaksi tertaut kemunculan memakai
+      `periodDateOf`, atau pos dipilih menurut `date`, atau dibiarkan.
 - [ ] **T-18.2** Jadwal bulan keuangan berriwayat (ADR-038 §3.1–3.2):
       `FinancialMonthSchedule`, nilai `lastDay`, `financialPeriodOf` dengan
       `isTransition`, migrasi preferensi lama, `ActiveFinancialMonth`

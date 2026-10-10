@@ -149,6 +149,34 @@ void main() {
       expect(nav.selectedIndex, 3);
     });
 
+    testWidgets('Kembali sistem di tab selain Beranda pindah ke Beranda, bukan menutup aplikasi (B-33)', (tester) async {
+      await tester.pumpWidget(pumpableShell());
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      PopScope<Object?> shellPopScope() => tester.widget<PopScope<Object?>>(
+        find.ancestor(of: find.byType(AppNavBar), matching: find.byType(PopScope<Object?>)).first,
+      );
+
+      for (final label in [
+        t.appShell.transactionsTabLabel,
+        t.appShell.planTabLabel,
+        t.appShell.walletsTabLabel,
+      ]) {
+        await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(label)));
+        await tester.pumpAndSettle();
+        expect(shellPopScope().canPop, isFalse, reason: label);
+
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+
+        expect(tester.widget<AppNavBar>(find.byType(AppNavBar)).selectedIndex, 0, reason: label);
+        expect(find.widgetWithText(AppBar, t.appShell.homeTabLabel), findsOneWidget);
+      }
+      // Di Beranda, Kembali diteruskan ke sistem (aplikasi ditutup).
+      expect(shellPopScope().canPop, isTrue);
+    });
+
     testWidgets('menekan tujuan Transaksi berpindah ke tab Transaksi', (tester) async {
       await tester.pumpWidget(pumpableShell());
       await tester.pump();

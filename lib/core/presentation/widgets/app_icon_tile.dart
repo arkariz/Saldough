@@ -58,24 +58,13 @@ extension TileTintColors on AppColors {
   };
 }
 
-/// Warna tile bawaan untuk kunci tanpa ikon piksel (README design system
-/// bagian Ikon); kunci lain yang jatuh ke Material Symbols memakai
-/// [TileTint.slate].
-const Map<IconKey, TileTint> _symbolTints = {
-  IconKey.categoryFamily: TileTint.brown,
-  IconKey.categoryDonation: TileTint.brown,
-  IconKey.categoryBonus: TileTint.amber,
-  IconKey.categoryGift: TileTint.rose,
-  IconKey.categoryOther: TileTint.slate,
-};
-
 /// Tile ikon kategori, dompet, atau jenis transaksi (komponen IconTile).
 ///
 /// Dua varian, dipilih dari [icon]:
 /// - ikon piksel: ikon 32px (64px bila tile ≥ 80px) di tile netral
 ///   `surface2`, skala 1:1 supaya piksel tetap tajam;
-/// - Material Symbols (kategori tanpa ikon piksel, B-22): ikon `cat-*` di
-///   tile `cat-*-bg`, warna dari [tint] atau tabel bawaan.
+/// - Material Symbols (ikon tindakan di tile): ikon `cat-*` di tile
+///   `cat-*-bg`, warna dari [tint], bawaan [TileTint.slate].
 ///
 /// Sudut piksel kecil (`pixel-step-sm`). Ukuran `size-tile` (40) di baris,
 /// 32 di chip dan baris padat, 48 di kepala rincian.
@@ -102,7 +91,7 @@ class AppIconTile extends StatelessWidget {
     final pixel = isPixelIcon(icon);
     final (background, ink) = pixel
         ? (colors.surface2, colors.ink)
-        : colors.tile(tint ?? _symbolTints[icon] ?? TileTint.slate);
+        : colors.tile(tint ?? TileTint.slate);
     final glyph = pixel ? (size >= 80 ? 64.0 : AppSize.pixelIcon) : (size >= 40 ? AppSize.icon : AppSize.iconSm);
     return ExcludeSemantics(
       child: Container(

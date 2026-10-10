@@ -13,6 +13,7 @@ import 'package:saldough/core/foundation/analytics/app_bootstrap_firebase.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:state_management/state_management.dart';
 
@@ -22,6 +23,7 @@ final GetIt rootGetIt = GetIt.instance;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding.instance.addObserver(ActiveDay.observer);
+  await PixelIconAssets.load();
 
   // Urutan ini dipertahankan dari flutter-architecture-studi-bank (minus
   // jembatan legacy GetX mereka): pasang Bloc.observer -> Firebase ->

@@ -5,11 +5,18 @@ import 'package:saldough/shared/wallet/domain/wallet.dart';
 /// Kontrak akses data [Wallet]. Lihat ADR-0005 — selalu `Either<Failure, T>`,
 /// tidak pernah `throw Failure`.
 abstract interface class WalletRepository {
-  /// Daftar seluruh dompet terdaftar, aktif maupun tidak.
+  /// Daftar seluruh dompet terdaftar, aktif maupun tidak, dalam urutan
+  /// pilihan pengguna (B-34). Dompet baru ada di akhir.
   Future<Either<Failure, List<Wallet>>> listWallets();
 
-  /// Menyimpan [wallet] — menambah kalau `id` baru, menimpa kalau sudah ada.
+  /// Menyimpan [wallet] — menambah di akhir kalau `id` baru, menimpa di
+  /// tempatnya kalau sudah ada (urutan tidak berubah).
   Future<Either<Failure, Unit>> saveWallet(Wallet wallet);
+
+  /// Menyusun ulang dompet mengikuti [orderedIds]. Dompet yang tidak
+  /// disebut tetap di belakang dengan urutan relatifnya; id yang tidak
+  /// dikenal diabaikan.
+  Future<Either<Failure, Unit>> reorderWallets(List<String> orderedIds);
 
   /// Menghapus dompet ber-`id` [id]. Tidak berefek kalau `id` tidak
   /// ditemukan.

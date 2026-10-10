@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/motion/motion_policy.dart';
 import 'package:saldough/core/presentation/motion/stepped_curve.dart';
@@ -71,7 +69,7 @@ class _PixelPopState extends State<PixelPop> with SingleTickerProviderStateMixin
       _controller.value = 1;
       return;
     }
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   @override

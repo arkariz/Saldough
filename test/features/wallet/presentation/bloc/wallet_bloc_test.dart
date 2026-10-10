@@ -453,4 +453,47 @@ void main() {
       verify(() => walletRepository.listWallets()).called(1);
     });
   });
+
+  group('WalletBloc -- urutan dompet (B-34)', () {
+    test('WalletsReordered menyimpan urutan, memuat ulang dalam urutan baru, dan memancarkan sinyal', () async {
+      // Stub mencerminkan penulisan terakhir: listWallets mengikuti urutan
+      // yang terakhir disimpan.
+      var stored = [wallet('a'), wallet('b', name: 'Tunai'), wallet('c', name: 'GoPay')];
+      when(() => walletRepository.reorderWallets(any())).thenAnswer((invocation) async {
+        final ids = invocation.positionalArguments.single as List<String>;
+        stored = [for (final id in ids) stored.firstWhere((w) => w.id == id)];
+        return const Right(unit);
+      });
+      when(() => walletRepository.listWallets()).thenAnswer((_) async => Right(stored));
+      final sources = <Object?>[];
+      final subscription = ledgerChanges.changes.listen(sources.add);
+      addTearDown(subscription.cancel);
+      final bloc = buildBloc();
+      addTearDown(bloc.close);
+
+      bloc.add(const WalletsReordered(['c', 'a', 'b']));
+      await pumpEventQueue();
+
+      verify(() => walletRepository.reorderWallets(['c', 'a', 'b'])).called(1);
+      expect(bloc.state.wallets.map((w) => w.id), ['c', 'a', 'b']);
+      expect(messageOf(bloc.state), t.wallet.reorderedMessage);
+      expect(sources, [same(bloc)]);
+    });
+
+    blocTest<WalletBloc, WalletState>(
+      'gagal menyimpan urutan: daftar tetap, galat tampil, tanpa sinyal',
+      setUp: () {
+        when(() => walletRepository.reorderWallets(any())).thenAnswer((_) async => const Left(_forcedFailure));
+      },
+      build: buildBloc,
+      seed: () => WalletState.initial().copyWith(wallets: [wallet('a'), wallet('b')], isLoading: false),
+      act: (bloc) => bloc.add(const WalletsReordered(['b', 'a'])),
+      expect: () => [
+        isA<WalletState>()
+            .having((s) => s.wallets.map((w) => w.id), 'urutan', ['a', 'b'])
+            .having((s) => s.effect, 'effect', isNotNull),
+      ],
+      verify: (_) => verifyNever(() => walletRepository.listWallets()),
+    );
+  });
 }

@@ -126,11 +126,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
     if (duration == Duration.zero) {
       _controller.jumpToPage(_page + 1);
     } else {
-      unawaited(
-        _controller.nextPage(
-          duration: duration,
-          curve: Curves.easeInOut,
-        ),
+      _controller.nextPage(
+        duration: duration,
+        curve: Curves.easeInOut,
       );
     }
   }

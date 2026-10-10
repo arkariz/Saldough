@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -24,9 +22,7 @@ void main() {
         ),
       ),
     );
-    unawaited(
-      navigatorKey.currentState!.push(MaterialPageRoute<void>(builder: (_) => const Scaffold(body: _Amount()))),
-    );
+    navigatorKey.currentState!.push(MaterialPageRoute<void>(builder: (_) => const Scaffold(body: _Amount())));
     await tester.pumpAndSettle();
 
     ActiveCurrency.notifier.value = AppCurrency.usd;

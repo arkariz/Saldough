@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/theme/theme.dart';
 
 void main() {
   Future<void> pumpIcon(WidgetTester tester, IconKey key) {
@@ -41,9 +43,15 @@ void main() {
       IconKey.categoryPets,
       IconKey.categoryShopping,
       IconKey.empty,
+      IconKey.categoryFamily,
+      IconKey.categoryDonation,
+      IconKey.categoryBonus,
+      IconKey.categoryGift,
+      IconKey.categoryOther,
+      IconKey.accountPixel,
     ];
 
-    // Tindakan, navigasi, dan kategori tanpa ikon piksel: Material Symbols.
+    // Tindakan dan navigasi: Material Symbols.
     const symbolKeys = [
       IconKey.home,
       IconKey.budget,
@@ -51,15 +59,14 @@ void main() {
       IconKey.transactions,
       IconKey.wallets,
       IconKey.check,
+      IconKey.account,
+      IconKey.moreHorizontal,
+      IconKey.reorder,
+      IconKey.dragHandle,
       IconKey.calendar,
       IconKey.search,
       IconKey.filter,
       IconKey.locked,
-      IconKey.categoryOther,
-      IconKey.categoryFamily,
-      IconKey.categoryDonation,
-      IconKey.categoryBonus,
-      IconKey.categoryGift,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,
@@ -99,6 +106,58 @@ void main() {
       }
     });
 
+    testWidgets('aset piksel gagal dimuat: ikon B-22 jatuh ke Material Symbols', (tester) async {
+      const fallbacks = {
+        IconKey.categoryFamily: Symbols.family_restroom_rounded,
+        IconKey.categoryDonation: Symbols.volunteer_activism_rounded,
+        IconKey.categoryBonus: Symbols.stars_rounded,
+        IconKey.categoryGift: Symbols.redeem_rounded,
+        IconKey.categoryOther: Symbols.more_horiz_rounded,
+        IconKey.accountPixel: Symbols.account_circle_rounded,
+      };
+      for (final MapEntry(:key, :value) in fallbacks.entries) {
+        await pumpIcon(tester, key);
+        final svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final context = tester.element(find.byType(SvgPicture));
+        final fallback = svg.errorBuilder!(context, Exception('aset hilang'), StackTrace.empty);
+        expect((fallback as Icon).icon, value, reason: 'IconKey.$key');
+      }
+    });
+
+    testWidgets('aset piksel gagal dimuat tanpa simbol: ruang kosong seukuran ikon', (tester) async {
+      await pumpIcon(tester, IconKey.walletBank);
+      final svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final fallback = svg.errorBuilder!(tester.element(find.byType(SvgPicture)), Exception('aset hilang'), StackTrace.empty);
+      expect(fallback, isA<SizedBox>());
+    });
+
+    group('aset tidak ada di bundel', () {
+      tearDown(() => PixelIconAssets.available = null);
+
+      testWidgets('ikon B-22 langsung Material Symbols, tanpa memuat aset', (tester) async {
+        PixelIconAssets.available = {'assets/icons/wallet_bank.svg'};
+        await pumpIcon(tester, IconKey.categoryFamily);
+        expect(find.byType(SvgPicture), findsNothing);
+        expect(tester.widget<Icon>(find.byType(Icon)).icon, Symbols.family_restroom_rounded);
+        expect(isPixelIcon(IconKey.categoryFamily), isFalse);
+        expect(isPixelIcon(IconKey.walletBank), isTrue);
+      });
+
+      testWidgets('ikon piksel tanpa simbol cadangan jadi ruang kosong', (tester) async {
+        PixelIconAssets.available = {};
+        await tester.pumpWidget(const MaterialApp(home: Center(child: AppIcon(IconKey.walletBank, size: 32))));
+        expect(find.byType(SvgPicture), findsNothing);
+        expect(find.byType(Icon), findsNothing);
+        expect(tester.getSize(find.byType(SizedBox).last), const Size.square(32));
+      });
+
+      testWidgets('manifest bundel uji terbaca dan memuat ikon yang ada', (tester) async {
+        await tester.runAsync(PixelIconAssets.load);
+        expect(PixelIconAssets.has('assets/icons/wallet_bank.svg'), isTrue);
+        expect(PixelIconAssets.has('assets/icons/tidak_ada.svg'), isFalse);
+      });
+    });
+
     testWidgets('size diteruskan ke Icon Material', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: AppIcon(IconKey.add, size: 40)));
       final icon = tester.widget<Icon>(find.byType(Icon));
@@ -128,6 +187,28 @@ void main() {
       expect(walletIconKey(''), IconKey.wallets);
       // Nama IconKey yang valid tapi bukan jenis dompet tidak boleh lolos.
       expect(walletIconKey('categoryFood'), IconKey.wallets);
+    });
+  });
+
+  group('AppIcon -- garis tepi ikon piksel di mode gelap (B-23)', () {
+    const mapper = PixelOutlineColorMapper(Color(0xFF857A71));
+
+    test('hanya warna garis tepi #1E1B19 yang diganti', () {
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0xFF1E1B19)), const Color(0xFF857A71));
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0xFFC2410C)), const Color(0xFFC2410C));
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0x801E1B19)), const Color(0x801E1B19));
+    });
+
+    testWidgets('tema gelap memasang pemeta warna lineStrong; tema terang tidak', (tester) async {
+      ColorMapper? mapperOf() =>
+          (tester.widget<SvgPicture>(find.byType(SvgPicture)).bytesLoader as SvgAssetLoader).colorMapper;
+
+      await tester.pumpWidget(MaterialApp(theme: PixelTheme.dark, home: const AppIcon(IconKey.categoryCoffee)));
+      expect(mapperOf(), PixelOutlineColorMapper(AppColors.dark.lineStrong));
+
+      await tester.pumpWidget(MaterialApp(theme: PixelTheme.light, home: const AppIcon(IconKey.categoryCoffee)));
+      await tester.pumpAndSettle(); // Pergantian tema dianimasikan.
+      expect(mapperOf(), isNull);
     });
   });
 }

@@ -82,7 +82,8 @@ Lainnya yang paling sering salah:
   kembalikan ke `23`.
 - Sebelum selesai: `flutter analyze` dan `flutter test` (minimal uji yang
   relevan plus `test/architecture/`; seluruh suite sebelum PR). Keduanya harus
-  bersih — info `unnecessary_unawaited` lama (B-9) boleh tetap.
+  bersih, tanpa info lint sama sekali (B-9 sudah dibersihkan). Flutter ada di
+  `.fvm/flutter_sdk/bin/flutter` bila tidak ada di PATH.
 - Sesudah mengubah kode, jalankan `graphify update .` bila `graphify-out/` ada.
 - Perbarui kotak centang di TASK_LIST hanya bila benar-benar selesai dan
   terverifikasi; pekerjaan sebagian ditandai `⚠ Sebagian` beserta catatannya.

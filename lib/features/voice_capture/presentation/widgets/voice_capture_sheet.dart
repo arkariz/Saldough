@@ -249,7 +249,7 @@ class _RecordButtonState extends State<_RecordButton> with SingleTickerProviderS
   void _syncPulse() {
     final animate = _recording && MotionPolicy.duration(context, _pulse.duration!) != Duration.zero;
     if (animate && !_pulse.isAnimating) {
-      unawaited(_pulse.repeat(reverse: true));
+      _pulse.repeat(reverse: true);
     } else if (!animate && _pulse.isAnimating) {
       _pulse
         ..stop()

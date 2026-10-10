@@ -216,34 +216,42 @@ class _AppShellPageState extends State<AppShellPage> {
                                         onShowRecurring: () => _showPlan(context, PlanSegment.recurring),
                                         // Siapkan dana (ADR-036 §3.6): hitungan fitur `plan`.
                                         fundingWarnings: () => loadFundingWarnings(parentContainer),
-                                        child: Scaffold(
-                                          body: IndexedStack(
-                                            index: _activeTab,
-                                            // `IndexedStack` menjaga tab tersembunyi tetap hidup;
-                                            // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
-                                            children: [
-                                              for (final (i, tab) in tabsFor(context).indexed)
-                                                TourVisibility(visible: i == _activeTab, child: tab),
-                                            ],
-                                          ),
-                                          bottomNavigationBar: AppNavBar(
-                                            selectedIndex: _activeTab,
-                                            onSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
-                                            destinations: [
-                                              (icon: IconKey.navHome, label: t.appShell.homeTabLabel),
-                                              (icon: IconKey.navHistory, label: t.appShell.transactionsTabLabel),
-                                              (icon: IconKey.navPlan, label: t.appShell.planTabLabel),
-                                              (icon: IconKey.navWallets, label: t.appShell.walletsTabLabel),
-                                            ],
-                                            recordLabel: t.appShell.recordAction,
-                                            recordHint: t.appShell.recordVoiceHint,
-                                            onRecord: () => unawaited(_openRecord(context)),
-                                            onRecordLongPress: () => unawaited(_openRecord(context, voice: true)),
-                                            // Satu tombol, dua langkah tur: Catat lalu tekan lama
-                                            // untuk suara (ADR-021, ADR-034 §3.3).
-                                            recordWrapper: (button) => SpotlightTarget(
-                                              spotlightKey: SpotlightKey.homeVoice,
-                                              child: SpotlightTarget(spotlightKey: SpotlightKey.homeRecord, child: button),
+                                        // Kembali sistem di tab selain Beranda pindah ke Beranda dulu; baru
+                                        // dari Beranda aplikasi ditutup (B-33).
+                                        child: PopScope<Object?>(
+                                          canPop: _activeTab == _homeTabIndex,
+                                          onPopInvokedWithResult: (didPop, _) {
+                                            if (!didPop) _onDestinationSelected(context, _homeTabIndex);
+                                          },
+                                          child: Scaffold(
+                                            body: IndexedStack(
+                                              index: _activeTab,
+                                              // `IndexedStack` menjaga tab tersembunyi tetap hidup;
+                                              // tur hanya boleh mulai di tab yang tampil (ADR-021 §3.3).
+                                              children: [
+                                                for (final (i, tab) in tabsFor(context).indexed)
+                                                  TourVisibility(visible: i == _activeTab, child: tab),
+                                              ],
+                                            ),
+                                            bottomNavigationBar: AppNavBar(
+                                              selectedIndex: _activeTab,
+                                              onSelected: (tabIndex) => _onDestinationSelected(context, tabIndex),
+                                              destinations: [
+                                                (icon: IconKey.navHome, label: t.appShell.homeTabLabel),
+                                                (icon: IconKey.navHistory, label: t.appShell.transactionsTabLabel),
+                                                (icon: IconKey.navPlan, label: t.appShell.planTabLabel),
+                                                (icon: IconKey.navWallets, label: t.appShell.walletsTabLabel),
+                                              ],
+                                              recordLabel: t.appShell.recordAction,
+                                              recordHint: t.appShell.recordVoiceHint,
+                                              onRecord: () => unawaited(_openRecord(context)),
+                                              onRecordLongPress: () => unawaited(_openRecord(context, voice: true)),
+                                              // Satu tombol, dua langkah tur: Catat lalu tekan lama
+                                              // untuk suara (ADR-021, ADR-034 §3.3).
+                                              recordWrapper: (button) => SpotlightTarget(
+                                                spotlightKey: SpotlightKey.homeVoice,
+                                                child: SpotlightTarget(spotlightKey: SpotlightKey.homeRecord, child: button),
+                                              ),
                                             ),
                                           ),
                                         ),

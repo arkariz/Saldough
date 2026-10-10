@@ -187,8 +187,14 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _fromWalletId != null && _toWalletId != null && !_sameWallet;
 
+  /// Tanggal yang menentukan pos anggaran (KT-1): tanggal kemunculan bila
+  /// transaksi ini tertaut rutin dan selisihnya paling banyak 7 hari
+  /// (ADR-038 §3.5), selain itu tanggal transaksi.
+  DateTime get _periodDate =>
+      periodDateFor(_date, widget.initial?.recurrence?.occurrenceDate ?? widget.occurrence?.date);
+
   List<BudgetItemOption> get _budgetChoices =>
-      transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId, _date);
+      transferBudgetChoicesFor(widget.budgetItems, _fromWalletId, _toWalletId, _budgetItemId, _periodDate);
 
   /// Pos terpilih kalau masih sah untuk pasangan dompet asal/tujuan saat
   /// ini, selain itu `null`.
@@ -296,7 +302,7 @@ class _TransferFormSheetState extends State<TransferFormSheet> {
               ),
           ],
         ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),

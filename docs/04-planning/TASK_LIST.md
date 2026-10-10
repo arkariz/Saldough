@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -79,7 +79,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 3 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana), berikutnya T-18.12 |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 4 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode), berikutnya T-18.4 |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3414,7 +3414,7 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Rp9.086.000, bukan menunggu; bukan anggota periode 25 Sep; selisih
       8 hari menurut `date`; perkiraan tidak menambah gaji lagi). Terpakai pos
       cicilan masih 0 sampai T-18.12.
-- [ ] **T-18.12** KT-1 memakai tanggal periode untuk transaksi tertaut
+- [x] **T-18.12** KT-1 memakai tanggal periode untuk transaksi tertaut
       rutin (ADR-038 §3.5 revisi, DOMAIN_MODEL "Pengecualian transaksi
       tertaut rutin"): `countsTowardBudgetItem`, pemilih pos dan validasi
       `budgetItemOutsidePeriod` di CATAT. Dikerjakan sesudah T-18.3, sebelum
@@ -3433,6 +3433,24 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       biasa 24 Okt tetap ke pos periode 25 Sep; rutin 1 Nov dibayar 30 Okt
       (awal bulan 1) terhitung di pos November.
       Memenuhi FR-PLN-007.
+      **Selesai 10 Okt 2026.** `countsTowardBudgetItem` memakai
+      `periodDateOf` (progres anggaran, daftar transaksi tertaut, terpakai
+      Rencana). CATAT pengeluaran dan transfer menyaring pos dan
+      pemberitahuan "di luar periode" dengan `periodDateFor(tanggal,
+      kemunculan)`; kemunculan diambil dari transaksi yang disunting atau
+      dari "Ubah dulu". `Budget.months` ikut membaca satu bulan sebelumnya
+      bila tanggal mulai ≤ 7, jadi semua pembaca anggaran (layar Anggaran,
+      Beranda, Rencana) konsisten. Uji: bagian KT-1
+      `period_attribution_characterization_test.dart` kini perilaku yang
+      diharapkan (cicilan 24 Okt → pos 25 Okt Rp2.914.000, pos 25 Sep
+      tetap, pengeluaran biasa 24 Okt ke pos 25 Sep, selisih 8 hari kembali
+      ke `date`, rutin 1 Nov dibayar 30 Okt di pos November, terpakai Rencana
+      Rp2.914.000); 2 uji widget CATAT menyunting cicilan tertaut. Uji
+      `Budget.months` dan `BudgetBloc` diperbarui untuk bulan tetangga.
+      Keterbatasan yang diterima (sesuai ADR-038 §3.5, hanya tetangga
+      sebelumnya): transaksi tertaut yang dibayar **sesudah** akhir periode
+      dan jatuh di bulan kalender berikutnya (mis. kemunculan 30 Okt, awal
+      bulan 1, dibayar 2 Nov) tidak terbaca oleh anggaran Oktober.
 - [ ] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
       `periodDateOf`; judul rentang bila awal ≠ 1 atau periode peralihan
       (FINANCIAL_PERIOD P-11).

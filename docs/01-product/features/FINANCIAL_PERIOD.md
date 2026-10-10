@@ -131,9 +131,10 @@ keuangan sendiri.
   Rencana, Analisis, penyaring periode Riwayat), tanggal periode sebuah
   transaksi adalah `recurrence.occurrenceDate` bila transaksi tertaut
   kemunculan rutin **dan** selisihnya dengan `date` ≤ 7 hari; selain itu
-  `date`. Saldo, perkiraan saldo harian, dan urutan Riwayat tetap memakai
-  `date`. Ini selaras dengan ADR-036 §3.4 yang sudah menyelesaikan pos
-  anggaran menurut tanggal kemunculan.
+  `date`. Tanggal periode juga dipakai untuk pos anggaran: terpakai pos dan
+  pemilih pos di CATAT (KT-1, revisi 10 Okt 2026 sesudah temuan T-18.1),
+  sehingga sejalan dengan penyelesai pos ADR-036 §3.4. Saldo, perkiraan saldo
+  harian, partisi penyimpanan, dan urutan Riwayat tetap memakai `date`.
 - **P-5 Rencana memasukkan anggaran** ke periode yang memuat tanggal
   mulainya (perilaku sekarang, `budgetsStartingIn`), tidak berubah.
 - **P-6 Anggaran rutin tidak ikut otomatis.** Patokan anggaran rutin tetap
@@ -199,7 +200,11 @@ lama dipindah ke pos Bulanan periode 25 Okt bila anggarannya ikut pindah
 **D. Gaji maju (P-4).** Tanggal mulai 25, rutin Gaji tiap 25. Kemunculan
 25 Okt 2026 (Minggu) dicatat sebagai transaksi bertanggal Jumat 23 Okt dan
 tertaut kemunculan 25 Okt. Selisih 2 hari ≤ 7 → dihitung ke periode 25 Okt –
-24 Nov. Saldo BCA sudah naik sejak 23 Okt.
+24 Nov. Saldo BCA sudah naik sejak 23 Okt. Cicilan Rp2.914.000 untuk
+kemunculan 25 Okt yang dibayar 24 Okt dan tertaut pos "Cicilan" anggaran
+rutin: terhitung di periode 25 Okt – 24 Nov **dan** di terpakai pos periode
+itu (Rp2.914.000), tidak di periode 25 Sep – 24 Okt. Di Rencana, kemunculan
+Gaji dan Cicilan 25 Okt berstatus tercatat, bukan menunggu.
 
 ## 6. Masalah yang dicegah (dari pembahasan 10 Okt 2026)
 

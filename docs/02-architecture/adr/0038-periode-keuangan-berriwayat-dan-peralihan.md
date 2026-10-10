@@ -68,9 +68,17 @@ transaksi.
    `t.recurrence.occurrenceDate` bila `t.recurrence != null` dan
    `|t.date − occurrenceDate| ≤ 7 hari`, selain itu `t.date`. Dipakai untuk
    keanggotaan periode di `monthPlan`, Beranda (arus), Analisis, dan
-   penyaring periode Riwayat. Saldo, `projectCashflow` harian, partisi
-   penyimpanan `transaction/YYYY-MM` (ADR-012), dan validasi KT-1 tetap
-   memakai `date`.
+   penyaring periode Riwayat. Saldo, `projectCashflow` harian, dan partisi
+   penyimpanan `transaction/YYYY-MM` (ADR-012) tetap memakai `date`.
+   **Revisi 10 Okt 2026 (temuan T-18.1, keputusan pemilik opsi a):** KT-1
+   juga memakai `periodDateOf`. Pengeluaran atau transfer tertaut kemunculan
+   rutin (selisih ≤ 7 hari) terhitung di pos anggaran yang periodenya
+   mencakup tanggal periodenya, baik saat dihitung terpakainya
+   (`countsTowardBudgetItem`) maupun saat ditawarkan dan divalidasi di CATAT.
+   Ini menyelaraskan hitungan dengan penyelesai pos ADR-036 §3.4, yang sudah
+   memakai tanggal kemunculan. Transaksi tanpa tautan rutin tetap memakai
+   `date`. Hitungan terpakai sebuah anggaran membaca paling banyak satu
+   dokumen bulan tetangga (transaksi sampai 7 hari sebelum periodenya).
 6. **Beranda** memakai periode keuangan berjalan untuk arus (merevisi
    ADR-035 §3.6 "tidak berlaku untuk Beranda").
 

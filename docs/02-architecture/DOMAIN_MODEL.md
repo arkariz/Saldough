@@ -159,6 +159,13 @@ mengubah tanggal ke luar periode melepas tautannya. Karena itu `spent` sebuah
 anggaran cukup dihitung dari dokumen bulan yang disentuh periodenya, tidak
 dari seluruh riwayat (NFR-PERF-002).
 
+**Pengecualian transaksi tertaut rutin (ADR-038 §3.5, 10 Okt 2026).** Untuk
+transaksi yang tertaut kemunculan rutin dengan selisih tanggal paling lama
+7 hari, aturan di atas memakai **tanggal periode** (`occurrenceDate`), bukan
+`date`. Cicilan untuk kemunculan 25 Okt yang dibayar 24 Okt terhitung di pos
+anggaran periode 25 Okt, tempat ia direncanakan. Karena itu `spent` boleh
+membaca satu dokumen bulan tetangga.
+
 ### Transfer
 
 `TransferTransaction` memindahkan catatan uang antar dompet. Ia tidak mengubah

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
@@ -13,12 +14,14 @@ import 'package:state_management/state_management.dart';
 part 'home_effect.dart';
 part 'home_event.dart';
 
-/// Bloc Beranda (FR-HOME-001..005): total saldo, arus bulan berjalan,
-/// ringkasan anggaran dan freelance lewat port milik `home` (ADR-0009), dan
-/// transaksi terbaru. Seluruh sumber dibaca bersamaan.
+/// Bloc Beranda (FR-HOME-001..005): total saldo, arus periode keuangan
+/// berjalan (ADR-038 §3.6), ringkasan anggaran dan freelance lewat port
+/// milik `home` (ADR-0009), dan transaksi terbaru. Seluruh sumber dibaca
+/// bersamaan.
 ///
-/// ⚠ Transaksi TIDAK dibaca lewat `listAllTransactions`: arus cukup satu
-/// dokumen bulan, dan transaksi terbaru berhenti membaca begitu
+/// ⚠ Transaksi TIDAK dibaca lewat `listAllTransactions`: arus cukup dokumen
+/// bulan yang disentuh periode berjalan ± batas atribusi 7 hari (paling
+/// banyak tiga), dan transaksi terbaru berhenti membaca begitu
 /// [recentCount] terpenuhi — waktu tampil Beranda tidak bertambah seiring
 /// panjangnya riwayat (NFR-PERF-002). Saldo diambil dari
 /// `Wallet.currentBalance` yang tersimpan, bukan dihitung ulang.
@@ -38,7 +41,12 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
     // tanpa kerangka.
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => add(const HomeRefreshed()));
+    // Awal bulan keuangan diubah, atau tanggal berganti saat aplikasi hidup.
+    ActiveFinancialMonth.notifier.addListener(_refresh);
+    ActiveDay.notifier.addListener(_refresh);
   }
+
+  void _refresh() => add(const HomeRefreshed());
 
   /// Jumlah transaksi terbaru yang ditampilkan.
   static const recentCount = 5;
@@ -61,9 +69,10 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _load(Emitter<HomeState> emit, {required bool firstLoad}) async {
     final now = _now();
+    final period = ActiveFinancialMonth.periodOf(now);
     final (wallets, monthTransactions, recent, budget, freelance) = await (
       _walletRepository.listWallets(),
-      _transactionRepository.listTransactionsInMonth(now),
+      _periodTransactions(period),
       _transactionRepository.listRecentTransactions(recentCount),
       _budgetOverviewSource.activeBudgetOverview(),
       _freelanceOverviewSource.freelanceOverview(),
@@ -81,8 +90,8 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
             wallets: wallets,
             recentTransactions: recent,
             hasTransactions: recent.isNotEmpty,
-            month: DateTime(now.year, now.month),
-            cashFlow: _calculateCashFlow(monthTransactions, month: now),
+            period: period,
+            cashFlow: _calculateCashFlow.inPeriod(monthTransactions, from: period.start, until: period.end),
             budget: budget.activeCount == 0 ? null : budget,
             freelance: freelance,
             isLoading: false,
@@ -106,8 +115,27 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+  /// Transaksi dokumen bulan yang disentuh [period] ditambah
+  /// [periodAttributionDays] hari di kedua sisi (P-4).
+  Future<Either<Failure, List<Transaction>>> _periodTransactions(FinancialPeriod period) async {
+    final from = DateTime(period.start.year, period.start.month, period.start.day - periodAttributionDays);
+    final until = DateTime(period.end.year, period.end.month, period.end.day + periodAttributionDays);
+    final all = <Transaction>[];
+    for (var m = DateTime(from.year, from.month); m.isBefore(until); m = DateTime(m.year, m.month + 1)) {
+      switch (await _transactionRepository.listTransactionsInMonth(m)) {
+        case Left(:final value):
+          return left(value);
+        case Right(:final value):
+          all.addAll(value);
+      }
+    }
+    return right(all);
+  }
+
   @override
   Future<void> close() async {
+    ActiveFinancialMonth.notifier.removeListener(_refresh);
+    ActiveDay.notifier.removeListener(_refresh);
     await _ledgerSubscription.cancel();
     return super.close();
   }

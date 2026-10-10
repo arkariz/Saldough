@@ -53,6 +53,23 @@ void main() {
     });
   });
 
+  test('nama periode (P-11): nama bulan untuk awal 1, selain itu rentang; peralihan selalu rentang', () {
+    expect(financialPeriodOf(DateTime(2026, 10, 10), single(1)).name, 'Oktober');
+    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).name, '25 Okt – 24 Nov');
+    final transition = financialPeriodOf(
+      DateTime(2026, 10, 10),
+      single(25).changedOn(DateTime(2026, 10, 10), FinancialMonthStart.first),
+    );
+    expect(transition.name, '25 Sep – 31 Okt');
+    final startsOnFirst = financialPeriodOf(
+      DateTime(2026, 10, 10),
+      single(1).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
+    );
+    expect(startsOnFirst.isTransition, isTrue);
+    expect(startsOnFirst.name, '1 Okt – 24 Okt');
+    expect(startsOnFirst.label, '1 Okt – 24 Okt');
+  });
+
   group('periode peralihan (P-3)', () {
     test('A: 25 → 1 pada 10 Okt: peralihan 25 Sep – 31 Okt (37 hari), lalu 1 – 30 Nov', () {
       final before = single(25);

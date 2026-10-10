@@ -27,12 +27,22 @@ final class FinancialPeriod extends Equatable {
   /// Apakah [date] termasuk periode ini.
   bool contains(DateTime date) => !date.isBefore(start) && date.isBefore(end);
 
-  /// Label: "Oktober 2026" bila mulai tanggal 1; selain itu rentangnya
-  /// selalu ditulis, mis. "25 Okt – 24 Nov" (bulan keuangan bisa berbeda
-  /// dari bulan kalender di Beranda).
-  String get label => start.day == 1 && !isTransition
+  /// Periode normal yang dimulai tanggal 1: disebut nama bulannya. Selain
+  /// itu (awal lain atau periode peralihan) selalu disebut rentangnya
+  /// (FINANCIAL_PERIOD P-11).
+  bool get isCalendarMonth => start.day == 1 && !isTransition;
+
+  /// Rentang tanggal berspasi, mis. "25 Okt – 24 Nov".
+  String get rangeLabel => '${CycleMonthFormatter.formatDayMonth(start)} – ${CycleMonthFormatter.formatDayMonth(lastDay)}';
+
+  /// Label: "Oktober 2026" bila [isCalendarMonth], selain itu [rangeLabel].
+  String get label => isCalendarMonth
       ? CycleMonthFormatter.format('${start.year}-${start.month.toString().padLeft(2, '0')}')
-      : '${CycleMonthFormatter.formatDayMonth(start)} – ${CycleMonthFormatter.formatDayMonth(lastDay)}';
+      : rangeLabel;
+
+  /// Nama singkat (P-11): "Oktober" bila [isCalendarMonth], selain itu
+  /// [rangeLabel]. Dipakai judul kartu Arus Beranda.
+  String get name => isCalendarMonth ? CycleMonthFormatter.formatMonthName(start) : rangeLabel;
 
   @override
   List<Object?> get props => [start, end, isTransition];

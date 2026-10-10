@@ -1,3 +1,4 @@
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -11,7 +12,7 @@ final class HomeState extends UiState<HomeState> {
     required this.wallets,
     required this.recentTransactions,
     required this.hasTransactions,
-    required this.month,
+    required this.period,
     required this.cashFlow,
     required this.budget,
     required this.freelance,
@@ -25,7 +26,7 @@ final class HomeState extends UiState<HomeState> {
     wallets: const [],
     recentTransactions: const [],
     hasTransactions: false,
-    month: DateTime(2000),
+    period: FinancialPeriod(start: DateTime(2000), end: DateTime(2000, 2)),
     cashFlow: const CashFlow(income: 0, expense: 0),
     budget: null,
     freelance: null,
@@ -42,10 +43,10 @@ final class HomeState extends UiState<HomeState> {
   /// Apakah sudah ada satu pun transaksi tercatat (FR-HOME-005).
   final bool hasTransactions;
 
-  /// Bulan berjalan saat dimuat (hanya tahun dan bulannya yang dipakai).
-  final DateTime month;
+  /// Periode keuangan berjalan saat dimuat (FR-HOME-001, ADR-038 §3.6).
+  final FinancialPeriod period;
 
-  /// Pemasukan dan pengeluaran bulan berjalan; transfer tidak dihitung.
+  /// Pemasukan dan pengeluaran [period]; transfer tidak dihitung.
   final CashFlow cashFlow;
 
   /// Ringkasan anggaran aktif, atau `null` kalau tidak ada anggaran aktif —
@@ -80,7 +81,7 @@ final class HomeState extends UiState<HomeState> {
     wallets: wallets,
     recentTransactions: recentTransactions,
     hasTransactions: hasTransactions,
-    month: month,
+    period: period,
     cashFlow: cashFlow,
     budget: budget,
     freelance: freelance,
@@ -94,7 +95,7 @@ final class HomeState extends UiState<HomeState> {
     wallets,
     recentTransactions,
     hasTransactions,
-    month,
+    period,
     cashFlow,
     budget,
     freelance,

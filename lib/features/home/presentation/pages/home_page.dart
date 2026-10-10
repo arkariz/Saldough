@@ -7,7 +7,6 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
@@ -150,7 +149,7 @@ class _HomePageState extends State<HomePage> {
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.space6),
             AppSectionHeader(
-              CycleMonthFormatter.formatMonthName(state.month),
+              state.period.name,
               actionLabel: t.appShell.transactionsTabLabel,
               onAction: widget.onShowTransactions,
             ),

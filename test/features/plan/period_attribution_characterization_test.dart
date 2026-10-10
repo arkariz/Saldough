@@ -263,9 +263,59 @@ void main() {
     });
   });
 
-  test('kartu Arus Beranda memakai bulan kalender menurut date: keduanya di Oktober', () {
-    const flow = CalculateCashFlow();
-    expect(flow([gaji, cicilan], month: DateTime(2026, 10)), const CashFlow(income: 1200000000, expense: 291400000));
-    expect(flow([gaji, cicilan], month: DateTime(2026, 11)), const CashFlow(income: 0, expense: 0));
+  test('kartu Arus Beranda = pemasukan/pengeluaran monthPlan periode yang sama, tanpa transfer (T-18.4)', () {
+    final jajan = ExpenseTransaction(
+      id: 'jajan',
+      date: DateTime(2026, 10, 26, 12),
+      amount: 5700000,
+      note: '',
+      walletId: 'bca',
+    );
+    final bonus = IncomeTransaction(
+      id: 'bonus',
+      date: DateTime(2026, 10, 26, 13),
+      amount: 50000000,
+      note: '',
+      walletId: 'bca',
+    );
+    final tabung = TransferTransaction(
+      id: 'tabung',
+      date: DateTime(2026, 10, 26, 14),
+      amount: 100000000,
+      note: '',
+      fromWalletId: 'bca',
+      toWalletId: 'jago',
+    );
+    final all = [gaji, cicilan, jajan, bonus, tabung];
+    final spent = const CalculateBudgetProgress()(budget, all, now: today);
+    final plan = PlanMonthState(
+      today: today,
+      range: current,
+      schedule: schedule,
+      isLoading: false,
+      rules: rules,
+      transactions: all,
+      budgets: [
+        PlanBudget(
+          walletId: 'bca',
+          periodEnd: budget.endDate,
+          lines: [
+            for (final item in spent.items)
+              (itemId: item.item.id, key: item.item.templateItemId, planned: item.item.plannedAmount, spent: item.spent),
+          ],
+        ),
+      ],
+    ).planFor(0);
+    final flow = const CalculateCashFlow().inPeriod(all, from: current.start, until: current.end);
+    expect(flow, const CashFlow(income: 1250000000, expense: 297100000));
+    expect(flow.income, plan.recordedIncome + plan.unplannedIn);
+    expect(flow.expense, plan.recordedRecurringOut + plan.budgetSpent + plan.unplannedOut);
+    // Kalender (cara lama) menghitung gaji 23 Okt dan cicilan 24 Okt di
+    // Oktober bersama seluruh isi 25–31 Okt.
+    expect(const CalculateCashFlow()(all, month: DateTime(2026, 10)), flow);
+    expect(
+      const CalculateCashFlow().inPeriod(all, from: previous.start, until: previous.end),
+      const CashFlow(income: 0, expense: 0),
+    );
   });
 }

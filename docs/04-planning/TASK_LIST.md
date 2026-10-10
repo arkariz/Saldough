@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -79,7 +79,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 4 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode), berikutnya T-18.4 |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 5 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode), berikutnya T-18.5 |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3451,13 +3451,30 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       sebelumnya): transaksi tertaut yang dibayar **sesudah** akhir periode
       dan jatuh di bulan kalender berikutnya (mis. kemunculan 30 Okt, awal
       bulan 1, dibayar 2 Nov) tidak terbaca oleh anggaran Oktober.
-- [ ] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
+- [x] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
       `periodDateOf`; judul rentang bila awal ≠ 1 atau periode peralihan
       (FINANCIAL_PERIOD P-11).
       Buka: `features/home/`.
       Verifikasi: uji Arus = pemasukan/pengeluaran `monthPlan` periode yang
       sama tanpa transfer; awal 1 tetap bertajuk nama bulan.
       Memenuhi FR-HOME-001.
+      **Selesai 10 Okt 2026.** `HomeBloc` memakai
+      `ActiveFinancialMonth.periodOf(now)`, membaca dokumen bulan periode
+      itu ± 7 hari (paling banyak tiga dokumen, tetap terbatas untuk
+      NFR-PERF-002), dan menghitung `CalculateCashFlow.inPeriod` menurut
+      `periodDateOf`. Beranda segar saat awal bulan diubah atau tanggal
+      berganti. `HomeState.month` diganti `period`; judul bagian memakai
+      `FinancialPeriod.name` (P-11: "Oktober" untuk periode normal mulai
+      tanggal 1, selain itu rentang "25 Okt – 24 Nov", peralihan selalu
+      rentang) dengan `AppSectionHeader` yang ada. Selisih disengaja,
+      menunggu D3/D4: judul tetap tanpa awalan "Arus" seperti sekarang
+      (kunci `home.flowRangeTitle` belum dipakai), dan penanda "Periode
+      peralihan · n hari" belum tampil (T-18.8). Uji: `home_bloc_test.dart`
+      (4 uji: awal 25 dengan gaji 23 Okt dan transfer, awal 1, peralihan,
+      segar saat awal bulan diubah); rekonsiliasi Arus = `monthPlan`
+      (pemasukan Rp12.500.000 = tercatat + di luar rencana; pengeluaran
+      Rp2.971.000 = rutin tercatat + terpakai pos + di luar rencana); nama
+      periode di `financial_month_test.dart`.
 - [ ] **T-18.5** `Budget.endDate` opsional, patokan `lastDay` di
       `BudgetSchedule`, dan use case `AlignRecurringBudgets` (ADR-038
       §3.3–3.4, FINANCIAL_PERIOD P-6, P-7).

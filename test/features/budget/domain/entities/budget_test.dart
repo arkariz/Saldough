@@ -22,8 +22,16 @@ void main() {
   });
 
   group('Budget.months', () {
-    test('bulanan mulai tanggal 1: satu bulan saja', () {
-      expect(budget(BudgetPeriod.monthly, DateTime(2026, 9)).months, [DateTime(2026, 9)]);
+    test('bulanan mulai tanggal 1: ditambah bulan sebelumnya untuk transaksi tertaut rutin (ADR-038 §3.5)', () {
+      expect(budget(BudgetPeriod.monthly, DateTime(2026, 9)).months, [DateTime(2026, 8), DateTime(2026, 9)]);
+    });
+
+    test('mulai tanggal 8 ke atas: tanpa bulan tetangga; tanggal 7 ke bawah: paling banyak satu', () {
+      expect(budget(BudgetPeriod.monthly, DateTime(2026, 9, 8)).months, [DateTime(2026, 9), DateTime(2026, 10)]);
+      expect(
+        budget(BudgetPeriod.monthly, DateTime(2026, 9, 7)).months,
+        [DateTime(2026, 8), DateTime(2026, 9), DateTime(2026, 10)],
+      );
     });
 
     test('bulanan mulai tengah bulan: dua bulan', () {
@@ -35,7 +43,7 @@ void main() {
     });
 
     test('mingguan di dalam satu bulan: satu bulan', () {
-      expect(budget(BudgetPeriod.weekly, DateTime(2026, 9, 7)).months, [DateTime(2026, 9)]);
+      expect(budget(BudgetPeriod.weekly, DateTime(2026, 9, 14)).months, [DateTime(2026, 9)]);
     });
   });
 }

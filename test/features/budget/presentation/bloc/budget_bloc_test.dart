@@ -140,7 +140,10 @@ void main() {
         expect(state.progress['rumah']!.spent, 57660000);
         expect(state.linkedTransactions(household).map((t) => t.id), ['e1']);
         verify(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 9))).called(1);
-        verifyNever(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 8)));
+        // Agustus dibaca sebagai bulan tetangga anggaran September (ADR-038
+        // §3.5); bulan anggaran Agustus yang sudah selesai (Juli) tidak.
+        verify(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 8))).called(1);
+        verifyNever(() => transactionRepository.listTransactionsInMonth(DateTime(2026, 7)));
         verifyNever(() => transactionRepository.listAllTransactions());
       },
     );

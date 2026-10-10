@@ -9,9 +9,13 @@ const periodAttributionDays = 7;
 /// [periodAttributionDays] hari, selain itu `date`. Hanya untuk keanggotaan
 /// periode (Rencana, Beranda, Analisis, penyaring periode Riwayat); saldo,
 /// perkiraan harian, dan partisi penyimpanan tetap memakai `date`.
-DateTime periodDateOf(Transaction transaction) {
-  final date = transaction.date;
-  final occurrence = transaction.recurrence?.occurrenceDate;
+DateTime periodDateOf(Transaction transaction) =>
+    periodDateFor(transaction.date, transaction.recurrence?.occurrenceDate);
+
+/// [periodDateOf] untuk transaksi bertanggal [date] yang tertaut kemunculan
+/// [occurrence] (`null` = tidak tertaut), mis. isian CATAT yang belum
+/// menjadi transaksi.
+DateTime periodDateFor(DateTime date, DateTime? occurrence) {
   if (occurrence == null) return date;
   final gap = DateTime.utc(date.year, date.month, date.day)
       .difference(DateTime.utc(occurrence.year, occurrence.month, occurrence.day))

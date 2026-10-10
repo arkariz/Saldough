@@ -2,6 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Rencana pengeluaran untuk satu periode, terikat pada satu dompet.
 ///
@@ -69,12 +70,16 @@ final class Budget extends Equatable {
 
   /// Awal tiap bulan yang disentuh periode, urut naik — dokumen buku besar
   /// yang cukup dibaca untuk menghitung anggaran ini (ADR-012, KT-1).
+  /// Termasuk paling banyak satu bulan tetangga sebelumnya: transaksi
+  /// tertaut rutin sampai [periodAttributionDays] hari sebelum periode
+  /// terhitung di sini (ADR-038 §3.5).
   List<DateTime> get months {
     final end = endDate;
     final last = DateTime(end.year, end.month, end.day - 1);
+    final first = DateTime(startDate.year, startDate.month, startDate.day - periodAttributionDays);
     return [
       for (
-        var month = DateTime(startDate.year, startDate.month);
+        var month = DateTime(first.year, first.month);
         !month.isAfter(last);
         month = DateTime(month.year, month.month + 1)
       )

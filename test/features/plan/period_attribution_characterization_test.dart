@@ -12,8 +12,8 @@ import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Gajian maju dan tautan pos (FINANCIAL_PERIOD P-4, ADR-038 §3.5). Semula
-/// uji karakterisasi T-18.1; bagian Rencana kini perilaku yang diharapkan
-/// (T-18.3), bagian KT-1 masih memotret perilaku lama sampai T-18.12.
+/// uji karakterisasi T-18.1; kini perilaku yang diharapkan untuk Rencana
+/// (T-18.3) dan KT-1 (T-18.12).
 /// Bulan keuangan mulai tanggal 25, hari ini 26 Okt 2026.
 void main() {
   final schedule = FinancialMonthSchedule.single(const FinancialMonthStart.day(25));
@@ -110,20 +110,92 @@ void main() {
     expect(state.previousRange, previous);
   });
 
-  group('tautan pos menurut tanggal kemunculan (ADR-036 §3.4) vs KT-1 lama, sampai T-18.12', () {
+  group('KT-1 memakai tanggal periode untuk transaksi tertaut rutin (T-18.12)', () {
     test('pos dipilih dari periode yang memuat kemunculan 25 Okt', () {
       expect(cicilan.budgetItemId, 'cicilan-okt');
     });
 
-    test('KT-1 di hitungan anggaran: cicilan 24 Okt tidak terhitung ke pos 25 Okt – 24 Nov', () {
-      expect(countsTowardBudgetItem(budget, budget.items.single, cicilan), isFalse);
-      expect(progress.items.single.spent, 0);
-      expect(progress.spent, 0);
+    test('cicilan 24 Okt untuk kemunculan 25 Okt: terpakai pos periode 25 Okt = Rp2.914.000', () {
+      expect(countsTowardBudgetItem(budget, budget.items.single, cicilan), isTrue);
+      expect(progress.items.single.spent, 291400000);
+      expect(progress.spent, 291400000);
     });
 
-    test('KT-1 di CATAT: pos 25 Okt tidak ditawarkan untuk tanggal 24 Okt dan tautannya dianggap lepas', () {
-      expect(expenseBudgetChoicesFor(options, 'bca', null, cicilan.date), isEmpty);
-      expect(budgetItemOutsidePeriod(options, 'cicilan-okt', cicilan.date), options.single);
+    test('pos periode 25 Sep tidak berubah; pengeluaran biasa 24 Okt tetap ke pos 25 Sep', () {
+      final september = Budget(
+        id: 'bulanan-sep',
+        name: 'Bulanan',
+        walletId: 'bca',
+        period: BudgetPeriod.monthly,
+        startDate: DateTime(2026, 9, 25),
+        templateId: 'tpl-bulanan',
+        items: const [
+          BudgetItem(id: 'cicilan-sep', name: 'Cicilan', enteredAmount: 291400000, templateItemId: 'k-cicilan'),
+        ],
+      );
+      final plain = ExpenseTransaction(
+        id: 'belanja',
+        date: DateTime(2026, 10, 24, 19),
+        amount: 5000000,
+        note: 'Belanja',
+        walletId: 'bca',
+        budgetItemId: 'cicilan-sep',
+      );
+      final result = const CalculateBudgetProgress()(september, [gaji, cicilan, plain], now: today);
+      expect(result.items.single.spent, 5000000);
+      expect(countsTowardBudgetItem(budget, budget.items.single, plain.copyWith(budgetItemId: 'cicilan-okt')), isFalse);
+    });
+
+    test('selisih lebih dari 7 hari kembali ke date: tidak terhitung ke pos 25 Okt', () {
+      final far = ExpenseTransaction(
+        id: 'cicilan-jauh',
+        date: DateTime(2026, 10, 17, 9),
+        amount: 291400000,
+        note: 'Cicilan',
+        walletId: 'bca',
+        budgetItemId: 'cicilan-okt',
+        recurrence: RecurrenceLink(ruleId: 'cicilan', occurrenceDate: occurrence),
+      );
+      expect(countsTowardBudgetItem(budget, budget.items.single, far), isFalse);
+    });
+
+    test('CATAT: pos 25 Okt ditawarkan untuk isian 24 Okt yang tertaut kemunculan 25 Okt', () {
+      final periodDate = periodDateFor(cicilan.date, occurrence);
+      expect(expenseBudgetChoicesFor(options, 'bca', null, periodDate), options);
+      expect(budgetItemOutsidePeriod(options, 'cicilan-okt', periodDate), isNull);
+      // Tanpa tautan: aturan date, pos 25 Okt tidak ditawarkan.
+      expect(expenseBudgetChoicesFor(options, 'bca', null, periodDateFor(cicilan.date, null)), isEmpty);
+    });
+
+    test('Rencana: terpakai pos ikut terisi', () {
+      final plan = state.planFor(0);
+      expect(plan.budgetSpent, 291400000);
+      expect(plan.budgetOverrun, 0);
+      expect(plan.remaining, 908600000);
+    });
+
+    test('awal bulan 1: rutin 1 Nov dibayar 30 Okt terhitung di pos November', () {
+      final november = Budget(
+        id: 'bulanan-nov',
+        name: 'Bulanan',
+        walletId: 'bca',
+        period: BudgetPeriod.monthly,
+        startDate: DateTime(2026, 11),
+        items: const [BudgetItem(id: 'kos-nov', name: 'Kos', enteredAmount: 190000000)],
+      );
+      final kos = ExpenseTransaction(
+        id: 'kos',
+        date: DateTime(2026, 10, 30, 9),
+        amount: 190000000,
+        note: 'Kos',
+        walletId: 'bca',
+        budgetItemId: 'kos-nov',
+        recurrence: RecurrenceLink(ruleId: 'kos', occurrenceDate: DateTime(2026, 11)),
+      );
+      // Dokumen Oktober ikut dibaca: paling banyak satu bulan tetangga.
+      expect(november.months, [DateTime(2026, 10), DateTime(2026, 11)]);
+      expect(budget.months, [DateTime(2026, 10), DateTime(2026, 11)]);
+      expect(const CalculateBudgetProgress()(november, [kos], now: today).items.single.spent, 190000000);
     });
   });
 
@@ -134,8 +206,7 @@ void main() {
       expect(plan.recordedIncome, 1200000000);
       expect(plan.recurringDifference, 0);
       expect(plan.budgetPlanned, 291400000);
-      // Terpakai pos masih 0 karena KT-1 memakai date; diperbaiki T-18.12.
-      expect(plan.budgetSpent, 0);
+      expect(plan.budgetSpent, 291400000);
       expect(plan.unplannedIn, 0);
       expect(plan.unplannedOut, 0);
       expect(plan.remaining, 908600000);

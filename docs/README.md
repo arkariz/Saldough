@@ -164,7 +164,7 @@ docs/
 | [0035](02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md) | Transaksi rutin, tab Rencana, uang nganggur, dan perkiraan arus kas | Accepted |
 | [0036](02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md) | Anggaran rutin, perkiraan ke depan, dan tinjau awal bulan (R2) | Accepted |
 | [0037](02-architecture/adr/0037-otomasi-rutin-r3.md) | Otomasi rutin: deteksi, catat otomatis, dan saran (R3) | Accepted |
-| [0038](02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) | Periode keuangan berriwayat, periode peralihan, dan atribusi periode | Proposed |
+| [0038](02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) | Periode keuangan berriwayat, periode peralihan, dan atribusi periode | Accepted |
 
 ADR berikutnya memakai nomor **0038**.
 

@@ -3,7 +3,7 @@
 **Tanggal:** 10 Oktober 2026.
 **Status:** Diputuskan pemilik 10 Okt 2026 (§12). Keputusan arsitekturnya
 di [ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
-(Proposed); tugasnya Fase 18 di TASK_LIST.
+(Accepted 10 Okt 2026); tugasnya Fase 18 di TASK_LIST.
 **Berkaitan:** [ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)
 §3.6 (bulan keuangan 1–28, sudah ada), [ADR-036](../../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md)
 §3.1–3.4 (patokan anggaran rutin), [PLAN_TAB_LAYOUT.md](PLAN_TAB_LAYOUT.md)

@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-038
 - **Tanggal:** 2026-10-10
 - **Fase roadmap:** Fase 18
-- **Status:** Proposed
+- **Status:** Accepted (pemilik, 2026-10-10)
 - **Cakupan:** Global: `core/financial_month`, fitur `budget`, `plan`, `home`,
   `transaction` (dan Analisis, Fase 19)
 
@@ -173,6 +173,6 @@ sebulan; ditangani dengan label dan pengecualian (FINANCIAL_PERIOD P-8–P-10).
 ---
 
 **Penulis keputusan:** agen (product-owner), atas keputusan pemilik 10 Okt 2026
-**Ditinjau oleh:** —
-**Tanggal disetujui:** —
+**Ditinjau oleh:** pemilik
+**Tanggal disetujui:** 2026-10-10
 **Status implementasi:** Belum dimulai

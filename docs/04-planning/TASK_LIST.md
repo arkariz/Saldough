@@ -79,7 +79,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Proposed; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; T-18.1 boleh mulai, sisanya menunggu ADR-038 Accepted |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; mulai dari T-18.1 |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 7 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3311,8 +3311,8 @@ Keputusan pemilik 10 Okt 2026 (pembahasan "Bulan ini" dan Analisis).
 Perilaku di [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)
 (aturan P-1–P-11, contoh A–D); model di
 [ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
-(**Proposed**: T-18.2 dan seterusnya menunggu pemilik menyetujuinya; T-18.1
-boleh dimulai). Branch usulan `claude/periode-keuangan-fase-18`. Fase 19
+(Accepted pemilik 10 Okt 2026). Branch usulan `claude/periode-keuangan-fase-18`.
+Peta kerja designer dan engineer: [HANDOFF_FASE_18_19.md](HANDOFF_FASE_18_19.md). Fase 19
 (Analisis) bergantung pada T-18.2–T-18.4.
 
 **Hemat kuota:** satu tugas per sesi; baris "Buka" menyebut berkas yang
@@ -3402,6 +3402,7 @@ Keputusan pemilik 10 Okt 2026. Perilaku di
 `periodDateOf`). Layar menunggu rupa dari pemilik (FINANCIAL_ANALYSIS §14);
 tugas domain T-19.1–T-19.3 boleh lebih dulu. Branch usulan
 `claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+Peta kerja dan rupa yang ditunggu (A1–A5): [HANDOFF_FASE_18_19.md](HANDOFF_FASE_18_19.md).
 
 - [ ] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
       pemasukan per kategori, Freelance turunan, Tanpa kategori, Lainnya,

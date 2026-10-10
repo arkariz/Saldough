@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 10 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Proposed) dan Fase 19 (Analisis R1) dijadwalkan 10 Okt 2026. Versi `0.5.0+6` (tag terbaru `0.5.0+6`), belum dirilis publik.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) dan Fase 19 (Analisis R1) dijadwalkan 10 Okt 2026. Versi `0.5.0+6` (tag terbaru `0.5.0+6`), belum dirilis publik.
 
 ## Apa ini
 

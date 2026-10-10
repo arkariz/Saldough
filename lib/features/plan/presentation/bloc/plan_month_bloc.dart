@@ -205,13 +205,16 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     final uncertain = (await _freelance.unpaid()).getOrElse((_) => const []);
     final months = read(await _transactions.listAvailableMonths()) ?? const <DateTime>[];
     final transactions = <Transaction>[];
-    // Tiga bulan keuangan lalu (rata-rata di luar rencana) sampai akhir bulan ini.
+    // Tiga bulan keuangan lalu (rata-rata di luar rencana) sampai akhir bulan
+    // ini, ditambah batas atribusi di kedua sisi: gaji 25 Okt yang cair
+    // 23 Okt tetap terbaca sebagai anggota periode 25 Okt (P-4).
     var earliest = range;
     for (var back = 1; back <= 3; back++) {
       earliest = schedule.previousOf(earliest);
     }
-    final from = earliest.start;
-    for (var m = DateTime(from.year, from.month); m.isBefore(range.end); m = DateTime(m.year, m.month + 1)) {
+    final from = DateTime(earliest.start.year, earliest.start.month, earliest.start.day - periodAttributionDays);
+    final until = DateTime(range.end.year, range.end.month, range.end.day + periodAttributionDays);
+    for (var m = DateTime(from.year, from.month); m.isBefore(until); m = DateTime(m.year, m.month + 1)) {
       transactions.addAll(read(await _transactions.listTransactionsInMonth(m)) ?? const []);
     }
     if (failure != null) {

@@ -60,7 +60,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   /// Seluruh rutin.
   final List<RecurringRule> rules;
 
-  /// Transaksi tiga bulan keuangan lalu sampai akhir bulan ini.
+  /// Transaksi tiga bulan keuangan lalu sampai akhir bulan ini, ditambah
+  /// [periodAttributionDays] hari di kedua sisi (P-4).
   final List<Transaction> transactions;
 
   /// Anggaran yang dimulai di bulan ini.
@@ -156,6 +157,13 @@ final class PlanMonthState extends UiState<PlanMonthState> {
       reviewSteps.isNotEmpty &&
       today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays));
 
+  /// Transaksi yang tanggal periodenya ([periodDateOf], ADR-038 §3.5) di
+  /// [m]: gajian yang cair lebih awal tetap di periode kemunculannya.
+  List<Transaction> _membersOf(FinancialPeriod m) => [
+    for (final t in transactions)
+      if (m.contains(periodDateOf(t))) t,
+  ];
+
   /// Rencana vs nyata bulan lalu (W10), dihitung ulang dari buku besar.
   MonthPlan get previousPlan {
     final m = previousRange;
@@ -164,10 +172,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
       from: m.start,
       until: m.end,
       today: DateTime(m.end.year, m.end.month, m.end.day - 1),
-      transactions: [
-        for (final t in transactions)
-          if (m.contains(t.date)) t,
-      ],
+      transactions: _membersOf(m),
       budgetLines: [for (final b in previousBudgets) ...b.lines],
     );
   }
@@ -208,10 +213,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
       from: m.start,
       until: m.end,
       today: today,
-      transactions: [
-        for (final t in transactions)
-          if (m.contains(t.date)) t,
-      ],
+      transactions: _membersOf(m),
       budgetLines: [for (final b in budgetsFor(k)) ...b.lines],
     );
   }

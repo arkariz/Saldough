@@ -92,7 +92,8 @@ final class MonthPlan extends Equatable {
 
 /// Rencana bulan `from <= d < until` per [today].
 ///
-/// [transactions] adalah transaksi bertanggal di bulan itu; [budgetLines]
+/// [transactions] adalah transaksi yang tanggal periodenya ([periodDateOf],
+/// ADR-038 §3.5) di bulan itu; [budgetLines]
 /// pos pengeluaran anggaran yang periodenya jatuh di bulan itu. Rutin yang
 /// dijeda hanya menyumbang kemunculan yang sudah tercatat.
 MonthPlan monthPlan(
@@ -173,7 +174,8 @@ MonthPlan monthPlan(
   var unplannedOut = 0;
   var unplannedIn = 0;
   for (final t in transactions) {
-    if (ruleIds.contains(t.recurrence?.ruleId) || t.date.isBefore(from) || !t.date.isBefore(until)) continue;
+    final periodDate = periodDateOf(t);
+    if (ruleIds.contains(t.recurrence?.ruleId) || periodDate.isBefore(from) || !periodDate.isBefore(until)) continue;
     switch (t) {
       case ExpenseTransaction(:final budgetItemId) when budgetItemId == null || !budgetItems.contains(budgetItemId):
         unplannedOut += t.amount;

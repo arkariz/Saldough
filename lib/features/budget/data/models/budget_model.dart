@@ -13,7 +13,9 @@ import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 /// Skema 1 masih menulis `plannedAmount` tingkat anggaran; sejak ADR-017
 /// (skema 2) kunci itu diabaikan saat dibaca dan tidak ditulis lagi. Skema 3
 /// (ADR-036) menambah `templateId` dan `templateItemId` pos, keduanya
-/// opsional, jadi dokumen lama terbaca apa adanya.
+/// opsional, jadi dokumen lama terbaca apa adanya. Skema 4 (ADR-038 §3.3)
+/// menambah `endDate` opsional; tanpa kunci itu akhir periode diturunkan
+/// dari `period`.
 final class BudgetModel {
   /// Membuat [BudgetModel].
   const BudgetModel({
@@ -25,6 +27,7 @@ final class BudgetModel {
     required this.items,
     required this.isArchived,
     this.templateId,
+    this.endDate,
   });
 
   /// Membaca [BudgetModel] dari JSON.
@@ -37,6 +40,10 @@ final class BudgetModel {
     items: (json['items'] as List<dynamic>).map((e) => BudgetItemModel.fromJson(e as Map<String, dynamic>)).toList(),
     isArchived: json['isArchived'] as bool,
     templateId: json['templateId'] as String?,
+    endDate: switch (json['endDate']) {
+      final String end => DateTime.parse(end),
+      _ => null,
+    },
   );
 
   /// Membuat [BudgetModel] dari entitas domain [Budget].
@@ -49,10 +56,11 @@ final class BudgetModel {
     items: budget.items.map(BudgetItemModel.fromEntity).toList(),
     isArchived: budget.isArchived,
     templateId: budget.templateId,
+    endDate: budget.hasCustomEnd ? budget.endDate : null,
   );
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
-  static const schemaVersion = 3;
+  static const schemaVersion = 4;
 
   /// Identitas anggaran.
   final String id;
@@ -78,6 +86,9 @@ final class BudgetModel {
   /// Template berjadwal asalnya.
   final String? templateId;
 
+  /// Akhir periode yang disimpan (skema 4), atau `null`.
+  final DateTime? endDate;
+
   /// Menulis [BudgetModel] ke JSON.
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -88,6 +99,7 @@ final class BudgetModel {
     'items': items.map((i) => i.toJson()).toList(),
     'isArchived': isArchived,
     if (templateId != null) 'templateId': templateId,
+    if (endDate case final end?) 'endDate': end.toIso8601String(),
   };
 
   /// Mengubah model ini jadi entitas domain [Budget].
@@ -100,6 +112,7 @@ final class BudgetModel {
     items: items.map((i) => i.toEntity()).toList(),
     isArchived: isArchived,
     templateId: templateId,
+    endDate: endDate,
   );
 }
 

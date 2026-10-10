@@ -408,6 +408,15 @@ class AppIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final assetPath = _pixelAssets[iconKey];
     if (assetPath != null) {
+      // Mode gelap: garis tepi ikon piksel diganti `lineStrong` supaya tidak
+      // menyatu dengan tile gelap (B-23, ADR-034 §4).
+      if (Theme.of(context).brightness == Brightness.dark) {
+        return SvgPicture(
+          SvgAssetLoader(assetPath, colorMapper: PixelOutlineColorMapper(context.appColors.lineStrong)),
+          width: size,
+          height: size,
+        );
+      }
       return SvgPicture.asset(assetPath, width: size, height: size);
     }
 
@@ -441,4 +450,28 @@ IconKey walletIconKey(String key) {
     if (candidate.name == key) return candidate;
   }
   return IconKey.wallets;
+}
+
+/// Mengganti warna garis tepi ikon piksel ([pixelOutline]) dengan
+/// [outline] -- aturan pewarnaan ulang mode gelap (B-23, ADR-034 §4).
+/// Warna lain di SVG dibiarkan.
+final class PixelOutlineColorMapper extends ColorMapper {
+  /// Membuat [PixelOutlineColorMapper] yang memakai [outline].
+  const PixelOutlineColorMapper(this.outline);
+
+  /// Warna garis tepi seluruh ikon piksel di `assets/icons/`.
+  static const pixelOutline = Color(0xFF1E1B19);
+
+  /// Warna pengganti garis tepi.
+  final Color outline;
+
+  @override
+  Color substitute(String? id, String elementName, String attributeName, Color color) =>
+      color == pixelOutline ? outline : color;
+
+  @override
+  bool operator ==(Object other) => other is PixelOutlineColorMapper && other.outline == outline;
+
+  @override
+  int get hashCode => outline.hashCode;
 }

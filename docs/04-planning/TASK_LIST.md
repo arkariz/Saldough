@@ -3312,7 +3312,7 @@ Perilaku di [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)
 (aturan P-1–P-11, contoh A–D); model di
 [ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
 (Accepted pemilik 10 Okt 2026). Branch usulan `claude/periode-keuangan-fase-18`.
-Peta kerja designer dan engineer: [HANDOFF_FASE_18_19.md](HANDOFF_FASE_18_19.md). Fase 19
+Peta kerja designer dan engineer: [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV). Fase 19
 (Analisis) bergantung pada T-18.2–T-18.4.
 
 **Hemat kuota:** satu tugas per sesi; baris "Buka" menyebut berkas yang
@@ -3402,7 +3402,7 @@ Keputusan pemilik 10 Okt 2026. Perilaku di
 `periodDateOf`). Layar menunggu rupa dari pemilik (FINANCIAL_ANALYSIS §14);
 tugas domain T-19.1–T-19.3 boleh lebih dulu. Branch usulan
 `claude/analisis-fase-19`. R2 di B-38. (dari B-36)
-Peta kerja dan rupa yang ditunggu (A1–A5): [HANDOFF_FASE_18_19.md](HANDOFF_FASE_18_19.md).
+Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV).
 
 - [ ] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
       pemasukan per kategori, Freelance turunan, Tanpa kategori, Lainnya,

@@ -43,7 +43,11 @@ class _RecurringBudgetHostState extends State<RecurringBudgetHost> {
     final c = widget.container;
     // Kontainer tanpa template (sebagian uji shell): tidak ada yang lahir.
     if (!c.isRegistered<BudgetTemplateRepository>()) return;
-    _birth = BirthRecurringBudgets(budgets: c<BudgetRepository>(), templates: c<BudgetTemplateRepository>());
+    _birth = BirthRecurringBudgets(
+      budgets: c<BudgetRepository>(),
+      templates: c<BudgetTemplateRepository>(),
+      transactions: c<TransactionRepository>(),
+    );
     _ledger = c<LedgerChanges>();
     ActiveDay.notifier.addListener(_run);
     WidgetsBinding.instance.addPostFrameCallback((_) => _run());

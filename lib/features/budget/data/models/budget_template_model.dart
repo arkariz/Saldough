@@ -28,6 +28,7 @@ final class BudgetTemplateModel {
         period: BudgetPeriod.values.byName(s['period'] as String),
         anchorDate: DateTime.parse(s['anchorDate'] as String),
         isActive: s['isActive'] as bool,
+        onLastDay: s['onLastDay'] as bool? ?? false,
       ),
       _ => null,
     },
@@ -43,7 +44,7 @@ final class BudgetTemplateModel {
   );
 
   /// Versi skema dokumen ini. Naikkan kalau bentuk field berubah.
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
 
   /// Identitas template.
   final String id;
@@ -57,7 +58,8 @@ final class BudgetTemplateModel {
   /// Aktif atau tidak.
   final bool isEnabled;
 
-  /// Jadwal anggaran rutin (skema 2, ADR-036); `null` untuk template biasa.
+  /// Jadwal anggaran rutin (skema 2, ADR-036; `onLastDay` sejak skema 3,
+  /// ADR-038); `null` untuk template biasa.
   final BudgetSchedule? schedule;
 
   /// Menulis [BudgetTemplateModel] ke JSON.
@@ -72,6 +74,7 @@ final class BudgetTemplateModel {
         'period': s.period.name,
         'anchorDate': s.anchorDate.toIso8601String(),
         'isActive': s.isActive,
+        if (s.onLastDay) 'onLastDay': true,
       },
   };
 

@@ -79,8 +79,8 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; mulai dari T-18.1 |
-| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 7 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 11 | 0 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; mulai dari T-18.1 |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -3389,9 +3389,36 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji widget contoh B; uji W9 tidak tampil untuk periode
       peralihan.
       Memenuhi FR-PLN-006.
-- [ ] **T-18.9** Analitik `financial_month_changed{source, day,
-      moved_budgets}` tanpa nominal, lalu verifikasi di emulator contoh A, B,
-      dan D (pola VERIFICATION_PLAN_FASE_16); temuan jadi tugas baru.
+- [ ] **T-18.10** Tur spotlight periode keuangan (FINANCIAL_PERIOD §8A):
+      kunci `planPeriodHeader` dan `planTransition` di tur `planMonth`
+      sesudah `planTabs`, `SpotlightTarget` di titik pemakaian, teks
+      `tour.*` id/en dari tabel §8A.
+      ⚠ Progres per langkah (ADR-021 §3.1): `planTransition` hanya
+      terdaftar saat periode berjalan adalah peralihan; jangan menahan tur
+      menunggu targetnya. Perbarui tabel ADR-021 §3.4 bila daftar tur
+      berubah.
+      Buka: `core/tutorial/spotlight_key.dart`,
+      `core/tutorial/tutorial_progress.dart` (`tourSteps`).
+      Verifikasi: uji pengguna lama (langkah lain sudah dilihat) melihat
+      `planPeriodHeader` sekali; `planTransition` tidak tampil di periode
+      normal; kedua bahasa muat 360dp.
+      Memenuhi FR-PLN-004, FR-PLN-006.
+- [ ] **T-18.11** Analitik periode keuangan (FINANCIAL_PERIOD §8A): kelas
+      `PeriodEvents` dengan `financial_month_sheet_opened`,
+      `financial_month_changed`, `financial_month_offer`,
+      `recurrence_date_gap`.
+      ⚠ Tanpa nominal dan tanggal; dikirim dari tindakan atau bloc, bukan
+      `build()`; `recurrence_date_gap` dikirim di jalur tautan yang sama untuk
+      tautan pengguna dan otomatis. Tidak mengubah formulir Keamanan Data
+      (jenis data sama); cek `docs/03-release/PLAY_DATA_SAFETY.md`.
+      Buka: `core/foundation/analytics/app_analytics.dart`.
+      Verifikasi: uji lewat `AppAnalytics.debugSink`: nama dan parameter
+      persis tabel §8A untuk tiap sumber dan aksi; ember selisih 0, 3, 7, 8,
+      15 hari.
+      Memenuhi FR-PLN-004, FR-PLN-006, FR-PLN-007.
+- [ ] **T-18.9** Verifikasi Fase 18 di emulator contoh A, B, dan D (pola
+      VERIFICATION_PLAN_FASE_16), termasuk tur T-18.10 dan peristiwa T-18.11
+      di DebugView Firebase; temuan jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-PLN-006, FR-PLN-007.
 
 ## Fase 19: Analisis keuangan (R1)
@@ -3446,10 +3473,28 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       pintu hanya navigasi.
       Verifikasi: uji navigasi kedua pintu dengan argumen periode yang benar.
       Memenuhi FR-ANL-001, FR-ANL-005, FR-HOME-001.
-- [ ] **T-19.7** Analitik (`analysis_viewed`, `analysis_category_opened`,
-      `analysis_uncategorized_fix_opened`; tanpa nominal dan tanpa nama
-      kategori buatan pengguna), lalu verifikasi di emulator dengan data
-      contoh §10; temuan jadi tugas baru.
+- [ ] **T-19.8** Tur spotlight Analisis (FINANCIAL_ANALYSIS §13A):
+      `txnAnalysisSegment` sebagai langkah pertama tur `transaction`; tur
+      baru `analysis` dengan `analysisCategories`, `analysisUncategorized`,
+      `analysisTrend`; teks `homeCashFlow` diperbarui; teks `tour.*` id/en.
+      ⚠ Syarat `ready` tur `analysis`: termuat dan ada ≥1 transaksi di
+      periode. `analysisUncategorized` dan `analysisTrend` hanya terdaftar
+      saat targetnya tampil. Tambah baris `analysis` ke tabel ADR-021 §3.4.
+      Verifikasi: uji pengguna lama melihat `txnAnalysisSegment` sekali;
+      tur tidak tampil di keadaan kosong; kedua bahasa muat 360dp.
+      Memenuhi FR-ANL-001, FR-ANL-003, FR-ANL-005.
+- [ ] **T-19.9** Analitik Analisis (FINANCIAL_ANALYSIS §13A): kelas
+      `AnalysisEvents` dengan delapan peristiwa di tabel §13A.
+      ⚠ Tanpa nominal dan tanpa nama kategori buatan pengguna (`custom`);
+      `analysis_viewed` dan `analysis_highlights_shown` sekali per layar atau
+      periode yang dibuka, tidak per rebuild atau segar `LedgerChanges`.
+      Verifikasi: uji lewat `AppAnalytics.debugSink` untuk tiap pintu
+      (`history`, `home`, `lookback`), kategori bawaan, buatan pengguna,
+      Freelance, Tanpa kategori, Lainnya.
+      Memenuhi FR-ANL-001–FR-ANL-005.
+- [ ] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
+      termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
+      jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-ANL-001–FR-ANL-005.
 
 ## Antrean (belum dijadwalkan)
@@ -3547,12 +3592,12 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-001 | T-15.4, T-15.5, T-15.13 |
 | FR-PLN-002 | T-15.11, T-15.13 |
 | FR-PLN-003 | T-15.12, T-15.13 |
-| FR-PLN-004 | T-15.10, T-18.2, T-18.6, T-18.7 |
+| FR-PLN-004 | T-15.10, T-18.2, T-18.6, T-18.7, T-18.10, T-18.11 |
 | FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
 | FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
-| FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9 |
-| FR-PLN-007 | T-18.1, T-18.3, T-18.9 |
-| FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7 |
+| FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9, T-18.10, T-18.11 |
+| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11 |
+| FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7, T-19.8, T-19.9 |
 | FR-ANL-002 | T-19.2, T-19.4 |
 | FR-ANL-003 | T-19.2, T-19.4 |
 | FR-ANL-004 | T-19.3, T-19.5 |

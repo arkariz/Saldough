@@ -99,9 +99,7 @@ kategori buatan pengguna):
 | Porsi tanpa kategori | Nominal pengeluaran "Tanpa kategori" ÷ total pengeluaran, per bulan | Turun dari bulan ke bulan (pintu "Beri kategori" bekerja) |
 | Frekuensi pencatatan | Ukuran PRD §3 yang sudah ada | **Tidak turun.** Bila turun, analisis terasa menghakimi |
 
-Peristiwa usulan: `analysis_viewed{view: month|year, kind: expense|income,
-source: history|home}`, `analysis_category_opened{category: <builtInKey>|custom|none|freelance}`,
-`analysis_uncategorized_fix_opened`.
+Peristiwa analitik dan tur spotlight: §13A.
 
 ## 5. Posisi terhadap Beranda dan Rencana
 
@@ -389,8 +387,8 @@ dari jumlah persen anggotanya (5 + 4 + 4 = 13).
 
 Sorotan: "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan."
 
-**Bulan berjalan (B-6).** Hari ini 10 Oktober. Makan 1–10 Okt Rp520.000;
-Makan 1–10 Jul, Agt, Sep Rp300.000, Rp340.000, Rp380.000 → rata-rata
+**Bulan berjalan (B-6).** Hari ini 10 Oktober. Makan 1 – 10 Okt Rp520.000;
+Makan 1 – 10 Jul, Agt, Sep Rp300.000, Rp340.000, Rp380.000 → rata-rata
 Rp340.000. Selisih +Rp180.000 (+52,9%) → disorot: "Makan Rp180.000 lebih
 tinggi dari rata-rata s.d. tanggal 10."
 
@@ -472,6 +470,38 @@ pengeluaran/pemasukan per kategori; FR-ANL-002 pembanding dan sorotan;
 FR-ANL-003 tren enam bulan; FR-ANL-004 rincian kategori dan bongkar ke
 Riwayat; FR-ANL-005 Tanpa kategori dan Beri kategori; FR-ANL-006 tahun (R2).
 Cerita US-25 sampai US-28 di ujung Epik 5.
+
+## 13A. Tur spotlight dan analitik
+
+**Tur (ADR-021, progres per langkah).** Segmen Analisis tidak terlihat bagi
+pengguna lama kecuali disorot. Paling banyak tiga langkah baru per layar.
+
+| Kunci | Tur | Target | Tampil bila | Judul / isi (id) | Judul / isi (en) |
+|---|---|---|---|---|---|
+| `txnAnalysisSegment` | `transaction`, langkah pertama | Segmen Analisis (A1) | tab Riwayat termuat | Analisis / Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya. | Analysis / See where your money goes by category and compare it with usual. |
+| `analysisCategories` | `analysis` (baru) | Baris kategori pertama | Analisis termuat dan ada ≥1 transaksi di periode | Per kategori / Ketuk kategori untuk melihat transaksinya. | By category / Tap a category to see its transactions. |
+| `analysisUncategorized` | `analysis` | Baris Tanpa kategori | baris itu tampil | Tanpa kategori / Beri kategori supaya analisisnya lebih tepat. | Uncategorized / Add categories to make this more accurate. |
+| `analysisTrend` | `analysis` | Tren enam periode | tren tampil (≥2 periode data) | Enam periode terakhir / Ketuk satu periode untuk melihat analisisnya. | Last six periods / Tap a period to see its analysis. |
+
+Teks langkah `homeCashFlow` yang ada diperbarui untuk pengguna baru:
+"Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke
+mana perginya." / "The money that actually came in and went out this period.
+Tap to see where it went."
+
+**Analitik** (`AppAnalytics`, kelas `AnalysisEvents`). Tanpa nominal dan
+tanpa nama kategori buatan pengguna. Dikirim dari tindakan atau bloc, sekali
+per kejadian, tidak dari `build()`.
+
+| Peristiwa | Parameter | Kapan | Menjawab |
+|---|---|---|---|
+| `analysis_viewed` | `source`: `history` \| `home` \| `lookback`; `kind`: `expense` \| `income`; `transition`: `true` \| `false` | Layar Analisis terbuka | Ukuran "kunjungan bulanan" §4; pintu mana yang dipakai (keputusan Beranda §1.1) |
+| `analysis_period_changed` | `via`: `stepper` \| `trend` | Pindah periode | Apakah tren dipakai untuk navigasi |
+| `analysis_kind_switched` | `kind` | Pindah Pengeluaran/Pemasukan | Pemakaian A3 (uang dari mana) |
+| `analysis_wallet_filtered` | `filtered`: `true` \| `false` | Penyaring dompet berubah | Perlu tidaknya per dompet |
+| `analysis_highlights_shown` | `count`: `0`…`3` | Sekali per periode yang dibuka | Menyetel ambang sorotan KT-A3 |
+| `analysis_category_opened` | `category`: `<builtInKey>` \| `custom` \| `none` \| `freelance` \| `others`; `from`: `list` \| `highlight` | Rincian kategori dibuka | Ukuran "bongkar ke transaksi" §4 |
+| `analysis_see_all_opened` | — | Lihat semua transaksi | Apakah daftar 20 cukup |
+| `analysis_uncategorized_fix_opened` | — | Beri kategori diketuk | Ukuran "porsi tanpa kategori" §4 |
 
 ## 14. Perlu rupa dari pemilik
 

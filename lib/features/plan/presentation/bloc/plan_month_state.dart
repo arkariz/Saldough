@@ -14,6 +14,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   const PlanMonthState({
     required this.today,
     required this.range,
+    this.schedule,
     this.isLoading = true,
     this.loadFailed = false,
     this.wallets = const [],
@@ -39,7 +40,13 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   final DateTime today;
 
   /// Bulan keuangan berjalan.
-  final FinancialMonthRange range;
+  final FinancialPeriod range;
+
+  /// Jadwal bulan keuangan saat dimuat (ADR-038); `null` = [range] berasal
+  /// dari jadwal bawaan tanggal 1.
+  final FinancialMonthSchedule? schedule;
+
+  FinancialMonthSchedule get _schedule => schedule ?? FinancialMonthSchedule.initial;
 
   /// Sedang memuat pertama kali.
   final bool isLoading;
@@ -114,8 +121,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   static const reviewDays = 7;
 
   /// Bulan keuangan lalu.
-  FinancialMonthRange get previousRange =>
-      financialMonthOf(DateTime(range.start.year, range.start.month - 1, range.start.day), range.start.day);
+  FinancialPeriod get previousRange => _schedule.previousOf(range);
 
   /// Jumlah rencana anggaran rutin bulan ini (langkah 1).
   int get recurringBudgetTotal => [
@@ -167,14 +173,16 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   }
 
   /// Bulan berjalan dan [horizon] bulan sesudahnya.
-  List<FinancialMonthRange> get months => [
-    range,
-    for (var k = 1; k <= horizon; k++)
-      financialMonthOf(DateTime(range.start.year, range.start.month + k, range.start.day), range.start.day),
-  ];
+  List<FinancialPeriod> get months {
+    final result = [range];
+    while (result.length <= horizon) {
+      result.add(_schedule.nextOf(result.last));
+    }
+    return result;
+  }
 
   /// Bulan terpilih.
-  FinancialMonthRange get selectedRange => months[selected];
+  FinancialPeriod get selectedRange => months[selected];
 
   /// Bulan terpilih adalah bulan depan: seluruh isinya perkiraan.
   bool get isFuture => selected > 0;
@@ -210,15 +218,19 @@ final class PlanMonthState extends UiState<PlanMonthState> {
 
   /// Tiga bulan keuangan penuh sebelum bulan ini, terbaru dulu.
   List<({DateTime start, DateTime end})> get _previousMonths => [
-    for (var back = 1; back <= 3; back++)
-      () {
-        final r = financialMonthOf(
-          DateTime(range.start.year, range.start.month - back, range.start.day),
-          range.start.day,
-        );
-        return (start: r.start, end: r.end);
-      }(),
+    for (final r in previousPeriods(3)) (start: r.start, end: r.end),
   ];
+
+  /// [count] periode keuangan sebelum bulan ini, terbaru dulu.
+  List<FinancialPeriod> previousPeriods(int count) {
+    final result = <FinancialPeriod>[];
+    var period = range;
+    for (var back = 1; back <= count; back++) {
+      period = _schedule.previousOf(period);
+      result.add(period);
+    }
+    return result;
+  }
 
   /// Rata-rata harian di luar rencana untuk [walletId], atau `null` bila
   /// riwayat belum sebulan penuh.
@@ -290,7 +302,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   @override
   PlanMonthState copyWith({
     DateTime? today,
-    FinancialMonthRange? range,
+    FinancialPeriod? range,
+    FinancialMonthSchedule? schedule,
     bool? isLoading,
     bool? loadFailed,
     List<Wallet>? wallets,
@@ -310,6 +323,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   }) => PlanMonthState(
     today: today ?? this.today,
     range: range ?? this.range,
+    schedule: schedule ?? this.schedule,
     isLoading: isLoading ?? this.isLoading,
     loadFailed: loadFailed ?? this.loadFailed,
     wallets: wallets ?? this.wallets,
@@ -332,6 +346,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   List<Object?> get props => [
     today,
     range,
+    schedule,
     isLoading,
     loadFailed,
     wallets,
@@ -381,14 +396,7 @@ List<FundingWarning> planFundingWarnings(PlanMonthState state) {
           ? unplannedDailyAverage(
               state.transactions,
               months: [
-                for (var back = 1; back <= 3; back++)
-                  () {
-                    final r = financialMonthOf(
-                      DateTime(state.range.start.year, state.range.start.month - back, state.range.start.day),
-                      state.range.start.day,
-                    );
-                    return (start: r.start, end: r.end);
-                  }(),
+                for (final r in state.previousPeriods(3)) (start: r.start, end: r.end),
               ],
               historyStart: state.historyStart,
               ruleIds: {for (final rule in state.rules) rule.id},

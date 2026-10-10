@@ -65,9 +65,9 @@ Future<void> main() async {
     () => unawaited(amountVisibility.save(hidden: AmountVisibility.hidden)),
   );
 
-  // KT-R2: tanggal awal bulan keuangan tab Rencana; gagal dibaca = tanggal 1.
+  // ADR-038: jadwal bulan keuangan berriwayat; gagal dibaca = tanggal 1.
   ActiveFinancialMonth.notifier.value = (await rootGetIt<FinancialMonthPreferenceRepository>().load()).getOrElse(
-    (_) => 1,
+    (_) => FinancialMonthSchedule.initial,
   );
 
   // ADR-026 §3.4: kategori bawaan + migrasi label lama, sebelum layar pertama

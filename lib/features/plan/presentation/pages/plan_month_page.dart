@@ -122,7 +122,7 @@ class PlanMonthView extends StatelessWidget {
         }
         final bloc = context.read<PlanMonthBloc>();
         final range = state.selectedRange;
-        String labelOf(FinancialMonthRange m) =>
+        String labelOf(FinancialPeriod m) =>
             m.start.day == 1 ? CycleMonthFormatter.formatMonthShort(m.start) : m.label;
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;

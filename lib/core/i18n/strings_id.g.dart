@@ -2958,6 +2958,9 @@ class Translations$plan$id {
 	/// id: 'Tanggal $day'
 	String financialMonthDay({required Object day}) => 'Tanggal ${day}';
 
+	/// id: 'Hari terakhir bulan'
+	String get financialMonthLastDay => 'Hari terakhir bulan';
+
 	/// id: 'Bulan ini'
 	String get thisMonthSegmentLabel => 'Bulan ini';
 
@@ -4801,6 +4804,7 @@ extension on Translations {
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
+			'plan.financialMonthLastDay' => 'Hari terakhir bulan',
 			'plan.thisMonthSegmentLabel' => 'Bulan ini',
 			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
 			'plan.incomeRow' => 'Pemasukan',

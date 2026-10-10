@@ -1162,6 +1162,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthTitle => 'Financial month start';
 	@override String get financialMonthPickerTitle => 'Financial month starts on';
 	@override String financialMonthDay({required Object day}) => 'Day ${day}';
+	@override String get financialMonthLastDay => 'Last day of the month';
 	@override String get thisMonthSegmentLabel => 'This month';
 	@override String unplannedTitle({required Object month}) => 'Unplanned money · ${month}';
 	@override String get incomeRow => 'Income';
@@ -2573,6 +2574,7 @@ extension on TranslationsEn {
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthPickerTitle' => 'Financial month starts on',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
+			'plan.financialMonthLastDay' => 'Last day of the month',
 			'plan.thisMonthSegmentLabel' => 'This month',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
 			'plan.incomeRow' => 'Income',

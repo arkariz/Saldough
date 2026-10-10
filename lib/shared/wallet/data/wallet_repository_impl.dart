@@ -41,11 +41,26 @@ final class WalletRepositoryImpl with RepositoryGuard implements WalletRepositor
   @override
   Future<Either<Failure, Unit>> saveWallet(Wallet wallet) => guardVoid(() async {
         final models = await _store.read() ?? <WalletModel>[];
-        final next = [
-          ...models.where((m) => m.id != wallet.id),
-          WalletModel.fromEntity(wallet),
-        ];
+        final model = WalletModel.fromEntity(wallet);
+        // Urutan dokumen = urutan dompet (B-34): dompet lama diganti di
+        // tempatnya, bukan dipindah ke akhir; dompet baru di akhir.
+        final index = models.indexWhere((m) => m.id == wallet.id);
+        final next = index < 0 ? [...models, model] : ([...models]..[index] = model);
         await _store.write(next);
+      });
+
+  @override
+  Future<Either<Failure, Unit>> reorderWallets(List<String> orderedIds) => guardVoid(() async {
+        final models = await _store.read() ?? <WalletModel>[];
+        final rank = {for (final (i, id) in orderedIds.indexed) id: i};
+        // Sort stabil lewat indeks asal: dompet yang tidak disebut tetap di
+        // belakang dengan urutan relatifnya.
+        final indexed = models.indexed.toList()
+          ..sort((a, b) {
+            final byRank = (rank[a.$2.id] ?? orderedIds.length).compareTo(rank[b.$2.id] ?? orderedIds.length);
+            return byRank != 0 ? byRank : a.$1.compareTo(b.$1);
+          });
+        await _store.write([for (final (_, m) in indexed) m]);
       });
 
   @override

@@ -268,6 +268,12 @@ enum IconKey {
 
   /// Baris setelan Mata uang.
   payments,
+
+  /// Mengurutkan ulang daftar (Urutkan dompet, B-34).
+  reorder,
+
+  /// Pegangan seret baris yang bisa diurutkan.
+  dragHandle,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -362,6 +368,8 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.notifications: Symbols.notifications_rounded,
   IconKey.translate: Symbols.translate_rounded,
   IconKey.payments: Symbols.payments_rounded,
+  IconKey.reorder: Symbols.swap_vert_rounded,
+  IconKey.dragHandle: Symbols.drag_indicator_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).

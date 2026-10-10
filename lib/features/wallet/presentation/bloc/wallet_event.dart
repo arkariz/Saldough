@@ -67,6 +67,16 @@ final class WalletEdited extends WalletEvent {
   final int? initialBalance;
 }
 
+/// Menyusun ulang dompet mengikuti [orderedIds] (B-34). Urutan ini dipakai
+/// semua daftar dan pemilih dompet.
+final class WalletsReordered extends WalletEvent {
+  /// Membuat [WalletsReordered].
+  const WalletsReordered(this.orderedIds);
+
+  /// Id dompet dalam urutan baru.
+  final List<String> orderedIds;
+}
+
 /// Menghapus [wallet] -- HANYA kalau ia belum punya transaksi sama sekali
 /// (FR-WAL-001). Kalau sudah punya, penghapusan ditolak dengan pesan.
 final class WalletDeleted extends WalletEvent {

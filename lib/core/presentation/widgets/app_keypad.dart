@@ -7,6 +7,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/utils/formatters/money_expression.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 
@@ -21,12 +22,18 @@ import 'package:saldough/core/utils/formatters/money_input.dart';
 /// QA PR #43 F1): papan angka lebih pendek tanpa target sentuh yang lebih
 /// kecil. [onKey] menerima digit, `000`, [moneyKeyDecimal],
 /// atau [moneyKeyBackspace]; teksnya dihitung lewat [applyMoneyKey].
+///
+/// [operators] menambah kolom keempat ÷ × − + (T-8.18, selisih disengaja
+/// dari Keypad 3 kolom design system) tanpa menambah tinggi; tombolnya
+/// dikirim sebagai `moneyKey*` dari `money_expression.dart` dan dihitung
+/// lewat [applyMoneyExpressionKey]. Labelnya `ink2` supaya beda dari angka.
 class AppKeypad extends StatelessWidget {
   /// Membuat [AppKeypad].
   const AppKeypad({
     required this.onKey,
     required this.onClear,
     this.keyHeight = 40,
+    this.operators = false,
     super.key,
   });
 
@@ -40,15 +47,24 @@ class AppKeypad extends StatelessWidget {
   /// `AppSize.touch`.
   final double keyHeight;
 
+  /// Tampilkan kolom operator kalkulator.
+  final bool operators;
+
   @override
   Widget build(BuildContext context) {
     final decimalCurrency = ActiveCurrency.value.fractionDigits > 0;
+    final operatorKeys = moneyOperatorSymbols.keys.toList();
     final rows = [
       ['1', '2', '3'],
       ['4', '5', '6'],
       ['7', '8', '9'],
       [if (decimalCurrency) moneyKeyDecimal else '000', '0', moneyKeyBackspace],
     ];
+    if (operators) {
+      for (final (i, row) in rows.indexed) {
+        row.add(operatorKeys[i]);
+      }
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -102,7 +118,8 @@ class _KeyState extends State<_Key> {
     final colors = context.appColors;
     final key = widget.keyValue;
     final backspace = key == moneyKeyBackspace;
-    final label = key == moneyKeyDecimal ? MoneySeparators.decimal : key;
+    final operator = moneyOperatorSymbols[key];
+    final label = operator ?? (key == moneyKeyDecimal ? MoneySeparators.decimal : key);
     void tap() {
       unawaited(HapticFeedback.selectionClick());
       widget.onKey(key);
@@ -112,7 +129,14 @@ class _KeyState extends State<_Key> {
     final gap = ((AppSize.touch - widget.height) / 2).clamp(0.0, double.infinity);
     return Semantics(
       button: true,
-      label: backspace ? t.common.keypadBackspace : label,
+      label: switch (key) {
+        moneyKeyBackspace => t.common.keypadBackspace,
+        moneyKeyAdd => t.common.keypadAdd,
+        moneyKeySubtract => t.common.keypadSubtract,
+        moneyKeyMultiply => t.common.keypadMultiply,
+        moneyKeyDivide => t.common.keypadDivide,
+        _ => label,
+      },
       // `excludeSemantics` membuang aksi ketuk `GestureDetector`, jadi
       // aksinya dipasang di sini (QA PR #43 F7).
       onTap: tap,
@@ -146,6 +170,7 @@ class _KeyState extends State<_Key> {
                       label,
                       style: context.numberStyles.amountLg.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: operator == null ? null : colors.ink2,
                       ),
                     ),
             ),

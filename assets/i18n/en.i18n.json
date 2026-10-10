@@ -15,6 +15,10 @@
     "genericErrorMessage": "Something went wrong. Please try again.",
     "confirmDeleteTitle": "Delete?",
     "keypadBackspace": "Delete one digit",
+    "keypadAdd": "Plus",
+    "keypadSubtract": "Minus",
+    "keypadMultiply": "Times",
+    "keypadDivide": "Divided by",
     "close": "Close",
     "done": "Done"
   },
@@ -142,6 +146,12 @@
     },
     "balanceAfter": "Balance becomes $amount",
     "allCategories": "All categories",
+    "calc": {
+      "semantics": "Calculation $expression, amount $amount",
+      "notPositive": "The result must be more than 0",
+      "divideByZero": "Cannot divide by 0",
+      "tooLarge": "The result is too large"
+    },
     "amountSemantics": "Amount $amount"
   },
   "transaction": {

@@ -5,6 +5,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_category_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_choice.dart';
@@ -105,7 +106,7 @@ class IncomeFormSheet extends StatefulWidget {
 }
 
 class _IncomeFormSheetState extends State<IncomeFormSheet> {
-  final _amountController = TextEditingController();
+  final _amountController = RecordAmountController();
   String? _categoryId;
   final _noteController = TextEditingController();
   String? _walletId;

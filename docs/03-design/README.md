@@ -2,7 +2,10 @@
 
 Bahasa visual aplikasi diputuskan di
 [ADR-034](../02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md).
-Sumber kebenarannya dua artefak di akun pemilik; folder ini salinannya.
+Sumber kebenarannya artefak di akun pemilik; folder ini salinannya. Agen
+`ui-ux-designer` (`.claude/agents/ui-ux-designer.md`) boleh menyunting
+artefak design system dan prototipe langsung (izin pemilik 10 Okt 2026),
+selalu bersama salinannya di sini.
 
 | Artefak | Salinan |
 |---|---|
@@ -59,6 +62,14 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   angkanya contoh spec (hari ini 2 Okt 2026), saldo BCA hari ini
   Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
   anggapan prototipe.
+
+## Usulan desain
+
+`proposals/<nama-usulan>/` berisi mockup dan spek dari agen
+`ui-ux-designer` (`.claude/agents/ui-ux-designer.md`). Isinya **usulan**,
+bukan sumber kebenaran: statusnya di `README.md` tiap folder. Yang diterima
+pemilik dipindahkan ke artefak dan salinan di atas; foldernya tetap
+disimpan sebagai riwayat keputusan.
 
 ## Menjaga salinan
 

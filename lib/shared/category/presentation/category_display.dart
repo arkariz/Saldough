@@ -3,8 +3,8 @@ import 'package:saldough/shared/category/domain/built_in_categories.dart';
 import 'package:saldough/shared/category/domain/category.dart';
 
 /// Ikon kategori bawaan per `builtInKey`, persis README design system
-/// bagian Ikon. Kategori tanpa ikon piksel (Keluarga, Donasi, Bonus, Hadiah,
-/// Lainnya) memakai Material Symbols di tile berwarna (B-22).
+/// bagian Ikon. Ikon piksel Keluarga, Donasi, Bonus, Hadiah, dan Lainnya
+/// masih draf agen yang menunggu persetujuan pemilik (B-22).
 const Map<String, IconKey> _builtInIcons = {
   'food': IconKey.categoryFood,
   'groceries': IconKey.categoryGroceries,
@@ -33,8 +33,8 @@ const Map<IconKey, (IconKey, List<String>)> _titleVariants = {
 };
 
 /// Ikon yang bisa dipilih pengguna untuk kategori (QA PR #43 F12): ikon
-/// piksel kategori lebih dulu, lalu Material Symbols di tile berwarna untuk
-/// yang belum punya ikon piksel (B-22). Tidak ada ikon piksel baru.
+/// piksel kategori, termasuk draf agen B-22 (Keluarga, Donasi, Bonus,
+/// Hadiah).
 const List<IconKey> categoryIconChoices = [
   IconKey.categoryFood,
   IconKey.categoryCoffee,

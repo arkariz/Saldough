@@ -253,7 +253,7 @@ void _spread(int amount, {required DateTime from, required DateTime until, requi
 List<int> dailyPortions(int amount, int days) {
   if (days <= 0) return const [];
   final portion = amount ~/ days;
-  return [for (var i = 0; i < days; i++) i == days - 1 ? amount - portion * (days - 1) : portion];
+  return [for (var i = 0; i < days; i++) if (i == days - 1) amount - portion * (days - 1) else portion];
 }
 
 /// Rata-rata harian pengeluaran "di luar rencana" (§7.5): pengeluaran yang

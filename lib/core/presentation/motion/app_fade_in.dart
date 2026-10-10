@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/motion/motion_policy.dart';
 
@@ -61,7 +59,7 @@ class _AppFadeInState extends State<AppFadeIn> with SingleTickerProviderStateMix
     if (MotionPolicy.reduced(context)) {
       _controller.value = 1;
     } else {
-      unawaited(_controller.forward());
+      _controller.forward();
     }
   }
 

@@ -38,7 +38,7 @@ void main() {
     }
   });
 
-  test('kategori bawaan tanpa ikon piksel memakai Material Symbols (B-22)', () {
+  test('Keluarga, Donasi, Bonus, Hadiah, dan Lainnya memakai ikon piksel (draf B-22)', () {
     const expected = {
       'family': IconKey.categoryFamily,
       'donation': IconKey.categoryDonation,
@@ -50,7 +50,7 @@ void main() {
     for (final MapEntry(:key, :value) in expected.entries) {
       final icon = categoryIcon(builtIn(key));
       expect(icon, value, reason: key);
-      expect(isPixelIcon(icon), isFalse, reason: key);
+      expect(isPixelIcon(icon), isTrue, reason: key);
     }
   });
 

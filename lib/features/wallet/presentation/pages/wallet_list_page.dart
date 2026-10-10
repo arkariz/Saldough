@@ -13,6 +13,7 @@ import 'package:saldough/features/wallet/presentation/wallet_shares.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_empty_states.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
 import 'package:state_management/state_management.dart';
 
 /// Layar Dompet (T-2.7; FR-WAL-001..003): total saldo dompet aktif, daftar
@@ -47,6 +48,18 @@ class _WalletListPageState extends State<WalletListPage> {
   /// rincian, bukan langsung formulir sunting.
   Future<void> _addWallet(BuildContext context) => openAddWalletSheet(context);
 
+  /// Membuka lembar Urutkan dompet (B-34). Dompet nonaktif tetap di belakang
+  /// dompet aktif dengan urutan relatifnya.
+  Future<void> _reorderWallets(BuildContext context, WalletState state) async {
+    final bloc = context.read<WalletBloc>();
+    final ordered = await showFullScreenSheet<List<String>>(
+      context,
+      builder: (_) => WalletReorderSheet(wallets: state.activeWallets),
+    );
+    if (ordered == null) return;
+    bloc.add(WalletsReordered([...ordered, for (final w in state.inactiveWallets) w.id]));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +68,17 @@ class _WalletListPageState extends State<WalletListPage> {
         centerTitle: false,
         actions: [
           const TutorialInfoButton(tour: TourId.wallet),
+          BlocBuilder<WalletBloc, WalletState>(
+            buildWhen: (previous, current) => previous.activeWallets.length != current.activeWallets.length,
+            builder: (context, state) => state.activeWallets.length < 2
+                ? const SizedBox.shrink()
+                : AppIconButton(
+                    key: const ValueKey('wallet-reorder'),
+                    icon: IconKey.reorder,
+                    label: t.wallet.reorderAction,
+                    onPressed: () => _reorderWallets(context, context.read<WalletBloc>().state),
+                  ),
+          ),
           AppIconButton(icon: IconKey.add, label: t.wallet.addAction, onPressed: () => _addWallet(context)),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
+import 'package:saldough/core/theme/theme.dart';
 
 void main() {
   Future<void> pumpIcon(WidgetTester tester, IconKey key) {
@@ -41,9 +42,15 @@ void main() {
       IconKey.categoryPets,
       IconKey.categoryShopping,
       IconKey.empty,
+      IconKey.categoryFamily,
+      IconKey.categoryDonation,
+      IconKey.categoryBonus,
+      IconKey.categoryGift,
+      IconKey.categoryOther,
+      IconKey.accountPixel,
     ];
 
-    // Tindakan, navigasi, dan kategori tanpa ikon piksel: Material Symbols.
+    // Tindakan dan navigasi: Material Symbols.
     const symbolKeys = [
       IconKey.home,
       IconKey.budget,
@@ -51,15 +58,14 @@ void main() {
       IconKey.transactions,
       IconKey.wallets,
       IconKey.check,
+      IconKey.account,
+      IconKey.moreHorizontal,
+      IconKey.reorder,
+      IconKey.dragHandle,
       IconKey.calendar,
       IconKey.search,
       IconKey.filter,
       IconKey.locked,
-      IconKey.categoryOther,
-      IconKey.categoryFamily,
-      IconKey.categoryDonation,
-      IconKey.categoryBonus,
-      IconKey.categoryGift,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,
@@ -128,6 +134,28 @@ void main() {
       expect(walletIconKey(''), IconKey.wallets);
       // Nama IconKey yang valid tapi bukan jenis dompet tidak boleh lolos.
       expect(walletIconKey('categoryFood'), IconKey.wallets);
+    });
+  });
+
+  group('AppIcon -- garis tepi ikon piksel di mode gelap (B-23)', () {
+    const mapper = PixelOutlineColorMapper(Color(0xFF857A71));
+
+    test('hanya warna garis tepi #1E1B19 yang diganti', () {
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0xFF1E1B19)), const Color(0xFF857A71));
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0xFFC2410C)), const Color(0xFFC2410C));
+      expect(mapper.substitute(null, 'rect', 'fill', const Color(0x801E1B19)), const Color(0x801E1B19));
+    });
+
+    testWidgets('tema gelap memasang pemeta warna lineStrong; tema terang tidak', (tester) async {
+      ColorMapper? mapperOf() =>
+          (tester.widget<SvgPicture>(find.byType(SvgPicture)).bytesLoader as SvgAssetLoader).colorMapper;
+
+      await tester.pumpWidget(MaterialApp(theme: PixelTheme.dark, home: const AppIcon(IconKey.categoryCoffee)));
+      expect(mapperOf(), PixelOutlineColorMapper(AppColors.dark.lineStrong));
+
+      await tester.pumpWidget(MaterialApp(theme: PixelTheme.light, home: const AppIcon(IconKey.categoryCoffee)));
+      await tester.pumpAndSettle(); // Pergantian tema dianimasikan.
+      expect(mapperOf(), isNull);
     });
   });
 }

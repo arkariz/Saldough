@@ -127,7 +127,7 @@ class RecordCategoryField extends StatelessWidget {
         Expanded(
           child: _Option(
             key: const ValueKey('category-all'),
-            icon: IconKey.categoryOther,
+            icon: IconKey.moreHorizontal,
             label: t.record.allCategories,
             selected: false,
             onTap: () => _openAll(context, options),

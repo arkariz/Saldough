@@ -389,7 +389,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         AppAnalytics.log(RecurringEvents.occurrenceLinked);
         emit(
           state.copyWith(
-            transactions: [for (final t in state.transactions) t.id == source.id ? linked : t],
+            transactions: [for (final t in state.transactions) if (t.id == source.id) linked else t],
             effect: _effectDone(t.recurring.linkedMessage(name: rule.note)),
           ),
         );
@@ -480,7 +480,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         _recurringChanges.notifyChanged(source: this);
         emit(
           state.copyWith(
-            rules: [for (final r in state.rules) r.id == rule.id ? rule : r],
+            rules: [for (final r in state.rules) if (r.id == rule.id) rule else r],
             effect: message == null ? null : _effectDone(message),
           ),
         );

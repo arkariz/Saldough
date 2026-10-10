@@ -142,5 +142,48 @@ void main() {
       final wallets = result.getOrElse((_) => throw StateError('expected Right'));
       expect(wallets.map((w) => w.id), ['w1', 'w2']);
     });
+
+    group('urutan dompet (B-34)', () {
+      const bca = Wallet(id: 'w1', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0);
+      const tunai = Wallet(id: 'w2', name: 'Tunai', iconKey: 'walletCash', initialBalance: 0, currentBalance: 0);
+      const gopay = Wallet(id: 'w3', name: 'GoPay', iconKey: 'walletEwallet', initialBalance: 0, currentBalance: 0);
+
+      Future<List<String>> ids() async =>
+          (await repository.listWallets()).getOrElse((_) => throw StateError('expected Right')).map((w) => w.id).toList();
+
+      setUp(() async {
+        for (final wallet in [bca, tunai, gopay]) {
+          await repository.saveWallet(wallet);
+        }
+      });
+
+      test('menyimpan ulang dompet (saldo dihitung ulang, nama disunting) tidak memindahkannya', () async {
+        await repository.saveWallet(bca.copyWith(currentBalance: 2500000));
+        await repository.saveWallet(tunai.copyWith(name: 'Dompet saku'));
+
+        expect(await ids(), ['w1', 'w2', 'w3']);
+      });
+
+      test('reorderWallets menyusun mengikuti urutan pilihan dan bertahan sesudah disimpan ulang', () async {
+        await repository.reorderWallets(['w3', 'w1', 'w2']);
+        expect(await ids(), ['w3', 'w1', 'w2']);
+
+        await repository.saveWallet(bca.copyWith(currentBalance: 100));
+        expect(await ids(), ['w3', 'w1', 'w2']);
+      });
+
+      test('dompet yang tidak disebut tetap di belakang; id tak dikenal diabaikan', () async {
+        await repository.reorderWallets(['w2', 'tidak-ada']);
+
+        expect(await ids(), ['w2', 'w1', 'w3']);
+      });
+
+      test('dompet baru ditambahkan di akhir urutan pilihan', () async {
+        await repository.reorderWallets(['w3', 'w2', 'w1']);
+        await repository.saveWallet(const Wallet(id: 'w4', name: 'Jago', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0));
+
+        expect(await ids(), ['w3', 'w2', 'w1', 'w4']);
+      });
+    });
   });
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:saldough/core/presentation/motion/motion_policy.dart';
 
@@ -59,7 +57,7 @@ class _PixelBobState extends State<PixelBob> with SingleTickerProviderStateMixin
   void _sync() {
     final run = widget.enabled && !MotionPolicy.reduced(context);
     if (run && !_controller.isAnimating) {
-      unawaited(_controller.repeat());
+      _controller.repeat();
     } else if (!run && _controller.isAnimating) {
       _controller
         ..stop()

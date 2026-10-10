@@ -36,6 +36,7 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
     on<WalletAdded>(_onAdded);
     on<WalletEdited>(_onEdited);
     on<WalletDeleted>(_onDeleted);
+    on<WalletsReordered>(_onReordered);
   }
 
   final LedgerChanges _ledgerChanges;
@@ -101,6 +102,12 @@ final class WalletBloc extends Bloc<WalletEvent, WalletState> {
         }
         await _afterWrite(await _walletRepository.deleteWallet(event.wallet.id), t.wallet.deletedMessage, emit);
     }
+  }
+
+  /// Urutan baru juga memancarkan `LedgerChanges` lewat [_afterWrite] supaya
+  /// Beranda dan pemilih dompet ikut urutan yang sama (B-34).
+  Future<void> _onReordered(WalletsReordered event, Emitter<WalletState> emit) async {
+    await _afterWrite(await _walletRepository.reorderWallets(event.orderedIds), t.wallet.reorderedMessage, emit);
   }
 
   /// Apakah [transaction] memakai dompet ber-`id` [walletId] -- sebagai dompet

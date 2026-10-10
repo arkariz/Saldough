@@ -13,7 +13,8 @@ void main() {
   test('showModalBottomSheet hanya di full_screen_sheet.dart', () {
     final hits = [
       for (final file in files)
-        if (!file.path.endsWith('core/presentation/widgets/full_screen_sheet.dart') &&
+        // Jalur Windows memakai `\`.
+        if (!file.path.replaceAll(r'\', '/').endsWith('core/presentation/widgets/full_screen_sheet.dart') &&
             file.readAsStringSync().contains('showModalBottomSheet<'))
           file.path,
     ];

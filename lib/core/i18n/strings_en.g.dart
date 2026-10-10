@@ -281,6 +281,12 @@ class _Translations$wallet$en extends Translations$wallet$id {
 	@override String get savedMessage => 'Wallet saved.';
 	@override String get updatedMessage => 'Wallet updated.';
 	@override String get deletedMessage => 'Wallet deleted.';
+	@override String get reorderAction => 'Reorder wallets';
+	@override String get reorderTitle => 'Reorder wallets';
+	@override String get reorderHint => 'Press and drag a wallet to change its order. This order is used in every wallet list and picker.';
+	@override String reorderHandleLabel({required Object name}) => 'Drag to move ${name}';
+	@override String get reorderSaveAction => 'Save order';
+	@override String get reorderedMessage => 'Wallet order saved.';
 	@override String get deleteBlockedMessage => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.';
 	@override String get privacyNote => 'Data is stored locally and privately on your device.';
 	@override String get detailBackLabel => 'Back';
@@ -1650,6 +1656,12 @@ extension on TranslationsEn {
 			'wallet.savedMessage' => 'Wallet saved.',
 			'wallet.updatedMessage' => 'Wallet updated.',
 			'wallet.deletedMessage' => 'Wallet deleted.',
+			'wallet.reorderAction' => 'Reorder wallets',
+			'wallet.reorderTitle' => 'Reorder wallets',
+			'wallet.reorderHint' => 'Press and drag a wallet to change its order. This order is used in every wallet list and picker.',
+			'wallet.reorderHandleLabel' => ({required Object name}) => 'Drag to move ${name}',
+			'wallet.reorderSaveAction' => 'Save order',
+			'wallet.reorderedMessage' => 'Wallet order saved.',
 			'wallet.deleteBlockedMessage' => 'This wallet already has transactions, so it can\'t be deleted. Deactivate it instead.',
 			'wallet.privacyNote' => 'Data is stored locally and privately on your device.',
 			'wallet.detailBackLabel' => 'Back',
@@ -1921,14 +1933,14 @@ extension on TranslationsEn {
 			'freelance.unbilledLabel' => 'Unbilled',
 			'freelance.paymentsEmptyTitle' => 'No invoices yet',
 			'freelance.paymentsEmptyBody' => 'Group unbilled work hours into one invoice, then record it when you are paid.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentsFilteredEmpty' => 'No invoices with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			'freelance.paidOffBadge' => 'Paid off',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total balance',
-			_ => null,
-		} ?? switch (path) {
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
 			'home.budgetTitle' => 'Active budgets',
 			'home.budgetRemaining' => 'Remaining',
@@ -2435,14 +2447,14 @@ extension on TranslationsEn {
 			'plan.infoTitle' => 'Unplanned money',
 			'plan.infoIncome' => '+ Planned income',
 			'plan.infoBills' => '− Recurring bills',
+			_ => null,
+		} ?? switch (path) {
 			'plan.infoBudget' => '− Budgets',
 			'plan.infoOffPlan' => '± Off plan (already recorded)',
 			'plan.infoResult' => '= Unplanned money',
 			'plan.infoNotBalance' => 'Not your wallet balance.',
 			'plan.balanceTitle' => 'Wallet balance ≈',
 			'plan.allWallets' => 'All',
-			_ => null,
-		} ?? switch (path) {
 			'plan.endOf' => ({required Object date}) => 'End of ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Lowest · ${date}',
 			'plan.detailsAction' => 'Details',

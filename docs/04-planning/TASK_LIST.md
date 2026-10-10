@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -70,7 +70,7 @@ Terakhir diperbarui: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 bar
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 12 | 11 | Berjalan -- T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 17 | 15 | Berjalan -- T-8.13 (Kembali ke Beranda, B-33), T-8.14 (urutan dompet, B-34), T-8.15 (lint, B-9), dan T-8.16 (ikon piksel mode gelap, B-23) selesai 10 Okt 2026; T-8.17 (ikon piksel B-22) draf agen menunggu persetujuan pemilik; T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
@@ -96,11 +96,9 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
 
-- **KT-4** Nominal di Catat kembali ke Rp0 saat jenis diganti
-  (Pengeluaran → Pemasukan → Transfer): `RecordFormHost` membangun formulir
-  baru per jenis (`KeyedSubtree`). Disengaja sejak sebelum Fase 14, tetapi
-  lebih terasa karena papan angka kini di atas (QA PR #43, catatan F1).
-  Bawa nominal ke jenis baru, atau tetap kosong?
+KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
+10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
+T-14.x QA PR #43).
 
 KT-3 (cara migrasi label kategori lama, temuan F1 verifikasi M1) diputuskan
 30 Sep 2026: dibiarkan apa adanya karena belum ada pengguna dengan data
@@ -1533,6 +1531,60 @@ seluruh fitur di atasnya menghasilkan data.
       luar (papan ketik tertutup) → pemilih tanggal → Batal → papan ketik tetap
       tertutup. Kolom di formulir lain menyusul (B-19). Di luar PRD (UX).
 
+- [x] **T-8.13** Kembali sistem di tab selain Beranda pindah ke Beranda
+      (dari B-33, 10 Okt 2026). Shell `AppShellPage` dibungkus
+      `PopScope(canPop: tab aktif Beranda)`; di Riwayat, Rencana, atau Dompet
+      Kembali memindah ke Beranda, baru dari Beranda aplikasi ditutup. Segmen
+      Rencana tetap (KT-L4).
+      Verifikasi: uji `app_shell_page_test` "Kembali sistem … (B-33)" (gagal
+      tanpa perbaikan), uji tur "tombol kembali saat tur" tetap lulus. Belum
+      dicoba di perangkat (gestur Kembali Android). Di luar PRD (UX).
+
+- [x] **T-8.14** Urutan dompet stabil dan bisa diatur pengguna (dari B-34,
+      10 Okt 2026; pemilih memilih "urutan pilihan pengguna"). Akar bug:
+      `WalletRepositoryImpl.saveWallet` membuang lalu menambah di akhir, jadi
+      menyunting atau `RecomputeWalletBalances` memindah dompet ke bawah. Kini
+      diganti di tempatnya. Urutan = posisi di dokumen `wallet/all` (tanpa
+      field baru, skema tetap 1); `WalletRepository.reorderWallets` dan event
+      `WalletsReordered` (memancarkan `LedgerChanges`). Lembar **Urutkan
+      dompet** (`wallet_reorder_sheet.dart`, seret baris atau pegangannya) dari
+      tombol di app bar tab Dompet, tampil bila dompet aktif ≥ 2; dompet
+      nonaktif tetap di belakang.
+      ⚠ Lembar ini tidak ada di design system maupun prototipe; disusun dari
+      `AppFormHeader`, `AppCard`, `AppListRow`, `AppStickyBar`. Artefak perlu
+      diperbarui pemilik.
+      Verifikasi: uji repository (sunting/recompute tidak memindah, reorder,
+      id tak dikenal, dompet baru di akhir), bloc, dan widget (seret → Simpan
+      urutan; tutup tanpa simpan). Seret di HP belum dicoba. Memenuhi FR-WAL-003.
+
+- [x] **T-8.15** Bersihkan info lint (dari B-9, 10 Okt 2026). SDK 3.47.5
+      menandai `AnimationController.forward/repeat` dan
+      `PageController.nextPage` `@awaitNotRequired`, jadi 14 info
+      `unnecessary_unawaited` (13 di `lib/`, 1 di uji) dan 3
+      `prefer_if_elements_to_conditional_expressions` dibersihkan.
+      Verifikasi: `flutter analyze` tanpa isu sama sekali.
+
+- [x] **T-8.16** Garis tepi ikon piksel terbaca di mode gelap (dari B-23,
+      10 Okt 2026; pemilik menyetujui pewarnaan ulang saat render). Di tema
+      gelap `AppIcon` memuat SVG lewat `PixelOutlineColorMapper`: warna
+      `#1E1B19` diganti `lineStrong` (`#857A71`, ≈3,6:1 di tile `surface-2`
+      gelap); warna lain dan mode terang tidak berubah. Dicatat di ADR-034 §4.
+      Verifikasi: uji `app_icon_test` (pemeta warna, tema gelap/terang);
+      pratinjau raster 41+6 ikon di tile gelap. Belum dilihat di perangkat.
+
+- [ ] **T-8.17** Ikon piksel Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan
+      akun (dari B-22, 10 Okt 2026). ⚠ Sebagian: pemilik meminta agen membuat
+      **draf** SVG (`assets/icons/category_family|donation|bonus|gift|other.svg`,
+      `account.svg`) mengikuti gaya ikon yang ada; sudah dipasang di
+      `AppIcon` (kategori bawaan dan pilihan ikon kategori). "Semua kategori"
+      di Catat kini `IconKey.moreHorizontal` (tindakan, Material Symbols);
+      ikon piksel akun (`IconKey.accountPixel`) hanya di avatar belum masuk
+      ≥ 48px, tombol akun di app bar tetap Material Symbols.
+      Sisa: persetujuan atau artwork pengganti dari pemilik, lalu perbarui
+      design system (bagian Ikon) dan `docs/03-design/`.
+      Verifikasi: `app_icon_test`, `app_icon_tile_test`,
+      `category_display_test`.
+
 ## Fase 9: Onboarding, info, dan tur spotlight
 
 Rincian, konten, dan key spotlight ada di
@@ -2613,8 +2665,9 @@ font asli. Per tugas:
   di sheet pemilih (F11). ⚠ Selisih dari prototipe: tombol papan angka 40px
   (prototipe 46), petak kategori 4 kolom (prototipe 5), dan Ulangi berupa
   baris + sheet, bukan sakelar yang membuka chip (`CatatUlangi.dc.html`) —
-  atas permintaan pemilik di laporan QA. Pertanyaan nominal kembali ke Rp0
-  saat jenis diganti: KT-4.
+  atas permintaan pemilik di laporan QA. Nominal kembali ke Rp0 saat jenis
+  diganti: **diputuskan pemilik 10 Okt 2026 (KT-4): tetap kosong**, perilaku
+  sekarang dipertahankan.
 - T-14.6 (Beranda): perkiraan saldo di kartu bulan berpola label–nilai,
   "Terendah ≈… pada 24 Okt" hanya bila lebih rendah dari akhir bulan
   (`PlanForecastSummary`, F13).
@@ -3245,7 +3298,6 @@ menambah dan memindahkannya ada di
 | B-4 | Selaraskan klaim situs `tanukonomy-web` (repo terpisah, `docs/TASKS.md` di sana) dengan aplikasi: **akun opsional dan analitik/Crashlytics sudah ada** (ADR-023, dikonfirmasi pemilik 29 Sep 2026), jadi klaim lama "tanpa akun, tanpa analitik" harus diganti; tambahkan pilihan mata uang (ADR-025). Cocokkan dengan kebijakan privasi dan formulir Keamanan Data yang sudah diisi di Play Console. Render ulang tangkapan layar (label Riwayat/History). | agen | T-8.4, T-8.6, T-8.8 |
 | B-5 | Verifikasi di perangkat/emulator yang belum tercatat: keyboard desimal untuk mata uang berdesimal, layar Akun, langkah mata uang di onboarding, masuk Google/email sungguhan, hapus akun. Catat hasilnya di T-8.5/T-8.6. | pemilik | T-8.5, T-8.6 |
 | B-7 | Rancang **sinkronisasi data keuangan** ke server (ADR baru, `## Fase 10`). Wajib mematuhi ADR-024 §3.3 (ganti akun = data diganti dengan peringatan, tanpa penggabungan) dan menjawab KT-2. Proyek besar: skema, aturan keamanan, resolusi konflik. | pemilik memutuskan, lalu agen | T-8.4, ADR-024 |
-| B-9 | Bersihkan 11 info lint `unnecessary_unawaited` di berkas uji (mis. `test/core/currency/active_currency_rebuilder_test.dart:27`). | agen | `flutter analyze` 29 Sep 2026 |
 | B-11 | Lanjutan opsional UX-6 di luar T-8.2: pencarian lintas bulan kini memindai 3 bulan per ketukan; pertimbangkan indeks teks kalau riwayat pemakai sudah panjang (NFR-PERF-002). Tunggu data nyata, jangan dikerjakan spekulatif. | agen | T-8.2 |
 | B-12 | Ikon peluncur dan splash **iOS**: belum ada di repo (`flutter_launcher_icons` dan `flutter_native_splash` di `pubspec.yaml` diset `ios: false`); butuh artwork tanpa transparansi karena App Store mengabaikan alfa. Kerjakan begitu artwork diserahkan. | pemilik menyerahkan artwork | T-8.3 |
 | B-13 | **Sistem kategori** (prasyarat Catat lewat Suara): entitas `Category` bawaan + bisa diubah, datar, dipisah per jenis, transfer tanpa kategori, migrasi label `categoryKey` lama, alias bawaan. Butuh ADR-0026. Desain di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md) §3A dan Fase 1A. | dijadwalkan: T-11.1 | riset 30 Sep 2026 |
@@ -3254,8 +3306,6 @@ menambah dan memindahkannya ada di
 | B-15 | **Gemma lokal** (ditunda 30 Sep 2026, ADR-027 §3.5): spike model termurah (Gemma 3 270M → 1B → Gemma 4 E2B) lewat `flutter_gemma`, mirror HF publik + NOTICE Gemma, unduhan opt-in, gating perangkat. Rincian di VOICE_INPUT_RESEARCH.md §5–6. | pemilik memutuskan kapan | ADR-027 §3.5 |
 | B-20 | Kebijakan privasi di repo `tanukonomy-web`: catat dari notifikasi (isi notifikasi aplikasi yang dipilih dibaca di perangkat, teks yang ragu dikirim ke Gemini, disimpan paling lama 7 hari, OTP tidak diproses). | agen | ADR-032, T-11.21 |
 | B-21 | Pemrosesan notifikasi memanggil Gemini satu per satu (maks. 5 dtk per item) dan setiap catatan otomatis memancarkan `LedgerChanges` sendiri (N tangkapan = N muat ulang tiap tab). Pertimbangkan satu sinyal per putaran; tunggu keluhan nyata. | agen | audit `record` 1 Okt 2026 (N6) |
-| B-22 | Ikon piksel 32×32 untuk kategori Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan untuk akun (menggantikan B-8). Sampai ada, design system memakai Material Symbols di tile berwarna. Butuh artwork pemilik; jangan merancang sendiri. | pemilik | ADR-034 §4 |
-| B-23 | Varian ikon piksel untuk mode gelap: garis tepi `#1E1B19` menyatu dengan tile gelap. Butuh artwork pemilik atau aturan pewarnaan ulang yang disetujui. | pemilik | ADR-034 §4 |
 | B-25 | Peringatan nominal tidak wajar di **seluruh CATAT** (KT-R12): bandingkan dengan nominal biasa untuk kategori/catatan yang sama, misalnya ≥5× atau ≤⅕. Fase 15 hanya menerapkannya untuk rutin (T-15.6). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E5 |
 | B-26 | Kartu lembut "Ada yang belum dicatat sejak …?" sesudah 3 hari tanpa catatan apa pun, **tanpa streak** dan tanpa hitungan hari terputus (KT-R13). | agen | [RECURRING_AND_FORECAST.md](../01-product/features/RECURRING_AND_FORECAST.md) §7A E12 |
 | B-28 | **R3 Otomasi**: catat otomatis per rutin (nominal tetap), "belum terlihat" H+2, kenaikan harga dari notifikasi, rutin menganggur (W6), saran pola rutin dari riwayat/notifikasi, rutin lewat suara, gabung kartu menunggu (KT-R7). | agen | RECURRING_AND_FORECAST §12 |
@@ -3263,8 +3313,6 @@ menambah dan memindahkannya ada di
 | B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
-| B-33 | Tombol Kembali sistem di tab Riwayat, Rencana, atau Dompet langsung menutup aplikasi; shell belum punya `PopScope` (juga di `main`). Kembali ke Beranda dulu, baru keluar. | agen | QA PR #43 (di luar PR) |
-| B-34 | Urutan dompet berubah setelah dompet dipakai: daftar mengikuti urutan penyimpanan, tidak diurutkan. Tetapkan urutan stabil (mis. urutan buat atau urutan pilihan pengguna) di semua daftar dan pemilih dompet. | agen | QA PR #43 (di luar PR) |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 

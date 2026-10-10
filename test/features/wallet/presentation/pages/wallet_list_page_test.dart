@@ -15,6 +15,7 @@ import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -460,5 +461,65 @@ void main() {
         }
       },
     );
+  });
+
+  group('WalletListPage -- urutkan dompet (B-34)', () {
+    Finder reorderButton() => find.byKey(const ValueKey('wallet-reorder'));
+
+    testWidgets('tombol Urutkan hanya tampil bila ada dua dompet aktif atau lebih', (tester) async {
+      await seed('w1', 'BCA');
+      await seed('w2', 'Lama', active: false);
+      await openWalletsTab(tester);
+
+      expect(reorderButton(), findsNothing);
+    });
+
+    testWidgets('menyeret dompet lalu Simpan urutan menyimpan urutan baru; nonaktif tetap di belakang', (tester) async {
+      tallViewport(tester);
+      await seed('w1', 'BCA');
+      await seed('w2', 'Lama', active: false);
+      await seed('w3', 'Tunai', icon: 'walletCash');
+      await seed('w4', 'GoPay', icon: 'walletEwallet');
+      await openWalletsTab(tester);
+
+      await tester.tap(reorderButton());
+      await tester.pumpAndSettle();
+      expect(find.text(t.wallet.reorderTitle), findsOneWidget);
+      expect(find.descendant(of: find.byType(WalletReorderSheet), matching: find.text('Lama')), findsNothing, reason: 'dompet nonaktif tidak diurutkan di lembar');
+
+      // Seret pegangan GoPay ke atas BCA.
+      final handle = find.byKey(const ValueKey('wallet-reorder-handle-w4'));
+      final top = tester.getCenter(find.byKey(const ValueKey('wallet-reorder-handle-w1')));
+      final gesture = await tester.startGesture(tester.getCenter(handle));
+      await tester.pump(const Duration(milliseconds: 600));
+      final start = tester.getCenter(handle);
+      for (var step = 1; step <= 10; step++) {
+        await gesture.moveTo(Offset.lerp(start, top - const Offset(0, 48), step / 10)!);
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await gesture.up();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('wallet-reorder-save')));
+      await tester.pumpAndSettle();
+
+      expect((await stored()).map((w) => w.id), ['w4', 'w1', 'w3', 'w2']);
+      final names = tester.widgetList<WalletCard>(find.byType(WalletCard)).map((c) => c.wallet.name);
+      expect(names, ['GoPay', 'BCA', 'Tunai', 'Lama']);
+      expect(find.text(t.wallet.reorderedMessage), findsOneWidget);
+    });
+
+    testWidgets('menutup lembar tanpa Simpan tidak mengubah urutan', (tester) async {
+      await seed('w1', 'BCA');
+      await seed('w3', 'Tunai', icon: 'walletCash');
+      await openWalletsTab(tester);
+
+      await tester.tap(reorderButton());
+      await tester.pumpAndSettle();
+      await tester.tap(find.byWidgetPredicate((w) => w is AppIcon && w.iconKey == IconKey.close));
+      await tester.pumpAndSettle();
+
+      expect((await stored()).map((w) => w.id), ['w1', 'w3']);
+    });
   });
 }

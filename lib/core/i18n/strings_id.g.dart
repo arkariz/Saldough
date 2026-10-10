@@ -617,6 +617,24 @@ class Translations$wallet$id {
 	/// id: 'Dompet dihapus.'
 	String get deletedMessage => 'Dompet dihapus.';
 
+	/// id: 'Urutkan dompet'
+	String get reorderAction => 'Urutkan dompet';
+
+	/// id: 'Urutkan dompet'
+	String get reorderTitle => 'Urutkan dompet';
+
+	/// id: 'Tekan dan seret dompet untuk mengubah urutannya. Urutan ini dipakai di semua daftar dan pemilih dompet.'
+	String get reorderHint => 'Tekan dan seret dompet untuk mengubah urutannya. Urutan ini dipakai di semua daftar dan pemilih dompet.';
+
+	/// id: 'Seret untuk memindah $name'
+	String reorderHandleLabel({required Object name}) => 'Seret untuk memindah ${name}';
+
+	/// id: 'Simpan urutan'
+	String get reorderSaveAction => 'Simpan urutan';
+
+	/// id: 'Urutan dompet tersimpan.'
+	String get reorderedMessage => 'Urutan dompet tersimpan.';
+
 	/// id: 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.'
 	String get deleteBlockedMessage => 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.';
 
@@ -3790,6 +3808,12 @@ extension on Translations {
 			'wallet.savedMessage' => 'Dompet tersimpan.',
 			'wallet.updatedMessage' => 'Dompet diperbarui.',
 			'wallet.deletedMessage' => 'Dompet dihapus.',
+			'wallet.reorderAction' => 'Urutkan dompet',
+			'wallet.reorderTitle' => 'Urutkan dompet',
+			'wallet.reorderHint' => 'Tekan dan seret dompet untuk mengubah urutannya. Urutan ini dipakai di semua daftar dan pemilih dompet.',
+			'wallet.reorderHandleLabel' => ({required Object name}) => 'Seret untuk memindah ${name}',
+			'wallet.reorderSaveAction' => 'Simpan urutan',
+			'wallet.reorderedMessage' => 'Urutan dompet tersimpan.',
 			'wallet.deleteBlockedMessage' => 'Dompet ini sudah punya transaksi, jadi tidak bisa dihapus. Nonaktifkan saja.',
 			'wallet.privacyNote' => 'Data tersimpan lokal dan privat di perangkatmu.',
 			'wallet.detailBackLabel' => 'Kembali',
@@ -4061,14 +4085,14 @@ extension on Translations {
 			'freelance.unbilledLabel' => 'Belum ditagih',
 			'freelance.paymentsEmptyTitle' => 'Belum ada tagihan',
 			'freelance.paymentsEmptyBody' => 'Kumpulkan jam kerja yang belum ditagih jadi satu tagihan, lalu catat saat dibayar.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.paymentsFilteredEmpty' => 'Tidak ada tagihan dengan status ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
 			'freelance.paidOffBadge' => 'Lunas',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
 			'home.balanceLabel' => 'Total saldo',
-			_ => null,
-		} ?? switch (path) {
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
 			'home.budgetTitle' => 'Anggaran aktif',
 			'home.budgetRemaining' => 'Sisa',
@@ -4575,14 +4599,14 @@ extension on Translations {
 			'plan.infoTitle' => 'Uang nganggur',
 			'plan.infoIncome' => '+ Pemasukan terencana',
 			'plan.infoBills' => '− Tagihan rutin',
+			_ => null,
+		} ?? switch (path) {
 			'plan.infoBudget' => '− Anggaran',
 			'plan.infoOffPlan' => '± Di luar rencana (sudah tercatat)',
 			'plan.infoResult' => '= Uang nganggur',
 			'plan.infoNotBalance' => 'Bukan saldo dompet.',
 			'plan.balanceTitle' => 'Saldo dompet ≈',
 			'plan.allWallets' => 'Semua',
-			_ => null,
-		} ?? switch (path) {
 			'plan.endOf' => ({required Object date}) => 'Akhir ${date}',
 			'plan.lowestOn' => ({required Object date}) => 'Paling tipis · ${date}',
 			'plan.detailsAction' => 'Rincian',

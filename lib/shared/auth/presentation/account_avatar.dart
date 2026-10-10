@@ -23,7 +23,10 @@ class AccountAvatar extends StatelessWidget {
     final user = this.user;
     final initial = (user?.displayName ?? user?.email ?? '').trim();
     final fallback = user == null || initial.isEmpty
-        ? AppIcon(IconKey.account, size: size * 0.55, color: colors.ink2)
+        // Belum masuk dan avatar cukup besar: ikon piksel akun 32px (B-22).
+        ? (user == null && size >= AppSize.pixelIcon + 16
+              ? const AppIcon(IconKey.accountPixel, size: AppSize.pixelIcon)
+              : AppIcon(IconKey.account, size: size * 0.55, color: colors.ink2))
         : Text(
             initial.characters.first.toUpperCase(),
             style: TextStyle(fontSize: size * 0.45, fontWeight: FontWeight.w700, color: colors.onBrand),

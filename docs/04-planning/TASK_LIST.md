@@ -79,7 +79,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 11 | 0 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; mulai dari T-18.1 |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 1 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12), berikutnya T-18.2 |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3318,7 +3318,7 @@ Peta kerja designer dan engineer: [artifact serah terima](https://claude.ai/arti
 **Hemat kuota:** satu tugas per sesi; baris "Buka" menyebut berkas yang
 cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
 
-- [ ] **T-18.1** Verifikasi gajian maju dan tautan pos sebelum mengubah apa
+- [x] **T-18.1** Verifikasi gajian maju dan tautan pos sebelum mengubah apa
       pun (keputusan #4, ADR-038 §7).
       Uji karakterisasi: awal bulan 25; transaksi Gaji 23 Okt tertaut
       kemunculan 25 Okt; cicilan tertaut pos dicatat 24 Okt untuk kemunculan
@@ -3329,6 +3329,10 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji yang memotret perilaku sekarang; temuan ditulis di
       tugas ini dan mengoreksi FINANCIAL_PERIOD P-4 bila perlu.
       Memenuhi FR-PLN-007.
+      **Keputusan pemilik 10 Okt 2026: opsi (a)**: KT-1 memakai tanggal
+      periode untuk transaksi tertaut rutin (ADR-038 §3.5 direvisi,
+      DOMAIN_MODEL, FINANCIAL_PERIOD P-4 dan contoh D); dikerjakan di
+      T-18.3 dan T-18.12. Selesai 10 Okt 2026.
       **Temuan 10 Okt 2026 (belum dicentang: menunggu keputusan pemilik/PO,
       bertentangan dengan P-4).** Uji karakterisasi
       `test/features/plan/period_attribution_characterization_test.dart`
@@ -3368,11 +3372,37 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       terakhir"; migrasi satu angka → satu entri.
       Memenuhi FR-PLN-004, FR-PLN-006.
 - [ ] **T-18.3** Tanggal periode transaksi `periodDateOf` (ADR-038 §3.5)
-      dipakai `monthPlan` untuk keanggotaan periode.
-      ⚠ Saldo, perkiraan harian, partisi penyimpanan, dan validasi KT-1 tetap
-      memakai `date`.
-      Verifikasi: contoh D (gaji 23 Okt masuk periode 25 Okt); selisih 8 hari
-      menurut `date`; perkiraan harian tidak berubah.
+      dipakai Rencana untuk keanggotaan periode: saringan transaksi di
+      `PlanMonthState.planFor`/`previousPlan` (temuan T-18.1 nomor 3), bukan
+      hanya `monthPlan`; pemuatan ikut membaca transaksi sampai 7 hari di luar
+      rentang periode.
+      ⚠ Saldo, perkiraan harian, dan partisi penyimpanan tetap memakai
+      `date`. KT-1 di T-18.12.
+      Verifikasi: uji karakterisasi T-18.1
+      (`period_attribution_characterization_test.dart`) diubah menjadi uji
+      perilaku yang diharapkan untuk bagian Rencana: contoh D, Gaji dan
+      Cicilan 25 Okt tercatat (bukan menunggu) di periode 25 Okt dan tidak
+      di periode 25 Sep – 24 Okt; selisih 8 hari menurut `date`; perkiraan
+      harian tidak berubah.
+      Memenuhi FR-PLN-007.
+- [ ] **T-18.12** KT-1 memakai tanggal periode untuk transaksi tertaut
+      rutin (ADR-038 §3.5 revisi, DOMAIN_MODEL "Pengecualian transaksi
+      tertaut rutin"): `countsTowardBudgetItem`, pemilih pos dan validasi
+      `budgetItemOutsidePeriod` di CATAT. Dikerjakan sesudah T-18.3, sebelum
+      T-18.5.
+      ⚠ Transaksi tanpa tautan rutin tetap memakai `date`. Hitungan terpakai
+      membaca paling banyak satu dokumen bulan tetangga (NFR-PERF-002). Saldo
+      tidak berubah. Menyunting tanggal transaksi tertaut sampai selisih
+      > 7 hari kembali ke aturan `date` dan melepas tautan pos seperti
+      sekarang.
+      Buka: penyelesai pos kemunculan (`budgetItemForOccurrence`),
+      `countsTowardBudgetItem`, validasi pos di `features/record/`.
+      Verifikasi: bagian pos di uji karakterisasi T-18.1 diubah menjadi uji
+      perilaku: cicilan 24 Okt untuk kemunculan 25 Okt membuat terpakai pos
+      periode 25 Okt = Rp2.914.000 dan pos periode 25 Sep tidak berubah; CATAT
+      menawarkan pos periode 25 Okt saat menyunting transaksi itu; transaksi
+      biasa 24 Okt tetap ke pos periode 25 Sep; rutin 1 Nov dibayar 30 Okt
+      (awal bulan 1) terhitung di pos November.
       Memenuhi FR-PLN-007.
 - [ ] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
       `periodDateOf`; judul rentang bila awal ≠ 1 atau periode peralihan
@@ -3623,7 +3653,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
 | FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
 | FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9, T-18.10, T-18.11 |
-| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11 |
+| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11, T-18.12 |
 | FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7, T-19.8, T-19.9 |
 | FR-ANL-002 | T-19.2, T-19.4 |
 | FR-ANL-003 | T-19.2, T-19.4 |

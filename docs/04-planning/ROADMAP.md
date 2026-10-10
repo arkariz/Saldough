@@ -329,6 +329,33 @@ perkiraan bulan depan berantai persis dalam sen; siapkan dana muncul untuk
 autodebet yang kurang; tinjau awal bulan bisa diselesaikan di bawah satu
 menit tanpa memblokir pencatatan.
 
+## Fase 18: Periode keuangan
+
+Keputusan pemilik 10 Okt 2026. Awal bulan keuangan mudah ditemukan dan
+mengikuti gajian (termasuk hari terakhir bulan), mengubahnya tidak pernah
+memotong ulang bulan-bulan lalu, periode berjalan menjadi satu periode
+peralihan, anggaran rutin bisa ikut pindah tanpa celah, dan gajian yang maju
+tetap masuk periodenya. Kartu Arus Beranda ikut periode keuangan
+([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md),
+[FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)).
+
+**Selesai kalau:** contoh A–D FINANCIAL_PERIOD §5 lulus persis; tidak ada
+celah atau tumpang-tindih anggaran rutin sesudah dipindah; saldo tidak
+berubah oleh perubahan apa pun; Beranda dan Rencana menyebut angka periode
+yang sama.
+
+## Fase 19: Analisis keuangan (R1)
+
+Keputusan pemilik 10 Okt 2026. Segmen Analisis di Riwayat: ke mana uang
+pergi per kategori, dibanding biasanya, tren enam periode, rincian kategori
+sampai transaksinya, dan jalan membetulkan Tanpa kategori
+([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)).
+Bergantung pada Fase 18 karena membaca periode yang sama.
+
+**Selesai kalau:** contoh §10 FINANCIAL_ANALYSIS lulus persis dalam sen;
+total Analisis sama dengan kartu Arus Beranda dan cocok dengan Rencana
+(B-15); tidak ada nada menghakimi; Beranda tidak melambat.
+
 ## Ketergantungan antar fase
 
 ```

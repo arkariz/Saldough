@@ -79,6 +79,8 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Proposed; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; T-18.1 boleh mulai, sisanya menunggu ADR-038 Accepted |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 7 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -3303,6 +3305,152 @@ lalu centang di sini dan naikkan hitungan di tabel progres.
       Verifikasi: uji widget formulir pengeluaran.
       Selesai 4 Okt 2026.
 
+## Fase 18: Periode keuangan
+
+Keputusan pemilik 10 Okt 2026 (pembahasan "Bulan ini" dan Analisis).
+Perilaku di [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)
+(aturan P-1–P-11, contoh A–D); model di
+[ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
+(**Proposed**: T-18.2 dan seterusnya menunggu pemilik menyetujuinya; T-18.1
+boleh dimulai). Branch usulan `claude/periode-keuangan-fase-18`. Fase 19
+(Analisis) bergantung pada T-18.2–T-18.4.
+
+**Hemat kuota:** satu tugas per sesi; baris "Buka" menyebut berkas yang
+cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
+
+- [ ] **T-18.1** Verifikasi gajian maju dan tautan pos sebelum mengubah apa
+      pun (keputusan #4, ADR-038 §7).
+      Uji karakterisasi: awal bulan 25; transaksi Gaji 23 Okt tertaut
+      kemunculan 25 Okt; cicilan tertaut pos dicatat 24 Okt untuk kemunculan
+      25 Okt. Catat periode mana yang menghitungnya di `monthPlan` dan kartu
+      Arus, dan apakah validasi KT-1 menolak tautan pos ADR-036 §3.4.
+      Buka: `shared/recurring/domain/month_plan.dart`, use case catat dan
+      penyelesai pos kemunculan.
+      Verifikasi: uji yang memotret perilaku sekarang; temuan ditulis di
+      tugas ini dan mengoreksi FINANCIAL_PERIOD P-4 bila perlu.
+      Memenuhi FR-PLN-007.
+- [ ] **T-18.2** Jadwal bulan keuangan berriwayat (ADR-038 §3.1–3.2):
+      `FinancialMonthSchedule`, nilai `lastDay`, `financialPeriodOf` dengan
+      `isTransition`, migrasi preferensi lama, `ActiveFinancialMonth`
+      menyiarkan jadwal. Pemanggil lama `financialMonthOf` dialihkan.
+      ⚠ Periode yang sudah selesai tidak boleh berubah; `core/` tidak
+      mengimpor fitur.
+      Buka: `core/financial_month/`.
+      Verifikasi: contoh A–C FINANCIAL_PERIOD §5; panjang peralihan 13–46
+      hari untuk semua pasangan tanggal 2026–2028; Februari dengan "hari
+      terakhir"; migrasi satu angka → satu entri.
+      Memenuhi FR-PLN-004, FR-PLN-006.
+- [ ] **T-18.3** Tanggal periode transaksi `periodDateOf` (ADR-038 §3.5)
+      dipakai `monthPlan` untuk keanggotaan periode.
+      ⚠ Saldo, perkiraan harian, partisi penyimpanan, dan validasi KT-1 tetap
+      memakai `date`.
+      Verifikasi: contoh D (gaji 23 Okt masuk periode 25 Okt); selisih 8 hari
+      menurut `date`; perkiraan harian tidak berubah.
+      Memenuhi FR-PLN-007.
+- [ ] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
+      `periodDateOf`; judul rentang bila awal ≠ 1 atau periode peralihan
+      (FINANCIAL_PERIOD P-11).
+      Buka: `features/home/`.
+      Verifikasi: uji Arus = pemasukan/pengeluaran `monthPlan` periode yang
+      sama tanpa transfer; awal 1 tetap bertajuk nama bulan.
+      Memenuhi FR-HOME-001.
+- [ ] **T-18.5** `Budget.endDate` opsional, patokan `lastDay` di
+      `BudgetSchedule`, dan use case `AlignRecurringBudgets` (ADR-038
+      §3.3–3.4, FINANCIAL_PERIOD P-6, P-7).
+      ⚠ Jangan menulis ulang `startDate` anggaran yang sudah lahir; anggaran
+      berpatokan lain (mis. 15) tidak tersentuh; `schemaVersion` naik.
+      Buka: `features/budget/domain/entities/budget_schedule.dart`,
+      `features/budget/data/adapters/plan_budget_source_impl.dart`.
+      Verifikasi: contoh A–C tanpa celah dan tanpa tumpang-tindih periode;
+      tautan pos sesudah akhir baru dipindah saat periode berikutnya lahir;
+      saldo semua dompet sama dengan `recomputeWalletBalances()`.
+      Memenuhi FR-PLN-006.
+- [ ] **T-18.6** Alur ubah awal bulan (FINANCIAL_PERIOD F1, F3): lembar
+      pilihan 1–28 + Hari terakhir bulan, pintu dari kepala Bulan ini dan
+      Akun, pratinjau rentang peralihan, sakelar per anggaran rutin yang
+      patokannya sama, simpan memanggil T-18.2 dan T-18.5.
+      ⚠ Perlu rupa dari pemilik (FINANCIAL_PERIOD §9); sementara susun dari
+      komponen yang ada lewat skill `tanukonomy-ui` dan catat selisihnya.
+      Verifikasi: uji widget Batal tidak mengubah apa pun; pratinjau contoh
+      A dan B; sakelar mati menulis kalimat "tetap mulai tanggal 25".
+      Memenuhi FR-PLN-004, FR-PLN-006.
+- [ ] **T-18.7** Tawaran awal bulan saat menyimpan rutin pemasukan bulanan
+      (FINANCIAL_PERIOD F2): hanya bila awal bulan masih bawaan dan belum
+      pernah diubah, sekali per rutin.
+      Verifikasi: uji muncul untuk Gaji tanggal 25; tidak muncul untuk
+      pengeluaran, rutin mingguan, tanggal 1, atau sesudah pengguna pernah
+      mengubah sendiri.
+      Memenuhi FR-PLN-004.
+- [ ] **T-18.8** Periode peralihan di Rencana (FINANCIAL_PERIOD P-8, P-9):
+      label "Periode peralihan · n hari", uang nganggur negatif tanpa
+      peringatan dengan kalimat "Rentang ini tidak memuat gajian.", tinjau
+      awal bulan sekali dengan kalimat peralihan, W9 tidak dihitung.
+      ⚠ W1 dan titik terendah (berbasis saldo) tetap memperingatkan.
+      Verifikasi: uji widget contoh B; uji W9 tidak tampil untuk periode
+      peralihan.
+      Memenuhi FR-PLN-006.
+- [ ] **T-18.9** Analitik `financial_month_changed{source, day,
+      moved_budgets}` tanpa nominal, lalu verifikasi di emulator contoh A, B,
+      dan D (pola VERIFICATION_PLAN_FASE_16); temuan jadi tugas baru.
+      Memenuhi FR-PLN-006, FR-PLN-007.
+
+## Fase 19: Analisis keuangan (R1)
+
+Keputusan pemilik 10 Okt 2026. Perilaku di
+[FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)
+(aturan B-1–B-16, contoh §10). Bergantung pada T-18.2–T-18.4 (periode dan
+`periodDateOf`). Layar menunggu rupa dari pemilik (FINANCIAL_ANALYSIS §14);
+tugas domain T-19.1–T-19.3 boleh lebih dulu. Branch usulan
+`claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+
+- [ ] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
+      pemasukan per kategori, Freelance turunan, Tanpa kategori, Lainnya,
+      persen, transfer sebagai informasi, dompet nonaktif, kategori
+      diarsipkan, penyaring dompet (B-1, B-4, B-5, B-8–B-10, B-14).
+      ⚠ Uang `int` sen; persen dibulatkan setengah ke atas hanya saat tampil.
+      Verifikasi: contoh §10 persis (total Rp11.420.700, persen tampil 101%);
+      B-15 rekonsiliasi dengan `monthPlan` plus transfer Tabungan tertaut pos.
+      Memenuhi FR-ANL-001.
+- [ ] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
+      rata-rata sampai tiga periode, periode berjalan sampai hari yang sama,
+      periode peralihan dikecualikan, ambang 20% dan Rp50.000 (ambang per
+      mata uang di tabel format mata uang).
+      Verifikasi: contoh §10 (Makan disorot, Belanja tidak; bulan berjalan
+      +Rp180.000); periode pembanding Februari; tanpa pembanding → tanpa
+      sorotan.
+      Memenuhi FR-ANL-002, FR-ANL-003.
+- [ ] **T-19.3** Penyaring Riwayat "Tanpa kategori" dan rentang periode
+      keuangan, dibuka lewat kunci rute dengan argumen (ADR-030).
+      Verifikasi: jumlah daftar tersaring = total kategori di Analisis untuk
+      periode yang sama.
+      Memenuhi FR-ANL-004, FR-ANL-005.
+- [ ] **T-19.4** Segmen `Daftar | Analisis` di Riwayat dan layar Analisis
+      periode: periode, dompet, jenis, total, sorotan, daftar kategori, baris
+      transfer, tren; keadaan kosong, periode kosong, satu bulan data, galat;
+      `AmountVisibility` (B-12); segar lewat `LedgerChanges`; segmen terakhir
+      diingat.
+      ⚠ Perlu rupa dari pemilik (FINANCIAL_ANALYSIS §14) dan skill
+      `tanukonomy-ui`; kata mengikuti §12 dan glosarium (tambah Analisis,
+      Tanpa kategori).
+      Verifikasi: uji widget per keadaan, kedua bahasa, 360dp.
+      Memenuhi FR-ANL-001, FR-ANL-002, FR-ANL-003, FR-ANL-005.
+- [ ] **T-19.5** Rincian kategori: total, pembanding, tren, 20 transaksi,
+      Lihat semua transaksi ke T-19.3.
+      Verifikasi: uji widget; jumlah di rincian = daftar tersaring.
+      Memenuhi FR-ANL-004.
+- [ ] **T-19.6** Pintu masuk: kartu Arus Beranda → Analisis periode berjalan
+      (pengeluaran, semua dompet); lembar kilas balik → "Lihat rincian
+      {bulan}" (FINANCIAL_ANALYSIS F8.1).
+      ⚠ Beranda tidak boleh memicu pembacaan enam bulan (NFR-PERF-002):
+      pintu hanya navigasi.
+      Verifikasi: uji navigasi kedua pintu dengan argumen periode yang benar.
+      Memenuhi FR-ANL-001, FR-ANL-005, FR-HOME-001.
+- [ ] **T-19.7** Analitik (`analysis_viewed`, `analysis_category_opened`,
+      `analysis_uncategorized_fix_opened`; tanpa nominal dan tanpa nama
+      kategori buatan pengguna), lalu verifikasi di emulator dengan data
+      contoh §10; temuan jadi tugas baru.
+      Memenuhi FR-ANL-001–FR-ANL-005.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -3332,7 +3480,7 @@ menambah dan memindahkannya ada di
 | B-30 | Horizon perkiraan bisa diatur sampai 12 bulan (KT-R8); R2 memakai +2 tetap (ADR-036 §3.5). | agen | ADR-036 §6 |
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
-| B-36 | **Analisis keuangan**: segmen Analisis di Riwayat (pengeluaran/pemasukan per kategori, pembanding rata-rata, sorotan netral, tren 6 bulan, rincian kategori, Tanpa kategori + Beri kategori); R2 tahun dan tren total saldo. Draf desain menunggu KT-A1–A5, sesudahnya FR-ANL di PRD dan tugas fase. | pemilik memutuskan, lalu agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), PRD §12 |
+| B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
@@ -3368,7 +3516,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-FRL-004 | T-5.5 |
 | FR-FRL-005 | T-5.6, T-5.9 |
 | FR-FRL-006 | — (deprecated) |
-| FR-HOME-001 | T-6.1 |
+| FR-HOME-001 | T-6.1, T-18.4, T-19.6 |
 | FR-HOME-002 | T-6.2 |
 | FR-HOME-003 | T-6.3 |
 | FR-HOME-004 | T-6.4 |
@@ -3398,9 +3546,17 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-001 | T-15.4, T-15.5, T-15.13 |
 | FR-PLN-002 | T-15.11, T-15.13 |
 | FR-PLN-003 | T-15.12, T-15.13 |
-| FR-PLN-004 | T-15.10 |
+| FR-PLN-004 | T-15.10, T-18.2, T-18.6, T-18.7 |
 | FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
 | FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
+| FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9 |
+| FR-PLN-007 | T-18.1, T-18.3, T-18.9 |
+| FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7 |
+| FR-ANL-002 | T-19.2, T-19.4 |
+| FR-ANL-003 | T-19.2, T-19.4 |
+| FR-ANL-004 | T-19.3, T-19.5 |
+| FR-ANL-005 | T-19.3, T-19.4, T-19.6 |
+| FR-ANL-006 | B-38 |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

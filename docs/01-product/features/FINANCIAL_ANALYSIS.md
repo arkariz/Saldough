@@ -1,8 +1,10 @@
 # Analisis keuangan: ke mana uang pergi dan bagaimana trennya
 
 **Tanggal:** 10 Oktober 2026.
-**Status:** Draf, menunggu keputusan pemilik (§15). Belum ada FR, ADR, atau
-tugas; semuanya diturunkan sesudah KT-A1 sampai KT-A5 diputuskan.
+**Status:** Diputuskan pemilik 10 Okt 2026 (§15). Kebutuhan FR-ANL di PRD
+§7.9; tugas R1 di Fase 19 TASK_LIST, R2 di antrean B-38. Periode mengikuti
+[FINANCIAL_PERIOD.md](FINANCIAL_PERIOD.md) dan
+[ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md).
 **Berkaitan:** [PRD 2.0](../prd-saldough-2.0.md) §3 (tujuan "rasa
 kemajuan"), §6 (analitik lanjutan di luar MVP), §12 ("Laporan bulanan dan
 tahunan beserta grafiknya"); [RECURRING_AND_FORECAST.md](RECURRING_AND_FORECAST.md)
@@ -15,12 +17,15 @@ Dokumen ini merancang **perilaku, alur, dan aturan**. Rupa visual (bentuk
 grafik, warna, tata letak) diserahkan ke pemilik lewat design system dan
 prototipe; daftarnya di §14.
 
-## 1. Ringkasan keputusan (usulan)
+## 1. Ringkasan keputusan
 
-1. **Beranda tetap jadi dasbor harian; Analisis adalah tempat membaca ke
-   belakang.** Beranda menjawab "keadaanku sekarang", Rencana menjawab "ke
-   depan", Analisis menjawab "apa yang sudah terjadi, dikelompokkan dan
-   dibandingkan". Tidak ada angka yang dihitung dua kali dengan cara berbeda.
+1. **Beranda tidak dirombak; Analisis adalah tempat membaca ke belakang.**
+   Beranda menjawab "keadaanku sekarang" dan dibuka harian untuk bertindak,
+   Rencana menjawab "ke depan", Analisis menjawab "apa yang sudah terjadi,
+   dikelompokkan dan dibandingkan". Beranda baru ditata ulang bila data
+   pemakaian (`analysis_viewed{source: home}`) menunjukkan perlunya.
+   Alasannya: irama baca berbeda, risiko nada menghakimi pada layar harian
+   (O7), Beranda harus berguna sejak hari pertama, dan NFR-PERF-002.
 2. **Tempat: segmen Analisis di tab Riwayat** (`Daftar | Analisis`), plus
    satu pintu dari kartu Arus di Beranda. Tidak ada tab kelima (KT-A2).
 3. **Inti R1 adalah pengeluaran per kategori bulan ini**, dibandingkan dengan
@@ -36,6 +41,11 @@ prototipe; daftarnya di §14.
    §7B aturan 3).
 7. **Transfer tidak pernah masuk total**, termasuk transfer yang ditautkan ke
    pos tabungan. Ia tampil sebagai baris informasi terpisah.
+8. **Rencana memotong bulan per baris rencana, Analisis per kategori**, dan
+   totalnya cocok (aturan B-15). Rencana tidak pernah menampilkan kategori;
+   Analisis tidak pernah menampilkan perkiraan, pos anggaran, atau uang
+   nganggur. Jembatan satu arah dari Rencana: kilas balik bulan lalu (R1) dan
+   baris "Di luar rencana" (R2).
 
 ## 2. Masalah dan bukti
 
@@ -103,6 +113,8 @@ source: history|home}`, `analysis_category_opened{category: <builtInKey>|custom|
 | Dibanding biasanya bagaimana | **Analisis** | Baru |
 | Tren beberapa bulan | **Analisis** | Baru |
 | Rencana vs nyata, uang nganggur, perkiraan | Rencana › Bulan ini | Tidak berubah; Analisis tidak membuat perkiraan |
+| Rencana vs nyata bulan lalu (W10/W9) | Rencana › tinjau awal bulan | Lembar kilas balik mendapat "Lihat rincian {bulan}" ke Analisis bulan itu (R1) |
+| Pengeluaran di luar rencana, per kategori | Analisis, tersaring | Baris "Di luar rencana" di Bulan ini membuka Analisis tersaring (R2) |
 | Progres anggaran | Rencana › Anggaran | Tidak berubah; Analisis tidak menampilkan pos |
 
 ## 6. Arsitektur informasi
@@ -196,6 +208,17 @@ Pemasukan dari pembayaran freelance tidak pernah masuk "Tanpa kategori"
    itu; transfer masuk dan keluar dompet itu tampil sebagai baris informasi
    (aturan B-4).
 
+### F8. Dari Rencana
+
+1. **Kilas balik (R1).** Kartu tinjau awal bulan → lembar kilas balik →
+   **Lihat rincian September** → Analisis September, Pengeluaran, semua
+   dompet.
+2. **Di luar rencana (R2).** Bulan ini → ketuk baris Di luar rencana →
+   Analisis periode itu dengan penyaring "Di luar rencana": hanya
+   pengeluaran yang tidak tertaut pos dan tidak berasal dari rutin (definisi
+   `unplannedOut` di `monthPlan`), per kategori. Totalnya sama dengan angka
+   baris itu.
+
 ### Cabang dan jalan pulang
 
 | Keadaan | Perilaku |
@@ -248,14 +271,17 @@ keterbacaan; di kode semuanya `int` sen.
   `ExpenseTransaction` bertanggal di dalam periode. Rutin yang belum dicatat,
   anggaran, worklog, dan pembayaran freelance yang belum diterima tidak ikut
   (aturan domain 5 dan 6).
-- **B-2 Periode.** Satu bulan = satu bulan keuangan (`financial_month_start`,
-  ADR-035 §3.6), menunggu KT-A1. Dengan tanggal mulai 1, periode sama dengan
-  bulan kalender.
-- **B-3 Kecocokan dengan Beranda.** Bila bulan keuangan mulai tanggal 1 dan
-  penyaring "Semua dompet", total pengeluaran bulan berjalan di Analisis
-  **sama persis** dengan Keluar di kartu Arus Beranda, dan total pemasukannya
-  sama dengan Masuk. Engineer memastikan keduanya memakai sumber yang sama
-  (termasuk perlakuan transaksi di dompet nonaktif, lihat B-5).
+- **B-2 Periode.** Satu "bulan" = satu periode keuangan dari
+  `financialPeriodOf` (ADR-038), termasuk riwayatnya: periode lampau tidak
+  dipotong ulang bila awal bulan diubah. Keanggotaan transaksi memakai
+  `periodDateOf` (FINANCIAL_PERIOD P-4). Periode peralihan berlabel
+  "Periode peralihan · {n} hari".
+- **B-3 Kecocokan dengan Beranda.** Dengan penyaring "Semua dompet", total
+  pengeluaran periode berjalan di Analisis **sama persis** dengan Keluar di
+  kartu Arus Beranda, dan total pemasukannya sama dengan Masuk (Beranda ikut
+  periode keuangan sejak FINANCIAL_PERIOD P-11). Engineer memastikan keduanya
+  memakai sumber yang sama (termasuk perlakuan transaksi di dompet nonaktif,
+  lihat B-5).
 - **B-4 Transfer.** Tidak pernah dihitung sebagai pemasukan atau pengeluaran,
   termasuk yang ditautkan ke pos anggaran. Dengan "Semua dompet", jumlah
   transfer periode tampil sebagai satu baris informasi. Dengan satu dompet,
@@ -277,8 +303,11 @@ keterbacaan; di kode semuanya `int` sen.
     dibandingkan penuh.
   - Kategori bernilai > 0 di periode tetapi 0 di semua bulan pembanding
     berlabel "baru bulan ini", tanpa persen.
+  - **Periode peralihan** tidak pernah menjadi bulan pembanding, dan bila
+    periode terpilih adalah periode peralihan, pembanding dan sorotan tidak
+    tampil (FINANCIAL_PERIOD P-10).
 - **B-7 Sorotan.** Kategori disorot bila selisih terhadap rata-rata
-  **≥20% dan ≥Rp50.000** (dua ambang, pola W3; angka usulan, KT-A3), naik
+  **≥20% dan ≥Rp50.000** (dua ambang, pola W3; diputuskan KT-A3), naik
   maupun turun. Paling banyak tiga, urut selisih nominal terbesar. Kalimat:
   "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan" / "… lebih rendah …".
   Tidak ada sorotan bila tidak ada bulan pembanding.
@@ -309,6 +338,17 @@ keterbacaan; di kode semuanya `int` sen.
   Yang disimpan hanya preferensi tampilan (segmen terakhir).
 - **B-14 Kategori diarsipkan.** Tetap dihitung dan tampil untuk periode yang
   memuat transaksinya, dengan penanda "diarsipkan".
+- **B-15 Rekonsiliasi dengan Rencana.** Untuk periode yang sama dan semua
+  dompet: total pengeluaran Analisis = tagihan rutin tercatat + anggaran
+  terpakai **dari pengeluaran saja** + di luar rencana tercatat, seperti
+  dihitung `monthPlan`. Satu-satunya selisih yang sah: transfer yang
+  ditautkan ke pos anggaran dihitung sebagai "anggaran terpakai" di Rencana
+  tetapi bukan pengeluaran di Analisis (aturan 7). Uji wajib memakai contoh
+  §10 ditambah transfer Tabungan Rp1.000.000 tertaut pos.
+- **B-16 Label rata-rata.** Analisis selalu menulis "dibanding rata-rata
+  {n} bulan"; Rencana tetap menulis "≈Rp30.000/hari (rata-rata 3 bulan)"
+  untuk belanja di luar rencana. Dua hitungan berbeda tidak memakai kalimat
+  yang sama.
 
 ## 10. Contoh lengkap
 
@@ -359,7 +399,7 @@ tinggi dari rata-rata s.d. tanggal 10."
 | Kasus | Perilaku |
 |---|---|
 | Transaksi dipindah tanggal ke bulan lain | Pindah periode; kedua bulan segar |
-| Bulan keuangan diubah di Akun | Semua periode dihitung ulang dengan tanggal mulai baru; tidak ada yang disimpan |
+| Awal bulan keuangan diubah | Periode lampau tidak berubah; periode berjalan menjadi periode peralihan (FINANCIAL_PERIOD P-2, P-3); periode peralihan tidak dibandingkan (B-6) |
 | Bulan pembanding lebih pendek (Feb) saat membandingkan s.d. tanggal 30 | Dihitung sampai hari terakhir periode pembanding (B-6) |
 | Kategori pengeluaran diganti nama | Nama baru tampil di semua periode (kategori diacu lewat id) |
 | Pengeluaran negatif atau nol | Tidak mungkin; nominal selalu positif (DOMAIN_MODEL) |
@@ -396,6 +436,9 @@ Pengeluaran", "Selisih", "Transaksi". Istilah baru untuk glosarium:
 | `analysis.net` | Selisih | Net |
 | `analysis.seeAll` | Lihat semua transaksi | See all transactions |
 | `analysis.archived` | diarsipkan | archived |
+| `analysis.transition` | Periode peralihan · {days} hari | Transition period · {days} days |
+| `analysis.offPlanFilter` | Di luar rencana | Outside the plan |
+| `plan.lookbackSeeAnalysis` | Lihat rincian {month} | See {month} details |
 | `analysis.empty.title` | Belum ada yang bisa dianalisis | Nothing to analyze yet |
 | `analysis.empty.body` | Catat transaksi dan lihat ke mana uangmu pergi. | Record transactions to see where your money goes. |
 | `analysis.empty.cta` | Catat transaksi | Record a transaction |
@@ -418,11 +461,11 @@ Tidak dipakai: "boros", "hemat", "kesehatan keuangan", "skor", "waspada".
 - **Privasi.** Tidak ada data keluar perangkat selain peristiwa §4, tanpa
   nominal dan tanpa nama kategori buatan pengguna. Tidak mengubah formulir
   Keamanan Data.
-- **R2 / KT-A5.** Tren total saldo butuh tanggal mulai tiap dompet
-  (`Wallet` sekarang tidak punya `createdAt`). Tanpa itu, saldo awal dompet
-  yang baru dibuat akan tampak sudah ada sejak bulan pertama, atau muncul
-  sebagai lonjakan yang bukan pemasukan (aturan domain: saldo awal bukan
-  pemasukan). Butuh perubahan model, jadi ADR.
+- **R2 / KT-A5 (diputuskan: tambah).** Tren total saldo butuh
+  `Wallet.createdAt`. Dompet lama diisi tanggal transaksi tertuanya (atau
+  tanggal migrasi bila belum bertransaksi). Tanpa itu, saldo awal dompet
+  baru akan tampak sudah ada sejak bulan pertama, atau muncul sebagai
+  lonjakan yang bukan pemasukan. ADR-nya ditulis saat R2 (B-38) dijadwalkan.
 
 **Kebutuhan baru untuk PRD** (ditambahkan sesudah KT diputuskan): FR-ANL-001
 pengeluaran/pemasukan per kategori; FR-ANL-002 pembanding dan sorotan;
@@ -443,29 +486,17 @@ system maupun prototipe:
 5. Kepala periode dengan rentang tanggal bulan keuangan.
 6. Pintu dari kartu Arus Beranda (seluruh kartu bisa diketuk atau tautan).
 
-## 15. Keputusan untuk pemilik
+## 15. Keputusan pemilik (10 Okt 2026)
 
-- **KT-A1 Periode.** Bulan keuangan (rekomendasi) atau bulan kalender?
-  *Rekomendasi: bulan keuangan*, karena pemilik yang gajian tanggal 25
-  membaca "September" sebagai 25 Agt–24 Sep, dan W10 di Rencana sudah begitu.
-  Akibatnya angka Analisis bisa berbeda dari kartu Arus Beranda (kalender)
-  bila tanggal mulai ≠ 1; rentang tanggal selalu ditulis untuk menjelaskannya.
-- **KT-A2 Tempat dan nama.** Segmen **Analisis** di Riwayat + pintu dari
-  Beranda (rekomendasi). Alternatif: segmen keempat di Rencana (mencampur
-  rencana dengan kejadian), atau halaman sendiri dari Beranda saja (sulit
-  ditemukan lagi). Nama: "Analisis" (baku) dipilih atas "Analisa" dan
-  "Laporan".
-- **KT-A3 Ambang sorotan.** ≥20% dan ≥Rp50.000, paling banyak tiga
-  (rekomendasi untuk IDR). Mata uang lain (ADR-025) butuh ambang nominalnya
-  sendiri. *Rekomendasi:* ambang nominal per mata uang ditetapkan di tabel
-  yang sama dengan format mata uang, bukan dikonversi kurs.
-- **KT-A4 Kategori pemasukan freelance.** (a) Kelompok turunan "Freelance"
-  di Analisis saja (rekomendasi R1, tanpa ubah data), atau (b)
-  `ReceiveFreelancePayment` mengisi kategori bawaan pemasukan Freelance
-  (perubahan domain + migrasi transaksi lama, ADR-026/019).
-- **KT-A5 Tren total saldo (R2).** Tambah `Wallet.createdAt` (ADR, dompet lama
-  diisi tanggal transaksi tertuanya) atau tidak membuat tren total saldo
-  sama sekali.
+| # | Keputusan |
+|---|---|
+| Beranda | Tidak dirombak; Analisis di tempat khusus, Beranda jadi pintu (§1.1) |
+| KT-A1 | Periode = periode keuangan berriwayat (ADR-038) |
+| KT-A2 | Segmen **Analisis** di Riwayat (`Daftar \| Analisis`) + pintu dari kartu Arus Beranda |
+| KT-A3 | Sorotan bila ≥20% **dan** ≥Rp50.000, paling banyak tiga; mata uang lain punya ambang nominalnya sendiri di tabel format mata uang |
+| KT-A4 | Pemasukan freelance tanpa kategori = kelompok turunan **Freelance**, tanpa ubah data |
+| KT-A5 | Tambah `Wallet.createdAt` lewat ADR untuk tren total saldo (R2) |
+| Batas Rencana | Per baris rencana vs per kategori, total cocok (B-15), jembatan kilas balik (R1) dan Di luar rencana (R2), label rata-rata dibedakan (B-16) |
 
 ## 16. Yang sengaja tidak dikerjakan
 

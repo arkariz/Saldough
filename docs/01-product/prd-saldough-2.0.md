@@ -572,6 +572,11 @@ disimpan sebagai catatan sejarah saja.
 - [ ] Menampilkan total pemasukan bulan berjalan.
 - [ ] Menampilkan total pengeluaran bulan berjalan.
 - [ ] Tidak menghitung transfer sebagai pemasukan maupun pengeluaran.
+- [ ] "Bulan berjalan" adalah periode keuangan berjalan (FR-PLN-004), bukan
+      bulan kalender; judulnya rentang tanggal bila awal bulan keuangan bukan
+      tanggal 1 (revisi 10 Okt 2026,
+      [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) P-11).
+- [ ] Kartu arus menjadi pintu ke Analisis bulan berjalan (FR-ANL-001).
 
 **FR-HOME-002 — Ringkasan anggaran**
 
@@ -766,12 +771,36 @@ Fase 15; R2 dan R3 di antrean.
       (bisa dimatikan); pos dengan rutin tertaut tidak dihitung ganda.
 - [ ] Semua angka perkiraan berawalan `≈` dan bisa dibuka rinciannya.
 
-**FR-PLN-004 — Bulan keuangan bisa diatur (R1b)**
+**FR-PLN-004 — Bulan keuangan bisa diatur (R1b, direvisi 10 Okt 2026)**
 
-- [ ] Pengguna memilih tanggal awal bulan keuangan 1–28 (bawaan 1), misalnya
-      tanggal gajian.
-- [ ] Berlaku untuk Rencana dan kartu bulan baru; arus bulan berjalan di
-      Beranda tetap bulan kalender (FR-HOME-001).
+- [ ] Pengguna memilih tanggal awal bulan keuangan 1–28 atau **hari terakhir
+      bulan** (bawaan 1), misalnya tanggal gajian. Tanggal selesai mengikuti
+      sendiri; tidak bisa diatur bebas.
+- [ ] Bisa diatur dari kepala Rencana › Bulan ini (rentang bisa diketuk) dan
+      dari Akun; ditawarkan saat menyimpan rutin pemasukan bulanan bila awal
+      bulan masih bawaan.
+- [ ] Berlaku untuk Rencana, kartu bulan baru, arus Beranda (FR-HOME-001), dan
+      Analisis (FR-ANL-001). Rincian di
+      [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) dan
+      [ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md).
+
+**FR-PLN-006 — Mengubah awal bulan keuangan (Fase 18)**
+
+- [ ] Periode yang sudah selesai tidak pernah berubah.
+- [ ] Periode berjalan menjadi satu **periode peralihan** sampai batas baru
+      terdekat dengan akhir lamanya (13–46 hari), diperlihatkan sebelum
+      disimpan.
+- [ ] Anggaran rutin yang patokannya sama dengan awal bulan lama ditawarkan
+      ikut pindah; bila ikut, anggaran berjalan diregangkan atau dipendekkan
+      ke periode peralihan tanpa celah, nominal tetap. Saldo tidak berubah.
+- [ ] Periode peralihan berlabel; uang nganggur negatif di dalamnya tidak
+      memicu peringatan; tidak dipakai untuk akurasi perkiraan atau pembanding.
+
+**FR-PLN-007 — Gajian yang maju atau mundur (Fase 18)**
+
+- [ ] Transaksi yang tertaut kemunculan rutin dengan selisih tanggal paling
+      lama 7 hari dihitung ke periode kemunculannya. Saldo tetap menurut
+      tanggal transaksi.
 
 **FR-PLN-005 — Perkiraan bulan ke depan (R2)**
 
@@ -785,6 +814,59 @@ Fase 15; R2 dan R3 di antrean.
       sendiri dengan pos yang sama (template berjadwal, ADR-035 §3.9).
 - [ ] Mengubah anggaran rutin menawarkan "hanya periode ini" atau "periode ini
       dan berikutnya"; pos baru bawaannya hanya periode ini.
+
+### 7.9 Analisis (sesudah MVP, ditambahkan 10 Okt 2026)
+
+Kebutuhan ini lahir dari permintaan pemilik 10 Okt 2026 dan memenuhi
+"laporan bulanan" di §12. Perilaku, aturan B-1–B-16, dan contoh angkanya di
+[FINANCIAL_ANALYSIS.md](features/FINANCIAL_ANALYSIS.md). R1 di Fase 19, R2 di
+antrean (B-38).
+
+**FR-ANL-001 — Ke mana uang pergi (R1)**
+
+- [ ] Segmen **Analisis** di tab Riwayat menampilkan pengeluaran dan
+      pemasukan satu periode keuangan per kategori: nominal, persen, lima
+      teratas, Lainnya, dan Tanpa kategori; pemasukan freelance tanpa
+      kategori dikelompokkan sebagai Freelance.
+- [ ] Penyaring dompet; transfer hanya sebagai baris informasi, tidak pernah
+      masuk total atau persen.
+- [ ] Total sama persis dengan kartu Arus Beranda dan cocok dengan Rencana
+      (FINANCIAL_ANALYSIS B-3, B-15).
+- [ ] Hanya membaca: tidak menulis data keuangan apa pun.
+
+**FR-ANL-002 — Dibanding biasanya (R1)**
+
+- [ ] Tiap kategori dibandingkan dengan rata-rata sampai tiga periode
+      sebelumnya (periode berjalan: sampai hari yang sama); periode peralihan
+      tidak dipakai.
+- [ ] Paling banyak tiga sorotan bernada netral bila selisih ≥20% dan
+      ≥Rp50.000. Tanpa skor, label "boros", atau warna peringatan.
+
+**FR-ANL-003 — Tren (R1)**
+
+- [ ] Pemasukan, pengeluaran, dan selisih enam periode terakhir; mengetuk
+      satu periode membuka analisis periode itu. Periode sebelum pencatatan
+      pertama tidak ditampilkan.
+
+**FR-ANL-004 — Rincian kategori (R1)**
+
+- [ ] Total, pembanding, tren enam periode, dan transaksi periode itu, dengan
+      jalan ke Riwayat tersaring kategori dan periode yang sama (jumlahnya
+      sama).
+
+**FR-ANL-005 — Membetulkan Tanpa kategori (R1)**
+
+- [ ] Baris Tanpa kategori membawa **Beri kategori** yang membuka Riwayat
+      tersaring "Tanpa kategori"; menyunting lewat CATAT.
+- [ ] Lembar kilas balik di tinjau awal bulan membuka Analisis bulan itu.
+
+**FR-ANL-006 — Tahun dan tren total saldo (R2)**
+
+- [ ] Ringkasan setahun per periode dan per kategori, rata-rata per bulan dari
+      bulan yang sudah berjalan.
+- [ ] Tren total saldo akhir periode (butuh `Wallet.createdAt`, ADR baru).
+- [ ] Porsi pengeluaran dari rutin, dan baris "Di luar rencana" di Bulan ini
+      membuka Analisis tersaring.
 
 ## 8. Kebutuhan non-fungsional
 
@@ -955,7 +1037,8 @@ maupun warnanya sekaligus — bukan warna saja.
   tagihannya sebagai transfer.
 - ~~Transaksi berulang untuk langganan bulanan.~~ Dijadwalkan di Fase 15
   sebagai transaksi rutin, tab Rencana, uang nganggur, dan perkiraan (§7.8).
-- Laporan bulanan dan tahunan beserta grafiknya.
+- ~~Laporan bulanan dan tahunan beserta grafiknya.~~ Dijadwalkan sebagai
+  Analisis (§7.9): bulanan di Fase 19, tahunan di B-38.
 - Sinkronisasi antar perangkat.
 - Impor mutasi rekening.
 - Tujuan menabung dengan target nominal dan tenggat.

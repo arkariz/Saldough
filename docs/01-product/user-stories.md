@@ -233,6 +233,19 @@ sendiri pos mana yang sedang saya belanjakan.
   dompet dan pos sudah terpilih, bukan formulir tersendiri.
 - Memenuhi FR-BUD-007 dan FR-REC-002.
 
+**US-29 — Bulan saya mulai saat gajian**
+
+Sebagai pengguna yang gajian tanggal 25, saya ingin "bulan ini" di aplikasi
+dimulai saat gajian, supaya rencana dan analisis bulan saya mengikuti uang
+yang benar-benar masuk.
+
+- Awal bulan bisa diatur dari Rencana, termasuk "hari terakhir bulan", dan
+  ditawarkan saat membuat rutin gaji.
+- Mengubahnya tidak mengubah bulan-bulan lalu; anggaran rutin bisa ikut
+  pindah tanpa celah.
+- Gaji yang cair dua hari lebih awal tetap terhitung di bulan barunya.
+- Memenuhi FR-PLN-004, FR-PLN-006, FR-PLN-007, dan FR-HOME-001.
+
 ## Epik 4: Penghasilan freelance
 
 **US-16 — Mencatat jam kerja tanpa menganggapnya sudah cair**
@@ -325,6 +338,44 @@ nol dan menyerah di hari pertama.
   deretan nol.
 - Memenuhi FR-HOME-005.
 
+**US-25 — Tahu ke mana uang saya pergi**
+
+Sebagai pengguna, saya ingin melihat pengeluaran bulan ini per kategori,
+supaya saya tidak perlu menyaring Riwayat dan menjumlah sendiri.
+
+- Dari Beranda cukup dua ketukan sampai daftar kategori.
+- Jumlah semua baris sama persis dengan total pengeluaran bulan itu.
+- Transfer tidak ikut dihitung.
+- Memenuhi FR-ANL-001.
+
+**US-26 — Tahu apakah bulan ini berbeda dari biasanya**
+
+Sebagai pengguna, saya ingin tahu kategori mana yang jauh lebih tinggi atau
+lebih rendah dari biasanya, tanpa merasa dihakimi.
+
+- Pembanding rata-rata sampai tiga bulan, bulan berjalan sampai hari yang
+  sama.
+- Kalimat netral, tanpa skor dan tanpa kata "boros".
+- Memenuhi FR-ANL-002 dan FR-ANL-003.
+
+**US-27 — Membongkar satu kategori sampai transaksinya**
+
+Sebagai pengguna, saya ingin membuka satu kategori dan melihat transaksi
+pembentuknya, supaya saya percaya angkanya.
+
+- Rincian kategori menampilkan tren dan transaksinya.
+- Jalan ke Riwayat tersaring menghasilkan jumlah yang sama.
+- Memenuhi FR-ANL-004.
+
+**US-28 — Merapikan transaksi tanpa kategori**
+
+Sebagai pengguna, saya ingin langsung memberi kategori pada transaksi yang
+belum berkategori dari Analisis, supaya analisisnya makin tepat.
+
+- Tanpa kategori selalu tampil terpisah dengan aksi Beri kategori.
+- Sesudah disunting lewat CATAT, Analisis segar.
+- Memenuhi FR-ANL-005.
+
 ## Prioritas
 
 Urutan pengerjaan mengikuti loop inti produk: tempat uang dulu, lalu peristiwa,
@@ -338,6 +389,7 @@ baru rencana.
 | 4 | US-16 sampai US-19 | Freelance adalah domain pendukung, bukan inti |
 | 5 | US-20, US-24 | Beranda baru bermakna setelah semua di atas menghasilkan data |
 | 6 | US-15, US-23 | Template mempercepat pekerjaan yang sudah terbukti berjalan, jadi ia yang terakhir |
+| 7 | US-29, lalu US-25 sampai US-28 | Sesudah MVP (10 Okt 2026): periode keuangan lebih dulu karena Analisis membaca periode yang sama |
 
 ## Langkah berikutnya
 

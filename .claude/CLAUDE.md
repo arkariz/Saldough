@@ -97,8 +97,8 @@ atau peringatan (11 info `unnecessary_unawaited` di uji, B-9). Baseline 1 Okt
 (uji palet 1.0 dan `AppChip` ikut dihapus). Baseline sesudah Fase 13
 (1 Okt 2026): 39.746 baris, 95 berkas uji, 911 uji lulus, `flutter analyze`
 tanpa error atau peringatan (12 info `unnecessary_unawaited`, B-9).
-Baseline 10 Okt 2026 (sesudah T-8.13–8.17): 52.488 baris, 142 berkas uji,
-1.231 uji lulus, `flutter analyze` tanpa isu sama sekali (B-9 selesai).
+Baseline 10 Okt 2026 (sesudah T-8.18, kalkulator Catat): 52.772 baris, 144
+berkas uji, 1.254 uji lulus, `flutter analyze` tanpa isu sama sekali.
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan

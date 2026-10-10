@@ -4,6 +4,7 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/utils/formatters/money_input.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
 import 'package:saldough/features/record/presentation/widgets/record_amount_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_budget_item_field.dart';
 import 'package:saldough/features/record/presentation/widgets/record_date_field.dart';
@@ -121,7 +122,7 @@ class TransferFormSheet extends StatefulWidget {
 }
 
 class _TransferFormSheetState extends State<TransferFormSheet> {
-  final _amountController = TextEditingController();
+  final _amountController = RecordAmountController();
   final _noteController = TextEditingController();
   String? _fromWalletId;
   String? _toWalletId;

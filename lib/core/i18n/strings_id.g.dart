@@ -118,6 +118,18 @@ class Translations$common$id {
 	/// id: 'Hapus satu digit'
 	String get keypadBackspace => 'Hapus satu digit';
 
+	/// id: 'Tambah'
+	String get keypadAdd => 'Tambah';
+
+	/// id: 'Kurang'
+	String get keypadSubtract => 'Kurang';
+
+	/// id: 'Kali'
+	String get keypadMultiply => 'Kali';
+
+	/// id: 'Bagi'
+	String get keypadDivide => 'Bagi';
+
 	/// id: 'Tutup'
 	String get close => 'Tutup';
 
@@ -277,6 +289,8 @@ class Translations$record$id {
 
 	/// id: 'Semua kategori'
 	String get allCategories => 'Semua kategori';
+
+	late final Translations$record$calc$id calc = Translations$record$calc$id.internal(_root);
 
 	/// id: 'Nominal $amount'
 	String amountSemantics({required Object amount}) => 'Nominal ${amount}';
@@ -3388,6 +3402,27 @@ class Translations$record$repeat$id {
 	String get noBalanceChange => 'Tidak ada transaksi baru; saldo tidak berubah.';
 }
 
+// Path: record.calc
+class Translations$record$calc$id {
+	Translations$record$calc$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Hitungan $expression, nominal $amount'
+	String semantics({required Object expression, required Object amount}) => 'Hitungan ${expression}, nominal ${amount}';
+
+	/// id: 'Hasilnya harus lebih dari 0'
+	String get notPositive => 'Hasilnya harus lebih dari 0';
+
+	/// id: 'Tidak bisa dibagi 0'
+	String get divideByZero => 'Tidak bisa dibagi 0';
+
+	/// id: 'Hasilnya terlalu besar'
+	String get tooLarge => 'Hasilnya terlalu besar';
+}
+
 // Path: account.errors
 class Translations$account$errors$id {
 	Translations$account$errors$id.internal(this._root);
@@ -3586,6 +3621,10 @@ extension on Translations {
 			'common.genericErrorMessage' => 'Ada yang salah. Coba lagi.',
 			'common.confirmDeleteTitle' => 'Hapus?',
 			'common.keypadBackspace' => 'Hapus satu digit',
+			'common.keypadAdd' => 'Tambah',
+			'common.keypadSubtract' => 'Kurang',
+			'common.keypadMultiply' => 'Kali',
+			'common.keypadDivide' => 'Bagi',
 			'common.close' => 'Tutup',
 			'common.done' => 'Selesai',
 			'appShell.homeTabLabel' => 'Beranda',
@@ -3701,6 +3740,10 @@ extension on Translations {
 			'record.repeat.noBalanceChange' => 'Tidak ada transaksi baru; saldo tidak berubah.',
 			'record.balanceAfter' => ({required Object amount}) => 'Saldo jadi ${amount}',
 			'record.allCategories' => 'Semua kategori',
+			'record.calc.semantics' => ({required Object expression, required Object amount}) => 'Hitungan ${expression}, nominal ${amount}',
+			'record.calc.notPositive' => 'Hasilnya harus lebih dari 0',
+			'record.calc.divideByZero' => 'Tidak bisa dibagi 0',
+			'record.calc.tooLarge' => 'Hasilnya terlalu besar',
 			'record.amountSemantics' => ({required Object amount}) => 'Nominal ${amount}',
 			'transaction.pageTitle' => 'Riwayat',
 			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
@@ -4077,6 +4120,8 @@ extension on Translations {
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
 			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
 			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			'freelance.filterAll' => 'Semua',
 			'freelance.noDeductions' => 'Tanpa potongan',
@@ -4085,8 +4130,6 @@ extension on Translations {
 			'freelance.unbilledLabel' => 'Belum ditagih',
 			'freelance.paymentsEmptyTitle' => 'Belum ada tagihan',
 			'freelance.paymentsEmptyBody' => 'Kumpulkan jam kerja yang belum ditagih jadi satu tagihan, lalu catat saat dibayar.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.paymentsFilteredEmpty' => 'Tidak ada tagihan dengan status ini.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
@@ -4591,6 +4634,8 @@ extension on Translations {
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
 			'plan.thisMonthSegmentLabel' => 'Bulan ini',
 			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
+			_ => null,
+		} ?? switch (path) {
 			'plan.incomeRow' => 'Pemasukan',
 			'plan.billsRow' => 'Tagihan rutin',
 			'plan.budgetRow' => 'Anggaran',
@@ -4599,8 +4644,6 @@ extension on Translations {
 			'plan.infoTitle' => 'Uang nganggur',
 			'plan.infoIncome' => '+ Pemasukan terencana',
 			'plan.infoBills' => '− Tagihan rutin',
-			_ => null,
-		} ?? switch (path) {
 			'plan.infoBudget' => '− Anggaran',
 			'plan.infoOffPlan' => '± Di luar rencana (sudah tercatat)',
 			'plan.infoResult' => '= Uang nganggur',

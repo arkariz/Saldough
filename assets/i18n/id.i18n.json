@@ -15,6 +15,10 @@
     "genericErrorMessage": "Ada yang salah. Coba lagi.",
     "confirmDeleteTitle": "Hapus?",
     "keypadBackspace": "Hapus satu digit",
+    "keypadAdd": "Tambah",
+    "keypadSubtract": "Kurang",
+    "keypadMultiply": "Kali",
+    "keypadDivide": "Bagi",
     "close": "Tutup",
     "done": "Selesai"
   },
@@ -142,6 +146,12 @@
     },
     "balanceAfter": "Saldo jadi $amount",
     "allCategories": "Semua kategori",
+    "calc": {
+      "semantics": "Hitungan $expression, nominal $amount",
+      "notPositive": "Hasilnya harus lebih dari 0",
+      "divideByZero": "Tidak bisa dibagi 0",
+      "tooLarge": "Hasilnya terlalu besar"
+    },
     "amountSemantics": "Nominal $amount"
   },
   "transaction": {

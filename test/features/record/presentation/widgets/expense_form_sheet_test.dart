@@ -349,4 +349,60 @@ void main() {
     expect(find.text(t.record.repeat.noBalanceChange), findsOneWidget);
     expect(find.textContaining('akan berkurang'), findsNothing);
   });
+
+  group('kalkulator papan angka (T-8.18)', () {
+    Future<void> openSheet(WidgetTester tester, {ValueChanged<ExpenseRecorded?>? onResult}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () async {
+                  final result = await showModalBottomSheet<ExpenseRecorded>(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => const ExpenseFormSheet(wallets: wallets, initialWalletId: 'bca'),
+                  );
+                  onResult?.call(result);
+                },
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('ungkapan tampil di atas nominal; Simpan memakai hasilnya', (tester) async {
+      ExpenseRecorded? result;
+      await openSheet(tester, onResult: (r) => result = r);
+
+      await enterAmount(tester, '10000+5000*2');
+      expect(find.text('10.000 + 5.000 × 2'), findsOneWidget);
+      expect(find.text('Rp20.000', findRichText: true), findsOneWidget);
+
+      await tester.ensureVisible(find.byKey(const ValueKey('record-submit')));
+      await tester.tap(find.byKey(const ValueKey('record-submit')));
+      await tester.pumpAndSettle();
+      expect(result!.amount, 2000000);
+    });
+
+    testWidgets('hasil tidak sah menonaktifkan Simpan dan diberi keterangan', (tester) async {
+      await openSheet(tester);
+      await enterAmount(tester, '100-100');
+      expect(find.text(t.record.calc.notPositive), findsOneWidget);
+      expect(tester.widget<AppButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNull);
+
+      // Hapus melewati operand dan operator kembali ke nominal biasa.
+      for (var i = 0; i < 4; i++) {
+        await tester.tap(find.byKey(const ValueKey('keypad-backspace')));
+        await tester.pump();
+      }
+      expect(find.byKey(const ValueKey('record-amount-expression')), findsNothing);
+      expect(find.text('Rp100', findRichText: true), findsOneWidget);
+      expect(tester.widget<AppButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNotNull);
+    });
+  });
 }

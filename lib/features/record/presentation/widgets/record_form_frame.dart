@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/money_input.dart';
+import 'package:saldough/features/record/presentation/widgets/record_amount_controller.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
 
 /// Kerangka lembar Catat (prototipe `Catat.dc.html`, ADR-034): bar atas
@@ -10,8 +10,9 @@ import 'package:saldough/features/record/presentation/widgets/record_form_host.d
 /// bisa digulir, lalu di bawah papan angka dan tombol simpan yang menyebut
 /// jenisnya.
 ///
-/// [amountController] menyalakan [AppKeypad] di bawah; papan angka
-/// disembunyikan selama keyboard sistem terbuka (mis. mengetik catatan).
+/// [amountController] menyalakan [AppKeypad] di bawah, lengkap dengan kolom
+/// operator kalkulator (T-8.18); papan angka disembunyikan selama keyboard
+/// sistem terbuka (mis. mengetik catatan).
 /// Tombol simpan nonaktif selama [onSubmit] `null` (nominal atau dompet
 /// belum terisi).
 class RecordFormFrame extends StatelessWidget {
@@ -52,7 +53,7 @@ class RecordFormFrame extends StatelessWidget {
   final Widget? kindSwitcher;
 
   /// Pengendali nominal yang diisi lewat papan angka.
-  final TextEditingController? amountController;
+  final RecordAmountController? amountController;
 
   /// Dipanggil sesudah papan angka mengubah nominal.
   final VoidCallback? onAmountChanged;
@@ -61,11 +62,7 @@ class RecordFormFrame extends StatelessWidget {
   final List<Widget> children;
 
   void _onKey(String key) {
-    final controller = amountController!;
-    final next = applyMoneyKey(controller.text, key);
-    if (next == controller.text) return;
-    controller.text = next;
-    onAmountChanged?.call();
+    if (amountController!.applyKey(key)) onAmountChanged?.call();
   }
 
   void _onClear() {
@@ -128,7 +125,7 @@ class RecordFormFrame extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (amountController != null && !keyboardOpen) ...[
-                        AppKeypad(onKey: _onKey, onClear: _onClear),
+                        AppKeypad(onKey: _onKey, onClear: _onClear, operators: true),
                         const SizedBox(height: AppSpacing.space1),
                       ],
                       AppButton(

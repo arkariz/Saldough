@@ -89,6 +89,10 @@ class _Translations$common$en extends Translations$common$id {
 	@override String get genericErrorMessage => 'Something went wrong. Please try again.';
 	@override String get confirmDeleteTitle => 'Delete?';
 	@override String get keypadBackspace => 'Delete one digit';
+	@override String get keypadAdd => 'Plus';
+	@override String get keypadSubtract => 'Minus';
+	@override String get keypadMultiply => 'Times';
+	@override String get keypadDivide => 'Divided by';
 	@override String get close => 'Close';
 	@override String get done => 'Done';
 }
@@ -156,6 +160,7 @@ class _Translations$record$en extends Translations$record$id {
 	@override late final _Translations$record$repeat$en repeat = _Translations$record$repeat$en._(_root);
 	@override String balanceAfter({required Object amount}) => 'Balance becomes ${amount}';
 	@override String get allCategories => 'All categories';
+	@override late final _Translations$record$calc$en calc = _Translations$record$calc$en._(_root);
 	@override String amountSemantics({required Object amount}) => 'Amount ${amount}';
 }
 
@@ -1324,6 +1329,19 @@ class _Translations$record$repeat$en extends Translations$record$repeat$id {
 	@override String get noBalanceChange => 'No new transaction; balances stay the same.';
 }
 
+// Path: record.calc
+class _Translations$record$calc$en extends Translations$record$calc$id {
+	_Translations$record$calc$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String semantics({required Object expression, required Object amount}) => 'Calculation ${expression}, amount ${amount}';
+	@override String get notPositive => 'The result must be more than 0';
+	@override String get divideByZero => 'Cannot divide by 0';
+	@override String get tooLarge => 'The result is too large';
+}
+
 // Path: account.errors
 class _Translations$account$errors$en extends Translations$account$errors$id {
 	_Translations$account$errors$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1434,6 +1452,10 @@ extension on TranslationsEn {
 			'common.genericErrorMessage' => 'Something went wrong. Please try again.',
 			'common.confirmDeleteTitle' => 'Delete?',
 			'common.keypadBackspace' => 'Delete one digit',
+			'common.keypadAdd' => 'Plus',
+			'common.keypadSubtract' => 'Minus',
+			'common.keypadMultiply' => 'Times',
+			'common.keypadDivide' => 'Divided by',
 			'common.close' => 'Close',
 			'common.done' => 'Done',
 			'appShell.homeTabLabel' => 'Home',
@@ -1549,6 +1571,10 @@ extension on TranslationsEn {
 			'record.repeat.noBalanceChange' => 'No new transaction; balances stay the same.',
 			'record.balanceAfter' => ({required Object amount}) => 'Balance becomes ${amount}',
 			'record.allCategories' => 'All categories',
+			'record.calc.semantics' => ({required Object expression, required Object amount}) => 'Calculation ${expression}, amount ${amount}',
+			'record.calc.notPositive' => 'The result must be more than 0',
+			'record.calc.divideByZero' => 'Cannot divide by 0',
+			'record.calc.tooLarge' => 'The result is too large',
 			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
 			'transaction.searchHint' => 'Search this month: notes / categories...',
@@ -1925,6 +1951,8 @@ extension on TranslationsEn {
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.entryAddShortAction' => 'Record work hours',
 			'freelance.filterAll' => 'All',
 			'freelance.noDeductions' => 'No deductions',
@@ -1933,8 +1961,6 @@ extension on TranslationsEn {
 			'freelance.unbilledLabel' => 'Unbilled',
 			'freelance.paymentsEmptyTitle' => 'No invoices yet',
 			'freelance.paymentsEmptyBody' => 'Group unbilled work hours into one invoice, then record it when you are paid.',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.paymentsFilteredEmpty' => 'No invoices with this status.',
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
@@ -2439,6 +2465,8 @@ extension on TranslationsEn {
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
 			'plan.thisMonthSegmentLabel' => 'This month',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
+			_ => null,
+		} ?? switch (path) {
 			'plan.incomeRow' => 'Income',
 			'plan.billsRow' => 'Recurring bills',
 			'plan.budgetRow' => 'Budgets',
@@ -2447,8 +2475,6 @@ extension on TranslationsEn {
 			'plan.infoTitle' => 'Unplanned money',
 			'plan.infoIncome' => '+ Planned income',
 			'plan.infoBills' => '− Recurring bills',
-			_ => null,
-		} ?? switch (path) {
 			'plan.infoBudget' => '− Budgets',
 			'plan.infoOffPlan' => '± Off plan (already recorded)',
 			'plan.infoResult' => '= Unplanned money',

@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -70,7 +70,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 ba
 | 6 — Beranda | 6 | 6 | Selesai |
 | 7 — Template dan poles | 6 | 6 | Selesai (T-7.7 deprecated) |
 | **Total MVP** | **76** | **76** | |
-| 8 — Tindak lanjut pasca-MVP | 17 | 15 | Berjalan -- T-8.13 (Kembali ke Beranda, B-33), T-8.14 (urutan dompet, B-34), T-8.15 (lint, B-9), dan T-8.16 (ikon piksel mode gelap, B-23) selesai 10 Okt 2026; T-8.17 (ikon piksel B-22) draf agen menunggu persetujuan pemilik; T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
+| 8 — Tindak lanjut pasca-MVP | 18 | 16 | Berjalan -- T-8.18 (kalkulator di papan angka Catat) selesai 10 Okt 2026; T-8.13 (Kembali ke Beranda, B-33), T-8.14 (urutan dompet, B-34), T-8.15 (lint, B-9), dan T-8.16 (ikon piksel mode gelap, B-23) selesai 10 Okt 2026; T-8.17 (ikon piksel B-22) draf agen menunggu persetujuan pemilik; T-8.12 (fokus CATAT tidak melompat) selesai 1 Okt 2026; T-8.11 (dialog dan pemilih tanggal pixel, dari B-18) selesai 1 Okt 2026; T-8.10 (`PixelTheme` jadi tema global, ADR-031) selesai 1 Okt 2026; T-8.3 (ganti nama) sisa pekerjaan kode/dokumen setelah prasyarat pemilik selesai; T-8.4 (identitas/Analytics/Crashlytics, ADR-023) selesai; T-8.5 (akun lebih matang, ADR-024), T-8.6 (mata uang, ADR-025), dan T-8.8 (label navigasi 360dp, chip nominal i18n) selesai; T-8.7 (persiapan rilis Android; closed testing sudah dipublikasikan pemilik) dan T-8.9 (hapus `example_note`) selesai; sisa T-8.3 hanya sapuan nama di dokumen dan ikon iOS |
 | 9 — Onboarding, info, dan tur spotlight ([ONBOARDING_PLAN.md](../01-product/features/ONBOARDING_PLAN.md)) | 11 | 11 | Selesai 28 Sep 2026 |
 | 11 — Catat Cerdas: kategori, suara, dan notifikasi ([VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md), [ADR-032](../02-architecture/adr/0032-catat-dari-notifikasi.md)) | 24 | 15 | Berjalan -- T-11.9 benchmark teks selesai 1 Okt 2026 (Gemini dipertahankan; T-11.23/11.24 diperbaiki, T-11.22 gerbang kaskade "jenis tanpa kata arah" selesai: kasus sulit 73% → 90%), transkrip suara nyata belum; M4 catat dari notifikasi (T-11.17–11.21, ADR-032) dimulai 1 Okt 2026; T-11.16 (bahasa bawaan onboarding tersimpan, dari B-17), T-11.1–11.4, T-11.7 (Firebase AI, menunggu setelan Console), T-11.10, T-11.15 (temuan verifikasi kode M2/M3), T-11.14 (tanya bahasa ucapan untuk pengguna lama), dan T-11.11–11.13 (paket bahasa id/en, tanggal pasti, angka polos IDR, penyusun draf; ADR-029) selesai (verifikasi M1 lulus sesudah perbaikan); T-11.5 kode sudah di-commit tapi belum dicentang (ucapan nyata belum diuji); berikutnya T-11.6/11.7 |
 | 12 — Rapikan batas arsitektur ([ADR-030](../02-architecture/adr/0030-batas-antarfitur-rute-bertipe-dan-sinyal-buku-besar.md)) | 6 | 6 | Selesai 1 Okt 2026 -- batas zona, kunci rute, sinyal buku besar, dan uji batas impor |
@@ -1584,6 +1584,25 @@ seluruh fitur di atasnya menghasilkan data.
       design system (bagian Ikon) dan `docs/03-design/`.
       Verifikasi: `app_icon_test`, `app_icon_tile_test`,
       `category_display_test`.
+
+- [x] **T-8.18** Kalkulator di papan angka Catat (permintaan pemilik,
+      10 Okt 2026). `AppKeypad(operators: true)` menambah kolom keempat
+      ÷ × − + tanpa menambah tinggi; ungkapan tampil satu baris di atas
+      nominal besar, yang langsung berisi hasilnya, dan Simpan memakai hasil
+      itu (tanpa tombol `=`, pilihan pemilik). Aturan: × ÷ didahulukan dari
+      + −; hitungan eksak dengan pecahan `BigInt` lalu dibulatkan setengah ke
+      atas ke satuan terkecil mata uang (IDR rupiah utuh, USD sen); operand
+      × ÷ adalah angka biasa; operator di awal ditolak, operator berturut-turut
+      mengganti, operator di akhir diabaikan. Hasil ≤ 0, bagi 0, atau lebih
+      dari 12 digit mengosongkan nominal (Simpan nonaktif) dengan keterangan
+      `danger`. Logika di `core/utils/formatters/money_expression.dart`;
+      `RecordAmountController` menyimpan ungkapan, sementara `text` tetap
+      nominal hasil sehingga formulir CATAT tidak berubah. Selisih disengaja
+      dari komponen Keypad design system (3 kolom): artefak design system dan
+      prototipe Catat perlu diperbarui pemilik.
+      Verifikasi: `money_expression_test`, `app_keypad_test`,
+      `record_amount_field_test`, `expense_form_sheet_test` (kalkulator);
+      seluruh suite 1.254 lulus. Belum dicoba di perangkat.
 
 ## Fase 9: Onboarding, info, dan tur spotlight
 

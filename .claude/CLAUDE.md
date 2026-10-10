@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
-**Terakhir diperbarui:** 9 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Versi `0.3.0+4` (tag terbaru `0.3.0+4-patch-3`), belum dirilis publik.
+**Terakhir diperbarui:** 10 Oktober 2026
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Versi `0.5.0+6` (tag terbaru `0.5.0+6`), belum dirilis publik.
 
 ## Apa ini
 
@@ -74,7 +74,7 @@ Nominal tetap `int` sen (seperseratus satuan utama). Tampilkan lewat
 atau simbol lain langsung di widget.
 
 **Rilis Android (T-8.7):** penandatanganan rilis lewat
-`android/key.properties` (gitignore, tidak ada di repo), versi kini `0.3.0+4`,
+`android/key.properties` (gitignore, tidak ada di repo), versi kini `0.5.0+6`,
 Shorebird (`shorebird.yaml`), `google-services.json` sudah di repo. Pemilik
 sudah membangun, mengunggah, dan mempublikasikan **closed testing** di Play
 Console (29 Sep 2026) dan mengisi formulir Keamanan Data serta listing.
@@ -97,6 +97,8 @@ atau peringatan (11 info `unnecessary_unawaited` di uji, B-9). Baseline 1 Okt
 (uji palet 1.0 dan `AppChip` ikut dihapus). Baseline sesudah Fase 13
 (1 Okt 2026): 39.746 baris, 95 berkas uji, 911 uji lulus, `flutter analyze`
 tanpa error atau peringatan (12 info `unnecessary_unawaited`, B-9).
+Baseline 10 Okt 2026 (sesudah T-8.13–8.17): 52.488 baris, 142 berkas uji,
+1.231 uji lulus, `flutter analyze` tanpa isu sama sekali (B-9 selesai).
 Kode 1.0 bisa dipulihkan dari riwayat git (commit `13c7939` sebelum pivot).
 
 Yang sudah berjalan: CATAT (pemasukan, pengeluaran, transfer, dengan tautan

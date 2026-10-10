@@ -104,7 +104,14 @@ tetap.
 - `pubspec.yaml` mendapat `material_symbols_icons`; dua berkas huruf dihapus.
 - Ikon piksel belum lengkap: Keluarga, Donasi, Bonus, Hadiah, Lainnya, dan
   akun memakai Material Symbols di tile berwarna sampai artwork pemilik ada
-  (B-22). Garis tepi gelap ikon piksel butuh varian mode gelap (B-23).
+  (B-22). *Pembaruan 10 Okt 2026 (T-8.17):* atas permintaan pemilik agen
+  menggambar draf piksel keenamnya; dipakai sampai disetujui atau diganti
+  artwork pemilik.
+- Garis tepi gelap ikon piksel butuh varian mode gelap (B-23). *Diputuskan
+  10 Okt 2026 (T-8.16):* tanpa set aset kedua. Di tema gelap `AppIcon`
+  mengganti warna garis tepi `#1E1B19` dengan token `line-strong` saat
+  render (`PixelOutlineColorMapper`); warna lain tetap. Ikon piksel baru
+  wajib memakai `#1E1B19` persis untuk garis tepinya.
 - Tangkapan layar situs `tanukonomy-web` perlu dirender ulang setelah
   implementasi (B-4).
 - Usulan baru yang ikut di prototipe dan disetujui bersama desainnya:

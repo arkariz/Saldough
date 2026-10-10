@@ -159,9 +159,19 @@ keuangan sendiri.
 - **P-10 Pembanding.** Periode peralihan tidak dipakai sebagai pembanding
   rata-rata di Analisis (FINANCIAL_ANALYSIS B-6) dan kilas balik W10 menyebut
   panjangnya.
-- **P-11 Beranda.** Kartu Arus memakai periode keuangan berjalan. Judulnya
-  nama bulan bila tanggal mulai 1, selain itu rentangnya ("Arus 25 Sep –
-  24 Okt").
+- **P-11 Nama periode.** Kartu Arus Beranda memakai periode keuangan
+  berjalan. Nama periode di Beranda, Rencana, dan Analisis mengikuti satu
+  aturan (komponen `PeriodHeader` design system):
+  - periode normal yang dimulai tanggal 1: nama bulan ("Arus Oktober");
+  - periode normal yang tidak dimulai tanggal 1: rentang ("Arus 25 Sep –
+    24 Okt");
+  - **periode peralihan: selalu rentang**, juga bila awal bulan barunya
+    tanggal 1 ("25 Sep – 31 Okt"), ditambah penanda netral "Periode
+    peralihan · 37 hari".
+  Rentang tanggal ditulis dengan spasi di kedua sisi tanda pisah
+  (`writing.md`). Nama periode hanya bisa diketuk di Rencana › Bulan ini
+  (membuka lembar Awal bulan keuangan); di Beranda dan Analisis ia bukan
+  tombol.
 
 ## 5. Contoh
 
@@ -182,7 +192,7 @@ nganggur negatif tanpa peringatan, dengan kalimat P-8. Periode berikutnya
 
 **C. Dari 1 ke 25, diubah 28 Okt.** Periode berjalan `[1 Okt, 1 Nov)`, `c` =
 25 Okt ≤ 28 Okt. Periode peralihan **1 – 24 Okt** sudah selesai; periode
-berjalan **25 Okt – 24 Nov**. Pengeluaran 25–28 Okt yang tertaut pos Bulanan
+berjalan **25 Okt – 24 Nov**. Pengeluaran 25 – 28 Okt yang tertaut pos Bulanan
 lama dipindah ke pos Bulanan periode 25 Okt bila anggarannya ikut pindah
 (P-7).
 
@@ -197,7 +207,7 @@ tertaut kemunculan 25 Okt. Selisih 2 hari ≤ 7 → dihitung ke periode 25 Okt �
 |---|---|---|
 | P1 | Anggaran yang sudah lahir terhitung ke periode lain; uang nganggur naik palsu Rp3.068.500 | P-3, P-7 |
 | P2 | Anggaran rutin bergeser dari periode setiap bulan, permanen | P-7 |
-| P3 | Celah 25–31 Okt tanpa pos; pengeluaran jatuh ke "di luar rencana" | P-7 (`endDate`) |
+| P3 | Celah 25 – 31 Okt tanpa pos; pengeluaran jatuh ke "di luar rencana" | P-7 (`endDate`) |
 | P4 | Kilas balik dan Analisis bulan lalu berubah angka | P-2 |
 | P5 | Peringatan uang nganggur negatif yang menyesatkan | P-8 |
 | P6 | Tinjau awal bulan muncul tanpa penjelasan | P-9 |
@@ -233,9 +243,33 @@ tertaut kemunculan 25 Okt. Selisih 2 hari ≤ 7 → dihitung ke periode 25 Okt �
   dan penyaring periode Riwayat.
 - `month_review` dan `forecast_snapshots` tetap berkunci `monthStart`;
   periode peralihan cukup ditandai.
-- Analitik: `financial_month_changed{source: plan|account|offer,
-  day, moved_budgets}` tanpa nominal.
+- Tur dan analitik: §8A.
 - Fase 18 di TASK_LIST.
+
+## 8A. Tur spotlight dan analitik
+
+**Tur (ADR-021, progres per langkah).** Hanya yang mudah terlewat dan
+penting; setiap langkah tampil sekali saat targetnya pertama kali muncul,
+jadi pengguna lama ikut melihatnya.
+
+| Kunci | Tur | Target | Tampil bila | Judul / isi (id) | Judul / isi (en) |
+|---|---|---|---|---|---|
+| `planPeriodHeader` | `planMonth`, sesudah `planTabs` | Nama periode di kepala Bulan ini (D1) | segmen termuat | Bulan keuanganmu / Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut. | Your financial month / Tap to start the month on your payday. Plan and Analysis follow it. |
+| `planTransition` | `planMonth`, sesudah `planPeriodHeader` | Penanda periode peralihan (D3) | periode berjalan adalah periode peralihan | Periode peralihan / Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan. | Transition period / This period is longer or shorter once because your month start changed. The next one is a full month again. |
+
+Lembar Awal bulan keuangan dan tawaran F2 tidak diberi tur (sudah
+menjelaskan dirinya).
+
+**Analitik** (`AppAnalytics`, kelas `PeriodEvents`). Tanpa nominal, tanpa
+tanggal transaksi, parameter bernilai sedikit. Dikirim dari tindakan atau
+bloc, tidak dari `build()`.
+
+| Peristiwa | Parameter | Kapan | Menjawab |
+|---|---|---|---|
+| `financial_month_sheet_opened` | `source`: `plan` \| `account` \| `offer` | Lembar Awal bulan keuangan terbuka | Apakah pengaturan kini ditemukan (masalah §2) |
+| `financial_month_changed` | `source`; `day`: `1`…`28` \| `last`; `transition_days`; `moved_budgets`; `kept_budgets` | Simpan berhasil | Tanggal yang dipilih orang; kriteria tinjau ulang ADR-038 §8 (perubahan berulang) |
+| `financial_month_offer` | `action`: `shown` \| `accepted` \| `dismissed` | Tawaran F2 | Apakah tawaran dari rutin gajian berguna |
+| `recurrence_date_gap` | `bucket`: `0` \| `1-3` \| `4-7` \| `8-14` \| `15+` | Transaksi ditautkan ke kemunculan rutin (oleh pengguna atau otomatis) | Apakah batas atribusi 7 hari (P-4) tepat; kriteria tinjau ulang ADR-038 §8 |
 
 ## 9. Perlu rupa dari pemilik
 

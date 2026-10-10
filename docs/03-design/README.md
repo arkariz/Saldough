@@ -60,6 +60,14 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
   anggapan prototipe.
 
+## Usulan desain
+
+`proposals/<nama-usulan>/` berisi mockup dan spek dari agen
+`ui-ux-designer` (`.claude/agents/ui-ux-designer.md`). Isinya **usulan**,
+bukan sumber kebenaran: statusnya di `README.md` tiap folder. Yang diterima
+pemilik dipindahkan ke artefak dan salinan di atas; foldernya tetap
+disimpan sebagai riwayat keputusan.
+
 ## Menjaga salinan
 
 Setiap perubahan pada artefak disalin ke sini dalam commit yang sama dengan

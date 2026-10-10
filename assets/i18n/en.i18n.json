@@ -1087,6 +1087,7 @@
     "financialMonthTitle": "Financial month start",
     "financialMonthPickerTitle": "Financial month starts on",
     "financialMonthDay": "Day $day",
+    "financialMonthLastDay": "Last day of the month",
     "thisMonthSegmentLabel": "This month",
     "unplannedTitle": "Unplanned money · $month",
     "incomeRow": "Income",

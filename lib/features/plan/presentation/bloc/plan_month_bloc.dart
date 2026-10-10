@@ -103,7 +103,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     this._reviews,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
-       super(PlanMonthState(today: DateTime.now(), range: financialMonthOf(DateTime.now(), 1))) {
+       super(PlanMonthState(today: DateTime.now(), range: ActiveFinancialMonth.periodOf(DateTime.now()))) {
     on<PlanMonthLoaded>(_onLoaded);
     on<PlanMonthWalletChanged>((event, emit) => emit(state.copyWith(walletId: () => event.walletId)));
     on<PlanMonthUnplannedToggled>((event, emit) => emit(state.copyWith(includeUnplanned: event.enabled)));
@@ -169,7 +169,8 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     if (event.showSkeleton) emit(state.copyWith(isLoading: true));
     final now = _now();
     final today = DateTime(now.year, now.month, now.day);
-    final range = financialMonthOf(today, ActiveFinancialMonth.startDay);
+    final schedule = ActiveFinancialMonth.schedule;
+    final range = schedule.periodOf(today);
     Failure? failure;
     T? read<T>(Either<Failure, T> result) => result.fold((f) {
       failure ??= f;
@@ -180,7 +181,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     final rules = read(await _rules.listRules());
     // Anggaran yang sudah ada + periode virtual anggaran rutin yang belum
     // lahir, untuk bulan berjalan dan dua bulan sesudahnya (ADR-036 §3.5).
-    Future<List<PlanBudget>?> budgetsIn(FinancialMonthRange m) async {
+    Future<List<PlanBudget>?> budgetsIn(FinancialPeriod m) async {
       final existing = read(await _budgets.budgetsStartingIn(m.start, m.end));
       final scheduled = read(await _budgets.scheduledBudgetsStartingIn(m.start, m.end));
       return existing == null ? null : [...existing, ...?scheduled];
@@ -188,18 +189,16 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
 
     final budgets = await budgetsIn(range);
     // Bulan lalu untuk kilas balik (W10).
-    final previousRange = financialMonthOf(
-      DateTime(range.start.year, range.start.month - 1, range.start.day),
-      range.start.day,
-    );
+    final previousRange = schedule.previousOf(range);
     final previousBudgets = (await _budgets.budgetsStartingIn(previousRange.start, previousRange.end)).getOrElse(
       (_) => const [],
     );
     final stored = (await _reviews?.load())?.getOrElse((_) => null);
     final review = stored != null && stored.monthStart == range.start ? stored : MonthReview(monthStart: range.start);
     final later = <List<PlanBudget>>[];
+    var m = range;
     for (var k = 1; k <= PlanMonthState.horizon; k++) {
-      final m = financialMonthOf(DateTime(range.start.year, range.start.month + k, range.start.day), range.start.day);
+      m = schedule.nextOf(m);
       later.add(await budgetsIn(m) ?? const []);
     }
     // Freelance adalah data sekunder: gagal dibaca berarti tanpa "belum pasti".
@@ -207,7 +206,11 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     final months = read(await _transactions.listAvailableMonths()) ?? const <DateTime>[];
     final transactions = <Transaction>[];
     // Tiga bulan keuangan lalu (rata-rata di luar rencana) sampai akhir bulan ini.
-    final from = DateTime(range.start.year, range.start.month - 3, range.start.day);
+    var earliest = range;
+    for (var back = 1; back <= 3; back++) {
+      earliest = schedule.previousOf(earliest);
+    }
+    final from = earliest.start;
     for (var m = DateTime(from.year, from.month); m.isBefore(range.end); m = DateTime(m.year, m.month + 1)) {
       transactions.addAll(read(await _transactions.listTransactionsInMonth(m)) ?? const []);
     }
@@ -236,6 +239,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
       state.copyWith(
         today: today,
         range: range,
+        schedule: schedule,
         isLoading: false,
         loadFailed: false,
         wallets: [

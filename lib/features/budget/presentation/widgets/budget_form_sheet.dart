@@ -156,7 +156,7 @@ class _BudgetFormSheetState extends State<BudgetFormSheet> {
   void initState() {
     super.initState();
     // Bawaan bulanan: awal bulan keuangan (ADR-036 §3.1).
-    _startDate = financialMonthOf(DateTime.now(), ActiveFinancialMonth.startDay).start;
+    _startDate = ActiveFinancialMonth.periodOf(DateTime.now()).start;
     final budget = widget.initial;
     if (budget == null) {
       if (widget.wallets.length == 1) _walletId = widget.wallets.single.id;

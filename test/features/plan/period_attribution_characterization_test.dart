@@ -16,10 +16,10 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// perilaku sekarang, bukan perilaku yang diinginkan; temuannya ada di entri
 /// T-18.1 TASK_LIST. Bulan keuangan mulai tanggal 25, hari ini 26 Okt 2026.
 void main() {
-  const startDay = 25;
+  final schedule = FinancialMonthSchedule.single(const FinancialMonthStart.day(25));
   final today = DateTime(2026, 10, 26);
-  final current = financialMonthOf(today, startDay);
-  final previous = financialMonthOf(DateTime(2026, 10, 23), startDay);
+  final current = financialPeriodOf(today, schedule);
+  final previous = financialPeriodOf(DateTime(2026, 10, 23), schedule);
   final occurrence = DateTime(2026, 10, 25);
 
   RecurringRule rule(String id, RecurringKind kind, int amount, {String? budgetItemKey}) => RecurringRule(
@@ -88,6 +88,7 @@ void main() {
   final state = PlanMonthState(
     today: today,
     range: current,
+    schedule: schedule,
     isLoading: false,
     rules: rules,
     transactions: [gaji, cicilan],
@@ -104,8 +105,8 @@ void main() {
   );
 
   test('rentang: periode lalu 25 Sep – 24 Okt, periode berjalan 25 Okt – 24 Nov', () {
-    expect(previous, FinancialMonthRange(start: DateTime(2026, 9, 25), end: DateTime(2026, 10, 25)));
-    expect(current, FinancialMonthRange(start: DateTime(2026, 10, 25), end: DateTime(2026, 11, 25)));
+    expect(previous, FinancialPeriod(start: DateTime(2026, 9, 25), end: DateTime(2026, 10, 25)));
+    expect(current, FinancialPeriod(start: DateTime(2026, 10, 25), end: DateTime(2026, 11, 25)));
     expect(state.previousRange, previous);
   });
 

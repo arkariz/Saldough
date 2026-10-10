@@ -1084,6 +1084,7 @@
     "financialMonthTitle": "Awal bulan keuangan",
     "financialMonthPickerTitle": "Bulan keuangan dimulai",
     "financialMonthDay": "Tanggal $day",
+    "financialMonthLastDay": "Hari terakhir bulan",
     "thisMonthSegmentLabel": "Bulan ini",
     "unplannedTitle": "Uang nganggur · $month",
     "incomeRow": "Pemasukan",

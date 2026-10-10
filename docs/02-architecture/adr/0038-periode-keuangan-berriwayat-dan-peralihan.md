@@ -48,11 +48,21 @@ transaksi.
    `effectiveFrom` = tanggal minimum. Periode yang sudah selesai tidak pernah
    berubah.
 2. **Periode peralihan.** Mengubah `startDay` pada hari `T` dengan periode
-   berjalan `[a, b)` menambah entri `effectiveFrom = c`, dengan `c` batas
-   baru yang paling dekat ke `b` dan `> a` (seri: yang lebih akhir).
-   `[a, c)` adalah periode peralihan (13–46 hari). Fungsi murni
+   berjalan `[a, b)` menambah entri `effectiveFrom = a` (awal periode
+   peralihan). Batas akhirnya `c` dihitung ulang dari entri: batas baru yang
+   paling dekat ke `b` dan `> a` (seri: yang lebih akhir), dengan `b` akhir
+   periode `[a, …)` menurut entri sebelumnya. `[a, c)` adalah periode
+   peralihan (13–46 hari); bila `c = b` periodenya tidak berubah dan bukan
+   peralihan. Mengubah lagi saat periode berjalan masih mulai `a` mengganti
+   entri itu; kembali ke tanggal entri sebelumnya menghapusnya. Fungsi murni
    `financialPeriodOf(date, schedule)` mengembalikan `FinancialPeriod(start,
    end, isTransition)`.
+   **Revisi 10 Okt 2026 (T-18.2, keputusan pemilik):** semula
+   `effectiveFrom = c`. Entri `(c, startDay)` tidak selalu bisa dihitung
+   ulang menjadi `[a, c)` yang sama: 15 → 1 yang diubah 20 Jan 2027
+   (peralihan 15 Jan – 28 Feb, 45 hari) dan 20 Feb 2027 (15 – 28 Feb,
+   14 hari) sama-sama menghasilkan `c` = 1 Mar. Dengan `effectiveFrom = a`
+   hitungannya selalu tunggal.
 3. **`Budget.endDate`** opsional; null berarti `period.endFrom(startDate)`.
    Hanya diisi untuk menyelaraskan anggaran rutin ke periode peralihan.
    `BudgetSchedule` menerima patokan `lastDay`. Ini merevisi ADR-036 §3.1
@@ -183,4 +193,4 @@ sebulan; ditangani dengan label dan pengecualian (FINANCIAL_PERIOD P-8–P-10).
 **Penulis keputusan:** agen (product-owner), atas keputusan pemilik 10 Okt 2026
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-10-10
-**Status implementasi:** Belum dimulai
+**Status implementasi:** Berjalan (T-18.1–T-18.2 selesai 10 Okt 2026)

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
@@ -60,7 +59,7 @@ class _PixelSparkleState extends State<PixelSparkle> with SingleTickerProviderSt
   void _sync() {
     final run = widget.enabled && !MotionPolicy.reduced(context);
     if (run && !_controller.isAnimating) {
-      unawaited(_controller.repeat());
+      _controller.repeat();
     } else if (!run) {
       _controller.stop();
     }

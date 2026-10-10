@@ -69,8 +69,8 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
       _intro.value = 1;
       _blink.stop();
     } else {
-      if (_intro.value == 0) unawaited(_intro.forward());
-      if (!_blink.isAnimating) unawaited(_blink.repeat());
+      if (_intro.value == 0) _intro.forward();
+      if (!_blink.isAnimating) _blink.repeat();
     }
     if (_shownIndex < 0) _onStepChanged();
   }
@@ -131,7 +131,7 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
     if (reduced) {
       _move.value = 1;
     } else {
-      unawaited(_move.forward(from: 0));
+      _move.forward(from: 0);
     }
     if (mounted) setState(() {});
   }

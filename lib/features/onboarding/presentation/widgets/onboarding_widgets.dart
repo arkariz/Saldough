@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/motion/motion.dart';
@@ -135,7 +133,7 @@ class _OnboardingBackdropState extends State<OnboardingBackdrop> with SingleTick
     if (MotionPolicy.reduced(context)) {
       _drift.stop();
     } else if (!_drift.isAnimating) {
-      unawaited(_drift.repeat());
+      _drift.repeat();
     }
   }
 

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/motion/motion.dart';
@@ -68,7 +66,7 @@ class _OnboardingSceneState extends State<OnboardingScene> with SingleTickerProv
         ..stop()
         ..value = 1;
     } else if (widget.active && !_loop.isAnimating) {
-      unawaited(_loop.repeat());
+      _loop.repeat();
     } else if (!widget.active) {
       _loop.stop();
     }
@@ -379,7 +377,7 @@ class _DropInState extends State<_DropIn> with SingleTickerProviderStateMixin {
     if (MotionPolicy.reduced(context)) {
       _controller.value = 1;
     } else {
-      unawaited(_controller.forward());
+      _controller.forward();
     }
   }
 

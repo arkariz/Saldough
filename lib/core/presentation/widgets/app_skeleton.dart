@@ -54,7 +54,7 @@ class _AppSkeletonState extends State<AppSkeleton>
       if (_controller.isAnimating) _controller.stop();
       return _box(colors.surface2);
     }
-    if (!_controller.isAnimating) unawaited(_controller.repeat(reverse: true));
+    if (!_controller.isAnimating) _controller.repeat(reverse: true);
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) => _box(Color.lerp(colors.surface2, colors.surface3, _controller.value)!),

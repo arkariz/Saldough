@@ -125,16 +125,16 @@ enum IconKey {
   /// Kategori belanja/berbelanja.
   categoryShopping,
 
-  /// Kategori keluarga (belum ada ikon piksel, B-22).
+  /// Kategori keluarga (ikon piksel draf agen, B-22).
   categoryFamily,
 
-  /// Kategori donasi (belum ada ikon piksel, B-22).
+  /// Kategori donasi (ikon piksel draf agen, B-22).
   categoryDonation,
 
-  /// Kategori bonus (belum ada ikon piksel, B-22).
+  /// Kategori bonus (ikon piksel draf agen, B-22).
   categoryBonus,
 
-  /// Kategori hadiah (belum ada ikon piksel, B-22).
+  /// Kategori hadiah (ikon piksel draf agen, B-22).
   categoryGift,
 
   // Freelance
@@ -274,6 +274,14 @@ enum IconKey {
 
   /// Pegangan seret baris yang bisa diurutkan.
   dragHandle,
+
+  /// Lihat semua pilihan (mis. "Semua kategori" di Catat). Tindakan, jadi
+  /// Material Symbols; berbeda dari [categoryOther] yang benda.
+  moreHorizontal,
+
+  /// Ikon piksel akun (avatar saat belum masuk). Tombol akun di app bar
+  /// tetap [account] (tindakan, Material Symbols). Draf agen, B-22.
+  accountPixel,
 }
 
 /// Ikon piksel Tanukonomy (`assets/icons/`, SVG 32×32) untuk benda.
@@ -319,22 +327,23 @@ const Map<IconKey, String> _pixelAssets = {
   IconKey.paid: 'assets/icons/paid.svg',
   IconKey.overBudget: 'assets/icons/over_budget.svg',
   IconKey.empty: 'assets/icons/empty.svg',
+  // Draf agen menunggu persetujuan pemilik (B-22).
+  IconKey.categoryFamily: 'assets/icons/category_family.svg',
+  IconKey.categoryDonation: 'assets/icons/category_donation.svg',
+  IconKey.categoryBonus: 'assets/icons/category_bonus.svg',
+  IconKey.categoryGift: 'assets/icons/category_gift.svg',
+  IconKey.categoryOther: 'assets/icons/category_other.svg',
+  IconKey.accountPixel: 'assets/icons/account.svg',
 };
 
-/// Material Symbols Rounded (bobot 400) untuk tindakan, navigasi, dan
-/// kategori yang belum punya ikon piksel (B-22). Nama simbol mengikuti
-/// prototipe.
+/// Material Symbols Rounded (bobot 400) untuk tindakan dan navigasi. Nama
+/// simbol mengikuti prototipe.
 const Map<IconKey, IconData> _symbols = {
   IconKey.home: Symbols.home_rounded,
   IconKey.budget: Symbols.donut_small_rounded,
   IconKey.record: Symbols.add_rounded,
   IconKey.transactions: Symbols.receipt_long_rounded,
   IconKey.wallets: Symbols.account_balance_wallet_rounded,
-  IconKey.categoryOther: Symbols.more_horiz_rounded,
-  IconKey.categoryFamily: Symbols.family_restroom_rounded,
-  IconKey.categoryDonation: Symbols.volunteer_activism_rounded,
-  IconKey.categoryBonus: Symbols.stars_rounded,
-  IconKey.categoryGift: Symbols.redeem_rounded,
   IconKey.add: Symbols.add_rounded,
   IconKey.edit: Symbols.edit_rounded,
   IconKey.delete: Symbols.delete_rounded,
@@ -370,6 +379,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.payments: Symbols.payments_rounded,
   IconKey.reorder: Symbols.swap_vert_rounded,
   IconKey.dragHandle: Symbols.drag_indicator_rounded,
+  IconKey.moreHorizontal: Symbols.more_horiz_rounded,
 };
 
 /// Apakah [key] digambar sebagai ikon piksel (bukan Material Symbols).

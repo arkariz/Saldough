@@ -45,20 +45,14 @@ void main() {
   });
 
   testWidgets(
-    'tanpa ikon piksel: Material Symbols di tile berwarna sesuai tabel',
+    'Material Symbols: tile cat-slate bawaan, ikon cat-slate',
     (tester) async {
-      await pump(tester, const AppIconTile(IconKey.categoryFamily));
-      expect(decorationOf(tester).color, AppColors.light.catBrownBg);
+      await pump(tester, const AppIconTile(IconKey.moreHorizontal));
+      expect(decorationOf(tester).color, AppColors.light.catSlateBg);
       expect(
         tester.widget<Icon>(find.byType(Icon)).color,
-        AppColors.light.catBrown,
+        AppColors.light.catSlate,
       );
-
-      await pump(tester, const AppIconTile(IconKey.categoryGift));
-      expect(decorationOf(tester).color, AppColors.light.catRoseBg);
-
-      await pump(tester, const AppIconTile(IconKey.categoryOther));
-      expect(decorationOf(tester).color, AppColors.light.catSlateBg);
     },
   );
 
@@ -67,7 +61,7 @@ void main() {
   ) async {
     await pump(
       tester,
-      const AppIconTile(IconKey.categoryOther, tint: TileTint.teal),
+      const AppIconTile(IconKey.moreHorizontal, tint: TileTint.teal),
     );
     expect(decorationOf(tester).color, AppColors.light.catTealBg);
   });

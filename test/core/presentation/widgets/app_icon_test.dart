@@ -42,9 +42,15 @@ void main() {
       IconKey.categoryPets,
       IconKey.categoryShopping,
       IconKey.empty,
+      IconKey.categoryFamily,
+      IconKey.categoryDonation,
+      IconKey.categoryBonus,
+      IconKey.categoryGift,
+      IconKey.categoryOther,
+      IconKey.accountPixel,
     ];
 
-    // Tindakan, navigasi, dan kategori tanpa ikon piksel: Material Symbols.
+    // Tindakan dan navigasi: Material Symbols.
     const symbolKeys = [
       IconKey.home,
       IconKey.budget,
@@ -52,15 +58,14 @@ void main() {
       IconKey.transactions,
       IconKey.wallets,
       IconKey.check,
+      IconKey.account,
+      IconKey.moreHorizontal,
+      IconKey.reorder,
+      IconKey.dragHandle,
       IconKey.calendar,
       IconKey.search,
       IconKey.filter,
       IconKey.locked,
-      IconKey.categoryOther,
-      IconKey.categoryFamily,
-      IconKey.categoryDonation,
-      IconKey.categoryBonus,
-      IconKey.categoryGift,
       IconKey.add,
       IconKey.edit,
       IconKey.delete,

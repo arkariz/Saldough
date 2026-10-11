@@ -4,6 +4,11 @@ import 'package:failures/failures.dart';
 import 'package:saldough/core/financial_month/financial_period.dart';
 import 'package:saldough/core/foundation/repository_guard.dart';
 
+/// Status tawaran awal bulan saat menyimpan rutin gajian (FINANCIAL_PERIOD
+/// F2): apakah pengguna pernah mengubah awal bulan sendiri, dan rutin mana
+/// yang sudah pernah ditawari.
+typedef FinancialMonthOffer = ({bool changedByUser, Set<String> offeredRuleIds});
+
 /// Riwayat tanggal mulai bulan keuangan (ADR-038 §3.1).
 abstract interface class FinancialMonthPreferenceRepository {
   /// Jadwal tersimpan; bawaan tanggal 1 sejak awal.
@@ -11,9 +16,17 @@ abstract interface class FinancialMonthPreferenceRepository {
 
   /// Menyimpan [schedule].
   Future<Either<Failure, Unit>> save(FinancialMonthSchedule schedule);
+
+  /// Status tawaran; bawaan belum pernah diubah dan belum ada yang ditawari.
+  Future<Either<Failure, FinancialMonthOffer>> loadOffer();
+
+  /// Menyimpan status tawaran [offer].
+  Future<Either<Failure, Unit>> saveOffer(FinancialMonthOffer offer);
 }
 
 const _key = StorageKey(namespace: 'settings', name: 'financial_month_schedule');
+
+const _offerKey = StorageKey(namespace: 'settings', name: 'financial_month_offer');
 
 /// Preferensi lama satu angka (ADR-035 §3.6), hanya dibaca untuk migrasi.
 const _legacyKey = StorageKey(namespace: 'settings', name: 'financial_month_start');
@@ -68,6 +81,33 @@ final class FinancialMonthPreferenceRepositoryImpl with RepositoryGuard implemen
 
   @override
   Future<Either<Failure, Unit>> save(FinancialMonthSchedule schedule) => guardVoid(() => _store.write(schedule));
+
+  /// `{schemaVersion, changedByUser, offeredRuleIds}` di
+  /// `settings/financial_month_offer`.
+  StoredValue<FinancialMonthOffer> get _offer => StoredValue<FinancialMonthOffer>.json(
+    key: _offerKey,
+    fromJson: (json) => (
+      changedByUser: json['changedByUser'] == true,
+      offeredRuleIds: {
+        if (json['offeredRuleIds'] case final List<Object?> ids)
+          for (final id in ids)
+            if (id case final String id) id,
+      },
+    ),
+    toJson: (offer) => {
+      'schemaVersion': 1,
+      'changedByUser': offer.changedByUser,
+      'offeredRuleIds': [...offer.offeredRuleIds],
+    },
+    storage: _storage,
+  );
+
+  @override
+  Future<Either<Failure, FinancialMonthOffer>> loadOffer() =>
+      guard(() async => await _offer.read() ?? (changedByUser: false, offeredRuleIds: const <String>{}));
+
+  @override
+  Future<Either<Failure, Unit>> saveOffer(FinancialMonthOffer offer) => guardVoid(() => _offer.write(offer));
 }
 
 String _date(DateTime d) =>

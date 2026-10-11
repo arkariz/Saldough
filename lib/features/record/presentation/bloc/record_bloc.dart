@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/record/domain/record_defaults.dart';
 import 'package:saldough/features/record/presentation/bloc/record_state.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
@@ -33,6 +38,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     required this._createCategory,
     required this._recurringRepository,
     required this._recurringChanges,
+    this._financialMonth,
     this._now = DateTime.now,
   }) : super(RecordState.initial()) {
     on<RecordWalletsLoaded>(_onWalletsLoaded);
@@ -52,6 +58,9 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   final CreateCategory _createCategory;
   final RecurringRuleRepository _recurringRepository;
   final RecurringChanges _recurringChanges;
+
+  /// Status tawaran awal bulan (FINANCIAL_PERIOD F2); `null` = tanpa tawaran.
+  final FinancialMonthPreferenceRepository? _financialMonth;
   final DateTime Function() _now;
 
   /// Jumlah transaksi terbaru yang dibaca untuk isian bawaan.
@@ -146,7 +155,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     final anchor = rule.schedule.anchorDate;
     if (anchor.isAfter(_today)) {
       _recurringChanges.notifyChanged(source: this);
-      final effect = await _effectWithLinkSuggestion(
+      final effect = await _effectAfterRuleCreated(
         rule,
         t.record.repeat.scheduledMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(anchor)),
       );
@@ -161,7 +170,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         _recurringChanges.notifyChanged(source: this);
-        final effect = await _effectWithLinkSuggestion(rule, _recordedAndScheduledMessage(rule));
+        final effect = await _effectAfterRuleCreated(rule, _recordedAndScheduledMessage(rule));
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
     }
   }
@@ -194,7 +203,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
         _recurringChanges.notifyChanged(source: this);
-        final effect = await _effectWithLinkSuggestion(rule, _recordedAndScheduledMessage(rule));
+        final effect = await _effectAfterRuleCreated(rule, _recordedAndScheduledMessage(rule));
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
     }
   }
@@ -309,6 +318,64 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         ? t.record.repeat.recordedMessage(name: _nameOf(rule))
         : t.record.repeat.recordedNextMessage(name: _nameOf(rule), date: CycleMonthFormatter.formatDayMonth(next));
   }
+
+  /// Pesan berhasil untuk rutin baru: dengan tawaran awal bulan keuangan
+  /// bila [rule] rutin gajian yang memenuhi F2, selain itu dengan saran
+  /// tautan pos ([_effectWithLinkSuggestion]). Rutin gajian adalah
+  /// pemasukan, jadi keduanya tidak pernah berebut.
+  Future<UiEffect> _effectAfterRuleCreated(RecurringRule rule, String message) async {
+    final offer = await _financialMonthOffer(rule);
+    return offer == null ? _effectWithLinkSuggestion(rule, message) : _effectWithOffer(message, offer);
+  }
+
+  /// Tanggal yang ditawarkan untuk [rule] ([financialMonthOfferFor]), lalu
+  /// rutin itu dicatat sudah ditawari supaya tidak ditawarkan lagi.
+  Future<FinancialMonthStart?> _financialMonthOffer(RecurringRule rule) async {
+    final repository = _financialMonth;
+    if (repository == null) return null;
+    final offer = switch (await repository.loadOffer()) {
+      Right(:final value) => value,
+      Left() => null,
+    };
+    if (offer == null) return null;
+    final start = financialMonthOfferFor(rule, schedule: ActiveFinancialMonth.schedule, offer: offer);
+    if (start == null) return null;
+    await repository.saveOffer((
+      changedByUser: offer.changedByUser,
+      offeredRuleIds: {...offer.offeredRuleIds, rule.id},
+    ));
+    return start;
+  }
+
+  /// [message], lalu snackbar "Mulai bulan keuanganmu tiap tanggal 25?"
+  /// [Atur] yang membuka lembar Awal bulan keuangan dengan tanggal itu
+  /// terpilih (F2). Diabaikan = tidak ditawarkan lagi untuk rutin ini.
+  UiEffect _effectWithOffer(String message, FinancialMonthStart start) => CallbackEffect(
+    callback: (context) {
+      final colors = context.appColors;
+      final navigator = Navigator.of(context, rootNavigator: true);
+      final day = switch (start.day) {
+        final day? => t.plan.financialMonthOnDay(day: day),
+        null => t.plan.financialMonthOnLastDay,
+      };
+      ScaffoldMessenger.of(context)
+        ..showSnackBar(SnackBar(content: Text(message, style: TextStyle(color: colors.bg)), backgroundColor: colors.ink))
+        ..showSnackBar(
+          actionSnackBar(
+            context,
+            content: Text(t.plan.financialMonthOffer(start: day), style: TextStyle(color: colors.bg)),
+            backgroundColor: colors.ink,
+            action: SnackBarAction(
+              label: t.plan.financialMonthOfferAction,
+              textColor: colors.brand,
+              onPressed: () => unawaited(
+                navigator.context.pushRoute(BudgetRouteKeys.financialMonth, FinancialMonthInput(initial: start)),
+              ),
+            ),
+          ),
+        );
+    },
+  );
 
   /// Pesan berhasil untuk rutin baru, dengan aksi **Tautkan ke pos …** bila
   /// ada satu pos anggaran rutin yang cocok (E9, ADR-036 §3.4). Tidak pernah

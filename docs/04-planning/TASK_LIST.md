@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -79,7 +79,7 @@ Terakhir diperbarui: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 8 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana), berikutnya T-18.7 |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 12 | 9 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian), berikutnya T-18.10 dan T-18.11, lalu T-18.9 |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3540,13 +3540,33 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       dan tidak ikut disimpan, Batal, rute menyimpan jadwal + preferensi +
       anggaran diregangkan + `LedgerChanges`, rute Batal),
       `app_period_test.dart` (2 uji).
-- [ ] **T-18.7** Tawaran awal bulan saat menyimpan rutin pemasukan bulanan
+- [x] **T-18.7** Tawaran awal bulan saat menyimpan rutin pemasukan bulanan
       (FINANCIAL_PERIOD F2): hanya bila awal bulan masih bawaan dan belum
       pernah diubah, sekali per rutin.
       Verifikasi: uji muncul untuk Gaji tanggal 25; tidak muncul untuk
       pengeluaran, rutin mingguan, tanggal 1, atau sesudah pengguna pernah
       mengubah sendiri.
       Memenuhi FR-PLN-004.
+      **Selesai 11 Okt 2026.** Aturan murni `financialMonthOfferFor`
+      (`shared/recurring/domain/financial_month_offer.dart`): rutin
+      pemasukan bulanan bertanggal ≠ 1, jadwal masih
+      `FinancialMonthSchedule.initial`, belum pernah diubah sendiri, rutin
+      belum pernah ditawari; tanggal 29–31 ditawari "hari terakhir bulan"
+      hanya bila memang hari terakhir. Status di
+      `settings/financial_month_offer` (`FinancialMonthPreferenceRepository.
+      loadOffer`/`saveOffer`): `changedByUser` diisi saat lembar disimpan,
+      `offeredRuleIds` saat ditawarkan (sekali per rutin, diabaikan pun
+      tercatat). `RecordBloc` menampilkan pesan tersimpan lalu snackbar
+      "Mulai bulan keuanganmu tiap tanggal 25?" [Atur] di ketiga jalur
+      pembuatan rutin (Catat dan jadwalkan, Simpan jadwal, Jadikan rutin);
+      Atur membuka `BudgetRouteKeys.financialMonth` dengan
+      `FinancialMonthInput(initial: 25)`. Rutin gajian adalah pemasukan,
+      jadi tidak berebut dengan saran tautan pos (pengeluaran). Uji:
+      `record_bloc_financial_month_offer_test.dart` (7 uji: ditawarkan dan
+      dicatat, tidak sesudah diubah sendiri, tidak bila jadwal bukan bawaan,
+      aturan murni untuk pengeluaran/mingguan/tanggal 1/sudah ditawari/hari
+      terakhir); 2 pemeriksaan baru di `financial_month_sheet_test.dart`
+      (tanggal terpilih dari tawaran, simpan mengisi `changedByUser`).
 - [x] **T-18.8** Periode peralihan di Rencana (FINANCIAL_PERIOD P-8, P-9):
       label "Periode peralihan · n hari", uang nganggur negatif tanpa
       peringatan dengan kalimat "Rentang ini tidak memuat gajian.", tinjau

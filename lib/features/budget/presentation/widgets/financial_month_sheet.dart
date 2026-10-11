@@ -58,8 +58,13 @@ class FinancialMonthSheet extends StatefulWidget {
     required this.today,
     required this.budgets,
     required this.onSave,
+    this.initial,
     super.key,
   });
+
+  /// Tanggal yang sudah terpilih saat dibuka (tawaran rutin gajian, F2);
+  /// `null` = tanggal aktif.
+  final FinancialMonthStart? initial;
 
   /// Jadwal aktif.
   final FinancialMonthSchedule schedule;
@@ -78,7 +83,7 @@ class FinancialMonthSheet extends StatefulWidget {
 }
 
 class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
-  late FinancialMonthStart _pick = widget.schedule.active;
+  late FinancialMonthStart _pick = widget.initial ?? widget.schedule.active;
   final _off = <String>{};
   bool _saving = false;
 

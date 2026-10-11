@@ -1162,6 +1162,8 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthLastDay => 'Last day of the month';
 	@override String get financialMonthChange => 'Change financial month start';
 	@override String get financialMonthHint => 'Usually your payday.';
+	@override String financialMonthOffer({required Object start}) => 'Start your financial month on ${start}?';
+	@override String get financialMonthOfferAction => 'Set';
 	@override String financialMonthPreviewTitle({required Object day}) => 'Start on day ${day}';
 	@override String get financialMonthPreviewTitleLastDay => 'Start on the last day';
 	@override String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.';
@@ -2486,6 +2488,8 @@ extension on TranslationsEn {
 			_ => null,
 		} ?? switch (path) {
 			'plan.financialMonthHint' => 'Usually your payday.',
+			'plan.financialMonthOffer' => ({required Object start}) => 'Start your financial month on ${start}?',
+			'plan.financialMonthOfferAction' => 'Set',
 			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Start on day ${day}',
 			'plan.financialMonthPreviewTitleLastDay' => 'Start on the last day',
 			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.',

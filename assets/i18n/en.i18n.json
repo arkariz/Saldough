@@ -1090,6 +1090,8 @@
     "financialMonthLastDay": "Last day of the month",
     "financialMonthChange": "Change financial month start",
     "financialMonthHint": "Usually your payday.",
+    "financialMonthOffer": "Start your financial month on $start?",
+    "financialMonthOfferAction": "Set",
     "financialMonthPreviewTitle": "Start on day $day",
     "financialMonthPreviewTitleLastDay": "Start on the last day",
     "financialMonthPreviewTransition": "This period becomes $range ($days days), then $next.",

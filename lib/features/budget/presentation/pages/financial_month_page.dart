@@ -18,7 +18,10 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// dan Anggaran segar. Saldo tidak berubah.
 class FinancialMonthPage extends StatefulWidget {
   /// Membuat [FinancialMonthPage].
-  const FinancialMonthPage({this.now, super.key});
+  const FinancialMonthPage({this.initial, this.now, super.key});
+
+  /// Tanggal yang sudah terpilih saat dibuka; `null` = tanggal aktif.
+  final FinancialMonthStart? initial;
 
   /// Jam, bisa diganti di uji.
   final DateTime Function()? now;
@@ -40,11 +43,15 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
 
   Future<bool> _save(FinancialMonthStart start, Set<String> moved) async {
     final updated = _schedule.changedOn(_today, start);
-    final saved = await _c<FinancialMonthPreferenceRepository>().save(updated);
+    final preferences = _c<FinancialMonthPreferenceRepository>();
+    final saved = await preferences.save(updated);
     if (saved.isLeft()) {
       _showError();
       return false;
     }
+    // Sesudah diubah sendiri, tawaran rutin gajian tidak muncul lagi (F2).
+    final offer = (await preferences.loadOffer()).getOrElse((_) => (changedByUser: false, offeredRuleIds: const {}));
+    await preferences.saveOffer((changedByUser: true, offeredRuleIds: offer.offeredRuleIds));
     ActiveFinancialMonth.notifier.value = updated;
     final budgets = _c<BudgetRepository>();
     final templates = _c<BudgetTemplateRepository>();
@@ -82,6 +89,7 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
         if (!snapshot.hasData) return const SizedBox.expand();
         return FinancialMonthSheet(
           schedule: _schedule,
+          initial: widget.initial,
           today: _today,
           budgets: snapshot.data!,
           onSave: _save,

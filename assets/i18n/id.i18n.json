@@ -1087,6 +1087,8 @@
     "financialMonthLastDay": "Hari terakhir bulan",
     "financialMonthChange": "Ubah awal bulan keuangan",
     "financialMonthHint": "Biasanya tanggal gajian.",
+    "financialMonthOffer": "Mulai bulan keuanganmu tiap $start?",
+    "financialMonthOfferAction": "Atur",
     "financialMonthPreviewTitle": "Mulai tanggal $day",
     "financialMonthPreviewTitleLastDay": "Mulai hari terakhir bulan",
     "financialMonthPreviewTransition": "Periode ini jadi $range ($days hari), lalu $next.",

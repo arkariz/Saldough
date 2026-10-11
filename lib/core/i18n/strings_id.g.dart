@@ -2961,6 +2961,12 @@ class Translations$plan$id {
 	/// id: 'Biasanya tanggal gajian.'
 	String get financialMonthHint => 'Biasanya tanggal gajian.';
 
+	/// id: 'Mulai bulan keuanganmu tiap $start?'
+	String financialMonthOffer({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?';
+
+	/// id: 'Atur'
+	String get financialMonthOfferAction => 'Atur';
+
 	/// id: 'Mulai tanggal $day'
 	String financialMonthPreviewTitle({required Object day}) => 'Mulai tanggal ${day}';
 
@@ -4691,6 +4697,8 @@ extension on Translations {
 			_ => null,
 		} ?? switch (path) {
 			'plan.financialMonthHint' => 'Biasanya tanggal gajian.',
+			'plan.financialMonthOffer' => ({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?',
+			'plan.financialMonthOfferAction' => 'Atur',
 			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Mulai tanggal ${day}',
 			'plan.financialMonthPreviewTitleLastDay' => 'Mulai hari terakhir bulan',
 			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'Periode ini jadi ${range} (${days} hari), lalu ${next}.',

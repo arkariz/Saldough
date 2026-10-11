@@ -1,15 +1,19 @@
 # Pengumuman pembaruan: versi baru dari Play Store dan pembaruan kecil Shorebird
 
 **Tanggal:** 11 Oktober 2026.
-**Status:** Draf, menunggu keputusan pemilik (§12). Keputusan arsitekturnya
-di [ADR-039](../../02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md)
-(Proposed); tugasnya Fase 20 di TASK_LIST.
+**Status:** Draf, menunggu keputusan pemilik (§12). Keputusan teknisnya
+ditentukan engineer (§13) dan ditulis sebagai ADR baru di T-20.1; tugasnya
+Fase 20 di TASK_LIST.
 **Berkaitan:** [ADR-023](../../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)
 (Analytics/Crashlytics), T-8.7 (rilis Android dan Shorebird),
 [PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md), skill
 `release-email` (catatan rilis untuk penguji).
 
-Dokumen ini merancang perilaku, alur, aturan, dan teks. Rupa visual
+Dokumen ini merancang perilaku, alur, aturan, dan teks: apa yang dialami
+pengguna. **Cara teknisnya tidak diputuskan di sini**: mekanisme pengecekan
+dan pemasangan versi Play Store, cara membaca keadaan Shorebird, tempat
+menyimpan catatan "Apa yang baru", dan perlu tidaknya server atau
+konfigurasi jarak jauh ditentukan engineer, dengan batasan di §13. Rupa visual
 mengikuti komponen yang sudah ada (banner perhatian, baris setelan, lembar);
 yang belum ada ditandai "perlu rupa dari ui-ux-designer".
 
@@ -19,27 +23,24 @@ yang belum ada ditandai "perlu rupa dari ui-ux-designer".
    Play Store atau Shorebird. Rilis toko disebut **versi baru**, tambalan
    Shorebird disebut **pembaruan kecil**. Keduanya diumumkan di tempat yang
    sama: banner di Beranda dan baris **Versi aplikasi** di Akun.
-2. **Versi baru dari Play Store memakai In-App Updates mode fleksibel.**
-   Pengguna mengetuk **Perbarui**, unduhan berjalan di latar sementara
-   aplikasi tetap dipakai, lalu **Pasang sekarang** memasang dan membuka
-   ulang aplikasi. Tidak ada pembaruan paksa di R1 (KT-U1).
-3. **Pembaruan kecil tetap diunduh otomatis oleh Shorebird** (setelan
-   `auto_update` sekarang tidak diubah). Aplikasi hanya membaca keadaannya:
-   bila tambalan sudah terunduh dan menunggu dibuka ulang, Beranda memberi
-   tahu sekali (KT-U2).
+2. **Versi baru dari Play Store bisa dipasang dari dalam aplikasi**, dengan
+   ketukan sesedikit mungkin, tanpa dipaksa, dan sebisa mungkin tanpa
+   menghentikan pengguna yang sedang mencatat. Pengguna bisa menundanya
+   (KT-U1). Mekanismenya dipilih engineer.
+3. **Pembaruan kecil yang sudah siap diumumkan sekali** di Beranda, beserta
+   cara memakainya (tutup lalu buka lagi aplikasi) (KT-U2). Cara aplikasi
+   mengetahui keadaan pembaruan kecil dipilih engineer.
 4. **"Apa yang baru" tampil sekali** sesudah versi atau pembaruan kecil yang
    punya catatan terpasang, lalu bisa dibuka lagi dari Akun (KT-U3).
-   Catatannya ditulis di dalam kode aplikasi (teks i18n), bukan diambil dari
-   server, sehingga ikut terbawa oleh tambalan Shorebird dan terbaca tanpa
-   koneksi.
+   Catatannya harus terbaca tanpa koneksi dan tersedia juga untuk pembaruan
+   kecil; tempat dan cara menyimpannya dipilih engineer.
 5. **Tidak pernah mengganggu pencatatan.** Pengumuman hanya di Beranda dan
    Akun, tidak pernah di tengah Catat, suara, atau lembar lain; tidak muncul
    selama onboarding atau tur; kalah prioritas dari banner kotak masuk
    notifikasi; dan diam saja saat luring atau saat pengecekan gagal.
-6. **Tanpa server baru dan tanpa data keuangan keluar perangkat.** Yang
-   bertambah hanya pertanyaan "ada versi baru?" ke aplikasi Play Store di
-   perangkat dan pembacaan keadaan Shorebird yang sudah berjalan sejak T-8.7.
-   Keduanya tetap perlu dicek terhadap formulir Keamanan Data (§9).
+6. **Tanpa data keuangan keluar perangkat.** Apa pun mekanisme yang dipilih
+   engineer, data baru yang keluar perangkat (bila ada) disebut di ADR-nya
+   dan dicek terhadap formulir Keamanan Data (§9).
 
 ## 2. Masalah dan bukti
 
@@ -75,17 +76,10 @@ yang belum ada ditandai "perlu rupa dari ui-ux-designer".
 
 **Non-tujuan (R1)**
 
-- Pembaruan paksa atau "versi minimum" (butuh konfigurasi jarak jauh,
-  B-39).
-- iOS: aplikasi belum dirilis di App Store; App Store tidak punya API
-  pembaruan di dalam aplikasi. Pembaruan kecil Shorebird di iOS ikut berlaku
-  begitu iOS dirilis karena alurnya sama (B-39).
-- Mengatur jalur Shorebird (stable/beta/staging) dari aplikasi, prioritas
-  pembaruan Play (`updatePriority`), atau catatan rilis yang diambil dari
-  server.
-- Mengubah setelan `auto_update` Shorebird atau memberi pengguna pilihan
-  "jangan unduh pembaruan kecil".
-- Tombol "buka ulang sekarang" untuk pembaruan kecil (KT-U2).
+- Pembaruan paksa atau "versi minimum" (B-39).
+- iOS: aplikasi belum dirilis di App Store (B-39).
+- Memberi pengguna pilihan "jangan unduh pembaruan kecil" atau memilih
+  jalur uji.
 
 **Ukuran keberhasilan**
 
@@ -143,53 +137,51 @@ galat. Akun menampilkan versi yang terpasang saja.
 
 ```mermaid
 flowchart TD
-  A[Aplikasi dibuka / kembali ke depan] --> B{Sudah dicek < 6 jam lalu?}
-  B -- ya --> Z[Pakai hasil terakhir]
-  B -- tidak --> C[Tanya Play: ada versi baru?]
-  C -- gagal / tidak dipasang dari Play --> X[Diam, tidak ada banner]
+  A[Aplikasi dibuka / kembali ke depan] --> C[Cek: ada versi baru di Play?]
+  C -- gagal / tidak bisa dicek --> X[Diam, tidak ada banner]
   C -- tidak ada --> X
   C -- ada build N --> D{Build N ditunda pengguna < 7 hari lalu?}
   D -- ya --> Y[Tidak ada banner; Akun tetap menyebutnya]
   D -- tidak --> E[Banner: Versi baru tersedia - Perbarui]
   E -- Nanti --> Y
-  E -- Perbarui --> F[Dialog Play: setuju?]
+  E -- Perbarui --> F[Konfirmasi dari Play, bila ada]
   F -- batal --> E
-  F -- setuju --> G[Unduh di latar; banner: Mengunduh versi baru]
+  F -- setuju --> G[Mengunduh; pengguna tetap bisa mencatat]
   G -- gagal --> E
   G -- selesai --> H[Banner: Versi baru sudah diunduh - Pasang sekarang]
-  H -- Pasang sekarang --> I[Play memasang, aplikasi dibuka ulang]
+  H -- Pasang sekarang --> I[Versi baru terpasang, aplikasi terbuka lagi]
   I --> J[F3: Apa yang baru]
 ```
 
 1. Titik masuk: Beranda (banner) atau Akun → Versi aplikasi.
-2. Ketukan: **Perbarui** (1) → setuju di dialog Play (2) → **Pasang
-   sekarang** (3) sesudah unduhan selesai. Dua ketukan di aplikasi, satu di
-   dialog Play.
+2. Target ketukan: **Perbarui** → (konfirmasi Play bila mekanismenya
+   memintanya) → **Pasang sekarang**. Paling banyak dua ketukan di
+   aplikasi. Bila mekanisme yang dipilih engineer tidak mendukung unduh di
+   latar, keadaan "mengunduh" dan "sudah diunduh" boleh tidak ada; syarat
+   yang tetap berlaku: tidak memaksa, bisa ditunda, dan tidak menghilangkan
+   data.
 3. Banner punya tombol tutup **Nanti** pada keadaan "tersedia". Pada keadaan
    "mengunduh" tidak ada tindakan; pada "sudah diunduh" tidak bisa ditunda
    (unduhan sudah terjadi, memasangnya tinggal satu ketuk) tetapi tidak
    memaksa.
-4. Jalan pulang: batal di dialog Play → kembali ke "tersedia"; unduhan gagal
-   → kembali ke "tersedia" tanpa pesan galat panjang; aplikasi ditutup saat
-   mengunduh → saat dibuka lagi, keadaan dibaca ulang dari Play (bisa
-   "mengunduh" atau "sudah diunduh").
-5. Tidak dipasang dari Play (build debug, APK langsung, emulator tanpa
-   Play) → diam; Akun hanya menampilkan versi.
+4. Jalan pulang: batal di konfirmasi → kembali ke "tersedia"; unduhan
+   gagal → kembali ke "tersedia" tanpa pesan galat panjang; aplikasi
+   ditutup saat mengunduh → saat dibuka lagi, keadaan yang benar tampil.
+5. Tidak bisa dicek (mis. aplikasi tidak dipasang dari Play) → diam; Akun
+   hanya menampilkan versi.
 
 ### F2. Pembaruan kecil Shorebird
 
-1. Saat aplikasi dibuka, Shorebird mengunduh tambalan di latar (perilaku
-   sekarang).
-2. Saat dibuka dan saat kembali ke depan, aplikasi membaca keadaan
-   Shorebird. Bila ada tambalan berikutnya yang sudah terunduh (nomor
-   tambalan berikutnya > nomor yang sedang berjalan) dan nomor itu belum
-   pernah diumumkan → banner "Pembaruan kecil siap. Tutup lalu buka lagi
-   aplikasi untuk memakainya. [Oke]".
+1. Pembaruan kecil diunduh tanpa campur tangan pengguna (perilaku sekarang;
+   engineer boleh mengubah cara kerjanya selama hasil di bawah tetap).
+2. Begitu ada pembaruan kecil yang siap dipakai pada pembukaan berikutnya
+   dan belum pernah diumumkan → banner "Pembaruan kecil siap. Tutup lalu
+   buka lagi aplikasi untuk memakainya. [Oke]".
 3. **Oke** atau menutup banner → nomor tambalan itu tercatat sudah
    diumumkan; banner tidak muncul lagi untuk nomor itu. Akun tetap
    menyebut "Pembaruan kecil siap, buka ulang aplikasi".
 4. Pengguna menutup dan membuka lagi aplikasi → tambalan berjalan → F3.
-5. Build tanpa Shorebird (debug, `flutter run`) → diam.
+5. Keadaan tidak bisa diketahui (mis. build debug) → diam.
 
 ### F3. Apa yang baru
 
@@ -221,8 +213,7 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 - Ketuk baris → layar/lembar **Apa yang baru** (daftar catatan) dengan
   tombol sesuai keadaan di atasnya (**Perbarui** / **Pasang sekarang**),
   sehingga pengguna yang sudah menekan **Nanti** tetap punya jalan.
-- Membuka Akun memicu pengecekan Play bila hasil terakhir lebih tua dari
-  6 jam.
+- Membuka Akun memicu pengecekan (B-5).
 
 ## 6. Aturan bisnis
 
@@ -232,20 +223,21 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | B-2 | Banner pembaruan hanya tampil di Beranda, di slot `notice` yang sama dengan banner kotak masuk notifikasi. Bila kotak masuk punya transaksi menunggu, banner kotak masuk yang tampil (satu banner per layar, `writing.md`). |
 | B-3 | Prioritas di slot itu: kotak masuk notifikasi > versi baru sudah diunduh > versi baru tersedia/mengunduh > pembaruan kecil siap. |
 | B-4 | Versi baru dari Play mengalahkan pembaruan kecil: bila keduanya ada, hanya versi baru yang diumumkan (S4). |
-| B-5 | Pengecekan Play paling sering sekali per 6 jam (saat dibuka, kembali ke depan, atau membuka Akun). Kegagalan apa pun = "tidak diketahui", tanpa banner dan tanpa pesan galat. |
+| B-5 | Pengecekan terjadi saat aplikasi dibuka, kembali ke depan, atau Akun dibuka, tanpa terasa memberatkan (frekuensi persisnya ditentukan engineer). Kegagalan apa pun = "tidak diketahui", tanpa banner dan tanpa pesan galat. |
 | B-6 | **Nanti** menunda banner untuk build itu selama 7 hari. Build yang lebih baru dari yang ditunda tampil lagi tanpa menunggu. |
 | B-7 | **Pasang sekarang** hanya dijalankan dari ketukan pengguna di Beranda atau Akun. Aplikasi tidak pernah memanggil pemasangan sendiri. |
 | B-8 | Banner pembaruan kecil tampil paling banyak sekali per nomor tambalan. |
-| B-9 | Isi pembaruan kecil yang belum berjalan tidak bisa dibaca (kodenya belum dimuat), jadi banner pembaruan kecil tidak pernah menyebut isinya; isinya baru tampil lewat Apa yang baru sesudah dibuka ulang. |
+| B-9 | Banner pembaruan kecil tidak menyebut isinya; isinya tampil lewat Apa yang baru sesudah dibuka ulang. (Bila engineer menemukan cara membaca isinya lebih awal, ini boleh ditinjau ulang.) |
 | B-10 | Apa yang baru tampil otomatis paling banyak sekali per (build, tambalan), tidak pada pemasangan pertama, dan tidak selama onboarding atau tur. |
-| B-11 | Catatan Apa yang baru ditulis di teks i18n (id dan en) per (build, tambalan), paling banyak tiga butir, masing-masing satu kalimat manfaat. Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
+| B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, terbaca tanpa koneksi, paling banyak tiga butir, masing-masing satu kalimat manfaat. Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
 | B-12 | Lompat beberapa versi (mis. `0.5.0+6` → `0.7.0+9`): lembar menggabungkan catatan semua versi di antaranya, terbaru di atas, paling banyak enam butir; sisanya di Akun. |
 | B-13 | Inti aplikasi tetap luring: tidak ada alur pencatatan yang menunggu hasil pengecekan pembaruan. Pengecekan berjalan sesudah Beranda tampil, tidak menunda pembukaan. |
 
-Penyimpanan lokal (preferensi, bukan entitas domain; DOMAIN_MODEL tidak
-berubah): versi terakhir yang dilihat (build, tambalan), build yang ditunda
-dan waktunya, nomor tambalan terakhir yang diumumkan, waktu pengecekan Play
-terakhir. Semua milik perangkat, ikut terhapus bila data aplikasi dihapus.
+Yang perlu diingat aplikasi agar aturan di atas berlaku: versi terakhir
+yang dilihat (build, pembaruan kecil), build yang ditunda dan kapan,
+pembaruan kecil yang sudah diumumkan. Ini bukan data keuangan dan bukan
+entitas domain (DOMAIN_MODEL tidak berubah); milik perangkat, ikut terhapus
+bila data aplikasi dihapus. Cara menyimpannya ditentukan engineer.
 
 ## 7. Kebutuhan informasi per layar
 
@@ -296,17 +288,17 @@ tambalan.
 
 ## 9. Privasi dan Keamanan Data
 
-- **Play In-App Updates** bertanya ke aplikasi Play Store di perangkat
-  lewat pustaka Play; aplikasi kita tidak mengirim apa pun ke server kita.
-  Panduan Keamanan Data Google untuk pustaka Play perlu dibaca ulang sebelum
-  formulir diisi (T-20.7).
-- **Shorebird sudah menghubungi servernya sejak T-8.7** (`auto_update`
-  bawaan menyala) untuk menanyakan tambalan, tetapi
+- **Mekanisme pengecekan dan pemasangan** yang dipilih engineer (pustaka,
+  layanan, server, atau konfigurasi jarak jauh bila ada) wajib menyebut di
+  ADR-nya data apa yang keluar perangkat, ke mana, dan untuk apa, supaya
+  formulir Keamanan Data bisa diperbarui (T-20.7).
+- **Shorebird sudah menghubungi servernya sejak T-8.7** untuk menanyakan
+  pembaruan kecil, tetapi
   [PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md) belum
-  menyebutnya. Fitur ini tidak menambah panggilan Shorebird, tetapi celah
-  pencatatannya ditutup di T-20.7: data apa yang dikirim Shorebird
+  menyebutnya. Celah pencatatannya ditutup di T-20.7: data apa yang
+  dikirim Shorebird
   (menurut dokumentasi resminya) dan apakah perlu dideklarasikan.
-- `patch_number` sebagai properti pengguna dan custom key menambah satu
+- Nomor pembaruan kecil sebagai properti pengguna dan custom key menambah satu
   atribut ke data Analytics/Crashlytics yang sudah dideklarasikan; bukan
   jenis data baru.
 - Tidak ada data keuangan, teks transaksi, atau identitas yang keluar
@@ -351,29 +343,29 @@ yang baru**.
 | Kasus | Perilaku |
 |---|---|
 | Pengguna sedang di Catat saat unduhan versi baru selesai | Tidak ada apa pun di Catat; banner "sudah diunduh" menunggu di Beranda (B-2, B-7). |
-| Aplikasi dipindah ke latar sesudah unduhan selesai, tanpa Pasang sekarang | Saat kembali, banner "sudah diunduh" tampil lagi. Engineer memverifikasi apakah Play memasang sendiri saat aplikasi di latar; bila ya, pembukaan berikutnya langsung ke F3. |
-| Pemasangan versi baru saat notifikasi sedang diproses (ADR-032) | Antrean notifikasi hanya di-ack sesudah tersimpan, jadi pemasangan tidak menghilangkan transaksi; diverifikasi di T-20.8. |
+| Aplikasi dipindah ke latar sesudah unduhan selesai, tanpa Pasang sekarang | Saat kembali, banner "sudah diunduh" tampil lagi, atau, bila versi baru sudah terpasang dengan sendirinya, langsung ke F3. |
+| Pemasangan versi baru saat notifikasi sedang diproses (ADR-032) | Tidak ada transaksi yang hilang atau tercatat ganda; diverifikasi di T-20.8. |
 | Penguji keluar dari program closed testing | Play tidak menawarkan build tes; tidak ada banner. |
-| Tambalan Shorebird ditarik (rollback) | Nomor tambalan berjalan bisa turun; versi terakhir yang dilihat tidak diturunkan, tidak ada lembar, tidak ada galat. |
-| Versi baru terpasang sementara tambalan build lama masih "siap" | Tambalan build lama tidak berlaku lagi; nomor tambalan yang diumumkan diatur ulang per build. |
+| Pembaruan kecil ditarik pemilik (rollback) | Nomor pembaruan kecil berjalan bisa turun; versi terakhir yang dilihat tidak diturunkan, tidak ada lembar, tidak ada galat. |
+| Versi baru terpasang sementara pembaruan kecil build lama masih "siap" | Pembaruan kecil build lama tidak diumumkan lagi; hitungan "sudah diumumkan" berlaku per build. |
 | Bahasa aplikasi diganti sesudah lembar tampil | Akun menampilkan catatan dalam bahasa baru; lembar tidak tampil ulang. |
-| Penyimpanan preferensi gagal dibaca | Anggap pemasangan pertama: tidak menampilkan lembar (lebih baik terlewat daripada tampil berulang). |
+| Ingatan aplikasi (versi terakhir dilihat) gagal dibaca | Anggap pemasangan pertama: tidak menampilkan lembar (lebih baik terlewat daripada tampil berulang). |
 | Pengguna menghapus data aplikasi | Sama dengan pemasangan pertama. |
 | Mode tampil gelap / sembunyikan nominal | Tidak berpengaruh; tidak ada nominal di fitur ini. |
 
 ## 12. Pertanyaan untuk pemilik
 
-- **KT-U1 — Mode pembaruan Play.** Rekomendasi: **fleksibel saja** di R1
-  (unduh di latar, pasang saat pengguna mengetuk). Mode langsung (layar
-  penuh, wajib) baru masuk akal dengan "versi minimum" dari konfigurasi
-  jarak jauh untuk perbaikan kritis data, dicatat di B-39.
+- **KT-U1 — Boleh memaksa pembaruan?** Rekomendasi: **tidak** di R1;
+  pengguna selalu bisa menunda dan tetap mencatat. Pembaruan wajib untuk
+  perbaikan kritis data dicatat di B-39. (Mekanisme pembaruannya tetap
+  pilihan engineer.)
 - **KT-U2 — Pembaruan kecil diumumkan atau diam.** Rekomendasi: **umumkan
   sekali per tambalan** dengan banner "Pembaruan kecil siap" yang bisa
-  ditutup, tanpa tombol buka ulang. Alasannya: pemilik ingin pengguna tahu,
-  dan tambalan sering berisi perbaikan angka yang penting cepat dipakai.
-  Tombol "buka ulang sekarang" ditolak karena Android tidak menyediakan
-  cara resmi memulai ulang proses aplikasi; pustaka pihak ketiga untuk itu
-  rawan dan bisa memotong proses notifikasi yang sedang berjalan.
+  ditutup. Alasannya: pemilik ingin pengguna tahu, dan pembaruan kecil
+  sering berisi perbaikan angka yang penting cepat dipakai. Tombol "buka
+  ulang sekarang" hanya ditambahkan bila engineer menilainya aman (tidak
+  memotong pencatatan atau pemrosesan notifikasi); bila tidak, cukup teks
+  petunjuk.
 - **KT-U3 — Apa yang baru otomatis.** Rekomendasi: **tampil sekali
   otomatis** di Beranda bila ada catatan, plus selalu tersedia di Akun.
   Alternatifnya hanya di Akun, tetapi hampir tidak ada yang membukanya.
@@ -382,11 +374,42 @@ yang baru**.
   "pembaruan" lebih ramah daripada "patch".
 - **KT-U5 — Siapa menulis catatan Apa yang baru.** Rekomendasi: agen
   menyusun draf dari TASK_LIST/commit saat menyiapkan rilis atau tambalan
-  (bersama email rilis), pemilik menyetujui sebelum `shorebird release`
-  atau `shorebird patch`.
+  (bersama email rilis), pemilik menyetujui sebelum rilis atau pembaruan
+  kecil diterbitkan.
 
-## 13. Fase rilis
+## 13. Diserahkan ke engineer
+
+Keputusan teknis berikut **sengaja tidak diputuskan** di dokumen ini.
+Engineer (agen `flutter-engineer`) menentukannya dan menuliskannya sebagai
+ADR baru (nomor berikutnya) di T-20.1, sebelum kode ditulis:
+
+1. **Rilis Play Store:** cara mengetahui ada versi baru dan cara
+   mengunduh/memasangnya dari dalam aplikasi (pustaka, mode, atau membuka
+   halaman toko).
+2. **Pembaruan kecil Shorebird:** cara mengetahui pembaruan kecil sudah
+   siap dan nomor yang sedang berjalan, serta apakah setelan Shorebird
+   sekarang perlu diubah.
+3. **Catatan "Apa yang baru":** tempat dan cara menyimpannya.
+4. **Server atau konfigurasi jarak jauh:** perlu atau tidak.
+5. Letak kode dan pembagian zona (ADR-030), serta cara menyimpan ingatan
+   aplikasi (§6).
+
+Batasan yang wajib dipenuhi pilihan apa pun:
+
+- Alur F1–F4 dan aturan B-1–B-13 tetap berlaku (penyesuaian F1 bila
+  mekanismenya tidak mengunduh di latar sudah diatur di F1 langkah 2).
+- Inti aplikasi tetap luring dan tidak melambat (NFR-REL-001, B-13).
+- Catatan Apa yang baru terbaca luring dan tersedia juga untuk pembaruan
+  kecil (B-11).
+- Tidak ada data keuangan yang keluar perangkat; data baru yang keluar
+  disebut di ADR (§9).
+- Semua aturan bisa diuji tanpa perangkat (sumber pembaruan bisa diganti
+  palsu di uji).
+- Bila sebuah batasan ternyata tidak bisa dipenuhi, engineer berhenti dan
+  melapor ke pemilik, bukan menyesuaikan alur diam-diam.
+
+## 14. Fase rilis
 
 - **R1 (Fase 20):** semua di atas untuk Android.
-- **R2 (B-39):** versi minimum/pembaruan paksa lewat konfigurasi jarak jauh,
-  iOS (App Store), dan jalur Shorebird untuk penguji.
+- **R2 (B-39):** pembaruan wajib/versi minimum, iOS (App Store), dan
+  pilihan jalur uji untuk penguji.

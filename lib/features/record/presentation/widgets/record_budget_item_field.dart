@@ -24,6 +24,39 @@ List<BudgetItemOption> expenseBudgetChoicesFor(
     if (!option.isTransfer && option.walletId == walletId && _offeredOn(option, date, selectedId)) option,
 ];
 
+/// Pos yang ditawarkan saat CATAT membuat rutin pengeluaran (ADR-036 §3.4
+/// tambahan, T-18.15): hanya pos anggaran RUTIN (bertemplate) berdompet sama,
+/// karena pilihan itu disimpan sebagai tautan rutin. "Catat & Jadwalkan"
+/// ([scheduleOnly] `false`) tetap mengikuti KT-1 untuk transaksinya; "Simpan
+/// jadwal" tidak mencatat transaksi, jadi satu pos per template ditawarkan,
+/// dari periode yang mencakup [date] bila sudah lahir, selain itu yang
+/// terbaru.
+List<BudgetItemOption> recurringBudgetChoicesFor(
+  List<BudgetItemOption> all,
+  String? walletId,
+  DateTime date, {
+  required bool scheduleOnly,
+}) {
+  if (!scheduleOnly) {
+    return [
+      for (final option in expenseBudgetChoicesFor(all, walletId, null, date))
+        if (option.templateItemId != null) option,
+    ];
+  }
+  final byKey = <String, BudgetItemOption>{};
+  for (final option in all) {
+    final key = option.templateItemId;
+    if (key == null || option.isTransfer || option.isArchived || option.walletId != walletId) continue;
+    final current = byKey[key];
+    final better =
+        current == null ||
+        (option.covers(date) && !current.covers(date)) ||
+        (option.covers(date) == current.covers(date) && option.startDate.isAfter(current.startDate));
+    if (better) byKey[key] = option;
+  }
+  return byKey.values.toList();
+}
+
 /// Pos TRANSFER yang boleh ditawarkan ke transfer dari [fromWalletId] ke
 /// [toWalletId]: dompet anggarannya harus dompet asal DAN dompet tujuan posnya
 /// harus dompet tujuan transfer (ADR-018), dan periodenya mencakup [date]

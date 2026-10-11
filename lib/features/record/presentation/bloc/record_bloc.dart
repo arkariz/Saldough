@@ -146,7 +146,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   ) async {
     if (repeat == null) return _save(transaction, emit, onSaved);
     emit(state.copyWith(isSaving: true));
-    final rule = ruleFrom(transaction, repeat, id: _newId());
+    final rule = await _withChosenBudgetItem(ruleFrom(transaction, repeat, id: _newId()), transaction);
     if (await _recurringRepository.saveRule(rule) case Left(value: final failure)) {
       emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       return;
@@ -173,6 +173,22 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final effect = await _effectAfterRuleCreated(rule, _recordedAndScheduledMessage(rule));
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: effect));
     }
+  }
+
+  /// Pos anggaran yang dipilih saat membuat rutin pengeluaran adalah tautan
+  /// eksplisit (ADR-036 §3.4 tambahan, T-18.15): disimpan sebagai
+  /// `budgetItemKey` bila posnya pos anggaran rutin berdompet sama. Pos
+  /// bukan rutin tidak membuat tautan.
+  Future<RecurringRule> _withChosenBudgetItem(RecurringRule rule, Transaction transaction) async {
+    if (transaction case ExpenseTransaction(:final budgetItemId?, :final walletId)) {
+      final options = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
+      for (final option in options) {
+        if (option.itemId == budgetItemId && !option.isTransfer && option.walletId == walletId) {
+          if (option.templateItemId case final key?) return rule.copyWith(budgetItemKey: key);
+        }
+      }
+    }
+    return rule;
   }
 
   /// Jadikan Rutin: rutin baru yang kemunculan pertamanya adalah

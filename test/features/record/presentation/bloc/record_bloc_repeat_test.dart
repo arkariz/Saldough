@@ -5,10 +5,13 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
+
+import 'package:state_management/state_management.dart';
 
 import '../../../../helpers/mocks.dart';
 
@@ -21,6 +24,7 @@ void main() {
   late RecurringRuleRepositoryImpl rules;
   late RecurringChanges recurringChanges;
   late RecordBloc bloc;
+  late List<BudgetItemOption> catalogOptions;
 
   // "Hari ini" 2 Okt 2026, seperti contoh di RECURRING_AND_FORECAST §7.6.
   final today = DateTime(2026, 10, 2, 9);
@@ -39,7 +43,7 @@ void main() {
     bloc = RecordBloc(
       walletRepository: wallets,
       transactionRepository: transactions,
-      budgetItemCatalog: stubBudgetItemCatalog(),
+      budgetItemCatalog: stubBudgetItemCatalog(catalogOptions = []),
       createCategory: CreateCategory(repository: CategoryRepositoryImpl(storage: storage)),
       recurringRepository: rules,
       recurringChanges: recurringChanges,
@@ -173,6 +177,59 @@ void main() {
     expect(recorded.amount, 23450000);
     expect(recorded.recurrence, RecurrenceLink(ruleId: 'listrik', occurrenceDate: DateTime(2026, 9, 5)));
     expect(read(await rules.listRules()), isEmpty, reason: 'Ubah dulu tidak mengubah rutin');
+  });
+
+  group('pos anggaran dipilih saat membuat rutin menjadi tautan rutin (T-18.15, QA T-18.9 PO-1)', () {
+    BudgetItemOption option(String itemId, {String? templateItemId, DateTime? start}) => BudgetItemOption(
+      budgetId: 'bulanan',
+      budgetName: 'Bulanan',
+      itemId: itemId,
+      itemName: itemId,
+      walletId: 'bca',
+      startDate: start ?? DateTime(2026, 10),
+      endDate: DateTime((start ?? DateTime(2026, 10)).year, (start ?? DateTime(2026, 10)).month + 1),
+      templateItemId: templateItemId,
+      plannedAmount: 291400000,
+    );
+
+    ExpenseRecorded cicilan(DateTime date, String budgetItemId) => ExpenseRecorded(
+      walletId: 'bca',
+      amount: 291400000,
+      date: date,
+      note: 'Cicilan iPhone',
+      budgetItemId: budgetItemId,
+      repeat: const RecurringPattern(),
+    );
+
+    test('Simpan jadwal: rutin tertaut ke template pos, tanpa transaksi, tanpa saran E9', () async {
+      catalogOptions.add(option('cicilan-okt', templateItemId: 'tpl-cicilan'));
+      bloc.add(cicilan(DateTime(2026, 10, 24, 9), 'cicilan-okt'));
+      await settle(0);
+      final rule = read(await rules.listRules()).single;
+      expect(rule.budgetItemKey, 'tpl-cicilan');
+      expect(read(await transactions.listTransactionsInMonth(DateTime(2026, 10))), isEmpty);
+      // Saran tautan E9 hanya untuk rutin tanpa tautan.
+      expect(suggestBudgetLink(rule, catalogOptions), isNull);
+      expect(bloc.state.effect, isA<ShowSnackBarEffect>());
+    });
+
+    test('Catat & Jadwalkan: rutin tertaut dan transaksinya masuk pos itu', () async {
+      catalogOptions.add(option('cicilan-okt', templateItemId: 'tpl-cicilan'));
+      bloc.add(cicilan(DateTime(2026, 10, 2, 8), 'cicilan-okt'));
+      await settle(0);
+      final rule = read(await rules.listRules()).single;
+      expect(rule.budgetItemKey, 'tpl-cicilan');
+      final recorded = read(await transactions.listTransactionsInMonth(DateTime(2026, 10))).single as ExpenseTransaction;
+      expect(recorded.budgetItemId, 'cicilan-okt');
+      expect(recorded.recurrence?.ruleId, rule.id);
+    });
+
+    test('pos bukan rutin tidak membuat tautan', () async {
+      catalogOptions.add(option('bebas'));
+      bloc.add(cicilan(DateTime(2026, 10, 2, 8), 'bebas'));
+      await settle(0);
+      expect(read(await rules.listRules()).single.budgetItemKey, isNull);
+    });
   });
 
   test('Ubah dulu mengirim recurrence_date_gap: tanggal sama 0, gajian maju 2 hari 1-3 (T-18.14)', () async {

@@ -69,6 +69,13 @@ enum SpotlightKey {
   /// Sub-tab Rencana (Anggaran / Rutin), T-15.4.
   planTabs,
 
+  /// Nama periode di kepala segmen Bulan ini (T-18.10, FINANCIAL_PERIOD §8A).
+  planPeriodHeader,
+
+  /// Penanda periode peralihan di kepala Bulan ini; hanya terdaftar saat
+  /// periode berjalan adalah peralihan (T-18.10).
+  planTransition,
+
   /// Kartu Uang nganggur di segmen Bulan ini (T-15.13).
   planUnplanned,
 

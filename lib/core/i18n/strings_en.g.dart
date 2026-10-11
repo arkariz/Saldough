@@ -758,6 +758,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
 	@override String get planMonthPickerTitle => 'Next months';
 	@override String get planMonthPickerBody => 'See the forecast for the next two months. Each month shows its estimated month-end figure.';
+	@override String get planPeriodHeaderTitle => 'Your financial month';
+	@override String get planPeriodHeaderBody => 'Tap to start the month on your payday. Plan and Analysis follow it.';
+	@override String get planTransitionTitle => 'Transition period';
+	@override String get planTransitionBody => 'This period is longer or shorter once because your month start changed. The next one is a full month again.';
 }
 
 // Path: info
@@ -2131,6 +2135,10 @@ extension on TranslationsEn {
 			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
 			'tour.planMonthPickerTitle' => 'Next months',
 			'tour.planMonthPickerBody' => 'See the forecast for the next two months. Each month shows its estimated month-end figure.',
+			'tour.planPeriodHeaderTitle' => 'Your financial month',
+			'tour.planPeriodHeaderBody' => 'Tap to start the month on your payday. Plan and Analysis follow it.',
+			'tour.planTransitionTitle' => 'Transition period',
+			'tour.planTransitionBody' => 'This period is longer or shorter once because your month start changed. The next one is a full month again.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2481,12 +2489,12 @@ extension on TranslationsEn {
 			'recurring.suggestDismiss' => 'Not repeating',
 			'recurring.autoRecordedTitle' => 'Recorded automatically',
 			'plan.recurringSegmentLabel' => 'Recurring',
+			_ => null,
+		} ?? switch (path) {
 			'plan.financialMonthTitle' => 'Financial month start',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
 			'plan.financialMonthLastDay' => 'Last day of the month',
 			'plan.financialMonthChange' => 'Change financial month start',
-			_ => null,
-		} ?? switch (path) {
 			'plan.financialMonthHint' => 'Usually your payday.',
 			'plan.financialMonthOffer' => ({required Object start}) => 'Start your financial month on ${start}?',
 			'plan.financialMonthOfferAction' => 'Set',

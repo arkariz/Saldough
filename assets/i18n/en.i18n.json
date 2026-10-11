@@ -699,7 +699,11 @@
     "budgetRepeatTitle": "Repeat every period",
     "budgetRepeatBody": "Turn on to start this budget again every month with the same items. No money is moved.",
     "planMonthPickerTitle": "Next months",
-    "planMonthPickerBody": "See the forecast for the next two months. Each month shows its estimated month-end figure."
+    "planMonthPickerBody": "See the forecast for the next two months. Each month shows its estimated month-end figure.",
+    "planPeriodHeaderTitle": "Your financial month",
+    "planPeriodHeaderBody": "Tap to start the month on your payday. Plan and Analysis follow it.",
+    "planTransitionTitle": "Transition period",
+    "planTransitionBody": "This period is longer or shorter once because your month start changed. The next one is a full month again."
   },
   "info": {
     "menuTooltip": "Info and tours",

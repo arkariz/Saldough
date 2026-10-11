@@ -1956,6 +1956,18 @@ class Translations$tour$id {
 
 	/// id: 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.'
 	String get planMonthPickerBody => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.';
+
+	/// id: 'Bulan keuanganmu'
+	String get planPeriodHeaderTitle => 'Bulan keuanganmu';
+
+	/// id: 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.'
+	String get planPeriodHeaderBody => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.';
+
+	/// id: 'Periode peralihan'
+	String get planTransitionTitle => 'Periode peralihan';
+
+	/// id: 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.'
+	String get planTransitionBody => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.';
 }
 
 // Path: info
@@ -4340,6 +4352,10 @@ extension on Translations {
 			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
 			'tour.planMonthPickerTitle' => 'Bulan depan',
 			'tour.planMonthPickerBody' => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.',
+			'tour.planPeriodHeaderTitle' => 'Bulan keuanganmu',
+			'tour.planPeriodHeaderBody' => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.',
+			'tour.planTransitionTitle' => 'Periode peralihan',
+			'tour.planTransitionBody' => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4690,12 +4706,12 @@ extension on Translations {
 			'recurring.suggestDismiss' => 'Bukan rutin',
 			'recurring.autoRecordedTitle' => 'Tercatat otomatis',
 			'plan.recurringSegmentLabel' => 'Rutin',
+			_ => null,
+		} ?? switch (path) {
 			'plan.financialMonthTitle' => 'Awal bulan keuangan',
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
 			'plan.financialMonthLastDay' => 'Hari terakhir bulan',
 			'plan.financialMonthChange' => 'Ubah awal bulan keuangan',
-			_ => null,
-		} ?? switch (path) {
 			'plan.financialMonthHint' => 'Biasanya tanggal gajian.',
 			'plan.financialMonthOffer' => ({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?',
 			'plan.financialMonthOfferAction' => 'Atur',

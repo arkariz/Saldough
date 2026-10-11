@@ -6,8 +6,10 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
@@ -105,6 +107,7 @@ void main() {
     double width = 400,
     MonthReviewRepository? reviews,
     DateTime? today,
+    TutorialProgressRepository? tutorials,
   }) async {
     tester.view.physicalSize = Size(width, 1600);
     tester.view.devicePixelRatio = 1;
@@ -130,6 +133,12 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: PixelTheme.light,
+        builder: tutorials == null
+            ? null
+            : (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(disableAnimations: true),
+                child: SpotlightHost(repository: tutorials, child: child!),
+              ),
         home: Scaffold(
           body: BlocProvider.value(
             value: bloc,
@@ -386,6 +395,51 @@ void main() {
     expect(compactApprox(1100000000), '≈11 jt');
     expect(compactApprox(85000000), '≈850 rb');
     expect(compactApprox(-171400000), '≈−1,7 jt');
+  });
+
+  group('tur periode keuangan (T-18.10, FINANCIAL_PERIOD §8A)', () {
+    Future<TutorialProgressRepository> oldUser() async {
+      final tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+      // Pengguna lama: langkah tur Bulan ini sebelum Fase 18 sudah dilihat.
+      await tutorials.markStepsSeen(const [
+        SpotlightKey.planTabs,
+        SpotlightKey.planUnplanned,
+        SpotlightKey.planForecast,
+        SpotlightKey.planMonthPicker,
+      ]);
+      return tutorials;
+    }
+
+    testWidgets('pengguna lama melihat kepala periode sekali; periode biasa tanpa langkah peralihan', (tester) async {
+      final tutorials = await tester.runAsync(oldUser);
+      await pump(tester, tutorials: tutorials, width: 360);
+      expect(find.text(t.tour.planPeriodHeaderBody), findsOneWidget);
+      expect(find.text(t.tour.doneAction), findsOneWidget);
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      final progress = (await tester.runAsync(tutorials!.load))!.getOrElse((_) => TutorialProgress.empty);
+      expect(progress.hasSeen(SpotlightKey.planPeriodHeader), isTrue);
+      expect(progress.hasSeen(SpotlightKey.planTransition), isFalse);
+    });
+
+    testWidgets('periode berjalan peralihan: langkah penanda peralihan sesudah kepala periode', (tester) async {
+      ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial.changedOn(
+        DateTime(2026, 10, 10),
+        const FinancialMonthStart.day(25),
+      );
+      addTearDown(() => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial);
+      final tutorials = await tester.runAsync(oldUser);
+      await pump(tester, tutorials: tutorials, width: 360, today: DateTime(2026, 10, 10, 9));
+      expect(find.text(t.tour.planPeriodHeaderTitle), findsOneWidget);
+      await tester.tap(find.text(t.tour.nextAction));
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.planTransitionBody), findsOneWidget);
+      await tester.tap(find.text(t.tour.doneAction));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
   });
 
   group('periode peralihan (T-18.8, FINANCIAL_PERIOD P-8, P-9, contoh B)', () {

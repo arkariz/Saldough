@@ -161,9 +161,11 @@ abstract final class PeriodEvents {
 
   /// Transaksi ditautkan ke kemunculan rutin, oleh pengguna atau otomatis:
   /// selisih hari kalender antara [transactionDate] dan [occurrenceDate]
-  /// sebagai ember, bukan tanggalnya (batas atribusi P-4).
-  static AnalyticsEvent recurrenceDateGap(DateTime transactionDate, DateTime occurrenceDate) =>
-      AnalyticsEvent('recurrence_date_gap', {'bucket': gapBucket(transactionDate, occurrenceDate)});
+  /// sebagai ember, bukan tanggalnya (batas atribusi P-4). [via] jalurnya
+  /// (`edit`, `link`, `auto`, `one_tap`, `record_all`), supaya nol yang
+  /// dibuat sistem bisa dipisahkan dari sebaran yang diukur (T-18.19).
+  static AnalyticsEvent recurrenceDateGap(DateTime transactionDate, DateTime occurrenceDate, {required String via}) =>
+      AnalyticsEvent('recurrence_date_gap', {'bucket': gapBucket(transactionDate, occurrenceDate), 'via': via});
 
   /// `0`, `1-3`, `4-7`, `8-14`, atau `15+` hari, ke arah mana pun.
   static String gapBucket(DateTime a, DateTime b) {

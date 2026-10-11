@@ -314,6 +314,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
         AppAnalytics.log(RecurringEvents.occurrenceRecorded('one_tap'));
+        AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, event.date, via: 'one_tap'));
         emit(
           state.copyWith(
             transactions: [...state.transactions, transaction],
@@ -358,6 +359,8 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             return;
           case Right():
             recorded.add(transaction);
+            // Satu peristiwa per kemunculan yang tersimpan (T-18.19).
+            AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, o.date, via: 'record_all'));
         }
       }
     }
@@ -387,7 +390,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
         AppAnalytics.log(RecurringEvents.occurrenceLinked);
-        AppAnalytics.log(PeriodEvents.recurrenceDateGap(source.date, event.date));
+        AppAnalytics.log(PeriodEvents.recurrenceDateGap(source.date, event.date, via: 'link'));
         emit(
           state.copyWith(
             transactions: [for (final t in state.transactions) if (t.id == source.id) linked else t],

@@ -324,7 +324,7 @@ void main() {
         RecurrenceLink(ruleId: 'kopi', occurrenceDate: DateTime(2026, 9, 29), linkedBy: RecurrenceLinkedBy.auto),
       );
       // Tautan otomatis lewat jalur yang sama (T-18.11).
-      expect(events, contains(PeriodEvents.recurrenceDateGap(tx.date, DateTime(2026, 9, 29))));
+      expect(events, contains(PeriodEvents.recurrenceDateGap(tx.date, DateTime(2026, 9, 29), via: 'auto')));
       final entry = (await log.list(now)).getOrElse((_) => []).single;
       expect(entry.transactionId, tx.id);
 

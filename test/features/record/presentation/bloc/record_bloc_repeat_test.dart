@@ -261,8 +261,8 @@ void main() {
       await settle(before);
     }
     expect(events, [
-      const AnalyticsEvent('recurrence_date_gap', {'bucket': '0'}),
-      const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3'}),
+      const AnalyticsEvent('recurrence_date_gap', {'bucket': '0', 'via': 'edit'}),
+      const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3', 'via': 'edit'}),
     ]);
   });
 

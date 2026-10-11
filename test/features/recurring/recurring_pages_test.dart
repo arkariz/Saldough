@@ -3,6 +3,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
@@ -18,6 +19,8 @@ import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
+
+import '../../helpers/mocks.dart';
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -60,6 +63,7 @@ void main() {
     int monthsBack = 1,
     AutoRecordLogRepository? autoRecordLog,
     BudgetItemCatalog? catalog,
+    TransactionRepository? saveTo,
   }) async {
     tester.view.physicalSize = const Size(400, 1600);
     tester.view.devicePixelRatio = 1;
@@ -72,7 +76,7 @@ void main() {
       recurringChanges: changes,
       recordTransaction: RecordTransaction(
         ledgerChanges: LedgerChanges(),
-        transactionRepository: transactions,
+        transactionRepository: saveTo ?? transactions,
         recomputeWalletBalances: RecomputeWalletBalances(
           walletRepository: WalletRepositoryImpl(storage: storage),
           transactionRepository: transactions,
@@ -216,6 +220,52 @@ void main() {
       expect(await october(), isEmpty);
     });
 
+    group('recurrence_date_gap ember 0 dari Catat satu ketuk dan Catat semua (T-18.19)', () {
+      late List<AnalyticsEvent> gaps;
+      setUp(() {
+        gaps = [];
+        AppAnalytics.debugSink = (event) {
+          if (event.name == 'recurrence_date_gap') gaps.add(event);
+        };
+      });
+      tearDown(() => AppAnalytics.debugSink = null);
+
+      testWidgets('Catat satu ketuk: satu peristiwa 0 via one_tap', (tester) async {
+        await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+        await pump(tester, const RecurringSegmentView());
+        await tester.tap(find.text(t.recurring.recordAction));
+        await tester.pumpAndSettle();
+        expect(gaps, [const AnalyticsEvent('recurrence_date_gap', {'bucket': '0', 'via': 'one_tap'})]);
+      });
+
+      testWidgets('Catat semua (3): tiga peristiwa 0 via record_all', (tester) async {
+        await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+        await rules.saveRule(rule('Spotify', 5499000, DateTime(2026, 9, 30)));
+        await rules.saveRule(rule('Gym', 30000000, DateTime(2026, 10, 2)));
+        await pump(tester, const RecurringSegmentView());
+        await tester.tap(find.text(t.recurring.recordAllAction));
+        await tester.pumpAndSettle();
+        expect(gaps, List.filled(3, const AnalyticsEvent('recurrence_date_gap', {'bucket': '0', 'via': 'record_all'})));
+      });
+
+      testWidgets('gagal simpan: tidak mengirim', (tester) async {
+        registerFallbackValue(fallbackTransaction);
+        final failing = MockTransactionRepository();
+        when(() => failing.listTransactionsInMonth(any())).thenAnswer((_) async => right(const <Transaction>[]));
+        when(() => failing.saveTransaction(any(), previousDate: any(named: 'previousDate'))).thenAnswer(
+          (_) async => left<Failure, Unit>(const SystemFailure(code: FailureCode('TEST_FORCED_FAILURE'), message: 'dipaksa gagal')),
+        );
+        await rules.saveRule(rule('Netflix', 6500000, DateTime(2026, 10)));
+        await rules.saveRule(rule('Gym', 30000000, DateTime(2026, 10, 2)));
+        await pump(tester, const RecurringSegmentView(), saveTo: failing);
+        await tester.tap(find.text(t.recurring.recordAction).first);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(t.recurring.recordAllAction));
+        await tester.pumpAndSettle();
+        expect(gaps, isEmpty);
+      });
+    });
+
     testWidgets('transaksi mirip yang belum tertaut: ditanya dulu, Tautkan tidak menambah transaksi (E4)', (
       tester,
     ) async {
@@ -234,7 +284,7 @@ void main() {
       await tester.tap(find.text(t.recurring.linkAction));
       await tester.pumpAndSettle();
       // Tautan pengguna: 2 Okt ke kemunculan 1 Okt (T-18.11).
-      expect(events, contains(const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3'})));
+      expect(events, contains(const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3', 'via': 'link'})));
 
       final all = await october();
       expect(all, hasLength(1));

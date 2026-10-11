@@ -327,7 +327,8 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       // Tautan oleh pengguna dengan tanggal yang bisa digeser (gajian maju):
       // selisihnya mengukur batas atribusi 7 hari (FINANCIAL_PERIOD §8A,
       // ADR-038 §8, T-18.14).
-      onSuccess: () => AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, event.occurrenceDate)),
+      onSuccess: () =>
+          AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, event.occurrenceDate, via: 'edit')),
     );
   }
 

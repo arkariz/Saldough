@@ -25,7 +25,8 @@ void main() {
   test('recurrence_date_gap: ember selisih hari 0, 3, 7, 8, 15, ke arah mana pun, tanpa tanggal', () {
     final occurrence = DateTime(2026, 10, 25);
     String bucket(int days) =>
-        PeriodEvents.recurrenceDateGap(DateTime(2026, 10, 25 + days, 21), occurrence).parameters['bucket']! as String;
+        PeriodEvents.recurrenceDateGap(DateTime(2026, 10, 25 + days, 21), occurrence, via: 'edit').parameters['bucket']!
+            as String;
     expect(bucket(0), '0');
     expect(bucket(1), '1-3');
     expect(bucket(3), '1-3');
@@ -38,8 +39,8 @@ void main() {
     expect(bucket(-15), '15+');
     // Melewati batas bulan dan pergantian jam musim panas tidak menggeser hari.
     expect(PeriodEvents.gapBucket(DateTime(2026, 11, 1, 0, 30), DateTime(2026, 10, 31, 23)), '1-3');
-    final event = PeriodEvents.recurrenceDateGap(occurrence, occurrence);
+    final event = PeriodEvents.recurrenceDateGap(occurrence, occurrence, via: 'one_tap');
     expect(event.name, 'recurrence_date_gap');
-    expect(event.parameters.keys, ['bucket']);
+    expect(event.parameters, {'bucket': '0', 'via': 'one_tap'});
   });
 }

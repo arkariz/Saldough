@@ -79,7 +79,7 @@ Terakhir diperbarui: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 18 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, 13 Lulus 2 Gagal); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via) |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 19 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 selesai 11 Okt 2026 (13 Lulus 2 Gagal, temuan T-18.13–T-18.19 diverifikasi ulang di perangkat dan Lulus); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via) |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3660,7 +3660,7 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       tersimpan contoh A, `kept_budgets`), `record_bloc_financial_month_offer_test`
       (shown, accepted, dismissed), `recurring_pages_test` (tautan pengguna
       `1-3`), `process_captured_notifications_test` (tautan otomatis).
-- [ ] **T-18.9** Verifikasi Fase 18 di emulator contoh A, B, dan D (pola
+- [x] **T-18.9** Verifikasi Fase 18 di emulator contoh A, B, dan D (pola
       VERIFICATION_PLAN_FASE_16), termasuk tur T-18.10 dan peristiwa T-18.11
       di DebugView Firebase; temuan jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-PLN-006, FR-PLN-007.
@@ -3779,6 +3779,22 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
         Masuk Rp12.000.000, Keluar Rp2.914.000, Selisih Rp9.086.000; uang
         nganggur Rp6.017.500 (12.000.000 − 5.982.500, Cicilan hanya di
         anggaran); total saldo Rp30.086.000.
+      - T-18.19 Lulus (jam 28 Des, awal bulan diubah ke 1 pada 10 Des):
+        Catat satu ketuk Cicilan 25 Des → `recurrence_date_gap {bucket=0,
+        via=one_tap}`; Catat semua (Cicilan 25 Nov, Gaji 25 Nov, Gaji 25 Des)
+        → tiga `{bucket=0, via=record_all}`. Total saldo Rp48.258.000
+        (30.086.000 + 2 × 12.000.000 − 2 × 2.914.000).
+      - T-18.18 pratinjau contoh C Lulus: jam 28 Des, ubah ke 25 → "25 Nov
+        – 24 Des jadi periode peralihan yang sudah selesai. Periode ini
+        25 Des – 24 Jan." Sesudah simpan: kepala "25 Des – 24 Jan"; Cicilan
+        25 Des pindah ke pos Bulanan 25 Des – 24 Jan, Cicilan 25 Nov tetap di
+        Bulanan 25 Nov – 24 Des (masing-masing Rp2.914.000); saldo tetap
+        Rp48.258.000.
+      - T-18.18 rentang Lulus: 360dp, lembar Awal bulan keuangan memindah
+        "1 – 28 Feb" dan "1 Feb" utuh ke baris berikutnya, tidak terpenggal.
+      **Selesai 11 Okt 2026.** Hasil verifikasi ulang: semua temuan dan keputusan PO (T-18.13–
+        T-18.19) Lulus di perangkat; tidak ada temuan baru. Jam, density,
+        dan properti Analytics emulator dikembalikan.
 - [x] **T-18.13** Kartu Beranda "… dimulai" memakai rentang untuk periode
       peralihan (temuan T-18.9 V2, S3). Langkah: awal bulan 1, jam 10 Okt,
       ubah ke 25 (contoh B), buka Beranda. Harapan: "1 – 24 Okt dimulai",

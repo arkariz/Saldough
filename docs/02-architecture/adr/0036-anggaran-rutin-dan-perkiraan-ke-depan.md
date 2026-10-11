@@ -121,6 +121,13 @@ sudah lahir tetap ada dengan `templateId` yatim.
   spasi) atau nominal rencana yang sama, snackbar menawarkan "Tautkan ke
   pos Kos di Bulanan". Tautan juga bisa dipasang atau dilepas di rincian
   rutin. Tidak pernah otomatis.
+- **Pos yang dipilih di CATAT saat membuat rutin** (tambahan 11 Okt 2026,
+  temuan QA T-18.9 PO-1): pilihan pengguna adalah tautan eksplisit, bukan
+  tautan otomatis. Di mode jadwal ("Simpan jadwal") dan "Catat & Jadwalkan",
+  pemilih pos pengeluaran hanya menawarkan pos dari anggaran rutin
+  berdompet sama, dan pos terpilih disimpan sebagai `budgetItemKey` rutin.
+  Sebelumnya pilihan itu hilang tanpa kabar sehingga nominal rutin
+  terhitung dua kali (tagihan rutin dan anggaran).
 - **Hitungan (invarian 17):**
   - `monthPlan`: rutin tertaut tidak masuk tagihan rutin; posnya masuk
     anggaran dengan rencana `max(rencana pos, Σ kemunculan tertaut di

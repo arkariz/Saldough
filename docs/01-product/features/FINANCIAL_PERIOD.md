@@ -228,6 +228,9 @@ Gaji dan Cicilan 25 Okt berstatus tercatat, bukan menunggu.
 | `plan.financialMonthOfferAction` | Atur | Set |
 | `plan.financialMonthPreviewTitle` | Mulai tanggal {day} | Start on day {day} |
 | `plan.financialMonthPreviewTransition` | Periode ini jadi {range} ({days} hari), lalu {next}. | This period becomes {range} ({days} days), then {next}. |
+| `plan.financialMonthPreviewTransitionPast` (contoh C, `c ≤ T`) | {range} jadi periode peralihan yang sudah selesai. Periode ini {current}. | {range} becomes a completed transition period. This period is {current}. |
+| `plan.financialMonthOfferScheduled` (menggantikan dua snackbar berurutan) | Rutin dijadwalkan. Mulai bulan keuanganmu tiap tanggal {day}? | Recurring scheduled. Start your financial month on day {day}? |
+| `home.flowNet` | Selisih | Net |
 | `plan.financialMonthPreviewPast` | Periode sebelumnya tidak berubah. | Earlier periods stay the same. |
 | `plan.financialMonthMoveBudget` | {budget} juga mulai tanggal {day} | {budget} also starts on day {day} |
 | `plan.financialMonthKeepBudget` | {budget} tetap mulai tanggal {day}. | {budget} still starts on day {day}. |

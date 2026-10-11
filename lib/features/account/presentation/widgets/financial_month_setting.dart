@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:navigation/navigation.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -26,7 +25,7 @@ class FinancialMonthSettingEntry extends StatelessWidget {
         subtitle:
             '${_startLabel(schedule.active)} · '
             '${schedule.periodOf(DateTime.now()).label}',
-        onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const EmptyInput())),
+        onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput())),
       ),
     );
   }

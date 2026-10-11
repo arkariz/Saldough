@@ -39,10 +39,10 @@ final class BudgetRouteModule extends FeatureRouteModule {
         );
       },
     ),
-    RouteNode.typed<EmptyInput>(
+    RouteNode.typed<FinancialMonthInput>(
       key: BudgetRouteKeys.financialMonth,
       transition: RouteTransition.slideFromBottom,
-      builder: (context, _) => const FinancialMonthPage(),
+      builder: (context, input) => FinancialMonthPage(initial: input.initial),
     ),
   ];
 }

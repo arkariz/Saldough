@@ -42,6 +42,7 @@ void main() {
     WidgetTester tester, {
     required FinancialMonthSchedule schedule,
     List<FinancialMonthBudgetOption> budgets = const [],
+    FinancialMonthStart? initial,
   }) async {
     tester.view.physicalSize = const Size(360, 1600);
     tester.view.devicePixelRatio = 1;
@@ -53,6 +54,7 @@ void main() {
           home: Scaffold(
             body: FinancialMonthSheet(
               schedule: schedule,
+              initial: initial,
               today: today,
               budgets: budgets,
               onSave: (start, moved) async {
@@ -154,6 +156,14 @@ void main() {
     expect(saved()?.moved, {'darurat'});
   });
 
+  testWidgets('dibuka dari tawaran rutin gajian: tanggal 25 sudah terpilih, pratinjau langsung tampil', (tester) async {
+    final saved = await pump(tester, schedule: single(1), initial: const FinancialMonthStart.day(25));
+    expect(find.text('Periode ini jadi 1 – 24 Okt (24 hari), lalu 25 Okt – 24 Nov.'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('financial-month-save')));
+    await tester.pumpAndSettle();
+    expect(saved()?.start, const FinancialMonthStart.day(25));
+  });
+
   testWidgets('Batal tidak mengubah apa pun', (tester) async {
     final saved = await pump(
       tester,
@@ -242,6 +252,11 @@ void main() {
       final moved = (await tester.runAsync(templates.listTemplates))!.getOrElse((_) => const []).single;
       expect(moved.schedule!.anchorDate, DateTime(2026, 11));
       expect(notified, 1);
+      // Diubah sendiri: tawaran rutin gajian tidak muncul lagi (F2).
+      final offer = (await tester.runAsync(preferences.loadOffer))!.getOrElse(
+        (_) => (changedByUser: false, offeredRuleIds: const {}),
+      );
+      expect(offer.changedByUser, isTrue);
     });
 
     testWidgets('Batal: jadwal dan anggaran tetap', (tester) async {

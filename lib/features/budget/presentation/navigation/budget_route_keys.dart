@@ -1,4 +1,5 @@
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 
 // Satu-satunya berkas fitur `budget` yang boleh diimpor fitur lain
 // (ADR-0004, ADR-030 §3.3).
@@ -12,6 +13,16 @@ final class BudgetDetailInput extends RouteInput {
   final String budgetId;
 }
 
+/// Input lembar Awal bulan keuangan.
+final class FinancialMonthInput extends RouteInput {
+  /// Membuat [FinancialMonthInput].
+  const FinancialMonthInput({this.initial});
+
+  /// Tanggal yang sudah terpilih saat dibuka (tawaran rutin gajian, F2);
+  /// `null` = tanggal aktif.
+  final FinancialMonthStart? initial;
+}
+
 /// Kunci rute fitur `budget`.
 abstract final class BudgetRouteKeys {
   /// Rincian satu anggaran: dari tab Anggaran dan dari baris "Anggaran" di
@@ -21,5 +32,5 @@ abstract final class BudgetRouteKeys {
   /// Lembar Awal bulan keuangan (ADR-038, FINANCIAL_PERIOD F1): dari kepala
   /// Rencana › Bulan ini dan dari Akun. Selesai dengan `true` bila disimpan.
   /// Milik `budget` karena menyimpan juga memindah anggaran rutin.
-  static const financialMonth = RouteKey<EmptyInput>('budget.financialMonth');
+  static const financialMonth = RouteKey<FinancialMonthInput>('budget.financialMonth');
 }

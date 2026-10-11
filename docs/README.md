@@ -165,8 +165,9 @@ docs/
 | [0036](02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md) | Anggaran rutin, perkiraan ke depan, dan tinjau awal bulan (R2) | Accepted |
 | [0037](02-architecture/adr/0037-otomasi-rutin-r3.md) | Otomasi rutin: deteksi, catat otomatis, dan saran (R3) | Accepted |
 | [0038](02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) | Periode keuangan berriwayat, periode peralihan, dan atribusi periode | Accepted |
+| [0039](02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md) | Pengumuman pembaruan: Play In-App Updates fleksibel, keadaan Shorebird, catatan di dalam kode | Proposed |
 
-ADR berikutnya memakai nomor **0038**.
+ADR berikutnya memakai nomor **0040**.
 
 ## Pertanyaan yang sering muncul
 

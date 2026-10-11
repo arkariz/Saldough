@@ -179,6 +179,18 @@ pembayaran bisa mencakup jam kerja yang membentang dari akhir bulan ke
 pertengahan bulan berikutnya, dan panjangnya bervariasi dari delapan hari sampai
 hampir satu bulan.
 
+## Aplikasi dan pembaruan
+
+Ditambahkan 11 Okt 2026 untuk Fase 20
+([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)). Pengguna tidak
+perlu tahu mekanismenya; istilahnya mengikuti apa yang mereka alami.
+
+| Istilah | Di kode | Arti | Jangan pakai |
+|---|---|---|---|
+| Versi baru | `storeAvailable` dan seterusnya | Rilis baru dari Play Store, dipasang lewat pembaruan di dalam aplikasi | rilis, update (di teks id) |
+| Pembaruan kecil | tambalan Shorebird (`patchReady`) | Perbaikan yang diunduh otomatis dan berlaku sesudah aplikasi dibuka ulang | patch, tambalan, hotfix (di teks antarmuka) |
+| Apa yang baru | `whatsNew` | Catatan manfaat satu versi atau pembaruan kecil, tampil sekali dan bisa dibuka dari Akun | changelog, catatan rilis (di teks antarmuka) |
+
 ## Istilah arsitektur
 
 Istilah di bagian ini berasal dari paket internal yang dipakai Saldough.

@@ -3742,6 +3742,24 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
         tanda plus. (7) Teks pratinjau memutus "24 / Nov." antarbaris (tanpa
         spasi tak-putus); formulir anggaran menulis "1–31 Okt" tanpa spasi,
         sedangkan "15 Sep – 14 Okt" berspasi (writing.md).
+      **Verifikasi ulang 11 Okt 2026 (T-18.13–T-18.19)** — APK debug dari
+      `6d8e9c0`, emulator yang sama, data kosong, jam 10 Okt 2026. Data:
+      BCA Rp20.000.000, Tunai Rp1.000.000, anggaran rutin Bulanan (BCA,
+      mulai 1 Okt; Belanja Rp3.068.500, Cicilan Rp2.914.000).
+      - T-18.15 Lulus: CATAT → Simpan jadwal Cicilan iPhone −Rp2.914.000
+        tiap 25 dengan pos "Cicilan · Bulanan" → rincian rutin "Pos
+        anggaran: Cicilan · Bulanan". Bulan ini Oktober: Tagihan rutin Rp0,
+        Anggaran −Rp5.982.500, uang nganggur −Rp5.982.500 (tidak dihitung
+        dua kali). Formulir anggaran menulis "1 – 31 Okt" (T-18.18).
+      - T-18.18 tawaran tunggal Lulus: Simpan jadwal Gaji +Rp12.000.000 tiap
+        25 → satu snackbar "Rutin dijadwalkan. Mulai bulan keuanganmu tiap
+        tanggal 25?" [Atur], tanpa snackbar kedua. Catatan: snackbar itu
+        tertutup sendiri ±8 detik bila tidak diketuk (`dismissed`), jadi rutin
+        Gaji dibuat ulang untuk mengetuk [Atur]; pratinjau contoh B tetap
+        "1 – 24 Okt (24 hari), lalu 25 Okt – 24 Nov".
+      - T-18.17 Lulus: sesudah contoh B, segmen Rutin "Sisa rutin keluar ·
+        1 – 24 Okt" Rp0; Cicilan iPhone dan Gaji 25 Okt di kelompok Nanti.
+      - T-18.13 Lulus: kartu Beranda "1 – 24 Okt dimulai".
 - [x] **T-18.13** Kartu Beranda "… dimulai" memakai rentang untuk periode
       peralihan (temuan T-18.9 V2, S3). Langkah: awal bulan 1, jam 10 Okt,
       ubah ke 25 (contoh B), buka Beranda. Harapan: "1 – 24 Okt dimulai",

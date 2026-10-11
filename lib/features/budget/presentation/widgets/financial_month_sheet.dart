@@ -139,7 +139,10 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
                   ),
                   if (preview != null) ...[
                     const SizedBox(height: AppSpacing.space3),
-                    Padding(padding: gutter, child: _Preview(preview: preview, start: _pick)),
+                    Padding(
+                      padding: gutter,
+                      child: _Preview(preview: preview, start: _pick, today: widget.today),
+                    ),
                     if (widget.budgets.isNotEmpty) ...[
                       const SizedBox(height: AppSpacing.space4),
                       Padding(
@@ -178,8 +181,10 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
                           subtitle: _off.contains(budget.templateId)
                               ? t.plan.financialMonthBudgetKept(start: _on(widget.schedule.active))
                               : t.plan.financialMonthBudgetMoved(
-                                  until: CycleMonthFormatter.formatDayMonth(preview.current.lastDay),
-                                  next: CycleMonthFormatter.formatDayMonth(preview.current.end),
+                                  until: CycleMonthFormatter.noBreak(
+                                    CycleMonthFormatter.formatDayMonth(preview.current.lastDay),
+                                  ),
+                                  next: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(preview.current.end)),
                                 ),
                           onChanged: (on) => setState(() {
                             if (on) {
@@ -221,10 +226,11 @@ class _FinancialMonthSheetState extends State<FinancialMonthSheet> {
 /// Pratinjau (`tk-inset`): judul, kalimat periode peralihan, garis waktu,
 /// lalu "Periode sebelumnya tidak berubah."
 class _Preview extends StatelessWidget {
-  const _Preview({required this.preview, required this.start});
+  const _Preview({required this.preview, required this.start, required this.today});
 
   final FinancialMonthPreview preview;
   final FinancialMonthStart start;
+  final DateTime today;
 
   @override
   Widget build(BuildContext context) {
@@ -248,11 +254,19 @@ class _Preview extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.space2),
             Text(
-              t.plan.financialMonthPreviewTransition(
-                range: current.rangeLabel,
-                days: current.days,
-                next: preview.next.rangeLabel,
-              ),
+              // Contoh C (c ≤ hari ini): periode peralihan sudah selesai, dan
+              // periode berjalan sesudah disimpan adalah periode berikutnya.
+              !current.end.isAfter(DateTime(today.year, today.month, today.day))
+                  ? t.plan.financialMonthPreviewTransitionPast(
+                      range: current.rangeLabel,
+                      current: preview.next.rangeLabel,
+                    )
+                  : t.plan.financialMonthPreviewTransition(
+                      range: current.rangeLabel,
+                      days: current.days,
+                      next: preview.next.rangeLabel,
+                    ),
+              key: const ValueKey('financial-month-preview-sentence'),
               style: textTheme.bodyMedium,
             ),
             const SizedBox(height: AppSpacing.space2),
@@ -260,8 +274,8 @@ class _Preview extends StatelessWidget {
               previousDays: preview.previous.days,
               currentDays: current.days,
               nextDays: preview.next.days,
-              startLabel: CycleMonthFormatter.formatDayMonth(current.start),
-              endLabel: CycleMonthFormatter.formatDayMonth(current.end),
+              startLabel: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(current.start)),
+              endLabel: CycleMonthFormatter.noBreak(CycleMonthFormatter.formatDayMonth(current.end)),
             ),
             const SizedBox(height: AppSpacing.space2),
             Text(t.plan.financialMonthPreviewPast, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),

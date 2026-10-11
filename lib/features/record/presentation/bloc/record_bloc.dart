@@ -345,7 +345,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   /// pemasukan, jadi keduanya tidak pernah berebut.
   Future<UiEffect> _effectAfterRuleCreated(RecurringRule rule, String message) async {
     final offer = await _financialMonthOffer(rule);
-    return offer == null ? _effectWithLinkSuggestion(rule, message) : _effectWithOffer(message, offer);
+    return offer == null ? _effectWithLinkSuggestion(rule, message) : _effectWithOffer(offer);
   }
 
   /// Tanggal yang ditawarkan untuk [rule] ([financialMonthOfferFor]), lalu
@@ -368,10 +368,12 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     return start;
   }
 
-  /// [message], lalu snackbar "Mulai bulan keuanganmu tiap tanggal 25?"
-  /// [Atur] yang membuka lembar Awal bulan keuangan dengan tanggal itu
-  /// terpilih (F2). Diabaikan = tidak ditawarkan lagi untuk rutin ini.
-  UiEffect _effectWithOffer(String message, FinancialMonthStart start) => CallbackEffect(
+  /// Satu snackbar "Rutin dijadwalkan. Mulai bulan keuanganmu tiap tanggal
+  /// 25?" [Atur] yang membuka lembar Awal bulan keuangan dengan tanggal itu
+  /// terpilih (F2). Menggantikan pesan berhasil biasa, supaya tawarannya
+  /// tidak tertunda di belakang snackbar lain (T-18.18). Diabaikan = tidak
+  /// ditawarkan lagi untuk rutin ini.
+  UiEffect _effectWithOffer(FinancialMonthStart start) => CallbackEffect(
     callback: (context) {
       final colors = context.appColors;
       final navigator = Navigator.of(context, rootNavigator: true);
@@ -379,12 +381,10 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final day? => t.plan.financialMonthOnDay(day: day),
         null => t.plan.financialMonthOnLastDay,
       };
-      final messenger = ScaffoldMessenger.of(context)
-        ..showSnackBar(SnackBar(content: Text(message, style: TextStyle(color: colors.bg)), backgroundColor: colors.ink));
-      final offer = messenger.showSnackBar(
+      final offer = ScaffoldMessenger.of(context).showSnackBar(
         actionSnackBar(
           context,
-          content: Text(t.plan.financialMonthOffer(start: day), style: TextStyle(color: colors.bg)),
+          content: Text(t.plan.financialMonthOfferScheduled(start: day), style: TextStyle(color: colors.bg)),
           backgroundColor: colors.ink,
           action: SnackBarAction(
             label: t.plan.financialMonthOfferAction,

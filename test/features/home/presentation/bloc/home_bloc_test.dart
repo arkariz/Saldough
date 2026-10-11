@@ -75,7 +75,7 @@ void main() {
     ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.single(const FinancialMonthStart.day(25));
     final state = (await load()).state;
     expect(state.period, FinancialPeriod(start: DateTime(2026, 10, 25), end: DateTime(2026, 11, 25)));
-    expect(state.period.name, '25 Okt – 24 Nov');
+    expect(state.period.name, '25\u00A0Okt\u00A0–\u00A024\u00A0Nov');
     expect(state.cashFlow, const CashFlow(income: 1200000000, expense: 10000000));
   });
 
@@ -92,7 +92,7 @@ void main() {
     ).changedOn(DateTime(2026, 10, 10), FinancialMonthStart.first);
     final state = (await load()).state;
     expect(state.period, FinancialPeriod(start: DateTime(2026, 9, 25), end: DateTime(2026, 11), isTransition: true));
-    expect(state.period.name, '25 Sep – 31 Okt');
+    expect(state.period.name, '25\u00A0Sep\u00A0–\u00A031\u00A0Okt');
     expect(state.cashFlow, const CashFlow(income: 1200000000, expense: 12500000));
   });
 

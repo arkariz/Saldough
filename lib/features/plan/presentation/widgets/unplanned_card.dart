@@ -160,7 +160,8 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final sign = amount < 0 ? '−' : '+';
+    // Nol tanpa tanda: "Rp0", bukan "+Rp0" (T-18.18).
+    final sign = amount < 0 ? '−' : (amount > 0 ? '+' : '');
     final row = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 40),
       child: Row(

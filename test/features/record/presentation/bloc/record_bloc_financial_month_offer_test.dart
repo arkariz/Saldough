@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -109,8 +110,11 @@ void main() {
     Future<void> showAndClose(SnackBarClosedReason reason) async {
       effect.callback(context);
       await tester.pump();
-      final messenger = ScaffoldMessenger.of(context)..removeCurrentSnackBar();
-      await tester.pump();
+      // Satu snackbar saja: tawaran menggantikan pesan "Rutin dijadwalkan"
+      // (T-18.18).
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.text(t.plan.financialMonthOfferScheduled(start: t.plan.financialMonthOnDay(day: 25))), findsOneWidget);
+      final messenger = ScaffoldMessenger.of(context);
       if (reason == SnackBarClosedReason.action) {
         messenger.hideCurrentSnackBar(reason: SnackBarClosedReason.action);
       } else {

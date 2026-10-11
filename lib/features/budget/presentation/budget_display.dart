@@ -25,17 +25,15 @@ String budgetRangeLabel(Budget budget) {
   );
 }
 
-/// Rentang [budget] ringkas: "1–31 Okt" dalam satu bulan, "28 Sep – 4 Okt"
-/// lintas bulan (QA PR #43 F14).
+/// Rentang [budget] ringkas: "1 – 31 Okt" dalam satu bulan, "28 Sep – 4 Okt"
+/// lintas bulan (QA PR #43 F14), berspasi dan tidak dipenggal (T-18.18).
 String budgetRangeShortLabel(Budget budget) {
   final first = budget.startDate;
   final last = budget.endDate.subtract(const Duration(days: 1));
-  if (first.year == last.year && first.month == last.month) {
-    return t.budget.periodRangeShort(start: '${first.day}', end: CycleMonthFormatter.formatDayMonth(last));
-  }
-  return t.budget.periodRange(
-    start: CycleMonthFormatter.formatDayMonth(first),
-    end: CycleMonthFormatter.formatDayMonth(last),
+  final sameMonth = first.year == last.year && first.month == last.month;
+  return CycleMonthFormatter.range(
+    sameMonth ? '${first.day}' : CycleMonthFormatter.formatDayMonth(first),
+    CycleMonthFormatter.formatDayMonth(last),
   );
 }
 

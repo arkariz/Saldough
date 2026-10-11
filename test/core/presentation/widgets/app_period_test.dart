@@ -24,8 +24,8 @@ void main() {
   });
 
   testWidgets('periode peralihan: rentang dan penanda netral', (tester) async {
-    await pump(tester, const AppPeriodHeader(label: '1 – 24 Okt', transitionDays: 24));
-    expect(find.text('1 – 24 Okt'), findsOneWidget);
+    await pump(tester, const AppPeriodHeader(label: '1\u00A0–\u00A024\u00A0Okt', transitionDays: 24));
+    expect(find.text('1\u00A0–\u00A024\u00A0Okt'), findsOneWidget);
     expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
     // Di Beranda dan Analisis bukan tombol.
     expect(find.byKey(const ValueKey('period-header')), findsNothing);

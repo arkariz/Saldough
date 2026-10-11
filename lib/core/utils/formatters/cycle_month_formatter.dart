@@ -69,6 +69,14 @@ abstract final class CycleMonthFormatter {
     return '${date.day} ${months[date.month - 1]}';
   }
 
+  /// [text] dengan spasi tak-putus, supaya tanggal ("1 Apr") tidak dipenggal
+  /// di akhir baris (`writing.md`, T-18.18).
+  static String noBreak(String text) => text.replaceAll(' ', '\u00A0');
+
+  /// Rentang "[start] – [end]" yang tidak dipenggal: spasi tak-putus di
+  /// dalam tanggal dan di sekitar tanda pisah (`writing.md`, T-18.18).
+  static String range(String start, String end) => noBreak('$start – $end');
+
   /// Nama hari [date] — mis. `Kamis` — untuk jadwal mingguan.
   static String formatWeekday(DateTime date) {
     final weekdays = LocaleSettings.currentLocale == AppLocale.en ? _enWeekdays : _idWeekdays;

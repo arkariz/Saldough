@@ -45,6 +45,7 @@ void main() {
     required FinancialMonthSchedule schedule,
     List<FinancialMonthBudgetOption> budgets = const [],
     FinancialMonthStart? initial,
+    DateTime? on,
   }) async {
     tester.view.physicalSize = const Size(360, 1600);
     tester.view.devicePixelRatio = 1;
@@ -57,7 +58,7 @@ void main() {
             body: FinancialMonthSheet(
               schedule: schedule,
               initial: initial,
-              today: today,
+              today: on ?? today,
               budgets: budgets,
               onSave: (start, moved) async {
                 saved = (start: start, moved: moved);
@@ -102,10 +103,10 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('day-1')));
     await tester.pump();
     expect(find.text('Mulai tanggal 1'), findsOneWidget);
-    expect(find.text('Periode ini jadi 25 Sep – 31 Okt (37 hari), lalu 1 – 30 Nov.'), findsOneWidget);
+    expect(find.text('Periode ini jadi 25\u00A0Sep\u00A0–\u00A031\u00A0Okt (37 hari), lalu 1\u00A0–\u00A030\u00A0Nov.'), findsOneWidget);
     expect(find.text('Periode sebelumnya tidak berubah.'), findsOneWidget);
     expect(find.text('Yang dicentang ikut mulai tanggal 1. Yang tidak, tetap mulai tanggal 25.'), findsOneWidget);
-    expect(find.text('Berjalan sampai 31 Okt, berikutnya mulai 1 Nov'), findsOneWidget);
+    expect(find.text('Berjalan sampai 31\u00A0Okt, berikutnya mulai 1\u00A0Nov'), findsOneWidget);
     // Satu anggaran: tanpa tautan Pilih semua/Kosongkan.
     expect(find.byKey(const ValueKey('financial-month-bulk')), findsNothing);
     await tester.tap(find.byKey(const ValueKey('financial-month-save')));
@@ -119,9 +120,22 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('day-25')));
     await tester.pump();
     expect(find.text('Mulai tanggal 25'), findsOneWidget);
-    expect(find.text('Periode ini jadi 1 – 24 Okt (24 hari), lalu 25 Okt – 24 Nov.'), findsOneWidget);
+    expect(find.text('Periode ini jadi 1\u00A0–\u00A024\u00A0Okt (24 hari), lalu 25\u00A0Okt\u00A0–\u00A024\u00A0Nov.'), findsOneWidget);
     // Tanpa anggaran rutin: bagian anggaran tidak tampil.
     expect(find.text(t.plan.financialMonthBudgetsTitle), findsNothing);
+  });
+
+  testWidgets('C: 1 → 25 pada 28 Des: peralihan 1 – 24 Des sudah selesai, periode ini 25 Des – 24 Jan (T-18.18)', (
+    tester,
+  ) async {
+    await pump(tester, schedule: single(1), on: DateTime(2026, 12, 28));
+    await tester.tap(find.byKey(const ValueKey('day-25')));
+    await tester.pump();
+    expect(
+      find.text('1\u00A0–\u00A024\u00A0Des jadi periode peralihan yang sudah selesai. Periode ini 25\u00A0Des\u00A0–\u00A024\u00A0Jan.'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('hari terakhir bulan: 25 → hari terakhir pada 10 Okt', (tester) async {
@@ -129,7 +143,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('day-last')));
     await tester.pump();
     expect(find.text('Mulai hari terakhir bulan'), findsOneWidget);
-    expect(find.text('Periode ini jadi 25 Sep – 30 Okt (36 hari), lalu 31 Okt – 29 Nov.'), findsOneWidget);
+    expect(find.text('Periode ini jadi 25\u00A0Sep\u00A0–\u00A030\u00A0Okt (36 hari), lalu 31\u00A0Okt\u00A0–\u00A029\u00A0Nov.'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('financial-month-save')));
     await tester.pumpAndSettle();
     expect(saved()?.start, FinancialMonthStart.lastDay);
@@ -160,7 +174,7 @@ void main() {
 
   testWidgets('dibuka dari tawaran rutin gajian: tanggal 25 sudah terpilih, pratinjau langsung tampil', (tester) async {
     final saved = await pump(tester, schedule: single(1), initial: const FinancialMonthStart.day(25));
-    expect(find.text('Periode ini jadi 1 – 24 Okt (24 hari), lalu 25 Okt – 24 Nov.'), findsOneWidget);
+    expect(find.text('Periode ini jadi 1\u00A0–\u00A024\u00A0Okt (24 hari), lalu 25\u00A0Okt\u00A0–\u00A024\u00A0Nov.'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('financial-month-save')));
     await tester.pumpAndSettle();
     expect(saved()?.start, const FinancialMonthStart.day(25));

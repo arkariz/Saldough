@@ -106,9 +106,25 @@ class MonthReviewCard extends StatelessWidget {
                   style: labelSmStyle(context, color: colors.ink2),
                 ),
               ),
-              Text(progress, style: textTheme.bodySmall),
+              if (steps.isNotEmpty) Text(progress, style: textTheme.bodySmall),
             ],
           ),
+          // Periode peralihan: kartu muncul sekali dengan penjelasannya (P-9).
+          if (state.range.isTransition)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.space2),
+              child: Text(
+                t.plan.transitionReview(
+                  start: switch (state.activeStart.day) {
+                    final day? => t.plan.financialMonthOnDay(day: day),
+                    null => t.plan.financialMonthOnLastDay,
+                  },
+                  range: state.range.rangeLabel,
+                ),
+                key: const ValueKey('month-review-transition'),
+                style: textTheme.bodyMedium,
+              ),
+            ),
           if (steps.contains(MonthReviewStep.budgets))
             step(
               MonthReviewStep.budgets,

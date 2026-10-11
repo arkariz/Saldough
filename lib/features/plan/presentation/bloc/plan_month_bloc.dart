@@ -116,7 +116,7 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
     );
     on<PlanReviewDismissed>((event, emit) => _saveReview(state.review.copyWith(dismissed: event.dismissed), emit));
     on<PlanReviewSynced>((event, emit) {
-      if (event.review.monthStart == state.range.start && event.review != state.review) {
+      if (event.review.isFor(state.range) && event.review != state.review) {
         emit(state.copyWith(review: event.review));
       }
     });
@@ -194,7 +194,9 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
       (_) => const [],
     );
     final stored = (await _reviews?.load())?.getOrElse((_) => null);
-    final review = stored != null && stored.monthStart == range.start ? stored : MonthReview(monthStart: range.start);
+    final review = stored != null && stored.isFor(range)
+        ? stored
+        : MonthReview(monthStart: range.start, monthEnd: range.end);
     final later = <List<PlanBudget>>[];
     var m = range;
     for (var k = 1; k <= PlanMonthState.horizon; k++) {
@@ -274,15 +276,24 @@ final class PlanMonthBloc extends Bloc<PlanMonthEvent, PlanMonthState> {
   Future<void> _snapshot(Emitter<PlanMonthState> emit) async {
     final reviews = _reviews;
     if (reviews == null) return;
+    // W9 tidak dihitung untuk periode peralihan (FINANCIAL_PERIOD P-9):
+    // perkiraannya tidak disimpan, dan tidak dibandingkan saat ia menjadi
+    // bulan lalu.
     final stored = (await reviews.loadSnapshots()).getOrElse((_) => const []);
-    final current = ForecastSnapshot(
-      monthStart: state.range.start,
-      endBalance: state.copyWith(walletId: () => null).projectionFor(0).endBalance,
-      takenOn: state.today,
-    );
-    final updated = withSnapshot(stored, current);
-    if (!identical(updated, stored)) await reviews.saveSnapshots(updated);
+    var updated = stored;
+    if (!state.range.isTransition) {
+      updated = withSnapshot(
+        stored,
+        ForecastSnapshot(
+          monthStart: state.range.start,
+          endBalance: state.copyWith(walletId: () => null).projectionFor(0).endBalance,
+          takenOn: state.today,
+        ),
+      );
+      if (!identical(updated, stored)) await reviews.saveSnapshots(updated);
+    }
     final previous = state.previousRange.start;
+    if (state.previousRange.isTransition) return;
     emit(
       state.copyWith(
         previousForecast: () => updated

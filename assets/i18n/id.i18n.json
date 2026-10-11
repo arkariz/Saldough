@@ -1100,6 +1100,8 @@
     "financialMonthSelectAll": "Pilih semua",
     "financialMonthClearAll": "Kosongkan",
     "transitionLabel": "Periode peralihan · $days hari",
+    "transitionNoPayday": "Rentang ini tidak memuat gajian.",
+    "transitionReview": "Awal bulan keuanganmu kini $start. Periode ini $range.",
     "thisMonthSegmentLabel": "Bulan ini",
     "unplannedTitle": "Uang nganggur · $month",
     "incomeRow": "Pemasukan",

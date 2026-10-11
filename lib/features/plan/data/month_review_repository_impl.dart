@@ -10,7 +10,8 @@ const _key = StorageKey(namespace: 'plan', name: 'month_review');
 const _snapshotsKey = StorageKey(namespace: 'plan', name: 'forecast_snapshots');
 
 /// [MonthReviewRepository] satu dokumen `{schemaVersion, monthStart,
-/// doneSteps, completed, dismissed}` di `plan/month_review` dan
+/// monthEnd?, doneSteps, completed, dismissed}` di `plan/month_review`
+/// (`monthEnd` sejak skema 2, ADR-038) dan
 /// `{schemaVersion, items: [{monthStart, endBalance}]}` di
 /// `plan/forecast_snapshots`.
 final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthReviewRepository {
@@ -28,6 +29,10 @@ final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthRevie
     key: _key,
     fromJson: (json) => MonthReview(
       monthStart: DateTime.parse(json['monthStart'] as String),
+      monthEnd: switch (json['monthEnd']) {
+        final String end => DateTime.parse(end),
+        _ => null,
+      },
       doneSteps: {
         for (final name in (json['doneSteps'] as List<dynamic>? ?? const []).cast<String>())
           ?MonthReviewStep.values.asNameMap()[name],
@@ -36,8 +41,9 @@ final class MonthReviewRepositoryImpl with RepositoryGuard implements MonthRevie
       dismissed: json['dismissed'] as bool? ?? false,
     ),
     toJson: (review) => {
-      'schemaVersion': 1,
+      'schemaVersion': 2,
       'monthStart': review.monthStart.toIso8601String(),
+      if (review.monthEnd case final end?) 'monthEnd': end.toIso8601String(),
       'doneSteps': [for (final step in review.doneSteps) step.name],
       'completed': review.completed,
       'dismissed': review.dismissed,

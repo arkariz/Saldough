@@ -16,6 +16,7 @@ class UnplannedCard extends StatelessWidget {
     required this.onShowRecurring,
     required this.onShowBudget,
     this.isForecast = false,
+    this.withoutPayday = false,
     super.key,
   });
 
@@ -33,6 +34,11 @@ class UnplannedCard extends StatelessWidget {
 
   /// Bulan depan (ADR-036 §3.5): kepala berlencana PERKIRAAN.
   final bool isForecast;
+
+  /// Periode peralihan tanpa gajian (FINANCIAL_PERIOD P-8): angka negatif
+  /// tanpa warna peringatan, dengan satu kalimat penjelas. Peringatan
+  /// berbasis saldo tetap di tempatnya sendiri.
+  final bool withoutPayday;
 
   /// Baris "Di luar rencana": selisih sisa dari rencana, supaya angka besar
   /// tetap sama dengan jumlah baris.
@@ -102,8 +108,14 @@ class UnplannedCard extends StatelessWidget {
           ),
           HeroAmount(
             AppMoneyFormatter.format(remaining),
-            color: remaining < 0 ? colors.danger : null,
+            color: remaining < 0 && !withoutPayday ? colors.danger : null,
           ),
+          if (withoutPayday)
+            Text(
+              t.plan.transitionNoPayday,
+              key: const ValueKey('unplanned-no-payday'),
+              style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            ),
           const SizedBox(height: AppSpacing.space3),
           Container(
             padding: const EdgeInsets.symmetric(

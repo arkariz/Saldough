@@ -1103,6 +1103,8 @@
     "financialMonthSelectAll": "Select all",
     "financialMonthClearAll": "Clear all",
     "transitionLabel": "Transition period · $days days",
+    "transitionNoPayday": "This range has no payday.",
+    "transitionReview": "Your financial month now starts on $start. This period is $range.",
     "thisMonthSegmentLabel": "This month",
     "unplannedTitle": "Unplanned money · $month",
     "incomeRow": "Income",

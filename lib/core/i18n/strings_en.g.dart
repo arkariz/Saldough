@@ -1175,6 +1175,8 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthSelectAll => 'Select all';
 	@override String get financialMonthClearAll => 'Clear all';
 	@override String transitionLabel({required Object days}) => 'Transition period · ${days} days';
+	@override String get transitionNoPayday => 'This range has no payday.';
+	@override String transitionReview({required Object start, required Object range}) => 'Your financial month now starts on ${start}. This period is ${range}.';
 	@override String get thisMonthSegmentLabel => 'This month';
 	@override String unplannedTitle({required Object month}) => 'Unplanned money · ${month}';
 	@override String get incomeRow => 'Income';
@@ -2497,6 +2499,8 @@ extension on TranslationsEn {
 			'plan.financialMonthSelectAll' => 'Select all',
 			'plan.financialMonthClearAll' => 'Clear all',
 			'plan.transitionLabel' => ({required Object days}) => 'Transition period · ${days} days',
+			'plan.transitionNoPayday' => 'This range has no payday.',
+			'plan.transitionReview' => ({required Object start, required Object range}) => 'Your financial month now starts on ${start}. This period is ${range}.',
 			'plan.thisMonthSegmentLabel' => 'This month',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
 			'plan.incomeRow' => 'Income',

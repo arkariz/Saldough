@@ -3000,6 +3000,12 @@ class Translations$plan$id {
 	/// id: 'Periode peralihan · $days hari'
 	String transitionLabel({required Object days}) => 'Periode peralihan · ${days} hari';
 
+	/// id: 'Rentang ini tidak memuat gajian.'
+	String get transitionNoPayday => 'Rentang ini tidak memuat gajian.';
+
+	/// id: 'Awal bulan keuanganmu kini $start. Periode ini $range.'
+	String transitionReview({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.';
+
 	/// id: 'Bulan ini'
 	String get thisMonthSegmentLabel => 'Bulan ini';
 
@@ -4698,6 +4704,8 @@ extension on Translations {
 			'plan.financialMonthSelectAll' => 'Pilih semua',
 			'plan.financialMonthClearAll' => 'Kosongkan',
 			'plan.transitionLabel' => ({required Object days}) => 'Periode peralihan · ${days} hari',
+			'plan.transitionNoPayday' => 'Rentang ini tidak memuat gajian.',
+			'plan.transitionReview' => ({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.',
 			'plan.thisMonthSegmentLabel' => 'Bulan ini',
 			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
 			'plan.incomeRow' => 'Pemasukan',

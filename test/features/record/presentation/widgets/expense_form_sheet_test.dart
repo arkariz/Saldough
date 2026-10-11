@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
+import 'package:saldough/features/record/presentation/open_record_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -440,6 +441,74 @@ void main() {
       );
       expect(find.text('Cicilan · Bulanan'), findsOneWidget);
       expect(find.text(t.record.budgetItemOutOfPeriod(name: 'Bulanan')), findsNothing);
+    });
+
+    group('Ubah dulu kemunculan rutin tertaut (T-18.16, QA T-18.9 PO-2)', () {
+      final rule = RecurringRule(
+        id: 'cicilan',
+        kind: RecurringKind.expense,
+        amount: 291400000,
+        walletId: 'bca',
+        note: 'Cicilan',
+        schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 25)),
+        budgetItemKey: 'k-cicilan',
+      );
+      final occurrenceDate = DateTime(2026, 10, 25);
+
+      Future<ExpenseRecorded?> submitOccurrence(WidgetTester tester, {bool clear = false}) async {
+        tester.view.physicalSize = const Size(360, 2400);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        ExpenseRecorded? result;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () async {
+                    result = await showModalBottomSheet<ExpenseRecorded>(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => ExpenseFormSheet(
+                        wallets: wallets,
+                        initialWalletId: 'bca',
+                        budgetItems: options,
+                        draft: draftFromRule(rule, date: occurrenceDate),
+                        occurrence: (rule: rule, date: occurrenceDate),
+                      ),
+                    );
+                  },
+                  child: const Text('open'),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('open'));
+        await tester.pumpAndSettle();
+        expect(find.text('Cicilan · Bulanan'), findsOneWidget);
+        expect(find.text(t.record.budgetItemNone), findsNothing);
+        if (clear) {
+          await tester.ensureVisible(find.text('Cicilan · Bulanan'));
+          await tester.tap(find.text('Cicilan · Bulanan'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(t.record.budgetItemNone).last);
+          await tester.pumpAndSettle();
+        }
+        final submit = find.byKey(const ValueKey('record-submit'));
+        await tester.ensureVisible(submit);
+        await tester.tap(submit);
+        await tester.pumpAndSettle();
+        return result;
+      }
+
+      testWidgets('pos kemunculan tampil, bukan "Tanpa anggaran"; yang tampil = yang tersimpan', (tester) async {
+        expect((await submitOccurrence(tester))?.budgetItemId, 'cicilan-okt');
+      });
+
+      testWidgets('pengguna mengosongkan pos: tersimpan tanpa anggaran', (tester) async {
+        expect((await submitOccurrence(tester, clear: true))?.budgetItemId, isNull);
+      });
     });
 
     testWidgets('tanpa tautan rutin: tanggal 24 Okt di luar periode, tautannya lepas', (tester) async {

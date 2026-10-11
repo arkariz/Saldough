@@ -128,8 +128,7 @@ class PlanMonthView extends StatelessWidget {
         final range = state.selectedRange;
         // Nama bulan hanya untuk periode biasa yang mulai tanggal 1; periode
         // peralihan selalu rentang (P-11).
-        String labelOf(FinancialPeriod m) =>
-            m.isCalendarMonth ? CycleMonthFormatter.formatMonthShort(m.start) : m.rangeLabel;
+        String labelOf(FinancialPeriod m) => m.shortName;
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
         final funding = state.fundingWarnings;

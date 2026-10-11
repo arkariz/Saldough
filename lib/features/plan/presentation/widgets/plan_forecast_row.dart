@@ -185,9 +185,8 @@ class _MonthStartCard extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final plan = state.planFor(0);
-    final month = state.range.start.day == 1
-        ? CycleMonthFormatter.formatMonthShort(state.range.start)
-        : state.range.label;
+    // Periode peralihan selalu rentang, sama dengan Rencana (P-11, T-18.13).
+    final month = state.range.shortName;
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.space4),
       child: AppCard(

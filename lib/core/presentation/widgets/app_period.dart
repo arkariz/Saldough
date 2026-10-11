@@ -12,7 +12,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// [onTap] hanya teks (Beranda, Analisis).
 class AppPeriodHeader extends StatelessWidget {
   /// Membuat [AppPeriodHeader].
-  const AppPeriodHeader({required this.label, this.transitionDays, this.onTap, super.key});
+  const AppPeriodHeader({required this.label, this.transitionDays, this.onTap, this.wrapTag, super.key});
 
   /// Nama periode, mis. "Oktober" atau "25 Sep – 24 Okt".
   final String label;
@@ -22,6 +22,9 @@ class AppPeriodHeader extends StatelessWidget {
 
   /// Membuka lembar Awal bulan keuangan; `null` = bukan tombol.
   final VoidCallback? onTap;
+
+  /// Membungkus penanda peralihan, mis. dengan target tur di titik pemakaian.
+  final Widget Function(Widget tag)? wrapTag;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +81,7 @@ class AppPeriodHeader extends StatelessWidget {
             // Tombol menjorok ke kiri sejauh jarak dalamnya, supaya teksnya
             // segaris dengan isi halaman.
             if (onTap != null) Transform.translate(offset: const Offset(-AppSpacing.space2, 0), child: title) else title,
-            if (days != null) AppPeriodTag(days: days),
+            if (days != null) wrapTag?.call(AppPeriodTag(days: days)) ?? AppPeriodTag(days: days),
           ],
         ),
       ),

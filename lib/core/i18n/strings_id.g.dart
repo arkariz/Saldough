@@ -1957,6 +1957,18 @@ class Translations$tour$id {
 
 	/// id: 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.'
 	String get planMonthPickerBody => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.';
+
+	/// id: 'Bulan keuanganmu'
+	String get planPeriodHeaderTitle => 'Bulan keuanganmu';
+
+	/// id: 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.'
+	String get planPeriodHeaderBody => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.';
+
+	/// id: 'Periode peralihan'
+	String get planTransitionTitle => 'Periode peralihan';
+
+	/// id: 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.'
+	String get planTransitionBody => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.';
 }
 
 // Path: info
@@ -4498,6 +4510,10 @@ extension on Translations {
 			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
 			'tour.planMonthPickerTitle' => 'Bulan depan',
 			'tour.planMonthPickerBody' => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.',
+			'tour.planPeriodHeaderTitle' => 'Bulan keuanganmu',
+			'tour.planPeriodHeaderBody' => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.',
+			'tour.planTransitionTitle' => 'Periode peralihan',
+			'tour.planTransitionBody' => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4848,12 +4864,12 @@ extension on Translations {
 			'recurring.idleKeep' => 'Biarkan',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
 			'recurring.priceUpKeep' => 'Biarkan',
 			'recurring.suggestTitle' => 'Sepertinya rutin',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, sekitar tanggal ${day} tiga bulan terakhir.',
 			'recurring.suggestAccept' => 'Jadikan rutin',
 			'recurring.suggestDismiss' => 'Bukan rutin',

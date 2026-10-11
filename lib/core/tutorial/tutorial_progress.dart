@@ -69,6 +69,8 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   // dulu, sub-tab disorot sekali (progres per langkah).
   TourId.planMonth: [
     SpotlightKey.planTabs,
+    SpotlightKey.planPeriodHeader,
+    SpotlightKey.planTransition,
     SpotlightKey.planUnplanned,
     SpotlightKey.planForecast,
     SpotlightKey.planMonthPicker,

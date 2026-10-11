@@ -48,6 +48,8 @@ SpotlightStep spotlightStep(SpotlightKey key) {
     SpotlightKey.txnFilter => (tr.txnFilterTitle, tr.txnFilterBody),
     SpotlightKey.txnRow => (tr.txnRowTitle, tr.txnRowBody),
     SpotlightKey.planTabs => (tr.planTabsTitle, tr.planTabsBody),
+    SpotlightKey.planPeriodHeader => (tr.planPeriodHeaderTitle, tr.planPeriodHeaderBody),
+    SpotlightKey.planTransition => (tr.planTransitionTitle, tr.planTransitionBody),
     SpotlightKey.planUnplanned => (tr.planUnplannedTitle, tr.planUnplannedBody),
     SpotlightKey.planForecast => (tr.planForecastTitle, tr.planForecastBody),
     SpotlightKey.budgetRepeat => (tr.budgetRepeatTitle, tr.budgetRepeatBody),

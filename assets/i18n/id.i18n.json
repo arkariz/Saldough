@@ -699,7 +699,11 @@
     "budgetRepeatTitle": "Ulangi tiap periode",
     "budgetRepeatBody": "Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.",
     "planMonthPickerTitle": "Bulan depan",
-    "planMonthPickerBody": "Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya."
+    "planMonthPickerBody": "Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.",
+    "planPeriodHeaderTitle": "Bulan keuanganmu",
+    "planPeriodHeaderBody": "Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.",
+    "planTransitionTitle": "Periode peralihan",
+    "planTransitionBody": "Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan."
   },
   "info": {
     "menuTooltip": "Info dan tur",

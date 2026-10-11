@@ -759,6 +759,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get budgetRepeatBody => 'Turn on to start this budget again every month with the same items. No money is moved.';
 	@override String get planMonthPickerTitle => 'Next months';
 	@override String get planMonthPickerBody => 'See the forecast for the next two months. Each month shows its estimated month-end figure.';
+	@override String get planPeriodHeaderTitle => 'Your financial month';
+	@override String get planPeriodHeaderBody => 'Tap to start the month on your payday. Plan and Analysis follow it.';
+	@override String get planTransitionTitle => 'Transition period';
+	@override String get planTransitionBody => 'This period is longer or shorter once because your month start changed. The next one is a full month again.';
 }
 
 // Path: info
@@ -2230,6 +2234,10 @@ extension on TranslationsEn {
 			'tour.budgetRepeatBody' => 'Turn on to start this budget again every month with the same items. No money is moved.',
 			'tour.planMonthPickerTitle' => 'Next months',
 			'tour.planMonthPickerBody' => 'See the forecast for the next two months. Each month shows its estimated month-end figure.',
+			'tour.planPeriodHeaderTitle' => 'Your financial month',
+			'tour.planPeriodHeaderBody' => 'Tap to start the month on your payday. Plan and Analysis follow it.',
+			'tour.planTransitionTitle' => 'Transition period',
+			'tour.planTransitionBody' => 'This period is longer or shorter once because your month start changed. The next one is a full month again.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2580,12 +2588,12 @@ extension on TranslationsEn {
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			'recurring.priceUpUpdate' => 'Update item',
 			'recurring.priceUpKeep' => 'Keep amount',
 			'recurring.suggestTitle' => 'Looks repeating',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.',
 			'recurring.suggestAccept' => 'Make repeating',
 			'recurring.suggestDismiss' => 'Not repeating',

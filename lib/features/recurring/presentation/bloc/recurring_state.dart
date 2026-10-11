@@ -1,3 +1,4 @@
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -57,11 +58,15 @@ final class RecurringState extends UiState<RecurringState> {
   /// Catatan otomatis 7 hari terakhir yang belum dibatalkan (ADR-037 §3.2).
   final List<AutoRecordEntry> autoRecorded;
 
-  /// Awal bulan berjalan.
-  DateTime get monthStart => DateTime(today.year, today.month);
+  /// Periode keuangan berjalan (ADR-038), termasuk periode peralihan: segmen
+  /// Rutin membicarakan rentang yang sama dengan Bulan ini (T-18.17).
+  FinancialPeriod get period => ActiveFinancialMonth.periodOf(today);
 
-  /// Awal bulan berikutnya.
-  DateTime get monthEnd => DateTime(today.year, today.month + 1);
+  /// Awal periode berjalan.
+  DateTime get monthStart => period.start;
+
+  /// Awal periode berikutnya (eksklusif).
+  DateTime get monthEnd => period.end;
 
   /// Rutin ber-`id` [id], atau `null`.
   RecurringRule? ruleOf(String id) {

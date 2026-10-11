@@ -12,6 +12,7 @@ import 'package:saldough/features/recurring/presentation/bloc/recurring_bloc.dar
 import 'package:saldough/features/recurring/presentation/bloc/recurring_state.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_detail_page.dart';
 import 'package:saldough/features/recurring/presentation/pages/recurring_page.dart';
+import 'package:saldough/features/recurring/presentation/widgets/recurring_summary_card.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -154,6 +155,29 @@ void main() {
     await tester.tap(find.text(t.recurring.chipIncome));
     await tester.pumpAndSettle();
     expect(find.text(t.recurring.filteredEmpty), findsOneWidget);
+  });
+
+  testWidgets('periode peralihan 1 – 24 Okt (contoh B): judul rentang, kemunculan 25 Okt di Nanti (T-18.17)', (
+    tester,
+  ) async {
+    ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial.changedOn(
+      DateTime(2026, 10, 10),
+      const FinancialMonthStart.day(25),
+    );
+    addTearDown(() => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial);
+    await rules.saveRule(rule('Listrik', 20000000, DateTime(2026, 10, 5)));
+    await rules.saveRule(rule('Cicilan', 291400000, DateTime(2026, 10, 25)));
+    await pump(tester, const RecurringSegmentView());
+
+    expect(find.text(t.recurring.remainingTitle(month: '1 – 24 Okt')), findsOneWidget);
+    // Sisa periode ini hanya Listrik 5 Okt; Cicilan 25 Okt sudah periode berikutnya.
+    // Sisa dan rencana periode sama-sama Rp200.000; tanpa Cicilan (Rp3.114.000).
+    expect(find.descendant(of: find.byType(RecurringSummaryCard), matching: find.text('Rp200.000')), findsNWidgets(2));
+    expect(find.text('Rp3.114.000'), findsNothing);
+    final later = tester.getTopLeft(find.text(t.recurring.groupLater)).dy;
+    expect(tester.getTopLeft(find.text(t.recurring.groupThisMonth)).dy, lessThan(later));
+    expect(tester.getTopLeft(find.textContaining('Listrik').first).dy, lessThan(later));
+    expect(tester.getTopLeft(find.textContaining('Cicilan').first).dy, greaterThan(later));
   });
 
   testWidgets('rincian: Lewati menulis tanggal dilewati; Jeda lewat menu', (tester) async {

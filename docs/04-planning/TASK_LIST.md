@@ -3664,11 +3664,11 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       VERIFICATION_PLAN_FASE_16), termasuk tur T-18.10 dan peristiwa T-18.11
       di DebugView Firebase; temuan jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-PLN-006, FR-PLN-007.
-      **Hasil QA 11 Okt 2026 (sementara, sesi berlanjut)** — rencana uji
+      **Hasil QA 11 Okt 2026: 13 Lulus, 2 Gagal (V2, V15), 0 Terhalang** — rencana uji
       [artifact](https://claude.ai/artifact/5qMzrxDqnFpgBNSn1PWmLn). Emulator
       Pixel 7a API 35 (`emulator-5554`), APK debug dari `4a32d7d`
       (`main..4a32d7d`), data kosong (`pm clear`), jam dimajukan lewat
-      `cmd alarm set-time`. Analitik dibaca dari logcat `FA-SVC` (properti
+      `cmd alarm set-time` (dikembalikan ke `auto_time` sesudahnya). Analitik dibaca dari logcat `FA-SVC` (properti
       `debug.firebase.analytics.app`), bukan DebugView. Penyimpangan data
       awal: (a) rutin Gaji dibuat tiga kali (dua tawaran pertama diabaikan
       karena snackbar tawaran baru muncul ±4 detik sesudah "Rutin
@@ -3709,10 +3709,24 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
         1 – 24 Des (kini Rp0) ke Bulanan 25 Des – 24 Jan; Kartu tetap.
         Kartu 15 Nov – 14 Des tidak lahir karena aplikasi tidak dibuka saat
         itu (sesuai ADR-036 §3.2, bukan bug).
-      - V10 sebagian: pratinjau "25 Des – 30 Jan (37 hari), lalu 31 Jan –
-        27 Feb" dan Bulanan diregangkan sampai 30 Jan sesuai; bagian jam
-        28 Feb belum.
-      - V11, V12, V13 belum.
+      - V10 Lulus: pratinjau "25 Des – 30 Jan (37 hari), lalu 31 Jan –
+        27 Feb"; Bulanan 25 Des – 30 Jan, 31 Jan – 27 Feb, 28 Feb – 30 Mar,
+        masing-masing sekali, tanpa celah dan tanpa tumpang-tindih. Catatan:
+        langkah rencana uji (10 Jan langsung ke 28 Feb) hanya melahirkan
+        28 Feb karena ADR-036 §3.2 tidak mengisi periode terlewat; aplikasi
+        dibuka 31 Jan lalu 28 Feb untuk menguji harapannya.
+      - V11 Lulus: BCA Rp28.936.000 (20.000.000 + 12.000.000 − 2.914.000 −
+        150.000), Tunai Rp900.000, Tabungan Rp100.000, total Rp29.936.000;
+        tidak ada perubahan karena V2, V8, V9, V10.
+      - V12 Lulus: periode 28 Feb – 30 Mar dengan pengeluaran di luar rencana
+        Tunai Rp50.000 dan transfer Tunai → Tabungan Rp100.000: Arus Masuk
+        Rp0, Keluar Rp50.000 = "Di luar rencana" di Rencana; transfer tidak
+        ikut. Juga cocok di V6 (Masuk Rp12.000.000, Keluar Rp2.914.000 = pos
+        terpakai) dan di 1 – 24 Okt (transfer saja, Arus Rp0).
+      - V13 Lulus: lembar Awal bulan keuangan, kepala Bulan ini dengan
+        penanda, dan kartu Arus tidak terpotong di id terang dan en gelap,
+        360dp (`wm density 480`); "Transition period · 32 days" di baris
+        sendiri; rentang berspasi. Catatan S4 di pertanyaan PO 7.
       - V14 Lulus (pengguna baru): `planPeriodHeader` langkah 1/4 tur
         `planMonth`; `planTransition` 1/1 tampil sekali saat periode
         peralihan. Skenario pengguna lama yang sudah melihat tur sebelum

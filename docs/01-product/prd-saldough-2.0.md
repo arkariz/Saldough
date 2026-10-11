@@ -873,35 +873,36 @@ antrean (B-38).
 Kebutuhan ini lahir dari permintaan pemilik 11 Okt 2026: pengguna perlu tahu
 ada versi baru, baik rilis Play Store maupun pembaruan kecil Shorebird.
 Perilaku, aturan B-1–B-13, dan teksnya di
-[APP_UPDATE.md](features/APP_UPDATE.md); keputusan arsitektur di
-[ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md)
-(Proposed). R1 di Fase 20 (Android), R2 di antrean (B-39).
+[APP_UPDATE.md](features/APP_UPDATE.md); keputusan teknisnya ditentukan
+engineer sebagai ADR baru (APP_UPDATE §13). R1 di Fase 20 (Android), R2 di
+antrean (B-39).
 
 **FR-UPD-001 — Versi baru dari Play Store (R1)**
 
 - [ ] Beranda memberi tahu bila Play punya versi baru untuk pengguna itu,
-      dan pengguna bisa mengunduh lalu memasangnya tanpa keluar aplikasi
-      (pembaruan fleksibel), dengan pilihan Nanti.
+      dan pengguna bisa memasangnya dari dalam aplikasi dengan ketukan
+      sesedikit mungkin, dengan pilihan Nanti.
 - [ ] Tidak pernah memaksa, tidak pernah memasang tanpa ketukan pengguna,
       dan tidak pernah tampil di tengah Catat.
 - [ ] Luring atau gagal dicek: diam, tanpa pesan galat.
 
 **FR-UPD-002 — Pembaruan kecil (R1)**
 
-- [ ] Bila tambalan Shorebird sudah terunduh dan menunggu dibuka ulang,
-      Beranda memberi tahu sekali per tambalan cara memakainya.
+- [ ] Bila pembaruan kecil (Shorebird) sudah siap dan menunggu aplikasi
+      dibuka ulang, Beranda memberi tahu sekali per pembaruan kecil cara
+      memakainya.
 - [ ] Versi baru dari Play didahulukan bila keduanya ada.
 
 **FR-UPD-003 — Apa yang baru (R1)**
 
 - [ ] Sesudah versi atau pembaruan kecil yang punya catatan terpasang,
       catatan manfaatnya tampil sekali di Beranda dan selalu bisa dibuka
-      dari Akun. Tidak tampil pada pemasangan pertama.
+      dari Akun, juga tanpa koneksi. Tidak tampil pada pemasangan pertama.
 
 **FR-UPD-004 — Versi aplikasi di Akun (R1)**
 
 - [ ] Akun menampilkan versi, nomor build, dan nomor pembaruan kecil yang
-      berjalan beserta keadaan pembaruannya; nomor tambalan ikut ke
+      berjalan beserta keadaan pembaruannya; nomor pembaruan kecil ikut ke
       Analytics dan Crashlytics.
 
 ## 8. Kebutuhan non-fungsional

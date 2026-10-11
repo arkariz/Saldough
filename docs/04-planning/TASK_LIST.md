@@ -79,11 +79,7 @@ Terakhir diperbarui: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-<<<<<<< HEAD
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 14 | 13 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, 13 Lulus 2 Gagal); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu) |
-=======
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 18 | 11 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026: 13 Lulus, 2 Gagal; temuan T-18.13, T-18.14; keputusan PO jadi T-18.15–18.18, T-18.15 lebih dulu) |
->>>>>>> 880484f (Keputusan PO atas QA T-18.9: T-18.15–T-18.18)
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 13 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, 13 Lulus 2 Gagal); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3781,7 +3777,6 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       tautan otomatis notifikasi. Ubah dulu (`RecordOccurrenceRecorded` di
       `record_bloc.dart`) adalah jalur utama gajian maju, jadi kriteria
       tinjau ulang ADR-038 §8 tidak terukur tanpanya.
-<<<<<<< HEAD
       **Selesai 11 Okt 2026.** `_onOccurrenceRecorded` mengirim
       `recurrence_date_gap` sesudah transaksi tersimpan (lewat `onSuccess`
       baru di `_save`; gagal simpan tidak mengirim). Uji bloc di
@@ -3791,10 +3786,9 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       yang dibuat sistem akan menenggelamkan sebaran yang ingin diukur.
       Bila pemilik ingin keduanya ikut, tinggal menambah panggilan di jalur
       itu.
-=======
       **Keputusan pemilik 11 Okt 2026:** Catat satu ketuk dan Catat semua
       juga mengirim, dengan ember `0`, supaya sebaran selisih punya
-      penyebut.
+      penyebut. Dikerjakan di T-18.19.
 - [ ] **T-18.15** Pos anggaran yang dipilih saat membuat rutin disimpan
       sebagai tautan rutin (QA T-18.9 PO-1, keputusan pemilik 11 Okt 2026,
       ADR-036 §3.4 tambahan). **Kerjakan pertama.**
@@ -3835,7 +3829,17 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji widget per butir di id dan en, termasuk 360dp untuk
       rentang.
       Memenuhi FR-PLN-004, FR-HOME-001.
->>>>>>> 880484f (Keputusan PO atas QA T-18.9: T-18.15–T-18.18)
+- [ ] **T-18.19** `recurrence_date_gap {bucket: 0}` juga dari Catat satu
+      ketuk dan Catat semua (keputusan pemilik 11 Okt 2026 atas T-18.14):
+      tanpa nol, porsi pembayaran yang meleset dari tanggal rutin tidak
+      bisa dihitung (ADR-038 §8). Satu peristiwa per kemunculan tercatat,
+      sesudah simpan berhasil. Supaya nol dari sistem tidak menenggelamkan
+      sebaran (catatan engineer T-18.14), semua jalur mengirim parameter
+      `via`: `edit` (Ubah dulu), `link` (Tautkan di Rutin), `auto` (tautan
+      catat notifikasi), `one_tap`, `record_all`; FINANCIAL_PERIOD §8A.
+      Verifikasi: uji bloc Catat satu ketuk → satu peristiwa `0`; Catat
+      semua (3) → tiga peristiwa `0`; gagal simpan tidak mengirim.
+      Memenuhi FR-PLN-007.
 
 ## Fase 19: Analisis keuangan (R1)
 
@@ -4216,7 +4220,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
 | FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
 | FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9, T-18.10, T-18.11 |
-| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11, T-18.12 |
+| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11, T-18.12, T-18.14, T-18.19 |
 | FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7, T-19.8, T-19.9 |
 | FR-ANL-002 | T-19.2, T-19.4 |
 | FR-ANL-003 | T-19.2, T-19.4 |

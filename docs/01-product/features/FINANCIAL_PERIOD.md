@@ -277,7 +277,7 @@ bloc, tidak dari `build()`.
 | `financial_month_sheet_opened` | `source`: `plan` \| `account` \| `offer` | Lembar Awal bulan keuangan terbuka | Apakah pengaturan kini ditemukan (masalah §2) |
 | `financial_month_changed` | `source`; `day`: `1`…`28` \| `last`; `transition_days`; `moved_budgets`; `kept_budgets` | Simpan berhasil | Tanggal yang dipilih orang; kriteria tinjau ulang ADR-038 §8 (perubahan berulang) |
 | `financial_month_offer` | `action`: `shown` \| `accepted` \| `dismissed` | Tawaran F2 | Apakah tawaran dari rutin gajian berguna |
-| `recurrence_date_gap` | `bucket`: `0` \| `1-3` \| `4-7` \| `8-14` \| `15+` | Transaksi ditautkan ke kemunculan rutin (oleh pengguna atau otomatis) | Apakah batas atribusi 7 hari (P-4) tepat; kriteria tinjau ulang ADR-038 §8 |
+| `recurrence_date_gap` | `bucket`: `0` \| `1-3` \| `4-7` \| `8-14` \| `15+`; `via`: `edit` \| `link` \| `auto` \| `one_tap` \| `record_all` | Transaksi ditautkan ke kemunculan rutin (oleh pengguna atau otomatis) | Apakah batas atribusi 7 hari (P-4) tepat; kriteria tinjau ulang ADR-038 §8 |
 
 ## 9. Perlu rupa dari pemilik
 

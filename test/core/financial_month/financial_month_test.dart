@@ -29,7 +29,7 @@ void main() {
       final range = financialPeriodOf(DateTime(2026, 11, 3), single(25));
       expect(range, period(DateTime(2026, 10, 25), DateTime(2026, 11, 25)));
       expect(range.lastDay, DateTime(2026, 11, 24));
-      expect(range.label, '25 Okt – 24 Nov');
+      expect(range.label, '25\u00A0Okt\u00A0–\u00A024\u00A0Nov');
       expect(financialPeriodOf(DateTime(2026, 11, 25), single(25)).start, DateTime(2026, 11, 25));
       expect(range.contains(DateTime(2026, 11, 24, 23)), isTrue);
       expect(range.contains(DateTime(2026, 11, 25)), isFalse);
@@ -55,32 +55,32 @@ void main() {
 
   test('nama periode (P-11): nama bulan untuk awal 1, selain itu rentang; peralihan selalu rentang', () {
     expect(financialPeriodOf(DateTime(2026, 10, 10), single(1)).name, 'Oktober');
-    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).name, '25 Okt – 24 Nov');
+    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).name, '25\u00A0Okt\u00A0–\u00A024\u00A0Nov');
     final transition = financialPeriodOf(
       DateTime(2026, 10, 10),
       single(25).changedOn(DateTime(2026, 10, 10), FinancialMonthStart.first),
     );
-    expect(transition.name, '25 Sep – 31 Okt');
+    expect(transition.name, '25\u00A0Sep\u00A0–\u00A031\u00A0Okt');
     final startsOnFirst = financialPeriodOf(
       DateTime(2026, 10, 10),
       single(1).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
     );
     expect(startsOnFirst.isTransition, isTrue);
-    expect(startsOnFirst.name, '1 – 24 Okt');
-    expect(startsOnFirst.label, '1 – 24 Okt');
+    expect(startsOnFirst.name, '1\u00A0–\u00A024\u00A0Okt');
+    expect(startsOnFirst.label, '1\u00A0–\u00A024\u00A0Okt');
   });
 
   test('nama pendek (T-18.13): Rencana dan kartu Beranda "… dimulai" memakai aturan yang sama', () {
     // Periode normal tanggal 1.
     expect(financialPeriodOf(DateTime(2026, 10, 10), single(1)).shortName, 'Okt');
     // Periode normal bukan tanggal 1.
-    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).shortName, '25 Okt – 24 Nov');
+    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).shortName, '25\u00A0Okt\u00A0–\u00A024\u00A0Nov');
     // Periode peralihan yang mulai tanggal 1 (contoh B, temuan T-18.9 V2).
     final transition = financialPeriodOf(
       DateTime(2026, 10, 10),
       single(1).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
     );
-    expect(transition.shortName, '1 – 24 Okt');
+    expect(transition.shortName, '1\u00A0–\u00A024\u00A0Okt');
   });
 
   group('periode peralihan (P-3)', () {
@@ -90,7 +90,7 @@ void main() {
       final current = financialPeriodOf(DateTime(2026, 10, 10), after);
       expect(current, period(DateTime(2026, 9, 25), DateTime(2026, 11), transition: true));
       expect(current.days, 37);
-      expect(current.label, '25 Sep – 31 Okt');
+      expect(current.label, '25\u00A0Sep\u00A0–\u00A031\u00A0Okt');
       expect(after.nextOf(current), period(DateTime(2026, 11), DateTime(2026, 12)));
       // Periode September 25 Agt – 24 Sep tidak berubah (P-2).
       expect(after.previousOf(current), period(DateTime(2026, 8, 25), DateTime(2026, 9, 25)));

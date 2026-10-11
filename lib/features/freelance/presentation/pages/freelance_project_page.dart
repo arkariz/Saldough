@@ -355,7 +355,10 @@ class _PaymentCard extends StatelessWidget {
     final range = switch (entries) {
       [] => '',
       [final first, ..., final last] when !DateUtils.isSameDay(first.date, last.date) =>
-        '${CycleMonthFormatter.formatDateShort(first.date)} – ${CycleMonthFormatter.formatDateShort(last.date)}',
+        CycleMonthFormatter.range(
+          CycleMonthFormatter.formatDateShort(first.date),
+          CycleMonthFormatter.formatDateShort(last.date),
+        ),
       [final first, ...] => CycleMonthFormatter.formatDateShort(first.date),
     };
     return FreelancePaymentCard(

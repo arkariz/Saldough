@@ -362,7 +362,6 @@ class _Translations$budget$en extends Translations$budget$id {
 	@override String get periodLabel => 'Period';
 	@override String get startDateLabel => 'Starts';
 	@override String periodRange({required Object start, required Object end}) => '${start} – ${end}';
-	@override String periodRangeShort({required Object start, required Object end}) => '${start}–${end}';
 	@override String periodStartRow({required Object date, required Object range}) => 'Starts ${date} · ${range}';
 	@override String get itemsLabel => 'Budget items';
 	@override String get itemsHelp => 'Planned purchases or planned transfers. The budget total is the sum of all items.';
@@ -624,7 +623,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String get budgetLink => 'Or create a spending budget';
 	@override String budgetSpentOf({required Object spent, required Object planned}) => '${spent} used of ${planned}';
 	@override String walletLink({required Object count}) => 'In ${count} wallets';
-	@override String get netLabel => 'Net this month';
+	@override String get flowNet => 'Net';
 	@override String get hideAmounts => 'Hide amounts';
 	@override String get showAmounts => 'Show amounts';
 	@override String get budgetSafe => 'On track';
@@ -1169,11 +1168,12 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String get financialMonthLastDay => 'Last day of the month';
 	@override String get financialMonthChange => 'Change financial month start';
 	@override String get financialMonthHint => 'Usually your payday.';
-	@override String financialMonthOffer({required Object start}) => 'Start your financial month on ${start}?';
+	@override String financialMonthOfferScheduled({required Object start}) => 'Recurring scheduled. Start your financial month on ${start}?';
 	@override String get financialMonthOfferAction => 'Set';
 	@override String financialMonthPreviewTitle({required Object day}) => 'Start on day ${day}';
 	@override String get financialMonthPreviewTitleLastDay => 'Start on the last day';
 	@override String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.';
+	@override String financialMonthPreviewTransitionPast({required Object range, required Object current}) => '${range} becomes a completed transition period. This period is ${current}.';
 	@override String get financialMonthPreviewPast => 'Earlier periods stay the same.';
 	@override String get financialMonthBudgetsTitle => 'Recurring budgets';
 	@override String financialMonthBudgetsHelp({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.';
@@ -1871,7 +1871,6 @@ extension on TranslationsEn {
 			'budget.periodLabel' => 'Period',
 			'budget.startDateLabel' => 'Starts',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
-			'budget.periodRangeShort' => ({required Object start, required Object end}) => '${start}–${end}',
 			'budget.periodStartRow' => ({required Object date, required Object range}) => 'Starts ${date} · ${range}',
 			'budget.itemsLabel' => 'Budget items',
 			'budget.itemsHelp' => 'Planned purchases or planned transfers. The budget total is the sum of all items.',
@@ -2074,9 +2073,9 @@ extension on TranslationsEn {
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
+			'freelance.entryAddShortAction' => 'Record work hours',
 			_ => null,
 		} ?? switch (path) {
-			'freelance.entryAddShortAction' => 'Record work hours',
 			'freelance.filterAll' => 'All',
 			'freelance.noDeductions' => 'No deductions',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}',
@@ -2117,7 +2116,7 @@ extension on TranslationsEn {
 			'home.budgetLink' => 'Or create a spending budget',
 			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} used of ${planned}',
 			'home.walletLink' => ({required Object count}) => 'In ${count} wallets',
-			'home.netLabel' => 'Net this month',
+			'home.flowNet' => 'Net',
 			'home.hideAmounts' => 'Hide amounts',
 			'home.showAmounts' => 'Show amounts',
 			'home.budgetSafe' => 'On track',
@@ -2588,9 +2587,9 @@ extension on TranslationsEn {
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			_ => null,
 		} ?? switch (path) {
-			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			'recurring.priceUpUpdate' => 'Update item',
 			'recurring.priceUpKeep' => 'Keep amount',
 			'recurring.suggestTitle' => 'Looks repeating',
@@ -2604,11 +2603,12 @@ extension on TranslationsEn {
 			'plan.financialMonthLastDay' => 'Last day of the month',
 			'plan.financialMonthChange' => 'Change financial month start',
 			'plan.financialMonthHint' => 'Usually your payday.',
-			'plan.financialMonthOffer' => ({required Object start}) => 'Start your financial month on ${start}?',
+			'plan.financialMonthOfferScheduled' => ({required Object start}) => 'Recurring scheduled. Start your financial month on ${start}?',
 			'plan.financialMonthOfferAction' => 'Set',
 			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Start on day ${day}',
 			'plan.financialMonthPreviewTitleLastDay' => 'Start on the last day',
 			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.',
+			'plan.financialMonthPreviewTransitionPast' => ({required Object range, required Object current}) => '${range} becomes a completed transition period. This period is ${current}.',
 			'plan.financialMonthPreviewPast' => 'Earlier periods stay the same.',
 			'plan.financialMonthBudgetsTitle' => 'Recurring budgets',
 			'plan.financialMonthBudgetsHelp' => ({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.',

@@ -235,6 +235,9 @@ void main() {
     // Judul "Arus {periode}" (PeriodHeader, P-11).
     expect(find.text(t.home.flowTitle(period: CycleMonthFormatter.formatMonthName(now))), findsOneWidget);
     final flow = find.byType(HomeMonthCard);
+    // Baris selisih tanpa "bulan ini": judulnya bisa rentang (T-18.18).
+    expect(find.descendant(of: flow, matching: find.text(t.home.flowNet)), findsOneWidget);
+    expect(t.home.flowNet, 'Selisih');
     expect(find.descendant(of: flow, matching: find.text(t.home.incomeStat)), findsOne);
     expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);
     expect(find.descendant(of: flow, matching: find.text('−Rp750.000')), findsOneWidget);

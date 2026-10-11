@@ -169,7 +169,7 @@ void main() {
     await rules.saveRule(rule('Cicilan', 291400000, DateTime(2026, 10, 25)));
     await pump(tester, const RecurringSegmentView());
 
-    expect(find.text(t.recurring.remainingTitle(month: '1 – 24 Okt')), findsOneWidget);
+    expect(find.text(t.recurring.remainingTitle(month: '1\u00A0–\u00A024\u00A0Okt')), findsOneWidget);
     // Sisa periode ini hanya Listrik 5 Okt; Cicilan 25 Okt sudah periode berikutnya.
     // Sisa dan rencana periode sama-sama Rp200.000; tanpa Cicilan (Rp3.114.000).
     expect(find.descendant(of: find.byType(RecurringSummaryCard), matching: find.text('Rp200.000')), findsNWidgets(2));

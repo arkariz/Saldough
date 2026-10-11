@@ -102,7 +102,7 @@ class HomeMonthCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  t.home.netLabel,
+                  t.home.flowNet,
                   style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
                 ),
               ),

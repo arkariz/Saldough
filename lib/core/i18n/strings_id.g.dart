@@ -839,9 +839,6 @@ class Translations$budget$id {
 	/// id: '$start – $end'
 	String periodRange({required Object start, required Object end}) => '${start} – ${end}';
 
-	/// id: '$start–$end'
-	String periodRangeShort({required Object start, required Object end}) => '${start}–${end}';
-
 	/// id: 'Mulai $date · $range'
 	String periodStartRow({required Object date, required Object range}) => 'Mulai ${date} · ${range}';
 
@@ -1589,8 +1586,8 @@ class Translations$home$id {
 	/// id: 'Di $count dompet'
 	String walletLink({required Object count}) => 'Di ${count} dompet';
 
-	/// id: 'Selisih bulan ini'
-	String get netLabel => 'Selisih bulan ini';
+	/// id: 'Selisih'
+	String get flowNet => 'Selisih';
 
 	/// id: 'Sembunyikan nominal'
 	String get hideAmounts => 'Sembunyikan nominal';
@@ -2979,8 +2976,8 @@ class Translations$plan$id {
 	/// id: 'Biasanya tanggal gajian.'
 	String get financialMonthHint => 'Biasanya tanggal gajian.';
 
-	/// id: 'Mulai bulan keuanganmu tiap $start?'
-	String financialMonthOffer({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?';
+	/// id: 'Rutin dijadwalkan. Mulai bulan keuanganmu tiap $start?'
+	String financialMonthOfferScheduled({required Object start}) => 'Rutin dijadwalkan. Mulai bulan keuanganmu tiap ${start}?';
 
 	/// id: 'Atur'
 	String get financialMonthOfferAction => 'Atur';
@@ -2993,6 +2990,9 @@ class Translations$plan$id {
 
 	/// id: 'Periode ini jadi $range ($days hari), lalu $next.'
 	String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'Periode ini jadi ${range} (${days} hari), lalu ${next}.';
+
+	/// id: '$range jadi periode peralihan yang sudah selesai. Periode ini $current.'
+	String financialMonthPreviewTransitionPast({required Object range, required Object current}) => '${range} jadi periode peralihan yang sudah selesai. Periode ini ${current}.';
 
 	/// id: 'Periode sebelumnya tidak berubah.'
 	String get financialMonthPreviewPast => 'Periode sebelumnya tidak berubah.';
@@ -4147,7 +4147,6 @@ extension on Translations {
 			'budget.periodLabel' => 'Periode',
 			'budget.startDateLabel' => 'Mulai',
 			'budget.periodRange' => ({required Object start, required Object end}) => '${start} – ${end}',
-			'budget.periodRangeShort' => ({required Object start, required Object end}) => '${start}–${end}',
 			'budget.periodStartRow' => ({required Object date, required Object range}) => 'Mulai ${date} · ${range}',
 			'budget.itemsLabel' => 'Pos anggaran',
 			'budget.itemsHelp' => 'Rincian rencana belanja atau rencana transfer. Total rencana anggaran adalah jumlah seluruh pos.',
@@ -4350,9 +4349,9 @@ extension on Translations {
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
 			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
 			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
+			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			_ => null,
 		} ?? switch (path) {
-			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			'freelance.filterAll' => 'Semua',
 			'freelance.noDeductions' => 'Tanpa potongan',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}',
@@ -4393,7 +4392,7 @@ extension on Translations {
 			'home.budgetLink' => 'Atau buat anggaran pengeluaran',
 			'home.budgetSpentOf' => ({required Object spent, required Object planned}) => '${spent} terpakai dari ${planned}',
 			'home.walletLink' => ({required Object count}) => 'Di ${count} dompet',
-			'home.netLabel' => 'Selisih bulan ini',
+			'home.flowNet' => 'Selisih',
 			'home.hideAmounts' => 'Sembunyikan nominal',
 			'home.showAmounts' => 'Tampilkan nominal',
 			'home.budgetSafe' => 'Aman',
@@ -4864,9 +4863,9 @@ extension on Translations {
 			'recurring.idleKeep' => 'Biarkan',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			_ => null,
 		} ?? switch (path) {
-			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
 			'recurring.priceUpKeep' => 'Biarkan',
 			'recurring.suggestTitle' => 'Sepertinya rutin',
@@ -4880,11 +4879,12 @@ extension on Translations {
 			'plan.financialMonthLastDay' => 'Hari terakhir bulan',
 			'plan.financialMonthChange' => 'Ubah awal bulan keuangan',
 			'plan.financialMonthHint' => 'Biasanya tanggal gajian.',
-			'plan.financialMonthOffer' => ({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?',
+			'plan.financialMonthOfferScheduled' => ({required Object start}) => 'Rutin dijadwalkan. Mulai bulan keuanganmu tiap ${start}?',
 			'plan.financialMonthOfferAction' => 'Atur',
 			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Mulai tanggal ${day}',
 			'plan.financialMonthPreviewTitleLastDay' => 'Mulai hari terakhir bulan',
 			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'Periode ini jadi ${range} (${days} hari), lalu ${next}.',
+			'plan.financialMonthPreviewTransitionPast' => ({required Object range, required Object current}) => '${range} jadi periode peralihan yang sudah selesai. Periode ini ${current}.',
 			'plan.financialMonthPreviewPast' => 'Periode sebelumnya tidak berubah.',
 			'plan.financialMonthBudgetsTitle' => 'Anggaran rutin',
 			'plan.financialMonthBudgetsHelp' => ({required Object next, required Object previous}) => 'Yang dicentang ikut mulai ${next}. Yang tidak, tetap mulai ${previous}.',

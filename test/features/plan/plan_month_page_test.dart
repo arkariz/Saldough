@@ -454,7 +454,7 @@ void main() {
     testWidgets('kepala rentang + penanda; uang nganggur negatif tanpa warna peringatan, dengan kalimat', (tester) async {
       final reviews = MonthReviewRepositoryImpl(storage: storage);
       await pump(tester, reviews: reviews, today: DateTime(2026, 10, 10, 9));
-      expect(find.text('1 – 24 Okt'), findsOneWidget);
+      expect(find.text('1\u00A0–\u00A024\u00A0Okt'), findsOneWidget);
       expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
       expect(find.text('Rentang ini tidak memuat gajian.'), findsOneWidget);
       final hero = tester.widget<HeroAmount>(find.descendant(of: find.byType(UnplannedCard), matching: find.byType(HeroAmount)));
@@ -463,7 +463,7 @@ void main() {
 
       // Tinjau awal bulan muncul sekali dengan kalimat peralihan, walau sudah
       // lewat hari ke-7 periode.
-      expect(find.text('Awal bulan keuanganmu kini tanggal 25. Periode ini 1 – 24 Okt.'), findsOneWidget);
+      expect(find.text('Awal bulan keuanganmu kini tanggal 25. Periode ini 1\u00A0–\u00A024\u00A0Okt.'), findsOneWidget);
 
       // W9: perkiraan periode peralihan tidak disimpan.
       final snapshots = await tester.runAsync(reviews.loadSnapshots);
@@ -486,7 +486,7 @@ void main() {
 
     testWidgets('periode berikutnya 25 Okt – 24 Nov memuat gajian: tanpa kalimat, tanpa penanda', (tester) async {
       await pump(tester, today: DateTime(2026, 10, 26, 9));
-      expect(find.text('25 Okt – 24 Nov'), findsOneWidget);
+      expect(find.text('25\u00A0Okt\u00A0–\u00A024\u00A0Nov'), findsOneWidget);
       expect(find.text('Periode peralihan · 24 hari'), findsNothing);
       expect(find.text('Rentang ini tidak memuat gajian.'), findsNothing);
     });

@@ -33,13 +33,14 @@ final class FinancialPeriod extends Equatable {
   bool get isCalendarMonth => start.day == 1 && !isTransition;
 
   /// Rentang tanggal berspasi (`writing.md`): "25 Okt – 24 Nov", atau
-  /// "1 – 24 Okt" bila di bulan yang sama.
+  /// "1 – 24 Okt" bila di bulan yang sama. Spasinya tak-putus, jadi rentang
+  /// tidak pernah dipenggal di tengah (T-18.18).
   String get rangeLabel {
     final last = lastDay;
     final from = start.year == last.year && start.month == last.month
         ? '${start.day}'
         : CycleMonthFormatter.formatDayMonth(start);
-    return '$from – ${CycleMonthFormatter.formatDayMonth(last)}';
+    return CycleMonthFormatter.range(from, CycleMonthFormatter.formatDayMonth(last));
   }
 
   /// Label: "Oktober 2026" bila [isCalendarMonth], selain itu [rangeLabel].

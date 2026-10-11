@@ -15,6 +15,7 @@ TransactionKind transactionKindOf(RecurringKind kind) => switch (kind) {
 /// (PLAN_TAB_LAYOUT §6.3).
 String signedAmount(RecurringKind kind, int sen, {bool approximate = false}) {
   final sign = switch (kind) {
+    _ when sen == 0 => '',
     RecurringKind.income => '+',
     RecurringKind.expense => '−',
     RecurringKind.transfer => '⇄',

@@ -1,10 +1,6 @@
 /* Rencana and recurring prototype: components not yet in the design system. */
 
-/* Sub-tabs under the top bar (navigation between segments) */
-.tk-subtabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); flex: none; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
-.tk-subtab { position: relative; height: 48px; border: 0; background: none; color: var(--ink-2); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; text-decoration: none; display: grid; place-items: center; }
-.tk-subtab.is-active { color: var(--ink); }
-.tk-subtab.is-active::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 40px; height: 4px; margin-left: -20px; background: var(--brand); }
+/* Sub-tabs moved to the design system (SubTabs, tk-subtabs). */
 
 /* Estimate card: dashed frame, no fill, square corners. Solid card = certain, dashed = estimate. */
 .est-card { border: 2px dashed var(--line-strong); padding: 14px; display: flex; flex-direction: column; gap: 12px; }

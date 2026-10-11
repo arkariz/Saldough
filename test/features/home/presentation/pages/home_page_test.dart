@@ -232,7 +232,8 @@ void main() {
     // Total saldo dompet aktif: Rp5.250.000 + Rp0.
     expect(find.descendant(of: find.byType(HeroAmount), matching: find.text('Rp5.250.000')), findsOneWidget);
     // Transfer Rp1.000.000 tidak dihitung; pengeluaran tahun lalu juga tidak.
-    expect(find.text(CycleMonthFormatter.formatMonthName(now)), findsOneWidget);
+    // Judul "Arus {periode}" (PeriodHeader, P-11).
+    expect(find.text(t.home.flowTitle(period: CycleMonthFormatter.formatMonthName(now))), findsOneWidget);
     final flow = find.byType(HomeMonthCard);
     expect(find.descendant(of: flow, matching: find.text(t.home.incomeStat)), findsOne);
     expect(find.descendant(of: flow, matching: find.text('+Rp5.000.000')), findsOneWidget);

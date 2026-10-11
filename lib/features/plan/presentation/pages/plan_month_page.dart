@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -8,6 +12,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/plan/di/plan_scope.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
@@ -136,6 +141,14 @@ class PlanMonthView extends StatelessWidget {
           child: ListView(
             padding: padding,
             children: [
+              // Kepala periode (PeriodHeader, FINANCIAL_PERIOD F1, P-11): nama
+              // periode terpilih, pintu ke lembar Awal bulan keuangan.
+              AppPeriodHeader(
+                label: range.name,
+                transitionDays: range.isTransition ? range.days : null,
+                onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const EmptyInput())),
+              ),
+              const SizedBox(height: AppSpacing.space2),
               // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
               if (state.showReview && !state.isFuture) ...[
                 MonthReviewCard(

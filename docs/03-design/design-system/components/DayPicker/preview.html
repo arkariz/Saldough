@@ -1,0 +1,68 @@
+<!-- @dsCard group="Input" height=900 -->
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><title>DayPicker</title></head>
+<body>
+<div class="tk" style="max-width:360px;background:var(--bg);padding-top:16px">
+  <div class="tk-sheet" role="dialog" aria-label="Awal bulan keuangan" style="padding-bottom:0">
+    <div class="tk-sheet__handle"></div>
+    <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Awal bulan keuangan</h2><span style="width:48px;flex:none"></span></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="tk-t-body-sm tk-ink-2">Biasanya tanggal gajian.</p>
+      <div class="tk-daygrid" role="radiogroup" aria-label="Tanggal mulai">
+        <button class="tk-day is-selected" role="radio" aria-checked="true" aria-label="Tanggal 1"><span class="tk-day__n">1</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">2</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">3</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">4</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">5</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">6</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">7</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">8</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">9</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">10</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">11</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">12</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">13</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">14</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">15</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">16</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">17</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">18</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">19</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">20</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">21</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">22</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">23</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">24</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">25</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">26</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">27</span></button>
+        <button class="tk-day" role="radio" aria-checked="false"><span class="tk-day__n">28</span></button>
+        <button class="tk-day tk-day--wide" role="radio" aria-checked="false"><span class="tk-day__n">Hari terakhir bulan</span></button>
+      </div>
+      <div class="tk-inset">
+        <p class="tk-t-body-strong">Mulai tanggal 1</p>
+        <p class="tk-t-body-sm">Periode ini jadi 25 Sep – 31 Okt (37 hari), lalu 1 – 30 Nov.</p>
+        <div class="tk-ptl" aria-hidden="true">
+          <div class="tk-ptl__bar"><span class="tk-ptl__seg tk-ptl__seg--past" style="flex:31"></span><span class="tk-ptl__seg tk-ptl__seg--now" style="flex:37"></span><span class="tk-ptl__seg tk-ptl__seg--next" style="flex:30"></span></div>
+          <div class="tk-ptl__ticks"><span class="tk-ptl__tick" style="left:31.6%">25 Sep</span><span class="tk-ptl__tick" style="left:69.4%">1 Nov</span></div>
+        </div>
+        <p class="tk-t-body-sm tk-ink-2">Periode sebelumnya tidak berubah.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div class="tk-section__head" style="padding:0"><h3 class="tk-t-body-strong" style="margin:0">Anggaran rutin</h3><button class="tk-link" type="button">Kosongkan</button></div>
+        <p class="tk-t-body-sm tk-ink-2">Yang dicentang ikut mulai tanggal 1. Yang tidak, tetap mulai tanggal 25.</p>
+      </div>
+      <div class="tk-list tk-list--check" style="margin:-4px -16px 0;border-radius:0">
+        <label class="tk-row tk-row--check tk-row--compact"><span class="tk-check"><input type="checkbox" checked><span class="tk-check__box"><span class="tk-icon">check</span></span></span><span class="tk-row__main"><span class="tk-row__title">Anggaran Bulanan</span><span class="tk-row__sub">Berjalan sampai 31 Okt, berikutnya mulai 1 Nov</span></span></label>
+        <label class="tk-row tk-row--check tk-row--compact"><span class="tk-check"><input type="checkbox" checked><span class="tk-check__box"><span class="tk-icon">check</span></span></span><span class="tk-row__main"><span class="tk-row__title">Dana darurat</span><span class="tk-row__sub">Berjalan sampai 31 Okt, berikutnya mulai 1 Nov</span></span></label>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin:0 -16px;padding:12px 16px 16px;box-shadow:var(--shadow-bar)">
+      <button class="tk-btn tk-btn--text" type="button">Batal</button>
+      <button class="tk-btn tk-btn--primary" type="button" style="flex:1">Simpan</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

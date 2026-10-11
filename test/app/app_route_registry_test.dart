@@ -12,6 +12,7 @@ void main() {
       'account.page',
       'appUpdate.notes',
       'budget.detail',
+      'budget.financialMonth',
       'freelance.overview',
       'record.sheet',
       'record.edit',

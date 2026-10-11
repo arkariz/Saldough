@@ -31,6 +31,12 @@ Sistem ini menggantikan bahasa visual pixel (ADR-015, ADR-016, ADR-020) dan `Pix
 | Dua FAB (suara + CATAT) | `AppNavBar` dengan tombol Catat di tengah | Suara pindah ke dalam sheet Catat |
 | (baru) | `PixelCornerBorder` | `OutlinedBorder` dengan path sudut tangga dua langkah (`pixel-step`); dipakai `AppCard`, tombol, chip, tile |
 | (baru) | `AppHeroCard` | Kartu saldo terakota dengan kepala tanuki |
+| `AppSubTabs` (Rencana) | `AppSubTabs` | Komponen SubTabs; kini juga Riwayat (Daftar, Analisis), 2–3 segmen |
+| (baru) | `AppPeriodHeader` | Nama periode yang bisa diketuk + penanda periode peralihan netral |
+| (baru) | `AppDayPicker` | Lembar Awal bulan keuangan: kisi tanggal 7 kolom, pratinjau, garis waktu periode, sakelar anggaran rutin |
+| (baru) | `AppPeriodStepper` | ‹ periode ›, maju nonaktif di periode berjalan |
+| (baru) | `AppShareRow` | Baris kategori Analisis: nominal, bilah porsi kotak 6px `ink-2`, persen, pembanding |
+| (baru) | `AppTrendChart` | Kolom kotak 6px berpasangan (pemasukan, pengeluaran) per periode, selisih ringkas di bawah, `CustomPainter` |
 
 ## Urutan pengerjaan yang disarankan
 

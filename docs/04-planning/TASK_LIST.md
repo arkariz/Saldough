@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -79,7 +79,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 11 | 0 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; mulai dari T-18.1 |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 14 | 11 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, temuan T-18.13, T-18.14) |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3318,7 +3318,7 @@ Peta kerja designer dan engineer: [artifact serah terima](https://claude.ai/arti
 **Hemat kuota:** satu tugas per sesi; baris "Buka" menyebut berkas yang
 cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
 
-- [ ] **T-18.1** Verifikasi gajian maju dan tautan pos sebelum mengubah apa
+- [x] **T-18.1** Verifikasi gajian maju dan tautan pos sebelum mengubah apa
       pun (keputusan #4, ADR-038 §7).
       Uji karakterisasi: awal bulan 25; transaksi Gaji 23 Okt tertaut
       kemunculan 25 Okt; cicilan tertaut pos dicatat 24 Okt untuk kemunculan
@@ -3329,7 +3329,38 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji yang memotret perilaku sekarang; temuan ditulis di
       tugas ini dan mengoreksi FINANCIAL_PERIOD P-4 bila perlu.
       Memenuhi FR-PLN-007.
-- [ ] **T-18.2** Jadwal bulan keuangan berriwayat (ADR-038 §3.1–3.2):
+      **Keputusan pemilik 10 Okt 2026: opsi (a)**: KT-1 memakai tanggal
+      periode untuk transaksi tertaut rutin (ADR-038 §3.5 direvisi,
+      DOMAIN_MODEL, FINANCIAL_PERIOD P-4 dan contoh D); dikerjakan di
+      T-18.3 dan T-18.12. Selesai 10 Okt 2026.
+      **Temuan 10 Okt 2026 (belum dicentang: menunggu keputusan pemilik/PO,
+      bertentangan dengan P-4).** Uji karakterisasi
+      `test/features/plan/period_attribution_characterization_test.dart`
+      (8 uji), awal bulan 25, hari ini 26 Okt:
+      1. Tautan pos memang menurut tanggal kemunculan: cicilan 24 Okt untuk
+         kemunculan 25 Okt mendapat pos periode 25 Okt – 24 Nov
+         (`budgetItemForOccurrence`).
+      2. **KT-1 menolaknya di hitungan:** `countsTowardBudgetItem` memakai
+         `budget.covers(date)`, jadi terpakai pos itu 0. CATAT juga tidak
+         menawarkan pos itu untuk 24 Okt dan menganggap tautannya lepas
+         (`budgetItemOutsidePeriod`).
+      3. Rencana (`PlanMonthState.planFor`/`previousPlan`) menyaring
+         transaksi menurut `date` sebelum `monthPlan`. Akibatnya Gaji 23 Okt
+         dan Cicilan 24 Okt **tidak terhitung di periode mana pun**: di
+         periode 25 Okt kemunculannya tampak belum tercatat (Gaji berstatus
+         menunggu, sisa uang nganggur Rp9.086.000), di periode 25 Sep –
+         24 Okt keduanya dilewati karena milik rutin yang ada.
+         `monthPlan` sendiri sudah mencocokkan menurut tanggal kemunculan
+         bila transaksinya diberikan.
+      4. Kartu Arus Beranda memakai bulan kalender menurut `date`: keduanya
+         di Oktober.
+      Jadi kalimat P-4 "selaras dengan ADR-036 §3.4" tidak benar untuk pos
+      anggaran: sesudah T-18.3 (`periodDateOf` di `monthPlan`) cicilan masuk
+      periode 25 Okt tetapi posnya tetap terpakai 0 selama KT-1 memakai
+      `date`, sehingga hilang dari sisa uang nganggur. Perlu diputuskan
+      sebelum T-18.3/T-18.5: KT-1 untuk transaksi tertaut kemunculan memakai
+      `periodDateOf`, atau pos dipilih menurut `date`, atau dibiarkan.
+- [x] **T-18.2** Jadwal bulan keuangan berriwayat (ADR-038 §3.1–3.2):
       `FinancialMonthSchedule`, nilai `lastDay`, `financialPeriodOf` dengan
       `isTransition`, migrasi preferensi lama, `ActiveFinancialMonth`
       menyiarkan jadwal. Pemanggil lama `financialMonthOf` dialihkan.
@@ -3340,21 +3371,111 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       hari untuk semua pasangan tanggal 2026–2028; Februari dengan "hari
       terakhir"; migrasi satu angka → satu entri.
       Memenuhi FR-PLN-004, FR-PLN-006.
-- [ ] **T-18.3** Tanggal periode transaksi `periodDateOf` (ADR-038 §3.5)
-      dipakai `monthPlan` untuk keanggotaan periode.
-      ⚠ Saldo, perkiraan harian, partisi penyimpanan, dan validasi KT-1 tetap
-      memakai `date`.
-      Verifikasi: contoh D (gaji 23 Okt masuk periode 25 Okt); selisih 8 hari
-      menurut `date`; perkiraan harian tidak berubah.
+      **Selesai 10 Okt 2026.** `core/financial_month/financial_period.dart`:
+      `FinancialPeriod` (`isTransition`), `FinancialMonthStart` (1–28,
+      `lastDay`), `FinancialMonthSchedule` (`periodOf`, `previousOf`,
+      `nextOf`, `changedOn`), `financialPeriodOf`; `ActiveFinancialMonth`
+      menyiarkan jadwal. Preferensi di `settings/financial_month_schedule`,
+      preferensi lama dibaca sebagai satu entri sejak awal. Keputusan pemilik:
+      entri berlaku sejak **awal periode peralihan** (`a`), bukan `c`, karena
+      `(c, startDay)` ambigu di sekitar Februari (ADR-038 §3.2 direvisi).
+      Rencana (`PlanMonthBloc`/`State`), formulir anggaran, dan layar Akun
+      dialihkan; pemilih Akun masih 1–28 dan langsung menerapkan
+      `changedOn` (lembar pratinjau, hari terakhir, dan cabang "belum ada
+      transaksi" di T-18.6). Label periode peralihan selalu rentang (P-11).
+      Uji: `financial_month_test.dart` (17 uji, contoh A–C, semua pasangan
+      tanggal mulai 2026–2028 untuk 13–46 hari, tanpa celah, periode lampau
+      tetap, Februari dan hari terakhir, migrasi). Kunci i18n
+      `plan.financialMonthLastDay`.
+- [x] **T-18.3** Tanggal periode transaksi `periodDateOf` (ADR-038 §3.5)
+      dipakai Rencana untuk keanggotaan periode: saringan transaksi di
+      `PlanMonthState.planFor`/`previousPlan` (temuan T-18.1 nomor 3), bukan
+      hanya `monthPlan`; pemuatan ikut membaca transaksi sampai 7 hari di luar
+      rentang periode.
+      ⚠ Saldo, perkiraan harian, dan partisi penyimpanan tetap memakai
+      `date`. KT-1 di T-18.12.
+      Verifikasi: uji karakterisasi T-18.1
+      (`period_attribution_characterization_test.dart`) diubah menjadi uji
+      perilaku yang diharapkan untuk bagian Rencana: contoh D, Gaji dan
+      Cicilan 25 Okt tercatat (bukan menunggu) di periode 25 Okt dan tidak
+      di periode 25 Sep – 24 Okt; selisih 8 hari menurut `date`; perkiraan
+      harian tidak berubah.
       Memenuhi FR-PLN-007.
-- [ ] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
+      **Selesai 10 Okt 2026.** `periodDateOf` dan `periodAttributionDays`
+      (7) di `shared/transaction/domain/period_date.dart`. Dipakai
+      `PlanMonthState.planFor`/`previousPlan` (saringan anggota periode) dan
+      saringan "di luar rencana" `monthPlan`. `PlanMonthBloc` membaca
+      dokumen bulan sampai 7 hari sebelum periode terawal dan 7 hari sesudah
+      periode berjalan. Saldo, `balanceBefore`, `projectCashflow`, dan rata-rata
+      di luar rencana tetap memakai `date`. Uji: `period_date_test.dart`
+      (3 uji, batas 7/8 hari dua arah); bagian Rencana
+      `period_attribution_characterization_test.dart` kini perilaku yang
+      diharapkan (Gaji 25 Okt tercatat dengan sisa uang nganggur
+      Rp9.086.000, bukan menunggu; bukan anggota periode 25 Sep; selisih
+      8 hari menurut `date`; perkiraan tidak menambah gaji lagi). Terpakai pos
+      cicilan masih 0 sampai T-18.12.
+- [x] **T-18.12** KT-1 memakai tanggal periode untuk transaksi tertaut
+      rutin (ADR-038 §3.5 revisi, DOMAIN_MODEL "Pengecualian transaksi
+      tertaut rutin"): `countsTowardBudgetItem`, pemilih pos dan validasi
+      `budgetItemOutsidePeriod` di CATAT. Dikerjakan sesudah T-18.3, sebelum
+      T-18.5.
+      ⚠ Transaksi tanpa tautan rutin tetap memakai `date`. Hitungan terpakai
+      membaca paling banyak satu dokumen bulan tetangga (NFR-PERF-002). Saldo
+      tidak berubah. Menyunting tanggal transaksi tertaut sampai selisih
+      > 7 hari kembali ke aturan `date` dan melepas tautan pos seperti
+      sekarang.
+      Buka: penyelesai pos kemunculan (`budgetItemForOccurrence`),
+      `countsTowardBudgetItem`, validasi pos di `features/record/`.
+      Verifikasi: bagian pos di uji karakterisasi T-18.1 diubah menjadi uji
+      perilaku: cicilan 24 Okt untuk kemunculan 25 Okt membuat terpakai pos
+      periode 25 Okt = Rp2.914.000 dan pos periode 25 Sep tidak berubah; CATAT
+      menawarkan pos periode 25 Okt saat menyunting transaksi itu; transaksi
+      biasa 24 Okt tetap ke pos periode 25 Sep; rutin 1 Nov dibayar 30 Okt
+      (awal bulan 1) terhitung di pos November.
+      Memenuhi FR-PLN-007.
+      **Selesai 10 Okt 2026.** `countsTowardBudgetItem` memakai
+      `periodDateOf` (progres anggaran, daftar transaksi tertaut, terpakai
+      Rencana). CATAT pengeluaran dan transfer menyaring pos dan
+      pemberitahuan "di luar periode" dengan `periodDateFor(tanggal,
+      kemunculan)`; kemunculan diambil dari transaksi yang disunting atau
+      dari "Ubah dulu". `Budget.months` ikut membaca satu bulan sebelumnya
+      bila tanggal mulai ≤ 7, jadi semua pembaca anggaran (layar Anggaran,
+      Beranda, Rencana) konsisten. Uji: bagian KT-1
+      `period_attribution_characterization_test.dart` kini perilaku yang
+      diharapkan (cicilan 24 Okt → pos 25 Okt Rp2.914.000, pos 25 Sep
+      tetap, pengeluaran biasa 24 Okt ke pos 25 Sep, selisih 8 hari kembali
+      ke `date`, rutin 1 Nov dibayar 30 Okt di pos November, terpakai Rencana
+      Rp2.914.000); 2 uji widget CATAT menyunting cicilan tertaut. Uji
+      `Budget.months` dan `BudgetBloc` diperbarui untuk bulan tetangga.
+      Keterbatasan yang diterima (sesuai ADR-038 §3.5, hanya tetangga
+      sebelumnya): transaksi tertaut yang dibayar **sesudah** akhir periode
+      dan jatuh di bulan kalender berikutnya (mis. kemunculan 30 Okt, awal
+      bulan 1, dibayar 2 Nov) tidak terbaca oleh anggaran Oktober.
+- [x] **T-18.4** Kartu Arus Beranda memakai periode keuangan berjalan dan
       `periodDateOf`; judul rentang bila awal ≠ 1 atau periode peralihan
       (FINANCIAL_PERIOD P-11).
       Buka: `features/home/`.
       Verifikasi: uji Arus = pemasukan/pengeluaran `monthPlan` periode yang
       sama tanpa transfer; awal 1 tetap bertajuk nama bulan.
       Memenuhi FR-HOME-001.
-- [ ] **T-18.5** `Budget.endDate` opsional, patokan `lastDay` di
+      **Selesai 10 Okt 2026.** `HomeBloc` memakai
+      `ActiveFinancialMonth.periodOf(now)`, membaca dokumen bulan periode
+      itu ± 7 hari (paling banyak tiga dokumen, tetap terbatas untuk
+      NFR-PERF-002), dan menghitung `CalculateCashFlow.inPeriod` menurut
+      `periodDateOf`. Beranda segar saat awal bulan diubah atau tanggal
+      berganti. `HomeState.month` diganti `period`; judul bagian memakai
+      `FinancialPeriod.name` (P-11: "Oktober" untuk periode normal mulai
+      tanggal 1, selain itu rentang "25 Okt – 24 Nov", peralihan selalu
+      rentang) dengan `AppSectionHeader` yang ada. Selisih disengaja,
+      menunggu D3/D4: judul tetap tanpa awalan "Arus" seperti sekarang
+      (kunci `home.flowRangeTitle` belum dipakai), dan penanda "Periode
+      peralihan · n hari" belum tampil (T-18.8). Uji: `home_bloc_test.dart`
+      (4 uji: awal 25 dengan gaji 23 Okt dan transfer, awal 1, peralihan,
+      segar saat awal bulan diubah); rekonsiliasi Arus = `monthPlan`
+      (pemasukan Rp12.500.000 = tercatat + di luar rencana; pengeluaran
+      Rp2.971.000 = rutin tercatat + terpakai pos + di luar rencana); nama
+      periode di `financial_month_test.dart`.
+- [x] **T-18.5** `Budget.endDate` opsional, patokan `lastDay` di
       `BudgetSchedule`, dan use case `AlignRecurringBudgets` (ADR-038
       §3.3–3.4, FINANCIAL_PERIOD P-6, P-7).
       ⚠ Jangan menulis ulang `startDate` anggaran yang sudah lahir; anggaran
@@ -3365,7 +3486,27 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       tautan pos sesudah akhir baru dipindah saat periode berikutnya lahir;
       saldo semua dompet sama dengan `recomputeWalletBalances()`.
       Memenuhi FR-PLN-006.
-- [ ] **T-18.6** Alur ubah awal bulan (FINANCIAL_PERIOD F1, F3): lembar
+      **Selesai 11 Okt 2026.** `Budget.endDate` kini opsional tersimpan
+      (`BudgetModel` skema 4, kunci `endDate` hanya bila diisi; `copyWith`
+      membuangnya bila `startDate`/`period` berubah). `BudgetSchedule.onLastDay`
+      (template skema 3), `BudgetSchedule.startingAt` dan `canRepeat`
+      menerima anggaran bulanan yang mulai di hari terakhir bulan, `endOf`
+      memberi akhir = awal periode berikutnya (dipakai kelahiran dan periode
+      virtual Rencana). `alignRecurringBudgets`/`AlignRecurringBudgets`
+      (`features/budget/domain/usecases/align_recurring_budgets.dart`):
+      anggaran yang mencakup hari ini mendapat `endDate` = akhir peralihan,
+      patokan templat dipindah ke sana, lalu `BirthRecurringBudgets`
+      dijalankan. Kelahiran memindah tautan pos (P-7, `relinkedToBorn`) dari
+      anggaran bertemplat sama yang tidak lagi mencakup tanggal periode
+      transaksi ke pos `templateItemId` sama, lewat `saveTransaction` (tanggal
+      dan nominal tetap, jadi saldo tidak berubah); `RecurringBudgetHost`
+      kini memberi `TransactionRepository`. Belum dipanggil dari UI dan belum
+      didaftarkan di DI: itu T-18.6. Uji: `align_recurring_budgets_test.dart`
+      (6 uji: contoh A, B, C dengan anggaran berpatokan 15 tidak tersentuh,
+      tautan 27 Okt pindah, 20 Okt tetap, saldo = hitung ulang Rp9.900.000;
+      tidak dipilih; hari terakhir 31 Okt – 28 Feb tanpa celah; simpan-baca
+      skema baru).
+- [x] **T-18.6** Alur ubah awal bulan (FINANCIAL_PERIOD F1, F3): lembar
       pilihan 1–28 + Hari terakhir bulan, pintu dari kepala Bulan ini dan
       Akun, pratinjau rentang peralihan, sakelar per anggaran rutin yang
       patokannya sama, simpan memanggil T-18.2 dan T-18.5.
@@ -3374,14 +3515,59 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji widget Batal tidak mengubah apa pun; pratinjau contoh
       A dan B; sakelar mati menulis kalimat "tetap mulai tanggal 25".
       Memenuhi FR-PLN-004, FR-PLN-006.
-- [ ] **T-18.7** Tawaran awal bulan saat menyimpan rutin pemasukan bulanan
+      **Selesai 11 Okt 2026.** Rupa dari artefak pemilik (komponen
+      PeriodHeader, DayPicker, Checkbox; layar `AwalBulan*`, `Main` D1),
+      disalin ke `docs/03-design/`. Komponen baru di
+      `core/presentation/widgets/app_period.dart`: `AppPeriodHeader`,
+      `AppPeriodTag`, `AppDayGrid`, `AppPeriodTimeline`, `AppCheckRow`. Lembar
+      `FinancialMonthSheet` + `FinancialMonthPage` di fitur `budget`, rute
+      `BudgetRouteKeys.financialMonth` (lembar setinggi layar), dibuka dari
+      kepala Rencana › Bulan ini dan baris Akun (dialog lama dihapus). Simpan:
+      `changedOn` → preferensi → `ActiveFinancialMonth` →
+      `AlignRecurringBudgets` untuk anggaran yang dicentang → `LedgerChanges`.
+      Anggaran yang ditawarkan: rutin bulanan aktif yang patokannya sama
+      dengan awal bulan aktif (`movableRecurringBudgets`). Ikut diselaraskan
+      dengan rupa: judul kartu Beranda kini "Arus {periode}" plus penanda
+      peralihan (sisa T-18.4, D4), rentang bulan yang sama ditulis "1 – 24 Okt"
+      (`writing.md`), dan penanda peralihan sudah tampil di kepala Bulan ini.
+      Selisih dan sisa: teks memakai rupa Checkbox ("Berjalan sampai …",
+      "Tetap mulai …"), bukan kunci sakelar §7 `financialMonthMoveBudget`/
+      `KeepBudget`; cabang "belum ada transaksi sama sekali → tanpa periode
+      peralihan" (§3 Cabang) belum dibuat karena rupa dan rumusnya belum
+      ada; lembar kosong sesaat selama templat dimuat (tanpa kerangka). Uji:
+      `financial_month_sheet_test.dart` (9 uji: penyaring anggaran, contoh A
+      dan B, hari terakhir, centang dilepas menulis "Tetap mulai tanggal 25"
+      dan tidak ikut disimpan, Batal, rute menyimpan jadwal + preferensi +
+      anggaran diregangkan + `LedgerChanges`, rute Batal),
+      `app_period_test.dart` (2 uji).
+- [x] **T-18.7** Tawaran awal bulan saat menyimpan rutin pemasukan bulanan
       (FINANCIAL_PERIOD F2): hanya bila awal bulan masih bawaan dan belum
       pernah diubah, sekali per rutin.
       Verifikasi: uji muncul untuk Gaji tanggal 25; tidak muncul untuk
       pengeluaran, rutin mingguan, tanggal 1, atau sesudah pengguna pernah
       mengubah sendiri.
       Memenuhi FR-PLN-004.
-- [ ] **T-18.8** Periode peralihan di Rencana (FINANCIAL_PERIOD P-8, P-9):
+      **Selesai 11 Okt 2026.** Aturan murni `financialMonthOfferFor`
+      (`shared/recurring/domain/financial_month_offer.dart`): rutin
+      pemasukan bulanan bertanggal ≠ 1, jadwal masih
+      `FinancialMonthSchedule.initial`, belum pernah diubah sendiri, rutin
+      belum pernah ditawari; tanggal 29–31 ditawari "hari terakhir bulan"
+      hanya bila memang hari terakhir. Status di
+      `settings/financial_month_offer` (`FinancialMonthPreferenceRepository.
+      loadOffer`/`saveOffer`): `changedByUser` diisi saat lembar disimpan,
+      `offeredRuleIds` saat ditawarkan (sekali per rutin, diabaikan pun
+      tercatat). `RecordBloc` menampilkan pesan tersimpan lalu snackbar
+      "Mulai bulan keuanganmu tiap tanggal 25?" [Atur] di ketiga jalur
+      pembuatan rutin (Catat dan jadwalkan, Simpan jadwal, Jadikan rutin);
+      Atur membuka `BudgetRouteKeys.financialMonth` dengan
+      `FinancialMonthInput(initial: 25)`. Rutin gajian adalah pemasukan,
+      jadi tidak berebut dengan saran tautan pos (pengeluaran). Uji:
+      `record_bloc_financial_month_offer_test.dart` (7 uji: ditawarkan dan
+      dicatat, tidak sesudah diubah sendiri, tidak bila jadwal bukan bawaan,
+      aturan murni untuk pengeluaran/mingguan/tanggal 1/sudah ditawari/hari
+      terakhir); 2 pemeriksaan baru di `financial_month_sheet_test.dart`
+      (tanggal terpilih dari tawaran, simpan mengisi `changedByUser`).
+- [x] **T-18.8** Periode peralihan di Rencana (FINANCIAL_PERIOD P-8, P-9):
       label "Periode peralihan · n hari", uang nganggur negatif tanpa
       peringatan dengan kalimat "Rentang ini tidak memuat gajian.", tinjau
       awal bulan sekali dengan kalimat peralihan, W9 tidak dihitung.
@@ -3389,7 +3575,25 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji widget contoh B; uji W9 tidak tampil untuk periode
       peralihan.
       Memenuhi FR-PLN-006.
-- [ ] **T-18.10** Tur spotlight periode keuangan (FINANCIAL_PERIOD §8A):
+      **Selesai 11 Okt 2026.** Rupa D3 dari artefak (`BulanIniPeralihan`).
+      Label dan penanda sudah tampil sejak T-18.6 (`AppPeriodHeader`); nama
+      periode di kartu Bulan ini kini rentang untuk periode peralihan
+      (`labelOf` memakai `isCalendarMonth`). `UnplannedCard.withoutPayday`
+      (`PlanMonthState.transitionWithoutPayday`: bulan berjalan, peralihan,
+      tanpa pemasukan terencana): angka tanpa `danger` + "Rentang ini tidak
+      memuat gajian.". `MonthReview.monthEnd` (skema 2) dan `isFor(period)`:
+      peralihan yang berawal sama dengan periode lama mendapat tinjau
+      sendiri; `showReview` untuk peralihan tidak dibatasi 7 hari dan tetap
+      tampil tanpa langkah, dengan kalimat "Awal bulan keuanganmu kini
+      tanggal 25. Periode ini 1 – 24 Okt.". W9: snapshot perkiraan periode
+      peralihan tidak disimpan dan tidak dibandingkan saat ia menjadi bulan
+      lalu. W1 dan titik terendah tidak diubah. Uji: 3 uji di
+      `plan_month_page_test.dart` (contoh B: rentang, penanda, kalimat, angka
+      tanpa warna peringatan, tinjau dengan kalimat, snapshot tidak
+      disimpan; tinjau lama tidak menyembunyikan tinjau peralihan; periode
+      berikutnya tanpa kalimat dan penanda). P-10 (kilas balik W10 menyebut
+      panjang periode) belum: masuk Analisis/T-19.6.
+- [x] **T-18.10** Tur spotlight periode keuangan (FINANCIAL_PERIOD §8A):
       kunci `planPeriodHeader` dan `planTransition` di tur `planMonth`
       sesudah `planTabs`, `SpotlightTarget` di titik pemakaian, teks
       `tour.*` id/en dari tabel §8A.
@@ -3402,8 +3606,20 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       Verifikasi: uji pengguna lama (langkah lain sudah dilihat) melihat
       `planPeriodHeader` sekali; `planTransition` tidak tampil di periode
       normal; kedua bahasa muat 360dp.
+      **Selesai 11 Okt 2026.** Kunci `planPeriodHeader` dan `planTransition`
+      di tur `planMonth` sesudah `planTabs`; target kepala periode membungkus
+      `AppPeriodHeader`, target peralihan membungkus `AppPeriodTag` lewat
+      parameter baru `wrapTag` dan hanya terdaftar saat yang terpilih periode
+      berjalan (bukan periode depan). Teks `tour.planPeriodHeader*` dan
+      `tour.planTransition*` id/en persis tabel §8A. Daftar `TourId` tidak
+      berubah, jadi tabel ADR-021 §3.4 tetap. Uji di
+      `plan_month_page_test.dart`: pengguna lama melihat kepala periode sekali
+      dan langkah peralihan tidak tercatat di periode biasa; periode berjalan
+      peralihan menampilkan langkah peralihan sesudah kepala periode; keduanya
+      di 360dp tanpa luapan (bahasa id; teks en lebih pendek-sepadan, dicek
+      di T-18.9).
       Memenuhi FR-PLN-004, FR-PLN-006.
-- [ ] **T-18.11** Analitik periode keuangan (FINANCIAL_PERIOD §8A): kelas
+- [x] **T-18.11** Analitik periode keuangan (FINANCIAL_PERIOD §8A): kelas
       `PeriodEvents` dengan `financial_month_sheet_opened`,
       `financial_month_changed`, `financial_month_offer`,
       `recurrence_date_gap`.
@@ -3416,10 +3632,119 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       persis tabel §8A untuk tiap sumber dan aksi; ember selisih 0, 3, 7, 8,
       15 hari.
       Memenuhi FR-PLN-004, FR-PLN-006, FR-PLN-007.
+      **Selesai 11 Okt 2026.** `PeriodEvents` di `app_analytics.dart`.
+      Sumber lembar lewat `FinancialMonthInput.source`
+      (`FinancialMonthSource.plan`/`account`/`offer`, wajib);
+      `financial_month_sheet_opened` dari `initState` halaman,
+      `financial_month_changed` sesudah jadwal tersimpan (`day` teks `1`…`28`
+      atau `last`; `transition_days` 0 bila periode berjalan tidak menjadi
+      peralihan; `kept_budgets` = anggaran yang ditawarkan tapi dikosongkan).
+      `financial_month_offer`: `shown` dari `RecordBloc` saat tawaran dibuat,
+      `accepted`/`dismissed` dari alasan tutup snackbar tawaran (aksi
+      [Atur] = accepted, selainnya dismissed, termasuk tergeser snackbar
+      lain). `recurrence_date_gap` di samping `occurrence_linked` pada kedua
+      jalur tautan (Tautkan di Rutin dan tautan otomatis catat notifikasi);
+      selisih hari kalender, ke arah mana pun. Formulir Keamanan Data tidak
+      berubah (tetap "Interaksi aplikasi"). Uji: `period_events_test.dart`
+      (baru: nama/parameter, ember 0, 1, 3, 4, 7, 8, 14, 15 kedua arah),
+      `financial_month_sheet_test.dart` (dibuka per sumber, parameter
+      tersimpan contoh A, `kept_budgets`), `record_bloc_financial_month_offer_test`
+      (shown, accepted, dismissed), `recurring_pages_test` (tautan pengguna
+      `1-3`), `process_captured_notifications_test` (tautan otomatis).
 - [ ] **T-18.9** Verifikasi Fase 18 di emulator contoh A, B, dan D (pola
       VERIFICATION_PLAN_FASE_16), termasuk tur T-18.10 dan peristiwa T-18.11
       di DebugView Firebase; temuan jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-PLN-006, FR-PLN-007.
+      **Hasil QA 11 Okt 2026 (sementara, sesi berlanjut)** — rencana uji
+      [artifact](https://claude.ai/artifact/5qMzrxDqnFpgBNSn1PWmLn). Emulator
+      Pixel 7a API 35 (`emulator-5554`), APK debug dari `4a32d7d`
+      (`main..4a32d7d`), data kosong (`pm clear`), jam dimajukan lewat
+      `cmd alarm set-time`. Analitik dibaca dari logcat `FA-SVC` (properti
+      `debug.firebase.analytics.app`), bukan DebugView. Penyimpangan data
+      awal: (a) rutin Gaji dibuat tiga kali (dua tawaran pertama diabaikan
+      karena snackbar tawaran baru muncul ±4 detik sesudah "Rutin
+      dijadwalkan"), dua yang lebih dulu dihapus; (b) transfer Tunai →
+      Tabungan Rp100.000 tanggal 10 Okt supaya kartu Arus Beranda tampil
+      (Beranda tanpa transaksi tidak menampilkan kartu Arus); (c) rutin
+      Cicilan iPhone ternyata **belum tertaut** walau pos dipilih di CATAT
+      (lihat pertanyaan PO 1), ditautkan lewat rincian rutin sesudah
+      kemunculan 25 Okt dicatat; transaksinya ikut tertaut ke pos periode
+      25 Okt.
+      - V1 Lulus: tawaran "Mulai bulan keuanganmu tiap tanggal 25?" [Atur]
+        membuka lembar dengan 25 terpilih.
+      - V2 **Gagal** (1 dari 9 harapan, T-18.13): pratinjau, hanya Bulanan
+        ditawarkan, kepala "1 – 24 Okt" + "Periode peralihan · 24 hari",
+        uang nganggur −Rp6.982.500 tanpa warna + "Rentang ini tidak memuat
+        gajian.", kartu tinjau dengan kalimat peralihan, "Arus 1 – 24 Okt" +
+        penanda, Bulanan sampai 24 Okt, Kartu 15 Sep – 14 Okt, saldo tetap —
+        semua sesuai; tetapi kartu Beranda berjudul "Okt dimulai", bukan
+        rentang (P-11).
+      - V3 Lulus: rutin pemasukan tanggal 10 tanpa tawaran dan tanpa
+        peristiwa `shown`.
+      - V4 Lulus: Batal dari Rencana dan dari Akun tidak mengubah apa pun;
+        "Arus 1 – 24 Okt" di Beranda bukan tombol.
+      - V5 Lulus: 25 Okt – 24 Nov tanpa penanda; Bulanan 25 Okt lahir sekali;
+        Kartu tetap berpatokan 15 (15 Okt – 14 Nov); Gaji dan Cicilan
+        menunggu.
+      - V6 Lulus: Gaji 23 Okt dan Cicilan 24 Okt berstatus tercatat di 25 Okt
+        – 24 Nov; kilas balik 1 – 24 Okt pemasukan dan anggaran nyata Rp0;
+        Bulanan 25 Okt pos Cicilan terpakai Rp2.914.000, Bulanan 1 – 24 Okt
+        Rp0; Arus Masuk Rp12.000.000, Keluar Rp2.914.000; BCA Rp29.086.000.
+      - V7 Lulus: pos Cicilan periode 25 Okt sah di pemilih; tanggal 17 Okt
+        melepas pos dengan pemberitahuan "Tanggal ini di luar periode
+        anggaran …". Ditutup tanpa simpan (tetap 24 Okt).
+      - V8 Lulus: pratinjau "25 Okt – 30 Nov (37 hari), lalu 1 – 31 Des";
+        Bulanan diregangkan sampai 30 Nov, lahir 1 Des; Kartu tetap; 1 – 24
+        Okt tidak berubah.
+      - V9 Lulus: Belanja Rp150.000 tanggal 26 Des pindah dari Bulanan
+        1 – 24 Des (kini Rp0) ke Bulanan 25 Des – 24 Jan; Kartu tetap.
+        Kartu 15 Nov – 14 Des tidak lahir karena aplikasi tidak dibuka saat
+        itu (sesuai ADR-036 §3.2, bukan bug).
+      - V10 sebagian: pratinjau "25 Des – 30 Jan (37 hari), lalu 31 Jan –
+        27 Feb" dan Bulanan diregangkan sampai 30 Jan sesuai; bagian jam
+        28 Feb belum.
+      - V11, V12, V13 belum.
+      - V14 Lulus (pengguna baru): `planPeriodHeader` langkah 1/4 tur
+        `planMonth`; `planTransition` 1/1 tampil sekali saat periode
+        peralihan. Skenario pengguna lama yang sudah melihat tur sebelum
+        T-18.10 tidak bisa dibuat di build ini.
+      - V15 **Gagal** (T-18.14): `financial_month_offer` shown/dismissed/
+        accepted, `financial_month_sheet_opened` offer/plan/account, dan
+        `financial_month_changed {source=offer, day=25, transition_days=24,
+        moved_budgets=1, kept_budgets=0}` sesuai; `recurrence_date_gap`
+        tidak terkirim saat V6 (Ubah dulu, selisih 2 hari).
+      - Pertanyaan untuk PO (tanpa rujukan, bukan bug): (1) CATAT mode
+        jadwal menampilkan "Pos anggaran" dan pilihannya bisa diisi, tapi
+        `ruleFrom` tidak menyimpannya ke rutin; dengan "Simpan jadwal" pilihan
+        itu hilang tanpa kabar (ADR-036 §3.4 hanya menautkan lewat E9 atau
+        rincian). Sembunyikan kolomnya, atau tautkan rutin? (2) Ubah dulu
+        untuk rutin tertaut menampilkan "Tanpa anggaran" padahal saat
+        disimpan masuk pos kemunculan. (3) Segmen Rutin masih per bulan
+        kalender ("Sisa rutin keluar · Okt", kelompok "Bulan ini" memuat
+        25 Okt saat periode 1 – 24 Okt). (4) Pratinjau kasus C (diubah 28 Des)
+        menulis "Periode ini jadi 1 – 24 Des …" padahal periode berjalan
+        sesudah simpan 25 Des – 24 Jan. (5) Kartu Arus berlabel "Selisih
+        bulan ini" saat periodenya rentang. (6) "Tagihan rutin +Rp0" memakai
+        tanda plus. (7) Teks pratinjau memutus "24 / Nov." antarbaris (tanpa
+        spasi tak-putus); formulir anggaran menulis "1–31 Okt" tanpa spasi,
+        sedangkan "15 Sep – 14 Okt" berspasi (writing.md).
+- [ ] **T-18.13** Kartu Beranda "… dimulai" memakai rentang untuk periode
+      peralihan (temuan T-18.9 V2, S3). Langkah: awal bulan 1, jam 10 Okt,
+      ubah ke 25 (contoh B), buka Beranda. Harapan: "1 – 24 Okt dimulai",
+      seperti kartu tinjau di Rencana (P-11: periode peralihan selalu
+      rentang). Aktual: "Okt dimulai". Sumber:
+      `lib/features/plan/presentation/widgets/plan_forecast_row.dart`
+      `_MonthStartCard` memilih nama bulan bila `range.start.day == 1` tanpa
+      melihat peralihan. Rujukan FINANCIAL_PERIOD P-11.
+- [ ] **T-18.14** `recurrence_date_gap` saat kemunculan dicatat lewat Ubah
+      dulu (temuan T-18.9 V15, S3). Langkah: rutin Gaji tanggal 25, jam 26
+      Okt, Gaji 25 Okt → Ubah dulu → tanggal 23 Okt → simpan. Harapan:
+      `recurrence_date_gap {bucket: 1-3}` (FINANCIAL_PERIOD §8A: transaksi
+      ditautkan ke kemunculan oleh pengguna). Aktual: tidak terkirim;
+      peristiwa hanya dari Tautkan di Rutin (`recurring_bloc.dart`) dan
+      tautan otomatis notifikasi. Ubah dulu (`RecordOccurrenceRecorded` di
+      `record_bloc.dart`) adalah jalur utama gajian maju, jadi kriteria
+      tinjau ulang ADR-038 §8 tidak terukur tanpanya.
 
 ## Fase 19: Analisis keuangan (R1)
 
@@ -3596,7 +3921,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-PLN-005 | T-16.6, T-16.7, T-16.12 |
 | FR-BUD-008 | T-16.1–16.5, T-16.8, T-16.12 |
 | FR-PLN-006 | T-18.2, T-18.5, T-18.6, T-18.8, T-18.9, T-18.10, T-18.11 |
-| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11 |
+| FR-PLN-007 | T-18.1, T-18.3, T-18.9, T-18.11, T-18.12 |
 | FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7, T-19.8, T-19.9 |
 | FR-ANL-002 | T-19.2, T-19.4 |
 | FR-ANL-003 | T-19.2, T-19.4 |

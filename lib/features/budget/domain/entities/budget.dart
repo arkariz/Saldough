@@ -2,6 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:saldough/features/budget/domain/entities/budget_item.dart';
 import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 import 'package:saldough/features/budget/domain/entities/budget_status.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Rencana pengeluaran untuk satu periode, terikat pada satu dompet.
 ///
@@ -25,6 +26,7 @@ final class Budget extends Equatable {
     this.items = const [],
     this.isArchived = false,
     this.templateId,
+    this._endDate,
   });
 
   /// Identitas anggaran.
@@ -58,8 +60,20 @@ final class Budget extends Equatable {
   /// (ADR-036 §3.1); `null` untuk anggaran biasa.
   final String? templateId;
 
-  /// Batas akhir periode, eksklusif. Lihat [BudgetPeriod.endFrom].
-  DateTime get endDate => period.endFrom(startDate);
+  /// Akhir periode yang disimpan (ADR-038 §3.3), atau `null`. Hanya diisi
+  /// untuk menyelaraskan anggaran rutin ke periode peralihan dan untuk
+  /// anggaran rutin berpatokan hari terakhir bulan.
+  final DateTime? _endDate;
+
+  /// Apakah akhir periodenya disimpan, bukan diturunkan dari [period].
+  bool get hasCustomEnd => _endDate != null;
+
+  /// Batas akhir periode, eksklusif: akhir yang disimpan, atau
+  /// [BudgetPeriod.endFrom] dari [startDate].
+  DateTime get endDate => switch (_endDate) {
+    final end? => DateTime(end.year, end.month, end.day),
+    null => period.endFrom(startDate),
+  };
 
   /// Apakah [date] berada di dalam periode: `startDate ≤ date < endDate`,
   /// hanya tanggal [startDate] yang dipakai. Transaksi hanya terhitung ke
@@ -69,12 +83,16 @@ final class Budget extends Equatable {
 
   /// Awal tiap bulan yang disentuh periode, urut naik — dokumen buku besar
   /// yang cukup dibaca untuk menghitung anggaran ini (ADR-012, KT-1).
+  /// Termasuk paling banyak satu bulan tetangga sebelumnya: transaksi
+  /// tertaut rutin sampai [periodAttributionDays] hari sebelum periode
+  /// terhitung di sini (ADR-038 §3.5).
   List<DateTime> get months {
     final end = endDate;
     final last = DateTime(end.year, end.month, end.day - 1);
+    final first = DateTime(startDate.year, startDate.month, startDate.day - periodAttributionDays);
     return [
       for (
-        var month = DateTime(startDate.year, startDate.month);
+        var month = DateTime(first.year, first.month);
         !month.isAfter(last);
         month = DateTime(month.year, month.month + 1)
       )
@@ -105,7 +123,9 @@ final class Budget extends Equatable {
     return (elapsedDays / totalDays).clamp(0.0, 1.0);
   }
 
-  /// Salinan [Budget] dengan field yang disebutkan diganti.
+  /// Salinan [Budget] dengan field yang disebutkan diganti. Akhir yang
+  /// disimpan ikut hanya bila [startDate] dan [period] tidak berubah, kecuali
+  /// [endDate] diberikan.
   Budget copyWith({
     String? name,
     String? walletId,
@@ -114,7 +134,10 @@ final class Budget extends Equatable {
     List<BudgetItem>? items,
     bool? isArchived,
     String? Function()? templateId,
+    DateTime? Function()? endDate,
   }) {
+    final sameSpan =
+        (startDate == null || startDate == this.startDate) && (period == null || period == this.period);
     return Budget(
       id: id,
       name: name ?? this.name,
@@ -124,9 +147,10 @@ final class Budget extends Equatable {
       items: items ?? this.items,
       isArchived: isArchived ?? this.isArchived,
       templateId: templateId == null ? this.templateId : templateId(),
+      endDate: endDate != null ? endDate() : (sameSpan ? _endDate : null),
     );
   }
 
   @override
-  List<Object?> get props => [id, name, walletId, period, startDate, items, isArchived, templateId];
+  List<Object?> get props => [id, name, walletId, period, startDate, items, isArchived, templateId, _endDate];
 }

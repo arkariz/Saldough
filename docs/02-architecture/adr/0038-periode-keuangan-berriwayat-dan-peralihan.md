@@ -48,11 +48,21 @@ transaksi.
    `effectiveFrom` = tanggal minimum. Periode yang sudah selesai tidak pernah
    berubah.
 2. **Periode peralihan.** Mengubah `startDay` pada hari `T` dengan periode
-   berjalan `[a, b)` menambah entri `effectiveFrom = c`, dengan `c` batas
-   baru yang paling dekat ke `b` dan `> a` (seri: yang lebih akhir).
-   `[a, c)` adalah periode peralihan (13–46 hari). Fungsi murni
+   berjalan `[a, b)` menambah entri `effectiveFrom = a` (awal periode
+   peralihan). Batas akhirnya `c` dihitung ulang dari entri: batas baru yang
+   paling dekat ke `b` dan `> a` (seri: yang lebih akhir), dengan `b` akhir
+   periode `[a, …)` menurut entri sebelumnya. `[a, c)` adalah periode
+   peralihan (13–46 hari); bila `c = b` periodenya tidak berubah dan bukan
+   peralihan. Mengubah lagi saat periode berjalan masih mulai `a` mengganti
+   entri itu; kembali ke tanggal entri sebelumnya menghapusnya. Fungsi murni
    `financialPeriodOf(date, schedule)` mengembalikan `FinancialPeriod(start,
    end, isTransition)`.
+   **Revisi 10 Okt 2026 (T-18.2, keputusan pemilik):** semula
+   `effectiveFrom = c`. Entri `(c, startDay)` tidak selalu bisa dihitung
+   ulang menjadi `[a, c)` yang sama: 15 → 1 yang diubah 20 Jan 2027
+   (peralihan 15 Jan – 28 Feb, 45 hari) dan 20 Feb 2027 (15 – 28 Feb,
+   14 hari) sama-sama menghasilkan `c` = 1 Mar. Dengan `effectiveFrom = a`
+   hitungannya selalu tunggal.
 3. **`Budget.endDate`** opsional; null berarti `period.endFrom(startDate)`.
    Hanya diisi untuk menyelaraskan anggaran rutin ke periode peralihan.
    `BudgetSchedule` menerima patokan `lastDay`. Ini merevisi ADR-036 §3.1
@@ -68,9 +78,17 @@ transaksi.
    `t.recurrence.occurrenceDate` bila `t.recurrence != null` dan
    `|t.date − occurrenceDate| ≤ 7 hari`, selain itu `t.date`. Dipakai untuk
    keanggotaan periode di `monthPlan`, Beranda (arus), Analisis, dan
-   penyaring periode Riwayat. Saldo, `projectCashflow` harian, partisi
-   penyimpanan `transaction/YYYY-MM` (ADR-012), dan validasi KT-1 tetap
-   memakai `date`.
+   penyaring periode Riwayat. Saldo, `projectCashflow` harian, dan partisi
+   penyimpanan `transaction/YYYY-MM` (ADR-012) tetap memakai `date`.
+   **Revisi 10 Okt 2026 (temuan T-18.1, keputusan pemilik opsi a):** KT-1
+   juga memakai `periodDateOf`. Pengeluaran atau transfer tertaut kemunculan
+   rutin (selisih ≤ 7 hari) terhitung di pos anggaran yang periodenya
+   mencakup tanggal periodenya, baik saat dihitung terpakainya
+   (`countsTowardBudgetItem`) maupun saat ditawarkan dan divalidasi di CATAT.
+   Ini menyelaraskan hitungan dengan penyelesai pos ADR-036 §3.4, yang sudah
+   memakai tanggal kemunculan. Transaksi tanpa tautan rutin tetap memakai
+   `date`. Hitungan terpakai sebuah anggaran membaca paling banyak satu
+   dokumen bulan tetangga (transaksi sampai 7 hari sebelum periodenya).
 6. **Beranda** memakai periode keuangan berjalan untuk arus (merevisi
    ADR-035 §3.6 "tidak berlaku untuk Beranda").
 
@@ -175,4 +193,4 @@ sebulan; ditangani dengan label dan pengecualian (FINANCIAL_PERIOD P-8–P-10).
 **Penulis keputusan:** agen (product-owner), atas keputusan pemilik 10 Okt 2026
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-10-10
-**Status implementasi:** Belum dimulai
+**Status implementasi:** Kode selesai (T-18.1–T-18.8 dan T-18.10–T-18.12 selesai 10–11 Okt 2026; verifikasi perangkat T-18.9 oleh QA)

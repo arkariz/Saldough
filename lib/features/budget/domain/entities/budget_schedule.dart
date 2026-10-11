@@ -5,10 +5,10 @@ import 'package:saldough/features/budget/domain/entities/budget_period.dart';
 /// melahirkan anggaran tiap periode, dengan dompet dan panjang periode ini.
 ///
 /// Periode ke-n dimulai `anchorDate + n` minggu atau bulan. Anggaran bulanan
-/// hanya boleh berpatokan tanggal 1–28, supaya setiap bulan punya tanggal
-/// mulai dan akhir periode (`BudgetPeriod.endFrom`) tepat jatuh di awal
-/// periode berikutnya, tanpa celah atau tumpang tindih. Pembuatnya wajib
-/// memeriksa [canRepeat] lebih dulu.
+/// berpatokan tanggal 1–28, atau hari terakhir bulan ([onLastDay], ADR-038
+/// §3.3), supaya setiap bulan punya tanggal mulai; akhir tiap periode adalah
+/// awal periode berikutnya ([endOf]), tanpa celah atau tumpang tindih.
+/// Pembuatnya wajib memeriksa [canRepeat] lebih dulu.
 final class BudgetSchedule extends Equatable {
   /// Membuat [BudgetSchedule].
   const BudgetSchedule({
@@ -16,15 +16,33 @@ final class BudgetSchedule extends Equatable {
     required this.period,
     required this.anchorDate,
     this.isActive = true,
+    this.onLastDay = false,
   });
+
+  /// Jadwal anggaran rutin yang periode pertamanya dimulai [startDate]:
+  /// bulanan yang mulai di hari terakhir bulan (di atas tanggal 28)
+  /// berpatokan [onLastDay].
+  factory BudgetSchedule.startingAt({
+    required String walletId,
+    required BudgetPeriod period,
+    required DateTime startDate,
+  }) => BudgetSchedule(
+    walletId: walletId,
+    period: period,
+    anchorDate: startDate,
+    onLastDay: period == BudgetPeriod.monthly && startDate.day > maxMonthlyAnchorDay && _isLastDayOfMonth(startDate),
+  );
 
   /// Tanggal patokan terakhir yang boleh untuk anggaran rutin bulanan.
   static const maxMonthlyAnchorDay = 28;
 
   /// Apakah anggaran yang mulai pada [startDate] dengan [period] bisa
-  /// dijadikan rutin.
+  /// dijadikan rutin: mingguan selalu; bulanan bila mulai tanggal 1–28 atau
+  /// hari terakhir bulan.
   static bool canRepeat(BudgetPeriod period, DateTime startDate) =>
-      period != BudgetPeriod.monthly || startDate.day <= maxMonthlyAnchorDay;
+      period != BudgetPeriod.monthly || startDate.day <= maxMonthlyAnchorDay || _isLastDayOfMonth(startDate);
+
+  static bool _isLastDayOfMonth(DateTime date) => DateTime(date.year, date.month, date.day + 1).day == 1;
 
   /// Dompet anggaran yang lahir.
   final String walletId;
@@ -38,13 +56,21 @@ final class BudgetSchedule extends Equatable {
   /// Mati: tidak ada periode baru yang lahir; yang sudah lahir tetap ada.
   final bool isActive;
 
+  /// Bulanan berpatokan hari terakhir tiap bulan (31 Okt, 30 Nov, 28 Feb).
+  final bool onLastDay;
+
   DateTime get _anchor => DateTime(anchorDate.year, anchorDate.month, anchorDate.day);
 
   /// Awal periode ke-[n] (0 = [anchorDate]).
   DateTime startOf(int n) => switch (period) {
     BudgetPeriod.weekly => DateTime(_anchor.year, _anchor.month, _anchor.day + 7 * n),
+    BudgetPeriod.monthly when onLastDay => DateTime(_anchor.year, _anchor.month + n + 1, 0),
     BudgetPeriod.monthly => DateTime(_anchor.year, _anchor.month + n, _anchor.day),
   };
+
+  /// Akhir (eksklusif) periode yang dimulai [start]: awal periode
+  /// berikutnya.
+  DateTime endOf(DateTime start) => startOf((indexAt(start) ?? 0) + 1);
 
   /// Indeks periode yang mencakup [date], atau `null` bila [date] sebelum
   /// [anchorDate].
@@ -77,19 +103,25 @@ final class BudgetSchedule extends Equatable {
     final first = indexAt(from) ?? 0;
     return [
       for (var n = first; startOf(n).isBefore(until); n++)
-        if (period.endFrom(startOf(n)).isAfter(from)) startOf(n),
+        if (endOf(startOf(n)).isAfter(from)) startOf(n),
     ];
   }
 
   /// Salinan dengan field yang disebutkan diganti.
-  BudgetSchedule copyWith({String? walletId, BudgetPeriod? period, DateTime? anchorDate, bool? isActive}) =>
-      BudgetSchedule(
-        walletId: walletId ?? this.walletId,
-        period: period ?? this.period,
-        anchorDate: anchorDate ?? this.anchorDate,
-        isActive: isActive ?? this.isActive,
-      );
+  BudgetSchedule copyWith({
+    String? walletId,
+    BudgetPeriod? period,
+    DateTime? anchorDate,
+    bool? isActive,
+    bool? onLastDay,
+  }) => BudgetSchedule(
+    walletId: walletId ?? this.walletId,
+    period: period ?? this.period,
+    anchorDate: anchorDate ?? this.anchorDate,
+    isActive: isActive ?? this.isActive,
+    onLastDay: onLastDay ?? this.onLastDay,
+  );
 
   @override
-  List<Object?> get props => [walletId, period, _anchor, isActive];
+  List<Object?> get props => [walletId, period, _anchor, isActive, onLastDay];
 }

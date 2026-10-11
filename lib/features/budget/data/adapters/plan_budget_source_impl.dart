@@ -47,7 +47,7 @@ final class PlanBudgetSourceImpl implements PlanBudgetSource {
             if (!start.isBefore(from) && !born.contains((template.id, start)))
               PlanBudget(
                 walletId: schedule.walletId,
-                periodEnd: schedule.period.endFrom(start),
+                periodEnd: schedule.endOf(start),
                 lines: [
                   for (final item in template.items)
                     if (item.kind == BudgetItemKind.expense)

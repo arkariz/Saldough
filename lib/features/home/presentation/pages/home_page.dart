@@ -7,7 +7,6 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
-import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
@@ -149,11 +148,14 @@ class _HomePageState extends State<HomePage> {
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.space6),
+            // Judul "Arus {periode}" dan penanda periode peralihan
+            // (PeriodHeader, P-11); di Beranda bukan tombol.
             AppSectionHeader(
-              CycleMonthFormatter.formatMonthName(state.month),
+              t.home.flowTitle(period: state.period.name),
               actionLabel: t.appShell.transactionsTabLabel,
               onAction: widget.onShowTransactions,
             ),
+            if (state.period.isTransition) AppPeriodTag(days: state.period.days),
             const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeCashFlow,

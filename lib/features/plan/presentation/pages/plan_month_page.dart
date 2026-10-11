@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -8,6 +11,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/plan/di/plan_scope.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
@@ -122,8 +126,10 @@ class PlanMonthView extends StatelessWidget {
         }
         final bloc = context.read<PlanMonthBloc>();
         final range = state.selectedRange;
-        String labelOf(FinancialMonthRange m) =>
-            m.start.day == 1 ? CycleMonthFormatter.formatMonthShort(m.start) : m.label;
+        // Nama bulan hanya untuk periode biasa yang mulai tanggal 1; periode
+        // peralihan selalu rentang (P-11).
+        String labelOf(FinancialPeriod m) =>
+            m.isCalendarMonth ? CycleMonthFormatter.formatMonthShort(m.start) : m.rangeLabel;
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
         final funding = state.fundingWarnings;
@@ -136,6 +142,22 @@ class PlanMonthView extends StatelessWidget {
           child: ListView(
             padding: padding,
             children: [
+              // Kepala periode (PeriodHeader, FINANCIAL_PERIOD F1, P-11): nama
+              // periode terpilih, pintu ke lembar Awal bulan keuangan.
+              SpotlightTarget(
+                spotlightKey: SpotlightKey.planPeriodHeader,
+                child: AppPeriodHeader(
+                  label: range.name,
+                  transitionDays: range.isTransition ? range.days : null,
+                  onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput(source: FinancialMonthSource.plan))),
+                  // Tur peralihan hanya untuk periode berjalan (FINANCIAL_PERIOD §8A).
+                  wrapTag: (tag) => SpotlightTarget(
+                    spotlightKey: state.selected == 0 ? SpotlightKey.planTransition : null,
+                    child: tag,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.space2),
               // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
               if (state.showReview && !state.isFuture) ...[
                 MonthReviewCard(
@@ -187,6 +209,7 @@ class PlanMonthView extends StatelessWidget {
                 child: UnplannedCard(
                   plan: state.plan,
                   isForecast: state.isFuture,
+                  withoutPayday: state.transitionWithoutPayday,
                   monthLabel: monthLabel,
                   onShowRecurring: onShowRecurring,
                   onShowBudget: onShowBudget,

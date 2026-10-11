@@ -4,6 +4,7 @@ import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
+import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -117,6 +118,7 @@ void main() {
     WidgetTester tester, {
     List<Wallet> wallets = wallets,
     ExpenseTransaction? initial,
+    List<BudgetItemOption> budgetItems = const [],
   }) {
     tester.view.physicalSize = const Size(360, 2400);
     tester.view.devicePixelRatio = 1;
@@ -124,7 +126,7 @@ void main() {
     return tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: ExpenseFormSheet(wallets: wallets, initial: initial),
+          body: ExpenseFormSheet(wallets: wallets, initial: initial, budgetItems: budgetItems),
         ),
       ),
     );
@@ -403,6 +405,47 @@ void main() {
       expect(find.byKey(const ValueKey('record-amount-expression')), findsNothing);
       expect(find.text('Rp100', findRichText: true), findsOneWidget);
       expect(tester.widget<AppButton>(find.byKey(const ValueKey('record-submit'))).onPressed, isNotNull);
+    });
+  });
+
+  group('ExpenseFormSheet -- pos anggaran transaksi tertaut rutin (T-18.12)', () {
+    final options = [
+      BudgetItemOption(
+        budgetId: 'bulanan-okt',
+        budgetName: 'Bulanan',
+        itemId: 'cicilan-okt',
+        itemName: 'Cicilan',
+        walletId: 'bca',
+        startDate: DateTime(2026, 10, 25),
+        endDate: DateTime(2026, 11, 25),
+        templateItemId: 'k-cicilan',
+        plannedAmount: 291400000,
+      ),
+    ];
+    ExpenseTransaction cicilan({RecurrenceLink? recurrence}) => ExpenseTransaction(
+      id: 'cicilan',
+      date: DateTime(2026, 10, 24, 9),
+      amount: 291400000,
+      note: 'Cicilan',
+      walletId: 'bca',
+      budgetItemId: 'cicilan-okt',
+      recurrence: recurrence,
+    );
+
+    testWidgets('menyunting cicilan 24 Okt untuk kemunculan 25 Okt: pos periode 25 Okt tetap terpilih', (tester) async {
+      await pumpForm(
+        tester,
+        initial: cicilan(recurrence: RecurrenceLink(ruleId: 'cicilan', occurrenceDate: DateTime(2026, 10, 25))),
+        budgetItems: options,
+      );
+      expect(find.text('Cicilan · Bulanan'), findsOneWidget);
+      expect(find.text(t.record.budgetItemOutOfPeriod(name: 'Bulanan')), findsNothing);
+    });
+
+    testWidgets('tanpa tautan rutin: tanggal 24 Okt di luar periode, tautannya lepas', (tester) async {
+      await pumpForm(tester, initial: cicilan(), budgetItems: options);
+      expect(find.text('Cicilan · Bulanan'), findsNothing);
+      expect(find.text(t.record.budgetItemOutOfPeriod(name: 'Bulanan')), findsOneWidget);
     });
   });
 }

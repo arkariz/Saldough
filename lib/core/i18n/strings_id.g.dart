@@ -1501,6 +1501,9 @@ class Translations$home$id {
 
 	// Translations
 
+	/// id: 'Arus $period'
+	String flowTitle({required Object period}) => 'Arus ${period}';
+
 	/// id: 'Beranda gagal dimuat'
 	String get loadErrorTitle => 'Beranda gagal dimuat';
 
@@ -1953,6 +1956,18 @@ class Translations$tour$id {
 
 	/// id: 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.'
 	String get planMonthPickerBody => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.';
+
+	/// id: 'Bulan keuanganmu'
+	String get planPeriodHeaderTitle => 'Bulan keuanganmu';
+
+	/// id: 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.'
+	String get planPeriodHeaderBody => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.';
+
+	/// id: 'Periode peralihan'
+	String get planTransitionTitle => 'Periode peralihan';
+
+	/// id: 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.'
+	String get planTransitionBody => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.';
 }
 
 // Path: info
@@ -2946,11 +2961,68 @@ class Translations$plan$id {
 	/// id: 'Awal bulan keuangan'
 	String get financialMonthTitle => 'Awal bulan keuangan';
 
-	/// id: 'Bulan keuangan dimulai'
-	String get financialMonthPickerTitle => 'Bulan keuangan dimulai';
-
 	/// id: 'Tanggal $day'
 	String financialMonthDay({required Object day}) => 'Tanggal ${day}';
+
+	/// id: 'Hari terakhir bulan'
+	String get financialMonthLastDay => 'Hari terakhir bulan';
+
+	/// id: 'Ubah awal bulan keuangan'
+	String get financialMonthChange => 'Ubah awal bulan keuangan';
+
+	/// id: 'Biasanya tanggal gajian.'
+	String get financialMonthHint => 'Biasanya tanggal gajian.';
+
+	/// id: 'Mulai bulan keuanganmu tiap $start?'
+	String financialMonthOffer({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?';
+
+	/// id: 'Atur'
+	String get financialMonthOfferAction => 'Atur';
+
+	/// id: 'Mulai tanggal $day'
+	String financialMonthPreviewTitle({required Object day}) => 'Mulai tanggal ${day}';
+
+	/// id: 'Mulai hari terakhir bulan'
+	String get financialMonthPreviewTitleLastDay => 'Mulai hari terakhir bulan';
+
+	/// id: 'Periode ini jadi $range ($days hari), lalu $next.'
+	String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'Periode ini jadi ${range} (${days} hari), lalu ${next}.';
+
+	/// id: 'Periode sebelumnya tidak berubah.'
+	String get financialMonthPreviewPast => 'Periode sebelumnya tidak berubah.';
+
+	/// id: 'Anggaran rutin'
+	String get financialMonthBudgetsTitle => 'Anggaran rutin';
+
+	/// id: 'Yang dicentang ikut mulai $next. Yang tidak, tetap mulai $previous.'
+	String financialMonthBudgetsHelp({required Object next, required Object previous}) => 'Yang dicentang ikut mulai ${next}. Yang tidak, tetap mulai ${previous}.';
+
+	/// id: 'tanggal $day'
+	String financialMonthOnDay({required Object day}) => 'tanggal ${day}';
+
+	/// id: 'hari terakhir bulan'
+	String get financialMonthOnLastDay => 'hari terakhir bulan';
+
+	/// id: 'Berjalan sampai $until, berikutnya mulai $next'
+	String financialMonthBudgetMoved({required Object until, required Object next}) => 'Berjalan sampai ${until}, berikutnya mulai ${next}';
+
+	/// id: 'Tetap mulai $start'
+	String financialMonthBudgetKept({required Object start}) => 'Tetap mulai ${start}';
+
+	/// id: 'Pilih semua'
+	String get financialMonthSelectAll => 'Pilih semua';
+
+	/// id: 'Kosongkan'
+	String get financialMonthClearAll => 'Kosongkan';
+
+	/// id: 'Periode peralihan · $days hari'
+	String transitionLabel({required Object days}) => 'Periode peralihan · ${days} hari';
+
+	/// id: 'Rentang ini tidak memuat gajian.'
+	String get transitionNoPayday => 'Rentang ini tidak memuat gajian.';
+
+	/// id: 'Awal bulan keuanganmu kini $start. Periode ini $range.'
+	String transitionReview({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.';
 
 	/// id: 'Bulan ini'
 	String get thisMonthSegmentLabel => 'Bulan ini';
@@ -4134,6 +4206,7 @@ extension on Translations {
 			'freelance.nextExpected' => ({required Object count, required Object date}) => '${count} tagihan · terdekat ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Kerja ${range}',
 			'freelance.paidOffBadge' => 'Lunas',
+			'home.flowTitle' => ({required Object period}) => 'Arus ${period}',
 			'home.loadErrorTitle' => 'Beranda gagal dimuat',
 			'home.balanceLabel' => 'Total saldo',
 			'home.walletCount' => ({required Object count}) => '${count} dompet aktif',
@@ -4279,6 +4352,10 @@ extension on Translations {
 			'tour.budgetRepeatBody' => 'Nyalakan supaya anggaran ini lahir lagi tiap bulan dengan pos yang sama. Tidak ada uang yang dipindahkan.',
 			'tour.planMonthPickerTitle' => 'Bulan depan',
 			'tour.planMonthPickerBody' => 'Lihat perkiraan dua bulan ke depan. Angka di tiap bulan adalah perkiraan akhir bulannya.',
+			'tour.planPeriodHeaderTitle' => 'Bulan keuanganmu',
+			'tour.planPeriodHeaderBody' => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.',
+			'tour.planTransitionTitle' => 'Periode peralihan',
+			'tour.planTransitionBody' => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4629,13 +4706,32 @@ extension on Translations {
 			'recurring.suggestDismiss' => 'Bukan rutin',
 			'recurring.autoRecordedTitle' => 'Tercatat otomatis',
 			'plan.recurringSegmentLabel' => 'Rutin',
-			'plan.financialMonthTitle' => 'Awal bulan keuangan',
-			'plan.financialMonthPickerTitle' => 'Bulan keuangan dimulai',
-			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
-			'plan.thisMonthSegmentLabel' => 'Bulan ini',
-			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
 			_ => null,
 		} ?? switch (path) {
+			'plan.financialMonthTitle' => 'Awal bulan keuangan',
+			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
+			'plan.financialMonthLastDay' => 'Hari terakhir bulan',
+			'plan.financialMonthChange' => 'Ubah awal bulan keuangan',
+			'plan.financialMonthHint' => 'Biasanya tanggal gajian.',
+			'plan.financialMonthOffer' => ({required Object start}) => 'Mulai bulan keuanganmu tiap ${start}?',
+			'plan.financialMonthOfferAction' => 'Atur',
+			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Mulai tanggal ${day}',
+			'plan.financialMonthPreviewTitleLastDay' => 'Mulai hari terakhir bulan',
+			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'Periode ini jadi ${range} (${days} hari), lalu ${next}.',
+			'plan.financialMonthPreviewPast' => 'Periode sebelumnya tidak berubah.',
+			'plan.financialMonthBudgetsTitle' => 'Anggaran rutin',
+			'plan.financialMonthBudgetsHelp' => ({required Object next, required Object previous}) => 'Yang dicentang ikut mulai ${next}. Yang tidak, tetap mulai ${previous}.',
+			'plan.financialMonthOnDay' => ({required Object day}) => 'tanggal ${day}',
+			'plan.financialMonthOnLastDay' => 'hari terakhir bulan',
+			'plan.financialMonthBudgetMoved' => ({required Object until, required Object next}) => 'Berjalan sampai ${until}, berikutnya mulai ${next}',
+			'plan.financialMonthBudgetKept' => ({required Object start}) => 'Tetap mulai ${start}',
+			'plan.financialMonthSelectAll' => 'Pilih semua',
+			'plan.financialMonthClearAll' => 'Kosongkan',
+			'plan.transitionLabel' => ({required Object days}) => 'Periode peralihan · ${days} hari',
+			'plan.transitionNoPayday' => 'Rentang ini tidak memuat gajian.',
+			'plan.transitionReview' => ({required Object start, required Object range}) => 'Awal bulan keuanganmu kini ${start}. Periode ini ${range}.',
+			'plan.thisMonthSegmentLabel' => 'Bulan ini',
+			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
 			'plan.incomeRow' => 'Pemasukan',
 			'plan.billsRow' => 'Tagihan rutin',
 			'plan.budgetRow' => 'Anggaran',

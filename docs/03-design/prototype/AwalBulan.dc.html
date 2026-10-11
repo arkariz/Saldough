@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Awal bulan keuangan</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="rencana.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <dc-import name="Main" dark="{{dark}}" peralihan="{{bgPer}}" hint-size="360px,800px"></dc-import>
+  <a class="tk-scrim" href="Main.dc.html" aria-label="{{t.close}}"></a>
+  <div class="tk-sheet" role="dialog" aria-label="{{t.title}}" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 760px; display: flex; flex-direction: column; padding-bottom: 0">
+    <div class="tk-sheet__handle"></div>
+    <div class="tk-sheet__head"><a class="tk-iconbtn" href="Main.dc.html" aria-label="{{t.close}}"><span class="tk-icon">close</span></a><h2 class="tk-sheet__title">{{t.title}}</h2><span style="width: 48px; flex: none"></span></div>
+    <div class="tk-scroll" style="flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px">
+      <p class="tk-t-body-sm tk-ink-2">{{t.hint}}</p>
+      <div class="tk-daygrid" role="radiogroup" aria-label="{{t.title}}">
+        <sc-for list="{{days}}" as="d" hint-placeholder-count="28">
+          <button class="tk-day {{d.cls}}" type="button" role="radio" aria-checked="{{d.checked}}" aria-label="{{d.aria}}" onClick="{{d.pick}}"><span class="tk-day__n">{{d.n}}</span></button>
+        </sc-for>
+        <button class="tk-day tk-day--wide {{last.cls}}" type="button" role="radio" aria-checked="{{last.checked}}" onClick="{{last.pick}}"><span class="tk-day__n">{{t.lastDay}}</span></button>
+      </div>
+
+      <sc-if value="{{changed}}" hint-placeholder-val="{{true}}">
+        <div class="tk-inset">
+          <p class="tk-t-body-strong">{{pv.title}}</p>
+          <p class="tk-t-body-sm">{{pv.line}}</p>
+          <div class="tk-ptl" aria-hidden="true">
+            <div class="tk-ptl__bar"><span class="tk-ptl__seg tk-ptl__seg--past" style="flex: {{pv.a}}"></span><span class="tk-ptl__seg tk-ptl__seg--now" style="flex: {{pv.b}}"></span><span class="tk-ptl__seg tk-ptl__seg--next" style="flex: {{pv.c}}"></span></div>
+            <div class="tk-ptl__ticks"><span class="tk-ptl__tick" style="left: {{pv.t1}}%">{{pv.l1}}</span><span class="tk-ptl__tick" style="left: {{pv.t2}}%">{{pv.l2}}</span></div>
+          </div>
+          <p class="tk-t-body-sm tk-ink-2">{{t.past}}</p>
+        </div>
+        <sc-if value="{{hasBudgets}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px">
+            <div class="tk-section__head" style="padding: 0">
+              <h3 class="tk-t-body-strong" style="margin: 0">{{t.budgetsTitle}}</h3>
+              <sc-if value="{{bulk.show}}" hint-placeholder-val="{{false}}"><button class="tk-link" type="button" onClick="{{bulk.act}}">{{bulk.label}}</button></sc-if>
+            </div>
+            <p class="tk-t-body-sm tk-ink-2">{{budgetsHelp}}</p>
+          </div>
+          <div class="tk-list tk-list--check" style="margin: -4px -16px 0; border-radius: 0">
+            <sc-for list="{{budgets}}" as="b" hint-placeholder-count="1">
+              <label class="tk-row tk-row--check tk-row--compact">
+                <span class="tk-check"><input type="checkbox" checked="{{b.on}}" onChange="{{b.toggle}}"><span class="tk-check__box"><span class="tk-icon">check</span></span></span>
+                <span class="tk-row__main"><span class="tk-row__title">{{b.name}}</span><span class="tk-row__sub">{{b.effect}}</span></span>
+              </label>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-if>
+    </div>
+    <div style="flex: none; display: flex; gap: 8px; margin: 0 -16px; padding: 12px 16px 16px; background: var(--surface); box-shadow: var(--shadow-bar)">
+      <a class="tk-btn tk-btn--text" href="Main.dc.html">{{t.cancel}}</a>
+      <a class="tk-btn tk-btn--primary {{saveCls}}" href="Main.dc.html" style="flex: 1" aria-disabled="{{saveDisabled}}">{{t.save}}</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"contohA":{"editor":"boolean","default":false,"section":"Periode keuangan"},"jumlahAnggaran":{"editor":"enum","options":["0","1","2","6"],"default":"1","section":"Periode keuangan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    const A = !!this.props.contohA;
+    // Contoh B (FINANCIAL_PERIOD §5): aktif 1, gajian 25, diubah 10 Okt 2026. Contoh A: aktif 25, diubah ke 1.
+    const active = A ? 25 : 1;
+    const pick = s.pick !== undefined ? s.pick : (A ? 1 : 25);
+    const today = new Date(2026, 9, 10);
+    const T = en
+      ? { title: 'Financial month start', hint: 'Usually your payday.', lastDay: 'Last day of the month', past: 'Earlier periods stay the same.', cancel: 'Cancel', save: 'Save', close: 'Close',
+          day: (d) => d === 'last' ? 'the last day' : 'day ' + d, start: (d) => 'Start on ' + (d === 'last' ? 'the last day' : 'day ' + d),
+          line: (r, n, x) => 'This period becomes ' + r + ' (' + n + ' days), then ' + x + '.',
+          budgetsTitle: 'Recurring budgets', help: (n, o) => 'Checked ones also start on ' + n + '. The rest still start on ' + o + '.', all: 'Select all', none: 'Clear all',
+          moved: (u, x) => 'Runs until ' + u + ', the next starts ' + x, kept: (o) => 'Still starts on ' + o,
+          mon: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], dayAria: (d) => 'Day ' + d, on: (d) => d === 'last' ? 'the last day' : 'day ' + d }
+      : { title: 'Awal bulan keuangan', hint: 'Biasanya tanggal gajian.', lastDay: 'Hari terakhir bulan', past: 'Periode sebelumnya tidak berubah.', cancel: 'Batal', save: 'Simpan', close: 'Tutup',
+          start: (d) => d === 'last' ? 'Mulai hari terakhir bulan' : 'Mulai tanggal ' + d,
+          line: (r, n, x) => 'Periode ini jadi ' + r + ' (' + n + ' hari), lalu ' + x + '.',
+          budgetsTitle: 'Anggaran rutin', help: (n, o) => 'Yang dicentang ikut mulai ' + n + '. Yang tidak, tetap mulai ' + o + '.', all: 'Pilih semua', none: 'Kosongkan',
+          moved: (u, x) => 'Berjalan sampai ' + u + ', berikutnya mulai ' + x, kept: (o) => 'Tetap mulai ' + o,
+          mon: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'], dayAria: (d) => 'Tanggal ' + d, on: (d) => d === 'last' ? 'hari terakhir bulan' : 'tanggal ' + d };
+
+    const DAY = 86400000;
+    const lastOf = (y, m) => new Date(y, m + 1, 0).getDate();
+    const startIn = (y, m, d) => new Date(y, m, d === 'last' ? lastOf(y, m) : d);
+    // Period containing a date under start day d: [start, next start).
+    const periodOf = (date, d) => {
+      let st = startIn(date.getFullYear(), date.getMonth(), d);
+      if (st > date) st = startIn(date.getFullYear(), date.getMonth() - 1, d);
+      return [st, startIn(st.getFullYear(), st.getMonth() + 1, d)];
+    };
+    const days = (a, b) => Math.round((b - a) / DAY);
+    const fmt = (a, bEx) => {
+      const b = new Date(bEx - DAY);
+      return a.getMonth() === b.getMonth()
+        ? a.getDate() + ' – ' + b.getDate() + ' ' + T.mon[b.getMonth()]
+        : a.getDate() + ' ' + T.mon[a.getMonth()] + ' – ' + b.getDate() + ' ' + T.mon[b.getMonth()];
+    };
+    const short = (a) => a.getDate() + ' ' + T.mon[a.getMonth()];
+
+    const changed = pick !== active;
+    let pv = { title: '', line: '', a: 1, b: 1, c: 1, t1: 33, t2: 66, l1: '', l2: '' };
+    let until = '', nextStart = '';
+    if (changed) {
+      const [s0, e0] = periodOf(today, active);
+      const prev = periodOf(new Date(s0 - DAY), active);
+      const cands = [-1, 0, 1].map((k) => startIn(e0.getFullYear(), e0.getMonth() + k, pick));
+      const c = cands.reduce((x, y) => Math.abs(y - e0) < Math.abs(x - e0) ? y : x);
+      const next = [c, startIn(c.getFullYear(), c.getMonth() + 1, pick)];
+      const a = days(prev[0], prev[1]), b = days(s0, c), cc = days(next[0], next[1]), tot = a + b + cc;
+      until = short(new Date(c - DAY)); nextStart = short(c);
+      pv = {
+        title: T.start(pick),
+        line: T.line(fmt(s0, c), b, fmt(next[0], next[1])),
+        a: a, b: b, c: cc,
+        t1: Math.round(a / tot * 1000) / 10, t2: Math.round((a + b) / tot * 1000) / 10,
+        l1: short(s0), l2: short(c)
+      };
+    }
+    const off = s.off || {};
+    const ALL = ['Anggaran Bulanan', 'Dana darurat', 'Kebutuhan rumah', 'Jajan bulanan', 'Hobi', 'Sekolah anak'];
+    const n = parseInt(this.props.jumlahAnggaran ?? '1', 10);
+    const names = ALL.slice(0, n);
+    const allOn = names.every((x) => !off[x]);
+    const budgets = names.map((x) => ({
+      name: x, on: !off[x],
+      effect: off[x] ? T.kept(T.on(active)) : T.moved(until, nextStart),
+      toggle: () => this.setState({ off: Object.assign({}, off, { [x]: !off[x] }) })
+    }));
+    const bulk = {
+      show: names.length >= 2,
+      label: allOn ? T.none : T.all,
+      act: () => this.setState({ off: allOn ? Object.fromEntries(names.map((x) => [x, true])) : {} })
+    };
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      dark: !!this.props.dark,
+      bgPer: false,
+      t: T,
+      days: Array.from({ length: 28 }, (_, i) => ({
+        n: String(i + 1),
+        cls: pick === i + 1 ? 'is-selected' : '',
+        checked: pick === i + 1 ? 'true' : 'false',
+        aria: T.dayAria(i + 1),
+        pick: () => this.setState({ pick: i + 1 })
+      })),
+      last: { cls: pick === 'last' ? 'is-selected' : '', checked: pick === 'last' ? 'true' : 'false', pick: () => this.setState({ pick: 'last' }) },
+      changed: changed,
+      pv: pv,
+      hasBudgets: budgets.length > 0,
+      budgets: budgets,
+      bulk: bulk,
+      budgetsHelp: T.help(T.on(pick), T.on(active)),
+      saveCls: changed ? '' : 'is-disabled',
+      saveDisabled: changed ? 'false' : 'true'
+    };
+  }
+}
+</script>
+</body>
+</html>

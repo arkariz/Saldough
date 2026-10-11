@@ -26,14 +26,19 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Tagihan | pembayaran (untuk yang belum diterima) | Di Freelance: kumpulan jam kerja yang ditagihkan |
 | Belum diterima | piutang, gaji kotor tertunda | Total tagihan tertunda dan jam belum ditagih |
 | Kotak masuk notifikasi | tangkapan, inbox | Transaksi dari notifikasi bank dan e-wallet |
+| Awal bulan keuangan | tanggal tutup buku, siklus | Tanggal mulai periode keuangan (1–28 atau hari terakhir bulan) |
+| Periode peralihan | periode transisi, bulan pendek/panjang | Satu periode 13–46 hari sesudah awal bulan keuangan diubah |
+| Analisis | laporan, statistik, insight | Segmen Riwayat: ke mana uang pergi per kategori dan trennya |
+| Tanpa kategori | lain-lain, uncategorized | Transaksi yang belum diberi kategori; bukan "Lainnya" |
+| Lainnya ({n} kategori) | sisanya, dll. | Gabungan kategori di luar lima teratas di Analisis |
 
 ## Format
 
 - Nominal: `Rp27.522.000` tanpa spasi. Desimal hanya untuk mata uang yang memakainya.
 - Tanda: pengeluaran `−Rp45.000` (minus U+2212, bukan tanda hubung), pemasukan `+Rp8.500.000`, transfer tanpa tanda.
 - Ringkas (`Rp11,7 jt`, `Rp950 rb`) hanya di grafik dan ruang yang benar-benar sempit, tidak pernah di daftar atau form.
-- Persen bulat: "64% terpakai".
-- Tanggal: "Hari ini", "Kemarin", lalu "Sabtu, 26 Sep"; tahun hanya kalau berbeda dari tahun berjalan. Rentang: "1–30 Sep".
+- Persen bulat: "64% terpakai". Di Analisis persen dibulatkan per baris dan jumlahnya tidak dipaksa 100; di bawah 0,5% ditulis "<1%".
+- Tanggal: "Hari ini", "Kemarin", lalu "Sabtu, 26 Sep"; tahun hanya kalau berbeda dari tahun berjalan. Rentang dengan spasi di kedua sisi tanda pisah: "1 – 30 Sep", lintas bulan "25 Sep – 24 Okt". Rentang angka yang bukan tanggal tetap rapat ("1–28", "13–46 hari").
 - Jam: "08.00".
 
 ## Pola
@@ -61,3 +66,9 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 
 **Bantuan di bawah kolom.** Satu kalimat, menjelaskan akibat, bukan aturan.
 > Saldo Tunai jadi Rp331.000.
+
+**Perbandingan.** Netral, tanpa menilai. Sebut arah dan jumlahnya.
+> Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan.
+
+Jangan pakai: boros, hemat, kesehatan keuangan, skor, waspada.
+

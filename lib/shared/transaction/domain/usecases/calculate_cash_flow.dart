@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/shared/transaction/domain/period_date.dart';
 import 'package:saldough/shared/transaction/domain/transaction.dart';
 
 /// Pemasukan dan pengeluaran satu bulan, dalam sen (FR-HOME-001).
@@ -32,11 +33,26 @@ final class CalculateCashFlow {
   /// Arus [transactions] pada bulan [month]. Transaksi di luar bulan itu
   /// diabaikan, jadi hasil `listTransactionsInMonth` maupun riwayat penuh
   /// sama-sama boleh diberikan.
-  CashFlow call(Iterable<Transaction> transactions, {required DateTime month}) {
+  CashFlow call(Iterable<Transaction> transactions, {required DateTime month}) => _sum(
+    transactions.where((t) => t.date.year == month.year && t.date.month == month.month),
+  );
+
+  /// Arus periode keuangan `from <= d < until` (FR-HOME-001, ADR-038 §3.6):
+  /// keanggotaan menurut tanggal periode ([periodDateOf]), jadi gaji yang
+  /// cair beberapa hari lebih awal tetap di periode kemunculannya.
+  /// Transaksi di luar periode diabaikan.
+  CashFlow inPeriod(Iterable<Transaction> transactions, {required DateTime from, required DateTime until}) =>
+      _sum(
+        transactions.where((t) {
+          final date = periodDateOf(t);
+          return !date.isBefore(from) && date.isBefore(until);
+        }),
+      );
+
+  CashFlow _sum(Iterable<Transaction> transactions) {
     var income = 0;
     var expense = 0;
     for (final transaction in transactions) {
-      if (transaction.date.year != month.year || transaction.date.month != month.month) continue;
       switch (transaction) {
         case IncomeTransaction():
           income += transaction.amount;

@@ -183,8 +183,14 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
 
   bool get _canSubmit => _amountSen != null && _walletId != null;
 
+  /// Tanggal yang menentukan pos anggaran (KT-1): tanggal kemunculan bila
+  /// transaksi ini tertaut rutin dan selisihnya paling banyak 7 hari
+  /// (ADR-038 §3.5), selain itu tanggal transaksi.
+  DateTime get _periodDate =>
+      periodDateFor(_date, widget.initial?.recurrence?.occurrenceDate ?? widget.occurrence?.date);
+
   List<BudgetItemOption> get _budgetChoices =>
-      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId, _date);
+      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId, _periodDate);
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
@@ -294,7 +300,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
           ],
         ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _date) case final dropped?)
+        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),

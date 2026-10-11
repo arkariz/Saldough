@@ -56,7 +56,7 @@ RecurringBudgetSave planRecurringBudgetSave({
       name: budget.name,
       items: [for (final item in keyed) item.copyWith(id: item.templateItemId, templateItemId: () => null)],
       isEnabled: template?.isEnabled ?? true,
-      schedule: BudgetSchedule(walletId: budget.walletId, period: budget.period, anchorDate: budget.startDate),
+      schedule: BudgetSchedule.startingAt(walletId: budget.walletId, period: budget.period, startDate: budget.startDate),
     ),
   );
 }

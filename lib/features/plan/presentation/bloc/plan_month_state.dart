@@ -14,6 +14,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   const PlanMonthState({
     required this.today,
     required this.range,
+    this.schedule,
     this.isLoading = true,
     this.loadFailed = false,
     this.wallets = const [],
@@ -39,7 +40,13 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   final DateTime today;
 
   /// Bulan keuangan berjalan.
-  final FinancialMonthRange range;
+  final FinancialPeriod range;
+
+  /// Jadwal bulan keuangan saat dimuat (ADR-038); `null` = [range] berasal
+  /// dari jadwal bawaan tanggal 1.
+  final FinancialMonthSchedule? schedule;
+
+  FinancialMonthSchedule get _schedule => schedule ?? FinancialMonthSchedule.initial;
 
   /// Sedang memuat pertama kali.
   final bool isLoading;
@@ -53,7 +60,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   /// Seluruh rutin.
   final List<RecurringRule> rules;
 
-  /// Transaksi tiga bulan keuangan lalu sampai akhir bulan ini.
+  /// Transaksi tiga bulan keuangan lalu sampai akhir bulan ini, ditambah
+  /// [periodAttributionDays] hari di kedua sisi (P-4).
   final List<Transaction> transactions;
 
   /// Anggaran yang dimulai di bulan ini.
@@ -108,14 +116,16 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   int? get forecastMiss => previousForecast == null ? null : previousForecast! - previousActualEnd;
 
   /// Status tinjau awal bulan berjalan (J4, ADR-036 §3.7).
-  MonthReview get review => _review ?? MonthReview(monthStart: range.start);
+  MonthReview get review => _review ?? MonthReview(monthStart: range.start, monthEnd: range.end);
+
+  /// Awal bulan keuangan yang aktif, untuk kalimat periode peralihan.
+  FinancialMonthStart get activeStart => _schedule.active;
 
   /// Hari terakhir kartu tinjau tampil: hari ke-7 bulan keuangan.
   static const reviewDays = 7;
 
   /// Bulan keuangan lalu.
-  FinancialMonthRange get previousRange =>
-      financialMonthOf(DateTime(range.start.year, range.start.month - 1, range.start.day), range.start.day);
+  FinancialPeriod get previousRange => _schedule.previousOf(range);
 
   /// Jumlah rencana anggaran rutin bulan ini (langkah 1).
   int get recurringBudgetTotal => [
@@ -144,11 +154,24 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   int get reviewDoneCount => reviewSteps.where(review.doneSteps.contains).length;
 
   /// Kartu tinjau tampil: tujuh hari pertama bulan keuangan, belum selesai,
-  /// dan ada yang perlu ditinjau.
+  /// dan ada yang perlu ditinjau. Periode peralihan: sekali sampai selesai,
+  /// juga tanpa langkah, karena kartunya menjelaskan periode itu (P-9).
   bool get showReview =>
       !review.completed &&
-      reviewSteps.isNotEmpty &&
-      today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays));
+      (range.isTransition ||
+          (reviewSteps.isNotEmpty &&
+              today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays))));
+
+  /// Periode peralihan tanpa gajian: uang nganggur boleh negatif tanpa warna
+  /// peringatan, dengan satu kalimat penjelas (P-8). Hanya bulan berjalan.
+  bool get transitionWithoutPayday => !isFuture && range.isTransition && planFor(0).plannedIncome == 0;
+
+  /// Transaksi yang tanggal periodenya ([periodDateOf], ADR-038 §3.5) di
+  /// [m]: gajian yang cair lebih awal tetap di periode kemunculannya.
+  List<Transaction> _membersOf(FinancialPeriod m) => [
+    for (final t in transactions)
+      if (m.contains(periodDateOf(t))) t,
+  ];
 
   /// Rencana vs nyata bulan lalu (W10), dihitung ulang dari buku besar.
   MonthPlan get previousPlan {
@@ -158,23 +181,22 @@ final class PlanMonthState extends UiState<PlanMonthState> {
       from: m.start,
       until: m.end,
       today: DateTime(m.end.year, m.end.month, m.end.day - 1),
-      transactions: [
-        for (final t in transactions)
-          if (m.contains(t.date)) t,
-      ],
+      transactions: _membersOf(m),
       budgetLines: [for (final b in previousBudgets) ...b.lines],
     );
   }
 
   /// Bulan berjalan dan [horizon] bulan sesudahnya.
-  List<FinancialMonthRange> get months => [
-    range,
-    for (var k = 1; k <= horizon; k++)
-      financialMonthOf(DateTime(range.start.year, range.start.month + k, range.start.day), range.start.day),
-  ];
+  List<FinancialPeriod> get months {
+    final result = [range];
+    while (result.length <= horizon) {
+      result.add(_schedule.nextOf(result.last));
+    }
+    return result;
+  }
 
   /// Bulan terpilih.
-  FinancialMonthRange get selectedRange => months[selected];
+  FinancialPeriod get selectedRange => months[selected];
 
   /// Bulan terpilih adalah bulan depan: seluruh isinya perkiraan.
   bool get isFuture => selected > 0;
@@ -200,25 +222,26 @@ final class PlanMonthState extends UiState<PlanMonthState> {
       from: m.start,
       until: m.end,
       today: today,
-      transactions: [
-        for (final t in transactions)
-          if (m.contains(t.date)) t,
-      ],
+      transactions: _membersOf(m),
       budgetLines: [for (final b in budgetsFor(k)) ...b.lines],
     );
   }
 
   /// Tiga bulan keuangan penuh sebelum bulan ini, terbaru dulu.
   List<({DateTime start, DateTime end})> get _previousMonths => [
-    for (var back = 1; back <= 3; back++)
-      () {
-        final r = financialMonthOf(
-          DateTime(range.start.year, range.start.month - back, range.start.day),
-          range.start.day,
-        );
-        return (start: r.start, end: r.end);
-      }(),
+    for (final r in previousPeriods(3)) (start: r.start, end: r.end),
   ];
+
+  /// [count] periode keuangan sebelum bulan ini, terbaru dulu.
+  List<FinancialPeriod> previousPeriods(int count) {
+    final result = <FinancialPeriod>[];
+    var period = range;
+    for (var back = 1; back <= count; back++) {
+      period = _schedule.previousOf(period);
+      result.add(period);
+    }
+    return result;
+  }
 
   /// Rata-rata harian di luar rencana untuk [walletId], atau `null` bila
   /// riwayat belum sebulan penuh.
@@ -290,7 +313,8 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   @override
   PlanMonthState copyWith({
     DateTime? today,
-    FinancialMonthRange? range,
+    FinancialPeriod? range,
+    FinancialMonthSchedule? schedule,
     bool? isLoading,
     bool? loadFailed,
     List<Wallet>? wallets,
@@ -310,6 +334,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   }) => PlanMonthState(
     today: today ?? this.today,
     range: range ?? this.range,
+    schedule: schedule ?? this.schedule,
     isLoading: isLoading ?? this.isLoading,
     loadFailed: loadFailed ?? this.loadFailed,
     wallets: wallets ?? this.wallets,
@@ -332,6 +357,7 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   List<Object?> get props => [
     today,
     range,
+    schedule,
     isLoading,
     loadFailed,
     wallets,
@@ -381,14 +407,7 @@ List<FundingWarning> planFundingWarnings(PlanMonthState state) {
           ? unplannedDailyAverage(
               state.transactions,
               months: [
-                for (var back = 1; back <= 3; back++)
-                  () {
-                    final r = financialMonthOf(
-                      DateTime(state.range.start.year, state.range.start.month - back, state.range.start.day),
-                      state.range.start.day,
-                    );
-                    return (start: r.start, end: r.end);
-                  }(),
+                for (final r in state.previousPeriods(3)) (start: r.start, end: r.end),
               ],
               historyStart: state.historyStart,
               ruleIds: {for (final rule in state.rules) rule.id},

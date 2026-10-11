@@ -11,6 +11,7 @@ export 'data/recurring_suggestion_dismissals_impl.dart';
 export 'domain/auto_record.dart';
 export 'domain/budget_link.dart';
 export 'domain/cashflow_projection.dart';
+export 'domain/financial_month_offer.dart';
 export 'domain/funding.dart';
 export 'domain/insights.dart';
 export 'domain/month_plan.dart';

@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -26,6 +27,11 @@ final class RecordScope extends IsolatedScope {
       ..registerSingleton<CategoryRepository>(parent<CategoryRepository>())
       ..registerSingleton<RecurringRuleRepository>(parent<RecurringRuleRepository>())
       ..registerSingleton<RecurringChanges>(parent<RecurringChanges>());
+    // Tawaran awal bulan (FINANCIAL_PERIOD F2); sebagian uji tidak
+    // menyediakannya.
+    if (parent.isRegistered<FinancialMonthPreferenceRepository>()) {
+      c.registerSingleton<FinancialMonthPreferenceRepository>(parent<FinancialMonthPreferenceRepository>());
+    }
   }
 
   @override
@@ -38,6 +44,9 @@ final class RecordScope extends IsolatedScope {
         createCategory: CreateCategory(repository: c<CategoryRepository>()),
         recurringRepository: c<RecurringRuleRepository>(),
         recurringChanges: c<RecurringChanges>(),
+        financialMonth: c.isRegistered<FinancialMonthPreferenceRepository>()
+            ? c<FinancialMonthPreferenceRepository>()
+            : null,
         recordTransaction: RecordTransaction(
           ledgerChanges: c<LedgerChanges>(),
           transactionRepository: c<TransactionRepository>(),

@@ -119,8 +119,10 @@ final class BudgetItemProgress extends Equatable {
 }
 
 /// Apakah [transaction] terhitung ke [item] milik [budget] (ADR-018),
-/// DENGAN anggapan `budgetItemId`-nya sudah menunjuk [item]. Tanggalnya
-/// harus di dalam periode [budget] ([Budget.covers], KT-1), lalu:
+/// DENGAN anggapan `budgetItemId`-nya sudah menunjuk [item]. Tanggal
+/// periodenya ([periodDateOf]: tanggal kemunculan untuk transaksi tertaut
+/// rutin yang selisihnya paling banyak 7 hari, ADR-038 §3.5; selain itu
+/// `date`) harus di dalam periode [budget] ([Budget.covers], KT-1), lalu:
 /// - pos pengeluaran: hanya [ExpenseTransaction] yang `walletId`-nya dompet
 ///   anggaran;
 /// - pos transfer: hanya [TransferTransaction] DARI dompet anggaran KE
@@ -129,7 +131,7 @@ final class BudgetItemProgress extends Equatable {
 /// Satu-satunya tempat aturan ini ditulis — dipakai hitungan progres dan
 /// daftar transaksi tertaut, supaya keduanya tidak pernah berbeda.
 bool countsTowardBudgetItem(Budget budget, BudgetItem item, Transaction transaction) =>
-    budget.covers(transaction.date) &&
+    budget.covers(periodDateOf(transaction)) &&
     switch ((item.kind, transaction)) {
       (BudgetItemKind.expense, ExpenseTransaction(:final walletId)) => walletId == budget.walletId,
       (BudgetItemKind.transfer, TransferTransaction(:final fromWalletId, :final toWalletId)) =>

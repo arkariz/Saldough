@@ -127,8 +127,10 @@ class PlanMonthView extends StatelessWidget {
         }
         final bloc = context.read<PlanMonthBloc>();
         final range = state.selectedRange;
+        // Nama bulan hanya untuk periode biasa yang mulai tanggal 1; periode
+        // peralihan selalu rentang (P-11).
         String labelOf(FinancialPeriod m) =>
-            m.start.day == 1 ? CycleMonthFormatter.formatMonthShort(m.start) : m.label;
+            m.isCalendarMonth ? CycleMonthFormatter.formatMonthShort(m.start) : m.rangeLabel;
         final monthLabel = labelOf(range);
         final next = state.nextOccurrences;
         final funding = state.fundingWarnings;
@@ -200,6 +202,7 @@ class PlanMonthView extends StatelessWidget {
                 child: UnplannedCard(
                   plan: state.plan,
                   isForecast: state.isFuture,
+                  withoutPayday: state.transitionWithoutPayday,
                   monthLabel: monthLabel,
                   onShowRecurring: onShowRecurring,
                   onShowBudget: onShowBudget,

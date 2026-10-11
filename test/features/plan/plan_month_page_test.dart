@@ -3,6 +3,7 @@ import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -13,6 +14,7 @@ import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/pages/plan_month_page.dart';
+import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -384,5 +386,55 @@ void main() {
     expect(compactApprox(1100000000), '≈11 jt');
     expect(compactApprox(85000000), '≈850 rb');
     expect(compactApprox(-171400000), '≈−1,7 jt');
+  });
+
+  group('periode peralihan (T-18.8, FINANCIAL_PERIOD P-8, P-9, contoh B)', () {
+    // 1 → 25 pada 10 Okt: peralihan 1 – 24 Okt (24 hari), gaji 25 Okt di luarnya.
+    setUp(
+      () => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.single(
+        FinancialMonthStart.first,
+      ).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
+    );
+    tearDown(() => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial);
+
+    testWidgets('kepala rentang + penanda; uang nganggur negatif tanpa warna peringatan, dengan kalimat', (tester) async {
+      final reviews = MonthReviewRepositoryImpl(storage: storage);
+      await pump(tester, reviews: reviews, today: DateTime(2026, 10, 10, 9));
+      expect(find.text('1 – 24 Okt'), findsOneWidget);
+      expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
+      expect(find.text('Rentang ini tidak memuat gajian.'), findsOneWidget);
+      final hero = tester.widget<HeroAmount>(find.descendant(of: find.byType(UnplannedCard), matching: find.byType(HeroAmount)));
+      expect(hero.formatted, startsWith('−'));
+      expect(hero.color, isNull);
+
+      // Tinjau awal bulan muncul sekali dengan kalimat peralihan, walau sudah
+      // lewat hari ke-7 periode.
+      expect(find.text('Awal bulan keuanganmu kini tanggal 25. Periode ini 1 – 24 Okt.'), findsOneWidget);
+
+      // W9: perkiraan periode peralihan tidak disimpan.
+      final snapshots = await tester.runAsync(reviews.loadSnapshots);
+      expect(snapshots!.getOrElse((_) => const []), isEmpty);
+    });
+
+    testWidgets('tinjau periode lama (awal sama, akhir lama) tidak menyembunyikan tinjau peralihan', (tester) async {
+      final reviews = MonthReviewRepositoryImpl(storage: storage);
+      await tester.runAsync(() => reviews.save(MonthReview(monthStart: DateTime(2026, 10), completed: true)));
+      await pump(tester, reviews: reviews, today: DateTime(2026, 10, 10, 9));
+      expect(find.byKey(const ValueKey('month-review-transition')), findsOneWidget);
+      expect(MonthReview(monthStart: DateTime(2026, 10)).isFor(FinancialPeriod(start: DateTime(2026, 10), end: DateTime(2026, 11))), isTrue);
+      expect(
+        MonthReview(monthStart: DateTime(2026, 10)).isFor(
+          FinancialPeriod(start: DateTime(2026, 10), end: DateTime(2026, 10, 25), isTransition: true),
+        ),
+        isFalse,
+      );
+    });
+
+    testWidgets('periode berikutnya 25 Okt – 24 Nov memuat gajian: tanpa kalimat, tanpa penanda', (tester) async {
+      await pump(tester, today: DateTime(2026, 10, 26, 9));
+      expect(find.text('25 Okt – 24 Nov'), findsOneWidget);
+      expect(find.text('Periode peralihan · 24 hari'), findsNothing);
+      expect(find.text('Rentang ini tidak memuat gajian.'), findsNothing);
+    });
   });
 }

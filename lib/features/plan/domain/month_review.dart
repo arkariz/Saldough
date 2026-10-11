@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
 /// Langkah tinjau awal bulan (J4, ADR-036 §3.7). Semuanya bisa dilewati.
@@ -20,6 +21,7 @@ final class MonthReview extends Equatable {
   /// Membuat [MonthReview].
   const MonthReview({
     required this.monthStart,
+    this.monthEnd,
     this.doneSteps = const {},
     this.completed = false,
     this.dismissed = false,
@@ -27,6 +29,16 @@ final class MonthReview extends Equatable {
 
   /// Awal bulan keuangan yang ditinjau.
   final DateTime monthStart;
+
+  /// Akhir (eksklusif) periode yang ditinjau (ADR-038); `null` = dokumen
+  /// lama, berlaku untuk periode biasa yang mulai [monthStart].
+  final DateTime? monthEnd;
+
+  /// Apakah tinjau ini milik [period]. Periode peralihan berawal sama dengan
+  /// periode lama tetapi panjangnya berbeda, jadi ia mendapat tinjau sendiri
+  /// sekali (FINANCIAL_PERIOD P-9).
+  bool isFor(FinancialPeriod period) =>
+      monthStart == period.start && (monthEnd == null ? !period.isTransition : monthEnd == period.end);
 
   /// Langkah yang sudah dicentang.
   final Set<MonthReviewStep> doneSteps;
@@ -40,13 +52,14 @@ final class MonthReview extends Equatable {
   /// Salinan dengan field yang disebutkan diganti.
   MonthReview copyWith({Set<MonthReviewStep>? doneSteps, bool? completed, bool? dismissed}) => MonthReview(
     monthStart: monthStart,
+    monthEnd: monthEnd,
     doneSteps: doneSteps ?? this.doneSteps,
     completed: completed ?? this.completed,
     dismissed: dismissed ?? this.dismissed,
   );
 
   @override
-  List<Object?> get props => [monthStart, doneSteps, completed, dismissed];
+  List<Object?> get props => [monthStart, monthEnd, doneSteps, completed, dismissed];
 }
 
 /// Perkiraan akhir bulan yang dibuat saat bulan keuangan pertama kali

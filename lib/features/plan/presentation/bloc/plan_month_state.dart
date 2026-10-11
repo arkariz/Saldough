@@ -116,7 +116,10 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   int? get forecastMiss => previousForecast == null ? null : previousForecast! - previousActualEnd;
 
   /// Status tinjau awal bulan berjalan (J4, ADR-036 §3.7).
-  MonthReview get review => _review ?? MonthReview(monthStart: range.start);
+  MonthReview get review => _review ?? MonthReview(monthStart: range.start, monthEnd: range.end);
+
+  /// Awal bulan keuangan yang aktif, untuk kalimat periode peralihan.
+  FinancialMonthStart get activeStart => _schedule.active;
 
   /// Hari terakhir kartu tinjau tampil: hari ke-7 bulan keuangan.
   static const reviewDays = 7;
@@ -151,11 +154,17 @@ final class PlanMonthState extends UiState<PlanMonthState> {
   int get reviewDoneCount => reviewSteps.where(review.doneSteps.contains).length;
 
   /// Kartu tinjau tampil: tujuh hari pertama bulan keuangan, belum selesai,
-  /// dan ada yang perlu ditinjau.
+  /// dan ada yang perlu ditinjau. Periode peralihan: sekali sampai selesai,
+  /// juga tanpa langkah, karena kartunya menjelaskan periode itu (P-9).
   bool get showReview =>
       !review.completed &&
-      reviewSteps.isNotEmpty &&
-      today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays));
+      (range.isTransition ||
+          (reviewSteps.isNotEmpty &&
+              today.isBefore(DateTime(range.start.year, range.start.month, range.start.day + reviewDays))));
+
+  /// Periode peralihan tanpa gajian: uang nganggur boleh negatif tanpa warna
+  /// peringatan, dengan satu kalimat penjelas (P-8). Hanya bulan berjalan.
+  bool get transitionWithoutPayday => !isFuture && range.isTransition && planFor(0).plannedIncome == 0;
 
   /// Transaksi yang tanggal periodenya ([periodDateOf], ADR-038 §3.5) di
   /// [m]: gajian yang cair lebih awal tetap di periode kemunculannya.

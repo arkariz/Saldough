@@ -1,8 +1,10 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
@@ -76,6 +78,52 @@ void main() {
     final offer = read(await preferences.loadOffer());
     expect(offer.offeredRuleIds, {rule.id});
     expect(offer.changedByUser, isFalse);
+  });
+
+  testWidgets('analitik tawaran: shown dari bloc; accepted dan dismissed dari cara snackbar ditutup (T-18.11)', (
+    tester,
+  ) async {
+    final events = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = (event) {
+      if (event.name == 'financial_month_offer') events.add(event);
+    };
+    addTearDown(() => AppAnalytics.debugSink = null);
+    final effect = (await tester.runAsync(() => save(gaji(DateTime(2026, 9, 25, 9)))))! as CallbackEffect;
+    expect(events, [PeriodEvents.offer('shown')]);
+    expect(events.single.name, 'financial_month_offer');
+    expect(events.single.parameters, {'action': 'shown'});
+
+    late BuildContext context;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (c) {
+              context = c;
+              return const SizedBox();
+            },
+          ),
+        ),
+      ),
+    );
+    Future<void> showAndClose(SnackBarClosedReason reason) async {
+      effect.callback(context);
+      await tester.pump();
+      final messenger = ScaffoldMessenger.of(context)..removeCurrentSnackBar();
+      await tester.pump();
+      if (reason == SnackBarClosedReason.action) {
+        messenger.hideCurrentSnackBar(reason: SnackBarClosedReason.action);
+      } else {
+        messenger.removeCurrentSnackBar();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    await showAndClose(SnackBarClosedReason.action);
+    expect(events.last, PeriodEvents.offer('accepted'));
+    await showAndClose(SnackBarClosedReason.remove);
+    expect(events.last, PeriodEvents.offer('dismissed'));
+    expect(events.length, 3);
   });
 
   test('sudah pernah mengubah awal bulan sendiri: tidak ditawarkan', () async {

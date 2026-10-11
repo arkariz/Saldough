@@ -387,6 +387,7 @@ final class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         emit(state.copyWith(effect: _effectError(failure)));
       case Right():
         AppAnalytics.log(RecurringEvents.occurrenceLinked);
+        AppAnalytics.log(PeriodEvents.recurrenceDateGap(source.date, event.date));
         emit(
           state.copyWith(
             transactions: [for (final t in state.transactions) if (t.id == source.id) linked else t],

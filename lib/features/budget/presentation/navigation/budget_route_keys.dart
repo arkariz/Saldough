@@ -13,10 +13,26 @@ final class BudgetDetailInput extends RouteInput {
   final String budgetId;
 }
 
+/// Asal pembukaan lembar Awal bulan keuangan, untuk analitik
+/// (FINANCIAL_PERIOD §8A).
+enum FinancialMonthSource {
+  /// Kepala Rencana › Bulan ini.
+  plan,
+
+  /// Layar Akun.
+  account,
+
+  /// Tawaran rutin gajian (F2).
+  offer,
+}
+
 /// Input lembar Awal bulan keuangan.
 final class FinancialMonthInput extends RouteInput {
   /// Membuat [FinancialMonthInput].
-  const FinancialMonthInput({this.initial});
+  const FinancialMonthInput({required this.source, this.initial});
+
+  /// Asal pembukaan.
+  final FinancialMonthSource source;
 
   /// Tanggal yang sudah terpilih saat dibuka (tawaran rutin gajian, F2);
   /// `null` = tanggal aktif.

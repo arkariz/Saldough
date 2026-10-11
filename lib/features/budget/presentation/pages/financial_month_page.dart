@@ -1,12 +1,14 @@
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/budget/domain/usecases/align_recurring_budgets.dart';
 import 'package:saldough/features/budget/domain/usecases/birth_recurring_budgets.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/budget/presentation/widgets/financial_month_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
@@ -18,7 +20,10 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// dan Anggaran segar. Saldo tidak berubah.
 class FinancialMonthPage extends StatefulWidget {
   /// Membuat [FinancialMonthPage].
-  const FinancialMonthPage({this.initial, this.now, super.key});
+  const FinancialMonthPage({required this.source, this.initial, this.now, super.key});
+
+  /// Asal pembukaan, untuk analitik.
+  final FinancialMonthSource source;
 
   /// Tanggal yang sudah terpilih saat dibuka; `null` = tanggal aktif.
   final FinancialMonthStart? initial;
@@ -36,9 +41,18 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
   late final FinancialMonthSchedule _schedule = ActiveFinancialMonth.schedule;
   late final Future<List<FinancialMonthBudgetOption>> _budgets = _loadBudgets();
 
+  /// Isi [_budgets] begitu termuat; lembar baru tampil sesudahnya.
+  List<FinancialMonthBudgetOption> _options = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    AppAnalytics.log(PeriodEvents.sheetOpened(widget.source.name));
+  }
+
   Future<List<FinancialMonthBudgetOption>> _loadBudgets() async {
     final templates = (await _c<BudgetTemplateRepository>().listTemplates()).getOrElse((_) => const <BudgetTemplate>[]);
-    return movableRecurringBudgets(templates, _schedule.active);
+    return _options = movableRecurringBudgets(templates, _schedule.active);
   }
 
   Future<bool> _save(FinancialMonthStart start, Set<String> moved) async {
@@ -53,6 +67,16 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
     final offer = (await preferences.loadOffer()).getOrElse((_) => (changedByUser: false, offeredRuleIds: const {}));
     await preferences.saveOffer((changedByUser: true, offeredRuleIds: offer.offeredRuleIds));
     ActiveFinancialMonth.notifier.value = updated;
+    final current = updated.periodOf(_schedule.periodOf(_today).start);
+    AppAnalytics.log(
+      PeriodEvents.changed(
+        source: widget.source.name,
+        day: start.day?.toString() ?? 'last',
+        transitionDays: current.isTransition ? current.days : 0,
+        movedBudgets: moved.length,
+        keptBudgets: _options.length - moved.length,
+      ),
+    );
     final budgets = _c<BudgetRepository>();
     final templates = _c<BudgetTemplateRepository>();
     final aligned = await AlignRecurringBudgets(
@@ -66,7 +90,7 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
     )(
       templateIds: moved,
       today: _today,
-      transitionEnd: updated.periodOf(_schedule.periodOf(_today).start).end,
+      transitionEnd: current.end,
       start: start,
     );
     _c<LedgerChanges>().notifyChanged(source: this);

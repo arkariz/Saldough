@@ -89,6 +89,54 @@ abstract final class RecurringEvents {
       AnalyticsEvent('recurring_suggestion_action', {'action': action});
 }
 
+/// Peristiwa periode keuangan (FINANCIAL_PERIOD §8A, ADR-038), tanpa nominal
+/// dan tanpa tanggal.
+abstract final class PeriodEvents {
+  PeriodEvents._();
+
+  /// Lembar Awal bulan keuangan terbuka: `plan`, `account`, atau `offer`.
+  static AnalyticsEvent sheetOpened(String source) =>
+      AnalyticsEvent('financial_month_sheet_opened', {'source': source});
+
+  /// Awal bulan keuangan tersimpan. [day] `1`…`28` atau `last`;
+  /// [transitionDays] 0 bila periode berjalan tidak menjadi peralihan.
+  static AnalyticsEvent changed({
+    required String source,
+    required String day,
+    required int transitionDays,
+    required int movedBudgets,
+    required int keptBudgets,
+  }) => AnalyticsEvent('financial_month_changed', {
+    'source': source,
+    'day': day,
+    'transition_days': transitionDays,
+    'moved_budgets': movedBudgets,
+    'kept_budgets': keptBudgets,
+  });
+
+  /// Tawaran awal bulan dari rutin gajian (F2): `shown`, `accepted`, atau
+  /// `dismissed`.
+  static AnalyticsEvent offer(String action) => AnalyticsEvent('financial_month_offer', {'action': action});
+
+  /// Transaksi ditautkan ke kemunculan rutin, oleh pengguna atau otomatis:
+  /// selisih hari kalender antara [transactionDate] dan [occurrenceDate]
+  /// sebagai ember, bukan tanggalnya (batas atribusi P-4).
+  static AnalyticsEvent recurrenceDateGap(DateTime transactionDate, DateTime occurrenceDate) =>
+      AnalyticsEvent('recurrence_date_gap', {'bucket': gapBucket(transactionDate, occurrenceDate)});
+
+  /// `0`, `1-3`, `4-7`, `8-14`, atau `15+` hari, ke arah mana pun.
+  static String gapBucket(DateTime a, DateTime b) {
+    final days = DateTime.utc(a.year, a.month, a.day).difference(DateTime.utc(b.year, b.month, b.day)).inDays.abs();
+    return switch (days) {
+      0 => '0',
+      <= 3 => '1-3',
+      <= 7 => '4-7',
+      <= 14 => '8-14',
+      _ => '15+',
+    };
+  }
+}
+
 /// Peristiwa Rencana R2 (ADR-036 §3.8), tanpa nominal.
 abstract final class PlanEvents {
   PlanEvents._();

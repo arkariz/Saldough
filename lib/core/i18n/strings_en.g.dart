@@ -594,6 +594,7 @@ class _Translations$home$en extends Translations$home$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String flowTitle({required Object period}) => 'Flow ${period}';
 	@override String get loadErrorTitle => 'Home failed to load';
 	@override String get balanceLabel => 'Total balance';
 	@override String walletCount({required Object count}) => 'Active wallets: ${count}';
@@ -1157,9 +1158,23 @@ class _Translations$plan$en extends Translations$plan$id {
 	// Translations
 	@override String get recurringSegmentLabel => 'Recurring';
 	@override String get financialMonthTitle => 'Financial month start';
-	@override String get financialMonthPickerTitle => 'Financial month starts on';
 	@override String financialMonthDay({required Object day}) => 'Day ${day}';
 	@override String get financialMonthLastDay => 'Last day of the month';
+	@override String get financialMonthChange => 'Change financial month start';
+	@override String get financialMonthHint => 'Usually your payday.';
+	@override String financialMonthPreviewTitle({required Object day}) => 'Start on day ${day}';
+	@override String get financialMonthPreviewTitleLastDay => 'Start on the last day';
+	@override String financialMonthPreviewTransition({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.';
+	@override String get financialMonthPreviewPast => 'Earlier periods stay the same.';
+	@override String get financialMonthBudgetsTitle => 'Recurring budgets';
+	@override String financialMonthBudgetsHelp({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.';
+	@override String financialMonthOnDay({required Object day}) => 'day ${day}';
+	@override String get financialMonthOnLastDay => 'the last day';
+	@override String financialMonthBudgetMoved({required Object until, required Object next}) => 'Runs until ${until}, the next starts ${next}';
+	@override String financialMonthBudgetKept({required Object start}) => 'Still starts on ${start}';
+	@override String get financialMonthSelectAll => 'Select all';
+	@override String get financialMonthClearAll => 'Clear all';
+	@override String transitionLabel({required Object days}) => 'Transition period · ${days} days';
 	@override String get thisMonthSegmentLabel => 'This month';
 	@override String unplannedTitle({required Object month}) => 'Unplanned money · ${month}';
 	@override String get incomeRow => 'Income';
@@ -1966,6 +1981,7 @@ extension on TranslationsEn {
 			'freelance.nextExpected' => ({required Object count, required Object date}) => 'Invoices: ${count} · next ${date}',
 			'freelance.paymentWorkRange' => ({required Object range}) => 'Work ${range}',
 			'freelance.paidOffBadge' => 'Paid off',
+			'home.flowTitle' => ({required Object period}) => 'Flow ${period}',
 			'home.loadErrorTitle' => 'Home failed to load',
 			'home.balanceLabel' => 'Total balance',
 			'home.walletCount' => ({required Object count}) => 'Active wallets: ${count}',
@@ -2462,12 +2478,26 @@ extension on TranslationsEn {
 			'recurring.autoRecordedTitle' => 'Recorded automatically',
 			'plan.recurringSegmentLabel' => 'Recurring',
 			'plan.financialMonthTitle' => 'Financial month start',
-			'plan.financialMonthPickerTitle' => 'Financial month starts on',
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
 			'plan.financialMonthLastDay' => 'Last day of the month',
-			'plan.thisMonthSegmentLabel' => 'This month',
+			'plan.financialMonthChange' => 'Change financial month start',
 			_ => null,
 		} ?? switch (path) {
+			'plan.financialMonthHint' => 'Usually your payday.',
+			'plan.financialMonthPreviewTitle' => ({required Object day}) => 'Start on day ${day}',
+			'plan.financialMonthPreviewTitleLastDay' => 'Start on the last day',
+			'plan.financialMonthPreviewTransition' => ({required Object range, required Object days, required Object next}) => 'This period becomes ${range} (${days} days), then ${next}.',
+			'plan.financialMonthPreviewPast' => 'Earlier periods stay the same.',
+			'plan.financialMonthBudgetsTitle' => 'Recurring budgets',
+			'plan.financialMonthBudgetsHelp' => ({required Object next, required Object previous}) => 'Checked ones also start on ${next}. The rest still start on ${previous}.',
+			'plan.financialMonthOnDay' => ({required Object day}) => 'day ${day}',
+			'plan.financialMonthOnLastDay' => 'the last day',
+			'plan.financialMonthBudgetMoved' => ({required Object until, required Object next}) => 'Runs until ${until}, the next starts ${next}',
+			'plan.financialMonthBudgetKept' => ({required Object start}) => 'Still starts on ${start}',
+			'plan.financialMonthSelectAll' => 'Select all',
+			'plan.financialMonthClearAll' => 'Clear all',
+			'plan.transitionLabel' => ({required Object days}) => 'Transition period · ${days} days',
+			'plan.thisMonthSegmentLabel' => 'This month',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
 			'plan.incomeRow' => 'Income',
 			'plan.billsRow' => 'Recurring bills',

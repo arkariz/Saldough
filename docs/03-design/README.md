@@ -54,6 +54,16 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   | `RincianRutin.dc.html` | sama | Rincian rutin (Cicilan iPhone) |
   | `BerandaRutin.dc.html` | `Beranda.dc.html` | Beranda dengan kartu Menunggu dicatat |
   | `CatatUlangi.dc.html` | sama | Bagian Ulangi di Catat |
+  | `AwalBulan.dc.html` | sama | D2 lembar Awal bulan keuangan, contoh B (1 → 25) |
+  | `AwalBulanA.dc.html` | sama | D2 contoh A (25 → 1) |
+  | `AwalBulanBanyak.dc.html` | sama | D2 dengan enam anggaran rutin |
+  | `BulanIniPeralihan.dc.html` | sama | D1 + D3 Bulan ini di periode peralihan |
+  | `BerandaAwal25.dc.html` | sama | D4 Beranda, awal bulan tanggal 25 |
+  | `BerandaPeralihan.dc.html` | sama | D3 + D4 Beranda di periode peralihan |
+
+  Disalin 11 Okt 2026 (T-18.6) bersama komponen design system PeriodHeader,
+  DayPicker, Checkbox, dan PeriodStepper. `AwalBulanEn` dan
+  `BulanIniPeralihanGelap` (varian bahasa dan tema) hanya ada di artefak.
 
   Komponen yang belum masuk design system (sub-tab, kartu perkiraan
   bergaris putus, baris jadwal, grafik saldo tangga `fc-*`, bagian Ulangi)

@@ -11,6 +11,7 @@ void main() {
     expect(appRouteRegistry().registeredKeys.toSet(), {
       'account.page',
       'budget.detail',
+      'budget.financialMonth',
       'freelance.overview',
       'record.sheet',
       'record.edit',

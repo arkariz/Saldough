@@ -148,11 +148,14 @@ class _HomePageState extends State<HomePage> {
           // Kartu tanpa isi disembunyikan, bukan diisi angka nol (FR-HOME-005).
           if (state.hasTransactions) ...[
             const SizedBox(height: AppSpacing.space6),
+            // Judul "Arus {periode}" dan penanda periode peralihan
+            // (PeriodHeader, P-11); di Beranda bukan tombol.
             AppSectionHeader(
-              state.period.name,
+              t.home.flowTitle(period: state.period.name),
               actionLabel: t.appShell.transactionsTabLabel,
               onAction: widget.onShowTransactions,
             ),
+            if (state.period.isTransition) AppPeriodTag(days: state.period.days),
             const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeCashFlow,

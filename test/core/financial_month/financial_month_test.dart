@@ -66,8 +66,8 @@ void main() {
       single(1).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
     );
     expect(startsOnFirst.isTransition, isTrue);
-    expect(startsOnFirst.name, '1 Okt – 24 Okt');
-    expect(startsOnFirst.label, '1 Okt – 24 Okt');
+    expect(startsOnFirst.name, '1 – 24 Okt');
+    expect(startsOnFirst.label, '1 – 24 Okt');
   });
 
   group('periode peralihan (P-3)', () {

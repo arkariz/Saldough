@@ -12,7 +12,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
 <style>
 body{margin:0}
 </style>
@@ -22,13 +22,18 @@ body{margin:0}
     <h1 class="tk-topbar__title">Rencana</h1>
   </header>
   <nav class="tk-subtabs" aria-label="Bagian Rencana">
-    <a class="tk-subtab is-active" href="RencanaBulanIni.dc.html" aria-current="page">Bulan ini</a>
-    <a class="tk-subtab" href="RencanaAnggaran.dc.html">Anggaran</a>
-    <a class="tk-subtab" href="RencanaRutin.dc.html">Rutin</a>
+    <a class="tk-subtab is-active" href="Main.dc.html" aria-current="page">Bulan ini</a>
+    <a class="tk-subtab" href="Anggaran.dc.html">Anggaran</a>
+    <a class="tk-subtab" href="Rutin.dc.html">Rutin</a>
   </nav>
 
-  <main class="tk-body tk-scroll" style="gap: 16px; padding: 16px 16px 32px">
-    <div class="tk-banner" role="status">
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 8px 16px 32px">
+    <div class="tk-period">
+      <a class="tk-period__btn" href="AwalBulan.dc.html" aria-label="{{hd.aria}}">{{hd.label}}<span class="tk-icon">expand_more</span></a>
+      <sc-if value="{{hd.per}}" hint-placeholder-val="{{false}}"><span class="tk-period__tag"><span class="tk-icon">calendar_today</span>Periode peralihan · 24 hari</span></sc-if>
+    </div>
+
+    <div class="tk-banner" role="status" style="margin-top: -8px">
       <span class="tk-icon">warning</span>
       <span class="tk-banner__text">Saldo BCA diperkirakan kurang untuk Cicilan iPhone 10 Okt. Siapkan dana di BCA.</span>
     </div>
@@ -46,10 +51,11 @@ body{margin:0}
         <button class="tk-iconbtn" type="button" aria-label="Apa itu uang nganggur" onClick="{{openInfo}}"><span class="tk-icon tk-icon--sm">info</span></button>
       </div>
       <p class="tk-amt tk-t-amount-hero" style="margin-top: -8px">{{p.total}}</p>
+      <sc-if value="{{p.noPayday}}" hint-placeholder-val="{{false}}"><p class="tk-t-body-sm tk-ink-2" style="margin-top: -8px">Rentang ini tidak memuat gajian.</p></sc-if>
       <div class="inset">
-        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
-        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
-        <a class="inset__row" href="RencanaAnggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
+        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
+        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
+        <a class="inset__row" href="Anggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
         <sc-if value="{{p.hasOutside}}" hint-placeholder-val="{{true}}"><div class="inset__row"><span class="tk-ink-2">Di luar rencana</span><span class="tk-amt tk-t-amount-sm">−Rp57.000</span></div></sc-if>
       </div>
     </section>
@@ -63,7 +69,7 @@ body{margin:0}
         </div>
       </div>
       <div class="est-tiles">
-        <div class="tk-stat"><span class="tk-stat__label">Akhir {{p.short}}</span><span class="tk-amt tk-t-amount">{{g.end}}</span></div>
+        <div class="tk-stat"><span class="tk-stat__label">Akhir {{p.endShort}}</span><span class="tk-amt tk-t-amount">{{g.end}}</span></div>
         <div class="tk-stat"><span class="tk-stat__label">Paling tipis · {{g.lowDate}}</span><span class="tk-amt tk-t-amount {{g.lowCls}}">{{g.low}}</span></div>
       </div>
 
@@ -132,7 +138,7 @@ body{margin:0}
         </div>
       </section>
       <section class="tk-section">
-        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="RencanaRutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="Rutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
         <div class="tk-list">
           <div class="today-rule">hari ini, 2 Okt</div>
           <div class="sched">
@@ -159,10 +165,10 @@ body{margin:0}
   </main>
 
   <nav class="tk-nav" aria-label="Navigasi utama">
-    <a class="tk-nav__item" href="BerandaRutin.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="Beranda.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</button>
     <a class="tk-nav__catat" href="CatatUlangi.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
-    <a class="tk-nav__item is-active" href="RencanaBulanIni.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
+    <a class="tk-nav__item is-active" href="Main.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</button>
   </nav>
 
@@ -170,13 +176,13 @@ body{margin:0}
     <button class="tk-scrim" type="button" aria-label="Tutup" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
     <div class="tk-sheet" role="dialog" aria-label="Uang nganggur" style="position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 24px">
       <div class="tk-sheet__handle"></div>
-      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Uang nganggur · Okt</h2><span style="width: 48px; flex: none"></span></div>
+      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Uang nganggur · {{f.short}}</h2><span style="width: 48px; flex: none"></span></div>
       <div class="formula">
-        <div class="formula__row"><span>Pemasukan terencana</span><span class="tk-amt">+Rp12.000.000</span></div>
-        <div class="formula__row"><span>Tagihan rutin</span><span class="tk-amt">−Rp5.879.000</span></div>
+        <div class="formula__row"><span>Pemasukan terencana</span><span class="tk-amt">{{f.income}}</span></div>
+        <div class="formula__row"><span>Tagihan rutin</span><span class="tk-amt">{{f.bills}}</span></div>
         <div class="formula__row"><span>Anggaran</span><span class="tk-amt">−Rp3.068.500</span></div>
         <div class="formula__row"><span>Di luar rencana (tercatat)</span><span class="tk-amt">−Rp57.000</span></div>
-        <div class="formula__row formula__total"><span>Uang nganggur</span><span class="tk-amt">Rp2.995.500</span></div>
+        <div class="formula__row formula__total"><span>Uang nganggur</span><span class="tk-amt">{{f.total}}</span></div>
       </div>
       <p class="tk-t-body-sm tk-ink-2">Bukan saldo dompet.</p>
     </div>
@@ -186,21 +192,21 @@ body{margin:0}
     <button class="tk-scrim" type="button" aria-label="Tutup" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
     <div class="tk-sheet" role="dialog" aria-label="Rincian saldo dompet" style="position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 24px">
       <div class="tk-sheet__handle"></div>
-      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Saldo dompet akhir Okt ≈</h2><span style="width: 48px; flex: none"></span></div>
+      <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup" onClick="{{close}}"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Saldo dompet akhir {{f.endShort}} ≈</h2><span style="width: 48px; flex: none"></span></div>
       <div class="formula">
         <div class="formula__row"><span>Saldo dompet hari ini</span><span class="tk-amt">Rp6.500.000</span></div>
-        <div class="formula__row"><span>Masuk terjadwal</span><span class="tk-amt">+Rp12.000.000</span></div>
-        <div class="formula__row"><span>Sisa tagihan rutin</span><span class="tk-amt">−Rp3.979.000</span></div>
+        <div class="formula__row"><span>Masuk terjadwal</span><span class="tk-amt">{{f.inSched}}</span></div>
+        <div class="formula__row"><span>Sisa tagihan rutin</span><span class="tk-amt">{{f.billsLeft}}</span></div>
         <div class="formula__row"><span>Sisa anggaran</span><span class="tk-amt">−Rp2.700.000</span></div>
-        <sc-if value="{{jajan}}" hint-placeholder-val="{{true}}"><div class="formula__row"><span>Jajan harian, ≈Rp30.000 × 30 hari</span><span class="tk-amt">−Rp900.000</span></div></sc-if>
-        <div class="formula__row formula__total"><span>Akhir Oktober</span><span class="tk-amt">{{rincianEnd}}</span></div>
+        <sc-if value="{{jajan}}" hint-placeholder-val="{{true}}"><div class="formula__row"><span>Jajan harian, ≈Rp30.000 × {{f.jajanDays}} hari</span><span class="tk-amt">{{f.jajan}}</span></div></sc-if>
+        <div class="formula__row formula__total"><span>{{f.endLong}}</span><span class="tk-amt">{{rincianEnd}}</span></div>
       </div>
       <label class="tk-row tk-row--compact" style="padding: 8px 0"><span class="tk-row__main"><span class="tk-row__title">Hitung jajan harian</span><span class="tk-row__sub">Belanja kecil di luar rencana</span></span><span class="tk-switch"><input type="checkbox" checked="{{jajan}}" onChange="{{toggleJajan}}" aria-label="Hitung jajan harian"><span class="tk-switch__track"></span></span></label>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"peralihan":{"editor":"boolean","default":false,"section":"Periode keuangan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
@@ -208,10 +214,13 @@ class Component extends DCLogic {
     const wallet = s.wallet || 'all';
     const sheet = s.sheet || '';
     const jajan = s.jajan !== false;
+    const per = !!this.props.peralihan;
     const plans = {
-      okt: { short: 'Okt', est: false, total: 'Rp2.995.500', income: '+Rp12.000.000', bills: '−Rp5.879.000', budget: '−Rp3.068.500', hasOutside: true },
-      nov: { short: 'Nov', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false },
-      des: { short: 'Des', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false }
+      okt: per
+        ? { short: '1 – 24 Okt', endShort: '24 Okt', est: false, total: '−Rp8.204.500', income: 'Rp0', bills: '−Rp5.079.000', budget: '−Rp3.068.500', hasOutside: true, noPayday: true }
+        : { short: 'Okt', endShort: 'Okt', est: false, total: 'Rp2.995.500', income: '+Rp12.000.000', bills: '−Rp5.879.000', budget: '−Rp3.068.500', hasOutside: true },
+      nov: { short: 'Nov', endShort: 'Nov', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false },
+      des: { short: 'Des', endShort: 'Des', est: true, total: '≈Rp3.052.500', income: '≈+Rp12.000.000', bills: '≈−Rp5.879.000', budget: '≈−Rp3.068.500', hasOutside: false }
     };
     const g = this.forecast(month, wallet, jajan, s.sel);
     const pick = (key, cur, field) => ({
@@ -219,8 +228,20 @@ class Component extends DCLogic {
       pressed: cur === key ? 'true' : 'false',
       pick: () => this.setState({ [field]: key, sel: null })
     });
+    const heads = per
+      ? { okt: '1 – 24 Okt', nov: '25 Okt – 24 Nov', des: '25 Nov – 24 Des' }
+      : { okt: 'Oktober', nov: 'November', des: 'Desember' };
+    const f = per
+      ? { short: '1 – 24 Okt', income: 'Rp0', bills: '−Rp5.079.000', total: '−Rp8.204.500', endShort: '24 Okt', inSched: 'Rp0', billsLeft: '−Rp3.179.000', jajanDays: '23', jajan: '−Rp690.000', endLong: 'Akhir 24 Okt' }
+      : { short: 'Okt', income: '+Rp12.000.000', bills: '−Rp5.879.000', total: 'Rp2.995.500', endShort: 'Okt', inSched: '+Rp12.000.000', billsLeft: '−Rp3.979.000', jajanDays: '30', jajan: '−Rp900.000', endLong: 'Akhir Oktober' };
     return {
       theme: this.props.dark ? 'dark' : 'light',
+      hd: {
+        label: heads[month],
+        per: per && month === 'okt',
+        aria: heads[month] + (per && month === 'okt' ? ', periode peralihan 24 hari' : '') + '. Ubah awal bulan keuangan'
+      },
+      f: f,
       p: plans[month],
       g: g,
       r: g.read,
@@ -243,7 +264,7 @@ class Component extends DCLogic {
 
   // Daily end-of-day balance projection. Okt day 1 is recorded; everything after is an estimate.
   series(mk, w, jajan) {
-    const M = { okt: { n: 31 }, nov: { n: 30 }, des: { n: 31 } };
+    const M = { okt: { n: this.props.peralihan ? 24 : 31 }, nov: { n: 30 }, des: { n: 31 } };
     const n = M[mk].n;
     const rutin = [
       { d: 1, name: 'Kos', amt: -1900000 },
@@ -258,7 +279,7 @@ class Component extends DCLogic {
     if (mk === 'okt') {
       ev = rutin.filter((e) => e.name !== 'Kos').map((e) => e.name === 'Netflix' ? Object.assign({}, e, { d: 2, name: 'Netflix, menunggu' }) : e);
       start = w === 'all' ? 6500000 : 2820000;
-      spendTotal = w === 'all' ? 2700000 + (jajan ? 900000 : 0) : 1950000;
+      spendTotal = w === 'all' ? 2700000 + (jajan ? 30000 * (n - 1) : 0) : 1950000;
       spendFrom = 2;
     } else {
       const prev = this.series(mk === 'nov' ? 'okt' : 'nov', w, jajan);

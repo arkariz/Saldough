@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block");
 
 /* Tanukonomy components. Tokens come from tokens.css (var(--name)). Class prefix: tk-. */
 
@@ -267,3 +267,124 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px; }
 .tk-demo--col { flex-direction: column; align-items: stretch; }
 .tk-demo--surface { background: var(--surface); }
+
+/* ---- Periode keuangan dan Analisis (Fase 18–19) ---- */
+
+/* Sub-tabs: segments of one tab (Rencana: Bulan ini | Anggaran | Rutin; Riwayat: Daftar | Analisis). Navigation, not a filter. */
+.tk-subtabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); flex: none; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
+.tk-subtab { position: relative; height: 48px; padding: 0 8px; border: 0; background: none; color: var(--ink-2); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; text-decoration: none; display: grid; place-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tk-subtab.is-active { color: var(--ink); }
+.tk-subtab.is-active::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 40px; height: 4px; margin-left: -20px; background: var(--brand); }
+
+/* Period head: the financial period as a tappable title (opens "Awal bulan keuangan"), plus the transition badge. */
+.tk-period { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 48px; }
+.tk-period__btn { display: inline-flex; align-items: center; gap: 4px; min-height: 48px; margin: 0 0 0 -8px; padding: 0 8px; border: 0; background: transparent; color: var(--ink); font-size: 18px; line-height: 26px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer; text-align: left; }
+.tk-period__btn .tk-icon { font-size: 20px; color: var(--ink-2); }
+.tk-period__btn:active { background: var(--surface-2); }
+.tk-period__note { flex-basis: 100%; margin-top: -4px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+
+/* Day-of-month picker: 1–28 in rows of seven, then "Last day of the month" across the row. */
+.tk-daygrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.tk-day { height: 48px; padding: 3px 2px; border: 0; background: none; color: var(--ink); cursor: pointer; display: grid; }
+.tk-day__n { display: grid; place-items: center; background: var(--surface-2); font-size: 16px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tk-day:active .tk-day__n { background: var(--surface-3); }
+.tk-day.is-selected .tk-day__n { background: var(--brand-soft); color: var(--brand-ink); box-shadow: inset 0 0 0 2px var(--brand); }
+.tk-day--wide { grid-column: 1 / -1; }
+.tk-day--wide .tk-day__n { font-size: 14px; line-height: 20px; }
+
+/* Inset: a quiet block inside a card or sheet (preview text, plan vs actual). */
+.tk-inset { background: var(--surface-2); padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+/* Period timeline: earlier period (unchanged) → transition period → next period, widths by days. */
+.tk-ptl { display: flex; flex-direction: column; gap: 4px; }
+.tk-ptl__bar { display: flex; gap: 4px; height: 8px; }
+.tk-ptl__seg { min-width: 8px; background: repeating-linear-gradient(90deg, var(--seg) 0 6px, transparent 6px 8px); }
+.tk-ptl__seg--past { --seg: var(--line-strong); }
+.tk-ptl__seg--now { --seg: var(--ink); }
+.tk-ptl__seg--next { --seg: var(--line-strong); }
+.tk-ptl__ticks { position: relative; height: 16px; }
+.tk-ptl__tick { position: absolute; top: 0; transform: translateX(-50%); font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Period stepper (Riwayat, Analisis): looking back one period at a time; the forward arrow stops at the current period. */
+.tk-stepper { display: flex; align-items: center; gap: 4px; margin: 0 -8px; }
+.tk-stepper__label { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.tk-stepper__title { font-size: 16px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tk-stepper__sub { font-size: 14px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tk-iconbtn[disabled] { opacity: var(--opacity-disabled, 0.4); pointer-events: none; }
+
+/* Filter chip with a menu (wallet filter). */
+.tk-chip--menu { padding-right: 8px; }
+
+/* Comparison line: neutral by design. Direction comes from the arrow and the words, never from color. */
+.tk-cmp { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tk-cmp .tk-icon { font-size: 16px; color: var(--ink-2); }
+.tk-cmp b { font-weight: 600; color: var(--ink); }
+
+/* Share bar: one category's part of the total. Neutral ink-2 squares; the percent always sits next to it. */
+.tk-share { position: relative; flex: 1; min-width: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--track) 0 6px, transparent 6px 8px); }
+.tk-share__fill { position: absolute; left: 0; top: 0; bottom: 0; max-width: 100%; background: repeating-linear-gradient(90deg, var(--ink-2) 0 6px, transparent 6px 8px); }
+.tk-share__pct { flex: none; width: 40px; text-align: right; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* Share row: a ListRow whose main column holds title + amount, the share bar + percent, then the comparison. */
+.tk-row--share { align-items: flex-start; }
+.tk-row--share .tk-tile { margin-top: 2px; }
+.tk-row__line { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.tk-row__line .tk-row__title { flex: 1; min-width: 0; }
+.tk-row--share .tk-row__main { gap: 6px; }
+.tk-row--share .tk-row__sub { white-space: normal; }
+.tk-row--share .tk-row__title.is-wrap { white-space: normal; }
+.tk-row--child { padding-left: 68px; min-height: 56px; }
+.tk-row--child .tk-row__title { font-weight: 500; }
+
+/* Info line: something shown beside the totals but not part of them (transfers). */
+.tk-infoline { display: flex; align-items: center; gap: 12px; padding: 0 4px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-infoline .tk-tile { width: 32px; height: 32px; }
+.tk-infoline .tk-tile img { width: 32px; height: 32px; }
+
+/* Trend: six periods, income and expense as paired columns of 6px squares, net as text under each period. */
+.tk-trend { position: relative; width: 100%; }
+.tk-trend svg { display: block; width: 100%; overflow: visible; }
+.tk-trend__grid { fill: none; stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; }
+.tk-trend__base { fill: none; stroke: var(--ink-3); stroke-width: 1; shape-rendering: crispEdges; }
+.tk-trend__sel { fill: var(--surface-2); }
+.tk-trend__in { fill: var(--positive); shape-rendering: crispEdges; }
+.tk-trend__out { fill: var(--ink); shape-rendering: crispEdges; }
+.tk-trend__one { fill: var(--ink-2); shape-rendering: crispEdges; }
+.tk-trend__y { position: absolute; right: 0; transform: translateY(-50%); font-size: 11px; line-height: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; pointer-events: none; }
+.tk-trend__cols { position: absolute; left: 0; top: 0; bottom: 0; display: grid; }
+.tk-trend__col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 0; padding: 0 0 2px; border: 0; background: none; cursor: pointer; color: var(--ink-2); font: inherit; min-width: 0; }
+.tk-trend__x { font-size: 12px; line-height: 16px; font-weight: 600; }
+.tk-trend__net { font-size: 11px; line-height: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tk-trend__days { font-size: 11px; line-height: 14px; color: var(--ink-3); white-space: nowrap; }
+.tk-trend__col.is-selected { color: var(--ink); }
+.tk-trend__col.is-selected .tk-trend__x { font-weight: 700; }
+.tk-trend__col:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tk-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; line-height: 16px; color: var(--ink-2); }
+.tk-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.tk-legend i { display: inline-block; width: 8px; height: 8px; }
+.tk-legend .is-in { background: var(--positive); }
+.tk-legend .is-out { background: var(--ink); }
+.tk-legend .is-one { background: var(--ink-2); }
+.tk-readout { background: var(--surface-2); padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.tk-readout__row { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+
+/* Pixel corners for the new controls */
+:is(.tk-period__btn, .tk-day__n) { --u: var(--pixel-step-sm, 2px); border-radius: 0; clip-path: polygon(0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0, calc(100% - var(--u) * 2) 0, calc(100% - var(--u) * 2) var(--u), calc(100% - var(--u)) var(--u), calc(100% - var(--u)) calc(var(--u) * 2), 100% calc(var(--u) * 2), 100% calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u)), calc(100% - var(--u) * 2) calc(100% - var(--u)), calc(100% - var(--u) * 2) 100%, calc(var(--u) * 2) 100%, calc(var(--u) * 2) calc(100% - var(--u)), var(--u) calc(100% - var(--u)), var(--u) calc(100% - var(--u) * 2), 0 calc(100% - var(--u) * 2)); }
+.tk-period__tag { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tk-period__tag .tk-icon { font-size: 16px; }
+
+/* Card door: the upper part of a card that opens another screen, while the rest of the card keeps its own link (Beranda › Arus → Analisis). */
+.tk-card__door { display: flex; align-items: center; gap: 8px; padding: 16px 12px 0 16px; color: inherit; text-decoration: none; cursor: pointer; }
+.tk-card__door:active { background: var(--surface-2); }
+
+/* Checkbox: pick many of many (which recurring budgets move). The whole row is the target; the box sits at the start. */
+.tk-check { position: relative; width: 24px; height: 24px; flex: none; display: inline-block; }
+.tk-check input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.tk-check__box { position: absolute; inset: 0; display: grid; place-items: center; background: var(--surface); box-shadow: inset 0 0 0 2px var(--line-strong); color: transparent; --u: var(--pixel-step-sm, 2px); clip-path: polygon(0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0, calc(100% - var(--u) * 2) 0, calc(100% - var(--u) * 2) var(--u), calc(100% - var(--u)) var(--u), calc(100% - var(--u)) calc(var(--u) * 2), 100% calc(var(--u) * 2), 100% calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u) * 2), calc(100% - var(--u)) calc(100% - var(--u)), calc(100% - var(--u) * 2) calc(100% - var(--u)), calc(100% - var(--u) * 2) 100%, calc(var(--u) * 2) 100%, calc(var(--u) * 2) calc(100% - var(--u)), var(--u) calc(100% - var(--u)), var(--u) calc(100% - var(--u) * 2), 0 calc(100% - var(--u) * 2)); }
+.tk-check__box .tk-icon { font-size: 20px; font-variation-settings: "FILL" 0, "wght" 600, "GRAD" 0, "opsz" 20; }
+.tk-check input:checked + .tk-check__box { background: var(--brand); box-shadow: none; color: var(--on-brand); }
+.tk-check input:focus-visible + .tk-check__box { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tk-row--check { align-items: flex-start; }
+.tk-row--check .tk-check { margin-top: 2px; }
+.tk-row--check .tk-row__sub { white-space: normal; }
+.tk-list--check .tk-row + .tk-row::before { left: 52px; }

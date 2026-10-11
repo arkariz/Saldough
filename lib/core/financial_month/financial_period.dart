@@ -32,8 +32,15 @@ final class FinancialPeriod extends Equatable {
   /// (FINANCIAL_PERIOD P-11).
   bool get isCalendarMonth => start.day == 1 && !isTransition;
 
-  /// Rentang tanggal berspasi, mis. "25 Okt – 24 Nov".
-  String get rangeLabel => '${CycleMonthFormatter.formatDayMonth(start)} – ${CycleMonthFormatter.formatDayMonth(lastDay)}';
+  /// Rentang tanggal berspasi (`writing.md`): "25 Okt – 24 Nov", atau
+  /// "1 – 24 Okt" bila di bulan yang sama.
+  String get rangeLabel {
+    final last = lastDay;
+    final from = start.year == last.year && start.month == last.month
+        ? '${start.day}'
+        : CycleMonthFormatter.formatDayMonth(start);
+    return '$from – ${CycleMonthFormatter.formatDayMonth(last)}';
+  }
 
   /// Label: "Oktober 2026" bila [isCalendarMonth], selain itu [rangeLabel].
   String get label => isCalendarMonth

@@ -17,4 +17,9 @@ abstract final class BudgetRouteKeys {
   /// Rincian satu anggaran: dari tab Anggaran dan dari baris "Anggaran" di
   /// rincian transaksi (T-4.11).
   static const detail = RouteKey<BudgetDetailInput>('budget.detail');
+
+  /// Lembar Awal bulan keuangan (ADR-038, FINANCIAL_PERIOD F1): dari kepala
+  /// Rencana › Bulan ini dan dari Akun. Selesai dengan `true` bila disimpan.
+  /// Milik `budget` karena menyimpan juga memindah anggaran rutin.
+  static const financialMonth = RouteKey<EmptyInput>('budget.financialMonth');
 }

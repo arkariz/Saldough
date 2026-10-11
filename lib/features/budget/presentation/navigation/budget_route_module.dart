@@ -6,6 +6,7 @@ import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
 import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/budget/presentation/pages/budget_detail_page.dart';
+import 'package:saldough/features/budget/presentation/pages/financial_month_page.dart';
 import 'package:state_management/state_management.dart';
 
 /// Modul rute fitur `budget` (ADR-030 §3.3). Rincian anggaran memasang
@@ -37,6 +38,11 @@ final class BudgetRouteModule extends FeatureRouteModule {
           },
         );
       },
+    ),
+    RouteNode.typed<EmptyInput>(
+      key: BudgetRouteKeys.financialMonth,
+      transition: RouteTransition.slideFromBottom,
+      builder: (context, _) => const FinancialMonthPage(),
     ),
   ];
 }

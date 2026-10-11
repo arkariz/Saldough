@@ -308,7 +308,15 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       _ => null,
     };
     if (transaction == null) return;
-    await _save(transaction, emit, _effectSaved(t.recurring.recordedMessage(name: _nameOf(event.rule))));
+    await _save(
+      transaction,
+      emit,
+      _effectSaved(t.recurring.recordedMessage(name: _nameOf(event.rule))),
+      // Tautan oleh pengguna dengan tanggal yang bisa digeser (gajian maju):
+      // selisihnya mengukur batas atribusi 7 hari (FINANCIAL_PERIOD §8A,
+      // ADR-038 §8, T-18.14).
+      onSuccess: () => AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, event.occurrenceDate)),
+    );
   }
 
   String _recordedAndScheduledMessage(RecurringRule rule) {
@@ -465,13 +473,19 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     toWalletId: e.toWalletId,
   );
 
-  Future<void> _save(Transaction transaction, Emitter<RecordState> emit, UiEffect onSaved) async {
+  Future<void> _save(
+    Transaction transaction,
+    Emitter<RecordState> emit,
+    UiEffect onSaved, {
+    void Function()? onSuccess,
+  }) async {
     emit(state.copyWith(isSaving: true));
     final result = await _recordTransaction(transaction);
     switch (result) {
       case Left(value: final failure):
         emit(state.copyWith(isSaving: false, effect: _effectError(failure)));
       case Right():
+        onSuccess?.call();
         emit(state.copyWith(isSaving: false, saveCount: state.saveCount + 1, effect: onSaved));
     }
   }

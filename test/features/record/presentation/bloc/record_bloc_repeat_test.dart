@@ -2,6 +2,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/record/presentation/bloc/record_bloc.dart';
 import 'package:saldough/features/record/presentation/widgets/record_repeat_field.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -172,6 +173,40 @@ void main() {
     expect(recorded.amount, 23450000);
     expect(recorded.recurrence, RecurrenceLink(ruleId: 'listrik', occurrenceDate: DateTime(2026, 9, 5)));
     expect(read(await rules.listRules()), isEmpty, reason: 'Ubah dulu tidak mengubah rutin');
+  });
+
+  test('Ubah dulu mengirim recurrence_date_gap: tanggal sama 0, gajian maju 2 hari 1-3 (T-18.14)', () async {
+    final events = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = (event) {
+      if (event.name == 'recurrence_date_gap') events.add(event);
+    };
+    addTearDown(() => AppAnalytics.debugSink = null);
+    final gaji = RecurringRule(
+      id: 'gaji',
+      kind: RecurringKind.income,
+      amount: 1200000000,
+      walletId: 'bca',
+      note: 'Gaji',
+      schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(2026, 9, 25)),
+    );
+    for (final (occurrence, paid) in [
+      (DateTime(2026, 9, 25), DateTime(2026, 9, 25, 9)),
+      (DateTime(2026, 10, 25), DateTime(2026, 10, 23, 9)),
+    ]) {
+      final before = bloc.state.saveCount;
+      bloc.add(
+        RecordOccurrenceRecorded(
+          rule: gaji,
+          occurrenceDate: occurrence,
+          recorded: IncomeRecorded(walletId: 'bca', amount: 1200000000, date: paid, note: 'Gaji'),
+        ),
+      );
+      await settle(before);
+    }
+    expect(events, [
+      const AnalyticsEvent('recurrence_date_gap', {'bucket': '0'}),
+      const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3'}),
+    ]);
   });
 
   test('Ubah rutin: hanya rutin yang berubah; jadwal lama dipertahankan bila tanggalnya kemunculan', () async {

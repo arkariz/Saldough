@@ -79,7 +79,7 @@ Terakhir diperbarui: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 ba
 | 15 — Rencana dan rutin, R1 ([ADR-035](../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md), Accepted) | 19 | 16 | Berjalan sejak 2 Okt 2026 -- ADR-035 disetujui pemilik; kode R1a dan R1b selesai; perbaikan hasil verifikasi emulator T-15.15–15.18 selesai 4 Okt 2026; sisa T-15.9/15.14 (perangkat nyata) dan T-15.19 (poles teks) |
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
-| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 14 | 12 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, 13 Lulus 2 Gagal); T-18.13 selesai (nama periode kartu Beranda) |
+| 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 14 | 13 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 verifikasi perangkat berjalan (QA 11 Okt 2026, 13 Lulus 2 Gagal); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu) |
 | 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
@@ -3759,7 +3759,7 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       karena `PlanForecastRow` membangun bloc dengan jam nyata
       (`DateTime.now` lewat `PlanScope`), sehingga kartunya tidak bisa
       dimunculkan secara pasti di uji widget.
-- [ ] **T-18.14** `recurrence_date_gap` saat kemunculan dicatat lewat Ubah
+- [x] **T-18.14** `recurrence_date_gap` saat kemunculan dicatat lewat Ubah
       dulu (temuan T-18.9 V15, S3). Langkah: rutin Gaji tanggal 25, jam 26
       Okt, Gaji 25 Okt → Ubah dulu → tanggal 23 Okt → simpan. Harapan:
       `recurrence_date_gap {bucket: 1-3}` (FINANCIAL_PERIOD §8A: transaksi
@@ -3768,6 +3768,15 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       tautan otomatis notifikasi. Ubah dulu (`RecordOccurrenceRecorded` di
       `record_bloc.dart`) adalah jalur utama gajian maju, jadi kriteria
       tinjau ulang ADR-038 §8 tidak terukur tanpanya.
+      **Selesai 11 Okt 2026.** `_onOccurrenceRecorded` mengirim
+      `recurrence_date_gap` sesudah transaksi tersimpan (lewat `onSuccess`
+      baru di `_save`; gagal simpan tidak mengirim). Uji bloc di
+      `record_bloc_repeat_test`: Ubah dulu bertanggal sama → `0`, gaji 25 Okt
+      dibayar 23 Okt → `1-3`. Catat satu ketuk dan Catat semua (selisih
+      selalu 0) **tidak** ikut mengirim: §8A menulis "ditautkan", dan nol
+      yang dibuat sistem akan menenggelamkan sebaran yang ingin diukur.
+      Bila pemilik ingin keduanya ikut, tinggal menambah panggilan di jalur
+      itu.
 
 ## Fase 19: Analisis keuangan (R1)
 

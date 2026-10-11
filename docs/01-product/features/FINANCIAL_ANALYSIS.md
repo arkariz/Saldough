@@ -308,7 +308,11 @@ keterbacaan; di kode semuanya `int` sen.
   **≥20% dan ≥Rp50.000** (dua ambang, pola W3; diputuskan KT-A3), naik
   maupun turun. Paling banyak tiga, urut selisih nominal terbesar. Kalimat:
   "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan" / "… lebih rendah …".
-  Tidak ada sorotan bila tidak ada bulan pembanding.
+  Tidak ada sorotan bila tidak ada bulan pembanding. Hanya kategori yang
+  bernominal > 0 di periode terpilih **dan** rata-ratanya > 0 yang bisa
+  disorot: kategori "baru bulan ini" tidak disorot (cukup labelnya), dan
+  kategori yang tidak muncul di periode itu tidak dibahas (keputusan PO
+  11 Okt 2026, saat menyusun rencana uji T-19.7).
 - **B-8 Persen.** Persen = nominal kategori ÷ total jenisnya × 100, dibulatkan
   setengah ke atas ke bilangan bulat. Nilai di atas 0 dan di bawah 0,5%
   tampil "<1%". Jumlah persen yang tampil **tidak dipaksa 100** (contoh §10

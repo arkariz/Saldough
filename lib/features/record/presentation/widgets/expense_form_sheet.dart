@@ -136,6 +136,15 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   @override
   void initState() {
     super.initState();
+    _prefill();
+    // Ubah dulu kemunculan rutin tertaut: kolom pos menampilkan pos
+    // kemunculannya, dan yang tampil itulah yang tersimpan (T-18.16).
+    if (widget.occurrence case final occurrence?) {
+      _budgetItemId ??= budgetItemForOccurrence(occurrence.rule, occurrence.date, widget.budgetItems);
+    }
+  }
+
+  void _prefill() {
     final tx = widget.initial ?? widget.prefill;
     final draft = widget.draft;
     if (tx == null && draft != null) {

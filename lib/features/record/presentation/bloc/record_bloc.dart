@@ -279,15 +279,11 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
   }
 
   /// Ubah dulu: transaksi dari isian formulir, tertaut ke kemunculannya.
-  /// Isian CATAT dipakai apa adanya (termasuk pos anggaran).
+  /// Isian CATAT dipakai apa adanya, termasuk pos anggaran: formulir sudah
+  /// mengisi pos kemunculan rutin tertaut (T-18.16), jadi "Tanpa anggaran"
+  /// yang dipilih pengguna tetap tanpa anggaran.
   Future<void> _onOccurrenceRecorded(RecordOccurrenceRecorded event, Emitter<RecordState> emit) async {
     final link = RecurrenceLink(ruleId: event.rule.id, occurrenceDate: event.occurrenceDate);
-    // Rutin tertaut pos: transaksinya masuk pos periode itu (ADR-036 §3.4).
-    String? linkedItem;
-    if (event.recorded case ExpenseRecorded(budgetItemId: null) when event.rule.budgetItemKey != null) {
-      final options = (await _budgetItemCatalog.listOptions()).getOrElse((_) => const []);
-      linkedItem = budgetItemForOccurrence(event.rule, event.occurrenceDate, options);
-    }
     final transaction = switch (event.recorded) {
       final IncomeRecorded e => IncomeTransaction(
         id: _newId(),
@@ -306,7 +302,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         note: e.note,
         categoryId: e.categoryId,
         walletId: e.walletId,
-        budgetItemId: e.budgetItemId ?? linkedItem,
+        budgetItemId: e.budgetItemId,
         sourceIconId: e.sourceIconId,
         recurrence: link,
       ),

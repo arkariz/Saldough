@@ -32,8 +32,8 @@ yang belum ada ditandai "perlu rupa dari ui-ux-designer".
    mengetahui keadaan pembaruan kecil dipilih engineer.
 4. **"Apa yang baru" tampil sekali** sesudah versi atau pembaruan kecil yang
    punya catatan terpasang, lalu bisa dibuka lagi dari Akun (KT-U3).
-   Catatannya harus terbaca tanpa koneksi dan tersedia juga untuk pembaruan
-   kecil; tempat dan cara menyimpannya dipilih engineer.
+   Catatan tersedia untuk versi baru maupun pembaruan kecil; tempat, cara
+   menyimpan, dan perlu tidaknya koneksi untuk membacanya dipilih engineer.
 5. **Tidak pernah mengganggu pencatatan.** Pengumuman hanya di Beranda dan
    Akun, tidak pernah di tengah Catat, suara, atau lembar lain; tidak muncul
    selama onboarding atau tur; kalah prioritas dari banner kotak masuk
@@ -229,7 +229,7 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | B-8 | Banner pembaruan kecil tampil paling banyak sekali per nomor tambalan. |
 | B-9 | Banner pembaruan kecil tidak menyebut isinya; isinya tampil lewat Apa yang baru sesudah dibuka ulang. (Bila engineer menemukan cara membaca isinya lebih awal, ini boleh ditinjau ulang.) |
 | B-10 | Apa yang baru tampil otomatis paling banyak sekali per (build, tambalan), tidak pada pemasangan pertama, dan tidak selama onboarding atau tur. |
-| B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, terbaca tanpa koneksi, paling banyak tiga butir, masing-masing satu kalimat manfaat. Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
+| B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, paling banyak tiga butir, masing-masing satu kalimat manfaat. Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
 | B-12 | Lompat beberapa versi (mis. `0.5.0+6` → `0.7.0+9`): lembar menggabungkan catatan semua versi di antaranya, terbaru di atas, paling banyak enam butir; sisanya di Akun. |
 | B-13 | Inti aplikasi tetap luring: tidak ada alur pencatatan yang menunggu hasil pengecekan pembaruan. Pengecekan berjalan sesudah Beranda tampil, tidak menunda pembukaan. |
 
@@ -348,6 +348,7 @@ yang baru**.
 | Penguji keluar dari program closed testing | Play tidak menawarkan build tes; tidak ada banner. |
 | Pembaruan kecil ditarik pemilik (rollback) | Nomor pembaruan kecil berjalan bisa turun; versi terakhir yang dilihat tidak diturunkan, tidak ada lembar, tidak ada galat. |
 | Versi baru terpasang sementara pembaruan kecil build lama masih "siap" | Pembaruan kecil build lama tidak diumumkan lagi; hitungan "sudah diumumkan" berlaku per build. |
+| Catatan belum bisa didapat saat versi baru pertama dibuka (mis. luring, bila mekanisme engineer butuh koneksi) | Tidak ada galat; lembar ditunda dan tampil sekali begitu catatannya tersedia. Versi terakhir yang dilihat baru diperbarui sesudah lembar tampil atau dipastikan tidak ada catatan. |
 | Bahasa aplikasi diganti sesudah lembar tampil | Akun menampilkan catatan dalam bahasa baru; lembar tidak tampil ulang. |
 | Ingatan aplikasi (versi terakhir dilihat) gagal dibaca | Anggap pemasangan pertama: tidak menampilkan lembar (lebih baik terlewat daripada tampil berulang). |
 | Pengguna menghapus data aplikasi | Sama dengan pemasangan pertama. |
@@ -399,8 +400,9 @@ Batasan yang wajib dipenuhi pilihan apa pun:
 - Alur F1–F4 dan aturan B-1–B-13 tetap berlaku (penyesuaian F1 bila
   mekanismenya tidak mengunduh di latar sudah diatur di F1 langkah 2).
 - Inti aplikasi tetap luring dan tidak melambat (NFR-REL-001, B-13).
-- Catatan Apa yang baru terbaca luring dan tersedia juga untuk pembaruan
-  kecil (B-11).
+- Catatan Apa yang baru tersedia untuk versi baru maupun pembaruan kecil
+  (B-11); boleh luring atau daring, asal kegagalan mendapatkannya tidak
+  menampilkan galat dan tidak membuat lembar terlewat (§11).
 - Tidak ada data keuangan yang keluar perangkat; data baru yang keluar
   disebut di ADR (§9).
 - Semua aturan bisa diuji tanpa perangkat (sumber pembaruan bisa diganti

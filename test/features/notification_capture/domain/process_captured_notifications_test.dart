@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
@@ -312,6 +313,9 @@ void main() {
       await rules.saveRule(kopi());
       await enable(AutoRecordLevel.whenComplete);
       gateway.queue = [notif('a', payment)];
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
       await matching(rules, log)();
 
       final tx = (await ledgerNow()).single;
@@ -319,6 +323,8 @@ void main() {
         tx.recurrence,
         RecurrenceLink(ruleId: 'kopi', occurrenceDate: DateTime(2026, 9, 29), linkedBy: RecurrenceLinkedBy.auto),
       );
+      // Tautan otomatis lewat jalur yang sama (T-18.11).
+      expect(events, contains(PeriodEvents.recurrenceDateGap(tx.date, DateTime(2026, 9, 29))));
       final entry = (await log.list(now)).getOrElse((_) => []).single;
       expect(entry.transactionId, tx.id);
 

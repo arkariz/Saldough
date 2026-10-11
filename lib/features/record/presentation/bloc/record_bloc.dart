@@ -344,6 +344,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
       changedByUser: offer.changedByUser,
       offeredRuleIds: {...offer.offeredRuleIds, rule.id},
     ));
+    AppAnalytics.log(PeriodEvents.offer('shown'));
     return start;
   }
 
@@ -358,22 +359,31 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
         final day? => t.plan.financialMonthOnDay(day: day),
         null => t.plan.financialMonthOnLastDay,
       };
-      ScaffoldMessenger.of(context)
-        ..showSnackBar(SnackBar(content: Text(message, style: TextStyle(color: colors.bg)), backgroundColor: colors.ink))
-        ..showSnackBar(
-          actionSnackBar(
-            context,
-            content: Text(t.plan.financialMonthOffer(start: day), style: TextStyle(color: colors.bg)),
-            backgroundColor: colors.ink,
-            action: SnackBarAction(
-              label: t.plan.financialMonthOfferAction,
-              textColor: colors.brand,
-              onPressed: () => unawaited(
-                navigator.context.pushRoute(BudgetRouteKeys.financialMonth, FinancialMonthInput(initial: start)),
+      final messenger = ScaffoldMessenger.of(context)
+        ..showSnackBar(SnackBar(content: Text(message, style: TextStyle(color: colors.bg)), backgroundColor: colors.ink));
+      final offer = messenger.showSnackBar(
+        actionSnackBar(
+          context,
+          content: Text(t.plan.financialMonthOffer(start: day), style: TextStyle(color: colors.bg)),
+          backgroundColor: colors.ink,
+          action: SnackBarAction(
+            label: t.plan.financialMonthOfferAction,
+            textColor: colors.brand,
+            onPressed: () => unawaited(
+              navigator.context.pushRoute(
+                BudgetRouteKeys.financialMonth,
+                FinancialMonthInput(source: FinancialMonthSource.offer, initial: start),
               ),
             ),
           ),
-        );
+        ),
+      );
+      unawaited(
+        offer.closed.then(
+          (reason) =>
+              AppAnalytics.log(PeriodEvents.offer(reason == SnackBarClosedReason.action ? 'accepted' : 'dismissed')),
+        ),
+      );
     },
   );
 

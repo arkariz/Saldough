@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -15,6 +16,7 @@ import 'package:saldough/features/budget/domain/entities/budget_schedule.dart';
 import 'package:saldough/features/budget/domain/entities/budget_template.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_repository.dart';
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
+import 'package:saldough/features/budget/presentation/navigation/budget_route_keys.dart';
 import 'package:saldough/features/budget/presentation/pages/financial_month_page.dart';
 import 'package:saldough/features/budget/presentation/widgets/financial_month_sheet.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -207,7 +209,7 @@ void main() {
 
     tearDown(() => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial);
 
-    Future<void> open(WidgetTester tester) async {
+    Future<void> open(WidgetTester tester, {FinancialMonthSource source = FinancialMonthSource.plan}) async {
       tester.view.physicalSize = const Size(360, 1600);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -222,7 +224,7 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: PixelTheme.light,
-            home: Scaffold(body: FinancialMonthPage(now: () => today)),
+            home: Scaffold(body: FinancialMonthPage(source: source, now: () => today)),
           ),
         ),
       );
@@ -257,6 +259,55 @@ void main() {
         (_) => (changedByUser: false, offeredRuleIds: const {}),
       );
       expect(offer.changedByUser, isTrue);
+    });
+
+    testWidgets('analitik: dibuka per sumber; tersimpan dengan tanggal, panjang peralihan, anggaran (T-18.11)', (
+      tester,
+    ) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await open(tester, source: FinancialMonthSource.account);
+      expect(events, [PeriodEvents.sheetOpened('account')]);
+      expect(events.single.name, 'financial_month_sheet_opened');
+      expect(events.single.parameters, {'source': 'account'});
+
+      // Contoh A: 25 → 1 pada 10 Okt, peralihan 25 Sep – 31 Okt (37 hari);
+      // satu anggaran ikut pindah.
+      await tester.tap(find.byKey(const ValueKey('day-1')));
+      await tester.pump();
+      await tester.runAsync(() async {
+        await tester.tap(find.byKey(const ValueKey('financial-month-save')));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      });
+      await tester.pumpAndSettle();
+      expect(events.last.name, 'financial_month_changed');
+      expect(events.last.parameters, {
+        'source': 'account',
+        'day': '1',
+        'transition_days': 37,
+        'moved_budgets': 1,
+        'kept_budgets': 0,
+      });
+    });
+
+    testWidgets('analitik: anggaran yang tidak ikut dihitung kept_budgets; sumber offer', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await open(tester, source: FinancialMonthSource.offer);
+      await tester.tap(find.byKey(const ValueKey('day-1')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('financial-month-budget-bulanan')));
+      await tester.pump();
+      await tester.runAsync(() async {
+        await tester.tap(find.byKey(const ValueKey('financial-month-save')));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      });
+      await tester.pumpAndSettle();
+      expect(events.first.parameters, {'source': 'offer'});
+      expect(events.last.parameters, containsPair('moved_budgets', 0));
+      expect(events.last.parameters, containsPair('kept_budgets', 1));
     });
 
     testWidgets('Batal: jadwal dan anggaran tetap', (tester) async {

@@ -199,6 +199,9 @@ void main() {
       await transactions.saveTransaction(
         ExpenseTransaction(id: 'dari-notif', date: DateTime(2026, 10, 2), amount: 6500000, note: '', walletId: 'bca'),
       );
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
       await pump(tester, const RecurringSegmentView());
 
       await tester.tap(find.text(t.recurring.recordAction));
@@ -206,6 +209,8 @@ void main() {
       expect(find.text(t.recurring.similarTitle), findsOneWidget);
       await tester.tap(find.text(t.recurring.linkAction));
       await tester.pumpAndSettle();
+      // Tautan pengguna: 2 Okt ke kemunculan 1 Okt (T-18.11).
+      expect(events, contains(const AnalyticsEvent('recurrence_date_gap', {'bucket': '1-3'})));
 
       final all = await october();
       expect(all, hasLength(1));

@@ -290,6 +290,7 @@ final class ProcessCapturedNotifications {
     if (result.isLeft()) return (null, false);
     if (autoLink) {
       AppAnalytics.log(RecurringEvents.occurrenceLinkedAuto);
+      AppAnalytics.log(PeriodEvents.recurrenceDateGap(transaction.date, match.date));
       await matchLog?.add(
         RecurrenceMatchEntry(
           transactionId: transaction.id,

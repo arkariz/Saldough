@@ -149,7 +149,7 @@ class PlanMonthView extends StatelessWidget {
                 child: AppPeriodHeader(
                   label: range.name,
                   transitionDays: range.isTransition ? range.days : null,
-                  onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput())),
+                  onTap: () => unawaited(context.pushRoute(BudgetRouteKeys.financialMonth, const FinancialMonthInput(source: FinancialMonthSource.plan))),
                   // Tur peralihan hanya untuk periode berjalan (FINANCIAL_PERIOD §8A).
                   wrapTag: (tag) => SpotlightTarget(
                     spotlightKey: state.selected == 0 ? SpotlightKey.planTransition : null,

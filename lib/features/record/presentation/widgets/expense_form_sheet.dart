@@ -189,8 +189,19 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   DateTime get _periodDate =>
       periodDateFor(_date, widget.initial?.recurrence?.occurrenceDate ?? widget.occurrence?.date);
 
-  List<BudgetItemOption> get _budgetChoices =>
-      expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId, _periodDate);
+  /// Formulir ini membuat rutin baru (bukan Jadikan Rutin atau Ubah rutin):
+  /// pos terpilih menjadi tautan rutin (T-18.15).
+  bool get _createsRule => _repeat != null && !widget.repeatLocked;
+
+  /// "Simpan jadwal": tanggal masa depan, tidak ada transaksi yang dicatat.
+  bool get _scheduleOnly {
+    final now = DateTime.now();
+    return DateTime(_date.year, _date.month, _date.day).isAfter(DateTime(now.year, now.month, now.day));
+  }
+
+  List<BudgetItemOption> get _budgetChoices => _createsRule
+      ? recurringBudgetChoicesFor(widget.budgetItems, _walletId, _periodDate, scheduleOnly: _scheduleOnly)
+      : expenseBudgetChoicesFor(widget.budgetItems, _walletId, _budgetItemId, _periodDate);
 
   /// Pos terpilih kalau masih sah untuk dompet asal saat ini, selain itu
   /// `null` — pos anggaran dompet lain tidak pernah ikut tersimpan.
@@ -300,7 +311,8 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
           ],
         ),
-        if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
+        if (!(_createsRule && _scheduleOnly))
+          if (budgetItemOutsidePeriod(widget.budgetItems, _budgetItemId, _periodDate) case final dropped?)
           RecordBudgetItemOutOfPeriodNotice(option: dropped),
         if (widget.occurrence case final occurrence?)
           RecordOccurrenceNotice(occurrence: occurrence, amount: _amountSen, date: _date),

@@ -90,6 +90,41 @@ void main() {
     });
   });
 
+  group('recurringBudgetChoicesFor (ADR-036 §3.4 tambahan, T-18.15)', () {
+    BudgetItemOption cicilan(DateTime start, DateTime end, {String wallet = 'bca', bool archived = false}) =>
+        BudgetItemOption(
+          budgetId: 'bulanan-${start.month}',
+          budgetName: 'Bulanan',
+          itemId: 'cicilan-${start.month}',
+          itemName: 'Cicilan',
+          walletId: wallet,
+          startDate: start,
+          endDate: end,
+          templateItemId: 'tpl-cicilan',
+          isArchived: archived,
+        );
+    final sep = cicilan(september.start, september.end);
+    final okt = cicilan(DateTime(2026, 10), DateTime(2026, 11));
+    final gopay = cicilan(september.start, september.end, wallet: 'gopay');
+    final rutin = [...all, sep, okt, gopay];
+
+    test('Catat & Jadwalkan: hanya pos rutin berdompet sama yang periodenya mencakup tanggal (KT-1)', () {
+      expect(recurringBudgetChoicesFor(rutin, 'bca', sep15, scheduleOnly: false), [sep]);
+      expect(recurringBudgetChoicesFor(all, 'bca', sep15, scheduleOnly: false), isEmpty, reason: 'Beras bukan pos rutin');
+    });
+
+    test('Simpan jadwal: satu pos per template; periode yang mencakup tanggal, selain itu yang terbaru', () {
+      expect(recurringBudgetChoicesFor(rutin, 'bca', sep15, scheduleOnly: true), [sep]);
+      expect(recurringBudgetChoicesFor(rutin, 'bca', DateTime(2026, 12, 25), scheduleOnly: true), [okt]);
+      expect(recurringBudgetChoicesFor(rutin, 'gopay', DateTime(2026, 12, 25), scheduleOnly: true), [gopay]);
+    });
+
+    test('Simpan jadwal: pos bukan rutin, transfer, dan diarsipkan tidak ditawarkan', () {
+      final archived = cicilan(DateTime(2026, 11), DateTime(2026, 12), archived: true);
+      expect(recurringBudgetChoicesFor([...all, archived], 'bca', DateTime(2026, 11, 5), scheduleOnly: true), isEmpty);
+    });
+  });
+
   group('transferBudgetChoicesFor (ADR-018, KT-1)', () {
     test('hanya pos TRANSFER dengan dompet asal dan tujuan yang cocok', () {
       expect(transferBudgetChoicesFor(all, 'bca', 'tabungan', null, sep15), [setoran]);

@@ -897,7 +897,7 @@ antrean (B-39).
 
 - [ ] Sesudah versi atau pembaruan kecil yang punya catatan terpasang,
       catatan manfaatnya tampil sekali di Beranda dan selalu bisa dibuka
-      dari Akun, juga tanpa koneksi. Tidak tampil pada pemasangan pertama.
+      dari Akun. Tidak tampil pada pemasangan pertama.
 
 **FR-UPD-004 — Versi aplikasi di Akun (R1)**
 

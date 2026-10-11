@@ -3552,14 +3552,15 @@ menyentuh berkas Fase 18/19 selain slot banner Beranda dan layar Akun.
       Memenuhi FR-UPD-004.
 - [ ] **T-20.4** Apa yang baru (APP_UPDATE F3, B-10–B-12).
       Catatan per versi/pembaruan kecil dalam id dan en (cara menyimpan
-      sesuai ADR T-20.1; harus terbaca luring dan tersedia untuk pembaruan
+      sesuai ADR T-20.1, luring atau daring; tersedia untuk pembaruan
       kecil), lembar sekali di Beranda, daftar lengkap dari Akun, gabungan saat lompat
       versi (maks enam butir). Isi catatan pertama untuk versi yang memuat
       fitur ini.
       Perlu rupa dari ui-ux-designer: lembar Apa yang baru dan daftar
       catatan di Akun (APP_UPDATE §7).
       ⚠ Tidak tampil pada pemasangan pertama, saat onboarding/tur, atau
-      bila ingatan aplikasi gagal dibaca.
+      bila ingatan aplikasi gagal dibaca; catatan yang belum bisa didapat
+      menunda lembar tanpa galat (APP_UPDATE §11).
       Verifikasi: uji unit pemilihan catatan (6→7, 7 pembaruan kecil 0→1,
       6→9 dengan catatan di 7 dan 9, pembaruan kecil tanpa catatan,
       rollback); uji

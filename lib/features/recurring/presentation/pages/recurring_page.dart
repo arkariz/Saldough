@@ -145,7 +145,8 @@ class RecurringSegmentView extends StatelessWidget {
                 spotlightKey: SpotlightKey.recurringSummary,
                 child: RecurringSummaryCard(
                   summary: summary,
-                  monthLabel: CycleMonthFormatter.formatMonthShort(state.monthStart),
+                  // Nama periode (P-11): "Okt", atau rentang bila bukan bulan kalender.
+                  monthLabel: state.period.shortName,
                   subscriptions: subscriptionTotals(state.rules),
                 ),
               ),

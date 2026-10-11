@@ -84,6 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md), [ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md) Proposed) | 8 | 0 | Draf 11 Okt 2026, menunggu keputusan pemilik KT-U1–KT-U5 dan ADR-039 Accepted; mulai dari T-20.1 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -97,6 +98,14 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   [ADR-024](../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
   §3.3 poin 4. (Ganti akun sudah diputuskan: data diganti dengan peringatan,
   tanpa penggabungan.)
+
+- **KT-U1–KT-U5** Pengumuman pembaruan (Fase 20): mode pembaruan Play
+  (rekomendasi fleksibel saja), pembaruan kecil diumumkan sekali atau diam
+  (rekomendasi umumkan sekali, tanpa tombol buka ulang), Apa yang baru
+  otomatis (rekomendasi ya, sekali), format versi di Akun, dan penulis
+  catatan Apa yang baru. Rincian dan alasannya di
+  [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §12; ADR-039 menunggu
+  Accepted.
 
 KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
 10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
@@ -3497,6 +3506,95 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-ANL-001–FR-ANL-005.
 
+## Fase 20: Pengumuman pembaruan
+
+Permintaan pemilik 11 Okt 2026: pengguna tahu ada versi baru dari Play Store
+dan pembaruan kecil Shorebird, lalu tahu apa yang berubah. Perilaku, aturan
+B-1–B-13, teks, dan kasus tepi di
+[APP_UPDATE.md](../01-product/features/APP_UPDATE.md); arsitektur di
+[ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md)
+(Proposed). **Belum boleh dikerjakan** sebelum pemilik menjawab KT-U1–KT-U5
+dan ADR-039 Accepted. Branch sendiri dari `main`; tidak menyentuh berkas
+Fase 18/19 selain slot `notice` Beranda dan layar Akun.
+
+- [ ] **T-20.1** Port pembaruan dan dua adaptor (ADR-039 §3).
+      `AppUpdateSource` dengan adaptor Play In-App Updates (fleksibel) dan
+      Shorebird (`shorebird_code_push`, baca tambalan berjalan dan
+      berikutnya), versi lewat `package_info_plus`, keadaan gabungan
+      `none/storeAvailable/storeDownloading/storeDownloaded/patchReady`,
+      preferensi lokal (versi terakhir dilihat, penundaan, tambalan
+      diumumkan, waktu cek), dan pembatas cek 6 jam.
+      ⚠ Verifikasi API persis `shorebird_code_push` dan perilaku pemasangan
+      fleksibel saat aplikasi di latar sebelum menulis adaptor (ADR-039 §7).
+      ⚠ Kegagalan apa pun = `none`, tanpa galat ke UI (B-5).
+      Verifikasi: uji unit dengan adaptor palsu untuk B-3, B-4, B-5, B-6,
+      B-8, rollback tambalan, dan versi baru yang mengatur ulang tambalan
+      (APP_UPDATE §11); uji batas impor lulus.
+      Memenuhi FR-UPD-001, FR-UPD-002.
+- [ ] **T-20.2** Banner pembaruan di Beranda (APP_UPDATE F1, F2, §7).
+      Empat keadaan di slot `notice` Beranda, kalah dari
+      `CaptureInboxBanner` (B-2, B-3); Perbarui memulai pembaruan
+      fleksibel, Pasang sekarang menyelesaikannya, Nanti menunda 7 hari,
+      Oke menandai tambalan diumumkan. Pola banner perhatian yang sudah ada,
+      tanpa rupa baru. Teks id/en APP_UPDATE §10.
+      ⚠ Tidak pernah tampil di Catat, lembar, onboarding, atau tur (B-7,
+      B-10); cek tidak menunda pembukaan Beranda (B-13).
+      Verifikasi: uji widget tiap keadaan dan urutan prioritas (S4: toko
+      mengalahkan tambalan); uji bahwa banner kotak masuk menang.
+      Memenuhi FR-UPD-001, FR-UPD-002.
+- [ ] **T-20.3** Baris Versi aplikasi di Akun (APP_UPDATE F4).
+      Versi, build, dan pembaruan kecil (format sesuai KT-U4), keterangan
+      keadaan, ketuk membuka Apa yang baru dengan tombol Perbarui/Pasang
+      sekarang sesuai keadaan; membuka Akun memicu cek bila >6 jam.
+      Verifikasi: uji widget "0.6.0 (7)" dan "0.6.0 (7), pembaruan 1" serta
+      tiap keterangan keadaan; tombol tetap tersedia sesudah Nanti.
+      Memenuhi FR-UPD-004.
+- [ ] **T-20.4** Apa yang baru (APP_UPDATE F3, B-10–B-12).
+      Catatan per (build, tambalan) di i18n id/en (bukan aset), lembar
+      sekali di Beranda, daftar lengkap dari Akun, gabungan saat lompat
+      versi (maks enam butir). Isi catatan pertama untuk versi yang memuat
+      fitur ini.
+      Perlu rupa dari ui-ux-designer: lembar Apa yang baru dan daftar
+      catatan di Akun (APP_UPDATE §7).
+      ⚠ Tidak tampil pada pemasangan pertama, saat onboarding/tur, atau
+      bila preferensi gagal dibaca.
+      Verifikasi: uji unit pemilihan catatan (6→7, 7 tambalan 0→1, 6→9
+      dengan catatan di 7 dan 9, tambalan tanpa catatan, rollback); uji
+      widget lembar tampil sekali.
+      Memenuhi FR-UPD-003.
+- [ ] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
+      `UpdateEvents` (`update_banner_shown`, `update_banner_action`,
+      `app_updated`, `whats_new_viewed`), properti pengguna dan custom key
+      Crashlytics `patch_number`.
+      Verifikasi: uji peristiwa dengan `AppAnalytics` palsu; DebugView
+      Firebase di T-20.8.
+      Memenuhi FR-UPD-004.
+- [ ] **T-20.6** Langkah rilis: catatan Apa yang baru sebelum
+      `shorebird release`/`shorebird patch` (KT-U5).
+      Tambahkan ke dokumen rilis di `docs/03-release/` dan skill
+      `release-email` (catatan aplikasi dan email dari sumber yang sama);
+      aturan gaya B-11.
+      Verifikasi: dokumen dan skill menyebut langkahnya; contoh catatan
+      lolos `translations_test.dart`.
+      Di luar PRD: proses rilis.
+- [ ] **T-20.7** Keamanan Data: Shorebird dan Play In-App Updates
+      (APP_UPDATE §9). Catat di
+      [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) data yang
+      dikirim Shorebird (sudah berjalan sejak T-8.7, belum tercatat) dan
+      panduan Google untuk pustaka Play, menurut dokumentasi resminya; usul
+      perubahan formulir dan kebijakan privasi bila perlu.
+      ⚠ Formulir Play Console dan situs diisi pemilik; agen hanya menyiapkan.
+      Verifikasi: pemilik menyetujui catatan sebelum build Fase 20 diunggah.
+      Memenuhi NFR-SEC-001.
+- [ ] **T-20.8** Verifikasi di perangkat lewat jalur tes Play.
+      Pasang build N dari jalur tes, publikasikan N+1: banner, Nanti,
+      Perbarui, unduh, Pasang sekarang, Apa yang baru, data utuh (B-1),
+      dan pemasangan saat notifikasi sedang diproses. Lalu rilis tambalan
+      Shorebird: banner pembaruan kecil sekali, buka ulang, Apa yang baru,
+      `patch_number` di DebugView dan Crashlytics. Luring: diam.
+      Dikerjakan terakhir; temuan jadi tugas baru.
+      Memenuhi FR-UPD-001–FR-UPD-004.
+
 ## Antrean (belum dijadwalkan)
 
 Hal yang sudah diketahui perlu dikerjakan tapi belum masuk fase. Cara
@@ -3527,6 +3625,7 @@ menambah dan memindahkannya ada di
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
+| B-39 | **Pengumuman pembaruan R2**: versi minimum/pembaruan paksa lewat konfigurasi jarak jauh (ADR-039 Opsi A, KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan jalur Shorebird untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §13 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |
 
@@ -3603,6 +3702,10 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-ANL-004 | T-19.3, T-19.5 |
 | FR-ANL-005 | T-19.3, T-19.4, T-19.6 |
 | FR-ANL-006 | B-38 |
+| FR-UPD-001 | T-20.1, T-20.2, T-20.8 |
+| FR-UPD-002 | T-20.1, T-20.2, T-20.8 |
+| FR-UPD-003 | T-20.4, T-20.8 |
+| FR-UPD-004 | T-20.3, T-20.5, T-20.8 |
 | NFR-SEC-001 | Terpenuhi sendirinya di MVP — tidak ada panggilan jaringan sama sekali; direvisi 28 Sep 2026 untuk fitur online mendatang, lihat T-8.4 |
 | NFR-PLAT-001 | Diwarisi dari Saldough 1.0, sudah terbukti berjalan |
 

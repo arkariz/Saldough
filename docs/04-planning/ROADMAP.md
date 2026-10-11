@@ -356,6 +356,20 @@ Bergantung pada Fase 18 karena membaca periode yang sama.
 total Analisis sama dengan kartu Arus Beranda dan cocok dengan Rencana
 (B-15); tidak ada nada menghakimi; Beranda tidak melambat.
 
+## Fase 20: Pengumuman pembaruan
+
+Permintaan pemilik 11 Okt 2026. Pengguna tahu ada versi baru dari Play Store
+(pembaruan fleksibel di dalam aplikasi) dan pembaruan kecil Shorebird, lalu
+melihat Apa yang baru sekali; Akun menampilkan versi dan pembaruan kecil
+yang berjalan
+([APP_UPDATE.md](../01-product/features/APP_UPDATE.md),
+[ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-aplikasi.md)
+Proposed). Tidak bergantung pada Fase 18/19.
+
+**Selesai kalau:** alur F1–F4 APP_UPDATE lulus di perangkat lewat jalur tes
+Play dan tambalan Shorebird sungguhan; data keuangan utuh sesudah
+pemasangan; luring diam; Keamanan Data mencatat Shorebird.
+
 ## Ketergantungan antar fase
 
 ```

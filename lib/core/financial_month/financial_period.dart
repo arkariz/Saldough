@@ -51,6 +51,10 @@ final class FinancialPeriod extends Equatable {
   /// [rangeLabel]. Dipakai judul kartu Arus Beranda.
   String get name => isCalendarMonth ? CycleMonthFormatter.formatMonthName(start) : rangeLabel;
 
+  /// Nama pendek (P-11): "Okt" bila [isCalendarMonth], selain itu
+  /// [rangeLabel]. Dipakai Rencana › Bulan ini dan kartu Beranda "… dimulai".
+  String get shortName => isCalendarMonth ? CycleMonthFormatter.formatMonthShort(start) : rangeLabel;
+
   @override
   List<Object?> get props => [start, end, isTransition];
 }

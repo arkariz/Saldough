@@ -70,6 +70,19 @@ void main() {
     expect(startsOnFirst.label, '1 – 24 Okt');
   });
 
+  test('nama pendek (T-18.13): Rencana dan kartu Beranda "… dimulai" memakai aturan yang sama', () {
+    // Periode normal tanggal 1.
+    expect(financialPeriodOf(DateTime(2026, 10, 10), single(1)).shortName, 'Okt');
+    // Periode normal bukan tanggal 1.
+    expect(financialPeriodOf(DateTime(2026, 10, 26), single(25)).shortName, '25 Okt – 24 Nov');
+    // Periode peralihan yang mulai tanggal 1 (contoh B, temuan T-18.9 V2).
+    final transition = financialPeriodOf(
+      DateTime(2026, 10, 10),
+      single(1).changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25)),
+    );
+    expect(transition.shortName, '1 – 24 Okt');
+  });
+
   group('periode peralihan (P-3)', () {
     test('A: 25 → 1 pada 10 Okt: peralihan 25 Sep – 31 Okt (37 hari), lalu 1 – 30 Nov', () {
       final before = single(25);

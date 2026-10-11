@@ -3517,6 +3517,7 @@ pembaruan kecil Shorebird, penyimpanan catatan Apa yang baru, dan perlu
 tidaknya server; ditulis sebagai ADR di T-20.1. **Belum boleh dikerjakan**
 sebelum pemilik menjawab KT-U1–KT-U5. Branch sendiri dari `main`; tidak
 menyentuh berkas Fase 18/19 selain slot banner Beranda dan layar Akun.
+Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai/artifact/42Lb4hBdMaXzQnX7pXE59J).
 
 - [ ] **T-20.1** ADR teknis pengumuman pembaruan, lalu fondasinya.
       Engineer memilih dan menulis ADR (nomor berikutnya, Proposed sampai

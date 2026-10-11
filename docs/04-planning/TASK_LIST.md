@@ -3769,6 +3769,16 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
       - T-18.17 Lulus: sesudah contoh B, segmen Rutin "Sisa rutin keluar ·
         1 – 24 Okt" Rp0; Cicilan iPhone dan Gaji 25 Okt di kelompok Nanti.
       - T-18.13 Lulus: kartu Beranda "1 – 24 Okt dimulai".
+      - T-18.16 Lulus (jam 26 Okt): Ubah dulu Cicilan 25 Okt membuka dengan
+        "Pos anggaran: Cicilan · Bulanan"; tanggal 24 Okt, pos tetap; sesudah
+        simpan Bulanan 25 Okt – 24 Nov pos Cicilan terpakai Rp2.914.000,
+        Bulanan 1 – 24 Okt Rp0 (yang tampil = yang tersimpan).
+      - T-18.14 Lulus: Ubah dulu Gaji 25 Okt → 23 Okt dan Cicilan → 24 Okt
+        masing-masing mengirim `recurrence_date_gap {bucket=1-3, via=edit}`.
+      - T-18.18 label Lulus: kartu Arus "Selisih"; Arus 25 Okt – 24 Nov
+        Masuk Rp12.000.000, Keluar Rp2.914.000, Selisih Rp9.086.000; uang
+        nganggur Rp6.017.500 (12.000.000 − 5.982.500, Cicilan hanya di
+        anggaran); total saldo Rp30.086.000.
 - [x] **T-18.13** Kartu Beranda "… dimulai" memakai rentang untuk periode
       peralihan (temuan T-18.9 V2, S3). Langkah: awal bulan 1, jam 10 Okt,
       ubah ke 25 (contoh B), buka Beranda. Harapan: "1 – 24 Okt dimulai",

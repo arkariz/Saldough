@@ -149,14 +149,20 @@ flowchart TD
 1. Beranda → ketuk kartu Arus.
 2. Analisis bulan berjalan terbuka di **Pengeluaran**: total, lalu daftar
    kategori urut nominal terbesar.
-3. Ketuk satu kategori → Rincian kategori (F4).
+3. Ketuk satu kategori, di irisan donat atau baris daftar → kategori itu
+   **terpilih**: irisan lain meredup, tengah donat menampilkan nama,
+   nominal, "{persen} dari pengeluaran", dan pembandingnya. Ketuk lagi →
+   batal pilih. Memilih "Lainnya" membuka anggotanya.
+4. **Lihat rincian {kategori}** di bawah donat → Rincian kategori (F4).
 
-Keluar: kembali ke Beranda.
+Keluar: kembali ke Beranda. (Revisi 12 Okt 2026 mengikuti desain: ketuk
+baris memilih, bukan membuka rincian.)
 
 ### F2. Dibanding biasanya (A2)
 
-1. Di Analisis bulan, tiap kategori membawa pembanding "rata-rata N bulan"
-   bila ada bulan pembanding (aturan B-6).
+1. Pembanding total jenis ("dibanding rata-rata N bulan") selalu tampil di
+   tengah donat. Pembanding **per kategori** hanya tampil saat kategori itu
+   dipilih (F1 langkah 3), supaya daftar tetap ringkas (aturan B-6).
 2. Paling banyak tiga kategori dengan perubahan terbesar disorot di atas
    daftar (aturan B-7), dengan kalimat netral.
 3. Ketuk sorotan → Rincian kategori itu.
@@ -170,6 +176,8 @@ Keluar: kembali ke Beranda.
 
 ### F4. Satu kategori (A5)
 
+0. Masuk lewat **Lihat rincian {kategori}** sesudah memilih kategori, atau
+   lewat baris sorotan.
 1. Rincian kategori: total periode, pembanding, tren enam bulan kategori ini,
    lalu transaksi periode itu (terbaru dulu, paling banyak 20).
 2. "Lihat semua transaksi" → segmen Daftar di Riwayat tersaring kategori dan
@@ -181,8 +189,9 @@ Keluar: kembali ke Beranda.
 ### F5. Membetulkan "Tanpa kategori"
 
 1. Baris "Tanpa kategori" selalu tampil terpisah di akhir daftar bila
-   nominalnya > 0, dengan aksi **Beri kategori**.
-2. Ketuk → Daftar tersaring "Tanpa kategori" untuk periode itu.
+   nominalnya > 0.
+2. Pilih baris itu → di bawah donat muncul **Beri kategori** (bukan "Lihat
+   rincian") → Daftar tersaring "Tanpa kategori" untuk periode itu.
 3. Ketuk transaksi → Rincian → Sunting → CATAT, pilih kategori, simpan.
 4. Kembali → daftar tersaring berkurang satu; kembali lagi → Analisis segar.
 
@@ -237,11 +246,16 @@ Urutan di bawah adalah urutan prioritas baca, bukan tata letak.
 **Analisis · bulan**
 1. Periode (nama bulan; rentang tanggal bila bulan keuangan tidak mulai
    tanggal 1), pemilih bulan, penyaring dompet, pilihan Pengeluaran/Pemasukan.
-2. Total jenis terpilih untuk periode, dan pembandingnya (aturan B-6).
-3. Sorotan perubahan (0–3 baris).
-4. Daftar kategori: nama, ikon kategori, nominal, persen dari total,
-   pembanding. Lima teratas, lalu "Lainnya (n kategori)" yang bisa dibuka,
-   lalu "Tanpa kategori" + **Beri kategori**.
+2. Total jenis terpilih untuk periode dan pembandingnya (aturan B-6), di
+   tengah donat porsi kategori. Saat satu kategori dipilih, tengah donat
+   berganti ke kategori itu: nama, nominal, "{persen} dari pengeluaran",
+   pembanding atau "baru bulan ini", lalu **Lihat rincian {kategori}** (atau
+   **Beri kategori** untuk Tanpa kategori).
+3. Sorotan perubahan (0–3 baris), masing-masing membuka rincian kategorinya.
+4. Daftar kategori (legenda donat): warna, nama, persen, nominal. Lima
+   teratas, lalu "Lainnya (n kategori)" yang bisa dibuka, lalu "Tanpa
+   kategori". Pembanding per kategori tidak tampil di daftar, hanya saat
+   dipilih.
 5. Baris informasi transfer: "Dipindahkan antardompet Rp1.000.000 · tidak
    mengurangi total uangmu".
 6. Tren enam bulan: pemasukan, pengeluaran, selisih per bulan, bulan terpilih
@@ -437,6 +451,8 @@ Pengeluaran", "Selisih", "Transaksi". Istilah baru untuk glosarium:
 | `analysis.trend.title` | 6 bulan terakhir | Last 6 months |
 | `analysis.net` | Selisih | Net |
 | `analysis.seeAll` | Lihat semua transaksi | See all transactions |
+| `analysis.seeCategory` | Lihat rincian {category} | See {category} details |
+| `analysis.shareOf` | {percent} dari {kind} (kind huruf kecil: pengeluaran/pemasukan) | {percent} of {kind} (expenses/income) |
 | `analysis.archived` | diarsipkan | archived |
 | `analysis.transition` | Periode peralihan · {days} hari | Transition period · {days} days |
 | `analysis.offPlanFilter` | Di luar rencana | Outside the plan |
@@ -483,7 +499,7 @@ pengguna lama kecuali disorot. Paling banyak tiga langkah baru per layar.
 | Kunci | Tur | Target | Tampil bila | Judul / isi (id) | Judul / isi (en) |
 |---|---|---|---|---|---|
 | `txnAnalysisSegment` | `transaction`, langkah pertama | Segmen Analisis (A1) | tab Riwayat termuat | Analisis / Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya. | Analysis / See where your money goes by category and compare it with usual. |
-| `analysisCategories` | `analysis` (baru) | Baris kategori pertama | Analisis termuat dan ada ≥1 transaksi di periode | Per kategori / Ketuk kategori untuk melihat transaksinya. | By category / Tap a category to see its transactions. |
+| `analysisCategories` | `analysis` (baru) | Baris kategori pertama | Analisis termuat dan ada ≥1 transaksi di periode | Per kategori / Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya. | By category / Tap a slice or row to see one category, then open its details. |
 | `analysisUncategorized` | `analysis` | Baris Tanpa kategori | baris itu tampil | Tanpa kategori / Beri kategori supaya analisisnya lebih tepat. | Uncategorized / Add categories to make this more accurate. |
 | `analysisTrend` | `analysis` | Tren enam periode | tren tampil (≥2 periode data) | Enam periode terakhir / Ketuk satu periode untuk melihat analisisnya. | Last six periods / Tap a period to see its analysis. |
 
@@ -503,7 +519,7 @@ per kejadian, tidak dari `build()`.
 | `analysis_kind_switched` | `kind` | Pindah Pengeluaran/Pemasukan | Pemakaian A3 (uang dari mana) |
 | `analysis_wallet_filtered` | `filtered`: `true` \| `false` | Penyaring dompet berubah | Perlu tidaknya per dompet |
 | `analysis_highlights_shown` | `count`: `0`…`3` | Sekali per periode yang dibuka | Menyetel ambang sorotan KT-A3 |
-| `analysis_category_opened` | `category`: `<builtInKey>` \| `custom` \| `none` \| `freelance` \| `others`; `from`: `list` \| `highlight` | Rincian kategori dibuka | Ukuran "bongkar ke transaksi" §4 |
+| `analysis_category_opened` | `category`: `<builtInKey>` \| `custom` \| `none` \| `freelance` \| `others`; `from`: `link` (Lihat rincian) \| `highlight` | Rincian kategori dibuka | Ukuran "bongkar ke transaksi" §4 |
 | `analysis_see_all_opened` | — | Lihat semua transaksi | Apakah daftar 20 cukup |
 | `analysis_uncategorized_fix_opened` | — | Beri kategori diketuk | Ukuran "porsi tanpa kategori" §4 |
 

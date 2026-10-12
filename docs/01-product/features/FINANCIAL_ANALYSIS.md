@@ -203,8 +203,16 @@ Pemasukan dari pembayaran freelance tidak pernah masuk "Tanpa kategori"
 1. Pemilih bulan ‹ › di kepala Analisis. Tidak bisa maju melewati bulan
    berjalan (Analisis tidak membuat perkiraan; masa depan ada di Rencana).
 2. Tren enam bulan (berakhir di bulan terpilih) menunjukkan pemasukan,
-   pengeluaran, dan selisih per bulan. Ketuk satu bulan di tren → Analisis
-   pindah ke bulan itu.
+   pengeluaran, dan selisih per bulan. Ketuk satu kolom → kolom itu
+   terpilih dan panel angka di bawah grafik menampilkan pemasukan,
+   pengeluaran, dan selisihnya, ditambah tautan **Lihat analisis {bulan}**
+   yang memindah Analisis ke periode itu (revisi 12 Okt 2026, R2: memilih
+   tidak langsung berpindah, supaya tidak berpindah tanpa sengaja).
+   - **Periode berjalan** ditandai sebagai belum selesai ("s.d. 10 Okt" di
+     baris keterangan kolom, sama dengan tempat penanda periode peralihan)
+     dan selisihnya ditulis tanpa tanda + atau − sampai periodenya selesai,
+     supaya kolom yang baru berjalan tidak terbaca sebagai hemat atau defisit
+     (revisi 12 Okt 2026, R1).
 3. Bulan sebelum bulan pertama pencatatan tidak ditampilkan di tren (bukan
    ditampilkan sebagai nol).
 
@@ -455,6 +463,8 @@ Pengeluaran", "Selisih", "Transaksi". Istilah baru untuk glosarium:
 | `analysis.shareOf` | {percent} dari {kind} (kind huruf kecil: pengeluaran/pemasukan) | {percent} of {kind} (expenses/income) |
 | `analysis.archived` | diarsipkan | archived |
 | `analysis.transition` | Periode peralihan · {days} hari | Transition period · {days} days |
+| `analysis.trend.toDate` | s.d. {date} | through {date} |
+| `analysis.trend.seePeriod` | Lihat analisis {period} | See {period} analysis |
 | `analysis.offPlanFilter` | Di luar rencana | Outside the plan |
 | `plan.lookbackSeeAnalysis` | Lihat rincian {month} | See {month} details |
 | `analysis.empty.title` | Belum ada yang bisa dianalisis | Nothing to analyze yet |
@@ -501,7 +511,7 @@ pengguna lama kecuali disorot. Paling banyak tiga langkah baru per layar.
 | `txnAnalysisSegment` | `transaction`, langkah pertama | Segmen Analisis (A1) | tab Riwayat termuat | Analisis / Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya. | Analysis / See where your money goes by category and compare it with usual. |
 | `analysisCategories` | `analysis` (baru) | Baris kategori pertama | Analisis termuat dan ada ≥1 transaksi di periode | Per kategori / Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya. | By category / Tap a slice or row to see one category, then open its details. |
 | `analysisUncategorized` | `analysis` | Baris Tanpa kategori | baris itu tampil | Tanpa kategori / Beri kategori supaya analisisnya lebih tepat. | Uncategorized / Add categories to make this more accurate. |
-| `analysisTrend` | `analysis` | Tren enam periode | tren tampil (≥2 periode data) | Enam periode terakhir / Ketuk satu periode untuk melihat analisisnya. | Last six periods / Tap a period to see its analysis. |
+| `analysisTrend` | `analysis` | Tren enam periode | tren tampil (≥2 periode data) | Enam periode terakhir / Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai. | Last six periods / Tap a column to see its numbers. The period still running is marked. |
 
 Teks langkah `homeCashFlow` yang ada diperbarui untuk pengguna baru:
 "Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke
@@ -515,7 +525,7 @@ per kejadian, tidak dari `build()`.
 | Peristiwa | Parameter | Kapan | Menjawab |
 |---|---|---|---|
 | `analysis_viewed` | `source`: `history` \| `home` \| `lookback`; `kind`: `expense` \| `income`; `transition`: `true` \| `false` | Layar Analisis terbuka | Ukuran "kunjungan bulanan" §4; pintu mana yang dipakai (keputusan Beranda §1.1) |
-| `analysis_period_changed` | `via`: `stepper` \| `trend` | Pindah periode | Apakah tren dipakai untuk navigasi |
+| `analysis_period_changed` | `via`: `stepper` \| `trend` (tautan Lihat analisis di panel tren) | Pindah periode | Apakah tren dipakai untuk navigasi |
 | `analysis_kind_switched` | `kind` | Pindah Pengeluaran/Pemasukan | Pemakaian A3 (uang dari mana) |
 | `analysis_wallet_filtered` | `filtered`: `true` \| `false` | Penyaring dompet berubah | Perlu tidaknya per dompet |
 | `analysis_highlights_shown` | `count`: `0`…`3` | Sekali per periode yang dibuka | Menyetel ambang sorotan KT-A3 |

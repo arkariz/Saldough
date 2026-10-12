@@ -579,6 +579,12 @@ system maupun prototipe:
 5. Kepala periode dengan rentang tanggal bulan keuangan.
 6. Pintu dari kartu Arus Beranda (seluruh kartu bisa diketuk atau tautan).
 
+**Warna irisan donat (keputusan pemilik 12 Okt 2026).** Warna irisan
+ditentukan design system dan dibiarkan beragam; tidak harus sama dengan
+warna tile kategori di daftar transaksi. Usulan menyamakannya (review R4)
+dibatalkan. Legenda tetap menulis nama dan persen, jadi warna bukan
+satu-satunya pembawa informasi.
+
 ## 15. Keputusan pemilik (10 Okt 2026)
 
 | # | Keputusan |

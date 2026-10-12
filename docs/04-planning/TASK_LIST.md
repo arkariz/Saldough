@@ -3979,9 +3979,14 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       Tanpa kategori).
       Verifikasi: uji widget per keadaan, kedua bahasa, 360dp.
       Memenuhi FR-ANL-001, FR-ANL-002, FR-ANL-003, FR-ANL-005.
-- [ ] **T-19.5** Rincian kategori: total, pembanding, tren, 20 transaksi,
-      Lihat semua transaksi ke T-19.3.
-      Verifikasi: uji widget; jumlah di rincian = daftar tersaring.
+- [ ] **T-19.5** Rincian kategori: total, pembanding, ringkasan frekuensi,
+      tren dengan garis rata-rata dan panel selisih (B-17), 20 transaksi
+      (ketuk → rincian transaksi), Lihat semua transaksi ke T-19.3.
+      Verifikasi: uji widget; jumlah di rincian = daftar tersaring; contoh
+      Makan September FINANCIAL_ANALYSIS §10 (2 transaksi, Rp622.500;
+      biasanya 1,7 transaksi, Rp570.000; garis Rp950.000; Rp295.000 di
+      atas rata-rata); kategori baru tanpa garis dan tanpa "biasanya";
+      periode berjalan tanpa selisih.
       Memenuhi FR-ANL-004.
 - [ ] **T-19.6** Pintu masuk: kartu Arus Beranda → Analisis periode berjalan
       (pengeluaran, semua dompet); lembar kilas balik → "Lihat rincian

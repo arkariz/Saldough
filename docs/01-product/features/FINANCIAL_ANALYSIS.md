@@ -271,9 +271,12 @@ Urutan di bawah adalah urutan prioritas baca, bukan tata letak.
 
 **Rincian kategori**
 1. Nama kategori, periode, total, persen dari total jenisnya.
-2. Pembanding dengan rata-rata.
-3. Tren enam bulan kategori ini.
-4. Transaksi periode ini (paling banyak 20) + **Lihat semua transaksi**.
+2. Pembanding dengan rata-rata, dan ringkasan frekuensi (B-17): jumlah
+   transaksi dan rata-rata per transaksi, dibanding biasanya.
+3. Tren enam bulan kategori ini dengan garis rata-rata; panel angka kolom
+   terpilih menyebut selisihnya terhadap rata-rata (B-17).
+4. Transaksi periode ini (paling banyak 20) + **Lihat semua transaksi**;
+   ketuk transaksi membuka rincian transaksinya.
 
 **Analisis · tahun (R2)**
 1. Tahun, total pemasukan, pengeluaran, selisih (s.d. bulan berjalan untuk
@@ -373,6 +376,24 @@ keterbacaan; di kode semuanya `int` sen.
   {n} bulan"; Rencana tetap menulis "≈Rp30.000/hari (rata-rata 3 bulan)"
   untuk belanja di luar rencana. Dua hitungan berbeda tidak memakai kalimat
   yang sama.
+- **B-17 Rincian kategori: rata-rata di grafik dan frekuensi** (revisi
+  12 Okt 2026).
+  - **Garis rata-rata** putus-putus di grafik tren kategori, setinggi
+    rata-rata bulan pembanding B-6 (bulan penuh, tanpa periode peralihan),
+    berlabel "rata-rata {n} bulan". Tidak digambar bila tidak ada bulan
+    pembanding ("baru bulan ini").
+  - **Panel angka** kolom terpilih menulis nominalnya dan selisihnya
+    terhadap garis: "{nominal} di atas rata-rata" / "di bawah rata-rata".
+    Untuk periode berjalan dan periode peralihan, panel menulis "s.d.
+    {tanggal}" atau "{n} hari" dan tidak membandingkan (B-6, R1).
+  - **Ringkasan frekuensi** di kartu atas: "{jumlah} transaksi · rata-rata
+    {nominal} per transaksi". Pembandingnya "biasanya {jumlah} transaksi ·
+    {nominal}": jumlah = jumlah transaksi bulan pembanding ÷ banyaknya bulan
+    pembanding, satu angka desimal; nominal = total bulan pembanding ÷
+    jumlah transaksi bulan pembanding (digabung, bukan rata-rata dari
+    rata-rata), dibulatkan saat tampil. Tanpa bulan pembanding, hanya baris
+    pertama.
+  - Kolom periode sebelum pencatatan pertama tidak digambar (F6).
 
 ## 10. Contoh lengkap
 
@@ -417,6 +438,14 @@ Sorotan: "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan."
 Makan 1 – 10 Jul, Agt, Sep Rp300.000, Rp340.000, Rp380.000 → rata-rata
 Rp340.000. Selisih +Rp180.000 (+52,9%) → disorot: "Makan Rp180.000 lebih
 tinggi dari rata-rata s.d. tanggal 10."
+
+**Rincian kategori Makan, September (B-17).** Transaksi Makan: Jun 1, Jul
+2, Agt 2, Sep 2 (data uji QA). Ringkasan: "2 transaksi · rata-rata
+Rp622.500 per transaksi"; "biasanya 1,7 transaksi · Rp570.000"
+(Rp2.850.000 ÷ 5 transaksi). Garis rata-rata di Rp950.000; kolom September
+terpilih: "Rp1.245.000 · Rp295.000 di atas rata-rata". Kesimpulan yang
+terbaca pengguna: naiknya karena tiap transaksi lebih besar, bukan lebih
+sering.
 
 ## 11. Kasus tepi
 
@@ -465,6 +494,10 @@ Pengeluaran", "Selisih", "Transaksi". Istilah baru untuk glosarium:
 | `analysis.transition` | Periode peralihan · {days} hari | Transition period · {days} days |
 | `analysis.trend.toDate` | s.d. {date} | through {date} |
 | `analysis.trend.seePeriod` | Lihat analisis {period} | See {period} analysis |
+| `analysis.trend.avgLine` | rata-rata {n} bulan | {n}-month average |
+| `analysis.trend.aboveAvg` / `.belowAvg` | {amount} di atas rata-rata / {amount} di bawah rata-rata | {amount} above average / {amount} below average |
+| `analysis.category.frequency` | {count} transaksi · rata-rata {amount} per transaksi | {count} transactions · {amount} average each |
+| `analysis.category.frequencyUsual` | biasanya {count} transaksi · {amount} | usually {count} transactions · {amount} |
 | `analysis.offPlanFilter` | Di luar rencana | Outside the plan |
 | `plan.lookbackSeeAnalysis` | Lihat rincian {month} | See {month} details |
 | `analysis.empty.title` | Belum ada yang bisa dianalisis | Nothing to analyze yet |

@@ -80,7 +80,7 @@ Terakhir diperbarui: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 ba
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
 | 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 19 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 selesai 11 Okt 2026 (13 Lulus 2 Gagal, temuan T-18.13–T-18.19 diverifikasi ulang di perangkat dan Lulus); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via) |
-| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 9 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -4018,6 +4018,22 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       (`history`, `home`, `lookback`), kategori bawaan, buatan pengguna,
       Freelance, Tanpa kategori, Lainnya.
       Memenuhi FR-ANL-001–FR-ANL-005.
+- [ ] **T-19.10** Segmen Daftar Riwayat memakai periode keuangan dan
+      **berbagi periode dengan Analisis** (review desain 12 Okt 2026, R3):
+      pemilih periode, ringkasan Pemasukan/Pengeluaran, dan pengelompokan
+      memakai `financialPeriodOf` dan `periodDateOf` dengan nama periode
+      P-11; memilih Juli di Analisis lalu pindah ke Daftar menampilkan Juli,
+      dan sebaliknya. Teks tur `txnMonth` menjadi "Satu periode per tampilan
+      / Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu
+      memakai periode yang sama." (en: "One period per view / Switch periods
+      to see other history. List and Analysis always use the same period.").
+      ⚠ Urutan hari di Daftar tetap menurut `date`; hanya keanggotaan periode
+      yang memakai `periodDateOf`. Pembacaan dibatasi seperti T-18.4.
+      Verifikasi: awal bulan 25, ringkasan Daftar = kartu Arus Beranda =
+      total Analisis untuk periode yang sama; gaji 23 Okt tertaut 25 Okt
+      tampil di Daftar periode 25 Okt; perpindahan segmen mempertahankan
+      periode.
+      Memenuhi FR-TXN-004, FR-ANL-001.
 - [ ] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
       termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
       jadi tugas baru. Dikerjakan terakhir.
@@ -4330,6 +4346,7 @@ Tabel ini memastikan tidak ada kebutuhan di
 | FR-ANL-001 | T-19.1, T-19.4, T-19.6, T-19.7, T-19.8, T-19.9 |
 | FR-ANL-002 | T-19.2, T-19.4 |
 | FR-ANL-003 | T-19.2, T-19.4 |
+| FR-TXN-004 (periode keuangan di Daftar) | T-19.10 |
 | FR-ANL-004 | T-19.3, T-19.5 |
 | FR-ANL-005 | T-19.3, T-19.4, T-19.6 |
 | FR-ANL-006 | B-38 |

@@ -1,0 +1,95 @@
+name: Shorebird Pipeline (Release/Patch)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action_type:
+        description: 'Pilih aksi (release atau patch)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - release
+          - patch
+      flutter_version:
+        description: 'Versi Flutter (contoh: 3.47.5)'
+        required: true
+        default: '3.47.5'
+        type: string
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # # --- 1. SETUP BUILD ENVIRONTMENT (WITH CACHE) ---
+      # - name: Setup Java
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'temurin'
+      #     java-version: '17'
+      #     cache: 'gradle'
+
+      # - name: Setup Flutter
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     flutter-version: ${{ github.event.inputs.flutter_version }}
+      #     channel: 'stable'
+      #     cache: true
+
+      # - name: Cache Pub Dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.local/share/pub-cache/hosted
+      #       ~/.pub-cache/hosted
+      #     key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pub-
+
+      # - name: Install Flutter Dependencies
+      #   run: flutter pub get
+
+      # - name: Setup Shorebird
+      #   uses: shorebirdtech/setup-shorebird@v1
+      #   with:
+      #     cache: true
+
+      # - name: Setup Ruby and Fastlane
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.2'
+      #     bundler-cache: true
+      #     working-directory: android
+
+      # # --- 2. SHOREBIRD & FASTLANE EXECUTION ---
+      # - name: Fastlane - Shorebird Release to Play Store
+      #   if: github.event.inputs.action_type == 'release'
+      #   env:
+      #     SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+      #   working-directory: android
+      #   run: bundle exec fastlane android release_internal
+
+      # - name: Fastlane - Shorebird Patch
+      #   if: github.event.inputs.action_type == 'patch'
+      #   env:
+      #     SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+      #   working-directory: android
+      #   run: bundle exec fastlane android patch_ota
+    
+    # --- 3. SETUP FIREBASE & UPDATE CONFIG ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm' # Need file package-lock.json in repositori
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Update Firebase Remote Config
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: node scripts/update_release_note.js

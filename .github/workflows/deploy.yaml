@@ -33,13 +33,15 @@ jobs:
           java-version: '17'
           cache: 'gradle'
       
-      - name: Cache Android NDK
+      - name: Cache Android NDK & CMake
         uses: actions/cache@v3
         with:
-          path: /usr/local/lib/android/sdk/ndk
-          key: ${{ runner.os }}-ndk-${{ hashFiles('android/app/build.gradle') }}
+          path: |
+            /usr/local/lib/android/sdk/ndk
+            /usr/local/lib/android/sdk/cmake
+          key: ${{ runner.os }}-android-ndk-cmake-${{ hashFiles('android/app/build.gradle') }}
           restore-keys: |
-            ${{ runner.os }}-ndk-
+            ${{ runner.os }}-android-ndk-cmake-
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -74,6 +76,28 @@ jobs:
           working-directory: android
 
       # # --- 2. SHOREBIRD & FASTLANE EXECUTION ---
+      - name: Setup Keystore & key.properties
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > android/upload-keystore.jks
+
+          cat <<EOF > android/key.properties
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Create Play Store Credential For Fastlane
+        env:
+          PLAY_STORE_JSON: ${{ secrets.FASTLANE_ANDROID_SERVICE_ACCOUNT }}
+        working-directory: android/fastlane
+        run: echo "$PLAY_STORE_JSON" > fastlane-android-service-account.json
+
       - name: Fastlane - Shorebird Release to Play Store
         if: github.event.inputs.action_type == 'release'
         env:

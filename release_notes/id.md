@@ -1,4 +1,4 @@
-🚀 Apa yang baru di versi ini:
+🚀 Apa yang baru di versi patch ini:
 
 • Perbaikan bug pada halaman utama
 • Peningkatan kecepatan loading data

@@ -1,0 +1,37 @@
+default_platform(:android)
+
+platform :android do
+
+    desc "Shorebird Release dan Upload ke Play Store Internal"
+    lane :release_internal do
+        # 1. Build Release App Using Shorebird
+        shorebird_release(platform: "android")
+
+        # 2. Read release note file from root folder
+        note_id = File.read("../../release_notes/id.md")
+        note_en = File.read("../../release_notes/en.md")
+
+        # 3. Upload to Google Play Store (Internal Track)
+        # upload_to_play_store(
+        #     track: "internal",
+        #     aab: "../build/app/outputs/bundle/release/app-release.aab",
+        #     release_notes: {
+        #         "id-ID" => note_id,
+        #         "en-US" => note_en
+        #     },
+        #     changes_not_sent_for_review: true,
+        #     skip_upload_metadata: true,
+        #     skip_upload_images: true,
+        #     skip_upload_screenshots: true
+        # )
+    end
+
+    desc "Shorebird Patch (OTA Update)"
+    lane :patch_ota do
+        shorebird_patch(
+            platform: "android",
+            args: "--release-version=latest"
+        )
+    end
+
+end

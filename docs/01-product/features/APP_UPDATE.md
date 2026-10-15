@@ -222,8 +222,8 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | # | Aturan (bisa diuji) |
 |---|---|
 | B-1 | Pengumuman pembaruan tidak pernah menulis atau membaca data keuangan; saldo, transaksi, anggaran, dan rutin sama persis sebelum dan sesudah memasang versi baru atau pembaruan kecil. |
-| B-2 | Banner pembaruan hanya tampil di Beranda, di slot `notice` yang sama dengan banner kotak masuk notifikasi. Bila kotak masuk punya transaksi menunggu, banner kotak masuk yang tampil (satu banner per layar, `writing.md`). |
-| B-3 | Prioritas di slot itu: kotak masuk notifikasi > versi baru sudah diunduh > versi baru tersedia/mengunduh > pembaruan kecil siap. |
+| B-2 | Banner pembaruan hanya tampil di Beranda, di slot **di atas kartu saldo**; banner kotak masuk notifikasi tetap di slotnya sendiri di bawah saldo, jadi keduanya bisa tampil bersamaan (diubah pemilik 15 Okt 2026, mengikuti rupa v3; sebelumnya satu banner per layar dan kotak masuk menang). |
+| B-3 | Prioritas **di dalam** banner pembaruan (satu saja yang tampil): versi baru sudah diunduh > versi baru tersedia/mengunduh > pembaruan kecil siap. |
 | B-4 | Versi baru dari Play mengalahkan pembaruan kecil: bila keduanya ada, hanya versi baru yang diumumkan (S4). |
 | B-5 | Pengecekan terjadi saat aplikasi dibuka, kembali ke depan, atau Akun dibuka, tanpa terasa memberatkan (frekuensi persisnya ditentukan engineer). Kegagalan apa pun = "tidak diketahui", tanpa banner dan tanpa pesan galat. |
 | B-6 | **Nanti** menunda banner untuk build itu selama 7 hari. Build yang lebih baru dari yang ditunda tampil lagi tanpa menunggu. |
@@ -244,24 +244,28 @@ bila data aplikasi dihapus. Cara menyimpannya ditentukan engineer.
 
 ## 7. Kebutuhan informasi per layar
 
-**Banner Beranda** (rupa v3, keputusan pemilik 15 Okt 2026: latar `brand`
-penuh, tile ikon, judul + chip versi dalam satu baris yang membungkus ke
-bawah bila sempit, tombol × di pojok kanan atas, tombol aksi di bawahnya;
-chip versi dari Remote Config, ADR-039 §3.3 butir 7):
+**Banner Beranda** (rupa v3, keputusan pemilik 15 Okt 2026): kartu `brand`
+penuh **di atas kartu saldo**; tile 40px (emoji atau ikon), judul tebal dengan
+chip versi `straw` (turun ke bawah bila sempit) dan keterangan di bawahnya,
+tombol × di pojok kanan atas, lalu garis pemisah dan tombol aksi rata kanan.
+Chip versi dari Remote Config (ADR-039 §3.3 butir 7). Tanpa tautan "Lihat apa
+yang baru" dan tanpa lembar sebelum dipasang: catatan hanya tampil setelah
+aplikasi diperbarui (lembar otomatis, daftar di Akun).
 
-| Keadaan | Judul | Chip versi | Aksi | × (Nanti) |
-|---|---|---|---|---|
-| Versi baru tersedia | Versi baru tersedia. | Ya, bila namanya sudah ada | Perbarui | Ya |
-| Mengunduh | Mengunduh versi baru. Kamu tetap bisa mencatat. | Ya | — | Tidak |
-| Sudah diunduh | Versi baru sudah diunduh. | Ya | Pasang sekarang | Tidak |
-| Pembaruan kecil siap | Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya. | Tidak | Oke (menutup dan mencatat) | Tidak |
+| Keadaan | Tile | Judul | Keterangan | Chip versi | Aksi | × (Nanti) |
+|---|---|---|---|---|---|---|
+| Versi baru tersedia | 🚀 | Versi baru tersedia | — | Ya, bila namanya sudah ada | Perbarui | Ya |
+| Mengunduh | ikon berputar | Mengunduh versi baru | Kamu tetap bisa mencatat. | Ya | — | Tidak |
+| Sudah diunduh | ikon pembaruan | Versi baru sudah diunduh | — | Ya | Pasang sekarang | Tidak |
+| Pembaruan kecil siap | ikon buka ulang | Pembaruan kecil siap | Tutup lalu buka lagi aplikasi untuk memakainya. | Tidak | Oke (menutup dan mencatat) | Tidak |
 
 Ketuk × = Nanti (tunda 7 hari, B-6); label aksesibilitasnya "Nanti".
 Chip hanya nama versi (mis. `v0.7.0`), bukan isi catatan, dan tanpa ukuran
 unduhan (Play tidak memberikannya).
 
-**Lembar Apa yang baru** (perlu rupa dari ui-ux-designer: lembar bawah
-sederhana; belum ada di prototipe):
+**Lembar Apa yang baru** (rupa v3: tile 🚀 dengan chip versi dan judul di tengah,
+tombol × di pojok kanan atas, butir dikelompokkan per kategori dalam kartu,
+tanpa kalimat terima kasih dan tanpa maskot):
 
 1. Judul: "Apa yang baru di versi 0.6.0" (pembaruan kecil: "Apa yang baru").
 2. Daftar 1–3 butir (sampai enam bila menggabungkan, B-12),

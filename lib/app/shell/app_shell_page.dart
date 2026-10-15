@@ -147,12 +147,13 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowBudgets: () => _showPlan(context, PlanSegment.budget),
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
-        notice: Column(
+        updateNotice: Column(
           children: [
             WhatsNewHost(container: parentContainer, active: _activeTab == _homeTabIndex),
-            CaptureInboxBanner(container: parentContainer, fallback: AppUpdateBanner(container: parentContainer)),
+            AppUpdateBanner(container: parentContainer),
           ],
         ),
+        notice: CaptureInboxBanner(container: parentContainer),
         pendingRecurring: RecurringPendingCard(
           spotlight: (tour: TourId.home, key: SpotlightKey.homePending),
           container: parentContainer,

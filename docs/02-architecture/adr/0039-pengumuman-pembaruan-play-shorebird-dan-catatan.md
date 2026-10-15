@@ -233,8 +233,10 @@ dengan `domain/` murni:
 - `presentation`: `AppUpdateBloc` (state_management), `AppUpdateBanner`,
   `WhatsNewSheet`, rute `AppUpdateRouteKeys.notes` untuk daftar dari Akun.
 - Komposisi: `RootModule` memasang bloc; `lib/app/shell/app_shell_page.dart`
-  mengisi slot `notice` Beranda dengan penentu prioritas (kotak masuk
-  notifikasi > banner pembaruan, B-2/B-3). Akun membuka layar lewat kunci
+  mengisi slot `updateNotice` Beranda (di atas kartu saldo) dengan
+  banner pembaruan dan pemicu lembar; banner kotak masuk tetap di slot
+  `notice` di bawah saldo dan keduanya bisa tampil bersamaan (B-2, diubah
+  pemilik 15 Okt 2026). Akun membuka layar lewat kunci
   rute dan membaca baris versi lewat port kecil milik `account` (ADR-030:
   tanpa impor isi `app_update`).
 - **Ingatan aplikasi** di `KeyValueStorage` (pola

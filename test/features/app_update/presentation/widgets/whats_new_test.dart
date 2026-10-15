@@ -104,7 +104,7 @@ void main() {
       expect(find.text('✨'), findsNothing);
     });
 
-    testWidgets('Oke memanggil penutup; tidak ada tombol tutup bergambar maupun penutup maskot', (tester) async {
+    testWidgets('Oke dan × memanggil penutup; tanpa maskot dan tanpa kalimat terima kasih', (tester) async {
       var closed = 0;
       await pump(
         tester,
@@ -114,10 +114,16 @@ void main() {
         onClose: () => closed++,
       );
       await tester.tap(find.byKey(const ValueKey('whats-new-ok')));
-      expect(closed, 1);
-      expect(find.byIcon(Icons.close), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('whats-new-close')));
+      expect(closed, 2);
+      expect(find.bySemanticsLabel(t.appUpdate.whatsNew.close), findsOneWidget);
       expect(find.byType(Image), findsNothing);
       expect(find.textContaining('Terima kasih'), findsNothing);
+      expect(
+        tester.getRect(find.byKey(const ValueKey('whats-new-close'))).right,
+        greaterThan(tester.getRect(find.byKey(const ValueKey('whats-new-ok'))).right - 16),
+        reason: '× di pojok kanan',
+      );
     });
 
     for (final locale in [AppLocale.id, AppLocale.en]) {

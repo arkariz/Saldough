@@ -3633,17 +3633,23 @@ class Translations$appUpdate$banner$id {
 
 	// Translations
 
-	/// id: 'Versi baru tersedia.'
-	String get storeAvailable => 'Versi baru tersedia.';
+	/// id: 'Versi baru tersedia'
+	String get storeAvailable => 'Versi baru tersedia';
 
-	/// id: 'Mengunduh versi baru. Kamu tetap bisa mencatat.'
-	String get storeDownloading => 'Mengunduh versi baru. Kamu tetap bisa mencatat.';
+	/// id: 'Mengunduh versi baru'
+	String get storeDownloading => 'Mengunduh versi baru';
 
-	/// id: 'Versi baru sudah diunduh.'
-	String get storeDownloaded => 'Versi baru sudah diunduh.';
+	/// id: 'Kamu tetap bisa mencatat.'
+	String get storeDownloadingNote => 'Kamu tetap bisa mencatat.';
 
-	/// id: 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.'
-	String get patchReady => 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.';
+	/// id: 'Versi baru sudah diunduh'
+	String get storeDownloaded => 'Versi baru sudah diunduh';
+
+	/// id: 'Pembaruan kecil siap'
+	String get patchReady => 'Pembaruan kecil siap';
+
+	/// id: 'Tutup lalu buka lagi aplikasi untuk memakainya.'
+	String get patchReadyNote => 'Tutup lalu buka lagi aplikasi untuk memakainya.';
 }
 
 // Path: appUpdate.action
@@ -4856,10 +4862,12 @@ extension on Translations {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.',
-			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia.',
-			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru. Kamu tetap bisa mencatat.',
-			'appUpdate.banner.storeDownloaded' => 'Versi baru sudah diunduh.',
-			'appUpdate.banner.patchReady' => 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.',
+			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',
+			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru',
+			'appUpdate.banner.storeDownloadingNote' => 'Kamu tetap bisa mencatat.',
+			'appUpdate.banner.storeDownloaded' => 'Versi baru sudah diunduh',
+			'appUpdate.banner.patchReady' => 'Pembaruan kecil siap',
+			'appUpdate.banner.patchReadyNote' => 'Tutup lalu buka lagi aplikasi untuk memakainya.',
 			'appUpdate.action.update' => 'Perbarui',
 			'appUpdate.action.install' => 'Pasang sekarang',
 			'appUpdate.action.later' => 'Nanti',

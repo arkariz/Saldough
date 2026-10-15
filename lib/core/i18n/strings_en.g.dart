@@ -1456,10 +1456,12 @@ class _Translations$appUpdate$banner$en extends Translations$appUpdate$banner$id
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get storeAvailable => 'A new version is available.';
-	@override String get storeDownloading => 'Downloading the new version. You can keep recording.';
-	@override String get storeDownloaded => 'The new version is downloaded.';
-	@override String get patchReady => 'A small update is ready. Close and reopen the app to use it.';
+	@override String get storeAvailable => 'A new version is available';
+	@override String get storeDownloading => 'Downloading the new version';
+	@override String get storeDownloadingNote => 'You can keep recording.';
+	@override String get storeDownloaded => 'The new version is downloaded';
+	@override String get patchReady => 'A small update is ready';
+	@override String get patchReadyNote => 'Close and reopen the app to use it.';
 }
 
 // Path: appUpdate.action
@@ -2636,10 +2638,12 @@ extension on TranslationsEn {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
-			'appUpdate.banner.storeAvailable' => 'A new version is available.',
-			'appUpdate.banner.storeDownloading' => 'Downloading the new version. You can keep recording.',
-			'appUpdate.banner.storeDownloaded' => 'The new version is downloaded.',
-			'appUpdate.banner.patchReady' => 'A small update is ready. Close and reopen the app to use it.',
+			'appUpdate.banner.storeAvailable' => 'A new version is available',
+			'appUpdate.banner.storeDownloading' => 'Downloading the new version',
+			'appUpdate.banner.storeDownloadingNote' => 'You can keep recording.',
+			'appUpdate.banner.storeDownloaded' => 'The new version is downloaded',
+			'appUpdate.banner.patchReady' => 'A small update is ready',
+			'appUpdate.banner.patchReadyNote' => 'Close and reopen the app to use it.',
 			'appUpdate.action.update' => 'Update',
 			'appUpdate.action.install' => 'Install now',
 			'appUpdate.action.later' => 'Later',

@@ -35,8 +35,12 @@ Sistem ini menggantikan bahasa visual pixel (ADR-015, ADR-016, ADR-020) dan `Pix
 | (baru) | `AppPeriodHeader` | Nama periode yang bisa diketuk + penanda periode peralihan netral |
 | (baru) | `AppDayPicker` | Lembar Awal bulan keuangan: kisi tanggal 7 kolom, pratinjau, garis waktu periode, sakelar anggaran rutin |
 | (baru) | `AppPeriodStepper` | ‹ periode ›, maju nonaktif di periode berjalan |
-| (baru) | `AppShareRow` | Baris kategori Analisis: nominal, bilah porsi kotak 6px `ink-2`, persen, pembanding |
+| (baru) | `AppLegendRow` | Baris legenda donat satu baris: penanda warna, nama, persen, nominal; bisa dipilih |
+| (baru) | `AppDonutChart` | Donat porsi kategori, `CustomPainter`: lingkar 216, tebal 24, celah 2, mulai jam 12 searah jarum jam; tengah total atau kategori terpilih, irisan lain 25% |
 | (baru) | `AppTrendChart` | Kolom kotak 6px berpasangan (pemasukan, pengeluaran) per periode, selisih ringkas di bawah, `CustomPainter` |
+| (baru) | `AppUpdateCard` | Kartu `brand` pembaruan di Beranda: tile 🚀/ikon, judul + pil versi, keterangan, tutup, kaki (tautan + satu tombol); empat keadaan |
+| (baru) | `AppReleaseNotes` | Isi lembar: kepala (🚀 + pil + judul), kartu butir berkategori (tile berwarna + pil kategori + kalimat), kelompok per versi |
+| (baru) | `AppInfoSheet` | Sheet varian Catatan: isi menggulir (maks 300px) + kaki tombol `primary` (dan "Nanti") |
 
 ## Urutan pengerjaan yang disarankan
 

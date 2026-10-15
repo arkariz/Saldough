@@ -63,10 +63,21 @@ Riwayat › Analisis menjawab "uangku ke mana, dibanding biasanya". Hanya membac
 
 1. PeriodStepper (‹ periode ›, maju berhenti di periode berjalan).
 2. SegmentedControl Pengeluaran / Pemasukan, lalu chip penyaring dompet "Semua dompet ▾".
-3. Kartu ringkasan: label, total (`amount-hero`), pembanding `tk-cmp`, lalu 0–3 sorotan sebagai baris bertautan di kartu yang sama.
-4. Daftar kategori dengan ShareRow: lima teratas, Lainnya yang bisa dibuka, lalu kartu Tanpa kategori dengan "Beri kategori".
-5. Baris informasi transfer di luar kartu.
-6. Bagian "6 bulan terakhir" dengan TrendChart dan readout periode terpilih.
+3. Satu kartu: DonutChart (jenis dan total di tengah), pembanding `tk-cmp`, 0–3 sorotan bertautan, lalu legenda LegendRow: lima teratas, Lainnya yang bisa dibuka, Tanpa kategori. Ketuk irisan atau baris untuk melihat satu kategori di tengah donat, dengan pembanding dan "Lihat rincian" (atau "Beri kategori").
+4. Transfer di kaki kartu yang sama (`tk-card__foot`): "Dipindahkan antardompet" + nominal, "Tidak mengurangi total uangmu".
+5. Bagian "6 bulan terakhir" dengan TrendChart; ketuk kolom memilihnya, panel angka memberi "Lihat analisis {periode}".
 
-Nada netral di seluruh layar: tanpa `warning` atau `danger`, tanpa `≈`, tanpa bingkai putus-putus. Arah perubahan disampaikan oleh panah `ink-2` dan kata, bukan warna.
+**Rincian kategori:** kartu atas (periode, total `amount-hero`, persen dari jenisnya, pembanding, lalu ringkasan frekuensi `tk-freq`: "2 transaksi · rata-rata Rp622.500 per transaksi" dan "biasanya 1,7 transaksi · Rp570.000" `ink-2`), TrendChart satu besaran dengan garis rata-rata, lalu transaksi (ketuk → Rincian transaksi) dan "Lihat semua transaksi". Kategori baru: tanpa garis dan tanpa "biasanya".
 
+Riwayat Daftar dan Analisis berbagi periode (PeriodStepper yang sama).
+
+Nada netral di seluruh layar: tanpa `warning` atau `danger`, tanpa `≈`, tanpa bingkai putus-putus. Arah perubahan disampaikan oleh panah `ink-2` dan kata, bukan warna. Warna kategori di donat hanya pembeda kategori, bukan penilaian.
+
+## Pembaruan aplikasi
+
+Fase 20, rupa v3 mengikuti rujukan gambar pilihan pemilik (15 Okt 2026).
+
+1. **Kartu pembaruan di Beranda** (UpdateCard): kartu `brand` di paling atas Beranda dengan 🚀, judul, pil versi, tautan "Lihat apa yang baru" dan satu tombol. Di gambar ia berada di atas kartu saldo dan berdampingan dengan banner kotak masuk; ini menyimpang dari satu banner per layar dan B-2/B-3 dan menunggu keputusan product owner. Tanpa hitung mundur.
+2. **Lembar Apa yang baru** (Sheet varian Catatan + ReleaseNotes): dibuka dari tautan di kartu (sebelum dipasang: Perbarui + Nanti) dan sekali sesudah pembaruan yang punya catatan (Oke). Tidak di Catat, onboarding, atau tur. Beberapa versi sekaligus: satu lembar, dikelompokkan per versi.
+3. **Akun › Versi aplikasi**: baris di grup paling bawah (ikon system_update): judul, nomor versi, keterangan keadaan. Halaman Versi aplikasi: kartu status (tile `brand-soft`), bagian "Apa yang baru" berisi satu kartu per versi, tindakan lebar penuh menempel di bawah hanya saat ada tindakan.
+4. Teks dan keadaan mengikuti dokumen fitur; di sini hanya rupanya.

@@ -80,7 +80,7 @@ Terakhir diperbarui: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
 | 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 19 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 selesai 11 Okt 2026 (13 Lulus 2 Gagal, temuan T-18.13–T-18.19 diverifikasi ulang di perangkat dan Lulus); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via). **Selesai 15 Okt 2026**: T-18.9 lulus, masuk `main` lewat rilis `0.7.0+13` |
-| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 0 | Dijadwalkan 10 Okt 2026; Fase 18 selesai; rupa Analisis sudah ada (15 Okt 2026); dikerjakan per irisan vertikal di `claude/analisis-fase-19`, tiap irisan diverifikasi pemilik sebelum berikutnya |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -3952,9 +3952,20 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
 Keputusan pemilik 10 Okt 2026. Perilaku di
 [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)
 (aturan B-1–B-16, contoh §10). Bergantung pada T-18.2–T-18.4 (periode dan
-`periodDateOf`). Layar menunggu rupa dari pemilik (FINANCIAL_ANALYSIS §14);
-tugas domain T-19.1–T-19.3 boleh lebih dulu. Branch usulan
-`claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+`periodDateOf`). Rupa sudah ada sejak review 12 Okt 2026 (FINANCIAL_ANALYSIS
+§14, salinan di `docs/03-design`). **Dikerjakan per irisan vertikal**, bukan
+per lapisan (keputusan pemilik 15 Okt 2026): tiap irisan menembus domain →
+layar → pintu masuk dan berhenti untuk diverifikasi pemilik; satu tugas
+T-19.x bisa selesai lintas irisan dan dicentang begitu seluruh kriterianya
+terpenuhi. Branch `claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+
+Irisan: 1 Beranda → Analisis pengeluaran periode berjalan (T-19.1, T-19.4
+inti, pintu T-19.6) · 2 pilih kategori, Tanpa kategori, Daftar tersaring
+(T-19.3) · 3 Pemasukan, Freelance, per dompet · 4 pembanding dan sorotan
+(T-19.2) · 5 tren enam periode · 6 Rincian kategori (T-19.5) · 7 Daftar
+berbagi periode (T-19.10) · 8 kilas balik, tur, analitik (T-19.6, T-19.8,
+T-19.9). Pembanding: periode peralihan di antara tiga periode dibuang,
+rata-rata dari sisanya (keputusan pemilik 15 Okt 2026).
 Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV).
 
 - [ ] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
@@ -3983,8 +3994,9 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       transfer, tren; keadaan kosong, periode kosong, satu bulan data, galat;
       `AmountVisibility` (B-12); segar lewat `LedgerChanges`; segmen terakhir
       diingat.
-      ⚠ Perlu rupa dari pemilik (FINANCIAL_ANALYSIS §14) dan skill
-      `tanukonomy-ui`; kata mengikuti §12 dan glosarium (tambah Analisis,
+      ⚠ Rupa: prototipe `Analisis*`, `Riwayat` dan komponen DonutChart,
+      LegendRow, TrendChart, SubTabs, PeriodStepper (FINANCIAL_ANALYSIS §14);
+      pakai skill `tanukonomy-ui`; kata mengikuti §12 dan glosarium (tambah Analisis,
       Tanpa kategori).
       Verifikasi: uji widget per keadaan, kedua bahasa, 360dp.
       Memenuhi FR-ANL-001, FR-ANL-002, FR-ANL-003, FR-ANL-005.

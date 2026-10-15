@@ -15,8 +15,11 @@ import 'package:saldough/features/account/presentation/navigation/account_route_
 import 'package:saldough/features/app_update/data/app_update_memory_repository_impl.dart';
 import 'package:saldough/features/app_update/data/package_info_version_source.dart';
 import 'package:saldough/features/app_update/data/play_store_update_source.dart';
+import 'package:saldough/features/app_update/data/release_notes_repository_impl.dart';
+import 'package:saldough/features/app_update/data/remote_config_gateway.dart';
 import 'package:saldough/features/app_update/data/shorebird_patch_source.dart';
 import 'package:saldough/features/app_update/domain/repositories/app_update_memory_repository.dart';
+import 'package:saldough/features/app_update/domain/repositories/release_notes_source.dart';
 import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
@@ -217,11 +220,16 @@ abstract final class RootModule {
           patch: container<PatchSource>(),
         ),
       )
+      // Catatan Apa yang baru: Remote Config + salinan lokal (ADR-039 §3.3).
+      ..registerLazySingleton<ReleaseNotesSource>(
+        () => ReleaseNotesRepositoryImpl(gateway: FirebaseRemoteConfigGateway(), storage: container<KeyValueStorage>()),
+      )
       ..registerLazySingleton<AppUpdateBloc>(
         () => AppUpdateBloc(
           read: container<ReadUpdateSnapshot>(),
           store: container<StoreUpdateSource>(),
           memory: container<AppUpdateMemoryRepository>(),
+          notes: container<ReleaseNotesSource>(),
         ),
       )
       // Pilihan bahasa (ADR-028), kunci `settings/language`. Mengganti bahasa

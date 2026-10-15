@@ -1251,6 +1251,7 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	@override late final _Translations$appUpdate$banner$en banner = _Translations$appUpdate$banner$en._(_root);
 	@override late final _Translations$appUpdate$action$en action = _Translations$appUpdate$action$en._(_root);
 	@override late final _Translations$appUpdate$whatsNew$en whatsNew = _Translations$appUpdate$whatsNew$en._(_root);
+	@override late final _Translations$appUpdate$category$en category = _Translations$appUpdate$category$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1484,6 +1485,20 @@ class _Translations$appUpdate$whatsNew$en extends Translations$appUpdate$whatsNe
 	@override String title({required Object version}) => 'What\'s new in version ${version}';
 	@override String get titlePatch => 'What\'s new';
 	@override String get empty => 'No update notes yet.';
+	@override String get close => 'Close';
+}
+
+// Path: appUpdate.category
+class _Translations$appUpdate$category$en extends Translations$appUpdate$category$id {
+	_Translations$appUpdate$category$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get kNew => 'New';
+	@override String get faster => 'Faster';
+	@override String get fixed => 'Fixes';
+	@override String get security => 'Security';
 }
 
 // Path: record.voice.failure
@@ -2632,6 +2647,11 @@ extension on TranslationsEn {
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'What\'s new',
 			'appUpdate.whatsNew.empty' => 'No update notes yet.',
+			'appUpdate.whatsNew.close' => 'Close',
+			'appUpdate.category.kNew' => 'New',
+			'appUpdate.category.faster' => 'Faster',
+			'appUpdate.category.fixed' => 'Fixes',
+			'appUpdate.category.security' => 'Security',
 			_ => null,
 		};
 	}

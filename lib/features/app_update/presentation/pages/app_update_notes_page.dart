@@ -6,6 +6,7 @@ import 'package:saldough/features/app_update/domain/services/update_policy.dart'
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_labels.dart';
+import 'package:saldough/features/app_update/presentation/widgets/release_notes_view.dart';
 import 'package:state_management/state_management.dart';
 
 /// Halaman "Versi aplikasi" dari baris di Akun (APP_UPDATE F4, §7; prototipe
@@ -23,7 +24,7 @@ class AppUpdateNotesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final texts = t.appUpdate;
     return BlocBuilder<AppUpdateBloc, AppUpdateState>(
-      buildWhen: (a, b) => a.snapshot != b.snapshot || a.busy != b.busy,
+      buildWhen: (a, b) => a.snapshot != b.snapshot || a.busy != b.busy || a.installedNotes != b.installedNotes,
       builder: (context, state) {
         final bloc = context.read<AppUpdateBloc>();
         final action = _action(state, bloc);
@@ -36,7 +37,29 @@ class AppUpdateNotesPage extends StatelessWidget {
                 _VersionHeader(state: state),
                 const SizedBox(height: AppSpacing.space6),
                 AppSectionHeader(texts.whatsNew.titlePatch),
-                AppEmptyState(title: texts.whatsNew.empty),
+                if (state.installedNotes.isEmpty)
+                  AppEmptyState(title: texts.whatsNew.empty)
+                else
+                  for (final note in state.installedNotes) ...[
+                    AppCard(
+                      key: ValueKey('app-update-notes-${note.build}-${note.patch}'),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Semantics(
+                            header: true,
+                            child: Text(
+                              releaseNoteVersion(note),
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: context.appColors.ink2),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.space3),
+                          ReleaseNoteGroups(groups: note.groups),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.space3),
+                  ],
               ],
             ),
           ),

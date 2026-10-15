@@ -1192,7 +1192,14 @@
     "whatsNew": {
       "title": "What's new in version $version",
       "titlePatch": "What's new",
-      "empty": "No update notes yet."
+      "empty": "No update notes yet.",
+      "close": "Close"
+    },
+    "category": {
+      "new": "New",
+      "faster": "Faster",
+      "fixed": "Fixes",
+      "security": "Security"
     }
   }
 }

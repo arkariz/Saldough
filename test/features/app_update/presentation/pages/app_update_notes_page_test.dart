@@ -7,6 +7,7 @@ import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
+import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/navigation/app_update_route_keys.dart';
@@ -62,6 +63,36 @@ void main() {
     expect(find.text(t.appUpdate.whatsNew.empty), findsOneWidget);
     expect(find.text(t.appUpdate.action.update), findsNothing);
     expect(find.text(t.appUpdate.action.install), findsNothing);
+  });
+
+  testWidgets('daftar catatan: hanya versi terpasang, terbaru di atas, dikelompokkan per kategori', (tester) async {
+    ReleaseNote note(int build, String version) => ReleaseNote(
+      build: build,
+      patch: 0,
+      version: version,
+      groups: [
+        NoteGroup(
+          category: NoteCategory.fixed,
+          notes: [LocalizedNote(id: 'Catatan $version.', en: 'Note $version.')],
+        ),
+      ],
+    );
+    harness.notes.entries = {
+      (build: 6, patch: 0): note(6, '0.5.0'),
+      (build: 7, patch: 0): note(7, '0.6.0'),
+      (build: 8, patch: 0): note(8, '0.7.0'),
+    };
+    await open(tester);
+    expect(find.byKey(const ValueKey('app-update-notes-7-0')), findsOneWidget);
+    expect(find.byKey(const ValueKey('app-update-notes-6-0')), findsOneWidget);
+    expect(find.byKey(const ValueKey('app-update-notes-8-0')), findsNothing, reason: 'belum terpasang');
+    expect(find.text('Catatan 0.6.0.'), findsOneWidget);
+    expect(find.text(t.appUpdate.category.fixed), findsNWidgets(2));
+    expect(find.text(t.appUpdate.whatsNew.empty), findsNothing);
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('app-update-notes-7-0'))).dy,
+      lessThan(tester.getTopLeft(find.byKey(const ValueKey('app-update-notes-6-0'))).dy),
+    );
   });
 
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {

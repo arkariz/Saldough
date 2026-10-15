@@ -3610,6 +3610,23 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Verifikasi: uji sumber catatan palsu (entri ada, belum ada, terlambat
       < 2 dtk, lewat 2 dtk, luring dengan salinan lokal).
       Memenuhi FR-UPD-003.
+      ⚠ Sebagian (15 Okt 2026): data, logika, dan lembar dikerjakan. Ada:
+      `ReleaseNote`/`NoteCategory` + parser berkas berkategori,
+      `decideWhatsNew`/`installedNotes` (B-10–B-12, rollback, tunda bila
+      belum terambil), `ReleaseNotesRepositoryImpl` di atas Remote Config
+      (`firebase_remote_config`, interval 30 menit, `onConfigUpdated`,
+      salinan lokal hanya sampai versi berjalan), bloc (lembar menunggu,
+      daftar terpasang, chip versi dari entri build yang ditawarkan Play dengan
+      batas tunggu 2 detik), `WhatsNewHost` (menunggu tab Beranda aktif, tur
+      selesai, dan tidak ada layar/lembar lain di atasnya), `WhatsNewSheet`
+      dan daftar di halaman Versi aplikasi, `release_notes/7-0.json` (draf)
+      dan uji penjaga berkas (`test/release/`). Uji 70+ baru; suite 1.409
+      lulus, `flutter analyze` bersih.
+      Tersisa: (1) rupa lembar dan daftar per kategori digambar ulang
+      ui-ux-designer (tampilan sekarang sementara); (2) pemilik menyetujui
+      teks `release_notes/7-0.json` (KT-U5; draf dari commit sejak
+      0.5.0+6: kalkulator Catat, urutan dompet, Kembali ke Beranda);
+      (3) berkas `release_notes/id.md`/`en.md` dan skrip CI diganti di T-20.6.
 - [ ] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
       `UpdateEvents` (`update_banner_shown` (+ `has_version`), `update_banner_action`,
       `app_updated`, `whats_new_viewed`), properti pengguna dan custom key

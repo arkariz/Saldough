@@ -41,6 +41,17 @@ final class AppUpdatePatchAcknowledged extends AppUpdateEvent {
   const AppUpdatePatchAcknowledged();
 }
 
+/// Lembar Apa yang baru ditutup (Oke, scrim, atau geser): sudah dilihat.
+final class AppUpdateWhatsNewSeen extends AppUpdateEvent {
+  /// Membuat [AppUpdateWhatsNewSeen].
+  const AppUpdateWhatsNewSeen();
+}
+
+/// Nilai catatan baru diaktifkan saat aplikasi terbuka.
+final class _AppUpdateNotesChanged extends AppUpdateEvent {
+  const _AppUpdateNotesChanged();
+}
+
 /// Keadaan unduhan berubah dari aliran Play.
 final class _AppUpdateStageChanged extends AppUpdateEvent {
   const _AppUpdateStageChanged(this.stage);

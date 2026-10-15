@@ -11,6 +11,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
+import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
 import 'package:saldough/features/app_update/domain/repositories/app_update_memory_repository.dart';
 import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
@@ -23,6 +24,8 @@ import 'package:saldough/features/notification_capture/domain/repositories/notif
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/capture_inbox_banner.dart';
 import 'package:saldough/shared/capture/capture.dart';
+
+import '../../../../helpers/update_harness.dart';
 
 class _MockInstalled extends Mock implements InstalledVersionSource {}
 
@@ -49,6 +52,7 @@ void main() {
   late _MockPatch patch;
   late _MockMemory memory;
   late GetIt container;
+  late FakeReleaseNotes fakeNotes;
   AppUpdateBloc? created;
 
   void source({StoreUpdateInfo? play, PatchState patchState = PatchState.none}) {
@@ -63,11 +67,12 @@ void main() {
     store = _MockStore();
     patch = _MockPatch();
     memory = _MockMemory();
+    fakeNotes = FakeReleaseNotes();
     when(installed.read).thenAnswer((_) async => right((name: '0.5.0', build: 6)));
     when(() => store.watch()).thenAnswer(_noStages);
     when(() => store.startDownload()).thenAnswer((_) async => right(true));
     when(() => store.completeInstall()).thenAnswer((_) async => right(unit));
-    when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty));
+    when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(6, 0)));
     when(() => memory.save(any())).thenAnswer((_) async => right(unit));
     source();
     // Bloc dibuat malas, di dalam zona uji widget (bukan di setUp).
@@ -78,6 +83,7 @@ void main() {
           read: ReadUpdateSnapshot(installed: installed, store: store, patch: patch),
           store: store,
           memory: memory,
+          notes: fakeNotes,
         ),
       );
   });
@@ -167,6 +173,22 @@ void main() {
     await pump(tester, child: AppUpdateBanner(container: GetIt.asNewInstance()));
     expect(find.byType(UpdateBannerCard), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('chip versi tampil bila catatan build yang ditawarkan Play sudah ada (B-14)', (tester) async {
+    fakeNotes.entries = {
+      (build: 8, patch: 0): const ReleaseNote(build: 8, patch: 0, version: '0.7.0', groups: []),
+    };
+    source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
+    await pump(tester);
+    expect(find.text('v0.7.0'), findsOneWidget);
+  });
+
+  testWidgets('tanpa catatan build itu: banner tampil tanpa chip', (tester) async {
+    source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
+    await pump(tester);
+    expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
+    expect(find.byKey(const ValueKey('app-update-version-chip')), findsNothing);
   });
 
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {

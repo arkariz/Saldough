@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 2 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.2 selesai, lanjut T-20.3 |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 3 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3 selesai, lanjut T-20.4 (menunggu rupa U1–U2) |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3568,13 +3568,25 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       tampil agar target sorot tidak bergeser. Uji 33 baru (bloc, banner id/en
       360dp tiap keadaan, kotak masuk menang, tur, S4); suite 1.322 lulus,
       `flutter analyze` bersih. Belum diverifikasi di perangkat (T-20.8).
-- [ ] **T-20.3** Baris Versi aplikasi di Akun (APP_UPDATE F4).
+- [x] **T-20.3** Baris Versi aplikasi di Akun (APP_UPDATE F4).
       Versi, build, dan pembaruan kecil (format sesuai KT-U4), keterangan
       keadaan, ketuk membuka Apa yang baru dengan tombol Perbarui/Pasang
       sekarang sesuai keadaan; membuka Akun memicu cek (B-5).
       Verifikasi: uji widget "0.6.0 (7)" dan "0.6.0 (7), pembaruan 1" serta
       tiap keterangan keadaan; tombol tetap tersedia sesudah Nanti.
       Memenuhi FR-UPD-004.
+      Selesai 15 Okt 2026: baris `AppVersionRow` di grup baru "Aplikasi"
+      paling bawah layar Akun (`account.version.*`, `account.appSection`),
+      disisipkan akar komposisi lewat `accountVersionEntry` (Akun tidak
+      mengimpor isi `app_update`, ADR-030); membuka Akun memicu cek Play
+      (`force`). Ketuk membuka layar "Apa yang baru" (`AppUpdateRouteKeys.notes`,
+      `AppUpdateNotesPage`) dengan Perbarui / Pasang sekarang menurut keadaan
+      sebenarnya, sehingga tetap ada sesudah Nanti. Selisih disengaja: nilai
+      versi dan keterangan keadaan dalam satu subjudul dua baris (bukan
+      nilai di kanan) agar tidak mengecil di 360dp. Daftar catatan di layar
+      itu baru keadaan kosong; isinya di T-20.4 (perlu rupa dari designer).
+      Uji 20 baru (id/en 360dp tiap keadaan, tombol sesudah Nanti, B-7);
+      suite 1.342 lulus, `flutter analyze` bersih. Belum di perangkat (T-20.8).
 - [ ] **T-20.4** Apa yang baru (APP_UPDATE F3, B-10–B-12).
       Catatan per versi/pembaruan kecil dalam id dan en (cara menyimpan
       sesuai ADR T-20.1, luring atau daring; tersedia untuk pembaruan

@@ -10,6 +10,7 @@ void main() {
   test('setiap kunci rute fitur terdaftar sekali', () {
     expect(appRouteRegistry().registeredKeys.toSet(), {
       'account.page',
+      'appUpdate.notes',
       'budget.detail',
       'freelance.overview',
       'record.sheet',

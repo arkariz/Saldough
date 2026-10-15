@@ -745,7 +745,18 @@
     },
     "recordingSection": "Recording",
     "displaySection": "Display",
-    "hideAmountsBody": "Replace numbers with dots on every screen, e.g. when opening the app around others."
+    "hideAmountsBody": "Replace numbers with dots on every screen, e.g. when opening the app around others.",
+    "appSection": "App",
+    "version": {
+      "label": "App version",
+      "value": "$version ($build)",
+      "valuePatched": "$version ($build), patch $patch",
+      "statusLatest": "Up to date",
+      "statusAvailable": "New version available",
+      "statusDownloading": "Downloading new version",
+      "statusDownloaded": "New version downloaded",
+      "statusPatchReady": "Small update ready, reopen the app"
+    }
   },
   "currency": {
     "settingsTitle": "Settings",
@@ -1177,6 +1188,11 @@
       "install": "Install now",
       "later": "Later",
       "ok": "OK"
+    },
+    "whatsNew": {
+      "title": "What's new in version $version",
+      "titlePatch": "What's new",
+      "empty": "No update notes yet."
     }
   }
 }

@@ -2082,6 +2082,11 @@ class Translations$account$id {
 
 	/// id: 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.'
 	String get hideAmountsBody => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.';
+
+	/// id: 'Aplikasi'
+	String get appSection => 'Aplikasi';
+
+	late final Translations$account$version$id version = Translations$account$version$id.internal(_root);
 }
 
 // Path: currency
@@ -3194,6 +3199,7 @@ class Translations$appUpdate$id {
 	// Translations
 	late final Translations$appUpdate$banner$id banner = Translations$appUpdate$banner$id.internal(_root);
 	late final Translations$appUpdate$action$id action = Translations$appUpdate$action$id.internal(_root);
+	late final Translations$appUpdate$whatsNew$id whatsNew = Translations$appUpdate$whatsNew$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3459,6 +3465,39 @@ class Translations$account$errors$id {
 	String get other => 'Gagal masuk. Coba lagi.';
 }
 
+// Path: account.version
+class Translations$account$version$id {
+	Translations$account$version$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Versi aplikasi'
+	String get label => 'Versi aplikasi';
+
+	/// id: '$version ($build)'
+	String value({required Object version, required Object build}) => '${version} (${build})';
+
+	/// id: '$version ($build), pembaruan $patch'
+	String valuePatched({required Object version, required Object build, required Object patch}) => '${version} (${build}), pembaruan ${patch}';
+
+	/// id: 'Terbaru'
+	String get statusLatest => 'Terbaru';
+
+	/// id: 'Versi baru tersedia'
+	String get statusAvailable => 'Versi baru tersedia';
+
+	/// id: 'Mengunduh versi baru'
+	String get statusDownloading => 'Mengunduh versi baru';
+
+	/// id: 'Versi baru sudah diunduh'
+	String get statusDownloaded => 'Versi baru sudah diunduh';
+
+	/// id: 'Pembaruan kecil siap, buka ulang aplikasi'
+	String get statusPatchReady => 'Pembaruan kecil siap, buka ulang aplikasi';
+}
+
 // Path: currency.names
 class Translations$currency$names$id {
 	Translations$currency$names$id.internal(this._root);
@@ -3625,6 +3664,24 @@ class Translations$appUpdate$action$id {
 
 	/// id: 'Oke'
 	String get ok => 'Oke';
+}
+
+// Path: appUpdate.whatsNew
+class Translations$appUpdate$whatsNew$id {
+	Translations$appUpdate$whatsNew$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Apa yang baru di versi $version'
+	String title({required Object version}) => 'Apa yang baru di versi ${version}';
+
+	/// id: 'Apa yang baru'
+	String get titlePatch => 'Apa yang baru';
+
+	/// id: 'Belum ada catatan pembaruan.'
+	String get empty => 'Belum ada catatan pembaruan.';
 }
 
 // Path: record.voice.failure
@@ -4374,6 +4431,15 @@ extension on Translations {
 			'account.recordingSection' => 'Pencatatan',
 			'account.displaySection' => 'Tampilan',
 			'account.hideAmountsBody' => 'Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.',
+			'account.appSection' => 'Aplikasi',
+			'account.version.label' => 'Versi aplikasi',
+			'account.version.value' => ({required Object version, required Object build}) => '${version} (${build})',
+			'account.version.valuePatched' => ({required Object version, required Object build, required Object patch}) => '${version} (${build}), pembaruan ${patch}',
+			'account.version.statusLatest' => 'Terbaru',
+			'account.version.statusAvailable' => 'Versi baru tersedia',
+			'account.version.statusDownloading' => 'Mengunduh versi baru',
+			'account.version.statusDownloaded' => 'Versi baru sudah diunduh',
+			'account.version.statusPatchReady' => 'Pembaruan kecil siap, buka ulang aplikasi',
 			'currency.settingsTitle' => 'Pengaturan',
 			'currency.label' => 'Mata uang',
 			'currency.pickerTitle' => 'Pilih mata uang',
@@ -4679,6 +4745,8 @@ extension on Translations {
 			'recurring.priceUpKeep' => 'Biarkan',
 			'recurring.suggestTitle' => 'Sepertinya rutin',
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, sekitar tanggal ${day} tiga bulan terakhir.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.suggestAccept' => 'Jadikan rutin',
 			'recurring.suggestDismiss' => 'Bukan rutin',
 			'recurring.autoRecordedTitle' => 'Tercatat otomatis',
@@ -4688,8 +4756,6 @@ extension on Translations {
 			'plan.financialMonthDay' => ({required Object day}) => 'Tanggal ${day}',
 			'plan.thisMonthSegmentLabel' => 'Bulan ini',
 			'plan.unplannedTitle' => ({required Object month}) => 'Uang nganggur · ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'plan.incomeRow' => 'Pemasukan',
 			'plan.billsRow' => 'Tagihan rutin',
 			'plan.budgetRow' => 'Anggaran',
@@ -4773,6 +4839,9 @@ extension on Translations {
 			'appUpdate.action.install' => 'Pasang sekarang',
 			'appUpdate.action.later' => 'Nanti',
 			'appUpdate.action.ok' => 'Oke',
+			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
+			'appUpdate.whatsNew.titlePatch' => 'Apa yang baru',
+			'appUpdate.whatsNew.empty' => 'Belum ada catatan pembaruan.',
 			_ => null,
 		};
 	}

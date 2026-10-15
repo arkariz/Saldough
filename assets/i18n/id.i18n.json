@@ -1161,5 +1161,19 @@
     "committedShare": "${percent}% pemasukan $month sudah terikat (rutin + anggaran).",
     "committedShareVs": "${percent}% pemasukan $month sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.",
     "installmentFree": "Sesudah $name selesai, mulai $month ruang bebas +$amount/bln."
+  },
+  "appUpdate": {
+    "banner": {
+      "storeAvailable": "Versi baru tersedia.",
+      "storeDownloading": "Mengunduh versi baru. Kamu tetap bisa mencatat.",
+      "storeDownloaded": "Versi baru sudah diunduh.",
+      "patchReady": "Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya."
+    },
+    "action": {
+      "update": "Perbarui",
+      "install": "Pasang sekarang",
+      "later": "Nanti",
+      "ok": "Oke"
+    }
   }
 }

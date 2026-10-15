@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 1 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1 selesai, lanjut T-20.2 |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 2 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.2 selesai, lanjut T-20.3 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3546,7 +3546,7 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Dependensi `firebase_remote_config` baru ditambah di T-20.4. Uji 30
       baru; seluruh suite 1.289 lulus, `flutter analyze` bersih.
       Belum ada UI; bloc dan banner di T-20.2.
-- [ ] **T-20.2** Banner pembaruan di Beranda (APP_UPDATE F1, F2, §7).
+- [x] **T-20.2** Banner pembaruan di Beranda (APP_UPDATE F1, F2, §7).
       Keadaan banner di slot yang sama dengan banner kotak masuk notifikasi
       dan kalah darinya (B-2, B-3); Perbarui, Pasang sekarang, Nanti
       (menunda 7 hari), dan Oke (pembaruan kecil sudah diumumkan). Pola
@@ -3557,6 +3557,17 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Verifikasi: uji widget tiap keadaan dan urutan prioritas (S4: versi
       baru mengalahkan pembaruan kecil); uji bahwa banner kotak masuk menang.
       Memenuhi FR-UPD-001, FR-UPD-002.
+      Selesai 15 Okt 2026: `AppUpdateBloc` (singleton akar; cek sesudah frame
+      pertama dan saat aplikasi kembali ke depan, Play dibatasi 6 jam kecuali
+      Akun, Nanti/Oke disimpan), `AppUpdateBanner`, dan teks `appUpdate.*`
+      id/en. Banner masuk slot `notice` Beranda sebagai `fallback`
+      `CaptureInboxBanner` (kotak masuk menang, satu banner per layar).
+      Selisih disengaja: nada `info` + ikon `refresh` (bukan warning: lembut,
+      APP_UPDATE ui-ux); `AppBanner` dapat tindakan kedua berupa teks
+      ("Nanti") sebelum tindakan utama; banner menyingkir selama tur spotlight
+      tampil agar target sorot tidak bergeser. Uji 33 baru (bloc, banner id/en
+      360dp tiap keadaan, kotak masuk menang, tur, S4); suite 1.322 lulus,
+      `flutter analyze` bersih. Belum diverifikasi di perangkat (T-20.8).
 - [ ] **T-20.3** Baris Versi aplikasi di Akun (APP_UPDATE F4).
       Versi, build, dan pembaruan kecil (format sesuai KT-U4), keterangan
       keadaan, ketuk membuka Apa yang baru dengan tombol Perbarui/Pasang

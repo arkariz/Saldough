@@ -1164,5 +1164,19 @@
     "committedShare": "${percent}% of $month income is already committed (repeating + budgets).",
     "committedShareVs": "${percent}% of $month income is already committed (repeating + budgets); the month before, ${previous}%.",
     "installmentFree": "After $name ends, from $month you free up +$amount/mo."
+  },
+  "appUpdate": {
+    "banner": {
+      "storeAvailable": "A new version is available.",
+      "storeDownloading": "Downloading the new version. You can keep recording.",
+      "storeDownloaded": "The new version is downloaded.",
+      "patchReady": "A small update is ready. Close and reopen the app to use it."
+    },
+    "action": {
+      "update": "Update",
+      "install": "Install now",
+      "later": "Later",
+      "ok": "OK"
+    }
   }
 }

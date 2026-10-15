@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 0 | Draf 11 Okt 2026, menunggu keputusan pemilik KT-U1–KT-U5; mulai dari T-20.1 (engineer menulis ADR teknis) |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 1 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1 selesai, lanjut T-20.2 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3514,12 +3514,14 @@ B-1–B-13, teks, dan kasus tepi di
 [APP_UPDATE.md](../01-product/features/APP_UPDATE.md). **Keputusan teknis
 diserahkan ke engineer** (APP_UPDATE §13): mekanisme rilis Play Store,
 pembaruan kecil Shorebird, penyimpanan catatan Apa yang baru, dan perlu
-tidaknya server; ditulis sebagai ADR di T-20.1. **Belum boleh dikerjakan**
-sebelum pemilik menjawab KT-U1–KT-U5. Branch sendiri dari `main`; tidak
+tidaknya server; ditulis sebagai ADR di T-20.1
+([ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md),
+Accepted 15 Okt 2026). Pemilik menjawab KT-U1–KT-U5 sesuai rekomendasi
+(15 Okt 2026). Branch sendiri dari `main`; tidak
 menyentuh berkas Fase 18/19 selain slot banner Beranda dan layar Akun.
 Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai/artifact/42Lb4hBdMaXzQnX7pXE59J).
 
-- [ ] **T-20.1** ADR teknis pengumuman pembaruan, lalu fondasinya.
+- [x] **T-20.1** ADR teknis pengumuman pembaruan, lalu fondasinya.
       Engineer memilih dan menulis ADR (nomor berikutnya, Proposed sampai
       disetujui pemilik) untuk lima keputusan APP_UPDATE §13, dengan
       batasan di bagian yang sama, termasuk data yang keluar perangkat.
@@ -3533,6 +3535,17 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       B-8, rollback pembaruan kecil, dan versi baru yang mengatur ulang
       hitungan pembaruan kecil (APP_UPDATE §11); uji batas impor lulus.
       Memenuhi FR-UPD-001, FR-UPD-002.
+      Selesai 15 Okt 2026: ADR-039 Accepted (Play In-App Update fleksibel,
+      Shorebird baca saja, catatan: sumber `release_notes/` di repo disajikan
+      lewat Remote Config satu parameter per entri). Fondasi di
+      `lib/features/app_update/`: model (`AppVersion`, `UpdateSnapshot`,
+      `AppUpdateMemory`), `pickAnnouncement`/`versionStatusOf` (B-3, B-4,
+      B-6, B-8, rollback), port sumber + implementasi `in_app_update`,
+      `shorebird_code_push`, `package_info_plus`, ingatan di
+      `KeyValueStorage`, `ReadUpdateSnapshot`, dikawat di `RootModule`.
+      Dependensi `firebase_remote_config` baru ditambah di T-20.4. Uji 30
+      baru; seluruh suite 1.289 lulus, `flutter analyze` bersih.
+      Belum ada UI; bloc dan banner di T-20.2.
 - [ ] **T-20.2** Banner pembaruan di Beranda (APP_UPDATE F1, F2, §7).
       Keadaan banner di slot yang sama dengan banner kotak masuk notifikasi
       dan kalah darinya (B-2, B-3); Perbarui, Pasang sekarang, Nanti

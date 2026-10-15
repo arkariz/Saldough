@@ -11,6 +11,13 @@ import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
+import 'package:saldough/features/app_update/data/app_update_memory_repository_impl.dart';
+import 'package:saldough/features/app_update/data/package_info_version_source.dart';
+import 'package:saldough/features/app_update/data/play_store_update_source.dart';
+import 'package:saldough/features/app_update/data/shorebird_patch_source.dart';
+import 'package:saldough/features/app_update/domain/repositories/app_update_memory_repository.dart';
+import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
+import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/adapters/plan_budget_source_impl.dart';
@@ -190,6 +197,21 @@ abstract final class RootModule {
       // `tutorial/progress`. Bukan data keuangan.
       ..registerLazySingleton<TutorialProgressRepository>(
         () => TutorialProgressRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      // Pengumuman pembaruan (ADR-039): sumber Play, Shorebird, versi
+      // terpasang, dan ingatan aplikasi `app_update/memory` (bukan data keuangan).
+      ..registerLazySingleton<InstalledVersionSource>(PackageInfoVersionSource.new)
+      ..registerLazySingleton<StoreUpdateSource>(PlayStoreUpdateSource.new)
+      ..registerLazySingleton<PatchSource>(ShorebirdPatchSource.new)
+      ..registerLazySingleton<AppUpdateMemoryRepository>(
+        () => AppUpdateMemoryRepositoryImpl(storage: container<KeyValueStorage>()),
+      )
+      ..registerLazySingleton<ReadUpdateSnapshot>(
+        () => ReadUpdateSnapshot(
+          installed: container<InstalledVersionSource>(),
+          store: container<StoreUpdateSource>(),
+          patch: container<PatchSource>(),
+        ),
       )
       // Pilihan bahasa (ADR-028), kunci `settings/language`. Mengganti bahasa
       // ikut mengganti nama kategori bawaan yang belum diganti pengguna.

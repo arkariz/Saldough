@@ -5,7 +5,7 @@
 - **Decision ID:** ADR-039
 - **Tanggal:** 2026-10-15
 - **Fase roadmap:** Fase 20 (T-20.1)
-- **Status:** Proposed (menunggu persetujuan pemilik)
+- **Status:** Accepted (pemilik, 2026-10-15)
 - **Cakupan:** Fitur baru `app_update`, slot banner Beranda (`lib/app/shell`),
   layar Akun, pipeline rilis (`.github/workflows/deploy.yaml`,
   `scripts/`, `release_notes/`)

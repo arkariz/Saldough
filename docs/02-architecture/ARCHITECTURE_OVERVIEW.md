@@ -128,7 +128,8 @@ saldough/
 │       ├── wallet/  transaction/  budget/  freelance/  account/  onboarding/
 │       ├── record/                       # CATAT — satu-satunya formulir pencatatan transaksi
 │       ├── voice_capture/                # catat pakai suara → CATAT berisi draf (ADR-027, ADR-033)
-│       └── notification_capture/         # catat dari notifikasi, Android (ADR-032, ADR-033)
+│       ├── notification_capture/         # catat dari notifikasi, Android (ADR-032, ADR-033)
+│       └── app_update/                   # pengumuman versi baru (Play) dan pembaruan kecil (Shorebird), Apa yang baru (ADR-039)
 └── test/                                 # cermin lib/, + architecture/ dan helpers/
 ```
 
@@ -595,7 +596,10 @@ lewat `ScopeWidget` fiturnya di dalam `IndexedStack` (bukan
 `StatefulShellRoute` — catatan revisi ADR-0004 §8). Tombol mengambang membuka
 rute alur `record` dan `voice_capture`; shell tidak memasang `RecordBloc`.
 Shell juga memasang host dan banner `notification_capture` (pemicu
-pemrosesan dan kartu kotak masuk).
+pemrosesan dan kartu kotak masuk) serta banner dan lembar `app_update`
+(slot di atas kartu saldo Beranda; `AppUpdateBloc` singleton di akar). Baris
+Versi aplikasi di Akun disisipkan akar komposisi lewat `accountVersionEntry`,
+supaya Akun tidak mengimpor isi `app_update` (ADR-030, ADR-039).
 
 ### Sinkronisasi antarfitur
 

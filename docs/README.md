@@ -96,7 +96,10 @@ docs/
 │       ├── VOICE_INPUT_RESEARCH.md    # kategori + Catat lewat Suara (Fase 11)
 │       ├── RECURRING_AND_FORECAST.md  # transaksi/anggaran rutin dan perkiraan (draf)
 │       ├── RECURRING_COMPETITIVE_ANALYSIS.md  # analisis pesaing untuk fitur rutin dan perkiraan
-│       └── PLAN_TAB_LAYOUT.md         # tata letak tab Rencana: Bulan ini, Anggaran, Rutin
+│       ├── PLAN_TAB_LAYOUT.md         # tata letak tab Rencana: Bulan ini, Anggaran, Rutin
+│       ├── FINANCIAL_PERIOD.md        # periode keuangan (Fase 18)
+│       ├── FINANCIAL_ANALYSIS.md      # analisis keuangan (Fase 19)
+│       └── APP_UPDATE.md              # pengumuman pembaruan Play Store dan Shorebird (Fase 20)
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md
@@ -104,7 +107,8 @@ docs/
 ├── 03-release/                # toko dan rilis
 │   ├── ASO_NAME_RESEARCH.md   # riset nama Tanukonomy dan kata kunci toko
 │   ├── PLAY_STORE_LISTING.md  # setelan toko dan listing Play (ASO)
-│   └── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
+│   ├── PLAY_DATA_SAFETY.md    # draf formulir Keamanan Data Play Console
+│   └── RELEASE_NOTES.md       # catatan "Apa yang baru": berkas, persetujuan, langkah rilis
 ├── 04-planning/               # urutan dan progres yang masih berjalan
 │   ├── ROADMAP.md
 │   ├── TASK_LIST.md           # tugas, progres, antrean B-n; mulai dari sini
@@ -165,8 +169,9 @@ docs/
 | [0036](02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md) | Anggaran rutin, perkiraan ke depan, dan tinjau awal bulan (R2) | Accepted |
 | [0037](02-architecture/adr/0037-otomasi-rutin-r3.md) | Otomasi rutin: deteksi, catat otomatis, dan saran (R3) | Accepted |
 | [0038](02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) | Periode keuangan berriwayat, periode peralihan, dan atribusi periode | Accepted |
+| [0039](02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md) | Pengumuman pembaruan: Play In-App Update, Shorebird, dan catatan Apa yang baru | Accepted |
 
-ADR berikutnya memakai nomor **0039**.
+ADR berikutnya memakai nomor **0040**.
 
 ## Pertanyaan yang sering muncul
 
@@ -186,6 +191,7 @@ ADR berikutnya memakai nomor **0039**.
 | Kenapa tampilannya sudut piksel, ikon piksel, dan satu huruf? | [ADR-034](02-architecture/adr/0034-bahasa-visual-buku-catatan-piksel.md), desainnya di [03-design](03-design/README.md) |
 | Bagaimana menambah tugas baru? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Menambah tugas baru" |
 | Apa yang menunggu di antrean? | [Daftar tugas](04-planning/TASK_LIST.md), bagian "Antrean" |
+| Bagaimana pengguna tahu ada versi baru atau pembaruan kecil? Bagaimana catatan "Apa yang baru" ditulis dan diterbitkan? | [APP_UPDATE.md](01-product/features/APP_UPDATE.md), [ADR-039](02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md), dan [RELEASE_NOTES.md](03-release/RELEASE_NOTES.md) |
 | Apa yang harus diisi sebelum submit ke Play Store? | [PLAY_DATA_SAFETY.md](03-release/PLAY_DATA_SAFETY.md) dan [PLAY_STORE_LISTING.md](03-release/PLAY_STORE_LISTING.md) |
 | Apa yang dikerjakan berikutnya? | [Daftar tugas](04-planning/TASK_LIST.md) dan [perbaikan hasil review UX](04-planning/done/UX_REVIEW_FIXES.md) |
 

@@ -873,9 +873,11 @@ antrean (B-38).
 Kebutuhan ini lahir dari permintaan pemilik 11 Okt 2026: pengguna perlu tahu
 ada versi baru, baik rilis Play Store maupun pembaruan kecil Shorebird.
 Perilaku, aturan B-1–B-13, dan teksnya di
-[APP_UPDATE.md](features/APP_UPDATE.md); keputusan teknisnya ditentukan
-engineer sebagai ADR baru (APP_UPDATE §13). R1 di Fase 20 (Android), R2 di
-antrean (B-39).
+[APP_UPDATE.md](features/APP_UPDATE.md); keputusan teknisnya di
+[ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md)
+(Accepted 15 Okt 2026). R1 di Fase 20 (Android): kode selesai dan di `main`,
+kotak di bawah dicentang setelah verifikasi perangkat T-20.8. R2 di antrean
+(B-39).
 
 **FR-UPD-001 — Versi baru dari Play Store (R1)**
 

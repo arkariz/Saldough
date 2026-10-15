@@ -1,9 +1,13 @@
 # Pengumuman pembaruan: versi baru dari Play Store dan pembaruan kecil Shorebird
 
 **Tanggal:** 11 Oktober 2026.
-**Status:** Draf, menunggu keputusan pemilik (§12). Keputusan teknisnya
-ditentukan engineer (§13) dan ditulis sebagai ADR baru di T-20.1; tugasnya
-Fase 20 di TASK_LIST.
+**Status:** Diputuskan pemilik 15 Okt 2026 (§12). Kode T-20.1–T-20.7 selesai
+dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); sisa T-20.8,
+verifikasi di perangkat lewat jalur tes Play. Keputusan teknisnya di
+[ADR-039](../../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md)
+(Accepted 15 Okt 2026); tugasnya Fase 20 di TASK_LIST. Proses menulis dan
+menerbitkan catatan "Apa yang baru":
+[RELEASE_NOTES.md](../../03-release/RELEASE_NOTES.md).
 **Berkaitan:** [ADR-023](../../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)
 (Analytics/Crashlytics), T-8.7 (rilis Android dan Shorebird),
 [PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md), skill
@@ -11,13 +15,13 @@ Fase 20 di TASK_LIST.
 
 Dokumen ini merancang perilaku, alur, aturan, dan teks: apa yang dialami
 pengguna. **Cara teknisnya tidak diputuskan di sini**: mekanisme pengecekan
-dan pemasangan versi Play Store, cara membaca keadaan Shorebird, tempat
-menyimpan catatan "Apa yang baru", dan perlu tidaknya server atau
-konfigurasi jarak jauh ditentukan engineer, dengan batasan di §13. Rupa visual
+dan pemasangan versi Play Store, cara membaca keadaan Shorebird, dan tempat
+menyimpan catatan "Apa yang baru" dipilih engineer di ADR-039 (ringkasannya
+di §13). Rupa visual
 mengikuti komponen yang sudah ada (banner perhatian, baris setelan, lembar);
 yang belum ada ditandai "perlu rupa dari ui-ux-designer".
 
-## 1. Ringkasan keputusan (usulan)
+## 1. Ringkasan keputusan
 
 1. **Dua mekanisme, satu bahasa untuk pengguna.** Pengguna tidak perlu tahu
    Play Store atau Shorebird. Rilis toko disebut **versi baru**, tambalan
@@ -26,21 +30,21 @@ yang belum ada ditandai "perlu rupa dari ui-ux-designer".
 2. **Versi baru dari Play Store bisa dipasang dari dalam aplikasi**, dengan
    ketukan sesedikit mungkin, tanpa dipaksa, dan sebisa mungkin tanpa
    menghentikan pengguna yang sedang mencatat. Pengguna bisa menundanya
-   (KT-U1). Mekanismenya dipilih engineer.
+   (KT-U1).
 3. **Pembaruan kecil yang sudah siap diumumkan sekali** di Beranda, beserta
-   cara memakainya (tutup lalu buka lagi aplikasi) (KT-U2). Cara aplikasi
-   mengetahui keadaan pembaruan kecil dipilih engineer.
+   cara memakainya (tutup lalu buka lagi aplikasi) (KT-U2).
 4. **"Apa yang baru" tampil sekali** sesudah versi atau pembaruan kecil yang
    punya catatan terpasang, lalu bisa dibuka lagi dari Akun (KT-U3).
-   Catatan tersedia untuk versi baru maupun pembaruan kecil; tempat, cara
-   menyimpan, dan perlu tidaknya koneksi untuk membacanya dipilih engineer.
+   Catatan tersedia untuk versi baru maupun pembaruan kecil, dan **wajib
+   ada untuk setiap build yang dipublikasikan** (keputusan pemilik 15 Okt
+   2026).
 5. **Tidak pernah mengganggu pencatatan.** Pengumuman hanya di Beranda dan
    Akun, tidak pernah di tengah Catat, suara, atau lembar lain; tidak muncul
-   selama onboarding atau tur; kalah prioritas dari banner kotak masuk
-   notifikasi; dan diam saja saat luring atau saat pengecekan gagal.
-6. **Tanpa data keuangan keluar perangkat.** Apa pun mekanisme yang dipilih
-   engineer, data baru yang keluar perangkat (bila ada) disebut di ADR-nya
-   dan dicek terhadap formulir Keamanan Data (§9).
+   selama onboarding atau tur; tidak menyingkirkan banner kotak masuk
+   notifikasi (keduanya bisa tampil bersama, B-2); dan diam saja saat luring
+   atau saat pengecekan gagal.
+6. **Tanpa data keuangan keluar perangkat.** Data teknis yang keluar karena
+   fitur ini disebut di ADR-039 dan di formulir Keamanan Data (§9).
 
 ## 2. Masalah dan bukti
 
@@ -158,7 +162,7 @@ flowchart TD
 1. Titik masuk: Beranda (banner) atau Akun → Versi aplikasi.
 2. Target ketukan: **Perbarui** → (konfirmasi Play bila mekanismenya
    memintanya) → **Pasang sekarang**. Paling banyak dua ketukan di
-   aplikasi. Bila mekanisme yang dipilih engineer tidak mendukung unduh di
+   aplikasi. Bila mekanisme pembaruan tidak mendukung unduh di
    latar, keadaan "mengunduh" dan "sudah diunduh" boleh tidak ada; syarat
    yang tetap berlaku: tidak memaksa, bisa ditunda, dan tidak menghilangkan
    data.
@@ -225,7 +229,7 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | B-2 | Banner pembaruan hanya tampil di Beranda, di slot **di atas kartu saldo**; banner kotak masuk notifikasi tetap di slotnya sendiri di bawah saldo, jadi keduanya bisa tampil bersamaan (diubah pemilik 15 Okt 2026, mengikuti rupa v3; sebelumnya satu banner per layar dan kotak masuk menang). |
 | B-3 | Prioritas **di dalam** banner pembaruan (satu saja yang tampil): versi baru sudah diunduh > versi baru tersedia/mengunduh > pembaruan kecil siap. |
 | B-4 | Versi baru dari Play mengalahkan pembaruan kecil: bila keduanya ada, hanya versi baru yang diumumkan (S4). |
-| B-5 | Pengecekan terjadi saat aplikasi dibuka, kembali ke depan, atau Akun dibuka, tanpa terasa memberatkan (frekuensi persisnya ditentukan engineer). Kegagalan apa pun = "tidak diketahui", tanpa banner dan tanpa pesan galat. |
+| B-5 | Pengecekan terjadi saat aplikasi dibuka, kembali ke depan, atau Akun dibuka, tanpa terasa memberatkan: ke Play paling sering sekali per jam (diulang sesudah 1 menit bila hasil terakhir gagal atau belum pasti), kecuali saat Akun dibuka (ADR-039 §3.1). Kegagalan apa pun = "tidak diketahui", tanpa banner dan tanpa pesan galat. |
 | B-6 | **Nanti** menunda banner untuk build itu selama 7 hari. Build yang lebih baru dari yang ditunda tampil lagi tanpa menunggu. |
 | B-7 | **Pasang sekarang** hanya dijalankan dari ketukan pengguna di Beranda atau Akun. Aplikasi tidak pernah memanggil pemasangan sendiri. |
 | B-8 | Banner pembaruan kecil tampil paling banyak sekali per nomor tambalan. |
@@ -240,7 +244,7 @@ Yang perlu diingat aplikasi agar aturan di atas berlaku: versi terakhir
 yang dilihat (build, pembaruan kecil), build yang ditunda dan kapan,
 pembaruan kecil yang sudah diumumkan. Ini bukan data keuangan dan bukan
 entitas domain (DOMAIN_MODEL tidak berubah); milik perangkat, ikut terhapus
-bila data aplikasi dihapus. Cara menyimpannya ditentukan engineer.
+bila data aplikasi dihapus. Disimpan di `KeyValueStorage` (ADR-039).
 
 ## 7. Kebutuhan informasi per layar
 
@@ -303,16 +307,16 @@ tambalan.
 
 ## 9. Privasi dan Keamanan Data
 
-- **Mekanisme pengecekan dan pemasangan** yang dipilih engineer (pustaka,
-  layanan, server, atau konfigurasi jarak jauh bila ada) wajib menyebut di
-  ADR-nya data apa yang keluar perangkat, ke mana, dan untuk apa, supaya
-  formulir Keamanan Data bisa diperbarui (T-20.7).
+- **Mekanisme yang dipilih** (ADR-039): Play In-App Updates (tanpa data ke
+  pengembang), Shorebird baca saja, dan Firebase Remote Config untuk
+  catatan (data teknis otomatis dan ID instalasi Firebase). Tidak ada server
+  baru milik sendiri.
 - **Shorebird sudah menghubungi servernya sejak T-8.7** untuk menanyakan
-  pembaruan kecil, tetapi
-  [PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md) belum
-  menyebutnya. Celah pencatatannya ditutup di T-20.7: data apa yang
-  dikirim Shorebird
-  (menurut dokumentasi resminya) dan apakah perlu dideklarasikan.
+  pembaruan kecil, tetapi belum tercatat di formulir. Celah itu dan data
+  Remote Config dicatat di
+  [PLAY_DATA_SAFETY.md](../../03-release/PLAY_DATA_SAFETY.md) (T-20.7);
+  pemilik melaporkan formulir Play Console dan kebijakan privasi sudah
+  diisi ulang (15 Okt 2026).
 - Nomor pembaruan kecil sebagai properti pengguna dan custom key menambah satu
   atribut ke data Analytics/Crashlytics yang sudah dideklarasikan; bukan
   jenis data baru.
@@ -321,24 +325,29 @@ tambalan.
 
 ## 10. Kata dan kalimat (id / en)
 
-Kunci yang diusulkan; engineer boleh merapikan sesuai struktur i18n.
+Kunci seperti yang dipakai di kode (`assets/i18n/`). Judul dan keterangan
+banner dipisah (judul tanpa titik) mengikuti rupa v3.
 
 | Kunci | id | en |
 |---|---|---|
-| `appUpdate.banner.storeAvailable` | Versi baru tersedia. | A new version is available. |
-| `appUpdate.banner.storeDownloading` | Mengunduh versi baru. Kamu tetap bisa mencatat. | Downloading the new version. You can keep recording. |
-| `appUpdate.banner.storeDownloaded` | Versi baru sudah diunduh. | The new version is downloaded. |
-| `appUpdate.banner.patchReady` | Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya. | A small update is ready. Close and reopen the app to use it. |
+| `appUpdate.banner.storeAvailable` | Versi baru tersedia | A new version is available |
+| `appUpdate.banner.storeDownloading` | Mengunduh versi baru | Downloading the new version |
+| `appUpdate.banner.storeDownloadingNote` | Kamu tetap bisa mencatat. | You can keep recording. |
+| `appUpdate.banner.storeDownloaded` | Versi baru sudah diunduh | The new version is downloaded |
+| `appUpdate.banner.patchReady` | Pembaruan kecil siap | A small update is ready |
+| `appUpdate.banner.patchReadyNote` | Tutup lalu buka lagi aplikasi untuk memakainya. | Close and reopen the app to use it. |
 | `appUpdate.action.update` | Perbarui | Update |
 | `appUpdate.action.install` | Pasang sekarang | Install now |
 | `appUpdate.action.later` | Nanti | Later |
 | `appUpdate.action.ok` | Oke | OK |
-| `appUpdate.whatsNew.title` | Apa yang baru di versi {version} | What's new in version {version} |
+| `appUpdate.whatsNew.title` | Apa yang baru di versi $version | What's new in version $version |
 | `appUpdate.whatsNew.titlePatch` | Apa yang baru | What's new |
 | `appUpdate.whatsNew.empty` | Belum ada catatan pembaruan. | No update notes yet. |
+| `appUpdate.whatsNew.close` | Tutup | Close |
+| `account.appSection` | Aplikasi | App |
 | `account.version.label` | Versi aplikasi | App version |
-| `account.version.value` | {version} ({build}) | {version} ({build}) |
-| `account.version.valuePatched` | {version} ({build}), pembaruan {patch} | {version} ({build}), patch {patch} |
+| `account.version.value` | $version ($build) | $version ($build) |
+| `account.version.valuePatched` | $version ($build), pembaruan $patch | $version ($build), patch $patch |
 | `account.version.statusLatest` | Terbaru | Up to date |
 | `account.version.statusAvailable` | Versi baru tersedia | New version available |
 | `account.version.statusDownloading` | Mengunduh versi baru | Downloading new version |
@@ -352,10 +361,13 @@ benar saat transaksi dipindah ke pos lain."
 
 Nama kategori catatan (`appUpdate.category.*`): **Baru** / New,
 **Lebih cepat** / Faster, **Perbaikan** / Fixes, **Keamanan** / Security.
-Aturan pakai dan bentuk berkas catatan: ADR-039 §3.3.
+Aturan pakai dan bentuk berkas catatan: ADR-039 §3.3 dan
+[RELEASE_NOTES.md](../../03-release/RELEASE_NOTES.md). Panel diagnostik
+(`appUpdate.diagnostic.*`: tekan lama kartu kepala di halaman Versi
+aplikasi) adalah alat bantu uji, bukan fitur pengguna.
 
-Istilah baru masuk glosarium: **Versi baru**, **Pembaruan kecil**, **Apa
-yang baru**.
+Istilah baru sudah masuk glosarium: **Versi baru**, **Pembaruan kecil**,
+**Apa yang baru**.
 
 ## 11. Kasus tepi
 
@@ -373,61 +385,49 @@ yang baru**.
 | Pengguna menghapus data aplikasi | Sama dengan pemasangan pertama. |
 | Mode tampil gelap / sembunyikan nominal | Tidak berpengaruh; tidak ada nominal di fitur ini. |
 
-## 12. Pertanyaan untuk pemilik
+## 12. Keputusan pemilik (15 Okt 2026)
 
-- **KT-U1 — Boleh memaksa pembaruan?** Rekomendasi: **tidak** di R1;
-  pengguna selalu bisa menunda dan tetap mencatat. Pembaruan wajib untuk
-  perbaikan kritis data dicatat di B-39. (Mekanisme pembaruannya tetap
-  pilihan engineer.)
-- **KT-U2 — Pembaruan kecil diumumkan atau diam.** Rekomendasi: **umumkan
-  sekali per tambalan** dengan banner "Pembaruan kecil siap" yang bisa
-  ditutup. Alasannya: pemilik ingin pengguna tahu, dan pembaruan kecil
-  sering berisi perbaikan angka yang penting cepat dipakai. Tombol "buka
-  ulang sekarang" hanya ditambahkan bila engineer menilainya aman (tidak
-  memotong pencatatan atau pemrosesan notifikasi); bila tidak, cukup teks
-  petunjuk.
-- **KT-U3 — Apa yang baru otomatis.** Rekomendasi: **tampil sekali
-  otomatis** di Beranda bila ada catatan, plus selalu tersedia di Akun.
-  Alternatifnya hanya di Akun, tetapi hampir tidak ada yang membukanya.
-- **KT-U4 — Format versi di Akun.** Rekomendasi: "0.6.0 (7), pembaruan 1".
-  Nomor build dan tambalan dibutuhkan untuk laporan bug penguji; kata
-  "pembaruan" lebih ramah daripada "patch".
-- **KT-U5 — Siapa menulis catatan Apa yang baru.** Rekomendasi: agen
-  menyusun draf dari TASK_LIST/commit saat menyiapkan rilis atau tambalan
-  (bersama email rilis), pemilik menyetujui sebelum rilis atau pembaruan
-  kecil diterbitkan.
+Pemilik menjawab KT-U1–KT-U5 **sesuai rekomendasi**:
 
-## 13. Diserahkan ke engineer
+- **KT-U1 — Boleh memaksa pembaruan?** Tidak di R1. Pengguna selalu bisa
+  menunda dan tetap mencatat. Pembaruan wajib untuk perbaikan kritis data
+  ada di B-39.
+- **KT-U2 — Pembaruan kecil diumumkan atau diam.** Diumumkan sekali per
+  pembaruan kecil dengan banner "Pembaruan kecil siap", tanpa tombol buka
+  ulang (hanya teks petunjuk).
+- **KT-U3 — Apa yang baru otomatis.** Tampil sekali otomatis di Beranda bila
+  ada catatan, dan selalu tersedia di Akun.
+- **KT-U4 — Format versi di Akun.** "0.6.0 (7), pembaruan 1".
+- **KT-U5 — Siapa menulis catatan.** Agen menyusun draf dari TASK_LIST dan
+  commit saat menyiapkan rilis atau pembaruan kecil; pemilik menyetujui lewat
+  tinjauan PR sebelum diterbitkan.
 
-Keputusan teknis berikut **sengaja tidak diputuskan** di dokumen ini.
-Engineer (agen `flutter-engineer`) menentukannya dan menuliskannya sebagai
-ADR baru (nomor berikutnya) di T-20.1, sebelum kode ditulis:
+Keputusan pemilik tambahan saat pengerjaan (15 Okt 2026): catatan **wajib**
+untuk setiap build yang dipublikasikan; butir **dikelompokkan per kategori**;
+rupa v3 (banner di atas kartu saldo, bisa bersama banner kotak masuk, B-2);
+**tanpa** lembar atau tautan "Lihat apa yang baru" sebelum dipasang; lembar
+tanpa penutup maskot atau kalimat terima kasih.
 
-1. **Rilis Play Store:** cara mengetahui ada versi baru dan cara
-   mengunduh/memasangnya dari dalam aplikasi (pustaka, mode, atau membuka
-   halaman toko).
-2. **Pembaruan kecil Shorebird:** cara mengetahui pembaruan kecil sudah
-   siap dan nomor yang sedang berjalan, serta apakah setelan Shorebird
-   sekarang perlu diubah.
-3. **Catatan "Apa yang baru":** tempat dan cara menyimpannya.
-4. **Server atau konfigurasi jarak jauh:** perlu atau tidak.
-5. Letak kode dan pembagian zona (ADR-030), serta cara menyimpan ingatan
-   aplikasi (§6).
+## 13. Keputusan teknis (ADR-039)
 
-Batasan yang wajib dipenuhi pilihan apa pun:
+Lima keputusan yang diserahkan ke engineer sudah diputuskan di
+[ADR-039](../../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md)
+(Accepted 15 Okt 2026):
 
-- Alur F1–F4 dan aturan B-1–B-13 tetap berlaku (penyesuaian F1 bila
-  mekanismenya tidak mengunduh di latar sudah diatur di F1 langkah 2).
-- Inti aplikasi tetap luring dan tidak melambat (NFR-REL-001, B-13).
-- Catatan Apa yang baru tersedia untuk versi baru maupun pembaruan kecil
-  (B-11); boleh luring atau daring, asal kegagalan mendapatkannya tidak
-  menampilkan galat dan tidak membuat lembar terlewat (§11).
-- Tidak ada data keuangan yang keluar perangkat; data baru yang keluar
-  disebut di ADR (§9).
-- Semua aturan bisa diuji tanpa perangkat (sumber pembaruan bisa diganti
-  palsu di uji).
-- Bila sebuah batasan ternyata tidak bisa dipenuhi, engineer berhenti dan
-  melapor ke pemilik, bukan menyesuaikan alur diam-diam.
+1. **Rilis Play Store:** Play In-App Updates mode fleksibel (`in_app_update`);
+   pemasangan hanya dari ketukan Pasang sekarang (B-7).
+2. **Pembaruan kecil Shorebird:** `shorebird_code_push` hanya membaca
+   keadaan; `auto_update` tidak diubah.
+3. **Catatan Apa yang baru:** sumber di repo (`release_notes/<build>-<patch>.json`),
+   disajikan lewat Firebase Remote Config, dengan salinan lokal.
+4. **Server:** tidak ada server baru; Firebase yang sudah ada dipakai.
+5. **Kode:** fitur `lib/features/app_update/`, banner dan baris Akun
+   disisipkan oleh akar komposisi `lib/app/shell/` (ADR-030); ingatan aplikasi
+   di `KeyValueStorage`.
+
+Batasan produk pada pilihan teknis tetap berlaku, termasuk bila ADR
+ditinjau ulang: alur F1–F4 dan aturan B-1–B-14, inti tetap luring dan tidak
+melambat, tanpa data keuangan keluar perangkat, dan bisa diuji tanpa perangkat.
 
 ## 14. Fase rilis
 

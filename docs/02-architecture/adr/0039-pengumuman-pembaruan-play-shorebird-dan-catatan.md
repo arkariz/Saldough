@@ -89,10 +89,46 @@ sesuai F2. B-9 tetap: banner tidak menyebut isinya.
 Keputusan:
 
 1. **Sumber kebenaran = repo**, bukan konsol Firebase. Satu berkas per entri:
-   `release_notes/<build>-<patch>.json` (`0` bila rilis toko), isi
-   `{"id": ["…"], "en": ["…"]}`, 1–3 butir per bahasa (B-11). Pemilik
+   `release_notes/<build>-<patch>.json` (`0` bila rilis toko). Pemilik
    menyetujui lewat tinjauan PR sebelum rilis atau tambalan diterbitkan
-   (KT-U5). Berkas `release_notes/id.md`/`en.md` lama diganti.
+   (KT-U5). Berkas `release_notes/id.md`/`en.md` lama diganti. Bentuknya
+   (butir **dikelompokkan per kategori**, keputusan pemilik 15 Okt 2026):
+
+   ```json
+   {
+     "version": "0.6.0",
+     "groups": [
+       { "category": "new", "notes": [
+         { "id": "Bulan keuangan kini bisa dimulai di tanggal gajianmu.",
+           "en": "Your financial month can now start on payday." } ] },
+       { "category": "fixed", "notes": [
+         { "id": "…", "en": "…" }, { "id": "…", "en": "…" } ] }
+     ]
+   }
+   ```
+
+   - `version` = nama versi (`0.6.0`) untuk judul dan kepala kelompok;
+     build dan nomor pembaruan kecil hanya dari nama berkas.
+   - `category` salah satu: `new` (Baru ✨), `faster` (Lebih cepat ⚡),
+     `fixed` (Perbaikan 🛠️), `security` (Keamanan 🔒). Label di i18n
+     (`appUpdate.category.*`), emoji dipetakan di aplikasi, bukan di data.
+     Kategori yang tak dikenal aplikasi (mis. dari versi yang lebih baru)
+     tidak dibuang: butirnya tampil sebagai kelompok tanpa label dan emoji.
+   - Urutan kelompok dan butir = urutan tampil; penulis menaruh yang paling
+     penting bagi pengguna di atas. Satu kategori satu kelompok.
+   - Pakai bila: `new` ada kemampuan atau layar baru yang terlihat;
+     `faster` hanya bila ada ukuran sebelum dan sesudah; `fixed` sesuatu
+     yang salah kini benar, dari sisi yang dirasakan pengguna; `security`
+     hanya perubahan perlindungan data atau akses yang bisa disebut
+     konkret (bukan "diperkuat").
+   - Total paling banyak 3 butir per berkas (B-11), 6 di lembar gabungan.
+   - Tampilan: label kategori (emoji + nama) sekali per kelompok, butir di
+     bawahnya. Lembar tanpa penutup maskot atau kalimat terima kasih
+     (keputusan pemilik 15 Okt 2026).
+   - CI memeriksa sebelum build (T-20.6): JSON sah, `id` dan `en` tak
+     kosong, kategori dikenal dan tidak ganda, total ≤ 3, `version` sama
+     dengan `pubspec.yaml` untuk build itu, dan teks id tanpa tanda seru,
+     "Anda", "patch", "tambalan", "bug".
 2. **Penyaji = Remote Config, satu parameter per entri**:
    `whats_new_<build>_<patch>` bernilai JSON entri itu. Satu parameter per
    entri, bukan satu peta riwayat, supaya (a) skrip CI tidak perlu membaca-

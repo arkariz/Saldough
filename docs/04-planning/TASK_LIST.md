@@ -3593,8 +3593,10 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       kecil), lembar sekali di Beranda, daftar lengkap dari Akun, gabungan saat lompat
       versi (maks enam butir). Isi catatan pertama untuk versi yang memuat
       fitur ini.
-      Perlu rupa dari ui-ux-designer: lembar Apa yang baru dan daftar
-      catatan di Akun (APP_UPDATE §7).
+      Rupa: prototipe 12 layar (`ApaYangBaru`, `VersiAplikasi`), tetapi
+      butir kini **dikelompokkan per kategori** dan tanpa penutup maskot
+      (keputusan pemilik 15 Okt 2026) — perlu digambar ulang ui-ux-designer
+      sebelum lembar dan daftar dikerjakan. Skema berkas: ADR-039 §3.3.
       ⚠ Tidak tampil pada pemasangan pertama, saat onboarding/tur, atau
       bila ingatan aplikasi gagal dibaca; catatan yang belum bisa didapat
       menunda lembar tanpa galat (APP_UPDATE §11).
@@ -3614,7 +3616,9 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Play Store dan pembaruan kecil diterbitkan (KT-U5).
       Tambahkan ke dokumen rilis di `docs/03-release/` dan skill
       `release-email` (catatan aplikasi dan email dari sumber yang sama);
-      aturan gaya B-11; caranya mengikuti ADR T-20.1.
+      aturan gaya B-11; caranya mengikuti ADR T-20.1. Berkas catatan
+      berkategori `release_notes/<build>-<patch>.json` dan pemeriksaan CI
+      sebelum build (ADR-039 §3.3).
       Verifikasi: dokumen dan skill menyebut langkahnya; contoh catatan
       mematuhi glosarium dan `writing.md`.
       Di luar PRD: proses rilis.

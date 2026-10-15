@@ -247,7 +247,7 @@ bila data aplikasi dihapus. Cara menyimpannya ditentukan engineer.
 **Banner Beranda** (rupa v3, keputusan pemilik 15 Okt 2026): kartu `brand`
 penuh **di atas kartu saldo**; tile 40px (emoji atau ikon), judul tebal dengan
 chip versi `straw` (turun ke bawah bila sempit) dan keterangan di bawahnya,
-tombol × di pojok kanan atas, lalu garis pemisah dan tombol aksi rata kanan.
+tombol × di pojok kanan atas, lalu tombol aksi rata kanan (tanpa garis pemisah, 15 Okt 2026).
 Chip versi dari Remote Config (ADR-039 §3.3 butir 7). Tanpa tautan "Lihat apa
 yang baru" dan tanpa lembar sebelum dipasang: catatan hanya tampil setelah
 aplikasi diperbarui (lembar otomatis, daftar di Akun).

@@ -5,7 +5,7 @@ import 'package:saldough/core/theme/theme.dart';
 /// Kartu pembaruan di Beranda (APP_UPDATE §7, rupa v3 `tk-upd`): latar `brand`
 /// penuh, tile 40px berisi emoji atau ikon, judul tebal dengan chip versi
 /// (membungkus ke bawah bila sempit) dan keterangan di bawahnya, tombol × di
-/// pojok kanan atas, lalu garis pemisah dan tombol aksi rata kanan.
+/// pojok kanan atas, lalu tombol aksi rata kanan (tanpa garis pemisah).
 /// Tanpa [onDismiss] / [actionLabel] bagian itu tidak ada.
 class UpdateBannerCard extends StatelessWidget {
   /// Membuat [UpdateBannerCard].
@@ -138,30 +138,22 @@ class UpdateBannerCard extends StatelessWidget {
           ),
           if (actionLabel case final label?) ...[
             const SizedBox(height: AppSpacing.space3),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: colors.onBrand.withValues(alpha: 0.3))),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.space3),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Semantics(
-                    button: true,
-                    child: GestureDetector(
-                      key: const ValueKey('app-update-action'),
-                      behavior: HitTestBehavior.opaque,
-                      onTap: onAction,
-                      child: Container(
-                        height: AppSize.buttonSm,
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
-                        // Selebar teksnya saja: tombol rata kanan.
-                        child: Center(
-                          widthFactor: 1,
-                          child: Text(label, style: textTheme.labelLarge?.copyWith(color: colors.ink)),
-                        ),
-                      ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Semantics(
+                button: true,
+                child: GestureDetector(
+                  key: const ValueKey('app-update-action'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onAction,
+                  child: Container(
+                    height: AppSize.buttonSm,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
+                    // Selebar teksnya saja: tombol rata kanan.
+                    child: Center(
+                      widthFactor: 1,
+                      child: Text(label, style: textTheme.labelLarge?.copyWith(color: colors.ink)),
                     ),
                   ),
                 ),

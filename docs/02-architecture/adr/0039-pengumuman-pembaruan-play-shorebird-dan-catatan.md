@@ -46,7 +46,7 @@ memblokir layar, bertentangan dengan "tidak memaksa" (KT-U1).
 - Hanya berfungsi untuk aplikasi yang dipasang dari Play. Sideload, build
   debug, atau pemanggilan yang melempar galat = keadaan `unknown` = diam (B-5).
 - Pengecekan: saat Beranda pertama tampil, saat aplikasi kembali ke depan
-  (paling sering sekali per 6 jam), dan saat Akun dibuka. Selalu tanpa
+  (paling sering sekali per jam; bila hasil terakhir gagal atau belum pasti, diulang pada pemicu berikutnya sesudah 1 menit), dan saat Akun dibuka. Selalu tanpa
   `await` di jalur pembukaan (B-13).
 - `completeFlexibleUpdate` hanya dipanggil dari ketukan **Pasang sekarang**
   (B-7).

@@ -17,8 +17,14 @@ import 'package:state_management/state_management.dart';
 
 part 'app_update_event.dart';
 
-/// Jeda minimum antar pengecekan Play tanpa `force` (ADR-039 §3.1).
-const storeCheckInterval = Duration(hours: 6);
+/// Jeda minimum antar pengecekan Play tanpa `force` sesudah hasil yang pasti
+/// (ADR-039 §3.1). Pengecekan ke Play murah, dan keadaan Play bisa baru
+/// berubah beberapa menit sesudah build dipublikasikan, jadi jedanya pendek.
+const storeCheckInterval = Duration(hours: 1);
+
+/// Jeda ulang bila pengecekan Play terakhir tidak pasti (gagal, belum siap):
+/// dicoba lagi pada pemicu berikutnya (aplikasi kembali ke depan).
+const storeRetryInterval = Duration(minutes: 1);
 
 /// Batas tunggu banner versi baru untuk catatan build yang ditawarkan Play
 /// (untuk chip versi), bila belum ada di perangkat (ADR-039 §3.3 butir 4).
@@ -60,6 +66,7 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
   StreamSubscription<StoreUpdateStage>? _stages;
   StreamSubscription<void>? _noteChanges;
   DateTime? _lastStoreCheck;
+  bool _lastStoreUnknown = false;
   bool _memoryLoaded = false;
   int? _reportedPatch;
   final _shownBanners = <UpdateAnnouncement>{};
@@ -151,13 +158,17 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
       _memoryLoaded = true;
     }
     final last = _lastStoreCheck;
-    final checkStore = event.force || last == null || _now().difference(last) >= storeCheckInterval;
+    // Hasil yang tidak pasti (gagal dicek) tidak boleh menahan pengecekan
+    // berikutnya selama berjam-jam.
+    final interval = _lastStoreUnknown ? storeRetryInterval : storeCheckInterval;
+    final checkStore = event.force || last == null || _now().difference(last) >= interval;
     if (checkStore) _lastStoreCheck = _now();
     final result = await _read(checkStore: checkStore);
     switch (result) {
       case Left():
         emit(_compose(state, memory: memory));
       case Right(value: var snapshot):
+        if (checkStore) _lastStoreUnknown = snapshot.store.stage == StoreUpdateStage.unknown;
         // Tanpa pengecekan Play, keadaan Play terakhir dipertahankan.
         final previous = state.snapshot;
         if (!checkStore && previous != null) {

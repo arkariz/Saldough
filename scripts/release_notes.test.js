@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { validateNote, validateForRelease, loadEntries, syncTemplate, paramName, parseFileName } = require('./release_notes');
+const { PLAY_LIMIT, formatPlayChangelog, validateNote, validateForRelease, loadEntries, syncTemplate, paramName, parseFileName } = require('./release_notes');
 
 const good = {
   version: '0.6.0',
@@ -142,4 +142,28 @@ test('syncTemplate remove: hanya entri yang disebut yang dihapus', async () => {
   const rc = fakeRc({ whats_new_7_0: p('a'), whats_new_6_0: p('b') });
   await syncTemplate(rc, {}, { remove: [paramName(7, 0)] });
   assert.deepEqual(Object.keys(rc.published().parameters), ['whats_new_6_0']);
+});
+
+test('formatPlayChangelog: judul, kategori beremoji, butir bertanda •', () => {
+  const text = formatPlayChangelog(good, 'id');
+  assert.equal(
+    text,
+    ['🚀 Apa yang baru di versi 0.6.0', '', '✨ Baru', '• Satu.', '• Dua.', '', '🛠️ Perbaikan', '• Tiga.'].join('\n'),
+  );
+  assert.match(formatPlayChangelog(good, 'en'), /^🚀 What's new in version 0\.6\.0\n\n✨ New\n• One\./);
+});
+
+test('formatPlayChangelog: lewat 500 karakter, butir terbawah dibuang dan kategori kosong hilang', () => {
+  const long = 'x'.repeat(190);
+  const note = {
+    version: '0.6.0',
+    groups: [
+      { category: 'new', notes: [{ id: long, en: long }, { id: long, en: long }] },
+      { category: 'fixed', notes: [{ id: long, en: long }] },
+    ],
+  };
+  const text = formatPlayChangelog(note, 'id');
+  assert.ok([...text].length <= PLAY_LIMIT, `${[...text].length} karakter`);
+  assert.ok(!text.includes('Perbaikan'), 'kategori yang butirnya terbuang ikut hilang');
+  assert.ok(text.includes('✨ Baru'));
 });

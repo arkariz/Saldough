@@ -9,6 +9,7 @@
 //   node scripts/release_notes.js validate --build 7 --patch 0
 //   node scripts/release_notes.js publish
 //   node scripts/release_notes.js cleanup --build 7 --patch 0
+//   node scripts/release_notes.js play-changelog --build 7 --lang id
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +18,14 @@ const KEY_PREFIX = 'whats_new_';
 const CATEGORIES = ['new', 'faster', 'fixed', 'security'];
 const MAX_NOTES = 3;
 const MAX_ATTEMPTS = 3;
+const PLAY_LIMIT = 500;
+const PLAY_TITLE = { id: (v) => `🚀 Apa yang baru di versi ${v}`, en: (v) => `🚀 What's new in version ${v}` };
+const PLAY_CATEGORY = {
+  new: { emoji: '✨', id: 'Baru', en: 'New' },
+  faster: { emoji: '⚡', id: 'Lebih cepat', en: 'Faster' },
+  fixed: { emoji: '🛠️', id: 'Perbaikan', en: 'Fixes' },
+  security: { emoji: '🔒', id: 'Keamanan', en: 'Security' },
+};
 const BANNED_ID = /!|\b(anda|patch|tambalan|bug)\b/i;
 
 const paramName = (build, patch) => `${KEY_PREFIX}${build}_${patch}`;
@@ -104,6 +113,30 @@ function validateForRelease({ dir, build, patch, pubspecText }) {
   return [...problems, ...validateNote(fs.readFileSync(file, 'utf8'), { pubspecVersion: pubspec.version })];
 }
 
+/**
+ * Teks "What's new" Play dari satu catatan: judul, lalu tiap kategori dengan
+ * emoji dan namanya, butirnya sebagai "•". Maksimal 500 karakter (batas Play,
+ * dihitung per titik kode); bila terlalu panjang butir dibuang dari bawah dan
+ * kategori yang kosong ikut hilang.
+ */
+function formatPlayChangelog(note, lang) {
+  const length = (text) => [...text].length;
+  const title = PLAY_TITLE[lang](note.version);
+  const groups = note.groups.map((g) => ({
+    heading: `${PLAY_CATEGORY[g.category].emoji} ${PLAY_CATEGORY[g.category][lang]}`,
+    items: g.notes.map((n) => `• ${n[lang]}`),
+  }));
+  const render = () => [title, ...groups.filter((g) => g.items.length).map((g) => `${g.heading}\n${g.items.join('\n')}`)].join('\n\n');
+  let text = render();
+  while (length(text) > PLAY_LIMIT) {
+    const last = [...groups].reverse().find((g) => g.items.length);
+    if (!last) break;
+    last.items.pop();
+    text = render();
+  }
+  return text;
+}
+
 const isConflict = (e) => /precondition|version-mismatch|etag/i.test(`${(e && e.code) || ''} ${(e && e.message) || ''}`);
 
 /**
@@ -174,6 +207,14 @@ async function main() {
       process.exit(1);
     }
     console.log('Catatan rilis sah.');
+  } else if (command === 'play-changelog') {
+    const file = path.join(dir, `${Number(arg('build'))}-0.json`);
+    const lang = arg('lang');
+    if (!['id', 'en'].includes(lang)) {
+      console.error('--lang harus id atau en');
+      process.exit(2);
+    }
+    process.stdout.write(formatPlayChangelog(JSON.parse(fs.readFileSync(file, 'utf8')), lang));
   } else if (command === 'publish') {
     const entries = loadEntries(dir);
     await syncTemplate(remoteConfigFromEnv(), entries);
@@ -189,7 +230,7 @@ async function main() {
       console.warn(`Pembersihan gagal (diabaikan): ${e.message}`);
     }
   } else {
-    console.error('Perintah: validate | publish | cleanup');
+    console.error('Perintah: validate | publish | cleanup | play-changelog');
     process.exit(2);
   }
 }
@@ -201,4 +242,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { KEY_PREFIX, paramName, parseFileName, readPubspec, validateNote, loadEntries, validateForRelease, syncTemplate };
+module.exports = { PLAY_LIMIT, formatPlayChangelog, KEY_PREFIX, paramName, parseFileName, readPubspec, validateNote, loadEntries, validateForRelease, syncTemplate };

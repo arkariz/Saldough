@@ -117,20 +117,8 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// Transaksi dokumen bulan yang disentuh [period] ditambah
   /// [periodAttributionDays] hari di kedua sisi (P-4).
-  Future<Either<Failure, List<Transaction>>> _periodTransactions(FinancialPeriod period) async {
-    final from = DateTime(period.start.year, period.start.month, period.start.day - periodAttributionDays);
-    final until = DateTime(period.end.year, period.end.month, period.end.day + periodAttributionDays);
-    final all = <Transaction>[];
-    for (var m = DateTime(from.year, from.month); m.isBefore(until); m = DateTime(m.year, m.month + 1)) {
-      switch (await _transactionRepository.listTransactionsInMonth(m)) {
-        case Left(:final value):
-          return left(value);
-        case Right(:final value):
-          all.addAll(value);
-      }
-    }
-    return right(all);
-  }
+  Future<Either<Failure, List<Transaction>>> _periodTransactions(FinancialPeriod period) =>
+      ListPeriodTransactions(_transactionRepository)(from: period.start, until: period.end);
 
   @override
   Future<void> close() async {

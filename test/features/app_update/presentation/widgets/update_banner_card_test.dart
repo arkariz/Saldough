@@ -44,52 +44,63 @@ void main() {
   }
 
   const full = UpdateBannerCard(
-    title: 'Versi baru tersedia.',
-    icon: IconKey.systemUpdate,
+    title: 'Versi baru tersedia',
+    emoji: '🚀',
     versionChip: 'v0.7.0',
     actionLabel: 'Perbarui',
     dismissLabel: 'Nanti',
   );
 
-  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas, tombol di baris sendiri di bawah', (
+  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas; tombol rata kanan di bawah garis', (
     tester,
   ) async {
     await pump(tester, full, width: 480);
-    final title = tester.getRect(find.text('Versi baru tersedia.'));
+    final title = tester.getRect(find.text('Versi baru tersedia'));
     final chip = tester.getRect(find.byKey(const ValueKey('app-update-version-chip')));
     final close = tester.getRect(find.byKey(const ValueKey('app-update-dismiss')));
     final action = tester.getRect(find.byKey(const ValueKey('app-update-action')));
     final card = tester.getRect(find.byType(UpdateBannerCard));
 
     expect((chip.center.dy - title.center.dy).abs(), lessThan(8), reason: 'sebaris');
-    expect(close.top - card.top, lessThan(16));
-    expect(card.right - close.right, lessThan(16), reason: 'pojok kanan');
+    expect(close.top - card.top, lessThanOrEqualTo(16));
+    expect(card.right - close.right, lessThanOrEqualTo(16), reason: 'pojok kanan');
     expect(close.width, greaterThanOrEqualTo(48));
     expect(action.top, greaterThanOrEqualTo(title.bottom), reason: 'tombol di baris sendiri');
     expect(card.right - action.right, lessThanOrEqualTo(16), reason: 'tombol rata kanan');
     expect(action.width, lessThan(card.width / 2), reason: 'selebar teksnya, bukan sebaris penuh');
   });
 
-  testWidgets('di 360dp judul memakai lebar penuh dan chip turun ke bawahnya', (tester) async {
+  testWidgets('keterangan tampil di bawah judul; emoji di tile', (tester) async {
     await pump(
       tester,
       const UpdateBannerCard(
-        title: 'Mengunduh versi baru. Kamu tetap bisa mencatat.',
+        title: 'Mengunduh versi baru',
+        description: 'Kamu tetap bisa mencatat.',
         icon: IconKey.progressActivity,
         spin: true,
         versionChip: 'v0.7.0',
-        actionLabel: 'Perbarui',
-        dismissLabel: 'Nanti',
       ),
     );
-    final title = tester.getRect(find.textContaining('Mengunduh'));
-    final chip = tester.getRect(find.byKey(const ValueKey('app-update-version-chip')));
-    expect(chip.top, greaterThanOrEqualTo(title.bottom - 1));
-    expect(tester.takeException(), isNull);
+    final title = tester.getRect(find.text('Mengunduh versi baru'));
+    final description = tester.getRect(find.text('Kamu tetap bisa mencatat.'));
+    expect(description.top, greaterThanOrEqualTo(title.bottom - 1));
+    expect(find.byKey(const ValueKey('app-update-action')), findsNothing);
+    expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
+    await pump(tester, full);
+    expect(find.text('🚀'), findsOneWidget);
   });
 
-  testWidgets('tanpa chip, tanpa ×, tanpa tombol: hanya ikon dan judul', (tester) async {
-    await pump(tester, const UpdateBannerCard(title: 'Mengunduh versi baru.', icon: IconKey.systemUpdate));
+  testWidgets('di 360dp tidak overflow; chip tetap di dalam kartu', (tester) async {
+    await pump(tester, full);
+    expect(tester.takeException(), isNull);
+    final card = tester.getRect(find.byType(UpdateBannerCard));
+    final chip = tester.getRect(find.byKey(const ValueKey('app-update-version-chip')));
+    expect(chip.right, lessThanOrEqualTo(card.right));
+    expect(card.width, 328);
+  });
+
+  testWidgets('tanpa chip, tanpa ×, tanpa tombol: hanya tile dan judul', (tester) async {
+    await pump(tester, const UpdateBannerCard(title: 'Mengunduh versi baru'));
     expect(find.byKey(const ValueKey('app-update-version-chip')), findsNothing);
     expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
     expect(find.byKey(const ValueKey('app-update-action')), findsNothing);
@@ -101,8 +112,7 @@ void main() {
     await pump(
       tester,
       UpdateBannerCard(
-        title: 'Versi baru tersedia.',
-        icon: IconKey.systemUpdate,
+        title: 'Versi baru tersedia',
         actionLabel: 'Perbarui',
         onAction: () => acted++,
         dismissLabel: 'Nanti',
@@ -120,13 +130,12 @@ void main() {
       await pump(tester, full, theme: theme);
       final c = theme.extension<AppColors>()!;
       expect(_contrast(c.onBrand, c.brand), greaterThanOrEqualTo(4.5), reason: 'judul di latar brand');
-      expect(_contrast(c.brandInk, c.surface), greaterThanOrEqualTo(4.5), reason: 'teks tombol');
+      expect(_contrast(c.ink, c.surface), greaterThanOrEqualTo(4.5), reason: 'teks tombol');
       expect(
         _contrast(theme.brightness == Brightness.dark ? c.onBrand : c.ink, c.straw),
         greaterThanOrEqualTo(4.5),
         reason: 'teks chip di atas straw',
       );
-      expect(_contrast(c.brand, c.surface), greaterThanOrEqualTo(3), reason: 'ikon di tile');
     });
   }
 }

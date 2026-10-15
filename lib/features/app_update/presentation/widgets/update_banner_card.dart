@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 
-/// Kartu banner pembaruan (APP_UPDATE §7, rupa v3): latar `brand` penuh, tile
-/// ikon `surface`, judul dengan chip versi `straw` di sebelahnya (membungkus
-/// ke bawah bila sempit), tombol × di pojok kanan atas, dan tombol aksi di
-/// baris sendiri di bawahnya, rata kanan. Tanpa [onDismiss] / [actionLabel]
-/// bagian itu tidak ada.
+/// Kartu pembaruan di Beranda (APP_UPDATE §7, rupa v3 `tk-upd`): latar `brand`
+/// penuh, tile 40px berisi emoji atau ikon, judul tebal dengan chip versi
+/// (membungkus ke bawah bila sempit) dan keterangan di bawahnya, tombol × di
+/// pojok kanan atas, lalu garis pemisah dan tombol aksi rata kanan.
+/// Tanpa [onDismiss] / [actionLabel] bagian itu tidak ada.
 class UpdateBannerCard extends StatelessWidget {
   /// Membuat [UpdateBannerCard].
   const UpdateBannerCard({
     required this.title,
-    required this.icon,
+    this.description,
+    this.emoji,
+    this.icon = IconKey.systemUpdate,
     this.spin = false,
     this.versionChip,
     this.actionLabel,
@@ -21,10 +23,16 @@ class UpdateBannerCard extends StatelessWidget {
     super.key,
   });
 
-  /// Judul satu kalimat.
+  /// Judul pendek.
   final String title;
 
-  /// Ikon di tile.
+  /// Keterangan di bawah judul.
+  final String? description;
+
+  /// Emoji di tile; menggantikan [icon] bila diisi.
+  final String? emoji;
+
+  /// Ikon di tile bila [emoji] kosong.
   final IconKey icon;
 
   /// Ikon berputar ("mengunduh").
@@ -49,13 +57,15 @@ class UpdateBannerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final glyph = AppIcon(icon, color: colors.brand);
     // `straw` hanya latar chip; teksnya gelap di kedua tema (token tema terang
     // `ink`, tema gelap `onBrand`) supaya tetap 4,5:1 (design system: straw
     // bukan untuk teks).
     final chipInk = Theme.of(context).brightness == Brightness.dark ? colors.onBrand : colors.ink;
+    final glyph = emoji != null
+        ? ExcludeSemantics(child: Text(emoji!, style: const TextStyle(fontSize: 24, height: 1)))
+        : AppIcon(icon, color: colors.onBrand);
     return Container(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space3, AppSpacing.space2, AppSpacing.space3),
+      padding: const EdgeInsets.all(AppSpacing.space4),
       decoration: ShapeDecoration(color: colors.brand, shape: const PixelCornerBorder()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -67,26 +77,36 @@ class UpdateBannerCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 alignment: Alignment.center,
-                decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
+                decoration: ShapeDecoration(
+                  color: colors.onBrand.withValues(alpha: 0.2),
+                  shape: const PixelCornerBorder.small(),
+                ),
                 child: spin ? AppSpin(child: glyph) : glyph,
               ),
               const SizedBox(width: AppSpacing.space3),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.space2),
-                  child: Wrap(
-                    spacing: AppSpacing.space2,
-                    runSpacing: AppSpacing.space1,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                  padding: const EdgeInsets.only(top: AppSpacing.space1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: textTheme.labelLarge?.copyWith(color: colors.onBrand)),
-                      if (versionChip case final chip?)
-                        Container(
-                          key: const ValueKey('app-update-version-chip'),
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
-                          decoration: ShapeDecoration(color: colors.straw, shape: const PixelCornerBorder.small()),
-                          child: Text(chip, style: textTheme.labelSmall?.copyWith(color: chipInk)),
-                        ),
+                      Wrap(
+                        spacing: AppSpacing.space2,
+                        runSpacing: AppSpacing.space1,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(title, style: textTheme.titleMedium?.copyWith(color: colors.onBrand)),
+                          if (versionChip case final chip?)
+                            Container(
+                              key: const ValueKey('app-update-version-chip'),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space2, vertical: 2),
+                              decoration: ShapeDecoration(color: colors.straw, shape: const PixelCornerBorder.small()),
+                              child: Text(chip, style: textTheme.labelSmall?.copyWith(color: chipInk)),
+                            ),
+                        ],
+                      ),
+                      if (description case final text?)
+                        Text(text, style: textTheme.bodyMedium?.copyWith(color: colors.onBrand)),
                     ],
                   ),
                 ),
@@ -107,7 +127,7 @@ class UpdateBannerCard extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: AppSpacing.space2, right: AppSpacing.space2),
+                          padding: const EdgeInsets.only(top: AppSpacing.space1, right: AppSpacing.space1),
                           child: AppIcon(IconKey.close, size: 20, color: colors.onBrand),
                         ),
                       ),
@@ -116,31 +136,38 @@ class UpdateBannerCard extends StatelessWidget {
                 ),
             ],
           ),
-          if (actionLabel case final label?)
-            Align(
-              alignment: Alignment.centerRight,
+          if (actionLabel case final label?) ...[
+            const SizedBox(height: AppSpacing.space3),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: colors.onBrand.withValues(alpha: 0.3))),
+              ),
               child: Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.space1, right: AppSpacing.space2),
-                child: Semantics(
-                  button: true,
-                  child: GestureDetector(
-                    key: const ValueKey('app-update-action'),
-                    behavior: HitTestBehavior.opaque,
-                    onTap: onAction,
-                    child: Container(
-                      height: AppSize.buttonSm,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
-                      // Selebar teksnya saja: tombol rata kanan, bukan sebaris penuh.
-                      child: Center(
-                        widthFactor: 1,
-                        child: Text(label, style: textTheme.labelLarge?.copyWith(color: colors.brandInk)),
+                padding: const EdgeInsets.only(top: AppSpacing.space3),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Semantics(
+                    button: true,
+                    child: GestureDetector(
+                      key: const ValueKey('app-update-action'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: onAction,
+                      child: Container(
+                        height: AppSize.buttonSm,
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
+                        // Selebar teksnya saja: tombol rata kanan.
+                        child: Center(
+                          widthFactor: 1,
+                          child: Text(label, style: textTheme.labelLarge?.copyWith(color: colors.ink)),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
+          ],
         ],
       ),
     );

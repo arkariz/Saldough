@@ -33,6 +33,7 @@ class HomePage extends StatefulWidget {
     required this.onShowBudgets,
     required this.onShowTransactions,
     required this.onShowWallets,
+    this.updateNotice,
     this.notice,
     this.pendingRecurring,
     this.forecast,
@@ -50,6 +51,11 @@ class HomePage extends StatefulWidget {
 
   /// Pindah ke tab Dompet (membuat dompet pertama).
   final VoidCallback onShowWallets;
+
+  /// Kartu pembaruan aplikasi di **atas** kartu saldo (APP_UPDATE §7, rupa v3),
+  /// disisipkan akar komposisi; tampil bersama banner [notice] bila keduanya
+  /// ada. `null` = tidak ada.
+  final Widget? updateNotice;
 
   /// Kartu pemberitahuan di bawah total saldo, disisipkan akar komposisi
   /// (mis. kotak masuk Catat dari notifikasi, ADR-032); `null` = tidak ada.
@@ -130,6 +136,8 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space12),
         children: [
+          // Kartu pembaruan aplikasi membawa jarak bawahnya sendiri.
+          ?widget.updateNotice,
           // Urutan `patterns.md`: total saldo → yang perlu tindakan → bulan
           // ini → anggaran → freelance → transaksi terbaru.
           // Tanpa dompet, Beranda langsung ke langkah awal (`BerandaKosong`):

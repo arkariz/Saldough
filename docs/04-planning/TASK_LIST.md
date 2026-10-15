@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 6 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3 dan T-20.5–T-20.7 selesai; T-20.4 sebagian (rupa v3 tiba, menunggu keputusan selisih); lanjut T-20.8 |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 7 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.7 selesai; T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); lanjut T-20.8 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3587,7 +3587,7 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       itu baru keadaan kosong; isinya di T-20.4 (perlu rupa dari designer).
       Uji 20 baru (id/en 360dp tiap keadaan, tombol sesudah Nanti, B-7);
       suite 1.342 lulus, `flutter analyze` bersih. Belum di perangkat (T-20.8).
-- [ ] **T-20.4** Apa yang baru (APP_UPDATE F3, B-10–B-12).
+- [x] **T-20.4** Apa yang baru (APP_UPDATE F3, B-10–B-12).
       Catatan per versi/pembaruan kecil dalam id dan en (cara menyimpan
       sesuai ADR T-20.1, luring atau daring; tersedia untuk pembaruan
       kecil), lembar sekali di Beranda, daftar lengkap dari Akun, gabungan saat lompat
@@ -3610,29 +3610,28 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Verifikasi: uji sumber catatan palsu (entri ada, belum ada, terlambat
       < 2 dtk, lewat 2 dtk, luring dengan salinan lokal).
       Memenuhi FR-UPD-003.
-      ⚠ Sebagian (15 Okt 2026): data, logika, dan lembar dikerjakan. Ada:
-      `ReleaseNote`/`NoteCategory` + parser berkas berkategori,
-      `decideWhatsNew`/`installedNotes` (B-10–B-12, rollback, tunda bila
-      belum terambil), `ReleaseNotesRepositoryImpl` di atas Remote Config
-      (`firebase_remote_config`, interval 30 menit, `onConfigUpdated`,
-      salinan lokal hanya sampai versi berjalan), bloc (lembar menunggu,
-      daftar terpasang, chip versi dari entri build yang ditawarkan Play dengan
-      batas tunggu 2 detik), `WhatsNewHost` (menunggu tab Beranda aktif, tur
-      selesai, dan tidak ada layar/lembar lain di atasnya), `WhatsNewSheet`
-      dan daftar di halaman Versi aplikasi, `release_notes/7-0.json` (draf)
-      dan uji penjaga berkas (`test/release/`). Uji 70+ baru; suite 1.409
+      Selesai 15 Okt 2026 (data dan logika sebelumnya; rupa v3 dari pemilik
+      sesudahnya). Ada: `ReleaseNote`/`NoteCategory` + parser berkas
+      berkategori, `decideWhatsNew`/`installedNotes` (B-10–B-12, rollback,
+      tunda bila belum terambil), `ReleaseNotesRepositoryImpl` di atas
+      Remote Config (`firebase_remote_config`, interval 30 menit,
+      `onConfigUpdated`, salinan lokal hanya sampai versi berjalan), bloc
+      (lembar menunggu, daftar terpasang, chip versi dengan batas tunggu 2
+      detik), `WhatsNewHost` (menunggu tab Beranda aktif, tur selesai, dan
+      tidak ada layar/lembar lain di atasnya), `WhatsNewSheet`, daftar di
+      halaman Versi aplikasi, `release_notes/7-0.json` (disetujui pemilik),
+      uji penjaga berkas (`test/release/`).
+      Rupa v3 (prototipe `BannerPembaruan`, `ApaYangBaru`, `VersiAplikasi`):
+      banner `brand` penuh **di atas kartu saldo** dan bisa bersama banner
+      kotak masuk (B-2 diubah), tile + judul + chip versi `straw` + ×,
+      tombol di bawah garis; lembar dengan tile 🚀, chip versi, judul
+      terpusat, × dan kartu per kategori. Keputusan pemilik yang menyimpang
+      dari prototipe: butir **dikelompokkan per kategori** (bukan chip per
+      butir), tanpa kalimat terima kasih, **tanpa lembar atau tautan "Lihat
+      apa yang baru" sebelum dipasang** (dan tanpa ukuran unduhan, yang tidak
+      diberikan Play); chip versi tetap kuning (`straw`, teks gelap). Prototipe
+      perlu disesuaikan designer untuk tiga hal itu. Uji ~100 baru; suite
       lulus, `flutter analyze` bersih.
-      Tersisa: (1) rupa lembar dan daftar per kategori digambar ulang
-      ui-ux-designer (tampilan sekarang sementara); (2) pemilik menyetujui
-      teks `release_notes/7-0.json` (KT-U5; draf dari commit sejak
-      0.5.0+6: kalkulator Catat, urutan dompet, Kembali ke Beranda);
-      (3) berkas `release_notes/id.md`/`en.md` dan skrip CI diganti di T-20.6.
-      15 Okt 2026: rupa v3 dari pemilik/designer sudah di prototipe 12 layar
-      (`ApaYangBaru`, `ApaYangBaruPra`, `BannerPembaruan`, `VersiAplikasi`).
-      Selisihnya dengan kode dan keputusan sebelumnya (butir per kategori vs
-      label per butir, kalimat terima kasih, lembar sebelum pasang dengan
-      ukuran unduhan, banner di atas kartu saldo bersama kotak masuk) menunggu
-      keputusan pemilik sebelum diimplementasikan.
 - [x] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
       `UpdateEvents` (`update_banner_shown` (+ `has_version`), `update_banner_action`,
       `app_updated`, `whats_new_viewed`), properti pengguna dan custom key

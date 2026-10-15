@@ -11,8 +11,9 @@ import 'package:saldough/features/app_update/presentation/widgets/update_banner_
 import 'package:state_management/state_management.dart';
 
 /// Banner pembaruan di slot Beranda (APP_UPDATE F1, F2, §7; ADR-039).
-/// Disisipkan shell sebagai cadangan banner kotak masuk notifikasi, jadi
-/// paling banyak satu banner tampil (B-2, B-3). Kosong bila fitur tidak
+/// Disisipkan shell di slot **di atas** kartu saldo (rupa v3); tampil bersama
+/// banner kotak masuk notifikasi, yang punya slot sendiri di bawah saldo
+/// (B-2 diubah pemilik 15 Okt 2026). Kosong bila fitur tidak
 /// terdaftar (platform lain, uji), bila tidak ada yang diumumkan, atau
 /// selama tur spotlight tampil.
 ///
@@ -73,7 +74,7 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
           UpdateAnnouncement.none => null,
           UpdateAnnouncement.storeAvailable => UpdateBannerCard(
             key: const ValueKey('app-update-store-available'),
-            icon: IconKey.systemUpdate,
+            emoji: '🚀',
             title: texts.banner.storeAvailable,
             versionChip: chip,
             actionLabel: texts.action.update,
@@ -86,11 +87,11 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
             icon: IconKey.progressActivity,
             spin: true,
             title: texts.banner.storeDownloading,
+            description: texts.banner.storeDownloadingNote,
             versionChip: chip,
           ),
           UpdateAnnouncement.storeDownloaded => UpdateBannerCard(
             key: const ValueKey('app-update-store-downloaded'),
-            icon: IconKey.systemUpdate,
             title: texts.banner.storeDownloaded,
             versionChip: chip,
             actionLabel: texts.action.install,
@@ -100,6 +101,7 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
             key: const ValueKey('app-update-patch-ready'),
             icon: IconKey.restartAlt,
             title: texts.banner.patchReady,
+            description: texts.banner.patchReadyNote,
             actionLabel: texts.action.ok,
             onAction: () => bloc.add(const AppUpdatePatchAcknowledged()),
           ),

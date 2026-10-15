@@ -8,7 +8,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
-import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
@@ -298,7 +297,7 @@ void main() {
     }
   }
 
-  group('slot kotak masuk (B-2, B-3)', () {
+  group('kotak masuk dan pembaruan (B-2 diubah 15 Okt 2026: slot sendiri-sendiri)', () {
     late _MockCaptureStore captureStore;
 
     setUp(() {
@@ -309,11 +308,6 @@ void main() {
       source(play: const StoreUpdateInfo(stage: StoreUpdateStage.downloaded, availableBuild: 7));
     });
 
-    Widget slot() => CaptureInboxBanner(
-      container: container,
-      fallback: AppUpdateBanner(container: container),
-    );
-
     final entry = CaptureInboxEntry(
       id: 'a',
       packageName: 'id.co.bri.brimo',
@@ -323,20 +317,25 @@ void main() {
       draft: const RecordDraft(kind: DraftKind.expense, amountSen: 5000000),
     );
 
-    testWidgets('kotak masuk kosong: banner pembaruan tampil', (tester) async {
-      when(() => captureStore.loadInbox()).thenAnswer((_) async => right(<CaptureInboxEntry>[]));
-      await pump(tester, child: slot());
+    Widget both() => Column(
+      children: [
+        AppUpdateBanner(container: container),
+        CaptureInboxBanner(container: container),
+      ],
+    );
+
+    testWidgets('kotak masuk berisi: kedua banner tampil, tidak saling mengalahkan', (tester) async {
+      when(() => captureStore.loadInbox()).thenAnswer((_) async => right([entry]));
+      await pump(tester, child: both());
       expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsOneWidget);
-      expect(find.byKey(const ValueKey('capture-inbox-banner')), findsNothing);
+      expect(find.byKey(const ValueKey('capture-inbox-banner')), findsOneWidget);
     });
 
-    testWidgets('kotak masuk berisi: hanya banner kotak masuk', (tester) async {
-      when(() => captureStore.loadInbox()).thenAnswer((_) async => right([entry]));
-      await pump(tester, child: slot());
-      expect(find.byKey(const ValueKey('capture-inbox-banner')), findsOneWidget);
-      expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsNothing);
-      expect(find.byType(UpdateBannerCard), findsNothing);
-      expect(find.byType(AppBanner), findsOneWidget);
+    testWidgets('kotak masuk kosong: hanya banner pembaruan', (tester) async {
+      when(() => captureStore.loadInbox()).thenAnswer((_) async => right(<CaptureInboxEntry>[]));
+      await pump(tester, child: both());
+      expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsOneWidget);
+      expect(find.byKey(const ValueKey('capture-inbox-banner')), findsNothing);
     });
   });
 }

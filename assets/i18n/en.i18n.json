@@ -1178,10 +1178,12 @@
   },
   "appUpdate": {
     "banner": {
-      "storeAvailable": "A new version is available.",
-      "storeDownloading": "Downloading the new version. You can keep recording.",
-      "storeDownloaded": "The new version is downloaded.",
-      "patchReady": "A small update is ready. Close and reopen the app to use it."
+      "storeAvailable": "A new version is available",
+      "storeDownloading": "Downloading the new version",
+      "storeDownloadingNote": "You can keep recording.",
+      "storeDownloaded": "The new version is downloaded",
+      "patchReady": "A small update is ready",
+      "patchReadyNote": "Close and reopen the app to use it."
     },
     "action": {
       "update": "Update",

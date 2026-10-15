@@ -48,6 +48,15 @@ git show <akhir>:docs/04-planning/TASK_LIST.md > <scratchpad>/tl.md
 - Nama menu dan tombol yang disebut di email: cek ejaannya di
   `assets/i18n/id.i18n.json` pada tag akhir. Jangan mengarang nama menu.
 
+- **Catatan rilis di repo** (sejak Fase 20): `release_notes/<build>-<patch>.json`
+  memuat butir "Apa yang baru" yang sama dengan lembar di aplikasi dan teks
+  Play, sudah disetujui pemilik. Untuk build dalam rentang yang punya
+  berkasnya, jadikan itu **sumber utama bagian ✨ Yang baru dan 🛠️ Perbaikan**
+  (rangkum dengan nada email, jangan mengarang butir lain yang tidak ada di
+  berkas atau commit). Bila berkas build akhir belum ada, susun drafnya lebih
+  dulu mengikuti `docs/03-release/RELEASE_NOTES.md` dan minta pemilik
+  menyetujuinya; catatan aplikasi dan email harus dari sumber yang sama.
+
 Jangan membaca kode sumber kecuali satu klaim benar-benar tidak bisa
 dipastikan dari dokumen. Biaya token adalah pertimbangan nyata di proyek ini.
 

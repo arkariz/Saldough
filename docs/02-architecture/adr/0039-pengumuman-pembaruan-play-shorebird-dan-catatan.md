@@ -164,6 +164,10 @@ Keputusan:
       8, pengguna lompat 6→8) hanya tertutup lapis 1 dan 2; karena itu
       pemeriksaan "berkas catatan cocok dengan versi di `pubspec.yaml`" masuk
       CI (T-20.6).
+   Nomor pembaruan kecil dimasukkan operator sebagai input workflow
+   (`patch_number`), karena catatan harus terbit sebelum `shorebird patch`
+   memberi nomornya; pelaksanaan dan langkahnya di
+   [RELEASE_NOTES.md](../../03-release/RELEASE_NOTES.md).
    Nomor tambalan Shorebird tidak terpakai bila tambalan gagal, jadi
    percobaan ulang memakai nomor yang sama dan menimpa entri dari berkas.
    Supaya penerbitan catatan itu sendiri andal: skrip mengulang bila

@@ -12,6 +12,11 @@ on:
         options:
           - release
           - patch
+      patch_number:
+        description: 'Nomor pembaruan kecil (hanya untuk patch): nomor Shorebird berikutnya untuk rilis ini, mis. 1 untuk patch pertama. Catatannya di release_notes/<build>-<nomor>.json'
+        required: false
+        default: '0'
+        type: string
       flutter_version:
         description: 'Flutter version'
         required: true
@@ -24,6 +29,47 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      # --- 0. CATATAN "APA YANG BARU" (ADR-039 §3.3) ---
+      # Wajib ada untuk setiap build yang dipublikasikan; diperiksa SEBELUM
+      # build panjang dan diterbitkan ke Remote Config SEBELUM rilis/patch,
+      # supaya perangkat sudah memegangnya saat versi baru tiba.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm' # Need file package-lock.json in repositori
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Determine build and patch number
+        id: meta
+        run: |
+          BUILD=$(sed -n 's/^version:[[:space:]]*[^+]*+\([0-9][0-9]*\).*/\1/p' pubspec.yaml)
+          if [ "${{ github.event.inputs.action_type }}" = "patch" ]; then
+            PATCH="${{ github.event.inputs.patch_number }}"
+            if [ -z "$PATCH" ] || [ "$PATCH" = "0" ]; then
+              echo "patch_number wajib diisi (>= 1) untuk patch" >&2
+              exit 1
+            fi
+          else
+            PATCH=0
+          fi
+          echo "build=$BUILD" >> "$GITHUB_OUTPUT"
+          echo "patch=$PATCH" >> "$GITHUB_OUTPUT"
+
+      - name: Test release notes script
+        run: npm test
+
+      - name: Validate release notes
+        run: node scripts/release_notes.js validate --build ${{ steps.meta.outputs.build }} --patch ${{ steps.meta.outputs.patch }}
+
+      - name: Publish release notes to Firebase Remote Config
+        id: publish_notes
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: node scripts/release_notes.js publish
 
       # --- 1. SETUP BUILD ENVIRONTMENT (WITH CACHE) ---
       - name: Setup Java
@@ -112,17 +158,11 @@ jobs:
         working-directory: android
         run: bundle exec fastlane android patch_ota
     
-    # --- 3. SETUP FIREBASE & UPDATE CONFIG ---
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm' # Need file package-lock.json in repositori
-
-      - name: Install Node Dependencies
-        run: npm ci
-
-      - name: Update Firebase Remote Config
+    # --- 3. PEMBERSIHAN BILA GAGAL ---
+      # Rilis/patch gagal: hapus entri catatan eksekusi ini (sebisanya). Sisa
+      # yang yatim dibersihkan sinkronisasi eksekusi berikutnya.
+      - name: Remove release note entry if the run failed
+        if: failure() && steps.publish_notes.outcome == 'success'
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-        run: node scripts/update_release_note.js
+        run: node scripts/release_notes.js cleanup --build ${{ steps.meta.outputs.build }} --patch ${{ steps.meta.outputs.patch }}

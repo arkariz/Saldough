@@ -5,12 +5,15 @@ import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
+import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
 import 'package:saldough/features/app_update/domain/repositories/app_update_memory_repository.dart';
 import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
+
+import '../../../../helpers/update_harness.dart';
 
 class _MockInstalled extends Mock implements InstalledVersionSource {}
 
@@ -27,6 +30,7 @@ void main() {
   late _MockPatch patch;
   late _MockMemory memory;
   late StreamController<StoreUpdateStage> stages;
+  late FakeReleaseNotes notes;
   late DateTime now;
   late AppUpdateBloc bloc;
 
@@ -40,6 +44,7 @@ void main() {
     store = _MockStore();
     patch = _MockPatch();
     memory = _MockMemory();
+    notes = FakeReleaseNotes();
     stages = StreamController<StoreUpdateStage>.broadcast();
     now = DateTime(2026, 10, 15, 9);
     when(() => installed.read()).thenAnswer((_) async => right((name: '0.5.0', build: 6)));
@@ -48,12 +53,13 @@ void main() {
     when(() => store.startDownload()).thenAnswer((_) async => right(true));
     when(() => store.completeInstall()).thenAnswer((_) async => right(unit));
     when(() => patch.read()).thenAnswer((_) async => right(PatchState.none));
-    when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty));
+    when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(6, 0)));
     when(() => memory.save(any())).thenAnswer((_) async => right(unit));
     bloc = AppUpdateBloc(
       read: ReadUpdateSnapshot(installed: installed, store: store, patch: patch),
       store: store,
       memory: memory,
+      notes: notes,
       now: () => now,
     );
   });
@@ -210,6 +216,124 @@ void main() {
       when(() => patch.read()).thenAnswer((_) async => right(const PatchState(current: 2, next: 1)));
       await check();
       expect(bloc.state.announcement, UpdateAnnouncement.none);
+    });
+  });
+
+  group('catatan Apa yang baru dan chip versi (ADR-039 §3.3)', () {
+    ReleaseNote note(int build, int patch, String version) => ReleaseNote(
+      build: build,
+      patch: patch,
+      version: version,
+      groups: [
+        NoteGroup(
+          category: NoteCategory.newFeature,
+          notes: [LocalizedNote(id: '$version/$patch', en: '$version/$patch')],
+        ),
+      ],
+    );
+
+    void entries(List<ReleaseNote> list) => notes.entries = {for (final n in list) n.key: n};
+
+    test('pemasangan pertama: tanpa lembar, versi terakhir dilihat disimpan', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty));
+      entries([note(6, 0, '0.5.0')]);
+      await check();
+      expect(bloc.state.whatsNew, isEmpty);
+      verify(
+        () => memory.save(any(that: isA<AppUpdateMemory>().having((m) => m.lastSeenBuild, 'lastSeenBuild', 6))),
+      ).called(1);
+    });
+
+    test('6 → 7: lembar versi 7 menunggu, dan tidak disimpan sampai dilihat', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(5, 0)));
+      entries([note(5, 0, '0.4.0'), note(6, 0, '0.5.0')]);
+      await check();
+      expect([for (final n in bloc.state.whatsNew) n.key], [(build: 6, patch: 0)]);
+      verifyNever(() => memory.save(any()));
+
+      bloc.add(const AppUpdateWhatsNewSeen());
+      await settle();
+      expect(bloc.state.whatsNew, isEmpty);
+      verify(
+        () => memory.save(any(that: isA<AppUpdateMemory>().having((m) => m.lastSeenBuild, 'lastSeenBuild', 6))),
+      ).called(1);
+    });
+
+    test('catatan belum terambil: lembar ditunda dan versi terakhir dilihat tidak maju', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(5, 0)));
+      notes.serverRead = false;
+      await check();
+      expect(bloc.state.whatsNew, isEmpty);
+      verifyNever(() => memory.save(any()));
+
+      // Catatan tiba kemudian: lembar tampil sekali.
+      notes
+        ..serverRead = true
+        ..entries = {(build: 6, patch: 0): note(6, 0, '0.5.0')};
+      notes.changesController.add(null);
+      await settle();
+      await settle();
+      expect(bloc.state.whatsNew, hasLength(1));
+    });
+
+    test('daftar catatan terpasang di Akun: terbaru di atas, tanpa entri yang belum terpasang', () async {
+      entries([note(5, 0, '0.4.0'), note(6, 0, '0.5.0'), note(7, 0, '0.6.0')]);
+      await check();
+      expect([for (final n in bloc.state.installedNotes) n.build], [6, 5]);
+    });
+
+    test('chip: entri build yang ditawarkan Play ada, versinya tampil', () async {
+      entries([note(7, 0, '0.6.0')]);
+      when(() => store.check()).thenAnswer(
+        (_) async => right(const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 7)),
+      );
+      await check();
+      expect(bloc.state.availableVersion, '0.6.0');
+    });
+
+    test('chip: entri belum ada tetapi tiba dalam batas tunggu, banner langsung bersama chip', () async {
+      notes
+        ..onRefresh = {(build: 7, patch: 0): note(7, 0, '0.6.0')}
+        ..refreshDelay = const Duration(milliseconds: 20);
+      bloc.add(const AppUpdateChecked());
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      expect(bloc.state.availableVersion, '0.6.0');
+      expect(bloc.state.announcement, UpdateAnnouncement.storeAvailable);
+    });
+
+    test('chip: terlambat melewati batas tunggu, banner tampil tanpa chip dan chip menyusul', () async {
+      final slow = AppUpdateBloc(
+        read: ReadUpdateSnapshot(installed: installed, store: store, patch: patch),
+        store: store,
+        memory: memory,
+        notes: notes,
+        now: () => now,
+        waitForChip: const Duration(milliseconds: 10),
+      );
+      addTearDown(slow.close);
+      notes
+        ..onRefresh = {(build: 7, patch: 0): note(7, 0, '0.6.0')}
+        ..refreshDelay = const Duration(milliseconds: 80);
+      slow.add(const AppUpdateChecked());
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+      expect(
+        slow.state.announcement,
+        UpdateAnnouncement.storeAvailable,
+        reason: 'banner tidak menunggu lebih dari batas',
+      );
+      expect(slow.state.availableVersion, isNull);
+
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      slow.add(const AppUpdateChecked(force: true));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(slow.state.availableVersion, '0.6.0');
+    });
+
+    test('chip: tanpa chip bila tidak ada versi baru dari Play', () async {
+      when(() => store.check()).thenAnswer((_) async => right(const StoreUpdateInfo(stage: StoreUpdateStage.none)));
+      entries([note(7, 0, '0.6.0')]);
+      await check();
+      expect(bloc.state.availableVersion, isNull);
     });
   });
 }

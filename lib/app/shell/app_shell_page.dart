@@ -10,6 +10,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
+import 'package:saldough/features/app_update/presentation/widgets/whats_new_host.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:saldough/features/budget/presentation/bloc/budget_state.dart';
@@ -146,7 +147,12 @@ class _AppShellPageState extends State<AppShellPage> {
         onShowBudgets: () => _showPlan(context, PlanSegment.budget),
         onShowTransactions: () => _onDestinationSelected(context, _transactionsTabIndex),
         onShowWallets: () => _onDestinationSelected(context, _walletsTabIndex),
-        notice: CaptureInboxBanner(container: parentContainer, fallback: AppUpdateBanner(container: parentContainer)),
+        notice: Column(
+          children: [
+            WhatsNewHost(container: parentContainer, active: _activeTab == _homeTabIndex),
+            CaptureInboxBanner(container: parentContainer, fallback: AppUpdateBanner(container: parentContainer)),
+          ],
+        ),
         pendingRecurring: RecurringPendingCard(
           spotlight: (tour: TourId.home, key: SpotlightKey.homePending),
           container: parentContainer,

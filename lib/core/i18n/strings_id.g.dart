@@ -3200,6 +3200,7 @@ class Translations$appUpdate$id {
 	late final Translations$appUpdate$banner$id banner = Translations$appUpdate$banner$id.internal(_root);
 	late final Translations$appUpdate$action$id action = Translations$appUpdate$action$id.internal(_root);
 	late final Translations$appUpdate$whatsNew$id whatsNew = Translations$appUpdate$whatsNew$id.internal(_root);
+	late final Translations$appUpdate$category$id category = Translations$appUpdate$category$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3682,6 +3683,30 @@ class Translations$appUpdate$whatsNew$id {
 
 	/// id: 'Belum ada catatan pembaruan.'
 	String get empty => 'Belum ada catatan pembaruan.';
+
+	/// id: 'Tutup'
+	String get close => 'Tutup';
+}
+
+// Path: appUpdate.category
+class Translations$appUpdate$category$id {
+	Translations$appUpdate$category$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Baru'
+	String get kNew => 'Baru';
+
+	/// id: 'Lebih cepat'
+	String get faster => 'Lebih cepat';
+
+	/// id: 'Perbaikan'
+	String get fixed => 'Perbaikan';
+
+	/// id: 'Keamanan'
+	String get security => 'Keamanan';
 }
 
 // Path: record.voice.failure
@@ -4842,6 +4867,11 @@ extension on Translations {
 			'appUpdate.whatsNew.title' => ({required Object version}) => 'Apa yang baru di versi ${version}',
 			'appUpdate.whatsNew.titlePatch' => 'Apa yang baru',
 			'appUpdate.whatsNew.empty' => 'Belum ada catatan pembaruan.',
+			'appUpdate.whatsNew.close' => 'Tutup',
+			'appUpdate.category.kNew' => 'Baru',
+			'appUpdate.category.faster' => 'Lebih cepat',
+			'appUpdate.category.fixed' => 'Perbaikan',
+			'appUpdate.category.security' => 'Keamanan',
 			_ => null,
 		};
 	}

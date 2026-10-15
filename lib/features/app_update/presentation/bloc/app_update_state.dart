@@ -1,5 +1,7 @@
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
+import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
+import 'package:saldough/features/app_update/domain/repositories/release_notes_source.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:state_management/state_management.dart';
 
@@ -13,6 +15,9 @@ final class AppUpdateState extends UiState<AppUpdateState> {
     this.announcement = UpdateAnnouncement.none,
     this.busy = false,
     this.availableVersion,
+    this.notes = ReleaseNotesSnapshot.empty,
+    this.whatsNew = const [],
+    this.installedNotes = const [],
     super.effect,
   });
 
@@ -32,6 +37,16 @@ final class AppUpdateState extends UiState<AppUpdateState> {
   /// entri catatan build itu (ADR-039 §3.3 butir 7); `null` = tanpa chip.
   final String? availableVersion;
 
+  /// Catatan yang dikenal aplikasi (Remote Config + salinan lokal).
+  final ReleaseNotesSnapshot notes;
+
+  /// Isi lembar Apa yang baru yang menunggu dilihat (terbaru di atas); kosong
+  /// = tidak ada lembar.
+  final List<ReleaseNote> whatsNew;
+
+  /// Catatan semua versi yang sudah terpasang (daftar di Akun), terbaru di atas.
+  final List<ReleaseNote> installedNotes;
+
   /// Keterangan keadaan untuk baris Akun.
   VersionStatus get status => snapshot == null ? VersionStatus.unknown : versionStatusOf(snapshot!);
 
@@ -42,6 +57,9 @@ final class AppUpdateState extends UiState<AppUpdateState> {
     UpdateAnnouncement? announcement,
     bool? busy,
     String? Function()? availableVersion,
+    ReleaseNotesSnapshot? notes,
+    List<ReleaseNote>? whatsNew,
+    List<ReleaseNote>? installedNotes,
     UiEffect? effect,
   }) => AppUpdateState(
     snapshot: snapshot != null ? snapshot() : this.snapshot,
@@ -49,9 +67,12 @@ final class AppUpdateState extends UiState<AppUpdateState> {
     announcement: announcement ?? this.announcement,
     busy: busy ?? this.busy,
     availableVersion: availableVersion != null ? availableVersion() : this.availableVersion,
+    notes: notes ?? this.notes,
+    whatsNew: whatsNew ?? this.whatsNew,
+    installedNotes: installedNotes ?? this.installedNotes,
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [snapshot, memory, announcement, busy, availableVersion];
+  List<Object?> get props => [snapshot, memory, announcement, busy, availableVersion, notes, whatsNew, installedNotes];
 }

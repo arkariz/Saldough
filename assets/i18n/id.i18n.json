@@ -1189,7 +1189,14 @@
     "whatsNew": {
       "title": "Apa yang baru di versi $version",
       "titlePatch": "Apa yang baru",
-      "empty": "Belum ada catatan pembaruan."
+      "empty": "Belum ada catatan pembaruan.",
+      "close": "Tutup"
+    },
+    "category": {
+      "new": "Baru",
+      "faster": "Lebih cepat",
+      "fixed": "Perbaikan",
+      "security": "Keamanan"
     }
   }
 }

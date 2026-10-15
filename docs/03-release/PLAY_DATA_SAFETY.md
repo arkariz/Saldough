@@ -1,8 +1,9 @@
 # Draf formulir Keamanan Data Play Console
 
-Diperbarui 29 September 2026 (ADR-023: identitas, Analytics, Crashlytics
-sudah masuk kode). Draf jawaban untuk bagian **App content → Data safety**
-di Play Console.
+Diperbarui 15 Oktober 2026 (Fase 20: Shorebird, Remote Config, dan
+pengumuman pembaruan; sebelumnya 29 September 2026, ADR-023: identitas,
+Analytics, Crashlytics). Draf jawaban untuk bagian **App content → Data
+safety** di Play Console.
 
 ## Aturan paling penting
 
@@ -89,6 +90,56 @@ karena akunnya sendiri opsional).
 **Tidak ada** baris "Info finansial" di rilis ini — dompet/transaksi/
 anggaran tidak pernah meninggalkan perangkat (beda dari draf sebelumnya,
 lihat riwayat git dokumen ini).
+
+### Fase 20: Shorebird, Remote Config, dan pengumuman pembaruan (T-20.7)
+
+Diperiksa 15 Oktober 2026 terhadap dokumentasi resmi
+([FAQ Shorebird](https://docs.shorebird.dev/code-push/faq/),
+[pengungkapan data SDK Firebase](https://firebase.google.com/docs/android/play-data-disclosure)).
+**Tidak ada data keuangan, teks transaksi, atau identitas pengguna** yang
+keluar perangkat karena fitur ini. Yang berubah hanya jenis data
+"pengenal anonim", dan satu di antaranya **sudah berjalan sejak T-8.7 tetapi
+belum tercatat di formulir**.
+
+| Mekanisme | Ke mana | Data (menurut dokumentasi resmi) | Status | Dampak ke formulir |
+|---|---|---|---|---|
+| **Shorebird** (pembaruan kecil, `auto_update`) | Server Shorebird (pihak ketiga) | ID instalasi anonim yang dibuat Shorebird (nama kode `client_id`), id aplikasi, versi rilis dan build, nomor patch, platform, arsitektur. Tanpa lokasi, sidik perangkat, atau ID iklan. Log operasional server bisa memuat alamat IP. | **Sudah berjalan sejak T-8.7, belum tercatat** | Tambah **Info pengenal: ID perangkat atau ID lain** (lihat bawah) |
+| **Play In-App Updates** (versi baru) | Google Play (lewat layanan Play di perangkat) | Tidak ada data yang dikirim aplikasi ke pengembang atau server kami | Baru | Tidak ada |
+| **Firebase Remote Config** (catatan Apa yang baru, chip versi) | Firebase (Google) | Otomatis oleh SDK: kode negara, kode bahasa, zona waktu, versi platform dan OS, Firebase Android App ID, nama paket, versi SDK; plus Firebase installation ID (FID, per instalasi, tidak mengidentifikasi unik pengguna atau perangkat) | Baru | FID masuk baris **ID perangkat atau ID lain** yang sama |
+| **Analytics**: peristiwa `update_*`, `app_updated`, `whats_new_viewed`, properti `patch_number` | Firebase Analytics | Jenis banner, tindakan, nomor build dan pembaruan kecil | Baru, jenis data sama | Tidak ada baris baru (sudah "Interaksi aplikasi") |
+| **Crashlytics**: kunci kustom `patch_number` | Firebase Crashlytics | Satu angka | Baru, jenis data sama | Tidak ada baris baru. Crashlytics hanya menambah metadata rollout Remote Config bila ada rollout aktif; kita tidak memakainya. |
+
+**Baris yang perlu ditambah** (usulan, pemilik memutuskan):
+
+| Kategori Play | Sub-jenis | Dikumpulkan | Dibagikan | Wajib/opsional | Tujuan |
+|---|---|---|---|---|---|
+| Info pengenal | ID perangkat atau ID lain | Ya (ID instalasi anonim Shorebird, FID Firebase) | Tidak\* | Wajib | Fungsi aplikasi (mengantar pembaruan kecil dan konfigurasi), Analitik |
+
+`*` Shorebird memproses data atas nama kita untuk mengantar pembaruan dan
+menghitung pemakaian; menurut definisi Play, transfer ke penyedia layanan
+yang memproses atas nama pengembang bukan "dibagikan". Konfirmasi dengan
+[panduan Data safety Google](https://support.google.com/googleplay/android-developer/answer/10787469)
+sebelum mengisi; bila ragu, isi "Dibagikan: Ya" untuk Shorebird.
+
+**Celah yang ditemukan di formulir sekarang:** tabel "Jenis data yang
+dideklarasikan" di atas belum memuat "ID perangkat atau ID lain", padahal
+Firebase installations SDK (dipakai Analytics, Crashlytics, dan Remote
+Config) membuat FID per instalasi. Baris di atas menutup itu sekalian.
+Periksa juga pemetaan Google Analytics di
+[dokumentasinya](https://support.google.com/analytics/answer/11582702) untuk
+jenis data lain yang mungkin perlu ditandai.
+
+**Kebijakan privasi (`tanukonomy-web`) perlu menyebut:** (1) pembaruan kecil
+lewat Shorebird dengan ID instalasi anonim dan data teknis aplikasi
+tersebut, tanpa data pengguna; (2) Firebase Remote Config untuk catatan
+rilis dengan data teknis otomatis (negara, bahasa, zona waktu, versi OS,
+FID); (3) pembaruan versi lewat Google Play. Perbarui
+`LEGAL_EFFECTIVE_DATE` bersamaan. Formulir Play Console dan situs diisi
+pemilik; dokumen ini hanya menyiapkan.
+
+**Sebelum build Fase 20 diunggah:** pemilik menyetujui bagian ini, mengisi
+ulang formulir (build berbeda = formulir per rilis), dan memperbarui
+kebijakan privasi.
 
 ### Belum termasuk di draf ini
 

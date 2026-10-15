@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 5 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3, T-20.5, dan T-20.6 selesai, T-20.4 sebagian (menunggu rupa lembar per kategori), lanjut T-20.7 |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 5 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3, T-20.5, dan T-20.6 selesai, T-20.4 dan T-20.7 sebagian (menunggu rupa lembar per kategori dan persetujuan pemilik), lanjut T-20.8 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3676,6 +3676,16 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       ⚠ Formulir Play Console dan situs diisi pemilik; agen hanya menyiapkan.
       Verifikasi: pemilik menyetujui catatan sebelum build Fase 20 diunggah.
       Memenuhi NFR-SEC-001.
+      ⚠ Sebagian (15 Okt 2026): catatan disiapkan di
+      [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (bagian
+      Fase 20): Shorebird mengirim ID instalasi anonim, id aplikasi, versi
+      rilis, nomor patch, platform, dan arsitektur (sudah berjalan sejak
+      T-8.7, belum tercatat); Remote Config mengirim data teknis otomatis
+      plus FID; Play In-App Updates tanpa data ke pengembang. Usul:
+      tambah baris "ID perangkat atau ID lain"; ditemukan juga celah yang
+      sama di formulir Analytics/Crashlytics sekarang. Tersisa: persetujuan
+      pemilik, pengisian ulang formulir Play Console, dan pembaruan
+      kebijakan privasi di repo `tanukonomy-web` (diisi pemilik).
 - [ ] **T-20.8** Verifikasi di perangkat lewat jalur tes Play.
       Pasang build N dari jalur tes, publikasikan N+1: banner, Nanti,
       Perbarui, Pasang sekarang, Apa yang baru, data utuh (B-1), dan

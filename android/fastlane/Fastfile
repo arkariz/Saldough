@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'json'
 
 default_platform(:android)
 
@@ -8,9 +9,21 @@ platform :android do
     lane :release_internal do
         shorebird_release(platform: "android")
 
-        # 1. Read release note file from root folder
-        note_id = File.read("../../release_notes/id.md")
-        note_en = File.read("../../release_notes/en.md")
+        # 1. Catatan "What's new" Play dari berkas catatan yang sama dengan
+        # aplikasi (ADR-039 §3.3): release_notes/<build>-0.json, maksimal 500
+        # karakter per bahasa (batas Play), butir terpotong dari bawah.
+        build = File.read("../../pubspec.yaml", encoding: "UTF-8")[/^version:\s*\S+\+(\d+)/, 1]
+        note = JSON.parse(File.read("../../release_notes/#{build}-0.json", encoding: "UTF-8"))
+        changelog = lambda do |lang|
+            text = ""
+            note["groups"].flat_map { |g| g["notes"].map { |n| "• #{n[lang]}" } }.each do |line|
+                break if (text + line + "\n").length > 500
+                text += line + "\n"
+            end
+            text.strip
+        end
+        note_id = changelog.call("id")
+        note_en = changelog.call("en")
 
         # 2. Create Fastlane metadata folder structure dynamically
         id_dir = "metadata/android/id/changelogs"

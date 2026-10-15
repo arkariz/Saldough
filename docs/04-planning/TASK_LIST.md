@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 4 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3 dan T-20.5 selesai, T-20.4 sebagian (menunggu rupa lembar per kategori), lanjut T-20.6 |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 5 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3, T-20.5, dan T-20.6 selesai, T-20.4 sebagian (menunggu rupa lembar per kategori), lanjut T-20.7 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3644,7 +3644,7 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       atau daftar dibuka. Uji 22 baru (bloc, banner, host, halaman);
       suite 1.421 lulus, `flutter analyze` bersih. DebugView dan Crashlytics
       diperiksa di T-20.8.
-- [ ] **T-20.6** Langkah rilis: catatan Apa yang baru sebelum rilis
+- [x] **T-20.6** Langkah rilis: catatan Apa yang baru sebelum rilis
       Play Store dan pembaruan kecil diterbitkan (KT-U5).
       Tambahkan ke dokumen rilis di `docs/03-release/` dan skill
       `release-email` (catatan aplikasi dan email dari sumber yang sama);
@@ -3656,6 +3656,17 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Verifikasi: dokumen dan skill menyebut langkahnya; contoh catatan
       mematuhi glosarium dan `writing.md`.
       Di luar PRD: proses rilis.
+      Selesai 15 Okt 2026: `scripts/release_notes.js` (`validate`,
+      `publish`, `cleanup`; 15 uji Node, `npm test`), `deploy.yaml`
+      (validasi sebelum build, terbit ke Remote Config sebelum rilis dengan
+      baca balik dan ulang saat ETag bentrok, pembersihan saat gagal,
+      input `patch_number`), `Fastfile` (teks What's new Play dari berkas
+      yang sama, 500 karakter), berkas `id.md`/`en.md`/`update_release_note.js`
+      lama dihapus, dokumen [RELEASE_NOTES.md](../03-release/RELEASE_NOTES.md),
+      skill `release-email` memakai berkas catatan sebagai sumber utama.
+      ⚠ Belum dijalankan sungguhan di GitHub Actions (butuh rahasia dan
+      Firebase); batas ukuran nilai parameter Remote Config (ADR-039)
+      belum diverifikasi: diuji saat workflow pertama dijalankan.
 - [ ] **T-20.7** Keamanan Data: Shorebird dan mekanisme pembaruan
       pilihan ADR T-20.1 (APP_UPDATE §9). Catat di
       [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) data yang

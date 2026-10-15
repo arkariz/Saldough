@@ -813,6 +813,8 @@ class _Translations$account$en extends Translations$account$id {
 	@override String get recordingSection => 'Recording';
 	@override String get displaySection => 'Display';
 	@override String get hideAmountsBody => 'Replace numbers with dots on every screen, e.g. when opening the app around others.';
+	@override String get appSection => 'App';
+	@override late final _Translations$account$version$en version = _Translations$account$version$en._(_root);
 }
 
 // Path: currency
@@ -1248,6 +1250,7 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	// Translations
 	@override late final _Translations$appUpdate$banner$en banner = _Translations$appUpdate$banner$en._(_root);
 	@override late final _Translations$appUpdate$action$en action = _Translations$appUpdate$action$en._(_root);
+	@override late final _Translations$appUpdate$whatsNew$en whatsNew = _Translations$appUpdate$whatsNew$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1368,6 +1371,23 @@ class _Translations$account$errors$en extends Translations$account$errors$id {
 	@override String get other => 'Couldn\'t sign in. Try again.';
 }
 
+// Path: account.version
+class _Translations$account$version$en extends Translations$account$version$id {
+	_Translations$account$version$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get label => 'App version';
+	@override String value({required Object version, required Object build}) => '${version} (${build})';
+	@override String valuePatched({required Object version, required Object build, required Object patch}) => '${version} (${build}), patch ${patch}';
+	@override String get statusLatest => 'Up to date';
+	@override String get statusAvailable => 'New version available';
+	@override String get statusDownloading => 'Downloading new version';
+	@override String get statusDownloaded => 'New version downloaded';
+	@override String get statusPatchReady => 'Small update ready, reopen the app';
+}
+
 // Path: currency.names
 class _Translations$currency$names$en extends Translations$currency$names$id {
 	_Translations$currency$names$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1452,6 +1472,18 @@ class _Translations$appUpdate$action$en extends Translations$appUpdate$action$id
 	@override String get install => 'Install now';
 	@override String get later => 'Later';
 	@override String get ok => 'OK';
+}
+
+// Path: appUpdate.whatsNew
+class _Translations$appUpdate$whatsNew$en extends Translations$appUpdate$whatsNew$id {
+	_Translations$appUpdate$whatsNew$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object version}) => 'What\'s new in version ${version}';
+	@override String get titlePatch => 'What\'s new';
+	@override String get empty => 'No update notes yet.';
 }
 
 // Path: record.voice.failure
@@ -2189,6 +2221,15 @@ extension on TranslationsEn {
 			'account.recordingSection' => 'Recording',
 			'account.displaySection' => 'Display',
 			'account.hideAmountsBody' => 'Replace numbers with dots on every screen, e.g. when opening the app around others.',
+			'account.appSection' => 'App',
+			'account.version.label' => 'App version',
+			'account.version.value' => ({required Object version, required Object build}) => '${version} (${build})',
+			'account.version.valuePatched' => ({required Object version, required Object build, required Object patch}) => '${version} (${build}), patch ${patch}',
+			'account.version.statusLatest' => 'Up to date',
+			'account.version.statusAvailable' => 'New version available',
+			'account.version.statusDownloading' => 'Downloading new version',
+			'account.version.statusDownloaded' => 'New version downloaded',
+			'account.version.statusPatchReady' => 'Small update ready, reopen the app',
 			'currency.settingsTitle' => 'Settings',
 			'currency.label' => 'Currency',
 			'currency.pickerTitle' => 'Choose currency',
@@ -2494,6 +2535,8 @@ extension on TranslationsEn {
 			'recurring.priceUpKeep' => 'Keep amount',
 			'recurring.suggestTitle' => 'Looks repeating',
 			'recurring.suggestLine' => ({required Object name, required Object amount, required Object day}) => '${name} ${amount}, around day ${day} for the last three months.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.suggestAccept' => 'Make repeating',
 			'recurring.suggestDismiss' => 'Not repeating',
 			'recurring.autoRecordedTitle' => 'Recorded automatically',
@@ -2503,8 +2546,6 @@ extension on TranslationsEn {
 			'plan.financialMonthDay' => ({required Object day}) => 'Day ${day}',
 			'plan.thisMonthSegmentLabel' => 'This month',
 			'plan.unplannedTitle' => ({required Object month}) => 'Unplanned money · ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'plan.incomeRow' => 'Income',
 			'plan.billsRow' => 'Recurring bills',
 			'plan.budgetRow' => 'Budgets',
@@ -2588,6 +2629,9 @@ extension on TranslationsEn {
 			'appUpdate.action.install' => 'Install now',
 			'appUpdate.action.later' => 'Later',
 			'appUpdate.action.ok' => 'OK',
+			'appUpdate.whatsNew.title' => ({required Object version}) => 'What\'s new in version ${version}',
+			'appUpdate.whatsNew.titlePatch' => 'What\'s new',
+			'appUpdate.whatsNew.empty' => 'No update notes yet.',
 			_ => null,
 		};
 	}

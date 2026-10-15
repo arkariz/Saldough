@@ -745,7 +745,18 @@
     },
     "recordingSection": "Pencatatan",
     "displaySection": "Tampilan",
-    "hideAmountsBody": "Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain."
+    "hideAmountsBody": "Ganti angka dengan titik di semua layar, mis. saat membuka aplikasi di depan orang lain.",
+    "appSection": "Aplikasi",
+    "version": {
+      "label": "Versi aplikasi",
+      "value": "$version ($build)",
+      "valuePatched": "$version ($build), pembaruan $patch",
+      "statusLatest": "Terbaru",
+      "statusAvailable": "Versi baru tersedia",
+      "statusDownloading": "Mengunduh versi baru",
+      "statusDownloaded": "Versi baru sudah diunduh",
+      "statusPatchReady": "Pembaruan kecil siap, buka ulang aplikasi"
+    }
   },
   "currency": {
     "settingsTitle": "Pengaturan",
@@ -1174,6 +1185,11 @@
       "install": "Pasang sekarang",
       "later": "Nanti",
       "ok": "Oke"
+    },
+    "whatsNew": {
+      "title": "Apa yang baru di versi $version",
+      "titlePatch": "Apa yang baru",
+      "empty": "Belum ada catatan pembaruan."
     }
   }
 }

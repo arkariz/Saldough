@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:flutter/widgets.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/features/account/di/account_scope.dart';
 import 'package:saldough/features/account/presentation/bloc/account_bloc.dart';
@@ -11,8 +12,12 @@ import 'package:state_management/state_management.dart';
 /// Modul rute fitur `account` (ADR-030 §3.3): layar Akun lengkap dengan
 /// `AccountScope`-nya sendiri (ADR-023).
 final class AccountRouteModule extends FeatureRouteModule {
-  /// Membuat [AccountRouteModule].
-  const AccountRouteModule();
+  /// Membuat [AccountRouteModule]; [versionEntry] mengisi baris Versi
+  /// aplikasi (dikawat akar komposisi, isinya milik fitur `app_update`).
+  const AccountRouteModule({this.versionEntry});
+
+  /// Pembuat baris Versi aplikasi dari container akar.
+  final Widget Function(GetIt container)? versionEntry;
 
   @override
   List<RouteNode> get routes => [
@@ -28,7 +33,9 @@ final class AccountRouteModule extends FeatureRouteModule {
               BlocProvider.value(value: scope.container<AccountBloc>()),
               BlocProvider.value(value: scope.container<CategoryManagerBloc>()),
             ],
-            child: const EffectListener<AccountBloc, AccountState>(child: AccountPage()),
+            child: EffectListener<AccountBloc, AccountState>(
+              child: AccountPage(versionEntry: versionEntry?.call(parentContainer)),
+            ),
           ),
         );
       },

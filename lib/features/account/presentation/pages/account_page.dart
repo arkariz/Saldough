@@ -22,7 +22,12 @@ import 'package:state_management/state_management.dart';
 /// Keduanya memuat bagian "Pengaturan" (mata uang, ADR-025).
 class AccountPage extends StatefulWidget {
   /// Membuat [AccountPage].
-  const AccountPage({super.key});
+  const AccountPage({this.versionEntry, super.key});
+
+  /// Baris Versi aplikasi di grup paling bawah (APP_UPDATE F4), disisipkan
+  /// akar komposisi karena isinya milik fitur lain (ADR-030); `null` = tanpa
+  /// grup itu.
+  final Widget? versionEntry;
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -56,6 +61,11 @@ class _AccountPageState extends State<AccountPage> {
                 padding: const EdgeInsets.all(AppSpacing.space4),
                 children: [
                   if (user == null) _SignedOut(state: state) else _SignedIn(state: state, user: user),
+                  if (widget.versionEntry case final entry?) ...[
+                    const SizedBox(height: AppSpacing.space6),
+                    AppSectionHeader(t.account.appSection),
+                    AppListCard(dividerIndent: AppListCard.iconIndent, children: [entry]),
+                  ],
                 ],
               );
             },

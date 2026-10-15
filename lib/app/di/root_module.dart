@@ -3,6 +3,7 @@ import 'package:di/di.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_storage/hive_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/app/shell/account_version_entry.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
@@ -19,6 +20,7 @@ import 'package:saldough/features/app_update/domain/repositories/app_update_memo
 import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
+import 'package:saldough/features/app_update/presentation/navigation/app_update_route_module.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/adapters/plan_budget_source_impl.dart';
@@ -71,7 +73,8 @@ abstract final class RootModule {
   /// ⚠ Daftar ini tumbuh manual tiap fitur baru ditambahkan — tidak ada
   /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
   static const List<FeatureRouteModule> featureModules = [
-    AccountRouteModule(),
+    AccountRouteModule(versionEntry: accountVersionEntry),
+    AppUpdateRouteModule(),
     BudgetRouteModule(),
     FreelanceRouteModule(),
     NotificationCaptureRouteModule(),

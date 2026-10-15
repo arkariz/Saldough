@@ -125,9 +125,9 @@ sebelum mengisi; bila ragu, isi "Dibagikan: Ya" untuk Shorebird.
 dideklarasikan" di atas belum memuat "ID perangkat atau ID lain", padahal
 Firebase installations SDK (dipakai Analytics, Crashlytics, dan Remote
 Config) membuat FID per instalasi. Baris di atas menutup itu sekalian.
-Periksa juga pemetaan Google Analytics di
-[dokumentasinya](https://support.google.com/analytics/answer/11582702) untuk
-jenis data lain yang mungkin perlu ditandai.
+Periksa juga halaman pengungkapan data Google Analytics (Firebase menaut
+ke sana dari bagian `firebase-analytics`) untuk jenis data lain yang
+mungkin perlu ditandai.
 
 **Kebijakan privasi (`tanukonomy-web`) perlu menyebut:** (1) pembaruan kecil
 lewat Shorebird dengan ID instalasi anonim dan data teknis aplikasi

@@ -1,0 +1,22 @@
+{
+  "version": "0.6.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Beranda memberi tahu saat ada versi baru, dan kamu bisa memperbaruinya langsung dari aplikasi.",
+          "en": "Home tells you when a new version is available, and you can update right from the app."
+        },
+        {
+          "id": "Akun punya baris Versi aplikasi berisi versi terpasang dan catatan pembaruan.",
+          "en": "Account has an App version row with the installed version and the update notes."
+        },
+        {
+          "id": "Pembaruan kecil kini diumumkan, lengkap dengan petunjuk membuka ulang aplikasi.",
+          "en": "Small updates are now announced, with a hint to reopen the app."
+        }
+      ]
+    }
+  ]
+}

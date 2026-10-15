@@ -102,9 +102,30 @@ Keputusan:
    `…_id`/`…_en`). `scripts/update_release_note.js` diubah: menulis semua
    entri `release_notes/*.json` (idempoten) dan **tidak lagi menimpa**
    parameter lama.
-3. **Urutan di CI:** langkah Remote Config dipindah **sebelum** langkah
-   `release`/`patch`. Hari ini ia sesudahnya, sehingga ada celah pengguna
-   membuka tambalan sebelum catatannya terbit.
+3. **Urutan di CI dan bila build gagal.** Langkah Remote Config dijalankan
+   **sebelum** langkah `release`/`patch`. Hari ini ia sesudahnya: pengguna
+   yang sudah memuat tambalan bisa membuka aplikasi sebelum catatannya
+   terbit, lalu dianggap "tanpa catatan" dan lembarnya hilang selamanya.
+   Akibat dari urutan baru, catatan bisa terbit untuk rilis yang akhirnya
+   gagal. Itu ditangani tiga lapis:
+   1. **Sinkronisasi dengan penghapusan:** skrip menyamakan semua parameter
+      `whats_new_*` dengan isi `release_notes/` (menambah, menimpa, dan
+      menghapus kunci tanpa berkas). Catatan yatim hilang pada eksekusi
+      berikutnya. Berkas catatan rilis yang gagal dihapus atau diganti
+      namanya di PR perbaikan.
+   2. **Pembersihan saat gagal:** langkah `if: failure()` menghapus entri
+      milik eksekusi itu sebisanya (tidak boleh membuat eksekusi gagal
+      kedua; kegagalannya ditutup oleh lapis 1).
+   3. **Aplikasi hanya memakai entri yang nomornya sudah berjalan atau
+      terlewati** (build/tambalan ≤ yang berjalan) dan hanya menyalin entri
+      itu ke penyimpanan lokal. Entri yatim bernomor lebih besar tidak
+      tampil dan tidak tersimpan. Sisa risiko: catatan yatim bernomor
+      **lebih kecil** dari rilis berikutnya (build 7 gagal, rilis jadi build
+      8, pengguna lompat 6→8) hanya tertutup lapis 1 dan 2; karena itu
+      pemeriksaan "berkas catatan cocok dengan versi di `pubspec.yaml`" masuk
+      CI (T-20.6).
+   Nomor tambalan Shorebird tidak terpakai bila tambalan gagal, jadi
+   percobaan ulang memakai nomor yang sama dan menimpa entri dari berkas.
 4. **Di aplikasi:** `firebase_remote_config` dengan nilai bawaan kosong dan
    `minimumFetchInterval` 1 jam; `fetchAndActivate` dijalankan sesudah
    Beranda tampil, tanpa `await` di jalur pembukaan. Nilai yang berhasil

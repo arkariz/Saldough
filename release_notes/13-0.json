@@ -1,0 +1,27 @@
+{
+  "version": "0.7.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Kamu bisa memulai bulan keuanganmu di tanggal gajian, dan Beranda serta Rencana ikut menyesuaikan.",
+          "en": "You can start your financial month on your payday, and Home and Plan follow it."
+        },
+        {
+          "id": "Anggaran rutin ikut pindah ke awal bulan yang baru tanpa mengubah periode yang sudah lewat.",
+          "en": "Recurring budgets move to the new month start without changing past periods."
+        }
+      ]
+    },
+    {
+      "category": "fixed",
+      "notes": [
+        {
+          "id": "Pos anggaran yang kamu pilih saat membuat transaksi rutin kini ikut tersimpan.",
+          "en": "The budget item you pick when creating a recurring transaction is now saved."
+        }
+      ]
+    }
+  ]
+}

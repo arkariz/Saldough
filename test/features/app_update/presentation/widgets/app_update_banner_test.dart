@@ -203,6 +203,23 @@ void main() {
     expect(shown.single.parameters['stage'], 'available');
   });
 
+  testWidgets('jarak: 24px di bawah kartu sebelum bagian berikutnya, tanpa jarak di atasnya', (tester) async {
+    source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
+    await pump(
+      tester,
+      child: Column(
+        children: [
+          AppUpdateBanner(container: container),
+          const SizedBox(key: ValueKey('next-section'), height: 40),
+        ],
+      ),
+    );
+    final card = tester.getRect(find.byType(UpdateBannerCard));
+    final next = tester.getRect(find.byKey(const ValueKey('next-section')));
+    expect(next.top - card.bottom, 24, reason: 'kartu tidak menempel pada kartu saldo di bawahnya');
+    expect(card.top, 16, reason: 'tanpa jarak tambahan di atas kartu (hanya padding tes)');
+  });
+
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {
     source(play: available);
     await pump(tester);

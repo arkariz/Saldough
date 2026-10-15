@@ -111,8 +111,10 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!bloc.isClosed) bloc.add(AppUpdateBannerShown(state.announcement));
         });
+        // Jarak 24px di bawah kartu, sama dengan jarak antarbagian Beranda; kartu
+        // ini di atas kartu saldo, jadi tanpa jarak di atasnya.
         return Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.space6),
+          padding: const EdgeInsets.only(bottom: AppSpacing.space6),
           child: banner,
         );
       },

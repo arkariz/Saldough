@@ -51,7 +51,9 @@ void main() {
     dismissLabel: 'Nanti',
   );
 
-  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas, tombol di bawahnya', (tester) async {
+  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas, tombol di baris sendiri di bawah', (
+    tester,
+  ) async {
     await pump(tester, full, width: 480);
     final title = tester.getRect(find.text('Versi baru tersedia.'));
     final chip = tester.getRect(find.byKey(const ValueKey('app-update-version-chip')));
@@ -62,11 +64,13 @@ void main() {
     expect((chip.center.dy - title.center.dy).abs(), lessThan(8), reason: 'sebaris');
     expect(close.top - card.top, lessThan(16));
     expect(card.right - close.right, lessThan(16), reason: 'pojok kanan');
-    expect(action.top, greaterThanOrEqualTo(close.bottom - 1), reason: 'tombol di bawah ×');
     expect(close.width, greaterThanOrEqualTo(48));
+    expect(action.top, greaterThanOrEqualTo(title.bottom), reason: 'tombol di baris sendiri');
+    expect(card.right - action.right, lessThanOrEqualTo(16), reason: 'tombol rata kanan');
+    expect(action.width, lessThan(card.width / 2), reason: 'selebar teksnya, bukan sebaris penuh');
   });
 
-  testWidgets('di 360dp chip turun ke bawah judul bila lebar tidak cukup', (tester) async {
+  testWidgets('di 360dp judul memakai lebar penuh dan chip turun ke bawahnya', (tester) async {
     await pump(
       tester,
       const UpdateBannerCard(
@@ -117,7 +121,11 @@ void main() {
       final c = theme.extension<AppColors>()!;
       expect(_contrast(c.onBrand, c.brand), greaterThanOrEqualTo(4.5), reason: 'judul di latar brand');
       expect(_contrast(c.brandInk, c.surface), greaterThanOrEqualTo(4.5), reason: 'teks tombol');
-      expect(_contrast(c.onInverse, c.inverseSurface), greaterThanOrEqualTo(4.5), reason: 'teks chip');
+      expect(
+        _contrast(theme.brightness == Brightness.dark ? c.onBrand : c.ink, c.straw),
+        greaterThanOrEqualTo(4.5),
+        reason: 'teks chip di atas straw',
+      );
       expect(_contrast(c.brand, c.surface), greaterThanOrEqualTo(3), reason: 'ikon di tile');
     });
   }

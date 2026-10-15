@@ -89,7 +89,8 @@ void main() {
     await openAccount(tester);
     expect(find.text(t.account.appSection), findsOneWidget);
     expect(find.text(t.account.version.label), findsOneWidget);
-    expect(find.text('0.6.0 (7)\n${t.account.version.statusLatest}'), findsOneWidget);
+    expect(find.text('0.6.0 (7)'), findsOneWidget);
+    expect(find.text(t.account.version.statusLatest), findsOneWidget);
   });
 
   testWidgets('membuka Akun memicu pengecekan Play (B-5)', (tester) async {

@@ -5,12 +5,14 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
+import 'package:saldough/features/app_update/presentation/widgets/app_update_labels.dart';
 import 'package:state_management/state_management.dart';
 
-/// Layar "Apa yang baru" dari baris Versi aplikasi di Akun (APP_UPDATE F4,
-/// §7): tindakan sesuai keadaan di atas, daftar catatan di bawahnya.
+/// Halaman "Versi aplikasi" dari baris di Akun (APP_UPDATE F4, §7; prototipe
+/// `VersiAplikasi.dc.html`): kartu kepala berisi versi dan keadaannya, bagian
+/// "Apa yang baru", dan tombol pembaruan yang menempel di bawah.
 ///
-/// Tindakan mengikuti keadaan sebenarnya, bukan banner, sehingga pengguna yang
+/// Tombol mengikuti keadaan sebenarnya, bukan banner, sehingga pengguna yang
 /// sudah menekan Nanti tetap punya jalan memperbarui. Daftar catatan diisi
 /// di T-20.4; sebelum itu hanya keadaan kosong.
 class AppUpdateNotesPage extends StatelessWidget {
@@ -20,79 +22,93 @@ class AppUpdateNotesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texts = t.appUpdate;
-    return Scaffold(
-      appBar: AppBar(title: Text(texts.whatsNew.titlePatch)),
-      body: SafeArea(
-        child: BlocBuilder<AppUpdateBloc, AppUpdateState>(
-          buildWhen: (a, b) => a.status != b.status || a.busy != b.busy,
-          builder: (context, state) {
-            final bloc = context.read<AppUpdateBloc>();
-            return ListView(
+    return BlocBuilder<AppUpdateBloc, AppUpdateState>(
+      buildWhen: (a, b) => a.snapshot != b.snapshot || a.busy != b.busy,
+      builder: (context, state) {
+        final bloc = context.read<AppUpdateBloc>();
+        final action = _action(state, bloc);
+        return Scaffold(
+          appBar: AppBar(title: Text(t.account.version.label)),
+          body: SafeArea(
+            child: ListView(
               padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
-                ?_status(context, state, bloc),
+                _VersionHeader(state: state),
                 const SizedBox(height: AppSpacing.space6),
+                AppSectionHeader(texts.whatsNew.titlePatch),
                 AppEmptyState(title: texts.whatsNew.empty),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+          bottomNavigationBar: action == null ? null : AppStickyBar(child: action),
+        );
+      },
     );
   }
 
-  /// Pesan keadaan dan tombolnya; `null` bila tidak ada yang perlu dilakukan.
-  Widget? _status(BuildContext context, AppUpdateState state, AppUpdateBloc bloc) {
-    final texts = t.appUpdate;
-    switch (state.status) {
-      case VersionStatus.available:
-        return _StatusCard(
-          key: const ValueKey('app-update-notes-available'),
-          message: texts.banner.storeAvailable,
-          action: AppButton(
-            label: texts.action.update,
-            expand: true,
-            loading: state.busy,
-            onPressed: state.busy ? null : () => bloc.add(const AppUpdateDownloadRequested()),
-          ),
-        );
-      case VersionStatus.downloading:
-        return _StatusCard(key: const ValueKey('app-update-notes-downloading'), message: texts.banner.storeDownloading);
-      case VersionStatus.downloaded:
-        return _StatusCard(
-          key: const ValueKey('app-update-notes-downloaded'),
-          message: texts.banner.storeDownloaded,
-          action: AppButton(
-            label: texts.action.install,
-            expand: true,
-            onPressed: () => bloc.add(const AppUpdateInstallRequested()),
-          ),
-        );
-      case VersionStatus.patchReady:
-        return _StatusCard(key: const ValueKey('app-update-notes-patch'), message: texts.banner.patchReady);
-      case VersionStatus.latest:
-      case VersionStatus.unknown:
-        return null;
-    }
+  /// Tombol keadaan: Perbarui bila tersedia, Pasang sekarang bila sudah
+  /// diunduh; selain itu tidak ada.
+  Widget? _action(AppUpdateState state, AppUpdateBloc bloc) {
+    final texts = t.appUpdate.action;
+    return switch (state.status) {
+      VersionStatus.available => AppButton(
+        key: const ValueKey('app-update-notes-update'),
+        label: texts.update,
+        expand: true,
+        loading: state.busy,
+        onPressed: state.busy ? null : () => bloc.add(const AppUpdateDownloadRequested()),
+      ),
+      VersionStatus.downloaded => AppButton(
+        key: const ValueKey('app-update-notes-install'),
+        label: texts.install,
+        expand: true,
+        onPressed: () => bloc.add(const AppUpdateInstallRequested()),
+      ),
+      _ => null,
+    };
   }
 }
 
-class _StatusCard extends StatelessWidget {
-  const _StatusCard({required this.message, this.action, super.key});
+/// Kartu kepala `tk-whatsnew`: tile ikon keadaan, nilai versi, keterangan.
+class _VersionHeader extends StatelessWidget {
+  const _VersionHeader({required this.state});
 
-  final String message;
-  final Widget? action;
+  final AppUpdateState state;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(message, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink)),
-          if (action case final button?) ...[const SizedBox(height: AppSpacing.space3), button],
-        ],
+    final textTheme = Theme.of(context).textTheme;
+    final version = state.snapshot?.version;
+    final status = versionStatusLabel(state.status);
+    final icon = AppIcon(versionStatusIcon(state.status), color: colors.brandInk);
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        key: const ValueKey('app-update-notes-header'),
+        padding: const EdgeInsets.all(AppSpacing.space4),
+        decoration: ShapeDecoration(color: colors.brandSoft, shape: const PixelCornerBorder()),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()),
+              child: state.status == VersionStatus.downloading ? AppSpin(child: icon) : icon,
+            ),
+            const SizedBox(width: AppSpacing.space3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (version != null) Text(versionValue(version), style: textTheme.titleLarge),
+                  if (status != null) Text(status, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

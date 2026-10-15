@@ -32,6 +32,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: PixelTheme.light,
+          builder: (context, child) =>
+              MediaQuery(data: MediaQuery.of(context).copyWith(disableAnimations: true), child: child!),
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () => context.pushRoute(AppUpdateRouteKeys.notes, const EmptyInput()),
@@ -53,6 +55,9 @@ void main() {
 
   testWidgets('terbaru: hanya keadaan kosong catatan', (tester) async {
     await open(tester);
+    expect(find.text(t.account.version.label), findsOneWidget);
+    expect(find.text('0.6.0 (7)'), findsOneWidget);
+    expect(find.text(t.account.version.statusLatest), findsOneWidget);
     expect(find.text(t.appUpdate.whatsNew.titlePatch), findsOneWidget);
     expect(find.text(t.appUpdate.whatsNew.empty), findsOneWidget);
     expect(find.text(t.appUpdate.action.update), findsNothing);
@@ -62,8 +67,8 @@ void main() {
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {
     harness.set(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
     await open(tester);
-    expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
-    await tester.tap(find.text(t.appUpdate.action.update));
+    expect(find.text(t.account.version.statusAvailable), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('app-update-notes-update')));
     await tester.pumpAndSettle();
     verify(() => harness.store.startDownload()).called(1);
   });
@@ -77,6 +82,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: PixelTheme.light,
+          builder: (context, child) =>
+              MediaQuery(data: MediaQuery.of(context).copyWith(disableAnimations: true), child: child!),
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () => context.pushRoute(AppUpdateRouteKeys.notes, const EmptyInput()),
@@ -100,7 +107,7 @@ void main() {
   testWidgets('mengunduh: pesan tanpa tombol', (tester) async {
     harness.set(play: const StoreUpdateInfo(stage: StoreUpdateStage.downloading, availableBuild: 8));
     await open(tester);
-    expect(find.text(t.appUpdate.banner.storeDownloading), findsOneWidget);
+    expect(find.text(t.account.version.statusDownloading), findsOneWidget);
     expect(find.text(t.appUpdate.action.update), findsNothing);
     expect(find.text(t.appUpdate.action.install), findsNothing);
   });
@@ -109,7 +116,7 @@ void main() {
     harness.set(play: downloaded);
     await open(tester);
     verifyNever(() => harness.store.completeInstall());
-    await tester.tap(find.text(t.appUpdate.action.install));
+    await tester.tap(find.byKey(const ValueKey('app-update-notes-install')));
     await tester.pumpAndSettle();
     verify(() => harness.store.completeInstall()).called(1);
   });
@@ -117,7 +124,7 @@ void main() {
   testWidgets('pembaruan kecil siap: petunjuk buka ulang, tanpa tombol', (tester) async {
     harness.set(patchState: const PatchState(next: 1));
     await open(tester);
-    expect(find.text(t.appUpdate.banner.patchReady), findsOneWidget);
+    expect(find.text(t.account.version.statusPatchReady), findsOneWidget);
     expect(find.text(t.appUpdate.action.ok), findsNothing);
   });
 }

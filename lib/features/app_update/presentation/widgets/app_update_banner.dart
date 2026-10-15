@@ -7,6 +7,7 @@ import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/app_update/domain/services/update_policy.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
+import 'package:saldough/features/app_update/presentation/widgets/update_banner_card.dart';
 import 'package:state_management/state_management.dart';
 
 /// Banner pembaruan di slot Beranda (APP_UPDATE F1, F2, §7; ADR-039).
@@ -63,40 +64,42 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
     if (SpotlightHost.maybeOf(context)?.isActive ?? false) return const SizedBox.shrink();
     return BlocBuilder<AppUpdateBloc, AppUpdateState>(
       bloc: bloc,
-      buildWhen: (a, b) => a.announcement != b.announcement || a.busy != b.busy,
+      buildWhen: (a, b) =>
+          a.announcement != b.announcement || a.busy != b.busy || a.availableVersion != b.availableVersion,
       builder: (context, state) {
         final texts = t.appUpdate;
+        final chip = state.availableVersion == null ? null : 'v${state.availableVersion}';
         final banner = switch (state.announcement) {
           UpdateAnnouncement.none => null,
-          UpdateAnnouncement.storeAvailable => AppBanner(
+          UpdateAnnouncement.storeAvailable => UpdateBannerCard(
             key: const ValueKey('app-update-store-available'),
-            tone: AppTone.info,
-            icon: IconKey.refresh,
-            message: texts.banner.storeAvailable,
+            icon: IconKey.systemUpdate,
+            title: texts.banner.storeAvailable,
+            versionChip: chip,
             actionLabel: texts.action.update,
             onAction: state.busy ? null : () => bloc.add(const AppUpdateDownloadRequested()),
-            secondaryActionLabel: texts.action.later,
-            onSecondaryAction: () => bloc.add(const AppUpdateDeferred()),
+            dismissLabel: texts.action.later,
+            onDismiss: () => bloc.add(const AppUpdateDeferred()),
           ),
-          UpdateAnnouncement.storeDownloading => AppBanner(
+          UpdateAnnouncement.storeDownloading => UpdateBannerCard(
             key: const ValueKey('app-update-store-downloading'),
-            tone: AppTone.info,
-            icon: IconKey.refresh,
-            message: texts.banner.storeDownloading,
+            icon: IconKey.progressActivity,
+            spin: true,
+            title: texts.banner.storeDownloading,
+            versionChip: chip,
           ),
-          UpdateAnnouncement.storeDownloaded => AppBanner(
+          UpdateAnnouncement.storeDownloaded => UpdateBannerCard(
             key: const ValueKey('app-update-store-downloaded'),
-            tone: AppTone.info,
-            icon: IconKey.refresh,
-            message: texts.banner.storeDownloaded,
+            icon: IconKey.systemUpdate,
+            title: texts.banner.storeDownloaded,
+            versionChip: chip,
             actionLabel: texts.action.install,
             onAction: () => bloc.add(const AppUpdateInstallRequested()),
           ),
-          UpdateAnnouncement.patchReady => AppBanner(
+          UpdateAnnouncement.patchReady => UpdateBannerCard(
             key: const ValueKey('app-update-patch-ready'),
-            tone: AppTone.info,
-            icon: IconKey.refresh,
-            message: texts.banner.patchReady,
+            icon: IconKey.restartAlt,
+            title: texts.banner.patchReady,
             actionLabel: texts.action.ok,
             onAction: () => bloc.add(const AppUpdatePatchAcknowledged()),
           ),

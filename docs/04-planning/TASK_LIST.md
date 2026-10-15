@@ -3604,9 +3604,14 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       6→9 dengan catatan di 7 dan 9, pembaruan kecil tanpa catatan,
       rollback); uji
       widget lembar tampil sekali.
+      Chip versi banner dan keandalan Remote Config (ADR-039 §3.3 butir 4
+      dan 7): ambil tiap buka/kembali ke depan, interval 30 menit,
+      `onConfigUpdated`, salinan lokal, batas tunggu banner 2 detik.
+      Verifikasi: uji sumber catatan palsu (entri ada, belum ada, terlambat
+      < 2 dtk, lewat 2 dtk, luring dengan salinan lokal).
       Memenuhi FR-UPD-003.
 - [ ] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
-      `UpdateEvents` (`update_banner_shown`, `update_banner_action`,
+      `UpdateEvents` (`update_banner_shown` (+ `has_version`), `update_banner_action`,
       `app_updated`, `whats_new_viewed`), properti pengguna dan custom key
       Crashlytics nomor pembaruan kecil (usulan nama `patch_number`).
       Verifikasi: uji peristiwa dengan `AppAnalytics` palsu; DebugView
@@ -3618,7 +3623,9 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       `release-email` (catatan aplikasi dan email dari sumber yang sama);
       aturan gaya B-11; caranya mengikuti ADR T-20.1. Berkas catatan
       berkategori `release_notes/<build>-<patch>.json` dan pemeriksaan CI
-      sebelum build (ADR-039 §3.3).
+      sebelum build (ADR-039 §3.3). Catatan **wajib** untuk setiap build
+      yang dipublikasikan (rilis dan tambalan, ≥ 1 butir); skrip mengulang
+      saat ETag bentrok dan membaca balik template sebelum rilis diunggah.
       Verifikasi: dokumen dan skill menyebut langkahnya; contoh catatan
       mematuhi glosarium dan `writing.md`.
       Di luar PRD: proses rilis.

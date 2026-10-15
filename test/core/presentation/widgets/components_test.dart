@@ -291,26 +291,52 @@ void main() {
       expect(shapeOf(tester, find.byType(AppBanner)).color, c.warningSoft);
     });
 
-    testWidgets('banner dengan tindakan kedua berupa teks: keduanya terjangkau', (tester) async {
-      var primary = 0;
-      var secondary = 0;
-      await pump(
-        tester,
-        AppBanner(
-          message: 'Versi baru tersedia.',
-          actionLabel: 'Perbarui',
-          onAction: () => primary++,
-          secondaryActionLabel: 'Nanti',
-          onSecondaryAction: () => secondary++,
-        ),
-      );
-      await tester.tap(find.text('Nanti'));
-      await tester.tap(find.text('Perbarui'));
-      expect((primary, secondary), (1, 1));
+    testWidgets('AppSpin berputar, dan diam bila pengguna mengurangi gerak', (tester) async {
+      Future<double> turnsAfterHalfSecond({required bool reduce}) async {
+        await tester.pumpWidget(
+          MediaQuery(
+            data: MediaQueryData(disableAnimations: reduce),
+            child: const Directionality(
+              textDirection: TextDirection.ltr,
+              child: AppSpin(child: SizedBox(width: 10, height: 10)),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 500));
+        return tester.widget<RotationTransition>(find.byType(RotationTransition)).turns.value;
+      }
+
+      expect(await turnsAfterHalfSecond(reduce: false), closeTo(0.5, 0.01));
+      expect(await turnsAfterHalfSecond(reduce: true), 0);
     });
   });
 
   group('AppCard, AppListCard, AppListRow, AppSectionHeader', () {
+    testWidgets('AppListRow detail: baris keterangan di bawah subjudul, tebal bila detailStrong', (tester) async {
+      await pump(
+        tester,
+        const Column(
+          children: [
+            AppListRow(title: 'Versi aplikasi', subtitle: '0.6.0 (7)', detail: 'Terbaru'),
+            AppListRow(
+              title: 'Versi aplikasi',
+              subtitle: '0.6.0 (7)',
+              detail: 'Versi baru tersedia',
+              detailStrong: true,
+            ),
+          ],
+        ),
+      );
+      final plain = tester.widget<Text>(find.text('Terbaru'));
+      final strong = tester.widget<Text>(find.text('Versi baru tersedia'));
+      expect(plain.style?.fontWeight, isNot(FontWeight.w600));
+      expect(strong.style?.fontWeight, FontWeight.w600);
+      expect(
+        tester.getTopLeft(find.text('Terbaru')).dy,
+        greaterThan(tester.getBottomLeft(find.text('0.6.0 (7)').first).dy - 1),
+      );
+    });
+
     testWidgets('kartu surface bersudut piksel; dapat diketuk', (tester) async {
       var taps = 0;
       await pump(

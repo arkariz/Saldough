@@ -17,6 +17,7 @@ import 'package:saldough/features/app_update/domain/repositories/update_sources.
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
 import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
+import 'package:saldough/features/app_update/presentation/widgets/update_banner_card.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -95,6 +96,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: PixelTheme.light,
+        // Ikon "mengunduh" berputar tanpa henti; uji tidak menunggunya.
+        builder: (context, child) =>
+            MediaQuery(data: MediaQuery.of(context).copyWith(disableAnimations: true), child: child!),
         home: Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(16),
@@ -155,13 +159,13 @@ void main() {
 
   testWidgets('tanpa pengumuman: tidak ada banner', (tester) async {
     await pump(tester);
-    expect(find.byType(AppBanner), findsNothing);
+    expect(find.byType(UpdateBannerCard), findsNothing);
     verify(() => store.check()).called(1);
   });
 
   testWidgets('bloc tidak terdaftar: kosong, tanpa galat', (tester) async {
     await pump(tester, child: AppUpdateBanner(container: GetIt.asNewInstance()));
-    expect(find.byType(AppBanner), findsNothing);
+    expect(find.byType(UpdateBannerCard), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -177,9 +181,9 @@ void main() {
   testWidgets('tersedia: Nanti menyembunyikan banner dan menyimpannya', (tester) async {
     source(play: available);
     await pump(tester);
-    await tester.tap(find.text(t.appUpdate.action.later));
+    await tester.tap(find.byKey(const ValueKey('app-update-dismiss')));
     await tester.pumpAndSettle();
-    expect(find.byType(AppBanner), findsNothing);
+    expect(find.byType(UpdateBannerCard), findsNothing);
     verify(() => memory.save(any())).called(1);
   });
 
@@ -188,13 +192,13 @@ void main() {
     await pump(tester);
     expect(find.text(t.appUpdate.banner.storeDownloading), findsOneWidget);
     expect(find.text(t.appUpdate.action.update), findsNothing);
-    expect(find.text(t.appUpdate.action.later), findsNothing);
+    expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
   });
 
   testWidgets('sudah diunduh: tanpa Nanti; Pasang sekarang hanya jalan saat diketuk (B-7)', (tester) async {
     source(play: const StoreUpdateInfo(stage: StoreUpdateStage.downloaded, availableBuild: 7));
     await pump(tester);
-    expect(find.text(t.appUpdate.action.later), findsNothing);
+    expect(find.byKey(const ValueKey('app-update-dismiss')), findsNothing);
     verifyNever(() => store.completeInstall());
     await tester.tap(find.text(t.appUpdate.action.install));
     await tester.pumpAndSettle();
@@ -207,14 +211,14 @@ void main() {
     expect(find.text(t.appUpdate.banner.patchReady), findsOneWidget);
     await tester.tap(find.text(t.appUpdate.action.ok));
     await tester.pumpAndSettle();
-    expect(find.byType(AppBanner), findsNothing);
+    expect(find.byType(UpdateBannerCard), findsNothing);
     verify(() => memory.save(any())).called(1);
   });
 
   testWidgets('B-4 (S4): versi baru dan pembaruan kecil sekaligus, hanya versi baru', (tester) async {
     source(play: available, patchState: const PatchState(next: 1));
     await pump(tester);
-    expect(find.byType(AppBanner), findsOneWidget);
+    expect(find.byType(UpdateBannerCard), findsOneWidget);
     expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
   });
 
@@ -237,19 +241,23 @@ void main() {
         source(play: setup.play, patchState: setup.patch);
         await pump(tester);
         expect(tester.takeException(), isNull);
-        final banner = tester.getRect(find.byType(AppBanner));
+        final banner = tester.getRect(find.byType(UpdateBannerCard));
         expect(banner.width, 328);
         for (final label in [
           t.appUpdate.action.update,
           t.appUpdate.action.install,
           t.appUpdate.action.ok,
-          t.appUpdate.action.later,
         ]) {
           for (final element in find.text(label).evaluate()) {
             final rect = tester.getRect(find.byWidget(element.widget));
             expect(rect.left, greaterThanOrEqualTo(banner.left), reason: label);
             expect(rect.right, lessThanOrEqualTo(banner.right), reason: label);
           }
+        }
+        for (final element in find.byKey(const ValueKey('app-update-dismiss')).evaluate()) {
+          final rect = tester.getRect(find.byWidget(element.widget));
+          expect(rect.right, lessThanOrEqualTo(banner.right));
+          expect(rect.top, greaterThanOrEqualTo(banner.top), reason: '× di pojok atas');
         }
       });
     }
@@ -292,6 +300,7 @@ void main() {
       await pump(tester, child: slot());
       expect(find.byKey(const ValueKey('capture-inbox-banner')), findsOneWidget);
       expect(find.byKey(const ValueKey('app-update-store-downloaded')), findsNothing);
+      expect(find.byType(UpdateBannerCard), findsNothing);
       expect(find.byType(AppBanner), findsOneWidget);
     });
   });

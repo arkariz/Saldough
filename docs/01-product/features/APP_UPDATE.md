@@ -117,10 +117,12 @@ aplikasi terakhir dan membukanya lagi; kini berjalan tambalan 1, dan lembar
 **Apa yang baru** menampilkan "Sisa anggaran kini dihitung benar saat
 transaksi dipindah ke pos lain."
 
-**S3 — Pembaruan kecil tanpa catatan.** Tambalan 2 hanya memperbaiki galat
-yang tidak terasa pengguna; pemilik tidak menulis catatan. Banner "Pembaruan
-kecil siap" tetap tampil sekali (tidak bisa tahu isinya sebelum terpasang,
-§6 B-9), tetapi sesudah dibuka ulang tidak ada lembar Apa yang baru.
+**S3 — Catatan tidak tersedia.** Setiap build yang dipublikasikan wajib
+punya catatan (keputusan pemilik 15 Okt 2026; ditegakkan CI, ADR-039 §3.3),
+jadi keadaan ini hanya terjadi bila catatannya belum bisa didapat di
+perangkat (luring, Remote Config belum terambil): banner tetap tampil (tidak
+bisa tahu isinya sebelum terpasang, §6 B-9) dan lembar Apa yang baru ditunda
+sampai catatannya ada (§11), bukan dilewati.
 
 **S4 — Keduanya ada.** Citra di `0.5.0+6` tambalan 1, tambalan 2 sudah
 terunduh, dan `0.6.0+7` juga tersedia di Play. Beranda hanya menampilkan
@@ -231,6 +233,7 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | B-10 | Apa yang baru tampil otomatis paling banyak sekali per (build, tambalan), tidak pada pemasangan pertama, dan tidak selama onboarding atau tur. |
 | B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, paling banyak tiga butir, masing-masing satu kalimat manfaat, dikelompokkan per kategori (Baru, Lebih cepat, Perbaikan, Keamanan; satu kelompok per kategori). Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
 | B-12 | Lompat beberapa versi (mis. `0.5.0+6` → `0.7.0+9`): lembar menggabungkan catatan semua versi di antaranya, terbaru di atas, paling banyak enam butir, dikelompokkan per versi lalu per kategori; sisanya di Akun. |
+| B-14 | Chip versi di banner hanya nama versi build yang **dikonfirmasi Play**, dibaca dari entri catatan build itu; tidak ada entri = tanpa chip. Banner menunggu pengambilan entri paling lama 2 detik, tidak pernah lebih, dan Beranda tidak menunggu. |
 | B-13 | Inti aplikasi tetap luring: tidak ada alur pencatatan yang menunggu hasil pengecekan pembaruan. Pengecekan berjalan sesudah Beranda tampil, tidak menunda pembukaan. |
 
 Yang perlu diingat aplikasi agar aturan di atas berlaku: versi terakhir
@@ -241,15 +244,21 @@ bila data aplikasi dihapus. Cara menyimpannya ditentukan engineer.
 
 ## 7. Kebutuhan informasi per layar
 
-**Banner Beranda** (pola "Banner perhatian" yang sudah ada, satu kalimat +
-satu aksi; tidak butuh rupa baru):
+**Banner Beranda** (rupa v3, keputusan pemilik 15 Okt 2026: latar `brand`
+penuh, tile ikon, judul + chip versi dalam satu baris yang membungkus ke
+bawah bila sempit, tombol × di pojok kanan atas, tombol aksi di bawahnya;
+chip versi dari Remote Config, ADR-039 §3.3 butir 7):
 
-| Keadaan | Teks | Aksi | Bisa ditutup |
-|---|---|---|---|
-| Versi baru tersedia | Versi baru tersedia. | Perbarui | Ya (Nanti) |
-| Mengunduh | Mengunduh versi baru. Kamu tetap bisa mencatat. | — | Tidak |
-| Sudah diunduh | Versi baru sudah diunduh. | Pasang sekarang | Tidak |
-| Pembaruan kecil siap | Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya. | Oke | Ya (Oke) |
+| Keadaan | Judul | Chip versi | Aksi | × (Nanti) |
+|---|---|---|---|---|
+| Versi baru tersedia | Versi baru tersedia. | Ya, bila namanya sudah ada | Perbarui | Ya |
+| Mengunduh | Mengunduh versi baru. Kamu tetap bisa mencatat. | Ya | — | Tidak |
+| Sudah diunduh | Versi baru sudah diunduh. | Ya | Pasang sekarang | Tidak |
+| Pembaruan kecil siap | Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya. | Tidak | Oke (menutup dan mencatat) | Tidak |
+
+Ketuk × = Nanti (tunda 7 hari, B-6); label aksesibilitasnya "Nanti".
+Chip hanya nama versi (mis. `v0.7.0`), bukan isi catatan, dan tanpa ukuran
+unduhan (Play tidak memberikannya).
 
 **Lembar Apa yang baru** (perlu rupa dari ui-ux-designer: lembar bawah
 sederhana; belum ada di prototipe):
@@ -278,7 +287,7 @@ pribadi atau keuangan:
 
 | Peristiwa | Parameter | Kapan |
 |---|---|---|
-| `update_banner_shown` | `kind: store\|patch`, `stage: available\|downloading\|downloaded\|ready` | Banner tampil (sekali per keadaan per sesi) |
+| `update_banner_shown` | `kind: store\|patch`, `stage: available\|downloading\|downloaded\|ready`, `has_version: true\|false` | Banner tampil (sekali per keadaan per sesi) |
 | `update_banner_action` | `kind`, `action: update\|install\|dismiss`, `source: home\|account` | Ketukan Perbarui / Pasang sekarang / Nanti / Oke |
 | `app_updated` | `kind: store\|patch`, `from_build`, `to_build`, `to_patch` | Pembukaan pertama sesudah versi berubah (bukan pemasangan pertama) |
 | `whats_new_viewed` | `build`, `patch`, `source: auto\|account` | Lembar Apa yang baru dibuka |

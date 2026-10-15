@@ -225,6 +225,18 @@ enum IconKey {
   /// Muat ulang/segarkan.
   refresh,
 
+  /// Versi baru tersedia atau sudah diunduh (pengumuman pembaruan, ADR-039).
+  systemUpdate,
+
+  /// Buka ulang aplikasi untuk memakai pembaruan kecil (ADR-039).
+  restartAlt,
+
+  /// Sedang berjalan; diputar oleh pemakai lewat `AppSpin` (ADR-039).
+  progressActivity,
+
+  /// Sudah beres, mis. aplikasi di versi terbaru (ADR-039).
+  checkCircle,
+
   /// Buka/tutup bagian yang bisa dilipat.
   expandMore,
 
@@ -372,6 +384,10 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.stop: Symbols.stop_rounded,
   IconKey.debugMenu: Symbols.bug_report_rounded,
   IconKey.refresh: Symbols.refresh_rounded,
+  IconKey.systemUpdate: Symbols.system_update_rounded,
+  IconKey.restartAlt: Symbols.restart_alt_rounded,
+  IconKey.progressActivity: Symbols.progress_activity_rounded,
+  IconKey.checkCircle: Symbols.check_circle_rounded,
   IconKey.expandMore: Symbols.expand_more_rounded,
   IconKey.expandLess: Symbols.expand_less_rounded,
   IconKey.moreVert: Symbols.more_vert_rounded,

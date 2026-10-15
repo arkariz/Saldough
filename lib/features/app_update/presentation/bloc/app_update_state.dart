@@ -12,6 +12,7 @@ final class AppUpdateState extends UiState<AppUpdateState> {
     this.memory = AppUpdateMemory.empty,
     this.announcement = UpdateAnnouncement.none,
     this.busy = false,
+    this.availableVersion,
     super.effect,
   });
 
@@ -27,6 +28,10 @@ final class AppUpdateState extends UiState<AppUpdateState> {
   /// Unduhan sedang dimulai (menunggu dialog Play).
   final bool busy;
 
+  /// Nama versi build yang ditawarkan Play ("0.7.0") untuk chip banner, dari
+  /// entri catatan build itu (ADR-039 §3.3 butir 7); `null` = tanpa chip.
+  final String? availableVersion;
+
   /// Keterangan keadaan untuk baris Akun.
   VersionStatus get status => snapshot == null ? VersionStatus.unknown : versionStatusOf(snapshot!);
 
@@ -36,15 +41,17 @@ final class AppUpdateState extends UiState<AppUpdateState> {
     AppUpdateMemory? memory,
     UpdateAnnouncement? announcement,
     bool? busy,
+    String? Function()? availableVersion,
     UiEffect? effect,
   }) => AppUpdateState(
     snapshot: snapshot != null ? snapshot() : this.snapshot,
     memory: memory ?? this.memory,
     announcement: announcement ?? this.announcement,
     busy: busy ?? this.busy,
+    availableVersion: availableVersion != null ? availableVersion() : this.availableVersion,
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [snapshot, memory, announcement, busy];
+  List<Object?> get props => [snapshot, memory, announcement, busy, availableVersion];
 }

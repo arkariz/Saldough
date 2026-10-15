@@ -121,6 +121,10 @@ Keputusan:
      yang salah kini benar, dari sisi yang dirasakan pengguna; `security`
      hanya perubahan perlindungan data atau akses yang bisa disebut
      konkret (bukan "diperkuat").
+   - **Catatan wajib untuk setiap build yang dipublikasikan** (rilis toko
+     maupun pembaruan kecil), keputusan pemilik 15 Okt 2026: CI berhenti
+     sebelum build bila berkasnya tidak ada atau tanpa butir. Aplikasi tetap
+     menoleransi entri yang tak ada (tanpa lembar, B-11), sebagai pengaman.
    - Total paling banyak 3 butir per berkas (B-11), 6 di lembar gabungan.
    - Tampilan: label kategori (emoji + nama) sekali per kelompok, butir di
      bawahnya. Lembar tanpa penutup maskot atau kalimat terima kasih
@@ -162,17 +166,44 @@ Keputusan:
       CI (T-20.6).
    Nomor tambalan Shorebird tidak terpakai bila tambalan gagal, jadi
    percobaan ulang memakai nomor yang sama dan menimpa entri dari berkas.
-4. **Di aplikasi:** `firebase_remote_config` dengan nilai bawaan kosong dan
-   `minimumFetchInterval` 1 jam; `fetchAndActivate` dijalankan sesudah
-   Beranda tampil, tanpa `await` di jalur pembukaan. Nilai yang berhasil
-   dibaca **disalin ke penyimpanan lokal** (`app_update/notes`) sehingga
-   daftar di Akun tetap utuh luring dan sesudah entri dihapus dari server.
+   Supaya penerbitan catatan itu sendiri andal: skrip mengulang bila
+   penerbitan template bentrok (ETag berubah, maksimal 3 kali), lalu
+   **membaca balik** template dan memastikan setiap entri ada dengan isi
+   yang sama; bila tidak, pipeline berhenti **sebelum** rilis atau tambalan
+   diunggah.
+4. **Di aplikasi:** `firebase_remote_config` dengan nilai bawaan kosong.
+   Nilai yang berhasil dibaca **disalin ke penyimpanan lokal**
+   (`app_update/notes`) sehingga daftar di Akun tetap utuh luring dan
+   sesudah entri dihapus dari server. Supaya Remote Config **andal**:
+   1. *Ambil dini, bukan menunggu banner.* `fetchAndActivate` dijalankan
+      setiap aplikasi dibuka dan kembali ke depan (tanpa `await` di jalur
+      pembukaan), dengan `minimumFetchInterval` 30 menit (di bawah batas
+      throttle klien 5 ambil/jam). Karena CI menerbitkan catatan **sebelum**
+      rilis (butir 3), perangkat sudah memegang entri build baru jauh sebelum
+      Play menawarkannya (peninjauan dan peluncuran Play makan jam-jaman).
+   2. *Perubahan langsung.* Selama aplikasi terbuka, `onConfigUpdated`
+      mengaktifkan entri baru tanpa menunggu interval.
+   3. *Rantai cadangan.* Nilai aktif SDK → salinan lokal → tanpa data. Data
+      yang sudah pernah didapat tidak hilang karena luring.
+   4. *Batas tunggu.* Banner versi baru menunggu pengambilan paling lama
+      2 detik **hanya bila** entri build yang ditawarkan Play belum ada;
+      lewat itu banner tampil tanpa chip versi dan chip menyusul. Beranda
+      dan pencatatan tidak pernah menunggu (B-13).
+   5. *Terukur.* Parameter `has_version` (true/false) pada
+      `update_banner_shown` (T-20.5): kalau persentase `false` tinggi,
+      keandalannya perlu ditinjau.
 5. **Gagal = tunda, bukan lewati.** Catatan yang belum didapat menunda
    lembar dan versi terakhir dilihat belum dimajukan (§11); entri yang
    memang tidak ada baru dianggap "tanpa catatan" bila server sudah dibaca
    berhasil dan kuncinya tidak ada.
 6. Bahasa: aplikasi memilih `id` atau `en` sesuai bahasa aktif saat
    ditampilkan, dengan `en` sebagai cadangan.
+7. **Chip versi di banner "Versi baru tersedia".** Play hanya memberi nomor
+   build yang tersedia, bukan nama versinya. Aplikasi mencari entri
+   `whats_new_<build tersedia>_0` dan membaca **hanya kolom `version`**
+   (butir catatan tetap baru dibaca setelah terpasang). Entri hanya dicari
+   untuk build yang sudah dikonfirmasi Play, jadi catatan yatim dari rilis
+   yang gagal tidak pernah tampil. Entri belum ada = banner tanpa chip.
 
 ### 3.4 Server atau konfigurasi jarak jauh
 

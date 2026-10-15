@@ -24,6 +24,8 @@ class AppListRow extends StatelessWidget {
     this.semanticsLabel,
     this.wrapTitle = false,
     this.wrapSubtitle = false,
+    this.detail,
+    this.detailStrong = false,
     super.key,
   });
 
@@ -60,6 +62,14 @@ class AppListRow extends StatelessWidget {
 
   /// Keterangan membungkus ke banyak baris (penjelasan, bukan meta).
   final bool wrapSubtitle;
+
+  /// Baris keterangan tambahan di bawah [subtitle], mis. keadaan "Versi baru
+  /// tersedia" di baris Versi aplikasi. Selalu membungkus.
+  final String? detail;
+
+  /// [detail] bergaya label tebal (`label`, 14px/600) untuk keadaan yang
+  /// perlu terlihat; `false` = gaya subjudul biasa.
+  final bool detailStrong;
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +131,16 @@ class AppListRow extends StatelessWidget {
                         maxLines: wrapSubtitle ? null : 1,
                         overflow: wrapSubtitle ? null : TextOverflow.ellipsis,
                         style: textTheme.bodyMedium?.copyWith(
+                          color: colors.ink2,
+                        ),
+                      ),
+                    ),
+                  if (detail != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        detail!,
+                        style: (detailStrong ? textTheme.labelLarge : textTheme.bodyMedium)?.copyWith(
                           color: colors.ink2,
                         ),
                       ),

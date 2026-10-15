@@ -365,9 +365,9 @@ yang berjalan
 ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)). Mekanisme
 teknisnya di
 [ADR-039](../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md)
-(Accepted 15 Okt 2026). Tidak bergantung pada Fase 18/19. **Status:** kode
-T-20.1–T-20.7 selesai 15 Okt 2026 dan sudah di `main` (ada di build
-`0.6.0+12` dan `0.7.0+13`); sisa T-20.8, verifikasi di perangkat.
+(Accepted 15 Okt 2026). Tidak bergantung pada Fase 18/19. **Status:**
+selesai 15 Okt 2026. Kode T-20.1–T-20.7 di `main` (ada di build `0.6.0+12`
+dan `0.7.0+13`); verifikasi perangkat T-20.8 lulus semua.
 
 **Selesai kalau:** alur F1–F4 APP_UPDATE lulus di perangkat lewat jalur tes
 Play dan pembaruan kecil Shorebird sungguhan; data keuangan utuh sesudah

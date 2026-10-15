@@ -1,9 +1,9 @@
 # Pengumuman pembaruan: versi baru dari Play Store dan pembaruan kecil Shorebird
 
 **Tanggal:** 11 Oktober 2026.
-**Status:** Diputuskan pemilik 15 Okt 2026 (§12). Kode T-20.1–T-20.7 selesai
-dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); sisa T-20.8,
-verifikasi di perangkat lewat jalur tes Play. Keputusan teknisnya di
+**Status:** Diputuskan pemilik 15 Okt 2026 (§12). Fase 20 selesai 15 Okt
+2026: kode di `main` (ada di build `0.6.0+12` dan `0.7.0+13`) dan
+terverifikasi di perangkat (T-20.8, semua lulus). Keputusan teknisnya di
 [ADR-039](../../02-architecture/adr/0039-pengumuman-pembaruan-play-shorebird-dan-catatan.md)
 (Accepted 15 Okt 2026); tugasnya Fase 20 di TASK_LIST. Proses menulis dan
 menerbitkan catatan "Apa yang baru":

@@ -229,8 +229,8 @@ Baris **Versi aplikasi** di grup paling bawah layar Akun:
 | B-8 | Banner pembaruan kecil tampil paling banyak sekali per nomor tambalan. |
 | B-9 | Banner pembaruan kecil tidak menyebut isinya; isinya tampil lewat Apa yang baru sesudah dibuka ulang. (Bila engineer menemukan cara membaca isinya lebih awal, ini boleh ditinjau ulang.) |
 | B-10 | Apa yang baru tampil otomatis paling banyak sekali per (build, tambalan), tidak pada pemasangan pertama, dan tidak selama onboarding atau tur. |
-| B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, paling banyak tiga butir, masing-masing satu kalimat manfaat. Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
-| B-12 | Lompat beberapa versi (mis. `0.5.0+6` → `0.7.0+9`): lembar menggabungkan catatan semua versi di antaranya, terbaru di atas, paling banyak enam butir; sisanya di Akun. |
+| B-11 | Catatan Apa yang baru ditulis per versi atau pembaruan kecil dalam id dan en, paling banyak tiga butir, masing-masing satu kalimat manfaat, dikelompokkan per kategori (Baru, Lebih cepat, Perbaikan, Keamanan; satu kelompok per kategori). Hanya perubahan yang terasa pengguna. Tidak ada catatan = tidak ada lembar. |
+| B-12 | Lompat beberapa versi (mis. `0.5.0+6` → `0.7.0+9`): lembar menggabungkan catatan semua versi di antaranya, terbaru di atas, paling banyak enam butir, dikelompokkan per versi lalu per kategori; sisanya di Akun. |
 | B-13 | Inti aplikasi tetap luring: tidak ada alur pencatatan yang menunggu hasil pengecekan pembaruan. Pengecekan berjalan sesudah Beranda tampil, tidak menunda pembukaan. |
 
 Yang perlu diingat aplikasi agar aturan di atas berlaku: versi terakhir
@@ -255,9 +255,11 @@ satu aksi; tidak butuh rupa baru):
 sederhana; belum ada di prototipe):
 
 1. Judul: "Apa yang baru di versi 0.6.0" (pembaruan kecil: "Apa yang baru").
-2. Daftar 1–3 butir (sampai enam bila menggabungkan, B-12), urut sesuai
-   tulisan.
-3. Satu tombol: **Oke**. Menutup lembar = sudah dilihat.
+2. Daftar 1–3 butir (sampai enam bila menggabungkan, B-12),
+   **dikelompokkan per kategori**: label kategori (emoji + nama) sekali,
+   butirnya di bawahnya; urutan kelompok dan butir sesuai tulisan.
+3. Satu tombol: **Oke**. Menutup lembar = sudah dilihat. Tanpa penutup
+   (maskot atau kalimat terima kasih): diputuskan pemilik 15 Okt 2026.
 
 **Akun → Versi aplikasi** (pola baris setelan yang sudah ada; daftar
 catatannya memakai rupa lembar di atas atau halaman sederhana, keputusan
@@ -334,6 +336,10 @@ Catatan Apa yang baru per versi ditulis dengan gaya yang sama: kalimat
 manfaat, "kamu", tanpa tanda seru, tanpa istilah teknis ("tambalan",
 "patch", "bug" tidak dipakai di id). Contoh: "Sisa anggaran kini dihitung
 benar saat transaksi dipindah ke pos lain."
+
+Nama kategori catatan (`appUpdate.category.*`): **Baru** / New,
+**Lebih cepat** / Faster, **Perbaikan** / Fixes, **Keamanan** / Security.
+Aturan pakai dan bentuk berkas catatan: ADR-039 §3.3.
 
 Istilah baru masuk glosarium: **Versi baru**, **Pembaruan kecil**, **Apa
 yang baru**.

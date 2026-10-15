@@ -3560,14 +3560,16 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       Selesai 15 Okt 2026: `AppUpdateBloc` (singleton akar; cek sesudah frame
       pertama dan saat aplikasi kembali ke depan, Play dibatasi 6 jam kecuali
       Akun, Nanti/Oke disimpan), `AppUpdateBanner`, dan teks `appUpdate.*`
-      id/en. Banner masuk slot `notice` Beranda sebagai `fallback`
-      `CaptureInboxBanner` (kotak masuk menang, satu banner per layar).
-      Selisih disengaja: nada `info` + ikon `refresh` (bukan warning: lembut,
-      APP_UPDATE ui-ux); `AppBanner` dapat tindakan kedua berupa teks
-      ("Nanti") sebelum tindakan utama; banner menyingkir selama tur spotlight
-      tampil agar target sorot tidak bergeser. Uji 33 baru (bloc, banner id/en
-      360dp tiap keadaan, kotak masuk menang, tur, S4); suite 1.322 lulus,
-      `flutter analyze` bersih. Belum diverifikasi di perangkat (T-20.8).
+      id/en.
+      Rupa akhir (v3 pemilik, 15 Okt 2026): kartu `brand` penuh (tile 🚀 atau
+      ikon, judul tebal, chip versi `straw`, × = Nanti, tombol rata kanan di
+      bawah garis) di slot `updateNotice` **di atas kartu saldo**, bersama
+      banner kotak masuk di slotnya sendiri (B-2 diubah; B-3 hanya di dalam
+      banner pembaruan; `CaptureInboxBanner` tanpa `fallback`). Tanpa tautan
+      "Lihat apa yang baru" sebelum dipasang. Banner menyingkir selama tur
+      spotlight tampil agar target sorot tidak bergeser. Uji: bloc, banner
+      id/en 360dp tiap keadaan, kartu, tur, S4; suite lulus, `flutter
+      analyze` bersih. Belum diverifikasi di perangkat (T-20.8).
 - [x] **T-20.3** Baris Versi aplikasi di Akun (APP_UPDATE F4).
       Versi, build, dan pembaruan kecil (format sesuai KT-U4), keterangan
       keadaan, ketuk membuka Apa yang baru dengan tombol Perbarui/Pasang

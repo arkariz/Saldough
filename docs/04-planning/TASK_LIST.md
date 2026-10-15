@@ -84,7 +84,7 @@ Terakhir diperbarui: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 ba
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
-| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 3 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3 selesai, lanjut T-20.4 (menunggu rupa U1–U2) |
+| 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 4 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.3 dan T-20.5 selesai, T-20.4 sebagian (menunggu rupa lembar per kategori), lanjut T-20.6 |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -3627,13 +3627,23 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       teks `release_notes/7-0.json` (KT-U5; draf dari commit sejak
       0.5.0+6: kalkulator Catat, urutan dompet, Kembali ke Beranda);
       (3) berkas `release_notes/id.md`/`en.md` dan skrip CI diganti di T-20.6.
-- [ ] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
+- [x] **T-20.5** Analitik dan diagnostik pembaruan (APP_UPDATE §8).
       `UpdateEvents` (`update_banner_shown` (+ `has_version`), `update_banner_action`,
       `app_updated`, `whats_new_viewed`), properti pengguna dan custom key
       Crashlytics nomor pembaruan kecil (usulan nama `patch_number`).
       Verifikasi: uji peristiwa dengan `AppAnalytics` palsu; DebugView
       Firebase di T-20.8.
       Memenuhi FR-UPD-004.
+      Selesai 15 Okt 2026: `UpdateEvents` di `app_analytics.dart` (4
+      peristiwa; `update_banner_shown` + `has_version`), `AppAnalytics.
+      setUserProperty`/`setDiagnostic`, nomor pembaruan kecil
+      `patch_number` dipasang sekali tiap berubah. Pemicu: banner tampil
+      (disaring bloc sekali per keadaan per sesi), tombol Perbarui/Pasang
+      sekarang/Nanti/Oke (sumber `home` atau `account`), `app_updated` saat
+      versi terakhir dilihat maju (bukan pemasangan pertama), dan lembar
+      atau daftar dibuka. Uji 22 baru (bloc, banner, host, halaman);
+      suite 1.421 lulus, `flutter analyze` bersih. DebugView dan Crashlytics
+      diperiksa di T-20.8.
 - [ ] **T-20.6** Langkah rilis: catatan Apa yang baru sebelum rilis
       Play Store dan pembaruan kecil diterbitkan (KT-U5).
       Tambahkan ke dokumen rilis di `docs/03-release/` dan skill

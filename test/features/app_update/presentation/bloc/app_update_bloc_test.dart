@@ -4,6 +4,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
@@ -334,6 +335,163 @@ void main() {
       entries([note(7, 0, '0.6.0')]);
       await check();
       expect(bloc.state.availableVersion, isNull);
+    });
+  });
+
+  group('analitik pembaruan (APP_UPDATE §8, tanpa data pribadi)', () {
+    late List<AnalyticsEvent> events;
+    late List<(String, String)> properties;
+    late List<(String, Object)> diagnostics;
+
+    setUp(() {
+      events = [];
+      properties = [];
+      diagnostics = [];
+      AppAnalytics.debugSink = events.add;
+      AppAnalytics.debugUserPropertySink = (name, value) => properties.add((name, value));
+      AppAnalytics.debugDiagnosticSink = (key, value) => diagnostics.add((key, value));
+    });
+
+    tearDown(() {
+      AppAnalytics.debugSink = null;
+      AppAnalytics.debugUserPropertySink = null;
+      AppAnalytics.debugDiagnosticSink = null;
+    });
+
+    AnalyticsEvent? named(String name) {
+      final found = events.where((e) => e.name == name).toList();
+      return found.isEmpty ? null : found.single;
+    }
+
+    test('nomor pembaruan kecil dipasang sekali sebagai properti pengguna dan kunci Crashlytics', () async {
+      when(() => patch.read()).thenAnswer((_) async => right(const PatchState(current: 2)));
+      await check();
+      await check(force: true);
+      expect(properties, [('patch_number', '2')]);
+      expect(diagnostics, [('patch_number', 2)]);
+    });
+
+    test('tanpa tambalan: nilainya 0', () async {
+      await check();
+      expect(properties, [('patch_number', '0')]);
+      expect(diagnostics, [('patch_number', 0)]);
+    });
+
+    test('update_banner_shown: sekali per keadaan per sesi, membawa has_version', () async {
+      await check();
+      bloc
+        ..add(const AppUpdateBannerShown(UpdateAnnouncement.storeAvailable))
+        ..add(const AppUpdateBannerShown(UpdateAnnouncement.storeAvailable));
+      await settle();
+      final shown = events.where((e) => e.name == 'update_banner_shown').toList();
+      expect(shown, hasLength(1));
+      expect(shown.single.parameters, {'kind': 'store', 'stage': 'available', 'has_version': 'false'});
+
+      bloc.add(const AppUpdateBannerShown(UpdateAnnouncement.patchReady));
+      await settle();
+      expect(events.where((e) => e.name == 'update_banner_shown').last.parameters['kind'], 'patch');
+    });
+
+    test('update_banner_action: update, install, dismiss (store dan patch) dengan sumbernya', () async {
+      await check();
+      bloc.add(const AppUpdateDownloadRequested(source: UpdateActionSource.account));
+      await settle();
+      expect(events.last.parameters, {'kind': 'store', 'action': 'update', 'source': 'account'});
+
+      bloc.add(const AppUpdateDeferred());
+      await settle();
+      expect(events.last.parameters, {'kind': 'store', 'action': 'dismiss', 'source': 'home'});
+
+      stages.add(StoreUpdateStage.downloaded);
+      await settle();
+      bloc.add(const AppUpdateInstallRequested());
+      await settle();
+      expect(events.last.parameters, {'kind': 'store', 'action': 'install', 'source': 'home'});
+    });
+
+    test('update_banner_action patch: Oke dicatat sebagai dismiss', () async {
+      when(() => store.check()).thenAnswer((_) async => right(const StoreUpdateInfo(stage: StoreUpdateStage.none)));
+      when(() => patch.read()).thenAnswer((_) async => right(const PatchState(next: 1)));
+      await check();
+      bloc.add(const AppUpdatePatchAcknowledged());
+      await settle();
+      expect(events.last.name, 'update_banner_action');
+      expect(events.last.parameters, {'kind': 'patch', 'action': 'dismiss', 'source': 'home'});
+    });
+
+    test('app_updated: sekali saat versi terakhir dilihat maju karena build baru; bukan pemasangan pertama', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty));
+      await check();
+      expect(named('app_updated'), isNull, reason: 'pemasangan pertama');
+
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(5, 0)));
+      final fresh = AppUpdateBloc(
+        read: ReadUpdateSnapshot(installed: installed, store: store, patch: patch),
+        store: store,
+        memory: memory,
+        notes: notes,
+      );
+      addTearDown(fresh.close);
+      fresh.add(const AppUpdateChecked());
+      await settle();
+      await settle();
+      final updated = named('app_updated')!;
+      expect(updated.parameters, {'kind': 'store', 'from_build': 5, 'to_build': 6, 'to_patch': 0});
+    });
+
+    test('app_updated patch: build sama, nomor pembaruan kecil maju', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(6, 0)));
+      when(() => patch.read()).thenAnswer((_) async => right(const PatchState(current: 1)));
+      await check();
+      expect(named('app_updated')!.parameters, {'kind': 'patch', 'from_build': 6, 'to_build': 6, 'to_patch': 1});
+    });
+
+    test('whats_new_viewed: otomatis dari lembar, account dari daftar; tanpa catatan tidak dicatat', () async {
+      when(() => memory.load()).thenAnswer((_) async => right(AppUpdateMemory.empty.see(5, 0)));
+      notes.entries = {
+        (build: 6, patch: 0): const ReleaseNote(
+          build: 6,
+          patch: 0,
+          version: '0.5.0',
+          groups: [
+            NoteGroup(
+              category: NoteCategory.fixed,
+              notes: [LocalizedNote(id: 'A', en: 'A')],
+            ),
+          ],
+        ),
+      };
+      await check();
+      bloc.add(const AppUpdateWhatsNewOpened(UpdateActionSource.home));
+      await settle();
+      expect(events.last.parameters, {'build': 6, 'patch': 0, 'source': 'auto'});
+
+      bloc.add(const AppUpdateWhatsNewOpened(UpdateActionSource.account));
+      await settle();
+      expect(events.last.parameters, {'build': 6, 'patch': 0, 'source': 'account'});
+
+      notes.entries = {};
+      bloc.add(const AppUpdateChecked(force: true));
+      await settle();
+      await settle();
+      final before = events.length;
+      bloc.add(const AppUpdateWhatsNewOpened(UpdateActionSource.account));
+      await settle();
+      expect(events.length, before);
+    });
+
+    test('tidak ada parameter pribadi atau keuangan', () async {
+      await check();
+      bloc
+        ..add(const AppUpdateBannerShown(UpdateAnnouncement.storeAvailable))
+        ..add(const AppUpdateDownloadRequested());
+      await settle();
+      for (final event in events) {
+        expect(event.name, startsWith('update_'));
+        for (final value in event.parameters.values) {
+          expect(value, anyOf(isA<String>(), isA<int>()));
+        }
+      }
     });
   });
 }

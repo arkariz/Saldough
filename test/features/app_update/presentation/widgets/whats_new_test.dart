@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -200,6 +201,17 @@ void main() {
       container<AppUpdateBloc>().add(const AppUpdateChecked(force: true));
       await tester.pumpAndSettle();
       expect(find.byType(WhatsNewSheet), findsNothing, reason: 'tidak tampil ulang');
+    });
+
+    testWidgets('analitik: whats_new_viewed otomatis dicatat saat lembar dibuka', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await tester.pumpWidget(app());
+      await checkNow(tester);
+      final viewed = events.where((e) => e.name == 'whats_new_viewed').toList();
+      expect(viewed, hasLength(1));
+      expect(viewed.single.parameters, {'build': 7, 'patch': 0, 'source': 'auto'});
     });
 
     testWidgets('menutup lewat scrim juga berarti sudah dilihat', (tester) async {

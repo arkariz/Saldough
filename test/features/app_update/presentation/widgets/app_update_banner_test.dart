@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -189,6 +190,18 @@ void main() {
     await pump(tester);
     expect(find.text(t.appUpdate.banner.storeAvailable), findsOneWidget);
     expect(find.byKey(const ValueKey('app-update-version-chip')), findsNothing);
+  });
+
+  testWidgets('analitik: banner yang tampil dicatat sekali walau layar dibangun ulang', (tester) async {
+    final events = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = events.add;
+    addTearDown(() => AppAnalytics.debugSink = null);
+    source(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
+    await pump(tester);
+    await pump(tester);
+    final shown = events.where((e) => e.name == 'update_banner_shown').toList();
+    expect(shown, hasLength(1));
+    expect(shown.single.parameters['stage'], 'available');
   });
 
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {

@@ -3685,7 +3685,8 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       tambah baris "ID perangkat atau ID lain"; ditemukan juga celah yang
       sama di formulir Analytics/Crashlytics sekarang. Tersisa: persetujuan
       pemilik, pengisian ulang formulir Play Console, dan pembaruan
-      kebijakan privasi di repo `tanukonomy-web` (diisi pemilik).
+      kebijakan privasi di repo `tanukonomy-web` (diisi pemilik). Pemilik
+      menyetujui usulan baris dan jawaban kolom dibagikan (15 Okt 2026).
 - [ ] **T-20.8** Verifikasi di perangkat lewat jalur tes Play.
       Pasang build N dari jalur tes, publikasikan N+1: banner, Nanti,
       Perbarui, Pasang sekarang, Apa yang baru, data utuh (B-1), dan

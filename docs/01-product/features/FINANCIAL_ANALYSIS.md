@@ -566,18 +566,20 @@ per kejadian, tidak dari `build()`.
 | `analysis_see_all_opened` | — | Lihat semua transaksi | Apakah daftar 20 cukup |
 | `analysis_uncategorized_fix_opened` | — | Beri kategori diketuk | Ukuran "porsi tanpa kategori" §4 |
 
-## 14. Perlu rupa dari pemilik
+## 14. Rupa (sudah ada, 12–15 Okt 2026)
 
-Alur dan informasinya sudah ditetapkan di §6–§8; rupanya belum ada di design
-system maupun prototipe:
+Alur dan informasinya di §6–§8. Rupanya dirancang designer sesudah review
+12 Okt 2026 dan sudah ada di design system dan prototipe pemilik (salinan di
+[docs/03-design](../../03-design/README.md), bagian "Analisis keuangan"):
 
-1. Segmen `Daftar | Analisis` di kepala Riwayat (pola sub-tab Rencana?).
-2. Bentuk perbandingan porsi kategori (daftar dengan bilah, cincin, dsb.).
-3. Bentuk tren enam bulan dengan tiga besaran (pemasukan, pengeluaran,
-   selisih) dan bulan terpilih.
-4. Baris sorotan perubahan yang netral (tanpa warna peringatan).
-5. Kepala periode dengan rentang tanggal bulan keuangan.
-6. Pintu dari kartu Arus Beranda (seluruh kartu bisa diketuk atau tautan).
+1. Segmen `Daftar | Analisis` di kepala Riwayat: komponen **SubTabs**, prototipe `Riwayat`.
+2. Porsi kategori: **DonutChart** + **LegendRow** di satu kartu, kaki kartu transfer.
+3. Tren enam periode dengan tiga besaran, kolom terpilih, panel angka: **TrendChart**.
+4. Sorotan perubahan netral (`tk-cmp`, panah `ink-2`, tanpa warna status).
+5. Kepala periode: **PeriodStepper** (‹ periode ›, maju berhenti di periode berjalan).
+6. Pintu dari kartu Arus Beranda: pasangan Pemasukan/Pengeluaran sebagai pintu
+   (`tk-card__door`, prototipe Rencana `Beranda`); tautan di kilas balik
+   (`KilasBalik`).
 
 **Warna irisan donat (keputusan pemilik 12 Okt 2026).** Warna irisan
 ditentukan design system dan dibiarkan beragam; tidak harus sama dengan

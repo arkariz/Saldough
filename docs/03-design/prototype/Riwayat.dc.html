@@ -11,7 +11,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
 <style>
 body{margin:0}
 </style>
@@ -22,24 +22,28 @@ body{margin:0}
     <button class="tk-iconbtn" type="button" aria-label="Cari"><span class="tk-icon">search</span></button>
     <button class="tk-iconbtn" type="button" aria-label="Filter dompet dan kategori"><span class="tk-icon">tune</span></button>
   </header>
+  <nav class="tk-subtabs" aria-label="Bagian Riwayat">
+    <a class="tk-subtab is-active" href="Riwayat.dc.html" aria-current="page">Daftar</a>
+    <a class="tk-subtab" href="Analisis.dc.html">Analisis</a>
+  </nav>
 
-  <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 32px">
-    <div style="display: flex; align-items: center; gap: 4px; margin: -8px -8px 0">
-      <button class="tk-iconbtn" type="button" aria-label="Bulan sebelumnya"><span class="tk-icon">chevron_left</span></button>
-      <p class="tk-t-body-strong" style="flex: 1; text-align: center">September 2026</p>
-      <button class="tk-iconbtn" type="button" aria-label="Bulan berikutnya"><span class="tk-icon">chevron_right</span></button>
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 8px 16px 32px">
+    <div class="tk-stepper">
+      <button class="tk-iconbtn" type="button" aria-label="Periode sebelumnya"><span class="tk-icon">chevron_left</span></button>
+      <div class="tk-stepper__label"><span class="tk-stepper__title">September 2026</span></div>
+      <button class="tk-iconbtn" type="button" aria-label="Periode berikutnya"><span class="tk-icon">chevron_right</span></button>
     </div>
 
     <div class="tk-card" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px 16px">
-      <div class="tk-stat"><span class="tk-stat__label">Pemasukan</span><span class="tk-amt tk-t-amount tk-amt--pos">+Rp11.750.000</span></div>
-      <div class="tk-stat"><span class="tk-stat__label">Pengeluaran</span><span class="tk-amt tk-t-amount">−Rp2.778.000</span></div>
+      <div class="tk-stat"><span class="tk-stat__label">Pemasukan</span><span class="tk-amt tk-t-amount tk-amt--pos">+Rp14.615.438</span></div>
+      <div class="tk-stat"><span class="tk-stat__label">Pengeluaran</span><span class="tk-amt tk-t-amount">−Rp11.420.700</span></div>
     </div>
 
     <div class="tk-chips tk-scroll" role="group" aria-label="Jenis transaksi" style="overflow-x: auto; margin: 0 -16px; padding: 0 16px">
-      <button class="tk-chip tk-chip--on-bg {{c0.cls}}" type="button" aria-pressed="{{c0.pressed}}" onClick="{{c0.pick}}">Semua 28</button>
-      <button class="tk-chip tk-chip--on-bg {{c1.cls}}" type="button" aria-pressed="{{c1.pressed}}" onClick="{{c1.pick}}">Pengeluaran 24</button>
+      <button class="tk-chip tk-chip--on-bg {{c0.cls}}" type="button" aria-pressed="{{c0.pressed}}" onClick="{{c0.pick}}">Semua 34</button>
+      <button class="tk-chip tk-chip--on-bg {{c1.cls}}" type="button" aria-pressed="{{c1.pressed}}" onClick="{{c1.pick}}">Pengeluaran 31</button>
       <button class="tk-chip tk-chip--on-bg {{c2.cls}}" type="button" aria-pressed="{{c2.pressed}}" onClick="{{c2.pick}}">Pemasukan 2</button>
-      <button class="tk-chip tk-chip--on-bg {{c3.cls}}" type="button" aria-pressed="{{c3.pressed}}" onClick="{{c3.pick}}">Transfer 2</button>
+      <button class="tk-chip tk-chip--on-bg {{c3.cls}}" type="button" aria-pressed="{{c3.pressed}}" onClick="{{c3.pick}}">Transfer 1</button>
     </div>
 
     <div class="tk-banner" role="status">
@@ -57,7 +61,8 @@ body{margin:0}
         <div class="tk-list">
           <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
             <div class="tk-row">
-              <span class="tk-tile tk-tile--px"><img src="{{r.px}}" alt="" width="32" height="32"></span>
+              <sc-if value="{{r.hasPx}}" hint-placeholder-val="{{true}}"><span class="tk-tile tk-tile--px"><img src="{{r.px}}" alt="" width="32" height="32"></span></sc-if>
+              <sc-if value="{{r.sym}}" hint-placeholder-val="{{false}}"><span class="tk-tile tk-tile--brown"><span class="tk-icon">volunteer_activism</span></span></sc-if>
               <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><span class="tk-row__sub">{{r.sub}}</span></span>
               <span class="tk-row__end"><span class="{{r.amtCls}}">{{r.amtText}}</span></span>
             </div>
@@ -71,7 +76,7 @@ body{margin:0}
     <a class="tk-nav__item" href="Main.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
     <a class="tk-nav__item is-active" href="Riwayat.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</a>
     <a class="tk-nav__catat" href="Catat.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
-    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Anggaran</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
     <a class="tk-nav__item" href="Dompet.dc.html"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</a>
   </nav>
 </div>
@@ -81,17 +86,17 @@ class Component extends DCLogic {
   renderVals() {
     const filter = (this.state && this.state.filter) || 'all';
     const fmt = (n) => 'Rp' + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    // September 2026 (FINANCIAL_ANALYSIS §10): hari ini 10 Okt, jadi tanpa "Hari ini"/"Kemarin". Empat hari terakhir September.
     const rows = [
-      { d: 0, title: 'Kopi susu', sub: 'Tunai · 08.00', amt: -28000, kind: 'expense', color: 'orange', icon: 'restaurant' },
-      { d: 1, title: 'Tarik tunai', sub: 'BCA → Tunai · 17.30', amt: 300000, kind: 'transfer', color: 'info', icon: 'swap_horiz' },
-      { d: 1, title: 'Makan siang', sub: 'BCA · 12.00', amt: -45000, kind: 'expense', color: 'orange', icon: 'restaurant' },
-      { d: 2, title: 'Bensin', sub: 'GoPay · 18.00', amt: -47000, kind: 'expense', color: 'blue', icon: 'two_wheeler' },
-      { d: 2, title: 'Belanja bulanan', sub: 'BCA · 10.15', amt: -412500, kind: 'expense', color: 'green', icon: 'shopping_cart' },
-      { d: 3, title: 'Token listrik', sub: 'BCA · 19.40', amt: -200000, kind: 'expense', color: 'purple', icon: 'bolt' },
-      { d: 3, title: 'Gaji September', sub: 'BCA · 09.00', amt: 8500000, kind: 'income', color: 'green', icon: 'payments' }
+      { d: 0, title: 'Belanja mingguan', sub: 'BCA · 10.15', amt: -412500, kind: 'expense', icon: 'groceries' },
+      { d: 0, title: 'Netflix', sub: 'BCA · 07.00', amt: -65000, kind: 'expense', icon: 'subs' },
+      { d: 1, title: 'Sabil', sub: 'BCA · 08.00', amt: -800000, kind: 'expense', icon: 'give' },
+      { d: 2, title: 'Ke Tabungan', sub: 'BCA → Tabungan · 09.30', amt: 1000000, kind: 'transfer', icon: 'transfer' },
+      { d: 3, title: 'Gaji September', sub: 'BCA · 09.00', amt: 12000000, kind: 'income', icon: 'salary' },
+      { d: 3, title: 'Bensin', sub: 'GoPay · 18.00', amt: -47000, kind: 'expense', icon: 'transport' }
     ];
-    const PX = {"restaurant": "/_blob/f1ae8d6356f45cec2038768261cba47e", "swap_horiz": "/_blob/713cb080cbbfcd6a289509dcd33f9d1f", "two_wheeler": "/_blob/eff7e72da8655d2f31d39fc508e98b7a", "shopping_cart": "/_blob/807cc382e258bd1f8a94ba4795471b4d", "bolt": "/_blob/73796fb4a84837b6efa626a8f86986c4", "payments": "/_blob/6472b514c73603db38d0e194adeb08cd"};
-    const days = ['Hari ini · Senin, 28 Sep', 'Kemarin · Minggu, 27 Sep', 'Sabtu, 26 Sep', 'Jumat, 25 Sep'];
+    const PX = { groceries: '/_blob/807cc382e258bd1f8a94ba4795471b4d', subs: '/_blob/aabe73f55f1957f913ecba1e56955969', transfer: '/_blob/713cb080cbbfcd6a289509dcd33f9d1f', salary: '/_blob/6472b514c73603db38d0e194adeb08cd', transport: '/_blob/be1d988f965774850a0d78479d429106' };
+    const days = ['Rabu, 30 Sep', 'Senin, 28 Sep', 'Sabtu, 26 Sep', 'Jumat, 25 Sep'];
     const visible = rows.filter((r) => filter === 'all' || r.kind === filter);
     const groups = days.map((label, i) => {
       const rs = visible.filter((r) => r.d === i);
@@ -104,7 +109,7 @@ class Component extends DCLogic {
           title: r.title,
           sub: r.sub,
           icon: r.icon,
-          px: r.title.indexOf('Kopi') === 0 ? '/_blob/5230a938ba88d34885eb8ce4aa7fd201' : PX[r.icon],
+          px: PX[r.icon] || '', hasPx: !!PX[r.icon], sym: !PX[r.icon],
           color: r.color,
           amtText: r.kind === 'transfer' ? fmt(r.amt) : (r.amt < 0 ? '−' : '+') + fmt(r.amt),
           amtCls: 'tk-amt tk-t-amount' + (r.kind === 'income' ? ' tk-amt--pos' : r.kind === 'transfer' ? ' tk-amt--muted' : '')

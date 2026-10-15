@@ -201,6 +201,7 @@ pernah mengubah saldo dompet mana pun.
 | `walletId` | `String` | Dompet sumber. **Wajib**, dan menyaring pengeluaran mana yang terhitung. |
 | `period` | `BudgetPeriod` | `weekly` atau `monthly`. |
 | `startDate` | `DateTime` | Awal berlakunya periode. |
+| `endDate` | `DateTime?` | Akhir periode (eksklusif) bila berbeda dari `period.endFrom(startDate)`. Hanya diisi untuk menyelaraskan anggaran rutin ke periode peralihan ([ADR-038](adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) §3.3). Null pada hampir semua anggaran. |
 | `items` | `List<BudgetItem>` | Pos-pos di dalamnya. **Minimal satu** saat dibuat lewat formulir. |
 | `isArchived` | `bool` | Anggaran yang diarsipkan tidak muncul di daftar aktif, tetapi transaksi yang tertaut padanya tetap ada dan tetap terhitung di riwayat. |
 
@@ -478,6 +479,18 @@ Hubungannya dengan `FreelanceProject` sama persis dengan hubungan
 **salinan mandiri**. Menyunting template tidak pernah mengubah proyek yang sudah
 dibuat darinya, dan membuat atau menyunting template tidak pernah menyentuh
 saldo dompet mana pun.
+
+## Periode keuangan
+
+Bukan entitas tersimpan selain pengaturannya. Detail di
+[ADR-038](adr/0038-periode-keuangan-berriwayat-dan-peralihan.md) dan
+[FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md).
+
+| Konsep | Kode | Keterangan |
+|---|---|---|
+| Jadwal awal bulan | `FinancialMonthSchedule` (`settings/financial_month_schedule`) | Daftar `(effectiveFrom, startDay)`, `startDay` 1–28 atau hari terakhir bulan. Periode yang sudah selesai tidak pernah dipotong ulang. |
+| Periode | `financialPeriodOf(date, schedule)` → `FinancialPeriod(start, end, isTransition)` | `start ≤ d < end`. Satu periode peralihan (13–46 hari) terbentuk saat awal bulan diubah. |
+| Tanggal periode transaksi | `periodDateOf(transaction)` | `recurrence.occurrenceDate` bila tertaut kemunculan rutin dan selisihnya ≤ 7 hari, selain itu `date`. Dipakai untuk keanggotaan periode dan pos anggaran (KT-1); saldo dan partisi tetap memakai `date`. |
 
 ## Invarian
 

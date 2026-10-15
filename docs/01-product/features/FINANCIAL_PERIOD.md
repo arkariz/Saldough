@@ -1,7 +1,7 @@
 # Periode keuangan: awal bulan yang mengikuti gajian
 
 **Tanggal:** 10 Oktober 2026.
-**Status:** Diputuskan pemilik 10 Okt 2026 (§12). Keputusan arsitekturnya
+**Status:** Selesai 15 Okt 2026 (Fase 18, rilis `0.7.0+13`). Diputuskan pemilik 10 Okt 2026 (§12). Keputusan arsitekturnya
 di [ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
 (Accepted 10 Okt 2026); tugasnya Fase 18 di TASK_LIST.
 **Berkaitan:** [ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)

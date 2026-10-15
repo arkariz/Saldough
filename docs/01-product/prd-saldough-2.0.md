@@ -572,7 +572,7 @@ disimpan sebagai catatan sejarah saja.
 - [ ] Menampilkan total pemasukan bulan berjalan.
 - [ ] Menampilkan total pengeluaran bulan berjalan.
 - [ ] Tidak menghitung transfer sebagai pemasukan maupun pengeluaran.
-- [ ] "Bulan berjalan" adalah periode keuangan berjalan (FR-PLN-004), bukan
+- [x] "Bulan berjalan" adalah periode keuangan berjalan (FR-PLN-004), bukan
       bulan kalender; judulnya rentang tanggal bila awal bulan keuangan bukan
       tanggal 1 (revisi 10 Okt 2026,
       [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) P-11).
@@ -773,32 +773,33 @@ Fase 15; R2 dan R3 di antrean.
 
 **FR-PLN-004 — Bulan keuangan bisa diatur (R1b, direvisi 10 Okt 2026)**
 
-- [ ] Pengguna memilih tanggal awal bulan keuangan 1–28 atau **hari terakhir
+- [x] Pengguna memilih tanggal awal bulan keuangan 1–28 atau **hari terakhir
       bulan** (bawaan 1), misalnya tanggal gajian. Tanggal selesai mengikuti
       sendiri; tidak bisa diatur bebas.
-- [ ] Bisa diatur dari kepala Rencana › Bulan ini (rentang bisa diketuk) dan
+- [x] Bisa diatur dari kepala Rencana › Bulan ini (rentang bisa diketuk) dan
       dari Akun; ditawarkan saat menyimpan rutin pemasukan bulanan bila awal
       bulan masih bawaan.
 - [ ] Berlaku untuk Rencana, kartu bulan baru, arus Beranda (FR-HOME-001), dan
-      Analisis (FR-ANL-001). Rincian di
+      Analisis (FR-ANL-001). Rencana dan Beranda selesai di Fase 18; kotak ini dicentang
+      sesudah Analisis (Fase 19). Rincian di
       [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) dan
       [ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md).
 
 **FR-PLN-006 — Mengubah awal bulan keuangan (Fase 18)**
 
-- [ ] Periode yang sudah selesai tidak pernah berubah.
-- [ ] Periode berjalan menjadi satu **periode peralihan** sampai batas baru
+- [x] Periode yang sudah selesai tidak pernah berubah.
+- [x] Periode berjalan menjadi satu **periode peralihan** sampai batas baru
       terdekat dengan akhir lamanya (13–46 hari), diperlihatkan sebelum
       disimpan.
-- [ ] Anggaran rutin yang patokannya sama dengan awal bulan lama ditawarkan
+- [x] Anggaran rutin yang patokannya sama dengan awal bulan lama ditawarkan
       ikut pindah; bila ikut, anggaran berjalan diregangkan atau dipendekkan
       ke periode peralihan tanpa celah, nominal tetap. Saldo tidak berubah.
-- [ ] Periode peralihan berlabel; uang nganggur negatif di dalamnya tidak
+- [x] Periode peralihan berlabel; uang nganggur negatif di dalamnya tidak
       memicu peringatan; tidak dipakai untuk akurasi perkiraan atau pembanding.
 
 **FR-PLN-007 — Gajian yang maju atau mundur (Fase 18)**
 
-- [ ] Transaksi yang tertaut kemunculan rutin dengan selisih tanggal paling
+- [x] Transaksi yang tertaut kemunculan rutin dengan selisih tanggal paling
       lama 7 hari dihitung ke periode kemunculannya. Saldo tetap menurut
       tanggal transaksi.
 

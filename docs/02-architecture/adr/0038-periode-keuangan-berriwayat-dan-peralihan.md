@@ -193,4 +193,4 @@ sebulan; ditangani dengan label dan pengecualian (FINANCIAL_PERIOD P-8–P-10).
 **Penulis keputusan:** agen (product-owner), atas keputusan pemilik 10 Okt 2026
 **Ditinjau oleh:** pemilik
 **Tanggal disetujui:** 2026-10-10
-**Status implementasi:** Kode selesai (T-18.1–T-18.8 dan T-18.10–T-18.12 selesai 10–11 Okt 2026; verifikasi perangkat T-18.9 oleh QA)
+**Status implementasi:** Selesai 15 Okt 2026 (Fase 18, T-18.1–T-18.19; verifikasi perangkat T-18.9 lulus; rilis `0.7.0+13`)

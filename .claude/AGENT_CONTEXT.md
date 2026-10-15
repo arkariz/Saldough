@@ -123,6 +123,11 @@ gejala yang kelihatan**.
 - Nama entitas domain tidak disingkat.
 - Nama dompet dan kategori disimpan sebagai data, bukan enum. Jenis transaksi
   justru `sealed`, karena menambah jenis mengubah aturan perhitungan saldo.
+- **Periode keuangan** (ADR-038): hitung "bulan" selalu lewat
+  `financialPeriodOf(date, schedule)`, bukan `DateTime(y, m, startDay)`, dan
+  keanggotaan transaksi lewat `periodDateOf`. Saldo, perkiraan harian, dan
+  partisi `transaction/YYYY-MM` tetap memakai `date`. Jangan menulis ulang
+  `startDate` anggaran yang sudah lahir; pakai `endDate`.
 
 ## Yang TIDAK boleh dilakukan
 

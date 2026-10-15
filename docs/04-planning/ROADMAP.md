@@ -344,6 +344,9 @@ celah atau tumpang-tindih anggaran rutin sesudah dipindah; saldo tidak
 berubah oleh perubahan apa pun; Beranda dan Rencana menyebut angka periode
 yang sama.
 
+**Selesai 15 Okt 2026** (rilis `0.7.0+13`): 19 tugas, termasuk lima tindak
+lanjut QA (T-18.15–T-18.19); verifikasi perangkat T-18.9 lulus.
+
 ## Fase 19: Analisis keuangan (R1)
 
 Keputusan pemilik 10 Okt 2026. Segmen Analisis di Riwayat: ke mana uang

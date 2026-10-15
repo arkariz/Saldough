@@ -137,7 +137,9 @@ mengubah saldo kecuali transaksi yang benar-benar dicatat.
 | Nominal tetap / kira-kira | `amountMode` | Kira-kira berarti nominal dikonfirmasi tiap kali dicatat. |
 | Cara bayar | `paymentMode` | Autodebet (terjadi sendiri di bank) atau bayar sendiri. Menentukan jenis pengingat. |
 | Pengingat | notifikasi lokal | Notifikasi H−n dan hari jatuh tempo; aksi Catat membuka aplikasi. |
-| Bulan keuangan | preferensi `financial_month_start` | Bulan yang dimulai pada tanggal pilihan pengguna (1–28), misalnya tanggal gajian. Hanya untuk Rencana. |
+| Bulan keuangan, periode keuangan | `FinancialMonthSchedule`, `financialPeriodOf` | Periode yang dimulai pada tanggal pilihan pengguna (1–28 atau hari terakhir bulan), misalnya tanggal gajian. Dipakai Rencana, Beranda, dan Analisis (ADR-038). Di antarmuka: "Awal bulan keuangan". |
+| Periode peralihan | `FinancialPeriod.isTransition` | Satu periode 13–46 hari yang terbentuk saat awal bulan keuangan diubah. Berlabel "Periode peralihan · n hari"; tidak dipakai sebagai pembanding. |
+| Tanggal periode | `periodDateOf` | Tanggal yang menentukan periode sebuah transaksi: tanggal kemunculan rutin bila tertaut dan selisihnya ≤ 7 hari, selain itu tanggal transaksi. |
 | Uang nganggur | `monthPlan` (turunan) | Pemasukan terencana bulan itu dikurangi tagihan rutin dan anggaran, lalu dikurangi belanja di luar rencana yang sudah tercatat. **Bukan saldo.** |
 | Di luar rencana | turunan | Pengeluaran yang tidak tertaut pos anggaran dan bukan dari rutin. |
 | Saldo dompet (perkiraan) | `projectCashflow` (turunan) | Perkiraan isi dompet per hari sampai akhir bulan, selalu ditulis dengan `≈`. |

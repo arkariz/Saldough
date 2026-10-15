@@ -16,6 +16,8 @@ class AppBanner extends StatelessWidget {
     this.icon = IconKey.info,
     this.actionLabel,
     this.onAction,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
     super.key,
   });
 
@@ -33,6 +35,13 @@ class AppBanner extends StatelessWidget {
 
   /// Dipanggil saat tindakan diketuk.
   final VoidCallback? onAction;
+
+  /// Tindakan kedua berupa teks tanpa latar ("Nanti"), di kiri [actionLabel];
+  /// dipakai banner yang bisa ditunda.
+  final String? secondaryActionLabel;
+
+  /// Dipanggil saat tindakan kedua diketuk.
+  final VoidCallback? onSecondaryAction;
 
   @override
   Widget build(BuildContext context) {
@@ -60,39 +69,52 @@ class AppBanner extends StatelessWidget {
               style: textTheme.bodyMedium?.copyWith(color: colors.ink),
             ),
           ),
+          if (secondaryActionLabel case final label?) ...[
+            const SizedBox(width: AppSpacing.space2),
+            _BannerAction(label: label, onTap: onSecondaryAction, filled: false),
+          ],
           if (actionLabel case final label?) ...[
             const SizedBox(width: AppSpacing.space2),
-            Semantics(
-              button: true,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: onAction,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: AppSize.touch),
-                  child: Center(
-                    widthFactor: 1,
-                    heightFactor: 1,
-                    child: Container(
-                      height: AppSize.buttonSm,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      alignment: Alignment.center,
-                      decoration: ShapeDecoration(
-                        color: colors.surface,
-                        shape: const PixelCornerBorder.small(),
-                      ),
-                      child: Text(
-                        label,
-                        style: textTheme.labelLarge?.copyWith(
-                          color: colors.ink,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            _BannerAction(label: label, onTap: onAction, filled: true),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Tombol kecil di banner: berlatar `surface` bila [filled], teks saja bila
+/// tidak. Area ketuk 48dp.
+class _BannerAction extends StatelessWidget {
+  const _BannerAction({required this.label, required this.onTap, required this.filled});
+
+  final String label;
+  final VoidCallback? onTap;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(color: colors.ink);
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: AppSize.touch),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Container(
+              height: AppSize.buttonSm,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              alignment: Alignment.center,
+              decoration: filled ? ShapeDecoration(color: colors.surface, shape: const PixelCornerBorder.small()) : null,
+              child: Text(label, style: labelStyle),
+            ),
+          ),
+        ),
       ),
     );
   }

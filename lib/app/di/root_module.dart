@@ -18,6 +18,7 @@ import 'package:saldough/features/app_update/data/shorebird_patch_source.dart';
 import 'package:saldough/features/app_update/domain/repositories/app_update_memory_repository.dart';
 import 'package:saldough/features/app_update/domain/repositories/update_sources.dart';
 import 'package:saldough/features/app_update/domain/usecases/read_update_snapshot.dart';
+import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.dart';
 import 'package:saldough/features/budget/data/adapters/budget_item_catalog_impl.dart';
 import 'package:saldough/features/budget/data/adapters/budget_overview_source_impl.dart';
 import 'package:saldough/features/budget/data/adapters/plan_budget_source_impl.dart';
@@ -211,6 +212,13 @@ abstract final class RootModule {
           installed: container<InstalledVersionSource>(),
           store: container<StoreUpdateSource>(),
           patch: container<PatchSource>(),
+        ),
+      )
+      ..registerLazySingleton<AppUpdateBloc>(
+        () => AppUpdateBloc(
+          read: container<ReadUpdateSnapshot>(),
+          store: container<StoreUpdateSource>(),
+          memory: container<AppUpdateMemoryRepository>(),
         ),
       )
       // Pilihan bahasa (ADR-028), kunci `settings/language`. Mengganti bahasa

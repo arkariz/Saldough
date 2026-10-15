@@ -16,11 +16,15 @@ import 'package:saldough/features/notification_capture/presentation/navigation/n
 /// atau fitur tidak terdaftar (platform lain, uji).
 class CaptureInboxBanner extends StatefulWidget {
   /// Membuat [CaptureInboxBanner].
-  const CaptureInboxBanner({required this.container, super.key});
+  const CaptureInboxBanner({required this.container, this.fallback, super.key});
 
   /// Container akar tempat modul notifikasi terdaftar; slot Beranda berada
   /// di bawah `HomeScope` yang terisolasi (ADR-030).
   final GetIt container;
+
+  /// Ditampilkan bila tidak ada yang menunggu: slot Beranda hanya memuat satu
+  /// banner, dan kotak masuk menang atas pengumuman lain (APP_UPDATE B-2).
+  final Widget? fallback;
 
   @override
   State<CaptureInboxBanner> createState() => _CaptureInboxBannerState();
@@ -55,7 +59,7 @@ class _CaptureInboxBannerState extends State<CaptureInboxBanner> {
 
   @override
   Widget build(BuildContext context) {
-    if (_pending == 0) return const SizedBox.shrink();
+    if (_pending == 0) return widget.fallback ?? const SizedBox.shrink();
     final texts = t.notificationCapture;
     void open() => unawaited(context.pushRoute(NotificationCaptureRouteKeys.inbox, const EmptyInput()));
     // Banner perhatian design system: satu kalimat + satu tindakan, nada

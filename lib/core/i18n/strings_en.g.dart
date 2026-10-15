@@ -58,6 +58,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
+	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
 }
 
 // Path: app
@@ -1238,6 +1239,17 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
 }
 
+// Path: appUpdate
+class _Translations$appUpdate$en extends Translations$appUpdate$id {
+	_Translations$appUpdate$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$appUpdate$banner$en banner = _Translations$appUpdate$banner$en._(_root);
+	@override late final _Translations$appUpdate$action$en action = _Translations$appUpdate$action$en._(_root);
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1414,6 +1426,32 @@ class _Translations$recurring$starters$en extends Translations$recurring$starter
 	@override String get parents => 'Send to parents';
 	@override String get arisan => 'Arisan';
 	@override String get savings => 'Savings';
+}
+
+// Path: appUpdate.banner
+class _Translations$appUpdate$banner$en extends Translations$appUpdate$banner$id {
+	_Translations$appUpdate$banner$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get storeAvailable => 'A new version is available.';
+	@override String get storeDownloading => 'Downloading the new version. You can keep recording.';
+	@override String get storeDownloaded => 'The new version is downloaded.';
+	@override String get patchReady => 'A small update is ready. Close and reopen the app to use it.';
+}
+
+// Path: appUpdate.action
+class _Translations$appUpdate$action$en extends Translations$appUpdate$action$id {
+	_Translations$appUpdate$action$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get update => 'Update';
+	@override String get install => 'Install now';
+	@override String get later => 'Later';
+	@override String get ok => 'OK';
 }
 
 // Path: record.voice.failure
@@ -2542,6 +2580,14 @@ extension on TranslationsEn {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
+			'appUpdate.banner.storeAvailable' => 'A new version is available.',
+			'appUpdate.banner.storeDownloading' => 'Downloading the new version. You can keep recording.',
+			'appUpdate.banner.storeDownloaded' => 'The new version is downloaded.',
+			'appUpdate.banner.patchReady' => 'A small update is ready. Close and reopen the app to use it.',
+			'appUpdate.action.update' => 'Update',
+			'appUpdate.action.install' => 'Install now',
+			'appUpdate.action.later' => 'Later',
+			'appUpdate.action.ok' => 'OK',
 			_ => null,
 		};
 	}

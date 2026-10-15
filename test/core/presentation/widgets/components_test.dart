@@ -290,6 +290,24 @@ void main() {
       expect(taps, 1);
       expect(shapeOf(tester, find.byType(AppBanner)).color, c.warningSoft);
     });
+
+    testWidgets('banner dengan tindakan kedua berupa teks: keduanya terjangkau', (tester) async {
+      var primary = 0;
+      var secondary = 0;
+      await pump(
+        tester,
+        AppBanner(
+          message: 'Versi baru tersedia.',
+          actionLabel: 'Perbarui',
+          onAction: () => primary++,
+          secondaryActionLabel: 'Nanti',
+          onSecondaryAction: () => secondary++,
+        ),
+      );
+      await tester.tap(find.text('Nanti'));
+      await tester.tap(find.text('Perbarui'));
+      expect((primary, secondary), (1, 1));
+    });
   });
 
   group('AppCard, AppListCard, AppListRow, AppSectionHeader', () {

@@ -60,6 +60,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
+	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
 }
 
 // Path: app
@@ -3184,6 +3185,17 @@ class Translations$plan$id {
 	String installmentFree({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.';
 }
 
+// Path: appUpdate
+class Translations$appUpdate$id {
+	Translations$appUpdate$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$appUpdate$banner$id banner = Translations$appUpdate$banner$id.internal(_root);
+	late final Translations$appUpdate$action$id action = Translations$appUpdate$action$id.internal(_root);
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -3571,6 +3583,48 @@ class Translations$recurring$starters$id {
 
 	/// id: 'Tabungan'
 	String get savings => 'Tabungan';
+}
+
+// Path: appUpdate.banner
+class Translations$appUpdate$banner$id {
+	Translations$appUpdate$banner$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Versi baru tersedia.'
+	String get storeAvailable => 'Versi baru tersedia.';
+
+	/// id: 'Mengunduh versi baru. Kamu tetap bisa mencatat.'
+	String get storeDownloading => 'Mengunduh versi baru. Kamu tetap bisa mencatat.';
+
+	/// id: 'Versi baru sudah diunduh.'
+	String get storeDownloaded => 'Versi baru sudah diunduh.';
+
+	/// id: 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.'
+	String get patchReady => 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.';
+}
+
+// Path: appUpdate.action
+class Translations$appUpdate$action$id {
+	Translations$appUpdate$action$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Perbarui'
+	String get update => 'Perbarui';
+
+	/// id: 'Pasang sekarang'
+	String get install => 'Pasang sekarang';
+
+	/// id: 'Nanti'
+	String get later => 'Nanti';
+
+	/// id: 'Oke'
+	String get ok => 'Oke';
 }
 
 // Path: record.voice.failure
@@ -4711,6 +4765,14 @@ extension on Translations {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.',
+			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia.',
+			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru. Kamu tetap bisa mencatat.',
+			'appUpdate.banner.storeDownloaded' => 'Versi baru sudah diunduh.',
+			'appUpdate.banner.patchReady' => 'Pembaruan kecil siap. Tutup lalu buka lagi aplikasi untuk memakainya.',
+			'appUpdate.action.update' => 'Perbarui',
+			'appUpdate.action.install' => 'Pasang sekarang',
+			'appUpdate.action.later' => 'Nanti',
+			'appUpdate.action.ok' => 'Oke',
 			_ => null,
 		};
 	}

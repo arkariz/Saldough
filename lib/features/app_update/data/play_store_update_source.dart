@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:flutter/foundation.dart';
 import 'package:in_app_update/in_app_update.dart' as play;
 import 'package:saldough/core/foundation/repository_guard.dart';
 import 'package:saldough/features/app_update/domain/entities/update_snapshot.dart';
@@ -48,7 +49,23 @@ final class PlayStoreUpdateSource with RepositoryGuard implements StoreUpdateSou
   };
 
   @override
-  Future<Either<Failure, StoreUpdateInfo>> check() => guard(() async => map(await play.InAppUpdate.checkForUpdate()));
+  Future<Either<Failure, StoreUpdateInfo>> check() async {
+    final result = await guard(() async {
+      final info = await play.InAppUpdate.checkForUpdate();
+      // Hanya build debug: apa yang dilaporkan Play, untuk menelusuri banner yang tidak muncul.
+      if (kDebugMode) {
+        debugPrint(
+          '[app_update] Play: availability=${info.updateAvailability.name}, install=${info.installStatus.name}, '
+          'flexible=${info.flexibleUpdateAllowed}, versionCode=${info.availableVersionCode}',
+        );
+      }
+      return map(info);
+    });
+    if (kDebugMode) {
+      result.fold((failure) => debugPrint('[app_update] Play gagal dicek: ${failure.message}'), (_) {});
+    }
+    return result;
+  }
 
   @override
   Future<Either<Failure, bool>> startDownload() =>

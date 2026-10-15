@@ -10,17 +10,13 @@ platform :android do
         shorebird_release(platform: "android")
 
         # 1. Catatan "What's new" Play dari berkas catatan yang sama dengan
-        # aplikasi (ADR-039 §3.3): release_notes/<build>-0.json, maksimal 500
-        # karakter per bahasa (batas Play), butir terpotong dari bawah.
+        # aplikasi (ADR-039 §3.3), diformat skrip catatan: judul, kategori
+        # beremoji, butir bertanda •, maksimal 500 karakter (batas Play).
         build = File.read("../../pubspec.yaml", encoding: "UTF-8")[/^version:\s*\S+\+(\d+)/, 1]
-        note = JSON.parse(File.read("../../release_notes/#{build}-0.json", encoding: "UTF-8"))
         changelog = lambda do |lang|
-            text = ""
-            note["groups"].flat_map { |g| g["notes"].map { |n| "• #{n[lang]}" } }.each do |line|
-                break if (text + line + "\n").length > 500
-                text += line + "\n"
-            end
-            text.strip
+            text = `node ../../scripts/release_notes.js play-changelog --build #{build} --lang #{lang}`.force_encoding("UTF-8")
+            UI.user_error!("Gagal membuat catatan Play (#{lang})") unless $?.success? && !text.strip.empty?
+            text
         end
         note_id = changelog.call("id")
         note_en = changelog.call("en")

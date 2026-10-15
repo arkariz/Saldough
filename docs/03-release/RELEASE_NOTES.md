@@ -78,8 +78,12 @@ disetujui tidak boleh ada di `main`.
    yang tanpa berkas), mengulang bila ETag bentrok (maksimal 3 kali), lalu
    **membaca balik** template. Gagal membaca balik = berhenti sebelum rilis.
 4. Rilis atau patch lewat fastlane. Untuk rilis toko, teks "What's new" Play
-   dibuat dari berkas yang sama (maksimal 500 karakter per bahasa, butir
-   terpotong dari bawah).
+   dibuat dari berkas yang sama oleh `node scripts/release_notes.js
+   play-changelog --build <build> --lang id|en`: judul "🚀 Apa yang baru di
+   versi X", lalu tiap kategori dengan emoji dan namanya (✨ Baru, ⚡ Lebih
+   cepat, 🛠️ Perbaikan, 🔒 Keamanan) dan butirnya bertanda •. Maksimal 500
+   karakter per bahasa (batas Play); bila lebih, butir terbawah dibuang dan
+   kategori yang kosong ikut hilang.
 5. Bila langkah 4 gagal: `cleanup` menghapus entri eksekusi ini dari
    Remote Config (sebisanya). Sisa yang yatim hilang pada `publish`
    eksekusi berikutnya.

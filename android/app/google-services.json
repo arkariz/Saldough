@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "696822782042-71i7rhe31m3k8dbfsudns5bvc8qubb34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arkarizdev.tanukonomy",
+            "certificate_hash": "536c821105fca742a7f95e92620da7ccdaa3db83"
+          }
+        },
+        {
           "client_id": "696822782042-klfurfjja11e37vo6arc9kksd9gb2g3b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -105,20 +105,41 @@ void main() {
     expect(bloc.state.announcement, UpdateAnnouncement.storeAvailable);
   });
 
-  test('B-13: pengecekan Play dibatasi 6 jam kecuali force; keadaan Play dipertahankan', () async {
+  test('B-13: pengecekan Play dibatasi 1 jam kecuali force; keadaan Play dipertahankan', () async {
     await check();
-    now = now.add(const Duration(hours: 1));
+    now = now.add(const Duration(minutes: 30));
     await check();
     verify(() => store.check()).called(1);
     expect(bloc.state.announcement, UpdateAnnouncement.storeAvailable);
 
-    now = now.add(const Duration(hours: 5));
+    now = now.add(const Duration(minutes: 30));
     await check();
     verify(() => store.check()).called(1);
 
     await check(force: true);
     verify(() => store.check()).called(1);
   });
+
+  test(
+    'hasil Play yang tidak pasti (gagal) tidak menahan pengecekan: diulang pada pemicu berikutnya sesudah 1 menit',
+    () async {
+      when(() => store.check()).thenAnswer((_) async => left(failure));
+      await check();
+      expect(bloc.state.announcement, UpdateAnnouncement.none);
+      verify(() => store.check()).called(1);
+
+      now = now.add(const Duration(seconds: 30));
+      await check();
+      verifyNever(() => store.check());
+
+      // Play akhirnya menawarkan versi baru; pemicu berikutnya (kembali ke depan) menangkapnya.
+      when(() => store.check()).thenAnswer((_) async => right(available));
+      now = now.add(const Duration(seconds: 31));
+      await check();
+      verify(() => store.check()).called(1);
+      expect(bloc.state.announcement, UpdateAnnouncement.storeAvailable);
+    },
+  );
 
   test('B-6: Nanti menunda build itu dan menyimpannya; 7 hari kemudian tampil lagi', () async {
     await check();

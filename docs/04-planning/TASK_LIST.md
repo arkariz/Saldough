@@ -3558,7 +3558,7 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       baru mengalahkan pembaruan kecil); uji bahwa banner kotak masuk menang.
       Memenuhi FR-UPD-001, FR-UPD-002.
       Selesai 15 Okt 2026: `AppUpdateBloc` (singleton akar; cek sesudah frame
-      pertama dan saat aplikasi kembali ke depan, Play dibatasi 6 jam kecuali
+      pertama dan saat aplikasi kembali ke depan, Play dibatasi 1 jam (1 menit bila hasil terakhir tidak pasti) kecuali
       Akun, Nanti/Oke disimpan), `AppUpdateBanner`, dan teks `appUpdate.*`
       id/en.
       Rupa akhir (v3 pemilik, 15 Okt 2026): kartu `brand` penuh (tile 🚀 atau

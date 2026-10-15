@@ -222,7 +222,8 @@
     "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.",
     "makeRecurringAction": "Make recurring",
     "previousMonth": "Previous month",
-    "nextMonth": "Next month"
+    "nextMonth": "Next month",
+    "listSegment": "List"
   },
   "wallet": {
     "subtitle": "Total balance of all active wallets",
@@ -587,7 +588,8 @@
     "freelanceRowTitle": "Not yet received",
     "freelanceRowSub": "$count invoices, expected $date",
     "incomeStat": "Income",
-    "expenseStat": "Expenses"
+    "expenseStat": "Expenses",
+    "analysisDoor": "Analysis $period: income and expenses by category"
   },
   "onboarding": {
     "skipAction": "Skip",
@@ -1231,5 +1233,31 @@
       "title": "Update diagnostics",
       "copy": "Copy"
     }
+  },
+  "analysis": {
+    "segment": "Analysis",
+    "previousPeriod": "Previous period",
+    "nextPeriod": "Next period",
+    "uncategorized": "Uncategorized",
+    "freelanceGroup": "Freelance",
+    "others": "Others ($n categories)",
+    "archived": "archived",
+    "transferTitle": "Moved between wallets",
+    "transferSub": "Doesn't change your total",
+    "transferIn": "Transfers in",
+    "transferOut": "Transfers out",
+    "kind": {
+      "expense": "Expenses",
+      "income": "Income"
+    },
+    "empty": {
+      "title": "Nothing to analyze yet",
+      "body": "Record transactions to see where your money goes.",
+      "cta": "Record a transaction"
+    },
+    "emptyMonth": "No expenses in $period yet.",
+    "error": "Couldn't load analysis. Pull down to try again.",
+    "donutSemantics": "$kind $period: $parts",
+    "rowSemantics": "$name, $percent, $amount"
   }
 }

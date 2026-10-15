@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -6,6 +8,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
@@ -29,21 +32,49 @@ import 'package:state_management/state_management.dart';
 /// tempat sunting dan hapus (T-2.6).
 class TransactionListPage extends StatefulWidget {
   /// Membuat [TransactionListPage].
-  const TransactionListPage({this.notice, super.key});
+  const TransactionListPage({this.notice, this.analysis, this.segmentRepository, super.key});
 
   /// Banner kotak masuk notifikasi, disisipkan akar komposisi (prototipe
   /// `Riwayat.dc.html`); `null` = tidak ada.
   final Widget? notice;
+
+  /// Isi segmen Analisis, disisipkan akar komposisi (ADR-030: `transaction` tidak
+  /// mengimpor `analysis`). `null` = tanpa segmen, hanya daftar.
+  final Widget? analysis;
+
+  /// Pengingat segmen terakhir; `null` = selalu mulai di Daftar.
+  final HistorySegmentRepository? segmentRepository;
 
   @override
   State<TransactionListPage> createState() => _TransactionListPageState();
 }
 
 class _TransactionListPageState extends State<TransactionListPage> {
+  /// Segmen terpilih; `null` sampai preferensinya terbaca.
+  HistorySegment? _segment;
+
   @override
   void initState() {
     super.initState();
     context.read<TransactionBloc>().add(const TransactionStarted());
+    if (widget.analysis == null) {
+      _segment = HistorySegment.list;
+    } else if (widget.segmentRepository case final repository?) {
+      unawaited(_restoreSegment(repository));
+    } else {
+      _segment = HistorySegment.list;
+    }
+  }
+
+  Future<void> _restoreSegment(HistorySegmentRepository repository) async {
+    final saved = (await repository.load()).getOrElse((_) => HistorySegment.list);
+    if (mounted) setState(() => _segment = saved);
+  }
+
+  void _selectSegment(HistorySegment segment) {
+    if (segment == _segment) return;
+    setState(() => _segment = segment);
+    if (widget.segmentRepository case final repository?) unawaited(repository.save(segment));
   }
 
   void _clearFilters() {
@@ -61,9 +92,24 @@ class _TransactionListPageState extends State<TransactionListPage> {
         title: Text(t.transaction.pageTitle, style: Theme.of(context).textTheme.headlineSmall),
         centerTitle: false,
         actions: const [TutorialInfoButton(tour: TourId.transaction)],
+        // Daftar | Analisis (A1, SubTabs): navigasi, isi di bawahnya berganti seluruhnya.
+        bottom: widget.analysis == null || _segment == null
+            ? null
+            : AppSubTabs<HistorySegment>(
+                options: [
+                  (HistorySegment.list, t.transaction.listSegment),
+                  (HistorySegment.analysis, t.analysis.segment),
+                ],
+                selected: _segment!,
+                onChanged: _selectSegment,
+              ),
       ),
       body: SafeArea(
-        child: BlocBuilder<TransactionBloc, TransactionState>(
+        child: _segment == null
+            ? const AppSkeletonPage()
+            : _segment == HistorySegment.analysis
+            ? widget.analysis!
+            : BlocBuilder<TransactionBloc, TransactionState>(
           builder: (context, state) {
             if (state.isLoading) return const AppSkeletonPage();
 

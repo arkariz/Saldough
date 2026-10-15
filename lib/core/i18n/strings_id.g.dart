@@ -61,6 +61,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
 	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
+	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
 }
 
 // Path: app
@@ -508,6 +509,9 @@ class Translations$transaction$id {
 
 	/// id: 'Bulan berikutnya'
 	String get nextMonth => 'Bulan berikutnya';
+
+	/// id: 'Daftar'
+	String get listSegment => 'Daftar';
 }
 
 // Path: wallet
@@ -1615,6 +1619,9 @@ class Translations$home$id {
 
 	/// id: 'Pengeluaran'
 	String get expenseStat => 'Pengeluaran';
+
+	/// id: 'Analisis $period: pemasukan dan pengeluaran per kategori'
+	String analysisDoor({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori';
 }
 
 // Path: onboarding
@@ -3276,6 +3283,63 @@ class Translations$appUpdate$id {
 	late final Translations$appUpdate$diagnostic$id diagnostic = Translations$appUpdate$diagnostic$id.internal(_root);
 }
 
+// Path: analysis
+class Translations$analysis$id {
+	Translations$analysis$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Analisis'
+	String get segment => 'Analisis';
+
+	/// id: 'Periode sebelumnya'
+	String get previousPeriod => 'Periode sebelumnya';
+
+	/// id: 'Periode berikutnya'
+	String get nextPeriod => 'Periode berikutnya';
+
+	/// id: 'Tanpa kategori'
+	String get uncategorized => 'Tanpa kategori';
+
+	/// id: 'Freelance'
+	String get freelanceGroup => 'Freelance';
+
+	/// id: 'Lainnya ($n kategori)'
+	String others({required Object n}) => 'Lainnya (${n} kategori)';
+
+	/// id: 'diarsipkan'
+	String get archived => 'diarsipkan';
+
+	/// id: 'Dipindahkan antardompet'
+	String get transferTitle => 'Dipindahkan antardompet';
+
+	/// id: 'Tidak mengurangi total uangmu'
+	String get transferSub => 'Tidak mengurangi total uangmu';
+
+	/// id: 'Transfer masuk'
+	String get transferIn => 'Transfer masuk';
+
+	/// id: 'Transfer keluar'
+	String get transferOut => 'Transfer keluar';
+
+	late final Translations$analysis$kind$id kind = Translations$analysis$kind$id.internal(_root);
+	late final Translations$analysis$empty$id empty = Translations$analysis$empty$id.internal(_root);
+
+	/// id: 'Belum ada pengeluaran di $period.'
+	String emptyMonth({required Object period}) => 'Belum ada pengeluaran di ${period}.';
+
+	/// id: 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.'
+	String get error => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.';
+
+	/// id: '$kind $period: $parts'
+	String donutSemantics({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}';
+
+	/// id: '$name, $percent, $amount'
+	String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+}
+
 // Path: record.draftIssue
 class Translations$record$draftIssue$id {
 	Translations$record$draftIssue$id.internal(this._root);
@@ -3803,6 +3867,39 @@ class Translations$appUpdate$diagnostic$id {
 	String get copy => 'Salin';
 }
 
+// Path: analysis.kind
+class Translations$analysis$kind$id {
+	Translations$analysis$kind$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pengeluaran'
+	String get expense => 'Pengeluaran';
+
+	/// id: 'Pemasukan'
+	String get income => 'Pemasukan';
+}
+
+// Path: analysis.empty
+class Translations$analysis$empty$id {
+	Translations$analysis$empty$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Belum ada yang bisa dianalisis'
+	String get title => 'Belum ada yang bisa dianalisis';
+
+	/// id: 'Catat transaksi dan lihat ke mana uangmu pergi.'
+	String get body => 'Catat transaksi dan lihat ke mana uangmu pergi.';
+
+	/// id: 'Catat transaksi'
+	String get cta => 'Catat transaksi';
+}
+
 // Path: record.voice.failure
 class Translations$record$voice$failure$id {
 	Translations$record$voice$failure$id.internal(this._root);
@@ -4043,6 +4140,7 @@ extension on Translations {
 			'transaction.makeRecurringAction' => 'Jadikan rutin',
 			'transaction.previousMonth' => 'Bulan sebelumnya',
 			'transaction.nextMonth' => 'Bulan berikutnya',
+			'transaction.listSegment' => 'Daftar',
 			'wallet.subtitle' => 'Total saldo semua dompet aktif',
 			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
 			'wallet.listHeading' => 'Dompet aktif',
@@ -4349,9 +4447,9 @@ extension on Translations {
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
 			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
 			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
-			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			'freelance.filterAll' => 'Semua',
 			'freelance.noDeductions' => 'Tanpa potongan',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}',
@@ -4402,6 +4500,7 @@ extension on Translations {
 			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} tagihan, perkiraan ${date}',
 			'home.incomeStat' => 'Pemasukan',
 			'home.expenseStat' => 'Pengeluaran',
+			'home.analysisDoor' => ({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -4862,10 +4961,10 @@ extension on Translations {
 			'recurring.idleBody' => 'Dua kemunculan terakhir dilewati atau belum terlihat.',
 			'recurring.idleKeep' => 'Biarkan',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
-			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
-			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
 			'recurring.priceUpKeep' => 'Biarkan',
 			'recurring.suggestTitle' => 'Sepertinya rutin',
@@ -4994,6 +5093,26 @@ extension on Translations {
 			'appUpdate.category.security' => 'Keamanan',
 			'appUpdate.diagnostic.title' => 'Diagnostik pembaruan',
 			'appUpdate.diagnostic.copy' => 'Salin',
+			'analysis.segment' => 'Analisis',
+			'analysis.previousPeriod' => 'Periode sebelumnya',
+			'analysis.nextPeriod' => 'Periode berikutnya',
+			'analysis.uncategorized' => 'Tanpa kategori',
+			'analysis.freelanceGroup' => 'Freelance',
+			'analysis.others' => ({required Object n}) => 'Lainnya (${n} kategori)',
+			'analysis.archived' => 'diarsipkan',
+			'analysis.transferTitle' => 'Dipindahkan antardompet',
+			'analysis.transferSub' => 'Tidak mengurangi total uangmu',
+			'analysis.transferIn' => 'Transfer masuk',
+			'analysis.transferOut' => 'Transfer keluar',
+			'analysis.kind.expense' => 'Pengeluaran',
+			'analysis.kind.income' => 'Pemasukan',
+			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
+			'analysis.empty.body' => 'Catat transaksi dan lihat ke mana uangmu pergi.',
+			'analysis.empty.cta' => 'Catat transaksi',
+			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
+			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			_ => null,
 		};
 	}

@@ -70,7 +70,14 @@ extension TileTintColors on AppColors {
 /// 32 di chip dan baris padat, 48 di kepala rincian.
 class AppIconTile extends StatelessWidget {
   /// Membuat [AppIconTile] untuk [icon].
-  const AppIconTile(this.icon, {this.size = AppSize.tile, this.tint, this.selected = false, super.key});
+  const AppIconTile(
+    this.icon, {
+    this.size = AppSize.tile,
+    this.tint,
+    this.selected = false,
+    this.background,
+    super.key,
+  });
 
   /// Ikon yang dibawa tile.
   final IconKey icon;
@@ -84,6 +91,9 @@ class AppIconTile extends StatelessWidget {
   /// Terpilih (pemilih kategori Catat): latar `brandSoft` dengan garis
   /// dalam `brand` 2px.
   final bool selected;
+
+  /// Menimpa latar bawaan, mis. `surface` bagi tile di kaki kartu `surface2`.
+  final Color? background;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,7 @@ class AppIconTile extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
-          color: selected ? colors.brandSoft : background,
+          color: selected ? colors.brandSoft : (this.background ?? background),
           shape: PixelCornerBorder.small(
             side: selected ? BorderSide(color: colors.brand, width: 2) : BorderSide.none,
           ),

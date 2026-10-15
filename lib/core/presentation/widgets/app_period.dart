@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/app_button.dart';
 import 'package:saldough/core/presentation/widgets/app_icon.dart';
 import 'package:saldough/core/presentation/widgets/pixel_corner_border.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -115,6 +116,74 @@ class AppPeriodTag extends StatelessWidget {
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Pemilih periode ‹ periode › (komponen PeriodStepper, Riwayat › Analisis):
+/// melihat ke belakang satu periode sekali langkah. [onNext] `null` menonaktifkan
+/// panah maju (periode berjalan: Analisis tidak punya masa depan). Judul
+/// nama bulan atau rentang ([FinancialPeriod.name]); periode peralihan diberi
+/// [AppPeriodTag] di bawah judul.
+class AppPeriodStepper extends StatelessWidget {
+  /// Membuat [AppPeriodStepper].
+  const AppPeriodStepper({
+    required this.title,
+    required this.onPrevious,
+    required this.onNext,
+    this.transitionDays,
+    super.key,
+  });
+
+  /// Nama periode.
+  final String title;
+
+  /// Panjang periode peralihan, atau `null` bila periode biasa.
+  final int? transitionDays;
+
+  /// Mundur satu periode; `null` bila tidak ada yang lebih lama.
+  final VoidCallback? onPrevious;
+
+  /// Maju satu periode; `null` di periode berjalan.
+  final VoidCallback? onNext;
+
+  @override
+  Widget build(BuildContext context) {
+    final days = transitionDays;
+    return Row(
+      children: [
+        AppIconButton(
+          key: const ValueKey('period-previous'),
+          icon: IconKey.chevronLeft,
+          label: t.analysis.previousPeriod,
+          onPressed: onPrevious,
+        ),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                key: const ValueKey('period-title'),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+              if (days != null) ...[
+                const SizedBox(height: AppSpacing.space1),
+                AppPeriodTag(days: days),
+              ],
+            ],
+          ),
+        ),
+        AppIconButton(
+          key: const ValueKey('period-next'),
+          icon: IconKey.chevronRight,
+          label: t.analysis.nextPeriod,
+          onPressed: onNext,
         ),
       ],
     );

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
@@ -8,6 +10,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/freelance/presentation/navigation/freelance_route_keys.dart';
 import 'package:saldough/features/home/presentation/bloc/home_bloc.dart';
 import 'package:saldough/features/home/presentation/bloc/home_state.dart';
@@ -167,7 +170,16 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: AppSpacing.space2),
             SpotlightTarget(
               spotlightKey: SpotlightKey.homeCashFlow,
-              child: HomeMonthCard(cashFlow: state.cashFlow, footer: widget.forecast),
+              child: HomeMonthCard(
+                cashFlow: state.cashFlow,
+                footer: widget.forecast,
+                // Pintu ke Analisis periode berjalan (D4): hanya navigasi, tanpa
+                // membaca riwayat enam bulan di Beranda (NFR-PERF-002).
+                onOpenAnalysis: () => unawaited(
+                  context.pushRoute(AnalysisRouteKeys.open, const AnalysisInput(source: AnalysisSource.home)),
+                ),
+                analysisLabel: t.home.analysisDoor(period: state.period.name),
+              ),
             ),
           ] else if (widget.forecast case final forecast?) ...[
             const SizedBox(height: AppSpacing.space6),

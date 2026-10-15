@@ -51,7 +51,7 @@ void main() {
     dismissLabel: 'Nanti',
   );
 
-  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas; tombol rata kanan di bawah garis', (
+  testWidgets('judul dan chip sebaris bila muat; × di pojok kanan atas; tombol rata kanan di bawah', (
     tester,
   ) async {
     await pump(tester, full, width: 480);
@@ -68,6 +68,19 @@ void main() {
     expect(action.top, greaterThanOrEqualTo(title.bottom), reason: 'tombol di baris sendiri');
     expect(card.right - action.right, lessThanOrEqualTo(16), reason: 'tombol rata kanan');
     expect(action.width, lessThan(card.width / 2), reason: 'selebar teksnya, bukan sebaris penuh');
+  });
+
+  testWidgets('tanpa garis pemisah antara judul/keterangan dan tombol aksi', (tester) async {
+    await pump(tester, full);
+    expect(
+      find.descendant(
+        of: find.byType(UpdateBannerCard),
+        matching: find.byWidgetPredicate(
+          (w) => w is DecoratedBox && w.decoration is BoxDecoration && (w.decoration as BoxDecoration).border != null,
+        ),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('keterangan tampil di bawah judul; emoji di tile', (tester) async {

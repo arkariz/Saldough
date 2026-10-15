@@ -16,9 +16,21 @@ import 'package:state_management/state_management.dart';
 /// Tombol mengikuti keadaan sebenarnya, bukan banner, sehingga pengguna yang
 /// sudah menekan Nanti tetap punya jalan memperbarui. Daftar catatan diisi
 /// di T-20.4; sebelum itu hanya keadaan kosong.
-class AppUpdateNotesPage extends StatelessWidget {
+class AppUpdateNotesPage extends StatefulWidget {
   /// Membuat [AppUpdateNotesPage].
   const AppUpdateNotesPage({super.key});
+
+  @override
+  State<AppUpdateNotesPage> createState() => _AppUpdateNotesPageState();
+}
+
+class _AppUpdateNotesPageState extends State<AppUpdateNotesPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Analitik: daftar catatan dibuka dari Akun (bloc melewati bila kosong).
+    context.read<AppUpdateBloc>().add(const AppUpdateWhatsNewOpened(UpdateActionSource.account));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +91,15 @@ class AppUpdateNotesPage extends StatelessWidget {
         label: texts.update,
         expand: true,
         loading: state.busy,
-        onPressed: state.busy ? null : () => bloc.add(const AppUpdateDownloadRequested()),
+        onPressed: state.busy
+            ? null
+            : () => bloc.add(const AppUpdateDownloadRequested(source: UpdateActionSource.account)),
       ),
       VersionStatus.downloaded => AppButton(
         key: const ValueKey('app-update-notes-install'),
         label: texts.install,
         expand: true,
-        onPressed: () => bloc.add(const AppUpdateInstallRequested()),
+        onPressed: () => bloc.add(const AppUpdateInstallRequested(source: UpdateActionSource.account)),
       ),
       _ => null,
     };

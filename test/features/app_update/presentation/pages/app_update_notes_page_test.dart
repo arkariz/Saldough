@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -94,6 +95,40 @@ void main() {
       lessThan(tester.getTopLeft(find.byKey(const ValueKey('app-update-notes-6-0'))).dy),
     );
   });
+
+  testWidgets(
+    'analitik: membuka halaman dengan catatan mencatat whats_new_viewed account; Perbarui bersumber account',
+    (
+      tester,
+    ) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      harness.notes.entries = {
+        (build: 7, patch: 0): const ReleaseNote(
+          build: 7,
+          patch: 0,
+          version: '0.6.0',
+          groups: [
+            NoteGroup(
+              category: NoteCategory.fixed,
+              notes: [LocalizedNote(id: 'A', en: 'A')],
+            ),
+          ],
+        ),
+      };
+      harness.set(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
+      await open(tester);
+      expect(events.where((e) => e.name == 'whats_new_viewed').single.parameters, {
+        'build': 7,
+        'patch': 0,
+        'source': 'account',
+      });
+      await tester.tap(find.byKey(const ValueKey('app-update-notes-update')));
+      await tester.pumpAndSettle();
+      expect(events.last.parameters, {'kind': 'store', 'action': 'update', 'source': 'account'});
+    },
+  );
 
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {
     harness.set(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));

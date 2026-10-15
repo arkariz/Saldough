@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/app_update/domain/entities/app_update_memory.dart';
 import 'package:saldough/features/app_update/domain/entities/app_version.dart';
 import 'package:saldough/features/app_update/domain/entities/release_note.dart';
@@ -43,6 +44,8 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
     on<AppUpdateDeferred>(_onDeferred);
     on<AppUpdatePatchAcknowledged>(_onPatchAcknowledged);
     on<AppUpdateWhatsNewSeen>(_onWhatsNewSeen);
+    on<AppUpdateBannerShown>(_onBannerShown);
+    on<AppUpdateWhatsNewOpened>(_onWhatsNewOpened);
     on<_AppUpdateStageChanged>(_onStageChanged);
     on<_AppUpdateNotesChanged>(_onNotesChanged);
   }
@@ -58,6 +61,8 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
   StreamSubscription<void>? _noteChanges;
   DateTime? _lastStoreCheck;
   bool _memoryLoaded = false;
+  int? _reportedPatch;
+  final _shownBanners = <UpdateAnnouncement>{};
 
   /// Menyusun state dari [snapshot], [memory], dan [notes]; memajukan versi
   /// terakhir dilihat bila lembar tidak diperlukan (pemasangan pertama, tanpa
@@ -87,6 +92,7 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
         case WhatsNewNothing():
           final advanced = mem.see(snap.version.build, snap.version.patch);
           if (advanced != mem) {
+            _reportUpdated(mem, advanced, snap.version);
             mem = advanced;
             unawaited(_memory.save(advanced));
           }
@@ -108,6 +114,30 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
       availableVersion: () => availableVersion,
       announcement: snap == null ? UpdateAnnouncement.none : pickAnnouncement(snapshot: snap, memory: mem, now: _now()),
     );
+  }
+
+  /// `app_updated` sekali saat versi terakhir dilihat maju karena versi
+  /// berubah; pemasangan pertama (belum ada versi sebelumnya) tidak dihitung.
+  void _reportUpdated(AppUpdateMemory before, AppUpdateMemory after, AppVersion running) {
+    final fromBuild = before.lastSeenBuild;
+    if (fromBuild == null) return;
+    AppAnalytics.log(
+      UpdateEvents.appUpdated(
+        kind: after.lastSeenBuild != fromBuild ? 'store' : 'patch',
+        fromBuild: fromBuild,
+        toBuild: running.build,
+        toPatch: running.patch,
+      ),
+    );
+  }
+
+  /// Nomor pembaruan kecil yang berjalan ke Analytics dan Crashlytics, sekali
+  /// tiap berubah (0 = tanpa tambalan).
+  void _reportPatch(int patch) {
+    if (_reportedPatch == patch) return;
+    _reportedPatch = patch;
+    AppAnalytics.setUserProperty(UpdateEvents.patchNumberKey, '$patch');
+    AppAnalytics.setDiagnostic(UpdateEvents.patchNumberKey, patch);
   }
 
   Future<ReleaseNotesSnapshot?> _loadNotes(AppVersion running, {required bool refresh}) async =>
@@ -150,6 +180,7 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
         } else {
           unawaited(_refreshNotes(snapshot.version));
         }
+        _reportPatch(snapshot.version.patch);
         emit(_compose(state, snapshot: snapshot, memory: memory, notes: notes));
         _watch();
     }
@@ -194,6 +225,7 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
 
   Future<void> _onDownloadRequested(AppUpdateDownloadRequested event, Emitter<AppUpdateState> emit) async {
     if (state.busy) return;
+    AppAnalytics.log(UpdateEvents.bannerAction(kind: 'store', action: 'update', source: event.source.name));
     emit(state.copyWith(busy: true));
     // Pengguna menolak atau gagal: tetap "tersedia", tanpa pesan galat.
     await _store.startDownload();
@@ -202,12 +234,14 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
 
   Future<void> _onInstallRequested(AppUpdateInstallRequested event, Emitter<AppUpdateState> emit) async {
     if (state.snapshot?.store.stage != StoreUpdateStage.downloaded) return;
+    AppAnalytics.log(UpdateEvents.bannerAction(kind: 'store', action: 'install', source: event.source.name));
     await _store.completeInstall();
   }
 
   Future<void> _onDeferred(AppUpdateDeferred event, Emitter<AppUpdateState> emit) async {
     final build = state.snapshot?.store.availableBuild;
     if (build == null) return;
+    AppAnalytics.log(UpdateEvents.bannerAction(kind: 'store', action: 'dismiss', source: 'home'));
     final memory = state.memory.defer(build, _now());
     emit(_compose(state, memory: memory));
     await _memory.save(memory);
@@ -217,6 +251,7 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
     final snapshot = state.snapshot;
     final ready = snapshot?.patch.ready;
     if (snapshot == null || ready == null) return;
+    AppAnalytics.log(UpdateEvents.bannerAction(kind: 'patch', action: 'dismiss', source: 'home'));
     final memory = state.memory.announce(snapshot.version.build, ready);
     emit(_compose(state, memory: memory));
     await _memory.save(memory);
@@ -226,8 +261,33 @@ final class AppUpdateBloc extends Bloc<AppUpdateEvent, AppUpdateState> {
     final version = state.snapshot?.version;
     if (version == null || state.whatsNew.isEmpty) return;
     final memory = state.memory.see(version.build, version.patch);
+    _reportUpdated(state.memory, memory, version);
     emit(_compose(state, memory: memory));
     await _memory.save(memory);
+  }
+
+  void _onBannerShown(AppUpdateBannerShown event, Emitter<AppUpdateState> emit) {
+    final (kind, stage) = switch (event.announcement) {
+      UpdateAnnouncement.none => (null, null),
+      UpdateAnnouncement.storeAvailable => ('store', 'available'),
+      UpdateAnnouncement.storeDownloading => ('store', 'downloading'),
+      UpdateAnnouncement.storeDownloaded => ('store', 'downloaded'),
+      UpdateAnnouncement.patchReady => ('patch', 'ready'),
+    };
+    if (kind == null || stage == null || !_shownBanners.add(event.announcement)) return;
+    AppAnalytics.log(UpdateEvents.bannerShown(kind: kind, stage: stage, hasVersion: state.availableVersion != null));
+  }
+
+  void _onWhatsNewOpened(AppUpdateWhatsNewOpened event, Emitter<AppUpdateState> emit) {
+    final shown = event.source == UpdateActionSource.home ? state.whatsNew : state.installedNotes;
+    if (shown.isEmpty) return;
+    AppAnalytics.log(
+      UpdateEvents.whatsNewViewed(
+        build: shown.first.build,
+        patch: shown.first.patch,
+        source: event.source == UpdateActionSource.home ? 'auto' : 'account',
+      ),
+    );
   }
 
   @override

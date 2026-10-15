@@ -17,16 +17,31 @@ final class AppUpdateChecked extends AppUpdateEvent {
   final bool force;
 }
 
+/// Dari mana sebuah tindakan pembaruan diketuk (analitik, APP_UPDATE §8).
+enum UpdateActionSource {
+  /// Banner di Beranda.
+  home,
+
+  /// Halaman Versi aplikasi di Akun.
+  account,
+}
+
 /// Perbarui diketuk: mulai unduhan (dialog Play bila perlu).
 final class AppUpdateDownloadRequested extends AppUpdateEvent {
   /// Membuat [AppUpdateDownloadRequested].
-  const AppUpdateDownloadRequested();
+  const AppUpdateDownloadRequested({this.source = UpdateActionSource.home});
+
+  /// Asal ketukan.
+  final UpdateActionSource source;
 }
 
 /// Pasang sekarang diketuk (B-7: satu-satunya jalan ke pemasangan).
 final class AppUpdateInstallRequested extends AppUpdateEvent {
   /// Membuat [AppUpdateInstallRequested].
-  const AppUpdateInstallRequested();
+  const AppUpdateInstallRequested({this.source = UpdateActionSource.home});
+
+  /// Asal ketukan.
+  final UpdateActionSource source;
 }
 
 /// Nanti diketuk: tunda build yang tersedia 7 hari (B-6).
@@ -45,6 +60,24 @@ final class AppUpdatePatchAcknowledged extends AppUpdateEvent {
 final class AppUpdateWhatsNewSeen extends AppUpdateEvent {
   /// Membuat [AppUpdateWhatsNewSeen].
   const AppUpdateWhatsNewSeen();
+}
+
+/// Banner pengumuman tampil di layar (analitik: sekali per keadaan per sesi).
+final class AppUpdateBannerShown extends AppUpdateEvent {
+  /// Membuat [AppUpdateBannerShown].
+  const AppUpdateBannerShown(this.announcement);
+
+  /// Pengumuman yang tampil.
+  final UpdateAnnouncement announcement;
+}
+
+/// Lembar atau daftar Apa yang baru dibuka (analitik).
+final class AppUpdateWhatsNewOpened extends AppUpdateEvent {
+  /// Membuat [AppUpdateWhatsNewOpened].
+  const AppUpdateWhatsNewOpened(this.source);
+
+  /// `home` = lembar otomatis, `account` = halaman Versi aplikasi.
+  final UpdateActionSource source;
 }
 
 /// Nilai catatan baru diaktifkan saat aplikasi terbuka.

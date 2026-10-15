@@ -105,6 +105,10 @@ class _AppUpdateBannerState extends State<AppUpdateBanner> with WidgetsBindingOb
           ),
         };
         if (banner == null) return const SizedBox.shrink();
+        // Analitik: bloc menyaring supaya sekali per keadaan per sesi.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!bloc.isClosed) bloc.add(AppUpdateBannerShown(state.announcement));
+        });
         return Padding(
           padding: const EdgeInsets.only(top: AppSpacing.space6),
           child: banner,

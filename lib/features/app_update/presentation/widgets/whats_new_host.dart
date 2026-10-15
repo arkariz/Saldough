@@ -65,6 +65,7 @@ class _WhatsNewHostState extends State<WhatsNewHost> {
     if (_tour?.isActive ?? false) return;
     if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
     _showing = true;
+    bloc.add(const AppUpdateWhatsNewOpened(UpdateActionSource.home));
     unawaited(
       showAppSheet<void>(
         context,

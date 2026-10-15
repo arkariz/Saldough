@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 /// Satu peristiwa analitik kustom (ADR-023). Parameternya tidak pernah
@@ -31,10 +32,50 @@ abstract final class AppAnalytics {
   @visibleForTesting
   static void Function(AnalyticsEvent event)? debugSink;
 
+  /// Penampung pengganti untuk uji properti pengguna; `null` = Firebase.
+  @visibleForTesting
+  static void Function(String name, String value)? debugUserPropertySink;
+
+  /// Penampung pengganti untuk uji kunci diagnostik; `null` = Crashlytics.
+  @visibleForTesting
+  static void Function(String key, Object value)? debugDiagnosticSink;
+
+  /// Memasang properti pengguna Analytics ([name] `snake_case`, [value]
+  /// String); diam bila Firebase belum siap.
+  static void setUserProperty(String name, String value) {
+    if (debugUserPropertySink case final sink?) return sink(name, value);
+    unawaited(_setUserProperty(name, value));
+  }
+
+  /// Memasang kunci kustom Crashlytics supaya laporan galat bisa dipilah
+  /// (mis. nomor pembaruan kecil); diam bila Firebase belum siap.
+  static void setDiagnostic(String key, Object value) {
+    if (debugDiagnosticSink case final sink?) return sink(key, value);
+    unawaited(_setDiagnostic(key, value));
+  }
+
   /// Mengirim [event].
   static void log(AnalyticsEvent event) {
     if (debugSink case final sink?) return sink(event);
     unawaited(_send(event));
+  }
+
+  static Future<void> _setUserProperty(String name, String value) async {
+    try {
+      if (Firebase.apps.isEmpty) return;
+      await FirebaseAnalytics.instance.setUserProperty(name: name, value: value);
+    } on Object {
+      // Analitik tidak boleh menggagalkan apa pun.
+    }
+  }
+
+  static Future<void> _setDiagnostic(String key, Object value) async {
+    try {
+      if (Firebase.apps.isEmpty) return;
+      await FirebaseCrashlytics.instance.setCustomKey(key, value);
+    } on Object {
+      // Diagnostik tidak boleh menggagalkan apa pun.
+    }
   }
 
   static Future<void> _send(AnalyticsEvent event) async {
@@ -126,4 +167,46 @@ abstract final class PlanEvents {
   /// "Selesai meninjau" dengan jumlah langkah tercentang.
   static AnalyticsEvent monthReviewCompleted(int stepsDone) =>
       AnalyticsEvent('month_review_completed', {'steps_done': stepsDone});
+}
+
+/// Peristiwa pengumuman pembaruan (APP_UPDATE §8, ADR-039), tanpa data
+/// pribadi atau keuangan.
+abstract final class UpdateEvents {
+  UpdateEvents._();
+
+  /// Nama properti pengguna dan kunci Crashlytics nomor pembaruan kecil
+  /// yang berjalan (0 = tanpa tambalan).
+  static const patchNumberKey = 'patch_number';
+
+  /// Banner tampil (sekali per keadaan per sesi). [kind] `store` atau `patch`;
+  /// [stage] `available`, `downloading`, `downloaded`, atau `ready`;
+  /// [hasVersion] = chip versi ikut tampil (ukuran keandalan Remote Config).
+  static AnalyticsEvent bannerShown({required String kind, required String stage, required bool hasVersion}) =>
+      AnalyticsEvent('update_banner_shown', {
+        'kind': kind,
+        'stage': stage,
+        'has_version': hasVersion ? 'true' : 'false',
+      });
+
+  /// Ketukan Perbarui / Pasang sekarang / Nanti (×) / Oke. [action] `update`,
+  /// `install`, atau `dismiss`; [source] `home` atau `account`.
+  static AnalyticsEvent bannerAction({required String kind, required String action, required String source}) =>
+      AnalyticsEvent('update_banner_action', {'kind': kind, 'action': action, 'source': source});
+
+  /// Pembukaan pertama sesudah versi berubah (bukan pemasangan pertama).
+  static AnalyticsEvent appUpdated({
+    required String kind,
+    required int fromBuild,
+    required int toBuild,
+    required int toPatch,
+  }) => AnalyticsEvent('app_updated', {
+    'kind': kind,
+    'from_build': fromBuild,
+    'to_build': toBuild,
+    'to_patch': toPatch,
+  });
+
+  /// Lembar atau daftar Apa yang baru dibuka; [source] `auto` atau `account`.
+  static AnalyticsEvent whatsNewViewed({required int build, required int patch, required String source}) =>
+      AnalyticsEvent('whats_new_viewed', {'build': build, 'patch': patch, 'source': source});
 }

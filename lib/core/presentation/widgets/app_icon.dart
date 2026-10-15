@@ -267,6 +267,9 @@ enum IconKey {
   /// Peringatan.
   warning,
 
+  /// Galat netral (lingkaran bertanda seru), mis. Analisis gagal dimuat.
+  error,
+
   /// Selesai, tidak ada yang tersisa (keadaan kosong kotak masuk).
   taskAlt,
 
@@ -398,6 +401,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.inbox: Symbols.inbox_rounded,
   IconKey.schedule: Symbols.schedule_rounded,
   IconKey.warning: Symbols.warning_rounded,
+  IconKey.error: Symbols.error_rounded,
   IconKey.taskAlt: Symbols.task_alt_rounded,
   IconKey.label: Symbols.label_rounded,
   IconKey.notifications: Symbols.notifications_rounded,

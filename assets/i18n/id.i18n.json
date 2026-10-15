@@ -222,7 +222,8 @@
     "detailFreelanceNote": "Pemasukan ini dicatat dari pembayaran freelance. Untuk mengubahnya, batalkan penerimaannya di Freelance.",
     "makeRecurringAction": "Jadikan rutin",
     "previousMonth": "Bulan sebelumnya",
-    "nextMonth": "Bulan berikutnya"
+    "nextMonth": "Bulan berikutnya",
+    "listSegment": "Daftar"
   },
   "wallet": {
     "subtitle": "Total saldo semua dompet aktif",
@@ -587,7 +588,8 @@
     "freelanceRowTitle": "Belum diterima",
     "freelanceRowSub": "$count tagihan, perkiraan $date",
     "incomeStat": "Pemasukan",
-    "expenseStat": "Pengeluaran"
+    "expenseStat": "Pengeluaran",
+    "analysisDoor": "Analisis $period: pemasukan dan pengeluaran per kategori"
   },
   "onboarding": {
     "skipAction": "Lewati",
@@ -1228,5 +1230,31 @@
       "title": "Diagnostik pembaruan",
       "copy": "Salin"
     }
+  },
+  "analysis": {
+    "segment": "Analisis",
+    "previousPeriod": "Periode sebelumnya",
+    "nextPeriod": "Periode berikutnya",
+    "uncategorized": "Tanpa kategori",
+    "freelanceGroup": "Freelance",
+    "others": "Lainnya ($n kategori)",
+    "archived": "diarsipkan",
+    "transferTitle": "Dipindahkan antardompet",
+    "transferSub": "Tidak mengurangi total uangmu",
+    "transferIn": "Transfer masuk",
+    "transferOut": "Transfer keluar",
+    "kind": {
+      "expense": "Pengeluaran",
+      "income": "Pemasukan"
+    },
+    "empty": {
+      "title": "Belum ada yang bisa dianalisis",
+      "body": "Catat transaksi dan lihat ke mana uangmu pergi.",
+      "cta": "Catat transaksi"
+    },
+    "emptyMonth": "Belum ada pengeluaran di $period.",
+    "error": "Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.",
+    "donutSemantics": "$kind $period: $parts",
+    "rowSemantics": "$name, $percent, $amount"
   }
 }

@@ -59,6 +59,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
 	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
+	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
 }
 
 // Path: app
@@ -240,6 +241,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get makeRecurringAction => 'Make recurring';
 	@override String get previousMonth => 'Previous month';
 	@override String get nextMonth => 'Next month';
+	@override String get listSegment => 'List';
 }
 
 // Path: wallet
@@ -633,6 +635,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String freelanceRowSub({required Object count, required Object date}) => '${count} invoices, expected ${date}';
 	@override String get incomeStat => 'Income';
 	@override String get expenseStat => 'Expenses';
+	@override String analysisDoor({required Object period}) => 'Analysis ${period}: income and expenses by category';
 }
 
 // Path: onboarding
@@ -1279,6 +1282,32 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	@override late final _Translations$appUpdate$diagnostic$en diagnostic = _Translations$appUpdate$diagnostic$en._(_root);
 }
 
+// Path: analysis
+class _Translations$analysis$en extends Translations$analysis$id {
+	_Translations$analysis$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get segment => 'Analysis';
+	@override String get previousPeriod => 'Previous period';
+	@override String get nextPeriod => 'Next period';
+	@override String get uncategorized => 'Uncategorized';
+	@override String get freelanceGroup => 'Freelance';
+	@override String others({required Object n}) => 'Others (${n} categories)';
+	@override String get archived => 'archived';
+	@override String get transferTitle => 'Moved between wallets';
+	@override String get transferSub => 'Doesn\'t change your total';
+	@override String get transferIn => 'Transfers in';
+	@override String get transferOut => 'Transfers out';
+	@override late final _Translations$analysis$kind$en kind = _Translations$analysis$kind$en._(_root);
+	@override late final _Translations$analysis$empty$en empty = _Translations$analysis$empty$en._(_root);
+	@override String emptyMonth({required Object period}) => 'No expenses in ${period} yet.';
+	@override String get error => 'Couldn\'t load analysis. Pull down to try again.';
+	@override String donutSemantics({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}';
+	@override String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+}
+
 // Path: record.draftIssue
 class _Translations$record$draftIssue$en extends Translations$record$draftIssue$id {
 	_Translations$record$draftIssue$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1539,6 +1568,29 @@ class _Translations$appUpdate$diagnostic$en extends Translations$appUpdate$diagn
 	@override String get copy => 'Copy';
 }
 
+// Path: analysis.kind
+class _Translations$analysis$kind$en extends Translations$analysis$kind$id {
+	_Translations$analysis$kind$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get expense => 'Expenses';
+	@override String get income => 'Income';
+}
+
+// Path: analysis.empty
+class _Translations$analysis$empty$en extends Translations$analysis$empty$id {
+	_Translations$analysis$empty$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nothing to analyze yet';
+	@override String get body => 'Record transactions to see where your money goes.';
+	@override String get cta => 'Record a transaction';
+}
+
 // Path: record.voice.failure
 class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
 	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1767,6 +1819,7 @@ extension on TranslationsEn {
 			'transaction.makeRecurringAction' => 'Make recurring',
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
+			'transaction.listSegment' => 'List',
 			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
 			'wallet.listHeading' => 'Active wallets',
@@ -2073,9 +2126,9 @@ extension on TranslationsEn {
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
-			'freelance.entryAddShortAction' => 'Record work hours',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.entryAddShortAction' => 'Record work hours',
 			'freelance.filterAll' => 'All',
 			'freelance.noDeductions' => 'No deductions',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}',
@@ -2126,6 +2179,7 @@ extension on TranslationsEn {
 			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} invoices, expected ${date}',
 			'home.incomeStat' => 'Income',
 			'home.expenseStat' => 'Expenses',
+			'home.analysisDoor' => ({required Object period}) => 'Analysis ${period}: income and expenses by category',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -2586,10 +2640,10 @@ extension on TranslationsEn {
 			'recurring.idleBody' => 'The last two were skipped or not seen.',
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
-			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
-			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
+			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			'recurring.priceUpUpdate' => 'Update item',
 			'recurring.priceUpKeep' => 'Keep amount',
 			'recurring.suggestTitle' => 'Looks repeating',
@@ -2718,6 +2772,26 @@ extension on TranslationsEn {
 			'appUpdate.category.security' => 'Security',
 			'appUpdate.diagnostic.title' => 'Update diagnostics',
 			'appUpdate.diagnostic.copy' => 'Copy',
+			'analysis.segment' => 'Analysis',
+			'analysis.previousPeriod' => 'Previous period',
+			'analysis.nextPeriod' => 'Next period',
+			'analysis.uncategorized' => 'Uncategorized',
+			'analysis.freelanceGroup' => 'Freelance',
+			'analysis.others' => ({required Object n}) => 'Others (${n} categories)',
+			'analysis.archived' => 'archived',
+			'analysis.transferTitle' => 'Moved between wallets',
+			'analysis.transferSub' => 'Doesn\'t change your total',
+			'analysis.transferIn' => 'Transfers in',
+			'analysis.transferOut' => 'Transfers out',
+			'analysis.kind.expense' => 'Expenses',
+			'analysis.kind.income' => 'Income',
+			'analysis.empty.title' => 'Nothing to analyze yet',
+			'analysis.empty.body' => 'Record transactions to see where your money goes.',
+			'analysis.empty.cta' => 'Record a transaction',
+			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
+			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			_ => null,
 		};
 	}

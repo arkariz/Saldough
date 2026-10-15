@@ -9,6 +9,7 @@ import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
+import 'package:saldough/features/analysis/presentation/widgets/analysis_segment.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_banner.dart';
 import 'package:saldough/features/app_update/presentation/widgets/whats_new_host.dart';
 import 'package:saldough/features/budget/di/budget_scope.dart';
@@ -33,6 +34,7 @@ import 'package:saldough/features/recurring/presentation/pages/recurring_page.da
 import 'package:saldough/features/recurring/presentation/widgets/recurring_pending.dart';
 import 'package:saldough/features/recurring/presentation/widgets/recurring_starter_chips.dart';
 import 'package:saldough/features/transaction/di/transaction_scope.dart';
+import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
@@ -164,7 +166,13 @@ class _AppShellPageState extends State<AppShellPage> {
           onTap: () => _showPlan(context, PlanSegment.thisMonth),
         ),
       ),
-      TransactionListPage(notice: CaptureInboxBanner(container: parentContainer)),
+      TransactionListPage(
+        notice: CaptureInboxBanner(container: parentContainer),
+        analysis: AnalysisSegment(container: parentContainer),
+        segmentRepository: parentContainer.isRegistered<HistorySegmentRepository>()
+            ? parentContainer<HistorySegmentRepository>()
+            : null,
+      ),
       PlanPage(
         selected: _planSegment,
         onChanged: (segment) => setState(() => _planSegment = segment),

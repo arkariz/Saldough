@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -7,6 +9,7 @@ import 'package:saldough/features/app_update/presentation/bloc/app_update_bloc.d
 import 'package:saldough/features/app_update/presentation/bloc/app_update_state.dart';
 import 'package:saldough/features/app_update/presentation/widgets/app_update_labels.dart';
 import 'package:saldough/features/app_update/presentation/widgets/release_notes_view.dart';
+import 'package:saldough/features/app_update/presentation/widgets/update_diagnostics.dart';
 import 'package:state_management/state_management.dart';
 
 /// Halaman "Versi aplikasi" dari baris di Akun (APP_UPDATE F4, §7; prototipe
@@ -46,7 +49,20 @@ class _AppUpdateNotesPageState extends State<AppUpdateNotesPage> {
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.space4),
               children: [
-                _VersionHeader(state: state),
+                // Tekan lama: panel diagnostik (jawaban mentah Play dan keputusan
+                // pengumuman) untuk menelusuri banner yang tidak muncul.
+                GestureDetector(
+                  key: const ValueKey('app-update-notes-header-hold'),
+                  behavior: HitTestBehavior.opaque,
+                  onLongPress: () => unawaited(
+                    showAppSheet<void>(
+                      context,
+                      isScrollControlled: true,
+                      builder: (_) => UpdateDiagnosticsSheet(text: buildUpdateDiagnostics(state)),
+                    ),
+                  ),
+                  child: _VersionHeader(state: state),
+                ),
                 const SizedBox(height: AppSpacing.space6),
                 AppSectionHeader(texts.whatsNew.titlePatch),
                 if (state.installedNotes.isEmpty)

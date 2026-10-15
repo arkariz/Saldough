@@ -1202,6 +1202,10 @@
       "faster": "Faster",
       "fixed": "Fixes",
       "security": "Security"
+    },
+    "diagnostic": {
+      "title": "Update diagnostics",
+      "copy": "Copy"
     }
   }
 }

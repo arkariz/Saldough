@@ -1252,6 +1252,7 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	@override late final _Translations$appUpdate$action$en action = _Translations$appUpdate$action$en._(_root);
 	@override late final _Translations$appUpdate$whatsNew$en whatsNew = _Translations$appUpdate$whatsNew$en._(_root);
 	@override late final _Translations$appUpdate$category$en category = _Translations$appUpdate$category$en._(_root);
+	@override late final _Translations$appUpdate$diagnostic$en diagnostic = _Translations$appUpdate$diagnostic$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1501,6 +1502,17 @@ class _Translations$appUpdate$category$en extends Translations$appUpdate$categor
 	@override String get faster => 'Faster';
 	@override String get fixed => 'Fixes';
 	@override String get security => 'Security';
+}
+
+// Path: appUpdate.diagnostic
+class _Translations$appUpdate$diagnostic$en extends Translations$appUpdate$diagnostic$id {
+	_Translations$appUpdate$diagnostic$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Update diagnostics';
+	@override String get copy => 'Copy';
 }
 
 // Path: record.voice.failure
@@ -2656,6 +2668,8 @@ extension on TranslationsEn {
 			'appUpdate.category.faster' => 'Faster',
 			'appUpdate.category.fixed' => 'Fixes',
 			'appUpdate.category.security' => 'Security',
+			'appUpdate.diagnostic.title' => 'Update diagnostics',
+			'appUpdate.diagnostic.copy' => 'Copy',
 			_ => null,
 		};
 	}

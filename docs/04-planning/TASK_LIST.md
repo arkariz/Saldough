@@ -3695,6 +3695,11 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       kebijakan privasi di repo `tanukonomy-web` (diisi pemilik). Pemilik
       menyetujui usulan baris dan jawaban kolom dibagikan (15 Okt 2026) dan
       melaporkan formulir serta kebijakan privasi selesai (15 Okt 2026).
+      Alat bantu uji (15 Okt 2026): tekan lama kartu kepala di halaman Versi
+      aplikasi membuka panel diagnostik (jawaban mentah Play: availability,
+      installStatus, flexibleAllowed, versionCode, priority; Shorebird; alasan
+      gagal; keputusan pengumuman) dengan tombol Salin; berguna untuk
+      menelusuri banner yang tidak muncul di build dari Play.
 - [ ] **T-20.8** Verifikasi di perangkat lewat jalur tes Play.
       Pasang build N dari jalur tes, publikasikan N+1: banner, Nanti,
       Perbarui, Pasang sekarang, Apa yang baru, data utuh (B-1), dan

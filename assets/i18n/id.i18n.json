@@ -1199,6 +1199,10 @@
       "faster": "Lebih cepat",
       "fixed": "Perbaikan",
       "security": "Keamanan"
+    },
+    "diagnostic": {
+      "title": "Diagnostik pembaruan",
+      "copy": "Salin"
     }
   }
 }

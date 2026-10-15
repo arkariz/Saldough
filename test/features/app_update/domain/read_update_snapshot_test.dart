@@ -49,6 +49,14 @@ void main() {
     expect(s.patch.ready, 2);
   });
 
+  test('Play gagal: alasannya dibawa sebagai diagnostik (tidak ke antarmuka)', () async {
+    when(() => store.check()).thenAnswer((_) async => left(failure));
+    final s = await snapshot();
+    expect(s.store.stage, StoreUpdateStage.unknown);
+    expect(s.store.diagnostic, contains('gagal dicek'));
+    expect(s.store.diagnostic, contains('gagal'));
+  });
+
   test('Shorebird gagal: tanpa tambalan', () async {
     when(() => patch.read()).thenAnswer((_) async => left(failure));
     final s = await snapshot();

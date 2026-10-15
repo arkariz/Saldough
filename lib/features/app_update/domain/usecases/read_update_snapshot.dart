@@ -22,7 +22,11 @@ final class ReadUpdateSnapshot {
     final version = installed.getOrElse((_) => throw StateError('Left'));
     final patch = (await _patch.read()).getOrElse((_) => PatchState.none);
     final store = checkStore
-        ? (await _store.check()).getOrElse((_) => StoreUpdateInfo.unknown)
+        ? (await _store.check()).fold(
+            (failure) =>
+                StoreUpdateInfo(stage: StoreUpdateStage.unknown, diagnostic: 'gagal dicek: ${failure.message}'),
+            (info) => info,
+          )
         : StoreUpdateInfo.unknown;
     return right(
       UpdateSnapshot(

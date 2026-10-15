@@ -130,6 +130,38 @@ void main() {
     },
   );
 
+  testWidgets('tekan lama kartu kepala: panel diagnostik berisi jawaban mentah Play dan keputusan pengumuman', (
+    tester,
+  ) async {
+    harness.set(
+      play: const StoreUpdateInfo(
+        stage: StoreUpdateStage.available,
+        availableBuild: 8,
+        diagnostic: 'availability=updateAvailable\nflexibleAllowed=true',
+      ),
+    );
+    await open(tester);
+    await tester.longPress(find.byKey(const ValueKey('app-update-notes-header-hold')));
+    await tester.pumpAndSettle();
+    expect(find.text(t.appUpdate.diagnostic.title), findsOneWidget);
+    final text = tester.widget<SelectableText>(find.byKey(const ValueKey('update-diagnostics-text'))).data!;
+    expect(text, contains('availability=updateAvailable'));
+    expect(text, contains('flexibleAllowed=true'));
+    expect(text, contains('Play stage: available, build ditawarkan: 8'));
+    expect(text, contains('pengumuman: storeAvailable'));
+    expect(text, contains('versi: 0.6.0 (build 7, patch 0)'));
+  });
+
+  testWidgets('diagnostik: Play gagal tampil sebagai alasan, bukan banner', (tester) async {
+    harness.set(play: StoreUpdateInfo.unknown);
+    await open(tester);
+    await tester.longPress(find.byKey(const ValueKey('app-update-notes-header-hold')));
+    await tester.pumpAndSettle();
+    final text = tester.widget<SelectableText>(find.byKey(const ValueKey('update-diagnostics-text'))).data!;
+    expect(text, contains('tidak dicek / tanpa jawaban'));
+    expect(text, contains('pengumuman: none'));
+  });
+
   testWidgets('tersedia: Perbarui memulai unduhan', (tester) async {
     harness.set(play: const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 8));
     await open(tester);

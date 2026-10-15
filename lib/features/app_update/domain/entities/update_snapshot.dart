@@ -23,7 +23,7 @@ enum StoreUpdateStage {
 /// Hasil pengecekan Play: keadaan dan nomor build yang tersedia.
 final class StoreUpdateInfo extends Equatable {
   /// Membuat [StoreUpdateInfo].
-  const StoreUpdateInfo({required this.stage, this.availableBuild});
+  const StoreUpdateInfo({required this.stage, this.availableBuild, this.diagnostic});
 
   /// Tidak diketahui.
   static const unknown = StoreUpdateInfo(stage: StoreUpdateStage.unknown);
@@ -33,6 +33,10 @@ final class StoreUpdateInfo extends Equatable {
 
   /// Nomor build versi baru; `null` bila tidak ada atau tidak diketahui.
   final int? availableBuild;
+
+  /// Jawaban mentah Play (atau alasan gagal) untuk panel diagnostik; tidak
+  /// ikut kesamaan nilai dan tidak pernah tampil di antarmuka biasa.
+  final String? diagnostic;
 
   @override
   List<Object?> get props => [stage, availableBuild];

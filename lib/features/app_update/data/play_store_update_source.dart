@@ -17,12 +17,21 @@ final class PlayStoreUpdateSource with RepositoryGuard implements StoreUpdateSou
   /// Memetakan hasil Play ke [StoreUpdateInfo]. Pembaruan yang tidak boleh
   /// fleksibel dianggap tidak diketahui (diam).
   static StoreUpdateInfo map(play.AppUpdateInfo info) {
+    final detail = describe(info);
     switch (info.installStatus) {
       case play.InstallStatus.downloaded:
-        return StoreUpdateInfo(stage: StoreUpdateStage.downloaded, availableBuild: info.availableVersionCode);
+        return StoreUpdateInfo(
+          stage: StoreUpdateStage.downloaded,
+          availableBuild: info.availableVersionCode,
+          diagnostic: detail,
+        );
       case play.InstallStatus.downloading:
       case play.InstallStatus.pending:
-        return StoreUpdateInfo(stage: StoreUpdateStage.downloading, availableBuild: info.availableVersionCode);
+        return StoreUpdateInfo(
+          stage: StoreUpdateStage.downloading,
+          availableBuild: info.availableVersionCode,
+          diagnostic: detail,
+        );
       case play.InstallStatus.unknown:
       case play.InstallStatus.installing:
       case play.InstallStatus.installed:
@@ -34,11 +43,22 @@ final class PlayStoreUpdateSource with RepositoryGuard implements StoreUpdateSou
       play.UpdateAvailability.updateAvailable when info.flexibleUpdateAllowed => StoreUpdateInfo(
         stage: StoreUpdateStage.available,
         availableBuild: info.availableVersionCode,
+        diagnostic: detail,
       ),
-      play.UpdateAvailability.updateNotAvailable => const StoreUpdateInfo(stage: StoreUpdateStage.none),
-      _ => StoreUpdateInfo.unknown,
+      play.UpdateAvailability.updateNotAvailable => StoreUpdateInfo(stage: StoreUpdateStage.none, diagnostic: detail),
+      _ => StoreUpdateInfo(stage: StoreUpdateStage.unknown, diagnostic: detail),
     };
   }
+
+  /// Jawaban mentah Play, satu bidang per baris, untuk panel diagnostik.
+  static String describe(play.AppUpdateInfo info) =>
+      'availability=${info.updateAvailability.name}\n'
+      'installStatus=${info.installStatus.name}\n'
+      'flexibleAllowed=${info.flexibleUpdateAllowed}\n'
+      'immediateAllowed=${info.immediateUpdateAllowed}\n'
+      'availableVersionCode=${info.availableVersionCode}\n'
+      'updatePriority=${info.updatePriority}\n'
+      'stalenessDays=${info.clientVersionStalenessDays}';
 
   /// Memetakan status pemasangan di aliran Play; `null` = tidak mengubah apa-apa.
   static StoreUpdateStage? mapStatus(play.InstallStatus status) => switch (status) {

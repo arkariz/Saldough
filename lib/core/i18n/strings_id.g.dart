@@ -3201,6 +3201,7 @@ class Translations$appUpdate$id {
 	late final Translations$appUpdate$action$id action = Translations$appUpdate$action$id.internal(_root);
 	late final Translations$appUpdate$whatsNew$id whatsNew = Translations$appUpdate$whatsNew$id.internal(_root);
 	late final Translations$appUpdate$category$id category = Translations$appUpdate$category$id.internal(_root);
+	late final Translations$appUpdate$diagnostic$id diagnostic = Translations$appUpdate$diagnostic$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3713,6 +3714,21 @@ class Translations$appUpdate$category$id {
 
 	/// id: 'Keamanan'
 	String get security => 'Keamanan';
+}
+
+// Path: appUpdate.diagnostic
+class Translations$appUpdate$diagnostic$id {
+	Translations$appUpdate$diagnostic$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Diagnostik pembaruan'
+	String get title => 'Diagnostik pembaruan';
+
+	/// id: 'Salin'
+	String get copy => 'Salin';
 }
 
 // Path: record.voice.failure
@@ -4880,6 +4896,8 @@ extension on Translations {
 			'appUpdate.category.faster' => 'Lebih cepat',
 			'appUpdate.category.fixed' => 'Perbaikan',
 			'appUpdate.category.security' => 'Keamanan',
+			'appUpdate.diagnostic.title' => 'Diagnostik pembaruan',
+			'appUpdate.diagnostic.copy' => 'Salin',
 			_ => null,
 		};
 	}

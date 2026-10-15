@@ -64,4 +64,19 @@ void main() {
     expect(PlayStoreUpdateSource.mapStatus(play.InstallStatus.canceled), StoreUpdateStage.available);
     expect(PlayStoreUpdateSource.mapStatus(play.InstallStatus.installing), isNull);
   });
+
+  test('diagnostik memuat jawaban mentah Play di setiap hasil, tanpa mengubah kesamaan nilai', () {
+    final available = PlayStoreUpdateSource.map(info());
+    expect(available.diagnostic, contains('availability=updateAvailable'));
+    expect(available.diagnostic, contains('flexibleAllowed=true'));
+    expect(available.diagnostic, contains('availableVersionCode=7'));
+    expect(available, const StoreUpdateInfo(stage: StoreUpdateStage.available, availableBuild: 7));
+
+    final notFlexible = PlayStoreUpdateSource.map(info(flexible: false));
+    expect(notFlexible.stage, StoreUpdateStage.unknown);
+    expect(notFlexible.diagnostic, contains('flexibleAllowed=false'));
+
+    final none = PlayStoreUpdateSource.map(info(availability: play.UpdateAvailability.updateNotAvailable, code: null));
+    expect(none.diagnostic, contains('availability=updateNotAvailable'));
+  });
 }

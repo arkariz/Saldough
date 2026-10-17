@@ -4225,6 +4225,40 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
       jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-ANL-001–FR-ANL-005.
+      **Hasil QA 17 Okt 2026 (sementara, sesi berlanjut)** — rencana uji
+      [artifact](https://claude.ai/artifact/5qMzrxDqnFpgBNSn1PWmLn) Bagian 4.
+      Emulator Pixel 7a API 35 (`emulator-5554`), APK debug dari `2e9b166`
+      (PR #51, `claude/analisis-fase-19`, `minSdk = 23`), data kosong
+      (`pm clear`), jam 10 Okt 2026, awal bulan tanggal 1. Analitik dibaca
+      dari logcat `FA-SVC`, bukan DebugView. Data awal §10 dicatat lewat
+      CATAT dan Freelance; selisih nama: Makan = "Makan & Minum", Belanja =
+      "Belanja Harian" (bawaan); Cicilan, Tempat tinggal, Sedekah, Langganan
+      kategori buatan pengguna; tanpa kategori Rp120.000 tanggal 22 Sep;
+      Freelance: proyek Klien A Rp72.500/jam, pajak 2,5%, 37 jam, tagihan
+      diterima 28 Sep Rp2.615.438 ke BCA; transfer BCA → Tabungan
+      Rp1.000.000 26 Sep tertaut pos transfer "Tabungan" anggaran September
+      (BCA, 1 – 30 Sep, bukan rutin). Total saldo sesudah data awal
+      Rp11.364.738 (BCA Rp10.364.738, Tabungan Rp1.000.000) = hitungan
+      tangan.
+      - A1 Lulus: September Pengeluaran Rp11.420.700; Belanja Harian 27%,
+        Cicilan 26%, Tempat tinggal 17%, Makan & Minum 11%, Sedekah 7%,
+        "Lainnya (3 kategori)" Rp1.373.200 12%, Tanpa kategori Rp120.000 1%
+        (dipilih → tombol Beri kategori); "Dipindahkan antardompet
+        Rp1.000.000 · Tidak mengurangi total uangmu" di luar total.
+      - A2 Lulus: satu sorotan "Makan & Minum Rp295.000 lebih tinggi dari
+        rata-rata 3 bulan"; Belanja tidak disorot; Cicilan dipilih →
+        "26% dari pengeluaran" + "baru bulan ini", tanpa baris selisih.
+      - A5 sebagian: tren hanya Jun–Sep; pengeluaran Rp3.600.000,
+        Rp3.800.000, Rp3.910.000, Rp11.420.700; selisih Jun–Agt negatif;
+        September pemasukan Rp14.615.438, selisih +Rp3.194.738. Ketuk kolom
+        belum diuji.
+      - A14 sebagian (pengguna baru): tur Riwayat 1/4 dimulai `txnAnalysisSegment`;
+        tur `analysis` di Agustus 2 langkah (kategori, tren, tanpa Tanpa
+        kategori); di September langkah Tanpa kategori 1/1 baru muncul
+        saat barisnya tampil. Skenario pengguna lama belum.
+      - B1 sebagian: Analisis terbuka di Agustus yang sebelumnya dipilih di
+        Daftar.
+      - Belum: A3, A4, A6–A13, A15, B2–B5.
 
 ## Fase 20: Pengumuman pembaruan
 

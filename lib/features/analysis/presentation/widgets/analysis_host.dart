@@ -10,7 +10,12 @@ import 'package:state_management/state_management.dart';
 /// dipakai segmen di Riwayat maupun halaman rute penuh.
 class AnalysisHost extends StatelessWidget {
   /// Membuat [AnalysisHost]. [periodStart] `null` = periode berjalan.
-  const AnalysisHost({required this.container, required this.child, this.periodStart, super.key});
+  const AnalysisHost({
+    required this.container,
+    required this.child,
+    this.periodStart,
+    super.key,
+  });
 
   /// Kontainer induk (akar komposisi).
   final GetIt container;
@@ -30,7 +35,10 @@ class AnalysisHost extends StatelessWidget {
         return BlocProvider.value(
           value: bloc,
           child: EffectListener<AnalysisBloc, AnalysisState>(
-            child: RunOnce(action: () => bloc.add(AnalysisStarted(periodStart: periodStart)), child: child),
+            child: RunOnce(
+              action: () => bloc.add(AnalysisStarted(periodStart: periodStart)),
+              child: child,
+            ),
           ),
         );
       },

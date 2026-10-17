@@ -12,10 +12,24 @@ void main() {
   Category? categoryOf(String id) => null;
 
   var next = 0;
-  ExpenseTransaction spend(DateTime date, int rupiah, {String wallet = 'bca'}) =>
-      ExpenseTransaction(id: 'e${next++}', date: date, amount: rp(rupiah), note: '', walletId: wallet);
-  IncomeTransaction earn(DateTime date, int rupiah, {String wallet = 'bca'}) =>
-      IncomeTransaction(id: 'i${next++}', date: date, amount: rp(rupiah), note: '', walletId: wallet);
+  ExpenseTransaction spend(
+    DateTime date,
+    int rupiah, {
+    String wallet = 'bca',
+  }) => ExpenseTransaction(
+    id: 'e${next++}',
+    date: date,
+    amount: rp(rupiah),
+    note: '',
+    walletId: wallet,
+  );
+  IncomeTransaction earn(DateTime date, int rupiah, {String wallet = 'bca'}) => IncomeTransaction(
+    id: 'i${next++}',
+    date: date,
+    amount: rp(rupiah),
+    note: '',
+    walletId: wallet,
+  );
 
   group('trendPeriods', () {
     test('enam periode berakhir di periode yang dilihat, tertua dulu', () {
@@ -40,7 +54,12 @@ void main() {
         schedule: schedule,
         earliestStart: DateTime(2026, 6),
       );
-      expect(periods.map((p) => p.start), [DateTime(2026, 6), DateTime(2026, 7), DateTime(2026, 8), DateTime(2026, 9)]);
+      expect(periods.map((p) => p.start), [
+        DateTime(2026, 6),
+        DateTime(2026, 7),
+        DateTime(2026, 8),
+        DateTime(2026, 9),
+      ]);
     });
 
     test('periode tunggal bila yang dilihat bulan pertama pencatatan', () {
@@ -53,7 +72,10 @@ void main() {
     });
 
     test('periode peralihan ikut, dengan keterangan panjangnya', () {
-      final changed = schedule.changedOn(DateTime(2026, 10, 10), const FinancialMonthStart.day(25));
+      final changed = schedule.changedOn(
+        DateTime(2026, 10, 10),
+        const FinancialMonthStart.day(25),
+      );
       final periods = trendPeriods(
         period: changed.periodOf(DateTime(2026, 11)),
         schedule: changed,
@@ -80,19 +102,35 @@ void main() {
         toWalletId: 'tabungan',
       ),
     ];
-    final periods = [DateTime(2026, 8), DateTime(2026, 9)].map(schedule.periodOf).toList();
+    final periods = [
+      DateTime(2026, 8),
+      DateTime(2026, 9),
+    ].map(schedule.periodOf).toList();
 
-    test('pemasukan dan pengeluaran per periode; transfer tidak dihitung; selisih = pemasukan − pengeluaran', () {
-      final trend = buildTrend(transactions: data, periods: periods, today: DateTime(2026, 10, 10), categoryOf: categoryOf);
-      expect(trend.map((p) => p.income), [rp(12000000), rp(14000000)]);
-      expect(trend.map((p) => p.expense), [rp(8000000), rp(9100000)]);
-      expect(trend.map((p) => p.net), [rp(4000000), rp(4900000)]);
-      expect(trend.any((p) => p.isRunning), isFalse);
-    });
+    test(
+      'pemasukan dan pengeluaran per periode; transfer tidak dihitung; selisih = pemasukan − pengeluaran',
+      () {
+        final trend = buildTrend(
+          transactions: data,
+          periods: periods,
+          today: DateTime(2026, 10, 10),
+          categoryOf: categoryOf,
+        );
+        expect(trend.map((p) => p.income), [rp(12000000), rp(14000000)]);
+        expect(trend.map((p) => p.expense), [rp(8000000), rp(9100000)]);
+        expect(trend.map((p) => p.net), [rp(4000000), rp(4900000)]);
+        expect(trend.any((p) => p.isRunning), isFalse);
+      },
+    );
 
     test('periode yang memuat hari ini berjalan dan membawa tanggalnya', () {
       final today = DateTime(2026, 9, 20, 9);
-      final trend = buildTrend(transactions: data, periods: periods, today: today, categoryOf: categoryOf);
+      final trend = buildTrend(
+        transactions: data,
+        periods: periods,
+        today: today,
+        categoryOf: categoryOf,
+      );
       expect(trend.map((p) => p.isRunning), [false, true]);
       expect(trend.last.asOf, today);
     });

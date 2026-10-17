@@ -151,25 +151,28 @@ final class AnalysisState extends UiState<AnalysisState> {
     PeriodSummary? summary,
     PeriodComparison? comparison,
     List<TrendPoint>? trend,
-  }) =>
-      AnalysisState(
-        period: period,
-        summary: summary ?? this.summary,
-        comparison: comparison,
-        trend: trend ?? this.trend,
-        trendSelected: trendSelected,
-        isCurrent: isCurrent,
-        canGoBack: canGoBack,
-        hasAnyTransactions: hasAnyTransactions,
-        isLoading: isLoading,
-        loadFailed: loadFailed,
-        kind: kind,
-        walletId: walletId,
-        wallets: wallets,
-      );
+  }) => AnalysisState(
+    period: period,
+    summary: summary ?? this.summary,
+    comparison: comparison,
+    trend: trend ?? this.trend,
+    trendSelected: trendSelected,
+    isCurrent: isCurrent,
+    canGoBack: canGoBack,
+    hasAnyTransactions: hasAnyTransactions,
+    isLoading: isLoading,
+    loadFailed: loadFailed,
+    kind: kind,
+    walletId: walletId,
+    wallets: wallets,
+  );
 
   @override
-  AnalysisState copyWith({bool? isLoading, bool? loadFailed, UiEffect? effect}) => AnalysisState(
+  AnalysisState copyWith({
+    bool? isLoading,
+    bool? loadFailed,
+    UiEffect? effect,
+  }) => AnalysisState(
     period: period,
     summary: summary,
     isCurrent: isCurrent,

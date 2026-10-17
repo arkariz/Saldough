@@ -87,8 +87,7 @@ final class Comparison extends Equatable {
   int get difference => (_scaled * 2 + months) ~/ (2 * months);
 
   /// Layak disorot: selisih ≥ 20% **dan** ≥ [minSen] dari rata-rata (> 0).
-  bool get isNotable =>
-      hasBaseline && _scaled * 100 >= highlightMinPercent * baselineSum && _scaled >= minSen * months;
+  bool get isNotable => hasBaseline && _scaled * 100 >= highlightMinPercent * baselineSum && _scaled >= minSen * months;
 
   @override
   List<Object?> get props => [amount, baselineSum, months, minSen];
@@ -118,6 +117,7 @@ final class PeriodComparison extends Equatable {
     required this.toDay,
     required this.totalSum,
     required this.sums,
+    this.counts = const {},
     this.minSen = highlightMinSen,
   });
 
@@ -134,40 +134,60 @@ final class PeriodComparison extends Equatable {
   /// `uncategorized`) di seluruh bulan pembanding. Kunci yang tak ada = 0.
   final Map<String, int> sums;
 
+  /// Jumlah transaksi per kunci baris daun di seluruh bulan pembanding
+  /// (ringkasan frekuensi Rincian kategori, B-17).
+  final Map<String, int> counts;
+
   /// Ambang selisih nominal sorotan (sen), mengikuti mata uang aktif.
   final int minSen;
 
   /// Pembanding [total] jenis terhadap total bulan pembanding.
-  Comparison ofTotal(int total) => Comparison(amount: total, baselineSum: totalSum, months: months, minSen: minSen);
+  Comparison ofTotal(int total) => Comparison(
+    amount: total,
+    baselineSum: totalSum,
+    months: months,
+    minSen: minSen,
+  );
 
   /// Pembanding [group]. Lainnya dibandingkan sebagai gabungan anggotanya.
   Comparison ofGroup(AnalysisGroup group) {
     final baseline = group.kind == AnalysisGroupKind.others
         ? group.children.fold(0, (sum, g) => sum + (sums[g.key] ?? 0))
         : sums[group.key] ?? 0;
-    return Comparison(amount: group.amount, baselineSum: baseline, months: months, minSen: minSen);
+    return Comparison(
+      amount: group.amount,
+      baselineSum: baseline,
+      months: months,
+      minSen: minSen,
+    );
   }
 
   /// Sorotan (B-7) untuk [summary]: kategori dan Freelance bernominal > 0 dan
   /// berpembanding > 0 dengan selisih ≥ 20% dan ≥ Rp50.000, paling banyak
   /// tiga, urut selisih terbesar. Tanpa kategori dan Lainnya tidak disorot.
   List<Highlight> highlightsOf(PeriodSummary summary) {
-    final leaves = [
-      for (final g in summary.groups)
-        if (g.kind == AnalysisGroupKind.others) ...g.children else g,
-    ].where((g) => g.kind == AnalysisGroupKind.category || g.kind == AnalysisGroupKind.freelance);
-    final highlights = [
-      for (final g in leaves)
-        if (g.amount > 0 && ofGroup(g).isNotable) Highlight(group: g, comparison: ofGroup(g)),
-    ]..sort((a, b) {
-        final byDiff = b.comparison.difference.compareTo(a.comparison.difference);
-        return byDiff != 0 ? byDiff : a.group.sortName.compareTo(b.group.sortName);
-      });
+    final leaves =
+        [
+          for (final g in summary.groups)
+            if (g.kind == AnalysisGroupKind.others) ...g.children else g,
+        ].where(
+          (g) => g.kind == AnalysisGroupKind.category || g.kind == AnalysisGroupKind.freelance,
+        );
+    final highlights =
+        [
+          for (final g in leaves)
+            if (g.amount > 0 && ofGroup(g).isNotable) Highlight(group: g, comparison: ofGroup(g)),
+        ]..sort((a, b) {
+          final byDiff = b.comparison.difference.compareTo(
+            a.comparison.difference,
+          );
+          return byDiff != 0 ? byDiff : a.group.sortName.compareTo(b.group.sortName);
+        });
     return highlights.take(highlightMaxCount).toList();
   }
 
   @override
-  List<Object?> get props => [months, toDay, totalSum, sums, minSen];
+  List<Object?> get props => [months, toDay, totalSum, sums, counts, minSen];
 }
 
 /// Membandingkan [period] dengan [periods] (hasil [comparisonPeriods]); `null`
@@ -188,6 +208,7 @@ PeriodComparison? comparePeriod({
   final elapsed = today == null ? null : _utcDay(today).difference(_utcDay(period.start)).inDays + 1;
   var totalSum = 0;
   final sums = <String, int>{};
+  final counts = <String, int>{};
   for (final p in periods) {
     var until = p.end;
     if (elapsed != null) {
@@ -206,10 +227,18 @@ PeriodComparison? comparePeriod({
     for (final g in summary.groups) {
       for (final leaf in g.kind == AnalysisGroupKind.others ? g.children : [g]) {
         sums[leaf.key] = (sums[leaf.key] ?? 0) + leaf.amount;
+        counts[leaf.key] = (counts[leaf.key] ?? 0) + leaf.count;
       }
     }
   }
-  return PeriodComparison(months: periods.length, toDay: today?.day, totalSum: totalSum, sums: sums, minSen: minSen);
+  return PeriodComparison(
+    months: periods.length,
+    toDay: today?.day,
+    totalSum: totalSum,
+    sums: sums,
+    counts: counts,
+    minSen: minSen,
+  );
 }
 
 DateTime _utcDay(DateTime d) => DateTime.utc(d.year, d.month, d.day);

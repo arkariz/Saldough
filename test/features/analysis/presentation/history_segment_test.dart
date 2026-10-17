@@ -42,11 +42,19 @@ void main() {
     container = GetIt.asNewInstance()
       ..registerLazySingleton<AuthRepository>(FakeAuthRepository.new)
       ..registerLazySingleton<BudgetOverviewSource>(stubBudgetOverviewSource)
-      ..registerLazySingleton<FreelanceOverviewSource>(stubFreelanceOverviewSource)
-      ..registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()))
+      ..registerLazySingleton<FreelanceOverviewSource>(
+        stubFreelanceOverviewSource,
+      )
+      ..registerLazySingleton<BudgetRepository>(
+        () => BudgetRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
       ..registerLazySingleton<BudgetItemCatalog>(stubBudgetItemCatalog)
-      ..registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()))
-      ..registerLazySingleton<WalletRepository>(() => WalletRepositoryImpl(storage: storage))
+      ..registerLazySingleton<CategoryRepository>(
+        () => CategoryRepositoryImpl(storage: InMemoryKeyValueStorage()),
+      )
+      ..registerLazySingleton<WalletRepository>(
+        () => WalletRepositoryImpl(storage: storage),
+      )
       ..registerLazySingleton<LedgerChanges>(LedgerChanges.new)
       ..registerLazySingleton<RecurringChanges>(RecurringChanges.new)
       ..registerLazySingleton<RecurringRuleRepository>(
@@ -55,8 +63,12 @@ void main() {
       ..registerLazySingleton<PlanBudgetSource>(EmptyPlanBudgetSource.new)
       ..registerLazySingleton<PlanFreelanceSource>(EmptyPlanFreelanceSource.new)
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
-      ..registerLazySingleton<HistorySegmentRepository>(() => HistorySegmentRepositoryImpl(storage: storage))
-      ..registerLazySingleton<TransactionRepository>(() => TransactionRepositoryImpl(storage: storage));
+      ..registerLazySingleton<HistorySegmentRepository>(
+        () => HistorySegmentRepositoryImpl(storage: storage),
+      )
+      ..registerLazySingleton<TransactionRepository>(
+        () => TransactionRepositoryImpl(storage: storage),
+      );
   });
 
   Future<void> openHistoryTab(WidgetTester tester) async {
@@ -70,58 +82,94 @@ void main() {
     for (var i = 0; i < 6; i++) {
       await tester.pump();
     }
-    await tester.tap(find.descendant(of: find.byType(AppNavBar), matching: find.text(t.appShell.transactionsTabLabel)));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppNavBar),
+        matching: find.text(t.appShell.transactionsTabLabel),
+      ),
+    );
     await tester.pumpAndSettle();
   }
 
-  Finder segment(String label) =>
-      find.descendant(of: find.byType(AppSubTabs<HistorySegment>), matching: find.text(label));
+  Finder segment(String label) => find.descendant(
+    of: find.byType(AppSubTabs<HistorySegment>),
+    matching: find.text(label),
+  );
 
-  Future<HistorySegment> saved() async =>
-      (await HistorySegmentRepositoryImpl(storage: storage).load()).getOrElse((_) => HistorySegment.list);
+  Future<HistorySegment> saved() async => (await HistorySegmentRepositoryImpl(
+    storage: storage,
+  ).load()).getOrElse((_) => HistorySegment.list);
 
-  testWidgets('Riwayat punya sub-tab Daftar dan Analisis; bawaannya Daftar', (tester) async {
+  testWidgets('Riwayat punya sub-tab Daftar dan Analisis; bawaannya Daftar', (
+    tester,
+  ) async {
     await openHistoryTab(tester);
     expect(find.byType(AppSubTabs<HistorySegment>), findsOneWidget);
     expect(segment('Daftar'), findsOneWidget);
     expect(segment('Analisis'), findsOneWidget);
-    expect(find.text(t.transaction.emptyMonthTitle), findsOneWidget, reason: 'isi Daftar');
-    expect(find.text(t.analysis.empty.title), findsNothing);
-  });
-
-  testWidgets('memilih Analisis mengganti seluruh isi dan mengingat pilihan; kembali ke Daftar', (tester) async {
-    await openHistoryTab(tester);
-    await tester.tap(segment('Analisis'));
-    await tester.pumpAndSettle();
-    // Belum ada transaksi sama sekali: keadaan kosong Analisis, isi Daftar hilang.
-    expect(find.text(t.analysis.empty.title), findsOneWidget);
-    expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
-    expect(await saved(), HistorySegment.analysis);
-
-    await tester.tap(segment('Daftar'));
-    await tester.pumpAndSettle();
-    expect(find.text(t.transaction.emptyMonthTitle), findsOneWidget);
-    expect(find.text(t.analysis.empty.title), findsNothing);
-    expect(await saved(), HistorySegment.list);
-  });
-
-  testWidgets('segmen terakhir diingat: Riwayat langsung terbuka di Analisis', (tester) async {
-    await HistorySegmentRepositoryImpl(storage: storage).save(HistorySegment.analysis);
-    await openHistoryTab(tester);
-    expect(find.text(t.analysis.empty.title), findsOneWidget);
-    expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
-  });
-
-  testWidgets('Analisis tersambung ke transaksi sungguhan: total dan donat tampil', (tester) async {
-    final repository = TransactionRepositoryImpl(storage: storage);
-    final now = DateTime.now();
-    await repository.saveTransaction(
-      ExpenseTransaction(id: 'e1', date: now, amount: 4500000, note: 'kopi', walletId: 'bca'),
+    expect(
+      find.text(t.transaction.emptyMonthTitle),
+      findsOneWidget,
+      reason: 'isi Daftar',
     );
-    await HistorySegmentRepositoryImpl(storage: storage).save(HistorySegment.analysis);
-    await openHistoryTab(tester);
-    expect(find.byKey(const ValueKey('analysis-card')), findsOneWidget);
-    expect(find.text('Rp45.000'), findsWidgets);
-    expect(find.text(t.analysis.uncategorized), findsOneWidget, reason: 'tanpa kategori');
+    expect(find.text(t.analysis.empty.title), findsNothing);
   });
+
+  testWidgets(
+    'memilih Analisis mengganti seluruh isi dan mengingat pilihan; kembali ke Daftar',
+    (tester) async {
+      await openHistoryTab(tester);
+      await tester.tap(segment('Analisis'));
+      await tester.pumpAndSettle();
+      // Belum ada transaksi sama sekali: keadaan kosong Analisis, isi Daftar hilang.
+      expect(find.text(t.analysis.empty.title), findsOneWidget);
+      expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
+      expect(await saved(), HistorySegment.analysis);
+
+      await tester.tap(segment('Daftar'));
+      await tester.pumpAndSettle();
+      expect(find.text(t.transaction.emptyMonthTitle), findsOneWidget);
+      expect(find.text(t.analysis.empty.title), findsNothing);
+      expect(await saved(), HistorySegment.list);
+    },
+  );
+
+  testWidgets('segmen terakhir diingat: Riwayat langsung terbuka di Analisis', (
+    tester,
+  ) async {
+    await HistorySegmentRepositoryImpl(
+      storage: storage,
+    ).save(HistorySegment.analysis);
+    await openHistoryTab(tester);
+    expect(find.text(t.analysis.empty.title), findsOneWidget);
+    expect(find.text(t.transaction.emptyMonthTitle), findsNothing);
+  });
+
+  testWidgets(
+    'Analisis tersambung ke transaksi sungguhan: total dan donat tampil',
+    (tester) async {
+      final repository = TransactionRepositoryImpl(storage: storage);
+      final now = DateTime.now();
+      await repository.saveTransaction(
+        ExpenseTransaction(
+          id: 'e1',
+          date: now,
+          amount: 4500000,
+          note: 'kopi',
+          walletId: 'bca',
+        ),
+      );
+      await HistorySegmentRepositoryImpl(
+        storage: storage,
+      ).save(HistorySegment.analysis);
+      await openHistoryTab(tester);
+      expect(find.byKey(const ValueKey('analysis-card')), findsOneWidget);
+      expect(find.text('Rp45.000'), findsWidgets);
+      expect(
+        find.text(t.analysis.uncategorized),
+        findsOneWidget,
+        reason: 'tanpa kategori',
+      );
+    },
+  );
 }

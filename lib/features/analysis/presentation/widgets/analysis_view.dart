@@ -12,7 +12,9 @@ import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/analysis_colors.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_trend.dart';
+import 'package:saldough/features/analysis/presentation/widgets/compare_line.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -40,7 +42,12 @@ class AnalysisView extends StatelessWidget {
           child: ListView(
             key: const ValueKey('analysis-scroll'),
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space8),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.space4,
+              AppSpacing.space2,
+              AppSpacing.space4,
+              AppSpacing.space8,
+            ),
             children: _children(context, state, bloc),
           ),
         );
@@ -48,7 +55,11 @@ class AnalysisView extends StatelessWidget {
     );
   }
 
-  List<Widget> _children(BuildContext context, AnalysisState state, AnalysisBloc bloc) {
+  List<Widget> _children(
+    BuildContext context,
+    AnalysisState state,
+    AnalysisBloc bloc,
+  ) {
     if (state.isLoading) return const [_Loading()];
     if (state.loadFailed) return [const _LoadError()];
     if (!state.hasAnyTransactions) {
@@ -60,7 +71,10 @@ class AnalysisView extends StatelessWidget {
             title: t.analysis.empty.title,
             body: t.analysis.empty.body,
             actionLabel: t.analysis.empty.cta,
-            onAction: () => context.pushRoute(RecordRouteKeys.sheet, const RecordSheetInput()),
+            onAction: () => context.pushRoute(
+              RecordRouteKeys.sheet,
+              const RecordSheetInput(),
+            ),
           ),
         ),
       ];
@@ -84,7 +98,9 @@ class AnalysisView extends StatelessWidget {
             state.kind == CategoryKind.income
                 ? t.analysis.emptyMonthIncome(period: period.name)
                 : t.analysis.emptyMonth(period: period.name),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: context.appColors.ink2),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: context.appColors.ink2),
           ),
         )
       else
@@ -134,7 +150,11 @@ class _Controls extends StatelessWidget {
                 label: selected?.name ?? t.analysis.allWallets,
                 options: [
                   for (final wallet in wallets)
-                    (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+                    (
+                      value: wallet.id,
+                      label: wallet.name,
+                      icon: walletIconKey(wallet.iconKey),
+                    ),
                 ],
                 allLabel: t.analysis.allWallets,
                 allIcon: IconKey.wallets,
@@ -146,6 +166,23 @@ class _Controls extends StatelessWidget {
     );
   }
 }
+
+/// Membuka Rincian kategori [group] untuk periode, jenis, dan dompet yang dilihat.
+void _openDetail(
+  BuildContext context,
+  AnalysisState state,
+  AnalysisGroup group,
+) => unawaited(
+  context.pushRoute(
+    AnalysisRouteKeys.category,
+    CategoryDetailInput(
+      categoryId: group.category?.id,
+      kind: state.kind,
+      periodStart: state.period.start,
+      walletId: state.walletId,
+    ),
+  ),
+);
 
 String _shareText(AnalysisShare share) => share.belowOne ? '<1%' : '${share.percent}%';
 
@@ -178,7 +215,12 @@ class _AnalysisCard extends StatelessWidget {
     final selectedSlice = state.selectedKey == null ? null : summary.sliceOf(state.selectedKey!);
     void select(String key) => bloc.add(AnalysisGroupSelected(key));
     var divider = false;
-    Widget row(AnalysisGroup group, {bool child = false, Color? swatch, bool? expanded}) {
+    Widget row(
+      AnalysisGroup group, {
+      bool child = false,
+      Color? swatch,
+      bool? expanded,
+    }) {
       final name = _groupName(group);
       final percent = _shareText(group.share);
       final widget = AppLegendRow(
@@ -212,7 +254,13 @@ class _AnalysisCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.space4),
           Center(
             child: AppDonutChart(
-              slices: [for (final g in groups) DonutSlice(value: g.amount, color: analysisColorOf(colors, g))],
+              slices: [
+                for (final g in groups)
+                  DonutSlice(
+                    value: g.amount,
+                    color: analysisColorOf(colors, g),
+                  ),
+              ],
               selected: selectedSlice,
               onSelect: (index) => select(groups[index].key),
               semanticsLabel: t.analysis.donutSemantics(
@@ -231,14 +279,28 @@ class _AnalysisCard extends StatelessWidget {
           ),
           // Pembanding: total jenis saat tak ada pilihan, kategori saat dipilih (B-6).
           if (state.comparison case final comparison?)
-            _CompareLine(
-              comparison: comparison,
+            CompareLine(
+              label: compareLabel(comparison),
               result: selected == null ? comparison.ofTotal(summary.total) : comparison.ofGroup(selected),
               isGroup: selected != null,
               isUncategorized: selected?.kind == AnalysisGroupKind.uncategorized,
             ),
-          // "Beri kategori" muncul saat Tanpa kategori dipilih (F5); "Lihat
-          // rincian" menyusul bersama layar Rincian kategori.
+          // "Lihat rincian {kategori}" untuk kategori dan Freelance (F4);
+          // "Beri kategori" saat Tanpa kategori dipilih (F5).
+          if (selected != null &&
+              (selected.kind == AnalysisGroupKind.category || selected.kind == AnalysisGroupKind.freelance)) ...[
+            const SizedBox(height: AppSpacing.space2),
+            Center(
+              child: AppButton.secondary(
+                key: const ValueKey('analysis-detail'),
+                label: t.analysis.category.seeCategory(
+                  category: _groupName(selected),
+                ),
+                small: true,
+                onPressed: () => _openDetail(context, state, selected),
+              ),
+            ),
+          ],
           if (selected?.kind == AnalysisGroupKind.uncategorized) ...[
             const SizedBox(height: AppSpacing.space2),
             Center(
@@ -267,7 +329,12 @@ class _AnalysisCard extends StatelessWidget {
               ),
             ),
           ],
-          if (state.comparison case final comparison?) _Highlights(comparison: comparison, highlights: state.highlights),
+          if (state.comparison case final comparison?)
+            _Highlights(
+              comparison: comparison,
+              highlights: state.highlights,
+              onOpen: (group) => _openDetail(context, state, group),
+            ),
           const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[
             row(
@@ -285,98 +352,27 @@ class _AnalysisCard extends StatelessWidget {
   }
 }
 
-/// Label pembanding: "rata-rata 3 bulan", "bulan lalu", atau "rata-rata s.d.
-/// tanggal 10" untuk periode berjalan (B-6, B-16).
-String _compareLabel(PeriodComparison comparison) {
-  final day = comparison.toDay;
-  if (day != null) return t.analysis.compare.toDate(day: day);
-  return comparison.months == 1 ? t.analysis.compare.lastMonth : t.analysis.compare.avg(n: comparison.months);
-}
-
-/// Selisih terhadap pembanding di bawah donat (`tk-cmp`): panah, nominal
-/// tebal, "dibanding {label}"; atau "baru bulan ini" untuk kategori tanpa
-/// riwayat. Tidak tampil bila tidak ada rata-rata untuk dibandingkan.
-class _CompareLine extends StatelessWidget {
-  const _CompareLine({
-    required this.comparison,
-    required this.result,
-    required this.isGroup,
-    required this.isUncategorized,
-  });
-
-  final PeriodComparison comparison;
-  final Comparison result;
-  final bool isGroup;
-  final bool isUncategorized;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    if (isGroup && result.isNew && !isUncategorized) {
-      return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.space2),
-        child: Center(child: AppBadge(t.analysis.compare.newThisMonth, key: const ValueKey('analysis-new'))),
-      );
-    }
-    if (!result.hasBaseline) return const SizedBox.shrink();
-    final style = textTheme.bodyMedium?.copyWith(color: colors.ink2);
-    final amount = AppMoneyFormatter.format(result.difference);
-    final label = t.analysis.compare.vs(label: _compareLabel(comparison));
-    return Padding(
-      key: const ValueKey('analysis-compare'),
-      padding: const EdgeInsets.only(top: AppSpacing.space2, left: AppSpacing.space4, right: AppSpacing.space4),
-      child: Semantics(
-        container: true,
-        label: result.isHigher
-            ? t.analysis.compare.srHigher(amount: amount, label: label)
-            : t.analysis.compare.srLower(amount: amount, label: label),
-        excludeSemantics: true,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: AppIcon(result.isHigher ? IconKey.arrowUp : IconKey.arrowDown, size: 16, color: colors.ink2),
-            ),
-            const SizedBox(width: AppSpacing.space1),
-            Flexible(
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: amount,
-                      style: style?.copyWith(color: colors.ink, fontWeight: FontWeight.w600),
-                    ),
-                    TextSpan(text: ' $label'),
-                  ],
-                ),
-                style: style,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// Sorotan perubahan (B-7), 0–3 baris di atas daftar, kalimat netral tanpa
 /// nilai. Membuka Rincian kategori menyusul di irisan 6.
 class _Highlights extends StatelessWidget {
-  const _Highlights({required this.comparison, required this.highlights});
+  const _Highlights({
+    required this.comparison,
+    required this.highlights,
+    required this.onOpen,
+  });
 
   final PeriodComparison comparison;
   final List<Highlight> highlights;
+
+  /// Membuka Rincian kategori sorotan itu.
+  final ValueChanged<AnalysisGroup> onOpen;
 
   @override
   Widget build(BuildContext context) {
     if (highlights.isEmpty) return const SizedBox.shrink();
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final label = _compareLabel(comparison);
+    final label = compareLabel(comparison);
     return Container(
       key: const ValueKey('analysis-highlights'),
       margin: const EdgeInsets.only(top: AppSpacing.space2),
@@ -386,21 +382,29 @@ class _Highlights extends StatelessWidget {
       child: Column(
         children: [
           for (final highlight in highlights)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
-              child: Row(
-                children: [
-                  AppIconTile(
-                    highlight.group.category == null ? IconKey.freelance : categoryIcon(highlight.group.category!),
-                  ),
-                  const SizedBox(width: AppSpacing.space3),
-                  Expanded(
-                    child: Text(
-                      _highlightText(highlight, label),
-                      style: textTheme.bodyLarge,
+            InkWell(
+              key: ValueKey('analysis-highlight-${highlight.group.key}'),
+              onTap: () => onOpen(highlight.group),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.space4,
+                  vertical: AppSpacing.space2,
+                ),
+                child: Row(
+                  children: [
+                    AppIconTile(
+                      highlight.group.category == null ? IconKey.freelance : categoryIcon(highlight.group.category!),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: AppSpacing.space3),
+                    Expanded(
+                      child: Text(
+                        _highlightText(highlight, label),
+                        style: textTheme.bodyLarge,
+                      ),
+                    ),
+                    AppIcon(IconKey.chevronRight, color: colors.ink3),
+                  ],
+                ),
               ),
             ),
         ],
@@ -455,11 +459,18 @@ class _DonutCenter extends StatelessWidget {
         ),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: AppMoneyText(group?.amount ?? total, size: MoneySize.large, color: color),
+          child: AppMoneyText(
+            group?.amount ?? total,
+            size: MoneySize.large,
+            color: color,
+          ),
         ),
         if (group != null)
           Text(
-            t.analysis.shareOf(percent: _shareText(group.share), kind: lowerKind),
+            t.analysis.shareOf(
+              percent: _shareText(group.share),
+              kind: lowerKind,
+            ),
             textAlign: TextAlign.center,
             style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
@@ -496,7 +507,11 @@ class _TransferFoot extends StatelessWidget {
                   AppMoneyText(sen, size: MoneySize.small, color: colors.ink2),
                 ],
               ),
-              if (sub != null) Text(sub, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
+              if (sub != null)
+                Text(
+                  sub,
+                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                ),
             ],
           ),
         ),
@@ -506,7 +521,10 @@ class _TransferFoot extends StatelessWidget {
       key: const ValueKey('analysis-transfers'),
       color: colors.surface2,
       margin: const EdgeInsets.only(top: AppSpacing.space2),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.space4,
+        vertical: AppSpacing.space3,
+      ),
       child: Column(
         spacing: AppSpacing.space3,
         children: [
@@ -514,7 +532,11 @@ class _TransferFoot extends StatelessWidget {
             line(title: t.analysis.transferIn, sen: info.incoming),
             line(title: t.analysis.transferOut, sen: info.outgoing),
           ] else
-            line(title: t.analysis.transferTitle, sen: info.total, sub: t.analysis.transferSub),
+            line(
+              title: t.analysis.transferTitle,
+              sen: info.total,
+              sub: t.analysis.transferSub,
+            ),
         ],
       ),
     );
@@ -559,7 +581,9 @@ class _LoadError extends StatelessWidget {
           Text(
             t.analysis.error,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.ink2),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colors.ink2),
           ),
         ],
       ),

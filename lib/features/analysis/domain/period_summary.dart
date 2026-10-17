@@ -99,10 +99,20 @@ final class AnalysisGroup extends Equatable {
 /// persen.
 final class TransferInfo extends Equatable {
   /// Membuat [TransferInfo].
-  const TransferInfo({required this.total, required this.incoming, required this.outgoing, required this.perWallet});
+  const TransferInfo({
+    required this.total,
+    required this.incoming,
+    required this.outgoing,
+    required this.perWallet,
+  });
 
   /// Tanpa transfer.
-  static const none = TransferInfo(total: 0, incoming: 0, outgoing: 0, perWallet: false);
+  static const none = TransferInfo(
+    total: 0,
+    incoming: 0,
+    outgoing: 0,
+    perWallet: false,
+  );
 
   /// Semua dompet: jumlah seluruh transfer periode.
   final int total;

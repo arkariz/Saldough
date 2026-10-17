@@ -3366,6 +3366,7 @@ class Translations$analysis$id {
 	late final Translations$analysis$compare$id compare = Translations$analysis$compare$id.internal(_root);
 	late final Translations$analysis$highlight$id highlight = Translations$analysis$highlight$id.internal(_root);
 	late final Translations$analysis$trend$id trend = Translations$analysis$trend$id.internal(_root);
+	late final Translations$analysis$category$id category = Translations$analysis$category$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -4004,6 +4005,45 @@ class Translations$analysis$trend$id {
 
 	/// id: '$period, pemasukan $income, pengeluaran $expense, selisih $net'
 	String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}';
+}
+
+// Path: analysis.category
+class Translations$analysis$category$id {
+	Translations$analysis$category$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$count transaksi · rata-rata $amount per transaksi'
+	String frequency({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi';
+
+	/// id: '$count transaksi · rata-rata $amount per transaksi'
+	String frequencyOne({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi';
+
+	/// id: 'biasanya $count transaksi · $amount'
+	String frequencyUsual({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}';
+
+	/// id: 'Lihat semua transaksi'
+	String get seeAll => 'Lihat semua transaksi';
+
+	/// id: 'Lihat rincian $category'
+	String seeCategory({required Object category}) => 'Lihat rincian ${category}';
+
+	/// id: 'Transaksi'
+	String get transactions => 'Transaksi';
+
+	/// id: '$amount di atas rata-rata'
+	String aboveAvg({required Object amount}) => '${amount} di atas rata-rata';
+
+	/// id: '$amount di bawah rata-rata'
+	String belowAvg({required Object amount}) => '${amount} di bawah rata-rata';
+
+	/// id: 'rata-rata $n bulan'
+	String avgLine({required Object n}) => 'rata-rata ${n} bulan';
+
+	/// id: '20 transaksi terbaru'
+	String get moreHint => '20 transaksi terbaru';
 }
 
 // Path: record.voice.failure
@@ -5244,6 +5284,16 @@ extension on Translations {
 			'analysis.trend.days' => ({required Object n}) => '${n} hari',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
+			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
+			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}',
+			'analysis.category.seeAll' => 'Lihat semua transaksi',
+			'analysis.category.seeCategory' => ({required Object category}) => 'Lihat rincian ${category}',
+			'analysis.category.transactions' => 'Transaksi',
+			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
+			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
+			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
+			'analysis.category.moreHint' => '20 transaksi terbaru',
 			_ => null,
 		};
 	}

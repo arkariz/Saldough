@@ -11,7 +11,9 @@ final class AnalysisScope extends IsolatedScope {
   @override
   void bridge(GetIt c) {
     c
-      ..registerSingleton<TransactionRepository>(parent<TransactionRepository>())
+      ..registerSingleton<TransactionRepository>(
+        parent<TransactionRepository>(),
+      )
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<LedgerChanges>(parent<LedgerChanges>());
   }

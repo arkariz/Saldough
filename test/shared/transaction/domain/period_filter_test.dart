@@ -92,5 +92,19 @@ void main() {
       expect(matches(filter(uncategorized: true), expense()), isTrue);
       expect(matches(filter(uncategorized: true), expense(category: 'makan')), isFalse);
     });
+
+    test('freelance: hanya pembayaran freelance tanpa kategori (kelompok Freelance di Analisis)', () {
+      final freelance = PeriodTransactionFilter(
+        from: from,
+        until: until,
+        type: TransactionTypeFilter.income,
+        freelance: true,
+      );
+      bool freelanceMatches(Transaction t) => freelance.matches(t, isKnownCategory: known);
+      expect(freelanceMatches(income(freelance: 'p1')), isTrue);
+      expect(freelanceMatches(income(freelance: 'p1', category: 'gaji')), isFalse, reason: 'berkategori = kategorinya');
+      expect(freelanceMatches(income(category: 'gaji')), isFalse);
+      expect(freelanceMatches(income()), isFalse, reason: 'bukan pembayaran freelance');
+    });
   });
 }

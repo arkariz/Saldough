@@ -11,6 +11,7 @@ void main() {
     expect(appRouteRegistry().registeredKeys.toSet(), {
       'account.page',
       'analysis.open',
+      'analysis.category',
       'appUpdate.notes',
       'budget.detail',
       'budget.financialMonth',

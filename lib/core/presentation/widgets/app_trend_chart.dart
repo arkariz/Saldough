@@ -12,18 +12,18 @@ class TrendColumn {
     required this.label,
     required this.income,
     required this.expense,
-    required this.netText,
     required this.semanticsLabel,
+    this.netText = '',
     this.caption,
   });
 
   /// Label periode di bawah kolom, mis. "Sep".
   final String label;
 
-  /// Pemasukan (sen), tinggi batang kiri.
+  /// Pemasukan (sen), tinggi batang kiri; diabaikan pada grafik satu besaran.
   final int income;
 
-  /// Pengeluaran (sen), tinggi batang kanan.
+  /// Pengeluaran (sen), tinggi batang kanan; pada grafik satu besaran, nilainya.
   final int expense;
 
   /// Selisih ringkas di bawah label, mis. "+3,2 jt"; kosong bila tak ada.
@@ -51,6 +51,9 @@ class AppTrendChart extends StatelessWidget {
     required this.onSelect,
     required this.axisLabel,
     this.slots = 6,
+    this.single = false,
+    this.average,
+    this.averageLabel,
     super.key,
   });
 
@@ -69,6 +72,16 @@ class AppTrendChart extends StatelessWidget {
   /// Jumlah slot.
   final int slots;
 
+  /// Satu besaran (Rincian kategori): satu batang 14px `ink-2` per kolom dari
+  /// [TrendColumn.expense], bukan sepasang.
+  final bool single;
+
+  /// Tinggi garis rata-rata putus-putus (sen); `null` = tanpa garis.
+  final int? average;
+
+  /// Label garis rata-rata, mis. "rata-rata 3 bulan".
+  final String? averageLabel;
+
   /// Tinggi seluruh grafik.
   static const height = 186.0;
 
@@ -84,7 +97,13 @@ class AppTrendChart extends StatelessWidget {
     final top = math.max(hi.toDouble(), 1);
     final raw = top / 3;
     final magnitude = math.pow(10, (math.log(raw) / math.ln10).floor()).toDouble();
-    final step = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).firstWhere((c) => c >= raw);
+    final step = [
+      1,
+      2,
+      2.5,
+      5,
+      10,
+    ].map((m) => m * magnitude).firstWhere((c) => c >= raw);
     return (step: step, max: (top / step).ceil() * step);
   }
 
@@ -93,10 +112,15 @@ class AppTrendChart extends StatelessWidget {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final offset = slots - columns.length;
-    final hi = columns.fold<int>(0, (m, c) => math.max(m, math.max(c.income, c.expense)));
+    final hi = columns.fold<int>(
+      average ?? 0,
+      (m, c) => math.max(m, single ? c.expense : math.max(c.income, c.expense)),
+    );
     final scale = scaleFor(hi);
     double yOf(double value) => _base - value / scale.max * (_base - _top);
-    final ticks = [for (var t = scale.step; t <= scale.max + 1; t += scale.step) t];
+    final ticks = [
+      for (var t = scale.step; t <= scale.max + 1; t += scale.step) t,
+    ];
     return SizedBox(
       height: height,
       child: LayoutBuilder(
@@ -117,6 +141,9 @@ class AppTrendChart extends StatelessWidget {
                     area: area,
                     positive: colors.positive,
                     ink: colors.ink,
+                    single: single,
+                    average: average,
+                    mark: colors.ink2,
                     line: colors.line,
                     base: colors.ink3,
                     band: colors.surface2,
@@ -131,10 +158,33 @@ class AppTrendChart extends StatelessWidget {
                     child: ExcludeSemantics(
                       child: Text(
                         axisLabel(tick.round()),
-                        style: textTheme.labelSmall?.copyWith(color: colors.ink2, fontSize: 11, height: 14 / 11),
+                        style: textTheme.labelSmall?.copyWith(
+                          color: colors.ink2,
+                          fontSize: 11,
+                          height: 14 / 11,
+                        ),
                       ),
                     ),
                   ),
+              if (average case final avg? when averageLabel != null)
+                Positioned(
+                  left: 0,
+                  bottom: height - yOf(avg.toDouble()).roundToDouble() + 1,
+                  child: ExcludeSemantics(
+                    child: Container(
+                      color: colors.surface,
+                      padding: const EdgeInsets.only(right: 4, bottom: 2),
+                      child: Text(
+                        averageLabel!,
+                        style: textTheme.labelSmall?.copyWith(
+                          color: colors.ink2,
+                          fontSize: 11,
+                          height: 14 / 11,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               Positioned(
                 left: 0,
                 top: 0,
@@ -165,7 +215,12 @@ class AppTrendChart extends StatelessWidget {
 }
 
 class _ColumnButton extends StatelessWidget {
-  const _ColumnButton({required this.column, required this.selected, required this.onTap, super.key});
+  const _ColumnButton({
+    required this.column,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
 
   final TrendColumn column;
   final bool selected;
@@ -204,14 +259,22 @@ class _ColumnButton extends StatelessWidget {
                 column.netText,
                 maxLines: 1,
                 softWrap: false,
-                style: textTheme.labelSmall?.copyWith(color: color, fontSize: 11, height: 14 / 11),
+                style: textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontSize: 11,
+                  height: 14 / 11,
+                ),
               ),
               if (column.caption case final caption?)
                 Text(
                   caption,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: textTheme.labelSmall?.copyWith(color: colors.ink3, fontSize: 11, height: 13 / 11),
+                  style: textTheme.labelSmall?.copyWith(
+                    color: colors.ink3,
+                    fontSize: 11,
+                    height: 13 / 11,
+                  ),
                 ),
             ],
           ),
@@ -232,6 +295,9 @@ class _TrendPainter extends CustomPainter {
     required this.area,
     required this.positive,
     required this.ink,
+    required this.single,
+    required this.average,
+    required this.mark,
     required this.line,
     required this.base,
     required this.band,
@@ -246,6 +312,9 @@ class _TrendPainter extends CustomPainter {
   final double area;
   final Color positive;
   final Color ink;
+  final bool single;
+  final int? average;
+  final Color mark;
   final Color line;
   final Color base;
   final Color band;
@@ -283,14 +352,35 @@ class _TrendPainter extends CustomPainter {
     );
     for (final (i, column) in columns.indexed) {
       final cx = slot * (offset + i) + slot / 2;
-      _stack(canvas, cx - _barWidth - 1, column.income, positive);
-      _stack(canvas, cx + 1, column.expense, ink);
+      if (single) {
+        _stack(canvas, cx - 7, column.expense, mark, width: 14);
+      } else {
+        _stack(canvas, cx - _barWidth - 1, column.income, positive);
+        _stack(canvas, cx + 1, column.expense, ink);
+      }
+    }
+    if (average case final avg?) {
+      // Garis acuan putus-putus 4/3, bukan perkiraan.
+      final y = _y(avg.toDouble()).roundToDouble() + 0.5;
+      final dash = Paint()
+        ..color = mark
+        ..strokeWidth = 1.5
+        ..isAntiAlias = false;
+      for (var x = 0.0; x < area; x += 7) {
+        canvas.drawLine(Offset(x, y), Offset(math.min(x + 4, area), y), dash);
+      }
     }
   }
 
   /// Batang: tumpukan kotak 6px berjarak 2px dari garis dasar; sisa tinggi
   /// di bawah satu kotak digambar sebagai kotak yang lebih pendek.
-  void _stack(Canvas canvas, double x, int value, Color color) {
+  void _stack(
+    Canvas canvas,
+    double x,
+    int value,
+    Color color, {
+    double width = _barWidth,
+  }) {
     if (value <= 0) return;
     final height = value / scaleMax * (AppTrendChart._base - AppTrendChart._top);
     final full = (height / _pitch).floor();
@@ -299,11 +389,22 @@ class _TrendPainter extends CustomPainter {
       ..color = color
       ..isAntiAlias = false;
     for (var i = 0; i < full; i++) {
-      canvas.drawRect(Rect.fromLTWH(x, AppTrendChart._base - _pitch * i - _brick, _barWidth, _brick), paint);
+      canvas.drawRect(
+        Rect.fromLTWH(
+          x,
+          AppTrendChart._base - _pitch * i - _brick,
+          width,
+          _brick,
+        ),
+        paint,
+      );
     }
     if (rest > 0.5) {
       final h = math.min(rest, _brick);
-      canvas.drawRect(Rect.fromLTWH(x, AppTrendChart._base - _pitch * full - h, _barWidth, h), paint);
+      canvas.drawRect(
+        Rect.fromLTWH(x, AppTrendChart._base - _pitch * full - h, width, h),
+        paint,
+      );
     }
   }
 
@@ -315,6 +416,9 @@ class _TrendPainter extends CustomPainter {
       old.area != area ||
       old.positive != positive ||
       old.ink != ink ||
+      old.single != single ||
+      old.average != average ||
+      old.mark != mark ||
       old.line != line ||
       old.base != base ||
       old.band != band;

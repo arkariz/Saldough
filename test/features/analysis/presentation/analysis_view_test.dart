@@ -274,6 +274,112 @@ void main() {
     });
   });
 
+  group('tren enam periode (F6)', () {
+    // Juni–Agustus hanya pengeluaran; September = contoh §10 (pemasukan Rp14.615.437,50).
+    List<Transaction> history() => [
+      expenseOn(DateTime(2026, 6, 5), 3600000, category: 'makan'),
+      expenseOn(DateTime(2026, 7, 5), 3800000, category: 'makan'),
+      expenseOn(DateTime(2026, 8, 5), 3900000, category: 'makan'),
+    ];
+
+    Future<void> openSeptember(WidgetTester tester) async {
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      await tester.tap(find.byKey(const ValueKey('period-previous')));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('empat kolom (Jun–Sep, tak ada nol sebelum pencatatan); panel angka September; tanpa tautan', (
+      tester,
+    ) async {
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.byKey(const ValueKey('analysis-trend')), findsOneWidget);
+      expect(find.text('6 bulan terakhir'), findsOneWidget);
+      for (final i in [0, 1, 2, 3]) {
+        expect(find.byKey(ValueKey('trend-col-$i')), findsOneWidget);
+      }
+      expect(find.byKey(const ValueKey('trend-col-4')), findsNothing);
+      expect(find.text('Jun'), findsOneWidget);
+      expect(find.text('+3,2 jt'), findsOneWidget, reason: 'selisih September bertanda');
+      expect(find.text('−3,6 jt'), findsOneWidget, reason: 'selisih Juni negatif, tanpa merah');
+      final readout = find.byKey(const ValueKey('analysis-readout'));
+      expect(find.descendant(of: readout, matching: find.text('September 2026')), findsOneWidget);
+      expect(find.descendant(of: readout, matching: find.text('−Rp11.420.700')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-trend-jump')), findsNothing);
+    });
+
+    testWidgets('mengetuk kolom Juni hanya memilih; tautan "Lihat analisis Juni" memindah Analisis ke Juni', (tester) async {
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('trend-col-0')));
+      await tester.pump();
+      expect(find.text('September 2026'), findsWidgets);
+      expect(find.descendant(of: find.byKey(const ValueKey('analysis-readout')), matching: find.text('Juni 2026')), findsOneWidget);
+      expect(find.text('Lihat analisis Juni'), findsOneWidget);
+      expect(find.descendant(of: find.byType(AppPeriodStepper), matching: find.text('September 2026')), findsOneWidget);
+
+      await tester.ensureVisible(find.byKey(const ValueKey('analysis-trend-jump')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('analysis-trend-jump')));
+      await tester.pumpAndSettle();
+      expect(find.descendant(of: find.byType(AppPeriodStepper), matching: find.text('Juni 2026')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-trend')), findsNothing, reason: 'Juni pencatatan pertama: satu kolom saja');
+    });
+
+    testWidgets('periode berjalan: keterangan "s.d. 10 Okt" dan selisih tanpa tanda', (tester) async {
+      await seed([...history(), ...september2026(), expenseOn(DateTime(2026, 10, 4), 520000, category: 'makan')]);
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      expect(find.text('s.d. 10 Okt'), findsOneWidget, reason: 'keterangan kolom');
+      expect(find.text('520 rb'), findsOneWidget, reason: 'selisih Oktober tanpa − sampai periodenya selesai');
+      expect(find.text('−520 rb'), findsNothing);
+      final readout = find.byKey(const ValueKey('analysis-readout'));
+      expect(find.descendant(of: readout, matching: find.text('Oktober 2026 · s.d. 10 Okt')), findsOneWidget);
+    });
+
+    testWidgets('bulan pertama pencatatan: satu periode, tren tidak tampil', (tester) async {
+      await seed(september2026());
+      await pump(tester);
+      expect(find.byKey(const ValueKey('analysis-trend')), findsNothing);
+    });
+
+    testWidgets('periode tanpa pengeluaran tetap menampilkan tren', (tester) async {
+      await seed([...history(), ...september2026()]);
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      expect(find.byKey(const ValueKey('analysis-none')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-trend')), findsOneWidget);
+    });
+
+    testWidgets('nominal disembunyikan: selisih "•••", panel Rp•••••, label sumbu hilang', (tester) async {
+      AmountVisibility.notifier.value = true;
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.text('•••'), findsNWidgets(4));
+      expect(find.text('+3,2 jt'), findsNothing);
+      expect(find.text('15 jt'), findsNothing);
+    });
+
+    testWidgets('dompet disaring ikut ke tren; bahasa Inggris: "Last 6 months", "Net", "M"', (tester) async {
+      await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.text('Last 6 months'), findsOneWidget);
+      expect(find.text('Net'), findsOneWidget);
+      expect(find.text('+3.2M'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('semantik kolom: "September 2026, pemasukan …, pengeluaran …, selisih +…"', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      final label = tester.getSemantics(find.byKey(const ValueKey('trend-col-3'))).label;
+      expect(label, startsWith('September 2026, pemasukan Rp'));
+      expect(label, contains('pengeluaran Rp11.420.700'));
+      expect(label, contains('selisih +Rp'));
+      semantics.dispose();
+    });
+  });
+
   group('dibanding biasanya (F2, B-6, B-7)', () {
     // Juni–Agustus dari FINANCIAL_ANALYSIS §10: rata-rata Makan Rp950.000, Belanja Rp2.820.000.
     List<Transaction> history() => [

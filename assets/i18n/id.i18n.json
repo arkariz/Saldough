@@ -1276,6 +1276,16 @@
     "highlight": {
       "higher": "$subject lebih tinggi dari $compare",
       "lower": "$subject lebih rendah dari $compare"
+    },
+    "trend": {
+      "title": "6 bulan terakhir",
+      "income": "Pemasukan",
+      "expense": "Pengeluaran",
+      "net": "Selisih",
+      "toDate": "s.d. $date",
+      "days": "$n hari",
+      "seePeriod": "Lihat analisis $period",
+      "column": "$period, pemasukan $income, pengeluaran $expense, selisih $net"
     }
   }
 }

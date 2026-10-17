@@ -12,6 +12,7 @@ import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/analysis_colors.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/features/analysis/presentation/widgets/analysis_trend.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -88,6 +89,7 @@ class AnalysisView extends StatelessWidget {
         )
       else
         _AnalysisCard(state: state, summary: summary),
+      AnalysisTrendSection(state: state),
     ];
   }
 }

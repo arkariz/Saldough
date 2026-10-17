@@ -3365,6 +3365,7 @@ class Translations$analysis$id {
 
 	late final Translations$analysis$compare$id compare = Translations$analysis$compare$id.internal(_root);
 	late final Translations$analysis$highlight$id highlight = Translations$analysis$highlight$id.internal(_root);
+	late final Translations$analysis$trend$id trend = Translations$analysis$trend$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3970,6 +3971,39 @@ class Translations$analysis$highlight$id {
 
 	/// id: '$subject lebih rendah dari $compare'
 	String lower({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}';
+}
+
+// Path: analysis.trend
+class Translations$analysis$trend$id {
+	Translations$analysis$trend$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '6 bulan terakhir'
+	String get title => '6 bulan terakhir';
+
+	/// id: 'Pemasukan'
+	String get income => 'Pemasukan';
+
+	/// id: 'Pengeluaran'
+	String get expense => 'Pengeluaran';
+
+	/// id: 'Selisih'
+	String get net => 'Selisih';
+
+	/// id: 's.d. $date'
+	String toDate({required Object date}) => 's.d. ${date}';
+
+	/// id: '$n hari'
+	String days({required Object n}) => '${n} hari';
+
+	/// id: 'Lihat analisis $period'
+	String seePeriod({required Object period}) => 'Lihat analisis ${period}';
+
+	/// id: '$period, pemasukan $income, pengeluaran $expense, selisih $net'
+	String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}';
 }
 
 // Path: record.voice.failure
@@ -5202,6 +5236,14 @@ extension on Translations {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}',
+			'analysis.trend.title' => '6 bulan terakhir',
+			'analysis.trend.income' => 'Pemasukan',
+			'analysis.trend.expense' => 'Pengeluaran',
+			'analysis.trend.net' => 'Selisih',
+			'analysis.trend.toDate' => ({required Object date}) => 's.d. ${date}',
+			'analysis.trend.days' => ({required Object n}) => '${n} hari',
+			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
 			_ => null,
 		};
 	}

@@ -7,6 +7,7 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
+import 'package:saldough/features/analysis/domain/period_trend.dart';
 import 'package:saldough/features/analysis/domain/summarize_period.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -41,6 +42,13 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     on<AnalysisRefreshed>(_onRefreshed);
     on<AnalysisPeriodStepped>(_onStepped);
     on<AnalysisGroupSelected>(_onSelected);
+    on<AnalysisTrendSelected>((event, emit) {
+      if (event.index >= 0 && event.index < state.trend.length) emit(state.withTrendSelected(event.index));
+    });
+    on<AnalysisPeriodJumped>((event, emit) async {
+      _anchor = event.date;
+      await _load(emit, firstLoad: false, keepSelection: false);
+    });
     on<AnalysisKindChanged>((event, emit) => _onControls(emit, kind: event.kind, walletId: state.walletId));
     on<AnalysisWalletChanged>((event, emit) => _onControls(emit, kind: state.kind, walletId: event.walletId));
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => _refresh());
@@ -68,6 +76,17 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   /// Bulan pembanding periode yang dilihat (B-6) dan hari ini bila periode berjalan.
   List<FinancialPeriod> _comparisonPeriods = const [];
   DateTime? _comparisonToday;
+
+  /// Periode tren enam kolom berakhir di periode yang dilihat (F6).
+  List<FinancialPeriod> _trendPeriods = const [];
+
+  List<TrendPoint> _trendFor(String? walletId) => buildTrend(
+    transactions: _transactions,
+    periods: _trendPeriods,
+    today: _now(),
+    categoryOf: _categoryOf,
+    walletId: walletId,
+  );
 
   PeriodComparison? _compare(AnalysisState from, CategoryKind kind, String? walletId) => comparePeriod(
     transactions: _transactions,
@@ -120,6 +139,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         walletId: walletId,
         summary: _summarize(state, kind, walletId),
         comparison: _compare(state, kind, walletId),
+        trend: _trendFor(walletId),
       ),
     );
   }
@@ -174,7 +194,8 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         final earliest = schedule.periodOf(DateTime(first.year, first.month));
         _comparisonPeriods = comparisonPeriods(period: period, schedule: schedule, earliestStart: earliest.start);
         _comparisonToday = period.start == current.start ? _now() : null;
-        final readFrom = _comparisonPeriods.isEmpty ? period.start : _comparisonPeriods.last.start;
+        _trendPeriods = trendPeriods(period: period, schedule: schedule, earliestStart: earliest.start);
+        final readFrom = _trendPeriods.first.start;
         switch (await ListPeriodTransactions(_repository)(from: readFrom, until: period.end)) {
           case Left(:final value):
             _emitFailure(emit, value, firstLoad: firstLoad);
@@ -215,6 +236,8 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
                   walletId: walletId,
                   minSen: highlightMinSenOf(ActiveCurrency.value),
                 ),
+                trend: _trendFor(walletId),
+                trendSelected: keepSelection ? state.trendSelected : null,
               ),
             );
         }

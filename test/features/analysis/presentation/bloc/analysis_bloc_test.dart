@@ -62,6 +62,40 @@ void main() {
     return bloc.stream.firstWhere((s) => !s.isLoading);
   }
 
+  group('tren (F6)', () {
+    test('enam periode berakhir di periode yang dilihat; kolom terpilih tidak memindah periode; lompat memindah', () async {
+      await seed([
+        expenseOn(DateTime(2026, 6, 5), 100000, category: 'makan'),
+        expenseOn(DateTime(2026, 7, 5), 100000, category: 'makan'),
+        ...september2026(),
+      ]);
+      final bloc = create();
+      final state = await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      expect(state.trend.map((p) => p.period.start), [DateTime(2026, 6), DateTime(2026, 7), DateTime(2026, 8), DateTime(2026, 9)]);
+      expect(state.trendIndex, 3);
+
+      bloc.add(const AnalysisTrendSelected(1));
+      final picked = await bloc.stream.firstWhere((s) => s.trendSelected == 1);
+      expect(picked.period.label, 'September 2026', reason: 'memilih tidak berpindah');
+      expect(picked.trendIndex, 1);
+
+      bloc.add(AnalysisPeriodJumped(picked.trend[1].period.start));
+      final jumped = await bloc.stream.firstWhere((s) => s.period.label == 'Juli 2026' && !s.isLoading);
+      expect(jumped.trendSelected, isNull);
+      expect(jumped.trend.last.period.label, 'Juli 2026');
+      expect(jumped.trend.length, 2);
+    });
+
+    test('penyaring dompet menghitung ulang tren tanpa membaca ulang', () async {
+      await seed([...september2026(), expenseOn(DateTime(2026, 8, 3), 70000, category: 'makan', wallet: 'tabungan')]);
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      bloc.add(const AnalysisWalletChanged('tabungan'));
+      final state = await bloc.stream.firstWhere((s) => s.walletId == 'tabungan');
+      expect(state.trend.map((p) => p.expense), [rp(70000), 0]);
+    });
+  });
+
   group('pembanding (B-6)', () {
     test('September dengan Jun–Agt: 3 bulan pembanding, sorotan Makan; periode peralihan tanpa pembanding', () async {
       await seed([

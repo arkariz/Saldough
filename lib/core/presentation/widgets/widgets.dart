@@ -31,6 +31,7 @@ export 'app_sticky_bar.dart';
 export 'app_sub_tabs.dart';
 export 'app_switch_row.dart';
 export 'app_tappable.dart';
+export 'app_trend_chart.dart';
 export 'category_icon.dart';
 export 'confirm_delete_dialog.dart';
 export 'dismiss_keyboard.dart';

@@ -1316,6 +1316,7 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override String emptyMonthIncome({required Object period}) => 'No income in ${period} yet.';
 	@override late final _Translations$analysis$compare$en compare = _Translations$analysis$compare$en._(_root);
 	@override late final _Translations$analysis$highlight$en highlight = _Translations$analysis$highlight$en._(_root);
+	@override late final _Translations$analysis$trend$en trend = _Translations$analysis$trend$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1626,6 +1627,23 @@ class _Translations$analysis$highlight$en extends Translations$analysis$highligh
 	// Translations
 	@override String higher({required Object subject, required Object compare}) => '${subject} higher than ${compare}';
 	@override String lower({required Object subject, required Object compare}) => '${subject} lower than ${compare}';
+}
+
+// Path: analysis.trend
+class _Translations$analysis$trend$en extends Translations$analysis$trend$id {
+	_Translations$analysis$trend$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Last 6 months';
+	@override String get income => 'Income';
+	@override String get expense => 'Expenses';
+	@override String get net => 'Net';
+	@override String toDate({required Object date}) => 'through ${date}';
+	@override String days({required Object n}) => '${n} days';
+	@override String seePeriod({required Object period}) => 'See ${period} analysis';
+	@override String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}';
 }
 
 // Path: record.voice.failure
@@ -2846,6 +2864,14 @@ extension on TranslationsEn {
 			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lower, ${label}',
 			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} higher than ${compare}',
 			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lower than ${compare}',
+			'analysis.trend.title' => 'Last 6 months',
+			'analysis.trend.income' => 'Income',
+			'analysis.trend.expense' => 'Expenses',
+			'analysis.trend.net' => 'Net',
+			'analysis.trend.toDate' => ({required Object date}) => 'through ${date}',
+			'analysis.trend.days' => ({required Object n}) => '${n} days',
+			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
 			_ => null,
 		};
 	}

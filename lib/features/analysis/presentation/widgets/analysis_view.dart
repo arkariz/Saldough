@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:saldough/core/currency/amount_visibility.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/analysis_colors.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
@@ -13,6 +15,7 @@ import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/category/category_presentation.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
@@ -224,6 +227,14 @@ class _AnalysisCard extends StatelessWidget {
               ),
             ),
           ),
+          // Pembanding: total jenis saat tak ada pilihan, kategori saat dipilih (B-6).
+          if (state.comparison case final comparison?)
+            _CompareLine(
+              comparison: comparison,
+              result: selected == null ? comparison.ofTotal(summary.total) : comparison.ofGroup(selected),
+              isGroup: selected != null,
+              isUncategorized: selected?.kind == AnalysisGroupKind.uncategorized,
+            ),
           // "Beri kategori" muncul saat Tanpa kategori dipilih (F5); "Lihat
           // rincian" menyusul bersama layar Rincian kategori.
           if (selected?.kind == AnalysisGroupKind.uncategorized) ...[
@@ -254,6 +265,7 @@ class _AnalysisCard extends StatelessWidget {
               ),
             ),
           ],
+          if (state.comparison case final comparison?) _Highlights(comparison: comparison, highlights: state.highlights),
           const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[
             row(
@@ -268,6 +280,142 @@ class _AnalysisCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Label pembanding: "rata-rata 3 bulan", "bulan lalu", atau "rata-rata s.d.
+/// tanggal 10" untuk periode berjalan (B-6, B-16).
+String _compareLabel(PeriodComparison comparison) {
+  final day = comparison.toDay;
+  if (day != null) return t.analysis.compare.toDate(day: day);
+  return comparison.months == 1 ? t.analysis.compare.lastMonth : t.analysis.compare.avg(n: comparison.months);
+}
+
+/// Selisih terhadap pembanding di bawah donat (`tk-cmp`): panah, nominal
+/// tebal, "dibanding {label}"; atau "baru bulan ini" untuk kategori tanpa
+/// riwayat. Tidak tampil bila tidak ada rata-rata untuk dibandingkan.
+class _CompareLine extends StatelessWidget {
+  const _CompareLine({
+    required this.comparison,
+    required this.result,
+    required this.isGroup,
+    required this.isUncategorized,
+  });
+
+  final PeriodComparison comparison;
+  final Comparison result;
+  final bool isGroup;
+  final bool isUncategorized;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    if (isGroup && result.isNew && !isUncategorized) {
+      return Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.space2),
+        child: Center(child: AppBadge(t.analysis.compare.newThisMonth, key: const ValueKey('analysis-new'))),
+      );
+    }
+    if (!result.hasBaseline) return const SizedBox.shrink();
+    final style = textTheme.bodyMedium?.copyWith(color: colors.ink2);
+    final amount = AppMoneyFormatter.format(result.difference);
+    final label = t.analysis.compare.vs(label: _compareLabel(comparison));
+    return Padding(
+      key: const ValueKey('analysis-compare'),
+      padding: const EdgeInsets.only(top: AppSpacing.space2, left: AppSpacing.space4, right: AppSpacing.space4),
+      child: Semantics(
+        container: true,
+        label: result.isHigher
+            ? t.analysis.compare.srHigher(amount: amount, label: label)
+            : t.analysis.compare.srLower(amount: amount, label: label),
+        excludeSemantics: true,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: AppIcon(result.isHigher ? IconKey.arrowUp : IconKey.arrowDown, size: 16, color: colors.ink2),
+            ),
+            const SizedBox(width: AppSpacing.space1),
+            Flexible(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: amount,
+                      style: style?.copyWith(color: colors.ink, fontWeight: FontWeight.w600),
+                    ),
+                    TextSpan(text: ' $label'),
+                  ],
+                ),
+                style: style,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Sorotan perubahan (B-7), 0–3 baris di atas daftar, kalimat netral tanpa
+/// nilai. Membuka Rincian kategori menyusul di irisan 6.
+class _Highlights extends StatelessWidget {
+  const _Highlights({required this.comparison, required this.highlights});
+
+  final PeriodComparison comparison;
+  final List<Highlight> highlights;
+
+  @override
+  Widget build(BuildContext context) {
+    if (highlights.isEmpty) return const SizedBox.shrink();
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    final label = _compareLabel(comparison);
+    return Container(
+      key: const ValueKey('analysis-highlights'),
+      margin: const EdgeInsets.only(top: AppSpacing.space2),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: colors.line)),
+      ),
+      child: Column(
+        children: [
+          for (final highlight in highlights)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space2),
+              child: Row(
+                children: [
+                  AppIconTile(
+                    highlight.group.category == null ? IconKey.freelance : categoryIcon(highlight.group.category!),
+                  ),
+                  const SizedBox(width: AppSpacing.space3),
+                  Expanded(
+                    child: Text(
+                      _highlightText(highlight, label),
+                      style: textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// "Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan". Saat nominal
+  /// disembunyikan, nominalnya dilepas dari kalimat.
+  String _highlightText(Highlight highlight, String label) {
+    final name = _groupName(highlight.group);
+    final subject = AmountVisibility.hidden
+        ? name
+        : '$name ${AppMoneyFormatter.format(highlight.comparison.difference)}';
+    return highlight.comparison.isHigher
+        ? t.analysis.highlight.higher(subject: subject, compare: label)
+        : t.analysis.highlight.lower(subject: subject, compare: label);
   }
 }
 

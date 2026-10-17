@@ -1,4 +1,5 @@
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -20,6 +21,7 @@ final class AnalysisState extends UiState<AnalysisState> {
     this.kind = CategoryKind.expense,
     this.walletId,
     this.wallets = const [],
+    this.comparison,
     super.effect,
   });
 
@@ -75,6 +77,16 @@ final class AnalysisState extends UiState<AnalysisState> {
   /// tetap dihitung, B-5).
   final List<Wallet> wallets;
 
+  /// Pembanding terhadap bulan pembanding (B-6); `null` bila tidak ada bulan
+  /// pembanding atau [period] adalah periode peralihan.
+  final PeriodComparison? comparison;
+
+  /// Sorotan perubahan (B-7), paling banyak tiga.
+  List<Highlight> get highlights {
+    final summary = this.summary;
+    return comparison == null || summary == null ? const [] : comparison!.highlightsOf(summary);
+  }
+
   /// Baris yang dipilih, atau `null`.
   AnalysisGroup? get selected => selectedKey == null ? null : summary?.groupOf(selectedKey!);
 
@@ -92,14 +104,21 @@ final class AnalysisState extends UiState<AnalysisState> {
     kind: kind,
     walletId: walletId,
     wallets: wallets,
+    comparison: comparison,
   );
 
   /// Salinan dengan jenis [kind] dan dompet [walletId] baru (`null` = semua);
   /// pilihan baris dikosongkan karena barisnya berganti.
-  AnalysisState withControls({required CategoryKind kind, required String? walletId, PeriodSummary? summary}) =>
+  AnalysisState withControls({
+    required CategoryKind kind,
+    required String? walletId,
+    PeriodSummary? summary,
+    PeriodComparison? comparison,
+  }) =>
       AnalysisState(
         period: period,
         summary: summary ?? this.summary,
+        comparison: comparison,
         isCurrent: isCurrent,
         canGoBack: canGoBack,
         hasAnyTransactions: hasAnyTransactions,
@@ -124,6 +143,7 @@ final class AnalysisState extends UiState<AnalysisState> {
     kind: kind,
     walletId: walletId,
     wallets: wallets,
+    comparison: comparison,
     effect: effect,
   );
 
@@ -141,5 +161,6 @@ final class AnalysisState extends UiState<AnalysisState> {
     kind,
     walletId,
     wallets,
+    comparison,
   ];
 }

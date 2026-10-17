@@ -274,6 +274,92 @@ void main() {
     });
   });
 
+  group('dibanding biasanya (F2, B-6, B-7)', () {
+    // Juni–Agustus dari FINANCIAL_ANALYSIS §10: rata-rata Makan Rp950.000, Belanja Rp2.820.000.
+    List<Transaction> history() => [
+      expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),
+      expenseOn(DateTime(2026, 7, 5), 950000, category: 'makan'),
+      expenseOn(DateTime(2026, 8, 5), 1000000, category: 'makan'),
+      expenseOn(DateTime(2026, 6, 6), 2700000, category: 'belanja'),
+      expenseOn(DateTime(2026, 7, 6), 2850000, category: 'belanja'),
+      expenseOn(DateTime(2026, 8, 6), 2910000, category: 'belanja'),
+    ];
+
+    // Hari ini 10 Okt: September sudah selesai, dibandingkan penuh.
+    Future<void> openSeptember(WidgetTester tester) async {
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      await tester.tap(find.byKey(const ValueKey('period-previous')));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('total di bawah donat dan sorotan Makan +Rp295.000; Belanja (+8,8%) tidak disorot', (tester) async {
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.textContaining('Rp7.650.700', findRichText: true), findsOneWidget);
+      expect(find.textContaining('dibanding rata-rata 3 bulan', findRichText: true), findsOneWidget);
+      expect(find.text('Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan'), findsOneWidget);
+      expect(find.textContaining('lebih tinggi dari', findRichText: true), findsOneWidget, reason: 'hanya satu sorotan');
+    });
+
+    testWidgets('memilih Makan: pembanding kategori; Cicilan (tanpa riwayat): baru bulan ini', (tester) async {
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Makan')));
+      await tester.pump();
+      expect(find.textContaining('Rp295.000 dibanding rata-rata 3 bulan', findRichText: true), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Cicilan')));
+      await tester.pump();
+      expect(find.byKey(const ValueKey('analysis-new')), findsOneWidget);
+      expect(find.text('baru bulan ini'), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-compare')), findsNothing);
+    });
+
+    testWidgets('bulan pertama pencatatan: tanpa pembanding dan tanpa sorotan', (tester) async {
+      await seed(september2026());
+      await openSeptember(tester);
+      expect(find.byKey(const ValueKey('analysis-compare')), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-highlights')), findsNothing);
+    });
+
+    testWidgets('periode berjalan: dibanding s.d. tanggal yang sama (Makan +Rp180.000)', (tester) async {
+      await seed([
+        expenseOn(DateTime(2026, 7, 3), 300000, category: 'makan'),
+        expenseOn(DateTime(2026, 7, 20), 650000, category: 'makan'),
+        expenseOn(DateTime(2026, 8, 4), 340000, category: 'makan'),
+        expenseOn(DateTime(2026, 8, 25), 660000, category: 'makan'),
+        expenseOn(DateTime(2026, 9, 2), 380000, category: 'makan'),
+        expenseOn(DateTime(2026, 9, 28), 865000, category: 'makan'),
+        expenseOn(DateTime(2026, 10, 4), 520000, category: 'makan'),
+      ]);
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      expect(find.text('Makan Rp180.000 lebih tinggi dari rata-rata s.d. tanggal 10'), findsOneWidget);
+      expect(find.textContaining('dibanding rata-rata s.d. tanggal 10', findRichText: true), findsOneWidget);
+    });
+
+    testWidgets('nominal disembunyikan: sorotan tanpa nominal', (tester) async {
+      AmountVisibility.notifier.value = true;
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.text('Makan lebih tinggi dari rata-rata 3 bulan'), findsOneWidget);
+    });
+
+    testWidgets('bahasa Inggris: "higher than 3-month average"', (tester) async {
+      await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      expect(find.textContaining('higher than 3-month average'), findsOneWidget);
+    });
+
+    testWidgets('pembanding mengikuti jenis dan dompet: Pemasukan tanpa riwayat tidak membandingkan', (tester) async {
+      await seed([...history(), ...september2026()]);
+      await openSeptember(tester);
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-compare')), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-highlights')), findsNothing);
+    });
+  });
+
   group('jenis dan dompet (F2, F3)', () {
     Future<void> seedWallets({bool two = true}) async {
       final wallets = WalletRepositoryImpl(storage: storage);

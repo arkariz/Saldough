@@ -3362,6 +3362,9 @@ class Translations$analysis$id {
 
 	/// id: 'Belum ada pemasukan di $period.'
 	String emptyMonthIncome({required Object period}) => 'Belum ada pemasukan di ${period}.';
+
+	late final Translations$analysis$compare$id compare = Translations$analysis$compare$id.internal(_root);
+	late final Translations$analysis$highlight$id highlight = Translations$analysis$highlight$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3922,6 +3925,51 @@ class Translations$analysis$empty$id {
 
 	/// id: 'Catat transaksi'
 	String get cta => 'Catat transaksi';
+}
+
+// Path: analysis.compare
+class Translations$analysis$compare$id {
+	Translations$analysis$compare$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'rata-rata $n bulan'
+	String avg({required Object n}) => 'rata-rata ${n} bulan';
+
+	/// id: 'bulan lalu'
+	String get lastMonth => 'bulan lalu';
+
+	/// id: 'rata-rata s.d. tanggal $day'
+	String toDate({required Object day}) => 'rata-rata s.d. tanggal ${day}';
+
+	/// id: 'dibanding $label'
+	String vs({required Object label}) => 'dibanding ${label}';
+
+	/// id: 'baru bulan ini'
+	String get newThisMonth => 'baru bulan ini';
+
+	/// id: '$amount lebih tinggi, $label'
+	String srHigher({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}';
+
+	/// id: '$amount lebih rendah, $label'
+	String srLower({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}';
+}
+
+// Path: analysis.highlight
+class Translations$analysis$highlight$id {
+	Translations$analysis$highlight$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$subject lebih tinggi dari $compare'
+	String higher({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}';
+
+	/// id: '$subject lebih rendah dari $compare'
+	String lower({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}';
 }
 
 // Path: record.voice.failure
@@ -5145,6 +5193,15 @@ extension on Translations {
 			'analysis.allWallets' => 'Semua dompet',
 			'analysis.walletLabel' => 'Dompet',
 			'analysis.emptyMonthIncome' => ({required Object period}) => 'Belum ada pemasukan di ${period}.',
+			'analysis.compare.avg' => ({required Object n}) => 'rata-rata ${n} bulan',
+			'analysis.compare.lastMonth' => 'bulan lalu',
+			'analysis.compare.toDate' => ({required Object day}) => 'rata-rata s.d. tanggal ${day}',
+			'analysis.compare.vs' => ({required Object label}) => 'dibanding ${label}',
+			'analysis.compare.newThisMonth' => 'baru bulan ini',
+			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}',
+			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}',
+			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}',
+			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}',
 			_ => null,
 		};
 	}

@@ -1314,6 +1314,8 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override String get allWallets => 'All wallets';
 	@override String get walletLabel => 'Wallet';
 	@override String emptyMonthIncome({required Object period}) => 'No income in ${period} yet.';
+	@override late final _Translations$analysis$compare$en compare = _Translations$analysis$compare$en._(_root);
+	@override late final _Translations$analysis$highlight$en highlight = _Translations$analysis$highlight$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1597,6 +1599,33 @@ class _Translations$analysis$empty$en extends Translations$analysis$empty$id {
 	@override String get title => 'Nothing to analyze yet';
 	@override String get body => 'Record transactions to see where your money goes.';
 	@override String get cta => 'Record a transaction';
+}
+
+// Path: analysis.compare
+class _Translations$analysis$compare$en extends Translations$analysis$compare$id {
+	_Translations$analysis$compare$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String avg({required Object n}) => '${n}-month average';
+	@override String get lastMonth => 'last month';
+	@override String toDate({required Object day}) => 'average through day ${day}';
+	@override String vs({required Object label}) => 'vs ${label}';
+	@override String get newThisMonth => 'new this month';
+	@override String srHigher({required Object amount, required Object label}) => '${amount} higher, ${label}';
+	@override String srLower({required Object amount, required Object label}) => '${amount} lower, ${label}';
+}
+
+// Path: analysis.highlight
+class _Translations$analysis$highlight$en extends Translations$analysis$highlight$id {
+	_Translations$analysis$highlight$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String higher({required Object subject, required Object compare}) => '${subject} higher than ${compare}';
+	@override String lower({required Object subject, required Object compare}) => '${subject} lower than ${compare}';
 }
 
 // Path: record.voice.failure
@@ -2808,6 +2837,15 @@ extension on TranslationsEn {
 			'analysis.allWallets' => 'All wallets',
 			'analysis.walletLabel' => 'Wallet',
 			'analysis.emptyMonthIncome' => ({required Object period}) => 'No income in ${period} yet.',
+			'analysis.compare.avg' => ({required Object n}) => '${n}-month average',
+			'analysis.compare.lastMonth' => 'last month',
+			'analysis.compare.toDate' => ({required Object day}) => 'average through day ${day}',
+			'analysis.compare.vs' => ({required Object label}) => 'vs ${label}',
+			'analysis.compare.newThisMonth' => 'new this month',
+			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} higher, ${label}',
+			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lower, ${label}',
+			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} higher than ${compare}',
+			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lower than ${compare}',
 			_ => null,
 		};
 	}

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/domain/summarize_period.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
@@ -45,6 +47,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     ActiveFinancialMonth.notifier.addListener(_refresh);
     ActiveDay.notifier.addListener(_refresh);
     ActiveCategories.notifier.addListener(_refresh);
+    ActiveCurrency.notifier.addListener(_refresh);
   }
 
   void _refresh() => add(const AnalysisRefreshed());
@@ -58,8 +61,24 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   /// Tanggal di dalam periode yang dilihat; `null` = ikut periode berjalan.
   DateTime? _anchor;
 
-  /// Transaksi periode yang dilihat; jenis dan dompet berganti tanpa membaca ulang.
+  /// Transaksi periode yang dilihat dan bulan pembandingnya; jenis dan dompet
+  /// berganti tanpa membaca ulang.
   List<Transaction> _transactions = const [];
+
+  /// Bulan pembanding periode yang dilihat (B-6) dan hari ini bila periode berjalan.
+  List<FinancialPeriod> _comparisonPeriods = const [];
+  DateTime? _comparisonToday;
+
+  PeriodComparison? _compare(AnalysisState from, CategoryKind kind, String? walletId) => comparePeriod(
+    transactions: _transactions,
+    period: from.period,
+    periods: _comparisonPeriods,
+    kind: kind,
+    categoryOf: _categoryOf,
+    today: _comparisonToday,
+    walletId: walletId,
+    minSen: highlightMinSenOf(ActiveCurrency.value),
+  );
 
   Future<void> _onStarted(AnalysisStarted event, Emitter<AnalysisState> emit) async {
     _anchor = event.periodStart;
@@ -95,7 +114,14 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   /// sudah dibaca dan pilihan baris dikosongkan (barisnya berganti).
   void _onControls(Emitter<AnalysisState> emit, {required CategoryKind kind, required String? walletId}) {
     if (state.summary == null || (kind == state.kind && walletId == state.walletId)) return;
-    emit(state.withControls(kind: kind, walletId: walletId, summary: _summarize(state, kind, walletId)));
+    emit(
+      state.withControls(
+        kind: kind,
+        walletId: walletId,
+        summary: _summarize(state, kind, walletId),
+        comparison: _compare(state, kind, walletId),
+      ),
+    );
   }
 
   Future<void> _onStepped(AnalysisPeriodStepped event, Emitter<AnalysisState> emit) async {
@@ -146,7 +172,10 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         };
         final first = months.reduce((a, b) => a.isBefore(b) ? a : b);
         final earliest = schedule.periodOf(DateTime(first.year, first.month));
-        switch (await ListPeriodTransactions(_repository)(from: period.start, until: period.end)) {
+        _comparisonPeriods = comparisonPeriods(period: period, schedule: schedule, earliestStart: earliest.start);
+        _comparisonToday = period.start == current.start ? _now() : null;
+        final readFrom = _comparisonPeriods.isEmpty ? period.start : _comparisonPeriods.last.start;
+        switch (await ListPeriodTransactions(_repository)(from: readFrom, until: period.end)) {
           case Left(:final value):
             _emitFailure(emit, value, firstLoad: firstLoad);
           case Right(:final value):
@@ -176,6 +205,16 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
                 kind: state.kind,
                 walletId: walletId,
                 wallets: wallets,
+                comparison: comparePeriod(
+                  transactions: value,
+                  period: period,
+                  periods: _comparisonPeriods,
+                  kind: state.kind,
+                  categoryOf: _categoryOf,
+                  today: _comparisonToday,
+                  walletId: walletId,
+                  minSen: highlightMinSenOf(ActiveCurrency.value),
+                ),
               ),
             );
         }
@@ -195,6 +234,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     ActiveFinancialMonth.notifier.removeListener(_refresh);
     ActiveDay.notifier.removeListener(_refresh);
     ActiveCategories.notifier.removeListener(_refresh);
+    ActiveCurrency.notifier.removeListener(_refresh);
     await _ledgerSubscription.cancel();
     return super.close();
   }

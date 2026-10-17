@@ -1266,6 +1266,19 @@
     "kindLabel": "Type",
     "allWallets": "All wallets",
     "walletLabel": "Wallet",
-    "emptyMonthIncome": "No income in $period yet."
+    "emptyMonthIncome": "No income in $period yet.",
+    "compare": {
+      "avg": "$n-month average",
+      "lastMonth": "last month",
+      "toDate": "average through day $day",
+      "vs": "vs $label",
+      "newThisMonth": "new this month",
+      "srHigher": "$amount higher, $label",
+      "srLower": "$amount lower, $label"
+    },
+    "highlight": {
+      "higher": "$subject higher than $compare",
+      "lower": "$subject lower than $compare"
+    }
   }
 }

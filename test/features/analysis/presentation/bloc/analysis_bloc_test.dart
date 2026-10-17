@@ -62,6 +62,38 @@ void main() {
     return bloc.stream.firstWhere((s) => !s.isLoading);
   }
 
+  group('pembanding (B-6)', () {
+    test('September dengan Jun–Agt: 3 bulan pembanding, sorotan Makan; periode peralihan tanpa pembanding', () async {
+      await seed([
+        expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),
+        expenseOn(DateTime(2026, 7, 5), 950000, category: 'makan'),
+        expenseOn(DateTime(2026, 8, 5), 1000000, category: 'makan'),
+        ...september2026(),
+      ]);
+      final bloc = create();
+      final state = await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      expect(state.comparison!.months, 3);
+      expect(state.comparison!.toDay, isNull);
+      expect(state.highlights.map((h) => h.group.key), ['cat:makan']);
+
+      // Jenis berganti: dihitung ulang dari transaksi yang sama (Pemasukan tanpa riwayat → semua baru).
+      bloc.add(const AnalysisKindChanged(CategoryKind.income));
+      final income = await bloc.stream.firstWhere((s) => s.kind == CategoryKind.income);
+      expect(income.comparison!.totalSum, 0);
+      expect(income.highlights, isEmpty);
+    });
+
+    test('periode berjalan: toDay = tanggal hari ini; bulan pertama pencatatan tidak punya pembanding', () async {
+      await seed([expenseOn(DateTime(2026, 8, 4), 100000, category: 'makan'), expenseOn(DateTime(2026, 10, 4), 50000, category: 'makan')]);
+      final state = await loaded(create());
+      expect(state.comparison!.toDay, 10);
+      expect(state.comparison!.months, 2, reason: 'September dan Agustus; Juli sebelum pencatatan pertama');
+
+      final first = await loaded(create(), AnalysisStarted(periodStart: DateTime(2026, 8, 15)));
+      expect(first.comparison, isNull);
+    });
+  });
+
   group('jenis dan dompet (F2, F3)', () {
     Future<void> seedWallets() async {
       final wallets = WalletRepositoryImpl(storage: storage);

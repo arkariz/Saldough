@@ -4281,7 +4281,16 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
         Rp120.000 → diubah ke Transportasi → daftar "0 transaksi · Tidak ada
         lagi transaksi di sini."; kembali: Tanpa kategori hilang, Lainnya
         (3 kategori) Rp1.493.200 13%, total tetap Rp11.420.700.
-      - Belum: A8–A13, A15, B2–B5.
+      - A8 Lulus (perbaikan 2e9b166): penyaring dompet Tabungan, September →
+        "Belum ada pengeluaran di September." + "Transfer masuk Rp1.000.000 /
+        Transfer keluar Rp0".
+      - Persiapan A9/A10: rutin Gaji +Rp12.000.000 tiap 25 (Simpan jadwal,
+        BCA) ditambahkan supaya Bulan ini tidak kosong; jam diubah ke 3 Okt
+        2026. Kartu "Okt dimulai" memuat "Kilas balik September 2026 /
+        Lihat". Belum diketuk.
+      - Belum: A9–A13, A15, B2–B5. Emulator ditinggalkan dengan jam
+        dikembalikan otomatis; data uji tetap di emulator untuk dilanjutkan
+        (jam perlu disetel lagi ke 3 atau 10 Okt 2026).
 
 ## Fase 20: Pengumuman pembaruan
 

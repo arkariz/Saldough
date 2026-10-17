@@ -24,6 +24,22 @@ final class TransactionHistoryInput extends RouteInput {
   final String walletId;
 }
 
+/// Input Daftar tersaring satu periode (dari Analisis, T-19.3): daftar semua
+/// transaksi yang lolos [filter], bukan satu bulan kalender.
+final class TransactionFilterInput extends RouteInput {
+  /// Membuat [TransactionFilterInput].
+  const TransactionFilterInput({required this.title, required this.subtitle, required this.filter});
+
+  /// Judul layar, mis. "Tanpa kategori" atau nama kategori.
+  final String title;
+
+  /// Keterangan di bawah judul, mis. nama periode.
+  final String subtitle;
+
+  /// Saringan; jumlahnya sama dengan total barisnya di Analisis.
+  final PeriodTransactionFilter filter;
+}
+
 /// Kunci rute fitur `transaction`.
 abstract final class TransactionRouteKeys {
   /// Rincian satu transaksi.
@@ -31,4 +47,8 @@ abstract final class TransactionRouteKeys {
 
   /// Riwayat tersaring satu dompet, terpisah dari tab Riwayat.
   static const history = RouteKey<TransactionHistoryInput>('transaction.history');
+
+  /// Daftar tersaring satu periode, dibuka dari Analisis ("Beri kategori",
+  /// "Lihat semua transaksi").
+  static const filtered = RouteKey<TransactionFilterInput>('transaction.filtered');
 }

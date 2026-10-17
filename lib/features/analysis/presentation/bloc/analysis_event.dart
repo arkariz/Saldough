@@ -22,6 +22,16 @@ final class AnalysisRefreshed extends AnalysisEvent {
   const AnalysisRefreshed();
 }
 
+/// Mengetuk irisan donat atau baris legenda (F1): memilih barisnya, mengetuk
+/// lagi membatalkan. Lainnya memilih sekaligus membuka anggotanya.
+final class AnalysisGroupSelected extends AnalysisEvent {
+  /// Membuat [AnalysisGroupSelected].
+  const AnalysisGroupSelected(this.key);
+
+  /// [AnalysisGroup.key] baris yang diketuk.
+  final String key;
+}
+
 /// Pindah satu periode ke belakang atau ke depan (F6).
 final class AnalysisPeriodStepped extends AnalysisEvent {
   /// Membuat [AnalysisPeriodStepped].

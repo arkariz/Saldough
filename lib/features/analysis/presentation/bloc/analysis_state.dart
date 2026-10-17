@@ -13,6 +13,8 @@ final class AnalysisState extends UiState<AnalysisState> {
     required this.hasAnyTransactions,
     required this.isLoading,
     this.loadFailed = false,
+    this.selectedKey,
+    this.othersOpen = false,
     super.effect,
   });
 
@@ -50,6 +52,29 @@ final class AnalysisState extends UiState<AnalysisState> {
   /// Pemuatan pertama gagal.
   final bool loadFailed;
 
+  /// Kunci baris yang dipilih di donat atau legenda ([AnalysisGroup.key]), atau
+  /// `null`. Tidak disimpan: pindah periode mengosongkannya.
+  final String? selectedKey;
+
+  /// Anggota Lainnya sedang dibuka.
+  final bool othersOpen;
+
+  /// Baris yang dipilih, atau `null`.
+  AnalysisGroup? get selected => selectedKey == null ? null : summary?.groupOf(selectedKey!);
+
+  /// Salinan dengan pilihan [key] dan keadaan [othersOpen] (`key` `null` = tanpa pilihan).
+  AnalysisState withSelection(String? key, {required bool othersOpen}) => AnalysisState(
+    period: period,
+    summary: summary,
+    isCurrent: isCurrent,
+    canGoBack: canGoBack,
+    hasAnyTransactions: hasAnyTransactions,
+    isLoading: isLoading,
+    loadFailed: loadFailed,
+    selectedKey: key,
+    othersOpen: othersOpen,
+  );
+
   @override
   AnalysisState copyWith({bool? isLoading, bool? loadFailed, UiEffect? effect}) => AnalysisState(
     period: period,
@@ -59,9 +84,21 @@ final class AnalysisState extends UiState<AnalysisState> {
     hasAnyTransactions: hasAnyTransactions,
     isLoading: isLoading ?? this.isLoading,
     loadFailed: loadFailed ?? this.loadFailed,
+    selectedKey: selectedKey,
+    othersOpen: othersOpen,
     effect: effect,
   );
 
   @override
-  List<Object?> get props => [period, summary, isCurrent, canGoBack, hasAnyTransactions, isLoading, loadFailed];
+  List<Object?> get props => [
+    period,
+    summary,
+    isCurrent,
+    canGoBack,
+    hasAnyTransactions,
+    isLoading,
+    loadFailed,
+    selectedKey,
+    othersOpen,
+  ];
 }

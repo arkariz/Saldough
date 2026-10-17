@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -106,6 +107,87 @@ void main() {
     final clamped = await loaded(create(), AnalysisStarted(periodStart: DateTime(2027, 3)));
     expect(clamped.period.start, DateTime(2026, 10));
     expect(clamped.isCurrent, isTrue);
+  });
+
+  group('pilihan kategori (F1)', () {
+    Future<AnalysisBloc> september() async {
+      await seed(september2026());
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9)));
+      return bloc;
+    }
+
+    Future<AnalysisState> select(AnalysisBloc bloc, String key) {
+      bloc.add(AnalysisGroupSelected(key));
+      return bloc.stream.first;
+    }
+
+    test('mengetuk memilih, mengetuk lagi membatalkan; hanya satu pilihan sekaligus', () async {
+      final bloc = await september();
+      expect(bloc.state.selectedKey, isNull);
+      var state = await select(bloc, 'cat:makan');
+      expect(state.selected!.category!.name, 'Makan');
+      expect(state.summary!.sliceOf('cat:makan'), 3);
+      state = await select(bloc, 'cat:belanja');
+      expect(state.selectedKey, 'cat:belanja');
+      state = await select(bloc, 'cat:belanja');
+      expect(state.selectedKey, isNull);
+    });
+
+    test('Lainnya memilih sekaligus membuka anggotanya; mengetuk lagi menutup keduanya; anggota menyalakan irisan Lainnya', () async {
+      final bloc = await september();
+      var state = await select(bloc, 'others');
+      expect([state.selectedKey, state.othersOpen], ['others', true]);
+      state = await select(bloc, 'cat:tagihan');
+      expect(state.selected!.category!.name, 'Tagihan');
+      expect(state.othersOpen, isTrue, reason: 'anggota tetap terbuka saat dipilih');
+      expect(state.summary!.sliceOf('cat:tagihan'), 5, reason: 'irisan Lainnya yang menyala');
+      state = await select(bloc, 'cat:tagihan');
+      state = await select(bloc, 'others');
+      state = await select(bloc, 'others');
+      expect([state.selectedKey, state.othersOpen], [null, false]);
+    });
+
+    test('kunci yang tidak ada diabaikan; Tanpa kategori bisa dipilih', () async {
+      final bloc = await september();
+      bloc.add(const AnalysisGroupSelected('cat:tidak-ada'));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(bloc.state.selectedKey, isNull);
+      final state = await select(bloc, 'uncategorized');
+      expect(state.selected!.kind, AnalysisGroupKind.uncategorized);
+    });
+
+    test('pindah periode mengosongkan pilihan; penyegaran mempertahankannya selama barisnya ada', () async {
+      await seed([...september2026(), expenseOn(DateTime(2026, 8, 12), 700000, category: 'makan')]);
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9)));
+      await select(bloc, 'cat:makan');
+      await select(bloc, 'others');
+
+      ledger.notifyChanged(source: Object());
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      expect(bloc.state.selectedKey, 'others', reason: 'penyegaran tidak menghapus pilihan');
+      expect(bloc.state.othersOpen, isTrue);
+
+      bloc.add(const AnalysisPeriodStepped(forward: false));
+      final august = await bloc.stream.firstWhere((s) => s.period.start == DateTime(2026, 8));
+      expect(august.selectedKey, isNull);
+      expect(august.othersOpen, isFalse);
+    });
+
+    test('penyegaran membuang pilihan yang barisnya sudah hilang', () async {
+      final bloc = await september();
+      await select(bloc, 'uncategorized');
+      // Tanpa kategori diberi kategori di layar lain.
+      final uncategorized = (await repository.listTransactionsInMonth(DateTime(2026, 9)))
+          .getOrElse((_) => const [])
+          .whereType<ExpenseTransaction>()
+          .firstWhere((t) => t.categoryId == null);
+      await repository.saveTransaction(uncategorized.copyWith(categoryId: 'makan'));
+      ledger.notifyChanged(source: Object());
+      final refreshed = await bloc.stream.firstWhere((s) => s.summary!.groupOf('uncategorized') == null);
+      expect(refreshed.selectedKey, isNull);
+    });
   });
 
   test('belum ada transaksi sama sekali: keadaan kosong, tanpa ringkasan', () async {

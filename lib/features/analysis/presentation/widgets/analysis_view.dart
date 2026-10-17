@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -9,7 +11,9 @@ import 'package:saldough/features/analysis/presentation/analysis_colors.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_keys.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
 /// Isi layar Analisis satu periode (Riwayat › Analisis, A2): pemilih periode,
@@ -76,7 +80,7 @@ class AnalysisView extends StatelessWidget {
           ),
         )
       else
-        _AnalysisCard(summary: summary, periodName: period.name),
+        _AnalysisCard(state: state, summary: summary),
     ];
   }
 }
@@ -93,30 +97,26 @@ String _groupName(AnalysisGroup group) => switch (group.kind) {
 String _kindName(CategoryKind kind) => kind == CategoryKind.expense ? t.analysis.kind.expense : t.analysis.kind.income;
 
 /// Kartu donat: lingkar, legenda, dan kaki transfer di satu `AppCard`.
-class _AnalysisCard extends StatefulWidget {
-  const _AnalysisCard({required this.summary, required this.periodName});
+/// Mengetuk irisan atau baris memilih kategori (F1): irisan lain meredup dan
+/// tengah donat berganti ke kategori itu; mengetuk lagi membatalkan.
+class _AnalysisCard extends StatelessWidget {
+  const _AnalysisCard({required this.state, required this.summary});
 
+  final AnalysisState state;
   final PeriodSummary summary;
-  final String periodName;
-
-  @override
-  State<_AnalysisCard> createState() => _AnalysisCardState();
-}
-
-class _AnalysisCardState extends State<_AnalysisCard> {
-  /// Anggota Lainnya sedang dibuka.
-  bool _othersOpen = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final textTheme = Theme.of(context).textTheme;
-    final summary = widget.summary;
+    final bloc = context.read<AnalysisBloc>();
     final groups = summary.groups;
     final kind = _kindName(summary.kind);
     final amountColor = summary.kind == CategoryKind.income ? colors.positive : null;
+    final selected = state.selected;
+    final selectedSlice = state.selectedKey == null ? null : summary.sliceOf(state.selectedKey!);
+    void select(String key) => bloc.add(AnalysisGroupSelected(key));
     var divider = false;
-    Widget row(AnalysisGroup group, {bool child = false, Color? swatch, bool? expanded, VoidCallback? onTap}) {
+    Widget row(AnalysisGroup group, {bool child = false, Color? swatch, bool? expanded}) {
       final name = _groupName(group);
       final percent = _shareText(group.share);
       final widget = AppLegendRow(
@@ -132,9 +132,10 @@ class _AnalysisCardState extends State<_AnalysisCard> {
         swatch: swatch,
         child: child,
         expanded: expanded,
+        selected: group.key == state.selectedKey,
         showDivider: divider,
         amountColor: amountColor,
-        onTap: onTap,
+        onTap: () => select(group.key),
       );
       divider = true;
       return widget;
@@ -150,37 +151,111 @@ class _AnalysisCardState extends State<_AnalysisCard> {
           Center(
             child: AppDonutChart(
               slices: [for (final g in groups) DonutSlice(value: g.amount, color: analysisColorOf(colors, g))],
+              selected: selectedSlice,
+              onSelect: (index) => select(groups[index].key),
               semanticsLabel: t.analysis.donutSemantics(
                 kind: kind,
-                period: widget.periodName,
+                period: state.period.name,
                 parts: groups.map((g) => '${_groupName(g)} ${_shareText(g.share)}').join(', '),
               ),
-              center: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(kind, style: textTheme.bodyMedium?.copyWith(color: colors.ink2)),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: AppMoneyText(summary.total, size: MoneySize.large, color: amountColor),
-                  ),
-                ],
+              center: _DonutCenter(
+                kindName: kind,
+                total: summary.total,
+                color: amountColor,
+                selected: selected,
+                lowerKind: kind.toLowerCase(),
               ),
             ),
           ),
+          // "Beri kategori" muncul saat Tanpa kategori dipilih (F5); "Lihat
+          // rincian" menyusul bersama layar Rincian kategori.
+          if (selected?.kind == AnalysisGroupKind.uncategorized) ...[
+            const SizedBox(height: AppSpacing.space2),
+            Center(
+              child: AppButton.secondary(
+                key: const ValueKey('analysis-fix'),
+                label: t.analysis.fix,
+                small: true,
+                onPressed: () => unawaited(
+                  context.pushRoute(
+                    TransactionRouteKeys.filtered,
+                    TransactionFilterInput(
+                      title: t.analysis.uncategorized,
+                      subtitle: state.period.label,
+                      filter: PeriodTransactionFilter(
+                        from: state.period.start,
+                        until: state.period.end,
+                        type: summary.kind == CategoryKind.expense
+                            ? TransactionTypeFilter.expense
+                            : TransactionTypeFilter.income,
+                        uncategorized: true,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[
             row(
               group,
               swatch: analysisColorOf(colors, group),
-              expanded: group.kind == AnalysisGroupKind.others ? _othersOpen : null,
-              onTap: group.kind == AnalysisGroupKind.others ? () => setState(() => _othersOpen = !_othersOpen) : null,
+              expanded: group.kind == AnalysisGroupKind.others ? state.othersOpen : null,
             ),
-            if (group.kind == AnalysisGroupKind.others && _othersOpen)
+            if (group.kind == AnalysisGroupKind.others && state.othersOpen)
               for (final member in group.children) row(member, child: true),
           ],
           if (summary.transfers.hasAny) _TransferFoot(info: summary.transfers),
         ],
       ),
+    );
+  }
+}
+
+/// Isi lubang donat: jenis dan total; bila ada pilihan, namanya, nominalnya,
+/// dan "{persen} dari pengeluaran" (`tk-donut__center`).
+class _DonutCenter extends StatelessWidget {
+  const _DonutCenter({
+    required this.kindName,
+    required this.total,
+    required this.color,
+    required this.selected,
+    required this.lowerKind,
+  });
+
+  final String kindName;
+  final int total;
+  final Color? color;
+  final AnalysisGroup? selected;
+  final String lowerKind;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final textTheme = Theme.of(context).textTheme;
+    final group = selected;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          group == null ? kindName : _groupName(group),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: AppMoneyText(group?.amount ?? total, size: MoneySize.large, color: color),
+        ),
+        if (group != null)
+          Text(
+            t.analysis.shareOf(percent: _shareText(group.share), kind: lowerKind),
+            textAlign: TextAlign.center,
+            style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          ),
+      ],
     );
   }
 }

@@ -223,7 +223,9 @@
     "makeRecurringAction": "Jadikan rutin",
     "previousMonth": "Bulan sebelumnya",
     "nextMonth": "Bulan berikutnya",
-    "listSegment": "Daftar"
+    "listSegment": "Daftar",
+    "filteredCount": "$count transaksi",
+    "filteredEmpty": "Tidak ada lagi transaksi di sini."
   },
   "wallet": {
     "subtitle": "Total saldo semua dompet aktif",
@@ -1255,6 +1257,8 @@
     "emptyMonth": "Belum ada pengeluaran di $period.",
     "error": "Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.",
     "donutSemantics": "$kind $period: $parts",
-    "rowSemantics": "$name, $percent, $amount"
+    "rowSemantics": "$name, $percent, $amount",
+    "fix": "Beri kategori",
+    "shareOf": "$percent dari $kind"
   }
 }

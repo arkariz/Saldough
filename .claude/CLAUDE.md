@@ -1,7 +1,7 @@
 # CLAUDE.md — Konteks proyek Saldough
 
 **Terakhir diperbarui:** 15 Oktober 2026
-**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1) berjalan sejak 15 Okt 2026, per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`). Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Versi `0.7.0+13` (tag terbaru `0.7.0+13`), belum dirilis publik.
+**Fase saat ini:** MVP selesai (Fase 0–7), Fase 9 (onboarding, tur spotlight, lapis info) selesai 28 Sep 2026; Fase 8 (tindak lanjut pasca-MVP, persiapan rilis) berjalan; Fase 11 (Catat Cerdas) berjalan; Fase 12 (rapikan batas arsitektur, ADR-030) selesai 1 Okt 2026; Fase 13 (pecah fitur `record`, ADR-033) selesai 1 Okt 2026; Fase 14 (bahasa visual baru, ADR-034) kodenya selesai 9 Okt 2026 (sisa review desain/QA, render situs B-4, verifikasi perangkat); Fase 15 (Rencana dan rutin, ADR-035) berjalan sejak 2 Okt 2026; Fase 16 (Rencana R2, ADR-036) kodenya selesai 4 Okt 2026 (sisa poles T-16.16); Fase 17 (Rencana R3, ADR-037 Accepted) berjalan sejak 4 Okt 2026. Fase 18 (periode keuangan, ADR-038 Accepted) selesai 15 Okt 2026 (rilis `0.7.0+13`, verifikasi perangkat T-18.9 lulus); Fase 19 (Analisis R1) kodenya selesai 17 Okt 2026 per irisan vertikal yang diverifikasi pemilik (rupa sudah ada, salinan di `docs/03-design`); sisa T-19.7 (verifikasi emulator oleh QA) dan PR. Fase 20 (pengumuman pembaruan, ADR-039 Accepted) selesai 15 Okt 2026 (kode di `main`, verifikasi perangkat T-20.8 lulus). Versi `0.7.0+13` (tag terbaru `0.7.0+13`), belum dirilis publik.
 
 ## Apa ini
 
@@ -97,7 +97,9 @@ tanggal kemunculannya, termasuk untuk pos anggaran/KT-1); saldo dan partisi
 tetap memakai `date`. Anggaran punya `endDate` opsional untuk peralihan.
 Beranda (kartu Arus), Rencana, dan segmen Rutin memakai periode yang sama;
 nama periode mengikuti `FINANCIAL_PERIOD.md` P-11. Analisis dan Daftar
-Riwayat menyusul di Fase 19.
+Riwayat (Fase 19) memakai periode yang sama lewat `HistoryPeriod`; Daftar
+tidak bisa maju melewati periode berjalan atau mundur melewati pencatatan
+pertama.
 
 **Pengumuman pembaruan (Fase 20, ADR-039, 15 Okt 2026):** pengguna diberi
 tahu ada **versi baru** (rilis Play Store, dipasang dari dalam aplikasi lewat

@@ -4,3 +4,4 @@ library;
 export 'active_day.dart';
 export 'financial_month_preference_repository.dart';
 export 'financial_period.dart';
+export 'history_period.dart';

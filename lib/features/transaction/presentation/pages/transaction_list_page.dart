@@ -14,7 +14,7 @@ import 'package:saldough/features/transaction/presentation/bloc/transaction_stat
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_empty_states.dart';
 import 'package:saldough/features/transaction/presentation/widgets/transaction_filter_bar.dart';
-import 'package:saldough/features/transaction/presentation/widgets/transaction_month_header.dart';
+import 'package:saldough/features/transaction/presentation/widgets/transaction_period_header.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -145,19 +145,15 @@ class _TransactionListPageState extends State<TransactionListPage> {
                       children: [
                         SpotlightTarget(
                           spotlightKey: SpotlightKey.txnMonth,
-                          child: TransactionMonthHeader(
-                            month: state.month,
+                          child: TransactionPeriodHeader(
+                            period: state.period,
                             rawTransactions: state.rawTransactions,
-                            onPreviousMonth: () => bloc.add(
-                              TransactionMonthChanged(
-                                DateTime(state.month.year, state.month.month - 1),
-                              ),
-                            ),
-                            onNextMonth: () => bloc.add(
-                              TransactionMonthChanged(
-                                DateTime(state.month.year, state.month.month + 1),
-                              ),
-                            ),
+                            onPrevious: state.canGoBack
+                                ? () => bloc.add(const TransactionPeriodStepped(forward: false))
+                                : null,
+                            onNext: state.isCurrent
+                                ? null
+                                : () => bloc.add(const TransactionPeriodStepped(forward: true)),
                           ),
                         ),
                         // Pencarian, dompet, dan kategori TETAP disembunyikan

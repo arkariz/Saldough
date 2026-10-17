@@ -715,8 +715,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get walletCardBody => 'Tap to see this wallet\'s history and record straight from there.';
 	@override String get walletAddTitle => 'Add a wallet';
 	@override String get walletAddBody => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.';
-	@override String get txnMonthTitle => 'One month per view';
-	@override String get txnMonthBody => 'Switch months to see other history. The income and expense totals here cover only the month shown.';
+	@override String get txnMonthTitle => 'One period per view';
+	@override String get txnMonthBody => 'Switch periods to see other history. List and Analysis always use the same period.';
 	@override String get txnFilterTitle => 'Search and filter';
 	@override String get txnFilterBody => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.';
 	@override String get txnRowTitle => 'Edit or delete';
@@ -2316,8 +2316,8 @@ extension on TranslationsEn {
 			'tour.walletCardBody' => 'Tap to see this wallet\'s history and record straight from there.',
 			'tour.walletAddTitle' => 'Add a wallet',
 			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.',
-			'tour.txnMonthTitle' => 'One month per view',
-			'tour.txnMonthBody' => 'Switch months to see other history. The income and expense totals here cover only the month shown.',
+			'tour.txnMonthTitle' => 'One period per view',
+			'tour.txnMonthBody' => 'Switch periods to see other history. List and Analysis always use the same period.',
 			'tour.txnFilterTitle' => 'Search and filter',
 			'tour.txnFilterBody' => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.',
 			'tour.txnRowTitle' => 'Edit or delete',

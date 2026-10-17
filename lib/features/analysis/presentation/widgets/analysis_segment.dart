@@ -14,5 +14,6 @@ class AnalysisSegment extends StatelessWidget {
   final GetIt container;
 
   @override
-  Widget build(BuildContext context) => AnalysisHost(container: container, child: const AnalysisView());
+  Widget build(BuildContext context) =>
+      AnalysisHost(container: container, sharesHistoryPeriod: true, child: const AnalysisView());
 }

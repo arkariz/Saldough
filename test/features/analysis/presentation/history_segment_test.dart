@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -35,6 +36,8 @@ void main() {
   late GetIt container;
 
   setUpAll(registerEffectHandlers);
+
+  tearDown(HistoryPeriod.reset);
 
   setUp(() {
     useCategories(['Makan']);
@@ -172,4 +175,68 @@ void main() {
       );
     },
   );
+
+  group('periode dibagi antara Daftar dan Analisis (T-19.10)', () {
+    final now = DateTime.now();
+    final previous = DateTime(now.year, now.month - 1, 10, 9);
+
+    Future<void> seedTwoMonths() async {
+      final repository = TransactionRepositoryImpl(storage: storage);
+      await repository.saveTransaction(
+        ExpenseTransaction(id: 'e1', date: now, amount: 4500000, note: 'kopi', walletId: 'bca'),
+      );
+      await repository.saveTransaction(
+        ExpenseTransaction(id: 'e0', date: previous, amount: 3000000, note: 'lalu', walletId: 'bca'),
+      );
+    }
+
+    String labelOf(DateTime date) => ActiveFinancialMonth.periodOf(date).label;
+
+    testWidgets('mundur di Daftar lalu pindah ke Analisis: periode sama; maju di Analisis lalu kembali ke Daftar: sama', (
+      tester,
+    ) async {
+      await seedTwoMonths();
+      await openHistoryTab(tester);
+      expect(find.text(labelOf(now)), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('period-previous')));
+      await tester.pumpAndSettle();
+      expect(find.text(labelOf(previous)), findsOneWidget);
+      expect(find.text('lalu'), findsOneWidget);
+
+      await tester.tap(segment('Analisis'));
+      await tester.pumpAndSettle();
+      expect(find.descendant(of: find.byType(AppPeriodStepper), matching: find.text(labelOf(previous))), findsOneWidget);
+      expect(find.text('Rp30.000'), findsWidgets, reason: 'total Analisis periode lalu');
+
+      await tester.tap(find.byKey(const ValueKey('period-next')));
+      await tester.pumpAndSettle();
+      await tester.tap(segment('Daftar'));
+      await tester.pumpAndSettle();
+      expect(find.text(labelOf(now)), findsOneWidget);
+      expect(find.text('kopi'), findsOneWidget);
+    });
+
+    testWidgets('ringkasan Daftar = total Analisis untuk periode yang sama', (tester) async {
+      await seedTwoMonths();
+      await openHistoryTab(tester);
+      expect(find.textContaining('Rp45.000', findRichText: true), findsWidgets, reason: 'Pengeluaran di kartu ringkasan Daftar');
+      await tester.tap(segment('Analisis'));
+      await tester.pumpAndSettle();
+      expect(find.text('Rp45.000'), findsWidgets, reason: 'total di tengah donat Analisis');
+    });
+
+    testWidgets('Daftar tidak bisa maju melewati periode berjalan dan tidak mundur melewati pencatatan pertama', (
+      tester,
+    ) async {
+      await seedTwoMonths();
+      await openHistoryTab(tester);
+      final next = tester.widget<AppIconButton>(find.byKey(const ValueKey('period-next')));
+      expect(next.onPressed, isNull);
+      await tester.tap(find.byKey(const ValueKey('period-previous')));
+      await tester.pumpAndSettle();
+      final back = tester.widget<AppIconButton>(find.byKey(const ValueKey('period-previous')));
+      expect(back.onPressed, isNull, reason: 'bulan pertama pencatatan');
+    });
+  });
 }

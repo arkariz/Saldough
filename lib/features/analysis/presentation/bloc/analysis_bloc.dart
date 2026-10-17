@@ -33,7 +33,9 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     required LedgerChanges ledgerChanges,
     Category? Function(String id)? categoryOf,
     DateTime Function()? now,
+    bool sharesHistoryPeriod = false,
   }) : _repository = transactionRepository,
+       _sharesHistory = sharesHistoryPeriod,
        _wallets = walletRepository,
        _categoryOf = categoryOf ?? ActiveCategories.byId,
        _now = now ?? DateTime.now,
@@ -43,6 +45,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
          ),
        ) {
     on<AnalysisStarted>(_onStarted);
+    on<AnalysisHistorySynced>((event, emit) async {
+      // Segmen Daftar memindah periode bersama (`HistoryPeriod`).
+      _anchor = HistoryPeriod.anchor;
+      await _load(emit, firstLoad: false, keepSelection: false);
+    });
     on<AnalysisRefreshed>(_onRefreshed);
     on<AnalysisPeriodStepped>(_onStepped);
     on<AnalysisGroupSelected>(_onSelected);
@@ -64,6 +71,14 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     ActiveDay.notifier.addListener(_refresh);
     ActiveCategories.notifier.addListener(_refresh);
     ActiveCurrency.notifier.addListener(_refresh);
+    if (_sharesHistory) HistoryPeriod.notifier.addListener(_syncHistory);
+  }
+
+  /// Periode dibagi dengan segmen Daftar di Riwayat (T-19.10).
+  final bool _sharesHistory;
+
+  void _syncHistory() {
+    if (HistoryPeriod.anchor != _anchor) add(const AnalysisHistorySynced());
   }
 
   void _refresh() => add(const AnalysisRefreshed());
@@ -115,7 +130,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     AnalysisStarted event,
     Emitter<AnalysisState> emit,
   ) async {
-    _anchor = event.periodStart;
+    _anchor = event.periodStart ?? (_sharesHistory ? HistoryPeriod.anchor : null);
     emit(state.copyWith(isLoading: true, loadFailed: false));
     await _load(emit, firstLoad: true);
   }
@@ -290,6 +305,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
                 trendSelected: keepSelection ? state.trendSelected : null,
               ),
             );
+            if (_sharesHistory) HistoryPeriod.select(period, current);
         }
     }
   }
@@ -316,6 +332,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     ActiveDay.notifier.removeListener(_refresh);
     ActiveCategories.notifier.removeListener(_refresh);
     ActiveCurrency.notifier.removeListener(_refresh);
+    HistoryPeriod.notifier.removeListener(_syncHistory);
     await _ledgerSubscription.cancel();
     return super.close();
   }

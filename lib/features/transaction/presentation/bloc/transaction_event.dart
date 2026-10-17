@@ -22,14 +22,22 @@ final class TransactionRefreshed extends TransactionEvent {
   const TransactionRefreshed();
 }
 
-/// Berpindah ke bulan [month] (navigasi bulan sebelumnya/berikutnya) --
-/// HANYA memuat ulang transaksi, dompet tidak diambil ulang.
-final class TransactionMonthChanged extends TransactionEvent {
-  /// Membuat [TransactionMonthChanged].
-  const TransactionMonthChanged(this.month);
+/// Berpindah satu periode keuangan (panah periode sebelumnya/berikutnya) --
+/// HANYA memuat ulang transaksi, dompet tidak diambil ulang. Periode terpilih
+/// dibagi dengan segmen Analisis lewat `HistoryPeriod` (T-19.10).
+final class TransactionPeriodStepped extends TransactionEvent {
+  /// Membuat [TransactionPeriodStepped].
+  const TransactionPeriodStepped({required this.forward});
 
-  /// Bulan tujuan. Hanya tahun dan bulannya dipakai.
-  final DateTime month;
+  /// `true` = ke periode berikutnya.
+  final bool forward;
+}
+
+/// Segmen Analisis memindah periode bersama (`HistoryPeriod` berubah): ikut
+/// ke periode itu bila berbeda dari yang tampil.
+final class TransactionPeriodSynced extends TransactionEvent {
+  /// Membuat [TransactionPeriodSynced].
+  const TransactionPeriodSynced();
 }
 
 /// Mengganti filter jenis transaksi.

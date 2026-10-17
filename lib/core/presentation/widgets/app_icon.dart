@@ -192,6 +192,12 @@ enum IconKey {
   /// Navigasi maju (mis. bulan berikutnya).
   chevronRight,
 
+  /// Naik: nominal lebih tinggi dari pembanding (Analisis).
+  arrowUp,
+
+  /// Turun: nominal lebih rendah dari pembanding (Analisis).
+  arrowDown,
+
   /// Kolom pencarian.
   search,
 
@@ -266,6 +272,9 @@ enum IconKey {
 
   /// Peringatan.
   warning,
+
+  /// Galat netral (lingkaran bertanda seru), mis. Analisis gagal dimuat.
+  error,
 
   /// Selesai, tidak ada yang tersisa (keadaan kosong kotak masuk).
   taskAlt,
@@ -392,12 +401,15 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.expandLess: Symbols.expand_less_rounded,
   IconKey.moreVert: Symbols.more_vert_rounded,
   IconKey.back: Symbols.arrow_back_rounded,
+  IconKey.arrowUp: Symbols.arrow_upward_rounded,
+  IconKey.arrowDown: Symbols.arrow_downward_rounded,
   IconKey.backspace: Symbols.backspace_rounded,
   IconKey.visibility: Symbols.visibility_rounded,
   IconKey.visibilityOff: Symbols.visibility_off_rounded,
   IconKey.inbox: Symbols.inbox_rounded,
   IconKey.schedule: Symbols.schedule_rounded,
   IconKey.warning: Symbols.warning_rounded,
+  IconKey.error: Symbols.error_rounded,
   IconKey.taskAlt: Symbols.task_alt_rounded,
   IconKey.label: Symbols.label_rounded,
   IconKey.notifications: Symbols.notifications_rounded,

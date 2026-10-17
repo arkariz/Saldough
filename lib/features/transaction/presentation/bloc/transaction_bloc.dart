@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/app_action_snack_bar.dart';
@@ -17,10 +18,12 @@ import 'package:state_management/state_management.dart';
 part 'transaction_effect.dart';
 part 'transaction_event.dart';
 
-/// Bloc layar riwayat transaksi (FR-TXN-004) -- memuat transaksi bulan
-/// berjalan lewat `TransactionRepository.listTransactionsInMonth` (buku besar
+/// Bloc layar riwayat transaksi (FR-TXN-004) -- memuat transaksi satu
+/// **periode keuangan** (ADR-038, T-19.10) lewat `ListPeriodTransactions`
+/// (dokumen bulan yang disentuh periode ± batas atribusi; buku besar
 /// dipartisi per bulan, ADR-012; TIDAK pernah `listAllTransactions()`, itu
-/// reserved untuk penghitungan ulang saldo) dan dompet lewat
+/// reserved untuk penghitungan ulang saldo), memakai `periodDateOf` untuk
+/// keanggotaan, dan dompet lewat
 /// `WalletRepository.listWallets`, lalu menyaring dan mengelompokkannya per
 /// tanggal.
 ///
@@ -44,7 +47,11 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     // ADR-030 §3.4: transaksi/saldo berubah di layar lain -> muat ulang
     // tanpa kerangka.
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => add(const TransactionRefreshed()));
-    on<TransactionMonthChanged>(_onMonthChanged);
+    on<TransactionPeriodStepped>(_onPeriodStepped);
+    on<TransactionPeriodSynced>(_onPeriodSynced);
+    HistoryPeriod.notifier.addListener(_syncPeriod);
+    ActiveFinancialMonth.notifier.addListener(_refresh);
+    ActiveDay.notifier.addListener(_refresh);
     on<TransactionTypeFilterChanged>(_onTypeFilterChanged);
     on<TransactionWalletFilterChanged>(_onWalletFilterChanged);
     on<TransactionCategoryFilterChanged>(_onCategoryFilterChanged);
@@ -55,6 +62,11 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   }
 
   late final StreamSubscription<void> _ledgerSubscription;
+
+  void _refresh() => add(const TransactionRefreshed());
+
+  void _syncPeriod() => add(const TransactionPeriodSynced());
+
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
   final RecordTransaction _recordTransaction;
@@ -81,7 +93,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure)));
       case Right(value: final wallets):
         await _loadBudgetItems(emit);
-        await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+        await _loadPeriod(period: _target(), wallets: wallets, emit: emit);
     }
   }
 
@@ -92,7 +104,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(effect: _effectError(failure)));
       case Right(value: final wallets):
         await _loadBudgetItems(emit);
-        await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+        await _loadPeriod(period: _target(), wallets: wallets, emit: emit);
     }
   }
 
@@ -127,28 +139,62 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           case Left(value: final failure):
             emit(state.copyWith(effect: _effectError(failure)));
           case Right(value: final wallets):
-            await _loadMonth(month: state.month, wallets: wallets, emit: emit);
+            await _loadPeriod(period: _target(), wallets: wallets, emit: emit);
             if (!state.loadFailed) emit(state.copyWith(effect: successEffect()));
         }
     }
   }
 
-  Future<void> _onMonthChanged(TransactionMonthChanged event, Emitter<TransactionState> emit) async {
-    emit(state.copyWith(isLoading: true, loadFailed: false, month: event.month));
-    await _loadMonth(month: event.month, wallets: state.wallets, emit: emit);
+  /// Periode yang harus tampil: yang dipilih bersama (`HistoryPeriod`), atau
+  /// periode berjalan. Periode di masa depan tidak pernah tampil.
+  FinancialPeriod _target() {
+    final schedule = ActiveFinancialMonth.schedule;
+    final current = schedule.periodOf(DateTime.now());
+    final anchor = HistoryPeriod.anchor;
+    if (anchor == null) return current;
+    final period = schedule.periodOf(anchor);
+    return period.start.isAfter(current.start) ? current : period;
   }
 
-  Future<void> _loadMonth({
-    required DateTime month,
+  Future<void> _onPeriodStepped(TransactionPeriodStepped event, Emitter<TransactionState> emit) async {
+    final schedule = ActiveFinancialMonth.schedule;
+    final shown = state.period;
+    if (event.forward) {
+      if (state.isCurrent) return;
+    } else if (!state.canGoBack) {
+      return;
+    }
+    final target = event.forward ? schedule.nextOf(shown) : schedule.previousOf(shown);
+    HistoryPeriod.select(target, schedule.periodOf(DateTime.now()));
+    emit(state.copyWith(isLoading: true, loadFailed: false, period: target));
+    await _loadPeriod(period: target, wallets: state.wallets, emit: emit);
+  }
+
+  Future<void> _onPeriodSynced(TransactionPeriodSynced event, Emitter<TransactionState> emit) async {
+    final target = _target();
+    if (target.start == state.period.start && target.end == state.period.end) return;
+    emit(state.copyWith(isLoading: true, loadFailed: false, period: target));
+    await _loadPeriod(period: target, wallets: state.wallets, emit: emit);
+  }
+
+  Future<void> _loadPeriod({
+    required FinancialPeriod period,
     required List<Wallet> wallets,
     required Emitter<TransactionState> emit,
   }) async {
-    final result = await _transactionRepository.listTransactionsInMonth(month);
+    final schedule = ActiveFinancialMonth.schedule;
+    final current = schedule.periodOf(DateTime.now());
+    final monthsResult = await _transactionRepository.listAvailableMonths();
+    final months = switch (monthsResult) {
+      Right(:final value) => value,
+      Left() => state.availableMonths,
+    };
+    final result = await ListPeriodTransactions(_transactionRepository)(from: period.start, until: period.end);
     switch (result) {
       case Left(value: final failure):
         emit(
           state.copyWith(
-            month: month,
+            period: period,
             wallets: wallets,
             isLoading: false,
             loadFailed: true,
@@ -156,15 +202,26 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           ),
         );
       case Right(value: final transactions):
+        final first = months.isEmpty ? null : months.reduce((a, b) => a.isBefore(b) ? a : b);
+        final earliest = first == null ? period : schedule.periodOf(DateTime(first.year, first.month));
+        final members = [
+          for (final transaction in transactions)
+            if (period.contains(periodDateOf(transaction))) transaction,
+        ];
+        // Periode yang dilihat ikut dibagi dengan Analisis; periode berjalan = `null`.
+        HistoryPeriod.select(period, current);
         emit(
           _recomputed(
-            month: month,
+            period: period,
             wallets: wallets,
-            rawTransactions: transactions,
+            rawTransactions: members,
             typeFilter: state.typeFilter,
             walletFilter: state.walletFilter,
             categoryFilter: state.categoryFilter,
             searchQuery: state.searchQuery,
+            isCurrent: period.start == current.start,
+            canGoBack: period.start.isAfter(earliest.start),
+            availableMonths: months,
           ),
         );
     }
@@ -173,7 +230,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _onTypeFilterChanged(TransactionTypeFilterChanged event, Emitter<TransactionState> emit) {
     emit(
       _recomputed(
-        month: state.month,
+        period: state.period,
         wallets: state.wallets,
         rawTransactions: state.rawTransactions,
         typeFilter: event.filter,
@@ -187,7 +244,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _onWalletFilterChanged(TransactionWalletFilterChanged event, Emitter<TransactionState> emit) {
     emit(
       _recomputed(
-        month: state.month,
+        period: state.period,
         wallets: state.wallets,
         rawTransactions: state.rawTransactions,
         typeFilter: state.typeFilter,
@@ -201,7 +258,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _onCategoryFilterChanged(TransactionCategoryFilterChanged event, Emitter<TransactionState> emit) {
     emit(
       _recomputed(
-        month: state.month,
+        period: state.period,
         wallets: state.wallets,
         rawTransactions: state.rawTransactions,
         typeFilter: state.typeFilter,
@@ -215,7 +272,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _onSearchChanged(TransactionSearchChanged event, Emitter<TransactionState> emit) {
     emit(
       _recomputed(
-        month: state.month,
+        period: state.period,
         wallets: state.wallets,
         rawTransactions: state.rawTransactions,
         typeFilter: state.typeFilter,
@@ -243,7 +300,7 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     // selesai (`_recomputed` lain sudah jalan lebih dulu dan mereset field
     // lintas bulan), hasil batch ini dibuang di akhir, bukan ditimpakan ke
     // kriteria yang sudah tidak berlaku.
-    final month = state.month;
+    final period = state.period;
     final typeFilter = state.typeFilter;
     final walletFilter = state.walletFilter;
     final categoryFilter = state.categoryFilter;
@@ -264,13 +321,18 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
 
     bool sameCriteria() =>
-        state.month == month &&
+        state.period == period &&
         state.typeFilter == typeFilter &&
         state.walletFilter == walletFilter &&
         state.categoryFilter == categoryFilter &&
         state.searchQuery == searchQuery;
 
-    final candidates = availableMonths.where((m) => m.isBefore(month)).toList()
+    // Bulan sebelum periode ini; bulan tempat periode dimulai ikut bila periodenya
+    // tidak mulai tanggal 1 (isinya sebagian milik periode sebelumnya).
+    final startMonth = DateTime(period.start.year, period.start.month);
+    final candidates = availableMonths
+        .where((m) => m.isBefore(startMonth) || (period.start.day > 1 && m == startMonth))
+        .toList()
       ..sort((a, b) => b.compareTo(a));
     final alreadyScanned = state.crossMonthScannedMonths;
     final remaining = candidates.where((m) => !alreadyScanned.contains(m)).toList();
@@ -297,7 +359,10 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         case Right(value: final transactions):
           matches.addAll(
             filterTransactions(
-              transactions,
+              [
+                for (final transaction in transactions)
+                  if (periodDateOf(transaction).isBefore(period.start)) transaction,
+              ],
               categoryName: _categoryName,
               walletNames: walletNames,
               walletId: walletFilter,
@@ -330,13 +395,16 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   /// mendukung (lihat catatan `ExpenseTransaction.copyWith` soal
   /// `budgetItemId`).
   TransactionState _recomputed({
-    required DateTime month,
+    required FinancialPeriod period,
     required List<Wallet> wallets,
     required List<Transaction> rawTransactions,
     required TransactionTypeFilter typeFilter,
     required String? walletFilter,
     required String? categoryFilter,
     required String searchQuery,
+    bool? isCurrent,
+    bool? canGoBack,
+    List<DateTime>? availableMonths,
   }) {
     // Angka chip jenis dihitung SEBELUM penyaring jenis diterapkan, supaya
     // tiap chip menunjukkan berapa yang akan tampil kalau dipilih.
@@ -354,7 +422,10 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     ];
 
     return TransactionState(
-      month: month,
+      period: period,
+      isCurrent: isCurrent ?? state.isCurrent,
+      canGoBack: canGoBack ?? state.canGoBack,
+      availableMonths: availableMonths ?? state.availableMonths,
       wallets: wallets,
       budgetItems: state.budgetItems,
       rawTransactions: rawTransactions,
@@ -375,6 +446,9 @@ final class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   @override
   Future<void> close() async {
+    HistoryPeriod.notifier.removeListener(_syncPeriod);
+    ActiveFinancialMonth.notifier.removeListener(_refresh);
+    ActiveDay.notifier.removeListener(_refresh);
     await _ledgerSubscription.cancel();
     return super.close();
   }

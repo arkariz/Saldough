@@ -31,6 +31,9 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Analisis | laporan, statistik, insight | Segmen Riwayat: ke mana uang pergi per kategori dan trennya |
 | Tanpa kategori | lain-lain, uncategorized | Transaksi yang belum diberi kategori; bukan "Lainnya" |
 | Lainnya ({n} kategori) | sisanya, dll. | Gabungan kategori di luar lima teratas di Analisis |
+| Versi baru | update, upgrade | Rilis dari toko aplikasi, dipasang dari dalam aplikasi |
+| Pembaruan kecil | patch, tambalan, hotfix | Perbaikan yang dipakai setelah aplikasi dibuka ulang; nomornya "pembaruan {n}" |
+| Apa yang baru | changelog, release notes | Catatan manfaat sesudah pembaruan; judul "Apa yang baru di versi {versi}" |
 
 ## Format
 
@@ -66,6 +69,11 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 
 **Bantuan di bawah kolom.** Satu kalimat, menjelaskan akibat, bukan aturan.
 > Saldo Tunai jadi Rp331.000.
+
+**Catatan Apa yang baru.** Satu kalimat manfaat per butir, "kamu" bila perlu, tanpa tanda seru dan istilah teknis; paling banyak 3 butir per versi. Tiap butir berkategori (Baru, Lebih cepat, Perbaikan, Keamanan) dengan pil dan emoji kategori; kepala berisi 🚀; sesudah dipasang, satu baris "Terima kasih sudah memakai Tanukonomy." Ini satu-satunya tempat emoji diperbolehkan (keputusan pemilik 15 Okt 2026).
+> Perbaikan · Sisa anggaran kini dihitung benar saat transaksi dipindah ke pos lain.
+
+**Versi.** "0.6.0 (7)" (nama versi, nomor build); dengan pembaruan kecil "0.6.0 (7), pembaruan 1".
 
 **Perbandingan.** Netral, tanpa menilai. Sebut arah dan jumlahnya.
 > Makan Rp295.000 lebih tinggi dari rata-rata 3 bulan.

@@ -57,7 +57,10 @@ enum SpotlightKey {
   /// Tombol tambah dompet.
   walletAdd,
 
-  /// Konsol bulan tab Transaksi.
+  /// Sub-tab Analisis di tab Riwayat (T-19.8); langkah pertama tur Transaksi.
+  txnAnalysisSegment,
+
+  /// Pemilih periode tab Riwayat (dibagi Daftar dan Analisis, T-19.10).
   txnMonth,
 
   /// Baris cari dan Filter tab Transaksi.
@@ -65,6 +68,15 @@ enum SpotlightKey {
 
   /// Baris transaksi pertama.
   txnRow,
+
+  /// Baris kategori pertama di donat Analisis (T-19.8).
+  analysisCategories,
+
+  /// Baris Tanpa kategori di Analisis; hanya terdaftar saat barisnya tampil.
+  analysisUncategorized,
+
+  /// Tren enam periode di Analisis; hanya terdaftar saat tren tampil.
+  analysisTrend,
 
   /// Sub-tab Rencana (Anggaran / Rutin), T-15.4.
   planTabs,

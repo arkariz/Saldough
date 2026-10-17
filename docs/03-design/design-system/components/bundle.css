@@ -238,9 +238,9 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-nav__catat:active .tk-nav__catat-btn { background: var(--brand-pressed); }
 
 /* Pixel accent: stepped corners, the pixel Catat button, hero card, pixel icons */
-:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog) { --u: var(--pixel-step, 4px); }
-:is(.tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
-:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
+:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd) { --u: var(--pixel-step, 4px); }
+:is(.tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
+:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
   border-radius: 0;
   clip-path: polygon(
     0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0,
@@ -320,26 +320,15 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-cmp .tk-icon { font-size: 16px; color: var(--ink-2); }
 .tk-cmp b { font-weight: 600; color: var(--ink); }
 
-/* Share bar: one category's part of the total. Neutral ink-2 squares; the percent always sits next to it. */
-.tk-share { position: relative; flex: 1; min-width: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--track) 0 6px, transparent 6px 8px); }
-.tk-share__fill { position: absolute; left: 0; top: 0; bottom: 0; max-width: 100%; background: repeating-linear-gradient(90deg, var(--ink-2) 0 6px, transparent 6px 8px); }
-.tk-share__pct { flex: none; width: 40px; text-align: right; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-
-/* Share row: a ListRow whose main column holds title + amount, the share bar + percent, then the comparison. */
-.tk-row--share { align-items: flex-start; }
-.tk-row--share .tk-tile { margin-top: 2px; }
-.tk-row__line { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
-.tk-row__line .tk-row__title { flex: 1; min-width: 0; }
-.tk-row--share .tk-row__main { gap: 6px; }
-.tk-row--share .tk-row__sub { white-space: normal; }
-.tk-row--share .tk-row__title.is-wrap { white-space: normal; }
-.tk-row--child { padding-left: 68px; min-height: 56px; }
-.tk-row--child .tk-row__title { font-weight: 500; }
-
-/* Info line: something shown beside the totals but not part of them (transfers). */
-.tk-infoline { display: flex; align-items: center; gap: 12px; padding: 0 4px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
-.tk-infoline .tk-tile { width: 32px; height: 32px; }
-.tk-infoline .tk-tile img { width: 32px; height: 32px; }
+/* Card foot: a quiet band at the bottom of a card for what sits beside the total but is not part of it (transfers in Analisis). */
+.tk-card__foot { margin: 8px -16px 0; padding: 12px 16px; background: var(--surface-2); display: flex; flex-direction: column; gap: 12px; }
+.tk-card__foot .tk-tile--px { background: var(--surface); }
+.tk-xfer { display: flex; align-items: center; gap: 12px; }
+.tk-xfer__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tk-xfer__line { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.tk-xfer__title { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink); }
+.tk-xfer__sub { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-xfer__amt { flex: none; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); }
 
 /* Trend: six periods, income and expense as paired columns of 6px squares, net as text under each period. */
 .tk-trend { position: relative; width: 100%; }
@@ -355,7 +344,7 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-trend__col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 0; padding: 0 0 2px; border: 0; background: none; cursor: pointer; color: var(--ink-2); font: inherit; min-width: 0; }
 .tk-trend__x { font-size: 12px; line-height: 16px; font-weight: 600; }
 .tk-trend__net { font-size: 11px; line-height: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tk-trend__days { font-size: 11px; line-height: 14px; color: var(--ink-3); white-space: nowrap; }
+.tk-trend__days { font-size: 11px; line-height: 13px; color: var(--ink-3); white-space: normal; text-align: center; max-width: 100%; }
 .tk-trend__col.is-selected { color: var(--ink); }
 .tk-trend__col.is-selected .tk-trend__x { font-weight: 700; }
 .tk-trend__col:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
@@ -388,3 +377,86 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-row--check .tk-check { margin-top: 2px; }
 .tk-row--check .tk-row__sub { white-space: normal; }
 .tk-list--check .tk-row + .tk-row::before { left: 52px; }
+
+/* Donut: each category's share of the total (Analisis). Slices in category colors, 2px gaps on the card surface, total in the middle. */
+.tk-donut { position: relative; width: 216px; height: 216px; margin: 4px auto 0; flex: none; }
+.tk-donut svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+.tk-donut__seg { fill: none; stroke-linecap: butt; cursor: pointer; transition: opacity 150ms ease-out; }
+.tk-donut__seg.is-dim { opacity: 0.25; }
+@media (prefers-reduced-motion: reduce) { .tk-donut__seg { transition: none; } }
+.tk-donut__center { position: absolute; inset: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; pointer-events: none; }
+.tk-donut__label { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-donut__total { font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tk-swatch { display: inline-block; width: 10px; height: 10px; flex: none; }
+
+/* Legend row: the donut's legend inside the same card. One line: swatch, name, percent, amount. Tap selects the category. */
+.tk-legrow { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 8px 16px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tk-legrow + .tk-legrow::before { content: ""; position: absolute; top: 0; left: 36px; right: 0; height: 1px; background: var(--line); }
+.tk-legrow:active { background: var(--surface-2); }
+.tk-legrow.is-selected { background: var(--surface-2); }
+.tk-legrow.is-selected .tk-legrow__name { font-weight: 700; }
+.tk-legrow__name { flex: 1; min-width: 0; font-size: 16px; line-height: 24px; font-weight: 500; }
+.tk-legrow__pct { flex: none; width: 44px; text-align: right; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tk-legrow__amt { flex: none; min-width: 92px; text-align: right; font-size: 14px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tk-legrow--child { padding-left: 36px; min-height: 44px; }
+.tk-legrow--child .tk-legrow__name { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-legrow:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tk-trend__avg { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 4 3; shape-rendering: crispEdges; }
+.tk-trend__avglabel { position: absolute; left: 0; transform: translateY(-100%); padding: 0 4px 2px 0; font-size: 11px; line-height: 14px; color: var(--ink-2); background: var(--surface); pointer-events: none; }
+.tk-readout__line { font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.tk-readout .tk-link { align-self: flex-start; margin-top: 2px; }
+/* Frequency summary in a category detail: how many transactions and how big, then the usual. */
+.tk-freq { display: flex; align-items: flex-start; gap: 8px; }
+.tk-freq .tk-icon { margin-top: 0; }
+.tk-freq__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tk-freq__now { font-size: 14px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tk-freq__usual { font-size: 14px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+/* Pembaruan aplikasi (Fase 20, v3): kartu pembaruan di Beranda (tk-upd), lembar catatan rilis (tk-rel), catatan berkategori (tk-note, tk-tag). */
+.tk-upd { display: flex; flex-direction: column; gap: 12px; padding: 16px; background: var(--brand); color: var(--on-brand); }
+.tk-upd__top { display: flex; align-items: flex-start; gap: 10px; }
+.tk-upd__tile { flex: none; width: 40px; height: 40px; display: grid; place-items: center; background: color-mix(in srgb, var(--on-brand) 20%, transparent); }
+.tk-upd__emoji { font-size: 24px; line-height: 1; font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif; }
+.tk-upd__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
+.tk-upd__title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 16px; line-height: 24px; font-weight: 700; }
+.tk-upd__pill { font-size: 12px; line-height: 16px; font-weight: 700; padding: 2px 8px; background: var(--brand-soft); color: var(--brand-ink); }
+.tk-upd__desc { font-size: 14px; line-height: 20px; }
+.tk-upd__close { flex: none; width: 32px; height: 32px; margin: -4px -4px 0 0; border: 0; background: transparent; color: var(--on-brand); display: grid; place-items: center; cursor: pointer; border-radius: 999px; padding: 0; position: relative; }
+.tk-upd__close::after { content: ""; position: absolute; inset: -4px; }
+.tk-upd__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--on-brand) 30%, transparent); }
+.tk-upd__foot--end { justify-content: flex-end; }
+.tk-upd__link { display: inline-flex; align-items: center; gap: 2px; padding: 14px 0; margin: -14px 0; color: var(--on-brand); font-size: 14px; line-height: 20px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.tk-upd__lt { text-decoration: underline; text-underline-offset: 3px; }
+.tk-icon--spin { animation: tk-spin 1s linear infinite; }
+@keyframes tk-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .tk-icon--spin { animation: none; } }
+.tk-row--wrap .tk-row__title, .tk-row--wrap .tk-row__sub { white-space: normal; overflow: visible; text-overflow: clip; }
+.tk-tile--brandsoft { background: var(--brand-soft); color: var(--brand-ink); }
+.tk-tile__emoji { font-size: 22px; line-height: 1; font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif; }
+
+.tk-tag { display: inline-flex; align-self: flex-start; font-size: 12px; line-height: 16px; font-weight: 700; padding: 1px 8px; background: var(--cat-slate-bg); color: var(--cat-slate); }
+.tk-tag--orange { background: var(--cat-orange-bg); color: var(--cat-orange); }
+.tk-tag--amber { background: var(--cat-amber-bg); color: var(--cat-amber); }
+.tk-tag--blue { background: var(--cat-blue-bg); color: var(--cat-blue); }
+.tk-tag--green { background: var(--cat-green-bg); color: var(--cat-green); }
+.tk-notes { display: flex; flex-direction: column; gap: 20px; }
+.tk-notes__group { display: flex; flex-direction: column; gap: 12px; }
+.tk-notes__head { margin: 0; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.01em; color: var(--ink-2); }
+.tk-notes__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.tk-note { display: flex; gap: 12px; align-items: flex-start; }
+.tk-note__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.tk-note__text { font-size: 15px; line-height: 22px; }
+
+.tk-rel { position: relative; }
+.tk-rel__x { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; background: var(--surface-2); color: var(--ink); display: grid; place-items: center; cursor: pointer; padding: 0; border-radius: 999px; }
+.tk-rel__x::after { content: ""; position: absolute; inset: -4px; }
+.tk-rel__hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px 0 16px; text-align: center; }
+.tk-rel__badges { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; }
+.tk-rel__tile { width: 56px; height: 56px; display: grid; place-items: center; background: var(--surface); box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 14%, transparent); font-size: 32px; line-height: 1; font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif; }
+.tk-rel__pill { font-size: 12px; line-height: 16px; font-weight: 700; padding: 3px 10px; background: var(--brand-soft); color: var(--brand-ink); }
+.tk-rel__title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
+.tk-rel__sub { margin: 0; max-width: 280px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-sheet__scroll { max-height: 300px; overflow-y: auto; }
+.tk-rel__list { display: flex; flex-direction: column; gap: 10px; }
+.tk-rel__card { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--surface-2); }
+.tk-rel__foot { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; }

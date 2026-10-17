@@ -151,7 +151,8 @@ Isinya mengikuti ONBOARDING_PLAN §4.3, dengan empat penyesuaian:
 | `home` | Beranda | termuat dan ≥1 dompet |
 | `record` | CATAT | selalu |
 | `wallet` | Dompet | termuat |
-| `transaction` | Transaksi | termuat dan ≥1 transaksi bulan tampil |
+| `transaction` | Transaksi | termuat dan ≥1 transaksi periode tampil; langkah pertamanya `txnAnalysisSegment` (sub-tab Analisis, T-19.8) |
+| `analysis` | Analisis (segmen Riwayat atau halaman penuh) | termuat dan ≥1 transaksi di periode; `analysisUncategorized` dan `analysisTrend` hanya terdaftar saat targetnya tampil (T-19.8) |
 | `budget` | Anggaran | termuat |
 | `budgetDetail` | Rincian anggaran | termuat |
 | `freelance` | Ikhtisar Freelance | termuat |

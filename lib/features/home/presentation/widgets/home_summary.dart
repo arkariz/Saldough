@@ -51,13 +51,20 @@ class HomeBalanceCard extends StatelessWidget {
 /// Card). Transfer sudah dikecualikan di [cashFlow] (FR-HOME-001).
 class HomeMonthCard extends StatelessWidget {
   /// Membuat [HomeMonthCard].
-  const HomeMonthCard({required this.cashFlow, this.footer, super.key});
+  const HomeMonthCard({required this.cashFlow, this.footer, this.onOpenAnalysis, this.analysisLabel, super.key});
 
   /// Arus bulan berjalan.
   final CashFlow cashFlow;
 
   /// Isi tambahan di bawah selisih (perkiraan saldo akhir bulan, T-15.13).
   final Widget? footer;
+
+  /// Membuka Analisis periode ini (D4): pasangan Pemasukan/Pengeluaran jadi
+  /// pintu bertanda panah. `null` = bukan pintu.
+  final VoidCallback? onOpenAnalysis;
+
+  /// Label pembaca layar pintu, mis. "Analisis Oktober: …".
+  final String? analysisLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -71,55 +78,76 @@ class HomeMonthCard extends StatelessWidget {
       ],
     );
     final net = cashFlow.income - cashFlow.expense;
+    final pair = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: stat(t.home.incomeStat, cashFlow.income, MoneyKind.income)),
+        const SizedBox(width: AppSpacing.space3),
+        Expanded(child: stat(t.home.expenseStat, cashFlow.expense, MoneyKind.expense)),
+      ],
+    );
+    final open = onOpenAnalysis;
     return AppCard(
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: stat(
-                  t.home.incomeStat,
-                  cashFlow.income,
-                  MoneyKind.income,
+          if (open == null)
+            Padding(padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space4, 0), child: pair)
+          else
+            // Pintu (`tk-card__door`): bagian atas kartu membuka Analisis, sisanya
+            // tetap tautannya sendiri.
+            Semantics(
+              button: true,
+              label: analysisLabel,
+              excludeSemantics: analysisLabel != null,
+              child: InkWell(
+                key: const ValueKey('home-analysis-door'),
+                onTap: open,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space4, AppSpacing.space3, 0),
+                  child: Row(
+                    children: [
+                      Expanded(child: pair),
+                      const SizedBox(width: AppSpacing.space2),
+                      AppIcon(IconKey.chevronRight, color: colors.ink2),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.space3),
-              Expanded(
-                child: stat(
-                  t.home.expenseStat,
-                  cashFlow.expense,
-                  MoneyKind.expense,
-                ),
-              ),
-            ],
-          ),
+            ),
           const SizedBox(height: AppSpacing.space3),
-          const Divider(),
-          const SizedBox(height: AppSpacing.space3),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  t.home.flowNet,
-                  style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+          const Divider(indent: AppSpacing.space4, endIndent: AppSpacing.space4),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space3, AppSpacing.space4, AppSpacing.space4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        t.home.flowNet,
+                        style: textTheme.bodyMedium?.copyWith(color: colors.ink2),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.space2),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: AppMoneyText(net, size: MoneySize.small, color: colors.ink),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: AppSpacing.space2),
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: AppMoneyText(net, size: MoneySize.small, color: colors.ink),
-                ),
-              ),
-            ],
+                if (footer != null) ...[
+                  const SizedBox(height: AppSpacing.space2),
+                  footer!,
+                ],
+              ],
+            ),
           ),
-          if (footer != null) ...[
-            const SizedBox(height: AppSpacing.space2),
-            footer!,
-          ],
         ],
       ),
     );

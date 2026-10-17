@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Rincian kategori</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub">
+    <a class="tk-iconbtn" href="Analisis.dc.html" aria-label="{{t.back}}"><span class="tk-icon">arrow_back</span></a>
+    <h1 class="tk-topbar__title">{{c.name}}</h1>
+  </header>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 4px 16px 32px">
+    <section class="tk-card" style="display: flex; flex-direction: column; gap: 4px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="tk-t-body-sm tk-ink-2" style="flex: 1">{{t.period}}</span>
+        <sc-if value="{{c.archived}}" hint-placeholder-val="{{false}}"><span class="tk-badge">{{t.archived}}</span></sc-if>
+      </div>
+      <p class="tk-amt tk-t-amount-hero">{{c.total}}</p>
+      <p class="tk-t-body-sm tk-ink-2">{{c.share}}</p>
+      <sc-if value="{{c.isNew}}" hint-placeholder-val="{{false}}"><span class="tk-badge" style="align-self: flex-start; margin-top: 4px">{{t.isNew}}</span></sc-if>
+      <sc-if value="{{c.hasCmp}}" hint-placeholder-val="{{true}}">
+        <p class="tk-cmp" style="margin-top: 4px"><span class="tk-icon" aria-hidden="true">{{c.cmpIcon}}</span><span><b>{{c.cmpAmt}}</b> {{t.vsAvg}}</span></p>
+      </sc-if>
+      <hr class="tk-divider" style="margin: 8px 0 4px">
+      <div class="tk-freq">
+        <span class="tk-icon tk-icon--sm tk-ink-2" aria-hidden="true">receipt_long</span>
+        <span class="tk-freq__main">
+          <span class="tk-freq__now">{{c.freq}}</span>
+          <sc-if value="{{c.hasUsual}}" hint-placeholder-val="{{true}}"><span class="tk-freq__usual">{{c.usual}}</span></sc-if>
+        </span>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{t.trendTitle}}</h2></div>
+      <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+        <div class="tk-trend" style="height: 186px">
+          <svg width="296" height="186" viewBox="0 0 296 186" aria-hidden="true">
+            <path class="tk-trend__sel" d="{{g.band}}"></path>
+            <path class="tk-trend__grid" d="{{g.grid}}"></path>
+            <path class="tk-trend__base" d="{{g.base}}"></path>
+            <path class="tk-trend__one" d="{{g.out}}"></path>
+            <path class="tk-trend__avg" d="{{g.avg}}"></path>
+          </svg>
+          <sc-if value="{{g.hasAvg}}" hint-placeholder-val="{{true}}"><span class="tk-trend__avglabel" style="top: {{g.avgTop}}px">{{t.avgLine}}</span></sc-if>
+          <sc-for list="{{g.yLabels}}" as="y" hint-placeholder-count="3">
+            <span class="tk-trend__y" style="top: {{y.top}}px">{{y.text}}</span>
+          </sc-for>
+          <div class="tk-trend__cols" role="group" aria-label="{{t.trendTitle}}" style="width: 260px; grid-template-columns: repeat(6, minmax(0, 1fr))">
+            <sc-for list="{{g.cols}}" as="k" hint-placeholder-count="4">
+              <button class="tk-trend__col {{k.cls}}" type="button" aria-label="{{k.aria}}" aria-pressed="{{k.pressed}}" onClick="{{k.pick}}" style="grid-column: {{k.col}}">
+                <span class="tk-trend__x">{{k.label}}</span>
+                <span class="tk-trend__days">{{k.days}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="tk-readout" aria-live="polite">
+          <span class="tk-t-label">{{rd.title}}</span>
+          <span class="tk-readout__line"><b class="tk-amt">{{rd.val}}</b><sc-if value="{{rd.hasDiff}}" hint-placeholder-val="{{true}}"><span class="tk-ink-2"> · {{rd.diff}}</span></sc-if></span>
+          <sc-if value="{{rd.hasLink}}" hint-placeholder-val="{{false}}"><a class="tk-link" href="Analisis.dc.html">{{rd.link}}<span class="tk-icon tk-icon--sm">chevron_right</span></a></sc-if>
+        </div>
+      </div>
+    </section>
+
+    <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{t.txTitle}}</h2></div>
+      <div class="tk-list">
+        <sc-for list="{{tx}}" as="r" hint-placeholder-count="2">
+          <a class="tk-row" href="RincianTransaksi.dc.html">
+            <sc-if value="{{r.px}}" hint-placeholder-val="{{true}}"><span class="tk-tile tk-tile--px"><img src="{{r.icon}}" alt="" width="32" height="32"></span></sc-if>
+            <sc-if value="{{r.sym}}" hint-placeholder-val="{{false}}"><span class="tk-tile tk-tile--rose"><span class="tk-icon">medical_services</span></span></sc-if>
+            <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><span class="tk-row__sub">{{r.sub}}</span></span>
+            <span class="tk-row__end"><span class="tk-amt tk-t-amount">{{r.amt}}</span></span>
+            <span class="tk-icon tk-row__chev">chevron_right</span>
+          </a>
+        </sc-for>
+      </div>
+      <a class="tk-btn tk-btn--secondary tk-btn--block" href="Riwayat.dc.html" style="margin-top: 4px">{{t.seeAll}}</a>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"keadaan":{"editor":"enum","options":["isi","baru","arsip"],"default":"isi","section":"Keadaan"},"trenPilih":{"editor":"enum","options":["","0","1","2"],"default":"","section":"Keadaan"},"hidden":{"editor":"boolean","default":false,"section":"Keadaan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en, hid = !!this.props.hidden;
+    const st = this.props.keadaan || 'isi';
+    const T = en
+      ? { back: 'Back', period: 'September 2026', archived: 'archived', isNew: 'new this month', vsAvg: 'vs 3-month average', trendTitle: 'Last 6 months', txTitle: 'Transactions', seeAll: 'See all transactions',
+          avgLine: '3-month average', share: (p) => p + ' of expenses', above: (a) => a + ' above average', below: (a) => a + ' below average',
+          freq: (n, a) => n + (n === 1 ? ' transaction' : ' transactions') + ' · ' + a + ' average each', usual: (n, a) => 'usually ' + n + ' transactions · ' + a,
+          seePeriod: (x) => 'See ' + x + ' analysis', dec: (x) => String(x),
+          mon: ['Jun', 'Jul', 'Aug', 'Sep'], monLong: ['June', 'July', 'August', 'September'], day: (d, m) => d + ' ' + ['Jun', 'Jul', 'Aug', 'Sep'][m] }
+      : { back: 'Kembali', period: 'September 2026', archived: 'diarsipkan', isNew: 'baru bulan ini', vsAvg: 'dibanding rata-rata 3 bulan', trendTitle: '6 bulan terakhir', txTitle: 'Transaksi', seeAll: 'Lihat semua transaksi',
+          avgLine: 'rata-rata 3 bulan', share: (p) => p + ' dari pengeluaran', above: (a) => a + ' di atas rata-rata', below: (a) => a + ' di bawah rata-rata',
+          freq: (n, a) => n + ' transaksi · rata-rata ' + a + ' per transaksi', usual: (n, a) => 'biasanya ' + n + ' transaksi · ' + a,
+          seePeriod: (x) => 'Lihat analisis ' + x, dec: (x) => String(x).replace('.', ','),
+          mon: ['Jun', 'Jul', 'Agt', 'Sep'], monLong: ['Juni', 'Juli', 'Agustus', 'September'] };
+    const dots = (x) => String(Math.round(Math.abs(x))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const rp = (x) => hid ? 'Rp•••••' : 'Rp' + dots(x);
+    const isNew = st === 'baru';
+    // Makan, September 2026 (FINANCIAL_ANALYSIS §10, B-17): Rp1.245.000 = 11%; rata-rata Jun–Agt Rp950.000.
+    // Pencatatan pertama Juni, jadi tren mulai Juni. Transaksi Makan: Jun 1, Jul 2, Agt 2, Sep 2.
+    // Biasanya: 5 transaksi ÷ 3 bulan = 1,7; Rp2.850.000 ÷ 5 = Rp570.000. Sep: Rp1.245.000 ÷ 2 = Rp622.500.
+    // Keadaan "baru": kategori ilustratif Kesehatan, nol di semua bulan pembanding.
+    const C = isNew
+      ? { name: en ? 'Health' : 'Kesehatan', total: 350000, pct: '3%', series: [0, 0, 0, 350000], avg: 0, count: 1, usualCount: 0, usualAvg: 0 }
+      : { name: en ? 'Food' : 'Makan', total: 1245000, pct: '11%', series: [900000, 950000, 1000000, 1245000], avg: 950000, count: 2, usualCount: 1.7, usualAvg: 570000 };
+    const viewed = 3;
+    const sel = s.sel !== undefined ? s.sel : (this.props.trenPilih ? parseInt(this.props.trenPilih, 10) : viewed);
+    const pts = C.series.map((v, i) => ({ label: T.mon[i], out: v, aria: T.monLong[i] + ' 2026, ' + C.name + ' ' + rp(v) }));
+    const g = this.trendGeo(pts, sel, true, hid, en ? 'en' : 'id', { avg: isNew ? 0 : C.avg });
+    g.cols = g.cols.map((c, i) => Object.assign(c, { pressed: i === sel ? 'true' : 'false', pick: () => this.setState({ sel: i }) }));
+    const v = C.series[sel], dd = v - C.avg;
+    const txs = isNew
+      ? [['Apotek', 'BCA · ' + (en ? 'Mon, 21 Sep' : 'Senin, 21 Sep'), 350000]]
+      : [['Makan malam keluarga', 'BCA · ' + (en ? 'Sun, 20 Sep' : 'Minggu, 20 Sep'), 865000], ['Makan bersama kantor', 'GoPay · ' + (en ? 'Sat, 5 Sep' : 'Sabtu, 5 Sep'), 380000]];
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      t: T,
+      c: {
+        name: C.name, total: rp(C.total), share: T.share(C.pct), archived: st === 'arsip', isNew: isNew,
+        hasCmp: !isNew, cmpIcon: 'arrow_upward', cmpAmt: rp(C.total - C.avg),
+        freq: T.freq(C.count, rp(Math.round(C.total / C.count))),
+        hasUsual: !isNew, usual: T.usual(T.dec(C.usualCount), rp(C.usualAvg))
+      },
+      g: g,
+      rd: {
+        title: T.monLong[sel] + ' 2026', val: rp(v),
+        hasDiff: !isNew && dd !== 0, diff: (dd > 0 ? T.above : T.below)(rp(Math.abs(dd))),
+        hasLink: sel !== viewed, link: T.seePeriod(T.monLong[sel])
+      },
+      tx: txs.map((r) => ({
+        title: r[0], sub: r[1], amt: hid ? 'Rp•••••' : '−Rp' + dots(r[2]),
+        px: !isNew, sym: isNew, icon: '/_blob/f1ae8d6356f45cec2038768261cba47e'
+      }))
+    };
+  }
+
+  // Trend: periods as paired (income, expense) or single columns of 6px squares, in 6 fixed slots (right-aligned:
+  // periods before the first recording are not drawn). p = [{ label, inc, out, net, days, noSign, aria }].
+  // o = { avg: number|null } draws the dashed average line (one-series only).
+  trendGeo(p, sel, one, hidden, lang, o) {
+    o = o || {};
+    const PW = 260, TOP = 8, BASE = 116, H = 186, SLOTS = 6;
+    const f1 = (x) => Math.round(x * 10) / 10;
+    const slot = PW / SLOTS, off = SLOTS - p.length;
+    const vals = [o.avg || 0];
+    p.forEach((d) => { if (one) vals.push(d.out); else vals.push(d.inc, d.out); });
+    const hi = Math.max.apply(null, vals.concat([1]));
+    const raw = hi / 3, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((c) => c >= raw);
+    const yMax = Math.ceil(hi / step) * step;
+    const Y = (v) => BASE - v / yMax * (BASE - TOP);
+    const col = (x, w, v) => {
+      const h = v / yMax * (BASE - TOP);
+      const n = Math.floor(h / 8), r = h - n * 8;
+      let d = '';
+      for (let i = 0; i < n; i++) d += 'M' + f1(x) + ' ' + f1(BASE - 8 * i - 6) + 'h' + w + 'v6h-' + w + 'Z';
+      if (r > 0.5) { const hh = Math.min(r, 6); d += 'M' + f1(x) + ' ' + f1(BASE - 8 * n - hh) + 'h' + w + 'v' + f1(hh) + 'h-' + w + 'Z'; }
+      return d;
+    };
+    let inc = '', out = '';
+    p.forEach((d, i) => {
+      const cx = slot * (off + i) + slot / 2;
+      if (one) out += col(cx - 7, 14, d.out);
+      else { inc += col(cx - 11, 10, d.inc); out += col(cx + 1, 10, d.out); }
+    });
+    const ticks = [];
+    for (let t = step; t <= yMax + 1; t += step) ticks.push(t);
+    const grid = ticks.map((t) => 'M0 ' + (Math.round(Y(t)) + 0.5) + 'H' + PW).join('');
+    const short = (v) => {
+      const a = Math.abs(v);
+      if (lang === 'en') return a >= 1e6 ? String(Math.round(a / 1e5) / 10) + 'M' : String(Math.round(a / 1000)) + 'K';
+      return a >= 1e6 ? String(Math.round(a / 1e5) / 10).replace('.', ',') + ' jt' : String(Math.round(a / 1000)) + ' rb';
+    };
+    const hasAvg = !!o.avg;
+    const ay = hasAvg ? Math.round(Y(o.avg)) + 0.5 : 0;
+    return {
+      band: 'M' + f1(slot * (off + sel) + 1) + ' 0h' + f1(slot - 2) + 'V' + H + 'H' + f1(slot * (off + sel) + 1) + 'Z',
+      grid: grid,
+      base: 'M0 ' + (BASE + 0.5) + 'H' + PW,
+      inc: inc, out: out,
+      hasAvg: hasAvg, avg: hasAvg ? 'M0 ' + ay + 'H' + PW : '', avgTop: ay,
+      yLabels: hidden ? [] : ticks.map((t) => ({ top: Y(t), text: short(t) })),
+      cols: p.map((d, i) => ({
+        label: d.label,
+        col: off + i + 1,
+        net: hidden ? '•••' : (d.net === undefined ? '' : (d.noSign ? '' : (d.net < 0 ? '−' : '+')) + short(d.net)),
+        hasNet: d.net !== undefined,
+        days: d.days || '',
+        hasDays: !!d.days,
+        aria: d.aria,
+        cls: i === sel ? 'is-selected' : ''
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

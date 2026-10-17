@@ -222,7 +222,10 @@
     "detailFreelanceNote": "This income was recorded from a freelance payment. To change it, cancel its receipt in Freelance.",
     "makeRecurringAction": "Make recurring",
     "previousMonth": "Previous month",
-    "nextMonth": "Next month"
+    "nextMonth": "Next month",
+    "listSegment": "List",
+    "filteredCount": "$count transactions",
+    "filteredEmpty": "No transactions left here."
   },
   "wallet": {
     "subtitle": "Total balance of all active wallets",
@@ -587,7 +590,8 @@
     "freelanceRowTitle": "Not yet received",
     "freelanceRowSub": "$count invoices, expected $date",
     "incomeStat": "Income",
-    "expenseStat": "Expenses"
+    "expenseStat": "Expenses",
+    "analysisDoor": "Analysis $period: income and expenses by category"
   },
   "onboarding": {
     "skipAction": "Skip",
@@ -628,7 +632,7 @@
     "homeRecordTitle": "One door for recording",
     "homeRecordBody": "Every income, expense, and transfer is recorded from here.",
     "homeCashFlowTitle": "This month's flow",
-    "homeCashFlowBody": "The money that actually came in and went out this month.",
+    "homeCashFlowBody": "The money that actually came in and went out this period. Tap to see where it went.",
     "homeBudgetTitle": "Active budget left",
     "homeBudgetBody": "What's left of the plan in budgets running now. Tap for details.",
     "homeFreelanceTitle": "Freelance summary",
@@ -651,8 +655,8 @@
     "walletCardBody": "Tap to see this wallet's history and record straight from there.",
     "walletAddTitle": "Add a wallet",
     "walletAddBody": "Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.",
-    "txnMonthTitle": "One month per view",
-    "txnMonthBody": "Switch months to see other history. The income and expense totals here cover only the month shown.",
+    "txnMonthTitle": "One period per view",
+    "txnMonthBody": "Switch periods to see other history. List and Analysis always use the same period.",
     "txnFilterTitle": "Search and filter",
     "txnFilterBody": "Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.",
     "txnRowTitle": "Edit or delete",
@@ -702,7 +706,15 @@
     "planPeriodHeaderTitle": "Your financial month",
     "planPeriodHeaderBody": "Tap to start the month on your payday. Plan and Analysis follow it.",
     "planTransitionTitle": "Transition period",
-    "planTransitionBody": "This period is longer or shorter once because your month start changed. The next one is a full month again."
+    "planTransitionBody": "This period is longer or shorter once because your month start changed. The next one is a full month again.",
+    "txnAnalysisSegmentTitle": "Analysis",
+    "txnAnalysisSegmentBody": "See where your money goes by category and compare it with usual.",
+    "analysisCategoriesTitle": "By category",
+    "analysisCategoriesBody": "Tap a slice or row to see one category, then open its details.",
+    "analysisUncategorizedTitle": "Uncategorized",
+    "analysisUncategorizedBody": "Add categories to make this more accurate.",
+    "analysisTrendTitle": "Last six periods",
+    "analysisTrendBody": "Tap a column to see its numbers. The period still running is marked."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -1198,7 +1210,8 @@
     "accuracyMissedBy": "The $month forecast was off by $amount, mostly from $line.",
     "committedShare": "${percent}% of $month income is already committed (repeating + budgets).",
     "committedShareVs": "${percent}% of $month income is already committed (repeating + budgets); the month before, ${previous}%.",
-    "installmentFree": "After $name ends, from $month you free up +$amount/mo."
+    "installmentFree": "After $name ends, from $month you free up +$amount/mo.",
+    "lookbackSeeAnalysis": "See $month details"
   },
   "appUpdate": {
     "banner": {
@@ -1230,6 +1243,73 @@
     "diagnostic": {
       "title": "Update diagnostics",
       "copy": "Copy"
+    }
+  },
+  "analysis": {
+    "segment": "Analysis",
+    "previousPeriod": "Previous period",
+    "nextPeriod": "Next period",
+    "uncategorized": "Uncategorized",
+    "freelanceGroup": "Freelance",
+    "others": "Others ($n categories)",
+    "archived": "archived",
+    "transferTitle": "Moved between wallets",
+    "transferSub": "Doesn't change your total",
+    "transferIn": "Transfers in",
+    "transferOut": "Transfers out",
+    "kind": {
+      "expense": "Expenses",
+      "income": "Income"
+    },
+    "empty": {
+      "title": "Nothing to analyze yet",
+      "body": "Record transactions to see where your money goes.",
+      "cta": "Record a transaction"
+    },
+    "emptyMonth": "No expenses in $period yet.",
+    "error": "Couldn't load analysis. Pull down to try again.",
+    "donutSemantics": "$kind $period: $parts",
+    "rowSemantics": "$name, $percent, $amount",
+    "fix": "Add category",
+    "shareOf": "$percent of $kind",
+    "kindLabel": "Type",
+    "allWallets": "All wallets",
+    "walletLabel": "Wallet",
+    "emptyMonthIncome": "No income in $period yet.",
+    "compare": {
+      "avg": "$n-month average",
+      "lastMonth": "last month",
+      "toDate": "average through day $day",
+      "vs": "vs $label",
+      "newThisMonth": "new this month",
+      "srHigher": "$amount higher, $label",
+      "srLower": "$amount lower, $label"
+    },
+    "highlight": {
+      "higher": "$subject higher than $compare",
+      "lower": "$subject lower than $compare"
+    },
+    "trend": {
+      "title": "Last 6 months",
+      "income": "Income",
+      "expense": "Expenses",
+      "net": "Net",
+      "toDate": "through $date",
+      "days": "$n days",
+      "seePeriod": "See $period analysis",
+      "column": "$period, income $income, expenses $expense, net $net"
+    },
+    "category": {
+      "frequency": "$count transactions · $amount average each",
+      "frequencyOne": "$count transaction · $amount average each",
+      "frequencyUsual": "usually $count transactions · $amount",
+      "seeAll": "See all transactions",
+      "seeCategory": "See $category details",
+      "transactions": "Transactions",
+      "aboveAvg": "$amount above average",
+      "belowAvg": "$amount below average",
+      "avgLine": "$n-month average",
+      "moreHint": "Latest 20 transactions"
     }
   }
 }

@@ -73,6 +73,32 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
   anggapan prototipe.
 
+## Analisis keuangan (Fase 19)
+
+Layar Riwayat › Analisis dan Rincian kategori
+([FINANCIAL_ANALYSIS](../01-product/features/FINANCIAL_ANALYSIS.md)), dari
+artefak Tanukonomy Halaman Baru; disalin 15 Okt 2026 bersama komponen design
+system DonutChart, LegendRow, TrendChart, SubTabs, dan PeriodStepper
+(`bundle.css`, `patterns.md`, `writing.md`, dan `flutter.md` ikut diperbarui).
+
+| Salinan | Isi |
+|---|---|
+| `Riwayat.dc.html` | A1 sub-tab Daftar \| Analisis, PeriodStepper, ringkasan Pemasukan/Pengeluaran |
+| `Analisis.dc.html` | A2 Analisis September (contoh §10); berkas utama, varian di bawah memanggilnya dengan properti |
+| `AnalisisOktober`, `AnalisisTrenAgustus` | Periode berjalan s.d. tanggal 10; kolom tren Agustus terpilih |
+| `AnalisisPeralihan` (+`EnGelap`) | D3 periode peralihan 1 – 24 Okt, tanpa pembanding dan sorotan |
+| `AnalisisPilihMakan`, `AnalisisPilihTanpaKategori` | Kategori terpilih di donat; Tanpa kategori memilih "Beri kategori" |
+| `AnalisisDompet`, `AnalisisSembunyi` | Satu dompet (Transfer masuk/keluar); nominal disembunyikan |
+| `AnalisisKosong`, `AnalisisSatuBulan`, `AnalisisTanpaPengeluaran`, `AnalisisMemuat`, `AnalisisGalat` | A4 keadaan |
+| `AnalisisEnGelap` | Contoh en dan gelap |
+| `RincianKategori.dc.html` (+`Agustus`, `Arsip`, `Baru`, `EnGelap`) | A3 Rincian kategori Makan; kolom tren terpilih, diarsipkan + tersembunyi, baru bulan ini |
+| `RincianTransaksi.dc.html` | Tujuan baris transaksi di Rincian kategori |
+| `BerandaRutin.dc.html` | D4 kartu Arus: pasangan Pemasukan/Pengeluaran sebagai pintu (`tk-card__door`) |
+| `KilasBalik.dc.html` | A5 lembar kilas balik dengan tautan "Lihat rincian September" |
+
+Rupa Fase 20 (UpdateCard, ReleaseNotes) ikut masuk `bundle.css` tetapi
+komponen dan prototipenya belum disalin ke sini.
+
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

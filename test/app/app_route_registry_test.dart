@@ -10,6 +10,8 @@ void main() {
   test('setiap kunci rute fitur terdaftar sekali', () {
     expect(appRouteRegistry().registeredKeys.toSet(), {
       'account.page',
+      'analysis.open',
+      'analysis.category',
       'appUpdate.notes',
       'budget.detail',
       'budget.financialMonth',
@@ -21,6 +23,7 @@ void main() {
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'transaction.detail',
+      'transaction.filtered',
       'transaction.history',
       'voiceCapture.capture',
       'wallet.detail',

@@ -30,9 +30,10 @@ Sikap desainnya: **buku catatan yang rapi**. Halaman bersih, tinta yang jelas, a
 - Nominal: pengeluaran `ink`, pemasukan `positive`, transfer `ink-2` dengan tile `info`. Merah tidak dipakai untuk pengeluaran biasa.
 - Status anggaran: aman `ink` di bar dengan badge `positive`; 85% atau lebih `warning-fill` dengan badge `warning`; lewat `danger` dengan badge `danger` yang menyebut selisihnya.
 - "Perlu dicek" dan "Tertunda" memakai `warning` di atas `warning-soft`.
-- Warna kategori (`cat-*-bg` dengan ikon `cat-*`) hanya muncul di tile ikon. Jangan mewarnai teks atau latar baris dengan warna kategori.
+- Warna kategori (`cat-*-bg` dengan ikon `cat-*`) muncul di tile ikon, dan (keputusan pemilik 12 Okt 2026) di irisan diagram donat Analisis beserta penanda warnanya (`tk-swatch`) di LegendRow. Jangan mewarnai teks atau latar baris dengan warna kategori.
 - Snackbar `inverse-surface` dengan teks `on-inverse` dan aksi `inverse-brand`.
 - Sheet dan dialog di atas `scrim`.
+- Analisis: porsi kategori sebagai donat berwarna `cat-*` (Lainnya `cat-slate`, Tanpa kategori `line-strong`); grafik tren dengan kolom pemasukan `positive` dan pengeluaran `ink`, periode terpilih `surface-2`. Tidak ada warna status di Analisis; kategori yang naik tetap netral.
 
 ## Tipografi
 

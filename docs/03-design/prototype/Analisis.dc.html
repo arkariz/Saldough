@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Riwayat, Analisis</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar">
+    <h1 class="tk-topbar__title">{{t.history}}</h1>
+  </header>
+  <nav class="tk-subtabs" aria-label="{{t.sections}}">
+    <a class="tk-subtab" href="Riwayat.dc.html">{{t.list}}</a>
+    <a class="tk-subtab is-active" href="Analisis.dc.html" aria-current="page">{{t.analysis}}</a>
+  </nav>
+
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 8px 16px 32px">
+    <sc-if value="{{v.loading}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-direction: column; gap: 16px; padding-top: 8px" aria-busy="true">
+        <span class="tk-skel" style="height: 28px; width: 160px; align-self: center"></span>
+        <span class="tk-skel" style="height: 48px"></span>
+        <span class="tk-skel" style="height: 36px; width: 140px"></span>
+        <span class="tk-skel" style="height: 116px"></span>
+        <span class="tk-skel" style="height: 272px"></span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{v.error}}" hint-placeholder-val="{{false}}">
+      <div class="tk-empty" role="alert" style="padding-top: 120px">
+        <span class="tk-icon tk-ink-2" style="font-size: 32px">error</span>
+        <p class="tk-empty__body">{{t.error}}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{v.empty}}" hint-placeholder-val="{{false}}">
+      <div class="tk-empty" style="padding-top: 32px">
+        <img class="tk-empty__art" src="/_blob/9ec0bbecee78363060510fba93fd108e" alt="" width="144">
+        <h2 class="tk-empty__title">{{t.emptyTitle}}</h2>
+        <p class="tk-empty__body">{{t.emptyBody}}</p>
+        <div class="tk-empty__actions"><a class="tk-btn tk-btn--primary" href="Catat.dc.html">{{t.emptyCta}}</a></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{v.main}}" hint-placeholder-val="{{true}}">
+      <div class="tk-stepper">
+        <button class="tk-iconbtn" type="button" aria-label="{{t.prev}}"><span class="tk-icon">chevron_left</span></button>
+        <div class="tk-stepper__label">
+          <span class="tk-stepper__title">{{d.title}}</span>
+          <sc-if value="{{d.per}}" hint-placeholder-val="{{false}}"><span class="tk-period__tag"><span class="tk-icon">calendar_today</span>{{t.transition}}</span></sc-if>
+        </div>
+        <button class="tk-iconbtn" type="button" aria-label="{{t.next}}" disabled="{{d.atNow}}"><span class="tk-icon">chevron_right</span></button>
+      </div>
+
+      <div class="tk-seg" role="radiogroup" aria-label="{{t.kindLabel}}" style="margin-top: -4px">
+        <button class="tk-seg__opt {{k.out.cls}}" type="button" role="radio" aria-checked="{{k.out.on}}" onClick="{{k.out.pick}}">{{t.expense}}</button>
+        <button class="tk-seg__opt {{k.inc.cls}}" type="button" role="radio" aria-checked="{{k.inc.on}}" onClick="{{k.inc.pick}}">{{t.income}}</button>
+      </div>
+
+      <div class="tk-chips">
+        <button class="tk-chip tk-chip--on-bg tk-chip--menu {{d.walletCls}}" type="button" aria-haspopup="listbox" onClick="{{toggleWallet}}">{{d.wallet}}<span class="tk-icon">expand_more</span></button>
+      </div>
+
+      <sc-if value="{{d.none}}" hint-placeholder-val="{{false}}">
+        <div class="tk-card"><p class="tk-t-body tk-ink-2">{{d.noneText}}</p></div>
+      </sc-if>
+
+      <sc-if value="{{d.has}}" hint-placeholder-val="{{true}}">
+        <section class="tk-card" style="display: flex; flex-direction: column; gap: 8px; padding-bottom: 0">
+          <div class="tk-donut">
+            <svg viewBox="0 0 216 216" role="img" aria-label="{{d.donutAria}}">
+              <sc-for list="{{d.slices}}" as="sl" hint-placeholder-count="7">
+                <circle class="tk-donut__seg {{sl.cls}}" cx="108" cy="108" r="96" stroke-width="24" stroke-dasharray="{{sl.dash}}" stroke-dashoffset="{{sl.off}}" style="stroke: {{sl.color}}" onClick="{{sl.pick}}"></circle>
+              </sc-for>
+            </svg>
+            <div class="tk-donut__center" aria-live="polite">
+              <span class="tk-donut__label">{{c.label}}</span>
+              <span class="tk-amt tk-donut__total {{c.cls}}">{{c.total}}</span>
+              <sc-if value="{{c.hasPct}}" hint-placeholder-val="{{false}}"><span class="tk-donut__label">{{c.pct}}</span></sc-if>
+            </div>
+          </div>
+          <sc-if value="{{c.cmp}}" hint-placeholder-val="{{true}}">
+            <p class="tk-cmp" style="justify-content: center; text-align: center"><span class="tk-icon" aria-hidden="true">{{c.cmpIcon}}</span><span><b>{{c.cmpAmt}}</b> {{c.cmpText}}</span></p>
+          </sc-if>
+          <sc-if value="{{c.isNew}}" hint-placeholder-val="{{false}}"><span class="tk-badge" style="align-self: center">{{t.isNew}}</span></sc-if>
+          <sc-if value="{{c.hasLink}}" hint-placeholder-val="{{false}}"><a class="tk-link" href="RincianKategori.dc.html" style="align-self: center">{{c.link}}<span class="tk-icon tk-icon--sm">chevron_right</span></a></sc-if>
+          <sc-if value="{{c.hasFix}}" hint-placeholder-val="{{false}}"><a class="tk-btn tk-btn--secondary tk-btn--sm" href="Riwayat.dc.html" style="align-self: center">{{t.fix}}</a></sc-if>
+
+          <sc-if value="{{d.hasHi}}" hint-placeholder-val="{{true}}">
+            <div style="margin: 4px -16px 0; box-shadow: inset 0 1px 0 var(--line)">
+              <sc-for list="{{d.hi}}" as="h" hint-placeholder-count="1">
+                <a class="tk-row tk-row--compact" href="RincianKategori.dc.html">
+                  <span class="tk-tile tk-tile--px"><img src="{{h.icon}}" alt="" width="32" height="32"></span>
+                  <span class="tk-row__main"><span class="tk-t-body" style="white-space: normal">{{h.text}}</span></span>
+                  <span class="tk-icon tk-row__chev">chevron_right</span>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <div class="tk-legend-list" style="margin: 0 -16px">
+            <sc-for list="{{d.leg}}" as="r" hint-placeholder-count="7">
+              <button class="tk-legrow {{r.cls}}" type="button" aria-pressed="{{r.pressed}}" aria-label="{{r.aria}}" onClick="{{r.pick}}">
+                <sc-if value="{{r.hasSwatch}}" hint-placeholder-val="{{true}}"><i class="tk-swatch" style="background: {{r.color}}"></i></sc-if>
+                <span class="tk-legrow__name">{{r.name}}<sc-if value="{{r.hasChev}}" hint-placeholder-val="{{false}}"> <span class="tk-icon tk-icon--sm tk-ink-2" style="vertical-align: -4px">{{r.chev}}</span></sc-if></span>
+                <span class="tk-legrow__pct">{{r.pct}}</span>
+                <span class="tk-amt tk-legrow__amt {{r.amtCls}}">{{r.amt}}</span>
+              </button>
+            </sc-for>
+          </div>
+          <sc-if value="{{d.hasTransfers}}" hint-placeholder-val="{{true}}">
+            <div class="tk-card__foot">
+              <sc-for list="{{d.transfers}}" as="x" hint-placeholder-count="1">
+                <div class="tk-xfer">
+                  <span class="tk-tile tk-tile--px"><img src="/_blob/713cb080cbbfcd6a289509dcd33f9d1f" alt="" width="32" height="32"></span>
+                  <span class="tk-xfer__main"><span class="tk-xfer__line"><span class="tk-xfer__title">{{x.title}}</span><span class="tk-amt tk-xfer__amt">{{x.amt}}</span></span><sc-if value="{{x.hasSub}}" hint-placeholder-val="{{true}}"><span class="tk-xfer__sub">{{x.sub}}</span></sc-if></span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </section>
+
+      </sc-if>
+
+      <sc-if value="{{v.trend}}" hint-placeholder-val="{{true}}">
+        <section class="tk-section" style="margin-top: 8px">
+          <div class="tk-section__head"><h2 class="tk-section__title">{{t.trendTitle}}</h2></div>
+          <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+            <div class="tk-legend" aria-hidden="true"><span><i class="is-in"></i>{{t.income}}</span><span><i class="is-out"></i>{{t.expense}}</span></div>
+            <div class="tk-trend" style="height: 186px">
+              <svg width="296" height="186" viewBox="0 0 296 186" aria-hidden="true">
+                <path class="tk-trend__sel" d="{{g.band}}"></path>
+                <path class="tk-trend__grid" d="{{g.grid}}"></path>
+                <path class="tk-trend__base" d="{{g.base}}"></path>
+                <path class="tk-trend__in" d="{{g.inc}}"></path>
+                <path class="tk-trend__out" d="{{g.out}}"></path>
+              </svg>
+              <sc-for list="{{g.yLabels}}" as="y" hint-placeholder-count="3">
+                <span class="tk-trend__y" style="top: {{y.top}}px">{{y.text}}</span>
+              </sc-for>
+              <div class="tk-trend__cols" role="group" aria-label="{{t.trendTitle}}" style="width: 260px; grid-template-columns: repeat(6, minmax(0, 1fr))">
+                <sc-for list="{{g.cols}}" as="c" hint-placeholder-count="6">
+                  <button class="tk-trend__col {{c.cls}}" type="button" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="grid-column: {{c.col}}">
+                    <span class="tk-trend__x">{{c.label}}</span>
+                    <span class="tk-trend__net">{{c.net}}</span>
+                    <span class="tk-trend__days">{{c.days}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div class="tk-readout" aria-live="polite">
+              <span class="tk-t-label">{{rd.title}}</span>
+              <div class="tk-readout__row"><span class="tk-ink-2">{{t.income}}</span><span class="tk-amt tk-amt--pos">{{rd.inc}}</span></div>
+              <div class="tk-readout__row"><span class="tk-ink-2">{{t.expense}}</span><span class="tk-amt">{{rd.out}}</span></div>
+              <div class="tk-readout__row"><span class="tk-ink-2">{{t.net}}</span><span class="tk-amt">{{rd.net}}</span></div>
+              <sc-if value="{{rd.hasLink}}" hint-placeholder-val="{{false}}"><a class="tk-link" href="Analisis.dc.html">{{rd.link}}<span class="tk-icon tk-icon--sm">chevron_right</span></a></sc-if>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+    </sc-if>
+  </main>
+
+  <nav class="tk-nav" aria-label="{{t.nav}}">
+    <a class="tk-nav__item" href="Main.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>{{t.home}}</a>
+    <a class="tk-nav__item is-active" href="Riwayat.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>{{t.history}}</a>
+    <a class="tk-nav__catat" href="Catat.dc.html" aria-label="{{t.record}}"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>{{t.recordShort}}</a>
+    <a class="tk-nav__item" href="Anggaran.dc.html"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>{{t.plan}}</a>
+    <a class="tk-nav__item" href="Dompet.dc.html"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>{{t.wallets}}</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"keadaan":{"editor":"enum","options":["september","oktober","peralihan","dompet","satuBulan","tanpaPengeluaran","kosong","memuat","galat"],"default":"september","section":"Keadaan"},"hidden":{"editor":"boolean","default":false,"section":"Keadaan"},"pilih":{"editor":"enum","options":["","food","shop","uncat"],"default":"","section":"Keadaan"},"trenPilih":{"editor":"enum","options":["","0","1","2","3"],"default":"","section":"Keadaan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en, hid = !!this.props.hidden;
+    const st = this.props.keadaan || 'september';
+    const kind = s.kind || 'out';
+    const T = en ? {
+      history: 'History', list: 'List', analysis: 'Analysis', sections: 'History sections', prev: 'Previous period', next: 'Next period',
+      kindLabel: 'Type', expense: 'Expenses', income: 'Income', all: 'All wallets', uncat: 'Uncategorized', fix: 'Add category',
+      others: (n) => 'Others (' + n + ' categories)', avg: (n) => n + '-month average', toDate: (d) => 'average through day ' + d,
+      vs: (x) => 'vs ' + x, higher: (c, a, x) => c + (a ? ' ' + a : '') + ' higher than ' + x, lower: (c, a, x) => c + (a ? ' ' + a : '') + ' lower than ' + x,
+      transferTitle: 'Moved between wallets', transferSub: 'Doesn\'t change your total', transferIn: 'Transfers in', transferOut: 'Transfers out',
+      trendTitle: 'Last 6 months', toDate10: 'through 10 Oct', seePeriod: (x) => 'See ' + x + ' analysis', isNew: 'new this month', seeCat: (c) => 'See ' + c + ' details', net: 'Net', transition: 'Transition period · 24 days', days: (n) => n + ' days',
+      emptyTitle: 'Nothing to analyze yet', emptyBody: 'Record transactions to see where your money goes.', emptyCta: 'Record a transaction',
+      emptyMonth: (m) => 'No expenses in ' + m + ' yet.', error: "Couldn't load analysis. Pull down to try again.",
+      of: (p, k) => p + ' of ' + k.toLowerCase(), nav: 'Main navigation', home: 'Home', record: 'Record a transaction', recordShort: 'Record', plan: 'Plan', wallets: 'Wallets',
+      mon: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      monLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      cat: { shop: 'Shopping', inst: 'Installments', home: 'Housing', food: 'Food', give: 'Charity', bills: 'Bills', subs: 'Subscriptions', trans: 'Transport', salary: 'Salary', free: 'Freelance' }
+    } : {
+      history: 'Riwayat', list: 'Daftar', analysis: 'Analisis', sections: 'Bagian Riwayat', prev: 'Periode sebelumnya', next: 'Periode berikutnya',
+      kindLabel: 'Jenis', expense: 'Pengeluaran', income: 'Pemasukan', all: 'Semua dompet', uncat: 'Tanpa kategori', fix: 'Beri kategori',
+      others: (n) => 'Lainnya (' + n + ' kategori)', avg: (n) => 'rata-rata ' + n + ' bulan', toDate: (d) => 'rata-rata s.d. tanggal ' + d,
+      vs: (x) => 'dibanding ' + x, higher: (c, a, x) => c + (a ? ' ' + a : '') + ' lebih tinggi dari ' + x, lower: (c, a, x) => c + (a ? ' ' + a : '') + ' lebih rendah dari ' + x,
+      transferTitle: 'Dipindahkan antardompet', transferSub: 'Tidak mengurangi total uangmu', transferIn: 'Transfer masuk', transferOut: 'Transfer keluar',
+      trendTitle: '6 bulan terakhir', toDate10: 's.d. 10 Okt', seePeriod: (x) => 'Lihat analisis ' + x, isNew: 'baru bulan ini', seeCat: (c) => 'Lihat rincian ' + c, net: 'Selisih', transition: 'Periode peralihan · 24 hari', days: (n) => n + ' hari',
+      emptyTitle: 'Belum ada yang bisa dianalisis', emptyBody: 'Catat transaksi dan lihat ke mana uangmu pergi.', emptyCta: 'Catat transaksi',
+      emptyMonth: (m) => 'Belum ada pengeluaran di ' + m + '.', error: 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
+      of: (p, k) => p + ' dari ' + k.toLowerCase(), nav: 'Navigasi utama', home: 'Beranda', record: 'Catat transaksi', recordShort: 'Catat', plan: 'Rencana', wallets: 'Dompet',
+      mon: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
+      monLong: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+      cat: { shop: 'Belanja', inst: 'Cicilan', home: 'Tempat tinggal', food: 'Makan', give: 'Sedekah', bills: 'Tagihan', subs: 'Langganan', trans: 'Transportasi', salary: 'Gaji', free: 'Freelance' }
+    };
+    const dots = (x) => String(Math.round(Math.abs(x))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const rp = (x) => hid ? 'Rp•••••' : 'Rp' + dots(x);
+    const signed = (x) => hid ? 'Rp•••••' : (x < 0 ? '−' : '+') + 'Rp' + dots(x);
+    const pct = (v, tot) => { const p = v / tot * 100; return p > 0 && p < 0.5 ? '<1%' : Math.floor(p + 0.5) + '%'; };
+    const B = (id) => '/_blob/' + id;
+    const IC = {
+      shop: { px: B('807cc382e258bd1f8a94ba4795471b4d') }, inst: { px: B('6ec6bc4ed4a972490d3a4a21764dcbb6') }, home: { px: B('196abb10802024dd6b0295ba3e372318') },
+      food: { px: B('f1ae8d6356f45cec2038768261cba47e') }, give: { sym: 'volunteer_activism', tile: 'tk-tile--brown' }, bills: { px: B('73796fb4a84837b6efa626a8f86986c4') },
+      subs: { px: B('aabe73f55f1957f913ecba1e56955969') }, trans: { px: B('be1d988f965774850a0d78479d429106') }, salary: { px: B('6472b514c73603db38d0e194adeb08cd') },
+      free: { px: B('7b29d1c27de82a7878980c9785ed0d08') }
+    };
+    // Warna irisan donat per kategori (token cat-*); Lainnya slate, Tanpa kategori line-strong.
+    const COL = { shop: 'green', inst: 'indigo', home: 'teal', food: 'orange', give: 'brown', bills: 'purple', subs: 'rose', trans: 'blue', salary: 'green', free: 'amber' };
+    const cv = (k) => 'var(--cat-' + COL[k] + ')';
+    // Data (FINANCIAL_ANALYSIS §10): September 2026, mulai tanggal 1. avg = rata-rata Jun–Agt; Oktober s.d. tanggal 10.
+    const DATA = {
+      sep: {
+        m: 8, out: [['shop', 3068500, 2820000], ['inst', 2914000, 2914000], ['home', 1900000, 1900000], ['food', 1245000, 950000], ['give', 800000, 800000], ['bills', 550000, 520000], ['subs', 413200, 398000], ['trans', 410000, 445000]],
+        uncat: 120000, inc: [['salary', 12000000, 12000000], ['free', 2615438, 650000]], transfer: 1000000
+      },
+      bca: {
+        m: 8, out: [['shop', 3068500, 2820000], ['inst', 2914000, 2914000], ['home', 1900000, 1900000], ['bills', 550000, 520000], ['subs', 413200, 398000]],
+        uncat: 0, inc: [['salary', 12000000, 12000000]], tin: 0, tout: 1000000
+      },
+      okt: {
+        m: 9, toDate: 10, out: [['inst', 2914000, 2914000], ['home', 1900000, 1900000], ['food', 520000, 340000], ['shop', 318500, 360000], ['bills', 200000, 190000], ['subs', 65000, 65000]],
+        uncat: 0, inc: [], transfer: 0
+      }
+    };
+    const key = st === 'oktober' || st === 'peralihan' || st === 'tanpaPengeluaran' ? 'okt' : (st === 'dompet' || s.wallet === 'bca') ? 'bca' : 'sep';
+    const D = DATA[key];
+    const per = st === 'peralihan';
+    const noCmp = per || st === 'satuBulan';
+    const list = kind === 'out' ? D.out : D.inc;
+    const none = st === 'tanpaPengeluaran' || list.length === 0;
+    const uncat = kind === 'out' ? D.uncat : 0;
+    const total = list.reduce((a, r) => a + r[1], 0) + uncat;
+    const avgTotal = list.reduce((a, r) => a + r[2], 0) + (kind === 'out' && key === 'sep' ? 90000 : 0);
+    const cmpLabel = D.toDate ? T.toDate(D.toDate) : T.avg(3);
+    const sorted = list.slice().sort((a, b) => b[1] - a[1] || (T.cat[a[0]] < T.cat[b[0]] ? -1 : 1));
+    const top = sorted.length - 5 >= 2 ? sorted.slice(0, 5) : sorted;
+    const rest = sorted.length - 5 >= 2 ? sorted.slice(5) : [];
+    const kname = kind === 'out' ? T.expense : T.income;
+    const row = (r) => {
+      const ic = IC[r[0]];
+      return {
+        isCat: true, isOthers: false, key: r[0], v: r[1], avg: r[2], color: cv(r[0]), name: T.cat[r[0]], amt: rp(r[1]), amtCls: kind === 'inc' ? 'tk-amt--pos' : '',
+        px: !!ic.px, sym: !ic.px, icon: ic.px || ic.sym, tileCls: ic.tile || '',
+        w: Math.round(r[1] / total * 1000) / 10, pct: pct(r[1], total), pctAria: T.of(pct(r[1], total), kname),
+        hasCmp: !noCmp, cmp: cmpLabel + ' ' + rp(r[2]), cmpText: noCmp ? '' : cmpLabel + ' ' + rp(r[2])
+      };
+    };
+    const rows = top.map(row);
+    if (rest.length) {
+      const sum = rest.reduce((a, r) => a + r[1], 0), avg = rest.reduce((a, r) => a + r[2], 0);
+      const open = !!s.others;
+      rows.push({
+        isCat: false, isOthers: true, v: sum, avgSum: avg, color: 'var(--cat-slate)', open: open, chev: open ? 'expand_less' : 'expand_more', name: T.others(rest.length), amt: rp(sum), amtCls: '',
+        w: Math.round(sum / total * 1000) / 10, pct: pct(sum, total), pctAria: T.of(pct(sum, total), kname), hasCmp: !noCmp, cmp: cmpLabel + ' ' + rp(avg), cmpText: noCmp ? '' : cmpLabel + ' ' + rp(avg),
+        kids: rest.map((r) => ({ name: T.cat[r[0]], amt: rp(r[1]), amtCls: '', w: Math.round(r[1] / total * 1000) / 10, pct: pct(r[1], total), pctAria: T.of(pct(r[1], total), kname) }))
+      });
+    }
+    // Sorotan B-7: >= 20% dan >= Rp50.000, paling banyak tiga, urut selisih nominal.
+    const hi = noCmp ? [] : list
+      .map((r) => ({ r: r, d: r[1] - r[2] }))
+      .filter((x) => x.r[2] > 0 && Math.abs(x.d) >= 50000 && Math.abs(x.d) / x.r[2] >= 0.2)
+      .sort((a, b) => Math.abs(b.d) - Math.abs(a.d)).slice(0, 3)
+      .map((x) => ({ icon: IC[x.r[0]].px || '', text: (x.d > 0 ? T.higher : T.lower)(T.cat[x.r[0]], hid ? '' : rp(Math.abs(x.d)), cmpLabel) }));
+    const diff = total - avgTotal;
+    const parts = rows.map((r) => ({ v: r.v, color: r.color, name: r.name, pct: r.pct })).concat(uncat > 0 ? [{ v: uncat, color: 'var(--line-strong)', name: T.uncat, pct: pct(uncat, total) }] : []);
+    const slices = total > 0 ? this.donutGeo(parts, total) : [];
+    const title = per ? '1 – 24 ' + T.mon[9] : T.monLong[D.m] + ' 2026';
+    const shortP = per ? '1 – 24 ' + T.mon[9] : T.monLong[D.m];
+    const transfers = [];
+    if (kind === 'out' || true) {
+      if (key === 'bca') { transfers.push({ title: T.transferIn, hasSub: false, sub: '', amt: rp(D.tin) }, { title: T.transferOut, hasSub: false, sub: '', amt: rp(D.tout) }); }
+      else if (D.transfer) transfers.push({ title: T.transferTitle, hasSub: true, sub: T.transferSub, amt: rp(D.transfer) });
+    }
+    // Tren (F6): pencatatan pertama Juni 2026, jadi April dan Mei tidak digambar. Oktober = periode berjalan s.d. 10 Okt.
+    const TR = [[5, 13100000, 10700000], [6, 12000000, 10850000], [7, 12850000, 10961000], [8, 14615438, 11420700], [9, 0, st === 'tanpaPengeluaran' ? 0 : 5917500]];
+    // BCA: hanya gaji masuk ke BCA; pengeluaran BCA rata-rata Jun–Agt Rp8.552.000.
+    const TRB = [[5, 12000000, 8420000], [6, 12000000, 8556000], [7, 12000000, 8680000], [8, 12000000, 8845700]];
+    const six = key === 'okt' ? TR : key === 'bca' ? TRB : TR.slice(0, 4);
+    const viewed = six.length - 1;
+    const sel = s.sel !== undefined ? s.sel : (this.props.trenPilih ? Math.min(viewed, parseInt(this.props.trenPilih, 10)) : viewed);
+    const pname = (m) => per && m === 9 ? '1 – 24 ' + T.mon[9] : T.monLong[m];
+    const pts = six.map((p) => {
+      const cur = p[0] === 9;
+      const net = p[1] - p[2];
+      return {
+        label: T.mon[p[0]], inc: p[1], out: p[2], net: net, noSign: cur,
+        days: cur ? T.toDate10 : '',
+        aria: pname(p[0]) + ' 2026' + (cur ? ' (' + T.toDate10 + ')' : '') + ', ' + T.income.toLowerCase() + ' ' + rp(p[1]) + ', ' + T.expense.toLowerCase() + ' ' + rp(p[2]) + ', ' + T.net.toLowerCase() + ' ' + (cur ? rp(net) : signed(net))
+      };
+    });
+    const g = this.trendGeo(pts, sel, false, hid, en ? 'en' : 'id');
+    g.cols = g.cols.map((c, i) => Object.assign(c, { pressed: i === sel ? 'true' : 'false', pick: () => this.setState({ sel: i }) }));
+    const sp = six[sel];
+    const spCur = sp[0] === 9;
+    // Pilihan kategori di donat atau legenda: irisan lain meredup, tengah donat menampilkan kategori itu.
+    const selKey = s.cat !== undefined ? s.cat : (this.props.pilih || '');
+    const items = [];
+    rows.forEach((r) => {
+      if (r.isCat) items.push({ key: r.key, v: r.v, avg: r.avg, color: r.color, name: r.name, pct: r.pct, slice: r.key, kind: 'cat' });
+      else {
+        items.push({ key: 'others', v: r.v, avg: r.avgSum, color: r.color, name: r.name, pct: r.pct, slice: 'others', kind: 'others' });
+        if (s.others) rest.forEach((k) => items.push({ key: k[0], v: k[1], avg: k[2], color: r.color, name: T.cat[k[0]], pct: pct(k[1], total), slice: 'others', kind: 'child' }));
+      }
+    });
+    if (uncat > 0) items.push({ key: 'uncat', v: uncat, avg: key === 'sep' ? 90000 : 0, color: 'var(--line-strong)', name: T.uncat, pct: pct(uncat, total), slice: 'uncat', kind: 'uncat' });
+    const selItem = items.find((x) => x.key === selKey) || null;
+    const selSlice = selItem ? selItem.slice : '';
+    const pickKey = (k) => () => this.setState({ cat: selKey === k ? '' : k });
+    const pickOthers = () => this.setState({ cat: selKey === 'others' ? '' : 'others', others: selKey === 'others' ? false : true });
+    const sliceItems = items.filter((x) => x.kind !== 'child');
+    const geo = total > 0 ? this.donutGeo(sliceItems, total) : [];
+    const slicesSel = geo.map((g, i) => Object.assign(g, {
+      cls: selSlice && sliceItems[i].slice !== selSlice ? 'is-dim' : '',
+      pick: sliceItems[i].kind === 'others' ? pickOthers : pickKey(sliceItems[i].key)
+    }));
+    const leg = items.map((x) => ({
+      cls: (x.kind === 'child' ? 'tk-legrow--child ' : '') + (selKey === x.key ? 'is-selected' : ''),
+      pressed: selKey === x.key ? 'true' : 'false',
+      aria: x.name + ', ' + x.pct + ', ' + rp(x.v),
+      hasSwatch: x.kind !== 'child', color: x.color,
+      name: x.name, hasChev: x.kind === 'others', chev: s.others ? 'expand_less' : 'expand_more',
+      pct: x.pct, amt: rp(x.v), amtCls: kind === 'inc' ? 'tk-amt--pos' : '',
+      pick: x.kind === 'others' ? pickOthers : pickKey(x.key)
+    }));
+    let c;
+    if (!selItem) {
+      c = { label: kname, total: rp(total), cls: kind === 'inc' ? 'tk-amt--pos' : '', hasPct: false, pct: '',
+            cmp: !noCmp && avgTotal > 0, cmpIcon: diff >= 0 ? 'arrow_upward' : 'arrow_downward', cmpAmt: rp(Math.abs(diff)), cmpText: T.vs(cmpLabel),
+            isNew: false, hasLink: false, link: '', hasFix: false };
+    } else {
+      const dd = selItem.v - selItem.avg;
+      c = { label: selItem.name, total: rp(selItem.v), cls: kind === 'inc' ? 'tk-amt--pos' : '', hasPct: true, pct: T.of(selItem.pct, kname),
+            cmp: !noCmp && selItem.avg > 0, cmpIcon: dd >= 0 ? 'arrow_upward' : 'arrow_downward', cmpAmt: rp(Math.abs(dd)), cmpText: T.vs(cmpLabel),
+            isNew: !noCmp && selItem.avg === 0 && selItem.kind !== 'uncat',
+            hasLink: selItem.kind === 'cat' || selItem.kind === 'child', link: T.seeCat(selItem.name), hasFix: selItem.kind === 'uncat' };
+    }
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      t: T,
+      v: {
+        loading: st === 'memuat', error: st === 'galat', empty: st === 'kosong',
+        main: ['memuat', 'galat', 'kosong'].indexOf(st) < 0,
+        trend: st !== 'satuBulan' && ['memuat', 'galat', 'kosong'].indexOf(st) < 0
+      },
+      k: {
+        out: { cls: kind === 'out' ? 'is-selected' : '', on: kind === 'out' ? 'true' : 'false', pick: () => this.setState({ kind: 'out' }) },
+        inc: { cls: kind === 'inc' ? 'is-selected' : '', on: kind === 'inc' ? 'true' : 'false', pick: () => this.setState({ kind: 'inc' }) }
+      },
+      toggleWallet: () => this.setState({ wallet: s.wallet === 'bca' ? 'all' : 'bca' }),
+      toggleOthers: () => this.setState({ others: !s.others }),
+      d: {
+        title: title, per: per, atNow: key === 'okt',
+        wallet: key === 'bca' ? 'BCA' : T.all, walletCls: key === 'bca' ? 'is-selected' : '',
+        none: none, noneText: kind === 'out' ? T.emptyMonth(T.monLong[D.m]) : T.emptyMonth(T.monLong[D.m]).replace(en ? 'expenses' : 'pengeluaran', en ? 'income' : 'pemasukan'),
+        has: !none,
+        label: kname + ' · ' + shortP, total: rp(total), heroCls: kind === 'inc' ? 'tk-amt--pos' : '', kname: kname,
+        slices: slicesSel, leg: leg, donutAria: kname + ' ' + shortP + ': ' + parts.map((x) => x.name + ' ' + x.pct).join(', '),
+        cmp: !noCmp && avgTotal > 0, cmpIcon: diff >= 0 ? 'arrow_upward' : 'arrow_downward', cmpAmt: rp(Math.abs(diff)), cmpText: T.vs(cmpLabel),
+        hasHi: hi.length > 0, hi: hi,
+        rows: rows,
+        hasUncat: uncat > 0,
+        uncat: { amt: rp(uncat), w: Math.round(uncat / total * 1000) / 10, pct: pct(uncat, total || 1), pctAria: T.of(pct(uncat, total || 1), kname) },
+        transfers: transfers, hasTransfers: transfers.length > 0
+      },
+      c: c,
+      g: g,
+      rd: {
+        title: pname(sp[0]) + ' 2026' + (spCur ? ' · ' + T.toDate10 : ''), inc: signed(sp[1]), out: hid ? 'Rp•••••' : '−Rp' + dots(sp[2]),
+        net: spCur ? rp(sp[1] - sp[2]) : signed(sp[1] - sp[2]),
+        hasLink: sel !== viewed, link: T.seePeriod(pname(sp[0]))
+      }
+    };
+  }
+
+  // Donut slices: items = [{ v, color, name, pct }], total > 0. Circle r 96, stroke 24, viewBox 216; 2.5 units gap between slices.
+  donutGeo(items, total) {
+    const C = 2 * Math.PI * 96, GAP = items.length > 1 ? 2.5 : 0;
+    let at = 0;
+    return items.filter((it) => it.v > 0).map((it) => {
+      const full = it.v / total * C;
+      const len = Math.max(1.5, full - GAP);
+      const sl = { dash: (Math.round(len * 10) / 10) + ' ' + (Math.round(C * 10) / 10), off: String(-(Math.round(at * 10) / 10)), color: it.color };
+      at += full;
+      return sl;
+    });
+  }
+
+  // Trend: periods as paired (income, expense) or single columns of 6px squares, in 6 fixed slots (right-aligned:
+  // periods before the first recording are not drawn). p = [{ label, inc, out, net, days, noSign, aria }].
+  // o = { avg: number|null } draws the dashed average line (one-series only).
+  trendGeo(p, sel, one, hidden, lang, o) {
+    o = o || {};
+    const PW = 260, TOP = 8, BASE = 116, H = 186, SLOTS = 6;
+    const f1 = (x) => Math.round(x * 10) / 10;
+    const slot = PW / SLOTS, off = SLOTS - p.length;
+    const vals = [o.avg || 0];
+    p.forEach((d) => { if (one) vals.push(d.out); else vals.push(d.inc, d.out); });
+    const hi = Math.max.apply(null, vals.concat([1]));
+    const raw = hi / 3, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((c) => c >= raw);
+    const yMax = Math.ceil(hi / step) * step;
+    const Y = (v) => BASE - v / yMax * (BASE - TOP);
+    const col = (x, w, v) => {
+      const h = v / yMax * (BASE - TOP);
+      const n = Math.floor(h / 8), r = h - n * 8;
+      let d = '';
+      for (let i = 0; i < n; i++) d += 'M' + f1(x) + ' ' + f1(BASE - 8 * i - 6) + 'h' + w + 'v6h-' + w + 'Z';
+      if (r > 0.5) { const hh = Math.min(r, 6); d += 'M' + f1(x) + ' ' + f1(BASE - 8 * n - hh) + 'h' + w + 'v' + f1(hh) + 'h-' + w + 'Z'; }
+      return d;
+    };
+    let inc = '', out = '';
+    p.forEach((d, i) => {
+      const cx = slot * (off + i) + slot / 2;
+      if (one) out += col(cx - 7, 14, d.out);
+      else { inc += col(cx - 11, 10, d.inc); out += col(cx + 1, 10, d.out); }
+    });
+    const ticks = [];
+    for (let t = step; t <= yMax + 1; t += step) ticks.push(t);
+    const grid = ticks.map((t) => 'M0 ' + (Math.round(Y(t)) + 0.5) + 'H' + PW).join('');
+    const short = (v) => {
+      const a = Math.abs(v);
+      if (lang === 'en') return a >= 1e6 ? String(Math.round(a / 1e5) / 10) + 'M' : String(Math.round(a / 1000)) + 'K';
+      return a >= 1e6 ? String(Math.round(a / 1e5) / 10).replace('.', ',') + ' jt' : String(Math.round(a / 1000)) + ' rb';
+    };
+    const hasAvg = !!o.avg;
+    const ay = hasAvg ? Math.round(Y(o.avg)) + 0.5 : 0;
+    return {
+      band: 'M' + f1(slot * (off + sel) + 1) + ' 0h' + f1(slot - 2) + 'V' + H + 'H' + f1(slot * (off + sel) + 1) + 'Z',
+      grid: grid,
+      base: 'M0 ' + (BASE + 0.5) + 'H' + PW,
+      inc: inc, out: out,
+      hasAvg: hasAvg, avg: hasAvg ? 'M0 ' + ay + 'H' + PW : '', avgTop: ay,
+      yLabels: hidden ? [] : ticks.map((t) => ({ top: Y(t), text: short(t) })),
+      cols: p.map((d, i) => ({
+        label: d.label,
+        col: off + i + 1,
+        net: hidden ? '•••' : (d.net === undefined ? '' : (d.noSign ? '' : (d.net < 0 ? '−' : '+')) + short(d.net)),
+        hasNet: d.net !== undefined,
+        days: d.days || '',
+        hasDays: !!d.days,
+        aria: d.aria,
+        cls: i === sel ? 'is-selected' : ''
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

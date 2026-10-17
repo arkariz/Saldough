@@ -3,6 +3,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
@@ -33,9 +34,15 @@ void main() {
     registerFallbackValue(DateTime(2026));
   });
 
+  tearDown(() {
+    HistoryPeriod.reset();
+    ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial;
+  });
+
   setUp(() {
     walletRepository = MockWalletRepository();
     transactionRepository = MockTransactionRepository();
+    when(() => transactionRepository.listAvailableMonths()).thenAnswer((_) async => const Right(<DateTime>[]));
     when(() => walletRepository.listWallets()).thenAnswer(
       (_) async => const Right([
         Wallet(
@@ -74,10 +81,19 @@ void main() {
   /// Membuat [transactionRepository.listTransactionsInMonth] mengembalikan
   /// [answers] secara berurutan tiap kali dipanggil -- dipakai untuk uji
   /// yang memuat dua kali (mis. refresh setelah transaksi baru).
+  ///
+  /// Satu pemuatan periode membaca dokumen bulan sekitarnya (T-19.10), jadi
+  /// hanya dokumen BULAN INI yang berisi jawaban; bulan lain kosong dan tidak
+  /// dihitung sebagai pemanggilan.
   void stubMonthSequence(List<List<Transaction>> answers) {
     var call = 0;
     when(() => transactionRepository.listTransactionsInMonth(any())).thenAnswer(
-      (_) async {
+      (invocation) async {
+        final month = invocation.positionalArguments[0] as DateTime;
+        final now = DateTime.now();
+        if (month.year != now.year || month.month != now.month) {
+          return const Right<Failure, List<Transaction>>(<Transaction>[]);
+        }
         final result = Right<Failure, List<Transaction>>(
           answers[call < answers.length ? call : answers.length - 1],
         );
@@ -85,6 +101,14 @@ void main() {
         return result;
       },
     );
+  }
+
+  /// Dokumen bulan [byMonth] (kunci: tanggal 1 bulan itu); bulan lain kosong.
+  void stubMonthly(Map<DateTime, List<Transaction>> byMonth) {
+    when(() => transactionRepository.listTransactionsInMonth(any())).thenAnswer((invocation) async {
+      final month = invocation.positionalArguments[0] as DateTime;
+      return Right<Failure, List<Transaction>>(byMonth[DateTime(month.year, month.month)] ?? const []);
+    });
   }
 
   group('TransactionBloc -- memuat', () {
@@ -300,12 +324,12 @@ void main() {
     );
 
     blocTest<TransactionBloc, TransactionState>(
-      'TransactionMonthChanged memuat ulang HANYA transaksi, bukan dompet, dan recompute kategori',
+      'TransactionPeriodStepped mundur memuat ulang HANYA transaksi, bukan dompet, recompute kategori, dan dibagikan lewat HistoryPeriod',
       setUp: () {
         final now = DateTime.now();
-        final nextMonth = DateTime(now.year, now.month + 1);
-        stubMonthSequence([
-          [
+        final previous = DateTime(now.year, now.month - 1);
+        stubMonthly({
+          DateTime(now.year, now.month): [
             ExpenseTransaction(
               id: 'e1',
               date: DateTime(now.year, now.month),
@@ -315,30 +339,139 @@ void main() {
               categoryId: 'makan',
             ),
           ],
-          [
+          previous: [
             ExpenseTransaction(
               id: 'e2',
-              date: nextMonth,
+              date: DateTime(previous.year, previous.month, 10),
               amount: 20000,
               note: '',
               walletId: 'bca',
               categoryId: 'tagihan',
             ),
           ],
-        ]);
+        });
+        when(
+          () => transactionRepository.listAvailableMonths(),
+        ).thenAnswer((_) async => Right([previous, DateTime(now.year, now.month)]));
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading);
+        bloc.add(const TransactionPeriodStepped(forward: false));
+      },
+      skip: 1,
+      verify: (bloc) {
+        final now = DateTime.now();
+        expect(bloc.state.categoryOptions, ['tagihan']);
+        expect(bloc.state.groups.expand((g) => g.transactions).single.id, 'e2');
+        expect(bloc.state.isCurrent, isFalse);
+        expect(bloc.state.canGoBack, isFalse, reason: 'bulan pertama pencatatan');
+        expect(HistoryPeriod.anchor, DateTime(now.year, now.month - 1));
+        verify(() => walletRepository.listWallets()).called(1);
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'periode ikut bergeser ketika segmen Analisis mengubah HistoryPeriod, dan kembali ke berjalan saat dikosongkan',
+      setUp: () {
+        final now = DateTime.now();
+        stubMonthly({
+          DateTime(now.year, now.month - 1): [
+            ExpenseTransaction(
+              id: 'lalu',
+              date: DateTime(now.year, now.month - 1, 12),
+              amount: 1000,
+              note: '',
+              walletId: 'bca',
+            ),
+          ],
+        });
       },
       build: buildBloc,
       act: (bloc) async {
         final now = DateTime.now();
         bloc.add(const TransactionStarted());
         await bloc.stream.firstWhere((s) => !s.isLoading);
-        bloc.add(TransactionMonthChanged(DateTime(now.year, now.month + 1)));
+        HistoryPeriod.notifier.value = DateTime(now.year, now.month - 1);
+        await bloc.stream.firstWhere((s) => !s.isLoading && !s.isCurrent);
+        HistoryPeriod.reset();
+        await bloc.stream.firstWhere((s) => !s.isLoading && s.isCurrent);
       },
+      verify: (bloc) {
+        expect(bloc.state.isCurrent, isTrue);
+        expect(bloc.state.groups, isEmpty);
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'awal bulan 25: hanya anggota periode 25-24 yang dimuat, dari dokumen bulan yang disentuh',
+      setUp: () {
+        final now = DateTime.now();
+        ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.single(const FinancialMonthStart.day(25));
+        final period = ActiveFinancialMonth.periodOf(now);
+        final inside = period.start.add(const Duration(days: 2));
+        stubMonthly({
+          for (
+            var m = DateTime(period.start.year, period.start.month - 1);
+            m.isBefore(period.end);
+            m = DateTime(m.year, m.month + 1)
+          )
+            m: [
+              ExpenseTransaction(
+                id: 'x${m.month}',
+                date: DateTime(m.year, m.month, 10),
+                amount: 500,
+                note: '',
+                walletId: 'bca',
+              ),
+            ],
+          DateTime(inside.year, inside.month): [
+            ExpenseTransaction(id: 'in', date: inside, amount: 7000, note: '', walletId: 'bca'),
+          ],
+        });
+      },
+      build: buildBloc,
+      act: (bloc) => bloc.add(const TransactionStarted()),
       skip: 1,
       verify: (bloc) {
-        expect(bloc.state.categoryOptions, ['tagihan']);
-        expect(bloc.state.groups.expand((g) => g.transactions).single.id, 'e2');
-        verify(() => walletRepository.listWallets()).called(1);
+        final ids = bloc.state.rawTransactions.map((t) => t.id).toList();
+        expect(ids, contains('in'));
+        expect(
+          bloc.state.rawTransactions.every((t) => bloc.state.period.contains(t.date)),
+          isTrue,
+          reason: 'hanya anggota periode 25-24',
+        );
+      },
+    );
+
+    blocTest<TransactionBloc, TransactionState>(
+      'gaji 23 tertaut kemunculan 25: tampil di periode yang mulai 25, bukan di periode sebelumnya (contoh D)',
+      setUp: () {
+        ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.single(const FinancialMonthStart.day(25));
+        stubMonthly({
+          DateTime(2026, 9): [
+            IncomeTransaction(
+              id: 'gaji',
+              date: DateTime(2026, 9, 23, 9),
+              amount: 1200000000,
+              note: '',
+              walletId: 'bca',
+            ).withRecurrence(RecurrenceLink(ruleId: 'gaji', occurrenceDate: DateTime(2026, 9, 25))),
+          ],
+        });
+      },
+      build: buildBloc,
+      act: (bloc) async {
+        HistoryPeriod.notifier.value = DateTime(2026, 9, 25);
+        bloc.add(const TransactionStarted());
+        await bloc.stream.firstWhere((s) => !s.isLoading && s.rawTransactions.isNotEmpty);
+        HistoryPeriod.notifier.value = DateTime(2026, 8, 25);
+        await bloc.stream.firstWhere((s) => !s.isLoading && s.rawTransactions.isEmpty);
+      },
+      verify: (bloc) {
+        expect(bloc.state.period.start, DateTime(2026, 8, 25));
+        expect(bloc.state.rawTransactions, isEmpty);
       },
     );
 
@@ -390,12 +523,7 @@ void main() {
   });
 
   group('TransactionBloc -- pencarian lintas bulan (T-8.2, UX-6)', () {
-    void stubMonthlyTransactions(Map<DateTime, List<Transaction>> byMonth) {
-      when(() => transactionRepository.listTransactionsInMonth(any())).thenAnswer((invocation) async {
-        final month = invocation.positionalArguments[0] as DateTime;
-        return Right<Failure, List<Transaction>>(byMonth[DateTime(month.year, month.month)] ?? const []);
-      });
-    }
+    void stubMonthlyTransactions(Map<DateTime, List<Transaction>> byMonth) => stubMonthly(byMonth);
 
     blocTest<TransactionBloc, TransactionState>(
       'tidak memindai apa pun kalau kata kunci pencarian kosong',
@@ -408,7 +536,6 @@ void main() {
       },
       skip: 1,
       verify: (bloc) {
-        verifyNever(() => transactionRepository.listAvailableMonths());
         expect(bloc.state.crossMonthScannedMonths, isEmpty);
       },
     );
@@ -432,8 +559,8 @@ void main() {
       act: (bloc) async {
         bloc.add(const TransactionStarted());
         await bloc.stream.firstWhere((s) => !s.isLoading);
-        bloc.add(TransactionMonthChanged(DateTime(2026, 9)));
-        await bloc.stream.firstWhere((s) => !s.isLoading);
+        HistoryPeriod.notifier.value = DateTime(2026, 9);
+        await bloc.stream.firstWhere((s) => !s.isLoading && s.period.start == DateTime(2026, 9));
         bloc
           ..add(const TransactionSearchChanged('tagihan'))
           ..add(const TransactionSearchAcrossMonthsRequested());
@@ -462,8 +589,8 @@ void main() {
       act: (bloc) async {
         bloc.add(const TransactionStarted());
         await bloc.stream.firstWhere((s) => !s.isLoading);
-        bloc.add(TransactionMonthChanged(DateTime(2026, 9)));
-        await bloc.stream.firstWhere((s) => !s.isLoading);
+        HistoryPeriod.notifier.value = DateTime(2026, 9);
+        await bloc.stream.firstWhere((s) => !s.isLoading && s.period.start == DateTime(2026, 9));
         bloc
           ..add(const TransactionSearchChanged('tagihan'))
           ..add(const TransactionSearchAcrossMonthsRequested());

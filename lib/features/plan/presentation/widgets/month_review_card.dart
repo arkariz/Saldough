@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_bloc.dart';
 import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
@@ -151,15 +155,23 @@ class MonthReviewCard extends StatelessWidget {
               MonthReviewStep.lookback,
               accuracyText(state) ?? t.plan.reviewLookback(month: state.previousRange.label),
               [
-                AppButton.text(small: true, label: t.plan.reviewSee, onPressed: () async {
+                AppButton.text(
+                  small: true,
+                  label: t.plan.reviewSee,
+                  onPressed: () async {
                     await showLookbackSheet(context, state);
                     mark(MonthReviewStep.lookback);
-                  }),
+                  },
+                ),
               ],
             ),
           const SizedBox(height: AppSpacing.space4),
           AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),
-          AppButton.text(small: true, label: t.plan.reviewLater, onPressed: () => bloc.add(const PlanReviewDismissed())),
+          AppButton.text(
+            small: true,
+            label: t.plan.reviewLater,
+            onPressed: () => bloc.add(const PlanReviewDismissed()),
+          ),
         ],
       ),
     );
@@ -250,6 +262,25 @@ Future<void> showLookbackSheet(BuildContext context, PlanMonthState state) {
                 const SizedBox(height: AppSpacing.space2),
                 Text(t.plan.lookbackBiggest(line: biggest.$1), style: textTheme.bodySmall),
               ],
+              // Pintu ke Analisis periode itu (FINANCIAL_ANALYSIS F8.1, T-19.6).
+              const SizedBox(height: AppSpacing.space2),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: AppButton.text(
+                  key: const ValueKey('lookback-see-analysis'),
+                  small: true,
+                  label: t.plan.lookbackSeeAnalysis(month: state.previousRange.name),
+                  onPressed: () {
+                    Navigator.of(sheetContext).pop();
+                    unawaited(
+                      context.pushRoute(
+                        AnalysisRouteKeys.open,
+                        AnalysisInput(source: AnalysisSource.lookback, periodStart: state.previousRange.start),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

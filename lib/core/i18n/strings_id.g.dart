@@ -61,6 +61,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
 	late final Translations$appUpdate$id appUpdate = Translations$appUpdate$id.internal(_root);
+	late final Translations$analysis$id analysis = Translations$analysis$id.internal(_root);
 }
 
 // Path: app
@@ -508,6 +509,15 @@ class Translations$transaction$id {
 
 	/// id: 'Bulan berikutnya'
 	String get nextMonth => 'Bulan berikutnya';
+
+	/// id: 'Daftar'
+	String get listSegment => 'Daftar';
+
+	/// id: '$count transaksi'
+	String filteredCount({required Object count}) => '${count} transaksi';
+
+	/// id: 'Tidak ada lagi transaksi di sini.'
+	String get filteredEmpty => 'Tidak ada lagi transaksi di sini.';
 }
 
 // Path: wallet
@@ -1615,6 +1625,9 @@ class Translations$home$id {
 
 	/// id: 'Pengeluaran'
 	String get expenseStat => 'Pengeluaran';
+
+	/// id: 'Analisis $period: pemasukan dan pengeluaran per kategori'
+	String analysisDoor({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori';
 }
 
 // Path: onboarding
@@ -1742,8 +1755,8 @@ class Translations$tour$id {
 	/// id: 'Arus bulan ini'
 	String get homeCashFlowTitle => 'Arus bulan ini';
 
-	/// id: 'Uang yang benar-benar masuk dan keluar bulan ini.'
-	String get homeCashFlowBody => 'Uang yang benar-benar masuk dan keluar bulan ini.';
+	/// id: 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.'
+	String get homeCashFlowBody => 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.';
 
 	/// id: 'Sisa anggaran aktif'
 	String get homeBudgetTitle => 'Sisa anggaran aktif';
@@ -1811,11 +1824,11 @@ class Translations$tour$id {
 	/// id: 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.'
 	String get walletAddBody => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.';
 
-	/// id: 'Satu bulan per tampilan'
-	String get txnMonthTitle => 'Satu bulan per tampilan';
+	/// id: 'Satu periode per tampilan'
+	String get txnMonthTitle => 'Satu periode per tampilan';
 
-	/// id: 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.'
-	String get txnMonthBody => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.';
+	/// id: 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.'
+	String get txnMonthBody => 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.';
 
 	/// id: 'Cari dan saring'
 	String get txnFilterTitle => 'Cari dan saring';
@@ -1966,6 +1979,30 @@ class Translations$tour$id {
 
 	/// id: 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.'
 	String get planTransitionBody => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.';
+
+	/// id: 'Analisis'
+	String get txnAnalysisSegmentTitle => 'Analisis';
+
+	/// id: 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.'
+	String get txnAnalysisSegmentBody => 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.';
+
+	/// id: 'Per kategori'
+	String get analysisCategoriesTitle => 'Per kategori';
+
+	/// id: 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.'
+	String get analysisCategoriesBody => 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.';
+
+	/// id: 'Tanpa kategori'
+	String get analysisUncategorizedTitle => 'Tanpa kategori';
+
+	/// id: 'Beri kategori supaya analisisnya lebih tepat.'
+	String get analysisUncategorizedBody => 'Beri kategori supaya analisisnya lebih tepat.';
+
+	/// id: 'Enam periode terakhir'
+	String get analysisTrendTitle => 'Enam periode terakhir';
+
+	/// id: 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.'
+	String get analysisTrendBody => 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.';
 }
 
 // Path: info
@@ -3260,6 +3297,9 @@ class Translations$plan$id {
 
 	/// id: 'Sesudah $name selesai, mulai $month ruang bebas +$amount/bln.'
 	String installmentFree({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.';
+
+	/// id: 'Lihat rincian $month'
+	String lookbackSeeAnalysis({required Object month}) => 'Lihat rincian ${month}';
 }
 
 // Path: appUpdate
@@ -3274,6 +3314,86 @@ class Translations$appUpdate$id {
 	late final Translations$appUpdate$whatsNew$id whatsNew = Translations$appUpdate$whatsNew$id.internal(_root);
 	late final Translations$appUpdate$category$id category = Translations$appUpdate$category$id.internal(_root);
 	late final Translations$appUpdate$diagnostic$id diagnostic = Translations$appUpdate$diagnostic$id.internal(_root);
+}
+
+// Path: analysis
+class Translations$analysis$id {
+	Translations$analysis$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Analisis'
+	String get segment => 'Analisis';
+
+	/// id: 'Periode sebelumnya'
+	String get previousPeriod => 'Periode sebelumnya';
+
+	/// id: 'Periode berikutnya'
+	String get nextPeriod => 'Periode berikutnya';
+
+	/// id: 'Tanpa kategori'
+	String get uncategorized => 'Tanpa kategori';
+
+	/// id: 'Freelance'
+	String get freelanceGroup => 'Freelance';
+
+	/// id: 'Lainnya ($n kategori)'
+	String others({required Object n}) => 'Lainnya (${n} kategori)';
+
+	/// id: 'diarsipkan'
+	String get archived => 'diarsipkan';
+
+	/// id: 'Dipindahkan antardompet'
+	String get transferTitle => 'Dipindahkan antardompet';
+
+	/// id: 'Tidak mengurangi total uangmu'
+	String get transferSub => 'Tidak mengurangi total uangmu';
+
+	/// id: 'Transfer masuk'
+	String get transferIn => 'Transfer masuk';
+
+	/// id: 'Transfer keluar'
+	String get transferOut => 'Transfer keluar';
+
+	late final Translations$analysis$kind$id kind = Translations$analysis$kind$id.internal(_root);
+	late final Translations$analysis$empty$id empty = Translations$analysis$empty$id.internal(_root);
+
+	/// id: 'Belum ada pengeluaran di $period.'
+	String emptyMonth({required Object period}) => 'Belum ada pengeluaran di ${period}.';
+
+	/// id: 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.'
+	String get error => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.';
+
+	/// id: '$kind $period: $parts'
+	String donutSemantics({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}';
+
+	/// id: '$name, $percent, $amount'
+	String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+
+	/// id: 'Beri kategori'
+	String get fix => 'Beri kategori';
+
+	/// id: '$percent dari $kind'
+	String shareOf({required Object percent, required Object kind}) => '${percent} dari ${kind}';
+
+	/// id: 'Jenis'
+	String get kindLabel => 'Jenis';
+
+	/// id: 'Semua dompet'
+	String get allWallets => 'Semua dompet';
+
+	/// id: 'Dompet'
+	String get walletLabel => 'Dompet';
+
+	/// id: 'Belum ada pemasukan di $period.'
+	String emptyMonthIncome({required Object period}) => 'Belum ada pemasukan di ${period}.';
+
+	late final Translations$analysis$compare$id compare = Translations$analysis$compare$id.internal(_root);
+	late final Translations$analysis$highlight$id highlight = Translations$analysis$highlight$id.internal(_root);
+	late final Translations$analysis$trend$id trend = Translations$analysis$trend$id.internal(_root);
+	late final Translations$analysis$category$id category = Translations$analysis$category$id.internal(_root);
 }
 
 // Path: record.draftIssue
@@ -3803,6 +3923,156 @@ class Translations$appUpdate$diagnostic$id {
 	String get copy => 'Salin';
 }
 
+// Path: analysis.kind
+class Translations$analysis$kind$id {
+	Translations$analysis$kind$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pengeluaran'
+	String get expense => 'Pengeluaran';
+
+	/// id: 'Pemasukan'
+	String get income => 'Pemasukan';
+}
+
+// Path: analysis.empty
+class Translations$analysis$empty$id {
+	Translations$analysis$empty$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Belum ada yang bisa dianalisis'
+	String get title => 'Belum ada yang bisa dianalisis';
+
+	/// id: 'Catat transaksi dan lihat ke mana uangmu pergi.'
+	String get body => 'Catat transaksi dan lihat ke mana uangmu pergi.';
+
+	/// id: 'Catat transaksi'
+	String get cta => 'Catat transaksi';
+}
+
+// Path: analysis.compare
+class Translations$analysis$compare$id {
+	Translations$analysis$compare$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'rata-rata $n bulan'
+	String avg({required Object n}) => 'rata-rata ${n} bulan';
+
+	/// id: 'bulan lalu'
+	String get lastMonth => 'bulan lalu';
+
+	/// id: 'rata-rata s.d. tanggal $day'
+	String toDate({required Object day}) => 'rata-rata s.d. tanggal ${day}';
+
+	/// id: 'dibanding $label'
+	String vs({required Object label}) => 'dibanding ${label}';
+
+	/// id: 'baru bulan ini'
+	String get newThisMonth => 'baru bulan ini';
+
+	/// id: '$amount lebih tinggi, $label'
+	String srHigher({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}';
+
+	/// id: '$amount lebih rendah, $label'
+	String srLower({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}';
+}
+
+// Path: analysis.highlight
+class Translations$analysis$highlight$id {
+	Translations$analysis$highlight$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$subject lebih tinggi dari $compare'
+	String higher({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}';
+
+	/// id: '$subject lebih rendah dari $compare'
+	String lower({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}';
+}
+
+// Path: analysis.trend
+class Translations$analysis$trend$id {
+	Translations$analysis$trend$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '6 bulan terakhir'
+	String get title => '6 bulan terakhir';
+
+	/// id: 'Pemasukan'
+	String get income => 'Pemasukan';
+
+	/// id: 'Pengeluaran'
+	String get expense => 'Pengeluaran';
+
+	/// id: 'Selisih'
+	String get net => 'Selisih';
+
+	/// id: 's.d. $date'
+	String toDate({required Object date}) => 's.d. ${date}';
+
+	/// id: '$n hari'
+	String days({required Object n}) => '${n} hari';
+
+	/// id: 'Lihat analisis $period'
+	String seePeriod({required Object period}) => 'Lihat analisis ${period}';
+
+	/// id: '$period, pemasukan $income, pengeluaran $expense, selisih $net'
+	String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}';
+}
+
+// Path: analysis.category
+class Translations$analysis$category$id {
+	Translations$analysis$category$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: '$count transaksi · rata-rata $amount per transaksi'
+	String frequency({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi';
+
+	/// id: '$count transaksi · rata-rata $amount per transaksi'
+	String frequencyOne({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi';
+
+	/// id: 'biasanya $count transaksi · $amount'
+	String frequencyUsual({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}';
+
+	/// id: 'Lihat semua transaksi'
+	String get seeAll => 'Lihat semua transaksi';
+
+	/// id: 'Lihat rincian $category'
+	String seeCategory({required Object category}) => 'Lihat rincian ${category}';
+
+	/// id: 'Transaksi'
+	String get transactions => 'Transaksi';
+
+	/// id: '$amount di atas rata-rata'
+	String aboveAvg({required Object amount}) => '${amount} di atas rata-rata';
+
+	/// id: '$amount di bawah rata-rata'
+	String belowAvg({required Object amount}) => '${amount} di bawah rata-rata';
+
+	/// id: 'rata-rata $n bulan'
+	String avgLine({required Object n}) => 'rata-rata ${n} bulan';
+
+	/// id: '20 transaksi terbaru'
+	String get moreHint => '20 transaksi terbaru';
+}
+
 // Path: record.voice.failure
 class Translations$record$voice$failure$id {
 	Translations$record$voice$failure$id.internal(this._root);
@@ -4043,6 +4313,9 @@ extension on Translations {
 			'transaction.makeRecurringAction' => 'Jadikan rutin',
 			'transaction.previousMonth' => 'Bulan sebelumnya',
 			'transaction.nextMonth' => 'Bulan berikutnya',
+			'transaction.listSegment' => 'Daftar',
+			'transaction.filteredCount' => ({required Object count}) => '${count} transaksi',
+			'transaction.filteredEmpty' => 'Tidak ada lagi transaksi di sini.',
 			'wallet.subtitle' => 'Total saldo semua dompet aktif',
 			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
 			'wallet.listHeading' => 'Dompet aktif',
@@ -4347,11 +4620,11 @@ extension on Translations {
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
 			'freelance.billAction' => ({required Object count}) => 'Tagih (${count})',
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
 			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
 			'freelance.entryAddShortAction' => 'Catat jam kerja',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.filterAll' => 'Semua',
 			'freelance.noDeductions' => 'Tanpa potongan',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} jam · ${amount}',
@@ -4402,6 +4675,7 @@ extension on Translations {
 			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} tagihan, perkiraan ${date}',
 			'home.incomeStat' => 'Pemasukan',
 			'home.expenseStat' => 'Pengeluaran',
+			'home.analysisDoor' => ({required Object period}) => 'Analisis ${period}: pemasukan dan pengeluaran per kategori',
 			'onboarding.skipAction' => 'Lewati',
 			'onboarding.nextAction' => 'Lanjut',
 			'onboarding.closeAction' => 'Tutup',
@@ -4438,7 +4712,7 @@ extension on Translations {
 			'tour.homeRecordTitle' => 'Satu pintu mencatat',
 			'tour.homeRecordBody' => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.',
 			'tour.homeCashFlowTitle' => 'Arus bulan ini',
-			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar bulan ini.',
+			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.',
 			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
 			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
 			'tour.homeFreelanceTitle' => 'Ringkasan freelance',
@@ -4461,8 +4735,8 @@ extension on Translations {
 			'tour.walletCardBody' => 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.',
 			'tour.walletAddTitle' => 'Tambah dompet',
 			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.',
-			'tour.txnMonthTitle' => 'Satu bulan per tampilan',
-			'tour.txnMonthBody' => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.',
+			'tour.txnMonthTitle' => 'Satu periode per tampilan',
+			'tour.txnMonthBody' => 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.',
 			'tour.txnFilterTitle' => 'Cari dan saring',
 			'tour.txnFilterBody' => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.',
 			'tour.txnRowTitle' => 'Ubah atau hapus',
@@ -4513,6 +4787,14 @@ extension on Translations {
 			'tour.planPeriodHeaderBody' => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.',
 			'tour.planTransitionTitle' => 'Periode peralihan',
 			'tour.planTransitionBody' => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.',
+			'tour.txnAnalysisSegmentTitle' => 'Analisis',
+			'tour.txnAnalysisSegmentBody' => 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.',
+			'tour.analysisCategoriesTitle' => 'Per kategori',
+			'tour.analysisCategoriesBody' => 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.',
+			'tour.analysisUncategorizedTitle' => 'Tanpa kategori',
+			'tour.analysisUncategorizedBody' => 'Beri kategori supaya analisisnya lebih tepat.',
+			'tour.analysisTrendTitle' => 'Enam periode terakhir',
+			'tour.analysisTrendBody' => 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -4852,6 +5134,8 @@ extension on Translations {
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.',
@@ -4864,8 +5148,6 @@ extension on Translations {
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
 			'recurring.priceUpKeep' => 'Biarkan',
 			'recurring.suggestTitle' => 'Sepertinya rutin',
@@ -4974,6 +5256,7 @@ extension on Translations {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.',
+			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'Lihat rincian ${month}',
 			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',
 			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru',
 			'appUpdate.banner.storeDownloadingNote' => 'Kamu tetap bisa mencatat.',
@@ -4994,6 +5277,59 @@ extension on Translations {
 			'appUpdate.category.security' => 'Keamanan',
 			'appUpdate.diagnostic.title' => 'Diagnostik pembaruan',
 			'appUpdate.diagnostic.copy' => 'Salin',
+			'analysis.segment' => 'Analisis',
+			'analysis.previousPeriod' => 'Periode sebelumnya',
+			'analysis.nextPeriod' => 'Periode berikutnya',
+			'analysis.uncategorized' => 'Tanpa kategori',
+			'analysis.freelanceGroup' => 'Freelance',
+			'analysis.others' => ({required Object n}) => 'Lainnya (${n} kategori)',
+			'analysis.archived' => 'diarsipkan',
+			'analysis.transferTitle' => 'Dipindahkan antardompet',
+			'analysis.transferSub' => 'Tidak mengurangi total uangmu',
+			'analysis.transferIn' => 'Transfer masuk',
+			'analysis.transferOut' => 'Transfer keluar',
+			'analysis.kind.expense' => 'Pengeluaran',
+			'analysis.kind.income' => 'Pemasukan',
+			'analysis.empty.title' => 'Belum ada yang bisa dianalisis',
+			'analysis.empty.body' => 'Catat transaksi dan lihat ke mana uangmu pergi.',
+			'analysis.empty.cta' => 'Catat transaksi',
+			'analysis.emptyMonth' => ({required Object period}) => 'Belum ada pengeluaran di ${period}.',
+			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
+			'analysis.fix' => 'Beri kategori',
+			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} dari ${kind}',
+			'analysis.kindLabel' => 'Jenis',
+			'analysis.allWallets' => 'Semua dompet',
+			'analysis.walletLabel' => 'Dompet',
+			'analysis.emptyMonthIncome' => ({required Object period}) => 'Belum ada pemasukan di ${period}.',
+			'analysis.compare.avg' => ({required Object n}) => 'rata-rata ${n} bulan',
+			'analysis.compare.lastMonth' => 'bulan lalu',
+			'analysis.compare.toDate' => ({required Object day}) => 'rata-rata s.d. tanggal ${day}',
+			'analysis.compare.vs' => ({required Object label}) => 'dibanding ${label}',
+			'analysis.compare.newThisMonth' => 'baru bulan ini',
+			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} lebih tinggi, ${label}',
+			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lebih rendah, ${label}',
+			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} lebih tinggi dari ${compare}',
+			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lebih rendah dari ${compare}',
+			'analysis.trend.title' => '6 bulan terakhir',
+			'analysis.trend.income' => 'Pemasukan',
+			'analysis.trend.expense' => 'Pengeluaran',
+			'analysis.trend.net' => 'Selisih',
+			'analysis.trend.toDate' => ({required Object date}) => 's.d. ${date}',
+			'analysis.trend.days' => ({required Object n}) => '${n} hari',
+			'analysis.trend.seePeriod' => ({required Object period}) => 'Lihat analisis ${period}',
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, pemasukan ${income}, pengeluaran ${expense}, selisih ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
+			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaksi · rata-rata ${amount} per transaksi',
+			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'biasanya ${count} transaksi · ${amount}',
+			'analysis.category.seeAll' => 'Lihat semua transaksi',
+			'analysis.category.seeCategory' => ({required Object category}) => 'Lihat rincian ${category}',
+			'analysis.category.transactions' => 'Transaksi',
+			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} di atas rata-rata',
+			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} di bawah rata-rata',
+			'analysis.category.avgLine' => ({required Object n}) => 'rata-rata ${n} bulan',
+			'analysis.category.moreHint' => '20 transaksi terbaru',
 			_ => null,
 		};
 	}

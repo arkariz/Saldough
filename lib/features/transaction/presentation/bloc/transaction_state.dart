@@ -1,3 +1,4 @@
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -7,7 +8,7 @@ import 'package:state_management/state_management.dart';
 final class TransactionState extends UiState<TransactionState> {
   /// Membuat [TransactionState].
   const TransactionState({
-    required this.month,
+    required this.period,
     required this.wallets,
     required this.rawTransactions,
     required this.typeFilter,
@@ -20,6 +21,8 @@ final class TransactionState extends UiState<TransactionState> {
     this.budgetItems = const [],
     this.searchQuery = '',
     this.loadFailed = false,
+    this.isCurrent = true,
+    this.canGoBack = false,
     this.availableMonths = const [],
     this.crossMonthScannedMonths = const [],
     this.crossMonthGroups = const [],
@@ -28,11 +31,10 @@ final class TransactionState extends UiState<TransactionState> {
     super.effect,
   });
 
-  /// State awal, sebelum bulan berjalan dimuat.
+  /// State awal, sebelum periode berjalan dimuat.
   factory TransactionState.initial() {
-    final now = DateTime.now();
     return TransactionState(
-      month: DateTime(now.year, now.month),
+      period: ActiveFinancialMonth.periodOf(DateTime.now()),
       wallets: const [],
       rawTransactions: const [],
       typeFilter: TransactionTypeFilter.all,
@@ -45,8 +47,17 @@ final class TransactionState extends UiState<TransactionState> {
     );
   }
 
-  /// Bulan yang sedang ditampilkan (tanggal selalu 1, jam diabaikan).
-  final DateTime month;
+  /// Periode keuangan yang sedang ditampilkan (ADR-038), dibagi dengan segmen
+  /// Analisis. Keanggotaannya lewat `periodDateOf`; urutan hari tetap menurut
+  /// `date`.
+  final FinancialPeriod period;
+
+  /// [period] adalah periode berjalan: panah maju nonaktif.
+  final bool isCurrent;
+
+  /// Ada periode yang lebih lama untuk dilihat (sampai periode yang memuat
+  /// bulan pertama pencatatan).
+  final bool canGoBack;
 
   /// Seluruh dompet (aktif maupun tidak) -- untuk penyaring dompet dan
   /// penerjemah `walletId` -> nama pada tiap baris.
@@ -67,7 +78,7 @@ final class TransactionState extends UiState<TransactionState> {
     return null;
   }
 
-  /// Transaksi bulan [month] APA ADANYA dari repository, belum tersaring.
+  /// Transaksi bulan [period] APA ADANYA dari repository, belum tersaring.
   /// Sumber kebenaran untuk [categoryOptions] dan ringkasan bulan (yang
   /// sengaja tidak ikut terpangkas filter -- lihat `TransactionListPage`).
   final List<Transaction> rawTransactions;
@@ -117,7 +128,7 @@ final class TransactionState extends UiState<TransactionState> {
   /// bulan pertama kali diminta (T-8.2). Kosong berarti belum pernah diminta.
   final List<DateTime> availableMonths;
 
-  /// Bulan sebelum [month] yang SUDAH dipindai pencarian lintas bulan,
+  /// Bulan sebelum [period] yang SUDAH dipindai pencarian lintas bulan,
   /// terlepas dari filter/kata kunci yang mana -- direset ke kosong tiap kali
   /// filter, kata kunci, atau bulan berubah (lihat `TransactionBloc._recomputed`),
   /// karena hasil pindaian lama tidak lagi berarti untuk kriteria yang baru.
@@ -130,13 +141,15 @@ final class TransactionState extends UiState<TransactionState> {
   /// Sedang memindai satu tumpuk bulan sebelumnya (T-8.2).
   final bool isSearchingCrossMonth;
 
-  /// `true` kalau seluruh bulan sebelum [month] di [availableMonths] sudah
+  /// `true` kalau seluruh bulan sebelum [period] di [availableMonths] sudah
   /// habis dipindai -- tombol "Cari lebih jauh" disembunyikan sesudah ini.
   final bool crossMonthExhausted;
 
   @override
   TransactionState copyWith({
-    DateTime? month,
+    FinancialPeriod? period,
+    bool? isCurrent,
+    bool? canGoBack,
     List<Wallet>? wallets,
     List<BudgetItemOption>? budgetItems,
     List<Transaction>? rawTransactions,
@@ -157,7 +170,9 @@ final class TransactionState extends UiState<TransactionState> {
     UiEffect? effect,
   }) {
     return TransactionState(
-      month: month ?? this.month,
+      period: period ?? this.period,
+      isCurrent: isCurrent ?? this.isCurrent,
+      canGoBack: canGoBack ?? this.canGoBack,
       wallets: wallets ?? this.wallets,
       budgetItems: budgetItems ?? this.budgetItems,
       rawTransactions: rawTransactions ?? this.rawTransactions,
@@ -181,7 +196,9 @@ final class TransactionState extends UiState<TransactionState> {
 
   @override
   List<Object?> get props => [
-    month,
+    period,
+    isCurrent,
+    canGoBack,
     wallets,
     budgetItems,
     rawTransactions,

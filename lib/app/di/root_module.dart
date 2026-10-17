@@ -12,6 +12,7 @@ import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/language/language.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_module.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_module.dart';
 import 'package:saldough/features/app_update/data/app_update_memory_repository_impl.dart';
 import 'package:saldough/features/app_update/data/package_info_version_source.dart';
 import 'package:saldough/features/app_update/data/play_store_update_source.dart';
@@ -52,6 +53,8 @@ import 'package:saldough/features/recurring/data/reminder_settings_repository_im
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
+import 'package:saldough/features/transaction/data/history_segment_repository_impl.dart';
+import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_module.dart';
 import 'package:saldough/features/voice_capture/presentation/navigation/voice_capture_route_module.dart';
 import 'package:saldough/features/wallet/presentation/navigation/wallet_route_module.dart';
@@ -77,6 +80,7 @@ abstract final class RootModule {
   /// penemuan otomatis, sesuai desain `FeatureRouteModule`.
   static const List<FeatureRouteModule> featureModules = [
     AccountRouteModule(versionEntry: accountVersionEntry),
+    AnalysisRouteModule(),
     AppUpdateRouteModule(),
     BudgetRouteModule(),
     FreelanceRouteModule(),
@@ -137,6 +141,10 @@ abstract final class RootModule {
       // Saran Sepertinya rutin yang ditolak (ADR-037 §3.3).
       ..registerLazySingleton<RecurringSuggestionDismissals>(
         () => RecurringSuggestionDismissalsImpl(storage: container<KeyValueStorage>()),
+      )
+      // Segmen Riwayat terakhir (Daftar atau Analisis), preferensi tampilan.
+      ..registerLazySingleton<HistorySegmentRepository>(
+        () => HistorySegmentRepositoryImpl(storage: container<KeyValueStorage>()),
       )
       // Log catat otomatis rutin (ADR-037 §3.2).
       ..registerLazySingleton<AutoRecordLogRepository>(

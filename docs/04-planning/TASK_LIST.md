@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 17 Oktober 2026 (1.706 uji lulus, 187 berkas uji, 62.636 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 8 Fase 19; kode Fase 19 selesai, sisa T-19.7 untuk QA). Sebelumnya: 17 Oktober 2026 (1.693 uji lulus, sesudah irisan 7 Fase 19). Sebelumnya: 17 Oktober 2026 (1.685 uji lulus, sesudah irisan 6 Fase 19). Sebelumnya: 17 Oktober 2026 (1.662 uji lulus, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -80,7 +80,7 @@ Terakhir diperbarui: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
 | 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 19 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 selesai 11 Okt 2026 (13 Lulus 2 Gagal, temuan T-18.13–T-18.19 diverifikasi ulang di perangkat dan Lulus); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via). **Selesai 15 Okt 2026**: T-18.9 lulus, masuk `main` lewat rilis `0.7.0+13` |
-| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 0 | Dijadwalkan 10 Okt 2026; sesudah T-18.2–18.4, layar menunggu rupa dari pemilik |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 9 | Kode selesai 17 Okt 2026, sisa T-19.7 (verifikasi emulator oleh QA). Dijadwalkan 10 Okt 2026; Fase 18 selesai; rupa Analisis sudah ada (15 Okt 2026); dikerjakan per irisan vertikal di `claude/analisis-fase-19`, tiap irisan diverifikasi pemilik sebelum berikutnya |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -3952,12 +3952,25 @@ cukup dibaca. Tutup dengan `flutter analyze` tanpa isu dan seluruh uji lulus.
 Keputusan pemilik 10 Okt 2026. Perilaku di
 [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)
 (aturan B-1–B-16, contoh §10). Bergantung pada T-18.2–T-18.4 (periode dan
-`periodDateOf`). Layar menunggu rupa dari pemilik (FINANCIAL_ANALYSIS §14);
-tugas domain T-19.1–T-19.3 boleh lebih dulu. Branch usulan
-`claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+`periodDateOf`). Rupa sudah ada sejak review 12 Okt 2026 (FINANCIAL_ANALYSIS
+§14, salinan di `docs/03-design`). **Dikerjakan per irisan vertikal**, bukan
+per lapisan (keputusan pemilik 15 Okt 2026): tiap irisan menembus domain →
+layar → pintu masuk dan berhenti untuk diverifikasi pemilik; satu tugas
+T-19.x bisa selesai lintas irisan dan dicentang begitu seluruh kriterianya
+terpenuhi. Branch `claude/analisis-fase-19`. R2 di B-38. (dari B-36)
+
+Irisan: 1 Beranda → Analisis pengeluaran periode berjalan (T-19.1, T-19.4
+inti, pintu T-19.6) · 2 pilih kategori, Tanpa kategori, Daftar tersaring
+(T-19.3) · 3 Pemasukan, Freelance, per dompet · 4 pembanding dan sorotan
+(T-19.2) · 5 tren enam periode · 6 Rincian kategori (T-19.5) · 7 Daftar
+berbagi periode (T-19.10) · 8 kilas balik, tur, analitik (T-19.6, T-19.8,
+T-19.9). Pembanding: periode peralihan di antara tiga periode dibuang,
+rata-rata dari sisanya (keputusan pemilik 15 Okt 2026).
+
+**Progres irisan:** 0 (salin rupa, dokumen) dan 1 (Beranda → Analisis pengeluaran periode berjalan) selesai 15 Okt 2026; irisan 2 (pilih kategori, Tanpa kategori → Beri kategori → Daftar tersaring) selesai 17 Okt 2026; irisan 3 (Pemasukan, Freelance, penyaring dompet, transfer per dompet) dan irisan 4 (Dibanding biasanya: pembanding dan sorotan) selesai 17 Okt 2026; irisan 5 (Tren enam periode; T-19.2 dan T-19.4 tuntas) selesai 17 Okt 2026; irisan 6 (Rincian kategori, T-19.5) selesai 17 Okt 2026; irisan 7 (Daftar Riwayat berbagi periode, T-19.10) selesai 17 Okt 2026; irisan 8 (kilas balik, tur, analitik; T-19.6/8/9) selesai 17 Okt 2026. Kode Fase 19 selesai; sisa T-19.7 (QA) dan PR.
 Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV).
 
-- [ ] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
+- [x] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
       pemasukan per kategori, Freelance turunan, Tanpa kategori, Lainnya,
       persen, transfer sebagai informasi, dompet nonaktif, kategori
       diarsipkan, penyaring dompet (B-1, B-4, B-5, B-8–B-10, B-14).
@@ -3965,7 +3978,21 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       Verifikasi: contoh §10 persis (total Rp11.420.700, persen tampil 101%);
       B-15 rekonsiliasi dengan `monthPlan` plus transfer Tabungan tertaut pos.
       Memenuhi FR-ANL-001.
-- [ ] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
+      **Selesai 15 Okt 2026 (irisan 1).** `summarizePeriod` (fungsi murni di
+      `features/analysis/domain/`): keanggotaan lewat `periodDateOf`, persen
+      bilangan bulat half-up (`AnalysisShare`, "<1%"), lima teratas lalu
+      Lainnya (n ≥ 2) lalu Tanpa kategori, Freelance turunan, transfer hanya
+      informasi (satu angka, atau masuk/keluar per dompet), dompet nonaktif
+      dihitung, kategori diarsipkan ditandai, id tak dikenal = Tanpa kategori.
+      Pembaca bersama `ListPeriodTransactions` (dokumen bulan ± 7 hari) kini
+      dipakai juga `HomeBloc`. Uji `summarize_period_test`: contoh §10 persis
+      dalam sen (Rp11.420.700; 27/26/17/11/7/12/1 = 101%; Lainnya 12% bukan
+      13%; pemasukan 1.461.543.750 sen karena gaji bersih freelance
+      Rp2.615.437,50 yang dokumen bulatkan ke Rp2.615.438), B-3 (= Arus
+      Beranda, termasuk dompet nonaktif dan tautan rutin), B-15 (= rutin
+      tercatat + anggaran terpakai tanpa transfer + di luar rencana, dengan
+      transfer Tabungan Rp1.000.000 tertaut pos), gaji 23 Okt tertaut 25 Okt.
+- [x] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
       rata-rata sampai tiga periode, periode berjalan sampai hari yang sama,
       periode peralihan dikecualikan, ambang 20% dan Rp50.000 (ambang per
       mata uang di tabel format mata uang).
@@ -3973,22 +4000,104 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       +Rp180.000); periode pembanding Februari; tanpa pembanding → tanpa
       sorotan.
       Memenuhi FR-ANL-002, FR-ANL-003.
-- [ ] **T-19.3** Penyaring Riwayat "Tanpa kategori" dan rentang periode
+      *Irisan 4 selesai 17 Okt 2026 (pembanding dan sorotan; tren enam
+      periode menyusul di irisan 5):* `comparisonPeriods` (sampai tiga
+      periode tepat sebelum, ≥ periode pencatatan pertama, peralihan dibuang
+      tanpa diganti, periode peralihan sendiri tanpa pembanding) dan
+      `comparePeriod`/`PeriodComparison`/`Comparison` di
+      `features/analysis/domain/period_comparison.dart`, bilangan bulat
+      murni: rata-rata tidak dibulatkan sebelum dibandingkan, selisih
+      dibulatkan setengah ke atas hanya saat tampil. Periode berjalan
+      dibandingkan s.d. hari yang sama (potong di akhir periode yang lebih
+      pendek). Ambang nominal sorotan mengikuti mata uang: lima langkah
+      pilihan cepat (`5 × step`, Rp50.000 untuk rupiah, 5 satuan untuk
+      USD), diputuskan engineer tanpa tabel baru karena tabel format mata
+      uang belum ada di kode; ubah di `highlightMinSenOf` bila PO punya
+      angka lain. UI: baris `tk-cmp` di bawah donat (total, atau kategori
+      terpilih; "baru bulan ini" untuk kategori tanpa riwayat), sorotan 0–3
+      baris. Sorotan **belum bisa diketuk**: membuka Rincian kategori
+      menyusul di irisan 6. Pembanding ikut jenis dan dompet. Uji: contoh
+      §10 (Makan +Rp295.000 disorot, Belanja +8,8% tidak; Oktober s.d.
+      tanggal 10 +Rp180.000), Februari, peralihan, ambang ganda.
+      *Irisan 5 selesai 17 Okt 2026 (tren; T-19.2 tuntas):* `trendPeriods`/
+      `buildTrend` (`features/analysis/domain/period_trend.dart`): enam
+      periode berakhir di periode yang dilihat, tidak sebelum pencatatan
+      pertama, peralihan ikut; total sama dengan Analisis, ikut penyaring
+      dompet. Komponen inti `AppTrendChart` (batang kotak 6px, slot rata
+      kanan, pita periode terpilih, garis bantu, label sumbu ringkas "15 jt"/
+      "15M") dan `AnalysisTrendSection` (legenda, panel angka, tautan "Lihat
+      analisis {periode}"). Memilih kolom hanya memilih; tautan memindah
+      periode (event `AnalysisPeriodJumped`). Periode berjalan: "s.d. 10 Okt",
+      selisih tanpa tanda; peralihan: "24 hari". Satu periode: tren tidak
+      tampil. Pembacaan transaksi kini mencakup enam periode (satu panggilan
+      `ListPeriodTransactions`). Selisih engineer: label kolom periode yang
+      tidak mulai tanggal 1 memakai nama bulan tempat periode berakhir
+      (25 Okt – 24 Nov = "Nov"); rinciannya tetap di panel angka.
+- [x] **T-19.3** Penyaring Riwayat "Tanpa kategori" dan rentang periode
       keuangan, dibuka lewat kunci rute dengan argumen (ADR-030).
       Verifikasi: jumlah daftar tersaring = total kategori di Analisis untuk
       periode yang sama.
       Memenuhi FR-ANL-004, FR-ANL-005.
-- [ ] **T-19.4** Segmen `Daftar | Analisis` di Riwayat dan layar Analisis
+      **Selesai 17 Okt 2026 (irisan 2).** `PeriodTransactionFilter`
+      (`shared/transaction/domain/period_filter.dart`: periode lewat
+      `periodDateOf`, jenis, dompet, kategori, Tanpa kategori lewat
+      `isUncategorizedTransaction` yang sama artinya dengan Analisis B-9) dan
+      rute `transaction.filtered` (`TransactionFilterInput`: judul, keterangan,
+      saringan) ke `FilteredTransactionsPage`: jumlah dan total, transaksi per
+      hari, ketuk membuka rincian, segar lewat `LedgerChanges` sekembalinya
+      dari sunting. Selisih dari kalimat tugas: ini halaman tersendiri, bukan
+      mengubah Daftar di tab Riwayat, supaya model bulan Riwayat tidak
+      disentuh sebelum Daftar berbagi periode (irisan 7, T-19.10). Uji
+      `summarize_period_test` (kecocokan): jumlah dan total daftar tersaring
+      = baris Analisis untuk Tanpa kategori dan tiap kategori, pengeluaran dan
+      pemasukan, dengan id kategori hilang, Freelance, dan satu dompet.
+- [x] **T-19.4** Segmen `Daftar | Analisis` di Riwayat dan layar Analisis
       periode: periode, dompet, jenis, total, sorotan, daftar kategori, baris
       transfer, tren; keadaan kosong, periode kosong, satu bulan data, galat;
       `AmountVisibility` (B-12); segar lewat `LedgerChanges`; segmen terakhir
       diingat.
-      ⚠ Perlu rupa dari pemilik (FINANCIAL_ANALYSIS §14) dan skill
-      `tanukonomy-ui`; kata mengikuti §12 dan glosarium (tambah Analisis,
+      ⚠ Rupa: prototipe `Analisis*`, `Riwayat` dan komponen DonutChart,
+      LegendRow, TrendChart, SubTabs, PeriodStepper (FINANCIAL_ANALYSIS §14);
+      pakai skill `tanukonomy-ui`; kata mengikuti §12 dan glosarium (tambah Analisis,
       Tanpa kategori).
       Verifikasi: uji widget per keadaan, kedua bahasa, 360dp.
       Memenuhi FR-ANL-001, FR-ANL-002, FR-ANL-003, FR-ANL-005.
-- [ ] **T-19.5** Rincian kategori: total, pembanding, ringkasan frekuensi,
+      *Irisan 1 selesai 15 Okt 2026:* sub-tab `Daftar | Analisis` di Riwayat
+      (`AppSubTabs`, segmen terakhir diingat di `settings/history_segment`),
+      `AppPeriodStepper` (‹ › berhenti di periode berjalan dan di periode
+      yang memuat bulan pertama pencatatan), `AppDonutChart` + `AppLegendRow`
+      (inti, belum bisa dipilih), kaki kartu transfer, keadaan memuat, galat
+      (tarik ke bawah), belum ada transaksi, dan periode tanpa pengeluaran,
+      penanda periode peralihan, Lainnya yang bisa dibuka. Fitur baru
+      `features/analysis/` (rute `analysis.open`); `transaction` tidak
+      mengimpornya: akar komposisi menyisipkan `AnalysisSegment` ke
+      `TransactionListPage`. Warna irisan tetap per kategori (`analysisTintOf`:
+      bawaan mengikuti pembagian `TileTint`, buatan pengguna dari hash FNV-1a
+      id), selisih dari prototipe: Freelance indigo (prototipe amber) supaya
+      sama dengan tile kategori Freelance. Irisan 2–5 (pilih kategori,
+      Pengeluaran/Pemasukan, penyaring dompet, pembanding, sorotan, tren)
+      selesai 17 Okt 2026; tugas ini tuntas.
+      *Irisan 2 selesai 17 Okt 2026:* mengetuk irisan donat atau baris
+      legenda memilih (irisan lain meredup ke 25%, tengah donat menampilkan
+      nama, nominal, dan "{persen} dari pengeluaran"; ketuk lagi membatalkan),
+      Lainnya memilih sekaligus membuka anggotanya, anggota bisa dipilih;
+      pilihan hidup di `AnalysisState` (bertahan lewat penyegaran selama
+      barisnya ada, dikosongkan saat pindah periode). Tanpa kategori terpilih
+      memunculkan **Beri kategori** ke Daftar tersaring. "Lihat rincian" belum
+      ada: menyusul bersama Rincian kategori (irisan 6).
+      *Irisan 3 selesai 17 Okt 2026:* `AppSegmentedControl` Pengeluaran |
+      Pemasukan di bawah pemilih periode (jenis di `AnalysisState.kind`,
+      bertahan lewat penyegaran dan pindah periode; layar baru dari pintu
+      Beranda selalu mulai di Pengeluaran), kelompok Freelance di Pemasukan,
+      nominal pemasukan `positive`, pesan "Belum ada pemasukan di {periode}."
+      Penyaring dompet (`AppMenuSelectButton`, hanya tampil bila ada lebih
+      dari satu dompet; nonaktif tetap dipilih-able dan dihitung) mengganti
+      kaki transfer menjadi Transfer masuk/keluar dompet itu. Jenis dan
+      dompet berganti tanpa membaca ulang: bloc menyimpan transaksi periode
+      dan menghitung ulang `summarizePeriod`. Beri kategori meneruskan dompet
+      terpilih ke Daftar tersaring. Selisih dari prototipe: chip dompet
+      prototipe hanya mengganti antara dua nilai; di sini menu lengkap.
+- [x] **T-19.5** Rincian kategori: total, pembanding, ringkasan frekuensi,
       tren dengan garis rata-rata dan panel selisih (B-17), 20 transaksi
       (ketuk → rincian transaksi), Lihat semua transaksi ke T-19.3.
       Verifikasi: uji widget; jumlah di rincian = daftar tersaring; contoh
@@ -3997,14 +4106,44 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       atas rata-rata); kategori baru tanpa garis dan tanpa "biasanya";
       periode berjalan tanpa selisih.
       Memenuhi FR-ANL-004.
-- [ ] **T-19.6** Pintu masuk: kartu Arus Beranda → Analisis periode berjalan
+      **Selesai 17 Okt 2026 (irisan 6).** Rute `analysis.category`
+      (`CategoryDetailInput`: kategori atau Freelance, periode, jenis, dompet),
+      dibuka dari **Lihat rincian {kategori}** (kategori, Freelance, dan
+      anggota Lainnya; bukan Tanpa kategori/Lainnya) dan dari baris sorotan
+      yang kini bisa diketuk. Domain `summarizeCategory`
+      (`features/analysis/domain/category_detail.dart`): total, persen,
+      pembanding headline (periode berjalan s.d. hari yang sama), frekuensi
+      dan "biasanya" (B-17: jumlah ÷ bulan, nominal digabung), serta garis
+      rata-rata bulan **penuh** (tanpa garis bila "baru bulan ini"). Layar:
+      kartu atas (periode, total, persen, pembanding atau "baru bulan ini",
+      frekuensi, penanda diarsipkan), tren satu besaran (`AppTrendChart`
+      `single` + garis putus-putus berlabel), panel angka
+      "{nominal} · {selisih} di atas/bawah rata-rata" (tanpa pembanding untuk
+      periode berjalan/peralihan/kategori baru), tautan "Lihat analisis
+      {periode}" (membuka Analisis periode itu), transaksi paling banyak 20
+      terbaru per hari, dan **Lihat semua transaksi** ke Daftar tersaring
+      dengan saringan yang sama (jumlahnya sama dengan total, diuji).
+      `PeriodTransactionFilter` mendapat `freelance` supaya Freelance bisa
+      disaring. Selisih dari prototipe: transaksi memakai kartu kelompok per
+      hari yang sama dengan Riwayat (bukan baris datar) agar tampilan dan
+      perilaku ketuk konsisten.
+- [x] **T-19.6** Pintu masuk: kartu Arus Beranda → Analisis periode berjalan
       (pengeluaran, semua dompet); lembar kilas balik → "Lihat rincian
       {bulan}" (FINANCIAL_ANALYSIS F8.1).
       ⚠ Beranda tidak boleh memicu pembacaan enam bulan (NFR-PERF-002):
       pintu hanya navigasi.
       Verifikasi: uji navigasi kedua pintu dengan argumen periode yang benar.
       Memenuhi FR-ANL-001, FR-ANL-005, FR-HOME-001.
-- [ ] **T-19.8** Tur spotlight Analisis (FINANCIAL_ANALYSIS §13A):
+      *Irisan 1 selesai 15 Okt 2026 (pintu Beranda):* pasangan
+      Pemasukan/Pengeluaran di kartu Arus adalah pintu (`HomeMonthCard.onOpenAnalysis`,
+      panah di kanan, label "Analisis {periode}: …") ke rute `analysis.open`
+      (periode berjalan); hanya navigasi, tanpa membaca riwayat di Beranda.
+      Selisih dan footer perkiraan tetap di luar pintu.
+      **Selesai 17 Okt 2026 (irisan 8).** Lembar kilas balik punya tombol
+      **Lihat rincian {bulan}** (`lookback-see-analysis`) yang menutup lembar
+      lalu membuka `analysis.open` dengan `source: lookback` dan awal periode
+      bulan lalu; diuji dengan argumen periode yang benar.
+- [x] **T-19.8** Tur spotlight Analisis (FINANCIAL_ANALYSIS §13A):
       `txnAnalysisSegment` sebagai langkah pertama tur `transaction`; tur
       baru `analysis` dengan `analysisCategories`, `analysisUncategorized`,
       `analysisTrend`; teks `homeCashFlow` diperbarui; teks `tour.*` id/en.
@@ -4014,7 +4153,17 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       Verifikasi: uji pengguna lama melihat `txnAnalysisSegment` sekali;
       tur tidak tampil di keadaan kosong; kedua bahasa muat 360dp.
       Memenuhi FR-ANL-001, FR-ANL-003, FR-ANL-005.
-- [ ] **T-19.9** Analitik Analisis (FINANCIAL_ANALYSIS §13A): kelas
+      **Selesai 17 Okt 2026 (irisan 8).** Kunci baru `txnAnalysisSegment`
+      (langkah pertama tur `transaction`; target hanya tab Analisis lewat
+      `AppSubTabs.tabWrap`), `analysisCategories`, `analysisUncategorized`,
+      `analysisTrend` dan `TourId.analysis` (`TourTrigger` di `AnalysisView`,
+      `ready` saat termuat dan ada transaksi di periode; tombol info di
+      halaman penuh). Baris kategori pertama memakai kunci kategori kecuali
+      barisnya Tanpa kategori; `analysisTrend` hanya terdaftar saat tren
+      tampil. Teks `homeCashFlow` diperbarui, ADR-021 §3.4 dan ONBOARDING_PLAN
+      mendapat barisnya. Diuji: pengguna lama melihat langkah baru sekali,
+      tur Analisis tiga langkah, tidak tampil tanpa transaksi.
+- [x] **T-19.9** Analitik Analisis (FINANCIAL_ANALYSIS §13A): kelas
       `AnalysisEvents` dengan delapan peristiwa di tabel §13A.
       ⚠ Tanpa nominal dan tanpa nama kategori buatan pengguna (`custom`);
       `analysis_viewed` dan `analysis_highlights_shown` sekali per layar atau
@@ -4023,7 +4172,20 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       (`history`, `home`, `lookback`), kategori bawaan, buatan pengguna,
       Freelance, Tanpa kategori, Lainnya.
       Memenuhi FR-ANL-001–FR-ANL-005.
-- [ ] **T-19.10** Segmen Daftar Riwayat memakai periode keuangan dan
+      **Selesai 17 Okt 2026 (irisan 8).** `AnalysisEvents` di
+      `core/foundation/analytics/app_analytics.dart` (delapan peristiwa).
+      `analysis_viewed` (pintu dari `AnalysisStarted.source`),
+      `analysis_highlights_shown`, `analysis_period_changed` (`stepper`/
+      `trend`; mengikuti periode Daftar tidak dihitung), `kind_switched`, dan
+      `wallet_filtered` dikirim dari `AnalysisBloc`, sekali per kejadian;
+      `category_opened` (`<builtInKey>`/`custom`/`none`/`freelance`/`others`,
+      asal `link`/`highlight`), `see_all_opened`, dan
+      `uncategorized_fix_opened` dari tindakan di layar. Diuji lewat
+      `AppAnalytics.debugSink`, termasuk tidak ada nominal atau nama kategori
+      di parameter dan tidak ada pengiriman saat segar. "Lainnya" tidak punya
+      tombol rincian, jadi `others` hanya terjangkau lewat anggota; `none`
+      ikut disiapkan walau Tanpa kategori memakai Beri kategori.
+- [x] **T-19.10** Segmen Daftar Riwayat memakai periode keuangan dan
       **berbagi periode dengan Analisis** (review desain 12 Okt 2026, R3):
       pemilih periode, ringkasan Pemasukan/Pengeluaran, dan pengelompokan
       memakai `financialPeriodOf` dan `periodDateOf` dengan nama periode
@@ -4039,10 +4201,96 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       tampil di Daftar periode 25 Okt; perpindahan segmen mempertahankan
       periode.
       Memenuhi FR-TXN-004, FR-ANL-001.
+      **Selesai 17 Okt 2026 (irisan 7).** `HistoryPeriod`
+      (`core/financial_month/history_period.dart`, `ValueNotifier` tanggal
+      awal periode, `null` = berjalan) dibagi `TransactionBloc` (Daftar) dan
+      `AnalysisBloc` segmen Riwayat (`sharesHistoryPeriod`); Analisis dari
+      Beranda/Rincian kategori punya periodenya sendiri. `TransactionBloc`
+      memuat `ListPeriodTransactions` lalu menyaring dengan `periodDateOf`;
+      state memakai `period`/`isCurrent`/`canGoBack` (bukan `month`), event
+      `TransactionPeriodStepped`/`TransactionPeriodSynced` menggantikan
+      `TransactionMonthChanged`; ikut `ActiveFinancialMonth`/`ActiveDay`.
+      Header Daftar kini `TransactionPeriodHeader` (`AppPeriodStepper`, label
+      P-11, penanda peralihan). **Perubahan perilaku yang disengaja**: Daftar
+      tidak lagi bisa maju ke bulan depan atau mundur melewati bulan pertama
+      pencatatan (sama dengan Analisis); `listAvailableMonths` dibaca di
+      tiap pemuatan; pencarian lintas bulan memindai bulan sebelum periode
+      dan menyaring `periodDateOf < awal periode` (bulan awal periode ikut
+      bila periode tidak mulai tanggal 1). Teks tur `txnMonth` diganti sesuai
+      tugas. Uji lama yang diperbarui sadar: `transaction_bloc_test` (stub per
+      bulan karena satu pemuatan membaca beberapa dokumen; langkah bulan →
+      `TransactionPeriodStepped`/`HistoryPeriod`; `verifyNever(listAvailableMonths)`
+      dihapus karena kini dibaca tiap muat).
 - [ ] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
       termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
       jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-ANL-001–FR-ANL-005.
+      **Hasil QA 17 Okt 2026 (sementara, sesi berlanjut)** — rencana uji
+      [artifact](https://claude.ai/artifact/5qMzrxDqnFpgBNSn1PWmLn) Bagian 4.
+      Emulator Pixel 7a API 35 (`emulator-5554`), APK debug dari `2e9b166`
+      (PR #51, `claude/analisis-fase-19`, `minSdk = 23`), data kosong
+      (`pm clear`), jam 10 Okt 2026, awal bulan tanggal 1. Analitik dibaca
+      dari logcat `FA-SVC`, bukan DebugView. Data awal §10 dicatat lewat
+      CATAT dan Freelance; selisih nama: Makan = "Makan & Minum", Belanja =
+      "Belanja Harian" (bawaan); Cicilan, Tempat tinggal, Sedekah, Langganan
+      kategori buatan pengguna; tanpa kategori Rp120.000 tanggal 22 Sep;
+      Freelance: proyek Klien A Rp72.500/jam, pajak 2,5%, 37 jam, tagihan
+      diterima 28 Sep Rp2.615.438 ke BCA; transfer BCA → Tabungan
+      Rp1.000.000 26 Sep tertaut pos transfer "Tabungan" anggaran September
+      (BCA, 1 – 30 Sep, bukan rutin). Total saldo sesudah data awal
+      Rp11.364.738 (BCA Rp10.364.738, Tabungan Rp1.000.000) = hitungan
+      tangan.
+      - A1 Lulus: September Pengeluaran Rp11.420.700; Belanja Harian 27%,
+        Cicilan 26%, Tempat tinggal 17%, Makan & Minum 11%, Sedekah 7%,
+        "Lainnya (3 kategori)" Rp1.373.200 12%, Tanpa kategori Rp120.000 1%
+        (dipilih → tombol Beri kategori); "Dipindahkan antardompet
+        Rp1.000.000 · Tidak mengurangi total uangmu" di luar total.
+      - A2 Lulus: satu sorotan "Makan & Minum Rp295.000 lebih tinggi dari
+        rata-rata 3 bulan"; Belanja tidak disorot; Cicilan dipilih →
+        "26% dari pengeluaran" + "baru bulan ini", tanpa baris selisih.
+      - A5 sebagian: tren hanya Jun–Sep; pengeluaran Rp3.600.000,
+        Rp3.800.000, Rp3.910.000, Rp11.420.700; selisih Jun–Agt negatif;
+        September pemasukan Rp14.615.438, selisih +Rp3.194.738. Ketuk kolom
+        belum diuji.
+      - A14 sebagian (pengguna baru): tur Riwayat 1/4 dimulai `txnAnalysisSegment`;
+        tur `analysis` di Agustus 2 langkah (kategori, tren, tanpa Tanpa
+        kategori); di September langkah Tanpa kategori 1/1 baru muncul
+        saat barisnya tampil. Skenario pengguna lama belum.
+      - B1 sebagian: Analisis terbuka di Agustus yang sebelumnya dipilih di
+        Daftar.
+      - A3 Lulus: Pemasukan September Rp14.615.438, Gaji 82%, Freelance 18%
+        (kelompok turunan). Catatan data: Gaji semula tercatat tanpa
+        kategori karena salah ketuk QA saat mengisi data, dibetulkan lewat
+        Ubah sebelum A3 diulang.
+      - A4 Lulus: Oktober Rp520.000; sorotan "Makan & Minum Rp180.000 lebih
+        tinggi dari rata-rata s.d. tanggal 10"; pembanding total "Rp1.564.500
+        lebih rendah, dibanding rata-rata s.d. tanggal 10" (= 520.000 −
+        rata-rata 1–10 Jul/Agt/Sep 2.084.500).
+      - A5 Lulus: ketuk kolom Juli di September hanya memilih kolom (panel
+        Juli: Pemasukan Rp0, Pengeluaran −Rp3.800.000, Selisih −Rp3.800.000)
+        dan memunculkan "Lihat analisis Juli"; tautan itu memindah Analisis ke
+        Juli (Belanja Harian 75%, Makan & Minum 25%). Kolom Oktober
+        berketerangan "s.d. 10 Okt", selisih "Rp520.000" tanpa tanda.
+      - A6 Lulus: Makan & Minum dipilih → "Lihat rincian Makan & Minum" →
+        Rincian September Rp1.245.000, 11% dari pengeluaran, "2 transaksi ·
+        rata-rata Rp622.500 per transaksi", "biasanya 1,7 transaksi ·
+        Rp570.000", "Rp295.000 lebih tinggi", tren Jun–Sep Rp900.000,
+        Rp950.000, Rp1.000.000, Rp1.245.000, 2 transaksi. Lihat semua
+        transaksi → "September 2026 / 2 transaksi / Rp1.245.000".
+      - A7 Lulus: Tanpa kategori → Beri kategori → daftar 1 transaksi
+        Rp120.000 → diubah ke Transportasi → daftar "0 transaksi · Tidak ada
+        lagi transaksi di sini."; kembali: Tanpa kategori hilang, Lainnya
+        (3 kategori) Rp1.493.200 13%, total tetap Rp11.420.700.
+      - A8 Lulus (perbaikan 2e9b166): penyaring dompet Tabungan, September →
+        "Belum ada pengeluaran di September." + "Transfer masuk Rp1.000.000 /
+        Transfer keluar Rp0".
+      - Persiapan A9/A10: rutin Gaji +Rp12.000.000 tiap 25 (Simpan jadwal,
+        BCA) ditambahkan supaya Bulan ini tidak kosong; jam diubah ke 3 Okt
+        2026. Kartu "Okt dimulai" memuat "Kilas balik September 2026 /
+        Lihat". Belum diketuk.
+      - Belum: A9–A13, A15, B2–B5. Emulator ditinggalkan dengan jam
+        dikembalikan otomatis; data uji tetap di emulator untuk dilanjutkan
+        (jam perlu disetel lagi ke 3 atau 10 Okt 2026).
 
 ## Fase 20: Pengumuman pembaruan
 

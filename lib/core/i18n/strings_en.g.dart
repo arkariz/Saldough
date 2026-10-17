@@ -59,6 +59,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
 	@override late final _Translations$appUpdate$en appUpdate = _Translations$appUpdate$en._(_root);
+	@override late final _Translations$analysis$en analysis = _Translations$analysis$en._(_root);
 }
 
 // Path: app
@@ -240,6 +241,9 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get makeRecurringAction => 'Make recurring';
 	@override String get previousMonth => 'Previous month';
 	@override String get nextMonth => 'Next month';
+	@override String get listSegment => 'List';
+	@override String filteredCount({required Object count}) => '${count} transactions';
+	@override String get filteredEmpty => 'No transactions left here.';
 }
 
 // Path: wallet
@@ -633,6 +637,7 @@ class _Translations$home$en extends Translations$home$id {
 	@override String freelanceRowSub({required Object count, required Object date}) => '${count} invoices, expected ${date}';
 	@override String get incomeStat => 'Income';
 	@override String get expenseStat => 'Expenses';
+	@override String analysisDoor({required Object period}) => 'Analysis ${period}: income and expenses by category';
 }
 
 // Path: onboarding
@@ -687,7 +692,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeRecordTitle => 'One door for recording';
 	@override String get homeRecordBody => 'Every income, expense, and transfer is recorded from here.';
 	@override String get homeCashFlowTitle => 'This month\'s flow';
-	@override String get homeCashFlowBody => 'The money that actually came in and went out this month.';
+	@override String get homeCashFlowBody => 'The money that actually came in and went out this period. Tap to see where it went.';
 	@override String get homeBudgetTitle => 'Active budget left';
 	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
 	@override String get homeFreelanceTitle => 'Freelance summary';
@@ -710,8 +715,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get walletCardBody => 'Tap to see this wallet\'s history and record straight from there.';
 	@override String get walletAddTitle => 'Add a wallet';
 	@override String get walletAddBody => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.';
-	@override String get txnMonthTitle => 'One month per view';
-	@override String get txnMonthBody => 'Switch months to see other history. The income and expense totals here cover only the month shown.';
+	@override String get txnMonthTitle => 'One period per view';
+	@override String get txnMonthBody => 'Switch periods to see other history. List and Analysis always use the same period.';
 	@override String get txnFilterTitle => 'Search and filter';
 	@override String get txnFilterBody => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.';
 	@override String get txnRowTitle => 'Edit or delete';
@@ -762,6 +767,14 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get planPeriodHeaderBody => 'Tap to start the month on your payday. Plan and Analysis follow it.';
 	@override String get planTransitionTitle => 'Transition period';
 	@override String get planTransitionBody => 'This period is longer or shorter once because your month start changed. The next one is a full month again.';
+	@override String get txnAnalysisSegmentTitle => 'Analysis';
+	@override String get txnAnalysisSegmentBody => 'See where your money goes by category and compare it with usual.';
+	@override String get analysisCategoriesTitle => 'By category';
+	@override String get analysisCategoriesBody => 'Tap a slice or row to see one category, then open its details.';
+	@override String get analysisUncategorizedTitle => 'Uncategorized';
+	@override String get analysisUncategorizedBody => 'Add categories to make this more accurate.';
+	@override String get analysisTrendTitle => 'Last six periods';
+	@override String get analysisTrendBody => 'Tap a column to see its numbers. The period still running is marked.';
 }
 
 // Path: info
@@ -1263,6 +1276,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String committedShare({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).';
 	@override String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.';
 	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
+	@override String lookbackSeeAnalysis({required Object month}) => 'See ${month} details';
 }
 
 // Path: appUpdate
@@ -1277,6 +1291,42 @@ class _Translations$appUpdate$en extends Translations$appUpdate$id {
 	@override late final _Translations$appUpdate$whatsNew$en whatsNew = _Translations$appUpdate$whatsNew$en._(_root);
 	@override late final _Translations$appUpdate$category$en category = _Translations$appUpdate$category$en._(_root);
 	@override late final _Translations$appUpdate$diagnostic$en diagnostic = _Translations$appUpdate$diagnostic$en._(_root);
+}
+
+// Path: analysis
+class _Translations$analysis$en extends Translations$analysis$id {
+	_Translations$analysis$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get segment => 'Analysis';
+	@override String get previousPeriod => 'Previous period';
+	@override String get nextPeriod => 'Next period';
+	@override String get uncategorized => 'Uncategorized';
+	@override String get freelanceGroup => 'Freelance';
+	@override String others({required Object n}) => 'Others (${n} categories)';
+	@override String get archived => 'archived';
+	@override String get transferTitle => 'Moved between wallets';
+	@override String get transferSub => 'Doesn\'t change your total';
+	@override String get transferIn => 'Transfers in';
+	@override String get transferOut => 'Transfers out';
+	@override late final _Translations$analysis$kind$en kind = _Translations$analysis$kind$en._(_root);
+	@override late final _Translations$analysis$empty$en empty = _Translations$analysis$empty$en._(_root);
+	@override String emptyMonth({required Object period}) => 'No expenses in ${period} yet.';
+	@override String get error => 'Couldn\'t load analysis. Pull down to try again.';
+	@override String donutSemantics({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}';
+	@override String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+	@override String get fix => 'Add category';
+	@override String shareOf({required Object percent, required Object kind}) => '${percent} of ${kind}';
+	@override String get kindLabel => 'Type';
+	@override String get allWallets => 'All wallets';
+	@override String get walletLabel => 'Wallet';
+	@override String emptyMonthIncome({required Object period}) => 'No income in ${period} yet.';
+	@override late final _Translations$analysis$compare$en compare = _Translations$analysis$compare$en._(_root);
+	@override late final _Translations$analysis$highlight$en highlight = _Translations$analysis$highlight$en._(_root);
+	@override late final _Translations$analysis$trend$en trend = _Translations$analysis$trend$en._(_root);
+	@override late final _Translations$analysis$category$en category = _Translations$analysis$category$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1539,6 +1589,92 @@ class _Translations$appUpdate$diagnostic$en extends Translations$appUpdate$diagn
 	@override String get copy => 'Copy';
 }
 
+// Path: analysis.kind
+class _Translations$analysis$kind$en extends Translations$analysis$kind$id {
+	_Translations$analysis$kind$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get expense => 'Expenses';
+	@override String get income => 'Income';
+}
+
+// Path: analysis.empty
+class _Translations$analysis$empty$en extends Translations$analysis$empty$id {
+	_Translations$analysis$empty$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nothing to analyze yet';
+	@override String get body => 'Record transactions to see where your money goes.';
+	@override String get cta => 'Record a transaction';
+}
+
+// Path: analysis.compare
+class _Translations$analysis$compare$en extends Translations$analysis$compare$id {
+	_Translations$analysis$compare$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String avg({required Object n}) => '${n}-month average';
+	@override String get lastMonth => 'last month';
+	@override String toDate({required Object day}) => 'average through day ${day}';
+	@override String vs({required Object label}) => 'vs ${label}';
+	@override String get newThisMonth => 'new this month';
+	@override String srHigher({required Object amount, required Object label}) => '${amount} higher, ${label}';
+	@override String srLower({required Object amount, required Object label}) => '${amount} lower, ${label}';
+}
+
+// Path: analysis.highlight
+class _Translations$analysis$highlight$en extends Translations$analysis$highlight$id {
+	_Translations$analysis$highlight$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String higher({required Object subject, required Object compare}) => '${subject} higher than ${compare}';
+	@override String lower({required Object subject, required Object compare}) => '${subject} lower than ${compare}';
+}
+
+// Path: analysis.trend
+class _Translations$analysis$trend$en extends Translations$analysis$trend$id {
+	_Translations$analysis$trend$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Last 6 months';
+	@override String get income => 'Income';
+	@override String get expense => 'Expenses';
+	@override String get net => 'Net';
+	@override String toDate({required Object date}) => 'through ${date}';
+	@override String days({required Object n}) => '${n} days';
+	@override String seePeriod({required Object period}) => 'See ${period} analysis';
+	@override String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}';
+}
+
+// Path: analysis.category
+class _Translations$analysis$category$en extends Translations$analysis$category$id {
+	_Translations$analysis$category$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String frequency({required Object count, required Object amount}) => '${count} transactions · ${amount} average each';
+	@override String frequencyOne({required Object count, required Object amount}) => '${count} transaction · ${amount} average each';
+	@override String frequencyUsual({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}';
+	@override String get seeAll => 'See all transactions';
+	@override String seeCategory({required Object category}) => 'See ${category} details';
+	@override String get transactions => 'Transactions';
+	@override String aboveAvg({required Object amount}) => '${amount} above average';
+	@override String belowAvg({required Object amount}) => '${amount} below average';
+	@override String avgLine({required Object n}) => '${n}-month average';
+	@override String get moreHint => 'Latest 20 transactions';
+}
+
 // Path: record.voice.failure
 class _Translations$record$voice$failure$en extends Translations$record$voice$failure$id {
 	_Translations$record$voice$failure$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1767,6 +1903,9 @@ extension on TranslationsEn {
 			'transaction.makeRecurringAction' => 'Make recurring',
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
+			'transaction.listSegment' => 'List',
+			'transaction.filteredCount' => ({required Object count}) => '${count} transactions',
+			'transaction.filteredEmpty' => 'No transactions left here.',
 			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
 			'wallet.listHeading' => 'Active wallets',
@@ -2071,11 +2210,11 @@ extension on TranslationsEn {
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
 			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
 			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
 			'freelance.entryAddShortAction' => 'Record work hours',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.filterAll' => 'All',
 			'freelance.noDeductions' => 'No deductions',
 			'freelance.projectTotals' => ({required Object hours, required Object amount}) => 'Total ${hours} h · ${amount}',
@@ -2126,6 +2265,7 @@ extension on TranslationsEn {
 			'home.freelanceRowSub' => ({required Object count, required Object date}) => '${count} invoices, expected ${date}',
 			'home.incomeStat' => 'Income',
 			'home.expenseStat' => 'Expenses',
+			'home.analysisDoor' => ({required Object period}) => 'Analysis ${period}: income and expenses by category',
 			'onboarding.skipAction' => 'Skip',
 			'onboarding.nextAction' => 'Next',
 			'onboarding.closeAction' => 'Close',
@@ -2162,7 +2302,7 @@ extension on TranslationsEn {
 			'tour.homeRecordTitle' => 'One door for recording',
 			'tour.homeRecordBody' => 'Every income, expense, and transfer is recorded from here.',
 			'tour.homeCashFlowTitle' => 'This month\'s flow',
-			'tour.homeCashFlowBody' => 'The money that actually came in and went out this month.',
+			'tour.homeCashFlowBody' => 'The money that actually came in and went out this period. Tap to see where it went.',
 			'tour.homeBudgetTitle' => 'Active budget left',
 			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
 			'tour.homeFreelanceTitle' => 'Freelance summary',
@@ -2185,8 +2325,8 @@ extension on TranslationsEn {
 			'tour.walletCardBody' => 'Tap to see this wallet\'s history and record straight from there.',
 			'tour.walletAddTitle' => 'Add a wallet',
 			'tour.walletAddBody' => 'Bank account, e-wallet, or cash. Its starting balance can be changed anytime, and the recorded balance follows.',
-			'tour.txnMonthTitle' => 'One month per view',
-			'tour.txnMonthBody' => 'Switch months to see other history. The income and expense totals here cover only the month shown.',
+			'tour.txnMonthTitle' => 'One period per view',
+			'tour.txnMonthBody' => 'Switch periods to see other history. List and Analysis always use the same period.',
 			'tour.txnFilterTitle' => 'Search and filter',
 			'tour.txnFilterBody' => 'Search notes or categories, then filter by wallet and category with Filter. If this month has no match, the search can continue into other months.',
 			'tour.txnRowTitle' => 'Edit or delete',
@@ -2237,6 +2377,14 @@ extension on TranslationsEn {
 			'tour.planPeriodHeaderBody' => 'Tap to start the month on your payday. Plan and Analysis follow it.',
 			'tour.planTransitionTitle' => 'Transition period',
 			'tour.planTransitionBody' => 'This period is longer or shorter once because your month start changed. The next one is a full month again.',
+			'tour.txnAnalysisSegmentTitle' => 'Analysis',
+			'tour.txnAnalysisSegmentBody' => 'See where your money goes by category and compare it with usual.',
+			'tour.analysisCategoriesTitle' => 'By category',
+			'tour.analysisCategoriesBody' => 'Tap a slice or row to see one category, then open its details.',
+			'tour.analysisUncategorizedTitle' => 'Uncategorized',
+			'tour.analysisUncategorizedBody' => 'Add categories to make this more accurate.',
+			'tour.analysisTrendTitle' => 'Last six periods',
+			'tour.analysisTrendBody' => 'Tap a column to see its numbers. The period still running is marked.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2576,6 +2724,8 @@ extension on TranslationsEn {
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',
@@ -2588,8 +2738,6 @@ extension on TranslationsEn {
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.priceUpUpdate' => 'Update item',
 			'recurring.priceUpKeep' => 'Keep amount',
 			'recurring.suggestTitle' => 'Looks repeating',
@@ -2698,6 +2846,7 @@ extension on TranslationsEn {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
+			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'See ${month} details',
 			'appUpdate.banner.storeAvailable' => 'A new version is available',
 			'appUpdate.banner.storeDownloading' => 'Downloading the new version',
 			'appUpdate.banner.storeDownloadingNote' => 'You can keep recording.',
@@ -2718,6 +2867,59 @@ extension on TranslationsEn {
 			'appUpdate.category.security' => 'Security',
 			'appUpdate.diagnostic.title' => 'Update diagnostics',
 			'appUpdate.diagnostic.copy' => 'Copy',
+			'analysis.segment' => 'Analysis',
+			'analysis.previousPeriod' => 'Previous period',
+			'analysis.nextPeriod' => 'Next period',
+			'analysis.uncategorized' => 'Uncategorized',
+			'analysis.freelanceGroup' => 'Freelance',
+			'analysis.others' => ({required Object n}) => 'Others (${n} categories)',
+			'analysis.archived' => 'archived',
+			'analysis.transferTitle' => 'Moved between wallets',
+			'analysis.transferSub' => 'Doesn\'t change your total',
+			'analysis.transferIn' => 'Transfers in',
+			'analysis.transferOut' => 'Transfers out',
+			'analysis.kind.expense' => 'Expenses',
+			'analysis.kind.income' => 'Income',
+			'analysis.empty.title' => 'Nothing to analyze yet',
+			'analysis.empty.body' => 'Record transactions to see where your money goes.',
+			'analysis.empty.cta' => 'Record a transaction',
+			'analysis.emptyMonth' => ({required Object period}) => 'No expenses in ${period} yet.',
+			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
+			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
+			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
+			'analysis.fix' => 'Add category',
+			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} of ${kind}',
+			'analysis.kindLabel' => 'Type',
+			'analysis.allWallets' => 'All wallets',
+			'analysis.walletLabel' => 'Wallet',
+			'analysis.emptyMonthIncome' => ({required Object period}) => 'No income in ${period} yet.',
+			'analysis.compare.avg' => ({required Object n}) => '${n}-month average',
+			'analysis.compare.lastMonth' => 'last month',
+			'analysis.compare.toDate' => ({required Object day}) => 'average through day ${day}',
+			'analysis.compare.vs' => ({required Object label}) => 'vs ${label}',
+			'analysis.compare.newThisMonth' => 'new this month',
+			'analysis.compare.srHigher' => ({required Object amount, required Object label}) => '${amount} higher, ${label}',
+			'analysis.compare.srLower' => ({required Object amount, required Object label}) => '${amount} lower, ${label}',
+			'analysis.highlight.higher' => ({required Object subject, required Object compare}) => '${subject} higher than ${compare}',
+			'analysis.highlight.lower' => ({required Object subject, required Object compare}) => '${subject} lower than ${compare}',
+			'analysis.trend.title' => 'Last 6 months',
+			'analysis.trend.income' => 'Income',
+			'analysis.trend.expense' => 'Expenses',
+			'analysis.trend.net' => 'Net',
+			'analysis.trend.toDate' => ({required Object date}) => 'through ${date}',
+			'analysis.trend.days' => ({required Object n}) => '${n} days',
+			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
+			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
+			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaction · ${amount} average each',
+			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}',
+			'analysis.category.seeAll' => 'See all transactions',
+			'analysis.category.seeCategory' => ({required Object category}) => 'See ${category} details',
+			'analysis.category.transactions' => 'Transactions',
+			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
+			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
+			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
+			'analysis.category.moreHint' => 'Latest 20 transactions',
 			_ => null,
 		};
 	}

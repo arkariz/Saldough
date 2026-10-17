@@ -692,7 +692,7 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeRecordTitle => 'One door for recording';
 	@override String get homeRecordBody => 'Every income, expense, and transfer is recorded from here.';
 	@override String get homeCashFlowTitle => 'This month\'s flow';
-	@override String get homeCashFlowBody => 'The money that actually came in and went out this month.';
+	@override String get homeCashFlowBody => 'The money that actually came in and went out this period. Tap to see where it went.';
 	@override String get homeBudgetTitle => 'Active budget left';
 	@override String get homeBudgetBody => 'What\'s left of the plan in budgets running now. Tap for details.';
 	@override String get homeFreelanceTitle => 'Freelance summary';
@@ -767,6 +767,14 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get planPeriodHeaderBody => 'Tap to start the month on your payday. Plan and Analysis follow it.';
 	@override String get planTransitionTitle => 'Transition period';
 	@override String get planTransitionBody => 'This period is longer or shorter once because your month start changed. The next one is a full month again.';
+	@override String get txnAnalysisSegmentTitle => 'Analysis';
+	@override String get txnAnalysisSegmentBody => 'See where your money goes by category and compare it with usual.';
+	@override String get analysisCategoriesTitle => 'By category';
+	@override String get analysisCategoriesBody => 'Tap a slice or row to see one category, then open its details.';
+	@override String get analysisUncategorizedTitle => 'Uncategorized';
+	@override String get analysisUncategorizedBody => 'Add categories to make this more accurate.';
+	@override String get analysisTrendTitle => 'Last six periods';
+	@override String get analysisTrendBody => 'Tap a column to see its numbers. The period still running is marked.';
 }
 
 // Path: info
@@ -1268,6 +1276,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String committedShare({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).';
 	@override String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.';
 	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
+	@override String lookbackSeeAnalysis({required Object month}) => 'See ${month} details';
 }
 
 // Path: appUpdate
@@ -2293,7 +2302,7 @@ extension on TranslationsEn {
 			'tour.homeRecordTitle' => 'One door for recording',
 			'tour.homeRecordBody' => 'Every income, expense, and transfer is recorded from here.',
 			'tour.homeCashFlowTitle' => 'This month\'s flow',
-			'tour.homeCashFlowBody' => 'The money that actually came in and went out this month.',
+			'tour.homeCashFlowBody' => 'The money that actually came in and went out this period. Tap to see where it went.',
 			'tour.homeBudgetTitle' => 'Active budget left',
 			'tour.homeBudgetBody' => 'What\'s left of the plan in budgets running now. Tap for details.',
 			'tour.homeFreelanceTitle' => 'Freelance summary',
@@ -2368,6 +2377,14 @@ extension on TranslationsEn {
 			'tour.planPeriodHeaderBody' => 'Tap to start the month on your payday. Plan and Analysis follow it.',
 			'tour.planTransitionTitle' => 'Transition period',
 			'tour.planTransitionBody' => 'This period is longer or shorter once because your month start changed. The next one is a full month again.',
+			'tour.txnAnalysisSegmentTitle' => 'Analysis',
+			'tour.txnAnalysisSegmentBody' => 'See where your money goes by category and compare it with usual.',
+			'tour.analysisCategoriesTitle' => 'By category',
+			'tour.analysisCategoriesBody' => 'Tap a slice or row to see one category, then open its details.',
+			'tour.analysisUncategorizedTitle' => 'Uncategorized',
+			'tour.analysisUncategorizedBody' => 'Add categories to make this more accurate.',
+			'tour.analysisTrendTitle' => 'Last six periods',
+			'tour.analysisTrendBody' => 'Tap a column to see its numbers. The period still running is marked.',
 			'info.menuTooltip' => 'Info and tours',
 			'info.replayTourAction' => 'Tour this screen',
 			'info.showIntroAction' => 'Tanukonomy introduction',
@@ -2707,6 +2724,8 @@ extension on TranslationsEn {
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',
@@ -2715,8 +2734,6 @@ extension on TranslationsEn {
 			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
 			'recurring.idleTitle' => ({required Object name}) => 'Still using ${name}?',
 			'recurring.idleBody' => 'The last two were skipped or not seen.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.idleKeep' => 'Keep',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
@@ -2829,6 +2846,7 @@ extension on TranslationsEn {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% of ${month} income is already committed (repeating + budgets).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
+			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'See ${month} details',
 			'appUpdate.banner.storeAvailable' => 'A new version is available',
 			'appUpdate.banner.storeDownloading' => 'Downloading the new version',
 			'appUpdate.banner.storeDownloadingNote' => 'You can keep recording.',

@@ -192,35 +192,45 @@ void main() {
 
     String labelOf(DateTime date) => ActiveFinancialMonth.periodOf(date).label;
 
-    testWidgets('mundur di Daftar lalu pindah ke Analisis: periode sama; maju di Analisis lalu kembali ke Daftar: sama', (
-      tester,
-    ) async {
-      await seedTwoMonths();
-      await openHistoryTab(tester);
-      expect(find.text(labelOf(now)), findsOneWidget);
+    testWidgets(
+      'mundur di Daftar lalu pindah ke Analisis: periode sama; maju di Analisis lalu kembali ke Daftar: sama',
+      (
+        tester,
+      ) async {
+        await seedTwoMonths();
+        await openHistoryTab(tester);
+        expect(find.text(labelOf(now)), findsOneWidget);
 
-      await tester.tap(find.byKey(const ValueKey('period-previous')));
-      await tester.pumpAndSettle();
-      expect(find.text(labelOf(previous)), findsOneWidget);
-      expect(find.text('lalu'), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('period-previous')));
+        await tester.pumpAndSettle();
+        expect(find.text(labelOf(previous)), findsOneWidget);
+        expect(find.text('lalu'), findsOneWidget);
 
-      await tester.tap(segment('Analisis'));
-      await tester.pumpAndSettle();
-      expect(find.descendant(of: find.byType(AppPeriodStepper), matching: find.text(labelOf(previous))), findsOneWidget);
-      expect(find.text('Rp30.000'), findsWidgets, reason: 'total Analisis periode lalu');
+        await tester.tap(segment('Analisis'));
+        await tester.pumpAndSettle();
+        expect(
+          find.descendant(of: find.byType(AppPeriodStepper), matching: find.text(labelOf(previous))),
+          findsOneWidget,
+        );
+        expect(find.text('Rp30.000'), findsWidgets, reason: 'total Analisis periode lalu');
 
-      await tester.tap(find.byKey(const ValueKey('period-next')));
-      await tester.pumpAndSettle();
-      await tester.tap(segment('Daftar'));
-      await tester.pumpAndSettle();
-      expect(find.text(labelOf(now)), findsOneWidget);
-      expect(find.text('kopi'), findsOneWidget);
-    });
+        await tester.tap(find.byKey(const ValueKey('period-next')));
+        await tester.pumpAndSettle();
+        await tester.tap(segment('Daftar'));
+        await tester.pumpAndSettle();
+        expect(find.text(labelOf(now)), findsOneWidget);
+        expect(find.text('kopi'), findsOneWidget);
+      },
+    );
 
     testWidgets('ringkasan Daftar = total Analisis untuk periode yang sama', (tester) async {
       await seedTwoMonths();
       await openHistoryTab(tester);
-      expect(find.textContaining('Rp45.000', findRichText: true), findsWidgets, reason: 'Pengeluaran di kartu ringkasan Daftar');
+      expect(
+        find.textContaining('Rp45.000', findRichText: true),
+        findsWidgets,
+        reason: 'Pengeluaran di kartu ringkasan Daftar',
+      );
       await tester.tap(segment('Analisis'));
       await tester.pumpAndSettle();
       expect(find.text('Rp45.000'), findsWidgets, reason: 'total di tengah donat Analisis');

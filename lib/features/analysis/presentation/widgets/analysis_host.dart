@@ -4,6 +4,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/analysis/di/analysis_scope.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:state_management/state_management.dart';
 
 /// Memasang scope dan [AnalysisBloc] untuk [child] lalu memulainya (ADR-030):
@@ -15,8 +16,12 @@ class AnalysisHost extends StatelessWidget {
     required this.child,
     this.periodStart,
     this.sharesHistoryPeriod = false,
+    this.source = AnalysisSource.history,
     super.key,
   });
+
+  /// Pintu masuk, untuk analitik.
+  final AnalysisSource source;
 
   /// Segmen di Riwayat: periodenya dibagi dengan segmen Daftar (T-19.10).
   final bool sharesHistoryPeriod;
@@ -40,7 +45,7 @@ class AnalysisHost extends StatelessWidget {
           value: bloc,
           child: EffectListener<AnalysisBloc, AnalysisState>(
             child: RunOnce(
-              action: () => bloc.add(AnalysisStarted(periodStart: periodStart)),
+              action: () => bloc.add(AnalysisStarted(periodStart: periodStart, source: source)),
               child: child,
             ),
           ),

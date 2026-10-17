@@ -55,19 +55,22 @@ void main() {
     return bloc.stream.firstWhere((s) => !s.isLoading);
   }
 
-  test('paling banyak 20 transaksi terbaru, jumlah dan total tetap seluruhnya (sama dengan Daftar tersaring)', () async {
-    for (var i = 0; i < 25; i++) {
-      await repository.saveTransaction(expenseOn(DateTime(2026, 9, 1 + i, 9), 1000, category: 'makan'));
-    }
-    await repository.saveTransaction(expenseOn(DateTime(2026, 9, 3), 5, category: 'belanja'));
-    final state = await loaded(create());
-    final shown = state.groups.fold(0, (n, g) => n + g.transactions.length);
-    expect(shown, categoryDetailTransactionLimit);
-    expect(state.hasMore, isTrue);
-    expect(state.groups.first.date, DateTime(2026, 9, 25), reason: 'terbaru dulu');
-    expect(state.detail!.amount, rp(25000));
-    expect(state.detail!.frequency.count, 25);
-  });
+  test(
+    'paling banyak 20 transaksi terbaru, jumlah dan total tetap seluruhnya (sama dengan Daftar tersaring)',
+    () async {
+      for (var i = 0; i < 25; i++) {
+        await repository.saveTransaction(expenseOn(DateTime(2026, 9, 1 + i, 9), 1000, category: 'makan'));
+      }
+      await repository.saveTransaction(expenseOn(DateTime(2026, 9, 3), 5, category: 'belanja'));
+      final state = await loaded(create());
+      final shown = state.groups.fold(0, (n, g) => n + g.transactions.length);
+      expect(shown, categoryDetailTransactionLimit);
+      expect(state.hasMore, isTrue);
+      expect(state.groups.first.date, DateTime(2026, 9, 25), reason: 'terbaru dulu');
+      expect(state.detail!.amount, rp(25000));
+      expect(state.detail!.frequency.count, 25);
+    },
+  );
 
   test('memilih kolom tren tidak berpindah periode; indeks bawaan kolom terakhir', () async {
     await repository.saveTransaction(expenseOn(DateTime(2026, 7, 5), 100000, category: 'makan'));

@@ -170,9 +170,18 @@ targetnya. Nama kunci = `<tur>.<elemen>`. Teks adalah draf `id`.
 
 | Key | Target | Judul | Isi | Syarat |
 |---|---|---|---|---|
+| `txn.analysis` | Sub-tab Analisis di Riwayat (`txnAnalysisSegment`, langkah pertama) | Analisis | Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya. | Ada transaksi |
 | `txn.month` | Pemilih periode (`TransactionPeriodHeader`) | Satu periode per tampilan | Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama. | Selalu |
 | `txn.filter` | `TransactionFilterBar` | Cari dan saring | Cari catatan atau kategori, saring per dompet dan jenis. | Selalu |
 | `txn.row` | `TransactionRow` pertama | Sunting atau hapus | Ketuk transaksi untuk rinciannya; dari sana bisa disunting atau dihapus, dan saldo dihitung ulang. | Ada transaksi |
+
+**TR-ANALYSIS — Analisis** (T-19.8, FINANCIAL_ANALYSIS §13A)
+
+| Key | Target | Judul | Isi | Syarat |
+|---|---|---|---|---|
+| `analysis.categories` | Baris kategori pertama | Per kategori | Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya. | Ada transaksi di periode |
+| `analysis.uncategorized` | Baris Tanpa kategori | Tanpa kategori | Beri kategori supaya analisisnya lebih tepat. | Baris itu tampil |
+| `analysis.trend` | Tren enam periode | Enam periode terakhir | Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai. | Tren tampil (≥2 periode data) |
 
 Kartu Beranda yang dimuat sendiri (`home.forecast`, `home.pending`) memasang
 `TourTrigger` TR-HOME-nya sendiri, supaya disorot saat pertama tampil tanpa

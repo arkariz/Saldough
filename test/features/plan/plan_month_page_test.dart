@@ -1,8 +1,10 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:di/di.dart' show GetIt, ScopeProvider;
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -11,6 +13,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/features/plan/data/month_review_repository_impl.dart';
 import 'package:saldough/features/plan/domain/month_review.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
@@ -108,6 +111,7 @@ void main() {
     MonthReviewRepository? reviews,
     DateTime? today,
     TutorialProgressRepository? tutorials,
+    void Function(AnalysisInput input)? onAnalysis,
   }) async {
     tester.view.physicalSize = Size(width, 1600);
     tester.view.devicePixelRatio = 1;
@@ -130,22 +134,29 @@ void main() {
       now: () => today ?? DateTime(2026, 10, 2, 9),
     )..add(const PlanMonthLoaded());
     addTearDown(bloc.close);
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: PixelTheme.light,
-        builder: tutorials == null
-            ? null
-            : (context, child) => MediaQuery(
-                data: MediaQuery.of(context).copyWith(disableAnimations: true),
-                child: SpotlightHost(repository: tutorials, child: child!),
-              ),
-        home: Scaffold(
-          body: BlocProvider.value(
-            value: bloc,
-            child: PlanMonthView(onShowRecurring: () {}, onShowBudget: () {}),
-          ),
+    final app = MaterialApp(
+      theme: PixelTheme.light,
+      builder: tutorials == null
+          ? null
+          : (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(disableAnimations: true),
+              child: SpotlightHost(repository: tutorials, child: child!),
+            ),
+      home: Scaffold(
+        body: BlocProvider.value(
+          value: bloc,
+          child: PlanMonthView(onShowRecurring: () {}, onShowBudget: () {}),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      onAnalysis == null
+          ? app
+          : ScopeProvider(
+              container: GetIt.asNewInstance()
+                ..registerSingleton<RouteRegistry>(RouteRegistry.fromModules([_AnalysisStub(onAnalysis)])),
+              child: app,
+            ),
     );
     await tester.pumpAndSettle();
   }
@@ -271,6 +282,18 @@ void main() {
       expect(stored.monthStart, DateTime(2026, 10));
       expect(stored.doneSteps, {MonthReviewStep.estimates});
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('kilas balik punya pintu Lihat rincian {bulan} ke Analisis bulan lalu (F8.1)', (tester) async {
+      AnalysisInput? opened;
+      await pump(tester, width: 360, reviews: reviews, onAnalysis: (input) => opened = input);
+      await tester.tap(find.text(t.plan.reviewSee));
+      await tester.pumpAndSettle();
+      expect(find.text('Lihat rincian September'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('lookback-see-analysis')));
+      await tester.pumpAndSettle();
+      expect(opened!.source, AnalysisSource.lookback);
+      expect(opened!.periodStart, DateTime(2026, 9));
     });
 
     testWidgets('Nanti melipat jadi satu baris; Selesai meninjau menyembunyikan kartu', (tester) async {
@@ -451,19 +474,26 @@ void main() {
     );
     tearDown(() => ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial);
 
-    testWidgets('kepala rentang + penanda; uang nganggur negatif tanpa warna peringatan, dengan kalimat', (tester) async {
+    testWidgets('kepala rentang + penanda; uang nganggur negatif tanpa warna peringatan, dengan kalimat', (
+      tester,
+    ) async {
       final reviews = MonthReviewRepositoryImpl(storage: storage);
       await pump(tester, reviews: reviews, today: DateTime(2026, 10, 10, 9));
       expect(find.text('1\u00A0–\u00A024\u00A0Okt'), findsOneWidget);
       expect(find.text('Periode peralihan · 24 hari'), findsOneWidget);
       expect(find.text('Rentang ini tidak memuat gajian.'), findsOneWidget);
-      final hero = tester.widget<HeroAmount>(find.descendant(of: find.byType(UnplannedCard), matching: find.byType(HeroAmount)));
+      final hero = tester.widget<HeroAmount>(
+        find.descendant(of: find.byType(UnplannedCard), matching: find.byType(HeroAmount)),
+      );
       expect(hero.formatted, startsWith('−'));
       expect(hero.color, isNull);
 
       // Tinjau awal bulan muncul sekali dengan kalimat peralihan, walau sudah
       // lewat hari ke-7 periode.
-      expect(find.text('Awal bulan keuanganmu kini tanggal 25. Periode ini 1\u00A0–\u00A024\u00A0Okt.'), findsOneWidget);
+      expect(
+        find.text('Awal bulan keuanganmu kini tanggal 25. Periode ini 1\u00A0–\u00A024\u00A0Okt.'),
+        findsOneWidget,
+      );
 
       // W9: perkiraan periode peralihan tidak disimpan.
       final snapshots = await tester.runAsync(reviews.loadSnapshots);
@@ -475,7 +505,12 @@ void main() {
       await tester.runAsync(() => reviews.save(MonthReview(monthStart: DateTime(2026, 10), completed: true)));
       await pump(tester, reviews: reviews, today: DateTime(2026, 10, 10, 9));
       expect(find.byKey(const ValueKey('month-review-transition')), findsOneWidget);
-      expect(MonthReview(monthStart: DateTime(2026, 10)).isFor(FinancialPeriod(start: DateTime(2026, 10), end: DateTime(2026, 11))), isTrue);
+      expect(
+        MonthReview(
+          monthStart: DateTime(2026, 10),
+        ).isFor(FinancialPeriod(start: DateTime(2026, 10), end: DateTime(2026, 11))),
+        isTrue,
+      );
       expect(
         MonthReview(monthStart: DateTime(2026, 10)).isFor(
           FinancialPeriod(start: DateTime(2026, 10), end: DateTime(2026, 10, 25), isTransition: true),
@@ -491,4 +526,22 @@ void main() {
       expect(find.text('Rentang ini tidak memuat gajian.'), findsNothing);
     });
   });
+}
+
+/// Rute Analisis pengganti: mencatat input yang dibuka.
+final class _AnalysisStub extends FeatureRouteModule {
+  const _AnalysisStub(this.onOpen);
+
+  final void Function(AnalysisInput input) onOpen;
+
+  @override
+  List<RouteNode> get routes => [
+    RouteNode.typed<AnalysisInput>(
+      key: AnalysisRouteKeys.open,
+      builder: (context, input) {
+        onOpen(input);
+        return const Scaffold(body: Text('analisis'));
+      },
+    ),
+  ];
 }

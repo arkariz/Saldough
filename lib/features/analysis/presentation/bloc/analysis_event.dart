@@ -10,7 +10,10 @@ sealed class AnalysisEvent {
 /// atau `null` = periode berjalan.
 final class AnalysisStarted extends AnalysisEvent {
   /// Membuat [AnalysisStarted].
-  const AnalysisStarted({this.periodStart});
+  const AnalysisStarted({this.periodStart, this.source = AnalysisSource.history});
+
+  /// Pintu masuk, untuk analitik.
+  final AnalysisSource source;
 
   /// Tanggal di dalam periode yang dibuka, atau `null` = periode berjalan.
   final DateTime? periodStart;

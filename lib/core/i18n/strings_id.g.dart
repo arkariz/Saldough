@@ -1755,8 +1755,8 @@ class Translations$tour$id {
 	/// id: 'Arus bulan ini'
 	String get homeCashFlowTitle => 'Arus bulan ini';
 
-	/// id: 'Uang yang benar-benar masuk dan keluar bulan ini.'
-	String get homeCashFlowBody => 'Uang yang benar-benar masuk dan keluar bulan ini.';
+	/// id: 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.'
+	String get homeCashFlowBody => 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.';
 
 	/// id: 'Sisa anggaran aktif'
 	String get homeBudgetTitle => 'Sisa anggaran aktif';
@@ -1979,6 +1979,30 @@ class Translations$tour$id {
 
 	/// id: 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.'
 	String get planTransitionBody => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.';
+
+	/// id: 'Analisis'
+	String get txnAnalysisSegmentTitle => 'Analisis';
+
+	/// id: 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.'
+	String get txnAnalysisSegmentBody => 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.';
+
+	/// id: 'Per kategori'
+	String get analysisCategoriesTitle => 'Per kategori';
+
+	/// id: 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.'
+	String get analysisCategoriesBody => 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.';
+
+	/// id: 'Tanpa kategori'
+	String get analysisUncategorizedTitle => 'Tanpa kategori';
+
+	/// id: 'Beri kategori supaya analisisnya lebih tepat.'
+	String get analysisUncategorizedBody => 'Beri kategori supaya analisisnya lebih tepat.';
+
+	/// id: 'Enam periode terakhir'
+	String get analysisTrendTitle => 'Enam periode terakhir';
+
+	/// id: 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.'
+	String get analysisTrendBody => 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.';
 }
 
 // Path: info
@@ -3273,6 +3297,9 @@ class Translations$plan$id {
 
 	/// id: 'Sesudah $name selesai, mulai $month ruang bebas +$amount/bln.'
 	String installmentFree({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.';
+
+	/// id: 'Lihat rincian $month'
+	String lookbackSeeAnalysis({required Object month}) => 'Lihat rincian ${month}';
 }
 
 // Path: appUpdate
@@ -4685,7 +4712,7 @@ extension on Translations {
 			'tour.homeRecordTitle' => 'Satu pintu mencatat',
 			'tour.homeRecordBody' => 'Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.',
 			'tour.homeCashFlowTitle' => 'Arus bulan ini',
-			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar bulan ini.',
+			'tour.homeCashFlowBody' => 'Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.',
 			'tour.homeBudgetTitle' => 'Sisa anggaran aktif',
 			'tour.homeBudgetBody' => 'Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.',
 			'tour.homeFreelanceTitle' => 'Ringkasan freelance',
@@ -4760,6 +4787,14 @@ extension on Translations {
 			'tour.planPeriodHeaderBody' => 'Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.',
 			'tour.planTransitionTitle' => 'Periode peralihan',
 			'tour.planTransitionBody' => 'Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.',
+			'tour.txnAnalysisSegmentTitle' => 'Analisis',
+			'tour.txnAnalysisSegmentBody' => 'Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.',
+			'tour.analysisCategoriesTitle' => 'Per kategori',
+			'tour.analysisCategoriesBody' => 'Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.',
+			'tour.analysisUncategorizedTitle' => 'Tanpa kategori',
+			'tour.analysisUncategorizedBody' => 'Beri kategori supaya analisisnya lebih tepat.',
+			'tour.analysisTrendTitle' => 'Enam periode terakhir',
+			'tour.analysisTrendBody' => 'Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai.',
 			'info.menuTooltip' => 'Info dan tur',
 			'info.replayTourAction' => 'Tur layar ini',
 			'info.showIntroAction' => 'Pengenalan Tanukonomy',
@@ -5099,6 +5134,8 @@ extension on Translations {
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.',
@@ -5107,8 +5144,6 @@ extension on Translations {
 			'recurring.snoozedMessage' => ({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.',
 			'recurring.idleTitle' => ({required Object name}) => 'Masih memakai ${name}?',
 			'recurring.idleBody' => 'Dua kemunculan terakhir dilewati atau belum terlihat.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.idleKeep' => 'Biarkan',
 			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
@@ -5221,6 +5256,7 @@ extension on Translations {
 			'plan.committedShare' => ({required Object percent, required Object month}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran).',
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.',
+			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'Lihat rincian ${month}',
 			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',
 			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru',
 			'appUpdate.banner.storeDownloadingNote' => 'Kamu tetap bisa mencatat.',

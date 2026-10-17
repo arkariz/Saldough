@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/amount_visibility.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
@@ -86,81 +87,84 @@ class AnalysisTrendSection extends StatelessWidget {
       children: [
         const SizedBox(height: AppSpacing.space4),
         AppSectionHeader(t.analysis.trend.title),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: AppSpacing.space3,
-            children: [
-              ExcludeSemantics(
-                child: Wrap(
-                  spacing: AppSpacing.space4,
-                  runSpacing: AppSpacing.space1,
-                  children: [
-                    _LegendSwatch(
-                      color: colors.positive,
-                      label: t.analysis.trend.income,
-                    ),
-                    _LegendSwatch(
-                      color: colors.ink,
-                      label: t.analysis.trend.expense,
-                    ),
-                  ],
+        SpotlightTarget(
+          spotlightKey: SpotlightKey.analysisTrend,
+          child: AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: AppSpacing.space3,
+              children: [
+                ExcludeSemantics(
+                  child: Wrap(
+                    spacing: AppSpacing.space4,
+                    runSpacing: AppSpacing.space1,
+                    children: [
+                      _LegendSwatch(
+                        color: colors.positive,
+                        label: t.analysis.trend.income,
+                      ),
+                      _LegendSwatch(
+                        color: colors.ink,
+                        label: t.analysis.trend.expense,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              AppTrendChart(
-                columns: [for (final p in trend) column(p)],
-                selected: selected,
-                onSelect: (index) => bloc.add(AnalysisTrendSelected(index)),
-                axisLabel: compactAmount,
-              ),
-              Container(
-                key: const ValueKey('analysis-readout'),
-                color: colors.surface2,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.space3,
-                  vertical: 10,
+                AppTrendChart(
+                  columns: [for (final p in trend) column(p)],
+                  selected: selected,
+                  onSelect: (index) => bloc.add(AnalysisTrendSelected(index)),
+                  axisLabel: compactAmount,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: AppSpacing.space1,
-                  children: [
-                    Text(readoutTitle, style: textTheme.labelLarge),
-                    _ReadoutRow(
-                      label: t.analysis.trend.income,
-                      text: '${_sign(point.income)}${AppMoneyFormatter.format(point.income)}',
-                      color: colors.positive,
-                    ),
-                    _ReadoutRow(
-                      label: t.analysis.trend.expense,
-                      text:
-                          '${AmountVisibility.hidden || point.expense == 0 ? '' : '−'}'
-                          '${AppMoneyFormatter.format(point.expense)}',
-                    ),
-                    _ReadoutRow(
-                      label: t.analysis.trend.net,
-                      text:
-                          '${point.isRunning ? '' : _sign(point.net)}'
-                          '${AppMoneyFormatter.format(point.net.abs())}',
-                    ),
-                    if (!isViewed)
-                      Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: TextButton(
-                          key: const ValueKey('analysis-trend-jump'),
-                          onPressed: () => bloc.add(
-                            AnalysisPeriodJumped(point.period.start),
-                          ),
-                          child: Text(
-                            t.analysis.trend.seePeriod(
-                              period: point.period.name,
+                Container(
+                  key: const ValueKey('analysis-readout'),
+                  color: colors.surface2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.space3,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: AppSpacing.space1,
+                    children: [
+                      Text(readoutTitle, style: textTheme.labelLarge),
+                      _ReadoutRow(
+                        label: t.analysis.trend.income,
+                        text: '${_sign(point.income)}${AppMoneyFormatter.format(point.income)}',
+                        color: colors.positive,
+                      ),
+                      _ReadoutRow(
+                        label: t.analysis.trend.expense,
+                        text:
+                            '${AmountVisibility.hidden || point.expense == 0 ? '' : '−'}'
+                            '${AppMoneyFormatter.format(point.expense)}',
+                      ),
+                      _ReadoutRow(
+                        label: t.analysis.trend.net,
+                        text:
+                            '${point.isRunning ? '' : _sign(point.net)}'
+                            '${AppMoneyFormatter.format(point.net.abs())}',
+                      ),
+                      if (!isViewed)
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton(
+                            key: const ValueKey('analysis-trend-jump'),
+                            onPressed: () => bloc.add(
+                              AnalysisPeriodJumped(point.period.start),
+                            ),
+                            child: Text(
+                              t.analysis.trend.seePeriod(
+                                period: point.period.name,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

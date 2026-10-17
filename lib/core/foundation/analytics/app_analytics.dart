@@ -180,6 +180,42 @@ abstract final class PeriodEvents {
   }
 }
 
+/// Peristiwa Analisis keuangan (FINANCIAL_ANALYSIS §13A, T-19.9). Tanpa
+/// nominal dan tanpa nama kategori buatan pengguna (`custom`); dikirim dari
+/// tindakan atau bloc, sekali per kejadian, tidak dari `build()`.
+abstract final class AnalysisEvents {
+  AnalysisEvents._();
+
+  /// Layar Analisis terbuka: [source] `history`, `home`, atau `lookback`;
+  /// [kind] `expense` atau `income`; [transition] periode peralihan.
+  static AnalyticsEvent viewed({required String source, required String kind, required bool transition}) =>
+      AnalyticsEvent('analysis_viewed', {'source': source, 'kind': kind, 'transition': transition ? 'true' : 'false'});
+
+  /// Pindah periode: [via] `stepper` atau `trend` (tautan Lihat analisis).
+  static AnalyticsEvent periodChanged(String via) => AnalyticsEvent('analysis_period_changed', {'via': via});
+
+  /// Pindah Pengeluaran/Pemasukan.
+  static AnalyticsEvent kindSwitched(String kind) => AnalyticsEvent('analysis_kind_switched', {'kind': kind});
+
+  /// Penyaring dompet berubah: [filtered] `true` bila satu dompet.
+  static AnalyticsEvent walletFiltered({required bool filtered}) =>
+      AnalyticsEvent('analysis_wallet_filtered', {'filtered': filtered ? 'true' : 'false'});
+
+  /// Sorotan yang tampil di periode yang dibuka (0…3), sekali per periode.
+  static AnalyticsEvent highlightsShown(int count) => AnalyticsEvent('analysis_highlights_shown', {'count': count});
+
+  /// Rincian kategori dibuka: [category] `<builtInKey>`, `custom`, `none`,
+  /// `freelance`, atau `others`; [from] `link` atau `highlight`.
+  static AnalyticsEvent categoryOpened({required String category, required String from}) =>
+      AnalyticsEvent('analysis_category_opened', {'category': category, 'from': from});
+
+  /// Lihat semua transaksi dari Rincian kategori.
+  static const seeAllOpened = AnalyticsEvent('analysis_see_all_opened');
+
+  /// Beri kategori diketuk dari Tanpa kategori.
+  static const uncategorizedFixOpened = AnalyticsEvent('analysis_uncategorized_fix_opened');
+}
+
 /// Peristiwa Rencana R2 (ADR-036 §3.8), tanpa nominal.
 abstract final class PlanEvents {
   PlanEvents._();

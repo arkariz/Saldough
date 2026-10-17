@@ -32,6 +32,7 @@ import 'package:saldough/features/home/presentation/widgets/home_cards.dart';
 import 'package:saldough/features/home/presentation/widgets/home_summary.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/transaction/domain/history_segment.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -40,6 +41,7 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/transaction/transaction_presentation.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
+import '../../../../helpers/categories.dart';
 import '../../../../helpers/fake_auth_repository.dart';
 import '../../../../helpers/plan_sources.dart';
 import '../../../../helpers/routes.dart';
@@ -464,12 +466,76 @@ void main() {
       await openTab(tester, t.appShell.transactionsTabLabel);
 
       await walkThrough(tester, [
+        (t.tour.txnAnalysisSegmentTitle, t.tour.txnAnalysisSegmentBody),
         (t.tour.txnMonthTitle, t.tour.txnMonthBody),
         (t.tour.txnFilterTitle, t.tour.txnFilterBody),
         (t.tour.txnRowTitle, t.tour.txnRowBody),
       ]);
       final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
       expect(progress.hasCompleted(TourId.transaction), isTrue);
+    });
+
+    testWidgets('Transaksi: pengguna lama yang sudah menamatkan tur ini melihat segmen Analisis sekali saja', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      await tutorials.markStepsSeen([
+        SpotlightKey.txnMonth,
+        SpotlightKey.txnFilter,
+        SpotlightKey.txnRow,
+        ...tourSteps[TourId.home]!,
+      ]);
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      await walkThrough(tester, [(t.tour.txnAnalysisSegmentTitle, t.tour.txnAnalysisSegmentBody)]);
+
+      await openTab(tester, t.appShell.homeTabLabel);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      // Judulnya sama dengan label sub-tab, jadi periksa gelembungnya lewat semantik.
+      expect(step(1, 1, t.tour.txnAnalysisSegmentTitle, t.tour.txnAnalysisSegmentBody), findsNothing);
+    });
+
+    testWidgets('Analisis: tur kategori, Tanpa kategori, dan tren', (tester) async {
+      tallViewport(tester);
+      await seedFull();
+      useCategories(['Makan']);
+      await transactionRepository.saveTransaction(
+        ExpenseTransaction(
+          id: 'kategori',
+          date: today.add(const Duration(minutes: 20)),
+          amount: 1000000,
+          note: 'Bakso',
+          walletId: 'bca',
+          categoryId: 'Makan',
+        ),
+      );
+      await tutorials.markStepsSeen([...tourSteps[TourId.home]!, ...tourSteps[TourId.transaction]!]);
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      await tester.tap(
+        find.descendant(of: find.byType(AppSubTabs<HistorySegment>), matching: find.text(t.analysis.segment)),
+      );
+      await tester.pumpAndSettle();
+
+      await walkThrough(tester, [
+        (t.tour.analysisCategoriesTitle, t.tour.analysisCategoriesBody),
+        (t.tour.analysisUncategorizedTitle, t.tour.analysisUncategorizedBody),
+        (t.tour.analysisTrendTitle, t.tour.analysisTrendBody),
+      ]);
+      final progress = (await tutorials.load()).getOrElse((_) => TutorialProgress.empty);
+      expect(progress.hasCompleted(TourId.analysis), isTrue);
+    });
+
+    testWidgets('Analisis: tanpa transaksi, tur tidak tampil', (tester) async {
+      tallViewport(tester);
+      await seedWallet();
+      await tutorials.markStepsSeen([...tourSteps[TourId.home]!, ...tourSteps[TourId.transaction]!]);
+      await openShellWithTours(tester);
+      await openTab(tester, t.appShell.transactionsTabLabel);
+      await tester.tap(
+        find.descendant(of: find.byType(AppSubTabs<HistorySegment>), matching: find.text(t.analysis.segment)),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(t.tour.analysisCategoriesTitle), findsNothing);
     });
 
     testWidgets('Anggaran kosong: hanya Template; ringkasan dan penyaring menyusul saat ada anggaran', (tester) async {

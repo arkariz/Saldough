@@ -15,7 +15,9 @@ void main() {
   const makan = Category(id: 'makan', kind: CategoryKind.expense, name: 'Makan');
   const baru = Category(id: 'baru', kind: CategoryKind.expense, name: 'Kesehatan');
   const gaji = Category(id: 'gaji', kind: CategoryKind.income, name: 'Gaji');
-  final all = {for (final c in [makan, baru, gaji]) c.id: c};
+  final all = {
+    for (final c in [makan, baru, gaji]) c.id: c,
+  };
   Category? categoryOf(String id) => all[id];
 
   var next = 0;

@@ -8,6 +8,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -718,6 +719,82 @@ void main() {
     );
   });
 
+  group('analitik dari layar (T-19.9)', () {
+    late List<AnalyticsEvent> events;
+
+    setUp(() {
+      events = [];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+    });
+
+    Future<void> openSeptember(WidgetTester tester) async {
+      await pump(tester, now: DateTime(2026, 10, 10, 9));
+      await tester.tap(find.byKey(const ValueKey('period-previous')));
+      await tester.pumpAndSettle();
+      events.clear();
+    }
+
+    Iterable<Map<String, Object>> opened() =>
+        events.where((e) => e.name == 'analysis_category_opened').map((e) => e.parameters);
+
+    testWidgets('Lihat rincian: kategori buatan pengguna = custom (tanpa nama), lewat link', (tester) async {
+      await seed(september2026());
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Makan')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('analysis-detail')));
+      await tester.pumpAndSettle();
+      expect(opened().single, {'category': 'custom', 'from': 'link'});
+    });
+
+    testWidgets('Freelance dan baris sorotan dicatat dengan asalnya', (tester) async {
+      await seed([
+        expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),
+        expenseOn(DateTime(2026, 7, 5), 950000, category: 'makan'),
+        expenseOn(DateTime(2026, 8, 5), 1000000, category: 'makan'),
+        ...september2026(),
+      ]);
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('analysis-highlight-cat:makan')));
+      await tester.pumpAndSettle();
+      expect(opened().single, {'category': 'custom', 'from': 'highlight'});
+
+      events.clear();
+      tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Freelance')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('analysis-detail')));
+      await tester.pumpAndSettle();
+      expect(opened().single, {'category': 'freelance', 'from': 'link'});
+    });
+
+    testWidgets('Beri kategori mengirim analysis_uncategorized_fix_opened tanpa parameter', (tester) async {
+      await seed(september2026());
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Tanpa kategori')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('analysis-fix')));
+      await tester.pumpAndSettle();
+      expect(events.where((e) => e.name == 'analysis_uncategorized_fix_opened').single.parameters, isEmpty);
+    });
+
+    testWidgets('membangun ulang layar tidak mengirim peristiwa', (tester) async {
+      await seed(september2026());
+      await openSeptember(tester);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Makan')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Makan')));
+      await tester.pump();
+      expect(events, isEmpty);
+    });
+  });
+
   group('Rincian kategori (F4)', () {
     List<Transaction> history() => [
       expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),
@@ -767,7 +844,9 @@ void main() {
     testWidgets('Freelance di Pemasukan membuka rincian tanpa kategori', (tester) async {
       await seed(september2026());
       await pump(tester);
-      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')));
+      await tester.tap(
+        find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('analysis-row-Freelance')));
       await tester.pump();

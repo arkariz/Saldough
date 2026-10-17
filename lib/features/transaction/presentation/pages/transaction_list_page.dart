@@ -102,6 +102,10 @@ class _TransactionListPageState extends State<TransactionListPage> {
                 ],
                 selected: _segment!,
                 onChanged: _selectSegment,
+                tabWrap: (segment, tab) => SpotlightTarget(
+                  spotlightKey: segment == HistorySegment.analysis ? SpotlightKey.txnAnalysisSegment : null,
+                  child: tab,
+                ),
               ),
       ),
       body: SafeArea(

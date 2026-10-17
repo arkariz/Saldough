@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_view.dart';
 
 /// Analisis sebagai halaman penuh (dari kartu Arus Beranda dan kilas balik):
@@ -17,6 +19,7 @@ class AnalysisPage extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         centerTitle: false,
+        actions: const [TutorialInfoButton(tour: TourId.analysis)],
       ),
       body: const SafeArea(child: AnalysisView()),
     );

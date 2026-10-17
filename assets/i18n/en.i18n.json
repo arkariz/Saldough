@@ -632,7 +632,7 @@
     "homeRecordTitle": "One door for recording",
     "homeRecordBody": "Every income, expense, and transfer is recorded from here.",
     "homeCashFlowTitle": "This month's flow",
-    "homeCashFlowBody": "The money that actually came in and went out this month.",
+    "homeCashFlowBody": "The money that actually came in and went out this period. Tap to see where it went.",
     "homeBudgetTitle": "Active budget left",
     "homeBudgetBody": "What's left of the plan in budgets running now. Tap for details.",
     "homeFreelanceTitle": "Freelance summary",
@@ -706,7 +706,15 @@
     "planPeriodHeaderTitle": "Your financial month",
     "planPeriodHeaderBody": "Tap to start the month on your payday. Plan and Analysis follow it.",
     "planTransitionTitle": "Transition period",
-    "planTransitionBody": "This period is longer or shorter once because your month start changed. The next one is a full month again."
+    "planTransitionBody": "This period is longer or shorter once because your month start changed. The next one is a full month again.",
+    "txnAnalysisSegmentTitle": "Analysis",
+    "txnAnalysisSegmentBody": "See where your money goes by category and compare it with usual.",
+    "analysisCategoriesTitle": "By category",
+    "analysisCategoriesBody": "Tap a slice or row to see one category, then open its details.",
+    "analysisUncategorizedTitle": "Uncategorized",
+    "analysisUncategorizedBody": "Add categories to make this more accurate.",
+    "analysisTrendTitle": "Last six periods",
+    "analysisTrendBody": "Tap a column to see its numbers. The period still running is marked."
   },
   "info": {
     "menuTooltip": "Info and tours",
@@ -1202,7 +1210,8 @@
     "accuracyMissedBy": "The $month forecast was off by $amount, mostly from $line.",
     "committedShare": "${percent}% of $month income is already committed (repeating + budgets).",
     "committedShareVs": "${percent}% of $month income is already committed (repeating + budgets); the month before, ${previous}%.",
-    "installmentFree": "After $name ends, from $month you free up +$amount/mo."
+    "installmentFree": "After $name ends, from $month you free up +$amount/mo.",
+    "lookbackSeeAnalysis": "See $month details"
   },
   "appUpdate": {
     "banner": {

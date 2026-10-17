@@ -192,6 +192,12 @@ enum IconKey {
   /// Navigasi maju (mis. bulan berikutnya).
   chevronRight,
 
+  /// Naik: nominal lebih tinggi dari pembanding (Analisis).
+  arrowUp,
+
+  /// Turun: nominal lebih rendah dari pembanding (Analisis).
+  arrowDown,
+
   /// Kolom pencarian.
   search,
 
@@ -395,6 +401,8 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.expandLess: Symbols.expand_less_rounded,
   IconKey.moreVert: Symbols.more_vert_rounded,
   IconKey.back: Symbols.arrow_back_rounded,
+  IconKey.arrowUp: Symbols.arrow_upward_rounded,
+  IconKey.arrowDown: Symbols.arrow_downward_rounded,
   IconKey.backspace: Symbols.backspace_rounded,
   IconKey.visibility: Symbols.visibility_rounded,
   IconKey.visibilityOff: Symbols.visibility_off_rounded,

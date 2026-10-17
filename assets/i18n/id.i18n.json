@@ -1263,6 +1263,19 @@
     "kindLabel": "Jenis",
     "allWallets": "Semua dompet",
     "walletLabel": "Dompet",
-    "emptyMonthIncome": "Belum ada pemasukan di $period."
+    "emptyMonthIncome": "Belum ada pemasukan di $period.",
+    "compare": {
+      "avg": "rata-rata $n bulan",
+      "lastMonth": "bulan lalu",
+      "toDate": "rata-rata s.d. tanggal $day",
+      "vs": "dibanding $label",
+      "newThisMonth": "baru bulan ini",
+      "srHigher": "$amount lebih tinggi, $label",
+      "srLower": "$amount lebih rendah, $label"
+    },
+    "highlight": {
+      "higher": "$subject lebih tinggi dari $compare",
+      "lower": "$subject lebih rendah dari $compare"
+    }
   }
 }

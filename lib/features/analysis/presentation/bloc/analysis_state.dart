@@ -1,5 +1,7 @@
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
+import 'package:saldough/shared/category/category.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 /// Keadaan layar Analisis untuk satu periode (FR-ANL-001).
@@ -15,6 +17,9 @@ final class AnalysisState extends UiState<AnalysisState> {
     this.loadFailed = false,
     this.selectedKey,
     this.othersOpen = false,
+    this.kind = CategoryKind.expense,
+    this.walletId,
+    this.wallets = const [],
     super.effect,
   });
 
@@ -59,6 +64,17 @@ final class AnalysisState extends UiState<AnalysisState> {
   /// Anggota Lainnya sedang dibuka.
   final bool othersOpen;
 
+  /// Jenis yang dianalisis. Diingat selama layar hidup; pintu Beranda selalu
+  /// membuka layar baru, jadi selalu mulai di pengeluaran.
+  final CategoryKind kind;
+
+  /// Dompet yang disaring, atau `null` = semua dompet.
+  final String? walletId;
+
+  /// Dompet yang bisa dipilih penyaring (aktif maupun tidak: transaksinya
+  /// tetap dihitung, B-5).
+  final List<Wallet> wallets;
+
   /// Baris yang dipilih, atau `null`.
   AnalysisGroup? get selected => selectedKey == null ? null : summary?.groupOf(selectedKey!);
 
@@ -73,7 +89,26 @@ final class AnalysisState extends UiState<AnalysisState> {
     loadFailed: loadFailed,
     selectedKey: key,
     othersOpen: othersOpen,
+    kind: kind,
+    walletId: walletId,
+    wallets: wallets,
   );
+
+  /// Salinan dengan jenis [kind] dan dompet [walletId] baru (`null` = semua);
+  /// pilihan baris dikosongkan karena barisnya berganti.
+  AnalysisState withControls({required CategoryKind kind, required String? walletId, PeriodSummary? summary}) =>
+      AnalysisState(
+        period: period,
+        summary: summary ?? this.summary,
+        isCurrent: isCurrent,
+        canGoBack: canGoBack,
+        hasAnyTransactions: hasAnyTransactions,
+        isLoading: isLoading,
+        loadFailed: loadFailed,
+        kind: kind,
+        walletId: walletId,
+        wallets: wallets,
+      );
 
   @override
   AnalysisState copyWith({bool? isLoading, bool? loadFailed, UiEffect? effect}) => AnalysisState(
@@ -86,6 +121,9 @@ final class AnalysisState extends UiState<AnalysisState> {
     loadFailed: loadFailed ?? this.loadFailed,
     selectedKey: selectedKey,
     othersOpen: othersOpen,
+    kind: kind,
+    walletId: walletId,
+    wallets: wallets,
     effect: effect,
   );
 
@@ -100,5 +138,8 @@ final class AnalysisState extends UiState<AnalysisState> {
     loadFailed,
     selectedKey,
     othersOpen,
+    kind,
+    walletId,
+    wallets,
   ];
 }

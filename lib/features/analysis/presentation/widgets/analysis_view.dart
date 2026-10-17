@@ -70,18 +70,75 @@ class AnalysisView extends StatelessWidget {
         onPrevious: state.canGoBack ? () => bloc.add(const AnalysisPeriodStepped(forward: false)) : null,
         onNext: state.isCurrent ? null : () => bloc.add(const AnalysisPeriodStepped(forward: true)),
       ),
+      const SizedBox(height: AppSpacing.space3),
+      _Controls(state: state),
       const SizedBox(height: AppSpacing.space4),
       if (summary == null || summary.isEmpty)
         AppCard(
           key: const ValueKey('analysis-none'),
           child: Text(
-            t.analysis.emptyMonth(period: period.name),
+            state.kind == CategoryKind.income
+                ? t.analysis.emptyMonthIncome(period: period.name)
+                : t.analysis.emptyMonth(period: period.name),
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: context.appColors.ink2),
           ),
         )
       else
         _AnalysisCard(state: state, summary: summary),
     ];
+  }
+}
+
+/// Pilihan jenis (Pengeluaran | Pemasukan) dan penyaring dompet (F2, F3).
+/// Penyaring dompet hanya tampil bila ada lebih dari satu dompet.
+class _Controls extends StatelessWidget {
+  const _Controls({required this.state});
+
+  final AnalysisState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<AnalysisBloc>();
+    final wallets = state.wallets;
+    final selected = wallets.where((w) => w.id == state.walletId).firstOrNull;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpacing.space2,
+      children: [
+        Semantics(
+          container: true,
+          label: t.analysis.kindLabel,
+          child: AppSegmentedControl<CategoryKind>(
+            key: const ValueKey('analysis-kind'),
+            options: [
+              (CategoryKind.expense, t.analysis.kind.expense),
+              (CategoryKind.income, t.analysis.kind.income),
+            ],
+            selected: state.kind,
+            onChanged: (kind) => bloc.add(AnalysisKindChanged(kind)),
+          ),
+        ),
+        if (wallets.length > 1)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 240),
+              child: AppMenuSelectButton<String>(
+                key: const ValueKey('analysis-wallet'),
+                icon: selected == null ? IconKey.wallets : walletIconKey(selected.iconKey),
+                label: selected?.name ?? t.analysis.allWallets,
+                options: [
+                  for (final wallet in wallets)
+                    (value: wallet.id, label: wallet.name, icon: walletIconKey(wallet.iconKey)),
+                ],
+                allLabel: t.analysis.allWallets,
+                allIcon: IconKey.wallets,
+                onSelected: (id) => bloc.add(AnalysisWalletChanged(id)),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }
 
@@ -189,6 +246,7 @@ class _AnalysisCard extends StatelessWidget {
                             ? TransactionTypeFilter.expense
                             : TransactionTypeFilter.income,
                         uncategorized: true,
+                        walletId: state.walletId,
                       ),
                     ),
                   ),

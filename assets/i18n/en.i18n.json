@@ -1262,6 +1262,10 @@
     "donutSemantics": "$kind $period: $parts",
     "rowSemantics": "$name, $percent, $amount",
     "fix": "Add category",
-    "shareOf": "$percent of $kind"
+    "shareOf": "$percent of $kind",
+    "kindLabel": "Type",
+    "allWallets": "All wallets",
+    "walletLabel": "Wallet",
+    "emptyMonthIncome": "No income in $period yet."
   }
 }

@@ -40,14 +40,23 @@ PeriodSummary summarizePeriod(
     final date = periodDateOf(transaction);
     if (date.isBefore(from) || !date.isBefore(until)) continue;
     switch (transaction) {
-      case TransferTransaction(:final fromWalletId, :final toWalletId, :final amount):
+      case TransferTransaction(
+        :final fromWalletId,
+        :final toWalletId,
+        :final amount,
+      ):
         if (walletId == null) {
           transferTotal += amount;
         } else {
           if (toWalletId == walletId) incoming += amount;
           if (fromWalletId == walletId) outgoing += amount;
         }
-      case IncomeTransaction(walletId: final transactionWallet, :final categoryId, :final amount, :final isFreelancePayment)
+      case IncomeTransaction(
+            walletId: final transactionWallet,
+            :final categoryId,
+            :final amount,
+            :final isFreelancePayment,
+          )
           when kind == CategoryKind.income && (walletId == null || transactionWallet == walletId):
         final category = categoryId == null ? null : categoryOf(categoryId);
         total += amount;
@@ -63,7 +72,11 @@ PeriodSummary summarizePeriod(
           uncategorized += amount;
           uncategorizedCount++;
         }
-      case ExpenseTransaction(walletId: final transactionWallet, :final categoryId, :final amount)
+      case ExpenseTransaction(
+            walletId: final transactionWallet,
+            :final categoryId,
+            :final amount,
+          )
           when kind == CategoryKind.expense && (walletId == null || transactionWallet == walletId):
         final category = categoryId == null ? null : categoryOf(categoryId);
         total += amount;
@@ -128,8 +141,18 @@ PeriodSummary summarizePeriod(
         ),
     ],
     transfers: walletId == null
-        ? TransferInfo(total: transferTotal, incoming: 0, outgoing: 0, perWallet: false)
-        : TransferInfo(total: 0, incoming: incoming, outgoing: outgoing, perWallet: true),
+        ? TransferInfo(
+            total: transferTotal,
+            incoming: 0,
+            outgoing: 0,
+            perWallet: false,
+          )
+        : TransferInfo(
+            total: 0,
+            incoming: incoming,
+            outgoing: outgoing,
+            perWallet: true,
+          ),
   );
 }
 

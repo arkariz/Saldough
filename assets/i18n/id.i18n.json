@@ -1286,6 +1286,18 @@
       "days": "$n hari",
       "seePeriod": "Lihat analisis $period",
       "column": "$period, pemasukan $income, pengeluaran $expense, selisih $net"
+    },
+    "category": {
+      "frequency": "$count transaksi · rata-rata $amount per transaksi",
+      "frequencyOne": "$count transaksi · rata-rata $amount per transaksi",
+      "frequencyUsual": "biasanya $count transaksi · $amount",
+      "seeAll": "Lihat semua transaksi",
+      "seeCategory": "Lihat rincian $category",
+      "transactions": "Transaksi",
+      "aboveAvg": "$amount di atas rata-rata",
+      "belowAvg": "$amount di bawah rata-rata",
+      "avgLine": "rata-rata $n bulan",
+      "moreHint": "20 transaksi terbaru"
     }
   }
 }

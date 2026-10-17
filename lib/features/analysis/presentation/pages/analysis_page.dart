@@ -12,7 +12,10 @@ class AnalysisPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.analysis.segment, style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(
+          t.analysis.segment,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         centerTitle: false,
       ),
       body: const SafeArea(child: AnalysisView()),

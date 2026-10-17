@@ -1317,6 +1317,7 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override late final _Translations$analysis$compare$en compare = _Translations$analysis$compare$en._(_root);
 	@override late final _Translations$analysis$highlight$en highlight = _Translations$analysis$highlight$en._(_root);
 	@override late final _Translations$analysis$trend$en trend = _Translations$analysis$trend$en._(_root);
+	@override late final _Translations$analysis$category$en category = _Translations$analysis$category$en._(_root);
 }
 
 // Path: record.draftIssue
@@ -1644,6 +1645,25 @@ class _Translations$analysis$trend$en extends Translations$analysis$trend$id {
 	@override String days({required Object n}) => '${n} days';
 	@override String seePeriod({required Object period}) => 'See ${period} analysis';
 	@override String column({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}';
+}
+
+// Path: analysis.category
+class _Translations$analysis$category$en extends Translations$analysis$category$id {
+	_Translations$analysis$category$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String frequency({required Object count, required Object amount}) => '${count} transactions · ${amount} average each';
+	@override String frequencyOne({required Object count, required Object amount}) => '${count} transaction · ${amount} average each';
+	@override String frequencyUsual({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}';
+	@override String get seeAll => 'See all transactions';
+	@override String seeCategory({required Object category}) => 'See ${category} details';
+	@override String get transactions => 'Transactions';
+	@override String aboveAvg({required Object amount}) => '${amount} above average';
+	@override String belowAvg({required Object amount}) => '${amount} below average';
+	@override String avgLine({required Object n}) => '${n}-month average';
+	@override String get moreHint => 'Latest 20 transactions';
 }
 
 // Path: record.voice.failure
@@ -2872,6 +2892,16 @@ extension on TranslationsEn {
 			'analysis.trend.days' => ({required Object n}) => '${n} days',
 			'analysis.trend.seePeriod' => ({required Object period}) => 'See ${period} analysis',
 			'analysis.trend.column' => ({required Object period, required Object income, required Object expense, required Object net}) => '${period}, income ${income}, expenses ${expense}, net ${net}',
+			'analysis.category.frequency' => ({required Object count, required Object amount}) => '${count} transactions · ${amount} average each',
+			'analysis.category.frequencyOne' => ({required Object count, required Object amount}) => '${count} transaction · ${amount} average each',
+			'analysis.category.frequencyUsual' => ({required Object count, required Object amount}) => 'usually ${count} transactions · ${amount}',
+			'analysis.category.seeAll' => 'See all transactions',
+			'analysis.category.seeCategory' => ({required Object category}) => 'See ${category} details',
+			'analysis.category.transactions' => 'Transactions',
+			'analysis.category.aboveAvg' => ({required Object amount}) => '${amount} above average',
+			'analysis.category.belowAvg' => ({required Object amount}) => '${amount} below average',
+			'analysis.category.avgLine' => ({required Object n}) => '${n}-month average',
+			'analysis.category.moreHint' => 'Latest 20 transactions',
 			_ => null,
 		};
 	}

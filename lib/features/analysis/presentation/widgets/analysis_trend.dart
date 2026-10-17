@@ -53,7 +53,9 @@ class AnalysisTrendSection extends StatelessWidget {
     TrendColumn column(TrendPoint p) {
       final net = p.isRunning ? compactAmount(p.net) : '${_sign(p.net)}${compactAmount(p.net)}';
       final caption = p.isRunning
-          ? t.analysis.trend.toDate(date: CycleMonthFormatter.formatDayMonth(p.asOf!))
+          ? t.analysis.trend.toDate(
+              date: CycleMonthFormatter.formatDayMonth(p.asOf!),
+            )
           : p.period.isTransition
           ? t.analysis.trend.days(n: p.period.days)
           : null;
@@ -94,8 +96,14 @@ class AnalysisTrendSection extends StatelessWidget {
                   spacing: AppSpacing.space4,
                   runSpacing: AppSpacing.space1,
                   children: [
-                    _LegendSwatch(color: colors.positive, label: t.analysis.trend.income),
-                    _LegendSwatch(color: colors.ink, label: t.analysis.trend.expense),
+                    _LegendSwatch(
+                      color: colors.positive,
+                      label: t.analysis.trend.income,
+                    ),
+                    _LegendSwatch(
+                      color: colors.ink,
+                      label: t.analysis.trend.expense,
+                    ),
                   ],
                 ),
               ),
@@ -108,7 +116,10 @@ class AnalysisTrendSection extends StatelessWidget {
               Container(
                 key: const ValueKey('analysis-readout'),
                 color: colors.surface2,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space3, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.space3,
+                  vertical: 10,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: AppSpacing.space1,
@@ -121,7 +132,8 @@ class AnalysisTrendSection extends StatelessWidget {
                     ),
                     _ReadoutRow(
                       label: t.analysis.trend.expense,
-                      text: '${AmountVisibility.hidden || point.expense == 0 ? '' : '−'}'
+                      text:
+                          '${AmountVisibility.hidden || point.expense == 0 ? '' : '−'}'
                           '${AppMoneyFormatter.format(point.expense)}',
                     ),
                     _ReadoutRow(
@@ -135,8 +147,14 @@ class AnalysisTrendSection extends StatelessWidget {
                         alignment: AlignmentDirectional.centerStart,
                         child: TextButton(
                           key: const ValueKey('analysis-trend-jump'),
-                          onPressed: () => bloc.add(AnalysisPeriodJumped(point.period.start)),
-                          child: Text(t.analysis.trend.seePeriod(period: point.period.name)),
+                          onPressed: () => bloc.add(
+                            AnalysisPeriodJumped(point.period.start),
+                          ),
+                          child: Text(
+                            t.analysis.trend.seePeriod(
+                              period: point.period.name,
+                            ),
+                          ),
                         ),
                       ),
                   ],
@@ -163,7 +181,12 @@ class _LegendSwatch extends StatelessWidget {
       spacing: AppSpacing.space1,
       children: [
         Container(width: 10, height: 10, color: color),
-        Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2)),
+        Text(
+          label,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+        ),
       ],
     );
   }
@@ -182,13 +205,19 @@ class _ReadoutRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2)),
+        Text(
+          label,
+          style: textTheme.bodyMedium?.copyWith(color: context.appColors.ink2),
+        ),
         const SizedBox(width: AppSpacing.space2),
         Flexible(
           child: FittedBox(
             fit: BoxFit.scaleDown,
             alignment: AlignmentDirectional.centerEnd,
-            child: Text(text, style: context.numberStyles.amountSm.copyWith(color: color)),
+            child: Text(
+              text,
+              style: context.numberStyles.amountSm.copyWith(color: color),
+            ),
           ),
         ),
       ],

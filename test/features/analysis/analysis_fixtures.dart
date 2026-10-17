@@ -8,12 +8,24 @@ final Map<String, Category> analysisCategories = {
   for (final c in [
     const Category(id: 'belanja', kind: CategoryKind.expense, name: 'Belanja'),
     const Category(id: 'cicilan', kind: CategoryKind.expense, name: 'Cicilan'),
-    const Category(id: 'tempat', kind: CategoryKind.expense, name: 'Tempat tinggal'),
+    const Category(
+      id: 'tempat',
+      kind: CategoryKind.expense,
+      name: 'Tempat tinggal',
+    ),
     const Category(id: 'makan', kind: CategoryKind.expense, name: 'Makan'),
     const Category(id: 'sedekah', kind: CategoryKind.expense, name: 'Sedekah'),
     const Category(id: 'tagihan', kind: CategoryKind.expense, name: 'Tagihan'),
-    const Category(id: 'langganan', kind: CategoryKind.expense, name: 'Langganan'),
-    const Category(id: 'transportasi', kind: CategoryKind.expense, name: 'Transportasi'),
+    const Category(
+      id: 'langganan',
+      kind: CategoryKind.expense,
+      name: 'Langganan',
+    ),
+    const Category(
+      id: 'transportasi',
+      kind: CategoryKind.expense,
+      name: 'Transportasi',
+    ),
     const Category(id: 'gaji', kind: CategoryKind.income, name: 'Gaji'),
   ])
     c.id: c,
@@ -23,15 +35,19 @@ Category? analysisCategoryOf(String id) => analysisCategories[id];
 
 var _next = 0;
 
-ExpenseTransaction expenseOn(DateTime date, int rupiah, {String? category, String wallet = 'bca'}) =>
-    ExpenseTransaction(
-      id: 'e${_next++}',
-      date: date,
-      amount: rp(rupiah),
-      note: '',
-      walletId: wallet,
-      categoryId: category,
-    );
+ExpenseTransaction expenseOn(
+  DateTime date,
+  int rupiah, {
+  String? category,
+  String wallet = 'bca',
+}) => ExpenseTransaction(
+  id: 'e${_next++}',
+  date: date,
+  amount: rp(rupiah),
+  note: '',
+  walletId: wallet,
+  categoryId: category,
+);
 
 /// September 2026: pengeluaran Rp11.420.700, pemasukan, dan transfer Rp1.000.000.
 List<Transaction> september2026() {
@@ -46,7 +62,14 @@ List<Transaction> september2026() {
     expenseOn(d(3), 413200, category: 'langganan'),
     expenseOn(d(12), 410000, category: 'transportasi'),
     expenseOn(d(15), 120000),
-    IncomeTransaction(id: 'i${_next++}', date: d(25), amount: rp(12000000), note: '', walletId: 'bca', categoryId: 'gaji'),
+    IncomeTransaction(
+      id: 'i${_next++}',
+      date: d(25),
+      amount: rp(12000000),
+      note: '',
+      walletId: 'bca',
+      categoryId: 'gaji',
+    ),
     IncomeTransaction(
       id: 'i${_next++}',
       date: d(26),

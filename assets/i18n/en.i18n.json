@@ -1289,6 +1289,18 @@
       "days": "$n days",
       "seePeriod": "See $period analysis",
       "column": "$period, income $income, expenses $expense, net $net"
+    },
+    "category": {
+      "frequency": "$count transactions · $amount average each",
+      "frequencyOne": "$count transaction · $amount average each",
+      "frequencyUsual": "usually $count transactions · $amount",
+      "seeAll": "See all transactions",
+      "seeCategory": "See $category details",
+      "transactions": "Transactions",
+      "aboveAvg": "$amount above average",
+      "belowAvg": "$amount below average",
+      "avgLine": "$n-month average",
+      "moreHint": "Latest 20 transactions"
     }
   }
 }

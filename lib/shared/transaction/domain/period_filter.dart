@@ -27,6 +27,7 @@ final class PeriodTransactionFilter extends Equatable {
     required this.type,
     this.uncategorized = false,
     this.categoryId,
+    this.freelance = false,
     this.walletId,
   });
 
@@ -45,6 +46,10 @@ final class PeriodTransactionFilter extends Equatable {
   /// Hanya satu kategori.
   final String? categoryId;
 
+  /// Hanya pemasukan pembayaran freelance tanpa kategori: kelompok Freelance
+  /// di Analisis (B-9).
+  final bool freelance;
+
   /// Hanya satu dompet.
   final String? walletId;
 
@@ -57,9 +62,12 @@ final class PeriodTransactionFilter extends Equatable {
     if (walletId != null && !walletIdsOf(transaction).contains(walletId)) return false;
     if (uncategorized && !isUncategorizedTransaction(transaction, isKnownCategory: isKnownCategory)) return false;
     if (categoryId != null && transaction.categoryId != categoryId) return false;
+    if (freelance && !(transaction is IncomeTransaction && transaction.categoryId == null && transaction.isFreelancePayment)) {
+      return false;
+    }
     return true;
   }
 
   @override
-  List<Object?> get props => [from, until, type, uncategorized, categoryId, walletId];
+  List<Object?> get props => [from, until, type, uncategorized, categoryId, freelance, walletId];
 }

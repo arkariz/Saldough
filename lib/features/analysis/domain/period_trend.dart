@@ -10,7 +10,12 @@ const trendSlots = 6;
 /// Satu kolom tren: pemasukan dan pengeluaran satu periode (FINANCIAL_ANALYSIS F6).
 final class TrendPoint extends Equatable {
   /// Membuat [TrendPoint].
-  const TrendPoint({required this.period, required this.income, required this.expense, this.asOf});
+  const TrendPoint({
+    required this.period,
+    required this.income,
+    required this.expense,
+    this.asOf,
+  });
 
   /// Periodenya.
   final FinancialPeriod period;

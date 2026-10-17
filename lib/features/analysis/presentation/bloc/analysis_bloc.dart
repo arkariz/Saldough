@@ -37,7 +37,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
        _wallets = walletRepository,
        _categoryOf = categoryOf ?? ActiveCategories.byId,
        _now = now ?? DateTime.now,
-       super(AnalysisState.initial(ActiveFinancialMonth.periodOf((now ?? DateTime.now)()))) {
+       super(
+         AnalysisState.initial(
+           ActiveFinancialMonth.periodOf((now ?? DateTime.now)()),
+         ),
+       ) {
     on<AnalysisStarted>(_onStarted);
     on<AnalysisRefreshed>(_onRefreshed);
     on<AnalysisPeriodStepped>(_onStepped);
@@ -49,8 +53,12 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       _anchor = event.date;
       await _load(emit, firstLoad: false, keepSelection: false);
     });
-    on<AnalysisKindChanged>((event, emit) => _onControls(emit, kind: event.kind, walletId: state.walletId));
-    on<AnalysisWalletChanged>((event, emit) => _onControls(emit, kind: state.kind, walletId: event.walletId));
+    on<AnalysisKindChanged>(
+      (event, emit) => _onControls(emit, kind: event.kind, walletId: state.walletId),
+    );
+    on<AnalysisWalletChanged>(
+      (event, emit) => _onControls(emit, kind: state.kind, walletId: event.walletId),
+    );
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => _refresh());
     ActiveFinancialMonth.notifier.addListener(_refresh);
     ActiveDay.notifier.addListener(_refresh);
@@ -88,7 +96,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     walletId: walletId,
   );
 
-  PeriodComparison? _compare(AnalysisState from, CategoryKind kind, String? walletId) => comparePeriod(
+  PeriodComparison? _compare(
+    AnalysisState from,
+    CategoryKind kind,
+    String? walletId,
+  ) => comparePeriod(
     transactions: _transactions,
     period: from.period,
     periods: _comparisonPeriods,
@@ -99,14 +111,19 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     minSen: highlightMinSenOf(ActiveCurrency.value),
   );
 
-  Future<void> _onStarted(AnalysisStarted event, Emitter<AnalysisState> emit) async {
+  Future<void> _onStarted(
+    AnalysisStarted event,
+    Emitter<AnalysisState> emit,
+  ) async {
     _anchor = event.periodStart;
     emit(state.copyWith(isLoading: true, loadFailed: false));
     await _load(emit, firstLoad: true);
   }
 
-  Future<void> _onRefreshed(AnalysisRefreshed event, Emitter<AnalysisState> emit) =>
-      _load(emit, firstLoad: false);
+  Future<void> _onRefreshed(
+    AnalysisRefreshed event,
+    Emitter<AnalysisState> emit,
+  ) => _load(emit, firstLoad: false);
 
   void _onSelected(AnalysisGroupSelected event, Emitter<AnalysisState> emit) {
     final summary = state.summary;
@@ -114,13 +131,24 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     final selected = state.selectedKey == event.key;
     if (event.key == 'others') {
       // Lainnya memilih sekaligus membuka anggotanya; mengetuk lagi menutup keduanya.
-      emit(state.withSelection(selected ? null : event.key, othersOpen: !selected));
+      emit(
+        state.withSelection(selected ? null : event.key, othersOpen: !selected),
+      );
     } else {
-      emit(state.withSelection(selected ? null : event.key, othersOpen: state.othersOpen));
+      emit(
+        state.withSelection(
+          selected ? null : event.key,
+          othersOpen: state.othersOpen,
+        ),
+      );
     }
   }
 
-  PeriodSummary _summarize(AnalysisState from, CategoryKind kind, String? walletId) => summarizePeriod(
+  PeriodSummary _summarize(
+    AnalysisState from,
+    CategoryKind kind,
+    String? walletId,
+  ) => summarizePeriod(
     _transactions,
     from: from.period.start,
     until: from.period.end,
@@ -131,7 +159,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
 
   /// Jenis atau dompet berganti: ringkasan dihitung ulang dari transaksi yang
   /// sudah dibaca dan pilihan baris dikosongkan (barisnya berganti).
-  void _onControls(Emitter<AnalysisState> emit, {required CategoryKind kind, required String? walletId}) {
+  void _onControls(
+    Emitter<AnalysisState> emit, {
+    required CategoryKind kind,
+    required String? walletId,
+  }) {
     if (state.summary == null || (kind == state.kind && walletId == state.walletId)) return;
     emit(
       state.withControls(
@@ -144,7 +176,10 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     );
   }
 
-  Future<void> _onStepped(AnalysisPeriodStepped event, Emitter<AnalysisState> emit) async {
+  Future<void> _onStepped(
+    AnalysisPeriodStepped event,
+    Emitter<AnalysisState> emit,
+  ) async {
     final schedule = ActiveFinancialMonth.schedule;
     final shown = state.period;
     if (event.forward) {
@@ -158,7 +193,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     await _load(emit, firstLoad: false, keepSelection: false);
   }
 
-  Future<void> _load(Emitter<AnalysisState> emit, {required bool firstLoad, bool keepSelection = true}) async {
+  Future<void> _load(
+    Emitter<AnalysisState> emit, {
+    required bool firstLoad,
+    bool keepSelection = true,
+  }) async {
     final schedule = ActiveFinancialMonth.schedule;
     final current = schedule.periodOf(_now());
     var period = _anchor == null ? current : schedule.periodOf(_anchor!);
@@ -192,11 +231,22 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         };
         final first = months.reduce((a, b) => a.isBefore(b) ? a : b);
         final earliest = schedule.periodOf(DateTime(first.year, first.month));
-        _comparisonPeriods = comparisonPeriods(period: period, schedule: schedule, earliestStart: earliest.start);
+        _comparisonPeriods = comparisonPeriods(
+          period: period,
+          schedule: schedule,
+          earliestStart: earliest.start,
+        );
         _comparisonToday = period.start == current.start ? _now() : null;
-        _trendPeriods = trendPeriods(period: period, schedule: schedule, earliestStart: earliest.start);
+        _trendPeriods = trendPeriods(
+          period: period,
+          schedule: schedule,
+          earliestStart: earliest.start,
+        );
         final readFrom = _trendPeriods.first.start;
-        switch (await ListPeriodTransactions(_repository)(from: readFrom, until: period.end)) {
+        switch (await ListPeriodTransactions(_repository)(
+          from: readFrom,
+          until: period.end,
+        )) {
           case Left(:final value):
             _emitFailure(emit, value, firstLoad: firstLoad);
           case Right(:final value):
@@ -246,9 +296,17 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
 
   /// Pemuatan pertama yang gagal menampilkan galat layar; gagal menyegarkan
   /// mempertahankan angka lama dan cukup memberi tahu.
-  void _emitFailure(Emitter<AnalysisState> emit, Failure failure, {required bool firstLoad}) => emit(
+  void _emitFailure(
+    Emitter<AnalysisState> emit,
+    Failure failure, {
+    required bool firstLoad,
+  }) => emit(
     firstLoad
-        ? state.copyWith(isLoading: false, loadFailed: true, effect: _effectError(failure))
+        ? state.copyWith(
+            isLoading: false,
+            loadFailed: true,
+            effect: _effectError(failure),
+          )
         : state.copyWith(effect: _effectError(failure)),
   );
 

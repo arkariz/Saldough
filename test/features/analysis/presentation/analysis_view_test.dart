@@ -795,6 +795,27 @@ void main() {
     });
   });
 
+  testWidgets('dompet yang hanya menerima transfer: pesan kosong tetap disertai Transfer masuk (A8, B-4)', (
+    tester,
+  ) async {
+    final wallets = WalletRepositoryImpl(storage: storage);
+    for (final id in ['bca', 'tabungan']) {
+      await wallets.saveWallet(
+        Wallet(id: id, name: id.toUpperCase(), iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+    }
+    await seed(september2026());
+    await pump(tester);
+    await tester.tap(find.byKey(const ValueKey('analysis-wallet')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('TABUNGAN').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Belum ada pengeluaran di September.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('analysis-transfers-only')), findsOneWidget);
+    expect(find.text('Transfer masuk'), findsOneWidget);
+    expect(find.text('Rp1.000.000'), findsWidgets);
+  });
+
   group('Rincian kategori (F4)', () {
     List<Transaction> history() => [
       expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),

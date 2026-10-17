@@ -4,12 +4,14 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/domain/period_trend.dart';
 import 'package:saldough/features/analysis/domain/summarize_period.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -58,6 +60,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     });
     on<AnalysisPeriodJumped>((event, emit) async {
       _anchor = event.date;
+      AppAnalytics.log(AnalysisEvents.periodChanged('trend'));
       await _load(emit, firstLoad: false, keepSelection: false);
     });
     on<AnalysisKindChanged>(
@@ -73,6 +76,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     ActiveCurrency.notifier.addListener(_refresh);
     if (_sharesHistory) HistoryPeriod.notifier.addListener(_syncHistory);
   }
+
+  /// Pintu masuk layar ini (analitik, T-19.9) dan penanda sekali-per-kejadian.
+  AnalysisSource _source = AnalysisSource.history;
+  bool _viewedLogged = false;
+  DateTime? _highlightsLoggedFor;
 
   /// Periode dibagi dengan segmen Daftar di Riwayat (T-19.10).
   final bool _sharesHistory;
@@ -131,6 +139,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     Emitter<AnalysisState> emit,
   ) async {
     _anchor = event.periodStart ?? (_sharesHistory ? HistoryPeriod.anchor : null);
+    _source = event.source;
     emit(state.copyWith(isLoading: true, loadFailed: false));
     await _load(emit, firstLoad: true);
   }
@@ -180,6 +189,8 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     required String? walletId,
   }) {
     if (state.summary == null || (kind == state.kind && walletId == state.walletId)) return;
+    if (kind != state.kind) AppAnalytics.log(AnalysisEvents.kindSwitched(kind.name));
+    if (walletId != state.walletId) AppAnalytics.log(AnalysisEvents.walletFiltered(filtered: walletId != null));
     emit(
       state.withControls(
         kind: kind,
@@ -188,6 +199,15 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         comparison: _compare(state, kind, walletId),
         trend: _trendFor(walletId),
       ),
+    );
+  }
+
+  /// `analysis_viewed` sekali per layar yang dibuka (bukan per segar atau per periode).
+  void _logViewed(FinancialPeriod period) {
+    if (_viewedLogged) return;
+    _viewedLogged = true;
+    AppAnalytics.log(
+      AnalysisEvents.viewed(source: _source.name, kind: state.kind.name, transition: period.isTransition),
     );
   }
 
@@ -204,6 +224,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       if (!state.canGoBack) return;
       _anchor = schedule.previousOf(shown).start;
     }
+    AppAnalytics.log(AnalysisEvents.periodChanged('stepper'));
     // Pindah periode mengosongkan pilihan (F1).
     await _load(emit, firstLoad: false, keepSelection: false);
   }
@@ -238,6 +259,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
             kind: state.kind,
           ),
         );
+        _logViewed(period);
         return;
       case Right(value: final months):
         final wallets = switch (await _wallets.listWallets()) {
@@ -306,6 +328,12 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
               ),
             );
             if (_sharesHistory) HistoryPeriod.select(period, current);
+            _logViewed(period);
+            // Sekali per periode yang dibuka, bukan tiap segar atau ganti jenis (KT-A3).
+            if (_highlightsLoggedFor != period.start) {
+              _highlightsLoggedFor = period.start;
+              AppAnalytics.log(AnalysisEvents.highlightsShown(state.highlights.length));
+            }
         }
     }
   }

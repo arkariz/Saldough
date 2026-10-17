@@ -5,6 +5,7 @@ import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
@@ -35,7 +36,11 @@ void main() {
   const makan = Category(id: 'makan', kind: CategoryKind.expense, name: 'Makan');
   const sehat = Category(id: 'sehat', kind: CategoryKind.expense, name: 'Kesehatan', isArchived: true);
 
+  late List<AnalyticsEvent> events;
+
   setUp(() async {
+    events = [];
+    AppAnalytics.debugSink = events.add;
     storage = InMemoryKeyValueStorage();
     repository = TransactionRepositoryImpl(storage: storage);
     filtered = null;
@@ -46,6 +51,7 @@ void main() {
   });
 
   tearDown(() {
+    AppAnalytics.debugSink = null;
     ActiveCategories.notifier.value = const [];
     ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial;
     AmountVisibility.notifier.value = false;
@@ -81,8 +87,10 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: PixelTheme.light,
-          builder: (context, child) =>
-              MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: scaler), child: child!),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: scaler),
+            child: child!,
+          ),
           home: CategoryDetailPage(input: input),
         ),
       ),
@@ -153,6 +161,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('category-see-all')));
     await tester.pumpAndSettle();
+    expect(events.where((e) => e.name == 'analysis_see_all_opened').single.parameters, isEmpty);
     expect(filtered!.title, 'Makan');
     expect(filtered!.subtitle, 'September 2026');
     expect(filtered!.filter.categoryId, 'makan');
@@ -181,7 +190,9 @@ void main() {
     expect(find.text('1 transaksi · rata-rata Rp350.000 per transaksi'), findsOneWidget);
   });
 
-  testWidgets('periode berjalan: kolom "s.d.", panel tanpa pembanding; nominal tersembunyi menutup angka', (tester) async {
+  testWidgets('periode berjalan: kolom "s.d.", panel tanpa pembanding; nominal tersembunyi menutup angka', (
+    tester,
+  ) async {
     AmountVisibility.notifier.value = true;
     await seed(data());
     final now = DateTime.now();

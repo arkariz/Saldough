@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -134,16 +135,19 @@ class _Body extends StatelessWidget {
           AppButton.secondary(
             key: const ValueKey('category-see-all'),
             label: t.analysis.category.seeAll,
-            onPressed: () => unawaited(
-              context.pushRoute(
-                TransactionRouteKeys.filtered,
-                TransactionFilterInput(
-                  title: state.name,
-                  subtitle: state.period.label,
-                  filter: bloc.periodFilter(state.period),
+            onPressed: () {
+              AppAnalytics.log(AnalysisEvents.seeAllOpened);
+              unawaited(
+                context.pushRoute(
+                  TransactionRouteKeys.filtered,
+                  TransactionFilterInput(
+                    title: state.name,
+                    subtitle: state.period.label,
+                    filter: bloc.periodFilter(state.period),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ],
       ),

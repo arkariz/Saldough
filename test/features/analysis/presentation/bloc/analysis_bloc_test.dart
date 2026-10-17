@@ -4,9 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/features/analysis/presentation/navigation/analysis_route_keys.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
@@ -68,21 +70,24 @@ void main() {
   }
 
   group('periode dibagi dengan Daftar (T-19.10)', () {
-    test('mulai di periode yang dipilih Daftar; berpindah periode memperbarui HistoryPeriod; yang bukan segmen tidak', () async {
-      await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);
-      HistoryPeriod.notifier.value = DateTime(2026, 9);
-      final shared = create(shares: true);
-      final state = await loaded(shared);
-      expect(state.period.label, 'September 2026');
+    test(
+      'mulai di periode yang dipilih Daftar; berpindah periode memperbarui HistoryPeriod; yang bukan segmen tidak',
+      () async {
+        await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);
+        HistoryPeriod.notifier.value = DateTime(2026, 9);
+        final shared = create(shares: true);
+        final state = await loaded(shared);
+        expect(state.period.label, 'September 2026');
 
-      HistoryPeriod.reset();
-      final alone = create();
-      final separate = await loaded(alone);
-      expect(separate.period.label, 'Oktober 2026', reason: 'bukan segmen Riwayat: periodenya sendiri');
-      alone.add(const AnalysisPeriodStepped(forward: false));
-      await alone.stream.firstWhere((s) => s.period.label == 'September 2026' && !s.isLoading);
-      expect(HistoryPeriod.anchor, isNull, reason: 'tidak menulis HistoryPeriod');
-    });
+        HistoryPeriod.reset();
+        final alone = create();
+        final separate = await loaded(alone);
+        expect(separate.period.label, 'Oktober 2026', reason: 'bukan segmen Riwayat: periodenya sendiri');
+        alone.add(const AnalysisPeriodStepped(forward: false));
+        await alone.stream.firstWhere((s) => s.period.label == 'September 2026' && !s.isLoading);
+        expect(HistoryPeriod.anchor, isNull, reason: 'tidak menulis HistoryPeriod');
+      },
+    );
 
     test('mundur di Analisis menulis HistoryPeriod; perubahan dari Daftar dibaca dan memperbarui periode', () async {
       await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);
@@ -95,6 +100,114 @@ void main() {
       HistoryPeriod.reset();
       final back = await bloc.stream.firstWhere((s) => s.period.label == 'Oktober 2026' && !s.isLoading);
       expect(back.isCurrent, isTrue);
+    });
+  });
+
+  group('analitik (T-19.9)', () {
+    late List<AnalyticsEvent> events;
+
+    setUp(() {
+      events = [];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+    });
+
+    List<AnalyticsEvent> named(String name) => events.where((e) => e.name == name).toList();
+
+    Future<void> history() async {
+      await seed([
+        expenseOn(DateTime(2026, 6, 5), 900000, category: 'makan'),
+        expenseOn(DateTime(2026, 7, 5), 950000, category: 'makan'),
+        expenseOn(DateTime(2026, 8, 5), 1000000, category: 'makan'),
+        ...september2026(),
+      ]);
+    }
+
+    test('analysis_viewed sekali per layar dengan pintu, jenis, dan peralihan; segar tidak menggandakan', () async {
+      await history();
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15), source: AnalysisSource.lookback));
+      expect(named('analysis_viewed').single.parameters, {
+        'source': 'lookback',
+        'kind': 'expense',
+        'transition': 'false',
+      });
+      ledger.notifyChanged();
+      bloc
+        ..add(const AnalysisRefreshed())
+        ..add(const AnalysisPeriodStepped(forward: false));
+      await bloc.stream.firstWhere((s) => s.period.label == 'Agustus 2026' && !s.isLoading);
+      expect(named('analysis_viewed'), hasLength(1));
+    });
+
+    test('pintu Beranda dan Riwayat dicatat apa adanya', () async {
+      await history();
+      for (final source in [AnalysisSource.home, AnalysisSource.history]) {
+        events.clear();
+        await loaded(create(), AnalysisStarted(source: source));
+        expect(named('analysis_viewed').single.parameters['source'], source.name);
+      }
+    });
+
+    test('analysis_highlights_shown sekali per periode yang dibuka, bukan per ganti jenis atau segar', () async {
+      await history();
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      expect(named('analysis_highlights_shown').single.parameters, {'count': 1});
+
+      bloc
+        ..add(const AnalysisKindChanged(CategoryKind.income))
+        ..add(const AnalysisRefreshed());
+      await bloc.stream.firstWhere((s) => s.kind == CategoryKind.income);
+      expect(named('analysis_highlights_shown'), hasLength(1));
+
+      bloc.add(const AnalysisPeriodStepped(forward: false));
+      await bloc.stream.firstWhere((s) => s.period.label == 'Agustus 2026' && !s.isLoading);
+      final shown = named('analysis_highlights_shown');
+      expect(shown, hasLength(2));
+      expect(shown.last.parameters['count'], isA<int>());
+    });
+
+    test('periode berubah lewat panah atau tautan tren, jenis, dan dompet dicatat tanpa nominal', () async {
+      await history();
+      final wallets = WalletRepositoryImpl(storage: storage);
+      await wallets.saveWallet(
+        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+
+      bloc.add(const AnalysisPeriodStepped(forward: false));
+      await bloc.stream.firstWhere((s) => s.period.label == 'Agustus 2026' && !s.isLoading);
+      bloc.add(AnalysisPeriodJumped(DateTime(2026, 7)));
+      await bloc.stream.firstWhere((s) => s.period.label == 'Juli 2026' && !s.isLoading);
+      expect(named('analysis_period_changed').map((e) => e.parameters['via']), ['stepper', 'trend']);
+
+      bloc.add(const AnalysisKindChanged(CategoryKind.income));
+      await bloc.stream.firstWhere((s) => s.kind == CategoryKind.income);
+      expect(named('analysis_kind_switched').single.parameters, {'kind': 'income'});
+
+      bloc.add(const AnalysisWalletChanged('bca'));
+      await bloc.stream.firstWhere((s) => s.walletId == 'bca');
+      bloc.add(const AnalysisWalletChanged(null));
+      await bloc.stream.firstWhere((s) => s.walletId == null);
+      expect(named('analysis_wallet_filtered').map((e) => e.parameters['filtered']), ['true', 'false']);
+
+      for (final e in events) {
+        for (final value in e.parameters.values) {
+          expect('$value', isNot(contains('Rp')));
+          expect('$value', isNot(contains('Makan')));
+        }
+      }
+    });
+
+    test('ikut periode Daftar tidak dianggap pindah periode oleh pengguna', () async {
+      await history();
+      final bloc = create(shares: true);
+      await loaded(bloc);
+      HistoryPeriod.notifier.value = DateTime(2026, 8);
+      await bloc.stream.firstWhere((s) => s.period.label == 'Agustus 2026' && !s.isLoading);
+      expect(named('analysis_period_changed'), isEmpty);
     });
   });
 

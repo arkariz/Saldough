@@ -17,6 +17,7 @@ final class AnalysisRouteModule extends FeatureRouteModule {
       builder: (context, input) => AnalysisHost(
         container: ScopeProvider.of(context),
         periodStart: input.periodStart,
+        source: input.source,
         child: const AnalysisPage(),
       ),
     ),

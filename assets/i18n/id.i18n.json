@@ -632,7 +632,7 @@
     "homeRecordTitle": "Satu pintu mencatat",
     "homeRecordBody": "Semua pemasukan, pengeluaran, dan transfer dicatat dari sini.",
     "homeCashFlowTitle": "Arus bulan ini",
-    "homeCashFlowBody": "Uang yang benar-benar masuk dan keluar bulan ini.",
+    "homeCashFlowBody": "Uang yang benar-benar masuk dan keluar periode ini. Ketuk untuk melihat ke mana perginya.",
     "homeBudgetTitle": "Sisa anggaran aktif",
     "homeBudgetBody": "Sisa rencana dari anggaran yang sedang berjalan. Ketuk untuk rinciannya.",
     "homeFreelanceTitle": "Ringkasan freelance",
@@ -706,7 +706,15 @@
     "planPeriodHeaderTitle": "Bulan keuanganmu",
     "planPeriodHeaderBody": "Ketuk untuk memulai bulan di tanggal gajianmu. Rencana dan Analisis ikut.",
     "planTransitionTitle": "Periode peralihan",
-    "planTransitionBody": "Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan."
+    "planTransitionBody": "Periode ini lebih panjang atau lebih pendek sekali karena awal bulanmu berubah. Berikutnya kembali sebulan.",
+    "txnAnalysisSegmentTitle": "Analisis",
+    "txnAnalysisSegmentBody": "Lihat ke mana uangmu pergi per kategori dan bandingkan dengan biasanya.",
+    "analysisCategoriesTitle": "Per kategori",
+    "analysisCategoriesBody": "Ketuk irisan atau baris untuk melihat bagian satu kategori, lalu buka rinciannya.",
+    "analysisUncategorizedTitle": "Tanpa kategori",
+    "analysisUncategorizedBody": "Beri kategori supaya analisisnya lebih tepat.",
+    "analysisTrendTitle": "Enam periode terakhir",
+    "analysisTrendBody": "Ketuk satu kolom untuk melihat angkanya. Periode yang masih berjalan ditandai."
   },
   "info": {
     "menuTooltip": "Info dan tur",
@@ -1199,7 +1207,8 @@
     "accuracyMissedBy": "Perkiraan $month meleset $amount, terbesar dari $line.",
     "committedShare": "${percent}% pemasukan $month sudah terikat (rutin + anggaran).",
     "committedShareVs": "${percent}% pemasukan $month sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.",
-    "installmentFree": "Sesudah $name selesai, mulai $month ruang bebas +$amount/bln."
+    "installmentFree": "Sesudah $name selesai, mulai $month ruang bebas +$amount/bln.",
+    "lookbackSeeAnalysis": "Lihat rincian $month"
   },
   "appUpdate": {
     "banner": {

@@ -16,6 +16,9 @@ enum TourId {
   /// Tab Transaksi.
   transaction,
 
+  /// Analisis keuangan (segmen Riwayat atau halaman penuh, T-19.8).
+  analysis,
+
   /// Segmen Bulan ini tab Rencana.
   planMonth,
 
@@ -64,7 +67,17 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     SpotlightKey.recordRepeat,
   ],
   TourId.wallet: [SpotlightKey.walletSummary, SpotlightKey.walletCard, SpotlightKey.walletAdd],
-  TourId.transaction: [SpotlightKey.txnMonth, SpotlightKey.txnFilter, SpotlightKey.txnRow],
+  // Segmen Analisis disorot lebih dulu supaya pengguna lama yang sudah
+  // menamatkan tur ini tetap melihatnya sekali (progres per langkah).
+  TourId.transaction: [
+    SpotlightKey.txnAnalysisSegment,
+    SpotlightKey.txnMonth,
+    SpotlightKey.txnFilter,
+    SpotlightKey.txnRow,
+  ],
+  // Langkah kedua dan ketiga hanya terdaftar saat targetnya tampil (Tanpa
+  // kategori ada nominalnya, tren punya dua periode data atau lebih).
+  TourId.analysis: [SpotlightKey.analysisCategories, SpotlightKey.analysisUncategorized, SpotlightKey.analysisTrend],
   // Sub-tab Rencana ikut di tiap segmen: segmen mana pun yang dibuka lebih
   // dulu, sub-tab disorot sekali (progres per langkah).
   TourId.planMonth: [

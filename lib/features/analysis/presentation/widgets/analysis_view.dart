@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:saldough/core/currency/amount_visibility.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/money_formatter.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
@@ -34,21 +37,26 @@ class AnalysisView extends StatelessWidget {
     return BlocBuilder<AnalysisBloc, AnalysisState>(
       builder: (context, state) {
         final bloc = context.read<AnalysisBloc>();
-        return RefreshIndicator(
-          onRefresh: () async {
-            bloc.add(const AnalysisRefreshed());
-            await bloc.stream.firstWhere((s) => !s.isLoading);
-          },
-          child: ListView(
-            key: const ValueKey('analysis-scroll'),
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.space4,
-              AppSpacing.space2,
-              AppSpacing.space4,
-              AppSpacing.space8,
+        // Tur (ADR-021): hanya saat termuat dan ada transaksi di periode.
+        return TourTrigger(
+          tour: TourId.analysis,
+          ready: !state.isLoading && !state.loadFailed && state.summary != null && !state.summary!.isEmpty,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              bloc.add(const AnalysisRefreshed());
+              await bloc.stream.firstWhere((s) => !s.isLoading);
+            },
+            child: ListView(
+              key: const ValueKey('analysis-scroll'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.space4,
+                AppSpacing.space2,
+                AppSpacing.space4,
+                AppSpacing.space8,
+              ),
+              children: _children(context, state, bloc),
             ),
-            children: _children(context, state, bloc),
           ),
         );
       },
@@ -167,22 +175,36 @@ class _Controls extends StatelessWidget {
   }
 }
 
-/// Membuka Rincian kategori [group] untuk periode, jenis, dan dompet yang dilihat.
+/// Membuka Rincian kategori [group] untuk periode, jenis, dan dompet yang
+/// dilihat; [from] `link` (Lihat rincian) atau `highlight` (baris sorotan).
 void _openDetail(
   BuildContext context,
   AnalysisState state,
-  AnalysisGroup group,
-) => unawaited(
-  context.pushRoute(
-    AnalysisRouteKeys.category,
-    CategoryDetailInput(
-      categoryId: group.category?.id,
-      kind: state.kind,
-      periodStart: state.period.start,
-      walletId: state.walletId,
+  AnalysisGroup group, {
+  required String from,
+}) {
+  AppAnalytics.log(AnalysisEvents.categoryOpened(category: _analyticsCategory(group), from: from));
+  unawaited(
+    context.pushRoute(
+      AnalysisRouteKeys.category,
+      CategoryDetailInput(
+        categoryId: group.category?.id,
+        kind: state.kind,
+        periodStart: state.period.start,
+        walletId: state.walletId,
+      ),
     ),
-  ),
-);
+  );
+}
+
+/// Nilai parameter `category` peristiwa analitik: kunci bawaan, `custom`
+/// (tanpa nama buatan pengguna), `none`, `freelance`, atau `others`.
+String _analyticsCategory(AnalysisGroup group) => switch (group.kind) {
+  AnalysisGroupKind.category => group.category!.builtInKey ?? 'custom',
+  AnalysisGroupKind.freelance => 'freelance',
+  AnalysisGroupKind.uncategorized => 'none',
+  AnalysisGroupKind.others => 'others',
+};
 
 String _shareText(AnalysisShare share) => share.belowOne ? '<1%' : '${share.percent}%';
 
@@ -215,6 +237,7 @@ class _AnalysisCard extends StatelessWidget {
     final selectedSlice = state.selectedKey == null ? null : summary.sliceOf(state.selectedKey!);
     void select(String key) => bloc.add(AnalysisGroupSelected(key));
     var divider = false;
+    var firstRow = true;
     Widget row(
       AnalysisGroup group, {
       bool child = false,
@@ -242,7 +265,12 @@ class _AnalysisCard extends StatelessWidget {
         onTap: () => select(group.key),
       );
       divider = true;
-      return widget;
+      // Tur: baris kategori pertama dan baris Tanpa kategori (hanya saat tampil).
+      final tourKey = group.kind == AnalysisGroupKind.uncategorized
+          ? SpotlightKey.analysisUncategorized
+          : (!child && firstRow ? SpotlightKey.analysisCategories : null);
+      firstRow = false;
+      return SpotlightTarget(spotlightKey: tourKey, child: widget);
     }
 
     return AppCard(
@@ -297,7 +325,7 @@ class _AnalysisCard extends StatelessWidget {
                   category: _groupName(selected),
                 ),
                 small: true,
-                onPressed: () => _openDetail(context, state, selected),
+                onPressed: () => _openDetail(context, state, selected, from: 'link'),
               ),
             ),
           ],
@@ -308,24 +336,27 @@ class _AnalysisCard extends StatelessWidget {
                 key: const ValueKey('analysis-fix'),
                 label: t.analysis.fix,
                 small: true,
-                onPressed: () => unawaited(
-                  context.pushRoute(
-                    TransactionRouteKeys.filtered,
-                    TransactionFilterInput(
-                      title: t.analysis.uncategorized,
-                      subtitle: state.period.label,
-                      filter: PeriodTransactionFilter(
-                        from: state.period.start,
-                        until: state.period.end,
-                        type: summary.kind == CategoryKind.expense
-                            ? TransactionTypeFilter.expense
-                            : TransactionTypeFilter.income,
-                        uncategorized: true,
-                        walletId: state.walletId,
+                onPressed: () {
+                  AppAnalytics.log(AnalysisEvents.uncategorizedFixOpened);
+                  unawaited(
+                    context.pushRoute(
+                      TransactionRouteKeys.filtered,
+                      TransactionFilterInput(
+                        title: t.analysis.uncategorized,
+                        subtitle: state.period.label,
+                        filter: PeriodTransactionFilter(
+                          from: state.period.start,
+                          until: state.period.end,
+                          type: summary.kind == CategoryKind.expense
+                              ? TransactionTypeFilter.expense
+                              : TransactionTypeFilter.income,
+                          uncategorized: true,
+                          walletId: state.walletId,
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -333,7 +364,7 @@ class _AnalysisCard extends StatelessWidget {
             _Highlights(
               comparison: comparison,
               highlights: state.highlights,
-              onOpen: (group) => _openDetail(context, state, group),
+              onOpen: (group) => _openDetail(context, state, group, from: 'highlight'),
             ),
           const SizedBox(height: AppSpacing.space2),
           for (final group in groups) ...[

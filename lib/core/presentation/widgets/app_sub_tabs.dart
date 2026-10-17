@@ -10,7 +10,13 @@ import 'package:saldough/core/theme/theme.dart';
 /// atau "saring". Pindah hanya lewat ketukan; tidak ada geser (§3.3).
 class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
   /// Membuat [AppSubTabs].
-  const AppSubTabs({required this.options, required this.selected, required this.onChanged, super.key});
+  const AppSubTabs({
+    required this.options,
+    required this.selected,
+    required this.onChanged,
+    this.tabWrap,
+    super.key,
+  });
 
   /// Pilihan beserta labelnya, sesuai urutan.
   final List<(T, String)> options;
@@ -20,6 +26,12 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
 
   /// Dipanggil dengan pilihan baru.
   final ValueChanged<T> onChanged;
+
+  /// Membungkus satu tab, mis. dengan target tur spotlight; `null` = tanpa
+  /// pembungkus.
+  final Widget Function(T value, Widget tab)? tabWrap;
+
+  Widget _wrap(T value, Widget tab) => tabWrap?.call(value, tab) ?? tab;
 
   @override
   Size get preferredSize => const Size.fromHeight(48);
@@ -33,7 +45,9 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
     // huruf biasa, aktif `ink` dengan penanda `brand` 40×4 di tengah bawah,
     // garis `line` di bawah seluruh baris.
     return DecoratedBox(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colors.line))),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: colors.line)),
+      ),
       child: SizedBox(
         height: preferredSize.height,
         child: Row(
@@ -41,31 +55,34 @@ class AppSubTabs<T> extends StatelessWidget implements PreferredSizeWidget {
           children: [
             for (final (value, label) in options)
               Expanded(
-                child: Semantics(
-                  button: true,
-                  selected: value == selected,
-                  child: GestureDetector(
-                    onTap: () => onChanged(value),
-                    behavior: HitTestBehavior.opaque,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              label,
-                              maxLines: 1,
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                color: value == selected ? colors.ink : colors.ink2,
+                child: _wrap(
+                  value,
+                  Semantics(
+                    button: true,
+                    selected: value == selected,
+                    child: GestureDetector(
+                      onTap: () => onChanged(value),
+                      behavior: HitTestBehavior.opaque,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space1),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                label,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: value == selected ? colors.ink : colors.ink2,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        if (value == selected)
-                          Positioned(bottom: 0, child: Container(width: 40, height: 4, color: colors.brand)),
-                      ],
+                          if (value == selected)
+                            Positioned(bottom: 0, child: Container(width: 40, height: 4, color: colors.brand)),
+                        ],
+                      ),
                     ),
                   ),
                 ),

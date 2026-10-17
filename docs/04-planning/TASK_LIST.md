@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 17 Oktober 2026 (1.640 uji lulus, 182 berkas uji, 60.148 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 17 Oktober 2026 (1.662 uji lulus, 184 berkas uji, 60.863 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -3967,7 +3967,7 @@ berbagi periode (T-19.10) · 8 kilas balik, tur, analitik (T-19.6, T-19.8,
 T-19.9). Pembanding: periode peralihan di antara tiga periode dibuang,
 rata-rata dari sisanya (keputusan pemilik 15 Okt 2026).
 
-**Progres irisan:** 0 (salin rupa, dokumen) dan 1 (Beranda → Analisis pengeluaran periode berjalan) selesai 15 Okt 2026; irisan 2 (pilih kategori, Tanpa kategori → Beri kategori → Daftar tersaring) selesai 17 Okt 2026; irisan 3 (Pemasukan, Freelance, penyaring dompet, transfer per dompet) dan irisan 4 (Dibanding biasanya: pembanding dan sorotan) selesai 17 Okt 2026; berikutnya irisan 5 menunggu verifikasi pemilik.
+**Progres irisan:** 0 (salin rupa, dokumen) dan 1 (Beranda → Analisis pengeluaran periode berjalan) selesai 15 Okt 2026; irisan 2 (pilih kategori, Tanpa kategori → Beri kategori → Daftar tersaring) selesai 17 Okt 2026; irisan 3 (Pemasukan, Freelance, penyaring dompet, transfer per dompet) dan irisan 4 (Dibanding biasanya: pembanding dan sorotan) selesai 17 Okt 2026; irisan 5 (Tren enam periode; T-19.2 dan T-19.4 tuntas) selesai 17 Okt 2026; berikutnya irisan 6 menunggu verifikasi pemilik.
 Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV).
 
 - [x] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
@@ -3992,7 +3992,7 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       Beranda, termasuk dompet nonaktif dan tautan rutin), B-15 (= rutin
       tercatat + anggaran terpakai tanpa transfer + di luar rencana, dengan
       transfer Tabungan Rp1.000.000 tertaut pos), gaji 23 Okt tertaut 25 Okt.
-- [ ] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
+- [x] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
       rata-rata sampai tiga periode, periode berjalan sampai hari yang sama,
       periode peralihan dikecualikan, ambang 20% dan Rp50.000 (ambang per
       mata uang di tabel format mata uang).
@@ -4019,6 +4019,20 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       menyusul di irisan 6. Pembanding ikut jenis dan dompet. Uji: contoh
       §10 (Makan +Rp295.000 disorot, Belanja +8,8% tidak; Oktober s.d.
       tanggal 10 +Rp180.000), Februari, peralihan, ambang ganda.
+      *Irisan 5 selesai 17 Okt 2026 (tren; T-19.2 tuntas):* `trendPeriods`/
+      `buildTrend` (`features/analysis/domain/period_trend.dart`): enam
+      periode berakhir di periode yang dilihat, tidak sebelum pencatatan
+      pertama, peralihan ikut; total sama dengan Analisis, ikut penyaring
+      dompet. Komponen inti `AppTrendChart` (batang kotak 6px, slot rata
+      kanan, pita periode terpilih, garis bantu, label sumbu ringkas "15 jt"/
+      "15M") dan `AnalysisTrendSection` (legenda, panel angka, tautan "Lihat
+      analisis {periode}"). Memilih kolom hanya memilih; tautan memindah
+      periode (event `AnalysisPeriodJumped`). Periode berjalan: "s.d. 10 Okt",
+      selisih tanpa tanda; peralihan: "24 hari". Satu periode: tren tidak
+      tampil. Pembacaan transaksi kini mencakup enam periode (satu panggilan
+      `ListPeriodTransactions`). Selisih engineer: label kolom periode yang
+      tidak mulai tanggal 1 memakai nama bulan tempat periode berakhir
+      (25 Okt – 24 Nov = "Nov"); rinciannya tetap di panel angka.
 - [x] **T-19.3** Penyaring Riwayat "Tanpa kategori" dan rentang periode
       keuangan, dibuka lewat kunci rute dengan argumen (ADR-030).
       Verifikasi: jumlah daftar tersaring = total kategori di Analisis untuk
@@ -4037,7 +4051,7 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       `summarize_period_test` (kecocokan): jumlah dan total daftar tersaring
       = baris Analisis untuk Tanpa kategori dan tiap kategori, pengeluaran dan
       pemasukan, dengan id kategori hilang, Freelance, dan satu dompet.
-- [ ] **T-19.4** Segmen `Daftar | Analisis` di Riwayat dan layar Analisis
+- [x] **T-19.4** Segmen `Daftar | Analisis` di Riwayat dan layar Analisis
       periode: periode, dompet, jenis, total, sorotan, daftar kategori, baris
       transfer, tren; keadaan kosong, periode kosong, satu bulan data, galat;
       `AmountVisibility` (B-12); segar lewat `LedgerChanges`; segmen terakhir
@@ -4060,9 +4074,9 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       `TransactionListPage`. Warna irisan tetap per kategori (`analysisTintOf`:
       bawaan mengikuti pembagian `TileTint`, buatan pengguna dari hash FNV-1a
       id), selisih dari prototipe: Freelance indigo (prototipe amber) supaya
-      sama dengan tile kategori Freelance. Menunggu irisan 2–5: pilih
-      kategori, Pengeluaran/Pemasukan, penyaring dompet, pembanding, sorotan,
-      tren.
+      sama dengan tile kategori Freelance. Irisan 2–5 (pilih kategori,
+      Pengeluaran/Pemasukan, penyaring dompet, pembanding, sorotan, tren)
+      selesai 17 Okt 2026; tugas ini tuntas.
       *Irisan 2 selesai 17 Okt 2026:* mengetuk irisan donat atau baris
       legenda memilih (irisan lain meredup ke 25%, tengah donat menampilkan
       nama, nominal, dan "{persen} dari pengeluaran"; ketuk lagi membatalkan),

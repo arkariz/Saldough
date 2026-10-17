@@ -50,6 +50,24 @@ final class AnalysisWalletChanged extends AnalysisEvent {
   final String? walletId;
 }
 
+/// Memilih kolom tren [index] (F6): hanya memilih, tidak berpindah periode.
+final class AnalysisTrendSelected extends AnalysisEvent {
+  /// Membuat [AnalysisTrendSelected].
+  const AnalysisTrendSelected(this.index);
+
+  /// Indeks kolom di `AnalysisState.trend`.
+  final int index;
+}
+
+/// Memindah Analisis ke periode yang memuat [date] ("Lihat analisis {periode}").
+final class AnalysisPeriodJumped extends AnalysisEvent {
+  /// Membuat [AnalysisPeriodJumped].
+  const AnalysisPeriodJumped(this.date);
+
+  /// Tanggal di dalam periode tujuan.
+  final DateTime date;
+}
+
 /// Pindah satu periode ke belakang atau ke depan (F6).
 final class AnalysisPeriodStepped extends AnalysisEvent {
   /// Membuat [AnalysisPeriodStepped].

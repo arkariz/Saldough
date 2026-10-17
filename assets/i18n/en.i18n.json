@@ -1279,6 +1279,16 @@
     "highlight": {
       "higher": "$subject higher than $compare",
       "lower": "$subject lower than $compare"
+    },
+    "trend": {
+      "title": "Last 6 months",
+      "income": "Income",
+      "expense": "Expenses",
+      "net": "Net",
+      "toDate": "through $date",
+      "days": "$n days",
+      "seePeriod": "See $period analysis",
+      "column": "$period, income $income, expenses $expense, net $net"
     }
   }
 }

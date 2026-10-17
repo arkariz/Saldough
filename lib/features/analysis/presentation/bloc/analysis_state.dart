@@ -1,6 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/analysis/domain/period_comparison.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
+import 'package:saldough/features/analysis/domain/period_trend.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -22,6 +25,8 @@ final class AnalysisState extends UiState<AnalysisState> {
     this.walletId,
     this.wallets = const [],
     this.comparison,
+    this.trend = const [],
+    this.trendSelected,
     super.effect,
   });
 
@@ -81,6 +86,16 @@ final class AnalysisState extends UiState<AnalysisState> {
   /// pembanding atau [period] adalah periode peralihan.
   final PeriodComparison? comparison;
 
+  /// Tren enam periode berakhir di [period], dari yang tertua (F6). Kosong
+  /// bila belum dimuat; grafik hanya tampil dengan dua periode atau lebih.
+  final List<TrendPoint> trend;
+
+  /// Indeks kolom tren yang dipilih; `null` = periode yang dilihat (terakhir).
+  final int? trendSelected;
+
+  /// Indeks kolom tren yang sedang terpilih.
+  int get trendIndex => math.min(trendSelected ?? trend.length - 1, trend.length - 1);
+
   /// Sorotan perubahan (B-7), paling banyak tiga.
   List<Highlight> get highlights {
     final summary = this.summary;
@@ -105,6 +120,27 @@ final class AnalysisState extends UiState<AnalysisState> {
     walletId: walletId,
     wallets: wallets,
     comparison: comparison,
+    trend: trend,
+    trendSelected: trendSelected,
+  );
+
+  /// Salinan dengan kolom tren [index] terpilih.
+  AnalysisState withTrendSelected(int index) => AnalysisState(
+    period: period,
+    summary: summary,
+    isCurrent: isCurrent,
+    canGoBack: canGoBack,
+    hasAnyTransactions: hasAnyTransactions,
+    isLoading: isLoading,
+    loadFailed: loadFailed,
+    selectedKey: selectedKey,
+    othersOpen: othersOpen,
+    kind: kind,
+    walletId: walletId,
+    wallets: wallets,
+    comparison: comparison,
+    trend: trend,
+    trendSelected: index,
   );
 
   /// Salinan dengan jenis [kind] dan dompet [walletId] baru (`null` = semua);
@@ -114,11 +150,14 @@ final class AnalysisState extends UiState<AnalysisState> {
     required String? walletId,
     PeriodSummary? summary,
     PeriodComparison? comparison,
+    List<TrendPoint>? trend,
   }) =>
       AnalysisState(
         period: period,
         summary: summary ?? this.summary,
         comparison: comparison,
+        trend: trend ?? this.trend,
+        trendSelected: trendSelected,
         isCurrent: isCurrent,
         canGoBack: canGoBack,
         hasAnyTransactions: hasAnyTransactions,
@@ -144,6 +183,8 @@ final class AnalysisState extends UiState<AnalysisState> {
     walletId: walletId,
     wallets: wallets,
     comparison: comparison,
+    trend: trend,
+    trendSelected: trendSelected,
     effect: effect,
   );
 
@@ -162,5 +203,7 @@ final class AnalysisState extends UiState<AnalysisState> {
     walletId,
     wallets,
     comparison,
+    trend,
+    trendSelected,
   ];
 }

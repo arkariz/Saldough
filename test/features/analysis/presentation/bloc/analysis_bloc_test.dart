@@ -7,7 +7,9 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
+import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 import '../../../../helpers/mocks.dart';
@@ -40,6 +42,7 @@ void main() {
   AnalysisBloc create({TransactionRepository? source}) {
     final bloc = AnalysisBloc(
       transactionRepository: source ?? repository,
+      walletRepository: WalletRepositoryImpl(storage: storage),
       ledgerChanges: ledger,
       categoryOf: analysisCategoryOf,
       now: () => today,
@@ -58,6 +61,89 @@ void main() {
     bloc.add(event);
     return bloc.stream.firstWhere((s) => !s.isLoading);
   }
+
+  group('jenis dan dompet (F2, F3)', () {
+    Future<void> seedWallets() async {
+      final wallets = WalletRepositoryImpl(storage: storage);
+      for (final id in ['bca', 'tabungan']) {
+        await wallets.saveWallet(
+          Wallet(id: id, name: id.toUpperCase(), iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+        );
+      }
+    }
+
+    test('bawaannya pengeluaran dan semua dompet; dompet dimuat untuk penyaring', () async {
+      await seedWallets();
+      await seed(september2026());
+      final state = await loaded(create(), AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      expect(state.kind, CategoryKind.expense);
+      expect(state.walletId, isNull);
+      expect(state.wallets.map((w) => w.id), ['bca', 'tabungan']);
+      expect(state.summary!.total, rp(11420700));
+    });
+
+    test('Pemasukan: Gaji dan Freelance; total = Rp14.615.437,50; pilihan baris dikosongkan', () async {
+      await seedWallets();
+      await seed(september2026());
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      bloc
+        ..add(const AnalysisGroupSelected('cat:makan'))
+        ..add(const AnalysisKindChanged(CategoryKind.income));
+      final state = await bloc.stream.firstWhere((s) => s.kind == CategoryKind.income);
+      expect(state.selectedKey, isNull);
+      expect(state.summary!.kind, CategoryKind.income);
+      expect(state.summary!.total, 1461543750);
+      expect(state.summary!.groups.map((g) => g.key), ['cat:gaji', 'freelance']);
+    });
+
+    test('satu dompet: hanya transaksinya, transfer masuk/keluar dompet itu; semua dompet kembali', () async {
+      await seedWallets();
+      await seed([
+        ...september2026(),
+        expenseOn(DateTime(2026, 9, 9), 50000, category: 'makan', wallet: 'tabungan'),
+      ]);
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      bloc.add(const AnalysisWalletChanged('tabungan'));
+      var state = await bloc.stream.firstWhere((s) => s.walletId == 'tabungan');
+      expect(state.summary!.total, rp(50000));
+      expect(state.summary!.transfers.perWallet, isTrue);
+      expect(state.summary!.transfers.incoming, rp(1000000));
+      expect(state.summary!.transfers.outgoing, 0);
+
+      bloc.add(const AnalysisWalletChanged(null));
+      state = await bloc.stream.firstWhere((s) => s.walletId == null);
+      expect(state.summary!.total, rp(11470700));
+      expect(state.summary!.transfers.perWallet, isFalse);
+    });
+
+    test('jenis dan dompet bertahan lewat penyegaran dan pindah periode', () async {
+      await seedWallets();
+      await seed(september2026());
+      final bloc = create();
+      await loaded(bloc);
+      bloc
+        ..add(const AnalysisKindChanged(CategoryKind.income))
+        ..add(const AnalysisWalletChanged('bca'));
+      await bloc.stream.firstWhere((s) => s.walletId == 'bca');
+      bloc.add(const AnalysisPeriodStepped(forward: false));
+      final state = await bloc.stream.firstWhere((s) => s.period.label == 'September 2026' && !s.isLoading);
+      expect(state.kind, CategoryKind.income);
+      expect(state.walletId, 'bca');
+      expect(state.summary!.total, 1461543750);
+    });
+
+    test('mengulang pilihan yang sama tidak memancarkan keadaan baru', () async {
+      await seedWallets();
+      await seed(september2026());
+      final bloc = create();
+      final first = await loaded(bloc);
+      bloc.add(const AnalysisKindChanged(CategoryKind.expense));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(identical(bloc.state, first), isTrue);
+    });
+  });
 
   test('awalnya memuat; periode berjalan Oktober 2026, tidak bisa maju, bisa mundur bila ada bulan lebih lama', () async {
     await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);

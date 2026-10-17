@@ -3350,6 +3350,18 @@ class Translations$analysis$id {
 
 	/// id: '$percent dari $kind'
 	String shareOf({required Object percent, required Object kind}) => '${percent} dari ${kind}';
+
+	/// id: 'Jenis'
+	String get kindLabel => 'Jenis';
+
+	/// id: 'Semua dompet'
+	String get allWallets => 'Semua dompet';
+
+	/// id: 'Dompet'
+	String get walletLabel => 'Dompet';
+
+	/// id: 'Belum ada pemasukan di $period.'
+	String emptyMonthIncome({required Object period}) => 'Belum ada pemasukan di ${period}.';
 }
 
 // Path: record.draftIssue
@@ -5129,6 +5141,10 @@ extension on Translations {
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Beri kategori',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} dari ${kind}',
+			'analysis.kindLabel' => 'Jenis',
+			'analysis.allWallets' => 'Semua dompet',
+			'analysis.walletLabel' => 'Dompet',
+			'analysis.emptyMonthIncome' => ({required Object period}) => 'Belum ada pemasukan di ${period}.',
 			_ => null,
 		};
 	}

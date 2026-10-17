@@ -4,10 +4,12 @@ import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/features/analysis/domain/period_summary.dart';
 import 'package:saldough/features/analysis/domain/summarize_period.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_state.dart';
 import 'package:saldough/shared/category/category.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 part 'analysis_effect.dart';
@@ -24,10 +26,12 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   /// Membuat [AnalysisBloc]. [categoryOf] dan [now] bisa diganti di uji.
   AnalysisBloc({
     required TransactionRepository transactionRepository,
+    required WalletRepository walletRepository,
     required LedgerChanges ledgerChanges,
     Category? Function(String id)? categoryOf,
     DateTime Function()? now,
   }) : _repository = transactionRepository,
+       _wallets = walletRepository,
        _categoryOf = categoryOf ?? ActiveCategories.byId,
        _now = now ?? DateTime.now,
        super(AnalysisState.initial(ActiveFinancialMonth.periodOf((now ?? DateTime.now)()))) {
@@ -35,6 +39,8 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     on<AnalysisRefreshed>(_onRefreshed);
     on<AnalysisPeriodStepped>(_onStepped);
     on<AnalysisGroupSelected>(_onSelected);
+    on<AnalysisKindChanged>((event, emit) => _onControls(emit, kind: event.kind, walletId: state.walletId));
+    on<AnalysisWalletChanged>((event, emit) => _onControls(emit, kind: state.kind, walletId: event.walletId));
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => _refresh());
     ActiveFinancialMonth.notifier.addListener(_refresh);
     ActiveDay.notifier.addListener(_refresh);
@@ -45,11 +51,15 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
 
   late final StreamSubscription<void> _ledgerSubscription;
   final TransactionRepository _repository;
+  final WalletRepository _wallets;
   final Category? Function(String id) _categoryOf;
   final DateTime Function() _now;
 
   /// Tanggal di dalam periode yang dilihat; `null` = ikut periode berjalan.
   DateTime? _anchor;
+
+  /// Transaksi periode yang dilihat; jenis dan dompet berganti tanpa membaca ulang.
+  List<Transaction> _transactions = const [];
 
   Future<void> _onStarted(AnalysisStarted event, Emitter<AnalysisState> emit) async {
     _anchor = event.periodStart;
@@ -70,6 +80,22 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     } else {
       emit(state.withSelection(selected ? null : event.key, othersOpen: state.othersOpen));
     }
+  }
+
+  PeriodSummary _summarize(AnalysisState from, CategoryKind kind, String? walletId) => summarizePeriod(
+    _transactions,
+    from: from.period.start,
+    until: from.period.end,
+    kind: kind,
+    categoryOf: _categoryOf,
+    walletId: walletId,
+  );
+
+  /// Jenis atau dompet berganti: ringkasan dihitung ulang dari transaksi yang
+  /// sudah dibaca dan pilihan baris dikosongkan (barisnya berganti).
+  void _onControls(Emitter<AnalysisState> emit, {required CategoryKind kind, required String? walletId}) {
+    if (state.summary == null || (kind == state.kind && walletId == state.walletId)) return;
+    emit(state.withControls(kind: kind, walletId: walletId, summary: _summarize(state, kind, walletId)));
   }
 
   Future<void> _onStepped(AnalysisPeriodStepped event, Emitter<AnalysisState> emit) async {
@@ -109,22 +135,31 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
             canGoBack: false,
             hasAnyTransactions: false,
             isLoading: false,
+            kind: state.kind,
           ),
         );
         return;
       case Right(value: final months):
+        final wallets = switch (await _wallets.listWallets()) {
+          Right(:final value) => value,
+          Left() => state.wallets,
+        };
         final first = months.reduce((a, b) => a.isBefore(b) ? a : b);
         final earliest = schedule.periodOf(DateTime(first.year, first.month));
         switch (await ListPeriodTransactions(_repository)(from: period.start, until: period.end)) {
           case Left(:final value):
             _emitFailure(emit, value, firstLoad: firstLoad);
           case Right(:final value):
+            _transactions = value;
+            // Dompet yang tak dikenal lagi dilepas dari penyaring.
+            final walletId = wallets.any((w) => w.id == state.walletId) ? state.walletId : null;
             final summary = summarizePeriod(
               value,
               from: period.start,
               until: period.end,
-              kind: CategoryKind.expense,
+              kind: state.kind,
               categoryOf: _categoryOf,
+              walletId: walletId,
             );
             // Pilihan bertahan lewat penyegaran selama barisnya masih ada.
             final key = keepSelection && summary.groupOf(state.selectedKey ?? '') != null ? state.selectedKey : null;
@@ -138,6 +173,9 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
                 isLoading: false,
                 selectedKey: key,
                 othersOpen: keepSelection && state.othersOpen && summary.groupOf('others') != null,
+                kind: state.kind,
+                walletId: walletId,
+                wallets: wallets,
               ),
             );
         }

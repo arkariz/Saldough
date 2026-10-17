@@ -1310,6 +1310,10 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
 	@override String get fix => 'Add category';
 	@override String shareOf({required Object percent, required Object kind}) => '${percent} of ${kind}';
+	@override String get kindLabel => 'Type';
+	@override String get allWallets => 'All wallets';
+	@override String get walletLabel => 'Wallet';
+	@override String emptyMonthIncome({required Object period}) => 'No income in ${period} yet.';
 }
 
 // Path: record.draftIssue
@@ -2800,6 +2804,10 @@ extension on TranslationsEn {
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
 			'analysis.fix' => 'Add category',
 			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} of ${kind}',
+			'analysis.kindLabel' => 'Type',
+			'analysis.allWallets' => 'All wallets',
+			'analysis.walletLabel' => 'Wallet',
+			'analysis.emptyMonthIncome' => ({required Object period}) => 'No income in ${period} yet.',
 			_ => null,
 		};
 	}

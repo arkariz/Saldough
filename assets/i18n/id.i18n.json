@@ -1259,6 +1259,10 @@
     "donutSemantics": "$kind $period: $parts",
     "rowSemantics": "$name, $percent, $amount",
     "fix": "Beri kategori",
-    "shareOf": "$percent dari $kind"
+    "shareOf": "$percent dari $kind",
+    "kindLabel": "Jenis",
+    "allWallets": "Semua dompet",
+    "walletLabel": "Dompet",
+    "emptyMonthIncome": "Belum ada pemasukan di $period."
   }
 }

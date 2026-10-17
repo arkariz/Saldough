@@ -32,6 +32,24 @@ final class AnalysisGroupSelected extends AnalysisEvent {
   final String key;
 }
 
+/// Mengganti jenis yang dianalisis: pengeluaran atau pemasukan (F2).
+final class AnalysisKindChanged extends AnalysisEvent {
+  /// Membuat [AnalysisKindChanged].
+  const AnalysisKindChanged(this.kind);
+
+  /// Jenis baru.
+  final CategoryKind kind;
+}
+
+/// Menyaring ke satu dompet; `null` = semua dompet (F3).
+final class AnalysisWalletChanged extends AnalysisEvent {
+  /// Membuat [AnalysisWalletChanged].
+  const AnalysisWalletChanged(this.walletId);
+
+  /// Dompet yang dipilih, atau `null` = semua.
+  final String? walletId;
+}
+
 /// Pindah satu periode ke belakang atau ke depan (F6).
 final class AnalysisPeriodStepped extends AnalysisEvent {
   /// Membuat [AnalysisPeriodStepped].

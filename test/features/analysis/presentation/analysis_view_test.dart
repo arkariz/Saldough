@@ -15,6 +15,7 @@ import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart'
 import 'package:saldough/features/analysis/presentation/widgets/analysis_view.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
+import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
 
 import '../../../helpers/mocks.dart';
@@ -75,6 +76,7 @@ void main() {
     addTearDown(tester.view.reset);
     final bloc = AnalysisBloc(
       transactionRepository: source ?? repository,
+      walletRepository: WalletRepositoryImpl(storage: storage),
       ledgerChanges: ledger,
       categoryOf: analysisCategoryOf,
       now: () => now ?? DateTime(2026, 9, 30, 10),
@@ -103,7 +105,11 @@ void main() {
       await pump(tester);
       expect(find.byKey(const ValueKey('period-title')), findsOneWidget);
       expect(find.text('September 2026'), findsOneWidget);
-      expect(find.text('Pengeluaran'), findsOneWidget);
+      expect(
+        find.descendant(of: find.byType(AppDonutChart), matching: find.text('Pengeluaran')),
+        findsOneWidget,
+        reason: 'label di tengah donat',
+      );
       expect(find.text('Rp11.420.700'), findsOneWidget, reason: 'total hanya di tengah donat');
 
       final names = ['Belanja', 'Cicilan', 'Tempat tinggal', 'Makan', 'Sedekah', 'Tanpa kategori'];
@@ -160,7 +166,7 @@ void main() {
       await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
       await seed(september2026());
       await pump(tester);
-      expect(find.text('Expenses'), findsOneWidget);
+      expect(find.descendant(of: find.byType(AppDonutChart), matching: find.text('Expenses')), findsOneWidget);
       expect(find.textContaining('Others (3 categories)', findRichText: true), findsOneWidget);
       expect(find.text('Uncategorized'), findsOneWidget);
       expect(find.text('Moved between wallets'), findsOneWidget);
@@ -268,6 +274,122 @@ void main() {
     });
   });
 
+  group('jenis dan dompet (F2, F3)', () {
+    Future<void> seedWallets({bool two = true}) async {
+      final wallets = WalletRepositoryImpl(storage: storage);
+      for (final id in two ? ['bca', 'tabungan'] : ['bca']) {
+        await wallets.saveWallet(
+          Wallet(id: id, name: id.toUpperCase(), iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+        );
+      }
+    }
+
+    testWidgets('Pemasukan: Gaji dan Freelance, nominal hijau, tengah donat "Pemasukan"; kembali ke Pengeluaran', (
+      tester,
+    ) async {
+      await seedWallets();
+      await seed(september2026());
+      await pump(tester);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsOneWidget);
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-row-Gaji')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-row-Freelance')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-row-Makan')), findsNothing);
+      final center = tester.widget<AppMoneyText>(
+        find.descendant(of: find.byType(AppDonutChart), matching: find.byType(AppMoneyText)),
+      );
+      expect(center.sen, 1461543750);
+      expect(center.color, AppColors.light.positive);
+
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pengeluaran')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-row-Makan')), findsOneWidget);
+      expect(find.byKey(const ValueKey('analysis-row-Gaji')), findsNothing);
+    });
+
+    testWidgets('periode tanpa pemasukan: pesan "Belum ada pemasukan di …" tanpa donat', (tester) async {
+      await seedWallets();
+      await seed([expenseOn(DateTime(2026, 9, 3), 10000, category: 'makan')]);
+      await pump(tester);
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Pemasukan')));
+      await tester.pumpAndSettle();
+      expect(find.text('Belum ada pemasukan di September.'), findsOneWidget);
+      expect(find.byType(AppDonutChart), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsOneWidget, reason: 'pilihan jenis tetap bisa dibalik');
+    });
+
+    testWidgets('penyaring dompet: pilih BCA lalu kembali ke Semua dompet', (tester) async {
+      await seedWallets();
+      await seed([
+        ...september2026(),
+        expenseOn(DateTime(2026, 9, 9), 50000, category: 'makan', wallet: 'tabungan'),
+      ]);
+      await pump(tester);
+      expect(find.text('Semua dompet'), findsOneWidget);
+      expect(find.text('Dipindahkan antardompet'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('analysis-wallet')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('TABUNGAN').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Rp50.000'), findsWidgets);
+      expect(find.text('Transfer masuk'), findsOneWidget);
+      expect(find.text('Transfer keluar'), findsOneWidget);
+      expect(find.text('Dipindahkan antardompet'), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('analysis-wallet')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Semua dompet').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Dipindahkan antardompet'), findsOneWidget);
+      expect(find.text('Rp11.470.700'), findsOneWidget);
+    });
+
+    testWidgets('satu dompet saja: penyaring dompet tidak tampil', (tester) async {
+      await seedWallets(two: false);
+      await seed(september2026());
+      await pump(tester);
+      expect(find.byKey(const ValueKey('analysis-wallet')), findsNothing);
+      expect(find.byKey(const ValueKey('analysis-kind')), findsOneWidget);
+    });
+
+    testWidgets('Beri kategori meneruskan dompet yang dipilih ke Daftar tersaring', (tester) async {
+      await seedWallets();
+      await seed(september2026());
+      TransactionFilterInput? opened;
+      await pump(
+        tester,
+        onFiltered: (input) {
+          opened = input;
+          return input;
+        },
+      );
+      await tester.tap(find.byKey(const ValueKey('analysis-wallet')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('BCA').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('analysis-row-Tanpa kategori')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('analysis-fix')));
+      await tester.pumpAndSettle();
+      expect(opened!.filter.walletId, 'bca');
+      expect(opened!.filter.type, TransactionTypeFilter.expense);
+    });
+
+    testWidgets('bahasa Inggris dan 360dp: "Income", "All wallets", tanpa overflow', (tester) async {
+      await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
+      await seedWallets();
+      await seed(september2026());
+      await pump(tester);
+      expect(find.text('All wallets'), findsOneWidget);
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('analysis-kind')), matching: find.text('Income')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('analysis-row-Freelance')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('periode dan keadaan', () {
     testWidgets('mengetuk ‹ pindah ke periode sebelumnya; periode berjalan menonaktifkan ›', (tester) async {
       await seed([...september2026(), expenseOn(DateTime(2026, 8, 12), 700000, category: 'makan')]);
@@ -325,6 +447,7 @@ void main() {
       await seed(september2026());
       final bloc = AnalysisBloc(
         transactionRepository: repository,
+        walletRepository: WalletRepositoryImpl(storage: storage),
         ledgerChanges: ledger,
         categoryOf: analysisCategoryOf,
         now: () => DateTime(2026, 9, 30, 10),

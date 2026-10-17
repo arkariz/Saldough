@@ -113,6 +113,14 @@ class AnalysisView extends StatelessWidget {
         )
       else
         _AnalysisCard(state: state, summary: summary),
+      // Transfer tetap informasi walau jenis ini kosong (B-4, F7): mis. dompet
+      // Tabungan yang hanya menerima transfer.
+      if (summary != null && summary.isEmpty && summary.transfers.hasAny)
+        AppCard(
+          key: const ValueKey('analysis-transfers-only'),
+          padding: EdgeInsets.zero,
+          child: _TransferFoot(info: summary.transfers),
+        ),
       AnalysisTrendSection(state: state),
     ];
   }

@@ -302,6 +302,60 @@ void main() {
     });
   });
 
+  group('kecocokan dengan Daftar tersaring (T-19.3)', () {
+    // Jumlah dan total daftar tersaring = barisnya di Analisis untuk periode, jenis, dan dompet yang sama.
+    void expectSame(List<Transaction> transactions, CategoryKind kind, AnalysisGroup group, PeriodTransactionFilter filter) {
+      final matched = transactions.where((t) => filter.matches(t, isKnownCategory: (id) => categoryOf(id) != null));
+      expect(matched.length, group.count, reason: 'jumlah ${group.key}');
+      expect(matched.fold(0, (sum, t) => sum + t.amount), group.amount, reason: 'total ${group.key}');
+    }
+
+    test('Tanpa kategori dan satu kategori, pengeluaran dan pemasukan, dengan kasus tepi', () {
+      final transactions = [
+        ...september(),
+        expense(70000), // tanpa kategori lagi
+        expense(30000, category: 'id-yang-sudah-hilang'), // id tidak dikenal = Tanpa kategori
+        expense(55000, category: 'makan', wallet: 'gopay'),
+        income(rp(500)), // pemasukan tanpa kategori dan bukan freelance
+        income(rp(900), freelance: 'pay2'), // Freelance: bukan Tanpa kategori
+      ];
+      for (final kind in CategoryKind.values) {
+        final type = kind == CategoryKind.expense ? TransactionTypeFilter.expense : TransactionTypeFilter.income;
+        final s = summary(transactions, kind: kind);
+        for (final group in s.groups.expand((g) => [g, ...g.children])) {
+          if (group.kind == AnalysisGroupKind.others) continue;
+          final filter = PeriodTransactionFilter(
+            from: from,
+            until: until,
+            type: type,
+            uncategorized: group.kind == AnalysisGroupKind.uncategorized,
+            categoryId: group.kind == AnalysisGroupKind.category ? group.category!.id : null,
+          );
+          if (group.kind == AnalysisGroupKind.freelance) continue; // Freelance bukan saringan kategori
+          expectSame(transactions, kind, group, filter);
+        }
+      }
+    });
+
+    test('satu dompet: saringan dompet menghasilkan angka yang sama dengan Analisis per dompet', () {
+      final transactions = [...september(), expense(55000, category: 'makan', wallet: 'gopay'), expense(1000, wallet: 'gopay')];
+      final gopay = summary(transactions, walletId: 'gopay');
+      final uncategorized = gopay.groups.singleWhere((g) => g.kind == AnalysisGroupKind.uncategorized);
+      expectSame(
+        transactions,
+        CategoryKind.expense,
+        uncategorized,
+        PeriodTransactionFilter(
+          from: from,
+          until: until,
+          type: TransactionTypeFilter.expense,
+          uncategorized: true,
+          walletId: 'gopay',
+        ),
+      );
+    });
+  });
+
   group('kecocokan dengan layar lain', () {
     test('B-3: total Analisis (semua dompet) = Pemasukan dan Pengeluaran kartu Arus Beranda', () {
       final transactions = [

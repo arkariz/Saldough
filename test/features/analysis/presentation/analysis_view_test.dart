@@ -1,9 +1,11 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:di/di.dart' show GetIt, ScopeProvider;
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:navigation/navigation.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -11,6 +13,7 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/analysis/presentation/bloc/analysis_bloc.dart';
 import 'package:saldough/features/analysis/presentation/widgets/analysis_view.dart';
+import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:state_management/state_management.dart';
 
@@ -19,6 +22,24 @@ import '../analysis_fixtures.dart';
 
 /// Layar Analisis satu periode (A2, A4): donat, legenda, kaki transfer, dan
 /// keadaannya, di dua bahasa, 360dp, dan nominal tersembunyi.
+/// Rute Daftar tersaring pengganti: mencatat input yang dibuka.
+final class _FilteredStub extends FeatureRouteModule {
+  const _FilteredStub(this.onFiltered);
+
+  final TransactionFilterInput? Function(TransactionFilterInput input)? onFiltered;
+
+  @override
+  List<RouteNode> get routes => [
+    RouteNode.typed<TransactionFilterInput>(
+      key: TransactionRouteKeys.filtered,
+      builder: (context, input) {
+        onFiltered?.call(input);
+        return const Scaffold(body: Text('daftar tersaring'));
+      },
+    ),
+  ];
+}
+
 void main() {
   late InMemoryKeyValueStorage storage;
   late TransactionRepositoryImpl repository;
@@ -47,6 +68,7 @@ void main() {
     DateTime? now,
     TransactionRepository? source,
     double width = 360,
+    TransactionFilterInput? Function(TransactionFilterInput input)? onFiltered,
   }) async {
     tester.view.physicalSize = Size(width, 1800);
     tester.view.devicePixelRatio = 1;
@@ -58,11 +80,16 @@ void main() {
       now: () => now ?? DateTime(2026, 9, 30, 10),
     )..add(const AnalysisStarted());
     addTearDown(bloc.close);
+    final container = GetIt.asNewInstance()
+      ..registerSingleton<RouteRegistry>(RouteRegistry.fromModules([_FilteredStub(onFiltered)]));
     await tester.pumpWidget(
-      MaterialApp(
-        theme: PixelTheme.light,
-        home: Scaffold(
-          body: BlocProvider.value(value: bloc, child: const AnalysisView()),
+      ScopeProvider(
+        container: container,
+        child: MaterialApp(
+          theme: PixelTheme.light,
+          home: Scaffold(
+            body: BlocProvider.value(value: bloc, child: const AnalysisView()),
+          ),
         ),
       ),
     );
@@ -138,6 +165,106 @@ void main() {
       expect(find.text('Uncategorized'), findsOneWidget);
       expect(find.text('Moved between wallets'), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+  });
+
+  group('memilih kategori (F1, F5)', () {
+    Finder row(String name) => find.byKey(ValueKey('analysis-row-$name'));
+
+    testWidgets('mengetuk baris: tengah donat berganti nama, nominal, dan "11% dari pengeluaran"; ketuk lagi kembali', (
+      tester,
+    ) async {
+      await seed(september2026());
+      await pump(tester);
+      expect(find.text('Rp11.420.700'), findsOneWidget);
+      expect(find.text('11% dari pengeluaran'), findsNothing);
+
+      await tester.tap(row('Makan'));
+      await tester.pump();
+      expect(find.text('11% dari pengeluaran'), findsOneWidget);
+      expect(find.text('Rp1.245.000'), findsNWidgets(2), reason: 'tengah donat + baris legenda');
+      expect(find.text('Rp11.420.700'), findsNothing, reason: 'total diganti kategori terpilih');
+      expect(find.byKey(const ValueKey('analysis-fix')), findsNothing, reason: 'Beri kategori hanya untuk Tanpa kategori');
+
+      await tester.tap(row('Makan'));
+      await tester.pump();
+      expect(find.text('Rp11.420.700'), findsOneWidget);
+      expect(find.text('11% dari pengeluaran'), findsNothing);
+    });
+
+    testWidgets('baris terpilih bersemantik "terpilih"; mengetuk irisan donat memilih barisnya', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await seed(september2026());
+      await pump(tester);
+      await tester.tap(row('Belanja'));
+      await tester.pump();
+      expect(
+        tester.getSemantics(row('Belanja')),
+        matchesSemantics(
+          label: 'Belanja, 27%, Rp3.068.500',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: true,
+          hasTapAction: true,
+        ),
+      );
+      // Irisan pertama (Belanja 27%) di jam 12–jam 3: titik jam 2 pada cincin.
+      final origin = tester.getTopLeft(find.byType(AppDonutChart));
+      await tester.tapAt(origin + const Offset(108 + 70, 108 - 66));
+      await tester.pump();
+      expect(find.text('27% dari pengeluaran'), findsNothing, reason: 'ketukan kedua pada irisan yang sama membatalkan');
+      semantics.dispose();
+    });
+
+    testWidgets('Lainnya terpilih: tengah menyebut gabungannya dan anggotanya terbuka', (tester) async {
+      await seed(september2026());
+      await pump(tester);
+      await tester.tap(row('Lainnya (3 kategori)'));
+      await tester.pump();
+      expect(find.text('12% dari pengeluaran'), findsOneWidget);
+      expect(find.text('Tagihan'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('analysis-row-child-Tagihan')));
+      await tester.pump();
+      expect(find.text('5% dari pengeluaran'), findsOneWidget, reason: 'anggota dipilih dengan persennya sendiri');
+    });
+
+    testWidgets('Tanpa kategori terpilih memunculkan Beri kategori yang membuka Daftar tersaring periode itu', (tester) async {
+      await seed(september2026());
+      TransactionFilterInput? opened;
+      await pump(
+        tester,
+        onFiltered: (input) {
+          opened = input;
+          return input;
+        },
+      );
+      await tester.tap(row('Tanpa kategori'));
+      await tester.pump();
+      expect(find.text('1% dari pengeluaran'), findsOneWidget);
+      expect(find.text('Rp120.000'), findsNWidgets(2));
+      await tester.tap(find.byKey(const ValueKey('analysis-fix')));
+      await tester.pumpAndSettle();
+
+      expect(opened, isNotNull);
+      expect(opened!.title, 'Tanpa kategori');
+      expect(opened!.subtitle, 'September 2026');
+      expect(opened!.filter.uncategorized, isTrue);
+      expect(opened!.filter.type, TransactionTypeFilter.expense);
+      expect(opened!.filter.from, DateTime(2026, 9));
+      expect(opened!.filter.until, DateTime(2026, 10));
+      expect(find.text('daftar tersaring'), findsOneWidget);
+    });
+
+    testWidgets('bahasa Inggris: "11% of expenses" dan Add category', (tester) async {
+      await tester.runAsync(() => LocaleSettings.setLocale(AppLocale.en));
+      await seed(september2026());
+      await pump(tester);
+      await tester.tap(row('Makan'));
+      await tester.pump();
+      expect(find.text('11% of expenses'), findsOneWidget);
+      await tester.tap(row('Uncategorized'));
+      await tester.pump();
+      expect(find.text('Add category'), findsOneWidget);
     });
   });
 

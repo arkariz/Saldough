@@ -7,6 +7,7 @@ export 'data/source_icon_repository_impl.dart';
 export 'data/transaction_repository_impl.dart';
 export 'domain/ledger_changes.dart';
 export 'domain/period_date.dart';
+export 'domain/period_filter.dart';
 export 'domain/source_icon_repository.dart';
 export 'domain/transaction.dart';
 export 'domain/transaction_query.dart';

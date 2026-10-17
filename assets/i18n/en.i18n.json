@@ -223,7 +223,9 @@
     "makeRecurringAction": "Make recurring",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
-    "listSegment": "List"
+    "listSegment": "List",
+    "filteredCount": "$count transactions",
+    "filteredEmpty": "No transactions left here."
   },
   "wallet": {
     "subtitle": "Total balance of all active wallets",
@@ -1258,6 +1260,8 @@
     "emptyMonth": "No expenses in $period yet.",
     "error": "Couldn't load analysis. Pull down to try again.",
     "donutSemantics": "$kind $period: $parts",
-    "rowSemantics": "$name, $percent, $amount"
+    "rowSemantics": "$name, $percent, $amount",
+    "fix": "Add category",
+    "shareOf": "$percent of $kind"
   }
 }

@@ -512,6 +512,12 @@ class Translations$transaction$id {
 
 	/// id: 'Daftar'
 	String get listSegment => 'Daftar';
+
+	/// id: '$count transaksi'
+	String filteredCount({required Object count}) => '${count} transaksi';
+
+	/// id: 'Tidak ada lagi transaksi di sini.'
+	String get filteredEmpty => 'Tidak ada lagi transaksi di sini.';
 }
 
 // Path: wallet
@@ -3338,6 +3344,12 @@ class Translations$analysis$id {
 
 	/// id: '$name, $percent, $amount'
 	String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+
+	/// id: 'Beri kategori'
+	String get fix => 'Beri kategori';
+
+	/// id: '$percent dari $kind'
+	String shareOf({required Object percent, required Object kind}) => '${percent} dari ${kind}';
 }
 
 // Path: record.draftIssue
@@ -4141,6 +4153,8 @@ extension on Translations {
 			'transaction.previousMonth' => 'Bulan sebelumnya',
 			'transaction.nextMonth' => 'Bulan berikutnya',
 			'transaction.listSegment' => 'Daftar',
+			'transaction.filteredCount' => ({required Object count}) => '${count} transaksi',
+			'transaction.filteredEmpty' => 'Tidak ada lagi transaksi di sini.',
 			'wallet.subtitle' => 'Total saldo semua dompet aktif',
 			'wallet.activeBadge' => ({required Object count}) => '${count} dompet aktif',
 			'wallet.listHeading' => 'Dompet aktif',
@@ -4445,10 +4459,10 @@ extension on Translations {
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
 			'freelance.billAction' => ({required Object count}) => 'Tagih (${count})',
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
-			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
-			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
+			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
 			'freelance.entryAddShortAction' => 'Catat jam kerja',
 			'freelance.filterAll' => 'Semua',
 			'freelance.noDeductions' => 'Tanpa potongan',
@@ -4959,10 +4973,10 @@ extension on Translations {
 			'recurring.snoozedMessage' => ({required Object name}) => '${name} ditanyakan lagi 2 hari lagi.',
 			'recurring.idleTitle' => ({required Object name}) => 'Masih memakai ${name}?',
 			'recurring.idleBody' => 'Dua kemunculan terakhir dilewati atau belum terlihat.',
-			'recurring.idleKeep' => 'Biarkan',
-			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.idleKeep' => 'Biarkan',
+			'recurring.autoRecordedOne' => ({required Object name}) => '${name} dicatat otomatis.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} rutin dicatat otomatis.',
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} tercatat ${amount}, naik dari rutin. Tautkan?',
 			'recurring.priceUpUpdate' => 'Perbarui rutin',
@@ -5113,6 +5127,8 @@ extension on Translations {
 			'analysis.error' => 'Analisis gagal dimuat. Tarik ke bawah untuk mencoba lagi.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
+			'analysis.fix' => 'Beri kategori',
+			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} dari ${kind}',
 			_ => null,
 		};
 	}

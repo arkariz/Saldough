@@ -22,6 +22,7 @@ void main() {
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'transaction.detail',
+      'transaction.filtered',
       'transaction.history',
       'voiceCapture.capture',
       'wallet.detail',

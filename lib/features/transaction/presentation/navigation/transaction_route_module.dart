@@ -6,6 +6,7 @@ import 'package:saldough/features/transaction/di/transaction_scope.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:saldough/features/transaction/presentation/bloc/transaction_state.dart';
 import 'package:saldough/features/transaction/presentation/navigation/transaction_route_keys.dart';
+import 'package:saldough/features/transaction/presentation/pages/filtered_transactions_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_detail_page.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:state_management/state_management.dart';
@@ -25,6 +26,10 @@ final class TransactionRouteModule extends FeatureRouteModule {
         onStart: (bloc) => bloc.add(const TransactionStarted()),
         child: TransactionDetailPage(transaction: input.transaction),
       ),
+    ),
+    RouteNode.typed<TransactionFilterInput>(
+      key: TransactionRouteKeys.filtered,
+      builder: (context, input) => FilteredTransactionsPage(input: input),
     ),
     RouteNode.typed<TransactionHistoryInput>(
       key: TransactionRouteKeys.history,

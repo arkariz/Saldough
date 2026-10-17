@@ -74,6 +74,14 @@ final class AnalysisGroup extends Equatable {
   /// Kategori diarsipkan tetap dihitung dan ditandai (B-14).
   bool get isArchived => category?.isArchived ?? false;
 
+  /// Kunci stabil baris ini untuk pilihan di donat dan legenda.
+  String get key => switch (kind) {
+    AnalysisGroupKind.category => 'cat:${category!.id}',
+    AnalysisGroupKind.freelance => 'freelance',
+    AnalysisGroupKind.uncategorized => 'uncategorized',
+    AnalysisGroupKind.others => 'others',
+  };
+
   /// Nama untuk mengurutkan nominal yang sama: nama kategori; kelompok
   /// turunan memakai kunci tetap.
   String get sortName => switch (kind) {
@@ -145,6 +153,26 @@ final class PeriodSummary extends Equatable {
 
   /// Tidak ada transaksi jenis ini.
   bool get isEmpty => total == 0;
+
+  /// Baris ber-[key], termasuk anggota Lainnya; `null` bila tidak ada.
+  AnalysisGroup? groupOf(String key) {
+    for (final group in groups) {
+      if (group.key == key) return group;
+      for (final child in group.children) {
+        if (child.key == key) return child;
+      }
+    }
+    return null;
+  }
+
+  /// Indeks irisan donat yang menyala untuk [key]: baris itu sendiri, atau
+  /// Lainnya bila [key] anggotanya; `null` bila tidak ada.
+  int? sliceOf(String key) {
+    for (final (i, group) in groups.indexed) {
+      if (group.key == key || group.children.any((child) => child.key == key)) return i;
+    }
+    return null;
+  }
 
   @override
   List<Object?> get props => [kind, total, groups, transfers, count];

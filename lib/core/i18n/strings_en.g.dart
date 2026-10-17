@@ -242,6 +242,8 @@ class _Translations$transaction$en extends Translations$transaction$id {
 	@override String get previousMonth => 'Previous month';
 	@override String get nextMonth => 'Next month';
 	@override String get listSegment => 'List';
+	@override String filteredCount({required Object count}) => '${count} transactions';
+	@override String get filteredEmpty => 'No transactions left here.';
 }
 
 // Path: wallet
@@ -1306,6 +1308,8 @@ class _Translations$analysis$en extends Translations$analysis$id {
 	@override String get error => 'Couldn\'t load analysis. Pull down to try again.';
 	@override String donutSemantics({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}';
 	@override String rowSemantics({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}';
+	@override String get fix => 'Add category';
+	@override String shareOf({required Object percent, required Object kind}) => '${percent} of ${kind}';
 }
 
 // Path: record.draftIssue
@@ -1820,6 +1824,8 @@ extension on TranslationsEn {
 			'transaction.previousMonth' => 'Previous month',
 			'transaction.nextMonth' => 'Next month',
 			'transaction.listSegment' => 'List',
+			'transaction.filteredCount' => ({required Object count}) => '${count} transactions',
+			'transaction.filteredEmpty' => 'No transactions left here.',
 			'wallet.subtitle' => 'Total balance of all active wallets',
 			'wallet.activeBadge' => ({required Object count}) => '${count} active wallets',
 			'wallet.listHeading' => 'Active wallets',
@@ -2124,10 +2130,10 @@ extension on TranslationsEn {
 			'freelance.receiptCancelConfirmAction' => 'Delete income',
 			'freelance.billAction' => ({required Object count}) => 'Bill (${count})',
 			'freelance.entriesEmptyTitle' => 'No work hours yet',
-			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
-			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
 			_ => null,
 		} ?? switch (path) {
+			'freelance.entriesEmptyBody' => 'The work hours you record become this project\'s invoices.',
+			'freelance.entriesFilteredEmpty' => 'No work hours with this status.',
 			'freelance.entryAddShortAction' => 'Record work hours',
 			'freelance.filterAll' => 'All',
 			'freelance.noDeductions' => 'No deductions',
@@ -2638,10 +2644,10 @@ extension on TranslationsEn {
 			'recurring.snoozedMessage' => ({required Object name}) => 'We\'ll ask about ${name} again in 2 days.',
 			'recurring.idleTitle' => ({required Object name}) => 'Still using ${name}?',
 			'recurring.idleBody' => 'The last two were skipped or not seen.',
-			'recurring.idleKeep' => 'Keep',
-			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			_ => null,
 		} ?? switch (path) {
+			'recurring.idleKeep' => 'Keep',
+			'recurring.autoRecordedOne' => ({required Object name}) => '${name} recorded automatically.',
 			'recurring.autoRecordedMany' => ({required Object n}) => '${n} repeating items recorded automatically.',
 			'recurring.priceUpFound' => ({required Object name, required Object amount}) => '${name} came in at ${amount}, higher than planned. Link it?',
 			'recurring.priceUpUpdate' => 'Update item',
@@ -2792,6 +2798,8 @@ extension on TranslationsEn {
 			'analysis.error' => 'Couldn\'t load analysis. Pull down to try again.',
 			'analysis.donutSemantics' => ({required Object kind, required Object period, required Object parts}) => '${kind} ${period}: ${parts}',
 			'analysis.rowSemantics' => ({required Object name, required Object percent, required Object amount}) => '${name}, ${percent}, ${amount}',
+			'analysis.fix' => 'Add category',
+			'analysis.shareOf' => ({required Object percent, required Object kind}) => '${percent} of ${kind}',
 			_ => null,
 		};
 	}

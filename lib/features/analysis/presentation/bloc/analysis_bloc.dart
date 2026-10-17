@@ -34,6 +34,7 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
     on<AnalysisStarted>(_onStarted);
     on<AnalysisRefreshed>(_onRefreshed);
     on<AnalysisPeriodStepped>(_onStepped);
+    on<AnalysisGroupSelected>(_onSelected);
     _ledgerSubscription = ledgerChanges.from(this).listen((_) => _refresh());
     ActiveFinancialMonth.notifier.addListener(_refresh);
     ActiveDay.notifier.addListener(_refresh);
@@ -59,6 +60,18 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   Future<void> _onRefreshed(AnalysisRefreshed event, Emitter<AnalysisState> emit) =>
       _load(emit, firstLoad: false);
 
+  void _onSelected(AnalysisGroupSelected event, Emitter<AnalysisState> emit) {
+    final summary = state.summary;
+    if (summary == null || summary.groupOf(event.key) == null) return;
+    final selected = state.selectedKey == event.key;
+    if (event.key == 'others') {
+      // Lainnya memilih sekaligus membuka anggotanya; mengetuk lagi menutup keduanya.
+      emit(state.withSelection(selected ? null : event.key, othersOpen: !selected));
+    } else {
+      emit(state.withSelection(selected ? null : event.key, othersOpen: state.othersOpen));
+    }
+  }
+
   Future<void> _onStepped(AnalysisPeriodStepped event, Emitter<AnalysisState> emit) async {
     final schedule = ActiveFinancialMonth.schedule;
     final shown = state.period;
@@ -69,10 +82,11 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       if (!state.canGoBack) return;
       _anchor = schedule.previousOf(shown).start;
     }
-    await _load(emit, firstLoad: false);
+    // Pindah periode mengosongkan pilihan (F1).
+    await _load(emit, firstLoad: false, keepSelection: false);
   }
 
-  Future<void> _load(Emitter<AnalysisState> emit, {required bool firstLoad}) async {
+  Future<void> _load(Emitter<AnalysisState> emit, {required bool firstLoad, bool keepSelection = true}) async {
     final schedule = ActiveFinancialMonth.schedule;
     final current = schedule.periodOf(_now());
     var period = _anchor == null ? current : schedule.periodOf(_anchor!);
@@ -105,20 +119,25 @@ final class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
           case Left(:final value):
             _emitFailure(emit, value, firstLoad: firstLoad);
           case Right(:final value):
+            final summary = summarizePeriod(
+              value,
+              from: period.start,
+              until: period.end,
+              kind: CategoryKind.expense,
+              categoryOf: _categoryOf,
+            );
+            // Pilihan bertahan lewat penyegaran selama barisnya masih ada.
+            final key = keepSelection && summary.groupOf(state.selectedKey ?? '') != null ? state.selectedKey : null;
             emit(
               AnalysisState(
                 period: period,
-                summary: summarizePeriod(
-                  value,
-                  from: period.start,
-                  until: period.end,
-                  kind: CategoryKind.expense,
-                  categoryOf: _categoryOf,
-                ),
+                summary: summary,
                 isCurrent: period.start == current.start,
                 canGoBack: period.start.isAfter(earliest.start),
                 hasAnyTransactions: true,
                 isLoading: false,
+                selectedKey: key,
+                othersOpen: keepSelection && state.othersOpen && summary.groupOf('others') != null,
               ),
             );
         }

@@ -4258,7 +4258,30 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
         saat barisnya tampil. Skenario pengguna lama belum.
       - B1 sebagian: Analisis terbuka di Agustus yang sebelumnya dipilih di
         Daftar.
-      - Belum: A3, A4, A6–A13, A15, B2–B5.
+      - A3 Lulus: Pemasukan September Rp14.615.438, Gaji 82%, Freelance 18%
+        (kelompok turunan). Catatan data: Gaji semula tercatat tanpa
+        kategori karena salah ketuk QA saat mengisi data, dibetulkan lewat
+        Ubah sebelum A3 diulang.
+      - A4 Lulus: Oktober Rp520.000; sorotan "Makan & Minum Rp180.000 lebih
+        tinggi dari rata-rata s.d. tanggal 10"; pembanding total "Rp1.564.500
+        lebih rendah, dibanding rata-rata s.d. tanggal 10" (= 520.000 −
+        rata-rata 1–10 Jul/Agt/Sep 2.084.500).
+      - A5 Lulus: ketuk kolom Juli di September hanya memilih kolom (panel
+        Juli: Pemasukan Rp0, Pengeluaran −Rp3.800.000, Selisih −Rp3.800.000)
+        dan memunculkan "Lihat analisis Juli"; tautan itu memindah Analisis ke
+        Juli (Belanja Harian 75%, Makan & Minum 25%). Kolom Oktober
+        berketerangan "s.d. 10 Okt", selisih "Rp520.000" tanpa tanda.
+      - A6 Lulus: Makan & Minum dipilih → "Lihat rincian Makan & Minum" →
+        Rincian September Rp1.245.000, 11% dari pengeluaran, "2 transaksi ·
+        rata-rata Rp622.500 per transaksi", "biasanya 1,7 transaksi ·
+        Rp570.000", "Rp295.000 lebih tinggi", tren Jun–Sep Rp900.000,
+        Rp950.000, Rp1.000.000, Rp1.245.000, 2 transaksi. Lihat semua
+        transaksi → "September 2026 / 2 transaksi / Rp1.245.000".
+      - A7 Lulus: Tanpa kategori → Beri kategori → daftar 1 transaksi
+        Rp120.000 → diubah ke Transportasi → daftar "0 transaksi · Tidak ada
+        lagi transaksi di sini."; kembali: Tanpa kategori hilang, Lainnya
+        (3 kategori) Rp1.493.200 13%, total tetap Rp11.420.700.
+      - Belum: A8–A13, A15, B2–B5.
 
 ## Fase 20: Pengumuman pembaruan
 

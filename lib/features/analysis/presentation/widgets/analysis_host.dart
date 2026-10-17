@@ -14,8 +14,12 @@ class AnalysisHost extends StatelessWidget {
     required this.container,
     required this.child,
     this.periodStart,
+    this.sharesHistoryPeriod = false,
     super.key,
   });
+
+  /// Segmen di Riwayat: periodenya dibagi dengan segmen Daftar (T-19.10).
+  final bool sharesHistoryPeriod;
 
   /// Kontainer induk (akar komposisi).
   final GetIt container;
@@ -29,7 +33,7 @@ class AnalysisHost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopeWidget<AnalysisScope>(
-      create: () => AnalysisScope(parentContainer: container),
+      create: () => AnalysisScope(parentContainer: container, sharesHistoryPeriod: sharesHistoryPeriod),
       builder: (context, scope) {
         final bloc = scope.container<AnalysisBloc>();
         return BlocProvider.value(

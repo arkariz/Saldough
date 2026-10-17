@@ -1824,11 +1824,11 @@ class Translations$tour$id {
 	/// id: 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.'
 	String get walletAddBody => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.';
 
-	/// id: 'Satu bulan per tampilan'
-	String get txnMonthTitle => 'Satu bulan per tampilan';
+	/// id: 'Satu periode per tampilan'
+	String get txnMonthTitle => 'Satu periode per tampilan';
 
-	/// id: 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.'
-	String get txnMonthBody => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.';
+	/// id: 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.'
+	String get txnMonthBody => 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.';
 
 	/// id: 'Cari dan saring'
 	String get txnFilterTitle => 'Cari dan saring';
@@ -4708,8 +4708,8 @@ extension on Translations {
 			'tour.walletCardBody' => 'Ketuk untuk melihat riwayat dompet ini dan mencatat langsung dari sana.',
 			'tour.walletAddTitle' => 'Tambah dompet',
 			'tour.walletAddBody' => 'Rekening, e-wallet, atau tunai. Saldo awalnya bisa diubah kapan saja, dan saldo tercatat ikut menyesuaikan.',
-			'tour.txnMonthTitle' => 'Satu bulan per tampilan',
-			'tour.txnMonthBody' => 'Geser bulan untuk melihat riwayat lain. Pemasukan dan pengeluaran di sini hanya untuk bulan yang tampil.',
+			'tour.txnMonthTitle' => 'Satu periode per tampilan',
+			'tour.txnMonthBody' => 'Geser periode untuk melihat riwayat lain. Daftar dan Analisis selalu memakai periode yang sama.',
 			'tour.txnFilterTitle' => 'Cari dan saring',
 			'tour.txnFilterBody' => 'Cari catatan atau kategori, lalu saring per dompet dan kategori lewat Filter. Kalau bulan ini kosong, pencarian bisa dilanjutkan ke bulan lain.',
 			'tour.txnRowTitle' => 'Ubah atau hapus',

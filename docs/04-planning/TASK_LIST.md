@@ -57,7 +57,7 @@ Templat tugas:
 
 ## Ringkasan progres
 
-Terakhir diperbarui: 17 Oktober 2026 (1.685 uji lulus, 187 berkas uji, 62.298 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 6 Fase 19). Sebelumnya: 17 Oktober 2026 (1.662 uji lulus, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
+Terakhir diperbarui: 17 Oktober 2026 (1.693 uji lulus, 187 berkas uji, 62.440 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 7 Fase 19). Sebelumnya: 17 Oktober 2026 (1.685 uji lulus, sesudah irisan 6 Fase 19). Sebelumnya: 17 Oktober 2026 (1.662 uji lulus, sesudah irisan 5 Fase 19). Sebelumnya: 17 Oktober 2026 (1.640 uji lulus, sesudah irisan 4 Fase 19). Sebelumnya: 17 Oktober 2026 (1.619 uji lulus, sesudah irisan 3 Fase 19). Sebelumnya: 17 Oktober 2026 (1.608 uji lulus, sesudah irisan 2 Fase 19). Sebelumnya: 15 Oktober 2026 (1.587 uji lulus, 178 berkas uji, 59.046 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah irisan 1 Fase 19). Sebelumnya: 15 Oktober 2026 (1.421 uji lulus per T-20.5, angka terakhir yang tercatat dan belum dijalankan ulang; 167 berkas uji dan 57.417 baris Dart di `lib/` tanpa `.g.dart` dihitung ulang 15 Okt; `flutter analyze` tanpa isu per T-20.5, sesudah T-20.1–T-20.8 Fase 20). Sebelumnya: 11 Oktober 2026 (1.349 uji lulus, 153 berkas uji, 54.617 baris Dart di `lib/` tanpa `.g.dart`, `flutter analyze` tanpa isu, sesudah T-18.19). Sebelumnya: 11 Oktober 2026 (1.346 uji lulus, 153 berkas uji, 54.611 baris sesudah T-18.18). Sebelumnya: 11 Oktober 2026 (1.342 uji lulus, 152 berkas uji, 54.585 baris sesudah T-18.17). Sebelumnya: 11 Oktober 2026 (1.341 uji lulus, 152 berkas uji, 54.579 baris sesudah T-18.16). Sebelumnya: 11 Oktober 2026 (1.339 uji lulus, 152 berkas uji, 54.574 baris sesudah T-18.15). Sebelumnya: 11 Oktober 2026 (1.333 uji lulus, 152 berkas uji, 54.513 baris sesudah T-18.13 dan T-18.14). Sebelumnya: 11 Oktober 2026 (1.331 uji lulus, 152 berkas uji, 54.497 baris sesudah T-18.11). Sebelumnya: 11 Oktober 2026 (1.326 uji lulus, 151 berkas uji, 54.397 baris sesudah T-18.10). Sebelumnya: 11 Oktober 2026 (1.324 uji lulus, 151 berkas uji, 54.375 baris sesudah T-18.7). Sebelumnya: 11 Oktober 2026 (1.316 uji lulus, 150 berkas uji, 54.213 baris sesudah T-18.8). Sebelumnya: 11 Oktober 2026 (1.313 uji lulus, 150 berkas uji, 54.143 baris sesudah T-18.6). Sebelumnya: 11 Oktober 2026 (1.302 uji lulus, 148 berkas uji, 53.368 baris sesudah T-18.5). Sebelumnya: 10 Oktober 2026 (1.296 uji lulus, 147 berkas uji, 53.136 baris sesudah T-18.4). Sebelumnya: 10 Oktober 2026 (1.291 uji lulus, 146 berkas uji, 53.082 baris sesudah T-18.12). Sebelumnya: 10 Oktober 2026 (1.284 uji lulus, 146 berkas uji, 53.059 baris sesudah T-18.3). Sebelumnya: 10 Oktober 2026 (1.280 uji lulus, 145 berkas uji, 53.030 baris sesudah T-18.2). Sebelumnya: 10 Oktober 2026 (1.254 uji lulus, 144 berkas uji, 52.772 baris sesudah T-8.18). Sebelumnya: 10 Oktober 2026 (1.231 uji lulus, 142 berkas uji, 52.488 baris sesudah T-8.13–8.17). Sebelumnya: 9 Oktober 2026 (1.213 uji lulus, 142 berkas uji, 52.277 baris Dart di `lib/` tanpa `.g.dart` sesudah perbaikan QA PR #43; sesudah kode Fase 14: 1.166 uji, 134 berkas, 51.797 baris). Sebelumnya: 1 Oktober 2026 (911 uji lulus, 95 berkas uji, 39.746 baris sesudah Fase 13; 901 uji lulus sesudah M4 berjalan; sebelumnya 867 uji lulus, 88 berkas uji, 34.516 baris Dart di `lib/` tanpa `.g.dart`).
 
 | Fase | Tugas | Selesai | Status |
 |---|---|---|---|
@@ -3967,7 +3967,7 @@ berbagi periode (T-19.10) · 8 kilas balik, tur, analitik (T-19.6, T-19.8,
 T-19.9). Pembanding: periode peralihan di antara tiga periode dibuang,
 rata-rata dari sisanya (keputusan pemilik 15 Okt 2026).
 
-**Progres irisan:** 0 (salin rupa, dokumen) dan 1 (Beranda → Analisis pengeluaran periode berjalan) selesai 15 Okt 2026; irisan 2 (pilih kategori, Tanpa kategori → Beri kategori → Daftar tersaring) selesai 17 Okt 2026; irisan 3 (Pemasukan, Freelance, penyaring dompet, transfer per dompet) dan irisan 4 (Dibanding biasanya: pembanding dan sorotan) selesai 17 Okt 2026; irisan 5 (Tren enam periode; T-19.2 dan T-19.4 tuntas) selesai 17 Okt 2026; irisan 6 (Rincian kategori, T-19.5) selesai 17 Okt 2026; berikutnya irisan 7 menunggu verifikasi pemilik.
+**Progres irisan:** 0 (salin rupa, dokumen) dan 1 (Beranda → Analisis pengeluaran periode berjalan) selesai 15 Okt 2026; irisan 2 (pilih kategori, Tanpa kategori → Beri kategori → Daftar tersaring) selesai 17 Okt 2026; irisan 3 (Pemasukan, Freelance, penyaring dompet, transfer per dompet) dan irisan 4 (Dibanding biasanya: pembanding dan sorotan) selesai 17 Okt 2026; irisan 5 (Tren enam periode; T-19.2 dan T-19.4 tuntas) selesai 17 Okt 2026; irisan 6 (Rincian kategori, T-19.5) selesai 17 Okt 2026; irisan 7 (Daftar Riwayat berbagi periode, T-19.10) selesai 17 Okt 2026; berikutnya irisan 8 menunggu verifikasi pemilik.
 Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://claude.ai/artifact/3iTKPTX5iEMJidsnvUxTuV).
 
 - [x] **T-19.1** Domain ringkasan periode (fungsi murni): pengeluaran dan
@@ -4159,7 +4159,7 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       (`history`, `home`, `lookback`), kategori bawaan, buatan pengguna,
       Freelance, Tanpa kategori, Lainnya.
       Memenuhi FR-ANL-001–FR-ANL-005.
-- [ ] **T-19.10** Segmen Daftar Riwayat memakai periode keuangan dan
+- [x] **T-19.10** Segmen Daftar Riwayat memakai periode keuangan dan
       **berbagi periode dengan Analisis** (review desain 12 Okt 2026, R3):
       pemilih periode, ringkasan Pemasukan/Pengeluaran, dan pengelompokan
       memakai `financialPeriodOf` dan `periodDateOf` dengan nama periode
@@ -4175,6 +4175,26 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       tampil di Daftar periode 25 Okt; perpindahan segmen mempertahankan
       periode.
       Memenuhi FR-TXN-004, FR-ANL-001.
+      **Selesai 17 Okt 2026 (irisan 7).** `HistoryPeriod`
+      (`core/financial_month/history_period.dart`, `ValueNotifier` tanggal
+      awal periode, `null` = berjalan) dibagi `TransactionBloc` (Daftar) dan
+      `AnalysisBloc` segmen Riwayat (`sharesHistoryPeriod`); Analisis dari
+      Beranda/Rincian kategori punya periodenya sendiri. `TransactionBloc`
+      memuat `ListPeriodTransactions` lalu menyaring dengan `periodDateOf`;
+      state memakai `period`/`isCurrent`/`canGoBack` (bukan `month`), event
+      `TransactionPeriodStepped`/`TransactionPeriodSynced` menggantikan
+      `TransactionMonthChanged`; ikut `ActiveFinancialMonth`/`ActiveDay`.
+      Header Daftar kini `TransactionPeriodHeader` (`AppPeriodStepper`, label
+      P-11, penanda peralihan). **Perubahan perilaku yang disengaja**: Daftar
+      tidak lagi bisa maju ke bulan depan atau mundur melewati bulan pertama
+      pencatatan (sama dengan Analisis); `listAvailableMonths` dibaca di
+      tiap pemuatan; pencarian lintas bulan memindai bulan sebelum periode
+      dan menyaring `periodDateOf < awal periode` (bulan awal periode ikut
+      bila periode tidak mulai tanggal 1). Teks tur `txnMonth` diganti sesuai
+      tugas. Uji lama yang diperbarui sadar: `transaction_bloc_test` (stub per
+      bulan karena satu pemuatan membaca beberapa dokumen; langkah bulan →
+      `TransactionPeriodStepped`/`HistoryPeriod`; `verifyNever(listAvailableMonths)`
+      dihapus karena kini dibaca tiap muat).
 - [ ] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
       termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
       jadi tugas baru. Dikerjakan terakhir.

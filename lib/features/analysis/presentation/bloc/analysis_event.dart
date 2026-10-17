@@ -50,6 +50,13 @@ final class AnalysisWalletChanged extends AnalysisEvent {
   final String? walletId;
 }
 
+/// Segmen Daftar memindah periode bersama (`HistoryPeriod` berubah): ikut ke
+/// periode itu.
+final class AnalysisHistorySynced extends AnalysisEvent {
+  /// Membuat [AnalysisHistorySynced].
+  const AnalysisHistorySynced();
+}
+
 /// Memilih kolom tren [index] (F6): hanya memilih, tidak berpindah periode.
 final class AnalysisTrendSelected extends AnalysisEvent {
   /// Membuat [AnalysisTrendSelected].

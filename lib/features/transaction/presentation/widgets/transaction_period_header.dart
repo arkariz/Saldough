@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/shared/transaction/transaction.dart';
 
-/// Pemilih bulan dan ringkasan bulan Riwayat (prototipe `Riwayat.dc.html`):
-/// panah bulan sebelumnya/berikutnya di sekitar "September 2026", lalu kartu
-/// pemasukan dan pengeluaran bulan itu. Dihitung dari SELURUH transaksi
-/// bulan ini (`rawTransactions`), bukan hasil saringan -- ringkasan bulan,
-/// bukan hasil pencarian. Transfer tidak dihitung (CLAUDE.md aturan 7).
-class TransactionMonthHeader extends StatelessWidget {
-  /// Membuat [TransactionMonthHeader].
-  const TransactionMonthHeader({
-    required this.month,
+/// Pemilih periode dan ringkasan periode Riwayat (prototipe `Riwayat.dc.html`):
+/// panah periode sebelumnya/berikutnya di sekitar "September 2026" (atau
+/// rentang "25 Okt – 24 Nov"), lalu kartu pemasukan dan pengeluaran periode
+/// itu. Dihitung dari SELURUH transaksi periode ini (`rawTransactions`),
+/// bukan hasil saringan -- ringkasan periode, bukan hasil pencarian.
+/// Transfer tidak dihitung (CLAUDE.md aturan 7). Periodenya dibagi dengan
+/// segmen Analisis (T-19.10).
+class TransactionPeriodHeader extends StatelessWidget {
+  /// Membuat [TransactionPeriodHeader].
+  const TransactionPeriodHeader({
+    required this.period,
     required this.rawTransactions,
-    required this.onPreviousMonth,
-    required this.onNextMonth,
+    required this.onPrevious,
+    required this.onNext,
     super.key,
   });
 
-  /// Bulan yang sedang ditampilkan.
-  final DateTime month;
+  /// Periode yang sedang ditampilkan.
+  final FinancialPeriod period;
 
-  /// Seluruh transaksi bulan ini, belum tersaring filter.
+  /// Seluruh transaksi periode ini, belum tersaring filter.
   final List<Transaction> rawTransactions;
 
-  /// Dipanggil saat panah bulan sebelumnya ditekan.
-  final VoidCallback onPreviousMonth;
+  /// Mundur satu periode; `null` bila tidak ada yang lebih lama.
+  final VoidCallback? onPrevious;
 
-  /// Dipanggil saat panah bulan berikutnya ditekan.
-  final VoidCallback onNextMonth;
+  /// Maju satu periode; `null` di periode berjalan.
+  final VoidCallback? onNext;
 
   ({int income, int expense}) get _totals {
     var income = 0;
@@ -48,11 +50,6 @@ class TransactionMonthHeader extends StatelessWidget {
     return (income: income, expense: expense);
   }
 
-  String get _monthLabel {
-    final cycleId = '${month.year}-${month.month.toString().padLeft(2, '0')}';
-    return CycleMonthFormatter.format(cycleId);
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -68,24 +65,11 @@ class TransactionMonthHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            AppIconButton(
-              key: const ValueKey('month-previous'),
-              icon: IconKey.chevronLeft,
-              label: t.transaction.previousMonth,
-              onPressed: onPreviousMonth,
-            ),
-            Expanded(
-              child: Text(_monthLabel, textAlign: TextAlign.center, style: textTheme.titleMedium),
-            ),
-            AppIconButton(
-              key: const ValueKey('month-next'),
-              icon: IconKey.chevronRight,
-              label: t.transaction.nextMonth,
-              onPressed: onNextMonth,
-            ),
-          ],
+        AppPeriodStepper(
+          title: period.label,
+          transitionDays: period.isTransition ? period.days : null,
+          onPrevious: onPrevious,
+          onNext: onNext,
         ),
         const SizedBox(height: AppSpacing.space2),
         AppCard(

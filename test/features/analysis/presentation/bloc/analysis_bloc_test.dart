@@ -33,19 +33,21 @@ void main() {
   });
 
   tearDown(() async {
+    HistoryPeriod.reset();
     ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.initial;
     for (final bloc in blocs) {
       await bloc.close();
     }
   });
 
-  AnalysisBloc create({TransactionRepository? source}) {
+  AnalysisBloc create({TransactionRepository? source, bool shares = false}) {
     final bloc = AnalysisBloc(
       transactionRepository: source ?? repository,
       walletRepository: WalletRepositoryImpl(storage: storage),
       ledgerChanges: ledger,
       categoryOf: analysisCategoryOf,
       now: () => today,
+      sharesHistoryPeriod: shares,
     );
     blocs.add(bloc);
     return bloc;
@@ -64,6 +66,37 @@ void main() {
     bloc.add(event);
     return bloc.stream.firstWhere((s) => !s.isLoading);
   }
+
+  group('periode dibagi dengan Daftar (T-19.10)', () {
+    test('mulai di periode yang dipilih Daftar; berpindah periode memperbarui HistoryPeriod; yang bukan segmen tidak', () async {
+      await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);
+      HistoryPeriod.notifier.value = DateTime(2026, 9);
+      final shared = create(shares: true);
+      final state = await loaded(shared);
+      expect(state.period.label, 'September 2026');
+
+      HistoryPeriod.reset();
+      final alone = create();
+      final separate = await loaded(alone);
+      expect(separate.period.label, 'Oktober 2026', reason: 'bukan segmen Riwayat: periodenya sendiri');
+      alone.add(const AnalysisPeriodStepped(forward: false));
+      await alone.stream.firstWhere((s) => s.period.label == 'September 2026' && !s.isLoading);
+      expect(HistoryPeriod.anchor, isNull, reason: 'tidak menulis HistoryPeriod');
+    });
+
+    test('mundur di Analisis menulis HistoryPeriod; perubahan dari Daftar dibaca dan memperbarui periode', () async {
+      await seed([...september2026(), expenseOn(DateTime(2026, 10, 3), 520000, category: 'makan')]);
+      final bloc = create(shares: true);
+      await loaded(bloc);
+      bloc.add(const AnalysisPeriodStepped(forward: false));
+      await bloc.stream.firstWhere((s) => s.period.label == 'September 2026' && !s.isLoading);
+      expect(HistoryPeriod.anchor, DateTime(2026, 9));
+
+      HistoryPeriod.reset();
+      final back = await bloc.stream.firstWhere((s) => s.period.label == 'Oktober 2026' && !s.isLoading);
+      expect(back.isCurrent, isTrue);
+    });
+  });
 
   group('tren (F6)', () {
     test(

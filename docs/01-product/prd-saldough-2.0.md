@@ -576,7 +576,7 @@ disimpan sebagai catatan sejarah saja.
       bulan kalender; judulnya rentang tanggal bila awal bulan keuangan bukan
       tanggal 1 (revisi 10 Okt 2026,
       [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) P-11).
-- [ ] Kartu arus menjadi pintu ke Analisis bulan berjalan (FR-ANL-001).
+- [x] Kartu arus menjadi pintu ke Analisis bulan berjalan (FR-ANL-001).
 
 **FR-HOME-002 — Ringkasan anggaran**
 
@@ -779,9 +779,9 @@ Fase 15; R2 dan R3 di antrean.
 - [x] Bisa diatur dari kepala Rencana › Bulan ini (rentang bisa diketuk) dan
       dari Akun; ditawarkan saat menyimpan rutin pemasukan bulanan bila awal
       bulan masih bawaan.
-- [ ] Berlaku untuk Rencana, kartu bulan baru, arus Beranda (FR-HOME-001), dan
-      Analisis (FR-ANL-001). Rencana dan Beranda selesai di Fase 18; kotak ini dicentang
-      sesudah Analisis (Fase 19). Rincian di
+- [x] Berlaku untuk Rencana, kartu bulan baru, arus Beranda (FR-HOME-001), dan
+      Analisis (FR-ANL-001). Rencana dan Beranda selesai di Fase 18, Analisis di Fase 19
+      (verifikasi emulator 18 Okt 2026). Rincian di
       [FINANCIAL_PERIOD.md](features/FINANCIAL_PERIOD.md) dan
       [ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md).
 
@@ -825,41 +825,41 @@ antrean (B-38).
 
 **FR-ANL-001 — Ke mana uang pergi (R1)**
 
-- [ ] Segmen **Analisis** di tab Riwayat menampilkan pengeluaran dan
+- [x] Segmen **Analisis** di tab Riwayat menampilkan pengeluaran dan
       pemasukan satu periode keuangan per kategori: nominal, persen, lima
       teratas, Lainnya, dan Tanpa kategori; pemasukan freelance tanpa
       kategori dikelompokkan sebagai Freelance.
-- [ ] Penyaring dompet; transfer hanya sebagai baris informasi, tidak pernah
+- [x] Penyaring dompet; transfer hanya sebagai baris informasi, tidak pernah
       masuk total atau persen.
-- [ ] Total sama persis dengan kartu Arus Beranda dan cocok dengan Rencana
+- [x] Total sama persis dengan kartu Arus Beranda dan cocok dengan Rencana
       (FINANCIAL_ANALYSIS B-3, B-15).
-- [ ] Hanya membaca: tidak menulis data keuangan apa pun.
+- [x] Hanya membaca: tidak menulis data keuangan apa pun.
 
 **FR-ANL-002 — Dibanding biasanya (R1)**
 
-- [ ] Tiap kategori dibandingkan dengan rata-rata sampai tiga periode
+- [x] Tiap kategori dibandingkan dengan rata-rata sampai tiga periode
       sebelumnya (periode berjalan: sampai hari yang sama); periode peralihan
       tidak dipakai.
-- [ ] Paling banyak tiga sorotan bernada netral bila selisih ≥20% dan
+- [x] Paling banyak tiga sorotan bernada netral bila selisih ≥20% dan
       ≥Rp50.000. Tanpa skor, label "boros", atau warna peringatan.
 
 **FR-ANL-003 — Tren (R1)**
 
-- [ ] Pemasukan, pengeluaran, dan selisih enam periode terakhir; mengetuk
+- [x] Pemasukan, pengeluaran, dan selisih enam periode terakhir; mengetuk
       satu periode membuka analisis periode itu. Periode sebelum pencatatan
       pertama tidak ditampilkan.
 
 **FR-ANL-004 — Rincian kategori (R1)**
 
-- [ ] Total, pembanding, tren enam periode, dan transaksi periode itu, dengan
+- [x] Total, pembanding, tren enam periode, dan transaksi periode itu, dengan
       jalan ke Riwayat tersaring kategori dan periode yang sama (jumlahnya
       sama).
 
 **FR-ANL-005 — Membetulkan Tanpa kategori (R1)**
 
-- [ ] Baris Tanpa kategori membawa **Beri kategori** yang membuka Riwayat
+- [x] Baris Tanpa kategori membawa **Beri kategori** yang membuka Riwayat
       tersaring "Tanpa kategori"; menyunting lewat CATAT.
-- [ ] Lembar kilas balik di tinjau awal bulan membuka Analisis bulan itu.
+- [x] Lembar kilas balik di tinjau awal bulan membuka Analisis bulan itu.
 
 **FR-ANL-006 — Tahun dan tren total saldo (R2)**
 

@@ -94,10 +94,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
 
 - **KT-P** Freemium (B-41–B-62): nama paket, panjang uji coba, batas
   dompet, harga dan Harga Pendiri, hadiah penguji, penyedia billing,
-  ekspor/cadangan manual sebelum rilis publik (B-42), batas notifikasi
-  gratis 1 aplikasi, dan persetujuan urutan kerja Plus (KT-P9, Penjaga
-  pertama). KT-P10 sudah diputuskan 18 Okt 2026 (Target dan utang-piutang
-  masuk produk, B-47/B-48). Rincian di
+  batas notifikasi gratis 1 aplikasi, dan pembagian otomasi yang sudah
+  ada (KT-P11). Sudah diputuskan 18 Okt 2026: KT-P7 (B-42/B-43 sebelum
+  rilis publik), KT-P9 (urutan kerja Plus, Penjaga pertama), KT-P10
+  (Target dan utang-piutang masuk produk, B-47/B-48). Rincian di
   [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, §15.
 - **KT-2** Nasib data lokal saat pengguna **keluar** dari akun yang sudah
   terikat sinkronisasi: tetap di perangkat, atau ditawarkan untuk dihapus?

@@ -92,6 +92,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
+| B-42, B-43 | Ekspor CSV, cadangan/pulihkan manual, dan kunci aplikasi (gratis); prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
 sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
@@ -107,7 +108,6 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
 | B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
-| B-42, B-43 | Ekspor CSV, cadangan/pulihkan manual, dan kunci aplikasi (gratis); prasyarat Plus | KT-P7; bisa juga naik ke Now sebelum rilis publik |
 | B-41 + B-44 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama) dan **Penjaga + Ringkasan Senin**, Plus hanya untuk penguji | KT-P disetujui (§15), ADR monetisasi |
 | B-45, B-46, B-41 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus mulai dijual** | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
 
@@ -128,7 +128,7 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-55, B-56 | Widget (Catat gratis, ringkasan Plus); kosmetik Plus | Kapan saja; B-56 menunggu aset pemilik |
 | B-57–B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, Dompet Bersama/Plus Keluarga (butuh B-7), rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
 
-### Jalur Plus (usulan urutan, KT-P9)
+### Jalur Plus (urutan disetujui pemilik 18 Okt 2026, KT-P9)
 
 Freemium dan paywall dirancang di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) (B-41). Urutan usulannya,
 dengan alasan lengkap di §13 dokumen itu:

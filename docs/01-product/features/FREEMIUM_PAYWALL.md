@@ -3,7 +3,9 @@
 **Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
 **Status:** Usulan, menunggu keputusan pemilik (§15). Belum ada kode.
 KT-P10 diputuskan 18 Okt 2026: **Target dan utang-piutang masuk produk**.
-KT-P9 dijawab dengan peta kerja dan urutan di §13 (menunggu persetujuan).
+KT-P7 dan KT-P9 disetujui 18 Okt 2026: ekspor/cadangan manual dan kunci
+aplikasi (A1–A2) dikerjakan sebelum rilis publik, dan urutan kerja §13
+berlaku (Penjaga pertama).
 Keputusan teknisnya ditulis sebagai ADR baru sebelum implementasi (PRD §13
 "Arsitektur fitur online yang direncanakan", T-8.4). Antrean: B-41.
 **Revisi 2:** pemilik menilai Plus versi pertama kalah nilai dari versi
@@ -535,7 +537,7 @@ momen §8 lebih sering terjadi, bukan menambah fitur.
 
 ## 13. Peta kerja Plus dan urutannya (jawaban KT-P9)
 
-Usulan, menunggu persetujuan pemilik. Butir `B-n` ada di antrean TASK_LIST
+Disetujui pemilik 18 Okt 2026 (KT-P9). Butir `B-n` ada di antrean TASK_LIST
 dan di [ROADMAP](../../04-planning/ROADMAP.md) bagian "Jalur Plus". Ukuran
 usaha: **S** muat 1–2 sesi agen, **M** satu fase kecil (3–6 tugas), **L**
 satu fase penuh dengan ADR.
@@ -652,14 +654,25 @@ butirnya ke Now (aturan ROADMAP).
   bentuk lain.
 - **KT-P6** Penyedia billing: RevenueCat (usulan) atau `in_app_purchase`
   + Cloud Functions.
-- **KT-P7** Ekspor dan cadangan manual (A1–A2, §13) dikerjakan sebelum rilis
-  publik, meskipun paywall belum siap.
+- ~~**KT-P7**~~ Disetujui 18 Okt 2026: ekspor dan cadangan manual serta
+  kunci aplikasi (A1–A2, B-42/B-43) dikerjakan sebelum rilis publik.
 - **KT-P8** Catat dari notifikasi gratis dibatasi 1 aplikasi sumber (§4.3).
-- **KT-P9** Setujui peta kerja dan urutan §13 (Penjaga dibangun pertama;
-  Plus dijual sesudah Penjaga, Catat dari foto, dan Bagaimana kalau).
+- ~~**KT-P9**~~ Disetujui 18 Okt 2026: peta kerja dan urutan §13 (Penjaga
+  dibangun pertama; Plus dijual sesudah Penjaga, Catat dari foto, dan
+  Bagaimana kalau).
 - ~~**KT-P10**~~ Diputuskan 18 Okt 2026: Target dan utang-piutang masuk
   produk, dengan pembagian Gratis/Plus di §7. ADR domain masing-masing
   ditulis di B-47 dan B-48.
+- **KT-P11** Otomasi yang **sudah ada** dan sudah dipakai penguji: tingkat
+  otomatis catat dari notifikasi (Fase 11) dan catat otomatis rutin
+  bernominal tetap (R3, Fase 17). Revisi 2 menaruh yang pertama di Plus
+  tapi yang kedua di Gratis, jadi tidak konsisten. Usulan: **semua
+  pencatatan otomatis = Plus** (notifikasi tingkat 2/3 dan catat otomatis
+  rutin), **semua deteksi di dalam aplikasi = Gratis** (belum terlihat,
+  kenaikan harga, rutin menganggur, "sepertinya rutin"), dan Penjaga
+  (Plus) yang mengirim deteksi itu sebagai notifikasi. Belum rilis publik,
+  dan penguji mendapat Plus 12 bulan (KT-P5), jadi tidak ada pengguna yang
+  kehilangan fitur. Alternatifnya: semua yang sudah ada tetap gratis.
 
 ## 16. Sumber
 

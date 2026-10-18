@@ -1,7 +1,7 @@
 # Analisis keuangan: ke mana uang pergi dan bagaimana trennya
 
 **Tanggal:** 10 Oktober 2026.
-**Status:** Diputuskan pemilik 10 Okt 2026 (§15). Kebutuhan FR-ANL di PRD
+**Status:** R1 selesai 18 Okt 2026 (Fase 19, di `main`). Diputuskan pemilik 10 Okt 2026 (§15). Kebutuhan FR-ANL di PRD
 §7.9; tugas R1 di Fase 19 TASK_LIST, R2 di antrean B-38. Periode mengikuti
 [FINANCIAL_PERIOD.md](FINANCIAL_PERIOD.md) dan
 [ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md).

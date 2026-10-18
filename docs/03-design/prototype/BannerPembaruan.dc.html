@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Banner pembaruan</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub">
+    <h1 class="tk-topbar__title" style="padding-left: 12px">{{title}}</h1>
+  </header>
+  <main class="tk-body tk-scroll" style="gap: 24px; padding: 0 16px 32px">
+    <p class="tk-t-body-sm tk-ink-2">{{intro}}</p>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <p class="tk-t-label-sm tk-ink-2">{{b1.cap}}</p>
+      <div class="tk-upd" role="status"><div class="tk-upd__top"><span class="tk-upd__tile" aria-hidden="true"><span class="tk-upd__emoji">🚀</span></span><div class="tk-upd__body"><div class="tk-upd__title"><span>{{b1.title}}</span><span class="tk-upd__pill">{{ver}}</span></div></div><button class="tk-upd__close" type="button" aria-label="{{later}}"><span class="tk-icon">close</span></button></div><div class="tk-upd__foot"><a class="tk-upd__link" href="ApaYangBaruPra.dc.html"><span class="tk-upd__lt">{{link}}</span><span class="tk-icon tk-icon--sm">chevron_right</span></a><button class="tk-btn tk-btn--on-soft tk-btn--sm" type="button">{{update}}</button></div></div>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <p class="tk-t-label-sm tk-ink-2">{{b2.cap}}</p>
+      <div class="tk-upd" role="status"><div class="tk-upd__top"><span class="tk-upd__tile" aria-hidden="true"><span class="tk-icon tk-icon--spin">progress_activity</span></span><div class="tk-upd__body"><div class="tk-upd__title"><span>{{b2.title}}</span></div><sc-if value="{{b2.hasDesc}}" hint-placeholder-val="{{false}}"><span class="tk-upd__desc">{{b2.desc}}</span></sc-if></div></div></div>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <p class="tk-t-label-sm tk-ink-2">{{b3.cap}}</p>
+      <div class="tk-upd" role="status"><div class="tk-upd__top"><span class="tk-upd__tile" aria-hidden="true"><span class="tk-icon">system_update</span></span><div class="tk-upd__body"><div class="tk-upd__title"><span>{{b3.title}}</span><span class="tk-upd__pill">{{ver}}</span></div></div></div><div class="tk-upd__foot"><a class="tk-upd__link" href="ApaYangBaruPra.dc.html"><span class="tk-upd__lt">{{link}}</span><span class="tk-icon tk-icon--sm">chevron_right</span></a><a class="tk-btn tk-btn--on-soft tk-btn--sm" href="ApaYangBaru.dc.html">{{install}}</a></div></div>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <p class="tk-t-label-sm tk-ink-2">{{b4.cap}}</p>
+      <div class="tk-upd" role="status"><div class="tk-upd__top"><span class="tk-upd__tile" aria-hidden="true"><span class="tk-icon">restart_alt</span></span><div class="tk-upd__body"><div class="tk-upd__title"><span>{{b4.title}}</span></div><sc-if value="{{b4.hasDesc}}" hint-placeholder-val="{{false}}"><span class="tk-upd__desc">{{b4.desc}}</span></sc-if></div></div><div class="tk-upd__foot tk-upd__foot--end"><button class="tk-btn tk-btn--on-soft tk-btn--sm" type="button">{{ok}}</button></div></div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+const D = {
+ "ui": {
+  "id": {
+   "banner": {
+    "tersedia": [
+     "Versi baru tersedia",
+     ""
+    ],
+    "mengunduh": [
+     "Mengunduh versi baru",
+     "Kamu tetap bisa mencatat."
+    ],
+    "diunduh": [
+     "Versi baru sudah diunduh",
+     ""
+    ],
+    "kecil": [
+     "Pembaruan kecil siap",
+     "Tutup lalu buka lagi aplikasi untuk memakainya."
+    ]
+   },
+   "link": "Lihat apa yang baru",
+   "updateSize": "Perbarui (18,4 MB)",
+   "pillAvail": "Versi baru tersedia",
+   "act": {
+    "update": "Perbarui",
+    "install": "Pasang sekarang",
+    "later": "Nanti",
+    "ok": "Oke"
+   },
+   "wnTitle": "Apa yang baru di versi ",
+   "wnTitlePatch": "Apa yang baru",
+   "wnEmpty": "Belum ada catatan pembaruan.",
+   "verLabel": "Versi aplikasi",
+   "patch": "pembaruan",
+   "st": {
+    "terbaru": "Terbaru",
+    "tersedia": "Versi baru tersedia",
+    "mengunduh": "Mengunduh versi baru",
+    "diunduh": "Versi baru sudah diunduh",
+    "kecil": "Pembaruan kecil siap, buka ulang aplikasi",
+    "tidak": ""
+   },
+   "cap": {
+    "tersedia": "Versi baru tersedia",
+    "mengunduh": "Mengunduh",
+    "diunduh": "Sudah diunduh",
+    "kecil": "Pembaruan kecil siap"
+   },
+   "back": "Kembali",
+   "close": "Tutup",
+   "thanks": "Terima kasih sudah memakai Tanukonomy."
+  },
+  "en": {
+   "banner": {
+    "tersedia": [
+     "A new version is available",
+     ""
+    ],
+    "mengunduh": [
+     "Downloading the new version",
+     "You can keep recording."
+    ],
+    "diunduh": [
+     "The new version is downloaded",
+     ""
+    ],
+    "kecil": [
+     "A small update is ready",
+     "Close and reopen the app to use it."
+    ]
+   },
+   "link": "See what's new",
+   "updateSize": "Update (18.4 MB)",
+   "pillAvail": "New version available",
+   "act": {
+    "update": "Update",
+    "install": "Install now",
+    "later": "Later",
+    "ok": "OK"
+   },
+   "wnTitle": "What's new in version ",
+   "wnTitlePatch": "What's new",
+   "wnEmpty": "No update notes yet.",
+   "verLabel": "App version",
+   "patch": "patch",
+   "st": {
+    "terbaru": "Up to date",
+    "tersedia": "New version available",
+    "mengunduh": "Downloading new version",
+    "diunduh": "New version downloaded",
+    "kecil": "Small update ready, reopen the app",
+    "tidak": ""
+   },
+   "cap": {
+    "tersedia": "New version available",
+    "mengunduh": "Downloading",
+    "diunduh": "Downloaded",
+    "kecil": "Small update ready"
+   },
+   "back": "Back",
+   "close": "Close",
+   "thanks": "Thank you for using Tanukonomy."
+  }
+ },
+ "cats": {
+  "baru": {
+   "emoji": "✨",
+   "id": "Baru",
+   "en": "New",
+   "c": "orange"
+  },
+  "cepat": {
+   "emoji": "⚡",
+   "id": "Lebih cepat",
+   "en": "Faster",
+   "c": "amber"
+  },
+  "perbaikan": {
+   "emoji": "🛠️",
+   "id": "Perbaikan",
+   "en": "Fixes",
+   "c": "blue"
+  },
+  "aman": {
+   "emoji": "🔒",
+   "id": "Keamanan",
+   "en": "Security",
+   "c": "green"
+  }
+ },
+ "releases": [
+  {
+   "v": "0.7.0",
+   "b": 9,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Rutin yang jatuh tempo kini muncul di Beranda untuk dicatat.",
+     "Recurring items that are due now show on Home, ready to record."
+    ],
+    [
+     "baru",
+     "Grafik Analisis menampilkan rata-rata tiga bulan sebagai garis acuan.",
+     "Analysis charts show the 3-month average as a reference line."
+    ],
+    [
+     "perbaikan",
+     "Nominal yang disembunyikan tetap tersembunyi setelah aplikasi dibuka ulang.",
+     "Hidden amounts now stay hidden after the app reopens."
+    ]
+   ]
+  },
+  {
+   "v": "0.6.0",
+   "b": 7,
+   "p": 1,
+   "notes": [
+    [
+     "perbaikan",
+     "Sisa anggaran kini dihitung benar saat transaksi dipindah ke pos lain.",
+     "Remaining budget is now calculated correctly when a transaction moves to another line."
+    ],
+    [
+     "cepat",
+     "Layar Anggaran terbuka lebih cepat.",
+     "The Budget screen opens faster."
+    ],
+    [
+     "aman",
+     "Perlindungan data di perangkatmu diperkuat.",
+     "Protection of the data on your device is stronger."
+    ]
+   ]
+  },
+  {
+   "v": "0.6.0",
+   "b": 7,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Bulan keuangan kini bisa dimulai di tanggal gajianmu.",
+     "Your financial month can now start on payday."
+    ],
+    [
+     "baru",
+     "Riwayat punya tab Analisis untuk melihat ke mana uangmu pergi.",
+     "History has an Analysis tab to see where your money goes."
+    ],
+    [
+     "cepat",
+     "Beranda terbuka lebih cepat.",
+     "Home opens faster."
+    ]
+   ]
+  },
+  {
+   "v": "0.5.0",
+   "b": 6,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Transaksi dari notifikasi bank kini masuk ke Kotak masuk untuk kamu cek.",
+     "Bank notification transactions now land in the Inbox for you to review."
+    ],
+    [
+     "baru",
+     "Kategori bawaan kini bisa kamu ubah namanya.",
+     "You can now rename the default categories."
+    ]
+   ]
+  }
+ ]
+};
+const T = (en) => D.ui[en ? 'en' : 'id'];
+const ver = (r, en) => r.v + ' (' + r.b + ')' + (r.p ? ', ' + T(en).patch + ' ' + r.p : '');
+const notesOf = (r, en) => r.notes.map((n) => ({ c: D.cats[n[0]].c, emoji: D.cats[n[0]].emoji, tag: D.cats[n[0]][en ? 'en' : 'id'], text: n[en ? 2 : 1] }));
+const rel = (v, b, p) => D.releases.filter((r) => r.v === v && r.b === b && r.p === p)[0];
+
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const t = T(en);
+    const mk = (k) => ({ title: t.banner[k][0], desc: t.banner[k][1], hasDesc: !!t.banner[k][1], cap: t.cap[k] });
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      title: en ? 'Update banners' : 'Banner pembaruan',
+      intro: en ? 'One banner per screen. Shown together here only for comparison.' : 'Satu banner per layar. Di sini ditampilkan bersama hanya untuk perbandingan.',
+      b1: mk('tersedia'), b2: mk('mengunduh'), b3: mk('diunduh'), b4: mk('kecil'),
+      later: t.act.later, update: t.act.update, install: t.act.install, ok: t.act.ok, link: t.link, ver: '0.6.0'
+    };
+  }
+}
+</script>
+</body>
+</html>

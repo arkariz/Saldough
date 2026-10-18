@@ -6,6 +6,7 @@ Panel yang naik dari bawah untuk form, pemilih, dan tindakan lanjutan.
 - Pemilih (dompet, kategori, tanggal): judul di tengah, tombol tutup di kiri, daftar baris dengan centang pada yang terpilih.
 - Form (Catat, tambah dompet, tambah pos): tinggi penuh, tombol simpan menempel di bawah.
 - Tindakan (ketuk pos anggaran): daftar tindakan pendek.
+- Catatan (Apa yang baru): kepala rata tengah (tile 🚀 + pil + judul), kartu butir berkategori, tombol tutup bulat di kanan atas, kaki berisi tombol `primary` lebar penuh (+ tombol teks "Nanti" sebelum dipasang). Lihat ReleaseNotes.
 
 **Aturan**
 - Pegangan 36×4px di atas; geser ke bawah atau ketuk `scrim` untuk menutup, kecuali form yang sudah diisi (tanya dulu dengan dialog).

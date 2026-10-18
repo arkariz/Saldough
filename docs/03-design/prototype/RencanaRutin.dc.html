@@ -12,7 +12,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
 <style>
 body{margin:0}
 </style>
@@ -36,6 +36,18 @@ body{margin:0}
         <div class="inset__row"><span class="tk-ink-2">Sudah keluar</span><span class="tk-amt tk-t-amount-sm">{{hero.out}}</span></div>
       </div>
     </section>
+
+    <sc-if value="{{nudge.show}}" hint-placeholder-val="{{false}}">
+      <div class="tk-list" role="group" aria-label="Nyalakan fitur" style="flex: none">
+        <sc-for list="{{nudge.rows}}" as="r" hint-placeholder-count="2">
+          <div class="tk-row tk-row--compact tk-row--wrap">
+            <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">{{r.icon}}</span></span>
+            <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><sc-if value="{{r.hasSub}}" hint-placeholder-val="{{false}}"><span class="tk-row__sub">Izin belum diberikan</span></sc-if></span>
+            <button class="tk-btn tk-btn--secondary tk-btn--sm" type="button" aria-label="{{r.aria}}" onClick="{{r.act}}">{{r.btn}}</button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
 
     <div class="tk-chips" role="group" aria-label="Jenis rutin">
       <button class="tk-chip tk-chip--on-bg {{f0.cls}}" type="button" aria-pressed="{{f0.pressed}}" onClick="{{f0.pick}}">Semua</button>
@@ -111,10 +123,18 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Penemuan fitur"},"ingat":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Penemuan fitur"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
+    const dn = (this.state && this.state.done) || {};
+    const nz = this.props.notif || 'efektif', ig = this.props.ingat || 'efektif';
+    const nrows = [];
+    if (nz !== 'efektif' && !dn.n) nrows.push({ icon: 'notifications', title: 'Catat dari notifikasi', hasSub: nz === 'izin', btn: nz === 'izin' ? 'Izinkan' : 'Nyalakan',
+      aria: (nz === 'izin' ? 'Izinkan: ' : 'Nyalakan: ') + 'Catat dari notifikasi', act: () => this.setState({ done: Object.assign({}, dn, { n: true }) }) });
+    if (ig !== 'efektif' && !dn.i) nrows.push({ icon: 'alarm', title: 'Pengingat rutin', hasSub: ig === 'izin', btn: ig === 'izin' ? 'Izinkan' : 'Nyalakan',
+      aria: (ig === 'izin' ? 'Izinkan: ' : 'Nyalakan: ') + 'Pengingat rutin', act: () => this.setState({ done: Object.assign({}, dn, { i: true }) }) });
+    const nudge = { show: nrows.length > 0, rows: nrows };
     const filter = s.filter || 'all';
     const netflix = s.netflix || 'waiting';
     const B = (id) => '/_blob/' + id;
@@ -139,6 +159,7 @@ class Component extends DCLogic {
     const chip = (key) => ({ cls: filter === key ? 'is-selected' : '', pressed: filter === key ? 'true' : 'false', pick: () => this.setState({ filter: key }) });
     const recorded = netflix === 'recorded';
     return {
+      nudge: nudge,
       theme: this.props.dark ? 'dark' : 'light',
       hero: recorded ? { left: '≈Rp3.914.000', out: '−Rp1.965.000' } : { left: '≈Rp3.979.000', out: '−Rp1.900.000' },
       f0: chip('all'), f1: chip('income'), f2: chip('expense'), f3: chip('transfer'),

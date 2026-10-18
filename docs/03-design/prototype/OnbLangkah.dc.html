@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Onboarding, langkah wajib</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-onb" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink)">
+  <div class="tk-onb__top">
+    <span class="tk-onb__brand">{{t.brand}}</span>
+    <a class="tk-btn tk-btn--text" href="{{backHref}}">{{t.back}}</a>
+  </div>
+
+  <sc-if value="{{isPeriod}}" hint-placeholder-val="{{true}}">
+    <div class="tk-onb__body">
+      <div class="tk-card">
+        <h1 class="tk-onb__title">{{t.perTitle}}</h1>
+        <p class="tk-onb__text" style="margin-top: 8px">{{t.perBody}}</p>
+      </div>
+      <div class="tk-card" style="padding: 8px">
+        <div class="tk-daygrid" role="radiogroup" aria-label="{{t.perTitle}}">
+          <sc-for list="{{days}}" as="d" hint-placeholder-count="28">
+            <button class="tk-day {{d.cls}}" type="button" role="radio" aria-checked="{{d.checked}}" aria-label="{{d.aria}}" onClick="{{d.pick}}"><span class="tk-day__n">{{d.n}}</span></button>
+          </sc-for>
+          <button class="tk-day tk-day--wide {{last.cls}}" type="button" role="radio" aria-checked="{{last.checked}}" onClick="{{last.pick}}"><span class="tk-day__n">{{t.lastDay}}</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="tk-onb__foot"><a class="tk-btn tk-btn--primary tk-btn--block" href="OnbNotifikasi.dc.html">{{perConfirm}}</a></div>
+  </sc-if>
+
+  <sc-if value="{{isAsk}}" hint-placeholder-val="{{false}}">
+    <div class="tk-onb__body">
+      <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
+        <img class="tk-onb__art" src="{{art}}" alt="" style="{{artStyle}}">
+        <h1 class="tk-onb__title">{{title}}</h1>
+        <p class="tk-onb__text">{{body}}</p>
+        <sc-if value="{{answered}}" hint-placeholder-val="{{false}}">
+          <div class="tk-onb__status" role="status"><span>{{rowName}}</span><span class="{{badgeCls}}">{{badgeText}}</span></div>
+        </sc-if>
+      </div>
+    </div>
+    <div class="tk-onb__foot">
+      <sc-if value="{{asking}}" hint-placeholder-val="{{true}}">
+        <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{turnOn}}">{{t.turnOn}}</button>
+        <a class="tk-btn tk-btn--secondary tk-btn--block" href="{{nextHref}}">{{t.notNow}}</a>
+      </sc-if>
+      <sc-if value="{{answered}}" hint-placeholder-val="{{false}}">
+        <a class="tk-btn tk-btn--primary tk-btn--block" href="{{nextHref}}">{{t.next}}</a>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isFinal}}" hint-placeholder-val="{{false}}">
+    <div class="tk-onb__body">
+      <img class="tk-onb__art" src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" style="height: 168px">
+      <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+        <h1 class="tk-onb__title">{{t.finTitle}}</h1>
+        <p class="tk-onb__text">{{t.finBody}}</p>
+      </div>
+      <div class="tk-list" aria-label="{{t.brand}}">
+        <sc-for list="{{summary}}" as="r" hint-placeholder-count="3">
+          <div class="tk-row tk-row--compact tk-row--wrap"><span class="tk-icon tk-ink-2">{{r.icon}}</span><span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span></span><span class="{{r.cls}}">{{r.text}}</span></div>
+        </sc-for>
+      </div>
+    </div>
+    <div class="tk-onb__foot">
+      <a class="tk-btn tk-btn--primary tk-btn--block" href="Dompet.dc.html">{{t.addWallet}}</a>
+      <a class="tk-btn tk-btn--text tk-btn--block" href="Main.dc.html">{{t.later}}</a>
+      <a class="tk-btn tk-btn--text tk-btn--block" href="Akun.dc.html">{{t.signIn}}</a>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"langkah":{"editor":"enum","options":["period","notification","reminder","final"],"default":"period","section":"Langkah"},"keadaan":{"editor":"enum","options":["awal","nyala","belum","izin"],"default":"awal","section":"Langkah"},"pilih":{"editor":"enum","options":["1","25","last"],"default":"1","section":"Langkah"},"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Penutup"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"izin","section":"Penutup"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+const S = {
+ "id": {
+  "brand": "Tanukonomy",
+  "back": "Kembali",
+  "next": "Lanjut",
+  "turnOn": "Nyalakan",
+  "notNow": "Tidak sekarang",
+  "allow": "Izinkan",
+  "perTitle": "Biasanya gajian tanggal berapa?",
+  "perBody": "Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.",
+  "perConfirm": "Pakai tanggal {d}",
+  "perConfirmLast": "Pakai hari terakhir bulan",
+  "lastDay": "Hari terakhir bulan",
+  "dayAria": "Tanggal {d}",
+  "notTitle": "Catat otomatis dari notifikasi bank",
+  "notBody": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
+  "remTitle": "Ingatkan kamu sebelum jatuh tempo?",
+  "remBody": "Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.",
+  "finTitle": "Mulai dari dompet pertamamu",
+  "finBody": "Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.",
+  "addWallet": "Tambah dompet",
+  "later": "Nanti saja",
+  "signIn": "Sudah punya akun? Masuk",
+  "st": {
+   "on": "Nyala",
+   "off": "Mati",
+   "perm": "Izin belum diberikan"
+  },
+  "rowNotif": "Catat dari notifikasi",
+  "rowRem": "Pengingat rutin",
+  "rowPer": "Awal bulan keuangan",
+  "perValue": "Tanggal {d}",
+  "perValueLast": "Hari terakhir bulan",
+  "apps": "2 aplikasi",
+  "rowNote": "Pengingat belum menyala untuk semua rutin.",
+  "switchLabel": "Ingatkan",
+  "payTitle": "Gajian tanggal {d}?",
+  "payBody": "Mulai bulan keuangan dari tanggal {d}, supaya Rencana dan Analisis mengikuti gajianmu.",
+  "payAct": "Atur",
+  "payClose": "Tutup",
+  "hint": "Atur",
+  "periodAria": "Awal bulan keuangan, ketuk untuk mengatur",
+  "cap": {
+   "mati": "Mati",
+   "izin": "Izin belum diberikan"
+  },
+  "title": {
+   "nudge": "Tombol permanen, Beranda",
+   "akun": "Akun › Pencatatan"
+  },
+  "intro": {
+   "nudge": "Selama fitur belum efektif. Tanpa tutup, tanpa tunda.",
+   "akun": "Status di tiga baris, urutan sesuai dokumen fitur."
+  }
+ },
+ "en": {
+  "brand": "Tanukonomy",
+  "back": "Back",
+  "next": "Next",
+  "turnOn": "Turn on",
+  "notNow": "Not now",
+  "allow": "Allow",
+  "perTitle": "Which day is payday?",
+  "perBody": "Plan and Analysis follow this date. You can change it again in Account.",
+  "perConfirm": "Use day {d}",
+  "perConfirmLast": "Use the last day",
+  "lastDay": "Last day of the month",
+  "dayAria": "Day {d}",
+  "notTitle": "Record automatically from bank notifications",
+  "notBody": "Notifications from the apps you choose are read on your device and become draft entries. You review them first.",
+  "remTitle": "Remind you before things are due?",
+  "remBody": "You get a reminder before a recurring item is due, based on each item's settings.",
+  "finTitle": "Start with your first wallet",
+  "finBody": "Add one wallet, then record your first transaction. On every screen, the tanuki will show the way.",
+  "addWallet": "Add wallet",
+  "later": "Maybe later",
+  "signIn": "Already have an account? Sign in",
+  "st": {
+   "on": "On",
+   "off": "Off",
+   "perm": "Permission not granted"
+  },
+  "rowNotif": "Record from notifications",
+  "rowRem": "Recurring reminders",
+  "rowPer": "Financial month start",
+  "perValue": "Day {d}",
+  "perValueLast": "Last day of the month",
+  "apps": "2 apps",
+  "rowNote": "Reminders aren't on for every recurring item.",
+  "switchLabel": "Remind me",
+  "payTitle": "Payday on day {d}?",
+  "payBody": "Start your financial month on day {d}, so Plan and Analysis follow your payday.",
+  "payAct": "Set",
+  "payClose": "Close",
+  "hint": "Set",
+  "periodAria": "Financial month start, tap to set",
+  "cap": {
+   "mati": "Off",
+   "izin": "Permission not granted"
+  },
+  "title": {
+   "nudge": "Permanent buttons, Home",
+   "akun": "Account › Recording"
+  },
+  "intro": {
+   "nudge": "While the feature is not effective. No close, no snooze.",
+   "akun": "Status on three rows, in the order of the feature doc."
+  }
+ }
+};const BCLS = {"on": "tk-badge tk-badge--positive", "off": "tk-badge", "perm": "tk-badge tk-badge--warning"};
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const t = S[en ? 'en' : 'id'];
+    const s = this.state || {};
+    const step = this.props.langkah || 'period';
+    const fill = (str, d) => str.replace('{d}', d);
+    const pick = s.pick !== undefined ? s.pick : (this.props.pilih || '1');
+    const k = s.k || this.props.keadaan || 'awal';
+    const out = { theme: this.props.dark ? 'dark' : 'light', t: t,
+      isPeriod: step === 'period', isAsk: step === 'notification' || step === 'reminder', isFinal: step === 'final' };
+    // --- langkah tanggal gajian
+    out.days = Array.from({ length: 28 }, (_, i) => ({ n: String(i + 1), cls: String(pick) === String(i + 1) ? 'is-selected' : '',
+      checked: String(pick) === String(i + 1) ? 'true' : 'false', aria: fill(t.dayAria, i + 1), pick: () => this.setState({ pick: String(i + 1) }) }));
+    out.last = { cls: pick === 'last' ? 'is-selected' : '', checked: pick === 'last' ? 'true' : 'false', pick: () => this.setState({ pick: 'last' }) };
+    out.perConfirm = pick === 'last' ? t.perConfirmLast : fill(t.perConfirm, pick);
+    // --- langkah Catat dari notifikasi / pengingat
+    const rem = step === 'reminder';
+    out.art = rem ? '/_blob/e125ca20c3187e5fa60212f92f671be1' : '/_blob/2793e3fb2006e07f55a8ce38c966144a';
+    out.artStyle = rem ? 'height: 120px' : 'height: 148px';
+    out.title = rem ? t.remTitle : t.notTitle;
+    out.body = rem ? t.remBody : t.notBody;
+    out.rowName = rem ? t.rowRem : t.rowNotif;
+    out.asking = k === 'awal';
+    out.answered = k !== 'awal';
+    // keadaan sesudah menjawab: nyala = nyala; belum = kembali dari setelan tanpa menyelesaikan; izin = izin ditolak
+    const sk = k === 'nyala' ? 'on' : (k === 'izin' ? 'perm' : 'off');
+    out.badgeCls = BCLS[sk];
+    out.badgeText = t.st[sk];
+    out.turnOn = () => this.setState({ k: rem ? 'nyala' : 'nyala' });
+    out.nextHref = rem ? 'OnbPenutup.dc.html' : 'OnbPengingat.dc.html';
+    out.backHref = step === 'period' ? '#' : step === 'notification' ? 'OnbLangkah.dc.html' : step === 'reminder' ? 'OnbNotifikasi.dc.html' : 'OnbPengingat.dc.html';
+    // --- penutup: ringkasan tiga pilihan
+    const n = this.props.notif || 'nyala', r = this.props.ingat || 'izin';
+    const map = { nyala: 'on', mati: 'off', izin: 'perm' };
+    out.summary = [
+      { icon: 'calendar_today', title: t.rowPer, text: pick === 'last' ? t.perValueLast : fill(t.perValue, pick), cls: 'tk-t-body-sm tk-ink-2' },
+      { icon: 'notifications', title: t.rowNotif, text: t.st[map[n]], cls: BCLS[map[n]] },
+      { icon: 'alarm', title: t.rowRem, text: t.st[map[r]], cls: BCLS[map[r]] }
+    ];
+    return out;
+  }
+}
+</script>
+</body>
+</html>

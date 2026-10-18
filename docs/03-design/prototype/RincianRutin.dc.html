@@ -34,7 +34,13 @@ body{margin:0}
       <div class="inset__row"><span class="tk-ink-2">Jadwal</span><span>Tiap tanggal 10</span></div>
       <div class="inset__row"><span class="tk-ink-2">Dompet</span><span style="display: inline-flex; align-items: center; gap: 6px"><img src="/_blob/111194542e6d27a54d91cb9dbe6cc4a4" alt="" width="20" height="20" style="image-rendering: pixelated">BCA</span></div>
       <div class="inset__row"><span class="tk-ink-2">Berakhir</span><span>12 kali, 10 Jun 2027</span></div>
-      <div class="inset__row"><span class="tk-ink-2">Cara bayar</span><span>Autodebet</span></div>
+      <div class="inset__row"><span class="tk-ink-2">Cara bayar</span><span>{{pay}}</span></div>
+      <sc-if value="{{rem.show}}" hint-placeholder-val="{{false}}">
+        <div class="inset__row"><span class="tk-ink-2">Ingatkan</span><label class="tk-switch"><input type="checkbox" checked="{{rem.on}}" aria-label="Ingatkan"><span class="tk-switch__track"></span></label></div>
+        <sc-if value="{{rem.note}}" hint-placeholder-val="{{true}}">
+          <div class="tk-rownote" style="padding: 0"><span class="tk-rownote__text">Pengingat belum menyala untuk semua rutin.</span><button class="tk-btn tk-btn--secondary tk-btn--sm" type="button" aria-label="{{rem.aria}}">{{rem.btn}}</button></div>
+        </sc-if>
+      </sc-if>
       <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px">
         <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px" role="img" aria-label="3 dari 12 sudah tercatat">
           <span style="height: 10px; background: var(--brand)"></span><span style="height: 10px; background: var(--brand)"></span><span style="height: 10px; background: var(--brand)"></span>
@@ -64,9 +70,9 @@ body{margin:0}
     <section class="tk-section">
       <div class="tk-section__head"><h2 class="tk-section__title">Tercatat</h2></div>
       <div class="tk-list">
-        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Sep</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-3</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
-        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Agu</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-2</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
-        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Jul</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-1</span><span class="tk-row__sub">BCA · autodebet</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Sep</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-3</span><span class="tk-row__sub">BCA · {{payLow}}</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Agu</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-2</span><span class="tk-row__sub">BCA · {{payLow}}</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
+        <div class="sched is-done"><span class="sched__date"><span class="sched__day">10</span><span class="sched__dow">Jul</span></span><span class="tk-row__main"><span class="tk-row__title">Ke-1</span><span class="tk-row__sub">BCA · {{payLow}}</span></span><span class="tk-amt tk-t-amount">−Rp2.914.000</span></div>
       </div>
     </section>
   </main>
@@ -83,10 +89,12 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"pengingat":{"editor":"enum","options":["","mati","izin"],"default":"","section":"Penemuan fitur"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
+    const peng = this.props.pengingat || '';
+    const bayar = peng === 'mati' || peng === 'izin';
     const skipped = s.skipped || {};
     const items = [
       { id: 'okt', day: '10', mon: 'Okt', n: 4, label: '10 Okt' },
@@ -110,6 +118,8 @@ class Component extends DCLogic {
       };
     });
     return {
+      pay: bayar ? 'Bayar sendiri' : 'Autodebet', payLow: bayar ? 'bayar sendiri' : 'autodebet',
+      rem: { show: bayar, on: true, note: bayar, btn: peng === 'izin' ? 'Izinkan' : 'Nyalakan', aria: (peng === 'izin' ? 'Izinkan' : 'Nyalakan') + ': Pengingat rutin' },
       theme: this.props.dark ? 'dark' : 'light',
       next: next,
       hasSnack: !!s.snack,

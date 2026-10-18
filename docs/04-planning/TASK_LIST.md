@@ -4738,6 +4738,54 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
+      **Hasil rupa (designer, 18 Okt 2026), menunggu persetujuan pemilik;
+      kotak belum dicentang.** Prototipe 12 layar
+      (`OnbLangkah`, `OnbNotifikasi*`, `OnbPengingat*`, `OnbPenutup*`,
+      `BerandaTombol*`, `TombolPermanen*`, `AkunStatus*`), prototipe Rencana
+      dan Rutin (`BulanIniTawaran*`, `RutinPengingat*`,
+      `RincianRutinPengingat*`, `BerandaTombolMenunggu`), design system
+      (komponen baru OnboardingStep, FeatureNudge, PaydayOffer; PeriodHeader
+      diubah; pola "Penemuan fitur"; glosarium Nyalakan/Izinkan/status);
+      salinan di `docs/03-design/` (termasuk rupa Fase 20 yang belum
+      tersalin). Spek: [design-system/patterns.md](../03-design/design-system/patterns.md)
+      bagian "Penemuan fitur" dan README tiap komponen.
+      *Selisih dari komponen yang ada:* (1) PeriodHeader: tombol kini pil
+      tonal `surface-2` dengan petunjuk "Atur" (perubahan tampilan yang
+      sudah ada, berlaku di Bulan ini; Beranda dan Analisis tidak berubah).
+      (2) Baris tombol permanen memakai ListRow + Button `secondary sm`
+      ("Nyalakan"/"Izinkan") dengan nama fitur sebagai judul, bukan teks
+      tombol penuh `discovery.notification.button` (lihat pertanyaan 1);
+      nama aksesibel tetap memuat nama fitur. (3) "Tidak sekarang" di
+      onboarding adalah tombol `secondary` selebar "Nyalakan", bukan tombol
+      teks, supaya tidak terbaca sebagai Lewati. (4) Status di Akun memakai
+      Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning`
+      dengan teks); `warning` dipakai karena izin yang hilang adalah status
+      yang perlu tindakan, selalu bersama teks, tidak untuk tekanan. (5)
+      Ringkasan penutup onboarding tiga baris, bukan satu baris (satu baris
+      tidak muat di 360dp dan en). (6) Ilustrasi langkah notifikasi dan
+      pengingat memakai `onboarding_3` dan `onboarding_4` yang sudah ada;
+      ilustrasi khusus per langkah bersifat opsional dan perlu permintaan
+      aset ke pemilik. (7) Kartu tawaran gajian kartu `surface` biasa (bukan
+      kartu `brand`), satu-satunya yang punya tombol tutup.
+      *Pertanyaan untuk PO (rupa tidak menebak):* (1) Bunyi tombol:
+      `discovery.notification.button` dan `discovery.reminder.button` panjang
+      dan `discovery.allowAccess` ("Izinkan") saja ambigu bila dua tombol
+      berdampingan. Rekomendasi: baris dengan nama fitur + tombol pendek
+      "Nyalakan"/"Izinkan" seperti di prototipe; kunci panjang dipakai
+      sebagai nama aksesibel. (2) Status baris Awal bulan keuangan di Akun:
+      §7.1 menyebut tiga baris berstatus Nyala/Mati/Izin, tetapi awal bulan
+      keuangan tidak punya status itu; prototipe menampilkan tanggalnya
+      ("Tanggal 25"). Setuju? (3) Teks tombol konfirmasi untuk hari terakhir
+      bulan: `onboarding.period.confirm` hanya menerima {d}; usulan "Pakai hari
+      terakhir bulan". (4) Sesudah kembali dari setelan tanpa menyalakan,
+      layar hanya menampilkan status Mati dan Lanjut, tanpa kalimat
+      penghibur. Perlu satu kalimat ("Bisa dinyalakan dari Beranda atau
+      Akun.")? (5) Teks en semua kunci §8 diusulkan designer (id dari §8);
+      mohon disetujui. (6) Mode tinjau onboarding dari Akun (§4.1) belum
+      dirancang terpisah; memakai kerangka yang sama dengan tombol "Tutup".
+      Perlu rupa khusus? (7) Urutan Beranda P-6 dan kartu pembaruan Fase 20
+      masih menunggu keputusan letak (kartu di atas kartu saldo, lihat
+      UpdateCard); baris tombol permanen mengikuti keputusan itu.
 - [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
       Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
       efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan

@@ -22,16 +22,27 @@ body{margin:0}
     <h1 class="tk-topbar__title">Rencana</h1>
   </header>
   <nav class="tk-subtabs" aria-label="Bagian Rencana">
-    <a class="tk-subtab is-active" href="Main.dc.html" aria-current="page">Bulan ini</a>
-    <a class="tk-subtab" href="Anggaran.dc.html">Anggaran</a>
-    <a class="tk-subtab" href="Rutin.dc.html">Rutin</a>
+    <a class="tk-subtab is-active" href="RencanaBulanIni.dc.html" aria-current="page">Bulan ini</a>
+    <a class="tk-subtab" href="RencanaAnggaran.dc.html">Anggaran</a>
+    <a class="tk-subtab" href="RencanaRutin.dc.html">Rutin</a>
   </nav>
 
   <main class="tk-body tk-scroll" style="gap: 16px; padding: 8px 16px 32px">
     <div class="tk-period">
-      <a class="tk-period__btn" href="AwalBulan.dc.html" aria-label="{{hd.aria}}">{{hd.label}}<span class="tk-icon">expand_more</span></a>
+      <a class="tk-period__btn" href="AwalBulan.dc.html" aria-label="{{hd.aria}}">{{hd.label}}<span class="tk-period__hint">Atur</span><span class="tk-icon">expand_more</span></a>
       <sc-if value="{{hd.per}}" hint-placeholder-val="{{false}}"><span class="tk-period__tag"><span class="tk-icon">calendar_today</span>Periode peralihan · 24 hari</span></sc-if>
     </div>
+
+    <sc-if value="{{offer.show}}" hint-placeholder-val="{{false}}">
+      <section class="tk-card tk-offer" aria-label="Gajian tanggal 25?">
+        <div class="tk-offer__top">
+          <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">calendar_today</span></span>
+          <div class="tk-offer__text"><span class="tk-t-body-strong">Gajian tanggal 25?</span><span class="tk-t-body-sm tk-ink-2">Mulai bulan keuangan dari tanggal 25, supaya Rencana dan Analisis mengikuti gajianmu.</span></div>
+          <button class="tk-iconbtn tk-offer__close" type="button" aria-label="Tutup" onClick="{{offer.close}}"><span class="tk-icon">close</span></button>
+        </div>
+        <div class="tk-offer__actions"><a class="tk-btn tk-btn--secondary tk-btn--sm" href="AwalBulan.dc.html">Atur</a></div>
+      </section>
+    </sc-if>
 
     <div class="tk-banner" role="status" style="margin-top: -8px">
       <span class="tk-icon">warning</span>
@@ -53,9 +64,9 @@ body{margin:0}
       <p class="tk-amt tk-t-amount-hero" style="margin-top: -8px">{{p.total}}</p>
       <sc-if value="{{p.noPayday}}" hint-placeholder-val="{{false}}"><p class="tk-t-body-sm tk-ink-2" style="margin-top: -8px">Rentang ini tidak memuat gajian.</p></sc-if>
       <div class="inset">
-        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
-        <a class="inset__row" href="Rutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
-        <a class="inset__row" href="Anggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Pemasukan</span><span class="tk-amt tk-t-amount-sm tk-amt--pos">{{p.income}}</span></a>
+        <a class="inset__row" href="RencanaRutin.dc.html"><span class="tk-ink-2">Tagihan rutin</span><span class="tk-amt tk-t-amount-sm">{{p.bills}}</span></a>
+        <a class="inset__row" href="RencanaAnggaran.dc.html"><span class="tk-ink-2">Anggaran</span><span class="tk-amt tk-t-amount-sm">{{p.budget}}</span></a>
         <sc-if value="{{p.hasOutside}}" hint-placeholder-val="{{true}}"><div class="inset__row"><span class="tk-ink-2">Di luar rencana</span><span class="tk-amt tk-t-amount-sm">−Rp57.000</span></div></sc-if>
       </div>
     </section>
@@ -138,7 +149,7 @@ body{margin:0}
         </div>
       </section>
       <section class="tk-section">
-        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="Rutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+        <div class="tk-section__head"><h2 class="tk-section__title">Berikutnya</h2><a class="tk-link" href="RencanaRutin.dc.html">Semua di Rutin<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
         <div class="tk-list">
           <div class="today-rule">hari ini, 2 Okt</div>
           <div class="sched">
@@ -165,10 +176,10 @@ body{margin:0}
   </main>
 
   <nav class="tk-nav" aria-label="Navigasi utama">
-    <a class="tk-nav__item" href="Beranda.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
+    <a class="tk-nav__item" href="BerandaRutin.dc.html"><span class="tk-nav__pill"><span class="tk-icon">home</span></span>Beranda</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">receipt_long</span></span>Riwayat</button>
     <a class="tk-nav__catat" href="CatatUlangi.dc.html" aria-label="Catat transaksi"><span class="tk-pixel-shadow"><span class="tk-nav__catat-btn"><span class="tk-icon">add</span></span></span>Catat</a>
-    <a class="tk-nav__item is-active" href="Main.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
+    <a class="tk-nav__item is-active" href="RencanaBulanIni.dc.html" aria-current="page"><span class="tk-nav__pill"><span class="tk-icon">donut_small</span></span>Rencana</a>
     <button class="tk-nav__item" type="button"><span class="tk-nav__pill"><span class="tk-icon">account_balance_wallet</span></span>Dompet</button>
   </nav>
 
@@ -206,7 +217,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"peralihan":{"editor":"boolean","default":false,"section":"Periode keuangan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"tawaran":{"editor":"boolean","default":false,"section":"Penemuan fitur"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"peralihan":{"editor":"boolean","default":false,"section":"Periode keuangan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
@@ -235,6 +246,7 @@ class Component extends DCLogic {
       ? { short: '1 – 24 Okt', income: 'Rp0', bills: '−Rp5.079.000', total: '−Rp8.204.500', endShort: '24 Okt', inSched: 'Rp0', billsLeft: '−Rp3.179.000', jajanDays: '23', jajan: '−Rp690.000', endLong: 'Akhir 24 Okt' }
       : { short: 'Okt', income: '+Rp12.000.000', bills: '−Rp5.879.000', total: 'Rp2.995.500', endShort: 'Okt', inSched: '+Rp12.000.000', billsLeft: '−Rp3.979.000', jajanDays: '30', jajan: '−Rp900.000', endLong: 'Akhir Oktober' };
     return {
+      offer: { show: !!this.props.tawaran && !s.offerClosed, close: () => this.setState({ offerClosed: true }) },
       theme: this.props.dark ? 'dark' : 'light',
       hd: {
         label: heads[month],

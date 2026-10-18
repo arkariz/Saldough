@@ -8,7 +8,7 @@ Nama periode keuangan yang sedang dilihat, sekaligus pintu ke lembar Awal bulan 
 - Periode peralihan: rentang, lalu penanda `tk-period__tag` "Periode peralihan · 37 hari" dengan ikon `calendar_today` 16px. Di en label lebih panjang ("Transition period · 37 days"), jadi penanda turun ke baris sendiri bila tidak muat.
 
 **Aturan**
-- Tombol `tk-period__btn`: gaya `title`, ikon `expand_more` `ink-2` di kanan sebagai tanda bisa diketuk, target 48px, sudut piksel kecil. Mengetuk membuka lembar Awal bulan keuangan (DayPicker).
+- Tombol `tk-period__btn` (Rencana › Bulan ini): pil tonal `surface-2`, gaya `title`, lalu petunjuk "Atur" `tk-period__hint` (`label` `brand-ink`, en "Set") dan ikon `expand_more` `ink-2`, target 48px, sudut piksel kecil. Pil berlatar dan kata Atur membedakannya dari label biasa (Fase 21, FEATURE_DISCOVERY §6.1). Mengetuk membuka lembar Awal bulan keuangan (DayPicker). Teks aksesibel: "Awal bulan keuangan, ketuk untuk mengatur".
 - Penanda peralihan **netral**: `ink-2`, tanpa latar, tanpa ikon atau warna peringatan. Ia keterangan, bukan status. Bukan Badge (lebih dari tiga kata).
 - Kalimat penjelas di bawahnya (`tk-period__note`, `body-sm` `ink-2`) hanya bila dokumen fitur memintanya. Contoh: "Rentang ini tidak memuat gajian." di kartu uang nganggur. Juga tanpa warna peringatan.
 - Penanda yang sama dipakai di Rencana › Bulan ini, kepala kartu Arus di Beranda, dan kepala Analisis (di bawah PeriodStepper, sebagai `tk-stepper__sub`).

@@ -73,6 +73,24 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
   anggapan prototipe.
 
+## Penemuan fitur (Fase 21, T-21.0)
+
+Rupa tiga langkah onboarding wajib, tombol permanen, status di Akun, kepala
+periode dapat diketuk, dan tawaran gajian. Spek di
+[design-system/patterns.md](design-system/patterns.md) bagian "Penemuan
+fitur"; komponen `OnboardingStep`, `FeatureNudge`, `PaydayOffer`, dan
+`PeriodHeader` (diubah) di `design-system/components/`. Papan di prototipe
+12 layar: `OnbLangkah` (awal periode) dengan `OnbPeriode25EnGelap`,
+`OnbNotifikasi`, `OnbNotifikasiNyala`, `OnbNotifikasiBelumEnGelap`,
+`OnbPengingat`, `OnbPengingatNyala`, `OnbPengingatIzinEnGelap`,
+`OnbPenutup`, `OnbPenutupEnGelap`; `BerandaTombol`, `BerandaTombolIzin`,
+`BerandaTombolSatu`, `BerandaTombolUrutan`, `TombolPermanen` (+ `EnGelap`);
+`AkunStatusIzin`, `AkunStatusKeadaan` (+ `EnGelap`). Papan di prototipe
+Rencana dan Rutin (nama salinan sama dengan nama artefak): `BulanIniTawaran`
+(+ `Gelap`), `RutinPengingat`, `RutinPengingatIzin`, `RincianRutinPengingat`,
+`RincianRutinPengingatIzin`, `BerandaTombolMenunggu`. Selisih dan pertanyaan
+untuk PO di entri T-21.0 `TASK_LIST.md`.
+
 ## Analisis keuangan (Fase 19)
 
 Layar Riwayat › Analisis dan Rincian kategori

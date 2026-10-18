@@ -31,6 +31,9 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Analisis | laporan, statistik, insight | Segmen Riwayat: ke mana uang pergi per kategori dan trennya |
 | Tanpa kategori | lain-lain, uncategorized | Transaksi yang belum diberi kategori; bukan "Lainnya" |
 | Lainnya ({n} kategori) | sisanya, dll. | Gabungan kategori di luar lima teratas di Analisis |
+| Nyalakan | aktifkan, hidupkan | Tombol fitur yang mati; "Tidak sekarang" (bukan Lewati atau Nanti) untuk menolak di onboarding |
+| Izinkan | beri akses | Tombol bila izin sistem hilang |
+| Nyala / Mati / Izin belum diberikan | aktif, nonaktif, ditolak | Status fitur di Akun dan onboarding |
 | Versi baru | update, upgrade | Rilis dari toko aplikasi, dipasang dari dalam aplikasi |
 | Pembaruan kecil | patch, tambalan, hotfix | Perbaikan yang dipakai setelah aplikasi dibuka ulang; nomornya "pembaruan {n}" |
 | Apa yang baru | changelog, release notes | Catatan manfaat sesudah pembaruan; judul "Apa yang baru di versi {versi}" |

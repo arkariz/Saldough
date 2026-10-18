@@ -81,3 +81,15 @@ Fase 20, rupa v3 mengikuti rujukan gambar pilihan pemilik (15 Okt 2026).
 2. **Lembar Apa yang baru** (Sheet varian Catatan + ReleaseNotes): dibuka dari tautan di kartu (sebelum dipasang: Perbarui + Nanti) dan sekali sesudah pembaruan yang punya catatan (Oke). Tidak di Catat, onboarding, atau tur. Beberapa versi sekaligus: satu lembar, dikelompokkan per versi.
 3. **Akun › Versi aplikasi**: baris di grup paling bawah (ikon system_update): judul, nomor versi, keterangan keadaan. Halaman Versi aplikasi: kartu status (tile `brand-soft`), bagian "Apa yang baru" berisi satu kartu per versi, tindakan lebar penuh menempel di bawah hanya saat ada tindakan.
 4. Teks dan keadaan mengikuti dokumen fitur; di sini hanya rupanya.
+
+## Penemuan fitur
+
+Fase 21 (FEATURE_DISCOVERY). Tiga fitur yang sulit ditemukan (awal bulan keuangan, Catat dari notifikasi, pengingat rutin) ditawarkan pada saat nilainya terasa, tanpa tekanan.
+
+1. **Onboarding: tiga langkah wajib** (OnboardingStep), urutan: slide pengantar › bahasa › mata uang › awal periode keuangan › Catat dari notifikasi (Android) › pengingat rutin › penutup. Tanpa Lewati. Wajib dijawab, bebas dijawab apa: Nyalakan dan Tidak sekarang sama besar. Tanggal: bawaan 1 terpilih, tetap dikonfirmasi.
+2. **Tombol permanen** (FeatureNudge): satu kartu dua baris di Beranda sesudah kartu Menunggu dicatat dan kotak masuk, juga satu baris di segmen Rutin dan catatan di bawah sakelar per rutin. Tanpa tutup; hilang begitu efektif; Nyalakan menjadi Izinkan bila izin hilang.
+3. **Status di Akun › Pencatatan**: baris Catat dari notifikasi (Android), Pengingat rutin, Awal bulan keuangan, urutan itu. Status berupa Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning`) di baris kedua baris; Awal bulan keuangan menampilkan tanggalnya.
+4. **Kepala periode dapat diketuk**: pil tonal dengan petunjuk "Atur" (PeriodHeader).
+5. **Tawaran gajian** (PaydayOffer): kartu biasa di kepala Bulan ini untuk pengguna lama; boleh ditutup, satu-satunya.
+6. Tidak ada streak, hitungan hari, lencana, atau kata "ketinggalan". Warna peringatan hanya untuk status izin yang hilang, selalu bersama teks.
+

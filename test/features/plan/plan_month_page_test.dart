@@ -296,6 +296,31 @@ void main() {
       expect(opened!.periodStart, DateTime(2026, 9));
     });
 
+    testWidgets('kilas balik yang sudah selesai tetap bisa dibuka lagi ("Lihat lagi") tanpa mengubah hitungan langkah (T-19.11, B-18)', (
+      tester,
+    ) async {
+      await pump(tester, width: 360, reviews: reviews);
+      expect(find.text('0/2'), findsOneWidget);
+      await tester.tap(find.text(t.plan.reviewSee));
+      await tester.pumpAndSettle();
+      expect(find.text('Lihat rincian September'), findsOneWidget);
+      tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+      await tester.pumpAndSettle();
+
+      expect(find.text('1/2'), findsOneWidget);
+      expect(find.text(t.plan.reviewSee), findsNothing);
+      expect(find.text(t.plan.reviewSeeAgain), findsOneWidget);
+
+      await tester.tap(find.text(t.plan.reviewSeeAgain));
+      await tester.pumpAndSettle();
+      expect(find.text('Lihat rincian September'), findsOneWidget);
+      tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+      await tester.pumpAndSettle();
+      expect(find.text('1/2'), findsOneWidget, reason: 'membuka lagi tidak menambah hitungan');
+      final stored = (await reviews.load()).getOrElse((_) => null)!;
+      expect(stored.doneSteps, {MonthReviewStep.lookback});
+    });
+
     testWidgets('Nanti melipat jadi satu baris; Selesai meninjau menyembunyikan kartu', (tester) async {
       await pump(tester, reviews: reviews);
       await tester.tap(find.text(t.plan.reviewLater));

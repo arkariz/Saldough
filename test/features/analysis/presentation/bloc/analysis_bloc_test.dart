@@ -168,6 +168,37 @@ void main() {
       expect(shown.last.parameters['count'], isA<int>());
     });
 
+    test('analysis_highlights_shown tidak terkirim ulang saat ganti jenis, ganti dompet, atau segar di periode yang sama (T-19.11)', () async {
+      await history();
+      final wallets = WalletRepositoryImpl(storage: storage);
+      await wallets.saveWallet(
+        const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+      );
+      final bloc = create();
+      await loaded(bloc, AnalysisStarted(periodStart: DateTime(2026, 9, 15)));
+      expect(named('analysis_highlights_shown'), hasLength(1));
+
+      bloc.add(const AnalysisKindChanged(CategoryKind.income));
+      await bloc.stream.firstWhere((s) => s.kind == CategoryKind.income);
+      bloc.add(const AnalysisKindChanged(CategoryKind.expense));
+      await bloc.stream.firstWhere((s) => s.kind == CategoryKind.expense);
+      bloc.add(const AnalysisWalletChanged('bca'));
+      await bloc.stream.firstWhere((s) => s.walletId == 'bca');
+      bloc.add(const AnalysisWalletChanged(null));
+      await bloc.stream.firstWhere((s) => s.walletId == null);
+      expect(named('analysis_highlights_shown'), hasLength(1), reason: 'ganti jenis dan dompet');
+
+      // Segar lewat tombol tarik, LedgerChanges, dan perubahan kategori.
+      bloc.add(const AnalysisRefreshed());
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      ledger.notifyChanged();
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      ActiveCategories.notifier.value = const [];
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      expect(named('analysis_highlights_shown'), hasLength(1), reason: 'segar di periode yang sama');
+      expect(named('analysis_viewed'), hasLength(1));
+    });
+
     test('periode berubah lewat panah atau tautan tren, jenis, dan dompet dicatat tanpa nominal', () async {
       await history();
       final wallets = WalletRepositoryImpl(storage: storage);

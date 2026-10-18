@@ -93,9 +93,10 @@ Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
 diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
 
 - **KT-P** Freemium (B-41): nama paket, panjang uji coba, batas dompet,
-  harga dan paket Pendiri, hadiah penguji, penyedia billing, dan apakah
-  ekspor/cadangan manual dikerjakan sebelum rilis publik. Rincian KT-P1–P7
-  di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §12.
+  harga dan Harga Pendiri, hadiah penguji, penyedia billing, ekspor/cadangan
+  manual sebelum rilis publik, batas notifikasi gratis 1 aplikasi, fitur
+  Plus pertama di M1, serta Target dan utang-piutang. Rincian KT-P1–P10 di
+  [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §15.
 - **KT-2** Nasib data lokal saat pengguna **keluar** dari akun yang sudah
   terikat sinkronisasi: tetap di perangkat, atau ditawarkan untuk dihapus?
   Baru relevan saat sinkronisasi didesain —
@@ -4739,7 +4740,7 @@ menambah dan memindahkannya ada di
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
 | B-40 | Tindak lanjut kecil QA T-19.7 (S4 dan celah uji): tombol "Catat transaksi" di keadaan kosong Analisis sebagian tertutup bilah bawah pada 360dp sampai digulir; belum teruji di perangkat: keadaan galat dan memuat Analisis, keadaan kosong bahasa en, pembayaran Freelance di Pemasukan, sorotan `from=highlight`, `category=freelance`. | agen (S4) + pemilik (uji perangkat) | QA T-19.7 |
-| B-41 | **Freemium dan paywall (Tanukonomy Plus)**: usulan pembagian Gratis/Plus, reverse trial 14 hari, paywall kontekstual P1–P9, harga, dan urutan M0–M4 di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md). Tunggu KT-P1–P7 (§12 dokumen itu), lalu tulis ADR monetisasi sebelum kode. M0 (ekspor CSV + cadangan manual gratis, kunci aplikasi) bisa dikerjakan lebih dulu. | pemilik memutuskan, lalu agen | FREEMIUM_PAYWALL.md, PRD §13 |
+| B-41 | **Freemium dan paywall (Tanukonomy Plus, revisi 2)**: Gratis = buku catatan, Plus = enam pilar "Tanuki bekerja untukmu" (catat dari foto, Penjaga + Ringkasan Senin, Tanya Tanuki, Bagaimana kalau + Target, rapor/Rekap SPT/Freelance Pro, cadangan otomatis), model cicip, reverse trial 14 hari dengan momen terjadwal, harga, urutan M0–M4 di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md). Tunggu KT-P1–P10 (§15), lalu ADR monetisasi sebelum kode. M0 (ekspor CSV + cadangan manual gratis, kunci aplikasi) bisa lebih dulu. | pemilik memutuskan, lalu agen | FREEMIUM_PAYWALL.md, PRD §6, §13 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

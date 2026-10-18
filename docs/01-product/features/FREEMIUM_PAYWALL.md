@@ -1,459 +1,592 @@
-# Freemium dan paywall: apa yang gratis, apa yang Plus, dan kenapa orang membayar
+# Freemium dan paywall: Gratis untuk mencatat, Plus agar Tanuki bekerja untukmu
 
-**Tanggal:** 18 Oktober 2026.
-**Status:** Usulan, menunggu keputusan pemilik (§12). Belum ada kode.
-Keputusan teknisnya nanti ditulis sebagai ADR baru sebelum implementasi
-(PRD §13 "Arsitektur fitur online yang direncanakan", T-8.4). Antrean: B-41.
+**Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
+**Status:** Usulan, menunggu keputusan pemilik (§15). Belum ada kode.
+Keputusan teknisnya ditulis sebagai ADR baru sebelum implementasi (PRD §13
+"Arsitektur fitur online yang direncanakan", T-8.4). Antrean: B-41.
+**Revisi 2:** pemilik menilai Plus versi pertama kalah nilai dari versi
+gratis yang sudah mulus. Plus dirancang ulang dari "gratis plus sedikit"
+menjadi kelas pekerjaan yang lain (§2), dengan fitur Plus baru (§6) dan
+peta fitur mendatang (§7).
 **Berkaitan:** [PRD 2.0](../prd-saldough-2.0.md) §5 (proposisi nilai dan
-prinsip produk), §8.3 NFR-REL-001 dan §8.5 NFR-SEC-001 (pencatatan inti
-wajib penuh tanpa koneksi; panggilan jaringan untuk verifikasi pembelian
-diizinkan); [ADR-023](../../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)
+prinsip produk), §6 "Di luar MVP" (pemindaian struk, asisten AI, laporan
+tahunan, utang, akun bersama), §8.3 NFR-REL-001 dan §8.5 NFR-SEC-001;
+[ADR-023](../../02-architecture/adr/0023-identitas-opsional-firebase-auth-analitik-crashlytics.md)
 (akun opsional, Analytics); [ADR-024](../../02-architecture/adr/0024-kepemilikan-data-lokal-dan-akun.md)
 (data milik perangkat); [ADR-027](../../02-architecture/adr/0027-catat-cerdas-interpreter-yang-bisa-diganti.md)
 dan [ADR-032](../../02-architecture/adr/0032-catat-dari-notifikasi.md)
 (Catat Cerdas, Gemini); [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md)
 §9 (biaya Gemini); [FINANCIAL_ANALYSIS.md](FINANCIAL_ANALYSIS.md) (Analisis
 R1/R2); [RECURRING_AND_FORECAST.md](RECURRING_AND_FORECAST.md) (rutin,
-perkiraan, R3).
+perkiraan, katalog wawasan §7B, R3).
 
-Dokumen ini merancang **pembagian fitur, mekanisme konversi, dan harga**.
-Rupa paywall diserahkan ke design system dan prototipe pemilik (skill
-`tanukonomy-ui`); di sini hanya isi dan perilakunya.
+Dokumen ini merancang **pembagian fitur, fitur Plus, mekanisme konversi,
+dan harga**. Rupa diserahkan ke design system dan prototipe pemilik (skill
+`tanukonomy-ui`).
 
 ## 1. Ringkasan rekomendasi
 
-1. **Satu paket berbayar, "Tanukonomy Plus"** (nama menunggu KT-P1), bukan
-   dua tingkat. Aplikasi masih kecil; satu pilihan lebih mudah dijual dan
-   dirawat.
-2. **Mencatat dan melihat datamu sendiri gratis selamanya, tanpa batas.**
-   CATAT, Riwayat, Dompet, Anggaran, Rutin, dan ekspor data tidak pernah
-   dikunci atau dibatasi jumlahnya. Ini yang membuat orang memasang dan
-   bertahan; paywall di sini merusak kepercayaan dan prinsip 5 ("hambatan
-   mencatat tetap rendah").
-3. **Plus menjual tiga hal: lebih sedikit kerja, lebih jauh melihat, dan
-   lebih tenang.**
-   - *Lebih sedikit kerja*: Catat Cerdas otomatis (notifikasi tercatat
-     sendiri, tafsir Gemini tanpa kuota ketat, otomasi rutin R3).
-   - *Lebih jauh melihat*: Analisis seluruh riwayat, tren 12 bulan,
-     tampilan tahun, perkiraan sampai 12 bulan, Rapor Tahunan.
-   - *Lebih tenang*: cadangan otomatis (dan kelak sinkronisasi antar
-     perangkat).
-   Ditambah kosmetik bertema tanuki sebagai bonus yang murah dibuat.
-4. **Pengait utama: uji coba terbalik (*reverse trial*) 14 hari tanpa kartu.**
-   Semua pengguna baru langsung memakai Plus sesudah onboarding, lalu turun
-   ke Gratis. Yang hilang terasa nyata ("12 catatan bulan ini kini perlu
-   kamu tinjau sendiri"), bukan janji abstrak.
-5. **Paywall kontekstual, bukan dinding.** Muncul di titik ketika pengguna
-   baru saja merasakan manfaatnya (§6), maksimal sekali sehari, tidak
-   pernah di tengah alur CATAT.
-6. **Tanpa iklan sama sekali**, di paket mana pun. SDK iklan mengirim data
-   pemakaian ke pihak ketiga, bertentangan dengan NFR-SEC-001 dan citra
-   "data milik perangkat".
-7. **Harga awal (hipotesis untuk diuji):** Rp19.000/bulan, Rp129.000/tahun,
-   dan "Pendiri" seumur hidup Rp299.000 yang dijual terbatas (§8).
-8. **Prasyarat sebelum paywall pertama tayang:** ekspor CSV dan cadangan
-   manual ke berkas **gratis** (§9.1). Tidak etis memungut bayaran dari
-   aplikasi yang datanya belum bisa dibawa pergi.
+1. **Gratis = buku catatan. Plus = juru catat pribadi.** Di versi gratis,
+   kamu yang mencatat dan kamu yang membaca. Di Plus, **Tanuki bekerja
+   untukmu**: ia mencatat dari foto dan notifikasi, berjaga dan memberi tahu
+   sebelum masalah terjadi, menjawab pertanyaan tentang uangmu, membantu
+   merencanakan "bagaimana kalau", dan menyusun laporan yang siap dipakai.
+   Kalimat ini cocok dengan maskot (tanuki juru catat) dan dengan definisi
+   produk: Plus tetap *mencatat*, tidak pernah *melakukan*.
+2. **Enam pilar Plus** (§5): Tanuki Mencatat, Tanuki Berjaga, Tanya Tanuki,
+   Tanuki Merencanakan, Tanuki Melapor, Tanuki Menyimpan. Tiap pilar adalah
+   pekerjaan yang **tidak bisa** dilakukan versi gratis dengan tangan, bukan
+   versi gratis yang sedikit lebih cepat.
+3. **Gratis tetap mulus untuk inti.** CATAT, Riwayat, Dompet, Anggaran,
+   Rutin, Rencana bulan ini, Analisis 6 periode, dan ekspor data gratis
+   tanpa batas. Yang dikurangi dari versi gratis hanya hal yang memang
+   berupa otomasi (§4.3).
+4. **Model "cicip", bukan kunci mati.** Setiap pilar Plus punya jatah kecil
+   gratis per periode keuangan: 1 peringatan Penjaga, 3 pertanyaan Tanya
+   Tanuki, 5 catat dari foto, ringkasan rapor. Pengguna gratis terus
+   merasakan rasanya, sehingga tahu persis apa yang dibeli.
+5. **Uji coba terbalik 14 hari tanpa kartu**, dirancang supaya setiap pilar
+   punya satu "momen ajaib" terjadwal di dalam 14 hari itu (§8).
+6. **Harga (hipotesis):** Rp25.000/bulan, Rp179.000/tahun; **Harga Pendiri**
+   Rp129.000/tahun yang terkunci selama tetap berlangganan, untuk pembeli
+   90 hari pertama. Tanpa paket seumur hidup karena pilar AI punya biaya
+   berjalan (§11).
+7. **Tanpa iklan di paket mana pun**, dan **ekspor serta cadangan manual
+   gratis** sebelum paywall pertama tayang (§12.1).
 
-## 2. Inventaris fitur yang ada dan yang direncanakan
+## 2. Kenapa versi pertama terasa kurang premium
 
-Diambil dari PRD §7, TASK_LIST, dan antrean B-n per 18 Okt 2026.
+Isi Plus revisi 1 dan masalahnya:
 
-| # | Fitur | Keadaan | Biaya marginal per pengguna | Sifat nilainya |
-|---|---|---|---|---|
-| F1 | CATAT (pemasukan, pengeluaran, transfer, kalkulator, tautan pos) | Ada | 0 | Inti, kebiasaan harian |
-| F2 | Riwayat dan pencarian | Ada | 0 | Inti, data pengguna |
-| F3 | Dompet | Ada | 0 | Inti, proposisi nilai #1 |
-| F4 | Anggaran, pos, arsip, penyaring | Ada | 0 | Inti, prinsip 3 |
-| F5 | Template anggaran | Ada | 0 | Kemudahan, pengguna mahir |
-| F6 | Freelance (proyek, worklog, pembayaran) | Ada | 0 | Pembeda, ceruk pekerja lepas |
-| F7 | Beranda (saldo, arus, ringkasan) | Ada | 0 | Inti |
-| F8 | Kategori bawaan yang bisa diubah | Ada | 0 | Inti |
-| F9 | Catat pakai suara (STT sistem + parser aturan) | Ada | 0 | Kemudahan |
-| F10 | Tafsir cerdas Gemini (fallback suara dan notifikasi) | Ada | ≈ US$0,0003 per panggilan (VOICE_INPUT_RESEARCH §9: ~US$4 per 15.000) | Kemudahan, "ajaib" |
-| F11 | Catat dari notifikasi (Android), tinjau semua | Ada | 0 (Gemini terpisah, F10) | Kemudahan, pengait kuat |
-| F12 | Tingkat otomatis 2/3 dan pola buatan sendiri | Ada | 0 | Otomasi, pengguna mahir |
-| F13 | Rutin, kemunculan, pengingat, total langganan, kenaikan harga | Ada | 0 | Kebiasaan, retensi |
-| F14 | Rencana Bulan ini, uang nganggur, perkiraan +2 bulan | Ada | 0 | Pandangan ke depan |
-| F15 | Periode keuangan pilihan sendiri | Ada | 0 | Inti (memengaruhi semua angka) |
-| F16 | Analisis R1 (ke mana uang pergi, dibanding biasanya, tren, per dompet) | Ada | 0 | Wawasan |
-| F17 | Akun opsional, mata uang, bahasa, mode gelap, sembunyikan nominal | Ada | 0 | Dasar, privasi |
-| F18 | Analisis R2: tahun, tren total saldo (B-38) | Direncanakan | 0 | Wawasan mendalam |
-| F19 | Horizon perkiraan sampai 12 bulan (B-30) | Direncanakan | 0 | Pandangan ke depan |
-| F20 | R3 Otomasi rutin: catat otomatis per rutin, saran pola, rutin menganggur (B-28) | Direncanakan | 0 | Otomasi |
-| F21 | Sinkronisasi antar perangkat (B-7) | Direncanakan, besar | Server: penyimpanan dan baca/tulis Firestore | Ketenangan |
-| F22 | Ekspor/impor data | **Belum ada**, di luar MVP (PRD §6) | 0 | Kepemilikan data |
-| F23 | Cadangan otomatis | **Belum ada** | 0 bila ke Google Drive milik pengguna | Ketenangan |
-| F24 | Kunci aplikasi (sidik jari/PIN) | **Belum ada** | 0 | Keamanan |
-| F25 | Widget layar utama | **Belum ada** | 0 | Kebiasaan |
-| F26 | Tema warna, kostum tanuki, ikon aplikasi alternatif | **Belum ada** | 0 (biaya aset sekali) | Kosmetik, identitas merek |
-| F27 | Rapor bulanan/tahunan yang bisa dibagikan | **Belum ada** | 0 | Wawasan, viral |
+| Isi Plus revisi 1 | Kenapa lemah |
+|---|---|
+| Notifikasi tercatat otomatis | Versi gratis sudah mengisi draf; Plus hanya menghemat satu ketukan "Simpan" |
+| Analisis lebih dari 6 periode, tren 12 bulan | Baru terasa setelah 7 bulan; bagi pengguna baru tidak ada bedanya |
+| Perkiraan 12 bulan | Versi gratis sudah memberi +2 bulan; selisihnya kuantitas, bukan kualitas |
+| Template dan proyek freelance lebih banyak | Batas jumlah; terasa sebagai rintangan, bukan hadiah |
+| Kosmetik | Bagus sebagai bonus, tidak cukup sebagai alasan |
 
-Dua pengamatan dari tabel:
+Polanya sama: **Plus = Gratis + sedikit**. Pengguna yang sudah puas dengan
+versi gratis tidak punya pekerjaan baru yang ingin diselesaikan. Paket yang
+terasa premium menjual **pekerjaan yang berbeda jenisnya**:
 
-- **Hampir semua fitur berbiaya marginal nol.** Satu-satunya biaya
-  berjalan yang nyata hari ini adalah Gemini, dan itu pun sangat murah.
-  Artinya paywall tidak perlu dibenarkan dengan "biaya server"; ia harus
-  dibenarkan dengan **nilai**. Kuota Gemini (§4.3) dipakai sebagai bingkai
-  nilai, bukan pelindung biaya.
-- **Belum ada cadangan maupun ekspor.** Data hidup hanya di satu ponsel.
-  Ini risiko terbesar bagi pengguna (ganti/hilang ponsel = catatan hilang)
-  dan sekaligus alasan membayar yang paling umum di kategori ini (Monefy
-  dan Spendee menjual sinkronisasi/cadangan). Lihat §9.1.
+- Gratis menjawab "**apa yang sudah terjadi**". Plus menjawab "**apa yang
+  akan terjadi, apa artinya, dan apa yang sebaiknya kuperhatikan**".
+- Gratis menunggu kamu membuka aplikasi. Plus **datang padamu** saat ada yang
+  perlu diketahui.
+- Gratis memberi angka. Plus memberi **jawaban dan dokumen siap pakai**
+  (rapor, rekap SPT, invoice).
 
-## 3. Prinsip pembagian
+## 3. Inventaris fitur yang ada dan yang direncanakan
 
-Setiap fitur diuji dengan lima pertanyaan, berurutan:
+Ringkas dari PRD §7, TASK_LIST, dan antrean B-n per 18 Okt 2026.
 
-1. **Apakah menguncinya membuat aplikasi gratis gagal memenuhi janjinya
-   sendiri?** Kalau ya, gratis. Janjinya: tahu di mana uangmu, apa yang
-   terjadi, dan ke mana direncanakan pergi (prinsip 1–3), dengan hambatan
-   mencatat rendah (prinsip 5).
-2. **Apakah ini data milik pengguna?** Melihat, mencari, dan membawa pergi
-   datanya sendiri selalu gratis. Plus boleh menjual *cara baru membaca*
-   data (tren panjang, tampilan tahun), bukan akses ke data itu.
-3. **Apakah ini keamanan atau aksesibilitas?** Gratis (kunci aplikasi, mode
-   gelap, sembunyikan nominal, bahasa).
-4. **Apakah ini menghemat kerja yang tetap bisa dilakukan manual?** Kandidat
-   Plus. Pengguna gratis tetap bisa mencapai hasil yang sama dengan tangan;
-   Plus membuatnya terjadi sendiri. Ini cocok dengan sifat aplikasi:
-   otomatisasi selalu lewat `RecordTransaction` (aturan 8), jadi tidak ada
-   jalur pencatatan khusus berbayar.
-5. **Apakah ini kedalaman yang hanya dibutuhkan setelah berbulan-bulan
-   memakai?** Kandidat Plus. Nilainya tumbuh bersama riwayat, sehingga
-   pengguna yang paling setia adalah yang paling mau membayar.
+| # | Fitur | Keadaan | Biaya marginal |
+|---|---|---|---|
+| F1 | CATAT (pemasukan, pengeluaran, transfer, kalkulator, tautan pos) | Ada | 0 |
+| F2 | Riwayat dan pencarian | Ada | 0 |
+| F3 | Dompet | Ada | 0 |
+| F4 | Anggaran, pos, arsip, penyaring; template | Ada | 0 |
+| F5 | Freelance (proyek, worklog, pajak per proyek, pembayaran) | Ada | 0 |
+| F6 | Beranda | Ada | 0 |
+| F7 | Kategori bawaan yang bisa diubah | Ada | 0 |
+| F8 | Catat pakai suara (STT sistem + parser aturan) | Ada | 0 |
+| F9 | Tafsir cerdas Gemini (fallback suara dan notifikasi) | Ada | ≈ US$0,0003 per panggilan |
+| F10 | Catat dari notifikasi (Android), tinjau semua dan tingkat otomatis | Ada | 0 (+F9) |
+| F11 | Rutin, kemunculan, pengingat, total langganan, kenaikan harga | Ada | 0 |
+| F12 | Rencana Bulan ini, uang nganggur, perkiraan +2 bulan | Ada | 0 |
+| F13 | Periode keuangan pilihan sendiri | Ada | 0 |
+| F14 | Analisis R1 (6 periode, dibanding biasanya, tren) | Ada | 0 |
+| F15 | Akun opsional, mata uang, bahasa, mode gelap, sembunyikan nominal | Ada | 0 |
+| F16 | Analisis R2 tahun dan tren saldo (B-38); horizon 12 bulan (B-30); R3 otomasi rutin (B-28) | Direncanakan | 0 |
+| F17 | Sinkronisasi antar perangkat (B-7) | Direncanakan, besar | Server |
+| F18 | Ekspor/impor, cadangan, kunci aplikasi, widget | **Belum ada** | 0 |
+| F19 | Pemindaian struk, asisten AI, laporan tahunan, utang, akun bersama | **Di luar MVP** (PRD §6), kandidat Plus | Gemini untuk yang AI |
 
-Yang sengaja **tidak** dipakai sebagai tuas:
+Pengamatan: hampir semua yang sudah ada berbiaya nol dan sudah bagus.
+Karena itu nilai Plus harus datang dari **fitur baru** (F19 dan §6), bukan
+dari mengunci F1–F15.
 
-- **Batas jumlah transaksi.** Menghukum kebiasaan yang ingin dibangun.
-- **Batas dompet.** Spendee (1 dompet), Wallet (3 akun), dan Money Lover
-  membatasi ini, tapi di Tanukonomy dompet adalah proposisi nilai #1 dan
-  persona sasaran memang punya beberapa rekening, dompet digital, dan tunai.
-  Batas 1–3 membuat Beranda menampilkan total saldo yang salah, sehingga
-  versi gratis berbohong. Alternatif batas longgar ada di KT-P3.
-- **Iklan.** Lihat §1 butir 6.
-- **Mengunci data saat Plus berakhir.** Lihat §7.
+## 4. Prinsip pembagian
 
-## 4. Pembagian Gratis dan Plus
+### 4.1 Lima uji, berurutan
 
-### 4.1 Tabel pembagian
+1. **Menguncinya membuat versi gratis gagal memenuhi janjinya?** Kalau ya,
+   gratis. Janjinya: tahu di mana uangmu, apa yang terjadi, dan ke mana
+   direncanakan pergi, dengan hambatan mencatat rendah (prinsip 1–3 dan 5).
+2. **Data milik pengguna?** Melihat, mencari, dan membawa pergi datanya
+   sendiri selalu gratis.
+3. **Keamanan atau aksesibilitas?** Gratis.
+4. **Tanuki melakukan pekerjaan yang tidak bisa dilakukan pengguna dengan
+   tangan, atau bekerja saat pengguna tidak membuka aplikasi?** Plus.
+5. **Menghasilkan jawaban atau dokumen, bukan sekadar angka?** Plus.
 
-| Area | Gratis (selamanya) | Plus |
+### 4.2 Yang tidak dipakai sebagai tuas
+
+Batas jumlah transaksi, batas dompet (dompet adalah proposisi nilai #1 dan
+persona memang punya banyak; batas kecil membuat total saldo di Beranda
+salah), iklan, dan mengunci data saat Plus berakhir.
+
+### 4.3 Penyetelan ulang versi gratis
+
+Versi gratis yang terlalu murah hati di bagian **otomasi** membuat Plus
+kehilangan inti ceritanya. Dua penyesuaian, keduanya hanya menyentuh
+otomasi dan bukan pencatatan:
+
+- **Catat dari notifikasi gratis untuk 1 aplikasi sumber** (misalnya bank
+  utama), tetap dengan draf terisi dan tinjau semua. Plus: semua aplikasi,
+  tingkat otomatis, pola sendiri. Persona umumnya punya 2–4 aplikasi bank
+  dan dompet digital, jadi batas ini terasa tanpa mematahkan fitur
+  (KT-P8).
+- **Tafsir cerdas gratis 30 per periode** (suara + notifikasi digabung),
+  lalu jatuh ke parser aturan tanpa ada yang gagal.
+
+## 5. Pembagian Gratis dan Plus
+
+| Area | Gratis | Plus |
 |---|---|---|
-| **Mencatat** (F1, F8, F9) | CATAT lengkap, kalkulator, kategori sendiri, suara dengan parser aturan, tanpa batas | — (sama) |
-| **Riwayat dan Dompet** (F2, F3, F7) | Tanpa batas, pencarian, Beranda lengkap | — (sama) |
-| **Anggaran** (F4, F5) | Anggaran dan pos tanpa batas; **1 template** | Template tanpa batas |
-| **Rutin** (F13, F20) | Rutin tanpa batas, pengingat, kartu Menunggu, total langganan, deteksi kenaikan harga, catat satu ketuk | **Otomasi R3**: catat otomatis per rutin bernominal tetap, saran pola rutin dari riwayat, peringatan rutin menganggur |
-| **Rencana** (F14, F15, F19) | Bulan ini, uang nganggur, perkiraan +2 bulan, periode keuangan | **Perkiraan sampai 12 bulan**, peringatan dini "uang nganggur menipis di bulan X" |
-| **Catat dari notifikasi** (F11, F12) | Semua aplikasi sumber, pola bawaan, tingkat **tinjau semua** (kotak masuk + pengingat) | **Tingkat otomatis** (dicatat langsung bila lengkap/yakin), **pola buatan sendiri** |
-| **Tafsir cerdas** (F10) | **30 tafsir per bulan** (suara + notifikasi digabung), lalu jatuh ke parser aturan | **Tanpa kuota** (batas wajar 1.000/bulan, tidak ditampilkan) |
-| **Analisis** (F16, F18) | **6 periode terakhir**: seluruh Analisis R1, termasuk "dibanding biasanya" dan tren enam bulan | **Seluruh riwayat**, tren 12 bulan, tampilan tahun, tren total saldo (B-38) |
-| **Freelance** (F6) | **2 proyek aktif** (proyek selesai/arsip tidak dihitung) | Proyek aktif tanpa batas |
-| **Rapor** (F27, baru) | Rapor bulanan ringkas (bisa dibagikan, bertanda Tanukonomy) | **Rapor Tahunan** lengkap ("Tahun Tanuki-mu"), rapor bulanan rinci |
-| **Data** (F22, F23, F21) | **Ekspor CSV, cadangan dan pulihkan manual ke berkas** | **Cadangan otomatis** harian ke Google Drive pengguna; kelak **sinkronisasi antar perangkat** |
-| **Keamanan dan dasar** (F17, F24) | Kunci aplikasi, sembunyikan nominal, mode gelap, bahasa, mata uang | — (sama) |
-| **Widget** (F25, baru) | Widget **tombol Catat** | Widget ringkasan (saldo, sisa anggaran, menunggu) |
-| **Kosmetik** (F26, baru) | Tema bawaan terang/gelap | Tema warna tambahan, kostum tanuki, ikon aplikasi alternatif |
+| **Mencatat inti** | CATAT lengkap, kalkulator, kategori sendiri, suara dengan parser aturan, Riwayat, Dompet, Beranda, tanpa batas | — (sama) |
+| **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas |
+| **Analisis** | 6 periode terakhir (seluruh R1) | Riwayat penuh, tren 12 bulan, tampilan tahun, tren saldo |
+| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; rutin tercatat otomatis (R3); tafsir tanpa kuota |
+| **② Tanuki Berjaga** | **Cicip 1 peringatan** per periode | **Penjaga**: prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan besar minggu depan, langganan naik/menganggur; **Ringkasan Senin** |
+| **③ Tanya Tanuki** | **Cicip 3 pertanyaan** per periode | Tanya jawab bahasa sehari-hari tentang uangmu sendiri, ketik atau suara |
+| **④ Tanuki Merencanakan** | — | **Bagaimana kalau** (simulasi), **Target** dengan perkiraan tanggal tercapai, perkiraan 12 bulan |
+| **⑤ Tanuki Melapor** | Rapor bulanan ringkas (angka, bisa dibagikan) | **Rapor bulanan bercerita**, **Rapor Tahunan**, **Rekap SPT tahunan**, ekspor laporan PDF/Excel; Freelance Pro (invoice, status tagihan, penghasilan per klien) |
+| **⑥ Tanuki Menyimpan** | Ekspor CSV, cadangkan dan pulihkan manual ke berkas | Cadangan otomatis harian ke Google Drive pengguna; kelak sinkronisasi antar perangkat |
+| **Keamanan dan dasar** | Kunci aplikasi, sembunyikan nominal, mode gelap, bahasa, mata uang | — (sama) |
+| **Widget** | Widget tombol Catat | Widget ringkasan (sisa anggaran, uang nganggur, Menunggu) |
+| **Kosmetik** | Tema bawaan | Tema tambahan, kostum tanuki, ikon aplikasi alternatif, lencana Pendiri |
 | **Iklan** | Tidak ada | Tidak ada |
 
-### 4.2 Kenapa garisnya di sana
+Jatah cicip disimpan di Remote Config (sudah dipakai Fase 20), jadi bisa
+disetel tanpa rilis.
 
-- **Rutin tetap gratis penuh**, otomasinya yang Plus. Pengingat rutin adalah
-  mesin kebiasaan (orang kembali ke aplikasi tiap tagihan jatuh tempo);
-  membatasinya menurunkan retensi, sumber semua konversi.
-- **Notifikasi gratis di tingkat tinjau semua.** Pengguna gratis tetap
-  merasakan sihirnya (notifikasi bank berubah jadi draf CATAT terisi),
-  sehingga mereka tahu persis apa yang dibeli: menghilangkan satu ketukan
-  "Simpan" per transaksi, puluhan kali sebulan. Ini pengait paling kuat
-  karena manfaatnya terhitung (§6, P1).
-- **Analisis 6 periode gratis** sama dengan jangkauan R1 yang sudah
-  dipakai penguji (tren enam bulan, pembanding rata-rata 3 bulan, aturan
-  B-6), jadi tidak ada yang dicabut. Plus menjual yang belum ada: riwayat
-  lebih dari 6 periode, tren 12 bulan, dan tampilan tahun (R2). Pemicunya
-  datang terlambat (bulan ke-7), tapi saat itu pengguna sudah terikat dan
-  riwayatnya paling berharga. Daftar Riwayat sendiri tetap penuh; yang Plus
-  hanya tampilan analisisnya.
-- **Freelance 2 proyek aktif.** Pembeda produk tetap terlihat di versi
-  gratis (karyawan dengan satu sampingan cukup), sementara pekerja lepas
-  sungguhan dengan banyak klien adalah segmen yang paling mudah membenarkan
-  biaya Rp19.000 terhadap penghasilannya.
-- **1 template anggaran gratis** supaya pengguna mengerti fiturnya; yang
-  menyusun banyak anggaran berulang adalah pengguna mahir.
+## 6. Fitur Plus baru, rinci
 
-### 4.3 Kuota tafsir cerdas
+Format tiap fitur: apa yang didapat pengguna, kenapa premium, cara kerja
+singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
 
-- Dihitung per periode keuangan (bukan bulan kalender), satu tafsir = satu
-  panggilan Gemini yang berhasil. Tafsir oleh pola dan parser aturan tidak
-  dihitung, jadi kebanyakan pengguna gratis tidak akan pernah menyentuh
-  batasnya bila pola bawaannya bagus.
-- Saat kuota habis: tidak ada yang gagal. Suara tetap mengisi draf dengan
-  parser aturan, notifikasi yang tidak cocok pola masuk kotak masuk tanpa
-  tafsir. Pesan netral sekali per periode: "Tafsir cerdas bulan ini sudah
-  terpakai 30. Catatan tetap jalan; bagian yang ragu dikosongkan seperti
-  biasa."
-- Angka 30 dan 1.000 dibaca dari Remote Config (sudah dipakai Fase 20),
-  sehingga bisa disetel tanpa rilis.
-- Biaya terburuk pengguna Plus yang menghabiskan 1.000 tafsir:
-  ≈ US$0,27/bulan (VOICE_INPUT_RESEARCH §9). Aman terhadap harga mana pun
-  di §8.
+### 6.1 Catat dari foto (pilar ①)
 
-## 5. Uji coba terbalik (reverse trial)
+- **Yang didapat:** foto struk belanja atau tangkapan layar bukti transfer,
+  QRIS, atau e-wallet → CATAT terbuka terisi (nominal, tanggal, toko sebagai
+  catatan, kategori ditebak, dompet dari pola tangkapan layar). Bisa dibuka
+  dari tombol Catat, dari lembar bagi Android ("Bagikan ke Tanukonomy"), dan
+  dari galeri.
+- **Kenapa premium:** di Indonesia bukti transfer dan QRIS adalah kejadian
+  harian, dan aplikasi pencatat manual hampir tidak ada yang menanganinya
+  dengan baik. Ini menghapus pekerjaan yang paling malas dilakukan:
+  menyalin angka dari layar lain.
+- **Cara kerja:** gambar dikirim ke Gemini (multimodal) lewat Firebase AI
+  Logic yang sudah ada, keluarannya masuk ke penyusun draf `shared/capture/`
+  yang sama dengan suara. Resolver tetap hanya memilih dompet dan kategori
+  yang ada; bagian ragu dikosongkan.
+- **Aturan:** draf **selalu membuka CATAT** (aturan 8). Pengguna diberi tahu
+  sekali bahwa gambar dikirim untuk dibaca dan tidak disimpan (NFR-SEC-001);
+  gambar tidak disimpan di perangkat sesudah draf jadi.
+- **Biaya:** ≈ US$0,0015 per foto [E dari harga `gemini-3.5-flash-lite`
+  di VOICE_INPUT_RESEARCH §9: ~2.000 token masuk, ~300 keluar].
+- **Ketergantungan:** kecil, karena interpreter, resolver, dan draf sudah
+  ada. Struk berisi banyak barang cukup dibaca totalnya di R1; rincian
+  per barang dan patungan menyusul (§7).
 
-### 5.1 Alur
+### 6.2 Penjaga dan Ringkasan Senin (pilar ②)
 
-| Kapan | Yang terjadi |
-|---|---|
-| Akhir onboarding | Layar hadiah, bukan tagihan: "Plus aktif 14 hari, gratis. Tanpa kartu, tanpa langganan otomatis." Satu tombol "Mulai". Daftar 3 hal yang Plus lakukan, dipersonalisasi dari pilihan onboarding (mis. bila mengaktifkan catat notifikasi: "Catatan dari notifikasi bank tercatat sendiri"). |
-| Hari 0–14 | Semua fitur Plus aktif. Tur spotlight (ADR-021) menyorot fitur Plus saat pertama tampil, dengan lencana kecil "Plus". Catat notifikasi menawarkan tingkat otomatis begitu pengguna menyelesaikan 3 tinjauan. |
-| Hari 11 | Satu notifikasi lokal dan kartu di Beranda: **rekap nilai**, bukan hitung mundur. "3 hari lagi Plus-mu selesai. Selama ini: 23 catatan tercatat otomatis, 9 tafsir cerdas, tren 4 bulan dibuka." Angka dihitung dari pemakaian lokal. |
-| Hari 14 | Layar turun ke Gratis: apa yang tetap (semua catatan, semua data), apa yang berubah (dengan angka pemakaiannya), dan penawaran perkenalan **48 jam**: tahun pertama Rp99.000. Tombol kedua "Lanjut dengan Gratis" sama jelasnya. |
-| Sesudahnya | Hanya paywall kontekstual (§6). Penawaran perkenalan muncul sekali lagi di akhir periode keuangan berikutnya, lalu tidak lagi. |
+- **Yang didapat:** notifikasi lokal hanya saat ada yang layak diketahui,
+  dengan nada netral katalog wawasan RECURRING_AND_FORECAST §7B:
+  - "Dengan laju sekarang, anggaran Makan habis sekitar 22 Okt, 9 hari
+    sebelum periode berakhir."
+  - "Uang nganggur diperkirakan minus Rp350.000 di pekan terakhir periode
+    ini, sesudah cicilan dan listrik."
+  - "Pengeluaran Transportasi pekan ini 3× biasanya."
+  - "Pekan depan ada 3 tagihan rutin, total Rp2,1 jt."
+  - Langganan naik harga atau rutin yang tampaknya sudah tidak dipakai (W6,
+    B-28).
+  - **Ringkasan Senin:** satu notifikasi tiap Senin pagi berisi pekan lalu
+    (masuk, keluar, kategori teratas) dan pekan ini (tagihan, sisa
+    anggaran).
+- **Kenapa premium:** versi gratis menunggu dibuka; Penjaga **datang lebih
+  dulu**, sebelum anggaran jebol, bukan sesudahnya. Ini rasa "ada yang
+  mengawasi untukku" yang tidak bisa ditiru dengan membuka aplikasi lebih
+  sering.
+- **Cara kerja:** dihitung **di perangkat** dari data yang sudah ada
+  (`monthPlan`, `projectCashflow`, Analisis, rutin), dijadwalkan dengan
+  `flutter_local_notifications` yang sudah dipakai. Batas: maksimal satu
+  peringatan per hari dan bisa diatur per jenis.
+- **Aturan:** tanpa skor, tanpa streak, tanpa menghakimi (KT-R13, nada §7B).
+- **Biaya:** 0. Tanpa jaringan.
+- **Cicip gratis:** satu peringatan per periode, diberi label "Contoh
+  Penjaga", supaya pengguna gratis tahu apa yang mereka lewatkan.
 
-### 5.2 Kenapa reverse trial, bukan uji coba Play biasa
+### 6.3 Tanya Tanuki (pilar ③)
 
-- Uji coba Play Billing butuh kartu atau metode bayar dan berlangganan
-  otomatis. Di Indonesia banyak pengguna tidak punya kartu kredit di akun
-  Play (pulsa dan dompet digital memang tersedia, tapi tetap ada hambatan),
-  dan "berlangganan otomatis" menakutkan untuk aplikasi baru yang belum
-  dipercaya.
-- Freemium biasa membuat pengguna tidak pernah merasakan fitur Plus. Ringkasan
-  laporan RevenueCat 2026 menyebut median konversi uji coba ke berbayar
-  hari ke-35 10,7% untuk *hard paywall* dan 2,1% untuk freemium. Reverse
-  trial berusaha mengambil sebagian keunggulan hard paywall (pengguna
-  merasakan produk penuh) tanpa mengunci pintu masuk.
-- Rasa kehilangan lebih kuat dari janji. Pengguna yang sudah 14 hari
-  melihat notifikasi banknya tercatat sendiri akan merasakan kembali ke
-  tinjau manual sebagai kemunduran nyata.
+- **Yang didapat:** kotak tanya (atau suara, tekan lama tombol Catat) untuk
+  pertanyaan sehari-hari:
+  - "Berapa habis buat kopi 3 bulan terakhir?"
+  - "Bulan ini aku lebih boros di mana dibanding biasanya?"
+  - "Kalau beli HP 5 juta tanggal 1, uang nganggurku cukup sampai gajian?"
+  - "Klien mana yang paling lama bayarnya?"
 
-### 5.3 Panjang uji coba
+  Jawaban berupa kalimat pendek, angka, dan tautan ke layar yang
+  membuktikannya (Analisis tersaring, Rencana, rincian proyek).
+- **Kenapa premium:** mengubah data yang dicatat berbulan-bulan menjadi
+  jawaban dalam satu kalimat. Ini "asisten keuangan berbasis AI" di PRD §6,
+  dibangun di atas prinsip proyek.
+- **Cara kerja, prinsip "Tanuki tidak pernah menghitung":** Gemini hanya
+  **menerjemahkan pertanyaan** menjadi kueri terstruktur (jenis, kategori,
+  dompet, periode, kata kunci catatan, atau skenario). Kueri divalidasi
+  resolver seperti draf CATAT, lalu **angkanya dihitung di perangkat**
+  dengan fungsi domain yang sudah teruji, dan kalimat jawabannya disusun
+  dari templat lokal. Pertanyaan yang tidak bisa dipetakan dijawab jujur
+  ("Aku belum bisa menjawab itu") dengan saran pertanyaan yang bisa.
+  Akibatnya: angka selalu tepat (aturan 1 dan preferensi "ketepatan angka"),
+  dan yang dikirim ke Gemini hanya **teks pertanyaan dan daftar nama
+  kategori/dompet**, tanpa nominal atau transaksi.
+- **Aturan:** hanya tentang data pengguna sendiri. Tidak memberi saran
+  produk investasi atau pinjaman.
+- **Biaya:** ≈ US$0,001 per pertanyaan [E: ~1.500 token masuk, ~200
+  keluar]. Batas wajar 300 per bulan.
+- **Ketergantungan:** sedang. Butuh katalog kueri yang didukung (mulai
+  dari 10–15 bentuk pertanyaan paling umum) dan uji pemetaannya.
 
-14 hari dipilih karena cukup untuk melihat dua sampai tiga siklus belanja
-mingguan dan satu sampai dua tagihan rutin, tetapi berakhir sebelum
-pengguna melupakan aplikasinya. Alternatif yang lebih selaras dengan Fase 18:
-**sampai akhir periode keuangan pertama yang penuh** (minimal 14 hari),
-supaya Analisis sempat menampilkan satu periode utuh. Lebih kuat tapi
-panjangnya tidak seragam (14–45 hari). Pilihan di KT-P2.
+### 6.4 Bagaimana kalau, dan Target (pilar ④)
 
-### 5.4 Penyalahgunaan
+- **Bagaimana kalau:** pengguna menambah kejadian khayalan ke perkiraan
+  ("cicilan motor Rp1,2 jt × 24 mulai Des", "beli laptop Rp12 jt Feb",
+  "gaji naik 10% Jan", "berhenti kerja Mar") dan melihat uang nganggur
+  12 bulan ke depan **dengan dan tanpa** skenario itu, berdampingan.
+  Skenario bisa disimpan, dibandingkan, dan dibuang. Tidak pernah menjadi
+  transaksi atau rutin sungguhan kecuali pengguna memilih "Jadikan rutin".
+- **Target:** "Dana darurat Rp15 jt", "Liburan Rp6 jt Juni". Aplikasi
+  memperkirakan tanggal tercapai dari uang nganggur rata-rata, dan
+  memberi tahu bila meleset. Target adalah **rencana**, bukan pemesanan
+  uang (sejalan aturan 5): tidak mengubah saldo dompet mana pun; kemajuan
+  dibaca dari saldo dompet yang ditandai untuk target itu atau dari
+  pencatatan sisihkan yang berupa transfer.
+- **Kenapa premium:** keputusan besar (cicilan, resign, beli barang mahal)
+  adalah saat orang paling butuh kepastian dan paling mau membayar.
+- **Cara kerja:** di atas `projectCashflow` yang sudah ada (ADR-035/036).
+  Target butuh entitas baru → ADR (Target tidak ada sejak pivot; 1.0 punya
+  `shared/goal` yang sudah dihapus).
+- **Biaya:** 0.
 
-Uji coba disimpan lokal dan di Firebase Auth bila pengguna masuk. Pasang
-ulang aplikasi bisa mengulang uji coba bagi yang tidak masuk akun. Untuk
-skala sekarang, terima risiko ini: orang yang rela memasang ulang dan
-kehilangan data tiap 14 hari bukan pembeli. Bila kelak berarti, kaitkan ke
-Play Integrity atau wajibkan masuk akun untuk uji coba kedua.
+### 6.5 Rapor, Rekap SPT, dan Freelance Pro (pilar ⑤)
 
-## 6. Paywall kontekstual: titik pengait
+- **Rapor bulanan bercerita:** di akhir tiap periode, Tanuki menyusun satu
+  halaman: tiga hal yang menonjol, perbandingan dengan biasanya, rutin yang
+  berubah, kemajuan target. Kalimat dari templat lokal (tanpa mengirim
+  data). Versi gratis: kartu angka ringkas.
+- **Rapor Tahunan ("Tahun Tanuki-mu"):** rangkuman setahun dalam kartu
+  geser bergaya piksel yang bisa dibagikan tanpa nominal (persentase dan
+  peringkat saja), tayang Desember. Kartu yang dibagikan membawa nama
+  aplikasi, jadi ini juga saluran pertumbuhan.
+- **Rekap SPT tahunan:** satu dokumen (PDF + CSV) yang membantu mengisi SPT
+  orang pribadi: penghasilan per sumber (gaji dan freelance per klien,
+  beserta potongan pajak per proyek yang sudah tercatat), saldo tiap dompet
+  di 31 Desember sebagai daftar harta kas, dan utang tercatat (bila §7
+  utang-piutang sudah ada). Tayang Januari, sebelum batas lapor SPT orang
+  pribadi 31 Maret. Ini **rekap catatan**, bukan pelaporan pajak, dan
+  aplikasi tidak menghitung pajak terutang.
+- **Freelance Pro:** buat invoice PDF dari worklog (nama klien, jam, tarif,
+  pajak) dan bagikan lewat lembar bagi; status tagihan *terkirim*, *jatuh
+  tempo*, *lewat jatuh tempo* (menjawab pertanyaan terbuka PRD §13 tentang
+  status ketiga dan ikon `icon_freelance_overdue_payment` yang sudah ada);
+  pengingat tagih; penghasilan per klien dan tarif efektif per jam.
+  Pembayaran tetap dicatat lewat CATAT (aturan 6 dan 8): invoice adalah
+  dokumen, tidak menyentuh saldo.
+- **Ekspor laporan PDF/Excel** dari Analisis periode atau tahun mana pun.
+- **Kenapa premium:** menghasilkan dokumen yang langsung dipakai di luar
+  aplikasi. Pekerja lepas punya alasan bisnis untuk membayar.
+- **Biaya:** 0.
 
-Aturan umum:
+### 6.6 Cadangan otomatis (pilar ⑥)
 
-- Paywall hanya muncul **sesudah** pengguna berhasil melakukan sesuatu,
-  tidak pernah menghalangi tindakan mencatat. CATAT, simpan, dan sunting
-  transaksi bebas paywall selamanya.
-- Maksimal satu paywall kontekstual per hari dan tiga per periode keuangan;
-  sesudah "Nanti saja" tiga kali pada pemicu yang sama, pemicu itu diam
-  30 hari.
-- Selalu tampilkan **angka milik pengguna** (berapa catatan, berapa bulan),
-  bukan klaim umum.
-- Nada mengikuti glosarium `docs/03-design/design-system/writing.md`:
-  netral, menjelaskan manfaat, tanpa menghakimi, tanpa urgensi palsu.
-  Kosakata tetap "mencatat", bukan "melakukan".
+Cadangan harian terenkripsi ke folder data aplikasi di Google Drive milik
+pengguna (bukan server Tanukonomy), dengan pemulihan saat pasang ulang atau
+ganti ponsel. Pemulihan mengikuti ADR-024 §3.3 (data diganti dengan
+peringatan, tanpa penggabungan). Biaya server 0. Sinkronisasi sungguhan
+antar perangkat (B-7) menyusul di §7.
 
-| # | Pemicu | Saat | Contoh kalimat (id) | Kekuatan |
+## 7. Fitur mendatang untuk Plus
+
+Diurutkan menurut nilai bagi pengguna Plus dibanding usahanya. "Gratis
+dasar" berarti bagian dasarnya masuk versi gratis supaya janji produk
+tetap utuh.
+
+| Fitur | Untuk siapa | Pembagian | Usaha | Catatan |
 |---|---|---|---|---|
-| P1 | Pengguna gratis menyimpan tinjauan notifikasi ke-10 dalam satu periode | Sesudah simpan, kartu kecil di kotak masuk | "10 catatan dari notifikasi bulan ini kamu tinjau satu per satu. Dengan Plus, yang lengkap tercatat sendiri; kamu tinggal cek di daftar Tercatat otomatis." | Sangat kuat: manfaat terhitung, berulang |
-| P2 | Menggeser Analisis ke periode ke-7 ke belakang, atau membuka tren 12 bulan | Halaman periode itu tampil dengan grafik **data asli** pengguna yang diburamkan | "Kamu sudah mencatat 9 bulan. Lihat semuanya dengan Plus." | Kuat: data milik sendiri yang terlihat tapi belum terbaca |
-| P3 | Tafsir cerdas tersisa 5 | Sekali, di lembar suara/kotak masuk | "Tafsir cerdas tinggal 5 bulan ini." | Sedang |
-| P4 | Membuat proyek freelance aktif ke-3 | Saat menekan Simpan; proyek tetap tersimpan sebagai **Arsip** bila menolak | "Proyek aktif ke-3 butuh Plus. Simpan sebagai arsip dulu, atau aktifkan Plus." | Kuat untuk pekerja lepas |
-| P5 | Menggeser perkiraan Rencana melewati +2 bulan | Kolom ketiga berupa kartu terkunci | "Lihat sampai 12 bulan ke depan." | Sedang |
-| P6 | Rutin bernominal tetap dicatat satu ketuk 3 bulan berturut-turut | Di rincian rutin | "Netflix sudah 3 bulan kamu catat dengan nominal yang sama. Plus bisa mencatatnya otomatis tiap tanggal 12." | Kuat, butuh R3 |
-| P7 | 30 hari pemakaian atau 200 transaksi, belum pernah mencadangkan | Kartu Beranda, sekali | "200 catatanmu hanya ada di ponsel ini. Cadangkan sekarang (gratis), atau biarkan Plus mencadangkan tiap hari." | Kuat dan jujur; jalur gratis ada |
-| P8 | Desember / akhir tahun keuangan | Kartu Beranda + notifikasi lokal | "Tahun Tanuki-mu sudah siap." Tiga kartu pertama gratis, sisanya Plus | Musiman, viral bila dibagikan |
-| P9 | Membuka layar Akun | Baris tetap "Tanukonomy Plus" | — | Pasif, untuk yang sudah mau |
+| **Utang-piutang** ("Teman pinjam Rp500rb", kasbon, paylater) | Semua | Gratis dasar (catat dan lihat), Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan dan sisa pokok | M | Di luar MVP (PRD §6). Butuh ADR domain: piutang bukan saldo dompet. Cocok dengan maskot yang membawa buku utang-piutang (ONBOARDING_ART_BRIEF) |
+| **Patungan dari struk** | Anak muda, kantor | Plus | M | Sesudah catat dari foto dan utang-piutang: pilih barang per orang → piutang tercatat |
+| **Dompet Bersama / Plus Keluarga** | Pasangan, keluarga kecil | Tingkat kedua "Plus Keluarga" (2–5 orang) | L | Butuh sinkronisasi (B-7). Persona PRD memang menyebut keluarga kecil |
+| **Sinkronisasi antar perangkat** | Semua | Plus | L | B-7, ADR sendiri, wajib ADR-024 §3.3 |
+| **Kartu kredit dan paylater sebagai dompet tagihan** (jatuh tempo, tagihan berjalan) | Pemakai kartu | Gratis dasar, Plus: peringatan jatuh tempo masuk Penjaga | M | Di luar MVP (PRD §6), model sudah menampung |
+| **Kekayaan bersih** (aset manual: emas, reksa dana, kendaraan; dikurangi utang) | Profesional muda | Plus | M | Nilai dicatat manual, bukan tersambung ke broker (tetap "mencatat") |
+| **Tanya Tanuki R2**: kueri gabungan dan perbandingan antar tahun | Pengguna lama | Plus | M | Sesudah R1 terukur |
+| **Rapor kuartal untuk freelance** (penghasilan, klien, jam) | Pekerja lepas | Plus | S | Dari data Freelance Pro |
+| **Catat dari email** (struk e-commerce, tagihan) | Semua | Plus | L | Izin Gmail sensitif, kebijakan Google ketat; dipertimbangkan paling akhir |
+| **Gemma lokal** (B-15) untuk tafsir tanpa internet | Peduli privasi | Plus | L | Menurunkan biaya Gemini dan menjadi nilai jual privasi |
 
-Rupa paywall (satu layar): judul berbasis pemicu, 3 manfaat teratas yang
-diurutkan menurut pemicunya, pilihan **Tahunan** terpilih bawaan dengan
-"setara Rp10.750/bulan", Bulanan di bawahnya, tautan "Pulihkan pembelian",
-dan kalimat "Semua catatanmu tetap milikmu, berlangganan atau tidak."
+Yang sengaja tidak masuk: sinkronisasi bank dan pembayaran (bertentangan
+dengan definisi produk), saran investasi, skor kredit, dan gamifikasi
+streak (KT-R13).
 
-## 7. Saat Plus berakhir (turun ke Gratis)
+## 8. Uji coba terbalik dengan momen ajaib terjadwal
 
-Prinsip: **tidak ada data yang dikunci, tidak ada yang dihapus, tidak ada
-pencatatan yang terhalang.**
+Semua pengguna baru mendapat Plus 14 hari tanpa kartu. Supaya hari ke-14
+terasa sebagai kehilangan nyata, setiap pilar harus **benar-benar terjadi**
+di dalam 14 hari itu, bukan hanya tersedia:
 
-| Fitur | Perilaku sesudah turun |
+| Hari | Momen | Pilar |
+|---|---|---|
+| 0 (akhir onboarding) | Layar hadiah: "Plus aktif 14 hari. Tanpa kartu, tanpa langganan otomatis." Lalu ajakan pertama: "Coba foto struk atau bukti transfer terakhirmu." | ① |
+| 0–2 | Bila catat notifikasi diaktifkan: semua aplikasi sumber dan tawaran tingkat otomatis sesudah 3 tinjauan | ① |
+| 2–4 | Kartu Beranda berisi tiga contoh pertanyaan yang dipersonalisasi dari kategori yang sudah dipakai: "Tanya Tanuki: berapa habis buat Makan pekan ini?" | ③ |
+| 3–7 | Peringatan Penjaga pertama begitu ada sinyal nyata (anggaran, tagihan pekan depan) | ② |
+| Senin pertama | Ringkasan Senin pertama | ② |
+| 5–10 | Ajakan "Bagaimana kalau" saat pengguna membuka perkiraan di Rencana, atau membuat Target dari onboarding | ④ |
+| 11 | **Rekap nilai:** "Selama 11 hari: 14 catatan dari foto dan notifikasi, 4 peringatan Penjaga, 6 pertanyaan terjawab." Angka dari pemakaian lokal | semua |
+| 14 | Layar turun ke Gratis: yang tetap (semua catatan dan data), yang berubah (dengan angka pemakaiannya), dan tawaran **Harga Pendiri** selama 48 jam. "Lanjut dengan Gratis" sama jelasnya | — |
+
+Momen yang tidak pernah terjadi selama uji coba (misalnya Penjaga diam
+karena data belum cukup) tidak disebut di rekap. Rekap hanya memuat yang
+benar-benar dikerjakan Tanuki.
+
+Kenapa reverse trial: uji coba Play Billing butuh metode bayar dan
+berlangganan otomatis, yang menjadi hambatan bagi aplikasi baru. Menurut
+ringkasan laporan RevenueCat 2026, median konversi uji coba ke berbayar
+hari ke-35 adalah 10,7% untuk aplikasi yang wajib bayar di depan dan 2,1%
+untuk freemium. Reverse trial mencoba mengambil sebagian keunggulan pertama
+(pengguna merasakan produk penuh) tanpa menutup pintu masuk.
+
+Penyalahgunaan (pasang ulang untuk mengulang uji coba): diterima untuk
+skala sekarang; bila berarti, kaitkan ke akun atau Play Integrity.
+
+Alternatif panjang uji coba (sampai akhir periode keuangan pertama yang
+penuh) di KT-P2.
+
+## 9. Paywall kontekstual
+
+Aturan umum: paywall hanya muncul **sesudah** pengguna berhasil melakukan
+sesuatu, tidak pernah di tengah CATAT; maksimal sekali sehari dan tiga kali
+per periode; sesudah tiga kali "Nanti saja" pada pemicu yang sama, pemicu
+itu diam 30 hari; selalu memakai angka milik pengguna; nada mengikuti
+`docs/03-design/design-system/writing.md`.
+
+| # | Pemicu | Contoh kalimat | Pilar |
+|---|---|---|---|
+| P1 | Jatah cicip catat dari foto habis | "5 foto bulan ini sudah jadi catatan. Dengan Plus, foto berapa pun." | ① |
+| P2 | Memilih aplikasi sumber notifikasi kedua | "Bank utamamu sudah tercatat dari notifikasi. Tambah GoPay dan aplikasi lain dengan Plus." | ① |
+| P3 | Sesudah "Contoh Penjaga" bulanan | "Peringatan ini datang 9 hari sebelum anggaran Makan habis. Plus memberi tahu tiap kali ada yang seperti ini." | ② |
+| P4 | Jatah Tanya Tanuki habis, atau pertanyaan ke-4 diketik | Pertanyaannya tetap tersimpan: "Simpan pertanyaan ini dan jawab sekarang dengan Plus." | ③ |
+| P5 | Membuka perkiraan Rencana dan menggeser melewati +2 bulan | "Lihat 12 bulan ke depan, dan coba bagaimana kalau ada cicilan baru." | ④ |
+| P6 | Akhir periode: rapor ringkas tampil | Rapor bercerita di belakangnya diburamkan, memakai data asli | ⑤ |
+| P7 | Proyek freelance: pembayaran sudah lewat 14 hari dari worklog terakhir | "Klien A belum membayar 21 hari. Buat invoice dan pantau jatuh temponya dengan Plus." | ⑤ |
+| P8 | 30 hari atau 200 transaksi tanpa cadangan | "200 catatanmu hanya ada di ponsel ini. Cadangkan sekarang (gratis), atau biarkan Plus mencadangkan tiap hari." | ⑥ |
+| P9 | Desember dan Januari | "Tahun Tanuki-mu sudah siap" dan "Rekap SPT 2026-mu sudah bisa disusun" | ⑤ |
+| P10 | Layar Akun | Baris tetap "Tanukonomy Plus" | — |
+
+Isi layar paywall: judul sesuai pemicu, enam pilar dengan pilar pemicu di
+atas, Tahunan terpilih bawaan ("setara Rp14.900/bulan"), Bulanan di
+bawahnya, "Pulihkan pembelian", dan kalimat "Semua catatanmu tetap milikmu,
+berlangganan atau tidak."
+
+## 10. Saat Plus berakhir
+
+Prinsip: tidak ada data yang dikunci atau dihapus, tidak ada pencatatan
+yang terhalang. "Yang sudah ada tetap ada; pekerjaan baru oleh Tanuki
+berhenti."
+
+| Fitur | Sesudah turun |
 |---|---|
-| Tingkat otomatis notifikasi | Kembali ke tinjau semua. Transaksi yang sudah tercatat otomatis tetap ada. |
-| Pola buatan sendiri | Tetap tersimpan dan **tetap dipakai** untuk mencocokkan; hanya membuat pola baru yang butuh Plus. (Mematikannya akan terasa seperti menghukum.) |
-| Otomasi rutin R3 | Rutin kembali menunggu konfirmasi satu ketuk. |
-| Proyek freelance aktif ke-3 dst. | Tetap aktif dan bisa dicatat (worklog, pembayaran diterima lewat CATAT); hanya **membuat** proyek aktif baru yang terhalang sampai di bawah batas. Aturan 6 dan 8 tidak pernah terhalang paywall. |
-| Template ke-2 dst. | Tetap ada dan bisa dipakai; membuat template baru butuh Plus. |
-| Analisis lebih dari 6 periode, tren 12 bulan, tahun | Terkunci tampilannya; Riwayat tetap penuh. |
-| Cadangan otomatis | Berhenti; cadangan lama di Drive tetap bisa dipulihkan. Cadangan manual tetap tersedia. |
-| Kosmetik | Kembali ke tema bawaan; pilihan disimpan bila berlangganan lagi. |
+| Notifikasi semua aplikasi, tingkat otomatis | Kembali ke 1 aplikasi pilihan pengguna dan tinjau semua; transaksi yang sudah tercatat tetap ada; pola buatan sendiri tetap dipakai |
+| Catat dari foto, Tanya Tanuki, Penjaga | Kembali ke jatah cicip |
+| Skenario dan Target | Tetap bisa dilihat; tidak diperbarui dan tidak bisa dibuat yang baru |
+| Rapor, Rekap SPT, invoice yang sudah dibuat | Tetap bisa dibuka dan dibagikan |
+| Status tagihan freelance | Tetap tampil; pembayaran tetap dicatat lewat CATAT |
+| Analisis di luar 6 periode | Tampilannya terkunci; Riwayat tetap penuh |
+| Cadangan otomatis | Berhenti; cadangan lama tetap bisa dipulihkan; cadangan manual tersedia |
+| Kosmetik | Kembali ke bawaan; pilihan disimpan |
 
-Aturan "yang sudah ada tetap berjalan, yang baru butuh Plus" lebih mudah
-dijelaskan dan menghindari ulasan bintang satu "data saya dikunci".
+## 11. Harga
 
-## 8. Harga
-
-### 8.1 Acuan pesaing (harga dolar, toko AS; harga Indonesia perlu dicek langsung di Play Store)
+### 11.1 Acuan pesaing (toko luar negeri; harga Indonesia perlu dicek di Play Store)
 
 | Aplikasi | Model | Harga |
 |---|---|---|
-| Spendee | Gratis 1 dompet + 1 anggaran; Plus; Premium (sinkron bank) | Plus US$1,99/bln atau US$14,99/thn; Premium US$5,99/bln atau US$35,99/thn; uji coba 7 hari |
-| Wallet (BudgetBakers) | Gratis terbatas (3 akun di Android); Premium | Sekitar US$4,49/bln, US$26,99/thn (sumber berbeda-beda) |
-| Money Lover | Gratis terbatas dompet/anggaran + iklan; Premium seumur hidup; Linked Wallet bulanan terpisah | Seumur hidup US$19,99 (toko AS), 599.000đ (Vietnam) |
-| Monefy | Gratis 1 akun; Pro sekali bayar (sinkron, multi-mata uang, tanpa iklan) | Bervariasi per toko |
-| YNAB | Berbayar penuh, uji coba 34 hari | US$109/thn, US$14,99/bln |
-| Monarch | Berbayar penuh, uji coba 7 hari | US$99,99/thn (Core) |
+| Spendee | Gratis 1 dompet + 1 anggaran; Plus; Premium (sinkron bank) | Plus US$1,99/bln atau US$14,99/thn; Premium US$5,99/bln atau US$35,99/thn |
+| Wallet (BudgetBakers) | Gratis terbatas; Premium | Sekitar US$4,49/bln, US$26,99/thn (sumber berbeda-beda) |
+| Money Lover | Gratis terbatas + iklan; Premium seumur hidup | US$19,99 seumur hidup (toko AS) |
+| YNAB | Berbayar penuh | US$109/thn |
+| Monarch | Berbayar penuh | US$99,99/thn (Core) |
 
-Pola yang terlihat: aplikasi pencatat manual di pasar berkembang berada di
-kisaran US$15–27/tahun, sering dengan pilihan seumur hidup; harga
-US$100/tahun hanya untuk aplikasi yang tersambung bank di pasar AS.
+Pencatat manual di pasar berkembang berada di kisaran US$15–27/tahun. Plus
+revisi 2 membawa pekerjaan yang biasanya hanya ada di aplikasi berharga
+lebih tinggi (asisten, perkiraan skenario, pemindaian), sehingga layak
+sedikit di atas kisaran itu.
 
-### 8.2 Usulan
+### 11.2 Usulan
 
 | Paket | Harga | Catatan |
 |---|---|---|
-| Bulanan | **Rp19.000** | Pintu masuk; harga "kopi susu sekali" |
-| Tahunan | **Rp129.000** (≈ Rp10.750/bln, hemat 43%) | Dipilih bawaan di paywall; tujuan utama |
-| Perkenalan tahun pertama | **Rp99.000** | Hanya 48 jam sesudah uji coba berakhir dan sekali lagi di periode berikutnya |
-| Pendiri (seumur hidup) | **Rp299.000** | Dijual terbatas, mis. 90 hari pertama rilis publik atau 500 pembeli pertama. Pasar Indonesia akrab dengan "sekali bayar" (Money Lover, Monefy). Dibatasi karena bertentangan dengan biaya sinkronisasi kelak |
+| Bulanan | **Rp25.000** | |
+| Tahunan | **Rp179.000** (≈ Rp14.900/bln, hemat 40%) | Terpilih bawaan |
+| Harga Pendiri | **Rp129.000/tahun**, terkunci selama tetap berlangganan | Untuk pembeli 90 hari pertama sesudah rilis publik, dan penawaran 48 jam sesudah uji coba berakhir. Mengganti paket seumur hidup |
+| Penguji closed testing | Plus gratis 12 bulan, lalu Harga Pendiri | Terima kasih, dan sumber ulasan pertama (KT-P5) |
 
-Ini hipotesis. Uji dengan eksperimen harga Play Console begitu ada volume;
-yang diukur adalah pendapatan per pemasang, bukan konversi saja.
+**Tanpa paket seumur hidup:** pilar ①③ memakai Gemini, jadi pembeli seumur
+hidup akan menjadi biaya tanpa batas waktu. Harga Pendiri yang terkunci
+memberi rasa "untung karena datang lebih awal" tanpa risiko itu.
 
-### 8.3 Penguji closed testing
+### 11.3 Biaya per pengguna Plus
 
-Penguji yang sudah ikut sejak closed testing diberi **Pendiri gratis**
-(atau Plus 12 bulan, KT-P5) sebagai terima kasih, lewat kode promo Play.
-Mereka sumber ulasan pertama di rilis publik.
+Perkiraan [E] dari harga `gemini-3.5-flash-lite` (US$0,30 per 1 juta token
+masuk, US$2,50 per 1 juta keluar, VOICE_INPUT_RESEARCH §9):
 
-## 9. Mekanisme teknis (garis besar untuk ADR)
+| Pemakaian bulanan | Pemakai biasa | Pemakai berat (batas wajar) |
+|---|---|---|
+| Tafsir cerdas | 40 × US$0,0003 | 1.000 × US$0,0003 |
+| Catat dari foto | 20 × US$0,0015 | 150 × US$0,0015 |
+| Tanya Tanuki | 15 × US$0,001 | 300 × US$0,001 |
+| **Total** | **≈ US$0,06** | **≈ US$0,8** |
 
-### 9.1 Prasyarat gratis: ekspor dan cadangan manual
+Pendapatan bersih Tahunan sesudah biaya layanan Play 15%: Rp179.000 × 0,85
+÷ 12 ≈ Rp12.700/bulan; Harga Pendiri ≈ Rp9.100/bulan. Pemakai biasa jauh
+aman. Pemakai berat (≈ US$0,8 ≈ Rp13.000 pada kurs ±Rp16.500) **melebihi**
+pendapatan bersih Harga Pendiri dan hampir menyamai Tahunan, karena itu
+batas wajar perlu ada (tidak ditampilkan kecuali tersentuh) dan biaya
+nyata per pengguna diukur sejak M1. Penjaga,
+skenario, rapor, dan cadangan Drive berbiaya 0.
 
-Sebelum paywall pertama: **Ekspor CSV** (transaksi, dompet, kategori) dan
-**Cadangkan ke berkas / Pulihkan dari berkas** (salinan basis data lokal,
-dibagikan lewat lembar bagi Android). Ini memenuhi ADR-024 (data milik
-perangkat) secara bermartabat dan membuat jalur gratis P7 jujur. Pulihkan
-mengikuti ADR-024 §3.3: data diganti dengan peringatan, tanpa penggabungan.
+## 12. Mekanisme teknis (garis besar untuk ADR)
 
-### 9.2 Pembelian dan hak (entitlement)
+### 12.1 Prasyarat gratis
 
-- **Google Play Billing lewat RevenueCat (`purchases_flutter`)**, usulan
-  utama: verifikasi kuitansi di server tanpa backend sendiri, ID pengguna
-  anonim cocok dengan akun opsional (ADR-023), paywall dan eksperimen bisa
-  diatur dari dasbor, dan siap untuk iOS. Gratis sampai ambang pendapatan
-  tertentu (cek ketentuan terbaru sebelum ADR). Alternatif: paket resmi
-  `in_app_purchase` + verifikasi di Cloud Functions (butuh Blaze, T-11.8,
-  dan kode server yang harus dirawat).
-- Pemulihan pembelian lewat akun Play, tidak wajib masuk akun Tanukonomy.
-- NFR-SEC-001 sudah mengizinkan panggilan untuk verifikasi pembelian. Data
-  yang dikirim ke penyedia billing (ID pembelian, ID pengguna anonim) wajib
-  dicatat di `docs/03-release/PLAY_DATA_SAFETY.md`.
+Ekspor CSV dan cadangkan/pulihkan manual ke berkas, serta kunci aplikasi,
+dikerjakan **sebelum** paywall pertama. Tidak etis memungut bayaran dari
+aplikasi yang datanya belum bisa dibawa pergi.
 
-### 9.3 Struktur kode (mengikuti ADR-030)
+### 12.2 Pembelian dan hak
 
-- `core/foundation/entitlement/`: port `Entitlements` (aliran
-  `PlanState`: gratis, uji coba sampai tanggal X, Plus sampai tanggal Y),
-  enum `PlusFeature`, dan batas (`freelanceActiveProjects`,
-  `smartInterpretationsPerPeriod`, `analysisPeriodsBack`, `budgetTemplates`)
-  yang dibaca dari Remote Config dengan nilai bawaan lokal. `core` tidak
+- Google Play Billing lewat **RevenueCat** (`purchases_flutter`), usulan
+  utama: verifikasi kuitansi di server tanpa backend sendiri, ID anonim
+  cocok dengan akun opsional, siap iOS. Alternatif `in_app_purchase` +
+  Cloud Functions (butuh Blaze, T-11.8). KT-P6.
+- Data ke penyedia billing dicatat di `docs/03-release/PLAY_DATA_SAFETY.md`.
+
+### 12.3 Struktur kode (ADR-030)
+
+- `core/foundation/entitlement/`: port `Entitlements` (aliran `PlanState`:
+  gratis, uji coba sampai X, Plus sampai Y), enum `PlusFeature`, jatah cicip
+  dan batas dari Remote Config dengan nilai bawaan lokal. `core` tidak
   mengimpor fitur.
-- `features/premium/`: paywall, layar hadiah uji coba, layar turun,
-  adaptor RevenueCat. Dibuka lewat `PremiumRouteKeys.paywall` dengan
-  parameter `PaywallTrigger` (P1–P9), sehingga fitur lain tidak mengimpor
-  isinya.
-- Fitur memeriksa hak lewat port, di lapisan presentasi atau use case
-  otomasi, **tidak pernah** di `RecordTransaction` itu sendiri. Pencatatan
-  manual tidak punya cabang hak sama sekali.
-- **Luring:** hak terakhir disimpan lokal dengan tanggal berakhirnya, plus
-  tenggang 3 hari bila tidak bisa memeriksa. Tanpa koneksi, pengguna Plus
-  tetap Plus (NFR-REL-001).
-- Kuota tafsir dihitung di klien per periode keuangan. Cukup untuk awal
-  karena biayanya kecil dan App Check sudah melindungi Gemini.
-- `test/architecture/import_boundaries_test.dart` diperluas untuk
-  `features/premium/`.
+- `features/premium/`: paywall, layar hadiah uji coba, rekap nilai, layar
+  turun, adaptor billing; dibuka lewat `PremiumRouteKeys.paywall` dengan
+  `PaywallTrigger`.
+- Fitur Plus baru di tempatnya masing-masing: catat dari foto di
+  `features/photo_capture/` (pola sama dengan `voice_capture`, berlanjut ke
+  `RecordRouteKeys.sheet`); Penjaga di `features/guardian/` membaca port
+  rencana dan analisis; Tanya Tanuki di `features/ask/` dengan pemeta kueri
+  di `shared/capture/` (interpreter yang sama, keluaran berbeda).
+- Hak diperiksa di presentasi atau use case otomasi, **tidak pernah** di
+  `RecordTransaction`. Pencatatan manual tidak punya cabang hak.
+- Luring: hak terakhir disimpan lokal dengan tanggal berakhir, tenggang
+  3 hari. Tanpa koneksi, pengguna Plus tetap Plus (NFR-REL-001); fitur yang
+  butuh Gemini memberi tahu bahwa ia butuh internet, seperti suara.
+- `test/architecture/import_boundaries_test.dart` diperluas untuk modul
+  baru.
 
-### 9.4 Pengukuran
+### 12.4 Privasi fitur AI
 
-Peristiwa Analytics (ADR-023 sudah ada): `trial_started`,
-`trial_value_recap_shown`, `trial_ended{outcome}`, `paywall_viewed{trigger}`,
-`paywall_dismissed{trigger}`, `purchase_started{plan}`,
+| Fitur | Yang dikirim ke Gemini | Yang tidak pernah dikirim |
+|---|---|---|
+| Tafsir cerdas (ada) | Teks ucapan atau notifikasi yang disamarkan | Saldo, nomor rekening |
+| Catat dari foto | Gambar yang dipilih pengguna | Riwayat, saldo |
+| Tanya Tanuki | Teks pertanyaan, nama kategori dan dompet | Nominal, transaksi, catatan |
+| Rapor, Penjaga, skenario | Tidak ada (lokal) | — |
+
+Semua fitur yang mengirim memberi tahu sekali saat pertama dipakai dan
+dicatat di kebijakan privasi situs (B-20).
+
+### 12.5 Pengukuran
+
+Peristiwa Analytics: `trial_started`, `trial_moment{pillar}`,
+`trial_value_recap_shown`, `trial_ended{outcome}`,
+`paywall_viewed{trigger}`, `paywall_dismissed{trigger}`,
 `purchase_completed{plan}`, `plus_feature_used{feature}`,
-`smart_quota_exhausted`. Ukuran utama:
+`taste_quota_exhausted{feature}`.
 
 | Ukuran | Target awal (hipotesis) |
 |---|---|
-| Pengguna onboarding yang memulai uji coba | ≥ 90% (otomatis) |
-| Uji coba → berbayar dalam 30 hari | 4–6% |
-| Konversi per pemasang hari ke-60 | 2–4% (median freemium 2,1%, ringkasan RevenueCat 2026) |
+| Pengguna uji coba yang mengalami ≥3 dari 6 pilar | ≥ 50% |
+| Uji coba → berbayar dalam 30 hari | 5–8% |
+| Konversi per pemasang hari ke-60 | 3–5% (median freemium 2,1%, ringkasan RevenueCat 2026) |
 | Porsi Tahunan dari pembelian | ≥ 60% |
-| Paywall per pengguna per minggu | ≤ 1 (pengaman terhadap rasa diganggu) |
-| Retensi D30 Gratis tidak turun dibanding sebelum paywall | ≤ 2 poin turun |
+| Pilar yang paling sering dipakai pembeli 30 hari sebelum membeli | Diukur, untuk menentukan urutan pilar di paywall |
+| Retensi D30 versi gratis | Turun ≤ 2 poin dibanding sebelum paywall |
 
-Pemicu yang konversinya rendah dibuang; batas dan kuota disetel lewat
-Remote Config, bukan rilis.
+"Pilar yang dialami" adalah ukuran terdepan: bila pengguna yang mengalami
+≥3 pilar jauh lebih sering membeli, prioritas berikutnya adalah membuat
+momen §8 lebih sering terjadi, bukan menambah fitur.
 
-## 10. Urutan peluncuran
+## 13. Urutan peluncuran
 
-| Tahap | Isi | Kenapa urutannya begini |
+| Tahap | Isi | Alasan urutan |
 |---|---|---|
-| **M0 Prasyarat** | ADR monetisasi; Firebase Blaze (T-11.8); ekspor CSV + cadangan/pulihkan manual (gratis); kunci aplikasi (gratis) | Kepercayaan dulu; tanpa ini paywall terasa memeras |
-| **M1 Plus pertama** | Billing + entitlement; reverse trial; tingkat otomatis notifikasi + pola sendiri; kuota tafsir; Analisis >6 periode dan tren 12 bulan; perkiraan 12 bulan (B-30); template dan batas freelance; paywall P1–P5, P9; 1–2 tema kosmetik | Semua fitur ini **sudah ada** atau kecil; hanya perlu digerbang. Bisa tayang bersama rilis publik |
-| **M2 Ketenangan dan otomasi** | Cadangan otomatis Google Drive; R3 otomasi rutin (B-28, P6); Analisis R2 tahun dan tren saldo (B-38); widget ringkasan; pemicu P7 | Menambah nilai Plus bagi yang sudah membayar, menekan churn tahunan |
-| **M3 Musiman** | Rapor Tahunan (P8), target Desember 2026 bila sempat, atau akhir 2027 | Momen berbagi dan konversi alami |
-| **M4 Sinkronisasi** | B-7, Plus atau tingkat lebih tinggi; pelanggan lama dipertahankan di harga lamanya | Proyek terbesar, butuh ADR sendiri |
+| **M0 Prasyarat** | ADR monetisasi; Blaze (T-11.8); ekspor CSV, cadangan/pulihkan manual, kunci aplikasi (semua gratis) | Kepercayaan lebih dulu |
+| **M1 Peluncuran Plus** | Billing dan hak; reverse trial dan rekap nilai; **Catat dari foto**; **Penjaga + Ringkasan Senin**; notifikasi semua aplikasi + otomatis; **Bagaimana kalau** + perkiraan 12 bulan (B-30); Analisis penuh; rapor bulanan; paywall P1–P6, P8, P10 | Pilar ①②④⑤ hadir sejak hari pertama, dengan fitur yang sebagian besar memakai mesin yang sudah ada (capture, `projectCashflow`, Analisis, pengingat lokal) |
+| **M2 Tanuki bertanya dan menyimpan** | **Tanya Tanuki** R1; **Target**; cadangan otomatis Drive; R3 otomasi rutin (B-28); Freelance Pro; P7 | Melengkapi pilar ③⑥; Tanya Tanuki paling berisiko secara mutu, jadi sesudah dasar Plus terukur |
+| **M3 Musim laporan** | **Rapor Tahunan** (Desember) dan **Rekap SPT** (Januari, sebelum batas 31 Maret); P9 | Momen konversi musiman; bila M1 belum siap Desember 2026, sasar Desember 2027 dengan Rekap SPT tetap di awal tahun |
+| **M4 Bersama** | Utang-piutang, patungan, sinkronisasi (B-7), **Plus Keluarga** | Proyek besar dan butuh ADR domain; tingkat harga kedua baru dibuka di sini, pelanggan lama tetap di harganya |
 
-## 11. Risiko
+## 14. Risiko
 
 | Risiko | Mitigasi |
 |---|---|
-| Ulasan "dulu gratis sekarang bayar" dari penguji | Semua yang dipakai penguji tetap gratis kecuali otomasi; penguji dapat Pendiri gratis (§8.3) |
-| Pengguna gratis merasa diganggu | Batas frekuensi §6, tidak ada paywall di CATAT, ukuran "paywall per minggu" |
-| Konversi rendah di pasar Indonesia | Tahunan murah, pilihan seumur hidup terbatas, metode bayar Play lokal (pulsa, dompet digital) |
-| Catat dari notifikasi hanya Android | Di iOS kelak, pengait utama bergeser ke Analisis, cadangan, dan rapor |
-| Kebijakan Play tentang izin akses notifikasi dan fitur berbayar | Izin dan alasan penggunaannya sama untuk Gratis dan Plus; yang berbayar hanya tingkat otomatisnya |
-| Hak Plus salah terbaca luring dan mengunci pengguna yang sudah bayar | Tenggang 3 hari, dan kegagalan baca hak tidak pernah memblokir pencatatan |
+| Penguji kecewa "dulu gratis" (notifikasi jadi 1 aplikasi) | Penguji dapat Plus 12 bulan; pembatasan hanya pada otomasi |
+| Mutu Tanya Tanuki mengecewakan (salah paham pertanyaan) | Angka selalu dihitung lokal; pertanyaan yang tak terpetakan dijawab jujur; mulai dari katalog pertanyaan sempit; tayang di M2 |
+| Penjaga terasa mengganggu | Maksimal satu per hari, diatur per jenis, hanya saat ada sinyal nyata |
+| Pembacaan foto salah | Draf selalu membuka CATAT; bagian ragu dikosongkan |
+| Biaya Gemini membengkak | Batas wajar, Remote Config, dan Gemma lokal (B-15) sebagai jalan keluar |
+| Rekap SPT dianggap nasihat pajak | Disebut rekap catatan; tidak menghitung pajak terutang; isi hanya data yang dicatat pengguna |
+| Catat dari notifikasi hanya Android | Di iOS kelak, pengait utama: foto, Penjaga, Tanya Tanuki, rapor |
+| Plus terlalu banyak untuk dirawat satu pengembang | Urutan M1–M4; setiap pilar dibangun di atas mesin yang sudah ada; ukur pilar mana yang menjual sebelum menambah |
 
-## 12. Keputusan pemilik yang dibutuhkan
+## 15. Keputusan pemilik yang dibutuhkan
 
-- **KT-P1** Nama paket: "Tanukonomy Plus", "Premium", atau nama bertema
-  tanuki lain?
-- **KT-P2** Panjang uji coba terbalik: tetap 14 hari, atau sampai akhir
-  periode keuangan pertama yang penuh (§5.3)?
-- **KT-P3** Dompet tanpa batas di Gratis (usulan), atau batas longgar
-  (mis. 6 dompet aktif) sebagai tuas tambahan?
-- **KT-P4** Harga §8.2 dan apakah paket Pendiri seumur hidup dijual.
-- **KT-P5** Hadiah penguji closed testing: Pendiri gratis atau Plus 12 bulan.
+- **KT-P1** Nama paket: "Tanukonomy Plus" atau nama lain.
+- **KT-P2** Panjang uji coba: 14 hari, atau sampai akhir periode keuangan
+  pertama yang penuh.
+- **KT-P3** Dompet tanpa batas di versi gratis (usulan) atau batas longgar.
+- **KT-P4** Harga §11.2 dan Harga Pendiri sebagai pengganti seumur hidup.
+- **KT-P5** Hadiah penguji closed testing: Plus 12 bulan (usulan) atau
+  bentuk lain.
 - **KT-P6** Penyedia billing: RevenueCat (usulan) atau `in_app_purchase`
   + Cloud Functions.
-- **KT-P7** Apakah ekspor CSV dan cadangan manual (M0) dikerjakan sebelum
-  rilis publik, meskipun paywall belum siap?
+- **KT-P7** Ekspor dan cadangan manual (M0) dikerjakan sebelum rilis
+  publik, meskipun paywall belum siap.
+- **KT-P8** Catat dari notifikasi gratis dibatasi 1 aplikasi sumber (§4.3).
+- **KT-P9** Fitur mana di M1: usulan Catat dari foto, Penjaga, dan
+  Bagaimana kalau. Bila harus memilih satu untuk dibangun pertama, usulan:
+  **Penjaga** (biaya 0, mesin sudah ada, paling terasa "bekerja untukku").
+- **KT-P10** Target dan utang-piutang: masuk produk (butuh ADR domain
+  baru), dan bila ya, pembagian Gratis/Plus di §7.
 
-## 13. Sumber
+## 16. Sumber
 
-- Spendee: [halaman Premium](https://www.spendee.com/premium) (Plus
-  US$1,99/US$14,99, Premium US$5,99/US$35,99, uji coba 7 hari, gratis 1
-  dompet tunai dan 1 anggaran).
+- Spendee: [halaman Premium](https://www.spendee.com/premium).
 - Wallet by BudgetBakers: [dukungan BudgetBakers](https://support.budgetbakers.com/hc/en-us/articles/7151349344018),
-  [ulasan Finder](https://www.finder.com/uk/budgeting/wallet-budgetbakers-review),
-  [ulasan TechRadar](https://www.techradar.com/reviews/wallet-finance-management).
+  [ulasan Finder](https://www.finder.com/uk/budgeting/wallet-budgetbakers-review).
 - Money Lover: [App Store Vietnam](https://apps.apple.com/vn/app/money-lover-s%E1%BB%95-thu-chi/id486312413?l=vi),
-  [App Store](https://apps.apple.com/dz/app/money-lover-money-manager/id486312413),
-  [catatan uji coba Premium](https://note.moneylover.me/your-passport-to-premium-dive-into-14-days-of-exclusive-benefits/).
-- Monefy: [ulasan Gerald](https://joingerald.com/learn/financial-wellness/monefy-expense-tracker-review),
-  [harga IAP](https://apppricinglab.com/iap/apple/1212024409).
-- YNAB dan Monarch: [perbandingan harga 2026](https://getfinny.app/blog/ynab-vs-monarch-money-2026),
-  [Costbench](https://costbench.com/compare/ynab-vs-monarch-money/).
+  [App Store](https://apps.apple.com/dz/app/money-lover-money-manager/id486312413).
+- Monefy: [ulasan Gerald](https://joingerald.com/learn/financial-wellness/monefy-expense-tracker-review).
+- YNAB dan Monarch: [perbandingan harga 2026](https://getfinny.app/blog/ynab-vs-monarch-money-2026).
 - Tolok ukur langganan: [RevenueCat State of Subscription Apps 2026](https://www.revenuecat.com/state-of-subscription-apps),
   [RevenueCat: tren dan tolok ukur 2026](https://www.revenuecat.com/blog/growth/subscription-app-trends-benchmarks-2026),
-  [RevenueCat: hard paywall vs freemium](https://www.revenuecat.com/blog/growth/hard-paywall-vs-freemium),
-  [Airbridge: hard vs soft paywall](https://www.airbridge.io/blog/hard-vs-soft-paywalls),
-  [Adapty: strategi monetisasi freemium](https://adapty.io/blog/freemium-app-monetization-strategies/).
-  Angka 10,7% vs 2,1% berasal dari ringkasan pihak kedua atas laporan
-  RevenueCat 2026; halaman RevenueCat tidak bisa dibuka langsung saat riset,
-  jadi perlakukan sebagai arah, bukan angka pasti.
-- Harga minimum Play Indonesia: [Android Developers Blog, 2015](https://android-developers.googleblog.com/2015/11/minimum-purchase-price-for-apps-and-in.html)
-  (Rp3.000; data lama, cek Play Console).
+  [Airbridge: hard vs soft paywall](https://www.airbridge.io/blog/hard-vs-soft-paywalls).
+  Angka 10,7% dan 2,1% berasal dari ringkasan pihak kedua atas laporan
+  RevenueCat 2026 (situs RevenueCat tidak bisa dibuka saat riset); anggap
+  sebagai arah, bukan angka pasti.
+- Harga Gemini dan perkiraan biaya: [VOICE_INPUT_RESEARCH.md](VOICE_INPUT_RESEARCH.md) §9.
+  Perkiraan token per foto dan per pertanyaan di §11.3 adalah perkiraan
+  [E] yang perlu diukur di spike.

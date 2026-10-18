@@ -609,22 +609,17 @@ void main() {
               planned: rp(3068500),
               spent: rp(3068500),
             ),
-            (
-              itemId: 'tabungan-sep',
-              key: null,
-              planned: rp(1000000),
-              spent: rp(1000000),
-            ),
+            // Pos transfer Tabungan tidak diteruskan ke Rencana (KT-R14, aturan 7);
+            // diuji end-to-end di `b15_rekonsiliasi_test.dart`.
           ],
         );
         expect(plan.recordedRecurringOut, rp(6577200));
         expect(plan.unplannedOut, rp(1775000));
-        // Satu-satunya selisih sah (B-15, aturan 7): transfer tertaut pos terhitung "anggaran terpakai" di Rencana.
-        const transferLinkedToBudget = 100000000;
-        expect(plan.budgetSpent - transferLinkedToBudget, rp(3068500));
+        // Tidak ada selisih sah (B-15, revisi 18 Okt 2026).
+        expect(plan.budgetSpent, rp(3068500));
         expect(
           summary(transactions).total,
-          plan.recordedRecurringOut + (plan.budgetSpent - transferLinkedToBudget) + plan.unplannedOut,
+          plan.recordedRecurringOut + plan.budgetSpent + plan.unplannedOut,
         );
         expect(summary(transactions).total, rp(11420700));
       },

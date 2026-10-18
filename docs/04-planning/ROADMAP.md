@@ -359,6 +359,12 @@ Bergantung pada Fase 18 karena membaca periode yang sama.
 total Analisis sama dengan kartu Arus Beranda dan cocok dengan Rencana
 (B-15); tidak ada nada menghakimi; Beranda tidak melambat.
 
+**Selesai 18 Okt 2026** (PR #51, rebase ke `main`): 12 tugas, termasuk
+T-19.10 (Daftar Riwayat berbagi periode), T-19.11 (kilas balik bisa dibuka
+lagi), dan T-19.12 (pencarian lintas periode) dari tindak lanjut QA; verifikasi
+emulator T-19.7 tanpa Gagal S1/S2. Sisa: B-40 (tindak lanjut kecil) dan R2
+(B-38).
+
 ## Fase 20: Pengumuman pembaruan
 
 Permintaan pemilik 11 Okt 2026. Pengguna tahu ada versi baru dari Play Store

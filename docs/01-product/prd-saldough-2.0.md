@@ -907,6 +907,34 @@ di perangkat 15 Okt 2026 (T-20.8). R2 di antrean (B-39).
       berjalan beserta keadaan pembaruannya; nomor pembaruan kecil ikut ke
       Analytics dan Crashlytics.
 
+### 7.11 Penemuan fitur (sesudah MVP, ditambahkan 18 Okt 2026)
+
+Kebutuhan ini lahir dari permintaan pemilik 18 Okt 2026: Catat dari
+notifikasi, pengingat rutin, dan awal bulan keuangan sulit ditemukan.
+Perilaku, aturan D-1–D-8, dan teksnya di
+[FEATURE_DISCOVERY.md](features/FEATURE_DISCOVERY.md); tugasnya Fase 21.
+
+**FR-DSC-001 — Tawaran sesuai pemicu**
+- [ ] Kartu penemuan Beranda tampil satu per satu, paling banyak sehari
+      sekali, tidak mendahului banner pembaruan, Menunggu dicatat, atau
+      kotak masuk tangkapan.
+- [ ] Ditutup tidak muncul lagi; Nanti menunda 7 hari maksimal dua kali;
+      fitur yang sudah menyala tidak ditawari; status ketiga fitur terlihat
+      di Akun.
+
+**FR-DSC-002 — Catat dari notifikasi ditawarkan (Android)**
+- [ ] Kartu muncul sesudah pengguna punya cukup catatan manual dan fitur
+      mati; Atur membuka setelan yang sama dengan Akun; tidak ada di iOS.
+
+**FR-DSC-003 — Pengingat rutin ditawarkan**
+- [ ] Sesudah rutin pertama disimpan, pengguna ditawari menyalakan
+      pengingat; sakelar per rutin memberi tahu bila sakelar global mati.
+
+**FR-DSC-004 — Awal bulan keuangan ditawarkan**
+- [ ] Pemasukan Gaji di tanggal selain 1 menawarkan mengatur awal bulan
+      keuangan dengan tanggal disarankan yang dikonfirmasi pengguna; kepala
+      periode Rencana jelas dapat diketuk.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

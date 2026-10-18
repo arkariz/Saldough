@@ -58,6 +58,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
+| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan ditawarkan pada saat nilainya terasa (draf 18 Okt 2026, menunggu KT-D1–KT-D4) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -452,6 +453,20 @@ dan `0.7.0+13`); verifikasi perangkat T-20.8 lulus semua.
 **Selesai kalau:** alur F1–F4 APP_UPDATE lulus di perangkat lewat jalur tes
 Play dan pembaruan kecil Shorebird sungguhan; data keuangan utuh sesudah
 pemasangan; luring diam; Keamanan Data mencatat Shorebird.
+
+## Fase 21: Penemuan fitur
+
+Permintaan pemilik 18 Okt 2026. Tiga fitur yang sudah jadi (Catat dari
+notifikasi, pengingat rutin, awal bulan keuangan) hanya ada sebagai setelan
+di Akun sehingga jarang dinyalakan. Fase ini menambah kartu dan lembar
+tawaran sesuai perilaku pengguna, status di Akun, satu slide onboarding, dan
+tur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
+Bukan fitur baru; tidak bergantung pada fase lain selain slot Beranda Fase
+20. **Status:** draf, menunggu KT-D1–KT-D4 dan rupa dari designer.
+
+**Selesai kalau:** tiap tawaran muncul hanya pada pemicunya, satu kartu
+sekaligus, bisa ditutup atau ditunda, tidak muncul bila fitur sudah menyala,
+dan status ketiganya terlihat di Akun, terverifikasi di perangkat.
 
 ## Ketergantungan antar fase
 

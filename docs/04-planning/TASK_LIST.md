@@ -85,6 +85,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 9 | 0 | Draf PO 18 Okt 2026; menunggu KT-D1–KT-D4 dan rupa (T-21.0) |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -106,6 +107,12 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   dan alasannya di [APP_UPDATE.md](../01-product/features/APP_UPDATE.md)
   §12. Keputusan teknis bukan bagian KT ini; engineer menulisnya sebagai ADR
   di T-20.1.
+
+- **KT-D1–KT-D4** Penemuan fitur (Fase 21): pemicu kartu notifikasi
+  (rekomendasi 5 transaksi manual), langkah tanggal gajian di onboarding
+  (ya, bawaan Lewati), satu slide onboarding (ya, tanpa izin), dan Nanti 7
+  hari maksimal dua kali (ya). Rincian di
+  [FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md) §10.
 
 KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
 10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
@@ -4703,6 +4710,82 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       melaporkan **semua lulus** (versi baru, pembaruan kecil, Apa yang baru,
       data utuh, luring diam), tanpa temuan baru. Kotak FR-UPD-001–004 di PRD
       §7.10 dicentang. Rincian langkah per langkah tidak dicatat pemilik.
+
+## Fase 21: Penemuan fitur
+
+Permintaan pemilik 18 Okt 2026: Catat dari notifikasi, pengingat rutin, dan
+awal bulan keuangan sudah jadi tetapi tersembunyi di setelan. Fase ini
+menambah **tawaran pada saat nilainya terasa**, bukan fitur baru. Perilaku,
+aturan D-1–D-8, teks, dan kasus tepi di
+[FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md). Branch
+sendiri dari `main`. **Jangan mulai T-21.2–T-21.6 sebelum KT-D1–KT-D4
+dijawab** (angka pemicu dan cakupan onboarding bergantung padanya). Rupa
+kartu, lembar, status Akun, dan isyarat kepala periode: perlu rupa dari
+ui-ux-designer (T-21.0) sebelum T-21.2.
+
+- [ ] **T-21.0** Rupa penemuan fitur (designer). Kartu penemuan Beranda
+      (tiga isi, aksi Atur/Nyalakan/Nanti, ✕), lembar tawaran pengingat
+      sesudah rutin pertama, catatan sakelar per rutin, status "Nyala/Mati/
+      Izin belum diberikan" di baris Akun, isyarat kepala periode Rencana
+      dapat diketuk, slide onboarding baru, langkah opsional tanggal gajian.
+      Ke prototipe pemilik dan `docs/03-design/`.
+      Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
+      dicatat.
+      Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
+- [ ] **T-21.1** Mesin saran penemuan. Penyimpanan keadaan tawaran per fitur
+      (ditutup, ditunda, jumlah tunda, terakhir tampil), aturan D-1–D-6 dan
+      D-8 sebagai logika murni yang bisa diuji, slot di Beranda di bawah
+      banner pembaruan dan kartu Menunggu/kotak masuk (D-2). Lintas fitur:
+      sisipkan lewat akar komposisi seperti `CaptureInboxBanner` dan
+      `accountVersionEntry` (ADR-030); tulis ADR bila perlu.
+      ⚠ Fase 20 memakai slot Beranda yang sama; jangan menggeser banner
+      pembaruan.
+      Verifikasi: uji unit tiap aturan D-1–D-6 (satu kartu, jeda, urutan,
+      Nanti dua kali jadi Tutup, fitur menyala tidak ditawari); uji
+      arsitektur tetap hijau.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.2** Kartu Catat dari notifikasi (Android). Pemicu KT-D1, aksi
+      Atur membuka setelan yang sama dengan Akun, kembali tanpa menyalakan
+      dihitung satu tunda. Tidak ada di iOS.
+      Verifikasi: uji widget dan bloc untuk pemicu, D-5, D-7; verifikasi
+      perangkat (Android 15) tidak mengubah alur izin ADR-032.
+      Memenuhi FR-DSC-002.
+- [ ] **T-21.3** Pengingat rutin: lembar sesudah rutin pertama disimpan,
+      kartu cadangan Beranda, dan catatan di sakelar per rutin saat sakelar
+      global mati.
+      ⚠ Menyalakan memakai alur izin yang sama dengan Akun; ditolak = D-6.
+      Verifikasi: uji untuk rutin pertama vs kedua, global menyala sudah,
+      izin ditolak; verifikasi perangkat pengingat sungguh datang.
+      Memenuhi FR-DSC-003.
+- [ ] **T-21.4** Awal bulan keuangan: tawaran gajian (kartu di kepala Rencana
+      › Bulan ini dan Beranda), tanggal disarankan dari pemasukan Gaji dan
+      dikonfirmasi pengguna di lembar yang ada, isyarat kepala periode dapat
+      diketuk. Langkah opsional tanggal gajian di onboarding bila KT-D2 ya.
+      ⚠ Hanya menyarankan; P-1–P-11 FINANCIAL_PERIOD tidak berubah.
+      Verifikasi: uji pemicu (tanggal 1 vs 2–28, jadwal sudah diubah,
+      ditolak), uji onboarding tidak membuat periode peralihan.
+      Memenuhi FR-DSC-004.
+- [ ] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
+      dan urutannya (FEATURE_DISCOVERY §7.1).
+      Verifikasi: uji widget tiap keadaan; baris notifikasi tidak ada di iOS.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.6** Onboarding satu slide baru (bila KT-D3 ya, tanpa izin), tur
+      spotlight (`SpotlightKey` baru: kartu penemuan, status Akun, kepala
+      periode), dan teks `discovery.*` id dan en.
+      Verifikasi: uji terjemahan (`translations_test`), tur per langkah
+      mengikuti ADR-021.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.7** Peristiwa analitik §9 (`discovery_*`, `feature_enabled`)
+      tanpa nominal dan nama kategori buatan; catat di
+      `PLAY_DATA_SAFETY.md` bila ada data baru.
+      Verifikasi: uji tiap peristiwa dan parameternya.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru sampai tiap
+      kartu muncul sesuai pemicu, Tutup/Nanti, fitur menyala dari Akun
+      membuat kartu hilang, izin ditolak, urutan Beranda dengan banner
+      pembaruan, iOS tanpa kartu notifikasi. Hasil di rencana verifikasi
+      Fase 21.
+      Memenuhi FR-DSC-001–004.
 
 ## Antrean (belum dijadwalkan)
 

@@ -51,16 +51,87 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 11 | Catat Cerdas: kategori dan suara | Transaksi berkategori tertutup; satu ucapan mengisi formulir CATAT |
 | 12 | Rapikan batas arsitektur | Fitur hanya saling kenal lewat kunci rute; uji batas impor menjaga |
 | 13 | Pecah fitur `record` | CATAT, suara, dan notifikasi fitur terpisah; mesin tafsir di `shared/capture` |
+| 14 | Bahasa visual baru | "Buku catatan dengan aksen piksel": token, komponen, navigasi 4 tab + Catat, semua layar |
 | 15 | Rencana dan rutin (R1) | Rutin tercatat satu ketuk atau tercocok sendiri; uang nganggur dan perkiraan bulan ini terlihat di tab Rencana |
+| 16 | Rencana R2 | Anggaran rutin lahir sendiri, perkiraan bulan ke depan, siapkan dana, tinjau awal bulan |
+| 17 | Rencana R3 | Rutin tercatat otomatis (nominal tetap), deteksi "belum terlihat", saran rutin |
+| 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
+| 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
+| 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
 
-**Status per 2 Oktober 2026:** Fase 0–7, 9, 12, dan 13 selesai; Fase 8 dan 11
-berjalan (sisa Fase 8: sapuan nama dan ikon iOS T-8.3; sisa Fase 11: ucapan
-nyata T-11.5, Keamanan Data T-11.6, Firebase AI T-11.7–11.9); Fase 15
-direncanakan, menunggu tinjauan ADR-035. Rincian dan antrean di
-[TASK_LIST.md](TASK_LIST.md).
+**Status per 18 Oktober 2026:** semua fase di tabel sudah selesai kodenya
+(kecuali sisa kecil di Fase 8, 11, dan 15 yang tercatat di
+[TASK_LIST.md](TASK_LIST.md)). Arah berikutnya ada di
+[Now / Next / Later](#now--next--later) di bawah.
+
+## Now / Next / Later
+
+Arah ke depan, diambil dari antrean `B-n` dan tugas terbuka di
+[TASK_LIST.md](TASK_LIST.md). Ini peta prioritas, bukan jadwal: tidak ada
+tanggal, dan pemilik yang menentukan kapan sebuah butir naik kolom. Butir
+yang naik ke **Now** dijadwalkan sebagai fase dengan tugas `T-n.n` mengikuti
+"Menambah tugas baru" di TASK_LIST. Diperbarui 18 Okt 2026.
+
+Tujuan produk yang dipakai menilai (PRD §3): pengguna **kembali mencatat
+secara rutin**, angka selalu tepat, dan inti aplikasi tetap jalan tanpa akun
+dan tanpa koneksi.
+
+### Now: menuju rilis publik
+
+Closed testing sudah berjalan. Yang menghalangi rilis publik, bukan fitur
+baru:
+
+| Butir | Isi | Siapa |
+|---|---|---|
+| T-11.8 | Pindah Firebase ke tier berbayar (Blaze) sebelum rilis publik | pemilik |
+| T-11.6, T-11.21, B-20 | Formulir Keamanan Data dan kebijakan privasi untuk catat dari notifikasi dan suara | agen + pemilik |
+| B-4 | Selaraskan klaim situs `tanukonomy-web` dengan aplikasi (akun opsional, analitik, mata uang) | agen |
+| B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
+| B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
+| Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
+
+**Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
+sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
+"kembali mencatat", kecil, dan tidak menambah data keluar perangkat.
+
+### Next: sesudah rilis publik stabil
+
+| Butir | Isi | Syarat naik ke Now |
+|---|---|---|
+| B-25 | Peringatan nominal tidak wajar di seluruh CATAT (KT-R12): cegah salah ketik uang | Sesudah B-26; desain sudah ada (RECURRING_AND_FORECAST §7A E5) |
+| B-38 | Analisis R2: tampilan tahun, tren total saldo (`Wallet.createdAt`, ADR baru), porsi rutin, Di luar rencana | Data pemakaian Analisis R1 menunjukkan layar dipakai (`analysis_viewed`) |
+| B-32 | Rutin lewat suara dan kartu menunggu gabungan (KT-R7) | Rupa dari designer |
+| B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
+| B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
+| B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
+
+### Later: butuh keputusan atau bukti dulu
+
+| Butir | Isi | Kenapa menunggu |
+|---|---|---|
+| B-7 | Sinkronisasi data keuangan ke server | Proyek paling besar; butuh keputusan produk, ADR, dan jawaban KT-2; wajib mematuhi ADR-024 §3.3 |
+| B-15 | Gemma lokal untuk Catat lewat Suara | Ditunda 30 Sep 2026; pemilik menentukan kapan |
+| B-28 | Sisa R3 otomasi (kenaikan harga dari notifikasi, rutin menganggur) | Tunggu pemakaian R3 nyata |
+| B-30 | Horizon perkiraan sampai 12 bulan (KT-R8) | R2 memakai +2 tetap; tunggu kebutuhan nyata |
+| B-11, B-21 | Indeks pencarian riwayat panjang; satu sinyal per putaran notifikasi | Tunggu keluhan atau data nyata, jangan dikerjakan spekulatif |
+| B-16, B-19 | Temuan kecil verifikasi M1; `dismissKeyboardOnTapOutside` di formulir lain | Poles; kerjakan bersama tugas yang menyentuh berkasnya |
+
+### Tidak dikerjakan
+
+Daftar lengkapnya ada di PRD §6 "Di luar MVP" dan tiap dokumen fitur bagian
+"Yang sengaja tidak dikerjakan": koneksi bank, pembayaran atau transfer
+sungguhan, saran investasi, perkiraan berbasis AI, skor kesehatan keuangan,
+streak harian, dan periode mingguan.
+
+### Aturan memakai peta ini
+
+- Satu butir di satu kolom. Naik kolom hanya atas keputusan pemilik.
+- Butir baru masuk antrean `B-n` di TASK_LIST lebih dulu, lalu ditaruh di
+  kolom yang sesuai di sini.
+- Butir yang selesai dihapus dari sini; riwayatnya ada di fase masing-masing.
 
 ## Fase 0: Dokumen Saldough 2.0
 

@@ -1208,7 +1208,8 @@
     "committedShare": "${percent}% pemasukan $month sudah terikat (rutin + anggaran).",
     "committedShareVs": "${percent}% pemasukan $month sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.",
     "installmentFree": "Sesudah $name selesai, mulai $month ruang bebas +$amount/bln.",
-    "lookbackSeeAnalysis": "Lihat rincian $month"
+    "lookbackSeeAnalysis": "Lihat rincian $month",
+    "reviewSeeAgain": "Lihat lagi"
   },
   "appUpdate": {
     "banner": {

@@ -3300,6 +3300,9 @@ class Translations$plan$id {
 
 	/// id: 'Lihat rincian $month'
 	String lookbackSeeAnalysis({required Object month}) => 'Lihat rincian ${month}';
+
+	/// id: 'Lihat lagi'
+	String get reviewSeeAgain => 'Lihat lagi';
 }
 
 // Path: appUpdate
@@ -5257,6 +5260,7 @@ extension on Translations {
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% pemasukan ${month} sudah terikat (rutin + anggaran); bulan sebelumnya ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'Sesudah ${name} selesai, mulai ${month} ruang bebas +${amount}/bln.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'Lihat rincian ${month}',
+			'plan.reviewSeeAgain' => 'Lihat lagi',
 			'appUpdate.banner.storeAvailable' => 'Versi baru tersedia',
 			'appUpdate.banner.storeDownloading' => 'Mengunduh versi baru',
 			'appUpdate.banner.storeDownloadingNote' => 'Kamu tetap bisa mencatat.',

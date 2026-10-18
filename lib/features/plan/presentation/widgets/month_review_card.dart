@@ -68,7 +68,7 @@ class MonthReviewCard extends StatelessWidget {
       );
     }
 
-    Widget step(MonthReviewStep step, String text, List<Widget> actions) {
+    Widget step(MonthReviewStep step, String text, List<Widget> actions, {bool keepActions = false}) {
       final checked = done.contains(step);
       return Padding(
         padding: const EdgeInsets.only(top: AppSpacing.space2),
@@ -86,7 +86,7 @@ class MonthReviewCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(text, style: textTheme.bodyMedium),
-                  if (!checked) Wrap(spacing: AppSpacing.space1, children: actions),
+                  if (!checked || keepActions) Wrap(spacing: AppSpacing.space1, children: actions),
                 ],
               ),
             ),
@@ -157,13 +157,16 @@ class MonthReviewCard extends StatelessWidget {
               [
                 AppButton.text(
                   small: true,
-                  label: t.plan.reviewSee,
+                  label: done.contains(MonthReviewStep.lookback) ? t.plan.reviewSeeAgain : t.plan.reviewSee,
                   onPressed: () async {
                     await showLookbackSheet(context, state);
                     mark(MonthReviewStep.lookback);
                   },
                 ),
               ],
+              // Kilas balik boleh dibuka berkali-kali sampai kartu ditutup (B-18, T-19.11):
+              // pintu "Lihat rincian {bulan}" ke Analisis tetap terjangkau.
+              keepActions: true,
             ),
           const SizedBox(height: AppSpacing.space4),
           AppButton(label: t.plan.reviewDone, onPressed: () => bloc.add(const PlanReviewCompleted())),

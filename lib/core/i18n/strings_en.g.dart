@@ -1277,6 +1277,7 @@ class _Translations$plan$en extends Translations$plan$id {
 	@override String committedShareVs({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.';
 	@override String installmentFree({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.';
 	@override String lookbackSeeAnalysis({required Object month}) => 'See ${month} details';
+	@override String get reviewSeeAgain => 'See again';
 }
 
 // Path: appUpdate
@@ -2847,6 +2848,7 @@ extension on TranslationsEn {
 			'plan.committedShareVs' => ({required Object percent, required Object month, required Object previous}) => '${percent}% of ${month} income is already committed (repeating + budgets); the month before, ${previous}%.',
 			'plan.installmentFree' => ({required Object name, required Object month, required Object amount}) => 'After ${name} ends, from ${month} you free up +${amount}/mo.',
 			'plan.lookbackSeeAnalysis' => ({required Object month}) => 'See ${month} details',
+			'plan.reviewSeeAgain' => 'See again',
 			'appUpdate.banner.storeAvailable' => 'A new version is available',
 			'appUpdate.banner.storeDownloading' => 'Downloading the new version',
 			'appUpdate.banner.storeDownloadingNote' => 'You can keep recording.',

@@ -1211,7 +1211,8 @@
     "committedShare": "${percent}% of $month income is already committed (repeating + budgets).",
     "committedShareVs": "${percent}% of $month income is already committed (repeating + budgets); the month before, ${previous}%.",
     "installmentFree": "After $name ends, from $month you free up +$amount/mo.",
-    "lookbackSeeAnalysis": "See $month details"
+    "lookbackSeeAnalysis": "See $month details",
+    "reviewSeeAgain": "See again"
   },
   "appUpdate": {
     "banner": {

@@ -92,6 +92,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
+| B-42, B-43 | Ekspor CSV, cadangan/pulihkan manual, dan kunci aplikasi (gratis); prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
 sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
@@ -107,6 +108,8 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
 | B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
+| B-41 + B-44 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama) dan **Penjaga + Ringkasan Senin**, Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
+| B-45, B-46, B-41 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus mulai dijual** | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
 
 ### Later: butuh keputusan atau bukti dulu
 
@@ -118,13 +121,47 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-30 | Horizon perkiraan sampai 12 bulan (KT-R8) | R2 memakai +2 tetap; tunggu kebutuhan nyata |
 | B-11, B-21 | Indeks pencarian riwayat panjang; satu sinyal per putaran notifikasi | Tunggu keluhan atau data nyata, jangan dikerjakan spekulatif |
 | B-16, B-19 | Temuan kecil verifikasi M1; `dismissKeyboardOnTapOutside` di formulir lain | Poles; kerjakan bersama tugas yang menyentuh berkasnya |
+| B-47, B-48 | **Target** dan **utang-piutang** (masuk produk, KT-P10) | ADR domain masing-masing; sesudah Plus dijual |
+| B-49, B-50, B-51 | Rapor bulanan bercerita + ekspor PDF, Freelance Pro, cadangan otomatis Drive | Sesudah Plus dijual; B-51 sesudah B-42 |
+| B-52 | Tanya Tanuki R1 | Sesudah B-47/B-48 supaya bisa menjawab tentang target dan utang; mutu diuji dengan katalog kueri sempit |
+| B-53, B-54 | Rapor Tahunan (Des 2027) dan Rekap SPT (Jan 2028) | Tahun data penuh pertama; B-49, B-50, B-48 |
+| B-55, B-56 | Widget (Catat gratis, ringkasan Plus); kosmetik Plus | Kapan saja; B-56 menunggu aset pemilik |
+| B-57–B-62 | Patungan dari struk, kartu kredit/paylater sebagai dompet tagihan, kekayaan bersih, Dompet Bersama/Plus Keluarga (butuh B-7), rapor kuartal freelance dan Tanya Tanuki R2, catat dari email | Sesudah pilar Plus terukur; urutan di FREEMIUM_PAYWALL §13.5 |
+
+### Jalur Plus (urutan disetujui pemilik 18 Okt 2026, KT-P9)
+
+Freemium dan paywall dirancang di [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) (B-41). Urutan usulannya,
+dengan alasan lengkap di §13 dokumen itu:
+
+```
+A. Kepercayaan (gratis)   B-42 ekspor/cadangan manual, B-43 kunci aplikasi
+        │
+B. Fondasi Plus           B-41 billing, hak, paywall, gerbang fitur lama
+        │
+C. Tiga pilar → dijual    B-44 Penjaga ─► B-45 Catat dari foto ─► B-46 Bagaimana kalau
+        │                 ─► B-41 reverse trial (Plus mulai dijual)
+D. Domain baru            B-47 Target, B-48 utang-piutang (ADR dulu)
+        │
+E. Melengkapi pilar       B-49 rapor + PDF ─► B-50 Freelance Pro, B-51 cadangan Drive,
+        │                 B-52 Tanya Tanuki
+F. Musiman                B-53 Rapor Tahunan (Des 2027), B-54 Rekap SPT (Jan 2028)
+
+Kapan saja: B-55 widget, B-56 kosmetik. Sesudahnya: B-57–B-62, B-7, B-15.
+```
+
+Prinsipnya: kepercayaan sebelum menagih; Plus baru dijual bila tiga pilar
+terasa di uji coba; mesin yang sudah ada dan fitur tanpa data keluar lebih
+dulu; aturan uang baru (Target, utang) lewat ADR; fitur AI paling berisiko
+paling akhir. Nomor fase usulan (21–26) ada di FREEMIUM_PAYWALL §13.4 dan
+baru dipakai saat pemilik menaikkan butirnya ke Now.
 
 ### Tidak dikerjakan
 
 Daftar lengkapnya ada di PRD §6 "Di luar MVP" dan tiap dokumen fitur bagian
 "Yang sengaja tidak dikerjakan": koneksi bank, pembayaran atau transfer
 sungguhan, saran investasi, perkiraan berbasis AI, skor kesehatan keuangan,
-streak harian, dan periode mingguan.
+streak harian, dan periode mingguan. (Tanya Tanuki, B-52, bukan perkiraan
+berbasis AI: Gemini hanya memahami pertanyaan, angkanya dihitung aplikasi.)
 
 ### Aturan memakai peta ini
 

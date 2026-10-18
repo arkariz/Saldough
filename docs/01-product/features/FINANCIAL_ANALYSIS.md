@@ -364,7 +364,15 @@ keterbacaan; di kode semuanya `int` sen.
   menulis entitas keuangan apa pun dan tidak memancarkan `LedgerChanges`.
   Yang disimpan hanya preferensi tampilan (segmen terakhir).
 - **B-14 Kategori diarsipkan.** Tetap dihitung dan tampil untuk periode yang
-  memuat transaksinya, dengan penanda "diarsipkan".
+  memuat transaksinya. Penanda "diarsipkan" cukup di Rincian kategori, tidak
+  di baris daftar (keputusan PO 18 Okt 2026).
+- **B-18 Keadaan tampilan** (keputusan PO 18 Okt 2026): jenis
+  Pengeluaran/Pemasukan **tidak diingat**, selalu mulai dari Pengeluaran;
+  periode dan segmen terakhir diingat. Tren dengan penyaring dompet tetap
+  enam periode, kolom tanpa transaksi dompet itu ditampilkan Rp0.
+  Kilas balik dari kartu tinjau awal bulan boleh dibuka berkali-kali sampai
+  kartu tinjau ditutup; langkah yang sudah selesai tetap bisa diketuk
+  ("Lihat lagi").
 - **B-15 Rekonsiliasi dengan Rencana.** Untuk periode yang sama dan semua
   dompet: total pengeluaran Analisis = tagihan rutin tercatat + anggaran
   terpakai + di luar rencana tercatat, seperti dihitung `monthPlan`. **Tidak

@@ -80,7 +80,7 @@ Terakhir diperbarui: 17 Oktober 2026 (1.706 uji lulus, 187 berkas uji, 62.636 ba
 | 16 — Rencana R2: anggaran rutin dan ke depan ([ADR-036](../02-architecture/adr/0036-anggaran-rutin-dan-perkiraan-ke-depan.md), Accepted) | 16 | 16 | Berjalan sejak 4 Okt 2026 (dari B-27) -- R2a T-16.1–16.5, R2b T-16.6–16.7, R2c T-16.8–16.11 |
 | 17 — Rencana R3: otomasi rutin ([ADR-037](../02-architecture/adr/0037-otomasi-rutin-r3.md), Accepted) | 12 | 12 | Kode selesai 4 Okt 2026 -- verifikasi emulator terbatas (catat otomatis); sisa verifikasi kartu R3 dan daftar log Tercatat otomatis |
 | 18 — Periode keuangan ([ADR-038](../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md), Accepted; [FINANCIAL_PERIOD.md](../01-product/features/FINANCIAL_PERIOD.md)) | 19 | 19 | Dijadwalkan 10 Okt 2026; ADR-038 Accepted 10 Okt 2026; T-18.1 selesai (KT-1 memakai tanggal periode untuk transaksi tertaut rutin, T-18.12); T-18.2 selesai (jadwal berriwayat, `effectiveFrom` = awal peralihan); T-18.3 selesai (`periodDateOf` di Rencana); T-18.12 selesai (KT-1 tanggal periode); T-18.4 selesai (Arus Beranda per periode); T-18.5 selesai (`Budget.endDate`, patokan hari terakhir, `AlignRecurringBudgets`); T-18.6 selesai (lembar Awal bulan keuangan, rupa D1/D2 dari artefak); T-18.8 selesai (peralihan di Rencana); T-18.7 selesai (tawaran rutin gajian); T-18.10 selesai (tur kepala periode dan peralihan); T-18.11 selesai (`PeriodEvents`); T-18.9 selesai 11 Okt 2026 (13 Lulus 2 Gagal, temuan T-18.13–T-18.19 diverifikasi ulang di perangkat dan Lulus); T-18.13 selesai (nama periode kartu Beranda); T-18.14 selesai (selisih tanggal dari Ubah dulu); keputusan PO atas QA jadi T-18.15–18.19, T-18.15 lebih dulu; T-18.15 selesai (pos terpilih saat membuat rutin jadi tautan); T-18.16 selesai (pos kemunculan di Ubah dulu); T-18.17 selesai (segmen Rutin per periode); T-18.18 selesai (teks dan format kecil); T-18.19 selesai (recurrence_date_gap dengan via). **Selesai 15 Okt 2026**: T-18.9 lulus, masuk `main` lewat rilis `0.7.0+13` |
-| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 10 | 9 | Kode selesai 17 Okt 2026, sisa T-19.7 (verifikasi emulator oleh QA). Dijadwalkan 10 Okt 2026; Fase 18 selesai; rupa Analisis sudah ada (15 Okt 2026); dikerjakan per irisan vertikal di `claude/analisis-fase-19`, tiap irisan diverifikasi pemilik sebelum berikutnya |
+| 19 — Analisis keuangan R1 ([FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md)) | 12 | 12 | Kode selesai 17 Okt 2026, verifikasi emulator T-19.7 selesai 18 Okt 2026 (tidak ada Gagal S1/S2; tersisa B-40). Dijadwalkan 10 Okt 2026; Fase 18 selesai; rupa Analisis sudah ada (15 Okt 2026); dikerjakan per irisan vertikal di `claude/analisis-fase-19`, tiap irisan diverifikasi pemilik sebelum berikutnya |
 | UX/UI — perbaikan hasil review ([UX_REVIEW_FIXES.md](done/UX_REVIEW_FIXES.md)), di luar MVP | 22 | 22 | Selesai; UX-1 dikerjakan bersama T-9.6 |
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
@@ -3992,6 +3992,12 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       Beranda, termasuk dompet nonaktif dan tautan rutin), B-15 (= rutin
       tercatat + anggaran terpakai tanpa transfer + di luar rencana, dengan
       transfer Tabungan Rp1.000.000 tertaut pos), gaji 23 Okt tertaut 25 Okt.
+      **Revisi 18 Okt 2026 (QA A9, B-15 direvisi):** tidak ada selisih sah;
+      uji B-15 tidak lagi memasukkan pos transfer ke baris anggaran, dan
+      `test/features/analysis/b15_rekonsiliasi_test.dart` memeriksa end-to-end
+      lewat `PlanBudgetSourceImpl`: pos transfer tidak diteruskan ke Rencana,
+      total Analisis = rutin tercatat + anggaran terpakai + di luar rencana,
+      transfer hanya keterangan.
 - [x] **T-19.2** Pembanding, sorotan, dan tren enam periode (B-6, B-7):
       rata-rata sampai tiga periode, periode berjalan sampai hari yang sama,
       periode peralihan dikecualikan, ambang 20% dan Rp50.000 (ambang per
@@ -4221,7 +4227,39 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
       bulan karena satu pemuatan membaca beberapa dokumen; langkah bulan →
       `TransactionPeriodStepped`/`HistoryPeriod`; `verifyNever(listAvailableMonths)`
       dihapus karena kini dibaca tiap muat).
-- [ ] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
+- [x] **T-19.11** Kilas balik bisa dibuka lagi (QA T-19.7 E2, keputusan
+      pemilik 18 Okt 2026, FINANCIAL_ANALYSIS B-18): langkah kilas balik di
+      kartu tinjau awal bulan yang sudah selesai tetap bisa diketuk ("Lihat
+      lagi") sampai kartu ditutup, sehingga "Lihat rincian {bulan}" ke
+      Analisis tetap terjangkau.
+      Buka: `features/plan/presentation/widgets/month_review_card.dart`.
+      Verifikasi: uji widget langkah selesai membuka lembar lagi; tidak
+      mengubah hitungan langkah (1/3 tetap 1/3).
+      Memenuhi FR-ANL-005.
+      **Selesai 18 Okt 2026.** Langkah kilas balik yang sudah dicentang
+      memakai tombol "Lihat lagi" (`plan.reviewSeeAgain`) dan membuka lembar
+      yang sama, termasuk "Lihat rincian {bulan}"; hitungan tidak berubah
+      (diuji: 1/2 tetap 1/2, tersimpan sekali). Ditambah uji bloc: 
+      `analysis_highlights_shown` tidak terkirim ulang saat ganti jenis, ganti
+      dompet, tarik-segar, `LedgerChanges`, atau perubahan kategori di periode
+      yang sama (dan `analysis_viewed` tetap sekali).
+- [x] **T-19.12** Pencarian lintas periode "Cari di bulan lain" di Daftar
+      Riwayat kembali berfungsi dan terjangkau (QA T-19.7 E3, arahan PO
+      18 Okt 2026). **Selesai 18 Okt 2026.** Penyebab hilangnya: bila
+      pencarian tidak menemukan apa pun di periode yang tampil, hasil
+      pemindaian periode lain membuat `SliverFillRemaining(hasScrollBody:
+      false)` meminta dimensi intrinsik dari kartu yang memakai
+      `LayoutBuilder`, sehingga layar melempar galat layout dan hasilnya tidak
+      pernah terlihat; sebelumnya tidak ada uji widget yang mencakupnya.
+      Perbaikan: keadaan "tidak cocok" memakai `SliverToBoxAdapter`; tombol
+      juga ditawarkan di bawah hasil bila periode ini punya hasil (selama
+      kata kunci terisi); hint kolom cari menyebut "periode ini". Diuji:
+      tanpa hasil di periode ini (tombol, pindai, temuan periode lalu), dengan
+      hasil di periode ini (tombol di bawah hasil, tanpa menggandakan periode
+      ini), dan hint.
+      Buka: `features/transaction/presentation/pages/transaction_list_page.dart`.
+      Memenuhi FR-TXN-004.
+- [x] **T-19.7** Verifikasi Fase 19 di emulator dengan data contoh §10,
       termasuk tur T-19.8 dan peristiwa T-19.9 di DebugView Firebase; temuan
       jadi tugas baru. Dikerjakan terakhir.
       Memenuhi FR-ANL-001–FR-ANL-005.
@@ -4288,9 +4326,171 @@ Peta kerja dan rupa yang ditunggu (A1–A5): [artifact serah terima](https://cla
         BCA) ditambahkan supaya Bulan ini tidak kosong; jam diubah ke 3 Okt
         2026. Kartu "Okt dimulai" memuat "Kilas balik September 2026 /
         Lihat". Belum diketuk.
-      - Belum: A9–A13, A15, B2–B5. Emulator ditinggalkan dengan jam
-        dikembalikan otomatis; data uji tetap di emulator untuk dilanjutkan
-        (jam perlu disetel lagi ke 3 atau 10 Okt 2026).
+      - A9 **Lulus (koreksi 18 Okt: semula Gagal dugaan S2; keputusan PO di bawah)**: jam 3 Okt,
+        kilas balik September 2026 (kartu "Okt dimulai" → Lihat) menulis
+        Anggaran Rencana Rp0 / Nyata Rp0, "Di luar rencana" Nyata
+        Rp11.420.700, Uang nganggur Nyata Rp3.194.738. Harapan B-15:
+        pengeluaran Nyata Rencana = Rp11.420.700 + Rp1.000.000 (transfer
+        Tabungan tertaut pos dihitung anggaran terpakai), selisih tepat
+        sebesar transfer itu. Aktual: transfer tidak masuk Anggaran
+        (padahal Rencana › Anggaran September menulis "100% · Rp1.000.000
+        terpakai dari Rp1.000.000") dan rencana Anggaran Rp0 bukan
+        Rp1.000.000. Kemungkinan penyebab: kilas balik membaca rekaman
+        bulan (`month_review`) yang tidak pernah dibuat karena aplikasi
+        tidak dibuka di September (data uji dibuat mundur lewat CATAT), jadi
+        ini mungkin batas uji, bukan bug; mohon engineer memastikan apakah
+        kilas balik tanpa rekaman dihitung langsung dari transaksi dan
+        anggaran.
+      - A10 sebagian: kartu Arus Beranda berisi pintu "Analisis Oktober:
+        pemasukan dan pengeluaran per kategori" (ada). Lembar kilas balik
+        memuat tombol "Lihat rincian September". Mengetuk keduanya belum
+        diselesaikan (sesi terputus).
+      - A10 Lulus sebagian: pintu kartu Arus Beranda ("Analisis Oktober:
+        pemasukan dan pengeluaran per kategori") membuka Analisis Oktober,
+        Pengeluaran, semua dompet; ringkasannya Rp520.000 = Selisih −Rp520.000
+        di kartu Arus (B-3). Pintu kilas balik **Terhalang**: langkah
+        "Lihat" di kartu tinjau hanya ada sekali (sesudah dibuka, kartu
+        berstatus 1/1 tanpa tautan), jadi tombol "Lihat rincian September"
+        di lembar tidak bisa diketuk ulang pada data ini; perlu data kosong
+        baru atau catatan engineer bagaimana membukanya lagi.
+      - A11 Lulus (dengan catatan): Sembunyikan nominal → semua Rp•••••,
+        persen tetap tampil, kalimat sorotan "Makan & Minum lebih tinggi
+        dari rata-rata 3 bulan" tanpa nominal. Sedekah diarsipkan di Akun
+        → September tetap menampilkan Sedekah 7%; penanda "diarsipkan" ada
+        di Rincian Sedekah (September 2026 / diarsipkan) tetapi **tidak** di
+        baris daftar kategori (B-14: "tetap tampil … dengan penanda";
+        pertanyaan PO 3).
+      - A12 Lulus: jam 10 Okt, awal bulan → 25 (pratinjau "1 – 24 Okt (24
+        hari), lalu 25 Okt – 24 Nov"): Analisis Oktober bertajuk "1 – 24 Okt"
+        + "Periode peralihan · 24 hari", Rp520.000, tanpa pembanding total
+        maupun sorotan; September tetap "September 2026" dengan angka A1;
+        tren memakai label "1 – 24 Okt (s.d. 10 Okt)".
+      - A15 Lulus (dari logcat `FA-SVC`, bukan DebugView; sesi 17–18 Okt,
+        build `2e9b166`): `analysis_viewed {source=home|history,
+        kind=expense, transition=false|true}` (home dari kartu Arus; history
+        di periode peralihan `transition=true`); `analysis_period_changed
+        {via=stepper|trend}` (stepper dari Analisis; mengikuti periode dari
+        Daftar tidak dicatat); `analysis_kind_switched {kind=income|expense}`;
+        `analysis_wallet_filtered {filtered=true|false}`;
+        `analysis_highlights_shown {count=0|1}`; `analysis_category_opened
+        {from=link, category=food|custom}` (kategori buatan pengguna dan
+        Freelance-tidak-diuji muncul sebagai `custom`, tanpa nama);
+        `analysis_see_all_opened`; `analysis_uncategorized_fix_opened`.
+        Tidak ada nominal, tanggal, atau nama kategori di parameter mana
+        pun (R7). Tidak teruji: `from=highlight`, `category=freelance`
+        (Freelance di Pemasukan tidak dibuka rincian), dan "sekali per
+        periode" untuk `analysis_highlights_shown` secara eksplisit (11
+        peristiwa untuk ±10 pembukaan periode, konsisten tapi tidak
+        dibuktikan per periode).
+      - B1 Lulus: periode dari Daftar menjadi periode Analisis dan
+        sebaliknya (Agustus/September terbawa); Daftar memakai kepala yang
+        sama dengan Analisis: "1 – 24 Okt" + "Periode peralihan · 24 hari"
+        (P-11) saat awal bulan 25. Pilihan bertahan antarsegmen.
+      - B2 Lulus sebagian: periode peralihan 1 – 24 Okt: ringkasan Daftar
+        Pengeluaran −Rp520.000 = total Analisis Rp520.000 = Selisih −Rp520.000
+        kartu Arus Beranda; jam 10 Okt, awal bulan 1 juga sama (Rp520.000).
+        Periode normal bukan tanggal 1 belum diuji (butuh jam ≥ 25 Okt).
+      - B2 periode normal Lulus (jam 26 Okt, awal bulan 25): Daftar 25 Okt
+        – 24 Nov Pemasukan +Rp12.000.000, Pengeluaran Rp0 = Analisis
+        (+Rp12.000.000) = Arus Beranda (Selisih Rp12.000.000).
+      - B3 Lulus: rutin Gaji 25 Okt dicatat lewat Ubah dulu bertanggal 23
+        Okt → muncul di Daftar periode 25 Okt – 24 Nov (Jumat, 23 Okt +Rp12.000.000)
+        dan tidak di 1 – 24 Okt (hanya Senin, 5 Okt −Rp520.000); urutan hari
+        tetap menurut tanggal transaksi.
+      - B4 Lulus sebagian: tombol Periode berikutnya nonaktif di periode
+        berjalan; Periode sebelumnya nonaktif di Juni 2026 (bulan pertama
+        pencatatan). "Cari di bulan lain": kontrol pencarian tidak
+        ditemukan di Daftar (Filter hanya Dompet dan Kategori), jadi
+        bagian itu tidak teruji; mohon engineer menunjukkan lokasinya.
+      - B5 sebagian: Rincian kategori memuat jumlah dan total sama dengan
+        Lihat semua transaksi (Makan & Minum September 2 transaksi
+        Rp1.245.000), kategori diarsipkan ditandai "diarsipkan" di Rincian.
+        Belum: batas 20 transaksi, Freelance (Pemasukan), tautan tren
+        "Lihat analisis" dari Rincian, kategori baru tanpa garis rata-rata
+        (Rincian Tempat tinggal "baru bulan ini" tanpa baris selisih).
+      **Keputusan PO atas laporan QA, 18 Okt 2026** (rencana uji versi 7):
+      - A9 bukan bug aplikasi: B-15 lama keliru; transfer tertaut pos tidak
+        dihitung di Rencana maupun Analisis (KT-R14, ADR-035, aturan 7), hanya
+        keterangan "Dipindahkan antardompet". Hasil yang terlihat (Anggaran
+        Rp0, Di luar rencana Rp11.420.700) benar. A9 → **Lulus**. B-15 benar di
+        branch `claude/fix-b15-rekonsiliasi`.
+      - E2 (kilas balik hanya sekali) = kekurangan produk → T-19.11 (selesai
+        18 Okt). A10 sebelumnya Terhalang; diuji ulang sesudah T-19.11.
+      - E3 (tidak ada "Cari di bulan lain") = dugaan regresi S2 → T-19.12
+        (selesai 18 Okt). Verifikasi apakah ada di main (0.7.0+13) dan uji
+        ulang B4 di bawah.
+      - E4 (`analysis_viewed` sekali per masuk segmen) sesuai → Lulus.
+      - E5: uji bloc `highlights_shown` ditambah di T-19.11; sampai itu, A15
+        bagian ini "Lulus dengan catatan: tak terbukti dari log".
+      - P1 (penanda "diarsipkan" cukup di Rincian), P2 (tren per dompet tetap
+        enam periode), P3 (jenis tidak diingat) → Lulus.
+      **Putaran 18 Okt 2026** — emulator yang sama; APK debug PR #51 dari
+      `8dd54fa` (termasuk T-19.11 dan T-19.12); untuk A14 lebih dulu
+      dipasang build `0.7.0+13` dari tag (data kosong), lalu `adb install -r`
+      build PR #51 tanpa menghapus data. Ruang emulator sempat habis
+      (INSTALL_FAILED_INSUFFICIENT_STORAGE); paket debug lain
+      `com.saldough.saldough` dilepas untuk membebaskan ruang.
+      - Koreksi E3: pada build `0.7.0+13` kolom "Cari di bulan ini: catatan /
+        kategori…" ada di Daftar Riwayat, dan di build uji pertama kolom itu
+        juga ada (jarak Filter ke chip sama); hint-nya tidak terbaca oleh
+        pembaca layar sehingga hasil `grep` QA "tidak ditemukan" keliru. Yang
+        sungguh rusak (T-19.12) adalah hasil "Cari di bulan lain" bila periode
+        yang tampil tanpa hasil; B4 bagian itu diuji ulang di bawah.
+      - A14 Lulus (pengguna lama; build `0.7.0+13` dengan tur Riwayat
+        sudah tamat → build PR #51): Riwayat hanya menampilkan satu langkah
+        1/1 "Analisis" yang menyorot segmen Analisis; sesudah Selesai,
+        Analisis (satu bulan data) hanya menampilkan tur `analysis` 1 langkah
+        "Per kategori" (Tanpa kategori dan tren tidak muncul karena barisnya
+        tidak tampil); membuka Analisis lagi tidak menampilkan tur.
+      - A13 sebagian: "baru satu bulan data" Lulus (Oktober Rp520.000 hanya
+        donat dan daftar kategori; tanpa pembanding, sorotan, tren,
+        transfer). "Periode tanpa pemasukan" Lulus ("Belum ada pemasukan di
+        Oktober."). Belum: data kosong dan memuat (butuh `pm clear`), galat
+        (Terhalang, sulit dipicu).
+      - B4 Lulus (build T-19.12): Daftar Oktober, kata kunci "Bensin" (hanya
+        ada di September) → "Tidak ada transaksi bulan ini yang cocok dengan
+        filter" + "Pencarian dan filter hanya mencakup bulan yang sedang
+        dibuka" + tombol "Cari di bulan lain"; mengetuknya → "Ditemukan di
+        bulan lain: Sabtu, 12 Sep · Bensin · −Rp300.000" tanpa duplikat.
+        Tombol baru muncul sekitar 3–5 detik sesudah pencarian dijalankan
+        (hasil pindai berjalan di latar); mohon engineer memastikan itu
+        memang disengaja.
+      - B5 Lulus (dengan catatan): Rincian kategori baru (Hiburan Agustus,
+        periode pertama): "1 transaksi · rata-rata Rp200.000 per
+        transaksi", tanpa garis rata-rata dan tanpa tren, tanpa baris
+        selisih. Rincian Makan & Minum Oktober (23 transaksi, Rp740.000):
+        "Lihat semua transaksi" → "Oktober 2026 / 23 transaksi / Rp740.000"
+        = total Rincian; tautan "Lihat analisis September" dari kolom tren
+        Rincian membuka Analisis September. **Batas 20 transaksi di Rincian
+        tidak terverifikasi eksak**: hitungan baris dari pemindaian layar
+        tidak andal (11–17 baris unik per pemindaian); mohon uji bloc atau
+        widget yang menegaskan `take(20)`. Freelance di Pemasukan: tidak
+        diuji ulang pada putaran ini (belum ada pembayaran Freelance di data
+        baru).
+      - A10 Lulus (uji ulang, build T-19.11): data kosong baru (BCA, 1
+        pengeluaran September, rutin Gaji), jam 3 Okt: kartu "Okt dimulai"
+        0/1 → Lihat → "Lihat rincian September" membuka Analisis September
+        (Pengeluaran, Makan & Minum 100% Rp100.000); kembali ke Rencana
+        kartu 1/1 dengan tombol "Lihat lagi", yang membuka lembar kilas
+        balik yang sama (hitungan tetap 1/1).
+      - A13 Lulus sebagian: data kosong ("Belum ada yang bisa dianalisis" +
+        Catat transaksi, tanpa tur analisis) Lulus di id terang 1080p dan
+        gelap 360dp; baru satu bulan data dan periode tanpa pemasukan
+        Lulus (di atas). Terhalang: keadaan galat (tidak bisa dipicu di
+        emulator), keadaan memuat (tidak teramati sempat difoto), bahasa en
+        pada keadaan kosong. Catatan S4: pada 360dp tombol "Catat
+        transaksi" di keadaan kosong sebagian tertutup bilah bawah sampai
+        halaman digulir sedikit.
+      **Ringkasan putaran 17–18 Okt 2026** (hasil akhir T-19.7):
+      Lulus: A1–A12, A14, A15 (bagian highlights_shown dengan catatan "tak
+      terbukti dari log"), B1–B5 (B5 dengan catatan batas 20 dan Freelance).
+      Gagal: tidak ada (A9 dikoreksi ke Lulus oleh keputusan PO).
+      Terhalang: A13 galat, A13 memuat, B5 Freelance (Pemasukan), batas 20
+      transaksi Rincian secara eksak, `analysis_category_opened` dengan
+      `from=highlight` dan `category=freelance`.
+      **Selesai 18 Okt 2026** (tidak ada Gagal S1/S2 terbuka).
+      - Catatan alat: rekaman CATAT lewat skrip sempat gagal karena papan
+        ketik tetap terbuka menutup tombol simpan; bukan temuan aplikasi.
 
 ## Fase 20: Pengumuman pembaruan
 
@@ -4534,6 +4734,7 @@ menambah dan memindahkannya ada di
 | B-31 | (**Selesai 4 Okt 2026**: T-17.8 + `occurrence_linked{by: auto}`, `occurrence_unlinked`, `plan_viewed{segment}`) Pasang peristiwa analitik R1 (ADR-035 §7): `recurring_created{source}`, `occurrence_recorded{method}`, `occurrence_skipped`, `occurrence_linked{by}`, `occurrence_unlinked`, `plan_viewed{segment}` lewat `AppAnalytics` (T-16.11). | agen | T-16.11 |
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
+| B-40 | Tindak lanjut kecil QA T-19.7 (S4 dan celah uji): tombol "Catat transaksi" di keadaan kosong Analisis sebagian tertutup bilah bawah pada 360dp sampai digulir; belum teruji di perangkat: keadaan galat dan memuat Analisis, keadaan kosong bahasa en, pembayaran Freelance di Pemasukan, sorotan `from=highlight`, `category=freelance`. | agen (S4) + pemilik (uji perangkat) | QA T-19.7 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

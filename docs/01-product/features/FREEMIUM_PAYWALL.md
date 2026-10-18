@@ -3,6 +3,7 @@
 **Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
 **Status:** Usulan, menunggu keputusan pemilik (§15). Belum ada kode.
 KT-P10 diputuskan 18 Okt 2026: **Target dan utang-piutang masuk produk**.
+KT-P11 diputuskan 18 Okt 2026: **seluruh otomasi rutin R3 menjadi Plus**.
 KT-P7 dan KT-P9 disetujui 18 Okt 2026: ekspor/cadangan manual dan kunci
 aplikasi (A1–A2) dikerjakan sebelum rilis publik, dan urutan kerja §13
 berlaku (Penjaga pertama).
@@ -103,7 +104,7 @@ Ringkas dari PRD §7, TASK_LIST, dan antrean B-n per 18 Okt 2026.
 | F14 | Analisis R1 (6 periode, dibanding biasanya, tren) | Ada | 0 |
 | F15 | Akun opsional, mata uang, bahasa, mode gelap, sembunyikan nominal | Ada | 0 |
 | F16 | Analisis R2 tahun dan tren saldo (B-38); horizon 12 bulan (B-30) | Direncanakan | 0 |
-| F16b | Otomasi rutin R3: catat otomatis nominal tetap, belum terlihat, kenaikan harga, rutin menganggur, "sepertinya rutin" | **Ada** (Fase 17) | 0 |
+| F16b | Otomasi rutin R3: catat otomatis nominal tetap, belum terlihat, kenaikan harga, rutin menganggur, "sepertinya rutin" | **Ada** (Fase 17), menjadi **Plus** (KT-P11) | 0 |
 | F17 | Sinkronisasi antar perangkat (B-7) | Direncanakan, besar | Server |
 | F18 | Ekspor/impor, cadangan, kunci aplikasi, widget | **Belum ada** | 0 |
 | F19 | Pemindaian struk, asisten AI, laporan tahunan, utang, akun bersama | **Di luar MVP** (PRD §6), kandidat Plus | Gemini untuk yang AI |
@@ -135,7 +136,7 @@ salah), iklan, dan mengunci data saat Plus berakhir.
 ### 4.3 Penyetelan ulang versi gratis
 
 Versi gratis yang terlalu murah hati di bagian **otomasi** membuat Plus
-kehilangan inti ceritanya. Dua penyesuaian, keduanya hanya menyentuh
+kehilangan inti ceritanya. Tiga penyesuaian, semuanya hanya menyentuh
 otomasi dan bukan pencatatan:
 
 - **Catat dari notifikasi gratis untuk 1 aplikasi sumber** (misalnya bank
@@ -145,15 +146,21 @@ otomasi dan bukan pencatatan:
   (KT-P8).
 - **Tafsir cerdas gratis 30 per periode** (suara + notifikasi digabung),
   lalu jatuh ke parser aturan tanpa ada yang gagal.
+- **Otomasi rutin R3 menjadi Plus** (KT-P11): catat otomatis rutin
+  bernominal tetap, belum terlihat, kenaikan harga dari notifikasi, rutin
+  menganggur, dan saran "sepertinya rutin". Versi gratis tetap punya rutin
+  dasar R1/R2: rutin tanpa batas, pengingat, kartu Menunggu, catat satu
+  ketuk, total langganan, dan peringatan kenaikan nominal saat mencatat
+  (T-15.6). Deteksi R3 ikut jatah cicip Penjaga (§6.2).
 
 ## 5. Pembagian Gratis dan Plus
 
 | Area | Gratis | Plus |
 |---|---|---|
 | **Mencatat inti** | CATAT lengkap, kalkulator, kategori sendiri, suara dengan parser aturan, Riwayat, Dompet, Beranda, tanpa batas | — (sama) |
-| **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, otomasi rutin R3 yang sudah ada (Fase 17), Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas |
+| **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, catat satu ketuk, total langganan, Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas; **Otomasi rutin R3** (Fase 17): catat otomatis rutin bernominal tetap, label belum terlihat di notifikasi, kenaikan harga dari notifikasi, rutin menganggur, saran "sepertinya rutin" |
 | **Analisis** | 6 periode terakhir (seluruh R1) | Riwayat penuh, tren 12 bulan, tampilan tahun, tren saldo |
-| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; tafsir tanpa kuota |
+| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; rutin tercatat otomatis (R3); tafsir tanpa kuota |
 | **② Tanuki Berjaga** | **Cicip 1 peringatan** per periode | **Penjaga**: prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan besar minggu depan, langganan naik/menganggur; **Ringkasan Senin** |
 | **③ Tanya Tanuki** | **Cicip 3 pertanyaan** per periode | Tanya jawab bahasa sehari-hari tentang uangmu sendiri, ketik atau suara |
 | **④ Tanuki Merencanakan** | — | **Bagaimana kalau** (simulasi), **Target** dengan perkiraan tanggal tercapai, perkiraan 12 bulan |
@@ -206,9 +213,10 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
     ini, sesudah cicilan dan listrik."
   - "Pengeluaran Transportasi pekan ini 3× biasanya."
   - "Pekan depan ada 3 tagihan rutin, total Rp2,1 jt."
-  - Sinyal R3 yang sudah ada di segmen Rutin (kenaikan harga, rutin
-    menganggur, belum terlihat) dikirim sebagai notifikasi. Deteksinya
-    sendiri tetap gratis di dalam aplikasi; Plus menambah "datang padamu".
+  - Deteksi R3 (kenaikan harga dari notifikasi, rutin menganggur, belum
+    terlihat, "sepertinya rutin"), yang di Plus tampil di segmen Rutin dan
+    juga dikirim sebagai notifikasi. Di versi gratis, satu deteksi R3 boleh
+    menjadi "Contoh Penjaga" periode itu.
   - **Ringkasan Senin:** satu notifikasi tiap Senin pagi berisi pekan lalu
     (masuk, keluar, kategori teratas) dan pekan ini (tagihan, sisa
     anggaran).
@@ -412,6 +420,7 @@ berhenti."
 | Status tagihan freelance | Tetap tampil; pembayaran tetap dicatat lewat CATAT |
 | Analisis di luar 6 periode | Tampilannya terkunci; Riwayat tetap penuh |
 | Cadangan otomatis | Berhenti; cadangan lama tetap bisa dipulihkan; cadangan manual tersedia |
+| Otomasi rutin R3 | Rutin yang disetel Catat otomatis kembali menunggu konfirmasi satu ketuk (setelannya disimpan untuk bila berlangganan lagi); transaksi yang sudah tercatat otomatis tetap ada dan daftar Tercatat otomatis tetap bisa dibuka; label belum terlihat, kenaikan harga dari notifikasi, rutin menganggur, dan saran rutin berhenti tampil |
 | Kosmetik | Kembali ke bawaan; pilihan disimpan |
 
 ## 11. Harga
@@ -571,7 +580,7 @@ satu fase penuh dengan ADR.
 | A2 | B-43 | Kunci aplikasi (sidik jari/PIN) | Akun, preferensi | `local_auth` | S | Gratis dan kecil; dicari pengguna aplikasi keuangan sebelum mereka mau memasukkan data |
 | **B. Fondasi Plus** | | | | | | |
 | B1 | B-41 | ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah dari Remote Config, peristiwa Analytics | Remote Config, Analytics, kunci rute | `features/premium/`, `core/foundation/entitlement/` | M | Semua pilar butuh tempat untuk memeriksa hak dan menghitung jatah cicip. Dibangun dulu, **belum dijual**: Plus dinyalakan hanya untuk penguji |
-| B2 | B-41, B-30 | Gerbang fitur yang sudah ada: notifikasi 1 aplikasi, kuota tafsir 30, Analisis > 6 periode, template ke-2, proyek freelance ke-3; perkiraan 12 bulan | Semua sudah ada | Hanya pemeriksaan hak | S | Murah, dan memberi data pertama berapa sering batas tersentuh |
+| B2 | B-41, B-30 | Gerbang fitur yang sudah ada: notifikasi 1 aplikasi, kuota tafsir 30, Analisis > 6 periode, template ke-2, proyek freelance ke-3, otomasi rutin R3 (KT-P11); perkiraan 12 bulan | Semua sudah ada | Hanya pemeriksaan hak | S | Murah, dan memberi data pertama berapa sering batas tersentuh |
 | **C. Tiga pilar pertama → peluncuran Plus** | | | | | | |
 | C1 | B-44 | **Penjaga + Ringkasan Senin** (②) | `monthPlan`, `projectCashflow`, Analisis, deteksi R3 Fase 17, `flutter_local_notifications` | Mesin aturan peringatan, penjadwal, setelan per jenis | M | **Dibangun pertama.** Biaya 0, tanpa data keluar, mesin sudah ada, dan paling langsung terasa "Tanuki bekerja untukku". Cicip gratisnya juga menaikkan retensi pengguna gratis, ukuran keberhasilan utama PRD §3. Pertanyaan ADR: hitung di latar (`workmanager`) atau dijadwalkan saat aplikasi dibuka |
 | C2 | B-45 | **Catat dari foto** (①) | Interpreter Gemini, resolver, penyusun draf `shared/capture/`, `RecordRouteKeys.sheet` | Sumber bukti gambar, pemilih gambar, terima bagi dari aplikasi lain, prompt multimodal | M | Kedua. Momen ajaib hari 0 uji coba dan dipakai tiap hari. Ditaruh sesudah C1 karena butuh Blaze (T-11.8) dan pembaruan Keamanan Data/kebijakan privasi |
@@ -634,7 +643,7 @@ butirnya ke Now (aturan ROADMAP).
 
 | Risiko | Mitigasi |
 |---|---|
-| Penguji kecewa "dulu gratis" (notifikasi jadi 1 aplikasi) | Penguji dapat Plus 12 bulan; pembatasan hanya pada otomasi |
+| Penguji kecewa "dulu gratis" (notifikasi jadi 1 aplikasi, otomasi R3 jadi Plus) | Penguji dapat Plus 12 bulan; pembatasan hanya pada otomasi |
 | Mutu Tanya Tanuki mengecewakan (salah paham pertanyaan) | Angka selalu dihitung lokal; pertanyaan yang tak terpetakan dijawab jujur; mulai dari katalog pertanyaan sempit; tayang paling akhir di antara pilar (E4) |
 | Penjaga terasa mengganggu | Maksimal satu per hari, diatur per jenis, hanya saat ada sinyal nyata |
 | Pembacaan foto salah | Draf selalu membuka CATAT; bagian ragu dikosongkan |
@@ -663,16 +672,11 @@ butirnya ke Now (aturan ROADMAP).
 - ~~**KT-P10**~~ Diputuskan 18 Okt 2026: Target dan utang-piutang masuk
   produk, dengan pembagian Gratis/Plus di §7. ADR domain masing-masing
   ditulis di B-47 dan B-48.
-- **KT-P11** Otomasi yang **sudah ada** dan sudah dipakai penguji: tingkat
-  otomatis catat dari notifikasi (Fase 11) dan catat otomatis rutin
-  bernominal tetap (R3, Fase 17). Revisi 2 menaruh yang pertama di Plus
-  tapi yang kedua di Gratis, jadi tidak konsisten. Usulan: **semua
-  pencatatan otomatis = Plus** (notifikasi tingkat 2/3 dan catat otomatis
-  rutin), **semua deteksi di dalam aplikasi = Gratis** (belum terlihat,
-  kenaikan harga, rutin menganggur, "sepertinya rutin"), dan Penjaga
-  (Plus) yang mengirim deteksi itu sebagai notifikasi. Belum rilis publik,
-  dan penguji mendapat Plus 12 bulan (KT-P5), jadi tidak ada pengguna yang
-  kehilangan fitur. Alternatifnya: semua yang sudah ada tetap gratis.
+- ~~**KT-P11**~~ Diputuskan 18 Okt 2026: **seluruh otomasi rutin R3 (Fase
+  17, ADR-037) menjadi Plus**, termasuk deteksinya; tingkat otomatis catat
+  dari notifikasi juga Plus. Gratis tetap punya rutin dasar R1/R2 (§4.3).
+  Aman karena belum rilis publik dan penguji mendapat Plus 12 bulan
+  (KT-P5). Gerbangnya dikerjakan di B-41 (§13 B2).
 
 ## 16. Sumber
 

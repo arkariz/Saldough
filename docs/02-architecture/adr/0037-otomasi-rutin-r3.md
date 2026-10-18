@@ -6,6 +6,9 @@
 - **Tanggal:** 2026-10-04
 - **Fase roadmap:** Fase 17 (Rencana R3)
 - **Status:** Accepted (pemilik menjawab "lanjut" atas usulan §6, 4 Okt 2026)
+- **Paket:** sejak 18 Okt 2026 (KT-P11) seluruh otomasi ini fitur Plus;
+  lihat [FREEMIUM_PAYWALL.md](../../01-product/features/FREEMIUM_PAYWALL.md)
+  §4.3 dan §10. Keputusan teknis gerbangnya menyusul di ADR monetisasi (B-41).
 - **Cakupan:** `lib/shared/recurring/` (status kemunculan, deteksi, saran),
   `lib/features/recurring/` (kartu Menunggu, rincian, pengaturan rutin),
   `lib/features/notification_capture/` (kenaikan harga dari notifikasi),

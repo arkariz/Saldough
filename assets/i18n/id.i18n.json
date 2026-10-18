@@ -156,7 +156,7 @@
   },
   "transaction": {
     "pageTitle": "Riwayat",
-    "searchHint": "Cari di bulan ini: catatan / kategori...",
+    "searchHint": "Cari di periode ini: catatan / kategori...",
     "allFilterLabel": "Semua $count",
     "incomeFilterLabel": "Pemasukan $count",
     "expenseFilterLabel": "Pengeluaran $count",

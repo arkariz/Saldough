@@ -2,8 +2,8 @@
 
 **Tanggal:** 18 Oktober 2026.
 **Status:** Direvisi 18 Okt 2026 sesuai arahan pemilik: onboarding wajib
-(§4) dan tombol permanen (§5). Menunggu satu konfirmasi, KT-D1 (§9). Tugasnya
-Fase 21 di TASK_LIST.
+(§4) dan tombol permanen (§5). KT-D1 dijawab pemilik 18 Okt 2026 (§9). Tinggal
+rupa dari designer (T-21.0). Tugasnya Fase 21 di TASK_LIST.
 **Berkaitan:** [ADR-032](../../02-architecture/adr/0032-catat-dari-notifikasi.md)
 (Catat dari notifikasi), [ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)
 §3.8 (pengingat rutin), [ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
@@ -38,7 +38,7 @@ Akar yang sama: ketiganya hanya ada sebagai **setelan pasif**, bukan
 3. Awal periode keuangan tidak mendapat tombol permanen (tidak diminta);
    pintunya tetap kepala periode dan Akun.
 
-Tafsiran PO atas "mandatory" (KT-D1, mohon dikonfirmasi): **langkahnya
+Tafsiran atas "mandatory" (KT-D1, **disetujui pemilik 18 Okt 2026**): **langkahnya
 wajib dijawab, bukan fiturnya wajib menyala.** Langkah tidak punya tombol
 Lewati, dan pengguna harus memilih **Nyalakan** atau **Tidak sekarang**.
 Alasan: izin notifikasi dan akses membaca notifikasi adalah izin sistem yang
@@ -181,13 +181,11 @@ dengan persetujuan PO mengikuti glosarium `writing.md`.
 | `discovery.payday.title` / `body` | Gajian tanggal {d}? / Mulai bulan keuangan dari tanggal {d}, supaya Rencana dan Analisis mengikuti gajianmu. |
 | `discovery.status.on` / `off` / `permissionNeeded` | Nyala / Mati / Izin belum diberikan |
 
-## 9. Keputusan terbuka dan analitik
+## 9. Keputusan dan analitik
 
-**KT-D1** (satu-satunya): "wajib" berarti **wajib dijawab** (Nyalakan atau
-Tidak sekarang), bukan wajib menyala, seperti §2? Rekomendasi PO: ya. Bila
-pemilik ingin wajib menyala, onboarding tidak bisa dilanjutkan tanpa izin
-sistem; PO tidak merekomendasikannya (pengguna yang menolak izin akan
-terjebak, dan itu juga mengganggu penilaian peninjau Play).
+**KT-D1** (diputuskan pemilik 18 Okt 2026): "wajib" berarti **wajib dijawab**
+(Nyalakan atau Tidak sekarang), bukan wajib menyala. Tidak ada keputusan
+terbuka yang tersisa untuk fase ini.
 
 **Analitik** (ADR-023, tanpa nominal, nama kategori buatan, atau isi
 notifikasi):

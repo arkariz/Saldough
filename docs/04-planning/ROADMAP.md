@@ -58,7 +58,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
-| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, menunggu KT-D1) |
+| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -464,7 +464,7 @@ muncul di Beranda selama notifikasi dan pengingat belum efektif, status di
 Akun, dan tur
 ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
 Bukan fitur baru; bergantung pada slot Beranda Fase 20 dan onboarding Fase
-9. **Status:** draf, menunggu KT-D1 dan rupa dari designer.
+9. **Status:** KT-D1 diputuskan 18 Okt 2026; menunggu rupa dari designer, lalu kode.
 
 **Selesai kalau:** akun baru tidak bisa melewati tiga langkah tanpa
 menjawab, tombol permanen muncul dan hilang sesuai keadaan efektif fitur,

@@ -85,7 +85,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
-| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 9 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); menunggu KT-D1 dan rupa (T-21.0) |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 9 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -108,11 +108,9 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   §12. Keputusan teknis bukan bagian KT ini; engineer menulisnya sebagai ADR
   di T-20.1.
 
-- **KT-D1** Penemuan fitur (Fase 21): "mandatory" di onboarding berarti
-  langkah **wajib dijawab** (Nyalakan atau Tidak sekarang), bukan fitur
-  wajib menyala (rekomendasi: ya; izin sistem tidak bisa dipaksa). Rincian
-  di [FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md) §2
-  dan §9.
+KT-D1 (arti "wajib" di onboarding Fase 21) diputuskan 18 Okt 2026: wajib
+dijawab (Nyalakan atau Tidak sekarang), bukan wajib menyala; dicatat di
+FEATURE_DISCOVERY §2 dan §9.
 
 KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
 10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
@@ -4719,8 +4717,8 @@ tersembunyi di setelan. Fase ini menambah **tiga langkah wajib di
 onboarding** dan **tombol Nyalakan permanen** selama fitur belum efektif;
 bukan fitur baru. Perilaku, aturan, teks, dan kasus tepi di
 [FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md). Branch
-sendiri dari `main`. Tafsiran "wajib = wajib dijawab, bukan wajib menyala"
-menunggu konfirmasi KT-D1; tugas rupa (T-21.0) boleh jalan duluan. Rupa
+sendiri dari `main`. Arti "wajib" = wajib dijawab, bukan wajib menyala
+(KT-D1, diputuskan pemilik 18 Okt 2026); mulai dari T-21.0 dan T-21.1. Rupa
 baris tombol, langkah onboarding, status Akun, dan isyarat kepala periode:
 perlu rupa dari ui-ux-designer sebelum T-21.2.
 

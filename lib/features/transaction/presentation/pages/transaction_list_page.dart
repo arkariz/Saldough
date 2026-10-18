@@ -253,25 +253,15 @@ class _Body extends StatelessWidget {
       );
     }
     if (state.groups.isEmpty) {
-      final bloc = context.read<TransactionBloc>();
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space12),
+      // Bukan `SliverFillRemaining`: ia meminta dimensi intrinsik, dan kartu hasil
+      // pencarian lintas periode memakai `LayoutBuilder` (galat layout, T-19.12).
+      return SliverPadding(
+        padding: const EdgeInsets.fromLTRB(AppSpacing.space4, 0, AppSpacing.space4, AppSpacing.space12),
+        sliver: SliverToBoxAdapter(
           child: Column(
             children: [
               TransactionEmptyFilterState(onClearFilters: onClearFilters),
-              if (state.searchQuery.trim().isNotEmpty)
-                TransactionCrossMonthSearchSection(
-                  hasScanned: state.crossMonthScannedMonths.isNotEmpty,
-                  isSearching: state.isSearchingCrossMonth,
-                  exhausted: state.crossMonthExhausted,
-                  groups: state.crossMonthGroups,
-                  walletsById: walletsById,
-                  onSearch: () => bloc.add(const TransactionSearchAcrossMonthsRequested()),
-                  onTransactionTap: (transaction) =>
-                    context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
-                ),
+              if (state.searchQuery.trim().isNotEmpty) _crossMonthSection(context),
             ],
           ),
         ),
@@ -284,17 +274,39 @@ class _Body extends StatelessWidget {
         AppSpacing.space4,
         AppSpacing.space12,
       ),
-      sliver: SliverList.separated(
-        itemCount: state.groups.length,
-        separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.space6),
-        itemBuilder: (context, index) => TransactionDateGroupCard(
-          group: state.groups[index],
-          walletsById: walletsById,
-          onTransactionTap: (transaction) =>
-                    context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
-          firstRowSpotlightKey: index == 0 ? SpotlightKey.txnRow : null,
-        ),
+      sliver: SliverMainAxisGroup(
+        slivers: [
+          SliverList.separated(
+            itemCount: state.groups.length,
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.space6),
+            itemBuilder: (context, index) => TransactionDateGroupCard(
+              group: state.groups[index],
+              walletsById: walletsById,
+              onTransactionTap: (transaction) =>
+                        context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
+              firstRowSpotlightKey: index == 0 ? SpotlightKey.txnRow : null,
+            ),
+          ),
+          // Mencari di periode lain tetap ditawarkan walau periode ini punya hasil (T-19.12).
+          if (state.searchQuery.trim().isNotEmpty) SliverToBoxAdapter(child: _crossMonthSection(context)),
+        ],
       ),
+    );
+  }
+
+  /// Pencarian lintas periode (T-8.2): tombol "Cari di bulan lain", pemindaian,
+  /// dan hasilnya. Aktif hanya saat kata kunci pencarian terisi.
+  Widget _crossMonthSection(BuildContext context) {
+    final bloc = context.read<TransactionBloc>();
+    return TransactionCrossMonthSearchSection(
+      hasScanned: state.crossMonthScannedMonths.isNotEmpty,
+      isSearching: state.isSearchingCrossMonth,
+      exhausted: state.crossMonthExhausted,
+      groups: state.crossMonthGroups,
+      walletsById: walletsById,
+      onSearch: () => bloc.add(const TransactionSearchAcrossMonthsRequested()),
+      onTransactionTap: (transaction) =>
+          context.pushRoute(TransactionRouteKeys.detail, TransactionDetailInput(transaction)),
     );
   }
 }

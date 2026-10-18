@@ -156,7 +156,7 @@
   },
   "transaction": {
     "pageTitle": "History",
-    "searchHint": "Search this month: notes / categories...",
+    "searchHint": "Search this period: notes / categories...",
     "allFilterLabel": "All $count",
     "incomeFilterLabel": "Income $count",
     "expenseFilterLabel": "Expenses $count",

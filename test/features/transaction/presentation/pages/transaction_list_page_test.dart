@@ -105,6 +105,70 @@ void main() {
       expect(find.text(t.transaction.trustFooterMessage), findsOneWidget);
     });
 
+    group('pencarian lintas periode "Cari di bulan lain" (T-8.2, T-19.12)', () {
+      Future<void> seedTwoPeriods() async {
+        await walletRepository.saveWallet(
+          const Wallet(id: 'bca', name: 'BCA', iconKey: 'walletBank', initialBalance: 0, currentBalance: 0),
+        );
+        final now = DateTime.now();
+        final previous = DateTime(now.year, now.month - 1, 15, 9);
+        await transactionRepository.saveTransaction(
+          ExpenseTransaction(id: 'e1', date: now, amount: 30000, note: 'kopi pagi', walletId: 'bca'),
+        );
+        await transactionRepository.saveTransaction(
+          ExpenseTransaction(id: 'e0', date: previous, amount: 40000, note: 'tagihan listrik', walletId: 'bca'),
+        );
+        await transactionRepository.saveTransaction(
+          ExpenseTransaction(id: 'e00', date: previous, amount: 20000, note: 'kopi sore', walletId: 'bca'),
+        );
+      }
+
+      Future<void> openTall(WidgetTester tester) async {
+        tester.view.physicalSize = const Size(800, 2400);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await openTransactionsTab(tester);
+      }
+
+      testWidgets('kolom cari ada dan petunjuknya menyebut periode; tombol baru muncul sesudah mencari', (tester) async {
+        await seedTwoPeriods();
+        await openTall(tester);
+        expect(find.text(t.transaction.searchHint), findsOneWidget);
+        expect(find.text(t.transaction.crossMonthSearchButton), findsNothing, reason: 'belum mencari');
+      });
+
+      testWidgets('tanpa hasil di periode ini: tombol tampil, dipindai, dan menemukan transaksi periode sebelumnya', (
+        tester,
+      ) async {
+        await seedTwoPeriods();
+        await openTall(tester);
+        await tester.enterText(find.byType(TextField), 'listrik');
+        await tester.pumpAndSettle();
+        expect(find.text(t.transaction.crossMonthSearchButton), findsOneWidget);
+
+        await tester.tap(find.text(t.transaction.crossMonthSearchButton));
+        await tester.pumpAndSettle();
+        expect(find.textContaining('tagihan listrik', findRichText: true), findsOneWidget);
+        expect(find.text(t.transaction.crossMonthSearchButton), findsNothing);
+      });
+
+      testWidgets('walau periode ini punya hasil, tombol tetap ditawarkan di bawah hasil dan tidak menggandakan periode ini', (
+        tester,
+      ) async {
+        await seedTwoPeriods();
+        await openTall(tester);
+        await tester.enterText(find.byType(TextField), 'kopi');
+        await tester.pumpAndSettle();
+        expect(find.text('kopi pagi'), findsOneWidget);
+        expect(find.text(t.transaction.crossMonthSearchButton), findsOneWidget);
+
+        await tester.tap(find.text(t.transaction.crossMonthSearchButton));
+        await tester.pumpAndSettle();
+        expect(find.text('kopi sore'), findsOneWidget, reason: 'dari periode sebelumnya');
+        expect(find.text('kopi pagi'), findsOneWidget, reason: 'periode ini tidak muncul dua kali');
+      });
+    });
+
     testWidgets('filter yang menyisakan nol hasil menampilkan keadaan kosong filter, BUKAN keadaan kosong bulan', (
       tester,
     ) async {

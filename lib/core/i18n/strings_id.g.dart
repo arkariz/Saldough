@@ -309,8 +309,8 @@ class Translations$transaction$id {
 	/// id: 'Riwayat'
 	String get pageTitle => 'Riwayat';
 
-	/// id: 'Cari di bulan ini: catatan / kategori...'
-	String get searchHint => 'Cari di bulan ini: catatan / kategori...';
+	/// id: 'Cari di periode ini: catatan / kategori...'
+	String get searchHint => 'Cari di periode ini: catatan / kategori...';
 
 	/// id: 'Semua $count'
 	String allFilterLabel({required Object count}) => 'Semua ${count}';
@@ -4246,7 +4246,7 @@ extension on Translations {
 			'record.calc.tooLarge' => 'Hasilnya terlalu besar',
 			'record.amountSemantics' => ({required Object amount}) => 'Nominal ${amount}',
 			'transaction.pageTitle' => 'Riwayat',
-			'transaction.searchHint' => 'Cari di bulan ini: catatan / kategori...',
+			'transaction.searchHint' => 'Cari di periode ini: catatan / kategori...',
 			'transaction.allFilterLabel' => ({required Object count}) => 'Semua ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Pemasukan ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Pengeluaran ${count}',

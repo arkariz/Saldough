@@ -174,7 +174,7 @@ class _Translations$transaction$en extends Translations$transaction$id {
 
 	// Translations
 	@override String get pageTitle => 'History';
-	@override String get searchHint => 'Search this month: notes / categories...';
+	@override String get searchHint => 'Search this period: notes / categories...';
 	@override String allFilterLabel({required Object count}) => 'All ${count}';
 	@override String incomeFilterLabel({required Object count}) => 'Income ${count}';
 	@override String expenseFilterLabel({required Object count}) => 'Expenses ${count}';
@@ -1836,7 +1836,7 @@ extension on TranslationsEn {
 			'record.calc.tooLarge' => 'The result is too large',
 			'record.amountSemantics' => ({required Object amount}) => 'Amount ${amount}',
 			'transaction.pageTitle' => 'History',
-			'transaction.searchHint' => 'Search this month: notes / categories...',
+			'transaction.searchHint' => 'Search this period: notes / categories...',
 			'transaction.allFilterLabel' => ({required Object count}) => 'All ${count}',
 			'transaction.incomeFilterLabel' => ({required Object count}) => 'Income ${count}',
 			'transaction.expenseFilterLabel' => ({required Object count}) => 'Expenses ${count}',

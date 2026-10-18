@@ -1,0 +1,22 @@
+{
+  "version": "0.8.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Buka Riwayat › Analisis untuk melihat ke mana uangmu pergi, per kategori, dompet, dan periode.",
+          "en": "Open History › Analysis to see where your money goes, by category, wallet, and period."
+        },
+        {
+          "id": "Lihat pengeluaran periode ini dibanding biasanya, lengkap dengan tren enam periode terakhir.",
+          "en": "See this period's spending compared with usual, along with the trend of the last six periods."
+        },
+        {
+          "id": "Ketuk sebuah kategori untuk melihat rinciannya, dan beri kategori pada transaksi yang masih Tanpa kategori.",
+          "en": "Tap a category to see its details, and assign a category to transactions that are still Uncategorized."
+        }
+      ]
+    }
+  ]
+}

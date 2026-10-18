@@ -2,6 +2,8 @@
 
 **Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
 **Status:** Usulan, menunggu keputusan pemilik (§15). Belum ada kode.
+KT-P10 diputuskan 18 Okt 2026: **Target dan utang-piutang masuk produk**.
+KT-P9 dijawab dengan peta kerja dan urutan di §13 (menunggu persetujuan).
 Keputusan teknisnya ditulis sebagai ADR baru sebelum implementasi (PRD §13
 "Arsitektur fitur online yang direncanakan", T-8.4). Antrean: B-41.
 **Revisi 2:** pemilik menilai Plus versi pertama kalah nilai dari versi
@@ -98,7 +100,8 @@ Ringkas dari PRD §7, TASK_LIST, dan antrean B-n per 18 Okt 2026.
 | F13 | Periode keuangan pilihan sendiri | Ada | 0 |
 | F14 | Analisis R1 (6 periode, dibanding biasanya, tren) | Ada | 0 |
 | F15 | Akun opsional, mata uang, bahasa, mode gelap, sembunyikan nominal | Ada | 0 |
-| F16 | Analisis R2 tahun dan tren saldo (B-38); horizon 12 bulan (B-30); R3 otomasi rutin (B-28) | Direncanakan | 0 |
+| F16 | Analisis R2 tahun dan tren saldo (B-38); horizon 12 bulan (B-30) | Direncanakan | 0 |
+| F16b | Otomasi rutin R3: catat otomatis nominal tetap, belum terlihat, kenaikan harga, rutin menganggur, "sepertinya rutin" | **Ada** (Fase 17) | 0 |
 | F17 | Sinkronisasi antar perangkat (B-7) | Direncanakan, besar | Server |
 | F18 | Ekspor/impor, cadangan, kunci aplikasi, widget | **Belum ada** | 0 |
 | F19 | Pemindaian struk, asisten AI, laporan tahunan, utang, akun bersama | **Di luar MVP** (PRD §6), kandidat Plus | Gemini untuk yang AI |
@@ -146,9 +149,9 @@ otomasi dan bukan pencatatan:
 | Area | Gratis | Plus |
 |---|---|---|
 | **Mencatat inti** | CATAT lengkap, kalkulator, kategori sendiri, suara dengan parser aturan, Riwayat, Dompet, Beranda, tanpa batas | — (sama) |
-| **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas |
+| **Anggaran, Rutin, Rencana** | Tanpa batas: anggaran, pos, 1 template, rutin dan pengingat, kartu Menunggu, otomasi rutin R3 yang sudah ada (Fase 17), Bulan ini, uang nganggur, perkiraan +2 bulan | Template tanpa batas |
 | **Analisis** | 6 periode terakhir (seluruh R1) | Riwayat penuh, tren 12 bulan, tampilan tahun, tren saldo |
-| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; rutin tercatat otomatis (R3); tafsir tanpa kuota |
+| **① Tanuki Mencatat** | Notifikasi 1 aplikasi (tinjau semua); 30 tafsir cerdas; **cicip 5 catat dari foto** per periode | **Catat dari foto** (struk, bukti transfer, tangkapan layar QRIS/e-wallet) tanpa kuota; notifikasi semua aplikasi + tingkat otomatis + pola sendiri; tafsir tanpa kuota |
 | **② Tanuki Berjaga** | **Cicip 1 peringatan** per periode | **Penjaga**: prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan besar minggu depan, langganan naik/menganggur; **Ringkasan Senin** |
 | **③ Tanya Tanuki** | **Cicip 3 pertanyaan** per periode | Tanya jawab bahasa sehari-hari tentang uangmu sendiri, ketik atau suara |
 | **④ Tanuki Merencanakan** | — | **Bagaimana kalau** (simulasi), **Target** dengan perkiraan tanggal tercapai, perkiraan 12 bulan |
@@ -201,8 +204,9 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
     ini, sesudah cicilan dan listrik."
   - "Pengeluaran Transportasi pekan ini 3× biasanya."
   - "Pekan depan ada 3 tagihan rutin, total Rp2,1 jt."
-  - Langganan naik harga atau rutin yang tampaknya sudah tidak dipakai (W6,
-    B-28).
+  - Sinyal R3 yang sudah ada di segmen Rutin (kenaikan harga, rutin
+    menganggur, belum terlihat) dikirim sebagai notifikasi. Deteksinya
+    sendiri tetap gratis di dalam aplikasi; Plus menambah "datang padamu".
   - **Ringkasan Senin:** satu notifikasi tiap Senin pagi berisi pekan lalu
     (masuk, keluar, kategori teratas) dan pekan ini (tagihan, sisa
     anggaran).
@@ -268,7 +272,7 @@ singkat, kepatuhan terhadap aturan proyek, biaya, dan ketergantungan.
   adalah saat orang paling butuh kepastian dan paling mau membayar.
 - **Cara kerja:** di atas `projectCashflow` yang sudah ada (ADR-035/036).
   Target butuh entitas baru → ADR (Target tidak ada sejak pivot; 1.0 punya
-  `shared/goal` yang sudah dihapus).
+  `shared/goal` yang sudah dihapus). **Masuk produk (KT-P10)**, B-47.
 - **Biaya:** 0.
 
 ### 6.5 Rapor, Rekap SPT, dan Freelance Pro (pilar ⑤)
@@ -316,7 +320,7 @@ tetap utuh.
 
 | Fitur | Untuk siapa | Pembagian | Usaha | Catatan |
 |---|---|---|---|---|
-| **Utang-piutang** ("Teman pinjam Rp500rb", kasbon, paylater) | Semua | Gratis dasar (catat dan lihat), Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan dan sisa pokok | M | Di luar MVP (PRD §6). Butuh ADR domain: piutang bukan saldo dompet. Cocok dengan maskot yang membawa buku utang-piutang (ONBOARDING_ART_BRIEF) |
+| **Utang-piutang** ("Teman pinjam Rp500rb", kasbon, paylater) | Semua | Gratis dasar (catat dan lihat), Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan dan sisa pokok | L | **Masuk produk (KT-P10)**, B-48. Butuh ADR domain: piutang bukan saldo dompet. Cocok dengan maskot yang membawa buku utang-piutang (ONBOARDING_ART_BRIEF) |
 | **Patungan dari struk** | Anak muda, kantor | Plus | M | Sesudah catat dari foto dan utang-piutang: pilih barang per orang → piutang tercatat |
 | **Dompet Bersama / Plus Keluarga** | Pasangan, keluarga kecil | Tingkat kedua "Plus Keluarga" (2–5 orang) | L | Butuh sinkronisasi (B-7). Persona PRD memang menyebut keluarga kecil |
 | **Sinkronisasi antar perangkat** | Semua | Plus | L | B-7, ADR sendiri, wajib ADR-024 §3.3 |
@@ -455,7 +459,7 @@ Pendapatan bersih Tahunan sesudah biaya layanan Play 15%: Rp179.000 × 0,85
 aman. Pemakai berat (≈ US$0,8 ≈ Rp13.000 pada kurs ±Rp16.500) **melebihi**
 pendapatan bersih Harga Pendiri dan hampir menyamai Tahunan, karena itu
 batas wajar perlu ada (tidak ditampilkan kecuali tersentuh) dan biaya
-nyata per pengguna diukur sejak M1. Penjaga,
+nyata per pengguna diukur sejak peluncuran Plus (C4). Penjaga,
 skenario, rapor, dan cadangan Drive berbiaya 0.
 
 ## 12. Mekanisme teknis (garis besar untuk ADR)
@@ -529,28 +533,113 @@ Peristiwa Analytics: `trial_started`, `trial_moment{pillar}`,
 ≥3 pilar jauh lebih sering membeli, prioritas berikutnya adalah membuat
 momen §8 lebih sering terjadi, bukan menambah fitur.
 
-## 13. Urutan peluncuran
+## 13. Peta kerja Plus dan urutannya (jawaban KT-P9)
 
-| Tahap | Isi | Alasan urutan |
+Usulan, menunggu persetujuan pemilik. Butir `B-n` ada di antrean TASK_LIST
+dan di [ROADMAP](../../04-planning/ROADMAP.md) bagian "Jalur Plus". Ukuran
+usaha: **S** muat 1–2 sesi agen, **M** satu fase kecil (3–6 tugas), **L**
+satu fase penuh dengan ADR.
+
+### 13.1 Kriteria urutan
+
+1. **Kepercayaan sebelum menagih.** Data harus bisa dibawa pergi dan
+   dikunci sebelum ada tombol bayar.
+2. **Plus baru dijual setelah layak.** Paywall tidak tayang hanya dengan
+   gerbang fitur lama; itu persis kelemahan revisi 1. Minimal tiga pilar
+   harus terasa di uji coba 14 hari.
+3. **Mesin yang sudah ada lebih dulu.** Fitur yang memakai ulang
+   `projectCashflow`, Analisis, rutin, pengingat lokal, dan `shared/capture`
+   berisiko rendah dan cepat.
+4. **Biaya nol dan tanpa data keluar lebih dulu.** Fitur lokal tidak perlu
+   mengubah Keamanan Data, kebijakan privasi, atau menunggu Blaze.
+5. **Aturan uang yang baru butuh ADR dulu.** Target dan utang-piutang
+   menyentuh invarian saldo (aturan 5 dan 7), jadi didokumentasikan sebelum
+   kode, sesudah Plus berjalan.
+6. **Fitur AI yang paling berisiko mutu paling akhir di antara pilar.**
+7. **Tanggal musiman tidak bisa digeser.** Rapor Tahunan butuh setahun
+   data; bagi hampir semua pengguna, tahun penuh pertama adalah 2027, jadi
+   sasarannya Desember 2027 dan Januari 2028, bukan 2026.
+
+### 13.2 Daftar kerja berurutan
+
+| Urut | Butir | Isi | Memakai ulang | Baru | Usaha | Kenapa di sini |
+|---|---|---|---|---|---|---|
+| **A. Kepercayaan (gratis)** | | | | | | |
+| A1 | B-42 | Ekspor CSV; cadangkan dan pulihkan manual ke berkas | Repositori Hive (`hive_storage`), lembar bagi Android | Format cadangan berversi, pemulihan sesuai ADR-024 §3.3 | M | Prasyarat etis paywall, dan sekaligus menghapus risiko terbesar pengguna hari ini (data hilang bersama ponsel). Juga dasar A1→E3 (cadangan otomatis memakai format yang sama) |
+| A2 | B-43 | Kunci aplikasi (sidik jari/PIN) | Akun, preferensi | `local_auth` | S | Gratis dan kecil; dicari pengguna aplikasi keuangan sebelum mereka mau memasukkan data |
+| **B. Fondasi Plus** | | | | | | |
+| B1 | B-41 | ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah dari Remote Config, peristiwa Analytics | Remote Config, Analytics, kunci rute | `features/premium/`, `core/foundation/entitlement/` | M | Semua pilar butuh tempat untuk memeriksa hak dan menghitung jatah cicip. Dibangun dulu, **belum dijual**: Plus dinyalakan hanya untuk penguji |
+| B2 | B-41, B-30 | Gerbang fitur yang sudah ada: notifikasi 1 aplikasi, kuota tafsir 30, Analisis > 6 periode, template ke-2, proyek freelance ke-3; perkiraan 12 bulan | Semua sudah ada | Hanya pemeriksaan hak | S | Murah, dan memberi data pertama berapa sering batas tersentuh |
+| **C. Tiga pilar pertama → peluncuran Plus** | | | | | | |
+| C1 | B-44 | **Penjaga + Ringkasan Senin** (②) | `monthPlan`, `projectCashflow`, Analisis, deteksi R3 Fase 17, `flutter_local_notifications` | Mesin aturan peringatan, penjadwal, setelan per jenis | M | **Dibangun pertama.** Biaya 0, tanpa data keluar, mesin sudah ada, dan paling langsung terasa "Tanuki bekerja untukku". Cicip gratisnya juga menaikkan retensi pengguna gratis, ukuran keberhasilan utama PRD §3. Pertanyaan ADR: hitung di latar (`workmanager`) atau dijadwalkan saat aplikasi dibuka |
+| C2 | B-45 | **Catat dari foto** (①) | Interpreter Gemini, resolver, penyusun draf `shared/capture/`, `RecordRouteKeys.sheet` | Sumber bukti gambar, pemilih gambar, terima bagi dari aplikasi lain, prompt multimodal | M | Kedua. Momen ajaib hari 0 uji coba dan dipakai tiap hari. Ditaruh sesudah C1 karena butuh Blaze (T-11.8) dan pembaruan Keamanan Data/kebijakan privasi |
+| C3 | B-46 | **Bagaimana kalau** (④) | `projectCashflow`, horizon 12 bulan dari B2 | Kejadian khayalan, simpan dan bandingkan skenario | M | Ketiga. Biaya 0; menjawab momen keputusan besar (cicilan, resign) yang paling mudah dijual. Melengkapi syarat "tiga pilar terasa" |
+| C4 | B-41 | Reverse trial, momen terjadwal, rekap nilai, layar turun, pemicu paywall P1–P5 dan P8 | Tur spotlight (ADR-021), Analytics | Penjadwal momen, rekap pemakaian lokal | S–M | **Peluncuran Plus (M1).** Ditaruh terakhir supaya rekap hari ke-11 punya isi nyata dari C1–C3 |
+| **D. Domain baru (KT-P10)** | | | | | | |
+| D1 | B-47 | ADR + **Target** (④): entitas, perkiraan tanggal tercapai, kemajuan dari dompet yang ditandai atau transfer sisihkan, peringatan meleset lewat Penjaga | `projectCashflow`, Penjaga, Rencana | Entitas `Goal`, layar Target, hubungan ke dompet | M–L | Sesudah peluncuran karena menyentuh aturan 5 (rencana, bukan pemesanan uang) dan butuh ADR. Memperkuat pilar ④ dan memberi Penjaga sinyal baru |
+| D2 | B-48 | ADR + **Utang-piutang**: dasar gratis (catat pinjam/pinjamkan, sisa, lunas), Plus: pengingat tagih dengan pesan siap kirim, jadwal cicilan | CATAT, dompet, pengingat lokal | Entitas utang/piutang, aturan saldo dan Analisis | L | Paling dalam menyentuh buku besar: meminjamkan uang mengurangi saldo dompet tapi **bukan pengeluaran**, dibayar kembali menambah saldo tapi **bukan pemasukan** (sejalan aturan 7). Bagian dasarnya memperbaiki versi gratis; prasyarat patungan (G1) dan bagian utang Rekap SPT (F2) |
+| **E. Melengkapi pilar ③⑤⑥** | | | | | | |
+| E1 | B-49 | **Rapor bulanan bercerita** + ekspor laporan PDF/Excel (⑤) | Analisis R1, katalog wawasan §7B | Templat kalimat, pembuat PDF (`pdf`) | M | Biaya 0; membangun mesin PDF yang dipakai E2, F1, F2 |
+| E2 | B-50 | **Freelance Pro** (⑤): invoice PDF dari worklog, status jatuh tempo dan lewat jatuh tempo, pengingat tagih, penghasilan per klien | Freelance, ADR-019, PDF dari E1 | Tanggal jatuh tempo, status ketiga | M | Segmen yang paling mudah membenarkan harga; menjawab pertanyaan terbuka PRD §13 tentang status lewat jatuh tempo |
+| E3 | B-51 | **Cadangan otomatis Google Drive** (⑥) | Format cadangan A1, Google Sign-In (ADR-023) | Lingkup Drive folder data aplikasi, penjadwal harian | M | Pilar ketenangan yang paling mudah dijual saat orang ganti ponsel. Sesudah A1 karena formatnya sama. Klasifikasi lingkup OAuth Drive perlu dicek di verifikasi Google |
+| E4 | B-52 | **Tanya Tanuki R1** (③) | Interpreter Gemini, resolver, Analisis, Rencana, Target, utang-piutang | Katalog 10–15 bentuk kueri, pemeta pertanyaan ke kueri, templat jawaban | L | Terakhir di antara pilar karena paling berisiko mutu dan paling bernilai bila sudah bisa menjawab tentang Target dan utang (D1–D2). Saat ini dijual lewat cicip dulu |
+| **F. Musim laporan (sasaran Des 2027 – Mar 2028)** | | | | | | |
+| F1 | B-53 | **Rapor Tahunan** (⑤), kartu geser yang bisa dibagikan tanpa nominal | Analisis, mesin rapor E1 | Kartu bagikan bergaya piksel | M | Butuh setahun data; momen konversi dan pertumbuhan Desember |
+| F2 | B-54 | **Rekap SPT** (⑤): penghasilan per sumber, potongan pajak freelance, saldo dompet 31 Des, utang | Freelance, utang-piutang D2, PDF E1 | Dokumen rekap | M | Januari, sebelum batas SPT orang pribadi 31 Maret |
+| **Kapan saja (paralel)** | | | | | | |
+| K1 | B-56 | Kosmetik Plus: tema, kostum tanuki, ikon aplikasi alternatif | Token ADR-034 | Aset dari pemilik | S kode + aset | Tidak menghalangi apa pun; masuk begitu aset siap. Bagus untuk peluncuran C4 bila ada |
+| K2 | B-55 | Widget: tombol Catat (gratis), ringkasan (Plus) | Beranda, Rencana | `home_widget`, kode native | M | Widget Catat gratis bisa lebih dulu karena menaikkan kebiasaan mencatat |
+
+### 13.3 Kenapa Penjaga pertama, bukan Catat dari foto atau Tanya Tanuki
+
+- **Catat dari foto** paling "wah", tapi bergantung pada Blaze, pembaruan
+  Keamanan Data, dan kebijakan privasi (B-20). Penjaga bisa mulai hari ini.
+- **Tanya Tanuki** paling "AI", tapi mutu pemahaman pertanyaan belum
+  terbukti; bila mengecewakan di peluncuran, kesan pertama Plus ikut rusak.
+- **Penjaga** mengubah sifat aplikasi dari pasif menjadi proaktif tanpa
+  biaya dan tanpa data keluar, dan langsung bisa diukur: apakah pengguna
+  yang menerima peringatan kembali mencatat lebih sering.
+
+### 13.4 Fase usulan
+
+| Fase usulan | Isi | Hasil |
 |---|---|---|
-| **M0 Prasyarat** | ADR monetisasi; Blaze (T-11.8); ekspor CSV, cadangan/pulihkan manual, kunci aplikasi (semua gratis) | Kepercayaan lebih dulu |
-| **M1 Peluncuran Plus** | Billing dan hak; reverse trial dan rekap nilai; **Catat dari foto**; **Penjaga + Ringkasan Senin**; notifikasi semua aplikasi + otomatis; **Bagaimana kalau** + perkiraan 12 bulan (B-30); Analisis penuh; rapor bulanan; paywall P1–P6, P8, P10 | Pilar ①②④⑤ hadir sejak hari pertama, dengan fitur yang sebagian besar memakai mesin yang sudah ada (capture, `projectCashflow`, Analisis, pengingat lokal) |
-| **M2 Tanuki bertanya dan menyimpan** | **Tanya Tanuki** R1; **Target**; cadangan otomatis Drive; R3 otomasi rutin (B-28); Freelance Pro; P7 | Melengkapi pilar ③⑥; Tanya Tanuki paling berisiko secara mutu, jadi sesudah dasar Plus terukur |
-| **M3 Musim laporan** | **Rapor Tahunan** (Desember) dan **Rekap SPT** (Januari, sebelum batas 31 Maret); P9 | Momen konversi musiman; bila M1 belum siap Desember 2026, sasar Desember 2027 dengan Rekap SPT tetap di awal tahun |
-| **M4 Bersama** | Utang-piutang, patungan, sinkronisasi (B-7), **Plus Keluarga** | Proyek besar dan butuh ADR domain; tingkat harga kedua baru dibuka di sini, pelanggan lama tetap di harganya |
+| Fase 21 | A1–A2 | Data bisa dibawa pergi dan dikunci (gratis) |
+| Fase 22 | B1–B2 + C1 | Fondasi Plus dan Penjaga, Plus hanya untuk penguji |
+| Fase 23 | C2–C4 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus dijual** |
+| Fase 24 | D1–D2 | Target dan utang-piutang |
+| Fase 25 | E1–E3 | Rapor bulanan, Freelance Pro, cadangan otomatis |
+| Fase 26 | E4 | Tanya Tanuki R1 |
+| Musiman | F1–F2 | Rapor Tahunan dan Rekap SPT |
+
+Nomor fase hanya usulan; fase baru dijadwalkan saat pemilik menaikkan
+butirnya ke Now (aturan ROADMAP).
+
+### 13.5 Sesudahnya (fitur mendatang)
+
+| Butir | Isi | Syarat |
+|---|---|---|
+| B-57 | Patungan dari struk | B-45 dan B-48 |
+| B-58 | Kartu kredit dan paylater sebagai dompet tagihan (gratis dasar, peringatan jatuh tempo di Penjaga) | ADR; PRD §6 |
+| B-59 | Kekayaan bersih (aset dicatat manual dikurangi utang) | B-48 |
+| B-60 | Dompet Bersama dan Plus Keluarga | Sinkronisasi B-7 |
+| B-7 | Sinkronisasi antar perangkat (Plus) | ADR sendiri, KT-2 |
+| B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, antar tahun) | B-50, B-52 terukur |
+| B-15 | Gemma lokal untuk tafsir tanpa internet (menekan biaya Gemini) | Biaya Gemini nyata dari B-45/B-52 |
+| B-62 | Catat dari email (struk e-commerce, tagihan) | Kebijakan izin Gmail; paling akhir |
 
 ## 14. Risiko
 
 | Risiko | Mitigasi |
 |---|---|
 | Penguji kecewa "dulu gratis" (notifikasi jadi 1 aplikasi) | Penguji dapat Plus 12 bulan; pembatasan hanya pada otomasi |
-| Mutu Tanya Tanuki mengecewakan (salah paham pertanyaan) | Angka selalu dihitung lokal; pertanyaan yang tak terpetakan dijawab jujur; mulai dari katalog pertanyaan sempit; tayang di M2 |
+| Mutu Tanya Tanuki mengecewakan (salah paham pertanyaan) | Angka selalu dihitung lokal; pertanyaan yang tak terpetakan dijawab jujur; mulai dari katalog pertanyaan sempit; tayang paling akhir di antara pilar (E4) |
 | Penjaga terasa mengganggu | Maksimal satu per hari, diatur per jenis, hanya saat ada sinyal nyata |
 | Pembacaan foto salah | Draf selalu membuka CATAT; bagian ragu dikosongkan |
 | Biaya Gemini membengkak | Batas wajar, Remote Config, dan Gemma lokal (B-15) sebagai jalan keluar |
 | Rekap SPT dianggap nasihat pajak | Disebut rekap catatan; tidak menghitung pajak terutang; isi hanya data yang dicatat pengguna |
 | Catat dari notifikasi hanya Android | Di iOS kelak, pengait utama: foto, Penjaga, Tanya Tanuki, rapor |
-| Plus terlalu banyak untuk dirawat satu pengembang | Urutan M1–M4; setiap pilar dibangun di atas mesin yang sudah ada; ukur pilar mana yang menjual sebelum menambah |
+| Plus terlalu banyak untuk dirawat satu pengembang | Urutan §13; setiap pilar dibangun di atas mesin yang sudah ada; ukur pilar mana yang menjual sebelum menambah |
 
 ## 15. Keputusan pemilik yang dibutuhkan
 
@@ -563,14 +652,14 @@ momen §8 lebih sering terjadi, bukan menambah fitur.
   bentuk lain.
 - **KT-P6** Penyedia billing: RevenueCat (usulan) atau `in_app_purchase`
   + Cloud Functions.
-- **KT-P7** Ekspor dan cadangan manual (M0) dikerjakan sebelum rilis
+- **KT-P7** Ekspor dan cadangan manual (A1–A2, §13) dikerjakan sebelum rilis
   publik, meskipun paywall belum siap.
 - **KT-P8** Catat dari notifikasi gratis dibatasi 1 aplikasi sumber (§4.3).
-- **KT-P9** Fitur mana di M1: usulan Catat dari foto, Penjaga, dan
-  Bagaimana kalau. Bila harus memilih satu untuk dibangun pertama, usulan:
-  **Penjaga** (biaya 0, mesin sudah ada, paling terasa "bekerja untukku").
-- **KT-P10** Target dan utang-piutang: masuk produk (butuh ADR domain
-  baru), dan bila ya, pembagian Gratis/Plus di §7.
+- **KT-P9** Setujui peta kerja dan urutan §13 (Penjaga dibangun pertama;
+  Plus dijual sesudah Penjaga, Catat dari foto, dan Bagaimana kalau).
+- ~~**KT-P10**~~ Diputuskan 18 Okt 2026: Target dan utang-piutang masuk
+  produk, dengan pembagian Gratis/Plus di §7. ADR domain masing-masing
+  ditulis di B-47 dan B-48.
 
 ## 16. Sumber
 

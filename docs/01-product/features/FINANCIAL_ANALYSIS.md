@@ -367,11 +367,18 @@ keterbacaan; di kode semuanya `int` sen.
   memuat transaksinya, dengan penanda "diarsipkan".
 - **B-15 Rekonsiliasi dengan Rencana.** Untuk periode yang sama dan semua
   dompet: total pengeluaran Analisis = tagihan rutin tercatat + anggaran
-  terpakai **dari pengeluaran saja** + di luar rencana tercatat, seperti
-  dihitung `monthPlan`. Satu-satunya selisih yang sah: transfer yang
-  ditautkan ke pos anggaran dihitung sebagai "anggaran terpakai" di Rencana
-  tetapi bukan pengeluaran di Analisis (aturan 7). Uji wajib memakai contoh
-  §10 ditambah transfer Tabungan Rp1.000.000 tertaut pos.
+  terpakai + di luar rencana tercatat, seperti dihitung `monthPlan`. **Tidak
+  ada selisih yang sah**: transfer, termasuk yang ditautkan ke pos transfer
+  (setoran Tabungan), tidak dihitung di kedua sisi (aturan 7, KT-R14, ADR-035
+  §3.5; `PlanBudget.lines` tanpa pos transfer). Transfer hanya tampil sebagai
+  keterangan "Dipindahkan antardompet" di Rencana dan Analisis. Uji wajib
+  memakai contoh §10 ditambah transfer Tabungan Rp1.000.000 tertaut pos
+  transfer: total Analisis = Nyata Rencana = Rp11.420.700, baris Anggaran di
+  kilas balik tidak memuat transfer itu, dan keterangan transfer tampil di
+  keduanya. (Revisi 18 Okt 2026 sesudah QA T-19.7 A9: versi sebelumnya
+  keliru menyebut transfer tertaut pos dihitung "anggaran terpakai" di
+  Rencana. Layar Rencana › Anggaran memang menghitungnya, tetapi itu angka
+  progres anggaran, bukan `monthPlan`.)
 - **B-16 Label rata-rata.** Analisis selalu menulis "dibanding rata-rata
   {n} bulan"; Rencana tetap menulis "≈Rp30.000/hari (rata-rata 3 bulan)"
   untuk belanja di luar rencana. Dua hitungan berbeda tidak memakai kalimat

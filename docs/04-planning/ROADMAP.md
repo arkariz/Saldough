@@ -58,6 +58,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
+| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -489,6 +490,23 @@ dan `0.7.0+13`); verifikasi perangkat T-20.8 lulus semua.
 **Selesai kalau:** alur F1–F4 APP_UPDATE lulus di perangkat lewat jalur tes
 Play dan pembaruan kecil Shorebird sungguhan; data keuangan utuh sesudah
 pemasangan; luring diam; Keamanan Data mencatat Shorebird.
+
+## Fase 21: Penemuan fitur
+
+Permintaan pemilik 18 Okt 2026. Tiga fitur yang sudah jadi (Catat dari
+notifikasi, pengingat rutin, awal bulan keuangan) hanya ada sebagai setelan
+di Akun sehingga jarang dinyalakan. Fase ini menjadikan ketiganya langkah
+wajib di onboarding (wajib dijawab), menambah tombol Nyalakan yang selalu
+muncul di Beranda selama notifikasi dan pengingat belum efektif, status di
+Akun, dan tur
+([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
+Bukan fitur baru; bergantung pada slot Beranda Fase 20 dan onboarding Fase
+9. **Status:** KT-D1 diputuskan 18 Okt 2026; menunggu rupa dari designer, lalu kode.
+
+**Selesai kalau:** akun baru tidak bisa melewati tiga langkah tanpa
+menjawab, tombol permanen muncul dan hilang sesuai keadaan efektif fitur,
+pengguna lama tidak dipaksa mengulang onboarding, semuanya terverifikasi di
+perangkat.
 
 ## Ketergantungan antar fase
 

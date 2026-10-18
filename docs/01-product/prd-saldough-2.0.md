@@ -907,6 +907,34 @@ di perangkat 15 Okt 2026 (T-20.8). R2 di antrean (B-39).
       berjalan beserta keadaan pembaruannya; nomor pembaruan kecil ikut ke
       Analytics dan Crashlytics.
 
+### 7.11 Penemuan fitur (sesudah MVP, ditambahkan 18 Okt 2026)
+
+Kebutuhan ini lahir dari permintaan pemilik 18 Okt 2026: Catat dari
+notifikasi, pengingat rutin, dan awal bulan keuangan sulit ditemukan.
+Perilaku dan aturannya di [FEATURE_DISCOVERY.md](features/FEATURE_DISCOVERY.md);
+tugasnya Fase 21.
+
+**FR-DSC-001 — Tombol permanen dan status**
+- [ ] Tombol Nyalakan untuk Catat dari notifikasi (Android) dan pengingat
+      rutin selalu tampil di Beranda selama fiturnya tidak efektif, tanpa
+      opsi tutup atau tunda, dan hilang begitu efektif; saat izin hilang
+      tombol menjadi Izinkan.
+- [ ] Status Nyala/Mati/Izin belum diberikan terlihat di Akun.
+
+**FR-DSC-002 — Catat dari notifikasi di onboarding (Android)**
+- [ ] Onboarding punya langkah wajib dijawab (Nyalakan atau Tidak
+      sekarang); tidak ada di iOS; pengguna lama tidak dipaksa mengulang.
+
+**FR-DSC-003 — Pengingat rutin di onboarding**
+- [ ] Onboarding punya langkah wajib dijawab; sakelar per rutin memberi tahu
+      bila sakelar global mati.
+
+**FR-DSC-004 — Awal periode keuangan di onboarding**
+- [ ] Onboarding mewajibkan memilih tanggal awal periode (bawaan tanggal 1,
+      dikonfirmasi), tanpa membuat periode peralihan; kepala periode Rencana
+      jelas dapat diketuk; pengguna lama dapat tawaran gajian yang boleh
+      ditutup.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

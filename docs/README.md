@@ -99,7 +99,8 @@ docs/
 │       ├── PLAN_TAB_LAYOUT.md         # tata letak tab Rencana: Bulan ini, Anggaran, Rutin
 │       ├── FINANCIAL_PERIOD.md        # periode keuangan (Fase 18)
 │       ├── FINANCIAL_ANALYSIS.md      # analisis keuangan (Fase 19)
-│       └── APP_UPDATE.md              # pengumuman pembaruan Play Store dan Shorebird (Fase 20)
+│       ├── APP_UPDATE.md              # pengumuman pembaruan Play Store dan Shorebird (Fase 20)
+│       └── FEATURE_DISCOVERY.md       # penemuan fitur: notifikasi, pengingat rutin, awal bulan (Fase 21)
 ├── 02-architecture/           # bagaimana membangunnya
 │   ├── ARCHITECTURE_OVERVIEW.md
 │   ├── DOMAIN_MODEL.md

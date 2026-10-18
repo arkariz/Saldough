@@ -85,6 +85,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 9 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -106,6 +107,10 @@ diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
   dan alasannya di [APP_UPDATE.md](../01-product/features/APP_UPDATE.md)
   §12. Keputusan teknis bukan bagian KT ini; engineer menulisnya sebagai ADR
   di T-20.1.
+
+KT-D1 (arti "wajib" di onboarding Fase 21) diputuskan 18 Okt 2026: wajib
+dijawab (Nyalakan atau Tidak sekarang), bukan wajib menyala; dicatat di
+FEATURE_DISCOVERY §2 dan §9.
 
 KT-4 (nominal di Catat kembali ke Rp0 saat jenis diganti) diputuskan
 10 Okt 2026: tetap kosong, perilaku sekarang dipertahankan (catatan
@@ -4708,6 +4713,92 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
       melaporkan **semua lulus** (versi baru, pembaruan kecil, Apa yang baru,
       data utuh, luring diam), tanpa temuan baru. Kotak FR-UPD-001–004 di PRD
       §7.10 dicentang. Rincian langkah per langkah tidak dicatat pemilik.
+
+## Fase 21: Penemuan fitur
+
+Permintaan pemilik 18 Okt 2026 (direvisi hari yang sama): Catat dari
+notifikasi, pengingat rutin, dan awal bulan keuangan sudah jadi tetapi
+tersembunyi di setelan. Fase ini menambah **tiga langkah wajib di
+onboarding** dan **tombol Nyalakan permanen** selama fitur belum efektif;
+bukan fitur baru. Perilaku, aturan, teks, dan kasus tepi di
+[FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md). Branch
+sendiri dari `main`. Arti "wajib" = wajib dijawab, bukan wajib menyala
+(KT-D1, diputuskan pemilik 18 Okt 2026); mulai dari T-21.0 dan T-21.1. Rupa
+baris tombol, langkah onboarding, status Akun, dan isyarat kepala periode:
+perlu rupa dari ui-ux-designer sebelum T-21.2.
+
+- [ ] **T-21.0** Rupa penemuan fitur (designer). Tiga langkah onboarding
+      (tanggal gajian, Catat dari notifikasi, pengingat; keadaan belum
+      memilih, memilih, izin ditolak, kembali dari setelan), baris tombol
+      permanen di Beranda (dua tombol, keadaan Nyalakan dan Izinkan),
+      tombol di segmen Rutin, catatan sakelar per rutin, status
+      "Nyala/Mati/Izin belum diberikan" di Akun, isyarat kepala periode
+      dapat diketuk, kartu tawaran gajian, ringkasan di penutup onboarding.
+      Ke prototipe pemilik dan `docs/03-design/`.
+      Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
+      dicatat.
+      Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
+- [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
+      Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
+      efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan
+      Akun tanpa saling mengimpor fitur (sisipkan lewat akar komposisi
+      seperti `CaptureInboxBanner` dan `accountVersionEntry`, ADR-030; ADR
+      bila perlu). Ingatan onboarding: langkah wajib baru (period,
+      notification, reminder) per langkah, pengguna yang sudah selesai
+      onboarding versi lama tidak dipaksa mengulang.
+      ⚠ Fase 20 memakai slot Beranda yang sama; jangan menggeser banner
+      pembaruan.
+      Verifikasi: uji unit status efektif (mati, nyala, izin hilang, iOS);
+      uji migrasi pengguna lama; uji arsitektur hijau.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.2** Onboarding: langkah wajib awal periode keuangan, Catat dari
+      notifikasi (Android saja), dan pengingat rutin, urutan dan aturan
+      FEATURE_DISCOVERY §4 (tanpa Lewati, Lanjut aktif setelah memilih,
+      Lewati slide melompat ke langkah wajib, mode tinjau tidak memaksa).
+      Nyalakan memakai alur setelan/izin yang sama dengan Akun; kembali
+      tanpa selesai dihitung sudah menjawab.
+      ⚠ Menyimpan tanggal sebelum ada data tidak membuat periode peralihan
+      (FINANCIAL_PERIOD); pastikan lewat uji.
+      ⚠ Aplikasi keluar ke setelan sistem lalu kembali: keadaan langkah
+      harus bertahan.
+      Verifikasi: uji widget tiap langkah dan jalur Nyalakan/Tidak sekarang/
+      izin ditolak; iOS tanpa langkah notifikasi; verifikasi perangkat.
+      Memenuhi FR-DSC-002, FR-DSC-003, FR-DSC-004.
+- [ ] **T-21.3** Baris tombol permanen di Beranda (P-1–P-6): Nyalakan catat
+      dari notifikasi (Android) dan Nyalakan pengingat rutin, menjadi
+      Izinkan bila izin hilang, hilang begitu efektif; tombol pengingat juga
+      di segmen Rutin dan catatan di sakelar per rutin.
+      Verifikasi: uji widget semua keadaan P-1–P-3; urutan Beranda dengan
+      banner pembaruan dan kartu Menunggu; tidak ada tombol di iOS untuk
+      notifikasi.
+      Memenuhi FR-DSC-001, FR-DSC-002, FR-DSC-003.
+- [ ] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
+      diketuk dan kartu tawaran gajian untuk pengguna lama (boleh ditutup).
+      ⚠ Hanya menyarankan; P-1–P-11 FINANCIAL_PERIOD tidak berubah.
+      Verifikasi: uji pemicu (tanggal 1 vs 2–28, jadwal sudah diubah,
+      ditutup).
+      Memenuhi FR-DSC-004.
+- [ ] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
+      dan urutannya (FEATURE_DISCOVERY §7.1).
+      Verifikasi: uji widget tiap keadaan; baris notifikasi tidak ada di iOS.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
+      status Akun, kepala periode), teks `onboarding.*` dan `discovery.*`
+      id dan en.
+      Verifikasi: `translations_test`, tur per langkah mengikuti ADR-021.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
+      nama kategori buatan; catat di `PLAY_DATA_SAFETY.md` bila ada data
+      baru.
+      Verifikasi: uji tiap peristiwa dan parameternya.
+      Memenuhi FR-DSC-001.
+- [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru melewati tiga
+      langkah wajib (Nyalakan, Tidak sekarang, izin ditolak, kembali dari
+      setelan), tombol permanen muncul dan hilang sesuai keadaan efektif
+      termasuk akses dicabut, pengguna lama tidak dipaksa onboarding, urutan
+      Beranda dengan banner pembaruan, iOS tanpa langkah dan tombol
+      notifikasi. Hasil di rencana verifikasi Fase 21.
+      Memenuhi FR-DSC-001–004.
 
 ## Antrean (belum dijadwalkan)
 

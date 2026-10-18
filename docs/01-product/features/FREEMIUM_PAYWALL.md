@@ -1,12 +1,9 @@
 # Freemium dan paywall: Gratis untuk mencatat, Plus agar Tanuki bekerja untukmu
 
 **Tanggal:** 18 Oktober 2026 (revisi 2, hari yang sama).
-**Status:** Usulan, menunggu keputusan pemilik (§15). Belum ada kode.
-KT-P10 diputuskan 18 Okt 2026: **Target dan utang-piutang masuk produk**.
-KT-P11 diputuskan 18 Okt 2026: **seluruh otomasi rutin R3 menjadi Plus**.
-KT-P7 dan KT-P9 disetujui 18 Okt 2026: ekspor/cadangan manual dan kunci
-aplikasi (A1–A2) dikerjakan sebelum rilis publik, dan urutan kerja §13
-berlaku (Penjaga pertama).
+**Status:** **Diputuskan pemilik 18 Okt 2026** (semua KT-P1–P11, §15).
+Belum ada kode. Uji coba berlaku sampai akhir periode keuangan pertama
+yang penuh (KT-P2, §8).
 Keputusan teknisnya ditulis sebagai ADR baru sebelum implementasi (PRD §13
 "Arsitektur fitur online yang direncanakan", T-8.4). Antrean: B-41.
 **Revisi 2:** pemilik menilai Plus versi pertama kalah nilai dari versi
@@ -50,8 +47,9 @@ dan harga**. Rupa diserahkan ke design system dan prototipe pemilik (skill
    gratis per periode keuangan: 1 peringatan Penjaga, 3 pertanyaan Tanya
    Tanuki, 5 catat dari foto, ringkasan rapor. Pengguna gratis terus
    merasakan rasanya, sehingga tahu persis apa yang dibeli.
-5. **Uji coba terbalik 14 hari tanpa kartu**, dirancang supaya setiap pilar
-   punya satu "momen ajaib" terjadwal di dalam 14 hari itu (§8).
+5. **Uji coba terbalik tanpa kartu sampai akhir periode keuangan pertama
+   yang penuh** (14–45 hari), dirancang supaya setiap pilar punya satu
+   "momen ajaib" terjadwal di dalamnya (§8).
 6. **Harga (hipotesis):** Rp25.000/bulan, Rp179.000/tahun; **Harga Pendiri**
    Rp129.000/tahun yang terkunci selama tetap berlangganan, untuk pembeli
    90 hari pertama. Tanpa paket seumur hidup karena pilar AI punya biaya
@@ -345,39 +343,77 @@ Yang sengaja tidak masuk: sinkronisasi bank dan pembayaran (bertentangan
 dengan definisi produk), saran investasi, skor kredit, dan gamifikasi
 streak (KT-R13).
 
-## 8. Uji coba terbalik dengan momen ajaib terjadwal
+## 8. Uji coba terbalik sampai akhir periode keuangan, dengan momen terjadwal
 
-Semua pengguna baru mendapat Plus 14 hari tanpa kartu. Supaya hari ke-14
-terasa sebagai kehilangan nyata, setiap pilar harus **benar-benar terjadi**
-di dalam 14 hari itu, bukan hanya tersedia:
+Semua pengguna baru mendapat Plus tanpa kartu **sampai akhir periode
+keuangan pertamanya yang penuh** (KT-P2, diputuskan 18 Okt 2026), supaya
+uji coba mengikuti satu siklus gajian utuh: gajian masuk, tagihan rutin
+jatuh tempo, anggaran berjalan sampai habis periode.
 
-| Hari | Momen | Pilar |
+### 8.1 Aturan panjang uji coba
+
+- Uji coba berakhir di **hari terakhir periode keuangan yang sedang
+  berjalan** bila sisa periode itu **minimal 14 hari**; bila kurang, di hari
+  terakhir **periode berikutnya**. Panjangnya 14 sampai sekitar 45 hari.
+  Contoh, periode mulai tanggal 25: pasang 1 Nov → berakhir 24 Nov (24
+  hari); pasang 15 Nov → berakhir 24 Des (40 hari).
+- Periode memakai `financialPeriodOf` (ADR-038). Bila pengguna belum
+  memilih tanggal mulai periode, dipakai bawaan aplikasi; onboarding dan
+  layar hadiah menawarkan "Kapan kamu gajian?" lebih dulu, supaya uji coba
+  langsung mengikuti siklus yang benar.
+- **Tanggal berakhir dihitung sekali saat uji coba mulai dan disimpan.**
+  Mengubah periode keuangan sesudahnya (termasuk periode peralihan 13–46
+  hari) tidak memajukan atau memundurkan uji coba.
+- Layar hadiah menyebut tanggalnya, bukan jumlah hari: "Plus aktif sampai
+  24 Nov, akhir periode pertamamu."
+
+### 8.2 Momen terjadwal
+
+Supaya akhir uji coba terasa sebagai kehilangan nyata, setiap pilar harus
+**benar-benar terjadi** di dalamnya, bukan hanya tersedia. Hari dihitung
+dari awal uji coba; "H-n" dihitung mundur dari hari berakhir.
+
+| Kapan | Momen | Pilar |
 |---|---|---|
-| 0 (akhir onboarding) | Layar hadiah: "Plus aktif 14 hari. Tanpa kartu, tanpa langganan otomatis." Lalu ajakan pertama: "Coba foto struk atau bukti transfer terakhirmu." | ① |
-| 0–2 | Bila catat notifikasi diaktifkan: semua aplikasi sumber dan tawaran tingkat otomatis sesudah 3 tinjauan | ① |
-| 2–4 | Kartu Beranda berisi tiga contoh pertanyaan yang dipersonalisasi dari kategori yang sudah dipakai: "Tanya Tanuki: berapa habis buat Makan pekan ini?" | ③ |
-| 3–7 | Peringatan Penjaga pertama begitu ada sinyal nyata (anggaran, tagihan pekan depan) | ② |
-| Senin pertama | Ringkasan Senin pertama | ② |
-| 5–10 | Ajakan "Bagaimana kalau" saat pengguna membuka perkiraan di Rencana, atau membuat Target dari onboarding | ④ |
-| 11 | **Rekap nilai:** "Selama 11 hari: 14 catatan dari foto dan notifikasi, 4 peringatan Penjaga, 6 pertanyaan terjawab." Angka dari pemakaian lokal | semua |
-| 14 | Layar turun ke Gratis: yang tetap (semua catatan dan data), yang berubah (dengan angka pemakaiannya), dan tawaran **Harga Pendiri** selama 48 jam. "Lanjut dengan Gratis" sama jelasnya | — |
+| Hari 0 (akhir onboarding) | Layar hadiah dengan tanggal berakhir. Ajakan pertama: "Coba foto struk atau bukti transfer terakhirmu." | ① |
+| Hari 0–2 | Bila catat notifikasi diaktifkan: semua aplikasi sumber dan tawaran tingkat otomatis sesudah 3 tinjauan; rutin bernominal tetap ditawari Catat otomatis | ① |
+| Hari 2–4 | Kartu Beranda dengan tiga contoh pertanyaan dari kategori yang sudah dipakai: "Tanya Tanuki: berapa habis buat Makan pekan ini?" | ③ |
+| Hari 3–7 | Peringatan Penjaga pertama begitu ada sinyal nyata (anggaran, tagihan pekan depan, deteksi R3) | ② |
+| Tiap Senin | Ringkasan Senin (2–6 kali selama uji coba) | ② |
+| Hari 5–10 | Ajakan "Bagaimana kalau" saat membuka perkiraan di Rencana, atau membuat Target | ④ |
+| Tagihan rutin pertama yang jatuh tempo | Tercatat otomatis bila disetel; muncul di daftar Tercatat otomatis | ① |
+| **H-3** | **Rekap nilai:** "Sejak 1 Nov: 14 catatan dari foto dan notifikasi, 3 tagihan rutin tercatat sendiri, 4 peringatan Penjaga, 6 pertanyaan terjawab." Angka dari pemakaian lokal | semua |
+| **Hari pertama periode berikutnya** | **Rapor bulanan bercerita** untuk periode uji coba (sesudah B-49 ada), dibuka sebagai momen Plus terakhir; sesudah ditutup, **layar turun ke Gratis**: yang tetap, yang berubah (dengan angka pemakaiannya), dan tawaran **Harga Pendiri** 48 jam. "Lanjut dengan Gratis" sama jelasnya | ⑤ |
 
-Momen yang tidak pernah terjadi selama uji coba (misalnya Penjaga diam
-karena data belum cukup) tidak disebut di rekap. Rekap hanya memuat yang
-benar-benar dikerjakan Tanuki.
+Plus tetap aktif sampai rapor periode itu dibuka atau paling lama 1 hari
+sesudah periode berakhir, supaya rapor pertama tidak terpotong. Sebelum
+B-49 tersedia, layar turun tampil di hari pertama periode berikutnya tanpa
+rapor.
 
-Kenapa reverse trial: uji coba Play Billing butuh metode bayar dan
-berlangganan otomatis, yang menjadi hambatan bagi aplikasi baru. Menurut
-ringkasan laporan RevenueCat 2026, median konversi uji coba ke berbayar
-hari ke-35 adalah 10,7% untuk aplikasi yang wajib bayar di depan dan 2,1%
-untuk freemium. Reverse trial mencoba mengambil sebagian keunggulan pertama
-(pengguna merasakan produk penuh) tanpa menutup pintu masuk.
+Momen yang tidak pernah terjadi (misalnya Penjaga diam karena data belum
+cukup) tidak disebut di rekap. Rekap hanya memuat yang benar-benar
+dikerjakan Tanuki.
+
+### 8.3 Kenapa model ini
+
+- **Reverse trial:** uji coba Play Billing butuh metode bayar dan
+  berlangganan otomatis, hambatan bagi aplikasi baru. Menurut ringkasan
+  laporan RevenueCat 2026, median konversi uji coba ke berbayar hari ke-35
+  adalah 10,7% untuk aplikasi yang wajib bayar di depan dan 2,1% untuk
+  freemium. Reverse trial mencoba mengambil sebagian keunggulan pertama
+  (pengguna merasakan produk penuh) tanpa menutup pintu masuk.
+- **Sampai akhir periode:** nilai aplikasi keuangan terasa per siklus
+  gajian. Uji coba yang berhenti di tengah periode memotong momen paling
+  kuat (tagihan tercatat sendiri, anggaran yang diselamatkan Penjaga, rapor
+  periode). Ringkasan pihak kedua atas data RevenueCat juga menyebut uji
+  coba 17–32 hari berkonversi lebih baik daripada uji coba di bawah 4 hari;
+  anggap sebagai arah.
+- **Biaya panjang yang berbeda-beda:** perbandingan konversi harus dibaca
+  per panjang uji coba (peristiwa `trial_started{days}`), bukan rata-rata
+  saja.
 
 Penyalahgunaan (pasang ulang untuk mengulang uji coba): diterima untuk
 skala sekarang; bila berarti, kaitkan ke akun atau Play Integrity.
-
-Alternatif panjang uji coba (sampai akhir periode keuangan pertama yang
-penuh) di KT-P2.
 
 ## 9. Paywall kontekstual
 
@@ -557,7 +593,7 @@ satu fase penuh dengan ADR.
    dikunci sebelum ada tombol bayar.
 2. **Plus baru dijual setelah layak.** Paywall tidak tayang hanya dengan
    gerbang fitur lama; itu persis kelemahan revisi 1. Minimal tiga pilar
-   harus terasa di uji coba 14 hari.
+   harus terasa selama uji coba.
 3. **Mesin yang sudah ada lebih dulu.** Fitur yang memakai ulang
    `projectCashflow`, Analisis, rutin, pengingat lokal, dan `shared/capture`
    berisiko rendah dan cepat.
@@ -652,31 +688,26 @@ butirnya ke Now (aturan ROADMAP).
 | Catat dari notifikasi hanya Android | Di iOS kelak, pengait utama: foto, Penjaga, Tanya Tanuki, rapor |
 | Plus terlalu banyak untuk dirawat satu pengembang | Urutan §13; setiap pilar dibangun di atas mesin yang sudah ada; ukur pilar mana yang menjual sebelum menambah |
 
-## 15. Keputusan pemilik yang dibutuhkan
+## 15. Keputusan pemilik (semua diputuskan 18 Okt 2026)
 
-- **KT-P1** Nama paket: "Tanukonomy Plus" atau nama lain.
-- **KT-P2** Panjang uji coba: 14 hari, atau sampai akhir periode keuangan
-  pertama yang penuh.
-- **KT-P3** Dompet tanpa batas di versi gratis (usulan) atau batas longgar.
-- **KT-P4** Harga §11.2 dan Harga Pendiri sebagai pengganti seumur hidup.
-- **KT-P5** Hadiah penguji closed testing: Plus 12 bulan (usulan) atau
-  bentuk lain.
-- **KT-P6** Penyedia billing: RevenueCat (usulan) atau `in_app_purchase`
-  + Cloud Functions.
-- ~~**KT-P7**~~ Disetujui 18 Okt 2026: ekspor dan cadangan manual serta
-  kunci aplikasi (A1–A2, B-42/B-43) dikerjakan sebelum rilis publik.
-- **KT-P8** Catat dari notifikasi gratis dibatasi 1 aplikasi sumber (§4.3).
-- ~~**KT-P9**~~ Disetujui 18 Okt 2026: peta kerja dan urutan §13 (Penjaga
-  dibangun pertama; Plus dijual sesudah Penjaga, Catat dari foto, dan
-  Bagaimana kalau).
-- ~~**KT-P10**~~ Diputuskan 18 Okt 2026: Target dan utang-piutang masuk
-  produk, dengan pembagian Gratis/Plus di §7. ADR domain masing-masing
-  ditulis di B-47 dan B-48.
-- ~~**KT-P11**~~ Diputuskan 18 Okt 2026: **seluruh otomasi rutin R3 (Fase
-  17, ADR-037) menjadi Plus**, termasuk deteksinya; tingkat otomatis catat
-  dari notifikasi juga Plus. Gratis tetap punya rutin dasar R1/R2 (§4.3).
-  Aman karena belum rilis publik dan penguji mendapat Plus 12 bulan
-  (KT-P5). Gerbangnya dikerjakan di B-41 (§13 B2).
+| KT | Keputusan |
+|---|---|
+| KT-P1 | Nama paket **Tanukonomy Plus** |
+| KT-P2 | Uji coba terbalik **sampai akhir periode keuangan pertama yang penuh** (minimal 14 hari), aturannya di §8.1 |
+| KT-P3 | **Dompet tanpa batas** di versi gratis |
+| KT-P4 | Harga §11.2: Rp25.000/bulan, Rp179.000/tahun, Harga Pendiri Rp129.000/tahun terkunci; **tanpa paket seumur hidup** |
+| KT-P5 | Penguji closed testing mendapat **Plus 12 bulan**, lalu Harga Pendiri |
+| KT-P6 | Billing lewat **RevenueCat** (`purchases_flutter`) |
+| KT-P7 | Ekspor dan cadangan manual serta kunci aplikasi (B-42/B-43) dikerjakan **sebelum rilis publik** |
+| KT-P8 | Catat dari notifikasi gratis **1 aplikasi sumber** (§4.3) |
+| KT-P9 | Peta kerja dan urutan §13: **Penjaga dibangun pertama**; Plus dijual sesudah Penjaga, Catat dari foto, dan Bagaimana kalau |
+| KT-P10 | **Target dan utang-piutang masuk produk** (§7); ADR domain di B-47 dan B-48 |
+| KT-P11 | **Seluruh otomasi rutin R3** (Fase 17, ADR-037) dan tingkat otomatis catat dari notifikasi menjadi **Plus**; gratis tetap punya rutin dasar R1/R2 (§4.3) |
+
+Keputusan teknis (struktur kode, penyimpanan hak, perhitungan tanggal
+berakhir uji coba, gerbang R3) ditulis di ADR monetisasi sebelum kode
+(B-41). Angka harga, jatah cicip, dan batas wajar tetap hipotesis yang
+disetel lewat Remote Config dan eksperimen harga Play sesudah ada data.
 
 ## 16. Sumber
 

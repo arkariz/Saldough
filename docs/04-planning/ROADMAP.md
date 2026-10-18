@@ -108,7 +108,7 @@ sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
 | B-12 | Ikon peluncur dan splash iOS | Pemilik menyerahkan artwork, dan keputusan merilis iOS |
 | B-39 | Pengumuman pembaruan R2: pembaruan wajib untuk perbaikan kritis, iOS | Butuh KT-U1 dan iOS |
 | B-29 | Penyamaran notifikasi Android 15 | Uji di perangkat Android 15 dengan notifikasi bank nyata |
-| B-41 + B-44 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama) dan **Penjaga + Ringkasan Senin**, Plus hanya untuk penguji | KT-P disetujui (§15), ADR monetisasi |
+| B-41 + B-44 | Fondasi Plus (billing, hak, paywall, gerbang fitur lama) dan **Penjaga + Ringkasan Senin**, Plus hanya untuk penguji | ADR monetisasi (semua KT-P diputuskan 18 Okt 2026) |
 | B-45, B-46, B-41 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus mulai dijual** | B-44 selesai; Blaze (T-11.8) dan Keamanan Data untuk B-45 |
 
 ### Later: butuh keputusan atau bukti dulu

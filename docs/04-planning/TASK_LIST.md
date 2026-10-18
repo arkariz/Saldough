@@ -92,13 +92,6 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 Hal yang butuh keputusan pemilik sebelum dikerjakan. Hapus entri begitu
 diputuskan, dan catat keputusannya di tugas atau ADR yang mengerjakannya.
 
-- **KT-P** Freemium (B-41–B-62): nama paket, panjang uji coba, batas
-  dompet, harga dan Harga Pendiri, hadiah penguji, penyedia billing,
-  dan batas notifikasi gratis 1 aplikasi. Sudah diputuskan 18 Okt 2026:
-  KT-P11 (otomasi rutin R3 menjadi Plus), KT-P7 (B-42/B-43 sebelum
-  rilis publik), KT-P9 (urutan kerja Plus, Penjaga pertama), KT-P10
-  (Target dan utang-piutang masuk produk, B-47/B-48). Rincian di
-  [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, §15.
 - **KT-2** Nasib data lokal saat pengguna **keluar** dari akun yang sudah
   terikat sinkronisasi: tetap di perangkat, atau ditawarkan untuk dihapus?
   Baru relevan saat sinkronisasi didesain —
@@ -4747,7 +4740,7 @@ menambah dan memindahkannya ada di
 | B-32 | R3d: rutin lewat suara ("tiap bulan", "tiap tanggal 5" menyalakan Ulangi di draf CATAT) dan KT-R7 kartu menunggu gabungan (ADR-037 §3.4), sesudah Fase 14. | agen + pemilik | T-17.9 |
 | B-38 | **Analisis R2**: tampilan tahun, tren total saldo (butuh `Wallet.createdAt`, ADR baru, KT-A5), porsi pengeluaran rutin, baris "Di luar rencana" di Bulan ini membuka Analisis tersaring, sorotan Analisis bersaing di slot wawasan Beranda (§7B aturan 2). | agen | [FINANCIAL_ANALYSIS.md](../01-product/features/FINANCIAL_ANALYSIS.md), FR-ANL-006 |
 | B-40 | Tindak lanjut kecil QA T-19.7 (S4 dan celah uji): tombol "Catat transaksi" di keadaan kosong Analisis sebagian tertutup bilah bawah pada 360dp sampai digulir; belum teruji di perangkat: keadaan galat dan memuat Analisis, keadaan kosong bahasa en, pembayaran Freelance di Pemasukan, sorotan `from=highlight`, `category=freelance`. | agen (S4) + pemilik (uji perangkat) | QA T-19.7 |
-| B-41 | **Fondasi Plus** (FREEMIUM_PAYWALL §13 B1, B2, C4): ADR monetisasi; billing (RevenueCat, KT-P6), `Entitlements`, layar paywall, jatah cicip dari Remote Config, peristiwa Analytics; gerbang fitur yang sudah ada (notifikasi 1 aplikasi, kuota tafsir, Analisis > 6 periode, template ke-2, proyek ke-3, seluruh otomasi rutin R3 Fase 17 sesuai KT-P11); lalu reverse trial, momen terjadwal, rekap nilai, pemicu paywall. Plus dinyalakan untuk penguji dulu, **dijual sesudah B-44–B-46**. Tunggu KT-P (§15). | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, PRD §13 |
+| B-41 | **Fondasi Plus** (FREEMIUM_PAYWALL §13 B1, B2, C4): ADR monetisasi; billing (RevenueCat), `Entitlements`, layar paywall, jatah cicip dari Remote Config, peristiwa Analytics; gerbang fitur yang sudah ada (notifikasi 1 aplikasi, kuota tafsir, Analisis > 6 periode, template ke-2, proyek ke-3, seluruh otomasi rutin R3 Fase 17 sesuai KT-P11); lalu reverse trial, momen terjadwal, rekap nilai, pemicu paywall. Plus dinyalakan untuk penguji dulu, **dijual sesudah B-44–B-46**. Semua KT-P diputuskan 18 Okt 2026 (§15): Tanukonomy Plus, uji coba sampai akhir periode keuangan pertama yang penuh (§8.1), dompet tanpa batas, harga §11.2 tanpa seumur hidup, penguji Plus 12 bulan, RevenueCat, notifikasi gratis 1 aplikasi. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13, PRD §13 |
 | B-42 | Ekspor CSV, cadangkan dan pulihkan manual ke berkas (**gratis**), format cadangan berversi, pemulihan mengikuti ADR-024 §3.3. Prasyarat paywall dan dasar B-51. | agen (KT-P7) | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §12.1, §13 A1 |
 | B-43 | Kunci aplikasi sidik jari/PIN (**gratis**, `local_auth`). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §13 A2 |
 | B-44 | **Penjaga + Ringkasan Senin** (Plus, cicip 1 per periode): prediksi anggaran habis, uang nganggur menipis, pengeluaran tak biasa, tagihan pekan depan, sinyal R3 sebagai notifikasi; dihitung lokal. Usulan dibangun pertama (KT-P9). Pertanyaan ADR: hitung di latar atau saat dibuka. | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §6.2, §13 C1 |

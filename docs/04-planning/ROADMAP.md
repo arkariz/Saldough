@@ -58,7 +58,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 18 | Periode keuangan | Awal bulan mengikuti gajian, periode peralihan, anggaran rutin ikut pindah (selesai 15 Okt 2026) |
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
-| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan ditawarkan pada saat nilainya terasa (draf 18 Okt 2026, menunggu KT-D1–KT-D4) |
+| 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, menunggu KT-D1) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -458,15 +458,18 @@ pemasangan; luring diam; Keamanan Data mencatat Shorebird.
 
 Permintaan pemilik 18 Okt 2026. Tiga fitur yang sudah jadi (Catat dari
 notifikasi, pengingat rutin, awal bulan keuangan) hanya ada sebagai setelan
-di Akun sehingga jarang dinyalakan. Fase ini menambah kartu dan lembar
-tawaran sesuai perilaku pengguna, status di Akun, satu slide onboarding, dan
-tur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
-Bukan fitur baru; tidak bergantung pada fase lain selain slot Beranda Fase
-20. **Status:** draf, menunggu KT-D1–KT-D4 dan rupa dari designer.
+di Akun sehingga jarang dinyalakan. Fase ini menjadikan ketiganya langkah
+wajib di onboarding (wajib dijawab), menambah tombol Nyalakan yang selalu
+muncul di Beranda selama notifikasi dan pengingat belum efektif, status di
+Akun, dan tur
+([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
+Bukan fitur baru; bergantung pada slot Beranda Fase 20 dan onboarding Fase
+9. **Status:** draf, menunggu KT-D1 dan rupa dari designer.
 
-**Selesai kalau:** tiap tawaran muncul hanya pada pemicunya, satu kartu
-sekaligus, bisa ditutup atau ditunda, tidak muncul bila fitur sudah menyala,
-dan status ketiganya terlihat di Akun, terverifikasi di perangkat.
+**Selesai kalau:** akun baru tidak bisa melewati tiga langkah tanpa
+menjawab, tombol permanen muncul dan hilang sesuai keadaan efektif fitur,
+pengguna lama tidak dipaksa mengulang onboarding, semuanya terverifikasi di
+perangkat.
 
 ## Ketergantungan antar fase
 

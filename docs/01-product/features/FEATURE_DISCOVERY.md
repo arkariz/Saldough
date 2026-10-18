@@ -1,8 +1,9 @@
 # Penemuan fitur: Catat dari notifikasi, pengingat rutin, awal bulan keuangan
 
 **Tanggal:** 18 Oktober 2026.
-**Status:** Draf PO, menunggu jawaban KT-D1–KT-D4 (§10). Tugasnya Fase 21 di
-TASK_LIST.
+**Status:** Direvisi 18 Okt 2026 sesuai arahan pemilik: onboarding wajib
+(§4) dan tombol permanen (§5). Menunggu satu konfirmasi, KT-D1 (§9). Tugasnya
+Fase 21 di TASK_LIST.
 **Berkaitan:** [ADR-032](../../02-architecture/adr/0032-catat-dari-notifikasi.md)
 (Catat dari notifikasi), [ADR-035](../../02-architecture/adr/0035-transaksi-rutin-rencana-dan-perkiraan.md)
 §3.8 (pengingat rutin), [ADR-038](../../02-architecture/adr/0038-periode-keuangan-berriwayat-dan-peralihan.md)
@@ -11,7 +12,8 @@ TASK_LIST.
 ADR-021 (tur spotlight).
 
 Dokumen ini merancang **kapan dan di mana pengguna ditawari** tiga fitur
-yang sudah jadi tetapi sulit ditemukan. Tidak ada fitur baru: perilaku
+yang sudah jadi tetapi sulit ditemukan: langkah wajib di onboarding, lalu
+tombol yang selalu terlihat selama fitur belum menyala. Tidak ada fitur baru: perilaku
 ketiganya tetap seperti di dokumen masing-masing. Rupa kartu dan lembar
 mengikuti komponen yang ada; yang belum ada ditandai "perlu rupa dari
 ui-ux-designer".
@@ -27,189 +29,189 @@ ui-ux-designer".
 Akar yang sama: ketiganya hanya ada sebagai **setelan pasif**, bukan
 **tawaran pada saat nilainya terasa**.
 
-## 2. Prinsip
+## 2. Keputusan pemilik (18 Okt 2026)
 
-1. **Tawarkan saat nilainya terlihat**, bukan di hari pertama. Pemicu
-   mengikuti perilaku pengguna, bukan jam.
-2. **Satu kartu, satu fitur, sekali tanya.** Ditutup berarti selesai;
-   ditunda berarti kembali paling banyak dua kali.
-3. **Tidak mengubah setelan tanpa ketukan eksplisit**, dan tidak
-   menebak (tanggal gajian hanya disarankan, dikonfirmasi pengguna).
-4. **Izin sistem hanya diminta lewat alur "nyalakan" yang sama dengan
-   Akun**, saat pengguna menyalakan; tidak ada izin diminta di onboarding.
-5. **Tanpa tekanan:** tanpa streak, tanpa hitungan hari, tanpa kata
-   "ketinggalan" (sejalan KT-R13). Teks menjelaskan manfaat dan cara kerja,
-   bukan penafian; kosakata tetap "mencatat, bukan melakukan".
-6. **Status selalu terlihat di Akun** supaya pengguna yang menutup kartu
-   tetap tahu di mana menyalakannya.
+1. **Onboarding memuat tiga langkah wajib:** pengingat rutin, Catat dari
+   notifikasi (Android), dan awal periode keuangan.
+2. **Tombol Nyalakan selalu muncul** untuk pengingat rutin dan Catat dari
+   notifikasi selama fiturnya tidak aktif. Tidak bisa ditutup atau ditunda.
+3. Awal periode keuangan tidak mendapat tombol permanen (tidak diminta);
+   pintunya tetap kepala periode dan Akun.
 
-## 3. Aturan tawaran (berlaku untuk semua kartu dan lembar)
+Tafsiran PO atas "mandatory" (KT-D1, mohon dikonfirmasi): **langkahnya
+wajib dijawab, bukan fiturnya wajib menyala.** Langkah tidak punya tombol
+Lewati, dan pengguna harus memilih **Nyalakan** atau **Tidak sekarang**.
+Alasan: izin notifikasi dan akses membaca notifikasi adalah izin sistem yang
+hanya bisa diberikan pengguna sendiri, dan memaksa menyala bertentangan
+dengan persetujuan privasi ADR-032. Pengguna yang memilih Tidak sekarang
+tetap diingatkan lewat tombol permanen (§5). Untuk awal periode keuangan,
+"wajib" berarti wajib memilih tanggal (bawaan terpilih: tanggal 1, tetap
+harus dikonfirmasi).
 
-| # | Aturan |
+## 3. Prinsip
+
+1. **Wajib dijawab, bebas dijawab apa.** Pengguna selalu boleh menolak,
+   tetapi tidak bisa tidak melihat pilihannya.
+2. **Tidak mengubah setelan tanpa ketukan eksplisit**; tanggal gajian
+   hanya disarankan dan dikonfirmasi.
+3. **Izin sistem hanya diminta saat pengguna mengetuk Nyalakan**, lewat alur
+   yang sama dengan Akun, tidak pernah otomatis.
+4. **Tanpa tekanan:** tanpa streak, tanpa hitungan hari, tanpa kata
+   "ketinggalan". Teks menjelaskan manfaat dan cara kerja, bukan penafian;
+   kosakata tetap "mencatat, bukan melakukan".
+5. **Status selalu terlihat di Akun.**
+
+## 4. Onboarding: tiga langkah wajib
+
+Urutan: slide pengantar › bahasa › mata uang › **awal periode keuangan ›
+Catat dari notifikasi (Android) › pengingat rutin** › penutup (tambah dompet).
+
+**4.1 Aturan umum**
+- Tanpa tombol Lewati dan tanpa tombol Kembali yang melewatkan; tombol
+  Lanjut baru aktif setelah pengguna memilih. Kembali ke langkah
+  sebelumnya tetap boleh.
+- Tombol **Lewati** pada slide pengantar melompat ke langkah wajib pertama
+  (bahasa), tidak keluar dari onboarding.
+- Tidak berlaku saat onboarding dibuka ulang dari Akun (mode tinjau): semua
+  langkah hanya menampilkan pilihan saat ini dan boleh ditutup.
+- Pengguna yang sudah menyelesaikan onboarding sebelum fase ini **tidak**
+  dipaksa mengulang; mereka dijangkau tombol permanen (§5) dan tawaran
+  gajian (§6.2).
+- Menekan tombol sistem Kembali di langkah wajib kembali ke langkah
+  sebelumnya, bukan keluar.
+
+**4.2 Awal periode keuangan** ("Biasanya gajian tanggal berapa?").
+Pemilih tanggal 1–28 atau hari terakhir bulan, tanggal 1 terpilih sebagai
+bawaan; tombol **Pakai tanggal {d}**. Teks pendek: Rencana dan Analisis
+mengikuti tanggal ini; bisa diubah lagi di Akun. Menetapkan sebelum ada data
+tidak membuat periode peralihan. Aturan P-1–P-11
+[FINANCIAL_PERIOD.md](FINANCIAL_PERIOD.md) tidak berubah.
+
+**4.3 Catat dari notifikasi (hanya Android; di iOS langkah ini tidak ada).**
+Satu layar manfaat singkat (notifikasi dari aplikasi yang kamu pilih dibaca
+di perangkat dan jadi draf catatan yang kamu tinjau dulu) dengan dua pilihan:
+**Nyalakan** dan **Tidak sekarang**. Nyalakan membuka alur setelan yang sama
+dengan Akun (pilih aplikasi, akses notifikasi sistem, persetujuan privasi
+ADR-032), lalu kembali ke onboarding; pengguna yang kembali tanpa
+menyelesaikannya dianggap sudah menjawab dan lanjut, fitur tetap mati dan
+tombol permanen tetap muncul. Teks privasi mengikuti salinan setelan ADR-032;
+PO tidak menambah klaim baru.
+
+**4.4 Pengingat rutin.** Satu layar manfaat (kamu dapat pengingat sebelum
+rutin jatuh tempo, sesuai setelan tiap rutin) dengan **Nyalakan** (meminta
+izin notifikasi sistem lalu menyalakan sakelar global) dan **Tidak
+sekarang**. Izin ditolak = lanjut, status "Izin belum diberikan" (§7).
+
+**4.5 Penutup.** Penutup yang ada ("Mulai dari dompet pertamamu") tidak
+berubah; boleh memuat ringkasan satu baris tiga pilihan tadi (perlu rupa).
+
+## 5. Tombol permanen: Nyalakan catat dari notifikasi dan pengingat
+
+**Aturan**
+- **P-1** Setiap tombol muncul **selama fitur tidak efektif** dan hilang
+  begitu efektif. Tidak ada tutup, tunda, ambang transaksi, atau jeda.
+- **P-2** "Tidak efektif" = sakelar mati **atau** izin/akses sistem belum
+  ada. Dalam keadaan izin hilang, tombol berubah menjadi **Izinkan** dan
+  membuka setelan sistem yang relevan.
+- **P-3** Catat dari notifikasi hanya Android (tidak ada di iOS).
+- **P-4** Tombol tidak mendorong tawaran lain dan tidak tampil sebagai
+  kartu besar: baris tombol ringkas di Beranda (perlu rupa).
+- **P-5** Tombol tidak menyalakan apa pun sendiri kecuali pengingat, yang
+  memakai alur Nyalakan Akun (meminta izin saat diketuk). Catat dari
+  notifikasi selalu membuka alur setelannya.
+- **P-6** Urutan di Beranda: banner pembaruan (Fase 20) › kartu Menunggu
+  dicatat dan kotak masuk tangkapan › baris tombol permanen. Baris ini tidak
+  pernah menggeser yang di atasnya.
+
+**Tempat**
+| Tombol | Tempat |
 |---|---|
-| D-1 | **Satu kartu penemuan sekaligus** di Beranda, dan paling banyak satu per hari. Jeda minimal 3 hari antar kartu yang berbeda. |
-| D-2 | **Urutan di Beranda:** banner pembaruan (Fase 20) › kartu Menunggu dicatat dan kotak masuk tangkapan › kartu penemuan. Kartu penemuan tidak pernah menggeser yang di atasnya. |
-| D-3 | **Tidak tampil** sebelum pengguna punya minimal satu dompet dan tiga transaksi, dan tidak selama tur spotlight Beranda berjalan. |
-| D-4 | **✕ (Tutup)** = tidak muncul lagi untuk fitur itu. **Nanti** = tunda 7 hari; setelah dua kali Nanti, diperlakukan sebagai Tutup. |
-| D-5 | Fitur yang sudah menyala (dari mana pun jalurnya) **tidak pernah** ditawarkan. Mematikannya kembali tidak memunculkan kartu lagi. |
-| D-6 | Izin sistem ditolak = kartu berhenti, status di Akun menunjukkan "Izin belum diberikan" dengan jalan ke setelan sistem. Tidak ditawari ulang. |
-| D-7 | Kartu Catat dari notifikasi **hanya Android**. Di iOS tidak ada kartu, baris Akun, maupun teks onboardingnya. |
-| D-8 | Semua keadaan tawaran (ditutup, ditunda, jumlah tunda, kapan terakhir tampil) disimpan di perangkat; tidak ada yang dikirim ke server selain peristiwa analitik §9. |
+| Nyalakan catat dari notifikasi | Beranda (baris tombol); Akun (baris dengan status, sudah ada) |
+| Nyalakan pengingat rutin | Beranda (baris tombol); segmen Rutin di Rencana; rincian rutin bila sakelar global mati (catatan satu baris di bawah sakelar per rutin, tombol **Nyalakan**) |
 
-## 4. Catat dari notifikasi
-
-**Pemicu kartu Beranda:** Android, fitur mati, dan pengguna sudah mencatat
-manual ≥ 5 transaksi pengeluaran/pemasukan (D-3 sudah terpenuhi).
-(KT-D1: angka 5.)
-
-**Kartu:** judul "Catat otomatis dari notifikasi bank", isi satu kalimat
-manfaat ("Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan
-jadi draf catatan, kamu tinjau dulu."), tombol **Atur** dan **Nanti**, ✕.
-Teks akhir mengikuti salinan setelan ADR-032 yang sudah ada; PO tidak
-menambah klaim privasi baru.
-
-**Aksi Atur:** langsung membuka layar setelan Catat dari notifikasi (rute
-yang sama dengan baris Akun); kartu tidak menyalakan apa pun sendiri karena
-alurnya butuh memilih aplikasi, akses notifikasi, dan persetujuan privasi.
-
-**Kasus tepi:**
-- Pengguna kembali dari setelan tanpa menyalakan: dihitung Tutup? **Tidak**,
-  dihitung seperti Nanti (satu tunda).
-- Menyalakan lewat Akun lebih dulu: kartu tidak pernah muncul (D-5).
-- Akses notifikasi dicabut di sistem sesudah menyala: itu urusan banner
-  setelan yang sudah ada, bukan kartu penemuan.
-
-## 5. Pengingat rutin
-
-Dua tempat, karena nilainya paling terasa tepat setelah pengguna membuat
-rutin.
-
-**5.1 Lembar sesudah rutin pertama disimpan.** Sekali seumur aplikasi,
-hanya bila pengingat global mati: lembar kecil "Ingatkan kamu sebelum jatuh
-tempo?" dengan **Nyalakan pengingat** (meminta izin sistem di sini, lalu
-menyalakan sakelar global) dan **Nanti saja**. Lembar tidak muncul untuk
-rutin kedua dan seterusnya. Isi menyebut kapan pengingat datang sesuai
-setelan yang ada (H-n per rutin), tanpa janji yang tidak ada di ADR-035.
-
-**5.2 Kartu cadangan di Beranda.** Pemicu: ≥ 1 rutin aktif dan pengingat
-mati, dan lembar 5.1 sudah ditolak atau terlewat (mis. rutin dibuat lewat
-saran pola). Tombol **Nyalakan** menjalankan alur yang sama dengan 5.1.
-
-**5.3 Menutup jebakan sakelar per rutin.** Bila pengguna menyalakan
-pengingat di rincian satu rutin sementara sakelar global mati, tampilkan
-catatan satu baris di bawah sakelar itu: "Pengingat belum menyala untuk
-semua rutin" dengan tautan **Nyalakan**. Bukan kartu, tidak ikut D-1.
-
-**Kasus tepi:** izin ditolak (D-6); rutin dihapus semua sesudah kartu muncul
-(kartu hilang); pengguna menyalakan di Akun (D-5).
+**Kasus tepi:** pengingat tanpa satu rutin pun tetap menampilkan tombol di
+Beranda; layar nyala menjelaskan bahwa pengingat berlaku untuk rutin yang
+dibuat. Akses notifikasi dicabut di sistem sesudah menyala: tombol kembali
+muncul sebagai **Izinkan** (P-2). Pengguna mematikan lewat Akun: tombol
+kembali (P-1), itu disengaja.
 
 ## 6. Awal bulan keuangan
 
-**6.1 Tawaran gajian.** Pemicu: pemasukan berkategori **Gaji** dicatat pada
-tanggal 2–28 (bukan tanggal 1), jadwal periode masih bawaan (tanggal 1),
-dan tawaran belum pernah dijawab. Kartu muncul di **kepala Rencana ›
-Bulan ini** dan, lewat D-1, di Beranda: "Gajian tanggal {d}? Mulai bulan
-keuangan dari {d}." Tombol **Atur** membuka lembar Awal bulan keuangan
-dengan {d} sudah terisi sebagai saran (pengguna mengonfirmasi atau
-mengubahnya), bukan mengubah diam-diam. Aturan P-1–P-11
-[FINANCIAL_PERIOD.md](FINANCIAL_PERIOD.md) berlaku tanpa perubahan,
-termasuk periode peralihan dan tawaran menyelaraskan anggaran rutin.
+**6.1 Pintu.** Kepala periode Rencana jelas dapat diketuk (ikon atau teks
+"Atur" kecil, bukan sekadar label). Perlu rupa dari ui-ux-designer.
 
-**6.2 Pintu di kepala periode jelas dapat diketuk.** Kepala periode
-Rencana mendapat isyarat dapat diketuk (mis. ikon/teks "Atur" kecil dan
-bukan sekadar label). Perlu rupa dari ui-ux-designer.
+**6.2 Tawaran gajian untuk pengguna lama.** Pemasukan berkategori **Gaji**
+dicatat pada tanggal 2–28, jadwal masih bawaan, dan tawaran belum dijawab:
+kartu di kepala Rencana › Bulan ini ("Gajian tanggal {d}? Mulai bulan
+keuangan dari {d}."). **Atur** membuka lembar Awal bulan keuangan dengan
+{d} terisi sebagai saran. Kartu ini boleh ditutup dan tidak muncul lagi
+(satu-satunya tawaran yang bisa ditutup di fase ini). Pengguna baru sudah
+memilih tanggal di onboarding, jadi tidak melihatnya.
 
-**6.3 Onboarding.** Langkah opsional "Biasanya gajian tanggal berapa?"
-sesudah mata uang, bawaan **Lewati (tanggal 1)** (KT-D2). Alasan PO:
-menetapkannya sebelum ada data tidak membuat periode peralihan, sedangkan
-mengubahnya belakangan membuatnya.
+## 7. Akun dan tur
 
-**Kasus tepi:** pengguna menolak tawaran 6.1 = tidak muncul lagi (D-4);
-jadwal sudah diubah dari jalur lain (rutin gajian, Akun) = tidak muncul
-(D-5); tanggal 29–31 disarankan lewat hari terakhir bulan hanya bila pengguna
-memilihnya, PO tidak menebaknya.
+**7.1 Akun › Pencatatan** menampilkan status di tiga baris: "Nyala" /
+"Mati" / "Izin belum diberikan". Urutan: Catat dari notifikasi (Android),
+Pengingat rutin, Awal bulan keuangan. Perlu rupa dari ui-ux-designer.
 
-## 7. Akun dan onboarding
-
-**7.1 Akun › Pencatatan** mendapat **status** di tiap baris dari ketiga
-fitur: "Nyala" / "Mati" / "Izin belum diberikan" (chip atau teks
-sekunder), supaya pengguna yang menutup kartu bisa melihat dan menyalakan
-dari sini. Urutan baris: Catat dari notifikasi (Android), Pengingat rutin,
-Awal bulan keuangan. Perlu rupa dari ui-ux-designer.
-
-**7.2 Onboarding** tidak menambah slide per fitur. Satu slide baru setelah
-"Catat dalam hitungan detik": "Biar aplikasi ikut membantu" dengan tiga
-baris singkat (notifikasi bank [hanya Android], pengingat tagihan, bulan
-mengikuti gajian) dan **tanpa meminta izin**. Slide tidak bisa menyalakan
-apa pun; kartu dan setelan yang melakukannya (KT-D3).
-
-**7.3 Tur spotlight (ADR-021, progres per langkah).** Tambah langkah untuk
-kartu penemuan pertama yang tampil di Beranda, baris status di Akun
-(sekali), dan kepala periode Rencana yang kini dapat diketuk. Kunci baru
-mengikuti pola `SpotlightKey` yang ada.
+**7.2 Tur spotlight (ADR-021, per langkah).** Langkah baru untuk baris
+tombol permanen di Beranda (sekali, saat pertama tampil), baris status di
+Akun, dan kepala periode Rencana yang kini dapat diketuk. Kunci baru
+mengikuti pola `SpotlightKey`.
 
 ## 8. Teks (kunci i18n, id dan en)
 
-Ruang nama baru `discovery.*`; teks akhir ditulis engineer dengan
-persetujuan PO mengikuti glosarium `writing.md`.
+Ruang nama `discovery.*` dan `onboarding.*`; teks akhir ditulis engineer
+dengan persetujuan PO mengikuti glosarium `writing.md`.
 
 | Kunci | Isi (id, draf) |
 |---|---|
-| `discovery.notification.title` | Catat otomatis dari notifikasi bank |
-| `discovery.notification.body` | Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu. |
-| `discovery.reminder.title` | Ingatkan kamu sebelum jatuh tempo? |
-| `discovery.reminder.body` | Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin. |
-| `discovery.payday.title` | Gajian tanggal {d}? |
-| `discovery.payday.body` | Mulai bulan keuangan dari tanggal {d}, supaya Rencana dan Analisis mengikuti gajianmu. |
-| `discovery.actionSetUp` / `actionTurnOn` / `actionLater` / `actionClose` | Atur / Nyalakan / Nanti / Tutup |
-| `discovery.status.on` / `off` / `permissionNeeded` | Nyala / Mati / Izin belum diberikan |
+| `onboarding.period.title` | Biasanya gajian tanggal berapa? |
+| `onboarding.period.body` | Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun. |
+| `onboarding.period.confirm` | Pakai tanggal {d} |
+| `onboarding.notification.title` | Catat otomatis dari notifikasi bank |
+| `onboarding.notification.body` | Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu. |
+| `onboarding.reminder.title` | Ingatkan kamu sebelum jatuh tempo? |
+| `onboarding.reminder.body` | Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin. |
+| `onboarding.turnOn` / `onboarding.notNow` | Nyalakan / Tidak sekarang |
+| `discovery.notification.button` | Nyalakan catat dari notifikasi |
+| `discovery.reminder.button` | Nyalakan pengingat rutin |
+| `discovery.allowAccess` | Izinkan |
 | `discovery.reminder.rowNote` | Pengingat belum menyala untuk semua rutin. |
+| `discovery.payday.title` / `body` | Gajian tanggal {d}? / Mulai bulan keuangan dari tanggal {d}, supaya Rencana dan Analisis mengikuti gajianmu. |
+| `discovery.status.on` / `off` / `permissionNeeded` | Nyala / Mati / Izin belum diberikan |
 
-## 9. Analitik
+## 9. Keputusan terbuka dan analitik
 
-Mengikuti ADR-023: tanpa nominal, tanpa nama kategori buatan, tanpa isi
-notifikasi.
+**KT-D1** (satu-satunya): "wajib" berarti **wajib dijawab** (Nyalakan atau
+Tidak sekarang), bukan wajib menyala, seperti §2? Rekomendasi PO: ya. Bila
+pemilik ingin wajib menyala, onboarding tidak bisa dilanjutkan tanpa izin
+sistem; PO tidak merekomendasikannya (pengguna yang menolak izin akan
+terjebak, dan itu juga mengganggu penilaian peninjau Play).
 
+**Analitik** (ADR-023, tanpa nominal, nama kategori buatan, atau isi
+notifikasi):
 | Peristiwa | Parameter |
 |---|---|
-| `discovery_shown` | `feature` (`notification`/`reminder`/`payday`), `surface` (`home`/`plan_head`/`sheet`/`onboarding`) |
-| `discovery_accepted` | `feature`, `surface` |
-| `discovery_snoozed` | `feature`, `count` (1–2) |
-| `discovery_closed` | `feature` |
-| `feature_enabled` | `feature`, `via` (`discovery`/`account`/`onboarding`) |
+| `onboarding_step_answered` | `step` (`period`/`notification`/`reminder`), `choice` (`turned_on`/`not_now`/`confirmed`) |
+| `feature_enabled` | `feature` (`notification`/`reminder`), `via` (`onboarding`/`home_button`/`account`/`rutin`) |
+| `discovery_button_tapped` | `feature`, `surface` (`home`/`rutin_segment`/`rutin_detail`), `state` (`off`/`permission`) |
+| `discovery_payday_card` | `action` (`shown`/`accepted`/`closed`) |
 
-Ukuran keberhasilan (§11) dihitung dari peristiwa ini; tidak ada ukuran per
-pengguna.
+## 10. Ukuran keberhasilan (indikatif)
 
-## 10. Keputusan untuk pemilik (KT-D1–KT-D4)
+- Persentase pengguna baru Android yang menyalakan Catat dari notifikasi
+  dan pengingat saat onboarding (`turned_on` vs `not_now`).
+- Pengguna yang memilih Tidak sekarang lalu menyalakan lewat tombol
+  permanen dalam 14 hari.
+- Tidak ada kenaikan berhenti di langkah wajib (jumlah pengguna yang
+  memulai vs menyelesaikan onboarding), diperiksa sebelum rilis publik.
 
-| # | Pertanyaan | Rekomendasi PO |
-|---|---|---|
-| KT-D1 | Pemicu kartu notifikasi: berapa transaksi manual sebelum ditawari? | 5 transaksi (nilai terasa, belum terlalu lambat). |
-| KT-D2 | Tambah langkah opsional "tanggal gajian" di onboarding? | Ya, bawaan Lewati (tanggal 1); mencegah periode peralihan di kemudian hari. |
-| KT-D3 | Tambah satu slide onboarding tentang tiga fitur ini? | Ya, satu slide, tanpa izin. |
-| KT-D4 | "Nanti" menunda 7 hari, maksimal 2 kali? | Ya; sesudahnya dianggap Tutup. |
+## 11. Tidak dikerjakan di fase ini
 
-Keputusan lain yang PO ambil sendiri dan bisa dibalik: tidak ada ADR baru
-untuk produk (hanya engineer bila mesin saran lintas fitur butuh, T-21.1),
-kartu pembuka tidak memakai notifikasi sistem, dan tidak ada tawaran untuk
-fitur lain (B-26, suara) di fase ini.
-
-## 11. Ukuran keberhasilan (indikatif, bukan syarat rilis)
-
-- Naiknya persentase pengguna Android aktif yang menyalakan Catat dari
-  notifikasi dalam 14 hari sesudah kartu pertama.
-- Pengguna dengan rutin yang menyalakan pengingat meningkat; keluhan
-  "pengingat tidak datang" turun.
-- Pengguna yang mengubah awal bulan keuangan dari tawaran gajian dibanding
-  dari Akun.
-- Tutup/Nanti tidak lebih dari separuh tampilan; bila lebih, tawaran
-  dinilai terlalu dini atau terlalu sering.
-
-## 12. Tidak dikerjakan di fase ini
-
+- Memaksa fitur menyala atau melewati izin sistem.
 - Notifikasi sistem atau email untuk mengajak menyalakan fitur.
-- Gamifikasi: streak, lencana, "kamu baru menyalakan 1 dari 3 fitur".
-- Hub "Fitur" sebagai layar baru; status di Akun cukup.
-- Menyalakan fitur otomatis tanpa ketukan.
+- Gamifikasi: streak, lencana, hitungan fitur yang belum dinyalakan.
+- Hub "Fitur" sebagai layar baru; status di Akun dan tombol permanen cukup.
+- Memaksa pengguna lama mengulang onboarding.
 - Mengubah perilaku inti ketiga fitur.

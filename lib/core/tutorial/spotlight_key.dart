@@ -18,6 +18,14 @@ enum SpotlightKey {
   /// Kartu Menunggu dicatat di Beranda (T-15.6).
   homePending,
 
+  /// Kartu Kotak masuk notifikasi di Beranda, pintu permanen Catat dari
+  /// notifikasi; hanya Android (Fase 21, T-21.6).
+  homeNotification,
+
+  /// Kartu tombol pengingat rutin di Beranda; hanya terdaftar selama
+  /// pengingat belum efektif (Fase 21, T-21.6).
+  homeReminder,
+
   /// Arus bulan ini di Beranda.
   homeCashFlow,
 
@@ -135,4 +143,8 @@ enum SpotlightKey {
 
   /// Aksi "catat diterima" pembayaran tertunda.
   freelanceReceive,
+
+  /// Kelompok Pencatatan di layar Akun yang memuat status Nyala / Mati /
+  /// Izin belum diberikan (Fase 21, T-21.6).
+  accountStatus,
 }

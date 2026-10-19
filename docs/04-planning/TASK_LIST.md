@@ -4956,11 +4956,31 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Akun) dan status `unsupported` tanpa badge. Uji:
       `feature_status_row_test.dart` (tiga keadaan + belum disetel, jumlah
       aplikasi, tanpa dukungan/tanpa sumber, berubah, resume, 360dp).
-- [ ] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
+- [x] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
       status Akun, kepala periode), teks `onboarding.*` dan `discovery.*`
       id dan en.
       Verifikasi: `translations_test`, tur per langkah mengikuti ADR-021.
       Memenuhi FR-DSC-001.
+      **Hasil (19 Okt 2026):** `SpotlightKey.homeNotification` (kartu Kotak
+      masuk notifikasi, hanya Android) dan `homeReminder` (kartu pengingat,
+      hanya selama belum efektif) ditambahkan ke `TourId.home` sesudah
+      `homePending`; keduanya memicu `TourTrigger` sendiri saat kartunya
+      pertama tampil, jadi pengguna yang sudah menamatkan tur Beranda tetap
+      melihat tiap langkah sekali (progres per langkah, ADR-021).
+      `accountStatus` + `TourId.account` menyorot baris status pengingat di
+      Akun (ada di Android dan iOS) sekali saat Akun pertama dibuka.
+      Kepala periode Rencana sudah punya langkah `planPeriodHeader` sejak
+      T-18.10 dengan teks "Ketuk untuk memulai bulan di tanggal gajianmu",
+      jadi tidak ditambah lagi. Teks `tour.homeNotification*`,
+      `tour.homeReminder*`, `tour.accountStatus*` id+en; teks `discovery.*`
+      dan `onboarding.*` sudah ditambah bersama T-21.2/21.3/21.5/21.9.
+      Sekalian memperbaiki lapisan tur: `ensureVisible` kini dijalankan
+      sesudah frame (dengan gerak dikurangi ia melompat sinkron dan
+      menandai AppBar halaman kotor di tengah pembangunan; ketahuan di
+      Akun). Uji: `test/features/discovery_tour_test.dart` (tiap kartu
+      disorot sekali, tidak disorot bila kartunya tidak ada, pengguna lama)
+      dan uji tur Akun di `account_page_test.dart`; `translations_test`
+      hijau.
 - [ ] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
       nama kategori buatan; catat di `PLAY_DATA_SAFETY.md` bila ada data
       baru.

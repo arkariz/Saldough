@@ -113,14 +113,20 @@ class _SpotlightOverlayState extends State<SpotlightOverlay> with TickerProvider
     final reduced = MotionPolicy.reduced(context);
     final targetContext = controller.targetContext(step.key);
     if (targetContext != null) {
-      unawaited(
-        Scrollable.ensureVisible(
-          targetContext,
-          alignment: 0.3,
-          duration: reduced ? Duration.zero : const Duration(milliseconds: 240),
-          curve: Curves.easeOut,
-        ).then((_) => _remeasure()),
-      );
+      // Sesudah frame: dengan gerak dikurangi gulirnya langsung (durasi
+      // nol), dan menggulir saat membangun membuat AppBar halaman
+      // ditandai kotor di tengah pembangunan.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !targetContext.mounted) return;
+        unawaited(
+          Scrollable.ensureVisible(
+            targetContext,
+            alignment: 0.3,
+            duration: reduced ? Duration.zero : const Duration(milliseconds: 240),
+            curve: Curves.easeOut,
+          ).then((_) => _remeasure()),
+        );
+      });
     }
     // Lubang pertama menyempit dari lingkaran besar ("iris"); berikutnya
     // berpindah dari target sebelumnya.

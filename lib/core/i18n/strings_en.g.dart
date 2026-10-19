@@ -749,6 +749,8 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get freelanceWorklogBody => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.';
 	@override String get freelanceReceiveTitle => 'Money actually arrives';
 	@override String get freelanceReceiveBody => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.';
+	@override String get accountStatusTitle => 'Recording status';
+	@override String get accountStatusBody => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.';
 	@override String get homeVoiceTitle => 'Record by voice';
 	@override String get homeVoiceBody => 'Long-press the Record button, say one transaction, then check the form before recording it.';
 	@override String get planTabsTitle => 'Plan';
@@ -761,6 +763,10 @@ class _Translations$tour$en extends Translations$tour$id {
 	@override String get homeForecastBody => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.';
 	@override String get homePendingTitle => 'Waiting to record';
 	@override String get homePendingBody => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.';
+	@override String get homeNotificationTitle => 'Record from notifications';
+	@override String get homeNotificationBody => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.';
+	@override String get homeReminderTitle => 'Recurring reminders';
+	@override String get homeReminderBody => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.';
 	@override String get recordRepeatTitle => 'Repeat';
 	@override String get recordRepeatBody => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.';
 	@override String get recurringStartersTitle => 'Quick start';
@@ -2464,6 +2470,8 @@ extension on TranslationsEn {
 			'tour.freelanceWorklogBody' => 'Work hours are income you\'ve earned. Group them into an invoice, then record it when you\'re paid.',
 			'tour.freelanceReceiveTitle' => 'Money actually arrives',
 			'tour.freelanceReceiveBody' => 'Record it when the pay arrives: your wallet balance grows and the invoice is settled.',
+			'tour.accountStatusTitle' => 'Recording status',
+			'tour.accountStatusBody' => 'See whether recording from notifications and recurring reminders are on. Tap a row to change it.',
 			'tour.homeVoiceTitle' => 'Record by voice',
 			'tour.homeVoiceBody' => 'Long-press the Record button, say one transaction, then check the form before recording it.',
 			'tour.planTabsTitle' => 'Plan',
@@ -2476,6 +2484,10 @@ extension on TranslationsEn {
 			'tour.homeForecastBody' => 'Your forecast wallet balance at month end and its lowest point. Tap for the breakdown in Plan.',
 			'tour.homePendingTitle' => 'Waiting to record',
 			'tour.homePendingBody' => 'Recurring bills and income that are due. Record in one tap, edit first, or Skip.',
+			'tour.homeNotificationTitle' => 'Record from notifications',
+			'tour.homeNotificationBody' => 'Pick your bank or e-wallet apps and their transaction notifications become draft entries. This card is always here.',
+			'tour.homeReminderTitle' => 'Recurring reminders',
+			'tour.homeReminderBody' => 'Turn them on to get reminded before bills are due. This card goes away once reminders are on.',
 			'tour.recordRepeatTitle' => 'Repeat',
 			'tour.recordRepeatBody' => 'For bills, salary, or subscriptions. Each next occurrence waits for you to record it; nothing is recorded silently.',
 			'tour.recurringStartersTitle' => 'Quick start',
@@ -2824,14 +2836,14 @@ extension on TranslationsEn {
 			'recurring.undoAction' => 'Undo',
 			'recurring.similarTitle' => 'Already recorded?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.linkAction' => 'Link',
 			'recurring.recordNewAction' => 'Record new',
 			'recurring.recordAction' => 'Record',
 			'recurring.editFirstAction' => 'Edit first',
 			'recurring.recordAllAction' => 'Record all',
 			'recurring.seeAllAction' => 'See all',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.pendingCardTitle' => 'Waiting to record',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',

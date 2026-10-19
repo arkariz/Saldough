@@ -11,7 +11,9 @@ import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/account/presentation/navigation/account_route_keys.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -24,7 +26,7 @@ void main() {
 
   setUpAll(registerEffectHandlers);
 
-  Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn}) async {
+  Future<void> pumpAccount(WidgetTester tester, {AppUser? signedIn, TutorialProgressRepository? tutorials}) async {
     repository = FakeAuthRepository(signedIn: signedIn);
     final container = GetIt.asNewInstance()
       ..registerSingleton<RouteRegistry>(appRouteRegistry())
@@ -43,6 +45,12 @@ void main() {
       ScopeProvider(
         container: container,
         child: MaterialApp(
+          builder: tutorials == null
+              ? null
+              : (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(disableAnimations: true),
+                  child: SpotlightHost(repository: tutorials, child: child!),
+                ),
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () => context.pushRoute(AccountRouteKeys.page, const EmptyInput()),
@@ -55,6 +63,32 @@ void main() {
     await tester.tap(find.text('buka'));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('tur Akun menyorot status pencatatan sekali saat pertama dibuka (T-21.6)', (tester) async {
+    final tutorials = TutorialProgressRepositoryImpl(storage: InMemoryKeyValueStorage());
+    tester.view
+      ..physicalSize = const Size(360, 800)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpAccount(tester, tutorials: tutorials);
+
+    expect(
+      find.bySemanticsLabel(
+        t.tour.stepSemantics(
+          current: 1,
+          total: 1,
+          title: t.tour.accountStatusTitle,
+          body: t.tour.accountStatusBody,
+        ),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text(t.tour.doneAction).last);
+    await tester.pumpAndSettle();
+    expect((await tutorials.load()).getOrElse((_) => throw StateError('')).hasSeen(SpotlightKey.accountStatus), isTrue);
+
+
+  });
 
   testWidgets('belum masuk: Google tampil, form email tersembunyi sampai tautannya diketuk', (tester) async {
     await pumpAccount(tester);

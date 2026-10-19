@@ -4,8 +4,10 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/features/recurring/presentation/widgets/reminder_status_builder.dart';
 
 /// Kartu tombol permanen **pengingat rutin** (komponen FeatureNudge,
@@ -16,13 +18,17 @@ import 'package:saldough/features/recurring/presentation/widgets/reminder_status
 /// Beranda dan dipakai segmen Rutin.
 class ReminderNudgeCard extends StatelessWidget {
   /// Membuat [ReminderNudgeCard].
-  const ReminderNudgeCard({required this.container, this.bottomGap = false, super.key});
+  const ReminderNudgeCard({required this.container, this.bottomGap = false, this.spotlight = false, super.key});
 
   /// Kontainer akar.
   final GetIt container;
 
   /// Jarak bawah, bila kartu di dalam daftar.
   final bool bottomGap;
+
+  /// Kartu ini target tur Beranda (T-21.6): disorot sekali saat pertama
+  /// tampil. Hanya satu pemakaian yang boleh membawa kunci spotlight.
+  final bool spotlight;
 
   @override
   Widget build(BuildContext context) => ReminderStatusBuilder(
@@ -64,10 +70,11 @@ class ReminderNudgeCard extends StatelessWidget {
           ],
         ),
       );
-      return Padding(
+      final padded = Padding(
         padding: EdgeInsets.only(top: bottomGap ? 0 : AppSpacing.space6, bottom: bottomGap ? AppSpacing.space4 : 0),
-        child: card,
+        child: spotlight ? SpotlightTarget(spotlightKey: SpotlightKey.homeReminder, child: card) : card,
       );
+      return spotlight ? TourTrigger(tour: TourId.home, ready: true, child: padded) : padded;
     },
   );
 }

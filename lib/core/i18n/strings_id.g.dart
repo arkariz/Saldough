@@ -1924,6 +1924,12 @@ class Translations$tour$id {
 	/// id: 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.'
 	String get freelanceReceiveBody => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.';
 
+	/// id: 'Status pencatatan'
+	String get accountStatusTitle => 'Status pencatatan';
+
+	/// id: 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.'
+	String get accountStatusBody => 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.';
+
 	/// id: 'Catat pakai suara'
 	String get homeVoiceTitle => 'Catat pakai suara';
 
@@ -1959,6 +1965,18 @@ class Translations$tour$id {
 
 	/// id: 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.'
 	String get homePendingBody => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.';
+
+	/// id: 'Catat dari notifikasi'
+	String get homeNotificationTitle => 'Catat dari notifikasi';
+
+	/// id: 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.'
+	String get homeNotificationBody => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.';
+
+	/// id: 'Pengingat rutin'
+	String get homeReminderTitle => 'Pengingat rutin';
+
+	/// id: 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.'
+	String get homeReminderBody => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.';
 
 	/// id: 'Ulangi'
 	String get recordRepeatTitle => 'Ulangi';
@@ -4948,6 +4966,8 @@ extension on Translations {
 			'tour.freelanceWorklogBody' => 'Jam kerja adalah penghasilan yang sudah kamu peroleh. Kumpulkan jadi tagihan, lalu catat saat dibayar.',
 			'tour.freelanceReceiveTitle' => 'Uang benar-benar masuk',
 			'tour.freelanceReceiveBody' => 'Catat saat honornya masuk: saldo dompet bertambah dan tagihannya lunas.',
+			'tour.accountStatusTitle' => 'Status pencatatan',
+			'tour.accountStatusBody' => 'Lihat apakah Catat dari notifikasi dan pengingat rutin menyala. Ketuk barisnya untuk mengubah.',
 			'tour.homeVoiceTitle' => 'Catat pakai suara',
 			'tour.homeVoiceBody' => 'Tekan lama tombol Catat, ucapkan satu transaksi, lalu periksa formulirnya sebelum dicatat.',
 			'tour.planTabsTitle' => 'Rencana',
@@ -4960,6 +4980,10 @@ extension on Translations {
 			'tour.homeForecastBody' => 'Saldo dompet perkiraan di akhir bulan dan titik paling tipisnya. Ketuk untuk rinciannya di Rencana.',
 			'tour.homePendingTitle' => 'Menunggu dicatat',
 			'tour.homePendingBody' => 'Tagihan dan pemasukan rutin yang sudah tiba. Catat satu ketuk, ubah dulu, atau Lewati.',
+			'tour.homeNotificationTitle' => 'Catat dari notifikasi',
+			'tour.homeNotificationBody' => 'Pilih aplikasi bank atau dompet digitalmu, lalu notifikasi transaksinya jadi draf catatan. Kartu ini selalu ada di sini.',
+			'tour.homeReminderTitle' => 'Pengingat rutin',
+			'tour.homeReminderBody' => 'Nyalakan supaya kamu diingatkan sebelum tagihan jatuh tempo. Kartu ini hilang begitu pengingat menyala.',
 			'tour.recordRepeatTitle' => 'Ulangi',
 			'tour.recordRepeatBody' => 'Untuk tagihan, gaji, atau langganan. Kemunculan berikutnya akan menunggu kamu catat; tidak pernah dicatat diam-diam.',
 			'tour.recurringStartersTitle' => 'Mulai cepat',
@@ -5308,14 +5332,14 @@ extension on Translations {
 			'recurring.undoAction' => 'Batalkan',
 			'recurring.similarTitle' => 'Sudah tercatat?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.linkAction' => 'Tautkan',
 			'recurring.recordNewAction' => 'Catat baru',
 			'recurring.recordAction' => 'Catat',
 			'recurring.editFirstAction' => 'Ubah dulu',
 			'recurring.recordAllAction' => 'Catat semua',
 			'recurring.seeAllAction' => 'Lihat semua',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.pendingCardTitle' => 'Menunggu dicatat',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',

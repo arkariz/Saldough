@@ -6,8 +6,10 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/spotlight/spotlight.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/core/tutorial/tutorial.dart';
 import 'package:saldough/core/utils/formatters/cycle_month_formatter.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
@@ -170,54 +172,76 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
         ],
       ],
     );
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.space6),
-      child: AppCard(
-        key: const ValueKey('notification-inbox-card'),
-        color: hasPending ? colors.warningSoft : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Aktif tanpa yang menunggu: kepala membuka layar setelan penuh.
-            if (active && !hasPending)
-              InkWell(key: const ValueKey('inbox-card-head'), onTap: _openSettings, child: head)
-            else
-              head,
-            if (hasPending) ...[
-              for (final entry in _pending.take(_previewCount)) ...[
-                const SizedBox(height: AppSpacing.space3),
-                _PreviewRow(
-                  entry: entry,
-                  onTeach: () => unawaited(
-                    _push(NotificationCaptureRouteKeys.teachPattern, TeachPatternInput(entryId: entry.id)),
-                  ),
-                ),
-              ],
-            ],
-            if (active) ...[
+    // Disorot sekali saat pertama tampil (T-21.6); kartu ini memuat dirinya
+    // sendiri sesudah Beranda, jadi memicu turnya sendiri.
+    return TourTrigger(
+      tour: TourId.home,
+      ready: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.space6),
+        child: SpotlightTarget(
+          spotlightKey: SpotlightKey.homeNotification,
+          child: _card(context, status, active: active, hasPending: hasPending, head: head),
+        ),
+      ),
+    );
+  }
+
+  Widget _card(
+    BuildContext context,
+    FeatureStatus status, {
+    required bool active,
+    required bool hasPending,
+    required Widget head,
+  }) {
+    final texts = t.discovery;
+    final textTheme = Theme.of(context).textTheme;
+    final colors = context.appColors;
+    return AppCard(
+      key: const ValueKey('notification-inbox-card'),
+      color: hasPending ? colors.warningSoft : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Aktif tanpa yang menunggu: kepala membuka layar setelan penuh.
+          if (active && !hasPending)
+            InkWell(key: const ValueKey('inbox-card-head'), onTap: _openSettings, child: head)
+          else
+            head,
+          if (hasPending) ...[
+            for (final entry in _pending.take(_previewCount)) ...[
               const SizedBox(height: AppSpacing.space3),
-              Row(
-                children: [
-                  if (hasPending)
-                    Expanded(
-                      child: Text(
-                        texts.notification.activeApps(n: status.activeCount),
-                        style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                      ),
-                    )
-                  else
-                    const Spacer(),
-                  AppButton.text(
-                    key: const ValueKey('inbox-card-manage'),
-                    small: true,
-                    label: texts.notification.manageSources,
-                    onPressed: _openSettings,
-                  ),
-                ],
+              _PreviewRow(
+                entry: entry,
+                onTeach: () => unawaited(
+                  _push(NotificationCaptureRouteKeys.teachPattern, TeachPatternInput(entryId: entry.id)),
+                ),
               ),
             ],
           ],
-        ),
+          if (active) ...[
+            const SizedBox(height: AppSpacing.space3),
+            Row(
+              children: [
+                if (hasPending)
+                  Expanded(
+                    child: Text(
+                      texts.notification.activeApps(n: status.activeCount),
+                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                    ),
+                  )
+                else
+                  const Spacer(),
+                AppButton.text(
+                  key: const ValueKey('inbox-card-manage'),
+                  small: true,
+                  label: texts.notification.manageSources,
+                  onPressed: _openSettings,
+                ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }

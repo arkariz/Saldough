@@ -165,7 +165,7 @@ class _AppShellPageState extends State<AppShellPage> {
           container: parentContainer,
           onShowAll: () => _showPlan(context, PlanSegment.recurring),
         ),
-        featureNudge: ReminderNudgeCard(container: parentContainer),
+        featureNudge: ReminderNudgeCard(container: parentContainer, spotlight: true),
         forecast: PlanForecastRow(
           container: parentContainer,
           onTap: () => _showPlan(context, PlanSegment.thisMonth),

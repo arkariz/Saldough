@@ -40,6 +40,9 @@ enum TourId {
 
   /// Rincian proyek Freelance.
   freelanceProject,
+
+  /// Layar Akun: status pencatatan (Fase 21, T-21.6).
+  account,
 }
 
 /// Langkah tiap tur, urut tampil (ONBOARDING_PLAN §4.3, ADR-021 §3.4).
@@ -52,6 +55,10 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
     // pertama), jadi disorot sendiri saat pertama tampil.
     SpotlightKey.homeForecast,
     SpotlightKey.homePending,
+    // Pintu permanen Fase 21: ada di Beranda belakangan (pengingat hilang
+    // saat efektif), jadi tiap langkah disorot sekali saat pertama tampil.
+    SpotlightKey.homeNotification,
+    SpotlightKey.homeReminder,
     SpotlightKey.homeCashFlow,
     SpotlightKey.homeBudget,
     SpotlightKey.homeFreelance,
@@ -106,6 +113,7 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
   TourId.budgetForm: [SpotlightKey.budgetRepeat],
   TourId.freelance: [SpotlightKey.freelanceProject],
   TourId.freelanceProject: [SpotlightKey.freelanceWorklog, SpotlightKey.freelanceReceive],
+  TourId.account: [SpotlightKey.accountStatus],
 };
 
 /// Progres onboarding dan tur spotlight di perangkat ini (ADR-021 §3.1).

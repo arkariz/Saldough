@@ -73,6 +73,32 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
   Rp2.820.000 dan pengeluaran harian BCA dari sisa anggaran Belanja adalah
   anggapan prototipe.
 
+## Penemuan fitur (Fase 21, T-21.0)
+
+Rupa dua langkah onboarding wajib (tanggal gajian, pengingat) dengan baris
+informasi Catat dari notifikasi di penutup, widget Kotak masuk
+notifikasi (satu widget, banyak keadaan, termasuk Nyalakan dan Kelola
+aplikasi & pola) dan kartu pengingat di Beranda (gambar pilihan pemilik),
+Mulai cepat, status di Akun, kepala periode dapat
+diketuk, dan tawaran gajian. Spek di
+[design-system/patterns.md](design-system/patterns.md) bagian "Penemuan
+fitur"; komponen `OnboardingStep`, `FeatureNudge`, `InboxCard`,
+`PaydayOffer`, dan `PeriodHeader` (diubah) di `design-system/components/`.
+Papan di prototipe 12 layar: `OnbLangkah` (awal periode),
+`OnbPeriode25EnGelap`, `OnbPengingat`, `OnbPengingatNyala`,
+`OnbPengingatIzinEnGelap`, `OnbPenutup`, `OnbPenutupEnGelap`,
+`OnbPenutupIos`; `BerandaTombol`, `BerandaTombolIzin`, `BerandaNotifAktif`,
+`BerandaNotifAktifKosong`, `BerandaNotifMati` (satu widget Kotak masuk
+notifikasi dengan lima keadaan), `BerandaTombolSatu` (iOS),
+`BerandaTombolUrutan`, `TombolPermanen` (+ `EnGelap`, spesimen keadaan); `MulaiCepat`, `MulaiCepatTanpaAplikasi`,
+`MulaiCepatIzinEnGelap`; `KotakMasuk` (tautan Kelola, Ajari pola) dan
+`KotakMasukKosong`; `AkunStatusIzin`, `AkunStatusKeadaan` (+ `EnGelap`).
+Papan di prototipe Rencana dan Rutin (nama salinan sama dengan nama
+artefak): `BulanIniTawaran` (+ `Gelap`), `RutinPengingat`,
+`RutinPengingatIzin`, `RincianRutinPengingat`, `RincianRutinPengingatIzin`,
+`BerandaTombolMenunggu`. Selisih dan pertanyaan untuk PO di entri T-21.0
+`TASK_LIST.md`.
+
 ## Analisis keuangan (Fase 19)
 
 Layar Riwayat › Analisis dan Rincian kategori

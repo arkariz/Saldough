@@ -238,9 +238,9 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-nav__catat:active .tk-nav__catat-btn { background: var(--brand-pressed); }
 
 /* Pixel accent: stepped corners, the pixel Catat button, hero card, pixel icons */
-:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd) { --u: var(--pixel-step, 4px); }
-:is(.tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
-:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
+:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-inbox) { --u: var(--pixel-step, 4px); }
+:is(.tk-inbox__item, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
+:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-inbox, .tk-inbox__item, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
   border-radius: 0;
   clip-path: polygon(
     0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0,
@@ -460,3 +460,40 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-rel__list { display: flex; flex-direction: column; gap: 10px; }
 .tk-rel__card { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--surface-2); }
 .tk-rel__foot { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; }
+
+/* Penemuan fitur (Fase 21): kepala periode dapat diketuk, catatan baris, langkah onboarding, tawaran gajian. */
+.tk-period__btn { background: var(--surface-2); margin: 0; padding: 0 12px; }
+.tk-period__hint { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--brand-ink); margin-left: 4px; }
+.tk-rownote { display: flex; align-items: center; gap: 12px; padding: 0 16px 12px; }
+.tk-rownote__text { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-offer { display: flex; flex-direction: column; gap: 12px; }
+.tk-offer__top { display: flex; align-items: flex-start; gap: 12px; }
+.tk-offer__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
+.tk-offer__close { margin: -8px -8px 0 0; }
+.tk-offer__actions { display: flex; justify-content: flex-end; }
+
+.tk-onb { position: relative; display: flex; flex-direction: column; background-color: var(--bg); background-image: radial-gradient(color-mix(in srgb, var(--line-strong) 40%, transparent) 1px, transparent 1.5px); background-size: 24px 24px; background-position: 12px 12px; }
+.tk-onb__top { flex: none; display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 8px 0 16px; }
+.tk-onb__brand { font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.01em; color: var(--ink-2); }
+.tk-onb__body { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 12px; }
+.tk-onb__foot { flex: none; padding: 8px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.tk-onb__art { display: block; margin: 0 auto 4px; height: 132px; width: auto; max-width: 100%; image-rendering: pixelated; }
+.tk-onb__title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.tk-onb__text { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-onb__status { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; }
+
+/* Penemuan fitur v2 (19 Okt 2026): kartu pintu (tk-nudge), kartu kotak masuk (tk-inbox), baris informasi penutup. */
+.tk-nudge { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: inherit; text-decoration: none; }
+.tk-nudge__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tk-nudge__title { font-size: 16px; line-height: 24px; font-weight: 600; }
+.tk-nudge__sub { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-inbox { display: flex; flex-direction: column; gap: 12px; padding: 16px; background: var(--warning-soft); }
+.tk-inbox__head { display: flex; align-items: center; gap: 12px; }
+.tk-inbox__item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; min-height: 56px; background: var(--surface); }
+.tk-inbox__item--unknown { outline: 1px dashed var(--line-strong); outline-offset: -2px; }
+.tk-inbox__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tk-inbox__foot .tk-link { margin-left: auto; }
+.tk-inbox__cap { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-inbox--calm { background: var(--surface); }
+.tk-onb__info { display: flex; align-items: flex-start; gap: 12px; padding: 4px 8px; }
+.tk-onb__info .tk-onb__text { flex: 1; }

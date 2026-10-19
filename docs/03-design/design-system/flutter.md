@@ -41,6 +41,11 @@ Sistem ini menggantikan bahasa visual pixel (ADR-015, ADR-016, ADR-020) dan `Pix
 | (baru) | `AppUpdateCard` | Kartu `brand` pembaruan di Beranda: tile 🚀/ikon, judul + pil versi, keterangan, tutup, kaki (tautan + satu tombol); empat keadaan |
 | (baru) | `AppReleaseNotes` | Isi lembar: kepala (🚀 + pil + judul), kartu butir berkategori (tile berwarna + pil kategori + kalimat), kelompok per versi |
 | (baru) | `AppInfoSheet` | Sheet varian Catatan: isi menggulir (maks 300px) + kaki tombol `primary` (dan "Nanti") |
+| (baru) | `AppOnboardingStep` | Kerangka langkah wajib onboarding: latar titik, bar atas (Kembali), isi menggulir, kaki tombol; varian tanggal, tanya, dan sudah-dijawab |
+| (baru) | `AppFeatureNudge` | Kartu tombol pengingat (tile ikon + judul + baris kedua + tombol `secondary sm`); `AppRowNote` untuk catatan di bawah sakelar |
+| (baru) | `AppInboxCard` | Widget Kotak masuk notifikasi dengan lima keadaan (belum disetel, izin hilang, mati, aktif kosong, aktif dengan tangkapan); pratinjau dua tangkapan, Ajari pola, Kelola aplikasi & pola |
+| (baru) | `AppPaydayOffer` | Kartu tawaran gajian di Bulan ini, bisa ditutup |
+| `AppPeriodHeader` | `AppPeriodHeader` | Pil tonal dengan petunjuk "Atur" di Bulan ini |
 
 ## Urutan pengerjaan yang disarankan
 

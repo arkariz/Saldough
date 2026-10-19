@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Kotak masuk notifikasi (keadaan)</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <header class="tk-topbar tk-topbar--sub"><h1 class="tk-topbar__title" style="padding-left: 12px">{{title}}</h1></header>
+  <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 32px">
+    <p class="tk-t-body-sm tk-ink-2">{{intro}}</p>
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+      <section style="display: flex; flex-direction: column; gap: 8px; flex: none">
+        <p class="tk-t-label-sm tk-ink-2">{{g.cap}}</p>
+        <div class="tk-card tk-inbox {{g.ib.cls}}" role="status" style="flex: none">
+        <div class="tk-inbox__head">
+          <span class="tk-tile {{g.ib.tile}}"><span class="tk-icon">inbox</span></span>
+          <span class="tk-nudge__text"><span class="tk-nudge__title">{{g.ib.title}}</span><span class="tk-nudge__sub">{{g.ib.sub}}</span></span>
+          <sc-if value="{{g.ib.hasCta}}" hint-placeholder-val="{{true}}"><a class="{{g.ib.ctaCls}}" href="{{g.ib.ctaHref}}" aria-label="{{g.ib.ctaAria}}">{{g.ib.cta}}</a></sc-if>
+        </div>
+        <sc-if value="{{g.ib.items}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__item">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">QRIS Toko Sinar Jaya</span><span class="tk-row__sub">BCA mobile · 10.42</span></span>
+            <span class="tk-amt tk-t-amount">−Rp125.000</span>
+          </div>
+          <div class="tk-inbox__item tk-inbox__item--unknown">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">Transfer masuk dari ANDI PRATAMA</span><span class="tk-row__sub">{{g.ib.unreadable}}</span></span>
+            <a class="tk-btn tk-btn--secondary tk-btn--sm" href="KotakMasuk.dc.html">{{g.ib.teach}}</a>
+          </div>
+        </sc-if>
+        <sc-if value="{{g.ib.manage}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__foot">
+            <sc-if value="{{g.ib.hasCap}}" hint-placeholder-val="{{false}}"><span class="tk-inbox__cap">{{g.ib.cap}}</span></sc-if>
+            <a class="tk-link" href="Akun.dc.html">{{g.ib.manageText}}<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+          </div>
+        </sc-if>
+      </div>
+      </section>
+    </sc-for>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+const S = {
+ "id": {
+  "brand": "Tanukonomy",
+  "back": "Kembali",
+  "next": "Lanjut",
+  "turnOn": "Nyalakan",
+  "notNow": "Tidak sekarang",
+  "allow": "Izinkan",
+  "perTitle": "Biasanya gajian tanggal berapa?",
+  "perBody": "Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.",
+  "perConfirm": "Pakai tanggal {d}",
+  "perConfirmLast": "Pakai hari terakhir bulan",
+  "lastDay": "Hari terakhir bulan",
+  "dayAria": "Tanggal {d}",
+  "remTitle": "Ingatkan kamu sebelum jatuh tempo?",
+  "remBody": "Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.",
+  "finTitle": "Mulai dari dompet pertamamu",
+  "finBody": "Tambahkan satu dompet, lalu catat transaksi pertamamu. Di tiap layar, tanuki akan menunjukkan jalannya.",
+  "addWallet": "Tambah dompet",
+  "later": "Nanti saja",
+  "signIn": "Sudah punya akun? Masuk",
+  "notInfo": "Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.",
+  "st": {
+   "on": "Nyala",
+   "off": "Mati",
+   "perm": "Izin belum diberikan"
+  },
+  "rowRem": "Pengingat rutin",
+  "rowPer": "Awal bulan keuangan",
+  "perValue": "Tanggal {d}",
+  "perValueLast": "Hari terakhir bulan",
+  "qsTitle": "Pilih aplikasi bank atau dompet digitalmu",
+  "qsBody": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
+  "qsOther": "Aplikasi lain",
+  "qsBuiltIn": "Pola bawaan",
+  "qsClose": "Tutup",
+  "nzBtnTitle": "Nyalakan catat dari notifikasi",
+  "nzManage": "Catat dari notifikasi",
+  "nzBody": "Catat otomatis dari notifikasi bank dan e-wallet.",
+  "nzActive": "{n} aplikasi aktif",
+  "rmBtnTitle": "Nyalakan pengingat rutin",
+  "rmBody": "Diingatkan sebelum tagihan jatuh tempo.",
+  "inboxTitle": "Kotak masuk notifikasi",
+  "inboxBody": "3 transaksi dari notifikasi menunggu dicek.",
+  "check": "Cek",
+  "manageSources": "Kelola aplikasi & pola",
+  "teach": "Ajari pola",
+  "unreadable": "Nominal belum terbaca",
+  "cap": {
+   "belum": "Catat dari notifikasi: belum disetel",
+   "aktif": "Catat dari notifikasi: aktif",
+   "izin": "Catat dari notifikasi: izin hilang",
+   "mati": "Catat dari notifikasi: sakelar mati",
+   "ingat": "Pengingat rutin: mati",
+   "ingatIzin": "Pengingat rutin: izin hilang"
+  },
+  "title": {
+   "nudge": "Pintu permanen, Beranda",
+   "akun": "Akun › Pencatatan"
+  },
+  "intro": {
+   "nudge": "Catat dari notifikasi tidak pernah hilang (Android). Pengingat hilang saat efektif. Tanpa tutup, tanpa tunda.",
+   "akun": "Status di tiga baris, urutan sesuai dokumen fitur."
+  },
+  "apps": "2 aplikasi"
+ },
+ "en": {
+  "brand": "Tanukonomy",
+  "back": "Back",
+  "next": "Next",
+  "turnOn": "Turn on",
+  "notNow": "Not now",
+  "allow": "Allow",
+  "perTitle": "Which day is payday?",
+  "perBody": "Plan and Analysis follow this date. You can change it again in Account.",
+  "perConfirm": "Use day {d}",
+  "perConfirmLast": "Use the last day",
+  "lastDay": "Last day of the month",
+  "dayAria": "Day {d}",
+  "remTitle": "Remind you before things are due?",
+  "remBody": "You get a reminder before a recurring item is due, based on each item's settings.",
+  "finTitle": "Start with your first wallet",
+  "finBody": "Add one wallet, then record your first transaction. On every screen, the tanuki will show the way.",
+  "addWallet": "Add wallet",
+  "later": "Maybe later",
+  "signIn": "Already have an account? Sign in",
+  "notInfo": "You can record automatically from bank notifications. Turn it on from Home.",
+  "st": {
+   "on": "On",
+   "off": "Off",
+   "perm": "Permission not granted"
+  },
+  "rowRem": "Recurring reminders",
+  "rowPer": "Financial month start",
+  "perValue": "Day {d}",
+  "perValueLast": "Last day of the month",
+  "qsTitle": "Choose your bank or e-wallet apps",
+  "qsBody": "Notifications from the apps you choose are read on your device and become draft entries. You review them first.",
+  "qsOther": "Other apps",
+  "qsBuiltIn": "Built-in pattern",
+  "qsClose": "Close",
+  "nzBtnTitle": "Turn on recording from notifications",
+  "nzManage": "Record from notifications",
+  "nzBody": "Record automatically from bank and e-wallet notifications.",
+  "nzActive": "{n} apps active",
+  "rmBtnTitle": "Turn on recurring reminders",
+  "rmBody": "Reminded before bills are due.",
+  "inboxTitle": "Notification inbox",
+  "inboxBody": "3 transactions from notifications are waiting to be checked.",
+  "check": "Check",
+  "manageSources": "Manage apps & patterns",
+  "teach": "Teach pattern",
+  "unreadable": "Amount not read yet",
+  "cap": {
+   "belum": "Record from notifications: not set up",
+   "aktif": "Record from notifications: active",
+   "izin": "Record from notifications: permission missing",
+   "mati": "Record from notifications: switched off",
+   "ingat": "Recurring reminders: off",
+   "ingatIzin": "Recurring reminders: permission missing"
+  },
+  "title": {
+   "nudge": "Permanent doors, Home",
+   "akun": "Account › Recording"
+  },
+  "intro": {
+   "nudge": "Record from notifications never goes away (Android). The reminder goes away once effective. No close, no snooze.",
+   "akun": "Status on three rows, in the order of the feature doc."
+  },
+  "apps": "2 apps"
+ }
+};
+const inboxState = (t, k) => {
+  const P = 'tk-btn tk-btn--primary tk-btn--sm', O = 'tk-btn tk-btn--sm tk-btn--on-soft';
+  const base = { title: t.inboxTitle, unreadable: t.unreadable, teach: t.teach, manageText: t.manageSources, items: false, manage: false, hasCap: false, cap: '', hasCta: true,
+    cls: 'tk-inbox--calm', tile: 'tk-tile--brandsoft' };
+  if (k === 'belum') return Object.assign(base, { title: t.nzBtnTitle, sub: t.nzBody, cta: t.turnOn, ctaCls: P, ctaHref: 'MulaiCepat.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'izin') return Object.assign(base, { title: t.nzManage, sub: t.st.perm, cta: t.allow, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.allow + ': ' + t.nzManage });
+  if (k === 'mati') return Object.assign(base, { title: t.nzBtnTitle, sub: t.st.off, cta: t.turnOn, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'aktifKosong') return Object.assign(base, { sub: t.nzActive.replace('{n}', '2'), hasCta: false, cta: '', ctaCls: '', ctaHref: '#', ctaAria: '', manage: true });
+  // aktif dengan tangkapan menunggu
+  return Object.assign(base, { cls: '', tile: 'tk-tile--amber', sub: t.inboxBody, cta: t.check, ctaCls: O, ctaHref: 'KotakMasuk.dc.html', ctaAria: t.inboxTitle,
+    items: true, manage: true, hasCap: true, cap: t.nzActive.replace('{n}', '2') });
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const t = S[en ? 'en' : 'id'];
+    const cap = en
+      ? { belum: 'Not set up', izin: 'Permission missing', mati: 'Switched off', aktifKosong: 'Active, nothing waiting', aktif: 'Active, items waiting' }
+      : { belum: 'Belum disetel', izin: 'Izin hilang', mati: 'Sakelar mati', aktifKosong: 'Aktif, tidak ada yang menunggu', aktif: 'Aktif, ada yang menunggu' };
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      title: en ? 'Notification inbox, states' : 'Kotak masuk notifikasi, keadaan',
+      intro: en ? 'One widget on Home (Android). It never goes away; it changes with the state.' : 'Satu widget di Beranda (Android). Tidak pernah hilang; isinya berubah menurut keadaan.',
+      groups: ['belum', 'izin', 'mati', 'aktifKosong', 'aktif'].map((k) => ({ cap: cap[k], ib: inboxState(t, k) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

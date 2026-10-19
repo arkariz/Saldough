@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Apa yang baru (lembar)</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <dc-import name="Main" banner="tidak" dark="{{dark}}" hint-size="360px,800px"></dc-import>
+  <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+    <button class="tk-scrim" type="button" aria-label="{{closeLabel}}" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet tk-rel" role="dialog" aria-modal="true" aria-labelledby="wn-title" style="position: absolute; left: 0; right: 0; bottom: 0">
+      <div class="tk-sheet__handle"></div>
+      <button class="tk-rel__x" type="button" aria-label="{{closeLabel}}" onClick="{{close}}"><span class="tk-icon">close</span></button>
+      <div class="tk-rel__hero">
+        <div class="tk-rel__badges"><span class="tk-rel__tile" aria-hidden="true">🚀</span><span class="tk-rel__pill">{{pill}}</span></div>
+        <h2 class="tk-rel__title" id="wn-title">{{title}}</h2>
+        <sc-if value="{{hasSub}}" hint-placeholder-val="{{true}}"><p class="tk-rel__sub">{{sub}}</p></sc-if>
+      </div>
+      <div class="tk-sheet__scroll">
+        <div class="tk-notes">
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="1">
+            <div class="tk-notes__group">
+              <sc-if value="{{g.hasHead}}" hint-placeholder-val="{{false}}"><h3 class="tk-notes__head">{{g.head}}</h3></sc-if>
+              <ul class="tk-rel__list" style="list-style: none; margin: 0; padding: 0">
+                <sc-for list="{{g.items}}" as="n" hint-placeholder-count="3">
+                  <li class="tk-rel__card">
+                    <span class="tk-tile {{n.tile}}"><span class="tk-tile__emoji" aria-hidden="true">{{n.emoji}}</span></span>
+                    <div class="tk-note__body"><span class="{{n.tagCls}}">{{n.tag}}</span><span class="tk-note__text">{{n.text}}</span></div>
+                  </li>
+                </sc-for>
+              </ul>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div class="tk-rel__foot">
+        <sc-if value="{{pra}}" hint-placeholder-val="{{false}}">
+          <a class="tk-btn tk-btn--primary tk-btn--block" href="BerandaMengunduh.dc.html">{{installLabel}}</a>
+          <button class="tk-btn tk-btn--text tk-btn--block" type="button" onClick="{{close}}">{{later}}</button>
+        </sc-if>
+        <sc-if value="{{pasca}}" hint-placeholder-val="{{true}}">
+          <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{close}}">{{ok}}</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"varian":{"editor":"enum","options":["pra","satu","gabungan","kecil"],"default":"satu","section":"Isi"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+const D = {
+ "ui": {
+  "id": {
+   "banner": {
+    "tersedia": [
+     "Versi baru tersedia",
+     ""
+    ],
+    "mengunduh": [
+     "Mengunduh versi baru",
+     "Kamu tetap bisa mencatat."
+    ],
+    "diunduh": [
+     "Versi baru sudah diunduh",
+     ""
+    ],
+    "kecil": [
+     "Pembaruan kecil siap",
+     "Tutup lalu buka lagi aplikasi untuk memakainya."
+    ]
+   },
+   "link": "Lihat apa yang baru",
+   "updateSize": "Perbarui (18,4 MB)",
+   "pillAvail": "Versi baru tersedia",
+   "act": {
+    "update": "Perbarui",
+    "install": "Pasang sekarang",
+    "later": "Nanti",
+    "ok": "Oke"
+   },
+   "wnTitle": "Apa yang baru di versi ",
+   "wnTitlePatch": "Apa yang baru",
+   "wnEmpty": "Belum ada catatan pembaruan.",
+   "verLabel": "Versi aplikasi",
+   "patch": "pembaruan",
+   "st": {
+    "terbaru": "Terbaru",
+    "tersedia": "Versi baru tersedia",
+    "mengunduh": "Mengunduh versi baru",
+    "diunduh": "Versi baru sudah diunduh",
+    "kecil": "Pembaruan kecil siap, buka ulang aplikasi",
+    "tidak": ""
+   },
+   "cap": {
+    "tersedia": "Versi baru tersedia",
+    "mengunduh": "Mengunduh",
+    "diunduh": "Sudah diunduh",
+    "kecil": "Pembaruan kecil siap"
+   },
+   "back": "Kembali",
+   "close": "Tutup",
+   "thanks": "Terima kasih sudah memakai Tanukonomy."
+  },
+  "en": {
+   "banner": {
+    "tersedia": [
+     "A new version is available",
+     ""
+    ],
+    "mengunduh": [
+     "Downloading the new version",
+     "You can keep recording."
+    ],
+    "diunduh": [
+     "The new version is downloaded",
+     ""
+    ],
+    "kecil": [
+     "A small update is ready",
+     "Close and reopen the app to use it."
+    ]
+   },
+   "link": "See what's new",
+   "updateSize": "Update (18.4 MB)",
+   "pillAvail": "New version available",
+   "act": {
+    "update": "Update",
+    "install": "Install now",
+    "later": "Later",
+    "ok": "OK"
+   },
+   "wnTitle": "What's new in version ",
+   "wnTitlePatch": "What's new",
+   "wnEmpty": "No update notes yet.",
+   "verLabel": "App version",
+   "patch": "patch",
+   "st": {
+    "terbaru": "Up to date",
+    "tersedia": "New version available",
+    "mengunduh": "Downloading new version",
+    "diunduh": "New version downloaded",
+    "kecil": "Small update ready, reopen the app",
+    "tidak": ""
+   },
+   "cap": {
+    "tersedia": "New version available",
+    "mengunduh": "Downloading",
+    "diunduh": "Downloaded",
+    "kecil": "Small update ready"
+   },
+   "back": "Back",
+   "close": "Close",
+   "thanks": "Thank you for using Tanukonomy."
+  }
+ },
+ "cats": {
+  "baru": {
+   "emoji": "✨",
+   "id": "Baru",
+   "en": "New",
+   "c": "orange"
+  },
+  "cepat": {
+   "emoji": "⚡",
+   "id": "Lebih cepat",
+   "en": "Faster",
+   "c": "amber"
+  },
+  "perbaikan": {
+   "emoji": "🛠️",
+   "id": "Perbaikan",
+   "en": "Fixes",
+   "c": "blue"
+  },
+  "aman": {
+   "emoji": "🔒",
+   "id": "Keamanan",
+   "en": "Security",
+   "c": "green"
+  }
+ },
+ "releases": [
+  {
+   "v": "0.7.0",
+   "b": 9,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Rutin yang jatuh tempo kini muncul di Beranda untuk dicatat.",
+     "Recurring items that are due now show on Home, ready to record."
+    ],
+    [
+     "baru",
+     "Grafik Analisis menampilkan rata-rata tiga bulan sebagai garis acuan.",
+     "Analysis charts show the 3-month average as a reference line."
+    ],
+    [
+     "perbaikan",
+     "Nominal yang disembunyikan tetap tersembunyi setelah aplikasi dibuka ulang.",
+     "Hidden amounts now stay hidden after the app reopens."
+    ]
+   ]
+  },
+  {
+   "v": "0.6.0",
+   "b": 7,
+   "p": 1,
+   "notes": [
+    [
+     "perbaikan",
+     "Sisa anggaran kini dihitung benar saat transaksi dipindah ke pos lain.",
+     "Remaining budget is now calculated correctly when a transaction moves to another line."
+    ],
+    [
+     "cepat",
+     "Layar Anggaran terbuka lebih cepat.",
+     "The Budget screen opens faster."
+    ],
+    [
+     "aman",
+     "Perlindungan data di perangkatmu diperkuat.",
+     "Protection of the data on your device is stronger."
+    ]
+   ]
+  },
+  {
+   "v": "0.6.0",
+   "b": 7,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Bulan keuangan kini bisa dimulai di tanggal gajianmu.",
+     "Your financial month can now start on payday."
+    ],
+    [
+     "baru",
+     "Riwayat punya tab Analisis untuk melihat ke mana uangmu pergi.",
+     "History has an Analysis tab to see where your money goes."
+    ],
+    [
+     "cepat",
+     "Beranda terbuka lebih cepat.",
+     "Home opens faster."
+    ]
+   ]
+  },
+  {
+   "v": "0.5.0",
+   "b": 6,
+   "p": 0,
+   "notes": [
+    [
+     "baru",
+     "Transaksi dari notifikasi bank kini masuk ke Kotak masuk untuk kamu cek.",
+     "Bank notification transactions now land in the Inbox for you to review."
+    ],
+    [
+     "baru",
+     "Kategori bawaan kini bisa kamu ubah namanya.",
+     "You can now rename the default categories."
+    ]
+   ]
+  }
+ ]
+};
+const T = (en) => D.ui[en ? 'en' : 'id'];
+const ver = (r, en) => r.v + ' (' + r.b + ')' + (r.p ? ', ' + T(en).patch + ' ' + r.p : '');
+const notesOf = (r, en) => r.notes.map((n) => ({ c: D.cats[n[0]].c, emoji: D.cats[n[0]].emoji, tag: D.cats[n[0]][en ? 'en' : 'id'], text: n[en ? 2 : 1] }));
+const rel = (v, b, p) => D.releases.filter((r) => r.v === v && r.b === b && r.p === p)[0];
+
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const t = T(en);
+    const open = !(this.state && this.state.closed);
+    // varian: pra = versi baru tersedia, sebelum dipasang (Perbarui + Nanti); satu = lompat satu versi;
+    // gabungan = beberapa versi (B-12); kecil = pembaruan kecil (tanpa nomor di judul). Selain pra: sesudah terpasang (Oke).
+    const v = this.props.varian || 'satu';
+    let title, sets, pill, sub = t.thanks;
+    if (v === 'gabungan') {
+      title = t.wnTitle + '0.7.0'; sets = [rel('0.7.0', 9, 0), rel('0.6.0', 7, 0)]; pill = ver(sets[0], en);
+    } else if (v === 'kecil') {
+      title = t.wnTitlePatch; sets = [rel('0.6.0', 7, 1)]; pill = ver(sets[0], en);
+    } else if (v === 'pra') {
+      title = t.wnTitle + '0.6.0'; sets = [rel('0.6.0', 7, 0)]; pill = t.pillAvail; sub = '';
+    } else {
+      title = t.wnTitle + '0.6.0'; sets = [rel('0.6.0', 7, 0)]; pill = ver(sets[0], en);
+    }
+    const groups = sets.map((r) => ({ hasHead: sets.length > 1, head: ver(r, en),
+      items: notesOf(r, en).map((n) => Object.assign({}, n, { tile: 'tk-tile--' + n.c, tagCls: 'tk-tag tk-tag--' + n.c })) }));
+    return {
+      theme: this.props.dark ? 'dark' : 'light',
+      dark: !!this.props.dark,
+      open: open,
+      title: title, pill: pill, sub: sub, hasSub: !!sub,
+      groups: groups,
+      pra: v === 'pra', pasca: v !== 'pra',
+      installLabel: t.updateSize, later: t.act.later,
+      ok: t.act.ok,
+      closeLabel: t.close,
+      close: () => this.setState({ closed: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

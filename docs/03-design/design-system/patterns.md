@@ -81,3 +81,15 @@ Fase 20, rupa v3 mengikuti rujukan gambar pilihan pemilik (15 Okt 2026).
 2. **Lembar Apa yang baru** (Sheet varian Catatan + ReleaseNotes): dibuka dari tautan di kartu (sebelum dipasang: Perbarui + Nanti) dan sekali sesudah pembaruan yang punya catatan (Oke). Tidak di Catat, onboarding, atau tur. Beberapa versi sekaligus: satu lembar, dikelompokkan per versi.
 3. **Akun › Versi aplikasi**: baris di grup paling bawah (ikon system_update): judul, nomor versi, keterangan keadaan. Halaman Versi aplikasi: kartu status (tile `brand-soft`), bagian "Apa yang baru" berisi satu kartu per versi, tindakan lebar penuh menempel di bawah hanya saat ada tindakan.
 4. Teks dan keadaan mengikuti dokumen fitur; di sini hanya rupanya.
+
+## Penemuan fitur
+
+Fase 21 (FEATURE_DISCOVERY, revisi 19 Okt 2026). Tiga fitur yang sulit ditemukan (awal bulan keuangan, Catat dari notifikasi, pengingat rutin) ditawarkan pada saat nilainya terasa, tanpa tekanan.
+
+1. **Onboarding: dua langkah wajib** (OnboardingStep): slide pengantar › bahasa › mata uang › awal periode keuangan › pengingat rutin › penutup. Tanpa Lewati. Wajib dijawab, bebas dijawab apa: Nyalakan dan Tidak sekarang sama besar. Tanggal: bawaan 1 terpilih, tetap dikonfirmasi. Catat dari notifikasi bukan langkah; penutup memuat satu baris informasi (Android).
+2. **Satu widget Kotak masuk notifikasi di Beranda** (InboxCard, Android): Catat dari notifikasi tidak punya kartu sendiri. Keadaan: belum disetel (Nyalakan, membuka Mulai cepat), izin hilang (Izinkan), sakelar mati (Nyalakan), aktif tanpa yang menunggu ("{n} aplikasi aktif" + Kelola aplikasi & pola), aktif dengan tangkapan (Cek, pratinjau, Ajari pola, Kelola aplikasi & pola). Tidak pernah hilang, tanpa tutup. Latar `warning-soft` hanya bila ada yang perlu dicek.
+3. **Kartu pengingat** (FeatureNudge): tombol Nyalakan/Izinkan selama pengingat belum efektif, hilang saat efektif, tanpa tutup. Urutan P-6: kartu pembaruan › Menunggu dicatat dan InboxCard › kartu pengingat.
+4. **Mulai cepat**: satu layar dengan daftar aplikasi bank/dompet digital yang punya pola bawaan (sudah tercentang, `tk-row--check`), baris Aplikasi lain, dan tombol sticky "Nyalakan" (menjadi "Izinkan" bila kembali tanpa izin, dengan status Izin belum diberikan). Tanpa aplikasi bawaan terpasang: hanya baris Aplikasi lain.
+5. **Status di Akun › Pencatatan**: baris Catat dari notifikasi (Android, jumlah aplikasi), Pengingat rutin, Awal bulan keuangan. Status berupa Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning` dengan teks).
+6. **Kepala periode dapat diketuk**: pil tonal dengan petunjuk "Atur" (PeriodHeader). **Tawaran gajian** (PaydayOffer): kartu biasa di kepala Bulan ini untuk pengguna lama; boleh ditutup, satu-satunya.
+7. Tidak ada streak, hitungan hari, lencana, atau kata "ketinggalan". Warna peringatan hanya untuk status izin yang hilang, selalu bersama teks.

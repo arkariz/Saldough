@@ -4741,6 +4741,72 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
+      **Hasil rupa (designer, v2 19 Okt 2026, sesuai brief revisi dan gambar
+      pilihan pemilik), menunggu persetujuan pemilik; kotak belum
+      dicentang.** Prototipe 12 layar: `OnbLangkah`, `OnbPengingat*`,
+      `OnbPenutup*`, `BerandaTombol*`, `BerandaNotif*`, `TombolPermanen*`,
+      `MulaiCepat*`, `KotakMasuk` (+ `KotakMasukKosong`), `AkunStatus*`;
+      prototipe Rencana dan Rutin: `BulanIniTawaran*`, `RutinPengingat*`,
+      `RincianRutinPengingat*`, `BerandaTombolMenunggu`; design system:
+      komponen OnboardingStep, FeatureNudge, InboxCard, PaydayOffer,
+      PeriodHeader (diubah), pola "Penemuan fitur"; salinan di
+      `docs/03-design/` (termasuk rupa Fase 20 yang belum tersalin).
+      *Berubah dari v1:* langkah onboarding Catat dari notifikasi dihapus
+      (diganti baris informasi di penutup, tidak dapat diketuk, hanya
+      Android); pintu Catat dari notifikasi kini kartu yang tidak pernah
+      hilang dengan empat keadaan; ada kartu kotak masuk dengan pratinjau,
+      layar Mulai cepat, tautan Kelola aplikasi & pola dan Ajari pola.
+      *Revisi v3 (20 Okt 2026, permintaan pemilik):* kartu Catat dari
+      notifikasi dan kartu kotak masuk digabung menjadi **satu widget Kotak
+      masuk notifikasi** di Beranda (Android) dengan lima keadaan: belum
+      disetel (Nyalakan, membuka Mulai cepat), izin hilang (Izinkan),
+      sakelar mati (Nyalakan), aktif tanpa yang menunggu ("{n} aplikasi
+      aktif" + Kelola aplikasi & pola), aktif dengan tangkapan (Cek,
+      pratinjau, Ajari pola, kaki "{n} aplikasi aktif" + Kelola aplikasi &
+      pola). Latar `warning-soft` hanya bila ada yang perlu dicek; keadaan
+      setelan memakai `surface`. Kartu pengingat tetap terpisah. Menggantikan
+      selisih (2) dan pertanyaan 1–3 di bawah yang menyebut kartu Catat dari
+      notifikasi terpisah; komponen `FeatureNudge` kini hanya pengingat.
+      Diputuskan pemilik 20 Okt 2026: judul widget "Nyalakan catat dari
+      notifikasi" (§8 `discovery.notification.button`) saat belum disetel
+      atau sakelar mati; "Catat dari notifikasi" saat izin hilang (tombol
+      Izinkan); "Kotak masuk notifikasi" saat aktif.
+      *Selisih dari komponen yang ada:* (1) PeriodHeader: tombol kini pil
+      tonal `surface-2` dengan petunjuk "Atur" (berlaku di Bulan ini).
+      (2) Kartu pintu (`tk-nudge`) dan kartu kotak masuk (`tk-inbox`)
+      adalah komponen baru; bentuknya mengikuti gambar pemilik, bukan
+      "baris ringkas" P-4. (3) Tombol `primary` hanya pada Catat dari
+      notifikasi, pengingat `secondary`. (4) "Tidak sekarang" di onboarding
+      tombol `secondary` selebar "Nyalakan", bukan tombol teks, supaya tidak
+      terbaca sebagai Lewati. (5) Status di Akun memakai Badge; `warning`
+      hanya untuk "Izin belum diberikan", selalu bersama teks. (6) Ringkasan
+      penutup dua baris (bukan satu baris; tidak muat di 360dp dan en).
+      (7) Ilustrasi langkah pengingat memakai `onboarding_4` yang sudah ada.
+      (8) Pratinjau kotak masuk di Beranda tidak punya tombol Simpan
+      (aturan 8: pencatatan lewat Cek/CATAT) dan tidak memuat tulisan
+      "Disinkronkan otomatis" dari gambar (tidak ada sinkronisasi).
+      (9) Kartu tawaran gajian kartu `surface` biasa, satu-satunya yang
+      punya tombol tutup.
+      *Pertanyaan untuk PO (rupa tidak menebak):* (1) Urutan Beranda: gambar
+      menaruh kartu pintu di atas kartu kotak masuk; P-6 menaruhnya di
+      bawah. Prototipe mengikuti P-6. Mana yang berlaku? (2) Pratinjau dua
+      tangkapan di kartu kotak masuk Beranda (dengan Ajari pola di sana)
+      belum ada di spek P-8, yang menyebut Ajari pola di kotak masuk. Pakai
+      pratinjau atau cukup kepala + Cek + Kelola? (3) Baris kedua kartu:
+      Catat dari notifikasi memakai teks Akun yang ada ("Catat otomatis dari
+      notifikasi bank dan e-wallet."; gambar menulis "SMS", yang salah);
+      pengingat memakai usulan "Diingatkan sebelum tagihan jatuh tempo."
+      (gambar: "Evaluasi mingguan & tagihan", bukan fitur). Setuju? (4)
+      Status baris Awal bulan keuangan di Akun: tidak punya Nyala/Mati;
+      prototipe menampilkan tanggalnya. (5) Teks konfirmasi untuk hari
+      terakhir bulan: usulan "Pakai hari terakhir bulan". (6) Teks en semua
+      kunci diusulkan designer. (7) Mode tinjau onboarding dari Akun belum
+      dirancang terpisah. (8) Mulai cepat: judul tombol "Nyalakan" (menjadi
+      "Izinkan" sesudah kembali tanpa izin); persetujuan privasi ADR-032
+      memakai alur yang ada (tidak digambar ulang). Contoh aplikasi (BCA
+      mobile, GoPay, DANA) adalah anggapan prototipe. (9) Letak kartu
+      pembaruan Fase 20 (di atas kartu saldo) masih menunggu keputusan;
+      kartu pintu mengikuti.
 - [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
       Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
       efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan

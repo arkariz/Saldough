@@ -11,7 +11,7 @@
 <x-dc>
 <helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,arrow_back,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_more,family_restroom,home,hourglass_top,inbox,info,label,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,credit_card,dark_mode,delete,donut_small,edit,edit_note,error,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
 <style>
 body{margin:0}
 </style>
@@ -41,7 +41,9 @@ body{margin:0}
       <div class="tk-section__head"><h2 class="tk-section__title">Pencatatan</h2></div>
       <div class="tk-list tk-list--icon">
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">label</span><span class="tk-row__main"><span class="tk-row__title">Kategori</span><span class="tk-row__sub">17 kategori</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
-        <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">notifications</span><span class="tk-row__main"><span class="tk-row__title">Catat dari notifikasi</span><span class="tk-row__sub">Aktif · 2 aplikasi</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+        <button class="tk-row tk-row--compact tk-row--wrap" type="button"><span class="tk-icon tk-ink-2">notifications</span><span class="tk-row__main"><span class="tk-row__title">Catat dari notifikasi</span><span class="tk-row__sub" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px"><span class="{{ak.n.cls}}">{{ak.n.text}}</span><sc-if value="{{ak.n.hasDetail}}" hint-placeholder-val="{{true}}"><span>2 aplikasi</span></sc-if></span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+        <button class="tk-row tk-row--compact tk-row--wrap" type="button"><span class="tk-icon tk-ink-2">alarm</span><span class="tk-row__main"><span class="tk-row__title">Pengingat rutin</span><span class="tk-row__sub" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px"><span class="{{ak.i.cls}}">{{ak.i.text}}</span></span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+        <a class="tk-row tk-row--compact tk-row--wrap" href="https://claude.ai/artifact/PzQEmLqRBQM72YM6HhU7pS"><span class="tk-icon tk-ink-2">calendar_today</span><span class="tk-row__main"><span class="tk-row__title">Awal bulan keuangan</span><span class="tk-row__sub" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px"><span>Tanggal 1</span></span></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
         <a class="tk-row tk-row--compact" href="KotakMasuk.dc.html"><span class="tk-icon tk-ink-2">inbox</span><span class="tk-row__main"><span class="tk-row__title">Kotak masuk notifikasi</span><span class="tk-row__sub">Cek tangkapan, batalkan yang otomatis</span></span><span class="tk-badge tk-badge--warning">3</span><span class="tk-icon tk-row__chev">chevron_right</span></a>
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">edit_note</span><span class="tk-row__main"><span class="tk-row__title">Template anggaran</span><span class="tk-row__sub">2 tersimpan</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
       </div>
@@ -62,17 +64,26 @@ body{margin:0}
       <div class="tk-list tk-list--icon">
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">lock</span><span class="tk-row__main"><span class="tk-row__title">Data kamu</span><span class="tk-row__sub">Tersimpan di perangkat ini</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">info</span><span class="tk-row__main"><span class="tk-row__title">Kebijakan privasi</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
+        <a class="tk-row tk-row--compact tk-row--wrap" href="VersiAplikasi.dc.html"><span class="tk-icon tk-ink-2">system_update</span><span class="tk-row__main"><span class="tk-row__title">Versi aplikasi</span><span class="tk-row__sub">{{ver.value}}</span><sc-if value="{{ver.hasStatus}}" hint-placeholder-val="{{true}}"><span class="{{ver.cls}}">{{ver.status}}</span></sc-if></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
       </div>
     </section>
-
-    <p class="tk-t-caption tk-ink-3" style="text-align: center">Tanukonomy 0.4.0 (5)</p>
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Status Pencatatan"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"mati","section":"Status Pencatatan"},"versi":{"editor":"enum","options":["terbaru","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"tersedia","section":"Versi aplikasi"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
-    return { theme: this.props.dark ? 'dark' : 'light' };
+    const k = this.props.versi || 'tersedia';
+    // Contoh: S1 (terpasang 0.5.0 (6), 0.6.0 (7) menunggu); terbaru = 0.6.0 (7), pembaruan 1.
+    const value = { terbaru: '0.6.0 (7), pembaruan 1', tersedia: '0.5.0 (6)', mengunduh: '0.5.0 (6)', diunduh: '0.5.0 (6)', kecil: '0.6.0 (7)', tidak: '0.6.0 (7)' }[k];
+    const status = { terbaru: 'Terbaru', tersedia: 'Versi baru tersedia', mengunduh: 'Mengunduh versi baru', diunduh: 'Versi baru sudah diunduh', kecil: 'Pembaruan kecil siap, buka ulang aplikasi', tidak: '' }[k];
+    const sm = { nyala: ['on', 'Nyala', 'tk-badge tk-badge--positive'], mati: ['off', 'Mati', 'tk-badge'], izin: ['perm', 'Izin belum diberikan', 'tk-badge tk-badge--warning'] };
+    const an = sm[this.props.notif || 'nyala'], ai = sm[this.props.ingat || 'mati'];
+    return {
+      ak: { n: { text: an[1], cls: an[2], hasDetail: (this.props.notif || 'nyala') === 'nyala' }, i: { text: ai[1], cls: ai[2] } },
+      theme: this.props.dark ? 'dark' : 'light',
+      ver: { value: value, status: status, hasStatus: !!status, cls: 'tk-row__sub' + (k === 'terbaru' || k === 'tidak' ? '' : ' tk-t-label') }
+    };
   }
 }
 </script>

@@ -495,16 +495,17 @@ pemasangan; luring diam; Keamanan Data mencatat Shorebird.
 
 Permintaan pemilik 18 Okt 2026. Tiga fitur yang sudah jadi (Catat dari
 notifikasi, pengingat rutin, awal bulan keuangan) hanya ada sebagai setelan
-di Akun sehingga jarang dinyalakan. Fase ini menjadikan ketiganya langkah
-wajib di onboarding (wajib dijawab), menambah tombol Nyalakan yang selalu
-muncul di Beranda selama notifikasi dan pengingat belum efektif, status di
-Akun, dan tur
+di Akun sehingga jarang dinyalakan. Fase ini menjadikan pengingat dan awal
+periode langkah wajib di onboarding (wajib dijawab), menjadikan Catat dari
+notifikasi pintu yang selalu ada di Beranda (Nyalakan, Kelola, Izinkan) dengan
+Mulai cepat, menambah tombol Nyalakan pengingat, status di Akun, dan tur
 ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)).
 Bukan fitur baru; bergantung pada slot Beranda Fase 20 dan onboarding Fase
 9. **Status:** KT-D1 diputuskan 18 Okt 2026; menunggu rupa dari designer, lalu kode.
 
-**Selesai kalau:** akun baru tidak bisa melewati tiga langkah tanpa
-menjawab, tombol permanen muncul dan hilang sesuai keadaan efektif fitur,
+**Selesai kalau:** akun baru tidak bisa melewati dua langkah tanpa
+menjawab, baris Catat dari notifikasi di Beranda tidak pernah hilang dan tombol
+pengingat hilang saat efektif,
 pengguna lama tidak dipaksa mengulang onboarding, semuanya terverifikasi di
 perangkat.
 

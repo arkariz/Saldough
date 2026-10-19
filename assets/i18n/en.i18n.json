@@ -844,6 +844,14 @@
     "hint": "App text and voice recording"
   },
   "discovery": {
+    "payday": {
+      "title": "Payday on the $d?",
+      "body": "Start your financial month on day $d so Plan and Analysis follow your payday.",
+      "action": "Set"
+    },
+    "period": {
+      "hint": "Set"
+    },
     "allowAccess": "Allow",
     "quickStart": {
       "title": "Pick your bank or e-wallet apps",

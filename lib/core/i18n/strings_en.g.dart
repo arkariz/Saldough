@@ -917,6 +917,8 @@ class _Translations$discovery$en extends Translations$discovery$id {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$discovery$payday$en payday = _Translations$discovery$payday$en._(_root);
+	@override late final _Translations$discovery$period$en period = _Translations$discovery$period$en._(_root);
 	@override String get allowAccess => 'Allow';
 	@override late final _Translations$discovery$quickStart$en quickStart = _Translations$discovery$quickStart$en._(_root);
 }
@@ -1498,6 +1500,28 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: discovery.payday
+class _Translations$discovery$payday$en extends Translations$discovery$payday$id {
+	_Translations$discovery$payday$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object d}) => 'Payday on the ${d}?';
+	@override String body({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.';
+	@override String get action => 'Set';
+}
+
+// Path: discovery.period
+class _Translations$discovery$period$en extends Translations$discovery$period$id {
+	_Translations$discovery$period$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get hint => 'Set';
 }
 
 // Path: discovery.quickStart
@@ -2521,6 +2545,10 @@ extension on TranslationsEn {
 			'language.label' => 'Language',
 			'language.pickerTitle' => 'Choose language',
 			'language.hint' => 'App text and voice recording',
+			'discovery.payday.title' => ({required Object d}) => 'Payday on the ${d}?',
+			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
+			'discovery.payday.action' => 'Set',
+			'discovery.period.hint' => 'Set',
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
@@ -2747,12 +2775,12 @@ extension on TranslationsEn {
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',
 			'recurring.chipIncome' => 'In',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.chipExpense' => 'Out',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Budget item',
 			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			'recurring.budgetLinkRemove' => 'Unlink',

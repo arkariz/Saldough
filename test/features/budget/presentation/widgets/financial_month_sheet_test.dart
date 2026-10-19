@@ -270,7 +270,7 @@ void main() {
       expect(notified, 1);
       // Diubah sendiri: tawaran rutin gajian tidak muncul lagi (F2).
       final offer = (await tester.runAsync(preferences.loadOffer))!.getOrElse(
-        (_) => (changedByUser: false, offeredRuleIds: const {}),
+        (_) => (changedByUser: false, offeredRuleIds: const <String>{}, paydayCardAnswered: false),
       );
       expect(offer.changedByUser, isTrue);
     });

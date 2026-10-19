@@ -4860,12 +4860,30 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Beranda, kotak masuk, dan Akun membuka layar yang sama; urutan Beranda
       dengan banner pembaruan dan kartu Menunggu; tidak ada baris di iOS.
       Memenuhi FR-DSC-001, FR-DSC-002, FR-DSC-003.
-- [ ] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
+- [x] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
       diketuk dan kartu tawaran gajian untuk pengguna lama (boleh ditutup).
       ⚠ Hanya menyarankan; P-1–P-11 FINANCIAL_PERIOD tidak berubah.
       Verifikasi: uji pemicu (tanggal 1 vs 2–28, jadwal sudah diubah,
       ditutup).
       Memenuhi FR-DSC-004.
+      **Hasil (19 Okt 2026):** `AppPeriodHeader` yang dapat diketuk kini
+      membawa pil tonal "Atur" (teks `discovery.period.hint`, menggantikan
+      ikon panah). Kartu `PaydayOfferCard` di bawah kepala Rencana › Bulan
+      ini; pemicunya `paydayOfferDay` (`features/plan/domain/`): pemasukan
+      kategori Gaji (`builtInKey == 'salary'`, bukan pembayaran freelance)
+      bertanggal 2–28 dalam 3 bulan terakhir, jadwal masih bawaan,
+      `changedByUser` false, kartu belum dijawab; dipakai yang terbaru.
+      **Atur** membuka lembar Awal bulan keuangan (`source: offer`) dengan
+      tanggal itu; kartu tidak ditandai dijawab saat dibuka, jadi batal
+      menyimpan tidak menghilangkannya, dan hilang sendiri begitu jadwal
+      berubah (`ActiveFinancialMonth`). **Tutup** menyimpan
+      `paydayCardAnswered` (field baru `FinancialMonthOffer`, tidak
+      mengubah jadwal). Uji: `payday_offer_test.dart` (tanggal 1, 2, 28,
+      29–31, terbaru, bukan Gaji/freelance/pengeluaran, sudah diubah,
+      ditutup) dan `payday_offer_card_test.dart` (tampil, tidak tampil,
+      ditutup menetap, jadwal berubah). Analitik `discovery_payday_card`
+      di T-21.7; rupa menunggu persetujuan T-21.0 (kartu `surface` biasa
+      dengan tombol tutup, mengikuti selisih 9).
 - [ ] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
       dan urutannya (FEATURE_DISCOVERY §7.1).
       Verifikasi: uji widget tiap keadaan; baris notifikasi tidak ada di iOS.

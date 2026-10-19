@@ -18,6 +18,7 @@ import 'package:saldough/features/plan/presentation/bloc/plan_month_state.dart';
 import 'package:saldough/features/plan/presentation/widgets/balance_forecast_card.dart';
 import 'package:saldough/features/plan/presentation/widgets/funding_banner.dart';
 import 'package:saldough/features/plan/presentation/widgets/month_review_card.dart';
+import 'package:saldough/features/plan/presentation/widgets/payday_offer_card.dart';
 import 'package:saldough/features/plan/presentation/widgets/unplanned_card.dart';
 import 'package:saldough/shared/recurring/recurring.dart';
 import 'package:state_management/state_management.dart';
@@ -67,6 +68,7 @@ class PlanMonthPage extends StatelessWidget {
               child: PlanMonthView(
                 onShowRecurring: onShowRecurring,
                 onShowBudget: onShowBudget,
+                paydayOffer: PaydayOfferCard(container: container),
                 pending: pending,
                 starters: starters,
               ),
@@ -84,6 +86,7 @@ class PlanMonthView extends StatelessWidget {
   const PlanMonthView({
     required this.onShowRecurring,
     required this.onShowBudget,
+    this.paydayOffer,
     this.pending,
     this.starters,
     super.key,
@@ -94,6 +97,9 @@ class PlanMonthView extends StatelessWidget {
 
   /// Ke segmen Anggaran.
   final VoidCallback onShowBudget;
+
+  /// Kartu tawaran gajian (FEATURE_DISCOVERY §6.2), di bawah kepala periode.
+  final Widget? paydayOffer;
 
   /// Kartu Menunggu dicatat.
   final Widget? pending;
@@ -157,6 +163,8 @@ class PlanMonthView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.space2),
+              // Tawaran gajian untuk pengguna lama (FEATURE_DISCOVERY §6.2).
+              ?paydayOffer,
               // Blok 0: tinjau awal bulan (J4, ADR-036 §3.7).
               if (state.showReview && !state.isFuture) ...[
                 MonthReviewCard(

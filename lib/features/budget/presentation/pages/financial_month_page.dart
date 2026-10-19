@@ -64,8 +64,12 @@ class _FinancialMonthPageState extends State<FinancialMonthPage> {
       return false;
     }
     // Sesudah diubah sendiri, tawaran rutin gajian tidak muncul lagi (F2).
-    final offer = (await preferences.loadOffer()).getOrElse((_) => (changedByUser: false, offeredRuleIds: const {}));
-    await preferences.saveOffer((changedByUser: true, offeredRuleIds: offer.offeredRuleIds));
+    final offer = (await preferences.loadOffer()).getOrElse((_) => (changedByUser: false, offeredRuleIds: const {}, paydayCardAnswered: false));
+    await preferences.saveOffer((
+      changedByUser: true,
+      offeredRuleIds: offer.offeredRuleIds,
+      paydayCardAnswered: offer.paydayCardAnswered,
+    ));
     ActiveFinancialMonth.notifier.value = updated;
     final current = updated.periodOf(_schedule.periodOf(_today).start);
     AppAnalytics.log(

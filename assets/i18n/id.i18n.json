@@ -844,6 +844,14 @@
     "hint": "Tampilan aplikasi dan bahasa ucapan"
   },
   "discovery": {
+    "payday": {
+      "title": "Gajian tanggal $d?",
+      "body": "Mulai bulan keuangan dari tanggal $d, supaya Rencana dan Analisis mengikuti gajianmu.",
+      "action": "Atur"
+    },
+    "period": {
+      "hint": "Atur"
+    },
     "allowAccess": "Izinkan",
     "quickStart": {
       "title": "Pilih aplikasi bank atau dompet digitalmu",

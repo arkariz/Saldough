@@ -131,7 +131,7 @@ void main() {
   });
 
   test('sudah pernah mengubah awal bulan sendiri: tidak ditawarkan', () async {
-    await preferences.saveOffer((changedByUser: true, offeredRuleIds: const {}));
+    await preferences.saveOffer((changedByUser: true, offeredRuleIds: const {}, paydayCardAnswered: false));
     final effect = await save(gaji(DateTime(2026, 9, 25, 9)));
     expect(effect, isA<ShowSnackBarEffect>());
     expect(read(await preferences.loadOffer()).offeredRuleIds, isEmpty);
@@ -155,7 +155,7 @@ void main() {
       note: 'Gaji',
       schedule: RecurringSchedule(frequency: frequency, anchorDate: anchor),
     );
-    const fresh = (changedByUser: false, offeredRuleIds: <String>{});
+    const fresh = (changedByUser: false, offeredRuleIds: <String>{}, paydayCardAnswered: false);
     FinancialMonthStart? offerFor(RecurringRule r, {FinancialMonthOffer offer = fresh, FinancialMonthSchedule? schedule}) =>
         financialMonthOfferFor(r, schedule: schedule ?? FinancialMonthSchedule.initial, offer: offer);
 
@@ -171,8 +171,8 @@ void main() {
 
     test('tidak bila pernah diubah sendiri, sudah ditawari, atau jadwal bukan bawaan', () {
       final r = rule(DateTime(2026, 9, 25));
-      expect(offerFor(r, offer: (changedByUser: true, offeredRuleIds: const {})), isNull);
-      expect(offerFor(r, offer: (changedByUser: false, offeredRuleIds: const {'r'})), isNull);
+      expect(offerFor(r, offer: (changedByUser: true, offeredRuleIds: const {}, paydayCardAnswered: false)), isNull);
+      expect(offerFor(r, offer: (changedByUser: false, offeredRuleIds: const {'r'}, paydayCardAnswered: false)), isNull);
       expect(
         offerFor(r, schedule: FinancialMonthSchedule.single(const FinancialMonthStart.day(10))),
         isNull,

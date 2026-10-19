@@ -2278,6 +2278,8 @@ class Translations$discovery$id {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$discovery$payday$id payday = Translations$discovery$payday$id.internal(_root);
+	late final Translations$discovery$period$id period = Translations$discovery$period$id.internal(_root);
 
 	/// id: 'Izinkan'
 	String get allowAccess => 'Izinkan';
@@ -3761,6 +3763,36 @@ class Translations$currency$names$id {
 	String get aud => 'Dolar Australia';
 }
 
+// Path: discovery.payday
+class Translations$discovery$payday$id {
+	Translations$discovery$payday$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Gajian tanggal $d?'
+	String title({required Object d}) => 'Gajian tanggal ${d}?';
+
+	/// id: 'Mulai bulan keuangan dari tanggal $d, supaya Rencana dan Analisis mengikuti gajianmu.'
+	String body({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.';
+
+	/// id: 'Atur'
+	String get action => 'Atur';
+}
+
+// Path: discovery.period
+class Translations$discovery$period$id {
+	Translations$discovery$period$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Atur'
+	String get hint => 'Atur';
+}
+
 // Path: discovery.quickStart
 class Translations$discovery$quickStart$id {
 	Translations$discovery$quickStart$id.internal(this._root);
@@ -4946,6 +4978,10 @@ extension on Translations {
 			'language.label' => 'Bahasa',
 			'language.pickerTitle' => 'Pilih bahasa',
 			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
+			'discovery.payday.title' => ({required Object d}) => 'Gajian tanggal ${d}?',
+			'discovery.payday.body' => ({required Object d}) => 'Mulai bulan keuangan dari tanggal ${d}, supaya Rencana dan Analisis mengikuti gajianmu.',
+			'discovery.payday.action' => 'Atur',
+			'discovery.period.hint' => 'Atur',
 			'discovery.allowAccess' => 'Izinkan',
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
@@ -5172,12 +5208,12 @@ extension on Translations {
 			'recurring.outLabel' => 'Sudah keluar',
 			'recurring.chipAll' => 'Semua',
 			'recurring.chipIncome' => 'Masuk',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.chipExpense' => 'Keluar',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Pos anggaran',
 			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			'recurring.budgetLinkRemove' => 'Lepas tautan',

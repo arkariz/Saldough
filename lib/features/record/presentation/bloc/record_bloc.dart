@@ -364,6 +364,7 @@ final class RecordBloc extends Bloc<RecordEvent, RecordState> {
     await repository.saveOffer((
       changedByUser: offer.changedByUser,
       offeredRuleIds: {...offer.offeredRuleIds, rule.id},
+      paydayCardAnswered: offer.paydayCardAnswered,
     ));
     AppAnalytics.log(PeriodEvents.offer('shown'));
     return start;

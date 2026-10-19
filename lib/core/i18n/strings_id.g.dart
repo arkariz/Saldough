@@ -1708,11 +1708,11 @@ class Translations$onboarding$id {
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
 
-	/// id: 'Biasanya gajian tanggal berapa?'
-	String get periodTitle => 'Biasanya gajian tanggal berapa?';
+	/// id: 'Kapan siklus bulananmu dimulai?'
+	String get periodTitle => 'Kapan siklus bulananmu dimulai?';
 
-	/// id: 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.'
-	String get periodBody => 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.';
+	/// id: 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.'
+	String get periodBody => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.';
 
 	/// id: 'Pakai tanggal $day'
 	String periodConfirm({required Object day}) => 'Pakai tanggal ${day}';
@@ -4897,8 +4897,8 @@ extension on Translations {
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
-			'onboarding.periodTitle' => 'Biasanya gajian tanggal berapa?',
-			'onboarding.periodBody' => 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.',
+			'onboarding.periodTitle' => 'Kapan siklus bulananmu dimulai?',
+			'onboarding.periodBody' => 'Rencana anggaran dan analisis keuangan akan dihitung mulai tanggal ini setiap bulannya. Bisa diubah kapan saja di menu Akun.',
 			'onboarding.periodConfirm' => ({required Object day}) => 'Pakai tanggal ${day}',
 			'onboarding.periodConfirmLast' => 'Pakai hari terakhir bulan',
 			'onboarding.reminderTitle' => 'Ingatkan kamu sebelum jatuh tempo?',

@@ -4,7 +4,7 @@ import 'package:saldough/core/financial_month/financial_month.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
-import 'package:saldough/features/onboarding/presentation/widgets/onboarding_scene.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_art.dart';
 
 /// Jawaban langkah pengingat rutin (FEATURE_DISCOVERY §4.4).
 enum OnboardingReminderChoice {
@@ -42,6 +42,11 @@ class OnboardingPeriodStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const OnboardingArt(
+                'assets/illustration/tanggal_gajian.png',
+                crop: Rect.fromLTWH(0.4, 0.2, 0.6, 0.78),
+              ),
+              const SizedBox(height: AppSpacing.space3),
               Semantics(header: true, child: Text(t.onboarding.periodTitle, style: textTheme.headlineSmall)),
               const SizedBox(height: AppSpacing.space2),
               Text(t.onboarding.periodBody, style: textTheme.bodyMedium),
@@ -79,15 +84,9 @@ class OnboardingReminderStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Ilustrasi OB-4 yang sudah ada (selisih 7 rupa v2).
-              ExcludeSemantics(
-                child: Image.asset(
-                  'assets/illustration/onboarding_4.png',
-                  height: 120,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.none,
-                  alignment: Alignment.centerLeft,
-                ),
+              const OnboardingArt(
+                'assets/illustration/pengingat_rutin.png',
+                crop: Rect.fromLTWH(0.15, 0.2, 0.7, 0.72),
               ),
               const SizedBox(height: AppSpacing.space3),
               Semantics(header: true, child: Text(t.onboarding.reminderTitle, style: textTheme.headlineSmall)),
@@ -181,9 +180,10 @@ class OnboardingFinale extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(
+          const OnboardingArt(
+            'assets/illustration/penutup.png',
             height: 156,
-            child: ExcludeSemantics(child: OnboardingScene(index: onboardingSlideCount - 1, active: true)),
+            crop: Rect.fromLTWH(0.04, 0.42, 0.94, 0.5),
           ),
           const SizedBox(height: AppSpacing.space3),
           Semantics(
@@ -201,7 +201,14 @@ class OnboardingFinale extends StatelessWidget {
             Row(
               key: const ValueKey('onboarding-notification-info'),
               children: [
-                ExcludeSemantics(child: AppIcon(IconKey.notifications, color: colors.ink2)),
+                const SizedBox(
+                  width: 56,
+                  child: OnboardingArt(
+                    'assets/illustration/catat_dari_notif.png',
+                    height: 64,
+                    crop: Rect.fromLTWH(0.14, 0.05, 0.8, 0.92),
+                  ),
+                ),
                 const SizedBox(width: AppSpacing.space2),
                 Expanded(
                   child: Text(t.onboarding.notificationInfo, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),

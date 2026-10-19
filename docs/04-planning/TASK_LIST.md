@@ -4875,6 +4875,13 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       langkah mata uang. (3) Mode tinjau tetap lima layar geser tanpa
       langkah (rupa tinjau belum dirancang, pertanyaan 7 designer). ⚠ Belum:
       verifikasi perangkat (T-21.8), analitik langkah (T-21.7).
+      *Ilustrasi (19 Okt 2026, permintaan pemilik):* langkah bahasa dan mata
+      uang `bahasa_mata_uang.png`, awal periode `tanggal_gajian.png`,
+      pengingat `pengingat_rutin.png`, penutup `penutup.png`, baris informasi
+      Catat dari notifikasi `catat_dari_notif.png`, layar Mulai cepat
+      `mulai_cepat.png`. Berkas punya margin transparan lebar, jadi
+      `OnboardingArt` memotongnya saat tampil (berkas tidak diubah); angka
+      potongan perkiraan dari tampilan berkas, periksa di perangkat (T-21.8).
 - [x] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
       notifikasi yang tidak pernah hilang di Android (belum disetel,
       "{n} aplikasi aktif", Izinkan/Nyalakan), tombol Nyalakan pengingat yang

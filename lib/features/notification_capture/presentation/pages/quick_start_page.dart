@@ -141,6 +141,16 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.space4),
             children: [
+              // Ilustrasi Mulai cepat (assets/illustration/mulai_cepat.png).
+              ExcludeSemantics(
+                child: Image.asset(
+                  'assets/illustration/mulai_cepat.png',
+                  height: 140,
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.space3),
               Text(texts.title, style: textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.space2),
               Text(candidates.isEmpty ? texts.noBuiltIn : texts.body, style: textTheme.bodyMedium),

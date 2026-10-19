@@ -3,6 +3,7 @@ import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/onboarding/presentation/widgets/onboarding_art.dart';
 
 /// Langkah pilih mata uang, gerbang terakhir onboarding pertama kali
 /// (ADR-025 §3.7).
@@ -40,6 +41,8 @@ class OnboardingCurrencyStep extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const OnboardingArt('assets/illustration/bahasa_mata_uang.png', crop: Rect.fromLTWH(0.1, 0.12, 0.8, 0.78)),
+                const SizedBox(height: AppSpacing.space3),
                 Semantics(header: true, child: Text(t.onboarding.currencyTitle, style: textTheme.headlineSmall)),
                 const SizedBox(height: AppSpacing.space2),
                 Text(t.onboarding.currencyBody, style: textTheme.bodyMedium),

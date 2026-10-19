@@ -671,8 +671,8 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get currencySuggested => 'Matches your device region';
 	@override String get currencyChooseFirst => 'Choose a currency first';
 	@override String currencyConfirm({required Object code}) => 'Use ${code}';
-	@override String get periodTitle => 'Which day is payday?';
-	@override String get periodBody => 'Plan and Analysis follow this date. You can change it again in Account.';
+	@override String get periodTitle => 'When does your monthly cycle start?';
+	@override String get periodBody => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.';
 	@override String periodConfirm({required Object day}) => 'Use day ${day}';
 	@override String get periodConfirmLast => 'Use the last day';
 	@override String get reminderTitle => 'Remind you before things are due?';
@@ -2401,8 +2401,8 @@ extension on TranslationsEn {
 			'onboarding.currencySuggested' => 'Matches your device region',
 			'onboarding.currencyChooseFirst' => 'Choose a currency first',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
-			'onboarding.periodTitle' => 'Which day is payday?',
-			'onboarding.periodBody' => 'Plan and Analysis follow this date. You can change it again in Account.',
+			'onboarding.periodTitle' => 'When does your monthly cycle start?',
+			'onboarding.periodBody' => 'Your budget plan and financial analysis will start on this date each month. You can change this anytime in Account.',
 			'onboarding.periodConfirm' => ({required Object day}) => 'Use day ${day}',
 			'onboarding.periodConfirmLast' => 'Use the last day',
 			'onboarding.reminderTitle' => 'Remind you before things are due?',

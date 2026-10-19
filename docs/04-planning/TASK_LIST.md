@@ -85,7 +85,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Situs web — landing, `/beta`, dokumen hukum (repo `arkariz/tanukonomy-web`, daftar tugas di `docs/TASKS.md` repo itu) | 6 | 6 | Selesai 28 Sep 2026; P-1 s.d. P-6 menunggu pemilik (domain, email kontak, tinjau dokumen hukum, Google Group dan closed testing, Cloudflare Pages) |
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
-| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 9 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
+| 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
 | Antrean (`B-n`, belum dijadwalkan) | 22 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -4718,8 +4718,9 @@ Peta kerja engineer, QA, dan designer: [artifact serah terima](https://claude.ai
 
 Permintaan pemilik 18 Okt 2026 (direvisi hari yang sama): Catat dari
 notifikasi, pengingat rutin, dan awal bulan keuangan sudah jadi tetapi
-tersembunyi di setelan. Fase ini menambah **tiga langkah wajib di
-onboarding** dan **tombol Nyalakan permanen** selama fitur belum efektif;
+tersembunyi di setelan. Fase ini menambah **dua langkah wajib di
+onboarding** (awal periode, pengingat) dan **pintu permanen** ke Catat dari
+notifikasi (selalu ada, juga sesudah menyala) serta tombol Nyalakan pengingat;
 bukan fitur baru. Perilaku, aturan, teks, dan kasus tepi di
 [FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md). Branch
 sendiri dari `main`. Arti "wajib" = wajib dijawab, bukan wajib menyala
@@ -4727,14 +4728,16 @@ sendiri dari `main`. Arti "wajib" = wajib dijawab, bukan wajib menyala
 baris tombol, langkah onboarding, status Akun, dan isyarat kepala periode:
 perlu rupa dari ui-ux-designer sebelum T-21.2.
 
-- [ ] **T-21.0** Rupa penemuan fitur (designer). Tiga langkah onboarding
-      (tanggal gajian, Catat dari notifikasi, pengingat; keadaan belum
-      memilih, memilih, izin ditolak, kembali dari setelan), baris tombol
-      permanen di Beranda (dua tombol, keadaan Nyalakan dan Izinkan),
-      tombol di segmen Rutin, catatan sakelar per rutin, status
-      "Nyala/Mati/Izin belum diberikan" di Akun, isyarat kepala periode
-      dapat diketuk, kartu tawaran gajian, ringkasan di penutup onboarding.
-      Ke prototipe pemilik dan `docs/03-design/`.
+- [ ] **T-21.0** Rupa penemuan fitur (designer). Dua langkah onboarding
+      (tanggal gajian, pengingat; keadaan belum memilih, memilih, izin
+      ditolak), baris informasi Catat dari notifikasi di penutup, baris pintu
+      Catat dari notifikasi di Beranda (belum disetel, "{n} aplikasi aktif",
+      Izinkan) dan tombol pengingat, layar Mulai cepat (daftar aplikasi
+      bawaan tercentang, izin, Aplikasi lain, tanpa aplikasi bawaan),
+      tautan Kelola aplikasi & pola dan Ajari pola di kotak masuk, tombol di
+      segmen Rutin, catatan sakelar per rutin, status "Nyala/Mati/Izin belum
+      diberikan" di Akun, isyarat kepala periode dapat diketuk, kartu
+      tawaran gajian. Ke prototipe pemilik dan `docs/03-design/`.
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
@@ -4751,26 +4754,30 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji unit status efektif (mati, nyala, izin hilang, iOS);
       uji migrasi pengguna lama; uji arsitektur hijau.
       Memenuhi FR-DSC-001.
-- [ ] **T-21.2** Onboarding: langkah wajib awal periode keuangan, Catat dari
-      notifikasi (Android saja), dan pengingat rutin, urutan dan aturan
-      FEATURE_DISCOVERY §4 (tanpa Lewati, Lanjut aktif setelah memilih,
-      Lewati slide melompat ke langkah wajib, mode tinjau tidak memaksa).
-      Nyalakan memakai alur setelan/izin yang sama dengan Akun; kembali
-      tanpa selesai dihitung sudah menjawab.
+- [ ] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
+      pengingat rutin, plus baris informasi Catat dari notifikasi di penutup
+      (Android saja, tidak dapat diketuk, tanpa izin), aturan FEATURE_DISCOVERY
+      §4 (tanpa Lewati, Lanjut aktif setelah memilih, Lewati slide melompat
+      ke langkah wajib, mode tinjau tidak memaksa). Nyalakan pengingat
+      memakai alur izin yang sama dengan Akun.
       ⚠ Menyimpan tanggal sebelum ada data tidak membuat periode peralihan
       (FINANCIAL_PERIOD); pastikan lewat uji.
-      ⚠ Aplikasi keluar ke setelan sistem lalu kembali: keadaan langkah
-      harus bertahan.
+      ⚠ Aplikasi keluar ke dialog izin lalu kembali: keadaan langkah harus
+      bertahan.
       Verifikasi: uji widget tiap langkah dan jalur Nyalakan/Tidak sekarang/
-      izin ditolak; iOS tanpa langkah notifikasi; verifikasi perangkat.
-      Memenuhi FR-DSC-002, FR-DSC-003, FR-DSC-004.
-- [ ] **T-21.3** Baris tombol permanen di Beranda (P-1–P-6): Nyalakan catat
-      dari notifikasi (Android) dan Nyalakan pengingat rutin, menjadi
-      Izinkan bila izin hilang, hilang begitu efektif; tombol pengingat juga
-      di segmen Rutin dan catatan di sakelar per rutin.
-      Verifikasi: uji widget semua keadaan P-1–P-3; urutan Beranda dengan
-      banner pembaruan dan kartu Menunggu; tidak ada tombol di iOS untuk
-      notifikasi.
+      izin ditolak; baris informasi tidak ada di iOS; verifikasi perangkat.
+      Memenuhi FR-DSC-003, FR-DSC-004.
+- [ ] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
+      notifikasi yang tidak pernah hilang di Android (belum disetel,
+      "{n} aplikasi aktif", Izinkan/Nyalakan), tombol Nyalakan pengingat yang
+      hilang saat efektif, tombol pengingat juga di segmen Rutin dan catatan
+      di sakelar per rutin, tautan Kelola aplikasi & pola dan Ajari pola di
+      kotak masuk tangkapan, jumlah aplikasi di baris Akun.
+      ⚠ Jumlah aplikasi aktif dibaca dari simpanan notifikasi lewat akar
+      komposisi, bukan impor fitur lain (ADR-030).
+      Verifikasi: uji widget semua keadaan P-1–P-3 dan P-7; Kelola dari
+      Beranda, kotak masuk, dan Akun membuka layar yang sama; urutan Beranda
+      dengan banner pembaruan dan kartu Menunggu; tidak ada baris di iOS.
       Memenuhi FR-DSC-001, FR-DSC-002, FR-DSC-003.
 - [ ] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
       diketuk dan kartu tawaran gajian untuk pengguna lama (boleh ditutup).
@@ -4792,13 +4799,30 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       baru.
       Verifikasi: uji tiap peristiwa dan parameternya.
       Memenuhi FR-DSC-001.
-- [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru melewati tiga
-      langkah wajib (Nyalakan, Tidak sekarang, izin ditolak, kembali dari
-      setelan), tombol permanen muncul dan hilang sesuai keadaan efektif
-      termasuk akses dicabut, pengguna lama tidak dipaksa onboarding, urutan
-      Beranda dengan banner pembaruan, iOS tanpa langkah dan tombol
-      notifikasi. Hasil di rencana verifikasi Fase 21.
+- [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru melewati dua
+      langkah wajib (Nyalakan, Tidak sekarang, izin ditolak), baris
+      informasi di penutup, baris Catat dari notifikasi di Beranda tidak
+      pernah hilang (belum disetel, aktif, izin dicabut, sakelar mati,
+      semua aplikasi dihapus), Kelola dari Beranda/kotak masuk/Akun, tombol
+      pengingat hilang saat efektif, pengguna lama tidak dipaksa onboarding,
+      urutan Beranda dengan banner pembaruan, iOS tanpa baris notifikasi.
+      Mencakup T-21.9. Hasil di rencana verifikasi Fase 21.
       Memenuhi FR-DSC-001–004.
+- [ ] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
+      Layar ringan untuk penyetelan pertama: aplikasi terpasang yang punya
+      pola bawaan sudah tercentang, satu langkah izin akses dan persetujuan
+      ADR-032 lewat alur yang ada, selesai ke keadaan "{n} aplikasi aktif".
+      Aplikasi tanpa pola bawaan lewat Aplikasi lain (pemilih dan pembuat
+      pola yang ada). Hanya sekali, saat belum ada aplikasi sumber. Kerjakan
+      sebelum T-21.8.
+      ⚠ Konfirmasi dari kode apakah aplikasi dengan pola bawaan benar-benar
+      tidak butuh pembuat pola; jika perlu, lapor ke PO sebelum mengubah.
+      ⚠ Izin akses notifikasi membawa pengguna keluar ke setelan sistem;
+      keadaan layar harus bertahan saat kembali.
+      Verifikasi: uji unit pemilihan aplikasi bawaan; uji widget (ada/tanpa
+      aplikasi bawaan terpasang, izin diberikan/ditolak/dibatalkan); uji
+      arsitektur hijau; verifikasi perangkat Android 14 dan 15.
+      Memenuhi FR-DSC-002.
 
 ## Antrean (belum dijadwalkan)
 

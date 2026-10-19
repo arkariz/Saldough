@@ -915,18 +915,21 @@ Perilaku dan aturannya di [FEATURE_DISCOVERY.md](features/FEATURE_DISCOVERY.md);
 tugasnya Fase 21.
 
 **FR-DSC-001 — Tombol permanen dan status**
-- [ ] Tombol Nyalakan untuk Catat dari notifikasi (Android) dan pengingat
-      rutin selalu tampil di Beranda selama fiturnya tidak efektif, tanpa
-      opsi tutup atau tunda, dan hilang begitu efektif; saat izin hilang
-      tombol menjadi Izinkan.
+- [ ] Tombol Nyalakan pengingat rutin tampil di Beranda selama fiturnya
+      tidak efektif, tanpa opsi tutup atau tunda, dan hilang begitu efektif;
+      saat izin hilang tombol (juga baris Catat dari notifikasi) menjadi
+      Izinkan.
 - [ ] Status Nyala/Mati/Izin belum diberikan terlihat di Akun.
 
-**FR-DSC-002 — Catat dari notifikasi di onboarding (Android)**
-- [ ] Onboarding punya langkah wajib dijawab (Nyalakan atau Tidak
-      sekarang); tidak ada di iOS; pengguna lama tidak dipaksa mengulang.
+**FR-DSC-002 — Catat dari notifikasi selalu mudah ditemukan (Android)**
+- [ ] Baris Catat dari notifikasi di Beranda tidak pernah hilang (belum
+      disetel, aktif dengan jumlah aplikasi, izin hilang); membuka Mulai cepat
+      saat belum disetel dan layar setelan penuh sesudahnya.
+- [ ] Kotak masuk tangkapan dan Akun memuat jalan ke Kelola aplikasi & pola;
+      tidak ada di iOS. Onboarding hanya memuat baris informasi.
 
 **FR-DSC-003 — Pengingat rutin di onboarding**
-- [ ] Onboarding punya langkah wajib dijawab; sakelar per rutin memberi tahu
+- [ ] Onboarding punya langkah wajib dijawab (Nyalakan atau Tidak sekarang); sakelar per rutin memberi tahu
       bila sakelar global mati.
 
 **FR-DSC-004 — Awal periode keuangan di onboarding**

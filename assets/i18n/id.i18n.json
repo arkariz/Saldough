@@ -852,6 +852,14 @@
     "period": {
       "hint": "Atur"
     },
+    "status": {
+      "on": "Nyala",
+      "off": "Mati",
+      "permissionNeeded": "Izin belum diberikan"
+    },
+    "notification": {
+      "activeApps": "$n aplikasi aktif"
+    },
     "allowAccess": "Izinkan",
     "quickStart": {
       "title": "Pilih aplikasi bank atau dompet digitalmu",

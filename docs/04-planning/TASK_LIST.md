@@ -4884,10 +4884,24 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       ditutup menetap, jadwal berubah). Analitik `discovery_payday_card`
       di T-21.7; rupa menunggu persetujuan T-21.0 (kartu `surface` biasa
       dengan tombol tutup, mengikuti selisih 9).
-- [ ] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
+- [x] **T-21.5** Akun: status Nyala/Mati/Izin belum diberikan di tiga baris
       dan urutannya (FEATURE_DISCOVERY §7.1).
       Verifikasi: uji widget tiap keadaan; baris notifikasi tidak ada di iOS.
       Memenuhi FR-DSC-001.
+      **Hasil (19 Okt 2026):** `FeatureStatusSettingRow`
+      (`features/account/presentation/widgets/`) membungkus `SettingRow` dengan
+      `AppBadge`: Nyala (positive), Mati (netral; juga untuk belum disetel),
+      Izin belum diberikan (warning + ikon, selalu bersama teks). Dibaca dari
+      `FeatureStatuses` (core, tanpa impor fitur) dan dibaca ulang saat
+      setelan berubah, aplikasi kembali ke depan, dan layar tujuan ditutup.
+      Catat dari notifikasi menampilkan "{n} aplikasi aktif" di keterangan
+      bila ada. Urutan baris sudah sesuai (Catat dari notifikasi, Pengingat
+      rutin, Awal bulan keuangan); baris ketiga tidak punya Nyala/Mati dan
+      tetap menampilkan tanggalnya (pertanyaan 4 designer, belum dijawab).
+      Baris notifikasi tetap hanya di Android (pemeriksaan platform halaman
+      Akun) dan status `unsupported` tanpa badge. Uji:
+      `feature_status_row_test.dart` (tiga keadaan + belum disetel, jumlah
+      aplikasi, tanpa dukungan/tanpa sumber, berubah, resume, 360dp).
 - [ ] **T-21.6** Tur spotlight (`SpotlightKey` baru: baris tombol Beranda,
       status Akun, kepala periode), teks `onboarding.*` dan `discovery.*`
       id dan en.

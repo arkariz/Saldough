@@ -1,0 +1,148 @@
+import 'dart:async';
+
+import 'package:di/di.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
+import 'package:saldough/core/theme/theme.dart';
+import 'package:saldough/features/account/presentation/widgets/feature_status_row.dart';
+
+final class _FakeStatuses implements FeatureStatuses {
+  final status = <DiscoveredFeature, FeatureStatus>{};
+  final controller = StreamController<void>.broadcast();
+
+  @override
+  Future<FeatureStatus> read(DiscoveredFeature feature) async => status[feature] ?? FeatureStatus.unsupported;
+
+  @override
+  Stream<void> get changes => controller.stream;
+}
+
+void main() {
+  late _FakeStatuses statuses;
+  var opened = 0;
+
+  setUp(() {
+    statuses = _FakeStatuses();
+    opened = 0;
+  });
+
+  Future<void> pumpRow(
+    WidgetTester tester, {
+    DiscoveredFeature feature = DiscoveredFeature.reminder,
+    bool registered = true,
+    double width = 360,
+  }) async {
+    final container = GetIt.asNewInstance();
+    if (registered) container.registerSingleton<FeatureStatuses>(statuses);
+    tester.view
+      ..physicalSize = Size(width, 800)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ScopeProvider(
+        container: container,
+        child: MaterialApp(
+          theme: PixelTheme.light,
+          home: Scaffold(
+            body: FeatureStatusSettingRow(
+              feature: feature,
+              icon: IconKey.schedule,
+              title: 'Judul',
+              subtitle: 'Keterangan bawaan',
+              onTap: () async => opened++,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('nyala: badge Nyala', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+    await pumpRow(tester);
+
+    expect(find.text(t.discovery.status.on), findsOneWidget);
+  });
+
+  testWidgets('mati dan belum disetel: badge Mati', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+    await pumpRow(tester);
+    expect(find.text(t.discovery.status.off), findsOneWidget);
+
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.unset);
+    statuses.controller.add(null);
+    await tester.pumpAndSettle();
+    expect(find.text(t.discovery.status.off), findsOneWidget);
+  });
+
+  testWidgets('izin dicabut: badge Izin belum diberikan, muat di 360dp', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+    await pumpRow(tester);
+
+    expect(find.text(t.discovery.status.permissionNeeded), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Catat dari notifikasi aktif menampilkan jumlah aplikasi di keterangan', (tester) async {
+    statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 3);
+    await pumpRow(tester, feature: DiscoveredFeature.notification);
+
+    expect(find.text(t.discovery.notification.activeApps(n: 3)), findsOneWidget);
+    expect(find.text('Keterangan bawaan'), findsNothing);
+  });
+
+  testWidgets('pengingat tetap memakai keterangan bawaan', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+    await pumpRow(tester);
+
+    expect(find.text('Keterangan bawaan'), findsOneWidget);
+  });
+
+  testWidgets('platform tidak mendukung dan tanpa FeatureStatuses: tanpa badge', (tester) async {
+    await pumpRow(tester, feature: DiscoveredFeature.notification);
+    expect(find.byType(AppBadge), findsNothing);
+
+    await pumpRow(tester, registered: false);
+    expect(find.byType(AppBadge), findsNothing);
+    expect(find.text('Judul'), findsOneWidget);
+  });
+
+  testWidgets('status ikut berubah saat setelan berubah dan sesudah layar tujuan ditutup', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+    await pumpRow(tester);
+    expect(find.text(t.discovery.status.off), findsOneWidget);
+
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+    statuses.controller.add(null);
+    await tester.pumpAndSettle();
+    expect(find.text(t.discovery.status.on), findsOneWidget);
+
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+    await tester.tap(find.text('Judul'));
+    await tester.pumpAndSettle();
+    expect(opened, 1);
+    expect(find.text(t.discovery.status.permissionNeeded), findsOneWidget);
+  });
+
+  testWidgets('kembali ke depan membaca ulang (izin dicabut di sistem)', (tester) async {
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
+    await pumpRow(tester);
+
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+    const [
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+      AppLifecycleState.hidden,
+      AppLifecycleState.inactive,
+      AppLifecycleState.resumed,
+    ].forEach(tester.binding.handleAppLifecycleStateChanged);
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.discovery.status.permissionNeeded), findsOneWidget);
+  });
+}

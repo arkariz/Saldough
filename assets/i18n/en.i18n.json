@@ -852,6 +852,14 @@
     "period": {
       "hint": "Set"
     },
+    "status": {
+      "on": "On",
+      "off": "Off",
+      "permissionNeeded": "Permission needed"
+    },
+    "notification": {
+      "activeApps": "Active apps: $n"
+    },
     "allowAccess": "Allow",
     "quickStart": {
       "title": "Pick your bank or e-wallet apps",

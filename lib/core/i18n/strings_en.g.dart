@@ -919,6 +919,8 @@ class _Translations$discovery$en extends Translations$discovery$id {
 	// Translations
 	@override late final _Translations$discovery$payday$en payday = _Translations$discovery$payday$en._(_root);
 	@override late final _Translations$discovery$period$en period = _Translations$discovery$period$en._(_root);
+	@override late final _Translations$discovery$status$en status = _Translations$discovery$status$en._(_root);
+	@override late final _Translations$discovery$notification$en notification = _Translations$discovery$notification$en._(_root);
 	@override String get allowAccess => 'Allow';
 	@override late final _Translations$discovery$quickStart$en quickStart = _Translations$discovery$quickStart$en._(_root);
 }
@@ -1522,6 +1524,28 @@ class _Translations$discovery$period$en extends Translations$discovery$period$id
 
 	// Translations
 	@override String get hint => 'Set';
+}
+
+// Path: discovery.status
+class _Translations$discovery$status$en extends Translations$discovery$status$id {
+	_Translations$discovery$status$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get on => 'On';
+	@override String get off => 'Off';
+	@override String get permissionNeeded => 'Permission needed';
+}
+
+// Path: discovery.notification
+class _Translations$discovery$notification$en extends Translations$discovery$notification$id {
+	_Translations$discovery$notification$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String activeApps({required Object n}) => 'Active apps: ${n}';
 }
 
 // Path: discovery.quickStart
@@ -2549,6 +2573,10 @@ extension on TranslationsEn {
 			'discovery.payday.body' => ({required Object d}) => 'Start your financial month on day ${d} so Plan and Analysis follow your payday.',
 			'discovery.payday.action' => 'Set',
 			'discovery.period.hint' => 'Set',
+			'discovery.status.on' => 'On',
+			'discovery.status.off' => 'Off',
+			'discovery.status.permissionNeeded' => 'Permission needed',
+			'discovery.notification.activeApps' => ({required Object n}) => 'Active apps: ${n}',
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
@@ -2771,12 +2799,12 @@ extension on TranslationsEn {
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} of ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'to ${wallet}',
 			'recurring.remainingTitle' => ({required Object month}) => 'Recurring still to go out · ${month}',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.plannedLabel' => 'Planned',
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',
 			'recurring.chipIncome' => 'In',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.chipExpense' => 'Out',
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Budget item',

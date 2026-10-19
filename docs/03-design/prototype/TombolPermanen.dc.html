@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Pintu permanen (keadaan)</title>
+<title>Kotak masuk notifikasi (keadaan)</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
 <link rel="stylesheet" href="tokens.css">
@@ -20,26 +20,34 @@ body{margin:0}
   <header class="tk-topbar tk-topbar--sub"><h1 class="tk-topbar__title" style="padding-left: 12px">{{title}}</h1></header>
   <main class="tk-body tk-scroll" style="gap: 16px; padding: 0 16px 32px">
     <p class="tk-t-body-sm tk-ink-2">{{intro}}</p>
-    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
       <section style="display: flex; flex-direction: column; gap: 8px; flex: none">
         <p class="tk-t-label-sm tk-ink-2">{{g.cap}}</p>
-      <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
-        <sc-if value="{{r.isBtn}}" hint-placeholder-val="{{true}}">
-          <div class="tk-card tk-nudge">
-            <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">{{r.icon}}</span></span>
-            <span class="tk-nudge__text"><span class="tk-nudge__title">{{r.title}}</span><span class="tk-nudge__sub">{{r.sub}}</span></span>
-            <sc-if value="{{r.hasHref}}" hint-placeholder-val="{{false}}"><a class="{{r.btnCls}}" href="{{r.href}}" aria-label="{{r.aria}}">{{r.btn}}</a></sc-if>
-            <sc-if value="{{r.noHref}}" hint-placeholder-val="{{true}}"><button class="{{r.btnCls}}" type="button" aria-label="{{r.aria}}" onClick="{{r.act}}">{{r.btn}}</button></sc-if>
+        <div class="tk-card tk-inbox {{g.ib.cls}}" role="status" style="flex: none">
+        <div class="tk-inbox__head">
+          <span class="tk-tile {{g.ib.tile}}"><span class="tk-icon">inbox</span></span>
+          <span class="tk-nudge__text"><span class="tk-nudge__title">{{g.ib.title}}</span><span class="tk-nudge__sub">{{g.ib.sub}}</span></span>
+          <sc-if value="{{g.ib.hasCta}}" hint-placeholder-val="{{true}}"><a class="{{g.ib.ctaCls}}" href="{{g.ib.ctaHref}}" aria-label="{{g.ib.ctaAria}}">{{g.ib.cta}}</a></sc-if>
+        </div>
+        <sc-if value="{{g.ib.items}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__item">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">QRIS Toko Sinar Jaya</span><span class="tk-row__sub">BCA mobile · 10.42</span></span>
+            <span class="tk-amt tk-t-amount">−Rp125.000</span>
+          </div>
+          <div class="tk-inbox__item tk-inbox__item--unknown">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">Transfer masuk dari ANDI PRATAMA</span><span class="tk-row__sub">{{g.ib.unreadable}}</span></span>
+            <a class="tk-btn tk-btn--secondary tk-btn--sm" href="KotakMasuk.dc.html">{{g.ib.teach}}</a>
           </div>
         </sc-if>
-        <sc-if value="{{r.isLink}}" hint-placeholder-val="{{false}}">
-          <a class="tk-card tk-nudge" href="{{r.href}}">
-            <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">{{r.icon}}</span></span>
-            <span class="tk-nudge__text"><span class="tk-nudge__title">{{r.title}}</span><span class="tk-nudge__sub">{{r.sub}}</span></span>
-            <span class="tk-icon tk-ink-2">chevron_right</span>
-          </a>
+        <sc-if value="{{g.ib.manage}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__foot">
+            <sc-if value="{{g.ib.hasCap}}" hint-placeholder-val="{{false}}"><span class="tk-inbox__cap">{{g.ib.cap}}</span></sc-if>
+            <a class="tk-link" href="Akun.dc.html">{{g.ib.manageText}}<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+          </div>
         </sc-if>
-      </sc-for>
+      </div>
       </section>
     </sc-for>
   </main>
@@ -178,23 +186,31 @@ const S = {
   "apps": "2 apps"
  }
 };
-const rowsFor = (t, kind) => {
-  const P = 'tk-btn tk-btn--primary tk-btn--sm', Sx = 'tk-btn tk-btn--secondary tk-btn--sm';
-  const nz = (title, sub, btn) => ({ isBtn: true, icon: 'notifications', title: title, sub: sub, btn: btn, btnCls: P, hasHref: false, noHref: true, aria: title, act: () => {} });
-  if (kind === 'belum') return [nz(t.nzBtnTitle, t.nzBody, t.turnOn)];
-  if (kind === 'aktif') return [{ isLink: true, icon: 'notifications', title: t.nzManage, sub: t.nzActive.replace('{n}', '2'), href: '#' }];
-  if (kind === 'izin') return [nz(t.nzManage, t.st.perm, t.allow)];
-  if (kind === 'mati') return [nz(t.nzManage, t.st.off, t.turnOn)];
-  if (kind === 'ingat') return [{ isBtn: true, icon: 'alarm', title: t.rmBtnTitle, sub: t.rmBody, btn: t.turnOn, btnCls: Sx, hasHref: false, noHref: true, aria: t.rmBtnTitle, act: () => {} }];
-  return [{ isBtn: true, icon: 'alarm', title: t.rowRem, sub: t.st.perm, btn: t.allow, btnCls: Sx, hasHref: false, noHref: true, aria: t.rowRem, act: () => {} }];
+const inboxState = (t, k) => {
+  const P = 'tk-btn tk-btn--primary tk-btn--sm', O = 'tk-btn tk-btn--sm tk-btn--on-soft';
+  const base = { title: t.inboxTitle, unreadable: t.unreadable, teach: t.teach, manageText: t.manageSources, items: false, manage: false, hasCap: false, cap: '', hasCta: true,
+    cls: 'tk-inbox--calm', tile: 'tk-tile--brandsoft' };
+  if (k === 'belum') return Object.assign(base, { sub: t.nzBody, cta: t.turnOn, ctaCls: P, ctaHref: 'MulaiCepat.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'izin') return Object.assign(base, { sub: t.st.perm, cta: t.allow, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.allow + ': ' + t.nzManage });
+  if (k === 'mati') return Object.assign(base, { sub: t.st.off, cta: t.turnOn, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'aktifKosong') return Object.assign(base, { sub: t.nzActive.replace('{n}', '2'), hasCta: false, cta: '', ctaCls: '', ctaHref: '#', ctaAria: '', manage: true });
+  // aktif dengan tangkapan menunggu
+  return Object.assign(base, { cls: '', tile: 'tk-tile--amber', sub: t.inboxBody, cta: t.check, ctaCls: O, ctaHref: 'KotakMasuk.dc.html', ctaAria: t.inboxTitle,
+    items: true, manage: true, hasCap: true, cap: t.nzActive.replace('{n}', '2') });
 };
+
 class Component extends DCLogic {
   renderVals() {
     const en = !!this.props.en;
     const t = S[en ? 'en' : 'id'];
+    const cap = en
+      ? { belum: 'Not set up', izin: 'Permission missing', mati: 'Switched off', aktifKosong: 'Active, nothing waiting', aktif: 'Active, items waiting' }
+      : { belum: 'Belum disetel', izin: 'Izin hilang', mati: 'Sakelar mati', aktifKosong: 'Aktif, tidak ada yang menunggu', aktif: 'Aktif, ada yang menunggu' };
     return {
-      theme: this.props.dark ? 'dark' : 'light', title: t.title.nudge, intro: t.intro.nudge,
-      groups: ['belum', 'aktif', 'izin', 'mati', 'ingat', 'ingatIzin'].map((k) => ({ cap: t.cap[k], rows: rowsFor(t, k) }))
+      theme: this.props.dark ? 'dark' : 'light',
+      title: en ? 'Notification inbox, states' : 'Kotak masuk notifikasi, keadaan',
+      intro: en ? 'One widget on Home (Android). It never goes away; it changes with the state.' : 'Satu widget di Beranda (Android). Tidak pernah hilang; isinya berubah menurut keadaan.',
+      groups: ['belum', 'izin', 'mati', 'aktifKosong', 'aktif'].map((k) => ({ cap: cap[k], ib: inboxState(t, k) }))
     };
   }
 }

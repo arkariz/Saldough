@@ -4756,6 +4756,20 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Android); pintu Catat dari notifikasi kini kartu yang tidak pernah
       hilang dengan empat keadaan; ada kartu kotak masuk dengan pratinjau,
       layar Mulai cepat, tautan Kelola aplikasi & pola dan Ajari pola.
+      *Revisi v3 (20 Okt 2026, permintaan pemilik):* kartu Catat dari
+      notifikasi dan kartu kotak masuk digabung menjadi **satu widget Kotak
+      masuk notifikasi** di Beranda (Android) dengan lima keadaan: belum
+      disetel (Nyalakan, membuka Mulai cepat), izin hilang (Izinkan),
+      sakelar mati (Nyalakan), aktif tanpa yang menunggu ("{n} aplikasi
+      aktif" + Kelola aplikasi & pola), aktif dengan tangkapan (Cek,
+      pratinjau, Ajari pola, kaki "{n} aplikasi aktif" + Kelola aplikasi &
+      pola). Latar `warning-soft` hanya bila ada yang perlu dicek; keadaan
+      setelan memakai `surface`. Kartu pengingat tetap terpisah. Menggantikan
+      selisih (2) dan pertanyaan 1–3 di bawah yang menyebut kartu Catat dari
+      notifikasi terpisah; komponen `FeatureNudge` kini hanya pengingat.
+      Pertanyaan baru untuk PO: apakah keadaan belum disetel/izin hilang/mati
+      cukup memakai judul "Kotak masuk notifikasi" + baris kedua (prototipe),
+      atau judul memuat "Nyalakan catat dari notifikasi" (§8)?
       *Selisih dari komponen yang ada:* (1) PeriodHeader: tombol kini pil
       tonal `surface-2` dengan petunjuk "Atur" (berlaku di Bulan ini).
       (2) Kartu pintu (`tk-nudge`) dan kartu kotak masuk (`tk-inbox`)

@@ -85,23 +85,30 @@ body{margin:0}
       </div>
     </sc-if>
     <sc-if value="{{show.kartu}}" hint-placeholder-val="{{false}}">
-      <div class="tk-card tk-inbox" role="status" style="flex: none">
+      <div class="tk-card tk-inbox {{ib.cls}}" role="status" style="flex: none">
         <div class="tk-inbox__head">
-          <span class="tk-tile tk-tile--amber"><span class="tk-icon">inbox</span></span>
-          <span class="tk-nudge__text"><span class="tk-nudge__title">Kotak masuk notifikasi</span><span class="tk-nudge__sub">3 transaksi dari notifikasi menunggu dicek.</span></span>
-          <a class="tk-btn tk-btn--sm tk-btn--on-soft" href="KotakMasuk.dc.html">Cek</a>
+          <span class="tk-tile {{ib.tile}}"><span class="tk-icon">inbox</span></span>
+          <span class="tk-nudge__text"><span class="tk-nudge__title">{{ib.title}}</span><span class="tk-nudge__sub">{{ib.sub}}</span></span>
+          <sc-if value="{{ib.hasCta}}" hint-placeholder-val="{{true}}"><a class="{{ib.ctaCls}}" href="{{ib.ctaHref}}" aria-label="{{ib.ctaAria}}">{{ib.cta}}</a></sc-if>
         </div>
-        <div class="tk-inbox__item">
-          <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
-          <span class="tk-row__main"><span class="tk-row__title">QRIS Toko Sinar Jaya</span><span class="tk-row__sub">BCA mobile · 10.42</span></span>
-          <span class="tk-amt tk-t-amount">−Rp125.000</span>
-        </div>
-        <div class="tk-inbox__item tk-inbox__item--unknown">
-          <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
-          <span class="tk-row__main"><span class="tk-row__title">Transfer masuk dari ANDI PRATAMA</span><span class="tk-row__sub">Nominal belum terbaca</span></span>
-          <a class="tk-btn tk-btn--secondary tk-btn--sm" href="KotakMasuk.dc.html">Ajari pola</a>
-        </div>
-        <div class="tk-inbox__foot"><a class="tk-link" href="Akun.dc.html">Kelola aplikasi &amp; pola<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+        <sc-if value="{{ib.items}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__item">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">QRIS Toko Sinar Jaya</span><span class="tk-row__sub">BCA mobile · 10.42</span></span>
+            <span class="tk-amt tk-t-amount">−Rp125.000</span>
+          </div>
+          <div class="tk-inbox__item tk-inbox__item--unknown">
+            <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+            <span class="tk-row__main"><span class="tk-row__title">Transfer masuk dari ANDI PRATAMA</span><span class="tk-row__sub">{{ib.unreadable}}</span></span>
+            <a class="tk-btn tk-btn--secondary tk-btn--sm" href="KotakMasuk.dc.html">{{ib.teach}}</a>
+          </div>
+        </sc-if>
+        <sc-if value="{{ib.manage}}" hint-placeholder-val="{{false}}">
+          <div class="tk-inbox__foot">
+            <sc-if value="{{ib.hasCap}}" hint-placeholder-val="{{false}}"><span class="tk-inbox__cap">{{ib.cap}}</span></sc-if>
+            <a class="tk-link" href="Akun.dc.html">{{ib.manageText}}<span class="tk-icon tk-icon--sm">chevron_right</span></a>
+          </div>
+        </sc-if>
       </div>
     </sc-if>
     <sc-if value="{{nudge.show}}" hint-placeholder-val="{{false}}">
@@ -208,7 +215,7 @@ body{margin:0}
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["tidak","belum","aktif","izin","mati"],"default":"tidak","section":"Pintu Catat dari notifikasi (tidak = iOS)"},"ingat":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Pengingat rutin"},"banner":{"editor":"enum","options":["kotak","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"kotak","section":"Banner Beranda (satu per layar)"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["tidak","belum","aktif","aktifKosong","izin","mati"],"default":"tidak","section":"Kotak masuk notifikasi (tidak = iOS)"},"ingat":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Pengingat rutin"},"banner":{"editor":"enum","options":["kotak","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"kotak","section":"Banner Beranda (satu per layar)"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 
 const nudgeRowsId = (notif, ingat, dn, set) => {
   const rows = [];
@@ -221,6 +228,20 @@ const nudgeRowsId = (notif, ingat, dn, set) => {
   if (ingat === 'izin' && !dn.i) rows.push({ isBtn: true, icon: 'alarm', title: 'Pengingat rutin', sub: 'Izin belum diberikan', btn: 'Izinkan', btnCls: Sx, hasHref: false, noHref: true, aria: 'Izinkan pengingat rutin', act: () => set({ i: true }) });
   return rows;
 };
+const S = { id: {"inboxTitle": "Kotak masuk notifikasi", "inboxBody": "3 transaksi dari notifikasi menunggu dicek.", "unreadable": "Nominal belum terbaca", "teach": "Ajari pola", "manageSources": "Kelola aplikasi & pola", "nzBody": "Catat otomatis dari notifikasi bank dan e-wallet.", "nzActive": "{n} aplikasi aktif", "nzBtnTitle": "Nyalakan catat dari notifikasi", "nzManage": "Catat dari notifikasi", "turnOn": "Nyalakan", "allow": "Izinkan", "check": "Cek", "st": {"perm": "Izin belum diberikan", "off": "Mati"}} };
+
+const inboxState = (t, k) => {
+  const P = 'tk-btn tk-btn--primary tk-btn--sm', O = 'tk-btn tk-btn--sm tk-btn--on-soft';
+  const base = { title: t.inboxTitle, unreadable: t.unreadable, teach: t.teach, manageText: t.manageSources, items: false, manage: false, hasCap: false, cap: '', hasCta: true,
+    cls: 'tk-inbox--calm', tile: 'tk-tile--brandsoft' };
+  if (k === 'belum') return Object.assign(base, { sub: t.nzBody, cta: t.turnOn, ctaCls: P, ctaHref: 'MulaiCepat.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'izin') return Object.assign(base, { sub: t.st.perm, cta: t.allow, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.allow + ': ' + t.nzManage });
+  if (k === 'mati') return Object.assign(base, { sub: t.st.off, cta: t.turnOn, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'aktifKosong') return Object.assign(base, { sub: t.nzActive.replace('{n}', '2'), hasCta: false, cta: '', ctaCls: '', ctaHref: '#', ctaAria: '', manage: true });
+  // aktif dengan tangkapan menunggu
+  return Object.assign(base, { cls: '', tile: 'tk-tile--amber', sub: t.inboxBody, cta: t.check, ctaCls: O, ctaHref: 'KotakMasuk.dc.html', ctaAria: t.inboxTitle,
+    items: true, manage: true, hasCap: true, cap: t.nzActive.replace('{n}', '2') });
+};
 class Component extends DCLogic {
   renderVals() {
     const hidden = !!(this.state && this.state.hidden);
@@ -230,11 +251,13 @@ class Component extends DCLogic {
       : { total: '27.522.000', income: '+Rp11.750.000', expense: '−Rp2.778.000', net: '+Rp8.972.000', budgetLeft: 'Rp1.930.000', budgetSpent: 'Rp3.420.000 dari Rp5.350.000', freelance: 'Rp3.600.000', r1: '−Rp28.000', r2: 'Rp300.000', r3: '−Rp45.000' };
     const b = (this.state && this.state.banner) || this.props.banner || 'kotak';
     const nz = this.props.notif || 'tidak';
+    const ib = inboxState(S.id, nz === 'aktif' || nz === 'aktifKosong' || nz === 'izin' || nz === 'mati' ? nz : 'belum');
     const dn = (this.state && this.state.done) || {};
-    const nudgeRows = nudgeRowsId(nz, this.props.ingat || 'efektif', dn, (o) => this.setState({ done: Object.assign({}, dn, o) }));
+    const nudgeRows = nudgeRowsId('tidak', this.props.ingat || 'efektif', dn, (o) => this.setState({ done: Object.assign({}, dn, o) }));
     const show = { always: nz === 'tidak', kartu: nz !== 'tidak', tersedia: b === 'tersedia', mengunduh: b === 'mengunduh', diunduh: b === 'diunduh', kecil: b === 'kecil' };
     return {
       nudge: { show: nudgeRows.length > 0, rows: nudgeRows },
+      ib: ib,
       show: show,
       later: () => this.setState({ banner: 'tidak' }),
       dismiss: () => this.setState({ banner: 'tidak' }),

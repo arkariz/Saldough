@@ -491,6 +491,9 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-inbox__head { display: flex; align-items: center; gap: 12px; }
 .tk-inbox__item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; min-height: 56px; background: var(--surface); }
 .tk-inbox__item--unknown { outline: 1px dashed var(--line-strong); outline-offset: -2px; }
-.tk-inbox__foot { display: flex; justify-content: flex-end; }
+.tk-inbox__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tk-inbox__foot .tk-link { margin-left: auto; }
+.tk-inbox__cap { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-inbox--calm { background: var(--surface); }
 .tk-onb__info { display: flex; align-items: flex-start; gap: 12px; padding: 4px 8px; }
 .tk-onb__info .tk-onb__text { flex: 1; }

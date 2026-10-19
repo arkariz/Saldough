@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dependencies/dependencies.dart' hide State;
 import 'package:failures/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -73,12 +74,19 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
       if (result == QuickStartResult.failed) return;
       _saved = true;
       if (result == QuickStartResult.ready) {
+        _completed(bloc);
         Navigator.of(context).pop(true);
         return;
       }
     }
     // Pengungkapan tampil tanpa indikator sibuk: dialog bukan pekerjaan latar.
     if (await showAccessDisclosure(context)) await bloc.openAccessSettings();
+  }
+
+  /// Mulai cepat selesai: fitur menyala lewat Mulai cepat (analitik).
+  void _completed(NotificationSettingsBloc bloc) {
+    AppAnalytics.log(DiscoveryEvents.quickStartCompleted(appsCount: bloc.quickStartAppsCount));
+    AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'notification', via: 'quick_start'));
   }
 
   Future<void> _other() => pickAndOpenNotificationSource(context, bloc: context.read<NotificationSettingsBloc>());
@@ -98,7 +106,10 @@ class _QuickStartPageState extends State<QuickStartPage> with WidgetsBindingObse
       body: SafeArea(
         child: BlocListener<NotificationSettingsBloc, NotificationSettingsState>(
           listenWhen: (previous, current) => _saved && !previous.accessGranted && current.accessGranted,
-          listener: (context, state) => Navigator.of(context).pop(true),
+          listener: (context, state) {
+            _completed(context.read<NotificationSettingsBloc>());
+            Navigator.of(context).pop(true);
+          },
           child: FutureBuilder<Either<Failure, List<InstalledApp>>>(
             future: _apps,
             builder: (context, snapshot) {

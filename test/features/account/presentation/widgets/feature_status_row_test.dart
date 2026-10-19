@@ -2,6 +2,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -133,5 +134,23 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.discovery.status.permissionNeeded), findsOneWidget);
+  });
+
+  testWidgets('analitik: baris Catat dari notifikasi di Akun tercatat; pengingat tidak', (tester) async {
+    final events = <AnalyticsEvent>[];
+    AppAnalytics.debugSink = events.add;
+    addTearDown(() => AppAnalytics.debugSink = null);
+    statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.off, activeCount: 1);
+    await pumpRow(tester, feature: DiscoveredFeature.notification);
+    await tester.tap(find.text('Judul'));
+    await tester.pumpAndSettle();
+    expect(events.single, DiscoveryEvents.notificationRowTapped(state: 'off', surface: 'account', action: 'manage'));
+
+    events.clear();
+    statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+    await pumpRow(tester);
+    await tester.tap(find.text('Judul'));
+    await tester.pumpAndSettle();
+    expect(events, isEmpty);
   });
 }

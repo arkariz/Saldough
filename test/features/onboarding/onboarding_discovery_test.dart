@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
@@ -401,6 +402,54 @@ void main() {
       expect(enabled, 0);
       expect((await progress()).answeredSteps, contains(OnboardingStep.reminder));
       expect((await progress()).onboardingDone, isFalse);
+    });
+
+    testWidgets('analitik: jawaban tiap langkah dan fitur menyala lewat onboarding', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await pumpRouter(tester);
+      await _toPeriod(tester);
+
+      await _tap(tester, _periodConfirm);
+      await _tap(tester, _turnOn);
+
+      expect(events, [
+        DiscoveryEvents.stepAnswered(step: 'period', choice: 'confirmed'),
+        DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'turned_on'),
+        DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'onboarding'),
+      ]);
+    });
+
+    testWidgets('analitik: izin ditolak tercatat turned_on tanpa feature_enabled', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      reminderGranted = false;
+      await pumpRouter(tester);
+      await _toPeriod(tester);
+      await _tap(tester, _periodConfirm);
+
+      await _tap(tester, _turnOn);
+
+      expect(events, [
+        DiscoveryEvents.stepAnswered(step: 'period', choice: 'confirmed'),
+        DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'turned_on'),
+      ]);
+    });
+
+    testWidgets('analitik: Tidak sekarang tercatat not_now', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await pumpRouter(tester);
+      await _toPeriod(tester);
+      await _tap(tester, _periodConfirm);
+
+      await _tap(tester, _notNow);
+
+      expect(events.last, DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'not_now'));
+      expect(events.map((e) => e.name), isNot(contains('feature_enabled')));
     });
 
     testWidgets('onboarding yang terputus: langkah yang sudah dijawab tidak ditanya lagi', (tester) async {

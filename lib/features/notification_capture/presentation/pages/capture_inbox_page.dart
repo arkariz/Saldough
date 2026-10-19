@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -168,7 +169,12 @@ class _InboxBodyState extends State<_InboxBody> {
                     key: const ValueKey('inbox-manage-sources'),
                     small: true,
                     label: t.discovery.notification.manageSources,
-                    onPressed: () => context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()),
+                    onPressed: () {
+                      AppAnalytics.log(
+                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'manage'),
+                      );
+                      unawaited(context.pushRoute(NotificationCaptureRouteKeys.settings, const EmptyInput()));
+                    },
                   ),
                 ),
                 const SizedBox(height: AppSpacing.space2),
@@ -359,7 +365,12 @@ class _PendingCard extends StatelessWidget {
                     key: ValueKey('inbox-teach-${entry.id}'),
                     small: true,
                     label: t.discovery.notification.teachPattern,
-                    onPressed: onMakePattern,
+                    onPressed: () {
+                      AppAnalytics.log(
+                        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'inbox', action: 'teach_pattern'),
+                      );
+                      onMakePattern();
+                    },
                   ),
                   const SizedBox(width: AppSpacing.space2),
                 ],

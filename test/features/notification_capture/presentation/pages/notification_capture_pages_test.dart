@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
@@ -124,6 +125,44 @@ void main() {
       expect(gateway.configuredSources, hasLength(2));
       expect(find.text(t.discovery.quickStart.turnOn), findsNothing);
       expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('analitik: selesai mencatat jumlah aplikasi dan via quick_start, tanpa nama aplikasi', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        DiscoveryEvents.quickStartCompleted(appsCount: 2),
+        DiscoveryEvents.featureEnabled(feature: 'notification', via: 'quick_start'),
+      ]);
+      expect(events.first.parameters, {'apps_count': 2});
+    });
+
+    testWidgets('analitik: akses diberikan sesudah kembali dari setelan sistem juga selesai satu kali', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      expect(events, isEmpty);
+
+      gateway.accessGranted = true;
+      await resumeApp(tester);
+
+      expect(events.map((e) => e.name), ['quick_start_completed', 'feature_enabled']);
+      expect(events.first.parameters, {'apps_count': 1});
     });
 
     testWidgets('aplikasi yang dicentang dihapus tidak ikut disimpan', (tester) async {
@@ -244,6 +283,21 @@ void main() {
       await tester.tap(find.text(t.notificationCapture.disclosureAccept));
       await tester.pumpAndSettle();
       expect(gateway.accessSettingsOpened, 1);
+    });
+
+    testWidgets('analitik: menyalakan sakelar di setelan = feature_enabled via account', (tester) async {
+      final events = <AnalyticsEvent>[];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      await open(tester, NotificationCaptureRouteKeys.settings);
+
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
+      expect(events, [DiscoveryEvents.featureEnabled(feature: 'notification', via: 'account')]);
+
+      await tester.tap(find.byType(Switch).first);
+      await tester.pumpAndSettle();
+      expect(events, hasLength(1));
     });
 
     testWidgets('mode pengingat ditolak izinnya tetap kotak masuk saja', (tester) async {

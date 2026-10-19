@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -59,6 +60,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
       return;
     }
     await _settings.setEnabled(enabled: value);
+    if (value) AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'account'));
     _statusChanges?.notify();
     if (mounted) setState(() => _enabled = value);
     await _sync();

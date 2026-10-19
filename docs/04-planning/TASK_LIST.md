@@ -4981,11 +4981,29 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       disorot sekali, tidak disorot bila kartunya tidak ada, pengguna lama)
       dan uji tur Akun di `account_page_test.dart`; `translations_test`
       hijau.
-- [ ] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
+- [x] **T-21.7** Peristiwa analitik FEATURE_DISCOVERY §9 tanpa nominal dan
       nama kategori buatan; catat di `PLAY_DATA_SAFETY.md` bila ada data
       baru.
       Verifikasi: uji tiap peristiwa dan parameternya.
       Memenuhi FR-DSC-001.
+      **Hasil (19 Okt 2026):** `DiscoveryEvents` di
+      `core/foundation/analytics/app_analytics.dart`, enam peristiwa §9.
+      `onboarding_step_answered` dari rute onboarding (period `confirmed`;
+      reminder `turned_on` walau izin ditolak, `not_now`).
+      `feature_enabled`: pengingat saat izin diberikan (via `onboarding`,
+      `home_row`, `rutin`, `account`); Catat dari notifikasi saat Mulai
+      cepat selesai (`quick_start`) dan saat sakelar setelan dinyalakan
+      (`account`, mencatat niat: izin sistem bisa menyusul).
+      `notification_row_tapped`: Beranda (quick_start/manage/teach_pattern),
+      kotak masuk (manage/teach_pattern), baris Akun (manage); Cek tidak
+      dicatat (bukan salah satu action §9). `quick_start_completed` hanya
+      `apps_count`. `discovery_button_tapped` untuk tombol pengingat
+      (home/rutin_segment/rutin_detail). `discovery_payday_card` shown
+      (sekali per kemunculan), accepted, closed. Tidak ada nominal, nama
+      kategori, nama/paket aplikasi, atau isi notifikasi (diuji).
+      `PLAY_DATA_SAFETY.md` diperbarui: jenis data sama, tanpa baris baru.
+      Uji: tiap peristiwa dan parameternya di uji kartu, kotak masuk,
+      Mulai cepat, setelan, onboarding, dan baris Akun.
 - [ ] **T-21.8** Verifikasi perangkat (QA/pemilik): akun baru melewati dua
       langkah wajib (Nyalakan, Tidak sekarang, izin ditolak), baris
       informasi di penutup, baris Catat dari notifikasi di Beranda tidak

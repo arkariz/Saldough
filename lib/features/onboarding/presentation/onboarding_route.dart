@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:saldough/core/currency/currency.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/app_route_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/language/language.dart';
@@ -101,6 +102,7 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
               }
               ActiveFinancialMonth.notifier.value = FinancialMonthSchedule.single(start);
               await answered(OnboardingStep.period);
+              AppAnalytics.log(DiscoveryEvents.stepAnswered(step: 'period', choice: 'confirmed'));
               return true;
             },
       onTurnOnReminders: mode == OnboardingMode.review || enableReminders == null
@@ -108,9 +110,14 @@ class _OnboardingLoaderState extends State<_OnboardingLoader> {
           : () async {
               final on = await enableReminders();
               await answered(OnboardingStep.reminder);
+              AppAnalytics.log(DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'turned_on'));
+              if (on) AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'onboarding'));
               return on;
             },
-      onRemindersDeclined: () => answered(OnboardingStep.reminder),
+      onRemindersDeclined: () async {
+        await answered(OnboardingStep.reminder);
+        AppAnalytics.log(DiscoveryEvents.stepAnswered(step: 'reminder', choice: 'not_now'));
+      },
       // ADR-028 §3.4: bahasa langsung diterapkan dan disimpan saat diketuk.
       onLanguageSelected: (locale) async {
         final changed = await container<ChangeAppLanguage>()(locale);

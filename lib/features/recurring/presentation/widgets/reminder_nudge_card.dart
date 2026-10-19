@@ -33,6 +33,7 @@ class ReminderNudgeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ReminderStatusBuilder(
     container: container,
+    surface: bottomGap ? 'rutin_segment' : 'home',
     builder: (context, state, enable) {
       final texts = t.discovery;
       final needsPermission = state == FeatureState.permissionNeeded;
@@ -92,6 +93,7 @@ class ReminderRuleNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ReminderStatusBuilder(
     container: container,
+    surface: 'rutin_detail',
     builder: (context, state, enable) {
       final texts = t.discovery;
       return Padding(

@@ -1,6 +1,7 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -107,7 +108,13 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   }) : super(const NotificationSettingsState()) {
     on<NotificationSettingsStarted>(_onStarted);
     on<NotificationSettingsResumed>(_onResumed);
-    on<NotificationCaptureToggled>((e, emit) => _saveSettings(state.settings.copyWith(enabled: e.enabled), emit));
+    on<NotificationCaptureToggled>((e, emit) async {
+      await _saveSettings(state.settings.copyWith(enabled: e.enabled), emit);
+      // Sakelar dinyalakan lewat setelan (FEATURE_DISCOVERY §9).
+      if (e.enabled && state.settings.enabled) {
+        AppAnalytics.log(DiscoveryEvents.featureEnabled(feature: 'notification', via: 'account'));
+      }
+    });
     on<NotificationDeliveryChanged>(_onDeliveryChanged);
     on<AutoRecordLevelChanged>((e, emit) => _saveSettings(state.settings.copyWith(autoRecordLevel: e.level), emit));
     on<AutoRecordToggled>(_onAutoRecordToggled);
@@ -268,6 +275,9 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   /// akses saat kembali (`NotificationSettingsResumed`).
   Future<void> openAccessSettings() => _gateway.openAccessSettings();
 
+  /// Jumlah aplikasi aktif sesudah [applyQuickStart] terakhir (analitik).
+  int quickStartAppsCount = 0;
+
   /// Mulai cepat (FEATURE_DISCOVERY §5.1): menyimpan [picked] sebagai sumber
   /// dan menyalakan fitur dalam satu simpanan, lalu menyegarkan state.
   /// Bukan event karena pemanggil menunggu hasilnya untuk memutuskan lanjut
@@ -281,6 +291,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
     _statusChanges?.notify();
     await syncNotificationCapture(_gateway, settings);
     final granted = await _gateway.isAccessGranted();
+    quickStartAppsCount = settings.sources.where((source) => source.enabled).length;
     add(const NotificationSettingsStarted());
     return granted ? QuickStartResult.ready : QuickStartResult.needsAccess;
   }

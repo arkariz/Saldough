@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -182,5 +183,68 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.discovery.notification.inboxTitle), findsOneWidget);
+  });
+
+  group('analitik (FEATURE_DISCOVERY §9)', () {
+    late List<AnalyticsEvent> events;
+
+    setUp(() {
+      events = [];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+    });
+
+    testWidgets('belum disetel: quick_start dari Beranda', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.unset);
+      await pumpCard(tester);
+
+      await tester.tap(action);
+      await tester.pumpAndSettle();
+
+      expect(
+        events.first,
+        DiscoveryEvents.notificationRowTapped(state: 'unset', surface: 'home', action: 'quick_start'),
+      );
+    });
+
+    testWidgets('izin hilang dan sakelar mati: manage dengan state-nya', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.permissionNeeded);
+      await pumpCard(tester);
+      await tester.tap(action);
+      await tester.pumpAndSettle();
+      expect(
+        events.single,
+        DiscoveryEvents.notificationRowTapped(state: 'permission', surface: 'home', action: 'manage'),
+      );
+    });
+
+    testWidgets('aktif: Kelola dan Ajari pola tercatat; Cek tidak', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
+      await store.saveInbox([entry('b', amount: null)]);
+      await pumpCard(tester);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
+      await tester.pumpAndSettle();
+      expect(
+        events.single,
+        DiscoveryEvents.notificationRowTapped(state: 'active', surface: 'home', action: 'teach_pattern'),
+      );
+    });
+
+    testWidgets('parameter tanpa nama aplikasi atau isi notifikasi', (tester) async {
+      statuses.status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.active, activeCount: 2);
+      await store.saveInbox([entry('b', amount: null)]);
+      await pumpCard(tester);
+      await tester.tap(find.byKey(const ValueKey('inbox-teach-b')));
+      await tester.pumpAndSettle();
+
+      for (final event in events) {
+        for (final value in event.parameters.values) {
+          expect('$value', isNot(contains('BRImo')));
+          expect('$value', isNot(contains('Teks b')));
+          expect('$value', isNot(contains('brimo')));
+        }
+      }
+    });
   });
 }

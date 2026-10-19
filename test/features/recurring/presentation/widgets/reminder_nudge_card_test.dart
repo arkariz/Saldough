@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
@@ -120,6 +121,64 @@ void main() {
       await pump(tester, (_) => ReminderNudgeCard(container: GetIt.asNewInstance()));
 
       expect(nudge, findsNothing);
+    });
+  });
+
+  group('analitik (FEATURE_DISCOVERY §9)', () {
+    late List<AnalyticsEvent> events;
+
+    setUp(() {
+      events = [];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+      when(() => scheduler.requestPermission()).thenAnswer((_) async => true);
+    });
+
+    testWidgets('Beranda: ketukan tombol lalu fitur menyala lewat home_row', (tester) async {
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, spotlight: true));
+
+      await tester.tap(nudgeAction);
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        DiscoveryEvents.buttonTapped(feature: 'reminder', surface: 'home', state: 'off'),
+        DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'home_row'),
+      ]);
+    });
+
+    testWidgets('segmen Rutin dengan izin hilang: state permission, via rutin', (tester) async {
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.permissionNeeded);
+      await pump(tester, (c) => ReminderNudgeCard(container: c, bottomGap: true));
+
+      await tester.tap(nudgeAction);
+      await tester.pumpAndSettle();
+
+      expect(events, [
+        DiscoveryEvents.buttonTapped(feature: 'reminder', surface: 'rutin_segment', state: 'permission'),
+        DiscoveryEvents.featureEnabled(feature: 'reminder', via: 'rutin'),
+      ]);
+    });
+
+    testWidgets('izin ditolak: hanya ketukan, tidak ada fitur menyala', (tester) async {
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      when(() => scheduler.requestPermission()).thenAnswer((_) async => false);
+      await pump(tester, (c) => ReminderNudgeCard(container: c));
+
+      await tester.tap(nudgeAction);
+      await tester.pumpAndSettle();
+
+      expect(events.map((e) => e.name), ['discovery_button_tapped']);
+    });
+
+    testWidgets('rincian rutin: surface rutin_detail', (tester) async {
+      statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      await pump(tester, (c) => ReminderRuleNote(container: c));
+
+      await tester.tap(find.byKey(const ValueKey('reminder-rule-note-action')));
+      await tester.pumpAndSettle();
+
+      expect(events.first, DiscoveryEvents.buttonTapped(feature: 'reminder', surface: 'rutin_detail', state: 'off'));
     });
   });
 

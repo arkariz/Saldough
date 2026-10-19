@@ -4,6 +4,7 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -108,13 +109,32 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
     await _load();
   }
 
-  void _openSettings() => unawaited(_push(NotificationCaptureRouteKeys.settings, const EmptyInput()));
+  /// Nama keadaan untuk analitik (`unset`, `active`, `permission`, `off`).
+  String get _stateName => switch (_status?.state) {
+    FeatureState.permissionNeeded => 'permission',
+    FeatureState.off => 'off',
+    FeatureState.active => 'active',
+    _ => 'unset',
+  };
+
+  void _tapped(String action) => AppAnalytics.log(
+    DiscoveryEvents.notificationRowTapped(state: _stateName, surface: 'home', action: action),
+  );
+
+  void _openSettings() {
+    _tapped('manage');
+    unawaited(_push(NotificationCaptureRouteKeys.settings, const EmptyInput()));
+  }
 
   void _openInbox() => unawaited(_push(NotificationCaptureRouteKeys.inbox, const EmptyInput()));
 
-  void _openQuickStart() => unawaited(_push(NotificationCaptureRouteKeys.quickStart, const EmptyInput()));
+  void _openQuickStart() {
+    _tapped('quick_start');
+    unawaited(_push(NotificationCaptureRouteKeys.quickStart, const EmptyInput()));
+  }
 
   Future<void> _allow() async {
+    _tapped('manage');
     final gateway = widget.container<NotificationCaptureGateway>();
     if (await showAccessDisclosure(context)) await gateway.openAccessSettings();
   }
@@ -213,9 +233,10 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
               const SizedBox(height: AppSpacing.space3),
               _PreviewRow(
                 entry: entry,
-                onTeach: () => unawaited(
-                  _push(NotificationCaptureRouteKeys.teachPattern, TeachPatternInput(entryId: entry.id)),
-                ),
+                onTeach: () {
+                  _tapped('teach_pattern');
+                  unawaited(_push(NotificationCaptureRouteKeys.teachPattern, TeachPatternInput(entryId: entry.id)));
+                },
               ),
             ],
           ],

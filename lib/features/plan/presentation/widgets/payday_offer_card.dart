@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
@@ -88,7 +89,9 @@ class _PaydayOfferCardState extends State<PaydayOfferCard> {
         );
       }
     }
-    if (mounted && day != _day) setState(() => _day = day);
+    if (!mounted || day == _day) return;
+    if (_day == null && day != null) AppAnalytics.log(DiscoveryEvents.paydayCard('shown'));
+    setState(() => _day = day);
   }
 
   Future<void> _answer() async {
@@ -104,11 +107,13 @@ class _PaydayOfferCardState extends State<PaydayOfferCard> {
   }
 
   Future<void> _close() async {
+    AppAnalytics.log(DiscoveryEvents.paydayCard('closed'));
     await _answer();
     if (mounted) setState(() => _day = null);
   }
 
   Future<void> _set(int day) async {
+    AppAnalytics.log(DiscoveryEvents.paydayCard('accepted'));
     // Tidak ditandai dijawab: bila lembar disimpan, `ActiveFinancialMonth`
     // berubah dan kartu hilang; bila dibatalkan, kartu tetap menawarkan.
     await context.pushRoute(

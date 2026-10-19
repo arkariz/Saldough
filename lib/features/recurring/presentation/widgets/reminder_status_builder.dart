@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/recurring/domain/enable_reminders.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
@@ -18,10 +19,13 @@ import 'package:saldough/shared/transaction/transaction.dart';
 /// kontainer minimal) tidak membangun apa pun.
 class ReminderStatusBuilder extends StatefulWidget {
   /// Membuat [ReminderStatusBuilder].
-  const ReminderStatusBuilder({required this.container, required this.builder, super.key});
+  const ReminderStatusBuilder({required this.container, required this.surface, required this.builder, super.key});
 
   /// Kontainer akar.
   final GetIt container;
+
+  /// Tempat tombol (analitik): `home`, `rutin_segment`, atau `rutin_detail`.
+  final String surface;
 
   /// Dipanggil bila pengingat belum efektif; [enable] meminta izin lalu
   /// menyalakan, dan menampilkan snackbar bila izin ditolak.
@@ -77,6 +81,13 @@ class _ReminderStatusBuilderState extends State<ReminderStatusBuilder> with Widg
   Future<void> _enable() async {
     final c = widget.container;
     final messenger = ScaffoldMessenger.maybeOf(context);
+    AppAnalytics.log(
+      DiscoveryEvents.buttonTapped(
+        feature: 'reminder',
+        surface: widget.surface,
+        state: _state == FeatureState.permissionNeeded ? 'permission' : 'off',
+      ),
+    );
     final granted = await EnableReminders(
       scheduler: c<ReminderScheduler>(),
       settings: c<ReminderSettingsRepository>(),
@@ -87,6 +98,11 @@ class _ReminderStatusBuilderState extends State<ReminderStatusBuilder> with Widg
         transactions: c<TransactionRepository>(),
       ),
     )();
+    if (granted) {
+      AppAnalytics.log(
+        DiscoveryEvents.featureEnabled(feature: 'reminder', via: widget.surface == 'home' ? 'home_row' : 'rutin'),
+      );
+    }
     if (c.isRegistered<FeatureStatusChanges>()) c<FeatureStatusChanges>().notify();
     if (!granted) messenger?.showSnackBar(SnackBar(content: Text(t.recurring.remindersDenied)));
     await _load();

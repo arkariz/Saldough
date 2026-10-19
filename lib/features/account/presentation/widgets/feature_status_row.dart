@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:saldough/core/discovery/discovery.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/features/account/presentation/widgets/setting_row.dart';
@@ -85,6 +86,20 @@ class _FeatureStatusSettingRowState extends State<FeatureStatusSettingRow> with 
   }
 
   Future<void> _open() async {
+    if (widget.feature == DiscoveredFeature.notification) {
+      AppAnalytics.log(
+        DiscoveryEvents.notificationRowTapped(
+          state: switch (_status?.state) {
+            FeatureState.permissionNeeded => 'permission',
+            FeatureState.off => 'off',
+            FeatureState.active => 'active',
+            _ => 'unset',
+          },
+          surface: 'account',
+          action: 'manage',
+        ),
+      );
+    }
     await widget.onTap();
     await _load();
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
 import 'package:saldough/core/financial_month/financial_month.dart';
+import 'package:saldough/core/foundation/analytics/app_analytics.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/plan/presentation/widgets/payday_offer_card.dart';
@@ -107,5 +108,30 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('payday-offer-card')), findsNothing);
+  });
+
+  group('analitik (FEATURE_DISCOVERY §9)', () {
+    late List<AnalyticsEvent> events;
+
+    setUp(() {
+      events = [];
+      AppAnalytics.debugSink = events.add;
+      addTearDown(() => AppAnalytics.debugSink = null);
+    });
+
+    testWidgets('tampil, lalu ditutup', (tester) async {
+      await recordSalary(DateTime(2026, 9, 25));
+      await pumpCard(tester);
+      expect(events, [DiscoveryEvents.paydayCard('shown')]);
+
+      await tester.tap(find.byKey(const ValueKey('payday-offer-close')));
+      await tester.pumpAndSettle();
+      expect(events, [DiscoveryEvents.paydayCard('shown'), DiscoveryEvents.paydayCard('closed')]);
+    });
+
+    testWidgets('tidak tampil: tidak ada peristiwa', (tester) async {
+      await pumpCard(tester);
+      expect(events, isEmpty);
+    });
   });
 }

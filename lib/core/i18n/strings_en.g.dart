@@ -55,6 +55,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$currency$en currency = _Translations$currency$en._(_root);
 	@override late final _Translations$category$en category = _Translations$category$en._(_root);
 	@override late final _Translations$language$en language = _Translations$language$en._(_root);
+	@override late final _Translations$discovery$en discovery = _Translations$discovery$en._(_root);
 	@override late final _Translations$notificationCapture$en notificationCapture = _Translations$notificationCapture$en._(_root);
 	@override late final _Translations$recurring$en recurring = _Translations$recurring$en._(_root);
 	@override late final _Translations$plan$en plan = _Translations$plan$en._(_root);
@@ -909,6 +910,17 @@ class _Translations$language$en extends Translations$language$id {
 	@override String get hint => 'App text and voice recording';
 }
 
+// Path: discovery
+class _Translations$discovery$en extends Translations$discovery$id {
+	_Translations$discovery$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get allowAccess => 'Allow';
+	@override late final _Translations$discovery$quickStart$en quickStart = _Translations$discovery$quickStart$en._(_root);
+}
+
 // Path: notificationCapture
 class _Translations$notificationCapture$en extends Translations$notificationCapture$id {
 	_Translations$notificationCapture$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -1486,6 +1498,20 @@ class _Translations$currency$names$en extends Translations$currency$names$id {
 	@override String get php => 'Philippine Peso';
 	@override String get vnd => 'Vietnamese Dong';
 	@override String get aud => 'Australian Dollar';
+}
+
+// Path: discovery.quickStart
+class _Translations$discovery$quickStart$en extends Translations$discovery$quickStart$id {
+	_Translations$discovery$quickStart$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pick your bank or e-wallet apps';
+	@override String get body => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.';
+	@override String get other => 'Other apps';
+	@override String get turnOn => 'Turn on';
+	@override String get noBuiltIn => 'No known bank or e-wallet apps on this device. Pick your own app.';
 }
 
 // Path: notificationCapture.reviewReason
@@ -2495,6 +2521,12 @@ extension on TranslationsEn {
 			'language.label' => 'Language',
 			'language.pickerTitle' => 'Choose language',
 			'language.hint' => 'App text and voice recording',
+			'discovery.allowAccess' => 'Allow',
+			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
+			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
+			'discovery.quickStart.other' => 'Other apps',
+			'discovery.quickStart.turnOn' => 'Turn on',
+			'discovery.quickStart.noBuiltIn' => 'No known bank or e-wallet apps on this device. Pick your own app.',
 			'notificationCapture.accountEntryTitle' => 'Record from notifications',
 			'notificationCapture.accountEntryBody' => 'Record automatically from bank and e-wallet notifications.',
 			'notificationCapture.settingsTitle' => 'Record from notifications',
@@ -2719,14 +2751,14 @@ extension on TranslationsEn {
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Budget item',
 			'recurring.budgetLinkNone' => 'Not linked. Link it so it isn\'t counted twice with a budget.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Link to a repeating budget item',
 			'recurring.budgetLinkRemove' => 'Unlink',
 			'recurring.budgetLinkEmpty' => 'No repeating budget items in this wallet yet.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} is linked to ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => '${name} is no longer linked to a budget item.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Prepare funds in ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount} on ${date}. Expected short ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'From ${month} you free up +${amount}/mo.',

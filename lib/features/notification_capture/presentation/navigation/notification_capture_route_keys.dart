@@ -10,4 +10,8 @@ abstract final class NotificationCaptureRouteKeys {
 
   /// Kotak masuk (ADR-032 §3.6), dari kartu Beranda dan snackbar shell.
   static const inbox = RouteKey<EmptyInput>('notificationCapture.inbox');
+
+  /// Mulai cepat penyetelan pertama (FEATURE_DISCOVERY §5.1), dari baris
+  /// pintu di Beranda. Hasilnya `true` bila fitur akhirnya aktif.
+  static const quickStart = RouteKey<EmptyInput>('notificationCapture.quickStart');
 }

@@ -11,6 +11,7 @@ import 'package:navigation/navigation.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/foundation/navigation/route_navigation.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
+import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/notification_capture/di/notification_capture_module.dart';
 import 'package:saldough/features/notification_capture/domain/entities/capture_inbox_entry.dart';
@@ -75,6 +76,156 @@ void main() {
     await tester.tap(find.text('buka'));
     await tester.pumpAndSettle();
   }
+
+  group('Mulai cepat (FEATURE_DISCOVERY §5.1)', () {
+    const bri = InstalledApp(packageName: 'id.co.bri.brimo', label: 'BRImo');
+    const gopay = InstalledApp(packageName: 'com.gojek.gopay', label: 'GoPay');
+    const calculator = InstalledApp(packageName: 'com.android.calculator2', label: 'Kalkulator');
+
+    Future<NotificationCaptureSettings> settings() async =>
+        (await store.loadSettings()).getOrElse((_) => throw StateError(''));
+
+    Future<void> resumeApp(WidgetTester tester) async {
+      const [
+        AppLifecycleState.inactive,
+        AppLifecycleState.hidden,
+        AppLifecycleState.paused,
+        AppLifecycleState.hidden,
+        AppLifecycleState.inactive,
+        AppLifecycleState.resumed,
+      ].forEach(tester.binding.handleAppLifecycleStateChanged);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('hanya aplikasi dengan pola bawaan, semuanya tercentang', (tester) async {
+      gateway.apps = const [gopay, calculator, bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      expect(find.text('BRImo'), findsOneWidget);
+      expect(find.text('GoPay'), findsOneWidget);
+      expect(find.text('Kalkulator'), findsNothing);
+      final boxes = tester.widgetList<Checkbox>(find.byType(Checkbox));
+      expect(boxes, hasLength(2));
+      expect(boxes.every((box) => box.value ?? false), isTrue);
+    });
+
+    testWidgets('akses sudah ada: Nyalakan menyimpan sumber, menyalakan fitur, dan menutup layar', (tester) async {
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      final saved = await settings();
+      expect(saved.enabled, isTrue);
+      expect(saved.sources.map((s) => s.packageName), ['id.co.bri.brimo', 'com.gojek.gopay']);
+      expect(gateway.configuredSources, hasLength(2));
+      expect(find.text(t.discovery.quickStart.turnOn), findsNothing);
+      expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('aplikasi yang dicentang dihapus tidak ikut disimpan', (tester) async {
+      gateway
+        ..apps = const [gopay, bri]
+        ..accessGranted = true;
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-com.gojek.gopay')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+
+      expect((await settings()).sources.map((s) => s.packageName), ['id.co.bri.brimo']);
+    });
+
+    testWidgets('tanpa centang dan tanpa sumber, Nyalakan nonaktif', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-id.co.bri.brimo')));
+      await tester.pumpAndSettle();
+
+      final button = tester.widget<AppButton>(find.byKey(const ValueKey('quick-start-turn-on')));
+      expect(button.onPressed, isNull);
+    });
+
+    testWidgets('akses belum ada: pengungkapan dulu, lalu setelan sistem; kembali dengan akses menutup layar', (
+      tester,
+    ) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.disclosureTitle), findsOneWidget);
+      expect(gateway.accessSettingsOpened, 0);
+      // Sumber sudah tersimpan sebelum keluar ke setelan sistem.
+      expect((await settings()).sources, hasLength(1));
+
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      expect(gateway.accessSettingsOpened, 1);
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+
+      gateway.accessGranted = true;
+      await resumeApp(tester);
+
+      expect(find.text(t.discovery.allowAccess), findsNothing);
+      expect(find.text('buka'), findsOneWidget);
+    });
+
+    testWidgets('kembali tanpa akses: layar bertahan dan tombol menjadi Izinkan', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.notificationCapture.disclosureAccept));
+      await tester.pumpAndSettle();
+      await resumeApp(tester);
+
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+      expect(find.text('BRImo'), findsOneWidget);
+
+      // Izinkan memakai ulang sumber yang tersimpan, tanpa menyimpan lagi.
+      await tester.tap(find.text(t.discovery.allowAccess));
+      await tester.pumpAndSettle();
+      expect(find.text(t.notificationCapture.disclosureTitle), findsOneWidget);
+    });
+
+    testWidgets('pengungkapan dibatalkan: tidak membuka setelan sistem, layar tetap', (tester) async {
+      gateway.apps = const [bri];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.text(t.discovery.quickStart.turnOn));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.common.cancel));
+      await tester.pumpAndSettle();
+
+      expect(gateway.accessSettingsOpened, 0);
+      expect(find.text(t.discovery.allowAccess), findsOneWidget);
+    });
+
+    testWidgets('tanpa aplikasi bawaan terpasang: pemilih aplikasi langsung terbuka', (tester) async {
+      gateway.apps = const [calculator];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      expect(find.text(t.notificationCapture.pickAppTitle), findsOneWidget);
+    });
+
+    testWidgets('Aplikasi lain membuka pemilih yang sudah ada', (tester) async {
+      gateway.apps = const [bri, calculator];
+      await open(tester, NotificationCaptureRouteKeys.quickStart);
+
+      await tester.tap(find.byKey(const ValueKey('quick-start-other')));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.notificationCapture.pickAppTitle), findsOneWidget);
+      expect(find.text('Kalkulator'), findsOneWidget);
+    });
+  });
 
   group('setelan', () {
     testWidgets('menyalakan fitur menampilkan akses; pengungkapan jelas sebelum setelan sistem', (tester) async {

@@ -843,6 +843,16 @@
     "pickerTitle": "Pilih bahasa",
     "hint": "Tampilan aplikasi dan bahasa ucapan"
   },
+  "discovery": {
+    "allowAccess": "Izinkan",
+    "quickStart": {
+      "title": "Pilih aplikasi bank atau dompet digitalmu",
+      "body": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
+      "other": "Aplikasi lain",
+      "turnOn": "Nyalakan",
+      "noBuiltIn": "Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri."
+    }
+  },
   "notificationCapture": {
     "accountEntryTitle": "Catat dari notifikasi",
     "accountEntryBody": "Catat otomatis dari notifikasi bank dan e-wallet.",

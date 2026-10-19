@@ -7,6 +7,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/services/built_in_notification_patterns.dart';
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_pattern_page.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/app_picker_sheet.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_widgets.dart';
 import 'package:saldough/shared/wallet/wallet_presentation.dart';
 import 'package:state_management/state_management.dart';
@@ -28,6 +29,22 @@ Future<void> openNotificationSourcePage(
     ),
   ),
 );
+
+/// Memilih aplikasi lalu membuka halaman sumbernya (Tambah aplikasi di
+/// setelan dan Aplikasi lain di Mulai cepat).
+Future<void> pickAndOpenNotificationSource(BuildContext context, {required NotificationSettingsBloc bloc}) async {
+  final app = await showAppPickerSheet(context, load: bloc.loadInstalledApps);
+  if (app == null || !context.mounted) return;
+  final existing = bloc.state.settings.sources.where((s) => s.packageName == app.packageName).firstOrNull;
+  await openNotificationSourcePage(
+    context,
+    bloc: bloc,
+    source:
+        existing ??
+        NotificationSource(packageName: app.packageName, appLabel: app.label, keywords: defaultNotificationKeywords),
+    isNew: existing == null,
+  );
+}
 
 class _SourcePage extends StatefulWidget {
   const _SourcePage({required this.initial, required this.isNew});

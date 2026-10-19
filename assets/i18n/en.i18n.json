@@ -843,6 +843,16 @@
     "pickerTitle": "Choose language",
     "hint": "App text and voice recording"
   },
+  "discovery": {
+    "allowAccess": "Allow",
+    "quickStart": {
+      "title": "Pick your bank or e-wallet apps",
+      "body": "Notifications from the apps you pick are read on this device and become draft entries. You review them first.",
+      "other": "Other apps",
+      "turnOn": "Turn on",
+      "noBuiltIn": "No known bank or e-wallet apps on this device. Pick your own app."
+    }
+  },
   "notificationCapture": {
     "accountEntryTitle": "Record from notifications",
     "accountEntryBody": "Record automatically from bank and e-wallet notifications.",

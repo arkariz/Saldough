@@ -14,7 +14,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/presentation/bloc/notification_settings_bloc.dart';
 import 'package:saldough/features/notification_capture/presentation/navigation/notification_capture_route_keys.dart';
 import 'package:saldough/features/notification_capture/presentation/pages/notification_source_page.dart';
-import 'package:saldough/features/notification_capture/presentation/widgets/app_picker_sheet.dart';
+import 'package:saldough/features/notification_capture/presentation/widgets/access_disclosure.dart';
 import 'package:saldough/features/notification_capture/presentation/widgets/notification_widgets.dart';
 import 'package:state_management/state_management.dart';
 
@@ -57,47 +57,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> wit
 
   Future<void> _requestAccess(BuildContext context) async {
     final bloc = context.read<NotificationSettingsBloc>();
-    final texts = t.notificationCapture;
-    final accepted = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(texts.disclosureTitle),
-        content: SingleChildScrollView(child: Text(texts.disclosureBody)),
-        actions: [
-          AppButton.text(
-            small: true,
-            label: t.common.cancel,
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-          ),
-          AppButton.text(
-            small: true,
-            label: texts.disclosureAccept,
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-          ),
-        ],
-      ),
-    );
-    if (accepted ?? false) await bloc.openAccessSettings();
+    if (await showAccessDisclosure(context)) await bloc.openAccessSettings();
   }
 
-  Future<void> _addSource(BuildContext context) async {
-    final bloc = context.read<NotificationSettingsBloc>();
-    final app = await showAppPickerSheet(context, load: bloc.loadInstalledApps);
-    if (app == null || !context.mounted) return;
-    final existing = bloc.state.settings.sources.where((s) => s.packageName == app.packageName).firstOrNull;
-    await openNotificationSourcePage(
-      context,
-      bloc: bloc,
-      source:
-          existing ??
-          NotificationSource(
-            packageName: app.packageName,
-            appLabel: app.label,
-            keywords: defaultNotificationKeywords,
-          ),
-      isNew: existing == null,
-    );
-  }
+  Future<void> _addSource(BuildContext context) =>
+      pickAndOpenNotificationSource(context, bloc: context.read<NotificationSettingsBloc>());
 
   @override
   Widget build(BuildContext context) {

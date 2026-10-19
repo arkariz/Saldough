@@ -8,6 +8,7 @@ import 'package:saldough/features/notification_capture/domain/entities/notificat
 import 'package:saldough/features/notification_capture/domain/entities/notification_source.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/quick_start_apps.dart';
 import 'package:saldough/features/notification_capture/presentation/host/sync_notification_capture.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 import 'package:state_management/state_management.dart';
@@ -80,6 +81,18 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
     userPatterns,
     debugSamples,
   ];
+}
+
+/// Hasil [NotificationSettingsBloc.applyQuickStart].
+enum QuickStartResult {
+  /// Setelan gagal disimpan.
+  failed,
+
+  /// Tersimpan, tetapi akses notifikasi sistem belum diberikan.
+  needsAccess,
+
+  /// Tersimpan dan akses sudah ada.
+  ready,
 }
 
 /// Bloc layar setelan Catat dari notifikasi (ADR-032 §3.2–3.8). Setiap
@@ -254,6 +267,23 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
   /// ADR-032 §3.8). Bukan event: tidak mengubah state; layar mengecek ulang
   /// akses saat kembali (`NotificationSettingsResumed`).
   Future<void> openAccessSettings() => _gateway.openAccessSettings();
+
+  /// Mulai cepat (FEATURE_DISCOVERY §5.1): menyimpan [picked] sebagai sumber
+  /// dan menyalakan fitur dalam satu simpanan, lalu menyegarkan state.
+  /// Bukan event karena pemanggil menunggu hasilnya untuk memutuskan lanjut
+  /// ke izin akses.
+  Future<QuickStartResult> applyQuickStart(List<NotificationSource> picked) async {
+    final settings = state.settings.copyWith(
+      enabled: true,
+      sources: mergeQuickStartSources(state.settings.sources, picked),
+    );
+    if ((await _store.saveSettings(settings)).isLeft()) return QuickStartResult.failed;
+    _statusChanges?.notify();
+    await syncNotificationCapture(_gateway, settings);
+    final granted = await _gateway.isAccessGranted();
+    add(const NotificationSettingsStarted());
+    return granted ? QuickStartResult.ready : QuickStartResult.needsAccess;
+  }
 
   /// Aplikasi peluncur terpasang untuk pemilih sumber.
   Future<Either<Failure, List<InstalledApp>>> loadInstalledApps() => _gateway.installedApps();

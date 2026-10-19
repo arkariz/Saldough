@@ -57,6 +57,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$currency$id currency = Translations$currency$id.internal(_root);
 	late final Translations$category$id category = Translations$category$id.internal(_root);
 	late final Translations$language$id language = Translations$language$id.internal(_root);
+	late final Translations$discovery$id discovery = Translations$discovery$id.internal(_root);
 	late final Translations$notificationCapture$id notificationCapture = Translations$notificationCapture$id.internal(_root);
 	late final Translations$recurring$id recurring = Translations$recurring$id.internal(_root);
 	late final Translations$plan$id plan = Translations$plan$id.internal(_root);
@@ -2270,6 +2271,20 @@ class Translations$language$id {
 	String get hint => 'Tampilan aplikasi dan bahasa ucapan';
 }
 
+// Path: discovery
+class Translations$discovery$id {
+	Translations$discovery$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Izinkan'
+	String get allowAccess => 'Izinkan';
+
+	late final Translations$discovery$quickStart$id quickStart = Translations$discovery$quickStart$id.internal(_root);
+}
+
 // Path: notificationCapture
 class Translations$notificationCapture$id {
 	Translations$notificationCapture$id.internal(this._root);
@@ -3746,6 +3761,30 @@ class Translations$currency$names$id {
 	String get aud => 'Dolar Australia';
 }
 
+// Path: discovery.quickStart
+class Translations$discovery$quickStart$id {
+	Translations$discovery$quickStart$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Pilih aplikasi bank atau dompet digitalmu'
+	String get title => 'Pilih aplikasi bank atau dompet digitalmu';
+
+	/// id: 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.'
+	String get body => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.';
+
+	/// id: 'Aplikasi lain'
+	String get other => 'Aplikasi lain';
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
+	/// id: 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.'
+	String get noBuiltIn => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.';
+}
+
 // Path: notificationCapture.reviewReason
 class Translations$notificationCapture$reviewReason$id {
 	Translations$notificationCapture$reviewReason$id.internal(this._root);
@@ -4907,6 +4946,12 @@ extension on Translations {
 			'language.label' => 'Bahasa',
 			'language.pickerTitle' => 'Pilih bahasa',
 			'language.hint' => 'Tampilan aplikasi dan bahasa ucapan',
+			'discovery.allowAccess' => 'Izinkan',
+			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
+			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
+			'discovery.quickStart.other' => 'Aplikasi lain',
+			'discovery.quickStart.turnOn' => 'Nyalakan',
+			'discovery.quickStart.noBuiltIn' => 'Tidak ada aplikasi bank atau dompet digital yang dikenal di perangkat ini. Pilih aplikasimu sendiri.',
 			'notificationCapture.accountEntryTitle' => 'Catat dari notifikasi',
 			'notificationCapture.accountEntryBody' => 'Catat otomatis dari notifikasi bank dan e-wallet.',
 			'notificationCapture.settingsTitle' => 'Catat dari notifikasi',
@@ -5131,14 +5176,14 @@ extension on Translations {
 			'recurring.chipTransfer' => 'Transfer',
 			'recurring.budgetLinkLabel' => 'Pos anggaran',
 			'recurring.budgetLinkNone' => 'Belum tertaut. Tautkan supaya tidak terhitung dua kali dengan anggaran.',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.budgetLinkValue' => ({required Object item, required Object budget}) => '${item} · ${budget}',
 			'recurring.budgetLinkPickerTitle' => 'Tautkan ke pos anggaran rutin',
 			'recurring.budgetLinkRemove' => 'Lepas tautan',
 			'recurring.budgetLinkEmpty' => 'Belum ada pos anggaran rutin di dompet ini.',
 			'recurring.budgetLinkedMessage' => ({required Object name, required Object item}) => '${name} tertaut ke pos ${item}.',
 			'recurring.budgetUnlinkedMessage' => ({required Object name}) => 'Tautan pos ${name} dilepas.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.fundingTitle' => ({required Object wallet}) => 'Siapkan dana di ${wallet}',
 			'recurring.fundingBody' => ({required Object name, required Object amount, required Object date, required Object shortfall}) => '${name} ${amount}, ${date}. Perkiraan kurang ≈${shortfall}.',
 			'recurring.installmentFreeLine' => ({required Object month, required Object amount}) => 'Mulai ${month} ruang bebas +${amount}/bln.',

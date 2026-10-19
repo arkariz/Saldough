@@ -4889,7 +4889,7 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       urutan Beranda dengan banner pembaruan, iOS tanpa baris notifikasi.
       Mencakup T-21.9. Hasil di rencana verifikasi Fase 21.
       Memenuhi FR-DSC-001–004.
-- [ ] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
+- [~] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
       Layar ringan untuk penyetelan pertama: aplikasi terpasang yang punya
       pola bawaan sudah tercentang, satu langkah izin akses dan persetujuan
       ADR-032 lewat alur yang ada, selesai ke keadaan "{n} aplikasi aktif".
@@ -4904,6 +4904,29 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       aplikasi bawaan terpasang, izin diberikan/ditolak/dibatalkan); uji
       arsitektur hijau; verifikasi perangkat Android 14 dan 15.
       Memenuhi FR-DSC-002.
+      **Hasil kode (19 Okt 2026), ⚠ Sebagian:** layar + rute
+      `NotificationCaptureRouteKeys.quickStart` (hasil `true` bila akhirnya
+      aktif) selesai; pintu masuk dari baris Beranda dikerjakan di T-21.3
+      (kunci rute belum dipakai siapa pun). Verifikasi perangkat Android
+      14/15 menyusul di T-21.8.
+      *Konfirmasi ⚠ pertama:* aplikasi dengan pola bawaan **tidak** butuh
+      pembuat pola. Pola bawaan (`builtInNotificationPatterns`) berlaku per
+      aplikasi hanya dari nama paket; sumber baru cukup memakai filter bawaan
+      (`defaultNotificationKeywords`). Catatan: pola bawaan masih
+      `verified: false`, jadi drafnya tidak pernah dicatat otomatis (ADR-032
+      §3.4) sampai diverifikasi sampel asli; tidak diubah di sini.
+      *Izin keluar ke setelan sistem:* sumber dan sakelar disimpan lebih
+      dulu (`applyQuickStart`), lalu pengungkapan, lalu setelan sistem;
+      kembali dengan akses menutup layar, tanpa akses tombol menjadi
+      **Izinkan** dan memakai sumber tersimpan. Pengungkapan dan pemilih
+      aplikasi dipakai bersama setelan (`showAccessDisclosure`,
+      `pickAndOpenNotificationSource`).
+      Uji: `quick_start_apps_test.dart` (pemilihan dan penggabungan),
+      sembilan uji widget di `notification_capture_pages_test.dart` (ada/tanpa
+      aplikasi bawaan, akses ada/belum/dibatalkan, kembali dengan dan tanpa
+      akses, Aplikasi lain). Teks `discovery.quickStart.*` dan
+      `discovery.allowAccess` id+en ditambahkan; sisa `discovery.*`
+      di T-21.6.
 
 ## Antrean (belum dijadwalkan)
 

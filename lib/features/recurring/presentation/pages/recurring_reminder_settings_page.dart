@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
@@ -27,6 +28,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
   late ReminderSettingsRepository _settings;
   late ReminderScheduler _scheduler;
   late SyncRecurringReminders _sync;
+  FeatureStatusChanges? _statusChanges;
 
   @override
   void didChangeDependencies() {
@@ -35,6 +37,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
     final c = ScopeProvider.of(context);
     _settings = c<ReminderSettingsRepository>();
     _scheduler = c<ReminderScheduler>();
+    _statusChanges = c.isRegistered<FeatureStatusChanges>() ? c<FeatureStatusChanges>() : null;
     _sync = SyncRecurringReminders(
       scheduler: _scheduler,
       settings: _settings,
@@ -56,6 +59,7 @@ class _RecurringReminderSettingsPageState extends State<RecurringReminderSetting
       return;
     }
     await _settings.setEnabled(enabled: value);
+    _statusChanges?.notify();
     if (mounted) setState(() => _enabled = value);
     await _sync();
   }

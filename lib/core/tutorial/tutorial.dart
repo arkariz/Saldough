@@ -1,4 +1,5 @@
 export 'onboarding_mode.dart';
+export 'onboarding_step.dart';
 export 'spotlight_key.dart';
 export 'tutorial_progress.dart';
 export 'tutorial_progress_repository.dart';

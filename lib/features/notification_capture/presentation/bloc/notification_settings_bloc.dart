@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/features/notification_capture/domain/entities/captured_notification.dart';
 import 'package:saldough/features/notification_capture/domain/entities/notification_capture_settings.dart';
@@ -85,8 +86,12 @@ final class NotificationSettingsState extends UiState<NotificationSettingsState>
 /// perubahan setelan disimpan lalu dikirim ke layanan native.
 final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, NotificationSettingsState> {
   /// Membuat [NotificationSettingsBloc].
-  NotificationSettingsBloc({required this._gateway, required this._store, required this._walletRepository})
-    : super(const NotificationSettingsState()) {
+  NotificationSettingsBloc({
+    required this._gateway,
+    required this._store,
+    required this._walletRepository,
+    this._statusChanges,
+  }) : super(const NotificationSettingsState()) {
     on<NotificationSettingsStarted>(_onStarted);
     on<NotificationSettingsResumed>(_onResumed);
     on<NotificationCaptureToggled>((e, emit) => _saveSettings(state.settings.copyWith(enabled: e.enabled), emit));
@@ -115,6 +120,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
 
   final NotificationCaptureGateway _gateway;
   final NotificationCaptureStore _store;
+  final FeatureStatusChanges? _statusChanges;
   final WalletRepository _walletRepository;
 
   Future<void> _onStarted(NotificationSettingsStarted event, Emitter<NotificationSettingsState> emit) async {
@@ -230,6 +236,7 @@ final class NotificationSettingsBloc extends Bloc<NotificationSettingsEvent, Not
         emit(state.copyWith(effect: _error(failure)));
       case Right():
         emit(state.copyWith(settings: settings));
+        _statusChanges?.notify();
         await syncNotificationCapture(_gateway, settings);
     }
   }

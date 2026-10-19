@@ -17,6 +17,9 @@ final class _FakeScheduler implements ReminderScheduler {
   Stream<ReminderResponse> get responses => const Stream.empty();
 
   @override
+  Future<bool> hasPermission() async => true;
+
+  @override
   Future<bool> requestPermission() async => true;
 
   @override

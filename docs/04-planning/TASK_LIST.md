@@ -4807,7 +4807,7 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       mobile, GoPay, DANA) adalah anggapan prototipe. (9) Letak kartu
       pembaruan Fase 20 (di atas kartu saldo) masih menunggu keputusan;
       kartu pintu mengikuti.
-- [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
+- [x] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
       Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
       efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan
       Akun tanpa saling mengimpor fitur (sisipkan lewat akar komposisi
@@ -4820,6 +4820,21 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji unit status efektif (mati, nyala, izin hilang, iOS);
       uji migrasi pengguna lama; uji arsitektur hijau.
       Memenuhi FR-DSC-001.
+      **Hasil (19 Okt 2026):** `core/discovery/` (`FeatureStatus`,
+      `FeatureState` unsupported/unset/off/permissionNeeded/active,
+      `FeatureStatuses`, `FeatureStatusChanges`); implementasinya
+      `AppFeatureStatuses` di `app/discovery/` (akar komposisi), terdaftar di
+      `RootModule`. `ReminderScheduler.hasPermission()` baru (tanpa meminta
+      izin). Penulis setelan (`NotificationSettingsBloc`, halaman sakelar
+      pengingat) memancarkan `FeatureStatusChanges`. Ingatan onboarding:
+      `OnboardingStep` {period, reminder} (langkah notification dihapus di
+      rupa v2) di `TutorialProgress.answeredSteps`, skema dokumen 3;
+      `isStepPending` = `!onboardingDone && !answered`, jadi pengguna lama
+      tidak dipaksa. Uji: `test/app/discovery/app_feature_statuses_test.dart`
+      (iOS, belum disetel, semua sumber dihapus, mati, izin dicabut, aktif,
+      gagal baca), migrasi dan langkah di
+      `tutorial_progress_repository_impl_test.dart`. `flutter analyze` bersih;
+      seluruh suite lulus (1.736 uji).
 - [ ] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
       pengingat rutin, plus baris informasi Catat dari notifikasi di penutup
       (Android saja, tidak dapat diketuk, tanpa izin), aturan FEATURE_DISCOVERY

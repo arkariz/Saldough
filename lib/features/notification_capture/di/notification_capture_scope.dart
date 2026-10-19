@@ -1,4 +1,5 @@
 import 'package:di/di.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_gateway.dart';
 import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
 import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
@@ -26,6 +27,10 @@ final class NotificationCaptureScope extends IsolatedScope {
       ..registerSingleton<WalletRepository>(parent<WalletRepository>())
       ..registerSingleton<CategoryRepository>(parent<CategoryRepository>())
       ..registerSingleton<TransactionRepository>(parent<TransactionRepository>());
+    // Opsional: uji yang membangun induk minimal tidak perlu sinyalnya.
+    if (parent.isRegistered<FeatureStatusChanges>()) {
+      c.registerSingleton<FeatureStatusChanges>(parent<FeatureStatusChanges>());
+    }
   }
 
   @override
@@ -36,6 +41,7 @@ final class NotificationCaptureScope extends IsolatedScope {
           gateway: c<NotificationCaptureGateway>(),
           store: c<NotificationCaptureStore>(),
           walletRepository: c<WalletRepository>(),
+          statusChanges: c.isRegistered<FeatureStatusChanges>() ? c<FeatureStatusChanges>() : null,
         ),
         dispose: (bloc) => bloc.close(),
       )

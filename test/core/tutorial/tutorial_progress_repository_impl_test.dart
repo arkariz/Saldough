@@ -85,6 +85,67 @@ void main() {
     expect(progress.seenSteps, tourSteps[TourId.wallet]!.toSet());
 
     await repository.markStepsSeen([SpotlightKey.homeBalance]);
-    expect(await storage.read('tutorial_progress'), contains('"schemaVersion":2'));
+    expect(await storage.read('tutorial_progress'), contains('"schemaVersion":3'));
+  });
+
+  group('langkah wajib onboarding (Fase 21)', () {
+    test('menandai langkah dijawab per langkah dan membacanya kembali', () async {
+      await repository.markOnboardingStepAnswered(OnboardingStep.period);
+
+      var progress = await loaded();
+      expect(progress.answeredSteps, {OnboardingStep.period});
+      expect(progress.isStepPending(OnboardingStep.period), isFalse);
+      expect(progress.isStepPending(OnboardingStep.reminder), isTrue);
+
+      await repository.markOnboardingStepAnswered(OnboardingStep.reminder);
+      progress = await loaded();
+      expect(progress.answeredSteps, OnboardingStep.values.toSet());
+    });
+
+    test('jawaban bertahan lewat markOnboardingDone dan markStepsSeen', () async {
+      await repository.markOnboardingStepAnswered(OnboardingStep.period);
+      await repository.markStepsSeen([SpotlightKey.homeBalance]);
+      await repository.markOnboardingDone();
+
+      final progress = await loaded();
+      expect(progress.answeredSteps, {OnboardingStep.period});
+      expect(progress.seenSteps, {SpotlightKey.homeBalance});
+    });
+
+    test('pengguna lama (versi 2, onboarding sudah selesai) tidak dipaksa mengulang', () async {
+      await storage.write(
+        'tutorial_progress',
+        '{"schemaVersion":2,"onboardingDone":true,"seenSteps":["homeBalance"]}',
+      );
+
+      final progress = await loaded();
+      expect(progress.answeredSteps, isEmpty);
+      for (final step in OnboardingStep.values) {
+        expect(progress.isStepPending(step), isFalse, reason: step.name);
+      }
+    });
+
+    test('instalasi baru: kedua langkah wajib menunggu jawaban', () async {
+      final progress = await loaded();
+      for (final step in OnboardingStep.values) {
+        expect(progress.isStepPending(step), isTrue, reason: step.name);
+      }
+    });
+
+    test('nama langkah yang tidak dikenal diabaikan', () async {
+      await storage.write(
+        'tutorial_progress',
+        '{"schemaVersion":3,"onboardingDone":false,"seenSteps":[],"answeredSteps":["period","langkah_masa_depan"]}',
+      );
+
+      expect((await loaded()).answeredSteps, {OnboardingStep.period});
+    });
+
+    test('resetAll melupakan jawaban', () async {
+      await repository.markOnboardingStepAnswered(OnboardingStep.period);
+      await repository.resetAll();
+
+      expect(await loaded(), TutorialProgress.empty);
+    });
   });
 }

@@ -1,4 +1,5 @@
 import 'package:dependencies/dependencies.dart';
+import 'package:saldough/core/tutorial/onboarding_step.dart';
 import 'package:saldough/core/tutorial/spotlight_key.dart';
 
 /// Tur spotlight yang dikenal aplikasi (ADR-021 §3.4): satu tur per layar,
@@ -116,7 +117,7 @@ const Map<TourId, List<SpotlightKey>> tourSteps = {
 /// pengenalan dan tur tampil lagi.
 final class TutorialProgress extends Equatable {
   /// Membuat [TutorialProgress].
-  const TutorialProgress({required this.onboardingDone, required this.seenSteps});
+  const TutorialProgress({required this.onboardingDone, required this.seenSteps, this.answeredSteps = const {}});
 
   /// Belum ada yang dilihat — keadaan instalasi baru, dan keadaan yang dipakai
   /// saat dokumen progres rusak.
@@ -128,6 +129,15 @@ final class TutorialProgress extends Equatable {
   /// Langkah tur yang sudah pernah dilihat (atau dilewati).
   final Set<SpotlightKey> seenSteps;
 
+  /// Langkah wajib onboarding yang sudah dijawab (Fase 21). Dicatat per
+  /// langkah supaya jawaban bertahan bila aplikasi keluar ke dialog izin.
+  final Set<OnboardingStep> answeredSteps;
+
+  /// Langkah wajib [step] masih harus ditampilkan. Pengguna yang sudah
+  /// menyelesaikan onboarding (termasuk versi lama yang belum punya langkah
+  /// ini) tidak pernah dipaksa mengulang.
+  bool isStepPending(OnboardingStep step) => !onboardingDone && !answeredSteps.contains(step);
+
   /// True kalau langkah [step] sudah dilihat.
   bool hasSeen(SpotlightKey step) => seenSteps.contains(step);
 
@@ -135,11 +145,16 @@ final class TutorialProgress extends Equatable {
   bool hasCompleted(TourId tour) => tourSteps[tour]!.every(hasSeen);
 
   /// Salinan dengan field yang diganti.
-  TutorialProgress copyWith({bool? onboardingDone, Set<SpotlightKey>? seenSteps}) => TutorialProgress(
+  TutorialProgress copyWith({
+    bool? onboardingDone,
+    Set<SpotlightKey>? seenSteps,
+    Set<OnboardingStep>? answeredSteps,
+  }) => TutorialProgress(
     onboardingDone: onboardingDone ?? this.onboardingDone,
     seenSteps: seenSteps ?? this.seenSteps,
+    answeredSteps: answeredSteps ?? this.answeredSteps,
   );
 
   @override
-  List<Object?> get props => [onboardingDone, seenSteps];
+  List<Object?> get props => [onboardingDone, seenSteps, answeredSteps];
 }

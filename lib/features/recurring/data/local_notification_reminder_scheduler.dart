@@ -78,6 +78,17 @@ final class LocalNotificationReminderScheduler implements ReminderScheduler {
   }
 
   @override
+  Future<bool> hasPermission() async {
+    await initialize();
+    if (Platform.isAndroid) {
+      final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      return await android?.areNotificationsEnabled() ?? false;
+    }
+    final ios = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+    return (await ios?.checkPermissions())?.isEnabled ?? false;
+  }
+
+  @override
   Future<bool> requestPermission() async {
     await initialize();
     if (Platform.isAndroid) {

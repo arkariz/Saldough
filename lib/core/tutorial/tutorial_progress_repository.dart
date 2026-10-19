@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:failures/failures.dart';
+import 'package:saldough/core/tutorial/onboarding_step.dart';
 import 'package:saldough/core/tutorial/spotlight_key.dart';
 import 'package:saldough/core/tutorial/tutorial_progress.dart';
 
@@ -14,6 +15,10 @@ abstract interface class TutorialProgressRepository {
 
   /// Menandai onboarding selesai.
   Future<Either<Failure, Unit>> markOnboardingDone();
+
+  /// Menandai langkah wajib [step] sudah dijawab (Nyalakan, Tidak sekarang,
+  /// atau Pakai tanggal).
+  Future<Either<Failure, Unit>> markOnboardingStepAnswered(OnboardingStep step);
 
   /// Menandai [steps] sudah dilihat.
   Future<Either<Failure, Unit>> markStepsSeen(Iterable<SpotlightKey> steps);

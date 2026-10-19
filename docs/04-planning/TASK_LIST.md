@@ -4767,9 +4767,10 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       setelan memakai `surface`. Kartu pengingat tetap terpisah. Menggantikan
       selisih (2) dan pertanyaan 1–3 di bawah yang menyebut kartu Catat dari
       notifikasi terpisah; komponen `FeatureNudge` kini hanya pengingat.
-      Pertanyaan baru untuk PO: apakah keadaan belum disetel/izin hilang/mati
-      cukup memakai judul "Kotak masuk notifikasi" + baris kedua (prototipe),
-      atau judul memuat "Nyalakan catat dari notifikasi" (§8)?
+      Diputuskan pemilik 20 Okt 2026: judul widget "Nyalakan catat dari
+      notifikasi" (§8 `discovery.notification.button`) saat belum disetel
+      atau sakelar mati; "Catat dari notifikasi" saat izin hilang (tombol
+      Izinkan); "Kotak masuk notifikasi" saat aktif.
       *Selisih dari komponen yang ada:* (1) PeriodHeader: tombol kini pil
       tonal `surface-2` dengan petunjuk "Atur" (berlaku di Bulan ini).
       (2) Kartu pintu (`tk-nudge`) dan kartu kotak masuk (`tk-inbox`)

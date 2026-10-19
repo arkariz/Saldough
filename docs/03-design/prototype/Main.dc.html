@@ -234,9 +234,9 @@ const inboxState = (t, k) => {
   const P = 'tk-btn tk-btn--primary tk-btn--sm', O = 'tk-btn tk-btn--sm tk-btn--on-soft';
   const base = { title: t.inboxTitle, unreadable: t.unreadable, teach: t.teach, manageText: t.manageSources, items: false, manage: false, hasCap: false, cap: '', hasCta: true,
     cls: 'tk-inbox--calm', tile: 'tk-tile--brandsoft' };
-  if (k === 'belum') return Object.assign(base, { sub: t.nzBody, cta: t.turnOn, ctaCls: P, ctaHref: 'MulaiCepat.dc.html', ctaAria: t.nzBtnTitle });
-  if (k === 'izin') return Object.assign(base, { sub: t.st.perm, cta: t.allow, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.allow + ': ' + t.nzManage });
-  if (k === 'mati') return Object.assign(base, { sub: t.st.off, cta: t.turnOn, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'belum') return Object.assign(base, { title: t.nzBtnTitle, sub: t.nzBody, cta: t.turnOn, ctaCls: P, ctaHref: 'MulaiCepat.dc.html', ctaAria: t.nzBtnTitle });
+  if (k === 'izin') return Object.assign(base, { title: t.nzManage, sub: t.st.perm, cta: t.allow, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.allow + ': ' + t.nzManage });
+  if (k === 'mati') return Object.assign(base, { title: t.nzBtnTitle, sub: t.st.off, cta: t.turnOn, ctaCls: P, ctaHref: 'Akun.dc.html', ctaAria: t.nzBtnTitle });
   if (k === 'aktifKosong') return Object.assign(base, { sub: t.nzActive.replace('{n}', '2'), hasCta: false, cta: '', ctaCls: '', ctaHref: '#', ctaAria: '', manage: true });
   // aktif dengan tangkapan menunggu
   return Object.assign(base, { cls: '', tile: 'tk-tile--amber', sub: t.inboxBody, cta: t.check, ctaCls: O, ctaHref: 'KotakMasuk.dc.html', ctaAria: t.inboxTitle,

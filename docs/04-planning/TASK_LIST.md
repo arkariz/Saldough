@@ -5013,6 +5013,13 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       urutan Beranda dengan banner pembaruan, iOS tanpa baris notifikasi.
       Mencakup T-21.9. Hasil di rencana verifikasi Fase 21.
       Memenuhi FR-DSC-001–004.
+      **Catatan yang harus diperiksa QA (dari pekerjaan kode, 19 Okt
+      2026):** (1) izin notifikasi yang ditolak permanen di Android 13+ →
+      B-63; (2) pola bawaan Catat dari notifikasi `verified: false`, jadi
+      tangkapan dari Mulai cepat tidak akan dicatat otomatis dan harus
+      lewat kotak masuk → B-64; (3) kegagalan simpan mata uang kini
+      muncul di penutup onboarding → B-65. Jangan menandai T-21.8 lulus
+      sebelum ketiganya dicoba di perangkat dan hasilnya dicatat.
 - [~] **T-21.9** Mulai cepat Catat dari notifikasi (FEATURE_DISCOVERY §5.1).
       Layar ringan untuk penyetelan pertama: aplikasi terpasang yang punya
       pola bawaan sudah tercentang, satu langkah izin akses dan persetujuan
@@ -5105,6 +5112,9 @@ menambah dan memindahkannya ada di
 | B-60 | **Dompet Bersama / Plus Keluarga** (tingkat kedua, 2–5 orang). Butuh sinkronisasi B-7. | pemilik memutuskan, lalu agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
 | B-61 | Rapor kuartal freelance; Tanya Tanuki R2 (kueri gabungan, perbandingan antar tahun). | agen | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7, sesudah B-50 dan B-52 terukur |
 | B-62 | Catat dari email (struk e-commerce, tagihan). Izin Gmail sensitif; dipertimbangkan paling akhir. | pemilik memutuskan | [FREEMIUM_PAYWALL.md](../01-product/features/FREEMIUM_PAYWALL.md) §7 |
+| B-63 | **Izin notifikasi ditolak permanen di Android 13+**: tombol Izinkan di kartu pengingat (Beranda, segmen Rutin, catatan rincian rutin) dan langkah pengingat onboarding hanya memanggil `requestPermission()`; sesudah ditolak dua kali sistem tidak memunculkan dialog lagi, jadi pengguna hanya melihat snackbar penolakan dan tombol tidak berbuat apa-apa. Putuskan jalurnya (mis. buka setelan notifikasi aplikasi bila permintaan tidak memunculkan dialog) lalu uji di Android 13/14/15. Catat dari notifikasi tidak terkena (izin aksesnya lewat setelan sistem). | pemilik memutuskan, lalu agen | T-21.3, T-21.8 |
+| B-64 | **Pola bawaan Catat dari notifikasi belum terverifikasi** (`builtInNotificationPatterns`, `verified: false`): hanya berjangkar pada kata arah, bukan format asli tiap aplikasi, sehingga drafnya selalu masuk kotak masuk dan tidak pernah dicatat otomatis (ADR-032 §3.4), termasuk dari Mulai cepat. Kumpulkan sampel notifikasi asli per aplikasi (layar sampel debug), ganti dengan templat dari sampel, tandai `verified: true` beserta ujinya. Sampai itu selesai, teks Mulai cepat/onboarding/Beranda tidak boleh menjanjikan pencatatan otomatis. Nama paket di `builtInNotificationApps` juga belum dicek di perangkat. | pemilik menyerahkan sampel, lalu agen | T-21.9, ADR-032 §3.4 |
+| B-65 | **Kegagalan menyimpan mata uang kini muncul di penutup onboarding**, bukan di langkah mata uang (T-21.2): pengguna sudah melewati awal periode dan pengingat, lalu `onFinished` gagal menyimpan dan hanya menampilkan snackbar di penutup. Pertimbangkan menyimpan mata uang saat meninggalkan langkah mata uang (tetap sebelum `markOnboardingDone`), atau mengembalikan pengguna ke langkah itu. Pastikan mata uang tidak jatuh diam-diam ke IDR bila gagal. | agen | T-21.2 |
 | B-39 | **Pengumuman pembaruan R2**: pembaruan wajib/versi minimum untuk perbaikan kritis (KT-U1), pembaruan untuk iOS (App Store) sesudah iOS dirilis, dan pilihan jalur uji untuk penguji. | agen + pemilik | [APP_UPDATE.md](../01-product/features/APP_UPDATE.md) §14 |
 | B-35 | Uji di perangkat yang belum dilakukan QA PR #43: lebar 360dp (butuh izin mengubah setelan ponsel), Freelance, perekaman suara sungguhan, dan jalur Gemini secara terpisah. | pemilik | QA PR #43 (di luar PR) |
 | B-14 | **Catat lewat Suara**: STT sistem (`speech_to_text`) + parser aturan + Gemma lokal mulai dari model termurah, 270M → 1B → Gemma 4 E2B (unduhan opt-in dari Hugging Face) → form CATAT terisi draf; adaptor Firebase AI sebagai jalur pivot. ADR-027. Riset & rencana di [VOICE_INPUT_RESEARCH.md](../01-product/features/VOICE_INPUT_RESEARCH.md). | dijadwalkan: T-11.2–T-11.9 | riset 30 Sep 2026 |

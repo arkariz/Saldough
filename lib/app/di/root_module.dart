@@ -54,8 +54,10 @@ import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/navigation/record_route_module.dart';
 import 'package:saldough/features/recurring/data/local_notification_reminder_scheduler.dart';
 import 'package:saldough/features/recurring/data/reminder_settings_repository_impl.dart';
+import 'package:saldough/features/recurring/domain/enable_reminders.dart';
 import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
 import 'package:saldough/features/recurring/domain/reminder_settings.dart';
+import 'package:saldough/features/recurring/domain/sync_recurring_reminders.dart';
 import 'package:saldough/features/recurring/presentation/navigation/recurring_route_module.dart';
 import 'package:saldough/features/transaction/data/history_segment_repository_impl.dart';
 import 'package:saldough/features/transaction/domain/history_segment.dart';
@@ -317,7 +319,26 @@ abstract final class RootModule {
             _ => null,
           },
         ),
-        onboardingBuilder: buildOnboardingRoute,
+        onboardingBuilder: (context, state) => buildOnboardingRoute(
+          context,
+          state,
+          // Pengingat rutin di onboarding (FEATURE_DISCOVERY §4.4): alur
+          // izin dan sakelar yang sama dengan Akun.
+          enableReminders: () async {
+            final granted = await EnableReminders(
+              scheduler: container<ReminderScheduler>(),
+              settings: container<ReminderSettingsRepository>(),
+              sync: SyncRecurringReminders(
+                scheduler: container<ReminderScheduler>(),
+                settings: container<ReminderSettingsRepository>(),
+                rules: container<RecurringRuleRepository>(),
+                transactions: container<TransactionRepository>(),
+              ),
+            )();
+            container<FeatureStatusChanges>().notify();
+            return granted;
+          },
+        ),
         // `screen_view` otomatis (ADR-023) -- belum ada event kustom.
         observers: [AppBootstrap.analyticsObserver],
       ),

@@ -671,6 +671,17 @@ class _Translations$onboarding$en extends Translations$onboarding$id {
 	@override String get currencySuggested => 'Matches your device region';
 	@override String get currencyChooseFirst => 'Choose a currency first';
 	@override String currencyConfirm({required Object code}) => 'Use ${code}';
+	@override String get periodTitle => 'Which day is payday?';
+	@override String get periodBody => 'Plan and Analysis follow this date. You can change it again in Account.';
+	@override String periodConfirm({required Object day}) => 'Use day ${day}';
+	@override String get periodConfirmLast => 'Use the last day';
+	@override String get reminderTitle => 'Remind you before things are due?';
+	@override String get reminderBody => 'You get a reminder before a recurring item is due, based on each item\'s settings.';
+	@override String get turnOn => 'Turn on';
+	@override String get notNow => 'Not now';
+	@override String get notificationInfo => 'You can record automatically from bank notifications. Turn it on from Home.';
+	@override String get summaryPeriod => 'Financial month start';
+	@override String get summaryReminder => 'Recurring reminders';
 	@override String get languageTitle => 'Choose your language';
 	@override String get languageBody => 'Used for the app and when recording by voice. You can change it later on the Account screen.';
 	@override String get languageConfirm => 'Continue';
@@ -2384,6 +2395,17 @@ extension on TranslationsEn {
 			'onboarding.currencySuggested' => 'Matches your device region',
 			'onboarding.currencyChooseFirst' => 'Choose a currency first',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Use ${code}',
+			'onboarding.periodTitle' => 'Which day is payday?',
+			'onboarding.periodBody' => 'Plan and Analysis follow this date. You can change it again in Account.',
+			'onboarding.periodConfirm' => ({required Object day}) => 'Use day ${day}',
+			'onboarding.periodConfirmLast' => 'Use the last day',
+			'onboarding.reminderTitle' => 'Remind you before things are due?',
+			'onboarding.reminderBody' => 'You get a reminder before a recurring item is due, based on each item\'s settings.',
+			'onboarding.turnOn' => 'Turn on',
+			'onboarding.notNow' => 'Not now',
+			'onboarding.notificationInfo' => 'You can record automatically from bank notifications. Turn it on from Home.',
+			'onboarding.summaryPeriod' => 'Financial month start',
+			'onboarding.summaryReminder' => 'Recurring reminders',
 			'onboarding.languageTitle' => 'Choose your language',
 			'onboarding.languageBody' => 'Used for the app and when recording by voice. You can change it later on the Account screen.',
 			'onboarding.languageConfirm' => 'Continue',
@@ -2808,6 +2830,8 @@ extension on TranslationsEn {
 			'recurring.editFirstAction' => 'Edit first',
 			'recurring.recordAllAction' => 'Record all',
 			'recurring.seeAllAction' => 'See all',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.pendingCardTitle' => 'Waiting to record',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Usually ${usual}. Check the amount again.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Scheduled for ${date}. Make sure the date is right.',
@@ -2819,8 +2843,6 @@ extension on TranslationsEn {
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'In ${n} day', other: 'In ${n} days', ), 
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',

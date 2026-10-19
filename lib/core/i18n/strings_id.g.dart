@@ -1708,6 +1708,39 @@ class Translations$onboarding$id {
 	/// id: 'Pakai $code'
 	String currencyConfirm({required Object code}) => 'Pakai ${code}';
 
+	/// id: 'Biasanya gajian tanggal berapa?'
+	String get periodTitle => 'Biasanya gajian tanggal berapa?';
+
+	/// id: 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.'
+	String get periodBody => 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.';
+
+	/// id: 'Pakai tanggal $day'
+	String periodConfirm({required Object day}) => 'Pakai tanggal ${day}';
+
+	/// id: 'Pakai hari terakhir bulan'
+	String get periodConfirmLast => 'Pakai hari terakhir bulan';
+
+	/// id: 'Ingatkan kamu sebelum jatuh tempo?'
+	String get reminderTitle => 'Ingatkan kamu sebelum jatuh tempo?';
+
+	/// id: 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.'
+	String get reminderBody => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.';
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
+	/// id: 'Tidak sekarang'
+	String get notNow => 'Tidak sekarang';
+
+	/// id: 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.'
+	String get notificationInfo => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.';
+
+	/// id: 'Awal bulan keuangan'
+	String get summaryPeriod => 'Awal bulan keuangan';
+
+	/// id: 'Pengingat rutin'
+	String get summaryReminder => 'Pengingat rutin';
+
 	/// id: 'Pilih bahasa'
 	String get languageTitle => 'Pilih bahasa';
 
@@ -4846,6 +4879,17 @@ extension on Translations {
 			'onboarding.currencySuggested' => 'Sesuai wilayah perangkatmu',
 			'onboarding.currencyChooseFirst' => 'Pilih mata uang dulu',
 			'onboarding.currencyConfirm' => ({required Object code}) => 'Pakai ${code}',
+			'onboarding.periodTitle' => 'Biasanya gajian tanggal berapa?',
+			'onboarding.periodBody' => 'Rencana dan Analisis mengikuti tanggal ini. Bisa diubah lagi di Akun.',
+			'onboarding.periodConfirm' => ({required Object day}) => 'Pakai tanggal ${day}',
+			'onboarding.periodConfirmLast' => 'Pakai hari terakhir bulan',
+			'onboarding.reminderTitle' => 'Ingatkan kamu sebelum jatuh tempo?',
+			'onboarding.reminderBody' => 'Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.',
+			'onboarding.turnOn' => 'Nyalakan',
+			'onboarding.notNow' => 'Tidak sekarang',
+			'onboarding.notificationInfo' => 'Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.',
+			'onboarding.summaryPeriod' => 'Awal bulan keuangan',
+			'onboarding.summaryReminder' => 'Pengingat rutin',
 			'onboarding.languageTitle' => 'Pilih bahasa',
 			'onboarding.languageBody' => 'Dipakai untuk tampilan aplikasi dan saat mencatat dengan suara. Bisa diubah lagi di layar Akun.',
 			'onboarding.languageConfirm' => 'Lanjut',
@@ -5270,6 +5314,8 @@ extension on Translations {
 			'recurring.editFirstAction' => 'Ubah dulu',
 			'recurring.recordAllAction' => 'Catat semua',
 			'recurring.seeAllAction' => 'Lihat semua',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.pendingCardTitle' => 'Menunggu dicatat',
 			'recurring.unusualAmountNotice' => ({required Object usual}) => 'Biasanya ${usual}. Periksa lagi nominalnya.',
 			'recurring.farDateNotice' => ({required Object date}) => 'Jadwalnya ${date}. Pastikan tanggalnya benar.',
@@ -5281,8 +5327,6 @@ extension on Translations {
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} hari lagi', ), 
-			_ => null,
-		} ?? switch (path) {
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',

@@ -4835,7 +4835,7 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       gagal baca), migrasi dan langkah di
       `tutorial_progress_repository_impl_test.dart`. `flutter analyze` bersih;
       seluruh suite lulus (1.736 uji).
-- [ ] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
+- [x] **T-21.2** Onboarding: dua langkah wajib, awal periode keuangan lalu
       pengingat rutin, plus baris informasi Catat dari notifikasi di penutup
       (Android saja, tidak dapat diketuk, tanpa izin), aturan FEATURE_DISCOVERY
       §4 (tanpa Lewati, Lanjut aktif setelah memilih, Lewati slide melompat
@@ -4848,6 +4848,33 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji widget tiap langkah dan jalur Nyalakan/Tidak sekarang/
       izin ditolak; baris informasi tidak ada di iOS; verifikasi perangkat.
       Memenuhi FR-DSC-003, FR-DSC-004.
+      **Hasil kode (19 Okt 2026):** `OnboardingPage` kini mesin langkah
+      (bahasa › layar geser › mata uang › awal periode › pengingat ›
+      penutup). Layar geser mode pertama kali tinggal empat; layar kelima
+      (ajakan dompet) menjadi penutup `OnboardingFinale` sesudah langkah
+      wajib, memuat ringkasan dua jawaban (satu baris tiap jawaban) dan,
+      hanya Android, baris informasi Catat dari notifikasi yang tidak dapat
+      diketuk. Awal periode memakai `AppDayGrid` (1–28 + hari terakhir,
+      tanggal 1 bawaan, tombol "Pakai tanggal {d}") dan disimpan sebagai
+      `FinancialMonthSchedule.single` sejak awal, jadi tidak ada periode
+      peralihan (diuji untuk tanggal 3/19/25/31). Pengingat: Nyalakan →
+      `EnableReminders` (izin lalu sakelar, disambungkan akar komposisi),
+      status Nyala atau Izin belum diberikan lalu Lanjut; Tidak sekarang
+      (tombol `secondary` selebar Nyalakan) langsung lanjut. Kembali (tombol
+      dan sistem) mundur satu langkah; Lewati di layar geser melompat ke
+      mata uang. Tiap jawaban dicatat per langkah (`answeredSteps`), jadi
+      onboarding yang terputus tidak menanyakannya lagi; mode tinjau tidak
+      menanyakan apa pun. Teks `onboarding.period*`, `reminder*`, `turnOn`,
+      `notNow`, `notificationInfo`, `summary*` id+en. Uji:
+      `onboarding_discovery_test.dart` (26 skenario) dan
+      `onboarding_test.dart` diperbarui ke alur baru.
+      *Selisih/catatan:* (1) urutan bahasa sudah di awal sejak ADR-028, jadi
+      "Lewati melompat ke langkah wajib pertama" berarti mata uang;
+      urutan bahasa tidak diubah. (2) Kegagalan menyimpan mata uang kini
+      terjadi di penutup (pengguna tetap di sana dengan snackbar), bukan di
+      langkah mata uang. (3) Mode tinjau tetap lima layar geser tanpa
+      langkah (rupa tinjau belum dirancang, pertanyaan 7 designer). ⚠ Belum:
+      verifikasi perangkat (T-21.8), analitik langkah (T-21.7).
 - [x] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
       notifikasi yang tidak pernah hilang di Android (belum disetel,
       "{n} aplikasi aktif", Izinkan/Nyalakan), tombol Nyalakan pengingat yang

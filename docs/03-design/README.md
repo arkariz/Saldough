@@ -75,21 +75,27 @@ Pakai skill `tanukonomy-ui` (`.claude/skills/tanukonomy-ui/`). Ringkasnya:
 
 ## Penemuan fitur (Fase 21, T-21.0)
 
-Rupa tiga langkah onboarding wajib, tombol permanen, status di Akun, kepala
-periode dapat diketuk, dan tawaran gajian. Spek di
+Rupa dua langkah onboarding wajib (tanggal gajian, pengingat) dengan baris
+informasi Catat dari notifikasi di penutup, kartu pintu Catat dari
+notifikasi dan pengingat di Beranda (gambar pilihan pemilik 19 Okt 2026),
+kartu kotak masuk, Mulai cepat, status di Akun, kepala periode dapat
+diketuk, dan tawaran gajian. Spek di
 [design-system/patterns.md](design-system/patterns.md) bagian "Penemuan
-fitur"; komponen `OnboardingStep`, `FeatureNudge`, `PaydayOffer`, dan
-`PeriodHeader` (diubah) di `design-system/components/`. Papan di prototipe
-12 layar: `OnbLangkah` (awal periode) dengan `OnbPeriode25EnGelap`,
-`OnbNotifikasi`, `OnbNotifikasiNyala`, `OnbNotifikasiBelumEnGelap`,
-`OnbPengingat`, `OnbPengingatNyala`, `OnbPengingatIzinEnGelap`,
-`OnbPenutup`, `OnbPenutupEnGelap`; `BerandaTombol`, `BerandaTombolIzin`,
-`BerandaTombolSatu`, `BerandaTombolUrutan`, `TombolPermanen` (+ `EnGelap`);
-`AkunStatusIzin`, `AkunStatusKeadaan` (+ `EnGelap`). Papan di prototipe
-Rencana dan Rutin (nama salinan sama dengan nama artefak): `BulanIniTawaran`
-(+ `Gelap`), `RutinPengingat`, `RutinPengingatIzin`, `RincianRutinPengingat`,
-`RincianRutinPengingatIzin`, `BerandaTombolMenunggu`. Selisih dan pertanyaan
-untuk PO di entri T-21.0 `TASK_LIST.md`.
+fitur"; komponen `OnboardingStep`, `FeatureNudge`, `InboxCard`,
+`PaydayOffer`, dan `PeriodHeader` (diubah) di `design-system/components/`.
+Papan di prototipe 12 layar: `OnbLangkah` (awal periode),
+`OnbPeriode25EnGelap`, `OnbPengingat`, `OnbPengingatNyala`,
+`OnbPengingatIzinEnGelap`, `OnbPenutup`, `OnbPenutupEnGelap`,
+`OnbPenutupIos`; `BerandaTombol`, `BerandaTombolIzin`, `BerandaNotifAktif`,
+`BerandaNotifMati`, `BerandaTombolSatu` (iOS), `BerandaTombolUrutan`,
+`TombolPermanen` (+ `EnGelap`); `MulaiCepat`, `MulaiCepatTanpaAplikasi`,
+`MulaiCepatIzinEnGelap`; `KotakMasuk` (tautan Kelola, Ajari pola) dan
+`KotakMasukKosong`; `AkunStatusIzin`, `AkunStatusKeadaan` (+ `EnGelap`).
+Papan di prototipe Rencana dan Rutin (nama salinan sama dengan nama
+artefak): `BulanIniTawaran` (+ `Gelap`), `RutinPengingat`,
+`RutinPengingatIzin`, `RincianRutinPengingat`, `RincianRutinPengingatIzin`,
+`BerandaTombolMenunggu`. Selisih dan pertanyaan untuk PO di entri T-21.0
+`TASK_LIST.md`.
 
 ## Analisis keuangan (Fase 19)
 

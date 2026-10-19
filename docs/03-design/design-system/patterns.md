@@ -84,12 +84,12 @@ Fase 20, rupa v3 mengikuti rujukan gambar pilihan pemilik (15 Okt 2026).
 
 ## Penemuan fitur
 
-Fase 21 (FEATURE_DISCOVERY). Tiga fitur yang sulit ditemukan (awal bulan keuangan, Catat dari notifikasi, pengingat rutin) ditawarkan pada saat nilainya terasa, tanpa tekanan.
+Fase 21 (FEATURE_DISCOVERY, revisi 19 Okt 2026). Tiga fitur yang sulit ditemukan (awal bulan keuangan, Catat dari notifikasi, pengingat rutin) ditawarkan pada saat nilainya terasa, tanpa tekanan.
 
-1. **Onboarding: tiga langkah wajib** (OnboardingStep), urutan: slide pengantar › bahasa › mata uang › awal periode keuangan › Catat dari notifikasi (Android) › pengingat rutin › penutup. Tanpa Lewati. Wajib dijawab, bebas dijawab apa: Nyalakan dan Tidak sekarang sama besar. Tanggal: bawaan 1 terpilih, tetap dikonfirmasi.
-2. **Tombol permanen** (FeatureNudge): satu kartu dua baris di Beranda sesudah kartu Menunggu dicatat dan kotak masuk, juga satu baris di segmen Rutin dan catatan di bawah sakelar per rutin. Tanpa tutup; hilang begitu efektif; Nyalakan menjadi Izinkan bila izin hilang.
-3. **Status di Akun › Pencatatan**: baris Catat dari notifikasi (Android), Pengingat rutin, Awal bulan keuangan, urutan itu. Status berupa Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning`) di baris kedua baris; Awal bulan keuangan menampilkan tanggalnya.
-4. **Kepala periode dapat diketuk**: pil tonal dengan petunjuk "Atur" (PeriodHeader).
-5. **Tawaran gajian** (PaydayOffer): kartu biasa di kepala Bulan ini untuk pengguna lama; boleh ditutup, satu-satunya.
-6. Tidak ada streak, hitungan hari, lencana, atau kata "ketinggalan". Warna peringatan hanya untuk status izin yang hilang, selalu bersama teks.
-
+1. **Onboarding: dua langkah wajib** (OnboardingStep): slide pengantar › bahasa › mata uang › awal periode keuangan › pengingat rutin › penutup. Tanpa Lewati. Wajib dijawab, bebas dijawab apa: Nyalakan dan Tidak sekarang sama besar. Tanggal: bawaan 1 terpilih, tetap dikonfirmasi. Catat dari notifikasi bukan langkah; penutup memuat satu baris informasi (Android).
+2. **Kartu pintu di Beranda** (FeatureNudge): Catat dari notifikasi tidak pernah hilang (belum disetel → Nyalakan membuka Mulai cepat; aktif → "{n} aplikasi aktif" membuka setelan; izin hilang → Izinkan; mati → Nyalakan). Pengingat rutin hilang saat efektif. Tanpa tutup. Urutan P-6: kartu pembaruan › Menunggu dicatat dan kartu kotak masuk › kartu pintu.
+3. **Kartu kotak masuk** (InboxCard) dengan pratinjau dan tautan Kelola aplikasi & pola; Ajari pola di tangkapan tak terbaca.
+4. **Mulai cepat**: satu layar dengan daftar aplikasi bank/dompet digital yang punya pola bawaan (sudah tercentang, `tk-row--check`), baris Aplikasi lain, dan tombol sticky "Nyalakan" (menjadi "Izinkan" bila kembali tanpa izin, dengan status Izin belum diberikan). Tanpa aplikasi bawaan terpasang: hanya baris Aplikasi lain.
+5. **Status di Akun › Pencatatan**: baris Catat dari notifikasi (Android, jumlah aplikasi), Pengingat rutin, Awal bulan keuangan. Status berupa Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning` dengan teks).
+6. **Kepala periode dapat diketuk**: pil tonal dengan petunjuk "Atur" (PeriodHeader). **Tawaran gajian** (PaydayOffer): kartu biasa di kepala Bulan ini untuk pengguna lama; boleh ditutup, satu-satunya.
+7. Tidak ada streak, hitungan hari, lencana, atau kata "ketinggalan". Warna peringatan hanya untuk status izin yang hilang, selalu bersama teks.

@@ -84,15 +84,45 @@ body{margin:0}
         <a class="tk-btn tk-btn--sm tk-btn--on-soft" href="KotakMasuk.dc.html">Cek</a>
       </div>
     </sc-if>
+    <sc-if value="{{show.kartu}}" hint-placeholder-val="{{false}}">
+      <div class="tk-card tk-inbox" role="status" style="flex: none">
+        <div class="tk-inbox__head">
+          <span class="tk-tile tk-tile--amber"><span class="tk-icon">inbox</span></span>
+          <span class="tk-nudge__text"><span class="tk-nudge__title">Kotak masuk notifikasi</span><span class="tk-nudge__sub">3 transaksi dari notifikasi menunggu dicek.</span></span>
+          <a class="tk-btn tk-btn--sm tk-btn--on-soft" href="KotakMasuk.dc.html">Cek</a>
+        </div>
+        <div class="tk-inbox__item">
+          <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+          <span class="tk-row__main"><span class="tk-row__title">QRIS Toko Sinar Jaya</span><span class="tk-row__sub">BCA mobile · 10.42</span></span>
+          <span class="tk-amt tk-t-amount">−Rp125.000</span>
+        </div>
+        <div class="tk-inbox__item tk-inbox__item--unknown">
+          <span class="tk-tile tk-tile--app tk-tile--sm">BCA</span>
+          <span class="tk-row__main"><span class="tk-row__title">Transfer masuk dari ANDI PRATAMA</span><span class="tk-row__sub">Nominal belum terbaca</span></span>
+          <a class="tk-btn tk-btn--secondary tk-btn--sm" href="KotakMasuk.dc.html">Ajari pola</a>
+        </div>
+        <div class="tk-inbox__foot"><a class="tk-link" href="Akun.dc.html">Kelola aplikasi &amp; pola<span class="tk-icon tk-icon--sm">chevron_right</span></a></div>
+      </div>
+    </sc-if>
     <sc-if value="{{nudge.show}}" hint-placeholder-val="{{false}}">
-      <div class="tk-list" role="group" aria-label="Nyalakan fitur" style="flex: none">
-        <sc-for list="{{nudge.rows}}" as="r" hint-placeholder-count="2">
-          <div class="tk-row tk-row--compact tk-row--wrap">
+      <div style="display: flex; flex-direction: column; gap: 12px; flex: none">
+      <sc-for list="{{nudge.rows}}" as="r" hint-placeholder-count="2">
+        <sc-if value="{{r.isBtn}}" hint-placeholder-val="{{true}}">
+          <div class="tk-card tk-nudge">
             <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">{{r.icon}}</span></span>
-            <span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span><sc-if value="{{r.hasSub}}" hint-placeholder-val="{{false}}"><span class="tk-row__sub">Izin belum diberikan</span></sc-if></span>
-            <button class="tk-btn tk-btn--secondary tk-btn--sm" type="button" aria-label="{{r.aria}}" onClick="{{r.act}}">{{r.btn}}</button>
+            <span class="tk-nudge__text"><span class="tk-nudge__title">{{r.title}}</span><span class="tk-nudge__sub">{{r.sub}}</span></span>
+            <sc-if value="{{r.hasHref}}" hint-placeholder-val="{{false}}"><a class="{{r.btnCls}}" href="{{r.href}}" aria-label="{{r.aria}}">{{r.btn}}</a></sc-if>
+            <sc-if value="{{r.noHref}}" hint-placeholder-val="{{true}}"><button class="{{r.btnCls}}" type="button" aria-label="{{r.aria}}" onClick="{{r.act}}">{{r.btn}}</button></sc-if>
           </div>
-        </sc-for>
+        </sc-if>
+        <sc-if value="{{r.isLink}}" hint-placeholder-val="{{false}}">
+          <a class="tk-card tk-nudge" href="{{r.href}}">
+            <span class="tk-tile tk-tile--brandsoft"><span class="tk-icon">{{r.icon}}</span></span>
+            <span class="tk-nudge__text"><span class="tk-nudge__title">{{r.title}}</span><span class="tk-nudge__sub">{{r.sub}}</span></span>
+            <span class="tk-icon tk-ink-2">chevron_right</span>
+          </a>
+        </sc-if>
+      </sc-for>
       </div>
     </sc-if>
     <section class="tk-section">
@@ -178,7 +208,19 @@ body{margin:0}
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Penemuan fitur"},"ingat":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Penemuan fitur"},"banner":{"editor":"enum","options":["kotak","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"kotak","section":"Banner Beranda (satu per layar)"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["tidak","belum","aktif","izin","mati"],"default":"tidak","section":"Pintu Catat dari notifikasi (tidak = iOS)"},"ingat":{"editor":"enum","options":["efektif","mati","izin"],"default":"efektif","section":"Pengingat rutin"},"banner":{"editor":"enum","options":["kotak","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"kotak","section":"Banner Beranda (satu per layar)"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+
+const nudgeRowsId = (notif, ingat, dn, set) => {
+  const rows = [];
+  const P = 'tk-btn tk-btn--primary tk-btn--sm', Sx = 'tk-btn tk-btn--secondary tk-btn--sm';
+  if (notif === 'belum') rows.push({ isBtn: true, icon: 'notifications', title: 'Nyalakan catat dari notifikasi', sub: 'Catat otomatis dari notifikasi bank dan e-wallet.', btn: 'Nyalakan', btnCls: P, hasHref: true, noHref: false, href: 'MulaiCepat.dc.html', aria: 'Nyalakan catat dari notifikasi' });
+  if (notif === 'aktif') rows.push({ isLink: true, icon: 'notifications', title: 'Catat dari notifikasi', sub: '2 aplikasi aktif', href: 'Akun.dc.html' });
+  if (notif === 'izin' && !dn.n) rows.push({ isBtn: true, icon: 'notifications', title: 'Catat dari notifikasi', sub: 'Izin belum diberikan', btn: 'Izinkan', btnCls: P, hasHref: false, noHref: true, aria: 'Izinkan catat dari notifikasi', act: () => set({ n: true }) });
+  if (notif === 'mati') rows.push({ isBtn: true, icon: 'notifications', title: 'Catat dari notifikasi', sub: 'Mati', btn: 'Nyalakan', btnCls: P, hasHref: true, noHref: false, href: 'Akun.dc.html', aria: 'Nyalakan catat dari notifikasi' });
+  if (ingat === 'mati' && !dn.i) rows.push({ isBtn: true, icon: 'alarm', title: 'Nyalakan pengingat rutin', sub: 'Diingatkan sebelum tagihan jatuh tempo.', btn: 'Nyalakan', btnCls: Sx, hasHref: false, noHref: true, aria: 'Nyalakan pengingat rutin', act: () => set({ i: true }) });
+  if (ingat === 'izin' && !dn.i) rows.push({ isBtn: true, icon: 'alarm', title: 'Pengingat rutin', sub: 'Izin belum diberikan', btn: 'Izinkan', btnCls: Sx, hasHref: false, noHref: true, aria: 'Izinkan pengingat rutin', act: () => set({ i: true }) });
+  return rows;
+};
 class Component extends DCLogic {
   renderVals() {
     const hidden = !!(this.state && this.state.hidden);
@@ -187,17 +229,12 @@ class Component extends DCLogic {
       ? { total: '•••••••', income: dots, expense: dots, net: dots, budgetLeft: dots, budgetSpent: dots + ' dari ' + dots, freelance: dots, r1: dots, r2: dots, r3: dots }
       : { total: '27.522.000', income: '+Rp11.750.000', expense: '−Rp2.778.000', net: '+Rp8.972.000', budgetLeft: 'Rp1.930.000', budgetSpent: 'Rp3.420.000 dari Rp5.350.000', freelance: 'Rp3.600.000', r1: '−Rp28.000', r2: 'Rp300.000', r3: '−Rp45.000' };
     const b = (this.state && this.state.banner) || this.props.banner || 'kotak';
+    const nz = this.props.notif || 'tidak';
     const dn = (this.state && this.state.done) || {};
-    const nz = this.props.notif || 'efektif', ig = this.props.ingat || 'efektif';
-    const nrows = [];
-    if (nz !== 'efektif' && !dn.n) nrows.push({ icon: 'notifications', title: 'Catat dari notifikasi', hasSub: nz === 'izin', btn: nz === 'izin' ? 'Izinkan' : 'Nyalakan',
-      aria: (nz === 'izin' ? 'Izinkan: ' : 'Nyalakan: ') + 'Catat dari notifikasi', act: () => this.setState({ done: Object.assign({}, dn, { n: true }) }) });
-    if (ig !== 'efektif' && !dn.i) nrows.push({ icon: 'alarm', title: 'Pengingat rutin', hasSub: ig === 'izin', btn: ig === 'izin' ? 'Izinkan' : 'Nyalakan',
-      aria: (ig === 'izin' ? 'Izinkan: ' : 'Nyalakan: ') + 'Pengingat rutin', act: () => this.setState({ done: Object.assign({}, dn, { i: true }) }) });
-    const nudge = { show: nrows.length > 0, rows: nrows };
-    const show = { always: true, tersedia: b === 'tersedia', mengunduh: b === 'mengunduh', diunduh: b === 'diunduh', kecil: b === 'kecil' };
+    const nudgeRows = nudgeRowsId(nz, this.props.ingat || 'efektif', dn, (o) => this.setState({ done: Object.assign({}, dn, o) }));
+    const show = { always: nz === 'tidak', kartu: nz !== 'tidak', tersedia: b === 'tersedia', mengunduh: b === 'mengunduh', diunduh: b === 'diunduh', kecil: b === 'kecil' };
     return {
-      nudge: nudge,
+      nudge: { show: nudgeRows.length > 0, rows: nudgeRows },
       show: show,
       later: () => this.setState({ banner: 'tidak' }),
       dismiss: () => this.setState({ banner: 'tidak' }),

@@ -4741,54 +4741,57 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DSC-001–004.
-      **Hasil rupa (designer, 18 Okt 2026), menunggu persetujuan pemilik;
-      kotak belum dicentang.** Prototipe 12 layar
-      (`OnbLangkah`, `OnbNotifikasi*`, `OnbPengingat*`, `OnbPenutup*`,
-      `BerandaTombol*`, `TombolPermanen*`, `AkunStatus*`), prototipe Rencana
-      dan Rutin (`BulanIniTawaran*`, `RutinPengingat*`,
-      `RincianRutinPengingat*`, `BerandaTombolMenunggu`), design system
-      (komponen baru OnboardingStep, FeatureNudge, PaydayOffer; PeriodHeader
-      diubah; pola "Penemuan fitur"; glosarium Nyalakan/Izinkan/status);
-      salinan di `docs/03-design/` (termasuk rupa Fase 20 yang belum
-      tersalin). Spek: [design-system/patterns.md](../03-design/design-system/patterns.md)
-      bagian "Penemuan fitur" dan README tiap komponen.
+      **Hasil rupa (designer, v2 19 Okt 2026, sesuai brief revisi dan gambar
+      pilihan pemilik), menunggu persetujuan pemilik; kotak belum
+      dicentang.** Prototipe 12 layar: `OnbLangkah`, `OnbPengingat*`,
+      `OnbPenutup*`, `BerandaTombol*`, `BerandaNotif*`, `TombolPermanen*`,
+      `MulaiCepat*`, `KotakMasuk` (+ `KotakMasukKosong`), `AkunStatus*`;
+      prototipe Rencana dan Rutin: `BulanIniTawaran*`, `RutinPengingat*`,
+      `RincianRutinPengingat*`, `BerandaTombolMenunggu`; design system:
+      komponen OnboardingStep, FeatureNudge, InboxCard, PaydayOffer,
+      PeriodHeader (diubah), pola "Penemuan fitur"; salinan di
+      `docs/03-design/` (termasuk rupa Fase 20 yang belum tersalin).
+      *Berubah dari v1:* langkah onboarding Catat dari notifikasi dihapus
+      (diganti baris informasi di penutup, tidak dapat diketuk, hanya
+      Android); pintu Catat dari notifikasi kini kartu yang tidak pernah
+      hilang dengan empat keadaan; ada kartu kotak masuk dengan pratinjau,
+      layar Mulai cepat, tautan Kelola aplikasi & pola dan Ajari pola.
       *Selisih dari komponen yang ada:* (1) PeriodHeader: tombol kini pil
-      tonal `surface-2` dengan petunjuk "Atur" (perubahan tampilan yang
-      sudah ada, berlaku di Bulan ini; Beranda dan Analisis tidak berubah).
-      (2) Baris tombol permanen memakai ListRow + Button `secondary sm`
-      ("Nyalakan"/"Izinkan") dengan nama fitur sebagai judul, bukan teks
-      tombol penuh `discovery.notification.button` (lihat pertanyaan 1);
-      nama aksesibel tetap memuat nama fitur. (3) "Tidak sekarang" di
-      onboarding adalah tombol `secondary` selebar "Nyalakan", bukan tombol
-      teks, supaya tidak terbaca sebagai Lewati. (4) Status di Akun memakai
-      Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning`
-      dengan teks); `warning` dipakai karena izin yang hilang adalah status
-      yang perlu tindakan, selalu bersama teks, tidak untuk tekanan. (5)
-      Ringkasan penutup onboarding tiga baris, bukan satu baris (satu baris
-      tidak muat di 360dp dan en). (6) Ilustrasi langkah notifikasi dan
-      pengingat memakai `onboarding_3` dan `onboarding_4` yang sudah ada;
-      ilustrasi khusus per langkah bersifat opsional dan perlu permintaan
-      aset ke pemilik. (7) Kartu tawaran gajian kartu `surface` biasa (bukan
-      kartu `brand`), satu-satunya yang punya tombol tutup.
-      *Pertanyaan untuk PO (rupa tidak menebak):* (1) Bunyi tombol:
-      `discovery.notification.button` dan `discovery.reminder.button` panjang
-      dan `discovery.allowAccess` ("Izinkan") saja ambigu bila dua tombol
-      berdampingan. Rekomendasi: baris dengan nama fitur + tombol pendek
-      "Nyalakan"/"Izinkan" seperti di prototipe; kunci panjang dipakai
-      sebagai nama aksesibel. (2) Status baris Awal bulan keuangan di Akun:
-      §7.1 menyebut tiga baris berstatus Nyala/Mati/Izin, tetapi awal bulan
-      keuangan tidak punya status itu; prototipe menampilkan tanggalnya
-      ("Tanggal 25"). Setuju? (3) Teks tombol konfirmasi untuk hari terakhir
-      bulan: `onboarding.period.confirm` hanya menerima {d}; usulan "Pakai hari
-      terakhir bulan". (4) Sesudah kembali dari setelan tanpa menyalakan,
-      layar hanya menampilkan status Mati dan Lanjut, tanpa kalimat
-      penghibur. Perlu satu kalimat ("Bisa dinyalakan dari Beranda atau
-      Akun.")? (5) Teks en semua kunci §8 diusulkan designer (id dari §8);
-      mohon disetujui. (6) Mode tinjau onboarding dari Akun (§4.1) belum
-      dirancang terpisah; memakai kerangka yang sama dengan tombol "Tutup".
-      Perlu rupa khusus? (7) Urutan Beranda P-6 dan kartu pembaruan Fase 20
-      masih menunggu keputusan letak (kartu di atas kartu saldo, lihat
-      UpdateCard); baris tombol permanen mengikuti keputusan itu.
+      tonal `surface-2` dengan petunjuk "Atur" (berlaku di Bulan ini).
+      (2) Kartu pintu (`tk-nudge`) dan kartu kotak masuk (`tk-inbox`)
+      adalah komponen baru; bentuknya mengikuti gambar pemilik, bukan
+      "baris ringkas" P-4. (3) Tombol `primary` hanya pada Catat dari
+      notifikasi, pengingat `secondary`. (4) "Tidak sekarang" di onboarding
+      tombol `secondary` selebar "Nyalakan", bukan tombol teks, supaya tidak
+      terbaca sebagai Lewati. (5) Status di Akun memakai Badge; `warning`
+      hanya untuk "Izin belum diberikan", selalu bersama teks. (6) Ringkasan
+      penutup dua baris (bukan satu baris; tidak muat di 360dp dan en).
+      (7) Ilustrasi langkah pengingat memakai `onboarding_4` yang sudah ada.
+      (8) Pratinjau kotak masuk di Beranda tidak punya tombol Simpan
+      (aturan 8: pencatatan lewat Cek/CATAT) dan tidak memuat tulisan
+      "Disinkronkan otomatis" dari gambar (tidak ada sinkronisasi).
+      (9) Kartu tawaran gajian kartu `surface` biasa, satu-satunya yang
+      punya tombol tutup.
+      *Pertanyaan untuk PO (rupa tidak menebak):* (1) Urutan Beranda: gambar
+      menaruh kartu pintu di atas kartu kotak masuk; P-6 menaruhnya di
+      bawah. Prototipe mengikuti P-6. Mana yang berlaku? (2) Pratinjau dua
+      tangkapan di kartu kotak masuk Beranda (dengan Ajari pola di sana)
+      belum ada di spek P-8, yang menyebut Ajari pola di kotak masuk. Pakai
+      pratinjau atau cukup kepala + Cek + Kelola? (3) Baris kedua kartu:
+      Catat dari notifikasi memakai teks Akun yang ada ("Catat otomatis dari
+      notifikasi bank dan e-wallet."; gambar menulis "SMS", yang salah);
+      pengingat memakai usulan "Diingatkan sebelum tagihan jatuh tempo."
+      (gambar: "Evaluasi mingguan & tagihan", bukan fitur). Setuju? (4)
+      Status baris Awal bulan keuangan di Akun: tidak punya Nyala/Mati;
+      prototipe menampilkan tanggalnya. (5) Teks konfirmasi untuk hari
+      terakhir bulan: usulan "Pakai hari terakhir bulan". (6) Teks en semua
+      kunci diusulkan designer. (7) Mode tinjau onboarding dari Akun belum
+      dirancang terpisah. (8) Mulai cepat: judul tombol "Nyalakan" (menjadi
+      "Izinkan" sesudah kembali tanpa izin); persetujuan privasi ADR-032
+      memakai alur yang ada (tidak digambar ulang). Contoh aplikasi (BCA
+      mobile, GoPay, DANA) adalah anggapan prototipe. (9) Letak kartu
+      pembaruan Fase 20 (di atas kartu saldo) masih menunggu keputusan;
+      kartu pintu mengikuti.
 - [ ] **T-21.1** Pondasi: status efektif fitur dan ingatan onboarding.
       Sumber tunggal "apakah Catat dari notifikasi / pengingat rutin
       efektif" (sakelar dan izin sistem, P-2), dibaca Beranda, Rutin, dan

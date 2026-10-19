@@ -37,43 +37,46 @@ body{margin:0}
         </div>
       </div>
     </div>
-    <div class="tk-onb__foot"><a class="tk-btn tk-btn--primary tk-btn--block" href="OnbNotifikasi.dc.html">{{perConfirm}}</a></div>
+    <div class="tk-onb__foot"><a class="tk-btn tk-btn--primary tk-btn--block" href="OnbPengingat.dc.html">{{perConfirm}}</a></div>
   </sc-if>
 
   <sc-if value="{{isAsk}}" hint-placeholder-val="{{false}}">
     <div class="tk-onb__body">
       <div class="tk-card" style="display: flex; flex-direction: column; gap: 12px">
-        <img class="tk-onb__art" src="{{art}}" alt="" style="{{artStyle}}">
-        <h1 class="tk-onb__title">{{title}}</h1>
-        <p class="tk-onb__text">{{body}}</p>
+        <img class="tk-onb__art" src="/_blob/e125ca20c3187e5fa60212f92f671be1" alt="" style="height: 120px">
+        <h1 class="tk-onb__title">{{t.remTitle}}</h1>
+        <p class="tk-onb__text">{{t.remBody}}</p>
         <sc-if value="{{answered}}" hint-placeholder-val="{{false}}">
-          <div class="tk-onb__status" role="status"><span>{{rowName}}</span><span class="{{badgeCls}}">{{badgeText}}</span></div>
+          <div class="tk-onb__status" role="status"><span>{{t.rowRem}}</span><span class="{{badgeCls}}">{{badgeText}}</span></div>
         </sc-if>
       </div>
     </div>
     <div class="tk-onb__foot">
       <sc-if value="{{asking}}" hint-placeholder-val="{{true}}">
         <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{turnOn}}">{{t.turnOn}}</button>
-        <a class="tk-btn tk-btn--secondary tk-btn--block" href="{{nextHref}}">{{t.notNow}}</a>
+        <a class="tk-btn tk-btn--secondary tk-btn--block" href="OnbPenutup.dc.html">{{t.notNow}}</a>
       </sc-if>
       <sc-if value="{{answered}}" hint-placeholder-val="{{false}}">
-        <a class="tk-btn tk-btn--primary tk-btn--block" href="{{nextHref}}">{{t.next}}</a>
+        <a class="tk-btn tk-btn--primary tk-btn--block" href="OnbPenutup.dc.html">{{t.next}}</a>
       </sc-if>
     </div>
   </sc-if>
 
   <sc-if value="{{isFinal}}" hint-placeholder-val="{{false}}">
     <div class="tk-onb__body">
-      <img class="tk-onb__art" src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" style="height: 168px">
+      <img class="tk-onb__art" src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" style="height: 156px">
       <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
         <h1 class="tk-onb__title">{{t.finTitle}}</h1>
         <p class="tk-onb__text">{{t.finBody}}</p>
       </div>
       <div class="tk-list" aria-label="{{t.brand}}">
-        <sc-for list="{{summary}}" as="r" hint-placeholder-count="3">
+        <sc-for list="{{summary}}" as="r" hint-placeholder-count="2">
           <div class="tk-row tk-row--compact tk-row--wrap"><span class="tk-icon tk-ink-2">{{r.icon}}</span><span class="tk-row__main"><span class="tk-row__title">{{r.title}}</span></span><span class="{{r.cls}}">{{r.text}}</span></div>
         </sc-for>
       </div>
+      <sc-if value="{{showInfo}}" hint-placeholder-val="{{true}}">
+        <div class="tk-onb__info"><span class="tk-icon tk-ink-2" aria-hidden="true">notifications</span><span class="tk-onb__text">{{t.notInfo}}</span></div>
+      </sc-if>
     </div>
     <div class="tk-onb__foot">
       <a class="tk-btn tk-btn--primary tk-btn--block" href="Dompet.dc.html">{{t.addWallet}}</a>
@@ -83,7 +86,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"langkah":{"editor":"enum","options":["period","notification","reminder","final"],"default":"period","section":"Langkah"},"keadaan":{"editor":"enum","options":["awal","nyala","belum","izin"],"default":"awal","section":"Langkah"},"pilih":{"editor":"enum","options":["1","25","last"],"default":"1","section":"Langkah"},"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Penutup"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"izin","section":"Penutup"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"langkah":{"editor":"enum","options":["period","reminder","final"],"default":"period","section":"Langkah"},"keadaan":{"editor":"enum","options":["awal","nyala","belum","izin"],"default":"awal","section":"Langkah"},"pilih":{"editor":"enum","options":["1","25","last"],"default":"1","section":"Langkah"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"izin","section":"Penutup"},"ios":{"editor":"boolean","default":false,"section":"Penutup"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 const S = {
  "id": {
   "brand": "Tanukonomy",
@@ -98,8 +101,6 @@ const S = {
   "perConfirmLast": "Pakai hari terakhir bulan",
   "lastDay": "Hari terakhir bulan",
   "dayAria": "Tanggal {d}",
-  "notTitle": "Catat otomatis dari notifikasi bank",
-  "notBody": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
   "remTitle": "Ingatkan kamu sebelum jatuh tempo?",
   "remBody": "Kamu dapat pengingat sebelum rutin jatuh tempo, sesuai setelan tiap rutin.",
   "finTitle": "Mulai dari dompet pertamamu",
@@ -107,37 +108,50 @@ const S = {
   "addWallet": "Tambah dompet",
   "later": "Nanti saja",
   "signIn": "Sudah punya akun? Masuk",
+  "notInfo": "Bisa catat otomatis dari notifikasi bank. Nyalakan dari Beranda.",
   "st": {
    "on": "Nyala",
    "off": "Mati",
    "perm": "Izin belum diberikan"
   },
-  "rowNotif": "Catat dari notifikasi",
   "rowRem": "Pengingat rutin",
   "rowPer": "Awal bulan keuangan",
   "perValue": "Tanggal {d}",
   "perValueLast": "Hari terakhir bulan",
-  "apps": "2 aplikasi",
-  "rowNote": "Pengingat belum menyala untuk semua rutin.",
-  "switchLabel": "Ingatkan",
-  "payTitle": "Gajian tanggal {d}?",
-  "payBody": "Mulai bulan keuangan dari tanggal {d}, supaya Rencana dan Analisis mengikuti gajianmu.",
-  "payAct": "Atur",
-  "payClose": "Tutup",
-  "hint": "Atur",
-  "periodAria": "Awal bulan keuangan, ketuk untuk mengatur",
+  "qsTitle": "Pilih aplikasi bank atau dompet digitalmu",
+  "qsBody": "Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.",
+  "qsOther": "Aplikasi lain",
+  "qsBuiltIn": "Pola bawaan",
+  "qsClose": "Tutup",
+  "nzBtnTitle": "Nyalakan catat dari notifikasi",
+  "nzManage": "Catat dari notifikasi",
+  "nzBody": "Catat otomatis dari notifikasi bank dan e-wallet.",
+  "nzActive": "{n} aplikasi aktif",
+  "rmBtnTitle": "Nyalakan pengingat rutin",
+  "rmBody": "Diingatkan sebelum tagihan jatuh tempo.",
+  "inboxTitle": "Kotak masuk notifikasi",
+  "inboxBody": "3 transaksi dari notifikasi menunggu dicek.",
+  "check": "Cek",
+  "manageSources": "Kelola aplikasi & pola",
+  "teach": "Ajari pola",
+  "unreadable": "Nominal belum terbaca",
   "cap": {
-   "mati": "Mati",
-   "izin": "Izin belum diberikan"
+   "belum": "Catat dari notifikasi: belum disetel",
+   "aktif": "Catat dari notifikasi: aktif",
+   "izin": "Catat dari notifikasi: izin hilang",
+   "mati": "Catat dari notifikasi: sakelar mati",
+   "ingat": "Pengingat rutin: mati",
+   "ingatIzin": "Pengingat rutin: izin hilang"
   },
   "title": {
-   "nudge": "Tombol permanen, Beranda",
+   "nudge": "Pintu permanen, Beranda",
    "akun": "Akun › Pencatatan"
   },
   "intro": {
-   "nudge": "Selama fitur belum efektif. Tanpa tutup, tanpa tunda.",
+   "nudge": "Catat dari notifikasi tidak pernah hilang (Android). Pengingat hilang saat efektif. Tanpa tutup, tanpa tunda.",
    "akun": "Status di tiga baris, urutan sesuai dokumen fitur."
-  }
+  },
+  "apps": "2 aplikasi"
  },
  "en": {
   "brand": "Tanukonomy",
@@ -152,8 +166,6 @@ const S = {
   "perConfirmLast": "Use the last day",
   "lastDay": "Last day of the month",
   "dayAria": "Day {d}",
-  "notTitle": "Record automatically from bank notifications",
-  "notBody": "Notifications from the apps you choose are read on your device and become draft entries. You review them first.",
   "remTitle": "Remind you before things are due?",
   "remBody": "You get a reminder before a recurring item is due, based on each item's settings.",
   "finTitle": "Start with your first wallet",
@@ -161,37 +173,50 @@ const S = {
   "addWallet": "Add wallet",
   "later": "Maybe later",
   "signIn": "Already have an account? Sign in",
+  "notInfo": "You can record automatically from bank notifications. Turn it on from Home.",
   "st": {
    "on": "On",
    "off": "Off",
    "perm": "Permission not granted"
   },
-  "rowNotif": "Record from notifications",
   "rowRem": "Recurring reminders",
   "rowPer": "Financial month start",
   "perValue": "Day {d}",
   "perValueLast": "Last day of the month",
-  "apps": "2 apps",
-  "rowNote": "Reminders aren't on for every recurring item.",
-  "switchLabel": "Remind me",
-  "payTitle": "Payday on day {d}?",
-  "payBody": "Start your financial month on day {d}, so Plan and Analysis follow your payday.",
-  "payAct": "Set",
-  "payClose": "Close",
-  "hint": "Set",
-  "periodAria": "Financial month start, tap to set",
+  "qsTitle": "Choose your bank or e-wallet apps",
+  "qsBody": "Notifications from the apps you choose are read on your device and become draft entries. You review them first.",
+  "qsOther": "Other apps",
+  "qsBuiltIn": "Built-in pattern",
+  "qsClose": "Close",
+  "nzBtnTitle": "Turn on recording from notifications",
+  "nzManage": "Record from notifications",
+  "nzBody": "Record automatically from bank and e-wallet notifications.",
+  "nzActive": "{n} apps active",
+  "rmBtnTitle": "Turn on recurring reminders",
+  "rmBody": "Reminded before bills are due.",
+  "inboxTitle": "Notification inbox",
+  "inboxBody": "3 transactions from notifications are waiting to be checked.",
+  "check": "Check",
+  "manageSources": "Manage apps & patterns",
+  "teach": "Teach pattern",
+  "unreadable": "Amount not read yet",
   "cap": {
-   "mati": "Off",
-   "izin": "Permission not granted"
+   "belum": "Record from notifications: not set up",
+   "aktif": "Record from notifications: active",
+   "izin": "Record from notifications: permission missing",
+   "mati": "Record from notifications: switched off",
+   "ingat": "Recurring reminders: off",
+   "ingatIzin": "Recurring reminders: permission missing"
   },
   "title": {
-   "nudge": "Permanent buttons, Home",
+   "nudge": "Permanent doors, Home",
    "akun": "Account › Recording"
   },
   "intro": {
-   "nudge": "While the feature is not effective. No close, no snooze.",
+   "nudge": "Record from notifications never goes away (Android). The reminder goes away once effective. No close, no snooze.",
    "akun": "Status on three rows, in the order of the feature doc."
-  }
+  },
+  "apps": "2 apps"
  }
 };const BCLS = {"on": "tk-badge tk-badge--positive", "off": "tk-badge", "perm": "tk-badge tk-badge--warning"};
 class Component extends DCLogic {
@@ -204,36 +229,27 @@ class Component extends DCLogic {
     const pick = s.pick !== undefined ? s.pick : (this.props.pilih || '1');
     const k = s.k || this.props.keadaan || 'awal';
     const out = { theme: this.props.dark ? 'dark' : 'light', t: t,
-      isPeriod: step === 'period', isAsk: step === 'notification' || step === 'reminder', isFinal: step === 'final' };
-    // --- langkah tanggal gajian
+      isPeriod: step === 'period', isAsk: step === 'reminder', isFinal: step === 'final' };
     out.days = Array.from({ length: 28 }, (_, i) => ({ n: String(i + 1), cls: String(pick) === String(i + 1) ? 'is-selected' : '',
       checked: String(pick) === String(i + 1) ? 'true' : 'false', aria: fill(t.dayAria, i + 1), pick: () => this.setState({ pick: String(i + 1) }) }));
     out.last = { cls: pick === 'last' ? 'is-selected' : '', checked: pick === 'last' ? 'true' : 'false', pick: () => this.setState({ pick: 'last' }) };
     out.perConfirm = pick === 'last' ? t.perConfirmLast : fill(t.perConfirm, pick);
-    // --- langkah Catat dari notifikasi / pengingat
-    const rem = step === 'reminder';
-    out.art = rem ? '/_blob/e125ca20c3187e5fa60212f92f671be1' : '/_blob/2793e3fb2006e07f55a8ce38c966144a';
-    out.artStyle = rem ? 'height: 120px' : 'height: 148px';
-    out.title = rem ? t.remTitle : t.notTitle;
-    out.body = rem ? t.remBody : t.notBody;
-    out.rowName = rem ? t.rowRem : t.rowNotif;
+    // langkah pengingat: awal, nyala, izin (izin ditolak); belum = kembali tanpa menyelesaikan (Mati)
     out.asking = k === 'awal';
     out.answered = k !== 'awal';
-    // keadaan sesudah menjawab: nyala = nyala; belum = kembali dari setelan tanpa menyelesaikan; izin = izin ditolak
     const sk = k === 'nyala' ? 'on' : (k === 'izin' ? 'perm' : 'off');
     out.badgeCls = BCLS[sk];
     out.badgeText = t.st[sk];
-    out.turnOn = () => this.setState({ k: rem ? 'nyala' : 'nyala' });
-    out.nextHref = rem ? 'OnbPenutup.dc.html' : 'OnbPengingat.dc.html';
-    out.backHref = step === 'period' ? '#' : step === 'notification' ? 'OnbLangkah.dc.html' : step === 'reminder' ? 'OnbNotifikasi.dc.html' : 'OnbPengingat.dc.html';
-    // --- penutup: ringkasan tiga pilihan
-    const n = this.props.notif || 'nyala', r = this.props.ingat || 'izin';
+    out.turnOn = () => this.setState({ k: 'nyala' });
+    out.backHref = step === 'period' ? '#' : step === 'reminder' ? 'OnbLangkah.dc.html' : 'OnbPengingat.dc.html';
+    // penutup: ringkasan dua pilihan + baris informasi Catat dari notifikasi (Android, tidak dapat diketuk)
+    const r = this.props.ingat || 'izin';
     const map = { nyala: 'on', mati: 'off', izin: 'perm' };
     out.summary = [
       { icon: 'calendar_today', title: t.rowPer, text: pick === 'last' ? t.perValueLast : fill(t.perValue, pick), cls: 'tk-t-body-sm tk-ink-2' },
-      { icon: 'notifications', title: t.rowNotif, text: t.st[map[n]], cls: BCLS[map[n]] },
       { icon: 'alarm', title: t.rowRem, text: t.st[map[r]], cls: BCLS[map[r]] }
     ];
+    out.showInfo = !this.props.ios;
     return out;
   }
 }

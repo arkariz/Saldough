@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Onboarding, notifikasi, kembali tanpa selesai, en, gelap</title>
+<title>Beranda: sakelar Catat dari notifikasi mati</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
 <link rel="stylesheet" href="tokens.css">
@@ -17,13 +17,13 @@ body{margin:0}
 </style>
 </helmet>
 <div data-theme="{{theme}}" style="width: 360px; height: 800px; background: var(--bg)">
-  <dc-import name="OnbLangkah" langkah="notification" keadaan="belum" en="{{yes}}" dark="{{yes}}" hint-size="360px,800px"></dc-import>
+  <dc-import name="Main" notif="mati" hint-size="360px,800px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
-    return { yes: true, theme: 'dark' };
+    return { yes: true, theme: 'light' };
   }
 }
 </script>

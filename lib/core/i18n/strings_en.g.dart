@@ -988,14 +988,14 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get removeSource => 'Remove this app';
 	@override String removeSourceConfirm({required Object app}) => 'Stop reading notifications from ${app}?';
 	@override String get save => 'Save';
-	@override String get patternTitle => 'Make a pattern';
-	@override String get patternSampleLabel => 'Example notification';
+	@override String get patternTitle => 'Teach a pattern';
+	@override String get patternSampleLabel => '1. Example notification';
 	@override String get patternSampleHint => 'Paste the notification text here';
-	@override String get patternInstructions => 'Pick a marker, then tap the words. Tap again to clear a mark.';
+	@override String get patternInstructions => 'Tap a marked word again to clear its mark.';
 	@override String get roleAmount => 'Amount';
 	@override String get roleNote => 'Note';
 	@override String get roleIgnore => 'Ignore';
-	@override String get patternKindLabel => 'Type';
+	@override String get patternKindLabel => '3. Transaction type';
 	@override String get kindExpense => 'Out';
 	@override String get kindIncome => 'In';
 	@override String get kindTransferOut => 'Transfer out';
@@ -1062,12 +1062,20 @@ class _Translations$notificationCapture$en extends Translations$notificationCapt
 	@override String get walletHelp => 'Transactions from this app are recorded in this wallet.';
 	@override String get advancedTitle => 'Filter and patterns';
 	@override String get advancedHint => 'Optional';
-	@override String get patternMarkLabel => 'Mark the parts';
+	@override String get patternMarkLabel => '2. Mark the important parts';
 	@override String patternNotAmount({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.';
 	@override String get kindTransfer => 'Transfer';
 	@override String get transferDirectionLabel => 'Transfer direction';
 	@override String get patternTransferWalletNone => 'Not set';
-	@override String get patternTemplateToggle => 'Edit template';
+	@override String get patternTemplateToggle => 'Show template (advanced)';
+	@override String get patternIntro => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.';
+	@override String get patternHintAmount => 'Tap the word that holds the amount, for example Rp50,000.';
+	@override String get patternHintNote => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.';
+	@override String get roleAmountHelp => 'Amount: how much money.';
+	@override String get roleNoteHelp => 'Note: the shop name or description that gets recorded.';
+	@override String get roleIgnoreHelp => 'Ignore: words that change every time, like a reference number.';
+	@override String get patternNeedAmount => 'Mark one amount word first so you can save.';
+	@override String get patternTemplateLabel => 'Template';
 	@override String get moreActions => 'More';
 }
 
@@ -2684,14 +2692,14 @@ extension on TranslationsEn {
 			'notificationCapture.removeSource' => 'Remove this app',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Stop reading notifications from ${app}?',
 			'notificationCapture.save' => 'Save',
-			'notificationCapture.patternTitle' => 'Make a pattern',
-			'notificationCapture.patternSampleLabel' => 'Example notification',
+			'notificationCapture.patternTitle' => 'Teach a pattern',
+			'notificationCapture.patternSampleLabel' => '1. Example notification',
 			'notificationCapture.patternSampleHint' => 'Paste the notification text here',
-			'notificationCapture.patternInstructions' => 'Pick a marker, then tap the words. Tap again to clear a mark.',
+			'notificationCapture.patternInstructions' => 'Tap a marked word again to clear its mark.',
 			'notificationCapture.roleAmount' => 'Amount',
 			'notificationCapture.roleNote' => 'Note',
 			'notificationCapture.roleIgnore' => 'Ignore',
-			'notificationCapture.patternKindLabel' => 'Type',
+			'notificationCapture.patternKindLabel' => '3. Transaction type',
 			'notificationCapture.kindExpense' => 'Out',
 			'notificationCapture.kindIncome' => 'In',
 			'notificationCapture.kindTransferOut' => 'Transfer out',
@@ -2762,12 +2770,20 @@ extension on TranslationsEn {
 			'notificationCapture.walletHelp' => 'Transactions from this app are recorded in this wallet.',
 			'notificationCapture.advancedTitle' => 'Filter and patterns',
 			'notificationCapture.advancedHint' => 'Optional',
-			'notificationCapture.patternMarkLabel' => 'Mark the parts',
+			'notificationCapture.patternMarkLabel' => '2. Mark the important parts',
 			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" is not an amount. Amounts use Rp or thousands separators.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Transfer direction',
 			'notificationCapture.patternTransferWalletNone' => 'Not set',
-			'notificationCapture.patternTemplateToggle' => 'Edit template',
+			'notificationCapture.patternTemplateToggle' => 'Show template (advanced)',
+			'notificationCapture.patternIntro' => 'Teach Tanukonomy how to read this notification so the amount and note fill in on their own next time. Only the amount word is required.',
+			'notificationCapture.patternHintAmount' => 'Tap the word that holds the amount, for example Rp50,000.',
+			'notificationCapture.patternHintNote' => 'Amount marked. If you like, tap the words that become the note (shop name or description). You can skip this.',
+			'notificationCapture.roleAmountHelp' => 'Amount: how much money.',
+			'notificationCapture.roleNoteHelp' => 'Note: the shop name or description that gets recorded.',
+			'notificationCapture.roleIgnoreHelp' => 'Ignore: words that change every time, like a reference number.',
+			'notificationCapture.patternNeedAmount' => 'Mark one amount word first so you can save.',
+			'notificationCapture.patternTemplateLabel' => 'Template',
 			'notificationCapture.moreActions' => 'More',
 			'recurring.starters.salary' => 'Salary',
 			'recurring.starters.rent' => 'Rent',
@@ -2828,6 +2844,8 @@ extension on TranslationsEn {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} deleted.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} skipped.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Update to ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.notFound' => 'This recurring no longer exists.',
 			'recurring.noRecorded' => 'Nothing recorded yet.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} recorded.',
@@ -2836,8 +2854,6 @@ extension on TranslationsEn {
 			'recurring.undoAction' => 'Undo',
 			'recurring.similarTitle' => 'Already recorded?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Looks like ${name} ${amount} · ${date}, already recorded.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.linkAction' => 'Link',
 			'recurring.recordNewAction' => 'Record new',
 			'recurring.recordAction' => 'Record',

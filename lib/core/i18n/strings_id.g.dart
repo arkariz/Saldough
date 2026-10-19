@@ -2464,17 +2464,17 @@ class Translations$notificationCapture$id {
 	/// id: 'Simpan'
 	String get save => 'Simpan';
 
-	/// id: 'Buat pola'
-	String get patternTitle => 'Buat pola';
+	/// id: 'Ajari pola'
+	String get patternTitle => 'Ajari pola';
 
-	/// id: 'Contoh notifikasi'
-	String get patternSampleLabel => 'Contoh notifikasi';
+	/// id: '1. Contoh notifikasi'
+	String get patternSampleLabel => '1. Contoh notifikasi';
 
 	/// id: 'Tempel teks notifikasi di sini'
 	String get patternSampleHint => 'Tempel teks notifikasi di sini';
 
-	/// id: 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.'
-	String get patternInstructions => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.';
+	/// id: 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.'
+	String get patternInstructions => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.';
 
 	/// id: 'Nominal'
 	String get roleAmount => 'Nominal';
@@ -2485,8 +2485,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Abaikan'
 	String get roleIgnore => 'Abaikan';
 
-	/// id: 'Jenis'
-	String get patternKindLabel => 'Jenis';
+	/// id: '3. Jenis transaksi'
+	String get patternKindLabel => '3. Jenis transaksi';
 
 	/// id: 'Keluar'
 	String get kindExpense => 'Keluar';
@@ -2512,7 +2512,7 @@ class Translations$notificationCapture$id {
 	/// id: 'Nama pola (opsional)'
 	String get patternLabelField => 'Nama pola (opsional)';
 
-	/// id: 'Terbaca: ${amount}'
+	/// id: 'Terbaca: $amount'
 	String patternPreview({required Object amount}) => 'Terbaca: ${amount}';
 
 	/// id: 'Tandai satu nominal. Kata Catatan harus berurutan.'
@@ -2678,8 +2678,8 @@ class Translations$notificationCapture$id {
 	/// id: 'Opsional'
 	String get advancedHint => 'Opsional';
 
-	/// id: 'Tandai bagiannya'
-	String get patternMarkLabel => 'Tandai bagiannya';
+	/// id: '2. Tandai bagian pentingnya'
+	String get patternMarkLabel => '2. Tandai bagian pentingnya';
 
 	/// id: '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.'
 	String patternNotAmount({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.';
@@ -2693,8 +2693,32 @@ class Translations$notificationCapture$id {
 	/// id: 'Belum ditentukan'
 	String get patternTransferWalletNone => 'Belum ditentukan';
 
-	/// id: 'Sunting templat'
-	String get patternTemplateToggle => 'Sunting templat';
+	/// id: 'Lihat templat (untuk yang paham)'
+	String get patternTemplateToggle => 'Lihat templat (untuk yang paham)';
+
+	/// id: 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.'
+	String get patternIntro => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.';
+
+	/// id: 'Ketuk kata yang berisi nominal, misalnya Rp50.000.'
+	String get patternHintAmount => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.';
+
+	/// id: 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.'
+	String get patternHintNote => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.';
+
+	/// id: 'Nominal: jumlah uangnya.'
+	String get roleAmountHelp => 'Nominal: jumlah uangnya.';
+
+	/// id: 'Catatan: nama toko atau keterangan yang ikut dicatat.'
+	String get roleNoteHelp => 'Catatan: nama toko atau keterangan yang ikut dicatat.';
+
+	/// id: 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.'
+	String get roleIgnoreHelp => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.';
+
+	/// id: 'Tandai satu kata nominal dulu supaya bisa disimpan.'
+	String get patternNeedAmount => 'Tandai satu kata nominal dulu supaya bisa disimpan.';
+
+	/// id: 'Templat'
+	String get patternTemplateLabel => 'Templat';
 
 	/// id: 'Lainnya'
 	String get moreActions => 'Lainnya';
@@ -5180,14 +5204,14 @@ extension on Translations {
 			'notificationCapture.removeSource' => 'Hapus aplikasi ini',
 			'notificationCapture.removeSourceConfirm' => ({required Object app}) => 'Berhenti membaca notifikasi ${app}?',
 			'notificationCapture.save' => 'Simpan',
-			'notificationCapture.patternTitle' => 'Buat pola',
-			'notificationCapture.patternSampleLabel' => 'Contoh notifikasi',
+			'notificationCapture.patternTitle' => 'Ajari pola',
+			'notificationCapture.patternSampleLabel' => '1. Contoh notifikasi',
 			'notificationCapture.patternSampleHint' => 'Tempel teks notifikasi di sini',
-			'notificationCapture.patternInstructions' => 'Pilih penanda, lalu ketuk katanya. Ketuk lagi untuk menghapus tanda.',
+			'notificationCapture.patternInstructions' => 'Ketuk lagi kata yang sudah ditandai untuk menghapus tandanya.',
 			'notificationCapture.roleAmount' => 'Nominal',
 			'notificationCapture.roleNote' => 'Catatan',
 			'notificationCapture.roleIgnore' => 'Abaikan',
-			'notificationCapture.patternKindLabel' => 'Jenis',
+			'notificationCapture.patternKindLabel' => '3. Jenis transaksi',
 			'notificationCapture.kindExpense' => 'Keluar',
 			'notificationCapture.kindIncome' => 'Masuk',
 			'notificationCapture.kindTransferOut' => 'Transfer keluar',
@@ -5258,12 +5282,20 @@ extension on Translations {
 			'notificationCapture.walletHelp' => 'Transaksi dari aplikasi ini dicatat di dompet ini.',
 			'notificationCapture.advancedTitle' => 'Filter dan pola',
 			'notificationCapture.advancedHint' => 'Opsional',
-			'notificationCapture.patternMarkLabel' => 'Tandai bagiannya',
+			'notificationCapture.patternMarkLabel' => '2. Tandai bagian pentingnya',
 			'notificationCapture.patternNotAmount' => ({required Object word}) => '"${word}" bukan nominal. Nominal memakai Rp atau titik ribuan.',
 			'notificationCapture.kindTransfer' => 'Transfer',
 			'notificationCapture.transferDirectionLabel' => 'Arah transfer',
 			'notificationCapture.patternTransferWalletNone' => 'Belum ditentukan',
-			'notificationCapture.patternTemplateToggle' => 'Sunting templat',
+			'notificationCapture.patternTemplateToggle' => 'Lihat templat (untuk yang paham)',
+			'notificationCapture.patternIntro' => 'Ajari Tanukonomy cara membaca notifikasi ini, supaya lain kali nominal dan catatannya terisi sendiri. Yang wajib hanya menandai kata nominal.',
+			'notificationCapture.patternHintAmount' => 'Ketuk kata yang berisi nominal, misalnya Rp50.000.',
+			'notificationCapture.patternHintNote' => 'Nominal sudah ditandai. Kalau mau, ketuk kata yang jadi catatan (nama toko atau keterangan). Boleh dilewati.',
+			'notificationCapture.roleAmountHelp' => 'Nominal: jumlah uangnya.',
+			'notificationCapture.roleNoteHelp' => 'Catatan: nama toko atau keterangan yang ikut dicatat.',
+			'notificationCapture.roleIgnoreHelp' => 'Abaikan: kata yang berubah tiap notifikasi, mis. nomor referensi.',
+			'notificationCapture.patternNeedAmount' => 'Tandai satu kata nominal dulu supaya bisa disimpan.',
+			'notificationCapture.patternTemplateLabel' => 'Templat',
 			'notificationCapture.moreActions' => 'Lainnya',
 			'recurring.starters.salary' => 'Gaji',
 			'recurring.starters.rent' => 'Kos/Sewa',
@@ -5324,6 +5356,8 @@ extension on Translations {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} dihapus.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} dilewati.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Perbarui ke ${amount}',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.notFound' => 'Rutin ini sudah tidak ada.',
 			'recurring.noRecorded' => 'Belum ada yang tercatat.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} tercatat.',
@@ -5332,8 +5366,6 @@ extension on Translations {
 			'recurring.undoAction' => 'Batalkan',
 			'recurring.similarTitle' => 'Sudah tercatat?',
 			'recurring.similarBody' => ({required Object name, required Object amount, required Object date}) => 'Mirip ${name} ${amount} · ${date} yang sudah tercatat.',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.linkAction' => 'Tautkan',
 			'recurring.recordNewAction' => 'Catat baru',
 			'recurring.recordAction' => 'Catat',

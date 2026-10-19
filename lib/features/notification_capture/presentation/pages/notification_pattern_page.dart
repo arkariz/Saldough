@@ -116,6 +116,8 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
     };
   });
 
+  bool get _hasAmount => _roles.containsValue(TemplateWordRole.amount);
+
   bool get _isTransfer => _kind == NotificationPatternKind.transferOut || _kind == NotificationPatternKind.transferIn;
 
   NotificationTemplateMatch? get _preview {
@@ -172,13 +174,33 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpacing.space4, AppSpacing.space2, AppSpacing.space4, AppSpacing.space4),
-          child: AppButton(label: texts.save, onPressed: _canSave ? _save : null),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Alasan tombol nonaktif, bukan diam saja.
+              if (!_canSave && _template.text.trim().isEmpty && _sample.text.trim().isNotEmpty) ...[
+                Text(
+                  texts.patternNeedAmount,
+                  key: const ValueKey('pattern-need-amount'),
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+                ),
+                const SizedBox(height: AppSpacing.space2),
+              ],
+              AppButton(label: texts.save, onPressed: _canSave ? _save : null),
+            ],
+          ),
         ),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.space4),
           children: [
+            // Apa gunanya halaman ini, dalam satu kalimat (bukan istilah
+            // "templat"): pengguna datang dari tangkapan yang tak terbaca.
+            Text(texts.patternIntro, style: textTheme.bodyMedium, key: const ValueKey('pattern-intro')),
+            const SizedBox(height: AppSpacing.space4),
             AppSectionLabel(texts.patternSampleLabel),
             const SizedBox(height: AppSpacing.space1),
             TextField(
@@ -208,7 +230,26 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
                 onChanged: (brush) => setState(() => _brush = brush),
               ),
               const SizedBox(height: AppSpacing.space1),
-              Text(texts.patternInstructions, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
+              const SizedBox(height: AppSpacing.space1),
+              // Petunjuk langkah berikutnya, mengikuti apa yang sudah
+              // ditandai; lalu arti penanda yang sedang dipilih.
+              Text(
+                _hasAmount ? texts.patternHintNote : texts.patternHintAmount,
+                key: const ValueKey('pattern-hint'),
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppSpacing.space1),
+              Text(
+                switch (_brush) {
+                  TemplateWordRole.amount => texts.roleAmountHelp,
+                  TemplateWordRole.note => texts.roleNoteHelp,
+                  _ => texts.roleIgnoreHelp,
+                },
+                key: const ValueKey('pattern-brush-help'),
+                style: textTheme.bodySmall?.copyWith(color: colors.ink2),
+              ),
+              if (_roles.isNotEmpty)
+                Text(texts.patternInstructions, style: textTheme.bodySmall?.copyWith(color: colors.ink2)),
               const SizedBox(height: AppSpacing.space2),
               Wrap(
                 spacing: AppSpacing.space1,
@@ -245,7 +286,7 @@ class _NotificationPatternPageState extends State<NotificationPatternPage> {
               )
             else ...[
               const SizedBox(height: AppSpacing.space4),
-              AppSectionLabel(texts.patternsTitle),
+              AppSectionLabel(texts.patternTemplateLabel),
               const SizedBox(height: AppSpacing.space1),
               TextField(
                 key: const ValueKey('pattern-template'),

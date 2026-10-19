@@ -607,4 +607,98 @@ void main() {
     expect(result?.template, 'QRIS {amount} di {note} sukses');
     expect(result?.kind, NotificationPatternKind.expense);
   });
+
+  group('pembuat pola: petunjuk langkah demi langkah', () {
+    Future<void> openBuilder(WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: PixelTheme.light,
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => openNotificationPatternPage(
+                context,
+                packageName: 'id.co.bri.brimo',
+                wallets: const [],
+                sample: 'QRIS Rp18.500 di WARUNG BU TINI sukses',
+              ),
+              child: const Text('buka'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('buka'));
+      await tester.pumpAndSettle();
+    }
+
+    final save = find.widgetWithText(AppButton, t.notificationCapture.save);
+
+    testWidgets('judul, pengantar satu kalimat, dan langkah bernomor', (tester) async {
+      await openBuilder(tester);
+
+      expect(find.text(t.notificationCapture.patternTitle), findsOneWidget);
+      expect(find.byKey(const ValueKey('pattern-intro')), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternIntro), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternSampleLabel), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternMarkLabel), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text(t.notificationCapture.patternKindLabel),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text(t.notificationCapture.patternKindLabel), findsOneWidget);
+    });
+
+    testWidgets('petunjuk mengikuti kemajuan: nominal dulu, lalu catatan yang boleh dilewati', (tester) async {
+      await openBuilder(tester);
+      expect(find.text(t.notificationCapture.patternHintAmount), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternHintNote), findsNothing);
+
+      await tester.tap(find.text('Rp18.500'));
+      await tester.pump();
+
+      expect(find.text(t.notificationCapture.patternHintAmount), findsNothing);
+      expect(find.text(t.notificationCapture.patternHintNote), findsOneWidget);
+    });
+
+    testWidgets('arti penanda terpilih ditulis di bawah pilihannya', (tester) async {
+      await openBuilder(tester);
+      expect(find.text(t.notificationCapture.roleAmountHelp), findsOneWidget);
+
+      await tester.tap(find.text(t.notificationCapture.roleNote));
+      await tester.pump();
+      expect(find.text(t.notificationCapture.roleNoteHelp), findsOneWidget);
+
+      await tester.tap(find.text(t.notificationCapture.roleIgnore));
+      await tester.pump();
+      expect(find.text(t.notificationCapture.roleIgnoreHelp), findsOneWidget);
+    });
+
+    testWidgets('Simpan nonaktif disertai alasannya sampai nominal ditandai', (tester) async {
+      await openBuilder(tester);
+      expect(find.byKey(const ValueKey('pattern-need-amount')), findsOneWidget);
+      expect(tester.widget<AppButton>(save).onPressed, isNull);
+
+      await tester.tap(find.text('Rp18.500'));
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('pattern-need-amount')), findsNothing);
+      expect(tester.widget<AppButton>(save).onPressed, isNotNull);
+    });
+
+    testWidgets('templat mentah tidak disebut Pola dan tersembunyi di balik tautan', (tester) async {
+      await openBuilder(tester);
+      expect(find.byKey(const ValueKey('pattern-template')), findsNothing);
+
+      await tester.scrollUntilVisible(
+        find.text(t.notificationCapture.patternTemplateToggle),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text(t.notificationCapture.patternTemplateToggle));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('pattern-template')), findsOneWidget);
+      expect(find.text(t.notificationCapture.patternTemplateLabel), findsOneWidget);
+    });
+  });
 }

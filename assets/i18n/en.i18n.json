@@ -857,8 +857,20 @@
       "off": "Off",
       "permissionNeeded": "Permission needed"
     },
+    "turnOn": "Turn on",
     "notification": {
-      "activeApps": "Active apps: $n"
+      "button": "Turn on recording from notifications",
+      "manage": "Record from notifications",
+      "inboxTitle": "Notification inbox",
+      "check": "Check",
+      "activeApps": "Active apps: $n",
+      "manageSources": "Manage apps & patterns",
+      "teachPattern": "Teach pattern"
+    },
+    "reminder": {
+      "button": "Turn on recurring reminders",
+      "body": "Reminded before bills are due.",
+      "rowNote": "Reminders aren't on for all recurring items yet."
     },
     "allowAccess": "Allow",
     "quickStart": {

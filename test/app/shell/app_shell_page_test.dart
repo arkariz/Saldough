@@ -1,11 +1,14 @@
+import 'package:dependencies/dependencies.dart';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:memory_storage/memory_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:navigation/navigation.dart';
 import 'package:saldough/app/shell/app_shell_page.dart';
+import 'package:saldough/core/discovery/discovery.dart';
 import 'package:saldough/core/foundation/effect_handler/app_effect_registry.dart';
 import 'package:saldough/core/i18n/strings.g.dart';
 import 'package:saldough/core/presentation/spotlight/spotlight.dart';
@@ -18,10 +21,15 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/budget/domain/repositories/budget_template_repository.dart';
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
+import 'package:saldough/features/notification_capture/data/notification_capture_store_impl.dart';
+import 'package:saldough/features/notification_capture/domain/repositories/notification_capture_store.dart';
+import 'package:saldough/features/notification_capture/domain/services/capture_inbox_changes.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
 import 'package:saldough/features/record/presentation/widgets/expense_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/income_form_sheet.dart';
 import 'package:saldough/features/record/presentation/widgets/record_form_host.dart';
+import 'package:saldough/features/recurring/domain/reminder_scheduler.dart';
+import 'package:saldough/features/recurring/domain/reminder_settings.dart';
 import 'package:saldough/features/transaction/presentation/pages/transaction_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_form_sheet.dart';
 import 'package:saldough/shared/auth/auth.dart';
@@ -32,10 +40,15 @@ import 'package:saldough/shared/transaction/transaction.dart';
 import 'package:saldough/shared/wallet/wallet.dart';
 
 import '../../helpers/fake_auth_repository.dart';
+import '../../helpers/fake_feature_statuses.dart';
 import '../../helpers/keypad.dart';
 import '../../helpers/mocks.dart';
 import '../../helpers/plan_sources.dart';
 import '../../helpers/routes.dart';
+
+class _MockScheduler extends Mock implements ReminderScheduler {}
+
+class _MockSettings extends Mock implements ReminderSettingsRepository {}
 
 void main() {
   late InMemoryKeyValueStorage storage;
@@ -297,6 +310,46 @@ void main() {
 
       expect(find.text('${t.recurring.pendingCardTitle} (1)'), findsOneWidget);
       expect(find.text('Netflix ●'), findsOneWidget);
+    });
+
+    testWidgets('Beranda: pintu permanen sesudah kartu Menunggu, kartu pengingat paling bawah (P-6)', (tester) async {
+      final now = DateTime.now();
+      await container<RecurringRuleRepository>().saveRule(
+        RecurringRule(
+          id: 'netflix',
+          kind: RecurringKind.expense,
+          amount: 6500000,
+          walletId: 'w1',
+          note: 'Netflix',
+          schedule: RecurringSchedule(frequency: RecurringFrequency.monthly, anchorDate: DateTime(now.year, now.month)),
+        ),
+      );
+      final statuses = FakeFeatureStatuses()
+        ..status[DiscoveredFeature.notification] = const FeatureStatus(FeatureState.unset)
+        ..status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.off);
+      final scheduler = _MockScheduler();
+      final reminderSettings = _MockSettings();
+      when(scheduler.initialize).thenAnswer((_) async => null);
+      when(() => scheduler.responses).thenAnswer((_) => const Stream.empty());
+      when(() => scheduler.replaceAll(any())).thenAnswer((_) async {});
+      when(reminderSettings.isEnabled).thenAnswer((_) async => right(false));
+      container
+        ..registerSingleton<FeatureStatuses>(statuses)
+        ..registerSingleton<NotificationCaptureStore>(NotificationCaptureStoreImpl(storage: storage))
+        ..registerSingleton<CaptureInboxChanges>(CaptureInboxChanges())
+        ..registerSingleton<ReminderScheduler>(scheduler)
+        ..registerSingleton<ReminderSettingsRepository>(reminderSettings);
+      await tester.pumpWidget(pumpableShell());
+      for (var i = 0; i < 5; i++) {
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+
+      final pending = tester.getTopLeft(find.text('${t.recurring.pendingCardTitle} (1)')).dy;
+      final inbox = tester.getTopLeft(find.byKey(const ValueKey('notification-inbox-card'))).dy;
+      final nudge = tester.getTopLeft(find.byKey(const ValueKey('reminder-nudge'))).dy;
+      expect(inbox, lessThan(nudge));
+      expect(pending, lessThan(nudge));
     });
 
     testWidgets('tab Rencana: sub-tab Anggaran lalu Rutin, tanpa app bar Anggaran ganda (T-15.4)', (tester) async {

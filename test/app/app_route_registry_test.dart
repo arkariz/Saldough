@@ -23,6 +23,7 @@ void main() {
       'notificationCapture.settings',
       'notificationCapture.inbox',
       'notificationCapture.quickStart',
+      'notificationCapture.teachPattern',
       'transaction.detail',
       'transaction.filtered',
       'transaction.history',

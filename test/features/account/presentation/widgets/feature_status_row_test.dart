@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,23 +7,14 @@ import 'package:saldough/core/presentation/widgets/widgets.dart';
 import 'package:saldough/core/theme/theme.dart';
 import 'package:saldough/features/account/presentation/widgets/feature_status_row.dart';
 
-final class _FakeStatuses implements FeatureStatuses {
-  final status = <DiscoveredFeature, FeatureStatus>{};
-  final controller = StreamController<void>.broadcast();
-
-  @override
-  Future<FeatureStatus> read(DiscoveredFeature feature) async => status[feature] ?? FeatureStatus.unsupported;
-
-  @override
-  Stream<void> get changes => controller.stream;
-}
+import '../../../../helpers/fake_feature_statuses.dart';
 
 void main() {
-  late _FakeStatuses statuses;
+  late FakeFeatureStatuses statuses;
   var opened = 0;
 
   setUp(() {
-    statuses = _FakeStatuses();
+    statuses = FakeFeatureStatuses();
     opened = 0;
   });
 
@@ -74,7 +63,7 @@ void main() {
     expect(find.text(t.discovery.status.off), findsOneWidget);
 
     statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.unset);
-    statuses.controller.add(null);
+    statuses.notify();
     await tester.pumpAndSettle();
     expect(find.text(t.discovery.status.off), findsOneWidget);
   });
@@ -117,7 +106,7 @@ void main() {
     expect(find.text(t.discovery.status.off), findsOneWidget);
 
     statuses.status[DiscoveredFeature.reminder] = const FeatureStatus(FeatureState.active);
-    statuses.controller.add(null);
+    statuses.notify();
     await tester.pumpAndSettle();
     expect(find.text(t.discovery.status.on), findsOneWidget);
 

@@ -4848,7 +4848,7 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Verifikasi: uji widget tiap langkah dan jalur Nyalakan/Tidak sekarang/
       izin ditolak; baris informasi tidak ada di iOS; verifikasi perangkat.
       Memenuhi FR-DSC-003, FR-DSC-004.
-- [ ] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
+- [x] **T-21.3** Pintu permanen di Beranda (P-1–P-8): baris Catat dari
       notifikasi yang tidak pernah hilang di Android (belum disetel,
       "{n} aplikasi aktif", Izinkan/Nyalakan), tombol Nyalakan pengingat yang
       hilang saat efektif, tombol pengingat juga di segmen Rutin dan catatan
@@ -4860,6 +4860,33 @@ perlu rupa dari ui-ux-designer sebelum T-21.2.
       Beranda, kotak masuk, dan Akun membuka layar yang sama; urutan Beranda
       dengan banner pembaruan dan kartu Menunggu; tidak ada baris di iOS.
       Memenuhi FR-DSC-001, FR-DSC-002, FR-DSC-003.
+      **Hasil (19 Okt 2026, rupa v3 disetujui pemilik):** dua kartu sesuai
+      komponen InboxCard dan FeatureNudge. `NotificationInboxCard`
+      (`notification_capture/presentation/widgets/`) menggantikan
+      `CaptureInboxBanner` di slot `notice` Beranda: lima keadaan (belum
+      disetel → Mulai cepat; izin hilang → pengungkapan + setelan sistem;
+      sakelar mati → setelan; aktif tanpa yang menunggu → "{n} aplikasi aktif"
+      + Kelola; aktif dengan tangkapan → Cek, pratinjau paling banyak dua
+      hanya-baca, Ajari pola pada nominal tak terbaca, kaki). Latar
+      `warning-soft` hanya bila ada yang menunggu; kosong di iOS. Banner lama
+      tetap di Riwayat. `ReminderNudgeCard` (`recurring/presentation/widgets/`)
+      di slot baru `featureNudge` Beranda (P-6: sesudah Menunggu dicatat dan
+      kotak masuk) dan di segmen Rutin di bawah kartu sisa tagihan; hilang
+      saat efektif, tanpa tutup/tunda. `ReminderRuleNote` di rincian rutin
+      di bawah sakelar per rutin. Menyalakan = `EnableReminders` (izin →
+      sakelar → sinkron jadwal), memancarkan `FeatureStatusChanges`. Kotak
+      masuk: tautan Kelola aplikasi & pola di bawah segmen (juga saat
+      kosong) dan Ajari pola di kartu tangkapan bernominal tak terbaca;
+      rute baru `teachPattern` membuka kotak masuk lalu langsung pembuat
+      pola. Jumlah aplikasi dibaca lewat `FeatureStatuses` (ADR-030).
+      Uji: `notification_inbox_card_test.dart` (semua keadaan, iOS, ubah
+      keadaan), `reminder_nudge_card_test.dart` (mati, izin hilang, efektif,
+      Nyalakan, ditolak, catatan rutin), tambahan di
+      `notification_capture_pages_test.dart`, urutan Beranda di
+      `app_shell_page_test.dart`. ⚠ Belum: izin notifikasi yang ditolak
+      permanen di Android 13+ membuat Izinkan tidak memunculkan dialog
+      (hanya snackbar); verifikasi perangkat di T-21.8. Banner pembaruan
+      Fase 20 tidak digeser.
 - [x] **T-21.4** Awal bulan keuangan: isyarat kepala periode Rencana dapat
       diketuk dan kartu tawaran gajian untuk pengguna lama (boleh ditutup).
       ⚠ Hanya menyarankan; P-1–P-11 FINANCIAL_PERIOD tidak berubah.

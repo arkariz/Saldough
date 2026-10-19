@@ -369,6 +369,71 @@ void main() {
   group('kotak masuk', () {
     final at = DateTime(2026, 10, 1, 14);
 
+    CaptureInboxEntry unreadable() => CaptureInboxEntry(
+      id: 'u',
+      packageName: 'id.co.bri.brimo',
+      appLabel: 'BRImo',
+      text: 'Transfer masuk dari ANDI',
+      capturedAt: at,
+      draft: const RecordDraft(kind: DraftKind.income),
+    );
+
+    testWidgets('tautan Kelola aplikasi & pola ada juga saat kosong dan membuka setelan', (tester) async {
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-manage-sources')));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.notificationCapture.settingsTitle), findsWidgets);
+    });
+
+    testWidgets('nominal tak terbaca: Ajari pola membuka pembuat pola; yang terbaca tanpa tombol itu', (tester) async {
+      await store.saveInbox([
+        unreadable(),
+        CaptureInboxEntry(
+          id: 'ok',
+          packageName: 'id.co.bri.brimo',
+          appLabel: 'BRImo',
+          text: 'Bayar',
+          capturedAt: at,
+          draft: const RecordDraft(kind: DraftKind.expense, amountSen: 10000),
+        ),
+      ]);
+      await open(tester, NotificationCaptureRouteKeys.inbox);
+
+      expect(find.byKey(const ValueKey('inbox-teach-u')), findsOneWidget);
+      expect(find.byKey(const ValueKey('inbox-teach-ok')), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('inbox-teach-u')));
+      await tester.pumpAndSettle();
+      expect(find.byType(NotificationPatternPage), findsOneWidget);
+    });
+
+    testWidgets('rute teachPattern langsung membuka pembuat pola untuk tangkapan itu', (tester) async {
+      await store.saveInbox([unreadable()]);
+      await tester.pumpWidget(
+        ScopeProvider(
+          container: container,
+          child: MaterialApp(
+            theme: PixelTheme.light,
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => context.pushRoute(
+                  NotificationCaptureRouteKeys.teachPattern,
+                  const TeachPatternInput(entryId: 'u'),
+                ),
+                child: const Text('buka'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('buka'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NotificationPatternPage), findsOneWidget);
+    });
+
     testWidgets('Abaikan menghapus tangkapan beserta teksnya', (tester) async {
       await store.saveInbox([
         CaptureInboxEntry(

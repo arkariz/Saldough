@@ -857,8 +857,20 @@
       "off": "Mati",
       "permissionNeeded": "Izin belum diberikan"
     },
+    "turnOn": "Nyalakan",
     "notification": {
-      "activeApps": "$n aplikasi aktif"
+      "button": "Nyalakan catat dari notifikasi",
+      "manage": "Catat dari notifikasi",
+      "inboxTitle": "Kotak masuk notifikasi",
+      "check": "Cek",
+      "activeApps": "$n aplikasi aktif",
+      "manageSources": "Kelola aplikasi & pola",
+      "teachPattern": "Ajari pola"
+    },
+    "reminder": {
+      "button": "Nyalakan pengingat rutin",
+      "body": "Diingatkan sebelum tagihan jatuh tempo.",
+      "rowNote": "Pengingat belum menyala untuk semua rutin."
     },
     "allowAccess": "Izinkan",
     "quickStart": {

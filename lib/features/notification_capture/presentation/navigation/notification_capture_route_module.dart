@@ -56,6 +56,22 @@ final class NotificationCaptureRouteModule extends FeatureRouteModule {
         ),
       ),
     ),
+    RouteNode.typed<TeachPatternInput>(
+      key: NotificationCaptureRouteKeys.teachPattern,
+      builder: (context, input) => _NotificationCapturePage(
+        builder: (scope) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: scope.container<CaptureInboxBloc>()..add(const CaptureInboxStarted())),
+            BlocProvider.value(
+              value: scope.container<NotificationSettingsBloc>()..add(const NotificationSettingsStarted()),
+            ),
+          ],
+          child: EffectListener<CaptureInboxBloc, CaptureInboxState>(
+            child: CaptureInboxPage(teachEntryId: input.entryId),
+          ),
+        ),
+      ),
+    ),
   ];
 }
 

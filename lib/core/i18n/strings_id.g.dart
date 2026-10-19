@@ -2281,7 +2281,12 @@ class Translations$discovery$id {
 	late final Translations$discovery$payday$id payday = Translations$discovery$payday$id.internal(_root);
 	late final Translations$discovery$period$id period = Translations$discovery$period$id.internal(_root);
 	late final Translations$discovery$status$id status = Translations$discovery$status$id.internal(_root);
+
+	/// id: 'Nyalakan'
+	String get turnOn => 'Nyalakan';
+
 	late final Translations$discovery$notification$id notification = Translations$discovery$notification$id.internal(_root);
+	late final Translations$discovery$reminder$id reminder = Translations$discovery$reminder$id.internal(_root);
 
 	/// id: 'Izinkan'
 	String get allowAccess => 'Izinkan';
@@ -3821,8 +3826,44 @@ class Translations$discovery$notification$id {
 
 	// Translations
 
+	/// id: 'Nyalakan catat dari notifikasi'
+	String get button => 'Nyalakan catat dari notifikasi';
+
+	/// id: 'Catat dari notifikasi'
+	String get manage => 'Catat dari notifikasi';
+
+	/// id: 'Kotak masuk notifikasi'
+	String get inboxTitle => 'Kotak masuk notifikasi';
+
+	/// id: 'Cek'
+	String get check => 'Cek';
+
 	/// id: '$n aplikasi aktif'
 	String activeApps({required Object n}) => '${n} aplikasi aktif';
+
+	/// id: 'Kelola aplikasi & pola'
+	String get manageSources => 'Kelola aplikasi & pola';
+
+	/// id: 'Ajari pola'
+	String get teachPattern => 'Ajari pola';
+}
+
+// Path: discovery.reminder
+class Translations$discovery$reminder$id {
+	Translations$discovery$reminder$id.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// id: 'Nyalakan pengingat rutin'
+	String get button => 'Nyalakan pengingat rutin';
+
+	/// id: 'Diingatkan sebelum tagihan jatuh tempo.'
+	String get body => 'Diingatkan sebelum tagihan jatuh tempo.';
+
+	/// id: 'Pengingat belum menyala untuk semua rutin.'
+	String get rowNote => 'Pengingat belum menyala untuk semua rutin.';
 }
 
 // Path: discovery.quickStart
@@ -5017,7 +5058,17 @@ extension on Translations {
 			'discovery.status.on' => 'Nyala',
 			'discovery.status.off' => 'Mati',
 			'discovery.status.permissionNeeded' => 'Izin belum diberikan',
+			'discovery.turnOn' => 'Nyalakan',
+			'discovery.notification.button' => 'Nyalakan catat dari notifikasi',
+			'discovery.notification.manage' => 'Catat dari notifikasi',
+			'discovery.notification.inboxTitle' => 'Kotak masuk notifikasi',
+			'discovery.notification.check' => 'Cek',
 			'discovery.notification.activeApps' => ({required Object n}) => '${n} aplikasi aktif',
+			'discovery.notification.manageSources' => 'Kelola aplikasi & pola',
+			'discovery.notification.teachPattern' => 'Ajari pola',
+			'discovery.reminder.button' => 'Nyalakan pengingat rutin',
+			'discovery.reminder.body' => 'Diingatkan sebelum tagihan jatuh tempo.',
+			'discovery.reminder.rowNote' => 'Pengingat belum menyala untuk semua rutin.',
 			'discovery.allowAccess' => 'Izinkan',
 			'discovery.quickStart.title' => 'Pilih aplikasi bank atau dompet digitalmu',
 			'discovery.quickStart.body' => 'Notifikasi dari aplikasi yang kamu pilih dibaca di perangkat dan jadi draf catatan. Kamu tinjau dulu.',
@@ -5230,6 +5281,8 @@ extension on Translations {
 			'recurring.reminderChannelName' => 'Pengingat rutin',
 			'recurring.reminderChannelDescription' => 'Tagihan dan pemasukan rutin yang jatuh tempo.',
 			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: '${n} hari lagi', ), 
+			_ => null,
+		} ?? switch (path) {
 			'recurring.reminderTodayTitle' => 'Jatuh tempo hari ini',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} rutin jatuh tempo hari ini',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} sudah tercatat.',
@@ -5240,8 +5293,6 @@ extension on Translations {
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} dari ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'ke ${wallet}',
 			'recurring.remainingTitle' => ({required Object month}) => 'Sisa rutin keluar · ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.plannedLabel' => 'Rencana',
 			'recurring.outLabel' => 'Sudah keluar',
 			'recurring.chipAll' => 'Semua',

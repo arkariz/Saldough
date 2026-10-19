@@ -920,7 +920,9 @@ class _Translations$discovery$en extends Translations$discovery$id {
 	@override late final _Translations$discovery$payday$en payday = _Translations$discovery$payday$en._(_root);
 	@override late final _Translations$discovery$period$en period = _Translations$discovery$period$en._(_root);
 	@override late final _Translations$discovery$status$en status = _Translations$discovery$status$en._(_root);
+	@override String get turnOn => 'Turn on';
 	@override late final _Translations$discovery$notification$en notification = _Translations$discovery$notification$en._(_root);
+	@override late final _Translations$discovery$reminder$en reminder = _Translations$discovery$reminder$en._(_root);
 	@override String get allowAccess => 'Allow';
 	@override late final _Translations$discovery$quickStart$en quickStart = _Translations$discovery$quickStart$en._(_root);
 }
@@ -1545,7 +1547,25 @@ class _Translations$discovery$notification$en extends Translations$discovery$not
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get button => 'Turn on recording from notifications';
+	@override String get manage => 'Record from notifications';
+	@override String get inboxTitle => 'Notification inbox';
+	@override String get check => 'Check';
 	@override String activeApps({required Object n}) => 'Active apps: ${n}';
+	@override String get manageSources => 'Manage apps & patterns';
+	@override String get teachPattern => 'Teach pattern';
+}
+
+// Path: discovery.reminder
+class _Translations$discovery$reminder$en extends Translations$discovery$reminder$id {
+	_Translations$discovery$reminder$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get button => 'Turn on recurring reminders';
+	@override String get body => 'Reminded before bills are due.';
+	@override String get rowNote => 'Reminders aren\'t on for all recurring items yet.';
 }
 
 // Path: discovery.quickStart
@@ -2576,7 +2596,17 @@ extension on TranslationsEn {
 			'discovery.status.on' => 'On',
 			'discovery.status.off' => 'Off',
 			'discovery.status.permissionNeeded' => 'Permission needed',
+			'discovery.turnOn' => 'Turn on',
+			'discovery.notification.button' => 'Turn on recording from notifications',
+			'discovery.notification.manage' => 'Record from notifications',
+			'discovery.notification.inboxTitle' => 'Notification inbox',
+			'discovery.notification.check' => 'Check',
 			'discovery.notification.activeApps' => ({required Object n}) => 'Active apps: ${n}',
+			'discovery.notification.manageSources' => 'Manage apps & patterns',
+			'discovery.notification.teachPattern' => 'Teach pattern',
+			'discovery.reminder.button' => 'Turn on recurring reminders',
+			'discovery.reminder.body' => 'Reminded before bills are due.',
+			'discovery.reminder.rowNote' => 'Reminders aren\'t on for all recurring items yet.',
 			'discovery.allowAccess' => 'Allow',
 			'discovery.quickStart.title' => 'Pick your bank or e-wallet apps',
 			'discovery.quickStart.body' => 'Notifications from the apps you pick are read on this device and become draft entries. You review them first.',
@@ -2789,6 +2819,8 @@ extension on TranslationsEn {
 			'recurring.reminderChannelName' => 'Recurring reminders',
 			'recurring.reminderChannelDescription' => 'Recurring bills and income that are due.',
 			'recurring.reminderSoonTitle' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'In ${n} day', other: 'In ${n} days', ), 
+			_ => null,
+		} ?? switch (path) {
 			'recurring.reminderTodayTitle' => 'Due today',
 			'recurring.reminderTodayManyTitle' => ({required Object n}) => '${n} recurring due today',
 			'recurring.alreadyRecordedMessage' => ({required Object name}) => '${name} is already recorded.',
@@ -2799,8 +2831,6 @@ extension on TranslationsEn {
 			'recurring.positionMeta' => ({required Object k, required Object n}) => '${k} of ${n}',
 			'recurring.toWalletMeta' => ({required Object wallet}) => 'to ${wallet}',
 			'recurring.remainingTitle' => ({required Object month}) => 'Recurring still to go out · ${month}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.plannedLabel' => 'Planned',
 			'recurring.outLabel' => 'Already out',
 			'recurring.chipAll' => 'All',

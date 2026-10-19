@@ -31,7 +31,7 @@ final class RecurringRouteModule extends FeatureRouteModule {
               child: EffectListener<RecurringBloc, RecurringState>(
                 child: RunOnce(
                   action: () => bloc.add(const RecurringStarted()),
-                  child: RecurringDetailPage(ruleId: input.ruleId),
+                  child: RecurringDetailPage(ruleId: input.ruleId, rootContainer: parentContainer),
                 ),
               ),
             );

@@ -167,7 +167,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
     };
     final head = Row(
       children: [
-        const AppIconTile(IconKey.inbox),
+        AppIconTile(IconKey.inbox, tint: hasPending ? .amber : null,),
         const SizedBox(width: AppSpacing.space3),
         Expanded(
           child: Column(
@@ -183,7 +183,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
           if (primary)
             AppButton(key: const ValueKey('inbox-card-action'), small: true, label: ctaLabel, onPressed: onCta)
           else
-            AppButton.secondary(
+            AppButton.text(
               key: const ValueKey('inbox-card-action'),
               small: true,
               label: ctaLabel,
@@ -220,6 +220,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
     return AppCard(
       key: const ValueKey('notification-inbox-card'),
       color: hasPending ? colors.warningSoft : null,
+      padding: const EdgeInsets.all(AppSpacing.space2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -230,7 +231,7 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
             head,
           if (hasPending) ...[
             for (final entry in _pending.take(_previewCount)) ...[
-              const SizedBox(height: AppSpacing.space3),
+              const SizedBox(height: AppSpacing.space2),
               _PreviewRow(
                 entry: entry,
                 onTeach: () {
@@ -240,26 +241,11 @@ class _NotificationInboxCardState extends State<NotificationInboxCard> with Widg
               ),
             ],
           ],
-          if (active) ...[
-            const SizedBox(height: AppSpacing.space3),
-            Row(
-              children: [
-                if (hasPending)
-                  Expanded(
-                    child: Text(
-                      texts.notification.activeApps(n: status.activeCount),
-                      style: textTheme.bodySmall?.copyWith(color: colors.ink2),
-                    ),
-                  )
-                else
-                  const Spacer(),
-                AppButton.text(
-                  key: const ValueKey('inbox-card-manage'),
-                  small: true,
-                  label: texts.notification.manageSources,
-                  onPressed: _openSettings,
-                ),
-              ],
+          if (active && hasPending) ...[
+            const SizedBox(height: AppSpacing.space2),
+            Text(
+              texts.notification.activeApps(n: status.activeCount),
+              style: textTheme.bodySmall?.copyWith(color: colors.ink2),
             ),
           ],
         ],

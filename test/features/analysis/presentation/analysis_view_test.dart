@@ -1117,7 +1117,7 @@ void main() {
         await pump(tester);
         expect(find.text('Belum ada yang bisa dianalisis'), findsOneWidget);
         expect(
-          find.text('Catat transaksi dan lihat ke mana uangmu pergi.'),
+          find.text('Catat transaksi untuk melihat alur pengeluaranmu.'),
           findsOneWidget,
         );
         expect(

@@ -134,7 +134,7 @@ void main() {
     await pump(tester);
     await tester.tap(find.byKey(const ValueKey('restore-next')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('akan hilang dari ponsel ini'), findsWidgets);
+    expect(find.textContaining('akan hilang'), findsWidgets);
   });
 
   testWidgets('Ganti data: daftar langkah dengan langkah 1 berjalan, lalu aplikasi dimulai ulang', (tester) async {

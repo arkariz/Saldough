@@ -148,19 +148,19 @@ Rupa [EXPORT_BACKUP](../01-product/features/EXPORT_BACKUP.md): ekspor ke
 spreadsheet, cadangkan, pulihkan. Komponen design system baru **DataSheet**
 (+FileCard) dan **RestoreFlow** (+RestorePreview, ProgressSteps); kelasnya
 (`tk-dsheet*`, `tk-file*`, `tk-vs*`, `tk-steps`) di `bundle.css`, pola di
-`patterns.md`, istilah di `writing.md`. `Akun.dc.html` dan `Riwayat.dc.html`
-berubah (bagian Data kamu, tombol ⋮). Selisih dan pertanyaan untuk PO di
+`patterns.md`, istilah di `writing.md`. `Akun.dc.html` berubah (bagian Data
+kamu). Ekspor hanya dari Akun dan tanpa pilihan rentang (keputusan pemilik
+22 Okt 2026), jadi Riwayat tidak berubah. Selisih dan pertanyaan untuk PO di
 entri T-22.0 `TASK_LIST.md`.
 
 | Salinan | Isi |
 |---|---|
 | `AkunData` (+`Belum`, `Ada`, `EnGelap`) | Akun digulir ke Data kamu: belum dicadangkan; ada cadangan + baris Kembalikan; en dan gelap. Berkas utama dua bahasa |
-| `LembarEkspor` (+`Kustom`, `Kosong`, `Proses`, `Siap`, `Riwayat`, `EnGelap`) | Lembar ekspor dari Akun atau Riwayat; properti `rentang`, `format`, `keadaan` |
+| `LembarEkspor` (+`Kosong`, `Proses`, `Siap`, `EnGelap`) | Lembar ekspor dari Akun, selalu seluruh data; properti `format`, `keadaan` |
 | `LembarCadangkan` (+`Proses`, `Siap`, `Batal`, `EnGelap`) | Lembar cadangkan; `Batal` = penyimpanan dibatalkan di lembar sistem |
 | `Pulihkan` (+`LebihLama`, `Semua`, `Dialog`, `DialogLama`, `Proses`, `Selesai`, `Galat`, `GalatBaru`, `GalatRuang`, `Kembalikan`, `EnGelap`) | Halaman pulihkan: properti `langkah`, `asal` (akun, onb, undo), `variasi`, `galat`, `tahap` |
 | `PulihkanOnbPratinjau`, `PulihkanOnbProses`, `PulihkanOnbSelesai`, `PulihkanOnbGalat` | Jalur pulihkan di onboarding |
 | `OnbPengantar` (+`EnGelap`) | Slide pertama onboarding dengan tautan "Sudah punya cadangan? Pulihkan" |
-| `RiwayatMenu` | Lembar tindakan ⋮ di Riwayat: Ekspor periode ini |
 
 ## Usulan desain
 

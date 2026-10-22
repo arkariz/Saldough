@@ -32,27 +32,15 @@ body{margin:0}
         <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
           <div class="tk-dsheet">
             <div class="tk-dsheet__group">
-              <p class="tk-dsheet__label" id="ex-range">{{t.range}}</p>
-              <div class="tk-dsheet__chips" role="radiogroup" aria-labelledby="ex-range">
-                <sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
-                  <button class="tk-chip {{c.cls}}" type="button" role="radio" aria-checked="{{c.checked}}" onClick="{{c.pick}}"><sc-if value="{{c.on}}" hint-placeholder-val="{{false}}"><span class="tk-icon" aria-hidden="true">check</span></sc-if>{{c.label}}</button>
-                </sc-for>
-              </div>
-              <sc-if value="{{isCustom}}" hint-placeholder-val="{{false}}">
-                <div class="tk-dsheet__dates">
-                  <div class="tk-field"><span class="tk-field__label">{{t.from}}</span><button class="tk-field__control" type="button"><span style="flex: 1; text-align: left; white-space: nowrap">{{dates.from}}</span><span class="tk-icon tk-icon--sm tk-ink-2" aria-hidden="true">calendar_today</span></button></div>
-                  <div class="tk-field"><span class="tk-field__label">{{t.to}}</span><button class="tk-field__control" type="button"><span style="flex: 1; text-align: left; white-space: nowrap">{{dates.to}}</span><span class="tk-icon tk-icon--sm tk-ink-2" aria-hidden="true">calendar_today</span></button></div>
-                </div>
-              </sc-if>
-            </div>
-            <div class="tk-dsheet__group">
               <p class="tk-dsheet__label" id="ex-format">{{t.format}}</p>
               <div class="tk-seg" role="radiogroup" aria-labelledby="ex-format">
                 <button class="tk-seg__opt {{f0.cls}}" type="button" role="radio" aria-checked="{{f0.checked}}" onClick="{{f0.pick}}">{{t.xlsx}}</button>
                 <button class="tk-seg__opt {{f1.cls}}" type="button" role="radio" aria-checked="{{f1.checked}}" onClick="{{f1.pick}}">{{t.csv}}</button>
               </div>
+              <p class="tk-field__help">{{fmtHelp}}</p>
             </div>
             <div class="tk-dsheet__sum {{sumCls}}" role="status"><span class="tk-icon" aria-hidden="true">{{sumIcon}}</span><span>{{sumText}}</span></div>
+            <sc-if value="{{hasNote}}" hint-placeholder-val="{{true}}"><p class="tk-dsheet__note"><span class="tk-icon" aria-hidden="true">info</span><span>{{t.scope}}</span></p></sc-if>
           </div>
           <div class="tk-dsheet__foot">
             <button class="tk-btn tk-btn--primary tk-btn--block {{goCls}}" type="button" onClick="{{go}}">{{t.go}}</button>
@@ -86,61 +74,45 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dari":{"editor":"enum","options":["akun","riwayat"],"default":"akun","section":"Keadaan"},"keadaan":{"editor":"enum","options":["awal","kosong","proses","siap"],"default":"awal","section":"Keadaan"},"rentang":{"editor":"enum","options":["period","last","year","all","custom"],"default":"period","section":"Keadaan"},"format":{"editor":"enum","options":["xlsx","csv"],"default":"xlsx","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"keadaan":{"editor":"enum","options":["awal","kosong","proses","siap"],"default":"awal","section":"Keadaan"},"format":{"editor":"enum","options":["xlsx","csv"],"default":"xlsx","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = this.state || {};
     const en = !!this.props.en;
     const T = en ? {
-      title: 'Export to spreadsheet', close: 'Close', range: 'Range', from: 'From', to: 'To', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      title: 'Export to spreadsheet', close: 'Close', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      xlsxHelp: 'Opens correctly in Excel and Google Sheets. Includes a Wallets sheet.', csvHelp: 'For other apps. Transactions only.',
+      scope: 'Includes all your transactions and your current wallet balances. Filter what you need in the spreadsheet.',
       go: 'Export', busy: 'Preparing the file…', busyNote: 'This can take a while if you have a lot of data. You can cancel.', cancel: 'Cancel',
-      readyTitle: 'File ready', saveTo: 'Save to…', share: 'Share', notSaved: '', empty: 'No transactions in this range.',
-      sum: (n, r) => n + (n === 1 ? ' transaction, ' : ' transactions, ') + r,
-      chips: { period: 'This period', last: 'Last period', year: 'This year', all: 'All', custom: 'Custom range' }
+      readyTitle: 'File ready', saveTo: 'Save to…', share: 'Share', notSaved: '', empty: 'No transactions to export yet.',
+      sum: (n, a, b) => n + (n === 1 ? ' transaction, ' : ' transactions, ') + a + ' – ' + b
     } : {
-      title: 'Ekspor ke spreadsheet', close: 'Tutup', range: 'Rentang', from: 'Dari', to: 'Sampai', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      title: 'Ekspor ke spreadsheet', close: 'Tutup', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      xlsxHelp: 'Terbuka benar di Excel dan Google Sheets. Memuat lembar Dompet.', csvHelp: 'Untuk aplikasi lain. Hanya transaksi.',
+      scope: 'Berisi seluruh transaksimu dan saldo dompet saat ini. Saring sendiri bagian yang kamu perlukan di spreadsheet.',
       go: 'Ekspor', busy: 'Menyiapkan berkas…', busyNote: 'Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.', cancel: 'Batal',
-      readyTitle: 'Berkas siap', saveTo: 'Simpan ke…', share: 'Bagikan', notSaved: '', empty: 'Tidak ada transaksi di rentang ini.',
-      sum: (n, r) => n + ' transaksi, ' + r,
-      chips: { period: 'Periode ini', last: 'Periode lalu', year: 'Tahun ini', all: 'Semua', custom: 'Pilih rentang' }
+      readyTitle: 'Berkas siap', saveTo: 'Simpan ke…', share: 'Bagikan', notSaved: '', empty: 'Belum ada transaksi untuk diekspor.',
+      sum: (n, a, b) => n + ' transaksi, ' + a + ' – ' + b
     };
-    const fromHist = this.props.dari === 'riwayat';
     const mon = en ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
-    // Contoh: hari ini 22 Okt 2026, periode mulai tanggal 1, catatan pertama 3 Jun 2026. Dari Riwayat, "Periode ini" = periode yang sedang dilihat (September).
-    const R = {
-      period: fromHist ? { n: 34, r: '1 – 30 ' + mon[8] + ' 2026', iso: '2026-09-01_2026-09-30' } : { n: 26, r: '1 – 22 ' + mon[9] + ' 2026', iso: '2026-10-01_2026-10-22' },
-      last: fromHist ? { n: 31, r: '1 – 31 ' + (en ? 'Aug' : 'Agt') + ' 2026', iso: '2026-08-01_2026-08-31' } : { n: 34, r: '1 – 30 ' + mon[8] + ' 2026', iso: '2026-09-01_2026-09-30' },
-      year: { n: 142, r: '1 ' + mon[0] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-01-01_2026-10-22' },
-      all: { n: 142, r: '3 ' + mon[5] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-06-03_2026-10-22' },
-      custom: { n: 62, r: '1 ' + mon[8] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-09-01_2026-10-22' }
-    };
-    const emptyBoard = this.props.keadaan === 'kosong';
-    const range = s.range || (emptyBoard ? 'custom' : (this.props.rentang || 'period'));
+    // Contoh: hari ini 22 Okt 2026, 142 transaksi, pencatatan pertama 3 Jun 2026. Selalu seluruh data saat ini.
+    const empty = this.props.keadaan === 'kosong';
+    const n = empty ? 0 : 142;
     const fmt = s.fmt || this.props.format || 'xlsx';
     const phase = s.phase || (this.props.keadaan === 'proses' ? 'busy' : this.props.keadaan === 'siap' ? 'ready' : 'form');
-    const cur = Object.assign({}, R[range]);
-    const isEmpty = range === 'custom' && emptyBoard && !s.range;
-    if (isEmpty) { cur.n = 0; cur.r = '1 – 30 ' + mon[10] + ' 2026'; cur.iso = '2026-11-01_2026-11-30'; }
-    const dates = isEmpty ? { from: '1 ' + mon[10] + ' 2026', to: '30 ' + mon[10] + ' 2026' } : { from: '1 ' + mon[8] + ' 2026', to: '22 ' + mon[9] + ' 2026' };
-    const chips = ['period', 'last', 'year', 'all', 'custom'].map((k) => ({
-      label: T.chips[k], on: range === k, cls: range === k ? 'is-selected' : '', checked: range === k ? 'true' : 'false',
-      pick: () => this.setState({ range: k, phase: 'form' })
-    }));
-    const empty = cur.n === 0;
     const timer = () => setTimeout(() => this.setState({ phase: 'ready' }), 1400);
-    const ext = fmt === 'xlsx' ? 'xlsx' : 'csv';
     return {
       theme: this.props.dark ? 'dark' : 'light', t: T, en: en, dark: !!this.props.dark, cad: 'belum',
-      underRiwayat: fromHist, underAkun: !fromHist,
+      underRiwayat: false, underAkun: true,
       open: !s.closed, close: () => this.setState({ closed: true }),
-      isForm: phase === 'form', isBusy: phase === 'busy', isReady: phase === 'ready', isCustom: range === 'custom',
-      chips: chips, dates: dates,
+      isForm: phase === 'form', isBusy: phase === 'busy', isReady: phase === 'ready',
       f0: { cls: fmt === 'xlsx' ? 'is-selected' : '', checked: fmt === 'xlsx' ? 'true' : 'false', pick: () => this.setState({ fmt: 'xlsx' }) },
       f1: { cls: fmt === 'csv' ? 'is-selected' : '', checked: fmt === 'csv' ? 'true' : 'false', pick: () => this.setState({ fmt: 'csv' }) },
-      sumCls: empty ? 'is-empty' : '', sumIcon: empty ? 'event_busy' : 'table_view', sumText: empty ? T.empty : T.sum(cur.n, cur.r),
+      fmtHelp: fmt === 'xlsx' ? T.xlsxHelp : T.csvHelp, hasNote: !empty,
+      sumCls: empty ? 'is-empty' : '', sumIcon: empty ? 'event_busy' : 'table_view', sumText: empty ? T.empty : T.sum(n, '3 ' + mon[5], '22 ' + mon[9] + ' 2026'),
       goCls: empty ? 'is-disabled' : '', go: () => { if (empty) return; this.setState({ phase: 'busy' }); timer(); },
       cancel: () => this.setState({ phase: 'form' }),
-      file: { name: 'tanukonomy-' + (en ? 'transactions' : 'transaksi') + '-' + cur.iso + '.' + ext, meta: (fmt === 'xlsx' ? 'Excel' : 'CSV') + ' · ' + cur.n + (en ? ' transactions' : ' transaksi') },
+      file: { name: 'tanukonomy-' + (en ? 'export' : 'ekspor') + '-2026-10-22.' + (fmt === 'xlsx' ? 'xlsx' : 'csv'), meta: (fmt === 'xlsx' ? 'Excel' : 'CSV') + ' · ' + n + (en ? ' transactions' : ' transaksi') },
       cancelled: false,
       saveTo: () => this.setState({ closed: true }), share: () => this.setState({ closed: true })
     };

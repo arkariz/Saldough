@@ -239,8 +239,8 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 
 /* Pixel accent: stepped corners, the pixel Catat button, hero card, pixel icons */
 :is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-inbox) { --u: var(--pixel-step, 4px); }
-:is(.tk-inbox__item, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
-:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-inbox, .tk-inbox__item, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
+:is(.tk-inbox__item, .tk-file, .tk-dsheet__sum, .tk-dsheet__busy, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) { --u: var(--pixel-step-sm, 2px); }
+:is(.tk-card, .tk-list, .tk-banner, .tk-hero, .tk-nav__catat-btn, .tk-snack, .tk-dialog, .tk-upd, .tk-inbox, .tk-inbox__item, .tk-file, .tk-dsheet__sum, .tk-dsheet__busy, .tk-upd__tile, .tk-upd__pill, .tk-rel__tile, .tk-rel__pill, .tk-rel__card, .tk-rel__x, .tk-tag, .tk-badge, .tk-tile, .tk-btn, .tk-chip, .tk-nav__pill, .tk-seg, .tk-seg__opt, .tk-key, .tk-field__control) {
   border-radius: 0;
   clip-path: polygon(
     0 calc(var(--u) * 2), var(--u) calc(var(--u) * 2), var(--u) var(--u), calc(var(--u) * 2) var(--u), calc(var(--u) * 2) 0,
@@ -528,3 +528,51 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-row.is-linked { background: var(--surface-2); box-shadow: inset 4px 0 0 var(--brand); }
 .tk-row__sub .tk-swatch { width: 8px; height: 8px; margin-right: 6px; vertical-align: 1px; }
 @media (prefers-reduced-motion: reduce) { .tk-spread__chev { transition: none; } .tk-spread__body { animation: none; } }
+
+/* DataSheet, FileCard, RestorePreview, ProgressSteps: ekspor, cadangkan, pulihkan (Fase 22) */
+.tk-dsheet { display: flex; flex-direction: column; gap: 16px; padding-top: 4px; }
+.tk-dsheet__group { display: flex; flex-direction: column; gap: 8px; }
+.tk-dsheet__label { margin: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink); }
+.tk-dsheet__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tk-dsheet__dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tk-dsheet__sum { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; background: var(--surface-2); color: var(--ink); font-size: 14px; line-height: 20px; font-weight: 600; }
+.tk-dsheet__sum .tk-icon { color: var(--ink-2); }
+.tk-dsheet__sum.is-empty { font-weight: 400; color: var(--ink-2); }
+.tk-dsheet__note { margin: 0; display: flex; gap: 8px; align-items: flex-start; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-dsheet__note .tk-icon { font-size: 20px; }
+.tk-dsheet__foot { display: flex; flex-direction: column; gap: 4px; padding-top: 12px; }
+.tk-dsheet__busy { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; background: var(--surface-2); font-size: 14px; line-height: 20px; font-weight: 600; }
+.tk-dsheet__busy .tk-icon { color: var(--brand); }
+.tk-dsheet__ok { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 4px 0 0; }
+.tk-dsheet__ok-title { margin: 0; font-size: 18px; line-height: 26px; font-weight: 700; }
+.tk-dsheet__incl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tk-dsheet__col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tk-dsheet__col h3 { margin: 0; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); }
+.tk-dsheet__li { display: flex; align-items: flex-start; gap: 6px; font-size: 14px; line-height: 20px; }
+.tk-dsheet__li .tk-icon { font-size: 18px; margin-top: 1px; color: var(--positive); }
+.tk-dsheet__col.is-out .tk-dsheet__li { color: var(--ink-2); }
+.tk-dsheet__col.is-out .tk-dsheet__li .tk-icon { color: var(--ink-3); }
+
+.tk-file { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 12px 16px; background: var(--surface-2); text-align: left; width: 100%; }
+.tk-file__main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.tk-file__name { font-size: 14px; line-height: 20px; font-weight: 600; overflow-wrap: anywhere; }
+.tk-file__meta { font-size: 12px; line-height: 16px; color: var(--ink-2); }
+
+.tk-vs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tk-vs--one { grid-template-columns: 1fr; }
+.tk-vs__col { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 0 12px; }
+.tk-vs__col:first-child { padding-left: 0; }
+.tk-vs__col + .tk-vs__col { padding-right: 0; box-shadow: inset 1px 0 0 var(--line); }
+.tk-vs__kicker { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); }
+.tk-vs__big { font-size: 18px; line-height: 26px; font-weight: 700; letter-spacing: -0.01em; }
+.tk-vs__line { font-size: 14px; line-height: 20px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tk-vs__line.is-dim { color: var(--ink-2); }
+
+.tk-steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.tk-step { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 8px 16px; font-size: 16px; line-height: 24px; color: var(--ink-3); }
+.tk-step + .tk-step { box-shadow: inset 0 1px 0 var(--line); }
+.tk-step .tk-icon { font-size: 22px; }
+.tk-step.is-done { color: var(--ink); }
+.tk-step.is-done .tk-icon { color: var(--positive); }
+.tk-step.is-active { color: var(--ink); font-weight: 600; }
+.tk-step.is-active .tk-icon { color: var(--brand); }

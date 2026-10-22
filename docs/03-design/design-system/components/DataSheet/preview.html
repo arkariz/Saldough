@@ -1,0 +1,35 @@
+<!-- @dsCard group="Data" height=560 -->
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><title>DataSheet</title></head>
+<body>
+<div class="tk tk-demo tk-demo--col" style="max-width:360px;gap:16px">
+  <div class="tk-sheet" style="box-shadow:none;border:1px solid var(--line)">
+    <div class="tk-sheet__handle"></div>
+    <div class="tk-sheet__head"><button class="tk-iconbtn" type="button" aria-label="Tutup"><span class="tk-icon">close</span></button><h2 class="tk-sheet__title">Ekspor ke spreadsheet</h2><span style="width:48px;flex:none"></span></div>
+    <div class="tk-dsheet">
+      <div class="tk-dsheet__group"><p class="tk-dsheet__label">Rentang</p>
+        <div class="tk-dsheet__chips" role="radiogroup">
+          <button class="tk-chip is-selected" type="button" role="radio" aria-checked="true"><span class="tk-icon">check</span>Periode ini</button>
+          <button class="tk-chip" type="button" role="radio" aria-checked="false">Periode lalu</button>
+          <button class="tk-chip" type="button" role="radio" aria-checked="false">Tahun ini</button>
+          <button class="tk-chip" type="button" role="radio" aria-checked="false">Semua</button>
+          <button class="tk-chip" type="button" role="radio" aria-checked="false">Pilih rentang</button>
+        </div></div>
+      <div class="tk-dsheet__group"><p class="tk-dsheet__label">Format</p>
+        <div class="tk-seg" role="radiogroup"><button class="tk-seg__opt is-selected" type="button" role="radio" aria-checked="true">Excel (.xlsx)</button><button class="tk-seg__opt" type="button" role="radio" aria-checked="false">CSV</button></div></div>
+      <div class="tk-dsheet__sum" role="status"><span class="tk-icon">table_view</span><span>26 transaksi, 1 – 22 Okt 2026</span></div>
+    </div>
+    <div class="tk-dsheet__foot"><button class="tk-btn tk-btn--primary tk-btn--block" type="button">Ekspor</button></div>
+  </div>
+  <div class="tk-sheet" style="box-shadow:none;border:1px solid var(--line)">
+    <div class="tk-sheet__handle"></div>
+    <div class="tk-dsheet" style="padding-top:12px">
+      <div class="tk-dsheet__ok"><span class="tk-tile tk-tile--lg tk-tile--brandsoft"><span class="tk-icon">check_circle</span></span><h3 class="tk-dsheet__ok-title">Cadangan siap</h3></div>
+      <div class="tk-file"><span class="tk-tile tk-tile--sm tk-tile--app"><span class="tk-icon">description</span></span><span class="tk-file__main"><span class="tk-file__name">tanukonomy-cadangan-2026-10-22.tnk</span><span class="tk-file__meta">142 transaksi · 4 dompet</span></span></div>
+    </div>
+    <div class="tk-dsheet__foot"><button class="tk-btn tk-btn--primary tk-btn--block" type="button">Simpan ke…</button><button class="tk-btn tk-btn--secondary tk-btn--block" type="button">Bagikan</button></div>
+  </div>
+</div>
+</body>
+</html>

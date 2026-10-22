@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Pulihkan dari cadangan</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,cloud_done,credit_card,dark_mode,delete,description,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,settings_backup_restore,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,table_view,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+  <sc-if value="{{isNormal}}" hint-placeholder-val="{{true}}">
+    <div class="tk tk-screen" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+      <header class="tk-topbar tk-topbar--sub">
+        <sc-if value="{{canBack}}" hint-placeholder-val="{{true}}"><a class="tk-iconbtn" href="AkunData.dc.html" aria-label="{{t.back}}"><span class="tk-icon">arrow_back</span></a></sc-if>
+        <h1 class="tk-topbar__title" style="{{titlePad}}">{{pageTitle}}</h1>
+      </header>
+      <main class="tk-body tk-scroll" style="gap: 16px; padding: 8px 16px 16px">
+        <sc-if value="{{isPreview}}" hint-placeholder-val="{{true}}">
+        <sc-if value="{{older}}" hint-placeholder-val="{{false}}"><div class="tk-banner" role="status"><span class="tk-icon" aria-hidden="true">info</span><span class="tk-banner__text">{{t.olderText}}</span></div></sc-if>
+        <div class="tk-card">
+          <div class="tk-vs {{vsCls}}">
+            <div class="tk-vs__col">
+              <span class="tk-vs__kicker">{{kick}}</span>
+              <span class="tk-vs__big">{{bk.date}}</span>
+              <span class="tk-vs__line">{{bk.tx}}</span><span class="tk-vs__line">{{bk.wallets}}</span><span class="tk-vs__line">{{bk.since}}</span><span class="tk-vs__line">{{bk.cur}}</span>
+            </div>
+            <sc-if value="{{hasNow}}" hint-placeholder-val="{{true}}">
+              <div class="tk-vs__col">
+                <span class="tk-vs__kicker">{{t.kickNow}}</span>
+                <span class="tk-vs__big">{{t.now}}</span>
+                <span class="tk-vs__line">{{nw.tx}}</span><span class="tk-vs__line">{{nw.wallets}}</span><span class="tk-vs__line">{{nw.since}}</span><span class="tk-vs__line">{{nw.cur}}</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <sc-if value="{{hasChanges}}" hint-placeholder-val="{{false}}">
+          <section class="tk-section">
+            <div class="tk-section__head"><h2 class="tk-section__title">{{t.changes}}</h2></div>
+            <div class="tk-list tk-list--icon">
+              <sc-for list="{{changes}}" as="c" hint-placeholder-count="2">
+                <div class="tk-row tk-row--compact tk-row--wrap"><span class="tk-icon tk-ink-2">{{c.icon}}</span><span class="tk-row__main"><span class="tk-row__title">{{c.text}}</span></span></div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+        <p class="tk-t-body-sm tk-ink-2" style="margin: 0; padding: 0 4px">{{t.unchanged}}</p>
+        </sc-if>
+        <sc-if value="{{isRun}}" hint-placeholder-val="{{false}}">
+        <ul class="tk-list tk-steps" aria-live="polite">
+          <sc-for list="{{steps}}" as="st" hint-placeholder-count="4">
+            <li class="tk-step {{st.cls}}"><span class="{{st.iconCls}}" aria-hidden="true">{{st.icon}}</span><span>{{st.text}}</span></li>
+          </sc-for>
+        </ul>
+        <p class="tk-t-body-sm tk-ink-2" style="margin: 0; padding: 0 4px">{{t.noCancel}}</p>
+        </sc-if>
+        <sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+        <img class="tk-onb__art" src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" style="height: 156px; margin-top: 24px">
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+          <h1 class="tk-onb__title">{{t.doneTitle}}</h1>
+          <sc-if value="{{doneNote}}" hint-placeholder-val="{{true}}"><p class="tk-onb__text">{{t.doneNote}}</p></sc-if>
+        </div>
+        </sc-if>
+        <sc-if value="{{isErr}}" hint-placeholder-val="{{false}}">
+        <div class="tk-empty" style="padding-top: 48px">
+          <span class="tk-tile tk-tile--lg tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{err.icon}}</span></span>
+          <h1 class="tk-empty__title">{{err.title}}</h1>
+          <p class="tk-empty__body">{{err.body}}</p>
+        </div>
+        </sc-if>
+      </main>
+      <sc-if value="{{isPreview}}" hint-placeholder-val="{{true}}">
+        <div class="tk-sticky-action">
+          <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{next}}">{{t.next}}</button>
+          <a class="tk-btn tk-btn--text tk-btn--block" href="AkunData.dc.html" style="margin-top: 4px">{{t.cancel}}</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+        <div class="tk-sticky-action"><a class="tk-btn tk-btn--primary tk-btn--block" href="Main.dc.html">{{t.home}}</a></div>
+      </sc-if>
+      <sc-if value="{{isErr}}" hint-placeholder-val="{{false}}">
+        <div class="tk-sticky-action">
+          <a class="tk-btn tk-btn--primary tk-btn--block" href="{{err.href}}">{{err.cta}}</a>
+          <a class="tk-btn tk-btn--text tk-btn--block" href="AkunData.dc.html" style="margin-top: 4px">{{t.close}}</a>
+        </div>
+      </sc-if>
+  <sc-if value="{{dlg}}" hint-placeholder-val="{{false}}">
+    <button class="tk-scrim" type="button" aria-label="{{t.cancel}}" onClick="{{dlgNo}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div style="position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; pointer-events: none">
+      <div class="tk-dialog" role="alertdialog" aria-labelledby="pl-dt" aria-describedby="pl-db" style="pointer-events: auto">
+        <h2 class="tk-dialog__title" id="pl-dt">{{t.dlgTitle}}</h2>
+        <p class="tk-dialog__body" id="pl-db">{{t.dlgBody}}</p>
+        <sc-if value="{{older}}" hint-placeholder-val="{{false}}"><p class="tk-dialog__body" style="color: var(--ink)">{{t.olderText}}</p></sc-if>
+        <div class="tk-dialog__actions"><button class="tk-btn tk-btn--text" type="button" onClick="{{dlgNo}}">{{t.cancel}}</button><button class="tk-btn tk-btn--danger" type="button" onClick="{{dlgYes}}">{{t.dlgYes}}</button></div>
+      </div>
+    </div>
+  </sc-if>
+    </div>
+  </sc-if>
+  <sc-if value="{{isOnb}}" hint-placeholder-val="{{false}}">
+    <div class="tk tk-onb" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink)">
+      <div class="tk-onb__top">
+        <span class="tk-onb__brand">Tanukonomy</span>
+        <sc-if value="{{canBack}}" hint-placeholder-val="{{true}}"><a class="tk-btn tk-btn--text" href="OnbPengantar.dc.html">{{t.back}}</a></sc-if>
+      </div>
+      <div class="tk-onb__body">
+        <sc-if value="{{isPreview}}" hint-placeholder-val="{{true}}">
+          <div class="tk-card" style="display: flex; flex-direction: column; gap: 8px">
+            <h1 class="tk-onb__title">{{pageTitle}}</h1>
+            <p class="tk-onb__text">{{t.onbBody}}</p>
+          </div>
+          <div class="tk-card">
+            <div class="tk-vs tk-vs--one">
+              <div class="tk-vs__col">
+                <span class="tk-vs__kicker">{{kick}}</span>
+                <span class="tk-vs__big">{{bk.date}}</span>
+                <span class="tk-vs__line">{{bk.tx}}</span><span class="tk-vs__line">{{bk.wallets}}</span><span class="tk-vs__line">{{bk.since}}</span><span class="tk-vs__line">{{bk.cur}}</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{isRun}}" hint-placeholder-val="{{false}}">
+          <div class="tk-card"><h1 class="tk-onb__title">{{pageTitle}}</h1></div>
+        <ul class="tk-list tk-steps" aria-live="polite">
+          <sc-for list="{{steps}}" as="st" hint-placeholder-count="4">
+            <li class="tk-step {{st.cls}}"><span class="{{st.iconCls}}" aria-hidden="true">{{st.icon}}</span><span>{{st.text}}</span></li>
+          </sc-for>
+        </ul>
+        <p class="tk-t-body-sm tk-ink-2" style="margin: 0; padding: 0 4px">{{t.noCancel}}</p>
+        </sc-if>
+        <sc-if value="{{isDone}}" hint-placeholder-val="{{false}}">
+        <img class="tk-onb__art" src="/_blob/789316f47a4dd97ba2f45230b1d4207f" alt="" style="height: 156px; margin-top: 24px">
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+          <h1 class="tk-onb__title">{{t.doneTitle}}</h1>
+          <sc-if value="{{doneNote}}" hint-placeholder-val="{{true}}"><p class="tk-onb__text">{{t.doneNote}}</p></sc-if>
+        </div>
+        </sc-if>
+        <sc-if value="{{isErr}}" hint-placeholder-val="{{false}}">
+        <div class="tk-empty" style="padding-top: 48px">
+          <span class="tk-tile tk-tile--lg tk-tile--brandsoft" aria-hidden="true"><span class="tk-icon">{{err.icon}}</span></span>
+          <h1 class="tk-empty__title">{{err.title}}</h1>
+          <p class="tk-empty__body">{{err.body}}</p>
+        </div>
+        </sc-if>
+      </div>
+      <div class="tk-onb__foot">
+        <sc-if value="{{isPreview}}" hint-placeholder-val="{{true}}">
+          <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{next}}">{{t.restoreNow}}</button>
+          <a class="tk-btn tk-btn--text tk-btn--block" href="OnbPengantar.dc.html">{{t.cancel}}</a>
+        </sc-if>
+        <sc-if value="{{isDone}}" hint-placeholder-val="{{false}}"><a class="tk-btn tk-btn--primary tk-btn--block" href="Main.dc.html">{{t.onbNext}}</a></sc-if>
+        <sc-if value="{{isErr}}" hint-placeholder-val="{{false}}">
+          <a class="tk-btn tk-btn--primary tk-btn--block" href="{{err.href}}">{{err.cta}}</a>
+          <a class="tk-btn tk-btn--text tk-btn--block" href="OnbPengantar.dc.html">{{t.close}}</a>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"asal":{"editor":"enum","options":["akun","onb","undo"],"default":"akun","section":"Keadaan"},"langkah":{"editor":"enum","options":["pratinjau","dialog","proses","selesai","galat"],"default":"pratinjau","section":"Keadaan"},"variasi":{"editor":"enum","options":["","lama","matauang","draf","semua"],"default":"","section":"Keadaan"},"galat":{"editor":"enum","options":["invalid","newer","space"],"default":"invalid","section":"Keadaan"},"tahap":{"editor":"enum","options":["1","2","3","4"],"default":"2","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    const T = en ? {
+      back: 'Back', close: 'Close', cancel: 'Cancel', next: 'Continue', restoreNow: 'Restore data', home: 'Go to Home', onbNext: 'Continue',
+      titleRestore: 'Restore from backup', titleUndo: 'Bring back data', titleRun: 'Restoring data',
+      kickBackup: 'Backup', kickSafety: 'Safety backup', kickNow: 'On this phone', now: 'Now',
+      changes: 'What will change', unchanged: 'Language and display settings on this phone stay as they are.',
+      cur: (c) => 'Currency will become ' + c, drafts: (n) => n + ' drafts from notifications you haven\'t reviewed won\'t be kept.',
+      olderText: 'This backup is older than the data on this phone; records after 12 Oct 2026 will be gone from this phone.',
+      dlgTitle: 'Replace all data on this phone?', dlgBody: 'All data on this phone will be replaced with the backup. Your current data is saved first as a safety backup.', dlgYes: 'Replace data',
+      onbBody: 'Choose what to bring over. Your currency and month start come from the backup.',
+      noCancel: 'This can\'t be cancelled. If the app closes midway, your data stays intact.',
+      steps: ['Saving current data as a safety backup', 'Replacing data with the backup', 'Recalculating wallet balances', 'Rescheduling reminders'],
+      doneTitle: 'Data restored from the 12 Oct 2026 backup.', doneNote: 'Notification permissions need to be granted again on this phone. You can turn them on from Home.',
+      tx: (n) => n + ' transactions', wl: (n) => n + ' wallets', since: 'Since 3 Jun 2026', date: '12 Oct 2026', dateSafety: '22 Oct 2026',
+      errs: {
+        invalid: { icon: 'error', title: 'This file can\'t be used', body: 'This file isn\'t a Tanukonomy backup or it\'s damaged. Your data hasn\'t changed.', cta: 'Choose another file', href: 'Pulihkan.dc.html' },
+        newer: { icon: 'system_update', title: 'Backup from a newer version', body: 'This backup was made by a newer version of Tanukonomy. Update the app and try again. Your data hasn\'t changed.', cta: 'Update the app', href: 'VersiAplikasi.dc.html' },
+        space: { icon: 'error', title: 'Storage is full', body: 'Not enough storage space. Your data hasn\'t changed.', cta: 'Choose another file', href: 'Pulihkan.dc.html' }
+      }
+    } : {
+      back: 'Kembali', close: 'Tutup', cancel: 'Batal', next: 'Lanjut', restoreNow: 'Pulihkan data', home: 'Ke Beranda', onbNext: 'Lanjut',
+      titleRestore: 'Pulihkan dari cadangan', titleUndo: 'Kembalikan data', titleRun: 'Memulihkan data',
+      kickBackup: 'Cadangan', kickSafety: 'Cadangan pengaman', kickNow: 'Di ponsel ini', now: 'Sekarang',
+      changes: 'Yang akan berubah', unchanged: 'Bahasa dan tampilan di ponsel ini tidak berubah.',
+      cur: (c) => 'Mata uang akan menjadi ' + c, drafts: (n) => n + ' draf dari notifikasi yang belum ditinjau tidak ikut.',
+      olderText: 'Cadangan ini lebih lama dari data di ponsel ini; catatan sesudah 12 Okt 2026 akan hilang dari ponsel ini.',
+      dlgTitle: 'Ganti semua data di ponsel ini?', dlgBody: 'Semua data di ponsel ini akan diganti dengan isi cadangan. Data yang sekarang disimpan dulu sebagai cadangan pengaman.', dlgYes: 'Ganti data',
+      onbBody: 'Cek isi cadangan sebelum dibawa. Mata uang dan awal bulan keuanganmu ikut dari cadangan.',
+      noCancel: 'Proses ini tidak bisa dibatalkan. Kalau aplikasi tertutup di tengah jalan, datamu tetap utuh.',
+      steps: ['Menyimpan data sekarang sebagai cadangan pengaman', 'Mengganti data dengan isi cadangan', 'Menghitung ulang saldo dompet', 'Menjadwalkan ulang pengingat'],
+      doneTitle: 'Data dipulihkan dari cadangan 12 Okt 2026.', doneNote: 'Izin notifikasi perlu diberikan lagi di ponsel ini. Kamu bisa menyalakannya dari Beranda.',
+      tx: (n) => n + ' transaksi', wl: (n) => n + ' dompet', since: 'Sejak 3 Jun 2026', date: '12 Okt 2026', dateSafety: '22 Okt 2026',
+      errs: {
+        invalid: { icon: 'error', title: 'Berkas tidak bisa dipakai', body: 'Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah.', cta: 'Pilih berkas lain', href: 'Pulihkan.dc.html' },
+        newer: { icon: 'system_update', title: 'Cadangan dari versi yang lebih baru', body: 'Cadangan ini dibuat oleh versi Tanukonomy yang lebih baru. Perbarui aplikasi lalu coba lagi. Datamu tidak berubah.', cta: 'Perbarui aplikasi', href: 'VersiAplikasi.dc.html' },
+        space: { icon: 'error', title: 'Ruang penyimpanan tidak cukup', body: 'Ruang penyimpanan tidak cukup. Datamu tidak berubah.', cta: 'Pilih berkas lain', href: 'Pulihkan.dc.html' }
+      }
+    };
+    const asal = this.props.asal || 'akun';
+    const isOnb = asal === 'onb', isUndo = asal === 'undo';
+    const v = this.props.variasi || '';
+    const older = (v === 'lama' || v === 'semua') && !isOnb;
+    const cur = v === 'matauang' || v === 'semua', drafts = (v === 'draf' || v === 'semua') && !isOnb;
+    const step = s.step || this.props.langkah || 'pratinjau';
+    const dlg = s.dlg !== undefined ? s.dlg : step === 'dialog';
+    const phase = step === 'dialog' ? 'pratinjau' : step;
+    // Pratinjau: cadangan di kiri; di ponsel ini di kanan. Kembalikan: cadangan pengaman (22 Okt, 142) menggantikan data sekarang (138, hasil pemulihan).
+    const bk = isUndo ? { date: T.dateSafety, tx: T.tx(142), wallets: T.wl(4), since: T.since, cur: 'IDR' }
+      : { date: T.date, tx: T.tx(138), wallets: T.wl(4), since: T.since, cur: cur ? 'USD' : 'IDR' };
+    const nw = isUndo ? { tx: T.tx(138), wallets: T.wl(4), since: T.since, cur: 'IDR' }
+      : { tx: T.tx(older ? 142 : 142), wallets: T.wl(4), since: T.since, cur: 'IDR' };
+    const changes = [];
+    if (cur) changes.push({ icon: 'payments', text: T.cur('USD') });
+    if (drafts) changes.push({ icon: 'inbox', text: T.drafts(3) });
+    const tahap = parseInt(s.tahap || this.props.tahap || '2', 10);
+    const labels = isOnb ? [T.steps[1], T.steps[2], T.steps[3]] : T.steps;
+    const steps = labels.map((x, i) => {
+      const n = i + 1, state = n < tahap ? 'done' : n === tahap ? 'active' : 'wait';
+      return { text: x, cls: 'is-' + state, icon: state === 'done' ? 'check_circle' : state === 'active' ? 'progress_activity' : 'radio_button_unchecked', iconCls: 'tk-icon' + (state === 'active' ? ' tk-icon--spin' : '') };
+    });
+    const run = () => {
+      const last = labels.length;
+      this.setState({ step: 'proses', dlg: false, tahap: 1 });
+      for (let i = 2; i <= last; i++) setTimeout(() => this.setState({ step: 'proses', tahap: i }), (i - 1) * 900);
+      setTimeout(() => this.setState({ step: 'selesai' }), last * 900);
+    };
+    const errKey = this.props.galat || 'invalid';
+    return {
+      theme: this.props.dark ? 'dark' : 'light', t: T, isOnb: isOnb, isNormal: !isOnb,
+      isPreview: phase === 'pratinjau', isRun: phase === 'proses', isDone: phase === 'selesai', isErr: phase === 'galat',
+      canBack: phase === 'pratinjau' || phase === 'galat', titlePad: phase === 'proses' || phase === 'selesai' ? 'padding-left: 12px' : '',
+      pageTitle: phase === 'proses' ? T.titleRun : isUndo ? T.titleUndo : T.titleRestore,
+      kick: isUndo ? T.kickSafety : T.kickBackup, bk: bk, nw: nw, hasNow: !isOnb, vsCls: isOnb ? 'tk-vs--one' : '',
+      older: older, hasChanges: changes.length > 0, changes: changes,
+      dlg: dlg && !isOnb, dlgNo: () => this.setState({ dlg: false, step: 'pratinjau' }), dlgYes: run,
+      next: () => (isOnb ? run() : this.setState({ dlg: true, step: 'pratinjau' })),
+      steps: steps, doneNote: true, err: T.errs[errKey]
+    };
+  }
+}
+</script>
+</body>
+</html>

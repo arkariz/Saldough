@@ -60,9 +60,21 @@ body{margin:0}
     </section>
 
     <section class="tk-section">
+      <div class="tk-section__head"><h2 class="tk-section__title">{{dk.title}}</h2></div>
+      <p class="tk-t-body-sm tk-ink-2" style="margin: -4px 4px 8px">{{dk.body}}</p>
+      <div class="tk-list tk-list--icon">
+        <a class="tk-row tk-row--compact" href="LembarEkspor.dc.html"><span class="tk-icon tk-ink-2">table_view</span><span class="tk-row__main"><span class="tk-row__title">{{dk.export}}</span><span class="tk-row__sub">{{dk.exportSub}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
+        <a class="tk-row tk-row--compact" href="LembarCadangkan.dc.html"><span class="tk-icon tk-ink-2">backup</span><span class="tk-row__main"><span class="tk-row__title">{{dk.backup}}</span><span class="tk-row__sub">{{dk.backupSub}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
+        <a class="tk-row tk-row--compact" href="Pulihkan.dc.html"><span class="tk-icon tk-ink-2">settings_backup_restore</span><span class="tk-row__main"><span class="tk-row__title">{{dk.restore}}</span><span class="tk-row__sub">{{dk.restoreSub}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
+        <sc-if value="{{dk.hasUndo}}" hint-placeholder-val="{{true}}">
+          <a class="tk-row tk-row--compact tk-row--wrap" href="PulihkanKembalikan.dc.html"><span class="tk-icon tk-ink-2">undo</span><span class="tk-row__main"><span class="tk-row__title">{{dk.undo}}</span><span class="tk-row__sub">{{dk.undoSub}}</span></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
+        </sc-if>
+      </div>
+    </section>
+
+    <section class="tk-section">
       <div class="tk-section__head"><h2 class="tk-section__title">Data dan privasi</h2></div>
       <div class="tk-list tk-list--icon">
-        <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">lock</span><span class="tk-row__main"><span class="tk-row__title">Data kamu</span><span class="tk-row__sub">Tersimpan di perangkat ini</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
         <button class="tk-row tk-row--compact" type="button"><span class="tk-icon tk-ink-2">info</span><span class="tk-row__main"><span class="tk-row__title">Kebijakan privasi</span></span><span class="tk-icon tk-row__chev">chevron_right</span></button>
         <a class="tk-row tk-row--compact tk-row--wrap" href="VersiAplikasi.dc.html"><span class="tk-icon tk-ink-2">system_update</span><span class="tk-row__main"><span class="tk-row__title">Versi aplikasi</span><span class="tk-row__sub">{{ver.value}}</span><sc-if value="{{ver.hasStatus}}" hint-placeholder-val="{{true}}"><span class="{{ver.cls}}">{{ver.status}}</span></sc-if></span><span class="tk-icon tk-row__chev">chevron_right</span></a>
       </div>
@@ -70,9 +82,21 @@ body{margin:0}
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Status Pencatatan"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"mati","section":"Status Pencatatan"},"versi":{"editor":"enum","options":["terbaru","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"tersedia","section":"Versi aplikasi"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+<script type="text/x-dc" data-dc-script data-props='{"notif":{"editor":"enum","options":["nyala","mati","izin"],"default":"nyala","section":"Status Pencatatan"},"ingat":{"editor":"enum","options":["nyala","mati","izin"],"default":"mati","section":"Status Pencatatan"},"versi":{"editor":"enum","options":["terbaru","tersedia","mengunduh","diunduh","kecil","tidak"],"default":"tersedia","section":"Versi aplikasi"},"cadangan":{"editor":"enum","options":["belum","ada"],"default":"belum","section":"Data kamu"},"kembalikan":{"editor":"boolean","default":false,"section":"Data kamu"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
 class Component extends DCLogic {
   renderVals() {
+    const en = false;
+    const DK = en ? {
+      title: 'Your data', body: 'All your records are stored on this phone. Back them up somewhere else to keep them safe, or export to a spreadsheet.',
+      export: 'Export to spreadsheet', exportSub: 'Excel or CSV', backup: 'Back up now', last: 'Last backup: 12 Oct 2026', never: 'Never backed up',
+      restore: 'Restore from backup', restoreSub: 'Replace data with a backup', undo: 'Bring back data from before the restore (22 Oct 2026)', undoSub: 'Kept on this phone until the next restore, 30 days at most'
+    } : {
+      title: 'Data kamu', body: 'Semua catatanmu tersimpan di ponsel ini. Cadangkan ke tempat lain supaya tetap aman, atau ekspor ke spreadsheet.',
+      export: 'Ekspor ke spreadsheet', exportSub: 'Excel atau CSV', backup: 'Cadangkan sekarang', last: 'Cadangan terakhir: 12 Okt 2026', never: 'Belum pernah dicadangkan',
+      restore: 'Pulihkan dari cadangan', restoreSub: 'Ganti data dengan cadangan', undo: 'Kembalikan data sebelum pemulihan (22 Okt 2026)', undoSub: 'Disimpan di ponsel ini sampai pemulihan berikutnya, paling lama 30 hari'
+    };
+    const had = (this.props.cadangan || 'belum') === 'ada';
+    const dk = { title: DK.title, body: DK.body, export: DK.export, exportSub: DK.exportSub, backup: DK.backup, backupSub: had ? DK.last : DK.never, restore: DK.restore, restoreSub: DK.restoreSub, hasUndo: !!this.props.kembalikan, undo: DK.undo, undoSub: DK.undoSub };
     const k = this.props.versi || 'tersedia';
     // Contoh: S1 (terpasang 0.5.0 (6), 0.6.0 (7) menunggu); terbaru = 0.6.0 (7), pembaruan 1.
     const value = { terbaru: '0.6.0 (7), pembaruan 1', tersedia: '0.5.0 (6)', mengunduh: '0.5.0 (6)', diunduh: '0.5.0 (6)', kecil: '0.6.0 (7)', tidak: '0.6.0 (7)' }[k];
@@ -81,6 +105,7 @@ class Component extends DCLogic {
     const an = sm[this.props.notif || 'nyala'], ai = sm[this.props.ingat || 'mati'];
     return {
       ak: { n: { text: an[1], cls: an[2], hasDetail: (this.props.notif || 'nyala') === 'nyala' }, i: { text: ai[1], cls: ai[2] } },
+      dk: dk,
       theme: this.props.dark ? 'dark' : 'light',
       ver: { value: value, status: status, hasStatus: !!status, cls: 'tk-row__sub' + (k === 'terbaru' || k === 'tidak' ? '' : ' tk-t-label') }
     };

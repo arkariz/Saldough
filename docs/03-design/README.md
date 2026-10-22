@@ -142,6 +142,26 @@ pertanyaannya ada di B-66 `TASK_LIST.md`.
 | `DompetSembunyi`, `DompetEnGelap` | D4 nominal disembunyikan; D5 en dan gelap, BCA dipilih |
 | `DompetSatu` | D6 satu dompet: kartu sebaran tidak tampil |
 
+## Ekspor dan cadangan (Fase 22, T-22.0)
+
+Rupa [EXPORT_BACKUP](../01-product/features/EXPORT_BACKUP.md): ekspor ke
+spreadsheet, cadangkan, pulihkan. Komponen design system baru **DataSheet**
+(+FileCard) dan **RestoreFlow** (+RestorePreview, ProgressSteps); kelasnya
+(`tk-dsheet*`, `tk-file*`, `tk-vs*`, `tk-steps`) di `bundle.css`, pola di
+`patterns.md`, istilah di `writing.md`. `Akun.dc.html` dan `Riwayat.dc.html`
+berubah (bagian Data kamu, tombol ⋮). Selisih dan pertanyaan untuk PO di
+entri T-22.0 `TASK_LIST.md`.
+
+| Salinan | Isi |
+|---|---|
+| `AkunData` (+`Belum`, `Ada`, `EnGelap`) | Akun digulir ke Data kamu: belum dicadangkan; ada cadangan + baris Kembalikan; en dan gelap. Berkas utama dua bahasa |
+| `LembarEkspor` (+`Kustom`, `Kosong`, `Proses`, `Siap`, `Riwayat`, `EnGelap`) | Lembar ekspor dari Akun atau Riwayat; properti `rentang`, `format`, `keadaan` |
+| `LembarCadangkan` (+`Proses`, `Siap`, `Batal`, `EnGelap`) | Lembar cadangkan; `Batal` = penyimpanan dibatalkan di lembar sistem |
+| `Pulihkan` (+`LebihLama`, `Semua`, `Dialog`, `DialogLama`, `Proses`, `Selesai`, `Galat`, `GalatBaru`, `GalatRuang`, `Kembalikan`, `EnGelap`) | Halaman pulihkan: properti `langkah`, `asal` (akun, onb, undo), `variasi`, `galat`, `tahap` |
+| `PulihkanOnbPratinjau`, `PulihkanOnbProses`, `PulihkanOnbSelesai`, `PulihkanOnbGalat` | Jalur pulihkan di onboarding |
+| `OnbPengantar` (+`EnGelap`) | Slide pertama onboarding dengan tautan "Sudah punya cadangan? Pulihkan" |
+| `RiwayatMenu` | Lembar tindakan ⋮ di Riwayat: Ekspor periode ini |
+
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

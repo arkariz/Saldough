@@ -46,6 +46,10 @@ Sistem ini menggantikan bahasa visual pixel (ADR-015, ADR-016, ADR-020) dan `Pix
 | (baru) | `AppInboxCard` | Widget Kotak masuk notifikasi dengan lima keadaan (belum disetel, izin hilang, mati, aktif kosong, aktif dengan tangkapan); pratinjau dua tangkapan, Ajari pola, Kelola aplikasi & pola |
 | (baru) | `AppPaydayOffer` | Kartu tawaran gajian di Bulan ini, bisa ditutup |
 | `AppPeriodHeader` | `AppPeriodHeader` | Pil tonal dengan petunjuk "Atur" di Bulan ini |
+| (baru) | `AppDataSheet` | Sheet form ekspor/cadangkan: kepala simetris, kelompok berlabel, chip `radiogroup`, `AppSegmentedControl`, ringkasan `surface-2`, kaki satu tombol; keadaan awal, kosong, proses (tombol Batal), siap |
+| (baru) | `AppFileCard` | Ikon berkas + nama (membungkus) + keterangan di blok `surface-2` |
+| (baru) | `AppRestoreSummary` | Kartu perbandingan dua kolom (cadangan vs ponsel ini), satu kolom di onboarding |
+| (baru) | `AppProgressSteps` | Daftar langkah dengan keadaan selesai, berjalan, menunggu; `aria-live` |
 
 ## Urutan pengerjaan yang disarankan
 

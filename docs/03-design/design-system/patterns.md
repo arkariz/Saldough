@@ -93,3 +93,15 @@ Fase 21 (FEATURE_DISCOVERY, revisi 19 Okt 2026). Tiga fitur yang sulit ditemukan
 5. **Status di Akun › Pencatatan**: baris Catat dari notifikasi (Android, jumlah aplikasi), Pengingat rutin, Awal bulan keuangan. Status berupa Badge (Nyala `positive`, Mati netral, Izin belum diberikan `warning` dengan teks).
 6. **Kepala periode dapat diketuk**: pil tonal dengan petunjuk "Atur" (PeriodHeader). **Tawaran gajian** (PaydayOffer): kartu biasa di kepala Bulan ini untuk pengguna lama; boleh ditutup, satu-satunya.
 7. Tidak ada streak, hitungan hari, lencana, atau kata "ketinggalan". Warna peringatan hanya untuk status izin yang hilang, selalu bersama teks.
+
+## Ekspor, cadangan, dan pulihkan
+
+Fase 22 (EXPORT_BACKUP, T-22.0). Semua gratis, tanpa akun, tanpa ajakan Plus.
+
+1. **Akun › Data kamu**: bagian sendiri (judul, satu paragraf, tiga baris): Ekspor ke spreadsheet, Cadangkan sekarang (keterangan "Cadangan terakhir: 12 Okt 2026" atau "Belum pernah dicadangkan", netral, tanpa warna peringatan), Pulihkan dari cadangan. Baris keempat **Kembalikan data sebelum pemulihan (22 Okt 2026)** hanya ada selama cadangan pengaman tersimpan (paling lama 30 hari).
+2. **Ekspor** dan **Cadangkan** memakai DataSheet: awal › proses (bisa dibatalkan) › siap dengan dua tombol **Simpan ke…** dan **Bagikan**. Status cadangan terakhir berubah hanya bila berkas tersimpan.
+3. **Riwayat**: tombol ⋮ di bar atas membuka lembar tindakan dengan "Ekspor periode ini"; lembar ekspor terisi periode yang dilihat.
+4. **Pulihkan** adalah halaman turunan (RestoreFlow), bukan sheet: pratinjau dengan perbandingan › dialog penggantian › proses › selesai atau galat. Kembalikan data memakai halaman yang sama.
+5. **Onboarding**: tautan teks "Sudah punya cadangan? Pulihkan" di bawah tombol Lanjut slide pertama. Urutan: bahasa › berkas › pratinjau (satu kolom, tanpa peringatan) › proses › selesai; langkah mata uang dan periode dilewati.
+6. Galat selalu menyebut "Datamu tidak berubah." dan tidak memakai warna `danger`.
+

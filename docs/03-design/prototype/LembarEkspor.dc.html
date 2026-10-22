@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Lembar ekspor</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,cloud_done,credit_card,dark_mode,delete,description,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,settings_backup_restore,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,table_view,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <sc-if value="{{underRiwayat}}" hint-placeholder-val="{{false}}"><dc-import name="Riwayat" dark="{{dark}}" hint-size="360px,800px"></dc-import></sc-if>
+  <sc-if value="{{underAkun}}" hint-placeholder-val="{{true}}"><dc-import name="AkunData" en="{{en}}" dark="{{dark}}" cadangan="{{cad}}" hint-size="360px,800px"></dc-import></sc-if>
+  <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+    <button class="tk-scrim" type="button" aria-label="{{t.close}}" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet" role="dialog" aria-modal="true" aria-labelledby="ds-title" style="position: absolute; left: 0; right: 0; bottom: 0">
+      <div class="tk-sheet__handle"></div>
+      <div class="tk-sheet__head">
+        <button class="tk-iconbtn" type="button" aria-label="{{t.close}}" onClick="{{close}}"><span class="tk-icon">close</span></button>
+        <h2 class="tk-sheet__title" id="ds-title">{{t.title}}</h2>
+        <span style="width: 48px; flex: none"></span>
+      </div>
+      <div style="padding: 0 0 4px">
+        <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
+          <div class="tk-dsheet">
+            <div class="tk-dsheet__group">
+              <p class="tk-dsheet__label" id="ex-range">{{t.range}}</p>
+              <div class="tk-dsheet__chips" role="radiogroup" aria-labelledby="ex-range">
+                <sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+                  <button class="tk-chip {{c.cls}}" type="button" role="radio" aria-checked="{{c.checked}}" onClick="{{c.pick}}"><sc-if value="{{c.on}}" hint-placeholder-val="{{false}}"><span class="tk-icon" aria-hidden="true">check</span></sc-if>{{c.label}}</button>
+                </sc-for>
+              </div>
+              <sc-if value="{{isCustom}}" hint-placeholder-val="{{false}}">
+                <div class="tk-dsheet__dates">
+                  <div class="tk-field"><span class="tk-field__label">{{t.from}}</span><button class="tk-field__control" type="button"><span style="flex: 1; text-align: left; white-space: nowrap">{{dates.from}}</span><span class="tk-icon tk-icon--sm tk-ink-2" aria-hidden="true">calendar_today</span></button></div>
+                  <div class="tk-field"><span class="tk-field__label">{{t.to}}</span><button class="tk-field__control" type="button"><span style="flex: 1; text-align: left; white-space: nowrap">{{dates.to}}</span><span class="tk-icon tk-icon--sm tk-ink-2" aria-hidden="true">calendar_today</span></button></div>
+                </div>
+              </sc-if>
+            </div>
+            <div class="tk-dsheet__group">
+              <p class="tk-dsheet__label" id="ex-format">{{t.format}}</p>
+              <div class="tk-seg" role="radiogroup" aria-labelledby="ex-format">
+                <button class="tk-seg__opt {{f0.cls}}" type="button" role="radio" aria-checked="{{f0.checked}}" onClick="{{f0.pick}}">{{t.xlsx}}</button>
+                <button class="tk-seg__opt {{f1.cls}}" type="button" role="radio" aria-checked="{{f1.checked}}" onClick="{{f1.pick}}">{{t.csv}}</button>
+              </div>
+            </div>
+            <div class="tk-dsheet__sum {{sumCls}}" role="status"><span class="tk-icon" aria-hidden="true">{{sumIcon}}</span><span>{{sumText}}</span></div>
+          </div>
+          <div class="tk-dsheet__foot">
+            <button class="tk-btn tk-btn--primary tk-btn--block {{goCls}}" type="button" onClick="{{go}}">{{t.go}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isBusy}}" hint-placeholder-val="{{false}}">
+          <div class="tk-dsheet">
+            <div class="tk-dsheet__busy" role="status" aria-live="polite"><span class="tk-icon tk-icon--spin" aria-hidden="true">progress_activity</span><span>{{t.busy}}</span></div>
+            <p class="tk-dsheet__note"><span class="tk-icon" aria-hidden="true">info</span><span>{{t.busyNote}}</span></p>
+          </div>
+          <div class="tk-dsheet__foot">
+            <button class="tk-btn tk-btn--text tk-btn--block" type="button" onClick="{{cancel}}">{{t.cancel}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isReady}}" hint-placeholder-val="{{false}}">
+        <div class="tk-dsheet">
+          <div class="tk-dsheet__ok">
+            <span class="tk-tile tk-tile--lg tk-tile--brandsoft"><span class="tk-icon">check_circle</span></span>
+            <h3 class="tk-dsheet__ok-title">{{t.readyTitle}}</h3>
+          </div>
+          <div class="tk-file"><span class="tk-tile tk-tile--sm tk-tile--app"><span class="tk-icon">description</span></span><span class="tk-file__main"><span class="tk-file__name">{{file.name}}</span><span class="tk-file__meta">{{file.meta}}</span></span></div>
+          <sc-if value="{{cancelled}}" hint-placeholder-val="{{false}}"><p class="tk-dsheet__note" role="status"><span class="tk-icon" aria-hidden="true">info</span><span>{{t.notSaved}}</span></p></sc-if>
+        </div>
+        <div class="tk-dsheet__foot">
+          <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{saveTo}}">{{t.saveTo}}</button>
+          <button class="tk-btn tk-btn--secondary tk-btn--block" type="button" onClick="{{share}}">{{t.share}}</button>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dari":{"editor":"enum","options":["akun","riwayat"],"default":"akun","section":"Keadaan"},"keadaan":{"editor":"enum","options":["awal","kosong","proses","siap"],"default":"awal","section":"Keadaan"},"rentang":{"editor":"enum","options":["period","last","year","all","custom"],"default":"period","section":"Keadaan"},"format":{"editor":"enum","options":["xlsx","csv"],"default":"xlsx","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    const T = en ? {
+      title: 'Export to spreadsheet', close: 'Close', range: 'Range', from: 'From', to: 'To', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      go: 'Export', busy: 'Preparing the file…', busyNote: 'This can take a while if you have a lot of data. You can cancel.', cancel: 'Cancel',
+      readyTitle: 'File ready', saveTo: 'Save to…', share: 'Share', notSaved: '', empty: 'No transactions in this range.',
+      sum: (n, r) => n + (n === 1 ? ' transaction, ' : ' transactions, ') + r,
+      chips: { period: 'This period', last: 'Last period', year: 'This year', all: 'All', custom: 'Custom range' }
+    } : {
+      title: 'Ekspor ke spreadsheet', close: 'Tutup', range: 'Rentang', from: 'Dari', to: 'Sampai', format: 'Format', xlsx: 'Excel (.xlsx)', csv: 'CSV',
+      go: 'Ekspor', busy: 'Menyiapkan berkas…', busyNote: 'Ini bisa memakan waktu kalau datamu banyak. Kamu bisa membatalkannya.', cancel: 'Batal',
+      readyTitle: 'Berkas siap', saveTo: 'Simpan ke…', share: 'Bagikan', notSaved: '', empty: 'Tidak ada transaksi di rentang ini.',
+      sum: (n, r) => n + ' transaksi, ' + r,
+      chips: { period: 'Periode ini', last: 'Periode lalu', year: 'Tahun ini', all: 'Semua', custom: 'Pilih rentang' }
+    };
+    const fromHist = this.props.dari === 'riwayat';
+    const mon = en ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
+    // Contoh: hari ini 22 Okt 2026, periode mulai tanggal 1, catatan pertama 3 Jun 2026. Dari Riwayat, "Periode ini" = periode yang sedang dilihat (September).
+    const R = {
+      period: fromHist ? { n: 34, r: '1 – 30 ' + mon[8] + ' 2026', iso: '2026-09-01_2026-09-30' } : { n: 26, r: '1 – 22 ' + mon[9] + ' 2026', iso: '2026-10-01_2026-10-22' },
+      last: fromHist ? { n: 31, r: '1 – 31 ' + (en ? 'Aug' : 'Agt') + ' 2026', iso: '2026-08-01_2026-08-31' } : { n: 34, r: '1 – 30 ' + mon[8] + ' 2026', iso: '2026-09-01_2026-09-30' },
+      year: { n: 142, r: '1 ' + mon[0] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-01-01_2026-10-22' },
+      all: { n: 142, r: '3 ' + mon[5] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-06-03_2026-10-22' },
+      custom: { n: 62, r: '1 ' + mon[8] + ' – 22 ' + mon[9] + ' 2026', iso: '2026-09-01_2026-10-22' }
+    };
+    const emptyBoard = this.props.keadaan === 'kosong';
+    const range = s.range || (emptyBoard ? 'custom' : (this.props.rentang || 'period'));
+    const fmt = s.fmt || this.props.format || 'xlsx';
+    const phase = s.phase || (this.props.keadaan === 'proses' ? 'busy' : this.props.keadaan === 'siap' ? 'ready' : 'form');
+    const cur = Object.assign({}, R[range]);
+    const isEmpty = range === 'custom' && emptyBoard && !s.range;
+    if (isEmpty) { cur.n = 0; cur.r = '1 – 30 ' + mon[10] + ' 2026'; cur.iso = '2026-11-01_2026-11-30'; }
+    const dates = isEmpty ? { from: '1 ' + mon[10] + ' 2026', to: '30 ' + mon[10] + ' 2026' } : { from: '1 ' + mon[8] + ' 2026', to: '22 ' + mon[9] + ' 2026' };
+    const chips = ['period', 'last', 'year', 'all', 'custom'].map((k) => ({
+      label: T.chips[k], on: range === k, cls: range === k ? 'is-selected' : '', checked: range === k ? 'true' : 'false',
+      pick: () => this.setState({ range: k, phase: 'form' })
+    }));
+    const empty = cur.n === 0;
+    const timer = () => setTimeout(() => this.setState({ phase: 'ready' }), 1400);
+    const ext = fmt === 'xlsx' ? 'xlsx' : 'csv';
+    return {
+      theme: this.props.dark ? 'dark' : 'light', t: T, en: en, dark: !!this.props.dark, cad: 'belum',
+      underRiwayat: fromHist, underAkun: !fromHist,
+      open: !s.closed, close: () => this.setState({ closed: true }),
+      isForm: phase === 'form', isBusy: phase === 'busy', isReady: phase === 'ready', isCustom: range === 'custom',
+      chips: chips, dates: dates,
+      f0: { cls: fmt === 'xlsx' ? 'is-selected' : '', checked: fmt === 'xlsx' ? 'true' : 'false', pick: () => this.setState({ fmt: 'xlsx' }) },
+      f1: { cls: fmt === 'csv' ? 'is-selected' : '', checked: fmt === 'csv' ? 'true' : 'false', pick: () => this.setState({ fmt: 'csv' }) },
+      sumCls: empty ? 'is-empty' : '', sumIcon: empty ? 'event_busy' : 'table_view', sumText: empty ? T.empty : T.sum(cur.n, cur.r),
+      goCls: empty ? 'is-disabled' : '', go: () => { if (empty) return; this.setState({ phase: 'busy' }); timer(); },
+      cancel: () => this.setState({ phase: 'form' }),
+      file: { name: 'tanukonomy-' + (en ? 'transactions' : 'transaksi') + '-' + cur.iso + '.' + ext, meta: (fmt === 'xlsx' ? 'Excel' : 'CSV') + ' · ' + cur.n + (en ? ' transactions' : ' transaksi') },
+      cancelled: false,
+      saveTo: () => this.setState({ closed: true }), share: () => this.setState({ closed: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -5093,6 +5093,50 @@ Riwayat (menu), dan onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
+      **Hasil rupa (22 Okt 2026, menunggu persetujuan pemilik):** 34 papan di
+      prototipe 12 layar (F22-1 s.d. F22-34) dan salinan di
+      `docs/03-design/` (bagian "Ekspor dan cadangan (Fase 22)"): Akun › Data
+      kamu (`AkunData*`; tanpa/ada cadangan, baris Kembalikan, en gelap),
+      lembar ekspor (`LembarEkspor*`: rentang, kustom, kosong, proses, siap,
+      dari Riwayat, en gelap CSV), lembar cadangkan (`LembarCadangkan*`: awal,
+      proses, siap, penyimpanan dibatalkan, en gelap), halaman pulihkan
+      (`Pulihkan*`: pratinjau, cadangan lebih lama, mata uang berbeda dan draf,
+      dialog Ganti data, proses, selesai, tiga galat, Kembalikan, en gelap,
+      jalur onboarding), menu Riwayat ⋮ (`RiwayatMenu`), slide pertama
+      onboarding dengan tautan pulihkan (`OnbPengantar*`). Komponen design
+      system baru: DataSheet (+FileCard) dan RestoreFlow (+RestorePreview,
+      ProgressSteps); kelas `tk-dsheet*`, `tk-file*`, `tk-vs*`, `tk-steps` di
+      `bundle.css`. Dipakai ulang tanpa perubahan: Sheet (form dan tindakan),
+      Chip (radiogroup), SegmentedControl, Field, Dialog, Banner, EmptyState,
+      Row, Button, Tile.
+      Selisih dan keputusan rupa: (1) bagian Akun "Data kamu" menggantikan
+      baris lama "Data kamu / Tersimpan di perangkat ini"; paragraf bagian
+      memakai `account.dataBody`. (2) KT-E3 dibaca sebagai lembar milik app
+      dengan dua tombol, **Simpan ke…** dan **Bagikan**, yang masing-masing
+      membuka lembar sistem. (3) Proses ekspor/cadangkan tanpa bar persentase
+      (pemutar + Batal); proses pulihkan tanpa tombol keluar. (4) Pulihkan
+      berupa halaman turunan, bukan sheet; satu banner "cadangan lebih lama"
+      ditambahkan di pratinjau selain di dialog (spek hanya di dialog). (5)
+      Galat versi lebih baru ditambah kalimat "Datamu tidak berubah."
+      (spek `errorNewer` tidak memilikinya, padahal aturan keras setiap
+      galat menyebutnya). (6) Riwayat memakai tiga tombol ikon di bar atas
+      (Cari, Filter, ⋮); pola menyebut paling banyak dua. (7) Warna `danger`
+      hanya untuk tombol Ganti data; galat tidak memakai warna bahaya.
+      Teks usulan designer (belum di §9): en seluruhnya, judul galat,
+      langkah proses, "Belum tersimpan…", catatan izin di layar selesai,
+      keterangan baris Kembalikan, "Yang akan berubah". Contoh data
+      (142 transaksi, 4 dompet, sejak 3 Jun 2026; cadangan 12 Okt 2026) dan
+      ekstensi `.tnk` adalah anggapan prototipe; ekstensi diputuskan ADR T-22.1.
+      **Pertanyaan untuk PO:** (a) KT-E3: dua tombol di lembar app (rupa ini)
+      atau satu lembar sistem langsung? (b) Tiga tombol di bar Riwayat bisa
+      diterima, atau Filter dipindah ke dalam ⋮? (c) Pilihan "Pilih rentang"
+      memakai pemilih tanggal sistem; perlu rupa pemilih tanggal sendiri?
+      (d) Banner "cadangan lebih lama" di pratinjau boleh, atau cukup di
+      dialog? (e) Slide pengantar onboarding masih punya "Lewati" (sesuai
+      aplikasi sekarang); tetap begitu di jalur pulihkan? Langkah bahasa di
+      jalur pulihkan memakai layar bahasa yang ada (tidak digambar ulang).
+      (f) Nama berkas cadangan dan ekstensi yang ramah pengguna?
+      Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
 - [ ] **T-22.1** ADR teknis cadangan dan ekspor, lalu fondasinya. Engineer
       menulis ADR (nomor berikutnya, Proposed sampai disetujui pemilik) untuk
       EXPORT_BACKUP §10: format dan versi berkas, checksum, penggantian

@@ -59,6 +59,7 @@ berarti membangun ringkasan untuk data yang belum ada.
 | 19 | Analisis keuangan R1 | Ke mana uang pergi per kategori, dibanding biasanya, tren enam periode (selesai 18 Okt 2026) |
 | 20 | Pengumuman pembaruan | Versi baru Play Store dan pembaruan kecil Shorebird diumumkan, catatan Apa yang baru (selesai 15 Okt 2026) |
 | 21 | Penemuan fitur | Catat dari notifikasi, pengingat rutin, dan awal bulan keuangan dijadikan langkah wajib onboarding dan tombol permanen (draf 18 Okt 2026, KT-D1 diputuskan, menunggu rupa) |
+| 22 | Ekspor dan cadangan manual | Ekspor transaksi ke xlsx/CSV, cadangkan dan pulihkan manual ke berkas, gratis tanpa akun (dari B-42, spek final 22 Okt 2026) |
 
 Fase 0 sampai 6 membentuk MVP. Fase 7 dikerjakan setelahnya. Fase 8 dan 9
 lahir dari pemakaian nyata dan persiapan rilis, bukan dari rencana awal.
@@ -93,7 +94,7 @@ baru:
 | B-1 | Sapuan nama "Saldough" → "Tanukonomy" di dokumen | agen |
 | B-5, B-35, B-40 | Verifikasi perangkat yang tertunda: Akun, mata uang, Freelance, suara, lebar 360dp, keadaan kosong Analisis | pemilik |
 | Audit TASK_LIST | Kotak lama yang kemungkinan sudah selesai di kode tapi belum dicentang (T-11.17–11.20, T-15.9, T-15.14, T-15.19, dan B-13/B-14 yang usang) | agen |
-| B-42, B-43 | Ekspor CSV, cadangan/pulihkan manual, dan kunci aplikasi (gratis); prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
+| Fase 22 (dari B-42), B-43 | Ekspor ke spreadsheet dan cadangan/pulihkan manual (Fase 22, [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)), lalu kunci aplikasi (B-43); gratis, prasyarat Plus. Naik ke Now 18 Okt 2026 (KT-P7): data penguji tidak boleh hanya hidup di satu ponsel saat rilis publik | agen |
 
 **Satu fitur yang ikut di Now:** **B-26**, kartu lembut "Ada yang belum dicatat
 sejak …?" (tanpa streak, KT-R13). Paling langsung menjawab ukuran keberhasilan
@@ -508,6 +509,19 @@ menjawab, baris Catat dari notifikasi di Beranda tidak pernah hilang dan tombol
 pengingat hilang saat efektif,
 pengguna lama tidak dipaksa mengulang onboarding, semuanya terverifikasi di
 perangkat.
+
+## Fase 22: Ekspor dan cadangan manual
+
+Dari B-42, permintaan pemilik 22 Okt 2026, prasyarat rilis publik dan Plus
+(FREEMIUM_PAYWALL KT-P7). Transaksi bisa diekspor ke xlsx/CSV, seluruh data
+bisa dicadangkan ke berkas dan dipulihkan di ponsel lain, gratis dan tanpa
+akun ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)). Format
+cadangan dipakai ulang cadangan otomatis Drive (B-51). Keputusan teknis di
+ADR engineer (T-22.1). **Status:** spek final 22 Okt 2026 (KT-E1–KT-E5 diputuskan); menunggu rupa dan ADR engineer.
+
+**Selesai kalau:** cadangan dari satu ponsel dipulihkan di ponsel lain dan
+seluruh layar identik, pemulihan gagal tidak pernah merusak data, dan total
+di spreadsheet sama dengan aplikasi, terverifikasi di perangkat.
 
 ## Ketergantungan antar fase
 

@@ -18,4 +18,7 @@ final class WalletDetailInput extends RouteInput {
 abstract final class WalletRouteKeys {
   /// Rincian satu dompet.
   static const detail = RouteKey<WalletDetailInput>('wallet.detail');
+
+  /// Daftar dompet nonaktif (Dompet v2, B-66).
+  static const inactive = RouteKey<EmptyInput>('wallet.inactive');
 }

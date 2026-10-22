@@ -938,6 +938,32 @@ tugasnya Fase 21.
       jelas dapat diketuk; pengguna lama dapat tawaran gajian yang boleh
       ditutup.
 
+### 7.12 Ekspor dan cadangan manual (sesudah MVP, ditambahkan 22 Okt 2026)
+
+Kebutuhan ini lahir dari B-42 (FREEMIUM_PAYWALL §12.1, KT-P7): data harus
+bisa dibawa pergi dan dipindah ke ponsel lain sebelum rilis publik, gratis,
+tanpa akun. Perilaku dan aturannya di
+[EXPORT_BACKUP.md](features/EXPORT_BACKUP.md); tugasnya Fase 22. Ini
+menggantikan "ekspor-impor data" di daftar §6 yang di luar MVP, untuk bagian
+ekspor saja; impor tetap di luar cakupan.
+
+**FR-DAT-001 — Ekspor ke spreadsheet**
+- [ ] Transaksi bisa diekspor ke xlsx atau CSV untuk rentang berbasis
+      periode keuangan, dari Akun dan Riwayat.
+- [ ] Jumlah kolom Arus per periode di berkas sama dengan Arus aplikasi;
+      transfer tidak dihitung sebagai pemasukan atau pengeluaran.
+
+**FR-DAT-002 — Cadangkan manual**
+- [ ] Seluruh data dan setelan keuangan bisa dicadangkan ke satu berkas
+      berversi di tempat pilihan pengguna, tanpa akun dan tanpa koneksi.
+- [ ] Akun menampilkan kapan cadangan terakhir disimpan.
+
+**FR-DAT-003 — Pulihkan manual**
+- [ ] Cadangan bisa dipulihkan dari Akun dan dari onboarding; data di
+      perangkat diganti seluruhnya tanpa penggabungan, dengan peringatan.
+- [ ] Pemulihan atomik; data sebelumnya disimpan sebagai cadangan pengaman
+      yang bisa dikembalikan; saldo dompet dihitung ulang.
+
 ## 8. Kebutuhan non-fungsional
 
 ### 8.1 Ketepatan

@@ -45,6 +45,10 @@ enum IconKey {
   /// Ikon piksel tab Dompet di navigasi bawah.
   navWallets,
 
+  /// Ikon piksel donat empat irisan untuk kartu Sebaran saldo di tab Dompet
+  /// (BalanceSpread, B-66).
+  balanceSpread,
+
   // Jenis dompet
 
   /// Dompet jenis rekening bank.
@@ -314,6 +318,7 @@ const Map<IconKey, String> _pixelAssets = {
   IconKey.navHistory: 'assets/icons/transactions.svg',
   IconKey.navPlan: 'assets/icons/budget.svg',
   IconKey.navWallets: 'assets/icons/wallets.svg',
+  IconKey.balanceSpread: 'assets/icons/balance_spread.svg',
   IconKey.walletBank: 'assets/icons/wallet_bank.svg',
   IconKey.walletCash: 'assets/icons/wallet_cash.svg',
   IconKey.walletEwallet: 'assets/icons/wallet_ewallet.svg',
@@ -369,6 +374,7 @@ const Map<IconKey, IconData> _symbols = {
   IconKey.record: Symbols.add_rounded,
   IconKey.transactions: Symbols.receipt_long_rounded,
   IconKey.wallets: Symbols.account_balance_wallet_rounded,
+  IconKey.balanceSpread: Icons.donut_small_outlined,
   IconKey.categoryOther: Symbols.more_horiz_rounded,
   IconKey.categoryFamily: Symbols.family_restroom_rounded,
   IconKey.categoryDonation: Symbols.volunteer_activism_rounded,

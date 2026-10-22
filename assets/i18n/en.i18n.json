@@ -234,6 +234,17 @@
     "addAction": "Add wallet",
     "inactiveHeading": "Inactive wallets",
     "inactiveBadge": "Inactive",
+    "spreadTitle": "Balance spread",
+    "spreadTapOpen": "Tap to see the chart",
+    "spreadTapClose": "Tap to close the chart",
+    "spreadOfTotal": "$percent of total balance",
+    "spreadSeeTotal": "See total",
+    "spreadHide": "Hide",
+    "spreadSemantics": "Balance spread: $list",
+    "inactiveRowSub": {
+      "one": "${n} wallet · hidden in Record",
+      "other": "${n} wallets · hidden in Record"
+    },
     "typeBank": "Bank account",
     "typeCash": "Cash",
     "typeEwallet": "Digital wallet",

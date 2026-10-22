@@ -234,6 +234,17 @@
     "addAction": "Tambah dompet",
     "inactiveHeading": "Dompet nonaktif",
     "inactiveBadge": "Nonaktif",
+    "spreadTitle": "Sebaran saldo",
+    "spreadTapOpen": "Ketuk untuk melihat diagram",
+    "spreadTapClose": "Ketuk untuk menutup diagram",
+    "spreadOfTotal": "$percent dari total saldo",
+    "spreadSeeTotal": "Lihat total",
+    "spreadHide": "Sembunyikan",
+    "spreadSemantics": "Sebaran saldo: $list",
+    "inactiveRowSub": {
+      "one": "${n} dompet · tidak muncul di Catat",
+      "other": "${n} dompet · tidak muncul di Catat"
+    },
     "typeBank": "Bank",
     "typeCash": "Uang tunai",
     "typeEwallet": "Dompet digital",

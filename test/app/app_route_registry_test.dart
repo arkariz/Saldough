@@ -29,6 +29,7 @@ void main() {
       'transaction.history',
       'voiceCapture.capture',
       'wallet.detail',
+      'wallet.inactive',
     });
   });
 

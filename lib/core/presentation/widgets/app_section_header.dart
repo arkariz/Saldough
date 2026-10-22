@@ -11,6 +11,7 @@ class AppSectionHeader extends StatelessWidget {
     this.hint,
     this.actionLabel,
     this.onAction,
+    this.badge,
     super.key,
   });
 
@@ -25,6 +26,9 @@ class AppSectionHeader extends StatelessWidget {
 
   /// Dipanggil saat tautan diketuk.
   final VoidCallback? onAction;
+
+  /// Lencana di belakang judul, mis. jumlah dompet aktif ("Dompet aktif 4").
+  final Widget? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,16 @@ class AppSectionHeader extends StatelessWidget {
           children: [
             Semantics(
               header: true,
-              child: Text(title, style: textTheme.titleLarge),
+              child: badge == null
+                  ? Text(title, style: textTheme.titleLarge)
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(child: Text(title, style: textTheme.titleLarge)),
+                        const SizedBox(width: AppSpacing.space2),
+                        badge!,
+                      ],
+                    ),
             ),
             if (actionLabel != null)
               Semantics(

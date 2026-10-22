@@ -13,9 +13,11 @@ import 'package:saldough/features/budget/domain/repositories/budget_repository.d
 import 'package:saldough/features/home/domain/budget_overview_source.dart';
 import 'package:saldough/features/home/domain/freelance_overview_source.dart';
 import 'package:saldough/features/plan/domain/plan_sources.dart';
+import 'package:saldough/features/wallet/presentation/pages/wallet_inactive_page.dart';
 import 'package:saldough/features/wallet/presentation/pages/wallet_list_page.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_card.dart';
 import 'package:saldough/features/wallet/presentation/widgets/wallet_reorder_sheet.dart';
+import 'package:saldough/features/wallet/presentation/widgets/wallet_spread_card.dart';
 import 'package:saldough/shared/auth/auth.dart';
 import 'package:saldough/shared/budget_catalog/budget_catalog.dart';
 import 'package:saldough/shared/category/category.dart';
@@ -166,18 +168,99 @@ void main() {
         expect(find.text('BCA'), findsOneWidget);
         expect(find.text('GoPay'), findsOneWidget);
         // Subjudul "Jenis · persen" (prototipe `Dompet.dc.html`): 8.500.000
-        // dari 10.950.000 = 78%, sisanya 22%; dompet nonaktif tanpa persen.
+        // dari 10.950.000 = 78%, sisanya 22%.
         expect(find.text('${t.wallet.typeBank} · 78%'), findsOneWidget);
         expect(find.text('${t.wallet.typeEwallet} · 22%'), findsOneWidget);
-        expect(find.text(t.wallet.typeBank), findsOneWidget, reason: 'Lama: nonaktif');
         expect(find.byType(WalletSpreadBar), findsOneWidget);
-        expect(
-          find.text(t.wallet.inactiveHeading),
-          findsOneWidget,
-        );
-        expect(find.text('Lama'), findsOneWidget);
+        expect(find.byType(WalletSwatch), findsWidgets);
+        // Dompet nonaktif hanya satu baris ringkas (B-66), bukan daftar.
+        expect(find.text(t.wallet.inactiveHeading), findsOneWidget);
+        expect(find.text(t.wallet.inactiveRowSub(n: 1)), findsOneWidget);
+        expect(find.text('Lama'), findsNothing);
       },
     );
+
+    testWidgets('satu dompet (D6): tanpa kartu Sebaran saldo dan tanpa persen', (tester) async {
+      tallViewport(tester);
+      await seed('a', 'BCA', current: 850000000);
+      await openWalletsTab(tester);
+
+      expect(find.byType(WalletSpreadCard), findsNothing);
+      expect(find.text(t.wallet.typeBank), findsOneWidget);
+      expect(find.byType(WalletSwatch), findsNothing);
+      expect(find.text(t.wallet.inactiveHeading), findsNothing);
+    });
+
+    testWidgets(
+      'Sebaran saldo: ringkas, dibuka jadi donat, pilih dompet menandai barisnya, Lihat total, Sembunyikan',
+      (tester) async {
+        tallViewport(tester);
+        await seed('bca', 'BCA', current: 1481000000);
+        await seed('tab', 'Tabungan', current: 1200000000, icon: 'walletSavings');
+        await seed('tunai', 'Tunai', current: 37600000, icon: 'walletCash');
+        await openWalletsTab(tester);
+
+        // D1: ringkas dengan kunci warna, tanpa donat.
+        expect(find.text(t.wallet.spreadTapOpen), findsOneWidget);
+        expect(find.text('Tunai 1%'), findsOneWidget);
+        expect(find.byType(AppDonutChart), findsNothing);
+        // Bar proporsi benar-benar tergambar: tiap ruas setinggi 12px, bukan 0.
+        final segments = find.descendant(of: find.byType(WalletSpreadBar), matching: find.byType(ColoredBox));
+        expect(segments, findsNWidgets(3));
+        for (final segment in tester.widgetList(segments)) {
+          final size = tester.getSize(find.byWidget(segment));
+          expect(size.height, 12);
+          expect(size.width, greaterThanOrEqualTo(3));
+        }
+
+        // D2: kepala membuka donat; tengahnya total.
+        await tester.tap(find.byKey(const ValueKey('wallet-spread-head')));
+        await tester.pumpAndSettle();
+        expect(find.byType(AppDonutChart), findsOneWidget);
+        expect(find.text(t.wallet.spreadTapClose), findsOneWidget);
+        expect(find.byType(WalletSpreadBar), findsNothing);
+        expect(find.text(t.wallet.spreadSeeTotal), findsNothing);
+
+        // D3: Tunai dipilih lewat legenda: tengah = nama + persen, baris ditandai.
+        await tester.tap(find.byKey(const ValueKey('wallet-legend-tunai')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.wallet.spreadOfTotal(percent: '1%')), findsOneWidget);
+        bool linkedOf(String name) =>
+            tester.widget<WalletCard>(find.ancestor(of: find.text(name), matching: find.byType(WalletCard))).linked;
+        expect(linkedOf('BCA'), isFalse);
+        expect(
+          tester.widgetList<WalletCard>(find.byType(WalletCard)).where((c) => c.linked).map((c) => c.wallet.id),
+          ['tunai'],
+        );
+
+        // Lihat total mengosongkan pilihan.
+        await tester.tap(find.text(t.wallet.spreadSeeTotal));
+        await tester.pumpAndSettle();
+        expect(tester.widgetList<WalletCard>(find.byType(WalletCard)).where((c) => c.linked), isEmpty);
+        expect(find.text(t.wallet.spreadOfTotal(percent: '1%')), findsNothing);
+
+        // Pilih lagi, lalu Sembunyikan: kembali ringkas tanpa pilihan.
+        await tester.tap(find.byKey(const ValueKey('wallet-legend-bca')));
+        await tester.pumpAndSettle();
+        expect(linkedOf('BCA'), isTrue);
+        await tester.tap(find.byKey(const ValueKey('wallet-spread-hide')));
+        await tester.pumpAndSettle();
+        expect(find.byType(AppDonutChart), findsNothing);
+        expect(linkedOf('BCA'), isFalse);
+      },
+    );
+
+    testWidgets('baris Dompet nonaktif membuka daftar dompet nonaktif', (tester) async {
+      tallViewport(tester);
+      await seed('a', 'BCA', current: 850000000);
+      await seed('c', 'Lama', current: 999900000, active: false);
+      await openWalletsTab(tester);
+
+      await tester.tap(find.byKey(const ValueKey('wallet-inactive-row')));
+      await tester.pumpAndSettle();
+      expect(find.byType(WalletInactivePage), findsOneWidget);
+      expect(find.text('Lama'), findsOneWidget);
+    });
 
     testWidgets(
       'saldo negatif tampil dengan tanda minus dan warna expense, bukan sebagai kesalahan (FR-WAL-003)',
@@ -505,7 +588,7 @@ void main() {
 
       expect((await stored()).map((w) => w.id), ['w4', 'w1', 'w3', 'w2']);
       final names = tester.widgetList<WalletCard>(find.byType(WalletCard)).map((c) => c.wallet.name);
-      expect(names, ['GoPay', 'BCA', 'Tunai', 'Lama']);
+      expect(names, ['GoPay', 'BCA', 'Tunai'], reason: 'Lama nonaktif: di halaman Dompet nonaktif (B-66)');
       expect(find.text(t.wallet.reorderedMessage), findsOneWidget);
     });
 

@@ -1,0 +1,18 @@
+{
+  "version": "0.8.0",
+  "groups": [
+    {
+      "category": "new",
+      "notes": [
+        {
+          "id": "Di Dompet, kartu Sebaran saldo menunjukkan porsi tiap dompet. Ketuk untuk membukanya jadi diagram donat, lalu pilih satu dompet untuk melihat saldo dan persennya.",
+          "en": "On Wallets, the Balance spread card shows each wallet's share. Tap it to open a donut chart, then pick a wallet to see its balance and share."
+        },
+        {
+          "id": "Dompet nonaktif kini dikumpulkan di satu halaman tersendiri, jadi daftar Dompet lebih ringkas.",
+          "en": "Inactive wallets now live on their own page, so your Wallets list stays short."
+        }
+      ]
+    }
+  ]
+}

@@ -1,33 +1,40 @@
 import 'package:saldough/shared/wallet/wallet.dart';
 
-/// Persen bagian saldo tiap dompet terhadap total saldo positif (bar sebaran
-/// Dompet, ADR-034 §4), dibulatkan dengan sisa terbesar supaya jumlahnya
-/// tepat 100. Dompet bersaldo nol atau negatif tidak ikut dan tidak muncul
-/// di hasil. Kosong bila tidak ada saldo positif sama sekali.
+/// Bagian saldo satu dompet terhadap total saldo positif (BalanceSpread).
+final class WalletShare {
+  /// Membuat [WalletShare].
+  const WalletShare({required this.percent, required this.belowOne});
+
+  /// Persen bulat, dibulatkan setengah ke atas.
+  final int percent;
+
+  /// Saldo di atas 0 tetapi di bawah 0,5% dari total: tampil "<1%".
+  final bool belowOne;
+
+  /// "54%" atau "<1%".
+  String get text => belowOne ? '<1%' : '$percent%';
+}
+
+/// Bagian saldo tiap dompet terhadap total saldo positif (kartu Sebaran
+/// saldo, BalanceSpread): persen bulat setengah ke atas, di bawah 0,5% ditulis
+/// "<1%" -- sama dengan Analisis, jadi jumlahnya boleh tidak tepat 100.
+/// Dompet bersaldo nol atau negatif tidak ikut dan tidak muncul di hasil.
+/// Kosong bila tidak ada saldo positif sama sekali.
 ///
-/// Aritmetika bilangan bulat murni: persen kali 10.000 dihitung lewat
-/// `~/` pada sen, sisa pembagiannya yang menentukan siapa dapat satu poin
-/// tambahan.
-Map<String, int> walletShares(List<Wallet> wallets) {
+/// Aritmetika bilangan bulat murni pada sen.
+Map<String, WalletShare> walletShares(List<Wallet> wallets) {
   final positive = [
     for (final w in wallets)
       if (w.currentBalance > 0) w,
   ];
   final total = positive.fold<int>(0, (sum, w) => sum + w.currentBalance);
   if (total == 0) return const {};
-  final floors = <String, int>{};
-  final remainders = <(String, int)>[];
-  for (final wallet in positive) {
-    final scaled = wallet.currentBalance * 100;
-    floors[wallet.id] = scaled ~/ total;
-    remainders.add((wallet.id, scaled % total));
-  }
-  var missing = 100 - floors.values.fold<int>(0, (a, b) => a + b);
-  remainders.sort((a, b) => b.$2.compareTo(a.$2));
-  for (final (id, _) in remainders) {
-    if (missing == 0) break;
-    floors[id] = floors[id]! + 1;
-    missing--;
-  }
-  return floors;
+  return {
+    for (final wallet in positive)
+      wallet.id: WalletShare(
+        // (saldo × 200 + total) ~/ (2 × total) = bulat setengah ke atas.
+        percent: (wallet.currentBalance * 200 + total) ~/ (2 * total),
+        belowOne: wallet.currentBalance * 200 < total,
+      ),
+  };
 }

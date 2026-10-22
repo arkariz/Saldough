@@ -547,6 +547,33 @@ class Translations$wallet$id {
 	/// id: 'Nonaktif'
 	String get inactiveBadge => 'Nonaktif';
 
+	/// id: 'Sebaran saldo'
+	String get spreadTitle => 'Sebaran saldo';
+
+	/// id: 'Ketuk untuk melihat diagram'
+	String get spreadTapOpen => 'Ketuk untuk melihat diagram';
+
+	/// id: 'Ketuk untuk menutup diagram'
+	String get spreadTapClose => 'Ketuk untuk menutup diagram';
+
+	/// id: '$percent dari total saldo'
+	String spreadOfTotal({required Object percent}) => '${percent} dari total saldo';
+
+	/// id: 'Lihat total'
+	String get spreadSeeTotal => 'Lihat total';
+
+	/// id: 'Sembunyikan'
+	String get spreadHide => 'Sembunyikan';
+
+	/// id: 'Sebaran saldo: $list'
+	String spreadSemantics({required Object list}) => 'Sebaran saldo: ${list}';
+
+	/// id: '(one) {${n} dompet · tidak muncul di Catat} (other) {${n} dompet · tidak muncul di Catat}'
+	String inactiveRowSub({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n,
+		one: '${n} dompet · tidak muncul di Catat',
+		other: '${n} dompet · tidak muncul di Catat',
+	);
+
 	/// id: 'Bank'
 	String get typeBank => 'Bank';
 
@@ -4544,6 +4571,14 @@ extension on Translations {
 			'wallet.addAction' => 'Tambah dompet',
 			'wallet.inactiveHeading' => 'Dompet nonaktif',
 			'wallet.inactiveBadge' => 'Nonaktif',
+			'wallet.spreadTitle' => 'Sebaran saldo',
+			'wallet.spreadTapOpen' => 'Ketuk untuk melihat diagram',
+			'wallet.spreadTapClose' => 'Ketuk untuk menutup diagram',
+			'wallet.spreadOfTotal' => ({required Object percent}) => '${percent} dari total saldo',
+			'wallet.spreadSeeTotal' => 'Lihat total',
+			'wallet.spreadHide' => 'Sembunyikan',
+			'wallet.spreadSemantics' => ({required Object list}) => 'Sebaran saldo: ${list}',
+			'wallet.inactiveRowSub' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, one: '${n} dompet · tidak muncul di Catat', other: '${n} dompet · tidak muncul di Catat', ), 
 			'wallet.typeBank' => 'Bank',
 			'wallet.typeCash' => 'Uang tunai',
 			'wallet.typeEwallet' => 'Dompet digital',
@@ -4834,6 +4869,8 @@ extension on Translations {
 			'freelance.receiveNoteDefault' => ({required Object project}) => 'Tagihan freelance ${project}',
 			'freelance.receiveAction' => 'Catat diterima',
 			'freelance.paymentReceivedMessage' => 'Tagihan dicatat diterima. Saldo dompet bertambah.',
+			_ => null,
+		} ?? switch (path) {
 			'freelance.receiptCancelAction' => 'Batalkan penerimaan',
 			'freelance.receiptCancelConfirmTitle' => 'Batalkan penerimaan?',
 			'freelance.receiptCancelConfirmMessage' => 'Pemasukannya dihapus dan saldo dompet berkurang kembali. Tagihan kembali tertunda.',
@@ -4842,8 +4879,6 @@ extension on Translations {
 			'freelance.receiptCancelConfirmAction' => 'Hapus pemasukan',
 			'freelance.billAction' => ({required Object count}) => 'Tagih (${count})',
 			'freelance.entriesEmptyTitle' => 'Belum ada jam kerja',
-			_ => null,
-		} ?? switch (path) {
 			'freelance.entriesEmptyBody' => 'Jam kerja yang kamu catat jadi dasar tagihan proyek ini.',
 			'freelance.entriesFilteredEmpty' => 'Tidak ada jam kerja dengan status ini.',
 			'freelance.entryAddShortAction' => 'Catat jam kerja',
@@ -5348,6 +5383,8 @@ extension on Translations {
 			'recurring.progressLine' => ({required Object k, required Object n}) => '${k} dari ${n} tercatat',
 			'recurring.countLine' => ({required Object n}) => '${n} kali',
 			'recurring.pausedLine' => 'Dijeda',
+			_ => null,
+		} ?? switch (path) {
 			'recurring.reminderLine' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('id'))(n, other: 'Bayar sendiri · diingatkan H−${n}', ), 
 			'recurring.autoDebitLine' => 'Autodebet',
 			'recurring.pausedMessage' => ({required Object name}) => '${name} dijeda.',
@@ -5356,8 +5393,6 @@ extension on Translations {
 			'recurring.deletedMessage' => ({required Object name}) => '${name} dihapus.',
 			'recurring.skippedMessage' => ({required Object date}) => '${date} dilewati.',
 			'recurring.priceUpdateAction' => ({required Object amount}) => 'Perbarui ke ${amount}',
-			_ => null,
-		} ?? switch (path) {
 			'recurring.notFound' => 'Rutin ini sudah tidak ada.',
 			'recurring.noRecorded' => 'Belum ada yang tercatat.',
 			'recurring.recordedMessage' => ({required Object name}) => '${name} tercatat.',

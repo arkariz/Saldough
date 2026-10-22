@@ -204,6 +204,14 @@ void main() {
         expect(find.text(t.wallet.spreadTapOpen), findsOneWidget);
         expect(find.text('Tunai 1%'), findsOneWidget);
         expect(find.byType(AppDonutChart), findsNothing);
+        // Bar proporsi benar-benar tergambar: tiap ruas setinggi 12px, bukan 0.
+        final segments = find.descendant(of: find.byType(WalletSpreadBar), matching: find.byType(ColoredBox));
+        expect(segments, findsNWidgets(3));
+        for (final segment in tester.widgetList(segments)) {
+          final size = tester.getSize(find.byWidget(segment));
+          expect(size.height, 12);
+          expect(size.width, greaterThanOrEqualTo(3));
+        }
 
         // D2: kepala membuka donat; tengahnya total.
         await tester.tap(find.byKey(const ValueKey('wallet-spread-head')));

@@ -222,7 +222,7 @@ class _Head extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space4, vertical: AppSpacing.space3),
             child: Row(
               children: [
-                AppIconTile(IconKey.budget, background: colors.brandSoft, foreground: colors.brandInk),
+                AppIconTile(IconKey.balanceSpread, background: colors.brandSoft),
                 const SizedBox(width: AppSpacing.space3),
                 Expanded(
                   child: Column(

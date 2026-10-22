@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 3 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), dan T-22.3 (cadangkan) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.4 |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 4 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 Accepted, T-22.1 (fondasi), T-22.2 (ekspor), T-22.3 (cadangkan), dan T-22.4 (pulihkan) selesai 22 Okt 2026; rupa sudah ada (T-22.0); berikutnya T-22.5 |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5219,7 +5219,7 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       diperiksa independen dengan Python (gzip, amplop versi 1, SHA-256 sesuai
       ADR cocok, tanpa kunci milik perangkat). `createdAt` ditulis UTC.
       ⚠ Belum dicoba di iOS.
-- [ ] **T-22.4** Pulihkan dari Akun: pemeriksaan R-1–R-3, pratinjau,
+- [x] **T-22.4** Pulihkan dari Akun: pemeriksaan R-1–R-3, pratinjau,
       peringatan penggantian, cadangan pengaman (R-5) dan baris Kembalikan,
       penggantian atomik (R-4), hitung ulang saldo (R-6), jadwal ulang
       pengingat, izin lewat pintu Fase 21.
@@ -5227,6 +5227,25 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       utuh, tidak pernah campuran.
       Verifikasi: uji tiap R-n; uji bolak-balik; verifikasi perangkat.
       Memenuhi FR-DAT-003.
+      **Selesai 22 Okt 2026.** Halaman Pulihkan dari cadangan (pratinjau dua
+      kolom, banner "lebih lama", daftar perubahan, dialog Ganti data, daftar
+      langkah, halaman galat dan halaman selesai), `RestoreService`
+      (pemeriksaan R-1–R-3), cadangan pengaman (R-5) dan baris Kembalikan
+      (mesin yang sama), penggantian atomik lewat jurnal (R-4) dengan
+      `AppReboot` yang menampilkan langkah selama boot ulang, hitung ulang
+      saldo (R-6) dan jadwal ulang pengingat di `restore_recovery`.
+      Selisih dari desain: ekstensi `.tkbak` (ADR-040), bukan `.tnk`.
+      Verifikasi: uji layanan, bloc, halaman, mesin (sapuan galat di setiap
+      operasi tulis), bolak-balik, dan Akun lulus; `flutter analyze` bersih;
+      seluruh `flutter test` 2014 lulus, 1 gagal
+      (`notification_inbox_card_test` "aktif tanpa yang menunggu", berkas
+      tak tersentuh tugas ini; sudah ada sebelumnya). Emulator Android:
+      berkas `.tkbak` dipilih lewat pemilih sistem → pratinjau → dialog →
+      daftar langkah → boot ulang → halaman "Data dipulihkan", dan baris
+      Kembalikan (22 Okt 2026) muncul di Akun.
+      ⚠ Belum diverifikasi di perangkat: banner "lebih lama" dan perubahan
+      mata uang/draf, aksi Kembalikan, galat berkas rusak/lebih baru,
+      penutupan paksa di tengah penggantian, izin lewat pintu Fase 21, iOS.
 - [ ] **T-22.5** Pulihkan saat onboarding (§7.3): tautan di slide pertama,
       langkah mata uang dan periode dilewati sesudah berhasil, langkah
       pengingat hanya bila cadangan memuat pengingat menyala.

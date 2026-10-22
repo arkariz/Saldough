@@ -5080,16 +5080,16 @@ ponsel lain (cadangkan dan pulihkan manual ke berkas), gratis, tanpa akun.
 Perilaku, aturan E-/C-/R-, teks, dan kasus tepi di
 [EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md). **Keputusan
 teknis diserahkan ke engineer** (EXPORT_BACKUP §10) sebagai ADR di T-22.1.
-KT-E1–KT-E5 diputuskan 22 Okt 2026. Branch sendiri dari `main`; menyentuh layar Akun,
-Riwayat (menu), dan onboarding (tautan pulihkan, bersinggungan dengan Fase
+KT-E1–KT-E5 diputuskan 22 Okt 2026. Branch sendiri dari `main`; menyentuh layar Akun dan
+onboarding (tautan pulihkan, bersinggungan dengan Fase
 21).
 
 - [ ] **T-22.0** Rupa ekspor dan cadangan (designer): bagian Data kamu di
       Akun (tiga baris, status cadangan terakhir, baris Kembalikan data
-      sebelum pemulihan), lembar ekspor (rentang, format, ringkasan, kosong,
-      proses), lembar cadangkan, alur pulihkan (pratinjau, peringatan
-      penggantian, cadangan lebih lama, proses, selesai, galat), menu Riwayat
-      Ekspor periode ini, tautan pulihkan di onboarding.
+      sebelum pemulihan), lembar ekspor (format, ringkasan seluruh data, belum
+      ada transaksi, proses), lembar cadangkan, alur pulihkan (pratinjau, peringatan
+      penggantian, cadangan lebih lama, proses, selesai, galat), tautan
+      pulihkan di onboarding.
       Verifikasi: pemilik menyetujui rupa; selisih dari komponen yang ada
       dicatat.
       Di luar PRD: rupa; kebutuhannya FR-DAT-001–003.
@@ -5103,9 +5103,9 @@ Riwayat (menu), dan onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: ADR disetujui; uji bolak-balik cadangkan → pulihkan di
       aplikasi kosong menghasilkan data identik (§10 butir 5).
       Memenuhi FR-DAT-002, FR-DAT-003.
-- [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun dan Riwayat,
-      rentang berbasis periode keuangan, xlsx (lembar Transaksi dan Dompet)
-      dan CSV sesuai §5, aturan E-1–E-6.
+- [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
+      pilihan rentang (selalu seluruh data saat ini), xlsx (lembar Transaksi
+      dan Dompet) dan CSV sesuai §5, aturan E-1–E-6.
       ⚠ Kolom Awal periode memakai `periodDateOf`; Arus transfer selalu 0
       (aturan 7).
       Verifikasi: uji jumlah Arus per Awal periode = Arus aplikasi, termasuk

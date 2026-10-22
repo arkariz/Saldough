@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Onboarding, slide pertama</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,cloud_done,credit_card,dark_mode,delete,description,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,settings_backup_restore,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,table_view,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk tk-onb" data-theme="{{theme}}" style="width: 360px; height: 800px; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink)">
+  <div class="tk-onb__top">
+    <span class="tk-onb__brand">Tanukonomy</span>
+    <button class="tk-btn tk-btn--text" type="button">{{t.skip}}</button>
+  </div>
+  <div class="tk-onb__body" style="justify-content: center; gap: 16px">
+    <img class="tk-onb__art" src="/_blob/9ec0bbecee78363060510fba93fd108e" alt="" style="height: 220px">
+    <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; padding: 0 8px">
+      <h1 class="tk-onb__title">{{t.title}}</h1>
+      <p class="tk-onb__text">{{t.body}}</p>
+    </div>
+    <div role="img" aria-label="{{t.page}}" style="display: flex; justify-content: center; gap: 8px">
+      <span style="width: 20px; height: 8px; background: var(--brand)"></span><span style="width: 8px; height: 8px; background: var(--line-strong)"></span><span style="width: 8px; height: 8px; background: var(--line-strong)"></span><span style="width: 8px; height: 8px; background: var(--line-strong)"></span>
+    </div>
+  </div>
+  <div class="tk-onb__foot">
+    <button class="tk-btn tk-btn--primary tk-btn--block" type="button">{{t.next}}</button>
+    <a class="tk-btn tk-btn--text tk-btn--block" href="PulihkanOnbPratinjau.dc.html"><span class="tk-icon" aria-hidden="true">settings_backup_restore</span>{{t.restore}}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const en = !!this.props.en;
+    const t = en
+      ? { skip: 'Skip', title: 'All your money, one book', body: 'See where your money is, what happens to it, and where you plan for it to go — all in one notebook.', next: 'Next', restore: 'Already have a backup? Restore', page: 'Page 1 of 4' }
+      : { skip: 'Lewati', title: 'Semua uangmu, satu buku', body: 'Lihat di mana uangmu berada, apa saja yang terjadi padanya, dan ke mana kamu merencanakannya — semuanya di satu buku catatan.', next: 'Lanjut', restore: 'Sudah punya cadangan? Pulihkan', page: 'Halaman 1 dari 4' };
+    return { theme: this.props.dark ? 'dark' : 'light', t: t };
+  }
+}
+</script>
+</body>
+</html>

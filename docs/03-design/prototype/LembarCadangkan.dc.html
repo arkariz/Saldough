@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Lembar cadangkan</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tanukonomy/components/bundle.css">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,account_balance_wallet,account_circle,add,alarm,arrow_back,arrow_downward,arrow_upward,backspace,backup,bolt,calendar_today,check,check_circle,chevron_left,chevron_right,close,cloud_done,credit_card,dark_mode,delete,description,donut_small,edit,edit_note,error,event_busy,expand_less,expand_more,family_restroom,home,hourglass_top,inbox,info,label,label_off,local_cafe,lock,logout,medical_services,mic,more_horiz,more_vert,notifications,payments,progress_activity,radio_button_unchecked,receipt_long,redeem,restart_alt,restaurant,savings,schedule,school,search,settings_backup_restore,shopping_bag,shopping_cart,sports_esports,stars,sticky_note_2,swap_horiz,system_update,table_view,task_alt,translate,tune,two_wheeler,undo,visibility,visibility_off,volunteer_activism,warning,wifi,work&display=block">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="tk" data-theme="{{theme}}" style="position: relative; width: 360px; height: 800px; overflow: hidden; font-family: 'Plus Jakarta Sans', Roboto, sans-serif; color: var(--ink); background: var(--bg)">
+  <sc-if value="{{underRiwayat}}" hint-placeholder-val="{{false}}"><dc-import name="Riwayat" dark="{{dark}}" hint-size="360px,800px"></dc-import></sc-if>
+  <sc-if value="{{underAkun}}" hint-placeholder-val="{{true}}"><dc-import name="AkunData" en="{{en}}" dark="{{dark}}" cadangan="{{cad}}" hint-size="360px,800px"></dc-import></sc-if>
+  <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+    <button class="tk-scrim" type="button" aria-label="{{t.close}}" onClick="{{close}}" style="border: 0; padding: 0; cursor: pointer"></button>
+    <div class="tk-sheet" role="dialog" aria-modal="true" aria-labelledby="ds-title" style="position: absolute; left: 0; right: 0; bottom: 0">
+      <div class="tk-sheet__handle"></div>
+      <div class="tk-sheet__head">
+        <button class="tk-iconbtn" type="button" aria-label="{{t.close}}" onClick="{{close}}"><span class="tk-icon">close</span></button>
+        <h2 class="tk-sheet__title" id="ds-title">{{t.title}}</h2>
+        <span style="width: 48px; flex: none"></span>
+      </div>
+      <div style="padding: 0 0 4px">
+        <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
+          <div class="tk-dsheet">
+            <div class="tk-dsheet__sum"><span class="tk-icon" aria-hidden="true">backup</span><span>{{t.sum}}</span></div>
+            <div class="tk-dsheet__incl">
+              <div class="tk-dsheet__col"><h3>{{t.inTitle}}</h3>
+                <sc-for list="{{inList}}" as="r" hint-placeholder-count="4"><div class="tk-dsheet__li"><span class="tk-icon" aria-hidden="true">check</span><span>{{r.text}}</span></div></sc-for>
+              </div>
+              <div class="tk-dsheet__col is-out"><h3>{{t.outTitle}}</h3>
+                <sc-for list="{{outList}}" as="r" hint-placeholder-count="4"><div class="tk-dsheet__li"><span class="tk-icon" aria-hidden="true">close</span><span>{{r.text}}</span></div></sc-for>
+              </div>
+            </div>
+            <p class="tk-dsheet__note"><span class="tk-icon" aria-hidden="true">info</span><span>{{t.hint}}</span></p>
+          </div>
+          <div class="tk-dsheet__foot">
+            <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{go}}">{{t.go}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isBusy}}" hint-placeholder-val="{{false}}">
+          <div class="tk-dsheet">
+            <div class="tk-dsheet__busy" role="status" aria-live="polite"><span class="tk-icon tk-icon--spin" aria-hidden="true">progress_activity</span><span>{{t.busy}}</span></div>
+          </div>
+          <div class="tk-dsheet__foot">
+            <button class="tk-btn tk-btn--text tk-btn--block" type="button" onClick="{{cancel}}">{{t.cancel}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isReady}}" hint-placeholder-val="{{false}}">
+        <div class="tk-dsheet">
+          <div class="tk-dsheet__ok">
+            <span class="tk-tile tk-tile--lg tk-tile--brandsoft"><span class="tk-icon">check_circle</span></span>
+            <h3 class="tk-dsheet__ok-title">{{t.readyTitle}}</h3>
+          </div>
+          <div class="tk-file"><span class="tk-tile tk-tile--sm tk-tile--app"><span class="tk-icon">description</span></span><span class="tk-file__main"><span class="tk-file__name">{{file.name}}</span><span class="tk-file__meta">{{file.meta}}</span></span></div>
+          <sc-if value="{{cancelled}}" hint-placeholder-val="{{false}}"><p class="tk-dsheet__note" role="status"><span class="tk-icon" aria-hidden="true">info</span><span>{{t.notSaved}}</span></p></sc-if>
+        </div>
+        <div class="tk-dsheet__foot">
+          <button class="tk-btn tk-btn--primary tk-btn--block" type="button" onClick="{{saveTo}}">{{t.saveTo}}</button>
+          <button class="tk-btn tk-btn--secondary tk-btn--block" type="button" onClick="{{share}}">{{t.share}}</button>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"keadaan":{"editor":"enum","options":["awal","proses","siap","batal"],"default":"awal","section":"Keadaan"},"en":{"editor":"boolean","default":false,"section":"Tampilan"},"dark":{"editor":"boolean","default":false,"section":"Tampilan"},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.state || {};
+    const en = !!this.props.en;
+    const T = en ? {
+      title: 'Back up now', close: 'Close', sum: '142 transactions, 4 wallets, since 3 Jun 2026', inTitle: 'Included', outTitle: 'Not included',
+      hint: 'Save it somewhere outside this phone, such as Google Drive, so it stays safe if the phone is lost. This file contains your financial records.',
+      go: 'Back up', busy: 'Creating the backup…', cancel: 'Cancel', readyTitle: 'Backup ready', saveTo: 'Save to…', share: 'Share',
+      notSaved: 'Not saved yet. Choose where to keep it so your backup is safe.',
+      inList: ['Wallets and transactions', 'Budgets and categories', 'Freelance and recurring', 'Money settings and reminders'],
+      outList: ['Notification text', 'System permissions', 'Account', 'Language and display']
+    } : {
+      title: 'Cadangkan sekarang', close: 'Tutup', sum: '142 transaksi, 4 dompet, sejak 3 Jun 2026', inTitle: 'Ikut', outTitle: 'Tidak ikut',
+      hint: 'Simpan di tempat di luar ponsel ini, misalnya Google Drive, supaya tetap aman kalau ponsel hilang. Berkas ini berisi catatan keuanganmu.',
+      go: 'Cadangkan', busy: 'Membuat cadangan…', cancel: 'Batal', readyTitle: 'Cadangan siap', saveTo: 'Simpan ke…', share: 'Bagikan',
+      notSaved: 'Belum tersimpan. Pilih tempat menyimpannya supaya cadanganmu aman.',
+      inList: ['Dompet dan transaksi', 'Anggaran dan kategori', 'Freelance dan rutin', 'Setelan keuangan dan pengingat'],
+      outList: ['Teks notifikasi', 'Izin sistem', 'Akun', 'Bahasa dan tampilan']
+    };
+    const phase = s.phase || (this.props.keadaan === 'proses' ? 'busy' : (this.props.keadaan === 'siap' || this.props.keadaan === 'batal') ? 'ready' : 'form');
+    const timer = () => setTimeout(() => this.setState({ phase: 'ready' }), 1400);
+    return {
+      theme: this.props.dark ? 'dark' : 'light', t: T, en: en, dark: !!this.props.dark, cad: 'belum',
+      underRiwayat: false, underAkun: true,
+      open: !s.closed, close: () => this.setState({ closed: true }),
+      isForm: phase === 'form', isBusy: phase === 'busy', isReady: phase === 'ready',
+      inList: T.inList.map((x) => ({ text: x })), outList: T.outList.map((x) => ({ text: x })),
+      go: () => { this.setState({ phase: 'busy' }); timer(); }, cancel: () => this.setState({ phase: 'form' }),
+      file: { name: 'tanukonomy-' + (en ? 'backup' : 'cadangan') + '-2026-10-22.tnk', meta: '142 ' + (en ? 'transactions' : 'transaksi') + ' · 4 ' + (en ? 'wallets' : 'dompet') },
+      cancelled: this.props.keadaan === 'batal' && !s.phase,
+      saveTo: () => this.setState({ closed: true }), share: () => this.setState({ closed: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

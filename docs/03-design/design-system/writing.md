@@ -17,6 +17,11 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 | Dompet | kantong, kas, rekening (sebagai nama umum) | Tempat uang: bank, dompet digital, tunai, tabungan, kartu |
 | Total saldo | total kas aktif, posisi saldo kas | Jumlah saldo semua dompet aktif |
 | Sebaran saldo | distribusi saldo, alokasi, teralokasi | Porsi total saldo di tiap dompet; bukan alokasi anggaran |
+| Ekspor | unduh data, export | Salinan transaksi ke spreadsheet (Excel atau CSV), untuk dibaca manusia |
+| Cadangan, cadangkan | backup, simpan data | Satu berkas berisi seluruh data, untuk dipulihkan oleh Tanukonomy |
+| Pulihkan | restore, impor, kembalikan semua | Mengganti seluruh data dengan isi cadangan; tanpa penggabungan |
+| Cadangan pengaman | cadangan otomatis, salinan lama | Data sebelum pemulihan, disimpan sementara untuk dikembalikan |
+| Berkas | file | Hasil ekspor atau cadangan |
 | Transaksi | log, entri, catatan kas | Pemasukan, pengeluaran, atau transfer |
 | Pemasukan / Pengeluaran | uang masuk / uang keluar, masuk / keluar (di judul) | "Masuk" dan "Keluar" boleh di ruang sempit seperti badge |
 | Transfer | mutasi, mutasi internal | Uang pindah antardompet; tidak mengubah total saldo |
@@ -76,6 +81,13 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 
 **Catatan Apa yang baru.** Satu kalimat manfaat per butir, "kamu" bila perlu, tanpa tanda seru dan istilah teknis; paling banyak 3 butir per versi. Tiap butir berkategori (Baru, Lebih cepat, Perbaikan, Keamanan) dengan pil dan emoji kategori; kepala berisi 🚀; sesudah dipasang, satu baris "Terima kasih sudah memakai Tanukonomy." Ini satu-satunya tempat emoji diperbolehkan (keputusan pemilik 15 Okt 2026).
 > Perbaikan · Sisa anggaran kini dihitung benar saat transaksi dipindah ke pos lain.
+
+**Galat data.** Sebut apa yang terjadi, lalu selalu "Datamu tidak berubah."
+> Berkas ini bukan cadangan Tanukonomy atau sudah rusak. Datamu tidak berubah.
+
+**Penggantian data.** Judul pertanyaan, isi menyebut cadangan pengaman, tombol menyebut tindakannya.
+> Ganti semua data di ponsel ini?
+> [Batal] [Ganti data]
 
 **Versi.** "0.6.0 (7)" (nama versi, nomor build); dengan pembaruan kecil "0.6.0 (7), pembaruan 1".
 

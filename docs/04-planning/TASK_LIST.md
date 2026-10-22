@@ -86,7 +86,7 @@ Terakhir diperbarui: 18 Oktober 2026 (Fase 19 selesai dan masuk `main` lewat PR 
 | Persiapan Play Console — draf jawaban [PLAY_DATA_SAFETY.md](../03-release/PLAY_DATA_SAFETY.md) (Keamanan Data) dan [PLAY_STORE_LISTING.md](../03-release/PLAY_STORE_LISTING.md) (setelan toko, ASO) | 2 | 2 | Draf selesai (Keamanan Data 28 Sep, listing 29 Sep 2026); isi formulir persis sebelum build berfitur ini diunggah, jangan sebelum itu. Keputusan pemilik di §1 listing masih terbuka |
 | 20 — Pengumuman pembaruan ([APP_UPDATE.md](../01-product/features/APP_UPDATE.md)) | 8 | 8 | KT-U1–KT-U5 dijawab dan ADR-039 Accepted (15 Okt 2026); T-20.1–T-20.8 selesai dan sudah di `main` (ada di build `0.6.0+12` dan `0.7.0+13`); T-20.4 selesai (rupa v3 diterapkan, selisih diputuskan pemilik); T-20.7 formulir Play Console dan kebijakan privasi dilaporkan pemilik selesai; verifikasi perangkat T-20.8 lulus semua (15 Okt 2026) |
 | 21 — Penemuan fitur ([FEATURE_DISCOVERY.md](../01-product/features/FEATURE_DISCOVERY.md)) | 10 | 0 | Draf PO 18 Okt 2026, direvisi (onboarding wajib, tombol permanen); KT-D1 diputuskan; menunggu rupa (T-21.0) |
-| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); menunggu rupa (T-22.0) dan ADR (T-22.1) |
+| 22 — Ekspor dan cadangan manual ([EXPORT_BACKUP.md](../01-product/features/EXPORT_BACKUP.md)) | 8 | 0 | Spek final 22 Okt 2026 (dari B-42, KT-E1–KT-E5 diputuskan); ADR-040 ditulis (Proposed, menunggu pemilik); menunggu rupa (T-22.0) |
 | Antrean (`B-n`, belum dijadwalkan) | 49 | 0 | Lihat [Antrean](#antrean-belum-dijadwalkan); nomor `B-n` tidak dipakai ulang |
 
 ## Keputusan terbuka
@@ -5148,6 +5148,13 @@ onboarding (tautan pulihkan, bersinggungan dengan Fase
       Verifikasi: ADR disetujui; uji bolak-balik cadangkan → pulihkan di
       aplikasi kosong menghasilkan data identik (§10 butir 5).
       Memenuhi FR-DAT-002, FR-DAT-003.
+      **Progres 22 Okt 2026:** [ADR-040](../02-architecture/adr/0040-ekspor-cadangan-dan-pemulihan-manual.md)
+      ditulis (Proposed). Fondasi **belum** dikerjakan; menunggu pemilik
+      menyetujui ADR dan menjawab P-1–P-4 (kunci yang tidak ada di §6.2:
+      `capture_auto_recorded`, `settings_financial_month_offer`,
+      `plan_forecast_snapshots`, `source_icon_*`) serta dependensi langsung
+      baru (`file_picker`; `archive`, `crypto`, `share_plus`, `path_provider`
+      dari transitif menjadi langsung).
 - [ ] **T-22.2** Ekspor ke spreadsheet: lembar ekspor dari Akun saja, tanpa
       pilihan rentang (selalu seluruh data saat ini), xlsx (lembar Transaksi
       dan Dompet) dan CSV sesuai §5, aturan E-1–E-6.

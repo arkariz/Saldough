@@ -651,7 +651,7 @@ satu fase penuh dengan ADR.
 
 | Fase usulan | Isi | Hasil |
 |---|---|---|
-| Fase 21 | A1–A2 | Data bisa dibawa pergi dan dikunci (gratis) |
+| Fase 21 | A1–A2 | Data bisa dibawa pergi dan dikunci (gratis). Terjadwal: A1 menjadi **Fase 22** ([EXPORT_BACKUP.md](EXPORT_BACKUP.md)) karena Fase 21 dipakai Penemuan fitur |
 | Fase 22 | B1–B2 + C1 | Fondasi Plus dan Penjaga, Plus hanya untuk penguji |
 | Fase 23 | C2–C4 | Catat dari foto, Bagaimana kalau, reverse trial: **Plus dijual** |
 | Fase 24 | D1–D2 | Target dan utang-piutang |

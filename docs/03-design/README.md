@@ -125,6 +125,23 @@ system DonutChart, LegendRow, TrendChart, SubTabs, dan PeriodStepper
 Rupa Fase 20 (UpdateCard, ReleaseNotes) ikut masuk `bundle.css` tetapi
 komponen dan prototipenya belum disalin ke sini.
 
+## Dompet v2: sebaran saldo (22 Okt 2026)
+
+Layar Dompet diperbarui mengikuti rujukan pemilik
+`proposals/wallet.html`, dengan bahasa visual ADR-034. Komponen baru
+**BalanceSpread** (`tk-spread`, `tk-legchip`, `tk-row.is-linked` di
+`bundle.css`): kartu Sebaran saldo yang ringkas (bar + kunci warna) dan bisa
+dibuka menjadi DonutChart dengan legenda dua kolom; memilih dompet di donat
+atau legenda menandai barisnya di daftar. Yang tidak diambil dari rujukan dan
+pertanyaannya ada di B-66 `TASK_LIST.md`.
+
+| Salinan | Isi |
+|---|---|
+| `Dompet.dc.html` | D1 berkas utama, sebaran ringkas; properti `terbuka`, `pilih`, `satuDompet`, `hidden`, `dark`, `en` |
+| `DompetTerbuka`, `DompetPilihTunai` | D2 donat terbuka (tengah = total); D3 Tunai dipilih, baris Tunai ditandai |
+| `DompetSembunyi`, `DompetEnGelap` | D4 nominal disembunyikan; D5 en dan gelap, BCA dipilih |
+| `DompetSatu` | D6 satu dompet: kartu sebaran tidak tampil |
+
 ## Usulan desain
 
 `proposals/<nama-usulan>/` berisi mockup dan spek dari agen

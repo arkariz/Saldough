@@ -497,3 +497,34 @@ a.tk-row:active, button.tk-row:active { background: var(--surface-2); }
 .tk-inbox--calm { background: var(--surface); }
 .tk-onb__info { display: flex; align-items: flex-start; gap: 12px; padding: 4px 8px; }
 .tk-onb__info .tk-onb__text { flex: 1; }
+
+/* BalanceSpread: sebaran saldo di Dompet, ringkas (bar) dan terbuka (donat) */
+.tk-spread { display: flex; flex-direction: column; flex: none; padding: 0; overflow: hidden; }
+.tk-spread__head { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 12px 16px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tk-spread__head:active { background: var(--surface-2); }
+.tk-spread__head:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tk-spread__main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.tk-spread__title { font-size: 16px; line-height: 24px; font-weight: 700; }
+.tk-spread__sub { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.tk-spread__chev { color: var(--ink-2); transition: transform 200ms ease-out; }
+.tk-spread.is-open .tk-spread__chev { transform: rotate(180deg); }
+.tk-spread__bar { display: flex; gap: 2px; height: 12px; margin: 0 16px; border-radius: 999px; overflow: hidden; }
+.tk-spread__bar > span { display: block; min-width: 3px; }
+.tk-spread__keys { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; padding: 8px 16px 16px; list-style: none; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--ink-2); }
+.tk-spread__key { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.tk-spread__key .tk-swatch { width: 8px; height: 8px; }
+.tk-spread__body { display: flex; flex-direction: column; gap: 12px; padding: 4px 0 8px; box-shadow: inset 0 1px 0 var(--line); animation: tk-spread-in 200ms ease-out; }
+@keyframes tk-spread-in { from { opacity: 0; } to { opacity: 1; } }
+.tk-spread__legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px; }
+.tk-legchip { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm, 8px); background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tk-legchip:active { background: var(--surface-2); }
+.tk-legchip:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tk-legchip__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; line-height: 20px; font-weight: 500; }
+.tk-legchip__pct { flex: none; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tk-legchip.is-selected { border-color: var(--brand); background: var(--brand-soft); }
+.tk-legchip.is-selected .tk-legchip__name, .tk-legchip.is-selected .tk-legchip__pct { font-weight: 700; color: var(--ink); }
+.tk-spread__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 36px; padding: 0 4px; }
+.tk-spread__foot .tk-btn:only-child { margin-left: auto; }
+.tk-row.is-linked { background: var(--surface-2); box-shadow: inset 4px 0 0 var(--brand); }
+.tk-row__sub .tk-swatch { width: 8px; height: 8px; margin-right: 6px; vertical-align: 1px; }
+@media (prefers-reduced-motion: reduce) { .tk-spread__chev { transition: none; } .tk-spread__body { animation: none; } }

@@ -16,6 +16,7 @@ Teks Tanukonomy ditulis seperti teman yang rapi mencatat: hangat, pendek, dan te
 |---|---|---|
 | Dompet | kantong, kas, rekening (sebagai nama umum) | Tempat uang: bank, dompet digital, tunai, tabungan, kartu |
 | Total saldo | total kas aktif, posisi saldo kas | Jumlah saldo semua dompet aktif |
+| Sebaran saldo | distribusi saldo, alokasi, teralokasi | Porsi total saldo di tiap dompet; bukan alokasi anggaran |
 | Transaksi | log, entri, catatan kas | Pemasukan, pengeluaran, atau transfer |
 | Pemasukan / Pengeluaran | uang masuk / uang keluar, masuk / keluar (di judul) | "Masuk" dan "Keluar" boleh di ruang sempit seperti badge |
 | Transfer | mutasi, mutasi internal | Uang pindah antardompet; tidak mengubah total saldo |
